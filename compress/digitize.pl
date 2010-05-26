@@ -9,7 +9,7 @@
 sub digitize {
     my $number = shift;
     if ($number >= 256) {
-	my $nn = sprintf("%x", $number);
+	my $nn = `printf "%x" $number`;
 	if ($nn =~ /^[01f]+$/i) { return "0x$nn"; }
     }
     return $number;
