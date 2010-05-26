@@ -1,0 +1,59 @@
+* {
+  margin: 0px;
+  padding: 0px;
+  font-family: Arial, Helvetica, FreeSans, sans;
+}
+
+#print {
+  position: relative;
+  width: 40em;
+  margin: 0px auto;
+  padding: 5px;
+}
+
+#print div {
+  position: relative;
+}
+
+.pass { color: #0A0; }
+.fail { color: #A00; }
+.unimplemented { color: #F80; }
+
+.begin {
+  text-align: center;
+  padding-bottom: 2px;
+  border-bottom: 1px solid #aaa;
+  margin: 0px auto 2px auto;
+}
+
+.all {
+  text-align: center;
+  font-weight: bold;
+}
+
+*+* > .begin, *+* > .all {
+  margin-top: 1em;
+}
+
+.also {
+  float: right;
+  width: 17em;
+  text-align: right;
+}
+
+h1 {
+  text-align: center;
+  background: #8A0000;
+  padding: 5px;
+  color: white;
+}
+
+#status {
+  padding: 3px 10px 3px 5px;
+  background: #d5c490;
+  color: #444;
+  font-size: 0.8em;
+  margin-bottom: 1em;
+  height: 1.3em;
+  vertical-align: middle;
+}

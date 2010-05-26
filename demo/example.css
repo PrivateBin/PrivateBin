@@ -1,0 +1,179 @@
+* {
+  margin: 0px;
+  padding: 0px;
+  font-family: Arial, Helvetica, FreeSans, sans;
+}
+
+h1 {
+  text-align: center;
+  background: #eee;
+  padding: 5px;
+  margin-bottom: 0.6em;
+  font-size: 1.5em;
+}
+
+.header {
+  width: 650px;
+  margin: 0px auto 1em;
+}
+
+p+p {
+  margin-top: 1em;
+}
+
+.explanation {
+  color: #555;
+  margin-top: 0.3em;
+}
+
+.section+.section, .explanation+.section {
+  margin-top: 1.5em;
+}
+
+.hex {
+  text-transform: uppercase;
+}
+
+.hex, .base64, #ciphertext {
+  font-family: 'Courier', mono;
+}
+
+.wide, textarea {
+  width: 100%;
+  margin: 0px -4px;
+  font-size: inherit;
+  text-align: left;
+}
+
+textarea+*, .wide+* {
+  margin-top: 0.3em;
+}
+
+/* bulk object placement */
+#theForm {
+  position: relative;
+  width: 940px;
+  margin: 0px auto;
+  font-size: 0.8em;
+}
+
+.column {
+  top: 0px;
+  width: 300px;
+}
+
+.box {
+  border: 2px solid #999;
+  padding: 7px;
+  margin-bottom: 20px;
+  -moz-border-radius: 7px;
+  -webkit-border-radius: 7px;
+}
+
+#cmode { position: absolute; left: 640px; }
+#ctexts { position: absolute; left: 320px; }
+
+.floatright {
+  float: right;
+  text-align: right;
+}
+
+a {
+  cursor: pointer;
+  color: #282;
+}
+
+a.random, #buttons a { text-decoration: none; }
+a.random:hover, a.random:focus { text-decoration: underline; }
+
+h2 {
+  margin: -7px -7px 3px -7px;
+  text-align: center;
+  font-size: 1.2em;
+  color: white;
+  background: #999;
+}
+
+#pplaintext { border-color: #f65; }
+#pplaintext h2 { background: #f65; }
+
+#ppassword { border-color: #4a4; }
+#ppassword h2 { background: #4a4; }
+
+#pciphertext { border-color: #78f; }
+#pciphertext h2 { background: #78f; }
+
+#buttons { text-align: center; margin-top: -20px; }
+
+a#doPbkdf2, a#encrypt, a#decrypt {
+  display: inline-block;
+  text-align: center;
+  height: 43px;
+  padding-top: 20px;
+  width: 50px;
+  background: url('alpha-arrow.png') no-repeat bottom center;
+  vertical-align: middle;
+  border: none;
+  color: white;
+  overflow: hidden;
+}
+
+.turnDown {
+  display: inline-block;
+  padding-bottom: 3px;
+  -moz-transform: rotate(90deg);	
+  -webkit-transform: rotate(90deg);	
+  transform: rotate(90deg);
+  background-color: inherit;
+}
+
+.turnUp {
+  display: inline-block;
+  padding-bottom: 3px;
+  -moz-transform: rotate(-90deg);	
+  -webkit-transform: rotate(-90deg);	
+  transform: rotate(-90deg);
+  background-color: inherit;	
+}
+
+.buttons a.disabled {
+  background-color: #ccc ! important;
+  cursor: inherit ! important;
+}
+
+a#encrypt { background-color: #f65; margin-bottom: 2px; }
+a#encrypt:hover, a#encrypt:focus { background-color: #f76; }
+a#encrypt:active { background-color: #f87; }
+
+a#decrypt {
+  height: 36px;
+  padding-top: 27px;
+  background: url('alpha-arrow.png') no-repeat top center;
+  background-color: #78f;
+  margin-top: 2px;
+}
+a#decrypt:hover { background-color: #89f; }
+a#decrypt:focus { background-color: #89f; }
+a#decrypt:active { background-color: #9af; }
+
+#ppassword, #pkey, #pmode, #pplaintext, #pciphertext {
+  -moz-border-radius: 7px;
+  -webkit-border-radius: 7px;
+}
+input[type='text'], input[type='password'], textarea {
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  font-size: inherit;
+  border: 1px solid #444;
+  padding: 3px;
+}
+
+input[type='text']:focus,  input[type='password']:focus, textarea:focus {
+  border-color: red;
+}
+
+input[type="radio"], input[type="checkbox"] {
+  position: relative;
+  top: 0.15em;
+  margin-right: -0.15em;
+}
