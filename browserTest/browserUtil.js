@@ -80,7 +80,12 @@ browserUtil.loadScripts = function(scriptNames, cbSuccess, cbError) {
       head.appendChild(scriptE);
       cb();
     } else {
-      var xhr = new XMLHttpRequest();
+      var xhr;
+      if (window.XMLHttpRequest) {
+        xhr = new XMLHttpRequest;
+      } else if (window.ActiveXObject) {
+        xhr = new ActiveXObject("Microsoft.XMLHTTP");
+      }
       xhr.onreadystatechange = function() {
         if (xhr.readyState == 4) {
           if (xhr.status == 200) {
