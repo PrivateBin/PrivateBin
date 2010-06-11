@@ -136,13 +136,13 @@ sjcl.mode.ccm = {
       // mac the data itself
       macData = w.concat(macData, adata);
       for (i=0; i<macData.length; i += 4) {
-        mac = prf.encrypt(xor(mac, macData.slice(i,i+4)));
+        mac = prf.encrypt(xor(mac, macData.slice(i,i+4).concat([0,0,0])));
       }
     }
   
     // mac the plaintext
     for (i=0; i<plaintext.length; i+=4) {
-      mac = prf.encrypt(xor(mac, plaintext.slice(i,i+4)));
+      mac = prf.encrypt(xor(mac, plaintext.slice(i,i+4).concat([0,0,0])));
     }
 
     return w.clamp(mac, tlen * 8);
