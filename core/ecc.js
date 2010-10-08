@@ -28,6 +28,30 @@ sjcl.ecc.point.prototype = {
   mult: function(k) {
     return this.toJac().mult(k, this).toAffine();
   },
+  
+  /**
+   * Multiply this point by k, added to affine2*k2, and return the answer in Jacobian coordinates.
+   * @param {bigInt} k The coefficient to multiply this by.
+   * @param {bigInt} k2 The coefficient to multiply affine2 this by.
+   * @param {sjcl.ecc.point} affine The other point in affine coordinates.
+   * @return {sjcl.ecc.pointJac} The result of the multiplication and addition, in Jacobian coordinates.
+   */
+  mult2: function(k, k2, affine2) {
+    return this.toJac().mult2(k, this, k2, affine2).toAffine();
+  },
+  
+  multiples: function() {
+    var m, i, j;
+    if (this._multiples === undefined) {
+      j = this.toJac().doubl();
+      m = this._multiples = [new sjcl.ecc.point(this.curve), this, j.toAffine()];
+      for (i=3; i<16; i++) {
+        j = j.add(this);
+        m.push(j.toAffine());
+      }
+    }
+    return this._multiples;
+  },
 
   isValid: function() {
     return this.y.square().equals(this.curve.b.add(this.x.mul(this.curve.a.add(this.x.square()))));
@@ -156,25 +180,47 @@ sjcl.ecc.pointJac.prototype = {
     } else if (k.limbs !== undefined) {
       k = k.normalize().limbs;
     }
-    var i, j, out = new sjcl.ecc.point(this.curve).toJac(), multiples, aff2;
     
-    if (affine === undefined) {
-      affine = this.toAffine();
-    }
-
-    if (affine.multiples === undefined) {
-      j = this.doubl();
-      affine.multiples = [new sjcl.ecc.point(this.curve), affine, j.toAffine()];
-      for (i=3; i<16; i++) {
-        j = j.add(affine);
-        affine.multiples[i] = j.toAffine();
-      }
-    }
-    multiples = affine.multiples;
+    var i, j, out = new sjcl.ecc.point(this.curve).toJac(), multiples = affine.multiples();
 
     for (i=k.length-1; i>=0; i--) {
       for (j=sjcl.bn.prototype.radix-4; j>=0; j-=4) {
         out = out.doubl().doubl().doubl().doubl().add(multiples[k[i]>>j & 0xF]);
+      }
+    }
+    
+    return out;
+  },
+  
+  /**
+   * Multiply this point by k, added to affine2*k2, and return the answer in Jacobian coordinates.
+   * @param {bigInt} k The coefficient to multiply this by.
+   * @param {sjcl.ecc.point} affine This point in affine coordinates.
+   * @param {bigInt} k2 The coefficient to multiply affine2 this by.
+   * @param {sjcl.ecc.point} affine The other point in affine coordinates.
+   * @return {sjcl.ecc.pointJac} The result of the multiplication and addition, in Jacobian coordinates.
+   */
+  mult2: function(k1, affine, k2, affine2) {
+    if (typeof(k1) == "number") {
+      k1 = [k1];
+    } else if (k1.limbs !== undefined) {
+      k1 = k1.normalize().limbs;
+    }
+    
+    if (typeof(k2) == "number") {
+      k2 = [k2];
+    } else if (k2.limbs !== undefined) {
+      k2 = k2.normalize().limbs;
+    }
+    
+    var i, j, out = new sjcl.ecc.point(this.curve).toJac(), m1 = affine.multiples(),
+        m2 = affine2.multiples(), l1, l2;
+
+    for (i=Math.max(k1.length,k2.length)-1; i>=0; i--) {
+      l1 = k1[i] | 0;
+      l2 = k2[i] | 0;
+      for (j=sjcl.bn.prototype.radix-4; j>=0; j-=4) {
+        out = out.doubl().doubl().doubl().doubl().add(m1[l1>>j & 0xF]).add(m2[l2>>j & 0xF]);
       }
     }
     
@@ -322,8 +368,7 @@ sjcl.ecc.dsa.publicKey.prototype = {
         s = sjcl.bn.fromBits(w.bitSlice(rs,l,2*l)),
         hG = sjcl.bn.fromBits(hash).mul(s).mod(R),
         hA = r.mul(s).mod(R),
-        jG = this._curve.G.toJac(),
-        r2 = jG.mult(hG, this._curve.G).add(this._point.mult(hA)).toAffine().x,
+        r2 = this._curve.G.mult2(hG, hA, this._point).x,
         corrupt = sjcl.exception.corrupt;
         
     if (r.equals(0) || s.equals(0) || r.greaterEquals(R) || s.greaterEquals(R) || !r2.equals(r)) {
