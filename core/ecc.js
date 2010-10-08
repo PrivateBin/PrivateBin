@@ -1,7 +1,3 @@
-if (window.sjcl == undefined) {
-  window.sjcl = {};
-}
-
 sjcl.ecc = {};
 
 /**
@@ -145,7 +141,7 @@ sjcl.ecc.pointJac.prototype = {
       return new sjcl.ecc.point(this.curve);
     }
     var zi = this.z.inverse(), zi2 = zi.square();
-    return new sjcl.ecc.point(this.curve, this.x.mul(zi2), this.y.mul(zi2.mul(zi)));
+    return new sjcl.ecc.point(this.curve, this.x.mul(zi2).fullReduce(), this.y.mul(zi2.mul(zi)).fullReduce());
   },
   
   /**
@@ -160,7 +156,7 @@ sjcl.ecc.pointJac.prototype = {
     } else if (k.limbs !== undefined) {
       k = k.normalize().limbs;
     }
-    var i, j, out = this, multiples, aff2;
+    var i, j, out = new sjcl.ecc.point(this.curve).toJac(), multiples, aff2;
     
     if (affine === undefined) {
       affine = this.toAffine();
@@ -177,7 +173,7 @@ sjcl.ecc.pointJac.prototype = {
     multiples = affine.multiples;
 
     for (i=k.length-1; i>=0; i--) {
-      for (j=bn.prototype.radix-4; j>=0; j-=4) {
+      for (j=sjcl.bn.prototype.radix-4; j>=0; j-=4) {
         out = out.doubl().doubl().doubl().doubl().add(multiples[k[i]>>j & 0xF]);
       }
     }
@@ -221,75 +217,77 @@ sjcl.ecc.curve.prototype.fromBits = function (bits) {
   return p;
 };
 
-sjcl.ecc.p192curve = new sjcl.ecc.curve(
-  p192,
-  "0x662107c8eb94364e4b2dd7ce",
-  -3,
-  "0x64210519e59c80e70fa7e9ab72243049feb8deecc146b9b1",
-  "0x188da80eb03090f67cbf20eb43a18800f4ff0afd82ff1012",
-  "0x07192b95ffc8da78631011ed6b24cdd573f977a11e794811");
-
-sjcl.ecc.p224curve = new sjcl.ecc.curve(
-  p224,
-  "0xe95c1f470fc1ec22d6baa3a3d5c4",
-  -3,
-  "0xb4050a850c04b3abf54132565044b0b7d7bfd8ba270b39432355ffb4",
-  "0xb70e0cbd6bb4bf7f321390b94a03c1d356c21122343280d6115c1d21",
-  "0xbd376388b5f723fb4c22dfe6cd4375a05a07476444d5819985007e34");
-
-sjcl.ecc.p256curve = new sjcl.ecc.curve(
-  p256,
-  "0x4319055358e8617b0c46353d039cdaae",
-  -3,
-  "0x5ac635d8aa3a93e7b3ebbd55769886bc651d06b0cc53b0f63bce3c3e27d2604b",
-  "0x6b17d1f2e12c4247f8bce6e563a440f277037d812deb33a0f4a13945d898c296",
-  "0x4fe342e2fe1a7f9b8ee7eb4a7c0f9e162bce33576b315ececbb6406837bf51f5");
-
-sjcl.ecc.p384curve = new sjcl.ecc.curve(
-  p384,
-  "0x389cb27e0bc8d21fa7e5f24cb74f58851313e696333ad68c",
-  -3,
-  "0xb3312fa7e23ee7e4988e056be3f82d19181d9c6efe8141120314088f5013875ac656398d8a2ed19d2a85c8edd3ec2aef",
-  "0xaa87ca22be8b05378eb1c71ef320ad746e1d3b628ba79b9859f741e082542a385502f25dbf55296c3a545e3872760ab7",
-  "0x3617de4a96262c6f5d9e98bf9292dc29f8f41dbd289a147ce9da3113b5f0b8c00a60b1ce1d7e819d7a431d7c90ea0e5f");
-
 sjcl.ecc.curves = {
-  192: sjcl.ecc.p192curve,
-  224: sjcl.ecc.p224curve,
-  256: sjcl.ecc.p256curve,
-  384: sjcl.ecc.p384curve
+  c192: new sjcl.ecc.curve(
+    sjcl.bn.prime.p192,
+    "0x662107c8eb94364e4b2dd7ce",
+    -3,
+    "0x64210519e59c80e70fa7e9ab72243049feb8deecc146b9b1",
+    "0x188da80eb03090f67cbf20eb43a18800f4ff0afd82ff1012",
+    "0x07192b95ffc8da78631011ed6b24cdd573f977a11e794811"),
+
+  c224: new sjcl.ecc.curve(
+    sjcl.bn.prime.p224,
+    "0xe95c1f470fc1ec22d6baa3a3d5c4",
+    -3,
+    "0xb4050a850c04b3abf54132565044b0b7d7bfd8ba270b39432355ffb4",
+    "0xb70e0cbd6bb4bf7f321390b94a03c1d356c21122343280d6115c1d21",
+    "0xbd376388b5f723fb4c22dfe6cd4375a05a07476444d5819985007e34"),
+
+  c256: new sjcl.ecc.curve(
+    sjcl.bn.prime.p256,
+    "0x4319055358e8617b0c46353d039cdaae",
+    -3,
+    "0x5ac635d8aa3a93e7b3ebbd55769886bc651d06b0cc53b0f63bce3c3e27d2604b",
+    "0x6b17d1f2e12c4247f8bce6e563a440f277037d812deb33a0f4a13945d898c296",
+    "0x4fe342e2fe1a7f9b8ee7eb4a7c0f9e162bce33576b315ececbb6406837bf51f5"),
+
+  c384: new sjcl.ecc.curve(
+    sjcl.bn.prime.p384,
+    "0x389cb27e0bc8d21fa7e5f24cb74f58851313e696333ad68c",
+    -3,
+    "0xb3312fa7e23ee7e4988e056be3f82d19181d9c6efe8141120314088f5013875ac656398d8a2ed19d2a85c8edd3ec2aef",
+    "0xaa87ca22be8b05378eb1c71ef320ad746e1d3b628ba79b9859f741e082542a385502f25dbf55296c3a545e3872760ab7",
+    "0x3617de4a96262c6f5d9e98bf9292dc29f8f41dbd289a147ce9da3113b5f0b8c00a60b1ce1d7e819d7a431d7c90ea0e5f")
 };
 
-sjcl.ecc.elGamal = {
-  publicKey: function(curve, point) {
-    this._curve = curve;
-    if (point instanceof Array) {
-      this._point = curve.fromBits(point);
-    } else {
-      this._point = point;
-    }
-  },
-  secretKey: function(curve, exponent) {
-    this._curve = curve;
-    this._exponent = exponent;
-  },
 
-  generateKeys: function(curve, paranoia) {
-    if (typeof curve == "number") {
-      curve = sjcl.ecc.curves[curve];
-      if (curve === undefined) {
-        throw new sjcl.exception.invalid("no such curve");
+/* Diffie-Hellman-like public-key system */
+sjcl.ecc._dh = function(cn) {
+  sjcl.ecc[cn] = {
+    publicKey: function(curve, point) {
+      this._curve = curve;
+      if (point instanceof Array) {
+        this._point = curve.fromBits(point);
+      } else {
+        this._point = point;
       }
+    },
+
+    secretKey: function(curve, exponent) {
+      this._curve = curve;
+      this._exponent = exponent;
+    },
+
+    generateKeys: function(curve, paranoia) {
+      if (typeof curve == "number") {
+        curve = sjcl.ecc.curves['c'+curve];
+        if (curve === undefined) {
+          throw new sjcl.exception.invalid("no such curve");
+        }
+      }
+      var sec = sjcl.bn.random(curve.r, paranoia), pub = curve.G.mult(sec);
+      return { pub: new sjcl.ecc[cn].publicKey(curve, pub),
+               sec: new sjcl.ecc[cn].secretKey(curve, sec) };
     }
-    var sec = bn.random(curve.r, paranoia), pub = curve.G.mult(sec);
-    return { pub: new sjcl.ecc.elGamal.publicKey(curve, pub),
-             sec: new sjcl.ecc.elGamal.secretKey(curve, sec) };
-  }
+  }; 
 };
+
+sjcl.ecc._dh("elGamal");
 
 sjcl.ecc.elGamal.publicKey.prototype = {
   kem: function(paranoia) {
-    var sec = bn.random(this._curve.r, paranoia),
+    var sec = sjcl.bn.random(this._curve.r, paranoia),
         tag = this._curve.G.mult(sec).toBits(),
         key = sjcl.hash.sha256.hash(this._point.mult(sec).toBits());
     return { key: key, tag: tag };
@@ -302,5 +300,35 @@ sjcl.ecc.elGamal.secretKey.prototype = {
   }
 };
 
+sjcl.ecc._dh("dsa");
 
+sjcl.ecc.dsa.secretKey.prototype = {
+  sign: function(hash, paranoia) {
+    var R = this._curve.r,
+        l = R.bitLength(),
+        k = kkkk = sjcl.bn.random(R.sub(1), paranoia).add(1),
+        r = this._curve.G.mult(k).x.mod(R),
+        s = sjcl.bn.fromBits(hash).add(r.mul(this._exponent)).inverseMod(R).mul(kkkk).mod(R);
+    return sjcl.bitArray.concat(r.toBits(l), s.toBits(l));
+  }
+};
 
+sjcl.ecc.dsa.publicKey.prototype = {
+  verify: function(hash, rs) {
+    var w = sjcl.bitArray,
+        R = this._curve.r,
+        l = R.bitLength(),
+        r = sjcl.bn.fromBits(w.bitSlice(rs,0,l)),
+        s = sjcl.bn.fromBits(w.bitSlice(rs,l,2*l)),
+        hG = sjcl.bn.fromBits(hash).mul(s).mod(R),
+        hA = r.mul(s).mod(R),
+        jG = this._curve.G.toJac(),
+        r2 = jG.mult(hG, this._curve.G).add(this._point.mult(hA)).toAffine().x,
+        corrupt = sjcl.exception.corrupt;
+        
+    if (r.equals(0) || s.equals(0) || r.greaterEquals(R) || s.greaterEquals(R) || !r2.equals(r)) {
+      throw (new corrupt("signature didn't check out"));
+    }
+    return true;
+  }
+}

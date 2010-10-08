@@ -1,14 +1,14 @@
 /**
  * Constructs a new bignum from another bignum, a number or a hex string.
  */
-function bn(it) {
+sjcl.bn = function(it) {
   this.initWith(it);
 }
 
-bn.prototype = {
+sjcl.bn.prototype = {
   radix: 24,
   maxMul: 8,
-  _class: bn,
+  _class: sjcl.bn,
   
   copy: function() {
     return new this._class(this);
@@ -103,27 +103,114 @@ bn.prototype = {
   /** this += that.  Does not normalize. */
   addM: function(that) {
     if (typeof(that) !== "object") { that = new this._class(that); }
-    var i;
-    for (i=this.limbs.length; i<that.limbs.length; i++) {
-      this.limbs[i] = 0;
+    var i, l=this.limbs, ll=that.limbs;
+    for (i=l.length; i<ll.length; i++) {
+      l[i] = 0;
     }
-    for (i=0; i<that.limbs.length; i++) {
-      this.limbs[i] += that.limbs[i];
+    for (i=0; i<ll.length; i++) {
+      l[i] += ll[i];
     }
+    return this;
+  },
+  
+  /** this *= 2.  Requires normalized; ends up normalized. */
+  doubleM: function() {
+    var i, carry=0, tmp, r=this.radix, m=this.radixMask, l=this.limbs;
+    for (i=0; i<l.length; i++) {
+      tmp = l[i];
+      tmp = tmp+tmp+carry;
+      l[i] = tmp & m;
+      carry = tmp >> r;
+    }
+    if (carry) l.push(carry);
+    return this;
+  },
+  
+  /** this /= 2, rounded down.  Requires normalized; ends up normalized. */
+  halveM: function() {
+    var i, carry=0, tmp, r=this.radix, l=this.limbs;
+    for (i=l.length-1; i>=0; i--) {
+      tmp = l[i];
+      l[i] = (tmp+carry)>>1;
+      carry = (tmp&1) << r;
+    }
+    if (!l[l.length-1]) l.pop();
     return this;
   },
 
   /** this -= that.  Does not normalize. */
   subM: function(that) {
     if (typeof(that) !== "object") { that = new this._class(that); }
-    var i;
-    for (i=this.limbs.length; i<that.limbs.length; i++) {
-      this.limbs[i] = 0;
+    var i, l=this.limbs, ll=that.limbs;
+    for (i=l.length; i<ll.length; i++) {
+      l[i] = 0;
     }
-    for (i=0; i<that.limbs.length; i++) {
-      this.limbs[i] -= that.limbs[i];
+    for (i=0; i<ll.length; i++) {
+      l[i] -= ll[i];
     }
     return this;
+  },
+  
+  mod: function(that) {
+    that = new sjcl.bn(that).normalize(); // copy before we begin
+    var out = new sjcl.bn(this).normalize(), ci=0;
+    
+    for (; out.greaterEquals(that); ci++) {
+      that.doubleM();
+    }
+    for (; ci > 0; ci--) {
+      that.halveM();
+      if (out.greaterEquals(that)) {
+        out.subM(that).normalize();
+      }
+    }
+    return out.trim();
+  },
+  
+  /** return inverse mod prime p.  p must be odd. Binary extended Euclidean algorithm mod p. */
+  inverseMod: function(p) {
+    var a = new sjcl.bn(1), b = new sjcl.bn(0), x = new sjcl.bn(this), y = new sjcl.bn(p), tmp, i, nz=1;
+    
+    if (!(p.limbs[0] & 1)) {
+      throw (new sjcl.exception.invalid("inverseMod: p must be odd"));
+    }
+    
+    // invariant: y is odd
+    do {
+      if (x.limbs[0] & 1) {
+        if (!x.greaterEquals(y)) {
+          // x < y; swap everything
+          tmp = x; x = y; y = tmp;
+          tmp = a; a = b; b = tmp;
+        }
+        x.subM(y);
+        x.normalize();
+        
+        if (!a.greaterEquals(b)) {
+          a.addM(p);
+        }
+        a.subM(b);
+      }
+      
+      // cut everything in half
+      x.halveM();
+      if (a.limbs[0] & 1) {
+        a.addM(p);
+      }
+      a.normalize();
+      a.halveM();
+      
+      // check for termination: x ?= 0
+      for (i=nz=0; i<x.limbs.length; i++) {
+        nz |= x.limbs[i];
+      }
+    } while(nz);
+    
+    if (!y.equals(1)) {
+      throw (new sjcl.exception.invalid("inverseMod: p and x must be relatively prime"));
+    }
+    
+    return b;
   },
   
   /** this + that.  Does not normalize. */
@@ -184,6 +271,13 @@ bn.prototype = {
     return out;
   },
 
+  trim: function() {
+    var l = this.limbs, p;
+    do { p = l.pop() } while (l.length && p == 0);
+    l.push(p);
+    return this;
+  },
+  
   /** Reduce mod a modulus.  Stubbed for subclassing. */
   reduce: function() {
     return this;
@@ -218,20 +312,55 @@ bn.prototype = {
     }
     limbs[i] += carry;
     return this;
+  },
+  
+  /** Serialize to a bit array */
+  toBits: function(len) {
+    this.fullReduce();
+    len = len || this.exponent || this.limbs.length * this.radix;
+    var i = Math.floor((len-1)/24), w=sjcl.bitArray, e = (len + 7 & -8) % this.radix || this.radix;
+    out = [w.partial(e, this.getLimb(i))];
+    for (i--; i >= 0; i--) {
+      out = w.concat(out, [w.partial(this.radix, this.getLimb(i))]);
+    }
+    return out;
+  },
+  
+  /** Return the length in bits, rounded up to the nearest byte. */
+  bitLength: function() {
+    this.fullReduce();
+    var out = this.radix * (this.limbs.length - 1);
+    var b = this.limbs[this.limbs.length - 1];
+    for (; b; b >>= 1) {
+      out ++;
+    }
+    return out+7 & -8;
   }
 };
 
-/* Initialization routines for bignum library. */
-(function init(){
-  bn.prototype.ipv = 1 / (bn.prototype.placeVal = Math.pow(2,bn.prototype.radix));
-  bn.prototype.radixMask = (1 << bn.prototype.radix) - 1;
-})();
+sjcl.bn.fromBits = function(bits) {
+  var out = new this(), words=[], w=sjcl.bitArray, t = this.prototype,
+      l = Math.min(this.bitLength || 0x100000000, w.bitLength(bits)), e = l % t.radix || t.radix;
+  
+  words[0] = w.extract(bits, 0, e);
+  for (; e < l; e += t.radix) {
+    words.unshift(w.extract(bits, e, t.radix));
+  }
+
+  out.limbs = words;
+  return out;
+};
+
+
+
+sjcl.bn.prototype.ipv = 1 / (sjcl.bn.prototype.placeVal = Math.pow(2,sjcl.bn.prototype.radix))
+sjcl.bn.prototype.radixMask = (1 << sjcl.bn.prototype.radix) - 1;
 
 /**
  * Creates a new subclass of bn, based on reduction modulo a pseudo-Mersenne prime,
  * i.e. a prime of the form 2^e + sum(a * 2^b),where the sum is negative and sparse.
  */
-function pseudoMersennePrime(exponent, coeff) {
+sjcl.bn.pseudoMersennePrime = function(exponent, coeff) {
   function p(it) {
     this.initWith(it);
     /*if (this.limbs[this.modOffset]) {
@@ -239,7 +368,7 @@ function pseudoMersennePrime(exponent, coeff) {
     }*/
   }
 
-  var ppr = p.prototype = new bn(), i, tmp, mo;
+  var ppr = p.prototype = new sjcl.bn(), i, tmp, mo;
   mo = ppr.modOffset = Math.ceil(tmp = exponent / ppr.radix);
   ppr.exponent = exponent;
   ppr.offset = [];
@@ -248,7 +377,7 @@ function pseudoMersennePrime(exponent, coeff) {
   ppr.fullMask = 0;
   ppr.fullOffset = [];
   ppr.fullFactor = [];
-  ppr.modulus = p.modulus = new bn(Math.pow(2,exponent));
+  ppr.modulus = p.modulus = new sjcl.bn(Math.pow(2,exponent));
   
   ppr.fullMask = 0|-Math.pow(2, exponent % ppr.radix);
 
@@ -257,7 +386,7 @@ function pseudoMersennePrime(exponent, coeff) {
     ppr.fullOffset[i] = Math.ceil(coeff[i][0] / ppr.radix - tmp);
     ppr.factor[i] = coeff[i][1] * Math.pow(1/2, exponent - coeff[i][0] + ppr.offset[i] * ppr.radix);
     ppr.fullFactor[i] = coeff[i][1] * Math.pow(1/2, exponent - coeff[i][0] + ppr.fullOffset[i] * ppr.radix);
-    ppr.modulus.addM(new bn(Math.pow(2,coeff[i][0])*coeff[i][1]));
+    ppr.modulus.addM(new sjcl.bn(Math.pow(2,coeff[i][0])*coeff[i][1]));
     ppr.minOffset = Math.min(ppr.minOffset, -ppr.offset[i]); // conservative
   }
   ppr._class = p;
@@ -336,49 +465,29 @@ function pseudoMersennePrime(exponent, coeff) {
     return (this.power(this.modulus.sub(2)));
   };
 
-  ppr.toBits = function() {
-    this.fullReduce();
-    var i=this.modOffset - 1, w=sjcl.bitArray, e = (this.exponent + 7 & -8) % this.radix || this.radix;
-    out = [w.partial(e, this.getLimb(i))];
-    for (i--; i >= 0; i--) {
-      out = w.concat(out, [w.partial(this.radix, this.getLimb(i))]);
-    }
-    return out;
-  };
-
-  p.fromBits = function(bits) {
-    
-    var out = new this(), words=[], w=sjcl.bitArray, t = this.prototype,
-        l = Math.min(w.bitLength(bits), t.exponent + 7 & -8), e = l % t.radix || t.radix;
-    
-    words[0] = w.extract(bits, 0, e);
-    for (; e < l; e += t.radix) {
-      words.unshift(w.extract(bits, e, t.radix));
-    }
-
-    out.limbs = words;
-    return out;
-  };
+  p.fromBits = sjcl.bn.fromBits;
 
   return p;
 }
 
 // a small Mersenne prime
-p127 = pseudoMersennePrime(127, [[0,-1]]);
+sjcl.bn.prime = {
+  p127: sjcl.bn.pseudoMersennePrime(127, [[0,-1]]),
 
-// Bernstein's prime for Curve25519
-p25519 = pseudoMersennePrime(255, [[0,-19]]);
+  // Bernstein's prime for Curve25519
+  p25519: sjcl.bn.pseudoMersennePrime(255, [[0,-19]]),
 
-// NIST primes
-p192 = pseudoMersennePrime(192, [[0,-1],[64,-1]]);
-p224 = pseudoMersennePrime(224, [[0,1],[96,-1]]);
-p256 = pseudoMersennePrime(256, [[0,-1],[96,1],[192,1],[224,-1]]);
-p384 = pseudoMersennePrime(384, [[0,-1],[32,1],[96,-1],[128,-1]]);
-p521 = pseudoMersennePrime(521, [[0,-1]]);
+  // NIST primes
+  p192: sjcl.bn.pseudoMersennePrime(192, [[0,-1],[64,-1]]),
+  p224: sjcl.bn.pseudoMersennePrime(224, [[0,1],[96,-1]]),
+  p256: sjcl.bn.pseudoMersennePrime(256, [[0,-1],[96,1],[192,1],[224,-1]]),
+  p384: sjcl.bn.pseudoMersennePrime(384, [[0,-1],[32,1],[96,-1],[128,-1]]),
+  p521: sjcl.bn.pseudoMersennePrime(521, [[0,-1]])
+};
 
-bn.random = function(modulus, paranoia) {
-  if (typeof modulus != "object") { modulus = new bn(modulus); }
-  var words, i, l = modulus.limbs.length, m = modulus.limbs[l-1]+1, out = new bn();
+sjcl.bn.random = function(modulus, paranoia) {
+  if (typeof modulus != "object") { modulus = new sjcl.bn(modulus); }
+  var words, i, l = modulus.limbs.length, m = modulus.limbs[l-1]+1, out = new sjcl.bn();
   while (true) {
     // get a sequence whose first digits make sense
     do {
