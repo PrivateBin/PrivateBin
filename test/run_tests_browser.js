@@ -13,7 +13,9 @@ function testCore(coreName, cb) {
     "sha256_test_brute_force.js",
     "hmac_test.js",
     "hmac_vectors.js",
-    "pbkdf2_test.js"
+    "pbkdf2_test.js",
+    "ecdh_test.js",
+    "ecdsa_test.js"
   ], i;
   
   for (i=1; i<testFiles.length; i++) {

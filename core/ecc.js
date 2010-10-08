@@ -346,9 +346,9 @@ sjcl.ecc.elGamal.secretKey.prototype = {
   }
 };
 
-sjcl.ecc._dh("dsa");
+sjcl.ecc._dh("ecdsa");
 
-sjcl.ecc.dsa.secretKey.prototype = {
+sjcl.ecc.ecdsa.secretKey.prototype = {
   sign: function(hash, paranoia) {
     var R = this._curve.r,
         l = R.bitLength(),
@@ -359,7 +359,7 @@ sjcl.ecc.dsa.secretKey.prototype = {
   }
 };
 
-sjcl.ecc.dsa.publicKey.prototype = {
+sjcl.ecc.ecdsa.publicKey.prototype = {
   verify: function(hash, rs) {
     var w = sjcl.bitArray,
         R = this._curve.r,
