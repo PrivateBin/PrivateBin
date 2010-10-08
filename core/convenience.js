@@ -59,7 +59,7 @@
     p.ct = sjcl.mode[p.mode].encrypt(prp, plaintext, p.iv, p.adata, p.tag);
     
     //return j.encode(j._subtract(p, j.defaults));
-		return j.encode(p);
+    return j.encode(p);
   },
   
   /** Simple decryption function.
@@ -208,7 +208,7 @@
     
     return out;
   },
-	*/
+  */
   
   /** Return only the specified elements of src.
    * @private

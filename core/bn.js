@@ -3,7 +3,7 @@
  */
 sjcl.bn = function(it) {
   this.initWith(it);
-}
+};
 
 sjcl.bn.prototype = {
   radix: 24,
@@ -50,7 +50,7 @@ sjcl.bn.prototype = {
    * Equality test is in constant time.
    */
   equals: function(that) {
-    if (typeof that == "number") { that = new this._class(that); }
+    if (typeof that === "number") { that = new this._class(that); }
     var difference = 0, i;
     this.fullReduce();
     that.fullReduce();
@@ -72,14 +72,14 @@ sjcl.bn.prototype = {
    * Returns 1 if this >= that, or zero otherwise.
    */
   greaterEquals: function(that) {
-    if (typeof that == "number") { that = new this._class(that); }
+    if (typeof that === "number") { that = new this._class(that); }
     var less = 0, greater = 0, i, a, b;
     i = Math.max(this.limbs.length, that.limbs.length) - 1;
     for (; i>= 0; i--) {
       a = this.getLimb(i);
       b = that.getLimb(i);
       greater |= (b - a) & ~less;
-      less |= (a - b) & ~greater
+      less |= (a - b) & ~greater;
     }
     return (greater | ~less) >>> 31;
   },
@@ -122,7 +122,9 @@ sjcl.bn.prototype = {
       l[i] = tmp & m;
       carry = tmp >> r;
     }
-    if (carry) l.push(carry);
+    if (carry) {
+      l.push(carry);
+    }
     return this;
   },
   
@@ -134,7 +136,9 @@ sjcl.bn.prototype = {
       l[i] = (tmp+carry)>>1;
       carry = (tmp&1) << r;
     }
-    if (!l[l.length-1]) l.pop();
+    if (!l[l.length-1]) {
+      l.pop();
+    }
     return this;
   },
 
@@ -225,7 +229,7 @@ sjcl.bn.prototype = {
   
   /** this * that.  Normalizes and reduces. */
   mul: function(that) {
-    if (typeof(that) == "number") { that = new this._class(that); }
+    if (typeof(that) === "number") { that = new this._class(that); }
     var i, j, a = this.limbs, b = that.limbs, al = a.length, bl = b.length, out = new this._class(), c = out.limbs, ai, ii=this.maxMul;
 
     for (i=0; i < this.limbs.length + that.limbs.length + 1; i++) {
@@ -252,12 +256,12 @@ sjcl.bn.prototype = {
 
   /** this ^ n.  Uses square-and-multiply.  Normalizes and reduces. */
   power: function(l) {
-    if (typeof(l) == "number") {
+    if (typeof(l) === "number") {
       l = [l];
     } else if (l.limbs !== undefined) {
       l = l.normalize().limbs;
     }
-    var j, out = new this._class(1), pow = this;
+    var i, j, out = new this._class(1), pow = this;
 
     for (i=0; i<l.length; i++) {
       for (j=0; j<this.radix; j++) {
@@ -273,7 +277,9 @@ sjcl.bn.prototype = {
 
   trim: function() {
     var l = this.limbs, p;
-    do { p = l.pop() } while (l.length && p == 0);
+    do {
+      p = l.pop();
+    } while (l.length && p === 0);
     l.push(p);
     return this;
   },
@@ -296,7 +302,7 @@ sjcl.bn.prototype = {
       m = limbs[i] = l & mask;
       carry = (l-m)*ipv;
     }
-    if (carry == -1) {
+    if (carry === -1) {
       limbs[i-1] -= this.placeVal;
     }
     return this;
@@ -329,8 +335,8 @@ sjcl.bn.prototype = {
   /** Return the length in bits, rounded up to the nearest byte. */
   bitLength: function() {
     this.fullReduce();
-    var out = this.radix * (this.limbs.length - 1);
-    var b = this.limbs[this.limbs.length - 1];
+    var out = this.radix * (this.limbs.length - 1),
+        b = this.limbs[this.limbs.length - 1];
     for (; b; b >>= 1) {
       out ++;
     }
@@ -339,7 +345,7 @@ sjcl.bn.prototype = {
 };
 
 sjcl.bn.fromBits = function(bits) {
-  var out = new this(), words=[], w=sjcl.bitArray, t = this.prototype,
+  var Class = this, out = new Class(), words=[], w=sjcl.bitArray, t = this.prototype,
       l = Math.min(this.bitLength || 0x100000000, w.bitLength(bits)), e = l % t.radix || t.radix;
   
   words[0] = w.extract(bits, 0, e);
@@ -353,7 +359,7 @@ sjcl.bn.fromBits = function(bits) {
 
 
 
-sjcl.bn.prototype.ipv = 1 / (sjcl.bn.prototype.placeVal = Math.pow(2,sjcl.bn.prototype.radix))
+sjcl.bn.prototype.ipv = 1 / (sjcl.bn.prototype.placeVal = Math.pow(2,sjcl.bn.prototype.radix));
 sjcl.bn.prototype.radixMask = (1 << sjcl.bn.prototype.radix) - 1;
 
 /**
@@ -405,7 +411,7 @@ sjcl.bn.pseudoMersennePrime = function(exponent, coeff) {
       }
       
       i--;
-      if (i == 0) {
+      if (!i) {
         limbs.push(0);
         this.cnormalize();
         i = this.minOffset;
@@ -416,10 +422,10 @@ sjcl.bn.pseudoMersennePrime = function(exponent, coeff) {
     return this;
   };
   
-  ppr._strongReduce = (ppr.fullMask == -1) ? ppr.reduce : function() {
-    var limbs = this.limbs, i = limbs.length - 1, l;
+  ppr._strongReduce = (ppr.fullMask === -1) ? ppr.reduce : function() {
+    var limbs = this.limbs, i = limbs.length - 1, k, l;
     this.reduce();
-    if (i == this.modOffset - 1) {
+    if (i === this.modOffset - 1) {
       l = limbs[i] & this.fullMask;
       limbs[i] -= l;
       for (k=0; k<this.fullOffset.length; k++) {
@@ -468,7 +474,7 @@ sjcl.bn.pseudoMersennePrime = function(exponent, coeff) {
   p.fromBits = sjcl.bn.fromBits;
 
   return p;
-}
+};
 
 // a small Mersenne prime
 sjcl.bn.prime = {
@@ -486,14 +492,14 @@ sjcl.bn.prime = {
 };
 
 sjcl.bn.random = function(modulus, paranoia) {
-  if (typeof modulus != "object") { modulus = new sjcl.bn(modulus); }
+  if (typeof modulus !== "object") { modulus = new sjcl.bn(modulus); }
   var words, i, l = modulus.limbs.length, m = modulus.limbs[l-1]+1, out = new sjcl.bn();
   while (true) {
     // get a sequence whose first digits make sense
     do {
       words = sjcl.random.randomWords(l, paranoia);
       if (words[l-1] < 0) { words[l-1] += 0x100000000; }
-    } while (Math.floor(words[l-1] / m) == Math.floor(0x100000000 / m));
+    } while (Math.floor(words[l-1] / m) === Math.floor(0x100000000 / m));
     words[l-1] %= m;
 
     // mask off all the limbs

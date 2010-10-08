@@ -92,7 +92,7 @@ sjcl.ecc.pointJac.prototype = {
    * @return {sjcl.ecc.pointJac} The sum of the two points, in Jacobian coordinates. 
    */
   add: function(T) {
-    var S = this;
+    var S = this, sz2, c, d, c2, x1, x2, x, y1, y2, y, z;
     if (S.curve !== T.curve) {
       throw("sjcl.ecc.add(): Points must be on the same curve to add them!");
     }
@@ -103,38 +103,33 @@ sjcl.ecc.pointJac.prototype = {
       return S;
     }
 
-    var
-      sz2 = S.z.square(),
-      c = T.x.mul(sz2).subM(S.x);
+    sz2 = S.z.square();
+    c = T.x.mul(sz2).subM(S.x);
 
     if (c.equals(0)) {
       if (S.y.equals(T.y.mul(sz2.mul(S.z)))) {
         // same point
         return S.doubl();
       } else {
-	// inverses
+        // inverses
         return new sjcl.ecc.pointJac(S.curve);
       }
     }
+    
+    d = T.y.mul(sz2.mul(S.z)).subM(S.y);
+    c2 = c.square();
 
-    var
-      d = T.y.mul(sz2.mul(S.z)).subM(S.y),
-      c2 = c.square(),
+    x1 = d.square();
+    x2 = c.square().mul(c).addM( S.x.add(S.x).mul(c2) );
+    x  = x1.subM(x2);
 
-      x1 = d.square(),
-      x2 = c.square().mul(c).addM( S.x.add(S.x).mul(c2) ),
-      x  = x1.subM(x2),
+    y1 = S.x.mul(c2).subM(x).mul(d);
+    y2 = S.y.mul(c.square().mul(c));
+    y  = y1.subM(y2);
 
-      y1 = S.x.mul(c2).subM(x).mul(d),
-      y2 = S.y.mul(c.square().mul(c)),
-      y  = y1.subM(y2),
+    z  = S.z.mul(c);
 
-      z  = S.z.mul(c);
-
-    //return new sjcl.ecc.pointJac(this.curve,x,y,z);
-    var U = new sjcl.ecc.pointJac(this.curve,x,y,z);
-    if (!U.isValid()) { throw "FOOOOOOOO"; }
-    return U;
+    return new sjcl.ecc.pointJac(this.curve,x,y,z);
   },
   
   /**
@@ -175,7 +170,7 @@ sjcl.ecc.pointJac.prototype = {
    * @return {sjcl.ecc.pointJac} The result of the multiplication, in Jacobian coordinates.
    */
   mult: function(k, affine) {
-    if (typeof(k) == "number") {
+    if (typeof(k) === "number") {
       k = [k];
     } else if (k.limbs !== undefined) {
       k = k.normalize().limbs;
@@ -201,13 +196,13 @@ sjcl.ecc.pointJac.prototype = {
    * @return {sjcl.ecc.pointJac} The result of the multiplication and addition, in Jacobian coordinates.
    */
   mult2: function(k1, affine, k2, affine2) {
-    if (typeof(k1) == "number") {
+    if (typeof(k1) === "number") {
       k1 = [k1];
     } else if (k1.limbs !== undefined) {
       k1 = k1.normalize().limbs;
     }
     
-    if (typeof(k2) == "number") {
+    if (typeof(k2) === "number") {
       k2 = [k2];
     } else if (k2.limbs !== undefined) {
       k2 = k2.normalize().limbs;
@@ -245,18 +240,18 @@ sjcl.ecc.pointJac.prototype = {
  * @param {bigInt} x The x coordinate of a base point of the curve.
  * @param {bigInt} y The y coordinate of a base point of the curve.
  */
-sjcl.ecc.curve = function(field, r, a, b, x, y) {
-  this.field = field;
-  this.r = field.prototype.modulus.sub(r);
-  this.a = new field(a);
-  this.b = new field(b);
-  this.G = new sjcl.ecc.point(this, new field(x), new field(y));
+sjcl.ecc.curve = function(Field, r, a, b, x, y) {
+  this.field = Field;
+  this.r = Field.prototype.modulus.sub(r);
+  this.a = new Field(a);
+  this.b = new Field(b);
+  this.G = new sjcl.ecc.point(this, new Field(x), new Field(y));
 };
 
 sjcl.ecc.curve.prototype.fromBits = function (bits) {
-  var w = sjcl.bitArray, l = this.field.prototype.exponent + 7 & -8;
-  p = new sjcl.ecc.point(this, this.field.fromBits(w.bitSlice(bits, 0, l)),
-                         this.field.fromBits(w.bitSlice(bits, l, 2*l)));
+  var w = sjcl.bitArray, l = this.field.prototype.exponent + 7 & -8,
+      p = new sjcl.ecc.point(this, this.field.fromBits(w.bitSlice(bits, 0, l)),
+                             this.field.fromBits(w.bitSlice(bits, l, 2*l)));
   if (!p.isValid()) {
     throw new sjcl.exception.corrupt("not on the curve!");
   }
@@ -316,7 +311,10 @@ sjcl.ecc._dh = function(cn) {
     },
 
     generateKeys: function(curve, paranoia) {
-      if (typeof curve == "number") {
+      if (curve === undefined) {
+        curve = 256;
+      }
+      if (typeof curve === "number") {
         curve = sjcl.ecc.curves['c'+curve];
         if (curve === undefined) {
           throw new sjcl.exception.invalid("no such curve");
@@ -352,9 +350,9 @@ sjcl.ecc.ecdsa.secretKey.prototype = {
   sign: function(hash, paranoia) {
     var R = this._curve.r,
         l = R.bitLength(),
-        k = kkkk = sjcl.bn.random(R.sub(1), paranoia).add(1),
+        k = sjcl.bn.random(R.sub(1), paranoia).add(1),
         r = this._curve.G.mult(k).x.mod(R),
-        s = sjcl.bn.fromBits(hash).add(r.mul(this._exponent)).inverseMod(R).mul(kkkk).mod(R);
+        s = sjcl.bn.fromBits(hash).add(r.mul(this._exponent)).inverseMod(R).mul(k).mod(R);
     return sjcl.bitArray.concat(r.toBits(l), s.toBits(l));
   }
 };
@@ -368,12 +366,11 @@ sjcl.ecc.ecdsa.publicKey.prototype = {
         s = sjcl.bn.fromBits(w.bitSlice(rs,l,2*l)),
         hG = sjcl.bn.fromBits(hash).mul(s).mod(R),
         hA = r.mul(s).mod(R),
-        r2 = this._curve.G.mult2(hG, hA, this._point).x,
-        corrupt = sjcl.exception.corrupt;
+        r2 = this._curve.G.mult2(hG, hA, this._point).x;
         
     if (r.equals(0) || s.equals(0) || r.greaterEquals(R) || s.greaterEquals(R) || !r2.equals(r)) {
-      throw (new corrupt("signature didn't check out"));
+      throw (new sjcl.exception.corrupt("signature didn't check out"));
     }
     return true;
   }
-}
+};
