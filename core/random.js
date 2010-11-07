@@ -221,7 +221,7 @@ sjcl.random = {
      */
   
     for (j in cbs) {
-     if (cbs.hasOwnProperty[j] && cbs[j] === cb) {
+	if (cbs.hasOwnProperty(j) && cbs[j] === cb) {
         jsTemp.push(j);
       }
     }
