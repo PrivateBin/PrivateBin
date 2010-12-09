@@ -341,6 +341,10 @@ sjcl.ecc.elGamal.publicKey.prototype = {
 sjcl.ecc.elGamal.secretKey.prototype = {
   unkem: function(tag) {
     return sjcl.hash.sha256.hash(this._curve.fromBits(tag).mult(this._exponent).toBits());
+  },
+
+  dh: function(pk) {
+    return sjcl.hash.sha256.hash(pk._point.mult(this._exponent).toBits());
   }
 };
 
