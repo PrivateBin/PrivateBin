@@ -17,11 +17,16 @@ sjcl.keyexchange.srp = {
     return group.g.powermod(x, group.N);
   },
 
+  /**
+   * Calculates SRP x.
+   *   x = SHA1(<salt> | SHA(<username> | ":" | <raw password>)) [RFC 2945]
+   * @param {String} I The username.
+   * @param {String} P The password.
+   * @param {Object} s A bitArray of the salt.
+   * @return {Object} A bitArray of SRP x.
+   */
   makeX: function(I, P, s) {
-    var inner;
-    // From RFC 2945:
-    // x = SHA1(<salt> | SHA(<username> | ":" | <raw password>))
-    inner = sjcl.hash.sha1.hash(I + ':' + P);
+    var inner = sjcl.hash.sha1.hash(I + ':' + P);
     return sjcl.hash.sha1.hash(sjcl.bitArray.concat(s, inner));
   },
 
