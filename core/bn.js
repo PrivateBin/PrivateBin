@@ -275,6 +275,21 @@ sjcl.bn.prototype = {
     return out;
   },
 
+  mulmod: function(x, N) {
+    return this.mod(N).mul(x.mod(N)).mod(N);
+  },
+
+  powermod: function(x, N) {
+    var result = new sjcl.bn(1), a = new sjcl.bn(this), k = new sjcl.bn(x);
+    while (true) {
+      if (k.limbs[0] & 1) { result = result.mulmod(a, N); }
+      k.halveM();
+      if (k.equals(0)) { break; }
+      a = a.mulmod(a, N);
+    }
+    return result.normalize().reduce();
+  },
+
   trim: function() {
     var l = this.limbs, p;
     do {
