@@ -8,6 +8,15 @@
  * @class SRP
  */
 sjcl.keyexchange.srp = {
+  /**
+   * Calculates SRP v, the verifier. 
+   *   v = g^x mod N [RFC 5054]
+   * @param {String} I The username.
+   * @param {String} P The password.
+   * @param {Object} s A bitArray of the salt.
+   * @param {Object} group The SRP group. Use sjcl.keyexchange.srp.knownGroup to obtain this object.
+   * @return {Object} A bitArray of SRP v.
+   */
   makeVerifier: function(I, P, s, group) {
     var x;
     // From RFC 5054:
