@@ -19,6 +19,9 @@ var sjcl = {
 
   /** @namespace Hash functions.  Right now only SHA256 is implemented. */
   hash: {},
+
+  /** @namespace Key exchange functions.  Right now only SRP is implemented. */
+  keyexchange: {},
   
   /** @namespace Block cipher modes of operation. */
   mode: {},
