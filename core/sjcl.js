@@ -58,7 +58,7 @@ var sjcl = {
     },
 
     /** @class Something isn't ready. */
-    notready: function(message) {
+    notReady: function(message) {
       this.toString = function() { return "NOT READY: "+this.message; };
       this.message = message;
     }
