@@ -59,10 +59,10 @@ sjcl.mode.ocb2 = {
     bi = plaintext.slice(i);
     bl = w.bitLength(bi);
     pad = prp.encrypt(xor(delta,[0,0,0,bl]));
-    bi = w.clamp(xor(bi,pad), bl);
+    bi = w.clamp(xor(bi.concat([0,0,0]),pad), bl);
     
     /* Checksum the final block, and finalize the checksum */
-    checksum = xor(checksum,xor(bi,pad));
+    checksum = xor(checksum,xor(bi.concat([0,0,0]),pad));
     checksum = prp.encrypt(xor(checksum,xor(delta,times2(delta))));
     
     /* MAC the header */
@@ -113,7 +113,7 @@ sjcl.mode.ocb2 = {
     /* Chop out and decrypt the final block */
     bl = len-i*32;
     pad = prp.encrypt(xor(delta,[0,0,0,bl]));
-    bi = xor(pad, w.clamp(ciphertext.slice(i),bl));
+    bi = xor(pad, w.clamp(ciphertext.slice(i),bl).concat([0,0,0]));
     
     /* Checksum the final block, and finalize the checksum */
     checksum = xor(checksum, bi);
@@ -154,7 +154,7 @@ sjcl.mode.ocb2 = {
     bi = adata.slice(i);
     if (w.bitLength(bi) < 128) {
       delta = xor(delta,times2(delta));
-      bi = w.concat(bi,[0x80000000|0]);
+      bi = w.concat(bi,[0x80000000|0,0,0,0]);
     }
     checksum = xor(checksum, bi);
     return prp.encrypt(xor(times2(xor(delta,times2(delta))), checksum));
