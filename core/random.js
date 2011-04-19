@@ -47,7 +47,7 @@ sjcl.random = {
     var out = [], i, readiness = this.isReady(paranoia), g;
   
     if (readiness === this._NOT_READY) {
-      throw new sjcl.exception.notready("generator isn't seeded");
+      throw new sjcl.exception.notReady("generator isn't seeded");
     } else if (readiness & this._REQUIRES_RESEED) {
       this._reseedFromPools(!(readiness & this._READY));
     }

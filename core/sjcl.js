@@ -58,6 +58,12 @@ var sjcl = {
     bug: function(message) {
       this.toString = function() { return "BUG: "+this.message; };
       this.message = message;
+    },
+    
+    /** @class Bug or missing feature in SJCL. */
+    notReady: function(message) {
+      this.toString = function() { return "GENERATOR NOT READY: "+this.message; };
+      this.message = message;
     }
   }
 };
