@@ -21,7 +21,8 @@ sjcl.keyexchange.srp = {
    * @param {String} I The username.
    * @param {String} P The password.
    * @param {Object} s A bitArray of the salt.
-   * @param {Object} group The SRP group. Use sjcl.keyexchange.srp.knownGroup to obtain this object.
+   * @param {Object} group The SRP group. Use sjcl.keyexchange.srp.knownGroup
+                           to obtain this object.
    * @return {Object} A bitArray of SRP v.
    */
   makeVerifier: function(I, P, s, group) {
