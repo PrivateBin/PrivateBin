@@ -50,8 +50,7 @@ sjcl.mode.ocb2 = {
       /* Encrypt a non-final block */
       bi = plaintext.slice(i,i+4);
       checksum = xor(checksum, bi);
-      bi = xor(delta,prp.encrypt(xor(delta, bi)));
-      output.splice(i,0,bi[0],bi[1],bi[2],bi[3]);
+      output = output.concat(xor(delta,prp.encrypt(xor(delta, bi))));
       delta = times2(delta);
     }
     
@@ -106,7 +105,7 @@ sjcl.mode.ocb2 = {
       /* Decrypt a non-final block */
       bi = xor(delta, prp.decrypt(xor(delta, ciphertext.slice(i,i+4))));
       checksum = xor(checksum, bi);
-      output.splice(i,0,bi[0],bi[1],bi[2],bi[3]);
+      output = output.concat(bi);
       delta = times2(delta);
     }
     

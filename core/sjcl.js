@@ -59,7 +59,7 @@ var sjcl = {
       this.toString = function() { return "BUG: "+this.message; };
       this.message = message;
     },
-    
+
     /** @class Something isn't ready. */
     notReady: function(message) {
       this.toString = function() { return "NOT READY: "+this.message; };
