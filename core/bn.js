@@ -275,10 +275,12 @@ sjcl.bn.prototype = {
     return out;
   },
 
-  mulmod: function(x, N) {
-    return this.mod(N).mul(x.mod(N)).mod(N);
+  /** this * that mod N */
+  mulmod: function(that, N) {
+    return this.mod(N).mul(that.mod(N)).mod(N);
   },
 
+  /** this ^ x mod N */
   powermod: function(x, N) {
     var result = new sjcl.bn(1), a = new sjcl.bn(this), k = new sjcl.bn(x);
     while (true) {

@@ -4,7 +4,7 @@ new sjcl.test.TestCase("Bignum modular reduction test", function (cb) {
     cb && cb();
     return;
   }
-  
+
   var a, N, r;
   for (i=0; i < sjcl.test.vector.bn_mod.length; i++) {
     tv = sjcl.test.vector.bn_mod[i];
@@ -26,7 +26,7 @@ new sjcl.test.TestCase("Bignum modular multiplication test", function (cb) {
     cb && cb();
     return;
   }
-  
+
   var a, b, N, r;
   for(var j=0;j<10;j++)for (i=0; i < sjcl.test.vector.bn_mulmod.length; i++) {
       tv = sjcl.test.vector.bn_mulmod[i];
@@ -49,7 +49,7 @@ new sjcl.test.TestCase("Bignum modular exponentiation test", function (cb) {
     cb && cb();
     return;
   }
-  
+
   var i, tv, g, x, N, v;
   for (i=0; i < sjcl.test.vector.bn_powermod.length; i++) {
     tv = sjcl.test.vector.bn_powermod[i];
