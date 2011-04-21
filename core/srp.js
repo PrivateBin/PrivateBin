@@ -1,5 +1,12 @@
 /** @fileOverview Javascript SRP implementation.
  *
+ * This file contains a partial implementation of the SRP (Secure Remote
+ * Password) password-authenticated key exchange protocol. Given a user
+ * identity, salt, and SRP group, it generates the SRP verifier that may
+ * be sent to a remote server to establish and SRP account.
+ *
+ * For more information, see http://srp.stanford.edu/.
+ *
  * @author Quinn Slack
  */
 
