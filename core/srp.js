@@ -27,8 +27,6 @@ sjcl.keyexchange.srp = {
    */
   makeVerifier: function(I, P, s, group) {
     var x;
-    // From RFC 5054:
-    // v = g^x mod N
     x = this.makeX(I, P, s);
     x = sjcl.bn.fromBits(x);
     return group.g.powermod(x, group.N);
