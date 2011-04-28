@@ -58,8 +58,7 @@
     /* do the encryption */
     p.ct = sjcl.mode[p.mode].encrypt(prp, plaintext, p.iv, p.adata, p.tag);
     
-    //return j.encode(j._subtract(p, j.defaults));
-    return j.encode(p);
+    return j.encode(j._subtract(p, j.defaults));
   },
   
   /** Simple decryption function.
@@ -123,7 +122,7 @@
         if (!i.match(/^[a-z0-9]+$/i)) {
           throw new sjcl.exception.invalid("json encode: invalid property name");
         }
-        out += comma + '"' + i + '":';
+        out += comma + i + ':';
         comma = ',';
         
         switch (typeof obj[i]) {
@@ -161,13 +160,13 @@
     }
     var a = str.replace(/^\{|\}$/g, '').split(/,/), out={}, i, m;
     for (i=0; i<a.length; i++) {
-      if (!(m=a[i].match(/^(?:(["']?)([a-z][a-z0-9]*)\1):(?:(\d+)|"([a-z0-9+\/%*_.@=\-]*)")$/i))) {
+      if (!(m=a[i].match(/^([a-z][a-z0-9]*):(?:(\d+)|"([a-z0-9+\/%*_.@=\-]*)")$/i))) {
         throw new sjcl.exception.invalid("json decode: this isn't json!");
       }
-      if (m[3]) {
-        out[m[2]] = parseInt(m[3],10);
+      if (m[2]) {
+        out[m[1]] = parseInt(m[2],10);
       } else {
-        out[m[2]] = m[2].match(/^(ct|salt|iv)$/) ? sjcl.codec.base64.toBits(m[4]) : unescape(m[4]);
+        out[m[1]] = m[1].match(/^(ct|salt|iv)$/) ? sjcl.codec.base64.toBits(m[3]) : unescape(m[3]);
       }
     }
     return out;
@@ -197,6 +196,7 @@
   
   /** Remove all elements of minus from plus.  Does not modify plus.
    * @private
+   */
   _subtract: function (plus, minus) {
     var out = {}, i;
     
@@ -208,7 +208,6 @@
     
     return out;
   },
-  */
   
   /** Return only the specified elements of src.
    * @private
