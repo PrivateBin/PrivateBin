@@ -11,9 +11,15 @@ function testCore(coreName, cb) {
     "sha256_test.js",
     "sha256_vectors.js",
     "sha256_test_brute_force.js",
+    "sha1_test.js",
+    "sha1_vectors.js",
     "hmac_test.js",
     "hmac_vectors.js",
-    "pbkdf2_test.js"
+    "pbkdf2_test.js",
+    "bn_test.js",
+    "bn_vectors.js",
+    "srp_test.js",
+    "srp_vectors.js"
   ], i;
   
   for (i=1; i<testFiles.length; i++) {
