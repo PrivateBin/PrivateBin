@@ -6,6 +6,8 @@ function testCore(coreName, cb) {
     "aes_vectors.js",
     "ccm_test.js",
     "ccm_vectors.js",
+    "cbc_test.js",
+    "cbc_vectors.js",
     "ocb2_test.js",
     "ocb2_vectors.js",
     "sha256_test.js",
@@ -18,6 +20,8 @@ function testCore(coreName, cb) {
     "pbkdf2_test.js",
     "bn_test.js",
     "bn_vectors.js",
+    "ecdsa_test.js",
+    "ecdh_test.js",
     "srp_test.js",
     "srp_vectors.js"
   ], i;
