@@ -1,5 +1,5 @@
 new sjcl.test.TestCase("OCB 2.0 mode tests", function (cb) {
-  if (!sjcl.cipher.aes) {
+  if (!sjcl.cipher.aes || !sjcl.mode.ocb2) {
     this.unimplemented();
     cb && cb();
     return;
