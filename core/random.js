@@ -193,8 +193,8 @@ sjcl.random = {
     if (!this._collectorsStarted) { return; }
   
     if (window.removeEventListener) {
-      window.removeEventListener("load", this._loadTimeCollector);
-      window.removeEventListener("mousemove", this._mouseCollector);
+      window.removeEventListener("load", this._loadTimeCollector, false);
+      window.removeEventListener("mousemove", this._mouseCollector, false);
     } else if (window.detachEvent) {
       window.detachEvent("onload", this._loadTimeCollector);
       window.detachEvent("onmousemove", this._mouseCollector);
