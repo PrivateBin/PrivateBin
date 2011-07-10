@@ -369,7 +369,7 @@ sjcl.random = {
 (function(){
   try {
     // get cryptographically strong entropy in Webkit
-    var ab = new Uint32Array(32), i;
+    var ab = new Uint32Array(32);
     crypto.getRandomValues(ab);
     sjcl.random.addEntropy(ab, 1024, "crypto.getRandomValues");
   } catch (e) {
