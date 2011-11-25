@@ -122,7 +122,7 @@
         if (!i.match(/^[a-z0-9]+$/i)) {
           throw new sjcl.exception.invalid("json encode: invalid property name");
         }
-        out += comma + i + ':';
+        out += comma + '"' + i + '"' + ':';
         comma = ',';
         
         switch (typeof obj[i]) {
