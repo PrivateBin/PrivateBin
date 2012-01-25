@@ -64,7 +64,7 @@ function doEncrypt() {
         mode:v.mode,
         ts:parseInt(v.tag),
         ks:parseInt(v.keysize) };
-  if (!v.freshiv || !usedIvs[v.iv]) { iv:v.iv; }
+  if (!v.freshiv || !usedIvs[v.iv]) { p.iv = v.iv; }
   if (!v.freshsalt || !usedSalts[v.salt]) { p.salt = v.salt; }
   ct = sjcl.encrypt(password || key, plaintext, p, rp).replace(/,/g,",\n");
 
