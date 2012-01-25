@@ -80,7 +80,7 @@ function doEncrypt() {
     v.ciphertext = ct;
     v.adata = '';
   } else {
-    v.ciphertext = ct.match(/ct:"([^"]*)"/)[1]; //"
+    v.ciphertext = ct.match(/"ct":"([^"]*)"/)[1]; //"
   }
   
   v.plaintext = '';
