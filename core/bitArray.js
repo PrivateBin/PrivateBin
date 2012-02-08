@@ -31,7 +31,7 @@
 sjcl.bitArray = {
   /**
    * Array slices in units of bits.
-   * @param {bitArray a} The array to slice.
+   * @param {bitArray} a The array to slice.
    * @param {Number} bstart The offset to the start of the slice, in bits.
    * @param {Number} bend The offset to the end of the slice, in bits.  If this is undefined,
    * slice until the end of the array.
