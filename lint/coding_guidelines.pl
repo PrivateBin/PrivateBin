@@ -12,8 +12,8 @@
 #
 #   ++ and -- are allowed.
 #
-#   Varibles are in camelCase.  I prefer underscore_separated, but JavaScript uses
-#   camelCase everywhere.
+#   Variables are in camelCase.  I prefer underscore_separated, but JavaScript
+#   uses camelCase everywhere.
 #
 #   Private members and methods are prefixed by underscores.
 #
