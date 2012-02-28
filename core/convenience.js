@@ -23,8 +23,9 @@
     rp = rp || {};
     
     var j = sjcl.json, p = j._add({ iv: sjcl.random.randomWords(4,0) },
-                                  j.defaults), tmp, prp;
+                                  j.defaults), tmp, prp, adata;
     j._add(p, params);
+    adata = p.adata;
     if (typeof p.salt === "string") {
       p.salt = sjcl.codec.base64.toBits(p.salt);
     }
@@ -49,6 +50,9 @@
     if (typeof plaintext === "string") {
       plaintext = sjcl.codec.utf8String.toBits(plaintext);
     }
+    if (typeof adata === "string") {
+      adata = sjcl.codec.utf8String.toBits(adata);
+    }
     prp = new sjcl.cipher[p.cipher](password);
     
     /* return the json data */
@@ -56,7 +60,7 @@
     rp.key = password;
     
     /* do the encryption */
-    p.ct = sjcl.mode[p.mode].encrypt(prp, plaintext, p.iv, p.adata, p.ts);
+    p.ct = sjcl.mode[p.mode].encrypt(prp, plaintext, p.iv, adata, p.ts);
     
     return j.encode(j._subtract(p, j.defaults));
   },
@@ -74,7 +78,7 @@
     params = params || {};
     rp = rp || {};
     
-    var j = sjcl.json, p = j._add(j._add(j._add({},j.defaults),j.decode(ciphertext)), params, true), ct, tmp, prp;
+    var j = sjcl.json, p = j._add(j._add(j._add({},j.defaults),j.decode(ciphertext)), params, true), ct, tmp, prp, adata=p.adata;
     if (typeof p.salt === "string") {
       p.salt = sjcl.codec.base64.toBits(p.salt);
     }
@@ -97,10 +101,13 @@
       password = tmp.key.slice(0,p.ks/32);
       p.salt  = tmp.salt;
     }
+    if (typeof adata === "string") {
+      adata = sjcl.codec.utf8String.toBits(adata);
+    }
     prp = new sjcl.cipher[p.cipher](password);
     
     /* do the decryption */
-    ct = sjcl.mode[p.mode].decrypt(prp, p.ct, p.iv, p.adata, p.ts);
+    ct = sjcl.mode[p.mode].decrypt(prp, p.ct, p.iv, adata, p.ts);
     
     /* return the json data */
     j._add(rp, p);
