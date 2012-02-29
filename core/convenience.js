@@ -62,7 +62,8 @@
     /* do the encryption */
     p.ct = sjcl.mode[p.mode].encrypt(prp, plaintext, p.iv, adata, p.ts);
     
-    return j.encode(j._subtract(p, j.defaults));
+    //return j.encode(j._subtract(p, j.defaults));
+    return j.encode(p);
   },
   
   /** Simple decryption function.
