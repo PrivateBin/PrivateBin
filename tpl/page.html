@@ -1,0 +1,81 @@
+<html>
+<head>
+<title>ZeroBin</title>
+<link type="text/css" rel="stylesheet" href="lib/zerobin.css?{$VERSION|rawurlencode}#" /> 
+<script src="lib/jquery.js#"></script>
+<script src="lib/sjcl.js#"></script>
+<script src="lib/base64.js#"></script>
+<script src="lib/rawdeflate.js#"></script>
+<script src="lib/rawinflate.js#"></script>
+<script src="lib/zerobin.js?{$VERSION|rawurlencode}#"></script>
+
+<!--[if lt IE 10]>
+<style> body {padding-left:60px;padding-right:60px;} div#ienotice {display:block;} </style>
+<![endif]-->
+
+<!--[if lt IE 10]>
+<style> div#ienotice {display:block; }  div#oldienotice {display:block; } </style>
+<![endif]-->
+
+</head>
+  <body>
+      <div id="aboutbox">
+          ZeroBin is a minimalist, opensource online pastebin where the server has zero knowledge of pasted data.
+          Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. 
+          More information on the <a href="http://sebsauvage.net/wiki/doku.php?id=php:zerobin">project page</a>.<br />
+          <span style="text-decoration:blink;font-size:10pt;color:#a4b3c4;">&#9654;</span> Note: This is a test service: 
+          Data may be deleted anytime. Kittens will die if you abuse this service.
+</div>
+    <h1 title="ZeroBin" onclick="window.location.href=scriptLocation();return false;">ZeroBin</h1><br>
+    <h2>Because ignorance is bliss</h2><br>
+    <h3>{$VERSION}</h3>
+    <noscript><div class="nonworking">Javascript is required for ZeroBin to work.<br>Sorry for the inconvenience.</div></noscript>
+    <div id="oldienotice" class="nonworking">ZeroBin requires a modern browser to work.</div>
+    <div id="ienotice">Still using Internet Explorer ? &nbsp;Do yourself a favor, switch to a modern browser: 
+        <a href="http://www.mozilla.org/firefox/">Firefox</a>, 
+        <a href="http://www.opera.com/">Opera</a>, 
+        <a href="http://www.google.com/chrome">Chrome</a>, 
+        <a href="http://www.apple.com/safari">Safari</a>...
+    </div>
+    <div id="status">&nbsp;</div>
+    <div id="errormessage" style="display:none">{$ERRORMESSAGE|htmlspecialchars}</div>
+    <div id="toolbar">
+    <button id="newbutton" onclick="window.location.href=scriptLocation();return false;" style="display:none;"><img src="lib/icon_new.png#" width="11" height="15" />New</button>
+    <button id="sendbutton" onclick="send_data();return false;" style="display:none;"><img src="lib/icon_send.png#" width="18" height="15" />Send</button>
+    <button id="clonebutton" onclick="clonePaste();return false;" style="display:none;"><img src="lib/icon_clone.png#" width="15" height="17" />Clone</button>
+      <div id="expiration" style="display:none;">Expire: 
+      <select id="pasteExpiration" name="pasteExpiration">
+        <option value="burn">Burn after reading</option>
+        <option value="10min">10 minutes</option>
+        <option value="1hour">1 hour</option>
+        <option value="1day">1 day</option>
+        <option value="1month" selected="selected">1 month</option>
+        <option value="1year">1 year</option>
+        <option value="never">Never</option>
+      </select>
+      </div>
+      <div id="remainingtime" style="display:none;"></div>
+      <div id="language" style="display:none;">
+      <select name="language">
+        <option value="language" selected="selected">Language</option>
+        <option value="C/C++">C/C++</option>
+        <option value="php">php</option>
+        <option value="python">Python</option>
+      </select>
+      </div>
+        <input id="password" value="Optional password..." style="display:none;" />
+        <div id="opendisc" class="button" style="display:none;">
+           <input type="checkbox" id="opendiscussion" name="opendiscussion" />
+           <label for="opendiscussion">Open discussion</label>
+        </div>
+    </div>
+    <div id="pastelink" style="display:none;"></div>
+    <div id="cleartext" style="display:none;"></div>
+    <textarea id="message" name="message" cols="80" rows="25" style="display:none;"></textarea>
+    <div id="discussion" style="display:none;">
+        <h4>Discussion</h4>
+        <div id="comments"></div>
+    </div>
+    <div id="cipherdata" style="display:none;">{$CIPHERDATA}</div>
+  </body>
+</html>
