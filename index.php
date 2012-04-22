@@ -22,14 +22,14 @@ function trafic_limiter_canPass($ip)
 {
     $tfilename='./data/trafic_limiter.php';
     if (!is_file($tfilename))
-    { 
-        file_put_contents($tfilename,"<?php\n\$GLOBALS['trafic_limiter']=array();\n?>"); 
-        chmod($tfilename,0705); 
+    {
+        file_put_contents($tfilename,"<?php\n\$GLOBALS['trafic_limiter']=array();\n?>");
+        chmod($tfilename,0705);
     }
     require $tfilename;
     $tl=$GLOBALS['trafic_limiter'];
     if (!empty($tl[$ip]) && ($tl[$ip]+10>=time()))
-    {       
+    {
         return false;
         // FIXME: purge file of expired IPs to keep it small
     }
@@ -56,7 +56,7 @@ function dataid2path($dataid)
 */
 function dataid2discussionpath($dataid)
 {
-    return dataid2path($dataid).$dataid.'.discussion/'; 
+    return dataid2path($dataid).$dataid.'.discussion/';
 }
 
 // Checks if a json string is a proper SJCL encrypted message.
@@ -64,19 +64,19 @@ function dataid2discussionpath($dataid)
 function validSJCL($jsonstring)
 {
     $accepted_keys=array('iv','salt','ct');
-    
+
     // Make sure content is valid json
     $decoded = json_decode($jsonstring);
     if ($decoded==null) return false;
     $decoded = (array)$decoded;
-    
-    // Make sure required fields are present and that they are base64 data.  
+
+    // Make sure required fields are present and that they are base64 data.
     foreach($accepted_keys as $k)
     {
         if (!array_key_exists($k,$decoded))  { return false; }
         if (base64_decode($decoded[$k],$strict=true)==null) { return false; }
     }
-    
+
     // Make sure no additionnal keys were added.
     if (count(array_intersect(array_keys($decoded),$accepted_keys))!=3) { return false; }
 
@@ -94,29 +94,29 @@ function deletePaste($pasteid)
 {
     // Delete the paste itself
     unlink(dataid2path($pasteid).$pasteid);
-    
+
     // Delete discussion if it exists.
     $discdir = dataid2discussionpath($pasteid);
     if (is_dir($discdir))
     {
         // Delete all files in discussion directory
-        $dhandle = opendir($discdir); 
+        $dhandle = opendir($discdir);
         while (false !== ($filename = readdir($dhandle)))
-        { 
-            if (is_file($discdir.$filename))  unlink($discdir.$filename); 
+        {
+            if (is_file($discdir.$filename))  unlink($discdir.$filename);
         }
         closedir($dhandle);
-        
+
         // Delete the discussion directory.
         rmdir($discdir);
     }
-}    
-    
+}
+
 if (!empty($_POST['data'])) // Create new paste/comment
 {
     /* POST contains:
          data (mandatory) = json encoded SJCL encrypted text (containing keys: iv,salt,ct)
-         
+
          All optional data will go to meta information:
          expire (optional) = expiration delay (never,10min,1hour,1day,1month,1year,burn) (default:never)
          opendiscusssion (optional) = is the discussion allowed on this paste ? (0/1) (default:0)
@@ -127,15 +127,15 @@ if (!empty($_POST['data'])) // Create new paste/comment
 
     header('Content-type: application/json');
     $error = false;
-    
+
     // Create storage directory if it does not exist.
     if (!is_dir('data'))
-    { 
-        mkdir('data',0705); 
-        file_put_contents('data/.htaccess',"Allow from none\nDeny from all\n"); 
-    }  
-    
-    // Make sure last paste from the IP address was more than 10 seconds ago. 
+    {
+        mkdir('data',0705);
+        file_put_contents('data/.htaccess',"Allow from none\nDeny from all\n");
+    }
+
+    // Make sure last paste from the IP address was more than 10 seconds ago.
     if (!trafic_limiter_canPass($_SERVER['REMOTE_ADDR']))
         { echo json_encode(array('status'=>1,'message'=>'Please wait 10 seconds between each post.')); exit; }
 
@@ -162,7 +162,7 @@ if (!empty($_POST['data'])) // Create new paste/comment
         elseif ($expire=='1year') $meta['expire_date']=time()+365*24*60*60;
         elseif ($expire=='burn') $meta['burnafterreading']=true;
     }
-    
+
     // Read open discussion flag
     if (!empty($_POST['opendiscussion']))
     {
@@ -170,10 +170,10 @@ if (!empty($_POST['data'])) // Create new paste/comment
         if ($opendiscussion!='0' && $opendiscussion!='1') { $error=true; }
         if ($opendiscussion!='0') { $meta['opendiscussion']=true; }
     }
-    
+
     // You can't have an open discussion on a "Burn after reading" paste:
-    if (isset($meta['burnafterreading'])) unset($meta['opendiscussion']);  
-    
+    if (isset($meta['burnafterreading'])) unset($meta['opendiscussion']);
+
     // Optional nickname for comments
     if (!empty($_POST['nickname']))
     {
@@ -185,22 +185,22 @@ if (!empty($_POST['data'])) // Create new paste/comment
         else
         {
             $meta['nickname']=$nick;
-            
+
             // Generation of the anonymous avatar (Vizhash):
             // If a nickname is provided, we generate a Vizhash.
             // (We assume that if the user did not enter a nickname, he/she wants
             // to be anonymous and we will not generate the vizhash.)
             $vz = new vizhash16x16();
             $pngdata = $vz->generate($_SERVER['REMOTE_ADDR']);
-            if ($pngdata!='') $meta['vizhash'] = 'data:image/png;base64,'.base64_encode($pngdata);  
-            // Once the avatar is generated, we do not keep the IP address, nor its hash.           
-        }            
-    }    
+            if ($pngdata!='') $meta['vizhash'] = 'data:image/png;base64,'.base64_encode($pngdata);
+            // Once the avatar is generated, we do not keep the IP address, nor its hash.
+        }
+    }
 
     if ($error)
     {
         echo json_encode(array('status'=>1,'message'=>'Invalid data.'));
-        exit;    
+        exit;
     }
 
     // Add post date to meta.
@@ -212,42 +212,42 @@ if (!empty($_POST['data'])) // Create new paste/comment
     $is_comment = (!empty($_POST['parentid']) && !empty($_POST['pasteid'])); // Is this post a comment ?
     $storage = array('data'=>$data);
     if (count($meta)>0) $storage['meta'] = $meta;  // Add meta-information only if necessary.
-    
+
     if ($is_comment) // The user posts a comment.
     {
         $pasteid = $_POST['pasteid'];
         $parentid = $_POST['parentid'];
         if (!preg_match('/[a-f\d]{16}/',$pasteid)) { echo json_encode(array('status'=>1,'message'=>'Invalid data.')); exit; }
         if (!preg_match('/[a-f\d]{16}/',$parentid)) { echo json_encode(array('status'=>1,'message'=>'Invalid data.')); exit; }
-        
+
         unset($storage['expire_date']); // Comment do not expire (it's the paste that expires)
         unset($storage['opendiscussion']);
-        
+
         // Make sure paste exists.
         $storagedir = dataid2path($pasteid);
         if (!is_file($storagedir.$pasteid)) { echo json_encode(array('status'=>1,'message'=>'Invalid data.')); exit; }
-        
+
         // Make sure the discussion is opened in this paste.
         $paste=json_decode(file_get_contents($storagedir.$pasteid));
         if (!$paste->meta->opendiscussion) { echo json_encode(array('status'=>1,'message'=>'Invalid data.')); exit; }
-        
+
         $discdir = dataid2discussionpath($pasteid);
         $filename = $pasteid.'.'.$dataid.'.'.$parentid;
-        if (!is_dir($discdir)) mkdir($discdir,$mode=0705,$recursive=true); 
+        if (!is_dir($discdir)) mkdir($discdir,$mode=0705,$recursive=true);
         if (is_file($discdir.$filename)) // Oups... improbable collision.
         {
             echo json_encode(array('status'=>1,'message'=>'You are unlucky. Try again.'));
             exit;
         }
-        
+
         file_put_contents($discdir.$filename,json_encode($storage));
         echo json_encode(array('status'=>0,'id'=>$dataid)); // 0 = no error
-        exit;    
+        exit;
     }
     else // a standard paste.
     {
         $storagedir = dataid2path($dataid);
-        if (!is_dir($storagedir)) mkdir($storagedir,$mode=0705,$recursive=true); 
+        if (!is_dir($storagedir)) mkdir($storagedir,$mode=0705,$recursive=true);
         if (is_file($storagedir.$dataid)) // Oups... improbable collision.
         {
             echo json_encode(array('status'=>1,'message'=>'You are unlucky. Try again.'));
@@ -258,7 +258,7 @@ if (!empty($_POST['data'])) // Create new paste/comment
         echo json_encode(array('status'=>0,'id'=>$dataid)); // 0 = no error
         exit;
     }
-    
+
 echo json_encode(array('status'=>1,'message'=>'Server error.'));
 exit;
 }
@@ -280,7 +280,7 @@ if (!empty($_SERVER['QUERY_STRING']))  // Display an existing paste.
             if (isset($paste->meta->expire_date) && $paste->meta->expire_date<time())
             {
                 deletePaste($dataid);  // Delete the paste
-                $ERRORMESSAGE='Paste does not exist or has expired.';                
+                $ERRORMESSAGE='Paste does not exist or has expired.';
             }
 
             if ($ERRORMESSAGE=='') // If no error, return the paste.
@@ -290,14 +290,14 @@ if (!empty($_SERVER['QUERY_STRING']))  // Display an existing paste.
 
                 $messages = array($paste); // The paste itself is the first in the list of encrypted messages.
                 // If it's a discussion, get all comments.
-                if ($paste->meta->opendiscussion)
+                if (property_exists($paste->meta, 'opendiscussion') && $paste->meta->opendiscussion)
                 {
                     $comments=array();
                     $datadir = dataid2discussionpath($dataid);
-                    if (!is_dir($datadir)) mkdir($datadir,$mode=0705,$recursive=true); 
-                    $dhandle = opendir($datadir); 
-                    while (false !== ($filename = readdir($dhandle))) 
-                    { 
+                    if (!is_dir($datadir)) mkdir($datadir,$mode=0705,$recursive=true);
+                    $dhandle = opendir($datadir);
+                    while (false !== ($filename = readdir($dhandle)))
+                    {
                         if (is_file($datadir.$filename))
                         {
                             $comment=json_decode(file_get_contents($datadir.$filename));
@@ -316,9 +316,9 @@ if (!empty($_SERVER['QUERY_STRING']))  // Display an existing paste.
                     $messages = array_merge($messages, $comments);
                 }
                 $CIPHERDATA = json_encode($messages);
-                
+
                 // If the paste was meant to be read only once, delete it.
-                if ($paste->meta->burnafterreading) deletePaste($dataid);
+                if (property_exists($paste->meta, 'burnafterreading') && $paste->meta->burnafterreading) deletePaste($dataid);
             }
         }
         else
@@ -331,7 +331,7 @@ if (!empty($_SERVER['QUERY_STRING']))  // Display an existing paste.
 
 require_once "lib/rain.tpl.class.php";
 header('Content-Type: text/html; charset=utf-8');
-$page = new RainTPL;    
+$page = new RainTPL;
 $page->assign('CIPHERDATA',htmlspecialchars($CIPHERDATA,ENT_NOQUOTES));  // We escape it here because ENT_NOQUOTES can't be used in RainTPL templates.
 $page->assign('VERSION',$VERSION);
 $page->assign('ERRORMESSAGE',$ERRORMESSAGE);
