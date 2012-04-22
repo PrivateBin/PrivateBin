@@ -1,13 +1,13 @@
 <html>
 <head>
 <title>ZeroBin</title>
-<link type="text/css" rel="stylesheet" href="lib/zerobin.css?{$VERSION|rawurlencode}#" /> 
-<script src="lib/jquery.js#"></script>
-<script src="lib/sjcl.js#"></script>
-<script src="lib/base64.js#"></script>
-<script src="lib/rawdeflate.js#"></script>
-<script src="lib/rawinflate.js#"></script>
-<script src="lib/zerobin.js?{$VERSION|rawurlencode}#"></script>
+<link type="text/css" rel="stylesheet" href="css/zerobin.css?{$VERSION|rawurlencode}#" /> 
+<script src="js/jquery.js#"></script>
+<script src="js/sjcl.js#"></script>
+<script src="js/base64.js#"></script>
+<script src="js/rawdeflate.js#"></script>
+<script src="js/rawinflate.js#"></script>
+<script src="js/zerobin.js?{$VERSION|rawurlencode}#"></script>
 
 <!--[if lt IE 10]>
 <style> body {padding-left:60px;padding-right:60px;} div#ienotice {display:block;} </style>
@@ -40,9 +40,9 @@
     <div id="status">&nbsp;</div>
     <div id="errormessage" style="display:none">{$ERRORMESSAGE|htmlspecialchars}</div>
     <div id="toolbar">
-    <button id="newbutton" onclick="window.location.href=scriptLocation();return false;" style="display:none;"><img src="lib/icon_new.png#" width="11" height="15" />New</button>
-    <button id="sendbutton" onclick="send_data();return false;" style="display:none;"><img src="lib/icon_send.png#" width="18" height="15" />Send</button>
-    <button id="clonebutton" onclick="clonePaste();return false;" style="display:none;"><img src="lib/icon_clone.png#" width="15" height="17" />Clone</button>
+    <button id="newbutton" onclick="window.location.href=scriptLocation();return false;" style="display:none;"><img src="img/icon_new.png#" width="11" height="15" />New</button>
+    <button id="sendbutton" onclick="send_data();return false;" style="display:none;"><img src="img/icon_send.png#" width="18" height="15" />Send</button>
+    <button id="clonebutton" onclick="clonePaste();return false;" style="display:none;"><img src="img/icon_clone.png#" width="15" height="17" />Clone</button>
       <div id="expiration" style="display:none;">Expire: 
       <select id="pasteExpiration" name="pasteExpiration">
         <option value="burn">Burn after reading</option>
