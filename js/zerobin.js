@@ -205,7 +205,7 @@ function send_comment(parentid) {
     var ciphernickname = '';
     var nick=$('input#nickname').val();
     if (nick != '' && nick != 'Optional nickname...') {
-        ciphernickname = ciphernickname = zeroCipher(pageKey(), nick);
+        ciphernickname = zeroCipher(pageKey(), nick);
     }
     var data_to_send = { data:cipherdata,
                          parentid: parentid,
@@ -213,8 +213,7 @@ function send_comment(parentid) {
                          nickname: ciphernickname
                        };
 
-    $
-        .post(scriptLocation(), data_to_send, 'json')
+    $.post(scriptLocation(), data_to_send, 'json')
         .error(function() {
             showError('Comment could not be sent (serveur error or not responding).');
         })
@@ -247,8 +246,7 @@ function send_data() {
                          expire:         $('select#pasteExpiration').val(),
                          opendiscussion: $('input#opendiscussion').is(':checked') ? 1 : 0
                        }; 
-    $
-        .post(scriptLocation(), data_to_send, 'json')
+    $.post(scriptLocation(), data_to_send, 'json')
         .error(function() {
             showError('Data could not be sent (serveur error or not responding).');
         })
@@ -278,14 +276,14 @@ function send_data() {
  * Put the screen in "New paste" mode.
  */
 function stateNewPaste() {
-    $('#sendbutton').show();
-    $('#clonebutton').hide();
+    $('button#sendbutton').show();
+    $('button#clonebutton').hide();
     $('div#expiration').show();
     $('div#remainingtime').hide();
     $('div#language').hide(); // $('#language').show();
     $('input#password').hide(); //$('#password').show();
     $('div#opendisc').show();
-    $('#newbutton').show();
+    $('button#newbutton').show();
     $('div#pastelink').hide();
     $('textarea#message').text('');
     $('textarea#message').show();
@@ -298,23 +296,21 @@ function stateNewPaste() {
  * Put the screen in "Existing paste" mode.
  */
 function stateExistingPaste() {
-    $('#sendbutton').hide();
+    $('button#sendbutton').hide();
     
     // No "clone" for IE<10.
-    if (!$('div#oldienotice').is(":visible")) {
+    if ($('div#oldienotice').is(":visible")) {
+        $('button#clonebutton').hide(); 
+    }
+    else {
         $('button#clonebutton').show(); 
     }
-    
-    /**
-     * @FIXME
-     */
-    $('#clonebutton').show();
-    
+   
     $('div#expiration').hide();
     $('div#language').hide();
     $('input#password').hide();
     $('div#opendisc').hide();
-    $('#newbutton').show();
+    $('button#newbutton').show();
     $('div#pastelink').hide();
     $('textarea#message').hide();
     $('div#cleartext').show();
