@@ -17,7 +17,7 @@ $script =~ s=/\*([^\*]|\*+[^\/])*\*/==g;
 $script =~ s=//.*==g;
 
 # stringify property names
-$script =~ s=\.([a-zA-Z0-9][_a-zA-Z0-9]*)=['$1']=g;
+$script =~ s=\.([a-zA-Z][_a-zA-Z0-9]*)=['$1']=g;
 
 # stringify sjcl
 $script =~ s=(?:var\s+)?sjcl(\.|\s*\=)=window['sjcl']$1=g;
