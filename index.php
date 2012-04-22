@@ -290,7 +290,7 @@ if (!empty($_SERVER['QUERY_STRING']))  // Display an existing paste.
 
                 $messages = array($paste); // The paste itself is the first in the list of encrypted messages.
                 // If it's a discussion, get all comments.
-                if (property_exists($paste->meta, 'opendiscussion'))
+                if (property_exists($paste->meta, 'opendiscussion') && $paste->meta->opendiscussion)
                 {
                     $comments=array();
                     $datadir = dataid2discussionpath($dataid);
@@ -318,7 +318,7 @@ if (!empty($_SERVER['QUERY_STRING']))  // Display an existing paste.
                 $CIPHERDATA = json_encode($messages);
 
                 // If the paste was meant to be read only once, delete it.
-                if (property_exists($paste->meta, 'burnafterreading')) deletePaste($dataid);
+                if (property_exists($paste->meta, 'burnafterreading') && $paste->meta->burnafterreading) deletePaste($dataid);
             }
         }
         else
