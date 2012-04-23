@@ -286,7 +286,7 @@ if (!empty($_SERVER['QUERY_STRING']))  // Display an existing paste.
             if ($ERRORMESSAGE=='') // If no error, return the paste.
             {
                 // We kindly provide the remaining time before expiration (in seconds)
-                if ($paste->meta->expire_date) $paste->meta->remaining_time = $paste->meta->expire_date - time();
+                if (property_exists($paste->meta, 'expire_date')) $paste->meta->remaining_time = $paste->meta->expire_date - time();
 
                 $messages = array($paste); // The paste itself is the first in the list of encrypted messages.
                 // If it's a discussion, get all comments.
