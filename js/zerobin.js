@@ -255,10 +255,7 @@ function send_data() {
                 stateExistingPaste();
                 var url = scriptLocation() + "?" + data.id + '#' + randomkey;
                 showStatus('');
-                $('div#pastelink').html('Your paste is <a href="' + url + '">' + url + '</a>');
-                $('div#pastelink')
-                    .append('&nbsp;&nbsp;<button id="shortenbutton" onclick="document.location=\'' + shortenUrl(url) + '\'"><img src="img/icon_shorten.png" width="13" height="15" />Shorten URL</button>')
-                    .show();
+                $('div#pastelink').html('Your paste is <a href="' + url + '">' + url + '</a>').show();
                 setElementText($('div#cleartext'), $('textarea#message').val());
                 urls2links($('div#cleartext'));
                 showStatus('');
@@ -368,13 +365,6 @@ function showStatus(message, spin) {
         $('div#status').prepend(img);
         $('div#replystatus').prepend(img);
     }
-}
-
-/**
- * Generate link to URL shortener.
- */
-function shortenUrl(url) {
-    return 'http://snipurl.com/site/snip?link=' + encodeURIComponent(url);
 }
 
 /**
