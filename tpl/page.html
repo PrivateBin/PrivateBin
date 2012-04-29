@@ -2,11 +2,13 @@
 <head>
 <title>ZeroBin</title>
 <link type="text/css" rel="stylesheet" href="css/zerobin.css?{$VERSION|rawurlencode}#" /> 
+<link type="text/css" rel="stylesheet" href="css/prettify.css?{$VERSION|rawurlencode}#" />
 <script src="js/jquery.js#"></script>
 <script src="js/sjcl.js#"></script>
 <script src="js/base64.js#"></script>
 <script src="js/rawdeflate.js#"></script>
 <script src="js/rawinflate.js#"></script>
+<script src="js/prettify.js#"></script>
 <script src="js/zerobin.js?{$VERSION|rawurlencode}#"></script>
 
 <!--[if lt IE 10]>
@@ -70,6 +72,9 @@
         </div>
     </div>
     <div id="pastelink" style="display:none;"></div>
+    <div id="prettymessage" style="display:none;">
+      <pre id="prettyprint" class="prettyprint linenums:1"></pre>
+    </div>
     <div id="cleartext" style="display:none;"></div>
     <textarea id="message" name="message" cols="80" rows="25" style="display:none;"></textarea>
     <div id="discussion" style="display:none;">
