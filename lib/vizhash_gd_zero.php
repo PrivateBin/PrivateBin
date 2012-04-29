@@ -22,17 +22,17 @@ class vizhash16x16
     {
         $this->width=16;
         $this->height=16;
-        
+
         // Read salt from file (and create it if does not exist).
         // The salt will make vizhash avatar unique on each ZeroBin installation
         // to prevent IP checking.
-        $saltfile = 'data/salt.php';
+        $saltfile = PATH . 'data/salt.php';
         if (!is_file($saltfile))
             file_put_contents($saltfile,'<?php /* |'.$this->randomSalt().'| */ ?>');
         $items=explode('|',file_get_contents($saltfile));
         $this->salt = $items[1];
-    }  
-    
+    }
+
     // Generate a 16x16 png corresponding to $text.
     // Input: $text (string)
     // Output: PNG data. Or empty string if GD is not available.
@@ -61,14 +61,14 @@ class vizhash16x16
         $image = $this->degrade($image,$op,array($r0,$g0,$b0),array(0,0,0));
 
         for($i=0; $i<7; $i=$i+1)
-        {     
+        {
             $action=$this->getInt();
             $color = imagecolorallocate($image, $r,$g,$b);
             $r = ($r0 + $this->getInt()/25)%256;
             $g = ($g0 + $this->getInt()/25)%256;
             $b = ($b0 + $this->getInt()/25)%256;
             $r0=$r; $g0=$g; $b0=$b;
-            $this->drawshape($image,$action,$color);   
+            $this->drawshape($image,$action,$color);
         }
 
         $color = imagecolorallocate($image,$this->getInt(),$this->getInt(),$this->getInt());
@@ -78,10 +78,10 @@ class vizhash16x16
         $imagedata = ob_get_contents();
         ob_end_clean();
         imagedestroy($image);
-        
+
         return $imagedata;
-    } 
-    
+    }
+
     // Generate a large random hexadecimal salt.
     private function randomSalt()
     {
@@ -89,25 +89,25 @@ class vizhash16x16
         for($i=0;$i<6;$i++) { $randomSalt.=base_convert(mt_rand(),10,16); }
         return $randomSalt;
     }
-   
-    
+
+
     private function getInt() // Returns a single integer from the $VALUES array (0...255)
     {
-        $v= $this->VALUES[$this->VALUES_INDEX]; 
+        $v= $this->VALUES[$this->VALUES_INDEX];
         $this->VALUES_INDEX++;
         $this->VALUES_INDEX %= count($this->VALUES); // Warp around the array
         return $v;
     }
-    private function getX() // Returns a single integer from the array (roughly mapped to image width) 
+    private function getX() // Returns a single integer from the array (roughly mapped to image width)
     {
         return $this->width*$this->getInt()/256;
     }
 
-    private function getY() // Returns a single integer from the array (roughly mapped to image height) 
-    { 
+    private function getY() // Returns a single integer from the array (roughly mapped to image height)
+    {
         return $this->height*$this->getInt()/256;
-    }  
-    
+    }
+
     # Gradient function taken from:
     # http://www.supportduweb.com/scripts_tutoriaux-code-source-41-gd-faire-un-degrade-en-php-gd-fonction-degrade-imagerie.html
     private function degrade($img,$direction,$color1,$color2)
@@ -129,17 +129,17 @@ class vizhash16x16
             }
             return $img;
     }
-    
+
     private function drawshape($image,$action,$color)
     {
         switch($action%7)
         {
             case 0:
-                ImageFilledRectangle ($image,$this->getX(),$this->getY(),$this->getX(),$this->getY(),$color);  
+                ImageFilledRectangle ($image,$this->getX(),$this->getY(),$this->getX(),$this->getY(),$color);
                 break;
             case 1:
             case 2:
-                ImageFilledEllipse ($image, $this->getX(), $this->getY(), $this->getX(), $this->getY(), $color);  
+                ImageFilledEllipse ($image, $this->getX(), $this->getY(), $this->getX(), $this->getY(), $color);
                 break;
             case 3:
                 $points = array($this->getX(), $this->getY(), $this->getX(), $this->getY(), $this->getX(), $this->getY(),$this->getX(), $this->getY());
@@ -150,9 +150,9 @@ class vizhash16x16
             case 6:
                 $start=$this->getInt()*360/256; $end=$start+$this->getInt()*180/256;
                 ImageFilledArc ($image, $this->getX(), $this->getY(), $this->getX(), $this->getY(),$start,$end,$color,IMG_ARC_PIE);
-                break;     
+                break;
         }
-    }    
-}    
+    }
+}
 
 ?>
