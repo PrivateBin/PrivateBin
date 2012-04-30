@@ -15,7 +15,7 @@
  *
  * Model for data access, implemented as a singleton.
  */
-class zerobin_data
+class zerobin_data extends zerobin_abstract
 {
     /*
      * @access private
@@ -23,33 +23,6 @@ class zerobin_data
      * @var string directory where data is stored
      */
     private static $_dir = 'data/';
-
-    /**
-     * singleton instance
-     *
-     * @access private
-     * @static
-     * @var zerobin
-     */
-    private static $_instance = null;
-
-    /**
-     * enforce singleton, disable constructor
-     *
-     * Instantiate using {@link getInstance()}, zerobin is a singleton object.
-     *
-     * @access protected
-     */
-    protected function __construct() {}
-
-    /**
-     * enforce singleton, disable cloning
-     *
-     * Instantiate using {@link getInstance()}, zerobin is a singleton object.
-     *
-     * @access private
-     */
-    private function __clone() {}
 
     /**
      * get instance of singleton
@@ -66,11 +39,11 @@ class zerobin_data
         	array_key_exists('dir', $options)
         ) self::$_dir = $options['dir'] . '/';
         // if needed initialize the singleton
-        if(null === self::$_instance) {
-            self::$_instance = new self;
+        if(null === parent::$_instance) {
+            parent::$_instance = new self;
             self::_init();
         }
-        return self::$_instance;
+        return parent::$_instance;
     }
 
     /**

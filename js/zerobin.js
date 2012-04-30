@@ -1,8 +1,12 @@
 /**
- * ZeroBin 0.15
+ * ZeroBin
  *
- * @link http://sebsauvage.net/wiki/doku.php?id=php:zerobin
- * @author sebsauvage
+ * a zero-knowledge paste bin
+ *
+ * @link      http://sebsauvage.net/wiki/doku.php?id=php:zerobin
+ * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
+ * @license   http://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
+ * @version   0.15
  */
 
 // Immediately start random number generator collector.
@@ -157,7 +161,7 @@ function displayMessages(key, comments) {
             try {
                 divComment.find('span.nickname').text(zeroDecipher(key, comment.meta.nickname));
             } catch(err) { }
-            divComment.find('span.commentdate').text('  ('+(new Date(comment.meta.postdate*1000).toUTCString())+')').attr('title','CommentID: ' + comment.meta.commentid);
+            divComment.find('span.commentdate').text('  ('+(new Date(comment.meta.postdate*1000).toString())+')').attr('title','CommentID: ' + comment.meta.commentid);
 
             // If an avatar is available, display it.
             if (comment.meta.vizhash) {
@@ -185,7 +189,6 @@ function open_reply(source, commentid) {
                 + '<div id="replystatus">&nbsp;</div>'
                 + '</div>');
     $('input#nickname').focus(function() {
-        $(this).css('color', '#000');
         if ($(this).val() == $(this).attr('title')) {
             $(this).val('');
         }

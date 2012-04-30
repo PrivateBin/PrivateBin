@@ -32,7 +32,7 @@
 }
 
 /* Put a border around prettyprinted code snippets. */
-pre.prettyprint { padding: 2px; border: 1px solid #888; background-color:white; }
+pre.prettyprint { padding: 2px; border: 1px solid #888; background-color:white; white-space:pre-wrap; }
 
 /* Specify class=linenums on a pre to get line numbering */
 ol.linenums {

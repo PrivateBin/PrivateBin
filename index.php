@@ -12,5 +12,6 @@
 
 // change this, if your php files and data is outside of your webservers document root
 define('PATH', '');
-require_once PATH . 'lib/zerobin.php';
+
+require PATH . 'lib/auto.php';
 new zerobin;

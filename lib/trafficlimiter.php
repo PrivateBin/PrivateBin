@@ -15,7 +15,7 @@
  *
  * Handles traffic limiting, so no user does more than one call per 10 seconds.
  */
-class traffic_limiter
+class trafficlimiter
 {
     /**
      * @access private

@@ -11,19 +11,12 @@
  */
 
 /**
- * zerobin_db
+ * zerobin_abstract
  *
- * Model for DB access, implemented as a singleton.
+ * Abstract model for ZeroBin data access, implemented as a singleton.
  */
-class zerobin_db
+abstract class zerobin_abstract
 {
-    /*
-     * @access private
-     * @static
-     * @var PDO instance of database connection
-     */
-    private static $_db;
-
 	/**
      * singleton instance
      *
@@ -31,7 +24,7 @@ class zerobin_db
      * @static
      * @var zerobin
      */
-    private static $_instance = null;
+    protected static $_instance = null;
 
     /**
      * enforce singleton, disable constructor
@@ -58,27 +51,7 @@ class zerobin_db
      * @static
      * @return zerobin
      */
-    public static function getInstance($options)
-    {
-        // if needed initialize the singleton
-        if(null === self::$_instance) {
-            self::$_instance = new self;
-            self::_init();
-        }
-        if (
-        	is_array($options) &&
-        	array_key_exists('dsn', $options) &&
-        	array_key_exists('usr', $options) &&
-        	array_key_exists('pwd', $options) &&
-        	array_key_exists('opt', $options)
-        ) self::$_db = new PDO(
-            $options['dsn'],
-            $options['usr'],
-            $options['pwd'],
-            $options['opt']
-        );
-        return self::$_instance;
-    }
+    abstract public static function getInstance($options);
 
     /**
      * Create a paste.
@@ -88,9 +61,7 @@ class zerobin_db
      * @param  array  $paste
      * @return int|false
      */
-    public function create($pasteid, $paste)
-    {
-    }
+    abstract public function create($pasteid, $paste);
 
     /**
      * Read a paste.
@@ -99,9 +70,7 @@ class zerobin_db
      * @param  string $pasteid
      * @return string
      */
-    public function read($pasteid)
-    {
-    }
+    abstract public function read($pasteid);
 
     /**
      * Delete a paste and its discussion.
@@ -110,9 +79,7 @@ class zerobin_db
      * @param  string $pasteid
      * @return void
      */
-    public function delete($pasteid)
-    {
-    }
+    abstract public function delete($pasteid);
 
     /**
      * Test if a paste exists.
@@ -121,9 +88,7 @@ class zerobin_db
      * @param  string $dataid
      * @return void
      */
-    public function exists($pasteid)
-    {
-    }
+    abstract public function exists($pasteid);
 
     /**
      * Create a comment in a paste.
@@ -135,9 +100,7 @@ class zerobin_db
      * @param  array  $comment
      * @return int|false
      */
-    public function createComment($pasteid, $parentid, $commentid, $comment)
-    {
-    }
+    abstract public function createComment($pasteid, $parentid, $commentid, $comment);
 
     /**
      * Read all comments of paste.
@@ -146,9 +109,7 @@ class zerobin_db
      * @param  string $pasteid
      * @return array
      */
-    public function readComments($pasteid)
-    {
-    }
+    abstract public function readComments($pasteid);
 
     /**
      * Test if a comment exists.
@@ -159,18 +120,5 @@ class zerobin_db
      * @param  string $commentid
      * @return void
      */
-    public function existsComment($pasteid, $parentid, $commentid)
-    {
-    }
-
-    /**
-     * initialize zerobin
-     *
-     * @access private
-     * @static
-     * @return void
-     */
-    private static function _init()
-    {
-    }
+    abstract public function existsComment($pasteid, $parentid, $commentid);
 }

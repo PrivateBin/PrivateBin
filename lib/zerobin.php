@@ -63,7 +63,6 @@ class zerobin
         // In case stupid admin has left magic_quotes enabled in php.ini.
         if (get_magic_quotes_gpc())
         {
-            require_once PATH . 'lib/filter.php';
             $_POST   = array_map('filter::stripslashes_deep', $_POST);
             $_GET    = array_map('filter::stripslashes_deep', $_GET);
             $_COOKIE = array_map('filter::stripslashes_deep', $_COOKIE);
@@ -118,7 +117,6 @@ class zerobin
     {
         // if needed, initialize the model
         if(is_string($this->_model)) {
-            require_once PATH . 'lib/' . $this->_model . '.php';
             $this->_model = forward_static_call(array($this->_model, 'getInstance'), $this->_conf['model_options']);
         }
         return $this->_model;
@@ -146,11 +144,10 @@ class zerobin
         $error = false;
 
         // Make sure last paste from the IP address was more than 10 seconds ago.
-        require_once PATH . 'lib/traffic_limiter.php';
-        traffic_limiter::setLimit($this->_conf['traffic_limit']);
-        traffic_limiter::setPath($this->_conf['traffic_dir']);
+        trafficlimiter::setLimit($this->_conf['traffic_limit']);
+        trafficlimiter::setPath($this->_conf['traffic_dir']);
         if (
-            !traffic_limiter::canPass($_SERVER['REMOTE_ADDR'])
+            !trafficlimiter::canPass($_SERVER['REMOTE_ADDR'])
         ) $this->_return_message(1, 'Please wait 10 seconds between each post.');
 
         // Make sure content is not too big.
@@ -160,7 +157,6 @@ class zerobin
         ) $this->_return_message(1, 'Paste is limited to 2 MB of encrypted data.');
 
         // Make sure format is correct.
-        require_once PATH . 'lib/sjcl.php';
         if (!sjcl::isValid($data)) $this->_return_message(1, 'Invalid data.');
 
         // Read additional meta-information.
@@ -219,7 +215,6 @@ class zerobin
             }
             else
             {
-                require_once PATH . 'lib/vizhash_gd_zero.php';
                 $meta['nickname'] = $nick;
                 $vz = new vizhash16x16();
                 $pngdata = $vz->generate($_SERVER['REMOTE_ADDR']);
@@ -381,7 +376,6 @@ class zerobin
      */
     private function _view()
     {
-        require_once PATH . 'lib/rain.tpl.class.php';
         header('Content-Type: text/html; charset=utf-8');
         $page = new RainTPL;
         // We escape it here because ENT_NOQUOTES can't be used in RainTPL templates.
