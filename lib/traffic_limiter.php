@@ -69,7 +69,17 @@ class traffic_limiter
      */
     public static function canPass($ip)
     {
-        if (!is_dir(self::$_path)) mkdir(self::$_path, 0705, true);
+        // Create storage directory if it does not exist.
+        if (!is_dir(self::$_path)) mkdir(self::$_path, 0705);
+        // Create .htaccess file if it does not exist.
+        if (!is_file(self::$_path . '/.htaccess'))
+        {
+            file_put_contents(
+                self::$_path . '/.htaccess',
+                'Allow from none' . PHP_EOL .
+                'Deny from all'. PHP_EOL
+            );
+        }
         $file = self::$_path . '/traffic_limiter.php';
         if (!is_file($file))
         {

@@ -95,6 +95,15 @@ class zerobin
      */
     private function _init()
     {
+        foreach (array('cfg', 'lib') as $dir)
+        {
+            if (!is_file(PATH . $dir . '/.htaccess')) file_put_contents(
+                PATH . $dir . '/.htaccess',
+                'Allow from none' . PHP_EOL .
+                'Deny from all'. PHP_EOL
+            );
+        }
+
         $this->_conf = parse_ini_file(PATH . 'cfg/conf.ini');
         $this->_model = $this->_conf['model'];
     }

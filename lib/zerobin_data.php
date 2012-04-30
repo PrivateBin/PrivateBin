@@ -60,15 +60,16 @@ class zerobin_data
      */
     public static function getInstance($options)
     {
+        // if given update the data directory
+        if (
+        	is_array($options) &&
+        	array_key_exists('dir', $options)
+        ) self::$_dir = $options['dir'] . '/';
         // if needed initialize the singleton
         if(null === self::$_instance) {
             self::$_instance = new self;
             self::_init();
         }
-        if (
-        	is_array($options) && 
-        	array_key_exists('dir', $options)
-        ) self::$_dir = $options['dir'];
         return self::$_instance;
     }
 
@@ -232,12 +233,11 @@ class zerobin_data
      */
     private static function _init()
     {
-        if (defined('PATH')) self::$_dir = PATH . self::$_dir;
-
         // Create storage directory if it does not exist.
-        if (!is_dir(self::$_dir))
+        if (!is_dir(self::$_dir)) mkdir(self::$_dir, 0705);
+        // Create .htaccess file if it does not exist.
+        if (!is_file(self::$_dir . '.htaccess'))
         {
-            mkdir(self::$_dir, 0705);
             file_put_contents(
                 self::$_dir . '.htaccess',
                 'Allow from none' . PHP_EOL .
