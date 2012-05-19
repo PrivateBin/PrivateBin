@@ -48,9 +48,11 @@
       <div id="expiration" style="display:none;">Expire: 
       <select id="pasteExpiration" name="pasteExpiration">
         <option value="burn">Burn after reading</option>
+        <option value="5min">5 minutes</option>
         <option value="10min">10 minutes</option>
         <option value="1hour">1 hour</option>
         <option value="1day">1 day</option>
+        <option value="1week">1 week</option>
         <option value="1month" selected="selected">1 month</option>
         <option value="1year">1 year</option>
         <option value="never">Never</option>
@@ -67,7 +69,7 @@
       </div>
         <input id="password" value="Optional password..." style="display:none;" />
         <div id="opendisc" class="button" style="display:none;">
-           <input type="checkbox" id="opendiscussion" name="opendiscussion" />
+           <input type="checkbox" id="opendiscussion" name="opendiscussion" {if="!$OPENDISCUSSION"} disabled="disabled"{/if} />
            <label for="opendiscussion">Open discussion</label>
         </div>
     </div>

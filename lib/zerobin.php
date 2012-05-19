@@ -103,8 +103,8 @@ class zerobin
             );
         }
 
-        $this->_conf = parse_ini_file(PATH . 'cfg/conf.ini');
-        $this->_model = $this->_conf['model'];
+        $this->_conf = parse_ini_file(PATH . 'cfg/conf.ini', true);
+        $this->_model = $this->_conf['model']['class'];
     }
 
     /**
@@ -117,7 +117,10 @@ class zerobin
     {
         // if needed, initialize the model
         if(is_string($this->_model)) {
-            $this->_model = forward_static_call(array($this->_model, 'getInstance'), $this->_conf['model_options']);
+            $this->_model = forward_static_call(
+                array($this->_model, 'getInstance'),
+                $this->_conf['model_options']
+            );
         }
         return $this->_model;
     }
@@ -129,7 +132,7 @@ class zerobin
      * data (mandatory) = json encoded SJCL encrypted text (containing keys: iv,salt,ct)
      *
      * All optional data will go to meta information:
-     * expire (optional) = expiration delay (never,10min,1hour,1day,1month,1year,burn) (default:never)
+     * expire (optional) = expiration delay (never,5min,10min,1hour,1day,1week,1month,1year,burn) (default:never)
      * opendiscusssion (optional) = is the discussion allowed on this paste ? (0/1) (default:0)
      * nickname (optional) = in discussion, encoded SJCL encrypted text nickname of author of comment (containing keys: iv,salt,ct)
      * parentid (optional) = in discussion, which comment this comment replies to.
@@ -143,18 +146,30 @@ class zerobin
         header('Content-type: application/json');
         $error = false;
 
-        // Make sure last paste from the IP address was more than 10 seconds ago.
-        trafficlimiter::setLimit($this->_conf['traffic_limit']);
-        trafficlimiter::setPath($this->_conf['traffic_dir']);
+        // Make sure last paste from the IP address was more than X seconds ago.
+        trafficlimiter::setLimit($this->_conf['traffic']['limit']);
+        trafficlimiter::setPath($this->_conf['traffic']['dir']);
         if (
             !trafficlimiter::canPass($_SERVER['REMOTE_ADDR'])
-        ) $this->_return_message(1, 'Please wait 10 seconds between each post.');
+        ) $this->_return_message(
+            1,
+            'Please wait ' .
+            $this->_conf['traffic']['limit'] .
+            ' seconds between each post.'
+        );
 
         // Make sure content is not too big.
         $data = $_POST['data'];
         if (
-            strlen($data) > 2000000
-        ) $this->_return_message(1, 'Paste is limited to 2 MB of encrypted data.');
+            strlen($data) > $this->_conf['main']['sizelimit']
+        ) $this->_return_message(
+            1,
+            'Paste is limited to ' .
+            $this->_conf['main']['sizelimit'] .
+            ' ' .
+            filter::size_humanreadable($this->_conf['main']['sizelimit']) .
+            ' of encrypted data.'
+        );
 
         // Make sure format is correct.
         if (!sjcl::isValid($data)) $this->_return_message(1, 'Invalid data.');
@@ -167,6 +182,12 @@ class zerobin
         {
             switch ($_POST['expire'])
             {
+                case 'burn':
+                    $meta['burnafterreading'] = true;
+                    break;
+                case '5min':
+                    $meta['expire_date'] = time()+5*60;
+                    break;
                 case '10min':
                     $meta['expire_date'] = time()+10*60;
                     break;
@@ -176,19 +197,19 @@ class zerobin
                 case '1day':
                     $meta['expire_date'] = time()+24*60*60;
                     break;
+                case '1week':
+                    $meta['expire_date'] = time()+7*24*60*60;
+                    break;
                 case '1month':
                     $meta['expire_date'] = strtotime('+1 month');
                     break;
                 case '1year':
                     $meta['expire_date'] = strtotime('+1 year');
-                    break;
-                case 'burn':
-                    $meta['burnafterreading'] = true;
             }
         }
 
         // Read open discussion flag.
-        if (!empty($_POST['opendiscussion']))
+        if ($this->_conf['main']['opendiscussion'] && !empty($_POST['opendiscussion']))
         {
             $opendiscussion = $_POST['opendiscussion'];
             if ($opendiscussion != 0)
@@ -381,6 +402,7 @@ class zerobin
         // We escape it here because ENT_NOQUOTES can't be used in RainTPL templates.
         $page->assign('CIPHERDATA', htmlspecialchars($this->_data, ENT_NOQUOTES));
         $page->assign('ERRORMESSAGE', $this->_error);
+        $page->assign('OPENDISCUSSION', $this->_conf['main']['opendiscussion']);
         $page->assign('VERSION', self::VERSION);
         $page->draw('page');
     }

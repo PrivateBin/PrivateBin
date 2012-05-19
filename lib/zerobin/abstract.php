@@ -49,7 +49,7 @@ abstract class zerobin_abstract
      *
      * @access public
      * @static
-     * @return zerobin
+     * @return zerobin_abstract
      */
     abstract public static function getInstance($options);
 

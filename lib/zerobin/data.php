@@ -29,9 +29,9 @@ class zerobin_data extends zerobin_abstract
      *
      * @access public
      * @static
-     * @return zerobin
+     * @return zerobin_data
      */
-    public static function getInstance($options)
+    public static function getInstance($options = null)
     {
         // if given update the data directory
         if (
