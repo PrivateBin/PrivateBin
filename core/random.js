@@ -100,12 +100,21 @@ sjcl.random = {
       break;
       
     case "object":
-      if (Object.prototype.toString.call(data) !== "[object Array]") {
-        err = 1;
-      }
-      for (i=0; i<data.length && !err; i++) {
-        if (typeof(data[i]) != "number") {
+      var objName = Object.prototype.toString.call(data);
+      if (objName === "[object Uint32Array]") {
+        tmp = [];
+        for (i = 0; i < data.length; i++) {
+          tmp.push(data[i]);
+        }
+        data = tmp;
+      } else {
+        if (objName !== "[object Array]") {
           err = 1;
+        }
+        for (i=0; i<data.length && !err; i++) {
+          if (typeof(data[i]) != "number") {
+            err = 1;
+          }
         }
       }
       if (!err) {
