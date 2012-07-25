@@ -79,10 +79,10 @@ sjcl.random = {
     source = source || "user";
   
     var id,
-      i, ty = 0, tmp,
+      i, tmp,
       t = (new Date()).valueOf(),
       robin = this._robins[source],
-      oldReady = this.isReady();
+      oldReady = this.isReady(), err = 0;
       
     id = this._collectorIds[source];
     if (id === undefined) { id = this._collectorIds[source] = this._collectorIdNext ++; }
@@ -93,23 +93,44 @@ sjcl.random = {
     switch(typeof(data)) {
       
     case "number":
-      data=[data];
-      ty=1;
+      if (estimatedEntropy === undefined) {
+        estimatedEntropy = 1;
+      }
+      this._pools[robin].update([id,this._eventId++,1,estimatedEntropy,t,1,data|0]);
       break;
       
     case "object":
-      if (estimatedEntropy === undefined) {
-       /* horrible entropy estimator */
-       estimatedEntropy = 0;
-       for (i=0; i<data.length; i++) {
-          tmp= data[i];
-          while (tmp>0) {
-           estimatedEntropy++;
-           tmp = tmp >>> 1;
+      var objName = Object.prototype.toString.call(data);
+      if (objName === "[object Uint32Array]") {
+        tmp = [];
+        for (i = 0; i < data.length; i++) {
+          tmp.push(data[i]);
+        }
+        data = tmp;
+      } else {
+        if (objName !== "[object Array]") {
+          err = 1;
+        }
+        for (i=0; i<data.length && !err; i++) {
+          if (typeof(data[i]) != "number") {
+            err = 1;
           }
         }
       }
-      this._pools[robin].update([id,this._eventId++,ty||2,estimatedEntropy,t,data.length].concat(data));
+      if (!err) {
+        if (estimatedEntropy === undefined) {
+          /* horrible entropy estimator */
+          estimatedEntropy = 0;
+          for (i=0; i<data.length; i++) {
+            tmp= data[i];
+            while (tmp>0) {
+              estimatedEntropy++;
+              tmp = tmp >>> 1;
+            }
+          }
+        }
+        this._pools[robin].update([id,this._eventId++,2,estimatedEntropy,t,data.length].concat(data));
+      }
       break;
       
     case "string":
@@ -125,8 +146,10 @@ sjcl.random = {
       break;
       
     default:
-      
-      throw new sjcl.exception.bug("random: addEntropy only supports number, array or string");
+      err=1;
+    }
+    if (err) {
+      throw new sjcl.exception.bug("random: addEntropy only supports number, array of numbers or string");
     }
   
     /* record the new strength */
@@ -342,8 +365,7 @@ sjcl.random = {
   },
   
   _loadTimeCollector: function (ev) {
-    var d = new Date();
-    sjcl.random.addEntropy(d, 2, "loadtime");
+    sjcl.random.addEntropy((new Date()).valueOf(), 2, "loadtime");
   },
   
   _fireEvent: function (name, arg) {
