@@ -360,7 +360,7 @@ sjcl.random = {
   },
   
   _mouseCollector: function (ev) {
-    var x = ev.x || ev.clientX || ev.offsetX, y = ev.y || ev.clientY || ev.offsetY;
+    var x = ev.x || ev.clientX || ev.offsetX || 0, y = ev.y || ev.clientY || ev.offsetY || 0;
     sjcl.random.addEntropy([x,y], 2, "mouse");
   },
   
