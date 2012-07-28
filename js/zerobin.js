@@ -29,6 +29,69 @@ function secondsToHuman(seconds)
 }
 
 /**
+ * Converts an associative array to an encoded string
+ * for appending to the anchor.
+ *
+ * @param object associative_array Object to be serialized
+ * @return string
+ */
+function hashToParameterString(associativeArray)
+{
+  var parameterString = ""
+  for (key in associativeArray)
+  {
+    if( parameterString === "" )
+    {
+      parameterString = encodeURIComponent(key);
+      parameterString += "=" + encodeURIComponent(associativeArray[key]);
+    } else {
+      parameterString += "&" + encodeURIComponent(key);
+      parameterString += "=" + encodeURIComponent(associativeArray[key]);
+    }
+  }
+  //padding for URL shorteners
+  parameterString += "&p=p";
+  
+  return parameterString;
+}
+
+/**
+ * Converts a string to an associative array.
+ *
+ * @param string parameter_string String containing parameters
+ * @return object
+ */
+function parameterStringToHash(parameterString)
+{
+  var parameterHash = {};
+  var parameterArray = parameterString.split("&");
+  for (var i = 0; i < parameterArray.length; i++) {
+    //var currentParamterString = decodeURIComponent(parameterArray[i]);
+    var pair = parameterArray[i].split("=");
+    var key = decodeURIComponent(pair[0]);
+    var value = decodeURIComponent(pair[1]);
+    parameterHash[key] = value;
+  }
+  
+  return parameterHash;
+}
+
+/**
+ * Get an associative array of the parameters found in the anchor
+ *
+ * @return object
+ **/
+function getParameterHash()
+{
+  var hashIndex = window.location.href.indexOf("#");
+  if (hashIndex >= 0) {
+    return parameterStringToHash(window.location.href.substring(hashIndex + 1));
+  } else {
+    return {};
+  } 
+}
+
+/**
  * Compress a message (deflate compression). Returns base64 encoded data.
  *
  * @param string message
@@ -71,8 +134,13 @@ function zeroDecipher(key, data) {
  *   eg. http://server.com/zero/?aaaa#bbbb --> http://server.com/zero/
  */
 function scriptLocation() {
-    return window.location.href.substring(0,window.location.href.length
-               -window.location.search.length -window.location.hash.length);
+  var scriptLocation = window.location.href.substring(0,window.location.href.length
+    - window.location.search.length - window.location.hash.length);
+  var hashIndex = scriptLocation.indexOf("#");
+  if (hashIndex !== -1) {
+    scriptLocation = scriptLocation.substring(0, hashIndex)
+  }
+  return scriptLocation
 }
 
 /**
