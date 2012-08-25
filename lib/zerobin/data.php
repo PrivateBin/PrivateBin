@@ -37,13 +37,13 @@ class zerobin_data extends zerobin_abstract
         if (
         	is_array($options) &&
         	array_key_exists('dir', $options)
-        ) self::$_dir = $options['dir'] . '/';
+        ) self::$_dir = $options['dir'] . DIRECTORY_SEPARATOR;
         // if needed initialize the singleton
-        if(null === parent::$_instance) {
-            parent::$_instance = new self;
+        if(!(self::$_instance instanceof zerobin_data)) {
+            self::$_instance = new self;
             self::_init();
         }
-        return parent::$_instance;
+        return self::$_instance;
     }
 
     /**
@@ -59,7 +59,7 @@ class zerobin_data extends zerobin_abstract
         $storagedir = self::_dataid2path($pasteid);
         if (is_file($storagedir . $pasteid)) return false;
         if (!is_dir($storagedir)) mkdir($storagedir, 0705, true);
-        return file_put_contents($storagedir . $pasteid, json_encode($paste));
+        return (bool) file_put_contents($storagedir . $pasteid, json_encode($paste));
     }
 
     /**
@@ -67,13 +67,11 @@ class zerobin_data extends zerobin_abstract
      *
      * @access public
      * @param  string $pasteid
-     * @return string
+     * @return stdClass|false
      */
     public function read($pasteid)
     {
-        if(!$this->exists($pasteid)) return json_decode(
-            '{"data":"","meta":{"burnafterreading":true,"postdate":0}}'
-        );
+        if(!$this->exists($pasteid)) return false;
         return json_decode(
             file_get_contents(self::_dataid2path($pasteid) . $pasteid)
         );
@@ -193,7 +191,7 @@ class zerobin_data extends zerobin_abstract
     {
         return is_file(
             self::_dataid2discussionpath($pasteid) .
-            $pasteid . '.' . $dataid . '.' . $parentid
+            $pasteid . '.' . $commentid . '.' . $parentid
         );
     }
 

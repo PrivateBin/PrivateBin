@@ -39,18 +39,15 @@ class sjcl
         // Make sure required fields are present and contain base64 data.
         foreach($accepted_keys as $k)
         {
-            if (!array_key_exists($k, $decoded)) return false;
-            if (is_null(base64_decode($decoded[$k], $strict=true))) return false;
+            if (!(
+                array_key_exists($k, $decoded) &&
+                base64_decode($decoded[$k], $strict=true)
+            )) return false;
         }
 
         // Make sure no additionnal keys were added.
         if (
-            count(
-                array_intersect(
-                    array_keys($decoded),
-                    $accepted_keys
-                )
-            ) != 3
+            count(array_keys($decoded)) != count($accepted_keys)
         ) return false;
 
         // FIXME: Reject data if entropy is too low?

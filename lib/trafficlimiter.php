@@ -92,18 +92,19 @@ class trafficlimiter
         }
 
         require $file;
+        $now = time();
         $tl = $GLOBALS['traffic_limiter'];
 
         // purge file of expired IPs to keep it small
         foreach($tl as $key => $time)
         {
-            if ($time + 10 < time())
+            if ($time + self::$_limit < $now)
             {
                 unset($tl[$key]);
             }
         }
 
-        if (array_key_exists($ip, $tl) && ($tl[$ip] + 10 >= time()))
+        if (array_key_exists($ip, $tl) && ($tl[$ip] + self::$_limit >= $now))
         {
             $result = false;
         } else {

@@ -1,6 +1,7 @@
 # Ignore data/ and tmp/
 data/
 tmp/
+tst/log/
 .settings/
 .buildpath
 .project

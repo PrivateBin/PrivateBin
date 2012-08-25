@@ -32,14 +32,20 @@
 }
 
 /* Put a border around prettyprinted code snippets. */
-pre.prettyprint { padding: 2px; border: 1px solid #888; background-color:white; white-space:pre-wrap; }
+.prettyprint {
+	padding: 2px;
+	border: 1px solid #888;
+	background-color: white;
+	white-space: pre-wrap;
+	clear: both;
+}
 
 /* Specify class=linenums on a pre to get line numbering */
 ol.linenums {
-    color: black;
-    margin-top: 0;
-    margin-bottom: 0;
-    list-style: decimal outside;
+	color: black;
+	margin-top: 0;
+	margin-bottom: 0;
+	list-style: decimal outside;
 } /* IE indents via margin-left */
 /*
 li.L0,

@@ -94,7 +94,7 @@ function setElementText(element, text) {
     if ($('div#oldienotice').is(":visible")) {
         // IE<10 do not support white-space:pre-wrap; so we have to do this BIG UGLY STINKING THING.
         element.text(text.replace(/\n/ig,'{BIG_UGLY_STINKING_THING__OH_GOD_I_HATE_IE}'));
-        element.html(element.text().replace(/{BIG_UGLY_STINKING_THING__OH_GOD_I_HATE_IE}/ig,"\r\n<br>"));
+        element.html(element.text().replace(/{BIG_UGLY_STINKING_THING__OH_GOD_I_HATE_IE}/ig,"\n<br />"));
     }
     // for other (sane) browsers:
     else {
@@ -112,9 +112,9 @@ function displayMessages(key, comments) {
     try { // Try to decrypt the paste.
         var cleartext = zeroDecipher(key, comments[0].data);
     } catch(err) {
-        $('div#cleartext').hide();
-        $('div#prettymessage').hide();
-        $('button#clonebutton').hide();
+        $('div#cleartext').addClass('hidden');
+        $('div#prettymessage').addClass('hidden');
+        $('button#clonebutton').addClass('hidden');
         showError('Could not decrypt data (Wrong key ?)');
         return;
     }
@@ -127,7 +127,7 @@ function displayMessages(key, comments) {
     if (comments[0].meta.expire_date) $('div#remainingtime').removeClass('foryoureyesonly').text('This document will expire in '+secondsToHuman(comments[0].meta.remaining_time)+'.').show();
     if (comments[0].meta.burnafterreading) {
         $('div#remainingtime').addClass('foryoureyesonly').text('FOR YOUR EYES ONLY.  Don\'t close this window, this message can\'t be displayed again.').show();
-        $('button#clonebutton').hide(); // Discourage cloning (as it can't really be prevented).
+        $('button#clonebutton').addClass('hidden'); // Discourage cloning (as it can't really be prevented).
     }
 
     // If the discussion is opened on this paste, display it.
@@ -148,10 +148,10 @@ function displayMessages(key, comments) {
             if ($(cname).length) {
                 place = $(cname);
             }
-            var divComment = $('<div class="comment" id="comment_' + comment.meta.commentid+'">'
+            var divComment = $('<article><div class="comment" id="comment_' + comment.meta.commentid+'">'
                                + '<div class="commentmeta"><span class="nickname"></span><span class="commentdate"></span></div><div class="commentdata"></div>'
                                + '<button onclick="open_reply($(this),\'' + comment.meta.commentid + '\');return false;">Reply</button>'
-                               + '</div>');
+                               + '</div></article>');
             setElementText(divComment.find('div.commentdata'), cleartext);
             // Convert URLs to clickable links in comment.
             urls2links(divComment.find('div.commentdata'));
@@ -171,7 +171,7 @@ function displayMessages(key, comments) {
             place.append(divComment);
         }
         $('div#comments').append('<div class="comment"><button onclick="open_reply($(this),\'' + pasteID() + '\');return false;">Add comment</button></div>');
-        $('div#discussion').show();
+        $('div#discussion').removeClass('hidden');
     }
 }
 
@@ -185,8 +185,8 @@ function open_reply(source, commentid) {
     source.after('<div class="reply">'
                 + '<input type="text" id="nickname" title="Optional nickname..." value="Optional nickname..." />'
                 + '<textarea id="replymessage" class="replymessage" cols="80" rows="7"></textarea>'
-                + '<br><button id="replybutton" onclick="send_comment(\'' + commentid + '\');return false;">Post comment</button>'
-                + '<div id="replystatus">&nbsp;</div>'
+                + '<br /><button id="replybutton" onclick="send_comment(\'' + commentid + '\');return false;">Post comment</button>'
+                + '<div id="replystatus"> </div>'
                 + '</div>');
     $('input#nickname').focus(function() {
         if ($(this).val() == $(this).attr('title')) {
@@ -281,46 +281,46 @@ function send_data() {
  * Put the screen in "New paste" mode.
  */
 function stateNewPaste() {
-    $('button#sendbutton').show();
-    $('button#clonebutton').hide();
-    $('div#expiration').show();
-    $('div#remainingtime').hide();
-    $('div#language').hide(); // $('#language').show();
-    $('input#password').hide(); //$('#password').show();
-    $('div#opendisc').show();
-    $('button#newbutton').show();
-    $('div#pastelink').hide();
+    $('button#sendbutton').removeClass('hidden');
+    $('button#clonebutton').addClass('hidden');
+    $('div#expiration').removeClass('hidden');
+    $('div#remainingtime').addClass('hidden');
+    $('div#language').addClass('hidden'); // $('#language').removeClass('hidden');
+    $('input#password').addClass('hidden'); //$('#password').removeClass('hidden');
+    $('div#opendisc').removeClass('hidden');
+    $('button#newbutton').removeClass('hidden');
+    $('div#pastelink').addClass('hidden');
     $('textarea#message').text('');
-    $('textarea#message').show();
-    $('div#cleartext').hide();
-    $('div#message').focus();
-    $('div#discussion').hide();
-    $('div#prettymessage').hide();
+    $('textarea#message').removeClass('hidden');
+    $('div#cleartext').addClass('hidden');
+    $('textarea#message').focus();
+    $('div#discussion').addClass('hidden');
+    $('div#prettymessage').addClass('hidden');
 }
 
 /**
  * Put the screen in "Existing paste" mode.
  */
 function stateExistingPaste() {
-    $('button#sendbutton').hide();
+    $('button#sendbutton').addClass('hidden');
 
     // No "clone" for IE<10.
     if ($('div#oldienotice').is(":visible")) {
-        $('button#clonebutton').hide();
+        $('button#clonebutton').addClass('hidden');
     }
     else {
-        $('button#clonebutton').show();
+        $('button#clonebutton').removeClass('hidden');
     }
 
-    $('div#expiration').hide();
-    $('div#language').hide();
-    $('input#password').hide();
-    $('div#opendisc').hide();
-    $('button#newbutton').show();
-    $('div#pastelink').hide();
-    $('textarea#message').hide();
-    $('div#cleartext').hide();
-    $('div#prettymessage').show();
+    $('div#expiration').addClass('hidden');
+    $('div#language').addClass('hidden');
+    $('input#password').addClass('hidden');
+    $('div#opendisc').addClass('hidden');
+    $('button#newbutton').removeClass('hidden');
+    $('div#pastelink').addClass('hidden');
+    $('textarea#message').addClass('hidden');
+    $('div#cleartext').addClass('hidden');
+    $('div#prettymessage').removeClass('hidden');
 }
 
 /**
@@ -361,11 +361,11 @@ function showStatus(message, spin) {
     $('div#replystatus').removeClass('errorMessage');
     $('div#replystatus').text(message);
     if (!message) {
-        $('div#status').html('&nbsp');
+        $('div#status').html(' ');
         return;
     }
     if (message == '') {
-        $('div#status').html('&nbsp');
+        $('div#status').html(' ');
         return;
     }
     $('div#status').removeClass('errorMessage');
@@ -419,6 +419,9 @@ function pageKey() {
 }
 
 $(function() {
+    // hide "no javascript" message
+    $('#noscript').hide();
+
     $('select#pasteExpiration').change(function() {
         if ($(this).val() == 'burn') {
             $('div#opendisc').addClass('buttondisabled');
@@ -429,7 +432,6 @@ $(function() {
             $('input#opendiscussion').removeAttr('disabled');
         }
     });
-
 
     // Display an existing paste
     if ($('div#cipherdata').text().length > 1) {

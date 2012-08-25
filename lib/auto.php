@@ -29,7 +29,10 @@ class auto
      */
     public static function loader($class_name)
     {
-        require_once PATH . 'lib/' . str_replace('_', '/', $class_name) . '.php';
+        $filename = PATH . 'lib/' . str_replace('_', '/', $class_name) . '.php';
+        if(is_readable($filename)) {
+            return include $filename;
+        }
+        return false;
     }
 }
-

@@ -42,12 +42,12 @@ class filter
      */
     public static function size_humanreadable($size)
     {
-        $i = 0;
         $iec = array('B', 'kiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB');
-        while ( ( $size / 1024 ) > 1 ) {
+        $i = 0;
+        while ( ( $size / 1024 ) >= 1 ) {
                 $size = $size / 1024;
                 $i++;
         }
-        return number_format($size, 2, ".", " ") . ' ' . $iec[$i];
+        return number_format($size, ($i ? 2 : 0), '.', ' ') . ' ' . $iec[$i];
     }
 }

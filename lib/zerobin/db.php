@@ -56,8 +56,8 @@ class zerobin_db extends zerobin_abstract
     public static function getInstance($options = null)
     {
         // if needed initialize the singleton
-        if(null === self::$_instance) {
-            parent::$_instance = new self;
+        if(!(self::$_instance instanceof zerobin_db)) {
+            self::$_instance = new self;
         }
 
         if (is_array($options))
@@ -176,6 +176,16 @@ class zerobin_db extends zerobin_abstract
     public function create($pasteid, $paste)
     {
         if (
+        		array_key_exists($pasteid, self::$_cache)
+        ) {
+            if(false !== self::$_cache[$pasteid]) {
+                return false;
+            } else {
+                unset(self::$_cache[$pasteid]);
+            }
+        }
+
+        if (
             !array_key_exists('opendiscussion', $paste['meta'])
         ) $paste['meta']['opendiscussion'] = false;
         if (
@@ -199,31 +209,36 @@ class zerobin_db extends zerobin_abstract
      *
      * @access public
      * @param  string $pasteid
-     * @return string
+     * @return stdClass|false
      */
     public function read($pasteid)
     {
         if (
             !array_key_exists($pasteid, self::$_cache)
-        ) self::$_cache[$pasteid] = self::_select(
-            'SELECT * FROM ' . self::$_prefix . 'paste WHERE dataid = ?',
-            array($pasteid), true
-        );
+        ) {
+            self::$_cache[$pasteid] = false;
+            $paste = self::_select(
+                'SELECT * FROM ' . self::$_prefix . 'paste WHERE dataid = ?',
+                array($pasteid), true
+            );
 
-        // create object
-        $paste = new stdClass;
-        $paste->data = self::$_cache[$pasteid]['data'];
-        $paste->meta = new stdClass;
-        $paste->meta->postdate = (int) self::$_cache[$pasteid]['postdate'];
-        $paste->meta->expire_date = (int) self::$_cache[$pasteid]['expiredate'];
-        if (
-            self::$_cache[$pasteid]['opendiscussion']
-        ) $paste->meta->opendiscussion = true;
-        if (
-            self::$_cache[$pasteid]['burnafterreading']
-        ) $paste->meta->burnafterreading = true;
+            if(false !== $paste) {
+                // create object
+                self::$_cache[$pasteid] = new stdClass;
+                self::$_cache[$pasteid]->data = $paste['data'];
+                self::$_cache[$pasteid]->meta = new stdClass;
+                self::$_cache[$pasteid]->meta->postdate = (int) $paste['postdate'];
+                self::$_cache[$pasteid]->meta->expire_date = (int) $paste['expiredate'];
+                if (
+                    $paste['opendiscussion']
+                ) self::$_cache[$pasteid]->meta->opendiscussion = true;
+                if (
+                    $paste['burnafterreading']
+                ) self::$_cache[$pasteid]->meta->burnafterreading = true;
+            }
+        }
 
-        return $paste;
+        return self::$_cache[$pasteid];
     }
 
     /**
@@ -243,6 +258,9 @@ class zerobin_db extends zerobin_abstract
             'DELETE FROM ' . self::$_prefix . 'comment WHERE pasteid = ?',
             array($pasteid)
         );
+        if (
+        		array_key_exists($pasteid, self::$_cache)
+        ) unset(self::$_cache[$pasteid]);
     }
 
     /**
@@ -256,10 +274,7 @@ class zerobin_db extends zerobin_abstract
     {
         if (
             !array_key_exists($pasteid, self::$_cache)
-        ) self::$_cache[$pasteid] = self::_select(
-            'SELECT * FROM ' . self::$_prefix . 'paste WHERE dataid = ?',
-            array($pasteid), true
-        );
+        ) self::$_cache[$pasteid] = $this->read($pasteid);
         return (bool) self::$_cache[$pasteid];
     }
 
@@ -278,9 +293,9 @@ class zerobin_db extends zerobin_abstract
         return self::_exec(
             'INSERT INTO ' . self::$_prefix . 'comment VALUES(?,?,?,?,?,?,?)',
             array(
+                $commentid,
                 $pasteid,
                 $parentid,
-                $commentid,
                 $comment['data'],
                 $comment['meta']['nickname'],
                 $comment['meta']['vizhash'],

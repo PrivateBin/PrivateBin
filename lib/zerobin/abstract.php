@@ -51,7 +51,7 @@ abstract class zerobin_abstract
      * @static
      * @return zerobin_abstract
      */
-    abstract public static function getInstance($options);
+    public static function getInstance($options) {}
 
     /**
      * Create a paste.

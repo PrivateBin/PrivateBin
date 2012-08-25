@@ -1,0 +1,17 @@
+<phpunit bootstrap="bootstrap.php" colors="true">
+	<testsuite name="ZeroBin Test Suite">
+		<directory suffix=".php">./</directory>
+	</testsuite>
+	<filter>
+		<whitelist>
+			<directory suffix=".php">../lib</directory>
+			<exclude>
+				<file>../lib/zerobin/abstract.php</file>
+			</exclude>
+		</whitelist>
+	</filter>
+	<logging>
+		<log type="coverage-html" target="log/coverage-report" charset="UTF-8" yui="true" highlight="true" lowUpperBound="50" highLowerBound="80" />
+		<log type="testdox-html" target="log/testdox.html" />
+	</logging>
+</phpunit>
