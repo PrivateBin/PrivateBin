@@ -397,20 +397,13 @@ class zerobin
      */
     private function _view()
     {
-        // set headers to disable caching and return valid XHTML, if supported
-        $content = (
-            array_key_exists('HTTP_ACCEPT', $_SERVER) &&
-            !empty($_SERVER['HTTP_ACCEPT']) &&
-            stristr($_SERVER['HTTP_ACCEPT'], 'application/xhtml+xml') !== false
-        ) ? 'application/xhtml+xml' : 'text/html';
+        // set headers to disable caching
         $time = gmdate('D, d M Y H:i:s \G\M\T');
-
         header('Cache-Control: no-store, no-cache, must-revalidate');
         header('Pragma: no-cache');
         header('Expires: ' . $time);
         header('Last-Modified: ' . $time);
         header('Vary: Accept');
-        header('Content-Type: ' . $content . ';charset=UTF-8');
 
         $page = new RainTPL;
         // We escape it here because ENT_NOQUOTES can't be used in RainTPL templates.

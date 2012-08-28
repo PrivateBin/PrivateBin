@@ -7,8 +7,8 @@ For Administrators
 In the index.php in the main folder you can define a different PATH. This is 
 useful if you want to secure your installation and want to move the 
 configuration, data files, templates and PHP libraries (directories cfg, data, 
-lib and tpl) outside of your document root. This new location must still be 
-accessible to your webserver / PHP process.
+lib, tpl and tst) outside of your document root. This new location must still 
+be accessible to your webserver / PHP process.
 
 > ### PATH Example ###
 > Your zerobin installation lives in a subfolder called "paste" inside of your 

@@ -1347,7 +1347,7 @@ var REGEXP_PRECEDER_PATTERN = '(?:^^\\.?|[+-]|\\!|\\!=|\\!==|\\#|\\%|\\%=|&|&&|&
   function prettyPrint(opt_whenDone) {
     function byTagName(tn) { return document.getElementsByTagName(tn); }
     // fetch a list of nodes to rewrite
-    var codeSegments = [byTagName('pre'), byTagName('code'), byTagName('xmp'), byTagName('div')];
+    var codeSegments = [byTagName('pre'), byTagName('code'), byTagName('xmp')];
     var elements = [];
     for (var i = 0; i < codeSegments.length; ++i) {
       for (var j = 0, n = codeSegments[i].length; j < n; ++j) {

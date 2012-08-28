@@ -124,9 +124,9 @@ function displayMessages(key, comments) {
     prettyPrint();
 
     // Display paste expiration.
-    if (comments[0].meta.expire_date) $('div#remainingtime').removeClass('foryoureyesonly').text('This document will expire in '+secondsToHuman(comments[0].meta.remaining_time)+'.').show();
+    if (comments[0].meta.expire_date) $('div#remainingtime').removeClass('foryoureyesonly').text('This document will expire in '+secondsToHuman(comments[0].meta.remaining_time)+'.').removeClass('hidden');
     if (comments[0].meta.burnafterreading) {
-        $('div#remainingtime').addClass('foryoureyesonly').text('FOR YOUR EYES ONLY.  Don\'t close this window, this message can\'t be displayed again.').show();
+        $('div#remainingtime').addClass('foryoureyesonly').text('FOR YOUR EYES ONLY.  Don\'t close this window, this message can\'t be displayed again.').removeClass('hidden');
         $('button#clonebutton').addClass('hidden'); // Discourage cloning (as it can't really be prevented).
     }
 
@@ -261,7 +261,7 @@ function send_data() {
                 stateExistingPaste();
                 var url = scriptLocation() + "?" + data.id + '#' + randomkey;
                 showStatus('');
-                $('div#pastelink').html('Your paste is <a href="' + url + '">' + url + '</a>').show();
+                $('div#pastelink').html('Your paste is <a href="' + url + '">' + url + '</a>').removeClass('hidden');
                 setElementText($('div#cleartext'), $('textarea#message').val());
                 setElementText($('pre#prettyprint'), $('textarea#message').val());
                 urls2links($('div#cleartext'));

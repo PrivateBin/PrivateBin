@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 	<head>
@@ -6,13 +5,13 @@
 		<title>ZeroBin</title>
 		<link type="text/css" rel="stylesheet" href="css/zerobin.css?{$VERSION|rawurlencode}#" /> 
 		<link type="text/css" rel="stylesheet" href="css/prettify.css?{$VERSION|rawurlencode}#" />
-		<script src="js/jquery.js#"></script>
-		<script src="js/sjcl.js#"></script>
-		<script src="js/base64.js#"></script>
-		<script src="js/rawdeflate.js#"></script>
-		<script src="js/rawinflate.js#"></script>
-		<script src="js/prettify.js#"></script>
-		<script src="js/zerobin.js?{$VERSION|rawurlencode}#"></script>
+		<script type="text/javascript" src="js/jquery.js#"></script>
+		<script type="text/javascript" src="js/sjcl.js#"></script>
+		<script type="text/javascript" src="js/base64.js#"></script>
+		<script type="text/javascript" src="js/rawdeflate.js#"></script>
+		<script type="text/javascript" src="js/rawinflate.js#"></script>
+		<script type="text/javascript" src="js/prettify.js#"></script>
+		<script type="text/javascript" src="js/zerobin.js?{$VERSION|rawurlencode}#"></script>
 		<!--[if lt IE 10]>
 		<style> body {padding-left:60px;padding-right:60px;} div#ienotice {display:block;} </style>
 		<![endif]-->
@@ -46,9 +45,9 @@
 				<div id="status"> </div>
 				<div id="errormessage" class="hidden">{$ERRORMESSAGE|htmlspecialchars}</div>
 				<div id="toolbar">
-					<button id="newbutton" onclick="window.location.href=scriptLocation();return false;" class="hidden"><img src="img/icon_new.png#" width="11" height="15" />New</button>
-					<button id="sendbutton" onclick="send_data();return false;" class="hidden"><img src="img/icon_send.png#" width="18" height="15" />Send</button>
-					<button id="clonebutton" onclick="clonePaste();return false;" class="hidden"><img src="img/icon_clone.png#" width="15" height="17" />Clone</button>
+					<button id="newbutton" onclick="window.location.href=scriptLocation();return false;" class="hidden"><img src="img/icon_new.png#" width="11" height="15" alt="" />New</button>
+					<button id="sendbutton" onclick="send_data();return false;" class="hidden"><img src="img/icon_send.png#" width="18" height="15" alt="" />Send</button>
+					<button id="clonebutton" onclick="clonePaste();return false;" class="hidden"><img src="img/icon_clone.png#" width="15" height="17" alt="" />Clone</button>
 		      <div id="expiration" class="hidden">Expire: 
 			      <select id="pasteExpiration" name="pasteExpiration">
 							<option value="burn">Burn after reading</option>
@@ -72,14 +71,14 @@
 						</select>
 					</div>
 					<input id="password" value="Optional password..." class="hidden" />
-					<div id="opendisc" class="button" class="hidden">
+					<div id="opendisc" class="button hidden">
 						<input type="checkbox" id="opendiscussion" name="opendiscussion" {if="!$OPENDISCUSSION"} disabled="disabled"{/if} />
 						<label for="opendiscussion">Open discussion</label>
 					</div>
 				</div>
 				<div id="pastelink" class="hidden"></div>
 				<div id="prettymessage" class="hidden">
-					<div id="prettyprint" class="prettyprint linenums:1"></div>
+					<pre id="prettyprint" class="prettyprint linenums:1"></pre>
 				</div>
 				<div id="cleartext" class="hidden"></div>
 				<textarea id="message" name="message" cols="80" rows="25" class="hidden"></textarea>
