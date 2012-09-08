@@ -36,25 +36,26 @@ class sjcl
         if (is_null($decoded)) return false;
         $decoded = (array) $decoded;
 
-        // Make sure required fields are present and contain base64 data.
-        foreach($accepted_keys as $k)
-        {
-            if (!(
-                array_key_exists($k, $decoded) &&
-                base64_decode($decoded[$k], $strict=true)
-            )) return false;
-        }
-
         // Make sure no additionnal keys were added.
         if (
             count(array_keys($decoded)) != count($accepted_keys)
         ) return false;
 
-        // FIXME: Reject data if entropy is too low?
+        // Make sure required fields are present and contain base64 data.
+        foreach($accepted_keys as $k)
+        {
+            if (!(
+                array_key_exists($k, $decoded) &&
+                $ct = base64_decode($decoded[$k], $strict=true)
+            )) return false;
+        }
 
         // Make sure some fields have a reasonable size.
         if (strlen($decoded['iv']) > 24) return false;
         if (strlen($decoded['salt']) > 14) return false;
+
+        // Reject data if entropy is too low
+        if (strlen($ct) > strlen(gzdeflate($ct))) return false;
 
         return true;
     }
