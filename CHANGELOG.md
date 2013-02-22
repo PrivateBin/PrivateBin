@@ -40,12 +40,12 @@
   * **Alpha 0.15 (2012-04-20):**
     * FIXED: 2 minor corrections to avoid notices in php log.
     * FIXED: Sources converted to UTF-8.
-  * ** Alpha 0.16: **:
+  * **Alpha 0.16**:
     * FIXED minor php warnings.
     * FIXED: zerobin.js reformated and properly commented.
     * FIXED: Directory structure re-organized.
     * CHANGED: URL shortening button was removed. (It was bad for privacy.)
-  * ** Alpha 0.17 (2013-02-23): **:
+  * **Alpha 0.17 (2013-02-23)**:
     * ADDED: Deletion URL.
     * small refactoring.
     * improved regex checks.
