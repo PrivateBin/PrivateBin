@@ -111,11 +111,13 @@ h3 {
 
 #pasteresult a { color: #fff; }
 
-#pasteresult button { margin-left: 11px }
+#pasteresult button { margin-left: 11px; }
 
 #deletelink { float: right; }
 
 #toolbar, #status { margin-bottom: 5px; }
+
+#copyhint { color: #666; font-size: 0.85em; }
 
 button, .button, #expiration, #language {
 	color: #fff;

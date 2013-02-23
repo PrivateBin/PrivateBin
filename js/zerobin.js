@@ -118,6 +118,7 @@ function decompress(data) {
 function zeroCipher(key, message) {
     return sjcl.encrypt(key,compress(message));
 }
+
 /**
  *  Decrypt message with key, then decompress.
  *
@@ -288,22 +289,22 @@ function send_comment(parentid) {
                        };
 
     $.post(scriptLocation(), data_to_send, 'json')
-        .error(function() {
-            showError('Comment could not be sent (serveur error or not responding).');
-        })
-        .success(function(data) {
-            if (data.status == 0) {
-                showStatus('Comment posted.');
-                location.reload();
-            }
-            else if (data.status==1) {
-                showError('Could not post comment: '+data.message);
-            }
-            else {
-                showError('Could not post comment.');
-            }
-        });
-    }
+    .error(function() {
+        showError('Comment could not be sent (serveur error or not responding).');
+    })
+    .success(function(data) {
+        if (data.status == 0) {
+            showStatus('Comment posted.');
+            location.reload();
+        }
+        else if (data.status==1) {
+            showError('Could not post comment: '+data.message);
+        }
+        else {
+            showError('Could not post comment.');
+        }
+    });
+}
 
 /**
  *  Send a new paste to server
@@ -321,33 +322,56 @@ function send_data() {
                          opendiscussion: $('input#opendiscussion').is(':checked') ? 1 : 0
                        };
     $.post(scriptLocation(), data_to_send, 'json')
-        .error(function() {
-            showError('Data could not be sent (serveur error or not responding).');
-        })
-        .success(function(data) {
-            if (data.status == 0) {
-                stateExistingPaste();
-                var url = scriptLocation() + "?" + data.id + '#' + randomkey;
-                var deleteUrl = scriptLocation() + "?pasteid=" + data.id + '&deletetoken=' + data.deletetoken;
-                showStatus('');
+    .error(function() {
+        showError('Data could not be sent (serveur error or not responding).');
+    })
+    .success(function(data) {
+        if (data.status == 0) {
+            stateExistingPaste();
+            var url = scriptLocation() + "?" + data.id + '#' + randomkey;
+            var deleteUrl = scriptLocation() + "?pasteid=" + data.id + '&deletetoken=' + data.deletetoken;
+            showStatus('');
 
-                $('div#pastelink').html('Your paste is <a href="' + url + '">' + url + '</a>');
-                $('div#deletelink').html('<a href="' + deleteUrl + '">Delete link</a>');
-                $('div#pasteresult').show();
+            $('div#pastelink').html('Your paste is <a id="pasteurl" href="' + url + '">' + url + '</a> <span id="copyhint">(Hit CTRL+C to copy)</span>');
+            $('div#deletelink').html('<a href="' + deleteUrl + '">Delete link</a>');
+            $('div#pasteresult').show();
+            selectText('pasteurl'); // We pre-select the link so that the user only has to CTRL+C the link.
 
-                setElementText($('div#cleartext'), $('textarea#message').val());
-                setElementText($('pre#prettyprint'), $('textarea#message').val());
-                urls2links($('div#cleartext'));
-                showStatus('');
-                prettyPrint();
-            }
-            else if (data.status==1) {
-                showError('Could not create paste: '+data.message);
-            }
-            else {
-                showError('Could not create paste.');
-            }
-        });
+            setElementText($('div#cleartext'), $('textarea#message').val());
+            setElementText($('pre#prettyprint'), $('textarea#message').val());
+            urls2links($('div#cleartext'));
+            showStatus('');
+            prettyPrint();
+        }
+        else if (data.status==1) {
+            showError('Could not create paste: '+data.message);
+        }
+        else {
+            showError('Could not create paste.');
+        }
+    });
+}
+
+/** Text range selection.
+ *  From: http://stackoverflow.com/questions/985272/jquery-selecting-text-in-an-element-akin-to-highlighting-with-your-mouse
+ *  @param string element : Indentifier of the element to select (id="").
+ */
+function selectText(element) {
+    var doc = document
+        , text = doc.getElementById(element)
+        , range, selection
+    ;    
+    if (doc.body.createTextRange) { //ms
+        range = doc.body.createTextRange();
+        range.moveToElementText(text);
+        range.select();
+    } else if (window.getSelection) { //all others
+        selection = window.getSelection();        
+        range = doc.createRange();
+        range.selectNodeContents(text);
+        selection.removeAllRanges();
+        selection.addRange(range);
+    }
 }
 
 /**
