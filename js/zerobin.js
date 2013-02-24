@@ -161,7 +161,7 @@ function pasteID() {
 function setElementText(element, text) {
     // For IE<10.
     if ($('div#oldienotice').is(":visible")) {
-        // IE<10 do not support white-space:pre-wrap; so we have to do this BIG UGLY STINKING THING.
+        // IE<10 does not support white-space:pre-wrap; so we have to do this BIG UGLY STINKING THING.
         element.text(text.replace(/\n/ig,'{BIG_UGLY_STINKING_THING__OH_GOD_I_HATE_IE}'));
         element.html(element.text().replace(/{BIG_UGLY_STINKING_THING__OH_GOD_I_HATE_IE}/ig,"\n<br />"));
     }
@@ -306,6 +306,7 @@ function send_comment(parentid) {
     });
 }
 
+
 /**
  *  Send a new paste to server
  */
@@ -314,7 +315,17 @@ function send_data() {
     if ($('textarea#message').val().length == 0) {
         return;
     }
+
+    // If sjcl has not collected enough entropy yet, display a message.
+    if (!sjcl.random.isReady())
+    {
+        showStatus('Sending paste (Please move your mouse for more entropy)...', spin=true);
+        sjcl.random.addEventListener('seeded', function(){ send_data(); }); 
+        return; 
+    }
+    
     showStatus('Sending paste...', spin=true);
+
     var randomkey = sjcl.codec.base64.fromBits(sjcl.random.randomWords(8, 0), 0);
     var cipherdata = zeroCipher(randomkey, $('textarea#message').val());
     var data_to_send = { data:           cipherdata,
