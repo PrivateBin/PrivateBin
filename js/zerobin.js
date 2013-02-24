@@ -383,8 +383,6 @@ function stateNewPaste() {
     $('button#clonebutton').addClass('hidden');
     $('div#expiration').removeClass('hidden');
     $('div#remainingtime').addClass('hidden');
-    $('div#language').addClass('hidden'); // $('#language').removeClass('hidden');
-    $('input#password').addClass('hidden'); //$('#password').removeClass('hidden');
     $('div#burnafterreadingoption').removeClass('hidden');
     $('div#opendisc').removeClass('hidden');
     $('button#newbutton').removeClass('hidden');
@@ -412,8 +410,6 @@ function stateExistingPaste() {
     }
 
     $('div#expiration').addClass('hidden');
-    $('div#language').addClass('hidden');
-    $('input#password').addClass('hidden');
     $('div#burnafterreadingoption').addClass('hidden');
     $('div#opendisc').addClass('hidden');
     $('button#newbutton').removeClass('hidden');

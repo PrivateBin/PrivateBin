@@ -119,7 +119,7 @@ h3 {
 
 #copyhint { color: #666; font-size: 0.85em; }
 
-button, .button, #expiration, #language {
+button, .button, #expiration {
 	color: #fff;
 	background-color: #323b47;
 	background-repeat: no-repeat;
@@ -178,7 +178,7 @@ button img {
 	top: 2px;
 }
 
-#expiration, #language, #burnafterreadingoption, #opendisc { 
+#expiration, #burnafterreadingoption, #opendisc { 
 	background-color: #414d5a; 
 	padding: 6px 8px;
 	margin: 0 5px 0 0;
@@ -186,14 +186,14 @@ button img {
 	bottom: 1px; /* WTF ? Why is this shifted by 1 pixel ? */
 }
 
-#expiration select, #language select {
+#expiration select {
 	color: #eee;
 	background: transparent;
 	border: none;
 }
 
 
-#expiration select option, #language select option {
+#expiration select option {
 	color:#eee;
 	background: #414d5a;
 }
