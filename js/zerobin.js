@@ -319,6 +319,7 @@ function send_data() {
     var cipherdata = zeroCipher(randomkey, $('textarea#message').val());
     var data_to_send = { data:           cipherdata,
                          expire:         $('select#pasteExpiration').val(),
+                         burnafterreading: $('input#burnafterreading').is(':checked') ? 1 : 0,
                          opendiscussion: $('input#opendiscussion').is(':checked') ? 1 : 0
                        };
     $.post(scriptLocation(), data_to_send, 'json')
@@ -384,6 +385,7 @@ function stateNewPaste() {
     $('div#remainingtime').addClass('hidden');
     $('div#language').addClass('hidden'); // $('#language').removeClass('hidden');
     $('input#password').addClass('hidden'); //$('#password').removeClass('hidden');
+    $('div#burnafterreadingoption').removeClass('hidden');
     $('div#opendisc').removeClass('hidden');
     $('button#newbutton').removeClass('hidden');
     $('div#pasteresult').addClass('hidden');
@@ -412,6 +414,7 @@ function stateExistingPaste() {
     $('div#expiration').addClass('hidden');
     $('div#language').addClass('hidden');
     $('input#password').addClass('hidden');
+    $('div#burnafterreadingoption').addClass('hidden');
     $('div#opendisc').addClass('hidden');
     $('button#newbutton').removeClass('hidden');
     $('div#pasteresult').addClass('hidden');
@@ -523,9 +526,11 @@ $(function() {
     // hide "no javascript" message
     $('#noscript').hide();
 
-    $('select#pasteExpiration').change(function() {
-        if ($(this).val() == 'burn') {
+    // If "burn after reading" is checked, disable discussion.
+    $('input#burnafterreading').change(function() {
+        if ($(this).is(':checked') ) { 
             $('div#opendisc').addClass('buttondisabled');
+            $('input#opendiscussion').attr({checked: false});
             $('input#opendiscussion').attr('disabled',true);
         }
         else {

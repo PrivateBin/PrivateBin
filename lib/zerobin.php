@@ -191,14 +191,23 @@ class zerobin
         // Read expiration date
         if (!empty($_POST['expire']))
         {
-            if ($_POST['expire'] == 'burn') {
-                $meta['burnafterreading'] = true;
-            } elseif (array_key_exists($_POST['expire'], $this->_conf['expire_options'])) {
+            if (array_key_exists($_POST['expire'], $this->_conf['expire_options'])) {
                 $expire = $this->_conf['expire_options'][$_POST['expire']];
             } else {
                 $expire = $this->_conf['expire_options'][$this->_conf['expire']['default']];
             }
             if ($expire > 0) $meta['expire_date'] = time() + $expire;
+        }
+        
+        // Destroy the paste when it is read.
+        if (!empty($_POST['burnafterreading']))
+        {
+            $burnafterreading = $_POST['burnafterreading'];
+            if ($burnafterreading != '0')
+            {
+                if ($burnafterreading != '1') $error = true;
+                $meta['burnafterreading'] = true;
+            }
         }
 
         // Read open discussion flag.

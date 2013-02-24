@@ -178,7 +178,7 @@ button img {
 	top: 2px;
 }
 
-#expiration, #language, #opendisc { 
+#expiration, #language, #burnafterreadingoption, #opendisc { 
 	background-color: #414d5a; 
 	padding: 6px 8px;
 	margin: 0 5px 0 0;
