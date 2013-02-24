@@ -381,6 +381,7 @@ function selectText(element) {
 function stateNewPaste() {
     $('button#sendbutton').removeClass('hidden');
     $('button#clonebutton').addClass('hidden');
+    $('button#rawtextbutton').addClass('hidden');
     $('div#expiration').removeClass('hidden');
     $('div#remainingtime').addClass('hidden');
     $('div#burnafterreadingoption').removeClass('hidden');
@@ -408,6 +409,7 @@ function stateExistingPaste() {
     else {
         $('button#clonebutton').removeClass('hidden');
     }
+    $('button#rawtextbutton').show();
 
     $('div#expiration').addClass('hidden');
     $('div#burnafterreadingoption').addClass('hidden');
@@ -417,6 +419,17 @@ function stateExistingPaste() {
     $('textarea#message').addClass('hidden');
     $('div#cleartext').addClass('hidden');
     $('div#prettymessage').removeClass('hidden');
+}
+
+/** Return raw text
+  */
+function rawText()
+{
+    history.replaceState(document.title, document.title, 'document.txt');
+    var paste = $('div#cleartext').text();
+    var newDoc = document.open('text/plain', 'replace');
+    newDoc.write(paste);
+    newDoc.close();
 }
 
 /**

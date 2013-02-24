@@ -178,7 +178,7 @@ button img {
 	top: 2px;
 }
 
-#expiration, #burnafterreadingoption, #opendisc { 
+#expiration, #rawtextbutton, #burnafterreadingoption, #opendisc { 
 	background-color: #414d5a; 
 	padding: 6px 8px;
 	margin: 0 5px 0 0;
@@ -196,6 +196,10 @@ button img {
 #expiration select option {
 	color:#eee;
 	background: #414d5a;
+}
+
+#rawtextbutton img {
+	padding: 1px 0 1px 0;
 }
 
 #remainingtime {
