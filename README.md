@@ -1,4 +1,4 @@
-ZeroBin 0.18 Alpha
+ZeroBin 0.19 Alpha
 
 ==== THIS IS ALPHA SOFTWARE - USE AT YOUR OWN RISKS ====
 

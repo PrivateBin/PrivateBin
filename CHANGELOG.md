@@ -63,4 +63,7 @@
     * ADDED: Better json checking (including entropy).
     * ADDED: Added version to js/css assets URLs in order to prevent some abusive caches to serve an obsolete version of these files when ZeroBin is upgraded.
     * "Burn after reading" option has been moved out of Expiration combo to a separate checkbox. Reason is: You can prevent a read-once paste to be available ad vitam eternam on the net.
+  * **Alpha 0.19 (2013-07-05)**:
+    * Corrected XSS security flaw which affected IE<10. Other browsers were not affected.
+    * Corrected spacing display in IE<10.
 

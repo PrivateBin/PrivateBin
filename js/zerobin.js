@@ -6,7 +6,7 @@
  * @link      http://sebsauvage.net/wiki/doku.php?id=php:zerobin
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   http://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
- * @version   0.18
+ * @version   0.19
  */
 
 // Immediately start random number generator collector.
@@ -152,6 +152,9 @@ function pasteID() {
     return window.location.search.substring(1);
 }
 
+function htmlEntities(str) {
+    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
 /**
  * Set text of a DOM element (required for IE)
  * This is equivalent to element.text(text)
@@ -162,8 +165,8 @@ function setElementText(element, text) {
     // For IE<10.
     if ($('div#oldienotice').is(":visible")) {
         // IE<10 does not support white-space:pre-wrap; so we have to do this BIG UGLY STINKING THING.
-        element.text(text.replace(/\n/ig,'{BIG_UGLY_STINKING_THING__OH_GOD_I_HATE_IE}'));
-        element.html(element.text().replace(/{BIG_UGLY_STINKING_THING__OH_GOD_I_HATE_IE}/ig,"\n<br />"));
+        var html = htmlEntities(text).replace(/\n/ig,"\r\n<br>");
+        element.html('<pre>'+html+'</pre>');
     }
     // for other (sane) browsers:
     else {
