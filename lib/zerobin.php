@@ -272,8 +272,8 @@ class zerobin
             $pasteid  = $_POST['pasteid'];
             $parentid = $_POST['parentid'];
             if (
-                !preg_match('/\A[a-f\d]{16}\z/', $pasteid) ||
-                !preg_match('/\A[a-f\d]{16}\z/', $parentid)
+                !preg_match('#\A[a-f\d]{16}\z#', $pasteid) ||
+                !preg_match('#\A[a-f\d]{16}\z#', $parentid)
             ) $this->_return_message(1, 'Invalid data.');
 
             // Comments do not expire (it's the paste that expires)
@@ -340,7 +340,7 @@ class zerobin
     private function _delete($dataid, $deletetoken)
     {
         // Is this a valid paste identifier?
-        if (preg_match('\A[a-f\d]{16}\z', $dataid))
+        if (preg_match('#\A[a-f\d]{16}\z#', $dataid))
         {
             // Check that paste exists.
             if (!$this->_model()->exists($dataid))
@@ -425,6 +425,10 @@ class zerobin
             {
                 $this->_error = 'Paste does not exist or has expired.';
             }
+        }
+        else
+        {
+            $this->_error = 'Invalid paste ID.';
         }
     }
 
