@@ -105,7 +105,7 @@ abstract class persistence
     {
         self::_initialize();
         $file = self::$_path . '/' . $filename;
-        file_put_contents($file, $data);
+        file_put_contents($file, $data, LOCK_EX);
         chmod($file, 0705);
         return $file;
     }
