@@ -51,15 +51,8 @@
 					<button id="clonebutton" onclick="clonePaste();return false;" class="hidden"><img src="img/icon_clone.png#" width="15" height="17" alt="" />Clone</button>
 		      <div id="expiration" class="hidden">Expire: 
 			      <select id="pasteExpiration" name="pasteExpiration">
-							<option value="burn">Burn after reading</option>
-							<option value="5min">5 minutes</option>
-							<option value="10min">10 minutes</option>
-							<option value="1hour">1 hour</option>
-							<option value="1day">1 day</option>
-							<option value="1week">1 week</option>
-							<option value="1month" selected="selected">1 month</option>
-							<option value="1year">1 year</option>
-							<option value="never">Never</option>
+							<option value="burn"{if="$BURNAFTERREADINGSELECTED"} selected="selected"{/if}>Burn after reading</option>{loop="EXPIRE"}
+							<option value="{$key}"{if="!$BURNAFTERREADINGSELECTED && $key == $EXPIREDEFAULT"} selected="selected"{/if}>{$value}</option>{/loop}
 						</select>
 					</div>
 					<div id="remainingtime" class="hidden"></div>

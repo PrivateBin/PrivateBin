@@ -180,32 +180,14 @@ class zerobin
         // Read expiration date
         if (!empty($_POST['expire']))
         {
-            switch ($_POST['expire'])
-            {
-                case 'burn':
-                    $meta['burnafterreading'] = true;
-                    break;
-                case '5min':
-                    $meta['expire_date'] = time()+5*60;
-                    break;
-                case '10min':
-                    $meta['expire_date'] = time()+10*60;
-                    break;
-                case '1hour':
-                    $meta['expire_date'] = time()+60*60;
-                    break;
-                case '1day':
-                    $meta['expire_date'] = time()+24*60*60;
-                    break;
-                case '1week':
-                    $meta['expire_date'] = time()+7*24*60*60;
-                    break;
-                case '1month':
-                    $meta['expire_date'] = strtotime('+1 month');
-                    break;
-                case '1year':
-                    $meta['expire_date'] = strtotime('+1 year');
+            if ($_POST['expire'] == 'burn') {
+                $meta['burnafterreading'] = true;
+            } elseif (array_key_exists($_POST['expire'], $this->_conf['expire_options'])) {
+                $expire = $this->_conf['expire_options'][$_POST['expire']];
+            } else {
+                $expire = $this->_conf['expire_options'][$this->_conf['expire']['default']];
             }
+            if ($expire > 0) $meta['expire_date'] = time() + $expire;
         }
 
         // Read open discussion flag.
@@ -405,12 +387,24 @@ class zerobin
         header('Last-Modified: ' . $time);
         header('Vary: Accept');
 
+        // label all the expiration options
+        $expire = array();
+        foreach ($this->_conf['expire_options'] as $key => $value) {
+            $expire[$key] = array_key_exists($key, $this->_conf['expire_labels']) ?
+                $this->_conf['expire_labels'][$key] :
+                $key;
+        }
+
         $page = new RainTPL;
-        // We escape it here because ENT_NOQUOTES can't be used in RainTPL templates.
+        // we escape it here because ENT_NOQUOTES can't be used in RainTPL templates
         $page->assign('CIPHERDATA', htmlspecialchars($this->_data, ENT_NOQUOTES));
         $page->assign('ERRORMESSAGE', $this->_error);
-        $page->assign('OPENDISCUSSION', $this->_conf['main']['opendiscussion']);
         $page->assign('VERSION', self::VERSION);
+        $page->assign('BURNAFTERREADINGSELECTED', $this->_conf['main']['burnafterreadingselected']);
+        $page->assign('OPENDISCUSSION', $this->_conf['main']['opendiscussion']);
+        $page->assign('SYNTAXHIGHLIGHTING', $this->_conf['main']['syntaxhighlighting']);
+        $page->assign('EXPIRE', $expire);
+        $page->assign('EXPIREDEFAULT', $this->_conf['expire']['default']);
         $page->draw('page');
     }
 

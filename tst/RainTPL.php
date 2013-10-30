@@ -5,6 +5,14 @@ class RainTPLTest extends PHPUnit_Framework_TestCase
 
     private static $error = 'foo bar';
 
+    private static $expire = array(
+        '5min' => '5 minutes',
+        '1hour' => '1 hour',
+        'never' => 'Never',
+    );
+
+    private static $expire_default = '1hour';
+
     private static $version = 'Version 1.2.3';
 
     private $_content;
@@ -14,11 +22,17 @@ class RainTPLTest extends PHPUnit_Framework_TestCase
         /* Setup Routine */
         $page = new RainTPL;
         $page::configure(array('cache_dir' => 'tmp/'));
+
+        $page = new RainTPL;
         // We escape it here because ENT_NOQUOTES can't be used in RainTPL templates.
         $page->assign('CIPHERDATA', htmlspecialchars(self::$data, ENT_NOQUOTES));
         $page->assign('ERRORMESSAGE', self::$error);
-        $page->assign('OPENDISCUSSION', false);
         $page->assign('VERSION', self::$version);
+        $page->assign('BURNAFTERREADINGSELECTED', false);
+        $page->assign('OPENDISCUSSION', false);
+        $page->assign('SYNTAXHIGHLIGHTING', true);
+        $page->assign('EXPIRE', self::$expire);
+        $page->assign('EXPIREDEFAULT', self::$expire_default);
         ob_start();
         $page->draw('page');
         $this->_content = ob_get_contents();

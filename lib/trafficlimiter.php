@@ -69,6 +69,9 @@ class trafficlimiter
      */
     public static function canPass($ip)
     {
+    	// disable limits if set to less then 1
+    	if (self::$_limit < 1) return true;
+
         // Create storage directory if it does not exist.
         if (!is_dir(self::$_path)) mkdir(self::$_path, 0705);
         // Create .htaccess file if it does not exist.
