@@ -315,7 +315,7 @@ class zerobin
         $dataid = $_SERVER['QUERY_STRING'];
 
         // Is this a valid paste identifier?
-        if (preg_match('/[a-f\d]{16}/', $dataid))
+        if (preg_match('\A[a-f\d]{16}\z', $dataid))
         {
             // Check that paste exists.
             if ($this->_model()->exists($dataid))
