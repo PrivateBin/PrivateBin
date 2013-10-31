@@ -405,7 +405,7 @@ class zerobin
         $page->assign('SYNTAXHIGHLIGHTING', $this->_conf['main']['syntaxhighlighting']);
         $page->assign('EXPIRE', $expire);
         $page->assign('EXPIREDEFAULT', $this->_conf['expire']['default']);
-        $page->draw('page');
+        $page->draw($this->_conf['main']['template']);
     }
 
     /**
