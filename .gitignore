@@ -1,7 +1,11 @@
 # Ignore data/ and tmp/
 data/
 tmp/
+# Ignore unit testing logs and eclipse project files
 tst/log/
 .settings/
 .buildpath
 .project
+# Ignore for safety
+.htaccess
+.htpasswd
