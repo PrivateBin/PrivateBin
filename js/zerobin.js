@@ -6,7 +6,7 @@
  * @link      http://sebsauvage.net/wiki/doku.php?id=php:zerobin
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   http://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
- * @version   0.15
+ * @version   0.17
  */
 
 // Immediately start random number generator collector.
@@ -328,8 +328,13 @@ function send_data() {
             if (data.status == 0) {
                 stateExistingPaste();
                 var url = scriptLocation() + "?" + data.id + '#' + randomkey;
+                var deleteUrl = scriptLocation() + "?pasteid=" + data.id + '&deletetoken=' + data.deletetoken;
                 showStatus('');
-                $('div#pastelink').html('Your paste is <a href="' + url + '">' + url + '</a>').removeClass('hidden');
+
+                $('div#pastelink').html('Your paste is <a href="' + url + '">' + url + '</a>');
+                $('div#deletelink').html('<a href="' + deleteUrl + '">Delete link</a>');
+                $('div#pasteresult').show();
+
                 setElementText($('div#cleartext'), $('textarea#message').val());
                 setElementText($('pre#prettyprint'), $('textarea#message').val());
                 urls2links($('div#cleartext'));
@@ -357,7 +362,7 @@ function stateNewPaste() {
     $('input#password').addClass('hidden'); //$('#password').removeClass('hidden');
     $('div#opendisc').removeClass('hidden');
     $('button#newbutton').removeClass('hidden');
-    $('div#pastelink').addClass('hidden');
+    $('div#pasteresult').addClass('hidden');
     $('textarea#message').text('');
     $('textarea#message').removeClass('hidden');
     $('div#cleartext').addClass('hidden');
@@ -385,7 +390,7 @@ function stateExistingPaste() {
     $('input#password').addClass('hidden');
     $('div#opendisc').addClass('hidden');
     $('button#newbutton').removeClass('hidden');
-    $('div#pastelink').addClass('hidden');
+    $('div#pasteresult').addClass('hidden');
     $('textarea#message').addClass('hidden');
     $('div#cleartext').addClass('hidden');
     $('div#prettymessage').removeClass('hidden');
@@ -504,6 +509,14 @@ $(function() {
             $('input#opendiscussion').removeAttr('disabled');
         }
     });
+
+    // Display status returned by php code if any (eg. Paste was properly deleted.)
+    if ($('div#status').text().length > 0) {
+        showStatus($('div#status').text(),false);
+        return;
+    }
+
+    $('div#status').html(' '); // Keep line height even if content empty.
 
     // Display an existing paste
     if ($('div#cipherdata').text().length > 1) {

@@ -6,14 +6,14 @@ class trafficlimiterTest extends PHPUnit_Framework_TestCase
     public function setUp()
     {
         /* Setup Routine */
-        $this->_path = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'trafficlimit' . DIRECTORY_SEPARATOR;
+        $this->_path = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'trafficlimit';
         trafficlimiter::setPath($this->_path);
     }
 
     public function tearDown()
     {
         /* Tear Down Routine */
-        helper::rmdir($this->_path);
+        helper::rmdir($this->_path . DIRECTORY_SEPARATOR);
     }
 
     public function testTrafficGetsLimited()

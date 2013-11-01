@@ -43,14 +43,14 @@
 		</header>
 		<section>
 			<article>
-				<div id="status"> </div>
-				<div id="errormessage" class="hidden">{$ERRORMESSAGE|htmlspecialchars}</div>
+				<div id="status">{$STATUS|htmlspecialchars}</div>
+				<div id="errormessage" class="hidden">{$ERROR|htmlspecialchars}</div>
 				<div id="toolbar">
 					<button id="newbutton" onclick="window.location.href=scriptLocation();return false;" class="hidden"><img src="img/icon_new.png#" width="11" height="15" alt="" />New</button>
 					<button id="sendbutton" onclick="send_data();return false;" class="hidden"><img src="img/icon_send.png#" width="18" height="15" alt="" />Send</button>
 					<button id="clonebutton" onclick="clonePaste();return false;" class="hidden"><img src="img/icon_clone.png#" width="15" height="17" alt="" />Clone</button>
-		      <div id="expiration" class="hidden">Expire: 
-			      <select id="pasteExpiration" name="pasteExpiration">
+					<div id="expiration" class="hidden">Expire: 
+						<select id="pasteExpiration" name="pasteExpiration">
 							<option value="burn"{if="$BURNAFTERREADINGSELECTED"} selected="selected"{/if}>Burn after reading</option>{loop="EXPIRE"}
 							<option value="{$key}"{if="!$BURNAFTERREADINGSELECTED && $key == $EXPIREDEFAULT"} selected="selected"{/if}>{$value}</option>{/loop}
 						</select>
@@ -70,7 +70,10 @@
 						<label for="opendiscussion">Open discussion</label>
 					</div>
 				</div>
-				<div id="pastelink" class="hidden"></div>
+				<div id="pasteresult" style="display:none;">
+					<div id="deletelink"></div>
+					<div id="pastelink"></div>
+				</div>
 				<div id="prettymessage" class="hidden">
 					<pre id="prettyprint" class="prettyprint linenums:1"></pre>
 				</div>
@@ -85,5 +88,5 @@
 			</div>
 		</section>
 		<div id="cipherdata" class="hidden">{$CIPHERDATA}</div>
-  </body>
+	</body>
 </html>

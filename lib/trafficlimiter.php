@@ -7,15 +7,15 @@
  * @link      http://sebsauvage.net/wiki/doku.php?id=php:zerobin
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   http://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
- * @version   0.15
+ * @version   0.17
  */
 
 /**
- * traffic_limiter
+ * trafficlimiter
  *
  * Handles traffic limiting, so no user does more than one call per 10 seconds.
  */
-class trafficlimiter
+class trafficlimiter extends persistence
 {
     /**
      * @access private
@@ -23,13 +23,6 @@ class trafficlimiter
      * @var    int
      */
     private static $_limit = 10;
-
-    /**
-     * @access private
-     * @static
-     * @var    string
-     */
-    private static $_path = 'data';
 
     /**
      * set the time limit in seconds
@@ -42,19 +35,6 @@ class trafficlimiter
     public static function setLimit($limit)
     {
         self::$_limit = $limit;
-    }
-
-    /**
-     * set the path
-     *
-     * @access public
-     * @static
-     * @param  string $path
-     * @return void
-     */
-    public static function setPath($path)
-    {
-        self::$_path = $path;
     }
 
     /**
@@ -72,29 +52,18 @@ class trafficlimiter
     	// disable limits if set to less then 1
     	if (self::$_limit < 1) return true;
 
-        // Create storage directory if it does not exist.
-        if (!is_dir(self::$_path)) mkdir(self::$_path, 0705);
-        // Create .htaccess file if it does not exist.
-        if (!is_file(self::$_path . '/.htaccess'))
+        $file = 'traffic_limiter.php';
+        if (!self::_exists($file))
         {
-            file_put_contents(
-                self::$_path . '/.htaccess',
-                'Allow from none' . PHP_EOL .
-                'Deny from all'. PHP_EOL
-            );
-        }
-        $file = self::$_path . '/traffic_limiter.php';
-        if (!is_file($file))
-        {
-            file_put_contents(
+            self::_store(
                 $file,
                 '<?php' . PHP_EOL .
                 '$GLOBALS[\'traffic_limiter\'] = array();' . PHP_EOL
             );
-            chmod($file, 0705);
         }
 
-        require $file;
+        $path = self::getPath($file);
+        require $path;
         $now = time();
         $tl = $GLOBALS['traffic_limiter'];
 
@@ -114,7 +83,7 @@ class trafficlimiter
             $tl[$ip] = time();
             $result = true;
         }
-        file_put_contents(
+        self::_store(
             $file,
             '<?php' . PHP_EOL .
             '$GLOBALS[\'traffic_limiter\'] = ' .

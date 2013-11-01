@@ -5,6 +5,8 @@ class RainTPLTest extends PHPUnit_Framework_TestCase
 
     private static $error = 'foo bar';
 
+    private static $status = '!*#@?$+';
+
     private static $expire = array(
         '5min' => '5 minutes',
         '1hour' => '1 hour',
@@ -26,7 +28,8 @@ class RainTPLTest extends PHPUnit_Framework_TestCase
         $page = new RainTPL;
         // We escape it here because ENT_NOQUOTES can't be used in RainTPL templates.
         $page->assign('CIPHERDATA', htmlspecialchars(self::$data, ENT_NOQUOTES));
-        $page->assign('ERRORMESSAGE', self::$error);
+        $page->assign('ERROR', self::$error);
+        $page->assign('STATUS', self::$status);
         $page->assign('VERSION', self::$version);
         $page->assign('BURNAFTERREADINGSELECTED', false);
         $page->assign('OPENDISCUSSION', false);

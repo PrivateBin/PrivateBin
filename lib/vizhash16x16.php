@@ -1,16 +1,27 @@
 <?php
-// VizHash_GD 0.0.4 beta ZeroBin 0.15
-// Visual Hash implementation in php4+GD, stripped down and modified version for ZeroBin
-// See: http://sebsauvage.net/wiki/doku.php?id=php:vizhash_gd
-// This is free software under the zlib/libpng licence
-// http://www.opensource.org/licenses/zlib-license.php
-/* Example:
-    $vz = new vizhash16x16();
-    $data = $vz->generate('hello');
-    header('Content-type: image/png');
-    echo $data;
-    exit;
-*/
+/**
+ * VizHash_GD
+ *
+ * Visual Hash implementation in php4+GD,
+ * stripped down and modified version for ZeroBin
+ *
+ * @link      http://sebsauvage.net/wiki/doku.php?id=php:vizhash_gd
+ * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
+ * @license   http://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
+ * @version   0.0.4 beta ZeroBin 0.17
+ */
+
+/**
+ * vizhash16x16
+ *
+ * Example:
+ * $vz = new vizhash16x16();
+ * $data = $vz->generate('hello');
+ * header('Content-type: image/png');
+ * echo $data;
+ * exit;
+ */
+
 class vizhash16x16
 {
     private $VALUES;
@@ -22,15 +33,7 @@ class vizhash16x16
     {
         $this->width=16;
         $this->height=16;
-
-        // Read salt from file (and create it if does not exist).
-        // The salt will make vizhash avatar unique on each ZeroBin installation
-        // to prevent IP checking.
-        $saltfile = PATH . 'data/salt.php';
-        if (!is_file($saltfile))
-            file_put_contents($saltfile,'<?php /* |'.$this->randomSalt().'| */ ?>');
-        $items=explode('|',file_get_contents($saltfile));
-        $this->salt = $items[1];
+        $this->salt = serversalt::get();
     }
 
     // Generate a 16x16 png corresponding to $text.

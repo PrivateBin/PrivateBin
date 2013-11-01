@@ -7,7 +7,7 @@
  * @link      http://sebsauvage.net/wiki/doku.php?id=php:zerobin
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   http://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
- * @version   0.15
+ * @version   0.17
  */
 
 /**
@@ -20,7 +20,7 @@ class zerobin
     /*
      * @const string version
      */
-    const VERSION = 'Alpha 0.15';
+    const VERSION = 'Alpha 0.17';
 
     /**
      * @access private
@@ -44,6 +44,12 @@ class zerobin
 
     /**
      * @access private
+     * @var    string
+     */
+    private $_status = '';
+
+    /**
+     * @access private
      * @var    zerobin_data
      */
     private $_model;
@@ -60,7 +66,7 @@ class zerobin
         if (version_compare(PHP_VERSION, '5.2.6') < 0)
             die('ZeroBin requires php 5.2.6 or above to work. Sorry.');
 
-        // In case stupid admin has left magic_quotes enabled in php.ini.
+        // in case stupid admin has left magic_quotes enabled in php.ini
         if (get_magic_quotes_gpc())
         {
             $_POST   = array_map('filter::stripslashes_deep', $_POST);
@@ -68,21 +74,26 @@ class zerobin
             $_COOKIE = array_map('filter::stripslashes_deep', $_COOKIE);
         }
 
-        // Load config from ini file.
+        // load config from ini file
         $this->_init();
 
-        // Create new paste or comment.
+        // create new paste or comment
         if (!empty($_POST['data']))
         {
-            $this->_create();
+            $this->_create($_POST['data']);
         }
-        // Display an existing paste.
+        // delete an existing paste
+        elseif (!empty($_GET['deletetoken']) && !empty($_GET['pasteid']))
+        {
+            $this->_delete($_GET['pasteid'], $_GET['deletetoken']);
+        }
+        // display an existing paste
         elseif (!empty($_SERVER['QUERY_STRING']))
         {
-            $this->_read();
+            $this->_read($_SERVER['QUERY_STRING']);
         }
 
-        // Display ZeroBin frontend
+        // display ZeroBin frontend
         $this->_view();
     }
 
@@ -126,7 +137,7 @@ class zerobin
     }
 
     /**
-     * Store new paste or comment.
+     * Store new paste or comment
      *
      * POST contains:
      * data (mandatory) = json encoded SJCL encrypted text (containing keys: iv,salt,ct)
@@ -139,9 +150,10 @@ class zerobin
      * pasteid (optional) = in discussion, which paste this comment belongs to.
      *
      * @access private
+     * @param  string $data
      * @return void
      */
-    private function _create()
+    private function _create($data)
     {
         header('Content-type: application/json');
         $error = false;
@@ -159,7 +171,6 @@ class zerobin
         );
 
         // Make sure content is not too big.
-        $data = $_POST['data'];
         if (
             strlen($data) > $this->_conf['main']['sizelimit']
         ) $this->_return_message(
@@ -252,8 +263,8 @@ class zerobin
             $pasteid  = $_POST['pasteid'];
             $parentid = $_POST['parentid'];
             if (
-                !preg_match('/[a-f\d]{16}/', $pasteid) ||
-                !preg_match('/[a-f\d]{16}/', $parentid)
+                !preg_match('/\A[a-f\d]{16}\z/', $pasteid) ||
+                !preg_match('/\A[a-f\d]{16}\z/', $parentid)
             ) $this->_return_message(1, 'Invalid data.');
 
             // Comments do not expire (it's the paste that expires)
@@ -297,23 +308,60 @@ class zerobin
                 $this->_model()->create($dataid, $storage) === false
             ) $this->_return_message(1, 'Error saving paste. Sorry.');
 
+            // Generate the "delete" token.
+            // The token is the hmac of the pasteid signed with the server salt.
+            // The paste can be delete by calling http://myserver.com/zerobin/?pasteid=<pasteid>&deletetoken=<deletetoken>
+            $deletetoken = hash_hmac('sha1', $dataid , serversalt::get());
+
             // 0 = no error
-            $this->_return_message(0, $dataid);
+            $this->_return_message(0, $dataid, array('deletetoken' => $deletetoken));
         }
 
         $this->_return_message(1, 'Server error.');
     }
 
     /**
-     * Read an existing paste or comment.
+     * Delete an existing paste
      *
      * @access private
+     * @param  string $dataid
+     * @param  string $deletetoken
      * @return void
      */
-    private function _read()
+    private function _delete($dataid, $deletetoken)
     {
-        $dataid = $_SERVER['QUERY_STRING'];
+        // Is this a valid paste identifier?
+        if (preg_match('\A[a-f\d]{16}\z', $dataid))
+        {
+            // Check that paste exists.
+            if (!$this->_model()->exists($dataid))
+            {
+                $this->_error = 'Paste does not exist, has expired or has been deleted.';
+                return;
+            }
+        }
 
+        // Make sure token is valid.
+        if ($deletetoken != hash_hmac('sha1', $dataid , serversalt::get()))
+        {
+            $this->_error = 'Wrong deletion token. Paste was not deleted.';
+            return;
+        }
+
+        // Paste exists and deletion token is valid: Delete the paste.
+        $this->_model()->delete($dataid);
+        $this->_status = 'Paste was properly deleted.';
+    }
+
+    /**
+     * Read an existing paste or comment
+     *
+     * @access private
+     * @param  string $dataid
+     * @return void
+     */
+    private function _read($dataid)
+    {
         // Is this a valid paste identifier?
         if (preg_match('\A[a-f\d]{16}\z', $dataid))
         {
@@ -331,7 +379,7 @@ class zerobin
                 {
                     // Delete the paste
                     $this->_model()->delete($dataid);
-                    $this->_error = 'Paste does not exist or has expired.';
+                    $this->_error = 'Paste does not exist, has expired or has been deleted.';
                 }
                 // If no error, return the paste.
                 else
@@ -398,7 +446,8 @@ class zerobin
         $page = new RainTPL;
         // we escape it here because ENT_NOQUOTES can't be used in RainTPL templates
         $page->assign('CIPHERDATA', htmlspecialchars($this->_data, ENT_NOQUOTES));
-        $page->assign('ERRORMESSAGE', $this->_error);
+        $page->assign('ERROR', $this->_error);
+        $page->assign('STATUS', $this->_status);
         $page->assign('VERSION', self::VERSION);
         $page->assign('BURNAFTERREADINGSELECTED', $this->_conf['main']['burnafterreadingselected']);
         $page->assign('OPENDISCUSSION', $this->_conf['main']['opendiscussion']);
@@ -414,9 +463,10 @@ class zerobin
      * @access private
      * @param  bool $status
      * @param  string $message
+     * @param  array $other
      * @return void
      */
-    private function _return_message($status, $message)
+    private function _return_message($status, $message, $other = array())
     {
         $result = array('status' => $status);
         if ($status)
@@ -427,6 +477,7 @@ class zerobin
         {
             $result['id'] = $message;
         }
+        $result += $other;
         exit(json_encode($result));
     }
 }
