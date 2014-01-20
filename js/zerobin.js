@@ -439,10 +439,9 @@ function stateExistingPaste() {
   */
 function rawText()
 {
-    history.pushState(document.title, document.title, 'document.txt');
-    var paste = $('div#cleartext').text();
-    var newDoc = document.open('text/plain', 'replace');
-    newDoc.write(paste);
+    var paste = $('div#cleartext').html();
+    var newDoc = document.open('text/html', 'replace');
+    newDoc.write('<pre>'+paste+'</pre>');
     newDoc.close();
 }
 
