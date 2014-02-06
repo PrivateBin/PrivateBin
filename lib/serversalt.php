@@ -39,8 +39,15 @@ class serversalt extends persistence
     public static function generate()
     {
         $randomSalt = '';
-        for($i=0; $i<16; ++$i) {
-            $randomSalt .= base_convert(mt_rand(), 10, 16);
+        if (function_exists('mcrypt_create_iv'))
+        {
+            $randomSalt = bin2hex(mcrypt_create_iv(256, MCRYPT_DEV_URANDOM));
+        }
+        else // fallback to mt_rand()
+        {
+            for($i = 0; $i < 16; ++$i) {
+                $randomSalt .= base_convert(mt_rand(), 10, 16);
+            }
         }
         self::$_salt = $randomSalt;
         return self::$_salt;
