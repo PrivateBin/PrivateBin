@@ -37,5 +37,10 @@ class vizhash16x16Test extends PHPUnit_Framework_TestCase
         $this->assertEquals('image/png', $finfo->file($this->_file));
         $this->assertNotEquals($pngdata, $vz->generate('2001:1620:2057:dead:beef::cafe:babe'));
         $this->assertEquals($pngdata, $vz->generate('127.0.0.1'));
+
+        // generating new salt
+        $salt = serversalt::get();
+        require 'mcrypt_mock.php';
+        $this->assertNotEquals($salt, serversalt::generate());
     }
 }

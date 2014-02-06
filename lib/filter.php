@@ -50,4 +50,35 @@ class filter
         }
         return number_format($size, ($i ? 2 : 0), '.', ' ') . ' ' . $iec[$i];
     }
+
+    /**
+     * validate paste ID
+     *
+     * @access public
+     * @param  string $dataid
+     * @return bool
+     */
+    public static function is_valid_paste_id($dataid)
+    {
+        return (bool) preg_match('#\A[a-f\d]{16}\z#', $dataid);
+    }
+
+    /**
+     * fixed time string comparison operation to prevent timing attacks
+     * https://crackstation.net/hashing-security.htm?=rd#slowequals
+     *
+     * @access public
+     * @param  string $a
+     * @param  string $b
+     * @return bool
+     */
+    public static function slow_equals($a, $b)
+    {
+        $diff = strlen($a) ^ strlen($b);
+        for($i = 0; $i < strlen($a) && $i < strlen($b); $i++)
+        {
+            $diff |= ord($a[$i]) ^ ord($b[$i]);
+        }
+        return $diff === 0;
+     }
 }

@@ -272,8 +272,8 @@ class zerobin
             $pasteid  = $_POST['pasteid'];
             $parentid = $_POST['parentid'];
             if (
-                !preg_match('#\A[a-f\d]{16}\z#', $pasteid) ||
-                !preg_match('#\A[a-f\d]{16}\z#', $parentid)
+                !filter::is_valid_paste_id($pasteid) ||
+                !filter::is_valid_paste_id($parentid)
             ) $this->_return_message(1, 'Invalid data.');
 
             // Comments do not expire (it's the paste that expires)
@@ -340,18 +340,21 @@ class zerobin
     private function _delete($dataid, $deletetoken)
     {
         // Is this a valid paste identifier?
-        if (preg_match('#\A[a-f\d]{16}\z#', $dataid))
+        if (!filter::is_valid_paste_id($dataid))
         {
-            // Check that paste exists.
-            if (!$this->_model()->exists($dataid))
-            {
-                $this->_error = 'Paste does not exist, has expired or has been deleted.';
-                return;
-            }
+            $this->_error = 'Invalid paste ID.';
+            return;
+        }
+
+        // Check that paste exists.
+        if (!$this->_model()->exists($dataid))
+        {
+            $this->_error = 'Paste does not exist, has expired or has been deleted.';
+            return;
         }
 
         // Make sure token is valid.
-        if ($deletetoken != hash_hmac('sha1', $dataid , serversalt::get()))
+        if (filter::slow_equals($deletetoken, hash_hmac('sha1', $dataid , serversalt::get())))
         {
             $this->_error = 'Wrong deletion token. Paste was not deleted.';
             return;
@@ -372,63 +375,62 @@ class zerobin
     private function _read($dataid)
     {
         // Is this a valid paste identifier?
-        if (preg_match('#\A[a-f\d]{16}\z#', $dataid))
+        if (!filter::is_valid_paste_id($dataid))
         {
-            // Check that paste exists.
-            if ($this->_model()->exists($dataid))
+            $this->_error = 'Invalid paste ID.';
+            return;
+        }
+
+        // Check that paste exists.
+        if ($this->_model()->exists($dataid))
+        {
+            // Get the paste itself.
+            $paste = $this->_model()->read($dataid);
+
+            // See if paste has expired.
+            if (
+                isset($paste->meta->expire_date) &&
+                $paste->meta->expire_date < time()
+            )
             {
-                // Get the paste itself.
-                $paste = $this->_model()->read($dataid);
-
-                // See if paste has expired.
-                if (
-                    isset($paste->meta->expire_date) &&
-                    $paste->meta->expire_date < time()
-                )
-                {
-                    // Delete the paste
-                    $this->_model()->delete($dataid);
-                    $this->_error = 'Paste does not exist, has expired or has been deleted.';
-                }
-                // If no error, return the paste.
-                else
-                {
-                    // We kindly provide the remaining time before expiration (in seconds)
-                    if (
-                        property_exists($paste->meta, 'expire_date')
-                    ) $paste->meta->remaining_time = $paste->meta->expire_date - time();
-
-                    // The paste itself is the first in the list of encrypted messages.
-                    $messages = array($paste);
-
-                    // If it's a discussion, get all comments.
-                    if (
-                        property_exists($paste->meta, 'opendiscussion') &&
-                        $paste->meta->opendiscussion
-                    )
-                    {
-                        $messages = array_merge(
-                            $messages,
-                            $this->_model()->readComments($dataid)
-                        );
-                    }
-                    $this->_data = json_encode($messages);
-
-                    // If the paste was meant to be read only once, delete it.
-                    if (
-                        property_exists($paste->meta, 'burnafterreading') &&
-                        $paste->meta->burnafterreading
-                    ) $this->_model()->delete($dataid);
-                }
+                // Delete the paste
+                $this->_model()->delete($dataid);
+                $this->_error = 'Paste does not exist, has expired or has been deleted.';
             }
+            // If no error, return the paste.
             else
             {
-                $this->_error = 'Paste does not exist or has expired.';
+                // We kindly provide the remaining time before expiration (in seconds)
+                if (
+                    property_exists($paste->meta, 'expire_date')
+                ) $paste->meta->remaining_time = $paste->meta->expire_date - time();
+
+                // The paste itself is the first in the list of encrypted messages.
+                $messages = array($paste);
+
+                // If it's a discussion, get all comments.
+                if (
+                    property_exists($paste->meta, 'opendiscussion') &&
+                    $paste->meta->opendiscussion
+                )
+                {
+                    $messages = array_merge(
+                        $messages,
+                        $this->_model()->readComments($dataid)
+                    );
+                }
+                $this->_data = json_encode($messages);
+
+                // If the paste was meant to be read only once, delete it.
+                if (
+                    property_exists($paste->meta, 'burnafterreading') &&
+                    $paste->meta->burnafterreading
+                ) $this->_model()->delete($dataid);
             }
         }
         else
         {
-            $this->_error = 'Invalid paste ID.';
+            $this->_error = 'Paste does not exist or has expired.';
         }
     }
 
