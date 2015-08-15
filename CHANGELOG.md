@@ -49,6 +49,6 @@
     * ADDED: Deletion URL.
     * small refactoring.
     * improved regex checks.
-    * larger server alt on installation.    
+    * larger server alt on installation.
 
 

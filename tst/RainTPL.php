@@ -91,4 +91,13 @@ class RainTPLTest extends PHPUnit_Framework_TestCase
             'outputs version correctly'
         );
     }
+
+    /**
+     * @expectedException RainTpl_Exception
+     */
+    public function testMissingTemplate()
+    {
+        $test = new RainTPL;
+        $test->draw('123456789 does not exist!');
+    }
 }

@@ -85,15 +85,6 @@ class vizhash16x16
         return $imagedata;
     }
 
-    // Generate a large random hexadecimal salt.
-    private function randomSalt()
-    {
-        $randomSalt='';
-        for($i=0;$i<6;$i++) { $randomSalt.=base_convert(mt_rand(),10,16); }
-        return $randomSalt;
-    }
-
-
     private function getInt() // Returns a single integer from the $VALUES array (0...255)
     {
         $v= $this->VALUES[$this->VALUES_INDEX];
@@ -101,6 +92,7 @@ class vizhash16x16
         $this->VALUES_INDEX %= count($this->VALUES); // Warp around the array
         return $v;
     }
+
     private function getX() // Returns a single integer from the array (roughly mapped to image width)
     {
         return $this->width*$this->getInt()/256;
@@ -148,14 +140,9 @@ class vizhash16x16
                 $points = array($this->getX(), $this->getY(), $this->getX(), $this->getY(), $this->getX(), $this->getY(),$this->getX(), $this->getY());
                 ImageFilledPolygon ($image, $points, 4, $color);
                 break;
-            case 4:
-            case 5:
-            case 6:
+            default:
                 $start=$this->getInt()*360/256; $end=$start+$this->getInt()*180/256;
                 ImageFilledArc ($image, $this->getX(), $this->getY(), $this->getX(), $this->getY(),$start,$end,$color,IMG_ARC_PIE);
-                break;
         }
     }
 }
-
-?>
