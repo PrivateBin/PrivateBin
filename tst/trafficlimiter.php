@@ -18,6 +18,9 @@ class trafficlimiterTest extends PHPUnit_Framework_TestCase
 
     public function testTrafficGetsLimited()
     {
+        $this->assertEquals($this->_path, trafficlimiter::getPath());
+        $file = 'baz';
+        $this->assertEquals($this->_path . DIRECTORY_SEPARATOR . $file, trafficlimiter::getPath($file));
         trafficlimiter::setLimit(4);
         $this->assertTrue(trafficlimiter::canPass('127.0.0.1'), 'first request may pass');
         sleep(2);

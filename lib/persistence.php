@@ -48,7 +48,7 @@ abstract class persistence
     public static function getPath($filename = null)
     {
         if(strlen($filename)) {
-            return self::$_path . '/' . $filename;
+            return self::$_path . DIRECTORY_SEPARATOR . $filename;
         } else {
             return self::$_path;
         }
