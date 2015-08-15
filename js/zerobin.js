@@ -335,7 +335,7 @@ function send_data() {
 
             $('div#pastelink').html('Your paste is <a id="pasteurl" href="' + url + '">' + url + '</a> <span id="copyhint">(Hit CTRL+C to copy)</span>');
             $('div#deletelink').html('<a href="' + deleteUrl + '">Delete link</a>');
-            $('div#pasteresult').show();
+            $('div#pasteresult').removeClass('hidden');
             selectText('pasteurl'); // We pre-select the link so that the user only has to CTRL+C the link.
 
             setElementText($('div#cleartext'), $('textarea#message').val());
@@ -409,7 +409,7 @@ function stateExistingPaste() {
     else {
         $('button#clonebutton').removeClass('hidden');
     }
-    $('button#rawtextbutton').show();
+    $('button#rawtextbutton').removeClass('hidden');
 
     $('div#expiration').addClass('hidden');
     $('div#burnafterreadingoption').addClass('hidden');

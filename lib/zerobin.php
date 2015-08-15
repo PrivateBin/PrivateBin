@@ -372,7 +372,7 @@ class zerobin
     private function _read($dataid)
     {
         // Is this a valid paste identifier?
-        if (preg_match('\A[a-f\d]{16}\z', $dataid))
+        if (preg_match('#\A[a-f\d]{16}\z#', $dataid))
         {
             // Check that paste exists.
             if ($this->_model()->exists($dataid))
@@ -452,6 +452,7 @@ class zerobin
                 $key;
         }
 
+        RainTPL::$path_replace = false;
         $page = new RainTPL;
         // we escape it here because ENT_NOQUOTES can't be used in RainTPL templates
         $page->assign('CIPHERDATA', htmlspecialchars($this->_data, ENT_NOQUOTES));

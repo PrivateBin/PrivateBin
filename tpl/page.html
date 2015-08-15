@@ -57,17 +57,16 @@
 						</select>
 					</div>
 					<div id="remainingtime" class="hidden"></div>
-					<div id="burnafterreadingoption" class="button" style="display:none;">
+					<div id="burnafterreadingoption" class="button hidden">
 						<input type="checkbox" id="burnafterreading" name="burnafterreading" {if="$BURNAFTERREADINGSELECTED"} checked="checked"{/if} />
 						<label for="burnafterreading">Burn after reading</label>
 					</div>
-					<input id="password" value="Optional password..." class="hidden" />
 					<div id="opendisc" class="button hidden">
 						<input type="checkbox" id="opendiscussion" name="opendiscussion" {if="!$OPENDISCUSSION"} disabled="disabled"{/if} />
 						<label for="opendiscussion">Open discussion</label>
 					</div>
 				</div>
-				<div id="pasteresult" style="display:none;">
+				<div id="pasteresult" class="hidden">
 					<div id="deletelink"></div>
 					<div id="pastelink"></div>
 				</div>
