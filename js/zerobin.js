@@ -293,7 +293,7 @@ function send_comment(parentid) {
 
     $.post(scriptLocation(), data_to_send, 'json')
     .error(function() {
-        showError('Comment could not be sent (serveur error or not responding).');
+        showError('Comment could not be sent (server error or not responding).');
     })
     .success(function(data) {
         if (data.status == 0) {
@@ -348,7 +348,7 @@ function send_data() {
             showStatus('');
 
             $('div#pastelink').html('Your paste is <a id="pasteurl" href="' + url + '">' + url + '</a> <span id="copyhint">(Hit CTRL+C to copy)</span>');
-            $('div#deletelink').html('<a href="' + deleteUrl + '">Delete link</a>');
+            $('div#deletelink').html('<a href="' + deleteUrl + '">Delete data</a>');
             $('div#pasteresult').removeClass('hidden');
             selectText('pasteurl'); // We pre-select the link so that the user only has to CTRL+C the link.
 
