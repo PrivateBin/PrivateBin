@@ -51,7 +51,7 @@ function hashToParameterString(associativeArray)
   }
   //padding for URL shorteners
   parameterString += "&p=p";
-  
+
   return parameterString;
 }
 
@@ -72,7 +72,7 @@ function parameterStringToHash(parameterString)
     var value = decodeURIComponent(pair[1]);
     parameterHash[key] = value;
   }
-  
+
   return parameterHash;
 }
 
@@ -88,7 +88,7 @@ function getParameterHash()
     return parameterStringToHash(window.location.href.substring(hashIndex + 1));
   } else {
     return {};
-  } 
+  }
 }
 
 /**
@@ -323,10 +323,10 @@ function send_data() {
     if (!sjcl.random.isReady())
     {
         showStatus('Sending paste (Please move your mouse for more entropy)...', spin=true);
-        sjcl.random.addEventListener('seeded', function(){ send_data(); }); 
-        return; 
+        sjcl.random.addEventListener('seeded', function(){ send_data(); });
+        return;
     }
-    
+
     showStatus('Sending paste...', spin=true);
 
     var randomkey = sjcl.codec.base64.fromBits(sjcl.random.randomWords(8, 0), 0);
@@ -375,13 +375,13 @@ function selectText(element) {
     var doc = document
         , text = doc.getElementById(element)
         , range, selection
-    ;    
+    ;
     if (doc.body.createTextRange) { //ms
         range = doc.body.createTextRange();
         range.moveToElementText(text);
         range.select();
     } else if (window.getSelection) { //all others
-        selection = window.getSelection();        
+        selection = window.getSelection();
         range = doc.createRange();
         range.selectNodeContents(text);
         selection.removeAllRanges();
@@ -450,10 +450,10 @@ function rawText()
  */
 function clonePaste() {
     stateNewPaste();
-    
+
     //Erase the id and the key in url
     history.replaceState(document.title, document.title, scriptLocation());
-    
+
     showStatus('');
     $('textarea#message').text($('div#cleartext').text());
 }
@@ -550,7 +550,7 @@ $(function() {
 
     // If "burn after reading" is checked, disable discussion.
     $('input#burnafterreading').change(function() {
-        if ($(this).is(':checked') ) { 
+        if ($(this).is(':checked') ) {
             $('div#opendisc').addClass('buttondisabled');
             $('input#opendiscussion').attr({checked: false});
             $('input#opendiscussion').attr('disabled',true);

@@ -198,7 +198,7 @@ class zerobin
             }
             if ($expire > 0) $meta['expire_date'] = time() + $expire;
         }
-        
+
         // Destroy the paste when it is read.
         if (!empty($_POST['burnafterreading']))
         {
