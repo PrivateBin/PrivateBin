@@ -1,11 +1,13 @@
 /*
- * $Id: rawdeflate.js,v 0.3 2009/03/01 19:05:05 dankogai Exp dankogai $
+ * $Id: rawdeflate.js,v 0.5 2013/04/09 14:25:38 dankogai Exp dankogai $
  *
+ * GNU General Public License, version 2 (GPL-2.0)
+ *   http://opensource.org/licenses/GPL-2.0
  * Original:
- *   http://www.onicos.com/staff/iz/amuse/javascript/expert/deflate.txt
+ *  http://www.onicos.com/staff/iz/amuse/javascript/expert/deflate.txt
  */
 
-(function(){
+(function(ctx){
 
 /* Copyright (C) 1999 Masanao Izumo <iz@onicos.co.jp>
  * Version: 1.0.1
@@ -753,6 +755,7 @@ var zip_init_deflate = function() {
     zip_qhead = null;
     zip_outcnt = 0;
     zip_outoff = 0;
+    zip_match_available = 0;
 
     if(zip_compr_level <= 3)
     {
@@ -763,6 +766,7 @@ var zip_init_deflate = function() {
     {
 	zip_match_length = zip_MIN_MATCH - 1;
 	zip_match_available = 0;
+        zip_match_available = 0;
     }
 
     zip_complete = false;
@@ -1665,7 +1669,7 @@ var zip_deflate = function(str, level) {
     return aout.join("");
 }
 
-if (! window.RawDeflate) RawDeflate = {};
-RawDeflate.deflate = zip_deflate;
+if (! ctx.RawDeflate) ctx.RawDeflate = {};
+ctx.RawDeflate.deflate = zip_deflate;
 
-})();
+})(this);
