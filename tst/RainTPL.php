@@ -24,8 +24,8 @@ class RainTPLTest extends PHPUnit_Framework_TestCase
         /* Setup Routine */
         $page = new RainTPL;
         $page::configure(array('cache_dir' => 'tmp/'));
+        $page::$path_replace = false;
 
-        $page = new RainTPL;
         // We escape it here because ENT_NOQUOTES can't be used in RainTPL templates.
         $page->assign('CIPHERDATA', htmlspecialchars(self::$data, ENT_NOQUOTES));
         $page->assign('ERROR', self::$error);
@@ -34,6 +34,7 @@ class RainTPLTest extends PHPUnit_Framework_TestCase
         $page->assign('BURNAFTERREADINGSELECTED', false);
         $page->assign('OPENDISCUSSION', false);
         $page->assign('SYNTAXHIGHLIGHTING', true);
+        $page->assign('BASE64JSVERSION', '2.1.9');
         $page->assign('EXPIRE', self::$expire);
         $page->assign('EXPIREDEFAULT', self::$expire_default);
         ob_start();

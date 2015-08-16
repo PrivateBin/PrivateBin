@@ -87,7 +87,8 @@ abstract class persistence
             file_put_contents(
                 $file,
                 'Allow from none' . PHP_EOL .
-                'Deny from all'. PHP_EOL
+                'Deny from all'. PHP_EOL,
+                LOCK_EX
             );
         }
     }

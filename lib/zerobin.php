@@ -110,11 +110,17 @@ class zerobin
             if (!is_file(PATH . $dir . '/.htaccess')) file_put_contents(
                 PATH . $dir . '/.htaccess',
                 'Allow from none' . PHP_EOL .
-                'Deny from all'. PHP_EOL
+                'Deny from all'. PHP_EOL,
+                LOCK_EX
             );
         }
 
         $this->_conf = parse_ini_file(PATH . 'cfg/conf.ini', true);
+        foreach (array('main', 'model') as $section) {
+            if (!array_key_exists($section, $this->_conf)) die(
+                "ZeroBin requires configuration section [$section] to be present in configuration file."
+            );
+        }
         $this->_model = $this->_conf['model']['class'];
     }
 
@@ -171,14 +177,13 @@ class zerobin
         );
 
         // Make sure content is not too big.
+        $sizelimit = (int) $this->_getMainConfig('sizelimit', 2097152);
         if (
-            strlen($data) > $this->_conf['main']['sizelimit']
+            strlen($data) > $sizelimit
         ) $this->_return_message(
             1,
             'Paste is limited to ' .
-            $this->_conf['main']['sizelimit'] .
-            ' ' .
-            filter::size_humanreadable($this->_conf['main']['sizelimit']) .
+            filter::size_humanreadable($sizelimit) .
             ' of encrypted data.'
         );
 
@@ -191,8 +196,9 @@ class zerobin
         // Read expiration date
         if (!empty($_POST['expire']))
         {
-            if (array_key_exists($_POST['expire'], $this->_conf['expire_options'])) {
-                $expire = $this->_conf['expire_options'][$_POST['expire']];
+            $selected_expire = (string) $_POST['expire'];
+            if (array_key_exists($selected_expire, $this->_conf['expire_options'])) {
+                $expire = $this->_conf['expire_options'][$selected_expire];
             } else {
                 $expire = $this->_conf['expire_options'][$this->_conf['expire']['default']];
             }
@@ -203,9 +209,9 @@ class zerobin
         if (!empty($_POST['burnafterreading']))
         {
             $burnafterreading = $_POST['burnafterreading'];
-            if ($burnafterreading != '0')
+            if ($burnafterreading !== '0')
             {
-                if ($burnafterreading != '1') $error = true;
+                if ($burnafterreading !== '1') $error = true;
                 $meta['burnafterreading'] = true;
             }
         }
@@ -214,9 +220,9 @@ class zerobin
         if ($this->_conf['main']['opendiscussion'] && !empty($_POST['opendiscussion']))
         {
             $opendiscussion = $_POST['opendiscussion'];
-            if ($opendiscussion != 0)
+            if ($opendiscussion !== '0')
             {
-                if ($opendiscussion != 1) $error = true;
+                if ($opendiscussion !== '1') $error = true;
                 $meta['opendiscussion'] = true;
             }
         }
@@ -269,8 +275,8 @@ class zerobin
             !empty($_POST['pasteid'])
         )
         {
-            $pasteid  = $_POST['pasteid'];
-            $parentid = $_POST['parentid'];
+            $pasteid  = (string) $_POST['pasteid'];
+            $parentid = (string) $_POST['parentid'];
             if (
                 !filter::is_valid_paste_id($pasteid) ||
                 !filter::is_valid_paste_id($parentid)
@@ -458,19 +464,35 @@ class zerobin
                 $key;
         }
 
-        RainTPL::$path_replace = false;
         $page = new RainTPL;
+        $page::$path_replace = false;
         // we escape it here because ENT_NOQUOTES can't be used in RainTPL templates
         $page->assign('CIPHERDATA', htmlspecialchars($this->_data, ENT_NOQUOTES));
         $page->assign('ERROR', $this->_error);
         $page->assign('STATUS', $this->_status);
         $page->assign('VERSION', self::VERSION);
-        $page->assign('BURNAFTERREADINGSELECTED', $this->_conf['main']['burnafterreadingselected']);
-        $page->assign('OPENDISCUSSION', $this->_conf['main']['opendiscussion']);
-        $page->assign('SYNTAXHIGHLIGHTING', $this->_conf['main']['syntaxhighlighting']);
+        $page->assign('OPENDISCUSSION', $this->_getMainConfig('opendiscussion', true));
+        $page->assign('SYNTAXHIGHLIGHTING', $this->_getMainConfig('syntaxhighlighting', true));
+        $page->assign('BURNAFTERREADINGSELECTED', $this->_getMainConfig('burnafterreadingselected', false));
+        $page->assign('BASE64JSVERSION', $this->_getMainConfig('base64version', '2.1.9'));
         $page->assign('EXPIRE', $expire);
         $page->assign('EXPIREDEFAULT', $this->_conf['expire']['default']);
-        $page->draw($this->_conf['main']['template']);
+        $page->draw($this->_getMainConfig('template', 'page'));
+    }
+
+    /**
+     * get configuration option from [main] section, optionally set a default
+     *
+     * @access private
+     * @param  string $option
+     * @param  mixed $default (optional)
+     * @return mixed
+     */
+    private function _getMainConfig($option, $default = false)
+    {
+        return array_key_exists($option, $this->_conf['main']) ?
+            $this->_conf['main'][$option] :
+            $default;
     }
 
     /**
