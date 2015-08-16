@@ -17,10 +17,12 @@
  */
 class zerobin_data extends zerobin_abstract
 {
-    /*
+    /**
+     * directory where data is stored
+     *
      * @access private
      * @static
-     * @var string directory where data is stored
+     * @var string
      */
     private static $_dir = 'data/';
 
@@ -29,6 +31,7 @@ class zerobin_data extends zerobin_abstract
      *
      * @access public
      * @static
+     * @param  array $options
      * @return zerobin_data
      */
     public static function getInstance($options = null)

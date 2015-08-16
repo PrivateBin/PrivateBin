@@ -18,6 +18,8 @@
 abstract class persistence
 {
     /**
+     * path in which to persist something
+     *
      * @access private
      * @static
      * @var    string

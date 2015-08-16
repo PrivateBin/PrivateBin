@@ -55,6 +55,7 @@ class filter
      * validate paste ID
      *
      * @access public
+     * @static
      * @param  string $dataid
      * @return bool
      */
@@ -68,6 +69,7 @@ class filter
      * https://crackstation.net/hashing-security.htm?=rd#slowequals
      *
      * @access public
+     * @static
      * @param  string $a
      * @param  string $b
      * @return bool

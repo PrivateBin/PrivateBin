@@ -17,12 +17,16 @@
  */
 class zerobin
 {
-    /*
-     * @const string version
+    /**
+     * version
+     *
+     * @const string
      */
     const VERSION = 'Alpha 0.19';
 
     /**
+     * configuration array
+     *
      * @access private
      * @var    array
      */
@@ -31,26 +35,34 @@ class zerobin
     );
 
     /**
+     * data
+     *
      * @access private
      * @var    string
      */
     private $_data = '';
 
     /**
+     * error message
+     *
      * @access private
      * @var    string
      */
     private $_error = '';
 
     /**
+     * status message
+     *
      * @access private
      * @var    string
      */
     private $_status = '';
 
     /**
+     * data storage model
+     *
      * @access private
-     * @var    zerobin_data
+     * @var    zerobin_abstract
      */
     private $_model;
 
@@ -60,6 +72,7 @@ class zerobin
      * initializes and runs ZeroBin
      *
      * @access public
+     * @return void
      */
     public function __construct()
     {
@@ -128,7 +141,7 @@ class zerobin
      * get the model, create one if needed
      *
      * @access private
-     * @return zerobin_data
+     * @return zerobin_abstract
      */
     private function _model()
     {

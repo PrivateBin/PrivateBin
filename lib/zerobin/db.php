@@ -17,31 +17,37 @@
  */
 class zerobin_db extends zerobin_abstract
 {
-    /*
-     * @access private
-     * @static
-     * @var array to cache select queries
+    /**
+     * cache for select queries
+     *
+     * @var array
      */
     private static $_cache = array();
 
-    /*
+    /**
+     * instance of database connection
+     *
      * @access private
      * @static
-     * @var PDO instance of database connection
+     * @var PDO
      */
     private static $_db;
 
-    /*
+    /**
+     * table prefix
+     *
      * @access private
      * @static
-     * @var string table prefix
+     * @var string
      */
     private static $_prefix = '';
 
-    /*
+    /**
+     * database type
+     *
      * @access private
      * @static
-     * @var string database type
+     * @var string
      */
     private static $_type = '';
 
@@ -50,6 +56,7 @@ class zerobin_db extends zerobin_abstract
      *
      * @access public
      * @static
+     * @param  array $options
      * @throws Exception
      * @return zerobin_db
      */

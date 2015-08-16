@@ -23,6 +23,8 @@
 class serversalt extends persistence
 {
     /**
+     * generated salt
+     *
      * @access private
      * @static
      * @var    string

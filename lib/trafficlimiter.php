@@ -18,6 +18,8 @@
 class trafficlimiter extends persistence
 {
     /**
+     * time limit in seconds, defaults to 10s
+     *
      * @access private
      * @static
      * @var    int
