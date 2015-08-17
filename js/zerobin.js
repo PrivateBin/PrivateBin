@@ -163,7 +163,7 @@ function htmlEntities(str) {
  */
 function setElementText(element, text) {
     // For IE<10.
-    if ($('div#oldienotice').is(":visible")) {
+    if ($('#oldienotice').is(":visible")) {
         // IE<10 does not support white-space:pre-wrap; so we have to do this BIG UGLY STINKING THING.
         var html = htmlEntities(text).replace(/\n/ig,"\r\n<br>");
         element.html('<pre>'+html+'</pre>');
@@ -184,27 +184,27 @@ function displayMessages(key, comments) {
     try { // Try to decrypt the paste.
         var cleartext = zeroDecipher(key, comments[0].data);
     } catch(err) {
-        $('div#cleartext').addClass('hidden');
-        $('div#prettymessage').addClass('hidden');
-        $('button#clonebutton').addClass('hidden');
+        $('#cleartext').addClass('hidden');
+        $('#prettymessage').addClass('hidden');
+        $('#clonebutton').addClass('hidden');
         showError('Could not decrypt data (Wrong key ?)');
         return;
     }
-    setElementText($('div#cleartext'), cleartext);
-    setElementText($('pre#prettyprint'), cleartext);
-    urls2links($('div#cleartext')); // Convert URLs to clickable links.
+    setElementText($('#cleartext'), cleartext);
+    setElementText($('#prettyprint'), cleartext);
+    urls2links($('#cleartext')); // Convert URLs to clickable links.
     prettyPrint();
 
     // Display paste expiration.
-    if (comments[0].meta.expire_date) $('div#remainingtime').removeClass('foryoureyesonly').text('This document will expire in '+secondsToHuman(comments[0].meta.remaining_time)+'.').removeClass('hidden');
+    if (comments[0].meta.expire_date) $('#remainingtime').removeClass('foryoureyesonly').text('This document will expire in '+secondsToHuman(comments[0].meta.remaining_time)+'.').removeClass('hidden');
     if (comments[0].meta.burnafterreading) {
-        $('div#remainingtime').addClass('foryoureyesonly').text('FOR YOUR EYES ONLY.  Don\'t close this window, this message can\'t be displayed again.').removeClass('hidden');
-        $('button#clonebutton').addClass('hidden'); // Discourage cloning (as it can't really be prevented).
+        $('#remainingtime').addClass('foryoureyesonly').text('FOR YOUR EYES ONLY.  Don\'t close this window, this message can\'t be displayed again.').removeClass('hidden');
+        $('#clonebutton').addClass('hidden'); // Discourage cloning (as it can't really be prevented).
     }
 
     // If the discussion is opened on this paste, display it.
     if (comments[0].meta.opendiscussion) {
-        $('div#comments').html('');
+        $('#comments').html('');
         // For each comment.
         for (var i = 1; i < comments.length; i++) {
             var comment=comments[i];
@@ -212,9 +212,9 @@ function displayMessages(key, comments) {
             try {
                 cleartext = zeroDecipher(key, comment.data);
             } catch(err) { }
-            var place = $('div#comments');
+            var place = $('#comments');
             // If parent comment exists, display below (CSS will automatically shift it right.)
-            var cname = 'div#comment_'+comment.meta.parentid
+            var cname = '#comment_'+comment.meta.parentid
 
             // If the element exists in page
             if ($(cname).length) {
@@ -242,8 +242,8 @@ function displayMessages(key, comments) {
 
             place.append(divComment);
         }
-        $('div#comments').append('<div class="comment"><button onclick="open_reply($(this),\'' + pasteID() + '\');return false;">Add comment</button></div>');
-        $('div#discussion').removeClass('hidden');
+        $('#comments').append('<div class="comment"><button onclick="open_reply($(this),\'' + pasteID() + '\');return false;">Add comment</button></div>');
+        $('#discussion').removeClass('hidden');
     }
 }
 
@@ -260,12 +260,12 @@ function open_reply(source, commentid) {
                 + '<br /><button id="replybutton" onclick="send_comment(\'' + commentid + '\');return false;">Post comment</button>'
                 + '<div id="replystatus"> </div>'
                 + '</div>');
-    $('input#nickname').focus(function() {
+    $('#nickname').focus(function() {
         if ($(this).val() == $(this).attr('title')) {
             $(this).val('');
         }
     });
-    $('textarea#replymessage').focus();
+    $('#replymessage').focus();
 }
 
 /**
@@ -274,14 +274,14 @@ function open_reply(source, commentid) {
  */
 function send_comment(parentid) {
     // Do not send if no data.
-    if ($('textarea#replymessage').val().length==0) {
+    if ($('#replymessage').val().length==0) {
         return;
     }
 
     showStatus('Sending comment...', spin=true);
-    var cipherdata = zeroCipher(pageKey(), $('textarea#replymessage').val());
+    var cipherdata = zeroCipher(pageKey(), $('#replymessage').val());
     var ciphernickname = '';
-    var nick=$('input#nickname').val();
+    var nick=$('#nickname').val();
     if (nick != '' && nick != 'Optional nickname...') {
         ciphernickname = zeroCipher(pageKey(), nick);
     }
@@ -315,7 +315,7 @@ function send_comment(parentid) {
  */
 function send_data() {
     // Do not send if no data.
-    if ($('textarea#message').val().length == 0) {
+    if ($('#message').val().length == 0) {
         return;
     }
 
@@ -330,11 +330,11 @@ function send_data() {
     showStatus('Sending paste...', spin=true);
 
     var randomkey = sjcl.codec.base64.fromBits(sjcl.random.randomWords(8, 0), 0);
-    var cipherdata = zeroCipher(randomkey, $('textarea#message').val());
+    var cipherdata = zeroCipher(randomkey, $('#message').val());
     var data_to_send = { data:           cipherdata,
-                         expire:         $('select#pasteExpiration').val(),
-                         burnafterreading: $('input#burnafterreading').is(':checked') ? 1 : 0,
-                         opendiscussion: $('input#opendiscussion').is(':checked') ? 1 : 0
+                         expire:         $('#pasteExpiration').val(),
+                         burnafterreading: $('#burnafterreading').is(':checked') ? 1 : 0,
+                         opendiscussion: $('#opendiscussion').is(':checked') ? 1 : 0
                        };
     $.post(scriptLocation(), data_to_send, 'json')
     .error(function() {
@@ -347,14 +347,14 @@ function send_data() {
             var deleteUrl = scriptLocation() + "?pasteid=" + data.id + '&deletetoken=' + data.deletetoken;
             showStatus('');
 
-            $('div#pastelink').html('Your paste is <a id="pasteurl" href="' + url + '">' + url + '</a> <span id="copyhint">(Hit CTRL+C to copy)</span>');
-            $('div#deletelink').html('<a href="' + deleteUrl + '">Delete data</a>');
-            $('div#pasteresult').removeClass('hidden');
+            $('#pastelink').html('Your paste is <a id="pasteurl" href="' + url + '">' + url + '</a> <span id="copyhint">(Hit CTRL+C to copy)</span>');
+            $('#deletelink').html('<a href="' + deleteUrl + '">Delete data</a>');
+            $('#pasteresult').removeClass('hidden');
             selectText('pasteurl'); // We pre-select the link so that the user only has to CTRL+C the link.
 
-            setElementText($('div#cleartext'), $('textarea#message').val());
-            setElementText($('pre#prettyprint'), $('textarea#message').val());
-            urls2links($('div#cleartext'));
+            setElementText($('#cleartext'), $('#message').val());
+            setElementText($('#prettyprint'), $('#message').val());
+            urls2links($('#cleartext'));
             showStatus('');
             prettyPrint();
         }
@@ -393,53 +393,53 @@ function selectText(element) {
  * Put the screen in "New paste" mode.
  */
 function stateNewPaste() {
-    $('button#sendbutton').removeClass('hidden');
-    $('button#clonebutton').addClass('hidden');
-    $('button#rawtextbutton').addClass('hidden');
-    $('div#expiration').removeClass('hidden');
-    $('div#remainingtime').addClass('hidden');
-    $('div#burnafterreadingoption').removeClass('hidden');
-    $('div#opendisc').removeClass('hidden');
-    $('button#newbutton').removeClass('hidden');
-    $('div#pasteresult').addClass('hidden');
-    $('textarea#message').text('');
-    $('textarea#message').removeClass('hidden');
-    $('div#cleartext').addClass('hidden');
-    $('textarea#message').focus();
-    $('div#discussion').addClass('hidden');
-    $('div#prettymessage').addClass('hidden');
+    $('#sendbutton').removeClass('hidden');
+    $('#clonebutton').addClass('hidden');
+    $('#rawtextbutton').addClass('hidden');
+    $('#expiration').removeClass('hidden');
+    $('#remainingtime').addClass('hidden');
+    $('#burnafterreadingoption').removeClass('hidden');
+    $('#opendisc').removeClass('hidden');
+    $('#newbutton').removeClass('hidden');
+    $('#pasteresult').addClass('hidden');
+    $('#message').text('');
+    $('#message').removeClass('hidden');
+    $('#cleartext').addClass('hidden');
+    $('#message').focus();
+    $('#discussion').addClass('hidden');
+    $('#prettymessage').addClass('hidden');
 }
 
 /**
  * Put the screen in "Existing paste" mode.
  */
 function stateExistingPaste() {
-    $('button#sendbutton').addClass('hidden');
+    $('#sendbutton').addClass('hidden');
 
     // No "clone" for IE<10.
-    if ($('div#oldienotice').is(":visible")) {
-        $('button#clonebutton').addClass('hidden');
+    if ($('#oldienotice').is(":visible")) {
+        $('#clonebutton').addClass('hidden');
     }
     else {
-        $('button#clonebutton').removeClass('hidden');
+        $('#clonebutton').removeClass('hidden');
     }
-    $('button#rawtextbutton').removeClass('hidden');
+    $('#rawtextbutton').removeClass('hidden');
 
-    $('div#expiration').addClass('hidden');
-    $('div#burnafterreadingoption').addClass('hidden');
-    $('div#opendisc').addClass('hidden');
-    $('button#newbutton').removeClass('hidden');
-    $('div#pasteresult').addClass('hidden');
-    $('textarea#message').addClass('hidden');
-    $('div#cleartext').addClass('hidden');
-    $('div#prettymessage').removeClass('hidden');
+    $('#expiration').addClass('hidden');
+    $('#burnafterreadingoption').addClass('hidden');
+    $('#opendisc').addClass('hidden');
+    $('#newbutton').removeClass('hidden');
+    $('#pasteresult').addClass('hidden');
+    $('#message').addClass('hidden');
+    $('#cleartext').addClass('hidden');
+    $('#prettymessage').removeClass('hidden');
 }
 
 /** Return raw text
   */
 function rawText()
 {
-    var paste = $('div#cleartext').html();
+    var paste = $('#cleartext').html();
     var newDoc = document.open('text/html', 'replace');
     newDoc.write('<pre>'+paste+'</pre>');
     newDoc.close();
@@ -455,7 +455,7 @@ function clonePaste() {
     history.replaceState(document.title, document.title, scriptLocation());
 
     showStatus('');
-    $('textarea#message').text($('div#cleartext').text());
+    $('#message').text($('#cleartext').text());
 }
 
 /**
@@ -464,7 +464,7 @@ function clonePaste() {
 function newPaste() {
     stateNewPaste();
     showStatus('');
-    $('textarea#message').text('');
+    $('#message').text('');
 }
 
 /**
@@ -472,8 +472,8 @@ function newPaste() {
  * (We use the same function for paste and reply to comments)
  */
 function showError(message) {
-    $('div#status').addClass('errorMessage').text(message);
-    $('div#replystatus').addClass('errorMessage').text(message);
+    $('#status').addClass('errorMessage').text(message);
+    $('#replystatus').addClass('errorMessage').text(message);
 }
 
 /**
@@ -484,22 +484,22 @@ function showError(message) {
  * @param boolean spin (optional) : tell if the "spinning" animation should be displayed.
  */
 function showStatus(message, spin) {
-    $('div#replystatus').removeClass('errorMessage');
-    $('div#replystatus').text(message);
+    $('#replystatus').removeClass('errorMessage');
+    $('#replystatus').text(message);
     if (!message) {
-        $('div#status').html(' ');
+        $('#status').html(' ');
         return;
     }
     if (message == '') {
-        $('div#status').html(' ');
+        $('#status').html(' ');
         return;
     }
-    $('div#status').removeClass('errorMessage');
-    $('div#status').text(message);
+    $('#status').removeClass('errorMessage');
+    $('#status').text(message);
     if (spin) {
         var img = '<img src="img/busy.gif" style="width:16px;height:9px;margin:0px 4px 0px 0px;" />';
-        $('div#status').prepend(img);
-        $('div#replystatus').prepend(img);
+        $('#status').prepend(img);
+        $('#replystatus').prepend(img);
     }
 }
 
@@ -549,28 +549,28 @@ $(function() {
     $('#noscript').hide();
 
     // If "burn after reading" is checked, disable discussion.
-    $('input#burnafterreading').change(function() {
+    $('#burnafterreading').change(function() {
         if ($(this).is(':checked') ) {
-            $('div#opendisc').addClass('buttondisabled');
-            $('input#opendiscussion').attr({checked: false});
-            $('input#opendiscussion').attr('disabled',true);
+            $('#opendisc').addClass('buttondisabled');
+            $('#opendiscussion').attr({checked: false});
+            $('#opendiscussion').attr('disabled',true);
         }
         else {
-            $('div#opendisc').removeClass('buttondisabled');
-            $('input#opendiscussion').removeAttr('disabled');
+            $('#opendisc').removeClass('buttondisabled');
+            $('#opendiscussion').removeAttr('disabled');
         }
     });
 
     // Display status returned by php code if any (eg. Paste was properly deleted.)
-    if ($('div#status').text().length > 0) {
-        showStatus($('div#status').text(),false);
+    if ($('#status').text().length > 0) {
+        showStatus($('#status').text(),false);
         return;
     }
 
-    $('div#status').html(' '); // Keep line height even if content empty.
+    $('#status').html(' '); // Keep line height even if content empty.
 
     // Display an existing paste
-    if ($('div#cipherdata').text().length > 1) {
+    if ($('#cipherdata').text().length > 1) {
         // Missing decryption key in URL ?
         if (window.location.hash.length == 0) {
             showError('Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL ?)');
@@ -578,7 +578,7 @@ $(function() {
         }
 
         // List of messages to display
-        var messages = jQuery.parseJSON($('div#cipherdata').text());
+        var messages = jQuery.parseJSON($('#cipherdata').text());
 
         // Show proper elements on screen.
         stateExistingPaste();
@@ -586,8 +586,8 @@ $(function() {
         displayMessages(pageKey(), messages);
     }
     // Display error message from php code.
-    else if ($('div#errormessage').text().length>1) {
-        showError($('div#errormessage').text());
+    else if ($('#errormessage').text().length>1) {
+        showError($('#errormessage').text());
     }
     // Create a new paste.
     else {
