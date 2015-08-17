@@ -486,6 +486,8 @@ class zerobin
         $page->assign('VERSION', self::VERSION);
         $page->assign('OPENDISCUSSION', $this->_getMainConfig('opendiscussion', true));
         $page->assign('SYNTAXHIGHLIGHTING', $this->_getMainConfig('syntaxhighlighting', true));
+        $page->assign('SYNTAXHIGHLIGHTINGTHEME', $this->_getMainConfig('syntaxhighlightingtheme', ''));
+        $page->assign('NOTICE', $this->_getMainConfig('notice', ''));
         $page->assign('BURNAFTERREADINGSELECTED', $this->_getMainConfig('burnafterreadingselected', false));
         $page->assign('BASE64JSVERSION', $this->_getMainConfig('base64version', '2.1.9'));
         $page->assign('EXPIRE', $expire);
