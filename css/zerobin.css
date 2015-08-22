@@ -19,7 +19,7 @@ html {
 
 body {
 	font-family: Arial, Helvetica, sans-serif;
-	font-size: 0.8em;
+	font-size: 0.9em;
 	margin-bottom: 15px;
 	padding-left: 60px;
 	padding-right: 60px;
@@ -65,7 +65,7 @@ h3 {
 }   
 
 #aboutbox { 
-	font-size: 1.4em;
+	font-size: 1.2em;
 	color: #94a3b4; 
 	padding: 4px 8px 4px 16px;
 	position: relative; 
@@ -380,4 +380,8 @@ img.vizhash {
 	position: relative;
 	top: 2px;
 	left: -3px;
+}
+
+#prettyprint {
+	font-size: 1.2em;
 }
