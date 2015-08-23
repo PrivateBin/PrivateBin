@@ -222,7 +222,7 @@ function displayMessages(key, comments) {
             }
             var divComment = $('<article><div class="comment" id="comment_' + comment.meta.commentid+'">'
                                + '<div class="commentmeta"><span class="nickname"></span><span class="commentdate"></span></div><div class="commentdata"></div>'
-                               + '<button onclick="open_reply($(this),\'' + comment.meta.commentid + '\');return false;">Reply</button>'
+                               + '<button onclick="open_reply($(this),\'' + comment.meta.commentid + '\');return false;" class="btn btn-default">Reply</button>'
                                + '</div></article>');
             setElementText(divComment.find('div.commentdata'), cleartext);
             // Convert URLs to clickable links in comment.
@@ -242,7 +242,7 @@ function displayMessages(key, comments) {
 
             place.append(divComment);
         }
-        $('#comments').append('<div class="comment"><button onclick="open_reply($(this),\'' + pasteID() + '\');return false;">Add comment</button></div>');
+        $('#comments').append('<div class="comment"><button onclick="open_reply($(this),\'' + pasteID() + '\');return false;" class="btn btn-default">Add comment</button></div>');
         $('#discussion').removeClass('hidden');
     }
 }
@@ -255,9 +255,9 @@ function displayMessages(key, comments) {
 function open_reply(source, commentid) {
     $('div.reply').remove(); // Remove any other reply area.
     source.after('<div class="reply">'
-                + '<input type="text" id="nickname" title="Optional nickname..." value="Optional nickname..." />'
-                + '<textarea id="replymessage" class="replymessage" cols="80" rows="7"></textarea>'
-                + '<br /><button id="replybutton" onclick="send_comment(\'' + commentid + '\');return false;">Post comment</button>'
+                + '<input type="text" id="nickname" class="form-control" title="Optional nickname..." value="Optional nickname..." />'
+                + '<textarea id="replymessage" class="replymessage form-control" cols="80" rows="7"></textarea>'
+                + '<br /><button id="replybutton" onclick="send_comment(\'' + commentid + '\');return false;" class="btn btn-default">Post comment</button>'
                 + '<div id="replystatus"> </div>'
                 + '</div>');
     $('#nickname').focus(function() {

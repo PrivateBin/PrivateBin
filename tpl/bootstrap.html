@@ -7,7 +7,8 @@
 		<meta name="robots" content="noindex" />
 		<title>ZeroBin</title>
 		<link type="text/css" rel="stylesheet" href="css/bootstrap/bootstrap-3.3.5.css" />
-		<link type="text/css" rel="stylesheet" href="css/bootstrap/bootstrap-theme-3.3.5.css" />{if="$SYNTAXHIGHLIGHTING"}
+		<link type="text/css" rel="stylesheet" href="css/bootstrap/bootstrap-theme-3.3.5.css" />
+		<link type="text/css" rel="stylesheet" href="css/bootstrap/zerobin.css?{$VERSION|rawurlencode}" />{if="$SYNTAXHIGHLIGHTING"}
 		<link type="text/css" rel="stylesheet" href="css/prettify/prettify.css?{$VERSION|rawurlencode}" />{if="strlen($SYNTAXHIGHLIGHTINGTHEME)"}
 		<link type="text/css" rel="stylesheet" href="css/prettify/{$SYNTAXHIGHLIGHTINGTHEME}.css?{$VERSION|rawurlencode}" />{/if}{/if}
 		<script type="text/javascript" src="js/jquery-1.11.3.js"></script>
@@ -18,11 +19,6 @@
 		<script type="text/javascript" src="js/bootstrap-3.3.5.js"></script>{if="$SYNTAXHIGHLIGHTING"}
 		<script type="text/javascript" src="js/prettify.js?{$VERSION|rawurlencode}"></script>{/if}
 		<script type="text/javascript" src="js/zerobin.js?{$VERSION|rawurlencode}"></script>
-		<style type="text/css">
-			body { padding: 70px 0 30px 0; }
-			#deletelink { float: right;	}
-			#pastelink { display: inline; }
-    	</style>
 		<!--[if lt IE 10]>
 		<style type="text/css">#ienotice {display:block !important;} #oldienotice {display:block !important;}</style>
 		<![endif]-->
