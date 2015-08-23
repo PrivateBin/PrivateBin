@@ -7,6 +7,7 @@ tmp/
 # Ignore unit testing logs, api docs and eclipse project files
 tst/log/
 doc/
-.settings/
+.settings
 .buildpath
 .project
+.externalToolBuilders
