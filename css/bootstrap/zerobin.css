@@ -13,6 +13,10 @@ body {
 	display: inline;
 }
 
+#message {
+	font-family: monospace;
+}
+
 #nickname {
 	margin: 5px 0;
 }
