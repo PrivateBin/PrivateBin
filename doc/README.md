@@ -10,7 +10,7 @@ Details about [installing phpDocumentor](http://phpdoc.org/docs/latest/getting-s
 can be found in its own documentation.
 
 Example for Debian and Ubuntu:
-    $ sudo aptitude install pear graphviz
+    $ sudo aptitude install php-pear graphviz
     $ sudo pear channel-discover pear.phpdoc.org
     $ sudo pear install phpdoc/phpDocumentor
 

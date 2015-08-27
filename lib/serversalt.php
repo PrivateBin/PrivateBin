@@ -47,12 +47,11 @@ class serversalt extends persistence
         }
         else // fallback to mt_rand()
         {
-            for($i = 0; $i < 16; ++$i) {
+            for($i = 0; $i < 256; ++$i) {
                 $randomSalt .= base_convert(mt_rand(), 10, 16);
             }
         }
-        self::$_salt = $randomSalt;
-        return self::$_salt;
+        return $randomSalt;
     }
 
     /**
@@ -60,21 +59,41 @@ class serversalt extends persistence
      *
      * @access public
      * @static
+     * @throws Exception
      * @return string
      */
     public static function get()
     {
-    	if (strlen(self::$_salt)) return self::$_salt;
+        if (strlen(self::$_salt)) return self::$_salt;
 
         $file = 'salt.php';
-        if (!self::_exists($file)) {
+        if (self::_exists($file)) {
+            $items = explode('|', @file_get_contents(self::getPath($file)));
+            if (!is_array($items) || count($items) != 3) {
+                throw new Exception('unable to read file ' . self::getPath($file), 20);
+            }
+            self::$_salt = $items[1];
+        } else {
+            self::$_salt = self::generate();
             self::_store(
-            	$file,
-                '<?php /* |'. self::generate() . '| */ ?>'
+                $file,
+                '<?php /* |'. self::$_salt . '| */ ?>'
             );
         }
-        $items = explode('|', file_get_contents(self::getPath($file)));
-        self::$_salt = $items[1];
-        return $items[1];
+        return self::$_salt;
+    }
+
+    /**
+     * set the path
+     *
+     * @access public
+     * @static
+     * @param  string $path
+     * @return void
+     */
+    public static function setPath($path)
+    {
+    	self::$_salt = '';
+        parent::setPath($path);
     }
 }

@@ -65,4 +65,81 @@ class zerobin_dbTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($this->_model->existsComment(self::$pasteid, self::$pasteid, self::$commentid), 'comment was deleted with paste');
         $this->assertFalse($this->_model->read(self::$pasteid), 'paste can no longer be found');
     }
+
+    /**
+     * @expectedException PDOException
+     */
+    public function testGetIbmInstance()
+    {
+        zerobin_db::getInstance(array(
+            'dsn' => 'ibm:', 'usr' => null, 'pwd' => null,
+            'opt' => array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
+        ));
+    }
+
+    /**
+     * @expectedException PDOException
+     */
+    public function testGetInformixInstance()
+    {
+        zerobin_db::getInstance(array(
+            'dsn' => 'informix:', 'usr' => null, 'pwd' => null,
+            'opt' => array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
+        ));
+    }
+
+    /**
+     * @expectedException PDOException
+     */
+    public function testGetMssqlInstance()
+    {
+        zerobin_db::getInstance(array(
+            'dsn' => 'mssql:', 'usr' => null, 'pwd' => null,
+            'opt' => array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
+        ));
+    }
+
+    /**
+     * @expectedException PDOException
+     */
+    public function testGetMysqlInstance()
+    {
+        zerobin_db::getInstance(array(
+            'dsn' => 'mysql:', 'usr' => null, 'pwd' => null,
+            'opt' => array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
+        ));
+    }
+
+    /**
+     * @expectedException PDOException
+     */
+    public function testGetOciInstance()
+    {
+        zerobin_db::getInstance(array(
+            'dsn' => 'oci:', 'usr' => null, 'pwd' => null,
+            'opt' => array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
+        ));
+    }
+
+    /**
+     * @expectedException PDOException
+     */
+    public function testGetPgsqlInstance()
+    {
+        zerobin_db::getInstance(array(
+            'dsn' => 'pgsql:', 'usr' => null, 'pwd' => null,
+            'opt' => array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
+        ));
+    }
+
+    /**
+     * @expectedException Exception
+     * @expectedExceptionCode 5
+     */
+    public function testGetFooInstance()
+    {
+        zerobin_db::getInstance(array(
+            'dsn' => 'foo:', 'usr' => null, 'pwd' => null, 'opt' => null
+        ));
+    }
 }

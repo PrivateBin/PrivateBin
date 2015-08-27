@@ -339,7 +339,7 @@ class zerobin
             // Generate the "delete" token.
             // The token is the hmac of the pasteid signed with the server salt.
             // The paste can be delete by calling http://myserver.com/zerobin/?pasteid=<pasteid>&deletetoken=<deletetoken>
-            $deletetoken = hash_hmac('sha1', $dataid , serversalt::get());
+            $deletetoken = hash_hmac('sha1', $dataid, serversalt::get());
 
             // 0 = no error
             $this->_return_message(0, $dataid, array('deletetoken' => $deletetoken));
@@ -373,7 +373,8 @@ class zerobin
         }
 
         // Make sure token is valid.
-        if (filter::slow_equals($deletetoken, hash_hmac('sha1', $dataid , serversalt::get())))
+        serversalt::setPath($this->_conf['traffic']['dir']);
+        if (!filter::slow_equals($deletetoken, hash_hmac('sha1', $dataid, serversalt::get())))
         {
             $this->_error = 'Wrong deletion token. Paste was not deleted.';
             return;

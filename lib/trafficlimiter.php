@@ -47,6 +47,7 @@ class trafficlimiter extends persistence
      * @access public
      * @static
      * @param  string $ip
+     * @throws Exception
      * @return bool
      */
     public static function canPass($ip)

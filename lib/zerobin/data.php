@@ -38,8 +38,8 @@ class zerobin_data extends zerobin_abstract
     {
         // if given update the data directory
         if (
-        	is_array($options) &&
-        	array_key_exists('dir', $options)
+            is_array($options) &&
+            array_key_exists('dir', $options)
         ) self::$_dir = $options['dir'] . DIRECTORY_SEPARATOR;
         // if needed initialize the singleton
         if(!(self::$_instance instanceof zerobin_data)) {
