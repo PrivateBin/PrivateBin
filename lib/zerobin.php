@@ -93,7 +93,8 @@ class zerobin
         // create new paste or comment
         if (!empty($_POST['data']))
         {
-            $this->_create($_POST['data']);
+            echo $this->_create($_POST['data']);
+            return;
         }
         // delete an existing paste
         elseif (!empty($_GET['deletetoken']) && !empty($_GET['pasteid']))
@@ -182,7 +183,7 @@ class zerobin
         trafficlimiter::setPath($this->_conf['traffic']['dir']);
         if (
             !trafficlimiter::canPass($_SERVER['REMOTE_ADDR'])
-        ) $this->_return_message(
+        ) return $this->_return_message(
             1,
             'Please wait ' .
             $this->_conf['traffic']['limit'] .
@@ -193,7 +194,7 @@ class zerobin
         $sizelimit = (int) $this->_getMainConfig('sizelimit', 2097152);
         if (
             strlen($data) > $sizelimit
-        ) $this->_return_message(
+        ) return $this->_return_message(
             1,
             'Paste is limited to ' .
             filter::size_humanreadable($sizelimit) .
@@ -201,7 +202,7 @@ class zerobin
         );
 
         // Make sure format is correct.
-        if (!sjcl::isValid($data)) $this->_return_message(1, 'Invalid data.');
+        if (!sjcl::isValid($data)) return $this->_return_message(1, 'Invalid data.');
 
         // Read additional meta-information.
         $meta=array();
@@ -268,7 +269,7 @@ class zerobin
             }
         }
 
-        if ($error) $this->_return_message(1, 'Invalid data.');
+        if ($error) return $this->_return_message(1, 'Invalid data.');
 
         // Add post date to meta.
         $meta['postdate'] = time();
@@ -293,7 +294,7 @@ class zerobin
             if (
                 !filter::is_valid_paste_id($pasteid) ||
                 !filter::is_valid_paste_id($parentid)
-            ) $this->_return_message(1, 'Invalid data.');
+            ) return $this->_return_message(1, 'Invalid data.');
 
             // Comments do not expire (it's the paste that expires)
             unset($storage['expire_date']);
@@ -302,26 +303,26 @@ class zerobin
             // Make sure paste exists.
             if (
                 !$this->_model()->exists($pasteid)
-            ) $this->_return_message(1, 'Invalid data.');
+            ) return $this->_return_message(1, 'Invalid data.');
 
             // Make sure the discussion is opened in this paste.
             $paste = $this->_model()->read($pasteid);
             if (
                 !$paste->meta->opendiscussion
-            ) $this->_return_message(1, 'Invalid data.');
+            ) return $this->_return_message(1, 'Invalid data.');
 
             // Check for improbable collision.
             if (
                 $this->_model()->existsComment($pasteid, $parentid, $dataid)
-            ) $this->_return_message(1, 'You are unlucky. Try again.');
+            ) return $this->_return_message(1, 'You are unlucky. Try again.');
 
             // New comment
             if (
                 $this->_model()->createComment($pasteid, $parentid, $dataid, $storage) === false
-            ) $this->_return_message(1, 'Error saving comment. Sorry.');
+            ) return $this->_return_message(1, 'Error saving comment. Sorry.');
 
             // 0 = no error
-            $this->_return_message(0, $dataid);
+            return $this->_return_message(0, $dataid);
         }
         // The user posts a standard paste.
         else
@@ -329,12 +330,12 @@ class zerobin
             // Check for improbable collision.
             if (
                 $this->_model()->exists($dataid)
-            ) $this->_return_message(1, 'You are unlucky. Try again.');
+            ) return $this->_return_message(1, 'You are unlucky. Try again.');
 
             // New paste
             if (
                 $this->_model()->create($dataid, $storage) === false
-            ) $this->_return_message(1, 'Error saving paste. Sorry.');
+            ) return $this->_return_message(1, 'Error saving paste. Sorry.');
 
             // Generate the "delete" token.
             // The token is the hmac of the pasteid signed with the server salt.
@@ -342,10 +343,10 @@ class zerobin
             $deletetoken = hash_hmac('sha1', $dataid, serversalt::get());
 
             // 0 = no error
-            $this->_return_message(0, $dataid, array('deletetoken' => $deletetoken));
+            return $this->_return_message(0, $dataid, array('deletetoken' => $deletetoken));
         }
 
-        $this->_return_message(1, 'Server error.');
+        return $this->_return_message(1, 'Server error.');
     }
 
     /**
@@ -532,6 +533,6 @@ class zerobin
             $result['id'] = $message;
         }
         $result += $other;
-        exit(json_encode($result));
+        return json_encode($result);
     }
 }

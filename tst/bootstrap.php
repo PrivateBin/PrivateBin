@@ -2,7 +2,7 @@
 error_reporting( E_ALL | E_STRICT );
 
 // change this, if your php files and data is outside of your webservers document root
-define('PATH', '..' . DIRECTORY_SEPARATOR);
+if (!defined('PATH')) define('PATH', '..' . DIRECTORY_SEPARATOR);
 
 require PATH . 'lib/auto.php';
 
