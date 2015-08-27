@@ -192,8 +192,10 @@ function displayMessages(key, comments) {
     }
     setElementText($('#cleartext'), cleartext);
     setElementText($('#prettyprint'), cleartext);
-    urls2links($('#cleartext')); // Convert URLs to clickable links.
-    prettyPrint();
+    // Convert URLs to clickable links.
+    urls2links($('#cleartext'));
+    urls2links($('#prettyprint'));
+    if (typeof prettyPrint == 'function') prettyPrint();
 
     // Display paste expiration.
     if (comments[0].meta.expire_date) $('#remainingtime').removeClass('foryoureyesonly').text('This document will expire in '+secondsToHuman(comments[0].meta.remaining_time)+'.').removeClass('hidden');
@@ -354,9 +356,11 @@ function send_data() {
 
             setElementText($('#cleartext'), $('#message').val());
             setElementText($('#prettyprint'), $('#message').val());
+            // Convert URLs to clickable links.
             urls2links($('#cleartext'));
+            urls2links($('#prettyprint'));
             showStatus('');
-            prettyPrint();
+            if (typeof prettyPrint == 'function') prettyPrint();
         }
         else if (data.status==1) {
             showError('Could not create paste: '+data.message);
