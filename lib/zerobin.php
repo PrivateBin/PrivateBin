@@ -171,7 +171,7 @@ class zerobin
      *
      * @access private
      * @param  string $data
-     * @return void
+     * @return string
      */
     private function _create($data)
     {
@@ -519,7 +519,7 @@ class zerobin
      * @param  bool $status
      * @param  string $message
      * @param  array $other
-     * @return void
+     * @return string
      */
     private function _return_message($status, $message, $other = array())
     {
