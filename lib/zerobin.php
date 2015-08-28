@@ -121,15 +121,15 @@ class zerobin
     {
         foreach (array('cfg', 'lib') as $dir)
         {
-            if (!is_file(PATH . $dir . '/.htaccess')) file_put_contents(
-                PATH . $dir . '/.htaccess',
+            if (!is_file(PATH . $dir . DIRECTORY_SEPARATOR . '.htaccess')) file_put_contents(
+                PATH . $dir . DIRECTORY_SEPARATOR . '.htaccess',
                 'Allow from none' . PHP_EOL .
                 'Deny from all'. PHP_EOL,
                 LOCK_EX
             );
         }
 
-        $this->_conf = parse_ini_file(PATH . 'cfg/conf.ini', true);
+        $this->_conf = parse_ini_file(PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.ini', true);
         foreach (array('main', 'model') as $section) {
             if (!array_key_exists($section, $this->_conf)) die(
                 "ZeroBin requires configuration section [$section] to be present in configuration file."
@@ -339,7 +339,7 @@ class zerobin
 
             // Generate the "delete" token.
             // The token is the hmac of the pasteid signed with the server salt.
-            // The paste can be delete by calling http://myserver.com/zerobin/?pasteid=<pasteid>&deletetoken=<deletetoken>
+            // The paste can be delete by calling http://example.com/zerobin/?pasteid=<pasteid>&deletetoken=<deletetoken>
             $deletetoken = hash_hmac('sha1', $dataid, serversalt::get());
 
             // 0 = no error

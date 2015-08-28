@@ -1,0 +1,341 @@
+#!/usr/bin/env php
+<?php
+/**
+ * generates a config unit test class
+ *
+ * This generator is meant to test all possible configuration combinations
+ * without having to write endless amounts of code manually.
+ *
+ * DANGER: Too many options/settings and too high max iteration setting may trigger
+ *         a fork bomb. Please save your work before executing this script.
+ */
+
+include 'bootstrap.php';
+
+$options = array(
+    'main/opendiscussion' => array(
+        array(
+            'setting' => true,
+            'tests' => array(
+                array(
+                    'type' => 'NotTag',
+                    'args' => array(
+                        array(
+                            'id' => 'opendiscussion',
+                            'attributes' => array(
+                                'disabled' => 'disabled',
+                            ),
+                        ),
+                        '$content',
+                        'outputs enabled discussion correctly'
+                    ),
+                ),
+            ),
+            'affects' => array('view')
+        ), array(
+            'setting' => false,
+            'tests' => array(
+                array(
+                    'type' => 'Tag',
+                    'args' => array(
+                        array(
+                            'id' => 'opendiscussion',
+                            'attributes' => array(
+                                'disabled' => 'disabled',
+                            ),
+                        ),
+                        '$content',
+                        'outputs disabled discussion correctly'
+                    ),
+                ),
+            ),
+            'affects' => array('view')
+        ),
+    ),
+    'main/syntaxhighlighting' => array(
+        array(
+            'setting' => true,
+            'tests' => array(
+                array(
+                    'type' => 'Tag',
+                    'args' => array(
+                        array(
+                            'tag' => 'link',
+                            'attributes' => array(
+                                'type' => 'text/css',
+                                'rel' => 'stylesheet',
+                                'href' => 'regexp:#css/prettify/prettify.css#',
+                            ),
+                        ),
+                        '$content',
+                        'outputs stylesheet correctly',
+                    ),
+                ), array(
+                    'type' => 'Tag',
+                    'args' => array(
+                        array(
+                            'tag' => 'script',
+                            'attributes' => array(
+                                'type' => 'text/javascript',
+                                'src' => 'regexp:#js/prettify.js#'
+                            ),
+                        ),
+                        '$content',
+                        'outputs javascript correctly',
+                    ),
+                ),
+            ),
+            'affects' => array('view'),
+        ), array(
+            'setting' => false,
+            'tests' => array(
+                array(
+                    'type' => 'NotTag',
+                    'args' => array(
+                        array(
+                            'tag' => 'link',
+                            'attributes' => array(
+                                'type' => 'text/css',
+                                'rel' => 'stylesheet',
+                                'href' => 'regexp:#css/prettify/prettify.css#',
+                            ),
+                        ),
+                        '$content',
+                        'removes stylesheet correctly',
+                    ),
+                ), array(
+                    'type' => 'NotTag',
+                    'args' => array(
+                        array(
+                            'tag' => 'script',
+                            'attributes' => array(
+                                'type' => 'text/javascript',
+                                'src' => 'regexp:#js/prettify.js#',
+                            ),
+                        ),
+                        '$content',
+                        'removes javascript correctly',
+                    ),
+                ),
+            ),
+            'affects' => array('view'),
+        ),
+    ),
+);
+
+// endless loop protection, since we're working with a recursive function, creating factorial configurations
+define('MAX_ITERATIONS', 1000);
+
+// generate all possible combinations of configurations: (option * settings)!
+$i = 0;
+$configurations = array(array('options' => array(), 'tests' => array(), 'affects' => array()));
+$configurations = getConfigurations($options, $configurations, $i);
+
+$defaultOptions = parse_ini_file(PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.ini', true);
+
+$code = <<<'EOT'
+<?php
+/**
+ * DO NOT EDIT: This file is automatically generated by configGenerator.php
+ */
+class configTest extends PHPUnit_Framework_TestCase
+{
+    private static $pasteid = '501f02e9eeb8bcec';
+
+    private static $paste = array(
+        'data' => '{"iv":"EN39/wd5Nk8HAiSG2K5AsQ","v":1,"iter":1000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"QKN1DBXe5PI","ct":"8hA83xDdXjD7K2qfmw5NdA"}',
+        'meta' => array(
+            'postdate' => 1344803344,
+            'opendiscussion' => true,
+        ),
+    );
+
+    private $_model;
+
+    private $_conf;
+
+    public function setUp()
+    {
+        /* Setup Routine */
+        $this->_conf = PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.ini';
+        if (!is_file($this->_conf . '.bak') && is_file($this->_conf))
+            rename($this->_conf, $this->_conf . '.bak');
+
+        $this->_model = zerobin_data::getInstance(array('dir' => PATH . 'data'));
+        serversalt::setPath(PATH . 'data');
+        $this->reset();
+    }
+
+    public function tearDown()
+    {
+        /* Tear Down Routine */
+        rename($this->_conf . '.bak', $this->_conf);
+}
+
+    public function reset($configuration = array())
+    {
+        $_POST = array();
+        $_GET = array();
+        $_SERVER = array();
+        if ($this->_model->exists(self::$pasteid))
+            $this->_model->delete(self::$pasteid);
+
+        // generate configuration file
+        if (count($configuration)) {
+            @unlink($this->_conf);
+            $c = fopen($this->_conf, 'a');
+            foreach ($configuration as $section => $options) {
+                fwrite($c, "[$section]" . PHP_EOL);
+                foreach($options as $option => $setting) {
+                    if (is_string($setting)) {
+                        $setting = '"' . $setting . '"';
+                    } else {
+                        $setting = var_export($setting, true);
+                    }
+                    fwrite($c, "$option = $setting" . PHP_EOL);
+                }
+                fwrite($c, PHP_EOL);
+            }
+            fclose($c);
+        }
+    }
+
+EOT;
+
+foreach ($configurations as $key => $conf) {
+    $options = var_export_min(array_replace_recursive($defaultOptions, $conf['options']), true);
+    foreach ($conf['affects'] as $step) {
+        $step = ucfirst($step);
+        switch ($step) {
+            case 'Create':
+                // @todo
+                continue;
+                break;
+            case 'Read':
+                // @todo
+                continue;
+                break;
+            case 'Delete':
+                // @todo
+                continue;
+                break;
+            // view
+            default:
+                $code .= <<<EOT
+    /**
+     * @runInSeparateProcess
+     */
+    public function test$step$key()
+    {
+        \$this->reset($options);
+        ob_start();
+        new zerobin;
+        \$content = ob_get_contents();
+
+
+EOT;
+        }
+
+        foreach ($conf['tests'] as $tests) {
+            foreach ($tests as $test) {
+                $args = array();
+                foreach ($test['args'] as $arg) {
+                    if ($arg == '$content') {
+                        $args[] = $arg;
+                    } else {
+                        $args[] = var_export_min($arg, true);
+                    }
+                }
+                $type = $test['type'];
+                $args = implode(', ', $args);
+                $code .= <<<EOT
+        \$this->assert$type($args);
+
+EOT;
+            }
+        }
+        $code .= <<<'EOT'
+    }
+
+
+EOT;
+    }
+}
+
+$code .= '}' . PHP_EOL;
+
+file_put_contents('configuration.php', $code);
+
+// recursive factorial function
+function getConfigurations(&$options, &$configurations, &$i) {
+    if (++$i > MAX_ITERATIONS) {
+        echo "max iterations reached, stopping", PHP_EOL;
+        return $configurations;
+    }
+    echo "getConfigurations: iteration $i", PHP_EOL;
+    $continue = list($path, $settings) = each($options);
+    if ($continue === false) {
+        return $configurations;
+    }
+    list($section, $option) = explode('/', $path);
+    for ($c = 0, $max = count($configurations); $c < $max; ++$c) {
+        if (!array_key_exists($section, $configurations[$c]['options'])) {
+            $configurations[$c]['options'][$section] = array();
+        }
+        if (count($settings) == 0) {
+            throw new Exception("Check your \$options: option $option has no settings!");
+        }
+        // set the first setting in the original configuration
+        $setting = current($settings);
+        addSetting($configurations[$c], $setting, $section, $option, $i);
+
+        // create clones for each of the other settings
+        while ($setting = next($settings)) {
+            $clone = $configurations[$c];
+            $configurations[] = addSetting($clone, $setting, $section, $option, $i);
+        }
+        reset($settings);
+    }
+    return getConfigurations($options, $configurations, $i);
+}
+
+function addSetting(&$configuration, &$setting, &$section, &$option, &$i) {
+    if (++$i > MAX_ITERATIONS) {
+        echo "max iterations reached, stopping", PHP_EOL;
+        return $configuration;
+    }
+    echo "addSetting: iteration $i", PHP_EOL;
+    if (
+        array_key_exists($option, $configuration['options'][$section]) &&
+        $configuration['options'][$section][$option] === $setting['setting']
+    ) {
+        $val = var_export_min($setting['setting'], true);
+        throw new Exception("Endless loop or error in options detected: option '$option' already exists with setting '$val' in one of the configurations!");
+    }
+    $configuration['options'][$section][$option] = $setting['setting'];
+    $configuration['tests'][$option] = $setting['tests'];
+    foreach ($setting['affects'] as $affects) {
+        if (!in_array($affects, $configuration['affects'])) {
+            $configuration['affects'][] = $affects;
+        }
+    }
+    return $configuration;
+}
+
+// by linus@flowingcreativity.net via php.net
+function var_export_min($var, $return = false) {
+    if (is_array($var)) {
+        $toImplode = array();
+        foreach ($var as $key => $value) {
+            $toImplode[] = var_export($key, true).' => '.var_export_min($value, true);
+        }
+        $code = 'array('.implode(', ', $toImplode).')';
+        if ($return) {
+            return $code;
+        } else {
+            echo $code;
+        }
+    } else {
+        return var_export($var, $return);
+    }
+}
