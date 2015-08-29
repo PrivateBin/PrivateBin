@@ -1,7 +1,7 @@
 <?php
 class zerobin_dbTest extends PHPUnit_Framework_TestCase
 {
-    private static $pasteid = '501f02e9eeb8bcec';
+    private static $pasteid = '5e9bc25c89fb3bf9';
 
     private static $paste = array(
         'data' => '{"iv":"EN39/wd5Nk8HAiSG2K5AsQ","v":1,"iter":1000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"QKN1DBXe5PI","ct":"8hA83xDdXjD7K2qfmw5NdA"}',
@@ -12,7 +12,7 @@ class zerobin_dbTest extends PHPUnit_Framework_TestCase
         ),
     );
 
-    private static $commentid = 'c47efb4741195f42';
+    private static $commentid = '5a52eebf11c4c94b';
 
     private static $comment = array(
         'data' => '{"iv":"Pd4pOKWkmDTT9uPwVwd5Ag","v":1,"iter":1000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"ZIUhFTliVz4","ct":"6nOCU3peNDclDDpFtJEBKA"}',

@@ -11,12 +11,17 @@
  */
 
 include 'bootstrap.php';
+
+$vrd  = array('view', 'read', 'delete');
+$vcud = array('view', 'create', 'read', 'delete');
+
 new configurationTestGenerator(array(
     'main/opendiscussion' => array(
         array(
             'setting' => true,
             'tests' => array(
                 array(
+                    'conditions' => array('steps' => $vrd),
                     'type' => 'NotTag',
                     'args' => array(
                         array(
@@ -28,9 +33,26 @@ new configurationTestGenerator(array(
                         '$content',
                         'outputs enabled discussion correctly'
                     ),
+                ), array(
+                    'conditions' => array('steps' => array('create'), 'traffic/limit' => 10),
+                    'settings' => array('$_POST["opendiscussion"] = "neither 1 nor 0"'),
+                    'type' => 'Equals',
+                    'args' => array(
+                        1,
+                        '$response["status"]',
+                        'when discussions are enabled, but invalid flag posted, fail to create paste'
+                    ),
+                ), array(
+                    'conditions' => array('steps' => array('create'), 'traffic/limit' => 10),
+                    'settings' => array('$_POST["opendiscussion"] = "neither 1 nor 0"'),
+                    'type' => 'False',
+                    'args' => array(
+                        '$this->_model->exists(self::$pasteid)',
+                        'when discussions are enabled, but invalid flag posted, paste is not created'
+                    ),
                 ),
             ),
-            'affects' => array('view')
+            'affects' => $vcud
         ), array(
             'setting' => false,
             'tests' => array(
@@ -48,7 +70,7 @@ new configurationTestGenerator(array(
                     ),
                 ),
             ),
-            'affects' => array('view')
+            'affects' => $vrd
         ),
     ),
     'main/syntaxhighlighting' => array(
@@ -63,7 +85,7 @@ new configurationTestGenerator(array(
                             'attributes' => array(
                                 'type' => 'text/css',
                                 'rel' => 'stylesheet',
-                                'href' => 'regexp:#css/prettify/prettify.css#',
+                                'href' => 'regexp:#css/prettify/prettify\.css#',
                             ),
                         ),
                         '$content',
@@ -76,7 +98,7 @@ new configurationTestGenerator(array(
                             'tag' => 'script',
                             'attributes' => array(
                                 'type' => 'text/javascript',
-                                'src' => 'regexp:#js/prettify.js#'
+                                'src' => 'regexp:#js/prettify\.js#'
                             ),
                         ),
                         '$content',
@@ -84,7 +106,7 @@ new configurationTestGenerator(array(
                     ),
                 ),
             ),
-            'affects' => array('view'),
+            'affects' => $vrd,
         ), array(
             'setting' => false,
             'tests' => array(
@@ -96,7 +118,7 @@ new configurationTestGenerator(array(
                             'attributes' => array(
                                 'type' => 'text/css',
                                 'rel' => 'stylesheet',
-                                'href' => 'regexp:#css/prettify/prettify.css#',
+                                'href' => 'regexp:#css/prettify/prettify\.css#',
                             ),
                         ),
                         '$content',
@@ -109,7 +131,7 @@ new configurationTestGenerator(array(
                             'tag' => 'script',
                             'attributes' => array(
                                 'type' => 'text/javascript',
-                                'src' => 'regexp:#js/prettify.js#',
+                                'src' => 'regexp:#js/prettify\.js#',
                             ),
                         ),
                         '$content',
@@ -117,7 +139,7 @@ new configurationTestGenerator(array(
                     ),
                 ),
             ),
-            'affects' => array('view'),
+            'affects' => $vrd,
         ),
     ),
     'main/syntaxhighlightingtheme' => array(
@@ -133,14 +155,13 @@ new configurationTestGenerator(array(
                             'attributes' => array(
                                 'type' => 'text/css',
                                 'rel' => 'stylesheet',
-                                'href' => 'regexp:#css/prettify/sons-of-obsidian.css#',
+                                'href' => 'regexp:#css/prettify/sons-of-obsidian\.css#',
                             ),
                         ),
                         '$content',
                         'outputs prettify theme stylesheet correctly',
                     ),
-                ),
-                array(
+                ), array(
                     'conditions' => array('main/syntaxhighlighting' => false),
                     'type' => 'NotTag',
                     'args' => array(
@@ -149,7 +170,7 @@ new configurationTestGenerator(array(
                             'attributes' => array(
                                 'type' => 'text/css',
                                 'rel' => 'stylesheet',
-                                'href' => 'regexp:#css/prettify/sons-of-obsidian.css#',
+                                'href' => 'regexp:#css/prettify/sons-of-obsidian\.css#',
                             ),
                         ),
                         '$content',
@@ -157,7 +178,7 @@ new configurationTestGenerator(array(
                     ),
                 ),
             ),
-            'affects' => array('view'),
+            'affects' => $vrd,
         ), array(
             'setting' => null, // option not set
             'tests' => array(
@@ -169,7 +190,7 @@ new configurationTestGenerator(array(
                             'attributes' => array(
                                 'type' => 'text/css',
                                 'rel' => 'stylesheet',
-                                'href' => 'regexp:#css/prettify/sons-of-obsidian.css#',
+                                'href' => 'regexp:#css/prettify/sons-of-obsidian\.css#',
                             ),
                         ),
                         '$content',
@@ -177,7 +198,218 @@ new configurationTestGenerator(array(
                     ),
                 ),
             ),
+            'affects' => $vrd,
+        ),
+    ),
+    'main/burnafterreadingselected' => array(
+        array(
+            'setting' => true,
+            'tests' => array(
+                array(
+                    'type' => 'Tag',
+                    'args' => array(
+                        array(
+                            'id' => 'burnafterreading',
+                            'attributes' => array(
+                                'checked' => 'checked',
+                            ),
+                        ),
+                        '$content',
+                        'preselects burn after reading option',
+                    ),
+                ),
+            ),
             'affects' => array('view'),
+        ), array(
+            'setting' => false,
+            'tests' => array(
+                array(
+                    'type' => 'NotTag',
+                    'args' => array(
+                        array(
+                            'id' => 'burnafterreading',
+                            'attributes' => array(
+                                'checked' => 'checked',
+                            ),
+                        ),
+                        '$content',
+                        'burn after reading option is unchecked',
+                    ),
+                ),
+            ),
+            'affects' => array('view'),
+        ),
+    ),
+    'main/template' => array(
+        array(
+            'setting' => 'page',
+            'tests' => array(
+                array(
+                    'type' => 'Tag',
+                    'args' => array(
+                        array(
+                            'tag' => 'link',
+                            'attributes' => array(
+                                'type' => 'text/css',
+                                'rel' => 'stylesheet',
+                                'href' => 'regexp:#css/zerobin\.css#',
+                            ),
+                        ),
+                        '$content',
+                        'outputs "page" stylesheet correctly',
+                    ),
+                ), array(
+                    'type' => 'NotTag',
+                    'args' => array(
+                        array(
+                            'tag' => 'link',
+                            'attributes' => array(
+                                'type' => 'text/css',
+                                'rel' => 'stylesheet',
+                                'href' => 'regexp:#css/bootstrap/bootstrap-\d[\d\.]+\d\.css#',
+                            ),
+                        ),
+                        '$content',
+                        'removes "bootstrap" stylesheet correctly',
+                    ),
+                ),
+            ),
+            'affects' => $vrd,
+        ), array(
+            'setting' => 'bootstrap',
+            'tests' => array(
+                array(
+                    'type' => 'NotTag',
+                    'args' => array(
+                        array(
+                            'tag' => 'link',
+                            'attributes' => array(
+                                'type' => 'text/css',
+                                'rel' => 'stylesheet',
+                                'href' => 'regexp:#css/zerobin.css#',
+                            ),
+                        ),
+                        '$content',
+                        'removes "page" stylesheet correctly',
+                    ),
+                ), array(
+                    'type' => 'Tag',
+                    'args' => array(
+                        array(
+                            'tag' => 'link',
+                            'attributes' => array(
+                                'type' => 'text/css',
+                                'rel' => 'stylesheet',
+                                'href' => 'regexp:#css/bootstrap/bootstrap-\d[\d\.]+\d\.css#',
+                            ),
+                        ),
+                        '$content',
+                        'outputs "bootstrap" stylesheet correctly',
+                    ),
+                ),
+            ),
+            'affects' => $vrd,
+        ),
+    ),
+    'main/sizelimit' => array(
+        array(
+            'setting' => 10,
+            'tests' => array(
+                array(
+                    'conditions' => array('steps' => array('create'), 'traffic/limit' => 10),
+                    'type' => 'Equals',
+                    'args' => array(
+                        1,
+                        '$response["status"]',
+                        'when sizelimit limit exceeded, fail to create paste'
+                    ),
+                ),
+            ),
+            'affects' => array('create')
+        ), array(
+            'setting' => 2097152,
+            'tests' => array(
+                array(
+                    'conditions' => array('steps' => array('create'), 'traffic/limit' => 0, 'main/burnafterreadingselected' => true),
+                    'settings' => array('sleep(3)'),
+                    'type' => 'Equals',
+                    'args' => array(
+                        0,
+                        '$response["status"]',
+                        'when sizelimit limit is not reached, successfully create paste'
+                    ),
+                ), array(
+                    'conditions' => array('steps' => array('create'), 'traffic/limit' => 0, 'main/burnafterreadingselected' => true),
+                    'settings' => array('sleep(3)'),
+                    'type' => 'True',
+                    'args' => array(
+                        '$this->_model->exists($response["id"])',
+                        'when sizelimit limit is not reached, paste exists after posting data'
+                    ),
+                ),
+            ),
+            'affects' => array('create')
+        ),
+    ),
+    'traffic/limit' => array(
+        array(
+            'setting' => 0,
+            'tests' => array(
+                array(
+                    'conditions' => array('steps' => array('create'), 'main/sizelimit' => 2097152),
+                    'type' => 'Equals',
+                    'args' => array(
+                        0,
+                        '$response["status"]',
+                        'when traffic limit is disabled, successfully create paste'
+                    ),
+                ), array(
+                    'conditions' => array('steps' => array('create'), 'main/sizelimit' => 2097152),
+                    'type' => 'True',
+                    'args' => array(
+                        '$this->_model->exists($response["id"])',
+                        'when traffic limit is disabled, paste exists after posting data'
+                    ),
+                ),
+            ),
+            'affects' => array('create')
+        ), array(
+            'setting' => 10,
+            'tests' => array(
+                array(
+                    'conditions' => array('steps' => array('create')),
+                    'type' => 'Equals',
+                    'args' => array(
+                        1,
+                        '$response["status"]',
+                        'when traffic limit is on and we do not wait, fail to create paste'
+                    ),
+                ),
+            ),
+            'affects' => array('create')
+        ), array(
+            'setting' => 2,
+            'tests' => array(
+                array(
+                    'conditions' => array('steps' => array('create'), 'main/sizelimit' => 2097152),
+                    'settings' => array('sleep(3)'),
+                    'type' => 'Equals',
+                    'args' => array(
+                        0,
+                        '$response["status"]',
+                        'when traffic limit is on and we wait, successfully create paste'
+                    ),
+                ), array(
+                    'conditions' => array('steps' => array('create'), 'main/sizelimit' => 2097152),
+                    'settings' => array('sleep(3)'),
+                    'type' => 'True',
+                    'args' => array(
+                        '$this->_model->exists($response["id"])',
+                        'when traffic limit is on and we wait, paste exists after posting data'
+                    ),
+                ),
+            ),
+            'affects' => array('create')
         ),
     ),
 ));
@@ -233,113 +465,29 @@ class configurationTestGenerator
             $fullOptions = array_replace_recursive($defaultOptions, $conf['options']);
             $options = helper::var_export_min($fullOptions, true);
             foreach ($conf['affects'] as $step) {
-                $step = ucfirst($step);
-                switch ($step) {
-                    case 'Create':
-                        $code .= <<<EOT
-    /**
-     * @runInSeparateProcess
-     */
-    public function test$step$key()
-    {
-        \$this->reset($options);
-        \$_POST = self::\$paste;
-        \$_SERVER['REMOTE_ADDR'] = '::1';
-        ob_start();
-        new zerobin;
-        \$content = ob_get_contents();
-
-        \$response = json_decode(\$content, true);
-        \$this->assertEquals(\$response['status'], 0, 'outputs status');
-        \$this->assertEquals(
-            \$response['deletetoken'],
-            hash_hmac('sha1', \$response['id'], serversalt::get()),
-            'outputs valid delete token'
-        );
-        \$this->assertTrue(\$this->_model->exists(\$response['id']), 'paste exists after posting data');
-
-
-EOT;
-                        break;
-                    case 'Read':
-                        $code .= <<<EOT
-    /**
-     * @runInSeparateProcess
-     */
-    public function test$step$key()
-    {
-        \$this->reset($options);
-        \$this->_model->create(self::\$pasteid, self::\$paste);
-        \$_SERVER['QUERY_STRING'] = self::\$pasteid;
-        ob_start();
-        new zerobin;
-        \$content = ob_get_contents();
-
-        \$this->assertTag(
-            array(
-                'id' => 'cipherdata',
-                'content' => htmlspecialchars(json_encode(self::\$paste), ENT_NOQUOTES)
-            ),
-            \$content,
-            'outputs data correctly'
-        );
-
-
-EOT;
-                        break;
-                    case 'Delete':
-                        $code .= <<<EOT
-    /**
-     * @runInSeparateProcess
-     */
-    public function test$step$key()
-    {
-        \$this->reset($options);
-        \$this->_model->create(self::$\pasteid, self::$\paste);
-        \$this->assertTrue(\$this->_model->exists(self::$\pasteid), 'paste exists before deleting data');
-        \$_GET['pasteid'] = self::$\pasteid;
-        \$_GET['deletetoken'] = hash_hmac('sha1', self::$\pasteid, serversalt::get());
-        ob_start();
-        new zerobin;
-        \$content = ob_get_contents();
-
-        \$this->assertTag(
-            array(
-                'id' => 'status',
-                'content' => 'Paste was properly deleted'
-            ),
-            \$content,
-            'outputs deleted status correctly'
-        );
-        \$this->assertFalse(\$this->_model->exists(self::\$pasteid), 'paste successfully deleted');
-
-
-EOT;
-                        break;
-                    // view
-                    default:
-                        $code .= <<<EOT
-    /**
-     * @runInSeparateProcess
-     */
-    public function test$step$key()
-    {
-        \$this->reset($options);
-        ob_start();
-        new zerobin;
-        \$content = ob_get_contents();
-
-
-EOT;
-                }
+                $testCode = $preCode = array();
                 foreach ($conf['tests'] as $tests) {
-                    foreach ($tests as $test) {
+                    foreach ($tests[0] as $test) {
+                        // skip if test does not affect this step
+                        if (!in_array($step, $tests[1])) {
+                            continue;
+                        }
+                        // skip if not all test conditions are met
                         if (array_key_exists('conditions', $test)) {
-                            while(list($path, $setting) = each($test['conditions'])) {
-                                list($section, $option) = explode('/', $path);
-                                if ($fullOptions[$section][$option] !== $setting) {
+                            while (list($path, $setting) = each($test['conditions'])) {
+                                if ($path == 'steps' && !in_array($step, $setting)) {
                                     continue 2;
+                                } elseif($path != 'steps') {
+                                    list($section, $option) = explode('/', $path);
+                                    if ($fullOptions[$section][$option] !== $setting) {
+                                        continue 2;
+                                    }
                                 }
+                            }
+                        }
+                        if (array_key_exists('settings', $test)) {
+                            foreach ($test['settings'] as $setting) {
+                                $preCode[$setting] = $setting;
                             }
                         }
                         $args = array();
@@ -350,12 +498,12 @@ EOT;
                                 $args[] = helper::var_export_min($arg, true);
                             }
                         }
-                        $type = $test['type'];
-                        $args = implode(', ', $args);
-                        $code .= "        \$this->assert$type($args);" . PHP_EOL;
+                        $testCode[] = array($test['type'], implode(', ', $args));
                     }
                 }
-                $code .= '    }' . PHP_EOL . PHP_EOL;
+                $code .= $this->_getFunction(
+                    ucfirst($step), $key, $options, $preCode, $testCode
+                );
             }
         }
         $code .= '}' . PHP_EOL;
@@ -376,7 +524,7 @@ EOT;
  */
 class configurationTest extends PHPUnit_Framework_TestCase
 {
-    private static $pasteid = '501f02e9eeb8bcec';
+    private static $pasteid = '5e9bc25c89fb3bf9';
 
     private static $paste = array(
         'data' => '{"iv":"EN39/wd5Nk8HAiSG2K5AsQ","v":1,"iter":1000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"QKN1DBXe5PI","ct":"8hA83xDdXjD7K2qfmw5NdA"}',
@@ -418,7 +566,114 @@ class configurationTest extends PHPUnit_Framework_TestCase
         helper::createIniFile($this->_conf, $configuration);
     }
 
+
 EOT;
+    }
+
+    /**
+     * get unit tests function block
+     *
+     * @param string $step
+     * @param int $key
+     * @param array $options
+     * @param array $preCode
+     * @param array $testCode
+     * @return string
+     */
+    private function _getFunction($step, $key, &$options, $preCode, $testCode)
+    {
+        if (count($testCode) == 0) {
+            echo "skipping creation of test$step$key, no valid tests found for configuration: $options". PHP_EOL;
+            return '';
+        }
+
+        $preString = $testString = '';
+        foreach ($preCode as $setting) {
+            $preString .= "        $setting;" . PHP_EOL;
+        }
+        foreach ($testCode as $test) {
+            $type = $test[0];
+            $args = $test[1];
+            $testString .= "        \$this->assert$type($args);" . PHP_EOL;
+        }
+        $code = <<<EOT
+    /**
+     * @runInSeparateProcess
+     */
+    public function test$step$key()
+    {
+        \$this->reset($options);
+EOT;
+
+        // step specific initialization
+        switch ($step) {
+            case 'Create':
+                $code .= PHP_EOL . <<<'EOT'
+        $_POST = self::$paste;
+        $_SERVER['REMOTE_ADDR'] = '::1';
+EOT;
+                break;
+            case 'Read':
+                $code .= PHP_EOL . <<<'EOT'
+        $this->_model->create(self::$pasteid, self::$paste);
+        $_SERVER['QUERY_STRING'] = self::$pasteid;
+EOT;
+                break;
+            case 'Delete':
+                $code .= PHP_EOL . <<<'EOT'
+        $this->_model->create(self::$pasteid, self::$paste);
+        $this->assertTrue($this->_model->exists(self::$pasteid), 'paste exists before deleting data');
+        $_GET['pasteid'] = self::$pasteid;
+        $_GET['deletetoken'] = hash_hmac('sha1', self::$pasteid, serversalt::get());
+EOT;
+                break;
+        }
+
+        // all steps
+        $code .= PHP_EOL . $preString;
+        $code .= <<<'EOT'
+        ob_start();
+        new zerobin;
+        $content = ob_get_contents();
+EOT;
+
+        // step specific tests
+        switch ($step) {
+            case 'Create':
+                $code .= <<<'EOT'
+
+        $response = json_decode($content, true);
+EOT;
+                break;
+            case 'Read':
+                $code .= <<<'EOT'
+
+        $this->assertTag(
+            array(
+                'id' => 'cipherdata',
+                'content' => htmlspecialchars(json_encode(self::$paste), ENT_NOQUOTES)
+            ),
+            $content,
+            'outputs data correctly'
+        );
+EOT;
+                break;
+            case 'Delete':
+                $code .= <<<'EOT'
+
+        $this->assertTag(
+            array(
+                'id' => 'status',
+                'content' => 'Paste was properly deleted'
+            ),
+            $content,
+            'outputs deleted status correctly'
+        );
+        $this->assertFalse($this->_model->exists(self::$pasteid), 'paste successfully deleted');
+EOT;
+                break;
+        }
+        return $code . PHP_EOL . PHP_EOL . $testString . '    }' . PHP_EOL . PHP_EOL;
     }
 
     /**
@@ -485,7 +740,7 @@ EOT;
             throw new Exception("Endless loop or error in options detected: option '$option' already exists with setting '$val' in one of the configurations!");
         }
         $configuration['options'][$section][$option] = $setting['setting'];
-        $configuration['tests'][$option] = $setting['tests'];
+        $configuration['tests'][$option] = array($setting['tests'], $setting['affects']);
         foreach ($setting['affects'] as $affects) {
             if (!in_array($affects, $configuration['affects'])) {
                 $configuration['affects'][] = $affects;

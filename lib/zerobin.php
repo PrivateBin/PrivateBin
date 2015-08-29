@@ -77,7 +77,7 @@ class zerobin
     public function __construct()
     {
         if (version_compare(PHP_VERSION, '5.2.6') < 0)
-            die('ZeroBin requires php 5.2.6 or above to work. Sorry.');
+            throw new Exception('ZeroBin requires php 5.2.6 or above to work. Sorry.', 1);
 
         // in case stupid admin has left magic_quotes enabled in php.ini
         if (get_magic_quotes_gpc())
@@ -131,9 +131,9 @@ class zerobin
 
         $this->_conf = parse_ini_file(PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.ini', true);
         foreach (array('main', 'model') as $section) {
-            if (!array_key_exists($section, $this->_conf)) die(
-                "ZeroBin requires configuration section [$section] to be present in configuration file."
-            );
+            if (!array_key_exists($section, $this->_conf)) {
+                throw new Exception("ZeroBin requires configuration section [$section] to be present in configuration file.", 2);
+            }
         }
         $this->_model = $this->_conf['model']['class'];
     }
@@ -402,6 +402,9 @@ class zerobin
             return;
         }
 
+        // show the same error message if the paste expired or does not exist
+        $genericError = 'Paste does not exist, has expired or has been deleted.';
+
         // Check that paste exists.
         if ($this->_model()->exists($dataid))
         {
@@ -416,7 +419,7 @@ class zerobin
             {
                 // Delete the paste
                 $this->_model()->delete($dataid);
-                $this->_error = 'Paste does not exist, has expired or has been deleted.';
+                $this->_error = $genericError;
             }
             // If no error, return the paste.
             else
@@ -451,7 +454,7 @@ class zerobin
         }
         else
         {
-            $this->_error = 'Paste does not exist or has expired.';
+            $this->_error = $genericError;
         }
     }
 
