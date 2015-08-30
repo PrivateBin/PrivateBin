@@ -116,7 +116,7 @@ function decompress(data) {
  * @return encrypted string data
  */
 function zeroCipher(key, message) {
-    if ($('input#password').val().length == 0) {
+    if ($('input#passwordinput').val().length == 0) {
         return sjcl.encrypt(key, compress(message));
     }
     return sjcl.encrypt(key + sjcl.codec.hex.fromBits(sjcl.hash.sha256.hash($("input#passwordinput").val())), compress(message));
