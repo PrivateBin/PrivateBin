@@ -1,0 +1,28 @@
+/* ZeroBin 0.19 - http://sebsauvage.net/wiki/doku.php?id=php:zerobin */
+
+
+body {
+	padding: 70px 0 30px 0;
+}
+
+#deletelink {
+	float: right;
+}
+
+#pastelink {
+	display: inline;
+}
+
+#message {
+	font-family: monospace;
+}
+
+#nickname {
+	margin: 5px 0;
+}
+
+.comment {
+	border-left: 1px solid #ccc;
+	padding: 5px 0 5px 5px;
+	white-space: pre-wrap;
+}

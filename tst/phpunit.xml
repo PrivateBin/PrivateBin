@@ -1,7 +1,7 @@
 <phpunit bootstrap="bootstrap.php" colors="true">
 	<testsuite name="ZeroBin Test Suite">
 		<directory suffix=".php">./</directory>
-		<exclude>mcrypt_mock.php</exclude>
+		<exclude>configGenerator.php</exclude>
 	</testsuite>
 	<filter>
 		<whitelist>

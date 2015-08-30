@@ -17,10 +17,12 @@
  */
 class zerobin_data extends zerobin_abstract
 {
-    /*
+    /**
+     * directory where data is stored
+     *
      * @access private
      * @static
-     * @var string directory where data is stored
+     * @var string
      */
     private static $_dir = 'data/';
 
@@ -29,14 +31,15 @@ class zerobin_data extends zerobin_abstract
      *
      * @access public
      * @static
+     * @param  array $options
      * @return zerobin_data
      */
     public static function getInstance($options = null)
     {
         // if given update the data directory
         if (
-        	is_array($options) &&
-        	array_key_exists('dir', $options)
+            is_array($options) &&
+            array_key_exists('dir', $options)
         ) self::$_dir = $options['dir'] . DIRECTORY_SEPARATOR;
         // if needed initialize the singleton
         if(!(self::$_instance instanceof zerobin_data)) {

@@ -17,31 +17,37 @@
  */
 class zerobin_db extends zerobin_abstract
 {
-    /*
-     * @access private
-     * @static
-     * @var array to cache select queries
+    /**
+     * cache for select queries
+     *
+     * @var array
      */
     private static $_cache = array();
 
-    /*
+    /**
+     * instance of database connection
+     *
      * @access private
      * @static
-     * @var PDO instance of database connection
+     * @var PDO
      */
     private static $_db;
 
-    /*
+    /**
+     * table prefix
+     *
      * @access private
      * @static
-     * @var string table prefix
+     * @var string
      */
     private static $_prefix = '';
 
-    /*
+    /**
+     * database type
+     *
      * @access private
      * @static
-     * @var string database type
+     * @var string
      */
     private static $_type = '';
 
@@ -50,6 +56,7 @@ class zerobin_db extends zerobin_abstract
      *
      * @access public
      * @static
+     * @param  array $options
      * @throws Exception
      * @return zerobin_db
      */
@@ -73,13 +80,6 @@ class zerobin_db extends zerobin_abstract
                 array_key_exists('opt', $options)
             )
             {
-                self::$_db = new PDO(
-                    $options['dsn'],
-                    $options['usr'],
-                    $options['pwd'],
-                    $options['opt']
-                );
-
                 // check if the database contains the required tables
                 self::$_type = strtolower(
                     substr($options['dsn'], 0, strpos($options['dsn'], ':'))
@@ -125,9 +125,16 @@ class zerobin_db extends zerobin_abstract
                         throw new Exception(
                             'PDO type ' .
                             self::$_type .
-                            ' is currently not supported.'
+                            ' is currently not supported.',
+                            5
                         );
                 }
+                self::$_db = new PDO(
+                    $options['dsn'],
+                    $options['usr'],
+                    $options['pwd'],
+                    $options['opt']
+                );
                 $statement = self::$_db->query($sql);
                 $tables = $statement->fetchAll(PDO::FETCH_COLUMN, 0);
 
@@ -259,7 +266,7 @@ class zerobin_db extends zerobin_abstract
             array($pasteid)
         );
         if (
-        		array_key_exists($pasteid, self::$_cache)
+            array_key_exists($pasteid, self::$_cache)
         ) unset(self::$_cache[$pasteid]);
     }
 

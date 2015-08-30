@@ -10,22 +10,20 @@ class vizhash16x16Test extends PHPUnit_Framework_TestCase
     public function setUp()
     {
         /* Setup Routine */
-        $this->_path = PATH . 'data' . DIRECTORY_SEPARATOR;
-        $this->_dataDirCreated = !is_dir($this->_path);
-        if($this->_dataDirCreated) mkdir($this->_path);
-        $this->_file = $this->_path . 'vizhash.png';
+        $this->_path = PATH . 'data';
+        if(!is_dir($this->_path)) mkdir($this->_path);
+        $this->_file = $this->_path . DIRECTORY_SEPARATOR . 'vizhash.png';
+        serversalt::setPath($this->_path);
     }
 
     public function tearDown()
     {
         /* Tear Down Routine */
-    		if($this->_dataDirCreated) {
-		        helper::rmdir($this->_path);
-        } else {
-            if(!@unlink($this->_file)) {
-            	throw new Exception('Error deleting file "' . $this->_file . '".');
-            }
+        chmod($this->_path, 0700);
+        if(!@unlink($this->_file)) {
+            throw new Exception('Error deleting file "' . $this->_file . '".');
         }
+        helper::rmdir($this->_path);
     }
 
     public function testVizhashGeneratesUniquePngsPerIp()
@@ -37,10 +35,5 @@ class vizhash16x16Test extends PHPUnit_Framework_TestCase
         $this->assertEquals('image/png', $finfo->file($this->_file));
         $this->assertNotEquals($pngdata, $vz->generate('2001:1620:2057:dead:beef::cafe:babe'));
         $this->assertEquals($pngdata, $vz->generate('127.0.0.1'));
-
-        // generating new salt
-        $salt = serversalt::get();
-        require 'mcrypt_mock.php';
-        $this->assertNotEquals($salt, serversalt::generate());
     }
 }

@@ -24,22 +24,67 @@
 
 class vizhash16x16
 {
+    /**
+     * hash values
+     *
+     * @access private
+     * @var    array
+     */
     private $VALUES;
+
+    /**
+     * index of current value
+     *
+     * @access private
+     * @var    int
+     */
     private $VALUES_INDEX;
+
+    /**
+     * image width
+     *
+     * @access private
+     * @var    int
+     */
     private $width;
+
+    /**
+     * image height
+     *
+     * @access private
+     * @var    int
+     */
     private $height;
+
+    /**
+     * salt used when generating the image
+     *
+     * @access private
+     * @var    string
+     */
     private $salt;
-    function __construct()
+
+    /**
+     * constructor
+     *
+     * @access public
+     * @return void
+     */
+    public function __construct()
     {
-        $this->width=16;
-        $this->height=16;
-        $this->salt = serversalt::get();
+        $this->width  = 16;
+        $this->height = 16;
+        $this->salt   = serversalt::get();
     }
 
-    // Generate a 16x16 png corresponding to $text.
-    // Input: $text (string)
-    // Output: PNG data. Or empty string if GD is not available.
-    function generate($text)
+    /**
+     * Generate a 16x16 png corresponding to $text.
+     *
+     * @access public
+     * @param  string $text
+     * @return string PNG data. Or empty string if GD is not available.
+     */
+    public function generate($text)
     {
         if (!function_exists('gd_info')) return '';
 
@@ -85,7 +130,13 @@ class vizhash16x16
         return $imagedata;
     }
 
-    private function getInt() // Returns a single integer from the $VALUES array (0...255)
+    /**
+     * Returns a single integer from the $VALUES array (0...255)
+     *
+     * @access private
+     * @return int
+     */
+    private function getInt()
     {
         $v= $this->VALUES[$this->VALUES_INDEX];
         $this->VALUES_INDEX++;
@@ -93,18 +144,41 @@ class vizhash16x16
         return $v;
     }
 
-    private function getX() // Returns a single integer from the array (roughly mapped to image width)
+    /**
+     * Returns a single integer from the array (roughly mapped to image width)
+     *
+     * @access private
+     * @return int
+     */
+    private function getX()
     {
         return $this->width*$this->getInt()/256;
     }
 
-    private function getY() // Returns a single integer from the array (roughly mapped to image height)
+    /**
+     * Returns a single integer from the array (roughly mapped to image height)
+     *
+     * @access private
+     * @return int
+     */
+    private function getY()
     {
         return $this->height*$this->getInt()/256;
     }
 
-    # Gradient function taken from:
-    # http://www.supportduweb.com/scripts_tutoriaux-code-source-41-gd-faire-un-degrade-en-php-gd-fonction-degrade-imagerie.html
+    /**
+     * Gradient function
+     *
+     * taken from:
+     * http://www.supportduweb.com/scripts_tutoriaux-code-source-41-gd-faire-un-degrade-en-php-gd-fonction-degrade-imagerie.html
+     *
+     * @access private
+     * @param  resource $img
+     * @param  string $direction
+     * @param  array $color1
+     * @param  array $color2
+     * @return resource
+     */
     private function degrade($img,$direction,$color1,$color2)
     {
             if($direction=='h') { $size = imagesx($img); $sizeinv = imagesy($img); }
@@ -125,6 +199,15 @@ class vizhash16x16
             return $img;
     }
 
+    /**
+     * Draw a shape
+     *
+     * @access private
+     * @param  resource $image
+     * @param  int $action
+     * @param  int $color
+     * @return void
+     */
     private function drawshape($image,$action,$color)
     {
         switch($action%7)

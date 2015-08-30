@@ -20,7 +20,7 @@ abstract class zerobin_abstract
 	/**
      * singleton instance
      *
-     * @access private
+     * @access protected
      * @static
      * @var zerobin
      */
@@ -49,6 +49,7 @@ abstract class zerobin_abstract
      *
      * @access public
      * @static
+     * @param  array $options
      * @return zerobin_abstract
      */
     public static function getInstance($options) {}

@@ -1,15 +1,17 @@
 <?php
-
 /**
- *  RainTPL
- *  -------
- *  Realized by Federico Ulfo & maintained by the Rain Team
- *  Distributed under GNU/LGPL 3 License
+ * RainTPL
  *
- *  @version 2.7.2
+ * Realized by Federico Ulfo & maintained by the Rain Team
+ * Distributed under GNU/LGPL 3 License
+ *
+ * @version 2.7.2
  */
 
 
+/**
+ * RainTPL
+ */
 class RainTPL{
 
 	// -------------------------
@@ -25,7 +27,9 @@ class RainTPL{
 
 
 		/**
-		 * Cache directory. Is the directory where RainTPL will compile the template and save the cache
+		 * Cache directory
+		 *
+		 * Is the directory where RainTPL will compile the template and save the cache
 		 *
 		 * @var string
 		 */
@@ -33,7 +37,9 @@ class RainTPL{
 
 
 		/**
-		 * Template base URL. RainTPL will add this URL to the relative paths of element selected in $path_replace_list.
+		 * Template base URL
+		 *
+		 * RainTPL will add this URL to the relative paths of element selected in $path_replace_list.
 		 *
 		 * @var string
 		 */
@@ -41,7 +47,7 @@ class RainTPL{
 
 
 		/**
-		 * Template extension.
+		 * Template extension
 		 *
 		 * @var string
 		 */
@@ -49,10 +55,12 @@ class RainTPL{
 
 
 		/**
-		 * Path replace is a cool features that replace all relative paths of images (<img src="...">), stylesheet (<link href="...">), script (<script src="...">) and link (<a href="...">)
+		 * Should the path be replaced
+		 *
+		 * Path replace is a cool features that replace all relative paths of images (&lt;img src="..."&gt;), stylesheet (&lt;link href="..."&gt;), script (&lt;script src="..."&gt;) and link (&lt;a href="..."&gt;)
 		 * Set true to enable the path replace.
 		 *
-		 * @var unknown_type
+		 * @var boolean
 		 */
 		static $path_replace = true;
 
@@ -69,22 +77,25 @@ class RainTPL{
 		/**
 		 * You can define in the black list what string are disabled into the template tags
 		 *
-		 * @var unknown_type
+		 * @var array
 		 */
 		static $black_list = array( '\$this', 'raintpl::', 'self::', '_SESSION', '_SERVER', '_ENV',  'eval', 'exec', 'unlink', 'rmdir' );
 
 
 		/**
-		 * Check template.
+		 * Check template
+		 * 
 		 * true: checks template update time, if changed it compile them
 		 * false: loads the compiled template. Set false if server doesn't have write permission for cache_directory.
 		 *
+		 * @var bool
 		 */
 		static $check_template_update = true;
 
 
 		/**
 		 * PHP tags <? ?>
+		 *
 		 * True: php tags are enabled into the template
 		 * False: php tags are disabled into the template and rendered as html
 		 *
@@ -94,7 +105,8 @@ class RainTPL{
 
 
 		/**
-		 * Debug mode flag.
+		 * Debug mode flag
+		 *
 		 * True: debug mode is used, syntax errors are displayed directly in template. Execution of script is not terminated.
 		 * False: exception is thrown on found error.
 		 *
@@ -116,17 +128,44 @@ class RainTPL{
 		 */
 		public $var = array();
 
-		protected $tpl = array(),		// variables to keep the template directories and info
-				  $cache = false,		// static cache enabled / disabled
-                  $cache_id = null;       // identify only one cache
+		/**
+		 * variables to keep the template directories and info
+		 *
+		 * @var array
+		 */
+		protected $tpl = array();		// 
 
-                protected static $config_name_sum = array();   // takes all the config to create the md5 of the file
+		/**
+		 * static cache enabled / disabled
+		 *
+		 * @var bool
+		 */
+		protected $cache = false;
+
+		/**
+		 * identify only one cache
+		 *
+		 * @var string
+		 */
+		protected $cache_id = '';
+
+		/**
+		 * takes all the config to create the md5 of the file
+		 *
+		 * @var array the file
+		 */
+        protected static $config_name_sum = array();
 
 	// -------------------------
 
 
 
-	const CACHE_EXPIRE_TIME = 3600; // default cache expire time = hour
+	/**
+	 * default cache expire time = hour
+	 *
+	 * @const int
+	 */
+	const CACHE_EXPIRE_TIME = 3600;
 
 
 
@@ -134,11 +173,11 @@ class RainTPL{
 	 * Assign variable
 	 * eg. 	$t->assign('name','mickey');
 	 *
-	 * @param mixed $variable_name Name of template variable or associative array name/value
-	 * @param mixed $value value assigned to this variable. Not set if variable_name is an associative array
+	 * @access public
+	 * @param  mixed $variable_name Name of template variable or associative array name/value
+	 * @param  mixed $value value assigned to this variable. Not set if variable_name is an associative array
 	 */
-
-	function assign( $variable, $value = null ){
+	public function assign( $variable, $value = null ){
 		if( is_array( $variable ) )
 			$this->var += $variable;
 		else
@@ -152,12 +191,12 @@ class RainTPL{
 	 * eg. 	$html = $tpl->draw( 'demo', TRUE ); // return template in string
 	 * or 	$tpl->draw( $tpl_name ); // echo the template
 	 *
-	 * @param string $tpl_name  template to load
-	 * @param boolean $return_string  true=return a string, false=echo the template
+	 * @access public
+	 * @param  string $tpl_name  template to load
+	 * @param  boolean $return_string  true=return a string, false=echo the template
 	 * @return string
 	 */
-
-	function draw( $tpl_name, $return_string = false ){
+	public function draw( $tpl_name, $return_string = false ){
 
 		try {
 			// compile the template if necessary and set the template filepath
@@ -211,12 +250,13 @@ class RainTPL{
 	/**
 	 * If exists a valid cache for this template it returns the cache
 	 *
-	 * @param string $tpl_name Name of template (set the same of draw)
-	 * @param int $expiration_time Set after how many seconds the cache expire and must be regenerated
+	 * @access public
+	 * @param  string $tpl_name Name of template (set the same of draw)
+	 * @param  int $expiration_time Set after how many seconds the cache expire and must be regenerated
+	 * @param  string $cache_id Suffix to be used when writing file to cache (optional)
 	 * @return string it return the HTML or null if the cache must be recreated
 	 */
-
-	function cache( $tpl_name, $expire_time = self::CACHE_EXPIRE_TIME, $cache_id = null ){
+	public function cache( $tpl_name, $expire_time = self::CACHE_EXPIRE_TIME, $cache_id = '' ){
 
         // set the cache_id
         $this->cache_id = $cache_id;
@@ -236,8 +276,12 @@ class RainTPL{
 	/**
 	 * Configure the settings of RainTPL
 	 *
+	 * @access public
+	 * @static
+	 * @param  array|string $setting array of settings or setting name
+	 * @param  mixed $value content to set in the setting (optional)
 	 */
-	static function configure( $setting, $value = null ){
+	public static function configure( $setting, $value = null ){
 		if( is_array( $setting ) )
 			foreach( $setting as $key => $value )
 				self::configure( $key, $value );
@@ -249,8 +293,14 @@ class RainTPL{
 
 
 
-	// check if has to compile the template
-	// return true if the template has changed
+	/**
+	 * Check if has to compile the template
+	 *
+	 * @access protected
+	 * @param  string $tpl_name template name to check
+	 * @throws RainTpl_NotFoundException
+	 * @return bool return true if the template has changed
+	 */
 	protected function check_template( $tpl_name ){
 
 		if( !isset($this->tpl['checked']) ){
@@ -280,16 +330,27 @@ class RainTPL{
 
 
 	/**
-	* execute stripslaches() on the xml block. Invoqued by preg_replace_callback function below
-	* @access protected
-	*/
+	 * execute stripslaches() on the xml block. Invoqued by preg_replace_callback function below
+	 *
+	 * @access protected
+	 * @param string $capture
+	 * @return string
+	 */
 	protected function xml_reSubstitution($capture) {
     		return "<?php echo '<?xml ".stripslashes($capture[1])." ?>'; ?>";
 	}
 
 	/**
 	 * Compile and write the compiled template file
+	 *
 	 * @access protected
+	 * @param  string $tpl_basename
+	 * @param  string $tpl_basedir
+	 * @param  string $tpl_filename
+	 * @param  string $cache_dir
+	 * @param  string $compiled_filename
+	 * @throws RainTpl_Exception
+	 * @return void
 	 */
 	protected function compileFile( $tpl_basename, $tpl_basedir, $tpl_filename, $cache_dir, $compiled_filename ){
 
@@ -328,7 +389,11 @@ class RainTPL{
 
 	/**
 	 * Compile template
+	 *
 	 * @access protected
+	 * @param  string $template_code
+	 * @param  string $tpl_basedir
+	 * @return string
 	 */
 	protected function compileTemplate( $template_code, $tpl_basedir ){
 
@@ -369,7 +434,11 @@ class RainTPL{
 
 	/**
 	 * Compile the code
+	 *
 	 * @access protected
+	 * @param  string $parsed_code
+	 * @throws RainTpl_SyntaxException
+	 * @return string
 	 */
 	protected function compileCode( $parsed_code ){
 
@@ -585,9 +654,12 @@ class RainTPL{
 
 
 	/**
-	 * Reduce a path, eg. www/library/../filepath//file => www/filepath/file
-	 * @param type $path
-	 * @return type
+	 * Reduce a path
+	 *
+	 * eg. www/library/../filepath//file => www/filepath/file
+	 *
+	 * @param string $path
+	 * @return string
 	 */
 	protected function reduce_path( $path ){
 		$path = str_replace( "://", "@not_replace@", $path );
@@ -599,13 +671,16 @@ class RainTPL{
 
 
 	/**
-	 * replace the path of image src, link href and a href.
+	 * replace the path of image src, link href and a href
+	 * 
 	 * url => template_dir/url
 	 * url# => url
 	 * http://url => http://url
 	 *
-	 * @param string $html
-	 * @return string html sostituito
+	 * @access protected
+	 * @param  string $html
+	 * @param  string $tpl_basedir
+	 * @return string html substitution
 	 */
 	protected function path_replace( $html, $tpl_basedir ){
 
@@ -655,16 +730,40 @@ class RainTPL{
 
 
 
-	// replace const
-	function const_replace( $html, $tag_left_delimiter, $tag_right_delimiter, $php_left_delimiter = null, $php_right_delimiter = null, $loop_level = null, $echo = null ){
+	/**
+	 * replace constants
+	 *
+	 * @access public
+	 * @param  string $html
+	 * @param  string $tag_left_delimiter
+	 * @param  string $tag_right_delimiter
+	 * @param  string $php_left_delimiter (optional)
+	 * @param  string $php_right_delimiter (optional)
+	 * @param  string $loop_level (optional)
+	 * @param  string $echo (optional)
+	 * @return string
+	 */
+	public function const_replace( $html, $tag_left_delimiter, $tag_right_delimiter, $php_left_delimiter = null, $php_right_delimiter = null, $loop_level = null, $echo = null ){
 		// const
 		return preg_replace( '/\{\#(\w+)\#{0,1}\}/', $php_left_delimiter . ( $echo ? " echo " : null ) . '\\1' . $php_right_delimiter, $html );
 	}
 
 
 
-	// replace functions/modifiers on constants and strings
-	function func_replace( $html, $tag_left_delimiter, $tag_right_delimiter, $php_left_delimiter = null, $php_right_delimiter = null, $loop_level = null, $echo = null ){
+	/**
+	 * replace functions/modifiers on constants and strings
+	 *
+	 * @access public
+	 * @param  string $html
+	 * @param  string $tag_left_delimiter
+	 * @param  string $tag_right_delimiter
+	 * @param  string $php_left_delimiter (optional)
+	 * @param  string $php_right_delimiter (optional)
+	 * @param  string $loop_level (optional)
+	 * @param  string $echo (optional)
+	 * @return string
+	 */
+	public function func_replace( $html, $tag_left_delimiter, $tag_right_delimiter, $php_left_delimiter = null, $php_right_delimiter = null, $loop_level = null, $echo = null ){
 
 		preg_match_all( '/' . '\{\#{0,1}(\"{0,1}.*?\"{0,1})(\|\w.*?)\#{0,1}\}' . '/', $html, $matches );
 
@@ -763,7 +862,20 @@ class RainTPL{
 
 
 
-	function var_replace( $html, $tag_left_delimiter, $tag_right_delimiter, $php_left_delimiter = null, $php_right_delimiter = null, $loop_level = null, $echo = null ){
+	/**
+	 * replace variables
+	 *
+	 * @access public
+	 * @param  string $html
+	 * @param  string $tag_left_delimiter
+	 * @param  string $tag_right_delimiter
+	 * @param  string $php_left_delimiter (optional)
+	 * @param  string $php_right_delimiter (optional)
+	 * @param  string $loop_level (optional)
+	 * @param  string $echo (optional)
+	 * @return string
+	 */
+	public function var_replace( $html, $tag_left_delimiter, $tag_right_delimiter, $php_left_delimiter = null, $php_right_delimiter = null, $loop_level = null, $echo = null ){
 
 		//all variables
 		if( preg_match_all( '/' . $tag_left_delimiter . '\$(\w+(?:\.\${0,1}[A-Za-z0-9_]+)*(?:(?:\[\${0,1}[A-Za-z0-9_]+\])|(?:\-\>\${0,1}[A-Za-z0-9_]+))*)(.*?)' . $tag_right_delimiter . '/', $html, $matches ) ){
@@ -876,8 +988,10 @@ class RainTPL{
 	/**
 	 * Check if function is in black list (sandbox)
 	 *
-	 * @param string $code
-	 * @param string $tag
+	 * @access protected
+	 * @param  string $code
+	 * @throws RainTpl_SyntaxException
+	 * @return void
 	 */
 	protected function function_check( $code ){
 
@@ -904,7 +1018,8 @@ class RainTPL{
 	/**
 	 * Prints debug info about exception or passes it further if debug is disabled.
 	 *
-	 * @param RainTpl_Exception $e
+	 * @access protected
+	 * @param  RainTpl_Exception $e
 	 * @return string
 	 */
 	protected function printDebug(RainTpl_Exception $e){

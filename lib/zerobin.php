@@ -17,12 +17,16 @@
  */
 class zerobin
 {
-    /*
-     * @const string version
+    /**
+     * version
+     *
+     * @const string
      */
     const VERSION = 'Alpha 0.19';
 
     /**
+     * configuration array
+     *
      * @access private
      * @var    array
      */
@@ -31,26 +35,34 @@ class zerobin
     );
 
     /**
+     * data
+     *
      * @access private
      * @var    string
      */
     private $_data = '';
 
     /**
+     * error message
+     *
      * @access private
      * @var    string
      */
     private $_error = '';
 
     /**
+     * status message
+     *
      * @access private
      * @var    string
      */
     private $_status = '';
 
     /**
+     * data storage model
+     *
      * @access private
-     * @var    zerobin_data
+     * @var    zerobin_abstract
      */
     private $_model;
 
@@ -60,11 +72,12 @@ class zerobin
      * initializes and runs ZeroBin
      *
      * @access public
+     * @return void
      */
     public function __construct()
     {
         if (version_compare(PHP_VERSION, '5.2.6') < 0)
-            die('ZeroBin requires php 5.2.6 or above to work. Sorry.');
+            throw new Exception('ZeroBin requires php 5.2.6 or above to work. Sorry.', 1);
 
         // in case stupid admin has left magic_quotes enabled in php.ini
         if (get_magic_quotes_gpc())
@@ -80,7 +93,8 @@ class zerobin
         // create new paste or comment
         if (!empty($_POST['data']))
         {
-            $this->_create($_POST['data']);
+            echo $this->_create($_POST['data']);
+            return;
         }
         // delete an existing paste
         elseif (!empty($_GET['deletetoken']) && !empty($_GET['pasteid']))
@@ -107,14 +121,20 @@ class zerobin
     {
         foreach (array('cfg', 'lib') as $dir)
         {
-            if (!is_file(PATH . $dir . '/.htaccess')) file_put_contents(
-                PATH . $dir . '/.htaccess',
+            if (!is_file(PATH . $dir . DIRECTORY_SEPARATOR . '.htaccess')) file_put_contents(
+                PATH . $dir . DIRECTORY_SEPARATOR . '.htaccess',
                 'Allow from none' . PHP_EOL .
-                'Deny from all'. PHP_EOL
+                'Deny from all'. PHP_EOL,
+                LOCK_EX
             );
         }
 
-        $this->_conf = parse_ini_file(PATH . 'cfg/conf.ini', true);
+        $this->_conf = parse_ini_file(PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.ini', true);
+        foreach (array('main', 'model') as $section) {
+            if (!array_key_exists($section, $this->_conf)) {
+                throw new Exception("ZeroBin requires configuration section [$section] to be present in configuration file.", 2);
+            }
+        }
         $this->_model = $this->_conf['model']['class'];
     }
 
@@ -122,7 +142,7 @@ class zerobin
      * get the model, create one if needed
      *
      * @access private
-     * @return zerobin_data
+     * @return zerobin_abstract
      */
     private function _model()
     {
@@ -151,7 +171,7 @@ class zerobin
      *
      * @access private
      * @param  string $data
-     * @return void
+     * @return string
      */
     private function _create($data)
     {
@@ -163,7 +183,7 @@ class zerobin
         trafficlimiter::setPath($this->_conf['traffic']['dir']);
         if (
             !trafficlimiter::canPass($_SERVER['REMOTE_ADDR'])
-        ) $this->_return_message(
+        ) return $this->_return_message(
             1,
             'Please wait ' .
             $this->_conf['traffic']['limit'] .
@@ -171,19 +191,18 @@ class zerobin
         );
 
         // Make sure content is not too big.
+        $sizelimit = (int) $this->_getMainConfig('sizelimit', 2097152);
         if (
-            strlen($data) > $this->_conf['main']['sizelimit']
-        ) $this->_return_message(
+            strlen($data) > $sizelimit
+        ) return $this->_return_message(
             1,
             'Paste is limited to ' .
-            $this->_conf['main']['sizelimit'] .
-            ' ' .
-            filter::size_humanreadable($this->_conf['main']['sizelimit']) .
+            filter::size_humanreadable($sizelimit) .
             ' of encrypted data.'
         );
 
         // Make sure format is correct.
-        if (!sjcl::isValid($data)) $this->_return_message(1, 'Invalid data.');
+        if (!sjcl::isValid($data)) return $this->_return_message(1, 'Invalid data.');
 
         // Read additional meta-information.
         $meta=array();
@@ -191,21 +210,22 @@ class zerobin
         // Read expiration date
         if (!empty($_POST['expire']))
         {
-            if (array_key_exists($_POST['expire'], $this->_conf['expire_options'])) {
-                $expire = $this->_conf['expire_options'][$_POST['expire']];
+            $selected_expire = (string) $_POST['expire'];
+            if (array_key_exists($selected_expire, $this->_conf['expire_options'])) {
+                $expire = $this->_conf['expire_options'][$selected_expire];
             } else {
                 $expire = $this->_conf['expire_options'][$this->_conf['expire']['default']];
             }
             if ($expire > 0) $meta['expire_date'] = time() + $expire;
         }
-        
+
         // Destroy the paste when it is read.
         if (!empty($_POST['burnafterreading']))
         {
             $burnafterreading = $_POST['burnafterreading'];
-            if ($burnafterreading != '0')
+            if ($burnafterreading !== '0')
             {
-                if ($burnafterreading != '1') $error = true;
+                if ($burnafterreading !== '1') $error = true;
                 $meta['burnafterreading'] = true;
             }
         }
@@ -214,9 +234,9 @@ class zerobin
         if ($this->_conf['main']['opendiscussion'] && !empty($_POST['opendiscussion']))
         {
             $opendiscussion = $_POST['opendiscussion'];
-            if ($opendiscussion != 0)
+            if ($opendiscussion !== '0')
             {
-                if ($opendiscussion != 1) $error = true;
+                if ($opendiscussion !== '1') $error = true;
                 $meta['opendiscussion'] = true;
             }
         }
@@ -249,7 +269,7 @@ class zerobin
             }
         }
 
-        if ($error) $this->_return_message(1, 'Invalid data.');
+        if ($error) return $this->_return_message(1, 'Invalid data.');
 
         // Add post date to meta.
         $meta['postdate'] = time();
@@ -269,12 +289,12 @@ class zerobin
             !empty($_POST['pasteid'])
         )
         {
-            $pasteid  = $_POST['pasteid'];
-            $parentid = $_POST['parentid'];
+            $pasteid  = (string) $_POST['pasteid'];
+            $parentid = (string) $_POST['parentid'];
             if (
                 !filter::is_valid_paste_id($pasteid) ||
                 !filter::is_valid_paste_id($parentid)
-            ) $this->_return_message(1, 'Invalid data.');
+            ) return $this->_return_message(1, 'Invalid data.');
 
             // Comments do not expire (it's the paste that expires)
             unset($storage['expire_date']);
@@ -283,26 +303,26 @@ class zerobin
             // Make sure paste exists.
             if (
                 !$this->_model()->exists($pasteid)
-            ) $this->_return_message(1, 'Invalid data.');
+            ) return $this->_return_message(1, 'Invalid data.');
 
             // Make sure the discussion is opened in this paste.
             $paste = $this->_model()->read($pasteid);
             if (
                 !$paste->meta->opendiscussion
-            ) $this->_return_message(1, 'Invalid data.');
+            ) return $this->_return_message(1, 'Invalid data.');
 
             // Check for improbable collision.
             if (
                 $this->_model()->existsComment($pasteid, $parentid, $dataid)
-            ) $this->_return_message(1, 'You are unlucky. Try again.');
+            ) return $this->_return_message(1, 'You are unlucky. Try again.');
 
             // New comment
             if (
                 $this->_model()->createComment($pasteid, $parentid, $dataid, $storage) === false
-            ) $this->_return_message(1, 'Error saving comment. Sorry.');
+            ) return $this->_return_message(1, 'Error saving comment. Sorry.');
 
             // 0 = no error
-            $this->_return_message(0, $dataid);
+            return $this->_return_message(0, $dataid);
         }
         // The user posts a standard paste.
         else
@@ -310,23 +330,23 @@ class zerobin
             // Check for improbable collision.
             if (
                 $this->_model()->exists($dataid)
-            ) $this->_return_message(1, 'You are unlucky. Try again.');
+            ) return $this->_return_message(1, 'You are unlucky. Try again.');
 
             // New paste
             if (
                 $this->_model()->create($dataid, $storage) === false
-            ) $this->_return_message(1, 'Error saving paste. Sorry.');
+            ) return $this->_return_message(1, 'Error saving paste. Sorry.');
 
             // Generate the "delete" token.
             // The token is the hmac of the pasteid signed with the server salt.
-            // The paste can be delete by calling http://myserver.com/zerobin/?pasteid=<pasteid>&deletetoken=<deletetoken>
-            $deletetoken = hash_hmac('sha1', $dataid , serversalt::get());
+            // The paste can be delete by calling http://example.com/zerobin/?pasteid=<pasteid>&deletetoken=<deletetoken>
+            $deletetoken = hash_hmac('sha1', $dataid, serversalt::get());
 
             // 0 = no error
-            $this->_return_message(0, $dataid, array('deletetoken' => $deletetoken));
+            return $this->_return_message(0, $dataid, array('deletetoken' => $deletetoken));
         }
 
-        $this->_return_message(1, 'Server error.');
+        return $this->_return_message(1, 'Server error.');
     }
 
     /**
@@ -354,7 +374,8 @@ class zerobin
         }
 
         // Make sure token is valid.
-        if (filter::slow_equals($deletetoken, hash_hmac('sha1', $dataid , serversalt::get())))
+        serversalt::setPath($this->_conf['traffic']['dir']);
+        if (!filter::slow_equals($deletetoken, hash_hmac('sha1', $dataid, serversalt::get())))
         {
             $this->_error = 'Wrong deletion token. Paste was not deleted.';
             return;
@@ -381,6 +402,9 @@ class zerobin
             return;
         }
 
+        // show the same error message if the paste expired or does not exist
+        $genericError = 'Paste does not exist, has expired or has been deleted.';
+
         // Check that paste exists.
         if ($this->_model()->exists($dataid))
         {
@@ -395,7 +419,7 @@ class zerobin
             {
                 // Delete the paste
                 $this->_model()->delete($dataid);
-                $this->_error = 'Paste does not exist, has expired or has been deleted.';
+                $this->_error = $genericError;
             }
             // If no error, return the paste.
             else
@@ -430,7 +454,7 @@ class zerobin
         }
         else
         {
-            $this->_error = 'Paste does not exist or has expired.';
+            $this->_error = $genericError;
         }
     }
 
@@ -458,19 +482,37 @@ class zerobin
                 $key;
         }
 
-        RainTPL::$path_replace = false;
         $page = new RainTPL;
+        $page::$path_replace = false;
         // we escape it here because ENT_NOQUOTES can't be used in RainTPL templates
         $page->assign('CIPHERDATA', htmlspecialchars($this->_data, ENT_NOQUOTES));
         $page->assign('ERROR', $this->_error);
         $page->assign('STATUS', $this->_status);
         $page->assign('VERSION', self::VERSION);
-        $page->assign('BURNAFTERREADINGSELECTED', $this->_conf['main']['burnafterreadingselected']);
-        $page->assign('OPENDISCUSSION', $this->_conf['main']['opendiscussion']);
-        $page->assign('SYNTAXHIGHLIGHTING', $this->_conf['main']['syntaxhighlighting']);
+        $page->assign('OPENDISCUSSION', $this->_getMainConfig('opendiscussion', true));
+        $page->assign('SYNTAXHIGHLIGHTING', $this->_getMainConfig('syntaxhighlighting', true));
+        $page->assign('SYNTAXHIGHLIGHTINGTHEME', $this->_getMainConfig('syntaxhighlightingtheme', ''));
+        $page->assign('NOTICE', $this->_getMainConfig('notice', ''));
+        $page->assign('BURNAFTERREADINGSELECTED', $this->_getMainConfig('burnafterreadingselected', false));
+        $page->assign('BASE64JSVERSION', $this->_getMainConfig('base64version', '2.1.9'));
         $page->assign('EXPIRE', $expire);
         $page->assign('EXPIREDEFAULT', $this->_conf['expire']['default']);
-        $page->draw($this->_conf['main']['template']);
+        $page->draw($this->_getMainConfig('template', 'page'));
+    }
+
+    /**
+     * get configuration option from [main] section, optionally set a default
+     *
+     * @access private
+     * @param  string $option
+     * @param  mixed $default (optional)
+     * @return mixed
+     */
+    private function _getMainConfig($option, $default = false)
+    {
+        return array_key_exists($option, $this->_conf['main']) ?
+            $this->_conf['main'][$option] :
+            $default;
     }
 
     /**
@@ -480,7 +522,7 @@ class zerobin
      * @param  bool $status
      * @param  string $message
      * @param  array $other
-     * @return void
+     * @return string
      */
     private function _return_message($status, $message, $other = array())
     {
@@ -494,6 +536,6 @@ class zerobin
             $result['id'] = $message;
         }
         $result += $other;
-        exit(json_encode($result));
+        return json_encode($result);
     }
 }

@@ -18,6 +18,8 @@
 class trafficlimiter extends persistence
 {
     /**
+     * time limit in seconds, defaults to 10s
+     *
      * @access private
      * @static
      * @var    int
@@ -45,6 +47,7 @@ class trafficlimiter extends persistence
      * @access public
      * @static
      * @param  string $ip
+     * @throws Exception
      * @return bool
      */
     public static function canPass($ip)
