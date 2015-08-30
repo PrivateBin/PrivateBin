@@ -231,7 +231,7 @@ class zerobin
         }
 
         // Read open discussion flag.
-        if ($this->_conf['main']['opendiscussion'] && !empty($_POST['opendiscussion']))
+        if ($this->_conf['main']['discussion'] && !empty($_POST['opendiscussion']))
         {
             $opendiscussion = $_POST['opendiscussion'];
             if ($opendiscussion !== '0')
@@ -489,11 +489,13 @@ class zerobin
         $page->assign('ERROR', $this->_error);
         $page->assign('STATUS', $this->_status);
         $page->assign('VERSION', self::VERSION);
+        $page->assign('DISCUSSION', $this->_getMainConfig('discussion', true));
         $page->assign('OPENDISCUSSION', $this->_getMainConfig('opendiscussion', true));
         $page->assign('SYNTAXHIGHLIGHTING', $this->_getMainConfig('syntaxhighlighting', true));
         $page->assign('SYNTAXHIGHLIGHTINGTHEME', $this->_getMainConfig('syntaxhighlightingtheme', ''));
         $page->assign('NOTICE', $this->_getMainConfig('notice', ''));
         $page->assign('BURNAFTERREADINGSELECTED', $this->_getMainConfig('burnafterreadingselected', false));
+        $page->assign('PASSWORD', $this->_getMainConfig('password', true));
         $page->assign('BASE64JSVERSION', $this->_getMainConfig('base64version', '2.1.9'));
         $page->assign('EXPIRE', $expire);
         $page->assign('EXPIREDEFAULT', $this->_conf['expire']['default']);

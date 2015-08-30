@@ -134,7 +134,7 @@ function zeroDecipher(key, data) {
         try {
             return decompress(sjcl.decrypt(key, data));
         } catch (err) {
-            var password = prompt("Please enter the password for this paste.", "");
+            var password = prompt("Please enter the password for this paste:", "");
             return decompress(sjcl.decrypt(key + sjcl.codec.hex.fromBits(sjcl.hash.sha256.hash(password)), data));
         }
     }
@@ -423,7 +423,7 @@ function stateNewPaste() {
     $('#discussion').addClass('hidden');
     $('#prettymessage').addClass('hidden');
     // Show password field
-    $('#password').show();
+    $('#password').removeClass('hidden');
 }
 
 /**

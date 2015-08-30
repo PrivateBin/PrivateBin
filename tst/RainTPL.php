@@ -31,10 +31,12 @@ class RainTPLTest extends PHPUnit_Framework_TestCase
         $page->assign('ERROR', self::$error);
         $page->assign('STATUS', self::$status);
         $page->assign('VERSION', self::$version);
-        $page->assign('BURNAFTERREADINGSELECTED', false);
-        $page->assign('OPENDISCUSSION', false);
+        $page->assign('DISCUSSION', true);
+        $page->assign('OPENDISCUSSION', true);
         $page->assign('SYNTAXHIGHLIGHTING', true);
         $page->assign('SYNTAXHIGHLIGHTINGTHEME', 'sons-of-obsidian');
+        $page->assign('BURNAFTERREADINGSELECTED', false);
+        $page->assign('PASSWORD', true);
         $page->assign('BASE64JSVERSION', '2.1.9');
         $page->assign('NOTICE', 'example');
         $page->assign('EXPIRE', self::$expire);
@@ -74,13 +76,27 @@ class RainTPLTest extends PHPUnit_Framework_TestCase
         );
         $this->assertTag(
             array(
+                'id' => 'password',
+            ),
+            $this->_content,
+            'password available if configured'
+        );
+        $this->assertTag(
+            array(
                 'id' => 'opendiscussion',
                 'attributes' => array(
-                    'disabled' => 'disabled'
+                    'checked' => 'checked'
                 ),
             ),
             $this->_content,
-            'disables discussions if configured'
+            'checked discussion if configured'
+        );
+        $this->assertTag(
+            array(
+                'id' => 'opendisc',
+            ),
+            $this->_content,
+            'discussions available if configured'
         );
         // testing version number in JS address, since other instances may not be present in different templates
         $this->assertTag(

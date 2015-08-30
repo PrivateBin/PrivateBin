@@ -60,10 +60,10 @@
 {loop="EXPIRE"}
 								<option value="{$key}"{if="$key == $EXPIREDEFAULT"} selected="selected"{/if}>{$value}</option>{/loop}
 							</select>
-							<a id="expiration" href="#" class="hidden dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Expires <span id="pasteExpirationDisplay"></span><span class="caret"></span></a>
+							<a id="expiration" href="#" class="hidden dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Expires <span id="pasteExpirationDisplay"></span> <span class="caret"></span></a>
 							<ul class="dropdown-menu">
 {loop="EXPIRE"}
-								<li><a href="#" onclick="$('#pasteExpiration').val('{$key}');$('#pasteExpirationDisplay').val('{$value}');return false;">{$value}</a></li>{/loop}
+								<li><a href="#" onclick="$('#pasteExpiration').val('{$key}');$('#pasteExpirationDisplay').text('{$value}');return false;">{$value}</a></li>{/loop}
 							</ul>
 						</li>
 						<li>
@@ -73,20 +73,20 @@
 									Burn after reading
 								</label>
 							</div>
-						</li>
+						</li>{if="$DISCUSSION"}
 						<li>
 							<div id="opendisc" class="navbar-text checkbox hidden">
 								<label>
-									<input type="checkbox" id="opendiscussion" name="opendiscussion" {if="!$OPENDISCUSSION"} disabled="disabled"{/if} />
+									<input type="checkbox" id="opendiscussion" name="opendiscussion" {if="$OPENDISCUSSION"} checked="checked"{/if} />
 									Open discussion
 							 	</label>
 							</div>
-						</li>
+						</li>{/if}{if="$PASSWORD"}
 						<li>
-							<div id="password" class="navbar-text" style="display:none;" >
-								<input type="password" id="passwordinput" placeholder="Password (optional)" size="19"/>
+							<div id="password" class="navbar-form hidden">
+								<input type="password" id="passwordinput" placeholder="Password (optional)" class="form-control" size="19"/>
 							</div>
-						</li>
+						</li>{/if}
 						<li>
 							<p id="remainingtime" class="hidden navbar-text"></p>
 						</li>

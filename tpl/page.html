@@ -57,12 +57,14 @@
 					<div id="burnafterreadingoption" class="button hidden">
 						<input type="checkbox" id="burnafterreading" name="burnafterreading" {if="$BURNAFTERREADINGSELECTED"} checked="checked"{/if} />
 						<label for="burnafterreading">Burn after reading</label>
-					</div>
+					</div>{if="$DISCUSSION"}
 					<div id="opendisc" class="button hidden">
-						<input type="checkbox" id="opendiscussion" name="opendiscussion" {if="!$OPENDISCUSSION"} disabled="disabled"{/if} />
+						<input type="checkbox" id="opendiscussion" name="opendiscussion" {if="$OPENDISCUSSION"} checked="checked"{/if} />
 						<label for="opendiscussion" {if="!$OPENDISCUSSION"} style="color: #BBBBBB;"{/if}>Open discussion</label>
-					</div>
-					<input id="password" placeholder="Optional password (recommended)" size="32" style="display:none;" />
+					</div>{/if}{if="$PASSWORD"}
+					<div id="password" class="hidden">
+						<input id="passwordinput" placeholder="Optional password (recommended)" size="32" />
+					</div>{/if}
 				</div>
 				<div id="pasteresult" class="hidden">
 					<div id="deletelink"></div>

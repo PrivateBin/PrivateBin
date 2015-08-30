@@ -16,19 +16,16 @@ $vrd  = array('view', 'read', 'delete');
 $vcud = array('view', 'create', 'read', 'delete');
 
 new configurationTestGenerator(array(
-    'main/opendiscussion' => array(
+    'main/discussion' => array(
         array(
             'setting' => true,
             'tests' => array(
                 array(
                     'conditions' => array('steps' => $vrd),
-                    'type' => 'NotTag',
+                    'type' => 'Tag',
                     'args' => array(
                         array(
-                            'id' => 'opendiscussion',
-                            'attributes' => array(
-                                'disabled' => 'disabled',
-                            ),
+                            'id' => 'opendisc',
                         ),
                         '$content',
                         'outputs enabled discussion correctly'
@@ -57,16 +54,54 @@ new configurationTestGenerator(array(
             'setting' => false,
             'tests' => array(
                 array(
+                    'type' => 'NotTag',
+                    'args' => array(
+                        array(
+                            'id' => 'opendisc',
+                        ),
+                        '$content',
+                        'outputs disabled discussion correctly'
+                    ),
+                ),
+            ),
+            'affects' => $vrd
+        ),
+    ),
+    'main/opendiscussion' => array(
+        array(
+            'setting' => true,
+            'tests' => array(
+                array(
+                    'conditions' => array('main/discussion' => true),
                     'type' => 'Tag',
                     'args' => array(
                         array(
                             'id' => 'opendiscussion',
                             'attributes' => array(
-                                'disabled' => 'disabled',
+                                'checked' => 'checked',
                             ),
                         ),
                         '$content',
-                        'outputs disabled discussion correctly'
+                        'outputs checked discussion correctly'
+                    ),
+                ),
+            ),
+            'affects' => $vrd
+        ), array(
+            'setting' => false,
+            'tests' => array(
+                array(
+                    'conditions' => array('main/discussion' => true),
+                    'type' => 'NotTag',
+                    'args' => array(
+                        array(
+                            'id' => 'opendiscussion',
+                            'attributes' => array(
+                                'checked' => 'checked',
+                            ),
+                        ),
+                        '$content',
+                        'outputs unchecked discussion correctly'
                     ),
                 ),
             ),
@@ -238,6 +273,40 @@ new configurationTestGenerator(array(
                 ),
             ),
             'affects' => array('view'),
+        ),
+    ),
+    'main/password' => array(
+        array(
+            'setting' => true,
+            'tests' => array(
+                array(
+                    'type' => 'Tag',
+                    'args' => array(
+                        array(
+                            'id' => 'password',
+                        ),
+                        '$content',
+                        'outputs password input correctly'
+                    ),
+                ),
+            ),
+            'affects' => $vrd
+        ), array(
+            'setting' => false,
+            'tests' => array(
+                array(
+                    'conditions' => array('main/discussion' => true),
+                    'type' => 'NotTag',
+                    'args' => array(
+                        array(
+                            'id' => 'password',
+                        ),
+                        '$content',
+                        'removes password input correctly'
+                    ),
+                ),
+            ),
+            'affects' => $vrd
         ),
     ),
     'main/template' => array(
@@ -421,7 +490,7 @@ class configurationTestGenerator
      * creating factorial configurations
      * @var int
      */
-    const MAX_ITERATIONS = 1000;
+    const MAX_ITERATIONS = 2000;
 
     /**
      * options to test
