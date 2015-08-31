@@ -13,10 +13,10 @@
 sjcl.random.startCollectors();
 
 /**
- *  Converts a duration (in seconds) into human readable format.
+ * Converts a duration (in seconds) into human readable format.
  *
- *  @param int seconds
- *  @return string
+ * @param int seconds
+ * @return string
  */
 function secondsToHuman(seconds)
 {
@@ -37,7 +37,7 @@ function secondsToHuman(seconds)
  */
 function hashToParameterString(associativeArray)
 {
-  var parameterString = ""
+  var parameterString = "";
   for (key in associativeArray)
   {
     if( parameterString === "" )
@@ -80,7 +80,7 @@ function parameterStringToHash(parameterString)
  * Get an associative array of the parameters found in the anchor
  *
  * @return object
- **/
+ */
 function getParameterHash()
 {
   var hashIndex = window.location.href.indexOf("#");
@@ -116,58 +116,80 @@ function decompress(data) {
  * @return encrypted string data
  */
 function zeroCipher(key, message) {
-    if ($('input#passwordinput').val().length == 0) {
+    if ($('#passwordinput').val().length == 0) {
         return sjcl.encrypt(key, compress(message));
     }
-    return sjcl.encrypt(key + sjcl.codec.hex.fromBits(sjcl.hash.sha256.hash($("input#passwordinput").val())), compress(message));
+    return sjcl.encrypt(key + sjcl.codec.hex.fromBits(sjcl.hash.sha256.hash($("#passwordinput").val())), compress(message));
 }
 
 /**
- *  Decrypt message with key, then decompress.
+ * Decrypt message with key, then decompress.
  *
- *  @param key
- *  @param encrypted string data
- *  @return string readable message
+ * @param string key
+ * @param encrypted string data
+ * @return string readable message
  */
 function zeroDecipher(key, data) {
     if (data != undefined) {
         try {
             return decompress(sjcl.decrypt(key, data));
         } catch (err) {
-            var password = prompt("Please enter the password for this paste:", "");
-            return decompress(sjcl.decrypt(key + sjcl.codec.hex.fromBits(sjcl.hash.sha256.hash(password)), data));
+            try {
+                if ($('#passwordinput').val().length > 0) {
+                    password = $('#passwordinput').val();
+                } else {
+                    password = prompt("Please enter the password for this paste:", "");
+                    if (password == null) return null;
+                }
+                data = decompress(sjcl.decrypt(key + sjcl.codec.hex.fromBits(sjcl.hash.sha256.hash(password)), data));
+                $('#passwordinput').val(password);
+                return data;
+            } catch (err) {
+                return zeroDecipher(key, data);
+            }
         }
     }
 }
 
 /**
- * @return the current script location (without search or hash part of the URL).
- *   eg. http://server.com/zero/?aaaa#bbbb --> http://server.com/zero/
+ * Get the current script location (without search or hash part of the URL).
+ * eg. http://server.com/zero/?aaaa#bbbb --> http://server.com/zero/
+ * 
+ * @return string current script location
  */
 function scriptLocation() {
   var scriptLocation = window.location.href.substring(0,window.location.href.length
     - window.location.search.length - window.location.hash.length);
   var hashIndex = scriptLocation.indexOf("#");
   if (hashIndex !== -1) {
-    scriptLocation = scriptLocation.substring(0, hashIndex)
+    scriptLocation = scriptLocation.substring(0, hashIndex);
   }
-  return scriptLocation
+  return scriptLocation;
 }
 
 /**
- * @return the paste unique identifier from the URL
- *   eg. 'c05354954c49a487'
+ * Get the pastes unique identifier from the URL
+ * eg. http://server.com/zero/?c05354954c49a487#xxx --> c05354954c49a487
+ * 
+ * @return string unique identifier
  */
 function pasteID() {
     return window.location.search.substring(1);
 }
 
+/**
+ * Convert all applicable characters to HTML entities
+ * 
+ * @param string str
+ * @returns string encoded string
+ */
 function htmlEntities(str) {
     return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 /**
  * Set text of a DOM element (required for IE)
  * This is equivalent to element.text(text)
+ * 
  * @param object element : a DOM element.
  * @param string text : the text to enter.
  */
@@ -191,8 +213,14 @@ function setElementText(element, text) {
  * @param array comments : Array of messages to display (items = array with keys ('data','meta')
  */
 function displayMessages(key, comments) {
+    // restore password if set in previous visit, then clear the session
+    if (window.sessionStorage && sessionStorage.getItem(pageKey())) {
+        $('#passwordinput').val(sessionStorage.getItem(pageKey()));
+        sessionStorage.clear();
+    }
     try { // Try to decrypt the paste.
         var cleartext = zeroDecipher(key, comments[0].data);
+        if (cleartext == null) throw "password prompt canceled";
     } catch(err) {
         $('#cleartext').addClass('hidden');
         $('#prettymessage').addClass('hidden');
@@ -217,7 +245,7 @@ function displayMessages(key, comments) {
     // If the discussion is opened on this paste, display it.
     if (comments[0].meta.opendiscussion) {
         $('#comments').html('');
-        // For each comment.
+        // iterate over comments
         for (var i = 1; i < comments.length; i++) {
             var comment=comments[i];
             var cleartext="[Could not decrypt comment ; Wrong key ?]";
@@ -226,7 +254,7 @@ function displayMessages(key, comments) {
             } catch(err) { }
             var place = $('#comments');
             // If parent comment exists, display below (CSS will automatically shift it right.)
-            var cname = '#comment_'+comment.meta.parentid
+            var cname = '#comment_'+comment.meta.parentid;
 
             // If the element exists in page
             if ($(cname).length) {
@@ -249,7 +277,7 @@ function displayMessages(key, comments) {
 
             // If an avatar is available, display it.
             if (comment.meta.vizhash) {
-                divComment.find('span.nickname').before('<img src="' + comment.meta.vizhash + '" class="vizhash" title="Anonymous avatar (Vizhash of the IP address)" />');
+                divComment.find('span.nickname').before('<img src="' + comment.meta.vizhash + '" class="vizhash" title="Anonymous avatar (Vizhash of the IP address)" /> ');
             }
 
             place.append(divComment);
@@ -261,6 +289,7 @@ function displayMessages(key, comments) {
 
 /**
  * Open the comment entry when clicking the "Reply" button of a comment.
+ * 
  * @param object source : element which emitted the event.
  * @param string commentid = identifier of the comment we want to reply to.
  */
@@ -282,6 +311,7 @@ function open_reply(source, commentid) {
 
 /**
  * Send a reply in a discussion.
+ * 
  * @param string parentid : the comment identifier we want to send a reply to.
  */
 function send_comment(parentid) {
@@ -310,6 +340,10 @@ function send_comment(parentid) {
     .success(function(data) {
         if (data.status == 0) {
             showStatus('Comment posted.');
+            // store password temporarily between page loads
+            if ($('#passwordinput').val().length > 0 && window.sessionStorage) {
+                sessionStorage.setItem(pageKey(), $('#passwordinput').val());
+            }
             location.reload();
         }
         else if (data.status==1) {
@@ -323,7 +357,7 @@ function send_comment(parentid) {
 
 
 /**
- *  Send a new paste to server
+ * Send a new paste to server
  */
 function send_data() {
     // Do not send if no data.
@@ -381,20 +415,22 @@ function send_data() {
     });
 }
 
-/** Text range selection.
- *  From: http://stackoverflow.com/questions/985272/jquery-selecting-text-in-an-element-akin-to-highlighting-with-your-mouse
- *  @param string element : Indentifier of the element to select (id="").
+/**
+ * Text range selection.
+ * From: http://stackoverflow.com/questions/985272/jquery-selecting-text-in-an-element-akin-to-highlighting-with-your-mouse
+ * 
+ * @param string element : Indentifier of the element to select (id="").
  */
 function selectText(element) {
     var doc = document
         , text = doc.getElementById(element)
         , range, selection
     ;
-    if (doc.body.createTextRange) { //ms
+    if (doc.body.createTextRange) { // MS
         range = doc.body.createTextRange();
         range.moveToElementText(text);
         range.select();
-    } else if (window.getSelection) { //all others
+    } else if (window.getSelection) { // all others
         selection = window.getSelection();
         range = doc.createRange();
         range.selectNodeContents(text);
@@ -451,8 +487,9 @@ function stateExistingPaste() {
     $('#prettymessage').removeClass('hidden');
 }
 
-/** Return raw text
-  */
+/**
+ * Return raw text
+ */
 function rawText()
 {
     var paste = $('#cleartext').html();
@@ -488,7 +525,11 @@ function newPaste() {
  * (We use the same function for paste and reply to comments)
  */
 function showError(message) {
-    $('#status').addClass('errorMessage').text(message);
+    if ($('#status').length) {
+        $('#status').addClass('errorMessage').text(message);
+    } else {
+        $('#errormessage').removeClass('hidden').append(message);
+    }
     $('#replystatus').addClass('errorMessage').text(message);
 }
 
@@ -529,7 +570,6 @@ function showStatus(message, spin) {
  * </code>
  *
  * @param object element : a jQuery DOM element.
- * @FIXME: add ppa & apt links.
  */
 function urls2links(element) {
     var re = /((http|https|ftp):\/\/[\w?=&.\/-;#@~%+-]+(?![\w\s?&.\/;#~%"=-]*>))/ig;
@@ -560,6 +600,9 @@ function pageKey() {
     return key;
 }
 
+/**
+ * main application start, called when DOM is fully loaded
+ */
 $(function() {
     // hide "no javascript" message
     $('#noscript').hide();
