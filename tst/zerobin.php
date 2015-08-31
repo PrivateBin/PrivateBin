@@ -527,4 +527,42 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         );
         $this->assertTrue($this->_model->exists(self::$pasteid), 'paste exists after failing to delete data');
     }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testDeleteBurnAfterReading()
+    {
+        $this->reset();
+        $burnPaste = self::$paste;
+        $burnPaste['meta']['burnafterreading'] = true;
+        $this->_model->create(self::$pasteid, $burnPaste);
+        $this->assertTrue($this->_model->exists(self::$pasteid), 'paste exists before deleting data');
+        $_GET['pasteid'] = self::$pasteid;
+        $_GET['deletetoken'] = 'burnafterreading';
+        ob_start();
+        new zerobin;
+        $content = ob_get_contents();
+        $response = json_decode($content, true);
+        $this->assertEquals(0, $response['status'], 'outputs status');
+        $this->assertFalse($this->_model->exists(self::$pasteid), 'paste successfully deleted');
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testDeleteInvalidBurnAfterReading()
+    {
+        $this->reset();
+        $this->_model->create(self::$pasteid, self::$paste);
+        $this->assertTrue($this->_model->exists(self::$pasteid), 'paste exists before deleting data');
+        $_GET['pasteid'] = self::$pasteid;
+        $_GET['deletetoken'] = 'burnafterreading';
+        ob_start();
+        new zerobin;
+        $content = ob_get_contents();
+        $response = json_decode($content, true);
+        $this->assertEquals(1, $response['status'], 'outputs status');
+        $this->assertTrue($this->_model->exists(self::$pasteid), 'paste successfully deleted');
+    }
 }

@@ -238,6 +238,10 @@ function displayMessages(key, comments) {
     // Display paste expiration.
     if (comments[0].meta.expire_date) $('#remainingtime').removeClass('foryoureyesonly').text('This document will expire in '+secondsToHuman(comments[0].meta.remaining_time)+'.').removeClass('hidden');
     if (comments[0].meta.burnafterreading) {
+        $.get(scriptLocation() + "?pasteid=" + pasteID() + '&deletetoken=burnafterreading', 'json')
+        .fail(function() {
+            showError('Could not delete the paste, it was not stored in burn after reading mode.');
+        });
         $('#remainingtime').addClass('foryoureyesonly').text('FOR YOUR EYES ONLY.  Don\'t close this window, this message can\'t be displayed again.').removeClass('hidden');
         $('#clonebutton').addClass('hidden'); // Discourage cloning (as it can't really be prevented).
     }
@@ -382,11 +386,7 @@ function send_data() {
                          burnafterreading: $('#burnafterreading').is(':checked') ? 1 : 0,
                          opendiscussion: $('#opendiscussion').is(':checked') ? 1 : 0
                        };
-    $.post(scriptLocation(), data_to_send, 'json')
-    .error(function() {
-        showError('Data could not be sent (serveur error or not responding).');
-    })
-    .success(function(data) {
+    $.post(scriptLocation(), data_to_send, function(data) {
         if (data.status == 0) {
             stateExistingPaste();
             var url = scriptLocation() + "?" + data.id + '#' + randomkey;
@@ -412,6 +412,9 @@ function send_data() {
         else {
             showError('Could not create paste.');
         }
+    }, 'json')
+    .fail(function() {
+        showError('Data could not be sent (server error or not responding).');
     });
 }
 

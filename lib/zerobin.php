@@ -25,6 +25,13 @@ class zerobin
     const VERSION = 'Alpha 0.19';
 
     /**
+     * show the same error message if the paste expired or does not exist
+     *
+     * @const string
+     */
+    const GENERIC_ERROR = 'Paste does not exist, has expired or has been deleted.';
+
+    /**
      * configuration array
      *
      * @access private
@@ -99,7 +106,11 @@ class zerobin
         // delete an existing paste
         elseif (!empty($_GET['deletetoken']) && !empty($_GET['pasteid']))
         {
-            $this->_delete($_GET['pasteid'], $_GET['deletetoken']);
+            $result = $this->_delete($_GET['pasteid'], $_GET['deletetoken']);
+            if (strlen($result)) {
+                echo $result;
+                return;
+            }
         }
         // display an existing paste
         elseif (!empty($_SERVER['QUERY_STRING']))
@@ -355,7 +366,7 @@ class zerobin
      * @access private
      * @param  string $dataid
      * @param  string $deletetoken
-     * @return void
+     * @return string
      */
     private function _delete($dataid, $deletetoken)
     {
@@ -363,14 +374,42 @@ class zerobin
         if (!filter::is_valid_paste_id($dataid))
         {
             $this->_error = 'Invalid paste ID.';
-            return;
+            return '';
         }
 
         // Check that paste exists.
         if (!$this->_model()->exists($dataid))
         {
-            $this->_error = 'Paste does not exist, has expired or has been deleted.';
-            return;
+            $this->_error = self::GENERIC_ERROR;
+            return '';
+        }
+
+        // Get the paste itself.
+        $paste = $this->_model()->read($dataid);
+
+        // See if paste has expired.
+        if (
+            isset($paste->meta->expire_date) &&
+            $paste->meta->expire_date < time()
+        )
+        {
+            // Delete the paste
+            $this->_model()->delete($dataid);
+            $this->_error = self::GENERIC_ERROR;
+        }
+
+        if ($deletetoken == 'burnafterreading') {
+            header('Content-type: application/json');
+            if (
+                isset($paste->meta->burnafterreading) &&
+                $paste->meta->burnafterreading
+            )
+            {
+                // Delete the paste
+                $this->_model()->delete($dataid);
+                return $this->_return_message(0, 'Paste was properly deleted.');
+            }
+            return $this->_return_message(1, 'Paste is not of burn-after-reading type.');
         }
 
         // Make sure token is valid.
@@ -378,12 +417,13 @@ class zerobin
         if (!filter::slow_equals($deletetoken, hash_hmac('sha1', $dataid, serversalt::get())))
         {
             $this->_error = 'Wrong deletion token. Paste was not deleted.';
-            return;
+            return '';
         }
 
         // Paste exists and deletion token is valid: Delete the paste.
         $this->_model()->delete($dataid);
         $this->_status = 'Paste was properly deleted.';
+        return '';
     }
 
     /**
@@ -402,9 +442,6 @@ class zerobin
             return;
         }
 
-        // show the same error message if the paste expired or does not exist
-        $genericError = 'Paste does not exist, has expired or has been deleted.';
-
         // Check that paste exists.
         if ($this->_model()->exists($dataid))
         {
@@ -419,7 +456,7 @@ class zerobin
             {
                 // Delete the paste
                 $this->_model()->delete($dataid);
-                $this->_error = $genericError;
+                $this->_error = self::GENERIC_ERROR;
             }
             // If no error, return the paste.
             else
@@ -444,17 +481,11 @@ class zerobin
                     );
                 }
                 $this->_data = json_encode($messages);
-
-                // If the paste was meant to be read only once, delete it.
-                if (
-                    property_exists($paste->meta, 'burnafterreading') &&
-                    $paste->meta->burnafterreading
-                ) $this->_model()->delete($dataid);
             }
         }
         else
         {
-            $this->_error = $genericError;
+            $this->_error = self::GENERIC_ERROR;
         }
     }
 
