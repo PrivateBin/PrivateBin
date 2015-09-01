@@ -440,6 +440,22 @@ class zerobinTest extends PHPUnit_Framework_TestCase
     /**
      * @runInSeparateProcess
      */
+    public function testReadJson()
+    {
+        $this->reset();
+        $this->_model->create(self::$pasteid, self::$paste);
+        $_SERVER['QUERY_STRING'] = self::$pasteid . '&json';
+        ob_start();
+        new zerobin;
+        $content = ob_get_contents();
+        $response = json_decode($content, true);
+        $this->assertEquals(0, $response['status'], 'outputs success status');
+        $this->assertEquals(array(self::$paste), $response['messages'], 'outputs data correctly');
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
     public function testDelete()
     {
         $this->reset();

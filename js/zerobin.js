@@ -213,11 +213,6 @@ function setElementText(element, text) {
  * @param array comments : Array of messages to display (items = array with keys ('data','meta')
  */
 function displayMessages(key, comments) {
-    // restore password if set in previous visit, then clear the session
-    if (window.sessionStorage && sessionStorage.getItem(pageKey())) {
-        $('#passwordinput').val(sessionStorage.getItem(pageKey()));
-        sessionStorage.clear();
-    }
     try { // Try to decrypt the paste.
         var cleartext = zeroDecipher(key, comments[0].data);
         if (cleartext == null) throw "password prompt canceled";
@@ -327,7 +322,7 @@ function send_comment(parentid) {
     showStatus('Sending comment...', spin=true);
     var cipherdata = zeroCipher(pageKey(), $('#replymessage').val());
     var ciphernickname = '';
-    var nick=$('#nickname').val();
+    var nick = $('#nickname').val();
     if (nick != '' && nick != 'Optional nickname...') {
         ciphernickname = zeroCipher(pageKey(), nick);
     }
@@ -337,28 +332,37 @@ function send_comment(parentid) {
                          nickname: ciphernickname
                        };
 
-    $.post(scriptLocation(), data_to_send, 'json')
-    .error(function() {
-        showError('Comment could not be sent (server error or not responding).');
-    })
-    .success(function(data) {
+    $.post(scriptLocation(), data_to_send, function(data) {
         if (data.status == 0) {
             showStatus('Comment posted.');
-            // store password temporarily between page loads
-            if ($('#passwordinput').val().length > 0 && window.sessionStorage) {
-                sessionStorage.setItem(pageKey(), $('#passwordinput').val());
-            }
-            location.reload();
+            $.get(scriptLocation() + "?" + pasteID() + "&json", function(data) {
+                if (data.status == 0) {
+                    displayMessages(pageKey(), data.messages);
+                }
+                else if (data.status == 1) {
+                    showError('Could not refresh display: ' + data.message);
+                }
+                else
+                {
+                    showError('Could not refresh display: unknown status');
+                }
+            }, 'json')
+            .fail(function() {
+                showError('Could not refresh display (server error or not responding).');
+            });
         }
-        else if (data.status==1) {
-            showError('Could not post comment: '+data.message);
+        else if (data.status == 1) {
+            showError('Could not post comment: ' + data.message);
         }
-        else {
-            showError('Could not post comment.');
+        else
+        {
+            showError('Could not post comment: unknown status');
         }
+    }, 'json')
+    .fail(function() {
+        showError('Comment could not be sent (server error or not responding).');
     });
 }
-
 
 /**
  * Send a new paste to server
@@ -407,7 +411,7 @@ function send_data() {
             if (typeof prettyPrint == 'function') prettyPrint();
         }
         else if (data.status==1) {
-            showError('Could not create paste: '+data.message);
+            showError('Could not create paste: ' + data.message);
         }
         else {
             showError('Could not create paste.');
