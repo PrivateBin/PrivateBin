@@ -60,7 +60,7 @@
 {loop="EXPIRE"}
 								<option value="{$key}"{if="$key == $EXPIREDEFAULT"} selected="selected"{/if}>{$value}</option>{/loop}
 							</select>
-							<a id="expiration" href="#" class="hidden dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Expires <span id="pasteExpirationDisplay"></span> <span class="caret"></span></a>
+							<a id="expiration" href="#" class="hidden dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Expires:  <span id="pasteExpirationDisplay">{$EXPIREDEFAULT}</span> <span class="caret"></span></a>
 							<ul class="dropdown-menu">
 {loop="EXPIRE"}
 								<li><a href="#" onclick="$('#pasteExpiration').val('{$key}');$('#pasteExpirationDisplay').text('{$value}');return false;">{$value}</a></li>{/loop}
