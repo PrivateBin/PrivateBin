@@ -454,7 +454,7 @@ class zerobin
             {
                 // Delete the paste
                 $this->_model()->delete($dataid);
-                $this->_return_message(0, 'Paste was properly deleted.');
+                $this->_return_message(0, $dataid);
             }
             else
             {
