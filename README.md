@@ -21,13 +21,18 @@ without loosing any data.
 
 - Encryption of data sent to server, even if it does not provide HTTPS.
 
+- Possibility to set a password which is asked when the paste is opened.
+  It further protects a paste and prevent people stumbling upon your paste's link
+  from being able to read it without this password.
+
 ## What it doesn't provide
 
 - As a user you have to trust the server administrator, your internet provider 
   and any country the traffic passes not to inject any malicious code.
 
-- The "password" to encrypt the paste is part of the URL. If you publicly post
-  a paste URL, everybody can read it.
+- The "key" used to encrypt the paste is part of the URL. If you publicly post
+  a non-passworded paste URL, everybody can read it. Use a password if you want
+  your paste to be "private".
 
 - A server admin might be forced to hand over access logs to the authorities.
   ZeroBin encrypts your text and the discussion contents, but who accessed it
