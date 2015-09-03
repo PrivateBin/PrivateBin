@@ -60,7 +60,7 @@ abstract class zerobin_abstract
      * @access public
      * @param  string $pasteid
      * @param  array  $paste
-     * @return int|false
+     * @return bool
      */
     abstract public function create($pasteid, $paste);
 
@@ -99,7 +99,7 @@ abstract class zerobin_abstract
      * @param  string $parentid
      * @param  string $commentid
      * @param  array  $comment
-     * @return int|false
+     * @return bool
      */
     abstract public function createComment($pasteid, $parentid, $commentid, $comment);
 

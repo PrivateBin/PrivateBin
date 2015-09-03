@@ -55,14 +55,14 @@ class zerobin_data extends zerobin_abstract
      * @access public
      * @param  string $pasteid
      * @param  array  $paste
-     * @return int|false
+     * @return bool
      */
     public function create($pasteid, $paste)
     {
         $storagedir = self::_dataid2path($pasteid);
         if (is_file($storagedir . $pasteid)) return false;
         if (!is_dir($storagedir)) mkdir($storagedir, 0705, true);
-        return (bool) file_put_contents($storagedir . $pasteid, json_encode($paste));
+        return (bool) @file_put_contents($storagedir . $pasteid, json_encode($paste));
     }
 
     /**
@@ -105,7 +105,7 @@ class zerobin_data extends zerobin_abstract
             $dir->close();
 
             // Delete the discussion directory.
-            rmdir($discdir);
+            @rmdir($discdir);
         }
     }
 
@@ -129,7 +129,7 @@ class zerobin_data extends zerobin_abstract
      * @param  string $parentid
      * @param  string $commentid
      * @param  array  $comment
-     * @return int|false
+     * @return bool
      */
     public function createComment($pasteid, $parentid, $commentid, $comment)
     {
@@ -137,7 +137,7 @@ class zerobin_data extends zerobin_abstract
         $filename = $pasteid . '.' . $commentid . '.' . $parentid;
         if (is_file($storagedir . $filename)) return false;
         if (!is_dir($storagedir)) mkdir($storagedir, 0705, true);
-        return file_put_contents($storagedir . $filename, json_encode($comment));
+        return (bool) @file_put_contents($storagedir . $filename, json_encode($comment));
     }
 
     /**

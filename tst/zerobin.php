@@ -22,6 +22,8 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         ),
     );
 
+    private $_conf;
+
     private $_model;
 
     public function setUp()
@@ -29,6 +31,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         /* Setup Routine */
         $this->_model = zerobin_data::getInstance(array('dir' => PATH . 'data'));
         serversalt::setPath(PATH . 'data');
+        $this->_conf = PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.ini';
         $this->reset();
     }
 
@@ -44,9 +47,8 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $_SERVER = array();
         if ($this->_model->exists(self::$pasteid))
             $this->_model->delete(self::$pasteid);
-        $conf = PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.ini';
-        if (is_file($conf . '.bak'))
-            rename($conf . '.bak', $conf);
+        if (is_file($this->_conf . '.bak'))
+            rename($this->_conf . '.bak', $this->_conf);
     }
 
     /**
@@ -98,10 +100,9 @@ class zerobinTest extends PHPUnit_Framework_TestCase
     public function testConf()
     {
         $this->reset();
-        $conf = PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.ini';
-        if (!is_file($conf . '.bak') && is_file($conf))
-            rename($conf, $conf . '.bak');
-        file_put_contents($conf, '');
+        if (!is_file($this->_conf . '.bak') && is_file($this->_conf))
+            rename($this->_conf, $this->_conf . '.bak');
+        file_put_contents($this->_conf, '');
         ob_start();
         new zerobin;
         $content = ob_get_contents();
@@ -113,12 +114,11 @@ class zerobinTest extends PHPUnit_Framework_TestCase
     public function testConfMissingExpireLabel()
     {
         $this->reset();
-        $conf = PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.ini';
-        $options = parse_ini_file($conf, true);
+        $options = parse_ini_file($this->_conf, true);
         $options['expire_options']['foobar123'] = 10;
-        if (!is_file($conf . '.bak') && is_file($conf))
-            rename($conf, $conf . '.bak');
-        helper::createIniFile($conf, $options);
+        if (!is_file($this->_conf . '.bak') && is_file($this->_conf))
+            rename($this->_conf, $this->_conf . '.bak');
+        helper::createIniFile($this->_conf, $options);
         ini_set('magic_quotes_gpc', 1);
         ob_start();
         new zerobin;
@@ -149,13 +149,77 @@ class zerobinTest extends PHPUnit_Framework_TestCase
     /**
      * @runInSeparateProcess
      */
-    public function testCreateValidExpire()
+    public function testCreateInvalidTimelimit()
     {
         $this->reset();
         $_POST = self::$paste;
+        $_SERVER['REMOTE_ADDR'] = '::1';
+        ob_start();
+        new zerobin;
+        $content = ob_get_contents();
+        $response = json_decode($content, true);
+        $this->assertEquals(1, $response['status'], 'outputs error status');
+        $this->assertFalse($this->_model->exists(self::$pasteid), 'paste exists after posting data');
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testCreateInvalidSize()
+    {
+        $this->reset();
+        $options = parse_ini_file($this->_conf, true);
+        $options['main']['sizelimit'] = 10;
+        $options['traffic']['limit'] = 0;
+        if (!is_file($this->_conf . '.bak') && is_file($this->_conf))
+            rename($this->_conf, $this->_conf . '.bak');
+        helper::createIniFile($this->_conf, $options);
+        $_POST = self::$paste;
+        $_SERVER['REMOTE_ADDR'] = '::1';
+        ob_start();
+        new zerobin;
+        $content = ob_get_contents();
+        $response = json_decode($content, true);
+        $this->assertEquals(1, $response['status'], 'outputs error status');
+        $this->assertFalse($this->_model->exists(self::$pasteid), 'paste exists after posting data');
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testCreateDuplicateId()
+    {
+        $this->reset();
+        $options = parse_ini_file($this->_conf, true);
+        $options['traffic']['limit'] = 0;
+        if (!is_file($this->_conf . '.bak') && is_file($this->_conf))
+            rename($this->_conf, $this->_conf . '.bak');
+        helper::createIniFile($this->_conf, $options);
+        $this->_model->create(self::$pasteid, self::$paste);
+        $_POST = self::$paste;
+        $_SERVER['REMOTE_ADDR'] = '::1';
+        ob_start();
+        new zerobin;
+        $content = ob_get_contents();
+        $response = json_decode($content, true);
+        $this->assertEquals(1, $response['status'], 'outputs error status');
+        $this->assertTrue($this->_model->exists(self::$pasteid), 'paste exists after posting data');
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testCreateValidExpire()
+    {
+        $this->reset();
+        $options = parse_ini_file($this->_conf, true);
+        $options['traffic']['limit'] = 0;
+        if (!is_file($this->_conf . '.bak') && is_file($this->_conf))
+            rename($this->_conf, $this->_conf . '.bak');
+        helper::createIniFile($this->_conf, $options);
+        $_POST = self::$paste;
         $_POST['expire'] = '5min';
         $_SERVER['REMOTE_ADDR'] = '::1';
-        sleep(11);
         ob_start();
         new zerobin;
         $content = ob_get_contents();
@@ -175,10 +239,14 @@ class zerobinTest extends PHPUnit_Framework_TestCase
     public function testCreateInvalidExpire()
     {
         $this->reset();
+        $options = parse_ini_file($this->_conf, true);
+        $options['traffic']['limit'] = 0;
+        if (!is_file($this->_conf . '.bak') && is_file($this->_conf))
+            rename($this->_conf, $this->_conf . '.bak');
+        helper::createIniFile($this->_conf, $options);
         $_POST = self::$paste;
         $_POST['expire'] = 'foo';
         $_SERVER['REMOTE_ADDR'] = '::1';
-        sleep(11);
         ob_start();
         new zerobin;
         $content = ob_get_contents();
@@ -198,10 +266,14 @@ class zerobinTest extends PHPUnit_Framework_TestCase
     public function testCreateInvalidBurn()
     {
         $this->reset();
+        $options = parse_ini_file($this->_conf, true);
+        $options['traffic']['limit'] = 0;
+        if (!is_file($this->_conf . '.bak') && is_file($this->_conf))
+            rename($this->_conf, $this->_conf . '.bak');
+        helper::createIniFile($this->_conf, $options);
         $_POST = self::$paste;
         $_POST['burnafterreading'] = 'neither 1 nor 0';
         $_SERVER['REMOTE_ADDR'] = '::1';
-        sleep(11);
         ob_start();
         new zerobin;
         $content = ob_get_contents();
@@ -216,10 +288,14 @@ class zerobinTest extends PHPUnit_Framework_TestCase
     public function testCreateInvalidOpenDiscussion()
     {
         $this->reset();
+        $options = parse_ini_file($this->_conf, true);
+        $options['traffic']['limit'] = 0;
+        if (!is_file($this->_conf . '.bak') && is_file($this->_conf))
+            rename($this->_conf, $this->_conf . '.bak');
+        helper::createIniFile($this->_conf, $options);
         $_POST = self::$paste;
         $_POST['opendiscussion'] = 'neither 1 nor 0';
         $_SERVER['REMOTE_ADDR'] = '::1';
-        sleep(11);
         ob_start();
         new zerobin;
         $content = ob_get_contents();
@@ -234,10 +310,14 @@ class zerobinTest extends PHPUnit_Framework_TestCase
     public function testCreateValidNick()
     {
         $this->reset();
+        $options = parse_ini_file($this->_conf, true);
+        $options['traffic']['limit'] = 0;
+        if (!is_file($this->_conf . '.bak') && is_file($this->_conf))
+            rename($this->_conf, $this->_conf . '.bak');
+        helper::createIniFile($this->_conf, $options);
         $_POST = self::$paste;
         $_POST['nickname'] = self::$comment['meta']['nickname'];
         $_SERVER['REMOTE_ADDR'] = '::1';
-        sleep(11);
         ob_start();
         new zerobin;
         $content = ob_get_contents();
@@ -257,10 +337,14 @@ class zerobinTest extends PHPUnit_Framework_TestCase
     public function testCreateInvalidNick()
     {
         $this->reset();
+        $options = parse_ini_file($this->_conf, true);
+        $options['traffic']['limit'] = 0;
+        if (!is_file($this->_conf . '.bak') && is_file($this->_conf))
+            rename($this->_conf, $this->_conf . '.bak');
+        helper::createIniFile($this->_conf, $options);
         $_POST = self::$paste;
         $_POST['nickname'] = 'foo';
         $_SERVER['REMOTE_ADDR'] = '::1';
-        sleep(11);
         ob_start();
         new zerobin;
         $content = ob_get_contents();
@@ -275,12 +359,16 @@ class zerobinTest extends PHPUnit_Framework_TestCase
     public function testCreateComment()
     {
         $this->reset();
+        $options = parse_ini_file($this->_conf, true);
+        $options['traffic']['limit'] = 0;
+        if (!is_file($this->_conf . '.bak') && is_file($this->_conf))
+            rename($this->_conf, $this->_conf . '.bak');
+        helper::createIniFile($this->_conf, $options);
         $_POST = self::$comment;
         $_POST['pasteid'] = self::$pasteid;
         $_POST['parentid'] = self::$pasteid;
         $_SERVER['REMOTE_ADDR'] = '::1';
         $this->_model->create(self::$pasteid, self::$paste);
-        sleep(11);
         ob_start();
         new zerobin;
         $content = ob_get_contents();
@@ -292,9 +380,38 @@ class zerobinTest extends PHPUnit_Framework_TestCase
     /**
      * @runInSeparateProcess
      */
+    public function testCreateInvalidComment()
+    {
+        $this->reset();
+        $options = parse_ini_file($this->_conf, true);
+        $options['traffic']['limit'] = 0;
+        if (!is_file($this->_conf . '.bak') && is_file($this->_conf))
+            rename($this->_conf, $this->_conf . '.bak');
+        helper::createIniFile($this->_conf, $options);
+        $_POST = self::$comment;
+        $_POST['pasteid'] = self::$pasteid;
+        $_POST['parentid'] = 'foo';
+        $_SERVER['REMOTE_ADDR'] = '::1';
+        $this->_model->create(self::$pasteid, self::$paste);
+        ob_start();
+        new zerobin;
+        $content = ob_get_contents();
+        $response = json_decode($content, true);
+        $this->assertEquals(1, $response['status'], 'outputs error status');
+        $this->assertFalse($this->_model->existsComment(self::$pasteid, self::$pasteid, self::$commentid), 'paste exists after posting data');
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
     public function testCreateCommentDiscussionDisabled()
     {
         $this->reset();
+        $options = parse_ini_file($this->_conf, true);
+        $options['traffic']['limit'] = 0;
+        if (!is_file($this->_conf . '.bak') && is_file($this->_conf))
+            rename($this->_conf, $this->_conf . '.bak');
+        helper::createIniFile($this->_conf, $options);
         $_POST = self::$comment;
         $_POST['pasteid'] = self::$pasteid;
         $_POST['parentid'] = self::$pasteid;
@@ -302,7 +419,6 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $paste = self::$paste;
         $paste['meta']['opendiscussion'] = false;
         $this->_model->create(self::$pasteid, $paste);
-        sleep(11);
         ob_start();
         new zerobin;
         $content = ob_get_contents();
@@ -317,17 +433,45 @@ class zerobinTest extends PHPUnit_Framework_TestCase
     public function testCreateCommentInvalidPaste()
     {
         $this->reset();
+        $options = parse_ini_file($this->_conf, true);
+        $options['traffic']['limit'] = 0;
+        if (!is_file($this->_conf . '.bak') && is_file($this->_conf))
+            rename($this->_conf, $this->_conf . '.bak');
+        helper::createIniFile($this->_conf, $options);
         $_POST = self::$comment;
         $_POST['pasteid'] = self::$pasteid;
         $_POST['parentid'] = self::$pasteid;
         $_SERVER['REMOTE_ADDR'] = '::1';
-        sleep(11);
         ob_start();
         new zerobin;
         $content = ob_get_contents();
         $response = json_decode($content, true);
         $this->assertEquals(1, $response['status'], 'outputs error status');
         $this->assertFalse($this->_model->existsComment(self::$pasteid, self::$pasteid, self::$commentid), 'paste exists after posting data');
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testCreateDuplicateComment()
+    {
+        $this->reset();
+        $options = parse_ini_file($this->_conf, true);
+        $options['traffic']['limit'] = 0;
+        if (!is_file($this->_conf . '.bak') && is_file($this->_conf))
+            rename($this->_conf, $this->_conf . '.bak');
+        helper::createIniFile($this->_conf, $options);
+        $this->_model->createComment(self::$pasteid, self::$pasteid, self::$commentid, self::$comment);
+        $_POST = self::$comment;
+        $_POST['pasteid'] = self::$pasteid;
+        $_POST['parentid'] = self::$pasteid;
+        $_SERVER['REMOTE_ADDR'] = '::1';
+        ob_start();
+        new zerobin;
+        $content = ob_get_contents();
+        $response = json_decode($content, true);
+        $this->assertEquals(1, $response['status'], 'outputs error status');
+        $this->assertTrue($this->_model->existsComment(self::$pasteid, self::$pasteid, self::$commentid), 'paste exists after posting data');
     }
 
     /**
@@ -451,6 +595,20 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $response = json_decode($content, true);
         $this->assertEquals(0, $response['status'], 'outputs success status');
         $this->assertEquals(array(self::$paste), $response['messages'], 'outputs data correctly');
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testReadInvalidJson()
+    {
+        $this->reset();
+        $_SERVER['QUERY_STRING'] = self::$pasteid . '&json';
+        ob_start();
+        new zerobin;
+        $content = ob_get_contents();
+        $response = json_decode($content, true);
+        $this->assertEquals(1, $response['status'], 'outputs error status');
     }
 
     /**
@@ -580,5 +738,29 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $response = json_decode($content, true);
         $this->assertEquals(1, $response['status'], 'outputs status');
         $this->assertTrue($this->_model->exists(self::$pasteid), 'paste successfully deleted');
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testDeleteExpired()
+    {
+        $this->reset();
+        $expiredPaste = self::$paste;
+        $expiredPaste['meta']['expire_date'] = $expiredPaste['meta']['postdate'];
+        $this->_model->create(self::$pasteid, $expiredPaste);
+        $_SERVER['QUERY_STRING'] = self::$pasteid;
+        ob_start();
+        new zerobin;
+        $content = ob_get_contents();
+        $this->assertTag(
+            array(
+                'id' => 'errormessage',
+                'content' => 'Paste does not exist'
+            ),
+            $content,
+            'outputs error correctly'
+        );
+        $this->assertFalse($this->_model->exists(self::$pasteid), 'paste successfully deleted');
     }
 }
