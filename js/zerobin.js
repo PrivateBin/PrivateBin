@@ -535,7 +535,9 @@ function showError(message) {
     if ($('#status').length) {
         $('#status').addClass('errorMessage').text(message);
     } else {
-        $('#errormessage').removeClass('hidden').append(message);
+        $('#errormessage').removeClass('hidden');
+        var content = $('#errormessage').contents();
+        content[content.length - 1].nodeValue = message;
     }
     $('#replystatus').addClass('errorMessage').text(message);
 }
