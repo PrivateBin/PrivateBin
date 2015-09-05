@@ -93,7 +93,7 @@ class zerobin
     {
         if (version_compare(PHP_VERSION, '5.2.6') < 0)
         {
-            throw new Exception('ZeroBin requires php 5.2.6 or above to work. Sorry.', 1);
+            throw new Exception(i18n::_('ZeroBin requires php 5.2.6 or above to work. Sorry.'), 1);
         }
 
         // in case stupid admin has left magic_quotes enabled in php.ini
@@ -156,7 +156,7 @@ class zerobin
         $this->_conf = parse_ini_file(PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.ini', true);
         foreach (array('main', 'model') as $section) {
             if (!array_key_exists($section, $this->_conf)) {
-                throw new Exception("ZeroBin requires configuration section [$section] to be present in configuration file.", 2);
+                throw new Exception(i18n::_('ZeroBin requires configuration section [%s] to be present in configuration file.', $section), 2);
             }
         }
         $this->_model = $this->_conf['model']['class'];
@@ -184,12 +184,12 @@ class zerobin
      * Store new paste or comment
      *
      * POST contains:
-     * data (mandatory) = json encoded SJCL encrypted text (containing keys: iv,salt,ct)
+     * data (mandatory) = json encoded SJCL encrypted text (containing keys: iv,v,iter,ks,ts,mode,adata,cipher,salt,ct)
      *
      * All optional data will go to meta information:
      * expire (optional) = expiration delay (never,5min,10min,1hour,1day,1week,1month,1year,burn) (default:never)
      * opendiscusssion (optional) = is the discussion allowed on this paste ? (0/1) (default:0)
-     * nickname (optional) = in discussion, encoded SJCL encrypted text nickname of author of comment (containing keys: iv,salt,ct)
+     * nickname (optional) = in discussion, encoded SJCL encrypted text nickname of author of comment (containing keys: iv,v,iter,ks,ts,mode,adata,cipher,salt,ct)
      * parentid (optional) = in discussion, which comment this comment replies to.
      * pasteid (optional) = in discussion, which paste this comment belongs to.
      *
@@ -208,9 +208,10 @@ class zerobin
         {
             $this->_return_message(
                 1,
-                'Please wait ' .
-                $this->_conf['traffic']['limit'] .
-                ' seconds between each post.'
+                i18n::_(
+                    'Please wait %d seconds between each post.',
+                    $this->_conf['traffic']['limit']
+                )
             );
             return;
         }
@@ -221,9 +222,10 @@ class zerobin
         {
             $this->_return_message(
                 1,
-                'Paste is limited to ' .
-                filter::size_humanreadable($sizelimit) .
-                ' of encrypted data.'
+                i18n::_(
+                    'Paste is limited to %s of encrypted data.',
+                    filter::size_humanreadable($sizelimit)
+                )
             );
             return;
         }
@@ -232,15 +234,18 @@ class zerobin
         if (!sjcl::isValid($data)) return $this->_return_message(1, 'Invalid data.');
 
         // Read additional meta-information.
-        $meta=array();
+        $meta = array();
 
         // Read expiration date
         if (!empty($_POST['expire']))
         {
             $selected_expire = (string) $_POST['expire'];
-            if (array_key_exists($selected_expire, $this->_conf['expire_options'])) {
+            if (array_key_exists($selected_expire, $this->_conf['expire_options']))
+            {
                 $expire = $this->_conf['expire_options'][$selected_expire];
-            } else {
+            }
+            else
+            {
                 $expire = $this->_conf['expire_options'][$this->_conf['expire']['default']];
             }
             if ($expire > 0) $meta['expire_date'] = time() + $expire;
@@ -575,23 +580,25 @@ class zerobin
         // label all the expiration options
         $expire = array();
         foreach ($this->_conf['expire_options'] as $key => $value) {
-            $expire[$key] = array_key_exists($key, $this->_conf['expire_labels']) ?
+            $expire[$key] = i18n::_(
+                array_key_exists($key, $this->_conf['expire_labels']) ?
                 $this->_conf['expire_labels'][$key] :
-                $key;
+                $key
+            );
         }
 
         $page = new RainTPL;
         $page::$path_replace = false;
         // we escape it here because ENT_NOQUOTES can't be used in RainTPL templates
         $page->assign('CIPHERDATA', htmlspecialchars($this->_data, ENT_NOQUOTES));
-        $page->assign('ERROR', $this->_error);
-        $page->assign('STATUS', $this->_status);
+        $page->assign('ERROR', i18n::_($this->_error));
+        $page->assign('STATUS', i18n::_($this->_status));
         $page->assign('VERSION', self::VERSION);
         $page->assign('DISCUSSION', $this->_getMainConfig('discussion', true));
         $page->assign('OPENDISCUSSION', $this->_getMainConfig('opendiscussion', true));
         $page->assign('SYNTAXHIGHLIGHTING', $this->_getMainConfig('syntaxhighlighting', true));
         $page->assign('SYNTAXHIGHLIGHTINGTHEME', $this->_getMainConfig('syntaxhighlightingtheme', ''));
-        $page->assign('NOTICE', $this->_getMainConfig('notice', ''));
+        $page->assign('NOTICE', i18n::_($this->_getMainConfig('notice', '')));
         $page->assign('BURNAFTERREADINGSELECTED', $this->_getMainConfig('burnafterreadingselected', false));
         $page->assign('PASSWORD', $this->_getMainConfig('password', true));
         $page->assign('BASE64JSVERSION', $this->_getMainConfig('base64version', '2.1.9'));
@@ -629,7 +636,7 @@ class zerobin
         $result = array('status' => $status);
         if ($status)
         {
-            $result['message'] = $message;
+            $result['message'] = i18n::_($message);
         }
         else
         {

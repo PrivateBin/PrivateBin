@@ -5,7 +5,7 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<meta name="robots" content="noindex" />
-		<title>ZeroBin</title>
+		<title>{function="t('ZeroBin')"}</title>
 		<link type="text/css" rel="stylesheet" href="css/bootstrap/bootstrap-3.3.5.css" />
 		<link type="text/css" rel="stylesheet" href="css/bootstrap/bootstrap-theme-3.3.5.css" />
 		<link type="text/css" rel="stylesheet" href="css/bootstrap/zerobin.css?{$VERSION|rawurlencode}" />{if="$SYNTAXHIGHLIGHTING"}
@@ -28,31 +28,31 @@
 			<div class="container">
 				<div class="navbar-header">
 					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-						<span class="sr-only">Toggle navigation</span>
+						<span class="sr-only">{function="t('Toggle navigation')"}</span>
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
 					</button>
-				<a class="navbar-brand" href="/" onclick="window.location.href=scriptLocation();return false;">ZeroBin</a>
+				<a class="navbar-brand" href="/" onclick="window.location.href=scriptLocation();return false;">{function="t('ZeroBin')"}</a>
 				</div>
 				<div id="navbar" class="navbar-collapse collapse">
 					<ul class="nav navbar-nav pull-right">
 						<li>
 							<button id="newbutton" type="button" class="hidden btn btn-default navbar-btn" onclick="window.location.href=scriptLocation();return false;">
-								<span class="glyphicon glyphicon-file" aria-hidden="true"></span> New
+								<span class="glyphicon glyphicon-file" aria-hidden="true"></span> {function="t('New')"}
 							</button>
 						</li>
 					</ul>
 					<ul class="nav navbar-nav">
 						<li class="pr">
 							<button id="sendbutton" type="button" class="hidden btn btn-default navbar-btn" onclick="send_data();return false;">
-								<span class="glyphicon glyphicon-upload" aria-hidden="true"></span> Send
+								<span class="glyphicon glyphicon-upload" aria-hidden="true"></span> {function="t('Send')"}
 							</button>
 							<button id="clonebutton" type="button" class="hidden btn btn-default navbar-btn" onclick="clonePaste();return false;">
-								<span class="glyphicon glyphicon-duplicate" aria-hidden="true"></span> Clone
+								<span class="glyphicon glyphicon-duplicate" aria-hidden="true"></span> {function="t('Clone')"}
 							</button>
 							<button id="rawtextbutton" type="button" class="hidden btn btn-default navbar-btn" onclick="rawText();return false;">
-								<span class="glyphicon glyphicon-text-background" aria-hidden="true"></span> Raw text
+								<span class="glyphicon glyphicon-text-background" aria-hidden="true"></span> {function="t('Raw text')"}
 							</button>
 						</li>
 						<li class="dropdown">
@@ -60,7 +60,7 @@
 {loop="EXPIRE"}
 								<option value="{$key}"{if="$key == $EXPIREDEFAULT"} selected="selected"{/if}>{$value}</option>{/loop}
 							</select>
-							<a id="expiration" href="#" class="hidden dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Expires:  <span id="pasteExpirationDisplay">{$EXPIREDEFAULT}</span> <span class="caret"></span></a>
+							<a id="expiration" href="#" class="hidden dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{function="t('Expires')"}: <span id="pasteExpirationDisplay">{$EXPIRE[$EXPIREDEFAULT]}</span> <span class="caret"></span></a>
 							<ul class="dropdown-menu">
 {loop="EXPIRE"}
 								<li><a href="#" onclick="$('#pasteExpiration').val('{$key}');$('#pasteExpirationDisplay').text('{$value}');return false;">{$value}</a></li>{/loop}
@@ -70,7 +70,7 @@
 							<div id="burnafterreadingoption" class="navbar-text checkbox hidden">
 								<label>
 									<input type="checkbox" id="burnafterreading" name="burnafterreading" {if="$BURNAFTERREADINGSELECTED"} checked="checked"{/if} />
-									Burn after reading
+									{function="t('Burn after reading')"}
 								</label>
 							</div>
 						</li>{if="$DISCUSSION"}
@@ -78,13 +78,13 @@
 							<div id="opendisc" class="navbar-text checkbox hidden">
 								<label>
 									<input type="checkbox" id="opendiscussion" name="opendiscussion" {if="$OPENDISCUSSION"} checked="checked"{/if} />
-									Open discussion
+									{function="t('Open discussion')"}
 							 	</label>
 							</div>
 						</li>{/if}{if="$PASSWORD"}
 						<li>
 							<div id="password" class="navbar-form hidden">
-								<input type="password" id="passwordinput" placeholder="Password (optional)" class="form-control" size="19"/>
+								<input type="password" id="passwordinput" placeholder="{function="t('Password (recommended)')"}" class="form-control" size="19"/>
 							</div>
 						</li>{/if}
 						<li>
@@ -100,9 +100,9 @@
 			</div>{/if}{if="strlen($STATUS)"}
 			<div id="status" role="alert" class="alert alert-success"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> {$STATUS|htmlspecialchars}</div>{/if}
 			<div id="errormessage" role="alert" class="{if="!strlen($ERROR)"}hidden {/if}alert alert-danger"><span class="glyphicon glyphicon-alert" aria-hidden="true"></span> {$ERROR|htmlspecialchars}</div>
-			<div id="noscript" role="alert" class="nonworking alert alert-warning"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> Javascript is required for ZeroBin to work.<br />Sorry for the inconvenience.</div>
-			<div id="oldienotice" role="alert" class="hidden nonworking alert alert-danger"><span class="glyphicon glyphicon-alert" aria-hidden="true"></span> ZeroBin requires a modern browser to work.</div>
-			<div id="ienotice" role="alert" class="hidden alert alert-warning"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span> Still using Internet Explorer?  Do yourself a favor, switch to a modern browser: 
+			<div id="noscript" role="alert" class="nonworking alert alert-warning"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> {function="t('Javascript is required for ZeroBin to work.<br />Sorry for the inconvenience.')"}</div>
+			<div id="oldienotice" role="alert" class="hidden nonworking alert alert-danger"><span class="glyphicon glyphicon-alert" aria-hidden="true"></span> {function="t('ZeroBin requires a modern browser to work.')"}</div>
+			<div id="ienotice" role="alert" class="hidden alert alert-warning"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span> {function="t('Still using Internet Explorer? Do yourself a favor, switch to a modern browser:')"}
 				<a href="http://www.mozilla.org/firefox/">Firefox</a>, 
 				<a href="http://www.opera.com/">Opera</a>, 
 				<a href="http://www.google.com/chrome">Chrome</a>, 
@@ -125,18 +125,16 @@
 		</section>
 		<section class="container">
 			<div id="discussion" class="hidden">
-				<h4>Discussion</h4>
+				<h4>{function="t('Discussion')"}</h4>
 				<div id="comments"></div>
 			</div>
 		</section>
 		<footer class="container">
 			<div class="row">
-				<h4 class="col-md-3 col-xs-8">ZeroBin <small>- Because ignorance is bliss</small></h4>
+				<h4 class="col-md-5 col-xs-8">{function="t('ZeroBin')"} <small>- {function="t('Because ignorance is bliss')"}</small></h4>
 				<p class="col-md-1 col-xs-4 text-center">{$VERSION}</p>
-				<p id="aboutbox" class="col-md-8 col-xs-12">
-					ZeroBin is a minimalist, opensource online pastebin where the server has zero knowledge of pasted data.<br />
-					Data is encrypted/decrypted <em>in the browser</em> using 256 bits AES.<br />
-					More information on the <a href="https://github.com/elrido/ZeroBin/wiki" target="_blank">project page</a>.
+				<p id="aboutbox" class="col-md-6 col-xs-12">
+					{function="t('ZeroBin is a minimalist, opensource online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href="https://github.com/elrido/ZeroBin/wiki">project page</a>.')"}
 				</p>
 			</div>
 		</footer>

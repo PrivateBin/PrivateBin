@@ -1162,4 +1162,9 @@ class RainTpl_SyntaxException extends RainTpl_Exception{
 	}
 }
 
+// shorthand translate function for use in templates
+function t() {
+	return call_user_func_array(array('i18n', 'translate'), func_get_args());
+}
+
 // -- end

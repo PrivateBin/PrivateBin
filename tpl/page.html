@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="utf-8" />
 		<meta name="robots" content="noindex" />
-		<title>ZeroBin</title>
+		<title>{function="t('ZeroBin')"}</title>
 		<link type="text/css" rel="stylesheet" href="css/zerobin.css?{$VERSION|rawurlencode}" />{if="$SYNTAXHIGHLIGHTING"}
 		<link type="text/css" rel="stylesheet" href="css/prettify/prettify.css?{$VERSION|rawurlencode}" />{if="strlen($SYNTAXHIGHLIGHTINGTHEME)"}
 		<link type="text/css" rel="stylesheet" href="css/prettify/{$SYNTAXHIGHLIGHTINGTHEME}.css?{$VERSION|rawurlencode}" />{/if}{/if}
@@ -21,17 +21,15 @@
 	<body>
 		<header>
 			<div id="aboutbox">
-				ZeroBin is a minimalist, opensource online pastebin where the server has zero knowledge of pasted data.
-				Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. 
-				More information on the <a href="https://github.com/elrido/ZeroBin/wiki">project page</a>.<br />{if="strlen($NOTICE)"}
+				{function="t('ZeroBin is a minimalist, opensource online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href="https://github.com/elrido/ZeroBin/wiki">project page</a>.')"}<br />{if="strlen($NOTICE)"}
 				<span class="blink">▶</span> {$NOTICE}{/if}
 			</div>
-			<h1 title="ZeroBin" onclick="window.location.href=scriptLocation();return false;">ZeroBin</h1><br />
-			<h2>Because ignorance is bliss</h2><br />
+			<h1 title="ZeroBin" onclick="window.location.href=scriptLocation();return false;">{function="t('ZeroBin')"}</h1><br />
+			<h2>{function="t('Because ignorance is bliss')"}</h2><br />
 			<h3>{$VERSION}</h3>
-			<div id="noscript" class="nonworking">Javascript is required for ZeroBin to work.<br />Sorry for the inconvenience.</div>
-			<div id="oldienotice" class="nonworking">ZeroBin requires a modern browser to work.</div>
-			<div id="ienotice">Still using Internet Explorer ?  Do yourself a favor, switch to a modern browser: 
+			<div id="noscript" class="nonworking">{function="t('Javascript is required for ZeroBin to work.<br />Sorry for the inconvenience.')"}</div>
+			<div id="oldienotice" class="nonworking">{function="t('ZeroBin requires a modern browser to work.')"}</div>
+			<div id="ienotice">{function="t('Still using Internet Explorer? Do yourself a favor, switch to a modern browser:')"}
 				<a href="http://www.mozilla.org/firefox/">Firefox</a>, 
 				<a href="http://www.opera.com/">Opera</a>, 
 				<a href="http://www.google.com/chrome">Chrome</a>, 
@@ -43,11 +41,11 @@
 				<div id="status">{$STATUS|htmlspecialchars}</div>
 				<div id="errormessage" class="hidden">{$ERROR|htmlspecialchars}</div>
 				<div id="toolbar">
-					<button id="newbutton" onclick="window.location.href=scriptLocation();return false;" class="hidden"><img src="img/icon_new.png" width="11" height="15" alt="" />New</button>
-					<button id="sendbutton" onclick="send_data();return false;" class="hidden"><img src="img/icon_send.png" width="18" height="15" alt="" />Send</button>
-					<button id="clonebutton" onclick="clonePaste();return false;" class="hidden"><img src="img/icon_clone.png" width="15" height="17" alt="" />Clone</button>
-					<button id="rawtextbutton" onclick="rawText();return false;" class="hidden"><img src="img/icon_raw.png" width="15" height="15" alt="" />Raw text</button>
-					<div id="expiration" class="hidden">Expires: 
+					<button id="newbutton" onclick="window.location.href=scriptLocation();return false;" class="hidden"><img src="img/icon_new.png" width="11" height="15" alt="" />{function="t('New')"}</button>
+					<button id="sendbutton" onclick="send_data();return false;" class="hidden"><img src="img/icon_send.png" width="18" height="15" alt="" />{function="t('Send')"}</button>
+					<button id="clonebutton" onclick="clonePaste();return false;" class="hidden"><img src="img/icon_clone.png" width="15" height="17" alt="" />{function="t('Clone')"}</button>
+					<button id="rawtextbutton" onclick="rawText();return false;" class="hidden"><img src="img/icon_raw.png" width="15" height="15" alt="" />{function="t('Raw text')"}</button>
+					<div id="expiration" class="hidden">{function="t('Expires')"}:
 						<select id="pasteExpiration" name="pasteExpiration">
 {loop="EXPIRE"}
 							<option value="{$key}"{if="$key == $EXPIREDEFAULT"} selected="selected"{/if}>{$value}</option>{/loop}
@@ -56,14 +54,14 @@
 					<div id="remainingtime" class="hidden"></div>
 					<div id="burnafterreadingoption" class="button hidden">
 						<input type="checkbox" id="burnafterreading" name="burnafterreading" {if="$BURNAFTERREADINGSELECTED"} checked="checked"{/if} />
-						<label for="burnafterreading">Burn after reading</label>
+						<label for="burnafterreading">{function="t('Burn after reading')"}</label>
 					</div>{if="$DISCUSSION"}
 					<div id="opendisc" class="button hidden">
 						<input type="checkbox" id="opendiscussion" name="opendiscussion" {if="$OPENDISCUSSION"} checked="checked"{/if} />
-						<label for="opendiscussion" {if="!$OPENDISCUSSION"} style="color: #BBBBBB;"{/if}>Open discussion</label>
+						<label for="opendiscussion" {if="!$OPENDISCUSSION"} style="color: #BBBBBB;"{/if}>{function="t('Open discussion')"}</label>
 					</div>{/if}{if="$PASSWORD"}
 					<div id="password" class="hidden">
-						<input id="passwordinput" placeholder="Optional password (recommended)" size="32" />
+						<input id="passwordinput" placeholder="{function="t('Password (recommended)')"}" size="32" />
 					</div>{/if}
 				</div>
 				<div id="pasteresult" class="hidden">
@@ -79,7 +77,7 @@
 		</section>
 		<section>
 			<div id="discussion" class="hidden">
-				<h4>Discussion</h4>
+				<h4>{function="t('Discussion')"}</h4>
 				<div id="comments"></div>
 			</div>
 		</section>
