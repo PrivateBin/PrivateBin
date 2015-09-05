@@ -33,25 +33,25 @@
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
 					</button>
-				<a class="navbar-brand" href="/" onclick="window.location.href=scriptLocation();return false;">{function="t('ZeroBin')"}</a>
+				<a class="reloadlink navbar-brand" href="/">{function="t('ZeroBin')"}</a>
 				</div>
 				<div id="navbar" class="navbar-collapse collapse">
 					<ul class="nav navbar-nav pull-right">
 						<li>
-							<button id="newbutton" type="button" class="hidden btn btn-default navbar-btn" onclick="window.location.href=scriptLocation();return false;">
+							<button id="newbutton" type="button" class="reloadlink hidden btn btn-default navbar-btn">
 								<span class="glyphicon glyphicon-file" aria-hidden="true"></span> {function="t('New')"}
 							</button>
 						</li>
 					</ul>
 					<ul class="nav navbar-nav">
 						<li class="pr">
-							<button id="sendbutton" type="button" class="hidden btn btn-default navbar-btn" onclick="send_data();return false;">
+							<button id="sendbutton" type="button" class="hidden btn btn-default navbar-btn">
 								<span class="glyphicon glyphicon-upload" aria-hidden="true"></span> {function="t('Send')"}
 							</button>
-							<button id="clonebutton" type="button" class="hidden btn btn-default navbar-btn" onclick="clonePaste();return false;">
+							<button id="clonebutton" type="button" class="hidden btn btn-default navbar-btn">
 								<span class="glyphicon glyphicon-duplicate" aria-hidden="true"></span> {function="t('Clone')"}
 							</button>
-							<button id="rawtextbutton" type="button" class="hidden btn btn-default navbar-btn" onclick="rawText();return false;">
+							<button id="rawtextbutton" type="button" class="hidden btn btn-default navbar-btn">
 								<span class="glyphicon glyphicon-text-background" aria-hidden="true"></span> {function="t('Raw text')"}
 							</button>
 						</li>

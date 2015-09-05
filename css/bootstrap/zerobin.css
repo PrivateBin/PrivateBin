@@ -21,12 +21,20 @@ body {
 	margin: 5px 0;
 }
 
+#comments, #comments button {
+	margin-bottom: 10px;
+}
+
 .comment {
 	border-left: 1px solid #ccc;
-	padding: 5px 0 5px 5px;
+	padding: 5px 0 5px 10px;
 	white-space: pre-wrap;
 }
 
-h4 {
+footer h4 {
 	margin-top: 0;
+}
+
+li.L0, li.L1, li.L2, li.L3, li.L5, li.L6, li.L7, li.L8 {
+	list-style-type: decimal !important;
 }
