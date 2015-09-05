@@ -1,0 +1,78 @@
+{
+    "en": "de",
+    "Paste does not exist, has expired or has been deleted.":
+        "L'extrait n'existe pas, a expiré, ou a été supprimé.",
+    "ZeroBin requires php 5.2.6 or above to work. Sorry.":
+        "Désolé, ZeroBin nécessite php 5.2.6 ou supérieur pour fonctionner.",
+    "ZeroBin requires configuration section [%s] to be present in configuration file.":
+        "ZeroBin a besoin de la section de configuration [%s] dans le fichier de configuration pour fonctionner.",
+    "Please wait %d seconds between each post.":
+        "Merci d'attendre %d secondes entre chaque publication.",
+    "Paste is limited to %s of encrypted data.":
+        "L'extrait est limité à %s de données chiffrées.",
+    "Invalid data.":
+        "Données invalides.",
+    "You are unlucky. Try again.":
+        "Pas de chance. Essayez encore.",
+    "Error saving comment. Sorry.":
+        "Erreur lors de la sauvegarde du commentaire.",
+    "Error saving paste. Sorry.":
+        "Erreur lors de la sauvegarde de l'extrait.",
+    "Invalid paste ID.":
+        "ID d'extrait invalide.",
+    "Paste is not of burn-after-reading type.":
+        "L'extrait n'est pas de type \"Effacer après lecture\".",
+    "Wrong deletion token. Paste was not deleted.":
+        "Jeton de suppression incorrect. L'extrait n'a pas été supprimé.",
+    "Paste was properly deleted.":
+        "L'extrait n'a pas pu être correctement supprimé.",
+    "ZeroBin": "ZeroBin",
+    "ZeroBin is a minimalist, opensource online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href=\"https://github.com/elrido/ZeroBin/wiki\">project page</a>.":
+        "ZeroBin ist ein minimalistischer, quelloffener \"pastebin\"-artiger Dienst bei dem der Server keinerlei Kenntnis der Daten-Schnipsel hat. Die Daten werden <i>im Browser</i> mit 256 Bit AES ver- und entschlüsselt. Weitere Informationen sind auf der <a href=\"https://github.com/elrido/ZeroBin/wiki\">Projektseite</a> zu finden.",
+    "Because ignorance is bliss":
+        "Parce que l'ignorance est le bonheur.",
+    "Javascript is required for ZeroBin to work.<br />Sorry for the inconvenience.":
+        "Javascript est requis pour faire fonctionner ZeroBin. <br />Merci d'activer Javascript.",
+    "ZeroBin requires a modern browser to work.":
+        "ZeroBin nérecessite un navigateur moderne.",
+    "Still using Internet Explorer? Do yourself a favor, switch to a modern browser:":
+        "Encore sur Internet Explorer ? Faites-vous une faveur, passez à un navigateur moderne :",
+    "New":
+        "Nouveau",
+    "Send":
+        "Envoyer",
+    "Clone":
+        "Cloner",
+    "Raw text":
+        "Texte brut",
+    "Expires":
+        "Expire",
+    "Burn after reading":
+        "Effacer après lecture",
+    "Open discussion":
+        "Autoriser la discussion",
+    "Password (recommended)":
+        "Mot de passe (recommandé)",
+    "Discussion":
+        "Discussion",
+    "Toggle navigation":
+        "Basculer la navigation",
+    "5 minutes":
+        "5 minutes",
+    "10 minutes":
+        "10 minutes",
+    "1 hour":
+        "1 heure",
+    "1 day":
+        "1 jour",
+    "1 week":
+        "1 semaine",
+    "1 month":
+        "1 mois",
+    "1 year":
+        "1 an",
+    "Never":
+        "Jamais",
+    "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.":
+        "Note : Ceci est un service de test : les données peuvent être supprimées à tout moment. Des chatons mourront si vous utilisez ce service de manière abusive."
+}
