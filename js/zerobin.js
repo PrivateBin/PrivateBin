@@ -623,6 +623,7 @@ $(function(){
                     var url = parent.scriptLocation() + '?' + data.id + '#' + randomkey;
                     var deleteUrl = parent.scriptLocation() + '?pasteid=' + data.id + '&deletetoken=' + data.deletetoken;
                     parent.showStatus('', false);
+                    parent.errorMessage.addClass('hidden');
 
                     $('#pastelink').html('Your paste is <a id="pasteurl" href="' + url + '">' + url + '</a> <span id="copyhint">(Hit CTRL+C to copy)</span>');
                     $('#deletelink').html('<a href="' + deleteUrl + '">Delete data</a>');
@@ -786,7 +787,9 @@ $(function(){
             }
             else
             {
-                this.errorMessage.removeClass('hidden').append(message);
+                this.errorMessage.removeClass('hidden');
+                var content = this.errorMessage.contents();
+                content[content.length - 1].nodeValue = message;
             }
             this.replyStatus.addClass('errorMessage').text(message);
         },
