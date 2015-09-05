@@ -396,7 +396,7 @@ function send_data() {
             var url = scriptLocation() + "?" + data.id + '#' + randomkey;
             var deleteUrl = scriptLocation() + "?pasteid=" + data.id + '&deletetoken=' + data.deletetoken;
             showStatus('');
-
+            $('#errormessage').addClass('hidden');
             $('#pastelink').html('Your paste is <a id="pasteurl" href="' + url + '">' + url + '</a> <span id="copyhint">(Hit CTRL+C to copy)</span>');
             $('#deletelink').html('<a href="' + deleteUrl + '">Delete data</a>');
             $('#pasteresult').removeClass('hidden');
