@@ -57,36 +57,27 @@
         "Dyskusja",
     "Toggle navigation":
         "Przełącz nawigację",
-    "5 minutes":
-        "5 minut",
-    "10 minutes":
-        "10 minut",
-    "1 hour":
-        "1 godzina",
-    "1 day":
-        "1 dzień",
-    "1 week":
-        "1 tydzień",
-    "1 month":
-        "1 miesiąc",
-    "1 year":
-        "1 rok",
+    "%d seconds": ["%d second", "%d second", "%d second"],
+    "%d minutes": ["%d minut", "%d minut", "%d minut"],
+    "%d hours": ["%d godzina", "%d godzina", "%d godzina"],
+    "%d days": ["%d dzień", "%d dzień", "%d dzień"],
+    "%d weeks": ["%d tydzień", "%d tydzień", "%d tydzień"],
+    "%d months": ["%d miesiąc", "%d miesiąc", "%d miesiąc"],
+    "%d years": ["%d rok", "%d rok", "%d rok"],
     "Never":
         "Nigdy",
     "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.":
         "Notka: To jest usługa testowa. Dane mogą zostać usunięte w dowolnym momencie. Kociątka umrą, jeśli nadużyjesz tej usługi.",
-    "This document will expire in %s.":
-        "This document will expire in %s.",
-    "%d second": "%d second",
-    "%d seconds": "%d seconds",
-    "%d minute": "%d minute",
-    "%d minutes": "%d minutes",
-    "%d hour": "%d hour",
-    "%d hours": "%d hours",
-    "%d day": "%d day",
-    "%d days": "%d days",
-    "%d month": "%d month",
-    "%d months": "%d months",
+    "This document will expire in %d seconds.":
+        ["This document will expire in %d second.", "This document will expire in %d seconds."],
+    "This document will expire in %d minutes.":
+        ["This document will expire in %d minute.", "This document will expire in %d minutes."],
+    "This document will expire in %d hours.":
+        ["This document will expire in %d hour.", "This document will expire in %d hours."],
+    "This document will expire in %d days.":
+        ["This document will expire in %d day.", "This document will expire in %d days."],
+    "This document will expire in %d months.":
+        ["This document will expire in %d month.", "This document will expire in %d months."],
     "Please enter the password for this paste:":
         "Please enter the password for this paste:",
     "Could not decrypt data (Wrong key?)":

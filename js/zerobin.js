@@ -20,41 +20,36 @@ $(function() {
      */
     var helper = {
         /**
-         * Converts a duration (in seconds) into human readable format.
+         * Converts a duration (in seconds) into human friendly approximation.
          *
          * @param int seconds
-         * @return string
+         * @return array
          */
         secondsToHuman: function(seconds)
         {
             if (seconds < 60)
             {
-                var v = Math.floor(seconds),
-                    format = '%d second' + ((v > 1) ? 's' : '');
-                return i18n._(format, v);
+                var v = Math.floor(seconds);
+                return [v, 'second'];
             }
             if (seconds < 60 * 60)
             {
-                var v = Math.floor(seconds / 60),
-                    format = '%d minute' + ((v > 1) ? 's' : '');
-                return i18n._(format, v);
+                var v = Math.floor(seconds / 60);
+                return [v, 'minute'];
             }
             if (seconds < 60 * 60 * 24)
             {
-                var v = Math.floor(seconds / (60 * 60)),
-                    format = '%d hour' + ((v > 1) ? 's' : '');
-                return i18n._(format, v);
+                var v = Math.floor(seconds / (60 * 60));
+                return [v, 'hour'];
             }
             // If less than 2 months, display in days:
             if (seconds < 60 * 60 * 24 * 60)
             {
-                var v = Math.floor(seconds / (60 * 60 * 24)),
-                    format = '%d day' + ((v > 1) ? 's' : '');
-                return i18n._(format, v);
+                var v = Math.floor(seconds / (60 * 60 * 24));
+                return [v, 'day'];
             }
-            var v = Math.floor(seconds / (60 * 60 * 24 * 30)),
-                format = '%d month' + ((v > 1) ? 's' : '');
-            return i18n._(format, v);
+            var v = Math.floor(seconds / (60 * 60 * 24 * 30));
+            return [v, 'month'];
         },
 
         /**
@@ -258,7 +253,29 @@ $(function() {
      * internationalization methods
      */
     var i18n = {
-        supportedLanguages: ['de', 'fr', 'pl'], // and the built in 'en'
+        /**
+         * supported languages, minus the built in 'en'
+         */
+        supportedLanguages: ['de', 'fr', 'pl'],
+
+        /**
+         * per language functions to use to determine the plural form
+         * From: http://localization-guide.readthedocs.org/en/latest/l10n/pluralforms.html
+         *
+         * @param int number
+         * @return int array key
+         */
+        pluralRules: {
+            de: function(n) {
+                return (n != 1 ? 1 : 0);
+            },
+            fr: function(n) {
+                return (n > 1 ? 1 : 0);
+            },
+            pl: function(n) {
+                return (n == 1 ? 0 : n%10 >= 2 && n %10 <=4 && (n%100 < 10 || n%100 >= 20) ? 1 : 2);
+            }
+        },
 
         /**
          * translate a string, alias for translate()
@@ -281,30 +298,64 @@ $(function() {
          */
         translate: function()
         {
-            var args = arguments;
+            var args = arguments, messageId, usesPlurals;
             if (typeof arguments[0] == 'object') args = arguments[0];
-            var messageId = args[0];
+            if (usesPlurals = $.isArray(args[0]))
+            {
+                // use the first plural form as messageId, otherwise the singular
+                messageId = (args[0].length > 1 ? args[0][1] : args[0][0]);
+            }
+            else
+            {
+                messageId = args[0];
+            }
             if (messageId.length == 0) return messageId;
             if (!this.translations.hasOwnProperty(messageId))
             {
                 console.log('Missing translation for: ' + messageId);
-                this.translations[messageId] = messageId;
+                this.translations[messageId] = args[0];
             }
-            args[0] = this.translations[messageId];
+            if (usesPlurals && $.isArray(this.translations[messageId]))
+            {
+                var n = parseInt(args[1] || 1),
+                    key = this.pluralRules[this.language](n),
+                    maxKey = this.translations[messageId].length - 1;
+                if (key > maxKey) key = maxKey;
+                args[0] = this.translations[messageId][key];
+                args[1] = n;
+            }
+            else
+            {
+                args[0] = this.translations[messageId];
+            }
             return helper.sprintf(args);
         },
 
+        /**
+         * load translations into cache, then execute callback function
+         *
+         * @param function callback
+         */
         loadTranslations: function(callback)
         {
             var language = (navigator.language || navigator.userLanguage).substring(0, 2);
             // note that 'en' is built in, so no translation is necessary
             if (this.supportedLanguages.indexOf(language) == -1) return;
             $.getJSON('i18n/' + language + '.json', function(data) {
+                i18n.language = language;
                 i18n.translations = data;
                 callback();
             });
         },
 
+        /**
+         * built in language
+         */
+        language: 'en',
+
+        /**
+         * translation cache
+         */
         translations: {}
     }
 
@@ -495,8 +546,13 @@ $(function() {
             // Display paste expiration.
             if (comments[0].meta.expire_date)
             {
+                var expiration = helper.secondsToHuman(comments[0].meta.remaining_time),
+                    expirationLabel = [
+                        'This document will expire in %d ' + expiration[1] + '.',
+                        'This document will expire in %d ' + expiration[1] + 's.'
+                    ];
                 this.remainingTime.removeClass('foryoureyesonly')
-                                   .text(i18n._('This document will expire in %s.', helper.secondsToHuman(comments[0].meta.remaining_time)))
+                                   .text(i18n._(expirationLabel, expiration[0]))
                                    .removeClass('hidden');
             }
             if (comments[0].meta.burnafterreading)
