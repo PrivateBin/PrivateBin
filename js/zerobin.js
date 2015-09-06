@@ -9,17 +9,16 @@
  * @version   0.20
  */
 
+'use strict';
+
 // Immediately start random number generator collector.
 sjcl.random.startCollectors();
 
-$(function(){
-    'use strict';
-    
+$(function() {
     /**
      * static helper methods
      */
     var helper = {
-
         /**
          * Converts a duration (in seconds) into human readable format.
          *
@@ -30,27 +29,32 @@ $(function(){
         {
             if (seconds < 60)
             {
-                var v = Math.floor(seconds);
-                return v + ' second' + ((v > 1) ? 's' : '');
+                var v = Math.floor(seconds),
+                    format = '%d second' + ((v > 1) ? 's' : '');
+                return i18n._(format, v);
             }
             if (seconds < 60 * 60)
             {
-                var v = Math.floor(seconds / 60);
-                return v + ' minute' + ((v > 1) ? 's' : '');
+                var v = Math.floor(seconds / 60),
+                    format = '%d minute' + ((v > 1) ? 's' : '');
+                return i18n._(format, v);
             }
             if (seconds < 60 * 60 * 24)
             {
-                var v = Math.floor(seconds / (60 * 60));
-                return v + ' hour' + ((v > 1) ? 's' : '');
+                var v = Math.floor(seconds / (60 * 60)),
+                    format = '%d hour' + ((v > 1) ? 's' : '');
+                return i18n._(format, v);
             }
             // If less than 2 months, display in days:
             if (seconds < 60 * 60 * 24 * 60)
             {
-                var v = Math.floor(seconds / (60 * 60 * 24));
-                return v + ' day' + ((v > 1) ? 's' : '');
+                var v = Math.floor(seconds / (60 * 60 * 24)),
+                    format = '%d day' + ((v > 1) ? 's' : '');
+                return i18n._(format, v);
             }
-            var v = Math.floor(seconds / (60 * 60 * 24 * 30));
-            return v + ' month' + ((v > 1) ? 's' : '');
+            var v = Math.floor(seconds / (60 * 60 * 24 * 30)),
+                format = '%d month' + ((v > 1) ? 's' : '');
+            return i18n._(format, v);
         },
 
         /**
@@ -125,7 +129,7 @@ $(function(){
          * Convert all applicable characters to HTML entities
          *
          * @param string str
-         * @returns string encoded string
+         * @return string encoded string
          */
         htmlEntities: function(str)
         {
@@ -172,7 +176,7 @@ $(function(){
          */
         setElementText: function(element, text)
         {
-            // For IE<10: Doesn't support white-space:pre-wrap; so we have to do this BIG UGLY STINKING THING.
+            // For IE<10: Doesn't support white-space:pre-wrap; so we have to do this...
             if ($('#oldienotice').is(':visible')) {
                 var html = this.htmlEntities(text).replace(/\n/ig,'\r\n<br>');
                 element.html('<pre>'+html+'</pre>');
@@ -197,20 +201,112 @@ $(function(){
          */
         urls2links: function(element)
         {
+            var markup = '<a href="$1" rel="nofollow">$1</a>';
             element.html(
                 element.html().replace(
                     /((http|https|ftp):\/\/[\w?=&.\/-;#@~%+-]+(?![\w\s?&.\/;#~%"=-]*>))/ig,
-                    '<a href="$1" rel="nofollow">$1</a>'
+                    markup
                 )
             );
             element.html(
                 element.html().replace(
                     /((magnet):[\w?=&.\/-;#@~%+-]+)/ig,
-                    '<a href="$1">$1</a>'
+                    markup
                 )
             );
+        },
+
+        /**
+         * minimal sprintf emulation for %s and %d formats
+         * From: http://stackoverflow.com/questions/610406/javascript-equivalent-to-printf-string-format#4795914
+         *
+         * @param string format
+         * @param mixed args one or multiple parameters injected into format string
+         * @return string
+         */
+        sprintf: function()
+        {
+            var args = arguments;
+            if (typeof arguments[0] == 'object') args = arguments[0];
+            var string = args[0],
+                i = 1;
+            return string.replace(/%((%)|s|d)/g, function (m) {
+                // m is the matched format, e.g. %s, %d
+                var val = null;
+                if (m[2]) {
+                    val = m[2];
+                } else {
+                    val = args[i];
+                    // A switch statement so that the formatter can be extended.
+                    switch (m) {
+                        case '%d':
+                            val = parseFloat(val);
+                            if (isNaN(val)) {
+                                val = 0;
+                            }
+                            break;
+                        // Default is %s
+                    }
+                    ++i;
+                }
+                return val;
+            });
         }
     };
+
+    /**
+     * internationalization methods
+     */
+    var i18n = {
+        supportedLanguages: ['de', 'fr', 'pl'], // and the built in 'en'
+
+        /**
+         * translate a string, alias for translate()
+         *
+         * @param string $messageId
+         * @param mixed args one or multiple parameters injected into placeholders
+         * @return string
+         */
+        _: function()
+        {
+            return this.translate(arguments);
+        },
+
+        /**
+         * translate a string
+         *
+         * @param string $messageId
+         * @param mixed args one or multiple parameters injected into placeholders
+         * @return string
+         */
+        translate: function()
+        {
+            var args = arguments;
+            if (typeof arguments[0] == 'object') args = arguments[0];
+            var messageId = args[0];
+            if (messageId.length == 0) return messageId;
+            if (!this.translations.hasOwnProperty(messageId))
+            {
+                console.log('Missing translation for: ' + messageId);
+                this.translations[messageId] = messageId;
+            }
+            args[0] = this.translations[messageId];
+            return helper.sprintf(args);
+        },
+
+        loadTranslations: function(callback)
+        {
+            var language = (navigator.language || navigator.userLanguage).substring(0, 2);
+            // note that 'en' is built in, so no translation is necessary
+            if (this.supportedLanguages.indexOf(language) == -1) return;
+            $.getJSON('i18n/' + language + '.json', function(data) {
+                i18n.translations = data;
+                callback();
+            });
+        },
+
+        translations: {}
+    }
 
     /**
      * filter methods
@@ -296,8 +392,8 @@ $(function(){
         scriptLocation: function()
         {
             var scriptLocation = window.location.href.substring(0,window.location.href.length
-                - window.location.search.length - window.location.hash.length);
-            var hashIndex = scriptLocation.indexOf('#');
+                - window.location.search.length - window.location.hash.length),
+                hashIndex = scriptLocation.indexOf('#');
             if (hashIndex !== -1)
             {
                 scriptLocation = scriptLocation.substring(0, hashIndex);
@@ -323,25 +419,18 @@ $(function(){
          */
         pageKey: function()
         {
-            var key = window.location.hash.substring(1);  // Get key
+            // Some web 2.0 services and redirectors add data AFTER the anchor
+            // (such as &utm_source=...). We will strip any additional data.
 
-            // Some stupid web 2.0 services and redirectors add data AFTER the anchor
-            // (such as &utm_source=...).
-            // We will strip any additional data.
+            var key = window.location.hash.substring(1),    // Get key
+                i = key.indexOf('=');
 
             // First, strip everything after the equal sign (=) which signals end of base64 string.
-            var i = key.indexOf('=');
-            if (i > -1)
-            {
-                key = key.substring(0, i + 1);
-            }
+            if (i > -1) key = key.substring(0, i + 1);
 
             // If the equal sign was not present, some parameters may remain:
             i = key.indexOf('&');
-            if (i > -1)
-            {
-                key = key.substring(0, i);
-            }
+            if (i > -1) key = key.substring(0, i);
 
             // Then add trailing equal sign if it's missing
             if (key.charAt(key.length - 1) !== '=') key += '=';
@@ -357,7 +446,7 @@ $(function(){
          */
         requestPassword: function()
         {
-            var password = prompt('Please enter the password for this paste:', '');
+            var password = prompt(i18n._('Please enter the password for this paste:'), '');
             if (password == null) throw 'password prompt canceled';
             if (password.length == 0) return this.requestPassword();
             return password;
@@ -398,7 +487,7 @@ $(function(){
                     this.clearText.addClass('hidden');
                     this.prettyMessage.addClass('hidden');
                     this.cloneButton.addClass('hidden');
-                    this.showError('Could not decrypt data (Wrong key?)');
+                    this.showError(i18n._('Could not decrypt data (Wrong key?)'));
                     return;
                 }
             }
@@ -407,18 +496,17 @@ $(function(){
             if (comments[0].meta.expire_date)
             {
                 this.remainingTime.removeClass('foryoureyesonly')
-                                   .text('This document will expire in ' + helper.secondsToHuman(comments[0].meta.remaining_time) + '.')
+                                   .text(i18n._('This document will expire in %s.', helper.secondsToHuman(comments[0].meta.remaining_time)))
                                    .removeClass('hidden');
             }
             if (comments[0].meta.burnafterreading)
             {
-                var parent = this;
                 $.get(this.scriptLocation() + '?pasteid=' + this.pasteID() + '&deletetoken=burnafterreading', 'json')
                 .fail(function() {
-                    parent.showError('Could not delete the paste, it was not stored in burn after reading mode.');
+                    zerobin.showError(i18n._('Could not delete the paste, it was not stored in burn after reading mode.'));
                 });
                 this.remainingTime.addClass('foryoureyesonly')
-                                   .text('FOR YOUR EYES ONLY. Don\'t close this window, this message can\'t be displayed again.')
+                                   .text(i18n._('FOR YOUR EYES ONLY. Don\'t close this window, this message can\'t be displayed again.'))
                                    .removeClass('hidden');
                 // Discourage cloning (as it can't really be prevented).
                 this.cloneButton.addClass('hidden');
@@ -434,7 +522,7 @@ $(function(){
                 {
                     var place = this.comments;
                     var comment=comments[i];
-                    var cleartext='[Could not decrypt comment; Wrong key?]';
+                    var cleartext = '[' + i18n._('Could not decrypt comment; Wrong key?') + ']';
                     try
                     {
                         cleartext = filter.decipher(key, password, comment.data);
@@ -451,7 +539,7 @@ $(function(){
                     }
                     var divComment = $('<article><div class="comment" id="comment_' + comment.meta.commentid+'">'
                                    + '<div class="commentmeta"><span class="nickname"></span><span class="commentdate"></span></div><div class="commentdata"></div>'
-                                   + '<button class="btn btn-default btn-sm">Reply</button>'
+                                   + '<button class="btn btn-default btn-sm">' + i18n._('Reply') + '</button>'
                                    + '</div></article>');
                     divComment.find('button').click({commentid: comment.meta.commentid}, $.proxy(this.openReply, this));
                     helper.setElementText(divComment.find('div.commentdata'), cleartext);
@@ -466,22 +554,28 @@ $(function(){
                     }
                     else
                     {
-                        divComment.find('span.nickname').html('<i>(Anonymous)</i>');
+                        divComment.find('span.nickname').html('<i>' + i18n._('Anonymous') + '</i>');
                     }
                     divComment.find('span.commentdate')
-                              .text(' ('+(new Date(comment.meta.postdate*1000).toString())+')')
-                              .attr('title','CommentID: ' + comment.meta.commentid);
+                              .text(' (' + (new Date(comment.meta.postdate * 1000).toLocaleString()) + ')')
+                              .attr('title', 'CommentID: ' + comment.meta.commentid);
 
                     // If an avatar is available, display it.
                     if (comment.meta.vizhash)
                     {
                         divComment.find('span.nickname')
-                                  .before('<img src="' + comment.meta.vizhash + '" class="vizhash" title="Anonymous avatar (Vizhash of the IP address)" /> ');
+                                  .before(
+                                    '<img src="' + comment.meta.vizhash + '" class="vizhash" title="' +
+                                    i18n._('Anonymous avatar (Vizhash of the IP address)') + '" /> '
+                                  );
                     }
 
                     place.append(divComment);
                 }
-                var divComment = $('<div class="comment"><button class="btn btn-default btn-sm">Add comment</button></div>');
+                var divComment = $(
+                    '<div class="comment"><button class="btn btn-default btn-sm">' +
+                    i18n._('Add comment') + '</button></div>'
+                );
                 divComment.find('button').click({commentid: this.pasteID()}, $.proxy(this.openReply, this));
                 this.comments.append(divComment);
                 this.discussion.removeClass('hidden');
@@ -497,21 +591,21 @@ $(function(){
         {
             event.preventDefault();
             var source = $(event.target),
-                commentid = event.data.commentid;
+                commentid = event.data.commentid
+                hint = i18n._('Optional nickname...');
 
             // Remove any other reply area.
             $('div.reply').remove();
-            var reply = $('<div class="reply">' +
-                          '<input type="text" id="nickname" class="form-control" title="Optional nickname..." placeholder="Optional nickname..." />' +
-                          '<textarea id="replymessage" class="replymessage form-control" cols="80" rows="7"></textarea>' +
-                          '<br /><button id="replybutton" class="btn btn-default btn-sm">Post comment</button>' +
-                          '<div id="replystatus"> </div>' +
-                          '</div>');
+            var reply = $(
+                '<div class="reply">' +
+                '<input type="text" id="nickname" class="form-control" title="' + hint + '" placeholder="' + hint + '" />' +
+                '<textarea id="replymessage" class="replymessage form-control" cols="80" rows="7"></textarea>' +
+                '<br /><button id="replybutton" class="btn btn-default btn-sm">' + i18n._('Post comment') + '</button>' +
+                '<div id="replystatus"> </div>' +
+                '</div>'
+            );
             reply.find('button').click({parentid: commentid}, $.proxy(this.sendComment, this));
             source.after(reply);
-            $('#nickname').focus(function() {
-                if ($(this).val() == $(this).attr('title')) $(this).val('');
-            });
             $('#replymessage').focus();
         },
 
@@ -528,12 +622,12 @@ $(function(){
             var replyMessage = $('#replymessage');
             if (replyMessage.val().length == 0) return;
 
-            this.showStatus('Sending comment...', true);
+            this.showStatus(i18n._('Sending comment...'), true);
             var parentid = event.data.parentid;
             var cipherdata = filter.cipher(this.pageKey(), this.passwordInput.val(), replyMessage.val());
             var ciphernickname = '';
             var nick = $('#nickname').val();
-            if (nick != '' && nick != 'Optional nickname...')
+            if (nick != '')
             {
                 ciphernickname = filter.cipher(this.pageKey(), this.passwordInput.val(), nick);
             }
@@ -544,42 +638,41 @@ $(function(){
                 nickname: ciphernickname
             };
 
-            var parent = this;
             $.post(this.scriptLocation(), data_to_send, function(data)
             {
                 if (data.status == 0)
                 {
-                    parent.showStatus('Comment posted.', false);
-                    $.get(parent.scriptLocation() + '?' + parent.pasteID() + '&json', function(data)
+                    zerobin.showStatus(i18n._('Comment posted.'), false);
+                    $.get(zerobin.scriptLocation() + '?' + zerobin.pasteID() + '&json', function(data)
                     {
                         if (data.status == 0)
                         {
-                            parent.displayMessages(parent.pageKey(), data.messages);
+                            zerobin.displayMessages(zerobin.pageKey(), data.messages);
                         }
                         else if (data.status == 1)
                         {
-                            parent.showError('Could not refresh display: ' + data.message);
+                            zerobin.showError(i18n._('Could not refresh display: %s', data.message));
                         }
                         else
                         {
-                            parent.showError('Could not refresh display: unknown status');
+                            zerobin.showError(i18n._('Could not refresh display: %s', i18n._('unknown status')));
                         }
                     }, 'json')
                     .fail(function() {
-                        parent.showError('Could not refresh display (server error or not responding).');
+                        zerobin.showError(i18n._('Could not refresh display: %s', i18n._('server error or not responding')));
                     });
                 }
                 else if (data.status == 1)
                 {
-                    parent.showError('Could not post comment: ' + data.message);
+                    zerobin.showError(i18n._('Could not post comment: %s', data.message));
                 }
                 else
                 {
-                    parent.showError('Could not post comment: unknown status');
+                    zerobin.showError(i18n._('Could not post comment: %s', i18n._('unknown status')));
                 }
             }, 'json')
             .fail(function() {
-                parent.showError('Comment could not be sent (server error or not responding).');
+                zerobin.showError(i18n._('Could not post comment: %s', i18n._('server error or not responding')));
             });
         },
 
@@ -598,14 +691,14 @@ $(function(){
             // If sjcl has not collected enough entropy yet, display a message.
             if (!sjcl.random.isReady())
             {
-                this.showStatus('Sending paste (Please move your mouse for more entropy)...', true);
+                this.showStatus(i18n._('Sending paste (Please move your mouse for more entropy)...'), true);
                 sjcl.random.addEventListener('seeded', function() {
                     this.sendData(event);
                 });
                 return;
             }
 
-            this.showStatus('Sending paste...', true);
+            this.showStatus(i18n._('Sending paste...'), true);
 
             var randomkey = sjcl.codec.base64.fromBits(sjcl.random.randomWords(8, 0), 0);
             var cipherdata = filter.cipher(randomkey, this.passwordInput.val(), this.message.val());
@@ -615,41 +708,40 @@ $(function(){
                 burnafterreading: this.burnAfterReading.is(':checked') ? 1 : 0,
                 opendiscussion:   this.openDiscussion.is(':checked') ? 1 : 0
             };
-            var parent = this;
             $.post(this.scriptLocation(), data_to_send, function(data)
             {
                 if (data.status == 0) {
-                    parent.stateExistingPaste();
-                    var url = parent.scriptLocation() + '?' + data.id + '#' + randomkey;
-                    var deleteUrl = parent.scriptLocation() + '?pasteid=' + data.id + '&deletetoken=' + data.deletetoken;
-                    parent.showStatus('', false);
-                    parent.errorMessage.addClass('hidden');
+                    zerobin.stateExistingPaste();
+                    var url = zerobin.scriptLocation() + '?' + data.id + '#' + randomkey;
+                    var deleteUrl = zerobin.scriptLocation() + '?pasteid=' + data.id + '&deletetoken=' + data.deletetoken;
+                    zerobin.showStatus('', false);
+                    zerobin.errorMessage.addClass('hidden');
 
-                    $('#pastelink').html('Your paste is <a id="pasteurl" href="' + url + '">' + url + '</a> <span id="copyhint">(Hit CTRL+C to copy)</span>');
-                    $('#deletelink').html('<a href="' + deleteUrl + '">Delete data</a>');
-                    parent.pasteResult.removeClass('hidden');
-                    // We pre-select the link so that the user only has to CTRL+C the link.
+                    $('#pastelink').html(i18n._('Your paste is <a id="pasteurl" href="%s">%s</a> <span id="copyhint">(Hit [Ctrl]+[c] to copy)</span>', url, url));
+                    $('#deletelink').html('<a href="' + deleteUrl + '">' + i18n._('Delete data') + '</a>');
+                    zerobin.pasteResult.removeClass('hidden');
+                    // We pre-select the link so that the user only has to [Ctrl]+[c] the link.
                     helper.selectText('pasteurl');
 
-                    helper.setElementText(parent.clearText, parent.message.val());
-                    helper.setElementText(parent.prettyPrint, parent.message.val());
+                    helper.setElementText(zerobin.clearText, zerobin.message.val());
+                    helper.setElementText(zerobin.prettyPrint, zerobin.message.val());
                     // Convert URLs to clickable links.
-                    helper.urls2links(parent.clearText);
-                    helper.urls2links(parent.prettyPrint);
-                    parent.showStatus('', false);
+                    helper.urls2links(zerobin.clearText);
+                    helper.urls2links(zerobin.prettyPrint);
+                    zerobin.showStatus('', false);
                     if (typeof prettyPrint == 'function') prettyPrint();
                 }
                 else if (data.status==1)
                 {
-                    parent.showError('Could not create paste: ' + data.message);
+                    zerobin.showError(i18n._('Could not create paste: %s', data.message));
                 }
                 else
                 {
-                    parent.showError('Could not create paste.');
+                    zerobin.showError(i18n._('Could not create paste: %s', i18n._('unknown status')));
                 }
             }, 'json')
             .fail(function() {
-                parent.showError('Data could not be sent (server error or not responding).');
+                zerobin.showError(i18n._('Could not create paste: %s', i18n._('server error or not responding')));
             });
         },
 
@@ -789,7 +881,7 @@ $(function(){
             {
                 this.errorMessage.removeClass('hidden');
                 var content = this.errorMessage.contents();
-                content[content.length - 1].nodeValue = message;
+                content[content.length - 1].nodeValue = ' ' + message;
             }
             this.replyStatus.addClass('errorMessage').text(message);
         },
@@ -885,7 +977,7 @@ $(function(){
                 // Missing decryption key in URL?
                 if (window.location.hash.length == 0)
                 {
-                    this.showError('Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL ?)');
+                    this.showError(i18n._('Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)'));
                     return;
                 }
 
@@ -912,7 +1004,8 @@ $(function(){
 
     /**
      * main application start, called when DOM is fully loaded
+     * runs zerobin when translations were loaded
      */
-    zerobin.init();
+    i18n.loadTranslations($.proxy(zerobin.init, zerobin));
 });
 

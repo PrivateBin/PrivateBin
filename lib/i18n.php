@@ -51,13 +51,8 @@ class i18n
      */
     public static function translate($messageId)
     {
-        if (empty($messageId))
-        {
-            return $messageId;
-        }
-        if (count(self::$_translations) === 0) {
-            self::loadTranslations();
-        }
+        if (empty($messageId)) return $messageId;
+        if (count(self::$_translations) === 0) self::loadTranslations();
         if (!array_key_exists($messageId, self::$_translations))
         {
             self::$_translations[$messageId] = $messageId;

@@ -183,7 +183,7 @@ class zerobin_db extends zerobin_abstract
     public function create($pasteid, $paste)
     {
         if (
-        		array_key_exists($pasteid, self::$_cache)
+                array_key_exists($pasteid, self::$_cache)
         ) {
             if(false !== self::$_cache[$pasteid]) {
                 return false;

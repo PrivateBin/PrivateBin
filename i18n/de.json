@@ -74,5 +74,63 @@
     "Never":
         "Nie",
     "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.":
-        "Hinweis: Dies ist ein Versuchsdienst. Daten können jederzeit gelöscht werden. Kätzchen werden sterben wenn Du diesen Dienst missbrauchst."
+        "Hinweis: Dies ist ein Versuchsdienst. Daten können jederzeit gelöscht werden. Kätzchen werden sterben wenn Du diesen Dienst missbrauchst.",
+    "This document will expire in %s.":
+        "Dieses Dokument läuft in %s ab.",
+    "%d second": "einer Sekunde",
+    "%d seconds": "%d Sekunden",
+    "%d minute": "einer Minute",
+    "%d minutes": "%d Minuten",
+    "%d hour": "einer Stunde",
+    "%d hours": "%d Stunden",
+    "%d day": "einem Tag",
+    "%d days": "%d Tagen",
+    "%d month": "einem Monat",
+    "%d months": "%d Monaten",
+    "Please enter the password for this paste:":
+        "Bitte gib das Passwort für diesen Text ein:",
+    "Could not decrypt data (Wrong key?)":
+        "Konnte Daten nicht entschlüsseln (Falscher Schlüssel?)",
+    "Could not delete the paste, it was not stored in burn after reading mode.":
+        "Konnte den Text nicht löschen, er wurde nicht im Einmal-Modus gespeichert.",
+    "FOR YOUR EYES ONLY. Don't close this window, this message can't be displayed again.":
+        "DIESER TEXT IST NUR FÜR DICH GEDACHT. Schliesse das Fenster nicht, diese Nachricht kann nur einmal geöffnet werden.",
+    "Could not decrypt comment; Wrong key?":
+        "Konnte Kommentar nicht entschlüsseln; Falscher Schlüssel?",
+    "Reply":
+        "Antworten",
+    "Anonymous":
+        "Anonym",
+    "Anonymous avatar (Vizhash of the IP address)":
+        "Anonymer Avatar (Vizhash der IP-Addresse)",
+    "Add comment":
+        "Kommentar hinzufügen",
+    "Optional nickname...":
+        "Optionales Pseudonym...",
+    "Post comment":
+        "Kommentar absenden",
+    "Sending comment...":
+        "Sende Kommentar...",
+    "Comment posted.":
+        "Kommentar gesendet.",
+    "Could not refresh display: %s":
+        "Konnte Ansicht nicht aktualisieren: %s",
+    "unknown status":
+        "Unbekannter Grund",
+    "server error or not responding":
+        "Fehler auf dem Server oder keine Antwort vom Server",
+    "Could not post comment: %s":
+        "Konnte Kommentar nicht senden: %s",
+    "Sending paste (Please move your mouse for more entropy)...":
+        "Sende Text (Bitte bewege Deine Maus um die Entropie zu erhöhen)...",
+    "Sending paste...":
+        "Sende Text...",
+    "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit [Ctrl]+[c] to copy)</span>":
+        "Dein Text ist unter <a id=\"pasteurl\" href=\"%s\">%s</a> zu finden <span id=\"copyhint\">(Drücke [Strg]+[c] um den Link zu kopieren)</span>",
+    "Delete data":
+        "Lösche Daten",
+    "Could not create paste: %s":
+        "Konnte Text nicht erstellen: %s",
+    "Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)":
+        "Konnte Text nicht entschlüsseln: Der Schlüssel fehlt in der Adresse (Hast Du eine Umleitung oder einen URL-Verkürzer benutzt, der Teile der Adresse entfernt?)"
 }
