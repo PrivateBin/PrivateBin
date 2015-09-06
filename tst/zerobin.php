@@ -111,23 +111,6 @@ class zerobinTest extends PHPUnit_Framework_TestCase
     /**
      * @runInSeparateProcess
      */
-    public function testConfMissingExpireLabel()
-    {
-        $this->reset();
-        $options = parse_ini_file($this->_conf, true);
-        $options['expire_options']['foobar123'] = 10;
-        if (!is_file($this->_conf . '.bak') && is_file($this->_conf))
-            rename($this->_conf, $this->_conf . '.bak');
-        helper::createIniFile($this->_conf, $options);
-        ini_set('magic_quotes_gpc', 1);
-        ob_start();
-        new zerobin;
-        $content = ob_get_contents();
-    }
-
-    /**
-     * @runInSeparateProcess
-     */
     public function testCreate()
     {
         $this->reset();
@@ -461,7 +444,9 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         if (!is_file($this->_conf . '.bak') && is_file($this->_conf))
             rename($this->_conf, $this->_conf . '.bak');
         helper::createIniFile($this->_conf, $options);
+        $this->_model->create(self::$pasteid, self::$paste);
         $this->_model->createComment(self::$pasteid, self::$pasteid, self::$commentid, self::$comment);
+        $this->assertTrue($this->_model->existsComment(self::$pasteid, self::$pasteid, self::$commentid), 'comment exists before posting data');
         $_POST = self::$comment;
         $_POST['pasteid'] = self::$pasteid;
         $_POST['parentid'] = self::$pasteid;
@@ -747,9 +732,12 @@ class zerobinTest extends PHPUnit_Framework_TestCase
     {
         $this->reset();
         $expiredPaste = self::$paste;
-        $expiredPaste['meta']['expire_date'] = $expiredPaste['meta']['postdate'];
+        $expiredPaste['meta']['expire_date'] = 1000;
+        $this->assertFalse($this->_model->exists(self::$pasteid), 'paste does not exist before being created');
         $this->_model->create(self::$pasteid, $expiredPaste);
-        $_SERVER['QUERY_STRING'] = self::$pasteid;
+        $this->assertTrue($this->_model->exists(self::$pasteid), 'paste exists before deleting data');
+        $_GET['pasteid'] = self::$pasteid;
+        $_GET['deletetoken'] = 'does not matter in this context, but has to be set';
         ob_start();
         new zerobin;
         $content = ob_get_contents();

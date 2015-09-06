@@ -579,12 +579,8 @@ class zerobin
 
         // label all the expiration options
         $expire = array();
-        foreach ($this->_conf['expire_options'] as $key => $value) {
-            $expire[$key] = i18n::_(
-                array_key_exists($key, $this->_conf['expire_labels']) ?
-                $this->_conf['expire_labels'][$key] :
-                $key
-            );
+        foreach ($this->_conf['expire_options'] as $time => $seconds) {
+            $expire[$time] = ($seconds == 0) ? i18n::_(ucfirst($time)): filter::time_humanreadable($time);
         }
 
         $page = new RainTPL;

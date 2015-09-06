@@ -9,14 +9,31 @@ class filterTest extends PHPUnit_Framework_TestCase
         );
     }
 
+    public function testFilterMakesTimesHumanlyReadable()
+    {
+        $this->assertEquals('5 minutes', filter::time_humanreadable('5min'));
+        $this->assertEquals('90 seconds', filter::time_humanreadable('90sec'));
+        $this->assertEquals('1 week', filter::time_humanreadable('1week'));
+        $this->assertEquals('6 months', filter::time_humanreadable('6months'));
+    }
+
+    /**
+     * @expectedException Exception
+     * @expectedExceptionCode 30
+     */
+    public function testFilterFailTimesHumanlyReadable()
+    {
+        filter::time_humanreadable('five_minutes');
+    }
+
     public function testFilterMakesSizesHumanlyReadable()
     {
         $this->assertEquals('1 B', filter::size_humanreadable(1));
         $this->assertEquals('1 000 B', filter::size_humanreadable(1000));
-        $this->assertEquals('1.00 kiB', filter::size_humanreadable(1024));
-        $this->assertEquals('1.21 kiB', filter::size_humanreadable(1234));
+        $this->assertEquals('1.00 KiB', filter::size_humanreadable(1024));
+        $this->assertEquals('1.21 KiB', filter::size_humanreadable(1234));
         $exponent = 1024;
-        $this->assertEquals('1 000.00 kiB', filter::size_humanreadable(1000 * $exponent));
+        $this->assertEquals('1 000.00 KiB', filter::size_humanreadable(1000 * $exponent));
         $this->assertEquals('1.00 MiB', filter::size_humanreadable(1024 * $exponent));
         $this->assertEquals('1.21 MiB', filter::size_humanreadable(1234 * $exponent));
         $exponent *= 1024;

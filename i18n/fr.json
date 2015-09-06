@@ -123,5 +123,14 @@
     "Could not create paste: %s":
         "Could not create paste: %s",
     "Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)":
-        "Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)"
+        "Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)",
+    "B": "o",
+    "KiB": "Kio",
+    "MiB": "Mio",
+    "GiB": "Gio",
+    "TiB": "Tio",
+    "PiB": "Pio",
+    "EiB": "Eio",
+    "ZiB": "Zio",
+    "YiB": "Yio"
 }

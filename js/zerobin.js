@@ -647,7 +647,7 @@ $(function() {
         {
             event.preventDefault();
             var source = $(event.target),
-                commentid = event.data.commentid
+                commentid = event.data.commentid,
                 hint = i18n._('Optional nickname...');
 
             // Remove any other reply area.

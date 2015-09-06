@@ -18,13 +18,22 @@
 class i18n
 {
     /**
+     * language
+     *
+     * @access protected
+     * @static
+     * @var    string
+     */
+    protected static $_language = 'en';
+
+    /**
      * translation cache
      *
-     * @access private
+     * @access protected
      * @static
      * @var    array
      */
-    private static $_translations = array();
+    protected static $_translations = array();
 
     /**
      * translate a string, alias for translate()
@@ -53,12 +62,30 @@ class i18n
     {
         if (empty($messageId)) return $messageId;
         if (count(self::$_translations) === 0) self::loadTranslations();
+        $messages = $messageId;
+        if (is_array($messageId))
+        {
+            $messageId = count($messageId) > 1 ? $messageId[1] : $messageId[0];
+        }
         if (!array_key_exists($messageId, self::$_translations))
         {
-            self::$_translations[$messageId] = $messageId;
+            self::$_translations[$messageId] = $messages;
         }
         $args = func_get_args();
-        $args[0] = self::$_translations[$messageId];
+        if (is_array(self::$_translations[$messageId]))
+        {
+            $number = (int) $args[1];
+            $key = self::_getPluralForm($number);
+            $max = count(self::$_translations[$messageId]) - 1;
+            if ($key > $max) $key = $max;
+
+            $args[0] = self::$_translations[$messageId][$key];
+            $args[1] = $number;
+        }
+        else
+        {
+            $args[0] = self::$_translations[$messageId];
+        }
         return call_user_func_array('sprintf', $args);
     }
 
@@ -91,6 +118,7 @@ class i18n
         // load translations
         if ($match != 'en')
         {
+            self::$_language = $match;
             self::$_translations = json_decode(
                 file_get_contents($path . DIRECTORY_SEPARATOR . $match . '.json'),
                 true
@@ -135,6 +163,27 @@ class i18n
             krsort($languages);
         }
         return $languages;
+    }
+
+    /**
+     * determines the plural form to use based on current language and given number
+     *
+     * From: http://localization-guide.readthedocs.org/en/latest/l10n/pluralforms.html
+     *
+     * @param int $n
+     * @return int
+     */
+    protected static function _getPluralForm($n)
+    {
+        switch (self::$_language) {
+            case 'fr':
+                return ($n > 1 ? 1 : 0);
+            case 'pl':
+                return ($n == 1 ? 0 : $n%10 >= 2 && $n %10 <=4 && ($n%100 < 10 || $n%100 >= 20) ? 1 : 2);
+            // en, de
+            default:
+                return ($n != 1 ? 1 : 0);
+        }
     }
 
     /**
