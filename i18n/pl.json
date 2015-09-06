@@ -1,0 +1,78 @@
+{
+    "en": "pl",
+    "Paste does not exist, has expired or has been deleted.":
+        "Wklejka nie istnieje, wygasła albo została usunięta.",
+    "ZeroBin requires php 5.2.6 or above to work. Sorry.":
+        "ZeroBin wymaga PHP w wersji 5.2.6 lub nowszej, sorry.",
+    "ZeroBin requires configuration section [%s] to be present in configuration file.":
+        "ZeroBin wymaga obecności sekcji [%s] w pliku konfiguracyjnym.",
+    "Please wait %d seconds between each post.":
+        "Poczekaj %d sekund pomiędzy każdą wklejką.",
+    "Paste is limited to %s of encrypted data.":
+        "Wklejka jest limitowana do %s zaszyfrowanych danych.",
+    "Invalid data.":
+        "Nieprawidłowe dane.",
+    "You are unlucky. Try again.":
+        "Miałeś pecha. Spróbuj ponownie.",
+    "Error saving comment. Sorry.":
+        "Błąd przy zapisywaniu komentarza, sorry.",
+    "Error saving paste. Sorry.":
+        "Błąd przy zapisywaniu wklejki, sorry.",
+    "Invalid paste ID.":
+        "Nieprawidłowe ID wklejki.",
+    "Paste is not of burn-after-reading type.":
+        "Ta wklejka nie ulega autodestrukcji po przeczytaniu.",
+    "Wrong deletion token. Paste was not deleted.":
+        "Nieprawidłowy token usuwania. Wklejka nie została usunięta.",
+    "Paste was properly deleted.":
+        "Wklejka usunięta poprawnie.",
+    "ZeroBin": "ZeroBin",
+    "ZeroBin is a minimalist, opensource online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href=\"https://github.com/elrido/ZeroBin/wiki\">project page</a>.":
+        "ZeroBin jest minimalistycznym, otwartoźródłowym serwisem typu pastebin, w którym serwer nie ma jakichkolwiek informacji o tym, co jest wklejane. Dane są szyfrowane i deszyfrowane <i>w przeglądarce</i> z użyciem 256-bitowego klucza AES. Więcej informacji na <a href=\"https://github.com/elrido/ZeroBin/wiki\">stronie projektu</a>.",
+    "Because ignorance is bliss":
+        "Ponieważ ignorancja jest cnotą",
+    "Javascript is required for ZeroBin to work.<br />Sorry for the inconvenience.":
+        "Do działania ZeroBina jest wymagany JavaScript. Przepraszamy za tę niedogodność.",
+    "ZeroBin requires a modern browser to work.":
+        "ZeroBin wymaga do działania nowoczesnej przeglądarki.",
+    "Still using Internet Explorer? Do yourself a favor, switch to a modern browser:":
+        "Cały czas używasz Internet Explorera? Zrób sobie przysługę, przesiądź się na nowoczesną przeglądarkę:",
+    "New":
+        "Nowa",
+    "Send":
+        "Wyślij",
+    "Clone":
+        "Sklonuj",
+    "Raw text":
+        "Czysty tekst",
+    "Expires":
+        "Wygasa",
+    "Burn after reading":
+        "Zniszcz po przeczytaniu",
+    "Open discussion":
+        "Otwarta dyskusja",
+    "Password (recommended)":
+        "Hasło (zalecane)",
+    "Discussion":
+        "Dyskusja",
+    "Toggle navigation":
+        "Przełącz nawigację",
+    "5 minutes":
+        "5 minut",
+    "10 minutes":
+        "10 minut",
+    "1 hour":
+        "1 godzina",
+    "1 day":
+        "1 dzień",
+    "1 week":
+        "1 tydzień",
+    "1 month":
+        "1 miesiąc",
+    "1 year":
+        "1 rok",
+    "Never":
+        "Nigdy",
+    "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.":
+        "Notka: To jest usługa testowa. Dane mogą zostać usunięte w dowolnym momencie. Kociątka umrą, jeśli nadużyjesz tej usługi."
+}
