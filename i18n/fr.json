@@ -1,7 +1,7 @@
 {
     "en": "fr",
     "Paste does not exist, has expired or has been deleted.":
-        "L'extrait n'existe pas, a expiré, ou a été supprimé.",
+        "Le paste n'existe pas, a expiré, ou a été supprimé.",
     "ZeroBin requires php 5.2.6 or above to work. Sorry.":
         "Désolé, ZeroBin nécessite php 5.2.6 ou supérieur pour fonctionner.",
     "ZeroBin requires configuration section [%s] to be present in configuration file.":
@@ -9,7 +9,7 @@
     "Please wait %d seconds between each post.":
         "Merci d'attendre %d secondes entre chaque publication.",
     "Paste is limited to %s of encrypted data.":
-        "L'extrait est limité à %s de données chiffrées.",
+        "Le paste est limité à %s de données chiffrées.",
     "Invalid data.":
         "Données invalides.",
     "You are unlucky. Try again.":
@@ -17,15 +17,15 @@
     "Error saving comment. Sorry.":
         "Erreur lors de la sauvegarde du commentaire.",
     "Error saving paste. Sorry.":
-        "Erreur lors de la sauvegarde de l'extrait.",
+        "Erreur lors de la sauvegarde de le paste.",
     "Invalid paste ID.":
-        "ID d'extrait invalide.",
+        "ID de paste invalide.",
     "Paste is not of burn-after-reading type.":
-        "L'extrait n'est pas de type \"Effacer après lecture\".",
+        "Le paste n'est pas de type \"Effacer après lecture\".",
     "Wrong deletion token. Paste was not deleted.":
-        "Jeton de suppression incorrect. L'extrait n'a pas été supprimé.",
+        "Jeton de suppression incorrect. Le paste n'a pas été supprimé.",
     "Paste was properly deleted.":
-        "L'extrait n'a pas pu être correctement supprimé.",
+        "Le paste n'a pas pu être correctement supprimé.",
     "ZeroBin": "ZeroBin",
     "ZeroBin is a minimalist, opensource online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href=\"https://github.com/elrido/ZeroBin/wiki\">project page</a>.":
         "Zerobin est un 'pastebin' (ou gestionnaire d'extraits de texte et de code source) minimaliste et Open-Source, dans lequel le serveur n'a aucune connaissance des données envoyées. Les données sont chiffrées/déchiffrées <i>dans le navigateur</i> par un chiffrage AES 256bits. Plus d'informations sur <a href=\"https://github.com/elrido/ZeroBin/wiki\">la page du projet</a>.",
@@ -57,7 +57,7 @@
         "Discussion",
     "Toggle navigation":
         "Basculer la navigation",
-    "%d seconds": ["%d second", "%d seconds"],
+    "%d seconds": ["%d seconde", "%d secondes"],
     "%d minutes": ["%d minute", "%d minutes"],
     "%d hours": ["%d heure", "%d heures"],
     "%d days": ["%d jour", "%d jours"],
@@ -69,59 +69,59 @@
     "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.":
         "Note : Ceci est un service de test : les données peuvent être supprimées à tout moment. Des chatons mourront si vous utilisez ce service de manière abusive.",
     "This document will expire in %d seconds.":
-        ["This document will expire in %d second.", "This document will expire in %d seconds."],
+        ["Ce document expirera dans %d seconde.", "Ce document expirera dans %d secondes."],
     "This document will expire in %d minutes.":
-        ["This document will expire in %d minute.", "This document will expire in %d minutes."],
+        ["Ce document expirera dans %d minute.", "Ce document expirera dans %d minutes."],
     "This document will expire in %d hours.":
-        ["This document will expire in %d hour.", "This document will expire in %d hours."],
+        ["Ce document expirera dans %d heure.", "Ce document expirera dans %d heures."],
     "This document will expire in %d days.":
-        ["This document will expire in %d day.", "This document will expire in %d days."],
+        ["Ce document expirera dans %d jour.", "Ce document expirera dans %d jours."],
     "This document will expire in %d months.":
-        ["This document will expire in %d month.", "This document will expire in %d months."],
+        ["Ce document expirera dans %d mois.", "Ce document expirera dans %d mois."],
     "Please enter the password for this paste:":
-        "Please enter the password for this paste:",
+        "Entrez le mot de passe pour ce paste:",
     "Could not decrypt data (Wrong key?)":
-        "Could not decrypt data (Wrong key?)",
+        "Impossible de déchiffrer les données (mauvaise clé ?)",
     "Could not delete the paste, it was not stored in burn after reading mode.":
-        "Could not delete the paste, it was not stored in burn after reading mode.",
+        "Impossible de supprimer le paste, car il n'a pas été stoclé en mode Effacer après lecture.",
     "FOR YOUR EYES ONLY. Don't close this window, this message can't be displayed again.":
-        "FOR YOUR EYES ONLY. Don't close this window, this message can't be displayed again.",
+        "POUR VOS YEUX UNIQUEMENT. Ne fermez pas cette fenêtre, ce paste ne pourra plus être affiché.",
     "Could not decrypt comment; Wrong key?":
-        "Could not decrypt comment; Wrong key?",
+        "Umpossible de déchiffrer le commentaire; mauvaise clé ?,
     "Reply":
-        "Reply",
+        "Répondre",
     "Anonymous":
-        "Anonymous",
+        "Anonyme",
     "Anonymous avatar (Vizhash of the IP address)":
-        "Anonymous avatar (Vizhash of the IP address)",
+        "Avatar anonyme (Vizhash de l'adresse IP)",
     "Add comment":
-        "Add comment",
+        "Ajouter un commentaire",
     "Optional nickname...":
-        "Optional nickname...",
+        "Pseudonyme optionnel...",
     "Post comment":
-        "Post comment",
+        "Poster le commentaire",
     "Sending comment...":
-        "Sending comment...",
+        "Envoi du commentaire...",
     "Comment posted.":
-        "Comment posted.",
+        "Commentaire posté.",
     "Could not refresh display: %s":
-        "Could not refresh display: %s",
+        "Impossible de rafraichir l'affichage: %s",
     "unknown status":
-        "unknown status",
+        "Statut inconnu",
     "server error or not responding":
-        "server error or not responding",
+        "Le serveur ne répond pas ou a rencontré une erreur",
     "Could not post comment: %s":
-        "Could not post comment: %s",
+        "Impossible de poster le commentaire: %s",
     "Sending paste (Please move your mouse for more entropy)...":
-        "Sending paste (Please move your mouse for more entropy)...",
+        "Envoi du paste (Merci de bouger votre souris pour plus d'entropie)...",
     "Sending paste...":
-        "Sending paste...",
+        "Envoie du paste...",
     "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit [Ctrl]+[c] to copy)</span>":
-        "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit [Ctrl]+[c] to copy)</span>",
+        "Votre paste est disponible a l'adresse <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Appuyez sur [Ctrl]+[c] pour copier)</span>",
     "Delete data":
-        "Delete data",
+        "Supprimer les données du paste",
     "Could not create paste: %s":
-        "Could not create paste: %s",
+        "Impossible de créer le paste: %s",
     "Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)":
-        "Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)"
+        "Impossible de déchiffrer le paste paste: Clé de déchiffrage manquante dans l'URL (Avez-vous utilisé un redirecteur ou un site de réduction d'URL qui supprime une partie de l'URL ?)"
 }
