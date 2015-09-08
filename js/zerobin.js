@@ -233,7 +233,8 @@ $(function() {
                 } else {
                     val = args[i];
                     // A switch statement so that the formatter can be extended.
-                    switch (m) {
+                    switch (m)
+                    {
                         case '%d':
                             val = parseFloat(val);
                             if (isNaN(val)) {
@@ -257,25 +258,6 @@ $(function() {
          * supported languages, minus the built in 'en'
          */
         supportedLanguages: ['de', 'fr', 'pl'],
-
-        /**
-         * per language functions to use to determine the plural form
-         * From: http://localization-guide.readthedocs.org/en/latest/l10n/pluralforms.html
-         *
-         * @param int number
-         * @return int array key
-         */
-        pluralRules: {
-            de: function(n) {
-                return (n != 1 ? 1 : 0);
-            },
-            fr: function(n) {
-                return (n > 1 ? 1 : 0);
-            },
-            pl: function(n) {
-                return (n == 1 ? 0 : n%10 >= 2 && n %10 <=4 && (n%100 < 10 || n%100 >= 20) ? 1 : 2);
-            }
-        },
 
         /**
          * translate a string, alias for translate()
@@ -312,13 +294,15 @@ $(function() {
             if (messageId.length == 0) return messageId;
             if (!this.translations.hasOwnProperty(messageId))
             {
-                console.log('Missing translation for: ' + messageId);
+                if (this.language != 'en') console.debug(
+                    'Missing translation for: ' + messageId
+                );
                 this.translations[messageId] = args[0];
             }
             if (usesPlurals && $.isArray(this.translations[messageId]))
             {
                 var n = parseInt(args[1] || 1),
-                    key = this.pluralRules[this.language](n),
+                    key = this.getPluralForm(n),
                     maxKey = this.translations[messageId].length - 1;
                 if (key > maxKey) key = maxKey;
                 args[0] = this.translations[messageId][key];
@@ -332,6 +316,26 @@ $(function() {
         },
 
         /**
+         * per language functions to use to determine the plural form
+         * From: http://localization-guide.readthedocs.org/en/latest/l10n/pluralforms.html
+         *
+         * @param int number
+         * @return int array key
+         */
+        getPluralForm: function(n) {
+            switch (this.language)
+            {
+                case 'fr':
+                    return (n > 1 ? 1 : 0);
+                case 'pl':
+                    return (n == 1 ? 0 : n%10 >= 2 && n %10 <=4 && (n%100 < 10 || n%100 >= 20) ? 1 : 2);
+                // en, de
+                default:
+                    return (n != 1 ? 1 : 0);
+            }
+        },
+
+        /**
          * load translations into cache, then execute callback function
          *
          * @param function callback
@@ -340,12 +344,18 @@ $(function() {
         {
             var language = (navigator.language || navigator.userLanguage).substring(0, 2);
             // note that 'en' is built in, so no translation is necessary
-            if (this.supportedLanguages.indexOf(language) == -1) return;
-            $.getJSON('i18n/' + language + '.json', function(data) {
-                i18n.language = language;
-                i18n.translations = data;
+            if (this.supportedLanguages.indexOf(language) == -1)
+            {
                 callback();
-            });
+            }
+            else
+            {
+                $.getJSON('i18n/' + language + '.json', function(data) {
+                    i18n.language = language;
+                    i18n.translations = data;
+                    callback();
+                });
+            }
         },
 
         /**
