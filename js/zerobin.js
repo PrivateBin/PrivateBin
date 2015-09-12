@@ -553,7 +553,8 @@ $(function() {
                 }
             }
 
-            // Display paste expiration.
+            // Display paste expiration / for your eyes only.
+            var content = this.remainingTime.contents();
             if (comments[0].meta.expire_date)
             {
                 var expiration = helper.secondsToHuman(comments[0].meta.remaining_time),
@@ -561,9 +562,9 @@ $(function() {
                         'This document will expire in %d ' + expiration[1] + '.',
                         'This document will expire in %d ' + expiration[1] + 's.'
                     ];
+                content[content.length - 1].nodeValue = ' ' + i18n._(expirationLabel, expiration[0]);
                 this.remainingTime.removeClass('foryoureyesonly')
-                                   .text(i18n._(expirationLabel, expiration[0]))
-                                   .removeClass('hidden');
+                                  .removeClass('hidden');
             }
             if (comments[0].meta.burnafterreading)
             {
@@ -571,9 +572,11 @@ $(function() {
                 .fail(function() {
                     zerobin.showError(i18n._('Could not delete the paste, it was not stored in burn after reading mode.'));
                 });
+                content[content.length - 1].nodeValue = ' ' + i18n._(
+                    'FOR YOUR EYES ONLY. Don\'t close this window, this message can\'t be displayed again.'
+                );
                 this.remainingTime.addClass('foryoureyesonly')
-                                   .text(i18n._('FOR YOUR EYES ONLY. Don\'t close this window, this message can\'t be displayed again.'))
-                                   .removeClass('hidden');
+                                  .removeClass('hidden');
                 // Discourage cloning (as it can't really be prevented).
                 this.cloneButton.addClass('hidden');
             }

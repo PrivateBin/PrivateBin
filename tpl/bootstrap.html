@@ -80,9 +80,6 @@
 								<input type="password" id="passwordinput" placeholder="{function="t('Password (recommended)')"}" class="form-control" size="19"/>
 							</div>
 						</li>{/if}
-						<li>
-							<p id="remainingtime" class="hidden navbar-text"></p>
-						</li>
 					</ul>
 					<ul class="nav navbar-nav pull-right">
 						<li>
@@ -97,8 +94,13 @@
 		<header class="container">{if="strlen($NOTICE)"}
 			<div role="alert" class="alert alert-info">
 				<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> {$NOTICE|htmlspecialchars}
-			</div>{/if}{if="strlen($STATUS)"}
-			<div id="status" role="alert" class="alert alert-success"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> {$STATUS|htmlspecialchars}</div>{/if}
+			</div>{/if}
+			<div id="remainingtime" role="alert" class="hidden alert alert-info">
+				<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+			</div>{if="strlen($STATUS)"}
+			<div id="status" role="alert" class="alert alert-success">
+				<span class="glyphicon glyphicon-ok" aria-hidden="true"></span> {$STATUS|htmlspecialchars}
+			</div>{/if}
 			<div id="errormessage" role="alert" class="{if="!strlen($ERROR)"}hidden {/if}alert alert-danger"><span class="glyphicon glyphicon-alert" aria-hidden="true"></span> {$ERROR|htmlspecialchars}</div>
 			<div id="noscript" role="alert" class="nonworking alert alert-warning"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> {function="t('Javascript is required for ZeroBin to work.<br />Sorry for the inconvenience.')"}</div>
 			<div id="oldienotice" role="alert" class="hidden nonworking alert alert-danger"><span class="glyphicon glyphicon-alert" aria-hidden="true"></span> {function="t('ZeroBin requires a modern browser to work.')"}</div>
