@@ -50,6 +50,14 @@ class zerobin
     private $_data = '';
 
     /**
+     * formatter
+     *
+     * @access private
+     * @var    string
+     */
+    private $_formatter = 'plaintext';
+
+    /**
      * error message
      *
      * @access private
@@ -237,7 +245,7 @@ class zerobin
         $meta = array();
 
         // Read expiration date
-        if (!empty($_POST['expire']))
+        if (array_key_exists('expire', $_POST) && !empty($_POST['expire']))
         {
             $selected_expire = (string) $_POST['expire'];
             if (array_key_exists($selected_expire, $this->_conf['expire_options']))
@@ -252,7 +260,7 @@ class zerobin
         }
 
         // Destroy the paste when it is read.
-        if (!empty($_POST['burnafterreading']))
+        if (array_key_exists('burnafterreading', $_POST) && !empty($_POST['burnafterreading']))
         {
             $burnafterreading = $_POST['burnafterreading'];
             if ($burnafterreading !== '0')
@@ -263,7 +271,11 @@ class zerobin
         }
 
         // Read open discussion flag.
-        if ($this->_conf['main']['discussion'] && !empty($_POST['opendiscussion']))
+        if (
+            $this->_getMainConfig('discussion', true) &&
+            array_key_exists('opendiscussion', $_POST) &&
+            !empty($_POST['opendiscussion'])
+        )
         {
             $opendiscussion = $_POST['opendiscussion'];
             if ($opendiscussion !== '0')
@@ -271,6 +283,17 @@ class zerobin
                 if ($opendiscussion !== '1') $error = true;
                 $meta['opendiscussion'] = true;
             }
+        }
+
+        // Read formatter flag.
+        if (array_key_exists('formatter', $_POST) && !empty($_POST['formatter']))
+        {
+            $formatter = $_POST['formatter'];
+            if (!array_key_exists($formatter, $this->_conf['formatter_options']))
+            {
+                $formatter = $this->_getMainConfig('defaultformatter', 'syntaxhighlighting');
+            }
+            $meta['formatter'] = $formatter;
         }
 
         // You can't have an open discussion on a "Burn after reading" paste:
@@ -541,6 +564,13 @@ class zerobin
                         $this->_model()->readComments($dataid)
                     );
                 }
+
+                // set formatter for for the view.
+                if (!property_exists($paste->meta, 'formatter'))
+                {
+                    $paste->meta->formatter = $this->_getMainConfig('defaultformatter', 'syntaxhighlighting');
+                }
+
                 $this->_data = json_encode($messages);
             }
         }
@@ -579,9 +609,13 @@ class zerobin
 
         // label all the expiration options
         $expire = array();
-        foreach ($this->_conf['expire_options'] as $time => $seconds) {
+        foreach ($this->_conf['expire_options'] as $time => $seconds)
+        {
             $expire[$time] = ($seconds == 0) ? i18n::_(ucfirst($time)): filter::time_humanreadable($time);
         }
+
+        // translate all the formatter options
+        $formatters = array_map(array('i18n', 'translate'), $this->_conf['formatter_options']);
 
         $page = new RainTPL;
         $page::$path_replace = false;
@@ -592,8 +626,11 @@ class zerobin
         $page->assign('VERSION', self::VERSION);
         $page->assign('DISCUSSION', $this->_getMainConfig('discussion', true));
         $page->assign('OPENDISCUSSION', $this->_getMainConfig('opendiscussion', true));
-        $page->assign('SYNTAXHIGHLIGHTING', $this->_getMainConfig('syntaxhighlighting', true));
+        $page->assign('MARKDOWN', array_key_exists('markdown', $formatters));
+        $page->assign('SYNTAXHIGHLIGHTING', array_key_exists('syntaxhighlighting', $formatters));
         $page->assign('SYNTAXHIGHLIGHTINGTHEME', $this->_getMainConfig('syntaxhighlightingtheme', ''));
+        $page->assign('FORMATTER', $formatters);
+        $page->assign('FORMATTERDEFAULT', $this->_getMainConfig('defaultformatter', 'syntaxhighlighting'));
         $page->assign('NOTICE', i18n::_($this->_getMainConfig('notice', '')));
         $page->assign('BURNAFTERREADINGSELECTED', $this->_getMainConfig('burnafterreadingselected', false));
         $page->assign('PASSWORD', $this->_getMainConfig('password', true));

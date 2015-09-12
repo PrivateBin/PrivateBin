@@ -12,7 +12,8 @@
 		<script type="text/javascript" src="js/base64-{$BASE64JSVERSION}.js"></script>
 		<script type="text/javascript" src="js/rawdeflate-0.5.js"></script>
 		<script type="text/javascript" src="js/rawinflate-0.3.js"></script>{if="$SYNTAXHIGHLIGHTING"}
-		<script type="text/javascript" src="js/prettify.js?{$VERSION|rawurlencode}"></script>{/if}
+		<script type="text/javascript" src="js/prettify.js?{$VERSION|rawurlencode}"></script>{/if}{if="$MARKDOWN"}
+		<script type="text/javascript" src="js/showdown.js?{$VERSION|rawurlencode}"></script>{/if}
 		<script type="text/javascript" src="js/zerobin.js?{$VERSION|rawurlencode}"></script>
 		<!--[if lt IE 10]>
 		<style type="text/css">body {padding-left:60px;padding-right:60px;} #ienotice {display:block;} #oldienotice {display:block;}</style>
@@ -24,9 +25,9 @@
 				{function="t('ZeroBin is a minimalist, opensource online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href="https://github.com/elrido/ZeroBin/wiki">project page</a>.')"}<br />{if="strlen($NOTICE)"}
 				<span class="blink">▶</span> {$NOTICE}{/if}
 			</div>
-			<h1 class="reloadlink">{function="t('ZeroBin')"}</h1><br />
-			<h2>{function="t('Because ignorance is bliss')"}</h2><br />
-			<h3>{$VERSION}</h3>
+			<h1 class="title reloadlink">{function="t('ZeroBin')"}</h1><br />
+			<h2 class="title">{function="t('Because ignorance is bliss')"}</h2><br />
+			<h3 class="title">{$VERSION}</h3>
 			<div id="noscript" class="nonworking">{function="t('Javascript is required for ZeroBin to work.<br />Sorry for the inconvenience.')"}</div>
 			<div id="oldienotice" class="nonworking">{function="t('ZeroBin requires a modern browser to work.')"}</div>
 			<div id="ienotice">{function="t('Still using Internet Explorer? Do yourself a favor, switch to a modern browser:')"}
@@ -63,6 +64,12 @@
 					<div id="password" class="hidden">
 						<input type="password" id="passwordinput" placeholder="{function="t('Password (recommended)')"}" size="32" />
 					</div>{/if}
+					<div id="formatter" class="button hidden">{function="t('Format')"}:
+						<select id="pasteFormatter" name="pasteFormatter">
+{loop="FORMATTER"}
+							<option value="{$key}"{if="$key == $FORMATTERDEFAULT"} selected="selected"{/if}>{$value}</option>{/loop}
+						</select>
+					</div>
 				</div>
 				<div id="pasteresult" class="hidden">
 					<div id="deletelink"></div>
@@ -77,7 +84,7 @@
 		</section>
 		<section>
 			<div id="discussion" class="hidden">
-				<h4>{function="t('Discussion')"}</h4>
+				<h4 class="title">{function="t('Discussion')"}</h4>
 				<div id="comments"></div>
 			</div>
 		</section>

@@ -123,5 +123,9 @@
     "Could not create paste: %s":
         "Konnte Text nicht erstellen: %s",
     "Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)":
-        "Konnte Text nicht entschlüsseln: Der Schlüssel fehlt in der Adresse (Hast Du eine Umleitung oder einen URL-Verkürzer benutzt, der Teile der Adresse entfernt?)"
+        "Konnte Text nicht entschlüsseln: Der Schlüssel fehlt in der Adresse (Hast Du eine Umleitung oder einen URL-Verkürzer benutzt, der Teile der Adresse entfernt?)",
+    "Format": "Format",
+    "Plain Text": "Nur Text",
+    "Source Code": "Quellcode",
+    "Markdown": "Markdown"
 }

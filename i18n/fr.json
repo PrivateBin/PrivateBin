@@ -132,5 +132,9 @@
     "PiB": "Pio",
     "EiB": "Eio",
     "ZiB": "Zio",
-    "YiB": "Yio"
+    "YiB": "Yio",
+    "Format": "Format",
+    "Plain Text": "texte",
+    "Source Code": "code source",
+    "Markdown": "Markdown"
 }

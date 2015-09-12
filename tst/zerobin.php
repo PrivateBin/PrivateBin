@@ -8,6 +8,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         'meta' => array(
             'postdate' => 1344803344,
             'opendiscussion' => true,
+            'formatter' => 'syntaxhighlighting',
         ),
     );
 
@@ -202,6 +203,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         helper::createIniFile($this->_conf, $options);
         $_POST = self::$paste;
         $_POST['expire'] = '5min';
+        $_POST['formatter'] = 'foo';
         $_SERVER['REMOTE_ADDR'] = '::1';
         ob_start();
         new zerobin;

@@ -184,6 +184,25 @@ $(function() {
         },
 
         /**
+         * replace last child of element with message
+         *
+         * @param object element : a jQuery wrapped DOM element.
+         * @param string message : the message to append.
+         */
+        setMessage: function(element, message)
+        {
+            var content = element.contents();
+            if (content.length > 0)
+            {
+                content[content.length - 1].nodeValue = ' ' + message;
+            }
+            else
+            {
+                this.setElementText(element, message);
+            }
+        },
+
+        /**
          * Convert URLs to clickable links.
          * URLs to handle:
          * <code>
@@ -514,6 +533,44 @@ $(function() {
         },
 
         /**
+         * use given format on paste, defaults to plain text
+         *
+         * @param string format
+         */
+        formatPaste: function(format)
+        {
+            switch (format || 'plaintext')
+            {
+                case 'markdown':
+                    if (typeof Showdown == 'object')
+                    {
+                        var converter = new Showdown.converter();
+                        this.clearText.html(
+                            converter.makeHtml(this.clearText.html())
+                        );
+                    }
+                    break;
+                case 'syntaxhighlighting':
+                    if (typeof prettyPrint == 'function') prettyPrint();
+                default:
+                    // Convert URLs to clickable links.
+                    helper.urls2links(this.clearText);
+                    helper.urls2links(this.prettyPrint);
+            }
+            if (format == 'markdown')
+            {
+                this.clearText.removeClass('hidden');
+                this.prettyMessage.addClass('hidden');
+            }
+            else
+            {
+                this.clearText.addClass('hidden');
+                this.prettyMessage.removeClass('hidden');
+            }
+            if (format == 'plaintext') this.prettyPrint.removeClass('prettyprint');
+        },
+
+        /**
          * Show decrypted text in the display area, including discussion (if open)
          *
          * @param string key : decryption key
@@ -537,11 +594,7 @@ $(function() {
 
                     helper.setElementText(this.clearText, cleartext);
                     helper.setElementText(this.prettyPrint, cleartext);
-
-                    // Convert URLs to clickable links.
-                    helper.urls2links(this.clearText);
-                    helper.urls2links(this.prettyPrint);
-                    if (typeof prettyPrint == 'function') prettyPrint();
+                    this.formatPaste(comments[0].meta.formatter);
                 }
                 catch(err)
                 {
@@ -554,7 +607,6 @@ $(function() {
             }
 
             // Display paste expiration / for your eyes only.
-            var content = this.remainingTime.contents();
             if (comments[0].meta.expire_date)
             {
                 var expiration = helper.secondsToHuman(comments[0].meta.remaining_time),
@@ -562,7 +614,7 @@ $(function() {
                         'This document will expire in %d ' + expiration[1] + '.',
                         'This document will expire in %d ' + expiration[1] + 's.'
                     ];
-                content[content.length - 1].nodeValue = ' ' + i18n._(expirationLabel, expiration[0]);
+                helper.setMessage(this.remainingTime, i18n._(expirationLabel, expiration[0]));
                 this.remainingTime.removeClass('foryoureyesonly')
                                   .removeClass('hidden');
             }
@@ -572,9 +624,9 @@ $(function() {
                 .fail(function() {
                     zerobin.showError(i18n._('Could not delete the paste, it was not stored in burn after reading mode.'));
                 });
-                content[content.length - 1].nodeValue = ' ' + i18n._(
+                helper.setMessage(this.remainingTime, i18n._(
                     'FOR YOUR EYES ONLY. Don\'t close this window, this message can\'t be displayed again.'
-                );
+                ));
                 this.remainingTime.addClass('foryoureyesonly')
                                   .removeClass('hidden');
                 // Discourage cloning (as it can't really be prevented).
@@ -776,6 +828,7 @@ $(function() {
             var data_to_send = {
                 data:             cipherdata,
                 expire:           $('#pasteExpiration').val(),
+                formatter:        $('#pasteFormatter').val(),
                 burnafterreading: this.burnAfterReading.is(':checked') ? 1 : 0,
                 opendiscussion:   this.openDiscussion.is(':checked') ? 1 : 0
             };
@@ -793,14 +846,11 @@ $(function() {
                     zerobin.pasteResult.removeClass('hidden');
                     // We pre-select the link so that the user only has to [Ctrl]+[c] the link.
                     helper.selectText('pasteurl');
+                    zerobin.showStatus('', false);
 
                     helper.setElementText(zerobin.clearText, zerobin.message.val());
                     helper.setElementText(zerobin.prettyPrint, zerobin.message.val());
-                    // Convert URLs to clickable links.
-                    helper.urls2links(zerobin.clearText);
-                    helper.urls2links(zerobin.prettyPrint);
-                    zerobin.showStatus('', false);
-                    if (typeof prettyPrint == 'function') prettyPrint();
+                    zerobin.formatPaste(data_to_send.formatter);
                 }
                 else if (data.status==1)
                 {
@@ -831,6 +881,7 @@ $(function() {
             this.prettyMessage.addClass('hidden');
             this.sendButton.removeClass('hidden');
             this.expiration.removeClass('hidden');
+            this.formatter.removeClass('hidden');
             this.burnAfterReadingOption.removeClass('hidden');
             this.openDisc.removeClass('hidden');
             this.newButton.removeClass('hidden');
@@ -858,6 +909,7 @@ $(function() {
             this.rawTextButton.removeClass('hidden');
 
             this.expiration.addClass('hidden');
+            this.formatter.addClass('hidden');
             this.burnAfterReadingOption.addClass('hidden');
             this.openDisc.addClass('hidden');
             this.newButton.removeClass('hidden');
@@ -953,8 +1005,7 @@ $(function() {
             else
             {
                 this.errorMessage.removeClass('hidden');
-                var content = this.errorMessage.contents();
-                content[content.length - 1].nodeValue = ' ' + message;
+                helper.setMessage(this.errorMessage, message);
             }
             this.replyStatus.addClass('errorMessage').text(message);
         },
@@ -1018,6 +1069,7 @@ $(function() {
             this.discussion = $('#discussion');
             this.errorMessage = $('#errormessage');
             this.expiration = $('#expiration');
+            this.formatter = $('#formatter');
             this.message = $('#message');
             this.newButton = $('#newbutton');
             this.openDisc = $('#opendisc');

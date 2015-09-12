@@ -123,5 +123,9 @@
     "Could not create paste: %s":
         "Could not create paste: %s",
     "Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)":
-        "Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)"
+        "Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)",
+    "Format": "Format",
+    "Plain Text": "Plain Text",
+    "Source Code": "Source Code",
+    "Markdown": "Markdown"
 }

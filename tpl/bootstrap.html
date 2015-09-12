@@ -17,7 +17,8 @@
 		<script type="text/javascript" src="js/rawdeflate-0.5.js"></script>
 		<script type="text/javascript" src="js/rawinflate-0.3.js"></script>
 		<script type="text/javascript" src="js/bootstrap-3.3.5.js"></script>{if="$SYNTAXHIGHLIGHTING"}
-		<script type="text/javascript" src="js/prettify.js?{$VERSION|rawurlencode}"></script>{/if}
+		<script type="text/javascript" src="js/prettify.js?{$VERSION|rawurlencode}"></script>{/if}{if="$MARKDOWN"}
+		<script type="text/javascript" src="js/showdown.js?{$VERSION|rawurlencode}"></script>{/if}
 		<script type="text/javascript" src="js/zerobin.js?{$VERSION|rawurlencode}"></script>
 		<!--[if lt IE 10]>
 		<style type="text/css">#ienotice {display:block !important;} #oldienotice {display:block !important;}</style>
@@ -80,6 +81,17 @@
 								<input type="password" id="passwordinput" placeholder="{function="t('Password (recommended)')"}" class="form-control" size="19"/>
 							</div>
 						</li>{/if}
+						<li class="dropdown">
+							<select id="pasteFormatter" name="pasteFormatter" class="hidden">
+{loop="FORMATTER"}
+								<option value="{$key}"{if="$key == $FORMATTERDEFAULT"} selected="selected"{/if}>{$value}</option>{/loop}
+							</select>
+							<a id="formatter" href="#" class="hidden dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{function="t('Format')"}: <span id="pasteFormatterDisplay">{$FORMATTER[$FORMATTERDEFAULT]}</span> <span class="caret"></span></a>
+							<ul class="dropdown-menu">
+{loop="FORMATTER"}
+								<li><a href="#" onclick="$('#pasteFormatter').val('{$key}');$('#pasteFormatterDisplay').text('{$value}');return false;">{$value}</a></li>{/loop}
+							</ul>
+						</li>
 					</ul>
 					<ul class="nav navbar-nav pull-right">
 						<li>

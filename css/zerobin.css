@@ -18,16 +18,16 @@ html {
 }
 
 body {
-	font-family: Arial, Helvetica, sans-serif;
+	font-family: Helvetica, Arial, sans-serif;
 	font-size: 0.9em;
 	margin-bottom: 15px;
 	padding-left: 60px;
 	padding-right: 60px;
 }
- 
+
 a { color: #0f388f; }
 
-h1 {
+h1.title {
 	font-size: 3.5em;
 	font-weight: bold;
 	color: #000;
@@ -36,7 +36,7 @@ h1 {
 	cursor: pointer;
 }
 
-h1:before {
+h1.title:before {
 	content: attr(title);
 	position: absolute;
 	color: rgba(255,255,255,0.15);
@@ -45,7 +45,7 @@ h1:before {
 	cursor: pointer;
 }
 
-h2 { 
+h2.title {
 	color: #000;
 	font-size: 1em;
 	display: inline;
@@ -54,15 +54,15 @@ h2 {
 	position: relative;
 	bottom: 8px;
 }
-  
-h3 { 
+
+h3.title {
 	color: #94a3b4;
 	font-size: 0.7em;
 	display: inline;
 	margin-top: 10px;
 	position: relative;
 	bottom: 8px;
-}   
+}
 
 #aboutbox { 
 	color: #94a3b4; 
@@ -76,21 +76,24 @@ h3 {
 
 #aboutbox a { color: #94a3b4; }
 
-#message, #cleartext, .replymessage {
+#message, #cleartext, #prettymessage, .replymessage {
 	clear: both;
 	color: #000;
 	background-color: #fff;
-	white-space: pre-wrap;
-	font-family: Consolas, "Lucida Console", "DejaVu Sans Mono", Monaco, monospace;
 	font-size: 9pt;
 	border: 1px solid #28343F;
-	padding: 5px;
 	box-sizing: border-box;
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	-ms-box-sizing: border-box;
 	-o-box-sizing: border-box;
 	width: 100%;
+}
+
+#message, .replymessage {
+	padding: 5px;
+	white-space: pre-wrap;
+	font-family: Consolas, "Lucida Console", "DejaVu Sans Mono", Monaco, monospace;
 }
 
 #status { 
@@ -118,7 +121,7 @@ h3 {
 
 #copyhint { color: #666; font-size: 0.85em; }
 
-button, .button, #expiration {
+button, .button, #expiration, #formatter {
 	color: #fff;
 	background-color: #323b47;
 	background-repeat: no-repeat;
@@ -177,7 +180,7 @@ button img {
 	top: 2px;
 }
 
-#expiration, #rawtextbutton, #burnafterreadingoption, #opendisc { 
+#expiration, #formatter, #rawtextbutton, #burnafterreadingoption, #opendisc { 
 	background-color: #414d5a; 
 	padding: 6px 8px;
 	margin: 0 5px 0 0;
@@ -185,14 +188,14 @@ button img {
 	bottom: 1px; /* WTF ? Why is this shifted by 1 pixel ? */
 }
 
-#expiration select {
+#expiration select, #formatter select {
 	color: #eee;
 	background: transparent;
 	border: none;
 }
 
 
-#expiration select option {
+#expiration select option, #formatter select option {
 	color:#eee;
 	background: #414d5a;
 }
@@ -201,7 +204,7 @@ button img {
 	padding: 1px 0 1px 0;
 }
 
-#remainingtime {
+#remainingtime, #password {
 	color: #94a3b4; 
 	display: inline;
 	font-size: 0.85em;
@@ -278,7 +281,7 @@ input {
 	min-width: 200px;
 }
 
-h4 {
+h4.title {
 	font-size: 1.2em;
 	color: #94a3b4;
 	font-style: italic;
@@ -383,5 +386,39 @@ img.vizhash {
 
 #prettyprint {
 	color: #000000;
+	font-size: 1.2em;
+}
+
+#cleartext {
+	padding: 10px;
+}
+
+#cleartext * {
+	margin-bottom: 10px;
+}
+
+#cleartext ol {
+	list-style: auto;
+	margin-left: 15px;
+}
+
+#cleartext ul {
+	list-style: disc;
+	margin-left: 15px;
+}
+
+#cleartext h1, #cleartext h2, #cleartext h3, #cleartext h4, #cleartext h5, #cleartext h6 {
+	font-weight: bold;
+}
+
+#cleartext h1 {
+	font-size: 2em;
+}
+
+#cleartext h2 {
+	font-size: 1.5em;
+}
+
+#cleartext h3 {
 	font-size: 1.2em;
 }

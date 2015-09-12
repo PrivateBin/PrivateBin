@@ -33,6 +33,7 @@ class RainTPLTest extends PHPUnit_Framework_TestCase
         $page->assign('VERSION', self::$version);
         $page->assign('DISCUSSION', true);
         $page->assign('OPENDISCUSSION', true);
+        $page->assign('MARKDOWN', true);
         $page->assign('SYNTAXHIGHLIGHTING', true);
         $page->assign('SYNTAXHIGHLIGHTINGTHEME', 'sons-of-obsidian');
         $page->assign('BURNAFTERREADINGSELECTED', false);
