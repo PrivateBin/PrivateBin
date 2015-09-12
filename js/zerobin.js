@@ -764,6 +764,8 @@ $(function() {
                 return;
             }
 
+            $('.navbar-toggle').click();
+            this.password.addClass('hidden');
             this.showStatus(i18n._('Sending paste...'), true);
 
             var randomkey = sjcl.codec.base64.fromBits(sjcl.random.randomWords(8, 0), 0);
@@ -919,6 +921,7 @@ $(function() {
 
             this.showStatus('', false);
             this.message.text(this.clearText.text());
+            $('.navbar-toggle').click();
         },
 
         /**
@@ -929,6 +932,7 @@ $(function() {
             this.stateNewPaste();
             this.showStatus('', false);
             this.message.text('');
+            $('.navbar-toggle').click();
         },
 
         /**
