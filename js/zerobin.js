@@ -548,7 +548,9 @@ $(function() {
                         this.clearText.html(
                             converter.makeHtml(this.clearText.html())
                         );
+                        this.clearText.removeClass('hidden');
                     }
+                    this.prettyMessage.addClass('hidden');
                     break;
                 case 'syntaxhighlighting':
                     if (typeof prettyPrint == 'function') prettyPrint();
@@ -556,16 +558,8 @@ $(function() {
                     // Convert URLs to clickable links.
                     helper.urls2links(this.clearText);
                     helper.urls2links(this.prettyPrint);
-            }
-            if (format == 'markdown')
-            {
-                this.clearText.removeClass('hidden');
-                this.prettyMessage.addClass('hidden');
-            }
-            else
-            {
-                this.clearText.addClass('hidden');
-                this.prettyMessage.removeClass('hidden');
+                    this.clearText.addClass('hidden');
+                    this.prettyMessage.removeClass('hidden');
             }
             if (format == 'plaintext') this.prettyPrint.removeClass('prettyprint');
         },
