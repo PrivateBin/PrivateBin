@@ -116,9 +116,12 @@ class zerobin
         $this->_init();
 
         // create new paste or comment
-        if (!empty($_POST['data']))
+        if (
+            (array_key_exists('data', $_POST) && !empty($_POST['data'])) ||
+            (array_key_exists('attachment', $_POST) && !empty($_POST['attachment']))
+        )
         {
-            $this->_create($_POST['data']);
+            $this->_create();
         }
         // delete an existing paste
         elseif (!empty($_GET['deletetoken']) && !empty($_GET['pasteid']))
@@ -191,23 +194,29 @@ class zerobin
     /**
      * Store new paste or comment
      *
-     * POST contains:
-     * data (mandatory) = json encoded SJCL encrypted text (containing keys: iv,v,iter,ks,ts,mode,adata,cipher,salt,ct)
+     * POST contains one or both:
+     * data = json encoded SJCL encrypted text (containing keys: iv,v,iter,ks,ts,mode,adata,cipher,salt,ct)
+     * attachment = json encoded SJCL encrypted text (containing keys: iv,v,iter,ks,ts,mode,adata,cipher,salt,ct)
      *
      * All optional data will go to meta information:
      * expire (optional) = expiration delay (never,5min,10min,1hour,1day,1week,1month,1year,burn) (default:never)
+     * formatter (optional) = format to display the paste as (plaintext,syntaxhighlighting,markdown) (default:syntaxhighlighting)
+     * burnafterreading (optional) = if this paste may only viewed once ? (0/1) (default:0)
      * opendiscusssion (optional) = is the discussion allowed on this paste ? (0/1) (default:0)
      * nickname (optional) = in discussion, encoded SJCL encrypted text nickname of author of comment (containing keys: iv,v,iter,ks,ts,mode,adata,cipher,salt,ct)
      * parentid (optional) = in discussion, which comment this comment replies to.
      * pasteid (optional) = in discussion, which paste this comment belongs to.
      *
      * @access private
-     * @param  string $data
      * @return string
      */
-    private function _create($data)
+    private function _create()
     {
         $error = false;
+
+        $has_attachment = array_key_exists('attachment', $_POST);
+        $data = array_key_exists('data', $_POST) ? $_POST['data'] : '';
+        $attachment = $has_attachment ? $_POST['attachment'] : '';
 
         // Make sure last paste from the IP address was more than X seconds ago.
         trafficlimiter::setLimit($this->_conf['traffic']['limit']);
@@ -226,7 +235,7 @@ class zerobin
 
         // Make sure content is not too big.
         $sizelimit = (int) $this->_getMainConfig('sizelimit', 2097152);
-        if (strlen($data) > $sizelimit)
+        if (strlen($data) + strlen($attachment) > $sizelimit)
         {
             $this->_return_message(
                 1,
@@ -240,6 +249,15 @@ class zerobin
 
         // Make sure format is correct.
         if (!sjcl::isValid($data)) return $this->_return_message(1, 'Invalid data.');
+
+        // Make sure attachments are enabled and format is correct.
+        if($has_attachment)
+        {
+            if (
+                !$this->_getMainConfig('fileupload', false) ||
+                !sjcl::isValid($attachment)
+            ) $this->_return_message(1, 'Invalid attachment.');
+        }
 
         // Read additional meta-information.
         $meta = array();
@@ -415,6 +433,9 @@ class zerobin
                 $this->_return_message(1, 'You are unlucky. Try again.');
                 return;
             }
+
+            // Add attachment if one was sent
+            if($has_attachment) $storage['attachment'] = $attachment;
 
             // New paste
             if (
@@ -634,6 +655,7 @@ class zerobin
         $page->assign('NOTICE', i18n::_($this->_getMainConfig('notice', '')));
         $page->assign('BURNAFTERREADINGSELECTED', $this->_getMainConfig('burnafterreadingselected', false));
         $page->assign('PASSWORD', $this->_getMainConfig('password', true));
+        $page->assign('FILEUPLOAD', $this->_getMainConfig('fileupload', false));
         $page->assign('BASE64JSVERSION', $this->_getMainConfig('base64version', '2.1.9'));
         $page->assign('EXPIRE', $expire);
         $page->assign('EXPIREDEFAULT', $this->_conf['expire']['default']);

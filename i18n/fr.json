@@ -136,5 +136,12 @@
     "Format": "Format",
     "Plain Text": "texte",
     "Source Code": "code source",
-    "Markdown": "Markdown"
+    "Markdown": "Markdown",
+    "Download attachment": "Download attachment",
+    "Cloned file attached.": "Cloned file attached.",
+    "Attach a file:": "Attach a file:",
+    "Remove attachment": "Remove attachment",
+    "Your browser does not support uploading encrypted files. Please use a newer browser.":
+        "Your browser does not support uploading encrypted files. Please use a newer browser.",
+    "Invalid attachment.": "Invalid attachment."
 }

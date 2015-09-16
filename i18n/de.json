@@ -127,5 +127,12 @@
     "Format": "Format",
     "Plain Text": "Nur Text",
     "Source Code": "Quellcode",
-    "Markdown": "Markdown"
+    "Markdown": "Markdown",
+    "Download attachment": "Anhang herunterladen",
+    "Cloned file attached.": "Kopierte Datei angehängt.",
+    "Attach a file:": "Datei anhängen:",
+    "Remove attachment": "Anhang entfernen",
+    "Your browser does not support uploading encrypted files. Please use a newer browser.":
+        "Dein Browser unterstützt das hochladen von verschlüsselten Dateien nicht. Bitte verwende einen neueren Browser.",
+    "Invalid attachment.": "Ungültiger Datei-Anhang."
 }

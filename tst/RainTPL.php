@@ -38,6 +38,7 @@ class RainTPLTest extends PHPUnit_Framework_TestCase
         $page->assign('SYNTAXHIGHLIGHTINGTHEME', 'sons-of-obsidian');
         $page->assign('BURNAFTERREADINGSELECTED', false);
         $page->assign('PASSWORD', true);
+        $page->assign('FILEUPLOAD', false);
         $page->assign('BASE64JSVERSION', '2.1.9');
         $page->assign('NOTICE', 'example');
         $page->assign('EXPIRE', self::$expire);

@@ -585,6 +585,15 @@ $(function() {
                     }
                     if (cleartext.length == 0) throw 'failed to decipher message';
                     this.passwordInput.val(password);
+                    if (comments[0].attachment)
+                    {
+                        var attachment = filter.decipher(key, password, comments[0].attachment);
+                        if (attachment)
+                        {
+                            this.attachmentLink.attr('href', attachment);
+                            this.attachment.removeClass('hidden');
+                        }
+                    }
 
                     helper.setElementText(this.clearText, cleartext);
                     helper.setElementText(this.prettyPrint, cleartext);
@@ -799,9 +808,10 @@ $(function() {
         sendData: function(event)
         {
             event.preventDefault();
+            var files = document.getElementById('file').files; // FileList object
 
             // Do not send if no data.
-            if (this.message.val().length == 0) return;
+            if (this.message.val().length == 0 && !(files && files[0])) return;
 
             // If sjcl has not collected enough entropy yet, display a message.
             if (!sjcl.random.isReady())
@@ -818,6 +828,48 @@ $(function() {
             this.showStatus(i18n._('Sending paste...'), true);
 
             var randomkey = sjcl.codec.base64.fromBits(sjcl.random.randomWords(8, 0), 0);
+            var cipherdata_attachment;
+            var password = this.passwordInput.val();
+            if(files && files[0])
+            {
+                if(typeof FileReader === undefined)
+                {
+                    this.showError(i18n._('Your browser does not support uploading encrypted files. Please use a newer browser.'));
+                    return;
+                }
+                var reader = new FileReader();
+                // Closure to capture the file information.
+                reader.onload = (function(theFile)
+                {
+                    return function(e) {
+                        zerobin.sendDataContinue(
+                            randomkey,
+                            filter.cipher(randomkey, password, e.target.result)
+                        );
+                    }
+                })(files[0]);
+                reader.readAsDataURL(files[0]);
+            }
+            else if(this.attachmentLink.attr('href'))
+            {
+                this.sendDataContinue(
+                    randomkey,
+                    filter.cipher(randomkey, password, this.attachmentLink.attr('href'))
+                );
+            }
+            else
+            {
+                this.sendDataContinue(randomkey, '');
+            }
+        },
+
+        /**
+         * Send a new paste to server, step 2
+         *
+         * @param Event event
+         */
+        sendDataContinue: function(randomkey, cipherdata_attachment)
+        {
             var cipherdata = filter.cipher(randomkey, this.passwordInput.val(), this.message.val());
             var data_to_send = {
                 data:             cipherdata,
@@ -826,6 +878,10 @@ $(function() {
                 burnafterreading: this.burnAfterReading.is(':checked') ? 1 : 0,
                 opendiscussion:   this.openDiscussion.is(':checked') ? 1 : 0
             };
+            if (cipherdata_attachment.length > 0)
+            {
+                data_to_send.attachment = cipherdata_attachment;
+            }
             $.post(this.scriptLocation(), data_to_send, function(data)
             {
                 if (data.status == 0) {
@@ -880,6 +936,8 @@ $(function() {
             this.openDisc.removeClass('hidden');
             this.newButton.removeClass('hidden');
             this.password.removeClass('hidden');
+            this.attach.removeClass('hidden');
+            this.attachment.removeClass('hidden');
             this.message.removeClass('hidden');
             this.message.focus();
         },
@@ -902,6 +960,8 @@ $(function() {
             }
             this.rawTextButton.removeClass('hidden');
 
+            this.attach.addClass('hidden');
+            this.attachment.addClass('hidden');
             this.expiration.addClass('hidden');
             this.formatter.addClass('hidden');
             this.burnAfterReadingOption.addClass('hidden');
@@ -969,6 +1029,11 @@ $(function() {
             history.replaceState(document.title, document.title, this.scriptLocation());
 
             this.showStatus('', false);
+            if (this.attachmentLink.attr('href'))
+            {
+                this.clonedFile.removeClass('hidden');
+                this.fileWrap.addClass('hidden');
+            }
             this.message.text(this.clearText.text());
             $('.navbar-toggle').click();
         },
@@ -982,6 +1047,19 @@ $(function() {
             this.showStatus('', false);
             this.message.text('');
             $('.navbar-toggle').click();
+        },
+
+        /**
+         * Removes an attachment.
+         */
+        removeAttachment: function()
+        {
+            this.clonedFile.addClass('hidden');
+            // removes the saved decrypted file data
+            $('#attachment a').attr('href', '');
+            // the only way to deselect the file is to recreate the input
+            this.fileWrap.html(this.fileWrap.html());
+            this.fileWrap.removeClass('hidden');
         },
 
         /**
@@ -1042,6 +1120,7 @@ $(function() {
             this.sendButton.click($.proxy(this.sendData, this));
             this.cloneButton.click($.proxy(this.clonePaste, this));
             this.rawTextButton.click($.proxy(this.rawText, this));
+            this.fileRemoveButton.click($.proxy(this.removeAttachment, this));
             $('.reloadlink').click($.proxy(this.reloadPage, this));
         },
 
@@ -1054,15 +1133,21 @@ $(function() {
             $('#noscript').hide();
 
             // preload jQuery wrapped DOM elements and bind events
+            this.attach = $('#attach');
+            this.attachment = $('#attachment');
+            this.attachmentLink = $('#attachment a');
             this.burnAfterReading = $('#burnafterreading');
             this.burnAfterReadingOption = $('#burnafterreadingoption');
             this.cipherData = $('#cipherdata');
             this.clearText = $('#cleartext');
             this.cloneButton = $('#clonebutton');
+            this.clonedFile = $('#clonedfile');
             this.comments = $('#comments');
             this.discussion = $('#discussion');
             this.errorMessage = $('#errormessage');
             this.expiration = $('#expiration');
+            this.fileRemoveButton = $('#fileremovebutton');
+            this.fileWrap = $('#filewrap');
             this.formatter = $('#formatter');
             this.message = $('#message');
             this.newButton = $('#newbutton');

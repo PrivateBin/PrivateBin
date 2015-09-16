@@ -74,7 +74,13 @@
 				<div id="pasteresult" class="hidden">
 					<div id="deletelink"></div>
 					<div id="pastelink"></div>
-				</div>
+				</div>{if="$FILEUPLOAD"}
+				<div id="attachment" class="hidden"><a>{function="t('Download attachment')"}</a></div>
+				<div id="attach" class="hidden">
+					<span id="clonedfile" class="hidden">{function="t('Cloned file attached.')"}</span>
+					<span id="filewrap">{function="t('Attach a file:')"} <input type="file" id="file" name="file" /></span>
+					<button id="fileremovebutton">{function="t('Remove attachment')"}</button>
+				</div>{/if}
 				<div id="prettymessage" class="hidden">
 					<pre id="prettyprint" class="prettyprint linenums:1"></pre>
 				</div>
