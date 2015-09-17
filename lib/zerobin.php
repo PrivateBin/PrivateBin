@@ -589,7 +589,15 @@ class zerobin
                 // set formatter for for the view.
                 if (!property_exists($paste->meta, 'formatter'))
                 {
-                    $paste->meta->formatter = $this->_getMainConfig('defaultformatter', 'syntaxhighlighting');
+                    // support < 0.21 syntax highlighting
+                    if (property_exists($paste->meta, 'syntaxcoloring') && $paste->meta->syntaxcoloring === true)
+                    {
+                        $paste->meta->formatter = 'syntaxhighlighting';
+                    }
+                    else
+                    {
+                        $paste->meta->formatter = $this->_getMainConfig('defaultformatter', 'syntaxhighlighting');
+                    }
                 }
 
                 $this->_data = json_encode($messages);
