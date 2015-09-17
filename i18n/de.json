@@ -134,5 +134,6 @@
     "Remove attachment": "Anhang entfernen",
     "Your browser does not support uploading encrypted files. Please use a newer browser.":
         "Dein Browser unterstützt das hochladen von verschlüsselten Dateien nicht. Bitte verwende einen neueren Browser.",
-    "Invalid attachment.": "Ungültiger Datei-Anhang."
+    "Invalid attachment.": "Ungültiger Datei-Anhang.",
+    "Options": "Optionen"
 }

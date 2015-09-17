@@ -134,5 +134,6 @@
     "Remove attachment": "Remove attachment",
     "Your browser does not support uploading encrypted files. Please use a newer browser.":
         "Your browser does not support uploading encrypted files. Please use a newer browser.",
-    "Invalid attachment.": "Invalid attachment."
+    "Invalid attachment.": "Invalid attachment.",
+    "Options": "Options"
 }

@@ -5,6 +5,29 @@ body {
 	padding: 70px 0 30px 0;
 }
 
+.navbar-nav {
+	margin: 0;
+}
+
+.dropdown-menu > li > label, .dropdown-menu > li > div {
+	clear: both;
+	display: block;
+	font-weight: normal;
+	line-height: 1.42857;
+	white-space: nowrap;
+}
+
+.dropdown-menu > li > label {
+	color: #333;
+	padding: 3px 20px 3px 40px;
+}
+
+.dropdown-menu > li > div {
+	color: #777;
+	padding: 3px 20px;
+	cursor: default;
+}
+
 #deletelink {
 	float: right;
 }
