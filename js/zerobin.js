@@ -594,6 +594,18 @@ $(function() {
                         }
                         this.attachmentLink.attr('href', attachment);
                         this.attachment.removeClass('hidden');
+                        
+                        // if the attachment is an image, display it
+                        var imagePrefix = 'data:image/';
+                        if (attachment.substring(0, imagePrefix.length) == imagePrefix)
+                        {
+                            this.image.html(
+                                $(document.createElement('img'))
+                                    .attr('src', attachment)
+                                    .attr('class', 'img-thumbnail')
+                            );
+                            this.image.removeClass('hidden');
+                        }
                     }
                     var cleartext = filter.decipher(key, password, comments[0].data);
                     if (cleartext.length == 0 && password.length == 0 && !comments[0].attachment)
@@ -604,9 +616,12 @@ $(function() {
                     if (cleartext.length == 0 && !comments[0].attachment) throw 'failed to decipher message';
 
                     this.passwordInput.val(password);
-                    helper.setElementText(this.clearText, cleartext);
-                    helper.setElementText(this.prettyPrint, cleartext);
-                    this.formatPaste(comments[0].meta.formatter);
+                    if (cleartext.length > 0)
+                    {
+                        helper.setElementText(this.clearText, cleartext);
+                        helper.setElementText(this.prettyPrint, cleartext);
+                        this.formatPaste(comments[0].meta.formatter);
+                    }
                 }
                 catch(err)
                 {
@@ -984,7 +999,7 @@ $(function() {
             this.pasteResult.addClass('hidden');
             this.message.addClass('hidden');
             this.clearText.addClass('hidden');
-            this.prettyMessage.removeClass('hidden');
+            this.prettyMessage.addClass('hidden');
         },
 
         /**
@@ -1163,6 +1178,7 @@ $(function() {
             this.fileRemoveButton = $('#fileremovebutton');
             this.fileWrap = $('#filewrap');
             this.formatter = $('#formatter');
+            this.image = $('#image');
             this.message = $('#message');
             this.newButton = $('#newbutton');
             this.openDisc = $('#opendisc');
