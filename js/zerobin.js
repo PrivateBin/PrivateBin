@@ -596,7 +596,7 @@ $(function() {
                         this.attachment.removeClass('hidden');
                     }
                     var cleartext = filter.decipher(key, password, comments[0].data);
-                    if (cleartext.length == 0 && password.length == 0)
+                    if (cleartext.length == 0 && password.length == 0 && !comments[0].attachment)
                     {
                         password = this.requestPassword();
                         cleartext = filter.decipher(key, password, comments[0].data);
