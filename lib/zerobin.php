@@ -223,7 +223,16 @@ class zerobin
         // Make sure last paste from the IP address was more than X seconds ago.
         trafficlimiter::setLimit($this->_conf['traffic']['limit']);
         trafficlimiter::setPath($this->_conf['traffic']['dir']);
-        if (!trafficlimiter::canPass($_SERVER['REMOTE_ADDR']))
+        $ipKey = 'REMOTE_ADDR';
+        if (array_key_exists('header', $this->_conf['traffic']))
+        {
+            $header = 'HTTP_' . $this->_conf['traffic']['header'];
+            if (array_key_exists($header, $_SERVER) && !empty($_SERVER[$header]))
+            {
+                $ipKey = $header;
+            }
+        }
+        if (!trafficlimiter::canPass($_SERVER[$ipKey]))
         {
             $this->_return_message(
                 1,
