@@ -577,24 +577,33 @@ $(function() {
             if (!this.prettyPrint.hasClass('prettyprinted')) {
                 try
                 {
-                    var cleartext = filter.decipher(key, password, comments[0].data);
-                    if (cleartext.length == 0)
-                    {
-                        if (password.length == 0) password = this.requestPassword();
-                        cleartext = filter.decipher(key, password, comments[0].data);
-                    }
-                    if (cleartext.length == 0) throw 'failed to decipher message';
-                    this.passwordInput.val(password);
                     if (comments[0].attachment)
                     {
                         var attachment = filter.decipher(key, password, comments[0].attachment);
-                        if (attachment)
+                        if (attachment.length == 0)
                         {
-                            this.attachmentLink.attr('href', attachment);
-                            this.attachment.removeClass('hidden');
+                            if (password.length == 0) password = this.requestPassword();
+                            attachment = filter.decipher(key, password, comments[0].attachment);
                         }
-                    }
+                        if (attachment.length == 0) throw 'failed to decipher attachment';
 
+                        if (comments[0].attachmentname)
+                        {
+                            var attachmentname = filter.decipher(key, password, comments[0].attachmentname);
+                            if (attachmentname.length > 0) this.attachmentLink.attr('download', attachmentname);
+                        }
+                        this.attachmentLink.attr('href', attachment);
+                        this.attachment.removeClass('hidden');
+                    }
+                    var cleartext = filter.decipher(key, password, comments[0].data);
+                    if (cleartext.length == 0 && password.length == 0)
+                    {
+                        password = this.requestPassword();
+                        cleartext = filter.decipher(key, password, comments[0].data);
+                    }
+                    if (cleartext.length == 0 && !comments[0].attachment) throw 'failed to decipher message';
+
+                    this.passwordInput.val(password);
                     helper.setElementText(this.clearText, cleartext);
                     helper.setElementText(this.prettyPrint, cleartext);
                     this.formatPaste(comments[0].meta.formatter);
@@ -844,7 +853,8 @@ $(function() {
                     return function(e) {
                         zerobin.sendDataContinue(
                             randomkey,
-                            filter.cipher(randomkey, password, e.target.result)
+                            filter.cipher(randomkey, password, e.target.result),
+                            filter.cipher(randomkey, password, theFile.name)
                         );
                     }
                 })(files[0]);
@@ -854,12 +864,13 @@ $(function() {
             {
                 this.sendDataContinue(
                     randomkey,
-                    filter.cipher(randomkey, password, this.attachmentLink.attr('href'))
+                    filter.cipher(randomkey, password, this.attachmentLink.attr('href')),
+                    this.attachmentLink.attr('download')
                 );
             }
             else
             {
-                this.sendDataContinue(randomkey, '');
+                this.sendDataContinue(randomkey, '', '');
             }
         },
 
@@ -868,7 +879,7 @@ $(function() {
          *
          * @param Event event
          */
-        sendDataContinue: function(randomkey, cipherdata_attachment)
+        sendDataContinue: function(randomkey, cipherdata_attachment, cipherdata_attachment_name)
         {
             var cipherdata = filter.cipher(randomkey, this.passwordInput.val(), this.message.val());
             var data_to_send = {
@@ -881,6 +892,10 @@ $(function() {
             if (cipherdata_attachment.length > 0)
             {
                 data_to_send.attachment = cipherdata_attachment;
+                if (cipherdata_attachment_name.length > 0)
+                {
+                    data_to_send.attachmentname = cipherdata_attachment_name;
+                }
             }
             $.post(this.scriptLocation(), data_to_send, function(data)
             {
@@ -1055,7 +1070,7 @@ $(function() {
         {
             this.clonedFile.addClass('hidden');
             // removes the saved decrypted file data
-            $('#attachment a').attr('href', '');
+            this.attachmentLink.attr('href', '');
             // the only way to deselect the file is to recreate the input
             this.fileWrap.html(this.fileWrap.html());
             this.fileWrap.removeClass('hidden');

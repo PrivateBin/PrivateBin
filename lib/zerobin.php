@@ -215,8 +215,10 @@ class zerobin
         $error = false;
 
         $has_attachment = array_key_exists('attachment', $_POST);
+        $has_attachmentname = $has_attachment && array_key_exists('attachmentname', $_POST) && !empty($_POST['attachmentname']);
         $data = array_key_exists('data', $_POST) ? $_POST['data'] : '';
         $attachment = $has_attachment ? $_POST['attachment'] : '';
+        $attachmentname = $has_attachmentname ? $_POST['attachmentname'] : '';
 
         // Make sure last paste from the IP address was more than X seconds ago.
         trafficlimiter::setLimit($this->_conf['traffic']['limit']);
@@ -235,7 +237,7 @@ class zerobin
 
         // Make sure content is not too big.
         $sizelimit = (int) $this->_getMainConfig('sizelimit', 2097152);
-        if (strlen($data) + strlen($attachment) > $sizelimit)
+        if (strlen($data) + strlen($attachment) + strlen($attachmentname) > $sizelimit)
         {
             $this->_return_message(
                 1,
@@ -255,7 +257,8 @@ class zerobin
         {
             if (
                 !$this->_getMainConfig('fileupload', false) ||
-                !sjcl::isValid($attachment)
+                !sjcl::isValid($attachment) ||
+                !($has_attachmentname && sjcl::isValid($attachmentname))
             ) $this->_return_message(1, 'Invalid attachment.');
         }
 
@@ -434,8 +437,9 @@ class zerobin
                 return;
             }
 
-            // Add attachment if one was sent
-            if($has_attachment) $storage['attachment'] = $attachment;
+            // Add attachment and its name, if one was sent
+            if ($has_attachment) $storage['attachment'] = $attachment;
+            if ($has_attachmentname) $storage['attachmentname'] = $attachmentname;
 
             // New paste
             if (
