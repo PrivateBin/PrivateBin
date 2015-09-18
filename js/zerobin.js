@@ -922,6 +922,7 @@ $(function() {
         stateNewPaste: function()
         {
             this.message.text('');
+            this.attachment.addClass('hidden');
             this.cloneButton.addClass('hidden');
             this.rawTextButton.addClass('hidden');
             this.remainingTime.addClass('hidden');
@@ -937,7 +938,6 @@ $(function() {
             this.newButton.removeClass('hidden');
             this.password.removeClass('hidden');
             this.attach.removeClass('hidden');
-            this.attachment.removeClass('hidden');
             this.message.removeClass('hidden');
             this.message.focus();
         },
@@ -961,7 +961,6 @@ $(function() {
             this.rawTextButton.removeClass('hidden');
 
             this.attach.addClass('hidden');
-            this.attachment.addClass('hidden');
             this.expiration.addClass('hidden');
             this.formatter.addClass('hidden');
             this.burnAfterReadingOption.addClass('hidden');

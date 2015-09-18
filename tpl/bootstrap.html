@@ -57,7 +57,11 @@
 							<a id="expiration" href="#" class="hidden dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{function="t('Expires')"}: <span id="pasteExpirationDisplay">{$EXPIRE[$EXPIREDEFAULT]}</span> <span class="caret"></span></a>
 							<ul class="dropdown-menu">
 {loop="EXPIRE"}
-								<li><a href="#" onclick="$('#pasteExpiration').val('{$key}');$('#pasteExpirationDisplay').text('{$value}');return false;">{$value}</a></li>{/loop}
+								<li>
+									<a href="#" onclick="$('#pasteExpiration').val('{$key}');$('#pasteExpirationDisplay').text('{$value}');return false;">
+										{$value}
+									</a>
+								</li>{/loop}
 							</ul>
 						</li>
 						<li>
@@ -80,6 +84,21 @@
 							<div id="password" class="navbar-form hidden">
 								<input type="password" id="passwordinput" placeholder="{function="t('Password (recommended)')"}" class="form-control" size="19"/>
 							</div>
+						</li>{/if}{if="$FILEUPLOAD"}
+						<li id="attach" class="hidden dropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{function="t('Attach a file:')"} <span class="caret"></span></a>
+							<ul class="dropdown-menu">
+								<li id="filewrap">
+									<div>
+										<input type="file" id="file" name="file" />
+									</div>
+								</li>
+								<li>
+									<a id="fileremovebutton"  href="#">
+										{function="t('Remove attachment')"}
+									</a>
+								</li>
+							</ul>
 						</li>{/if}
 						<li class="dropdown">
 							<select id="pasteFormatter" name="pasteFormatter" class="hidden">
@@ -89,7 +108,11 @@
 							<a id="formatter" href="#" class="hidden dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{function="t('Format')"}: <span id="pasteFormatterDisplay">{$FORMATTER[$FORMATTERDEFAULT]}</span> <span class="caret"></span></a>
 							<ul class="dropdown-menu">
 {loop="FORMATTER"}
-								<li><a href="#" onclick="$('#pasteFormatter').val('{$key}');$('#pasteFormatterDisplay').text('{$value}');return false;">{$value}</a></li>{/loop}
+								<li>
+									<a href="#" onclick="$('#pasteFormatter').val('{$key}');$('#pasteFormatterDisplay').text('{$value}');return false;">
+										{$value}
+									</a>
+								</li>{/loop}
 							</ul>
 						</li>
 					</ul>
@@ -109,7 +132,10 @@
 			</div>{/if}
 			<div id="remainingtime" role="alert" class="hidden alert alert-info">
 				<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
-			</div>{if="strlen($STATUS)"}
+			</div>{if="$FILEUPLOAD"}
+			<div id="attachment" role="alert" class="hidden alert alert-info">
+				<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> <a>{function="t('Download attachment')"}</a> <span id="clonedfile" class="hidden">{function="t('Cloned file attached.')"}</span>
+			</div>{/if}{if="strlen($STATUS)"}
 			<div id="status" role="alert" class="alert alert-success">
 				<span class="glyphicon glyphicon-ok" aria-hidden="true"></span> {$STATUS|htmlspecialchars}
 			</div>{/if}
