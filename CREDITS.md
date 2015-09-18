@@ -7,3 +7,10 @@ Greg Knaddison - robots.txt
 MrKooky - HTML5 markup, CSS cleanup
 Simon Rupf - MVC refactoring, configuration support and unit tests
 Hexalyse - Password protection
+Viktor Stanchev - File upload support
+
+Translations:
+Hexalyse - French
+Kuba Niewiarowski - Polish
+Gabbalo - German
+Draky50110 - French
