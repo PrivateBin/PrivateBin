@@ -2,7 +2,11 @@
 
 
 body {
-	padding: 70px 0 30px 0;
+	padding: 0 0 30px;
+}
+
+body.navbar-spacing {
+	padding-top: 70px;
 }
 
 .navbar-nav {

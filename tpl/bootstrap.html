@@ -25,7 +25,7 @@
 		<![endif]-->
 	</head>
 	<body role="document">
-		<nav class="navbar navbar-default navbar-fixed-top">
+		<nav class="navbar navbar-default">
 			<div class="container">
 				<div class="navbar-header">
 					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -60,27 +60,22 @@
 								<li><a href="#" onclick="$('#pasteExpiration').val('{$key}');$('#pasteExpirationDisplay').text('{$value}');return false;">{$value}</a></li>{/loop}
 							</ul>
 						</li>
-						<li class="dropdown">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{function="t('Options')"} <span class="caret"></span></a>
-							<ul class="dropdown-menu">
-								<li>
-									<div id="burnafterreadingoption" class="navbar-text checkbox hidden">
-										<label>
-											<input type="checkbox" id="burnafterreading" name="burnafterreading" {if="$BURNAFTERREADINGSELECTED"} checked="checked"{/if} />
-											{function="t('Burn after reading')"}
-										</label>
-									</div>
-								</li>{if="$DISCUSSION"}
-								<li>
-									<div id="opendisc" class="navbar-text checkbox hidden">
-										<label>
-											<input type="checkbox" id="opendiscussion" name="opendiscussion" {if="$OPENDISCUSSION"} checked="checked"{/if} />
-											{function="t('Open discussion')"}
-										</label>
-									</div>
-								</li>{/if}
-							</ul>
-						</li>{if="$PASSWORD"}
+						<li>
+							<div id="burnafterreadingoption" class="navbar-text checkbox hidden">
+								<label>
+									<input type="checkbox" id="burnafterreading" name="burnafterreading" {if="$BURNAFTERREADINGSELECTED"} checked="checked"{/if} />
+									{function="t('Burn after reading')"}
+								</label>
+							</div>
+						</li>{if="$DISCUSSION"}
+						<li>
+							<div id="opendisc" class="navbar-text checkbox hidden">
+								<label>
+									<input type="checkbox" id="opendiscussion" name="opendiscussion" {if="$OPENDISCUSSION"} checked="checked"{/if} />
+									{function="t('Open discussion')"}
+							 	</label>
+							</div>
+						</li>{/if}{if="$PASSWORD"}
 						<li>
 							<div id="password" class="navbar-form hidden">
 								<input type="password" id="passwordinput" placeholder="{function="t('Password (recommended)')"}" class="form-control" size="19"/>
