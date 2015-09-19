@@ -41,6 +41,8 @@ class RainTPLTest extends PHPUnit_Framework_TestCase
         $page->assign('FILEUPLOAD', false);
         $page->assign('BASE64JSVERSION', '2.1.9');
         $page->assign('NOTICE', 'example');
+        $page->assign('LANGUAGESELECTION', '');
+        $page->assign('LANGUAGES', i18n::getLanguageLabels(i18n::getAvailableLanguages()));
         $page->assign('EXPIRE', self::$expire);
         $page->assign('EXPIREDEFAULT', self::$expire_default);
         ob_start();

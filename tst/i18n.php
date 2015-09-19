@@ -25,6 +25,16 @@ class i18nTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($messageId, i18n::_($messageId), 'fallback to en');
     }
 
+    public function testCookieLanguageDeDetection()
+    {
+        $_COOKIE['lang'] = 'de';
+        i18n::loadTranslations();
+        $this->assertEquals($this->_translations['en'], i18n::_('en'), 'browser language de');
+        $this->assertEquals('0 Stunden', i18n::_('%d hours', 0), '0 hours in german');
+        $this->assertEquals('1 Stunde',  i18n::_('%d hours', 1), '1 hour in german');
+        $this->assertEquals('2 Stunden', i18n::_('%d hours', 2), '2 hours in french');
+    }
+
     public function testBrowserLanguageDeDetection()
     {
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'de-CH,de;q=0.8,en-GB;q=0.6,en-US;q=0.4,en;q=0.2';
@@ -64,6 +74,6 @@ class i18nTest extends PHPUnit_Framework_TestCase
     {
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'foobar';
         i18n::loadTranslations();
-        $this->assertEquals('some string + 1', i18n::_('some %s + %d', 'string', 1), 'browser language de');
+        $this->assertEquals('some string + 1', i18n::_('some %s + %d', 'string', 1), 'browser language en');
     }
 }

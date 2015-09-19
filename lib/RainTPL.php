@@ -1162,7 +1162,16 @@ class RainTpl_SyntaxException extends RainTpl_Exception{
 	}
 }
 
-// shorthand translate function for use in templates
+/**
+ * shorthand translate function for use in templates
+ *
+ * alias for i18n::translate()
+ *
+ * @access public
+ * @param  string $messageId
+ * @param  mixed $args one or multiple parameters injected into placeholders
+ * @return string
+ */
 function t() {
 	return call_user_func_array(array('i18n', 'translate'), func_get_args());
 }

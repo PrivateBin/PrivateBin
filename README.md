@@ -1,4 +1,4 @@
-# ZeroBin 0.20
+# ZeroBin 0.21
 
 ZeroBin is a minimalist, opensource online pastebin where the server has zero 
 knowledge of pasted data.
@@ -12,16 +12,16 @@ without loosing any data.
 
 ## What ZeroBin provides
 
-- As a server administrator you don't have to worry if your users post content
++ As a server administrator you don't have to worry if your users post content
   that is considered illegal in your country. You have no knowledge of any
-  pastes content. If requested or enforced, you can delete any paste from your
-  system.
+  of the pastes content. If requested or enforced, you can delete any paste from
+  your system.
 
-- Pastebin like system to store text documents, code samples, etc.
++ Pastebin-like system to store text documents, code samples, etc.
 
-- Encryption of data sent to server, even if it does not provide HTTPS.
++ Encryption of data sent to server, even if it does not provide HTTPS.
 
-- Possibility to set a password which is required to read the paste. It further 
++ Possibility to set a password which is required to read the paste. It further 
   protects a paste and prevents people stumbling upon your paste's link
   from being able to read it without the password.
 
@@ -43,48 +43,38 @@ without loosing any data.
 Some features are optional and can be enabled or disabled in the [configuration
 file](https://github.com/elrido/ZeroBin/wiki/Configuration):
 
-- Password protection
+* Password protection
 
-- Discussions
+* Discussions
 
-- Expiration times, including a "forever" and "burn after reading" option
+* Expiration times, including a "forever" and "burn after reading" option
 
-- Syntax highlighting using prettify.js, including 4 prettify themes
+* Markdown format support for HTML formatted pastes
 
-- Templates: By default there is a bootstrap based and a "classic ZeroBin" theme
+* Syntax highlighting for source code using prettify.js, including 4 prettify themes
+
+* File upload support, images get displayed (disabled by default, possibility to adjust size limit)
+
+* Templates: By default there is a bootstrap CSS and a "classic ZeroBin" theme
   and it is easy to adapt these to your own websites layout or create your own.
+
+* Translation system and automatic browser language detection (if enabled in browser)
+
+* Language selection (disabled by default, as it uses a session cookie)
 
 ## Further resources
 
-- [Installation guide](https://github.com/elrido/ZeroBin/wiki/Installation)
+* [Installation guide](https://github.com/elrido/ZeroBin/wiki/Installation)
 
-- [Configuration guide](https://github.com/elrido/ZeroBin/wiki/Configuration)
+* [Upgrading from 0.19 Alpha](https://github.com/elrido/ZeroBin/wiki/Upgrading-from-ZeroBin-0.19-Alpha)
 
-- [Developer guide](https://github.com/elrido/ZeroBin/wiki/Development)
+* [Configuration guide](https://github.com/elrido/ZeroBin/wiki/Configuration)
+
+* [Templates](https://github.com/elrido/ZeroBin/wiki/Templates)
+
+* [Translation guide](https://github.com/elrido/ZeroBin/wiki/Translation)
+
+* [Developer guide](https://github.com/elrido/ZeroBin/wiki/Development)
 
 Run into any issues? Have ideas for further developments? Please 
 [report](https://github.com/elrido/ZeroBin/issues) them!
-
-------------------------------------------------------------------------------
-
-Copyright (c) 2012 Sébastien SAUVAGE (sebsauvage.net)
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from 
-the use of this software.
-
-Permission is granted to anyone to use this software for any purpose, 
-including commercial applications, and to alter it and redistribute it 
-freely, subject to the following restrictions:
-
-    1. The origin of this software must not be misrepresented; you must 
-       not claim that you wrote the original software. If you use this 
-       software in a product, an acknowledgment in the product documentation
-       would be appreciated but is not required.
-
-    2. Altered source versions must be plainly marked as such, and must 
-       not be misrepresented as being the original software.
-
-    3. This notice may not be removed or altered from any source distribution.
-
-------------------------------------------------------------------------------

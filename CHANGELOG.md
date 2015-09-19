@@ -1,12 +1,29 @@
 # ZeroBin version history #
 
+  * **0.21 (2015-09-19)**:
+    * ADDED: Translations for German, French and Polish, language selection menu (optional)
+    * ADDED: File upload and image display support (optional)
+    * ADDED: Markdown format support
+    * ADDED: "bootstrap-compact" template that hides some of the options in a drop down menu to ensure the nav bar fitting on one line on smaller screen sizes
+    * FIXING: Various usability issues with different screen sizes / device types in the "bootstrap" template
+    * CHANGED: Instead of having different options to enable and preselect certain formats there is now a generic `[formatter_options]` section where formats can be added to the displayed format drop down menu. A `defaultformatter` can be set, it defaults to "plaintext". The `syntaxhighlighting` configuration got deprecated.
+    * `zerobin.js` got a major refactoring:
+      * moved from global namespace into anonymous function
+      * events are no longer set via "onclick" attributes in the templates, but bound by from JS side
+      * for simpler maintenance the functions were grouped into objects: zerobin (display logic, event handling), filter (compression,
+encryption), i18n (translation, counterpart of i18n.php) and helper (stateless utilities)
+    * Wiki pages were added to address common topics:
+      * [Upgrading from ZeroBin 0.19 Alpha](https://github.com/elrido/ZeroBin/wiki/Upgrading-from-ZeroBin-0.19-Alpha)
+      * [ZeroBin Directory of public servers](https://github.com/elrido/ZeroBin/wiki/ZeroBin-Directory)
+      * [Translation](https://github.com/elrido/ZeroBin/wiki/Translation)
+      * [Templates](https://github.com/elrido/ZeroBin/wiki/Templates)
   * **0.20 (2015-09-03)**:
     * ADDED: Password protected pastes (optional)
     * ADDED: configuration options for highlighting, password, discussions, expiration times, rate limiting
     * ADDED: JSON-only retrieval of paste incl. discussion, used to be able to refresh paste when posting a comment
     * ADDED: bootstrap CSS based template
-    * CHANGE: "Burn after reading" pastes are now deleted only after the paste was successfully decrypted via callback. This prevents accidental deletion by chatbots following URLs and the like. Usage of a password is suggested to ensure only the desired recipient is able to encrypt it.
-    * CHANGE: the "opendiscussion" option now only controls if the discussion checkbox is preselected. Use "discussion = false" to disable the discussion feature completely (which also removes the checkbox from the template).
+    * CHANGED: "Burn after reading" pastes are now deleted only after the paste was successfully decrypted via callback. This prevents accidental deletion by chatbots following URLs and the like. Usage of a password is suggested to ensure only the desired recipient is able to encrypt it.
+    * CHANGED: the "opendiscussion" option now only controls if the discussion checkbox is preselected. Use "discussion = false" to disable the discussion feature completely (which also removes the checkbox from the template).
     * FIXING: Behaviour of several conflicting configuration options. As a general measure unit tests for 9 of the options and all their possible configurations were added via a unit test generator.
     * updated JS libraries: jquery to 1.11.3, sjcl to 1.0.2, base64.js to 2.1.9, deflate to 0.5, inflate to 0.3 and prettify to latest
     * generally improved documentation, both inline phpdoc / JSdoc source code documentation, as well as Wiki pages on installation, configuration, development and JSON-API

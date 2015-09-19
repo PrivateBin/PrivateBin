@@ -74,6 +74,31 @@ class zerobinTest extends PHPUnit_Framework_TestCase
     /**
      * @runInSeparateProcess
      */
+    public function testViewLanguageSelection()
+    {
+        $this->reset();
+        $options = parse_ini_file($this->_conf, true);
+        $options['main']['languageselection'] = true;
+        if (!is_file($this->_conf . '.bak') && is_file($this->_conf))
+            rename($this->_conf, $this->_conf . '.bak');
+        helper::createIniFile($this->_conf, $options);
+        $_COOKIE['lang'] = 'de';
+        ob_start();
+        new zerobin;
+        $content = ob_get_contents();
+        $this->assertTag(
+            array(
+                'tag' => 'title',
+                'content' => 'ZeroBin'
+            ),
+            $content,
+            'outputs title correctly'
+        );
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
     public function testHtaccess()
     {
         $this->reset();
@@ -160,6 +185,27 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         helper::createIniFile($this->_conf, $options);
         $_POST = self::$paste;
         $_SERVER['REMOTE_ADDR'] = '::1';
+        ob_start();
+        new zerobin;
+        $content = ob_get_contents();
+        $response = json_decode($content, true);
+        $this->assertEquals(1, $response['status'], 'outputs error status');
+        $this->assertFalse($this->_model->exists(self::$pasteid), 'paste exists after posting data');
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testCreateProxyHeader()
+    {
+        $this->reset();
+        $options = parse_ini_file($this->_conf, true);
+        $options['traffic']['header'] = 'X_FORWARDED_FOR';
+        if (!is_file($this->_conf . '.bak') && is_file($this->_conf))
+            rename($this->_conf, $this->_conf . '.bak');
+        helper::createIniFile($this->_conf, $options);
+        $_POST = self::$paste;
+        $_SERVER['HTTP_X_FORWARDED_FOR'] = '::1';
         ob_start();
         new zerobin;
         $content = ob_get_contents();
@@ -287,6 +333,35 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $response = json_decode($content, true);
         $this->assertEquals(1, $response['status'], 'outputs error status');
         $this->assertFalse($this->_model->exists(self::$pasteid), 'paste exists after posting data');
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testCreateAttachment()
+    {
+        $this->reset();
+        $options = parse_ini_file($this->_conf, true);
+        $options['traffic']['limit'] = 0;
+        $options['main']['fileupload'] = true;
+        if (!is_file($this->_conf . '.bak') && is_file($this->_conf))
+            rename($this->_conf, $this->_conf . '.bak');
+        helper::createIniFile($this->_conf, $options);
+        $_POST = self::$paste;
+        $_POST['attachment'] = self::$comment['data'];
+        $_POST['attachmentname'] = self::$comment['meta']['nickname'];
+        $_SERVER['REMOTE_ADDR'] = '::1';
+        ob_start();
+        new zerobin;
+        $content = ob_get_contents();
+        $response = json_decode($content, true);
+        $this->assertEquals(0, $response['status'], 'outputs status');
+        $this->assertEquals(
+            hash_hmac('sha1', $response['id'], serversalt::get()),
+            $response['deletetoken'],
+            'outputs valid delete token'
+        );
+        $this->assertTrue($this->_model->exists($response['id']), 'paste exists after posting data');
     }
 
     /**
@@ -596,6 +671,55 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $content = ob_get_contents();
         $response = json_decode($content, true);
         $this->assertEquals(1, $response['status'], 'outputs error status');
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testReadOldSyntax()
+    {
+        $this->reset();
+        $oldPaste = self::$paste;
+        $oldPaste['meta']['syntaxcoloring'] = true;
+        unset($oldPaste['meta']['formatter']);
+        $this->_model->create(self::$pasteid, $oldPaste);
+        $_SERVER['QUERY_STRING'] = self::$pasteid;
+        ob_start();
+        new zerobin;
+        $content = ob_get_contents();
+        $oldPaste['meta']['formatter'] = 'syntaxhighlighting';
+        $this->assertTag(
+            array(
+                'id' => 'cipherdata',
+                'content' => htmlspecialchars(json_encode($oldPaste), ENT_NOQUOTES)
+            ),
+            $content,
+            'outputs data correctly'
+        );
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testReadOldFormat()
+    {
+        $this->reset();
+        $oldPaste = self::$paste;
+        unset($oldPaste['meta']['formatter']);
+        $this->_model->create(self::$pasteid, $oldPaste);
+        $_SERVER['QUERY_STRING'] = self::$pasteid;
+        ob_start();
+        new zerobin;
+        $content = ob_get_contents();
+        $oldPaste['meta']['formatter'] = 'plaintext';
+        $this->assertTag(
+            array(
+                'id' => 'cipherdata',
+                'content' => htmlspecialchars(json_encode($oldPaste), ENT_NOQUOTES)
+            ),
+            $content,
+            'outputs data correctly'
+        );
     }
 
     /**
