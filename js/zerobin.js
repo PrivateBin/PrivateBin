@@ -851,7 +851,8 @@ $(function() {
         sendData: function(event)
         {
             event.preventDefault();
-            var files = document.getElementById('file').files; // FileList object
+            var file = document.getElementById('file'),
+                files = (file && file.files) ? file.files : null; // FileList object
 
             // Do not send if no data.
             if (this.message.val().length == 0 && !(files && files[0])) return;
