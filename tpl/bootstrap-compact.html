@@ -118,7 +118,18 @@
 							</ul>
 						</li>{/if}
 					</ul>
-					<ul class="nav navbar-nav pull-right">
+					<ul class="nav navbar-nav pull-right">{if="strlen($LANGUAGESELECTION)"}
+						<li id="language" class="dropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-flag" aria-hidden="true"></span> {$LANGUAGES[$LANGUAGESELECTION][0]} <span class="caret"></span></a>
+							<ul class="dropdown-menu">
+{loop="LANGUAGES"}
+								<li>
+									<a href="#" class="reloadlink" onclick="document.cookie='lang={$key}';">
+										{$value[0]} ({$value[1]})
+									</a>
+								</li>{/loop}
+							</ul>
+						</li>{/if}
 						<li>
 							<button id="newbutton" type="button" class="reloadlink hidden btn btn-default navbar-btn">
 								<span class="glyphicon glyphicon-file" aria-hidden="true"></span> {function="t('New')"}

@@ -27,6 +27,33 @@ class i18n
     protected static $_language = 'en';
 
     /**
+     * language labels
+     *
+     * @access protected
+     * @static
+     * @var    array
+     */
+    protected static $_languageLabels = array();
+
+    /**
+     * available languages
+     *
+     * @access protected
+     * @static
+     * @var    array
+     */
+    protected static $_availableLanguages = array();
+
+    /**
+     * path to language files
+     *
+     * @access protected
+     * @static
+     * @var    string
+     */
+    protected static $_path = '';
+
+    /**
      * translation cache
      *
      * @access protected
@@ -94,36 +121,57 @@ class i18n
      *
      * From: http://stackoverflow.com/questions/3770513/detect-browser-language-in-php#3771447
      *
-     * @access protected
+     * @access public
      * @static
      * @return void
      */
     public static function loadTranslations()
     {
-        // find a matching translation file
-        $availableLanguages = array();
-        $path = PUBLIC_PATH . DIRECTORY_SEPARATOR . 'i18n';
-        $i18n = dir($path);
-        while (false !== ($file = $i18n->read()))
-        {
-            if (preg_match('/^([a-z]{2}).json$/', $file, $match) === 1)
-            {
-                $availableLanguages[] = $match[1];
-            }
-        }
+        $availableLanguages = self::getAvailableLanguages();
 
-        $match = self::_getMatchingLanguage(
-            self::getBrowserLanguages(), $availableLanguages
-        );
-        // load translations
-        if ($match != 'en')
+        // check if the lang cookie was set and that language exists
+        if (array_key_exists('lang', $_COOKIE) && in_array($_COOKIE['lang'], $availableLanguages))
         {
-            self::$_language = $match;
-            self::$_translations = json_decode(
-                file_get_contents($path . DIRECTORY_SEPARATOR . $match . '.json'),
-                true
+            $match = $_COOKIE['lang'];
+        }
+        // find a translation file matching the browsers language preferences
+        else
+        {
+            $match = self::_getMatchingLanguage(
+                self::getBrowserLanguages(), $availableLanguages
             );
         }
+
+        // load translations
+        self::$_language = $match;
+        self::$_translations = ($match == 'en') ? array() : json_decode(
+            file_get_contents(self::_getPath($match . '.json')),
+            true
+        );
+    }
+
+    /**
+     * get list of available translations based on files found
+     *
+     * @access public
+     * @static
+     * @return array
+     */
+    public static function getAvailableLanguages()
+    {
+        if (count(self::$_availableLanguages) == 0)
+        {
+            $i18n = dir(self::_getPath());
+            while (false !== ($file = $i18n->read()))
+            {
+                if (preg_match('/^([a-z]{2}).json$/', $file, $match) === 1)
+                {
+                    self::$_availableLanguages[] = $match[1];
+                }
+            }
+            self::$_availableLanguages[] = 'en';
+        }
+        return self::$_availableLanguages;
     }
 
     /**
@@ -131,6 +179,8 @@ class i18n
      *
      * From: http://stackoverflow.com/questions/3770513/detect-browser-language-in-php#3771447
      *
+     * @access public
+     * @static
      * @return array
      */
     public static function getBrowserLanguages()
@@ -166,11 +216,63 @@ class i18n
     }
 
     /**
+     * get currently loaded language
+     *
+     * @access public
+     * @static
+     * @return string
+     */
+    public static function getLanguage()
+    {
+        return self::$_language;
+    }
+
+    /**
+     * get list of language labels
+     *
+     * Only for given language codes, otherwise all labels.
+     *
+     * @access public
+     * @static
+     * @param  array $languages
+     * @return array
+     */
+    public static function getLanguageLabels($languages = array())
+    {
+        $file = self::_getPath('languages.json');
+        if (count(self::$_languageLabels) == 0 && is_readable($file))
+        {
+            self::$_languageLabels = json_decode(file_get_contents($file), true);
+        }
+        if (count($languages) == 0) return self::$_languageLabels;
+        return array_intersect_key(self::$_languageLabels, array_flip($languages));
+    }
+
+    /**
+     * get language file path
+     *
+     * @access protected
+     * @static
+     * @param  string $file
+     * @return string
+     */
+    protected static function _getPath($file = '')
+    {
+        if (strlen(self::$_path) == 0)
+        {
+            self::$_path = PUBLIC_PATH . DIRECTORY_SEPARATOR . 'i18n';
+        }
+        return self::$_path . (strlen($file) ? DIRECTORY_SEPARATOR . $file : '');
+    }
+
+    /**
      * determines the plural form to use based on current language and given number
      *
      * From: http://localization-guide.readthedocs.org/en/latest/l10n/pluralforms.html
      *
-     * @param int $n
+     * @access protected
+     * @static
+     * @param  int $n
      * @return int
      */
     protected static function _getPluralForm($n)
@@ -191,8 +293,10 @@ class i18n
      *
      * From: http://stackoverflow.com/questions/3770513/detect-browser-language-in-php#3771447
      *
-     * @param array $acceptedLanguages
-     * @param array $availableLanguages
+     * @access protected
+     * @static
+     * @param  array $acceptedLanguages
+     * @param  array $availableLanguages
      * @return string
      */
     protected static function _getMatchingLanguage($acceptedLanguages, $availableLanguages) {
@@ -247,8 +351,10 @@ class i18n
      *
      * From: http://stackoverflow.com/questions/3770513/detect-browser-language-in-php#3771447
      *
-     * @param string $a
-     * @param string $b
+     * @access protected
+     * @static
+     * @param  string $a
+     * @param  string $b
      * @return float
      */
     protected static function _matchLanguage($a, $b) {

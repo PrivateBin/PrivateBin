@@ -126,7 +126,7 @@ h3.title {
 
 #copyhint { color: #666; font-size: 0.85em; }
 
-button, .button, #expiration, #formatter {
+button, .button {
 	color: #fff;
 	background-color: #323b47;
 	background-repeat: no-repeat;
@@ -134,7 +134,7 @@ button, .button, #expiration, #formatter {
 	padding: 4px 8px;
 	font-size: 1em;
 	margin-right: 5px;
-	display: inline;
+	display: inline-block;
 	background-image: linear-gradient(bottom, #323b47 0, #51606e 100%);
 	background-image: -o-linear-gradient(bottom, #323b47 0, #51606e 100%);
 	background-image: -moz-linear-gradient(bottom, #323b47 0, #51606e 100%);
@@ -185,7 +185,7 @@ button img {
 	top: 2px;
 }
 
-#expiration, #formatter, #rawtextbutton, #burnafterreadingoption, #opendisc { 
+.button { 
 	background-color: #414d5a; 
 	padding: 6px 8px;
 	margin: 0 5px 0 0;
@@ -193,14 +193,14 @@ button img {
 	bottom: 1px; /* WTF ? Why is this shifted by 1 pixel ? */
 }
 
-#expiration select, #formatter select {
+.button select {
 	color: #eee;
 	background: transparent;
 	border: none;
 }
 
 
-#expiration select option, #formatter select option {
+.button select option {
 	color:#eee;
 	background: #414d5a;
 }

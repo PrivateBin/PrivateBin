@@ -659,6 +659,14 @@ class zerobin
         // translate all the formatter options
         $formatters = array_map(array('i18n', 'translate'), $this->_conf['formatter_options']);
 
+        // set language cookie if that functionality was enabled
+        $languageselection = '';
+        if ($this->_getMainConfig('languageselection', false))
+        {
+            $languageselection = i18n::getLanguage();
+            setcookie('lang', $languageselection);
+        }
+
         $page = new RainTPL;
         $page::$path_replace = false;
         // we escape it here because ENT_NOQUOTES can't be used in RainTPL templates
@@ -678,6 +686,8 @@ class zerobin
         $page->assign('PASSWORD', $this->_getMainConfig('password', true));
         $page->assign('FILEUPLOAD', $this->_getMainConfig('fileupload', false));
         $page->assign('BASE64JSVERSION', $this->_getMainConfig('base64version', '2.1.9'));
+        $page->assign('LANGUAGESELECTION', $languageselection);
+        $page->assign('LANGUAGES', i18n::getLanguageLabels(i18n::getAvailableLanguages()));
         $page->assign('EXPIRE', $expire);
         $page->assign('EXPIREDEFAULT', $this->_conf['expire']['default']);
         $page->draw($this->_getMainConfig('template', 'page'));

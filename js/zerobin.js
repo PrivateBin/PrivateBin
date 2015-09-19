@@ -266,7 +266,25 @@ $(function() {
                 }
                 return val;
             });
-        }
+        },
+        
+        /**
+         * get value of cookie, if it was set, empty string otherwise
+         * From: http://www.w3schools.com/js/js_cookies.asp
+         *
+         * @param string cname
+         * @return string
+         */
+        getCookie: function(cname) {
+            var name = cname + '=';
+            var ca = document.cookie.split(';');
+            for(var i = 0; i < ca.length; ++i) {
+                var c = ca[i];
+                while (c.charAt(0) == ' ') c = c.substring(1);
+                if (c.indexOf(name) == 0) return c.substring(name.length, c.length);
+            }
+            return '';
+        } 
     };
 
     /**
@@ -361,7 +379,8 @@ $(function() {
          */
         loadTranslations: function(callback)
         {
-            var language = (navigator.language || navigator.userLanguage).substring(0, 2);
+            var selectedLang = helper.getCookie('lang');
+            var language = selectedLang.length > 0 ? selectedLang : (navigator.language || navigator.userLanguage).substring(0, 2);
             // note that 'en' is built in, so no translation is necessary
             if (this.supportedLanguages.indexOf(language) == -1)
             {
