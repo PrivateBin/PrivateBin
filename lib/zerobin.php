@@ -232,31 +232,25 @@ class zerobin
                 $ipKey = $header;
             }
         }
-        if (!trafficlimiter::canPass($_SERVER[$ipKey]))
-        {
-            $this->_return_message(
-                1,
-                i18n::_(
-                    'Please wait %d seconds between each post.',
-                    $this->_conf['traffic']['limit']
-                )
-            );
-            return;
-        }
+        if (!trafficlimiter::canPass($_SERVER[$ipKey])) return $this->_return_message(
+            1,
+            i18n::_(
+                'Please wait %d seconds between each post.',
+                $this->_conf['traffic']['limit']
+            )
+        );
 
         // Make sure content is not too big.
         $sizelimit = (int) $this->_getMainConfig('sizelimit', 2097152);
-        if (strlen($data) + strlen($attachment) + strlen($attachmentname) > $sizelimit)
-        {
-            $this->_return_message(
-                1,
-                i18n::_(
-                    'Paste is limited to %s of encrypted data.',
-                    filter::size_humanreadable($sizelimit)
-                )
-            );
-            return;
-        }
+        if (
+            strlen($data) + strlen($attachment) + strlen($attachmentname) > $sizelimit
+        ) return $this->_return_message(
+            1,
+            i18n::_(
+                'Paste is limited to %s of encrypted data.',
+                filter::size_humanreadable($sizelimit)
+            )
+        );
 
         // Make sure format is correct.
         if (!sjcl::isValid($data)) return $this->_return_message(1, 'Invalid data.');
@@ -268,7 +262,7 @@ class zerobin
                 !$this->_getMainConfig('fileupload', false) ||
                 !sjcl::isValid($attachment) ||
                 !($has_attachmentname && sjcl::isValid($attachmentname))
-            ) $this->_return_message(1, 'Invalid attachment.');
+            ) return $this->_return_message(1, 'Invalid attachment.');
         }
 
         // Read additional meta-information.
@@ -321,7 +315,7 @@ class zerobin
             $formatter = $_POST['formatter'];
             if (!array_key_exists($formatter, $this->_conf['formatter_options']))
             {
-                $formatter = $this->_getMainConfig('defaultformatter', 'syntaxhighlighting');
+                $formatter = $this->_getMainConfig('defaultformatter', 'plaintext');
             }
             $meta['formatter'] = $formatter;
         }
@@ -354,11 +348,7 @@ class zerobin
             }
         }
 
-        if ($error)
-        {
-            $this->_return_message(1, 'Invalid data.');
-            return;
-        }
+        if ($error) return $this->_return_message(1, 'Invalid data.');
 
         // Add post date to meta.
         $meta['postdate'] = time();
@@ -383,11 +373,7 @@ class zerobin
             if (
                 !filter::is_valid_paste_id($pasteid) ||
                 !filter::is_valid_paste_id($parentid)
-            )
-            {
-                $this->_return_message(1, 'Invalid data.');
-                return;
-            }
+            ) return $this->_return_message(1, 'Invalid data.');
 
             // Comments do not expire (it's the paste that expires)
             unset($storage['expire_date']);
@@ -396,43 +382,26 @@ class zerobin
             // Make sure paste exists.
             if (
                 !$this->_model()->exists($pasteid)
-            )
-            {
-                $this->_return_message(1, 'Invalid data.');
-                return;
-            }
+            ) return $this->_return_message(1, 'Invalid data.');
 
             // Make sure the discussion is opened in this paste.
             $paste = $this->_model()->read($pasteid);
             if (
                 !$paste->meta->opendiscussion
-            )
-            {
-                $this->_return_message(1, 'Invalid data.');
-                return;
-            }
+            ) return $this->_return_message(1, 'Invalid data.');
 
             // Check for improbable collision.
             if (
                 $this->_model()->existsComment($pasteid, $parentid, $dataid)
-            )
-            {
-                $this->_return_message(1, 'You are unlucky. Try again.');
-                return;
-            }
+            ) return $this->_return_message(1, 'You are unlucky. Try again.');
 
             // New comment
             if (
                 $this->_model()->createComment($pasteid, $parentid, $dataid, $storage) === false
-            )
-            {
-                $this->_return_message(1, 'Error saving comment. Sorry.');
-                return;
-            }
+            ) return $this->_return_message(1, 'Error saving comment. Sorry.');
 
             // 0 = no error
-            $this->_return_message(0, $dataid);
-            return;
+            return $this->_return_message(0, $dataid);
         }
         // The user posts a standard paste.
         else
@@ -440,11 +409,7 @@ class zerobin
             // Check for improbable collision.
             if (
                 $this->_model()->exists($dataid)
-            )
-            {
-                $this->_return_message(1, 'You are unlucky. Try again.');
-                return;
-            }
+            ) return $this->_return_message(1, 'You are unlucky. Try again.');
 
             // Add attachment and its name, if one was sent
             if ($has_attachment) $storage['attachment'] = $attachment;
@@ -453,10 +418,7 @@ class zerobin
             // New paste
             if (
                 $this->_model()->create($dataid, $storage) === false
-            ) {
-                $this->_return_message(1, 'Error saving paste. Sorry.');
-                return;
-            }
+            ) return $this->_return_message(1, 'Error saving paste. Sorry.');
 
             // Generate the "delete" token.
             // The token is the hmac of the pasteid signed with the server salt.
@@ -464,8 +426,7 @@ class zerobin
             $deletetoken = hash_hmac('sha1', $dataid, serversalt::get());
 
             // 0 = no error
-            $this->_return_message(0, $dataid, array('deletetoken' => $deletetoken));
-            return;
+            return $this->_return_message(0, $dataid, array('deletetoken' => $deletetoken));
         }
     }
 
@@ -609,7 +570,7 @@ class zerobin
                     }
                     else
                     {
-                        $paste->meta->formatter = $this->_getMainConfig('defaultformatter', 'syntaxhighlighting');
+                        $paste->meta->formatter = $this->_getMainConfig('defaultformatter', 'plaintext');
                     }
                 }
 
@@ -680,7 +641,7 @@ class zerobin
         $page->assign('SYNTAXHIGHLIGHTING', array_key_exists('syntaxhighlighting', $formatters));
         $page->assign('SYNTAXHIGHLIGHTINGTHEME', $this->_getMainConfig('syntaxhighlightingtheme', ''));
         $page->assign('FORMATTER', $formatters);
-        $page->assign('FORMATTERDEFAULT', $this->_getMainConfig('defaultformatter', 'syntaxhighlighting'));
+        $page->assign('FORMATTERDEFAULT', $this->_getMainConfig('defaultformatter', 'plaintext'));
         $page->assign('NOTICE', i18n::_($this->_getMainConfig('notice', '')));
         $page->assign('BURNAFTERREADINGSELECTED', $this->_getMainConfig('burnafterreadingselected', false));
         $page->assign('PASSWORD', $this->_getMainConfig('password', true));
