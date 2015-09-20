@@ -1095,7 +1095,6 @@ $(function() {
             this.stateNewPaste();
             this.showStatus('', false);
             this.message.text('');
-            $('.navbar-toggle').click();
         },
 
         /**
