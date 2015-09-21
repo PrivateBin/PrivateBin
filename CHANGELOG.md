@@ -1,5 +1,10 @@
 # ZeroBin version history #
 
+  * **0.21.1 (2015-09-21)**:
+    * FIXING: lost meta data when using DB model instead of flat files
+    * FIXING: mobile navbar getting triggered on load
+    * CHANGED: database table "paste" gets automatically extended with a "meta" column
+    * CHANGED: navbar of "bootstrap" template now spans full width of view port on large screens
   * **0.21 (2015-09-19)**:
     * ADDED: Translations for German, French and Polish, language selection menu (optional)
     * ADDED: File upload and image display support (optional)

@@ -1,4 +1,4 @@
-# ZeroBin 0.21
+# ZeroBin 0.21.1
 
 ZeroBin is a minimalist, opensource online pastebin where the server has zero 
 knowledge of pasted data.

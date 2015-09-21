@@ -7,7 +7,7 @@
  * @link      http://sebsauvage.net/wiki/doku.php?id=php:zerobin
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   http://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
- * @version   0.21
+ * @version   0.21.1
  */
 
 /**
@@ -22,7 +22,7 @@ class zerobin
      *
      * @const string
      */
-    const VERSION = '0.21';
+    const VERSION = '0.21.1';
 
     /**
      * show the same error message if the paste expired or does not exist

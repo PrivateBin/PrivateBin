@@ -6,7 +6,7 @@
  * @link      http://sebsauvage.net/wiki/doku.php?id=php:zerobin
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   http://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
- * @version   0.21
+ * @version   0.21.1
  */
 
 'use strict';
@@ -267,7 +267,7 @@ $(function() {
                 return val;
             });
         },
-        
+
         /**
          * get value of cookie, if it was set, empty string otherwise
          * From: http://www.w3schools.com/js/js_cookies.asp
@@ -284,7 +284,7 @@ $(function() {
                 if (c.indexOf(name) == 0) return c.substring(name.length, c.length);
             }
             return '';
-        } 
+        }
     };
 
     /**
@@ -613,7 +613,7 @@ $(function() {
                         }
                         this.attachmentLink.attr('href', attachment);
                         this.attachment.removeClass('hidden');
-                        
+
                         // if the attachment is an image, display it
                         var imagePrefix = 'data:image/';
                         if (attachment.substring(0, imagePrefix.length) == imagePrefix)
