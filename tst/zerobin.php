@@ -1,28 +1,6 @@
 <?php
 class zerobinTest extends PHPUnit_Framework_TestCase
 {
-    private static $pasteid = '5e9bc25c89fb3bf9';
-
-    private static $paste = array(
-        'data' => '{"iv":"EN39/wd5Nk8HAiSG2K5AsQ","v":1,"iter":1000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"QKN1DBXe5PI","ct":"8hA83xDdXjD7K2qfmw5NdA"}',
-        'meta' => array(
-            'postdate' => 1344803344,
-            'opendiscussion' => true,
-            'formatter' => 'syntaxhighlighting',
-        ),
-    );
-
-    private static $commentid = '5a52eebf11c4c94b';
-
-    private static $comment = array(
-        'data' => '{"iv":"Pd4pOKWkmDTT9uPwVwd5Ag","v":1,"iter":1000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"ZIUhFTliVz4","ct":"6nOCU3peNDclDDpFtJEBKA"}',
-        'meta' => array(
-            'nickname' => '{"iv":"76MkAtOGC4oFogX/aSMxRA","v":1,"iter":1000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"ZIUhFTliVz4","ct":"b6Ae/U1xJdsX/+lATud4sQ"}',
-            'vizhash' => 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAABGUlEQVQokWOsl5/94983CNKQMjnxaOePf98MeKwPfNjkLZ3AgARab6b9+PeNEVnDj3/ff/z7ZiHnzsDA8Pv7H2TVPJw8EAYLAwb48OaVgIgYKycLsrYv378wMDB8//qdCVMDRA9EKSsnCwRBxNsepaLboMFlyMDAICAi9uHNK24GITQ/MDAwoNhgIGMLtwGrzegaLjw5jMz9+vUdnN17uwDCQDhJgk0O07yvX9+teDX1x79v6DYIsIjgcgMaYGFgYOBg4kJx2JejkAiBxAw+PzAwMNz4dp6wDXDw4MdNNOl0rWYsNkD89OLXI/xmo9sgzatJjAYmBgYGDiauD3/ePP18nVgb4MF89+M5ZX6js293wUMpnr8KTQMAxsCJnJ30apMAAAAASUVORK5CYII=',
-            'postdate' => 1344803528,
-        ),
-    );
-
     private $_conf;
 
     private $_model;
@@ -46,8 +24,8 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $_POST = array();
         $_GET = array();
         $_SERVER = array();
-        if ($this->_model->exists(self::$pasteid))
-            $this->_model->delete(self::$pasteid);
+        if ($this->_model->exists(helper::getPasteId()))
+            $this->_model->delete(helper::getPasteId());
         if (is_file($this->_conf . '.bak'))
             rename($this->_conf . '.bak', $this->_conf);
     }
@@ -140,7 +118,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
     public function testCreate()
     {
         $this->reset();
-        $_POST = self::$paste;
+        $_POST = helper::getPaste();
         $_SERVER['REMOTE_ADDR'] = '::1';
         ob_start();
         new zerobin;
@@ -161,14 +139,14 @@ class zerobinTest extends PHPUnit_Framework_TestCase
     public function testCreateInvalidTimelimit()
     {
         $this->reset();
-        $_POST = self::$paste;
+        $_POST = helper::getPaste();
         $_SERVER['REMOTE_ADDR'] = '::1';
         ob_start();
         new zerobin;
         $content = ob_get_contents();
         $response = json_decode($content, true);
         $this->assertEquals(1, $response['status'], 'outputs error status');
-        $this->assertFalse($this->_model->exists(self::$pasteid), 'paste exists after posting data');
+        $this->assertFalse($this->_model->exists(helper::getPasteId()), 'paste exists after posting data');
     }
 
     /**
@@ -183,14 +161,14 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         if (!is_file($this->_conf . '.bak') && is_file($this->_conf))
             rename($this->_conf, $this->_conf . '.bak');
         helper::createIniFile($this->_conf, $options);
-        $_POST = self::$paste;
+        $_POST = helper::getPaste();
         $_SERVER['REMOTE_ADDR'] = '::1';
         ob_start();
         new zerobin;
         $content = ob_get_contents();
         $response = json_decode($content, true);
         $this->assertEquals(1, $response['status'], 'outputs error status');
-        $this->assertFalse($this->_model->exists(self::$pasteid), 'paste exists after posting data');
+        $this->assertFalse($this->_model->exists(helper::getPasteId()), 'paste exists after posting data');
     }
 
     /**
@@ -204,14 +182,14 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         if (!is_file($this->_conf . '.bak') && is_file($this->_conf))
             rename($this->_conf, $this->_conf . '.bak');
         helper::createIniFile($this->_conf, $options);
-        $_POST = self::$paste;
+        $_POST = helper::getPaste();
         $_SERVER['HTTP_X_FORWARDED_FOR'] = '::1';
         ob_start();
         new zerobin;
         $content = ob_get_contents();
         $response = json_decode($content, true);
         $this->assertEquals(1, $response['status'], 'outputs error status');
-        $this->assertFalse($this->_model->exists(self::$pasteid), 'paste exists after posting data');
+        $this->assertFalse($this->_model->exists(helper::getPasteId()), 'paste exists after posting data');
     }
 
     /**
@@ -225,15 +203,15 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         if (!is_file($this->_conf . '.bak') && is_file($this->_conf))
             rename($this->_conf, $this->_conf . '.bak');
         helper::createIniFile($this->_conf, $options);
-        $this->_model->create(self::$pasteid, self::$paste);
-        $_POST = self::$paste;
+        $this->_model->create(helper::getPasteId(), helper::getPaste());
+        $_POST = helper::getPaste();
         $_SERVER['REMOTE_ADDR'] = '::1';
         ob_start();
         new zerobin;
         $content = ob_get_contents();
         $response = json_decode($content, true);
         $this->assertEquals(1, $response['status'], 'outputs error status');
-        $this->assertTrue($this->_model->exists(self::$pasteid), 'paste exists after posting data');
+        $this->assertTrue($this->_model->exists(helper::getPasteId()), 'paste exists after posting data');
     }
 
     /**
@@ -247,7 +225,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         if (!is_file($this->_conf . '.bak') && is_file($this->_conf))
             rename($this->_conf, $this->_conf . '.bak');
         helper::createIniFile($this->_conf, $options);
-        $_POST = self::$paste;
+        $_POST = helper::getPaste();
         $_POST['expire'] = '5min';
         $_POST['formatter'] = 'foo';
         $_SERVER['REMOTE_ADDR'] = '::1';
@@ -275,7 +253,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         if (!is_file($this->_conf . '.bak') && is_file($this->_conf))
             rename($this->_conf, $this->_conf . '.bak');
         helper::createIniFile($this->_conf, $options);
-        $_POST = self::$paste;
+        $_POST = helper::getPaste();
         $_POST['expire'] = 'foo';
         $_SERVER['REMOTE_ADDR'] = '::1';
         ob_start();
@@ -302,7 +280,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         if (!is_file($this->_conf . '.bak') && is_file($this->_conf))
             rename($this->_conf, $this->_conf . '.bak');
         helper::createIniFile($this->_conf, $options);
-        $_POST = self::$paste;
+        $_POST = helper::getPaste();
         $_POST['burnafterreading'] = 'neither 1 nor 0';
         $_SERVER['REMOTE_ADDR'] = '::1';
         ob_start();
@@ -310,7 +288,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $content = ob_get_contents();
         $response = json_decode($content, true);
         $this->assertEquals(1, $response['status'], 'outputs error status');
-        $this->assertFalse($this->_model->exists(self::$pasteid), 'paste exists after posting data');
+        $this->assertFalse($this->_model->exists(helper::getPasteId()), 'paste exists after posting data');
     }
 
     /**
@@ -324,7 +302,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         if (!is_file($this->_conf . '.bak') && is_file($this->_conf))
             rename($this->_conf, $this->_conf . '.bak');
         helper::createIniFile($this->_conf, $options);
-        $_POST = self::$paste;
+        $_POST = helper::getPaste();
         $_POST['opendiscussion'] = 'neither 1 nor 0';
         $_SERVER['REMOTE_ADDR'] = '::1';
         ob_start();
@@ -332,7 +310,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $content = ob_get_contents();
         $response = json_decode($content, true);
         $this->assertEquals(1, $response['status'], 'outputs error status');
-        $this->assertFalse($this->_model->exists(self::$pasteid), 'paste exists after posting data');
+        $this->assertFalse($this->_model->exists(helper::getPasteId()), 'paste exists after posting data');
     }
 
     /**
@@ -347,9 +325,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         if (!is_file($this->_conf . '.bak') && is_file($this->_conf))
             rename($this->_conf, $this->_conf . '.bak');
         helper::createIniFile($this->_conf, $options);
-        $_POST = self::$paste;
-        $_POST['attachment'] = self::$comment['data'];
-        $_POST['attachmentname'] = self::$comment['meta']['nickname'];
+        $_POST = helper::getPaste();
         $_SERVER['REMOTE_ADDR'] = '::1';
         ob_start();
         new zerobin;
@@ -375,8 +351,8 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         if (!is_file($this->_conf . '.bak') && is_file($this->_conf))
             rename($this->_conf, $this->_conf . '.bak');
         helper::createIniFile($this->_conf, $options);
-        $_POST = self::$paste;
-        $_POST['nickname'] = self::$comment['meta']['nickname'];
+        $_POST = helper::getPaste();
+        $_POST['nickname'] = helper::getComment()['meta']['nickname'];
         $_SERVER['REMOTE_ADDR'] = '::1';
         ob_start();
         new zerobin;
@@ -402,7 +378,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         if (!is_file($this->_conf . '.bak') && is_file($this->_conf))
             rename($this->_conf, $this->_conf . '.bak');
         helper::createIniFile($this->_conf, $options);
-        $_POST = self::$paste;
+        $_POST = helper::getPaste();
         $_POST['nickname'] = 'foo';
         $_SERVER['REMOTE_ADDR'] = '::1';
         ob_start();
@@ -410,7 +386,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $content = ob_get_contents();
         $response = json_decode($content, true);
         $this->assertEquals(1, $response['status'], 'outputs error status');
-        $this->assertFalse($this->_model->exists(self::$pasteid), 'paste exists after posting data');
+        $this->assertFalse($this->_model->exists(helper::getPasteId()), 'paste exists after posting data');
     }
 
     /**
@@ -424,17 +400,17 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         if (!is_file($this->_conf . '.bak') && is_file($this->_conf))
             rename($this->_conf, $this->_conf . '.bak');
         helper::createIniFile($this->_conf, $options);
-        $_POST = self::$comment;
-        $_POST['pasteid'] = self::$pasteid;
-        $_POST['parentid'] = self::$pasteid;
+        $_POST = helper::getComment();
+        $_POST['pasteid'] = helper::getPasteId();
+        $_POST['parentid'] = helper::getPasteId();
         $_SERVER['REMOTE_ADDR'] = '::1';
-        $this->_model->create(self::$pasteid, self::$paste);
+        $this->_model->create(helper::getPasteId(), helper::getPaste());
         ob_start();
         new zerobin;
         $content = ob_get_contents();
         $response = json_decode($content, true);
         $this->assertEquals(0, $response['status'], 'outputs status');
-        $this->assertTrue($this->_model->existsComment(self::$pasteid, self::$pasteid, $response['id']), 'paste exists after posting data');
+        $this->assertTrue($this->_model->existsComment(helper::getPasteId(), helper::getPasteId(), $response['id']), 'paste exists after posting data');
     }
 
     /**
@@ -448,17 +424,17 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         if (!is_file($this->_conf . '.bak') && is_file($this->_conf))
             rename($this->_conf, $this->_conf . '.bak');
         helper::createIniFile($this->_conf, $options);
-        $_POST = self::$comment;
-        $_POST['pasteid'] = self::$pasteid;
+        $_POST = helper::getComment();
+        $_POST['pasteid'] = helper::getPasteId();
         $_POST['parentid'] = 'foo';
         $_SERVER['REMOTE_ADDR'] = '::1';
-        $this->_model->create(self::$pasteid, self::$paste);
+        $this->_model->create(helper::getPasteId(), helper::getPaste());
         ob_start();
         new zerobin;
         $content = ob_get_contents();
         $response = json_decode($content, true);
         $this->assertEquals(1, $response['status'], 'outputs error status');
-        $this->assertFalse($this->_model->existsComment(self::$pasteid, self::$pasteid, self::$commentid), 'paste exists after posting data');
+        $this->assertFalse($this->_model->existsComment(helper::getPasteId(), helper::getPasteId(), helper::getCommentId()), 'paste exists after posting data');
     }
 
     /**
@@ -472,19 +448,18 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         if (!is_file($this->_conf . '.bak') && is_file($this->_conf))
             rename($this->_conf, $this->_conf . '.bak');
         helper::createIniFile($this->_conf, $options);
-        $_POST = self::$comment;
-        $_POST['pasteid'] = self::$pasteid;
-        $_POST['parentid'] = self::$pasteid;
+        $_POST = helper::getComment();
+        $_POST['pasteid'] = helper::getPasteId();
+        $_POST['parentid'] = helper::getPasteId();
         $_SERVER['REMOTE_ADDR'] = '::1';
-        $paste = self::$paste;
-        $paste['meta']['opendiscussion'] = false;
-        $this->_model->create(self::$pasteid, $paste);
+        $paste = helper::getPaste(array('opendiscussion' => false));
+        $this->_model->create(helper::getPasteId(), $paste);
         ob_start();
         new zerobin;
         $content = ob_get_contents();
         $response = json_decode($content, true);
         $this->assertEquals(1, $response['status'], 'outputs error status');
-        $this->assertFalse($this->_model->existsComment(self::$pasteid, self::$pasteid, self::$commentid), 'paste exists after posting data');
+        $this->assertFalse($this->_model->existsComment(helper::getPasteId(), helper::getPasteId(), helper::getCommentId()), 'paste exists after posting data');
     }
 
     /**
@@ -498,16 +473,16 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         if (!is_file($this->_conf . '.bak') && is_file($this->_conf))
             rename($this->_conf, $this->_conf . '.bak');
         helper::createIniFile($this->_conf, $options);
-        $_POST = self::$comment;
-        $_POST['pasteid'] = self::$pasteid;
-        $_POST['parentid'] = self::$pasteid;
+        $_POST = helper::getComment();
+        $_POST['pasteid'] = helper::getPasteId();
+        $_POST['parentid'] = helper::getPasteId();
         $_SERVER['REMOTE_ADDR'] = '::1';
         ob_start();
         new zerobin;
         $content = ob_get_contents();
         $response = json_decode($content, true);
         $this->assertEquals(1, $response['status'], 'outputs error status');
-        $this->assertFalse($this->_model->existsComment(self::$pasteid, self::$pasteid, self::$commentid), 'paste exists after posting data');
+        $this->assertFalse($this->_model->existsComment(helper::getPasteId(), helper::getPasteId(), helper::getCommentId()), 'paste exists after posting data');
     }
 
     /**
@@ -521,19 +496,19 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         if (!is_file($this->_conf . '.bak') && is_file($this->_conf))
             rename($this->_conf, $this->_conf . '.bak');
         helper::createIniFile($this->_conf, $options);
-        $this->_model->create(self::$pasteid, self::$paste);
-        $this->_model->createComment(self::$pasteid, self::$pasteid, self::$commentid, self::$comment);
-        $this->assertTrue($this->_model->existsComment(self::$pasteid, self::$pasteid, self::$commentid), 'comment exists before posting data');
-        $_POST = self::$comment;
-        $_POST['pasteid'] = self::$pasteid;
-        $_POST['parentid'] = self::$pasteid;
+        $this->_model->create(helper::getPasteId(), helper::getPaste());
+        $this->_model->createComment(helper::getPasteId(), helper::getPasteId(), helper::getCommentId(), helper::getComment());
+        $this->assertTrue($this->_model->existsComment(helper::getPasteId(), helper::getPasteId(), helper::getCommentId()), 'comment exists before posting data');
+        $_POST = helper::getComment();
+        $_POST['pasteid'] = helper::getPasteId();
+        $_POST['parentid'] = helper::getPasteId();
         $_SERVER['REMOTE_ADDR'] = '::1';
         ob_start();
         new zerobin;
         $content = ob_get_contents();
         $response = json_decode($content, true);
         $this->assertEquals(1, $response['status'], 'outputs error status');
-        $this->assertTrue($this->_model->existsComment(self::$pasteid, self::$pasteid, self::$commentid), 'paste exists after posting data');
+        $this->assertTrue($this->_model->existsComment(helper::getPasteId(), helper::getPasteId(), helper::getCommentId()), 'paste exists after posting data');
     }
 
     /**
@@ -542,15 +517,15 @@ class zerobinTest extends PHPUnit_Framework_TestCase
     public function testRead()
     {
         $this->reset();
-        $this->_model->create(self::$pasteid, self::$paste);
-        $_SERVER['QUERY_STRING'] = self::$pasteid;
+        $this->_model->create(helper::getPasteId(), helper::getPaste());
+        $_SERVER['QUERY_STRING'] = helper::getPasteId();
         ob_start();
         new zerobin;
         $content = ob_get_contents();
         $this->assertTag(
             array(
                 'id' => 'cipherdata',
-                'content' => htmlspecialchars(json_encode(self::$paste), ENT_NOQUOTES)
+                'content' => htmlspecialchars(json_encode(helper::getPaste()), ENT_NOQUOTES)
             ),
             $content,
             'outputs data correctly'
@@ -583,7 +558,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
     public function testReadNonexisting()
     {
         $this->reset();
-        $_SERVER['QUERY_STRING'] = self::$pasteid;
+        $_SERVER['QUERY_STRING'] = helper::getPasteId();
         ob_start();
         new zerobin;
         $content = ob_get_contents();
@@ -603,10 +578,9 @@ class zerobinTest extends PHPUnit_Framework_TestCase
     public function testReadExpired()
     {
         $this->reset();
-        $expiredPaste = self::$paste;
-        $expiredPaste['meta']['expire_date'] = $expiredPaste['meta']['postdate'];
-        $this->_model->create(self::$pasteid, $expiredPaste);
-        $_SERVER['QUERY_STRING'] = self::$pasteid;
+        $expiredPaste = helper::getPaste(array('expire_date' => 1344803344));
+        $this->_model->create(helper::getPasteId(), $expiredPaste);
+        $_SERVER['QUERY_STRING'] = helper::getPasteId();
         ob_start();
         new zerobin;
         $content = ob_get_contents();
@@ -626,10 +600,9 @@ class zerobinTest extends PHPUnit_Framework_TestCase
     public function testReadBurn()
     {
         $this->reset();
-        $burnPaste = self::$paste;
-        $burnPaste['meta']['burnafterreading'] = true;
-        $this->_model->create(self::$pasteid, $burnPaste);
-        $_SERVER['QUERY_STRING'] = self::$pasteid;
+        $burnPaste = helper::getPaste(array('burnafterreading' => true));
+        $this->_model->create(helper::getPasteId(), $burnPaste);
+        $_SERVER['QUERY_STRING'] = helper::getPasteId();
         ob_start();
         new zerobin;
         $content = ob_get_contents();
@@ -649,14 +622,14 @@ class zerobinTest extends PHPUnit_Framework_TestCase
     public function testReadJson()
     {
         $this->reset();
-        $this->_model->create(self::$pasteid, self::$paste);
-        $_SERVER['QUERY_STRING'] = self::$pasteid . '&json';
+        $this->_model->create(helper::getPasteId(), helper::getPaste());
+        $_SERVER['QUERY_STRING'] = helper::getPasteId() . '&json';
         ob_start();
         new zerobin;
         $content = ob_get_contents();
         $response = json_decode($content, true);
         $this->assertEquals(0, $response['status'], 'outputs success status');
-        $this->assertEquals(array(self::$paste), $response['messages'], 'outputs data correctly');
+        $this->assertEquals(array(helper::getPaste()), $response['messages'], 'outputs data correctly');
     }
 
     /**
@@ -665,7 +638,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
     public function testReadInvalidJson()
     {
         $this->reset();
-        $_SERVER['QUERY_STRING'] = self::$pasteid . '&json';
+        $_SERVER['QUERY_STRING'] = helper::getPasteId() . '&json';
         ob_start();
         new zerobin;
         $content = ob_get_contents();
@@ -679,11 +652,10 @@ class zerobinTest extends PHPUnit_Framework_TestCase
     public function testReadOldSyntax()
     {
         $this->reset();
-        $oldPaste = self::$paste;
-        $oldPaste['meta']['syntaxcoloring'] = true;
+        $oldPaste = helper::getPaste(array('syntaxcoloring' => true));
         unset($oldPaste['meta']['formatter']);
-        $this->_model->create(self::$pasteid, $oldPaste);
-        $_SERVER['QUERY_STRING'] = self::$pasteid;
+        $this->_model->create(helper::getPasteId(), $oldPaste);
+        $_SERVER['QUERY_STRING'] = helper::getPasteId();
         ob_start();
         new zerobin;
         $content = ob_get_contents();
@@ -704,10 +676,10 @@ class zerobinTest extends PHPUnit_Framework_TestCase
     public function testReadOldFormat()
     {
         $this->reset();
-        $oldPaste = self::$paste;
+        $oldPaste = helper::getPaste();
         unset($oldPaste['meta']['formatter']);
-        $this->_model->create(self::$pasteid, $oldPaste);
-        $_SERVER['QUERY_STRING'] = self::$pasteid;
+        $this->_model->create(helper::getPasteId(), $oldPaste);
+        $_SERVER['QUERY_STRING'] = helper::getPasteId();
         ob_start();
         new zerobin;
         $content = ob_get_contents();
@@ -728,10 +700,10 @@ class zerobinTest extends PHPUnit_Framework_TestCase
     public function testDelete()
     {
         $this->reset();
-        $this->_model->create(self::$pasteid, self::$paste);
-        $this->assertTrue($this->_model->exists(self::$pasteid), 'paste exists before deleting data');
-        $_GET['pasteid'] = self::$pasteid;
-        $_GET['deletetoken'] = hash_hmac('sha1', self::$pasteid, serversalt::get());
+        $this->_model->create(helper::getPasteId(), helper::getPaste());
+        $this->assertTrue($this->_model->exists(helper::getPasteId()), 'paste exists before deleting data');
+        $_GET['pasteid'] = helper::getPasteId();
+        $_GET['deletetoken'] = hash_hmac('sha1', helper::getPasteId(), serversalt::get());
         ob_start();
         new zerobin;
         $content = ob_get_contents();
@@ -743,7 +715,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
             $content,
             'outputs deleted status correctly'
         );
-        $this->assertFalse($this->_model->exists(self::$pasteid), 'paste successfully deleted');
+        $this->assertFalse($this->_model->exists(helper::getPasteId()), 'paste successfully deleted');
     }
 
     /**
@@ -752,7 +724,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
     public function testDeleteInvalidId()
     {
         $this->reset();
-        $this->_model->create(self::$pasteid, self::$paste);
+        $this->_model->create(helper::getPasteId(), helper::getPaste());
         $_GET['pasteid'] = 'foo';
         $_GET['deletetoken'] = 'bar';
         ob_start();
@@ -766,7 +738,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
             $content,
             'outputs delete error correctly'
         );
-        $this->assertTrue($this->_model->exists(self::$pasteid), 'paste exists after failing to delete data');
+        $this->assertTrue($this->_model->exists(helper::getPasteId()), 'paste exists after failing to delete data');
     }
 
     /**
@@ -775,7 +747,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
     public function testDeleteInexistantId()
     {
         $this->reset();
-        $_GET['pasteid'] = self::$pasteid;
+        $_GET['pasteid'] = helper::getPasteId();
         $_GET['deletetoken'] = 'bar';
         ob_start();
         new zerobin;
@@ -796,8 +768,8 @@ class zerobinTest extends PHPUnit_Framework_TestCase
     public function testDeleteInvalidToken()
     {
         $this->reset();
-        $this->_model->create(self::$pasteid, self::$paste);
-        $_GET['pasteid'] = self::$pasteid;
+        $this->_model->create(helper::getPasteId(), helper::getPaste());
+        $_GET['pasteid'] = helper::getPasteId();
         $_GET['deletetoken'] = 'bar';
         ob_start();
         new zerobin;
@@ -810,7 +782,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
             $content,
             'outputs delete error correctly'
         );
-        $this->assertTrue($this->_model->exists(self::$pasteid), 'paste exists after failing to delete data');
+        $this->assertTrue($this->_model->exists(helper::getPasteId()), 'paste exists after failing to delete data');
     }
 
     /**
@@ -819,18 +791,17 @@ class zerobinTest extends PHPUnit_Framework_TestCase
     public function testDeleteBurnAfterReading()
     {
         $this->reset();
-        $burnPaste = self::$paste;
-        $burnPaste['meta']['burnafterreading'] = true;
-        $this->_model->create(self::$pasteid, $burnPaste);
-        $this->assertTrue($this->_model->exists(self::$pasteid), 'paste exists before deleting data');
-        $_GET['pasteid'] = self::$pasteid;
+        $burnPaste = helper::getPaste(array('burnafterreading' => true));
+        $this->_model->create(helper::getPasteId(), $burnPaste);
+        $this->assertTrue($this->_model->exists(helper::getPasteId()), 'paste exists before deleting data');
+        $_GET['pasteid'] = helper::getPasteId();
         $_GET['deletetoken'] = 'burnafterreading';
         ob_start();
         new zerobin;
         $content = ob_get_contents();
         $response = json_decode($content, true);
         $this->assertEquals(0, $response['status'], 'outputs status');
-        $this->assertFalse($this->_model->exists(self::$pasteid), 'paste successfully deleted');
+        $this->assertFalse($this->_model->exists(helper::getPasteId()), 'paste successfully deleted');
     }
 
     /**
@@ -839,16 +810,16 @@ class zerobinTest extends PHPUnit_Framework_TestCase
     public function testDeleteInvalidBurnAfterReading()
     {
         $this->reset();
-        $this->_model->create(self::$pasteid, self::$paste);
-        $this->assertTrue($this->_model->exists(self::$pasteid), 'paste exists before deleting data');
-        $_GET['pasteid'] = self::$pasteid;
+        $this->_model->create(helper::getPasteId(), helper::getPaste());
+        $this->assertTrue($this->_model->exists(helper::getPasteId()), 'paste exists before deleting data');
+        $_GET['pasteid'] = helper::getPasteId();
         $_GET['deletetoken'] = 'burnafterreading';
         ob_start();
         new zerobin;
         $content = ob_get_contents();
         $response = json_decode($content, true);
         $this->assertEquals(1, $response['status'], 'outputs status');
-        $this->assertTrue($this->_model->exists(self::$pasteid), 'paste successfully deleted');
+        $this->assertTrue($this->_model->exists(helper::getPasteId()), 'paste successfully deleted');
     }
 
     /**
@@ -857,12 +828,11 @@ class zerobinTest extends PHPUnit_Framework_TestCase
     public function testDeleteExpired()
     {
         $this->reset();
-        $expiredPaste = self::$paste;
-        $expiredPaste['meta']['expire_date'] = 1000;
-        $this->assertFalse($this->_model->exists(self::$pasteid), 'paste does not exist before being created');
-        $this->_model->create(self::$pasteid, $expiredPaste);
-        $this->assertTrue($this->_model->exists(self::$pasteid), 'paste exists before deleting data');
-        $_GET['pasteid'] = self::$pasteid;
+        $expiredPaste = helper::getPaste(array('expire_date' => 1000));
+        $this->assertFalse($this->_model->exists(helper::getPasteId()), 'paste does not exist before being created');
+        $this->_model->create(helper::getPasteId(), $expiredPaste);
+        $this->assertTrue($this->_model->exists(helper::getPasteId()), 'paste exists before deleting data');
+        $_GET['pasteid'] = helper::getPasteId();
         $_GET['deletetoken'] = 'does not matter in this context, but has to be set';
         ob_start();
         new zerobin;
@@ -875,6 +845,6 @@ class zerobinTest extends PHPUnit_Framework_TestCase
             $content,
             'outputs error correctly'
         );
-        $this->assertFalse($this->_model->exists(self::$pasteid), 'paste successfully deleted');
+        $this->assertFalse($this->_model->exists(helper::getPasteId()), 'paste successfully deleted');
     }
 }

@@ -10,6 +10,97 @@ require PATH . 'lib/auto.php';
 class helper
 {
     /**
+     * example ID of a paste
+     *
+     * @var string
+     */
+    private static $pasteid = '5e9bc25c89fb3bf9';
+
+    /**
+     * example paste
+     *
+     * @var array
+     */
+    private static $paste = array(
+        'data' => '{"iv":"EN39/wd5Nk8HAiSG2K5AsQ","v":1,"iter":1000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"QKN1DBXe5PI","ct":"8hA83xDdXjD7K2qfmw5NdA"}',
+        'meta' => array(
+            'postdate' => 1344803344,
+            'opendiscussion' => true,
+            'formatter' => 'plaintext',
+            'attachment' => '{"iv":"Pd4pOKWkmDTT9uPwVwd5Ag","v":1,"iter":1000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"ZIUhFTliVz4","ct":"6nOCU3peNDclDDpFtJEBKA"}',
+            'attachmentname' => '{"iv":"76MkAtOGC4oFogX/aSMxRA","v":1,"iter":1000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"ZIUhFTliVz4","ct":"b6Ae/U1xJdsX/+lATud4sQ"}',
+        ),
+    );
+
+    /**
+     * example ID of a comment
+     *
+     * @var string
+     */
+    private static $commentid = '5a52eebf11c4c94b';
+
+    /**
+     * example comment
+     *
+     * @var array
+     */
+    private static $comment = array(
+        'data' => '{"iv":"Pd4pOKWkmDTT9uPwVwd5Ag","v":1,"iter":1000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"ZIUhFTliVz4","ct":"6nOCU3peNDclDDpFtJEBKA"}',
+        'meta' => array(
+            'nickname' => '{"iv":"76MkAtOGC4oFogX/aSMxRA","v":1,"iter":1000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"ZIUhFTliVz4","ct":"b6Ae/U1xJdsX/+lATud4sQ"}',
+            'vizhash' => 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAABGUlEQVQokWOsl5/94983CNKQMjnxaOePf98MeKwPfNjkLZ3AgARab6b9+PeNEVnDj3/ff/z7ZiHnzsDA8Pv7H2TVPJw8EAYLAwb48OaVgIgYKycLsrYv378wMDB8//qdCVMDRA9EKSsnCwRBxNsepaLboMFlyMDAICAi9uHNK24GITQ/MDAwoNhgIGMLtwGrzegaLjw5jMz9+vUdnN17uwDCQDhJgk0O07yvX9+teDX1x79v6DYIsIjgcgMaYGFgYOBg4kJx2JejkAiBxAw+PzAwMNz4dp6wDXDw4MdNNOl0rWYsNkD89OLXI/xmo9sgzatJjAYmBgYGDiauD3/ePP18nVgb4MF89+M5ZX6js293wUMpnr8KTQMAxsCJnJ30apMAAAAASUVORK5CYII=',
+            'postdate' => 1344803528,
+        ),
+    );
+
+    /**
+     * get example paste ID
+     *
+     * @return string
+     */
+    public static function getPasteId()
+    {
+        return self::$pasteid;
+    }
+
+
+    /**
+     * get example paste
+     *
+     * @return array
+     */
+    public static function getPaste($meta = array())
+    {
+        $example = self::$paste;
+        $example['meta'] = array_merge($example['meta'], $meta);
+        return $example;
+    }
+
+
+    /**
+     * get example paste ID
+     *
+     * @return string
+     */
+    public static function getCommentId()
+    {
+        return self::$commentid;
+    }
+
+
+    /**
+     * get example comment
+     *
+     * @return array
+     */
+    public static function getComment($meta = array())
+    {
+        $example = self::$comment;
+        $example['meta'] = array_merge($example['meta'], $meta);
+        return $example;
+    }
+
+    /**
      * delete directory and all its contents recursively
      *
      * @param string $path

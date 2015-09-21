@@ -1,28 +1,6 @@
 <?php
 class zerobin_dataTest extends PHPUnit_Framework_TestCase
 {
-    private static $pasteid = '5e9bc25c89fb3bf9';
-
-    private static $paste = array(
-        'data' => '{"iv":"EN39/wd5Nk8HAiSG2K5AsQ","v":1,"iter":1000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"QKN1DBXe5PI","ct":"8hA83xDdXjD7K2qfmw5NdA"}',
-        'meta' => array(
-            'postdate' => 1344803344,
-            'expire_date' => 1344803644,
-            'opendiscussion' => true,
-        ),
-    );
-
-    private static $commentid = '5a52eebf11c4c94b';
-
-    private static $comment = array(
-        'data' => '{"iv":"Pd4pOKWkmDTT9uPwVwd5Ag","v":1,"iter":1000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"ZIUhFTliVz4","ct":"6nOCU3peNDclDDpFtJEBKA"}',
-        'meta' => array(
-            'nickname' => '{"iv":"76MkAtOGC4oFogX/aSMxRA","v":1,"iter":1000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"ZIUhFTliVz4","ct":"b6Ae/U1xJdsX/+lATud4sQ"}',
-            'vizhash' => 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAABGUlEQVQokWOsl5/94983CNKQMjnxaOePf98MeKwPfNjkLZ3AgARab6b9+PeNEVnDj3/ff/z7ZiHnzsDA8Pv7H2TVPJw8EAYLAwb48OaVgIgYKycLsrYv378wMDB8//qdCVMDRA9EKSsnCwRBxNsepaLboMFlyMDAICAi9uHNK24GITQ/MDAwoNhgIGMLtwGrzegaLjw5jMz9+vUdnN17uwDCQDhJgk0O07yvX9+teDX1x79v6DYIsIjgcgMaYGFgYOBg4kJx2JejkAiBxAw+PzAwMNz4dp6wDXDw4MdNNOl0rWYsNkD89OLXI/xmo9sgzatJjAYmBgYGDiauD3/ePP18nVgb4MF89+M5ZX6js293wUMpnr8KTQMAxsCJnJ30apMAAAAASUVORK5CYII=',
-            'postdate' => 1344803528,
-        ),
-    );
-
     private $_model;
 
     private $_path;
@@ -43,28 +21,29 @@ class zerobin_dataTest extends PHPUnit_Framework_TestCase
     public function testFileBasedDataStoreWorks()
     {
         // storing pastes
-        $this->assertFalse($this->_model->exists(self::$pasteid), 'paste does not yet exist');
-        $this->assertTrue($this->_model->create(self::$pasteid, self::$paste), 'store new paste');
-        $this->assertTrue($this->_model->exists(self::$pasteid), 'paste exists after storing it');
-        $this->assertFalse($this->_model->create(self::$pasteid, self::$paste), 'unable to store the same paste twice');
-        $this->assertEquals(json_decode(json_encode(self::$paste)), $this->_model->read(self::$pasteid));
+        $paste = helper::getPaste(array('expire_date' => 1344803344));
+        $this->assertFalse($this->_model->exists(helper::getPasteId()), 'paste does not yet exist');
+        $this->assertTrue($this->_model->create(helper::getPasteId(), $paste), 'store new paste');
+        $this->assertTrue($this->_model->exists(helper::getPasteId()), 'paste exists after storing it');
+        $this->assertFalse($this->_model->create(helper::getPasteId(), $paste), 'unable to store the same paste twice');
+        $this->assertEquals(json_decode(json_encode($paste)), $this->_model->read(helper::getPasteId()));
 
         // storing comments
-        $this->assertFalse($this->_model->existsComment(self::$pasteid, self::$pasteid, self::$commentid), 'comment does not yet exist');
-        $this->assertTrue($this->_model->createComment(self::$pasteid, self::$pasteid, self::$commentid, self::$comment) !== false, 'store comment');
-        $this->assertTrue($this->_model->existsComment(self::$pasteid, self::$pasteid, self::$commentid), 'comment exists after storing it');
-        $comment = json_decode(json_encode(self::$comment));
-        $comment->meta->commentid = self::$commentid;
-        $comment->meta->parentid = self::$pasteid;
+        $this->assertFalse($this->_model->existsComment(helper::getPasteId(), helper::getPasteId(), helper::getCommentId()), 'comment does not yet exist');
+        $this->assertTrue($this->_model->createComment(helper::getPasteId(), helper::getPasteId(), helper::getCommentId(), helper::getComment()) !== false, 'store comment');
+        $this->assertTrue($this->_model->existsComment(helper::getPasteId(), helper::getPasteId(), helper::getCommentId()), 'comment exists after storing it');
+        $comment = json_decode(json_encode(helper::getComment()));
+        $comment->meta->commentid = helper::getCommentId();
+        $comment->meta->parentid = helper::getPasteId();
         $this->assertEquals(
             array($comment->meta->postdate => $comment),
-            $this->_model->readComments(self::$pasteid)
+            $this->_model->readComments(helper::getPasteId())
         );
 
         // deleting pastes
-        $this->_model->delete(self::$pasteid);
-        $this->assertFalse($this->_model->exists(self::$pasteid), 'paste successfully deleted');
-        $this->assertFalse($this->_model->existsComment(self::$pasteid, self::$pasteid, self::$commentid), 'comment was deleted with paste');
-        $this->assertFalse($this->_model->read(self::$pasteid), 'paste can no longer be found');
+        $this->_model->delete(helper::getPasteId());
+        $this->assertFalse($this->_model->exists(helper::getPasteId()), 'paste successfully deleted');
+        $this->assertFalse($this->_model->existsComment(helper::getPasteId(), helper::getPasteId(), helper::getCommentId()), 'comment was deleted with paste');
+        $this->assertFalse($this->_model->read(helper::getPasteId()), 'paste can no longer be found');
     }
 }

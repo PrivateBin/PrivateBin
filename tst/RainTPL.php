@@ -1,8 +1,6 @@
 <?php
 class RainTPLTest extends PHPUnit_Framework_TestCase
 {
-    private static $data = '{"iv":"EN39/wd5Nk8HAiSG2K5AsQ","salt":"QKN1DBXe5PI","ct":"8hA83xDdXjD7K2qfmw5NdA"}';
-
     private static $error = 'foo bar';
 
     private static $status = '!*#@?$+';
@@ -27,7 +25,7 @@ class RainTPLTest extends PHPUnit_Framework_TestCase
         $page::$path_replace = false;
 
         // We escape it here because ENT_NOQUOTES can't be used in RainTPL templates.
-        $page->assign('CIPHERDATA', htmlspecialchars(self::$data, ENT_NOQUOTES));
+        $page->assign('CIPHERDATA', htmlspecialchars(helper::getPaste()['data'], ENT_NOQUOTES));
         $page->assign('ERROR', self::$error);
         $page->assign('STATUS', self::$status);
         $page->assign('VERSION', self::$version);
@@ -65,7 +63,7 @@ class RainTPLTest extends PHPUnit_Framework_TestCase
         $this->assertTag(
             array(
                 'id' => 'cipherdata',
-                'content' => htmlspecialchars(self::$data, ENT_NOQUOTES)
+                'content' => htmlspecialchars(helper::getPaste()['data'], ENT_NOQUOTES)
             ),
             $this->_content,
             'outputs data correctly'

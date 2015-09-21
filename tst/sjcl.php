@@ -3,6 +3,12 @@ class sjclTest extends PHPUnit_Framework_TestCase
 {
     public function testSjclValidatorValidatesCorrectly()
     {
+        $paste = helper::getPaste();
+        $this->assertTrue(sjcl::isValid($paste['data']), 'valid sjcl');
+        $this->assertTrue(sjcl::isValid($paste['meta']['attachment']), 'valid sjcl');
+        $this->assertTrue(sjcl::isValid($paste['meta']['attachmentname']), 'valid sjcl');
+        $this->assertTrue(sjcl::isValid(helper::getComment()['data']), 'valid sjcl');
+
         $this->assertTrue(sjcl::isValid('{"iv":"83Ax/OdUav3SanDW9dcQPg","v":1,"iter":1000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"Gx1vA2/gQ3U","ct":"j7ImByuE5xCqD2YXm6aSyA"}'), 'valid sjcl');
         $this->assertFalse(sjcl::isValid('{"iv":"$","v":1,"iter":1000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"Gx1vA2/gQ3U","ct":"j7ImByuE5xCqD2YXm6aSyA"}'), 'invalid base64 encoding of iv');
         $this->assertFalse(sjcl::isValid('{"iv":"83Ax/OdUav3SanDW9dcQPg","v":1,"iter":1000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"$","ct":"j7ImByuE5xCqD2YXm6aSyA"}'), 'invalid base64 encoding of salt');

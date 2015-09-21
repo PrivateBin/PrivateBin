@@ -148,8 +148,21 @@ class zerobin_db extends zerobin_abstract
                         'postdate INT, ' .
                         'expiredate INT, ' .
                         'opendiscussion INT, ' .
-                        'burnafterreading INT );'
+                        'burnafterreading INT, ' .
+                        'meta TEXT );'
                     );
+                }
+                // check if the meta column exists
+                else
+                {
+                    try {
+                        self::$_db->exec('SELECT meta FROM ' . self::$_prefix . 'paste LIMIT 1;');
+                    } catch (PDOException $e) {
+                        if ($e->getCode() == 'HY000')
+                        {
+                            self::$_db->exec('ALTER TABLE ' . self::$_prefix . 'paste ADD COLUMN meta TEXT;');
+                        }
+                    }
                 }
 
                 // create comment table if needed
@@ -183,7 +196,7 @@ class zerobin_db extends zerobin_abstract
     public function create($pasteid, $paste)
     {
         if (
-                array_key_exists($pasteid, self::$_cache)
+            array_key_exists($pasteid, self::$_cache)
         ) {
             if(false !== self::$_cache[$pasteid]) {
                 return false;
@@ -192,21 +205,30 @@ class zerobin_db extends zerobin_abstract
             }
         }
 
-        if (
-            !array_key_exists('opendiscussion', $paste['meta'])
-        ) $paste['meta']['opendiscussion'] = false;
-        if (
-            !array_key_exists('burnafterreading', $paste['meta'])
-        ) $paste['meta']['burnafterreading'] = false;
+        $opendiscussion = $burnafterreading = false;
+        $meta = $paste['meta'];
+        unset($meta['postdate']);
+        unset($meta['expire_date']);
+        if (array_key_exists('opendiscussion', $paste['meta']))
+        {
+            $opendiscussion = (bool) $paste['meta']['opendiscussion'];
+            unset($meta['opendiscussion']);
+        }
+        if (array_key_exists('burnafterreading', $paste['meta']))
+        {
+            $burnafterreading = (bool) $paste['meta']['burnafterreading'];
+            unset($meta['burnafterreading']);
+        }
         return self::_exec(
-            'INSERT INTO ' . self::$_prefix . 'paste VALUES(?,?,?,?,?,?)',
+            'INSERT INTO ' . self::$_prefix . 'paste VALUES(?,?,?,?,?,?,?)',
             array(
                 $pasteid,
                 $paste['data'],
                 $paste['meta']['postdate'],
                 $paste['meta']['expire_date'],
-                (int) $paste['meta']['opendiscussion'],
-                (int) $paste['meta']['burnafterreading'],
+                (int) $opendiscussion,
+                (int) $burnafterreading,
+                json_encode($meta),
             )
         );
     }
@@ -233,7 +255,7 @@ class zerobin_db extends zerobin_abstract
                 // create object
                 self::$_cache[$pasteid] = new stdClass;
                 self::$_cache[$pasteid]->data = $paste['data'];
-                self::$_cache[$pasteid]->meta = new stdClass;
+                self::$_cache[$pasteid]->meta = json_decode($paste['meta']);
                 self::$_cache[$pasteid]->meta->postdate = (int) $paste['postdate'];
                 self::$_cache[$pasteid]->meta->expire_date = (int) $paste['expiredate'];
                 if (

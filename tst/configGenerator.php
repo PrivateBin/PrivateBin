@@ -44,7 +44,7 @@ new configurationTestGenerator(array(
                     'settings' => array('$_POST["opendiscussion"] = "neither 1 nor 0"'),
                     'type' => 'False',
                     'args' => array(
-                        '$this->_model->exists(self::$pasteid)',
+                        '$this->_model->exists(helper::getPasteId())',
                         'when discussions are enabled, but invalid flag posted, paste is not created'
                     ),
                 ),
@@ -108,9 +108,9 @@ new configurationTestGenerator(array(
             'affects' => $vrd
         ),
     ),
-    'main/syntaxhighlighting' => array(
+    'main/defaultformatter' => array(
         array(
-            'setting' => true,
+            'setting' => 'syntaxhighlighting',
             'tests' => array(
                 array(
                     'type' => 'Tag',
@@ -143,7 +143,7 @@ new configurationTestGenerator(array(
             ),
             'affects' => $vrd,
         ), array(
-            'setting' => false,
+            'setting' => 'plaintext',
             'tests' => array(
                 array(
                     'type' => 'NotTag',
@@ -593,16 +593,6 @@ class configurationTestGenerator
  */
 class configurationTest extends PHPUnit_Framework_TestCase
 {
-    private static $pasteid = '5e9bc25c89fb3bf9';
-
-    private static $paste = array(
-        'data' => '{"iv":"EN39/wd5Nk8HAiSG2K5AsQ","v":1,"iter":1000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"QKN1DBXe5PI","ct":"8hA83xDdXjD7K2qfmw5NdA"}',
-        'meta' => array(
-            'postdate' => 1344803344,
-            'opendiscussion' => true,
-        ),
-    );
-
     private $_model;
 
     private $_conf;
@@ -630,8 +620,8 @@ class configurationTest extends PHPUnit_Framework_TestCase
         $_POST = array();
         $_GET = array();
         $_SERVER = array();
-        if ($this->_model->exists(self::$pasteid))
-            $this->_model->delete(self::$pasteid);
+        if ($this->_model->exists(helper::getPasteId()))
+            $this->_model->delete(helper::getPasteId());
         helper::createIniFile($this->_conf, $configuration);
     }
 
@@ -678,22 +668,22 @@ EOT;
         switch ($step) {
             case 'Create':
                 $code .= PHP_EOL . <<<'EOT'
-        $_POST = self::$paste;
+        $_POST = helper::getPaste();
         $_SERVER['REMOTE_ADDR'] = '::1';
 EOT;
                 break;
             case 'Read':
                 $code .= PHP_EOL . <<<'EOT'
-        $this->_model->create(self::$pasteid, self::$paste);
-        $_SERVER['QUERY_STRING'] = self::$pasteid;
+        $this->_model->create(helper::getPasteId(), helper::getPaste());
+        $_SERVER['QUERY_STRING'] = helper::getPasteId();
 EOT;
                 break;
             case 'Delete':
                 $code .= PHP_EOL . <<<'EOT'
-        $this->_model->create(self::$pasteid, self::$paste);
-        $this->assertTrue($this->_model->exists(self::$pasteid), 'paste exists before deleting data');
-        $_GET['pasteid'] = self::$pasteid;
-        $_GET['deletetoken'] = hash_hmac('sha1', self::$pasteid, serversalt::get());
+        $this->_model->create(helper::getPasteId(), helper::getPaste());
+        $this->assertTrue($this->_model->exists(helper::getPasteId()), 'paste exists before deleting data');
+        $_GET['pasteid'] = helper::getPasteId();
+        $_GET['deletetoken'] = hash_hmac('sha1', helper::getPasteId(), serversalt::get());
 EOT;
                 break;
         }
@@ -720,7 +710,7 @@ EOT;
         $this->assertTag(
             array(
                 'id' => 'cipherdata',
-                'content' => htmlspecialchars(json_encode(self::$paste), ENT_NOQUOTES)
+                'content' => htmlspecialchars(json_encode(helper::getPaste()), ENT_NOQUOTES)
             ),
             $content,
             'outputs data correctly'
@@ -738,7 +728,7 @@ EOT;
             $content,
             'outputs deleted status correctly'
         );
-        $this->assertFalse($this->_model->exists(self::$pasteid), 'paste successfully deleted');
+        $this->assertFalse($this->_model->exists(helper::getPasteId()), 'paste successfully deleted');
 EOT;
                 break;
         }
