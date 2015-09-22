@@ -108,134 +108,6 @@ new configurationTestGenerator(array(
             'affects' => $vrd
         ),
     ),
-    'main/defaultformatter' => array(
-        array(
-            'setting' => 'syntaxhighlighting',
-            'tests' => array(
-                array(
-                    'type' => 'Tag',
-                    'args' => array(
-                        array(
-                            'tag' => 'link',
-                            'attributes' => array(
-                                'type' => 'text/css',
-                                'rel' => 'stylesheet',
-                                'href' => 'regexp:#css/prettify/prettify\.css#',
-                            ),
-                        ),
-                        '$content',
-                        'outputs prettify stylesheet correctly',
-                    ),
-                ), array(
-                    'type' => 'Tag',
-                    'args' => array(
-                        array(
-                            'tag' => 'script',
-                            'attributes' => array(
-                                'type' => 'text/javascript',
-                                'src' => 'regexp:#js/prettify\.js#'
-                            ),
-                        ),
-                        '$content',
-                        'outputs prettify javascript correctly',
-                    ),
-                ),
-            ),
-            'affects' => $vrd,
-        ), array(
-            'setting' => 'plaintext',
-            'tests' => array(
-                array(
-                    'type' => 'NotTag',
-                    'args' => array(
-                        array(
-                            'tag' => 'link',
-                            'attributes' => array(
-                                'type' => 'text/css',
-                                'rel' => 'stylesheet',
-                                'href' => 'regexp:#css/prettify/prettify\.css#',
-                            ),
-                        ),
-                        '$content',
-                        'removes prettify stylesheet correctly',
-                    ),
-                ), array(
-                    'type' => 'NotTag',
-                    'args' => array(
-                        array(
-                            'tag' => 'script',
-                            'attributes' => array(
-                                'type' => 'text/javascript',
-                                'src' => 'regexp:#js/prettify\.js#',
-                            ),
-                        ),
-                        '$content',
-                        'removes prettify javascript correctly',
-                    ),
-                ),
-            ),
-            'affects' => $vrd,
-        ),
-    ),
-    'main/syntaxhighlightingtheme' => array(
-        array(
-            'setting' => 'sons-of-obsidian',
-            'tests' => array(
-                array(
-                    'conditions' => array('main/syntaxhighlighting' => true),
-                    'type' => 'Tag',
-                    'args' => array(
-                        array(
-                            'tag' => 'link',
-                            'attributes' => array(
-                                'type' => 'text/css',
-                                'rel' => 'stylesheet',
-                                'href' => 'regexp:#css/prettify/sons-of-obsidian\.css#',
-                            ),
-                        ),
-                        '$content',
-                        'outputs prettify theme stylesheet correctly',
-                    ),
-                ), array(
-                    'conditions' => array('main/syntaxhighlighting' => false),
-                    'type' => 'NotTag',
-                    'args' => array(
-                        array(
-                            'tag' => 'link',
-                            'attributes' => array(
-                                'type' => 'text/css',
-                                'rel' => 'stylesheet',
-                                'href' => 'regexp:#css/prettify/sons-of-obsidian\.css#',
-                            ),
-                        ),
-                        '$content',
-                        'removes prettify theme stylesheet correctly',
-                    ),
-                ),
-            ),
-            'affects' => $vrd,
-        ), array(
-            'setting' => null, // option not set
-            'tests' => array(
-                array(
-                    'type' => 'NotTag',
-                    'args' => array(
-                        array(
-                            'tag' => 'link',
-                            'attributes' => array(
-                                'type' => 'text/css',
-                                'rel' => 'stylesheet',
-                                'href' => 'regexp:#css/prettify/sons-of-obsidian\.css#',
-                            ),
-                        ),
-                        '$content',
-                        'removes prettify theme stylesheet correctly',
-                    ),
-                ),
-            ),
-            'affects' => $vrd,
-        ),
-    ),
     'main/burnafterreadingselected' => array(
         array(
             'setting' => true,
@@ -528,7 +400,7 @@ class configurationTestGenerator
      */
     private function _writeConfigurationTest()
     {
-        $defaultOptions = parse_ini_file(PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.ini', true);
+        $defaultOptions = parse_ini_file(CONF, true);
         $code = $this->_getHeader();
         foreach ($this->_configurations as $key => $conf) {
             $fullOptions = array_replace_recursive($defaultOptions, $conf['options']);
@@ -576,7 +448,7 @@ class configurationTestGenerator
             }
         }
         $code .= '}' . PHP_EOL;
-        file_put_contents('configuration.php', $code);
+        file_put_contents('configurationCombinations.php', $code);
     }
 
     /**
