@@ -32,14 +32,12 @@ class zerobin
     const GENERIC_ERROR = 'Paste does not exist, has expired or has been deleted.';
 
     /**
-     * configuration array
+     * configuration
      *
      * @access private
-     * @var    array
+     * @var    configuration
      */
-    private $_conf = array(
-        'model' => 'zerobin_data',
-    );
+    private $_conf;
 
     /**
      * data
@@ -164,13 +162,8 @@ class zerobin
             );
         }
 
-        $this->_conf = parse_ini_file(PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.ini', true);
-        foreach (array('main', 'model') as $section) {
-            if (!array_key_exists($section, $this->_conf)) {
-                throw new Exception(i18n::_('ZeroBin requires configuration section [%s] to be present in configuration file.', $section), 2);
-            }
-        }
-        $this->_model = $this->_conf['model']['class'];
+        $this->_conf = new configuration;
+        $this->_model = $this->_conf->getKey('class', 'model');
     }
 
     /**
@@ -185,7 +178,7 @@ class zerobin
         if(is_string($this->_model)) {
             $this->_model = forward_static_call(
                 array($this->_model, 'getInstance'),
-                $this->_conf['model_options']
+                $this->_conf->getSection('model_options')
             );
         }
         return $this->_model;
@@ -222,12 +215,12 @@ class zerobin
         $attachmentname = $has_attachmentname ? $_POST['attachmentname'] : '';
 
         // Make sure last paste from the IP address was more than X seconds ago.
-        trafficlimiter::setLimit($this->_conf['traffic']['limit']);
-        trafficlimiter::setPath($this->_conf['traffic']['dir']);
+        trafficlimiter::setLimit($this->_conf->getKey('limit', 'traffic'));
+        trafficlimiter::setPath($this->_conf->getKey('dir', 'traffic'));
         $ipKey = 'REMOTE_ADDR';
-        if (array_key_exists('header', $this->_conf['traffic']))
+        if (($option = $this->_conf->getKey('header', 'traffic')) !== null)
         {
-            $header = 'HTTP_' . $this->_conf['traffic']['header'];
+            $header = 'HTTP_' . $option;
             if (array_key_exists($header, $_SERVER) && !empty($_SERVER[$header]))
             {
                 $ipKey = $header;
@@ -237,12 +230,12 @@ class zerobin
             1,
             i18n::_(
                 'Please wait %d seconds between each post.',
-                $this->_conf['traffic']['limit']
+                $this->_conf->getKey('limit', 'traffic')
             )
         );
 
         // Make sure content is not too big.
-        $sizelimit = (int) $this->_getMainConfig('sizelimit', 2097152);
+        $sizelimit = $this->_conf->getKey('sizelimit');
         if (
             strlen($data) + strlen($attachment) + strlen($attachmentname) > $sizelimit
         ) return $this->_return_message(
@@ -260,7 +253,7 @@ class zerobin
         if($has_attachment)
         {
             if (
-                !$this->_getMainConfig('fileupload', false) ||
+                !$this->_conf->getKey('fileupload') ||
                 !sjcl::isValid($attachment) ||
                 !($has_attachmentname && sjcl::isValid($attachmentname))
             ) return $this->_return_message(1, 'Invalid attachment.');
@@ -273,13 +266,14 @@ class zerobin
         if (array_key_exists('expire', $_POST) && !empty($_POST['expire']))
         {
             $selected_expire = (string) $_POST['expire'];
-            if (array_key_exists($selected_expire, $this->_conf['expire_options']))
+            $expire_options = $this->_conf->getSection('expire_options');
+            if (array_key_exists($selected_expire, $expire_options))
             {
-                $expire = $this->_conf['expire_options'][$selected_expire];
+                $expire = $expire_options[$selected_expire];
             }
             else
             {
-                $expire = $this->_conf['expire_options'][$this->_conf['expire']['default']];
+                $expire = $this->_conf->getKey($this->_conf->getKey('default', 'expire'), 'expire_options');
             }
             if ($expire > 0) $meta['expire_date'] = time() + $expire;
         }
@@ -297,7 +291,7 @@ class zerobin
 
         // Read open discussion flag.
         if (
-            $this->_getMainConfig('discussion', true) &&
+            $this->_conf->getKey('discussion') &&
             array_key_exists('opendiscussion', $_POST) &&
             !empty($_POST['opendiscussion'])
         )
@@ -314,9 +308,9 @@ class zerobin
         if (array_key_exists('formatter', $_POST) && !empty($_POST['formatter']))
         {
             $formatter = $_POST['formatter'];
-            if (!array_key_exists($formatter, $this->_conf['formatter_options']))
+            if (!array_key_exists($formatter, $this->_conf->getSection('formatter_options')))
             {
-                $formatter = $this->_getMainConfig('defaultformatter', 'plaintext');
+                $formatter = $this->_conf->getKey('defaultformatter');
             }
             $meta['formatter'] = $formatter;
         }
@@ -488,7 +482,7 @@ class zerobin
         }
 
         // Make sure token is valid.
-        serversalt::setPath($this->_conf['traffic']['dir']);
+        serversalt::setPath($this->_conf->getKey('dir', 'traffic'));
         if (!filter::slow_equals($deletetoken, hash_hmac('sha1', $dataid, serversalt::get())))
         {
             $this->_error = 'Wrong deletion token. Paste was not deleted.';
@@ -571,7 +565,7 @@ class zerobin
                     }
                     else
                     {
-                        $paste->meta->formatter = $this->_getMainConfig('defaultformatter', 'plaintext');
+                        $paste->meta->formatter = $this->_conf->getKey('defaultformatter');
                     }
                 }
 
@@ -613,17 +607,17 @@ class zerobin
 
         // label all the expiration options
         $expire = array();
-        foreach ($this->_conf['expire_options'] as $time => $seconds)
+        foreach ($this->_conf->getSection('expire_options') as $time => $seconds)
         {
             $expire[$time] = ($seconds == 0) ? i18n::_(ucfirst($time)): filter::time_humanreadable($time);
         }
 
         // translate all the formatter options
-        $formatters = array_map(array('i18n', 'translate'), $this->_conf['formatter_options']);
+        $formatters = array_map(array('i18n', 'translate'), $this->_conf->getSection('formatter_options'));
 
         // set language cookie if that functionality was enabled
         $languageselection = '';
-        if ($this->_getMainConfig('languageselection', false))
+        if ($this->_conf->getKey('languageselection'))
         {
             $languageselection = i18n::getLanguage();
             setcookie('lang', $languageselection);
@@ -636,38 +630,23 @@ class zerobin
         $page->assign('ERROR', i18n::_($this->_error));
         $page->assign('STATUS', i18n::_($this->_status));
         $page->assign('VERSION', self::VERSION);
-        $page->assign('DISCUSSION', $this->_getMainConfig('discussion', true));
-        $page->assign('OPENDISCUSSION', $this->_getMainConfig('opendiscussion', true));
+        $page->assign('DISCUSSION', $this->_conf->getKey('discussion'));
+        $page->assign('OPENDISCUSSION', $this->_conf->getKey('opendiscussion'));
         $page->assign('MARKDOWN', array_key_exists('markdown', $formatters));
         $page->assign('SYNTAXHIGHLIGHTING', array_key_exists('syntaxhighlighting', $formatters));
-        $page->assign('SYNTAXHIGHLIGHTINGTHEME', $this->_getMainConfig('syntaxhighlightingtheme', ''));
+        $page->assign('SYNTAXHIGHLIGHTINGTHEME', $this->_conf->getKey('syntaxhighlightingtheme'));
         $page->assign('FORMATTER', $formatters);
-        $page->assign('FORMATTERDEFAULT', $this->_getMainConfig('defaultformatter', 'plaintext'));
-        $page->assign('NOTICE', i18n::_($this->_getMainConfig('notice', '')));
-        $page->assign('BURNAFTERREADINGSELECTED', $this->_getMainConfig('burnafterreadingselected', false));
-        $page->assign('PASSWORD', $this->_getMainConfig('password', true));
-        $page->assign('FILEUPLOAD', $this->_getMainConfig('fileupload', false));
-        $page->assign('BASE64JSVERSION', $this->_getMainConfig('base64version', '2.1.9'));
+        $page->assign('FORMATTERDEFAULT', $this->_conf->getKey('defaultformatter'));
+        $page->assign('NOTICE', i18n::_($this->_conf->getKey('notice')));
+        $page->assign('BURNAFTERREADINGSELECTED', $this->_conf->getKey('burnafterreadingselected'));
+        $page->assign('PASSWORD', $this->_conf->getKey('password'));
+        $page->assign('FILEUPLOAD', $this->_conf->getKey('fileupload'));
+        $page->assign('BASE64JSVERSION', $this->_conf->getKey('base64version'));
         $page->assign('LANGUAGESELECTION', $languageselection);
         $page->assign('LANGUAGES', i18n::getLanguageLabels(i18n::getAvailableLanguages()));
         $page->assign('EXPIRE', $expire);
-        $page->assign('EXPIREDEFAULT', $this->_conf['expire']['default']);
-        $page->draw($this->_getMainConfig('template', 'page'));
-    }
-
-    /**
-     * get configuration option from [main] section, optionally set a default
-     *
-     * @access private
-     * @param  string $option
-     * @param  mixed $default (optional)
-     * @return mixed
-     */
-    private function _getMainConfig($option, $default = false)
-    {
-        return array_key_exists($option, $this->_conf['main']) ?
-            $this->_conf['main'][$option] :
-            $default;
+        $page->assign('EXPIREDEFAULT', $this->_conf->getKey('default', 'expire'));
+        $page->draw($this->_conf->getKey('template'));
     }
 
     /**

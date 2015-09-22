@@ -1,8 +1,6 @@
 <?php
 class zerobinTest extends PHPUnit_Framework_TestCase
 {
-    private $_conf;
-
     private $_model;
 
     public function setUp()
@@ -10,7 +8,6 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         /* Setup Routine */
         $this->_model = zerobin_data::getInstance(array('dir' => PATH . 'data'));
         serversalt::setPath(PATH . 'data');
-        $this->_conf = PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.ini';
         $this->reset();
     }
 
@@ -26,8 +23,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $_SERVER = array();
         if ($this->_model->exists(helper::getPasteId()))
             $this->_model->delete(helper::getPasteId());
-        if (is_file($this->_conf . '.bak'))
-            rename($this->_conf . '.bak', $this->_conf);
+        helper::confRestore();
     }
 
     /**
@@ -55,11 +51,10 @@ class zerobinTest extends PHPUnit_Framework_TestCase
     public function testViewLanguageSelection()
     {
         $this->reset();
-        $options = parse_ini_file($this->_conf, true);
+        $options = parse_ini_file(CONF, true);
         $options['main']['languageselection'] = true;
-        if (!is_file($this->_conf . '.bak') && is_file($this->_conf))
-            rename($this->_conf, $this->_conf . '.bak');
-        helper::createIniFile($this->_conf, $options);
+        helper::confBackup();
+        helper::createIniFile(CONF, $options);
         $_COOKIE['lang'] = 'de';
         ob_start();
         new zerobin;
@@ -104,9 +99,8 @@ class zerobinTest extends PHPUnit_Framework_TestCase
     public function testConf()
     {
         $this->reset();
-        if (!is_file($this->_conf . '.bak') && is_file($this->_conf))
-            rename($this->_conf, $this->_conf . '.bak');
-        file_put_contents($this->_conf, '');
+        helper::confBackup();
+        file_put_contents(CONF, '');
         ob_start();
         new zerobin;
         $content = ob_get_contents();
@@ -155,12 +149,11 @@ class zerobinTest extends PHPUnit_Framework_TestCase
     public function testCreateInvalidSize()
     {
         $this->reset();
-        $options = parse_ini_file($this->_conf, true);
+        $options = parse_ini_file(CONF, true);
         $options['main']['sizelimit'] = 10;
         $options['traffic']['limit'] = 0;
-        if (!is_file($this->_conf . '.bak') && is_file($this->_conf))
-            rename($this->_conf, $this->_conf . '.bak');
-        helper::createIniFile($this->_conf, $options);
+        helper::confBackup();
+        helper::createIniFile(CONF, $options);
         $_POST = helper::getPaste();
         $_SERVER['REMOTE_ADDR'] = '::1';
         ob_start();
@@ -177,11 +170,10 @@ class zerobinTest extends PHPUnit_Framework_TestCase
     public function testCreateProxyHeader()
     {
         $this->reset();
-        $options = parse_ini_file($this->_conf, true);
+        $options = parse_ini_file(CONF, true);
         $options['traffic']['header'] = 'X_FORWARDED_FOR';
-        if (!is_file($this->_conf . '.bak') && is_file($this->_conf))
-            rename($this->_conf, $this->_conf . '.bak');
-        helper::createIniFile($this->_conf, $options);
+        helper::confBackup();
+        helper::createIniFile(CONF, $options);
         $_POST = helper::getPaste();
         $_SERVER['HTTP_X_FORWARDED_FOR'] = '::1';
         ob_start();
@@ -198,11 +190,10 @@ class zerobinTest extends PHPUnit_Framework_TestCase
     public function testCreateDuplicateId()
     {
         $this->reset();
-        $options = parse_ini_file($this->_conf, true);
+        $options = parse_ini_file(CONF, true);
         $options['traffic']['limit'] = 0;
-        if (!is_file($this->_conf . '.bak') && is_file($this->_conf))
-            rename($this->_conf, $this->_conf . '.bak');
-        helper::createIniFile($this->_conf, $options);
+        helper::confBackup();
+        helper::createIniFile(CONF, $options);
         $this->_model->create(helper::getPasteId(), helper::getPaste());
         $_POST = helper::getPaste();
         $_SERVER['REMOTE_ADDR'] = '::1';
@@ -220,11 +211,10 @@ class zerobinTest extends PHPUnit_Framework_TestCase
     public function testCreateValidExpire()
     {
         $this->reset();
-        $options = parse_ini_file($this->_conf, true);
+        $options = parse_ini_file(CONF, true);
         $options['traffic']['limit'] = 0;
-        if (!is_file($this->_conf . '.bak') && is_file($this->_conf))
-            rename($this->_conf, $this->_conf . '.bak');
-        helper::createIniFile($this->_conf, $options);
+        helper::confBackup();
+        helper::createIniFile(CONF, $options);
         $_POST = helper::getPaste();
         $_POST['expire'] = '5min';
         $_POST['formatter'] = 'foo';
@@ -248,11 +238,10 @@ class zerobinTest extends PHPUnit_Framework_TestCase
     public function testCreateInvalidExpire()
     {
         $this->reset();
-        $options = parse_ini_file($this->_conf, true);
+        $options = parse_ini_file(CONF, true);
         $options['traffic']['limit'] = 0;
-        if (!is_file($this->_conf . '.bak') && is_file($this->_conf))
-            rename($this->_conf, $this->_conf . '.bak');
-        helper::createIniFile($this->_conf, $options);
+        helper::confBackup();
+        helper::createIniFile(CONF, $options);
         $_POST = helper::getPaste();
         $_POST['expire'] = 'foo';
         $_SERVER['REMOTE_ADDR'] = '::1';
@@ -275,11 +264,10 @@ class zerobinTest extends PHPUnit_Framework_TestCase
     public function testCreateInvalidBurn()
     {
         $this->reset();
-        $options = parse_ini_file($this->_conf, true);
+        $options = parse_ini_file(CONF, true);
         $options['traffic']['limit'] = 0;
-        if (!is_file($this->_conf . '.bak') && is_file($this->_conf))
-            rename($this->_conf, $this->_conf . '.bak');
-        helper::createIniFile($this->_conf, $options);
+        helper::confBackup();
+        helper::createIniFile(CONF, $options);
         $_POST = helper::getPaste();
         $_POST['burnafterreading'] = 'neither 1 nor 0';
         $_SERVER['REMOTE_ADDR'] = '::1';
@@ -297,11 +285,10 @@ class zerobinTest extends PHPUnit_Framework_TestCase
     public function testCreateInvalidOpenDiscussion()
     {
         $this->reset();
-        $options = parse_ini_file($this->_conf, true);
+        $options = parse_ini_file(CONF, true);
         $options['traffic']['limit'] = 0;
-        if (!is_file($this->_conf . '.bak') && is_file($this->_conf))
-            rename($this->_conf, $this->_conf . '.bak');
-        helper::createIniFile($this->_conf, $options);
+        helper::confBackup();
+        helper::createIniFile(CONF, $options);
         $_POST = helper::getPaste();
         $_POST['opendiscussion'] = 'neither 1 nor 0';
         $_SERVER['REMOTE_ADDR'] = '::1';
@@ -319,13 +306,14 @@ class zerobinTest extends PHPUnit_Framework_TestCase
     public function testCreateAttachment()
     {
         $this->reset();
-        $options = parse_ini_file($this->_conf, true);
+        $options = parse_ini_file(CONF, true);
         $options['traffic']['limit'] = 0;
         $options['main']['fileupload'] = true;
-        if (!is_file($this->_conf . '.bak') && is_file($this->_conf))
-            rename($this->_conf, $this->_conf . '.bak');
-        helper::createIniFile($this->_conf, $options);
+        helper::confBackup();
+        helper::createIniFile(CONF, $options);
         $_POST = helper::getPaste();
+        $_POST['attachment'] = $_POST['meta']['attachment'];
+        $_POST['attachmentname'] = $_POST['meta']['attachmentname'];
         $_SERVER['REMOTE_ADDR'] = '::1';
         ob_start();
         new zerobin;
@@ -346,11 +334,10 @@ class zerobinTest extends PHPUnit_Framework_TestCase
     public function testCreateValidNick()
     {
         $this->reset();
-        $options = parse_ini_file($this->_conf, true);
+        $options = parse_ini_file(CONF, true);
         $options['traffic']['limit'] = 0;
-        if (!is_file($this->_conf . '.bak') && is_file($this->_conf))
-            rename($this->_conf, $this->_conf . '.bak');
-        helper::createIniFile($this->_conf, $options);
+        helper::confBackup();
+        helper::createIniFile(CONF, $options);
         $_POST = helper::getPaste();
         $_POST['nickname'] = helper::getComment()['meta']['nickname'];
         $_SERVER['REMOTE_ADDR'] = '::1';
@@ -373,11 +360,10 @@ class zerobinTest extends PHPUnit_Framework_TestCase
     public function testCreateInvalidNick()
     {
         $this->reset();
-        $options = parse_ini_file($this->_conf, true);
+        $options = parse_ini_file(CONF, true);
         $options['traffic']['limit'] = 0;
-        if (!is_file($this->_conf . '.bak') && is_file($this->_conf))
-            rename($this->_conf, $this->_conf . '.bak');
-        helper::createIniFile($this->_conf, $options);
+        helper::confBackup();
+        helper::createIniFile(CONF, $options);
         $_POST = helper::getPaste();
         $_POST['nickname'] = 'foo';
         $_SERVER['REMOTE_ADDR'] = '::1';
@@ -395,11 +381,10 @@ class zerobinTest extends PHPUnit_Framework_TestCase
     public function testCreateComment()
     {
         $this->reset();
-        $options = parse_ini_file($this->_conf, true);
+        $options = parse_ini_file(CONF, true);
         $options['traffic']['limit'] = 0;
-        if (!is_file($this->_conf . '.bak') && is_file($this->_conf))
-            rename($this->_conf, $this->_conf . '.bak');
-        helper::createIniFile($this->_conf, $options);
+        helper::confBackup();
+        helper::createIniFile(CONF, $options);
         $_POST = helper::getComment();
         $_POST['pasteid'] = helper::getPasteId();
         $_POST['parentid'] = helper::getPasteId();
@@ -419,11 +404,10 @@ class zerobinTest extends PHPUnit_Framework_TestCase
     public function testCreateInvalidComment()
     {
         $this->reset();
-        $options = parse_ini_file($this->_conf, true);
+        $options = parse_ini_file(CONF, true);
         $options['traffic']['limit'] = 0;
-        if (!is_file($this->_conf . '.bak') && is_file($this->_conf))
-            rename($this->_conf, $this->_conf . '.bak');
-        helper::createIniFile($this->_conf, $options);
+        helper::confBackup();
+        helper::createIniFile(CONF, $options);
         $_POST = helper::getComment();
         $_POST['pasteid'] = helper::getPasteId();
         $_POST['parentid'] = 'foo';
@@ -443,11 +427,10 @@ class zerobinTest extends PHPUnit_Framework_TestCase
     public function testCreateCommentDiscussionDisabled()
     {
         $this->reset();
-        $options = parse_ini_file($this->_conf, true);
+        $options = parse_ini_file(CONF, true);
         $options['traffic']['limit'] = 0;
-        if (!is_file($this->_conf . '.bak') && is_file($this->_conf))
-            rename($this->_conf, $this->_conf . '.bak');
-        helper::createIniFile($this->_conf, $options);
+        helper::confBackup();
+        helper::createIniFile(CONF, $options);
         $_POST = helper::getComment();
         $_POST['pasteid'] = helper::getPasteId();
         $_POST['parentid'] = helper::getPasteId();
@@ -468,11 +451,10 @@ class zerobinTest extends PHPUnit_Framework_TestCase
     public function testCreateCommentInvalidPaste()
     {
         $this->reset();
-        $options = parse_ini_file($this->_conf, true);
+        $options = parse_ini_file(CONF, true);
         $options['traffic']['limit'] = 0;
-        if (!is_file($this->_conf . '.bak') && is_file($this->_conf))
-            rename($this->_conf, $this->_conf . '.bak');
-        helper::createIniFile($this->_conf, $options);
+        helper::confBackup();
+        helper::createIniFile(CONF, $options);
         $_POST = helper::getComment();
         $_POST['pasteid'] = helper::getPasteId();
         $_POST['parentid'] = helper::getPasteId();
@@ -491,11 +473,10 @@ class zerobinTest extends PHPUnit_Framework_TestCase
     public function testCreateDuplicateComment()
     {
         $this->reset();
-        $options = parse_ini_file($this->_conf, true);
+        $options = parse_ini_file(CONF, true);
         $options['traffic']['limit'] = 0;
-        if (!is_file($this->_conf . '.bak') && is_file($this->_conf))
-            rename($this->_conf, $this->_conf . '.bak');
-        helper::createIniFile($this->_conf, $options);
+        helper::confBackup();
+        helper::createIniFile(CONF, $options);
         $this->_model->create(helper::getPasteId(), helper::getPaste());
         $this->_model->createComment(helper::getPasteId(), helper::getPasteId(), helper::getCommentId(), helper::getComment());
         $this->assertTrue($this->_model->existsComment(helper::getPasteId(), helper::getPasteId(), helper::getCommentId()), 'comment exists before posting data');

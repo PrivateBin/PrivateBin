@@ -3,6 +3,7 @@ error_reporting( E_ALL | E_STRICT );
 
 // change this, if your php files and data is outside of your webservers document root
 if (!defined('PATH')) define('PATH', '..' . DIRECTORY_SEPARATOR);
+if (!defined('CONF')) define('CONF', PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.ini');
 if (!defined('PUBLIC_PATH')) define('PUBLIC_PATH', '..');
 
 require PATH . 'lib/auto.php';
@@ -63,7 +64,6 @@ class helper
         return self::$pasteid;
     }
 
-
     /**
      * get example paste
      *
@@ -76,7 +76,6 @@ class helper
         return $example;
     }
 
-
     /**
      * get example paste ID
      *
@@ -86,7 +85,6 @@ class helper
     {
         return self::$commentid;
     }
-
 
     /**
      * get example comment
@@ -125,6 +123,28 @@ class helper
         if(!@rmdir($path)) {
             throw new Exception('Error deleting directory "' . $path . '".');
         }
+    }
+
+    /**
+     * create a backup of the config file
+     *
+     * @return void
+     */
+    public static function confBackup()
+    {
+        if (!is_file(CONF . '.bak') && is_file(CONF))
+            rename(CONF, CONF . '.bak');
+    }
+
+    /**
+     * restor backup of the config file
+     *
+     * @return void
+     */
+    public static function confRestore()
+    {
+        if (is_file(CONF . '.bak'))
+            rename(CONF . '.bak', CONF);
     }
 
     /**
