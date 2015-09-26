@@ -215,18 +215,8 @@ class zerobin
         $attachmentname = $has_attachmentname ? $_POST['attachmentname'] : '';
 
         // Make sure last paste from the IP address was more than X seconds ago.
-        trafficlimiter::setLimit($this->_conf->getKey('limit', 'traffic'));
-        trafficlimiter::setPath($this->_conf->getKey('dir', 'traffic'));
-        $ipKey = 'REMOTE_ADDR';
-        if (($option = $this->_conf->getKey('header', 'traffic')) !== null)
-        {
-            $header = 'HTTP_' . $option;
-            if (array_key_exists($header, $_SERVER) && !empty($_SERVER[$header]))
-            {
-                $ipKey = $header;
-            }
-        }
-        if (!trafficlimiter::canPass($_SERVER[$ipKey])) return $this->_return_message(
+        trafficlimiter::setConfiguration($this->_conf);
+        if (!trafficlimiter::canPass()) return $this->_return_message(
             1,
             i18n::_(
                 'Please wait %d seconds between each post.',
@@ -334,7 +324,7 @@ class zerobin
             {
                 $meta['nickname'] = $nick;
                 $vz = new vizhash16x16();
-                $pngdata = $vz->generate($_SERVER['REMOTE_ADDR']);
+                $pngdata = $vz->generate(trafficlimiter::getIp());
                 if ($pngdata != '')
                 {
                     $meta['vizhash'] = 'data:image/png;base64,' . base64_encode($pngdata);

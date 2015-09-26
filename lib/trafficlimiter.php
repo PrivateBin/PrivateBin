@@ -27,6 +27,15 @@ class trafficlimiter extends persistence
     private static $_limit = 10;
 
     /**
+     * key to fetch IP address
+     *
+     * @access private
+     * @static
+     * @var    string
+     */
+    private static $_ipKey = 'REMOTE_ADDR';
+
+    /**
      * set the time limit in seconds
      *
      * @access public
@@ -40,20 +49,55 @@ class trafficlimiter extends persistence
     }
 
     /**
+     * set configuration options of the traffic limiter
+     *
+     * @access public
+     * @static
+     * @param configuration $conf
+     * @return void
+     */
+    public static function setConfiguration(configuration $conf)
+    {
+        self::setLimit($conf->getKey('limit', 'traffic'));
+        self::setPath($conf->getKey('dir', 'traffic'));
+        if (($option = $conf->getKey('header', 'traffic')) !== null)
+        {
+            $httpHeader = 'HTTP_' . $option;
+            if (array_key_exists($httpHeader, $_SERVER) && !empty($_SERVER[$httpHeader]))
+            {
+                self::$_ipKey = $httpHeader;
+            }
+        }
+    }
+
+    /**
+     * get the current visitors IP address
+     *
+     * @access public
+     * @static
+     * @return string
+     */
+    public static function getIp()
+    {
+        return $_SERVER[self::$_ipKey];
+    }
+
+    /**
      * traffic limiter
      *
      * Make sure the IP address makes at most 1 request every 10 seconds.
      *
      * @access public
      * @static
-     * @param  string $ip
      * @throws Exception
      * @return bool
      */
-    public static function canPass($ip)
+    public static function canPass()
     {
-    	// disable limits if set to less then 1
-    	if (self::$_limit < 1) return true;
+        $ip = self::getIp();
+
+        // disable limits if set to less then 1
+        if (self::$_limit < 1) return true;
 
         $file = 'traffic_limiter.php';
         if (!self::_exists($file))

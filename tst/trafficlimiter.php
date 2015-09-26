@@ -22,12 +22,15 @@ class trafficlimiterTest extends PHPUnit_Framework_TestCase
         $file = 'baz';
         $this->assertEquals($this->_path . DIRECTORY_SEPARATOR . $file, trafficlimiter::getPath($file));
         trafficlimiter::setLimit(4);
-        $this->assertTrue(trafficlimiter::canPass('127.0.0.1'), 'first request may pass');
+        $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
+        $this->assertTrue(trafficlimiter::canPass(), 'first request may pass');
         sleep(2);
-        $this->assertFalse(trafficlimiter::canPass('127.0.0.1'), 'second request is to fast, may not pass');
+        $this->assertFalse(trafficlimiter::canPass(), 'second request is to fast, may not pass');
         sleep(3);
-        $this->assertTrue(trafficlimiter::canPass('127.0.0.1'), 'third request waited long enough and may pass');
-        $this->assertTrue(trafficlimiter::canPass('2001:1620:2057:dead:beef::cafe:babe'), 'fourth request has different ip and may pass');
-        $this->assertFalse(trafficlimiter::canPass('127.0.0.1'), 'fifth request is to fast, may not pass');
+        $this->assertTrue(trafficlimiter::canPass(), 'third request waited long enough and may pass');
+        $_SERVER['REMOTE_ADDR'] = '2001:1620:2057:dead:beef::cafe:babe';
+        $this->assertTrue(trafficlimiter::canPass(), 'fourth request has different ip and may pass');
+        $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
+        $this->assertFalse(trafficlimiter::canPass(), 'fifth request is to fast, may not pass');
     }
 }
