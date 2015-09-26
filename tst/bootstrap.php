@@ -24,12 +24,12 @@ class helper
      */
     private static $paste = array(
         'data' => '{"iv":"EN39/wd5Nk8HAiSG2K5AsQ","v":1,"iter":1000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"QKN1DBXe5PI","ct":"8hA83xDdXjD7K2qfmw5NdA"}',
+        'attachment' => '{"iv":"Pd4pOKWkmDTT9uPwVwd5Ag","v":1,"iter":1000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"ZIUhFTliVz4","ct":"6nOCU3peNDclDDpFtJEBKA"}',
+        'attachmentname' => '{"iv":"76MkAtOGC4oFogX/aSMxRA","v":1,"iter":1000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"ZIUhFTliVz4","ct":"b6Ae/U1xJdsX/+lATud4sQ"}',
         'meta' => array(
             'postdate' => 1344803344,
             'opendiscussion' => true,
             'formatter' => 'plaintext',
-            'attachment' => '{"iv":"Pd4pOKWkmDTT9uPwVwd5Ag","v":1,"iter":1000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"ZIUhFTliVz4","ct":"6nOCU3peNDclDDpFtJEBKA"}',
-            'attachmentname' => '{"iv":"76MkAtOGC4oFogX/aSMxRA","v":1,"iter":1000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"ZIUhFTliVz4","ct":"b6Ae/U1xJdsX/+lATud4sQ"}',
         ),
     );
 
@@ -70,6 +70,18 @@ class helper
      * @return array
      */
     public static function getPaste($meta = array())
+    {
+        $example = self::getPasteWithAttachment($meta);
+        unset($example['attachment'], $example['attachmentname']);
+        return $example;
+    }
+
+    /**
+     * get example paste
+     *
+     * @return array
+     */
+    public static function getPasteWithAttachment($meta = array())
     {
         $example = self::$paste;
         $example['meta'] = array_merge($example['meta'], $meta);

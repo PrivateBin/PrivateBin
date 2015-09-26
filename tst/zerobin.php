@@ -311,10 +311,9 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $options['main']['fileupload'] = true;
         helper::confBackup();
         helper::createIniFile(CONF, $options);
-        $_POST = helper::getPaste();
-        $_POST['attachment'] = $_POST['meta']['attachment'];
-        $_POST['attachmentname'] = $_POST['meta']['attachmentname'];
+        $_POST = helper::getPasteWithAttachment();
         $_SERVER['REMOTE_ADDR'] = '::1';
+        $this->assertFalse($this->_model->exists(helper::getPasteId()), 'paste does not exists before posting data');
         ob_start();
         new zerobin;
         $content = ob_get_contents();
@@ -326,6 +325,11 @@ class zerobinTest extends PHPUnit_Framework_TestCase
             'outputs valid delete token'
         );
         $this->assertTrue($this->_model->exists($response['id']), 'paste exists after posting data');
+        $original = json_decode(json_encode($_POST));
+        $stored = $this->_model->read($response['id']);
+        foreach (array('data', 'attachment', 'attachmentname') as $key) {
+            $this->assertEquals($original->$key, $stored->$key);
+        }
     }
 
     /**

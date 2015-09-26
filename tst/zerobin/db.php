@@ -18,6 +18,9 @@ class zerobin_dbTest extends PHPUnit_Framework_TestCase
 
     public function testDatabaseBasedDataStoreWorks()
     {
+        $this->_model->delete(helper::getPasteId());
+
+        // storing pastes
         $paste = helper::getPaste(array('expire_date' => 1344803344));
         $this->assertFalse($this->_model->exists(helper::getPasteId()), 'paste does not yet exist');
         $this->assertTrue($this->_model->create(helper::getPasteId(), $paste), 'store new paste');
@@ -42,6 +45,20 @@ class zerobin_dbTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($this->_model->exists(helper::getPasteId()), 'paste successfully deleted');
         $this->assertFalse($this->_model->existsComment(helper::getPasteId(), helper::getPasteId(), helper::getCommentId()), 'comment was deleted with paste');
         $this->assertFalse($this->_model->read(helper::getPasteId()), 'paste can no longer be found');
+    }
+
+    public function testDatabaseBasedAttachmentStoreWorks()
+    {
+        $this->_model->delete(helper::getPasteId());
+        $original = $paste = helper::getPasteWithAttachment(array('expire_date' => 1344803344));
+        $paste['meta']['attachment'] = $paste['attachment'];
+        $paste['meta']['attachmentname'] = $paste['attachmentname'];
+        unset($paste['attachment'], $paste['attachmentname']);
+        $this->assertFalse($this->_model->exists(helper::getPasteId()), 'paste does not yet exist');
+        $this->assertTrue($this->_model->create(helper::getPasteId(), $paste), 'store new paste');
+        $this->assertTrue($this->_model->exists(helper::getPasteId()), 'paste exists after storing it');
+        $this->assertFalse($this->_model->create(helper::getPasteId(), $paste), 'unable to store the same paste twice');
+        $this->assertEquals(json_decode(json_encode($original)), $this->_model->read(helper::getPasteId()));
     }
 
     /**

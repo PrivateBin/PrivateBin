@@ -75,9 +75,20 @@ class zerobin_data extends zerobin_abstract
     public function read($pasteid)
     {
         if(!$this->exists($pasteid)) return false;
-        return json_decode(
+        $paste = json_decode(
             file_get_contents(self::_dataid2path($pasteid) . $pasteid)
         );
+        if (property_exists($paste->meta, 'attachment'))
+        {
+            $paste->attachment = $paste->meta->attachment;
+            unset($paste->meta->attachment);
+            if (property_exists($paste->meta, 'attachmentname'))
+            {
+                $paste->attachmentname = $paste->meta->attachmentname;
+                unset($paste->meta->attachmentname);
+            }
+        }
+        return $paste;
     }
 
     /**
@@ -90,7 +101,7 @@ class zerobin_data extends zerobin_abstract
     public function delete($pasteid)
     {
         // Delete the paste itself.
-        unlink(self::_dataid2path($pasteid) . $pasteid);
+        @unlink(self::_dataid2path($pasteid) . $pasteid);
 
         // Delete discussion if it exists.
         $discdir = self::_dataid2discussionpath($pasteid);
@@ -100,7 +111,7 @@ class zerobin_data extends zerobin_abstract
             $dir = dir($discdir);
             while (false !== ($filename = $dir->read()))
             {
-                if (is_file($discdir.$filename)) unlink($discdir.$filename);
+                if (is_file($discdir.$filename)) @unlink($discdir.$filename);
             }
             $dir->close();
 

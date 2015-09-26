@@ -264,6 +264,24 @@ class zerobin_db extends zerobin_abstract
                 if (
                     $paste['burnafterreading']
                 ) self::$_cache[$pasteid]->meta->burnafterreading = true;
+                if (property_exists(self::$_cache[$pasteid]->meta, 'attachment'))
+                {
+                    self::$_cache[$pasteid]->attachment = self::$_cache[$pasteid]->meta->attachment;
+                    unset(self::$_cache[$pasteid]->meta->attachment);
+                    if (property_exists(self::$_cache[$pasteid]->meta, 'attachmentname'))
+                    {
+                        self::$_cache[$pasteid]->attachmentname = self::$_cache[$pasteid]->meta->attachmentname;
+                        unset(self::$_cache[$pasteid]->meta->attachmentname);
+                    }
+                }
+                elseif (array_key_exists('attachment', $paste))
+                {
+                    self::$_cache[$pasteid]->attachment = $paste['attachment'];
+                    if (array_key_exists('attachmentname', $paste))
+                    {
+                        self::$_cache[$pasteid]->attachmentname = $paste['attachmentname'];
+                    }
+                }
             }
         }
 

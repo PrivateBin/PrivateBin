@@ -407,8 +407,8 @@ class zerobin
             ) return $this->_return_message(1, 'You are unlucky. Try again.');
 
             // Add attachment and its name, if one was sent
-            if ($has_attachment) $storage['attachment'] = $attachment;
-            if ($has_attachmentname) $storage['attachmentname'] = $attachmentname;
+            if ($has_attachment) $storage['meta']['attachment'] = $attachment;
+            if ($has_attachmentname) $storage['meta']['attachmentname'] = $attachmentname;
 
             // New paste
             if (
