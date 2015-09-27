@@ -58,8 +58,10 @@ class requestTest extends PHPUnit_Framework_TestCase
         $this->reset();
         $_SERVER['REQUEST_METHOD'] = 'PUT';
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
-        $_POST['data'] = 'foo';
+        $file = tempnam(sys_get_temp_dir(), 'FOO');
+        file_put_contents($file, 'data=foo');
         $request = new request;
+        $request->setInputStream($file);
         $this->assertTrue($request->isJsonApiCall(), 'is JSON Api call');
         $this->assertEquals('create', $request->getOperation());
         $this->assertEquals('foo', $request->getParam('data'));

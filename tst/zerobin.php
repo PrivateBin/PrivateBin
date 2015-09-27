@@ -113,6 +113,8 @@ class zerobinTest extends PHPUnit_Framework_TestCase
     {
         $this->reset();
         $_POST = helper::getPaste();
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
+        $_SERVER['REQUEST_METHOD'] = 'POST';
         $_SERVER['REMOTE_ADDR'] = '::1';
         ob_start();
         new zerobin;
@@ -134,6 +136,8 @@ class zerobinTest extends PHPUnit_Framework_TestCase
     {
         $this->reset();
         $_POST = helper::getPaste();
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
+        $_SERVER['REQUEST_METHOD'] = 'POST';
         $_SERVER['REMOTE_ADDR'] = '::1';
         ob_start();
         new zerobin;
@@ -155,6 +159,8 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         helper::confBackup();
         helper::createIniFile(CONF, $options);
         $_POST = helper::getPaste();
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
+        $_SERVER['REQUEST_METHOD'] = 'POST';
         $_SERVER['REMOTE_ADDR'] = '::1';
         ob_start();
         new zerobin;
@@ -176,6 +182,8 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         helper::createIniFile(CONF, $options);
         $_POST = helper::getPaste();
         $_SERVER['HTTP_X_FORWARDED_FOR'] = '::1';
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
+        $_SERVER['REQUEST_METHOD'] = 'POST';
         ob_start();
         new zerobin;
         $content = ob_get_contents();
@@ -196,6 +204,8 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         helper::createIniFile(CONF, $options);
         $this->_model->create(helper::getPasteId(), helper::getPaste());
         $_POST = helper::getPaste();
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
+        $_SERVER['REQUEST_METHOD'] = 'POST';
         $_SERVER['REMOTE_ADDR'] = '::1';
         ob_start();
         new zerobin;
@@ -218,6 +228,8 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $_POST = helper::getPaste();
         $_POST['expire'] = '5min';
         $_POST['formatter'] = 'foo';
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
+        $_SERVER['REQUEST_METHOD'] = 'POST';
         $_SERVER['REMOTE_ADDR'] = '::1';
         ob_start();
         new zerobin;
@@ -244,6 +256,8 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         helper::createIniFile(CONF, $options);
         $_POST = helper::getPaste();
         $_POST['expire'] = 'foo';
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
+        $_SERVER['REQUEST_METHOD'] = 'POST';
         $_SERVER['REMOTE_ADDR'] = '::1';
         ob_start();
         new zerobin;
@@ -270,6 +284,8 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         helper::createIniFile(CONF, $options);
         $_POST = helper::getPaste();
         $_POST['burnafterreading'] = 'neither 1 nor 0';
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
+        $_SERVER['REQUEST_METHOD'] = 'POST';
         $_SERVER['REMOTE_ADDR'] = '::1';
         ob_start();
         new zerobin;
@@ -291,6 +307,8 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         helper::createIniFile(CONF, $options);
         $_POST = helper::getPaste();
         $_POST['opendiscussion'] = 'neither 1 nor 0';
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
+        $_SERVER['REQUEST_METHOD'] = 'POST';
         $_SERVER['REMOTE_ADDR'] = '::1';
         ob_start();
         new zerobin;
@@ -312,6 +330,8 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         helper::confBackup();
         helper::createIniFile(CONF, $options);
         $_POST = helper::getPasteWithAttachment();
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
+        $_SERVER['REQUEST_METHOD'] = 'POST';
         $_SERVER['REMOTE_ADDR'] = '::1';
         $this->assertFalse($this->_model->exists(helper::getPasteId()), 'paste does not exists before posting data');
         ob_start();
@@ -344,6 +364,8 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         helper::createIniFile(CONF, $options);
         $_POST = helper::getPaste();
         $_POST['nickname'] = helper::getComment()['meta']['nickname'];
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
+        $_SERVER['REQUEST_METHOD'] = 'POST';
         $_SERVER['REMOTE_ADDR'] = '::1';
         ob_start();
         new zerobin;
@@ -372,6 +394,8 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $_POST['pasteid'] = helper::getPasteId();
         $_POST['parentid'] = helper::getPasteId();
         $_POST['nickname'] = 'foo';
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
+        $_SERVER['REQUEST_METHOD'] = 'POST';
         $_SERVER['REMOTE_ADDR'] = '::1';
         $this->_model->create(helper::getPasteId(), helper::getPaste());
         ob_start();
@@ -395,6 +419,8 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $_POST = helper::getComment();
         $_POST['pasteid'] = helper::getPasteId();
         $_POST['parentid'] = helper::getPasteId();
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
+        $_SERVER['REQUEST_METHOD'] = 'POST';
         $_SERVER['REMOTE_ADDR'] = '::1';
         $this->_model->create(helper::getPasteId(), helper::getPaste());
         ob_start();
@@ -418,6 +444,8 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $_POST = helper::getComment();
         $_POST['pasteid'] = helper::getPasteId();
         $_POST['parentid'] = 'foo';
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
+        $_SERVER['REQUEST_METHOD'] = 'POST';
         $_SERVER['REMOTE_ADDR'] = '::1';
         $this->_model->create(helper::getPasteId(), helper::getPaste());
         ob_start();
@@ -441,6 +469,8 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $_POST = helper::getComment();
         $_POST['pasteid'] = helper::getPasteId();
         $_POST['parentid'] = helper::getPasteId();
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
+        $_SERVER['REQUEST_METHOD'] = 'POST';
         $_SERVER['REMOTE_ADDR'] = '::1';
         $paste = helper::getPaste(array('opendiscussion' => false));
         $this->_model->create(helper::getPasteId(), $paste);
@@ -465,6 +495,8 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $_POST = helper::getComment();
         $_POST['pasteid'] = helper::getPasteId();
         $_POST['parentid'] = helper::getPasteId();
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
+        $_SERVER['REQUEST_METHOD'] = 'POST';
         $_SERVER['REMOTE_ADDR'] = '::1';
         ob_start();
         new zerobin;
@@ -490,6 +522,8 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $_POST = helper::getComment();
         $_POST['pasteid'] = helper::getPasteId();
         $_POST['parentid'] = helper::getPasteId();
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
+        $_SERVER['REQUEST_METHOD'] = 'POST';
         $_SERVER['REMOTE_ADDR'] = '::1';
         ob_start();
         new zerobin;
@@ -611,7 +645,8 @@ class zerobinTest extends PHPUnit_Framework_TestCase
     {
         $this->reset();
         $this->_model->create(helper::getPasteId(), helper::getPaste());
-        $_SERVER['QUERY_STRING'] = helper::getPasteId() . '&json';
+        $_SERVER['QUERY_STRING'] = helper::getPasteId();
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         ob_start();
         new zerobin;
         $content = ob_get_contents();
@@ -626,7 +661,8 @@ class zerobinTest extends PHPUnit_Framework_TestCase
     public function testReadInvalidJson()
     {
         $this->reset();
-        $_SERVER['QUERY_STRING'] = helper::getPasteId() . '&json';
+        $_SERVER['QUERY_STRING'] = helper::getPasteId();
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         ob_start();
         new zerobin;
         $content = ob_get_contents();
@@ -784,6 +820,8 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($this->_model->exists(helper::getPasteId()), 'paste exists before deleting data');
         $_GET['pasteid'] = helper::getPasteId();
         $_GET['deletetoken'] = 'burnafterreading';
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
+        $_SERVER['REQUEST_METHOD'] = 'DELETE';
         ob_start();
         new zerobin;
         $content = ob_get_contents();
@@ -802,6 +840,8 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($this->_model->exists(helper::getPasteId()), 'paste exists before deleting data');
         $_GET['pasteid'] = helper::getPasteId();
         $_GET['deletetoken'] = 'burnafterreading';
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
+        $_SERVER['REQUEST_METHOD'] = 'DELETE';
         ob_start();
         new zerobin;
         $content = ob_get_contents();

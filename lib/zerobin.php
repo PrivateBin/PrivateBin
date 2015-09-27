@@ -88,6 +88,14 @@ class zerobin
     private $_model;
 
     /**
+     * request
+     *
+     * @access private
+     * @var    request
+     */
+    private $_request;
+
+    /**
      * constructor
      *
      * initializes and runs ZeroBin
@@ -102,38 +110,27 @@ class zerobin
             throw new Exception(i18n::_('ZeroBin requires php 5.2.6 or above to work. Sorry.'), 1);
         }
 
-        // in case stupid admin has left magic_quotes enabled in php.ini
-        if (function_exists('get_magic_quotes_gpc') && get_magic_quotes_gpc())
-        {
-            $_POST   = array_map('filter::stripslashes_deep', $_POST);
-            $_GET    = array_map('filter::stripslashes_deep', $_GET);
-            $_COOKIE = array_map('filter::stripslashes_deep', $_COOKIE);
-        }
-
         // load config from ini file
         $this->_init();
 
-        // create new paste or comment
-        if (
-            (array_key_exists('data', $_POST) && !empty($_POST['data'])) ||
-            (array_key_exists('attachment', $_POST) && !empty($_POST['attachment']))
-        )
+        switch ($this->_request->getOperation())
         {
-            $this->_create();
-        }
-        // delete an existing paste
-        elseif (!empty($_GET['deletetoken']) && !empty($_GET['pasteid']))
-        {
-            $this->_delete($_GET['pasteid'], $_GET['deletetoken']);
-        }
-        // display an existing paste
-        elseif (!empty($_SERVER['QUERY_STRING']))
-        {
-            $this->_read($_SERVER['QUERY_STRING']);
+            case 'create':
+                $this->_create();
+                break;
+            case 'delete':
+                $this->_delete(
+                    $this->_request->getParam('pasteid'),
+                    $this->_request->getParam('deletetoken')
+                );
+                break;
+            case 'read':
+                $this->_read($this->_request->getParam('pasteid'));
+                break;
         }
 
         // output JSON or HTML
-        if (strlen($this->_json))
+        if ($this->_request->isJsonApiCall())
         {
             header('Content-type: application/json');
             echo $this->_json;
@@ -164,6 +161,7 @@ class zerobin
 
         $this->_conf = new configuration;
         $this->_model = new model($this->_conf);
+        $this->_request = new request;
     }
 
     /**
@@ -199,11 +197,9 @@ class zerobin
             )
         );
 
-        $has_attachment = array_key_exists('attachment', $_POST);
-        $has_attachmentname = $has_attachment && array_key_exists('attachmentname', $_POST) && !empty($_POST['attachmentname']);
-        $data = array_key_exists('data', $_POST) ? $_POST['data'] : '';
-        $attachment = $has_attachment ? $_POST['attachment'] : '';
-        $attachmentname = $has_attachmentname ? $_POST['attachmentname'] : '';
+        $data = $this->_request->getParam('data');
+        $attachment = $this->_request->getParam('attachment');
+        $attachmentname = $this->_request->getParam('attachmentname');
 
         // Ensure content is not too big.
         $sizelimit = $this->_conf->getKey('sizelimit');
@@ -218,18 +214,17 @@ class zerobin
         );
 
         // The user posts a comment.
-        if (
-            array_key_exists('parentid', $_POST) && !empty($_POST['parentid']) &&
-            array_key_exists('pasteid',  $_POST) && !empty($_POST['pasteid'])
-        )
+        $pasteid = $this->_request->getParam('pasteid');
+        $parentid = $this->_request->getParam('parentid');
+        if (!empty($pasteid) && !empty($parentid))
         {
-            $paste = $this->_model->getPaste($_POST['pasteid']);
+            $paste = $this->_model->getPaste($pasteid);
             if ($paste->exists()) {
                 try {
-                    $comment = $paste->getComment($_POST['parentid']);
+                    $comment = $paste->getComment($parentid);
 
-                    if (array_key_exists('nickname', $_POST) && !empty($_POST['nickname'])
-                    ) $comment->setNickname($_POST['nickname']);
+                    $nickname = $this->_request->getParam('nickname');
+                    if (!empty($nickname)) $comment->setNickname($nickname);
 
                     $comment->setData($data);
                     $comment->store();
@@ -248,24 +243,24 @@ class zerobin
         {
             $paste = $this->_model->getPaste();
             try {
-                if ($has_attachment)
+                if (!empty($attachment))
                 {
                     $paste->setAttachment($attachment);
-                    if ($has_attachmentname)
+                    if (!empty($attachmentname))
                         $paste->setAttachmentName($attachmentname);
                 }
 
-                if (array_key_exists('expire', $_POST) && !empty($_POST['expire'])
-                ) $paste->setExpiration($_POST['expire']);
+                $expire = $this->_request->getParam('expire');
+                if (!empty($expire)) $paste->setExpiration($expire);
 
-                if (array_key_exists('burnafterreading', $_POST) && !empty($_POST['burnafterreading'])
-                ) $paste->setBurnafterreading($_POST['burnafterreading']);
+                $burnafterreading = $this->_request->getParam('burnafterreading');
+                if (!empty($burnafterreading)) $paste->setBurnafterreading($burnafterreading);
 
-                if (array_key_exists('opendiscussion', $_POST) && !empty($_POST['opendiscussion'])
-                ) $paste->setOpendiscussion($_POST['opendiscussion']);
+                $opendiscussion = $this->_request->getParam('opendiscussion');
+                if (!empty($opendiscussion)) $paste->setOpendiscussion($opendiscussion);
 
-                if (array_key_exists('formatter', $_POST) && !empty($_POST['formatter'])
-                ) $paste->setFormatter($_POST['formatter']);
+                $formatter = $this->_request->getParam('formatter');
+                if (!empty($formatter)) $paste->setFormatter($formatter);
 
                 $paste->setData($data);
                 $paste->store();
@@ -339,12 +334,6 @@ class zerobin
      */
     private function _read($dataid)
     {
-        $isJson = false;
-        if (($pos = strpos($dataid, '&json')) !== false) {
-            $isJson = true;
-            $dataid = substr($dataid, 0, $pos);
-        }
-
         try {
             $paste = $this->_model->getPaste($dataid);
             if ($paste->exists())
@@ -362,10 +351,9 @@ class zerobin
             }
         } catch (Exception $e) {
             $this->_error = $e->getMessage();
-            return;
         }
 
-        if ($isJson)
+        if ($this->_request->isJsonApiCall())
         {
             if (strlen($this->_error))
             {
