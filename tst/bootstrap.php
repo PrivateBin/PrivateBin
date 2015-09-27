@@ -177,6 +177,18 @@ class helper
                         continue;
                     } elseif (is_string($setting)) {
                         $setting = '"' . $setting . '"';
+                    } elseif (is_array($setting)) {
+                        foreach ($setting as $key => $value) {
+                            if (is_null($value)) {
+                                $value = 'null';
+                            } elseif (is_string($value)) {
+                                $value = '"' . $value . '"';
+                            } else {
+                                $value = var_export($value, true);
+                            }
+                            fwrite($ini, $option . "[$key] = $value" . PHP_EOL);
+                        }
+                        continue;
                     } else {
                         $setting = var_export($setting, true);
                     }

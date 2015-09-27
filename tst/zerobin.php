@@ -368,15 +368,18 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $options['traffic']['limit'] = 0;
         helper::confBackup();
         helper::createIniFile(CONF, $options);
-        $_POST = helper::getPaste();
+        $_POST = helper::getComment();
+        $_POST['pasteid'] = helper::getPasteId();
+        $_POST['parentid'] = helper::getPasteId();
         $_POST['nickname'] = 'foo';
         $_SERVER['REMOTE_ADDR'] = '::1';
+        $this->_model->create(helper::getPasteId(), helper::getPaste());
         ob_start();
         new zerobin;
         $content = ob_get_contents();
         $response = json_decode($content, true);
         $this->assertEquals(1, $response['status'], 'outputs error status');
-        $this->assertFalse($this->_model->exists(helper::getPasteId()), 'paste exists after posting data');
+        $this->assertTrue($this->_model->exists(helper::getPasteId()), 'paste exists after posting data');
     }
 
     /**

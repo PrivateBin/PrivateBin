@@ -80,10 +80,10 @@ class zerobin
     private $_json = '';
 
     /**
-     * data storage model
+     * Factory of instance models
      *
      * @access private
-     * @var    zerobin_abstract
+     * @var    model
      */
     private $_model;
 
@@ -163,25 +163,7 @@ class zerobin
         }
 
         $this->_conf = new configuration;
-        $this->_model = $this->_conf->getKey('class', 'model');
-    }
-
-    /**
-     * get the model, create one if needed
-     *
-     * @access private
-     * @return zerobin_abstract
-     */
-    private function _model()
-    {
-        // if needed, initialize the model
-        if(is_string($this->_model)) {
-            $this->_model = forward_static_call(
-                array($this->_model, 'getInstance'),
-                $this->_conf->getSection('model_options')
-            );
-        }
-        return $this->_model;
+        $this->_model = new model($this->_conf);
     }
 
     /**
@@ -208,23 +190,22 @@ class zerobin
     {
         $error = false;
 
+        // Ensure last paste from visitors IP address was more than configured amount of seconds ago.
+        trafficlimiter::setConfiguration($this->_conf);
+        if (!trafficlimiter::canPass()) return $this->_return_message(
+            1, i18n::_(
+                'Please wait %d seconds between each post.',
+                $this->_conf->getKey('limit', 'traffic')
+            )
+        );
+
         $has_attachment = array_key_exists('attachment', $_POST);
         $has_attachmentname = $has_attachment && array_key_exists('attachmentname', $_POST) && !empty($_POST['attachmentname']);
         $data = array_key_exists('data', $_POST) ? $_POST['data'] : '';
         $attachment = $has_attachment ? $_POST['attachment'] : '';
         $attachmentname = $has_attachmentname ? $_POST['attachmentname'] : '';
 
-        // Make sure last paste from the IP address was more than X seconds ago.
-        trafficlimiter::setConfiguration($this->_conf);
-        if (!trafficlimiter::canPass()) return $this->_return_message(
-            1,
-            i18n::_(
-                'Please wait %d seconds between each post.',
-                $this->_conf->getKey('limit', 'traffic')
-            )
-        );
-
-        // Make sure content is not too big.
+        // Ensure content is not too big.
         $sizelimit = $this->_conf->getKey('sizelimit');
         if (
             strlen($data) + strlen($attachment) + strlen($attachmentname) > $sizelimit
@@ -236,182 +217,62 @@ class zerobin
             )
         );
 
-        // Make sure format is correct.
-        if (!sjcl::isValid($data)) return $this->_return_message(1, 'Invalid data.');
-
-        // Make sure attachments are enabled and format is correct.
-        if($has_attachment)
-        {
-            if (
-                !$this->_conf->getKey('fileupload') ||
-                !sjcl::isValid($attachment) ||
-                !($has_attachmentname && sjcl::isValid($attachmentname))
-            ) return $this->_return_message(1, 'Invalid attachment.');
-        }
-
-        // Read additional meta-information.
-        $meta = array();
-
-        // Read expiration date
-        if (array_key_exists('expire', $_POST) && !empty($_POST['expire']))
-        {
-            $selected_expire = (string) $_POST['expire'];
-            $expire_options = $this->_conf->getSection('expire_options');
-            if (array_key_exists($selected_expire, $expire_options))
-            {
-                $expire = $expire_options[$selected_expire];
-            }
-            else
-            {
-                $expire = $this->_conf->getKey($this->_conf->getKey('default', 'expire'), 'expire_options');
-            }
-            if ($expire > 0) $meta['expire_date'] = time() + $expire;
-        }
-
-        // Destroy the paste when it is read.
-        if (array_key_exists('burnafterreading', $_POST) && !empty($_POST['burnafterreading']))
-        {
-            $burnafterreading = $_POST['burnafterreading'];
-            if ($burnafterreading !== '0')
-            {
-                if ($burnafterreading !== '1') $error = true;
-                $meta['burnafterreading'] = true;
-            }
-        }
-
-        // Read open discussion flag.
-        if (
-            $this->_conf->getKey('discussion') &&
-            array_key_exists('opendiscussion', $_POST) &&
-            !empty($_POST['opendiscussion'])
-        )
-        {
-            $opendiscussion = $_POST['opendiscussion'];
-            if ($opendiscussion !== '0')
-            {
-                if ($opendiscussion !== '1') $error = true;
-                $meta['opendiscussion'] = true;
-            }
-        }
-
-        // Read formatter flag.
-        if (array_key_exists('formatter', $_POST) && !empty($_POST['formatter']))
-        {
-            $formatter = $_POST['formatter'];
-            if (!array_key_exists($formatter, $this->_conf->getSection('formatter_options')))
-            {
-                $formatter = $this->_conf->getKey('defaultformatter');
-            }
-            $meta['formatter'] = $formatter;
-        }
-
-        // You can't have an open discussion on a "Burn after reading" paste:
-        if (isset($meta['burnafterreading'])) unset($meta['opendiscussion']);
-
-        // Optional nickname for comments
-        if (!empty($_POST['nickname']))
-        {
-            // Generation of the anonymous avatar (Vizhash):
-            // If a nickname is provided, we generate a Vizhash.
-            // (We assume that if the user did not enter a nickname, he/she wants
-            // to be anonymous and we will not generate the vizhash.)
-            $nick = $_POST['nickname'];
-            if (!sjcl::isValid($nick))
-            {
-                $error = true;
-            }
-            else
-            {
-                $meta['nickname'] = $nick;
-                $vz = new vizhash16x16();
-                $pngdata = $vz->generate(trafficlimiter::getIp());
-                if ($pngdata != '')
-                {
-                    $meta['vizhash'] = 'data:image/png;base64,' . base64_encode($pngdata);
-                }
-                // Once the avatar is generated, we do not keep the IP address, nor its hash.
-            }
-        }
-
-        if ($error) return $this->_return_message(1, 'Invalid data.');
-
-        // Add post date to meta.
-        $meta['postdate'] = time();
-
-        // We just want a small hash to avoid collisions:
-        // Half-MD5 (64 bits) will do the trick
-        $dataid = substr(hash('md5', $data), 0, 16);
-
-        $storage = array('data' => $data);
-
-        // Add meta-information only if necessary.
-        if (count($meta)) $storage['meta'] = $meta;
-
         // The user posts a comment.
         if (
-            !empty($_POST['parentid']) &&
-            !empty($_POST['pasteid'])
+            array_key_exists('parentid', $_POST) && !empty($_POST['parentid']) &&
+            array_key_exists('pasteid',  $_POST) && !empty($_POST['pasteid'])
         )
         {
-            $pasteid  = (string) $_POST['pasteid'];
-            $parentid = (string) $_POST['parentid'];
-            if (
-                !filter::is_valid_paste_id($pasteid) ||
-                !filter::is_valid_paste_id($parentid)
-            ) return $this->_return_message(1, 'Invalid data.');
+            $paste = $this->_model->getPaste($_POST['pasteid']);
+            if ($paste->exists()) {
+                try {
+                    $comment = $paste->getComment($_POST['parentid']);
 
-            // Comments do not expire (it's the paste that expires)
-            unset($storage['expire_date']);
-            unset($storage['opendiscussion']);
+                    if (array_key_exists('nickname', $_POST) && !empty($_POST['nickname'])
+                    ) $comment->setNickname($_POST['nickname']);
 
-            // Make sure paste exists.
-            if (
-                !$this->_model()->exists($pasteid)
-            ) return $this->_return_message(1, 'Invalid data.');
-
-            // Make sure the discussion is opened in this paste.
-            $paste = $this->_model()->read($pasteid);
-            if (
-                !$paste->meta->opendiscussion
-            ) return $this->_return_message(1, 'Invalid data.');
-
-            // Check for improbable collision.
-            if (
-                $this->_model()->existsComment($pasteid, $parentid, $dataid)
-            ) return $this->_return_message(1, 'You are unlucky. Try again.');
-
-            // New comment
-            if (
-                $this->_model()->createComment($pasteid, $parentid, $dataid, $storage) === false
-            ) return $this->_return_message(1, 'Error saving comment. Sorry.');
-
-            // 0 = no error
-            return $this->_return_message(0, $dataid);
+                    $comment->setData($data);
+                    $comment->store();
+                } catch(Exception $e) {
+                    return $this->_return_message(1, $e->getMessage());
+                }
+                $this->_return_message(0, $comment->getId());
+            }
+            else
+            {
+                $this->_return_message(1, 'Invalid data.');
+            }
         }
         // The user posts a standard paste.
         else
         {
-            // Check for improbable collision.
-            if (
-                $this->_model()->exists($dataid)
-            ) return $this->_return_message(1, 'You are unlucky. Try again.');
+            $paste = $this->_model->getPaste();
+            try {
+                if ($has_attachment)
+                {
+                    $paste->setAttachment($attachment);
+                    if ($has_attachmentname)
+                        $paste->setAttachmentName($attachmentname);
+                }
 
-            // Add attachment and its name, if one was sent
-            if ($has_attachment) $storage['meta']['attachment'] = $attachment;
-            if ($has_attachmentname) $storage['meta']['attachmentname'] = $attachmentname;
+                if (array_key_exists('expire', $_POST) && !empty($_POST['expire'])
+                ) $paste->setExpiration($_POST['expire']);
 
-            // New paste
-            if (
-                $this->_model()->create($dataid, $storage) === false
-            ) return $this->_return_message(1, 'Error saving paste. Sorry.');
+                if (array_key_exists('burnafterreading', $_POST) && !empty($_POST['burnafterreading'])
+                ) $paste->setBurnafterreading($_POST['burnafterreading']);
 
-            // Generate the "delete" token.
-            // The token is the hmac of the pasteid signed with the server salt.
-            // The paste can be delete by calling http://example.com/zerobin/?pasteid=<pasteid>&deletetoken=<deletetoken>
-            $deletetoken = hash_hmac('sha1', $dataid, serversalt::get());
+                if (array_key_exists('opendiscussion', $_POST) && !empty($_POST['opendiscussion'])
+                ) $paste->setOpendiscussion($_POST['opendiscussion']);
 
-            // 0 = no error
-            return $this->_return_message(0, $dataid, array('deletetoken' => $deletetoken));
+                if (array_key_exists('formatter', $_POST) && !empty($_POST['formatter'])
+                ) $paste->setFormatter($_POST['formatter']);
+
+                $paste->setData($data);
+                $paste->store();
+            } catch (Exception $e) {
+                return $this->_return_message(1, $e->getMessage());
+            }
+            $this->_return_message(0, $paste->getId(), array('deletetoken' => $paste->getDeleteToken()));
         }
     }
 
@@ -425,63 +286,48 @@ class zerobin
      */
     private function _delete($dataid, $deletetoken)
     {
-        // Is this a valid paste identifier?
-        if (!filter::is_valid_paste_id($dataid))
-        {
-            $this->_error = 'Invalid paste ID.';
-            return;
-        }
-
-        // Check that paste exists.
-        if (!$this->_model()->exists($dataid))
-        {
-            $this->_error = self::GENERIC_ERROR;
-            return;
-        }
-
-        // Get the paste itself.
-        $paste = $this->_model()->read($dataid);
-
-        // See if paste has expired.
-        if (
-            isset($paste->meta->expire_date) &&
-            $paste->meta->expire_date < time()
-        )
-        {
-            // Delete the paste
-            $this->_model()->delete($dataid);
-            $this->_error = self::GENERIC_ERROR;
-            return;
-        }
-
-        if ($deletetoken == 'burnafterreading') {
-            if (
-                isset($paste->meta->burnafterreading) &&
-                $paste->meta->burnafterreading
-            )
+        try {
+            $paste = $this->_model->getPaste($dataid);
+            if ($paste->exists())
             {
-                // Delete the paste
-                $this->_model()->delete($dataid);
-                $this->_return_message(0, $dataid);
+                // accessing this property ensures that the paste would be
+                // deleted if it has already expired
+                $burnafterreading = $paste->isBurnafterreading();
+                if ($deletetoken == 'burnafterreading')
+                {
+                    if ($burnafterreading)
+                    {
+                        $paste->delete();
+                        $this->_return_message(0, $dataid);
+                    }
+                    else
+                    {
+                        $this->_return_message(1, 'Paste is not of burn-after-reading type.');
+                    }
+                }
+                else
+                {
+                    // Make sure the token is valid.
+                    serversalt::setPath($this->_conf->getKey('dir', 'traffic'));
+                    if (filter::slow_equals($deletetoken, $paste->getDeleteToken()))
+                    {
+                        // Paste exists and deletion token is valid: Delete the paste.
+                        $paste->delete();
+                        $this->_status = 'Paste was properly deleted.';
+                    }
+                    else
+                    {
+                        $this->_error = 'Wrong deletion token. Paste was not deleted.';
+                    }
+                }
             }
             else
             {
-                $this->_return_message(1, 'Paste is not of burn-after-reading type.');
+                $this->_error = self::GENERIC_ERROR;
             }
-            return;
+        } catch (Exception $e) {
+            $this->_error = $e->getMessage();
         }
-
-        // Make sure token is valid.
-        serversalt::setPath($this->_conf->getKey('dir', 'traffic'));
-        if (!filter::slow_equals($deletetoken, hash_hmac('sha1', $dataid, serversalt::get())))
-        {
-            $this->_error = 'Wrong deletion token. Paste was not deleted.';
-            return;
-        }
-
-        // Paste exists and deletion token is valid: Delete the paste.
-        $this->_model()->delete($dataid);
-        $this->_status = 'Paste was properly deleted.';
     }
 
     /**
@@ -499,73 +345,26 @@ class zerobin
             $dataid = substr($dataid, 0, $pos);
         }
 
-        // Is this a valid paste identifier?
-        if (!filter::is_valid_paste_id($dataid))
-        {
-            $this->_error = 'Invalid paste ID.';
+        try {
+            $paste = $this->_model->getPaste($dataid);
+            if ($paste->exists())
+            {
+                // The paste itself is the first in the list of encrypted messages.
+                $messages = array_merge(
+                    array($paste->get()),
+                    $paste->getComments()
+                );
+                $this->_data = json_encode($messages);
+            }
+            else
+            {
+                $this->_error = self::GENERIC_ERROR;
+            }
+        } catch (Exception $e) {
+            $this->_error = $e->getMessage();
             return;
         }
 
-        // Check that paste exists.
-        if ($this->_model()->exists($dataid))
-        {
-            // Get the paste itself.
-            $paste = $this->_model()->read($dataid);
-
-            // See if paste has expired.
-            if (
-                isset($paste->meta->expire_date) &&
-                $paste->meta->expire_date < time()
-            )
-            {
-                // Delete the paste
-                $this->_model()->delete($dataid);
-                $this->_error = self::GENERIC_ERROR;
-            }
-            // If no error, return the paste.
-            else
-            {
-                // We kindly provide the remaining time before expiration (in seconds)
-                if (
-                    property_exists($paste->meta, 'expire_date')
-                ) $paste->meta->remaining_time = $paste->meta->expire_date - time();
-
-                // The paste itself is the first in the list of encrypted messages.
-                $messages = array($paste);
-
-                // If it's a discussion, get all comments.
-                if (
-                    property_exists($paste->meta, 'opendiscussion') &&
-                    $paste->meta->opendiscussion
-                )
-                {
-                    $messages = array_merge(
-                        $messages,
-                        $this->_model()->readComments($dataid)
-                    );
-                }
-
-                // set formatter for for the view.
-                if (!property_exists($paste->meta, 'formatter'))
-                {
-                    // support < 0.21 syntax highlighting
-                    if (property_exists($paste->meta, 'syntaxcoloring') && $paste->meta->syntaxcoloring === true)
-                    {
-                        $paste->meta->formatter = 'syntaxhighlighting';
-                    }
-                    else
-                    {
-                        $paste->meta->formatter = $this->_conf->getKey('defaultformatter');
-                    }
-                }
-
-                $this->_data = json_encode($messages);
-            }
-        }
-        else
-        {
-            $this->_error = self::GENERIC_ERROR;
-        }
         if ($isJson)
         {
             if (strlen($this->_error))

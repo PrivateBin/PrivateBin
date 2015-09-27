@@ -62,13 +62,6 @@ class filterTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('1.21 YiB', filter::size_humanreadable(1234 * $exponent));
     }
 
-    public function testPasteIdValidation()
-    {
-        $this->assertTrue(filter::is_valid_paste_id('a242ab7bdfb2581a'), 'valid paste id');
-        $this->assertFalse(filter::is_valid_paste_id('foo'), 'invalid hex values');
-        $this->assertFalse(filter::is_valid_paste_id('../bar/baz'), 'path attack');
-    }
-
     public function testSlowEquals()
     {
         $this->assertTrue(filter::slow_equals('foo', 'foo'), 'same string');

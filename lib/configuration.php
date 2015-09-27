@@ -99,6 +99,17 @@ class configuration
                 }
                 continue;
             }
+            // provide different defaults for database model
+            elseif ($section == 'model_options' && $this->_configuration['model']['class'] == 'zerobin_db')
+            {
+                $values = array(
+                    'dsn' => 'sqlite:' . PATH . 'data/db.sq3',
+                    'tbl' => null,
+                    'usr' => null,
+                    'pwd' => null,
+                    'opt' => array(PDO::ATTR_PERSISTENT => true),
+                );
+            }
             foreach ($values as $key => $val)
             {
                 if ($key == 'dir')

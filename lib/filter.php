@@ -81,19 +81,6 @@ class filter
     }
 
     /**
-     * validate paste ID
-     *
-     * @access public
-     * @static
-     * @param  string $dataid
-     * @return bool
-     */
-    public static function is_valid_paste_id($dataid)
-    {
-        return (bool) preg_match('#\A[a-f\d]{16}\z#', $dataid);
-    }
-
-    /**
      * fixed time string comparison operation to prevent timing attacks
      * https://crackstation.net/hashing-security.htm?=rd#slowequals
      *

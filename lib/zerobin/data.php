@@ -172,16 +172,16 @@ class zerobin_data extends zerobin_abstract
                 // - pasteid is the paste this reply belongs to.
                 // - commentid is the comment identifier itself.
                 // - parentid is the comment this comment replies to (It can be pasteid)
-                if (is_file($discdir.$filename))
+                if (is_file($discdir . $filename))
                 {
-                    $comment = json_decode(file_get_contents($discdir.$filename));
+                    $comment = json_decode(file_get_contents($discdir . $filename));
                     $items = explode('.', $filename);
                     // Add some meta information not contained in file.
-                    $comment->meta->commentid=$items[1];
-                    $comment->meta->parentid=$items[2];
+                    $comment->meta->commentid = $items[1];
+                    $comment->meta->parentid = $items[2];
 
                     // Store in array
-                    $comments[$comment->meta->postdate]=$comment;
+                    $comments[$comment->meta->postdate] = $comment;
                 }
             }
             $dir->close();

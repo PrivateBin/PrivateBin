@@ -17,7 +17,7 @@
  */
 abstract class zerobin_abstract
 {
-	/**
+    /**
      * singleton instance
      *
      * @access protected
@@ -87,7 +87,7 @@ abstract class zerobin_abstract
      *
      * @access public
      * @param  string $dataid
-     * @return void
+     * @return bool
      */
     abstract public function exists($pasteid);
 

@@ -22,6 +22,7 @@ class modelTest extends PHPUnit_Framework_TestCase
         helper::createIniFile(CONF, $options);
         $this->_conf = new configuration;
         $this->_model = new model($this->_conf);
+        $_SERVER['REMOTE_ADDR'] = '::1';
     }
 
     public function tearDown()
@@ -46,12 +47,14 @@ class modelTest extends PHPUnit_Framework_TestCase
         $paste = $this->_model->getPaste(helper::getPasteId());
         $this->assertTrue($paste->exists(), 'paste exists after storing it');
         $paste = $paste->get();
-        foreach (array('data', 'opendiscussion', 'formatter') as $key) {
-            $this->assertEquals($pasteData[$key], $paste->$key);
+        $this->assertEquals($pasteData['data'], $paste->data);
+        foreach (array('opendiscussion', 'formatter') as $key) {
+            $this->assertEquals($pasteData['meta'][$key], $paste->meta->$key);
         }
 
         // storing comments
         $commentData = helper::getComment();
+        $paste = $this->_model->getPaste(helper::getPasteId());
         $comment = $paste->getComment(helper::getPasteId(), helper::getCommentId());
         $this->assertFalse($comment->exists(), 'comment does not yet exist');
 
@@ -75,7 +78,7 @@ class modelTest extends PHPUnit_Framework_TestCase
 
     /**
      * @expectedException Exception
-     * @expectedExceptionCode 60
+     * @expectedExceptionCode 75
      */
     public function testPasteDuplicate()
     {
@@ -97,7 +100,7 @@ class modelTest extends PHPUnit_Framework_TestCase
 
     /**
      * @expectedException Exception
-     * @expectedExceptionCode 60
+     * @expectedExceptionCode 69
      */
     public function testCommentDuplicate()
     {
@@ -136,19 +139,31 @@ class modelTest extends PHPUnit_Framework_TestCase
         $paste->store();
 
         $paste = $this->_model->getPaste(helper::getPasteId())->get(); // ID was set based on data
-        $this->assertEquals(true, $paste->meta->burnafterreading, 'burn after reading takes precedence');
-        $this->assertEquals(false, $paste->meta->opendiscussion, 'opendiscussion is overiden');
+        $this->assertEquals(true, property_exists($paste->meta, 'burnafterreading') && $paste->meta->burnafterreading, 'burn after reading takes precendence');
+        $this->assertEquals(false, property_exists($paste->meta, 'opendiscussion') && $paste->meta->opendiscussion, 'opendiscussion is disabled');
         $this->assertEquals($this->_conf->getKey('defaultformatter'), $paste->meta->formatter, 'default formatter is set');
 
-        $_SERVER['REMOTE_ADDR'] = '::1';
+        $this->_model->getPaste(helper::getPasteId())->delete();
+        $paste = $this->_model->getPaste();
+        $paste->setData($pasteData['data']);
+        $paste->setOpendiscussion();
+        $paste->store();
+
         $vz = new vizhash16x16();
         $pngdata = 'data:image/png;base64,' . base64_encode($vz->generate($_SERVER['REMOTE_ADDR']));
-        $comment = $this->_model->getPaste(helper::getPasteId())->getComment(helper::getPasteId());
+        $comment = $paste->getComment(helper::getPasteId());
         $comment->setData($commentData['data']);
         $comment->setNickname($commentData['meta']['nickname']);
         $comment->store();
 
-        $comment = $paste->getComment(helper::getPasteId(), helper::getCommentId());
+        $comment = $paste->getComment(helper::getPasteId(), helper::getCommentId())->get();
         $this->assertEquals($pngdata, $comment->meta->vizhash, 'nickname triggers vizhash to be set');
+    }
+
+    public function testPasteIdValidation()
+    {
+        $this->assertTrue(model_paste::isValidId('a242ab7bdfb2581a'), 'valid paste id');
+        $this->assertFalse(model_paste::isValidId('foo'), 'invalid hex values');
+        $this->assertFalse(model_paste::isValidId('../bar/baz'), 'path attack');
     }
 }

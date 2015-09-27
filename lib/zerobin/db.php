@@ -208,7 +208,12 @@ class zerobin_db extends zerobin_abstract
         $opendiscussion = $burnafterreading = false;
         $meta = $paste['meta'];
         unset($meta['postdate']);
-        unset($meta['expire_date']);
+        $expire_date = 0;
+        if (array_key_exists('expire_date', $paste['meta']))
+        {
+            $expire_date = (int) $paste['meta']['expire_date'];
+            unset($meta['expire_date']);
+        }
         if (array_key_exists('opendiscussion', $paste['meta']))
         {
             $opendiscussion = (bool) $paste['meta']['opendiscussion'];
@@ -225,7 +230,7 @@ class zerobin_db extends zerobin_abstract
                 $pasteid,
                 $paste['data'],
                 $paste['meta']['postdate'],
-                $paste['meta']['expire_date'],
+                $expire_date,
                 (int) $opendiscussion,
                 (int) $burnafterreading,
                 json_encode($meta),
@@ -255,33 +260,31 @@ class zerobin_db extends zerobin_abstract
                 // create object
                 self::$_cache[$pasteid] = new stdClass;
                 self::$_cache[$pasteid]->data = $paste['data'];
-                self::$_cache[$pasteid]->meta = json_decode($paste['meta']);
+
+                $meta = json_decode($paste['meta']);
+                if (!is_object($meta)) $meta = new stdClass;
+                if (property_exists($meta, 'attachment'))
+                {
+                    self::$_cache[$pasteid]->attachment = $meta->attachment;
+                    unset($meta->attachment);
+                    if (property_exists($meta, 'attachmentname'))
+                    {
+                        self::$_cache[$pasteid]->attachmentname = $meta->attachmentname;
+                        unset($meta->attachmentname);
+                    }
+                }
+                self::$_cache[$pasteid]->meta = $meta;
                 self::$_cache[$pasteid]->meta->postdate = (int) $paste['postdate'];
-                self::$_cache[$pasteid]->meta->expire_date = (int) $paste['expiredate'];
+                $expire_date = (int) $paste['expiredate'];
+                if (
+                    $expire_date > 0
+                ) self::$_cache[$pasteid]->meta->expire_date = $expire_date;
                 if (
                     $paste['opendiscussion']
                 ) self::$_cache[$pasteid]->meta->opendiscussion = true;
                 if (
                     $paste['burnafterreading']
                 ) self::$_cache[$pasteid]->meta->burnafterreading = true;
-                if (property_exists(self::$_cache[$pasteid]->meta, 'attachment'))
-                {
-                    self::$_cache[$pasteid]->attachment = self::$_cache[$pasteid]->meta->attachment;
-                    unset(self::$_cache[$pasteid]->meta->attachment);
-                    if (property_exists(self::$_cache[$pasteid]->meta, 'attachmentname'))
-                    {
-                        self::$_cache[$pasteid]->attachmentname = self::$_cache[$pasteid]->meta->attachmentname;
-                        unset(self::$_cache[$pasteid]->meta->attachmentname);
-                    }
-                }
-                elseif (array_key_exists('attachment', $paste))
-                {
-                    self::$_cache[$pasteid]->attachment = $paste['attachment'];
-                    if (array_key_exists('attachmentname', $paste))
-                    {
-                        self::$_cache[$pasteid]->attachmentname = $paste['attachmentname'];
-                    }
-                }
             }
         }
 
