@@ -3,17 +3,17 @@ class zerobin_dbTest extends PHPUnit_Framework_TestCase
 {
     private $_model;
 
+    private $_options = array(
+        'dsn' => 'sqlite::memory:',
+        'usr' => null,
+        'pwd' => null,
+        'opt' => array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION),
+    );
+
     public function setUp()
     {
         /* Setup Routine */
-        $this->_model = zerobin_db::getInstance(
-            array(
-                'dsn' => 'sqlite::memory:',
-                'usr' => null,
-                'pwd' => null,
-                'opt' => array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION),
-            )
-        );
+        $this->_model = zerobin_db::getInstance($this->_options);
     }
 
     public function testDatabaseBasedDataStoreWorks()
@@ -51,6 +51,7 @@ class zerobin_dbTest extends PHPUnit_Framework_TestCase
     {
         $this->_model->delete(helper::getPasteId());
         $original = $paste = helper::getPasteWithAttachment(array('expire_date' => 1344803344));
+        $paste['meta']['burnafterreading'] = $original['meta']['burnafterreading'] = true;
         $paste['meta']['attachment'] = $paste['attachment'];
         $paste['meta']['attachmentname'] = $paste['attachmentname'];
         unset($paste['attachment'], $paste['attachmentname']);
@@ -136,5 +137,30 @@ class zerobin_dbTest extends PHPUnit_Framework_TestCase
         zerobin_db::getInstance(array(
             'dsn' => 'foo:', 'usr' => null, 'pwd' => null, 'opt' => null
         ));
+    }
+
+    public function testTableUpgrade()
+    {
+        $path = PATH . 'data/db-test.sq3';
+        @unlink($path);
+        $this->_options['dsn'] = 'sqlite:' . $path;
+        $this->_options['tbl'] = 'foo_';
+        $db = new PDO(
+            $this->_options['dsn'],
+            $this->_options['usr'],
+            $this->_options['pwd'],
+            $this->_options['opt']
+        );
+        $db->exec(
+            'CREATE TABLE foo_paste ( ' .
+            'dataid CHAR(16), ' .
+            'data TEXT, ' .
+            'postdate INT, ' .
+            'expiredate INT, ' .
+            'opendiscussion INT, ' .
+            'burnafterreading INT );'
+        );
+        zerobin_db::getInstance($this->_options);
+        @unlink($path);
     }
 }

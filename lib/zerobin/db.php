@@ -139,7 +139,7 @@ class zerobin_db extends zerobin_abstract
                 $tables = $statement->fetchAll(PDO::FETCH_COLUMN, 0);
 
                 // create paste table if needed
-                if (!array_key_exists(self::$_prefix . 'paste', $tables))
+                if (!in_array(self::$_prefix . 'paste', $tables))
                 {
                     self::$_db->exec(
                         'CREATE TABLE ' . self::$_prefix . 'paste ( ' .
