@@ -248,6 +248,40 @@ class zerobinTest extends PHPUnit_Framework_TestCase
             'outputs valid delete token'
         );
         $this->assertTrue($this->_model->exists($response['id']), 'paste exists after posting data');
+        $paste = $this->_model->read($response['id']);
+        $this->assertEquals(time() + 300, $paste->meta->expire_date, 'time is set correctly');
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testCreateValidExpireWithDiscussion()
+    {
+        $this->reset();
+        $options = parse_ini_file(CONF, true);
+        $options['traffic']['limit'] = 0;
+        helper::confBackup();
+        helper::createIniFile(CONF, $options);
+        $_POST = helper::getPaste();
+        $_POST['expire'] = '5min';
+        $_POST['opendiscussion'] = '1';
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
+        $_SERVER['REQUEST_METHOD'] = 'POST';
+        $_SERVER['REMOTE_ADDR'] = '::1';
+        ob_start();
+        new zerobin;
+        $content = ob_get_contents();
+        $response = json_decode($content, true);
+        $this->assertEquals(0, $response['status'], 'outputs status');
+        $this->assertEquals(
+            hash_hmac('sha1', $response['id'], serversalt::get()),
+            $response['deletetoken'],
+            'outputs valid delete token'
+        );
+        $this->assertTrue($this->_model->exists($response['id']), 'paste exists after posting data');
+        $paste = $this->_model->read($response['id']);
+        $this->assertEquals(time() + 300, $paste->meta->expire_date, 'time is set correctly');
+        $this->assertEquals(1, $paste->meta->opendiscussion, 'time is set correctly');
     }
 
     /**

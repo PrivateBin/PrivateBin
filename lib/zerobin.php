@@ -243,6 +243,8 @@ class zerobin
         {
             $paste = $this->_model->getPaste();
             try {
+                $paste->setData($data);
+
                 if (!empty($attachment))
                 {
                     $paste->setAttachment($attachment);
@@ -262,7 +264,6 @@ class zerobin
                 $formatter = $this->_request->getParam('formatter');
                 if (!empty($formatter)) $paste->setFormatter($formatter);
 
-                $paste->setData($data);
                 $paste->store();
             } catch (Exception $e) {
                 return $this->_return_message(1, $e->getMessage());
