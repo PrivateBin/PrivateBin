@@ -1,7 +1,7 @@
 <?php
 class zerobinTest extends PHPUnit_Framework_TestCase
 {
-    private $_model;
+    protected $_model;
 
     public function setUp()
     {
@@ -14,6 +14,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
     public function tearDown()
     {
         /* Tear Down Routine */
+        helper::confRestore();
     }
 
     public function reset()
@@ -112,6 +113,10 @@ class zerobinTest extends PHPUnit_Framework_TestCase
     public function testCreate()
     {
         $this->reset();
+        $options = parse_ini_file(CONF, true);
+        $options['traffic']['limit'] = 0;
+        helper::confBackup();
+        helper::createIniFile(CONF, $options);
         $_POST = helper::getPaste();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD'] = 'POST';
@@ -139,6 +144,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD'] = 'POST';
         $_SERVER['REMOTE_ADDR'] = '::1';
+        trafficlimiter::canPass();
         ob_start();
         new zerobin;
         $content = ob_get_contents();
@@ -390,7 +396,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $options['traffic']['limit'] = 0;
         helper::confBackup();
         helper::createIniFile(CONF, $options);
-        $_POST = helper::getComment();
+        $_POST = helper::getCommentPost();
         $_POST['pasteid'] = helper::getPasteId();
         $_POST['parentid'] = helper::getPasteId();
         $_POST['nickname'] = 'foo';
@@ -416,7 +422,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $options['traffic']['limit'] = 0;
         helper::confBackup();
         helper::createIniFile(CONF, $options);
-        $_POST = helper::getComment();
+        $_POST = helper::getCommentPost();
         $_POST['pasteid'] = helper::getPasteId();
         $_POST['parentid'] = helper::getPasteId();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
@@ -441,7 +447,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $options['traffic']['limit'] = 0;
         helper::confBackup();
         helper::createIniFile(CONF, $options);
-        $_POST = helper::getComment();
+        $_POST = helper::getCommentPost();
         $_POST['pasteid'] = helper::getPasteId();
         $_POST['parentid'] = 'foo';
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
@@ -466,7 +472,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $options['traffic']['limit'] = 0;
         helper::confBackup();
         helper::createIniFile(CONF, $options);
-        $_POST = helper::getComment();
+        $_POST = helper::getCommentPost();
         $_POST['pasteid'] = helper::getPasteId();
         $_POST['parentid'] = helper::getPasteId();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
@@ -492,7 +498,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $options['traffic']['limit'] = 0;
         helper::confBackup();
         helper::createIniFile(CONF, $options);
-        $_POST = helper::getComment();
+        $_POST = helper::getCommentPost();
         $_POST['pasteid'] = helper::getPasteId();
         $_POST['parentid'] = helper::getPasteId();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
@@ -519,7 +525,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $this->_model->create(helper::getPasteId(), helper::getPaste());
         $this->_model->createComment(helper::getPasteId(), helper::getPasteId(), helper::getCommentId(), helper::getComment());
         $this->assertTrue($this->_model->existsComment(helper::getPasteId(), helper::getPasteId(), helper::getCommentId()), 'comment exists before posting data');
-        $_POST = helper::getComment();
+        $_POST = helper::getCommentPost();
         $_POST['pasteid'] = helper::getPasteId();
         $_POST['parentid'] = helper::getPasteId();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
@@ -676,8 +682,12 @@ class zerobinTest extends PHPUnit_Framework_TestCase
     public function testReadOldSyntax()
     {
         $this->reset();
-        $oldPaste = helper::getPaste(array('syntaxcoloring' => true));
-        unset($oldPaste['meta']['formatter']);
+        $oldPaste = helper::getPaste();
+        $oldPaste['meta'] = array(
+            'syntaxcoloring' => true,
+            'postdate' => $oldPaste['meta']['postdate'],
+            'opendiscussion' => $oldPaste['meta']['opendiscussion'],
+        );
         $this->_model->create(helper::getPasteId(), $oldPaste);
         $_SERVER['QUERY_STRING'] = helper::getPasteId();
         ob_start();

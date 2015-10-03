@@ -22,7 +22,7 @@ abstract class zerobin_abstract
      *
      * @access protected
      * @static
-     * @var zerobin
+     * @var zerobin_abstract
      */
     protected static $_instance = null;
 

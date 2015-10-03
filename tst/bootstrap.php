@@ -27,9 +27,9 @@ class helper
         'attachment' => '{"iv":"Pd4pOKWkmDTT9uPwVwd5Ag","v":1,"iter":1000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"ZIUhFTliVz4","ct":"6nOCU3peNDclDDpFtJEBKA"}',
         'attachmentname' => '{"iv":"76MkAtOGC4oFogX/aSMxRA","v":1,"iter":1000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"ZIUhFTliVz4","ct":"b6Ae/U1xJdsX/+lATud4sQ"}',
         'meta' => array(
+            'formatter' => 'plaintext',
             'postdate' => 1344803344,
             'opendiscussion' => true,
-            'formatter' => 'plaintext',
         ),
     );
 
@@ -107,6 +107,19 @@ class helper
     {
         $example = self::$comment;
         $example['meta'] = array_merge($example['meta'], $meta);
+        return $example;
+    }
+
+    /**
+     * get example comment
+     *
+     * @return array
+     */
+    public static function getCommentPost($meta = array())
+    {
+        $example = self::getComment($meta);
+        $example['nickname'] = $example['meta']['nickname'];
+        unset($example['meta']['nickname']);
         return $example;
     }
 

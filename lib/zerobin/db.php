@@ -166,7 +166,7 @@ class zerobin_db extends zerobin_abstract
                 }
 
                 // create comment table if needed
-                if (!array_key_exists(self::$_prefix . 'comment', $tables))
+                if (!in_array(self::$_prefix . 'comment', $tables))
                 {
                     self::$_db->exec(
                         'CREATE TABLE ' . self::$_prefix . 'comment ( ' .
@@ -182,7 +182,7 @@ class zerobin_db extends zerobin_abstract
             }
         }
 
-        return parent::$_instance;
+        return self::$_instance;
     }
 
     /**
