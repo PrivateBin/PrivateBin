@@ -23,7 +23,7 @@ class request
      * @access private
      * @var string
      */
-    private $_inputStream = 'php://input';
+    private static $_inputStream = 'php://input';
 
     /**
      * Operation to perform.
@@ -80,7 +80,8 @@ class request
         switch (array_key_exists('REQUEST_METHOD', $_SERVER) ? $_SERVER['REQUEST_METHOD'] : 'GET')
         {
             case 'PUT':
-                parse_str(file_get_contents($this->_inputStream), $this->_params);
+                $this->_operation = 'create';
+                parse_str(file_get_contents(self::$_inputStream), $this->_params);
                 break;
             case 'POST':
                 $this->_params = $_POST;
@@ -89,7 +90,7 @@ class request
                 $this->_params = $_GET;
         }
 
-        // prepare paremeters, depending on current operation
+        // prepare parameters, depending on current operation
         if (
             (array_key_exists('data', $this->_params) && !empty($this->_params['data'])) ||
             (array_key_exists('attachment', $this->_params) && !empty($this->_params['attachment']))
@@ -107,7 +108,7 @@ class request
         // display an existing paste
         elseif (array_key_exists('QUERY_STRING', $_SERVER) && !empty($_SERVER['QUERY_STRING']))
         {
-            $this->_operation = 'read';
+            if ($this->_operation != 'create') $this->_operation = 'read';
             $this->_params['pasteid'] = $_SERVER['QUERY_STRING'];
         }
     }
@@ -148,13 +149,12 @@ class request
     }
 
     /**
-     * Override the default input stream source
+     * Override the default input stream source, used for unit testing.
      *
      * @param unknown $input
      */
-    public function setInputStream($input)
+    public static function setInputStream($input)
     {
-        $this->_inputStream = $input;
-        $this->__construct();
+        self::$_inputStream = $input;
     }
 }
