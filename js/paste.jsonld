@@ -1,0 +1,11 @@
+{
+	"@context": {
+		"status": http://schema.org/Integer",
+		"id": "http://schema.org/name",
+		"deletetoken": "http://schema.org/Text",
+		"url: {
+			"@id": "http://schema.org/url",
+			"@type": "@id"
+		}
+	}
+}

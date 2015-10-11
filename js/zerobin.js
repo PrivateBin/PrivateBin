@@ -671,9 +671,11 @@ $(function() {
             }
             if (comments[0].meta.burnafterreading)
             {
+                // unfortunately many web servers don't support DELETE (and PUT) out of the box
                 $.ajax({
-                    // type: 'DELETE', // unfortunately many web servers will not support DELETE and PUT by default
-                    url: this.scriptLocation() + '?pasteid=' + this.pasteID() + '&deletetoken=burnafterreading',
+                    type: 'POST',
+                    url: this.scriptLocation() + '?' + this.pasteID(),
+                    data: {deletetoken: 'burnafterreading'},
                     dataType: 'json',
                     headers: this.headers
                 })

@@ -65,9 +65,9 @@ class jsonApiTest extends PHPUnit_Framework_TestCase
         $options['traffic']['limit'] = 0;
         helper::confBackup();
         helper::createIniFile(CONF, $options);
-        $file = tempnam(sys_get_temp_dir(), 'FOO');
         $paste = helper::getPaste();
         unset($paste['meta']);
+        $file = tempnam(sys_get_temp_dir(), 'FOO');
         file_put_contents($file, http_build_query($paste));
         request::setInputStream($file);
         $_SERVER['QUERY_STRING'] = helper::getPasteId();
@@ -87,6 +87,53 @@ class jsonApiTest extends PHPUnit_Framework_TestCase
         );
         $this->assertStringEndsWith('?' . $response['id'], $response['url'], 'returned URL points to new paste');
         $this->assertTrue($this->_model->exists($response['id']), 'paste exists after posting data');
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testDelete()
+    {
+        $this->reset();
+        $this->_model->create(helper::getPasteId(), helper::getPaste());
+        $this->assertTrue($this->_model->exists(helper::getPasteId()), 'paste exists before deleting data');
+        $file = tempnam(sys_get_temp_dir(), 'FOO');
+        file_put_contents($file, http_build_query(array(
+            'deletetoken' => hash_hmac('sha1', helper::getPasteId(), serversalt::get()),
+        )));
+        request::setInputStream($file);
+        $_SERVER['QUERY_STRING'] = helper::getPasteId();
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
+        $_SERVER['REQUEST_METHOD'] = 'DELETE';
+        ob_start();
+        new zerobin;
+        $content = ob_get_contents();
+        $response = json_decode($content, true);
+        $this->assertEquals(0, $response['status'], 'outputs status');
+        $this->assertFalse($this->_model->exists(helper::getPasteId()), 'paste successfully deleted');
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testDeleteWithPost()
+    {
+        $this->reset();
+        $this->_model->create(helper::getPasteId(), helper::getPaste());
+        $this->assertTrue($this->_model->exists(helper::getPasteId()), 'paste exists before deleting data');
+        $_POST = array(
+            'action' => 'delete',
+            'deletetoken' => hash_hmac('sha1', helper::getPasteId(), serversalt::get()),
+        );
+        $_SERVER['QUERY_STRING'] = helper::getPasteId();
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
+        $_SERVER['REQUEST_METHOD'] = 'POST';
+        ob_start();
+        new zerobin;
+        $content = ob_get_contents();
+        $response = json_decode($content, true);
+        $this->assertEquals(0, $response['status'], 'outputs status');
+        $this->assertFalse($this->_model->exists(helper::getPasteId()), 'paste successfully deleted');
     }
 
 }

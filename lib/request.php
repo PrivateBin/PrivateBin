@@ -79,8 +79,8 @@ class request
         // parse parameters, depending on request type
         switch (array_key_exists('REQUEST_METHOD', $_SERVER) ? $_SERVER['REQUEST_METHOD'] : 'GET')
         {
+            case 'DELETE':
             case 'PUT':
-                $this->_operation = 'create';
                 parse_str(file_get_contents(self::$_inputStream), $this->_params);
                 break;
             case 'POST':
@@ -89,8 +89,12 @@ class request
             default:
                 $this->_params = $_GET;
         }
+        if (array_key_exists('QUERY_STRING', $_SERVER) && !empty($_SERVER['QUERY_STRING']))
+        {
+            $this->_params['pasteid'] = $_SERVER['QUERY_STRING'];
+        }
 
-        // prepare parameters, depending on current operation
+        // prepare operation, depending on current parameters
         if (
             (array_key_exists('data', $this->_params) && !empty($this->_params['data'])) ||
             (array_key_exists('attachment', $this->_params) && !empty($this->_params['attachment']))
@@ -98,18 +102,17 @@ class request
         {
             $this->_operation = 'create';
         }
-        elseif (
-            array_key_exists('pasteid', $this->_params) && !empty($this->_params['pasteid']) &&
-            array_key_exists('deletetoken', $this->_params) && !empty($this->_params['deletetoken'])
-        )
+        elseif (array_key_exists('pasteid', $this->_params) && !empty($this->_params['pasteid']))
         {
-            $this->_operation = 'delete';
-        }
-        // display an existing paste
-        elseif (array_key_exists('QUERY_STRING', $_SERVER) && !empty($_SERVER['QUERY_STRING']))
-        {
-            if ($this->_operation != 'create') $this->_operation = 'read';
-            $this->_params['pasteid'] = $_SERVER['QUERY_STRING'];
+            if (array_key_exists('deletetoken', $this->_params) && !empty($this->_params['deletetoken']))
+            {
+                $this->_operation = 'delete';
+            }
+            else
+            {
+                $this->_operation = 'read';
+            }
+
         }
     }
 

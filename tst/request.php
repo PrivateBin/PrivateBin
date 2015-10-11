@@ -94,10 +94,10 @@ class requestTest extends PHPUnit_Framework_TestCase
     public function testApiDelete()
     {
         $this->reset();
-        $_SERVER['REQUEST_METHOD'] = 'DELETE';
+        $_SERVER['REQUEST_METHOD'] = 'POST';
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
-        $_GET['pasteid'] = 'foo';
-        $_GET['deletetoken'] = 'bar';
+        $_SERVER['QUERY_STRING'] = 'foo';
+        $_POST['deletetoken'] = 'bar';
         $request = new request;
         $this->assertTrue($request->isJsonApiCall(), 'is JSON Api call');
         $this->assertEquals('delete', $request->getOperation());

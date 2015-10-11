@@ -862,10 +862,10 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $burnPaste = helper::getPaste(array('burnafterreading' => true));
         $this->_model->create(helper::getPasteId(), $burnPaste);
         $this->assertTrue($this->_model->exists(helper::getPasteId()), 'paste exists before deleting data');
-        $_GET['pasteid'] = helper::getPasteId();
-        $_GET['deletetoken'] = 'burnafterreading';
+        $_POST['deletetoken'] = 'burnafterreading';
+        $_SERVER['QUERY_STRING'] = helper::getPasteId();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
-        $_SERVER['REQUEST_METHOD'] = 'DELETE';
+        $_SERVER['REQUEST_METHOD'] = 'POST';
         ob_start();
         new zerobin;
         $content = ob_get_contents();
@@ -882,10 +882,10 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $this->reset();
         $this->_model->create(helper::getPasteId(), helper::getPaste());
         $this->assertTrue($this->_model->exists(helper::getPasteId()), 'paste exists before deleting data');
-        $_GET['pasteid'] = helper::getPasteId();
-        $_GET['deletetoken'] = 'burnafterreading';
+        $_POST['deletetoken'] = 'burnafterreading';
+        $_SERVER['QUERY_STRING'] = helper::getPasteId();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
-        $_SERVER['REQUEST_METHOD'] = 'DELETE';
+        $_SERVER['REQUEST_METHOD'] = 'POST';
         ob_start();
         new zerobin;
         $content = ob_get_contents();
