@@ -122,4 +122,24 @@ abstract class zerobin_abstract
      * @return void
      */
     abstract public function existsComment($pasteid, $parentid, $commentid);
+
+    /**
+     * Get next free slot for comment from postdate.
+     *
+     * @access public
+     * @param  array $comments
+     * @param  int|string $postdate
+     * @return void
+     */
+    protected function getOpenSlot(&$comments, $postdate)
+    {
+        if (array_key_exists($postdate, $comments))
+        {
+            $parts = explode('.', $postdate, 2);
+            if (!array_key_exists(1, $parts)) $parts[1] = 0;
+            ++$parts[1];
+            return $this->addComment($comments, implode('.', $parts));
+        }
+        return $postdate;
+    }
 }

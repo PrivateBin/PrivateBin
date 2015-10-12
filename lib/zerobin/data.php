@@ -181,7 +181,8 @@ class zerobin_data extends zerobin_abstract
                     $comment->meta->parentid = $items[2];
 
                     // Store in array
-                    $comments[$comment->meta->postdate] = $comment;
+                    $key = $this->getOpenSlot($comments, (int) $comment->meta->postdate);
+                    $comments[$key] = $comment;
                 }
             }
             $dir->close();

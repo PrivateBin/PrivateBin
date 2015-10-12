@@ -378,7 +378,7 @@ class zerobin_db extends zerobin_abstract
         {
             foreach ($rows as $row)
             {
-                $i = (int) $row['postdate'];
+                $i = $this->getOpenSlot($comments, (int) $row['postdate']);
                 $comments[$i] = clone $commentTemplate;
                 $comments[$i]->data = $row['data'];
                 $comments[$i]->meta->nickname = $row['nickname'];
