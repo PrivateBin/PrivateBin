@@ -89,7 +89,11 @@ class request
             default:
                 $this->_params = $_GET;
         }
-        if (array_key_exists('QUERY_STRING', $_SERVER) && !empty($_SERVER['QUERY_STRING']))
+        if (
+            !array_key_exists('pasteid', $this->_params) &&
+            array_key_exists('QUERY_STRING', $_SERVER) &&
+            !empty($_SERVER['QUERY_STRING'])
+        )
         {
             $this->_params['pasteid'] = $_SERVER['QUERY_STRING'];
         }
@@ -112,7 +116,6 @@ class request
             {
                 $this->_operation = 'read';
             }
-
         }
     }
 

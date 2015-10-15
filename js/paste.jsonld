@@ -6,6 +6,23 @@
 		"url: {
 			"@id": "http://schema.org/url",
 			"@type": "@id"
-		}
+		},
+		"data": "http://schema.org/Text",
+		"attachment": "http://schema.org/Text",
+		"attachmentname": "http://schema.org/Text",
+		"meta": {
+			"formatter": "http://schema.org/Text",
+			"postdate": "http://schema.org/Integer",
+			"opendiscussion": "http://schema.org/True",
+			"burnafterreading": "http://schema.org/True",
+			"expire_date": "http://schema.org/Integer",
+			"remaining_time": "http://schema.org/Integer"
+		},
+		"comments": {
+			"@id": "comment.jsonld",
+			"@container": "@list"
+		},
+		"comment_count": "http://schema.org/Integer",
+		"comment_offset": "http://schema.org/Integer"
 	}
 }

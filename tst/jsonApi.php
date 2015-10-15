@@ -136,4 +136,21 @@ class jsonApiTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($this->_model->exists(helper::getPasteId()), 'paste successfully deleted');
     }
 
+    /**
+     * @runInSeparateProcess
+     */
+    public function testRead()
+    {
+        $this->reset();
+        $this->_model->create(helper::getPasteId(), helper::getPaste());
+        $_SERVER['QUERY_STRING'] = helper::getPasteId();
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
+        ob_start();
+        new zerobin;
+        $content = ob_get_contents();
+        $response = json_decode($content, true);
+        $this->assertEquals(0, $response['status'], 'outputs success status');
+        $this->assertEquals(array(helper::getPaste()), $response['messages'], 'outputs data correctly');
+    }
+
 }
