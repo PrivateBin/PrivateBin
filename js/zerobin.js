@@ -1073,7 +1073,7 @@ $(function() {
         },
 
         /**
-         * Reload the page
+         * Reload the page.
          *
          * @param Event event
          */
@@ -1084,7 +1084,7 @@ $(function() {
         },
 
         /**
-         * Return raw text
+         * Return raw text.
          *
          * @param Event event
          */
@@ -1118,6 +1118,30 @@ $(function() {
             }
             this.message.text(this.clearText.text());
             $('.navbar-toggle').click();
+        },
+
+        /**
+         * Support input of tab character.
+         *
+         * @param Event event
+         */
+        supportTabs: function(event)
+        {
+            var keyCode = event.keyCode || event.which;
+            // tab was pressed
+            if (keyCode === 9)
+            {
+                // prevent the textarea to lose focus
+                event.preventDefault();
+                // get caret position & selection
+                var val   = this.value,
+                    start = this.selectionStart,
+                    end   = this.selectionEnd;
+                // set textarea value to: text before caret + tab + text after caret
+                this.value = val.substring(0, start) + '\t' + val.substring(end);
+                // put caret at right position again
+                this.selectionStart = this.selectionEnd = start + 1;
+            }
         },
 
         /**
@@ -1203,6 +1227,7 @@ $(function() {
             this.rawTextButton.click($.proxy(this.rawText, this));
             this.fileRemoveButton.click($.proxy(this.removeAttachment, this));
             $('.reloadlink').click($.proxy(this.reloadPage, this));
+            this.message.keydown(this.supportTabs);
         },
 
         /**
