@@ -138,7 +138,7 @@ abstract class zerobin_abstract
             $parts = explode('.', $postdate, 2);
             if (!array_key_exists(1, $parts)) $parts[1] = 0;
             ++$parts[1];
-            return $this->addComment($comments, implode('.', $parts));
+            return $this->getOpenSlot($comments, implode('.', $parts));
         }
         return $postdate;
     }

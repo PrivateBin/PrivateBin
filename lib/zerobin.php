@@ -340,10 +340,7 @@ class zerobin
             if ($paste->exists())
             {
                 // The paste itself is the first in the list of encrypted messages.
-                $messages = array_merge(
-                    array($paste->get()),
-                    $paste->getComments()
-                );
+                $messages = array_merge(array($paste->get()), $paste->getComments());
                 $this->_data = json_encode($messages);
             }
             else

@@ -80,6 +80,11 @@ class zerobin_db extends zerobin_abstract
                 array_key_exists('opt', $options)
             )
             {
+                // set default options
+                $options['opt'][PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+                $options['opt'][PDO::ATTR_EMULATE_PREPARES] = false;
+                $options['opt'][PDO::ATTR_PERSISTENT] = true;
+
                 // check if the database contains the required tables
                 self::$_type = strtolower(
                     substr($options['dsn'], 0, strpos($options['dsn'], ':'))
@@ -156,12 +161,9 @@ class zerobin_db extends zerobin_abstract
                 else
                 {
                     try {
-                        self::$_db->exec('SELECT meta FROM ' . self::$_prefix . 'paste LIMIT 1;');
+                        self::_exec('SELECT meta FROM ' . self::$_prefix . 'paste LIMIT 1;', array());
                     } catch (PDOException $e) {
-                        if ($e->getCode() == 'HY000')
-                        {
-                            self::$_db->exec('ALTER TABLE ' . self::$_prefix . 'paste ADD COLUMN meta TEXT;');
-                        }
+                        self::$_db->exec('ALTER TABLE ' . self::$_prefix . 'paste ADD COLUMN meta TEXT;');
                     }
                 }
 
@@ -368,10 +370,6 @@ class zerobin_db extends zerobin_abstract
             array($pasteid)
         );
 
-        // create object
-        $commentTemplate = new stdClass;
-        $commentTemplate->meta = new stdClass;
-
         // create comment list
         $comments = array();
         if (count($rows))
@@ -379,10 +377,13 @@ class zerobin_db extends zerobin_abstract
             foreach ($rows as $row)
             {
                 $i = $this->getOpenSlot($comments, (int) $row['postdate']);
-                $comments[$i] = clone $commentTemplate;
+                $comments[$i] = new stdClass;
                 $comments[$i]->data = $row['data'];
-                $comments[$i]->meta->nickname = $row['nickname'];
-                $comments[$i]->meta->vizhash = $row['vizhash'];
+                $comments[$i]->meta = new stdClass;
+                if (array_key_exists('nickname', $row))
+                    $comments[$i]->meta->nickname = $row['nickname'];
+                if (array_key_exists('vizhash', $row))
+                    $comments[$i]->meta->vizhash = $row['vizhash'];
                 $comments[$i]->meta->postdate = $i;
                 $comments[$i]->meta->commentid = $row['dataid'];
                 $comments[$i]->meta->parentid = $row['parentid'];
