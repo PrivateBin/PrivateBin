@@ -444,7 +444,6 @@ class zerobin
             $result['url'] = (
                 array_key_exists('REQUEST_URI', $_SERVER) ? $_SERVER['REQUEST_URI'] : '/'
             ) . '?' . $message;
-            $result['@context'] = 'js/paste.jsonld';
         }
         $result += $other;
         $this->_json = json_encode($result);

@@ -378,15 +378,15 @@ class zerobin_db extends zerobin_abstract
             {
                 $i = $this->getOpenSlot($comments, (int) $row['postdate']);
                 $comments[$i] = new stdClass;
+                $comments[$i]->id = $row['dataid'];
+                $comments[$i]->parentid = $row['parentid'];
                 $comments[$i]->data = $row['data'];
                 $comments[$i]->meta = new stdClass;
+                $comments[$i]->meta->postdate = (int) $row['postdate'];
                 if (array_key_exists('nickname', $row))
                     $comments[$i]->meta->nickname = $row['nickname'];
                 if (array_key_exists('vizhash', $row))
                     $comments[$i]->meta->vizhash = $row['vizhash'];
-                $comments[$i]->meta->postdate = (int) $row['postdate'];
-                $comments[$i]->meta->commentid = $row['dataid'];
-                $comments[$i]->meta->parentid = $row['parentid'];
             }
             ksort($comments);
         }

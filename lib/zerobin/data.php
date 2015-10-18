@@ -177,8 +177,8 @@ class zerobin_data extends zerobin_abstract
                     $comment = json_decode(file_get_contents($discdir . $filename));
                     $items = explode('.', $filename);
                     // Add some meta information not contained in file.
-                    $comment->meta->commentid = $items[1];
-                    $comment->meta->parentid = $items[2];
+                    $comment->id = $items[1];
+                    $comment->parentid = $items[2];
 
                     // Store in array
                     $key = $this->getOpenSlot($comments, (int) $comment->meta->postdate);

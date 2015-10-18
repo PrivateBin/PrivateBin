@@ -709,18 +709,18 @@ $(function() {
                     catch(err)
                     {}
                     // If parent comment exists, display below (CSS will automatically shift it right.)
-                    var cname = '#comment_' + comment.meta.parentid;
+                    var cname = '#comment_' + comment.parentid;
 
                     // If the element exists in page
                     if ($(cname).length)
                     {
                         place = $(cname);
                     }
-                    var divComment = $('<article><div class="comment" id="comment_' + comment.meta.commentid+'">'
+                    var divComment = $('<article><div class="comment" id="comment_' + comment.id + '">'
                                    + '<div class="commentmeta"><span class="nickname"></span><span class="commentdate"></span></div><div class="commentdata"></div>'
                                    + '<button class="btn btn-default btn-sm">' + i18n._('Reply') + '</button>'
                                    + '</div></article>');
-                    divComment.find('button').click({commentid: comment.meta.commentid}, $.proxy(this.openReply, this));
+                    divComment.find('button').click({commentid: comment.id}, $.proxy(this.openReply, this));
                     helper.setElementText(divComment.find('div.commentdata'), cleartext);
                     // Convert URLs to clickable links in comment.
                     helper.urls2links(divComment.find('div.commentdata'));
@@ -737,7 +737,7 @@ $(function() {
                     }
                     divComment.find('span.commentdate')
                               .text(' (' + (new Date(comment.meta.postdate * 1000).toLocaleString()) + ')')
-                              .attr('title', 'CommentID: ' + comment.meta.commentid);
+                              .attr('title', 'CommentID: ' + comment.id);
 
                     // If an avatar is available, display it.
                     if (comment.meta.vizhash)

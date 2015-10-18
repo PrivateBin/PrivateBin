@@ -2,9 +2,16 @@
 	"@context": {
 		"status": "http://schema.org/Integer",
 		"id": "http://schema.org/name",
+		"parentid": "http://schema.org/name",
 		"url: {
 			"@id": "http://schema.org/url",
 			"@type": "@id"
+		},
+		"data": "http://schema.org/Text",
+		"meta": {
+			"postdate": "http://schema.org/Integer",
+			"nickname": "http://schema.org/Text",
+			"vizhash": "http://schema.org/Text"
 		}
 	}
 }
