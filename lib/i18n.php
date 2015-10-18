@@ -27,6 +27,15 @@ class i18n
     protected static $_language = 'en';
 
     /**
+     * language fallback
+     *
+     * @access protected
+     * @static
+     * @var    string
+     */
+    protected static $_languageFallback = 'en';
+
+    /**
      * language labels
      *
      * @access protected
@@ -249,6 +258,20 @@ class i18n
     }
 
     /**
+     * set the default language
+     *
+     * @access public
+     * @static
+     * @param  string $lang
+     * @return void
+     */
+    public static function setLanguageFallback($lang)
+    {
+        if (in_array($lang, self::getAvailableLanguages()))
+            self::$_languageFallback = $lang;
+    }
+
+    /**
      * get language file path
      *
      * @access protected
@@ -339,7 +362,7 @@ class i18n
         }
         if (count($matches) === 0)
         {
-            return 'en';
+            return self::$_languageFallback;
         }
         krsort($matches);
         $topmatches = current($matches);

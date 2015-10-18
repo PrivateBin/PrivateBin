@@ -185,6 +185,16 @@ class zerobin
         $this->_model = new model($this->_conf);
         $this->_request = new request;
         $this->_urlbase = array_key_exists('REQUEST_URI', $_SERVER) ? $_SERVER['REQUEST_URI'] : '/';
+
+        // set default language
+        $lang = $this->_conf->getKey('languagedefault');
+        i18n::setLanguageFallback($lang);
+        // force default language, if language selection is disabled and a default is set
+        if (!$this->_conf->getKey('languageselection') && strlen($lang) == 2)
+        {
+            $_COOKIE['lang'] = $lang;
+            setcookie('lang', $lang);
+        }
     }
 
     /**
@@ -448,6 +458,13 @@ class zerobin
         $page->draw($this->_conf->getKey('template'));
     }
 
+    /**
+     * outputs requested JSON-LD context
+     *
+     * @access private
+     * @param string $type
+     * @return void
+     */
     private function _jsonld($type)
     {
         if (
@@ -475,7 +492,7 @@ class zerobin
     }
 
     /**
-     * return JSON encoded message and exit
+     * prepares JSON encoded status message
      *
      * @access private
      * @param  bool $status

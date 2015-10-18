@@ -43,6 +43,7 @@ class configuration
             'notice' => '',
             'base64version' => '2.1.9',
             'languageselection' => false,
+            'languagedefault' => '',
         ),
         'expire' => array(
             'default' => '1week',
