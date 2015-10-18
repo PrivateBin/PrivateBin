@@ -48,6 +48,14 @@ class zerobin
     private $_data = '';
 
     /**
+     * does the paste expire
+     *
+     * @access private
+     * @var    bool
+     */
+    private $_doesExpire = false;
+
+    /**
      * formatter
      *
      * @access private
@@ -354,7 +362,9 @@ class zerobin
             $paste = $this->_model->getPaste($dataid);
             if ($paste->exists())
             {
-                $this->_data = json_encode($paste->get());
+                $data = $paste->get();
+                $this->_doesExpire = property_exists($data, 'meta') && property_exists($data->meta, 'expire_date');
+                $this->_data = json_encode($data);
             }
             else
             {
@@ -434,6 +444,7 @@ class zerobin
         $page->assign('LANGUAGES', i18n::getLanguageLabels(i18n::getAvailableLanguages()));
         $page->assign('EXPIRE', $expire);
         $page->assign('EXPIREDEFAULT', $this->_conf->getKey('default', 'expire'));
+        $page->assign('EXPIRECLONE', !$this->_doesExpire || ($this->_doesExpire && $this->_conf->getKey('clone', 'expire')));
         $page->draw($this->_conf->getKey('template'));
     }
 

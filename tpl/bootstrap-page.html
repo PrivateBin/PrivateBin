@@ -40,10 +40,10 @@
 						<li>
 							<button id="sendbutton" type="button" class="hidden btn btn-default navbar-btn">
 								<span class="glyphicon glyphicon-upload" aria-hidden="true"></span> {function="t('Send')"}
-							</button>
+							</button>{if="$EXPIRECLONE"}
 							<button id="clonebutton" type="button" class="hidden btn btn-default navbar-btn">
 								<span class="glyphicon glyphicon-duplicate" aria-hidden="true"></span> {function="t('Clone')"}
-							</button>
+							</button>{/if}
 							<button id="rawtextbutton" type="button" class="hidden btn btn-default navbar-btn">
 								<span class="glyphicon glyphicon-text-background" aria-hidden="true"></span> {function="t('Raw text')"}
 							</button>

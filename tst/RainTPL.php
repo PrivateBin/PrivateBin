@@ -43,6 +43,7 @@ class RainTPLTest extends PHPUnit_Framework_TestCase
         $page->assign('LANGUAGES', i18n::getLanguageLabels(i18n::getAvailableLanguages()));
         $page->assign('EXPIRE', self::$expire);
         $page->assign('EXPIREDEFAULT', self::$expire_default);
+        $page->assign('EXPIRECLONE', true);
         ob_start();
         $page->draw('page');
         $this->_content = ob_get_contents();

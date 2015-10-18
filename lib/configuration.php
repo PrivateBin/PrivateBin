@@ -46,6 +46,7 @@ class configuration
         ),
         'expire' => array(
             'default' => '1week',
+            'clone' => true,
         ),
         'expire_options' => array(
             '5min' => 300,
