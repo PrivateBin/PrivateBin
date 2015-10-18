@@ -339,9 +339,7 @@ class zerobin
             $paste = $this->_model->getPaste($dataid);
             if ($paste->exists())
             {
-                // The paste itself is the first in the list of encrypted messages.
-                $messages = array_merge(array($paste->get()), $paste->getComments());
-                $this->_data = json_encode($messages);
+                $this->_data = json_encode($paste->get());
             }
             else
             {
@@ -359,7 +357,7 @@ class zerobin
             }
             else
             {
-                $this->_return_message(0, $dataid, array('messages' => $messages));
+                $this->_return_message(0, $dataid, json_decode($this->_data, true));
             }
         }
     }

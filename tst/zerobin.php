@@ -587,7 +587,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $this->assertTag(
             array(
                 'id' => 'cipherdata',
-                'content' => htmlspecialchars(json_encode(helper::getPaste()), ENT_NOQUOTES)
+                'content' => htmlspecialchars(helper::getPasteAsJson(), ENT_NOQUOTES)
             ),
             $content,
             'outputs data correctly'
@@ -671,7 +671,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $this->assertTag(
             array(
                 'id' => 'cipherdata',
-                'content' => htmlspecialchars(json_encode($burnPaste), ENT_NOQUOTES)
+                'content' => htmlspecialchars(helper::getPasteAsJson($burnPaste['meta']), ENT_NOQUOTES)
             ),
             $content,
             'outputs data correctly'
@@ -684,7 +684,8 @@ class zerobinTest extends PHPUnit_Framework_TestCase
     public function testReadJson()
     {
         $this->reset();
-        $this->_model->create(helper::getPasteId(), helper::getPaste());
+        $paste = helper::getPaste();
+        $this->_model->create(helper::getPasteId(), $paste);
         $_SERVER['QUERY_STRING'] = helper::getPasteId();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         ob_start();
@@ -692,7 +693,14 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $content = ob_get_contents();
         $response = json_decode($content, true);
         $this->assertEquals(0, $response['status'], 'outputs success status');
-        $this->assertEquals(array(helper::getPaste()), $response['messages'], 'outputs data correctly');
+        $this->assertEquals(helper::getPasteId(), $response['id'], 'outputs data correctly');
+        $this->assertStringEndsWith('?' . $response['id'], $response['url'], 'returned URL points to new paste');
+        $this->assertEquals($paste['data'], $response['data'], 'outputs data correctly');
+        $this->assertEquals($paste['meta']['formatter'], $response['meta']['formatter'], 'outputs format correctly');
+        $this->assertEquals($paste['meta']['postdate'], $response['meta']['postdate'], 'outputs postdate correctly');
+        $this->assertEquals($paste['meta']['opendiscussion'], $response['meta']['opendiscussion'], 'outputs opendiscussion correctly');
+        $this->assertEquals(0, $response['comment_count'], 'outputs comment_count correctly');
+        $this->assertEquals(0, $response['comment_offset'], 'outputs comment_offset correctly');
     }
 
     /**
@@ -717,21 +725,22 @@ class zerobinTest extends PHPUnit_Framework_TestCase
     {
         $this->reset();
         $oldPaste = helper::getPaste();
-        $oldPaste['meta'] = array(
+        $meta = array(
             'syntaxcoloring' => true,
             'postdate' => $oldPaste['meta']['postdate'],
             'opendiscussion' => $oldPaste['meta']['opendiscussion'],
         );
+        $oldPaste['meta'] = $meta;
         $this->_model->create(helper::getPasteId(), $oldPaste);
         $_SERVER['QUERY_STRING'] = helper::getPasteId();
         ob_start();
         new zerobin;
         $content = ob_get_contents();
-        $oldPaste['meta']['formatter'] = 'syntaxhighlighting';
+        $meta['formatter'] = 'syntaxhighlighting';
         $this->assertTag(
             array(
                 'id' => 'cipherdata',
-                'content' => htmlspecialchars(json_encode($oldPaste), ENT_NOQUOTES)
+                'content' => htmlspecialchars(helper::getPasteAsJson($meta), ENT_NOQUOTES)
             ),
             $content,
             'outputs data correctly'
@@ -755,7 +764,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $this->assertTag(
             array(
                 'id' => 'cipherdata',
-                'content' => htmlspecialchars(json_encode($oldPaste), ENT_NOQUOTES)
+                'content' => htmlspecialchars(helper::getPasteAsJson($oldPaste['meta']), ENT_NOQUOTES)
             ),
             $content,
             'outputs data correctly'

@@ -142,7 +142,8 @@ class jsonApiTest extends PHPUnit_Framework_TestCase
     public function testRead()
     {
         $this->reset();
-        $this->_model->create(helper::getPasteId(), helper::getPaste());
+        $paste = helper::getPasteWithAttachment();
+        $this->_model->create(helper::getPasteId(), $paste);
         $_SERVER['QUERY_STRING'] = helper::getPasteId();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         ob_start();
@@ -150,7 +151,16 @@ class jsonApiTest extends PHPUnit_Framework_TestCase
         $content = ob_get_contents();
         $response = json_decode($content, true);
         $this->assertEquals(0, $response['status'], 'outputs success status');
-        $this->assertEquals(array(helper::getPaste()), $response['messages'], 'outputs data correctly');
+        $this->assertEquals(helper::getPasteId(), $response['id'], 'outputs data correctly');
+        $this->assertStringEndsWith('?' . $response['id'], $response['url'], 'returned URL points to new paste');
+        $this->assertEquals($paste['data'], $response['data'], 'outputs data correctly');
+        $this->assertEquals($paste['attachment'], $response['attachment'], 'outputs attachment correctly');
+        $this->assertEquals($paste['attachmentname'], $response['attachmentname'], 'outputs attachmentname correctly');
+        $this->assertEquals($paste['meta']['formatter'], $response['meta']['formatter'], 'outputs format correctly');
+        $this->assertEquals($paste['meta']['postdate'], $response['meta']['postdate'], 'outputs postdate correctly');
+        $this->assertEquals($paste['meta']['opendiscussion'], $response['meta']['opendiscussion'], 'outputs opendiscussion correctly');
+        $this->assertEquals(0, $response['comment_count'], 'outputs comment_count correctly');
+        $this->assertEquals(0, $response['comment_offset'], 'outputs comment_offset correctly');
     }
 
 }

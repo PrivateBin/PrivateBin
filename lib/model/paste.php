@@ -52,6 +52,10 @@ class model_paste extends model_abstract
                 $this->_data->meta->formatter = $this->_conf->getKey('defaultformatter');
             }
         }
+        $this->_data->comments = array_values($this->getComments());
+        $this->_data->comment_count = count($this->_data->comments);
+        $this->_data->comment_offset = 0;
+        $this->_data->{'@context'} = 'js/paste.jsonld';
         return $this->_data;
     }
 

@@ -384,7 +384,7 @@ class zerobin_db extends zerobin_abstract
                     $comments[$i]->meta->nickname = $row['nickname'];
                 if (array_key_exists('vizhash', $row))
                     $comments[$i]->meta->vizhash = $row['vizhash'];
-                $comments[$i]->meta->postdate = $i;
+                $comments[$i]->meta->postdate = (int) $row['postdate'];
                 $comments[$i]->meta->commentid = $row['dataid'];
                 $comments[$i]->meta->parentid = $row['parentid'];
             }

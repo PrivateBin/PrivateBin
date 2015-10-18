@@ -89,6 +89,23 @@ class helper
     }
 
     /**
+     * get example paste
+     *
+     * @return array
+     */
+    public static function getPasteAsJson($meta = array())
+    {
+        $example = self::getPaste();
+        if (count($meta))
+            $example['meta'] = $meta;
+        $example['comments'] = array();
+        $example['comment_count'] = 0;
+        $example['comment_offset'] = 0;
+        $example['@context'] = 'js/paste.jsonld';
+        return json_encode($example);
+    }
+
+    /**
      * get example paste ID
      *
      * @return string

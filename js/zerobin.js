@@ -592,28 +592,28 @@ $(function() {
          * Show decrypted text in the display area, including discussion (if open)
          *
          * @param string key : decryption key
-         * @param array comments : Array of messages to display (items = array with keys ('data','meta')
+         * @param object paste : paste object including comments to display (items = array with keys ('data','meta')
          */
-        displayMessages: function(key, comments)
+        displayMessages: function(key, paste)
         {
             // Try to decrypt the paste.
             var password = this.passwordInput.val();
             if (!this.prettyPrint.hasClass('prettyprinted')) {
                 try
                 {
-                    if (comments[0].attachment)
+                    if (paste.attachment)
                     {
-                        var attachment = filter.decipher(key, password, comments[0].attachment);
+                        var attachment = filter.decipher(key, password, paste.attachment);
                         if (attachment.length == 0)
                         {
                             if (password.length == 0) password = this.requestPassword();
-                            attachment = filter.decipher(key, password, comments[0].attachment);
+                            attachment = filter.decipher(key, password, paste.attachment);
                         }
                         if (attachment.length == 0) throw 'failed to decipher attachment';
 
-                        if (comments[0].attachmentname)
+                        if (paste.attachmentname)
                         {
-                            var attachmentname = filter.decipher(key, password, comments[0].attachmentname);
+                            var attachmentname = filter.decipher(key, password, paste.attachmentname);
                             if (attachmentname.length > 0) this.attachmentLink.attr('download', attachmentname);
                         }
                         this.attachmentLink.attr('href', attachment);
@@ -631,20 +631,20 @@ $(function() {
                             this.image.removeClass('hidden');
                         }
                     }
-                    var cleartext = filter.decipher(key, password, comments[0].data);
-                    if (cleartext.length == 0 && password.length == 0 && !comments[0].attachment)
+                    var cleartext = filter.decipher(key, password, paste.data);
+                    if (cleartext.length == 0 && password.length == 0 && !paste.attachment)
                     {
                         password = this.requestPassword();
-                        cleartext = filter.decipher(key, password, comments[0].data);
+                        cleartext = filter.decipher(key, password, paste.data);
                     }
-                    if (cleartext.length == 0 && !comments[0].attachment) throw 'failed to decipher message';
+                    if (cleartext.length == 0 && !paste.attachment) throw 'failed to decipher message';
 
                     this.passwordInput.val(password);
                     if (cleartext.length > 0)
                     {
                         helper.setElementText(this.clearText, cleartext);
                         helper.setElementText(this.prettyPrint, cleartext);
-                        this.formatPaste(comments[0].meta.formatter);
+                        this.formatPaste(paste.meta.formatter);
                     }
                 }
                 catch(err)
@@ -658,9 +658,9 @@ $(function() {
             }
 
             // Display paste expiration / for your eyes only.
-            if (comments[0].meta.expire_date)
+            if (paste.meta.expire_date)
             {
-                var expiration = helper.secondsToHuman(comments[0].meta.remaining_time),
+                var expiration = helper.secondsToHuman(paste.meta.remaining_time),
                     expirationLabel = [
                         'This document will expire in %d ' + expiration[1] + '.',
                         'This document will expire in %d ' + expiration[1] + 's.'
@@ -669,7 +669,7 @@ $(function() {
                 this.remainingTime.removeClass('foryoureyesonly')
                                   .removeClass('hidden');
             }
-            if (comments[0].meta.burnafterreading)
+            if (paste.meta.burnafterreading)
             {
                 // unfortunately many web servers don't support DELETE (and PUT) out of the box
                 $.ajax({
@@ -692,15 +692,15 @@ $(function() {
             }
 
             // If the discussion is opened on this paste, display it.
-            if (comments[0].meta.opendiscussion)
+            if (paste.meta.opendiscussion)
             {
                 this.comments.html('');
 
                 // iterate over comments
-                for (var i = 1; i < comments.length; i++)
+                for (var i = 0; i < paste.comments.length; ++i)
                 {
                     var place = this.comments;
-                    var comment=comments[i];
+                    var comment = paste.comments[i];
                     var cleartext = '[' + i18n._('Could not decrypt comment; Wrong key?') + ']';
                     try
                     {
@@ -837,7 +837,7 @@ $(function() {
                             {
                                 if (data.status == 0)
                                 {
-                                    zerobin.displayMessages(zerobin.pageKey(), data.messages);
+                                    zerobin.displayMessages(zerobin.pageKey(), data);
                                 }
                                 else if (data.status == 1)
                                 {
@@ -1293,12 +1293,12 @@ $(function() {
                 }
 
                 // List of messages to display.
-                var messages = $.parseJSON(this.cipherData.text());
+                var data = $.parseJSON(this.cipherData.text());
 
                 // Show proper elements on screen.
                 this.stateExistingPaste();
 
-                this.displayMessages(this.pageKey(), messages);
+                this.displayMessages(this.pageKey(), data);
             }
             // Display error message from php code.
             else if (this.errorMessage.text().length > 1)
