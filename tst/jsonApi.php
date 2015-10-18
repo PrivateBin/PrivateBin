@@ -175,7 +175,68 @@ class jsonApiTest extends PHPUnit_Framework_TestCase
         ob_start();
         new zerobin;
         $content = ob_get_contents();
-        $this->assertEquals(file_get_contents(PUBLIC_PATH . '/js/paste.jsonld'), $content, 'outputs data correctly');
+        $this->assertEquals(str_replace(
+                '?jsonld=',
+                '/?jsonld=',
+                file_get_contents(PUBLIC_PATH . '/js/paste.jsonld')
+            ), $content, 'outputs data correctly');
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testJsonLdComment()
+    {
+        $this->reset();
+        $paste = helper::getPasteWithAttachment();
+        $this->_model->create(helper::getPasteId(), $paste);
+        $_GET['jsonld'] = 'comment';
+        ob_start();
+        new zerobin;
+        $content = ob_get_contents();
+        $this->assertEquals(str_replace(
+                '?jsonld=',
+                '/?jsonld=',
+                file_get_contents(PUBLIC_PATH . '/js/comment.jsonld')
+            ), $content, 'outputs data correctly');
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testJsonLdPasteMeta()
+    {
+        $this->reset();
+        $paste = helper::getPasteWithAttachment();
+        $this->_model->create(helper::getPasteId(), $paste);
+        $_GET['jsonld'] = 'pastemeta';
+        ob_start();
+        new zerobin;
+        $content = ob_get_contents();
+        $this->assertEquals(str_replace(
+                '?jsonld=',
+                '/?jsonld=',
+                file_get_contents(PUBLIC_PATH . '/js/pastemeta.jsonld')
+            ), $content, 'outputs data correctly');
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testJsonLdCommentMeta()
+    {
+        $this->reset();
+        $paste = helper::getPasteWithAttachment();
+        $this->_model->create(helper::getPasteId(), $paste);
+        $_GET['jsonld'] = 'commentmeta';
+        ob_start();
+        new zerobin;
+        $content = ob_get_contents();
+        $this->assertEquals(str_replace(
+                '?jsonld=',
+                '/?jsonld=',
+                file_get_contents(PUBLIC_PATH . '/js/commentmeta.jsonld')
+            ), $content, 'outputs data correctly');
     }
 
     /**
