@@ -38,8 +38,8 @@ class model_comment extends model_abstract
         $comments = $this->_store->readComments($this->getPaste()->getId());
         foreach ($comments as $comment) {
             if (
-                $comment->meta->parentid == $this->getParentId() &&
-                $comment->meta->commentid == $this->getId()
+                $comment->parentid == $this->getParentId() &&
+                $comment->id == $this->getId()
             ) {
                 $this->_data = $comment;
                 break;

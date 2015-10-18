@@ -1,0 +1,11 @@
+{
+	"@context": {
+		"so": "http://schema.org/",
+		"formatter": {"@id": "so:Text"},
+		"postdate": {"@id": "so:Integer"},
+		"opendiscussion": {"@id": "so:True"},
+		"burnafterreading": {"@id": "so:True"},
+		"expire_date": {"@id": "so:Integer"},
+		"remaining_time": {"@id": "so:Integer"}
+	}
+}

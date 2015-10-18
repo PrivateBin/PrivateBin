@@ -33,8 +33,8 @@ class zerobin_dbTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($this->_model->createComment(helper::getPasteId(), helper::getPasteId(), helper::getCommentId(), helper::getComment()) !== false, 'store comment');
         $this->assertTrue($this->_model->existsComment(helper::getPasteId(), helper::getPasteId(), helper::getCommentId()), 'comment exists after storing it');
         $comment = json_decode(json_encode(helper::getComment()));
-        $comment->meta->commentid = helper::getCommentId();
-        $comment->meta->parentid = helper::getPasteId();
+        $comment->id = helper::getCommentId();
+        $comment->parentid = helper::getPasteId();
         $this->assertEquals(
             array($comment->meta->postdate => $comment),
             $this->_model->readComments(helper::getPasteId())

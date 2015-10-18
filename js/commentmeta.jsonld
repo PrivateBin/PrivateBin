@@ -1,0 +1,8 @@
+{
+	"@context": {
+		"so": "http://schema.org/",
+		"postdate": "so:Integer",
+		"nickname": "so:Text",
+		"vizhash": "so:Text"
+	}
+}

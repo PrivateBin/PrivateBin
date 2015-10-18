@@ -96,6 +96,14 @@ class zerobin
     private $_request;
 
     /**
+     * URL base
+     *
+     * @access private
+     * @var    string
+     */
+    private $_urlbase;
+
+    /**
      * constructor
      *
      * initializes and runs ZeroBin
@@ -127,12 +135,18 @@ class zerobin
             case 'read':
                 $this->_read($this->_request->getParam('pasteid'));
                 break;
+            case 'jsonld':
+                $this->_jsonld($this->_request->getParam('jsonld'));
+                return;
         }
 
         // output JSON or HTML
         if ($this->_request->isJsonApiCall())
         {
             header('Content-type: application/json');
+            header('Access-Control-Allow-Origin: *');
+            header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
+            header('Access-Control-Allow-Headers: X-Requested-With, Content-Type');
             echo $this->_json;
         }
         else
@@ -162,6 +176,7 @@ class zerobin
         $this->_conf = new configuration;
         $this->_model = new model($this->_conf);
         $this->_request = new request;
+        $this->_urlbase = array_key_exists('REQUEST_URI', $_SERVER) ? $_SERVER['REQUEST_URI'] : '/';
     }
 
     /**
@@ -422,6 +437,32 @@ class zerobin
         $page->draw($this->_conf->getKey('template'));
     }
 
+    private function _jsonld($type)
+    {
+        if (
+            $type !== 'paste' && $type !== 'comment' &&
+            $type !== 'pastemeta' && $type !== 'commentmeta'
+        )
+        {
+            $type = '';
+        }
+        $content = '{}';
+        $file = PUBLIC_PATH . DIRECTORY_SEPARATOR . 'js' . DIRECTORY_SEPARATOR . $type . '.jsonld';
+        if (is_readable($file))
+        {
+            $content = str_replace(
+                '?jsonld=',
+                $this->_urlbase . '?jsonld=',
+                file_get_contents($file)
+            );
+        }
+
+        header('Content-type: application/ld+json');
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Methods: GET');
+        echo $content;
+    }
+
     /**
      * return JSON encoded message and exit
      *
@@ -441,9 +482,7 @@ class zerobin
         else
         {
             $result['id'] = $message;
-            $result['url'] = (
-                array_key_exists('REQUEST_URI', $_SERVER) ? $_SERVER['REQUEST_URI'] : '/'
-            ) . '?' . $message;
+            $result['url'] = $this->_urlbase . '?' . $message;
         }
         $result += $other;
         $this->_json = json_encode($result);

@@ -1,28 +1,24 @@
 {
 	"@context": {
-		"status": http://schema.org/Integer",
-		"id": "http://schema.org/name",
-		"deletetoken": "http://schema.org/Text",
-		"url: {
-			"@id": "http://schema.org/url",
-			"@type": "@id"
+		"so": "http://schema.org/",
+		"status": {"@id": "so:Integer"},
+		"id": {"@id": "so:name"},
+		"deletetoken": {"@id": "so:Text"},
+		"url": {
+			"@type": "@id",
+			"@id": "so:url"
 		},
-		"data": "http://schema.org/Text",
-		"attachment": "http://schema.org/Text",
-		"attachmentname": "http://schema.org/Text",
+		"data": {"@id": "so:Text"},
+		"attachment": {"@id": "so:Text"},
+		"attachmentname": {"@id": "so:Text"},
 		"meta": {
-			"formatter": "http://schema.org/Text",
-			"postdate": "http://schema.org/Integer",
-			"opendiscussion": "http://schema.org/True",
-			"burnafterreading": "http://schema.org/True",
-			"expire_date": "http://schema.org/Integer",
-			"remaining_time": "http://schema.org/Integer"
+			"@id": "?jsonld=pastemeta"
 		},
 		"comments": {
-			"@id": "comment.jsonld",
+			"@id": "?jsonld=comment",
 			"@container": "@list"
 		},
-		"comment_count": "http://schema.org/Integer",
-		"comment_offset": "http://schema.org/Integer"
+		"comment_count": {"@id": "so:Integer"},
+		"comment_offset": {"@id": "so:Integer"}
 	}
 }

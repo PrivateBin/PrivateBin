@@ -1,17 +1,16 @@
 {
 	"@context": {
-		"status": "http://schema.org/Integer",
-		"id": "http://schema.org/name",
-		"parentid": "http://schema.org/name",
+		"so": "http://schema.org/",
+		"status": "so:Integer",
+		"id": "so:name",
+		"parentid": "so:name",
 		"url: {
-			"@id": "http://schema.org/url",
+			"@id": "so:url",
 			"@type": "@id"
 		},
-		"data": "http://schema.org/Text",
+		"data": "so:Text",
 		"meta": {
-			"postdate": "http://schema.org/Integer",
-			"nickname": "http://schema.org/Text",
-			"vizhash": "http://schema.org/Text"
+			"@id": "?jsonld=commentmeta"
 		}
 	}
 }

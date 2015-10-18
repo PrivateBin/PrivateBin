@@ -163,4 +163,34 @@ class jsonApiTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(0, $response['comment_offset'], 'outputs comment_offset correctly');
     }
 
+    /**
+     * @runInSeparateProcess
+     */
+    public function testJsonLdPaste()
+    {
+        $this->reset();
+        $paste = helper::getPasteWithAttachment();
+        $this->_model->create(helper::getPasteId(), $paste);
+        $_GET['jsonld'] = 'paste';
+        ob_start();
+        new zerobin;
+        $content = ob_get_contents();
+        $this->assertEquals(file_get_contents(PUBLIC_PATH . '/js/paste.jsonld'), $content, 'outputs data correctly');
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testJsonLdInvalid()
+    {
+        $this->reset();
+        $paste = helper::getPasteWithAttachment();
+        $this->_model->create(helper::getPasteId(), $paste);
+        $_GET['jsonld'] = '../cfg/conf.ini';
+        ob_start();
+        new zerobin;
+        $content = ob_get_contents();
+        $this->assertEquals('{}', $content, 'does not output nasty data');
+    }
+
 }
