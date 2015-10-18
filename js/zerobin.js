@@ -578,14 +578,20 @@ $(function() {
                     break;
                 case 'syntaxhighlighting':
                     if (typeof prettyPrint == 'function') prettyPrint();
+                    this.prettyMessage.css('overflow', 'auto');
                 default:
                     // Convert URLs to clickable links.
                     helper.urls2links(this.clearText);
                     helper.urls2links(this.prettyPrint);
                     this.clearText.addClass('hidden');
+                    if (format == 'plaintext') 
+                    {
+                        this.prettyPrint.css('white-space', 'pre-wrap');
+                        this.prettyPrint.css('word-break', 'normal');
+                        this.prettyPrint.removeClass('prettyprint');
+                    }
                     this.prettyMessage.removeClass('hidden');
             }
-            if (format == 'plaintext') this.prettyPrint.removeClass('prettyprint');
         },
 
         /**
