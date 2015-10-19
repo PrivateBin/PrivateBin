@@ -578,7 +578,6 @@ $(function() {
                     break;
                 case 'syntaxhighlighting':
                     if (typeof prettyPrint == 'function') prettyPrint();
-                    this.prettyMessage.css('overflow', 'auto');
                 default:
                     // Convert URLs to clickable links.
                     helper.urls2links(this.clearText);

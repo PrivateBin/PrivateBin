@@ -394,6 +394,10 @@ img.vizhash {
 	font-size: 1.2em;
 }
 
+#prettyprint.prettyprinted {
+	overflow: auto;
+}
+
 #cleartext {
 	padding: 10px;
 }
