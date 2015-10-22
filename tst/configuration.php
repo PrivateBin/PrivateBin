@@ -75,6 +75,13 @@ class configurationTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($this->_options, $conf->get(), 'newly generated configuration is correct');
     }
 
+    public function testHandleMissingConfigFile()
+    {
+        @unlink(CONF);
+        $conf = new configuration;
+        $this->assertEquals($this->_options, $conf->get(), 'returns correct defaults on missing file');
+    }
+
     /**
      * @expectedException Exception
      * @expectedExceptionCode 2

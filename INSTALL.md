@@ -16,8 +16,10 @@ and extract it in your web hosts folder were you want to install your ZeroBin in
 
 ### Configuration
 
-In the file `cfg/conf.ini` you can configure ZeroBin. The config file is divided
-into multiple sections, which are enclosed in square brackets.
+In the file `cfg/conf.ini` you can configure ZeroBin. A `cfg/conf.ini.sample` 
+is provided containing all options on default values. You can copy it to 
+`cfg/conf.ini` and adapt it as needed. The config file is divided into multiple 
+sections, which are enclosed in square brackets.
 
 In the `[main]` section you can enable or disable the discussion feature, set the
 limit of stored pastes and comments in bytes. The `[traffic]` section lets you

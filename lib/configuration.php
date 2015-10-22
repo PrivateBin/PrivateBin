@@ -84,10 +84,15 @@ class configuration
      */
     public function __construct()
     {
-        $config = parse_ini_file(PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.ini', true);
-        foreach (array('main', 'model') as $section) {
-            if (!array_key_exists($section, $config)) {
-                throw new Exception(i18n::_('ZeroBin requires configuration section [%s] to be present in configuration file.', $section), 2);
+        $config = array();
+        $configFile = PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.ini';
+        if (is_readable($configFile))
+        {
+            $config = parse_ini_file($configFile, true);
+            foreach (array('main', 'model') as $section) {
+                if (!array_key_exists($section, $config)) {
+                    throw new Exception(i18n::_('ZeroBin requires configuration section [%s] to be present in configuration file.', $section), 2);
+                }
             }
         }
         foreach ($this->_defaults as $section => $values)
