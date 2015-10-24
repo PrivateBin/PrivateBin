@@ -130,8 +130,9 @@ class configurationTest extends PHPUnit_Framework_TestCase
 
     public function testHandleWrongTypes()
     {
-        $this->_options['main']['syntaxhighlightingtheme'] = 'foo';
-        $options = $this->_options;
+        $original_options = $this->_options;
+        $original_options['main']['syntaxhighlightingtheme'] = 'foo';
+        $options = $original_options;
         $options['main']['discussion'] = 'true';
         $options['main']['opendiscussion'] = 0;
         $options['main']['password'] = -1; // evaluates to TRUE
@@ -140,6 +141,21 @@ class configurationTest extends PHPUnit_Framework_TestCase
         $options['formatter_options'][] = 'foo';
         helper::createIniFile(CONF, $options);
         $conf = new configuration;
-        $this->assertEquals($this->_options, $conf->get(), 'incorrect types are corrected');
+        $original_options['expire_options']['foo'] = intval('bar');
+        $original_options['formatter_options'][0] = 'foo';
+        $this->assertEquals($original_options, $conf->get(), 'incorrect types are corrected');
     }
+
+    public function testHandleMissingSubKeys()
+    {
+        $options = $this->_options;
+        unset($options['expire_options']['1week']);
+        unset($options['expire_options']['1year']);
+        unset($options['expire_options']['never']);
+        helper::createIniFile(CONF, $options);
+        $conf = new configuration;
+        $options['expire']['default'] = '5min';
+        $this->assertEquals($options, $conf->get(), 'not overriding "missing" subkeys');
+    }
+
 }

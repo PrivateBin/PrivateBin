@@ -95,11 +95,13 @@ class configuration
                 }
             }
         }
+        $opts = '_options';
         foreach ($this->_defaults as $section => $values)
         {
-            if (!array_key_exists($section, $config))
+            // fill missing sections with default values
+            if (!array_key_exists($section, $config) || count($config[$section]) == 0)
             {
-                $this->_configuration[$section] = $this->_defaults[$section];
+                $this->_configuration[$section] = $values;
                 if (array_key_exists('dir', $this->_configuration[$section]))
                 {
                     $this->_configuration[$section]['dir'] = PATH . $this->_configuration[$section]['dir'];
@@ -117,46 +119,70 @@ class configuration
                     'opt' => array(PDO::ATTR_PERSISTENT => true),
                 );
             }
-            foreach ($values as $key => $val)
+
+            // "*_options" sections don't require all defaults to be set
+            if (
+                $section !== 'model_options' &&
+                ($from = strlen($section) - strlen($opts)) >= 0 &&
+                strpos($section, $opts, $from) !== false
+            )
             {
-                if ($key == 'dir')
+                if (is_int(current($values)))
                 {
-                    $val = PATH . $val;
+                    $config[$section] = array_map('intval', $config[$section]);
                 }
-                $result = $val;
-                if (array_key_exists($key, $config[$section]))
-                {
-                    if ($val === null)
-                    {
-                        $result = $config[$section][$key];
-                    }
-                    elseif (is_bool($val))
-                    {
-                        $val = strtolower($config[$section][$key]);
-                        if (in_array($val, array('true', 'yes', 'on')))
-                        {
-                            $result = true;
-                        }
-                        elseif (in_array($val, array('false', 'no', 'off')))
-                        {
-                            $result = false;
-                        }
-                        else
-                        {
-                            $result = (bool) $config[$section][$key];
-                        }
-                    }
-                    elseif (is_int($val))
-                    {
-                        $result = (int) $config[$section][$key];
-                    }
-                    elseif (is_string($val) && !empty($config[$section][$key]))
-                    {
-                        $result = (string) $config[$section][$key];
-                    }
-                }
-                $this->_configuration[$section][$key] = $result;
+                $this->_configuration[$section] = $config[$section];
             }
+            // check for missing keys and set defaults if necessary
+            else
+            {
+                foreach ($values as $key => $val)
+                {
+                    if ($key == 'dir')
+                    {
+                        $val = PATH . $val;
+                    }
+                    $result = $val;
+                    if (array_key_exists($key, $config[$section]))
+                    {
+                        if ($val === null)
+                        {
+                            $result = $config[$section][$key];
+                        }
+                        elseif (is_bool($val))
+                        {
+                            $val = strtolower($config[$section][$key]);
+                            if (in_array($val, array('true', 'yes', 'on')))
+                            {
+                                $result = true;
+                            }
+                            elseif (in_array($val, array('false', 'no', 'off')))
+                            {
+                                $result = false;
+                            }
+                            else
+                            {
+                                $result = (bool) $config[$section][$key];
+                            }
+                        }
+                        elseif (is_int($val))
+                        {
+                            $result = (int) $config[$section][$key];
+                        }
+                        elseif (is_string($val) && !empty($config[$section][$key]))
+                        {
+                            $result = (string) $config[$section][$key];
+                        }
+                    }
+                    $this->_configuration[$section][$key] = $result;
+                }
+            }
+        }
+
+        // ensure a valid expire default key is set
+        if (!array_key_exists($this->_configuration['expire']['default'], $this->_configuration['expire_options']))
+        {
+            $this->_configuration['expire']['default'] = key($this->_configuration['expire_options']);
         }
     }
 
