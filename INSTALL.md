@@ -76,20 +76,31 @@ any experience running ZeroBin on other RDBMS, please let us know.
 For reference or if you want to create the table schema for yourself:
 
     CREATE TABLE prefix_paste (
-        dataid CHAR(16),
-        data TEXT,
+        dataid CHAR(16) NOT NULL,
+        data BLOB,
         postdate INT,
         expiredate INT,
         opendiscussion INT,
-        burnafterreading INT
+        burnafterreading INT,
+        meta TEXT,
+        attachment MEDIUMBLOB,
+        attachmentname BLOB,
+        PRIMARY KEY (dataid)
     );
     
     CREATE TABLE prefix_comment (
         dataid CHAR(16),
         pasteid CHAR(16),
         parentid CHAR(16),
-        data TEXT,
-        nickname VARCHAR(255),
-        vizhash TEXT,
-        postdate INT
+        data BLOB,
+        nickname BLOB,
+        vizhash BLOB,
+        postdate INT,
+        PRIMARY KEY (dataid)
     );
+    CREATE INDEX parent ON prefix_comment(pasteid);
+    
+    CREATE TABLE prefix_config (
+        id CHAR(16) NOT NULL, value TEXT, PRIMARY KEY (id)
+    );
+    INSERT INTO prefix_config VALUES('VERSION', '0.22');
