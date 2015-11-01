@@ -22,7 +22,7 @@ class zerobin
      *
      * @const string
      */
-    const VERSION = '0.21.1';
+    const VERSION = '0.22';
 
     /**
      * show the same error message if the paste expired or does not exist

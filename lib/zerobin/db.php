@@ -84,102 +84,54 @@ class zerobin_db extends zerobin_abstract
                 $options['opt'][PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
                 $options['opt'][PDO::ATTR_EMULATE_PREPARES] = false;
                 $options['opt'][PDO::ATTR_PERSISTENT] = true;
+                $db_tables_exist = true;
 
-                // check if the database contains the required tables
+                // setup type and dabase connection
                 self::$_type = strtolower(
                     substr($options['dsn'], 0, strpos($options['dsn'], ':'))
                 );
-                switch(self::$_type)
-                {
-                    case 'ibm':
-                        $sql = 'SELECT tabname FROM SYSCAT.TABLES ';
-                        break;
-                    case 'informix':
-                        $sql = 'SELECT tabname FROM systables ';
-                        break;
-                    case 'mssql':
-                        $sql = "SELECT name FROM sysobjects "
-                             . "WHERE type = 'U' ORDER BY name";
-                        break;
-                    case 'mysql':
-                        $sql = 'SHOW TABLES';
-                        break;
-                    case 'oci':
-                        $sql = 'SELECT table_name FROM all_tables';
-                        break;
-                    case 'pgsql':
-                        $sql = "SELECT c.relname AS table_name "
-                             . "FROM pg_class c, pg_user u "
-                             . "WHERE c.relowner = u.usesysid AND c.relkind = 'r' "
-                             . "AND NOT EXISTS (SELECT 1 FROM pg_views WHERE viewname = c.relname) "
-                             . "AND c.relname !~ '^(pg_|sql_)' "
-                             . "UNION "
-                             . "SELECT c.relname AS table_name "
-                             . "FROM pg_class c "
-                             . "WHERE c.relkind = 'r' "
-                             . "AND NOT EXISTS (SELECT 1 FROM pg_views WHERE viewname = c.relname) "
-                             . "AND NOT EXISTS (SELECT 1 FROM pg_user WHERE usesysid = c.relowner) "
-                             . "AND c.relname !~ '^pg_'";
-                        break;
-                    case 'sqlite':
-                        $sql = "SELECT name FROM sqlite_master WHERE type='table' "
-                             . "UNION ALL SELECT name FROM sqlite_temp_master "
-                             . "WHERE type='table' ORDER BY name";
-                        break;
-                    default:
-                        throw new Exception(
-                            'PDO type ' .
-                            self::$_type .
-                            ' is currently not supported.',
-                            5
-                        );
-                }
+                $tableQuery = self::_getTableQuery(self::$_type);
                 self::$_db = new PDO(
                     $options['dsn'],
                     $options['usr'],
                     $options['pwd'],
                     $options['opt']
                 );
-                $statement = self::$_db->query($sql);
-                $tables = $statement->fetchAll(PDO::FETCH_COLUMN, 0);
 
-                // create paste table if needed
+                // check if the database contains the required tables
+                $tables = self::$_db->query($tableQuery)->fetchAll(PDO::FETCH_COLUMN, 0);
+
+                // create paste table if necessary
                 if (!in_array(self::$_prefix . 'paste', $tables))
                 {
-                    self::$_db->exec(
-                        'CREATE TABLE ' . self::$_prefix . 'paste ( ' .
-                        'dataid CHAR(16), ' .
-                        'data TEXT, ' .
-                        'postdate INT, ' .
-                        'expiredate INT, ' .
-                        'opendiscussion INT, ' .
-                        'burnafterreading INT, ' .
-                        'meta TEXT );'
-                    );
-                }
-                // check if the meta column exists
-                else
-                {
-                    try {
-                        self::_exec('SELECT meta FROM ' . self::$_prefix . 'paste LIMIT 1;', array());
-                    } catch (PDOException $e) {
-                        self::$_db->exec('ALTER TABLE ' . self::$_prefix . 'paste ADD COLUMN meta TEXT;');
-                    }
+                    self::_createPasteTable();
+                    $db_tables_exist = false;
                 }
 
-                // create comment table if needed
+                // create comment table if necessary
                 if (!in_array(self::$_prefix . 'comment', $tables))
                 {
-                    self::$_db->exec(
-                        'CREATE TABLE ' . self::$_prefix . 'comment ( ' .
-                        'dataid CHAR(16), ' .
-                        'pasteid CHAR(16), ' .
-                        'parentid CHAR(16), ' .
-                        'data TEXT, ' .
-                        'nickname VARCHAR(255), ' .
-                        'vizhash TEXT, ' .
-                        'postdate INT );'
-                    );
+                    self::_createCommentTable();
+                    $db_tables_exist = false;
+                }
+
+                // create config table if necessary
+                $db_version = zerobin::VERSION;
+                if (!in_array(self::$_prefix . 'config', $tables))
+                {
+                    self::_createConfigTable();
+                    // if we only needed to create the config table, the DB is older then 0.22
+                    if ($db_tables_exist) $db_version = '0.21';
+                }
+                else
+                {
+                    $db_version = self::_getConfig('VERSION');
+                }
+
+                // update database structure if necessary
+                if (version_compare($db_version, zerobin::VERSION, '<'))
+                {
+                    self::_upgradeDatabase($db_version);
                 }
             }
         }
@@ -208,6 +160,7 @@ class zerobin_db extends zerobin_abstract
         }
 
         $opendiscussion = $burnafterreading = false;
+        $attachment = $attachmentname = '';
         $meta = $paste['meta'];
         unset($meta['postdate']);
         $expire_date = 0;
@@ -226,8 +179,18 @@ class zerobin_db extends zerobin_abstract
             $burnafterreading = (bool) $paste['meta']['burnafterreading'];
             unset($meta['burnafterreading']);
         }
+        if (array_key_exists('attachment', $paste['meta']))
+        {
+            $attachment = $paste['meta']['attachment'];
+            unset($meta['attachment']);
+        }
+        if (array_key_exists('attachmentname', $paste['meta']))
+        {
+            $attachmentname = $paste['meta']['attachmentname'];
+            unset($meta['attachmentname']);
+        }
         return self::_exec(
-            'INSERT INTO ' . self::$_prefix . 'paste VALUES(?,?,?,?,?,?,?)',
+            'INSERT INTO ' . self::$_prefix . 'paste VALUES(?,?,?,?,?,?,?,?,?)',
             array(
                 $pasteid,
                 $paste['data'],
@@ -236,6 +199,8 @@ class zerobin_db extends zerobin_abstract
                 (int) $opendiscussion,
                 (int) $burnafterreading,
                 json_encode($meta),
+                $attachment,
+                $attachmentname,
             )
         );
     }
@@ -265,6 +230,8 @@ class zerobin_db extends zerobin_abstract
 
                 $meta = json_decode($paste['meta']);
                 if (!is_object($meta)) $meta = new stdClass;
+
+                // support older attachments
                 if (property_exists($meta, 'attachment'))
                 {
                     self::$_cache[$pasteid]->attachment = $meta->attachment;
@@ -273,6 +240,15 @@ class zerobin_db extends zerobin_abstract
                     {
                         self::$_cache[$pasteid]->attachmentname = $meta->attachmentname;
                         unset($meta->attachmentname);
+                    }
+                }
+                // support current attachments
+                elseif (array_key_exists('attachment', $paste) && strlen($paste['attachment']))
+                {
+                    self::$_cache[$pasteid]->attachment = $paste['attachment'];
+                    if (array_key_exists('attachmentname', $paste) && strlen($paste['attachmentname']))
+                    {
+                        self::$_cache[$pasteid]->attachmentname = $paste['attachmentname'];
                     }
                 }
                 self::$_cache[$pasteid]->meta = $meta;
@@ -449,5 +425,228 @@ class zerobin_db extends zerobin_abstract
             $statement->fetchAll(PDO::FETCH_ASSOC);
         $statement->closeCursor();
         return $result;
+    }
+
+    /**
+     * get table list query, depending on the database type
+     *
+     * @access private
+     * @static
+     * @param  string $type
+     * @throws Exception
+     * @return string
+     */
+    private static function _getTableQuery($type)
+    {
+        switch($type)
+        {
+            case 'ibm':
+                $sql = 'SELECT tabname FROM SYSCAT.TABLES ';
+                break;
+            case 'informix':
+                $sql = 'SELECT tabname FROM systables ';
+                break;
+            case 'mssql':
+                $sql = "SELECT name FROM sysobjects "
+                     . "WHERE type = 'U' ORDER BY name";
+                break;
+            case 'mysql':
+                $sql = 'SHOW TABLES';
+                break;
+            case 'oci':
+                $sql = 'SELECT table_name FROM all_tables';
+                break;
+            case 'pgsql':
+                $sql = "SELECT c.relname AS table_name "
+                     . "FROM pg_class c, pg_user u "
+                     . "WHERE c.relowner = u.usesysid AND c.relkind = 'r' "
+                     . "AND NOT EXISTS (SELECT 1 FROM pg_views WHERE viewname = c.relname) "
+                     . "AND c.relname !~ '^(pg_|sql_)' "
+                     . "UNION "
+                     . "SELECT c.relname AS table_name "
+                     . "FROM pg_class c "
+                     . "WHERE c.relkind = 'r' "
+                     . "AND NOT EXISTS (SELECT 1 FROM pg_views WHERE viewname = c.relname) "
+                     . "AND NOT EXISTS (SELECT 1 FROM pg_user WHERE usesysid = c.relowner) "
+                     . "AND c.relname !~ '^pg_'";
+                break;
+            case 'sqlite':
+                $sql = "SELECT name FROM sqlite_master WHERE type='table' "
+                     . "UNION ALL SELECT name FROM sqlite_temp_master "
+                     . "WHERE type='table' ORDER BY name";
+                break;
+            default:
+                throw new Exception(
+                    "PDO type $type is currently not supported.", 5
+                );
+        }
+        return $sql;
+    }
+
+    /**
+     * get a value by key from the config table
+     *
+     * @access private
+     * @static
+     * @param  string $key
+     * @throws PDOException
+     * @return string
+     */
+    private static function _getConfig($key)
+    {
+        $row = self::_select(
+            'SELECT value FROM ' . self::$_prefix . 'config WHERE id = ?',
+            array($key), true
+        );
+        return $row['value'];
+    }
+
+    /**
+     * get the primary key clauses, depending on the database driver
+     *
+     * @access private
+     * @static
+     * @param string $key
+     * @return array
+     */
+    private static function _getPrimaryKeyClauses($key = 'dataid')
+    {
+        $main_key = $after_key = '';
+        if (self::$_type === 'mysql')
+        {
+            $after_key = ", PRIMARY KEY ($key)";
+        }
+        else
+        {
+            $main_key = ' PRIMARY KEY';
+        }
+        return array($main_key, $after_key);
+    }
+
+    /**
+     * create the paste table
+     *
+     * @access private
+     * @static
+     * @return void
+     */
+    private static function _createPasteTable()
+    {
+        list($main_key, $after_key) = self::_getPrimaryKeyClauses();
+        self::$_db->exec(
+            'CREATE TABLE ' . self::$_prefix . 'paste ( ' .
+            "dataid CHAR(16) NOT NULL$main_key, " .
+            'data BLOB, ' .
+            'postdate INT, ' .
+            'expiredate INT, ' .
+            'opendiscussion INT, ' .
+            'burnafterreading INT, ' .
+            'meta TEXT, ' .
+            'attachment MEDIUMBLOB, ' .
+            "attachmentname BLOB$after_key );"
+        );
+    }
+
+    /**
+     * create the paste table
+     *
+     * @access private
+     * @static
+     * @return void
+     */
+    private static function _createCommentTable()
+    {
+        list($main_key, $after_key) = self::_getPrimaryKeyClauses();
+        self::$_db->exec(
+            'CREATE TABLE ' . self::$_prefix . 'comment ( ' .
+            "dataid CHAR(16) NOT NULL$main_key, " .
+            'pasteid CHAR(16), ' .
+            'parentid CHAR(16), ' .
+            'data BLOB, ' .
+            'nickname BLOB, ' .
+            'vizhash BLOB, ' .
+            "postdate INT$after_key );"
+        );
+        self::$_db->exec(
+            'CREATE INDEX parent ON ' . self::$_prefix . 'comment(pasteid);'
+        );
+    }
+
+    /**
+     * create the paste table
+     *
+     * @access private
+     * @static
+     * @return void
+     */
+    private static function _createConfigTable()
+    {
+        list($main_key, $after_key) = self::_getPrimaryKeyClauses('id');
+        self::$_db->exec(
+            'CREATE TABLE ' . self::$_prefix . 'config ( ' .
+            "id CHAR(16) NOT NULL$main_key, value TEXT$after_key );"
+        );
+        self::_exec(
+            'INSERT INTO ' . self::$_prefix . 'config VALUES(?,?)',
+            array('VERSION', zerobin::VERSION)
+        );
+    }
+
+    /**
+     * upgrade the database schema from an old version
+     *
+     * @access private
+     * @static
+     * @param  string $oldversion
+     * @return void
+     */
+    private static function _upgradeDatabase($oldversion)
+    {
+        switch ($oldversion)
+        {
+            case '0.21':
+                // create the meta column if necessary (pre 0.21 change)
+                try {
+                    self::$_db->exec('SELECT meta FROM ' . self::$_prefix . 'paste LIMIT 1;', array());
+                } catch (PDOException $e) {
+                    self::$_db->exec('ALTER TABLE ' . self::$_prefix . 'paste ADD COLUMN meta TEXT;');
+                }
+                // SQLite only allows one ALTER statement at a time...
+                self::$_db->exec(
+                    'ALTER TABLE ' . self::$_prefix . 'paste ADD COLUMN attachment MEDIUMBLOB;'
+                );
+                self::$_db->exec(
+                    'ALTER TABLE ' . self::$_prefix . 'paste ADD COLUMN attachmentname BLOB;'
+                );
+                // SQLite doesn't support MODIFY, but it allows TEXT of similar
+                // size as BLOB, so there is no need to change it there
+                if (self::$_type !== 'sqlite')
+                {
+                    self::$_db->exec(
+                        'ALTER TABLE ' . self::$_prefix . 'paste ' .
+                        'ADD PRIMARY KEY (dataid),' .
+                        'MODIFY COLUMN data BLOB;'
+                    );
+                    self::$_db->exec(
+                        'ALTER TABLE ' . self::$_prefix . 'comment ' .
+                        'ADD PRIMARY KEY (dataid),' .
+                        'MODIFY COLUMN data BLOB, ' .
+                        'MODIFY COLUMN nickname BLOB, ' .
+                        'MODIFY COLUMN vizhash BLOB;'
+                    );
+                }
+                else
+                {
+                    self::$_db->exec(
+                        'CREATE UNIQUE INDEX primary ON ' . self::$_prefix . 'paste(dataid);'
+                    );
+                    self::$_db->exec(
+                        'CREATE UNIQUE INDEX primary ON ' . self::$_prefix . 'comment(dataid);'
+                    );
+                }
+                self::$_db->exec(
+                    'CREATE INDEX parent ON ' . self::$_prefix . 'comment(pasteid);'
+                );
+        }
     }
 }

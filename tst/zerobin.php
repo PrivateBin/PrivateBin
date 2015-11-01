@@ -184,6 +184,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $this->reset();
         $options = parse_ini_file(CONF, true);
         $options['traffic']['header'] = 'X_FORWARDED_FOR';
+        $options['traffic']['limit'] = 100;
         helper::confBackup();
         helper::createIniFile(CONF, $options);
         $_POST = helper::getPaste();
