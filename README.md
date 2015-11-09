@@ -1,4 +1,4 @@
-# ZeroBin 0.21.1
+# ZeroBin 0.22
 
 ZeroBin is a minimalist, opensource online pastebin where the server has zero 
 knowledge of pasted data.
@@ -29,6 +29,15 @@ without loosing any data.
 
 - As a user you have to trust the server administrator, your internet provider 
   and any country the traffic passes not to inject any malicious javascript code.
+  Ideally, the ZeroBin installation used would provide HTTPS, secured by 
+  [HSTS](https://en.wikipedia.org/wiki/HTTP_Strict_Transport_Security) and
+  [HKPH](https://en.wikipedia.org/wiki/HTTP_Public_Key_Pinning) using a 
+  certificate either validated by a trusted third party (check the certificate 
+  when first using a new ZeroBin instance) or self-signed by the server operator,
+  validated using a
+  [DNSSEC](https://en.wikipedia.org/wiki/Domain_Name_System_Security_Extensions) protected
+  [DANE](https://en.wikipedia.org/wiki/DNS-based_Authentication_of_Named_Entities)
+  record.
 
 - The "key" used to encrypt the paste is part of the URL. If you publicly post
   the URL of a paste that is not password-protected, everybody can read it.
