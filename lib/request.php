@@ -7,7 +7,7 @@
  * @link      http://sebsauvage.net/wiki/doku.php?id=php:zerobin
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   http://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
- * @version   0.21.1
+ * @version   0.22
  */
 
 /**
@@ -162,7 +162,7 @@ class request
     /**
      * Override the default input stream source, used for unit testing.
      *
-     * @param unknown $input
+     * @param string $input
      */
     public static function setInputStream($input)
     {

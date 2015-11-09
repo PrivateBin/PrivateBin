@@ -7,7 +7,7 @@
  * @link      http://sebsauvage.net/wiki/doku.php?id=php:zerobin
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   http://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
- * @version   0.21.1
+ * @version   0.22
  */
 
 /**
@@ -80,6 +80,7 @@ abstract class model_abstract
      * Set ID.
      *
      * @access public
+     * @param string $id
      * @throws Exception
      * @return void
      */

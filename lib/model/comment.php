@@ -7,7 +7,7 @@
  * @link      http://sebsauvage.net/wiki/doku.php?id=php:zerobin
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   http://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
- * @version   0.21.1
+ * @version   0.22
  */
 
 /**
@@ -161,6 +161,14 @@ class model_comment extends model_abstract
         return $this->_data->meta->parentid;
     }
 
+    /**
+     * Set nickname.
+     *
+     * @access public
+     * @param string $nickname
+     * @throws Exception
+     * @return void
+     */
     public function setNickname($nickname)
     {
         if (!sjcl::isValid($nickname)) throw new Exception('Invalid data.', 66);

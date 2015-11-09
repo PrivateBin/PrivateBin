@@ -463,7 +463,7 @@ class configurationTestGenerator
 /**
  * DO NOT EDIT: This file is generated automatically using configGenerator.php
  */
-class configurationTest extends PHPUnit_Framework_TestCase
+class configurationCombinationsTest extends PHPUnit_Framework_TestCase
 {
     private $_model;
 
@@ -539,6 +539,8 @@ EOT;
             case 'Create':
                 $code .= PHP_EOL . <<<'EOT'
         $_POST = helper::getPaste();
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
+        $_SERVER['REQUEST_METHOD'] = 'POST';
         $_SERVER['REMOTE_ADDR'] = '::1';
 EOT;
                 break;
@@ -580,7 +582,7 @@ EOT;
         $this->assertTag(
             array(
                 'id' => 'cipherdata',
-                'content' => htmlspecialchars(json_encode(helper::getPaste()), ENT_NOQUOTES)
+                'content' => htmlspecialchars(helper::getPasteAsJson(), ENT_NOQUOTES)
             ),
             $content,
             'outputs data correctly'

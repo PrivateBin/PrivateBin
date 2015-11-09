@@ -1,5 +1,18 @@
 # ZeroBin version history #
 
+  * **0.22 (2015-11-09)**:
+    * ADDED: Tab character input support
+    * ADDED: Dark bootstrap theme
+    * ADDED: Option to hide clone button on expiring pastes
+    * ADDED: Option to set a different default language then English and/or enforce it as the only language
+    * ADDED: Database now contains version to allow automatic update of structure, only if necessary; removing database structure check on each request
+    * FIXING: Regressions in database layer, prohibiting pastes from being stored
+    * FIXING: Fixing "missing" comments when they were posted during the same second to the same paste
+    * CHANGED: Switching positions of "New" and "Send" button, highlighting the latter to improve workflow
+    * CHANGED: Renamed config file to make updates easier
+    * CHANGED: Switching to JSON-based REST-API
+    * CHANGED: Database structure to store attachments, allowing larger attachments to be stored (depending on maximum BLOB size of database backend)
+    * CHANGED: Refactored data model, traffic limiting & request handling
   * **0.21.1 (2015-09-21)**:
     * FIXING: lost meta data when using DB model instead of flat files
     * FIXING: mobile navbar getting triggered on load

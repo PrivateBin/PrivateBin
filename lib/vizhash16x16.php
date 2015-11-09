@@ -8,7 +8,7 @@
  * @link      http://sebsauvage.net/wiki/doku.php?id=php:vizhash_gd
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   http://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
- * @version   0.0.4 beta ZeroBin 0.21.1
+ * @version   0.0.4 beta ZeroBin 0.22
  */
 
 /**
