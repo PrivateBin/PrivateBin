@@ -8,6 +8,7 @@
     * ADDED: Database now contains version to allow automatic update of structure, only if necessary; removing database structure check on each request
     * FIXING: Regressions in database layer, prohibiting pastes from being stored
     * FIXING: Fixing "missing" comments when they were posted during the same second to the same paste
+    * FIXING: JS failing when password input disabled
     * CHANGED: Switching positions of "New" and "Send" button, highlighting the latter to improve workflow
     * CHANGED: Renamed config file to make updates easier
     * CHANGED: Switching to JSON-based REST-API
