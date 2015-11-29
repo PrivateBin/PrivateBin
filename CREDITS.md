@@ -9,6 +9,7 @@ Simon Rupf - MVC refactoring, configuration, i18n and unit tests
 Hexalyse - Password protection
 Viktor Stanchev - File upload support
 azlux - Tab character input support
+Adam Fisher - Favicons
 
 Translations:
 Hexalyse - French

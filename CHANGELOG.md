@@ -6,6 +6,7 @@
     * ADDED: Option to hide clone button on expiring pastes
     * ADDED: Option to set a different default language then English and/or enforce it as the only language
     * ADDED: Database now contains version to allow automatic update of structure, only if necessary; removing database structure check on each request
+    * ADDED: Favicons
     * FIXING: Regressions in database layer, prohibiting pastes from being stored
     * FIXING: Fixing "missing" comments when they were posted during the same second to the same paste
     * FIXING: JS failing when password input disabled
