@@ -79,7 +79,7 @@ class trafficlimiter extends persistence
      */
     public static function getIp()
     {
-        return $_SERVER[self::$_ipKey];
+        return md5($_SERVER[self::$_ipKey]);
     }
 
     /**
