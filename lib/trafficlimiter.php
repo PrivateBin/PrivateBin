@@ -79,7 +79,7 @@ class trafficlimiter extends persistence
      */
     public static function getIp()
     {
-        return md5($_SERVER[self::$_ipKey]);
+        return $_SERVER[self::$_ipKey];
     }
 
     /**
@@ -94,10 +94,10 @@ class trafficlimiter extends persistence
      */
     public static function canPass()
     {
-        $ip = self::getIp();
-
         // disable limits if set to less then 1
         if (self::$_limit < 1) return true;
+
+        $ip = hash_hmac('sha256', self::getIp(), serversalt::get());
 
         $file = 'traffic_limiter.php';
         if (!self::_exists($file))
