@@ -1,0 +1,148 @@
+{
+    "en": "sl",
+    "Paste does not exist, has expired or has been deleted.":
+        "Prilepek ne obstaja, mu je potekla življenjska doba, ali pa je izbrisan.",
+    "ZeroBin requires php 5.2.6 or above to work. Sorry.":
+        "Oprosti, ZeroBin za delovanje potrebuje vsaj php 5.2.6.",
+    "ZeroBin requires configuration section [%s] to be present in configuration file.":
+        "ZeroBin potrebuje sekcijo konfiguracij [%s] v konfiguracijski datoteki.",
+    "Please wait %d seconds between each post.":
+        "Prosim počakaj vsaj %d sekund pred vsako naslednjo objavo.",
+    "Paste is limited to %s of encrypted data.":
+        "Velikost prilepka je omejena na %s zakodiranih podatkov.",
+    "Invalid data.":
+        "Neveljavni podatki.",
+    "You are unlucky. Try again.":
+        "Nimaš sreče, poskusi ponovno.",
+    "Error saving comment. Sorry.":
+        "Nekaj je šlo narobe pri shranjevanju komentarja. Oprosti.",
+    "Error saving paste. Sorry.":
+        "Nekaj je šlo narobe pri shranjevanju prilepka. Oprosti.",
+    "Invalid paste ID.":
+        "Napačen ID prilepka.",
+    "Paste is not of burn-after-reading type.":
+        "Prilepek ni tipa zažgi-po-branju.",
+    "Wrong deletion token. Paste was not deleted.":
+        "Napačen token za izbris. Prilepek ni bil izbrisan..",
+    "Paste was properly deleted.":
+        "Prilepek je uspešno izbrisan.",
+    "ZeroBin": "ZeroBin",
+    "ZeroBin is a minimalist, opensource online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href=\"https://github.com/elrido/ZeroBin/wiki\">project page</a>.":
+        "Zerobin je minimalističen, odprtokodni spletni 'pastebin', kjer server ne ve ničesar o prilepljenih podatkih. Podatki so zakodirani/odkodirani <i>v brskalniku</i> z uporabo 256 bitnega AES. Več informacij na < href=\"https://github.com/elrido/ZeroBin/wiki\">spletni strani projekta.</a>.",
+    "Because ignorance is bliss":
+        "Ker kar ne veš ne boli.",
+    "Javascript is required for ZeroBin to work.<br />Sorry for the inconvenience.":
+        "Da ZeroBin deluje, moraš vklopiti Javascript.<br />Oprosti za povročene nevšečnosti.",
+    "ZeroBin requires a modern browser to work.":
+        "ZeroBin za svoje delovanje potrebuje moderen brskalnik.",
+    "Still using Internet Explorer? Do yourself a favor, switch to a modern browser:":
+        "Še vedno uporabljaš Internet Explorer? Naredi si uslugo, preklopi na moderen brskalnik:",
+    "New":
+        "Nov prilepek",
+    "Send":
+        "Pošlji",
+    "Clone":
+        "Kloniraj",
+    "Raw text":
+        "Surov tekst",
+    "Expires":
+        "Poteče",
+    "Burn after reading":
+        "Zažgi (pobriši) po branju",
+    "Open discussion":
+        "Dovoli razpravo",
+    "Password (recommended)":
+        "Geslo (priporočeno)",
+    "Discussion":
+        "Razprava",
+    "Toggle navigation":
+        "Preklopi navigacijo",
+    "%d seconds": ["%d sekunda", "%d sekundi", "%d sekunde", "%d sekund"],
+    "%d minutes": ["%d minuta", "%d minuti", "%d minute", "%d minut"],
+    "%d hours": ["%d ura", "%d uri", "%d ure", "%d ur"],
+    "%d days": ["%d dan", "%d dneva", "%d dnevi", "%d dni"],
+    "%d weeks": ["%d teden", "%d tedna", "%d tedni", "%d tednov"],
+    "%d months": ["%d mesec", "%d meseca", "%d meseci", "%d mesecev"],
+    "%d years": ["%d leto", "%d leti", "%d leta", "%d let"],
+    "Never":
+        "Nikoli",
+    "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.":
+        "Ne pozabi: To je testna storitev: Podatki so lahko kadarkoli pobrisani. Mucki bodo umrli, če boš zlorabljala to storitev.",
+    "This document will expire in %d seconds.":
+        ["Ta dokument bo potekel čez %d sekundo.", "Ta dokument bo potekel čez %d sekundi.", "Ta dokument bo potekel čez %d sekunde.", "Ta dokument bo potekel čez %d sekund."],
+    "This document will expire in %d minutes.":
+        ["Ta dokument bo potekel čez %d minuto.", "Ta dokument bo potekel čez %d minuti.", "Ta dokument bo potekel čez %d minute.", "Ta dokument bo potekel čez %d minut."],
+    "This document will expire in %d hours.":
+        ["Ta dokument bo potekel čez %d uro.", "Ta dokument bo potekel čez %d uri.", "Ta dokument bo potekel čez %d ure.", "Ta dokument bo potekel čez %d ur."],
+    "This document will expire in %d days.":
+        ["Ta dokument bo potekel čez %d dan.", "Ta dokument bo potekel čez %d dni.", "Ta dokument bo potekel čez %d dni.", "Ta dokument bo potekel čez %d dni."],
+    "This document will expire in %d months.":
+        ["Ta dokument bo potekel čez %d mesec.", "Ta dokument bo potekel čez %d meseca.", "Ta dokument bo potekel čez %d mesece.", "Ta dokument bo potekel čez %d mesecev."],
+    "Please enter the password for this paste:":
+        "Prosim vnesi geslo tega prilepka:",
+    "Could not decrypt data (Wrong key?)":
+        "Nemogoče odkodirati podakte (Imaš napačen ključ?)",
+    "Could not delete the paste, it was not stored in burn after reading mode.":
+        "Prilepek je nemogoče izbrisati, ni bil shranjen v načinu \"zažgi po branju\".",
+    "FOR YOUR EYES ONLY. Don't close this window, this message can't be displayed again.":
+        "SAMO ZA TVOJE OČI. Ne zapri tega okna (zavihka), to sporočilo ne bo prikazano nikoli več.",
+    "Could not decrypt comment; Wrong key?":
+        "Ne morem odkodirati komentarja: Imaš napačen ključ?",
+    "Reply":
+        "Odgovori",
+    "Anonymous":
+        "Aninomno",
+    "Anonymous avatar (Vizhash of the IP address)":
+        "Anonimen avatar (Vizhash IP naslova)",
+    "Add comment":
+        "Dodaj komentar",
+    "Optional nickname...":
+        "Uporabniško ime (lahko izpustiš)",
+    "Post comment":
+        "Objavi komentar",
+    "Sending comment...":
+        "Pošiljam komentar ...",
+    "Comment posted.":
+        "Komentar poslan.",
+    "Could not refresh display: %s":
+        "Ne morem osvežiti zaslona : %s",
+    "unknown status":
+        "neznan status",
+    "server error or not responding":
+        "napaka na strežniku, ali pa se strežnik ne odziva",
+    "Could not post comment: %s":
+        "Komentarja ni bilo mogoče objaviti : %s",
+    "Sending paste (Please move your mouse for more entropy)...":
+        "Pošiljam prilepek (prosim premakni svojo miško za več entropije) ...",
+    "Sending paste...":
+        "Pošiljam prilepek...",
+    "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit [Ctrl]+[c] to copy)</span>":
+        "Tvoj prilepek je dostopen na naslovu: <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Pritisni [Ctrl]+[c] ali [Cmd] + [c] in skopiraj)</span>",
+    "Delete data":
+        "Izbriši podatke",
+    "Could not create paste: %s":
+        "Ne morem ustvariti prilepka: %s",
+    "Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)":
+        "Ne morem odkodirati prilepka: V URL-ju manjka ključ (A si uporabil krajšalnik URL-jev, ki odstrani del URL-ja?)",
+    "B": "o",
+    "KiB": "KB",
+    "MiB": "MB",
+    "GiB": "GB",
+    "TiB": "TB",
+    "PiB": "PB",
+    "EiB": "EB",
+    "ZiB": "ZB",
+    "YiB": "YB",
+    "Format": "Format",
+    "Plain Text": "Surov tekst",
+    "Source Code": "Odprta koda",
+    "Markdown": "Markdown",
+    "Download attachment": "Pretoči priponko",
+    "Cloned file attached.": "Pripeta datoteka klonirana",
+    "Attach a file": "Pripni datoteko",
+    "Remove attachment": "Odstrani priponko",
+    "Your browser does not support uploading encrypted files. Please use a newer browser.":
+        "Tvoj brskalnik ne omogoča nalaganje zakodiranih datotek. Prosim uporabi novejši brskalnik.",
+    "Invalid attachment.": "Neveljavna priponka.",
+    "Options": "Možnosti"
+}
