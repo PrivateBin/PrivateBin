@@ -16,6 +16,7 @@ class configurationTest extends PHPUnit_Framework_TestCase
             'base64version' => '2.1.9',
             'languageselection' => false,
             'languagedefault' => '',
+            'urlshortener' => '',
         ),
         'expire' => array(
             'default' => '1week',

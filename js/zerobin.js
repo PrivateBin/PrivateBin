@@ -405,7 +405,7 @@ $(function() {
          * translation cache
          */
         translations: {}
-    }
+    };
 
     /**
      * filter methods
@@ -921,7 +921,7 @@ $(function() {
                             filter.cipher(randomkey, password, e.target.result),
                             filter.cipher(randomkey, password, theFile.name)
                         );
-                    }
+                    };
                 })(files[0]);
                 reader.readAsDataURL(files[0]);
             }
@@ -942,7 +942,9 @@ $(function() {
         /**
          * Send a new paste to server, step 2
          *
-         * @param Event event
+         * @param string randomkey
+         * @param encrypted string cipherdata_attachment
+         * @param encrypted string cipherdata_attachment_name
          */
         sendDataContinue: function(randomkey, cipherdata_attachment, cipherdata_attachment_name)
         {
@@ -977,7 +979,12 @@ $(function() {
                         zerobin.showStatus('', false);
                         zerobin.errorMessage.addClass('hidden');
 
-                        $('#pastelink').html(i18n._('Your paste is <a id="pasteurl" href="%s">%s</a> <span id="copyhint">(Hit [Ctrl]+[c] to copy)</span>', url, url));
+                        $('#pastelink').html(
+                            i18n._(
+                                'Your paste is <a id="pasteurl" href="%s">%s</a> <span id="copyhint">(Hit [Ctrl]+[c] to copy)</span>',
+                                url, url
+                            ) + zerobin.shortenUrl(url)
+                        );
                         $('#deletelink').html('<a href="' + deleteUrl + '">' + i18n._('Delete data') + '</a>');
                         zerobin.pasteResult.removeClass('hidden');
                         // We pre-select the link so that the user only has to [Ctrl]+[c] the link.
@@ -1002,6 +1009,26 @@ $(function() {
             {
                 zerobin.showError(i18n._('Could not create paste: %s', i18n._('server error or not responding')));
             });
+        },
+
+        /**
+         * Check if a URL shortener was defined and create HTML containing a link to it.
+         *
+         * @param string url
+         * @return string html
+         */
+        shortenUrl: function(url)
+        {
+            var shortenerHtml = $('#shortenbutton');
+            if (shortenerHtml) {
+                var shortener = shortenerHtml.data('shortener');
+                shortenerHtml.attr(
+                    'onclick',
+                    "window.location.href = '" + shortener + encodeURIComponent(url) + "';"
+                );
+                return ' ' + $('<div />').append(shortenerHtml.clone()).html();
+            }
+            return '';
         },
 
         /**

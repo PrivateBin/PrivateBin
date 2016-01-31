@@ -44,6 +44,13 @@ class zerobinTest extends PHPUnit_Framework_TestCase
             $content,
             'outputs title correctly'
         );
+        $this->assertNotTag(
+            array(
+                'id' => 'shortenbutton'
+            ),
+            $content,
+            'doesn\'t output shortener button'
+        );
     }
 
     /**
@@ -67,6 +74,56 @@ class zerobinTest extends PHPUnit_Framework_TestCase
             ),
             $content,
             'outputs title correctly'
+        );
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testViewForceLanguageDefault()
+    {
+        $this->reset();
+        $options = parse_ini_file(CONF, true);
+        $options['main']['languageselection'] = false;
+        $options['main']['languagedefault'] = 'fr';
+        helper::confBackup();
+        helper::createIniFile(CONF, $options);
+        $_COOKIE['lang'] = 'de';
+        ob_start();
+        new zerobin;
+        $content = ob_get_contents();
+        $this->assertTag(
+            array(
+                'tag' => 'title',
+                'content' => 'ZeroBin'
+            ),
+            $content,
+            'outputs title correctly'
+        );
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testViewUrlShortener()
+    {
+        $shortener = 'https://shortener.example.com/api?link=';
+        $this->reset();
+        $options = parse_ini_file(CONF, true);
+        $options['main']['urlshortener'] = $shortener;
+        helper::confBackup();
+        helper::createIniFile(CONF, $options);
+        $_COOKIE['lang'] = 'de';
+        ob_start();
+        new zerobin;
+        $content = ob_get_contents();
+        $this->assertTag(
+            array(
+                'id' => 'shortenbutton',
+                'attributes' => array('data-shortener' => $shortener)
+            ),
+            $content,
+            'outputs configured shortener URL correctly'
         );
     }
 

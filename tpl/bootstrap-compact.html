@@ -169,7 +169,11 @@
 			<div id="pasteresult" role="alert" class="hidden alert alert-success">
 				<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
 				<div id="deletelink"></div>
-				<div id="pastelink"></div>
+				<div id="pastelink">{if="strlen($URLSHORTENER)"}
+					<button id="shortenbutton" data-shortener="{$URLSHORTENER|htmlspecialchars}" type="button" class="btn btn-primary">
+						<span class="glyphicon glyphicon-send" aria-hidden="true"></span> {function="t('Shorten URL')"}
+					</button>
+				{/if}</div>
 			</div>
 		</header>
 		<section class="container">

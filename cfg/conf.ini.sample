@@ -52,6 +52,11 @@ languageselection = false
 ; if this is set and language selection is disabled, this will be the only language
 ; languagedefault = "en"
 
+; (optional) URL shortener address to offer after a new paste is created
+; it is suggested to only use this with self-hosted shorteners as this will leak
+; the pastes encryption key
+; urlshortener = "https://shortener.example.com/api?link="
+
 [expire]
 ; expire value that is selected per default
 ; make sure the value exists in [expire_options]

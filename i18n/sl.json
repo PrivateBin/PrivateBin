@@ -144,5 +144,6 @@
     "Your browser does not support uploading encrypted files. Please use a newer browser.":
         "Tvoj brskalnik ne omogoča nalaganje zakodiranih datotek. Prosim uporabi novejši brskalnik.",
     "Invalid attachment.": "Neveljavna priponka.",
-    "Options": "Možnosti"
+    "Options": "Možnosti",
+    "Shorten URL": "Skrajšajte URL"
 }

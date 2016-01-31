@@ -44,6 +44,7 @@ class RainTPLTest extends PHPUnit_Framework_TestCase
         $page->assign('EXPIRE', self::$expire);
         $page->assign('EXPIREDEFAULT', self::$expire_default);
         $page->assign('EXPIRECLONE', true);
+        $page->assign('URLSHORTENER', '');
         ob_start();
         $page->draw('page');
         $this->_content = ob_get_contents();

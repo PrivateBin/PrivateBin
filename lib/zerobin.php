@@ -455,6 +455,7 @@ class zerobin
         $page->assign('EXPIRE', $expire);
         $page->assign('EXPIREDEFAULT', $this->_conf->getKey('default', 'expire'));
         $page->assign('EXPIRECLONE', !$this->_doesExpire || ($this->_doesExpire && $this->_conf->getKey('clone', 'expire')));
+        $page->assign('URLSHORTENER', $this->_conf->getKey('urlshortener'));
         $page->draw($this->_conf->getKey('template'));
     }
 

@@ -144,5 +144,6 @@
     "Your browser does not support uploading encrypted files. Please use a newer browser.":
         "Votre navigateur ne supporte pas l'envoi de fichiers chiffrés. Merci d'utiliser un navigateur plus récent.",
     "Invalid attachment.": "Attachement invalide.",
-    "Options": "Options"
+    "Options": "Options",
+    "Shorten URL": "Raccourcir URL"
 }

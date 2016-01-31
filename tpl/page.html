@@ -84,7 +84,9 @@
 				</div>
 				<div id="pasteresult" class="hidden">
 					<div id="deletelink"></div>
-					<div id="pastelink"></div>
+					<div id="pastelink">{if="strlen($URLSHORTENER)"}
+						<button id="shortenbutton" data-shortener="{$URLSHORTENER|htmlspecialchars}"><img src="img/icon_shorten.png" width="13" height="15" />{function="t('Shorten URL')"}</button>
+					{/if}</div>
 				</div>{if="$FILEUPLOAD"}
 				<div id="attachment" class="hidden"><a>{function="t('Download attachment')"}</a></div>
 				<div id="attach" class="hidden">
