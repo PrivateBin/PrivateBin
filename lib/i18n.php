@@ -198,7 +198,8 @@ class i18n
         if (array_key_exists('HTTP_ACCEPT_LANGUAGE', $_SERVER))
         {
             $languageRanges = explode(',', trim($_SERVER['HTTP_ACCEPT_LANGUAGE']));
-            foreach ($languageRanges as $languageRange) {
+            foreach ($languageRanges as $languageRange)
+            {
                 if (preg_match(
                     '/(\*|[a-zA-Z0-9]{1,8}(?:-[a-zA-Z0-9]{1,8})*)(?:\s*;\s*q\s*=\s*(0(?:\.\d{0,3})|1(?:\.0{0,3})))?/',
                     trim($languageRange), $match
@@ -325,7 +326,8 @@ class i18n
     protected static function _getMatchingLanguage($acceptedLanguages, $availableLanguages) {
         $matches = array();
         $any = false;
-        foreach ($acceptedLanguages as $acceptedQuality => $acceptedValues) {
+        foreach ($acceptedLanguages as $acceptedQuality => $acceptedValues)
+        {
             $acceptedQuality = floatval($acceptedQuality);
             if ($acceptedQuality === 0.0) continue;
             foreach ($availableLanguages as $availableValue)
