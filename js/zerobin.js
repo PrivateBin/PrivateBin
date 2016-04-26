@@ -444,8 +444,7 @@ $(function() {
          */
         cipher: function(key, password, message)
         {
-            password = (password || '').trim();
-            if (password.length == 0)
+            if ((password || '').trim().length == 0)
             {
                 return sjcl.encrypt(key, this.compress(message));
             }
