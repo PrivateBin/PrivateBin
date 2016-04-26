@@ -1,0 +1,140 @@
+{
+    "en": "zh",
+    "Paste does not exist, has expired or has been deleted.":
+        "粘贴不存在，已过期或者已被删除。",
+    "ZeroBin requires php 5.2.6 or above to work. Sorry.":
+        "ZeroBin需要工作于PHP 5.2.6及以上版本，抱歉。",
+    "ZeroBin requires configuration section [%s] to be present in configuration file.":
+        "ZeroBin需要设置配置文件中 [%s] 的部分。",
+    "Please wait %d seconds between each post.":
+        "每 %d 秒只能粘贴一次。",
+    "Paste is limited to %s of encrypted data.":
+        "粘贴受限于 %s 加密数据。",
+    "Invalid data.":
+        "无效的数据。",
+    "You are unlucky. Try again.":
+        "请再试一次。",
+    "Error saving comment. Sorry.":
+        "存储评论时出现错误，抱歉。",
+    "Error saving paste. Sorry.":
+        "存储粘贴时出现错误，抱歉。",
+    "Invalid paste ID.":
+        "无效的ID。",
+    "Paste is not of burn-after-reading type.":
+        "粘贴不是阅后即焚类型。",
+    "Wrong deletion token. Paste was not deleted.":
+        "错误的删除token，粘贴没有被删除。",
+    "Paste was properly deleted.":
+        "粘贴已被正确删除。",
+    "ZeroBin": "ZeroBin",
+    "ZeroBin is a minimalist, opensource online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href=\"https://github.com/elrido/ZeroBin/wiki\">project page</a>.":
+        "ZeroBin是一个极简，开源，对粘贴内容毫不知情的在线粘贴板，数据<i>在浏览器内</i>进行AES-256加密。更多信息请查看<a href=\"https://github.com/elrido/ZeroBin/wiki\">项目主页</a>。",
+    "Because ignorance is bliss":
+        "因为无知是福",
+    "Javascript is required for ZeroBin to work.<br />Sorry for the inconvenience.":
+        "ZeroBin需要JavaScript来进行加解密。<br />带来的不便敬请谅解。",
+    "ZeroBin requires a modern browser to work.":
+        "ZeroBin需要工作于现代化的浏览器。",
+    "Still using Internet Explorer? Do yourself a favor, switch to a modern browser:":
+        "还在使用Internet Explorer？帮自己个忙，换上一个现代化的浏览器：",
+    "New":
+        "新建",
+    "Send":
+        "送出",
+    "Clone":
+        "克隆",
+    "Raw text":
+        "纯文本",
+    "Expires":
+        "有效期",
+    "Burn after reading":
+        "阅后即焚",
+    "Open discussion":
+        "开放讨论",
+    "Password (recommended)":
+        "密码 (推荐)",
+    "Discussion":
+        "讨论",
+    "Toggle navigation":
+        "切换导航栏",
+    "%d seconds": ["%d 秒", "%d 秒"],
+    "%d minutes": ["%d 分钟", "%d 分钟"],
+    "%d hours": ["%d 小时", "%d 小时"],
+    "%d days": ["%d 天", "%d 天"],
+    "%d weeks": ["%d 周", "%d 周"],
+    "%d months": ["%d 个月", "%d 个月"],
+    "%d years": ["%d 年", "%d 年"],
+    "Never":
+        "永不过期",
+    "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.":
+        "注意：这是一个测试服务，数据随时可能被删除。如果你滥用这个服务的话，小猫咪会死的。",
+    "This document will expire in %d seconds.":
+        ["这份文档将在一秒后过期。", "这份文档将在 %d 秒后过期"],
+    "This document will expire in %d minutes.":
+        ["这份文档将在一分钟后过期。", "这份文档将在 %d 分钟后过期。"],
+    "This document will expire in %d hours.":
+        ["这份文档将在一小时后过期。", "这份文档将在 %d 小时后过期。"],
+    "This document will expire in %d days.":
+        ["这份文档将在一天后过期。", "这份文档将在 %d 天后过期。"],
+    "This document will expire in %d months.":
+        ["这份文档将在一个月后过期。", "这份文档将在 %d 个月后过期。"],
+    "Please enter the password for this paste:":
+        "请输入这份粘贴的密码：",
+    "Could not decrypt data (Wrong key?)":
+        "无法解密数据 (密钥错误？)",
+    "Could not delete the paste, it was not stored in burn after reading mode.":
+        "无法删除此粘贴，它没有以阅后即焚模式存储。",
+    "FOR YOUR EYES ONLY. Don't close this window, this message can't be displayed again.":
+        "看！仔！细！了！ 不要关闭窗口，否则你再也见不到这条消息了。",
+    "Could not decrypt comment; Wrong key?":
+        "无法解密评论; 密钥错误？",
+    "Reply":
+        "回复",
+    "Anonymous":
+        "匿名",
+    "Anonymous avatar (Vizhash of the IP address)":
+        "匿名头像 (由IP地址生成Vizhash)",
+    "Add comment":
+        "添加评论",
+    "Optional nickname...":
+        "可选昵称...",
+    "Post comment":
+        "评论",
+    "Sending comment...":
+        "评论发送中...",
+    "Comment posted.":
+        "评论已发送。",
+    "Could not refresh display: %s":
+        "无法刷新显示： %s",
+    "unknown status":
+        "未知状态",
+    "server error or not responding":
+        "服务器错误或无回应",
+    "Could not post comment: %s":
+        "无法发送评论： %s",
+    "Sending paste (Please move your mouse for more entropy)...":
+        "粘贴提交中 (请移动鼠标以产生更多熵)...",
+    "Sending paste...":
+        "粘贴提交中...",
+    "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit [Ctrl]+[c] to copy)</span>":
+        "您的粘贴的链接是<a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(按下 [Ctrl]+[c] 以复制)</span>",
+    "Delete data":
+        "删除数据",
+    "Could not create paste: %s":
+        "无法创建粘贴： %s",
+    "Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)":
+        "无法解密粘贴： URL中缺失解密密钥 (是否使用了重定向或者短链接导致密钥丢失？)",
+    "Format": "格式",
+    "Plain Text": "纯文本",
+    "Source Code": "源代码",
+    "Markdown": "Markdown",
+    "Download attachment": "下载附件",
+    "Cloned file attached.": "已附加克隆的文件",
+    "Attach a file": "添加一个附件",
+    "Remove attachment": "移除附件",
+    "Your browser does not support uploading encrypted files. Please use a newer browser.":
+        "您的浏览器不支持上传加密的文件，请使用更新的浏览器。",
+    "Invalid attachment.": "无效的附件",
+    "Options": "选项",
+    "Shorten URL": "缩短链接"
+}
