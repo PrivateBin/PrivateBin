@@ -158,7 +158,7 @@
 				<span class="glyphicon glyphicon-ok" aria-hidden="true"></span> {$STATUS|htmlspecialchars}
 			</div>{/if}
 			<div id="errormessage" role="alert" class="{if="!strlen($ERROR)"}hidden {/if}alert alert-danger"><span class="glyphicon glyphicon-alert" aria-hidden="true"></span> {$ERROR|htmlspecialchars}</div>
-			<div id="noscript" role="alert" class="nonworking alert alert-warning"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> {function="t('Javascript is required for ZeroBin to work.<br />Sorry for the inconvenience.')"}</div>
+			<noscript><div id="noscript" role="alert" class="nonworking alert alert-warning"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> {function="t('Javascript is required for ZeroBin to work.<br />Sorry for the inconvenience.')"}</div></noscript>
 			<div id="oldienotice" role="alert" class="hidden nonworking alert alert-danger"><span class="glyphicon glyphicon-alert" aria-hidden="true"></span> {function="t('ZeroBin requires a modern browser to work.')"}</div>
 			<div id="ienotice" role="alert" class="hidden alert alert-warning"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span> {function="t('Still using Internet Explorer? Do yourself a favor, switch to a modern browser:')"}
 				<a href="http://www.mozilla.org/firefox/">Firefox</a>, 
