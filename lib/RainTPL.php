@@ -382,7 +382,7 @@ class RainTPL{
 			mkdir( $cache_dir, 0755, true );
 
 		if( !is_writable( $cache_dir ) )
-			throw new RainTpl_Exception ('Cache directory ' . $cache_dir . 'doesn\'t have write permission. Set write permission or set RAINTPL_CHECK_TEMPLATE_UPDATE to false. More details on http://www.raintpl.com/Documentation/Documentation-for-PHP-developers/Configuration/');
+			throw new RainTpl_Exception ('Cache directory ' . $cache_dir . ' doesn\'t have write permission. Set write permission or set RAINTPL_CHECK_TEMPLATE_UPDATE to false. More details on http://www.raintpl.com/Documentation/Documentation-for-PHP-developers/Configuration/');
 
 		//write compiled file
 		file_put_contents( $compiled_filename, $template_compiled );
