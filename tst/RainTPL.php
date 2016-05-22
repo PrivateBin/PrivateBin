@@ -62,54 +62,36 @@ class RainTPLTest extends PHPUnit_Framework_TestCase
 
     public function testTemplateRendersCorrectly()
     {
-        $this->assertTag(
-            array(
-                'id' => 'cipherdata',
-                'content' => htmlspecialchars(helper::getPaste()['data'], ENT_NOQUOTES)
-            ),
+        $this->assertContains(
+            '<div id="cipherdata" class="hidden">' .
+            htmlspecialchars(helper::getPaste()['data'], ENT_NOQUOTES) .
+            '</div>',
             $this->_content,
             'outputs data correctly'
         );
-        $this->assertTag(
-            array(
-                'id' => 'errormessage',
-                'content' => self::$error
-            ),
+        $this->assertRegExp(
+            '#<div[^>]+id="errormessage"[^>]*>.*' . self::$error . '</div>#',
             $this->_content,
             'outputs error correctly'
         );
-        $this->assertTag(
-            array(
-                'id' => 'password',
-            ),
+        $this->assertRegExp(
+            '#<[^>]+id="password"[^>]*>#',
             $this->_content,
             'password available if configured'
         );
-        $this->assertTag(
-            array(
-                'id' => 'opendiscussion',
-                'attributes' => array(
-                    'checked' => 'checked'
-                ),
-            ),
+        $this->assertRegExp(
+            '#<input[^>]+id="opendiscussion"[^>]*checked="checked"[^>]*>#',
             $this->_content,
             'checked discussion if configured'
         );
-        $this->assertTag(
-            array(
-                'id' => 'opendisc',
-            ),
+        $this->assertRegExp(
+            '#<[^>]+id="opendisc"[^>]*>#',
             $this->_content,
             'discussions available if configured'
         );
         // testing version number in JS address, since other instances may not be present in different templates
-        $this->assertTag(
-            array(
-                'tag' => 'script',
-                'attributes' => array(
-                    'src' => 'js/zerobin.js?' . rawurlencode(self::$version)
-                ),
-            ),
+        $this->assertRegExp(
+            '#<script[^>]+src="js/zerobin.js\\?' . rawurlencode(self::$version) . '"[^>]*>#',
             $this->_content,
             'outputs version correctly'
         );
