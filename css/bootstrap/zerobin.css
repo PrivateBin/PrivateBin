@@ -47,7 +47,7 @@ body.navbar-spacing {
 }
 
 #pastelink > a {
-	display: inline;
+	word-wrap: break-word;
 }
 
 #message {
