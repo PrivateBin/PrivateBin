@@ -36,6 +36,10 @@ body.navbar-spacing {
 	margin-left: -56px;
 }
 
+.btn-primary {
+	margin-left: 8px;
+}
+
 #image img {
 	max-width: 100%;
 	height: auto;
