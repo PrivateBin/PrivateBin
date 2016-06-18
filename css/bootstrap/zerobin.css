@@ -46,6 +46,10 @@ body.navbar-spacing {
 	display: inline;
 }
 
+#pastelink > a {
+	display: inline;
+}
+
 #message {
 	font-family: monospace;
 }
