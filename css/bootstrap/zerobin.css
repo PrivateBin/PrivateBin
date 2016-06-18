@@ -32,6 +32,10 @@ body.navbar-spacing {
 	cursor: default;
 }
 
+.pull-right .dropdown-menu {
+	margin-left: -56px;
+}
+
 #image img {
 	max-width: 100%;
 	height: auto;
