@@ -46,6 +46,10 @@ body.navbar-spacing {
 	display: inline;
 }
 
+#pastelink > a {
+	word-wrap: break-word;
+}
+
 #message {
 	font-family: monospace;
 }
