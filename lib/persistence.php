@@ -116,6 +116,7 @@ abstract class persistence
         self::_initialize();
         $file = self::$_path . DIRECTORY_SEPARATOR . $filename;
         $writtenBytes = @file_put_contents($file, $data, LOCK_EX);
+        chmod($file, 0640); // protect file access
         if ($writtenBytes === false || $writtenBytes < strlen($data)) {
             throw new Exception('unable to write to file ' . $file, 13);
         }
