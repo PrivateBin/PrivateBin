@@ -36,18 +36,13 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         ob_start();
         new zerobin;
         $content = ob_get_contents();
-        $this->assertTag(
-            array(
-                'tag' => 'title',
-                'content' => 'ZeroBin'
-            ),
+        $this->assertContains(
+            '<title>ZeroBin</title>',
             $content,
             'outputs title correctly'
         );
-        $this->assertNotTag(
-            array(
-                'id' => 'shortenbutton'
-            ),
+        $this->assertNotContains(
+            'id="shortenbutton"',
             $content,
             'doesn\'t output shortener button'
         );
@@ -67,11 +62,8 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         ob_start();
         new zerobin;
         $content = ob_get_contents();
-        $this->assertTag(
-            array(
-                'tag' => 'title',
-                'content' => 'ZeroBin'
-            ),
+        $this->assertContains(
+            '<title>ZeroBin</title>',
             $content,
             'outputs title correctly'
         );
@@ -92,11 +84,8 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         ob_start();
         new zerobin;
         $content = ob_get_contents();
-        $this->assertTag(
-            array(
-                'tag' => 'title',
-                'content' => 'ZeroBin'
-            ),
+        $this->assertContains(
+            '<title>ZeroBin</title>',
             $content,
             'outputs title correctly'
         );
@@ -117,11 +106,8 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         ob_start();
         new zerobin;
         $content = ob_get_contents();
-        $this->assertTag(
-            array(
-                'id' => 'shortenbutton',
-                'attributes' => array('data-shortener' => $shortener)
-            ),
+        $this->assertRegExp(
+            '#id="shortenbutton"[^>]*data-shortener="' . preg_quote($shortener) . '"#',
             $content,
             'outputs configured shortener URL correctly'
         );
@@ -248,6 +234,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $_SERVER['HTTP_X_FORWARDED_FOR'] = '::1';
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD'] = 'POST';
+        $_SERVER['REMOTE_ADDR'] = '::1';
         ob_start();
         new zerobin;
         $content = ob_get_contents();
@@ -642,11 +629,10 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         ob_start();
         new zerobin;
         $content = ob_get_contents();
-        $this->assertTag(
-            array(
-                'id' => 'cipherdata',
-                'content' => htmlspecialchars(helper::getPasteAsJson(), ENT_NOQUOTES)
-            ),
+        $this->assertContains(
+            '<div id="cipherdata" class="hidden">' .
+            htmlspecialchars(helper::getPasteAsJson(), ENT_NOQUOTES) .
+            '</div>',
             $content,
             'outputs data correctly'
         );
@@ -662,11 +648,8 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         ob_start();
         new zerobin;
         $content = ob_get_contents();
-        $this->assertTag(
-            array(
-                'id' => 'errormessage',
-                'content' => 'Invalid paste ID'
-            ),
+        $this->assertRegExp(
+            '#<div[^>]*id="errormessage"[^>]*>.*Invalid paste ID\.</div>#',
             $content,
             'outputs error correctly'
         );
@@ -682,11 +665,8 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         ob_start();
         new zerobin;
         $content = ob_get_contents();
-        $this->assertTag(
-            array(
-                'id' => 'errormessage',
-                'content' => 'Paste does not exist'
-            ),
+        $this->assertRegExp(
+            '#<div[^>]*id="errormessage"[^>]*>.*Paste does not exist[^<]*</div>#',
             $content,
             'outputs error correctly'
         );
@@ -704,11 +684,8 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         ob_start();
         new zerobin;
         $content = ob_get_contents();
-        $this->assertTag(
-            array(
-                'id' => 'errormessage',
-                'content' => 'Paste does not exist'
-            ),
+        $this->assertRegExp(
+            '#<div[^>]*id="errormessage"[^>]*>.*Paste does not exist[^<]*</div>#',
             $content,
             'outputs error correctly'
         );
@@ -726,11 +703,10 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         ob_start();
         new zerobin;
         $content = ob_get_contents();
-        $this->assertTag(
-            array(
-                'id' => 'cipherdata',
-                'content' => htmlspecialchars(helper::getPasteAsJson($burnPaste['meta']), ENT_NOQUOTES)
-            ),
+        $this->assertContains(
+            '<div id="cipherdata" class="hidden">' .
+            htmlspecialchars(helper::getPasteAsJson($burnPaste['meta']), ENT_NOQUOTES) .
+            '</div>',
             $content,
             'outputs data correctly'
         );
@@ -795,11 +771,10 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         new zerobin;
         $content = ob_get_contents();
         $meta['formatter'] = 'syntaxhighlighting';
-        $this->assertTag(
-            array(
-                'id' => 'cipherdata',
-                'content' => htmlspecialchars(helper::getPasteAsJson($meta), ENT_NOQUOTES)
-            ),
+        $this->assertContains(
+            '<div id="cipherdata" class="hidden">' .
+            htmlspecialchars(helper::getPasteAsJson($meta), ENT_NOQUOTES) .
+            '</div>',
             $content,
             'outputs data correctly'
         );
@@ -819,11 +794,10 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         new zerobin;
         $content = ob_get_contents();
         $oldPaste['meta']['formatter'] = 'plaintext';
-        $this->assertTag(
-            array(
-                'id' => 'cipherdata',
-                'content' => htmlspecialchars(helper::getPasteAsJson($oldPaste['meta']), ENT_NOQUOTES)
-            ),
+        $this->assertContains(
+            '<div id="cipherdata" class="hidden">' .
+            htmlspecialchars(helper::getPasteAsJson($oldPaste['meta']), ENT_NOQUOTES) .
+            '</div>',
             $content,
             'outputs data correctly'
         );
@@ -842,11 +816,8 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         ob_start();
         new zerobin;
         $content = ob_get_contents();
-        $this->assertTag(
-            array(
-                'id' => 'status',
-                'content' => 'Paste was properly deleted'
-            ),
+        $this->assertRegExp(
+            '#<div[^>]*id="status"[^>]*>.*Paste was properly deleted[^<]*</div>#s',
             $content,
             'outputs deleted status correctly'
         );
@@ -865,11 +836,8 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         ob_start();
         new zerobin;
         $content = ob_get_contents();
-        $this->assertTag(
-            array(
-                'id' => 'errormessage',
-                'content' => 'Invalid paste ID'
-            ),
+        $this->assertRegExp(
+            '#<div[^>]*id="errormessage"[^>]*>.*Invalid paste ID\.</div>#',
             $content,
             'outputs delete error correctly'
         );
@@ -887,11 +855,8 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         ob_start();
         new zerobin;
         $content = ob_get_contents();
-        $this->assertTag(
-            array(
-                'id' => 'errormessage',
-                'content' => 'Paste does not exist'
-            ),
+        $this->assertRegExp(
+            '#<div[^>]*id="errormessage"[^>]*>.*Paste does not exist[^<]*</div>#',
             $content,
             'outputs delete error correctly'
         );
@@ -909,11 +874,8 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         ob_start();
         new zerobin;
         $content = ob_get_contents();
-        $this->assertTag(
-            array(
-                'id' => 'errormessage',
-                'content' => 'Wrong deletion token'
-            ),
+        $this->assertRegExp(
+            '#<div[^>]*id="errormessage"[^>]*>.*Wrong deletion token[^<]*</div>#',
             $content,
             'outputs delete error correctly'
         );
@@ -976,11 +938,8 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         ob_start();
         new zerobin;
         $content = ob_get_contents();
-        $this->assertTag(
-            array(
-                'id' => 'errormessage',
-                'content' => 'Paste does not exist'
-            ),
+        $this->assertRegExp(
+            '#<div[^>]*id="errormessage"[^>]*>.*Paste does not exist[^<]*</div>#',
             $content,
             'outputs error correctly'
         );

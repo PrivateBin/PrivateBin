@@ -151,7 +151,7 @@ class zerobin
         // output JSON or HTML
         if ($this->_request->isJsonApiCall())
         {
-            header('Content-type: application/json');
+            header('Content-type: ' . request::MIME_JSON);
             header('Access-Control-Allow-Origin: *');
             header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
             header('Access-Control-Allow-Headers: X-Requested-With, Content-Type');

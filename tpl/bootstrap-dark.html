@@ -18,7 +18,7 @@
 		<script type="text/javascript" src="js/rawinflate-0.3.js"></script>
 		<script type="text/javascript" src="js/bootstrap-3.3.5.js"></script>{if="$SYNTAXHIGHLIGHTING"}
 		<script type="text/javascript" src="js/prettify.js?{$VERSION|rawurlencode}"></script>{/if}{if="$MARKDOWN"}
-		<script type="text/javascript" src="js/showdown.js?{$VERSION|rawurlencode}"></script>{/if}
+		<script type="text/javascript" src="js/showdown-1.4.1.js"></script>{/if}
 		<script type="text/javascript" src="js/zerobin.js?{$VERSION|rawurlencode}"></script>
 		<!--[if lt IE 10]>
 		<style type="text/css">#ienotice {display:block !important;} #oldienotice {display:block !important;}</style>
@@ -154,7 +154,7 @@
 				<span class="glyphicon glyphicon-ok" aria-hidden="true"></span> {$STATUS|htmlspecialchars}
 			</div>{/if}
 			<div id="errormessage" role="alert" class="{if="!strlen($ERROR)"}hidden {/if}alert alert-danger"><span class="glyphicon glyphicon-alert" aria-hidden="true"></span> {$ERROR|htmlspecialchars}</div>
-			<div id="noscript" role="alert" class="nonworking alert alert-error"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> {function="t('Javascript is required for ZeroBin to work.<br />Sorry for the inconvenience.')"}</div>
+			<noscript><div id="noscript" role="alert" class="nonworking alert alert-error"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> {function="t('Javascript is required for ZeroBin to work.<br />Sorry for the inconvenience.')"}</div></noscript>
 			<div id="oldienotice" role="alert" class="hidden nonworking alert alert-danger"><span class="glyphicon glyphicon-alert" aria-hidden="true"></span> {function="t('ZeroBin requires a modern browser to work.')"}</div>
 			<div id="ienotice" role="alert" class="hidden alert alert-error"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span> {function="t('Still using Internet Explorer? Do yourself a favor, switch to a modern browser:')"}
 				<a href="http://www.mozilla.org/firefox/">Firefox</a>, 

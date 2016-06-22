@@ -104,4 +104,52 @@ class requestTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('foo', $request->getParam('pasteid'));
         $this->assertEquals('bar', $request->getParam('deletetoken'));
     }
+
+    public function testReadWithNegotiation()
+    {
+        $this->reset();
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+        $_SERVER['HTTP_ACCEPT'] = 'text/html,text/html; charset=UTF-8,application/xhtml+xml, application/xml;q=0.9,*/*;q=0.8, text/csv,application/json';
+        $_SERVER['QUERY_STRING'] = 'foo';
+        $request = new request;
+        $this->assertFalse($request->isJsonApiCall(), 'is HTML call');
+        $this->assertEquals('foo', $request->getParam('pasteid'));
+        $this->assertEquals('read', $request->getOperation());
+    }
+
+    public function testReadWithXhtmlNegotiation()
+    {
+        $this->reset();
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+        $_SERVER['HTTP_ACCEPT'] = 'application/xhtml+xml,text/html,text/html; charset=UTF-8, application/xml;q=0.9,*/*;q=0.8, text/csv,application/json';
+        $_SERVER['QUERY_STRING'] = 'foo';
+        $request = new request;
+        $this->assertFalse($request->isJsonApiCall(), 'is HTML call');
+        $this->assertEquals('foo', $request->getParam('pasteid'));
+        $this->assertEquals('read', $request->getOperation());
+    }
+
+    public function testApiReadWithNegotiation()
+    {
+        $this->reset();
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+        $_SERVER['HTTP_ACCEPT'] = 'text/plain,text/csv, application/xml;q=0.9, application/json, text/html,text/html; charset=UTF-8,application/xhtml+xml, */*;q=0.8';
+        $_SERVER['QUERY_STRING'] = 'foo';
+        $request = new request;
+        $this->assertTrue($request->isJsonApiCall(), 'is JSON Api call');
+        $this->assertEquals('foo', $request->getParam('pasteid'));
+        $this->assertEquals('read', $request->getOperation());
+    }
+
+    public function testReadWithFailedNegotiation()
+    {
+        $this->reset();
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+        $_SERVER['HTTP_ACCEPT'] = 'text/plain,text/csv, application/xml;q=0.9, */*;q=0.8';
+        $_SERVER['QUERY_STRING'] = 'foo';
+        $request = new request;
+        $this->assertFalse($request->isJsonApiCall(), 'is HTML call');
+        $this->assertEquals('foo', $request->getParam('pasteid'));
+        $this->assertEquals('read', $request->getOperation());
+    }
 }

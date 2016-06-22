@@ -294,7 +294,7 @@ $(function() {
         /**
          * supported languages, minus the built in 'en'
          */
-        supportedLanguages: ['de', 'fr', 'pl', 'sl'],
+        supportedLanguages: ['de', 'fr', 'pl', 'sl', 'zh'],
 
         /**
          * translate a string, alias for translate()
@@ -363,6 +363,7 @@ $(function() {
             switch (this.language)
             {
                 case 'fr':
+                case 'zh':
                     return (n > 1 ? 1 : 0);
                 case 'pl':
                     return (n == 1 ? 0 : n%10 >= 2 && n %10 <=4 && (n%100 < 10 || n%100 >= 20) ? 1 : 2);
@@ -443,8 +444,7 @@ $(function() {
          */
         cipher: function(key, password, message)
         {
-            password = (password || '').trim();
-            if (password.length == 0)
+            if ((password || '').trim().length == 0)
             {
                 return sjcl.encrypt(key, this.compress(message));
             }
@@ -560,17 +560,23 @@ $(function() {
          * use given format on paste, defaults to plain text
          *
          * @param string format
+         * @param string text
          */
-        formatPaste: function(format)
+        formatPaste: function(format, text)
         {
+            helper.setElementText(this.clearText, text);
+            helper.setElementText(this.prettyPrint, text);
             switch (format || 'plaintext')
             {
                 case 'markdown':
-                    if (typeof Showdown == 'object')
+                    if (typeof showdown == 'object')
                     {
-                        var converter = new Showdown.converter();
+                        showdown.setOption('strikethrough', true);
+                        showdown.setOption('tables', true);
+                        showdown.setOption('tablesHeaderId', true);
+                        var converter = new showdown.Converter();
                         this.clearText.html(
-                            converter.makeHtml(this.clearText.html())
+                            converter.makeHtml(text)
                         );
                         this.clearText.removeClass('hidden');
                     }
@@ -647,9 +653,7 @@ $(function() {
                     this.passwordInput.val(password);
                     if (cleartext.length > 0)
                     {
-                        helper.setElementText(this.clearText, cleartext);
-                        helper.setElementText(this.prettyPrint, cleartext);
-                        this.formatPaste(paste.meta.formatter);
+                        this.formatPaste(paste.meta.formatter, cleartext);
                     }
                 }
                 catch(err)
@@ -990,10 +994,7 @@ $(function() {
                         // We pre-select the link so that the user only has to [Ctrl]+[c] the link.
                         helper.selectText('pasteurl');
                         zerobin.showStatus('', false);
-
-                        helper.setElementText(zerobin.clearText, zerobin.message.val());
-                        helper.setElementText(zerobin.prettyPrint, zerobin.message.val());
-                        zerobin.formatPaste(data_to_send.formatter);
+                        zerobin.formatPaste(data_to_send.formatter, zerobin.message.val());
                     }
                     else if (data.status==1)
                     {

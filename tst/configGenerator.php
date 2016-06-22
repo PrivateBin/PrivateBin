@@ -579,11 +579,10 @@ EOT;
             case 'Read':
                 $code .= <<<'EOT'
 
-        $this->assertTag(
-            array(
-                'id' => 'cipherdata',
-                'content' => htmlspecialchars(helper::getPasteAsJson(), ENT_NOQUOTES)
-            ),
+        $this->assertContains(
+            '<div id="cipherdata" class="hidden">' .
+            htmlspecialchars(helper::getPasteAsJson(), ENT_NOQUOTES) .
+            '</div>',
             $content,
             'outputs data correctly'
         );
@@ -592,11 +591,8 @@ EOT;
             case 'Delete':
                 $code .= <<<'EOT'
 
-        $this->assertTag(
-            array(
-                'id' => 'status',
-                'content' => 'Paste was properly deleted'
-            ),
+        $this->assertRegExp(
+            '#<div[^>]*id="status"[^>]*>.*Paste was properly deleted</div>#',
             $content,
             'outputs deleted status correctly'
         );

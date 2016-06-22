@@ -31,7 +31,7 @@ without loosing any data.
   and any country the traffic passes not to inject any malicious javascript code.
   Ideally, the ZeroBin installation used would provide HTTPS, secured by 
   [HSTS](https://en.wikipedia.org/wiki/HTTP_Strict_Transport_Security) and
-  [HKPH](https://en.wikipedia.org/wiki/HTTP_Public_Key_Pinning) using a 
+  [HPKP](https://en.wikipedia.org/wiki/HTTP_Public_Key_Pinning) using a 
   certificate either validated by a trusted third party (check the certificate 
   when first using a new ZeroBin instance) or self-signed by the server operator,
   validated using a

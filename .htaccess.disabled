@@ -1,0 +1,3 @@
+RewriteEngine on
+RewriteCond %{HTTP_USER_AGENT} ^.*(bot|spider|crawl|https?://|WhatsApp|SkypeUriPreview) [NC]
+RewriteRule .* - [R=403,L]
