@@ -119,7 +119,7 @@ abstract class persistence
         if ($writtenBytes === false || $writtenBytes < strlen($data)) {
             throw new Exception('unable to write to file ' . $file, 13);
         }
-        chmod($file, 0640); // protect file access
+        @chmod($file, 0640); // protect file access
         return $file;
     }
 }
