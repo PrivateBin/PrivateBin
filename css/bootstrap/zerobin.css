@@ -33,13 +33,11 @@ body.navbar-spacing {
 }
 
 .pull-right .dropdown-menu {
-	margin-left: -56px;
+	margin-left: -5em;
 }
 
-/* add space around buttons */
-
-.btn-primary {
-	margin-left: 8px;
+#language {
+	margin-right: 8px;
 }
 
 .dropdown > #expiration {
