@@ -46,7 +46,7 @@
     "Raw text":
         "Czysty tekst",
     "Expires":
-        "Wygasa",
+        "Wygasa za",
     "Burn after reading":
         "Zniszcz po przeczytaniu",
     "Open discussion":
@@ -59,82 +59,82 @@
         "Przełącz nawigację",
     "%d seconds": ["%d second", "%d second", "%d second"],
     "%d minutes": ["%d minut", "%d minut", "%d minut"],
-    "%d hours": ["%d godzina", "%d godzina", "%d godzina"],
+    "%d hours": ["%d godzina", "%d godzina", "godzinę"],
     "%d days": ["%d dzień", "%d dzień", "%d dzień"],
-    "%d weeks": ["%d tydzień", "%d tydzień", "%d tydzień"],
-    "%d months": ["%d miesiąc", "%d miesiąc", "%d miesiąc"],
-    "%d years": ["%d rok", "%d rok", "%d rok"],
+    "%d weeks": ["%d tydzień", "%d tydzień", "tydzień"],
+    "%d months": ["%d miesiąc", "%d miesiąc", "miesiąc"],
+    "%d years": ["%d rok", "%d rok", "rok"],
     "Never":
-        "Nigdy",
+        "nigdy",
     "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.":
         "Notka: To jest usługa testowa. Dane mogą zostać usunięte w dowolnym momencie. Kociątka umrą, jeśli nadużyjesz tej usługi.",
     "This document will expire in %d seconds.":
-        ["This document will expire in %d second.", "This document will expire in %d seconds."],
+        ["Ten dokument wygaśnie za %d sekundę.", "Ten dokument wygaśnie za %d sekund."],
     "This document will expire in %d minutes.":
-        ["This document will expire in %d minute.", "This document will expire in %d minutes."],
+        ["Ten dokument wygaśnie za %d minutę.", "Ten dokument wygaśnie za %d minut."],
     "This document will expire in %d hours.":
-        ["This document will expire in %d hour.", "This document will expire in %d hours."],
+        ["Ten dokument wygaśnie za godzinę.", "Ten dokument wygaśnie za %d godzin."],
     "This document will expire in %d days.":
-        ["This document will expire in %d day.", "This document will expire in %d days."],
+        ["Ten dokument wygaśnie za %d dzień.", "Ten dokument wygaśnie za %d dni."],
     "This document will expire in %d months.":
-        ["This document will expire in %d month.", "This document will expire in %d months."],
+        ["Ten dokument wygaśnie za miesiąc.", "Ten dokument wygaśnie za %d miesięcy."],
     "Please enter the password for this paste:":
-        "Please enter the password for this paste:",
+        "Wpisz hasło dla tej wklejki:",
     "Could not decrypt data (Wrong key?)":
-        "Could not decrypt data (Wrong key?)",
+        "Nie udało się odszyfrować danych (zły klucz?)",
     "Could not delete the paste, it was not stored in burn after reading mode.":
-        "Could not delete the paste, it was not stored in burn after reading mode.",
+        "Nie udało się usunąć wklejki, nie została zapisana w trybie zniszczenia po przeczytaniu.",
     "FOR YOUR EYES ONLY. Don't close this window, this message can't be displayed again.":
-        "FOR YOUR EYES ONLY. Don't close this window, this message can't be displayed again.",
+        "TYLKO DO TWOJEGO WGLĄDU. Nie zamykaj tego okna, ta wiadomość nie będzie mogła być wyświetlona ponownie.",
     "Could not decrypt comment; Wrong key?":
-        "Could not decrypt comment; Wrong key?",
+        "Nie udało się odszyfrować komentarza; zły klucz?",
     "Reply":
-        "Reply",
+        "Odpowiedz",
     "Anonymous":
-        "Anonymous",
+        "Anonim",
     "Anonymous avatar (Vizhash of the IP address)":
-        "Anonymous avatar (Vizhash of the IP address)",
+        "Anonimowy avatar (Vizhash z adresu IP)",
     "Add comment":
-        "Add comment",
+        "Dodaj komentarz",
     "Optional nickname...":
-        "Optional nickname...",
+        "Opcjonalny nick...",
     "Post comment":
-        "Post comment",
+        "Wyślij komentarz",
     "Sending comment...":
-        "Sending comment...",
+        "Wysyłanie komentarza...",
     "Comment posted.":
-        "Comment posted.",
+        "Wysłano komentarz.",
     "Could not refresh display: %s":
-        "Could not refresh display: %s",
+        "Nie można odświeżyć widoku: %s",
     "unknown status":
-        "unknown status",
+        "nieznany status",
     "server error or not responding":
-        "server error or not responding",
+        "bląd serwera lub brak odpowiedzi",
     "Could not post comment: %s":
-        "Could not post comment: %s",
+        "Nie udało się wysłać komentarza: %s",
     "Sending paste (Please move your mouse for more entropy)...":
-        "Sending paste (Please move your mouse for more entropy)...",
+        "Wysyłanie wklejki (proszę poruszać myszą aby uzyskać większą entropię)...",
     "Sending paste...":
-        "Sending paste...",
+        "Wysyłanie wklejki...",
     "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit [Ctrl]+[c] to copy)</span>":
-        "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit [Ctrl]+[c] to copy)</span>",
+        "Twoja wklejka to <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(wciśnij [Ctrl]+[c] aby skopiować)</span>",
     "Delete data":
-        "Delete data",
+        "Skasuj dane",
     "Could not create paste: %s":
-        "Could not create paste: %s",
+        "Nie udało się utworzyć wklejki: %s",
     "Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)":
-        "Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)",
+        "Nie udało się odszyfrować wklejki - brak klucza deszyfrującego w adresie (użyłeś skracacza linków, który ucina część adresu?)",
     "Format": "Format",
-    "Plain Text": "Plain Text",
-    "Source Code": "Source Code",
+    "Plain Text": "Czysty tekst",
+    "Source Code": "Kod źródłowy",
     "Markdown": "Markdown",
-    "Download attachment": "Download attachment",
-    "Cloned file attached.": "Cloned file attached.",
-    "Attach a file": "Attach a file",
-    "Remove attachment": "Remove attachment",
+    "Download attachment": "Pobierz załącznik",
+    "Cloned file attached.": "Sklonowano załączony plik.",
+    "Attach a file": "Załącz plik",
+    "Remove attachment": "Usuń załącznik",
     "Your browser does not support uploading encrypted files. Please use a newer browser.":
-        "Your browser does not support uploading encrypted files. Please use a newer browser.",
-    "Invalid attachment.": "Invalid attachment.",
-    "Options": "Options",
+        "Twoja przeglądarka nie wspiera wysyłania zaszyfrowanych plików. Użyj nowszej przeglądarki.",
+    "Invalid attachment.": "Nieprawidłowy załącznik.",
+    "Options": "Opcje",
     "Shorten URL": "Skróć adres URL"
 }
