@@ -46,7 +46,7 @@
     "Raw text":
         "Czysty tekst",
     "Expires":
-        "Wygasa",
+        "Wygasa za",
     "Burn after reading":
         "Zniszcz po przeczytaniu",
     "Open discussion":
@@ -59,13 +59,13 @@
         "Przełącz nawigację",
     "%d seconds": ["%d second", "%d second", "%d second"],
     "%d minutes": ["%d minut", "%d minut", "%d minut"],
-    "%d hours": ["%d godzina", "%d godzina", "%d godzina"],
+    "%d hours": ["%d godzina", "%d godzina", "godzinę"],
     "%d days": ["%d dzień", "%d dzień", "%d dzień"],
-    "%d weeks": ["%d tydzień", "%d tydzień", "%d tydzień"],
-    "%d months": ["%d miesiąc", "%d miesiąc", "%d miesiąc"],
-    "%d years": ["%d rok", "%d rok", "%d rok"],
+    "%d weeks": ["%d tydzień", "%d tydzień", "tydzień"],
+    "%d months": ["%d miesiąc", "%d miesiąc", "miesiąc"],
+    "%d years": ["%d rok", "%d rok", "rok"],
     "Never":
-        "Nigdy",
+        "nigdy",
     "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.":
         "Notka: To jest usługa testowa. Dane mogą zostać usunięte w dowolnym momencie. Kociątka umrą, jeśli nadużyjesz tej usługi.",
     "This document will expire in %d seconds.":
@@ -73,11 +73,11 @@
     "This document will expire in %d minutes.":
         ["Ten dokument wygaśnie za %d minutę.", "Ten dokument wygaśnie za %d minut."],
     "This document will expire in %d hours.":
-        ["Ten dokument wygaśnie za in %d godzinę.", "Ten dokument wygaśnie za %d godzin."],
+        ["Ten dokument wygaśnie za godzinę.", "Ten dokument wygaśnie za %d godzin."],
     "This document will expire in %d days.":
         ["Ten dokument wygaśnie za %d dzień.", "Ten dokument wygaśnie za %d dni."],
     "This document will expire in %d months.":
-        ["Ten dokument wygaśnie za %d miesiąc.", "Ten dokument wygaśnie za %d miesięcy."],
+        ["Ten dokument wygaśnie za miesiąc.", "Ten dokument wygaśnie za %d miesięcy."],
     "Please enter the password for this paste:":
         "Wpisz hasło dla tej wklejki:",
     "Could not decrypt data (Wrong key?)":
