@@ -1,6 +1,6 @@
 Credits
 =======
-Sébastien Sauvage - original idea and main developer
+Sébastien Sauvage - original idea and main developer  
 El Rido - current developer and maintainer
 
 * Alexey Gladkov - syntax highlighting
