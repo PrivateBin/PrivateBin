@@ -6,7 +6,7 @@ packages and its dependencies:
 * phpdoc
 * graphviz
 
-Details about [installing phpDocumentor](http://phpdoc.org/docs/latest/getting-started/installing.html)
+Details about [installing phpDocumentor](https://phpdoc.org/docs/latest/getting-started/installing.html)
 can be found in its own documentation.
 
 Example for Debian and Ubuntu:
