@@ -1,4 +1,5 @@
 # ZeroBin 0.22
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/094500f62abf4c9aa0c8a8a4520e4789)](https://www.codacy.com/app/ZeroBin/ZeroBin?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=elrido/ZeroBin&amp;utm_campaign=Badge_Grade)
 
 ZeroBin is a minimalist, opensource online pastebin where the server has zero 
 knowledge of pasted data.
