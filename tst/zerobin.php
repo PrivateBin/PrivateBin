@@ -282,6 +282,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD'] = 'POST';
         $_SERVER['REMOTE_ADDR'] = '::1';
+        $time = time();
         ob_start();
         new zerobin;
         $content = ob_get_contents();
@@ -294,7 +295,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         );
         $this->assertTrue($this->_model->exists($response['id']), 'paste exists after posting data');
         $paste = $this->_model->read($response['id']);
-        $this->assertEquals(time() + 300, $paste->meta->expire_date, 'time is set correctly');
+        $this->assertEquals($time + 300, $paste->meta->expire_date, 'time is set correctly');
     }
 
     /**
