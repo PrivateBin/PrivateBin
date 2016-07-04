@@ -56,14 +56,6 @@ class zerobin
     private $_doesExpire = false;
 
     /**
-     * formatter
-     *
-     * @access private
-     * @var    string
-     */
-    private $_formatter = 'plaintext';
-
-    /**
      * error message
      *
      * @access private
@@ -219,8 +211,6 @@ class zerobin
      */
     private function _create()
     {
-        $error = false;
-
         // Ensure last paste from visitors IP address was more than configured amount of seconds ago.
         trafficlimiter::setConfiguration($this->_conf);
         if (!trafficlimiter::canPass()) return $this->_return_message(

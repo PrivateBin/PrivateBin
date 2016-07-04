@@ -1,8 +1,6 @@
 <?php
 class requestTest extends PHPUnit_Framework_TestCase
 {
-    private $_request;
-
     public function setUp()
     {
         /* Setup Routine */

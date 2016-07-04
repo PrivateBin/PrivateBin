@@ -90,7 +90,7 @@ class configurationTest extends PHPUnit_Framework_TestCase
     public function testHandleBlankConfigFile()
     {
         file_put_contents(CONF, '');
-        $conf = new configuration;
+        new configuration;
     }
 
     public function testHandleMinimalConfigFile()

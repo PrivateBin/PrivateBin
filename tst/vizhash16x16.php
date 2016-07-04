@@ -1,8 +1,6 @@
 <?php
 class vizhash16x16Test extends PHPUnit_Framework_TestCase
 {
-    private $_dataDirCreated;
-
     private $_file;
 
     private $_path;

@@ -124,9 +124,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
             $file = PATH . $dir . DIRECTORY_SEPARATOR . '.htaccess';
             @unlink($file);
         }
-        ob_start();
         new zerobin;
-        $content = ob_get_contents();
         foreach ($dirs as $dir) {
             $file = PATH . $dir . DIRECTORY_SEPARATOR . '.htaccess';
             $this->assertFileExists(

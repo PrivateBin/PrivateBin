@@ -175,7 +175,7 @@ class modelTest extends PHPUnit_Framework_TestCase
     public function testInvalidComment()
     {
         $paste = $this->_model->getPaste();
-        $comment = $paste->getComment(helper::getPasteId());
+        $paste->getComment(helper::getPasteId());
     }
 
     public function testExpiration()

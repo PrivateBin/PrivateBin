@@ -43,7 +43,7 @@ class serversaltTest extends PHPUnit_Framework_TestCase
             function mcrypt_create_iv($int, $flag)
             {
                 $randomSalt = '';
-                for($i = 0; $i < 256; ++$i) {
+                for($i = 0; $i < $int; ++$i) {
                     $randomSalt .= base_convert(mt_rand(), 10, 16);
                 }
                 // hex2bin requires an even length, pad if necessary
