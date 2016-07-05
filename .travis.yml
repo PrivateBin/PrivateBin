@@ -7,8 +7,7 @@ php:
   - hhvm
 
 before_script:
-  - curl -s http://getcomposer.org/installer | php
-  - php composer.phar install -n
+  - composer install -n
 
 script:
   - cd tst && ../vendor/bin/phpunit
