@@ -11,7 +11,7 @@ before_script:
   - php composer.phar install -n
 
 script:
-  - cd tst && phpunit
+  - vendor/bin/phpunit tst
 
 after_script:
   - php vendor/bin/codacycoverage clover tst/log/coverage-clover.xml
