@@ -328,10 +328,10 @@ $(function() {
             {
                 messageId = args[0];
             }
-            if (messageId.length == 0) return messageId;
+            if (messageId.length === 0) return messageId;
             if (!this.translations.hasOwnProperty(messageId))
             {
-                if (this.language != 'en') console.debug(
+                if (this.language !== 'en') console.debug(
                     'Missing translation for: ' + messageId
                 );
                 this.translations[messageId] = args[0];
@@ -366,10 +366,10 @@ $(function() {
                 case 'zh':
                     return (n > 1 ? 1 : 0);
                 case 'pl':
-                    return (n == 1 ? 0 : n%10 >= 2 && n %10 <=4 && (n%100 < 10 || n%100 >= 20) ? 1 : 2);
+                    return (n === 1 ? 0 : n%10 >= 2 && n %10 <=4 && (n%100 < 10 || n%100 >= 20) ? 1 : 2);
                 // en, de
                 default:
-                    return (n != 1 ? 1 : 0);
+                    return (n !== 1 ? 1 : 0);
             }
         },
 

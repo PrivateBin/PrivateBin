@@ -145,7 +145,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         file_put_contents(CONF, '');
         ob_start();
         new zerobin;
-        $content = ob_get_contents();
+        ob_get_contents();
     }
 
     /**

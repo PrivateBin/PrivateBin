@@ -1,5 +1,6 @@
 {
     "require-dev": {
+        "phpunit/phpunit": "5.4.*",
         "codacy/coverage": "dev-master"
     }
 }
