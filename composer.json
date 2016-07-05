@@ -1,0 +1,5 @@
+{
+    "require-dev": {
+        "codacy/coverage": "dev-master"
+    }
+}
