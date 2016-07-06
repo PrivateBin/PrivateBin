@@ -1,6 +1,5 @@
 <?php
 error_reporting( E_ALL | E_STRICT );
-ini_set('hhvm.xenon.period', '0');
 
 // change this, if your php files and data is outside of your webservers document root
 if (!defined('PUBLIC_PATH')) define('PUBLIC_PATH', '..');

@@ -187,7 +187,6 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD'] = 'POST';
         $_SERVER['REMOTE_ADDR'] = '::1';
-        trafficlimiter::setLimit(30);
         trafficlimiter::canPass();
         ob_start();
         new zerobin;
