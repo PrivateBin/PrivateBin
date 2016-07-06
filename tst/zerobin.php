@@ -295,7 +295,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         );
         $this->assertTrue($this->_model->exists($response['id']), 'paste exists after posting data');
         $paste = $this->_model->read($response['id']);
-        $this->assertEquals($time + 300, $paste->meta->expire_date, 'time is set correctly');
+        $this->assertGreaterThanOrEqual($time + 300, $paste->meta->expire_date, 'time is set correctly');
     }
 
     /**
@@ -327,8 +327,8 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         );
         $this->assertTrue($this->_model->exists($response['id']), 'paste exists after posting data');
         $paste = $this->_model->read($response['id']);
-        $this->assertEquals($time + 300, $paste->meta->expire_date, 'time is set correctly');
-        $this->assertEquals(1, $paste->meta->opendiscussion, 'time is set correctly');
+        $this->assertGreaterThanOrEqual($time + 300, $paste->meta->expire_date, 'time is set correctly');
+        $this->assertEquals(1, $paste->meta->opendiscussion, 'discussion is enabled');
     }
 
     /**

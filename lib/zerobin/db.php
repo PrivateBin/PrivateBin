@@ -607,7 +607,7 @@ class zerobin_db extends zerobin_abstract
             case '0.21':
                 // create the meta column if necessary (pre 0.21 change)
                 try {
-                    self::$_db->exec('SELECT meta FROM ' . self::$_prefix . 'paste LIMIT 1;', array());
+                    self::$_db->exec('SELECT meta FROM ' . self::$_prefix . 'paste LIMIT 1;');
                 } catch (PDOException $e) {
                     self::$_db->exec('ALTER TABLE ' . self::$_prefix . 'paste ADD COLUMN meta TEXT;');
                 }
