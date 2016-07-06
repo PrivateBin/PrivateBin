@@ -22,11 +22,13 @@ class model_paste extends model_abstract
      *
      * @access public
      * @throws Exception
-     * @return stdObject
+     * @return stdClass
      */
     public function get()
     {
         $this->_data = $this->_store->read($this->getId());
+        if ($this->_data === false) throw new Exception(zerobin::GENERIC_ERROR, 64);
+
         // check if paste has expired and delete it if neccessary.
         if (property_exists($this->_data->meta, 'expire_date'))
         {

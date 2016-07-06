@@ -30,7 +30,7 @@ class model_comment extends model_abstract
      *
      * @access public
      * @throws Exception
-     * @return stdObject
+     * @return stdClass
      */
     public function get()
     {
