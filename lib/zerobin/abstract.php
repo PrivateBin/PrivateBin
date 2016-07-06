@@ -69,7 +69,7 @@ abstract class zerobin_abstract
      *
      * @access public
      * @param  string $pasteid
-     * @return string
+     * @return stdClass|false
      */
     abstract public function read($pasteid);
 

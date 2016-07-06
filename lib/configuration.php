@@ -218,10 +218,9 @@ class configuration
 
 
     /**
-     * get a key from the configuration, typically the main section or all keys
+     * get a section from the configuration, must exist
      *
-     * @param string $key if empty, return all configuration options
-     * @param string $section defaults to main
+     * @param string $section
      * @throws Exception
      * return mixed
      */

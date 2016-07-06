@@ -20,11 +20,11 @@ spl_autoload_register('auto::loader');
 class auto
 {
     /**
-     * strips slashes deeply
+     * includes file for given class name
      *
      * @access public
      * @static
-     * @param  mixed $value
+     * @param  string $class_name
      * @return mixed
      */
     public static function loader($class_name)

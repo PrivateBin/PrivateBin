@@ -486,7 +486,7 @@ class zerobin
      * prepares JSON encoded status message
      *
      * @access private
-     * @param  bool $status
+     * @param  int $status
      * @param  string $message
      * @param  array $other
      * @return void
