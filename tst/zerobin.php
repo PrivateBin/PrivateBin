@@ -124,7 +124,9 @@ class zerobinTest extends PHPUnit_Framework_TestCase
             $file = PATH . $dir . DIRECTORY_SEPARATOR . '.htaccess';
             @unlink($file);
         }
+        ob_start();
         new zerobin;
+        ob_end_clean();
         foreach ($dirs as $dir) {
             $file = PATH . $dir . DIRECTORY_SEPARATOR . '.htaccess';
             $this->assertFileExists(
@@ -145,7 +147,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         file_put_contents(CONF, '');
         ob_start();
         new zerobin;
-        $content = ob_get_contents();
+        ob_end_clean();
     }
 
     /**
@@ -185,6 +187,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD'] = 'POST';
         $_SERVER['REMOTE_ADDR'] = '::1';
+        trafficlimiter::setLimit(30);
         trafficlimiter::canPass();
         ob_start();
         new zerobin;
@@ -312,6 +315,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD'] = 'POST';
         $_SERVER['REMOTE_ADDR'] = '::1';
+        $time = time();
         ob_start();
         new zerobin;
         $content = ob_get_contents();
@@ -324,7 +328,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         );
         $this->assertTrue($this->_model->exists($response['id']), 'paste exists after posting data');
         $paste = $this->_model->read($response['id']);
-        $this->assertEquals(time() + 300, $paste->meta->expire_date, 'time is set correctly');
+        $this->assertEquals($time + 300, $paste->meta->expire_date, 'time is set correctly');
         $this->assertEquals(1, $paste->meta->opendiscussion, 'time is set correctly');
     }
 

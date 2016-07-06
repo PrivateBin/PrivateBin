@@ -24,9 +24,9 @@ class trafficlimiterTest extends PHPUnit_Framework_TestCase
         trafficlimiter::setLimit(4);
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
         $this->assertTrue(trafficlimiter::canPass(), 'first request may pass');
-        sleep(2);
+        sleep(1);
         $this->assertFalse(trafficlimiter::canPass(), 'second request is to fast, may not pass');
-        sleep(3);
+        sleep(4);
         $this->assertTrue(trafficlimiter::canPass(), 'third request waited long enough and may pass');
         $_SERVER['REMOTE_ADDR'] = '2001:1620:2057:dead:beef::cafe:babe';
         $this->assertTrue(trafficlimiter::canPass(), 'fourth request has different ip and may pass');
