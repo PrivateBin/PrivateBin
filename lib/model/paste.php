@@ -27,7 +27,7 @@ class model_paste extends model_abstract
     public function get()
     {
         $this->_data = $this->_store->read($this->getId());
-        // See if paste has expired and delete it if neccessary.
+        // check if paste has expired and delete it if neccessary.
         if (property_exists($this->_data->meta, 'expire_date'))
         {
             if ($this->_data->meta->expire_date < time())
@@ -52,6 +52,12 @@ class model_paste extends model_abstract
                 $this->_data->meta->formatter = $this->_conf->getKey('defaultformatter');
             }
         }
+
+        // support old paste format with server wide salt
+        if (!property_exists($this->_data->meta, 'salt'))
+        {
+            $this->_data->meta->salt = serversalt::get();
+        }
         $this->_data->comments = array_values($this->getComments());
         $this->_data->comment_count = count($this->_data->comments);
         $this->_data->comment_offset = 0;
@@ -73,6 +79,7 @@ class model_paste extends model_abstract
             throw new Exception('You are unlucky. Try again.', 75);
 
         $this->_data->meta->postdate = time();
+        $this->_data->meta->salt = serversalt::generate();
 
         // store paste
         if (
@@ -151,7 +158,12 @@ class model_paste extends model_abstract
      */
     public function getDeleteToken()
     {
-        return hash_hmac('sha1', $this->getId(), serversalt::get());
+        if (!property_exists($this->_data->meta, 'salt')) $this->get();
+        return hash_hmac(
+            $this->_conf->getKey('zerobincompatibility') ? 'sha1' : 'sha256',
+            $this->getId(),
+            $this->_data->meta->salt
+        );
     }
 
     /**

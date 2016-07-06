@@ -46,13 +46,14 @@ class jsonApiTest extends PHPUnit_Framework_TestCase
         $content = ob_get_contents();
         $response = json_decode($content, true);
         $this->assertEquals(0, $response['status'], 'outputs status');
+        $this->assertStringEndsWith('?' . $response['id'], $response['url'], 'returned URL points to new paste');
+        $this->assertTrue($this->_model->exists($response['id']), 'paste exists after posting data');
+        $paste = $this->_model->read($response['id']);
         $this->assertEquals(
-            hash_hmac('sha1', $response['id'], serversalt::get()),
+            hash_hmac('sha256', $response['id'], $paste->meta->salt),
             $response['deletetoken'],
             'outputs valid delete token'
         );
-        $this->assertStringEndsWith('?' . $response['id'], $response['url'], 'returned URL points to new paste');
-        $this->assertTrue($this->_model->exists($response['id']), 'paste exists after posting data');
     }
 
     /**
@@ -80,13 +81,14 @@ class jsonApiTest extends PHPUnit_Framework_TestCase
         $response = json_decode($content, true);
         $this->assertEquals(0, $response['status'], 'outputs status');
         $this->assertEquals(helper::getPasteId(), $response['id'], 'outputted paste ID matches input');
+        $this->assertStringEndsWith('?' . $response['id'], $response['url'], 'returned URL points to new paste');
+        $this->assertTrue($this->_model->exists($response['id']), 'paste exists after posting data');
+        $paste = $this->_model->read($response['id']);
         $this->assertEquals(
-            hash_hmac('sha1', $response['id'], serversalt::get()),
+            hash_hmac('sha256', $response['id'], $paste->meta->salt),
             $response['deletetoken'],
             'outputs valid delete token'
         );
-        $this->assertStringEndsWith('?' . $response['id'], $response['url'], 'returned URL points to new paste');
-        $this->assertTrue($this->_model->exists($response['id']), 'paste exists after posting data');
     }
 
     /**
@@ -97,9 +99,10 @@ class jsonApiTest extends PHPUnit_Framework_TestCase
         $this->reset();
         $this->_model->create(helper::getPasteId(), helper::getPaste());
         $this->assertTrue($this->_model->exists(helper::getPasteId()), 'paste exists before deleting data');
+        $paste = $this->_model->read(helper::getPasteId());
         $file = tempnam(sys_get_temp_dir(), 'FOO');
         file_put_contents($file, http_build_query(array(
-            'deletetoken' => hash_hmac('sha1', helper::getPasteId(), serversalt::get()),
+            'deletetoken' => hash_hmac('sha256', helper::getPasteId(), $paste->meta->salt),
         )));
         request::setInputStream($file);
         $_SERVER['QUERY_STRING'] = helper::getPasteId();
@@ -121,9 +124,10 @@ class jsonApiTest extends PHPUnit_Framework_TestCase
         $this->reset();
         $this->_model->create(helper::getPasteId(), helper::getPaste());
         $this->assertTrue($this->_model->exists(helper::getPasteId()), 'paste exists before deleting data');
+        $paste = $this->_model->read(helper::getPasteId());
         $_POST = array(
             'action' => 'delete',
-            'deletetoken' => hash_hmac('sha1', helper::getPasteId(), serversalt::get()),
+            'deletetoken' => hash_hmac('sha256', helper::getPasteId(), $paste->meta->salt),
         );
         $_SERVER['QUERY_STRING'] = helper::getPasteId();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';

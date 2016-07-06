@@ -85,6 +85,7 @@ class helper
     public static function getPasteWithAttachment($meta = array())
     {
         $example = self::$paste;
+        $example['meta']['salt'] = serversalt::generate();
         $example['meta'] = array_merge($example['meta'], $meta);
         return $example;
     }
@@ -97,6 +98,8 @@ class helper
     public static function getPasteAsJson($meta = array())
     {
         $example = self::getPaste();
+        // the JSON shouldn't contain the salt
+        unset($example['meta']['salt']);
         if (count($meta))
             $example['meta'] = $meta;
         $example['comments'] = array();

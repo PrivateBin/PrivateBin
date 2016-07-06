@@ -327,7 +327,6 @@ class zerobin
                 else
                 {
                     // Make sure the token is valid.
-                    serversalt::setPath($this->_conf->getKey('dir', 'traffic'));
                     if (filter::slow_equals($deletetoken, $paste->getDeleteToken()))
                     {
                         // Paste exists and deletion token is valid: Delete the paste.
@@ -364,6 +363,7 @@ class zerobin
             {
                 $data = $paste->get();
                 $this->_doesExpire = property_exists($data, 'meta') && property_exists($data->meta, 'expire_date');
+                if (property_exists($data->meta, 'salt')) unset($data->meta->salt);
                 $this->_data = json_encode($data);
             }
             else
@@ -439,7 +439,7 @@ class zerobin
         $page->assign('BURNAFTERREADINGSELECTED', $this->_conf->getKey('burnafterreadingselected'));
         $page->assign('PASSWORD', $this->_conf->getKey('password'));
         $page->assign('FILEUPLOAD', $this->_conf->getKey('fileupload'));
-        $page->assign('BASE64JSVERSION', $this->_conf->getKey('base64version'));
+        $page->assign('BASE64JSVERSION', $this->_conf->getKey('zerobincompatibility') ? '1.7' : '2.1.9');
         $page->assign('LANGUAGESELECTION', $languageselection);
         $page->assign('LANGUAGES', i18n::getLanguageLabels(i18n::getAvailableLanguages()));
         $page->assign('EXPIRE', $expire);

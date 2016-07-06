@@ -169,12 +169,13 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $content = ob_get_contents();
         $response = json_decode($content, true);
         $this->assertEquals(0, $response['status'], 'outputs status');
+        $this->assertTrue($this->_model->exists($response['id']), 'paste exists after posting data');
+        $paste = $this->_model->read($response['id']);
         $this->assertEquals(
-            hash_hmac('sha1', $response['id'], serversalt::get()),
+            hash_hmac('sha256', $response['id'], $paste->meta->salt),
             $response['deletetoken'],
             'outputs valid delete token'
         );
-        $this->assertTrue($this->_model->exists($response['id']), 'paste exists after posting data');
     }
 
     /**
@@ -288,13 +289,13 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $content = ob_get_contents();
         $response = json_decode($content, true);
         $this->assertEquals(0, $response['status'], 'outputs status');
+        $this->assertTrue($this->_model->exists($response['id']), 'paste exists after posting data');
+        $paste = $this->_model->read($response['id']);
         $this->assertEquals(
-            hash_hmac('sha1', $response['id'], serversalt::get()),
+            hash_hmac('sha256', $response['id'], $paste->meta->salt),
             $response['deletetoken'],
             'outputs valid delete token'
         );
-        $this->assertTrue($this->_model->exists($response['id']), 'paste exists after posting data');
-        $paste = $this->_model->read($response['id']);
         $this->assertGreaterThanOrEqual($time + 300, $paste->meta->expire_date, 'time is set correctly');
     }
 
@@ -320,13 +321,13 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $content = ob_get_contents();
         $response = json_decode($content, true);
         $this->assertEquals(0, $response['status'], 'outputs status');
+        $this->assertTrue($this->_model->exists($response['id']), 'paste exists after posting data');
+        $paste = $this->_model->read($response['id']);
         $this->assertEquals(
-            hash_hmac('sha1', $response['id'], serversalt::get()),
+            hash_hmac('sha256', $response['id'], $paste->meta->salt),
             $response['deletetoken'],
             'outputs valid delete token'
         );
-        $this->assertTrue($this->_model->exists($response['id']), 'paste exists after posting data');
-        $paste = $this->_model->read($response['id']);
         $this->assertGreaterThanOrEqual($time + 300, $paste->meta->expire_date, 'time is set correctly');
         $this->assertEquals(1, $paste->meta->opendiscussion, 'discussion is enabled');
     }
@@ -351,12 +352,13 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $content = ob_get_contents();
         $response = json_decode($content, true);
         $this->assertEquals(0, $response['status'], 'outputs status');
+        $this->assertTrue($this->_model->exists($response['id']), 'paste exists after posting data');
+        $paste = $this->_model->read($response['id']);
         $this->assertEquals(
-            hash_hmac('sha1', $response['id'], serversalt::get()),
+            hash_hmac('sha256', $response['id'], $paste->meta->salt),
             $response['deletetoken'],
             'outputs valid delete token'
         );
-        $this->assertTrue($this->_model->exists($response['id']), 'paste exists after posting data');
     }
 
     /**
@@ -426,17 +428,17 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $content = ob_get_contents();
         $response = json_decode($content, true);
         $this->assertEquals(0, $response['status'], 'outputs status');
-        $this->assertEquals(
-            hash_hmac('sha1', $response['id'], serversalt::get()),
-            $response['deletetoken'],
-            'outputs valid delete token'
-        );
         $this->assertTrue($this->_model->exists($response['id']), 'paste exists after posting data');
         $original = json_decode(json_encode($_POST));
         $stored = $this->_model->read($response['id']);
         foreach (array('data', 'attachment', 'attachmentname') as $key) {
             $this->assertEquals($original->$key, $stored->$key);
         }
+        $this->assertEquals(
+            hash_hmac('sha256', $response['id'], $stored->meta->salt),
+            $response['deletetoken'],
+            'outputs valid delete token'
+        );
     }
 
     /**
@@ -459,12 +461,13 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $content = ob_get_contents();
         $response = json_decode($content, true);
         $this->assertEquals(0, $response['status'], 'outputs status');
+        $this->assertTrue($this->_model->exists($response['id']), 'paste exists after posting data');
+        $paste = $this->_model->read($response['id']);
         $this->assertEquals(
-            hash_hmac('sha1', $response['id'], serversalt::get()),
+            hash_hmac('sha256', $response['id'], $paste->meta->salt),
             $response['deletetoken'],
             'outputs valid delete token'
         );
-        $this->assertTrue($this->_model->exists($response['id']), 'paste exists after posting data');
     }
 
     /**
@@ -705,6 +708,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         ob_start();
         new zerobin;
         $content = ob_get_contents();
+        unset($burnPaste['meta']['salt']);
         $this->assertContains(
             '<div id="cipherdata" class="hidden">' .
             htmlspecialchars(helper::getPasteAsJson($burnPaste['meta']), ENT_NOQUOTES) .
@@ -796,6 +800,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         new zerobin;
         $content = ob_get_contents();
         $oldPaste['meta']['formatter'] = 'plaintext';
+        unset($oldPaste['meta']['salt']);
         $this->assertContains(
             '<div id="cipherdata" class="hidden">' .
             htmlspecialchars(helper::getPasteAsJson($oldPaste['meta']), ENT_NOQUOTES) .
@@ -813,8 +818,9 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $this->reset();
         $this->_model->create(helper::getPasteId(), helper::getPaste());
         $this->assertTrue($this->_model->exists(helper::getPasteId()), 'paste exists before deleting data');
+        $paste = $this->_model->read(helper::getPasteId());
         $_GET['pasteid'] = helper::getPasteId();
-        $_GET['deletetoken'] = hash_hmac('sha1', helper::getPasteId(), serversalt::get());
+        $_GET['deletetoken'] = hash_hmac('sha256', helper::getPasteId(), $paste->meta->salt);
         ob_start();
         new zerobin;
         $content = ob_get_contents();
@@ -944,6 +950,29 @@ class zerobinTest extends PHPUnit_Framework_TestCase
             '#<div[^>]*id="errormessage"[^>]*>.*Paste does not exist[^<]*</div>#',
             $content,
             'outputs error correctly'
+        );
+        $this->assertFalse($this->_model->exists(helper::getPasteId()), 'paste successfully deleted');
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testDeleteMissingPerPasteSalt()
+    {
+        $this->reset();
+        $paste = helper::getPaste();
+        unset($paste['meta']['salt']);
+        $this->_model->create(helper::getPasteId(), $paste);
+        $this->assertTrue($this->_model->exists(helper::getPasteId()), 'paste exists before deleting data');
+        $_GET['pasteid'] = helper::getPasteId();
+        $_GET['deletetoken'] = hash_hmac('sha256', helper::getPasteId(), serversalt::get());
+        ob_start();
+        new zerobin;
+        $content = ob_get_contents();
+        $this->assertRegExp(
+            '#<div[^>]*id="status"[^>]*>.*Paste was properly deleted[^<]*</div>#s',
+            $content,
+            'outputs deleted status correctly'
         );
         $this->assertFalse($this->_model->exists(helper::getPasteId()), 'paste successfully deleted');
     }

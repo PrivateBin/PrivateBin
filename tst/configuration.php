@@ -13,10 +13,10 @@ class configurationTest extends PHPUnit_Framework_TestCase
             'sizelimit' => 2097152,
             'template' => 'bootstrap',
             'notice' => '',
-            'base64version' => '2.1.9',
             'languageselection' => false,
             'languagedefault' => '',
             'urlshortener' => '',
+            'zerobincompatibility' => false,
         ),
         'expire' => array(
             'default' => '1week',

@@ -39,10 +39,6 @@ template = "bootstrap"
 ; (optional) notice to display
 ; notice = "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service."
 
-; base64.js library version, defaults to 2.1.9
-; use "1.7" if you are upgrading from a ZeroBin Alpha 0.19 installation
-base64version = "2.1.9"
-
 ; by default ZeroBin will guess the visitors language based on the browsers
 ; settings. Optionally you can enable the language selection menu, which uses
 ; a session cookie to store the choice until the browser is closed.
@@ -56,6 +52,11 @@ languageselection = false
 ; it is suggested to only use this with self-hosted shorteners as this will leak
 ; the pastes encryption key
 ; urlshortener = "https://shortener.example.com/api?link="
+
+; stay compatible with ZeroBin Alpha 0.19, less secure
+; if enabled will use base64.js version 1.7 instead of 2.1.9 and sha1 instead of
+; sha256 in HMAC for the deletion token
+zerobincompatibility = false
 
 [expire]
 ; expire value that is selected per default
