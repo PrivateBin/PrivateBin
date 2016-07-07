@@ -1,6 +1,8 @@
 # ZeroBin 0.22
 [![Build Status](https://travis-ci.org/elrido/ZeroBin.svg?branch=master)](https://travis-ci.org/elrido/ZeroBin)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/094500f62abf4c9aa0c8a8a4520e4789)](https://www.codacy.com/app/ZeroBin/ZeroBin?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=elrido/ZeroBin&amp;utm_campaign=Badge_Grade)
+[![Code Climate](https://codeclimate.com/github/elrido/ZeroBin/badges/gpa.svg)](https://codeclimate.com/github/elrido/ZeroBin)
+[![Test Coverage](https://codeclimate.com/github/elrido/ZeroBin/badges/coverage.svg)](https://codeclimate.com/github/elrido/ZeroBin/coverage)
 
 ZeroBin is a minimalist, opensource online pastebin where the server has zero 
 knowledge of pasted data.
