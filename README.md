@@ -66,7 +66,7 @@ without loosing any data.
 ## Options
 
 Some features are optional and can be enabled or disabled in the [configuration
-file](wiki/Configuration):
+file](https://github.com/PrivateBin/PrivateBin/wiki/Configuration):
 
 * Password protection
 
@@ -89,17 +89,17 @@ file](wiki/Configuration):
 
 ## Further resources
 
-* [Installation guide](wiki/Installation)
+* [Installation guide](https://github.com/PrivateBin/PrivateBin/wiki/Installation)
 
-* [Upgrading from 0.19 Alpha](wiki/Upgrading-from-ZeroBin-0.19-Alpha)
+* [Upgrading from 0.19 Alpha](https://github.com/PrivateBin/PrivateBin/wiki/Upgrading-from-ZeroBin-0.19-Alpha)
 
-* [Configuration guide](wiki/Configuration)
+* [Configuration guide](https://github.com/PrivateBin/PrivateBin/wiki/Configuration)
 
-* [Templates](wiki/Templates)
+* [Templates](https://github.com/PrivateBin/PrivateBin/wiki/Templates)
 
-* [Translation guide](wiki/Translation)
+* [Translation guide](https://github.com/PrivateBin/PrivateBin/wiki/Translation)
 
-* [Developer guide](hwiki/Development)
+* [Developer guide](https://github.com/PrivateBin/PrivateBin/wiki/Development)
 
 Run into any issues? Have ideas for further developments? Please 
-[report](issues) them!
+[report](https://github.com/PrivateBin/PrivateBin/issues) them!
