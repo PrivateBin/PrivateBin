@@ -48,7 +48,7 @@ without loosing any data.
 - The "key" used to encrypt the paste is part of the URL. If you publicly post
   the URL of a paste that is not password-protected, everybody can read it.
   Use a password if you want your paste to be private. In this case make sure to
-  use a strong password and do only share it privatly and end-to-end-encrypted.
+  use a strong password and do only share it privately and end-to-end-encrypted.
 
 - A server admin might be forced to hand over access logs to the authorities.
   ZeroBin encrypts your text and the discussion contents, but who accessed it
