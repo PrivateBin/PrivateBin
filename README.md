@@ -1,8 +1,8 @@
 # PrivateBin 0.22
-[![Build Status](https://travis-ci.org/PrivateBin/PrivateBin.svg?branch=master)](https://travis-ci.org/PrivateBin/PrivateBin) [![Build Status](https://scrutinizer-ci.com/g/PrivateBin/PrivateBin/badges/build.png?b=master)](https://scrutinizer-ci.com/g/PrivateBin/PrivateBin/build-status/master)
+[![Build Status](https://travis-ci.org/PrivateBin/PrivateBin.svg?branch=master)](https://travis-ci.org/PrivateBin/PrivateBin) [![Build Status](https://scrutinizer-ci.com/g/PrivateBin/PrivateBin/badges/build.png?b=master)](https://scrutinizer-ci.com/g/PrivateBin/PrivateBin/build-status/master)  
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/094500f62abf4c9aa0c8a8a4520e4789)](https://www.codacy.com/app/PrivateBin/PrivateBin)
 [![Code Climate](https://codeclimate.com/github/PrivateBin/PrivateBin/badges/gpa.svg)](https://codeclimate.com/github/PrivateBin/PrivateBin)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/PrivateBin/PrivateBin/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/PrivateBin/PrivateBin/?branch=master)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/PrivateBin/PrivateBin/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/PrivateBin/PrivateBin/?branch=master)  
 [![Codacy Badge](https://api.codacy.com/project/badge/Coverage/094500f62abf4c9aa0c8a8a4520e4789)](https://www.codacy.com/app/PrivateBin/PrivateBin)
 [![Test Coverage](https://codeclimate.com/github/PrivateBin/PrivateBin/badges/coverage.svg)](https://codeclimate.com/github/PrivateBin/PrivateBin/coverage) [![Code Coverage](https://scrutinizer-ci.com/g/PrivateBin/PrivateBin/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/PrivateBin/PrivateBin/?branch=master)
 
@@ -17,6 +17,8 @@ to allow easier and cleaner extensions and has now much more features than the
 original. It is however still fully compatible to the original ZeroBin 0.19
 data storage scheme. Therefore such installations can be upgraded to this fork
 without loosing any data.
+
+![PrivateBin Logo](https://raw.githubusercontent.com/PrivateBin/PrivateBin/master/img/favicons/android-chrome-192x192.png)
 
 ## What PrivateBin provides
 
@@ -61,9 +63,10 @@ without loosing any data.
   on the server. However the server could be misused or the server admin could
   be legally forced into sending malicious JavaScript to all web users, which
   grabs the decryption key and send it to the server when a user accesses a
-  PrivateBin. Therefore do not access any PrivateBin instance if you think it
-  has been compromised. As long as no user accesses this instance with a
-  previously generated URL, the content can''t be decrypted.
+  PrivateBin.  
+  Therefore do not access any PrivateBin instance if you think it has been
+  compromised. As long as no user accesses this instance with a previously
+  generated URL, the content can''t be decrypted.
 
 ## Options
 
@@ -108,5 +111,3 @@ file](https://github.com/PrivateBin/PrivateBin/wiki/Configuration):
 
 Run into any issues? Have ideas for further developments? Please 
 [report](https://github.com/PrivateBin/PrivateBin/issues) them!
-
-![PrivateBin Logo](https://raw.githubusercontent.com/PrivateBin/PrivateBin/master/img/favicons/android-chrome-192x192.png)

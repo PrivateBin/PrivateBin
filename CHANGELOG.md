@@ -1,4 +1,4 @@
-# ZeroBin version history #
+# PrivateBin version history
 
   * **0.22 (2015-11-09)**:
     * ADDED: Tab character input support

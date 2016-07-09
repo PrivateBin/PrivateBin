@@ -1,14 +1,13 @@
-License
-=======
+# License
 
-ZeroBin consists of PHP and JS code which was originally written by Sébastien
+PrivateBin consists of PHP and JS code which was originally written by Sébastien
 Sauvage in 2012 and falls unter the Zlib/libpng license. Also included are
 libraries that fall under the LGPLv3 (RainTPL), GPLv2 (SJCL, rawinflate,
 rawdeflate), BSD 2-clause (SJCL), BSD 3-clause (base64.js version 2.1.9,
 Showdown), MIT (base64.js version 1.7, Bootstrap) and Apache (prettify.js)
 licenses. All of these license terms can be found here below:
 
-## Zlib/libpng license for ZeroBin
+## Zlib/libpng license for PrivateBin
 
 Copyright © 2012 Sébastien Sauvage
 

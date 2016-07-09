@@ -1,7 +1,7 @@
-Credits
-=======
+# Credits
+
 Sébastien Sauvage - original idea and main developer  
-El Rido - current developer and maintainer
+Simon Rupf - current developer and maintainer
 
 * Alexey Gladkov - syntax highlighting
 * Greg Knaddison - robots.txt
