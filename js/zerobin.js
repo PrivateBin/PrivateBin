@@ -446,9 +446,9 @@ $(function() {
         {
             if ((password || '').trim().length == 0)
             {
-                return sjcl.encrypt(key, this.compress(message));
+                return sjcl.encrypt(key, this.compress(message), {mode : 'gcm'});
             }
-            return sjcl.encrypt(key + sjcl.codec.hex.fromBits(sjcl.hash.sha256.hash(password)), this.compress(message));
+            return sjcl.encrypt(key + sjcl.codec.hex.fromBits(sjcl.hash.sha256.hash(password)), this.compress(message), {mode : 'gcm'});
         },
 
         /**
