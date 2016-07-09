@@ -12,5 +12,5 @@ script:
   - cd tst && ../vendor/bin/phpunit
 
 after_script:
-  - vendor/bin/codacycoverage clover tst/log/coverage-clover.xml
-  - vendor/bin/test-reporter --coverage-report tst/log/coverage-clover.xml
+  - ../vendor/bin/codacycoverage clover tst/log/coverage-clover.xml
+  - ../vendor/bin/test-reporter --coverage-report tst/log/coverage-clover.xml
