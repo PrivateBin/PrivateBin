@@ -2,3 +2,4 @@ doc/ export-ignore
 tst/ export-ignore
 .gitattributes export-ignore
 .gitignore export-ignore
+img/bee*.png export-ignore
