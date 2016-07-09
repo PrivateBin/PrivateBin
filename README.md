@@ -1,11 +1,11 @@
-# ZeroBin 0.22
+# PrivateBin 0.22
 [![Build Status](https://travis-ci.org/elrido/ZeroBin.svg?branch=master)](https://travis-ci.org/elrido/ZeroBin)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/094500f62abf4c9aa0c8a8a4520e4789)](https://www.codacy.com/app/PrivateBin/PrivateBin)
 [![Code Climate](https://codeclimate.com/github/elrido/ZeroBin/badges/gpa.svg)](https://codeclimate.com/github/elrido/ZeroBin)  
 [![Codacy Badge](https://api.codacy.com/project/badge/Coverage/094500f62abf4c9aa0c8a8a4520e4789)](https://www.codacy.com/app/PrivateBin/PrivateBin)
 [![Test Coverage](https://codeclimate.com/github/elrido/ZeroBin/badges/coverage.svg)](https://codeclimate.com/github/elrido/ZeroBin/coverage)
 
-ZeroBin is a minimalist, open source online pastebin where the server has zero 
+PrivateBin is a minimalist, open source online pastebin where the server has zero 
 knowledge of pasted data.
 
 Data is encrypted/decrypted in the browser using 256 bit AES.
@@ -13,11 +13,11 @@ Data is encrypted/decrypted in the browser using 256 bit AES.
 This is a fork of ZeroBin, originally developed by
 [Sébastien Sauvage](https://github.com/sebsauvage/ZeroBin). It was refactored
 to allow easier and cleaner extensions and has now much more features than the
-original. It is however still fully compatible to the original ZeroBin 0.19 
+original. It is however still fully compatible to the original PrivateBin 0.19 
 data storage scheme. Therefore such installations can be upgraded to this fork 
 without loosing any data.
 
-## What ZeroBin provides
+## What PrivateBin provides
 
 + As a server administrator you don't have to worry if your users post content
   that is considered illegal in your country. You have no knowledge of any
@@ -66,7 +66,7 @@ without loosing any data.
 ## Options
 
 Some features are optional and can be enabled or disabled in the [configuration
-file](https://github.com/elrido/ZeroBin/wiki/Configuration):
+file](wiki/Configuration):
 
 * Password protection
 
@@ -89,17 +89,17 @@ file](https://github.com/elrido/ZeroBin/wiki/Configuration):
 
 ## Further resources
 
-* [Installation guide](https://github.com/elrido/ZeroBin/wiki/Installation)
+* [Installation guide](wiki/Installation)
 
-* [Upgrading from 0.19 Alpha](https://github.com/elrido/ZeroBin/wiki/Upgrading-from-ZeroBin-0.19-Alpha)
+* [Upgrading from 0.19 Alpha](wiki/Upgrading-from-ZeroBin-0.19-Alpha)
 
-* [Configuration guide](https://github.com/elrido/ZeroBin/wiki/Configuration)
+* [Configuration guide](wiki/Configuration)
 
-* [Templates](https://github.com/elrido/ZeroBin/wiki/Templates)
+* [Templates](wiki/Templates)
 
-* [Translation guide](https://github.com/elrido/ZeroBin/wiki/Translation)
+* [Translation guide](wiki/Translation)
 
-* [Developer guide](https://github.com/elrido/ZeroBin/wiki/Development)
+* [Developer guide](hwiki/Development)
 
 Run into any issues? Have ideas for further developments? Please 
-[report](https://github.com/elrido/ZeroBin/issues) them!
+[report](issues) them!
