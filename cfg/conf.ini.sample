@@ -1,8 +1,8 @@
-; ZeroBin
+; PrivateBin
 ;
 ; a zero-knowledge paste bin
 ;
-; @link      http://sebsauvage.net/wiki/doku.php?id=php:zerobin
+; @link      https://github.com/PrivateBin/PrivateBin
 ; @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
 ; @license   http://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
 ; @version   0.22
@@ -39,7 +39,7 @@ template = "bootstrap"
 ; (optional) notice to display
 ; notice = "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service."
 
-; by default ZeroBin will guess the visitors language based on the browsers
+; by default PrivateBin will guess the visitors language based on the browsers
 ; settings. Optionally you can enable the language selection menu, which uses
 ; a session cookie to store the choice until the browser is closed.
 languageselection = false
