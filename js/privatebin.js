@@ -251,7 +251,7 @@ $(function() {
         sprintf: function()
         {
             var args = arguments;
-            if (typeof arguments[0] == 'object')
+            if (typeof arguments[0] === 'object')
             {
                 args = arguments[0];
             }
@@ -334,12 +334,13 @@ $(function() {
          */
         translate: function()
         {
-            var args = arguments, messageId, usesPlurals;
-            if (typeof arguments[0] == 'object')
+            var args = arguments, messageId;
+            if (typeof arguments[0] === 'object')
             {
                 args = arguments[0];
             }
-            if (usesPlurals = $.isArray(args[0]))
+            var usesPlurals = $.isArray(args[0]);
+            if (usesPlurals)
             {
                 // use the first plural form as messageId, otherwise the singular
                 messageId = (args[0].length > 1 ? args[0][1] : args[0][0]);
