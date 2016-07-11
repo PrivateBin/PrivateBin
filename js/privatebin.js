@@ -10,6 +10,15 @@
  */
 
 'use strict';
+/** global: Base64 */
+/** global: FileReader */
+/** global: RawDeflate */
+/** global: history */
+/** global: navigator */
+/** global: prettyPrint */
+/** global: prettyPrintOne */
+/** global: showdown */
+/** global: sjcl */
 
 // Immediately start random number generator collector.
 sjcl.random.startCollectors();
@@ -27,28 +36,29 @@ $(function() {
          */
         secondsToHuman: function(seconds)
         {
+            var v;
             if (seconds < 60)
             {
-                var v = Math.floor(seconds);
+                v = Math.floor(seconds);
                 return [v, 'second'];
             }
             if (seconds < 60 * 60)
             {
-                var v = Math.floor(seconds / 60);
+                v = Math.floor(seconds / 60);
                 return [v, 'minute'];
             }
             if (seconds < 60 * 60 * 24)
             {
-                var v = Math.floor(seconds / (60 * 60));
+                v = Math.floor(seconds / (60 * 60));
                 return [v, 'hour'];
             }
             // If less than 2 months, display in days:
             if (seconds < 60 * 60 * 24 * 60)
             {
-                var v = Math.floor(seconds / (60 * 60 * 24));
+                v = Math.floor(seconds / (60 * 60 * 24));
                 return [v, 'day'];
             }
-            var v = Math.floor(seconds / (60 * 60 * 24 * 30));
+            v = Math.floor(seconds / (60 * 60 * 24 * 30));
             return [v, 'month'];
         },
 
@@ -241,12 +251,15 @@ $(function() {
         sprintf: function()
         {
             var args = arguments;
-            if (typeof arguments[0] == 'object') args = arguments[0];
+            if (typeof arguments[0] == 'object')
+            {
+                args = arguments[0];
+            }
             var string = args[0],
                 i = 1;
             return string.replace(/%((%)|s|d)/g, function (m) {
                 // m is the matched format, e.g. %s, %d
-                var val = null;
+                var val;
                 if (m[2]) {
                     val = m[2];
                 } else {
@@ -260,7 +273,8 @@ $(function() {
                                 val = 0;
                             }
                             break;
-                        // Default is %s
+                        default:
+                            // Default is %s
                     }
                     ++i;
                 }
@@ -280,8 +294,11 @@ $(function() {
             var ca = document.cookie.split(';');
             for(var i = 0; i < ca.length; ++i) {
                 var c = ca[i];
-                while (c.charAt(0) == ' ') c = c.substring(1);
-                if (c.indexOf(name) == 0) return c.substring(name.length, c.length);
+                while (c.charAt(0) === ' ') c = c.substring(1);
+                if (c.indexOf(name) === 0)
+                {
+                    return c.substring(name.length, c.length);
+                }
             }
             return '';
         }
@@ -318,7 +335,10 @@ $(function() {
         translate: function()
         {
             var args = arguments, messageId, usesPlurals;
-            if (typeof arguments[0] == 'object') args = arguments[0];
+            if (typeof arguments[0] == 'object')
+            {
+                args = arguments[0];
+            }
             if (usesPlurals = $.isArray(args[0]))
             {
                 // use the first plural form as messageId, otherwise the singular
@@ -328,20 +348,29 @@ $(function() {
             {
                 messageId = args[0];
             }
-            if (messageId.length === 0) return messageId;
+            if (messageId.length === 0)
+            {
+                return messageId;
+            }
             if (!this.translations.hasOwnProperty(messageId))
             {
-                if (this.language !== 'en') console.debug(
-                    'Missing translation for: ' + messageId
-                );
+                if (this.language !== 'en')
+                {
+                    console.debug(
+                        'Missing ' + this.language + ' translation for: ' + messageId
+                    );
+                }
                 this.translations[messageId] = args[0];
             }
             if (usesPlurals && $.isArray(this.translations[messageId]))
             {
-                var n = parseInt(args[1] || 1),
+                var n = parseInt(args[1] || 1, 10),
                     key = this.getPluralForm(n),
                     maxKey = this.translations[messageId].length - 1;
-                if (key > maxKey) key = maxKey;
+                if (key > maxKey)
+                {
+                    key = maxKey;
+                }
                 args[0] = this.translations[messageId][key];
                 args[1] = n;
             }
@@ -383,7 +412,7 @@ $(function() {
             var selectedLang = helper.getCookie('lang');
             var language = selectedLang.length > 0 ? selectedLang : (navigator.language || navigator.userLanguage).substring(0, 2);
             // note that 'en' is built in, so no translation is necessary
-            if (this.supportedLanguages.indexOf(language) == -1)
+            if (this.supportedLanguages.indexOf(language) === -1)
             {
                 callback();
             }
@@ -444,7 +473,7 @@ $(function() {
          */
         cipher: function(key, password, message)
         {
-            if ((password || '').trim().length == 0)
+            if ((password || '').trim().length === 0)
             {
                 return sjcl.encrypt(key, this.compress(message), {mode : 'gcm'});
             }
@@ -461,7 +490,7 @@ $(function() {
          */
         decipher: function(key, password, data)
         {
-            if (data != undefined)
+            if (data !== undefined)
             {
                 try
                 {
@@ -473,7 +502,7 @@ $(function() {
                     {
                         return this.decompress(sjcl.decrypt(key + sjcl.codec.hex.fromBits(sjcl.hash.sha256.hash(password)), data));
                     }
-                    catch(err)
+                    catch(e)
                     {}
                 }
             }
@@ -530,14 +559,23 @@ $(function() {
                 i = key.indexOf('=');
 
             // First, strip everything after the equal sign (=) which signals end of base64 string.
-            if (i > -1) key = key.substring(0, i + 1);
+            if (i > -1)
+            {
+                key = key.substring(0, i + 1);
+            }
 
             // If the equal sign was not present, some parameters may remain:
             i = key.indexOf('&');
-            if (i > -1) key = key.substring(0, i);
+            if (i > -1)
+            {
+                key = key.substring(0, i);
+            }
 
             // Then add trailing equal sign if it's missing
-            if (key.charAt(key.length - 1) !== '=') key += '=';
+            if (key.charAt(key.length - 1) !== '=')
+            {
+                key += '=';
+            }
 
             return key;
         },
@@ -551,8 +589,14 @@ $(function() {
         requestPassword: function()
         {
             var password = prompt(i18n._('Please enter the password for this paste:'), '');
-            if (password == null) throw 'password prompt canceled';
-            if (password.length == 0) return this.requestPassword();
+            if (password === null)
+            {
+                throw 'password prompt canceled';
+            }
+            if (password.length == 0)
+            {
+                return this.requestPassword();
+            }
             return password;
         },
 
@@ -569,7 +613,7 @@ $(function() {
             switch (format || 'plaintext')
             {
                 case 'markdown':
-                    if (typeof showdown == 'object')
+                    if (typeof showdown === 'object')
                     {
                         showdown.setOption('strikethrough', true);
                         showdown.setOption('tables', true);
@@ -583,19 +627,23 @@ $(function() {
                     this.prettyMessage.addClass('hidden');
                     break;
                 case 'syntaxhighlighting':
-                    if (typeof prettyPrintOne == 'function')
+                    if (typeof prettyPrintOne === 'function')
                     {
-                        if (typeof prettyPrint == 'function') prettyPrint();
+                        if (typeof prettyPrint === 'function')
+                        {
+                            prettyPrint();
+                        }
                         this.prettyPrint.html(
                             prettyPrintOne(text, null, true)
                         );
                     }
+                    // fall through, as the rest is the same
                 default:
                     // Convert URLs to clickable links.
                     helper.urls2links(this.clearText);
                     helper.urls2links(this.prettyPrint);
                     this.clearText.addClass('hidden');
-                    if (format == 'plaintext')
+                    if (format === 'plaintext')
                     {
                         this.prettyPrint.css('white-space', 'pre-wrap');
                         this.prettyPrint.css('word-break', 'normal');
@@ -621,24 +669,33 @@ $(function() {
                     if (paste.attachment)
                     {
                         var attachment = filter.decipher(key, password, paste.attachment);
-                        if (attachment.length == 0)
+                        if (attachment.length === 0)
                         {
-                            if (password.length == 0) password = this.requestPassword();
+                            if (password.length === 0)
+                            {
+                                password = this.requestPassword();
+                            }
                             attachment = filter.decipher(key, password, paste.attachment);
                         }
-                        if (attachment.length == 0) throw 'failed to decipher attachment';
+                        if (attachment.length === 0)
+                        {
+                            throw 'failed to decipher attachment';
+                        }
 
                         if (paste.attachmentname)
                         {
                             var attachmentname = filter.decipher(key, password, paste.attachmentname);
-                            if (attachmentname.length > 0) this.attachmentLink.attr('download', attachmentname);
+                            if (attachmentname.length > 0)
+                            {
+                                this.attachmentLink.attr('download', attachmentname);
+                            }
                         }
                         this.attachmentLink.attr('href', attachment);
                         this.attachment.removeClass('hidden');
 
                         // if the attachment is an image, display it
                         var imagePrefix = 'data:image/';
-                        if (attachment.substring(0, imagePrefix.length) == imagePrefix)
+                        if (attachment.substring(0, imagePrefix.length) === imagePrefix)
                         {
                             this.image.html(
                                 $(document.createElement('img'))
@@ -649,12 +706,15 @@ $(function() {
                         }
                     }
                     var cleartext = filter.decipher(key, password, paste.data);
-                    if (cleartext.length == 0 && password.length == 0 && !paste.attachment)
+                    if (cleartext.length === 0 && password.length === 0 && !paste.attachment)
                     {
                         password = this.requestPassword();
                         cleartext = filter.decipher(key, password, paste.data);
                     }
-                    if (cleartext.length == 0 && !paste.attachment) throw 'failed to decipher message';
+                    if (cleartext.length === 0 && !paste.attachment)
+                    {
+                        throw 'failed to decipher message';
+                    }
 
                     this.passwordInput.val(password);
                     if (cleartext.length > 0)
@@ -716,13 +776,7 @@ $(function() {
                 {
                     var place = this.comments;
                     var comment = paste.comments[i];
-                    var cleartext = '[' + i18n._('Could not decrypt comment; Wrong key?') + ']';
-                    try
-                    {
-                        cleartext = filter.decipher(key, password, comment.data);
-                    }
-                    catch(err)
-                    {}
+                    var commenttext = filter.decipher(key, password, comment.data);
                     // If parent comment exists, display below (CSS will automatically shift it right.)
                     var cname = '#comment_' + comment.parentid;
 
@@ -736,7 +790,7 @@ $(function() {
                                    + '<button class="btn btn-default btn-sm">' + i18n._('Reply') + '</button>'
                                    + '</div></article>');
                     divComment.find('button').click({commentid: comment.id}, $.proxy(this.openReply, this));
-                    helper.setElementText(divComment.find('div.commentdata'), cleartext);
+                    helper.setElementText(divComment.find('div.commentdata'), commenttext);
                     // Convert URLs to clickable links in comment.
                     helper.urls2links(divComment.find('div.commentdata'));
 
@@ -814,14 +868,17 @@ $(function() {
             this.errorMessage.addClass('hidden');
             // Do not send if no data.
             var replyMessage = $('#replymessage');
-            if (replyMessage.val().length == 0) return;
+            if (replyMessage.val().length === 0)
+            {
+                return;
+            }
 
             this.showStatus(i18n._('Sending comment...'), true);
             var parentid = event.data.parentid;
             var cipherdata = filter.cipher(this.pageKey(), this.passwordInput.val(), replyMessage.val());
             var ciphernickname = '';
             var nick = $('#nickname').val();
-            if (nick != '')
+            if (nick !== '')
             {
                 ciphernickname = filter.cipher(this.pageKey(), this.passwordInput.val(), nick);
             }
@@ -840,7 +897,7 @@ $(function() {
                 headers: this.headers,
                 success: function(data)
                 {
-                    if (data.status == 0)
+                    if (data.status === 0)
                     {
                         privatebin.showStatus(i18n._('Comment posted.'), false);
                         $.ajax({
@@ -850,11 +907,11 @@ $(function() {
                             headers: privatebin.headers,
                             success: function(data)
                             {
-                                if (data.status == 0)
+                                if (data.status === 0)
                                 {
                                     privatebin.displayMessages(privatebin.pageKey(), data);
                                 }
-                                else if (data.status == 1)
+                                else if (data.status === 1)
                                 {
                                     privatebin.showError(i18n._('Could not refresh display: %s', data.message));
                                 }
@@ -868,7 +925,7 @@ $(function() {
                             privatebin.showError(i18n._('Could not refresh display: %s', i18n._('server error or not responding')));
                         });
                     }
-                    else if (data.status == 1)
+                    else if (data.status === 1)
                     {
                         privatebin.showError(i18n._('Could not post comment: %s', data.message));
                     }
@@ -895,7 +952,10 @@ $(function() {
                 files = (file && file.files) ? file.files : null; // FileList object
 
             // Do not send if no data.
-            if (this.message.val().length == 0 && !(files && files[0])) return;
+            if (this.message.val().length === 0 && !(files && files[0]))
+            {
+                return;
+            }
 
             // If sjcl has not collected enough entropy yet, display a message.
             if (!sjcl.random.isReady())
@@ -982,7 +1042,7 @@ $(function() {
                 headers: this.headers,
                 success: function(data)
                 {
-                    if (data.status == 0) {
+                    if (data.status === 0) {
                         privatebin.stateExistingPaste();
                         var url = privatebin.scriptLocation() + '?' + data.id + '#' + randomkey;
                         var deleteUrl = privatebin.scriptLocation() + '?pasteid=' + data.id + '&deletetoken=' + data.deletetoken;
@@ -1002,7 +1062,7 @@ $(function() {
                         privatebin.showStatus('', false);
                         privatebin.formatPaste(data_to_send.formatter, privatebin.message.val());
                     }
-                    else if (data.status==1)
+                    else if (data.status === 1)
                     {
                         privatebin.showError(i18n._('Could not create paste: %s', data.message));
                     }
@@ -1279,7 +1339,7 @@ $(function() {
                 this.status.html(' ');
                 return;
             }
-            if (message == '')
+            if (message === '')
             {
                 this.status.html(' ');
                 return;
@@ -1368,7 +1428,7 @@ $(function() {
             if (this.cipherData.text().length > 1)
             {
                 // Missing decryption key in URL?
-                if (window.location.hash.length == 0)
+                if (window.location.hash.length === 0)
                 {
                     this.showError(i18n._('Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)'));
                     return;

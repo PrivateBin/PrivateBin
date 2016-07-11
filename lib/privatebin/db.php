@@ -315,7 +315,7 @@ class privatebin_db extends privatebin_abstract
      * @param  string $parentid
      * @param  string $commentid
      * @param  array  $comment
-     * @return int|false
+     * @return bool
      */
     public function createComment($pasteid, $parentid, $commentid, $comment)
     {
@@ -397,7 +397,7 @@ class privatebin_db extends privatebin_abstract
      * @param  string $sql
      * @param  array $params
      * @throws PDOException
-     * @return array
+     * @return bool
      */
     private static function _exec($sql, array $params)
     {
