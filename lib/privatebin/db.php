@@ -606,7 +606,7 @@ class privatebin_db extends privatebin_abstract
      */
     private static function _sanitizeIdentifier($identifier)
     {
-        return self::$_prefix . preg_replace('/[^A-Za-z0-9_]+/', '', $identifier);
+        return preg_replace('/[^A-Za-z0-9_]+/', '', self::$_prefix . $identifier);
     }
 
     /**
@@ -624,45 +624,42 @@ class privatebin_db extends privatebin_abstract
             case '0.21':
                 // create the meta column if necessary (pre 0.21 change)
                 try {
-                    self::$_db->exec('SELECT meta FROM ' . self::$_prefix . 'paste LIMIT 1;');
+                    self::$_db->exec('SELECT meta FROM ' . self::_sanitizeIdentifier('paste') . ' LIMIT 1;');
                 } catch (PDOException $e) {
-                    self::$_db->exec('ALTER TABLE ' . self::$_prefix . 'paste ADD COLUMN meta TEXT;');
+                    self::$_db->exec('ALTER TABLE ' . self::_sanitizeIdentifier('paste') . ' ADD COLUMN meta TEXT;');
                 }
                 // SQLite only allows one ALTER statement at a time...
                 self::$_db->exec(
-                    'ALTER TABLE ' . self::$_prefix . 'paste ADD COLUMN attachment MEDIUMBLOB;'
+                    'ALTER TABLE ' . self::_sanitizeIdentifier('paste') . ' ADD COLUMN attachment MEDIUMBLOB;'
                 );
                 self::$_db->exec(
-                    'ALTER TABLE ' . self::$_prefix . 'paste ADD COLUMN attachmentname BLOB;'
+                    'ALTER TABLE ' . self::_sanitizeIdentifier('paste') . ' ADD COLUMN attachmentname BLOB;'
                 );
                 // SQLite doesn't support MODIFY, but it allows TEXT of similar
                 // size as BLOB, so there is no need to change it there
                 if (self::$_type !== 'sqlite')
                 {
                     self::$_db->exec(
-                        'ALTER TABLE ' . self::$_prefix . 'paste ' .
-                        'ADD PRIMARY KEY (dataid),' .
-                        'MODIFY COLUMN data BLOB;'
+                        'ALTER TABLE ' . self::_sanitizeIdentifier('paste') .
+                        ' ADD PRIMARY KEY (dataid), MODIFY COLUMN data BLOB;'
                     );
                     self::$_db->exec(
-                        'ALTER TABLE ' . self::$_prefix . 'comment ' .
-                        'ADD PRIMARY KEY (dataid),' .
-                        'MODIFY COLUMN data BLOB, ' .
-                        'MODIFY COLUMN nickname BLOB, ' .
-                        'MODIFY COLUMN vizhash BLOB;'
+                        'ALTER TABLE ' . self::_sanitizeIdentifier('comment') .
+                        ' ADD PRIMARY KEY (dataid), MODIFY COLUMN data BLOB, ' .
+                        'MODIFY COLUMN nickname BLOB,  MODIFY COLUMN vizhash BLOB;'
                     );
                 }
                 else
                 {
                     self::$_db->exec(
-                        'CREATE UNIQUE INDEX primary ON ' . self::$_prefix . 'paste(dataid);'
+                        'CREATE UNIQUE INDEX primary ON ' . self::_sanitizeIdentifier('paste') . '(dataid);'
                     );
                     self::$_db->exec(
-                        'CREATE UNIQUE INDEX primary ON ' . self::$_prefix . 'comment(dataid);'
+                        'CREATE UNIQUE INDEX primary ON ' . self::_sanitizeIdentifier('comment') . '(dataid);'
                     );
                 }
                 self::$_db->exec(
-                    'CREATE INDEX parent ON ' . self::$_prefix . 'comment(pasteid);'
+                    'CREATE INDEX parent ON ' . self::_sanitizeIdentifier('comment') . '(pasteid);'
                 );
         }
     }
