@@ -27,8 +27,8 @@
     "Paste was properly deleted.":
         "Le paste a été correctement supprimé.",
     "PrivateBin": "PrivateBin",
-    "PrivateBin is a minimalist, opensource online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href=\"https://github.com/elrido/PrivateBin/wiki\">project page</a>.":
-        "PrivateBin est un 'pastebin' (ou gestionnaire d'extraits de texte et de code source) minimaliste et open source, dans lequel le serveur n'a aucune connaissance des données envoyées. Les données sont chiffrées/déchiffrées <i>dans le navigateur</i> par un chiffrage AES 256 bits. Plus d'informations sur <a href=\"https://github.com/elrido/PrivateBin/wiki\">la page du projet</a>.",
+    "PrivateBin is a minimalist, opensource online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href=\"https://github.com/PrivateBin/PrivateBin/wiki\">project page</a>.":
+        "PrivateBin est un 'pastebin' (ou gestionnaire d'extraits de texte et de code source) minimaliste et open source, dans lequel le serveur n'a aucune connaissance des données envoyées. Les données sont chiffrées/déchiffrées <i>dans le navigateur</i> par un chiffrage AES 256 bits. Plus d'informations sur <a href=\"https://github.com/PrivateBin/PrivateBin/wiki\">la page du projet</a>.",
     "Because ignorance is bliss":
         "Parce que l'ignorance est le bonheur",
     "Javascript is required for PrivateBin to work.<br />Sorry for the inconvenience.":

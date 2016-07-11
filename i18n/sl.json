@@ -27,8 +27,8 @@
     "Paste was properly deleted.":
         "Prilepek je uspešno izbrisan.",
     "PrivateBin": "PrivateBin",
-    "PrivateBin is a minimalist, opensource online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href=\"https://github.com/elrido/PrivateBin/wiki\">project page</a>.":
-        "PrivateBin je minimalističen, odprtokodni spletni 'pastebin', kjer server ne ve ničesar o prilepljenih podatkih. Podatki so zakodirani/odkodirani <i>v brskalniku</i> z uporabo 256 bitnega AES. Več informacij na < href=\"https://github.com/elrido/PrivateBin/wiki\">spletni strani projekta.</a>.",
+    "PrivateBin is a minimalist, opensource online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href=\"https://github.com/PrivateBin/PrivateBin/wiki\">project page</a>.":
+        "PrivateBin je minimalističen, odprtokodni spletni 'pastebin', kjer server ne ve ničesar o prilepljenih podatkih. Podatki so zakodirani/odkodirani <i>v brskalniku</i> z uporabo 256 bitnega AES. Več informacij na < href=\"https://github.com/PrivateBin/PrivateBin/wiki\">spletni strani projekta.</a>.",
     "Because ignorance is bliss":
         "Ker kar ne veš ne boli.",
     "Javascript is required for PrivateBin to work.<br />Sorry for the inconvenience.":
