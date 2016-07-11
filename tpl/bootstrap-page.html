@@ -5,7 +5,7 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<meta name="robots" content="noindex" />
-		<title>{function="t('PrivateBin')"}</title>
+		<title>{function="i18n::_('PrivateBin')"}</title>
 		<link type="text/css" rel="stylesheet" href="css/bootstrap/bootstrap-3.3.5.css" />
 		<link type="text/css" rel="stylesheet" href="css/bootstrap/bootstrap-theme-3.3.5.css" />
 		<link type="text/css" rel="stylesheet" href="css/bootstrap/privatebin.css?{$VERSION|rawurlencode}" />{if="$SYNTAXHIGHLIGHTING"}
@@ -33,24 +33,24 @@
 		<nav class="navbar navbar-default navbar-static-top">
 				<div class="navbar-header">
 					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-						<span class="sr-only">{function="t('Toggle navigation')"}</span>
+						<span class="sr-only">{function="i18n::_('Toggle navigation')"}</span>
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
 					</button>
-				<a class="reloadlink navbar-brand" href="/">{function="t('PrivateBin')"}</a>
+				<a class="reloadlink navbar-brand" href="/">{function="i18n::_('PrivateBin')"}</a>
 				</div>
 				<div id="navbar" class="navbar-collapse collapse">
 					<ul class="nav navbar-nav">
 						<li>
 							<button id="sendbutton" type="button" class="hidden btn btn-default navbar-btn">
-								<span class="glyphicon glyphicon-upload" aria-hidden="true"></span> {function="t('Send')"}
+								<span class="glyphicon glyphicon-upload" aria-hidden="true"></span> {function="i18n::_('Send')"}
 							</button>{if="$EXPIRECLONE"}
 							<button id="clonebutton" type="button" class="hidden btn btn-default navbar-btn">
-								<span class="glyphicon glyphicon-duplicate" aria-hidden="true"></span> {function="t('Clone')"}
+								<span class="glyphicon glyphicon-duplicate" aria-hidden="true"></span> {function="i18n::_('Clone')"}
 							</button>{/if}
 							<button id="rawtextbutton" type="button" class="hidden btn btn-default navbar-btn">
-								<span class="glyphicon glyphicon-text-background" aria-hidden="true"></span> {function="t('Raw text')"}
+								<span class="glyphicon glyphicon-text-background" aria-hidden="true"></span> {function="i18n::_('Raw text')"}
 							</button>
 						</li>
 						<li class="dropdown">
@@ -58,7 +58,7 @@
 {loop="EXPIRE"}
 								<option value="{$key}"{if="$key == $EXPIREDEFAULT"} selected="selected"{/if}>{$value}</option>{/loop}
 							</select>
-							<a id="expiration" href="#" class="hidden dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{function="t('Expires')"}: <span id="pasteExpirationDisplay">{$EXPIRE[$EXPIREDEFAULT]}</span> <span class="caret"></span></a>
+							<a id="expiration" href="#" class="hidden dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{function="i18n::_('Expires')"}: <span id="pasteExpirationDisplay">{$EXPIRE[$EXPIREDEFAULT]}</span> <span class="caret"></span></a>
 							<ul class="dropdown-menu">
 {loop="EXPIRE"}
 								<li>
@@ -72,7 +72,7 @@
 							<div id="burnafterreadingoption" class="navbar-text checkbox hidden">
 								<label>
 									<input type="checkbox" id="burnafterreading" name="burnafterreading" {if="$BURNAFTERREADINGSELECTED"} checked="checked"{/if} />
-									{function="t('Burn after reading')"}
+									{function="i18n::_('Burn after reading')"}
 								</label>
 							</div>
 						</li>{if="$DISCUSSION"}
@@ -80,17 +80,17 @@
 							<div id="opendisc" class="navbar-text checkbox hidden">
 								<label>
 									<input type="checkbox" id="opendiscussion" name="opendiscussion" {if="$OPENDISCUSSION"} checked="checked"{/if} />
-									{function="t('Open discussion')"}
+									{function="i18n::_('Open discussion')"}
 							 	</label>
 							</div>
 						</li>{/if}{if="$PASSWORD"}
 						<li>
 							<div id="password" class="navbar-form hidden">
-								<input type="password" id="passwordinput" placeholder="{function="t('Password (recommended)')"}" class="form-control" size="19"/>
+								<input type="password" id="passwordinput" placeholder="{function="i18n::_('Password (recommended)')"}" class="form-control" size="19"/>
 							</div>
 						</li>{/if}{if="$FILEUPLOAD"}
 						<li id="attach" class="hidden dropdown">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{function="t('Attach a file')"} <span class="caret"></span></a>
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{function="i18n::_('Attach a file')"} <span class="caret"></span></a>
 							<ul class="dropdown-menu">
 								<li id="filewrap">
 									<div>
@@ -99,7 +99,7 @@
 								</li>
 								<li>
 									<a id="fileremovebutton"  href="#">
-										{function="t('Remove attachment')"}
+										{function="i18n::_('Remove attachment')"}
 									</a>
 								</li>
 							</ul>
@@ -109,7 +109,7 @@
 {loop="FORMATTER"}
 								<option value="{$key}"{if="$key == $FORMATTERDEFAULT"} selected="selected"{/if}>{$value}</option>{/loop}
 							</select>
-							<a id="formatter" href="#" class="hidden dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{function="t('Format')"}: <span id="pasteFormatterDisplay">{$FORMATTER[$FORMATTERDEFAULT]}</span> <span class="caret"></span></a>
+							<a id="formatter" href="#" class="hidden dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{function="i18n::_('Format')"}: <span id="pasteFormatterDisplay">{$FORMATTER[$FORMATTERDEFAULT]}</span> <span class="caret"></span></a>
 							<ul class="dropdown-menu">
 {loop="FORMATTER"}
 								<li>
@@ -134,7 +134,7 @@
 					</li>{/if}
 					<li>
 						<button id="newbutton" type="button" class="reloadlink hidden btn btn-default navbar-btn">
-							<span class="glyphicon glyphicon-file" aria-hidden="true"></span> {function="t('New')"}
+							<span class="glyphicon glyphicon-file" aria-hidden="true"></span> {function="i18n::_('New')"}
 						</button>
 					</li>
 				</ul>
@@ -148,15 +148,15 @@
 				<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
 			</div>{if="$FILEUPLOAD"}
 			<div id="attachment" role="alert" class="hidden alert alert-info">
-				<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> <a>{function="t('Download attachment')"}</a> <span id="clonedfile" class="hidden">{function="t('Cloned file attached.')"}</span>
+				<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> <a>{function="i18n::_('Download attachment')"}</a> <span id="clonedfile" class="hidden">{function="i18n::_('Cloned file attached.')"}</span>
 			</div>{/if}{if="strlen($STATUS)"}
 			<div id="status" role="alert" class="alert alert-success">
 				<span class="glyphicon glyphicon-ok" aria-hidden="true"></span> {$STATUS|htmlspecialchars}
 			</div>{/if}
 			<div id="errormessage" role="alert" class="{if="!strlen($ERROR)"}hidden {/if}alert alert-danger"><span class="glyphicon glyphicon-alert" aria-hidden="true"></span> {$ERROR|htmlspecialchars}</div>
-			<noscript><div id="noscript" role="alert" class="nonworking alert alert-warning"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> {function="t('Javascript is required for PrivateBin to work.<br />Sorry for the inconvenience.')"}</div></noscript>
-			<div id="oldienotice" role="alert" class="hidden nonworking alert alert-danger"><span class="glyphicon glyphicon-alert" aria-hidden="true"></span> {function="t('PrivateBin requires a modern browser to work.')"}</div>
-			<div id="ienotice" role="alert" class="hidden alert alert-warning"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span> {function="t('Still using Internet Explorer? Do yourself a favor, switch to a modern browser:')"}
+			<noscript><div id="noscript" role="alert" class="nonworking alert alert-warning"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> {function="i18n::_('Javascript is required for PrivateBin to work.<br />Sorry for the inconvenience.')"}</div></noscript>
+			<div id="oldienotice" role="alert" class="hidden nonworking alert alert-danger"><span class="glyphicon glyphicon-alert" aria-hidden="true"></span> {function="i18n::_('PrivateBin requires a modern browser to work.')"}</div>
+			<div id="ienotice" role="alert" class="hidden alert alert-warning"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span> {function="i18n::_('Still using Internet Explorer? Do yourself a favor, switch to a modern browser:')"}
 				<a href="http://www.mozilla.org/firefox/">Firefox</a>, 
 				<a href="http://www.opera.com/">Opera</a>, 
 				<a href="http://www.google.com/chrome">Chrome</a>, 
@@ -167,13 +167,13 @@
 				<div id="deletelink"></div>
 				<div id="pastelink">{if="strlen($URLSHORTENER)"}
 					<button id="shortenbutton" data-shortener="{$URLSHORTENER|htmlspecialchars}" type="button" class="btn btn-primary">
-						<span class="glyphicon glyphicon-send" aria-hidden="true"></span> {function="t('Shorten URL')"}
+						<span class="glyphicon glyphicon-send" aria-hidden="true"></span> {function="i18n::_('Shorten URL')"}
 					</button>
 				{/if}</div>
 			</div>
 			<ul id="preview" class="nav nav-tabs hidden">
-				<li role="presentation" class="active"><a id="messageedit" href="#">{function="t('Editor')"}</a></li>
-				<li role="presentation"><a id="messagepreview" href="#">{function="t('Preview')"}</a></li>
+				<li role="presentation" class="active"><a id="messageedit" href="#">{function="i18n::_('Editor')"}</a></li>
+				<li role="presentation"><a id="messagepreview" href="#">{function="i18n::_('Preview')"}</a></li>
 			</ul>
 		</header>
 		<section class="container">
@@ -188,16 +188,16 @@
 		</section>
 		<section class="container">
 			<div id="discussion" class="hidden">
-				<h4>{function="t('Discussion')"}</h4>
+				<h4>{function="i18n::_('Discussion')"}</h4>
 				<div id="comments"></div>
 			</div>
 		</section>
 		<footer class="container">
 			<div class="row">
-				<h4 class="col-md-5 col-xs-8">{function="t('PrivateBin')"} <small>- {function="t('Because ignorance is bliss')"}</small></h4>
+				<h4 class="col-md-5 col-xs-8">{function="i18n::_('PrivateBin')"} <small>- {function="i18n::_('Because ignorance is bliss')"}</small></h4>
 				<p class="col-md-1 col-xs-4 text-center">{$VERSION}</p>
 				<p id="aboutbox" class="col-md-6 col-xs-12">
-					{function="t('PrivateBin is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href="https://github.com/elrido/PrivateBin/wiki">project page</a>.')"}
+					{function="i18n::_('PrivateBin is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href="https://github.com/elrido/PrivateBin/wiki">project page</a>.')"}
 				</p>
 			</div>
 		</footer>

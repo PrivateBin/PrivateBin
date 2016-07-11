@@ -1,59 +1,15 @@
 <?php
 class configurationTest extends PHPUnit_Framework_TestCase
 {
-    private $_options = array(
-        'main' => array(
-            'discussion' => true,
-            'opendiscussion' => false,
-            'password' => true,
-            'fileupload' => false,
-            'burnafterreadingselected' => false,
-            'defaultformatter' => 'plaintext',
-            'syntaxhighlightingtheme' => null,
-            'sizelimit' => 2097152,
-            'template' => 'bootstrap',
-            'notice' => '',
-            'languageselection' => false,
-            'languagedefault' => '',
-            'urlshortener' => '',
-            'zerobincompatibility' => false,
-        ),
-        'expire' => array(
-            'default' => '1week',
-            'clone' => true,
-        ),
-        'expire_options' => array(
-            '5min' => 300,
-            '10min' => 600,
-            '1hour' => 3600,
-            '1day' => 86400,
-            '1week' => 604800,
-            '1month' => 2592000,
-            '1year' => 31536000,
-            'never' => 0,
-        ),
-        'formatter_options' => array(
-            'plaintext' => 'Plain Text',
-            'syntaxhighlighting' => 'Source Code',
-            'markdown' => 'Markdown',
-        ),
-        'traffic' => array(
-            'limit' => 10,
-            'header' => null,
-            'dir' => '../data',
-        ),
-        'model' => array(
-            'class' => 'privatebin_data',
-        ),
-        'model_options' => array(
-            'dir' => '../data',
-        ),
-    );
+    private $_options;
 
     public function setUp()
     {
         /* Setup Routine */
         helper::confBackup();
+        $this->_options = configuration::getDefaults();
+        $this->_options['model_options']['dir'] = PATH . $this->_options['model_options']['dir'];
+        $this->_options['traffic']['dir'] = PATH . $this->_options['traffic']['dir'];
     }
 
     public function tearDown()

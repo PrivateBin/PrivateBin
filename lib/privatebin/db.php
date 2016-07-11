@@ -102,14 +102,14 @@ class privatebin_db extends privatebin_abstract
                 $tables = self::$_db->query($tableQuery)->fetchAll(PDO::FETCH_COLUMN, 0);
 
                 // create paste table if necessary
-                if (!in_array(self::$_prefix . 'paste', $tables))
+                if (!in_array(self::_sanitizeIdentifier('paste'), $tables))
                 {
                     self::_createPasteTable();
                     $db_tables_exist = false;
                 }
 
                 // create comment table if necessary
-                if (!in_array(self::$_prefix . 'comment', $tables))
+                if (!in_array(self::_sanitizeIdentifier('comment'), $tables))
                 {
                     self::_createCommentTable();
                     $db_tables_exist = false;
@@ -117,7 +117,7 @@ class privatebin_db extends privatebin_abstract
 
                 // create config table if necessary
                 $db_version = privatebin::VERSION;
-                if (!in_array(self::$_prefix . 'config', $tables))
+                if (!in_array(self::_sanitizeIdentifier('config'), $tables))
                 {
                     self::_createConfigTable();
                     // if we only needed to create the config table, the DB is older then 0.22
@@ -190,7 +190,8 @@ class privatebin_db extends privatebin_abstract
             unset($meta['attachmentname']);
         }
         return self::_exec(
-            'INSERT INTO ' . self::$_prefix . 'paste VALUES(?,?,?,?,?,?,?,?,?)',
+            'INSERT INTO ' . self::_sanitizeIdentifier('paste') .
+            ' VALUES(?,?,?,?,?,?,?,?,?)',
             array(
                 $pasteid,
                 $paste['data'],
@@ -219,8 +220,8 @@ class privatebin_db extends privatebin_abstract
         ) {
             self::$_cache[$pasteid] = false;
             $paste = self::_select(
-                'SELECT * FROM ' . self::$_prefix . 'paste WHERE dataid = ?',
-                array($pasteid), true
+                'SELECT * FROM ' . self::_sanitizeIdentifier('paste') .
+                ' WHERE dataid = ?', array($pasteid), true
             );
 
             if(false !== $paste) {
@@ -279,12 +280,12 @@ class privatebin_db extends privatebin_abstract
     public function delete($pasteid)
     {
         self::_exec(
-            'DELETE FROM ' . self::$_prefix . 'paste WHERE dataid = ?',
-            array($pasteid)
+            'DELETE FROM ' . self::_sanitizeIdentifier('paste') .
+            ' WHERE dataid = ?', array($pasteid)
         );
         self::_exec(
-            'DELETE FROM ' . self::$_prefix . 'comment WHERE pasteid = ?',
-            array($pasteid)
+            'DELETE FROM ' . self::_sanitizeIdentifier('comment') .
+            ' WHERE pasteid = ?', array($pasteid)
         );
         if (
             array_key_exists($pasteid, self::$_cache)
@@ -319,7 +320,8 @@ class privatebin_db extends privatebin_abstract
     public function createComment($pasteid, $parentid, $commentid, $comment)
     {
         return self::_exec(
-            'INSERT INTO ' . self::$_prefix . 'comment VALUES(?,?,?,?,?,?,?)',
+            'INSERT INTO ' . self::_sanitizeIdentifier('comment') .
+            ' VALUES(?,?,?,?,?,?,?)',
             array(
                 $commentid,
                 $pasteid,
@@ -342,8 +344,8 @@ class privatebin_db extends privatebin_abstract
     public function readComments($pasteid)
     {
         $rows = self::_select(
-            'SELECT * FROM ' . self::$_prefix . 'comment WHERE pasteid = ?',
-            array($pasteid)
+            'SELECT * FROM ' . self::_sanitizeIdentifier('comment') .
+            ' WHERE pasteid = ?', array($pasteid)
         );
 
         // create comment list
@@ -381,8 +383,8 @@ class privatebin_db extends privatebin_abstract
     public function existsComment($pasteid, $parentid, $commentid)
     {
         return (bool) self::_select(
-            'SELECT dataid FROM ' . self::$_prefix . 'comment ' .
-            'WHERE pasteid = ? AND parentid = ? AND dataid = ?',
+            'SELECT dataid FROM ' . self::_sanitizeIdentifier('comment') .
+            ' WHERE pasteid = ? AND parentid = ? AND dataid = ?',
             array($pasteid, $parentid, $commentid), true
         );
     }
@@ -495,8 +497,8 @@ class privatebin_db extends privatebin_abstract
     private static function _getConfig($key)
     {
         $row = self::_select(
-            'SELECT value FROM ' . self::$_prefix . 'config WHERE id = ?',
-            array($key), true
+            'SELECT value FROM ' . self::_sanitizeIdentifier('config') .
+            ' WHERE id = ?', array($key), true
         );
         return $row['value'];
     }
@@ -534,7 +536,7 @@ class privatebin_db extends privatebin_abstract
     {
         list($main_key, $after_key) = self::_getPrimaryKeyClauses();
         self::$_db->exec(
-            'CREATE TABLE ' . self::$_prefix . 'paste ( ' .
+            'CREATE TABLE ' . self::_sanitizeIdentifier('paste') . ' ( ' .
             "dataid CHAR(16) NOT NULL$main_key, " .
             'data BLOB, ' .
             'postdate INT, ' .
@@ -558,7 +560,7 @@ class privatebin_db extends privatebin_abstract
     {
         list($main_key, $after_key) = self::_getPrimaryKeyClauses();
         self::$_db->exec(
-            'CREATE TABLE ' . self::$_prefix . 'comment ( ' .
+            'CREATE TABLE ' . self::_sanitizeIdentifier('comment') . ' ( ' .
             "dataid CHAR(16) NOT NULL$main_key, " .
             'pasteid CHAR(16), ' .
             'parentid CHAR(16), ' .
@@ -568,7 +570,8 @@ class privatebin_db extends privatebin_abstract
             "postdate INT$after_key );"
         );
         self::$_db->exec(
-            'CREATE INDEX parent ON ' . self::$_prefix . 'comment(pasteid);'
+            'CREATE INDEX parent ON ' . self::_sanitizeIdentifier('comment') .
+            '(pasteid);'
         );
     }
 
@@ -583,13 +586,27 @@ class privatebin_db extends privatebin_abstract
     {
         list($main_key, $after_key) = self::_getPrimaryKeyClauses('id');
         self::$_db->exec(
-            'CREATE TABLE ' . self::$_prefix . 'config ( ' .
-            "id CHAR(16) NOT NULL$main_key, value TEXT$after_key );"
+            'CREATE TABLE ' . self::_sanitizeIdentifier('config') .
+            " ( id CHAR(16) NOT NULL$main_key, value TEXT$after_key );"
         );
         self::_exec(
-            'INSERT INTO ' . self::$_prefix . 'config VALUES(?,?)',
+            'INSERT INTO ' . self::_sanitizeIdentifier('config') .
+            ' VALUES(?,?)',
             array('VERSION', privatebin::VERSION)
         );
+    }
+
+    /**
+     * sanitizes identifiers
+     *
+     * @access private
+     * @static
+     * @param  string $identifier
+     * @return string
+     */
+    private static function _sanitizeIdentifier($identifier)
+    {
+        return self::$_prefix . preg_replace('/[^A-Za-z0-9_]+/', '', $identifier);
     }
 
     /**

@@ -321,7 +321,7 @@ class RainTPL{
 
 			// file doesn't exsist, or the template was updated, Rain will compile the template
 			if( !file_exists( $this->tpl['compiled_filename'] ) || ( self::$check_template_update && filemtime($this->tpl['compiled_filename']) < filemtime( $this->tpl['tpl_filename'] ) ) ){
-				$this->compileFile( $tpl_basename, $tpl_basedir, $this->tpl['tpl_filename'], PATH . self::$cache_dir, $this->tpl['compiled_filename'] );
+				$this->compileFile( $tpl_basedir, $this->tpl['tpl_filename'], PATH . self::$cache_dir, $this->tpl['compiled_filename'] );
 				return true;
 			}
 			$this->tpl['checked'] = true;
@@ -347,7 +347,6 @@ class RainTPL{
 	 * Compile and write the compiled template file
 	 *
 	 * @access protected
-	 * @param  string $tpl_basename
 	 * @param  string $tpl_basedir
 	 * @param  string $tpl_filename
 	 * @param  string $cache_dir
@@ -355,7 +354,7 @@ class RainTPL{
 	 * @throws RainTpl_Exception
 	 * @return void
 	 */
-	protected function compileFile( $tpl_basename, $tpl_basedir, $tpl_filename, $cache_dir, $compiled_filename ){
+	protected function compileFile( $tpl_basedir, $tpl_filename, $cache_dir, $compiled_filename ){
 
 		//read template file
 		$this->tpl['source'] = $template_code = file_get_contents( $tpl_filename );
@@ -1036,13 +1035,13 @@ class RainTPL{
 			$e->getTemplateFile()
 		);
 		if ($e instanceof RainTpl_SyntaxException) {
-			if (null != $e->getTemplateLine()) {
+			if (null !== $e->getTemplateLine()) {
 				$output .= '<p>line: ' . $e->getTemplateLine() . '</p>';
 			}
-			if (null != $e->getTag()) {
+			if (null !== $e->getTag()) {
 				$output .= '<p>in tag: ' . htmlspecialchars($e->getTag()) . '</p>';
 			}
-			if (null != $e->getTemplateLine() && null != $e->getTag()) {
+			if (null !== $e->getTemplateLine() && null !== $e->getTag()) {
 				$rows=explode("\n",  htmlspecialchars($this->tpl['source']));
 				$rows[$e->getTemplateLine()] = '<font color=red>' . $rows[$e->getTemplateLine()] . '</font>';
 				$output .= '<h3>template code</h3>' . implode('<br />', $rows) . '</pre>';
@@ -1160,20 +1159,6 @@ class RainTpl_SyntaxException extends RainTpl_Exception{
 		$this->tag = (string) $tag;
 		return $this;
 	}
-}
-
-/**
- * shorthand translate function for use in templates
- *
- * alias for i18n::translate()
- *
- * @access public
- * @param  string $messageId
- * @param  mixed $args one or multiple parameters injected into placeholders
- * @return string
- */
-function t() {
-	return call_user_func_array(array('i18n', 'translate'), func_get_args());
 }
 
 // -- end

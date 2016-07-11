@@ -29,7 +29,7 @@ class configuration
      *
      * @var array
      */
-    private $_defaults = array(
+    private static $_defaults = array(
         'main' => array(
             'discussion' => true,
             'opendiscussion' => false,
@@ -97,7 +97,7 @@ class configuration
             }
         }
         $opts = '_options';
-        foreach ($this->_defaults as $section => $values)
+        foreach (self::getDefaults() as $section => $values)
         {
             // fill missing sections with default values
             if (!array_key_exists($section, $config) || count($config[$section]) == 0)
@@ -197,6 +197,15 @@ class configuration
         return $this->_configuration;
     }
 
+    /**
+     * get default configuration as array
+     *
+     * return array
+     */
+    public static function getDefaults()
+    {
+        return self::$_defaults;
+    }
 
     /**
      * get a key from the configuration, typically the main section or all keys
@@ -215,7 +224,6 @@ class configuration
         }
         return $this->_configuration[$section][$key];
     }
-
 
     /**
      * get a section from the configuration, must exist

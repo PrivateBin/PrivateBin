@@ -507,7 +507,7 @@ $(function() {
 
         /**
          * Get the pastes unique identifier from the URL
-         * eg. http://server.com/zero/?c05354954c49a487#xxx --> c05354954c49a487
+         * eg. http://server.com/zero/?c05354954c49a487#c05354954c49a487 returns c05354954c49a487
          *
          * @return string unique identifier
          */
@@ -589,7 +589,7 @@ $(function() {
                         this.prettyPrint.html(
                             prettyPrintOne(text, null, true)
                         );
-                    };
+                    }
                 default:
                     // Convert URLs to clickable links.
                     helper.urls2links(this.clearText);

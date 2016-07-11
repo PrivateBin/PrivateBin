@@ -91,10 +91,11 @@ class vizhash16x16
         // We hash the input string.
         $hash=hash('sha1',$text.$this->salt).hash('md5',$text.$this->salt);
         $hash=$hash.strrev($hash);  # more data to make graphics
+        $hashlen=strlen($hash);
 
         // We convert the hash into an array of integers.
         $this->VALUES=array();
-        for($i=0; $i<strlen($hash); $i=$i+2){ array_push($this->VALUES,hexdec(substr($hash,$i,2))); }
+        for($i=0; $i<$hashlen; $i=$i+2){ array_push($this->VALUES,hexdec(substr($hash,$i,2))); }
         $this->VALUES_INDEX=0; // to walk the array.
 
         // Then use these integers to drive the creation of an image.

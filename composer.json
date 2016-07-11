@@ -1,4 +1,14 @@
 {
+    "name": "privatebin/privatebin",
+    "description": "PrivateBin is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted in the browser using 256 bit AES in Galois Counter mode.",
+    "version": "0.22",
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/PrivateBin/PrivateBin"
+        }
+    ],
+    "license":"zlib-acknowledgement",
     "require-dev": {
         "phpunit/phpunit": "4.8.*",
         "codacy/coverage": "dev-master",
