@@ -593,7 +593,7 @@ $(function() {
             {
                 throw 'password prompt canceled';
             }
-            if (password.length == 0)
+            if (password.length === 0)
             {
                 return this.requestPassword();
             }
