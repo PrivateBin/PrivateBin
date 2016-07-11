@@ -1,5 +1,5 @@
 <?php
-class zerobin_dataTest extends PHPUnit_Framework_TestCase
+class privatebin_dataTest extends PHPUnit_Framework_TestCase
 {
     private $_model;
 
@@ -8,8 +8,8 @@ class zerobin_dataTest extends PHPUnit_Framework_TestCase
     public function setUp()
     {
         /* Setup Routine */
-        $this->_path = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'zerobin_data';
-        $this->_model = zerobin_data::getInstance(array('dir' => $this->_path));
+        $this->_path = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'privatebin_data';
+        $this->_model = privatebin_data::getInstance(array('dir' => $this->_path));
     }
 
     public function tearDown()

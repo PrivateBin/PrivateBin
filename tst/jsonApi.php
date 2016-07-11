@@ -6,7 +6,7 @@ class jsonApiTest extends PHPUnit_Framework_TestCase
     public function setUp()
     {
         /* Setup Routine */
-        $this->_model = zerobin_data::getInstance(array('dir' => PATH . 'data'));
+        $this->_model = privatebin_data::getInstance(array('dir' => PATH . 'data'));
         serversalt::setPath(PATH . 'data');
         $this->reset();
     }
@@ -42,7 +42,7 @@ class jsonApiTest extends PHPUnit_Framework_TestCase
         $_SERVER['REQUEST_METHOD'] = 'POST';
         $_SERVER['REMOTE_ADDR'] = '::1';
         ob_start();
-        new zerobin;
+        new privatebin;
         $content = ob_get_contents();
         $response = json_decode($content, true);
         $this->assertEquals(0, $response['status'], 'outputs status');
@@ -76,7 +76,7 @@ class jsonApiTest extends PHPUnit_Framework_TestCase
         $_SERVER['REQUEST_METHOD'] = 'PUT';
         $_SERVER['REMOTE_ADDR'] = '::1';
         ob_start();
-        new zerobin;
+        new privatebin;
         $content = ob_get_contents();
         $response = json_decode($content, true);
         $this->assertEquals(0, $response['status'], 'outputs status');
@@ -109,7 +109,7 @@ class jsonApiTest extends PHPUnit_Framework_TestCase
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD'] = 'DELETE';
         ob_start();
-        new zerobin;
+        new privatebin;
         $content = ob_get_contents();
         $response = json_decode($content, true);
         $this->assertEquals(0, $response['status'], 'outputs status');
@@ -133,7 +133,7 @@ class jsonApiTest extends PHPUnit_Framework_TestCase
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD'] = 'POST';
         ob_start();
-        new zerobin;
+        new privatebin;
         $content = ob_get_contents();
         $response = json_decode($content, true);
         $this->assertEquals(0, $response['status'], 'outputs status');
@@ -151,7 +151,7 @@ class jsonApiTest extends PHPUnit_Framework_TestCase
         $_SERVER['QUERY_STRING'] = helper::getPasteId();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         ob_start();
-        new zerobin;
+        new privatebin;
         $content = ob_get_contents();
         $response = json_decode($content, true);
         $this->assertEquals(0, $response['status'], 'outputs success status');
@@ -177,7 +177,7 @@ class jsonApiTest extends PHPUnit_Framework_TestCase
         $this->_model->create(helper::getPasteId(), $paste);
         $_GET['jsonld'] = 'paste';
         ob_start();
-        new zerobin;
+        new privatebin;
         $content = ob_get_contents();
         $this->assertEquals(str_replace(
                 '?jsonld=',
@@ -196,7 +196,7 @@ class jsonApiTest extends PHPUnit_Framework_TestCase
         $this->_model->create(helper::getPasteId(), $paste);
         $_GET['jsonld'] = 'comment';
         ob_start();
-        new zerobin;
+        new privatebin;
         $content = ob_get_contents();
         $this->assertEquals(str_replace(
                 '?jsonld=',
@@ -215,7 +215,7 @@ class jsonApiTest extends PHPUnit_Framework_TestCase
         $this->_model->create(helper::getPasteId(), $paste);
         $_GET['jsonld'] = 'pastemeta';
         ob_start();
-        new zerobin;
+        new privatebin;
         $content = ob_get_contents();
         $this->assertEquals(str_replace(
                 '?jsonld=',
@@ -234,7 +234,7 @@ class jsonApiTest extends PHPUnit_Framework_TestCase
         $this->_model->create(helper::getPasteId(), $paste);
         $_GET['jsonld'] = 'commentmeta';
         ob_start();
-        new zerobin;
+        new privatebin;
         $content = ob_get_contents();
         $this->assertEquals(str_replace(
                 '?jsonld=',
@@ -253,7 +253,7 @@ class jsonApiTest extends PHPUnit_Framework_TestCase
         $this->_model->create(helper::getPasteId(), $paste);
         $_GET['jsonld'] = '../cfg/conf.ini';
         ob_start();
-        new zerobin;
+        new privatebin;
         $content = ob_get_contents();
         $this->assertEquals('{}', $content, 'does not output nasty data');
     }

@@ -1,21 +1,21 @@
 <?php
 /**
- * ZeroBin
+ * PrivateBin
  *
  * a zero-knowledge paste bin
  *
- * @link      http://sebsauvage.net/wiki/doku.php?id=php:zerobin
+ * @link      https://github.com/PrivateBin/PrivateBin
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   http://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
  * @version   0.22
  */
 
 /**
- * zerobin
+ * privatebin
  *
  * Controller, puts it all together.
  */
-class zerobin
+class privatebin
 {
     /**
      * version
@@ -106,7 +106,7 @@ class zerobin
     /**
      * constructor
      *
-     * initializes and runs ZeroBin
+     * initializes and runs PrivateBin
      *
      * @access public
      * @return void
@@ -115,7 +115,7 @@ class zerobin
     {
         if (version_compare(PHP_VERSION, '5.2.6') < 0)
         {
-            throw new Exception(i18n::_('ZeroBin requires php 5.2.6 or above to work. Sorry.'), 1);
+            throw new Exception(i18n::_('PrivateBin requires php 5.2.6 or above to work. Sorry.'), 1);
         }
 
         // load config from ini file
@@ -156,7 +156,7 @@ class zerobin
     }
 
     /**
-     * initialize zerobin
+     * initialize privatebin
      *
      * @access private
      * @return void
@@ -388,7 +388,7 @@ class zerobin
     }
 
     /**
-     * Display ZeroBin frontend.
+     * Display PrivateBin frontend.
      *
      * @access private
      * @return void

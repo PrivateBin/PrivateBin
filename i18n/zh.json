@@ -2,10 +2,10 @@
     "en": "zh",
     "Paste does not exist, has expired or has been deleted.":
         "粘贴不存在，已过期或者已被删除。",
-    "ZeroBin requires php 5.2.6 or above to work. Sorry.":
-        "ZeroBin需要工作于PHP 5.2.6及以上版本，抱歉。",
-    "ZeroBin requires configuration section [%s] to be present in configuration file.":
-        "ZeroBin需要设置配置文件中 [%s] 的部分。",
+    "PrivateBin requires php 5.2.6 or above to work. Sorry.":
+        "PrivateBin需要工作于PHP 5.2.6及以上版本，抱歉。",
+    "PrivateBin requires configuration section [%s] to be present in configuration file.":
+        "PrivateBin需要设置配置文件中 [%s] 的部分。",
     "Please wait %d seconds between each post.":
         "每 %d 秒只能粘贴一次。",
     "Paste is limited to %s of encrypted data.":
@@ -26,15 +26,15 @@
         "错误的删除token，粘贴没有被删除。",
     "Paste was properly deleted.":
         "粘贴已被正确删除。",
-    "ZeroBin": "ZeroBin",
-    "ZeroBin is a minimalist, opensource online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href=\"https://github.com/elrido/ZeroBin/wiki\">project page</a>.":
-        "ZeroBin是一个极简，开源，对粘贴内容毫不知情的在线粘贴板，数据<i>在浏览器内</i>进行AES-256加密。更多信息请查看<a href=\"https://github.com/elrido/ZeroBin/wiki\">项目主页</a>。",
+    "PrivateBin": "PrivateBin",
+    "PrivateBin is a minimalist, opensource online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href=\"https://github.com/elrido/PrivateBin/wiki\">project page</a>.":
+        "PrivateBin是一个极简，开源，对粘贴内容毫不知情的在线粘贴板，数据<i>在浏览器内</i>进行AES-256加密。更多信息请查看<a href=\"https://github.com/elrido/PrivateBin/wiki\">项目主页</a>。",
     "Because ignorance is bliss":
         "因为无知是福",
-    "Javascript is required for ZeroBin to work.<br />Sorry for the inconvenience.":
-        "ZeroBin需要JavaScript来进行加解密。<br />带来的不便敬请谅解。",
-    "ZeroBin requires a modern browser to work.":
-        "ZeroBin需要工作于现代化的浏览器。",
+    "Javascript is required for PrivateBin to work.<br />Sorry for the inconvenience.":
+        "PrivateBin需要JavaScript来进行加解密。<br />带来的不便敬请谅解。",
+    "PrivateBin requires a modern browser to work.":
+        "PrivateBin需要工作于现代化的浏览器。",
     "Still using Internet Explorer? Do yourself a favor, switch to a modern browser:":
         "还在使用Internet Explorer？帮自己个忙，换上一个现代化的浏览器：",
     "New":

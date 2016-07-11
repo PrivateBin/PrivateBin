@@ -2,10 +2,10 @@
     "en": "pl",
     "Paste does not exist, has expired or has been deleted.":
         "Wklejka nie istnieje, wygasła albo została usunięta.",
-    "ZeroBin requires php 5.2.6 or above to work. Sorry.":
-        "ZeroBin wymaga PHP w wersji 5.2.6 lub nowszej, sorry.",
-    "ZeroBin requires configuration section [%s] to be present in configuration file.":
-        "ZeroBin wymaga obecności sekcji [%s] w pliku konfiguracyjnym.",
+    "PrivateBin requires php 5.2.6 or above to work. Sorry.":
+        "PrivateBin wymaga PHP w wersji 5.2.6 lub nowszej, sorry.",
+    "PrivateBin requires configuration section [%s] to be present in configuration file.":
+        "PrivateBin wymaga obecności sekcji [%s] w pliku konfiguracyjnym.",
     "Please wait %d seconds between each post.":
         "Poczekaj %d sekund pomiędzy każdą wklejką.",
     "Paste is limited to %s of encrypted data.":
@@ -26,15 +26,15 @@
         "Nieprawidłowy token usuwania. Wklejka nie została usunięta.",
     "Paste was properly deleted.":
         "Wklejka usunięta poprawnie.",
-    "ZeroBin": "ZeroBin",
-    "ZeroBin is a minimalist, opensource online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href=\"https://github.com/elrido/ZeroBin/wiki\">project page</a>.":
-        "ZeroBin jest minimalistycznym, otwartoźródłowym serwisem typu pastebin, w którym serwer nie ma jakichkolwiek informacji o tym, co jest wklejane. Dane są szyfrowane i deszyfrowane <i>w przeglądarce</i> z użyciem 256-bitowego klucza AES. Więcej informacji na <a href=\"https://github.com/elrido/ZeroBin/wiki\">stronie projektu</a>.",
+    "PrivateBin": "PrivateBin",
+    "PrivateBin is a minimalist, opensource online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href=\"https://github.com/elrido/PrivateBin/wiki\">project page</a>.":
+        "PrivateBin jest minimalistycznym, otwartoźródłowym serwisem typu pastebin, w którym serwer nie ma jakichkolwiek informacji o tym, co jest wklejane. Dane są szyfrowane i deszyfrowane <i>w przeglądarce</i> z użyciem 256-bitowego klucza AES. Więcej informacji na <a href=\"https://github.com/elrido/PrivateBin/wiki\">stronie projektu</a>.",
     "Because ignorance is bliss":
         "Ponieważ ignorancja jest cnotą",
-    "Javascript is required for ZeroBin to work.<br />Sorry for the inconvenience.":
-        "Do działania ZeroBina jest wymagany JavaScript. Przepraszamy za tę niedogodność.",
-    "ZeroBin requires a modern browser to work.":
-        "ZeroBin wymaga do działania nowoczesnej przeglądarki.",
+    "Javascript is required for PrivateBin to work.<br />Sorry for the inconvenience.":
+        "Do działania PrivateBina jest wymagany JavaScript. Przepraszamy za tę niedogodność.",
+    "PrivateBin requires a modern browser to work.":
+        "PrivateBin wymaga do działania nowoczesnej przeglądarki.",
     "Still using Internet Explorer? Do yourself a favor, switch to a modern browser:":
         "Cały czas używasz Internet Explorera? Zrób sobie przysługę, przesiądź się na nowoczesną przeglądarkę:",
     "New":

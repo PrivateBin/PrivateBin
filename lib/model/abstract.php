@@ -1,10 +1,10 @@
 <?php
 /**
- * ZeroBin
+ * PrivateBin
  *
  * a zero-knowledge paste bin
  *
- * @link      http://sebsauvage.net/wiki/doku.php?id=php:zerobin
+ * @link      https://github.com/PrivateBin/PrivateBin
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   http://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
  * @version   0.22
@@ -13,7 +13,7 @@
 /**
  * model_abstract
  *
- * Abstract model for ZeroBin objects.
+ * Abstract model for PrivateBin objects.
  */
 abstract class model_abstract
 {
@@ -45,7 +45,7 @@ abstract class model_abstract
      * Data storage.
      *
      * @access protected
-     * @var zerobin_abstract
+     * @var privatebin_abstract
      */
     protected $_store;
 
@@ -54,10 +54,10 @@ abstract class model_abstract
      *
      * @access public
      * @param  configuration $configuration
-     * @param  zerobin_abstract $storage
+     * @param  privatebin_abstract $storage
      * @return void
      */
-    public function __construct(configuration $configuration, zerobin_abstract $storage)
+    public function __construct(configuration $configuration, privatebin_abstract $storage)
     {
         $this->_conf = $configuration;
         $this->_store = $storage;

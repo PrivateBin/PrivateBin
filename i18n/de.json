@@ -2,10 +2,10 @@
     "en": "de",
     "Paste does not exist, has expired or has been deleted.":
         "Diesen Text gibt es nicht, er ist abgelaufen oder wurde gelöscht.",
-    "ZeroBin requires php 5.2.6 or above to work. Sorry.":
-        "ZeroBin benötigt PHP 5.2.6 oder höher, um zu funktionieren. Sorry.",
-    "ZeroBin requires configuration section [%s] to be present in configuration file.":
-        "ZeroBin benötigt den Konfigurationsabschnitt [%s] in der Konfigurationsdatei um zu funktionieren.",
+    "PrivateBin requires php 5.2.6 or above to work. Sorry.":
+        "PrivateBin benötigt PHP 5.2.6 oder höher, um zu funktionieren. Sorry.",
+    "PrivateBin requires configuration section [%s] to be present in configuration file.":
+        "PrivateBin benötigt den Konfigurationsabschnitt [%s] in der Konfigurationsdatei um zu funktionieren.",
     "Please wait %d seconds between each post.":
         "Bitte warte %d Sekunden zwischen dem Absenden.",
     "Paste is limited to %s of encrypted data.":
@@ -26,15 +26,15 @@
         "Falscher Lösch-Code. Text wurde nicht gelöscht.",
     "Paste was properly deleted.":
         "Text wurde erfolgreich gelöscht.",
-    "ZeroBin": "ZeroBin",
-    "ZeroBin is a minimalist, opensource online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href=\"https://github.com/elrido/ZeroBin/wiki\">project page</a>.":
-        "ZeroBin ist ein minimalistischer, quelloffener \"Pastebin\"-artiger Dienst, bei dem der Server keinerlei Kenntnis der Inhalte hat. Die Daten werden <i>im Browser</i> mit 256 Bit AES ver- und entschlüsselt. Weitere Informationen sind auf der <a href=\"https://github.com/elrido/ZeroBin/wiki\">Projektseite</a> zu finden.",
+    "PrivateBin": "PrivateBin",
+    "PrivateBin is a minimalist, opensource online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href=\"https://github.com/elrido/PrivateBin/wiki\">project page</a>.":
+        "PrivateBin ist ein minimalistischer, quelloffener \"Pastebin\"-artiger Dienst, bei dem der Server keinerlei Kenntnis der Inhalte hat. Die Daten werden <i>im Browser</i> mit 256 Bit AES ver- und entschlüsselt. Weitere Informationen sind auf der <a href=\"https://github.com/elrido/PrivateBin/wiki\">Projektseite</a> zu finden.",
     "Because ignorance is bliss":
         "Unwissenheit ist ein Segen",
-    "Javascript is required for ZeroBin to work.<br />Sorry for the inconvenience.":
-        "Javascript ist eine Voraussetzung, um ZeroBin zu nutzen.<br />Bitte entschuldige die Unannehmlichkeiten.",
-    "ZeroBin requires a modern browser to work.":
-        "ZeroBin setzt einen modernen Browser voraus, um funktionieren zu können.",
+    "Javascript is required for PrivateBin to work.<br />Sorry for the inconvenience.":
+        "Javascript ist eine Voraussetzung, um PrivateBin zu nutzen.<br />Bitte entschuldige die Unannehmlichkeiten.",
+    "PrivateBin requires a modern browser to work.":
+        "PrivateBin setzt einen modernen Browser voraus, um funktionieren zu können.",
     "Still using Internet Explorer? Do yourself a favor, switch to a modern browser:":
         "Du benutzt immer noch den Internet Explorer? Tu Dir einen Gefallen und wechsle zu einem moderneren Browser:",
     "New":

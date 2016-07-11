@@ -1,5 +1,5 @@
 <?php
-class zerobin_dbTest extends PHPUnit_Framework_TestCase
+class privatebin_dbTest extends PHPUnit_Framework_TestCase
 {
     private $_model;
 
@@ -13,7 +13,7 @@ class zerobin_dbTest extends PHPUnit_Framework_TestCase
     public function setUp()
     {
         /* Setup Routine */
-        $this->_model = zerobin_db::getInstance($this->_options);
+        $this->_model = privatebin_db::getInstance($this->_options);
     }
 
     public function testDatabaseBasedDataStoreWorks()
@@ -67,7 +67,7 @@ class zerobin_dbTest extends PHPUnit_Framework_TestCase
      */
     public function testGetIbmInstance()
     {
-        zerobin_db::getInstance(array(
+        privatebin_db::getInstance(array(
             'dsn' => 'ibm:', 'usr' => null, 'pwd' => null,
             'opt' => array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
         ));
@@ -78,7 +78,7 @@ class zerobin_dbTest extends PHPUnit_Framework_TestCase
      */
     public function testGetInformixInstance()
     {
-        zerobin_db::getInstance(array(
+        privatebin_db::getInstance(array(
             'dsn' => 'informix:', 'usr' => null, 'pwd' => null,
             'opt' => array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
         ));
@@ -89,7 +89,7 @@ class zerobin_dbTest extends PHPUnit_Framework_TestCase
      */
     public function testGetMssqlInstance()
     {
-        zerobin_db::getInstance(array(
+        privatebin_db::getInstance(array(
             'dsn' => 'mssql:', 'usr' => null, 'pwd' => null,
             'opt' => array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
         ));
@@ -100,7 +100,7 @@ class zerobin_dbTest extends PHPUnit_Framework_TestCase
      */
     public function testGetMysqlInstance()
     {
-        zerobin_db::getInstance(array(
+        privatebin_db::getInstance(array(
             'dsn' => 'mysql:', 'usr' => null, 'pwd' => null,
             'opt' => array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
         ));
@@ -111,7 +111,7 @@ class zerobin_dbTest extends PHPUnit_Framework_TestCase
      */
     public function testGetOciInstance()
     {
-        zerobin_db::getInstance(array(
+        privatebin_db::getInstance(array(
             'dsn' => 'oci:', 'usr' => null, 'pwd' => null,
             'opt' => array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
         ));
@@ -122,7 +122,7 @@ class zerobin_dbTest extends PHPUnit_Framework_TestCase
      */
     public function testGetPgsqlInstance()
     {
-        zerobin_db::getInstance(array(
+        privatebin_db::getInstance(array(
             'dsn' => 'pgsql:', 'usr' => null, 'pwd' => null,
             'opt' => array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
         ));
@@ -134,7 +134,7 @@ class zerobin_dbTest extends PHPUnit_Framework_TestCase
      */
     public function testGetFooInstance()
     {
-        zerobin_db::getInstance(array(
+        privatebin_db::getInstance(array(
             'dsn' => 'foo:', 'usr' => null, 'pwd' => null, 'opt' => null
         ));
     }
@@ -160,7 +160,7 @@ class zerobin_dbTest extends PHPUnit_Framework_TestCase
             'opendiscussion INT, ' .
             'burnafterreading INT );'
         );
-        zerobin_db::getInstance($this->_options);
+        privatebin_db::getInstance($this->_options);
         @unlink($path);
     }
 }

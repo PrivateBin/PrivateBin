@@ -1,10 +1,10 @@
 <?php
 /**
- * ZeroBin
+ * PrivateBin
  *
  * a zero-knowledge paste bin
  *
- * @link      http://sebsauvage.net/wiki/doku.php?id=php:zerobin
+ * @link      https://github.com/PrivateBin/PrivateBin
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   http://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
  * @version   0.22
@@ -13,12 +13,12 @@
 /**
  * serversalt
  *
- * This is a random string which is unique to each ZeroBin installation.
+ * This is a random string which is unique to each PrivateBin installation.
  * It is automatically created if not present.
  *
  * Salt is used:
- * - to generate unique VizHash in discussions (which are not reproductible across ZeroBin servers)
- * - to generate unique deletion token (which are not re-usable across ZeroBin servers)
+ * - to generate unique VizHash in discussions (which are not reproductible across PrivateBin servers)
+ * - to generate unique deletion token (which are not re-usable across PrivateBin servers)
  */
 class serversalt extends persistence
 {

@@ -1,10 +1,10 @@
 <?php
 /**
- * ZeroBin
+ * PrivateBin
  *
  * a zero-knowledge paste bin
  *
- * @link      http://sebsauvage.net/wiki/doku.php?id=php:zerobin
+ * @link      https://github.com/PrivateBin/PrivateBin
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   http://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
  * @version   0.22
@@ -13,7 +13,7 @@
 /**
  * model_paste
  *
- * Model of a ZeroBin paste.
+ * Model of a PrivateBin paste.
  */
 class model_paste extends model_abstract
 {
@@ -27,7 +27,7 @@ class model_paste extends model_abstract
     public function get()
     {
         $this->_data = $this->_store->read($this->getId());
-        if ($this->_data === false) throw new Exception(zerobin::GENERIC_ERROR, 64);
+        if ($this->_data === false) throw new Exception(privatebin::GENERIC_ERROR, 64);
 
         // check if paste has expired and delete it if neccessary.
         if (property_exists($this->_data->meta, 'expire_date'))
@@ -35,7 +35,7 @@ class model_paste extends model_abstract
             if ($this->_data->meta->expire_date < time())
             {
                 $this->delete();
-                throw new Exception(zerobin::GENERIC_ERROR, 63);
+                throw new Exception(privatebin::GENERIC_ERROR, 63);
             }
             // We kindly provide the remaining time before expiration (in seconds)
             $this->_data->meta->remaining_time = $this->_data->meta->expire_date - time();
@@ -153,7 +153,7 @@ class model_paste extends model_abstract
      *
      * The token is the hmac of the pastes ID signed with the server salt.
      * The paste can be deleted by calling:
-     * http://example.com/zerobin/?pasteid=<pasteid>&deletetoken=<deletetoken>
+     * http://example.com/privatebin/?pasteid=<pasteid>&deletetoken=<deletetoken>
      *
      * @access public
      * @return string

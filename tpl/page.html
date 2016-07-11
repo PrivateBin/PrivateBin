@@ -3,8 +3,8 @@
 	<head>
 		<meta charset="utf-8" />
 		<meta name="robots" content="noindex" />
-		<title>{function="t('ZeroBin')"}</title>
-		<link type="text/css" rel="stylesheet" href="css/zerobin.css?{$VERSION|rawurlencode}" />{if="$SYNTAXHIGHLIGHTING"}
+		<title>{function="t('PrivateBin')"}</title>
+		<link type="text/css" rel="stylesheet" href="css/privatebin.css?{$VERSION|rawurlencode}" />{if="$SYNTAXHIGHLIGHTING"}
 		<link type="text/css" rel="stylesheet" href="css/prettify/prettify.css?{$VERSION|rawurlencode}" />{if="strlen($SYNTAXHIGHLIGHTINGTHEME)"}
 		<link type="text/css" rel="stylesheet" href="css/prettify/{$SYNTAXHIGHLIGHTINGTHEME}.css?{$VERSION|rawurlencode}" />{/if}{/if}
 		<script type="text/javascript" src="js/jquery-1.11.3.js"></script>
@@ -14,7 +14,7 @@
 		<script type="text/javascript" src="js/rawinflate-0.3.js"></script>{if="$SYNTAXHIGHLIGHTING"}
 		<script type="text/javascript" src="js/prettify.js?{$VERSION|rawurlencode}"></script>{/if}{if="$MARKDOWN"}
 		<script type="text/javascript" src="js/showdown-1.4.1.js"></script>{/if}
-		<script type="text/javascript" src="js/zerobin.js?{$VERSION|rawurlencode}"></script>
+		<script type="text/javascript" src="js/privatebin.js?{$VERSION|rawurlencode}"></script>
 		<!--[if lt IE 10]>
 		<style type="text/css">body {padding-left:60px;padding-right:60px;} #ienotice {display:block;} #oldienotice {display:block;}</style>
 		<![endif]-->
@@ -27,14 +27,14 @@
 	<body>
 		<header>
 			<div id="aboutbox">
-				{function="t('ZeroBin is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href="https://github.com/elrido/ZeroBin/wiki">project page</a>.')"}<br />{if="strlen($NOTICE)"}
+				{function="t('PrivateBin is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href="https://github.com/elrido/PrivateBin/wiki">project page</a>.')"}<br />{if="strlen($NOTICE)"}
 				<span class="blink">▶</span> {$NOTICE}{/if}
 			</div>
-			<h1 class="title reloadlink">{function="t('ZeroBin')"}</h1><br />
+			<h1 class="title reloadlink">{function="t('PrivateBin')"}</h1><br />
 			<h2 class="title">{function="t('Because ignorance is bliss')"}</h2><br />
 			<h3 class="title">{$VERSION}</h3>
-			<noscript><div id="noscript" class="nonworking">{function="t('Javascript is required for ZeroBin to work.<br />Sorry for the inconvenience.')"}</div></noscript>
-			<div id="oldienotice" class="nonworking">{function="t('ZeroBin requires a modern browser to work.')"}</div>
+			<noscript><div id="noscript" class="nonworking">{function="t('Javascript is required for PrivateBin to work.<br />Sorry for the inconvenience.')"}</div></noscript>
+			<div id="oldienotice" class="nonworking">{function="t('PrivateBin requires a modern browser to work.')"}</div>
 			<div id="ienotice">{function="t('Still using Internet Explorer? Do yourself a favor, switch to a modern browser:')"}
 				<a href="http://www.mozilla.org/firefox/">Firefox</a>, 
 				<a href="http://www.opera.com/">Opera</a>, 

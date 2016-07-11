@@ -1,21 +1,21 @@
 <?php
 /**
- * ZeroBin
+ * PrivateBin
  *
  * a zero-knowledge paste bin
  *
- * @link      http://sebsauvage.net/wiki/doku.php?id=php:zerobin
+ * @link      https://github.com/PrivateBin/PrivateBin
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   http://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
  * @version   0.22
  */
 
 /**
- * zerobin_data
+ * privatebin_data
  *
  * Model for data access, implemented as a singleton.
  */
-class zerobin_data extends zerobin_abstract
+class privatebin_data extends privatebin_abstract
 {
     /**
      * directory where data is stored
@@ -32,7 +32,7 @@ class zerobin_data extends zerobin_abstract
      * @access public
      * @static
      * @param  array $options
-     * @return zerobin_data
+     * @return privatebin_data
      */
     public static function getInstance($options = null)
     {
@@ -42,7 +42,7 @@ class zerobin_data extends zerobin_abstract
             array_key_exists('dir', $options)
         ) self::$_dir = $options['dir'] . DIRECTORY_SEPARATOR;
         // if needed initialize the singleton
-        if(!(self::$_instance instanceof zerobin_data)) {
+        if(!(self::$_instance instanceof privatebin_data)) {
             self::$_instance = new self;
             self::_init();
         }
@@ -211,7 +211,7 @@ class zerobin_data extends zerobin_abstract
     }
 
     /**
-     * initialize zerobin
+     * initialize privatebin
      *
      * @access private
      * @static

@@ -10,7 +10,7 @@ class modelTest extends PHPUnit_Framework_TestCase
         /* Setup Routine */
         $options = parse_ini_file(CONF, true);
         $options['model'] = array(
-            'class' => 'zerobin_db',
+            'class' => 'privatebin_db',
         );
         $options['model_options'] = array(
             'dsn' => 'sqlite::memory:',

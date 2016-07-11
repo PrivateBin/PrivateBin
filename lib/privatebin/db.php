@@ -1,21 +1,21 @@
 <?php
 /**
- * ZeroBin
+ * PrivateBin
  *
  * a zero-knowledge paste bin
  *
- * @link      http://sebsauvage.net/wiki/doku.php?id=php:zerobin
+ * @link      https://github.com/PrivateBin/PrivateBin
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   http://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
  * @version   0.22
  */
 
 /**
- * zerobin_db
+ * privatebin_db
  *
  * Model for DB access, implemented as a singleton.
  */
-class zerobin_db extends zerobin_abstract
+class privatebin_db extends privatebin_abstract
 {
     /**
      * cache for select queries
@@ -58,12 +58,12 @@ class zerobin_db extends zerobin_abstract
      * @static
      * @param  array $options
      * @throws Exception
-     * @return zerobin_db
+     * @return privatebin_db
      */
     public static function getInstance($options = null)
     {
         // if needed initialize the singleton
-        if(!(self::$_instance instanceof zerobin_db)) {
+        if(!(self::$_instance instanceof privatebin_db)) {
             self::$_instance = new self;
         }
 
@@ -116,7 +116,7 @@ class zerobin_db extends zerobin_abstract
                 }
 
                 // create config table if necessary
-                $db_version = zerobin::VERSION;
+                $db_version = privatebin::VERSION;
                 if (!in_array(self::$_prefix . 'config', $tables))
                 {
                     self::_createConfigTable();
@@ -129,7 +129,7 @@ class zerobin_db extends zerobin_abstract
                 }
 
                 // update database structure if necessary
-                if (version_compare($db_version, zerobin::VERSION, '<'))
+                if (version_compare($db_version, privatebin::VERSION, '<'))
                 {
                     self::_upgradeDatabase($db_version);
                 }
@@ -588,7 +588,7 @@ class zerobin_db extends zerobin_abstract
         );
         self::_exec(
             'INSERT INTO ' . self::$_prefix . 'config VALUES(?,?)',
-            array('VERSION', zerobin::VERSION)
+            array('VERSION', privatebin::VERSION)
         );
     }
 

@@ -1,10 +1,10 @@
 <?php
 /**
- * ZeroBin
+ * PrivateBin
  *
  * a zero-knowledge paste bin
  *
- * @link      http://sebsauvage.net/wiki/doku.php?id=php:zerobin
+ * @link      https://github.com/PrivateBin/PrivateBin
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   http://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
  * @version   0.22
@@ -13,7 +13,7 @@
 /**
  * model
  *
- * Factory of ZeroBin instance models.
+ * Factory of PrivateBin instance models.
  */
 class model
 {
@@ -27,7 +27,7 @@ class model
     /**
      * Data storage.
      *
-     * @var zerobin_abstract
+     * @var privatebin_abstract
      */
     private $_store = null;
 
@@ -61,8 +61,13 @@ class model
     {
         if ($this->_store === null)
         {
+            // added option to support old config file format
+            $model = str_replace(
+                'zerobin_', 'privatebin_',
+                $this->_conf->getKey('class', 'model')
+            );
             $this->_store = forward_static_call(
-                array($this->_conf->getKey('class', 'model'), 'getInstance'),
+                array($model, 'getInstance'),
                 $this->_conf->getSection('model_options')
             );
         }

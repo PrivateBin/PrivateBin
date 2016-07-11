@@ -1,10 +1,10 @@
 <?php
 /**
- * ZeroBin
+ * PrivateBin
  *
  * a zero-knowledge paste bin
  *
- * @link      http://sebsauvage.net/wiki/doku.php?id=php:zerobin
+ * @link      https://github.com/PrivateBin/PrivateBin
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   http://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
  * @version   0.22
@@ -13,7 +13,7 @@
 /**
  * model_comment
  *
- * Model of a ZeroBin comment.
+ * Model of a PrivateBin comment.
  */
 class model_comment extends model_abstract
 {

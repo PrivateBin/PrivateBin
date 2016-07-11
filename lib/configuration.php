@@ -1,10 +1,10 @@
 <?php
 /**
- * ZeroBin
+ * PrivateBin
  *
  * a zero-knowledge paste bin
  *
- * @link      http://sebsauvage.net/wiki/doku.php?id=php:zerobin
+ * @link      https://github.com/PrivateBin/PrivateBin
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   http://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
  * @version   0.22
@@ -71,7 +71,7 @@ class configuration
             'dir' => 'data',
         ),
         'model' => array(
-            'class' => 'zerobin_data',
+            'class' => 'privatebin_data',
         ),
         'model_options' => array(
             'dir' => 'data',
@@ -92,7 +92,7 @@ class configuration
             $config = parse_ini_file($configFile, true);
             foreach (array('main', 'model') as $section) {
                 if (!array_key_exists($section, $config)) {
-                    throw new Exception(i18n::_('ZeroBin requires configuration section [%s] to be present in configuration file.', $section), 2);
+                    throw new Exception(i18n::_('PrivateBin requires configuration section [%s] to be present in configuration file.', $section), 2);
                 }
             }
         }
@@ -110,7 +110,7 @@ class configuration
                 continue;
             }
             // provide different defaults for database model
-            elseif ($section == 'model_options' && $this->_configuration['model']['class'] == 'zerobin_db')
+            elseif ($section == 'model_options' && $this->_configuration['model']['class'] == 'privatebin_db')
             {
                 $values = array(
                     'dsn' => 'sqlite:' . PATH . 'data/db.sq3',
@@ -228,7 +228,7 @@ class configuration
     {
         if (!array_key_exists($section, $this->_configuration))
         {
-            throw new Exception(i18n::_('ZeroBin requires configuration section [%s] to be present in configuration file.', $section), 3);
+            throw new Exception(i18n::_('PrivateBin requires configuration section [%s] to be present in configuration file.', $section), 3);
         }
         return $this->_configuration[$section];
     }

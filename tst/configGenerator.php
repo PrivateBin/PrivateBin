@@ -193,7 +193,7 @@ new configurationTestGenerator(array(
                             'attributes' => array(
                                 'type' => 'text/css',
                                 'rel' => 'stylesheet',
-                                'href' => 'regexp:#css/zerobin\.css#',
+                                'href' => 'regexp:#css/privatebin\.css#',
                             ),
                         ),
                         '$content',
@@ -227,7 +227,7 @@ new configurationTestGenerator(array(
                             'attributes' => array(
                                 'type' => 'text/css',
                                 'rel' => 'stylesheet',
-                                'href' => 'regexp:#css/zerobin.css#',
+                                'href' => 'regexp:#css/privatebin.css#',
                             ),
                         ),
                         '$content',
@@ -474,7 +474,7 @@ class configurationCombinationsTest extends PHPUnit_Framework_TestCase
         /* Setup Routine */
         helper::confBackup();
 
-        $this->_model = zerobin_data::getInstance(array('dir' => PATH . 'data'));
+        $this->_model = privatebin_data::getInstance(array('dir' => PATH . 'data'));
         serversalt::setPath(PATH . 'data');
         $this->reset();
     }
@@ -564,7 +564,7 @@ EOT;
         $code .= PHP_EOL . $preString;
         $code .= <<<'EOT'
         ob_start();
-        new zerobin;
+        new privatebin;
         $content = ob_get_contents();
 EOT;
 

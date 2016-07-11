@@ -33,10 +33,10 @@
       * for simpler maintenance the functions were grouped into objects: zerobin (display logic, event handling), filter (compression,
 encryption), i18n (translation, counterpart of i18n.php) and helper (stateless utilities)
     * Wiki pages were added to address common topics:
-      * [Upgrading from ZeroBin 0.19 Alpha](https://github.com/elrido/ZeroBin/wiki/Upgrading-from-ZeroBin-0.19-Alpha)
-      * [ZeroBin Directory of public servers](https://github.com/elrido/ZeroBin/wiki/ZeroBin-Directory)
-      * [Translation](https://github.com/elrido/ZeroBin/wiki/Translation)
-      * [Templates](https://github.com/elrido/ZeroBin/wiki/Templates)
+      * [Upgrading from ZeroBin 0.19 Alpha](https://github.com/PrivateBin/PrivateBin/wiki/Upgrading-from-ZeroBin-0.19-Alpha)
+      * [Directory of public PrivateBin servers](https://github.com/PrivateBin/PrivateBin/wiki/PrivateBin-Directory)
+      * [Translation](https://github.com/PrivateBin/PrivateBin/wiki/Translation)
+      * [Templates](https://github.com/PrivateBin/PrivateBin/wiki/Templates)
   * **0.20 (2015-09-03)**:
     * ADDED: Password protected pastes (optional)
     * ADDED: configuration options for highlighting, password, discussions, expiration times, rate limiting

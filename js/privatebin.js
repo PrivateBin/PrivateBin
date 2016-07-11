@@ -1,9 +1,9 @@
 /**
- * ZeroBin
+ * PrivateBin
  *
  * a zero-knowledge paste bin
  *
- * @link      http://sebsauvage.net/wiki/doku.php?id=php:zerobin
+ * @link      https://github.com/PrivateBin/PrivateBin
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   http://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
  * @version   0.22
@@ -481,7 +481,7 @@ $(function() {
         }
     };
 
-    var zerobin = {
+    var privatebin = {
         /**
          * headers to send in AJAX requests
          */
@@ -695,7 +695,7 @@ $(function() {
                     headers: this.headers
                 })
                 .fail(function() {
-                    zerobin.showError(i18n._('Could not delete the paste, it was not stored in burn after reading mode.'));
+                    privatebin.showError(i18n._('Could not delete the paste, it was not stored in burn after reading mode.'));
                 });
                 helper.setMessage(this.remainingTime, i18n._(
                     'FOR YOUR EYES ONLY. Don\'t close this window, this message can\'t be displayed again.'
@@ -842,44 +842,44 @@ $(function() {
                 {
                     if (data.status == 0)
                     {
-                        zerobin.showStatus(i18n._('Comment posted.'), false);
+                        privatebin.showStatus(i18n._('Comment posted.'), false);
                         $.ajax({
                             type: 'GET',
-                            url: zerobin.scriptLocation() + '?' + zerobin.pasteID(),
+                            url: privatebin.scriptLocation() + '?' + privatebin.pasteID(),
                             dataType: 'json',
-                            headers: zerobin.headers,
+                            headers: privatebin.headers,
                             success: function(data)
                             {
                                 if (data.status == 0)
                                 {
-                                    zerobin.displayMessages(zerobin.pageKey(), data);
+                                    privatebin.displayMessages(privatebin.pageKey(), data);
                                 }
                                 else if (data.status == 1)
                                 {
-                                    zerobin.showError(i18n._('Could not refresh display: %s', data.message));
+                                    privatebin.showError(i18n._('Could not refresh display: %s', data.message));
                                 }
                                 else
                                 {
-                                    zerobin.showError(i18n._('Could not refresh display: %s', i18n._('unknown status')));
+                                    privatebin.showError(i18n._('Could not refresh display: %s', i18n._('unknown status')));
                                 }
                             }
                         })
                         .fail(function() {
-                            zerobin.showError(i18n._('Could not refresh display: %s', i18n._('server error or not responding')));
+                            privatebin.showError(i18n._('Could not refresh display: %s', i18n._('server error or not responding')));
                         });
                     }
                     else if (data.status == 1)
                     {
-                        zerobin.showError(i18n._('Could not post comment: %s', data.message));
+                        privatebin.showError(i18n._('Could not post comment: %s', data.message));
                     }
                     else
                     {
-                        zerobin.showError(i18n._('Could not post comment: %s', i18n._('unknown status')));
+                        privatebin.showError(i18n._('Could not post comment: %s', i18n._('unknown status')));
                     }
                 }
             })
             .fail(function() {
-                zerobin.showError(i18n._('Could not post comment: %s', i18n._('server error or not responding')));
+                privatebin.showError(i18n._('Could not post comment: %s', i18n._('server error or not responding')));
             });
         },
 
@@ -926,7 +926,7 @@ $(function() {
                 reader.onload = (function(theFile)
                 {
                     return function(e) {
-                        zerobin.sendDataContinue(
+                        privatebin.sendDataContinue(
                             randomkey,
                             filter.cipher(randomkey, password, e.target.result),
                             filter.cipher(randomkey, password, theFile.name)
@@ -983,38 +983,38 @@ $(function() {
                 success: function(data)
                 {
                     if (data.status == 0) {
-                        zerobin.stateExistingPaste();
-                        var url = zerobin.scriptLocation() + '?' + data.id + '#' + randomkey;
-                        var deleteUrl = zerobin.scriptLocation() + '?pasteid=' + data.id + '&deletetoken=' + data.deletetoken;
-                        zerobin.showStatus('', false);
-                        zerobin.errorMessage.addClass('hidden');
+                        privatebin.stateExistingPaste();
+                        var url = privatebin.scriptLocation() + '?' + data.id + '#' + randomkey;
+                        var deleteUrl = privatebin.scriptLocation() + '?pasteid=' + data.id + '&deletetoken=' + data.deletetoken;
+                        privatebin.showStatus('', false);
+                        privatebin.errorMessage.addClass('hidden');
 
                         $('#pastelink').html(
                             i18n._(
                                 'Your paste is <a id="pasteurl" href="%s">%s</a> <span id="copyhint">(Hit [Ctrl]+[c] to copy)</span>',
                                 url, url
-                            ) + zerobin.shortenUrl(url)
+                            ) + privatebin.shortenUrl(url)
                         );
                         $('#deletelink').html('<a href="' + deleteUrl + '">' + i18n._('Delete data') + '</a>');
-                        zerobin.pasteResult.removeClass('hidden');
+                        privatebin.pasteResult.removeClass('hidden');
                         // We pre-select the link so that the user only has to [Ctrl]+[c] the link.
                         helper.selectText('pasteurl');
-                        zerobin.showStatus('', false);
-                        zerobin.formatPaste(data_to_send.formatter, zerobin.message.val());
+                        privatebin.showStatus('', false);
+                        privatebin.formatPaste(data_to_send.formatter, privatebin.message.val());
                     }
                     else if (data.status==1)
                     {
-                        zerobin.showError(i18n._('Could not create paste: %s', data.message));
+                        privatebin.showError(i18n._('Could not create paste: %s', data.message));
                     }
                     else
                     {
-                        zerobin.showError(i18n._('Could not create paste: %s', i18n._('unknown status')));
+                        privatebin.showError(i18n._('Could not create paste: %s', i18n._('unknown status')));
                     }
                 }
             })
             .fail(function()
             {
-                zerobin.showError(i18n._('Could not create paste: %s', i18n._('server error or not responding')));
+                privatebin.showError(i18n._('Could not create paste: %s', i18n._('server error or not responding')));
             });
         },
 
@@ -1397,8 +1397,8 @@ $(function() {
 
     /**
      * main application start, called when DOM is fully loaded
-     * runs zerobin when translations were loaded
+     * runs privatebin when translations were loaded
      */
-    i18n.loadTranslations($.proxy(zerobin.init, zerobin));
+    i18n.loadTranslations($.proxy(privatebin.init, privatebin));
 });
 

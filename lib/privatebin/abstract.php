@@ -1,35 +1,35 @@
 <?php
 /**
- * ZeroBin
+ * PrivateBin
  *
  * a zero-knowledge paste bin
  *
- * @link      http://sebsauvage.net/wiki/doku.php?id=php:zerobin
+ * @link      https://github.com/PrivateBin/PrivateBin
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   http://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
  * @version   0.22
  */
 
 /**
- * zerobin_abstract
+ * privatebin_abstract
  *
- * Abstract model for ZeroBin data access, implemented as a singleton.
+ * Abstract model for PrivateBin data access, implemented as a singleton.
  */
-abstract class zerobin_abstract
+abstract class privatebin_abstract
 {
     /**
      * singleton instance
      *
      * @access protected
      * @static
-     * @var zerobin_abstract
+     * @var privatebin_abstract
      */
     protected static $_instance = null;
 
     /**
      * enforce singleton, disable constructor
      *
-     * Instantiate using {@link getInstance()}, zerobin is a singleton object.
+     * Instantiate using {@link getInstance()}, privatebin is a singleton object.
      *
      * @access protected
      */
@@ -38,7 +38,7 @@ abstract class zerobin_abstract
     /**
      * enforce singleton, disable cloning
      *
-     * Instantiate using {@link getInstance()}, zerobin is a singleton object.
+     * Instantiate using {@link getInstance()}, privatebin is a singleton object.
      *
      * @access private
      */
@@ -50,7 +50,7 @@ abstract class zerobin_abstract
      * @access public
      * @static
      * @param  array $options
-     * @return zerobin_abstract
+     * @return privatebin_abstract
      */
     public static function getInstance($options) {}
 

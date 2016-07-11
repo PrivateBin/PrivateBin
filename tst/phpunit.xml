@@ -1,5 +1,5 @@
 <phpunit bootstrap="bootstrap.php" colors="true">
-	<testsuite name="ZeroBin Test Suite">
+	<testsuite name="PrivateBin Test Suite">
 		<directory suffix=".php">./</directory>
 		<exclude>configGenerator.php</exclude>
 	</testsuite>
@@ -7,7 +7,7 @@
 		<whitelist>
 			<directory suffix=".php">../lib</directory>
 			<exclude>
-				<file>../lib/zerobin/abstract.php</file>
+				<file>../lib/privatebin/abstract.php</file>
 			</exclude>
 		</whitelist>
 	</filter>

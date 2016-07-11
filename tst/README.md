@@ -12,5 +12,5 @@ Example for Debian and Ubuntu:
     $ sudo aptitude install phpunit php5-gd php5-sqlite php5-xdebug
 
 To run the tests, just change into this directory and run phpunit:
-    $ cd ZeroBin/tst
+    $ cd PrivateBin/tst
     $ phpunit

@@ -91,7 +91,7 @@ class RainTPLTest extends PHPUnit_Framework_TestCase
         );
         // testing version number in JS address, since other instances may not be present in different templates
         $this->assertRegExp(
-            '#<script[^>]+src="js/zerobin.js\\?' . rawurlencode(self::$version) . '"[^>]*>#',
+            '#<script[^>]+src="js/privatebin.js\\?' . rawurlencode(self::$version) . '"[^>]*>#',
             $this->_content,
             'outputs version correctly'
         );

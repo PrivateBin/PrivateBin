@@ -18,6 +18,6 @@ $ sudo pear install phpdoc/phpDocumentor
 
 To generate the documentation, change into the main directory and run phpdoc:
 ```console
-$ cd ZeroBin
+$ cd PrivateBin
 $ phpdoc -d lib/ -t doc/
 ```

@@ -43,7 +43,7 @@ class configurationTest extends PHPUnit_Framework_TestCase
             'dir' => '../data',
         ),
         'model' => array(
-            'class' => 'zerobin_data',
+            'class' => 'privatebin_data',
         ),
         'model_options' => array(
             'dir' => '../data',

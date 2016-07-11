@@ -1,7 +1,7 @@
 <?php
-require_once 'zerobin.php';
+require_once 'privatebin.php';
 
-class zerobinWithDbTest extends zerobinTest
+class privatebinWithDbTest extends privatebinTest
 {
     private $_options = array(
         'dsn' => 'sqlite:../data/tst.sq3',
@@ -16,7 +16,7 @@ class zerobinWithDbTest extends zerobinTest
     public function setUp()
     {
         /* Setup Routine */
-        $this->_model = zerobin_db::getInstance($this->_options);
+        $this->_model = privatebin_db::getInstance($this->_options);
         serversalt::setPath(PATH . 'data');
         $this->reset();
     }
@@ -34,7 +34,7 @@ class zerobinWithDbTest extends zerobinTest
         // but then inject a db config
         $options = parse_ini_file(CONF, true);
         $options['model'] = array(
-            'class' => 'zerobin_db',
+            'class' => 'privatebin_db',
         );
         $options['model_options'] = $this->_options;
         helper::confBackup();

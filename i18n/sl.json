@@ -2,10 +2,10 @@
     "en": "sl",
     "Paste does not exist, has expired or has been deleted.":
         "Prilepek ne obstaja, mu je potekla življenjska doba, ali pa je izbrisan.",
-    "ZeroBin requires php 5.2.6 or above to work. Sorry.":
-        "Oprosti, ZeroBin za delovanje potrebuje vsaj php 5.2.6.",
-    "ZeroBin requires configuration section [%s] to be present in configuration file.":
-        "ZeroBin potrebuje sekcijo konfiguracij [%s] v konfiguracijski datoteki.",
+    "PrivateBin requires php 5.2.6 or above to work. Sorry.":
+        "Oprosti, PrivateBin za delovanje potrebuje vsaj php 5.2.6.",
+    "PrivateBin requires configuration section [%s] to be present in configuration file.":
+        "PrivateBin potrebuje sekcijo konfiguracij [%s] v konfiguracijski datoteki.",
     "Please wait %d seconds between each post.":
         "Prosim počakaj vsaj %d sekund pred vsako naslednjo objavo.",
     "Paste is limited to %s of encrypted data.":
@@ -26,15 +26,15 @@
         "Napačen token za izbris. Prilepek ni bil izbrisan..",
     "Paste was properly deleted.":
         "Prilepek je uspešno izbrisan.",
-    "ZeroBin": "ZeroBin",
-    "ZeroBin is a minimalist, opensource online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href=\"https://github.com/elrido/ZeroBin/wiki\">project page</a>.":
-        "Zerobin je minimalističen, odprtokodni spletni 'pastebin', kjer server ne ve ničesar o prilepljenih podatkih. Podatki so zakodirani/odkodirani <i>v brskalniku</i> z uporabo 256 bitnega AES. Več informacij na < href=\"https://github.com/elrido/ZeroBin/wiki\">spletni strani projekta.</a>.",
+    "PrivateBin": "PrivateBin",
+    "PrivateBin is a minimalist, opensource online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href=\"https://github.com/elrido/PrivateBin/wiki\">project page</a>.":
+        "PrivateBin je minimalističen, odprtokodni spletni 'pastebin', kjer server ne ve ničesar o prilepljenih podatkih. Podatki so zakodirani/odkodirani <i>v brskalniku</i> z uporabo 256 bitnega AES. Več informacij na < href=\"https://github.com/elrido/PrivateBin/wiki\">spletni strani projekta.</a>.",
     "Because ignorance is bliss":
         "Ker kar ne veš ne boli.",
-    "Javascript is required for ZeroBin to work.<br />Sorry for the inconvenience.":
-        "Da ZeroBin deluje, moraš vklopiti Javascript.<br />Oprosti za povročene nevšečnosti.",
-    "ZeroBin requires a modern browser to work.":
-        "ZeroBin za svoje delovanje potrebuje moderen brskalnik.",
+    "Javascript is required for PrivateBin to work.<br />Sorry for the inconvenience.":
+        "Da PrivateBin deluje, moraš vklopiti Javascript.<br />Oprosti za povročene nevšečnosti.",
+    "PrivateBin requires a modern browser to work.":
+        "PrivateBin za svoje delovanje potrebuje moderen brskalnik.",
     "Still using Internet Explorer? Do yourself a favor, switch to a modern browser:":
         "Še vedno uporabljaš Internet Explorer? Naredi si uslugo, preklopi na moderen brskalnik:",
     "New":

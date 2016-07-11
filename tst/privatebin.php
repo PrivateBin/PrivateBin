@@ -1,12 +1,12 @@
 <?php
-class zerobinTest extends PHPUnit_Framework_TestCase
+class privatebinTest extends PHPUnit_Framework_TestCase
 {
     protected $_model;
 
     public function setUp()
     {
         /* Setup Routine */
-        $this->_model = zerobin_data::getInstance(array('dir' => PATH . 'data'));
+        $this->_model = privatebin_data::getInstance(array('dir' => PATH . 'data'));
         serversalt::setPath(PATH . 'data');
         $this->reset();
     }
@@ -34,10 +34,10 @@ class zerobinTest extends PHPUnit_Framework_TestCase
     {
         $this->reset();
         ob_start();
-        new zerobin;
+        new privatebin;
         $content = ob_get_contents();
         $this->assertContains(
-            '<title>ZeroBin</title>',
+            '<title>PrivateBin</title>',
             $content,
             'outputs title correctly'
         );
@@ -60,10 +60,10 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         helper::createIniFile(CONF, $options);
         $_COOKIE['lang'] = 'de';
         ob_start();
-        new zerobin;
+        new privatebin;
         $content = ob_get_contents();
         $this->assertContains(
-            '<title>ZeroBin</title>',
+            '<title>PrivateBin</title>',
             $content,
             'outputs title correctly'
         );
@@ -82,10 +82,10 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         helper::createIniFile(CONF, $options);
         $_COOKIE['lang'] = 'de';
         ob_start();
-        new zerobin;
+        new privatebin;
         $content = ob_get_contents();
         $this->assertContains(
-            '<title>ZeroBin</title>',
+            '<title>PrivateBin</title>',
             $content,
             'outputs title correctly'
         );
@@ -104,7 +104,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         helper::createIniFile(CONF, $options);
         $_COOKIE['lang'] = 'de';
         ob_start();
-        new zerobin;
+        new privatebin;
         $content = ob_get_contents();
         $this->assertRegExp(
             '#id="shortenbutton"[^>]*data-shortener="' . preg_quote($shortener) . '"#',
@@ -125,7 +125,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
             @unlink($file);
         }
         ob_start();
-        new zerobin;
+        new privatebin;
         ob_end_clean();
         foreach ($dirs as $dir) {
             $file = PATH . $dir . DIRECTORY_SEPARATOR . '.htaccess';
@@ -146,7 +146,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         helper::confBackup();
         file_put_contents(CONF, '');
         ob_start();
-        new zerobin;
+        new privatebin;
         ob_end_clean();
     }
 
@@ -165,7 +165,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $_SERVER['REQUEST_METHOD'] = 'POST';
         $_SERVER['REMOTE_ADDR'] = '::1';
         ob_start();
-        new zerobin;
+        new privatebin;
         $content = ob_get_contents();
         $response = json_decode($content, true);
         $this->assertEquals(0, $response['status'], 'outputs status');
@@ -190,7 +190,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $_SERVER['REMOTE_ADDR'] = '::1';
         trafficlimiter::canPass();
         ob_start();
-        new zerobin;
+        new privatebin;
         $content = ob_get_contents();
         $response = json_decode($content, true);
         $this->assertEquals(1, $response['status'], 'outputs error status');
@@ -213,7 +213,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $_SERVER['REQUEST_METHOD'] = 'POST';
         $_SERVER['REMOTE_ADDR'] = '::1';
         ob_start();
-        new zerobin;
+        new privatebin;
         $content = ob_get_contents();
         $response = json_decode($content, true);
         $this->assertEquals(1, $response['status'], 'outputs error status');
@@ -237,7 +237,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $_SERVER['REQUEST_METHOD'] = 'POST';
         $_SERVER['REMOTE_ADDR'] = '::1';
         ob_start();
-        new zerobin;
+        new privatebin;
         $content = ob_get_contents();
         $response = json_decode($content, true);
         $this->assertEquals(1, $response['status'], 'outputs error status');
@@ -260,7 +260,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $_SERVER['REQUEST_METHOD'] = 'POST';
         $_SERVER['REMOTE_ADDR'] = '::1';
         ob_start();
-        new zerobin;
+        new privatebin;
         $content = ob_get_contents();
         $response = json_decode($content, true);
         $this->assertEquals(1, $response['status'], 'outputs error status');
@@ -285,7 +285,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $_SERVER['REMOTE_ADDR'] = '::1';
         $time = time();
         ob_start();
-        new zerobin;
+        new privatebin;
         $content = ob_get_contents();
         $response = json_decode($content, true);
         $this->assertEquals(0, $response['status'], 'outputs status');
@@ -317,7 +317,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $_SERVER['REMOTE_ADDR'] = '::1';
         $time = time();
         ob_start();
-        new zerobin;
+        new privatebin;
         $content = ob_get_contents();
         $response = json_decode($content, true);
         $this->assertEquals(0, $response['status'], 'outputs status');
@@ -348,7 +348,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $_SERVER['REQUEST_METHOD'] = 'POST';
         $_SERVER['REMOTE_ADDR'] = '::1';
         ob_start();
-        new zerobin;
+        new privatebin;
         $content = ob_get_contents();
         $response = json_decode($content, true);
         $this->assertEquals(0, $response['status'], 'outputs status');
@@ -377,7 +377,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $_SERVER['REQUEST_METHOD'] = 'POST';
         $_SERVER['REMOTE_ADDR'] = '::1';
         ob_start();
-        new zerobin;
+        new privatebin;
         $content = ob_get_contents();
         $response = json_decode($content, true);
         $this->assertEquals(1, $response['status'], 'outputs error status');
@@ -400,7 +400,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $_SERVER['REQUEST_METHOD'] = 'POST';
         $_SERVER['REMOTE_ADDR'] = '::1';
         ob_start();
-        new zerobin;
+        new privatebin;
         $content = ob_get_contents();
         $response = json_decode($content, true);
         $this->assertEquals(1, $response['status'], 'outputs error status');
@@ -424,7 +424,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $_SERVER['REMOTE_ADDR'] = '::1';
         $this->assertFalse($this->_model->exists(helper::getPasteId()), 'paste does not exists before posting data');
         ob_start();
-        new zerobin;
+        new privatebin;
         $content = ob_get_contents();
         $response = json_decode($content, true);
         $this->assertEquals(0, $response['status'], 'outputs status');
@@ -457,7 +457,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $_SERVER['REQUEST_METHOD'] = 'POST';
         $_SERVER['REMOTE_ADDR'] = '::1';
         ob_start();
-        new zerobin;
+        new privatebin;
         $content = ob_get_contents();
         $response = json_decode($content, true);
         $this->assertEquals(0, $response['status'], 'outputs status');
@@ -489,7 +489,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $_SERVER['REMOTE_ADDR'] = '::1';
         $this->_model->create(helper::getPasteId(), helper::getPaste());
         ob_start();
-        new zerobin;
+        new privatebin;
         $content = ob_get_contents();
         $response = json_decode($content, true);
         $this->assertEquals(1, $response['status'], 'outputs error status');
@@ -514,7 +514,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $_SERVER['REMOTE_ADDR'] = '::1';
         $this->_model->create(helper::getPasteId(), helper::getPaste());
         ob_start();
-        new zerobin;
+        new privatebin;
         $content = ob_get_contents();
         $response = json_decode($content, true);
         $this->assertEquals(0, $response['status'], 'outputs status');
@@ -539,7 +539,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $_SERVER['REMOTE_ADDR'] = '::1';
         $this->_model->create(helper::getPasteId(), helper::getPaste());
         ob_start();
-        new zerobin;
+        new privatebin;
         $content = ob_get_contents();
         $response = json_decode($content, true);
         $this->assertEquals(1, $response['status'], 'outputs error status');
@@ -565,7 +565,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $paste = helper::getPaste(array('opendiscussion' => false));
         $this->_model->create(helper::getPasteId(), $paste);
         ob_start();
-        new zerobin;
+        new privatebin;
         $content = ob_get_contents();
         $response = json_decode($content, true);
         $this->assertEquals(1, $response['status'], 'outputs error status');
@@ -589,7 +589,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $_SERVER['REQUEST_METHOD'] = 'POST';
         $_SERVER['REMOTE_ADDR'] = '::1';
         ob_start();
-        new zerobin;
+        new privatebin;
         $content = ob_get_contents();
         $response = json_decode($content, true);
         $this->assertEquals(1, $response['status'], 'outputs error status');
@@ -616,7 +616,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $_SERVER['REQUEST_METHOD'] = 'POST';
         $_SERVER['REMOTE_ADDR'] = '::1';
         ob_start();
-        new zerobin;
+        new privatebin;
         $content = ob_get_contents();
         $response = json_decode($content, true);
         $this->assertEquals(1, $response['status'], 'outputs error status');
@@ -632,7 +632,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $this->_model->create(helper::getPasteId(), helper::getPaste());
         $_SERVER['QUERY_STRING'] = helper::getPasteId();
         ob_start();
-        new zerobin;
+        new privatebin;
         $content = ob_get_contents();
         $this->assertContains(
             '<div id="cipherdata" class="hidden">' .
@@ -651,7 +651,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $this->reset();
         $_SERVER['QUERY_STRING'] = 'foo';
         ob_start();
-        new zerobin;
+        new privatebin;
         $content = ob_get_contents();
         $this->assertRegExp(
             '#<div[^>]*id="errormessage"[^>]*>.*Invalid paste ID\.</div>#',
@@ -668,7 +668,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $this->reset();
         $_SERVER['QUERY_STRING'] = helper::getPasteId();
         ob_start();
-        new zerobin;
+        new privatebin;
         $content = ob_get_contents();
         $this->assertRegExp(
             '#<div[^>]*id="errormessage"[^>]*>.*Paste does not exist[^<]*</div>#',
@@ -687,7 +687,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $this->_model->create(helper::getPasteId(), $expiredPaste);
         $_SERVER['QUERY_STRING'] = helper::getPasteId();
         ob_start();
-        new zerobin;
+        new privatebin;
         $content = ob_get_contents();
         $this->assertRegExp(
             '#<div[^>]*id="errormessage"[^>]*>.*Paste does not exist[^<]*</div>#',
@@ -706,7 +706,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $this->_model->create(helper::getPasteId(), $burnPaste);
         $_SERVER['QUERY_STRING'] = helper::getPasteId();
         ob_start();
-        new zerobin;
+        new privatebin;
         $content = ob_get_contents();
         unset($burnPaste['meta']['salt']);
         $this->assertContains(
@@ -729,7 +729,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $_SERVER['QUERY_STRING'] = helper::getPasteId();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         ob_start();
-        new zerobin;
+        new privatebin;
         $content = ob_get_contents();
         $response = json_decode($content, true);
         $this->assertEquals(0, $response['status'], 'outputs success status');
@@ -752,7 +752,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $_SERVER['QUERY_STRING'] = helper::getPasteId();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         ob_start();
-        new zerobin;
+        new privatebin;
         $content = ob_get_contents();
         $response = json_decode($content, true);
         $this->assertEquals(1, $response['status'], 'outputs error status');
@@ -774,7 +774,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $this->_model->create(helper::getPasteId(), $oldPaste);
         $_SERVER['QUERY_STRING'] = helper::getPasteId();
         ob_start();
-        new zerobin;
+        new privatebin;
         $content = ob_get_contents();
         $meta['formatter'] = 'syntaxhighlighting';
         $this->assertContains(
@@ -797,7 +797,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $this->_model->create(helper::getPasteId(), $oldPaste);
         $_SERVER['QUERY_STRING'] = helper::getPasteId();
         ob_start();
-        new zerobin;
+        new privatebin;
         $content = ob_get_contents();
         $oldPaste['meta']['formatter'] = 'plaintext';
         unset($oldPaste['meta']['salt']);
@@ -822,7 +822,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $_GET['pasteid'] = helper::getPasteId();
         $_GET['deletetoken'] = hash_hmac('sha256', helper::getPasteId(), $paste->meta->salt);
         ob_start();
-        new zerobin;
+        new privatebin;
         $content = ob_get_contents();
         $this->assertRegExp(
             '#<div[^>]*id="status"[^>]*>.*Paste was properly deleted[^<]*</div>#s',
@@ -842,7 +842,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $_GET['pasteid'] = 'foo';
         $_GET['deletetoken'] = 'bar';
         ob_start();
-        new zerobin;
+        new privatebin;
         $content = ob_get_contents();
         $this->assertRegExp(
             '#<div[^>]*id="errormessage"[^>]*>.*Invalid paste ID\.</div>#',
@@ -861,7 +861,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $_GET['pasteid'] = helper::getPasteId();
         $_GET['deletetoken'] = 'bar';
         ob_start();
-        new zerobin;
+        new privatebin;
         $content = ob_get_contents();
         $this->assertRegExp(
             '#<div[^>]*id="errormessage"[^>]*>.*Paste does not exist[^<]*</div>#',
@@ -880,7 +880,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $_GET['pasteid'] = helper::getPasteId();
         $_GET['deletetoken'] = 'bar';
         ob_start();
-        new zerobin;
+        new privatebin;
         $content = ob_get_contents();
         $this->assertRegExp(
             '#<div[^>]*id="errormessage"[^>]*>.*Wrong deletion token[^<]*</div>#',
@@ -904,7 +904,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD'] = 'POST';
         ob_start();
-        new zerobin;
+        new privatebin;
         $content = ob_get_contents();
         $response = json_decode($content, true);
         $this->assertEquals(0, $response['status'], 'outputs status');
@@ -924,7 +924,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD'] = 'POST';
         ob_start();
-        new zerobin;
+        new privatebin;
         $content = ob_get_contents();
         $response = json_decode($content, true);
         $this->assertEquals(1, $response['status'], 'outputs status');
@@ -944,7 +944,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $_GET['pasteid'] = helper::getPasteId();
         $_GET['deletetoken'] = 'does not matter in this context, but has to be set';
         ob_start();
-        new zerobin;
+        new privatebin;
         $content = ob_get_contents();
         $this->assertRegExp(
             '#<div[^>]*id="errormessage"[^>]*>.*Paste does not exist[^<]*</div>#',
@@ -967,7 +967,7 @@ class zerobinTest extends PHPUnit_Framework_TestCase
         $_GET['pasteid'] = helper::getPasteId();
         $_GET['deletetoken'] = hash_hmac('sha256', helper::getPasteId(), serversalt::get());
         ob_start();
-        new zerobin;
+        new privatebin;
         $content = ob_get_contents();
         $this->assertRegExp(
             '#<div[^>]*id="status"[^>]*>.*Paste was properly deleted[^<]*</div>#s',
