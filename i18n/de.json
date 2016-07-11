@@ -136,5 +136,7 @@
         "Dein Browser unterstützt das hochladen von verschlüsselten Dateien nicht. Bitte verwende einen neueren Browser.",
     "Invalid attachment.": "Ungültiger Datei-Anhang.",
     "Options": "Optionen",
-    "Shorten URL": "URL verkürzen"
+    "Shorten URL": "URL verkürzen",
+    "Editor": "Bearbeiten",
+    "Preview": "Vorschau"
 }

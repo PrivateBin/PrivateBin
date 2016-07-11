@@ -62,6 +62,10 @@ body.navbar-spacing {
 	word-wrap: break-word;
 }
 
+#preview {
+	margin-bottom: 10px;
+}
+
 #message {
 	font-family: monospace;
 }

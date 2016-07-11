@@ -136,5 +136,7 @@
         "Twoja przeglądarka nie wspiera wysyłania zaszyfrowanych plików. Użyj nowszej przeglądarki.",
     "Invalid attachment.": "Nieprawidłowy załącznik.",
     "Options": "Opcje",
-    "Shorten URL": "Skróć adres URL"
+    "Shorten URL": "Skróć adres URL",
+    "Editor": "Edytować",
+    "Preview": "Zapowiedź"
 }

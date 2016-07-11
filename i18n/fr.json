@@ -145,5 +145,7 @@
         "Votre navigateur ne supporte pas l'envoi de fichiers chiffrés. Merci d'utiliser un navigateur plus récent.",
     "Invalid attachment.": "Attachement invalide.",
     "Options": "Options",
-    "Shorten URL": "Raccourcir URL"
+    "Shorten URL": "Raccourcir URL",
+    "Editor": "éditer",
+    "Preview": "avant-première"
 }

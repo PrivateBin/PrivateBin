@@ -145,5 +145,7 @@
         "Tvoj brskalnik ne omogoča nalaganje zakodiranih datotek. Prosim uporabi novejši brskalnik.",
     "Invalid attachment.": "Neveljavna priponka.",
     "Options": "Možnosti",
-    "Shorten URL": "Skrajšajte URL"
+    "Shorten URL": "Skrajšajte URL",
+    "Editor": "Uredi",
+    "Preview": "Predogled"
 }

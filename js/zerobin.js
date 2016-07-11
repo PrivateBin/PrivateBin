@@ -583,7 +583,13 @@ $(function() {
                     this.prettyMessage.addClass('hidden');
                     break;
                 case 'syntaxhighlighting':
-                    if (typeof prettyPrint == 'function') prettyPrint();
+                    if (typeof prettyPrintOne == 'function')
+                    {
+                        if (typeof prettyPrint == 'function') prettyPrint();
+                        this.prettyPrint.html(
+                            prettyPrintOne(text, null, true)
+                        );
+                    };
                 default:
                     // Convert URLs to clickable links.
                     helper.urls2links(this.clearText);
@@ -1055,33 +1061,42 @@ $(function() {
             this.password.removeClass('hidden');
             this.attach.removeClass('hidden');
             this.message.removeClass('hidden');
+            this.preview.removeClass('hidden');
             this.message.focus();
         },
 
         /**
          * Put the screen in "Existing paste" mode.
+         *
+         * @param boolean preview (optional) : tell if the preview tabs should be displayed, defaults to false.
          */
-        stateExistingPaste: function()
+        stateExistingPaste: function(preview)
         {
-            this.sendButton.addClass('hidden');
+            preview = preview || false;
 
-            // No "clone" for IE<10.
-            if ($('#oldienotice').is(":visible"))
+            if (!preview)
             {
-                this.cloneButton.addClass('hidden');
-            }
-            else
-            {
-                this.cloneButton.removeClass('hidden');
-            }
-            this.rawTextButton.removeClass('hidden');
+                // No "clone" for IE<10.
+                if ($('#oldienotice').is(":visible"))
+                {
+                    this.cloneButton.addClass('hidden');
+                }
+                else
+                {
+                    this.cloneButton.removeClass('hidden');
+                }
 
-            this.attach.addClass('hidden');
-            this.expiration.addClass('hidden');
-            this.formatter.addClass('hidden');
-            this.burnAfterReadingOption.addClass('hidden');
-            this.openDisc.addClass('hidden');
-            this.newButton.removeClass('hidden');
+                this.rawTextButton.removeClass('hidden');
+                this.sendButton.addClass('hidden');
+                this.attach.addClass('hidden');
+                this.expiration.addClass('hidden');
+                this.formatter.addClass('hidden');
+                this.burnAfterReadingOption.addClass('hidden');
+                this.openDisc.addClass('hidden');
+                this.newButton.removeClass('hidden');
+                this.preview.addClass('hidden');
+            }
+
             this.pasteResult.addClass('hidden');
             this.message.addClass('hidden');
             this.clearText.addClass('hidden');
@@ -1178,6 +1193,35 @@ $(function() {
         },
 
         /**
+         * View the editor tab.
+         *
+         * @param Event event
+         */
+        viewEditor: function(event)
+        {
+            event.preventDefault();
+            this.messagePreview.parent().removeClass('active');
+            this.messageEdit.parent().addClass('active');
+            this.message.focus();
+            this.stateNewPaste();
+        },
+
+        /**
+         * View the preview tab.
+         *
+         * @param Event event
+         */
+        viewPreview: function(event)
+        {
+            event.preventDefault();
+            this.messageEdit.parent().removeClass('active');
+            this.messagePreview.parent().addClass('active');
+            this.message.focus();
+            this.stateExistingPaste(true);
+            this.formatPaste($('#pasteFormatter').val(), this.message.val());
+        },
+
+        /**
          * Create a new paste.
          */
         newPaste: function()
@@ -1261,6 +1305,8 @@ $(function() {
             this.fileRemoveButton.click($.proxy(this.removeAttachment, this));
             $('.reloadlink').click($.proxy(this.reloadPage, this));
             this.message.keydown(this.supportTabs);
+            this.messageEdit.click($.proxy(this.viewEditor, this));
+            this.messagePreview.click($.proxy(this.viewPreview, this));
         },
 
         /**
@@ -1290,6 +1336,8 @@ $(function() {
             this.formatter = $('#formatter');
             this.image = $('#image');
             this.message = $('#message');
+            this.messageEdit = $('#messageedit');
+            this.messagePreview = $('#messagepreview');
             this.newButton = $('#newbutton');
             this.openDisc = $('#opendisc');
             this.openDiscussion = $('#opendiscussion');
@@ -1298,6 +1346,7 @@ $(function() {
             this.pasteResult = $('#pasteresult');
             this.prettyMessage = $('#prettymessage');
             this.prettyPrint = $('#prettyprint');
+            this.preview = $('#preview');
             this.rawTextButton = $('#rawtextbutton');
             this.remainingTime = $('#remainingtime');
             this.replyStatus = $('#replystatus');
