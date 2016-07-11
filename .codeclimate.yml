@@ -31,9 +31,9 @@ engines:
         enabled: false
 ratings:
   paths:
-  - "css/zerobin.css"
-  - "css/bootstrap/zerobin.css"
-  - "js/zerobin.js"
+  - "css/privatebin.css"
+  - "css/bootstrap/privatebin.css"
+  - "js/privatebin.js"
   - "lib/**.php"
   - "index.php"
 exclude_paths: []

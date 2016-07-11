@@ -9,7 +9,6 @@
     ],
     "license":"zlib-acknowledgement",
     "require-dev": {
-        "phpunit/phpunit": "4.8.*",
         "codacy/coverage": "dev-master",
         "codeclimate/php-test-reporter": "dev-master"
     }
