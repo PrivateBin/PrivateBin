@@ -134,6 +134,12 @@ class privatebin_db extends privatebin_abstract
                     self::_upgradeDatabase($db_version);
                 }
             }
+            else
+            {
+                throw new Exception(
+                    'Missing configuration for key dsn, usr, pwd or opt in the section model_options, please check your configuration file', 6
+                );
+            }
         }
 
         return self::$_instance;

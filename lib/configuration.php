@@ -90,7 +90,7 @@ class configuration
         if (is_readable($configFile))
         {
             $config = parse_ini_file($configFile, true);
-            foreach (array('main', 'model') as $section) {
+            foreach (array('main', 'model', 'model_options') as $section) {
                 if (!array_key_exists($section, $config)) {
                     throw new Exception(i18n::_('PrivateBin requires configuration section [%s] to be present in configuration file.', $section), 2);
                 }
@@ -110,7 +110,12 @@ class configuration
                 continue;
             }
             // provide different defaults for database model
-            elseif ($section == 'model_options' && $this->_configuration['model']['class'] == 'privatebin_db')
+            elseif (
+                $section == 'model_options' && in_array(
+                    $this->_configuration['model']['class'],
+                    array('privatebin_db', 'zerobin_db')
+                )
+            )
             {
                 $values = array(
                     'dsn' => 'sqlite:' . PATH . 'data/db.sq3',
@@ -179,6 +184,12 @@ class configuration
                 }
             }
         }
+
+        // support for old config file format, before the fork was renamed
+        $this->_configuration['model']['class'] = str_replace(
+            'zerobin_', 'privatebin_',
+            $this->_configuration['model']['class']
+        );
 
         // ensure a valid expire default key is set
         if (!array_key_exists($this->_configuration['expire']['default'], $this->_configuration['expire_options']))

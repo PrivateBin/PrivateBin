@@ -3,6 +3,8 @@ class configurationTest extends PHPUnit_Framework_TestCase
 {
     private $_options;
 
+    private $_minimalConfig;
+
     public function setUp()
     {
         /* Setup Routine */
@@ -10,6 +12,7 @@ class configurationTest extends PHPUnit_Framework_TestCase
         $this->_options = configuration::getDefaults();
         $this->_options['model_options']['dir'] = PATH . $this->_options['model_options']['dir'];
         $this->_options['traffic']['dir'] = PATH . $this->_options['traffic']['dir'];
+        $this->_minimalConfig = '[main]' . PHP_EOL . '[model]' . PHP_EOL . '[model_options]';
     }
 
     public function tearDown()
@@ -51,7 +54,7 @@ class configurationTest extends PHPUnit_Framework_TestCase
 
     public function testHandleMinimalConfigFile()
     {
-        file_put_contents(CONF, '[main]' . PHP_EOL . '[model]');
+        file_put_contents(CONF, $this->_minimalConfig);
         $conf = new configuration;
         $this->assertEquals($this->_options, $conf->get(), 'returns correct defaults on empty file');
     }
@@ -62,7 +65,7 @@ class configurationTest extends PHPUnit_Framework_TestCase
      */
     public function testHandleInvalidSection()
     {
-        file_put_contents(CONF, '[main]' . PHP_EOL . '[model]');
+        file_put_contents(CONF, $this->_minimalConfig);
         $conf = new configuration;
         $conf->getKey('foo', 'bar');
     }
@@ -73,14 +76,14 @@ class configurationTest extends PHPUnit_Framework_TestCase
      */
     public function testHandleInvalidKey()
     {
-        file_put_contents(CONF, '[main]' . PHP_EOL . '[model]');
+        file_put_contents(CONF, $this->_minimalConfig);
         $conf = new configuration;
         $conf->getKey('foo');
     }
 
     public function testHandleGetKey()
     {
-        file_put_contents(CONF, '[main]' . PHP_EOL . '[model]');
+        file_put_contents(CONF, $this->_minimalConfig);
         $conf = new configuration;
         $this->assertEquals($this->_options['main']['sizelimit'], $conf->getKey('sizelimit'), 'get default size');
     }
@@ -113,6 +116,20 @@ class configurationTest extends PHPUnit_Framework_TestCase
         $conf = new configuration;
         $options['expire']['default'] = '5min';
         $this->assertEquals($options, $conf->get(), 'not overriding "missing" subkeys');
+    }
+
+    public function testHandlePreRenameConfig()
+    {
+        $options = $this->_options;
+        $options['model']['class'] = 'zerobin_data';
+        helper::createIniFile(CONF, $options);
+        $conf = new configuration;
+        $this->assertEquals('privatebin_data', $conf->getKey('class', 'model'), 'old data class gets renamed');
+
+        $options['model']['class'] = 'zerobin_db';
+        helper::createIniFile(CONF, $options);
+        $conf = new configuration;
+        $this->assertEquals('privatebin_db', $conf->getKey('class', 'model'), 'old db class gets renamed');
     }
 
 }

@@ -61,13 +61,8 @@ class model
     {
         if ($this->_store === null)
         {
-            // added option to support old config file format
-            $model = str_replace(
-                'zerobin_', 'privatebin_',
-                $this->_conf->getKey('class', 'model')
-            );
             $this->_store = forward_static_call(
-                array($model, 'getInstance'),
+                array($this->_conf->getKey('class', 'model'), 'getInstance'),
                 $this->_conf->getSection('model_options')
             );
         }

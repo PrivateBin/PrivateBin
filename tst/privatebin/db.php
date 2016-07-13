@@ -139,6 +139,50 @@ class privatebin_dbTest extends PHPUnit_Framework_TestCase
         ));
     }
 
+    /**
+     * @expectedException Exception
+     * @expectedExceptionCode 6
+     */
+    public function testMissingDsn()
+    {
+        $options = $this->_options;
+        unset($options['dsn']);
+        privatebin_db::getInstance($options);
+    }
+
+    /**
+     * @expectedException Exception
+     * @expectedExceptionCode 6
+     */
+    public function testMissingUsr()
+    {
+        $options = $this->_options;
+        unset($options['usr']);
+        privatebin_db::getInstance($options);
+    }
+
+    /**
+     * @expectedException Exception
+     * @expectedExceptionCode 6
+     */
+    public function testMissingPwd()
+    {
+        $options = $this->_options;
+        unset($options['pwd']);
+        privatebin_db::getInstance($options);
+    }
+
+    /**
+     * @expectedException Exception
+     * @expectedExceptionCode 6
+     */
+    public function testMissingOpt()
+    {
+        $options = $this->_options;
+        unset($options['opt']);
+        privatebin_db::getInstance($options);
+    }
+
     public function testTableUpgrade()
     {
         $path = PATH . 'data/db-test.sq3';
