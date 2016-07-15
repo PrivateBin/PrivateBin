@@ -63,4 +63,37 @@ class privatebin_dataTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(json_decode(json_encode($original)), $this->_model->read(helper::getPasteId()));
     }
 
+    public function testPurge()
+    {
+        $expired = helper::getPaste(array('expire_date' => 1344803344));
+        $paste = helper::getPaste(array('expire_date' => time() + 3600));
+        $keys = array('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'x', 'y', 'z');
+        $ids = array();
+        foreach ($keys as $key)
+        {
+            $ids[$key] = substr(md5($key), 0, 16);
+            $this->assertFalse($this->_model->exists($ids[$key]), "paste $key does not yet exist");
+            if (in_array($key, array('x', 'y', 'z')))
+            {
+                $this->assertTrue($this->_model->create($ids[$key], $paste), "store $key paste");
+            }
+            else
+            {
+                $this->assertTrue($this->_model->create($ids[$key], $expired), "store $key paste");
+            }
+            $this->assertTrue($this->_model->exists($ids[$key]), "paste $key exists after storing it");
+        }
+        $this->_model->purge(10);
+        foreach ($ids as $key => $id)
+        {
+            if (in_array($key, array('x', 'y', 'z')))
+            {
+                $this->assertTrue($this->_model->exists($ids[$key]), "paste $key exists after purge");
+            }
+            else
+            {
+                $this->assertFalse($this->_model->exists($ids[$key]), "paste $key was purged");
+            }
+        }
+    }
 }

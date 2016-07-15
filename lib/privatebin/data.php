@@ -211,6 +211,67 @@ class privatebin_data extends privatebin_abstract
     }
 
     /**
+     * Returns up to batch size number of paste ids that have expired
+     *
+     * @access private
+     * @param  int $batchsize
+     * @return array
+     */
+    protected function _getExpiredPastes($batchsize)
+    {
+        $pastes = array();
+        $firstLevel = array_filter(
+            scandir(self::$_dir),
+            array('self', '_isFirstLevelDir')
+        );
+        if (count($firstLevel) > 0)
+        {
+            // try at most 10 times the $batchsize pastes before giving up
+            for ($i = 0, $max = $batchsize * 10; $i < $max; ++$i)
+            {
+                $firstKey = array_rand($firstLevel);
+                $secondLevel = array_filter(
+                    scandir(self::$_dir . $firstLevel[$firstKey]),
+                    array('self', '_isSecondLevelDir')
+                );
+
+                // skip this folder in the next checks if it is empty
+                if (count($secondLevel) == 0)
+                {
+                    unset($firstLevel[$firstKey]);
+                    continue;
+                }
+
+                $secondKey = array_rand($secondLevel);
+                $path = self::$_dir . $firstLevel[$firstKey] . '/' . $secondLevel[$secondKey];
+                if (!is_dir($path)) continue;
+                $thirdLevel = array_filter(
+                    scandir($path),
+                    array('model_paste', 'isValidId')
+                );
+                if (count($thirdLevel) == 0) continue;
+                $thirdKey = array_rand($thirdLevel);
+                $pasteid = $thirdLevel[$thirdKey];
+                if (in_array($pasteid, $pastes)) continue;
+
+                if ($this->exists($pasteid))
+                {
+                    $data = $this->read($pasteid);
+                    if (
+                        property_exists($data->meta, 'expire_date') &&
+                        $data->meta->expire_date < time()
+                    )
+                    {
+                        $pastes[] = $pasteid;
+                        if (count($pastes) >= $batchsize) break;
+                    }
+                }
+            }
+        }
+        return $pastes;
+    }
+
+    /**
      * initialize privatebin
      *
      * @access private
@@ -265,5 +326,31 @@ class privatebin_data extends privatebin_abstract
     private static function _dataid2discussionpath($dataid)
     {
         return self::_dataid2path($dataid) . $dataid . '.discussion/';
+    }
+
+    /**
+     * Check that the given element is a valid first level directory.
+     *
+     * @access private
+     * @static
+     * @param  string $element
+     * @return bool
+     */
+    private static function _isFirstLevelDir($element)
+    {
+        return self::_isSecondLevelDir($element) && is_dir(self::$_dir . '/' . $element);
+    }
+
+    /**
+     * Check that the given element is a valid second level directory.
+     *
+     * @access private
+     * @static
+     * @param  string $element
+     * @return bool
+     */
+    private static function _isSecondLevelDir($element)
+    {
+        return (bool) preg_match('/^[a-f0-9]{2}$/', $element);
     }
 }

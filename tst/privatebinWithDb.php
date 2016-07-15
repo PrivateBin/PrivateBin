@@ -4,7 +4,6 @@ require_once 'privatebin.php';
 class privatebinWithDbTest extends privatebinTest
 {
     private $_options = array(
-        'dsn' => 'sqlite:../data/tst.sq3',
         'usr' => null,
         'pwd' => null,
         'opt' => array(
@@ -13,11 +12,15 @@ class privatebinWithDbTest extends privatebinTest
         ),
     );
 
+    private $_path;
+
     public function setUp()
     {
         /* Setup Routine */
+        $this->_path = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'privatebin_data';
+        if(!is_dir($this->_path)) mkdir($this->_path);
+        $this->_options['dsn'] = 'sqlite:' . $this->_path . '/tst.sq3';
         $this->_model = privatebin_db::getInstance($this->_options);
-        serversalt::setPath(PATH . 'data');
         $this->reset();
     }
 
@@ -25,7 +28,7 @@ class privatebinWithDbTest extends privatebinTest
     {
         /* Tear Down Routine */
         parent::tearDown();
-        @unlink('../data/tst.sq3');
+        helper::rmdir($this->_path);
     }
 
     public function reset()

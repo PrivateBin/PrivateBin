@@ -16,6 +16,12 @@ class privatebin_dbTest extends PHPUnit_Framework_TestCase
         $this->_model = privatebin_db::getInstance($this->_options);
     }
 
+    public function tearDown()
+    {
+        /* Tear Down Routine */
+        if (is_dir(PATH . 'data')) helper::rmdir(PATH . 'data');
+    }
+
     public function testDatabaseBasedDataStoreWorks()
     {
         $this->_model->delete(helper::getPasteId());
@@ -60,6 +66,41 @@ class privatebin_dbTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($this->_model->exists(helper::getPasteId()), 'paste exists after storing it');
         $this->assertFalse($this->_model->create(helper::getPasteId(), $paste), 'unable to store the same paste twice');
         $this->assertEquals(json_decode(json_encode($original)), $this->_model->read(helper::getPasteId()));
+    }
+
+    public function testPurge()
+    {
+        $this->_model->delete(helper::getPasteId());
+        $expired = helper::getPaste(array('expire_date' => 1344803344));
+        $paste = helper::getPaste(array('expire_date' => time() + 3600));
+        $keys = array('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'x', 'y', 'z');
+        $ids = array();
+        foreach ($keys as $key)
+        {
+            $ids[$key] = substr(md5($key), 0, 16);
+            $this->assertFalse($this->_model->exists($ids[$key]), "paste $key does not yet exist");
+            if (in_array($key, array('x', 'y', 'z')))
+            {
+                $this->assertTrue($this->_model->create($ids[$key], $paste), "store $key paste");
+            }
+            else
+            {
+                $this->assertTrue($this->_model->create($ids[$key], $expired), "store $key paste");
+            }
+            $this->assertTrue($this->_model->exists($ids[$key]), "paste $key exists after storing it");
+        }
+        $this->_model->purge(10);
+        foreach ($ids as $key => $id)
+        {
+            if (in_array($key, array('x', 'y', 'z')))
+            {
+                $this->assertTrue($this->_model->exists($ids[$key]), "paste $key exists after purge");
+            }
+            else
+            {
+                $this->assertFalse($this->_model->exists($ids[$key]), "paste $key was purged");
+            }
+        }
     }
 
     /**
@@ -185,6 +226,7 @@ class privatebin_dbTest extends PHPUnit_Framework_TestCase
 
     public function testTableUpgrade()
     {
+        mkdir(PATH . 'data');
         $path = PATH . 'data/db-test.sq3';
         @unlink($path);
         $this->_options['dsn'] = 'sqlite:' . $path;

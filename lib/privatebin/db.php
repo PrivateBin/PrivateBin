@@ -302,7 +302,7 @@ class privatebin_db extends privatebin_abstract
      * Test if a paste exists.
      *
      * @access public
-     * @param  string $dataid
+     * @param  string $pasteid
      * @return void
      */
     public function exists($pasteid)
@@ -381,7 +381,7 @@ class privatebin_db extends privatebin_abstract
      * Test if a comment exists.
      *
      * @access public
-     * @param  string $dataid
+     * @param  string $pasteid
      * @param  string $parentid
      * @param  string $commentid
      * @return void
@@ -393,6 +393,30 @@ class privatebin_db extends privatebin_abstract
             ' WHERE pasteid = ? AND parentid = ? AND dataid = ?',
             array($pasteid, $parentid, $commentid), true
         );
+    }
+
+    /**
+     * Returns up to batch size number of paste ids that have expired
+     *
+     * @access private
+     * @param  int $batchsize
+     * @return array
+     */
+    protected function _getExpiredPastes($batchsize)
+    {
+        $pastes = array();
+        $rows = self::_select(
+            'SELECT dataid FROM ' . self::_sanitizeIdentifier('paste') .
+            ' WHERE expiredate < ? LIMIT ?', array(time(), $batchsize)
+        );
+        if (count($rows))
+        {
+            foreach ($rows as $row)
+            {
+                $pastes[] = $row['dataid'];
+            }
+        }
+        return $pastes;
     }
 
     /**

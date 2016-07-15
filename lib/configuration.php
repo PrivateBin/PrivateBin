@@ -70,6 +70,11 @@ class configuration
             'header' => null,
             'dir' => 'data',
         ),
+        'purge' => array(
+            'limit' => 300,
+            'batchsize' => 10,
+            'dir' => 'data',
+        ),
         'model' => array(
             'class' => 'privatebin_data',
         ),

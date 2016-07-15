@@ -12,6 +12,7 @@ class configurationTest extends PHPUnit_Framework_TestCase
         $this->_options = configuration::getDefaults();
         $this->_options['model_options']['dir'] = PATH . $this->_options['model_options']['dir'];
         $this->_options['traffic']['dir'] = PATH . $this->_options['traffic']['dir'];
+        $this->_options['purge']['dir'] = PATH . $this->_options['purge']['dir'];
         $this->_minimalConfig = '[main]' . PHP_EOL . '[model]' . PHP_EOL . '[model_options]';
     }
 

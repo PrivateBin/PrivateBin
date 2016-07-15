@@ -35,6 +35,7 @@ class model
      * Factory constructor.
      *
      * @param configuration $conf
+     * @return void
      */
     public function __construct(configuration $conf)
     {
@@ -55,7 +56,23 @@ class model
     }
 
     /**
+     * Checks if a purge is necessary and triggers it if yes.
+     *
+     * @return void
+     */
+    public function purge()
+    {
+        purgelimiter::setConfiguration($this->_conf);
+        if (purgelimiter::canPurge())
+        {
+            $this->_getStore()->purge($this->_conf->getKey('batchsize', 'purge'));
+        }
+    }
+
+    /**
      * Gets, and creates if neccessary, a store object
+     *
+     * @return privatebin_abstract
      */
     private function _getStore()
     {

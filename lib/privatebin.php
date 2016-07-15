@@ -264,6 +264,7 @@ class privatebin
         // The user posts a standard paste.
         else
         {
+            $this->_model->purge();
             $paste = $this->_model->getPaste();
             try {
                 $paste->setData($data);

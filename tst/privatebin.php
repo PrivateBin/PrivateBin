@@ -184,7 +184,11 @@ class privatebinTest extends PHPUnit_Framework_TestCase
     public function testCreateInvalidTimelimit()
     {
         $this->reset();
-        $_POST = helper::getPaste();
+        $options = parse_ini_file(CONF, true);
+        $options['traffic']['limit'] = 0;
+        helper::confBackup();
+        helper::createIniFile(CONF, $options);
+        $_POST = helper::getPaste(array('expire' => 25));
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD'] = 'POST';
         $_SERVER['REMOTE_ADDR'] = '::1';
@@ -193,8 +197,14 @@ class privatebinTest extends PHPUnit_Framework_TestCase
         new privatebin;
         $content = ob_get_contents();
         $response = json_decode($content, true);
-        $this->assertEquals(1, $response['status'], 'outputs error status');
-        $this->assertFalse($this->_model->exists(helper::getPasteId()), 'paste exists after posting data');
+        $this->assertEquals(0, $response['status'], 'outputs status');
+        $this->assertTrue($this->_model->exists($response['id']), 'paste exists after posting data');
+        $paste = $this->_model->read($response['id']);
+        $this->assertEquals(
+            hash_hmac('sha256', $response['id'], $paste->meta->salt),
+            $response['deletetoken'],
+            'outputs valid delete token'
+        );
     }
 
     /**
@@ -228,11 +238,10 @@ class privatebinTest extends PHPUnit_Framework_TestCase
         $this->reset();
         $options = parse_ini_file(CONF, true);
         $options['traffic']['header'] = 'X_FORWARDED_FOR';
-        $options['traffic']['limit'] = 100;
         helper::confBackup();
         helper::createIniFile(CONF, $options);
         $_POST = helper::getPaste();
-        $_SERVER['HTTP_X_FORWARDED_FOR'] = '::1';
+        $_SERVER['HTTP_X_FORWARDED_FOR'] = '::2';
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD'] = 'POST';
         $_SERVER['REMOTE_ADDR'] = '::1';
@@ -240,8 +249,14 @@ class privatebinTest extends PHPUnit_Framework_TestCase
         new privatebin;
         $content = ob_get_contents();
         $response = json_decode($content, true);
-        $this->assertEquals(1, $response['status'], 'outputs error status');
-        $this->assertFalse($this->_model->exists(helper::getPasteId()), 'paste exists after posting data');
+        $this->assertEquals(0, $response['status'], 'outputs status');
+        $this->assertTrue($this->_model->exists($response['id']), 'paste exists after posting data');
+        $paste = $this->_model->read($response['id']);
+        $this->assertEquals(
+            hash_hmac('sha256', $response['id'], $paste->meta->salt),
+            $response['deletetoken'],
+            'outputs valid delete token'
+        );
     }
 
     /**

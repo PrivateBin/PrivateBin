@@ -124,6 +124,35 @@ abstract class privatebin_abstract
     abstract public function existsComment($pasteid, $parentid, $commentid);
 
     /**
+     * Returns up to batch size number of paste ids that have expired
+     *
+     * @access protected
+     * @param  int $batchsize
+     * @return array
+     */
+    abstract protected function _getExpiredPastes($batchsize);
+
+    /**
+     * Perform a purge of old pastes, at most the given batchsize is deleted.
+     *
+     * @access public
+     * @param  int $batchsize
+     * @return void
+     */
+    public function purge($batchsize)
+    {
+        if ($batchsize < 1) return;
+        $pastes = $this->_getExpiredPastes($batchsize);
+        if (count($pastes))
+        {
+            foreach ($pastes as $pasteid)
+            {
+                $this->delete($pasteid);
+            }
+        }
+    }
+
+    /**
      * Get next free slot for comment from postdate.
      *
      * @access public
