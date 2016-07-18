@@ -572,17 +572,18 @@ class privatebin_db extends privatebin_abstract
     private static function _createPasteTable()
     {
         list($main_key, $after_key) = self::_getPrimaryKeyClauses();
+        $dataType = self::$_type === 'pgsql' ? 'TEXT' : 'BLOB';
         self::$_db->exec(
             'CREATE TABLE ' . self::_sanitizeIdentifier('paste') . ' ( ' .
             "dataid CHAR(16) NOT NULL$main_key, " .
-            'data BLOB, ' .
+            "data $dataType, " .
             'postdate INT, ' .
             'expiredate INT, ' .
             'opendiscussion INT, ' .
             'burnafterreading INT, ' .
             'meta TEXT, ' .
-            'attachment MEDIUMBLOB, ' .
-            "attachmentname BLOB$after_key );"
+            'attachment ' . (self::$_type === 'pgsql' ? 'TEXT' : 'MEDIUMBLOB') . ', ' .
+            "attachmentname $dataType$after_key );"
         );
     }
 
@@ -596,14 +597,15 @@ class privatebin_db extends privatebin_abstract
     private static function _createCommentTable()
     {
         list($main_key, $after_key) = self::_getPrimaryKeyClauses();
+        $dataType = self::$_type === 'pgsql' ? 'text' : 'BLOB';
         self::$_db->exec(
             'CREATE TABLE ' . self::_sanitizeIdentifier('comment') . ' ( ' .
             "dataid CHAR(16) NOT NULL$main_key, " .
             'pasteid CHAR(16), ' .
             'parentid CHAR(16), ' .
-            'data BLOB, ' .
-            'nickname BLOB, ' .
-            'vizhash BLOB, ' .
+            "data $dataType, " .
+            "nickname $dataType, " .
+            "vizhash $dataType, " .
             "postdate INT$after_key );"
         );
         self::$_db->exec(
@@ -656,6 +658,7 @@ class privatebin_db extends privatebin_abstract
      */
     private static function _upgradeDatabase($oldversion)
     {
+        $dataType = self::$_type === 'pgsql' ? 'TEXT' : 'BLOB';
         switch ($oldversion)
         {
             case '0.21':
@@ -667,10 +670,12 @@ class privatebin_db extends privatebin_abstract
                 }
                 // SQLite only allows one ALTER statement at a time...
                 self::$_db->exec(
-                    'ALTER TABLE ' . self::_sanitizeIdentifier('paste') . ' ADD COLUMN attachment MEDIUMBLOB;'
+                    'ALTER TABLE ' . self::_sanitizeIdentifier('paste') .
+                    ' ADD COLUMN attachment ' .
+                    (self::$_type === 'pgsql' ? 'TEXT' : 'MEDIUMBLOB') . ';'
                 );
                 self::$_db->exec(
-                    'ALTER TABLE ' . self::_sanitizeIdentifier('paste') . ' ADD COLUMN attachmentname BLOB;'
+                    'ALTER TABLE ' . self::_sanitizeIdentifier('paste') . " ADD COLUMN attachmentname $dataType;"
                 );
                 // SQLite doesn't support MODIFY, but it allows TEXT of similar
                 // size as BLOB, so there is no need to change it there
@@ -678,12 +683,12 @@ class privatebin_db extends privatebin_abstract
                 {
                     self::$_db->exec(
                         'ALTER TABLE ' . self::_sanitizeIdentifier('paste') .
-                        ' ADD PRIMARY KEY (dataid), MODIFY COLUMN data BLOB;'
+                        ' ADD PRIMARY KEY (dataid), MODIFY COLUMN data $dataType;'
                     );
                     self::$_db->exec(
                         'ALTER TABLE ' . self::_sanitizeIdentifier('comment') .
-                        ' ADD PRIMARY KEY (dataid), MODIFY COLUMN data BLOB, ' .
-                        'MODIFY COLUMN nickname BLOB,  MODIFY COLUMN vizhash BLOB;'
+                        " ADD PRIMARY KEY (dataid), MODIFY COLUMN data $dataType, " .
+                        "MODIFY COLUMN nickname $dataType, MODIFY COLUMN vizhash $dataType;"
                     );
                 }
                 else
