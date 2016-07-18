@@ -98,6 +98,21 @@ limit = 10
 ; directory to store the traffic limits in
 dir = PATH "data"
 
+[purge]
+; minimum time limit between two purgings of expired pastes, it is only
+; triggered when pastes are created
+; Set this to 0 to disable purging. Set it to run more frequently, if you are
+; running a large site.
+limit = 300
+
+; maximum amount of expired pastes to delete in one purge
+; Set this to 0 to disable purging. Set it higher, if you are running a large
+; site
+batchsize = 10
+
+; directory to store the purge limit in
+dir = PATH "data"
+
 [model]
 ; name of data model class to load and directory for storage
 ; the default model "privatebin_data" stores everything in the filesystem
