@@ -176,7 +176,8 @@ class privatebin
         $this->_conf = new configuration;
         $this->_model = new model($this->_conf);
         $this->_request = new request;
-        $this->_urlbase = array_key_exists('REQUEST_URI', $_SERVER) ? $_SERVER['REQUEST_URI'] : '/';
+        $this->_urlbase = array_key_exists('REQUEST_URI', $_SERVER) ?
+            htmlspecialchars($_SERVER['REQUEST_URI']) : '/';
 
         // set default language
         $lang = $this->_conf->getKey('languagedefault');
