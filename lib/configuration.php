@@ -44,6 +44,7 @@ class configuration
             'languageselection' => false,
             'languagedefault' => '',
             'urlshortener' => '',
+            'vizhash' => true,
             'zerobincompatibility' => false,
         ),
         'expire' => array(

@@ -174,16 +174,19 @@ class model_comment extends model_abstract
         if (!sjcl::isValid($nickname)) throw new Exception('Invalid data.', 66);
         $this->_data->meta->nickname = $nickname;
 
-        // Generation of the anonymous avatar (Vizhash):
-        // If a nickname is provided, we generate a Vizhash.
-        // (We assume that if the user did not enter a nickname, he/she wants
-        // to be anonymous and we will not generate the vizhash.)
-        $vh = new vizhash16x16();
-        $pngdata = $vh->generate(trafficlimiter::getIp());
-        if ($pngdata != '')
+        if ($this->_conf->getKey('vizhash'))
         {
-            $this->_data->meta->vizhash = 'data:image/png;base64,' . base64_encode($pngdata);
+            // Generation of the anonymous avatar (Vizhash):
+            // If a nickname is provided, we generate a Vizhash.
+            // (We assume that if the user did not enter a nickname, he/she wants
+            // to be anonymous and we will not generate the vizhash.)
+            $vh = new vizhash16x16();
+            $pngdata = $vh->generate(trafficlimiter::getIp());
+            if ($pngdata != '')
+            {
+                $this->_data->meta->vizhash = 'data:image/png;base64,' . base64_encode($pngdata);
+            }
+            // Once the avatar is generated, we do not keep the IP address, nor its hash.
         }
-        // Once the avatar is generated, we do not keep the IP address, nor its hash.
     }
 }

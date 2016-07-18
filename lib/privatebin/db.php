@@ -325,6 +325,13 @@ class privatebin_db extends privatebin_abstract
      */
     public function createComment($pasteid, $parentid, $commentid, $comment)
     {
+        foreach (array('nickname', 'vizhash') as $key)
+        {
+            if (!array_key_exists($key, $comment['meta']))
+            {
+                $comment['meta'][$key] = null;
+            }
+        }
         return self::_exec(
             'INSERT INTO ' . self::_sanitizeIdentifier('comment') .
             ' VALUES(?,?,?,?,?,?,?)',
@@ -367,9 +374,9 @@ class privatebin_db extends privatebin_abstract
                 $comments[$i]->data = $row['data'];
                 $comments[$i]->meta = new stdClass;
                 $comments[$i]->meta->postdate = (int) $row['postdate'];
-                if (array_key_exists('nickname', $row))
+                if (array_key_exists('nickname', $row) && !empty($row['nickname']))
                     $comments[$i]->meta->nickname = $row['nickname'];
-                if (array_key_exists('vizhash', $row))
+                if (array_key_exists('vizhash', $row) && !empty($row['vizhash']))
                     $comments[$i]->meta->vizhash = $row['vizhash'];
             }
             ksort($comments);

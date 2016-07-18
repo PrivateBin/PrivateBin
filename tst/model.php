@@ -208,4 +208,59 @@ class modelTest extends PHPUnit_Framework_TestCase
         $paste->store();
         $paste->getComment(helper::getPasteId())->delete();
     }
+
+    public function testCommentWithDisabledVizhash()
+    {
+        $options = parse_ini_file(CONF, true);
+        $options['main']['vizhash'] = false;
+        $options['model'] = array(
+            'class' => 'privatebin_db',
+        );
+        $options['model_options'] = array(
+            'dsn' => 'sqlite::memory:',
+            'usr' => null,
+            'pwd' => null,
+            'opt' => array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION),
+        );
+        helper::confBackup();
+        helper::createIniFile(CONF, $options);
+        $model = new model(new configuration);
+
+        $pasteData = helper::getPaste();
+        $this->_model->getPaste(helper::getPasteId())->delete();
+        $paste = $model->getPaste(helper::getPasteId());
+        $this->assertFalse($paste->exists(), 'paste does not yet exist');
+
+        $paste = $model->getPaste();
+        $paste->setData($pasteData['data']);
+        $paste->setOpendiscussion();
+        $paste->setFormatter($pasteData['meta']['formatter']);
+        $paste->store();
+
+        $paste = $model->getPaste(helper::getPasteId());
+        $this->assertTrue($paste->exists(), 'paste exists after storing it');
+        $paste = $paste->get();
+        $this->assertEquals($pasteData['data'], $paste->data);
+        foreach (array('opendiscussion', 'formatter') as $key) {
+            $this->assertEquals($pasteData['meta'][$key], $paste->meta->$key);
+        }
+
+        // storing comments
+        $commentData = helper::getComment();
+        $paste = $model->getPaste(helper::getPasteId());
+        $comment = $paste->getComment(helper::getPasteId(), helper::getCommentId());
+        $this->assertFalse($comment->exists(), 'comment does not yet exist');
+
+        $comment = $paste->getComment(helper::getPasteId());
+        $comment->setData($commentData['data']);
+        $comment->setNickname($commentData['meta']['nickname']);
+        $comment->store();
+
+        $comment = $paste->getComment(helper::getPasteId(), helper::getCommentId());
+        $this->assertTrue($comment->exists(), 'comment exists after storing it');
+        $comment = $comment->get();
+        $this->assertEquals($commentData['data'], $comment->data);
+        $this->assertEquals($commentData['meta']['nickname'], $comment->meta->nickname);
+        $this->assertFalse(property_exists($comment->meta, 'vizhash'), 'vizhash was not generated');
+    }
 }

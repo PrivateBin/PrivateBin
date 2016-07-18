@@ -53,6 +53,12 @@ languageselection = false
 ; the pastes encryption key
 ; urlshortener = "https://shortener.example.com/api?link="
 
+; (optional) vizhash is a weak mechanism to detect if a comment was from a
+; different user when the same username was used in a comment. It is based on
+; the IP and might be used to get the posters IP if the server salt is leaked
+; and a rainbow table is generated for all IPs. Enabled by default.
+; vizhash = false
+
 ; stay compatible with PrivateBin Alpha 0.19, less secure
 ; if enabled will use base64.js version 1.7 instead of 2.1.9 and sha1 instead of
 ; sha256 in HMAC for the deletion token
