@@ -78,6 +78,7 @@ class privatebin_dbTest extends PHPUnit_Framework_TestCase
         foreach ($keys as $key)
         {
             $ids[$key] = substr(md5($key), 0, 16);
+            $this->_model->delete($ids[$key]);
             $this->assertFalse($this->_model->exists($ids[$key]), "paste $key does not yet exist");
             if (in_array($key, array('x', 'y', 'z')))
             {
@@ -95,6 +96,7 @@ class privatebin_dbTest extends PHPUnit_Framework_TestCase
             if (in_array($key, array('x', 'y', 'z')))
             {
                 $this->assertTrue($this->_model->exists($ids[$key]), "paste $key exists after purge");
+                $this->_model->delete($ids[$key]);
             }
             else
             {
@@ -224,10 +226,53 @@ class privatebin_dbTest extends PHPUnit_Framework_TestCase
         privatebin_db::getInstance($options);
     }
 
+    public function testOldAttachments()
+    {
+        mkdir(PATH . 'data');
+        $path = PATH . 'data' . DIRECTORY_SEPARATOR . 'attachement-test.sq3';
+        @unlink($path);
+        $this->_options['dsn'] = 'sqlite:' . $path;
+        $this->_options['tbl'] = 'bar_';
+        $model = privatebin_db::getInstance($this->_options);
+
+        $original = $paste = helper::getPasteWithAttachment(array('expire_date' => 1344803344));
+        $paste['meta']['attachment'] = $paste['attachment'];
+        $paste['meta']['attachmentname'] = $paste['attachmentname'];
+        unset($paste['attachment'], $paste['attachmentname']);
+        $meta = $paste['meta'];
+
+        $db = new PDO(
+            $this->_options['dsn'],
+            $this->_options['usr'],
+            $this->_options['pwd'],
+            $this->_options['opt']
+        );
+        $statement = $db->prepare('INSERT INTO bar_paste VALUES(?,?,?,?,?,?,?,?,?)');
+        $statement->execute(
+            array(
+                helper::getPasteId(),
+                $paste['data'],
+                $paste['meta']['postdate'],
+                1344803344,
+                0,
+                0,
+                json_encode($meta),
+                null,
+                null,
+            )
+        );
+        $statement->closeCursor();
+
+        $this->assertTrue($model->exists(helper::getPasteId()), 'paste exists after storing it');
+        $this->assertEquals(json_decode(json_encode($original)), $model->read(helper::getPasteId()));
+
+        helper::rmdir(PATH . 'data');
+    }
+
     public function testTableUpgrade()
     {
         mkdir(PATH . 'data');
-        $path = PATH . 'data/db-test.sq3';
+        $path = PATH . 'data' . DIRECTORY_SEPARATOR . 'db-test.sq3';
         @unlink($path);
         $this->_options['dsn'] = 'sqlite:' . $path;
         $this->_options['tbl'] = 'foo_';
@@ -246,7 +291,17 @@ class privatebin_dbTest extends PHPUnit_Framework_TestCase
             'opendiscussion INT, ' .
             'burnafterreading INT );'
         );
+        $db->exec(
+            'CREATE TABLE foo_comment ( ' .
+            "dataid CHAR(16) NOT NULL, " .
+            'pasteid CHAR(16), ' .
+            'parentid CHAR(16), ' .
+            'data BLOB, ' .
+            'nickname BLOB, ' .
+            'vizhash BLOB, ' .
+            "postdate INT );"
+        );
         privatebin_db::getInstance($this->_options);
-        @unlink($path);
+        helper::rmdir(PATH . 'data');
     }
 }

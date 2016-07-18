@@ -8,7 +8,9 @@ class modelTest extends PHPUnit_Framework_TestCase
     public function setUp()
     {
         /* Setup Routine */
+        helper::confRestore();
         $options = parse_ini_file(CONF, true);
+        $options['purge']['limit'] = 0;
         $options['model'] = array(
             'class' => 'privatebin_db',
         );
@@ -207,6 +209,45 @@ class modelTest extends PHPUnit_Framework_TestCase
         $paste->setData($pasteData['data']);
         $paste->store();
         $paste->getComment(helper::getPasteId())->delete();
+    }
+
+    public function testPurge()
+    {
+        $conf = new configuration;
+        $store = privatebin_db::getInstance($conf->getSection('model_options'));
+        $store->delete(helper::getPasteId());
+        $expired = helper::getPaste(array('expire_date' => 1344803344));
+        $paste = helper::getPaste(array('expire_date' => time() + 3600));
+        $keys = array('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'x', 'y', 'z');
+        $ids = array();
+        foreach ($keys as $key)
+        {
+            $ids[$key] = substr(md5($key), 0, 16);
+            $store->delete($ids[$key]);
+            $this->assertFalse($store->exists($ids[$key]), "paste $key does not yet exist");
+            if (in_array($key, array('x', 'y', 'z')))
+            {
+                $this->assertTrue($store->create($ids[$key], $paste), "store $key paste");
+            }
+            else
+            {
+                $this->assertTrue($store->create($ids[$key], $expired), "store $key paste");
+            }
+            $this->assertTrue($store->exists($ids[$key]), "paste $key exists after storing it");
+        }
+        $this->_model->purge(10);
+        foreach ($ids as $key => $id)
+        {
+            if (in_array($key, array('x', 'y', 'z')))
+            {
+                $this->assertTrue($this->_model->getPaste($ids[$key])->exists(), "paste $key exists after purge");
+                $this->_model->getPaste($ids[$key])->delete();
+            }
+            else
+            {
+                $this->assertFalse($this->_model->getPaste($ids[$key])->exists(), "paste $key was purged");
+            }
+        }
     }
 
     public function testCommentWithDisabledVizhash()

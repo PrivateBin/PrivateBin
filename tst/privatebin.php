@@ -7,7 +7,6 @@ class privatebinTest extends PHPUnit_Framework_TestCase
     {
         /* Setup Routine */
         $this->_model = privatebin_data::getInstance(array('dir' => PATH . 'data'));
-        serversalt::setPath(PATH . 'data');
         $this->reset();
     }
 
@@ -454,6 +453,28 @@ class privatebinTest extends PHPUnit_Framework_TestCase
             $response['deletetoken'],
             'outputs valid delete token'
         );
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testCreateTooSoon()
+    {
+        $this->reset();
+        $_POST = helper::getPaste();
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
+        $_SERVER['REQUEST_METHOD'] = 'POST';
+        $_SERVER['REMOTE_ADDR'] = '::1';
+        ob_start();
+        new privatebin;
+        ob_end_clean();
+        $this->_model->delete(helper::getPasteId());
+        ob_start();
+        new privatebin;
+        $content = ob_get_contents();
+        $response = json_decode($content, true);
+        $this->assertEquals(1, $response['status'], 'outputs error status');
+        $this->assertFalse($this->_model->exists(helper::getPasteId()), 'paste exists after posting data');
     }
 
     /**

@@ -607,8 +607,8 @@ class privatebin_db extends privatebin_abstract
             "postdate INT$after_key );"
         );
         self::$_db->exec(
-            'CREATE INDEX parent ON ' . self::_sanitizeIdentifier('comment') .
-            '(pasteid);'
+            'CREATE INDEX IF NOT EXISTS comment_parent ON ' .
+            self::_sanitizeIdentifier('comment') . '(pasteid);'
         );
     }
 
@@ -689,14 +689,17 @@ class privatebin_db extends privatebin_abstract
                 else
                 {
                     self::$_db->exec(
-                        'CREATE UNIQUE INDEX primary ON ' . self::_sanitizeIdentifier('paste') . '(dataid);'
+                        'CREATE UNIQUE INDEX IF NOT EXISTS paste_dataid ON ' .
+                        self::_sanitizeIdentifier('paste') . '(dataid);'
                     );
                     self::$_db->exec(
-                        'CREATE UNIQUE INDEX primary ON ' . self::_sanitizeIdentifier('comment') . '(dataid);'
+                        'CREATE UNIQUE INDEX IF NOT EXISTS comment_dataid ON ' .
+                        self::_sanitizeIdentifier('comment') . '(dataid);'
                     );
                 }
                 self::$_db->exec(
-                    'CREATE INDEX parent ON ' . self::_sanitizeIdentifier('comment') . '(pasteid);'
+                    'CREATE INDEX IF NOT EXISTS comment_parent ON ' .
+                    self::_sanitizeIdentifier('comment') . '(pasteid);'
                 );
         }
     }

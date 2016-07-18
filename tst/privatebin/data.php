@@ -65,6 +65,7 @@ class privatebin_dataTest extends PHPUnit_Framework_TestCase
 
     public function testPurge()
     {
+        mkdir($this->_path . DIRECTORY_SEPARATOR . '00', 0777, true);
         $expired = helper::getPaste(array('expire_date' => 1344803344));
         $paste = helper::getPaste(array('expire_date' => time() + 3600));
         $keys = array('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'x', 'y', 'z');

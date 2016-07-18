@@ -243,7 +243,8 @@ class privatebin_data extends privatebin_abstract
                 }
 
                 $secondKey = array_rand($secondLevel);
-                $path = self::$_dir . $firstLevel[$firstKey] . '/' . $secondLevel[$secondKey];
+                $path = self::$_dir . $firstLevel[$firstKey] .
+                    DIRECTORY_SEPARATOR . $secondLevel[$secondKey];
                 if (!is_dir($path)) continue;
                 $thirdLevel = array_filter(
                     scandir($path),
@@ -310,7 +311,8 @@ class privatebin_data extends privatebin_abstract
      */
     private static function _dataid2path($dataid)
     {
-        return self::$_dir . substr($dataid,0,2) . '/' . substr($dataid,2,2) . '/';
+        return self::$_dir . substr($dataid,0,2) . DIRECTORY_SEPARATOR .
+            substr($dataid,2,2) . DIRECTORY_SEPARATOR;
     }
 
     /**
@@ -325,7 +327,8 @@ class privatebin_data extends privatebin_abstract
      */
     private static function _dataid2discussionpath($dataid)
     {
-        return self::_dataid2path($dataid) . $dataid . '.discussion/';
+        return self::_dataid2path($dataid) . $dataid .
+            '.discussion' . DIRECTORY_SEPARATOR;
     }
 
     /**
@@ -338,7 +341,8 @@ class privatebin_data extends privatebin_abstract
      */
     private static function _isFirstLevelDir($element)
     {
-        return self::_isSecondLevelDir($element) && is_dir(self::$_dir . '/' . $element);
+        return self::_isSecondLevelDir($element) &&
+            is_dir(self::$_dir . DIRECTORY_SEPARATOR . $element);
     }
 
     /**
