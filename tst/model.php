@@ -236,7 +236,7 @@ class modelTest extends PHPUnit_Framework_TestCase
             $this->assertTrue($store->exists($ids[$key]), "paste $key exists after storing it");
         }
         $this->_model->purge(10);
-        foreach ($ids as $key)
+        foreach (array_keys($ids) as $key)
         {
             if (in_array($key, array('x', 'y', 'z')))
             {
