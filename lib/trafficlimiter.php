@@ -115,7 +115,7 @@ class trafficlimiter extends persistence
         $tl = $GLOBALS['traffic_limiter'];
 
         // purge file of expired IPs to keep it small
-        foreach($tl as $key => $time)
+        foreach ($tl as $key => $time)
         {
             if ($time + self::$_limit < $now)
             {

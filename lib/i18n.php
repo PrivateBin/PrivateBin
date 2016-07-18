@@ -306,7 +306,7 @@ class i18n
             case 'zh':
                 return ($n > 1 ? 1 : 0);
             case 'pl':
-                return ($n == 1 ? 0 : $n%10 >= 2 && $n %10 <=4 && ($n%100 < 10 || $n%100 >= 20) ? 1 : 2);
+                return ($n == 1 ? 0 : $n % 10 >= 2 && $n % 10 <= 4 && ($n % 100 < 10 || $n % 100 >= 20) ? 1 : 2);
             // en, de
             default:
                 return ($n != 1 ? 1 : 0);
@@ -386,7 +386,7 @@ class i18n
     protected static function _matchLanguage($a, $b) {
         $a = explode('-', $a);
         $b = explode('-', $b);
-        for ($i=0, $n=min(count($a), count($b)); $i<$n; $i++)
+        for ($i=0, $n = min(count($a), count($b)); $i < $n; ++$i)
         {
             if ($a[$i] !== $b[$i]) break;
         }

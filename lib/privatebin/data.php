@@ -42,7 +42,7 @@ class privatebin_data extends privatebin_abstract
             array_key_exists('dir', $options)
         ) self::$_dir = $options['dir'] . DIRECTORY_SEPARATOR;
         // if needed initialize the singleton
-        if(!(self::$_instance instanceof privatebin_data)) {
+        if (!(self::$_instance instanceof privatebin_data)) {
             self::$_instance = new self;
             self::_init();
         }
@@ -74,7 +74,7 @@ class privatebin_data extends privatebin_abstract
      */
     public function read($pasteid)
     {
-        if(!$this->exists($pasteid)) return false;
+        if (!$this->exists($pasteid)) return false;
         $paste = json_decode(
             file_get_contents(self::_dataid2path($pasteid) . $pasteid)
         );
@@ -111,7 +111,7 @@ class privatebin_data extends privatebin_abstract
             $dir = dir($discdir);
             while (false !== ($filename = $dir->read()))
             {
-                if (is_file($discdir.$filename)) @unlink($discdir.$filename);
+                if (is_file($discdir . $filename)) @unlink($discdir . $filename);
             }
             $dir->close();
 
@@ -289,7 +289,7 @@ class privatebin_data extends privatebin_abstract
             file_put_contents(
                 self::$_dir . '.htaccess',
                 'Allow from none' . PHP_EOL .
-                'Deny from all'. PHP_EOL
+                'Deny from all' . PHP_EOL
             );
         }
     }
@@ -311,8 +311,8 @@ class privatebin_data extends privatebin_abstract
      */
     private static function _dataid2path($dataid)
     {
-        return self::$_dir . substr($dataid,0,2) . DIRECTORY_SEPARATOR .
-            substr($dataid,2,2) . DIRECTORY_SEPARATOR;
+        return self::$_dir . substr($dataid, 0, 2) . DIRECTORY_SEPARATOR .
+            substr($dataid, 2, 2) . DIRECTORY_SEPARATOR;
     }
 
     /**

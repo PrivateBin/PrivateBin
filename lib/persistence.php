@@ -45,13 +45,16 @@ abstract class persistence
      * @access public
      * @static
      * @param  string $filename
-     * @return void
+     * @return string
      */
     public static function getPath($filename = null)
     {
-        if(strlen($filename)) {
+        if (strlen($filename))
+        {
             return self::$_path . DIRECTORY_SEPARATOR . $filename;
-        } else {
+        }
+        else
+        {
             return self::$_path;
         }
     }
@@ -92,7 +95,7 @@ abstract class persistence
             $writtenBytes = @file_put_contents(
                 $file,
                 'Allow from none' . PHP_EOL .
-                'Deny from all'. PHP_EOL,
+                'Deny from all' . PHP_EOL,
                 LOCK_EX
             );
             if ($writtenBytes === false || $writtenBytes < 30) {
@@ -116,7 +119,8 @@ abstract class persistence
         self::_initialize();
         $file = self::$_path . DIRECTORY_SEPARATOR . $filename;
         $writtenBytes = @file_put_contents($file, $data, LOCK_EX);
-        if ($writtenBytes === false || $writtenBytes < strlen($data)) {
+        if ($writtenBytes === false || $writtenBytes < strlen($data))
+        {
             throw new Exception('unable to write to file ' . $file, 13);
         }
         @chmod($file, 0640); // protect file access
