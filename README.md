@@ -19,7 +19,7 @@ original. It is however still fully compatible to the original ZeroBin 0.19
 data storage scheme. Therefore such installations can be upgraded to this fork
 without loosing any data.
 
-<img src="img/icon.svg" alt="PrivateBin Logo" height="200" />
+<img src="img/icon.svg" height="200" />
 
 ## What PrivateBin provides
 
