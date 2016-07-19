@@ -456,6 +456,34 @@ class privatebinTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * In some webserver setups (found with Suhosin) overly long POST params are
+     * silently removed, check that this case is handled
+     *
+     * @runInSeparateProcess
+     */
+    public function testCreateBrokenAttachmentUpload()
+    {
+        $this->reset();
+        $options = parse_ini_file(CONF, true);
+        $options['traffic']['limit'] = 0;
+        $options['main']['fileupload'] = true;
+        helper::confBackup();
+        helper::createIniFile(CONF, $options);
+        $_POST = helper::getPasteWithAttachment();
+        unset($_POST['attachment']);
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
+        $_SERVER['REQUEST_METHOD'] = 'POST';
+        $_SERVER['REMOTE_ADDR'] = '::1';
+        $this->assertFalse($this->_model->exists(helper::getPasteId()), 'paste does not exists before posting data');
+        ob_start();
+        new privatebin;
+        $content = ob_get_contents();
+        $response = json_decode($content, true);
+        $this->assertEquals(1, $response['status'], 'outputs error status');
+        $this->assertFalse($this->_model->exists(helper::getPasteId()), 'paste exists after posting data');
+    }
+
+    /**
      * @runInSeparateProcess
      */
     public function testCreateTooSoon()

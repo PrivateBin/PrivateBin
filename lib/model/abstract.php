@@ -112,7 +112,7 @@ abstract class model_abstract
      * Get instance data.
      *
      * @access public
-     * @return stdObject
+     * @return stdClass
      */
     abstract public function get();
 
