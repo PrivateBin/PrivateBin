@@ -28,5 +28,3 @@ If you have access to the server log files, also copy them here.
 
 <!-- The version of PrivateBin, if you use a unstable version paste the commit hash or the GitHub link to the commit here -->
 **PrivateBin version:**
-
-
