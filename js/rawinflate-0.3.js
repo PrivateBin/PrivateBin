@@ -2,7 +2,7 @@
  * $Id: rawinflate.js,v 0.3 2013/04/09 14:25:38 dankogai Exp dankogai $
  *
  * GNU General Public License, version 2 (GPL-2.0)
- *   http://opensource.org/licenses/GPL-2.0
+ *   https://opensource.org/licenses/GPL-2.0
  * original:
  *   http://www.onicos.com/staff/iz/amuse/javascript/expert/inflate.txt
  */

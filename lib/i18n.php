@@ -6,7 +6,7 @@
  *
  * @link      https://github.com/PrivateBin/PrivateBin
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
- * @license   http://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
+ * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
  * @version   0.22
  */
 
@@ -128,7 +128,7 @@ class i18n
     /**
      * loads translations
      *
-     * From: http://stackoverflow.com/questions/3770513/detect-browser-language-in-php#3771447
+     * From: https://stackoverflow.com/questions/3770513/detect-browser-language-in-php#3771447
      *
      * @access public
      * @static
@@ -186,7 +186,7 @@ class i18n
     /**
      * detect the clients supported languages and return them ordered by preference
      *
-     * From: http://stackoverflow.com/questions/3770513/detect-browser-language-in-php#3771447
+     * From: https://stackoverflow.com/questions/3770513/detect-browser-language-in-php#3771447
      *
      * @access public
      * @static
@@ -316,7 +316,7 @@ class i18n
     /**
      * compares two language preference arrays and returns the preferred match
      *
-     * From: http://stackoverflow.com/questions/3770513/detect-browser-language-in-php#3771447
+     * From: https://stackoverflow.com/questions/3770513/detect-browser-language-in-php#3771447
      *
      * @access protected
      * @static
@@ -375,7 +375,7 @@ class i18n
     /**
      * compare two language IDs and return the degree they match
      *
-     * From: http://stackoverflow.com/questions/3770513/detect-browser-language-in-php#3771447
+     * From: https://stackoverflow.com/questions/3770513/detect-browser-language-in-php#3771447
      *
      * @access protected
      * @static

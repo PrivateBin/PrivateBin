@@ -5,7 +5,7 @@
  *
  * @link      https://github.com/PrivateBin/PrivateBin
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
- * @license   http://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
+ * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
  * @version   0.22
  */
 
@@ -143,7 +143,7 @@ $(function() {
 
         /**
          * Text range selection.
-         * From: http://stackoverflow.com/questions/985272/jquery-selecting-text-in-an-element-akin-to-highlighting-with-your-mouse
+         * From: https://stackoverflow.com/questions/985272/jquery-selecting-text-in-an-element-akin-to-highlighting-with-your-mouse
          *
          * @param string element : Indentifier of the element to select (id="").
          */
@@ -242,7 +242,7 @@ $(function() {
 
         /**
          * minimal sprintf emulation for %s and %d formats
-         * From: http://stackoverflow.com/questions/610406/javascript-equivalent-to-printf-string-format#4795914
+         * From: https://stackoverflow.com/questions/610406/javascript-equivalent-to-printf-string-format#4795914
          *
          * @param string format
          * @param mixed args one or multiple parameters injected into format string

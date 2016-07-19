@@ -1,6 +1,6 @@
 {
 	"@context": {
-		"so": "http://schema.org/",
+		"so": "https://schema.org/",
 		"status": {"@id": "so:Integer"},
 		"id": {"@id": "so:name"},
 		"deletetoken": {"@id": "so:Text"},

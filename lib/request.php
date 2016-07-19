@@ -6,7 +6,7 @@
  *
  * @link      https://github.com/PrivateBin/PrivateBin
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
- * @license   http://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
+ * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
  * @version   0.22
  */
 
@@ -185,7 +185,7 @@ class request
     /**
      * detect the clients supported media type and decide if its a JSON API call or not
      *
-     * Adapted from: http://stackoverflow.com/questions/3770513/detect-browser-language-in-php#3771447
+     * Adapted from: https://stackoverflow.com/questions/3770513/detect-browser-language-in-php#3771447
      *
      * @access private
      * @return bool

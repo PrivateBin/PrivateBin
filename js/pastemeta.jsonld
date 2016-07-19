@@ -1,6 +1,6 @@
 {
 	"@context": {
-		"so": "http://schema.org/",
+		"so": "https://schema.org/",
 		"formatter": {"@id": "so:Text"},
 		"postdate": {"@id": "so:Integer"},
 		"opendiscussion": {"@id": "so:True"},
