@@ -19,7 +19,7 @@ original. It is however still fully compatible to the original ZeroBin 0.19
 data storage scheme. Therefore such installations can be upgraded to this fork
 without loosing any data.
 
-![PrivateBin Logo](https://raw.githubusercontent.com/PrivateBin/PrivateBin/master/android-chrome-192x192.png)
+<img src="img/icon.svg" alt="PrivateBin Logo" style="height: 200px;">
 
 ## What PrivateBin provides
 
@@ -110,5 +110,5 @@ file](https://github.com/PrivateBin/PrivateBin/wiki/Configuration):
 
 * [Developer guide](https://github.com/PrivateBin/PrivateBin/wiki/Development)
 
-Run into any issues? Have ideas for further developments? Please 
+Run into any issues? Have ideas for further developments? Please
 [report](https://github.com/PrivateBin/PrivateBin/issues) them!
