@@ -423,10 +423,8 @@ class privatebin
             setcookie('lang', $languageselection);
         }
 
-        $page = new RainTPL;
-        $page::$path_replace = false;
-        // we escape it here because ENT_NOQUOTES can't be used in RainTPL templates
-        $page->assign('CIPHERDATA', htmlspecialchars($this->_data, ENT_NOQUOTES));
+        $page = new view;
+        $page->assign('CIPHERDATA', $this->_data);
         $page->assign('ERROR', i18n::_($this->_error));
         $page->assign('STATUS', i18n::_($this->_status));
         $page->assign('VERSION', self::VERSION);

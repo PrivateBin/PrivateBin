@@ -27,7 +27,7 @@
     "Paste was properly deleted.":
         "Wklejka usunięta poprawnie.",
     "PrivateBin": "PrivateBin",
-    "PrivateBin is a minimalist, opensource online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href=\"https://github.com/PrivateBin/PrivateBin/wiki\">project page</a>.":
+    "PrivateBin is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href=\"https://github.com/PrivateBin/PrivateBin/wiki\">project page</a>.":
         "PrivateBin jest minimalistycznym, otwartoźródłowym serwisem typu pastebin, w którym serwer nie ma jakichkolwiek informacji o tym, co jest wklejane. Dane są szyfrowane i deszyfrowane <i>w przeglądarce</i> z użyciem 256-bitowego klucza AES. Więcej informacji na <a href=\"https://github.com/PrivateBin/PrivateBin/wiki\">stronie projektu</a>.",
     "Because ignorance is bliss":
         "Ponieważ ignorancja jest cnotą",

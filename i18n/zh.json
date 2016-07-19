@@ -27,7 +27,7 @@
     "Paste was properly deleted.":
         "粘贴已被正确删除。",
     "PrivateBin": "PrivateBin",
-    "PrivateBin is a minimalist, opensource online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href=\"https://github.com/PrivateBin/PrivateBin/wiki\">project page</a>.":
+    "PrivateBin is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href=\"https://github.com/PrivateBin/PrivateBin/wiki\">project page</a>.":
         "PrivateBin是一个极简，开源，对粘贴内容毫不知情的在线粘贴板，数据<i>在浏览器内</i>进行AES-256加密。更多信息请查看<a href=\"https://github.com/PrivateBin/PrivateBin/wiki\">项目主页</a>。",
     "Because ignorance is bliss":
         "因为无知是福",

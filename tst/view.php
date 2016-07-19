@@ -1,9 +1,17 @@
 <?php
-class RainTPLTest extends PHPUnit_Framework_TestCase
+class viewTest extends PHPUnit_Framework_TestCase
 {
     private static $error = 'foo bar';
 
     private static $status = '!*#@?$+';
+
+    private static $formatters = array(
+        'plaintext' => 'Plain Text',
+        'syntaxhighlighting' => 'Source Code',
+        'markdown' => 'Markdown',
+    );
+
+    private static $formatter_default = 'plaintext';
 
     private static $expire = array(
         '5min' => '5 minutes',
@@ -20,12 +28,8 @@ class RainTPLTest extends PHPUnit_Framework_TestCase
     public function setUp()
     {
         /* Setup Routine */
-        $page = new RainTPL;
-        $page::configure(array('cache_dir' => 'tmp/'));
-        $page::$path_replace = false;
-
-        // We escape it here because ENT_NOQUOTES can't be used in RainTPL templates.
-        $page->assign('CIPHERDATA', htmlspecialchars(helper::getPaste()['data'], ENT_NOQUOTES));
+        $page = new view;
+        $page->assign('CIPHERDATA', helper::getPaste()['data']);
         $page->assign('ERROR', self::$error);
         $page->assign('STATUS', self::$status);
         $page->assign('VERSION', self::$version);
@@ -34,6 +38,8 @@ class RainTPLTest extends PHPUnit_Framework_TestCase
         $page->assign('MARKDOWN', true);
         $page->assign('SYNTAXHIGHLIGHTING', true);
         $page->assign('SYNTAXHIGHLIGHTINGTHEME', 'sons-of-obsidian');
+        $page->assign('FORMATTER', self::$formatters);
+        $page->assign('FORMATTERDEFAULT', self::$formatter_default);
         $page->assign('BURNAFTERREADINGSELECTED', false);
         $page->assign('PASSWORD', true);
         $page->assign('FILEUPLOAD', false);
@@ -48,16 +54,12 @@ class RainTPLTest extends PHPUnit_Framework_TestCase
         ob_start();
         $page->draw('page');
         $this->_content = ob_get_contents();
-        // run a second time from cache
-        $page->cache('page');
-        $page->draw('page');
         ob_end_clean();
     }
 
     public function tearDown()
     {
         /* Tear Down Routine */
-        helper::rmdir(PATH . 'tmp');
     }
 
     public function testTemplateRendersCorrectly()
@@ -98,11 +100,12 @@ class RainTPLTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException RainTpl_Exception
+     * @expectedException Exception
+     * @expectedExceptionCode 80
      */
     public function testMissingTemplate()
     {
-        $test = new RainTPL;
+        $test = new view;
         $test->draw('123456789 does not exist!');
     }
 }
