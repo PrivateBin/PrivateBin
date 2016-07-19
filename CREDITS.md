@@ -11,7 +11,7 @@ Simon Rupf - current developer and maintainer
 * Viktor Stanchev - File upload support
 * azlux - Tab character input support
 * Adam Fisher - Favicons
-* rugk - various stuff, fixes
+* rugk - various stuff, icons
 
 Translations:
 * Hexalyse - French
