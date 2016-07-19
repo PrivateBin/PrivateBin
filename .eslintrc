@@ -9,6 +9,9 @@ env:
   jquery: true
   node: true
 
+globals:
+  sjcl: false
+
 # http://eslint.org/docs/rules/
 rules:
   # Possible Errors
@@ -52,7 +55,7 @@ rules:
   dot-notation: 0
   eqeqeq: 2
   guard-for-in: 2
-  no-alert: 2
+  no-alert: 0
   no-caller: 2
   no-case-declarations: 2
   no-div-regex: 2

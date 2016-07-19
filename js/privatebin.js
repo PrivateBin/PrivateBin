@@ -72,7 +72,7 @@ $(function() {
         hashToParameterString: function(associativeArray)
         {
             var parameterString = '';
-            for (key in associativeArray)
+            for (var key in associativeArray)
             {
                 if(parameterString === '')
                 {
@@ -1462,4 +1462,3 @@ $(function() {
      */
     i18n.loadTranslations($.proxy(privatebin.init, privatebin));
 });
-
