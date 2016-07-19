@@ -89,11 +89,12 @@ class privatebin_dataTest extends PHPUnit_Framework_TestCase
         {
             if (in_array($key, array('x', 'y', 'z')))
             {
-                $this->assertTrue($this->_model->exists($ids[$key]), "paste $key exists after purge");
+                $this->assertTrue($this->_model->exists($id), "paste $key exists after purge");
+                $this->_model->delete($id);
             }
             else
             {
-                $this->assertFalse($this->_model->exists($ids[$key]), "paste $key was purged");
+                $this->assertFalse($this->_model->exists($id), "paste $key was purged");
             }
         }
     }

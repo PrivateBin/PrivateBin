@@ -236,16 +236,16 @@ class modelTest extends PHPUnit_Framework_TestCase
             $this->assertTrue($store->exists($ids[$key]), "paste $key exists after storing it");
         }
         $this->_model->purge(10);
-        foreach (array_keys($ids) as $key)
+        foreach ($ids as $key => $id)
         {
             if (in_array($key, array('x', 'y', 'z')))
             {
-                $this->assertTrue($this->_model->getPaste($ids[$key])->exists(), "paste $key exists after purge");
-                $this->_model->getPaste($ids[$key])->delete();
+                $this->assertTrue($this->_model->getPaste($id)->exists(), "paste $key exists after purge");
+                $this->_model->getPaste($id)->delete();
             }
             else
             {
-                $this->assertFalse($this->_model->getPaste($ids[$key])->exists(), "paste $key was purged");
+                $this->assertFalse($this->_model->getPaste($id)->exists(), "paste $key was purged");
             }
         }
     }
