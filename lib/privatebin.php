@@ -237,6 +237,12 @@ class privatebin
             )
         );
 
+        // Ensure attachment did not get lost due to webserver limits or Suhosin
+        if (strlen($attachmentname) > 0 && strlen($attachment) == 0)
+        {
+            return $this->_return_message(1, 'Attachment missing in data received by server. Please check your webserver or suhosin configuration for maximum POST parameter limitations.');
+        }
+
         // The user posts a comment.
         $pasteid = $this->_request->getParam('pasteid');
         $parentid = $this->_request->getParam('parentid');
