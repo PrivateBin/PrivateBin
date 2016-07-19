@@ -1,4 +1,9 @@
-# Might as well keep robots away for performance and privacy reasons.
+# "A robots.txt a day keeps the robots away."
+# (for performance and privacy reasons)
+#
+# Note: To be effective this robots.txt must be put into the root of your server
+# directory.
+
 User-agent: *
 Allow: /index.php
 Disallow: /
