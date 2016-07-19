@@ -28,6 +28,8 @@
 		<link rel="icon" type="image/png" href="favicon-16x16.png?{$VERSION|rawurlencode}" sizes="16x16" />
 		<link rel="manifest" href="manifest.json?{$VERSION|rawurlencode}" />
 		<link rel="mask-icon" href="safari-pinned-tab.svg?{$VERSION|rawurlencode}" color="#ffcc00" />
+		<link rel="shortcut icon" href="favicon.ico">
+		<meta name="msapplication-config" content="browserconfig.xml">
 		<meta name="theme-color" content="#ffe57e" />
 	</head>
 	<body role="document">
@@ -160,9 +162,9 @@
 			<noscript><div id="noscript" role="alert" class="nonworking alert alert-warning"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> {function="i18n::_('Javascript is required for PrivateBin to work.<br />Sorry for the inconvenience.')"}</div></noscript>
 			<div id="oldienotice" role="alert" class="hidden nonworking alert alert-danger"><span class="glyphicon glyphicon-alert" aria-hidden="true"></span> {function="i18n::_('PrivateBin requires a modern browser to work.')"}</div>
 			<div id="ienotice" role="alert" class="hidden alert alert-warning"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span> {function="i18n::_('Still using Internet Explorer? Do yourself a favor, switch to a modern browser:')"}
-				<a href="http://www.mozilla.org/firefox/">Firefox</a>, 
-				<a href="http://www.opera.com/">Opera</a>, 
-				<a href="http://www.google.com/chrome">Chrome</a>, 
+				<a href="http://www.mozilla.org/firefox/">Firefox</a>,
+				<a href="http://www.opera.com/">Opera</a>,
+				<a href="http://www.google.com/chrome">Chrome</a>,
 				<a href="http://www.apple.com/safari">Safari</a>...
 			</div>
 			<div id="pasteresult" role="alert" class="hidden alert alert-success">
