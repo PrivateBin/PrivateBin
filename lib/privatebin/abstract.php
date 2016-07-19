@@ -86,7 +86,7 @@ abstract class privatebin_abstract
      * Test if a paste exists.
      *
      * @access public
-     * @param  string $dataid
+     * @param  string $pasteid
      * @return bool
      */
     abstract public function exists($pasteid);
@@ -116,7 +116,7 @@ abstract class privatebin_abstract
      * Test if a comment exists.
      *
      * @access public
-     * @param  string $dataid
+     * @param  string $pasteid
      * @param  string $parentid
      * @param  string $commentid
      * @return void
@@ -158,7 +158,7 @@ abstract class privatebin_abstract
      * @access public
      * @param  array $comments
      * @param  int|string $postdate
-     * @return void
+     * @return int|string
      */
     protected function getOpenSlot(&$comments, $postdate)
     {

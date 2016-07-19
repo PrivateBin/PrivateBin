@@ -973,7 +973,6 @@ $(function() {
             this.showStatus(i18n._('Sending paste...'), true);
 
             var randomkey = sjcl.codec.base64.fromBits(sjcl.random.randomWords(8, 0), 0);
-            var cipherdata_attachment;
             var password = this.passwordInput.val();
             if(files && files[0])
             {

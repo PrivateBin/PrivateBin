@@ -124,7 +124,7 @@ class privatebin_data extends privatebin_abstract
      * Test if a paste exists.
      *
      * @access public
-     * @param  string $dataid
+     * @param  string $pasteid
      * @return void
      */
     public function exists($pasteid)
@@ -197,7 +197,7 @@ class privatebin_data extends privatebin_abstract
      * Test if a comment exists.
      *
      * @access public
-     * @param  string $dataid
+     * @param  string $pasteid
      * @param  string $parentid
      * @param  string $commentid
      * @return void
