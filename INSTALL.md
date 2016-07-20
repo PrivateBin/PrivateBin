@@ -38,7 +38,7 @@ In the index.php you can define a different `PATH`. This is useful to secure you
 installation. You can move the configuration, data files, templates and PHP
 libraries (directories cfg, data, lib, tpl, tmp and tst) outside of your document
 root. This new location must still be accessible to your webserver / PHP process
-([open_basedir setting](https://php.net/manual/en/ini.core.php#ini.open-basedir)).
+([open_basedir setting](https://secure.php.net/manual/en/ini.core.php#ini.open-basedir)).
 
 > #### PATH Example
 > Your PrivateBin installation lives in a subfolder called "paste" inside of
@@ -79,7 +79,7 @@ data folder. This is the recommended setup for most sites.
 Under high load, in distributed setups or if you are not allowed to store files
 locally, you might want to switch to the `privatebin_db` model. This lets you
 store your data in a database. Basically all databases that are supported by
-[PDO](https://php.net/manual/en/book.pdo.php) may be used. Automatic table
+[PDO](https://secure.php.net/manual/en/book.pdo.php) may be used. Automatic table
 creation is provided for `pdo_ibm`, `pdo_informix`, `pdo_mssql`, `pdo_mysql`,
 `pdo_oci`, `pdo_pgsql` and `pdo_sqlite`. You may want to provide a table prefix,
 if you have to share the PrivateBin database with another application or you want
