@@ -12,6 +12,8 @@
 
 namespace PrivateBin;
 
+use Exception;
+
 /**
  * view
  *

@@ -1,4 +1,7 @@
 <?php
+
+use PrivateBin\i18n;
+
 class i18nTest extends PHPUnit_Framework_TestCase
 {
     private $_translations = array();

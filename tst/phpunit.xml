@@ -7,7 +7,7 @@
 		<whitelist>
 			<directory suffix=".php">../lib</directory>
 			<exclude>
-				<file>../lib/privatebin/abstract.php</file>
+				<file>../lib/data/AbstractData.php</file>
 			</exclude>
 		</whitelist>
 	</filter>

@@ -1,4 +1,7 @@
 <?php
+
+use PrivateBin\data\data;
+
 class privatebin_dataTest extends PHPUnit_Framework_TestCase
 {
     private $_model;
@@ -9,7 +12,7 @@ class privatebin_dataTest extends PHPUnit_Framework_TestCase
     {
         /* Setup Routine */
         $this->_path = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'privatebin_data';
-        $this->_model = privatebin_data::getInstance(array('dir' => $this->_path));
+        $this->_model = data::getInstance(array('dir' => $this->_path));
     }
 
     public function tearDown()

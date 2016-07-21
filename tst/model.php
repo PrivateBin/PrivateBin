@@ -1,4 +1,11 @@
 <?php
+
+use PrivateBin\configuration;
+use PrivateBin\data\db;
+use PrivateBin\model;
+use PrivateBin\model\paste;
+use PrivateBin\vizhash16x16;
+
 class modelTest extends PHPUnit_Framework_TestCase
 {
     private $_conf;
@@ -165,9 +172,9 @@ class modelTest extends PHPUnit_Framework_TestCase
 
     public function testPasteIdValidation()
     {
-        $this->assertTrue(model_paste::isValidId('a242ab7bdfb2581a'), 'valid paste id');
-        $this->assertFalse(model_paste::isValidId('foo'), 'invalid hex values');
-        $this->assertFalse(model_paste::isValidId('../bar/baz'), 'path attack');
+        $this->assertTrue(paste::isValidId('a242ab7bdfb2581a'), 'valid paste id');
+        $this->assertFalse(paste::isValidId('foo'), 'invalid hex values');
+        $this->assertFalse(paste::isValidId('../bar/baz'), 'path attack');
     }
 
     /**
@@ -214,7 +221,7 @@ class modelTest extends PHPUnit_Framework_TestCase
     public function testPurge()
     {
         $conf = new configuration;
-        $store = privatebin_db::getInstance($conf->getSection('model_options'));
+        $store = db::getInstance($conf->getSection('model_options'));
         $store->delete(helper::getPasteId());
         $expired = helper::getPaste(array('expire_date' => 1344803344));
         $paste = helper::getPaste(array('expire_date' => time() + 3600));

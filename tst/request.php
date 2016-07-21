@@ -1,4 +1,7 @@
 <?php
+
+use PrivateBin\request;
+
 class requestTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()

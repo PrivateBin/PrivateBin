@@ -12,6 +12,9 @@
 
 namespace PrivateBin;
 
+use Exception;
+use PDO;
+
 /**
  * configuration
  *

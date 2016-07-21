@@ -1,4 +1,7 @@
 <?php
+
+use PrivateBin\data\db;
+
 require_once 'privatebin.php';
 
 class privatebinWithDbTest extends privatebinTest
@@ -20,7 +23,7 @@ class privatebinWithDbTest extends privatebinTest
         $this->_path = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'privatebin_data';
         if(!is_dir($this->_path)) mkdir($this->_path);
         $this->_options['dsn'] = 'sqlite:' . $this->_path . DIRECTORY_SEPARATOR . 'tst.sq3';
-        $this->_model = privatebin_db::getInstance($this->_options);
+        $this->_model = db::getInstance($this->_options);
         $this->reset();
     }
 

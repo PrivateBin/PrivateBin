@@ -1,4 +1,7 @@
 <?php
+
+use PrivateBin\filter;
+
 class filterTest extends PHPUnit_Framework_TestCase
 {
     public function testFilterStripsSlashesDeeply()
