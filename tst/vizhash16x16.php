@@ -1,4 +1,8 @@
 <?php
+
+use PrivateBin\serversalt;
+use PrivateBin\vizhash16x16;
+
 class vizhash16x16Test extends PHPUnit_Framework_TestCase
 {
     private $_file;

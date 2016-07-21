@@ -1,4 +1,8 @@
 <?php
+
+use PrivateBin\data\data;
+use PrivateBin\privatebin;
+
 class privatebinTest extends PHPUnit_Framework_TestCase
 {
     protected $_model;
@@ -6,7 +10,7 @@ class privatebinTest extends PHPUnit_Framework_TestCase
     public function setUp()
     {
         /* Setup Routine */
-        $this->_model = privatebin_data::getInstance(array('dir' => PATH . 'data'));
+        $this->_model = data::getInstance(array('dir' => PATH . 'data'));
         $this->reset();
     }
 

@@ -10,12 +10,19 @@
  * @version   0.22
  */
 
+namespace PrivateBin\model;
+
+use Exception;
+use PrivateBin\sjcl;
+use PrivateBin\trafficlimiter;
+use PrivateBin\vizhash16x16;
+
 /**
  * model_comment
  *
  * Model of a PrivateBin comment.
  */
-class model_comment extends model_abstract
+class comment extends AbstractModel
 {
     /**
      * Instance's parent.
@@ -118,7 +125,7 @@ class model_comment extends model_abstract
      * @throws Exception
      * @return void
      */
-    public function setPaste(model_paste $paste)
+    public function setPaste(paste $paste)
     {
         $this->_paste = $paste;
         $this->_data->meta->pasteid = $paste->getId();

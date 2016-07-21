@@ -10,12 +10,18 @@
  * @version   0.22
  */
 
+namespace PrivateBin\model;
+
+use Exception;
+use PrivateBin\privatebin;
+use PrivateBin\serversalt;
+
 /**
  * model_paste
  *
  * Model of a PrivateBin paste.
  */
-class model_paste extends model_abstract
+class paste extends AbstractModel
 {
     /**
      * Get paste data.
@@ -130,7 +136,7 @@ class model_paste extends model_abstract
         {
             throw new Exception('Invalid data.', 62);
         }
-        $comment = new model_comment($this->_conf, $this->_store);
+        $comment = new comment($this->_conf, $this->_store);
         $comment->setPaste($this);
         $comment->setParentId($parentId);
         if ($commentId !== null) $comment->setId($commentId);

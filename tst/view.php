@@ -1,4 +1,8 @@
 <?php
+
+use PrivateBin\i18n;
+use PrivateBin\view;
+
 class viewTest extends PHPUnit_Framework_TestCase
 {
     private static $error = 'foo bar';
