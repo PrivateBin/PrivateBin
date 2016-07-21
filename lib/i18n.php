@@ -10,6 +10,8 @@
  * @version   0.22
  */
 
+namespace PrivateBin;
+
 /**
  * i18n
  *
@@ -82,7 +84,7 @@ class i18n
      */
     public static function _($messageId)
     {
-        return call_user_func_array(array('i18n', 'translate'), func_get_args());
+        return call_user_func_array(array('self', 'translate'), func_get_args());
     }
 
     /**

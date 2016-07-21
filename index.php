@@ -14,5 +14,5 @@
 define('PATH', '');
 
 define('PUBLIC_PATH', dirname(__FILE__));
-require PATH . 'lib/auto.php';
-new privatebin;
+require __DIR__ . '/vendor/autoload.php';
+new PrivateBin\privatebin;

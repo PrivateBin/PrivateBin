@@ -10,6 +10,11 @@
  * @version   0.22
  */
 
+namespace PrivateBin;
+
+use Exception;
+use PrivateBin\i18n;
+
 /**
  * filter
  *
@@ -28,7 +33,7 @@ class filter
     public static function stripslashes_deep($value)
     {
         return is_array($value) ?
-            array_map('filter::stripslashes_deep', $value) :
+            array_map('PrivateBin\\filter::stripslashes_deep', $value) :
             stripslashes($value);
     }
 

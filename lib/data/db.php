@@ -10,12 +10,20 @@
  * @version   0.22
  */
 
+namespace PrivateBin\data;
+
+use Exception;
+use PDO;
+use PDOException;
+use PrivateBin\privatebin;
+use stdClass;
+
 /**
  * privatebin_db
  *
  * Model for DB access, implemented as a singleton.
  */
-class privatebin_db extends privatebin_abstract
+class db extends AbstractData
 {
     /**
      * cache for select queries

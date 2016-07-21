@@ -10,6 +10,10 @@
  * @version   0.22
  */
 
+namespace PrivateBin;
+
+use Exception;
+
 /**
  * privatebin
  *
@@ -419,7 +423,7 @@ class privatebin
         }
 
         // translate all the formatter options
-        $formatters = array_map(array('i18n', 'translate'), $this->_conf->getSection('formatter_options'));
+        $formatters = array_map(array('PrivateBin\\i18n', 'translate'), $this->_conf->getSection('formatter_options'));
 
         // set language cookie if that functionality was enabled
         $languageselection = '';

@@ -1,5 +1,6 @@
 # Ignore data/, tmp/ and vendor/
 data/
+!lib/data/
 tmp/
 vendor/
 # Ignore for safety

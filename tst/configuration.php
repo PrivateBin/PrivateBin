@@ -1,4 +1,7 @@
 <?php
+
+use PrivateBin\configuration;
+
 class configurationTest extends PHPUnit_Framework_TestCase
 {
     private $_options;

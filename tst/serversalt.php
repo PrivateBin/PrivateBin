@@ -1,4 +1,7 @@
 <?php
+
+use PrivateBin\serversalt;
+
 class serversaltTest extends PHPUnit_Framework_TestCase
 {
     private $_path;

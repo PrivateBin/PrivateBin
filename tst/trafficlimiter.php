@@ -1,4 +1,7 @@
 <?php
+
+use PrivateBin\trafficlimiter;
+
 class trafficlimiterTest extends PHPUnit_Framework_TestCase
 {
     private $_path;

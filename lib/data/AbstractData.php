@@ -10,12 +10,14 @@
  * @version   0.22
  */
 
+namespace PrivateBin\data;
+
 /**
  * privatebin_abstract
  *
  * Abstract model for PrivateBin data access, implemented as a singleton.
  */
-abstract class privatebin_abstract
+abstract class AbstractData
 {
     /**
      * singleton instance

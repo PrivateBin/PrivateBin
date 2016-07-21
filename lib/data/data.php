@@ -10,12 +10,14 @@
  * @version   0.22
  */
 
+namespace PrivateBin\data;
+
 /**
  * privatebin_data
  *
  * Model for data access, implemented as a singleton.
  */
-class privatebin_data extends privatebin_abstract
+class data extends AbstractData
 {
     /**
      * directory where data is stored
@@ -248,7 +250,7 @@ class privatebin_data extends privatebin_abstract
                 if (!is_dir($path)) continue;
                 $thirdLevel = array_filter(
                     scandir($path),
-                    array('model_paste', 'isValidId')
+                    array('PrivateBin\\model\\paste', 'isValidId')
                 );
                 if (count($thirdLevel) == 0) continue;
                 $thirdKey = array_rand($thirdLevel);
