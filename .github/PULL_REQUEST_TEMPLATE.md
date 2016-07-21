@@ -1,4 +1,4 @@
-<!-- This is a template for your Pull Request. This are just some suggestions for you. You do not have -->
+<!-- This is a template for your Pull Request. This are just some suggestions for you. You do not have to use all of them. -->
 
 <!-- If your PR fixes an issue, mention it here. You can also just copy the URL - GitHub will convert it for you. -->
 This PR fixes 
