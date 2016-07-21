@@ -10,12 +10,20 @@
  * @version   0.22
  */
 
+namespace PrivateBin\Model;
+
+use Exception;
+use PrivateBin\configuration;
+use PrivateBin\data\AbstractData;
+use PrivateBin\sjcl;
+use stdClass;
+
 /**
  * model_abstract
  *
  * Abstract model for PrivateBin objects.
  */
-abstract class model_abstract
+abstract class AbstractModel
 {
     /**
      * Instance ID.
@@ -57,7 +65,7 @@ abstract class model_abstract
      * @param  privatebin_abstract $storage
      * @return void
      */
-    public function __construct(configuration $configuration, privatebin_abstract $storage)
+    public function __construct(configuration $configuration, AbstractData $storage)
     {
         $this->_conf = $configuration;
         $this->_store = $storage;

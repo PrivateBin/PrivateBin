@@ -10,6 +10,10 @@
  * @version   0.22
  */
 
+namespace PrivateBin;
+
+use PrivateBin\model\paste;
+
 /**
  * model
  *
@@ -50,7 +54,7 @@ class model
      */
     public function getPaste($pasteId = null)
     {
-        $paste = new model_paste($this->_conf, $this->_getStore());
+        $paste = new paste($this->_conf, $this->_getStore());
         if ($pasteId !== null) $paste->setId($pasteId);
         return $paste;
     }
@@ -76,10 +80,18 @@ class model
      */
     private function _getStore()
     {
+        // FIXME
+        // Workaround so that config value don't need to be changed
+        $callable = str_replace(
+            array('privatebin_data', 'privatebin_db'),
+            array('PrivateBin\\data\\data', 'PrivateBin\\data\\db'),
+            $this->_conf->getKey('class', 'model')
+        );
+
         if ($this->_store === null)
         {
             $this->_store = forward_static_call(
-                array($this->_conf->getKey('class', 'model'), 'getInstance'),
+                array($callable, 'getInstance'),
                 $this->_conf->getSection('model_options')
             );
         }

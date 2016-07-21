@@ -7,7 +7,7 @@ if (!defined('PATH')) define('PATH', '..' . DIRECTORY_SEPARATOR);
 if (!defined('CONF')) define('CONF', PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.ini');
 if (!is_file(CONF)) copy(CONF . '.sample', CONF);
 
-require PATH . 'lib/auto.php';
+require __DIR__ . '/vendor/autoload.php';
 
 class helper
 {

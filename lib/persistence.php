@@ -10,6 +10,8 @@
  * @version   0.22
  */
 
+namespace PrivateBin;
+
 /**
  * persistence
  *
