@@ -196,9 +196,15 @@ class configuration
             }
         }
 
-        // support for old config file format, before the fork was renamed
+        // support for old config file format, before the fork was renamed and PSR-4 introduced
         $this->_configuration['model']['class'] = str_replace(
             'zerobin_', 'privatebin_',
+            $this->_configuration['model']['class']
+        );
+
+        $this->_configuration['model']['class'] = str_replace(
+            array('privatebin_data', 'privatebin_db'),
+            array('PrivateBin\\data\\data', 'PrivateBin\\data\\db'),
             $this->_configuration['model']['class']
         );
 

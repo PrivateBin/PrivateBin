@@ -80,18 +80,10 @@ class model
      */
     private function _getStore()
     {
-        // FIXME
-        // Workaround so that config value don't need to be changed
-        $callable = str_replace(
-            array('privatebin_data', 'privatebin_db'),
-            array('PrivateBin\\data\\data', 'PrivateBin\\data\\db'),
-            $this->_conf->getKey('class', 'model')
-        );
-
         if ($this->_store === null)
         {
             $this->_store = forward_static_call(
-                array($callable, 'getInstance'),
+                array($this->_conf->getKey('class', 'model'), 'getInstance'),
                 $this->_conf->getSection('model_options')
             );
         }
