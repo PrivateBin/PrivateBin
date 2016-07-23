@@ -17,6 +17,9 @@
             "url": "https://github.com/PrivateBin/PrivateBin"
         }
     ],
+    "require": {
+        "php": "^5.2.6 || ^7.0"
+    }
     "require-dev": {
         "codacy/coverage": "dev-master",
         "codeclimate/php-test-reporter": "dev-master"
