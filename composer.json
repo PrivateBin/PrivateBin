@@ -1,13 +1,22 @@
 {
     "name": "privatebin/privatebin",
     "description": "PrivateBin is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted in the browser using 256 bit AES in Galois Counter mode (GCM).",
+    "type": "project",
+    "keywords": "private, secure, end-to-end-encrypted, e2e, paste, pastebin, zero, zero-knowledge, encryption, encrypted, AES",
+    "homepage": "https://github.com/PrivateBin",
+    "license":"zlib-acknowledgement",
+    "support": {
+        "issues": "https://github.com/PrivateBin/PrivateBin/issues",
+        "wiki": "https://github.com/PrivateBin/PrivateBin/wiki",
+        "source": "https://github.com/PrivateBin/PrivateBin",
+        "docs": "https://zerobin.dssr.ch/documentation/"
+    },
     "repositories": [
         {
             "type": "vcs",
             "url": "https://github.com/PrivateBin/PrivateBin"
         }
     ],
-    "license":"zlib-acknowledgement",
     "require-dev": {
         "codacy/coverage": "dev-master",
         "codeclimate/php-test-reporter": "dev-master"
