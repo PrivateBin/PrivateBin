@@ -1,5 +1,24 @@
 # PrivateBin version history
 
+  * **next release (2016-XX-XX)**
+    * ADDED: Translations for Slowene and Chinese
+    * ADDED: re-introduced URL shortener support (optional), which was removed back in version 0.16 for privacy concerns
+    * ADDED: Preview tab, helpful for writing markdown code or check source code rendering
+    * ADDED: Automatic purging of expired pastes, done on paste creation
+    * ADDED: Option to disable vizhashs in discussions (will only affect newly created pastes)
+    * ADDED: Composer support
+    * CHANGED: Renamed the ZeroBin fork to PrivateBin
+    * CHANGED: Removed unmaintained RainTPL template engine, replacing the templates with straight forward PHP file
+    * CHANGED: New favicon
+    * CHANGED: Upgrading SJCL library to 1.0.4
+    * CHANGED: Switched to GCM instead CCM mode for AES encryption for newly created pastes
+    * CHANGED: Switched to a SHA256 HMAC of the IP in traffic limiter instead of storing it in plain text on the server
+    * FIXED: Content-type negociation for HTML in certain uncommon browser configurations
+    * FIXED: JavaScript error displayed before page is loaded or during attachment load
+    * FIXED: Don't strip space characters at beginning or end of optional password
+    * FIXED: Various UI glitches in mobile version or on smaller desktops with language menu, button spacing and long URLs
+    * FIXED: Removed unused code detected with the help of various code review tools
+    * FIXED: Table format for PostgreSQL, making it possible to use PostgreSQL as backend in addition to MySQL, SQLite and flat files
   * **0.22 (2015-11-09)**:
     * ADDED: Tab character input support
     * ADDED: Dark bootstrap theme
