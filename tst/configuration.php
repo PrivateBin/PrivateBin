@@ -135,5 +135,4 @@ class configurationTest extends PHPUnit_Framework_TestCase
         $conf = new configuration;
         $this->assertEquals('PrivateBin\data\db', $conf->getKey('class', 'model'), 'old db class gets renamed');
     }
-
 }

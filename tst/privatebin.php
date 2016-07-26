@@ -27,8 +27,9 @@ class privatebinTest extends PHPUnit_Framework_TestCase
         $_POST = array();
         $_GET = array();
         $_SERVER = array();
-        if ($this->_model->exists(helper::getPasteId()))
+        if ($this->_model->exists(helper::getPasteId())) {
             $this->_model->delete(helper::getPasteId());
+        }
         helper::confRestore();
     }
 

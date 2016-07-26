@@ -34,13 +34,13 @@ class paste extends AbstractModel
     public function get()
     {
         $this->_data = $this->_store->read($this->getId());
-        if ($this->_data === false) throw new Exception(privatebin::GENERIC_ERROR, 64);
+        if ($this->_data === false) {
+            throw new Exception(privatebin::GENERIC_ERROR, 64);
+        }
 
         // check if paste has expired and delete it if neccessary.
-        if (property_exists($this->_data->meta, 'expire_date'))
-        {
-            if ($this->_data->meta->expire_date < time())
-            {
+        if (property_exists($this->_data->meta, 'expire_date')) {
+            if ($this->_data->meta->expire_date < time()) {
                 $this->delete();
                 throw new Exception(privatebin::GENERIC_ERROR, 63);
             }
@@ -49,22 +49,17 @@ class paste extends AbstractModel
         }
 
         // set formatter for for the view.
-        if (!property_exists($this->_data->meta, 'formatter'))
-        {
+        if (!property_exists($this->_data->meta, 'formatter')) {
             // support < 0.21 syntax highlighting
-            if (property_exists($this->_data->meta, 'syntaxcoloring') && $this->_data->meta->syntaxcoloring === true)
-            {
+            if (property_exists($this->_data->meta, 'syntaxcoloring') && $this->_data->meta->syntaxcoloring === true) {
                 $this->_data->meta->formatter = 'syntaxhighlighting';
-            }
-            else
-            {
+            } else {
                 $this->_data->meta->formatter = $this->_conf->getKey('defaultformatter');
             }
         }
 
         // support old paste format with server wide salt
-        if (!property_exists($this->_data->meta, 'salt'))
-        {
+        if (!property_exists($this->_data->meta, 'salt')) {
             $this->_data->meta->salt = serversalt::get();
         }
         $this->_data->comments = array_values($this->getComments());
@@ -84,8 +79,9 @@ class paste extends AbstractModel
     public function store()
     {
         // Check for improbable collision.
-        if ($this->exists())
+        if ($this->exists()) {
             throw new Exception('You are unlucky. Try again.', 75);
+        }
 
         $this->_data->meta->postdate = time();
         $this->_data->meta->salt = serversalt::generate();
@@ -96,7 +92,9 @@ class paste extends AbstractModel
                 $this->getId(),
                 json_decode(json_encode($this->_data), true)
             ) === false
-        ) throw new Exception('Error saving paste. Sorry.', 76);
+        ) {
+            throw new Exception('Error saving paste. Sorry.', 76);
+        }
     }
 
     /**
@@ -133,14 +131,15 @@ class paste extends AbstractModel
      */
     public function getComment($parentId, $commentId = null)
     {
-        if (!$this->exists())
-        {
+        if (!$this->exists()) {
             throw new Exception('Invalid data.', 62);
         }
         $comment = new comment($this->_conf, $this->_store);
         $comment->setPaste($this);
         $comment->setParentId($parentId);
-        if ($commentId !== null) $comment->setId($commentId);
+        if ($commentId !== null) {
+            $comment->setId($commentId);
+        }
         return $comment;
     }
 
@@ -167,7 +166,9 @@ class paste extends AbstractModel
      */
     public function getDeleteToken()
     {
-        if (!property_exists($this->_data->meta, 'salt')) $this->get();
+        if (!property_exists($this->_data->meta, 'salt')) {
+            $this->get();
+        }
         return hash_hmac(
             $this->_conf->getKey('zerobincompatibility') ? 'sha1' : 'sha256',
             $this->getId(),
@@ -185,8 +186,9 @@ class paste extends AbstractModel
      */
     public function setAttachment($attachment)
     {
-        if (!$this->_conf->getKey('fileupload') || !sjcl::isValid($attachment))
+        if (!$this->_conf->getKey('fileupload') || !sjcl::isValid($attachment)) {
             throw new Exception('Invalid attachment.', 71);
+        }
         $this->_data->meta->attachment = $attachment;
     }
 
@@ -200,8 +202,9 @@ class paste extends AbstractModel
      */
     public function setAttachmentName($attachmentname)
     {
-        if (!$this->_conf->getKey('fileupload') || !sjcl::isValid($attachmentname))
+        if (!$this->_conf->getKey('fileupload') || !sjcl::isValid($attachmentname)) {
             throw new Exception('Invalid attachment.', 72);
+        }
         $this->_data->meta->attachmentname = $attachmentname;
     }
 
@@ -215,16 +218,15 @@ class paste extends AbstractModel
     public function setExpiration($expiration)
     {
         $expire_options = $this->_conf->getSection('expire_options');
-        if (array_key_exists($expiration, $expire_options))
-        {
+        if (array_key_exists($expiration, $expire_options)) {
             $expire = $expire_options[$expiration];
-        }
-        else
-        {
+        } else {
             // using getKey() to ensure a default value is present
             $expire = $this->_conf->getKey($this->_conf->getKey('default', 'expire'), 'expire_options');
         }
-        if ($expire > 0) $this->_data->meta->expire_date = time() + $expire;
+        if ($expire > 0) {
+            $this->_data->meta->expire_date = time() + $expire;
+        }
     }
 
     /**
@@ -237,14 +239,12 @@ class paste extends AbstractModel
      */
     public function setBurnafterreading($burnafterreading = '1')
     {
-        if ($burnafterreading === '0')
-        {
+        if ($burnafterreading === '0') {
             $this->_data->meta->burnafterreading = false;
-        }
-        else
-        {
-            if ($burnafterreading !== '1')
+        } else {
+            if ($burnafterreading !== '1') {
                 throw new Exception('Invalid data.', 73);
+            }
             $this->_data->meta->burnafterreading = true;
             $this->_data->meta->opendiscussion = false;
         }
@@ -264,14 +264,12 @@ class paste extends AbstractModel
             !$this->_conf->getKey('discussion') ||
             $this->isBurnafterreading() ||
             $opendiscussion === '0'
-        )
-        {
+        ) {
             $this->_data->meta->opendiscussion = false;
-        }
-        else
-        {
-            if ($opendiscussion !== '1')
+        } else {
+            if ($opendiscussion !== '1') {
                 throw new Exception('Invalid data.', 74);
+            }
             $this->_data->meta->opendiscussion = true;
         }
     }
@@ -286,8 +284,7 @@ class paste extends AbstractModel
      */
     public function setFormatter($format)
     {
-        if (!array_key_exists($format, $this->_conf->getSection('formatter_options')))
-        {
+        if (!array_key_exists($format, $this->_conf->getSection('formatter_options'))) {
             $format = $this->_conf->getKey('defaultformatter');
         }
         $this->_data->meta->formatter = $format;
@@ -302,7 +299,9 @@ class paste extends AbstractModel
      */
     public function isBurnafterreading()
     {
-        if (!property_exists($this->_data, 'data')) $this->get();
+        if (!property_exists($this->_data, 'data')) {
+            $this->get();
+        }
         return property_exists($this->_data->meta, 'burnafterreading') &&
                $this->_data->meta->burnafterreading === true;
     }
@@ -317,7 +316,9 @@ class paste extends AbstractModel
      */
     public function isOpendiscussion()
     {
-        if (!property_exists($this->_data, 'data')) $this->get();
+        if (!property_exists($this->_data, 'data')) {
+            $this->get();
+        }
         return property_exists($this->_data->meta, 'opendiscussion') &&
                $this->_data->meta->opendiscussion === true;
     }

@@ -16,13 +16,17 @@ class serversaltTest extends PHPUnit_Framework_TestCase
     {
         /* Setup Routine */
         $this->_path = PATH . 'data';
-        if(!is_dir($this->_path)) mkdir($this->_path);
+        if (!is_dir($this->_path)) {
+            mkdir($this->_path);
+        }
         serversalt::setPath($this->_path);
 
         $this->_otherPath = $this->_path . DIRECTORY_SEPARATOR . 'foo';
 
         $this->_invalidPath = $this->_path . DIRECTORY_SEPARATOR . 'bar';
-        if(!is_dir($this->_invalidPath)) mkdir($this->_invalidPath);
+        if (!is_dir($this->_invalidPath)) {
+            mkdir($this->_invalidPath);
+        }
         $this->_invalidFile = $this->_invalidPath . DIRECTORY_SEPARATOR . 'salt.php';
     }
 
@@ -40,18 +44,18 @@ class serversaltTest extends PHPUnit_Framework_TestCase
         $salt = serversalt::get();
 
         // mcrypt mock
-        if (!function_exists('mcrypt_create_iv'))
-        {
-            if (!defined('MCRYPT_DEV_URANDOM')) define('MCRYPT_DEV_URANDOM', 1);
+        if (!function_exists('mcrypt_create_iv')) {
+            if (!defined('MCRYPT_DEV_URANDOM')) {
+                define('MCRYPT_DEV_URANDOM', 1);
+            }
             function mcrypt_create_iv($int, $flag)
             {
                 $randomSalt = '';
-                for($i = 0; $i < $int; ++$i) {
+                for ($i = 0; $i < $int; ++$i) {
                     $randomSalt .= base_convert(mt_rand(), 10, 16);
                 }
                 // hex2bin requires an even length, pad if necessary
-                if (strlen($randomSalt) % 2)
-                {
+                if (strlen($randomSalt) % 2) {
                     $randomSalt = '0' . $randomSalt;
                 }
                 return hex2bin($randomSalt);

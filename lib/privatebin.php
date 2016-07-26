@@ -117,16 +117,14 @@ class privatebin
      */
     public function __construct()
     {
-        if (version_compare(PHP_VERSION, '5.3.0') < 0)
-        {
+        if (version_compare(PHP_VERSION, '5.3.0') < 0) {
             throw new Exception(i18n::_('PrivateBin requires php 5.3.0 or above to work. Sorry.'), 1);
         }
 
         // load config from ini file
         $this->_init();
 
-        switch ($this->_request->getOperation())
-        {
+        switch ($this->_request->getOperation()) {
             case 'create':
                 $this->_create();
                 break;
@@ -145,16 +143,13 @@ class privatebin
         }
 
         // output JSON or HTML
-        if ($this->_request->isJsonApiCall())
-        {
+        if ($this->_request->isJsonApiCall()) {
             header('Content-type: ' . request::MIME_JSON);
             header('Access-Control-Allow-Origin: *');
             header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
             header('Access-Control-Allow-Headers: X-Requested-With, Content-Type');
             echo $this->_json;
-        }
-        else
-        {
+        } else {
             $this->_view();
         }
     }
@@ -167,14 +162,15 @@ class privatebin
      */
     private function _init()
     {
-        foreach (array('cfg', 'lib') as $dir)
-        {
-            if (!is_file(PATH . $dir . DIRECTORY_SEPARATOR . '.htaccess')) file_put_contents(
+        foreach (array('cfg', 'lib') as $dir) {
+            if (!is_file(PATH . $dir . DIRECTORY_SEPARATOR . '.htaccess')) {
+                file_put_contents(
                 PATH . $dir . DIRECTORY_SEPARATOR . '.htaccess',
                 'Allow from none' . PHP_EOL .
                 'Deny from all'. PHP_EOL,
                 LOCK_EX
             );
+            }
         }
 
         $this->_conf = new configuration;
@@ -187,8 +183,7 @@ class privatebin
         $lang = $this->_conf->getKey('languagedefault');
         i18n::setLanguageFallback($lang);
         // force default language, if language selection is disabled and a default is set
-        if (!$this->_conf->getKey('languageselection') && strlen($lang) == 2)
-        {
+        if (!$this->_conf->getKey('languageselection') && strlen($lang) == 2) {
             $_COOKIE['lang'] = $lang;
             setcookie('lang', $lang);
         }
@@ -218,12 +213,14 @@ class privatebin
     {
         // Ensure last paste from visitors IP address was more than configured amount of seconds ago.
         trafficlimiter::setConfiguration($this->_conf);
-        if (!trafficlimiter::canPass()) return $this->_return_message(
+        if (!trafficlimiter::canPass()) {
+            return $this->_return_message(
             1, i18n::_(
                 'Please wait %d seconds between each post.',
                 $this->_conf->getKey('limit', 'traffic')
             )
         );
+        }
 
         $data = $this->_request->getParam('data');
         $attachment = $this->_request->getParam('attachment');
@@ -233,71 +230,78 @@ class privatebin
         $sizelimit = $this->_conf->getKey('sizelimit');
         if (
             strlen($data) + strlen($attachment) + strlen($attachmentname) > $sizelimit
-        ) return $this->_return_message(
+        ) {
+            return $this->_return_message(
             1,
             i18n::_(
                 'Paste is limited to %s of encrypted data.',
                 filter::size_humanreadable($sizelimit)
             )
         );
+        }
 
         // Ensure attachment did not get lost due to webserver limits or Suhosin
-        if (strlen($attachmentname) > 0 && strlen($attachment) == 0)
-        {
+        if (strlen($attachmentname) > 0 && strlen($attachment) == 0) {
             return $this->_return_message(1, 'Attachment missing in data received by server. Please check your webserver or suhosin configuration for maximum POST parameter limitations.');
         }
 
         // The user posts a comment.
         $pasteid = $this->_request->getParam('pasteid');
         $parentid = $this->_request->getParam('parentid');
-        if (!empty($pasteid) && !empty($parentid))
-        {
+        if (!empty($pasteid) && !empty($parentid)) {
             $paste = $this->_model->getPaste($pasteid);
             if ($paste->exists()) {
                 try {
                     $comment = $paste->getComment($parentid);
 
                     $nickname = $this->_request->getParam('nickname');
-                    if (!empty($nickname)) $comment->setNickname($nickname);
+                    if (!empty($nickname)) {
+                        $comment->setNickname($nickname);
+                    }
 
                     $comment->setData($data);
                     $comment->store();
-                } catch(Exception $e) {
+                } catch (Exception $e) {
                     return $this->_return_message(1, $e->getMessage());
                 }
                 $this->_return_message(0, $comment->getId());
-            }
-            else
-            {
+            } else {
                 $this->_return_message(1, 'Invalid data.');
             }
         }
         // The user posts a standard paste.
-        else
-        {
+        else {
             $this->_model->purge();
             $paste = $this->_model->getPaste();
             try {
                 $paste->setData($data);
 
-                if (!empty($attachment))
-                {
+                if (!empty($attachment)) {
                     $paste->setAttachment($attachment);
-                    if (!empty($attachmentname))
+                    if (!empty($attachmentname)) {
                         $paste->setAttachmentName($attachmentname);
+                    }
                 }
 
                 $expire = $this->_request->getParam('expire');
-                if (!empty($expire)) $paste->setExpiration($expire);
+                if (!empty($expire)) {
+                    $paste->setExpiration($expire);
+                }
 
                 $burnafterreading = $this->_request->getParam('burnafterreading');
-                if (!empty($burnafterreading)) $paste->setBurnafterreading($burnafterreading);
+                if (!empty($burnafterreading)) {
+                    $paste->setBurnafterreading($burnafterreading);
+                }
 
                 $opendiscussion = $this->_request->getParam('opendiscussion');
-                if (!empty($opendiscussion)) $paste->setOpendiscussion($opendiscussion);
+                if (!empty($opendiscussion)) {
+                    $paste->setOpendiscussion($opendiscussion);
+                }
 
                 $formatter = $this->_request->getParam('formatter');
-                if (!empty($formatter)) $paste->setFormatter($formatter);
+                if (!empty($formatter)) {
+                    $paste->setFormatter($formatter);
+                }
 
                 $paste->store();
             } catch (Exception $e) {
@@ -319,40 +323,28 @@ class privatebin
     {
         try {
             $paste = $this->_model->getPaste($dataid);
-            if ($paste->exists())
-            {
+            if ($paste->exists()) {
                 // accessing this property ensures that the paste would be
                 // deleted if it has already expired
                 $burnafterreading = $paste->isBurnafterreading();
-                if ($deletetoken == 'burnafterreading')
-                {
-                    if ($burnafterreading)
-                    {
+                if ($deletetoken == 'burnafterreading') {
+                    if ($burnafterreading) {
                         $paste->delete();
                         $this->_return_message(0, $dataid);
-                    }
-                    else
-                    {
+                    } else {
                         $this->_return_message(1, 'Paste is not of burn-after-reading type.');
                     }
-                }
-                else
-                {
+                } else {
                     // Make sure the token is valid.
-                    if (filter::slow_equals($deletetoken, $paste->getDeleteToken()))
-                    {
+                    if (filter::slow_equals($deletetoken, $paste->getDeleteToken())) {
                         // Paste exists and deletion token is valid: Delete the paste.
                         $paste->delete();
                         $this->_status = 'Paste was properly deleted.';
-                    }
-                    else
-                    {
+                    } else {
                         $this->_error = 'Wrong deletion token. Paste was not deleted.';
                     }
                 }
-            }
-            else
-            {
+            } else {
                 $this->_error = self::GENERIC_ERROR;
             }
         } catch (Exception $e) {
@@ -371,29 +363,24 @@ class privatebin
     {
         try {
             $paste = $this->_model->getPaste($dataid);
-            if ($paste->exists())
-            {
+            if ($paste->exists()) {
                 $data = $paste->get();
                 $this->_doesExpire = property_exists($data, 'meta') && property_exists($data->meta, 'expire_date');
-                if (property_exists($data->meta, 'salt')) unset($data->meta->salt);
+                if (property_exists($data->meta, 'salt')) {
+                    unset($data->meta->salt);
+                }
                 $this->_data = json_encode($data);
-            }
-            else
-            {
+            } else {
                 $this->_error = self::GENERIC_ERROR;
             }
         } catch (Exception $e) {
             $this->_error = $e->getMessage();
         }
 
-        if ($this->_request->isJsonApiCall())
-        {
-            if (strlen($this->_error))
-            {
+        if ($this->_request->isJsonApiCall()) {
+            if (strlen($this->_error)) {
                 $this->_return_message(1, $this->_error);
-            }
-            else
-            {
+            } else {
                 $this->_return_message(0, $dataid, json_decode($this->_data, true));
             }
         }
@@ -417,8 +404,7 @@ class privatebin
 
         // label all the expiration options
         $expire = array();
-        foreach ($this->_conf->getSection('expire_options') as $time => $seconds)
-        {
+        foreach ($this->_conf->getSection('expire_options') as $time => $seconds) {
             $expire[$time] = ($seconds == 0) ? i18n::_(ucfirst($time)): filter::time_humanreadable($time);
         }
 
@@ -427,8 +413,7 @@ class privatebin
 
         // set language cookie if that functionality was enabled
         $languageselection = '';
-        if ($this->_conf->getKey('languageselection'))
-        {
+        if ($this->_conf->getKey('languageselection')) {
             $languageselection = i18n::getLanguage();
             setcookie('lang', $languageselection);
         }
@@ -471,14 +456,12 @@ class privatebin
         if (
             $type !== 'paste' && $type !== 'comment' &&
             $type !== 'pastemeta' && $type !== 'commentmeta'
-        )
-        {
+        ) {
             $type = '';
         }
         $content = '{}';
         $file = PUBLIC_PATH . DIRECTORY_SEPARATOR . 'js' . DIRECTORY_SEPARATOR . $type . '.jsonld';
-        if (is_readable($file))
-        {
+        if (is_readable($file)) {
             $content = str_replace(
                 '?jsonld=',
                 $this->_urlbase . '?jsonld=',
@@ -504,12 +487,9 @@ class privatebin
     private function _return_message($status, $message, $other = array())
     {
         $result = array('status' => $status);
-        if ($status)
-        {
+        if ($status) {
             $result['message'] = i18n::_($message);
-        }
-        else
-        {
+        } else {
             $result['id'] = $message;
             $result['url'] = $this->_urlbase . '?' . $message;
         }

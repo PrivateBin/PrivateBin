@@ -7,9 +7,9 @@
 		<link type="text/css" rel="stylesheet" href="css/privatebin.css?<?php echo rawurlencode($VERSION); ?>" /><?php
 if ($SYNTAXHIGHLIGHTING): ?>
 		<link type="text/css" rel="stylesheet" href="css/prettify/prettify.css?<?php echo rawurlencode($VERSION); ?>" /><?php
-	if (strlen($SYNTAXHIGHLIGHTINGTHEME)): ?>
+    if (strlen($SYNTAXHIGHLIGHTINGTHEME)): ?>
 		<link type="text/css" rel="stylesheet" href="css/prettify/<?php echo rawurlencode($SYNTAXHIGHLIGHTINGTHEME); ?>.css?<?php echo rawurlencode($VERSION); ?>" /><?php
-	endif;
+    endif;
 endif; ?>
 		<script type="text/javascript" src="js/jquery-1.11.3.js"></script>
 		<script type="text/javascript" src="js/sjcl-1.0.4.js"></script>
@@ -70,8 +70,8 @@ endif; ?>
 						<select id="pasteExpiration" name="pasteExpiration"><?php
 foreach ($EXPIRE as $key => $value): ?>
 							<option value="<?php echo $key; ?>"<?php
-	if ($key == $EXPIREDEFAULT): ?> selected="selected"<?php
-	endif; ?>><?php echo $value; ?></option><?php
+    if ($key == $EXPIREDEFAULT): ?> selected="selected"<?php
+    endif; ?>><?php echo $value; ?></option><?php
 endforeach; ?>
 						</select>
 					</div>
@@ -85,11 +85,11 @@ endif; ?> />
 if ($DISCUSSION): ?>
 					<div id="opendisc" class="button hidden">
 						<input type="checkbox" id="opendiscussion" name="opendiscussion" <?php
-	if ($OPENDISCUSSION): ?> checked="checked"<?php
-	endif; ?> />
+    if ($OPENDISCUSSION): ?> checked="checked"<?php
+    endif; ?> />
 						<label for="opendiscussion" <?php
-	if (!$OPENDISCUSSION): ?> style="color: #BBBBBB;"<?php
-	endif; ?>><?php echo PrivateBin\i18n::_('Open discussion'); ?></label>
+    if (!$OPENDISCUSSION): ?> style="color: #BBBBBB;"<?php
+    endif; ?>><?php echo PrivateBin\i18n::_('Open discussion'); ?></label>
 					</div><?php
 endif;
 if ($PASSWORD): ?>
@@ -101,19 +101,19 @@ endif; ?>
 						<select id="pasteFormatter" name="pasteFormatter"><?php
 foreach ($FORMATTER as $key => $value): ?>
 							<option value="<?php echo $key; ?>"<?php
-	if ($key == $FORMATTERDEFAULT): ?> selected="selected"<?php
-	endif; ?>><?php echo $value; ?></option><?php
+    if ($key == $FORMATTERDEFAULT): ?> selected="selected"<?php
+    endif; ?>><?php echo $value; ?></option><?php
 endforeach; ?>
 						</select>
 					</div><?php
 if (strlen($LANGUAGESELECTION)): ?>
 					<div id="language" class="button">
 						<select name="lang"><?php
-	foreach ($LANGUAGES as $key => $value): ?>
+    foreach ($LANGUAGES as $key => $value): ?>
 							<option class="reloadlink" onclick="document.cookie='lang=<?php echo $key; ?>';" value="<?php echo $key; ?>"<?php
-		if ($key == $LANGUAGESELECTION): ?> selected="selected"<?php
-		endif; ?>><?php echo $value[0]; ?> (<?php echo $value[1]; ?>)</option><?php
-	endforeach; ?>
+        if ($key == $LANGUAGESELECTION): ?> selected="selected"<?php
+        endif; ?>><?php echo $value[0]; ?> (<?php echo $value[1]; ?>)</option><?php
+    endforeach; ?>
 						</select>
 					</div><?php
 endif; ?>

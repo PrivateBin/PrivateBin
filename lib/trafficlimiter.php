@@ -62,11 +62,9 @@ class trafficlimiter extends persistence
     {
         self::setLimit($conf->getKey('limit', 'traffic'));
         self::setPath($conf->getKey('dir', 'traffic'));
-        if (($option = $conf->getKey('header', 'traffic')) !== null)
-        {
+        if (($option = $conf->getKey('header', 'traffic')) !== null) {
             $httpHeader = 'HTTP_' . $option;
-            if (array_key_exists($httpHeader, $_SERVER) && !empty($_SERVER[$httpHeader]))
-            {
+            if (array_key_exists($httpHeader, $_SERVER) && !empty($_SERVER[$httpHeader])) {
                 self::$_ipKey = $httpHeader;
             }
         }
@@ -97,13 +95,14 @@ class trafficlimiter extends persistence
     public static function canPass()
     {
         // disable limits if set to less then 1
-        if (self::$_limit < 1) return true;
+        if (self::$_limit < 1) {
+            return true;
+        }
 
         $ip = hash_hmac('sha256', self::getIp(), serversalt::get());
 
         $file = 'traffic_limiter.php';
-        if (!self::_exists($file))
-        {
+        if (!self::_exists($file)) {
             self::_store(
                 $file,
                 '<?php' . PHP_EOL .
@@ -117,16 +116,13 @@ class trafficlimiter extends persistence
         $tl = $GLOBALS['traffic_limiter'];
 
         // purge file of expired IPs to keep it small
-        foreach ($tl as $key => $time)
-        {
-            if ($time + self::$_limit < $now)
-            {
+        foreach ($tl as $key => $time) {
+            if ($time + self::$_limit < $now) {
                 unset($tl[$key]);
             }
         }
 
-        if (array_key_exists($ip, $tl) && ($tl[$ip] + self::$_limit >= $now))
-        {
+        if (array_key_exists($ip, $tl) && ($tl[$ip] + self::$_limit >= $now)) {
             $result = false;
         } else {
             $tl[$ip] = time();

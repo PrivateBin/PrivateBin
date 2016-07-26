@@ -94,7 +94,9 @@ abstract class AbstractModel
      */
     public function setId($id)
     {
-        if (!self::isValidId($id)) throw new Exception('Invalid paste ID.', 60);
+        if (!self::isValidId($id)) {
+            throw new Exception('Invalid paste ID.', 60);
+        }
         $this->_id = $id;
     }
 
@@ -108,7 +110,9 @@ abstract class AbstractModel
      */
     public function setData($data)
     {
-        if (!sjcl::isValid($data)) throw new Exception('Invalid data.', 61);
+        if (!sjcl::isValid($data)) {
+            throw new Exception('Invalid data.', 61);
+        }
         $this->_data->data = $data;
 
         // We just want a small hash to avoid collisions:

@@ -71,14 +71,15 @@ class db extends AbstractData
     public static function getInstance($options = null)
     {
         // if needed initialize the singleton
-        if(!(self::$_instance instanceof privatebin_db)) {
+        if (!(self::$_instance instanceof privatebin_db)) {
             self::$_instance = new self;
         }
 
-        if (is_array($options))
-        {
+        if (is_array($options)) {
             // set table prefix if given
-            if (array_key_exists('tbl', $options)) self::$_prefix = $options['tbl'];
+            if (array_key_exists('tbl', $options)) {
+                self::$_prefix = $options['tbl'];
+            }
 
             // initialize the db connection with new options
             if (
@@ -86,8 +87,7 @@ class db extends AbstractData
                 array_key_exists('usr', $options) &&
                 array_key_exists('pwd', $options) &&
                 array_key_exists('opt', $options)
-            )
-            {
+            ) {
                 // set default options
                 $options['opt'][PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
                 $options['opt'][PDO::ATTR_EMULATE_PREPARES] = false;
@@ -110,40 +110,34 @@ class db extends AbstractData
                 $tables = self::$_db->query($tableQuery)->fetchAll(PDO::FETCH_COLUMN, 0);
 
                 // create paste table if necessary
-                if (!in_array(self::_sanitizeIdentifier('paste'), $tables))
-                {
+                if (!in_array(self::_sanitizeIdentifier('paste'), $tables)) {
                     self::_createPasteTable();
                     $db_tables_exist = false;
                 }
 
                 // create comment table if necessary
-                if (!in_array(self::_sanitizeIdentifier('comment'), $tables))
-                {
+                if (!in_array(self::_sanitizeIdentifier('comment'), $tables)) {
                     self::_createCommentTable();
                     $db_tables_exist = false;
                 }
 
                 // create config table if necessary
                 $db_version = privatebin::VERSION;
-                if (!in_array(self::_sanitizeIdentifier('config'), $tables))
-                {
+                if (!in_array(self::_sanitizeIdentifier('config'), $tables)) {
                     self::_createConfigTable();
                     // if we only needed to create the config table, the DB is older then 0.22
-                    if ($db_tables_exist) $db_version = '0.21';
-                }
-                else
-                {
+                    if ($db_tables_exist) {
+                        $db_version = '0.21';
+                    }
+                } else {
                     $db_version = self::_getConfig('VERSION');
                 }
 
                 // update database structure if necessary
-                if (version_compare($db_version, privatebin::VERSION, '<'))
-                {
+                if (version_compare($db_version, privatebin::VERSION, '<')) {
                     self::_upgradeDatabase($db_version);
                 }
-            }
-            else
-            {
+            } else {
                 throw new Exception(
                     'Missing configuration for key dsn, usr, pwd or opt in the section model_options, please check your configuration file', 6
                 );
@@ -166,7 +160,7 @@ class db extends AbstractData
         if (
             array_key_exists($pasteid, self::$_cache)
         ) {
-            if(false !== self::$_cache[$pasteid]) {
+            if (false !== self::$_cache[$pasteid]) {
                 return false;
             } else {
                 unset(self::$_cache[$pasteid]);
@@ -178,28 +172,23 @@ class db extends AbstractData
         $meta = $paste['meta'];
         unset($meta['postdate']);
         $expire_date = 0;
-        if (array_key_exists('expire_date', $paste['meta']))
-        {
+        if (array_key_exists('expire_date', $paste['meta'])) {
             $expire_date = (int) $paste['meta']['expire_date'];
             unset($meta['expire_date']);
         }
-        if (array_key_exists('opendiscussion', $paste['meta']))
-        {
+        if (array_key_exists('opendiscussion', $paste['meta'])) {
             $opendiscussion = (bool) $paste['meta']['opendiscussion'];
             unset($meta['opendiscussion']);
         }
-        if (array_key_exists('burnafterreading', $paste['meta']))
-        {
+        if (array_key_exists('burnafterreading', $paste['meta'])) {
             $burnafterreading = (bool) $paste['meta']['burnafterreading'];
             unset($meta['burnafterreading']);
         }
-        if (array_key_exists('attachment', $paste['meta']))
-        {
+        if (array_key_exists('attachment', $paste['meta'])) {
             $attachment = $paste['meta']['attachment'];
             unset($meta['attachment']);
         }
-        if (array_key_exists('attachmentname', $paste['meta']))
-        {
+        if (array_key_exists('attachmentname', $paste['meta'])) {
             $attachmentname = $paste['meta']['attachmentname'];
             unset($meta['attachmentname']);
         }
@@ -238,31 +227,29 @@ class db extends AbstractData
                 ' WHERE dataid = ?', array($pasteid), true
             );
 
-            if(false !== $paste) {
+            if (false !== $paste) {
                 // create object
                 self::$_cache[$pasteid] = new stdClass;
                 self::$_cache[$pasteid]->data = $paste['data'];
 
                 $meta = json_decode($paste['meta']);
-                if (!is_object($meta)) $meta = new stdClass;
+                if (!is_object($meta)) {
+                    $meta = new stdClass;
+                }
 
                 // support older attachments
-                if (property_exists($meta, 'attachment'))
-                {
+                if (property_exists($meta, 'attachment')) {
                     self::$_cache[$pasteid]->attachment = $meta->attachment;
                     unset($meta->attachment);
-                    if (property_exists($meta, 'attachmentname'))
-                    {
+                    if (property_exists($meta, 'attachmentname')) {
                         self::$_cache[$pasteid]->attachmentname = $meta->attachmentname;
                         unset($meta->attachmentname);
                     }
                 }
                 // support current attachments
-                elseif (array_key_exists('attachment', $paste) && strlen($paste['attachment']))
-                {
+                elseif (array_key_exists('attachment', $paste) && strlen($paste['attachment'])) {
                     self::$_cache[$pasteid]->attachment = $paste['attachment'];
-                    if (array_key_exists('attachmentname', $paste) && strlen($paste['attachmentname']))
-                    {
+                    if (array_key_exists('attachmentname', $paste) && strlen($paste['attachmentname'])) {
                         self::$_cache[$pasteid]->attachmentname = $paste['attachmentname'];
                     }
                 }
@@ -271,13 +258,19 @@ class db extends AbstractData
                 $expire_date = (int) $paste['expiredate'];
                 if (
                     $expire_date > 0
-                ) self::$_cache[$pasteid]->meta->expire_date = $expire_date;
+                ) {
+                    self::$_cache[$pasteid]->meta->expire_date = $expire_date;
+                }
                 if (
                     $paste['opendiscussion']
-                ) self::$_cache[$pasteid]->meta->opendiscussion = true;
+                ) {
+                    self::$_cache[$pasteid]->meta->opendiscussion = true;
+                }
                 if (
                     $paste['burnafterreading']
-                ) self::$_cache[$pasteid]->meta->burnafterreading = true;
+                ) {
+                    self::$_cache[$pasteid]->meta->burnafterreading = true;
+                }
             }
         }
 
@@ -303,7 +296,9 @@ class db extends AbstractData
         );
         if (
             array_key_exists($pasteid, self::$_cache)
-        ) unset(self::$_cache[$pasteid]);
+        ) {
+            unset(self::$_cache[$pasteid]);
+        }
     }
 
     /**
@@ -317,7 +312,9 @@ class db extends AbstractData
     {
         if (
             !array_key_exists($pasteid, self::$_cache)
-        ) self::$_cache[$pasteid] = $this->read($pasteid);
+        ) {
+            self::$_cache[$pasteid] = $this->read($pasteid);
+        }
         return (bool) self::$_cache[$pasteid];
     }
 
@@ -333,10 +330,8 @@ class db extends AbstractData
      */
     public function createComment($pasteid, $parentid, $commentid, $comment)
     {
-        foreach (array('nickname', 'vizhash') as $key)
-        {
-            if (!array_key_exists($key, $comment['meta']))
-            {
+        foreach (array('nickname', 'vizhash') as $key) {
+            if (!array_key_exists($key, $comment['meta'])) {
                 $comment['meta'][$key] = null;
             }
         }
@@ -371,10 +366,8 @@ class db extends AbstractData
 
         // create comment list
         $comments = array();
-        if (count($rows))
-        {
-            foreach ($rows as $row)
-            {
+        if (count($rows)) {
+            foreach ($rows as $row) {
                 $i = $this->getOpenSlot($comments, (int) $row['postdate']);
                 $comments[$i] = new stdClass;
                 $comments[$i]->id = $row['dataid'];
@@ -382,10 +375,12 @@ class db extends AbstractData
                 $comments[$i]->data = $row['data'];
                 $comments[$i]->meta = new stdClass;
                 $comments[$i]->meta->postdate = (int) $row['postdate'];
-                if (array_key_exists('nickname', $row) && !empty($row['nickname']))
+                if (array_key_exists('nickname', $row) && !empty($row['nickname'])) {
                     $comments[$i]->meta->nickname = $row['nickname'];
-                if (array_key_exists('vizhash', $row) && !empty($row['vizhash']))
+                }
+                if (array_key_exists('vizhash', $row) && !empty($row['vizhash'])) {
                     $comments[$i]->meta->vizhash = $row['vizhash'];
+                }
             }
             ksort($comments);
         }
@@ -424,10 +419,8 @@ class db extends AbstractData
             'SELECT dataid FROM ' . self::_sanitizeIdentifier('paste') .
             ' WHERE expiredate < ? LIMIT ?', array(time(), $batchsize)
         );
-        if (count($rows))
-        {
-            foreach ($rows as $row)
-            {
+        if (count($rows)) {
+            foreach ($rows as $row) {
                 $pastes[] = $row['dataid'];
             }
         }
@@ -485,8 +478,7 @@ class db extends AbstractData
      */
     private static function _getTableQuery($type)
     {
-        switch($type)
-        {
+        switch ($type) {
             case 'ibm':
                 $sql = 'SELECT tabname FROM SYSCAT.TABLES ';
                 break;
@@ -559,12 +551,9 @@ class db extends AbstractData
     private static function _getPrimaryKeyClauses($key = 'dataid')
     {
         $main_key = $after_key = '';
-        if (self::$_type === 'mysql')
-        {
+        if (self::$_type === 'mysql') {
             $after_key = ", PRIMARY KEY ($key)";
-        }
-        else
-        {
+        } else {
             $main_key = ' PRIMARY KEY';
         }
         return array($main_key, $after_key);
@@ -667,8 +656,7 @@ class db extends AbstractData
     private static function _upgradeDatabase($oldversion)
     {
         $dataType = self::$_type === 'pgsql' ? 'TEXT' : 'BLOB';
-        switch ($oldversion)
-        {
+        switch ($oldversion) {
             case '0.21':
                 // create the meta column if necessary (pre 0.21 change)
                 try {
@@ -687,8 +675,7 @@ class db extends AbstractData
                 );
                 // SQLite doesn't support MODIFY, but it allows TEXT of similar
                 // size as BLOB, so there is no need to change it there
-                if (self::$_type !== 'sqlite')
-                {
+                if (self::$_type !== 'sqlite') {
                     self::$_db->exec(
                         'ALTER TABLE ' . self::_sanitizeIdentifier('paste') .
                         ' ADD PRIMARY KEY (dataid), MODIFY COLUMN data $dataType;'
@@ -698,9 +685,7 @@ class db extends AbstractData
                         " ADD PRIMARY KEY (dataid), MODIFY COLUMN data $dataType, " .
                         "MODIFY COLUMN nickname $dataType, MODIFY COLUMN vizhash $dataType;"
                     );
-                }
-                else
-                {
+                } else {
                     self::$_db->exec(
                         'CREATE UNIQUE INDEX IF NOT EXISTS paste_dataid ON ' .
                         self::_sanitizeIdentifier('paste') . '(dataid);'

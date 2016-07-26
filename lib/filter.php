@@ -78,9 +78,9 @@ class filter
     {
         $iec = array('B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB');
         $i = 0;
-        while ( ( $size / 1024 ) >= 1 ) {
-                $size = $size / 1024;
-                $i++;
+        while (($size / 1024) >= 1) {
+            $size = $size / 1024;
+            $i++;
         }
         return number_format($size, ($i ? 2 : 0), '.', ' ') . ' ' . i18n::_($iec[$i]);
     }
@@ -98,10 +98,9 @@ class filter
     public static function slow_equals($a, $b)
     {
         $diff = strlen($a) ^ strlen($b);
-        for($i = 0; $i < strlen($a) && $i < strlen($b); $i++)
-        {
+        for ($i = 0; $i < strlen($a) && $i < strlen($b); $i++) {
             $diff |= ord($a[$i]) ^ ord($b[$i]);
         }
         return $diff === 0;
-     }
+    }
 }

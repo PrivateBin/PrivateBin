@@ -13,7 +13,9 @@ class vizhash16x16Test extends PHPUnit_Framework_TestCase
     {
         /* Setup Routine */
         $this->_path = PATH . 'data';
-        if(!is_dir($this->_path)) mkdir($this->_path);
+        if (!is_dir($this->_path)) {
+            mkdir($this->_path);
+        }
         $this->_file = $this->_path . DIRECTORY_SEPARATOR . 'vizhash.png';
         serversalt::setPath($this->_path);
     }
@@ -22,7 +24,7 @@ class vizhash16x16Test extends PHPUnit_Framework_TestCase
     {
         /* Tear Down Routine */
         chmod($this->_path, 0700);
-        if(!@unlink($this->_file)) {
+        if (!@unlink($this->_file)) {
             throw new Exception('Error deleting file "' . $this->_file . '".');
         }
         helper::rmdir($this->_path);

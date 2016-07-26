@@ -11,9 +11,9 @@
 		<link type="text/css" rel="stylesheet" href="css/bootstrap/privatebin.css?<?php echo rawurlencode($VERSION); ?>" /><?php
 if ($SYNTAXHIGHLIGHTING): ?>
 		<link type="text/css" rel="stylesheet" href="css/prettify/prettify.css?<?php echo rawurlencode($VERSION); ?>" /><?php
-	if (strlen($SYNTAXHIGHLIGHTINGTHEME)): ?>
+    if (strlen($SYNTAXHIGHLIGHTINGTHEME)): ?>
 		<link type="text/css" rel="stylesheet" href="css/prettify/<?php echo rawurlencode($SYNTAXHIGHLIGHTINGTHEME); ?>.css?<?php echo rawurlencode($VERSION); ?>" /><?php
-	endif;
+    endif;
 endif; ?>
 		<script type="text/javascript" src="js/jquery-1.11.3.js"></script>
 		<script type="text/javascript" src="js/sjcl-1.0.4.js"></script>
@@ -73,8 +73,8 @@ endif; ?>
 							<select id="pasteExpiration" name="pasteExpiration" class="hidden"><?php
 foreach ($EXPIRE as $key => $value): ?>
 								<option value="<?php echo $key; ?>"<?php
-	if ($key == $EXPIREDEFAULT): ?> selected="selected"<?php
-	endif; ?>><?php echo $value; ?></option><?php
+    if ($key == $EXPIREDEFAULT): ?> selected="selected"<?php
+    endif; ?>><?php echo $value; ?></option><?php
 endforeach; ?>
 							</select>
 							<a id="expiration" href="#" class="hidden dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><?php echo PrivateBin\i18n::_('Expires'); ?>: <span id="pasteExpirationDisplay"><?php echo $EXPIRE[$EXPIREDEFAULT]; ?></span> <span class="caret"></span></a>
@@ -103,8 +103,8 @@ if ($DISCUSSION): ?>
 								<li id="opendisc" class="checkbox hidden">
 									<label>
 										<input type="checkbox" id="opendiscussion" name="opendiscussion" <?php
-	if ($OPENDISCUSSION): ?> checked="checked"<?php
-	endif; ?> />
+    if ($OPENDISCUSSION): ?> checked="checked"<?php
+    endif; ?> />
 										<?php echo PrivateBin\i18n::_('Open discussion'); ?>
 									</label>
 								</li><?php
@@ -126,8 +126,8 @@ endforeach; ?>
 							<select id="pasteFormatter" name="pasteFormatter" class="hidden"><?php
 foreach ($FORMATTER as $key => $value): ?>
 								<option value="<?php echo $key; ?>"<?php
-	if ($key == $FORMATTERDEFAULT): ?> selected="selected"<?php
-	endif; ?>><?php echo $value; ?></option><?php
+    if ($key == $FORMATTERDEFAULT): ?> selected="selected"<?php
+    endif; ?>><?php echo $value; ?></option><?php
 endforeach; ?>
 							</select>
 						</li><?php
@@ -161,13 +161,13 @@ if (strlen($LANGUAGESELECTION)): ?>
 						<li id="language" class="dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-flag" aria-hidden="true"></span> <?php echo $LANGUAGES[$LANGUAGESELECTION][0]; ?> <span class="caret"></span></a>
 							<ul class="dropdown-menu"><?php
-	foreach ($LANGUAGES as $key => $value): ?>
+    foreach ($LANGUAGES as $key => $value): ?>
 								<li>
 									<a href="#" class="reloadlink" onclick="document.cookie='lang={$key}';">
 										<?php echo $value[0]; ?> (<?php echo $value[1]; ?>)
 									</a>
 								</li><?php
-	endforeach; ?>
+    endforeach; ?>
 							</ul>
 						</li><?php
 endif; ?>

@@ -66,12 +66,13 @@ class purgelimiter extends persistence
     public static function canPurge()
     {
         // disable limits if set to less then 1
-        if (self::$_limit < 1) return true;
+        if (self::$_limit < 1) {
+            return true;
+        }
 
         $file = 'purge_limiter.php';
         $now = time();
-        if (!self::_exists($file))
-        {
+        if (!self::_exists($file)) {
             self::_store(
                 $file,
                 '<?php' . PHP_EOL .
@@ -83,12 +84,9 @@ class purgelimiter extends persistence
         require $path;
         $pl = $GLOBALS['purge_limiter'];
 
-        if ($pl + self::$_limit >= $now)
-        {
+        if ($pl + self::$_limit >= $now) {
             $result = false;
-        }
-        else
-        {
+        } else {
             $result = true;
             self::_store(
                 $file,

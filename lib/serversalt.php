@@ -45,13 +45,12 @@ class serversalt extends persistence
     public static function generate()
     {
         $randomSalt = '';
-        if (function_exists('mcrypt_create_iv'))
-        {
+        if (function_exists('mcrypt_create_iv')) {
             $randomSalt = bin2hex(mcrypt_create_iv(256, MCRYPT_DEV_URANDOM));
-        }
-        else // fallback to mt_rand()
-        {
-            for($i = 0; $i < 256; ++$i) {
+        } else {
+            // fallback to mt_rand()
+
+            for ($i = 0; $i < 256; ++$i) {
                 $randomSalt .= base_convert(mt_rand(), 10, 16);
             }
         }
@@ -68,7 +67,9 @@ class serversalt extends persistence
      */
     public static function get()
     {
-        if (strlen(self::$_salt)) return self::$_salt;
+        if (strlen(self::$_salt)) {
+            return self::$_salt;
+        }
 
         $file = 'salt.php';
         if (self::_exists($file)) {
@@ -97,7 +98,7 @@ class serversalt extends persistence
      */
     public static function setPath($path)
     {
-    	self::$_salt = '';
+        self::$_salt = '';
         parent::setPath($path);
     }
 }

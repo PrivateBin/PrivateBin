@@ -22,7 +22,9 @@ class privatebin_dbTest extends PHPUnit_Framework_TestCase
     public function tearDown()
     {
         /* Tear Down Routine */
-        if (is_dir(PATH . 'data')) helper::rmdir(PATH . 'data');
+        if (is_dir(PATH . 'data')) {
+            helper::rmdir(PATH . 'data');
+        }
     }
 
     public function testDatabaseBasedDataStoreWorks()
@@ -78,31 +80,23 @@ class privatebin_dbTest extends PHPUnit_Framework_TestCase
         $paste = helper::getPaste(array('expire_date' => time() + 3600));
         $keys = array('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'x', 'y', 'z');
         $ids = array();
-        foreach ($keys as $key)
-        {
+        foreach ($keys as $key) {
             $ids[$key] = substr(md5($key), 0, 16);
             $this->_model->delete($ids[$key]);
             $this->assertFalse($this->_model->exists($ids[$key]), "paste $key does not yet exist");
-            if (in_array($key, array('x', 'y', 'z')))
-            {
+            if (in_array($key, array('x', 'y', 'z'))) {
                 $this->assertTrue($this->_model->create($ids[$key], $paste), "store $key paste");
-            }
-            else
-            {
+            } else {
                 $this->assertTrue($this->_model->create($ids[$key], $expired), "store $key paste");
             }
             $this->assertTrue($this->_model->exists($ids[$key]), "paste $key exists after storing it");
         }
         $this->_model->purge(10);
-        foreach ($ids as $key => $id)
-        {
-            if (in_array($key, array('x', 'y', 'z')))
-            {
+        foreach ($ids as $key => $id) {
+            if (in_array($key, array('x', 'y', 'z'))) {
                 $this->assertTrue($this->_model->exists($id), "paste $key exists after purge");
                 $this->_model->delete($id);
-            }
-            else
-            {
+            } else {
                 $this->assertFalse($this->_model->exists($id), "paste $key was purged");
             }
         }

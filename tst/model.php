@@ -227,31 +227,23 @@ class modelTest extends PHPUnit_Framework_TestCase
         $paste = helper::getPaste(array('expire_date' => time() + 3600));
         $keys = array('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'x', 'y', 'z');
         $ids = array();
-        foreach ($keys as $key)
-        {
+        foreach ($keys as $key) {
             $ids[$key] = substr(md5($key), 0, 16);
             $store->delete($ids[$key]);
             $this->assertFalse($store->exists($ids[$key]), "paste $key does not yet exist");
-            if (in_array($key, array('x', 'y', 'z')))
-            {
+            if (in_array($key, array('x', 'y', 'z'))) {
                 $this->assertTrue($store->create($ids[$key], $paste), "store $key paste");
-            }
-            else
-            {
+            } else {
                 $this->assertTrue($store->create($ids[$key], $expired), "store $key paste");
             }
             $this->assertTrue($store->exists($ids[$key]), "paste $key exists after storing it");
         }
         $this->_model->purge(10);
-        foreach ($ids as $key => $id)
-        {
-            if (in_array($key, array('x', 'y', 'z')))
-            {
+        foreach ($ids as $key => $id) {
+            if (in_array($key, array('x', 'y', 'z'))) {
                 $this->assertTrue($this->_model->getPaste($id)->exists(), "paste $key exists after purge");
                 $this->_model->getPaste($id)->delete();
-            }
-            else
-            {
+            } else {
                 $this->assertFalse($this->_model->getPaste($id)->exists(), "paste $key was purged");
             }
         }

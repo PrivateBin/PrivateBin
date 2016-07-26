@@ -28,8 +28,9 @@ class jsonApiTest extends PHPUnit_Framework_TestCase
         $_POST = array();
         $_GET = array();
         $_SERVER = array();
-        if ($this->_model->exists(helper::getPasteId()))
+        if ($this->_model->exists(helper::getPasteId())) {
             $this->_model->delete(helper::getPasteId());
+        }
         helper::confRestore();
     }
 
@@ -263,5 +264,4 @@ class jsonApiTest extends PHPUnit_Framework_TestCase
         $content = ob_get_contents();
         $this->assertEquals('{}', $content, 'does not output nasty data');
     }
-
 }

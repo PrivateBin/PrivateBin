@@ -53,12 +53,9 @@ abstract class persistence
      */
     public static function getPath($filename = null)
     {
-        if (strlen($filename))
-        {
+        if (strlen($filename)) {
             return self::$_path . DIRECTORY_SEPARATOR . $filename;
-        }
-        else
-        {
+        } else {
             return self::$_path;
         }
     }
@@ -88,14 +85,15 @@ abstract class persistence
     protected static function _initialize()
     {
         // Create storage directory if it does not exist.
-        if (!is_dir(self::$_path))
-            if (!@mkdir(self::$_path))
+        if (!is_dir(self::$_path)) {
+            if (!@mkdir(self::$_path)) {
                 throw new Exception('unable to create directory ' . self::$_path, 10);
+            }
+        }
 
         // Create .htaccess file if it does not exist.
         $file = self::$_path . DIRECTORY_SEPARATOR . '.htaccess';
-        if (!is_file($file))
-        {
+        if (!is_file($file)) {
             $writtenBytes = @file_put_contents(
                 $file,
                 'Allow from none' . PHP_EOL .
@@ -123,8 +121,7 @@ abstract class persistence
         self::_initialize();
         $file = self::$_path . DIRECTORY_SEPARATOR . $filename;
         $writtenBytes = @file_put_contents($file, $data, LOCK_EX);
-        if ($writtenBytes === false || $writtenBytes < strlen($data))
-        {
+        if ($writtenBytes === false || $writtenBytes < strlen($data)) {
             throw new Exception('unable to write to file ' . $file, 13);
         }
         @chmod($file, 0640); // protect file access

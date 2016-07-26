@@ -53,8 +53,7 @@ class view
     public function draw($template)
     {
         $path = PATH . 'tpl' . DIRECTORY_SEPARATOR . $template . '.php';
-        if (!file_exists($path))
-        {
+        if (!file_exists($path)) {
             throw new Exception('Template ' . $template . ' not found!', 80);
         }
         extract($this->_variables);

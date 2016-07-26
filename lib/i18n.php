@@ -98,30 +98,31 @@ class i18n
      */
     public static function translate($messageId)
     {
-        if (empty($messageId)) return $messageId;
-        if (count(self::$_translations) === 0) self::loadTranslations();
+        if (empty($messageId)) {
+            return $messageId;
+        }
+        if (count(self::$_translations) === 0) {
+            self::loadTranslations();
+        }
         $messages = $messageId;
-        if (is_array($messageId))
-        {
+        if (is_array($messageId)) {
             $messageId = count($messageId) > 1 ? $messageId[1] : $messageId[0];
         }
-        if (!array_key_exists($messageId, self::$_translations))
-        {
+        if (!array_key_exists($messageId, self::$_translations)) {
             self::$_translations[$messageId] = $messages;
         }
         $args = func_get_args();
-        if (is_array(self::$_translations[$messageId]))
-        {
+        if (is_array(self::$_translations[$messageId])) {
             $number = (int) $args[1];
             $key = self::_getPluralForm($number);
             $max = count(self::$_translations[$messageId]) - 1;
-            if ($key > $max) $key = $max;
+            if ($key > $max) {
+                $key = $max;
+            }
 
             $args[0] = self::$_translations[$messageId][$key];
             $args[1] = $number;
-        }
-        else
-        {
+        } else {
             $args[0] = self::$_translations[$messageId];
         }
         return call_user_func_array('sprintf', $args);
@@ -141,13 +142,11 @@ class i18n
         $availableLanguages = self::getAvailableLanguages();
 
         // check if the lang cookie was set and that language exists
-        if (array_key_exists('lang', $_COOKIE) && in_array($_COOKIE['lang'], $availableLanguages))
-        {
+        if (array_key_exists('lang', $_COOKIE) && in_array($_COOKIE['lang'], $availableLanguages)) {
             $match = $availableLanguages[array_search($_COOKIE['lang'], $availableLanguages)];
         }
         // find a translation file matching the browsers language preferences
-        else
-        {
+        else {
             $match = self::_getMatchingLanguage(
                 self::getBrowserLanguages(), $availableLanguages
             );
@@ -170,13 +169,10 @@ class i18n
      */
     public static function getAvailableLanguages()
     {
-        if (count(self::$_availableLanguages) == 0)
-        {
+        if (count(self::$_availableLanguages) == 0) {
             $i18n = dir(self::_getPath());
-            while (false !== ($file = $i18n->read()))
-            {
-                if (preg_match('/^([a-z]{2}).json$/', $file, $match) === 1)
-                {
+            while (false !== ($file = $i18n->read())) {
+                if (preg_match('/^([a-z]{2}).json$/', $file, $match) === 1) {
                     self::$_availableLanguages[] = $match[1];
                 }
             }
@@ -197,26 +193,19 @@ class i18n
     public static function getBrowserLanguages()
     {
         $languages = array();
-        if (array_key_exists('HTTP_ACCEPT_LANGUAGE', $_SERVER))
-        {
+        if (array_key_exists('HTTP_ACCEPT_LANGUAGE', $_SERVER)) {
             $languageRanges = explode(',', trim($_SERVER['HTTP_ACCEPT_LANGUAGE']));
-            foreach ($languageRanges as $languageRange)
-            {
+            foreach ($languageRanges as $languageRange) {
                 if (preg_match(
                     '/(\*|[a-zA-Z0-9]{1,8}(?:-[a-zA-Z0-9]{1,8})*)(?:\s*;\s*q\s*=\s*(0(?:\.\d{0,3})|1(?:\.0{0,3})))?/',
                     trim($languageRange), $match
-                ))
-                {
-                    if (!isset($match[2]))
-                    {
+                )) {
+                    if (!isset($match[2])) {
                         $match[2] = '1.0';
-                    }
-                    else
-                    {
+                    } else {
                         $match[2] = (string) floatval($match[2]);
                     }
-                    if (!isset($languages[$match[2]]))
-                    {
+                    if (!isset($languages[$match[2]])) {
                         $languages[$match[2]] = array();
                     }
                     $languages[$match[2]][] = strtolower($match[1]);
@@ -252,11 +241,12 @@ class i18n
     public static function getLanguageLabels($languages = array())
     {
         $file = self::_getPath('languages.json');
-        if (count(self::$_languageLabels) == 0 && is_readable($file))
-        {
+        if (count(self::$_languageLabels) == 0 && is_readable($file)) {
             self::$_languageLabels = json_decode(file_get_contents($file), true);
         }
-        if (count($languages) == 0) return self::$_languageLabels;
+        if (count($languages) == 0) {
+            return self::$_languageLabels;
+        }
         return array_intersect_key(self::$_languageLabels, array_flip($languages));
     }
 
@@ -270,8 +260,9 @@ class i18n
      */
     public static function setLanguageFallback($lang)
     {
-        if (in_array($lang, self::getAvailableLanguages()))
+        if (in_array($lang, self::getAvailableLanguages())) {
             self::$_languageFallback = $lang;
+        }
     }
 
     /**
@@ -284,8 +275,7 @@ class i18n
      */
     protected static function _getPath($file = '')
     {
-        if (strlen(self::$_path) == 0)
-        {
+        if (strlen(self::$_path) == 0) {
             self::$_path = PUBLIC_PATH . DIRECTORY_SEPARATOR . 'i18n';
         }
         return self::$_path . (strlen($file) ? DIRECTORY_SEPARATOR . $file : '');
@@ -326,47 +316,40 @@ class i18n
      * @param  array $availableLanguages
      * @return string
      */
-    protected static function _getMatchingLanguage($acceptedLanguages, $availableLanguages) {
+    protected static function _getMatchingLanguage($acceptedLanguages, $availableLanguages)
+    {
         $matches = array();
         $any = false;
-        foreach ($acceptedLanguages as $acceptedQuality => $acceptedValues)
-        {
+        foreach ($acceptedLanguages as $acceptedQuality => $acceptedValues) {
             $acceptedQuality = floatval($acceptedQuality);
-            if ($acceptedQuality === 0.0) continue;
-            foreach ($availableLanguages as $availableValue)
-            {
+            if ($acceptedQuality === 0.0) {
+                continue;
+            }
+            foreach ($availableLanguages as $availableValue) {
                 $availableQuality = 1.0;
-                foreach ($acceptedValues as $acceptedValue)
-                {
-                    if ($acceptedValue === '*')
-                    {
+                foreach ($acceptedValues as $acceptedValue) {
+                    if ($acceptedValue === '*') {
                         $any = true;
                     }
                     $matchingGrade = self::_matchLanguage($acceptedValue, $availableValue);
-                    if ($matchingGrade > 0)
-                    {
+                    if ($matchingGrade > 0) {
                         $q = (string) ($acceptedQuality * $availableQuality * $matchingGrade);
-                        if (!isset($matches[$q]))
-                        {
+                        if (!isset($matches[$q])) {
                             $matches[$q] = array();
                         }
-                        if (!in_array($availableValue, $matches[$q]))
-                        {
+                        if (!in_array($availableValue, $matches[$q])) {
                             $matches[$q][] = $availableValue;
                         }
                     }
                 }
             }
         }
-        if (count($matches) === 0 && $any)
-        {
-            if (count($availableLanguages) > 0)
-            {
+        if (count($matches) === 0 && $any) {
+            if (count($availableLanguages) > 0) {
                 $matches['1.0'] = $availableLanguages;
             }
         }
-        if (count($matches) === 0)
-        {
+        if (count($matches) === 0) {
             return self::$_languageFallback;
         }
         krsort($matches);
@@ -385,12 +368,14 @@ class i18n
      * @param  string $b
      * @return float
      */
-    protected static function _matchLanguage($a, $b) {
+    protected static function _matchLanguage($a, $b)
+    {
         $a = explode('-', $a);
         $b = explode('-', $b);
-        for ($i=0, $n = min(count($a), count($b)); $i < $n; ++$i)
-        {
-            if ($a[$i] !== $b[$i]) break;
+        for ($i=0, $n = min(count($a), count($b)); $i < $n; ++$i) {
+            if ($a[$i] !== $b[$i]) {
+                break;
+            }
         }
         return $i === 0 ? 0 : (float) $i / count($a);
     }

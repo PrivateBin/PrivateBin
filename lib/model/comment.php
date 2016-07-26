@@ -66,16 +66,19 @@ class comment extends AbstractModel
     {
         // Make sure paste exists.
         $pasteid = $this->getPaste()->getId();
-        if (!$this->getPaste()->exists())
+        if (!$this->getPaste()->exists()) {
             throw new Exception('Invalid data.', 67);
+        }
 
         // Make sure the discussion is opened in this paste and in configuration.
-        if (!$this->getPaste()->isOpendiscussion() || !$this->_conf->getKey('discussion'))
+        if (!$this->getPaste()->isOpendiscussion() || !$this->_conf->getKey('discussion')) {
             throw new Exception('Invalid data.', 68);
+        }
 
         // Check for improbable collision.
-        if ($this->exists())
+        if ($this->exists()) {
             throw new Exception('You are unlucky. Try again.', 69);
+        }
 
         $this->_data->meta->postdate = time();
 
@@ -87,7 +90,9 @@ class comment extends AbstractModel
                 $this->getId(),
                 json_decode(json_encode($this->_data), true)
             ) === false
-        ) throw new Exception('Error saving comment. Sorry.', 70);
+        ) {
+            throw new Exception('Error saving comment. Sorry.', 70);
+        }
     }
 
     /**
@@ -152,7 +157,9 @@ class comment extends AbstractModel
      */
     public function setParentId($id)
     {
-        if (!self::isValidId($id)) throw new Exception('Invalid paste ID.', 65);
+        if (!self::isValidId($id)) {
+            throw new Exception('Invalid paste ID.', 65);
+        }
         $this->_data->meta->parentid = $id;
     }
 
@@ -164,7 +171,9 @@ class comment extends AbstractModel
      */
     public function getParentId()
     {
-        if (!property_exists($this->_data->meta, 'parentid')) $this->_data->meta->parentid = '';
+        if (!property_exists($this->_data->meta, 'parentid')) {
+            $this->_data->meta->parentid = '';
+        }
         return $this->_data->meta->parentid;
     }
 
@@ -178,19 +187,19 @@ class comment extends AbstractModel
      */
     public function setNickname($nickname)
     {
-        if (!sjcl::isValid($nickname)) throw new Exception('Invalid data.', 66);
+        if (!sjcl::isValid($nickname)) {
+            throw new Exception('Invalid data.', 66);
+        }
         $this->_data->meta->nickname = $nickname;
 
-        if ($this->_conf->getKey('vizhash'))
-        {
+        if ($this->_conf->getKey('vizhash')) {
             // Generation of the anonymous avatar (Vizhash):
             // If a nickname is provided, we generate a Vizhash.
             // (We assume that if the user did not enter a nickname, he/she wants
             // to be anonymous and we will not generate the vizhash.)
             $vh = new vizhash16x16();
             $pngdata = $vh->generate(trafficlimiter::getIp());
-            if ($pngdata != '')
-            {
+            if ($pngdata != '') {
                 $this->_data->meta->vizhash = 'data:image/png;base64,' . base64_encode($pngdata);
             }
             // Once the avatar is generated, we do not keep the IP address, nor its hash.
