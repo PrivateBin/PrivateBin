@@ -117,9 +117,9 @@ class privatebin
      */
     public function __construct()
     {
-        if (version_compare(PHP_VERSION, '5.2.6') < 0)
+        if (version_compare(PHP_VERSION, '5.3.0') < 0)
         {
-            throw new Exception(i18n::_('PrivateBin requires php 5.2.6 or above to work. Sorry.'), 1);
+            throw new Exception(i18n::_('PrivateBin requires php 5.3.0 or above to work. Sorry.'), 1);
         }
 
         // load config from ini file

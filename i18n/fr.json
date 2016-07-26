@@ -2,8 +2,8 @@
     "en": "fr",
     "Paste does not exist, has expired or has been deleted.":
         "Le paste n'existe pas, a expiré, ou a été supprimé.",
-    "PrivateBin requires php 5.2.6 or above to work. Sorry.":
-        "Désolé, PrivateBin nécessite php 5.2.6 ou supérieur pour fonctionner.",
+    "PrivateBin requires php 5.3.0 or above to work. Sorry.":
+        "Désolé, PrivateBin nécessite php 5.3.0 ou supérieur pour fonctionner.",
     "PrivateBin requires configuration section [%s] to be present in configuration file.":
         "PrivateBin a besoin de la section de configuration [%s] dans le fichier de configuration pour fonctionner.",
     "Please wait %d seconds between each post.":

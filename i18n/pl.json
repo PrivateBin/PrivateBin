@@ -2,8 +2,8 @@
     "en": "pl",
     "Paste does not exist, has expired or has been deleted.":
         "Wklejka nie istnieje, wygasła albo została usunięta.",
-    "PrivateBin requires php 5.2.6 or above to work. Sorry.":
-        "PrivateBin wymaga PHP w wersji 5.2.6 lub nowszej, sorry.",
+    "PrivateBin requires php 5.3.0 or above to work. Sorry.":
+        "PrivateBin wymaga PHP w wersji 5.3.0 lub nowszej, sorry.",
     "PrivateBin requires configuration section [%s] to be present in configuration file.":
         "PrivateBin wymaga obecności sekcji [%s] w pliku konfiguracyjnym.",
     "Please wait %d seconds between each post.":
