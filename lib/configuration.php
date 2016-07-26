@@ -82,7 +82,7 @@ class configuration
             'dir' => 'data',
         ),
         'model' => array(
-            'class' => 'privatebin_data',
+            'class' => 'PrivateBin\data\data',
         ),
         'model_options' => array(
             'dir' => 'data',

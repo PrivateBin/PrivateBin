@@ -128,12 +128,12 @@ class configurationTest extends PHPUnit_Framework_TestCase
         $options['model']['class'] = 'zerobin_data';
         helper::createIniFile(CONF, $options);
         $conf = new configuration;
-        $this->assertEquals('privatebin_data', $conf->getKey('class', 'model'), 'old data class gets renamed');
+        $this->assertEquals('PrivateBin\data\data', $conf->getKey('class', 'model'), 'old data class gets renamed');
 
         $options['model']['class'] = 'zerobin_db';
         helper::createIniFile(CONF, $options);
         $conf = new configuration;
-        $this->assertEquals('privatebin_db', $conf->getKey('class', 'model'), 'old db class gets renamed');
+        $this->assertEquals('PrivateBin\data\db', $conf->getKey('class', 'model'), 'old db class gets renamed');
     }
 
 }
