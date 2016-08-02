@@ -35,6 +35,7 @@ class privatebinTest extends PHPUnit_Framework_TestCase
         ob_start();
         new privatebin;
         $content = ob_get_contents();
+        ob_end_clean();
         $this->assertContains(
             '<title>PrivateBin</title>',
             $content,
@@ -61,6 +62,7 @@ class privatebinTest extends PHPUnit_Framework_TestCase
         ob_start();
         new privatebin;
         $content = ob_get_contents();
+        ob_end_clean();
         $this->assertContains(
             '<title>PrivateBin</title>',
             $content,
@@ -83,6 +85,7 @@ class privatebinTest extends PHPUnit_Framework_TestCase
         ob_start();
         new privatebin;
         $content = ob_get_contents();
+        ob_end_clean();
         $this->assertContains(
             '<title>PrivateBin</title>',
             $content,
@@ -105,6 +108,7 @@ class privatebinTest extends PHPUnit_Framework_TestCase
         ob_start();
         new privatebin;
         $content = ob_get_contents();
+        ob_end_clean();
         $this->assertRegExp(
             '#id="shortenbutton"[^>]*data-shortener="' . preg_quote($shortener) . '"#',
             $content,
@@ -166,6 +170,7 @@ class privatebinTest extends PHPUnit_Framework_TestCase
         ob_start();
         new privatebin;
         $content = ob_get_contents();
+        ob_end_clean();
         $response = json_decode($content, true);
         $this->assertEquals(0, $response['status'], 'outputs status');
         $this->assertTrue($this->_model->exists($response['id']), 'paste exists after posting data');
@@ -195,6 +200,7 @@ class privatebinTest extends PHPUnit_Framework_TestCase
         ob_start();
         new privatebin;
         $content = ob_get_contents();
+        ob_end_clean();
         $response = json_decode($content, true);
         $this->assertEquals(0, $response['status'], 'outputs status');
         $this->assertTrue($this->_model->exists($response['id']), 'paste exists after posting data');
@@ -224,6 +230,7 @@ class privatebinTest extends PHPUnit_Framework_TestCase
         ob_start();
         new privatebin;
         $content = ob_get_contents();
+        ob_end_clean();
         $response = json_decode($content, true);
         $this->assertEquals(1, $response['status'], 'outputs error status');
         $this->assertFalse($this->_model->exists(helper::getPasteId()), 'paste exists after posting data');
@@ -247,6 +254,7 @@ class privatebinTest extends PHPUnit_Framework_TestCase
         ob_start();
         new privatebin;
         $content = ob_get_contents();
+        ob_end_clean();
         $response = json_decode($content, true);
         $this->assertEquals(0, $response['status'], 'outputs status');
         $this->assertTrue($this->_model->exists($response['id']), 'paste exists after posting data');
@@ -276,6 +284,7 @@ class privatebinTest extends PHPUnit_Framework_TestCase
         ob_start();
         new privatebin;
         $content = ob_get_contents();
+        ob_end_clean();
         $response = json_decode($content, true);
         $this->assertEquals(1, $response['status'], 'outputs error status');
         $this->assertTrue($this->_model->exists(helper::getPasteId()), 'paste exists after posting data');
@@ -301,6 +310,7 @@ class privatebinTest extends PHPUnit_Framework_TestCase
         ob_start();
         new privatebin;
         $content = ob_get_contents();
+        ob_end_clean();
         $response = json_decode($content, true);
         $this->assertEquals(0, $response['status'], 'outputs status');
         $this->assertTrue($this->_model->exists($response['id']), 'paste exists after posting data');
@@ -333,6 +343,7 @@ class privatebinTest extends PHPUnit_Framework_TestCase
         ob_start();
         new privatebin;
         $content = ob_get_contents();
+        ob_end_clean();
         $response = json_decode($content, true);
         $this->assertEquals(0, $response['status'], 'outputs status');
         $this->assertTrue($this->_model->exists($response['id']), 'paste exists after posting data');
@@ -364,6 +375,7 @@ class privatebinTest extends PHPUnit_Framework_TestCase
         ob_start();
         new privatebin;
         $content = ob_get_contents();
+        ob_end_clean();
         $response = json_decode($content, true);
         $this->assertEquals(0, $response['status'], 'outputs status');
         $this->assertTrue($this->_model->exists($response['id']), 'paste exists after posting data');
@@ -393,6 +405,7 @@ class privatebinTest extends PHPUnit_Framework_TestCase
         ob_start();
         new privatebin;
         $content = ob_get_contents();
+        ob_end_clean();
         $response = json_decode($content, true);
         $this->assertEquals(1, $response['status'], 'outputs error status');
         $this->assertFalse($this->_model->exists(helper::getPasteId()), 'paste exists after posting data');
@@ -416,6 +429,7 @@ class privatebinTest extends PHPUnit_Framework_TestCase
         ob_start();
         new privatebin;
         $content = ob_get_contents();
+        ob_end_clean();
         $response = json_decode($content, true);
         $this->assertEquals(1, $response['status'], 'outputs error status');
         $this->assertFalse($this->_model->exists(helper::getPasteId()), 'paste exists after posting data');
@@ -440,6 +454,7 @@ class privatebinTest extends PHPUnit_Framework_TestCase
         ob_start();
         new privatebin;
         $content = ob_get_contents();
+        ob_end_clean();
         $response = json_decode($content, true);
         $this->assertEquals(0, $response['status'], 'outputs status');
         $this->assertTrue($this->_model->exists($response['id']), 'paste exists after posting data');
@@ -478,6 +493,7 @@ class privatebinTest extends PHPUnit_Framework_TestCase
         ob_start();
         new privatebin;
         $content = ob_get_contents();
+        ob_end_clean();
         $response = json_decode($content, true);
         $this->assertEquals(1, $response['status'], 'outputs error status');
         $this->assertFalse($this->_model->exists(helper::getPasteId()), 'paste exists after posting data');
@@ -500,6 +516,7 @@ class privatebinTest extends PHPUnit_Framework_TestCase
         ob_start();
         new privatebin;
         $content = ob_get_contents();
+        ob_end_clean();
         $response = json_decode($content, true);
         $this->assertEquals(1, $response['status'], 'outputs error status');
         $this->assertFalse($this->_model->exists(helper::getPasteId()), 'paste exists after posting data');
@@ -523,6 +540,7 @@ class privatebinTest extends PHPUnit_Framework_TestCase
         ob_start();
         new privatebin;
         $content = ob_get_contents();
+        ob_end_clean();
         $response = json_decode($content, true);
         $this->assertEquals(0, $response['status'], 'outputs status');
         $this->assertTrue($this->_model->exists($response['id']), 'paste exists after posting data');
@@ -555,6 +573,7 @@ class privatebinTest extends PHPUnit_Framework_TestCase
         ob_start();
         new privatebin;
         $content = ob_get_contents();
+        ob_end_clean();
         $response = json_decode($content, true);
         $this->assertEquals(1, $response['status'], 'outputs error status');
         $this->assertTrue($this->_model->exists(helper::getPasteId()), 'paste exists after posting data');
@@ -580,6 +599,7 @@ class privatebinTest extends PHPUnit_Framework_TestCase
         ob_start();
         new privatebin;
         $content = ob_get_contents();
+        ob_end_clean();
         $response = json_decode($content, true);
         $this->assertEquals(0, $response['status'], 'outputs status');
         $this->assertTrue($this->_model->existsComment(helper::getPasteId(), helper::getPasteId(), $response['id']), 'paste exists after posting data');
@@ -605,6 +625,7 @@ class privatebinTest extends PHPUnit_Framework_TestCase
         ob_start();
         new privatebin;
         $content = ob_get_contents();
+        ob_end_clean();
         $response = json_decode($content, true);
         $this->assertEquals(1, $response['status'], 'outputs error status');
         $this->assertFalse($this->_model->existsComment(helper::getPasteId(), helper::getPasteId(), helper::getCommentId()), 'paste exists after posting data');
@@ -631,6 +652,7 @@ class privatebinTest extends PHPUnit_Framework_TestCase
         ob_start();
         new privatebin;
         $content = ob_get_contents();
+        ob_end_clean();
         $response = json_decode($content, true);
         $this->assertEquals(1, $response['status'], 'outputs error status');
         $this->assertFalse($this->_model->existsComment(helper::getPasteId(), helper::getPasteId(), helper::getCommentId()), 'paste exists after posting data');
@@ -655,6 +677,7 @@ class privatebinTest extends PHPUnit_Framework_TestCase
         ob_start();
         new privatebin;
         $content = ob_get_contents();
+        ob_end_clean();
         $response = json_decode($content, true);
         $this->assertEquals(1, $response['status'], 'outputs error status');
         $this->assertFalse($this->_model->existsComment(helper::getPasteId(), helper::getPasteId(), helper::getCommentId()), 'paste exists after posting data');
@@ -682,6 +705,7 @@ class privatebinTest extends PHPUnit_Framework_TestCase
         ob_start();
         new privatebin;
         $content = ob_get_contents();
+        ob_end_clean();
         $response = json_decode($content, true);
         $this->assertEquals(1, $response['status'], 'outputs error status');
         $this->assertTrue($this->_model->existsComment(helper::getPasteId(), helper::getPasteId(), helper::getCommentId()), 'paste exists after posting data');
@@ -698,6 +722,7 @@ class privatebinTest extends PHPUnit_Framework_TestCase
         ob_start();
         new privatebin;
         $content = ob_get_contents();
+        ob_end_clean();
         $this->assertContains(
             '<div id="cipherdata" class="hidden">' .
             htmlspecialchars(helper::getPasteAsJson(), ENT_NOQUOTES) .
@@ -717,6 +742,7 @@ class privatebinTest extends PHPUnit_Framework_TestCase
         ob_start();
         new privatebin;
         $content = ob_get_contents();
+        ob_end_clean();
         $this->assertRegExp(
             '#<div[^>]*id="errormessage"[^>]*>.*Invalid paste ID\.</div>#',
             $content,
@@ -734,6 +760,7 @@ class privatebinTest extends PHPUnit_Framework_TestCase
         ob_start();
         new privatebin;
         $content = ob_get_contents();
+        ob_end_clean();
         $this->assertRegExp(
             '#<div[^>]*id="errormessage"[^>]*>.*Paste does not exist[^<]*</div>#',
             $content,
@@ -753,6 +780,7 @@ class privatebinTest extends PHPUnit_Framework_TestCase
         ob_start();
         new privatebin;
         $content = ob_get_contents();
+        ob_end_clean();
         $this->assertRegExp(
             '#<div[^>]*id="errormessage"[^>]*>.*Paste does not exist[^<]*</div>#',
             $content,
@@ -772,6 +800,7 @@ class privatebinTest extends PHPUnit_Framework_TestCase
         ob_start();
         new privatebin;
         $content = ob_get_contents();
+        ob_end_clean();
         unset($burnPaste['meta']['salt']);
         $this->assertContains(
             '<div id="cipherdata" class="hidden">' .
@@ -795,6 +824,7 @@ class privatebinTest extends PHPUnit_Framework_TestCase
         ob_start();
         new privatebin;
         $content = ob_get_contents();
+        ob_end_clean();
         $response = json_decode($content, true);
         $this->assertEquals(0, $response['status'], 'outputs success status');
         $this->assertEquals(helper::getPasteId(), $response['id'], 'outputs data correctly');
@@ -818,6 +848,7 @@ class privatebinTest extends PHPUnit_Framework_TestCase
         ob_start();
         new privatebin;
         $content = ob_get_contents();
+        ob_end_clean();
         $response = json_decode($content, true);
         $this->assertEquals(1, $response['status'], 'outputs error status');
     }
@@ -840,6 +871,7 @@ class privatebinTest extends PHPUnit_Framework_TestCase
         ob_start();
         new privatebin;
         $content = ob_get_contents();
+        ob_end_clean();
         $meta['formatter'] = 'syntaxhighlighting';
         $this->assertContains(
             '<div id="cipherdata" class="hidden">' .
@@ -863,6 +895,7 @@ class privatebinTest extends PHPUnit_Framework_TestCase
         ob_start();
         new privatebin;
         $content = ob_get_contents();
+        ob_end_clean();
         $oldPaste['meta']['formatter'] = 'plaintext';
         unset($oldPaste['meta']['salt']);
         $this->assertContains(
@@ -888,6 +921,7 @@ class privatebinTest extends PHPUnit_Framework_TestCase
         ob_start();
         new privatebin;
         $content = ob_get_contents();
+        ob_end_clean();
         $this->assertRegExp(
             '#<div[^>]*id="status"[^>]*>.*Paste was properly deleted[^<]*</div>#s',
             $content,
@@ -908,6 +942,7 @@ class privatebinTest extends PHPUnit_Framework_TestCase
         ob_start();
         new privatebin;
         $content = ob_get_contents();
+        ob_end_clean();
         $this->assertRegExp(
             '#<div[^>]*id="errormessage"[^>]*>.*Invalid paste ID\.</div>#',
             $content,
@@ -927,6 +962,7 @@ class privatebinTest extends PHPUnit_Framework_TestCase
         ob_start();
         new privatebin;
         $content = ob_get_contents();
+        ob_end_clean();
         $this->assertRegExp(
             '#<div[^>]*id="errormessage"[^>]*>.*Paste does not exist[^<]*</div>#',
             $content,
@@ -946,6 +982,7 @@ class privatebinTest extends PHPUnit_Framework_TestCase
         ob_start();
         new privatebin;
         $content = ob_get_contents();
+        ob_end_clean();
         $this->assertRegExp(
             '#<div[^>]*id="errormessage"[^>]*>.*Wrong deletion token[^<]*</div>#',
             $content,
@@ -970,6 +1007,7 @@ class privatebinTest extends PHPUnit_Framework_TestCase
         ob_start();
         new privatebin;
         $content = ob_get_contents();
+        ob_end_clean();
         $response = json_decode($content, true);
         $this->assertEquals(0, $response['status'], 'outputs status');
         $this->assertFalse($this->_model->exists(helper::getPasteId()), 'paste successfully deleted');
@@ -990,6 +1028,7 @@ class privatebinTest extends PHPUnit_Framework_TestCase
         ob_start();
         new privatebin;
         $content = ob_get_contents();
+        ob_end_clean();
         $response = json_decode($content, true);
         $this->assertEquals(1, $response['status'], 'outputs status');
         $this->assertTrue($this->_model->exists(helper::getPasteId()), 'paste successfully deleted');
@@ -1010,6 +1049,7 @@ class privatebinTest extends PHPUnit_Framework_TestCase
         ob_start();
         new privatebin;
         $content = ob_get_contents();
+        ob_end_clean();
         $this->assertRegExp(
             '#<div[^>]*id="errormessage"[^>]*>.*Paste does not exist[^<]*</div>#',
             $content,
@@ -1033,6 +1073,7 @@ class privatebinTest extends PHPUnit_Framework_TestCase
         ob_start();
         new privatebin;
         $content = ob_get_contents();
+        ob_end_clean();
         $this->assertRegExp(
             '#<div[^>]*id="status"[^>]*>.*Paste was properly deleted[^<]*</div>#s',
             $content,

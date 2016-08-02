@@ -44,6 +44,7 @@ class jsonApiTest extends PHPUnit_Framework_TestCase
         ob_start();
         new privatebin;
         $content = ob_get_contents();
+        ob_end_clean();
         $response = json_decode($content, true);
         $this->assertEquals(0, $response['status'], 'outputs status');
         $this->assertStringEndsWith('?' . $response['id'], $response['url'], 'returned URL points to new paste');
@@ -78,6 +79,7 @@ class jsonApiTest extends PHPUnit_Framework_TestCase
         ob_start();
         new privatebin;
         $content = ob_get_contents();
+        ob_end_clean();
         $response = json_decode($content, true);
         $this->assertEquals(0, $response['status'], 'outputs status');
         $this->assertEquals(helper::getPasteId(), $response['id'], 'outputted paste ID matches input');
@@ -111,6 +113,7 @@ class jsonApiTest extends PHPUnit_Framework_TestCase
         ob_start();
         new privatebin;
         $content = ob_get_contents();
+        ob_end_clean();
         $response = json_decode($content, true);
         $this->assertEquals(0, $response['status'], 'outputs status');
         $this->assertFalse($this->_model->exists(helper::getPasteId()), 'paste successfully deleted');
@@ -135,6 +138,7 @@ class jsonApiTest extends PHPUnit_Framework_TestCase
         ob_start();
         new privatebin;
         $content = ob_get_contents();
+        ob_end_clean();
         $response = json_decode($content, true);
         $this->assertEquals(0, $response['status'], 'outputs status');
         $this->assertFalse($this->_model->exists(helper::getPasteId()), 'paste successfully deleted');
@@ -153,6 +157,7 @@ class jsonApiTest extends PHPUnit_Framework_TestCase
         ob_start();
         new privatebin;
         $content = ob_get_contents();
+        ob_end_clean();
         $response = json_decode($content, true);
         $this->assertEquals(0, $response['status'], 'outputs success status');
         $this->assertEquals(helper::getPasteId(), $response['id'], 'outputs data correctly');
@@ -179,6 +184,7 @@ class jsonApiTest extends PHPUnit_Framework_TestCase
         ob_start();
         new privatebin;
         $content = ob_get_contents();
+        ob_end_clean();
         $this->assertEquals(str_replace(
                 '?jsonld=',
                 '/?jsonld=',
@@ -198,6 +204,7 @@ class jsonApiTest extends PHPUnit_Framework_TestCase
         ob_start();
         new privatebin;
         $content = ob_get_contents();
+        ob_end_clean();
         $this->assertEquals(str_replace(
                 '?jsonld=',
                 '/?jsonld=',
@@ -217,6 +224,7 @@ class jsonApiTest extends PHPUnit_Framework_TestCase
         ob_start();
         new privatebin;
         $content = ob_get_contents();
+        ob_end_clean();
         $this->assertEquals(str_replace(
                 '?jsonld=',
                 '/?jsonld=',
@@ -236,6 +244,7 @@ class jsonApiTest extends PHPUnit_Framework_TestCase
         ob_start();
         new privatebin;
         $content = ob_get_contents();
+        ob_end_clean();
         $this->assertEquals(str_replace(
                 '?jsonld=',
                 '/?jsonld=',
@@ -255,6 +264,7 @@ class jsonApiTest extends PHPUnit_Framework_TestCase
         ob_start();
         new privatebin;
         $content = ob_get_contents();
+        ob_end_clean();
         $this->assertEquals('{}', $content, 'does not output nasty data');
     }
 
