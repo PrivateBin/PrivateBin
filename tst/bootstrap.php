@@ -1,13 +1,24 @@
 <?php
-error_reporting( E_ALL | E_STRICT );
+
+use PrivateBin\serversalt;
+
+error_reporting(E_ALL | E_STRICT);
 
 // change this, if your php files and data is outside of your webservers document root
-if (!defined('PUBLIC_PATH')) define('PUBLIC_PATH', '..');
-if (!defined('PATH')) define('PATH', '..' . DIRECTORY_SEPARATOR);
-if (!defined('CONF')) define('CONF', PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.ini');
-if (!is_file(CONF)) copy(CONF . '.sample', CONF);
+if (!defined('PUBLIC_PATH')) {
+    define('PUBLIC_PATH', '..');
+}
+if (!defined('PATH')) {
+    define('PATH', '..' . DIRECTORY_SEPARATOR);
+}
+if (!defined('CONF')) {
+    define('CONF', PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.ini');
+}
+if (!is_file(CONF)) {
+    copy(CONF . '.sample', CONF);
+}
 
-require PATH . 'lib/auto.php';
+require PATH . 'vendor/autoload.php';
 
 class helper
 {
@@ -100,8 +111,9 @@ class helper
         $example = self::getPaste();
         // the JSON shouldn't contain the salt
         unset($example['meta']['salt']);
-        if (count($meta))
+        if (count($meta)) {
             $example['meta'] = $meta;
+        }
         $example['comments'] = array();
         $example['comment_count'] = 0;
         $example['comment_offset'] = 0;
@@ -154,19 +166,19 @@ class helper
     {
         $path .= DIRECTORY_SEPARATOR;
         $dir = dir($path);
-        while(false !== ($file = $dir->read())) {
-            if($file != '.' && $file != '..') {
-                if(is_dir($path . $file)) {
+        while (false !== ($file = $dir->read())) {
+            if ($file != '.' && $file != '..') {
+                if (is_dir($path . $file)) {
                     self::rmdir($path . $file);
-                } elseif(is_file($path . $file)) {
-                    if(!@unlink($path . $file)) {
+                } elseif (is_file($path . $file)) {
+                    if (!@unlink($path . $file)) {
                         throw new Exception('Error deleting file "' . $path . $file . '".');
                     }
                 }
             }
         }
         $dir->close();
-        if(!@rmdir($path)) {
+        if (!@rmdir($path)) {
             throw new Exception('Error deleting directory "' . $path . '".');
         }
     }
@@ -178,8 +190,9 @@ class helper
      */
     public static function confBackup()
     {
-        if (!is_file(CONF . '.bak') && is_file(CONF))
+        if (!is_file(CONF . '.bak') && is_file(CONF)) {
             rename(CONF, CONF . '.bak');
+        }
     }
 
     /**
@@ -189,8 +202,9 @@ class helper
      */
     public static function confRestore()
     {
-        if (is_file(CONF . '.bak'))
+        if (is_file(CONF . '.bak')) {
             rename(CONF . '.bak', CONF);
+        }
     }
 
     /**
@@ -206,7 +220,7 @@ class helper
             $ini = fopen($pathToFile, 'a');
             foreach ($values as $section => $options) {
                 fwrite($ini, "[$section]" . PHP_EOL);
-                foreach($options as $option => $setting) {
+                foreach ($options as $option => $setting) {
                     if (is_null($setting)) {
                         continue;
                     } elseif (is_string($setting)) {

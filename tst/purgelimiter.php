@@ -1,4 +1,7 @@
 <?php
+
+use PrivateBin\purgelimiter;
+
 class purgelimiterTest extends PHPUnit_Framework_TestCase
 {
     private $_path;
@@ -7,7 +10,9 @@ class purgelimiterTest extends PHPUnit_Framework_TestCase
     {
         /* Setup Routine */
         $this->_path = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'privatebin_data';
-        if(!is_dir($this->_path)) mkdir($this->_path);
+        if (!is_dir($this->_path)) {
+            mkdir($this->_path);
+        }
         purgelimiter::setPath($this->_path);
     }
 

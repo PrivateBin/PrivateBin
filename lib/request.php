@@ -10,6 +10,8 @@
  * @version   0.22
  */
 
+namespace PrivateBin;
+
 /**
  * request
  *
@@ -79,8 +81,7 @@ class request
     public function __construct()
     {
         // in case stupid admin has left magic_quotes enabled in php.ini (for PHP < 5.4)
-        if (function_exists('get_magic_quotes_gpc') && get_magic_quotes_gpc())
-        {
+        if (function_exists('get_magic_quotes_gpc') && get_magic_quotes_gpc()) {
             $_POST   = array_map('filter::stripslashes_deep', $_POST);
             $_GET    = array_map('filter::stripslashes_deep', $_GET);
             $_COOKIE = array_map('filter::stripslashes_deep', $_COOKIE);
@@ -90,8 +91,7 @@ class request
         $this->_isJsonApi = $this->_detectJsonRequest();
 
         // parse parameters, depending on request type
-        switch (array_key_exists('REQUEST_METHOD', $_SERVER) ? $_SERVER['REQUEST_METHOD'] : 'GET')
-        {
+        switch (array_key_exists('REQUEST_METHOD', $_SERVER) ? $_SERVER['REQUEST_METHOD'] : 'GET') {
             case 'DELETE':
             case 'PUT':
                 parse_str(file_get_contents(self::$_inputStream), $this->_params);
@@ -107,8 +107,7 @@ class request
             !array_key_exists('jsonld', $this->_params) &&
             array_key_exists('QUERY_STRING', $_SERVER) &&
             !empty($_SERVER['QUERY_STRING'])
-        )
-        {
+        ) {
             $this->_params['pasteid'] = $_SERVER['QUERY_STRING'];
         }
 
@@ -116,23 +115,15 @@ class request
         if (
             (array_key_exists('data', $this->_params) && !empty($this->_params['data'])) ||
             (array_key_exists('attachment', $this->_params) && !empty($this->_params['attachment']))
-        )
-        {
+        ) {
             $this->_operation = 'create';
-        }
-        elseif (array_key_exists('pasteid', $this->_params) && !empty($this->_params['pasteid']))
-        {
-            if (array_key_exists('deletetoken', $this->_params) && !empty($this->_params['deletetoken']))
-            {
+        } elseif (array_key_exists('pasteid', $this->_params) && !empty($this->_params['pasteid'])) {
+            if (array_key_exists('deletetoken', $this->_params) && !empty($this->_params['deletetoken'])) {
                 $this->_operation = 'delete';
-            }
-            else
-            {
+            } else {
                 $this->_operation = 'read';
             }
-        }
-        elseif (array_key_exists('jsonld', $this->_params) && !empty($this->_params['jsonld']))
-        {
+        } elseif (array_key_exists('jsonld', $this->_params) && !empty($this->_params['jsonld'])) {
             $this->_operation = 'jsonld';
         }
     }
@@ -203,53 +194,42 @@ class request
                 strpos($acceptHeader, self::MIME_JSON) !== false &&
                 strpos($acceptHeader, self::MIME_HTML) === false &&
                 strpos($acceptHeader, self::MIME_XHTML) === false)
-        )
-        {
+        ) {
             return true;
         }
 
         // advanced case: media type negotiation
         $mediaTypes = array();
-        if ($hasAcceptHeader)
-        {
+        if ($hasAcceptHeader) {
             $mediaTypeRanges = explode(',', trim($acceptHeader));
-            foreach ($mediaTypeRanges as $mediaTypeRange)
-            {
+            foreach ($mediaTypeRanges as $mediaTypeRange) {
                 if (preg_match(
                     '#(\*/\*|[a-z\-]+/[a-z\-+*]+(?:\s*;\s*[^q]\S*)*)(?:\s*;\s*q\s*=\s*(0(?:\.\d{0,3})|1(?:\.0{0,3})))?#',
                     trim($mediaTypeRange), $match
-                ))
-                {
-                    if (!isset($match[2]))
-                    {
+                )) {
+                    if (!isset($match[2])) {
                         $match[2] = '1.0';
-                    }
-                    else
-                    {
+                    } else {
                         $match[2] = (string) floatval($match[2]);
                     }
-                    if (!isset($mediaTypes[$match[2]]))
-                    {
+                    if (!isset($mediaTypes[$match[2]])) {
                         $mediaTypes[$match[2]] = array();
                     }
                     $mediaTypes[$match[2]][] = strtolower($match[1]);
                 }
             }
             krsort($mediaTypes);
-            foreach ($mediaTypes as $acceptedQuality => $acceptedValues)
-            {
-                if ($acceptedQuality === 0.0) continue;
-                foreach ($acceptedValues as $acceptedValue)
-                {
+            foreach ($mediaTypes as $acceptedQuality => $acceptedValues) {
+                if ($acceptedQuality === 0.0) {
+                    continue;
+                }
+                foreach ($acceptedValues as $acceptedValue) {
                     if (
                         strpos($acceptedValue, self::MIME_HTML) === 0 ||
                         strpos($acceptedValue, self::MIME_XHTML) === 0
-                    )
-                    {
+                    ) {
                         return false;
-                    }
-                    elseif (strpos($acceptedValue, self::MIME_JSON) === 0)
-                    {
+                    } elseif (strpos($acceptedValue, self::MIME_JSON) === 0) {
                         return true;
                     }
                 }

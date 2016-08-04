@@ -10,12 +10,14 @@
  * @version   0.22
  */
 
+namespace PrivateBin\data;
+
 /**
  * privatebin_abstract
  *
  * Abstract model for PrivateBin data access, implemented as a singleton.
  */
-abstract class privatebin_abstract
+abstract class AbstractData
 {
     /**
      * singleton instance
@@ -33,7 +35,9 @@ abstract class privatebin_abstract
      *
      * @access protected
      */
-    protected function __construct() {}
+    protected function __construct()
+    {
+    }
 
     /**
      * enforce singleton, disable cloning
@@ -42,7 +46,9 @@ abstract class privatebin_abstract
      *
      * @access private
      */
-    private function __clone() {}
+    private function __clone()
+    {
+    }
 
     /**
      * get instance of singleton
@@ -52,7 +58,9 @@ abstract class privatebin_abstract
      * @param  array $options
      * @return privatebin_abstract
      */
-    public static function getInstance($options) {}
+    public static function getInstance($options)
+    {
+    }
 
     /**
      * Create a paste.
@@ -141,12 +149,12 @@ abstract class privatebin_abstract
      */
     public function purge($batchsize)
     {
-        if ($batchsize < 1) return;
+        if ($batchsize < 1) {
+            return;
+        }
         $pastes = $this->_getExpiredPastes($batchsize);
-        if (count($pastes))
-        {
-            foreach ($pastes as $pasteid)
-            {
+        if (count($pastes)) {
+            foreach ($pastes as $pasteid) {
                 $this->delete($pasteid);
             }
         }
@@ -162,10 +170,11 @@ abstract class privatebin_abstract
      */
     protected function getOpenSlot(&$comments, $postdate)
     {
-        if (array_key_exists($postdate, $comments))
-        {
+        if (array_key_exists($postdate, $comments)) {
             $parts = explode('.', $postdate, 2);
-            if (!array_key_exists(1, $parts)) $parts[1] = 0;
+            if (!array_key_exists(1, $parts)) {
+                $parts[1] = 0;
+            }
             ++$parts[1];
             return $this->getOpenSlot($comments, implode('.', $parts));
         }

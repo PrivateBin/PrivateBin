@@ -10,6 +10,11 @@
  * @version   0.22
  */
 
+namespace PrivateBin;
+
+use Exception;
+use PDO;
+
 /**
  * configuration
  *
@@ -77,7 +82,7 @@ class configuration
             'dir' => 'data',
         ),
         'model' => array(
-            'class' => 'privatebin_data',
+            'class' => 'PrivateBin\data\data',
         ),
         'model_options' => array(
             'dir' => 'data',
@@ -93,8 +98,7 @@ class configuration
     {
         $config = array();
         $configFile = PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.ini';
-        if (is_readable($configFile))
-        {
+        if (is_readable($configFile)) {
             $config = parse_ini_file($configFile, true);
             foreach (array('main', 'model', 'model_options') as $section) {
                 if (!array_key_exists($section, $config)) {
@@ -103,14 +107,11 @@ class configuration
             }
         }
         $opts = '_options';
-        foreach (self::getDefaults() as $section => $values)
-        {
+        foreach (self::getDefaults() as $section => $values) {
             // fill missing sections with default values
-            if (!array_key_exists($section, $config) || count($config[$section]) == 0)
-            {
+            if (!array_key_exists($section, $config) || count($config[$section]) == 0) {
                 $this->_configuration[$section] = $values;
-                if (array_key_exists('dir', $this->_configuration[$section]))
-                {
+                if (array_key_exists('dir', $this->_configuration[$section])) {
                     $this->_configuration[$section]['dir'] = PATH . $this->_configuration[$section]['dir'];
                 }
                 continue;
@@ -121,8 +122,7 @@ class configuration
                     $this->_configuration['model']['class'],
                     array('privatebin_db', 'zerobin_db')
                 )
-            )
-            {
+            ) {
                 $values = array(
                     'dsn' => 'sqlite:' . PATH . 'data/db.sq3',
                     'tbl' => null,
@@ -137,52 +137,34 @@ class configuration
                 $section !== 'model_options' &&
                 ($from = strlen($section) - strlen($opts)) >= 0 &&
                 strpos($section, $opts, $from) !== false
-            )
-            {
-                if (is_int(current($values)))
-                {
+            ) {
+                if (is_int(current($values))) {
                     $config[$section] = array_map('intval', $config[$section]);
                 }
                 $this->_configuration[$section] = $config[$section];
             }
             // check for missing keys and set defaults if necessary
-            else
-            {
-                foreach ($values as $key => $val)
-                {
-                    if ($key == 'dir')
-                    {
+            else {
+                foreach ($values as $key => $val) {
+                    if ($key == 'dir') {
                         $val = PATH . $val;
                     }
                     $result = $val;
-                    if (array_key_exists($key, $config[$section]))
-                    {
-                        if ($val === null)
-                        {
+                    if (array_key_exists($key, $config[$section])) {
+                        if ($val === null) {
                             $result = $config[$section][$key];
-                        }
-                        elseif (is_bool($val))
-                        {
+                        } elseif (is_bool($val)) {
                             $val = strtolower($config[$section][$key]);
-                            if (in_array($val, array('true', 'yes', 'on')))
-                            {
+                            if (in_array($val, array('true', 'yes', 'on'))) {
                                 $result = true;
-                            }
-                            elseif (in_array($val, array('false', 'no', 'off')))
-                            {
+                            } elseif (in_array($val, array('false', 'no', 'off'))) {
                                 $result = false;
-                            }
-                            else
-                            {
+                            } else {
                                 $result = (bool) $config[$section][$key];
                             }
-                        }
-                        elseif (is_int($val))
-                        {
+                        } elseif (is_int($val)) {
                             $result = (int) $config[$section][$key];
-                        }
-                        elseif (is_string($val) && !empty($config[$section][$key]))
-                        {
+                        } elseif (is_string($val) && !empty($config[$section][$key])) {
                             $result = (string) $config[$section][$key];
                         }
                     }
@@ -191,15 +173,20 @@ class configuration
             }
         }
 
-        // support for old config file format, before the fork was renamed
+        // support for old config file format, before the fork was renamed and PSR-4 introduced
         $this->_configuration['model']['class'] = str_replace(
             'zerobin_', 'privatebin_',
             $this->_configuration['model']['class']
         );
 
+        $this->_configuration['model']['class'] = str_replace(
+            array('privatebin_data', 'privatebin_db'),
+            array('PrivateBin\\data\\data', 'PrivateBin\\data\\db'),
+            $this->_configuration['model']['class']
+        );
+
         // ensure a valid expire default key is set
-        if (!array_key_exists($this->_configuration['expire']['default'], $this->_configuration['expire_options']))
-        {
+        if (!array_key_exists($this->_configuration['expire']['default'], $this->_configuration['expire_options'])) {
             $this->_configuration['expire']['default'] = key($this->_configuration['expire_options']);
         }
     }
@@ -235,8 +222,7 @@ class configuration
     public function getKey($key, $section = 'main')
     {
         $options = $this->getSection($section);
-        if (!array_key_exists($key, $options))
-        {
+        if (!array_key_exists($key, $options)) {
             throw new Exception(i18n::_('Invalid data.') . " $section / $key", 4);
         }
         return $this->_configuration[$section][$key];
@@ -251,8 +237,7 @@ class configuration
      */
     public function getSection($section)
     {
-        if (!array_key_exists($section, $this->_configuration))
-        {
+        if (!array_key_exists($section, $this->_configuration)) {
             throw new Exception(i18n::_('PrivateBin requires configuration section [%s] to be present in configuration file.', $section), 3);
         }
         return $this->_configuration[$section];

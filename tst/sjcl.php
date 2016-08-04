@@ -1,4 +1,7 @@
 <?php
+
+use PrivateBin\sjcl;
+
 class sjclTest extends PHPUnit_Framework_TestCase
 {
     public function testSjclValidatorValidatesCorrectly()

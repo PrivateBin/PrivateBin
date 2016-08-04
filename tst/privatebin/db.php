@@ -1,4 +1,7 @@
 <?php
+
+use PrivateBin\data\db;
+
 class privatebin_dbTest extends PHPUnit_Framework_TestCase
 {
     private $_model;
@@ -13,13 +16,15 @@ class privatebin_dbTest extends PHPUnit_Framework_TestCase
     public function setUp()
     {
         /* Setup Routine */
-        $this->_model = privatebin_db::getInstance($this->_options);
+        $this->_model = db::getInstance($this->_options);
     }
 
     public function tearDown()
     {
         /* Tear Down Routine */
-        if (is_dir(PATH . 'data')) helper::rmdir(PATH . 'data');
+        if (is_dir(PATH . 'data')) {
+            helper::rmdir(PATH . 'data');
+        }
     }
 
     public function testDatabaseBasedDataStoreWorks()
@@ -75,31 +80,23 @@ class privatebin_dbTest extends PHPUnit_Framework_TestCase
         $paste = helper::getPaste(array('expire_date' => time() + 3600));
         $keys = array('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'x', 'y', 'z');
         $ids = array();
-        foreach ($keys as $key)
-        {
+        foreach ($keys as $key) {
             $ids[$key] = substr(md5($key), 0, 16);
             $this->_model->delete($ids[$key]);
             $this->assertFalse($this->_model->exists($ids[$key]), "paste $key does not yet exist");
-            if (in_array($key, array('x', 'y', 'z')))
-            {
+            if (in_array($key, array('x', 'y', 'z'))) {
                 $this->assertTrue($this->_model->create($ids[$key], $paste), "store $key paste");
-            }
-            else
-            {
+            } else {
                 $this->assertTrue($this->_model->create($ids[$key], $expired), "store $key paste");
             }
             $this->assertTrue($this->_model->exists($ids[$key]), "paste $key exists after storing it");
         }
         $this->_model->purge(10);
-        foreach ($ids as $key => $id)
-        {
-            if (in_array($key, array('x', 'y', 'z')))
-            {
+        foreach ($ids as $key => $id) {
+            if (in_array($key, array('x', 'y', 'z'))) {
                 $this->assertTrue($this->_model->exists($id), "paste $key exists after purge");
                 $this->_model->delete($id);
-            }
-            else
-            {
+            } else {
                 $this->assertFalse($this->_model->exists($id), "paste $key was purged");
             }
         }
@@ -110,7 +107,7 @@ class privatebin_dbTest extends PHPUnit_Framework_TestCase
      */
     public function testGetIbmInstance()
     {
-        privatebin_db::getInstance(array(
+        db::getInstance(array(
             'dsn' => 'ibm:', 'usr' => null, 'pwd' => null,
             'opt' => array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
         ));
@@ -121,7 +118,7 @@ class privatebin_dbTest extends PHPUnit_Framework_TestCase
      */
     public function testGetInformixInstance()
     {
-        privatebin_db::getInstance(array(
+        db::getInstance(array(
             'dsn' => 'informix:', 'usr' => null, 'pwd' => null,
             'opt' => array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
         ));
@@ -132,7 +129,7 @@ class privatebin_dbTest extends PHPUnit_Framework_TestCase
      */
     public function testGetMssqlInstance()
     {
-        privatebin_db::getInstance(array(
+        db::getInstance(array(
             'dsn' => 'mssql:', 'usr' => null, 'pwd' => null,
             'opt' => array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
         ));
@@ -143,7 +140,7 @@ class privatebin_dbTest extends PHPUnit_Framework_TestCase
      */
     public function testGetMysqlInstance()
     {
-        privatebin_db::getInstance(array(
+        db::getInstance(array(
             'dsn' => 'mysql:', 'usr' => null, 'pwd' => null,
             'opt' => array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
         ));
@@ -154,7 +151,7 @@ class privatebin_dbTest extends PHPUnit_Framework_TestCase
      */
     public function testGetOciInstance()
     {
-        privatebin_db::getInstance(array(
+        db::getInstance(array(
             'dsn' => 'oci:', 'usr' => null, 'pwd' => null,
             'opt' => array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
         ));
@@ -165,7 +162,7 @@ class privatebin_dbTest extends PHPUnit_Framework_TestCase
      */
     public function testGetPgsqlInstance()
     {
-        privatebin_db::getInstance(array(
+        db::getInstance(array(
             'dsn' => 'pgsql:', 'usr' => null, 'pwd' => null,
             'opt' => array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
         ));
@@ -177,7 +174,7 @@ class privatebin_dbTest extends PHPUnit_Framework_TestCase
      */
     public function testGetFooInstance()
     {
-        privatebin_db::getInstance(array(
+        db::getInstance(array(
             'dsn' => 'foo:', 'usr' => null, 'pwd' => null, 'opt' => null
         ));
     }
@@ -190,7 +187,7 @@ class privatebin_dbTest extends PHPUnit_Framework_TestCase
     {
         $options = $this->_options;
         unset($options['dsn']);
-        privatebin_db::getInstance($options);
+        db::getInstance($options);
     }
 
     /**
@@ -201,7 +198,7 @@ class privatebin_dbTest extends PHPUnit_Framework_TestCase
     {
         $options = $this->_options;
         unset($options['usr']);
-        privatebin_db::getInstance($options);
+        db::getInstance($options);
     }
 
     /**
@@ -212,7 +209,7 @@ class privatebin_dbTest extends PHPUnit_Framework_TestCase
     {
         $options = $this->_options;
         unset($options['pwd']);
-        privatebin_db::getInstance($options);
+        db::getInstance($options);
     }
 
     /**
@@ -223,7 +220,7 @@ class privatebin_dbTest extends PHPUnit_Framework_TestCase
     {
         $options = $this->_options;
         unset($options['opt']);
-        privatebin_db::getInstance($options);
+        db::getInstance($options);
     }
 
     public function testOldAttachments()
@@ -233,7 +230,7 @@ class privatebin_dbTest extends PHPUnit_Framework_TestCase
         @unlink($path);
         $this->_options['dsn'] = 'sqlite:' . $path;
         $this->_options['tbl'] = 'bar_';
-        $model = privatebin_db::getInstance($this->_options);
+        $model = db::getInstance($this->_options);
 
         $original = $paste = helper::getPasteWithAttachment(array('expire_date' => 1344803344));
         $paste['meta']['attachment'] = $paste['attachment'];
@@ -301,7 +298,7 @@ class privatebin_dbTest extends PHPUnit_Framework_TestCase
             'vizhash BLOB, ' .
             "postdate INT );"
         );
-        privatebin_db::getInstance($this->_options);
+        db::getInstance($this->_options);
         helper::rmdir(PATH . 'data');
     }
 }

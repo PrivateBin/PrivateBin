@@ -388,7 +388,8 @@ class configurationTestGenerator
      * constructor, generates the configuration test
      * @param array $options
      */
-    public function __construct($options) {
+    public function __construct($options)
+    {
         $this->_options = $options;
         // generate all possible combinations of options: options^settings
         $this->_generateConfigurations();
@@ -418,7 +419,7 @@ class configurationTestGenerator
                             while (list($path, $setting) = each($test['conditions'])) {
                                 if ($path == 'steps' && !in_array($step, $setting)) {
                                     continue 2;
-                                } elseif($path != 'steps') {
+                                } elseif ($path != 'steps') {
                                     list($section, $option) = explode('/', $path);
                                     if ($fullOptions[$section][$option] !== $setting) {
                                         continue 2;
@@ -653,7 +654,8 @@ EOT;
      * @throws Exception
      * @return array
      */
-    private function _addSetting(&$configuration, &$setting, &$section, &$option) {
+    private function _addSetting(&$configuration, &$setting, &$section, &$option)
+    {
         if (++$this->_iterationCount > self::MAX_ITERATIONS) {
             echo 'max iterations reached, stopping', PHP_EOL;
             return $configuration;

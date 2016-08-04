@@ -1,4 +1,10 @@
 <?php
+
+use PrivateBin\data\data;
+use PrivateBin\privatebin;
+use PrivateBin\request;
+use PrivateBin\serversalt;
+
 class jsonApiTest extends PHPUnit_Framework_TestCase
 {
     protected $_model;
@@ -6,7 +12,7 @@ class jsonApiTest extends PHPUnit_Framework_TestCase
     public function setUp()
     {
         /* Setup Routine */
-        $this->_model = privatebin_data::getInstance(array('dir' => PATH . 'data'));
+        $this->_model = data::getInstance(array('dir' => PATH . 'data'));
         serversalt::setPath(PATH . 'data');
         $this->reset();
     }
@@ -22,8 +28,9 @@ class jsonApiTest extends PHPUnit_Framework_TestCase
         $_POST = array();
         $_GET = array();
         $_SERVER = array();
-        if ($this->_model->exists(helper::getPasteId()))
+        if ($this->_model->exists(helper::getPasteId())) {
             $this->_model->delete(helper::getPasteId());
+        }
         helper::confRestore();
     }
 
@@ -267,5 +274,4 @@ class jsonApiTest extends PHPUnit_Framework_TestCase
         ob_end_clean();
         $this->assertEquals('{}', $content, 'does not output nasty data');
     }
-
 }

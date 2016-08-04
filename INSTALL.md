@@ -9,7 +9,7 @@ instance.
 
 ### Requirements
 
-- PHP version 5.2.6 or above
+- PHP version 5.3.0 or above
 - GD extension
 - mcrypt extension (recommended)
 - some disk space or (optional) a database supported by PDO

@@ -10,12 +10,20 @@
  * @version   0.22
  */
 
+namespace PrivateBin\Model;
+
+use Exception;
+use PrivateBin\configuration;
+use PrivateBin\data\AbstractData;
+use PrivateBin\sjcl;
+use stdClass;
+
 /**
  * model_abstract
  *
  * Abstract model for PrivateBin objects.
  */
-abstract class model_abstract
+abstract class AbstractModel
 {
     /**
      * Instance ID.
@@ -57,7 +65,7 @@ abstract class model_abstract
      * @param  privatebin_abstract $storage
      * @return void
      */
-    public function __construct(configuration $configuration, privatebin_abstract $storage)
+    public function __construct(configuration $configuration, AbstractData $storage)
     {
         $this->_conf = $configuration;
         $this->_store = $storage;
@@ -86,7 +94,9 @@ abstract class model_abstract
      */
     public function setId($id)
     {
-        if (!self::isValidId($id)) throw new Exception('Invalid paste ID.', 60);
+        if (!self::isValidId($id)) {
+            throw new Exception('Invalid paste ID.', 60);
+        }
         $this->_id = $id;
     }
 
@@ -100,7 +110,9 @@ abstract class model_abstract
      */
     public function setData($data)
     {
-        if (!sjcl::isValid($data)) throw new Exception('Invalid data.', 61);
+        if (!sjcl::isValid($data)) {
+            throw new Exception('Invalid data.', 61);
+        }
         $this->_data->data = $data;
 
         // We just want a small hash to avoid collisions:

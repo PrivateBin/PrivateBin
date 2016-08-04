@@ -10,6 +10,10 @@
  * @version   0.22
  */
 
+namespace PrivateBin;
+
+use PrivateBin\model\paste;
+
 /**
  * model
  *
@@ -50,8 +54,10 @@ class model
      */
     public function getPaste($pasteId = null)
     {
-        $paste = new model_paste($this->_conf, $this->_getStore());
-        if ($pasteId !== null) $paste->setId($pasteId);
+        $paste = new paste($this->_conf, $this->_getStore());
+        if ($pasteId !== null) {
+            $paste->setId($pasteId);
+        }
         return $paste;
     }
 
@@ -63,8 +69,7 @@ class model
     public function purge()
     {
         purgelimiter::setConfiguration($this->_conf);
-        if (purgelimiter::canPurge())
-        {
+        if (purgelimiter::canPurge()) {
             $this->_getStore()->purge($this->_conf->getKey('batchsize', 'purge'));
         }
     }
@@ -76,8 +81,7 @@ class model
      */
     private function _getStore()
     {
-        if ($this->_store === null)
-        {
+        if ($this->_store === null) {
             $this->_store = forward_static_call(
                 array($this->_conf->getKey('class', 'model'), 'getInstance'),
                 $this->_conf->getSection('model_options')

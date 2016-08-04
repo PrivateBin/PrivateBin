@@ -23,5 +23,10 @@
     "require-dev": {
         "codacy/coverage": "dev-master",
         "codeclimate/php-test-reporter": "dev-master"
+    },
+    "autoload": {
+        "psr-4": {
+            "PrivateBin\\": "lib/"
+        }
     }
 }

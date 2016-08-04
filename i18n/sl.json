@@ -2,8 +2,8 @@
     "en": "sl",
     "Paste does not exist, has expired or has been deleted.":
         "Prilepek ne obstaja, mu je potekla življenjska doba, ali pa je izbrisan.",
-    "PrivateBin requires php 5.2.6 or above to work. Sorry.":
-        "Oprosti, PrivateBin za delovanje potrebuje vsaj php 5.2.6.",
+    "PrivateBin requires php 5.3.0 or above to work. Sorry.":
+        "Oprosti, PrivateBin za delovanje potrebuje vsaj php 5.3.0.",
     "PrivateBin requires configuration section [%s] to be present in configuration file.":
         "PrivateBin potrebuje sekcijo konfiguracij [%s] v konfiguracijski datoteki.",
     "Please wait %d seconds between each post.":

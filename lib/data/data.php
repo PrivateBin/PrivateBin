@@ -10,12 +10,14 @@
  * @version   0.22
  */
 
+namespace PrivateBin\data;
+
 /**
  * privatebin_data
  *
  * Model for data access, implemented as a singleton.
  */
-class privatebin_data extends privatebin_abstract
+class data extends AbstractData
 {
     /**
      * directory where data is stored
@@ -40,7 +42,9 @@ class privatebin_data extends privatebin_abstract
         if (
             is_array($options) &&
             array_key_exists('dir', $options)
-        ) self::$_dir = $options['dir'] . DIRECTORY_SEPARATOR;
+        ) {
+            self::$_dir = $options['dir'] . DIRECTORY_SEPARATOR;
+        }
         // if needed initialize the singleton
         if (!(self::$_instance instanceof privatebin_data)) {
             self::$_instance = new self;
@@ -60,8 +64,12 @@ class privatebin_data extends privatebin_abstract
     public function create($pasteid, $paste)
     {
         $storagedir = self::_dataid2path($pasteid);
-        if (is_file($storagedir . $pasteid)) return false;
-        if (!is_dir($storagedir)) mkdir($storagedir, 0705, true);
+        if (is_file($storagedir . $pasteid)) {
+            return false;
+        }
+        if (!is_dir($storagedir)) {
+            mkdir($storagedir, 0705, true);
+        }
         return (bool) @file_put_contents($storagedir . $pasteid, json_encode($paste));
     }
 
@@ -74,16 +82,16 @@ class privatebin_data extends privatebin_abstract
      */
     public function read($pasteid)
     {
-        if (!$this->exists($pasteid)) return false;
+        if (!$this->exists($pasteid)) {
+            return false;
+        }
         $paste = json_decode(
             file_get_contents(self::_dataid2path($pasteid) . $pasteid)
         );
-        if (property_exists($paste->meta, 'attachment'))
-        {
+        if (property_exists($paste->meta, 'attachment')) {
             $paste->attachment = $paste->meta->attachment;
             unset($paste->meta->attachment);
-            if (property_exists($paste->meta, 'attachmentname'))
-            {
+            if (property_exists($paste->meta, 'attachmentname')) {
                 $paste->attachmentname = $paste->meta->attachmentname;
                 unset($paste->meta->attachmentname);
             }
@@ -105,13 +113,13 @@ class privatebin_data extends privatebin_abstract
 
         // Delete discussion if it exists.
         $discdir = self::_dataid2discussionpath($pasteid);
-        if (is_dir($discdir))
-        {
+        if (is_dir($discdir)) {
             // Delete all files in discussion directory
             $dir = dir($discdir);
-            while (false !== ($filename = $dir->read()))
-            {
-                if (is_file($discdir . $filename)) @unlink($discdir . $filename);
+            while (false !== ($filename = $dir->read())) {
+                if (is_file($discdir . $filename)) {
+                    @unlink($discdir . $filename);
+                }
             }
             $dir->close();
 
@@ -146,8 +154,12 @@ class privatebin_data extends privatebin_abstract
     {
         $storagedir = self::_dataid2discussionpath($pasteid);
         $filename = $pasteid . '.' . $commentid . '.' . $parentid;
-        if (is_file($storagedir . $filename)) return false;
-        if (!is_dir($storagedir)) mkdir($storagedir, 0705, true);
+        if (is_file($storagedir . $filename)) {
+            return false;
+        }
+        if (!is_dir($storagedir)) {
+            mkdir($storagedir, 0705, true);
+        }
         return (bool) @file_put_contents($storagedir . $filename, json_encode($comment));
     }
 
@@ -162,18 +174,15 @@ class privatebin_data extends privatebin_abstract
     {
         $comments = array();
         $discdir = self::_dataid2discussionpath($pasteid);
-        if (is_dir($discdir))
-        {
+        if (is_dir($discdir)) {
             // Delete all files in discussion directory
             $dir = dir($discdir);
-            while (false !== ($filename = $dir->read()))
-            {
+            while (false !== ($filename = $dir->read())) {
                 // Filename is in the form pasteid.commentid.parentid:
                 // - pasteid is the paste this reply belongs to.
                 // - commentid is the comment identifier itself.
                 // - parentid is the comment this comment replies to (It can be pasteid)
-                if (is_file($discdir . $filename))
-                {
+                if (is_file($discdir . $filename)) {
                     $comment = json_decode(file_get_contents($discdir . $filename));
                     $items = explode('.', $filename);
                     // Add some meta information not contained in file.
@@ -224,11 +233,9 @@ class privatebin_data extends privatebin_abstract
             scandir(self::$_dir),
             array('self', '_isFirstLevelDir')
         );
-        if (count($firstLevel) > 0)
-        {
+        if (count($firstLevel) > 0) {
             // try at most 10 times the $batchsize pastes before giving up
-            for ($i = 0, $max = $batchsize * 10; $i < $max; ++$i)
-            {
+            for ($i = 0, $max = $batchsize * 10; $i < $max; ++$i) {
                 $firstKey = array_rand($firstLevel);
                 $secondLevel = array_filter(
                     scandir(self::$_dir . $firstLevel[$firstKey]),
@@ -236,8 +243,7 @@ class privatebin_data extends privatebin_abstract
                 );
 
                 // skip this folder in the next checks if it is empty
-                if (count($secondLevel) == 0)
-                {
+                if (count($secondLevel) == 0) {
                     unset($firstLevel[$firstKey]);
                     continue;
                 }
@@ -245,26 +251,32 @@ class privatebin_data extends privatebin_abstract
                 $secondKey = array_rand($secondLevel);
                 $path = self::$_dir . $firstLevel[$firstKey] .
                     DIRECTORY_SEPARATOR . $secondLevel[$secondKey];
-                if (!is_dir($path)) continue;
+                if (!is_dir($path)) {
+                    continue;
+                }
                 $thirdLevel = array_filter(
                     scandir($path),
-                    array('model_paste', 'isValidId')
+                    array('PrivateBin\\model\\paste', 'isValidId')
                 );
-                if (count($thirdLevel) == 0) continue;
+                if (count($thirdLevel) == 0) {
+                    continue;
+                }
                 $thirdKey = array_rand($thirdLevel);
                 $pasteid = $thirdLevel[$thirdKey];
-                if (in_array($pasteid, $pastes)) continue;
+                if (in_array($pasteid, $pastes)) {
+                    continue;
+                }
 
-                if ($this->exists($pasteid))
-                {
+                if ($this->exists($pasteid)) {
                     $data = $this->read($pasteid);
                     if (
                         property_exists($data->meta, 'expire_date') &&
                         $data->meta->expire_date < time()
-                    )
-                    {
+                    ) {
                         $pastes[] = $pasteid;
-                        if (count($pastes) >= $batchsize) break;
+                        if (count($pastes) >= $batchsize) {
+                            break;
+                        }
                     }
                 }
             }
@@ -282,10 +294,11 @@ class privatebin_data extends privatebin_abstract
     private static function _init()
     {
         // Create storage directory if it does not exist.
-        if (!is_dir(self::$_dir)) mkdir(self::$_dir, 0705);
+        if (!is_dir(self::$_dir)) {
+            mkdir(self::$_dir, 0705);
+        }
         // Create .htaccess file if it does not exist.
-        if (!is_file(self::$_dir . '.htaccess'))
-        {
+        if (!is_file(self::$_dir . '.htaccess')) {
             file_put_contents(
                 self::$_dir . '.htaccess',
                 'Allow from none' . PHP_EOL .

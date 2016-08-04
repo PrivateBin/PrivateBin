@@ -1,4 +1,11 @@
 <?php
+
+use PrivateBin\configuration;
+use PrivateBin\data\db;
+use PrivateBin\model;
+use PrivateBin\model\paste;
+use PrivateBin\vizhash16x16;
+
 class modelTest extends PHPUnit_Framework_TestCase
 {
     private $_conf;
@@ -165,9 +172,9 @@ class modelTest extends PHPUnit_Framework_TestCase
 
     public function testPasteIdValidation()
     {
-        $this->assertTrue(model_paste::isValidId('a242ab7bdfb2581a'), 'valid paste id');
-        $this->assertFalse(model_paste::isValidId('foo'), 'invalid hex values');
-        $this->assertFalse(model_paste::isValidId('../bar/baz'), 'path attack');
+        $this->assertTrue(paste::isValidId('a242ab7bdfb2581a'), 'valid paste id');
+        $this->assertFalse(paste::isValidId('foo'), 'invalid hex values');
+        $this->assertFalse(paste::isValidId('../bar/baz'), 'path attack');
     }
 
     /**
@@ -214,37 +221,29 @@ class modelTest extends PHPUnit_Framework_TestCase
     public function testPurge()
     {
         $conf = new configuration;
-        $store = privatebin_db::getInstance($conf->getSection('model_options'));
+        $store = db::getInstance($conf->getSection('model_options'));
         $store->delete(helper::getPasteId());
         $expired = helper::getPaste(array('expire_date' => 1344803344));
         $paste = helper::getPaste(array('expire_date' => time() + 3600));
         $keys = array('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'x', 'y', 'z');
         $ids = array();
-        foreach ($keys as $key)
-        {
+        foreach ($keys as $key) {
             $ids[$key] = substr(md5($key), 0, 16);
             $store->delete($ids[$key]);
             $this->assertFalse($store->exists($ids[$key]), "paste $key does not yet exist");
-            if (in_array($key, array('x', 'y', 'z')))
-            {
+            if (in_array($key, array('x', 'y', 'z'))) {
                 $this->assertTrue($store->create($ids[$key], $paste), "store $key paste");
-            }
-            else
-            {
+            } else {
                 $this->assertTrue($store->create($ids[$key], $expired), "store $key paste");
             }
             $this->assertTrue($store->exists($ids[$key]), "paste $key exists after storing it");
         }
         $this->_model->purge(10);
-        foreach ($ids as $key => $id)
-        {
-            if (in_array($key, array('x', 'y', 'z')))
-            {
+        foreach ($ids as $key => $id) {
+            if (in_array($key, array('x', 'y', 'z'))) {
                 $this->assertTrue($this->_model->getPaste($id)->exists(), "paste $key exists after purge");
                 $this->_model->getPaste($id)->delete();
-            }
-            else
-            {
+            } else {
                 $this->assertFalse($this->_model->getPaste($id)->exists(), "paste $key was purged");
             }
         }

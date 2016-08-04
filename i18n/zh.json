@@ -2,8 +2,8 @@
     "en": "zh",
     "Paste does not exist, has expired or has been deleted.":
         "粘贴不存在，已过期或者已被删除。",
-    "PrivateBin requires php 5.2.6 or above to work. Sorry.":
-        "PrivateBin需要工作于PHP 5.2.6及以上版本，抱歉。",
+    "PrivateBin requires php 5.3.0 or above to work. Sorry.":
+        "PrivateBin需要工作于PHP 5.3.0及以上版本，抱歉。",
     "PrivateBin requires configuration section [%s] to be present in configuration file.":
         "PrivateBin需要设置配置文件中 [%s] 的部分。",
     "Please wait %d seconds between each post.":
