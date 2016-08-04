@@ -28,5 +28,8 @@
         "psr-4": {
             "PrivateBin\\": "lib/"
         }
+    },
+    "config": {
+        "autoloader-suffix": "DontChange"
     }
 }
