@@ -81,7 +81,7 @@ data folder. This is the recommended setup for most sites.
 Under high load, in distributed setups or if you are not allowed to store files
 locally, you might want to switch to the `Database` model. This lets you
 store your data in a database. Basically all databases that are supported by
-[PDO](http://php.net/manual/en/book.pdo.php) may be used. Automatic table
+[PDO](https://secure.php.net/manual/en/book.pdo.php) may be used. Automatic table
 creation is provided for `pdo_ibm`, `pdo_informix`, `pdo_mssql`, `pdo_mysql`,
 `pdo_oci`, `pdo_pgsql` and `pdo_sqlite`. You may want to provide a table prefix,
 if you have to share the PrivateBin database with another application or you want
