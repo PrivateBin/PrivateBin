@@ -30,7 +30,7 @@ you set a time limit in seconds. Users may not post more often then this limit
 to your PrivateBin installation.
 
 More details can be found in the
-[configuration documentation](../Configuration).
+[configuration documentation](https://github.com/PrivateBin/PrivateBin/wiki/Configuration).
 
 ## Advanced installation
 
@@ -40,7 +40,7 @@ In the index.php you can define a different `PATH`. This is useful to secure you
 installation. You can move the configuration, data files, templates and PHP
 libraries (directories cfg, data, lib, tpl, tst and vendor) outside of your document
 root. This new location must still be accessible to your webserver / PHP process
-([open_basedir setting](http://php.net/manual/en/ini.core.php#ini.open-basedir)).
+([open_basedir setting](https://secure.php.net/manual/en/ini.core.php#ini.open-basedir)).
 
 > #### PATH Example
 > Your PrivateBin installation lives in a subfolder called "paste" inside of
