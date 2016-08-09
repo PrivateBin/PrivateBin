@@ -59,6 +59,13 @@ languageselection = false
 ; and a rainbow table is generated for all IPs. Enabled by default.
 ; vizhash = false
 
+; Content Security Policy headers allow a website to restrict what sources are
+; allowed to be accessed in its context. You need to change this if you added
+; custom scripts from third-party domains to your templates, e.g. tracking
+; scripts or run your site behind certain DDoS-protection services.
+; Check the documentation at https://content-security-policy.com/
+cspheader = "default-src 'none'; connect-src *; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self';"
+
 ; stay compatible with PrivateBin Alpha 0.19, less secure
 ; if enabled will use base64.js version 1.7 instead of 2.1.9 and sha1 instead of
 ; sha256 in HMAC for the deletion token

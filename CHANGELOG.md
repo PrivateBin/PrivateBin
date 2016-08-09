@@ -8,11 +8,12 @@
     * ADDED: Option to disable vizhashs in discussions (will only affect newly created pastes)
     * ADDED: Composer support
     * CHANGED: Renamed the ZeroBin fork to PrivateBin
-    * CHANGED: Removed unmaintained RainTPL template engine, replacing the templates with straight forward PHP file
+    * CHANGED: Removed unmaintained RainTPL template engine, replacing the templates with straight forward PHP files
     * CHANGED: New favicon
     * CHANGED: Upgrading SJCL library to 1.0.4
     * CHANGED: Switched to GCM instead CCM mode for AES encryption for newly created pastes
     * CHANGED: Switched to a SHA256 HMAC of the IP in traffic limiter instead of storing it in plain text on the server
+    * CHANGED: Introduced content security policy header to reduce cross site scripting (XSS) risks
     * CHANGED: Refactored PHP code to conform to PSR-4 and PSR-2 standards.
     * FIXED: Content-type negociation for HTML in certain uncommon browser configurations
     * FIXED: JavaScript error displayed before page is loaded or during attachment load

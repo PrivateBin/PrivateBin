@@ -281,7 +281,7 @@ $(function() {
         getCookie: function(cname) {
             var name = cname + '=';
             var ca = document.cookie.split(';');
-            for(var i = 0; i < ca.length; ++i) {
+            for (var i = 0; i < ca.length; ++i) {
                 var c = ca[i];
                 while (c.charAt(0) === ' ') c = c.substring(1);
                 if (c.indexOf(name) === 0)
@@ -1250,6 +1250,45 @@ $(function() {
         },
 
         /**
+         * Set the expiration on bootstrap templates.
+         *
+         * @param Event event
+         */
+        setExpiration: function(event)
+        {
+            event.preventDefault();
+            var target = $(event.target);
+            $('#pasteExpiration').val(target.data('expiration'));
+            $('#pasteExpirationDisplay').text(target.text());
+        },
+
+        /**
+         * Set the format on bootstrap templates.
+         *
+         * @param Event event
+         */
+        setFormat: function(event)
+        {
+            event.preventDefault();
+            var target = $(event.target);
+            $('#pasteFormatter').val(target.data('format'));
+            $('#pasteFormatterDisplay').text(target.text());
+        },
+
+        /**
+         * Set the language on bootstrap templates.
+         *
+         * Sets the language cookie and reloads the page.
+         *
+         * @param Event event
+         */
+        setLanguage: function(event)
+        {
+            document.cookie = 'lang=' + $(event.target).data('lang');
+            this.reloadPage(event);
+        },
+
+        /**
          * Support input of tab character.
          *
          * @param Event event
@@ -1388,6 +1427,14 @@ $(function() {
             this.message.keydown(this.supportTabs);
             this.messageEdit.click($.proxy(this.viewEditor, this));
             this.messagePreview.click($.proxy(this.viewPreview, this));
+
+            // bootstrap template drop downs
+            $('ul.dropdown-menu li a', $('#expiration').parent()).click($.proxy(this.setExpiration, this));
+            $('ul.dropdown-menu li a', $('#formatter').parent()).click($.proxy(this.setFormat, this));
+            $('#language ul.dropdown-menu li a').click($.proxy(this.setLanguage, this));
+
+            // page template drop down
+            $('#language select option').click($.proxy(this.setLanguage, this));
         },
 
         /**

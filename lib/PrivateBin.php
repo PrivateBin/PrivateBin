@@ -402,6 +402,7 @@ class PrivateBin
         header('Expires: ' . $time);
         header('Last-Modified: ' . $time);
         header('Vary: Accept');
+        header('Content-Security-Policy: ' . $this->_conf->getKey('cspheader'));
 
         // label all the expiration options
         $expire = array();

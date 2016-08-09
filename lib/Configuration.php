@@ -51,6 +51,7 @@ class Configuration
             'languagedefault' => '',
             'urlshortener' => '',
             'vizhash' => true,
+            'cspheader' => 'default-src \'none\'; connect-src *; script-src \'self\'; style-src \'self\'; font-src \'self\'; img-src \'self\';',
             'zerobincompatibility' => false,
         ),
         'expire' => array(

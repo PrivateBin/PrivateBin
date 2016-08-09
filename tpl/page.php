@@ -159,7 +159,7 @@ if (strlen($LANGUAGESELECTION)):
 <?php
     foreach ($LANGUAGES as $key => $value):
 ?>
-							<option class="reloadlink" onclick="document.cookie='lang=<?php echo $key; ?>';" value="<?php echo $key; ?>"<?php
+							<option data-lang="<?php echo $key; ?>" value="<?php echo $key; ?>"<?php
         if ($key == $LANGUAGESELECTION):
 ?> selected="selected"<?php
         endif;

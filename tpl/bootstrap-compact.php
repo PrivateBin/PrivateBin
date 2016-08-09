@@ -107,7 +107,7 @@ endforeach;
 foreach ($EXPIRE as $key => $value):
 ?>
 								<li>
-									<a href="#" onclick="$('#pasteExpiration').val('<?php echo $key; ?>');$('#pasteExpirationDisplay').text('<?php echo $value; ?>');return false;">
+									<a href="#" data-expiration="<?php echo $key; ?>">
 										<?php echo $value; ?>
 									</a>
 								</li>
@@ -155,7 +155,7 @@ endif;
 foreach ($FORMATTER as $key => $value):
 ?>
 								<li>
-									<a href="#" onclick="$('#pasteFormatter').val('<?php echo $key; ?>');$('#pasteFormatterDisplay').text('<?php echo $value; ?>');return false;">
+									<a href="#" data-format="<?php echo $key; ?>">
 										<?php echo $value; ?>
 									</a>
 								</li>
@@ -219,7 +219,7 @@ if (strlen($LANGUAGESELECTION)):
     foreach ($LANGUAGES as $key => $value):
 ?>
 								<li>
-									<a href="#" class="reloadlink" onclick="document.cookie='lang={$key}';">
+									<a href="#" data-lang="<?php echo $key; ?>">
 										<?php echo $value[0]; ?> (<?php echo $value[1]; ?>)
 									</a>
 								</li>
