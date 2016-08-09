@@ -491,11 +491,13 @@ $(function() {
          */
         cipher: function(key, password, message)
         {
+            // Galois Counter Mode, keysize 256 bit, authentication tag 128 bit
+            var options = {mode: 'gcm', ks: 256, ts: 128};
             if ((password || '').trim().length === 0)
             {
-                return sjcl.encrypt(key, this.compress(message), {mode : 'gcm'});
+                return sjcl.encrypt(key, this.compress(message), options);
             }
-            return sjcl.encrypt(key + sjcl.codec.hex.fromBits(sjcl.hash.sha256.hash(password)), this.compress(message), {mode : 'gcm'});
+            return sjcl.encrypt(key + sjcl.codec.hex.fromBits(sjcl.hash.sha256.hash(password)), this.compress(message), options);
         },
 
         /**
