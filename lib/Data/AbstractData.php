@@ -13,7 +13,7 @@
 namespace PrivateBin\Data;
 
 /**
- * privatebin_abstract
+ * AbstractData
  *
  * Abstract model for PrivateBin data access, implemented as a singleton.
  */
@@ -24,7 +24,7 @@ abstract class AbstractData
      *
      * @access protected
      * @static
-     * @var privatebin_abstract
+     * @var AbstractData
      */
     protected static $_instance = null;
 

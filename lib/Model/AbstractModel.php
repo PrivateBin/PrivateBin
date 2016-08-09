@@ -45,7 +45,7 @@ abstract class AbstractModel
      * Configuration.
      *
      * @access protected
-     * @var configuration
+     * @var Configuration
      */
     protected $_conf;
 
@@ -53,7 +53,7 @@ abstract class AbstractModel
      * Data storage.
      *
      * @access protected
-     * @var privatebin_abstract
+     * @var AbstractData
      */
     protected $_store;
 
@@ -61,11 +61,11 @@ abstract class AbstractModel
      * Instance constructor.
      *
      * @access public
-     * @param  configuration $configuration
-     * @param  privatebin_abstract $storage
+     * @param  Configuration $configuration
+     * @param  AbstractData $storage
      * @return void
      */
-    public function __construct(configuration $configuration, AbstractData $storage)
+    public function __construct(Configuration $configuration, AbstractData $storage)
     {
         $this->_conf = $configuration;
         $this->_store = $storage;

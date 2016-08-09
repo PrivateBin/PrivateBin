@@ -4,6 +4,7 @@ use PrivateBin\Configuration;
 use PrivateBin\Data\Database;
 use PrivateBin\Model;
 use PrivateBin\Model\Paste;
+use PrivateBin\Persistence\ServerSalt;
 use PrivateBin\Vizhash16x16;
 
 class ModelTest extends PHPUnit_Framework_TestCase
@@ -12,10 +13,15 @@ class ModelTest extends PHPUnit_Framework_TestCase
 
     private $_model;
 
+    protected $_path;
+
     public function setUp()
     {
         /* Setup Routine */
         Helper::confRestore();
+        $this->_path = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'privatebin_data';
+        if (!is_dir($this->_path)) mkdir($this->_path);
+        ServerSalt::setPath($this->_path);
         $options = parse_ini_file(CONF, true);
         $options['purge']['limit'] = 0;
         $options['model'] = array(
@@ -37,6 +43,8 @@ class ModelTest extends PHPUnit_Framework_TestCase
     public function tearDown()
     {
         /* Tear Down Routine */
+        Helper::confRestore();
+        Helper::rmDir($this->_path);
     }
 
     public function testBasicWorkflow()
