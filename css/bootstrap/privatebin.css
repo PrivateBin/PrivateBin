@@ -9,6 +9,10 @@ body.navbar-spacing {
 	padding-top: 70px;
 }
 
+.buttondisabled {
+	opacity: 0.3;
+}
+
 .navbar-nav {
 	margin: 0 8px;
 	padding: 3px;
