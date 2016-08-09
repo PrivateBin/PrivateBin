@@ -306,7 +306,7 @@ class Database extends AbstractData
      *
      * @access public
      * @param  string $pasteid
-     * @return void
+     * @return bool
      */
     public function exists($pasteid)
     {
@@ -394,7 +394,7 @@ class Database extends AbstractData
      * @param  string $pasteid
      * @param  string $parentid
      * @param  string $commentid
-     * @return void
+     * @return bool
      */
     public function existsComment($pasteid, $parentid, $commentid)
     {

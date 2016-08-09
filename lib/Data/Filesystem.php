@@ -138,7 +138,7 @@ class Filesystem extends AbstractData
      *
      * @access public
      * @param  string $pasteid
-     * @return void
+     * @return bool
      */
     public function exists($pasteid)
     {
@@ -214,7 +214,7 @@ class Filesystem extends AbstractData
      * @param  string $pasteid
      * @param  string $parentid
      * @param  string $commentid
-     * @return void
+     * @return bool
      */
     public function existsComment($pasteid, $parentid, $commentid)
     {
@@ -325,7 +325,7 @@ class Filesystem extends AbstractData
      * @access private
      * @static
      * @param  string $dataid
-     * @return void
+     * @return string
      */
     private static function _dataid2path($dataid)
     {
@@ -341,7 +341,7 @@ class Filesystem extends AbstractData
      * @access private
      * @static
      * @param  string $dataid
-     * @return void
+     * @return string
      */
     private static function _dataid2discussionpath($dataid)
     {

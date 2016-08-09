@@ -129,7 +129,7 @@ abstract class AbstractData
      * @param  string $pasteid
      * @param  string $parentid
      * @param  string $commentid
-     * @return void
+     * @return bool
      */
     abstract public function existsComment($pasteid, $parentid, $commentid);
 

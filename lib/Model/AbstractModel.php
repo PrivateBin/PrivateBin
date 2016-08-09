@@ -110,7 +110,7 @@ abstract class AbstractModel
      */
     public function setData($data)
     {
-        if (!sjcl::isValid($data)) {
+        if (!Sjcl::isValid($data)) {
             throw new Exception('Invalid data.', 61);
         }
         $this->_data->data = $data;
