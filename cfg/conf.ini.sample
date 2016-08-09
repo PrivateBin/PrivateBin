@@ -120,14 +120,14 @@ dir = PATH "data"
 
 [model]
 ; name of data model class to load and directory for storage
-; the default model "privatebin_data" stores everything in the filesystem
-class = privatebin_data
+; the default model "Filesystem" stores everything in the filesystem
+class = Filesystem
 [model_options]
 dir = PATH "data"
 
 ;[model]
 ; example of DB configuration for MySQL
-;class = privatebin_db
+;class = Database
 ;[model_options]
 ;dsn = "mysql:host=localhost;dbname=privatebin;charset=UTF8"
 ;tbl = "privatebin_"	; table prefix
@@ -137,7 +137,7 @@ dir = PATH "data"
 
 ;[model]
 ; example of DB configuration for SQLite
-;class = privatebin_db
+;class = Database
 ;[model_options]
 ;dsn = "sqlite:" PATH "data/db.sq3"
 ;usr = null

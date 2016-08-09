@@ -1,5 +1,11 @@
 doc/ export-ignore
 tst/ export-ignore
+.codeclimate.yml export-ignore
+.csslintrc export-ignore
+.editorconfig export-ignore
+.eslintignore export-ignore
+.eslintrc export-ignore
 .gitattributes export-ignore
+.github export-ignore
 .gitignore export-ignore
-img/bee*.png export-ignore
+.travis.yml export-ignore

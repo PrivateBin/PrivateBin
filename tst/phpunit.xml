@@ -1,13 +1,13 @@
-<phpunit bootstrap="bootstrap.php" colors="true">
+<phpunit bootstrap="Bootstrap.php" colors="true">
 	<testsuite name="PrivateBin Test Suite">
 		<directory suffix=".php">./</directory>
-		<exclude>configGenerator.php</exclude>
+		<exclude>ConfigurationTestGenerator.php</exclude>
 	</testsuite>
 	<filter>
 		<whitelist>
 			<directory suffix=".php">../lib</directory>
 			<exclude>
-				<file>../lib/data/AbstractData.php</file>
+				<file>../lib/Data/AbstractData.php</file>
 			</exclude>
 		</whitelist>
 	</filter>

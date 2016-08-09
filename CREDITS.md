@@ -12,6 +12,7 @@ Simon Rupf - current developer and maintainer
 * azlux - Tab character input support
 * Adam Fisher - Favicons
 * rugk - various stuff, icons
+* Sobak - PSR-4 and PSR-2 refactoring
 
 Translations:
 * Hexalyse - French

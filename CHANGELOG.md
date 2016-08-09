@@ -13,6 +13,7 @@
     * CHANGED: Upgrading SJCL library to 1.0.4
     * CHANGED: Switched to GCM instead CCM mode for AES encryption for newly created pastes
     * CHANGED: Switched to a SHA256 HMAC of the IP in traffic limiter instead of storing it in plain text on the server
+    * CHANGED: Refactored PHP code to conform to PSR-4 and PSR-2 standards.
     * FIXED: Content-type negociation for HTML in certain uncommon browser configurations
     * FIXED: JavaScript error displayed before page is loaded or during attachment load
     * FIXED: Don't strip space characters at beginning or end of optional password
