@@ -33,39 +33,40 @@ class Paste extends AbstractModel
      */
     public function get()
     {
-        $this->_data = $this->_store->read($this->getId());
-        if ($this->_data === false) {
+        $data = $this->_store->read($this->getId());
+        if ($data === false) {
             throw new Exception(PrivateBin::GENERIC_ERROR, 64);
         }
 
         // check if paste has expired and delete it if neccessary.
-        if (property_exists($this->_data->meta, 'expire_date')) {
-            if ($this->_data->meta->expire_date < time()) {
+        if (property_exists($data->meta, 'expire_date')) {
+            if ($data->meta->expire_date < time()) {
                 $this->delete();
                 throw new Exception(PrivateBin::GENERIC_ERROR, 63);
             }
             // We kindly provide the remaining time before expiration (in seconds)
-            $this->_data->meta->remaining_time = $this->_data->meta->expire_date - time();
+            $data->meta->remaining_time = $data->meta->expire_date - time();
         }
 
         // set formatter for for the view.
-        if (!property_exists($this->_data->meta, 'formatter')) {
+        if (!property_exists($data->meta, 'formatter')) {
             // support < 0.21 syntax highlighting
-            if (property_exists($this->_data->meta, 'syntaxcoloring') && $this->_data->meta->syntaxcoloring === true) {
-                $this->_data->meta->formatter = 'syntaxhighlighting';
+            if (property_exists($data->meta, 'syntaxcoloring') && $data->meta->syntaxcoloring === true) {
+                $data->meta->formatter = 'syntaxhighlighting';
             } else {
-                $this->_data->meta->formatter = $this->_conf->getKey('defaultformatter');
+                $data->meta->formatter = $this->_conf->getKey('defaultformatter');
             }
         }
 
         // support old paste format with server wide salt
-        if (!property_exists($this->_data->meta, 'salt')) {
-            $this->_data->meta->salt = serversalt::get();
+        if (!property_exists($data->meta, 'salt')) {
+            $data->meta->salt = ServerSalt::get();
         }
-        $this->_data->comments = array_values($this->getComments());
-        $this->_data->comment_count = count($this->_data->comments);
-        $this->_data->comment_offset = 0;
-        $this->_data->{'@context'} = 'js/paste.jsonld';
+        $data->comments = array_values($this->getComments());
+        $data->comment_count = count($data->comments);
+        $data->comment_offset = 0;
+        $data->{'@context'} = 'js/paste.jsonld';
+        $this->_data = $data;
         return $this->_data;
     }
 

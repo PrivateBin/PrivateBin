@@ -12,6 +12,8 @@
 
 namespace PrivateBin\Data;
 
+use stdClass;
+
 /**
  * AbstractData
  *
