@@ -10,7 +10,7 @@
  * @version   0.22
  */
 
-namespace PrivateBin\model;
+namespace PrivateBin\Model;
 
 use PrivateBin\Sjcl;
 use PrivateBin\Persistence\TrafficLimiter;
