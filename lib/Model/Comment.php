@@ -15,6 +15,7 @@ namespace PrivateBin\Model;
 use PrivateBin\Sjcl;
 use PrivateBin\Persistence\TrafficLimiter;
 use PrivateBin\Vizhash16x16;
+use Identicon\Identicon;
 use Exception;
 
 /**
@@ -192,17 +193,26 @@ class Comment extends AbstractModel
         }
         $this->_data->meta->nickname = $nickname;
 
-        if ($this->_conf->getKey('vizhash')) {
-            // Generation of the anonymous avatar (Vizhash):
-            // If a nickname is provided, we generate a Vizhash.
-            // (We assume that if the user did not enter a nickname, he/she wants
-            // to be anonymous and we will not generate the vizhash.)
-            $vh = new Vizhash16x16();
-            $pngdata = $vh->generate(TrafficLimiter::getIp());
-            if ($pngdata != '') {
-                $this->_data->meta->vizhash = 'data:image/png;base64,' . base64_encode($pngdata);
+        // If a nickname is provided, we generate an icon based on a SHA512 HMAC
+        // of the users IP. (We assume that if the user did not enter a nickname,
+        // the user wants to be anonymous and we will not generate an icon.)
+        $icon = $this->_conf->getKey('icon');
+        if ($icon != 'none') {
+            $pngdata = '';
+            $hmac = TrafficLimiter::getHash();
+            if ($icon == 'identicon') {
+                $identicon = new Identicon();
+                $pngdata = $identicon->getImageDataUri($hmac, 16);
+            } elseif ($icon == 'vizhash') {
+                $vh = new Vizhash16x16();
+                $pngdata = 'data:image/png;base64,' . base64_encode(
+                    $vh->generate($hmac)
+                );
             }
-            // Once the avatar is generated, we do not keep the IP address, nor its hash.
+            if ($pngdata != '') {
+                $this->_data->meta->vizhash = $pngdata;
+            }
         }
+        // Once the icon is generated, we do not keep the IP address hash.
     }
 }

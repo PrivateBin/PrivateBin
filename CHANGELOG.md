@@ -5,7 +5,7 @@
     * ADDED: re-introduced URL shortener support (optional), which was removed back in version 0.16 for privacy concerns
     * ADDED: Preview tab, helpful for writing markdown code or check source code rendering
     * ADDED: Automatic purging of expired pastes, done on paste creation
-    * ADDED: Option to disable vizhashs in discussions (will only affect newly created pastes)
+    * ADDED: Option to disable icons in discussions (will only affect newly created pastes)
     * ADDED: Composer support
     * CHANGED: Renamed the ZeroBin fork to PrivateBin
     * CHANGED: Removed unmaintained RainTPL template engine, replacing the templates with straight forward PHP files
@@ -14,7 +14,9 @@
     * CHANGED: Switched to GCM instead CCM mode for AES encryption for newly created pastes
     * CHANGED: Switched to a SHA256 HMAC of the IP in traffic limiter instead of storing it in plain text on the server
     * CHANGED: Introduced content security policy header to reduce cross site scripting (XSS) risks
-    * CHANGED: Refactored PHP code to conform to PSR-4 and PSR-2 standards.
+    * CHANGED: Refactored PHP code to conform to PSR-4 and PSR-2 standards
+    * CHANGED: Switched to Identicons as the default for comments with nicknames
+    * CHANGED: Vizhash is now optional and based on (128 byte) SHA512 HMAC instead of (144 bytes) combination of MD5, SHA1 and a reversal of that string
     * FIXED: Content-type negociation for HTML in certain uncommon browser configurations
     * FIXED: JavaScript error displayed before page is loaded or during attachment load
     * FIXED: Don't strip space characters at beginning or end of optional password
