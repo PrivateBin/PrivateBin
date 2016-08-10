@@ -85,7 +85,7 @@ class Vizhash16x16
             return '';
         }
 
-        $textlen=strlen($text);
+        $textlen = strlen($text);
 
         // We convert the hash into an array of integers.
         $this->VALUES = array();
@@ -224,7 +224,7 @@ class Vizhash16x16
                 ImageFilledEllipse($image, $this->getX(), $this->getY(), $this->getX(), $this->getY(), $color);
                 break;
             case 3:
-                $points = array($this->getX(), $this->getY(), $this->getX(), $this->getY(), $this->getX(), $this->getY(),$this->getX(), $this->getY());
+                $points = array($this->getX(), $this->getY(), $this->getX(), $this->getY(), $this->getX(), $this->getY(), $this->getX(), $this->getY());
                 ImageFilledPolygon($image, $points, 4, $color);
                 break;
             default:
