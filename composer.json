@@ -18,7 +18,8 @@
         }
     ],
     "require": {
-        "php": "^5.2.6 || ^7.0"
+        "php": "^5.2.6 || ^7.0",
+        "paragonie/random_compat": "^2.0"
     },
     "require-dev": {
         "codacy/coverage": "dev-master",
