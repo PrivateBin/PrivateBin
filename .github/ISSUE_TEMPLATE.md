@@ -23,6 +23,9 @@ If you have access to the server log files, also copy them here.
 <!-- The Operation System of your server -->
 **Server OS:**
 
+<!-- The webserver running on your server, preferrably including the version -->
+**Webserver:**
+
 <!-- The version of your browser (when it is a client-side issue) -->
 **Browser:**
 
