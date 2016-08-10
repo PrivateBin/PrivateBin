@@ -15,6 +15,9 @@ body.navbar-spacing {
 
 .navbar-nav {
 	margin: 0 8px;
+}
+
+.navbar-brand {
 	padding: 3px;
 	padding-left: 8px;
 }

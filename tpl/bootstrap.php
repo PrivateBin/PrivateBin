@@ -64,7 +64,7 @@ endif;
 					<span class="icon-bar"></span>
 				</button>
 				<a class="reloadlink navbar-brand" href="/">
-					<img alt="<?php echo I18n::_('PrivateBin'); ?>" src="img/icon.svg" width="20" />
+					<img alt="<?php echo I18n::_('PrivateBin'); ?>" src="img/icon.svg" width="45" />
 				</a>
 			</div>
 			<div id="navbar" class="navbar-collapse collapse">
