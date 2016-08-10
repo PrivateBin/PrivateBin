@@ -1,1 +1,54 @@
-[]
+[
+    {
+        "name": "yzalis/identicon",
+        "version": "1.1.0",
+        "version_normalized": "1.1.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/yzalis/Identicon.git",
+            "reference": "a99fc2a3d018512f7914bc6f972952536c0f309b"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/yzalis/Identicon/zipball/a99fc2a3d018512f7914bc6f972952536c0f309b",
+            "reference": "a99fc2a3d018512f7914bc6f972952536c0f309b",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.0"
+        },
+        "require-dev": {
+            "fzaninotto/faker": "1.2.*@dev"
+        },
+        "time": "2014-07-13 09:19:12",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "1.1-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Identicon": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Benjamin Laugueux",
+                "email": "benjamin@yzalis.com"
+            }
+        ],
+        "description": "Create awesome unique avatar.",
+        "homepage": "http://identicon-php.org",
+        "keywords": [
+            "avatar",
+            "identicon",
+            "image"
+        ]
+    }
+]
