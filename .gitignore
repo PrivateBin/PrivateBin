@@ -3,7 +3,6 @@
 .htpasswd
 # Ignore data/ and vendor/
 data/
-!lib/data/
 vendor/
 # Ignore unit testing logs, api docs and eclipse project files
 doc/
