@@ -1290,6 +1290,10 @@ $(function() {
             var target = $(event.target);
             $('#pasteFormatter').val(target.data('format'));
             $('#pasteFormatterDisplay').text(target.text());
+
+            if (this.messagePreview.parent().hasClass('active')) {
+                this.viewPreview(event);
+            }
         },
 
         /**
