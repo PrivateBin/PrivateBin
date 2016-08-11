@@ -13,6 +13,7 @@
 namespace PrivateBin\Data;
 
 use PrivateBin\Model\Paste;
+use PrivateBin\Json;
 
 /**
  * Filesystem
@@ -61,6 +62,7 @@ class Filesystem extends AbstractData
      * @access public
      * @param  string $pasteid
      * @param  array  $paste
+     * @throws Exception
      * @return bool
      */
     public function create($pasteid, $paste)
@@ -72,7 +74,7 @@ class Filesystem extends AbstractData
         if (!is_dir($storagedir)) {
             mkdir($storagedir, 0700, true);
         }
-        return (bool) file_put_contents($storagedir . $pasteid, json_encode($paste));
+        return (bool) file_put_contents($storagedir . $pasteid, Json::encode($paste));
     }
 
     /**
@@ -153,6 +155,7 @@ class Filesystem extends AbstractData
      * @param  string $parentid
      * @param  string $commentid
      * @param  array  $comment
+     * @throws Exception
      * @return bool
      */
     public function createComment($pasteid, $parentid, $commentid, $comment)
@@ -165,7 +168,7 @@ class Filesystem extends AbstractData
         if (!is_dir($storagedir)) {
             mkdir($storagedir, 0700, true);
         }
-        return (bool) file_put_contents($storagedir . $filename, json_encode($comment));
+        return (bool) file_put_contents($storagedir . $filename, Json::encode($comment));
     }
 
     /**
