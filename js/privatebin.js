@@ -1202,6 +1202,23 @@ $(function() {
         },
 
         /**
+         * If discussion is checked, disable "burn after reading".
+         */
+        changeOpenDisc: function()
+        {
+            if (this.openDiscussion.is(':checked') )
+            {
+                this.burnAfterReadingOption.addClass('buttondisabled');
+                this.burnAfterReading.attr({checked: false, disabled: true});
+            }
+            else
+            {
+                this.burnAfterReadingOption.removeClass('buttondisabled');
+                this.burnAfterReading.removeAttr('disabled');
+            }
+        },
+
+        /**
          * Reload the page.
          *
          * @param Event event
@@ -1419,6 +1436,7 @@ $(function() {
         bindEvents: function()
         {
             this.burnAfterReading.change($.proxy(this.changeBurnAfterReading, this));
+            this.openDisc.change($.proxy(this.changeOpenDisc, this));
             this.sendButton.click($.proxy(this.sendData, this));
             this.cloneButton.click($.proxy(this.clonePaste, this));
             this.rawTextButton.click($.proxy(this.rawText, this));
