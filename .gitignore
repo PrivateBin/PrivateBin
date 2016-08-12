@@ -1,15 +1,12 @@
-# Ignore data/, tmp/ and vendor/
-data/
-!lib/data/
-tmp/
-vendor/
 # Ignore for safety
 .htaccess
 .htpasswd
+# Ignore data/ and vendor/
+data/
+vendor/
 # Ignore unit testing logs, api docs and eclipse project files
-tst/log/
 doc/
-composer.lock
+tst/log/
 .settings
 .buildpath
 .project
