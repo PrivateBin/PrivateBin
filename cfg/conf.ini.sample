@@ -1,11 +1,6 @@
-; PrivateBin
-;
-; a zero-knowledge paste bin
-;
-; @link      https://github.com/PrivateBin/PrivateBin
-; @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
-; @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
-; @version   0.22
+; config file for PrivateBin
+; 
+; An explanation of each setting can be find online at https://github.com/PrivateBin/PrivateBin/wiki/Configuration.
 
 [main]
 ; enable or disable the discussion feature, defaults to true
