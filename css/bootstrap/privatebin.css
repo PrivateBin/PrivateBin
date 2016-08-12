@@ -17,9 +17,17 @@ body.navbar-spacing {
 	margin: 0 8px;
 }
 
+.nav.navbar-nav > li {
+	margin-left: 8px;
+}
+
 .navbar-brand {
 	padding: 3px;
 	padding-left: 8px;
+}
+
+.navbar-form {
+	padding: 0;
 }
 
 .dropdown-menu > li > label, .dropdown-menu > li > div {
@@ -47,10 +55,6 @@ body.navbar-spacing {
 
 #language {
 	margin-right: 8px;
-}
-
-.dropdown > #expiration {
-	margin-left: 8px;
 }
 
 #image img {
