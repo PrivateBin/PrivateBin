@@ -119,7 +119,7 @@ abstract class AbstractPersistence
     protected static function _store($filename, $data)
     {
         self::_initialize();
-        $file = self::$_path . DIRECTORY_SEPARATOR . $filename;
+        $file         = self::$_path . DIRECTORY_SEPARATOR . $filename;
         $writtenBytes = @file_put_contents($file, $data, LOCK_EX);
         if ($writtenBytes === false || $writtenBytes < strlen($data)) {
             throw new Exception('unable to write to file ' . $file, 13);

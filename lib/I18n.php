@@ -114,8 +114,8 @@ class I18n
         $args = func_get_args();
         if (is_array(self::$_translations[$messageId])) {
             $number = (int) $args[1];
-            $key = self::_getPluralForm($number);
-            $max = count(self::$_translations[$messageId]) - 1;
+            $key    = self::_getPluralForm($number);
+            $max    = count(self::$_translations[$messageId]) - 1;
             if ($key > $max) {
                 $key = $max;
             }
@@ -143,7 +143,7 @@ class I18n
 
         // check if the lang cookie was set and that language exists
         if (array_key_exists('lang', $_COOKIE) && in_array($_COOKIE['lang'], $availableLanguages)) {
-            $match = $availableLanguages[array_search($_COOKIE['lang'], $availableLanguages)];
+            $match = $_COOKIE['lang'];
         }
         // find a translation file matching the browsers language preferences
         else {
@@ -153,7 +153,7 @@ class I18n
         }
 
         // load translations
-        self::$_language = $match;
+        self::$_language     = $match;
         self::$_translations = ($match == 'en') ? array() : json_decode(
             file_get_contents(self::_getPath($match . '.json')),
             true
@@ -319,7 +319,7 @@ class I18n
     protected static function _getMatchingLanguage($acceptedLanguages, $availableLanguages)
     {
         $matches = array();
-        $any = false;
+        $any     = false;
         foreach ($acceptedLanguages as $acceptedQuality => $acceptedValues) {
             $acceptedQuality = floatval($acceptedQuality);
             if ($acceptedQuality === 0.0) {
@@ -372,7 +372,7 @@ class I18n
     {
         $a = explode('-', $a);
         $b = explode('-', $b);
-        for ($i=0, $n = min(count($a), count($b)); $i < $n; ++$i) {
+        for ($i = 0, $n = min(count($a), count($b)); $i < $n; ++$i) {
             if ($a[$i] !== $b[$i]) {
                 break;
             }

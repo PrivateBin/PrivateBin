@@ -1,11 +1,6 @@
-; PrivateBin
-;
-; a zero-knowledge paste bin
-;
-; @link      https://github.com/PrivateBin/PrivateBin
-; @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
-; @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
-; @version   0.22
+; config file for PrivateBin
+; 
+; An explanation of each setting can be find online at https://github.com/PrivateBin/PrivateBin/wiki/Configuration.
 
 [main]
 ; enable or disable the discussion feature, defaults to true
@@ -53,18 +48,19 @@ languageselection = false
 ; the pastes encryption key
 ; urlshortener = "https://shortener.example.com/api?link="
 
-; (optional) vizhash is a weak mechanism to detect if a comment was from a
-; different user when the same username was used in a comment. It is based on
-; the IP and might be used to get the posters IP if the server salt is leaked
-; and a rainbow table is generated for all IPs. Enabled by default.
-; vizhash = false
+; (optional) IP based icons are a weak mechanism to detect if a comment was from
+; a different user when the same username was used in a comment. It might be
+; used to get the IP of a non anonymous comment poster if the server salt is
+; leaked and a SHA256 HMAC rainbow table is generated for all (relevant) IPs.
+; Can be set to one these values: none / vizhash / identicon (default).
+; icon = none
 
 ; Content Security Policy headers allow a website to restrict what sources are
 ; allowed to be accessed in its context. You need to change this if you added
 ; custom scripts from third-party domains to your templates, e.g. tracking
 ; scripts or run your site behind certain DDoS-protection services.
 ; Check the documentation at https://content-security-policy.com/
-cspheader = "default-src 'none'; connect-src *; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self';"
+cspheader = "default-src 'none'; connect-src *; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self' data:;"
 
 ; stay compatible with PrivateBin Alpha 0.19, less secure
 ; if enabled will use base64.js version 1.7 instead of 2.1.9 and sha1 instead of

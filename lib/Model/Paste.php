@@ -62,11 +62,11 @@ class Paste extends AbstractModel
         if (!property_exists($data->meta, 'salt')) {
             $data->meta->salt = ServerSalt::get();
         }
-        $data->comments = array_values($this->getComments());
-        $data->comment_count = count($data->comments);
+        $data->comments       = array_values($this->getComments());
+        $data->comment_count  = count($data->comments);
         $data->comment_offset = 0;
-        $data->{'@context'} = 'js/paste.jsonld';
-        $this->_data = $data;
+        $data->{'@context'}   = 'js/paste.jsonld';
+        $this->_data          = $data;
         return $this->_data;
     }
 
@@ -85,7 +85,7 @@ class Paste extends AbstractModel
         }
 
         $this->_data->meta->postdate = time();
-        $this->_data->meta->salt = serversalt::generate();
+        $this->_data->meta->salt     = serversalt::generate();
 
         // store paste
         if (
@@ -247,7 +247,7 @@ class Paste extends AbstractModel
                 throw new Exception('Invalid data.', 73);
             }
             $this->_data->meta->burnafterreading = true;
-            $this->_data->meta->opendiscussion = false;
+            $this->_data->meta->opendiscussion   = false;
         }
     }
 
@@ -296,7 +296,7 @@ class Paste extends AbstractModel
      *
      * @access public
      * @throws Exception
-     * @return boolean
+     * @return bool
      */
     public function isBurnafterreading()
     {
@@ -313,7 +313,7 @@ class Paste extends AbstractModel
      *
      * @access public
      * @throws Exception
-     * @return boolean
+     * @return bool
      */
     public function isOpendiscussion()
     {

@@ -13,6 +13,7 @@
 namespace PrivateBin\Data;
 
 use PrivateBin\Model\Paste;
+use PrivateBin\Json;
 
 /**
  * Filesystem
@@ -48,7 +49,7 @@ class Filesystem extends AbstractData
             self::$_dir = $options['dir'] . DIRECTORY_SEPARATOR;
         }
         // if needed initialize the singleton
-        if (!(self::$_instance instanceof Filesystem)) {
+        if (!(self::$_instance instanceof self)) {
             self::$_instance = new self;
             self::_init();
         }
@@ -61,6 +62,7 @@ class Filesystem extends AbstractData
      * @access public
      * @param  string $pasteid
      * @param  array  $paste
+     * @throws Exception
      * @return bool
      */
     public function create($pasteid, $paste)
@@ -72,7 +74,7 @@ class Filesystem extends AbstractData
         if (!is_dir($storagedir)) {
             mkdir($storagedir, 0700, true);
         }
-        return (bool) file_put_contents($storagedir . $pasteid, json_encode($paste));
+        return (bool) file_put_contents($storagedir . $pasteid, Json::encode($paste));
     }
 
     /**
@@ -153,19 +155,20 @@ class Filesystem extends AbstractData
      * @param  string $parentid
      * @param  string $commentid
      * @param  array  $comment
+     * @throws Exception
      * @return bool
      */
     public function createComment($pasteid, $parentid, $commentid, $comment)
     {
         $storagedir = self::_dataid2discussionpath($pasteid);
-        $filename = $pasteid . '.' . $commentid . '.' . $parentid;
+        $filename   = $pasteid . '.' . $commentid . '.' . $parentid;
         if (is_file($storagedir . $filename)) {
             return false;
         }
         if (!is_dir($storagedir)) {
             mkdir($storagedir, 0700, true);
         }
-        return (bool) file_put_contents($storagedir . $filename, json_encode($comment));
+        return (bool) file_put_contents($storagedir . $filename, Json::encode($comment));
     }
 
     /**
@@ -178,7 +181,7 @@ class Filesystem extends AbstractData
     public function readComments($pasteid)
     {
         $comments = array();
-        $discdir = self::_dataid2discussionpath($pasteid);
+        $discdir  = self::_dataid2discussionpath($pasteid);
         if (is_dir($discdir)) {
             // Delete all files in discussion directory
             $dir = dir($discdir);
@@ -189,13 +192,13 @@ class Filesystem extends AbstractData
                 // - parentid is the comment this comment replies to (It can be pasteid)
                 if (is_file($discdir . $filename)) {
                     $comment = json_decode(file_get_contents($discdir . $filename));
-                    $items = explode('.', $filename);
+                    $items   = explode('.', $filename);
                     // Add some meta information not contained in file.
-                    $comment->id = $items[1];
+                    $comment->id       = $items[1];
                     $comment->parentid = $items[2];
 
                     // Store in array
-                    $key = $this->getOpenSlot($comments, (int) $comment->meta->postdate);
+                    $key            = $this->getOpenSlot($comments, (int) $comment->meta->postdate);
                     $comments[$key] = $comment;
                 }
             }
@@ -233,7 +236,7 @@ class Filesystem extends AbstractData
      */
     protected function _getExpiredPastes($batchsize)
     {
-        $pastes = array();
+        $pastes     = array();
         $firstLevel = array_filter(
             scandir(self::$_dir),
             'self::_isFirstLevelDir'
@@ -241,7 +244,7 @@ class Filesystem extends AbstractData
         if (count($firstLevel) > 0) {
             // try at most 10 times the $batchsize pastes before giving up
             for ($i = 0, $max = $batchsize * 10; $i < $max; ++$i) {
-                $firstKey = array_rand($firstLevel);
+                $firstKey    = array_rand($firstLevel);
                 $secondLevel = array_filter(
                     scandir(self::$_dir . $firstLevel[$firstKey]),
                     'self::_isSecondLevelDir'
@@ -254,7 +257,7 @@ class Filesystem extends AbstractData
                 }
 
                 $secondKey = array_rand($secondLevel);
-                $path = self::$_dir . $firstLevel[$firstKey] .
+                $path      = self::$_dir . $firstLevel[$firstKey] .
                     DIRECTORY_SEPARATOR . $secondLevel[$secondKey];
                 if (!is_dir($path)) {
                     continue;
@@ -267,7 +270,7 @@ class Filesystem extends AbstractData
                     continue;
                 }
                 $thirdKey = array_rand($thirdLevel);
-                $pasteid = $thirdLevel[$thirdKey];
+                $pasteid  = $thirdLevel[$thirdKey];
                 if (in_array($pasteid, $pastes)) {
                     continue;
                 }

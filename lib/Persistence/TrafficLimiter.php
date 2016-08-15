@@ -73,15 +73,16 @@ class TrafficLimiter extends AbstractPersistence
     }
 
     /**
-     * get the current visitors IP address
+     * get a HMAC of the current visitors IP address
      *
      * @access public
      * @static
+     * @param  string $algo
      * @return string
      */
-    public static function getIp()
+    public static function getHash($algo = 'sha512')
     {
-        return $_SERVER[self::$_ipKey];
+        return hash_hmac($algo, $_SERVER[self::$_ipKey], ServerSalt::get());
     }
 
     /**
@@ -101,8 +102,6 @@ class TrafficLimiter extends AbstractPersistence
             return true;
         }
 
-        $ip = hash_hmac('sha256', self::getIp(), ServerSalt::get());
-
         $file = 'traffic_limiter.php';
         if (!self::_exists($file)) {
             self::_store(
@@ -115,20 +114,22 @@ class TrafficLimiter extends AbstractPersistence
         $path = self::getPath($file);
         require $path;
         $now = time();
-        $tl = $GLOBALS['traffic_limiter'];
+        $tl  = $GLOBALS['traffic_limiter'];
 
-        // purge file of expired IPs to keep it small
+        // purge file of expired hashes to keep it small
         foreach ($tl as $key => $time) {
             if ($time + self::$_limit < $now) {
                 unset($tl[$key]);
             }
         }
 
-        if (array_key_exists($ip, $tl) && ($tl[$ip] + self::$_limit >= $now)) {
+        // this hash is used as an array key, hence a shorter hash is used
+        $hash = self::getHash('sha256');
+        if (array_key_exists($hash, $tl) && ($tl[$hash] + self::$_limit >= $now)) {
             $result = false;
         } else {
-            $tl[$ip] = time();
-            $result = true;
+            $tl[$hash] = time();
+            $result    = true;
         }
         self::_store(
             $file,

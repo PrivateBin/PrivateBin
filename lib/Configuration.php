@@ -50,8 +50,8 @@ class Configuration
             'languageselection' => false,
             'languagedefault' => '',
             'urlshortener' => '',
-            'vizhash' => true,
-            'cspheader' => 'default-src \'none\'; connect-src *; script-src \'self\'; style-src \'self\'; font-src \'self\'; img-src \'self\';',
+            'icon' => 'identicon',
+            'cspheader' => 'default-src \'none\'; connect-src *; script-src \'self\'; style-src \'self\'; font-src \'self\'; img-src \'self\' data:;',
             'zerobincompatibility' => false,
         ),
         'expire' => array(
@@ -98,7 +98,7 @@ class Configuration
      */
     public function __construct()
     {
-        $config = array();
+        $config     = array();
         $configFile = PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.ini';
         if (is_readable($configFile)) {
             $config = parse_ini_file($configFile, true);

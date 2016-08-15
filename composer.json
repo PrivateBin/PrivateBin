@@ -19,7 +19,8 @@
     ],
     "require": {
         "php": "^5.2.6 || ^7.0",
-        "paragonie/random_compat": "^2.0"
+        "paragonie/random_compat": "^2.0",
+        "yzalis/identicon": "^1.1"
     },
     "require-dev": {
         "codacy/coverage": "dev-master",

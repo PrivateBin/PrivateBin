@@ -35,7 +35,7 @@ class FilesystemTest extends PHPUnit_Framework_TestCase
 
         // storing comments
         $this->assertFalse($this->_model->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId()), 'comment does not yet exist');
-        $this->assertTrue($this->_model->createComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId(), Helper::getComment()) !== false, 'store comment');
+        $this->assertTrue($this->_model->createComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId(), Helper::getComment()), 'store comment');
         $this->assertTrue($this->_model->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId()), 'comment exists after storing it');
         $comment = json_decode(json_encode(Helper::getComment()));
         $comment->id = Helper::getCommentId();
@@ -92,5 +92,34 @@ class FilesystemTest extends PHPUnit_Framework_TestCase
                 $this->assertFalse($this->_model->exists($id), "paste $key was purged");
             }
         }
+    }
+
+    /**
+     * @expectedException Exception
+     * @expectedExceptionCode 90
+     */
+    public function testErrorDetection()
+    {
+        $this->_model->delete(Helper::getPasteId());
+        $paste = Helper::getPaste(array('formatter' => "Invalid UTF-8 sequence: \xB1\x31"));
+        $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste does not yet exist');
+        $this->assertFalse($this->_model->create(Helper::getPasteId(), $paste), 'unable to store broken paste');
+        $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste does still not exist');
+    }
+
+    /**
+     * @expectedException Exception
+     * @expectedExceptionCode 90
+     */
+    public function testCommentErrorDetection()
+    {
+        $this->_model->delete(Helper::getPasteId());
+        $comment = Helper::getComment(array('formatter' => "Invalid UTF-8 sequence: \xB1\x31"));
+        $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste does not yet exist');
+        $this->assertTrue($this->_model->create(Helper::getPasteId(), Helper::getPaste()), 'store new paste');
+        $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste exists after storing it');
+        $this->assertFalse($this->_model->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId()), 'comment does not yet exist');
+        $this->assertFalse($this->_model->createComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId(), $comment), 'unable to store broken comment');
+        $this->assertFalse($this->_model->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId()), 'comment does still not exist');
     }
 }

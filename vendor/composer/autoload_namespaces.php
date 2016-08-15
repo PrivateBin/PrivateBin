@@ -6,4 +6,5 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Identicon' => array($vendorDir . '/yzalis/identicon/src'),
 );
