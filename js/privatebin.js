@@ -1370,6 +1370,8 @@ $(function() {
             this.stateNewPaste();
             this.showStatus('', false);
             this.message.text('');
+            this.changeBurnAfterReading();
+            this.changeOpenDisc();
         },
 
         /**
