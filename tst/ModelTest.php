@@ -5,7 +5,9 @@ use PrivateBin\Data\Database;
 use PrivateBin\Model;
 use PrivateBin\Model\Paste;
 use PrivateBin\Persistence\ServerSalt;
+use PrivateBin\Persistence\TrafficLimiter;
 use PrivateBin\Vizhash16x16;
+use Identicon\Identicon;
 
 class ModelTest extends PHPUnit_Framework_TestCase
 {
@@ -167,13 +169,13 @@ class ModelTest extends PHPUnit_Framework_TestCase
         $paste->setOpendiscussion();
         $paste->store();
 
-        $vz = new Vizhash16x16();
-        $pngdata = 'data:image/png;base64,' . base64_encode($vz->generate($_SERVER['REMOTE_ADDR']));
         $comment = $paste->getComment(Helper::getPasteId());
         $comment->setData($commentData['data']);
         $comment->setNickname($commentData['meta']['nickname']);
         $comment->store();
 
+        $identicon = new Identicon();
+        $pngdata = $identicon->getImageDataUri(TrafficLimiter::getHash(), 16);
         $comment = $paste->getComment(Helper::getPasteId(), Helper::getCommentId())->get();
         $this->assertEquals($pngdata, $comment->meta->vizhash, 'nickname triggers vizhash to be set');
     }
@@ -260,9 +262,9 @@ class ModelTest extends PHPUnit_Framework_TestCase
     public function testCommentWithDisabledVizhash()
     {
         $options = parse_ini_file(CONF, true);
-        $options['main']['vizhash'] = false;
+        $options['main']['icon'] = 'none';
         $options['model'] = array(
-            'class' => 'privatebin_db',
+            'class' => 'Database',
         );
         $options['model_options'] = array(
             'dsn' => 'sqlite::memory:',
@@ -310,5 +312,81 @@ class ModelTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($commentData['data'], $comment->data);
         $this->assertEquals($commentData['meta']['nickname'], $comment->meta->nickname);
         $this->assertFalse(property_exists($comment->meta, 'vizhash'), 'vizhash was not generated');
+    }
+
+    public function testCommentIdenticon()
+    {
+        $options = parse_ini_file(CONF, true);
+        $options['main']['icon'] = 'identicon';
+        $options['model'] = array(
+            'class' => 'Database',
+        );
+        $options['model_options'] = array(
+            'dsn' => 'sqlite::memory:',
+            'usr' => null,
+            'pwd' => null,
+            'opt' => array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION),
+        );
+        Helper::confBackup();
+        Helper::createIniFile(CONF, $options);
+        $model = new Model(new Configuration);
+
+        $pasteData = Helper::getPaste();
+        $commentData = Helper::getComment();
+        $model->getPaste(Helper::getPasteId())->delete();
+
+        $paste = $model->getPaste();
+        $paste->setData($pasteData['data']);
+        $paste->setOpendiscussion();
+        $paste->setFormatter($pasteData['meta']['formatter']);
+        $paste->store();
+
+        $comment = $paste->getComment(Helper::getPasteId());
+        $comment->setData($commentData['data']);
+        $comment->setNickname($commentData['meta']['nickname']);
+        $comment->store();
+
+        $identicon = new Identicon();
+        $pngdata = $identicon->getImageDataUri(TrafficLimiter::getHash(), 16);
+        $comment = $paste->getComment(Helper::getPasteId(), Helper::getCommentId())->get();
+        $this->assertEquals($pngdata, $comment->meta->vizhash, 'nickname triggers vizhash to be set');
+    }
+
+    public function testCommentVizhash()
+    {
+        $options = parse_ini_file(CONF, true);
+        $options['main']['icon'] = 'vizhash';
+        $options['model'] = array(
+            'class' => 'Database',
+        );
+        $options['model_options'] = array(
+            'dsn' => 'sqlite::memory:',
+            'usr' => null,
+            'pwd' => null,
+            'opt' => array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION),
+        );
+        Helper::confBackup();
+        Helper::createIniFile(CONF, $options);
+        $model = new Model(new Configuration);
+
+        $pasteData = Helper::getPaste();
+        $commentData = Helper::getComment();
+        $model->getPaste(Helper::getPasteId())->delete();
+
+        $paste = $model->getPaste();
+        $paste->setData($pasteData['data']);
+        $paste->setOpendiscussion();
+        $paste->setFormatter($pasteData['meta']['formatter']);
+        $paste->store();
+
+        $comment = $paste->getComment(Helper::getPasteId());
+        $comment->setData($commentData['data']);
+        $comment->setNickname($commentData['meta']['nickname']);
+        $comment->store();
+
+        $vz = new Vizhash16x16();
+        $pngdata = 'data:image/png;base64,' . base64_encode($vz->generate(TrafficLimiter::getHash()));
+        $comment = $paste->getComment(Helper::getPasteId(), Helper::getCommentId())->get();
+        $this->assertEquals($pngdata, $comment->meta->vizhash, 'nickname triggers vizhash to be set');
     }
 }

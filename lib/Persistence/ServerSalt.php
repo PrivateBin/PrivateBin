@@ -49,7 +49,6 @@ class ServerSalt extends AbstractPersistence
             $randomSalt = bin2hex(mcrypt_create_iv(256, MCRYPT_DEV_URANDOM));
         } else {
             // fallback to mt_rand()
-
             for ($i = 0; $i < 256; ++$i) {
                 $randomSalt .= base_convert(mt_rand(), 10, 16);
             }

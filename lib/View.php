@@ -11,6 +11,7 @@
  */
 
 namespace PrivateBin;
+
 use Exception;
 
 /**

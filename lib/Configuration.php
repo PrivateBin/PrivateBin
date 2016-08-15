@@ -50,8 +50,8 @@ class Configuration
             'languageselection' => false,
             'languagedefault' => '',
             'urlshortener' => '',
-            'vizhash' => true,
-            'cspheader' => 'default-src \'none\'; connect-src *; script-src \'self\'; style-src \'self\'; font-src \'self\'; img-src \'self\';',
+            'icon' => 'identicon',
+            'cspheader' => 'default-src \'none\'; connect-src *; script-src \'self\'; style-src \'self\'; font-src \'self\'; img-src \'self\' data:;',
             'zerobincompatibility' => false,
         ),
         'expire' => array(

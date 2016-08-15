@@ -143,7 +143,7 @@ class I18n
 
         // check if the lang cookie was set and that language exists
         if (array_key_exists('lang', $_COOKIE) && in_array($_COOKIE['lang'], $availableLanguages)) {
-            $match = $availableLanguages[array_search($_COOKIE['lang'], $availableLanguages)];
+             $match = $_COOKIE['lang'];
         }
         // find a translation file matching the browsers language preferences
         else {
