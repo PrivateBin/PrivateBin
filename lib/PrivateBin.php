@@ -168,14 +168,14 @@ class PrivateBin
                 file_put_contents(
                 PATH . $dir . DIRECTORY_SEPARATOR . '.htaccess',
                 'Allow from none' . PHP_EOL .
-                'Deny from all'. PHP_EOL,
+                'Deny from all' . PHP_EOL,
                 LOCK_EX
             );
             }
         }
 
-        $this->_conf = new Configuration;
-        $this->_model = new Model($this->_conf);
+        $this->_conf    = new Configuration;
+        $this->_model   = new Model($this->_conf);
         $this->_request = new Request;
         $this->_urlBase = array_key_exists('REQUEST_URI', $_SERVER) ?
             htmlspecialchars($_SERVER['REQUEST_URI']) : '/';
@@ -223,8 +223,8 @@ class PrivateBin
         );
         }
 
-        $data = $this->_request->getParam('data');
-        $attachment = $this->_request->getParam('attachment');
+        $data           = $this->_request->getParam('data');
+        $attachment     = $this->_request->getParam('attachment');
         $attachmentname = $this->_request->getParam('attachmentname');
 
         // Ensure content is not too big.
@@ -247,7 +247,7 @@ class PrivateBin
         }
 
         // The user posts a comment.
-        $pasteid = $this->_request->getParam('pasteid');
+        $pasteid  = $this->_request->getParam('pasteid');
         $parentid = $this->_request->getParam('parentid');
         if (!empty($pasteid) && !empty($parentid)) {
             $paste = $this->_model->getPaste($pasteid);
@@ -365,7 +365,7 @@ class PrivateBin
         try {
             $paste = $this->_model->getPaste($dataid);
             if ($paste->exists()) {
-                $data = $paste->get();
+                $data              = $paste->get();
                 $this->_doesExpire = property_exists($data, 'meta') && property_exists($data->meta, 'expire_date');
                 if (property_exists($data->meta, 'salt')) {
                     unset($data->meta->salt);
@@ -407,7 +407,7 @@ class PrivateBin
         // label all the expiration options
         $expire = array();
         foreach ($this->_conf->getSection('expire_options') as $time => $seconds) {
-            $expire[$time] = ($seconds == 0) ? I18n::_(ucfirst($time)): Filter::formatHumanReadableTime($time);
+            $expire[$time] = ($seconds == 0) ? I18n::_(ucfirst($time)) : Filter::formatHumanReadableTime($time);
         }
 
         // translate all the formatter options
@@ -462,7 +462,7 @@ class PrivateBin
             $type = '';
         }
         $content = '{}';
-        $file = PUBLIC_PATH . DIRECTORY_SEPARATOR . 'js' . DIRECTORY_SEPARATOR . $type . '.jsonld';
+        $file    = PUBLIC_PATH . DIRECTORY_SEPARATOR . 'js' . DIRECTORY_SEPARATOR . $type . '.jsonld';
         if (is_readable($file)) {
             $content = str_replace(
                 '?jsonld=',
@@ -492,7 +492,7 @@ class PrivateBin
         if ($status) {
             $result['message'] = I18n::_($message);
         } else {
-            $result['id'] = $message;
+            $result['id']  = $message;
             $result['url'] = $this->_urlBase . '?' . $message;
         }
         $result += $other;

@@ -65,7 +65,7 @@ endif;
 			<h3 class="title"><?php echo $VERSION; ?></h3>
 			<noscript><div id="noscript" class="nonworking"><?php echo I18n::_('Javascript is required for PrivateBin to work.<br />Sorry for the inconvenience.'); ?></div></noscript>
 			<div id="oldienotice" class="nonworking"><?php echo I18n::_('PrivateBin requires a modern browser to work.'); ?></div>
-			<div id="ienotice"><?php echo I18n::_('Still using Internet Explorer? Do yourself a favor, switch to a modern browser:'); ?>
+			<div id="ienotice"><?php echo I18n::_('Still using Internet Explorer? Do yourself a favor, switch to a modern browser:'), PHP_EOL; ?>
 				<a href="https://www.mozilla.org/firefox/">Firefox</a>,
 				<a href="https://www.opera.com/">Opera</a>,
 				<a href="https://www.google.com/chrome">Chrome</a>,
@@ -104,7 +104,7 @@ endforeach;
 					</div>
 					<div id="remainingtime" class="hidden"></div>
 					<div id="burnafterreadingoption" class="button hidden">
-						<input type="checkbox" id="burnafterreading" name="burnafterreading" <?php
+						<input type="checkbox" id="burnafterreading" name="burnafterreading"<?php
 if ($BURNAFTERREADINGSELECTED):
 ?> checked="checked"<?php
 endif;
@@ -115,7 +115,7 @@ endif;
 if ($DISCUSSION):
 ?>
 					<div id="opendisc" class="button hidden">
-						<input type="checkbox" id="opendiscussion" name="opendiscussion" <?php
+						<input type="checkbox" id="opendiscussion" name="opendiscussion"<?php
     if ($OPENDISCUSSION):
 ?> checked="checked"<?php
     endif;

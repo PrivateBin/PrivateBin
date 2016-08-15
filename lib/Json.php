@@ -33,7 +33,7 @@ class Json
     public static function encode($input)
     {
         $jsonString = json_encode($input);
-        $errorCode = json_last_error();
+        $errorCode  = json_last_error();
         if ($errorCode === JSON_ERROR_NONE) {
             return $jsonString;
         }

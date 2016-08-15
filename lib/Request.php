@@ -16,7 +16,7 @@ namespace PrivateBin;
  * Request
  *
  * parses request parameters and provides helper functions for routing
-*/
+ */
 class Request
 {
     /**
@@ -184,7 +184,7 @@ class Request
     private function _detectJsonRequest()
     {
         $hasAcceptHeader = array_key_exists('HTTP_ACCEPT', $_SERVER);
-        $acceptHeader = $hasAcceptHeader ? $_SERVER['HTTP_ACCEPT'] : '';
+        $acceptHeader    = $hasAcceptHeader ? $_SERVER['HTTP_ACCEPT'] : '';
 
         // simple cases
         if (

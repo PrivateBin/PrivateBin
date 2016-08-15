@@ -72,19 +72,19 @@ endif;
 					<ul class="nav navbar-nav">
 						<li>
 							<button id="sendbutton" type="button" class="hidden btn btn-default navbar-btn">
-								<span class="glyphicon glyphicon-upload" aria-hidden="true"></span> <?php echo I18n::_('Send'); ?>
+								<span class="glyphicon glyphicon-upload" aria-hidden="true"></span> <?php echo I18n::_('Send'), PHP_EOL; ?>
 							</button>
 <?php
 if ($EXPIRECLONE):
 ?>
 							<button id="clonebutton" type="button" class="hidden btn btn-default navbar-btn">
-								<span class="glyphicon glyphicon-duplicate" aria-hidden="true"></span> <?php echo I18n::_('Clone'); ?>
+								<span class="glyphicon glyphicon-duplicate" aria-hidden="true"></span> <?php echo I18n::_('Clone'), PHP_EOL; ?>
 							</button>
 <?php
 endif;
 ?>
 							<button id="rawtextbutton" type="button" class="hidden btn btn-default navbar-btn">
-								<span class="glyphicon glyphicon-text-background" aria-hidden="true"></span> <?php echo I18n::_('Raw text'); ?>
+								<span class="glyphicon glyphicon-text-background" aria-hidden="true"></span> <?php echo I18n::_('Raw text'), PHP_EOL; ?>
 							</button>
 						</li>
 						<li class="dropdown">
@@ -108,7 +108,7 @@ foreach ($EXPIRE as $key => $value):
 ?>
 								<li>
 									<a href="#" data-expiration="<?php echo $key; ?>">
-										<?php echo $value; ?>
+										<?php echo $value, PHP_EOL; ?>
 									</a>
 								</li>
 <?php
@@ -121,12 +121,12 @@ endforeach;
 							<ul class="dropdown-menu">
 								<li id="burnafterreadingoption" class="checkbox hidden">
 									<label>
-										<input type="checkbox" id="burnafterreading" name="burnafterreading" <?php
+										<input type="checkbox" id="burnafterreading" name="burnafterreading"<?php
 if ($BURNAFTERREADINGSELECTED):
 ?> checked="checked"<?php
 endif;
 ?> />
-										<?php echo I18n::_('Burn after reading'); ?>
+										<?php echo I18n::_('Burn after reading'), PHP_EOL; ?>
 									</label>
 								</li>
 <?php
@@ -134,12 +134,12 @@ if ($DISCUSSION):
 ?>
 								<li id="opendisc" class="checkbox hidden">
 									<label>
-										<input type="checkbox" id="opendiscussion" name="opendiscussion" <?php
+										<input type="checkbox" id="opendiscussion" name="opendiscussion"<?php
     if ($OPENDISCUSSION):
 ?> checked="checked"<?php
     endif;
 ?> />
-										<?php echo I18n::_('Open discussion'); ?>
+										<?php echo I18n::_('Open discussion'), PHP_EOL; ?>
 									</label>
 								</li>
 <?php
@@ -156,7 +156,7 @@ foreach ($FORMATTER as $key => $value):
 ?>
 								<li>
 									<a href="#" data-format="<?php echo $key; ?>">
-										<?php echo $value; ?>
+										<?php echo $value, PHP_EOL; ?>
 									</a>
 								</li>
 <?php
@@ -199,7 +199,7 @@ if ($FILEUPLOAD):
 								</li>
 								<li>
 									<a id="fileremovebutton"  href="#">
-										<?php echo I18n::_('Remove attachment'); ?>
+										<?php echo I18n::_('Remove attachment'), PHP_EOL; ?>
 									</a>
 								</li>
 							</ul>
@@ -233,7 +233,7 @@ endif;
 ?>
 						<li>
 							<button id="newbutton" type="button" class="reloadlink hidden btn btn-default navbar-btn">
-								<span class="glyphicon glyphicon-file" aria-hidden="true"></span> <?php echo I18n::_('New'); ?>
+								<span class="glyphicon glyphicon-file" aria-hidden="true"></span> <?php echo I18n::_('New'), PHP_EOL; ?>
 							</button>
 						</li>
 					</ul>
@@ -245,7 +245,7 @@ endif;
 if (strlen($NOTICE)):
 ?>
 			<div role="alert" class="alert alert-info">
-				<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> <?php echo htmlspecialchars($NOTICE); ?>
+				<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> <?php echo htmlspecialchars($NOTICE), PHP_EOL; ?>
 			</div>
 <?php
 endif;
@@ -264,7 +264,7 @@ endif;
 if (strlen($STATUS)):
 ?>
 			<div id="status" role="alert" class="alert alert-success">
-				<span class="glyphicon glyphicon-ok" aria-hidden="true"></span> <?php echo htmlspecialchars($STATUS); ?>
+				<span class="glyphicon glyphicon-ok" aria-hidden="true"></span> <?php echo htmlspecialchars($STATUS), PHP_EOL; ?>
 			</div>
 <?php
 endif;
@@ -276,7 +276,7 @@ endif;
 ?>alert alert-danger"><span class="glyphicon glyphicon-alert" aria-hidden="true"></span> <?php echo htmlspecialchars($ERROR); ?></div>
 			<noscript><div id="noscript" role="alert" class="nonworking alert alert-warning"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> <?php echo I18n::_('Javascript is required for PrivateBin to work.<br />Sorry for the inconvenience.'); ?></div></noscript>
 			<div id="oldienotice" role="alert" class="hidden nonworking alert alert-danger"><span class="glyphicon glyphicon-alert" aria-hidden="true"></span> <?php echo I18n::_('PrivateBin requires a modern browser to work.'); ?></div>
-			<div id="ienotice" role="alert" class="hidden alert alert-warning"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span> <?php echo I18n::_('Still using Internet Explorer? Do yourself a favor, switch to a modern browser:'); ?>
+			<div id="ienotice" role="alert" class="hidden alert alert-warning"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span> <?php echo I18n::_('Still using Internet Explorer? Do yourself a favor, switch to a modern browser:'), PHP_EOL; ?>
 				<a href="https://www.mozilla.org/firefox/">Firefox</a>,
 				<a href="https://www.opera.com/">Opera</a>,
 				<a href="https://www.google.com/chrome">Chrome</a>,
@@ -290,7 +290,7 @@ endif;
 if (strlen($URLSHORTENER)):
 ?>
 					<button id="shortenbutton" data-shortener="<?php echo htmlspecialchars($URLSHORTENER); ?>" type="button" class="btn btn-primary">
-						<span class="glyphicon glyphicon-send" aria-hidden="true"></span> <?php echo I18n::_('Shorten URL'); ?>
+						<span class="glyphicon glyphicon-send" aria-hidden="true"></span> <?php echo I18n::_('Shorten URL'), PHP_EOL; ?>
 					</button>
 <?php
 endif;
@@ -323,7 +323,7 @@ endif;
 				<h4 class="col-md-5 col-xs-8"><?php echo I18n::_('PrivateBin'); ?> <small>- <?php echo I18n::_('Because ignorance is bliss'); ?></small></h4>
 				<p class="col-md-1 col-xs-4 text-center"><?php echo $VERSION; ?></p>
 				<p id="aboutbox" class="col-md-6 col-xs-12">
-					<?php echo I18n::_('PrivateBin is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href="https://github.com/PrivateBin/PrivateBin/wiki">project page</a>.'); ?>
+					<?php echo I18n::_('PrivateBin is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href="https://github.com/PrivateBin/PrivateBin/wiki">project page</a>.'), PHP_EOL; ?>
 				</p>
 			</div>
 		</footer>

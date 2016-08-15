@@ -114,10 +114,9 @@ class FilesystemTest extends PHPUnit_Framework_TestCase
     public function testCommentErrorDetection()
     {
         $this->_model->delete(Helper::getPasteId());
-        $paste = Helper::getPaste();
         $comment = Helper::getComment(array('formatter' => "Invalid UTF-8 sequence: \xB1\x31"));
         $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste does not yet exist');
-        $this->assertTrue($this->_model->create(Helper::getPasteId(), Helper::getPaste()) === true, 'store new paste');
+        $this->assertTrue($this->_model->create(Helper::getPasteId(), Helper::getPaste()), 'store new paste');
         $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste exists after storing it');
         $this->assertFalse($this->_model->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId()), 'comment does not yet exist');
         $this->assertFalse($this->_model->createComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId(), $comment), 'unable to store broken comment');
