@@ -871,12 +871,12 @@ $(function() {
                 '<div class="reply">' +
                 '<input type="text" id="nickname" class="form-control" title="' + hint + '" placeholder="' + hint + '" />' +
                 '<textarea id="replymessage" class="replymessage form-control" cols="80" rows="7"></textarea>' +
-                '<br /><button id="replybutton" class="btn btn-default btn-sm">' + i18n._('Post comment') + '</button>' +
-                '<div id="replystatus"> </div>' +
-                '</div>'
+                '<br /><div id="replystatus"></div><button id="replybutton" class="btn btn-default btn-sm">' +
+                i18n._('Post comment') + '</button></div>'
             );
             reply.find('button').click({parentid: commentid}, $.proxy(this.sendComment, this));
             source.after(reply);
+            this.replyStatus = $('#replystatus');
             $('#replymessage').focus();
         },
 
@@ -1409,7 +1409,18 @@ $(function() {
                 this.errorMessage.removeClass('hidden');
                 helper.setMessage(this.errorMessage, message);
             }
-            this.replyStatus.addClass('errorMessage').text(message);
+            if (typeof this.replyStatus !== 'undefined') {
+                this.replyStatus.addClass('errorMessage');
+                this.replyStatus.addClass(this.errorMessage.attr('class'));
+                if (this.status.length)
+                {
+                    this.replyStatus.html(this.status.html());
+                }
+                else
+                {
+                    this.replyStatus.html(this.errorMessage.html());
+                }
+            }
         },
 
         /**
@@ -1421,7 +1432,9 @@ $(function() {
          */
         showStatus: function(message, spin)
         {
-            this.replyStatus.removeClass('errorMessage').text(message);
+            if (typeof this.replyStatus !== 'undefined') {
+                this.replyStatus.removeClass('errorMessage').text(message);
+            }
             if (!message)
             {
                 this.status.html(' ');
@@ -1437,7 +1450,9 @@ $(function() {
             {
                 var img = '<img src="img/busy.gif" style="width:16px;height:9px;margin:0 4px 0 0;" />';
                 this.status.prepend(img);
-                this.replyStatus.prepend(img);
+                if (typeof this.replyStatus !== 'undefined') {
+                    this.replyStatus.prepend(img);
+                }
             }
         },
 
@@ -1506,7 +1521,6 @@ $(function() {
             this.preview = $('#preview');
             this.rawTextButton = $('#rawtextbutton');
             this.remainingTime = $('#remainingtime');
-            this.replyStatus = $('#replystatus');
             this.sendButton = $('#sendbutton');
             this.status = $('#status');
             this.bindEvents();
