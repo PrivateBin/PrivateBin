@@ -741,6 +741,7 @@ $(function() {
                     this.passwordInput.val(password);
                     if (cleartext.length > 0)
                     {
+                        $('#pasteFormatter').val(paste.meta.formatter);
                         this.formatPaste(paste.meta.formatter, cleartext);
                     }
                 }
@@ -1237,7 +1238,8 @@ $(function() {
         rawText: function(event)
         {
             event.preventDefault();
-            var paste = this.clearText.html();
+            var paste = $('#pasteFormatter').val() === 'markdown' ?
+                this.prettyPrint.text() : this.clearText.text();
             var newDoc = document.open('text/html', 'replace');
             newDoc.write('<pre>' + paste + '</pre>');
             newDoc.close();
@@ -1262,7 +1264,10 @@ $(function() {
                 this.clonedFile.removeClass('hidden');
                 this.fileWrap.addClass('hidden');
             }
-            this.message.text(this.clearText.text());
+            this.message.text(
+                $('#pasteFormatter').val() === 'markdown' ?
+                    this.prettyPrint.text() : this.clearText.text()
+            );
             $('.navbar-toggle').click();
         },
 
