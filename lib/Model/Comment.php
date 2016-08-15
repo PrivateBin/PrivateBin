@@ -133,7 +133,7 @@ class Comment extends AbstractModel
      */
     public function setPaste(Paste $paste)
     {
-        $this->_paste = $paste;
+        $this->_paste               = $paste;
         $this->_data->meta->pasteid = $paste->getId();
     }
 
@@ -199,12 +199,12 @@ class Comment extends AbstractModel
         $icon = $this->_conf->getKey('icon');
         if ($icon != 'none') {
             $pngdata = '';
-            $hmac = TrafficLimiter::getHash();
+            $hmac    = TrafficLimiter::getHash();
             if ($icon == 'identicon') {
                 $identicon = new Identicon();
-                $pngdata = $identicon->getImageDataUri($hmac, 16);
+                $pngdata   = $identicon->getImageDataUri($hmac, 16);
             } elseif ($icon == 'vizhash') {
-                $vh = new Vizhash16x16();
+                $vh      = new Vizhash16x16();
                 $pngdata = 'data:image/png;base64,' . base64_encode(
                     $vh->generate($hmac)
                 );

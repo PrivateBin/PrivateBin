@@ -77,7 +77,7 @@ class Filter
     public static function formatHumanReadableSize($size)
     {
         $iec = array('B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB');
-        $i = 0;
+        $i   = 0;
         while (($size / 1024) >= 1) {
             $size = $size / 1024;
             $i++;

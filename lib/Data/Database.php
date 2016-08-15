@@ -71,7 +71,7 @@ class Database extends AbstractData
     public static function getInstance($options = null)
     {
         // if needed initialize the singleton
-        if (!(self::$_instance instanceof Database)) {
+        if (!(self::$_instance instanceof self)) {
             self::$_instance = new self;
         }
 
@@ -89,17 +89,17 @@ class Database extends AbstractData
                 array_key_exists('opt', $options)
             ) {
                 // set default options
-                $options['opt'][PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+                $options['opt'][PDO::ATTR_ERRMODE]          = PDO::ERRMODE_EXCEPTION;
                 $options['opt'][PDO::ATTR_EMULATE_PREPARES] = false;
-                $options['opt'][PDO::ATTR_PERSISTENT] = true;
-                $db_tables_exist = true;
+                $options['opt'][PDO::ATTR_PERSISTENT]       = true;
+                $db_tables_exist                            = true;
 
                 // setup type and dabase connection
                 self::$_type = strtolower(
                     substr($options['dsn'], 0, strpos($options['dsn'], ':'))
                 );
                 $tableQuery = self::_getTableQuery(self::$_type);
-                self::$_db = new PDO(
+                self::$_db  = new PDO(
                     $options['dsn'],
                     $options['usr'],
                     $options['pwd'],
@@ -168,8 +168,8 @@ class Database extends AbstractData
         }
 
         $opendiscussion = $burnafterreading = false;
-        $attachment = $attachmentname = '';
-        $meta = $paste['meta'];
+        $attachment     = $attachmentname     = '';
+        $meta           = $paste['meta'];
         unset($meta['postdate']);
         $expire_date = 0;
         if (array_key_exists('expire_date', $paste['meta'])) {
@@ -222,14 +222,14 @@ class Database extends AbstractData
             !array_key_exists($pasteid, self::$_cache)
         ) {
             self::$_cache[$pasteid] = false;
-            $paste = self::_select(
+            $paste                  = self::_select(
                 'SELECT * FROM ' . self::_sanitizeIdentifier('paste') .
                 ' WHERE dataid = ?', array($pasteid), true
             );
 
             if (false !== $paste) {
                 // create object
-                self::$_cache[$pasteid] = new stdClass;
+                self::$_cache[$pasteid]       = new stdClass;
                 self::$_cache[$pasteid]->data = $paste['data'];
 
                 $meta = json_decode($paste['meta']);
@@ -253,9 +253,9 @@ class Database extends AbstractData
                         self::$_cache[$pasteid]->attachmentname = $paste['attachmentname'];
                     }
                 }
-                self::$_cache[$pasteid]->meta = $meta;
+                self::$_cache[$pasteid]->meta           = $meta;
                 self::$_cache[$pasteid]->meta->postdate = (int) $paste['postdate'];
-                $expire_date = (int) $paste['expiredate'];
+                $expire_date                            = (int) $paste['expiredate'];
                 if (
                     $expire_date > 0
                 ) {
@@ -368,12 +368,12 @@ class Database extends AbstractData
         $comments = array();
         if (count($rows)) {
             foreach ($rows as $row) {
-                $i = $this->getOpenSlot($comments, (int) $row['postdate']);
-                $comments[$i] = new stdClass;
-                $comments[$i]->id = $row['dataid'];
-                $comments[$i]->parentid = $row['parentid'];
-                $comments[$i]->data = $row['data'];
-                $comments[$i]->meta = new stdClass;
+                $i                            = $this->getOpenSlot($comments, (int) $row['postdate']);
+                $comments[$i]                 = new stdClass;
+                $comments[$i]->id             = $row['dataid'];
+                $comments[$i]->parentid       = $row['parentid'];
+                $comments[$i]->data           = $row['data'];
+                $comments[$i]->meta           = new stdClass;
                 $comments[$i]->meta->postdate = (int) $row['postdate'];
                 if (array_key_exists('nickname', $row) && !empty($row['nickname'])) {
                     $comments[$i]->meta->nickname = $row['nickname'];
@@ -415,7 +415,7 @@ class Database extends AbstractData
     protected function _getExpiredPastes($batchsize)
     {
         $pastes = array();
-        $rows = self::_select(
+        $rows   = self::_select(
             'SELECT dataid FROM ' . self::_sanitizeIdentifier('paste') .
             ' WHERE expiredate < ? LIMIT ?', array(time(), $batchsize)
         );
@@ -440,7 +440,7 @@ class Database extends AbstractData
     private static function _exec($sql, array $params)
     {
         $statement = self::$_db->prepare($sql);
-        $result = $statement->execute($params);
+        $result    = $statement->execute($params);
         $statement->closeCursor();
         return $result;
     }
@@ -486,7 +486,7 @@ class Database extends AbstractData
                 $sql = 'SELECT tabname FROM systables ';
                 break;
             case 'mssql':
-                $sql = "SELECT name FROM sysobjects "
+                $sql = 'SELECT name FROM sysobjects '
                      . "WHERE type = 'U' ORDER BY name";
                 break;
             case 'mysql':
@@ -496,22 +496,22 @@ class Database extends AbstractData
                 $sql = 'SELECT table_name FROM all_tables';
                 break;
             case 'pgsql':
-                $sql = "SELECT c.relname AS table_name "
-                     . "FROM pg_class c, pg_user u "
+                $sql = 'SELECT c.relname AS table_name '
+                     . 'FROM pg_class c, pg_user u '
                      . "WHERE c.relowner = u.usesysid AND c.relkind = 'r' "
-                     . "AND NOT EXISTS (SELECT 1 FROM pg_views WHERE viewname = c.relname) "
+                     . 'AND NOT EXISTS (SELECT 1 FROM pg_views WHERE viewname = c.relname) '
                      . "AND c.relname !~ '^(pg_|sql_)' "
-                     . "UNION "
-                     . "SELECT c.relname AS table_name "
-                     . "FROM pg_class c "
+                     . 'UNION '
+                     . 'SELECT c.relname AS table_name '
+                     . 'FROM pg_class c '
                      . "WHERE c.relkind = 'r' "
-                     . "AND NOT EXISTS (SELECT 1 FROM pg_views WHERE viewname = c.relname) "
-                     . "AND NOT EXISTS (SELECT 1 FROM pg_user WHERE usesysid = c.relowner) "
+                     . 'AND NOT EXISTS (SELECT 1 FROM pg_views WHERE viewname = c.relname) '
+                     . 'AND NOT EXISTS (SELECT 1 FROM pg_user WHERE usesysid = c.relowner) '
                      . "AND c.relname !~ '^pg_'";
                 break;
             case 'sqlite':
                 $sql = "SELECT name FROM sqlite_master WHERE type='table' "
-                     . "UNION ALL SELECT name FROM sqlite_temp_master "
+                     . 'UNION ALL SELECT name FROM sqlite_temp_master '
                      . "WHERE type='table' ORDER BY name";
                 break;
             default:
@@ -569,7 +569,7 @@ class Database extends AbstractData
     private static function _createPasteTable()
     {
         list($main_key, $after_key) = self::_getPrimaryKeyClauses();
-        $dataType = self::$_type === 'pgsql' ? 'TEXT' : 'BLOB';
+        $dataType                   = self::$_type === 'pgsql' ? 'TEXT' : 'BLOB';
         self::$_db->exec(
             'CREATE TABLE ' . self::_sanitizeIdentifier('paste') . ' ( ' .
             "dataid CHAR(16) NOT NULL$main_key, " .
@@ -594,7 +594,7 @@ class Database extends AbstractData
     private static function _createCommentTable()
     {
         list($main_key, $after_key) = self::_getPrimaryKeyClauses();
-        $dataType = self::$_type === 'pgsql' ? 'text' : 'BLOB';
+        $dataType                   = self::$_type === 'pgsql' ? 'text' : 'BLOB';
         self::$_db->exec(
             'CREATE TABLE ' . self::_sanitizeIdentifier('comment') . ' ( ' .
             "dataid CHAR(16) NOT NULL$main_key, " .

@@ -110,10 +110,10 @@ class Vizhash16x16
 
         for ($i = 0; $i < 7; ++$i) {
             $action = $this->getInt();
-            $color = imagecolorallocate($image, $r, $g, $b);
-            $r = $r0 = ($r0 + $this->getInt() / 25) % 256;
-            $g = $g0 = ($g0 + $this->getInt() / 25) % 256;
-            $b = $b0 = ($b0 + $this->getInt() / 25) % 256;
+            $color  = imagecolorallocate($image, $r, $g, $b);
+            $r      = $r0      = ($r0 + $this->getInt() / 25) % 256;
+            $g      = $g0      = ($g0 + $this->getInt() / 25) % 256;
+            $b      = $b0      = ($b0 + $this->getInt() / 25) % 256;
             $this->drawshape($image, $action, $color);
         }
 
@@ -180,10 +180,10 @@ class Vizhash16x16
     private function degrade($img, $direction, $color1, $color2)
     {
         if ($direction == 'h') {
-            $size = imagesx($img);
+            $size    = imagesx($img);
             $sizeinv = imagesy($img);
         } else {
-            $size = imagesy($img);
+            $size    = imagesy($img);
             $sizeinv = imagesx($img);
         }
         $diffs = array(
@@ -228,8 +228,8 @@ class Vizhash16x16
                 ImageFilledPolygon($image, $points, 4, $color);
                 break;
             default:
-                $start = $this->getInt() * 360 /256;
-                $end = $start + $this->getInt() * 180 / 256;
+                $start = $this->getInt() * 360 / 256;
+                $end   = $start + $this->getInt() * 180 / 256;
                 ImageFilledArc($image, $this->getX(), $this->getY(), $this->getX(), $this->getY(), $start, $end, $color, IMG_ARC_PIE);
         }
     }

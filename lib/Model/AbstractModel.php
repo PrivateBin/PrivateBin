@@ -67,9 +67,9 @@ abstract class AbstractModel
      */
     public function __construct(Configuration $configuration, AbstractData $storage)
     {
-        $this->_conf = $configuration;
-        $this->_store = $storage;
-        $this->_data = new stdClass;
+        $this->_conf       = $configuration;
+        $this->_store      = $storage;
+        $this->_data       = new stdClass;
         $this->_data->meta = new stdClass;
     }
 

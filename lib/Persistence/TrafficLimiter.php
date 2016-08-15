@@ -114,7 +114,7 @@ class TrafficLimiter extends AbstractPersistence
         $path = self::getPath($file);
         require $path;
         $now = time();
-        $tl = $GLOBALS['traffic_limiter'];
+        $tl  = $GLOBALS['traffic_limiter'];
 
         // purge file of expired hashes to keep it small
         foreach ($tl as $key => $time) {
@@ -129,7 +129,7 @@ class TrafficLimiter extends AbstractPersistence
             $result = false;
         } else {
             $tl[$hash] = time();
-            $result = true;
+            $result    = true;
         }
         self::_store(
             $file,
