@@ -43,26 +43,6 @@ class ServerSaltTest extends PHPUnit_Framework_TestCase
         ServerSalt::setPath($this->_path);
         $salt = ServerSalt::get();
 
-        // mcrypt mock
-        if (!function_exists('mcrypt_create_iv')) {
-            if (!defined('MCRYPT_DEV_URANDOM')) {
-                define('MCRYPT_DEV_URANDOM', 1);
-            }
-            function mcrypt_create_iv($int, $flag)
-            {
-                $randomSalt = '';
-                for ($i = 0; $i < $int; ++$i) {
-                    $randomSalt .= base_convert(mt_rand(), 10, 16);
-                }
-                // hex2bin requires an even length, pad if necessary
-                if (strlen($randomSalt) % 2) {
-                    $randomSalt = '0' . $randomSalt;
-                }
-                return hex2bin($randomSalt);
-            }
-            $this->assertNotEquals($salt, ServerSalt::generate());
-        }
-
         // try setting a different path and resetting it
         ServerSalt::setPath($this->_otherPath);
         $this->assertNotEquals($salt, ServerSalt::get());

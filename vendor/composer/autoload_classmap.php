@@ -17,6 +17,7 @@ return array(
     'PrivateBin\\Data\\Filesystem' => $baseDir . '/lib/Data/Filesystem.php',
     'PrivateBin\\Filter' => $baseDir . '/lib/Filter.php',
     'PrivateBin\\I18n' => $baseDir . '/lib/I18n.php',
+    'PrivateBin\\Json' => $baseDir . '/lib/Json.php',
     'PrivateBin\\Model' => $baseDir . '/lib/Model.php',
     'PrivateBin\\Model\\AbstractModel' => $baseDir . '/lib/Model/AbstractModel.php',
     'PrivateBin\\Model\\Comment' => $baseDir . '/lib/Model/Comment.php',

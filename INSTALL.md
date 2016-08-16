@@ -12,7 +12,7 @@ the options and adjust them as you see fit.
 
 - PHP version 5.3 or above
 - GD extension
-- mcrypt extension (optional, but strongly recommended)
+- [Libsodium](https://download.libsodium.org) or mcrypt extension (optional, but strongly recommended)
 - some disk space or (optional) a database supported by PDO
 - ability to create files and folders in the installation directory and the PATH
 - A web browser with javascript support

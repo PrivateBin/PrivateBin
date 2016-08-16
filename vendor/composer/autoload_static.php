@@ -6,6 +6,10 @@ namespace Composer\Autoload;
 
 class ComposerStaticInitDontChange
 {
+    public static $files = array (
+        '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
+    );
+
     public static $prefixLengthsPsr4 = array (
         'P' => 
         array (
@@ -42,6 +46,7 @@ class ComposerStaticInitDontChange
         'PrivateBin\\Data\\Filesystem' => __DIR__ . '/../..' . '/lib/Data/Filesystem.php',
         'PrivateBin\\Filter' => __DIR__ . '/../..' . '/lib/Filter.php',
         'PrivateBin\\I18n' => __DIR__ . '/../..' . '/lib/I18n.php',
+        'PrivateBin\\Json' => __DIR__ . '/../..' . '/lib/Json.php',
         'PrivateBin\\Model' => __DIR__ . '/../..' . '/lib/Model.php',
         'PrivateBin\\Model\\AbstractModel' => __DIR__ . '/../..' . '/lib/Model/AbstractModel.php',
         'PrivateBin\\Model\\Comment' => __DIR__ . '/../..' . '/lib/Model/Comment.php',

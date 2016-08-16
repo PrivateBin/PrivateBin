@@ -27,6 +27,15 @@ use Exception;
 class ServerSalt extends AbstractPersistence
 {
     /**
+     * file where salt is saved to
+     *
+     * @access private
+     * @static
+     * @var    string
+     */
+    private static $_file = 'salt.php';
+
+    /**
      * generated salt
      *
      * @access private
@@ -44,15 +53,7 @@ class ServerSalt extends AbstractPersistence
      */
     public static function generate()
     {
-        $randomSalt = '';
-        if (function_exists('mcrypt_create_iv')) {
-            $randomSalt = bin2hex(mcrypt_create_iv(256, MCRYPT_DEV_URANDOM));
-        } else {
-            // fallback to mt_rand()
-            for ($i = 0; $i < 256; ++$i) {
-                $randomSalt .= base_convert(mt_rand(), 10, 16);
-            }
-        }
+        $randomSalt = bin2hex(random_bytes(256));
         return $randomSalt;
     }
 
@@ -70,19 +71,18 @@ class ServerSalt extends AbstractPersistence
             return self::$_salt;
         }
 
-        $file = 'salt.php';
-        if (self::_exists($file)) {
-            if (is_readable(self::getPath($file))) {
-                $items = explode('|', file_get_contents(self::getPath($file)));
+        if (self::_exists(self::$_file)) {
+            if (is_readable(self::getPath(self::$_file))) {
+                $items = explode('|', file_get_contents(self::getPath(self::$_file)));
             }
             if (!isset($items) || !is_array($items) || count($items) != 3) {
-                throw new Exception('unable to read file ' . self::getPath($file), 20);
+                throw new Exception('unable to read file ' . self::getPath(self::$_file), 20);
             }
             self::$_salt = $items[1];
         } else {
             self::$_salt = self::generate();
             self::_store(
-                $file,
+                self::$_file,
                 '<?php /* |' . self::$_salt . '| */ ?>'
             );
         }
