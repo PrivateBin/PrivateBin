@@ -47,7 +47,7 @@ class ViewTest extends PHPUnit_Framework_TestCase
         $page->assign('BURNAFTERREADINGSELECTED', false);
         $page->assign('PASSWORD', true);
         $page->assign('FILEUPLOAD', false);
-        $page->assign('BASE64JSVERSION', '2.1.9');
+        $page->assign('ZEROBINCOMPATIBILITY', false);
         $page->assign('NOTICE', 'example');
         $page->assign('LANGUAGESELECTION', '');
         $page->assign('LANGUAGES', I18n::getLanguageLabels(i18n::getAvailableLanguages()));

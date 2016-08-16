@@ -436,7 +436,7 @@ class PrivateBin
         $page->assign('BURNAFTERREADINGSELECTED', $this->_conf->getKey('burnafterreadingselected'));
         $page->assign('PASSWORD', $this->_conf->getKey('password'));
         $page->assign('FILEUPLOAD', $this->_conf->getKey('fileupload'));
-        $page->assign('BASE64JSVERSION', $this->_conf->getKey('zerobincompatibility') ? '1.7' : '2.1.9');
+        $page->assign('ZEROBINCOMPATIBILITY', $this->_conf->getKey('zerobincompatibility'));
         $page->assign('LANGUAGESELECTION', $languageselection);
         $page->assign('LANGUAGES', I18n::getLanguageLabels(I18n::getAvailableLanguages()));
         $page->assign('EXPIRE', $expire);

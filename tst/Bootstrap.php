@@ -19,6 +19,7 @@ if (!is_file(CONF)) {
 }
 
 require PATH . 'vendor/autoload.php';
+Helper::updateSubresourceIntegrity();
 
 class Helper
 {
@@ -65,6 +66,13 @@ class Helper
             'postdate' => 1344803528,
         ),
     );
+
+    /**
+     * JS files and their SRI hashes
+     *
+     * @var array
+     */
+    private static $hashes = array();
 
     /**
      * get example paste ID
@@ -271,6 +279,52 @@ class Helper
             }
         } else {
             return var_export($var, $return);
+        }
+    }
+
+    /**
+     * update all templates with the latest SRI hashes for all JS files
+     *
+     * @return void
+     */
+    public static function updateSubresourceIntegrity()
+    {
+        $dir = dir(PATH . 'js');
+        while (false !== ($file = $dir->read())) {
+            if (substr($file, -3) === '.js') {
+                self::$hashes[$file] = base64_encode(
+                    hash('sha512', file_get_contents(
+                        PATH . 'js' . DIRECTORY_SEPARATOR . $file
+                    ), true)
+                );
+            }
+        }
+
+        $dir = dir(PATH . 'tpl');
+        while (false !== ($file = $dir->read())) {
+            if (substr($file, -4) === '.php') {
+                $content = file_get_contents(
+                    PATH . 'tpl' . DIRECTORY_SEPARATOR . $file
+                );
+                $content = preg_replace_callback(
+                    '#<script type="text/javascript" src="js/([a-z0-9.-]+.js)([^"]*)"( integrity="[^"]+" crossorigin="[^"]+")?></script>#',
+                    function ($matches) {
+                        if (array_key_exists($matches[1], Helper::$hashes)) {
+                            return '<script type="text/javascript" src="js/' .
+                                $matches[1] . $matches[2] .
+                                '" integrity="sha512-' . Helper::$hashes[$matches[1]] .
+                                '" crossorigin="anonymous"></script>';
+                        } else {
+                            return $matches[0];
+                        }
+                    },
+                    $content
+                );
+                file_put_contents(
+                    PATH . 'tpl' . DIRECTORY_SEPARATOR . $file,
+                    $content
+                );
+            }
         }
     }
 }

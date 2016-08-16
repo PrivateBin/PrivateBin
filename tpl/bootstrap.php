@@ -23,25 +23,35 @@ if ($SYNTAXHIGHLIGHTING):
     endif;
 endif;
 ?>
-		<script type="text/javascript" src="js/jquery-1.11.3.js"></script>
-		<script type="text/javascript" src="js/sjcl-1.0.4.js"></script>
-		<script type="text/javascript" src="js/base64-<?php echo rawurlencode($BASE64JSVERSION); ?>.js"></script>
-		<script type="text/javascript" src="js/rawdeflate-0.5.js"></script>
-		<script type="text/javascript" src="js/rawinflate-0.3.js"></script>
-		<script type="text/javascript" src="js/bootstrap-3.3.5.js"></script>
+		<script type="text/javascript" src="js/jquery-1.11.3.js" integrity="sha512-xAERw8wHVOkM9x9y9/FvQ7g1t+gIQj39mfkN1Rd1OLcC5k/x2e6NO8hq6qEbb3oO+CYYTjVLFiFYg5/7ddF0zA==" crossorigin="anonymous"></script>
+		<script type="text/javascript" src="js/sjcl-1.0.4.js" integrity="sha512-BqVQ8GgWfMCcdsDuP6Ggm1BV7+mmoWH3PC4UqcYpEKSdEq1rthy6NUsa6gu5sydewbi/ilI3E3ohdCxlPPF9ww==" crossorigin="anonymous"></script>
+<?php
+if ($ZEROBINCOMPATIBILITY):
+?>
+		<script type="text/javascript" src="js/base64-1.7.js" integrity="sha512-JdwsSP3GyHR+jaCkns9CL9NTt4JUJqm/BsODGmYhBcj5EAPKcHYh+OiMfyHbcDLECe17TL0hjXADFkusAqiYgA==" crossorigin="anonymous"></script>
+<?php
+else:
+?>
+		<script type="text/javascript" src="js/base64-2.1.9.js" integrity="sha512-rbqAby7hObftbEoGQzkhUbEh5YkUn2MtekTLs4btvo2oly4CZ3DxhJzEh0u/rNzS54tcJdqi5Ug1ruugEd2U1g==" crossorigin="anonymous"></script>
+<?php
+endif;
+?>
+		<script type="text/javascript" src="js/rawdeflate-0.5.js" integrity="sha512-tTdZ7qMr7tt5VQy4iCHu6/aGB12eRwbUy+AEI5rXntfsjcRfBeeqJloMsBU9FrGk1bIYLiuND/FhU42LO1bi0g==" crossorigin="anonymous"></script>
+		<script type="text/javascript" src="js/rawinflate-0.3.js" integrity="sha512-g8uelGgJW9A/Z1tB6Izxab++oj5kdD7B4qC7DHwZkB6DGMXKyzx7v5mvap2HXueI2IIn08YlRYM56jwWdm2ucQ==" crossorigin="anonymous"></script>
+		<script type="text/javascript" src="js/bootstrap-3.3.5.js" integrity="sha512-/W33QnLmSAP1fwINS9iXgB6s/VOIG9GVdIuIYaUtbSvKPMv5S08PtT3PqnT2WjwBgB8DFeDN2nqJroqQYF7SwQ==" crossorigin="anonymous"></script>
 <?php
 if ($SYNTAXHIGHLIGHTING):
 ?>
-		<script type="text/javascript" src="js/prettify.js?<?php echo rawurlencode($VERSION); ?>"></script>
+		<script type="text/javascript" src="js/prettify.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-m8iHxoN+Fe12xxFwWNdY/TS4KoFntHp29qY0xUzBnPd0bkKMOR/dFhEdTWydpt0b/fIXyhB+znGYUvgjfJ2RzQ==" crossorigin="anonymous"></script>
 <?php
 endif;
 if ($MARKDOWN):
 ?>
-		<script type="text/javascript" src="js/showdown-1.4.1.js"></script>
+		<script type="text/javascript" src="js/showdown-1.4.1.js" integrity="sha512-Kbz1FIlDnqUJu/3yW8H8USzURA3JuUqSKRwz13lM4kWt6C0n6s4tjl81PCfnWtE4gBIzyj5uGePcfUyotk/icw==" crossorigin="anonymous"></script>
 <?php
 endif;
 ?>
-		<script type="text/javascript" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>"></script>
+		<script type="text/javascript" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-E9z1cIXJHhc940FLA4o//dRxoy5HwSeRZVgLClmREWl+o576zz3gOkMwxrUFVXKUMa2l2qc6huNwMpw+RGmk2Q==" crossorigin="anonymous"></script>
 		<!--[if lt IE 10]>
 		<style type="text/css">body {padding-left:60px;padding-right:60px;} #ienotice {display:block;} #oldienotice {display:block;}</style>
 		<![endif]-->
