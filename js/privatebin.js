@@ -1240,6 +1240,12 @@ $(function() {
             event.preventDefault();
             var paste = $('#pasteFormatter').val() === 'markdown' ?
                 this.prettyPrint.text() : this.clearText.text();
+            history.pushState(
+                null, document.title, this.scriptLocation() + '?' +
+                this.pasteID() + '#' + this.pageKey()
+            );
+            // we use text/html instead of text/plain to avoid a bug when
+            // reloading the raw text view (it reverts to type text/html)
             var newDoc = document.open('text/html', 'replace');
             newDoc.write('<pre>' + paste + '</pre>');
             newDoc.close();
@@ -1256,7 +1262,7 @@ $(function() {
             this.stateNewPaste();
 
             // Erase the id and the key in url
-            history.replaceState(document.title, document.title, this.scriptLocation());
+            history.replaceState(null, document.title, this.scriptLocation());
 
             this.showStatus('', false);
             if (this.attachmentLink.attr('href'))
