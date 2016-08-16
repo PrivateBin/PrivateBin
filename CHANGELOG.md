@@ -2,8 +2,8 @@
 
   * **next release (2016-XX-XX)**
     * ADDED: Translations for Slowene and Chinese
-    * ADDED: re-introduced URL shortener support (optional), which was removed back in version 0.16 for privacy concerns
-    * ADDED: Preview tab, helpful for writing markdown code or check source code rendering
+    * ADDED: re-introduced (optional) URL shortener support, which was removed back in version 0.16 for privacy concerns
+    * ADDED: Preview tab, helpful for writing markdown code or check the source code rendering
     * ADDED: Automatic purging of expired pastes, done on paste creation
     * ADDED: Option to disable icons in discussions (will only affect newly created pastes)
     * ADDED: Composer support
@@ -11,16 +11,21 @@
     * CHANGED: Removed unmaintained RainTPL template engine, replacing the templates with straight forward PHP files
     * CHANGED: New favicon
     * CHANGED: Upgrading SJCL library to 1.0.4
-    * CHANGED: Switched to GCM instead CCM mode for AES encryption for newly created pastes
+    * CHANGED: Switched to GCM instead of CCM mode for AES encryption for newly created pastes
+    * CHANGED: Use backported random bytes function from PHP7 for older PHP versions instead of mcrypt
     * CHANGED: Switched to a SHA256 HMAC of the IP in traffic limiter instead of storing it in plain text on the server
     * CHANGED: Introduced content security policy header to reduce cross site scripting (XSS) risks
+    * CHANGED: Added SHA512 subresource integrity hashes for all javascript includes to reduce the risk of manipulated scripts and easier detection of such
     * CHANGED: Refactored PHP code to conform to PSR-4 and PSR-2 standards
     * CHANGED: Switched to Identicons as the default for comments with nicknames
-    * CHANGED: Vizhash is now optional and based on (128 byte) SHA512 HMAC instead of (144 bytes) combination of MD5, SHA1 and a reversal of that string
+    * CHANGED: Vizhash is now optional and based on (128 byte) SHA512 HMAC instead of (144 byte) combination of MD5, SHA1 and a reversal of that string
     * FIXED: Content-type negociation for HTML in certain uncommon browser configurations
     * FIXED: JavaScript error displayed before page is loaded or during attachment load
     * FIXED: Don't strip space characters at beginning or end of optional password
     * FIXED: Various UI glitches in mobile version or on smaller desktops with language menu, button spacing and long URLs
+    * FIXED: Back button now works as expected after switching to raw text view of a paste
+    * FIXED: Reactivated second error message above send comment button to ensure its visibility when the main error message is outside the viewport
+    * FIXED: Raw text now displays original markdown instead of rendered HTML
     * FIXED: Removed unused code detected with the help of various code review tools
     * FIXED: Table format for PostgreSQL, making it possible to use PostgreSQL as backend in addition to MySQL, SQLite and flat files
   * **0.22 (2015-11-09)**:
