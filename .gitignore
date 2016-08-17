@@ -5,6 +5,10 @@
 # Ignore data/
 data/
 
+# Ignore PhpDoc
+doc/*
+!doc/*.md
+
 # Ignore vendor dir of Composer except PHP files
 vendor/*.*
 vendor/*/*.*
