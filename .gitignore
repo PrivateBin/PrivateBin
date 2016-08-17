@@ -5,7 +5,7 @@
 # Ignore data/
 data/
 
-# Ignore vendor dir except PHP files
+# Ignore vendor dir of Compser except PHP files
 vendor/*.*
 vendor/*/*.*
 vendor/*/*/*.*
@@ -18,8 +18,9 @@ vendor/**/tst
 vendor/**/tests
 !vendor/**/*.php
 
+composer.lock
+
 # Ignore unit testing logs, api docs and eclipse project files
-doc/
 tst/log/
 .settings
 .buildpath
