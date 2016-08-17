@@ -16,6 +16,7 @@ vendor/**/LICENSE
 vendor/**/test
 vendor/**/tst
 vendor/**/tests
+vendor/**/build_phar.php
 !vendor/**/*.php
 
 composer.lock
