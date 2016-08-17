@@ -1,11 +1,31 @@
-# Ignore for safety
+# Ignore server files for safety
 .htaccess
 .htpasswd
-# Ignore data/ and vendor/
+
+# Ignore data/
 data/
-vendor/
+
+# Ignore PhpDoc
+doc/*
+!doc/*.md
+
+# Ignore vendor dir of Composer except PHP files
+vendor/*.*
+vendor/*/*.*
+vendor/*/*/*.*
+vendor/*/*/*/*.*
+vendor/*/*/*/*/*.*
+vendor/*/*/*/*/*/*.*
+vendor/**/LICENSE
+vendor/**/test
+vendor/**/tst
+vendor/**/tests
+vendor/**/build_phar.php
+!vendor/**/*.php
+
+composer.lock
+
 # Ignore unit testing logs, api docs and eclipse project files
-doc/
 tst/log/
 .settings
 .buildpath
