@@ -5,7 +5,7 @@
 # Ignore data/
 data/
 
-# Ignore vendor dir of Compser except PHP files
+# Ignore vendor dir of Composer except PHP files
 vendor/*.*
 vendor/*/*.*
 vendor/*/*/*.*
