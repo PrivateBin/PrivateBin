@@ -537,6 +537,16 @@ $(function() {
         headers: {'X-Requested-With': 'JSONHttpRequest'},
 
         /**
+         * URL shortners create address
+         */
+        shortenerUrl: '',
+
+        /**
+         * URL of newly created paste
+         */
+        createdPasteUrl: '',
+
+        /**
          * Get the current script location (without search or hash part of the URL).
          * eg. http://server.com/zero/?aaaa#bbbb --> http://server.com/zero/
          *
@@ -1077,6 +1087,10 @@ $(function() {
                                 url, url
                             ) + privatebin.shortenUrl(url)
                         );
+                        var shortenButton = $('#shortenbutton');
+                        if (shortenButton) {
+                            shortenButton.click($.proxy(privatebin.sendToShortener, privatebin));
+                        }
                         $('#deletelink').html('<a href="' + deleteUrl + '">' + i18n._('Delete data') + '</a>');
                         privatebin.pasteResult.removeClass('hidden');
                         // We pre-select the link so that the user only has to [Ctrl]+[c] the link.
@@ -1110,11 +1124,8 @@ $(function() {
         {
             var shortenerHtml = $('#shortenbutton');
             if (shortenerHtml) {
-                var shortener = shortenerHtml.data('shortener');
-                shortenerHtml.attr(
-                    'onclick',
-                    "window.location.href = '" + shortener + encodeURIComponent(url) + "';"
-                );
+                this.shortenerUrl = shortenerHtml.data('shortener');
+                this.createdPasteUrl = url;
                 return ' ' + $('<div />').append(shortenerHtml.clone()).html();
             }
             return '';
@@ -1217,6 +1228,17 @@ $(function() {
                 this.burnAfterReadingOption.removeClass('buttondisabled');
                 this.burnAfterReading.removeAttr('disabled');
             }
+        },
+
+        /**
+         * Forward to URL shortener.
+         *
+         * @param Event event
+         */
+        sendToShortener: function(event)
+        {
+            event.preventDefault();
+            window.location.href = this.shortenerUrl + encodeURIComponent(this.createdPasteUrl);
         },
 
         /**
