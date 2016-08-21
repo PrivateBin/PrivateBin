@@ -1,4 +1,4 @@
-# <img src="https://cdn.rawgit.com/PrivateBin/assets/master/images/minified/logo.svg" width="500" />
+# <img alt="PrivateBin" src="https://cdn.rawgit.com/PrivateBin/assets/master/images/minified/logo.svg" width="500" />
 [![Build Status](https://travis-ci.org/PrivateBin/PrivateBin.svg?branch=master)](https://travis-ci.org/PrivateBin/PrivateBin) [![Build Status](https://scrutinizer-ci.com/g/PrivateBin/PrivateBin/badges/build.png?b=master)](https://scrutinizer-ci.com/g/PrivateBin/PrivateBin/build-status/master)  
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/094500f62abf4c9aa0c8a8a4520e4789)](https://www.codacy.com/app/PrivateBin/PrivateBin)
 [![Code Climate](https://codeclimate.com/github/PrivateBin/PrivateBin/badges/gpa.svg)](https://codeclimate.com/github/PrivateBin/PrivateBin)
