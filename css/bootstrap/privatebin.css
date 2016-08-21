@@ -22,8 +22,7 @@ body.navbar-spacing {
 }
 
 .navbar-brand {
-	padding: 3px;
-	padding-left: 8px;
+	padding: 6px 4px 0 8px;
 }
 
 .navbar-form {
