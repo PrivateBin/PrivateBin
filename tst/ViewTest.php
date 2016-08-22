@@ -33,7 +33,7 @@ class ViewTest extends PHPUnit_Framework_TestCase
     {
         /* Setup Routine */
         $page = new View;
-        $page->assign('CIPHERDATA', helper::getPaste()['data']);
+        $page->assign('CIPHERDATA', Helper::getPaste()['data']);
         $page->assign('ERROR', self::$error);
         $page->assign('STATUS', self::$status);
         $page->assign('VERSION', self::$version);
@@ -70,7 +70,7 @@ class ViewTest extends PHPUnit_Framework_TestCase
     {
         $this->assertContains(
             '<div id="cipherdata" class="hidden">' .
-            htmlspecialchars(helper::getPaste()['data'], ENT_NOQUOTES) .
+            htmlspecialchars(Helper::getPaste()['data'], ENT_NOQUOTES) .
             '</div>',
             $this->_content,
             'outputs data correctly'

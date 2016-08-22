@@ -34,7 +34,7 @@ class ConfigurationTest extends PHPUnit_Framework_TestCase
 
     public function testHandleFreshConfigFile()
     {
-        helper::createIniFile(CONF, $this->_options);
+        Helper::createIniFile(CONF, $this->_options);
         $conf = new Configuration;
         $this->assertEquals($this->_options, $conf->get(), 'newly generated configuration is correct');
     }
@@ -116,7 +116,7 @@ class ConfigurationTest extends PHPUnit_Framework_TestCase
         unset($options['expire_options']['1week']);
         unset($options['expire_options']['1year']);
         unset($options['expire_options']['never']);
-        helper::createIniFile(CONF, $options);
+        Helper::createIniFile(CONF, $options);
         $conf = new Configuration;
         $options['expire']['default'] = '5min';
         $this->assertEquals($options, $conf->get(), 'not overriding "missing" subkeys');

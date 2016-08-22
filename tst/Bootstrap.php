@@ -104,7 +104,7 @@ class Helper
     public static function getPasteWithAttachment($meta = array())
     {
         $example = self::$paste;
-        $example['meta']['salt'] = serversalt::generate();
+        $example['meta']['salt'] = ServerSalt::generate();
         $example['meta'] = array_merge($example['meta'], $meta);
         return $example;
     }

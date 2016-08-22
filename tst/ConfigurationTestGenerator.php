@@ -22,11 +22,9 @@ new ConfigurationTestGenerator(array(
             'tests' => array(
                 array(
                     'conditions' => array('steps' => $vrd),
-                    'type' => 'Tag',
+                    'type' => 'RegExp',
                     'args' => array(
-                        array(
-                            'id' => 'opendisc',
-                        ),
+                        '#<div[^>]*id="opendisc"[^>]*>#',
                         '$content',
                         'outputs enabled discussion correctly'
                     ),
@@ -44,7 +42,7 @@ new ConfigurationTestGenerator(array(
                     'settings' => array('$_POST["opendiscussion"] = "neither 1 nor 0"'),
                     'type' => 'False',
                     'args' => array(
-                        '$this->_model->exists(helper::getPasteId())',
+                        '$this->_model->exists(Helper::getPasteId())',
                         'when discussions are enabled, but invalid flag posted, paste is not created'
                     ),
                 ),
@@ -54,11 +52,9 @@ new ConfigurationTestGenerator(array(
             'setting' => false,
             'tests' => array(
                 array(
-                    'type' => 'NotTag',
+                    'type' => 'NotRegExp',
                     'args' => array(
-                        array(
-                            'id' => 'opendisc',
-                        ),
+                        '#<div[^>]*id="opendisc"[^>]*>#',
                         '$content',
                         'outputs disabled discussion correctly'
                     ),
@@ -73,14 +69,9 @@ new ConfigurationTestGenerator(array(
             'tests' => array(
                 array(
                     'conditions' => array('main/discussion' => true),
-                    'type' => 'Tag',
+                    'type' => 'RegExp',
                     'args' => array(
-                        array(
-                            'id' => 'opendiscussion',
-                            'attributes' => array(
-                                'checked' => 'checked',
-                            ),
-                        ),
+                        '#<input[^>]+id="opendiscussion"[^>]*checked="checked"[^>]*>#',
                         '$content',
                         'outputs checked discussion correctly'
                     ),
@@ -92,14 +83,9 @@ new ConfigurationTestGenerator(array(
             'tests' => array(
                 array(
                     'conditions' => array('main/discussion' => true),
-                    'type' => 'NotTag',
+                    'type' => 'NotRegExp',
                     'args' => array(
-                        array(
-                            'id' => 'opendiscussion',
-                            'attributes' => array(
-                                'checked' => 'checked',
-                            ),
-                        ),
+                        '#<input[^>]+id="opendiscussion"[^>]*checked="checked"[^>]*>#',
                         '$content',
                         'outputs unchecked discussion correctly'
                     ),
@@ -113,14 +99,9 @@ new ConfigurationTestGenerator(array(
             'setting' => true,
             'tests' => array(
                 array(
-                    'type' => 'Tag',
+                    'type' => 'RegExp',
                     'args' => array(
-                        array(
-                            'id' => 'burnafterreading',
-                            'attributes' => array(
-                                'checked' => 'checked',
-                            ),
-                        ),
+                        '#<input[^>]+id="burnafterreading"[^>]*checked="checked"[^>]*>#',
                         '$content',
                         'preselects burn after reading option',
                     ),
@@ -131,14 +112,9 @@ new ConfigurationTestGenerator(array(
             'setting' => false,
             'tests' => array(
                 array(
-                    'type' => 'NotTag',
+                    'type' => 'NotRegExp',
                     'args' => array(
-                        array(
-                            'id' => 'burnafterreading',
-                            'attributes' => array(
-                                'checked' => 'checked',
-                            ),
-                        ),
+                        '#<input[^>]+id="burnafterreading"[^>]*checked="checked"[^>]*>#',
                         '$content',
                         'burn after reading option is unchecked',
                     ),
@@ -152,11 +128,9 @@ new ConfigurationTestGenerator(array(
             'setting' => true,
             'tests' => array(
                 array(
-                    'type' => 'Tag',
+                    'type' => 'RegExp',
                     'args' => array(
-                        array(
-                            'id' => 'password',
-                        ),
+                        '#<div[^>]*id="password"[^>]*>#',
                         '$content',
                         'outputs password input correctly'
                     ),
@@ -168,11 +142,9 @@ new ConfigurationTestGenerator(array(
             'tests' => array(
                 array(
                     'conditions' => array('main/discussion' => true),
-                    'type' => 'NotTag',
+                    'type' => 'NotRegExp',
                     'args' => array(
-                        array(
-                            'id' => 'password',
-                        ),
+                        '#<div[^>]*id="password"[^>]*>#',
                         '$content',
                         'removes password input correctly'
                     ),
@@ -186,30 +158,16 @@ new ConfigurationTestGenerator(array(
             'setting' => 'page',
             'tests' => array(
                 array(
-                    'type' => 'Tag',
+                    'type' => 'RegExp',
                     'args' => array(
-                        array(
-                            'tag' => 'link',
-                            'attributes' => array(
-                                'type' => 'text/css',
-                                'rel' => 'stylesheet',
-                                'href' => 'regexp:#css/privatebin\.css#',
-                            ),
-                        ),
+                        '#<link[^>]+type="text/css"[^>]+rel="stylesheet"[^>]+href="css/privatebin\.css\\?\d+\.\d+"[^>]*/>#',
                         '$content',
                         'outputs "page" stylesheet correctly',
                     ),
                 ), array(
-                    'type' => 'NotTag',
+                    'type' => 'NotRegExp',
                     'args' => array(
-                        array(
-                            'tag' => 'link',
-                            'attributes' => array(
-                                'type' => 'text/css',
-                                'rel' => 'stylesheet',
-                                'href' => 'regexp:#css/bootstrap/bootstrap-\d[\d\.]+\d\.css#',
-                            ),
-                        ),
+                        '#<link[^>]+type="text/css"[^>]+rel="stylesheet"[^>]+href="css/bootstrap/bootstrap-\d[\d\.]+\d\.css"[^>]*/>#',
                         '$content',
                         'removes "bootstrap" stylesheet correctly',
                     ),
@@ -220,30 +178,16 @@ new ConfigurationTestGenerator(array(
             'setting' => 'bootstrap',
             'tests' => array(
                 array(
-                    'type' => 'NotTag',
+                    'type' => 'NotRegExp',
                     'args' => array(
-                        array(
-                            'tag' => 'link',
-                            'attributes' => array(
-                                'type' => 'text/css',
-                                'rel' => 'stylesheet',
-                                'href' => 'regexp:#css/privatebin.css#',
-                            ),
-                        ),
+                        '#<link[^>]+type="text/css"[^>]+rel="stylesheet"[^>]+href="css/privatebin\.css\\?\d+\.\d+"[^>]*/>#',
                         '$content',
                         'removes "page" stylesheet correctly',
                     ),
                 ), array(
-                    'type' => 'Tag',
+                    'type' => 'RegExp',
                     'args' => array(
-                        array(
-                            'tag' => 'link',
-                            'attributes' => array(
-                                'type' => 'text/css',
-                                'rel' => 'stylesheet',
-                                'href' => 'regexp:#css/bootstrap/bootstrap-\d[\d\.]+\d\.css#',
-                            ),
-                        ),
+                        '#<link[^>]+type="text/css"[^>]+rel="stylesheet"[^>]+href="css/bootstrap/bootstrap-\d[\d\.]+\d\.css"[^>]*/>#',
                         '$content',
                         'outputs "bootstrap" stylesheet correctly',
                     ),
@@ -465,7 +409,10 @@ class ConfigurationTestGenerator
  * DO NOT EDIT: This file is generated automatically using configGenerator.php
  */
 
+use PrivateBin\PrivateBin;
 use PrivateBin\Data\Filesystem;
+use PrivateBin\Persistence\ServerSalt;
+use PrivateBin\Persistence\TrafficLimiter;
 
 class ConfigurationCombinationsTest extends PHPUnit_Framework_TestCase
 {
@@ -481,7 +428,8 @@ class ConfigurationCombinationsTest extends PHPUnit_Framework_TestCase
         Helper::confBackup();
         $this->_path = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'privatebin_data';
         $this->_model = Filesystem::getInstance(array('dir' => $this->_path));
-        serversalt::setPath($this->_path);
+        ServerSalt::setPath($this->_path);
+        TrafficLimiter::setPath($this->_path);
         $this->reset();
     }
 
@@ -497,8 +445,11 @@ class ConfigurationCombinationsTest extends PHPUnit_Framework_TestCase
         $_POST = array();
         $_GET = array();
         $_SERVER = array();
-        if ($this->_model->exists(helper::getPasteId()))
-            $this->_model->delete(helper::getPasteId());
+        if ($this->_model->exists(Helper::getPasteId()))
+            $this->_model->delete(Helper::getPasteId());
+        $configuration['model_options']['dir'] = $this->_path;
+        $configuration['traffic']['dir'] = $this->_path;
+        $configuration['purge']['dir'] = $this->_path;
         Helper::createIniFile(CONF, $configuration);
     }
 
@@ -545,24 +496,25 @@ EOT;
         switch ($step) {
             case 'Create':
                 $code .= PHP_EOL . <<<'EOT'
-        $_POST = helper::getPaste();
+        $_POST = Helper::getPaste();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD'] = 'POST';
         $_SERVER['REMOTE_ADDR'] = '::1';
+        TrafficLimiter::canPass();
 EOT;
                 break;
             case 'Read':
                 $code .= PHP_EOL . <<<'EOT'
-        $this->_model->create(helper::getPasteId(), helper::getPaste());
-        $_SERVER['QUERY_STRING'] = helper::getPasteId();
+        $this->_model->create(Helper::getPasteId(), Helper::getPaste());
+        $_SERVER['QUERY_STRING'] = Helper::getPasteId();
 EOT;
                 break;
             case 'Delete':
                 $code .= PHP_EOL . <<<'EOT'
-        $this->_model->create(helper::getPasteId(), helper::getPaste());
-        $this->assertTrue($this->_model->exists(helper::getPasteId()), 'paste exists before deleting data');
-        $_GET['pasteid'] = helper::getPasteId();
-        $_GET['deletetoken'] = hash_hmac('sha1', helper::getPasteId(), serversalt::get());
+        $this->_model->create(Helper::getPasteId(), Helper::getPaste());
+        $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste exists before deleting data');
+        $_GET['pasteid'] = Helper::getPasteId();
+        $_GET['deletetoken'] = hash_hmac('sha256', Helper::getPasteId(), $this->_model->read(Helper::getPasteId())->meta->salt);
 EOT;
                 break;
         }
@@ -571,8 +523,9 @@ EOT;
         $code .= PHP_EOL . $preString;
         $code .= <<<'EOT'
         ob_start();
-        new privatebin;
+        new PrivateBin;
         $content = ob_get_contents();
+        ob_end_clean();
 EOT;
 
         // step specific tests
@@ -587,9 +540,7 @@ EOT;
                 $code .= <<<'EOT'
 
         $this->assertContains(
-            '<div id="cipherdata" class="hidden">' .
-            htmlspecialchars(helper::getPasteAsJson(), ENT_NOQUOTES) .
-            '</div>',
+            htmlspecialchars(json_encode(Helper::getPaste()['data']), ENT_NOQUOTES),
             $content,
             'outputs data correctly'
         );
@@ -599,11 +550,11 @@ EOT;
                 $code .= <<<'EOT'
 
         $this->assertRegExp(
-            '#<div[^>]*id="status"[^>]*>.*Paste was properly deleted</div>#',
+            '#<div[^>]*id="status"[^>]*>.*Paste was properly deleted[^<]*</div>#s',
             $content,
             'outputs deleted status correctly'
         );
-        $this->assertFalse($this->_model->exists(helper::getPasteId()), 'paste successfully deleted');
+        $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste successfully deleted');
 EOT;
                 break;
         }
