@@ -2,7 +2,7 @@
 
 **TL;DR:** Download the
 [latest release archive](https://github.com/PrivateBin/PrivateBin/releases/latest)
-and extract it in your web hosts folder were you want to install your PrivateBin
+and extract it in your web hosts folder where you want to install your PrivateBin
 instance. We try to provide a safe default configuration, but advise you to check
 the options and adjust them as you see fit.
 
@@ -24,7 +24,7 @@ the options and adjust them as you see fit.
 ### Configuration
 
 In the file `cfg/conf.ini` you can configure PrivateBin. A `cfg/conf.ini.sample`
-is provided containing all options on default values. You can copy it to
+is provided containing all options and default values. You can copy it to
 `cfg/conf.ini` and adapt it as needed. The config file is divided into multiple
 sections, which are enclosed in square brackets.
 
@@ -42,9 +42,10 @@ More details can be found in the
 
 In the index.php you can define a different `PATH`. This is useful to secure your
 installation. You can move the configuration, data files, templates and PHP
-libraries (directories cfg, data, lib, tpl, tst and vendor) outside of your document
-root. This new location must still be accessible to your webserver / PHP process
-([open_basedir setting](https://secure.php.net/manual/en/ini.core.php#ini.open-basedir)).
+libraries (directories cfg, doc, data, lib, tpl, tst and vendor) outside of your
+document root. This new location must still be accessible to your webserver / PHP
+process (see also
+[open_basedir setting](https://secure.php.net/manual/en/ini.core.php#ini.open-basedir)).
 
 > #### PATH Example
 > Your PrivateBin installation lives in a subfolder called "paste" inside of

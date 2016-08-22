@@ -76,11 +76,11 @@ file](https://github.com/PrivateBin/PrivateBin/wiki/Configuration):
 
 * Password protection
 
-* Discussions
+* Discussions, anonymous or with nicknames and IP based identicons or vizhashes
 
 * Expiration times, including a "forever" and "burn after reading" option
 
-* Markdown format support for HTML formatted pastes
+* Markdown format support for HTML formatted pastes, including preview function
 
 * Syntax highlighting for source code using prettify.js, including 4 prettify
   themes
@@ -88,8 +88,9 @@ file](https://github.com/PrivateBin/PrivateBin/wiki/Configuration):
 * File upload support, images get displayed (disabled by default, possibility
   to adjust size limit)
 
-* Templates: By default there is a bootstrap CSS and a "classic ZeroBin" theme
-  and it is easy to adapt these to your own websites layout or create your own.
+* Templates: By default there are bootstrap CSS, darkstrap and "classic ZeroBin"
+  themes and it is easy to adapt these to your own websites layout or create
+  your own.
 
 * Translation system and automatic browser language detection (if enabled in
   browser)

@@ -1,6 +1,6 @@
 # PrivateBin version history
 
-  * **next release (2016-XX-XX)**
+  * **next release (2016-08-25)**
     * ADDED: Translations for Slowene and Chinese
     * ADDED: re-introduced (optional) URL shortener support, which was removed back in version 0.16 for privacy concerns
     * ADDED: Preview tab, helpful for writing markdown code or check the source code rendering
@@ -9,7 +9,7 @@
     * ADDED: Composer support
     * CHANGED: Renamed the ZeroBin fork to PrivateBin
     * CHANGED: Removed unmaintained RainTPL template engine, replacing the templates with straight forward PHP files
-    * CHANGED: New favicon
+    * CHANGED: New logo and favicons
     * CHANGED: Upgrading SJCL library to 1.0.4
     * CHANGED: Switched to GCM instead of CCM mode for AES encryption for newly created pastes
     * CHANGED: Use backported random bytes function from PHP7 for older PHP versions instead of mcrypt
