@@ -62,7 +62,7 @@ endif;
 	<body>
 		<header>
 			<div id="aboutbox">
-				<?php echo I18n::_('PrivateBin is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href="https://github.com/PrivateBin/PrivateBin/wiki">project page</a>.'); ?><br />
+				<?php echo I18n::_('PrivateBin is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href="https://privatebin.info/">project page</a>.'); ?><br />
 <?php
 if (strlen($NOTICE)):
 ?>

@@ -327,7 +327,7 @@ endif;
 				<h4 class="col-md-5 col-xs-8"><?php echo I18n::_('PrivateBin'); ?> <small>- <?php echo I18n::_('Because ignorance is bliss'); ?></small></h4>
 				<p class="col-md-1 col-xs-4 text-center"><?php echo $VERSION; ?></p>
 				<p id="aboutbox" class="col-md-6 col-xs-12">
-					<?php echo I18n::_('PrivateBin is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href="https://github.com/PrivateBin/PrivateBin/wiki">project page</a>.'), PHP_EOL; ?>
+					<?php echo I18n::_('PrivateBin is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href="https://privatebin.info/">project page</a>.'), PHP_EOL; ?>
 				</p>
 			</div>
 		</footer>
