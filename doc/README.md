@@ -6,8 +6,9 @@ packages and its dependencies:
 * phpdoc
 * graphviz
 
-Details about [installing phpDocumentor](https://phpdoc.org/docs/latest/getting-started/installing.html)
-can be found in its own documentation.
+Details about
+[installing phpDocumentor](https://phpdoc.org/docs/latest/getting-started/installing.html)
+can be found in that projects documentation.
 
 Example for Debian and Ubuntu:
 ```console
@@ -21,3 +22,8 @@ To generate the documentation, change into the main directory and run phpdoc:
 $ cd PrivateBin
 $ phpdoc -d lib/ -t doc/
 ```
+
+**Note:** When used with PHP 7, the prerelease of phpDocumentator 2.9 needs to be
+manually installed by downloading it from
+[GitHub](https://github.com/phpDocumentor/phpDocumentor2/releases/download/v2.9.0/phpDocumentor.phar)
+and then manually moving it to e.g. `/usr/local/bin` and making it executable.
