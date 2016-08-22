@@ -10,14 +10,16 @@ the options and adjust them as you see fit.
 
 ### Requirements
 
-- PHP version 5.3 or above, if PHP older then 7.0 is used, _one_ of the following
-  sources of cryptographically safe randomness is required:
-  - open_basedir access to /dev/urandom
+- PHP version 5.3 or above
+- _one_ of the following sources of cryptographically safe randomness is required:
+  - PHP 7
   - [Libsodium](https://download.libsodium.org)
   - mcrypt extension
   - com_dotnet extension
+  
+  Mcrypt nees to be able to access `/dev/urandom`. This means if `open_basedir` is set, it must include this file.
 - GD extension
-- some disk space or (optional) a database supported by PDO
+- (optional) a database supported by [PDO](https://secure.php.net/manual/book.pdo.php)
 - ability to create files and folders in the installation directory and the PATH
 - A web browser with javascript support
 
