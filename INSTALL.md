@@ -18,7 +18,7 @@ the options and adjust them as you see fit.
   - mcrypt extension
   - com_dotnet extension
   
-  Mcrypt nees to be able to access `/dev/urandom`. This means if `open_basedir` is set, it must include this file.
+  Mcrypt needs to be able to access `/dev/urandom`. This means if `open_basedir` is set, it must include this file.
 - GD extension
 - (optional) a database supported by [PDO](https://secure.php.net/manual/book.pdo.php)
 - ability to create files and folders in the installation directory and the PATH
