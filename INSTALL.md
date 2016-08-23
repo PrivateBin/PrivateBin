@@ -12,12 +12,13 @@ the options and adjust them as you see fit.
 
 - PHP version 5.3 or above
 - _one_ of the following sources of cryptographically safe randomness is required:
-  - PHP 7 or higher*
+  - PHP 7 or higher
+  - open_basedir access to /dev/urandom
   - [Libsodium](https://download.libsodium.org)
-  - mcrypt extension*
+  - mcrypt extension
   - com_dotnet extension
   
-  \* Mcrypt and PHP 7 need to be able to access `/dev/urandom`. This means if `open_basedir` is set, it must include this file.
+  Mcrypt nees to be able to access `/dev/urandom`. This means if `open_basedir` is set, it must include this file.
 - GD extension
 - (optional) a database supported by [PDO](https://secure.php.net/manual/book.pdo.php)
 - ability to create files and folders in the installation directory and the PATH
