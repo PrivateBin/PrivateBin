@@ -13,8 +13,8 @@ the options and adjust them as you see fit.
 - PHP version 5.3 or above
 - _one_ of the following sources of cryptographically safe randomness is required:
   - PHP 7 or higher
-  - open_basedir access to /dev/urandom
   - [Libsodium](https://download.libsodium.org)
+  - open_basedir access to `/dev/urandom`
   - mcrypt extension
   - com_dotnet extension
   
