@@ -1,3 +1,4 @@
+<!-- Please have a look at our FAQ before submitting an issue: https://github.com/PrivateBin/PrivateBin/wiki/FAQ -->
 <!-- This is a template for an bug report. If you would like to suggest a feature, feel free to delete the part below. -->
 
 ## Steps to reproduce
