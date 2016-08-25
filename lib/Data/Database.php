@@ -7,7 +7,7 @@
  * @link      https://github.com/PrivateBin/PrivateBin
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
- * @version   0.22
+ * @version   1.0
  */
 
 namespace PrivateBin\Data;
@@ -698,6 +698,13 @@ class Database extends AbstractData
                 self::$_db->exec(
                     'CREATE INDEX IF NOT EXISTS comment_parent ON ' .
                     self::_sanitizeIdentifier('comment') . '(pasteid);'
+                );
+                // no break, continue with updates for 0.22
+            case '0.22':
+                self::_exec(
+                    'UPDATE ' . self::_sanitizeIdentifier('config') .
+                    ' SET value = ? WHERE id = ?',
+                    array('1.0', 'VERSION')
                 );
         }
     }

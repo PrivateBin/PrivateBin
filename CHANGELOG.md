@@ -1,6 +1,6 @@
 # PrivateBin version history
 
-  * **next release (2016-08-25)**
+  * **1.0 (2016-08-25)**
     * ADDED: Translations for Slowene and Chinese
     * ADDED: re-introduced (optional) URL shortener support, which was removed back in version 0.16 for privacy concerns
     * ADDED: Preview tab, helpful for writing markdown code or check the source code rendering

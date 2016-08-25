@@ -8,7 +8,7 @@
  * @link      http://sebsauvage.net/wiki/doku.php?id=php:vizhash_gd
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
- * @version   0.0.4 beta PrivateBin 0.22
+ * @version   0.0.5 beta PrivateBin 1.0
  */
 
 namespace PrivateBin;
@@ -18,7 +18,7 @@ namespace PrivateBin;
  *
  * Example:
  * $vz = new Vizhash16x16();
- * $data = $vz->generate('hello');
+ * $data = $vz->generate(sha512('hello'));
  * header('Content-type: image/png');
  * echo $data;
  * exit;

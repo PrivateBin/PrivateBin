@@ -1,6 +1,7 @@
 <?php
 
 use PrivateBin\Data\Database;
+use PrivateBin\PrivateBin;
 
 class DatabaseTest extends PHPUnit_Framework_TestCase
 {
@@ -302,6 +303,13 @@ class DatabaseTest extends PHPUnit_Framework_TestCase
             "postdate INT );"
         );
         $this->assertInstanceOf(Database::class, Database::getInstance($this->_options));
+
+        // check if version number was upgraded in created configuration table
+        $statement = $db->prepare('SELECT value FROM foo_config WHERE id LIKE ?');
+        $statement->execute(array('VERSION'));
+        $result = $statement->fetch(PDO::FETCH_ASSOC);
+        $statement->closeCursor();
+        $this->assertEquals(PrivateBin::VERSION, $result['value']);
         Helper::rmDir($this->_path);
     }
 }

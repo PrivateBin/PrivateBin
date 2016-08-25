@@ -7,7 +7,7 @@
  * @link      https://github.com/PrivateBin/PrivateBin
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
- * @version   0.22
+ * @version   1.0
  */
 
 namespace PrivateBin;
@@ -27,7 +27,7 @@ class PrivateBin
      *
      * @const string
      */
-    const VERSION = '0.22';
+    const VERSION = '1.0';
 
     /**
      * show the same error message if the paste expired or does not exist
