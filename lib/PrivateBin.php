@@ -13,6 +13,7 @@
 namespace PrivateBin;
 
 use PrivateBin\Persistence\TrafficLimiter;
+use PrivateBin\Persistence\ServerSalt;
 use Exception;
 
 /**
@@ -183,6 +184,7 @@ class PrivateBin
         $this->_request = new Request;
         $this->_urlBase = array_key_exists('REQUEST_URI', $_SERVER) ?
             htmlspecialchars($_SERVER['REQUEST_URI']) : '/';
+        ServerSalt::setPath($this->_conf->getKey('dir', 'traffic'));
 
         // set default language
         $lang = $this->_conf->getKey('languagedefault');
