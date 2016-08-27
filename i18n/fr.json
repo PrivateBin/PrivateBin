@@ -30,7 +30,7 @@
     "PrivateBin is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href=\"https://privatebin.info/\">project page</a>.":
         "PrivateBin est un 'pastebin' (ou gestionnaire d'extraits de texte et de code source) minimaliste et open source, dans lequel le serveur n'a aucune connaissance des données envoyées. Les données sont chiffrées/déchiffrées <i>dans le navigateur</i> par un chiffrage AES 256 bits. Plus d'informations sur <a href=\"https://privatebin.info/\">la page du projet</a>.",
     "Because ignorance is bliss":
-        "Parce que l'ignorance est le bonheur",
+        "Parce que l'ignorance c'est le bonheur",
     "Javascript is required for PrivateBin to work.<br />Sorry for the inconvenience.":
         "Javascript est requis pour faire fonctionner PrivateBin. <br />Désolé pour cet inconvénient.",
     "PrivateBin requires a modern browser to work.":
@@ -87,7 +87,7 @@
     "FOR YOUR EYES ONLY. Don't close this window, this message can't be displayed again.":
         "POUR VOS YEUX UNIQUEMENT. Ne fermez pas cette fenêtre, ce paste ne pourra plus être affiché.",
     "Could not decrypt comment; Wrong key?":
-        "Umpossible de déchiffrer le commentaire ; mauvaise clé ?",
+        "Impossible de déchiffrer le commentaire ; mauvaise clé ?",
     "Reply":
         "Répondre",
     "Anonymous":
@@ -146,8 +146,8 @@
     "Invalid attachment.": "Attachement invalide.",
     "Options": "Options",
     "Shorten URL": "Raccourcir URL",
-    "Editor": "éditer",
-    "Preview": "avant-première",
+    "Editor": "Éditer",
+    "Preview": "Prévisualiser",
     "PrivateBin requires the PATH to end in a \"%s\". Please update the PATH in your index.php.":
         "PrivateBin requires the PATH to end in a \"%s\". Please update the PATH in your index.php."
 }
