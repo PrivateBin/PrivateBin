@@ -7,6 +7,7 @@ use PrivateBin\I18n;
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<meta name="robots" content="noindex" />
+		<meta name="referrer" content="no-referrer">
 		<title><?php echo I18n::_('PrivateBin'); ?></title>
 		<link type="text/css" rel="stylesheet" href="css/bootstrap/bootstrap-theme-3.3.5.css" />
 		<link type="text/css" rel="stylesheet" href="css/bootstrap/darkstrap-0.9.3.css" />

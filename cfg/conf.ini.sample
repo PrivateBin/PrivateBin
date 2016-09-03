@@ -1,5 +1,5 @@
 ; config file for PrivateBin
-; 
+;
 ; An explanation of each setting can be find online at https://github.com/PrivateBin/PrivateBin/wiki/Configuration.
 
 [main]
@@ -60,7 +60,7 @@ languageselection = false
 ; custom scripts from third-party domains to your templates, e.g. tracking
 ; scripts or run your site behind certain DDoS-protection services.
 ; Check the documentation at https://content-security-policy.com/
-cspheader = "default-src 'none'; manifest-src 'self'; connect-src *; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self' data:;"
+cspheader = "default-src 'none'; manifest-src 'self'; connect-src *; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self' data:; referrer no-referrer;"
 
 ; stay compatible with PrivateBin Alpha 0.19, less secure
 ; if enabled will use base64.js version 1.7 instead of 2.1.9 and sha1 instead of
