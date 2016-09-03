@@ -3,8 +3,8 @@
 
 ## Steps to reproduce
 <!-- Tell us how to reproduce the problem. -->
-1. 
-2. 
+1.
+2.
 
 ### What happens
 
@@ -20,17 +20,17 @@ If you have access to the server log files, also copy them here.
 
 ## Basic information
 
-<!-- If you use a public server (or a private server where you like to get more vists) enter the address of it here. -->
-**Server address**: 
+<!-- If you use a public server enter the address of it here. -->
+**Server address**:
 
 <!-- The Operation System of your server -->
-**Server OS:** 
+**Server OS:**
 
 <!-- The webserver running on your server, preferrably including the version -->
-**Webserver:** 
+**Webserver:**
 
 <!-- The version of your browser (when it is a client-side issue) -->
-**Browser:** 
+**Browser:**
 
 <!-- The version of PrivateBin, if you use an unstable version paste the commit hash or the GitHub link to the commit here (you can get it by running `git rev-parse HEAD`) -->
-**PrivateBin version:** 
+**PrivateBin version:**
