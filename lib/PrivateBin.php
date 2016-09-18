@@ -403,12 +403,15 @@ class PrivateBin
     {
         // set headers to disable caching
         $time = gmdate('D, d M Y H:i:s \G\M\T');
-        header('Cache-Control: no-store, no-cache, must-revalidate');
+        header('Cache-Control: no-store, no-cache, no-transform, must-revalidate');
         header('Pragma: no-cache');
         header('Expires: ' . $time);
         header('Last-Modified: ' . $time);
         header('Vary: Accept');
         header('Content-Security-Policy: ' . $this->_conf->getKey('cspheader'));
+        header('X-Xss-Protection: 1; mode=block');
+        header('X-Frame-Options: DENY');
+        header('X-Content-Type-Options: nosniff');
 
         // label all the expiration options
         $expire = array();
