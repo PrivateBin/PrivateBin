@@ -1,7 +1,13 @@
 # Credits
 
-Sébastien Sauvage - original idea and main developer  
+## Active contributors
+
 Simon Rupf - current developer and maintainer
+rugk - security review, doc improvment & various other stuff
+
+## Past contributions
+
+Sébastien Sauvage - original idea and main developer
 
 * Alexey Gladkov - syntax highlighting
 * Greg Knaddison - robots.txt
@@ -10,11 +16,11 @@ Simon Rupf - current developer and maintainer
 * Hexalyse - Password protection
 * Viktor Stanchev - File upload support
 * azlux - Tab character input support
-* Adam Fisher - Favicons
-* rugk - various stuff, logo and icons
+* Adam Fisher - old Favicons
+* rugk - new logo/icons
 * Sobak - PSR-4 and PSR-2 refactoring
 
-Translations:
+## Translations
 * Hexalyse - French
 * Kuba Niewiarowski - Polish
 * Gabbalo - German
