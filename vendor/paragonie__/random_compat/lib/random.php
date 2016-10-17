@@ -8,7 +8,7 @@
  *
  * The MIT License (MIT)
  *
- * Copyright (c) 2015 - 2016 Paragon Initiative Enterprises
+ * Copyright (c) 2015 Paragon Initiative Enterprises
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -31,7 +31,7 @@
 
 if (!defined('PHP_VERSION_ID')) {
     // This constant was introduced in PHP 5.2.7
-    $RandomCompatversion = array_map('intval', explode('.', PHP_VERSION));
+    $RandomCompatversion = explode('.', PHP_VERSION);
     define(
         'PHP_VERSION_ID',
         $RandomCompatversion[0] * 10000
@@ -53,7 +53,7 @@ if (PHP_VERSION_ID < 70000) {
     require_once $RandomCompatDIR.'/cast_to_int.php';
     require_once $RandomCompatDIR.'/error_polyfill.php';
 
-    if (!is_callable('random_bytes')) {
+    if (!function_exists('random_bytes')) {
         /**
          * PHP 5.2.0 - 5.6.x way to implement random_bytes()
          *
@@ -71,7 +71,7 @@ if (PHP_VERSION_ID < 70000) {
          */
         if (extension_loaded('libsodium')) {
             // See random_bytes_libsodium.php
-            if (PHP_VERSION_ID >= 50300 && is_callable('\\Sodium\\randombytes_buf')) {
+            if (PHP_VERSION_ID >= 50300 && function_exists('\\Sodium\\randombytes_buf')) {
                 require_once $RandomCompatDIR.'/random_bytes_libsodium.php';
             } elseif (method_exists('Sodium', 'randombytes_buf')) {
                 require_once $RandomCompatDIR.'/random_bytes_libsodium_legacy.php';
@@ -100,7 +100,7 @@ if (PHP_VERSION_ID < 70000) {
             }
 
             if (
-                !is_callable('random_bytes')
+                !function_exists('random_bytes')
                 &&
                 $RandomCompatUrandom
                 &&
@@ -125,7 +125,7 @@ if (PHP_VERSION_ID < 70000) {
          * mcrypt_create_iv()
          */
         if (
-            !is_callable('random_bytes')
+            !function_exists('random_bytes')
             &&
             PHP_VERSION_ID >= 50307
             &&
@@ -146,7 +146,7 @@ if (PHP_VERSION_ID < 70000) {
         $RandomCompatUrandom = null;
 
         if (
-            !is_callable('random_bytes')
+            !function_exists('random_bytes')
             &&
             extension_loaded('com_dotnet')
             &&
@@ -175,7 +175,7 @@ if (PHP_VERSION_ID < 70000) {
         /**
          * throw new Exception
          */
-        if (!is_callable('random_bytes')) {
+        if (!function_exists('random_bytes')) {
             /**
              * We don't have any more options, so let's throw an exception right now
              * and hope the developer won't let it fail silently.
@@ -189,7 +189,7 @@ if (PHP_VERSION_ID < 70000) {
         }
     }
 
-    if (!is_callable('random_int')) {
+    if (!function_exists('random_int')) {
         require_once $RandomCompatDIR.'/random_int.php';
     }
 

@@ -5,7 +5,7 @@
  *
  * The MIT License (MIT)
  *
- * Copyright (c) 2015 - 2016 Paragon Initiative Enterprises
+ * Copyright (c) 2015 Paragon Initiative Enterprises
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,7 +26,7 @@
  * SOFTWARE.
  */
 
-if (!is_callable('RandomCompat_strlen')) {
+if (!function_exists('RandomCompat_strlen')) {
     if (
         defined('MB_OVERLOAD_STRING') &&
         ini_get('mbstring.func_overload') & MB_OVERLOAD_STRING
@@ -78,7 +78,7 @@ if (!is_callable('RandomCompat_strlen')) {
     }
 }
 
-if (!is_callable('RandomCompat_substr')) {
+if (!function_exists('RandomCompat_substr')) {
 
     if (
         defined('MB_OVERLOAD_STRING')
