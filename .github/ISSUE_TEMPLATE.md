@@ -18,6 +18,8 @@ Here you can add screenshots. If the issue is e.g. a client-side issue (= an iss
 If you have access to the server log files, also copy them here.
 -->
 
+* I can reproduce this issue on <https://privatebin.net>: Yes / No
+
 ## Basic information
 
 <!-- If you use a public server enter the address of it here. -->
