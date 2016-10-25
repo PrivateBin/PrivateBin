@@ -1,7 +1,7 @@
 /**
  * PrivateBin
  *
- * a zero-knowledge paste bin
+ * Main CSS file.
  *
  * @link      https://github.com/PrivateBin/PrivateBin
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
@@ -161,7 +161,7 @@ button, .button {
 	background-clip: padding-box;
 }
 
-button:hover  { 
+button:hover  {
 	background-image: linear-gradient(bottom, #424b57 0%, #61707e 100%);
 	background-image: -o-linear-gradient(bottom, #424b57 0%, #61707e 100%);
 	background-image: -moz-linear-gradient(bottom, #424b57 0%, #61707e 100%);
@@ -193,8 +193,8 @@ button img {
 	top: 2px;
 }
 
-.button { 
-	background-color: #414d5a; 
+.button {
+	background-color: #414d5a;
 	padding: 6px 8px;
 	margin: 0 5px 0 0;
 	position: relative;
@@ -218,7 +218,7 @@ button img {
 }
 
 #remainingtime, #password {
-	color: #94a3b4; 
+	color: #94a3b4;
 	display: inline;
 	font-size: 0.85em;
 }
@@ -298,7 +298,7 @@ h4.title {
 	font-size: 1.2em;
 	color: #94a3b4;
 	font-style: italic;
-	font-weight: bold; 
+	font-weight: bold;
 	position: relative;
 	margin-left: 30px;
 }
@@ -356,7 +356,7 @@ h4.title {
 	background-clip: padding-box;
 }
 
-.comment button:hover  { 
+.comment button:hover  {
 	background-image: linear-gradient(bottom, #ccd 0, #fff 100%);
 	background-image: -o-linear-gradient(bottom, #ccd 0, #fff 100%);
 	background-image: -moz-linear-gradient(bottom, #ccd 0, #fff 100%);

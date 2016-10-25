@@ -20,6 +20,11 @@
 /** global: showdown */
 /** global: sjcl */
 
+$(document).ready(function() {
+    // hide "no javascript" message as early as possible
+    $('#noscript').hide();
+})
+
 // Immediately start random number generator collector.
 sjcl.random.startCollectors();
 
