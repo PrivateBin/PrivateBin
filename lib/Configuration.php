@@ -1,108 +1,108 @@
 <?php
 /**
- * PrivateBin
+ * PrivateBin.
  *
  * a zero-knowledge paste bin
  *
  * @link      https://github.com/PrivateBin/PrivateBin
+ *
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
+ *
  * @version   1.0
  */
-
 namespace PrivateBin;
 
-use PrivateBin\I18n;
 use Exception;
 use PDO;
 
 /**
- * Configuration
+ * Configuration.
  *
  * parses configuration file, ensures default values present
  */
 class Configuration
 {
     /**
-     * parsed configuration
+     * parsed configuration.
      *
      * @var array
      */
     private $_configuration;
 
     /**
-     * default configuration
+     * default configuration.
      *
      * @var array
      */
-    private static $_defaults = array(
-        'main' => array(
-            'discussion' => true,
-            'opendiscussion' => false,
-            'password' => true,
-            'fileupload' => false,
+    private static $_defaults = [
+        'main' => [
+            'discussion'               => true,
+            'opendiscussion'           => false,
+            'password'                 => true,
+            'fileupload'               => false,
             'burnafterreadingselected' => false,
-            'defaultformatter' => 'plaintext',
-            'syntaxhighlightingtheme' => null,
-            'sizelimit' => 2097152,
-            'template' => 'bootstrap',
-            'notice' => '',
-            'languageselection' => false,
-            'languagedefault' => '',
-            'urlshortener' => '',
-            'icon' => 'identicon',
-            'cspheader' => 'default-src \'none\'; manifest-src \'self\'; connect-src *; script-src \'self\'; style-src \'self\'; font-src \'self\'; img-src \'self\' data:; referrer no-referrer;',
-            'zerobincompatibility' => false,
-        ),
-        'expire' => array(
+            'defaultformatter'         => 'plaintext',
+            'syntaxhighlightingtheme'  => null,
+            'sizelimit'                => 2097152,
+            'template'                 => 'bootstrap',
+            'notice'                   => '',
+            'languageselection'        => false,
+            'languagedefault'          => '',
+            'urlshortener'             => '',
+            'icon'                     => 'identicon',
+            'cspheader'                => 'default-src \'none\'; manifest-src \'self\'; connect-src *; script-src \'self\'; style-src \'self\'; font-src \'self\'; img-src \'self\' data:; referrer no-referrer;',
+            'zerobincompatibility'     => false,
+        ],
+        'expire' => [
             'default' => '1week',
-            'clone' => true,
-        ),
-        'expire_options' => array(
-            '5min' => 300,
-            '10min' => 600,
-            '1hour' => 3600,
-            '1day' => 86400,
-            '1week' => 604800,
+            'clone'   => true,
+        ],
+        'expire_options' => [
+            '5min'   => 300,
+            '10min'  => 600,
+            '1hour'  => 3600,
+            '1day'   => 86400,
+            '1week'  => 604800,
             '1month' => 2592000,
-            '1year' => 31536000,
-            'never' => 0,
-        ),
-        'formatter_options' => array(
-            'plaintext' => 'Plain Text',
+            '1year'  => 31536000,
+            'never'  => 0,
+        ],
+        'formatter_options' => [
+            'plaintext'          => 'Plain Text',
             'syntaxhighlighting' => 'Source Code',
-            'markdown' => 'Markdown',
-        ),
-        'traffic' => array(
-            'limit' => 10,
+            'markdown'           => 'Markdown',
+        ],
+        'traffic' => [
+            'limit'  => 10,
             'header' => null,
-            'dir' => 'data',
-        ),
-        'purge' => array(
-            'limit' => 300,
+            'dir'    => 'data',
+        ],
+        'purge' => [
+            'limit'     => 300,
             'batchsize' => 10,
-            'dir' => 'data',
-        ),
-        'model' => array(
+            'dir'       => 'data',
+        ],
+        'model' => [
             'class' => 'Filesystem',
-        ),
-        'model_options' => array(
+        ],
+        'model_options' => [
             'dir' => 'data',
-        ),
-    );
+        ],
+    ];
 
     /**
-     * parse configuration file and ensure default configuration values are present
+     * parse configuration file and ensure default configuration values are present.
      *
      * @throws Exception
      */
     public function __construct()
     {
-        $config     = array();
-        $configFile = PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.ini';
+        $config = [];
+        $configFile = PATH.'cfg'.DIRECTORY_SEPARATOR.'conf.ini';
         if (is_readable($configFile)) {
             $config = parse_ini_file($configFile, true);
-            foreach (array('main', 'model', 'model_options') as $section) {
+            foreach (['main', 'model', 'model_options'] as $section) {
                 if (!array_key_exists($section, $config)) {
                     throw new Exception(I18n::_('PrivateBin requires configuration section [%s] to be present in configuration file.', $section), 2);
                 }
@@ -114,7 +114,7 @@ class Configuration
             if (!array_key_exists($section, $config) || count($config[$section]) == 0) {
                 $this->_configuration[$section] = $values;
                 if (array_key_exists('dir', $this->_configuration[$section])) {
-                    $this->_configuration[$section]['dir'] = PATH . $this->_configuration[$section]['dir'];
+                    $this->_configuration[$section]['dir'] = PATH.$this->_configuration[$section]['dir'];
                 }
                 continue;
             }
@@ -122,16 +122,16 @@ class Configuration
             elseif (
                 $section == 'model_options' && in_array(
                     $this->_configuration['model']['class'],
-                    array('Database', 'privatebin_db', 'zerobin_db')
+                    ['Database', 'privatebin_db', 'zerobin_db']
                 )
             ) {
-                $values = array(
-                    'dsn' => 'sqlite:' . PATH . 'data' . DIRECTORY_SEPARATOR . 'db.sq3',
+                $values = [
+                    'dsn' => 'sqlite:'.PATH.'data'.DIRECTORY_SEPARATOR.'db.sq3',
                     'tbl' => null,
                     'usr' => null,
                     'pwd' => null,
-                    'opt' => array(PDO::ATTR_PERSISTENT => true),
-                );
+                    'opt' => [PDO::ATTR_PERSISTENT => true],
+                ];
             }
 
             // "*_options" sections don't require all defaults to be set
@@ -149,7 +149,7 @@ class Configuration
             else {
                 foreach ($values as $key => $val) {
                     if ($key == 'dir') {
-                        $val = PATH . $val;
+                        $val = PATH.$val;
                     }
                     $result = $val;
                     if (array_key_exists($key, $config[$section])) {
@@ -157,9 +157,9 @@ class Configuration
                             $result = $config[$section][$key];
                         } elseif (is_bool($val)) {
                             $val = strtolower($config[$section][$key]);
-                            if (in_array($val, array('true', 'yes', 'on'))) {
+                            if (in_array($val, ['true', 'yes', 'on'])) {
                                 $result = true;
-                            } elseif (in_array($val, array('false', 'no', 'off'))) {
+                            } elseif (in_array($val, ['false', 'no', 'off'])) {
                                 $result = false;
                             } else {
                                 $result = (bool) $config[$section][$key];
@@ -182,8 +182,8 @@ class Configuration
         );
 
         $this->_configuration['model']['class'] = str_replace(
-            array('privatebin_data', 'privatebin_db'),
-            array('Filesystem', 'Database'),
+            ['privatebin_data', 'privatebin_db'],
+            ['Filesystem', 'Database'],
             $this->_configuration['model']['class']
         );
 
@@ -194,7 +194,7 @@ class Configuration
     }
 
     /**
-     * get configuration as array
+     * get configuration as array.
      *
      * return array
      */
@@ -204,7 +204,7 @@ class Configuration
     }
 
     /**
-     * get default configuration as array
+     * get default configuration as array.
      *
      * return array
      */
@@ -214,34 +214,38 @@ class Configuration
     }
 
     /**
-     * get a key from the configuration, typically the main section or all keys
+     * get a key from the configuration, typically the main section or all keys.
      *
      * @param string $key
      * @param string $section defaults to main
+     *
      * @throws Exception
-     * return mixed
+     *                   return mixed
      */
     public function getKey($key, $section = 'main')
     {
         $options = $this->getSection($section);
         if (!array_key_exists($key, $options)) {
-            throw new Exception(I18n::_('Invalid data.') . " $section / $key", 4);
+            throw new Exception(I18n::_('Invalid data.')." $section / $key", 4);
         }
+
         return $this->_configuration[$section][$key];
     }
 
     /**
-     * get a section from the configuration, must exist
+     * get a section from the configuration, must exist.
      *
      * @param string $section
+     *
      * @throws Exception
-     * return mixed
+     *                   return mixed
      */
     public function getSection($section)
     {
         if (!array_key_exists($section, $this->_configuration)) {
             throw new Exception(I18n::_('PrivateBin requires configuration section [%s] to be present in configuration file.', $section), 3);
         }
+
         return $this->_configuration[$section];
     }
 }

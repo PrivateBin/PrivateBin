@@ -1,78 +1,81 @@
 <?php
 /**
- * PrivateBin
+ * PrivateBin.
  *
  * a zero-knowledge paste bin
  *
  * @link      https://github.com/PrivateBin/PrivateBin
+ *
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
+ *
  * @version   1.0
  */
-
 namespace PrivateBin\Data;
 
-use PrivateBin\PrivateBin;
 use Exception;
 use PDO;
 use PDOException;
+use PrivateBin\PrivateBin;
 use stdClass;
 
 /**
- * Database
+ * Database.
  *
  * Model for database access, implemented as a singleton.
  */
 class Database extends AbstractData
 {
     /**
-     * cache for select queries
+     * cache for select queries.
      *
      * @var array
      */
-    private static $_cache = array();
+    private static $_cache = [];
 
     /**
-     * instance of database connection
+     * instance of database connection.
      *
-     * @access private
      * @static
+     *
      * @var PDO
      */
     private static $_db;
 
     /**
-     * table prefix
+     * table prefix.
      *
-     * @access private
      * @static
+     *
      * @var string
      */
     private static $_prefix = '';
 
     /**
-     * database type
+     * database type.
      *
-     * @access private
      * @static
+     *
      * @var string
      */
     private static $_type = '';
 
     /**
-     * get instance of singleton
+     * get instance of singleton.
      *
-     * @access public
      * @static
-     * @param  array $options
+     *
+     * @param array $options
+     *
      * @throws Exception
+     *
      * @return Database
      */
     public static function getInstance($options = null)
     {
         // if needed initialize the singleton
         if (!(self::$_instance instanceof self)) {
-            self::$_instance = new self;
+            self::$_instance = new self();
         }
 
         if (is_array($options)) {
@@ -89,17 +92,17 @@ class Database extends AbstractData
                 array_key_exists('opt', $options)
             ) {
                 // set default options
-                $options['opt'][PDO::ATTR_ERRMODE]          = PDO::ERRMODE_EXCEPTION;
+                $options['opt'][PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
                 $options['opt'][PDO::ATTR_EMULATE_PREPARES] = false;
-                $options['opt'][PDO::ATTR_PERSISTENT]       = true;
-                $db_tables_exist                            = true;
+                $options['opt'][PDO::ATTR_PERSISTENT] = true;
+                $db_tables_exist = true;
 
                 // setup type and dabase connection
                 self::$_type = strtolower(
                     substr($options['dsn'], 0, strpos($options['dsn'], ':'))
                 );
                 $tableQuery = self::_getTableQuery(self::$_type);
-                self::$_db  = new PDO(
+                self::$_db = new PDO(
                     $options['dsn'],
                     $options['usr'],
                     $options['pwd'],
@@ -150,9 +153,9 @@ class Database extends AbstractData
     /**
      * Create a paste.
      *
-     * @access public
-     * @param  string $pasteid
-     * @param  array  $paste
+     * @param string $pasteid
+     * @param array  $paste
+     *
      * @return bool
      */
     public function create($pasteid, $paste)
@@ -168,8 +171,8 @@ class Database extends AbstractData
         }
 
         $opendiscussion = $burnafterreading = false;
-        $attachment     = $attachmentname     = '';
-        $meta           = $paste['meta'];
+        $attachment = $attachmentname = '';
+        $meta = $paste['meta'];
         unset($meta['postdate']);
         $expire_date = 0;
         if (array_key_exists('expire_date', $paste['meta'])) {
@@ -192,10 +195,11 @@ class Database extends AbstractData
             $attachmentname = $paste['meta']['attachmentname'];
             unset($meta['attachmentname']);
         }
+
         return self::_exec(
-            'INSERT INTO ' . self::_sanitizeIdentifier('paste') .
+            'INSERT INTO '.self::_sanitizeIdentifier('paste').
             ' VALUES(?,?,?,?,?,?,?,?,?)',
-            array(
+            [
                 $pasteid,
                 $paste['data'],
                 $paste['meta']['postdate'],
@@ -205,15 +209,15 @@ class Database extends AbstractData
                 json_encode($meta),
                 $attachment,
                 $attachmentname,
-            )
+            ]
         );
     }
 
     /**
      * Read a paste.
      *
-     * @access public
-     * @param  string $pasteid
+     * @param string $pasteid
+     *
      * @return stdClass|false
      */
     public function read($pasteid)
@@ -222,19 +226,19 @@ class Database extends AbstractData
             !array_key_exists($pasteid, self::$_cache)
         ) {
             self::$_cache[$pasteid] = false;
-            $paste                  = self::_select(
-                'SELECT * FROM ' . self::_sanitizeIdentifier('paste') .
-                ' WHERE dataid = ?', array($pasteid), true
+            $paste = self::_select(
+                'SELECT * FROM '.self::_sanitizeIdentifier('paste').
+                ' WHERE dataid = ?', [$pasteid], true
             );
 
             if (false !== $paste) {
                 // create object
-                self::$_cache[$pasteid]       = new stdClass;
+                self::$_cache[$pasteid] = new stdClass();
                 self::$_cache[$pasteid]->data = $paste['data'];
 
                 $meta = json_decode($paste['meta']);
                 if (!is_object($meta)) {
-                    $meta = new stdClass;
+                    $meta = new stdClass();
                 }
 
                 // support older attachments
@@ -253,9 +257,9 @@ class Database extends AbstractData
                         self::$_cache[$pasteid]->attachmentname = $paste['attachmentname'];
                     }
                 }
-                self::$_cache[$pasteid]->meta           = $meta;
+                self::$_cache[$pasteid]->meta = $meta;
                 self::$_cache[$pasteid]->meta->postdate = (int) $paste['postdate'];
-                $expire_date                            = (int) $paste['expiredate'];
+                $expire_date = (int) $paste['expiredate'];
                 if (
                     $expire_date > 0
                 ) {
@@ -280,19 +284,19 @@ class Database extends AbstractData
     /**
      * Delete a paste and its discussion.
      *
-     * @access public
-     * @param  string $pasteid
+     * @param string $pasteid
+     *
      * @return void
      */
     public function delete($pasteid)
     {
         self::_exec(
-            'DELETE FROM ' . self::_sanitizeIdentifier('paste') .
-            ' WHERE dataid = ?', array($pasteid)
+            'DELETE FROM '.self::_sanitizeIdentifier('paste').
+            ' WHERE dataid = ?', [$pasteid]
         );
         self::_exec(
-            'DELETE FROM ' . self::_sanitizeIdentifier('comment') .
-            ' WHERE pasteid = ?', array($pasteid)
+            'DELETE FROM '.self::_sanitizeIdentifier('comment').
+            ' WHERE pasteid = ?', [$pasteid]
         );
         if (
             array_key_exists($pasteid, self::$_cache)
@@ -304,8 +308,8 @@ class Database extends AbstractData
     /**
      * Test if a paste exists.
      *
-     * @access public
-     * @param  string $pasteid
+     * @param string $pasteid
+     *
      * @return bool
      */
     public function exists($pasteid)
@@ -315,30 +319,32 @@ class Database extends AbstractData
         ) {
             self::$_cache[$pasteid] = $this->read($pasteid);
         }
+
         return (bool) self::$_cache[$pasteid];
     }
 
     /**
      * Create a comment in a paste.
      *
-     * @access public
-     * @param  string $pasteid
-     * @param  string $parentid
-     * @param  string $commentid
-     * @param  array  $comment
+     * @param string $pasteid
+     * @param string $parentid
+     * @param string $commentid
+     * @param array  $comment
+     *
      * @return bool
      */
     public function createComment($pasteid, $parentid, $commentid, $comment)
     {
-        foreach (array('nickname', 'vizhash') as $key) {
+        foreach (['nickname', 'vizhash'] as $key) {
             if (!array_key_exists($key, $comment['meta'])) {
                 $comment['meta'][$key] = null;
             }
         }
+
         return self::_exec(
-            'INSERT INTO ' . self::_sanitizeIdentifier('comment') .
+            'INSERT INTO '.self::_sanitizeIdentifier('comment').
             ' VALUES(?,?,?,?,?,?,?)',
-            array(
+            [
                 $commentid,
                 $pasteid,
                 $parentid,
@@ -346,34 +352,34 @@ class Database extends AbstractData
                 $comment['meta']['nickname'],
                 $comment['meta']['vizhash'],
                 $comment['meta']['postdate'],
-            )
+            ]
         );
     }
 
     /**
      * Read all comments of paste.
      *
-     * @access public
-     * @param  string $pasteid
+     * @param string $pasteid
+     *
      * @return array
      */
     public function readComments($pasteid)
     {
         $rows = self::_select(
-            'SELECT * FROM ' . self::_sanitizeIdentifier('comment') .
-            ' WHERE pasteid = ?', array($pasteid)
+            'SELECT * FROM '.self::_sanitizeIdentifier('comment').
+            ' WHERE pasteid = ?', [$pasteid]
         );
 
         // create comment list
-        $comments = array();
+        $comments = [];
         if (count($rows)) {
             foreach ($rows as $row) {
-                $i                            = $this->getOpenSlot($comments, (int) $row['postdate']);
-                $comments[$i]                 = new stdClass;
-                $comments[$i]->id             = $row['dataid'];
-                $comments[$i]->parentid       = $row['parentid'];
-                $comments[$i]->data           = $row['data'];
-                $comments[$i]->meta           = new stdClass;
+                $i = $this->getOpenSlot($comments, (int) $row['postdate']);
+                $comments[$i] = new stdClass();
+                $comments[$i]->id = $row['dataid'];
+                $comments[$i]->parentid = $row['parentid'];
+                $comments[$i]->data = $row['data'];
+                $comments[$i]->meta = new stdClass();
                 $comments[$i]->meta->postdate = (int) $row['postdate'];
                 if (array_key_exists('nickname', $row) && !empty($row['nickname'])) {
                     $comments[$i]->meta->nickname = $row['nickname'];
@@ -384,76 +390,83 @@ class Database extends AbstractData
             }
             ksort($comments);
         }
+
         return $comments;
     }
 
     /**
      * Test if a comment exists.
      *
-     * @access public
-     * @param  string $pasteid
-     * @param  string $parentid
-     * @param  string $commentid
+     * @param string $pasteid
+     * @param string $parentid
+     * @param string $commentid
+     *
      * @return bool
      */
     public function existsComment($pasteid, $parentid, $commentid)
     {
         return (bool) self::_select(
-            'SELECT dataid FROM ' . self::_sanitizeIdentifier('comment') .
+            'SELECT dataid FROM '.self::_sanitizeIdentifier('comment').
             ' WHERE pasteid = ? AND parentid = ? AND dataid = ?',
-            array($pasteid, $parentid, $commentid), true
+            [$pasteid, $parentid, $commentid], true
         );
     }
 
     /**
-     * Returns up to batch size number of paste ids that have expired
+     * Returns up to batch size number of paste ids that have expired.
      *
-     * @access private
-     * @param  int $batchsize
+     * @param int $batchsize
+     *
      * @return array
      */
     protected function _getExpiredPastes($batchsize)
     {
-        $pastes = array();
-        $rows   = self::_select(
-            'SELECT dataid FROM ' . self::_sanitizeIdentifier('paste') .
-            ' WHERE expiredate < ? LIMIT ?', array(time(), $batchsize)
+        $pastes = [];
+        $rows = self::_select(
+            'SELECT dataid FROM '.self::_sanitizeIdentifier('paste').
+            ' WHERE expiredate < ? LIMIT ?', [time(), $batchsize]
         );
         if (count($rows)) {
             foreach ($rows as $row) {
                 $pastes[] = $row['dataid'];
             }
         }
+
         return $pastes;
     }
 
     /**
-     * execute a statement
+     * execute a statement.
      *
-     * @access private
      * @static
-     * @param  string $sql
-     * @param  array $params
+     *
+     * @param string $sql
+     * @param array  $params
+     *
      * @throws PDOException
+     *
      * @return bool
      */
     private static function _exec($sql, array $params)
     {
         $statement = self::$_db->prepare($sql);
-        $result    = $statement->execute($params);
+        $result = $statement->execute($params);
         $statement->closeCursor();
+
         return $result;
     }
 
     /**
-     * run a select statement
+     * run a select statement.
      *
-     * @access private
      * @static
-     * @param  string $sql
-     * @param  array $params
-     * @param  bool $firstOnly if only the first row should be returned
+     *
+     * @param string $sql
+     * @param array  $params
+     * @param bool   $firstOnly if only the first row should be returned
+     *
      * @throws PDOException
+     *
      * @return array
      */
     private static function _select($sql, array $params, $firstOnly = false)
@@ -464,16 +477,19 @@ class Database extends AbstractData
             $statement->fetch(PDO::FETCH_ASSOC) :
             $statement->fetchAll(PDO::FETCH_ASSOC);
         $statement->closeCursor();
+
         return $result;
     }
 
     /**
-     * get table list query, depending on the database type
+     * get table list query, depending on the database type.
      *
-     * @access private
      * @static
-     * @param  string $type
+     *
+     * @param string $type
+     *
      * @throws Exception
+     *
      * @return string
      */
     private static function _getTableQuery($type)
@@ -487,7 +503,7 @@ class Database extends AbstractData
                 break;
             case 'mssql':
                 $sql = 'SELECT name FROM sysobjects '
-                     . "WHERE type = 'U' ORDER BY name";
+                     ."WHERE type = 'U' ORDER BY name";
                 break;
             case 'mysql':
                 $sql = 'SHOW TABLES';
@@ -497,55 +513,60 @@ class Database extends AbstractData
                 break;
             case 'pgsql':
                 $sql = 'SELECT c.relname AS table_name '
-                     . 'FROM pg_class c, pg_user u '
-                     . "WHERE c.relowner = u.usesysid AND c.relkind = 'r' "
-                     . 'AND NOT EXISTS (SELECT 1 FROM pg_views WHERE viewname = c.relname) '
-                     . "AND c.relname !~ '^(pg_|sql_)' "
-                     . 'UNION '
-                     . 'SELECT c.relname AS table_name '
-                     . 'FROM pg_class c '
-                     . "WHERE c.relkind = 'r' "
-                     . 'AND NOT EXISTS (SELECT 1 FROM pg_views WHERE viewname = c.relname) '
-                     . 'AND NOT EXISTS (SELECT 1 FROM pg_user WHERE usesysid = c.relowner) '
-                     . "AND c.relname !~ '^pg_'";
+                     .'FROM pg_class c, pg_user u '
+                     ."WHERE c.relowner = u.usesysid AND c.relkind = 'r' "
+                     .'AND NOT EXISTS (SELECT 1 FROM pg_views WHERE viewname = c.relname) '
+                     ."AND c.relname !~ '^(pg_|sql_)' "
+                     .'UNION '
+                     .'SELECT c.relname AS table_name '
+                     .'FROM pg_class c '
+                     ."WHERE c.relkind = 'r' "
+                     .'AND NOT EXISTS (SELECT 1 FROM pg_views WHERE viewname = c.relname) '
+                     .'AND NOT EXISTS (SELECT 1 FROM pg_user WHERE usesysid = c.relowner) '
+                     ."AND c.relname !~ '^pg_'";
                 break;
             case 'sqlite':
                 $sql = "SELECT name FROM sqlite_master WHERE type='table' "
-                     . 'UNION ALL SELECT name FROM sqlite_temp_master '
-                     . "WHERE type='table' ORDER BY name";
+                     .'UNION ALL SELECT name FROM sqlite_temp_master '
+                     ."WHERE type='table' ORDER BY name";
                 break;
             default:
                 throw new Exception(
                     "PDO type $type is currently not supported.", 5
                 );
         }
+
         return $sql;
     }
 
     /**
-     * get a value by key from the config table
+     * get a value by key from the config table.
      *
-     * @access private
      * @static
-     * @param  string $key
+     *
+     * @param string $key
+     *
      * @throws PDOException
+     *
      * @return string
      */
     private static function _getConfig($key)
     {
         $row = self::_select(
-            'SELECT value FROM ' . self::_sanitizeIdentifier('config') .
-            ' WHERE id = ?', array($key), true
+            'SELECT value FROM '.self::_sanitizeIdentifier('config').
+            ' WHERE id = ?', [$key], true
         );
+
         return $row['value'];
     }
 
     /**
-     * get the primary key clauses, depending on the database driver
+     * get the primary key clauses, depending on the database driver.
      *
-     * @access private
      * @static
+     *
      * @param string $key
+     *
      * @return array
      */
     private static function _getPrimaryKeyClauses($key = 'dataid')
@@ -556,101 +577,104 @@ class Database extends AbstractData
         } else {
             $main_key = ' PRIMARY KEY';
         }
-        return array($main_key, $after_key);
+
+        return [$main_key, $after_key];
     }
 
     /**
-     * create the paste table
+     * create the paste table.
      *
-     * @access private
      * @static
+     *
      * @return void
      */
     private static function _createPasteTable()
     {
         list($main_key, $after_key) = self::_getPrimaryKeyClauses();
-        $dataType                   = self::$_type === 'pgsql' ? 'TEXT' : 'BLOB';
+        $dataType = self::$_type === 'pgsql' ? 'TEXT' : 'BLOB';
         self::$_db->exec(
-            'CREATE TABLE ' . self::_sanitizeIdentifier('paste') . ' ( ' .
-            "dataid CHAR(16) NOT NULL$main_key, " .
-            "data $dataType, " .
-            'postdate INT, ' .
-            'expiredate INT, ' .
-            'opendiscussion INT, ' .
-            'burnafterreading INT, ' .
-            'meta TEXT, ' .
-            'attachment ' . (self::$_type === 'pgsql' ? 'TEXT' : 'MEDIUMBLOB') . ', ' .
+            'CREATE TABLE '.self::_sanitizeIdentifier('paste').' ( '.
+            "dataid CHAR(16) NOT NULL$main_key, ".
+            "data $dataType, ".
+            'postdate INT, '.
+            'expiredate INT, '.
+            'opendiscussion INT, '.
+            'burnafterreading INT, '.
+            'meta TEXT, '.
+            'attachment '.(self::$_type === 'pgsql' ? 'TEXT' : 'MEDIUMBLOB').', '.
             "attachmentname $dataType$after_key );"
         );
     }
 
     /**
-     * create the paste table
+     * create the paste table.
      *
-     * @access private
      * @static
+     *
      * @return void
      */
     private static function _createCommentTable()
     {
         list($main_key, $after_key) = self::_getPrimaryKeyClauses();
-        $dataType                   = self::$_type === 'pgsql' ? 'text' : 'BLOB';
+        $dataType = self::$_type === 'pgsql' ? 'text' : 'BLOB';
         self::$_db->exec(
-            'CREATE TABLE ' . self::_sanitizeIdentifier('comment') . ' ( ' .
-            "dataid CHAR(16) NOT NULL$main_key, " .
-            'pasteid CHAR(16), ' .
-            'parentid CHAR(16), ' .
-            "data $dataType, " .
-            "nickname $dataType, " .
-            "vizhash $dataType, " .
+            'CREATE TABLE '.self::_sanitizeIdentifier('comment').' ( '.
+            "dataid CHAR(16) NOT NULL$main_key, ".
+            'pasteid CHAR(16), '.
+            'parentid CHAR(16), '.
+            "data $dataType, ".
+            "nickname $dataType, ".
+            "vizhash $dataType, ".
             "postdate INT$after_key );"
         );
         self::$_db->exec(
-            'CREATE INDEX IF NOT EXISTS comment_parent ON ' .
-            self::_sanitizeIdentifier('comment') . '(pasteid);'
+            'CREATE INDEX IF NOT EXISTS comment_parent ON '.
+            self::_sanitizeIdentifier('comment').'(pasteid);'
         );
     }
 
     /**
-     * create the paste table
+     * create the paste table.
      *
-     * @access private
      * @static
+     *
      * @return void
      */
     private static function _createConfigTable()
     {
         list($main_key, $after_key) = self::_getPrimaryKeyClauses('id');
         self::$_db->exec(
-            'CREATE TABLE ' . self::_sanitizeIdentifier('config') .
+            'CREATE TABLE '.self::_sanitizeIdentifier('config').
             " ( id CHAR(16) NOT NULL$main_key, value TEXT$after_key );"
         );
         self::_exec(
-            'INSERT INTO ' . self::_sanitizeIdentifier('config') .
+            'INSERT INTO '.self::_sanitizeIdentifier('config').
             ' VALUES(?,?)',
-            array('VERSION', PrivateBin::VERSION)
+            ['VERSION', PrivateBin::VERSION]
         );
     }
 
     /**
-     * sanitizes identifiers
+     * sanitizes identifiers.
      *
-     * @access private
      * @static
-     * @param  string $identifier
+     *
+     * @param string $identifier
+     *
      * @return string
      */
     private static function _sanitizeIdentifier($identifier)
     {
-        return preg_replace('/[^A-Za-z0-9_]+/', '', self::$_prefix . $identifier);
+        return preg_replace('/[^A-Za-z0-9_]+/', '', self::$_prefix.$identifier);
     }
 
     /**
-     * upgrade the database schema from an old version
+     * upgrade the database schema from an old version.
      *
-     * @access private
      * @static
-     * @param  string $oldversion
+     *
+     * @param string $oldversion
+     *
      * @return void
      */
     private static function _upgradeDatabase($oldversion)
@@ -660,51 +684,51 @@ class Database extends AbstractData
             case '0.21':
                 // create the meta column if necessary (pre 0.21 change)
                 try {
-                    self::$_db->exec('SELECT meta FROM ' . self::_sanitizeIdentifier('paste') . ' LIMIT 1;');
+                    self::$_db->exec('SELECT meta FROM '.self::_sanitizeIdentifier('paste').' LIMIT 1;');
                 } catch (PDOException $e) {
-                    self::$_db->exec('ALTER TABLE ' . self::_sanitizeIdentifier('paste') . ' ADD COLUMN meta TEXT;');
+                    self::$_db->exec('ALTER TABLE '.self::_sanitizeIdentifier('paste').' ADD COLUMN meta TEXT;');
                 }
                 // SQLite only allows one ALTER statement at a time...
                 self::$_db->exec(
-                    'ALTER TABLE ' . self::_sanitizeIdentifier('paste') .
-                    ' ADD COLUMN attachment ' .
-                    (self::$_type === 'pgsql' ? 'TEXT' : 'MEDIUMBLOB') . ';'
+                    'ALTER TABLE '.self::_sanitizeIdentifier('paste').
+                    ' ADD COLUMN attachment '.
+                    (self::$_type === 'pgsql' ? 'TEXT' : 'MEDIUMBLOB').';'
                 );
                 self::$_db->exec(
-                    'ALTER TABLE ' . self::_sanitizeIdentifier('paste') . " ADD COLUMN attachmentname $dataType;"
+                    'ALTER TABLE '.self::_sanitizeIdentifier('paste')." ADD COLUMN attachmentname $dataType;"
                 );
                 // SQLite doesn't support MODIFY, but it allows TEXT of similar
                 // size as BLOB, so there is no need to change it there
                 if (self::$_type !== 'sqlite') {
                     self::$_db->exec(
-                        'ALTER TABLE ' . self::_sanitizeIdentifier('paste') .
+                        'ALTER TABLE '.self::_sanitizeIdentifier('paste').
                         ' ADD PRIMARY KEY (dataid), MODIFY COLUMN data $dataType;'
                     );
                     self::$_db->exec(
-                        'ALTER TABLE ' . self::_sanitizeIdentifier('comment') .
-                        " ADD PRIMARY KEY (dataid), MODIFY COLUMN data $dataType, " .
+                        'ALTER TABLE '.self::_sanitizeIdentifier('comment').
+                        " ADD PRIMARY KEY (dataid), MODIFY COLUMN data $dataType, ".
                         "MODIFY COLUMN nickname $dataType, MODIFY COLUMN vizhash $dataType;"
                     );
                 } else {
                     self::$_db->exec(
-                        'CREATE UNIQUE INDEX IF NOT EXISTS paste_dataid ON ' .
-                        self::_sanitizeIdentifier('paste') . '(dataid);'
+                        'CREATE UNIQUE INDEX IF NOT EXISTS paste_dataid ON '.
+                        self::_sanitizeIdentifier('paste').'(dataid);'
                     );
                     self::$_db->exec(
-                        'CREATE UNIQUE INDEX IF NOT EXISTS comment_dataid ON ' .
-                        self::_sanitizeIdentifier('comment') . '(dataid);'
+                        'CREATE UNIQUE INDEX IF NOT EXISTS comment_dataid ON '.
+                        self::_sanitizeIdentifier('comment').'(dataid);'
                     );
                 }
                 self::$_db->exec(
-                    'CREATE INDEX IF NOT EXISTS comment_parent ON ' .
-                    self::_sanitizeIdentifier('comment') . '(pasteid);'
+                    'CREATE INDEX IF NOT EXISTS comment_parent ON '.
+                    self::_sanitizeIdentifier('comment').'(pasteid);'
                 );
                 // no break, continue with updates for 0.22
             case '0.22':
                 self::_exec(
-                    'UPDATE ' . self::_sanitizeIdentifier('config') .
+                    'UPDATE '.self::_sanitizeIdentifier('config').
                     ' SET value = ? WHERE id = ?',
-                    array('1.0', 'VERSION')
+                    ['1.0', 'VERSION']
                 );
         }
     }

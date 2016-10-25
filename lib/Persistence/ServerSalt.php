@@ -1,21 +1,22 @@
 <?php
 /**
- * PrivateBin
+ * PrivateBin.
  *
  * a zero-knowledge paste bin
  *
  * @link      https://github.com/PrivateBin/PrivateBin
+ *
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
+ *
  * @version   1.0
  */
-
 namespace PrivateBin\Persistence;
 
 use Exception;
 
 /**
- * ServerSalt
+ * ServerSalt.
  *
  * This is a random string which is unique to each PrivateBin installation.
  * It is automatically created if not present.
@@ -27,42 +28,44 @@ use Exception;
 class ServerSalt extends AbstractPersistence
 {
     /**
-     * file where salt is saved to
+     * file where salt is saved to.
      *
-     * @access private
      * @static
-     * @var    string
+     *
+     * @var string
      */
     private static $_file = 'salt.php';
 
     /**
-     * generated salt
+     * generated salt.
      *
-     * @access private
      * @static
-     * @var    string
+     *
+     * @var string
      */
     private static $_salt = '';
 
     /**
-     * generate a large random hexadecimal salt
+     * generate a large random hexadecimal salt.
      *
-     * @access public
      * @static
+     *
      * @return string
      */
     public static function generate()
     {
         $randomSalt = bin2hex(random_bytes(256));
+
         return $randomSalt;
     }
 
     /**
-     * get server salt
+     * get server salt.
      *
-     * @access public
      * @static
+     *
      * @throws Exception
+     *
      * @return string
      */
     public static function get()
@@ -76,25 +79,27 @@ class ServerSalt extends AbstractPersistence
                 $items = explode('|', file_get_contents(self::getPath(self::$_file)));
             }
             if (!isset($items) || !is_array($items) || count($items) != 3) {
-                throw new Exception('unable to read file ' . self::getPath(self::$_file), 20);
+                throw new Exception('unable to read file '.self::getPath(self::$_file), 20);
             }
             self::$_salt = $items[1];
         } else {
             self::$_salt = self::generate();
             self::_store(
                 self::$_file,
-                '<?php /* |' . self::$_salt . '| */ ?>'
+                '<?php /* |'.self::$_salt.'| */ ?>'
             );
         }
+
         return self::$_salt;
     }
 
     /**
-     * set the path
+     * set the path.
      *
-     * @access public
      * @static
-     * @param  string $path
+     *
+     * @param string $path
+     *
      * @return void
      */
     public static function setPath($path)

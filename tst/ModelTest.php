@@ -1,5 +1,6 @@
 <?php
 
+use Identicon\Identicon;
 use PrivateBin\Configuration;
 use PrivateBin\Data\Database;
 use PrivateBin\Model;
@@ -7,7 +8,6 @@ use PrivateBin\Model\Paste;
 use PrivateBin\Persistence\ServerSalt;
 use PrivateBin\Persistence\TrafficLimiter;
 use PrivateBin\Vizhash16x16;
-use Identicon\Identicon;
 
 class ModelTest extends PHPUnit_Framework_TestCase
 {
@@ -21,23 +21,25 @@ class ModelTest extends PHPUnit_Framework_TestCase
     {
         /* Setup Routine */
         Helper::confRestore();
-        $this->_path = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'privatebin_data';
-        if (!is_dir($this->_path)) mkdir($this->_path);
+        $this->_path = sys_get_temp_dir().DIRECTORY_SEPARATOR.'privatebin_data';
+        if (!is_dir($this->_path)) {
+            mkdir($this->_path);
+        }
         ServerSalt::setPath($this->_path);
         $options = parse_ini_file(CONF, true);
         $options['purge']['limit'] = 0;
-        $options['model'] = array(
+        $options['model'] = [
             'class' => 'Database',
-        );
-        $options['model_options'] = array(
+        ];
+        $options['model_options'] = [
             'dsn' => 'sqlite::memory:',
             'usr' => null,
             'pwd' => null,
-            'opt' => array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION),
-        );
+            'opt' => [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION],
+        ];
         Helper::confBackup();
         Helper::createIniFile(CONF, $options);
-        $this->_conf = new Configuration;
+        $this->_conf = new Configuration();
         $this->_model = new Model($this->_conf);
         $_SERVER['REMOTE_ADDR'] = '::1';
     }
@@ -67,7 +69,7 @@ class ModelTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($paste->exists(), 'paste exists after storing it');
         $paste = $paste->get();
         $this->assertEquals($pasteData['data'], $paste->data);
-        foreach (array('opendiscussion', 'formatter') as $key) {
+        foreach (['opendiscussion', 'formatter'] as $key) {
             $this->assertEquals($pasteData['meta'][$key], $paste->meta->$key);
         }
 
@@ -92,7 +94,7 @@ class ModelTest extends PHPUnit_Framework_TestCase
         $this->_model->getPaste(Helper::getPasteId())->delete();
         $paste = $this->_model->getPaste(Helper::getPasteId());
         $this->assertFalse($paste->exists(), 'paste successfully deleted');
-        $this->assertEquals(array(), $paste->getComments(), 'comment was deleted with paste');
+        $this->assertEquals([], $paste->getComments(), 'comment was deleted with paste');
     }
 
     /**
@@ -230,18 +232,18 @@ class ModelTest extends PHPUnit_Framework_TestCase
 
     public function testPurge()
     {
-        $conf = new Configuration;
+        $conf = new Configuration();
         $store = Database::getInstance($conf->getSection('model_options'));
         $store->delete(Helper::getPasteId());
-        $expired = Helper::getPaste(array('expire_date' => 1344803344));
-        $paste = Helper::getPaste(array('expire_date' => time() + 3600));
-        $keys = array('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'x', 'y', 'z');
-        $ids = array();
+        $expired = Helper::getPaste(['expire_date' => 1344803344]);
+        $paste = Helper::getPaste(['expire_date' => time() + 3600]);
+        $keys = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'x', 'y', 'z'];
+        $ids = [];
         foreach ($keys as $key) {
             $ids[$key] = substr(md5($key), 0, 16);
             $store->delete($ids[$key]);
             $this->assertFalse($store->exists($ids[$key]), "paste $key does not yet exist");
-            if (in_array($key, array('x', 'y', 'z'))) {
+            if (in_array($key, ['x', 'y', 'z'])) {
                 $this->assertTrue($store->create($ids[$key], $paste), "store $key paste");
             } else {
                 $this->assertTrue($store->create($ids[$key], $expired), "store $key paste");
@@ -250,7 +252,7 @@ class ModelTest extends PHPUnit_Framework_TestCase
         }
         $this->_model->purge(10);
         foreach ($ids as $key => $id) {
-            if (in_array($key, array('x', 'y', 'z'))) {
+            if (in_array($key, ['x', 'y', 'z'])) {
                 $this->assertTrue($this->_model->getPaste($id)->exists(), "paste $key exists after purge");
                 $this->_model->getPaste($id)->delete();
             } else {
@@ -263,18 +265,18 @@ class ModelTest extends PHPUnit_Framework_TestCase
     {
         $options = parse_ini_file(CONF, true);
         $options['main']['icon'] = 'none';
-        $options['model'] = array(
+        $options['model'] = [
             'class' => 'Database',
-        );
-        $options['model_options'] = array(
+        ];
+        $options['model_options'] = [
             'dsn' => 'sqlite::memory:',
             'usr' => null,
             'pwd' => null,
-            'opt' => array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION),
-        );
+            'opt' => [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION],
+        ];
         Helper::confBackup();
         Helper::createIniFile(CONF, $options);
-        $model = new Model(new Configuration);
+        $model = new Model(new Configuration());
 
         $pasteData = Helper::getPaste();
         $this->_model->getPaste(Helper::getPasteId())->delete();
@@ -291,7 +293,7 @@ class ModelTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($paste->exists(), 'paste exists after storing it');
         $paste = $paste->get();
         $this->assertEquals($pasteData['data'], $paste->data);
-        foreach (array('opendiscussion', 'formatter') as $key) {
+        foreach (['opendiscussion', 'formatter'] as $key) {
             $this->assertEquals($pasteData['meta'][$key], $paste->meta->$key);
         }
 
@@ -318,18 +320,18 @@ class ModelTest extends PHPUnit_Framework_TestCase
     {
         $options = parse_ini_file(CONF, true);
         $options['main']['icon'] = 'identicon';
-        $options['model'] = array(
+        $options['model'] = [
             'class' => 'Database',
-        );
-        $options['model_options'] = array(
+        ];
+        $options['model_options'] = [
             'dsn' => 'sqlite::memory:',
             'usr' => null,
             'pwd' => null,
-            'opt' => array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION),
-        );
+            'opt' => [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION],
+        ];
         Helper::confBackup();
         Helper::createIniFile(CONF, $options);
-        $model = new Model(new Configuration);
+        $model = new Model(new Configuration());
 
         $pasteData = Helper::getPaste();
         $commentData = Helper::getComment();
@@ -356,18 +358,18 @@ class ModelTest extends PHPUnit_Framework_TestCase
     {
         $options = parse_ini_file(CONF, true);
         $options['main']['icon'] = 'vizhash';
-        $options['model'] = array(
+        $options['model'] = [
             'class' => 'Database',
-        );
-        $options['model_options'] = array(
+        ];
+        $options['model_options'] = [
             'dsn' => 'sqlite::memory:',
             'usr' => null,
             'pwd' => null,
-            'opt' => array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION),
-        );
+            'opt' => [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION],
+        ];
         Helper::confBackup();
         Helper::createIniFile(CONF, $options);
-        $model = new Model(new Configuration);
+        $model = new Model(new Configuration());
 
         $pasteData = Helper::getPaste();
         $commentData = Helper::getComment();
@@ -385,7 +387,7 @@ class ModelTest extends PHPUnit_Framework_TestCase
         $comment->store();
 
         $vz = new Vizhash16x16();
-        $pngdata = 'data:image/png;base64,' . base64_encode($vz->generate(TrafficLimiter::getHash()));
+        $pngdata = 'data:image/png;base64,'.base64_encode($vz->generate(TrafficLimiter::getHash()));
         $comment = $paste->getComment(Helper::getPasteId(), Helper::getCommentId())->get();
         $this->assertEquals($pngdata, $comment->meta->vizhash, 'nickname triggers vizhash to be set');
     }

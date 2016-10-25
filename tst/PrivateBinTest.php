@@ -1,9 +1,9 @@
 <?php
 
 use PrivateBin\Data\Filesystem;
-use PrivateBin\PrivateBin;
 use PrivateBin\Persistence\ServerSalt;
 use PrivateBin\Persistence\TrafficLimiter;
+use PrivateBin\PrivateBin;
 
 class PrivateBinTest extends PHPUnit_Framework_TestCase
 {
@@ -14,8 +14,8 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
     public function setUp()
     {
         /* Setup Routine */
-        $this->_path = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'privatebin_data';
-        $this->_model = Filesystem::getInstance(array('dir' => $this->_path));
+        $this->_path = sys_get_temp_dir().DIRECTORY_SEPARATOR.'privatebin_data';
+        $this->_model = Filesystem::getInstance(['dir' => $this->_path]);
         ServerSalt::setPath($this->_path);
         $this->reset();
     }
@@ -29,9 +29,9 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
 
     public function reset()
     {
-        $_POST = array();
-        $_GET = array();
-        $_SERVER = array();
+        $_POST = [];
+        $_GET = [];
+        $_SERVER = [];
         if ($this->_model->exists(Helper::getPasteId())) {
             $this->_model->delete(Helper::getPasteId());
         }
@@ -51,7 +51,7 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
     {
         $this->reset();
         ob_start();
-        new PrivateBin;
+        new PrivateBin();
         $content = ob_get_contents();
         ob_end_clean();
         $this->assertContains(
@@ -78,7 +78,7 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
         Helper::createIniFile(CONF, $options);
         $_COOKIE['lang'] = 'de';
         ob_start();
-        new PrivateBin;
+        new PrivateBin();
         $content = ob_get_contents();
         ob_end_clean();
         $this->assertContains(
@@ -101,7 +101,7 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
         Helper::createIniFile(CONF, $options);
         $_COOKIE['lang'] = 'de';
         ob_start();
-        new PrivateBin;
+        new PrivateBin();
         $content = ob_get_contents();
         ob_end_clean();
         $this->assertContains(
@@ -124,11 +124,11 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
         Helper::createIniFile(CONF, $options);
         $_COOKIE['lang'] = 'de';
         ob_start();
-        new PrivateBin;
+        new PrivateBin();
         $content = ob_get_contents();
         ob_end_clean();
         $this->assertRegExp(
-            '#id="shortenbutton"[^>]*data-shortener="' . preg_quote($shortener) . '"#',
+            '#id="shortenbutton"[^>]*data-shortener="'.preg_quote($shortener).'"#',
             $content,
             'outputs configured shortener URL correctly'
         );
@@ -140,16 +140,16 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
     public function testHtaccess()
     {
         $this->reset();
-        $dirs = array('cfg', 'lib');
+        $dirs = ['cfg', 'lib'];
         foreach ($dirs as $dir) {
-            $file = PATH . $dir . DIRECTORY_SEPARATOR . '.htaccess';
+            $file = PATH.$dir.DIRECTORY_SEPARATOR.'.htaccess';
             @unlink($file);
         }
         ob_start();
-        new PrivateBin;
+        new PrivateBin();
         ob_end_clean();
         foreach ($dirs as $dir) {
-            $file = PATH . $dir . DIRECTORY_SEPARATOR . '.htaccess';
+            $file = PATH.$dir.DIRECTORY_SEPARATOR.'.htaccess';
             $this->assertFileExists(
                 $file,
                 "$dir htaccess recreated"
@@ -166,7 +166,7 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
         $this->reset();
         Helper::confBackup();
         file_put_contents(CONF, '');
-        new PrivateBin;
+        new PrivateBin();
     }
 
     /**
@@ -184,7 +184,7 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
         $_SERVER['REQUEST_METHOD'] = 'POST';
         $_SERVER['REMOTE_ADDR'] = '::1';
         ob_start();
-        new PrivateBin;
+        new PrivateBin();
         $content = ob_get_contents();
         ob_end_clean();
         $response = json_decode($content, true);
@@ -208,13 +208,13 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
         $options['traffic']['limit'] = 0;
         Helper::confBackup();
         Helper::createIniFile(CONF, $options);
-        $_POST = Helper::getPaste(array('expire' => 25));
+        $_POST = Helper::getPaste(['expire' => 25]);
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD'] = 'POST';
         $_SERVER['REMOTE_ADDR'] = '::1';
         TrafficLimiter::canPass();
         ob_start();
-        new PrivateBin;
+        new PrivateBin();
         $content = ob_get_contents();
         ob_end_clean();
         $response = json_decode($content, true);
@@ -244,7 +244,7 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
         $_SERVER['REQUEST_METHOD'] = 'POST';
         $_SERVER['REMOTE_ADDR'] = '::1';
         ob_start();
-        new PrivateBin;
+        new PrivateBin();
         $content = ob_get_contents();
         ob_end_clean();
         $response = json_decode($content, true);
@@ -268,7 +268,7 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
         $_SERVER['REQUEST_METHOD'] = 'POST';
         $_SERVER['REMOTE_ADDR'] = '::1';
         ob_start();
-        new PrivateBin;
+        new PrivateBin();
         $content = ob_get_contents();
         ob_end_clean();
         $response = json_decode($content, true);
@@ -298,7 +298,7 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
         $_SERVER['REQUEST_METHOD'] = 'POST';
         $_SERVER['REMOTE_ADDR'] = '::1';
         ob_start();
-        new PrivateBin;
+        new PrivateBin();
         $content = ob_get_contents();
         ob_end_clean();
         $response = json_decode($content, true);
@@ -324,7 +324,7 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
         $_SERVER['REMOTE_ADDR'] = '::1';
         $time = time();
         ob_start();
-        new PrivateBin;
+        new PrivateBin();
         $content = ob_get_contents();
         ob_end_clean();
         $response = json_decode($content, true);
@@ -357,7 +357,7 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
         $_SERVER['REMOTE_ADDR'] = '::1';
         $time = time();
         ob_start();
-        new PrivateBin;
+        new PrivateBin();
         $content = ob_get_contents();
         ob_end_clean();
         $response = json_decode($content, true);
@@ -389,7 +389,7 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
         $_SERVER['REQUEST_METHOD'] = 'POST';
         $_SERVER['REMOTE_ADDR'] = '::1';
         ob_start();
-        new PrivateBin;
+        new PrivateBin();
         $content = ob_get_contents();
         ob_end_clean();
         $response = json_decode($content, true);
@@ -419,7 +419,7 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
         $_SERVER['REQUEST_METHOD'] = 'POST';
         $_SERVER['REMOTE_ADDR'] = '::1';
         ob_start();
-        new PrivateBin;
+        new PrivateBin();
         $content = ob_get_contents();
         ob_end_clean();
         $response = json_decode($content, true);
@@ -443,7 +443,7 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
         $_SERVER['REQUEST_METHOD'] = 'POST';
         $_SERVER['REMOTE_ADDR'] = '::1';
         ob_start();
-        new PrivateBin;
+        new PrivateBin();
         $content = ob_get_contents();
         ob_end_clean();
         $response = json_decode($content, true);
@@ -468,7 +468,7 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
         $_SERVER['REMOTE_ADDR'] = '::1';
         $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste does not exists before posting data');
         ob_start();
-        new PrivateBin;
+        new PrivateBin();
         $content = ob_get_contents();
         ob_end_clean();
         $response = json_decode($content, true);
@@ -476,7 +476,7 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($this->_model->exists($response['id']), 'paste exists after posting data');
         $original = json_decode(json_encode($_POST));
         $stored = $this->_model->read($response['id']);
-        foreach (array('data', 'attachment', 'attachmentname') as $key) {
+        foreach (['data', 'attachment', 'attachmentname'] as $key) {
             $this->assertEquals($original->$key, $stored->$key);
         }
         $this->assertEquals(
@@ -488,7 +488,7 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
 
     /**
      * In some webserver setups (found with Suhosin) overly long POST params are
-     * silently removed, check that this case is handled
+     * silently removed, check that this case is handled.
      *
      * @runInSeparateProcess
      */
@@ -507,7 +507,7 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
         $_SERVER['REMOTE_ADDR'] = '::1';
         $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste does not exists before posting data');
         ob_start();
-        new PrivateBin;
+        new PrivateBin();
         $content = ob_get_contents();
         ob_end_clean();
         $response = json_decode($content, true);
@@ -526,11 +526,11 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
         $_SERVER['REQUEST_METHOD'] = 'POST';
         $_SERVER['REMOTE_ADDR'] = '::1';
         ob_start();
-        new PrivateBin;
+        new PrivateBin();
         ob_end_clean();
         $this->_model->delete(Helper::getPasteId());
         ob_start();
-        new PrivateBin;
+        new PrivateBin();
         $content = ob_get_contents();
         ob_end_clean();
         $response = json_decode($content, true);
@@ -554,7 +554,7 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
         $_SERVER['REQUEST_METHOD'] = 'POST';
         $_SERVER['REMOTE_ADDR'] = '::1';
         ob_start();
-        new PrivateBin;
+        new PrivateBin();
         $content = ob_get_contents();
         ob_end_clean();
         $response = json_decode($content, true);
@@ -587,7 +587,7 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
         $_SERVER['REMOTE_ADDR'] = '::1';
         $this->_model->create(Helper::getPasteId(), Helper::getPaste());
         ob_start();
-        new PrivateBin;
+        new PrivateBin();
         $content = ob_get_contents();
         ob_end_clean();
         $response = json_decode($content, true);
@@ -613,7 +613,7 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
         $_SERVER['REMOTE_ADDR'] = '::1';
         $this->_model->create(Helper::getPasteId(), Helper::getPaste());
         ob_start();
-        new PrivateBin;
+        new PrivateBin();
         $content = ob_get_contents();
         ob_end_clean();
         $response = json_decode($content, true);
@@ -639,7 +639,7 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
         $_SERVER['REMOTE_ADDR'] = '::1';
         $this->_model->create(Helper::getPasteId(), Helper::getPaste());
         ob_start();
-        new PrivateBin;
+        new PrivateBin();
         $content = ob_get_contents();
         ob_end_clean();
         $response = json_decode($content, true);
@@ -663,10 +663,10 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD'] = 'POST';
         $_SERVER['REMOTE_ADDR'] = '::1';
-        $paste = Helper::getPaste(array('opendiscussion' => false));
+        $paste = Helper::getPaste(['opendiscussion' => false]);
         $this->_model->create(Helper::getPasteId(), $paste);
         ob_start();
-        new PrivateBin;
+        new PrivateBin();
         $content = ob_get_contents();
         ob_end_clean();
         $response = json_decode($content, true);
@@ -691,7 +691,7 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
         $_SERVER['REQUEST_METHOD'] = 'POST';
         $_SERVER['REMOTE_ADDR'] = '::1';
         ob_start();
-        new PrivateBin;
+        new PrivateBin();
         $content = ob_get_contents();
         ob_end_clean();
         $response = json_decode($content, true);
@@ -719,7 +719,7 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
         $_SERVER['REQUEST_METHOD'] = 'POST';
         $_SERVER['REMOTE_ADDR'] = '::1';
         ob_start();
-        new PrivateBin;
+        new PrivateBin();
         $content = ob_get_contents();
         ob_end_clean();
         $response = json_decode($content, true);
@@ -736,12 +736,12 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
         $this->_model->create(Helper::getPasteId(), Helper::getPaste());
         $_SERVER['QUERY_STRING'] = Helper::getPasteId();
         ob_start();
-        new PrivateBin;
+        new PrivateBin();
         $content = ob_get_contents();
         ob_end_clean();
         $this->assertContains(
-            '<div id="cipherdata" class="hidden">' .
-            htmlspecialchars(Helper::getPasteAsJson(), ENT_NOQUOTES) .
+            '<div id="cipherdata" class="hidden">'.
+            htmlspecialchars(Helper::getPasteAsJson(), ENT_NOQUOTES).
             '</div>',
             $content,
             'outputs data correctly'
@@ -756,7 +756,7 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
         $this->reset();
         $_SERVER['QUERY_STRING'] = 'foo';
         ob_start();
-        new PrivateBin;
+        new PrivateBin();
         $content = ob_get_contents();
         ob_end_clean();
         $this->assertRegExp(
@@ -774,7 +774,7 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
         $this->reset();
         $_SERVER['QUERY_STRING'] = Helper::getPasteId();
         ob_start();
-        new PrivateBin;
+        new PrivateBin();
         $content = ob_get_contents();
         ob_end_clean();
         $this->assertRegExp(
@@ -790,11 +790,11 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
     public function testReadExpired()
     {
         $this->reset();
-        $expiredPaste = Helper::getPaste(array('expire_date' => 1344803344));
+        $expiredPaste = Helper::getPaste(['expire_date' => 1344803344]);
         $this->_model->create(Helper::getPasteId(), $expiredPaste);
         $_SERVER['QUERY_STRING'] = Helper::getPasteId();
         ob_start();
-        new PrivateBin;
+        new PrivateBin();
         $content = ob_get_contents();
         ob_end_clean();
         $this->assertRegExp(
@@ -810,17 +810,17 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
     public function testReadBurn()
     {
         $this->reset();
-        $burnPaste = Helper::getPaste(array('burnafterreading' => true));
+        $burnPaste = Helper::getPaste(['burnafterreading' => true]);
         $this->_model->create(Helper::getPasteId(), $burnPaste);
         $_SERVER['QUERY_STRING'] = Helper::getPasteId();
         ob_start();
-        new PrivateBin;
+        new PrivateBin();
         $content = ob_get_contents();
         ob_end_clean();
         unset($burnPaste['meta']['salt']);
         $this->assertContains(
-            '<div id="cipherdata" class="hidden">' .
-            htmlspecialchars(Helper::getPasteAsJson($burnPaste['meta']), ENT_NOQUOTES) .
+            '<div id="cipherdata" class="hidden">'.
+            htmlspecialchars(Helper::getPasteAsJson($burnPaste['meta']), ENT_NOQUOTES).
             '</div>',
             $content,
             'outputs data correctly'
@@ -838,13 +838,13 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
         $_SERVER['QUERY_STRING'] = Helper::getPasteId();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         ob_start();
-        new PrivateBin;
+        new PrivateBin();
         $content = ob_get_contents();
         ob_end_clean();
         $response = json_decode($content, true);
         $this->assertEquals(0, $response['status'], 'outputs success status');
         $this->assertEquals(Helper::getPasteId(), $response['id'], 'outputs data correctly');
-        $this->assertStringEndsWith('?' . $response['id'], $response['url'], 'returned URL points to new paste');
+        $this->assertStringEndsWith('?'.$response['id'], $response['url'], 'returned URL points to new paste');
         $this->assertEquals($paste['data'], $response['data'], 'outputs data correctly');
         $this->assertEquals($paste['meta']['formatter'], $response['meta']['formatter'], 'outputs format correctly');
         $this->assertEquals($paste['meta']['postdate'], $response['meta']['postdate'], 'outputs postdate correctly');
@@ -862,7 +862,7 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
         $_SERVER['QUERY_STRING'] = Helper::getPasteId();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         ob_start();
-        new PrivateBin;
+        new PrivateBin();
         $content = ob_get_contents();
         ob_end_clean();
         $response = json_decode($content, true);
@@ -876,22 +876,22 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
     {
         $this->reset();
         $oldPaste = Helper::getPaste();
-        $meta = array(
+        $meta = [
             'syntaxcoloring' => true,
-            'postdate' => $oldPaste['meta']['postdate'],
+            'postdate'       => $oldPaste['meta']['postdate'],
             'opendiscussion' => $oldPaste['meta']['opendiscussion'],
-        );
+        ];
         $oldPaste['meta'] = $meta;
         $this->_model->create(Helper::getPasteId(), $oldPaste);
         $_SERVER['QUERY_STRING'] = Helper::getPasteId();
         ob_start();
-        new PrivateBin;
+        new PrivateBin();
         $content = ob_get_contents();
         ob_end_clean();
         $meta['formatter'] = 'syntaxhighlighting';
         $this->assertContains(
-            '<div id="cipherdata" class="hidden">' .
-            htmlspecialchars(Helper::getPasteAsJson($meta), ENT_NOQUOTES) .
+            '<div id="cipherdata" class="hidden">'.
+            htmlspecialchars(Helper::getPasteAsJson($meta), ENT_NOQUOTES).
             '</div>',
             $content,
             'outputs data correctly'
@@ -909,14 +909,14 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
         $this->_model->create(Helper::getPasteId(), $oldPaste);
         $_SERVER['QUERY_STRING'] = Helper::getPasteId();
         ob_start();
-        new PrivateBin;
+        new PrivateBin();
         $content = ob_get_contents();
         ob_end_clean();
         $oldPaste['meta']['formatter'] = 'plaintext';
         unset($oldPaste['meta']['salt']);
         $this->assertContains(
-            '<div id="cipherdata" class="hidden">' .
-            htmlspecialchars(Helper::getPasteAsJson($oldPaste['meta']), ENT_NOQUOTES) .
+            '<div id="cipherdata" class="hidden">'.
+            htmlspecialchars(Helper::getPasteAsJson($oldPaste['meta']), ENT_NOQUOTES).
             '</div>',
             $content,
             'outputs data correctly'
@@ -935,7 +935,7 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
         $_GET['pasteid'] = Helper::getPasteId();
         $_GET['deletetoken'] = hash_hmac('sha256', Helper::getPasteId(), $paste->meta->salt);
         ob_start();
-        new PrivateBin;
+        new PrivateBin();
         $content = ob_get_contents();
         ob_end_clean();
         $this->assertRegExp(
@@ -956,7 +956,7 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
         $_GET['pasteid'] = 'foo';
         $_GET['deletetoken'] = 'bar';
         ob_start();
-        new PrivateBin;
+        new PrivateBin();
         $content = ob_get_contents();
         ob_end_clean();
         $this->assertRegExp(
@@ -976,7 +976,7 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
         $_GET['pasteid'] = Helper::getPasteId();
         $_GET['deletetoken'] = 'bar';
         ob_start();
-        new PrivateBin;
+        new PrivateBin();
         $content = ob_get_contents();
         ob_end_clean();
         $this->assertRegExp(
@@ -996,7 +996,7 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
         $_GET['pasteid'] = Helper::getPasteId();
         $_GET['deletetoken'] = 'bar';
         ob_start();
-        new PrivateBin;
+        new PrivateBin();
         $content = ob_get_contents();
         ob_end_clean();
         $this->assertRegExp(
@@ -1013,7 +1013,7 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
     public function testDeleteBurnAfterReading()
     {
         $this->reset();
-        $burnPaste = Helper::getPaste(array('burnafterreading' => true));
+        $burnPaste = Helper::getPaste(['burnafterreading' => true]);
         $this->_model->create(Helper::getPasteId(), $burnPaste);
         $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste exists before deleting data');
         $_POST['deletetoken'] = 'burnafterreading';
@@ -1021,7 +1021,7 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD'] = 'POST';
         ob_start();
-        new PrivateBin;
+        new PrivateBin();
         $content = ob_get_contents();
         ob_end_clean();
         $response = json_decode($content, true);
@@ -1042,7 +1042,7 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD'] = 'POST';
         ob_start();
-        new PrivateBin;
+        new PrivateBin();
         $content = ob_get_contents();
         ob_end_clean();
         $response = json_decode($content, true);
@@ -1056,14 +1056,14 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
     public function testDeleteExpired()
     {
         $this->reset();
-        $expiredPaste = Helper::getPaste(array('expire_date' => 1000));
+        $expiredPaste = Helper::getPaste(['expire_date' => 1000]);
         $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste does not exist before being created');
         $this->_model->create(Helper::getPasteId(), $expiredPaste);
         $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste exists before deleting data');
         $_GET['pasteid'] = Helper::getPasteId();
         $_GET['deletetoken'] = 'does not matter in this context, but has to be set';
         ob_start();
-        new PrivateBin;
+        new PrivateBin();
         $content = ob_get_contents();
         ob_end_clean();
         $this->assertRegExp(
@@ -1087,7 +1087,7 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
         $_GET['pasteid'] = Helper::getPasteId();
         $_GET['deletetoken'] = hash_hmac('sha256', Helper::getPasteId(), ServerSalt::get());
         ob_start();
-        new PrivateBin;
+        new PrivateBin();
         $content = ob_get_contents();
         ob_end_clean();
         $this->assertRegExp(

@@ -9,21 +9,21 @@ class TrafficLimiterTest extends PHPUnit_Framework_TestCase
     public function setUp()
     {
         /* Setup Routine */
-        $this->_path = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'trafficlimit';
+        $this->_path = sys_get_temp_dir().DIRECTORY_SEPARATOR.'trafficlimit';
         TrafficLimiter::setPath($this->_path);
     }
 
     public function tearDown()
     {
         /* Tear Down Routine */
-        Helper::rmDir($this->_path . DIRECTORY_SEPARATOR);
+        Helper::rmDir($this->_path.DIRECTORY_SEPARATOR);
     }
 
     public function testTrafficGetsLimited()
     {
         $this->assertEquals($this->_path, TrafficLimiter::getPath());
         $file = 'baz';
-        $this->assertEquals($this->_path . DIRECTORY_SEPARATOR . $file, TrafficLimiter::getPath($file));
+        $this->assertEquals($this->_path.DIRECTORY_SEPARATOR.$file, TrafficLimiter::getPath($file));
         TrafficLimiter::setLimit(4);
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
         $this->assertTrue(TrafficLimiter::canPass(), 'first request may pass');

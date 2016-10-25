@@ -1,40 +1,41 @@
 <?php
 /**
- * PrivateBin
+ * PrivateBin.
  *
  * a zero-knowledge paste bin
  *
  * @link      https://github.com/PrivateBin/PrivateBin
+ *
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
+ *
  * @version   1.0
  */
-
 namespace PrivateBin;
 
 /**
- * Request
+ * Request.
  *
  * parses request parameters and provides helper functions for routing
  */
 class Request
 {
     /**
-     * MIME type for JSON
+     * MIME type for JSON.
      *
      * @const string
      */
     const MIME_JSON = 'application/json';
 
     /**
-     * MIME type for HTML
+     * MIME type for HTML.
      *
      * @const string
      */
     const MIME_HTML = 'text/html';
 
     /**
-     * MIME type for XHTML
+     * MIME type for XHTML.
      *
      * @const string
      */
@@ -43,7 +44,6 @@ class Request
     /**
      * Input stream to use for PUT parameter parsing.
      *
-     * @access private
      * @var string
      */
     private static $_inputStream = 'php://input';
@@ -51,7 +51,6 @@ class Request
     /**
      * Operation to perform.
      *
-     * @access private
      * @var string
      */
     private $_operation = 'view';
@@ -59,15 +58,13 @@ class Request
     /**
      * Request parameters.
      *
-     * @access private
      * @var array
      */
-    private $_params = array();
+    private $_params = [];
 
     /**
      * If we are in a JSON API context.
      *
-     * @access private
      * @var bool
      */
     private $_isJsonApi = false;
@@ -75,15 +72,14 @@ class Request
     /**
      * Constructor.
      *
-     * @access public
      * @return void
      */
     public function __construct()
     {
         // in case stupid admin has left magic_quotes enabled in php.ini (for PHP < 5.4)
         if (version_compare(PHP_VERSION, '5.4.0') < 0 && get_magic_quotes_gpc()) {
-            $_POST   = array_map('PrivateBin\\Filter::stripslashesDeep', $_POST);
-            $_GET    = array_map('PrivateBin\\Filter::stripslashesDeep', $_GET);
+            $_POST = array_map('PrivateBin\\Filter::stripslashesDeep', $_POST);
+            $_GET = array_map('PrivateBin\\Filter::stripslashesDeep', $_GET);
             $_COOKIE = array_map('PrivateBin\\Filter::stripslashesDeep', $_COOKIE);
         }
 
@@ -131,7 +127,6 @@ class Request
     /**
      * Get current operation.
      *
-     * @access public
      * @return string
      */
     public function getOperation()
@@ -142,9 +137,9 @@ class Request
     /**
      * Get a request parameter.
      *
-     * @access public
-     * @param  string $param
-     * @param  string $default
+     * @param string $param
+     * @param string $default
+     *
      * @return string
      */
     public function getParam($param, $default = '')
@@ -155,7 +150,6 @@ class Request
     /**
      * If we are in a JSON API context.
      *
-     * @access public
      * @return bool
      */
     public function isJsonApiCall()
@@ -174,17 +168,16 @@ class Request
     }
 
     /**
-     * detect the clients supported media type and decide if its a JSON API call or not
+     * detect the clients supported media type and decide if its a JSON API call or not.
      *
      * Adapted from: https://stackoverflow.com/questions/3770513/detect-browser-language-in-php#3771447
      *
-     * @access private
      * @return bool
      */
     private function _detectJsonRequest()
     {
         $hasAcceptHeader = array_key_exists('HTTP_ACCEPT', $_SERVER);
-        $acceptHeader    = $hasAcceptHeader ? $_SERVER['HTTP_ACCEPT'] : '';
+        $acceptHeader = $hasAcceptHeader ? $_SERVER['HTTP_ACCEPT'] : '';
 
         // simple cases
         if (
@@ -199,7 +192,7 @@ class Request
         }
 
         // advanced case: media type negotiation
-        $mediaTypes = array();
+        $mediaTypes = [];
         if ($hasAcceptHeader) {
             $mediaTypeRanges = explode(',', trim($acceptHeader));
             foreach ($mediaTypeRanges as $mediaTypeRange) {
@@ -213,7 +206,7 @@ class Request
                         $match[2] = (string) floatval($match[2]);
                     }
                     if (!isset($mediaTypes[$match[2]])) {
-                        $mediaTypes[$match[2]] = array();
+                        $mediaTypes[$match[2]] = [];
                     }
                     $mediaTypes[$match[2]][] = strtolower($match[1]);
                 }
@@ -235,6 +228,7 @@ class Request
                 }
             }
         }
+
         return false;
     }
 }

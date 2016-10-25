@@ -1,63 +1,61 @@
 <?php
 /**
- * PrivateBin
+ * PrivateBin.
  *
  * a zero-knowledge paste bin
  *
  * @link      https://github.com/PrivateBin/PrivateBin
+ *
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
+ *
  * @version   1.0
  */
-
 namespace PrivateBin\Data;
 
 use stdClass;
 
 /**
- * AbstractData
+ * AbstractData.
  *
  * Abstract model for PrivateBin data access, implemented as a singleton.
  */
 abstract class AbstractData
 {
     /**
-     * singleton instance
+     * singleton instance.
      *
-     * @access protected
      * @static
+     *
      * @var AbstractData
      */
     protected static $_instance = null;
 
     /**
-     * enforce singleton, disable constructor
+     * enforce singleton, disable constructor.
      *
      * Instantiate using {@link getInstance()}, privatebin is a singleton object.
-     *
-     * @access protected
      */
     protected function __construct()
     {
     }
 
     /**
-     * enforce singleton, disable cloning
+     * enforce singleton, disable cloning.
      *
      * Instantiate using {@link getInstance()}, privatebin is a singleton object.
-     *
-     * @access private
      */
     private function __clone()
     {
     }
 
     /**
-     * get instance of singleton
+     * get instance of singleton.
      *
-     * @access public
      * @static
-     * @param  array $options
+     *
+     * @param array $options
+     *
      * @return privatebin_abstract
      */
     public static function getInstance($options)
@@ -67,9 +65,9 @@ abstract class AbstractData
     /**
      * Create a paste.
      *
-     * @access public
-     * @param  string $pasteid
-     * @param  array  $paste
+     * @param string $pasteid
+     * @param array  $paste
+     *
      * @return bool
      */
     abstract public function create($pasteid, $paste);
@@ -77,8 +75,8 @@ abstract class AbstractData
     /**
      * Read a paste.
      *
-     * @access public
-     * @param  string $pasteid
+     * @param string $pasteid
+     *
      * @return stdClass|false
      */
     abstract public function read($pasteid);
@@ -86,8 +84,8 @@ abstract class AbstractData
     /**
      * Delete a paste and its discussion.
      *
-     * @access public
-     * @param  string $pasteid
+     * @param string $pasteid
+     *
      * @return void
      */
     abstract public function delete($pasteid);
@@ -95,8 +93,8 @@ abstract class AbstractData
     /**
      * Test if a paste exists.
      *
-     * @access public
-     * @param  string $pasteid
+     * @param string $pasteid
+     *
      * @return bool
      */
     abstract public function exists($pasteid);
@@ -104,11 +102,11 @@ abstract class AbstractData
     /**
      * Create a comment in a paste.
      *
-     * @access public
-     * @param  string $pasteid
-     * @param  string $parentid
-     * @param  string $commentid
-     * @param  array  $comment
+     * @param string $pasteid
+     * @param string $parentid
+     * @param string $commentid
+     * @param array  $comment
+     *
      * @return bool
      */
     abstract public function createComment($pasteid, $parentid, $commentid, $comment);
@@ -116,8 +114,8 @@ abstract class AbstractData
     /**
      * Read all comments of paste.
      *
-     * @access public
-     * @param  string $pasteid
+     * @param string $pasteid
+     *
      * @return array
      */
     abstract public function readComments($pasteid);
@@ -125,19 +123,19 @@ abstract class AbstractData
     /**
      * Test if a comment exists.
      *
-     * @access public
-     * @param  string $pasteid
-     * @param  string $parentid
-     * @param  string $commentid
+     * @param string $pasteid
+     * @param string $parentid
+     * @param string $commentid
+     *
      * @return bool
      */
     abstract public function existsComment($pasteid, $parentid, $commentid);
 
     /**
-     * Returns up to batch size number of paste ids that have expired
+     * Returns up to batch size number of paste ids that have expired.
      *
-     * @access protected
-     * @param  int $batchsize
+     * @param int $batchsize
+     *
      * @return array
      */
     abstract protected function _getExpiredPastes($batchsize);
@@ -145,8 +143,8 @@ abstract class AbstractData
     /**
      * Perform a purge of old pastes, at most the given batchsize is deleted.
      *
-     * @access public
-     * @param  int $batchsize
+     * @param int $batchsize
+     *
      * @return void
      */
     public function purge($batchsize)
@@ -165,9 +163,9 @@ abstract class AbstractData
     /**
      * Get next free slot for comment from postdate.
      *
-     * @access public
-     * @param  array $comments
-     * @param  int|string $postdate
+     * @param array      $comments
+     * @param int|string $postdate
+     *
      * @return int|string
      */
     protected function getOpenSlot(&$comments, $postdate)
@@ -178,8 +176,10 @@ abstract class AbstractData
                 $parts[1] = 0;
             }
             ++$parts[1];
+
             return $this->getOpenSlot($comments, implode('.', $parts));
         }
+
         return $postdate;
     }
 }

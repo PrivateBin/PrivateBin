@@ -1,25 +1,26 @@
 <?php
 /**
- * PrivateBin
+ * PrivateBin.
  *
  * a zero-knowledge paste bin
  *
  * @link      https://github.com/PrivateBin/PrivateBin
+ *
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
+ *
  * @version   1.0
  */
-
 namespace PrivateBin\Model;
 
-use PrivateBin\Sjcl;
-use PrivateBin\Persistence\TrafficLimiter;
-use PrivateBin\Vizhash16x16;
-use Identicon\Identicon;
 use Exception;
+use Identicon\Identicon;
+use PrivateBin\Persistence\TrafficLimiter;
+use PrivateBin\Sjcl;
+use PrivateBin\Vizhash16x16;
 
 /**
- * Comment
+ * Comment.
  *
  * Model of a PrivateBin comment.
  */
@@ -28,7 +29,6 @@ class Comment extends AbstractModel
     /**
      * Instance's parent.
      *
-     * @access private
      * @var Paste
      */
     private $_paste;
@@ -36,8 +36,8 @@ class Comment extends AbstractModel
     /**
      * Get comment data.
      *
-     * @access public
      * @throws Exception
+     *
      * @return stdClass
      */
     public function get()
@@ -53,14 +53,15 @@ class Comment extends AbstractModel
                 break;
             }
         }
+
         return $this->_data;
     }
 
     /**
      * Store the comment's data.
      *
-     * @access public
      * @throws Exception
+     *
      * @return void
      */
     public function store()
@@ -99,8 +100,8 @@ class Comment extends AbstractModel
     /**
      * Delete the comment.
      *
-     * @access public
      * @throws Exception
+     *
      * @return void
      */
     public function delete()
@@ -111,7 +112,6 @@ class Comment extends AbstractModel
     /**
      * Test if comment exists in store.
      *
-     * @access public
      * @return bool
      */
     public function exists()
@@ -126,21 +126,21 @@ class Comment extends AbstractModel
     /**
      * Set paste.
      *
-     * @access public
      * @param Paste $paste
+     *
      * @throws Exception
+     *
      * @return void
      */
     public function setPaste(Paste $paste)
     {
-        $this->_paste               = $paste;
+        $this->_paste = $paste;
         $this->_data->meta->pasteid = $paste->getId();
     }
 
     /**
      * Get paste.
      *
-     * @access public
      * @return Paste
      */
     public function getPaste()
@@ -151,9 +151,10 @@ class Comment extends AbstractModel
     /**
      * Set parent ID.
      *
-     * @access public
      * @param string $id
+     *
      * @throws Exception
+     *
      * @return void
      */
     public function setParentId($id)
@@ -167,7 +168,6 @@ class Comment extends AbstractModel
     /**
      * Get parent ID.
      *
-     * @access public
      * @return string
      */
     public function getParentId()
@@ -175,15 +175,17 @@ class Comment extends AbstractModel
         if (!property_exists($this->_data->meta, 'parentid')) {
             $this->_data->meta->parentid = '';
         }
+
         return $this->_data->meta->parentid;
     }
 
     /**
      * Set nickname.
      *
-     * @access public
      * @param string $nickname
+     *
      * @throws Exception
+     *
      * @return void
      */
     public function setNickname($nickname)
@@ -199,13 +201,13 @@ class Comment extends AbstractModel
         $icon = $this->_conf->getKey('icon');
         if ($icon != 'none') {
             $pngdata = '';
-            $hmac    = TrafficLimiter::getHash();
+            $hmac = TrafficLimiter::getHash();
             if ($icon == 'identicon') {
                 $identicon = new Identicon();
-                $pngdata   = $identicon->getImageDataUri($hmac, 16);
+                $pngdata = $identicon->getImageDataUri($hmac, 16);
             } elseif ($icon == 'vizhash') {
-                $vh      = new Vizhash16x16();
-                $pngdata = 'data:image/png;base64,' . base64_encode(
+                $vh = new Vizhash16x16();
+                $pngdata = 'data:image/png;base64,'.base64_encode(
                     $vh->generate($hmac)
                 );
             }

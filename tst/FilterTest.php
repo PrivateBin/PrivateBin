@@ -7,8 +7,8 @@ class FilterTest extends PHPUnit_Framework_TestCase
     public function testFilterStripsSlashesDeeply()
     {
         $this->assertEquals(
-            array("f'oo", "b'ar", array("fo'o", "b'ar")),
-            Filter::stripslashesDeep(array("f\\'oo", "b\\'ar", array("fo\\'o", "b\\'ar")))
+            ["f'oo", "b'ar", ["fo'o", "b'ar"]],
+            Filter::stripslashesDeep(["f\\'oo", "b\\'ar", ["fo\\'o", "b\\'ar"]])
         );
     }
 

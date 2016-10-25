@@ -1,42 +1,44 @@
 <?php
 /**
- * PrivateBin
+ * PrivateBin.
  *
  * a zero-knowledge paste bin
  *
  * @link      https://github.com/PrivateBin/PrivateBin
+ *
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
+ *
  * @version   1.0
  */
-
 namespace PrivateBin\Data;
 
-use PrivateBin\Model\Paste;
 use PrivateBin\Json;
+use PrivateBin\Model\Paste;
 
 /**
- * Filesystem
+ * Filesystem.
  *
  * Model for filesystem data access, implemented as a singleton.
  */
 class Filesystem extends AbstractData
 {
     /**
-     * directory where data is stored
+     * directory where data is stored.
      *
-     * @access private
      * @static
+     *
      * @var string
      */
     private static $_dir = 'data/';
 
     /**
-     * get instance of singleton
+     * get instance of singleton.
      *
-     * @access public
      * @static
-     * @param  array $options
+     *
+     * @param array $options
+     *
      * @return Filesystem
      */
     public static function getInstance($options = null)
@@ -46,42 +48,45 @@ class Filesystem extends AbstractData
             is_array($options) &&
             array_key_exists('dir', $options)
         ) {
-            self::$_dir = $options['dir'] . DIRECTORY_SEPARATOR;
+            self::$_dir = $options['dir'].DIRECTORY_SEPARATOR;
         }
         // if needed initialize the singleton
         if (!(self::$_instance instanceof self)) {
-            self::$_instance = new self;
+            self::$_instance = new self();
             self::_init();
         }
+
         return self::$_instance;
     }
 
     /**
      * Create a paste.
      *
-     * @access public
-     * @param  string $pasteid
-     * @param  array  $paste
+     * @param string $pasteid
+     * @param array  $paste
+     *
      * @throws Exception
+     *
      * @return bool
      */
     public function create($pasteid, $paste)
     {
         $storagedir = self::_dataid2path($pasteid);
-        if (is_file($storagedir . $pasteid)) {
+        if (is_file($storagedir.$pasteid)) {
             return false;
         }
         if (!is_dir($storagedir)) {
             mkdir($storagedir, 0700, true);
         }
-        return (bool) file_put_contents($storagedir . $pasteid, Json::encode($paste));
+
+        return (bool) file_put_contents($storagedir.$pasteid, Json::encode($paste));
     }
 
     /**
      * Read a paste.
      *
-     * @access public
-     * @param  string $pasteid
+     * @param string $pasteid
+     *
      * @return stdClass|false
      */
     public function read($pasteid)
@@ -90,7 +95,7 @@ class Filesystem extends AbstractData
             return false;
         }
         $paste = json_decode(
-            file_get_contents(self::_dataid2path($pasteid) . $pasteid)
+            file_get_contents(self::_dataid2path($pasteid).$pasteid)
         );
         if (property_exists($paste->meta, 'attachment')) {
             $paste->attachment = $paste->meta->attachment;
@@ -100,14 +105,15 @@ class Filesystem extends AbstractData
                 unset($paste->meta->attachmentname);
             }
         }
+
         return $paste;
     }
 
     /**
      * Delete a paste and its discussion.
      *
-     * @access public
-     * @param  string $pasteid
+     * @param string $pasteid
+     *
      * @return void
      */
     public function delete($pasteid)
@@ -115,8 +121,8 @@ class Filesystem extends AbstractData
         $pastedir = self::_dataid2path($pasteid);
         if (is_dir($pastedir)) {
             // Delete the paste itself.
-            if (is_file($pastedir . $pasteid)) {
-                unlink($pastedir . $pasteid);
+            if (is_file($pastedir.$pasteid)) {
+                unlink($pastedir.$pasteid);
             }
 
             // Delete discussion if it exists.
@@ -125,8 +131,8 @@ class Filesystem extends AbstractData
                 // Delete all files in discussion directory
                 $dir = dir($discdir);
                 while (false !== ($filename = $dir->read())) {
-                    if (is_file($discdir . $filename)) {
-                        unlink($discdir . $filename);
+                    if (is_file($discdir.$filename)) {
+                        unlink($discdir.$filename);
                     }
                 }
                 $dir->close();
@@ -138,50 +144,52 @@ class Filesystem extends AbstractData
     /**
      * Test if a paste exists.
      *
-     * @access public
-     * @param  string $pasteid
+     * @param string $pasteid
+     *
      * @return bool
      */
     public function exists($pasteid)
     {
-        return is_file(self::_dataid2path($pasteid) . $pasteid);
+        return is_file(self::_dataid2path($pasteid).$pasteid);
     }
 
     /**
      * Create a comment in a paste.
      *
-     * @access public
-     * @param  string $pasteid
-     * @param  string $parentid
-     * @param  string $commentid
-     * @param  array  $comment
+     * @param string $pasteid
+     * @param string $parentid
+     * @param string $commentid
+     * @param array  $comment
+     *
      * @throws Exception
+     *
      * @return bool
      */
     public function createComment($pasteid, $parentid, $commentid, $comment)
     {
         $storagedir = self::_dataid2discussionpath($pasteid);
-        $filename   = $pasteid . '.' . $commentid . '.' . $parentid;
-        if (is_file($storagedir . $filename)) {
+        $filename = $pasteid.'.'.$commentid.'.'.$parentid;
+        if (is_file($storagedir.$filename)) {
             return false;
         }
         if (!is_dir($storagedir)) {
             mkdir($storagedir, 0700, true);
         }
-        return (bool) file_put_contents($storagedir . $filename, Json::encode($comment));
+
+        return (bool) file_put_contents($storagedir.$filename, Json::encode($comment));
     }
 
     /**
      * Read all comments of paste.
      *
-     * @access public
-     * @param  string $pasteid
+     * @param string $pasteid
+     *
      * @return array
      */
     public function readComments($pasteid)
     {
-        $comments = array();
-        $discdir  = self::_dataid2discussionpath($pasteid);
+        $comments = [];
+        $discdir = self::_dataid2discussionpath($pasteid);
         if (is_dir($discdir)) {
             // Delete all files in discussion directory
             $dir = dir($discdir);
@@ -190,15 +198,15 @@ class Filesystem extends AbstractData
                 // - pasteid is the paste this reply belongs to.
                 // - commentid is the comment identifier itself.
                 // - parentid is the comment this comment replies to (It can be pasteid)
-                if (is_file($discdir . $filename)) {
-                    $comment = json_decode(file_get_contents($discdir . $filename));
-                    $items   = explode('.', $filename);
+                if (is_file($discdir.$filename)) {
+                    $comment = json_decode(file_get_contents($discdir.$filename));
+                    $items = explode('.', $filename);
                     // Add some meta information not contained in file.
-                    $comment->id       = $items[1];
+                    $comment->id = $items[1];
                     $comment->parentid = $items[2];
 
                     // Store in array
-                    $key            = $this->getOpenSlot($comments, (int) $comment->meta->postdate);
+                    $key = $this->getOpenSlot($comments, (int) $comment->meta->postdate);
                     $comments[$key] = $comment;
                 }
             }
@@ -207,36 +215,37 @@ class Filesystem extends AbstractData
             // Sort comments by date, oldest first.
             ksort($comments);
         }
+
         return $comments;
     }
 
     /**
      * Test if a comment exists.
      *
-     * @access public
-     * @param  string $pasteid
-     * @param  string $parentid
-     * @param  string $commentid
+     * @param string $pasteid
+     * @param string $parentid
+     * @param string $commentid
+     *
      * @return bool
      */
     public function existsComment($pasteid, $parentid, $commentid)
     {
         return is_file(
-            self::_dataid2discussionpath($pasteid) .
-            $pasteid . '.' . $commentid . '.' . $parentid
+            self::_dataid2discussionpath($pasteid).
+            $pasteid.'.'.$commentid.'.'.$parentid
         );
     }
 
     /**
-     * Returns up to batch size number of paste ids that have expired
+     * Returns up to batch size number of paste ids that have expired.
      *
-     * @access private
-     * @param  int $batchsize
+     * @param int $batchsize
+     *
      * @return array
      */
     protected function _getExpiredPastes($batchsize)
     {
-        $pastes     = array();
+        $pastes = [];
         $firstLevel = array_filter(
             scandir(self::$_dir),
             'self::_isFirstLevelDir'
@@ -244,9 +253,9 @@ class Filesystem extends AbstractData
         if (count($firstLevel) > 0) {
             // try at most 10 times the $batchsize pastes before giving up
             for ($i = 0, $max = $batchsize * 10; $i < $max; ++$i) {
-                $firstKey    = array_rand($firstLevel);
+                $firstKey = array_rand($firstLevel);
                 $secondLevel = array_filter(
-                    scandir(self::$_dir . $firstLevel[$firstKey]),
+                    scandir(self::$_dir.$firstLevel[$firstKey]),
                     'self::_isSecondLevelDir'
                 );
 
@@ -257,8 +266,8 @@ class Filesystem extends AbstractData
                 }
 
                 $secondKey = array_rand($secondLevel);
-                $path      = self::$_dir . $firstLevel[$firstKey] .
-                    DIRECTORY_SEPARATOR . $secondLevel[$secondKey];
+                $path = self::$_dir.$firstLevel[$firstKey].
+                    DIRECTORY_SEPARATOR.$secondLevel[$secondKey];
                 if (!is_dir($path)) {
                     continue;
                 }
@@ -270,7 +279,7 @@ class Filesystem extends AbstractData
                     continue;
                 }
                 $thirdKey = array_rand($thirdLevel);
-                $pasteid  = $thirdLevel[$thirdKey];
+                $pasteid = $thirdLevel[$thirdKey];
                 if (in_array($pasteid, $pastes)) {
                     continue;
                 }
@@ -289,14 +298,15 @@ class Filesystem extends AbstractData
                 }
             }
         }
+
         return $pastes;
     }
 
     /**
-     * initialize privatebin
+     * initialize privatebin.
      *
-     * @access private
      * @static
+     *
      * @return void
      */
     private static function _init()
@@ -306,11 +316,11 @@ class Filesystem extends AbstractData
             mkdir(self::$_dir, 0700);
         }
         // Create .htaccess file if it does not exist.
-        if (!is_file(self::$_dir . '.htaccess')) {
+        if (!is_file(self::$_dir.'.htaccess')) {
             file_put_contents(
-                self::$_dir . '.htaccess',
-                'Allow from none' . PHP_EOL .
-                'Deny from all' . PHP_EOL
+                self::$_dir.'.htaccess',
+                'Allow from none'.PHP_EOL.
+                'Deny from all'.PHP_EOL
             );
         }
     }
@@ -325,15 +335,16 @@ class Filesystem extends AbstractData
      *
      * eg. input 'e3570978f9e4aa90' --> output 'data/e3/57/'
      *
-     * @access private
      * @static
-     * @param  string $dataid
+     *
+     * @param string $dataid
+     *
      * @return string
      */
     private static function _dataid2path($dataid)
     {
-        return self::$_dir . substr($dataid, 0, 2) . DIRECTORY_SEPARATOR .
-            substr($dataid, 2, 2) . DIRECTORY_SEPARATOR;
+        return self::$_dir.substr($dataid, 0, 2).DIRECTORY_SEPARATOR.
+            substr($dataid, 2, 2).DIRECTORY_SEPARATOR;
     }
 
     /**
@@ -341,37 +352,40 @@ class Filesystem extends AbstractData
      *
      * eg. input 'e3570978f9e4aa90' --> output 'data/e3/57/e3570978f9e4aa90.discussion/'
      *
-     * @access private
      * @static
-     * @param  string $dataid
+     *
+     * @param string $dataid
+     *
      * @return string
      */
     private static function _dataid2discussionpath($dataid)
     {
-        return self::_dataid2path($dataid) . $dataid .
-            '.discussion' . DIRECTORY_SEPARATOR;
+        return self::_dataid2path($dataid).$dataid.
+            '.discussion'.DIRECTORY_SEPARATOR;
     }
 
     /**
      * Check that the given element is a valid first level directory.
      *
-     * @access private
      * @static
-     * @param  string $element
+     *
+     * @param string $element
+     *
      * @return bool
      */
     private static function _isFirstLevelDir($element)
     {
         return self::_isSecondLevelDir($element) &&
-            is_dir(self::$_dir . DIRECTORY_SEPARATOR . $element);
+            is_dir(self::$_dir.DIRECTORY_SEPARATOR.$element);
     }
 
     /**
      * Check that the given element is a valid second level directory.
      *
-     * @access private
      * @static
-     * @param  string $element
+     *
+     * @param string $element
+     *
      * @return bool
      */
     private static function _isSecondLevelDir($element)
