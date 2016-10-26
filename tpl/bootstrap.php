@@ -159,7 +159,16 @@ if ($PASSWORD):
 ?>
 					<li>
 						<div id="password" class="navbar-form hidden">
-							<input type="password" id="passwordinput" placeholder="<?php echo I18n::_('Password (recommended)'); ?>" class="form-control" size="19" />
+
+							<!-- The following form element glues pseudo-login data together, so that password managers can try to look up stored value pairs.
+							     The username field is made hidden, because I found that otherwise password managers will fill in data into the password field.
+							     See https://developer.mozilla.org/en-US/docs/Web/Security/Securing_your_site/Turning_off_form_autocompletion#The_autocomplete_attribute_and_login_fields
+							-->
+
+							<form>
+								<input type="text" name="username" class="hidden" />
+								<input type="password" id="passwordinput" placeholder="<?php echo I18n::_('Password (recommended)'); ?>" class="form-control" size="20" />
+							</form>
 						</div>
 					</li>
 <?php
