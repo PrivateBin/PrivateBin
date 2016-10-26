@@ -193,7 +193,18 @@ if ($PASSWORD):
 ?>
 						<li>
 							<div id="password" class="navbar-form hidden">
-								<input type="password" id="passwordinput" placeholder="<?php echo I18n::_('Password (recommended)'); ?>" class="form-control" size="19"/>
+								<form>
+									<!--	The form element glues pseudo-login data together, so that password managers can try to look up stored value pairs.
+									     	The username field is intentionally set up with a pseudo username, and is hidden,
+										in order to prevent password managers from filling in data into the password field.
+										See 
+https://developer.mozilla.org/en-US/docs/Web/Security/Securing_your_site/Turning_off_form_autocompletion#The_autocomplete_attribute_and_login_fields
+									-->
+
+									<input type="text" value="privatebin-1FuCKEPWUQ6WAmpjMdfqaBuYhVzUcTuJC" name="username" class="hidden" aria-hidden="true" />
+									<input type="password" id="passwordinput" placeholder="<?php echo I18n::_('Password (recommended)'); ?>" class="form-control" 
+size="20" />
+								</form>
 							</div>
 						</li>
 <?php
