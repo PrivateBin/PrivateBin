@@ -9,13 +9,12 @@
  * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
  * @version   1.0
  */
-
 namespace PrivateBin\Model;
 
+use Exception;
 use PrivateBin\Configuration;
 use PrivateBin\Data\AbstractData;
 use PrivateBin\Sjcl;
-use Exception;
 use stdClass;
 
 /**

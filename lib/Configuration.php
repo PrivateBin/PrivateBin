@@ -9,10 +9,8 @@
  * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
  * @version   1.0
  */
-
 namespace PrivateBin;
 
-use PrivateBin\I18n;
 use Exception;
 use PDO;
 
@@ -37,51 +35,51 @@ class Configuration
      */
     private static $_defaults = array(
         'main' => array(
-            'discussion' => true,
-            'opendiscussion' => false,
-            'password' => true,
-            'fileupload' => false,
+            'discussion'               => true,
+            'opendiscussion'           => false,
+            'password'                 => true,
+            'fileupload'               => false,
             'burnafterreadingselected' => false,
-            'defaultformatter' => 'plaintext',
-            'syntaxhighlightingtheme' => null,
-            'sizelimit' => 2097152,
-            'template' => 'bootstrap',
-            'notice' => '',
-            'languageselection' => false,
-            'languagedefault' => '',
-            'urlshortener' => '',
-            'icon' => 'identicon',
-            'cspheader' => 'default-src \'none\'; manifest-src \'self\'; connect-src *; script-src \'self\'; style-src \'self\'; font-src \'self\'; img-src \'self\' data:; referrer no-referrer;',
-            'zerobincompatibility' => false,
+            'defaultformatter'         => 'plaintext',
+            'syntaxhighlightingtheme'  => null,
+            'sizelimit'                => 2097152,
+            'template'                 => 'bootstrap',
+            'notice'                   => '',
+            'languageselection'        => false,
+            'languagedefault'          => '',
+            'urlshortener'             => '',
+            'icon'                     => 'identicon',
+            'cspheader'                => 'default-src \'none\'; manifest-src \'self\'; connect-src *; script-src \'self\'; style-src \'self\'; font-src \'self\'; img-src \'self\' data:; referrer no-referrer;',
+            'zerobincompatibility'     => false,
         ),
         'expire' => array(
             'default' => '1week',
-            'clone' => true,
+            'clone'   => true,
         ),
         'expire_options' => array(
-            '5min' => 300,
-            '10min' => 600,
-            '1hour' => 3600,
-            '1day' => 86400,
-            '1week' => 604800,
+            '5min'   => 300,
+            '10min'  => 600,
+            '1hour'  => 3600,
+            '1day'   => 86400,
+            '1week'  => 604800,
             '1month' => 2592000,
-            '1year' => 31536000,
-            'never' => 0,
+            '1year'  => 31536000,
+            'never'  => 0,
         ),
         'formatter_options' => array(
-            'plaintext' => 'Plain Text',
+            'plaintext'          => 'Plain Text',
             'syntaxhighlighting' => 'Source Code',
-            'markdown' => 'Markdown',
+            'markdown'           => 'Markdown',
         ),
         'traffic' => array(
-            'limit' => 10,
+            'limit'  => 10,
             'header' => null,
-            'dir' => 'data',
+            'dir'    => 'data',
         ),
         'purge' => array(
-            'limit' => 300,
+            'limit'     => 300,
             'batchsize' => 10,
-            'dir' => 'data',
+            'dir'       => 'data',
         ),
         'model' => array(
             'class' => 'Filesystem',

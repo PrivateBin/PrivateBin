@@ -23,7 +23,7 @@ class I18nTest extends PHPUnit_Framework_TestCase
     public function testTranslationFallback()
     {
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'foobar';
-        $messageId = 'It does not matter if the message ID exists';
+        $messageId                       = 'It does not matter if the message ID exists';
         I18n::loadTranslations();
         $this->assertEquals($messageId, I18n::_($messageId), 'fallback to en');
     }
