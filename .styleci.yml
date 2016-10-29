@@ -1,0 +1,24 @@
+preset: recommended
+
+risky: false
+
+enabled:
+  - no_empty_comment
+  - align_equals
+
+disabled:
+  - blank_line_after_opening_tag
+  - blank_line_before_return
+  - concat_without_spaces
+  - declare_equal_normalize
+  - heredoc_to_nowdoc
+  - method_argument_space
+  - new_with_braces
+  - phpdoc_align
+  - phpdoc_no_access
+  - phpdoc_separation
+  - phpdoc_single_line_var_spacing
+  - phpdoc_summary
+  - short_array_syntax
+  - single_line_after_imports
+  - unalign_equals
