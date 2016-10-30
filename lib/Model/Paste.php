@@ -1,24 +1,25 @@
 <?php
 /**
- * PrivateBin
+ * PrivateBin.
  *
  * a zero-knowledge paste bin
  *
  * @link      https://github.com/PrivateBin/PrivateBin
+ *
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
+ *
  * @version   1.0
  */
-
 namespace PrivateBin\Model;
 
-use PrivateBin\PrivateBin;
-use PrivateBin\Persistence\ServerSalt;
-use PrivateBin\Sjcl;
 use Exception;
+use PrivateBin\Persistence\ServerSalt;
+use PrivateBin\PrivateBin;
+use PrivateBin\Sjcl;
 
 /**
- * Paste
+ * Paste.
  *
  * Model of a PrivateBin paste.
  */
@@ -27,8 +28,8 @@ class Paste extends AbstractModel
     /**
      * Get paste data.
      *
-     * @access public
      * @throws Exception
+     *
      * @return stdClass
      */
     public function get()
@@ -62,19 +63,20 @@ class Paste extends AbstractModel
         if (!property_exists($data->meta, 'salt')) {
             $data->meta->salt = ServerSalt::get();
         }
-        $data->comments       = array_values($this->getComments());
-        $data->comment_count  = count($data->comments);
+        $data->comments = array_values($this->getComments());
+        $data->comment_count = count($data->comments);
         $data->comment_offset = 0;
-        $data->{'@context'}   = 'js/paste.jsonld';
-        $this->_data          = $data;
+        $data->{'@context'} = 'js/paste.jsonld';
+        $this->_data = $data;
+
         return $this->_data;
     }
 
     /**
      * Store the paste's data.
      *
-     * @access public
      * @throws Exception
+     *
      * @return void
      */
     public function store()
@@ -85,7 +87,7 @@ class Paste extends AbstractModel
         }
 
         $this->_data->meta->postdate = time();
-        $this->_data->meta->salt     = serversalt::generate();
+        $this->_data->meta->salt = serversalt::generate();
 
         // store paste
         if (
@@ -101,8 +103,8 @@ class Paste extends AbstractModel
     /**
      * Delete the paste.
      *
-     * @access public
      * @throws Exception
+     *
      * @return void
      */
     public function delete()
@@ -113,7 +115,6 @@ class Paste extends AbstractModel
     /**
      * Test if paste exists in store.
      *
-     * @access public
      * @return bool
      */
     public function exists()
@@ -124,10 +125,11 @@ class Paste extends AbstractModel
     /**
      * Get a comment, optionally a specific instance.
      *
-     * @access public
      * @param string $parentId
      * @param string $commentId
+     *
      * @throws Exception
+     *
      * @return Comment
      */
     public function getComment($parentId, $commentId = null)
@@ -141,13 +143,13 @@ class Paste extends AbstractModel
         if ($commentId !== null) {
             $comment->setId($commentId);
         }
+
         return $comment;
     }
 
     /**
      * Get all comments, if any.
      *
-     * @access public
      * @return array
      */
     public function getComments()
@@ -162,7 +164,6 @@ class Paste extends AbstractModel
      * The paste can be deleted by calling:
      * http://example.com/privatebin/?pasteid=<pasteid>&deletetoken=<deletetoken>
      *
-     * @access public
      * @return string
      */
     public function getDeleteToken()
@@ -170,6 +171,7 @@ class Paste extends AbstractModel
         if (!property_exists($this->_data->meta, 'salt')) {
             $this->get();
         }
+
         return hash_hmac(
             $this->_conf->getKey('zerobincompatibility') ? 'sha1' : 'sha256',
             $this->getId(),
@@ -180,9 +182,10 @@ class Paste extends AbstractModel
     /**
      * Set paste's attachment.
      *
-     * @access public
      * @param string $attachment
+     *
      * @throws Exception
+     *
      * @return void
      */
     public function setAttachment($attachment)
@@ -196,9 +199,10 @@ class Paste extends AbstractModel
     /**
      * Set paste's attachment name.
      *
-     * @access public
      * @param string $attachmentname
+     *
      * @throws Exception
+     *
      * @return void
      */
     public function setAttachmentName($attachmentname)
@@ -212,8 +216,8 @@ class Paste extends AbstractModel
     /**
      * Set paste expiration.
      *
-     * @access public
      * @param string $expiration
+     *
      * @return void
      */
     public function setExpiration($expiration)
@@ -233,9 +237,10 @@ class Paste extends AbstractModel
     /**
      * Set paste's burn-after-reading type.
      *
-     * @access public
      * @param string $burnafterreading
+     *
      * @throws Exception
+     *
      * @return void
      */
     public function setBurnafterreading($burnafterreading = '1')
@@ -247,16 +252,17 @@ class Paste extends AbstractModel
                 throw new Exception('Invalid data.', 73);
             }
             $this->_data->meta->burnafterreading = true;
-            $this->_data->meta->opendiscussion   = false;
+            $this->_data->meta->opendiscussion = false;
         }
     }
 
     /**
      * Set paste's discussion state.
      *
-     * @access public
      * @param string $opendiscussion
+     *
      * @throws Exception
+     *
      * @return void
      */
     public function setOpendiscussion($opendiscussion = '1')
@@ -278,9 +284,10 @@ class Paste extends AbstractModel
     /**
      * Set paste's format.
      *
-     * @access public
      * @param string $format
+     *
      * @throws Exception
+     *
      * @return void
      */
     public function setFormatter($format)
@@ -294,8 +301,8 @@ class Paste extends AbstractModel
     /**
      * Check if paste is of burn-after-reading type.
      *
-     * @access public
      * @throws Exception
+     *
      * @return bool
      */
     public function isBurnafterreading()
@@ -303,16 +310,16 @@ class Paste extends AbstractModel
         if (!property_exists($this->_data, 'data')) {
             $this->get();
         }
+
         return property_exists($this->_data->meta, 'burnafterreading') &&
                $this->_data->meta->burnafterreading === true;
     }
 
-
     /**
      * Check if paste has discussions enabled.
      *
-     * @access public
      * @throws Exception
+     *
      * @return bool
      */
     public function isOpendiscussion()
@@ -320,6 +327,7 @@ class Paste extends AbstractModel
         if (!property_exists($this->_data, 'data')) {
             $this->get();
         }
+
         return property_exists($this->_data->meta, 'opendiscussion') &&
                $this->_data->meta->opendiscussion === true;
     }

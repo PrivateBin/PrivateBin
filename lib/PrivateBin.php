@@ -1,121 +1,113 @@
 <?php
 /**
- * PrivateBin
+ * PrivateBin.
  *
  * a zero-knowledge paste bin
  *
  * @link      https://github.com/PrivateBin/PrivateBin
+ *
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
+ *
  * @version   1.0
  */
-
 namespace PrivateBin;
 
-use PrivateBin\Persistence\TrafficLimiter;
-use PrivateBin\Persistence\ServerSalt;
 use Exception;
+use PrivateBin\Persistence\ServerSalt;
+use PrivateBin\Persistence\TrafficLimiter;
 
 /**
- * PrivateBin
+ * PrivateBin.
  *
  * Controller, puts it all together.
  */
 class PrivateBin
 {
     /**
-     * version
+     * version.
      *
      * @const string
      */
     const VERSION = '1.0';
 
     /**
-     * show the same error message if the paste expired or does not exist
+     * show the same error message if the paste expired or does not exist.
      *
      * @const string
      */
     const GENERIC_ERROR = 'Paste does not exist, has expired or has been deleted.';
 
     /**
-     * configuration
+     * configuration.
      *
-     * @access private
-     * @var    Configuration
+     * @var Configuration
      */
     private $_conf;
 
     /**
-     * data
+     * data.
      *
-     * @access private
-     * @var    string
+     * @var string
      */
     private $_data = '';
 
     /**
-     * does the paste expire
+     * does the paste expire.
      *
-     * @access private
-     * @var    bool
+     * @var bool
      */
     private $_doesExpire = false;
 
     /**
-     * error message
+     * error message.
      *
-     * @access private
-     * @var    string
+     * @var string
      */
     private $_error = '';
 
     /**
-     * status message
+     * status message.
      *
-     * @access private
-     * @var    string
+     * @var string
      */
     private $_status = '';
 
     /**
-     * JSON message
+     * JSON message.
      *
-     * @access private
-     * @var    string
+     * @var string
      */
     private $_json = '';
 
     /**
-     * Factory of instance models
+     * Factory of instance models.
      *
-     * @access private
-     * @var    model
+     * @var model
      */
     private $_model;
 
     /**
-     * request
+     * request.
      *
-     * @access private
-     * @var    request
+     * @var request
      */
     private $_request;
 
     /**
-     * URL base
+     * URL base.
      *
-     * @access private
-     * @var    string
+     * @var string
      */
     private $_urlBase;
 
     /**
-     * constructor
+     * constructor.
      *
      * initializes and runs PrivateBin
      *
-     * @access public
      * @throws Exception
+     *
      * @return void
      */
     public function __construct()
@@ -145,12 +137,13 @@ class PrivateBin
                 break;
             case 'jsonld':
                 $this->_jsonld($this->_request->getParam('jsonld'));
+
                 return;
         }
 
         // output JSON or HTML
         if ($this->_request->isJsonApiCall()) {
-            header('Content-type: ' . Request::MIME_JSON);
+            header('Content-type: '.Request::MIME_JSON);
             header('Access-Control-Allow-Origin: *');
             header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
             header('Access-Control-Allow-Headers: X-Requested-With, Content-Type');
@@ -161,27 +154,26 @@ class PrivateBin
     }
 
     /**
-     * initialize privatebin
+     * initialize privatebin.
      *
-     * @access private
      * @return void
      */
     private function _init()
     {
-        foreach (array('cfg', 'lib') as $dir) {
-            if (!is_file(PATH . $dir . DIRECTORY_SEPARATOR . '.htaccess')) {
+        foreach (['cfg', 'lib'] as $dir) {
+            if (!is_file(PATH.$dir.DIRECTORY_SEPARATOR.'.htaccess')) {
                 file_put_contents(
-                PATH . $dir . DIRECTORY_SEPARATOR . '.htaccess',
-                'Allow from none' . PHP_EOL .
-                'Deny from all' . PHP_EOL,
+                PATH.$dir.DIRECTORY_SEPARATOR.'.htaccess',
+                'Allow from none'.PHP_EOL.
+                'Deny from all'.PHP_EOL,
                 LOCK_EX
             );
             }
         }
 
-        $this->_conf    = new Configuration;
-        $this->_model   = new Model($this->_conf);
-        $this->_request = new Request;
+        $this->_conf = new Configuration();
+        $this->_model = new Model($this->_conf);
+        $this->_request = new Request();
         $this->_urlBase = array_key_exists('REQUEST_URI', $_SERVER) ?
             htmlspecialchars($_SERVER['REQUEST_URI']) : '/';
         ServerSalt::setPath($this->_conf->getKey('dir', 'traffic'));
@@ -197,7 +189,7 @@ class PrivateBin
     }
 
     /**
-     * Store new paste or comment
+     * Store new paste or comment.
      *
      * POST contains one or both:
      * data = json encoded SJCL encrypted text (containing keys: iv,v,iter,ks,ts,mode,adata,cipher,salt,ct)
@@ -213,7 +205,6 @@ class PrivateBin
      * parentid (optional) = in discussion, which comment this comment replies to.
      * pasteid (optional) = in discussion, which paste this comment belongs to.
      *
-     * @access private
      * @return string
      */
     private function _create()
@@ -229,8 +220,8 @@ class PrivateBin
         );
         }
 
-        $data           = $this->_request->getParam('data');
-        $attachment     = $this->_request->getParam('attachment');
+        $data = $this->_request->getParam('data');
+        $attachment = $this->_request->getParam('attachment');
         $attachmentname = $this->_request->getParam('attachmentname');
 
         // Ensure content is not too big.
@@ -253,7 +244,7 @@ class PrivateBin
         }
 
         // The user posts a comment.
-        $pasteid  = $this->_request->getParam('pasteid');
+        $pasteid = $this->_request->getParam('pasteid');
         $parentid = $this->_request->getParam('parentid');
         if (!empty($pasteid) && !empty($parentid)) {
             $paste = $this->_model->getPaste($pasteid);
@@ -314,16 +305,16 @@ class PrivateBin
             } catch (Exception $e) {
                 return $this->_return_message(1, $e->getMessage());
             }
-            $this->_return_message(0, $paste->getId(), array('deletetoken' => $paste->getDeleteToken()));
+            $this->_return_message(0, $paste->getId(), ['deletetoken' => $paste->getDeleteToken()]);
         }
     }
 
     /**
-     * Delete an existing paste
+     * Delete an existing paste.
      *
-     * @access private
-     * @param  string $dataid
-     * @param  string $deletetoken
+     * @param string $dataid
+     * @param string $deletetoken
+     *
      * @return void
      */
     private function _delete($dataid, $deletetoken)
@@ -360,10 +351,10 @@ class PrivateBin
     }
 
     /**
-     * Read an existing paste or comment
+     * Read an existing paste or comment.
      *
-     * @access private
-     * @param  string $dataid
+     * @param string $dataid
+     *
      * @return void
      */
     private function _read($dataid)
@@ -371,7 +362,7 @@ class PrivateBin
         try {
             $paste = $this->_model->getPaste($dataid);
             if ($paste->exists()) {
-                $data              = $paste->get();
+                $data = $paste->get();
                 $this->_doesExpire = property_exists($data, 'meta') && property_exists($data->meta, 'expire_date');
                 if (property_exists($data->meta, 'salt')) {
                     unset($data->meta->salt);
@@ -396,7 +387,6 @@ class PrivateBin
     /**
      * Display PrivateBin frontend.
      *
-     * @access private
      * @return void
      */
     private function _view()
@@ -405,16 +395,16 @@ class PrivateBin
         $time = gmdate('D, d M Y H:i:s \G\M\T');
         header('Cache-Control: no-store, no-cache, no-transform, must-revalidate');
         header('Pragma: no-cache');
-        header('Expires: ' . $time);
-        header('Last-Modified: ' . $time);
+        header('Expires: '.$time);
+        header('Last-Modified: '.$time);
         header('Vary: Accept');
-        header('Content-Security-Policy: ' . $this->_conf->getKey('cspheader'));
+        header('Content-Security-Policy: '.$this->_conf->getKey('cspheader'));
         header('X-Xss-Protection: 1; mode=block');
         header('X-Frame-Options: DENY');
         header('X-Content-Type-Options: nosniff');
 
         // label all the expiration options
-        $expire = array();
+        $expire = [];
         foreach ($this->_conf->getSection('expire_options') as $time => $seconds) {
             $expire[$time] = ($seconds == 0) ? I18n::_(ucfirst($time)) : Filter::formatHumanReadableTime($time);
         }
@@ -429,7 +419,7 @@ class PrivateBin
             setcookie('lang', $languageselection);
         }
 
-        $page = new View;
+        $page = new View();
         $page->assign('CIPHERDATA', $this->_data);
         $page->assign('ERROR', I18n::_($this->_error));
         $page->assign('STATUS', I18n::_($this->_status));
@@ -456,10 +446,10 @@ class PrivateBin
     }
 
     /**
-     * outputs requested JSON-LD context
+     * outputs requested JSON-LD context.
      *
-     * @access private
      * @param string $type
+     *
      * @return void
      */
     private function _jsonld($type)
@@ -471,11 +461,11 @@ class PrivateBin
             $type = '';
         }
         $content = '{}';
-        $file    = PUBLIC_PATH . DIRECTORY_SEPARATOR . 'js' . DIRECTORY_SEPARATOR . $type . '.jsonld';
+        $file = PUBLIC_PATH.DIRECTORY_SEPARATOR.'js'.DIRECTORY_SEPARATOR.$type.'.jsonld';
         if (is_readable($file)) {
             $content = str_replace(
                 '?jsonld=',
-                $this->_urlBase . '?jsonld=',
+                $this->_urlBase.'?jsonld=',
                 file_get_contents($file)
             );
         }
@@ -487,22 +477,22 @@ class PrivateBin
     }
 
     /**
-     * prepares JSON encoded status message
+     * prepares JSON encoded status message.
      *
-     * @access private
-     * @param  int $status
-     * @param  string $message
-     * @param  array $other
+     * @param int    $status
+     * @param string $message
+     * @param array  $other
+     *
      * @return void
      */
-    private function _return_message($status, $message, $other = array())
+    private function _return_message($status, $message, $other = [])
     {
-        $result = array('status' => $status);
+        $result = ['status' => $status];
         if ($status) {
             $result['message'] = I18n::_($message);
         } else {
-            $result['id']  = $message;
-            $result['url'] = $this->_urlBase . '?' . $message;
+            $result['id'] = $message;
+            $result['url'] = $this->_urlBase.'?'.$message;
         }
         $result += $other;
         $this->_json = json_encode($result);

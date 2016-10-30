@@ -1,7 +1,7 @@
 #!/usr/bin/env php
 <?php
 /**
- * generates a config unit test class
+ * generates a config unit test class.
  *
  * This generator is meant to test all possible configuration combinations
  * without having to write endless amounts of code manually.
@@ -9,327 +9,331 @@
  * DANGER: Too many options/settings and too high max iteration setting may trigger
  *         a fork bomb. Please save your work before executing this script.
  */
-
 include 'Bootstrap.php';
 
-$vrd  = array('view', 'read', 'delete');
-$vcud = array('view', 'create', 'read', 'delete');
+$vrd = ['view', 'read', 'delete'];
+$vcud = ['view', 'create', 'read', 'delete'];
 
-new ConfigurationTestGenerator(array(
-    'main/discussion' => array(
-        array(
+new ConfigurationTestGenerator([
+    'main/discussion' => [
+        [
             'setting' => true,
-            'tests' => array(
-                array(
-                    'conditions' => array('steps' => $vrd),
-                    'type' => 'RegExp',
-                    'args' => array(
+            'tests'   => [
+                [
+                    'conditions' => ['steps' => $vrd],
+                    'type'       => 'RegExp',
+                    'args'       => [
                         '#<div[^>]*id="opendisc"[^>]*>#',
                         '$content',
-                        'outputs enabled discussion correctly'
-                    ),
-                ), array(
-                    'conditions' => array('steps' => array('create'), 'traffic/limit' => 10),
-                    'settings' => array('$_POST["opendiscussion"] = "neither 1 nor 0"'),
-                    'type' => 'Equals',
-                    'args' => array(
+                        'outputs enabled discussion correctly',
+                    ],
+                ], [
+                    'conditions' => ['steps' => ['create'], 'traffic/limit' => 10],
+                    'settings'   => ['$_POST["opendiscussion"] = "neither 1 nor 0"'],
+                    'type'       => 'Equals',
+                    'args'       => [
                         1,
                         '$response["status"]',
-                        'when discussions are enabled, but invalid flag posted, fail to create paste'
-                    ),
-                ), array(
-                    'conditions' => array('steps' => array('create'), 'traffic/limit' => 10),
-                    'settings' => array('$_POST["opendiscussion"] = "neither 1 nor 0"'),
-                    'type' => 'False',
-                    'args' => array(
+                        'when discussions are enabled, but invalid flag posted, fail to create paste',
+                    ],
+                ], [
+                    'conditions' => ['steps' => ['create'], 'traffic/limit' => 10],
+                    'settings'   => ['$_POST["opendiscussion"] = "neither 1 nor 0"'],
+                    'type'       => 'False',
+                    'args'       => [
                         '$this->_model->exists(Helper::getPasteId())',
-                        'when discussions are enabled, but invalid flag posted, paste is not created'
-                    ),
-                ),
-            ),
-            'affects' => $vcud
-        ), array(
+                        'when discussions are enabled, but invalid flag posted, paste is not created',
+                    ],
+                ],
+            ],
+            'affects' => $vcud,
+        ], [
             'setting' => false,
-            'tests' => array(
-                array(
+            'tests'   => [
+                [
                     'type' => 'NotRegExp',
-                    'args' => array(
+                    'args' => [
                         '#<div[^>]*id="opendisc"[^>]*>#',
                         '$content',
-                        'outputs disabled discussion correctly'
-                    ),
-                ),
-            ),
-            'affects' => $vrd
-        ),
-    ),
-    'main/opendiscussion' => array(
-        array(
+                        'outputs disabled discussion correctly',
+                    ],
+                ],
+            ],
+            'affects' => $vrd,
+        ],
+    ],
+    'main/opendiscussion' => [
+        [
             'setting' => true,
-            'tests' => array(
-                array(
-                    'conditions' => array('main/discussion' => true),
-                    'type' => 'RegExp',
-                    'args' => array(
+            'tests'   => [
+                [
+                    'conditions' => ['main/discussion' => true],
+                    'type'       => 'RegExp',
+                    'args'       => [
                         '#<input[^>]+id="opendiscussion"[^>]*checked="checked"[^>]*>#',
                         '$content',
-                        'outputs checked discussion correctly'
-                    ),
-                ),
-            ),
-            'affects' => $vrd
-        ), array(
+                        'outputs checked discussion correctly',
+                    ],
+                ],
+            ],
+            'affects' => $vrd,
+        ], [
             'setting' => false,
-            'tests' => array(
-                array(
-                    'conditions' => array('main/discussion' => true),
-                    'type' => 'NotRegExp',
-                    'args' => array(
+            'tests'   => [
+                [
+                    'conditions' => ['main/discussion' => true],
+                    'type'       => 'NotRegExp',
+                    'args'       => [
                         '#<input[^>]+id="opendiscussion"[^>]*checked="checked"[^>]*>#',
                         '$content',
-                        'outputs unchecked discussion correctly'
-                    ),
-                ),
-            ),
-            'affects' => $vrd
-        ),
-    ),
-    'main/burnafterreadingselected' => array(
-        array(
+                        'outputs unchecked discussion correctly',
+                    ],
+                ],
+            ],
+            'affects' => $vrd,
+        ],
+    ],
+    'main/burnafterreadingselected' => [
+        [
             'setting' => true,
-            'tests' => array(
-                array(
+            'tests'   => [
+                [
                     'type' => 'RegExp',
-                    'args' => array(
+                    'args' => [
                         '#<input[^>]+id="burnafterreading"[^>]*checked="checked"[^>]*>#',
                         '$content',
                         'preselects burn after reading option',
-                    ),
-                ),
-            ),
-            'affects' => array('view'),
-        ), array(
+                    ],
+                ],
+            ],
+            'affects' => ['view'],
+        ], [
             'setting' => false,
-            'tests' => array(
-                array(
+            'tests'   => [
+                [
                     'type' => 'NotRegExp',
-                    'args' => array(
+                    'args' => [
                         '#<input[^>]+id="burnafterreading"[^>]*checked="checked"[^>]*>#',
                         '$content',
                         'burn after reading option is unchecked',
-                    ),
-                ),
-            ),
-            'affects' => array('view'),
-        ),
-    ),
-    'main/password' => array(
-        array(
+                    ],
+                ],
+            ],
+            'affects' => ['view'],
+        ],
+    ],
+    'main/password' => [
+        [
             'setting' => true,
-            'tests' => array(
-                array(
+            'tests'   => [
+                [
                     'type' => 'RegExp',
-                    'args' => array(
+                    'args' => [
                         '#<div[^>]*id="password"[^>]*>#',
                         '$content',
-                        'outputs password input correctly'
-                    ),
-                ),
-            ),
-            'affects' => $vrd
-        ), array(
+                        'outputs password input correctly',
+                    ],
+                ],
+            ],
+            'affects' => $vrd,
+        ], [
             'setting' => false,
-            'tests' => array(
-                array(
-                    'conditions' => array('main/discussion' => true),
-                    'type' => 'NotRegExp',
-                    'args' => array(
+            'tests'   => [
+                [
+                    'conditions' => ['main/discussion' => true],
+                    'type'       => 'NotRegExp',
+                    'args'       => [
                         '#<div[^>]*id="password"[^>]*>#',
                         '$content',
-                        'removes password input correctly'
-                    ),
-                ),
-            ),
-            'affects' => $vrd
-        ),
-    ),
-    'main/template' => array(
-        array(
+                        'removes password input correctly',
+                    ],
+                ],
+            ],
+            'affects' => $vrd,
+        ],
+    ],
+    'main/template' => [
+        [
             'setting' => 'page',
-            'tests' => array(
-                array(
+            'tests'   => [
+                [
                     'type' => 'RegExp',
-                    'args' => array(
+                    'args' => [
                         '#<link[^>]+type="text/css"[^>]+rel="stylesheet"[^>]+href="css/privatebin\.css\\?\d+\.\d+"[^>]*/>#',
                         '$content',
                         'outputs "page" stylesheet correctly',
-                    ),
-                ), array(
+                    ],
+                ], [
                     'type' => 'NotRegExp',
-                    'args' => array(
+                    'args' => [
                         '#<link[^>]+type="text/css"[^>]+rel="stylesheet"[^>]+href="css/bootstrap/bootstrap-\d[\d\.]+\d\.css"[^>]*/>#',
                         '$content',
                         'removes "bootstrap" stylesheet correctly',
-                    ),
-                ),
-            ),
+                    ],
+                ],
+            ],
             'affects' => $vrd,
-        ), array(
+        ], [
             'setting' => 'bootstrap',
-            'tests' => array(
-                array(
+            'tests'   => [
+                [
                     'type' => 'NotRegExp',
-                    'args' => array(
+                    'args' => [
                         '#<link[^>]+type="text/css"[^>]+rel="stylesheet"[^>]+href="css/privatebin\.css\\?\d+\.\d+"[^>]*/>#',
                         '$content',
                         'removes "page" stylesheet correctly',
-                    ),
-                ), array(
+                    ],
+                ], [
                     'type' => 'RegExp',
-                    'args' => array(
+                    'args' => [
                         '#<link[^>]+type="text/css"[^>]+rel="stylesheet"[^>]+href="css/bootstrap/bootstrap-\d[\d\.]+\d\.css"[^>]*/>#',
                         '$content',
                         'outputs "bootstrap" stylesheet correctly',
-                    ),
-                ),
-            ),
+                    ],
+                ],
+            ],
             'affects' => $vrd,
-        ),
-    ),
-    'main/sizelimit' => array(
-        array(
+        ],
+    ],
+    'main/sizelimit' => [
+        [
             'setting' => 10,
-            'tests' => array(
-                array(
-                    'conditions' => array('steps' => array('create'), 'traffic/limit' => 10),
-                    'type' => 'Equals',
-                    'args' => array(
+            'tests'   => [
+                [
+                    'conditions' => ['steps' => ['create'], 'traffic/limit' => 10],
+                    'type'       => 'Equals',
+                    'args'       => [
                         1,
                         '$response["status"]',
-                        'when sizelimit limit exceeded, fail to create paste'
-                    ),
-                ),
-            ),
-            'affects' => array('create')
-        ), array(
+                        'when sizelimit limit exceeded, fail to create paste',
+                    ],
+                ],
+            ],
+            'affects' => ['create'],
+        ], [
             'setting' => 2097152,
-            'tests' => array(
-                array(
-                    'conditions' => array('steps' => array('create'), 'traffic/limit' => 0, 'main/burnafterreadingselected' => true),
-                    'settings' => array('sleep(3)'),
-                    'type' => 'Equals',
-                    'args' => array(
+            'tests'   => [
+                [
+                    'conditions' => ['steps' => ['create'], 'traffic/limit' => 0, 'main/burnafterreadingselected' => true],
+                    'settings'   => ['sleep(3)'],
+                    'type'       => 'Equals',
+                    'args'       => [
                         0,
                         '$response["status"]',
-                        'when sizelimit limit is not reached, successfully create paste'
-                    ),
-                ), array(
-                    'conditions' => array('steps' => array('create'), 'traffic/limit' => 0, 'main/burnafterreadingselected' => true),
-                    'settings' => array('sleep(3)'),
-                    'type' => 'True',
-                    'args' => array(
+                        'when sizelimit limit is not reached, successfully create paste',
+                    ],
+                ], [
+                    'conditions' => ['steps' => ['create'], 'traffic/limit' => 0, 'main/burnafterreadingselected' => true],
+                    'settings'   => ['sleep(3)'],
+                    'type'       => 'True',
+                    'args'       => [
                         '$this->_model->exists($response["id"])',
-                        'when sizelimit limit is not reached, paste exists after posting data'
-                    ),
-                ),
-            ),
-            'affects' => array('create')
-        ),
-    ),
-    'traffic/limit' => array(
-        array(
+                        'when sizelimit limit is not reached, paste exists after posting data',
+                    ],
+                ],
+            ],
+            'affects' => ['create'],
+        ],
+    ],
+    'traffic/limit' => [
+        [
             'setting' => 0,
-            'tests' => array(
-                array(
-                    'conditions' => array('steps' => array('create'), 'main/sizelimit' => 2097152),
-                    'type' => 'Equals',
-                    'args' => array(
+            'tests'   => [
+                [
+                    'conditions' => ['steps' => ['create'], 'main/sizelimit' => 2097152],
+                    'type'       => 'Equals',
+                    'args'       => [
                         0,
                         '$response["status"]',
-                        'when traffic limit is disabled, successfully create paste'
-                    ),
-                ), array(
-                    'conditions' => array('steps' => array('create'), 'main/sizelimit' => 2097152),
-                    'type' => 'True',
-                    'args' => array(
+                        'when traffic limit is disabled, successfully create paste',
+                    ],
+                ], [
+                    'conditions' => ['steps' => ['create'], 'main/sizelimit' => 2097152],
+                    'type'       => 'True',
+                    'args'       => [
                         '$this->_model->exists($response["id"])',
-                        'when traffic limit is disabled, paste exists after posting data'
-                    ),
-                ),
-            ),
-            'affects' => array('create')
-        ), array(
+                        'when traffic limit is disabled, paste exists after posting data',
+                    ],
+                ],
+            ],
+            'affects' => ['create'],
+        ], [
             'setting' => 10,
-            'tests' => array(
-                array(
-                    'conditions' => array('steps' => array('create')),
-                    'type' => 'Equals',
-                    'args' => array(
+            'tests'   => [
+                [
+                    'conditions' => ['steps' => ['create']],
+                    'type'       => 'Equals',
+                    'args'       => [
                         1,
                         '$response["status"]',
-                        'when traffic limit is on and we do not wait, fail to create paste'
-                    ),
-                ),
-            ),
-            'affects' => array('create')
-        ), array(
+                        'when traffic limit is on and we do not wait, fail to create paste',
+                    ],
+                ],
+            ],
+            'affects' => ['create'],
+        ], [
             'setting' => 2,
-            'tests' => array(
-                array(
-                    'conditions' => array('steps' => array('create'), 'main/sizelimit' => 2097152),
-                    'settings' => array('sleep(3)'),
-                    'type' => 'Equals',
-                    'args' => array(
+            'tests'   => [
+                [
+                    'conditions' => ['steps' => ['create'], 'main/sizelimit' => 2097152],
+                    'settings'   => ['sleep(3)'],
+                    'type'       => 'Equals',
+                    'args'       => [
                         0,
                         '$response["status"]',
-                        'when traffic limit is on and we wait, successfully create paste'
-                    ),
-                ), array(
-                    'conditions' => array('steps' => array('create'), 'main/sizelimit' => 2097152),
-                    'settings' => array('sleep(3)'),
-                    'type' => 'True',
-                    'args' => array(
+                        'when traffic limit is on and we wait, successfully create paste',
+                    ],
+                ], [
+                    'conditions' => ['steps' => ['create'], 'main/sizelimit' => 2097152],
+                    'settings'   => ['sleep(3)'],
+                    'type'       => 'True',
+                    'args'       => [
                         '$this->_model->exists($response["id"])',
-                        'when traffic limit is on and we wait, paste exists after posting data'
-                    ),
-                ),
-            ),
-            'affects' => array('create')
-        ),
-    ),
-));
+                        'when traffic limit is on and we wait, paste exists after posting data',
+                    ],
+                ],
+            ],
+            'affects' => ['create'],
+        ],
+    ],
+]);
 
 class ConfigurationTestGenerator
 {
     /**
      * endless loop protection, since we're working with a recursive function,
-     * creating factorial configurations
+     * creating factorial configurations.
+     *
      * @var int
      */
     const MAX_ITERATIONS = 2000;
 
     /**
-     * options to test
+     * options to test.
+     *
      * @var array
      */
     private $_options;
 
     /**
-     * iteration count to guarantee timely end
+     * iteration count to guarantee timely end.
+     *
      * @var int
      */
     private $_iterationCount = 0;
 
     /**
-     * generated configurations
+     * generated configurations.
+     *
      * @var array
      */
-    private $_configurations = array(
-        array('options' => array(), 'tests' => array(), 'affects' => array())
-    );
+    private $_configurations = [
+        ['options' => [], 'tests' => [], 'affects' => []],
+    ];
 
     /**
-     * constructor, generates the configuration test
+     * constructor, generates the configuration test.
+     *
      * @param array $options
      */
     public function __construct($options)
@@ -341,7 +345,7 @@ class ConfigurationTestGenerator
     }
 
     /**
-     * write configuration test file based on generated configuration array
+     * write configuration test file based on generated configuration array.
      */
     private function _writeConfigurationTest()
     {
@@ -351,7 +355,7 @@ class ConfigurationTestGenerator
             $fullOptions = array_replace_recursive($defaultOptions, $conf['options']);
             $options = Helper::varExportMin($fullOptions, true);
             foreach ($conf['affects'] as $step) {
-                $testCode = $preCode = array();
+                $testCode = $preCode = [];
                 foreach ($conf['tests'] as $tests) {
                     foreach ($tests[0] as $test) {
                         // skip if test does not affect this step
@@ -376,7 +380,7 @@ class ConfigurationTestGenerator
                                 $preCode[$setting] = $setting;
                             }
                         }
-                        $args = array();
+                        $args = [];
                         foreach ($test['args'] as $arg) {
                             if (is_string($arg) && strpos($arg, '$') === 0) {
                                 $args[] = $arg;
@@ -384,7 +388,7 @@ class ConfigurationTestGenerator
                                 $args[] = Helper::varExportMin($arg, true);
                             }
                         }
-                        $testCode[] = array($test['type'], implode(', ', $args));
+                        $testCode[] = [$test['type'], implode(', ', $args)];
                     }
                 }
                 $code .= $this->_getFunction(
@@ -392,12 +396,12 @@ class ConfigurationTestGenerator
                 );
             }
         }
-        $code .= '}' . PHP_EOL;
+        $code .= '}'.PHP_EOL;
         file_put_contents('ConfigurationCombinationsTest.php', $code);
     }
 
     /**
-     * get header of configuration test file
+     * get header of configuration test file.
      *
      * @return string
      */
@@ -458,30 +462,32 @@ EOT;
     }
 
     /**
-     * get unit tests function block
+     * get unit tests function block.
      *
      * @param string $step
-     * @param int $key
-     * @param array $options
-     * @param array $preCode
-     * @param array $testCode
+     * @param int    $key
+     * @param array  $options
+     * @param array  $preCode
+     * @param array  $testCode
+     *
      * @return string
      */
     private function _getFunction($step, $key, &$options, $preCode, $testCode)
     {
         if (count($testCode) == 0) {
-            echo "skipping creation of test$step$key, no valid tests found for configuration: $options". PHP_EOL;
+            echo "skipping creation of test$step$key, no valid tests found for configuration: $options".PHP_EOL;
+
             return '';
         }
 
         $preString = $testString = '';
         foreach ($preCode as $setting) {
-            $preString .= "        $setting;" . PHP_EOL;
+            $preString .= "        $setting;".PHP_EOL;
         }
         foreach ($testCode as $test) {
             $type = $test[0];
             $args = $test[1];
-            $testString .= "        \$this->assert$type($args);" . PHP_EOL;
+            $testString .= "        \$this->assert$type($args);".PHP_EOL;
         }
         $code = <<<EOT
     /**
@@ -495,7 +501,7 @@ EOT;
         // step specific initialization
         switch ($step) {
             case 'Create':
-                $code .= PHP_EOL . <<<'EOT'
+                $code .= PHP_EOL.<<<'EOT'
         $_POST = Helper::getPaste();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD'] = 'POST';
@@ -504,13 +510,13 @@ EOT;
 EOT;
                 break;
             case 'Read':
-                $code .= PHP_EOL . <<<'EOT'
+                $code .= PHP_EOL.<<<'EOT'
         $this->_model->create(Helper::getPasteId(), Helper::getPaste());
         $_SERVER['QUERY_STRING'] = Helper::getPasteId();
 EOT;
                 break;
             case 'Delete':
-                $code .= PHP_EOL . <<<'EOT'
+                $code .= PHP_EOL.<<<'EOT'
         $this->_model->create(Helper::getPasteId(), Helper::getPaste());
         $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste exists before deleting data');
         $_GET['pasteid'] = Helper::getPasteId();
@@ -520,7 +526,7 @@ EOT;
         }
 
         // all steps
-        $code .= PHP_EOL . $preString;
+        $code .= PHP_EOL.$preString;
         $code .= <<<'EOT'
         ob_start();
         new PrivateBin;
@@ -558,13 +564,15 @@ EOT;
 EOT;
                 break;
         }
-        return $code . PHP_EOL . PHP_EOL . $testString . '    }' . PHP_EOL . PHP_EOL;
+
+        return $code.PHP_EOL.PHP_EOL.$testString.'    }'.PHP_EOL.PHP_EOL;
     }
 
     /**
-     * recursive function to generate configurations based on options
+     * recursive function to generate configurations based on options.
      *
      * @throws Exception
+     *
      * @return array
      */
     private function _generateConfigurations()
@@ -572,6 +580,7 @@ EOT;
         // recursive factorial function
         if (++$this->_iterationCount > self::MAX_ITERATIONS) {
             echo 'max iterations reached, stopping', PHP_EOL;
+
             return $this->_configurations;
         }
         echo "generateConfigurations: iteration $this->_iterationCount", PHP_EOL;
@@ -582,7 +591,7 @@ EOT;
         list($section, $option) = explode('/', $path);
         for ($c = 0, $max = count($this->_configurations); $c < $max; ++$c) {
             if (!array_key_exists($section, $this->_configurations[$c]['options'])) {
-                $this->_configurations[$c]['options'][$section] = array();
+                $this->_configurations[$c]['options'][$section] = [];
             }
             if (count($settings) == 0) {
                 throw new Exception("Check your \$options: option $option has no settings!");
@@ -598,23 +607,27 @@ EOT;
             }
             reset($settings);
         }
+
         return $this->_generateConfigurations();
     }
 
     /**
-     * add a setting to the given configuration
+     * add a setting to the given configuration.
      *
-     * @param array $configuration
-     * @param array $setting
+     * @param array  $configuration
+     * @param array  $setting
      * @param string $section
      * @param string $option
+     *
      * @throws Exception
+     *
      * @return array
      */
     private function _addSetting(&$configuration, &$setting, &$section, &$option)
     {
         if (++$this->_iterationCount > self::MAX_ITERATIONS) {
             echo 'max iterations reached, stopping', PHP_EOL;
+
             return $configuration;
         }
         echo "addSetting: iteration $this->_iterationCount", PHP_EOL;
@@ -626,12 +639,13 @@ EOT;
             throw new Exception("Endless loop or error in options detected: option '$option' already exists with setting '$val' in one of the configurations!");
         }
         $configuration['options'][$section][$option] = $setting['setting'];
-        $configuration['tests'][$option] = array($setting['tests'], $setting['affects']);
+        $configuration['tests'][$option] = [$setting['tests'], $setting['affects']];
         foreach ($setting['affects'] as $affects) {
             if (!in_array($affects, $configuration['affects'])) {
                 $configuration['affects'][] = $affects;
             }
         }
+
         return $configuration;
     }
 }

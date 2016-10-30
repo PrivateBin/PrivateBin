@@ -1,5 +1,6 @@
 <?php
 use PrivateBin\I18n;
+
 ?><!DOCTYPE html>
 <html lang="en">
 	<head>

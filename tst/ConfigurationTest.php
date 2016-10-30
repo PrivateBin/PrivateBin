@@ -13,10 +13,10 @@ class ConfigurationTest extends PHPUnit_Framework_TestCase
         /* Setup Routine */
         Helper::confBackup();
         $this->_options = configuration::getDefaults();
-        $this->_options['model_options']['dir'] = PATH . $this->_options['model_options']['dir'];
-        $this->_options['traffic']['dir'] = PATH . $this->_options['traffic']['dir'];
-        $this->_options['purge']['dir'] = PATH . $this->_options['purge']['dir'];
-        $this->_minimalConfig = '[main]' . PHP_EOL . '[model]' . PHP_EOL . '[model_options]';
+        $this->_options['model_options']['dir'] = PATH.$this->_options['model_options']['dir'];
+        $this->_options['traffic']['dir'] = PATH.$this->_options['traffic']['dir'];
+        $this->_options['purge']['dir'] = PATH.$this->_options['purge']['dir'];
+        $this->_minimalConfig = '[main]'.PHP_EOL.'[model]'.PHP_EOL.'[model_options]';
     }
 
     public function tearDown()
@@ -27,22 +27,22 @@ class ConfigurationTest extends PHPUnit_Framework_TestCase
 
     public function testDefaultConfigFile()
     {
-        $this->assertTrue(copy(CONF . '.bak', CONF), 'copy default configuration file');
-        $conf = new Configuration;
+        $this->assertTrue(copy(CONF.'.bak', CONF), 'copy default configuration file');
+        $conf = new Configuration();
         $this->assertEquals($this->_options, $conf->get(), 'default configuration is correct');
     }
 
     public function testHandleFreshConfigFile()
     {
         Helper::createIniFile(CONF, $this->_options);
-        $conf = new Configuration;
+        $conf = new Configuration();
         $this->assertEquals($this->_options, $conf->get(), 'newly generated configuration is correct');
     }
 
     public function testHandleMissingConfigFile()
     {
         @unlink(CONF);
-        $conf = new Configuration;
+        $conf = new Configuration();
         $this->assertEquals($this->_options, $conf->get(), 'returns correct defaults on missing file');
     }
 
@@ -53,13 +53,13 @@ class ConfigurationTest extends PHPUnit_Framework_TestCase
     public function testHandleBlankConfigFile()
     {
         file_put_contents(CONF, '');
-        new Configuration;
+        new Configuration();
     }
 
     public function testHandleMinimalConfigFile()
     {
         file_put_contents(CONF, $this->_minimalConfig);
-        $conf = new Configuration;
+        $conf = new Configuration();
         $this->assertEquals($this->_options, $conf->get(), 'returns correct defaults on empty file');
     }
 
@@ -70,7 +70,7 @@ class ConfigurationTest extends PHPUnit_Framework_TestCase
     public function testHandleInvalidSection()
     {
         file_put_contents(CONF, $this->_minimalConfig);
-        $conf = new Configuration;
+        $conf = new Configuration();
         $conf->getKey('foo', 'bar');
     }
 
@@ -81,14 +81,14 @@ class ConfigurationTest extends PHPUnit_Framework_TestCase
     public function testHandleInvalidKey()
     {
         file_put_contents(CONF, $this->_minimalConfig);
-        $conf = new Configuration;
+        $conf = new Configuration();
         $conf->getKey('foo');
     }
 
     public function testHandleGetKey()
     {
         file_put_contents(CONF, $this->_minimalConfig);
-        $conf = new Configuration;
+        $conf = new Configuration();
         $this->assertEquals($this->_options['main']['sizelimit'], $conf->getKey('sizelimit'), 'get default size');
     }
 
@@ -104,7 +104,7 @@ class ConfigurationTest extends PHPUnit_Framework_TestCase
         $options['expire_options']['foo'] = 'bar';
         $options['formatter_options'][] = 'foo';
         Helper::createIniFile(CONF, $options);
-        $conf = new Configuration;
+        $conf = new Configuration();
         $original_options['expire_options']['foo'] = intval('bar');
         $original_options['formatter_options'][0] = 'foo';
         $this->assertEquals($original_options, $conf->get(), 'incorrect types are corrected');
@@ -117,7 +117,7 @@ class ConfigurationTest extends PHPUnit_Framework_TestCase
         unset($options['expire_options']['1year']);
         unset($options['expire_options']['never']);
         Helper::createIniFile(CONF, $options);
-        $conf = new Configuration;
+        $conf = new Configuration();
         $options['expire']['default'] = '5min';
         $this->assertEquals($options, $conf->get(), 'not overriding "missing" subkeys');
     }
@@ -127,12 +127,12 @@ class ConfigurationTest extends PHPUnit_Framework_TestCase
         $options = $this->_options;
         $options['model']['class'] = 'zerobin_data';
         Helper::createIniFile(CONF, $options);
-        $conf = new Configuration;
+        $conf = new Configuration();
         $this->assertEquals('Filesystem', $conf->getKey('class', 'model'), 'old data class gets renamed');
 
         $options['model']['class'] = 'zerobin_db';
         Helper::createIniFile(CONF, $options);
-        $conf = new Configuration;
+        $conf = new Configuration();
         $this->assertEquals('Database', $conf->getKey('class', 'model'), 'old db class gets renamed');
     }
 }

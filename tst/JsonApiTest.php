@@ -1,9 +1,9 @@
 <?php
 
 use PrivateBin\Data\Filesystem;
+use PrivateBin\Persistence\ServerSalt;
 use PrivateBin\PrivateBin;
 use PrivateBin\Request;
-use PrivateBin\Persistence\ServerSalt;
 
 class JsonApiTest extends PHPUnit_Framework_TestCase
 {
@@ -15,8 +15,8 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
     {
         /* Setup Routine */
         Helper::confBackup();
-        $this->_path = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'privatebin_data';
-        $this->_model = Filesystem::getInstance(array('dir' => $this->_path));
+        $this->_path = sys_get_temp_dir().DIRECTORY_SEPARATOR.'privatebin_data';
+        $this->_model = Filesystem::getInstance(['dir' => $this->_path]);
         ServerSalt::setPath($this->_path);
         $this->reset();
     }
@@ -30,9 +30,9 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
 
     public function reset()
     {
-        $_POST = array();
-        $_GET = array();
-        $_SERVER = array();
+        $_POST = [];
+        $_GET = [];
+        $_SERVER = [];
         if ($this->_model->exists(Helper::getPasteId())) {
             $this->_model->delete(Helper::getPasteId());
         }
@@ -60,12 +60,12 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
         $_SERVER['REQUEST_METHOD'] = 'POST';
         $_SERVER['REMOTE_ADDR'] = '::1';
         ob_start();
-        new PrivateBin;
+        new PrivateBin();
         $content = ob_get_contents();
         ob_end_clean();
         $response = json_decode($content, true);
         $this->assertEquals(0, $response['status'], 'outputs status');
-        $this->assertStringEndsWith('?' . $response['id'], $response['url'], 'returned URL points to new paste');
+        $this->assertStringEndsWith('?'.$response['id'], $response['url'], 'returned URL points to new paste');
         $this->assertTrue($this->_model->exists($response['id']), 'paste exists after posting data');
         $paste = $this->_model->read($response['id']);
         $this->assertEquals(
@@ -95,13 +95,13 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
         $_SERVER['REQUEST_METHOD'] = 'PUT';
         $_SERVER['REMOTE_ADDR'] = '::1';
         ob_start();
-        new PrivateBin;
+        new PrivateBin();
         $content = ob_get_contents();
         ob_end_clean();
         $response = json_decode($content, true);
         $this->assertEquals(0, $response['status'], 'outputs status');
         $this->assertEquals(Helper::getPasteId(), $response['id'], 'outputted paste ID matches input');
-        $this->assertStringEndsWith('?' . $response['id'], $response['url'], 'returned URL points to new paste');
+        $this->assertStringEndsWith('?'.$response['id'], $response['url'], 'returned URL points to new paste');
         $this->assertTrue($this->_model->exists($response['id']), 'paste exists after posting data');
         $paste = $this->_model->read($response['id']);
         $this->assertEquals(
@@ -121,15 +121,15 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste exists before deleting data');
         $paste = $this->_model->read(Helper::getPasteId());
         $file = tempnam(sys_get_temp_dir(), 'FOO');
-        file_put_contents($file, http_build_query(array(
+        file_put_contents($file, http_build_query([
             'deletetoken' => hash_hmac('sha256', Helper::getPasteId(), $paste->meta->salt),
-        )));
+        ]));
         Request::setInputStream($file);
         $_SERVER['QUERY_STRING'] = Helper::getPasteId();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD'] = 'DELETE';
         ob_start();
-        new PrivateBin;
+        new PrivateBin();
         $content = ob_get_contents();
         ob_end_clean();
         $response = json_decode($content, true);
@@ -146,15 +146,15 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
         $this->_model->create(Helper::getPasteId(), Helper::getPaste());
         $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste exists before deleting data');
         $paste = $this->_model->read(Helper::getPasteId());
-        $_POST = array(
-            'action' => 'delete',
+        $_POST = [
+            'action'      => 'delete',
             'deletetoken' => hash_hmac('sha256', Helper::getPasteId(), $paste->meta->salt),
-        );
+        ];
         $_SERVER['QUERY_STRING'] = Helper::getPasteId();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD'] = 'POST';
         ob_start();
-        new PrivateBin;
+        new PrivateBin();
         $content = ob_get_contents();
         ob_end_clean();
         $response = json_decode($content, true);
@@ -177,13 +177,13 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
         $_SERVER['QUERY_STRING'] = Helper::getPasteId();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         ob_start();
-        new PrivateBin;
+        new PrivateBin();
         $content = ob_get_contents();
         ob_end_clean();
         $response = json_decode($content, true);
         $this->assertEquals(0, $response['status'], 'outputs success status');
         $this->assertEquals(Helper::getPasteId(), $response['id'], 'outputs data correctly');
-        $this->assertStringEndsWith('?' . $response['id'], $response['url'], 'returned URL points to new paste');
+        $this->assertStringEndsWith('?'.$response['id'], $response['url'], 'returned URL points to new paste');
         $this->assertEquals($paste['data'], $response['data'], 'outputs data correctly');
         $this->assertEquals($paste['meta']['attachment'], $response['attachment'], 'outputs attachment correctly');
         $this->assertEquals($paste['meta']['attachmentname'], $response['attachmentname'], 'outputs attachmentname correctly');
@@ -204,13 +204,13 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
         $this->_model->create(Helper::getPasteId(), $paste);
         $_GET['jsonld'] = 'paste';
         ob_start();
-        new PrivateBin;
+        new PrivateBin();
         $content = ob_get_contents();
         ob_end_clean();
         $this->assertEquals(str_replace(
                 '?jsonld=',
                 '/?jsonld=',
-                file_get_contents(PUBLIC_PATH . '/js/paste.jsonld')
+                file_get_contents(PUBLIC_PATH.'/js/paste.jsonld')
             ), $content, 'outputs data correctly');
     }
 
@@ -224,13 +224,13 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
         $this->_model->create(Helper::getPasteId(), $paste);
         $_GET['jsonld'] = 'comment';
         ob_start();
-        new PrivateBin;
+        new PrivateBin();
         $content = ob_get_contents();
         ob_end_clean();
         $this->assertEquals(str_replace(
                 '?jsonld=',
                 '/?jsonld=',
-                file_get_contents(PUBLIC_PATH . '/js/comment.jsonld')
+                file_get_contents(PUBLIC_PATH.'/js/comment.jsonld')
             ), $content, 'outputs data correctly');
     }
 
@@ -244,13 +244,13 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
         $this->_model->create(Helper::getPasteId(), $paste);
         $_GET['jsonld'] = 'pastemeta';
         ob_start();
-        new PrivateBin;
+        new PrivateBin();
         $content = ob_get_contents();
         ob_end_clean();
         $this->assertEquals(str_replace(
                 '?jsonld=',
                 '/?jsonld=',
-                file_get_contents(PUBLIC_PATH . '/js/pastemeta.jsonld')
+                file_get_contents(PUBLIC_PATH.'/js/pastemeta.jsonld')
             ), $content, 'outputs data correctly');
     }
 
@@ -264,13 +264,13 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
         $this->_model->create(Helper::getPasteId(), $paste);
         $_GET['jsonld'] = 'commentmeta';
         ob_start();
-        new PrivateBin;
+        new PrivateBin();
         $content = ob_get_contents();
         ob_end_clean();
         $this->assertEquals(str_replace(
                 '?jsonld=',
                 '/?jsonld=',
-                file_get_contents(PUBLIC_PATH . '/js/commentmeta.jsonld')
+                file_get_contents(PUBLIC_PATH.'/js/commentmeta.jsonld')
             ), $content, 'outputs data correctly');
     }
 
@@ -284,7 +284,7 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
         $this->_model->create(Helper::getPasteId(), $paste);
         $_GET['jsonld'] = '../cfg/conf.ini';
         ob_start();
-        new PrivateBin;
+        new PrivateBin();
         $content = ob_get_contents();
         ob_end_clean();
         $this->assertEquals('{}', $content, 'does not output nasty data');

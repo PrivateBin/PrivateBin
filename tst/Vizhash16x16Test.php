@@ -12,11 +12,11 @@ class Vizhash16x16Test extends PHPUnit_Framework_TestCase
     public function setUp()
     {
         /* Setup Routine */
-        $this->_path = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'privatebin_data';
+        $this->_path = sys_get_temp_dir().DIRECTORY_SEPARATOR.'privatebin_data';
         if (!is_dir($this->_path)) {
             mkdir($this->_path);
         }
-        $this->_file = $this->_path . DIRECTORY_SEPARATOR . 'vizhash.png';
+        $this->_file = $this->_path.DIRECTORY_SEPARATOR.'vizhash.png';
         ServerSalt::setPath($this->_path);
     }
 

@@ -9,19 +9,19 @@ class ViewTest extends PHPUnit_Framework_TestCase
 
     private static $status = '!*#@?$+';
 
-    private static $formatters = array(
-        'plaintext' => 'Plain Text',
+    private static $formatters = [
+        'plaintext'          => 'Plain Text',
         'syntaxhighlighting' => 'Source Code',
-        'markdown' => 'Markdown',
-    );
+        'markdown'           => 'Markdown',
+    ];
 
     private static $formatter_default = 'plaintext';
 
-    private static $expire = array(
-        '5min' => '5 minutes',
+    private static $expire = [
+        '5min'  => '5 minutes',
         '1hour' => '1 hour',
         'never' => 'Never',
-    );
+    ];
 
     private static $expire_default = '1hour';
 
@@ -32,7 +32,7 @@ class ViewTest extends PHPUnit_Framework_TestCase
     public function setUp()
     {
         /* Setup Routine */
-        $page = new View;
+        $page = new View();
         $page->assign('CIPHERDATA', Helper::getPaste()['data']);
         $page->assign('ERROR', self::$error);
         $page->assign('STATUS', self::$status);
@@ -69,14 +69,14 @@ class ViewTest extends PHPUnit_Framework_TestCase
     public function testTemplateRendersCorrectly()
     {
         $this->assertContains(
-            '<div id="cipherdata" class="hidden">' .
-            htmlspecialchars(Helper::getPaste()['data'], ENT_NOQUOTES) .
+            '<div id="cipherdata" class="hidden">'.
+            htmlspecialchars(Helper::getPaste()['data'], ENT_NOQUOTES).
             '</div>',
             $this->_content,
             'outputs data correctly'
         );
         $this->assertRegExp(
-            '#<div[^>]+id="errormessage"[^>]*>.*' . self::$error . '</div>#',
+            '#<div[^>]+id="errormessage"[^>]*>.*'.self::$error.'</div>#',
             $this->_content,
             'outputs error correctly'
         );
@@ -97,7 +97,7 @@ class ViewTest extends PHPUnit_Framework_TestCase
         );
         // testing version number in JS address, since other instances may not be present in different templates
         $this->assertRegExp(
-            '#<script[^>]+src="js/privatebin.js\\?' . rawurlencode(self::$version) . '"[^>]*>#',
+            '#<script[^>]+src="js/privatebin.js\\?'.rawurlencode(self::$version).'"[^>]*>#',
             $this->_content,
             'outputs version correctly'
         );
@@ -109,7 +109,7 @@ class ViewTest extends PHPUnit_Framework_TestCase
      */
     public function testMissingTemplate()
     {
-        $test = new View;
+        $test = new View();
         $test->draw('123456789 does not exist!');
     }
 }

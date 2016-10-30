@@ -4,13 +4,13 @@ use PrivateBin\I18n;
 
 class I18nTest extends PHPUnit_Framework_TestCase
 {
-    private $_translations = array();
+    private $_translations = [];
 
     public function setUp()
     {
         /* Setup Routine */
         $this->_translations = json_decode(
-            file_get_contents(PATH . 'i18n' . DIRECTORY_SEPARATOR . 'de.json'),
+            file_get_contents(PATH.'i18n'.DIRECTORY_SEPARATOR.'de.json'),
             true
         );
     }
@@ -34,7 +34,7 @@ class I18nTest extends PHPUnit_Framework_TestCase
         I18n::loadTranslations();
         $this->assertEquals($this->_translations['en'], I18n::_('en'), 'browser language de');
         $this->assertEquals('0 Stunden', I18n::_('%d hours', 0), '0 hours in german');
-        $this->assertEquals('1 Stunde',  I18n::_('%d hours', 1), '1 hour in german');
+        $this->assertEquals('1 Stunde', I18n::_('%d hours', 1), '1 hour in german');
         $this->assertEquals('2 Stunden', I18n::_('%d hours', 2), '2 hours in french');
     }
 
@@ -44,7 +44,7 @@ class I18nTest extends PHPUnit_Framework_TestCase
         I18n::loadTranslations();
         $this->assertEquals($this->_translations['en'], I18n::_('en'), 'browser language de');
         $this->assertEquals('0 Stunden', I18n::_('%d hours', 0), '0 hours in german');
-        $this->assertEquals('1 Stunde',  I18n::_('%d hours', 1), '1 hour in german');
+        $this->assertEquals('1 Stunde', I18n::_('%d hours', 1), '1 hour in german');
         $this->assertEquals('2 Stunden', I18n::_('%d hours', 2), '2 hours in french');
     }
 
@@ -53,8 +53,8 @@ class I18nTest extends PHPUnit_Framework_TestCase
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'fr-CH,fr;q=0.8,en-GB;q=0.6,en-US;q=0.4,en;q=0.2';
         I18n::loadTranslations();
         $this->assertEquals('fr', I18n::_('en'), 'browser language fr');
-        $this->assertEquals('0 heure',  I18n::_('%d hours', 0), '0 hours in french');
-        $this->assertEquals('1 heure',  I18n::_('%d hours', 1), '1 hour in french');
+        $this->assertEquals('0 heure', I18n::_('%d hours', 0), '0 hours in french');
+        $this->assertEquals('1 heure', I18n::_('%d hours', 1), '1 hour in french');
         $this->assertEquals('2 heures', I18n::_('%d hours', 2), '2 hours in french');
     }
 

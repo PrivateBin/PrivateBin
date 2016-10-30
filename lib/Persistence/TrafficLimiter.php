@@ -1,50 +1,52 @@
 <?php
 /**
- * PrivateBin
+ * PrivateBin.
  *
  * a zero-knowledge paste bin
  *
  * @link      https://github.com/PrivateBin/PrivateBin
+ *
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
+ *
  * @version   1.0
  */
-
 namespace PrivateBin\Persistence;
 
 use PrivateBin\Configuration;
 
 /**
- * TrafficLimiter
+ * TrafficLimiter.
  *
  * Handles traffic limiting, so no user does more than one call per 10 seconds.
  */
 class TrafficLimiter extends AbstractPersistence
 {
     /**
-     * time limit in seconds, defaults to 10s
+     * time limit in seconds, defaults to 10s.
      *
-     * @access private
      * @static
-     * @var    int
+     *
+     * @var int
      */
     private static $_limit = 10;
 
     /**
-     * key to fetch IP address
+     * key to fetch IP address.
      *
-     * @access private
      * @static
-     * @var    string
+     *
+     * @var string
      */
     private static $_ipKey = 'REMOTE_ADDR';
 
     /**
-     * set the time limit in seconds
+     * set the time limit in seconds.
      *
-     * @access public
      * @static
-     * @param  int $limit
+     *
+     * @param int $limit
+     *
      * @return void
      */
     public static function setLimit($limit)
@@ -53,11 +55,12 @@ class TrafficLimiter extends AbstractPersistence
     }
 
     /**
-     * set configuration options of the traffic limiter
+     * set configuration options of the traffic limiter.
      *
-     * @access public
      * @static
+     *
      * @param Configuration $conf
+     *
      * @return void
      */
     public static function setConfiguration(Configuration $conf)
@@ -65,7 +68,7 @@ class TrafficLimiter extends AbstractPersistence
         self::setLimit($conf->getKey('limit', 'traffic'));
         self::setPath($conf->getKey('dir', 'traffic'));
         if (($option = $conf->getKey('header', 'traffic')) !== null) {
-            $httpHeader = 'HTTP_' . $option;
+            $httpHeader = 'HTTP_'.$option;
             if (array_key_exists($httpHeader, $_SERVER) && !empty($_SERVER[$httpHeader])) {
                 self::$_ipKey = $httpHeader;
             }
@@ -73,11 +76,12 @@ class TrafficLimiter extends AbstractPersistence
     }
 
     /**
-     * get a HMAC of the current visitors IP address
+     * get a HMAC of the current visitors IP address.
      *
-     * @access public
      * @static
-     * @param  string $algo
+     *
+     * @param string $algo
+     *
      * @return string
      */
     public static function getHash($algo = 'sha512')
@@ -86,13 +90,14 @@ class TrafficLimiter extends AbstractPersistence
     }
 
     /**
-     * traffic limiter
+     * traffic limiter.
      *
      * Make sure the IP address makes at most 1 request every 10 seconds.
      *
-     * @access public
      * @static
+     *
      * @throws Exception
+     *
      * @return bool
      */
     public static function canPass()
@@ -106,15 +111,15 @@ class TrafficLimiter extends AbstractPersistence
         if (!self::_exists($file)) {
             self::_store(
                 $file,
-                '<?php' . PHP_EOL .
-                '$GLOBALS[\'traffic_limiter\'] = array();' . PHP_EOL
+                '<?php'.PHP_EOL.
+                '$GLOBALS[\'traffic_limiter\'] = array();'.PHP_EOL
             );
         }
 
         $path = self::getPath($file);
         require $path;
         $now = time();
-        $tl  = $GLOBALS['traffic_limiter'];
+        $tl = $GLOBALS['traffic_limiter'];
 
         // purge file of expired hashes to keep it small
         foreach ($tl as $key => $time) {
@@ -129,14 +134,15 @@ class TrafficLimiter extends AbstractPersistence
             $result = false;
         } else {
             $tl[$hash] = time();
-            $result    = true;
+            $result = true;
         }
         self::_store(
             $file,
-            '<?php' . PHP_EOL .
-            '$GLOBALS[\'traffic_limiter\'] = ' .
-            var_export($tl, true) . ';' . PHP_EOL
+            '<?php'.PHP_EOL.
+            '$GLOBALS[\'traffic_limiter\'] = '.
+            var_export($tl, true).';'.PHP_EOL
         );
+
         return $result;
     }
 }

@@ -1,37 +1,39 @@
 <?php
 /**
- * PrivateBin
+ * PrivateBin.
  *
  * a zero-knowledge paste bin
  *
  * @link      https://github.com/PrivateBin/PrivateBin
+ *
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
+ *
  * @version   1.0
  */
-
 namespace PrivateBin;
 
 /**
- * Sjcl
+ * Sjcl.
  *
  * Provides SJCL validation function.
  */
 class Sjcl
 {
     /**
-     * SJCL validator
+     * SJCL validator.
      *
      * Checks if a json string is a proper SJCL encrypted message.
      *
-     * @access public
      * @static
-     * @param  string $encoded JSON
+     *
+     * @param string $encoded JSON
+     *
      * @return bool
      */
     public static function isValid($encoded)
     {
-        $accepted_keys = array('iv','v','iter','ks','ts','mode','adata','cipher','salt','ct');
+        $accepted_keys = ['iv', 'v', 'iter', 'ks', 'ts', 'mode', 'adata', 'cipher', 'salt', 'ct'];
 
         // Make sure content is valid json
         $decoded = json_decode($encoded);
@@ -80,13 +82,13 @@ class Sjcl
         if (!is_int($decoded['iter']) || $decoded['iter'] <= 100) {
             return false;
         }
-        if (!in_array($decoded['ks'], array(128, 192, 256), true)) {
+        if (!in_array($decoded['ks'], [128, 192, 256], true)) {
             return false;
         }
-        if (!in_array($decoded['ts'], array(64, 96, 128), true)) {
+        if (!in_array($decoded['ts'], [64, 96, 128], true)) {
             return false;
         }
-        if (!in_array($decoded['mode'], array('ccm', 'ocb2', 'gcm'), true)) {
+        if (!in_array($decoded['mode'], ['ccm', 'ocb2', 'gcm'], true)) {
             return false;
         }
         if ($decoded['cipher'] !== 'aes') {

@@ -1,85 +1,87 @@
 <?php
 /**
- * PrivateBin
+ * PrivateBin.
  *
  * a zero-knowledge paste bin
  *
  * @link      https://github.com/PrivateBin/PrivateBin
+ *
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
+ *
  * @version   1.0
  */
-
 namespace PrivateBin;
 
 /**
- * I18n
+ * I18n.
  *
  * provides internationalization tools like translation, browser language detection, etc.
  */
 class I18n
 {
     /**
-     * language
+     * language.
      *
-     * @access protected
      * @static
-     * @var    string
+     *
+     * @var string
      */
     protected static $_language = 'en';
 
     /**
-     * language fallback
+     * language fallback.
      *
-     * @access protected
      * @static
-     * @var    string
+     *
+     * @var string
      */
     protected static $_languageFallback = 'en';
 
     /**
-     * language labels
+     * language labels.
      *
-     * @access protected
      * @static
-     * @var    array
+     *
+     * @var array
      */
-    protected static $_languageLabels = array();
+    protected static $_languageLabels = [];
 
     /**
-     * available languages
+     * available languages.
      *
-     * @access protected
      * @static
-     * @var    array
+     *
+     * @var array
      */
-    protected static $_availableLanguages = array();
+    protected static $_availableLanguages = [];
 
     /**
-     * path to language files
+     * path to language files.
      *
-     * @access protected
      * @static
-     * @var    string
+     *
+     * @var string
      */
     protected static $_path = '';
 
     /**
-     * translation cache
+     * translation cache.
      *
-     * @access protected
      * @static
-     * @var    array
+     *
+     * @var array
      */
-    protected static $_translations = array();
+    protected static $_translations = [];
 
     /**
-     * translate a string, alias for translate()
+     * translate a string, alias for translate().
      *
-     * @access public
      * @static
-     * @param  string $messageId
-     * @param  mixed $args one or multiple parameters injected into placeholders
+     *
+     * @param string $messageId
+     * @param mixed  $args      one or multiple parameters injected into placeholders
+     *
      * @return string
      */
     public static function _($messageId)
@@ -88,12 +90,13 @@ class I18n
     }
 
     /**
-     * translate a string
+     * translate a string.
      *
-     * @access public
      * @static
-     * @param  string $messageId
-     * @param  mixed $args one or multiple parameters injected into placeholders
+     *
+     * @param string $messageId
+     * @param mixed  $args      one or multiple parameters injected into placeholders
+     *
      * @return string
      */
     public static function translate($messageId)
@@ -114,8 +117,8 @@ class I18n
         $args = func_get_args();
         if (is_array(self::$_translations[$messageId])) {
             $number = (int) $args[1];
-            $key    = self::_getPluralForm($number);
-            $max    = count(self::$_translations[$messageId]) - 1;
+            $key = self::_getPluralForm($number);
+            $max = count(self::$_translations[$messageId]) - 1;
             if ($key > $max) {
                 $key = $max;
             }
@@ -125,16 +128,17 @@ class I18n
         } else {
             $args[0] = self::$_translations[$messageId];
         }
+
         return call_user_func_array('sprintf', $args);
     }
 
     /**
-     * loads translations
+     * loads translations.
      *
      * From: https://stackoverflow.com/questions/3770513/detect-browser-language-in-php#3771447
      *
-     * @access public
      * @static
+     *
      * @return void
      */
     public static function loadTranslations()
@@ -153,18 +157,18 @@ class I18n
         }
 
         // load translations
-        self::$_language     = $match;
-        self::$_translations = ($match == 'en') ? array() : json_decode(
-            file_get_contents(self::_getPath($match . '.json')),
+        self::$_language = $match;
+        self::$_translations = ($match == 'en') ? [] : json_decode(
+            file_get_contents(self::_getPath($match.'.json')),
             true
         );
     }
 
     /**
-     * get list of available translations based on files found
+     * get list of available translations based on files found.
      *
-     * @access public
      * @static
+     *
      * @return array
      */
     public static function getAvailableLanguages()
@@ -178,21 +182,22 @@ class I18n
             }
             self::$_availableLanguages[] = 'en';
         }
+
         return self::$_availableLanguages;
     }
 
     /**
-     * detect the clients supported languages and return them ordered by preference
+     * detect the clients supported languages and return them ordered by preference.
      *
      * From: https://stackoverflow.com/questions/3770513/detect-browser-language-in-php#3771447
      *
-     * @access public
      * @static
+     *
      * @return array
      */
     public static function getBrowserLanguages()
     {
-        $languages = array();
+        $languages = [];
         if (array_key_exists('HTTP_ACCEPT_LANGUAGE', $_SERVER)) {
             $languageRanges = explode(',', trim($_SERVER['HTTP_ACCEPT_LANGUAGE']));
             foreach ($languageRanges as $languageRange) {
@@ -206,21 +211,22 @@ class I18n
                         $match[2] = (string) floatval($match[2]);
                     }
                     if (!isset($languages[$match[2]])) {
-                        $languages[$match[2]] = array();
+                        $languages[$match[2]] = [];
                     }
                     $languages[$match[2]][] = strtolower($match[1]);
                 }
             }
             krsort($languages);
         }
+
         return $languages;
     }
 
     /**
-     * get currently loaded language
+     * get currently loaded language.
      *
-     * @access public
      * @static
+     *
      * @return string
      */
     public static function getLanguage()
@@ -229,16 +235,17 @@ class I18n
     }
 
     /**
-     * get list of language labels
+     * get list of language labels.
      *
      * Only for given language codes, otherwise all labels.
      *
-     * @access public
      * @static
-     * @param  array $languages
+     *
+     * @param array $languages
+     *
      * @return array
      */
-    public static function getLanguageLabels($languages = array())
+    public static function getLanguageLabels($languages = [])
     {
         $file = self::_getPath('languages.json');
         if (count(self::$_languageLabels) == 0 && is_readable($file)) {
@@ -247,15 +254,17 @@ class I18n
         if (count($languages) == 0) {
             return self::$_languageLabels;
         }
+
         return array_intersect_key(self::$_languageLabels, array_flip($languages));
     }
 
     /**
-     * set the default language
+     * set the default language.
      *
-     * @access public
      * @static
-     * @param  string $lang
+     *
+     * @param string $lang
+     *
      * @return void
      */
     public static function setLanguageFallback($lang)
@@ -266,29 +275,32 @@ class I18n
     }
 
     /**
-     * get language file path
+     * get language file path.
      *
-     * @access protected
      * @static
-     * @param  string $file
+     *
+     * @param string $file
+     *
      * @return string
      */
     protected static function _getPath($file = '')
     {
         if (strlen(self::$_path) == 0) {
-            self::$_path = PUBLIC_PATH . DIRECTORY_SEPARATOR . 'i18n';
+            self::$_path = PUBLIC_PATH.DIRECTORY_SEPARATOR.'i18n';
         }
-        return self::$_path . (strlen($file) ? DIRECTORY_SEPARATOR . $file : '');
+
+        return self::$_path.(strlen($file) ? DIRECTORY_SEPARATOR.$file : '');
     }
 
     /**
-     * determines the plural form to use based on current language and given number
+     * determines the plural form to use based on current language and given number.
      *
      * From: http://localization-guide.readthedocs.org/en/latest/l10n/pluralforms.html
      *
-     * @access protected
      * @static
-     * @param  int $n
+     *
+     * @param int $n
+     *
      * @return int
      */
     protected static function _getPluralForm($n)
@@ -296,30 +308,31 @@ class I18n
         switch (self::$_language) {
             case 'fr':
             case 'zh':
-                return ($n > 1 ? 1 : 0);
+                return $n > 1 ? 1 : 0;
             case 'pl':
-                return ($n == 1 ? 0 : $n % 10 >= 2 && $n % 10 <= 4 && ($n % 100 < 10 || $n % 100 >= 20) ? 1 : 2);
+                return $n == 1 ? 0 : $n % 10 >= 2 && $n % 10 <= 4 && ($n % 100 < 10 || $n % 100 >= 20) ? 1 : 2;
             // en, de
             default:
-                return ($n != 1 ? 1 : 0);
+                return $n != 1 ? 1 : 0;
         }
     }
 
     /**
-     * compares two language preference arrays and returns the preferred match
+     * compares two language preference arrays and returns the preferred match.
      *
      * From: https://stackoverflow.com/questions/3770513/detect-browser-language-in-php#3771447
      *
-     * @access protected
      * @static
-     * @param  array $acceptedLanguages
-     * @param  array $availableLanguages
+     *
+     * @param array $acceptedLanguages
+     * @param array $availableLanguages
+     *
      * @return string
      */
     protected static function _getMatchingLanguage($acceptedLanguages, $availableLanguages)
     {
-        $matches = array();
-        $any     = false;
+        $matches = [];
+        $any = false;
         foreach ($acceptedLanguages as $acceptedQuality => $acceptedValues) {
             $acceptedQuality = floatval($acceptedQuality);
             if ($acceptedQuality === 0.0) {
@@ -335,7 +348,7 @@ class I18n
                     if ($matchingGrade > 0) {
                         $q = (string) ($acceptedQuality * $availableQuality * $matchingGrade);
                         if (!isset($matches[$q])) {
-                            $matches[$q] = array();
+                            $matches[$q] = [];
                         }
                         if (!in_array($availableValue, $matches[$q])) {
                             $matches[$q][] = $availableValue;
@@ -354,18 +367,20 @@ class I18n
         }
         krsort($matches);
         $topmatches = current($matches);
+
         return current($topmatches);
     }
 
     /**
-     * compare two language IDs and return the degree they match
+     * compare two language IDs and return the degree they match.
      *
      * From: https://stackoverflow.com/questions/3770513/detect-browser-language-in-php#3771447
      *
-     * @access protected
      * @static
-     * @param  string $a
-     * @param  string $b
+     *
+     * @param string $a
+     * @param string $b
+     *
      * @return float
      */
     protected static function _matchLanguage($a, $b)
@@ -377,6 +392,7 @@ class I18n
                 break;
             }
         }
+
         return $i === 0 ? 0 : (float) $i / count($a);
     }
 }

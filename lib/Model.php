@@ -1,23 +1,23 @@
 <?php
 /**
- * PrivateBin
+ * PrivateBin.
  *
  * a zero-knowledge paste bin
  *
  * @link      https://github.com/PrivateBin/PrivateBin
+ *
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
+ *
  * @version   1.0
  */
-
 namespace PrivateBin;
 
-use PrivateBin\Data;
 use PrivateBin\Model\Paste;
 use PrivateBin\Persistence\PurgeLimiter;
 
 /**
- * Model
+ * Model.
  *
  * Factory of PrivateBin instance models.
  */
@@ -41,6 +41,7 @@ class Model
      * Factory constructor.
      *
      * @param configuration $conf
+     *
      * @return void
      */
     public function __construct(Configuration $conf)
@@ -52,6 +53,7 @@ class Model
      * Get a paste, optionally a specific instance.
      *
      * @param string $pasteId
+     *
      * @return Paste
      */
     public function getPaste($pasteId = null)
@@ -60,6 +62,7 @@ class Model
         if ($pasteId !== null) {
             $paste->setId($pasteId);
         }
+
         return $paste;
     }
 
@@ -77,7 +80,7 @@ class Model
     }
 
     /**
-     * Gets, and creates if neccessary, a store object
+     * Gets, and creates if neccessary, a store object.
      *
      * @return AbstractData
      */
@@ -85,10 +88,11 @@ class Model
     {
         if ($this->_store === null) {
             $this->_store = forward_static_call(
-                'PrivateBin\\Data\\' . $this->_conf->getKey('class', 'model') . '::getInstance',
+                'PrivateBin\\Data\\'.$this->_conf->getKey('class', 'model').'::getInstance',
                 $this->_conf->getSection('model_options')
             );
         }
+
         return $this->_store;
     }
 }
