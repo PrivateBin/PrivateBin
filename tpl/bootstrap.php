@@ -52,7 +52,7 @@ if ($MARKDOWN):
 <?php
 endif;
 ?>
-		<script type="text/javascript" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-tnG2Ai1USFqZM26ChISDXXq5YCpc4ae760JPSoN1wFLcu8wgu1VuOeZztWme9naCTgWRpOHSlg2PnvQbgoCjIg==" crossorigin="anonymous"></script>
+		<script type="text/javascript" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-h/cw2lgocVvgjmYWShhbnz5nSzyUv4rVY1JgN7vmkZq8VJX9KVXPoC7oYX+YGFk+0FYw+c/uofVW9yyU5TJv+w==" crossorigin="anonymous"></script>
 		<!--[if lt IE 10]>
 		<style type="text/css">body {padding-left:60px;padding-right:60px;} #ienotice {display:block;} #oldienotice {display:block;}</style>
 		<![endif]-->
@@ -280,7 +280,6 @@ if (!strlen($ERROR)):
 endif;
 ?>alert alert-danger"><span class="glyphicon glyphicon-alert" aria-hidden="true"></span> <?php echo htmlspecialchars($ERROR); ?></div>
 			<noscript><div id="noscript" role="alert" class="nonworking alert alert-warning"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> <?php echo I18n::_('JavaScript is required for PrivateBin to work.<br />Sorry for the inconvenience.'); ?></div></noscript>
-			<div id="noscript" role="alert" class="nonworking alert alert-warning noscript-hide"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> <?php echo I18n::_('The required JavaScripts for PrivateBin could not be loaded. This might <br />Please see <a href="">this FAQ for more information</a>.'); ?></div>
 			<noscript><link type="text/css" rel="stylesheet" href="css/noscript.css" /></noscript>
 			<div id="oldienotice" role="alert" class="hidden nonworking alert alert-danger"><span class="glyphicon glyphicon-alert" aria-hidden="true"></span> <?php echo I18n::_('PrivateBin requires a modern browser to work.'); ?></div>
 			<div id="ienotice" role="alert" class="hidden alert alert-warning"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span> <?php echo I18n::_('Still using Internet Explorer? Do yourself a favor, switch to a modern browser:'), PHP_EOL; ?>
@@ -325,6 +324,12 @@ endif;
 				<div id="comments"></div>
 			</div>
 		</section>
+        <section class="container">
+            <div id="noscript" role="alert" class="nonworking alert alert-info noscript-hide"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true">
+                <span> <?php echo I18n::_('Loading...'); ?></span><br>
+                <span class="smallErrorText"><?php echo I18n::_('In case this message never disappears please have a look at <a href="">this FAQ for information to troubleshoot</a>.'); ?></span>
+            </div>
+        </section>
 		<footer class="container">
 			<div class="row">
 				<h4 class="col-md-5 col-xs-8"><?php echo I18n::_('PrivateBin'); ?> <small>- <?php echo I18n::_('Because ignorance is bliss'); ?></small></h4>
