@@ -469,7 +469,7 @@ EOT;
     private function _getFunction($step, $key, &$options, $preCode, $testCode)
     {
         if (count($testCode) == 0) {
-            echo "skipping creation of test$step$key, no valid tests found for configuration: $options". PHP_EOL;
+            echo "skipping creation of test$step$key, no valid tests found for configuration: $options" . PHP_EOL;
             return '';
         }
 
