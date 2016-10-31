@@ -5,6 +5,8 @@ risky: false
 enabled:
   - no_empty_comment
   - align_equals
+  - long_array_syntax
+  - concat_with_spaces
 
 disabled:
   - blank_line_after_opening_tag
