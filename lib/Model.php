@@ -9,10 +9,8 @@
  * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
  * @version   1.0
  */
-
 namespace PrivateBin;
 
-use PrivateBin\Data;
 use PrivateBin\Model\Paste;
 use PrivateBin\Persistence\PurgeLimiter;
 

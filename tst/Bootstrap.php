@@ -36,12 +36,12 @@ class Helper
      * @var array
      */
     private static $paste = array(
-        'data' => '{"iv":"EN39/wd5Nk8HAiSG2K5AsQ","v":1,"iter":1000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"QKN1DBXe5PI","ct":"8hA83xDdXjD7K2qfmw5NdA"}',
-        'attachment' => '{"iv":"Pd4pOKWkmDTT9uPwVwd5Ag","v":1,"iter":1000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"ZIUhFTliVz4","ct":"6nOCU3peNDclDDpFtJEBKA"}',
+        'data'           => '{"iv":"EN39/wd5Nk8HAiSG2K5AsQ","v":1,"iter":1000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"QKN1DBXe5PI","ct":"8hA83xDdXjD7K2qfmw5NdA"}',
+        'attachment'     => '{"iv":"Pd4pOKWkmDTT9uPwVwd5Ag","v":1,"iter":1000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"ZIUhFTliVz4","ct":"6nOCU3peNDclDDpFtJEBKA"}',
         'attachmentname' => '{"iv":"76MkAtOGC4oFogX/aSMxRA","v":1,"iter":1000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"ZIUhFTliVz4","ct":"b6Ae/U1xJdsX/+lATud4sQ"}',
-        'meta' => array(
-            'formatter' => 'plaintext',
-            'postdate' => 1344803344,
+        'meta'           => array(
+            'formatter'      => 'plaintext',
+            'postdate'       => 1344803344,
             'opendiscussion' => true,
         ),
     );
@@ -62,7 +62,7 @@ class Helper
         'data' => '{"iv":"Pd4pOKWkmDTT9uPwVwd5Ag","v":1,"iter":1000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"ZIUhFTliVz4","ct":"6nOCU3peNDclDDpFtJEBKA"}',
         'meta' => array(
             'nickname' => '{"iv":"76MkAtOGC4oFogX/aSMxRA","v":1,"iter":1000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"ZIUhFTliVz4","ct":"b6Ae/U1xJdsX/+lATud4sQ"}',
-            'vizhash' => 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAABGUlEQVQokWOsl5/94983CNKQMjnxaOePf98MeKwPfNjkLZ3AgARab6b9+PeNEVnDj3/ff/z7ZiHnzsDA8Pv7H2TVPJw8EAYLAwb48OaVgIgYKycLsrYv378wMDB8//qdCVMDRA9EKSsnCwRBxNsepaLboMFlyMDAICAi9uHNK24GITQ/MDAwoNhgIGMLtwGrzegaLjw5jMz9+vUdnN17uwDCQDhJgk0O07yvX9+teDX1x79v6DYIsIjgcgMaYGFgYOBg4kJx2JejkAiBxAw+PzAwMNz4dp6wDXDw4MdNNOl0rWYsNkD89OLXI/xmo9sgzatJjAYmBgYGDiauD3/ePP18nVgb4MF89+M5ZX6js293wUMpnr8KTQMAxsCJnJ30apMAAAAASUVORK5CYII=',
+            'vizhash'  => 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAABGUlEQVQokWOsl5/94983CNKQMjnxaOePf98MeKwPfNjkLZ3AgARab6b9+PeNEVnDj3/ff/z7ZiHnzsDA8Pv7H2TVPJw8EAYLAwb48OaVgIgYKycLsrYv378wMDB8//qdCVMDRA9EKSsnCwRBxNsepaLboMFlyMDAICAi9uHNK24GITQ/MDAwoNhgIGMLtwGrzegaLjw5jMz9+vUdnN17uwDCQDhJgk0O07yvX9+teDX1x79v6DYIsIjgcgMaYGFgYOBg4kJx2JejkAiBxAw+PzAwMNz4dp6wDXDw4MdNNOl0rWYsNkD89OLXI/xmo9sgzatJjAYmBgYGDiauD3/ePP18nVgb4MF89+M5ZX6js293wUMpnr8KTQMAxsCJnJ30apMAAAAASUVORK5CYII=',
             'postdate' => 1344803528,
         ),
     );
@@ -103,9 +103,9 @@ class Helper
      */
     public static function getPasteWithAttachment($meta = array())
     {
-        $example = self::$paste;
+        $example                 = self::$paste;
         $example['meta']['salt'] = ServerSalt::generate();
-        $example['meta'] = array_merge($example['meta'], $meta);
+        $example['meta']         = array_merge($example['meta'], $meta);
         return $example;
     }
 
@@ -122,10 +122,10 @@ class Helper
         if (count($meta)) {
             $example['meta'] = $meta;
         }
-        $example['comments'] = array();
-        $example['comment_count'] = 0;
+        $example['comments']       = array();
+        $example['comment_count']  = 0;
         $example['comment_offset'] = 0;
-        $example['@context'] = 'js/paste.jsonld';
+        $example['@context']       = 'js/paste.jsonld';
         return json_encode($example);
     }
 
@@ -146,7 +146,7 @@ class Helper
      */
     public static function getComment($meta = array())
     {
-        $example = self::$comment;
+        $example         = self::$comment;
         $example['meta'] = array_merge($example['meta'], $meta);
         return $example;
     }
@@ -158,7 +158,7 @@ class Helper
      */
     public static function getCommentPost($meta = array())
     {
-        $example = self::getComment($meta);
+        $example             = self::getComment($meta);
         $example['nickname'] = $example['meta']['nickname'];
         unset($example['meta']['nickname']);
         return $example;

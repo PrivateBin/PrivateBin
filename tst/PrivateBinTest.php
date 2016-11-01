@@ -1,9 +1,9 @@
 <?php
 
 use PrivateBin\Data\Filesystem;
-use PrivateBin\PrivateBin;
 use PrivateBin\Persistence\ServerSalt;
 use PrivateBin\Persistence\TrafficLimiter;
+use PrivateBin\PrivateBin;
 
 class PrivateBinTest extends PHPUnit_Framework_TestCase
 {
@@ -14,7 +14,7 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
     public function setUp()
     {
         /* Setup Routine */
-        $this->_path = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'privatebin_data';
+        $this->_path  = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'privatebin_data';
         $this->_model = Filesystem::getInstance(array('dir' => $this->_path));
         ServerSalt::setPath($this->_path);
         $this->reset();
@@ -29,16 +29,16 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
 
     public function reset()
     {
-        $_POST = array();
-        $_GET = array();
+        $_POST   = array();
+        $_GET    = array();
         $_SERVER = array();
         if ($this->_model->exists(Helper::getPasteId())) {
             $this->_model->delete(Helper::getPasteId());
         }
         Helper::confRestore();
-        $options = parse_ini_file(CONF, true);
-        $options['purge']['dir'] = $this->_path;
-        $options['traffic']['dir'] = $this->_path;
+        $options                         = parse_ini_file(CONF, true);
+        $options['purge']['dir']         = $this->_path;
+        $options['traffic']['dir']       = $this->_path;
         $options['model_options']['dir'] = $this->_path;
         Helper::confBackup();
         Helper::createIniFile(CONF, $options);
@@ -72,7 +72,7 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
     public function testViewLanguageSelection()
     {
         $this->reset();
-        $options = parse_ini_file(CONF, true);
+        $options                              = parse_ini_file(CONF, true);
         $options['main']['languageselection'] = true;
         Helper::confBackup();
         Helper::createIniFile(CONF, $options);
@@ -94,9 +94,9 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
     public function testViewForceLanguageDefault()
     {
         $this->reset();
-        $options = parse_ini_file(CONF, true);
+        $options                              = parse_ini_file(CONF, true);
         $options['main']['languageselection'] = false;
-        $options['main']['languagedefault'] = 'fr';
+        $options['main']['languagedefault']   = 'fr';
         Helper::confBackup();
         Helper::createIniFile(CONF, $options);
         $_COOKIE['lang'] = 'de';
@@ -118,7 +118,7 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
     {
         $shortener = 'https://shortener.example.com/api?link=';
         $this->reset();
-        $options = parse_ini_file(CONF, true);
+        $options                         = parse_ini_file(CONF, true);
         $options['main']['urlshortener'] = $shortener;
         Helper::confBackup();
         Helper::createIniFile(CONF, $options);
@@ -175,14 +175,14 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
     public function testCreate()
     {
         $this->reset();
-        $options = parse_ini_file(CONF, true);
+        $options                     = parse_ini_file(CONF, true);
         $options['traffic']['limit'] = 0;
         Helper::confBackup();
         Helper::createIniFile(CONF, $options);
-        $_POST = Helper::getPaste();
+        $_POST                            = Helper::getPaste();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
-        $_SERVER['REQUEST_METHOD'] = 'POST';
-        $_SERVER['REMOTE_ADDR'] = '::1';
+        $_SERVER['REQUEST_METHOD']        = 'POST';
+        $_SERVER['REMOTE_ADDR']           = '::1';
         ob_start();
         new PrivateBin;
         $content = ob_get_contents();
@@ -204,14 +204,14 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
     public function testCreateInvalidTimelimit()
     {
         $this->reset();
-        $options = parse_ini_file(CONF, true);
+        $options                     = parse_ini_file(CONF, true);
         $options['traffic']['limit'] = 0;
         Helper::confBackup();
         Helper::createIniFile(CONF, $options);
-        $_POST = Helper::getPaste(array('expire' => 25));
+        $_POST                            = Helper::getPaste(array('expire' => 25));
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
-        $_SERVER['REQUEST_METHOD'] = 'POST';
-        $_SERVER['REMOTE_ADDR'] = '::1';
+        $_SERVER['REQUEST_METHOD']        = 'POST';
+        $_SERVER['REMOTE_ADDR']           = '::1';
         TrafficLimiter::canPass();
         ob_start();
         new PrivateBin;
@@ -234,15 +234,15 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
     public function testCreateInvalidSize()
     {
         $this->reset();
-        $options = parse_ini_file(CONF, true);
+        $options                      = parse_ini_file(CONF, true);
         $options['main']['sizelimit'] = 10;
-        $options['traffic']['limit'] = 0;
+        $options['traffic']['limit']  = 0;
         Helper::confBackup();
         Helper::createIniFile(CONF, $options);
-        $_POST = Helper::getPaste();
+        $_POST                            = Helper::getPaste();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
-        $_SERVER['REQUEST_METHOD'] = 'POST';
-        $_SERVER['REMOTE_ADDR'] = '::1';
+        $_SERVER['REQUEST_METHOD']        = 'POST';
+        $_SERVER['REMOTE_ADDR']           = '::1';
         ob_start();
         new PrivateBin;
         $content = ob_get_contents();
@@ -258,15 +258,15 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
     public function testCreateProxyHeader()
     {
         $this->reset();
-        $options = parse_ini_file(CONF, true);
+        $options                      = parse_ini_file(CONF, true);
         $options['traffic']['header'] = 'X_FORWARDED_FOR';
         Helper::confBackup();
         Helper::createIniFile(CONF, $options);
-        $_POST = Helper::getPaste();
-        $_SERVER['HTTP_X_FORWARDED_FOR'] = '::2';
+        $_POST                            = Helper::getPaste();
+        $_SERVER['HTTP_X_FORWARDED_FOR']  = '::2';
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
-        $_SERVER['REQUEST_METHOD'] = 'POST';
-        $_SERVER['REMOTE_ADDR'] = '::1';
+        $_SERVER['REQUEST_METHOD']        = 'POST';
+        $_SERVER['REMOTE_ADDR']           = '::1';
         ob_start();
         new PrivateBin;
         $content = ob_get_contents();
@@ -288,15 +288,15 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
     public function testCreateDuplicateId()
     {
         $this->reset();
-        $options = parse_ini_file(CONF, true);
+        $options                     = parse_ini_file(CONF, true);
         $options['traffic']['limit'] = 0;
         Helper::confBackup();
         Helper::createIniFile(CONF, $options);
         $this->_model->create(Helper::getPasteId(), Helper::getPaste());
-        $_POST = Helper::getPaste();
+        $_POST                            = Helper::getPaste();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
-        $_SERVER['REQUEST_METHOD'] = 'POST';
-        $_SERVER['REMOTE_ADDR'] = '::1';
+        $_SERVER['REQUEST_METHOD']        = 'POST';
+        $_SERVER['REMOTE_ADDR']           = '::1';
         ob_start();
         new PrivateBin;
         $content = ob_get_contents();
@@ -312,17 +312,17 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
     public function testCreateValidExpire()
     {
         $this->reset();
-        $options = parse_ini_file(CONF, true);
+        $options                     = parse_ini_file(CONF, true);
         $options['traffic']['limit'] = 0;
         Helper::confBackup();
         Helper::createIniFile(CONF, $options);
-        $_POST = Helper::getPaste();
-        $_POST['expire'] = '5min';
-        $_POST['formatter'] = 'foo';
+        $_POST                            = Helper::getPaste();
+        $_POST['expire']                  = '5min';
+        $_POST['formatter']               = 'foo';
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
-        $_SERVER['REQUEST_METHOD'] = 'POST';
-        $_SERVER['REMOTE_ADDR'] = '::1';
-        $time = time();
+        $_SERVER['REQUEST_METHOD']        = 'POST';
+        $_SERVER['REMOTE_ADDR']           = '::1';
+        $time                             = time();
         ob_start();
         new PrivateBin;
         $content = ob_get_contents();
@@ -345,17 +345,17 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
     public function testCreateValidExpireWithDiscussion()
     {
         $this->reset();
-        $options = parse_ini_file(CONF, true);
+        $options                     = parse_ini_file(CONF, true);
         $options['traffic']['limit'] = 0;
         Helper::confBackup();
         Helper::createIniFile(CONF, $options);
-        $_POST = Helper::getPaste();
-        $_POST['expire'] = '5min';
-        $_POST['opendiscussion'] = '1';
+        $_POST                            = Helper::getPaste();
+        $_POST['expire']                  = '5min';
+        $_POST['opendiscussion']          = '1';
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
-        $_SERVER['REQUEST_METHOD'] = 'POST';
-        $_SERVER['REMOTE_ADDR'] = '::1';
-        $time = time();
+        $_SERVER['REQUEST_METHOD']        = 'POST';
+        $_SERVER['REMOTE_ADDR']           = '::1';
+        $time                             = time();
         ob_start();
         new PrivateBin;
         $content = ob_get_contents();
@@ -379,15 +379,15 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
     public function testCreateInvalidExpire()
     {
         $this->reset();
-        $options = parse_ini_file(CONF, true);
+        $options                     = parse_ini_file(CONF, true);
         $options['traffic']['limit'] = 0;
         Helper::confBackup();
         Helper::createIniFile(CONF, $options);
-        $_POST = Helper::getPaste();
-        $_POST['expire'] = 'foo';
+        $_POST                            = Helper::getPaste();
+        $_POST['expire']                  = 'foo';
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
-        $_SERVER['REQUEST_METHOD'] = 'POST';
-        $_SERVER['REMOTE_ADDR'] = '::1';
+        $_SERVER['REQUEST_METHOD']        = 'POST';
+        $_SERVER['REMOTE_ADDR']           = '::1';
         ob_start();
         new PrivateBin;
         $content = ob_get_contents();
@@ -409,15 +409,15 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
     public function testCreateInvalidBurn()
     {
         $this->reset();
-        $options = parse_ini_file(CONF, true);
+        $options                     = parse_ini_file(CONF, true);
         $options['traffic']['limit'] = 0;
         Helper::confBackup();
         Helper::createIniFile(CONF, $options);
-        $_POST = Helper::getPaste();
-        $_POST['burnafterreading'] = 'neither 1 nor 0';
+        $_POST                            = Helper::getPaste();
+        $_POST['burnafterreading']        = 'neither 1 nor 0';
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
-        $_SERVER['REQUEST_METHOD'] = 'POST';
-        $_SERVER['REMOTE_ADDR'] = '::1';
+        $_SERVER['REQUEST_METHOD']        = 'POST';
+        $_SERVER['REMOTE_ADDR']           = '::1';
         ob_start();
         new PrivateBin;
         $content = ob_get_contents();
@@ -433,15 +433,15 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
     public function testCreateInvalidOpenDiscussion()
     {
         $this->reset();
-        $options = parse_ini_file(CONF, true);
+        $options                     = parse_ini_file(CONF, true);
         $options['traffic']['limit'] = 0;
         Helper::confBackup();
         Helper::createIniFile(CONF, $options);
-        $_POST = Helper::getPaste();
-        $_POST['opendiscussion'] = 'neither 1 nor 0';
+        $_POST                            = Helper::getPaste();
+        $_POST['opendiscussion']          = 'neither 1 nor 0';
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
-        $_SERVER['REQUEST_METHOD'] = 'POST';
-        $_SERVER['REMOTE_ADDR'] = '::1';
+        $_SERVER['REQUEST_METHOD']        = 'POST';
+        $_SERVER['REMOTE_ADDR']           = '::1';
         ob_start();
         new PrivateBin;
         $content = ob_get_contents();
@@ -457,15 +457,15 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
     public function testCreateAttachment()
     {
         $this->reset();
-        $options = parse_ini_file(CONF, true);
-        $options['traffic']['limit'] = 0;
+        $options                       = parse_ini_file(CONF, true);
+        $options['traffic']['limit']   = 0;
         $options['main']['fileupload'] = true;
         Helper::confBackup();
         Helper::createIniFile(CONF, $options);
-        $_POST = Helper::getPasteWithAttachment();
+        $_POST                            = Helper::getPasteWithAttachment();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
-        $_SERVER['REQUEST_METHOD'] = 'POST';
-        $_SERVER['REMOTE_ADDR'] = '::1';
+        $_SERVER['REQUEST_METHOD']        = 'POST';
+        $_SERVER['REMOTE_ADDR']           = '::1';
         $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste does not exists before posting data');
         ob_start();
         new PrivateBin;
@@ -475,7 +475,7 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(0, $response['status'], 'outputs status');
         $this->assertTrue($this->_model->exists($response['id']), 'paste exists after posting data');
         $original = json_decode(json_encode($_POST));
-        $stored = $this->_model->read($response['id']);
+        $stored   = $this->_model->read($response['id']);
         foreach (array('data', 'attachment', 'attachmentname') as $key) {
             $this->assertEquals($original->$key, $stored->$key);
         }
@@ -495,16 +495,16 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
     public function testCreateBrokenAttachmentUpload()
     {
         $this->reset();
-        $options = parse_ini_file(CONF, true);
-        $options['traffic']['limit'] = 0;
+        $options                       = parse_ini_file(CONF, true);
+        $options['traffic']['limit']   = 0;
         $options['main']['fileupload'] = true;
         Helper::confBackup();
         Helper::createIniFile(CONF, $options);
         $_POST = Helper::getPasteWithAttachment();
         unset($_POST['attachment']);
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
-        $_SERVER['REQUEST_METHOD'] = 'POST';
-        $_SERVER['REMOTE_ADDR'] = '::1';
+        $_SERVER['REQUEST_METHOD']        = 'POST';
+        $_SERVER['REMOTE_ADDR']           = '::1';
         $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste does not exists before posting data');
         ob_start();
         new PrivateBin;
@@ -521,10 +521,10 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
     public function testCreateTooSoon()
     {
         $this->reset();
-        $_POST = Helper::getPaste();
+        $_POST                            = Helper::getPaste();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
-        $_SERVER['REQUEST_METHOD'] = 'POST';
-        $_SERVER['REMOTE_ADDR'] = '::1';
+        $_SERVER['REQUEST_METHOD']        = 'POST';
+        $_SERVER['REMOTE_ADDR']           = '::1';
         ob_start();
         new PrivateBin;
         ob_end_clean();
@@ -544,15 +544,15 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
     public function testCreateValidNick()
     {
         $this->reset();
-        $options = parse_ini_file(CONF, true);
+        $options                     = parse_ini_file(CONF, true);
         $options['traffic']['limit'] = 0;
         Helper::confBackup();
         Helper::createIniFile(CONF, $options);
-        $_POST = Helper::getPaste();
-        $_POST['nickname'] = Helper::getComment()['meta']['nickname'];
+        $_POST                            = Helper::getPaste();
+        $_POST['nickname']                = Helper::getComment()['meta']['nickname'];
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
-        $_SERVER['REQUEST_METHOD'] = 'POST';
-        $_SERVER['REMOTE_ADDR'] = '::1';
+        $_SERVER['REQUEST_METHOD']        = 'POST';
+        $_SERVER['REMOTE_ADDR']           = '::1';
         ob_start();
         new PrivateBin;
         $content = ob_get_contents();
@@ -574,17 +574,17 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
     public function testCreateInvalidNick()
     {
         $this->reset();
-        $options = parse_ini_file(CONF, true);
+        $options                     = parse_ini_file(CONF, true);
         $options['traffic']['limit'] = 0;
         Helper::confBackup();
         Helper::createIniFile(CONF, $options);
-        $_POST = Helper::getCommentPost();
-        $_POST['pasteid'] = Helper::getPasteId();
-        $_POST['parentid'] = Helper::getPasteId();
-        $_POST['nickname'] = 'foo';
+        $_POST                            = Helper::getCommentPost();
+        $_POST['pasteid']                 = Helper::getPasteId();
+        $_POST['parentid']                = Helper::getPasteId();
+        $_POST['nickname']                = 'foo';
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
-        $_SERVER['REQUEST_METHOD'] = 'POST';
-        $_SERVER['REMOTE_ADDR'] = '::1';
+        $_SERVER['REQUEST_METHOD']        = 'POST';
+        $_SERVER['REMOTE_ADDR']           = '::1';
         $this->_model->create(Helper::getPasteId(), Helper::getPaste());
         ob_start();
         new PrivateBin;
@@ -601,16 +601,16 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
     public function testCreateComment()
     {
         $this->reset();
-        $options = parse_ini_file(CONF, true);
+        $options                     = parse_ini_file(CONF, true);
         $options['traffic']['limit'] = 0;
         Helper::confBackup();
         Helper::createIniFile(CONF, $options);
-        $_POST = Helper::getCommentPost();
-        $_POST['pasteid'] = Helper::getPasteId();
-        $_POST['parentid'] = Helper::getPasteId();
+        $_POST                            = Helper::getCommentPost();
+        $_POST['pasteid']                 = Helper::getPasteId();
+        $_POST['parentid']                = Helper::getPasteId();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
-        $_SERVER['REQUEST_METHOD'] = 'POST';
-        $_SERVER['REMOTE_ADDR'] = '::1';
+        $_SERVER['REQUEST_METHOD']        = 'POST';
+        $_SERVER['REMOTE_ADDR']           = '::1';
         $this->_model->create(Helper::getPasteId(), Helper::getPaste());
         ob_start();
         new PrivateBin;
@@ -627,16 +627,16 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
     public function testCreateInvalidComment()
     {
         $this->reset();
-        $options = parse_ini_file(CONF, true);
+        $options                     = parse_ini_file(CONF, true);
         $options['traffic']['limit'] = 0;
         Helper::confBackup();
         Helper::createIniFile(CONF, $options);
-        $_POST = Helper::getCommentPost();
-        $_POST['pasteid'] = Helper::getPasteId();
-        $_POST['parentid'] = 'foo';
+        $_POST                            = Helper::getCommentPost();
+        $_POST['pasteid']                 = Helper::getPasteId();
+        $_POST['parentid']                = 'foo';
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
-        $_SERVER['REQUEST_METHOD'] = 'POST';
-        $_SERVER['REMOTE_ADDR'] = '::1';
+        $_SERVER['REQUEST_METHOD']        = 'POST';
+        $_SERVER['REMOTE_ADDR']           = '::1';
         $this->_model->create(Helper::getPasteId(), Helper::getPaste());
         ob_start();
         new PrivateBin;
@@ -653,17 +653,17 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
     public function testCreateCommentDiscussionDisabled()
     {
         $this->reset();
-        $options = parse_ini_file(CONF, true);
+        $options                     = parse_ini_file(CONF, true);
         $options['traffic']['limit'] = 0;
         Helper::confBackup();
         Helper::createIniFile(CONF, $options);
-        $_POST = Helper::getCommentPost();
-        $_POST['pasteid'] = Helper::getPasteId();
-        $_POST['parentid'] = Helper::getPasteId();
+        $_POST                            = Helper::getCommentPost();
+        $_POST['pasteid']                 = Helper::getPasteId();
+        $_POST['parentid']                = Helper::getPasteId();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
-        $_SERVER['REQUEST_METHOD'] = 'POST';
-        $_SERVER['REMOTE_ADDR'] = '::1';
-        $paste = Helper::getPaste(array('opendiscussion' => false));
+        $_SERVER['REQUEST_METHOD']        = 'POST';
+        $_SERVER['REMOTE_ADDR']           = '::1';
+        $paste                            = Helper::getPaste(array('opendiscussion' => false));
         $this->_model->create(Helper::getPasteId(), $paste);
         ob_start();
         new PrivateBin;
@@ -680,16 +680,16 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
     public function testCreateCommentInvalidPaste()
     {
         $this->reset();
-        $options = parse_ini_file(CONF, true);
+        $options                     = parse_ini_file(CONF, true);
         $options['traffic']['limit'] = 0;
         Helper::confBackup();
         Helper::createIniFile(CONF, $options);
-        $_POST = Helper::getCommentPost();
-        $_POST['pasteid'] = Helper::getPasteId();
-        $_POST['parentid'] = Helper::getPasteId();
+        $_POST                            = Helper::getCommentPost();
+        $_POST['pasteid']                 = Helper::getPasteId();
+        $_POST['parentid']                = Helper::getPasteId();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
-        $_SERVER['REQUEST_METHOD'] = 'POST';
-        $_SERVER['REMOTE_ADDR'] = '::1';
+        $_SERVER['REQUEST_METHOD']        = 'POST';
+        $_SERVER['REMOTE_ADDR']           = '::1';
         ob_start();
         new PrivateBin;
         $content = ob_get_contents();
@@ -705,19 +705,19 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
     public function testCreateDuplicateComment()
     {
         $this->reset();
-        $options = parse_ini_file(CONF, true);
+        $options                     = parse_ini_file(CONF, true);
         $options['traffic']['limit'] = 0;
         Helper::confBackup();
         Helper::createIniFile(CONF, $options);
         $this->_model->create(Helper::getPasteId(), Helper::getPaste());
         $this->_model->createComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId(), Helper::getComment());
         $this->assertTrue($this->_model->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId()), 'comment exists before posting data');
-        $_POST = Helper::getCommentPost();
-        $_POST['pasteid'] = Helper::getPasteId();
-        $_POST['parentid'] = Helper::getPasteId();
+        $_POST                            = Helper::getCommentPost();
+        $_POST['pasteid']                 = Helper::getPasteId();
+        $_POST['parentid']                = Helper::getPasteId();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
-        $_SERVER['REQUEST_METHOD'] = 'POST';
-        $_SERVER['REMOTE_ADDR'] = '::1';
+        $_SERVER['REQUEST_METHOD']        = 'POST';
+        $_SERVER['REMOTE_ADDR']           = '::1';
         ob_start();
         new PrivateBin;
         $content = ob_get_contents();
@@ -835,7 +835,7 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
         $this->reset();
         $paste = Helper::getPaste();
         $this->_model->create(Helper::getPasteId(), $paste);
-        $_SERVER['QUERY_STRING'] = Helper::getPasteId();
+        $_SERVER['QUERY_STRING']          = Helper::getPasteId();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         ob_start();
         new PrivateBin;
@@ -859,7 +859,7 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
     public function testReadInvalidJson()
     {
         $this->reset();
-        $_SERVER['QUERY_STRING'] = Helper::getPasteId();
+        $_SERVER['QUERY_STRING']          = Helper::getPasteId();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         ob_start();
         new PrivateBin;
@@ -876,9 +876,9 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
     {
         $this->reset();
         $oldPaste = Helper::getPaste();
-        $meta = array(
+        $meta     = array(
             'syntaxcoloring' => true,
-            'postdate' => $oldPaste['meta']['postdate'],
+            'postdate'       => $oldPaste['meta']['postdate'],
             'opendiscussion' => $oldPaste['meta']['opendiscussion'],
         );
         $oldPaste['meta'] = $meta;
@@ -931,8 +931,8 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
         $this->reset();
         $this->_model->create(Helper::getPasteId(), Helper::getPaste());
         $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste exists before deleting data');
-        $paste = $this->_model->read(Helper::getPasteId());
-        $_GET['pasteid'] = Helper::getPasteId();
+        $paste               = $this->_model->read(Helper::getPasteId());
+        $_GET['pasteid']     = Helper::getPasteId();
         $_GET['deletetoken'] = hash_hmac('sha256', Helper::getPasteId(), $paste->meta->salt);
         ob_start();
         new PrivateBin;
@@ -953,7 +953,7 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
     {
         $this->reset();
         $this->_model->create(Helper::getPasteId(), Helper::getPaste());
-        $_GET['pasteid'] = 'foo';
+        $_GET['pasteid']     = 'foo';
         $_GET['deletetoken'] = 'bar';
         ob_start();
         new PrivateBin;
@@ -973,7 +973,7 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
     public function testDeleteInexistantId()
     {
         $this->reset();
-        $_GET['pasteid'] = Helper::getPasteId();
+        $_GET['pasteid']     = Helper::getPasteId();
         $_GET['deletetoken'] = 'bar';
         ob_start();
         new PrivateBin;
@@ -993,7 +993,7 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
     {
         $this->reset();
         $this->_model->create(Helper::getPasteId(), Helper::getPaste());
-        $_GET['pasteid'] = Helper::getPasteId();
+        $_GET['pasteid']     = Helper::getPasteId();
         $_GET['deletetoken'] = 'bar';
         ob_start();
         new PrivateBin;
@@ -1016,10 +1016,10 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
         $burnPaste = Helper::getPaste(array('burnafterreading' => true));
         $this->_model->create(Helper::getPasteId(), $burnPaste);
         $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste exists before deleting data');
-        $_POST['deletetoken'] = 'burnafterreading';
-        $_SERVER['QUERY_STRING'] = Helper::getPasteId();
+        $_POST['deletetoken']             = 'burnafterreading';
+        $_SERVER['QUERY_STRING']          = Helper::getPasteId();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
-        $_SERVER['REQUEST_METHOD'] = 'POST';
+        $_SERVER['REQUEST_METHOD']        = 'POST';
         ob_start();
         new PrivateBin;
         $content = ob_get_contents();
@@ -1037,10 +1037,10 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
         $this->reset();
         $this->_model->create(Helper::getPasteId(), Helper::getPaste());
         $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste exists before deleting data');
-        $_POST['deletetoken'] = 'burnafterreading';
-        $_SERVER['QUERY_STRING'] = Helper::getPasteId();
+        $_POST['deletetoken']             = 'burnafterreading';
+        $_SERVER['QUERY_STRING']          = Helper::getPasteId();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
-        $_SERVER['REQUEST_METHOD'] = 'POST';
+        $_SERVER['REQUEST_METHOD']        = 'POST';
         ob_start();
         new PrivateBin;
         $content = ob_get_contents();
@@ -1060,7 +1060,7 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste does not exist before being created');
         $this->_model->create(Helper::getPasteId(), $expiredPaste);
         $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste exists before deleting data');
-        $_GET['pasteid'] = Helper::getPasteId();
+        $_GET['pasteid']     = Helper::getPasteId();
         $_GET['deletetoken'] = 'does not matter in this context, but has to be set';
         ob_start();
         new PrivateBin;
@@ -1084,7 +1084,7 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
         unset($paste['meta']['salt']);
         $this->_model->create(Helper::getPasteId(), $paste);
         $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste exists before deleting data');
-        $_GET['pasteid'] = Helper::getPasteId();
+        $_GET['pasteid']     = Helper::getPasteId();
         $_GET['deletetoken'] = hash_hmac('sha256', Helper::getPasteId(), ServerSalt::get());
         ob_start();
         new PrivateBin;
