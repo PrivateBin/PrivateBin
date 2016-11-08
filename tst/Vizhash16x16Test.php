@@ -29,7 +29,7 @@ class Vizhash16x16Test extends PHPUnit_Framework_TestCase
 
     public function testVizhashGeneratesUniquePngsPerIp()
     {
-        $vz = new Vizhash16x16();
+        $vz      = new Vizhash16x16();
         $pngdata = $vz->generate(hash('sha512', '127.0.0.1'));
         file_put_contents($this->_file, $pngdata);
         $finfo = new finfo(FILEINFO_MIME_TYPE);

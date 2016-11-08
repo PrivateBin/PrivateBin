@@ -9,13 +9,12 @@
  * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
  * @version   1.0
  */
-
 namespace PrivateBin\Model;
 
-use PrivateBin\PrivateBin;
-use PrivateBin\Persistence\ServerSalt;
-use PrivateBin\Sjcl;
 use Exception;
+use PrivateBin\Persistence\ServerSalt;
+use PrivateBin\PrivateBin;
+use PrivateBin\Sjcl;
 
 /**
  * Paste
@@ -306,7 +305,6 @@ class Paste extends AbstractModel
         return property_exists($this->_data->meta, 'burnafterreading') &&
                $this->_data->meta->burnafterreading === true;
     }
-
 
     /**
      * Check if paste has discussions enabled.
