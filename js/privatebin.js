@@ -618,16 +618,7 @@ $(function() {
          */
         requestPassword: function()
         {
-            var password = prompt(i18n._('Please enter the password for this paste:'), '');
-            if (password === null)
-            {
-                throw 'password prompt canceled';
-            }
-            if (password.length === 0)
-            {
-                return this.requestPassword();
-            }
-            return password;
+            $("#passwordModal").modal();
         },
 
         /**
@@ -1578,6 +1569,23 @@ $(function() {
 
                 // Show proper elements on screen.
                 this.stateExistingPaste();
+
+                {
+                    // This part of code handles modal password request on decryption
+                    // Inside of event handler, "this" is something different... so we have to save it
+                    var self = this;
+                    $("#passwordModal").on('shown.bs.modal', function() {
+                        $("#decryptPassword").focus();
+                    });
+                    $("#passwordForm").submit(function(){
+                        $("#passwordModal").modal("hide");
+                        return false;
+                    });
+                    $("#passwordModal").on("hidden.bs.modal", function(){
+                        self.passwordInput.val($("#decryptPassword").val());
+                        self.displayMessages(self.pageKey(), data);
+                    });
+                }
 
                 this.displayMessages(this.pageKey(), data);
             }
