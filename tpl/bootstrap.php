@@ -66,7 +66,25 @@ endif;
 		<meta name="theme-color" content="#ffe57e" />
 	</head>
 	<body role="document">
-		<nav class="navbar navbar-default navbar-static-top">
+        <!-- Modal decryption password request -->
+        <div class="modal fade" id="passwordModal" role="dialog">
+          <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+              <div class="modal-body" style="padding:40px 50px;">
+            <form role="form" onSubmit="return false;" id="passwordForm">
+              <div class="form-group">
+                <label for="psw"><span class="glyphicon glyphicon-eye-open"></span> <?php echo I18n::_('Please enter the password for this paste:')?></label>
+                <input type="password" class="form-control" id="decryptPassword" placeholder="Enter password" autofocus>
+              </div>
+              <!-- <button type="submit" class="btn btn-success btn-block"><span class="glyphicon glyphicon-off"></span>Decrypt</button> -->
+            </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <nav class="navbar navbar-default navbar-static-top">
 			<div class="navbar-header">
 				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
 					<span class="sr-only"><?php echo I18n::_('Toggle navigation'); ?></span>
