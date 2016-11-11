@@ -696,7 +696,7 @@ $(function() {
                         {
                             if (password.length === 0)
                             {
-                                password = this.requestPassword();
+                                return this.requestPassword();
                             }
                             attachment = filter.decipher(key, password, paste.attachment);
                         }
@@ -731,7 +731,7 @@ $(function() {
                     var cleartext = filter.decipher(key, password, paste.data);
                     if (cleartext.length === 0 && password.length === 0 && !paste.attachment)
                     {
-                        password = this.requestPassword();
+                        return this.requestPassword();
                         cleartext = filter.decipher(key, password, paste.data);
                     }
                     if (cleartext.length === 0 && !paste.attachment)
