@@ -71,8 +71,8 @@ endif;
           <div class="modal-dialog">
             <!-- Modal content-->
             <div class="modal-content">
-              <div class="modal-body" style="padding:40px 50px;">
-            <form role="form" onSubmit="return false;" id="passwordForm">
+              <div class="modal-body">
+            <form role="form" id="passwordForm">
               <div class="form-group">
                 <label for="psw"><span class="glyphicon glyphicon-eye-open"></span> <?php echo I18n::_('Please enter the password for this paste:')?></label>
                 <input type="password" class="form-control" id="decryptPassword" placeholder="Enter password" autofocus>
