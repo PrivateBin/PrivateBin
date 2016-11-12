@@ -732,7 +732,6 @@ $(function() {
                     if (cleartext.length === 0 && password.length === 0 && !paste.attachment)
                     {
                         return this.requestPassword();
-                        cleartext = filter.decipher(key, password, paste.data);
                     }
                     if (cleartext.length === 0 && !paste.attachment)
                     {
