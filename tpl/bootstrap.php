@@ -72,13 +72,13 @@ endif;
             <!-- Modal content-->
             <div class="modal-content">
               <div class="modal-body">
-            <form role="form" id="passwordForm">
-              <div class="form-group">
-                <label for="psw"><span class="glyphicon glyphicon-eye-open"></span> <?php echo I18n::_('Please enter the password for this paste:')?></label>
-                <input type="password" class="form-control" id="decryptPassword" placeholder="Enter password" autofocus>
-              </div>
-              <!-- <button type="submit" class="btn btn-success btn-block"><span class="glyphicon glyphicon-off"></span>Decrypt</button> -->
-            </form>
+                <form role="form" id="passwordForm">
+                  <div class="form-group">
+                    <label for="decryptPassword"><span class="glyphicon glyphicon-eye-open"></span> <?php echo I18n::_('Please enter the password for this paste:')?></label>
+                    <input type="password" class="form-control" id="decryptPassword" placeholder="Enter password" autofocus>
+                  </div>
+                  <button type="submit" class="btn btn-success btn-block"><span class="glyphicon glyphicon-off"></span>Decrypt</button>
+                </form>
               </div>
             </div>
           </div>
