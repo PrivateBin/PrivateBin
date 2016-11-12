@@ -74,10 +74,10 @@ endif;
               <div class="modal-body">
                 <form role="form" id="passwordForm">
                   <div class="form-group">
-                    <label for="decryptPassword"><span class="glyphicon glyphicon-eye-open"></span> <?php echo I18n::_('Please enter the password for this paste:')?></label>
-                    <input type="password" class="form-control" id="decryptPassword" placeholder="Enter password" autofocus>
+                    <label for="decryptPassword"><span class="glyphicon glyphicon-eye-open"></span> <?php echo I18n::_('Please enter the password for this paste:') ?></label>
+                    <input type="password" class="form-control" id="decryptPassword" placeholder="<?php echo I18n::_('Enter password') ?>" autofocus>
                   </div>
-                  <button type="submit" class="btn btn-success btn-block"><span class="glyphicon glyphicon-off"></span>Decrypt</button>
+                  <button type="submit" class="btn btn-success btn-block"><span class="glyphicon glyphicon-off"></span> <?php echo I18n::_('Decrypt') ?></button>
                 </form>
               </div>
             </div>
