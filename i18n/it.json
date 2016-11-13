@@ -79,7 +79,7 @@
     "This document will expire in %d months.":
         ["Questo documento scadrà tra un mese.", "Questo documento scadrà in %d mesi."],
     "Please enter the password for this paste:":
-        "Inserisci la passowrd per questo messaggio:",
+        "Inserisci la password per questo messaggio:",
     "Could not decrypt data (Wrong key?)":
         "Non riesco a decifrari i dati (Chiave errata?)",
     "Could not delete the paste, it was not stored in burn after reading mode.":
@@ -140,5 +140,9 @@
     "Editor": "Editor",
     "Preview": "Preview",
     "PrivateBin requires the PATH to end in a \"%s\". Please update the PATH in your index.php.":
-        "PrivateBin necessita che PATH termini con \"%s\". Aggiorna la variabile PATH nel tuo index.php."
+        "PrivateBin necessita che PATH termini con \"%s\". Aggiorna la variabile PATH nel tuo index.php.",
+    "Decrypt":
+        "Decrypt",
+    "Enter password":
+        "Inserisci la password"
 }
