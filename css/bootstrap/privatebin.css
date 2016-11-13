@@ -98,10 +98,6 @@ body.navbar-spacing {
 	margin-bottom: 10px;
 }
 
-.smallErrorText {
-	font-size: 80%;
-}
-
 .comment {
 	border-left: 1px solid #ccc;
 	padding: 5px 0 5px 10px;
