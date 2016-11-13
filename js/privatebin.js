@@ -615,7 +615,7 @@ $(function() {
          */
         requestPassword: function()
         {
-            if (this.passwordModal.length == 0) {
+            if (this.passwordModal.length === 0) {
                 var password = prompt(i18n._('Please enter the password for this paste:'), '');
                 if (password === null)
                 {
