@@ -9,7 +9,6 @@
  * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
  * @version   1.0
  */
-
 namespace PrivateBin;
 
 /**
@@ -31,7 +30,7 @@ class Sjcl
      */
     public static function isValid($encoded)
     {
-        $accepted_keys = array('iv','v','iter','ks','ts','mode','adata','cipher','salt','ct');
+        $accepted_keys = array('iv', 'v', 'iter', 'ks', 'ts', 'mode', 'adata', 'cipher', 'salt', 'ct');
 
         // Make sure content is valid json
         $decoded = json_decode($encoded);

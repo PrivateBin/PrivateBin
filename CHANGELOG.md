@@ -1,5 +1,9 @@
 # PrivateBin version history
 
+  * **next (not yet released)**
+    * ADDED: Translations for Italian
+    * CHANGED: Suppressed referrer HTTP header sending when following links in a paste or comment (#96) and added additional HTTP headers for XSS mitigation (#91)
+    * CHANGED: Updated random_compat and jQuery libraries
   * **1.0 (2016-08-25)**
     * ADDED: Translations for Slowene and Chinese
     * ADDED: re-introduced (optional) URL shortener support, which was removed back in version 0.16 for privacy concerns

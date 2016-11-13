@@ -10,15 +10,15 @@ class ViewTest extends PHPUnit_Framework_TestCase
     private static $status = '!*#@?$+';
 
     private static $formatters = array(
-        'plaintext' => 'Plain Text',
+        'plaintext'          => 'Plain Text',
         'syntaxhighlighting' => 'Source Code',
-        'markdown' => 'Markdown',
+        'markdown'           => 'Markdown',
     );
 
     private static $formatter_default = 'plaintext';
 
     private static $expire = array(
-        '5min' => '5 minutes',
+        '5min'  => '5 minutes',
         '1hour' => '1 hour',
         'never' => 'Never',
     );

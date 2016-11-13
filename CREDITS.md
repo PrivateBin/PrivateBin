@@ -19,6 +19,7 @@ Sébastien Sauvage - original idea and main developer
 * Adam Fisher - old Favicons
 * rugk - new logo/icons
 * Sobak - PSR-4 and PSR-2 refactoring
+* Nathaniel Olsen - jQuery upgrade
 
 ## Translations
 * Hexalyse - French
@@ -27,3 +28,4 @@ Sébastien Sauvage - original idea and main developer
 * Draky50110 - French
 * Filip Muki Dobranić - Slovene
 * Jiawei Zhou - Chinese
+* Stefano Marty - Italian

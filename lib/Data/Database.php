@@ -9,13 +9,12 @@
  * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
  * @version   1.0
  */
-
 namespace PrivateBin\Data;
 
-use PrivateBin\PrivateBin;
 use Exception;
 use PDO;
 use PDOException;
+use PrivateBin\PrivateBin;
 use stdClass;
 
 /**
