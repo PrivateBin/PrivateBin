@@ -2,6 +2,7 @@
 
   * **next (not yet released)**
     * ADDED: Translations for Italian
+    * CHANGED: Using modal dialog to request password input instead of native JS input window (#69)
     * CHANGED: Suppressed referrer HTTP header sending when following links in a paste or comment (#96) and added additional HTTP headers for XSS mitigation (#91)
     * CHANGED: Updated random_compat and jQuery libraries
   * **1.0 (2016-08-25)**

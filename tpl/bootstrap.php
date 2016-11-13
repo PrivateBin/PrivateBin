@@ -52,7 +52,7 @@ if ($MARKDOWN):
 <?php
 endif;
 ?>
-		<script type="text/javascript" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-6NNTkh7KDhbUmY/iAB4wRgWtLQTuJjrfOp8Lawa9MqZrtNqGcMbWPjhkQn33RwGfO3+gHSrE19a9UWgG0ecc4w==" crossorigin="anonymous"></script>
+		<script type="text/javascript" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-cQXLXYKNq6ecCb0lA9BSQ0urt16yDERYnT5vcjeE3UJb6W5PUjwN/jtVsGBoRzoGGEll+N3stvgIXGjkjaYj5g==" crossorigin="anonymous"></script>
 		<!--[if lt IE 10]>
 		<style type="text/css">body {padding-left:60px;padding-right:60px;} #ienotice {display:block;} #oldienotice {display:block;}</style>
 		<![endif]-->
@@ -66,25 +66,22 @@ endif;
 		<meta name="theme-color" content="#ffe57e" />
 	</head>
 	<body role="document">
-        <!-- Modal decryption password request -->
-        <div class="modal fade" id="passwordModal" role="dialog">
-          <div class="modal-dialog">
-            <!-- Modal content-->
-            <div class="modal-content">
-              <div class="modal-body">
-                <form role="form" id="passwordForm">
-                  <div class="form-group">
-                    <label for="decryptPassword"><span class="glyphicon glyphicon-eye-open"></span> <?php echo I18n::_('Please enter the password for this paste:') ?></label>
-                    <input type="password" class="form-control" id="decryptPassword" placeholder="<?php echo I18n::_('Enter password') ?>" autofocus>
-                  </div>
-                  <button type="submit" class="btn btn-success btn-block"><span class="glyphicon glyphicon-off"></span> <?php echo I18n::_('Decrypt') ?></button>
-                </form>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <nav class="navbar navbar-default navbar-static-top">
+		<div id="passwordmodal" class="modal fade" role="dialog">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-body">
+						<form id="passwordform" role="form">
+							<div class="form-group">
+								<label for="passworddecrypt"><span class="glyphicon glyphicon-eye-open"></span> <?php echo I18n::_('Please enter the password for this paste:') ?></label>
+								<input id="passworddecrypt" type="password" class="form-control" placeholder="<?php echo I18n::_('Enter password') ?>" autofocus>
+							</div>
+							<button type="submit" class="btn btn-success btn-block"><span class="glyphicon glyphicon-off"></span> <?php echo I18n::_('Decrypt') ?></button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<nav class="navbar navbar-default navbar-static-top">
 			<div class="navbar-header">
 				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
 					<span class="sr-only"><?php echo I18n::_('Toggle navigation'); ?></span>

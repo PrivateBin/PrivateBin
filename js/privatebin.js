@@ -611,14 +611,26 @@ $(function() {
         },
 
         /**
-         * ask the user for the password and return it
-         *
-         * @throws error when dialog canceled
-         * @return string password
+         * ask the user for the password and set it
          */
         requestPassword: function()
         {
-            $("#passwordModal").modal();
+            if (this.passwordModal.length == 0) {
+                var password = prompt(i18n._('Please enter the password for this paste:'), '');
+                if (password === null)
+                {
+                    throw 'password prompt canceled';
+                }
+                if (password.length === 0)
+                {
+                    this.requestPassword();
+                } else {
+                    this.passwordInput.val(password);
+                    this.displayMessages();
+                }
+            } else {
+                this.passwordModal.modal();
+            }
         },
 
         /**
@@ -679,14 +691,15 @@ $(function() {
         /**
          * Show decrypted text in the display area, including discussion (if open)
          *
-         * @param string key : decryption key
-         * @param object paste : paste object including comments to display (items = array with keys ('data','meta')
+         * @param object paste (optional) object including comments to display (items = array with keys ('data','meta')
          */
-        displayMessages: function(key, paste)
+        displayMessages: function(paste)
         {
-            // Try to decrypt the paste.
+            paste = paste || $.parseJSON(this.cipherData.text());
+            var key = this.pageKey();
             var password = this.passwordInput.val();
             if (!this.prettyPrint.hasClass('prettyprinted')) {
+                // Try to decrypt the paste.
                 try
                 {
                     if (paste.attachment)
@@ -696,7 +709,8 @@ $(function() {
                         {
                             if (password.length === 0)
                             {
-                                return this.requestPassword();
+                                this.requestPassword();
+                                return;
                             }
                             attachment = filter.decipher(key, password, paste.attachment);
                         }
@@ -731,7 +745,8 @@ $(function() {
                     var cleartext = filter.decipher(key, password, paste.data);
                     if (cleartext.length === 0 && password.length === 0 && !paste.attachment)
                     {
-                        return this.requestPassword();
+                        this.requestPassword();
+                        return;
                     }
                     if (cleartext.length === 0 && !paste.attachment)
                     {
@@ -932,7 +947,7 @@ $(function() {
                             {
                                 if (data.status === 0)
                                 {
-                                    privatebin.displayMessages(privatebin.pageKey(), data);
+                                    privatebin.displayMessages(data);
                                 }
                                 else if (data.status === 1)
                                 {
@@ -1151,7 +1166,7 @@ $(function() {
         /**
          * Put the screen in "Existing paste" mode.
          *
-         * @param boolean preview (optional) : tell if the preview tabs should be displayed, defaults to false.
+         * @param boolean preview (optional) tell if the preview tabs should be displayed, defaults to false.
          */
         stateExistingPaste: function(preview)
         {
@@ -1411,6 +1426,34 @@ $(function() {
         },
 
         /**
+         * Focus on the modal password dialog.
+         */
+        focusPasswordModal: function()
+        {
+            this.passwordDecrypt.focus();
+        },
+
+        /**
+         * Decrypt using the password from the modal dialog.
+         */
+        decryptPasswordModal: function()
+        {
+            this.passwordInput.val(this.passwordDecrypt.val());
+            this.displayMessages();
+        },
+
+        /**
+         * Submit a password in the modal dialog.
+         *
+         * @param Event event
+         */
+        submitPasswordModal: function(event)
+        {
+            event.preventDefault();
+            this.passwordModal.modal('hide');
+        },
+
+        /**
          * Display an error message
          * (We use the same function for paste and reply to comments)
          *
@@ -1497,6 +1540,11 @@ $(function() {
 
             // page template drop down
             $('#language select option').click($.proxy(this.setLanguage, this));
+
+            // handle modal password request on decryption
+            this.passwordModal.on('shown.bs.modal', $.proxy(this.focusPasswordModal, this));
+            this.passwordModal.on('hidden.bs.modal', $.proxy(this.decryptPasswordModal, this));
+            this.passwordForm.submit($.proxy(this.submitPasswordModal, this));
         },
 
         /**
@@ -1533,6 +1581,9 @@ $(function() {
             this.openDiscussion = $('#opendiscussion');
             this.password = $('#password');
             this.passwordInput = $('#passwordinput');
+            this.passwordModal = $('#passwordmodal');
+            this.passwordForm = $('#passwordform');
+            this.passwordDecrypt = $('#passworddecrypt');
             this.pasteResult = $('#pasteresult');
             this.prettyMessage = $('#prettymessage');
             this.prettyPrint = $('#prettyprint');
@@ -1563,30 +1614,9 @@ $(function() {
                     return;
                 }
 
-                // List of messages to display.
-                var data = $.parseJSON(this.cipherData.text());
-
                 // Show proper elements on screen.
                 this.stateExistingPaste();
-
-                {
-                    // This part of code handles modal password request on decryption
-                    // Inside of event handler, "this" is something different... so we have to save it
-                    var self = this;
-                    $("#passwordModal").on('shown.bs.modal', function() {
-                        $("#decryptPassword").focus();
-                    });
-                    $("#passwordForm").submit(function(){
-                        $("#passwordModal").modal("hide");
-                        return false;
-                    });
-                    $("#passwordModal").on("hidden.bs.modal", function(){
-                        self.passwordInput.val($("#decryptPassword").val());
-                        self.displayMessages(self.pageKey(), data);
-                    });
-                }
-
-                this.displayMessages(this.pageKey(), data);
+                this.displayMessages();
             }
             // Display error message from php code.
             else if (this.errorMessage.text().length > 1)

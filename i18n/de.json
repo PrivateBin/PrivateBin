@@ -80,10 +80,6 @@
         ["Dieses Dokument läuft in einem Monat ab.", "Dieses Dokument läuft in %d Monaten ab."],
     "Please enter the password for this paste:":
         "Bitte gib das Passwort für diesen Text ein:",
-    "Decrypt":
-        "Entschlüsseln",
-    "Enter password":
-        "Passwort eingeben",
     "Could not decrypt data (Wrong key?)":
         "Konnte Daten nicht entschlüsseln (Falscher Schlüssel?)",
     "Could not delete the paste, it was not stored in burn after reading mode.":
@@ -144,5 +140,9 @@
     "Editor": "Bearbeiten",
     "Preview": "Vorschau",
     "PrivateBin requires the PATH to end in a \"%s\". Please update the PATH in your index.php.":
-        "Der PATH muss bei PrivateBin mit einem \"%s\" enden. Bitte passe Deinen PATH in Deiner index.php an."
+        "Der PATH muss bei PrivateBin mit einem \"%s\" enden. Bitte passe Deinen PATH in Deiner index.php an.",
+    "Decrypt":
+        "Entschlüsseln",
+    "Enter password":
+        "Passwort eingeben"
 }

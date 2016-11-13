@@ -140,5 +140,9 @@
     "Editor": "Edytować",
     "Preview": "Zapowiedź",
     "PrivateBin requires the PATH to end in a \"%s\". Please update the PATH in your index.php.":
-        "PrivateBin requires the PATH to end in a \"%s\". Please update the PATH in your index.php."
+        "PrivateBin requires the PATH to end in a \"%s\". Please update the PATH in your index.php.",
+    "Decrypt":
+        "Decrypt",
+    "Enter password":
+        "Wpisz hasło"
 }
