@@ -31,7 +31,7 @@
         "PrivateBin是一个极简，开源，对粘贴内容毫不知情的在线粘贴板，数据<i>在浏览器内</i>进行AES-256加密。更多信息请查看<a href=\"https://privatebin.info/\">项目主页</a>。",
     "Because ignorance is bliss":
         "因为无知是福",
-    "Javascript is required for PrivateBin to work.<br />Sorry for the inconvenience.":
+    "JavaScript is required for PrivateBin to work.<br />Sorry for the inconvenience.":
         "PrivateBin需要JavaScript来进行加解密。<br />带来的不便敬请谅解。",
     "PrivateBin requires a modern browser to work.":
         "PrivateBin需要工作于现代化的浏览器。",

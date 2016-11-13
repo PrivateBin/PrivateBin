@@ -31,7 +31,7 @@
         "PrivateBin jest minimalistycznym, otwartoźródłowym serwisem typu pastebin, w którym serwer nie ma jakichkolwiek informacji o tym, co jest wklejane. Dane są szyfrowane i deszyfrowane <i>w przeglądarce</i> z użyciem 256-bitowego klucza AES. Więcej informacji na <a href=\"https://privatebin.info/\">stronie projektu</a>.",
     "Because ignorance is bliss":
         "Ponieważ ignorancja jest cnotą",
-    "Javascript is required for PrivateBin to work.<br />Sorry for the inconvenience.":
+    "JavaScript is required for PrivateBin to work.<br />Sorry for the inconvenience.":
         "Do działania PrivateBina jest wymagany JavaScript. Przepraszamy za tę niedogodność.",
     "PrivateBin requires a modern browser to work.":
         "PrivateBin wymaga do działania nowoczesnej przeglądarki.",

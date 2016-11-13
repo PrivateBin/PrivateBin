@@ -31,8 +31,8 @@
         "PrivateBin est un 'pastebin' (ou gestionnaire d'extraits de texte et de code source) minimaliste et open source, dans lequel le serveur n'a aucune connaissance des données envoyées. Les données sont chiffrées/déchiffrées <i>dans le navigateur</i> par un chiffrage AES 256 bits. Plus d'informations sur <a href=\"https://privatebin.info/\">la page du projet</a>.",
     "Because ignorance is bliss":
         "Parce que l'ignorance c'est le bonheur",
-    "Javascript is required for PrivateBin to work.<br />Sorry for the inconvenience.":
-        "Javascript est requis pour faire fonctionner PrivateBin. <br />Désolé pour cet inconvénient.",
+    "JavaScript is required for PrivateBin to work.<br />Sorry for the inconvenience.":
+        "JavaScript est requis pour faire fonctionner PrivateBin. <br />Désolé pour cet inconvénient.",
     "PrivateBin requires a modern browser to work.":
         "PrivateBin nécessite un navigateur moderne pour fonctionner.",
     "Still using Internet Explorer? Do yourself a favor, switch to a modern browser:":
