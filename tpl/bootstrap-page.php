@@ -52,7 +52,7 @@ if ($MARKDOWN):
 <?php
 endif;
 ?>
-		<script type="text/javascript" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-h/cw2lgocVvgjmYWShhbnz5nSzyUv4rVY1JgN7vmkZq8VJX9KVXPoC7oYX+YGFk+0FYw+c/uofVW9yyU5TJv+w==" crossorigin="anonymous"></script>
+		<script type="text/javascript" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-ofJ8kC2nFEP1Tb494qM7ne2kGL+vL1syZHhKDfGr8xtl6sfC0JOIBw8ypwv7bTfo8TqJh0rAI0ZblsjuFcFEXA==" crossorigin="anonymous"></script>
 		<!--[if lt IE 10]>
 		<style type="text/css">body {padding-left:60px;padding-right:60px;} #ienotice {display:block;} #oldienotice {display:block;}</style>
 		<![endif]-->
@@ -66,6 +66,21 @@ endif;
 		<meta name="theme-color" content="#ffe57e" />
 	</head>
 	<body role="document">
+		<div id="passwordmodal" class="modal fade" role="dialog">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-body">
+						<form id="passwordform" role="form">
+							<div class="form-group">
+								<label for="passworddecrypt"><span class="glyphicon glyphicon-eye-open"></span> <?php echo I18n::_('Please enter the password for this paste:') ?></label>
+								<input id="passworddecrypt" type="password" class="form-control" placeholder="<?php echo I18n::_('Enter password') ?>" autofocus>
+							</div>
+							<button type="submit" class="btn btn-success btn-block"><span class="glyphicon glyphicon-off"></span> <?php echo I18n::_('Decrypt') ?></button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
 		<nav class="navbar navbar-default navbar-static-top">
 			<div class="navbar-header">
 				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">

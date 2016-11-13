@@ -20,6 +20,7 @@ Sébastien Sauvage - original idea and main developer
 * rugk - new logo/icons
 * Sobak - PSR-4 and PSR-2 refactoring
 * Nathaniel Olsen - jQuery upgrade
+* Alexander Demenshin - modal password dialog
 
 ## Translations
 * Hexalyse - French
