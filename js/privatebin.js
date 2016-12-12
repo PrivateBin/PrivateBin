@@ -655,9 +655,12 @@ $(function() {
                         this.clearText.html(
                             converter.makeHtml(text)
                         );
+                        // add table class from bootstrap css
+                        this.clearText.find('table').addClass('table');
+
                         this.clearText.removeClass('hidden');
+                        this.prettyMessage.addClass('hidden');
                     }
-                    this.prettyMessage.addClass('hidden');
                     break;
                 case 'syntaxhighlighting':
                     if (typeof prettyPrintOne === 'function')
