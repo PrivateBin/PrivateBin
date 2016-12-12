@@ -1,0 +1,305 @@
+diff --git a/lib/Configuration.php b/lib/Configuration.php
+index 9249a744ab32b422c313e5b71e32091d978f9969..62edd6760a7ab78e2e0a17dcf068e44c280f2572 100644
+--- a/lib/Configuration.php
++++ b/lib/Configuration.php
+@@ -10,7 +10,7 @@
+  * @version   1.0
+  */
+ 
+-namespace PrivateBin;;
++namespace PrivateBin;
+ 
+ use Exception;
+ use PDO;
+diff --git a/lib/Data/AbstractData.php b/lib/Data/AbstractData.php
+index 95b403938fac4bdcf0f5e5b6a8fa7f1c842c84df..c5d336797b8b1884e877d8db71c108318bbd71d9 100644
+--- a/lib/Data/AbstractData.php
++++ b/lib/Data/AbstractData.php
+@@ -10,7 +10,9 @@
+  * @version   1.0
+  */
+ 
+-namespace PrivateBin;\Data;
++namespace PrivateBin;
++
++\Data;
+ 
+ use stdClass;
+ 
+diff --git a/lib/Data/Database.php b/lib/Data/Database.php
+index bea75f2785245664f81fd0a3b2234397cc69b000..fbce6637535161892689ae18007fa2a98994dddf 100644
+--- a/lib/Data/Database.php
++++ b/lib/Data/Database.php
+@@ -10,12 +10,13 @@
+  * @version   1.0
+  */
+ 
+-namespace PrivateBin;\Data;
++namespace PrivateBin;
++
++\Data;
+ 
+ use Exception;
+ use PDO;
+ use PDOException;
+-use PrivateBin\PrivateBin;
+ use stdClass;
+ 
+ /**
+diff --git a/lib/Data/Filesystem.php b/lib/Data/Filesystem.php
+index 1a371e89f8686f4bd19fcb3b14ce1b0e228a07d0..456516fe978d59160436c0d90aed442e041e4b96 100644
+--- a/lib/Data/Filesystem.php
++++ b/lib/Data/Filesystem.php
+@@ -10,9 +10,10 @@
+  * @version   1.0
+  */
+ 
+-namespace PrivateBin;\Data;
++namespace PrivateBin;
++
++\Data;
+ 
+-use PrivateBin\Json;
+ use PrivateBin\Model\Paste;
+ 
+ /**
+diff --git a/lib/Filter.php b/lib/Filter.php
+index 141c3ce4ff3c6f48e8e87bb44aecfa1a5635c131..2ecc3b5896c516c7e36ea55fe6fdb0d664baef3f 100644
+--- a/lib/Filter.php
++++ b/lib/Filter.php
+@@ -10,7 +10,7 @@
+  * @version   1.0
+  */
+ 
+-namespace PrivateBin;;
++namespace PrivateBin;
+ 
+ use Exception;
+ 
+diff --git a/lib/I18n.php b/lib/I18n.php
+index 60dbdd4e377fa0ac8d5ff64442e726cbbbd897fc..df9f734b35fbc209bc81d3706e6b3f2877ae1d0b 100644
+--- a/lib/I18n.php
++++ b/lib/I18n.php
+@@ -10,7 +10,7 @@
+  * @version   1.0
+  */
+ 
+-namespace PrivateBin;;
++namespace PrivateBin;
+ 
+ /**
+  * I18n
+diff --git a/lib/Json.php b/lib/Json.php
+index ec27e6e31aac7850d3e9f141e1a9f3a39acf2222..2f26956562f228e10a710b2526bd44ed72271d82 100644
+--- a/lib/Json.php
++++ b/lib/Json.php
+@@ -10,7 +10,7 @@
+  * @version   1.0
+  */
+ 
+-namespace PrivateBin;;
++namespace PrivateBin;
+ 
+ use Exception;
+ 
+diff --git a/lib/Model.php b/lib/Model.php
+index e53da6bcd65e1ec5bf7e547bee23846a9073d54e..6dbe0214074245e81a9863cae70ef9d0aab7cbae 100644
+--- a/lib/Model.php
++++ b/lib/Model.php
+@@ -10,7 +10,7 @@
+  * @version   1.0
+  */
+ 
+-namespace PrivateBin;;
++namespace PrivateBin;
+ 
+ use PrivateBin\Model\Paste;
+ use PrivateBin\Persistence\PurgeLimiter;
+diff --git a/lib/Model/AbstractModel.php b/lib/Model/AbstractModel.php
+index 38cedfd4d7eaa648d778535314bc9268ef36299e..6e1a98a9b7ce217eaf343cece3a61efcd0033cf8 100644
+--- a/lib/Model/AbstractModel.php
++++ b/lib/Model/AbstractModel.php
+@@ -10,12 +10,12 @@
+  * @version   1.0
+  */
+ 
+-namespace PrivateBin;\Model;
++namespace PrivateBin;
++
++\Model;
+ 
+ use Exception;
+-use PrivateBin\Configuration;
+ use PrivateBin\Data\AbstractData;
+-use PrivateBin\Sjcl;
+ use stdClass;
+ 
+ /**
+diff --git a/lib/Model/Comment.php b/lib/Model/Comment.php
+index 39d78733aa788f16489a0956cc0fb1f55d384238..dd3ce305ab1312b8be04c43306074f5151de50ad 100644
+--- a/lib/Model/Comment.php
++++ b/lib/Model/Comment.php
+@@ -10,13 +10,13 @@
+  * @version   1.0
+  */
+ 
+-namespace PrivateBin;\Model;
++namespace PrivateBin;
++
++\Model;
+ 
+ use Exception;
+ use Identicon\Identicon;
+ use PrivateBin\Persistence\TrafficLimiter;
+-use PrivateBin\Sjcl;
+-use PrivateBin\Vizhash16x16;
+ 
+ /**
+  * Comment
+diff --git a/lib/Model/Paste.php b/lib/Model/Paste.php
+index 0ee3232d639ba189295b990f79e7909c7baf01b7..4e55b85c6bc4318039ab9d5d9c6a5fb08627d2e7 100644
+--- a/lib/Model/Paste.php
++++ b/lib/Model/Paste.php
+@@ -10,12 +10,12 @@
+  * @version   1.0
+  */
+ 
+-namespace PrivateBin;\Model;
++namespace PrivateBin;
++
++\Model;
+ 
+ use Exception;
+ use PrivateBin\Persistence\ServerSalt;
+-use PrivateBin\PrivateBin;
+-use PrivateBin\Sjcl;
+ 
+ /**
+  * Paste
+diff --git a/lib/Persistence/AbstractPersistence.php b/lib/Persistence/AbstractPersistence.php
+index 7ec98caadeddbbadd61d2eda12f59a67dfd5e238..d5bebdda341e6abf77941f63fe399fc1e3917558 100644
+--- a/lib/Persistence/AbstractPersistence.php
++++ b/lib/Persistence/AbstractPersistence.php
+@@ -10,7 +10,9 @@
+  * @version   1.0
+  */
+ 
+-namespace PrivateBin;\Persistence;
++namespace PrivateBin;
++
++\Persistence;
+ 
+ use Exception;
+ 
+diff --git a/lib/Persistence/PurgeLimiter.php b/lib/Persistence/PurgeLimiter.php
+index 90bc17ceb17fcb4a1ae5eb77668fe8461f55afc9..9c4f6ffcb7bf51a79ca0910f50343674f3074a5e 100644
+--- a/lib/Persistence/PurgeLimiter.php
++++ b/lib/Persistence/PurgeLimiter.php
+@@ -10,9 +10,9 @@
+  * @version   1.0
+  */
+ 
+-namespace PrivateBin;\Persistence;
++namespace PrivateBin;
+ 
+-use PrivateBin\Configuration;
++\Persistence;
+ 
+ /**
+  * PurgeLimiter
+diff --git a/lib/Persistence/ServerSalt.php b/lib/Persistence/ServerSalt.php
+index 734d037a9b0a15c0bc0c2ad1438b38f8513eed43..1248555245ae107708b7e2a5d935689d120e4b2c 100644
+--- a/lib/Persistence/ServerSalt.php
++++ b/lib/Persistence/ServerSalt.php
+@@ -10,7 +10,9 @@
+  * @version   1.0
+  */
+ 
+-namespace PrivateBin;\Persistence;
++namespace PrivateBin;
++
++\Persistence;
+ 
+ use Exception;
+ 
+diff --git a/lib/Persistence/TrafficLimiter.php b/lib/Persistence/TrafficLimiter.php
+index e752a0c9c4a8d89da0d25e068f526d8a1d815860..7d7fd0914f291df8da32af0eed2d56563399aef8 100644
+--- a/lib/Persistence/TrafficLimiter.php
++++ b/lib/Persistence/TrafficLimiter.php
+@@ -10,9 +10,9 @@
+  * @version   1.0
+  */
+ 
+-namespace PrivateBin;\Persistence;
++namespace PrivateBin;
+ 
+-use PrivateBin\Configuration;
++\Persistence;
+ 
+ /**
+  * TrafficLimiter
+diff --git a/lib/PrivateBin.php b/lib/PrivateBin.php
+index 54c296a25823db32d62898f1b29de01f995769e8..29d21a9158125617ce80a87e49b94e34b88cd318 100644
+--- a/lib/PrivateBin.php
++++ b/lib/PrivateBin.php
+@@ -10,7 +10,7 @@
+  * @version   1.0
+  */
+ 
+-namespace PrivateBin;;
++namespace PrivateBin;
+ 
+ use Exception;
+ use PrivateBin\Persistence\ServerSalt;
+diff --git a/lib/Request.php b/lib/Request.php
+index 143b6047ba499a8b4a0971436cc5c39b85f8010f..03cd100ecdc33b26b49634608a2131ce808012ac 100644
+--- a/lib/Request.php
++++ b/lib/Request.php
+@@ -10,7 +10,7 @@
+  * @version   1.0
+  */
+ 
+-namespace PrivateBin;;
++namespace PrivateBin;
+ 
+ /**
+  * Request
+diff --git a/lib/Sjcl.php b/lib/Sjcl.php
+index 5ed16fc8adb8704bdf49c66d6157a676bdc17bd5..72be729476960d0db86814eb57827cd0c508e935 100644
+--- a/lib/Sjcl.php
++++ b/lib/Sjcl.php
+@@ -10,7 +10,7 @@
+  * @version   1.0
+  */
+ 
+-namespace PrivateBin;;
++namespace PrivateBin;
+ 
+ /**
+  * Sjcl
+diff --git a/lib/View.php b/lib/View.php
+index 6f8fdb74b8ccfc62a0a724d5165d30e98bcbb34c..45d7b3a0b17ac2117806cd4343b5211772f3df23 100644
+--- a/lib/View.php
++++ b/lib/View.php
+@@ -10,7 +10,7 @@
+  * @version   1.0
+  */
+ 
+-namespace PrivateBin;;
++namespace PrivateBin;
+ 
+ use Exception;
+ 
+diff --git a/lib/Vizhash16x16.php b/lib/Vizhash16x16.php
+index 282dac736d32837c613d2d473e6d0b19662e5e01..be648f28d85c46adff32a69cd984532d0987ded6 100644
+--- a/lib/Vizhash16x16.php
++++ b/lib/Vizhash16x16.php
+@@ -11,7 +11,7 @@
+  * @version   0.0.5 beta PrivateBin 1.0
+  */
+ 
+-namespace PrivateBin;;
++namespace PrivateBin;
+ 
+ /**
+  * Vizhash16x16

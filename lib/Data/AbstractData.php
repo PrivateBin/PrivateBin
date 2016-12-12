@@ -10,7 +10,7 @@
  * @version   1.0
  */
 
-namespace PrivateBin;\Data;
+namespace PrivateBin\Data;
 
 use stdClass;
 

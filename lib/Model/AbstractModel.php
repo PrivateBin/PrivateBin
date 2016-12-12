@@ -10,7 +10,7 @@
  * @version   1.0
  */
 
-namespace PrivateBin;\Model;
+namespace PrivateBin\Model;
 
 use Exception;
 use PrivateBin\Configuration;

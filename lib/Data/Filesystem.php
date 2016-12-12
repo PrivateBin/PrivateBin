@@ -10,7 +10,7 @@
  * @version   1.0
  */
 
-namespace PrivateBin;\Data;
+namespace PrivateBin\Data;
 
 use PrivateBin\Json;
 use PrivateBin\Model\Paste;

@@ -10,7 +10,7 @@
  * @version   1.0
  */
 
-namespace PrivateBin;\Persistence;
+namespace PrivateBin\Persistence;
 
 use Exception;
 
