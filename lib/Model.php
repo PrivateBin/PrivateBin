@@ -10,7 +10,7 @@
  * @version   1.0
  */
 
-namespace PrivateBin;;
+namespace PrivateBin;
 
 use PrivateBin\Model\Paste;
 use PrivateBin\Persistence\PurgeLimiter;

@@ -11,7 +11,7 @@
  * @version   0.0.5 beta PrivateBin 1.0
  */
 
-namespace PrivateBin;;
+namespace PrivateBin;
 
 /**
  * Vizhash16x16
