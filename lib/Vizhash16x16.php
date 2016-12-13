@@ -10,6 +10,7 @@
  * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
  * @version   0.0.5 beta PrivateBin 1.0
  */
+
 namespace PrivateBin;
 
 /**
