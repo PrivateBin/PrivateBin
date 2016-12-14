@@ -655,6 +655,9 @@ $(function() {
                         this.clearText.html(
                             converter.makeHtml(text)
                         );
+                        // add table classes from bootstrap css
+                        this.clearText.find('table').addClass('table-condensed table-bordered');
+
                         this.clearText.removeClass('hidden');
                     }
                     this.prettyMessage.addClass('hidden');
