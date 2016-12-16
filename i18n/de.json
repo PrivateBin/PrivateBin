@@ -31,8 +31,8 @@
         "PrivateBin ist ein minimalistischer, quelloffener \"Pastebin\"-artiger Dienst, bei dem der Server keinerlei Kenntnis der Inhalte hat. Die Daten werden <i>im Browser</i> mit 256 Bit AES ver- und entschlüsselt. Weitere Informationen sind auf der <a href=\"https://privatebin.info/\">Projektseite</a> zu finden.",
     "Because ignorance is bliss":
         "Unwissenheit ist ein Segen",
-    "Javascript is required for PrivateBin to work.<br />Sorry for the inconvenience.":
-        "Javascript ist eine Voraussetzung, um PrivateBin zu nutzen.<br />Bitte entschuldige die Unannehmlichkeiten.",
+    "JavaScript is required for PrivateBin to work.<br />Sorry for the inconvenience.":
+        "JavaScript ist eine Voraussetzung, um PrivateBin zu nutzen.<br />Bitte entschuldige die Unannehmlichkeiten.",
     "PrivateBin requires a modern browser to work.":
         "PrivateBin setzt einen modernen Browser voraus, um funktionieren zu können.",
     "Still using Internet Explorer? Do yourself a favor, switch to a modern browser:":
@@ -144,5 +144,8 @@
     "Decrypt":
         "Entschlüsseln",
     "Enter password":
-        "Passwort eingeben"
+        "Passwort eingeben",
+    "Loading…": "Lädt…",
+    "In case this message never disappears please have a look at <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">this FAQ for information to troubleshoot</a>.":
+        "Wenn diese Nachricht nicht mehr verschwindet, schau bitte in <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">die FAQ</a> (englisch), um zu sehen, wie der Fehler behoben werden kann."
 }

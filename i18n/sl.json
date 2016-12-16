@@ -31,8 +31,8 @@
         "PrivateBin je minimalističen, odprtokodni spletni 'pastebin', kjer server ne ve ničesar o prilepljenih podatkih. Podatki so zakodirani/odkodirani <i>v brskalniku</i> z uporabo 256 bitnega AES. Več informacij na < href=\"https://privatebin.info/\">spletni strani projekta.</a>.",
     "Because ignorance is bliss":
         "Ker kar ne veš ne boli.",
-    "Javascript is required for PrivateBin to work.<br />Sorry for the inconvenience.":
-        "Da PrivateBin deluje, moraš vklopiti Javascript.<br />Oprosti za povročene nevšečnosti.",
+    "JavaScript is required for PrivateBin to work.<br />Sorry for the inconvenience.":
+        "Da PrivateBin deluje, moraš vklopiti JavaScript.<br />Oprosti za povročene nevšečnosti.",
     "PrivateBin requires a modern browser to work.":
         "PrivateBin za svoje delovanje potrebuje moderen brskalnik.",
     "Still using Internet Explorer? Do yourself a favor, switch to a modern browser:":
@@ -153,5 +153,8 @@
     "Decrypt":
         "Decrypt",
     "Enter password":
-        "Prosim vnesi geslo"
+        "Prosim vnesi geslo",
+    "Loading…": "Loading…",
+    "In case this message never disappears please have a look at <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">this FAQ for information to troubleshoot</a>.":
+        "In case this message never disappears please have a look at <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">this FAQ for information to troubleshoot</a> (in English)."
 }

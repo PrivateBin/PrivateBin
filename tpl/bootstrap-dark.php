@@ -24,6 +24,7 @@ if ($SYNTAXHIGHLIGHTING):
     endif;
 endif;
 ?>
+		<noscript><link type="text/css" rel="stylesheet" href="css/noscript.css" /></noscript>
 		<script type="text/javascript" src="js/jquery-3.1.1.js" integrity="sha512-U6K1YLIFUWcvuw5ucmMtT9HH4t0uz3M366qrF5y4vnyH6dgDzndlcGvH/Lz5k8NFh80SN95aJ5rqGZEdaQZ7ZQ==" crossorigin="anonymous"></script>
 		<script type="text/javascript" src="js/sjcl-1.0.4.js" integrity="sha512-BqVQ8GgWfMCcdsDuP6Ggm1BV7+mmoWH3PC4UqcYpEKSdEq1rthy6NUsa6gu5sydewbi/ilI3E3ohdCxlPPF9ww==" crossorigin="anonymous"></script>
 <?php
@@ -52,7 +53,7 @@ if ($MARKDOWN):
 <?php
 endif;
 ?>
-		<script type="text/javascript" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-ofJ8kC2nFEP1Tb494qM7ne2kGL+vL1syZHhKDfGr8xtl6sfC0JOIBw8ypwv7bTfo8TqJh0rAI0ZblsjuFcFEXA==" crossorigin="anonymous"></script>
+		<script type="text/javascript" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-aKd7/5EFMPmeZTmL0Iyttt6sbukO9E40bUink8A/IJmrncCh1upGLlkhti7ygO+hq/ocgLJ0kKoxZETzTgNEww==" crossorigin="anonymous"></script>
 		<!--[if lt IE 10]>
 		<style type="text/css">body {padding-left:60px;padding-right:60px;} #ienotice {display:block;} #oldienotice {display:block;}</style>
 		<![endif]-->
@@ -336,6 +337,12 @@ endif;
 			<div id="discussion" class="hidden">
 				<h4><?php echo I18n::_('Discussion'); ?></h4>
 				<div id="comments"></div>
+			</div>
+		</section>
+		<section class="container">
+			<div id="noscript" role="alert" class="nonworking alert alert-info noscript-hide"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true">
+				<span> <?php echo I18n::_('Loading…'); ?></span><br>
+				<span class="small"><?php echo I18n::_('In case this message never disappears please have a look at <a href="https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away">this FAQ for information to troubleshoot</a>.'); ?></span>
 			</div>
 		</section>
 		<footer class="container">
