@@ -31,8 +31,8 @@
         "PrivateBin это минималистичный Open Source проект для создания заметок, где сервер не знает ничего о сохраняемых данных. Данные шифруются/расшифровываются <i>в браузере</i> с использованием 256 битного шифрования AES. Подробнее можно узнать на <a href=\"https://privatebin.info/\">сайте проекта</a>.",
     "Because ignorance is bliss":
         "Потому что неведение - благо",
-    "Javascript is required for PrivateBin to work.<br />Sorry for the inconvenience.":
-        "Для работы PrivateBin требуется включенный Javascript.<br />Приносим извинения за неудобства..",
+    "JavaScript is required for PrivateBin to work.<br />Sorry for the inconvenience.":
+        "Для работы PrivateBin требуется включенный JavaScript.<br />Приносим извинения за неудобства..",
     "PrivateBin requires a modern browser to work.":
         "Для работы PrivateBin требуется более современный браузер.",
     "Still using Internet Explorer? Do yourself a favor, switch to a modern browser:":
