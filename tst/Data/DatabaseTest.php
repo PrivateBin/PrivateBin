@@ -77,19 +77,24 @@ class DatabaseTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(json_decode(json_encode($original)), $this->_model->read(Helper::getPasteId()));
     }
 
+    /**
+     * pastes a-g are expired and should get deleted, x never expires and y-z expire in an hour
+     */
     public function testPurge()
     {
         $this->_model->delete(Helper::getPasteId());
         $expired = Helper::getPaste(array('expire_date' => 1344803344));
         $paste   = Helper::getPaste(array('expire_date' => time() + 3600));
-        $keys    = array('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'x', 'y', 'z');
+        $keys    = array('a', 'b', 'c', 'd', 'e', 'f', 'g', 'x', 'y', 'z');
         $ids     = array();
         foreach ($keys as $key) {
             $ids[$key] = substr(md5($key), 0, 16);
             $this->_model->delete($ids[$key]);
             $this->assertFalse($this->_model->exists($ids[$key]), "paste $key does not yet exist");
-            if (in_array($key, array('x', 'y', 'z'))) {
+            if (in_array($key, array('y', 'z'))) {
                 $this->assertTrue($this->_model->create($ids[$key], $paste), "store $key paste");
+            } elseif ($key === 'x') {
+                $this->assertTrue($this->_model->create($ids[$key], Helper::getPaste()), "store $key paste");
             } else {
                 $this->assertTrue($this->_model->create($ids[$key], $expired), "store $key paste");
             }
