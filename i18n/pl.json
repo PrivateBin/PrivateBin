@@ -59,11 +59,11 @@
         "Przełącz nawigację",
     "%d seconds": ["%d second", "%d second", "%d second"],
     "%d minutes": ["%d minut", "%d minut", "%d minut"],
-    "%d hours": ["%d godzina", "%d godzina", "godzinę"],
+    "%d hours": ["%d godzina", "%d godzina", "%d godzinę"],
     "%d days": ["%d dzień", "%d dzień", "%d dzień"],
-    "%d weeks": ["%d tydzień", "%d tydzień", "tydzień"],
-    "%d months": ["%d miesiąc", "%d miesiąc", "miesiąc"],
-    "%d years": ["%d rok", "%d rok", "rok"],
+    "%d weeks": ["%d tydzień", "%d tydzień", "%d tydzień"],
+    "%d months": ["%d miesiąc", "%d miesiąc", "%d miesiąc"],
+    "%d years": ["%d rok", "%d rok", "%d rok"],
     "Never":
         "nigdy",
     "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.":
