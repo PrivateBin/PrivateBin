@@ -6,6 +6,7 @@
     * CHANGED: Using modal dialog to request password input instead of native JS input window (#69)
     * CHANGED: Suppressed referrer HTTP header sending when following links in a paste or comment (#96) and added additional HTTP headers for XSS mitigation (#91)
     * CHANGED: Updated random_compat and jQuery libraries
+    * FIXED: XSS using JavaScript stored as markdown formatted paste, after clicking on Raw paste button (#137)
     * FIXED: Automatic purging deleting non-expiring pastes, when using database store (#149)
   * **1.0 (2016-08-25)**
     * ADDED: Translations for Slowene and Chinese
