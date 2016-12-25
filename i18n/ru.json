@@ -1,0 +1,157 @@
+{
+    "en": "ru",
+    "Paste does not exist, has expired or has been deleted.":
+        "Запись не существует, просрочена или была удалена.",
+    "PrivateBin requires php 5.3.0 or above to work. Sorry.":
+        "Для работы PrivateBin требуется PHP 5.3.0 или выше. Извините.",
+    "PrivateBin requires configuration section [%s] to be present in configuration file.":
+        "PrivateBin необходимо наличие секции [%s] в конфигурационном файле.",
+    "Please wait %d seconds between each post.":
+        ["Пожалуйста ожидайте %d секунду между каждыми записями.", "Пожалуйста ожидайте %d секунды между каждыми записями.", "Пожалуйста ожидайте %d секунд между каждыми записями."],
+    "Paste is limited to %s of encrypted data.":
+        "Размер записи ограничен %s зашифрованных данных.",
+    "Invalid data.":
+        "Неверные данные.",
+    "You are unlucky. Try again.":
+        "Вам не повезло. Попробуйте еще раз.",
+    "Error saving comment. Sorry.":
+        "Ошибка при сохранении комментария. Извините.",
+    "Error saving paste. Sorry.":
+        "Ошибка при сохранении записи. Извините.",
+    "Invalid paste ID.":
+        "Неверный ID записи.",
+    "Paste is not of burn-after-reading type.":
+        "Тип записи не \"Удалить после прочтения\".",
+    "Wrong deletion token. Paste was not deleted.":
+        "Неверный ключ удаления записи. Запись не удалена",
+    "Paste was properly deleted.":
+        "Запись была успешно удалена.",
+    "PrivateBin": "PrivateBin",
+    "PrivateBin is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href=\"https://privatebin.info/\">project page</a>.":
+        "PrivateBin это минималистичный Open Source проект для создания заметок, где сервер не знает ничего о сохраняемых данных. Данные шифруются/расшифровываются <i>в браузере</i> с использованием 256 битного шифрования AES. Подробнее можно узнать на <a href=\"https://privatebin.info/\">сайте проекта</a>.",
+    "Because ignorance is bliss":
+        "Потому что неведение - благо",
+    "JavaScript is required for PrivateBin to work.<br />Sorry for the inconvenience.":
+        "Для работы PrivateBin требуется включенный JavaScript.<br />Приносим извинения за неудобства..",
+    "PrivateBin requires a modern browser to work.":
+        "Для работы PrivateBin требуется более современный браузер.",
+    "Still using Internet Explorer? Do yourself a favor, switch to a modern browser:":
+        "До сих пор используете Internet Explorer? Пожалейте себя, перейдите на более современный браузер:",
+    "New":
+        "Новая запись",
+    "Send":
+        "Отправить",
+    "Clone":
+        "Дублировать",
+    "Raw text":
+        "Исходный текст",
+    "Expires":
+        "Удалить через",
+    "Burn after reading":
+        "Удалить после прочтения",
+    "Open discussion":
+        "Открыть обсуждение",
+    "Password (recommended)":
+        "Пароль (рекомендуется)",
+    "Discussion":
+        "Обсуждение",
+    "Toggle navigation":
+        "Переключить навигацию",
+    "%d seconds": ["%d секунду", "%d секунды", "%d секунд"],
+    "%d minutes": ["%d минуту", "%d минуты", "%d минут"],
+    "%d hours": ["%d час", "%d часа", "%d часов"],
+    "%d days": ["%d день", "%d дня", "%d дней"],
+    "%d weeks": ["%d неделю", "%d недели", "%d недель"],
+    "%d months": ["%d месяц", "%d месяца", "%d месяцев"],
+    "%d years": ["%d год", "%d года", "%d лет"],
+    "Never":
+        "Никогда",
+    "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.":
+        "Примечание: Этот сервис тестовый: Данные могут быть удалены в любое время. Котята умрут, если вы будете злоупотреблять серсисом.",
+    "This document will expire in %d seconds.":
+        ["Документ будет удален через %d секунду.", "Документ будет удален через %d секунды.", "Документ будет удален через %d секунд."],
+    "This document will expire in %d minutes.":
+        ["Документ будет удален через %d минуту.", "Документ будет удален через %d минуты.", "Документ будет удален через %d минут."],
+    "This document will expire in %d hours.":
+        ["Документ будет удален через %d час.", "Документ будет удален через %d часа.", "Документ будет удален через %d часов."],
+    "This document will expire in %d days.":
+        ["Документ будет удален через %d день.", "Документ будет удален через %d дня.", "Документ будет удален через %d дней."],
+    "This document will expire in %d months.":
+        ["Документ будет удален через %d месяц.", "Документ будет удален через %d месяца.", "Документ будет удален через %d месяцев."],
+    "Please enter the password for this paste:":
+        "Пожалуйста введите пароль от записи:",
+    "Could not decrypt data (Wrong key?)":
+        "Невозможно расшифровать данные (Неверный ключ?)",
+    "Could not delete the paste, it was not stored in burn after reading mode.":
+        "Невозможно удалить запись, она не была сохранена в режиме удаления после прочтения",
+    "FOR YOUR EYES ONLY. Don't close this window, this message can't be displayed again.":
+        "ТОЛЬКО ДЛЯ ВАШИХ ГЛАЗ. Не закрывайте это окно, это сообщение не может быть показано снова.",
+    "Could not decrypt comment; Wrong key?":
+        "Невозможно расшифровать комментарий; Неверный ключ?",
+    "Reply":
+        "Ответить",
+    "Anonymous":
+        "Аноним",
+    "Anonymous avatar (Vizhash of the IP address)":
+        "Анонимный аватар (Vizhash IP адреса)",
+    "Add comment":
+        "Добавить комментарий",
+    "Optional nickname...":
+        "Опциональный никнейм...",
+    "Post comment":
+        "Отправить комментарий",
+    "Sending comment...":
+        "Отправка комментария...",
+    "Comment posted.":
+        "Комментарий опубликован.",
+    "Could not refresh display: %s":
+        "Невозможно обновить данные: %s",
+    "unknown status":
+        "неизвестная причина",
+    "server error or not responding":
+        "ошибка сервера или нет ответа",
+    "Could not post comment: %s":
+        "Не удалось опубликовать комментарий: %s",
+    "Sending paste (Please move your mouse for more entropy)...":
+        "Отправка записи (Пожалуйста двигайте мышкой для большей энтропии)...",
+    "Sending paste...":
+        "Отправка записи...",
+    "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit [Ctrl]+[c] to copy)</span>":
+        "Ссылка на запись <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Нажмите [Ctrl]+[c] чтобы скопировать ссылку)</span>",
+    "Delete data":
+        "Удалить запись",
+    "Could not create paste: %s":
+        "Не удалось опубликовать запись: %s",
+    "Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)":
+        "Невозможно расшифровать запись: Ключ расшифровки отсутствует в ссылке (Может быть вы используете сокращатель ссылок, который удаляет часть ссылки?)",
+    "B": "байт",
+    "KiB": "Кбайт",
+    "MiB": "Мбайт",
+    "GiB": "Гбайт",
+    "TiB": "Тбайт",
+    "PiB": "Пбайт",
+    "EiB": "Эбайт",
+    "ZiB": "Збайт",
+    "YiB": "Йбайт",
+    "Format": "Формат",
+    "Plain Text": "Обычный текст",
+    "Source Code": "Исходный код",
+    "Markdown": "Язык разметки",
+    "Download attachment": "Скачать прикрепленный файл",
+    "Cloned file attached.": "Дубль файла прикреплен.",
+    "Attach a file": "Прикрепить файл",
+    "Remove attachment": "Удалить вложение",
+    "Your browser does not support uploading encrypted files. Please use a newer browser.":
+        "Ваш браузер не поддерживает отправку зашифрованных файлов. Используйте более новый браузер.",
+    "Invalid attachment.": "Неизвестное вложение.",
+    "Options": "Опции",
+    "Shorten URL": "Короткая ссылка",
+    "Editor": "Редактор",
+    "Preview": "Предпросмотр",
+    "PrivateBin requires the PATH to end in a \"%s\". Please update the PATH in your index.php.":
+        "Переменная PATH необходима PrivateBin в конце \"%s\". Пожалуйста обновите переменную PATH в вашем index.php.",
+    "Decrypt":
+        "Расшифровать",
+    "Enter password":
+        "Введите пароль"
+}
