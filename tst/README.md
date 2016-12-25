@@ -5,7 +5,7 @@ In order to run these tests, you will need to install the following packages
 and its dependencies:
 * phpunit
 * php-gd
-* php-sqlite
+* php-sqlite3
 * php-xdebug
 
 Example for Debian and Ubuntu:
