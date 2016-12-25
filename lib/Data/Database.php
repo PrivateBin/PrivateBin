@@ -417,7 +417,7 @@ class Database extends AbstractData
         $pastes = array();
         $rows   = self::_select(
             'SELECT dataid FROM ' . self::_sanitizeIdentifier('paste') .
-            ' WHERE expiredate < ? LIMIT ?', array(time(), $batchsize)
+            ' WHERE expiredate < ? AND expiredate != ? LIMIT ?', array(time(), 0, $batchsize)
         );
         if (count($rows)) {
             foreach ($rows as $row) {
