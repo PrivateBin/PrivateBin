@@ -3,8 +3,8 @@
 **TL;DR:** Download the
 [latest release archive](https://github.com/PrivateBin/PrivateBin/releases/latest)
 and extract it in your web hosts folder where you want to install your PrivateBin
-instance. We try to provide a safe default configuration, but advise you to check
-the options and adjust them as you see fit.
+instance. We try to provide a safe default configuration, but we advise you to
+check the options and adjust them as you see fit.
 
 ## Basic installation
 
@@ -20,7 +20,7 @@ the options and adjust them as you see fit.
   
   Mcrypt needs to be able to access `/dev/urandom`. This means if `open_basedir` is set, it must include this file.
 - GD extension
-- (optional) a database supported by [PDO](https://secure.php.net/manual/book.pdo.php)
+- some disk space or (optional) a database supported by [PDO](https://secure.php.net/manual/book.pdo.php)
 - ability to create files and folders in the installation directory and the PATH
 - A web browser with javascript support
 
@@ -38,6 +38,17 @@ to your PrivateBin installation.
 
 More details can be found in the
 [configuration documentation](https://github.com/PrivateBin/PrivateBin/wiki/Configuration).
+
+## Further configuration
+
+After (or before) setting up PrivateBin, also set up HTTPS, as without HTTPS
+PrivateBin is not secure. (
+[More information](https://github.com/PrivateBin/PrivateBin/wiki/FAQ#how-should-i-setup-https))
+
+If you want to use PrivateBin behind Cloudflare, make sure you disabled Rocket
+loader and unchecked "Javascript" for Auto Minify, found in your domain settings,
+under "Speed". (More information
+[in this FAQ entry](https://github.com/PrivateBin/PrivateBin/wiki/FAQ#user-content-how-to-make-privatebin-work-when-using-cloudflare-for-ddos-protection))
 
 ## Advanced installation
 
@@ -134,4 +145,4 @@ For reference or if you want to create the table schema for yourself (replace
     CREATE TABLE prefix_config (
         id CHAR(16) NOT NULL, value TEXT, PRIMARY KEY (id)
     );
-    INSERT INTO prefix_config VALUES('VERSION', '0.22');
+    INSERT INTO prefix_config VALUES('VERSION', '1.1');
