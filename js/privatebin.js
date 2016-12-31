@@ -329,7 +329,7 @@ $(function() {
         /**
          * supported languages, minus the built in 'en'
          */
-        supportedLanguages: ['de', 'fr', 'it', 'pl', 'ru', 'sl', 'zh'],
+        supportedLanguages: ['de', 'es', 'fr', 'it', 'pl', 'ru', 'sl', 'zh'],
 
         /**
          * translate a string, alias for translate()
