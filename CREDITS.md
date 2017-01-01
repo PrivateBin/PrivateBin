@@ -32,3 +32,4 @@ Sébastien Sauvage - original idea and main developer
 * Jiawei Zhou - Chinese
 * Stefano Marty - Italian
 * R4SAS - Russian
+* Alfredo Fabián Altamirano Tena - Spanish
