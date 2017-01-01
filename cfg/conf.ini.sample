@@ -28,7 +28,7 @@ defaultformatter = "plaintext"
 ; (optional) set a syntax highlighting theme, as found in css/prettify/
 ; syntaxhighlightingtheme = "sons-of-obsidian"
 
-; size limit per paste or comment in bytes, defaults to 2 Mibibytes
+; size limit per paste or comment in bytes, defaults to 2 Megabytes
 sizelimit = 2097152
 
 ; template to include, default is "bootstrap" (tpl/bootstrap.html)
