@@ -1,11 +1,16 @@
 {
+    "PrivateBin": "PrivateBin",
+    "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href=\"https://privatebin.info/\">project page</a>.":
+        "%s ist ein minimalistischer, quelloffener \"Pastebin\"-artiger Dienst, bei dem der Server keinerlei Kenntnis der Inhalte hat. Die Daten werden <i>im Browser</i> mit 256 Bit AES ver- und entschlüsselt. Weitere Informationen sind auf der <a href=\"https://privatebin.info/\">Projektseite</a> zu finden.",
+    "Because ignorance is bliss":
+        "Unwissenheit ist ein Segen",
     "en": "de",
     "Paste does not exist, has expired or has been deleted.":
         "Diesen Text gibt es nicht, er ist abgelaufen oder wurde gelöscht.",
-    "PrivateBin requires php 5.3.0 or above to work. Sorry.":
-        "PrivateBin benötigt PHP 5.3.0 oder höher, um zu funktionieren. Sorry.",
-    "PrivateBin requires configuration section [%s] to be present in configuration file.":
-        "PrivateBin benötigt den Konfigurationsabschnitt [%s] in der Konfigurationsdatei um zu funktionieren.",
+    "%s requires php 5.3.0 or above to work. Sorry.":
+        "%s benötigt PHP 5.3.0 oder höher, um zu funktionieren. Sorry.",
+    "%s requires configuration section [%s] to be present in configuration file.":
+        "%s benötigt den Konfigurationsabschnitt [%s] in der Konfigurationsdatei um zu funktionieren.",
     "Please wait %d seconds between each post.":
         "Bitte warte %d Sekunden zwischen dem Absenden.",
     "Paste is limited to %s of encrypted data.":
@@ -26,15 +31,10 @@
         "Falscher Lösch-Code. Text wurde nicht gelöscht.",
     "Paste was properly deleted.":
         "Text wurde erfolgreich gelöscht.",
-    "PrivateBin": "PrivateBin",
-    "PrivateBin is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href=\"https://privatebin.info/\">project page</a>.":
-        "PrivateBin ist ein minimalistischer, quelloffener \"Pastebin\"-artiger Dienst, bei dem der Server keinerlei Kenntnis der Inhalte hat. Die Daten werden <i>im Browser</i> mit 256 Bit AES ver- und entschlüsselt. Weitere Informationen sind auf der <a href=\"https://privatebin.info/\">Projektseite</a> zu finden.",
-    "Because ignorance is bliss":
-        "Unwissenheit ist ein Segen",
-    "JavaScript is required for PrivateBin to work.<br />Sorry for the inconvenience.":
-        "JavaScript ist eine Voraussetzung, um PrivateBin zu nutzen.<br />Bitte entschuldige die Unannehmlichkeiten.",
-    "PrivateBin requires a modern browser to work.":
-        "PrivateBin setzt einen modernen Browser voraus, um funktionieren zu können.",
+    "JavaScript is required for %s to work.<br />Sorry for the inconvenience.":
+        "JavaScript ist eine Voraussetzung, um %s zu nutzen.<br />Bitte entschuldige die Unannehmlichkeiten.",
+    "%s requires a modern browser to work.":
+        "%s setzt einen modernen Browser voraus, um funktionieren zu können.",
     "Still using Internet Explorer? Do yourself a favor, switch to a modern browser:":
         "Du benutzt immer noch den Internet Explorer? Tu Dir einen Gefallen und wechsle zu einem moderneren Browser:",
     "New":
@@ -139,8 +139,8 @@
     "Shorten URL": "URL verkürzen",
     "Editor": "Bearbeiten",
     "Preview": "Vorschau",
-    "PrivateBin requires the PATH to end in a \"%s\". Please update the PATH in your index.php.":
-        "Der PATH muss bei PrivateBin mit einem \"%s\" enden. Bitte passe Deinen PATH in Deiner index.php an.",
+    "%s requires the PATH to end in a \"%s\". Please update the PATH in your index.php.":
+        "Der PATH muss bei %s mit einem \"%s\" enden. Bitte passe Deinen PATH in Deiner index.php an.",
     "Decrypt":
         "Entschlüsseln",
     "Enter password":

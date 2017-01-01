@@ -1,11 +1,16 @@
 {
+    "PrivateBin": "PrivateBin",
+    "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href=\"https://privatebin.info/\">project page</a>.":
+        "%s je minimalističen, odprtokodni spletni 'pastebin', kjer server ne ve ničesar o prilepljenih podatkih. Podatki so zakodirani/odkodirani <i>v brskalniku</i> z uporabo 256 bitnega AES. Več informacij na < href=\"https://privatebin.info/\">spletni strani projekta.</a>.",
+    "Because ignorance is bliss":
+        "Ker kar ne veš ne boli.",
     "en": "sl",
     "Paste does not exist, has expired or has been deleted.":
         "Prilepek ne obstaja, mu je potekla življenjska doba, ali pa je izbrisan.",
-    "PrivateBin requires php 5.3.0 or above to work. Sorry.":
-        "Oprosti, PrivateBin za delovanje potrebuje vsaj php 5.3.0.",
-    "PrivateBin requires configuration section [%s] to be present in configuration file.":
-        "PrivateBin potrebuje sekcijo konfiguracij [%s] v konfiguracijski datoteki.",
+    "%s requires php 5.3.0 or above to work. Sorry.":
+        "Oprosti, %s za delovanje potrebuje vsaj php 5.3.0.",
+    "%s requires configuration section [%s] to be present in configuration file.":
+        "%s potrebuje sekcijo konfiguracij [%s] v konfiguracijski datoteki.",
     "Please wait %d seconds between each post.":
         "Prosim počakaj vsaj %d sekund pred vsako naslednjo objavo.",
     "Paste is limited to %s of encrypted data.":
@@ -26,15 +31,10 @@
         "Napačen token za izbris. Prilepek ni bil izbrisan..",
     "Paste was properly deleted.":
         "Prilepek je uspešno izbrisan.",
-    "PrivateBin": "PrivateBin",
-    "PrivateBin is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href=\"https://privatebin.info/\">project page</a>.":
-        "PrivateBin je minimalističen, odprtokodni spletni 'pastebin', kjer server ne ve ničesar o prilepljenih podatkih. Podatki so zakodirani/odkodirani <i>v brskalniku</i> z uporabo 256 bitnega AES. Več informacij na < href=\"https://privatebin.info/\">spletni strani projekta.</a>.",
-    "Because ignorance is bliss":
-        "Ker kar ne veš ne boli.",
-    "JavaScript is required for PrivateBin to work.<br />Sorry for the inconvenience.":
-        "Da PrivateBin deluje, moraš vklopiti JavaScript.<br />Oprosti za povročene nevšečnosti.",
-    "PrivateBin requires a modern browser to work.":
-        "PrivateBin za svoje delovanje potrebuje moderen brskalnik.",
+    "JavaScript is required for %s to work.<br />Sorry for the inconvenience.":
+        "Da %s deluje, moraš vklopiti JavaScript.<br />Oprosti za povročene nevšečnosti.",
+    "%s requires a modern browser to work.":
+        "%s za svoje delovanje potrebuje moderen brskalnik.",
     "Still using Internet Explorer? Do yourself a favor, switch to a modern browser:":
         "Še vedno uporabljaš Internet Explorer? Naredi si uslugo, preklopi na moderen brskalnik:",
     "New":
@@ -148,8 +148,8 @@
     "Shorten URL": "Skrajšajte URL",
     "Editor": "Uredi",
     "Preview": "Predogled",
-    "PrivateBin requires the PATH to end in a \"%s\". Please update the PATH in your index.php.":
-        "PrivateBin requires the PATH to end in a \"%s\". Please update the PATH in your index.php.",
+    "%s requires the PATH to end in a \"%s\". Please update the PATH in your index.php.":
+        "%s requires the PATH to end in a \"%s\". Please update the PATH in your index.php.",
     "Decrypt":
         "Decrypt",
     "Enter password":

@@ -36,6 +36,7 @@ class Configuration
      */
     private static $_defaults = array(
         'main' => array(
+            'name'                     => 'PrivateBin',
             'discussion'               => true,
             'opendiscussion'           => false,
             'password'                 => true,
@@ -239,7 +240,7 @@ class Configuration
     public function getSection($section)
     {
         if (!array_key_exists($section, $this->_configuration)) {
-            throw new Exception(I18n::_('PrivateBin requires configuration section [%s] to be present in configuration file.', $section), 3);
+            throw new Exception(I18n::_('%s requires configuration section [%s] to be present in configuration file.', I18n::_($this->getKey('name')), $section), 3);
         }
         return $this->_configuration[$section];
     }

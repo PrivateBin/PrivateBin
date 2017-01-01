@@ -1,11 +1,16 @@
 {
+    "PrivateBin": "PrivateBin",
+    "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href=\"https://privatebin.info/\">project page</a>.":
+        "%s это минималистичный Open Source проект для создания заметок, где сервер не знает ничего о сохраняемых данных. Данные шифруются/расшифровываются <i>в браузере</i> с использованием 256 битного шифрования AES. Подробнее можно узнать на <a href=\"https://privatebin.info/\">сайте проекта</a>.",
+    "Because ignorance is bliss":
+        "Потому что неведение - благо",
     "en": "ru",
     "Paste does not exist, has expired or has been deleted.":
         "Запись не существует, просрочена или была удалена.",
-    "PrivateBin requires php 5.3.0 or above to work. Sorry.":
-        "Для работы PrivateBin требуется PHP 5.3.0 или выше. Извините.",
-    "PrivateBin requires configuration section [%s] to be present in configuration file.":
-        "PrivateBin необходимо наличие секции [%s] в конфигурационном файле.",
+    "%s requires php 5.3.0 or above to work. Sorry.":
+        "Для работы %s требуется PHP 5.3.0 или выше. Извините.",
+    "%s requires configuration section [%s] to be present in configuration file.":
+        "%s необходимо наличие секции [%s] в конфигурационном файле.",
     "Please wait %d seconds between each post.":
         ["Пожалуйста ожидайте %d секунду между каждыми записями.", "Пожалуйста ожидайте %d секунды между каждыми записями.", "Пожалуйста ожидайте %d секунд между каждыми записями."],
     "Paste is limited to %s of encrypted data.":
@@ -26,15 +31,10 @@
         "Неверный ключ удаления записи. Запись не удалена",
     "Paste was properly deleted.":
         "Запись была успешно удалена.",
-    "PrivateBin": "PrivateBin",
-    "PrivateBin is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href=\"https://privatebin.info/\">project page</a>.":
-        "PrivateBin это минималистичный Open Source проект для создания заметок, где сервер не знает ничего о сохраняемых данных. Данные шифруются/расшифровываются <i>в браузере</i> с использованием 256 битного шифрования AES. Подробнее можно узнать на <a href=\"https://privatebin.info/\">сайте проекта</a>.",
-    "Because ignorance is bliss":
-        "Потому что неведение - благо",
-    "JavaScript is required for PrivateBin to work.<br />Sorry for the inconvenience.":
-        "Для работы PrivateBin требуется включенный JavaScript.<br />Приносим извинения за неудобства..",
-    "PrivateBin requires a modern browser to work.":
-        "Для работы PrivateBin требуется более современный браузер.",
+    "JavaScript is required for %s to work.<br />Sorry for the inconvenience.":
+        "Для работы %s требуется включенный JavaScript.<br />Приносим извинения за неудобства..",
+    "%s requires a modern browser to work.":
+        "Для работы %s требуется более современный браузер.",
     "Still using Internet Explorer? Do yourself a favor, switch to a modern browser:":
         "До сих пор используете Internet Explorer? Пожалейте себя, перейдите на более современный браузер:",
     "New":
@@ -148,8 +148,8 @@
     "Shorten URL": "Короткая ссылка",
     "Editor": "Редактор",
     "Preview": "Предпросмотр",
-    "PrivateBin requires the PATH to end in a \"%s\". Please update the PATH in your index.php.":
-        "Переменная PATH необходима PrivateBin в конце \"%s\". Пожалуйста обновите переменную PATH в вашем index.php.",
+    "%s requires the PATH to end in a \"%s\". Please update the PATH in your index.php.":
+        "Переменная PATH необходима %s в конце \"%s\". Пожалуйста обновите переменную PATH в вашем index.php.",
     "Decrypt":
         "Расшифровать",
     "Enter password":

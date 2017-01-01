@@ -6,7 +6,7 @@ use PrivateBin\I18n;
 		<meta charset="utf-8" />
 		<meta name="robots" content="noindex" />
 		<meta name="referrer" content="no-referrer">
-		<title><?php echo I18n::_('PrivateBin'); ?></title>
+		<title><?php echo I18n::_($NAME); ?></title>
 		<link type="text/css" rel="stylesheet" href="css/privatebin.css?<?php echo rawurlencode($VERSION); ?>" />
 <?php
 if ($SYNTAXHIGHLIGHTING):
@@ -63,7 +63,7 @@ endif;
 	<body>
 		<header>
 			<div id="aboutbox">
-				<?php echo I18n::_('PrivateBin is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href="https://privatebin.info/">project page</a>.'); ?><br />
+				<?php echo I18n::_('%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href="https://privatebin.info/">project page</a>.', I18n::_($NAME)); ?><br />
 <?php
 if (strlen($NOTICE)):
 ?>
@@ -71,11 +71,11 @@ if (strlen($NOTICE)):
 endif;
 ?>
 			</div>
-			<h1 class="title reloadlink"><?php echo I18n::_('PrivateBin'); ?></h1><br />
+			<h1 class="title reloadlink"><?php echo I18n::_($NAME); ?></h1><br />
 			<h2 class="title"><?php echo I18n::_('Because ignorance is bliss'); ?></h2><br />
 			<h3 class="title"><?php echo $VERSION; ?></h3>
-			<noscript><div id="noscript" class="nonworking"><?php echo I18n::_('Javascript is required for PrivateBin to work.<br />Sorry for the inconvenience.'); ?></div></noscript>
-			<div id="oldienotice" class="nonworking"><?php echo I18n::_('PrivateBin requires a modern browser to work.'); ?></div>
+			<noscript><div id="noscript" class="nonworking"><?php echo I18n::_('Javascript is required for %s to work.<br />Sorry for the inconvenience.', I18n::_($NAME)); ?></div></noscript>
+			<div id="oldienotice" class="nonworking"><?php echo I18n::_('%s requires a modern browser to work.', I18n::_($NAME)); ?></div>
 			<div id="ienotice"><?php echo I18n::_('Still using Internet Explorer? Do yourself a favor, switch to a modern browser:'), PHP_EOL; ?>
 				<a href="https://www.mozilla.org/firefox/">Firefox</a>,
 				<a href="https://www.opera.com/">Opera</a>,

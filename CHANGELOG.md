@@ -2,6 +2,7 @@
 
   * **next (not yet released)**
     * ADDED: Translations for Spanish
+    * ADDED: Option in configuration to change the default "PrivateBin" title on the site.
   * **1.1 (2016-12-26)**
     * ADDED: Translations for Italian and Russian
     * ADDED: Loading message displayed until decryption succeeded for slower (in terms of CPU or network) systems

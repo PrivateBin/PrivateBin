@@ -1,11 +1,16 @@
 {
+    "PrivateBin": "PrivateBin",
+    "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href=\"https://privatebin.info/\">project page</a>.":
+        "%s est un 'pastebin' (ou gestionnaire d'extraits de texte et de code source) minimaliste et open source, dans lequel le serveur n'a aucune connaissance des données envoyées. Les données sont chiffrées/déchiffrées <i>dans le navigateur</i> par un chiffrage AES 256 bits. Plus d'informations sur <a href=\"https://privatebin.info/\">la page du projet</a>.",
+    "Because ignorance is bliss":
+        "Parce que l'ignorance c'est le bonheur",
     "en": "fr",
     "Paste does not exist, has expired or has been deleted.":
         "Le paste n'existe pas, a expiré, ou a été supprimé.",
-    "PrivateBin requires php 5.3.0 or above to work. Sorry.":
-        "Désolé, PrivateBin nécessite php 5.3.0 ou supérieur pour fonctionner.",
-    "PrivateBin requires configuration section [%s] to be present in configuration file.":
-        "PrivateBin a besoin de la section de configuration [%s] dans le fichier de configuration pour fonctionner.",
+    "%s requires php 5.3.0 or above to work. Sorry.":
+        "Désolé, %s nécessite php 5.3.0 ou supérieur pour fonctionner.",
+    "%s requires configuration section [%s] to be present in configuration file.":
+        "%s a besoin de la section de configuration [%s] dans le fichier de configuration pour fonctionner.",
     "Please wait %d seconds between each post.":
         "Merci d'attendre %d secondes entre chaque publication.",
     "Paste is limited to %s of encrypted data.":
@@ -26,15 +31,10 @@
         "Jeton de suppression incorrect. Le paste n'a pas été supprimé.",
     "Paste was properly deleted.":
         "Le paste a été correctement supprimé.",
-    "PrivateBin": "PrivateBin",
-    "PrivateBin is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href=\"https://privatebin.info/\">project page</a>.":
-        "PrivateBin est un 'pastebin' (ou gestionnaire d'extraits de texte et de code source) minimaliste et open source, dans lequel le serveur n'a aucune connaissance des données envoyées. Les données sont chiffrées/déchiffrées <i>dans le navigateur</i> par un chiffrage AES 256 bits. Plus d'informations sur <a href=\"https://privatebin.info/\">la page du projet</a>.",
-    "Because ignorance is bliss":
-        "Parce que l'ignorance c'est le bonheur",
-    "JavaScript is required for PrivateBin to work.<br />Sorry for the inconvenience.":
-        "JavaScript est requis pour faire fonctionner PrivateBin. <br />Désolé pour cet inconvénient.",
-    "PrivateBin requires a modern browser to work.":
-        "PrivateBin nécessite un navigateur moderne pour fonctionner.",
+    "JavaScript is required for %s to work.<br />Sorry for the inconvenience.":
+        "JavaScript est requis pour faire fonctionner %s. <br />Désolé pour cet inconvénient.",
+    "%s requires a modern browser to work.":
+        "%s nécessite un navigateur moderne pour fonctionner.",
     "Still using Internet Explorer? Do yourself a favor, switch to a modern browser:":
         "Encore sur Internet Explorer ? Faites-vous une faveur, passez à un navigateur moderne :",
     "New":
@@ -148,8 +148,8 @@
     "Shorten URL": "Raccourcir URL",
     "Editor": "Éditer",
     "Preview": "Prévisualiser",
-    "PrivateBin requires the PATH to end in a \"%s\". Please update the PATH in your index.php.":
-        "PrivateBin requires the PATH to end in a \"%s\". Please update the PATH in your index.php.",
+    "%s requires the PATH to end in a \"%s\". Please update the PATH in your index.php.":
+        "%s requires the PATH to end in a \"%s\". Please update the PATH in your index.php.",
     "Decrypt":
         "Decrypt",
     "Enter password":

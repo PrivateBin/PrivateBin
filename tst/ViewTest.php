@@ -33,6 +33,7 @@ class ViewTest extends PHPUnit_Framework_TestCase
     {
         /* Setup Routine */
         $page = new View;
+        $page->assign('NAME', 'PrivateBinTest');
         $page->assign('CIPHERDATA', Helper::getPaste()['data']);
         $page->assign('ERROR', self::$error);
         $page->assign('STATUS', self::$status);
@@ -50,7 +51,7 @@ class ViewTest extends PHPUnit_Framework_TestCase
         $page->assign('ZEROBINCOMPATIBILITY', false);
         $page->assign('NOTICE', 'example');
         $page->assign('LANGUAGESELECTION', '');
-        $page->assign('LANGUAGES', I18n::getLanguageLabels(i18n::getAvailableLanguages()));
+        $page->assign('LANGUAGES', I18n::getLanguageLabels(I18n::getAvailableLanguages()));
         $page->assign('EXPIRE', self::$expire);
         $page->assign('EXPIREDEFAULT', self::$expire_default);
         $page->assign('EXPIRECLONE', true);

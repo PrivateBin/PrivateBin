@@ -3,6 +3,9 @@
 ; An explanation of each setting can be find online at https://github.com/PrivateBin/PrivateBin/wiki/Configuration.
 
 [main]
+; (optional) set a project name to be displayed on the website
+; name = "PrivateBin"
+
 ; enable or disable the discussion feature, defaults to true
 discussion = true
 

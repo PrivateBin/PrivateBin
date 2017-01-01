@@ -121,10 +121,10 @@ class PrivateBin
     public function __construct()
     {
         if (version_compare(PHP_VERSION, '5.3.0') < 0) {
-            throw new Exception(I18n::_('PrivateBin requires php 5.3.0 or above to work. Sorry.'), 1);
+            throw new Exception(I18n::_('%s requires php 5.3.0 or above to work. Sorry.', I18n::_('PrivateBin')), 1);
         }
         if (strlen(PATH) < 0 && substr(PATH, -1) !== DIRECTORY_SEPARATOR) {
-            throw new Exception(I18n::_('PrivateBin requires the PATH to end in a "%s". Please update the PATH in your index.php.', DIRECTORY_SEPARATOR), 5);
+            throw new Exception(I18n::_('%s requires the PATH to end in a "%s". Please update the PATH in your index.php.', I18n::_('PrivateBin'), DIRECTORY_SEPARATOR), 5);
         }
 
         // load config from ini file, initialize required classes
@@ -430,6 +430,7 @@ class PrivateBin
         }
 
         $page = new View;
+        $page->assign('NAME', $this->_conf->getKey('name'));
         $page->assign('CIPHERDATA', $this->_data);
         $page->assign('ERROR', I18n::_($this->_error));
         $page->assign('STATUS', I18n::_($this->_status));

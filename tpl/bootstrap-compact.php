@@ -8,7 +8,7 @@ use PrivateBin\I18n;
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<meta name="robots" content="noindex" />
 		<meta name="referrer" content="no-referrer">
-		<title><?php echo I18n::_('PrivateBin'); ?></title>
+		<title><?php echo I18n::_($NAME); ?></title>
 		<link type="text/css" rel="stylesheet" href="css/bootstrap/bootstrap-3.3.5.css" />
 		<link type="text/css" rel="stylesheet" href="css/bootstrap/bootstrap-theme-3.3.5.css" />
 		<link type="text/css" rel="stylesheet" href="css/bootstrap/privatebin.css?<?php echo rawurlencode($VERSION); ?>" />
@@ -91,7 +91,7 @@ endif;
 						<span class="icon-bar"></span>
 					</button>
 					<a class="reloadlink navbar-brand" href="">
-						<img alt="<?php echo I18n::_('PrivateBin'); ?>" src="img/icon.svg" width="38" />
+						<img alt="<?php echo I18n::_($NAME); ?>" src="img/icon.svg" width="38" />
 					</a>
 				</div>
 				<div id="navbar" class="navbar-collapse collapse">
@@ -300,8 +300,8 @@ if (!strlen($ERROR)):
 ?>hidden <?php
 endif;
 ?>alert alert-danger"><span class="glyphicon glyphicon-alert" aria-hidden="true"></span> <?php echo htmlspecialchars($ERROR); ?></div>
-			<noscript><div id="noscript" role="alert" class="nonworking alert alert-warning"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> <?php echo I18n::_('Javascript is required for PrivateBin to work.<br />Sorry for the inconvenience.'); ?></div></noscript>
-			<div id="oldienotice" role="alert" class="hidden nonworking alert alert-danger"><span class="glyphicon glyphicon-alert" aria-hidden="true"></span> <?php echo I18n::_('PrivateBin requires a modern browser to work.'); ?></div>
+			<noscript><div id="noscript" role="alert" class="nonworking alert alert-warning"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> <?php echo I18n::_('Javascript is required for %s to work.<br />Sorry for the inconvenience.', I18n::_($NAME)); ?></div></noscript>
+			<div id="oldienotice" role="alert" class="hidden nonworking alert alert-danger"><span class="glyphicon glyphicon-alert" aria-hidden="true"></span> <?php echo I18n::_('%s requires a modern browser to work.', I18n::_($NAME)); ?></div>
 			<div id="ienotice" role="alert" class="hidden alert alert-warning"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span> <?php echo I18n::_('Still using Internet Explorer? Do yourself a favor, switch to a modern browser:'), PHP_EOL; ?>
 				<a href="https://www.mozilla.org/firefox/">Firefox</a>,
 				<a href="https://www.opera.com/">Opera</a>,
@@ -352,10 +352,10 @@ endif;
 		</section>
 		<footer class="container">
 			<div class="row">
-				<h4 class="col-md-5 col-xs-8"><?php echo I18n::_('PrivateBin'); ?> <small>- <?php echo I18n::_('Because ignorance is bliss'); ?></small></h4>
+				<h4 class="col-md-5 col-xs-8"><?php echo I18n::_($NAME); ?> <small>- <?php echo I18n::_('Because ignorance is bliss'); ?></small></h4>
 				<p class="col-md-1 col-xs-4 text-center"><?php echo $VERSION; ?></p>
 				<p id="aboutbox" class="col-md-6 col-xs-12">
-					<?php echo I18n::_('PrivateBin is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href="https://privatebin.info/">project page</a>.'), PHP_EOL; ?>
+					<?php echo I18n::_('%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href="https://privatebin.info/">project page</a>.', I18n::_($NAME)), PHP_EOL; ?>
 				</p>
 			</div>
 		</footer>
