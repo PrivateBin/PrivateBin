@@ -498,7 +498,7 @@ $(function() {
         {
             // Galois Counter Mode, keysize 256 bit, authentication tag 128 bit
             var options = {mode: 'gcm', ks: 256, ts: 128};
-            if ((password || '').trim().length === 0)
+            if (password.length === 0)
             {
                 return sjcl.encrypt(key, this.compress(message), options);
             }
