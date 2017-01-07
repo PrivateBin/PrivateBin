@@ -297,7 +297,7 @@ $(function() {
          * From: https://github.com/janl/mustache.js/blob/master/mustache.js#L60
          * Also: https://www.owasp.org/index.php/XSS_(Cross_Site_Scripting)_Prevention_Cheat_Sheet#RULE_.231_-_HTML_Escape_Before_Inserting_Untrusted_Data_into_HTML_Element_Content
          *
-         * @param string str 
+         * @param string str
          * @return string escaped HTML
          */
         htmlEntities: function(str) {
