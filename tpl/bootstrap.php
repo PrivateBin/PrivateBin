@@ -73,12 +73,12 @@ endif;
 		<!--[if lt IE 10]>
 		<style type="text/css">body {padding-left:60px;padding-right:60px;} #ienotice {display:block;} #oldienotice {display:block;}</style>
 		<![endif]-->
-		<link rel="apple-touch-icon" href="apple-touch-icon.png?<?php echo rawurlencode($VERSION); ?>" sizes="180x180" />
-		<link rel="icon" type="image/png" href="favicon-32x32.png?<?php echo rawurlencode($VERSION); ?>" sizes="32x32" />
-		<link rel="icon" type="image/png" href="favicon-16x16.png?<?php echo rawurlencode($VERSION); ?>" sizes="16x16" />
+		<link rel="apple-touch-icon" href="img/apple-touch-icon.png?<?php echo rawurlencode($VERSION); ?>" sizes="180x180" />
+		<link rel="icon" type="image/png" href="img/favicon-32x32.png?<?php echo rawurlencode($VERSION); ?>" sizes="32x32" />
+		<link rel="icon" type="image/png" href="img/favicon-16x16.png?<?php echo rawurlencode($VERSION); ?>" sizes="16x16" />
 		<link rel="manifest" href="manifest.json?<?php echo rawurlencode($VERSION); ?>" />
-		<link rel="mask-icon" href="safari-pinned-tab.svg?<?php echo rawurlencode($VERSION); ?>" color="#ffcc00" />
-		<link rel="shortcut icon" href="favicon.ico">
+		<link rel="mask-icon" href="img/safari-pinned-tab.svg?<?php echo rawurlencode($VERSION); ?>" color="#ffcc00" />
+		<link rel="shortcut icon" href="img/favicon.ico">
 		<meta name="msapplication-config" content="browserconfig.xml">
 		<meta name="theme-color" content="#ffe57e" />
 	</head>

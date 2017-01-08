@@ -2,7 +2,8 @@
 
   * **next (not yet released)**
     * ADDED: Translations for Spanish and Occitan
-    * ADDED: Option in configuration to change the default "PrivateBin" title on the site.
+    * ADDED: Option in configuration to change the default "PrivateBin" title of the site
+    * CHANGED: Cleanup of bootstrap template variants and moved icons to `img` directory
   * **1.1 (2016-12-26)**
     * ADDED: Translations for Italian and Russian
     * ADDED: Loading message displayed until decryption succeeded for slower (in terms of CPU or network) systems
