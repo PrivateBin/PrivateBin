@@ -1,7 +1,7 @@
 # PrivateBin version history
 
   * **next (not yet released)**
-    * ADDED: Translations for Spanish
+    * ADDED: Translations for Spanish and Occitan
     * ADDED: Option in configuration to change the default "PrivateBin" title on the site.
   * **1.1 (2016-12-26)**
     * ADDED: Translations for Italian and Russian

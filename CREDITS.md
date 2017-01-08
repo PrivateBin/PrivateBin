@@ -33,3 +33,4 @@ Sébastien Sauvage - original idea and main developer
 * Stefano Marty - Italian
 * R4SAS - Russian
 * Alfredo Fabián Altamirano Tena - Spanish
+* Quent-in - Occitan
