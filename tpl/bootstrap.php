@@ -1,5 +1,9 @@
 <?php
 use PrivateBin\I18n;
+if (!isset($tpl)) $tpl = 'bootstrap';
+$isCpct = substr($tpl, 9, 8) === '-compact';
+$isDark = substr($tpl, 9, 5) === '-dark';
+$isPage = substr($tpl, -5) === '-page';
 ?><!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -9,8 +13,21 @@ use PrivateBin\I18n;
 		<meta name="robots" content="noindex" />
 		<meta name="referrer" content="no-referrer">
 		<title><?php echo I18n::_($NAME); ?></title>
+<?php
+if (!$isDark):
+?>
 		<link type="text/css" rel="stylesheet" href="css/bootstrap/bootstrap-3.3.5.css" />
+<?php
+endif;
+?>
 		<link type="text/css" rel="stylesheet" href="css/bootstrap/bootstrap-theme-3.3.5.css" />
+<?php
+if ($isDark):
+?>
+		<link type="text/css" rel="stylesheet" href="css/bootstrap/darkstrap-0.9.3.css" />
+<?php
+endif;
+?>
 		<link type="text/css" rel="stylesheet" href="css/bootstrap/privatebin.css?<?php echo rawurlencode($VERSION); ?>" />
 <?php
 if ($SYNTAXHIGHLIGHTING):
@@ -66,7 +83,11 @@ endif;
 		<meta name="msapplication-config" content="browserconfig.xml">
 		<meta name="theme-color" content="#ffe57e" />
 	</head>
-	<body role="document">
+	<body role="document"<?php
+if ($isCpct):
+?> class="navbar-spacing"<?php
+endif;
+?>>
 		<div id="passwordmodal" class="modal fade" role="dialog">
 			<div class="modal-dialog">
 				<div class="modal-content">
@@ -82,7 +103,11 @@ endif;
 				</div>
 			</div>
 		</div>
-		<nav class="navbar navbar-default navbar-static-top">
+		<nav class="navbar navbar-<?php echo $isDark ? 'inverse' : 'default'; ?> navbar-<?php echo $isCpct ? 'fixed' : 'static'; ?>-top"><?php
+if ($isCpct):
+?><div class="container"><?php
+endif;
+?>
 			<div class="navbar-header">
 				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
 					<span class="sr-only"><?php echo I18n::_('Toggle navigation'); ?></span>
@@ -97,19 +122,28 @@ endif;
 			<div id="navbar" class="navbar-collapse collapse">
 				<ul class="nav navbar-nav">
 					<li>
-						<button id="newbutton" type="button" class="reloadlink hidden btn btn-default navbar-btn">
-							<span class="glyphicon glyphicon-file" aria-hidden="true"></span> <?php echo I18n::_('New'), PHP_EOL; ?>
+<?php
+if ($isPage):
+?>
+						<button id="sendbutton" type="button" class="hidden btn btn-<?php echo $isDark ? 'warning' : 'primary'; ?> navbar-btn">
+							<span class="glyphicon glyphicon-upload" aria-hidden="true"></span> <?php echo I18n::_('Send'), PHP_EOL;
+else:
+?>
+						<button id="newbutton" type="button" class="reloadlink hidden btn btn-<?php echo $isDark ? 'warning' : 'default'; ?> navbar-btn">
+							<span class="glyphicon glyphicon-file" aria-hidden="true"></span> <?php echo I18n::_('New'), PHP_EOL;
+endif;
+?>
 						</button>
 <?php
 if ($EXPIRECLONE):
 ?>
-						<button id="clonebutton" type="button" class="hidden btn btn-default navbar-btn">
+						<button id="clonebutton" type="button" class="hidden btn btn-<?php echo $isDark ? 'warning' : 'default'; ?> navbar-btn">
 							<span class="glyphicon glyphicon-duplicate" aria-hidden="true"></span> <?php echo I18n::_('Clone'), PHP_EOL; ?>
 						</button>
 <?php
 endif;
 ?>
-						<button id="rawtextbutton" type="button" class="hidden btn btn-default navbar-btn">
+						<button id="rawtextbutton" type="button" class="hidden btn btn-<?php echo $isDark ? 'warning' : 'default'; ?> navbar-btn">
 							<span class="glyphicon glyphicon-text-background" aria-hidden="true"></span> <?php echo I18n::_('Raw text'), PHP_EOL; ?>
 						</button>
 					</li>
@@ -142,34 +176,102 @@ endforeach;
 ?>
 						</ul>
 					</li>
+<?php
+if ($isCpct):
+?>
+					<li id="formatter" class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><?php echo I18n::_('Options'); ?> <span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<li id="burnafterreadingoption" class="checkbox hidden">
+								<label>
+									<input type="checkbox" id="burnafterreading" name="burnafterreading"<?php
+    if ($BURNAFTERREADINGSELECTED):
+?> checked="checked"<?php
+    endif;
+?> />
+									<?php echo I18n::_('Burn after reading'), PHP_EOL; ?>
+								</label>
+							</li>
+<?php
+    if ($DISCUSSION):
+?>
+							<li id="opendisc" class="checkbox hidden">
+								<label>
+									<input type="checkbox" id="opendiscussion" name="opendiscussion"<?php
+        if ($OPENDISCUSSION):
+?> checked="checked"<?php
+        endif;
+?> />
+									<?php echo I18n::_('Open discussion'), PHP_EOL; ?>
+								</label>
+							</li>
+<?php
+    endif;
+?>
+							<li role="separator" class="divider"></li>
+							<li>
+								<div>
+									<?php echo I18n::_('Format'); ?>: <span id="pasteFormatterDisplay"><?php echo $FORMATTER[$FORMATTERDEFAULT]; ?></span> <span class="caret"></span>
+								</div>
+							</li>
+<?php
+    foreach ($FORMATTER as $key => $value):
+?>
+							<li>
+								<a href="#" data-format="<?php echo $key; ?>">
+									<?php echo $value, PHP_EOL; ?>
+								</a>
+							</li>
+<?php
+    endforeach;
+?>
+						</ul>
+						<select id="pasteFormatter" name="pasteFormatter" class="hidden">
+<?php
+    foreach ($FORMATTER as $key => $value):
+?>
+							<option value="<?php echo $key; ?>"<?php
+        if ($key == $FORMATTERDEFAULT):
+?> selected="selected"<?php
+        endif;
+?>><?php echo $value; ?></option>
+<?php
+    endforeach;
+?>
+						</select>
+					</li>
+<?php
+else:
+?>
 					<li>
 						<div id="burnafterreadingoption" class="navbar-text checkbox hidden">
 							<label>
 								<input type="checkbox" id="burnafterreading" name="burnafterreading"<?php
-if ($BURNAFTERREADINGSELECTED):
+    if ($BURNAFTERREADINGSELECTED):
 ?> checked="checked"<?php
-endif;
+    endif;
 ?> />
 								<?php echo I18n::_('Burn after reading'), PHP_EOL; ?>
 							</label>
 						</div>
 					</li>
 <?php
-if ($DISCUSSION):
+    if ($DISCUSSION):
 ?>
 					<li>
 						<div id="opendisc" class="navbar-text checkbox hidden">
 							<label>
 								<input type="checkbox" id="opendiscussion" name="opendiscussion"<?php
-    if ($OPENDISCUSSION):
+        if ($OPENDISCUSSION):
 ?> checked="checked"<?php
-    endif;
+        endif;
 ?> />
 								<?php echo I18n::_('Open discussion'), PHP_EOL; ?>
 						 	</label>
 						</div>
 					</li>
 <?php
+    endif;
 endif;
 if ($PASSWORD):
 ?>
@@ -199,25 +301,26 @@ if ($FILEUPLOAD):
 					</li>
 <?php
 endif;
+if (!$isCpct):
 ?>
 					<li class="dropdown">
 						<select id="pasteFormatter" name="pasteFormatter" class="hidden">
 <?php
-foreach ($FORMATTER as $key => $value):
+    foreach ($FORMATTER as $key => $value):
 ?>
 							<option value="<?php echo $key; ?>"<?php
-    if ($key == $FORMATTERDEFAULT):
+        if ($key == $FORMATTERDEFAULT):
 ?> selected="selected"<?php
-    endif;
+        endif;
 ?>><?php echo $value; ?></option>
 <?php
-endforeach;
+    endforeach;
 ?>
 						</select>
 						<a id="formatter" href="#" class="hidden dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><?php echo I18n::_('Format'); ?>: <span id="pasteFormatterDisplay"><?php echo $FORMATTER[$FORMATTERDEFAULT]; ?></span> <span class="caret"></span></a>
 						<ul class="dropdown-menu">
 <?php
-foreach ($FORMATTER as $key => $value):
+    foreach ($FORMATTER as $key => $value):
 ?>
 							<li>
 								<a href="#" data-format="<?php echo $key; ?>">
@@ -225,10 +328,13 @@ foreach ($FORMATTER as $key => $value):
 								</a>
 							</li>
 <?php
-endforeach;
+    endforeach;
 ?>
 						</ul>
 					</li>
+<?php
+endif;
+?>
 				</ul>
 				<ul class="nav navbar-nav pull-right">
 <?php
@@ -254,13 +360,26 @@ if (strlen($LANGUAGESELECTION)):
 endif;
 ?>
 					<li>
-						<button id="sendbutton" type="button" class="hidden btn btn-primary navbar-btn">
-							<span class="glyphicon glyphicon-upload" aria-hidden="true"></span> <?php echo I18n::_('Send'), PHP_EOL; ?>
+<?php
+if ($isPage):
+?>
+						<button id="newbutton" type="button" class="reloadlink hidden btn btn-<?php echo $isDark ? 'warning' : 'default'; ?> navbar-btn">
+							<span class="glyphicon glyphicon-file" aria-hidden="true"></span> <?php echo I18n::_('New'), PHP_EOL;
+else:
+?>
+						<button id="sendbutton" type="button" class="hidden btn btn-<?php echo $isDark ? 'warning' : 'primary'; ?> navbar-btn">
+							<span class="glyphicon glyphicon-upload" aria-hidden="true"></span> <?php echo I18n::_('Send'), PHP_EOL;
+endif;
+?>
 						</button>
 					</li>
 				</ul>
 			</div>
-		</nav>
+		<?php
+if ($isCpct):
+?></div><?php
+endif;
+?></nav>
 		<header class="container">
 <?php
 if (strlen($NOTICE)):
@@ -295,9 +414,9 @@ if (!strlen($ERROR)):
 ?>hidden <?php
 endif;
 ?>alert alert-danger"><span class="glyphicon glyphicon-alert" aria-hidden="true"></span> <?php echo htmlspecialchars($ERROR); ?></div>
-			<noscript><div id="noscript" role="alert" class="nonworking alert alert-warning"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> <?php echo I18n::_('JavaScript is required for %s to work.<br />Sorry for the inconvenience.', I18n::_($NAME)); ?></div></noscript>
+			<noscript><div id="noscript" role="alert" class="nonworking alert alert-<?php echo $isDark ? 'error' : 'warning'; ?>"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> <?php echo I18n::_('JavaScript is required for %s to work.<br />Sorry for the inconvenience.', I18n::_($NAME)); ?></div></noscript>
 			<div id="oldienotice" role="alert" class="hidden nonworking alert alert-danger"><span class="glyphicon glyphicon-alert" aria-hidden="true"></span> <?php echo I18n::_('%s requires a modern browser to work.', I18n::_($NAME)); ?></div>
-			<div id="ienotice" role="alert" class="hidden alert alert-warning"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span> <?php echo I18n::_('Still using Internet Explorer? Do yourself a favor, switch to a modern browser:'), PHP_EOL; ?>
+			<div id="ienotice" role="alert" class="hidden alert alert-<?php echo $isDark ? 'error' : 'warning'; ?>"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span> <?php echo I18n::_('Still using Internet Explorer? Do yourself a favor, switch to a modern browser:'), PHP_EOL; ?>
 				<a href="https://www.mozilla.org/firefox/">Firefox</a>,
 				<a href="https://www.opera.com/">Opera</a>,
 				<a href="https://www.google.com/chrome">Chrome</a>,
@@ -310,7 +429,7 @@ endif;
 <?php
 if (strlen($URLSHORTENER)):
 ?>
-					<button id="shortenbutton" data-shortener="<?php echo htmlspecialchars($URLSHORTENER); ?>" type="button" class="btn btn-primary">
+					<button id="shortenbutton" data-shortener="<?php echo htmlspecialchars($URLSHORTENER); ?>" type="button" class="btn btn-<?php echo $isDark ? 'warning' : 'primary'; ?>">
 						<span class="glyphicon glyphicon-send" aria-hidden="true"></span> <?php echo I18n::_('Shorten URL'), PHP_EOL; ?>
 					</button>
 <?php

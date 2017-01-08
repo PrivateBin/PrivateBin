@@ -74,7 +74,7 @@ endif;
 			<h1 class="title reloadlink"><?php echo I18n::_($NAME); ?></h1><br />
 			<h2 class="title"><?php echo I18n::_('Because ignorance is bliss'); ?></h2><br />
 			<h3 class="title"><?php echo $VERSION; ?></h3>
-			<noscript><div id="noscript" class="nonworking"><?php echo I18n::_('Javascript is required for %s to work.<br />Sorry for the inconvenience.', I18n::_($NAME)); ?></div></noscript>
+			<noscript><div id="noscript" class="nonworking"><?php echo I18n::_('JavaScript is required for %s to work.<br />Sorry for the inconvenience.', I18n::_($NAME)); ?></div></noscript>
 			<div id="oldienotice" class="nonworking"><?php echo I18n::_('%s requires a modern browser to work.', I18n::_($NAME)); ?></div>
 			<div id="ienotice"><?php echo I18n::_('Still using Internet Explorer? Do yourself a favor, switch to a modern browser:'), PHP_EOL; ?>
 				<a href="https://www.mozilla.org/firefox/">Firefox</a>,
