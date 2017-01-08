@@ -52,7 +52,8 @@ class View
      */
     public function draw($template)
     {
-        $path = PATH . 'tpl' . DIRECTORY_SEPARATOR . $template . '.php';
+        $file = substr($template, 0, 9) === 'bootstrap' ? 'bootstrap' : $template;
+        $path = PATH . 'tpl' . DIRECTORY_SEPARATOR . $file . '.php';
         if (!file_exists($path)) {
             throw new Exception('Template ' . $template . ' not found!', 80);
         }

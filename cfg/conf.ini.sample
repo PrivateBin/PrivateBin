@@ -31,7 +31,7 @@ defaultformatter = "plaintext"
 ; size limit per paste or comment in bytes, defaults to 2 Mebibytes
 sizelimit = 2097152
 
-; template to include, default is "bootstrap" (tpl/bootstrap.html)
+; template to include, default is "bootstrap" (tpl/bootstrap.php)
 template = "bootstrap"
 
 ; (optional) notice to display

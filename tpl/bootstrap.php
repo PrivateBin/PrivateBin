@@ -1,9 +1,8 @@
 <?php
 use PrivateBin\I18n;
-if (!isset($tpl)) $tpl = 'bootstrap';
-$isCpct = substr($tpl, 9, 8) === '-compact';
-$isDark = substr($tpl, 9, 5) === '-dark';
-$isPage = substr($tpl, -5) === '-page';
+$isCpct = substr($template, 9, 8) === '-compact';
+$isDark = substr($template, 9, 5) === '-dark';
+$isPage = substr($template, -5) === '-page';
 ?><!DOCTYPE html>
 <html lang="en">
 	<head>
