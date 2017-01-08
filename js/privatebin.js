@@ -411,6 +411,7 @@ $(function() {
             switch (this.language)
             {
                 case 'fr':
+                case 'oc':
                 case 'zh':
                     return (n > 1 ? 1 : 0);
                 case 'pl':
