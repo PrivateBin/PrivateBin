@@ -1,11 +1,16 @@
 {
+    "PrivateBin": "PrivateBin",
+    "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href=\"https://privatebin.info/\">project page</a>.":
+        "%s er en minimalistisk, åpen kildekode, elektronisk tilgjengelig pastebin hvor serveren ikke har kunnskap om dataene som limes inn. Dataene krypteres/dekrypteres <i>i nettleseren</i> ved hjelp av 256 bits AES. Mer informasjon om prosjektet på  <a href=\"https://privatebin.info/\">prosjektsiden</a>.",
+    "Because ignorance is bliss":
+        "Fordi uvitenhet er lykke",
     "en": "no",
     "Paste does not exist, has expired or has been deleted.":
         "Innlegget eksisterer ikke, er utløpt eller har blitt slettet.",
-    "PrivateBin requires php 5.3.0 or above to work. Sorry.":
-        "Beklager, PrivateBin krever php 5.3.0 eller nyere for å kjøre.",
-    "PrivateBin requires configuration section [%s] to be present in configuration file.":
-        "PrivateBin krever konfigurasjonsdel [%s] å være til stede i konfigurasjonsfilen .",
+    "%s requires php 5.3.0 or above to work. Sorry.":
+        "Beklager, %s krever php 5.3.0 eller nyere for å kjøre.",
+    "%s requires configuration section [%s] to be present in configuration file.":
+        "%s krever konfigurasjonsdel [%s] å være til stede i konfigurasjonsfilen .",
     "Please wait %d seconds between each post.":
         "Vent %d sekunder mellom hvert innlegg.",
     "Paste is limited to %s of encrypted data.":
@@ -26,15 +31,10 @@
         "Feil slettenøkkel. Innlegg ble ikke slettet.",
     "Paste was properly deleted.":
         "Innlegget er slettet.",
-    "PrivateBin": "PrivateBin",
-    "PrivateBin is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href=\"https://privatebin.info/\">project page</a>.":
-        "PrivateBin er en minimalistisk, åpen kildekode, elektronisk tilgjengelig pastebin hvor serveren ikke har kunnskap om dataene som limes inn. Dataene krypteres/dekrypteres <i>i nettleseren</i> ved hjelp av 256 bits AES. Mer informasjon om prosjektet på  <a href=\"https://privatebin.info/\">prosjektsiden</a>.",
-    "Because ignorance is bliss":
-        "Fordi uvitenhet er lykke",
-    "JavaScript is required for PrivateBin to work.<br />Sorry for the inconvenience.":
-        "Beklager, Javascript kreves for at PrivateBin skal fungere.",
-    "PrivateBin requires a modern browser to work.":
-        "PrivateBin krever en moderne nettleser for å fungere.",
+    "JavaScript is required for %s to work.<br />Sorry for the inconvenience.":
+        "Beklager, Javascript kreves for at %s skal fungere.",
+    "%s requires a modern browser to work.":
+        "%s krever en moderne nettleser for å fungere.",
     "Still using Internet Explorer? Do yourself a favor, switch to a modern browser:":
         "Fortsatt bruker av Internet Explorer? Gjør deg selv en tjeneste, bytt til en moderne nettleser:",
     "New":
@@ -139,8 +139,8 @@
     "Shorten URL": "Addresse-forkorter",
     "Editor": "Rediger",
     "Preview": "Forhåndsvis",
-    "PrivateBin requires the PATH to end in a \"%s\". Please update the PATH in your index.php.":
-        "PrivateBin krever at PATH ender på \"%s\". Vennligst oppdater PATH i index.php.",
+    "%s requires the PATH to end in a \"%s\". Please update the PATH in your index.php.":
+        "%s krever at PATH ender på \"%s\". Vennligst oppdater PATH i index.php.",
     "Decrypt":
         "Dekrypter",
     "Enter password":
