@@ -135,8 +135,8 @@
     "Your browser does not support uploading encrypted files. Please use a newer browser.":
         "Nettleseren din støtter ikke å laste opp krypterte filer. Vennligst bruk en nyere nettleser.",
     "Invalid attachment.": "Ugyldig vedlegg.",
-    "Options": "Opsjoner",
-    "Shorten URL": "Addresse forkorter",
+    "Options": "Innstillinger",
+    "Shorten URL": "Addresse-forkorter",
     "Editor": "Rediger",
     "Preview": "Forhåndsvis",
     "PrivateBin requires the PATH to end in a \"%s\". Please update the PATH in your index.php.":
