@@ -1,0 +1,151 @@
+{
+    "en": "no",
+    "Paste does not exist, has expired or has been deleted.":
+        "Innlegget eksisterer ikke, er utløpt eller har blitt slettet.",
+    "PrivateBin requires php 5.3.0 or above to work. Sorry.":
+        "Beklager, PrivateBin krever php 5.3.0 eller nyere for å kjøre.",
+    "PrivateBin requires configuration section [%s] to be present in configuration file.":
+        "PrivateBin krever konfigurasjonsdel [%s] å være til stede i konfigurasjonsfilen .",
+    "Please wait %d seconds between each post.":
+        "Vent %d sekunder mellom hvert innlegg.",
+    "Paste is limited to %s of encrypted data.":
+        "Innlegg er begrenset til %s av kryptert data.",
+    "Invalid data.":
+        "Ugyldige data.",
+    "You are unlucky. Try again.":
+        "Du er uheldig. Prøv igjen.",
+    "Error saving comment. Sorry.":
+        "Beklager, det oppstod en feil ved lagring kommentar.",
+    "Error saving paste. Sorry.":
+        "Beklager, det oppstod en feil ved lagring innlegg.",
+    "Invalid paste ID.":
+        "Feil innlegg ID.",
+    "Paste is not of burn-after-reading type.":
+        "Innlegg er ikke av slett-etter-lesing type.",
+    "Wrong deletion token. Paste was not deleted.":
+        "Feil slettenøkkel. Innlegg ble ikke slettet.",
+    "Paste was properly deleted.":
+        "Innlegget er slettet.",
+    "PrivateBin": "PrivateBin",
+    "PrivateBin is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href=\"https://privatebin.info/\">project page</a>.":
+        "PrivateBin er en minimalistisk, åpen kildekode, elektronisk tilgjengelig pastebin hvor serveren ikke har kunnskap om dataene som limes inn. Dataene krypteres/dekrypteres <i>i nettleseren</i> ved hjelp av 256 bits AES. Mer informasjon om prosjektet på  <a href=\"https://privatebin.info/\">prosjektsiden</a>.",
+    "Because ignorance is bliss":
+        "Fordi uvitenhet er lykke",
+    "JavaScript is required for PrivateBin to work.<br />Sorry for the inconvenience.":
+        "Beklager, Javascript kreves for at PrivateBin skal fungere.",
+    "PrivateBin requires a modern browser to work.":
+        "PrivateBin krever en moderne nettleser for å fungere.",
+    "Still using Internet Explorer? Do yourself a favor, switch to a modern browser:":
+        "Fortsatt bruker av Internet Explorer? Gjør deg selv en tjeneste, bytt til en moderne nettleser:",
+    "New":
+        "Ny",
+    "Send":
+        "Send",
+    "Clone":
+        "Kopier",
+    "Raw text":
+        "Ren tekst",
+    "Expires":
+        "Utgår",
+    "Burn after reading":
+        "Slett etter lesing",
+    "Open discussion":
+        "Åpen diskusjon",
+    "Password (recommended)":
+        "Passord (anbefalt)",
+    "Discussion":
+        "Diskusjon",
+    "Toggle navigation":
+        "Navigasjon",
+    "%d seconds": ["%d sekund", "%d sekunder"],
+    "%d minutes": ["%d minutt", "%d minutter"],
+    "%d hours": ["%d time", "%d timer"],
+    "%d days": ["%d dag", "%d dager"],
+    "%d weeks": ["%d uke", "%d uker"],
+    "%d months": ["%d måned", "%d måneder"],
+    "%d years": ["%d år", "%d år"],
+    "Never":
+        "Aldri",
+    "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.":
+        "Merk: Dette er en test tjeneste: Data kan slettes når som helst. Kattunger vil dø hvis du misbruker denne tjenesten.",
+    "This document will expire in %d seconds.":
+        ["Dette dokumentet vil utløpe om %d sekund.", "Dette dokumentet vil utløpe om %d sekunder."],
+    "This document will expire in %d minutes.":
+        ["Dette dokumentet vil utløpe om %d minutt.", "Dette dokumentet vil utløpe om %d minutter."],
+    "This document will expire in %d hours.":
+        ["Dette dokumentet vil utløpe om %d time.", "Dette dokumentet vil utløpe om %d timer."],
+    "This document will expire in %d days.":
+        ["Dette dokumentet vil utløpe om %d dag.", "Dette dokumentet vil utløpe om %d dager."],
+    "This document will expire in %d months.":
+        ["Dette dokumentet vil utløpe om %d måned.", "Dette dokumentet vil utløpe om %d måneder."],
+    "Please enter the password for this paste:":
+        "Skriv inn passordet for dette innlegget:",
+    "Could not decrypt data (Wrong key?)":
+        "Kunne ikke dekryptere data (feil nøkkel?)",
+    "Could not delete the paste, it was not stored in burn after reading mode.":
+        "Kan ikke slette innlegget, det ble ikke lagret i slett-etter-les modus.",
+    "FOR YOUR EYES ONLY. Don't close this window, this message can't be displayed again.":
+        "KUN FOR DINE ØYNE. Ikke lukk dette vinduet, denne meldingen kan ikke bli vist igjen.",
+    "Could not decrypt comment; Wrong key?":
+        "Kan ikke dekryptere kommentar; Feil nøkkel?",
+    "Reply":
+        "Svar",
+    "Anonymous":
+        "Anonym",
+    "Anonymous avatar (Vizhash of the IP address)":
+        "Anonym avatar (Vizhash av IP addressen)",
+    "Add comment":
+        "Legg inn kommentar",
+    "Optional nickname...":
+        "Valgfritt kallenavn...",
+    "Post comment":
+        "Send kommentar",
+    "Sending comment...":
+        "Sender Kommentar...",
+    "Comment posted.":
+        "Kommentar sendt.",
+    "Could not refresh display: %s":
+        "Kunne ikke oppdatere skjermen: %s",
+    "unknown status":
+        "ukjent status",
+    "server error or not responding":
+        "server feilet eller svarer ikke",
+    "Could not post comment: %s":
+        "Kunne ikke sende kommentar: %s",
+    "Sending paste (Please move your mouse for more entropy)...":
+        "Sender innlegg (Flytt musen for mere entropi)...",
+    "Sending paste...":
+        "Sender innlegg...",
+    "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit [Ctrl]+[c] to copy)</span>":
+        "Ditt innlegg er <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Trykk [Ctrl]+[c] for å kopiere)</span>",
+    "Delete data":
+        "Slett data",
+    "Could not create paste: %s":
+        "Kunne ikke opprette innlegg: %s",
+    "Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)":
+        "Kan ikke dekryptere innlegg: Dekrypteringsnøkkelen mangler i addressen (Har du bruket en redirector eller en addresse forkorter som fjerner en del av addressen?)",
+    "Format": "Format",
+    "Plain Text": "Ren Tekst",
+    "Source Code": "Kildekode",
+    "Markdown": "Oppmerket",
+    "Download attachment": "Last ned vedlegg",
+    "Cloned file attached.": "Kopier vedlegg.",
+    "Attach a file": "Legg til fil",
+    "Remove attachment": "Slett vedlegg",
+    "Your browser does not support uploading encrypted files. Please use a newer browser.":
+        "Nettleseren din støtter ikke å laste opp krypterte filer. Vennligst bruk en nyere nettleser.",
+    "Invalid attachment.": "Ugyldig vedlegg.",
+    "Options": "Innstillinger",
+    "Shorten URL": "Addresse-forkorter",
+    "Editor": "Rediger",
+    "Preview": "Forhåndsvis",
+    "PrivateBin requires the PATH to end in a \"%s\". Please update the PATH in your index.php.":
+        "PrivateBin krever at PATH ender på \"%s\". Vennligst oppdater PATH i index.php.",
+    "Decrypt":
+        "Dekrypter",
+    "Enter password":
+        "Skriv inn passord",
+    "Loading…": "Laster…",
+    "In case this message never disappears please have a look at <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">this FAQ for information to troubleshoot</a>.":
+        "Hvis denne meldingen ikke forsvinner kan du ta en titt på <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">denne FAQen for informasjon om feilsøking</a>."
+}

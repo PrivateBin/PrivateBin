@@ -34,3 +34,4 @@ Sébastien Sauvage - original idea and main developer
 * R4SAS - Russian
 * Alfredo Fabián Altamirano Tena - Spanish
 * Quent-in - Occitan
+* idarlund - Norwegian

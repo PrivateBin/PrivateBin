@@ -329,7 +329,7 @@ $(function() {
         /**
          * supported languages, minus the built in 'en'
          */
-        supportedLanguages: ['de', 'es', 'fr', 'it', 'pl', 'oc', 'ru', 'sl', 'zh'],
+        supportedLanguages: ['de', 'es', 'fr', 'it', 'no', 'pl', 'oc', 'ru', 'sl', 'zh'],
 
         /**
          * translate a string, alias for translate()
@@ -420,7 +420,7 @@ $(function() {
                     return (n % 10 === 1 && n % 100 !== 11 ? 0 : (n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20) ? 1 : 2));
                 case 'sl':
                     return (n % 100 === 1 ? 1 : (n % 100 === 2 ? 2 : (n % 100 === 3 || n % 100 === 4 ? 3 : 0)));
-                // de, en, es, it
+                // de, en, es, it, no
                 default:
                     return (n !== 1 ? 1 : 0);
             }
