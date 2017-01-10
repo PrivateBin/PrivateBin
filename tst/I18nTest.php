@@ -58,6 +58,16 @@ class I18nTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('2 heures', I18n::_('%d hours', 2), '2 hours in French');
     }
 
+    public function testBrowserLanguageNoDetection()
+    {
+        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'no;q=0.8,en-GB;q=0.6,en-US;q=0.4,en;q=0.2';
+        I18n::loadTranslations();
+        $this->assertEquals('no', I18n::_('en'), 'browser language no');
+        $this->assertEquals('0 timer',  I18n::_('%d hours', 0), '0 hours in Norwegian');
+        $this->assertEquals('1 time',  I18n::_('%d hours', 1), '1 hour in Norwegian');
+        $this->assertEquals('2 timer', I18n::_('%d hours', 2), '2 hours in Norwegian');
+    }
+
     public function testBrowserLanguageOcDetection()
     {
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'oc;q=0.8,en-GB;q=0.6,en-US;q=0.4,en;q=0.2';
