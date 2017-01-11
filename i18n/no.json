@@ -12,7 +12,7 @@
     "%s requires configuration section [%s] to be present in configuration file.":
         "%s krever konfigurasjonsdel [%s] å være til stede i konfigurasjonsfilen .",
     "Please wait %d seconds between each post.":
-        "Vent %d sekunder mellom hvert innlegg.",
+        "Vennligst vent %d sekunder mellom hvert innlegg.",
     "Paste is limited to %s of encrypted data.":
         "Innlegg er begrenset til %s av kryptert data.",
     "Invalid data.":
@@ -26,17 +26,17 @@
     "Invalid paste ID.":
         "Feil innlegg ID.",
     "Paste is not of burn-after-reading type.":
-        "Innlegg er ikke av slett-etter-lesing type.",
+        "Innlegg er ikke av type slett-etter-lesing.",
     "Wrong deletion token. Paste was not deleted.":
-        "Feil slettenøkkel. Innlegg ble ikke slettet.",
+        "Feil slettingsnøkkel. Innlegg ble ikke fjernet.",
     "Paste was properly deleted.":
         "Innlegget er slettet.",
     "JavaScript is required for %s to work.<br />Sorry for the inconvenience.":
-        "Beklager, Javascript kreves for at %s skal fungere.",
+        "Javascript kreves for at %s skal fungere<br />Beklager ulempene.",
     "%s requires a modern browser to work.":
         "%s krever en moderne nettleser for å fungere.",
     "Still using Internet Explorer? Do yourself a favor, switch to a modern browser:":
-        "Fortsatt bruker av Internet Explorer? Gjør deg selv en tjeneste, bytt til en moderne nettleser:",
+        "Fortsatt bruker av Internet Explorer? Gjør deg selv en tjeneste og bytt til en moderne nettleser:",
     "New":
         "Ny",
     "Send":
@@ -56,7 +56,7 @@
     "Discussion":
         "Diskusjon",
     "Toggle navigation":
-        "Navigasjon",
+        "Veksle navigasjon",
     "%d seconds": ["%d sekund", "%d sekunder"],
     "%d minutes": ["%d minutt", "%d minutter"],
     "%d hours": ["%d time", "%d timer"],
@@ -79,9 +79,9 @@
     "This document will expire in %d months.":
         ["Dette dokumentet vil utløpe om %d måned.", "Dette dokumentet vil utløpe om %d måneder."],
     "Please enter the password for this paste:":
-        "Skriv inn passordet for dette innlegget:",
+        "Vennligst skriv inn passordet for dette innlegget:",
     "Could not decrypt data (Wrong key?)":
-        "Kunne ikke dekryptere data (feil nøkkel?)",
+        "Kunne ikke dekryptere data (Feil nøkkel?)",
     "Could not delete the paste, it was not stored in burn after reading mode.":
         "Kan ikke slette innlegget, det ble ikke lagret i slett-etter-les modus.",
     "FOR YOUR EYES ONLY. Don't close this window, this message can't be displayed again.":
@@ -93,9 +93,9 @@
     "Anonymous":
         "Anonym",
     "Anonymous avatar (Vizhash of the IP address)":
-        "Anonym avatar (Vizhash av IP addressen)",
+        "Anonym avatar (Vizhash av IP adressen)",
     "Add comment":
-        "Legg inn kommentar",
+        "Legg til kommentar",
     "Optional nickname...":
         "Valgfritt kallenavn...",
     "Post comment":
@@ -123,7 +123,7 @@
     "Could not create paste: %s":
         "Kunne ikke opprette innlegg: %s",
     "Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)":
-        "Kan ikke dekryptere innlegg: Dekrypteringsnøkkelen mangler i addressen (Har du bruket en redirector eller en addresse forkorter som fjerner en del av addressen?)",
+        "Kan ikke dekryptere innlegg: Dekrypteringsnøkkelen mangler i adressen (Har du bruket en redirector eller en URL forkorter som fjerner en del av addressen?)",
     "Format": "Format",
     "Plain Text": "Ren Tekst",
     "Source Code": "Kildekode",
@@ -135,8 +135,8 @@
     "Your browser does not support uploading encrypted files. Please use a newer browser.":
         "Nettleseren din støtter ikke å laste opp krypterte filer. Vennligst bruk en nyere nettleser.",
     "Invalid attachment.": "Ugyldig vedlegg.",
-    "Options": "Innstillinger",
-    "Shorten URL": "Addresse-forkorter",
+    "Options": "Alternativer",
+    "Shorten URL": "Adresse-forkorter",
     "Editor": "Rediger",
     "Preview": "Forhåndsvis",
     "%s requires the PATH to end in a \"%s\". Please update the PATH in your index.php.":
@@ -147,5 +147,5 @@
         "Skriv inn passord",
     "Loading…": "Laster…",
     "In case this message never disappears please have a look at <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">this FAQ for information to troubleshoot</a>.":
-        "Hvis denne meldingen ikke forsvinner kan du ta en titt på <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">denne FAQen for informasjon om feilsøking</a>."
+        "Hvis denne meldingen ikke forsvinner kan du ta en titt på siden med <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">ofte stilte spørsmål</a> for informasjon om feilsøking."
 }
