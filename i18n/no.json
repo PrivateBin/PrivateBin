@@ -67,7 +67,7 @@
     "Never":
         "Aldri",
     "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.":
-        "Merk: Dette er en test tjeneste: Data kan slettes når som helst. Kattunger vil dø hvis du misbuker denne tjenesten.",
+        "Merk: Dette er en test tjeneste: Data kan slettes når som helst. Kattunger vil dø hvis du misbruker denne tjenesten.",
     "This document will expire in %d seconds.":
         ["Dette dokumentet vil utløpe om %d sekund.", "Dette dokumentet vil utløpe om %d sekunder."],
     "This document will expire in %d minutes.":
