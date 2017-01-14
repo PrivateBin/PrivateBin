@@ -3,10 +3,12 @@
  *
  * a zero-knowledge paste bin
  *
- * @link      https://github.com/PrivateBin/PrivateBin
- * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
- * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
+ * @see       {@link https://github.com/PrivateBin/PrivateBin}
+ * @copyright 2012 Sébastien SAUVAGE ({@link http://sebsauvage.net})
+ * @license   {@link https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License}
  * @version   1.1
+ * @name      PrivateBin
+ * @namespace
  */
 
 'use strict';
@@ -26,13 +28,18 @@ sjcl.random.startCollectors();
 $(function() {
     /**
      * static helper methods
+     *
+     * @name helper
+     * @class
      */
     var helper = {
         /**
-         * Converts a duration (in seconds) into human friendly approximation.
+         * converts a duration (in seconds) into human friendly approximation
          *
-         * @param int seconds
-         * @return array
+         * @name helper.secondsToHuman
+         * @function
+         * @param  {number} seconds
+         * @return {Array}
          */
         secondsToHuman: function(seconds)
         {
@@ -63,11 +70,13 @@ $(function() {
         },
 
         /**
-         * Converts an associative array to an encoded string
-         * for appending to the anchor.
+         * converts an associative array to an encoded string
+         * for appending to the anchor
          *
-         * @param object associative_array Object to be serialized
-         * @return string
+         * @name   helper.hashToParameterString
+         * @function
+         * @param  {Object} associative_array - Object to be serialized
+         * @return {string}
          */
         hashToParameterString: function(associativeArray)
         {
@@ -92,10 +101,12 @@ $(function() {
         },
 
         /**
-         * Converts a string to an associative array.
+         * converts a anchor string to an associative array
          *
-         * @param string parameter_string String containing parameters
-         * @return object
+         * @name   helper.parameterStringToHash
+         * @function
+         * @param  {string} parameter_string - String containing parameters
+         * @return {Object}
          */
         parameterStringToHash: function(parameterString)
         {
@@ -113,9 +124,11 @@ $(function() {
         },
 
         /**
-         * Get an associative array of the parameters found in the anchor
+         * get an associative array of the parameters found in the anchor
          *
-         * @return object
+         * @name   helper.getParameterHash
+         * @function
+         * @return {Object}
          */
         getParameterHash: function()
         {
@@ -131,10 +144,12 @@ $(function() {
         },
 
         /**
-         * Text range selection.
-         * From: https://stackoverflow.com/questions/985272/jquery-selecting-text-in-an-element-akin-to-highlighting-with-your-mouse
+         * text range selection
          *
-         * @param string element : Indentifier of the element to select (id="").
+         * @see    {@link https://stackoverflow.com/questions/985272/jquery-selecting-text-in-an-element-akin-to-highlighting-with-your-mouse}
+         * @name   helper.selectText
+         * @function
+         * @param  {string} element - Indentifier of the element to select (id="")
          */
         selectText: function(element)
         {
@@ -162,11 +177,13 @@ $(function() {
         },
 
         /**
-         * Set text of a DOM element (required for IE)
-         * This is equivalent to element.text(text)
+         * set text of a DOM element (required for IE),
+         * this is equivalent to element.text(text)
          *
-         * @param object element : a DOM element.
-         * @param string text : the text to enter.
+         * @name   helper.setElementText
+         * @function
+         * @param  {Object} element - a DOM element
+         * @param  {string} text - the text to enter
          */
         setElementText: function(element, text)
         {
@@ -185,8 +202,10 @@ $(function() {
         /**
          * replace last child of element with message
          *
-         * @param object element : a jQuery wrapped DOM element.
-         * @param string message : the message to append.
+         * @name   helper.setMessage
+         * @function
+         * @param  {Object} element - a jQuery wrapped DOM element
+         * @param  {string} message - the message to append
          */
         setMessage: function(element, message)
         {
@@ -202,15 +221,17 @@ $(function() {
         },
 
         /**
-         * Convert URLs to clickable links.
+         * convert URLs to clickable links.
          * URLs to handle:
-         * <code>
+         * <pre>
          *     magnet:?xt.1=urn:sha1:YNCKHTQCWBTRNJIV4WNAE52SJUQCZO5C&xt.2=urn:sha1:TXGCZQTH26NL6OUQAJJPFALHG2LTGBC7
-         *     http://localhost:8800/zero/?6f09182b8ea51997#WtLEUO5Epj9UHAV9JFs+6pUQZp13TuspAUjnF+iM+dM=
-         *     http://user:password@localhost:8800/zero/?6f09182b8ea51997#WtLEUO5Epj9UHAV9JFs+6pUQZp13TuspAUjnF+iM+dM=
-         * </code>
+         *     http://example.com:8800/zero/?6f09182b8ea51997#WtLEUO5Epj9UHAV9JFs+6pUQZp13TuspAUjnF+iM+dM=
+         *     http://user:example.com@localhost:8800/zero/?6f09182b8ea51997#WtLEUO5Epj9UHAV9JFs+6pUQZp13TuspAUjnF+iM+dM=
+         * </pre>
          *
-         * @param object element : a jQuery DOM element.
+         * @name   helper.urls2links
+         * @function
+         * @param  {Object} element - a jQuery DOM element
          */
         urls2links: function(element)
         {
@@ -231,11 +252,13 @@ $(function() {
 
         /**
          * minimal sprintf emulation for %s and %d formats
-         * From: https://stackoverflow.com/questions/610406/javascript-equivalent-to-printf-string-format#4795914
          *
-         * @param string format
-         * @param mixed args one or multiple parameters injected into format string
-         * @return string
+         * @see    {@link https://stackoverflow.com/questions/610406/javascript-equivalent-to-printf-string-format#4795914}
+         * @name   helper.sprintf
+         * @function
+         * @param  {string} format
+         * @param  {...*} args - one or multiple parameters injected into format string
+         * @return {string}
          */
         sprintf: function()
         {
@@ -273,10 +296,12 @@ $(function() {
 
         /**
          * get value of cookie, if it was set, empty string otherwise
-         * From: http://www.w3schools.com/js/js_cookies.asp
          *
-         * @param string cname
-         * @return string
+         * @see    {@link http://www.w3schools.com/js/js_cookies.asp}
+         * @name   helper.getCookie
+         * @function
+         * @param  {string} cname
+         * @return {string}
          */
         getCookie: function(cname) {
             var name = cname + '=';
@@ -293,12 +318,13 @@ $(function() {
         },
 
         /**
-         * Convert all applicable characters to HTML entities.
-         * From: https://github.com/janl/mustache.js/blob/master/mustache.js#L60
-         * Also: https://www.owasp.org/index.php/XSS_(Cross_Site_Scripting)_Prevention_Cheat_Sheet#RULE_.231_-_HTML_Escape_Before_Inserting_Untrusted_Data_into_HTML_Element_Content
+         * convert all applicable characters to HTML entities
          *
-         * @param string str
-         * @return string escaped HTML
+         * @see    {@link https://www.owasp.org/index.php/XSS_(Cross_Site_Scripting)_Prevention_Cheat_Sheet#RULE_.231_-_HTML_Escape_Before_Inserting_Untrusted_Data_into_HTML_Element_Content}
+         * @name   helper.htmlEntities
+         * @function
+         * @param  {string} str
+         * @return {string} escaped HTML
          */
         htmlEntities: function(str) {
             return String(str).replace(
@@ -309,6 +335,11 @@ $(function() {
 
         /**
          * character to HTML entity lookup table
+         *
+         * @see    {@link https://github.com/janl/mustache.js/blob/master/mustache.js#L60}
+         * @name   helper.entityMap
+         * @enum   {Object}
+         * @readonly
          */
         entityMap: {
             '&': '&amp;',
@@ -324,19 +355,28 @@ $(function() {
 
     /**
      * internationalization methods
+     *
+     * @name i18n
+     * @class
      */
     var i18n = {
         /**
          * supported languages, minus the built in 'en'
+         *
+         * @name   i18n.supportedLanguages
+         * @prop   {string[]}
+         * @readonly
          */
         supportedLanguages: ['de', 'es', 'fr', 'it', 'no', 'pl', 'oc', 'ru', 'sl', 'zh'],
 
         /**
-         * translate a string, alias for translate()
+         * translate a string, alias for i18n.translate()
          *
-         * @param string $messageId
-         * @param mixed args one or multiple parameters injected into placeholders
-         * @return string
+         * @name   i18n._
+         * @function
+         * @param  {string} messageId
+         * @param  {...*} args - one or multiple parameters injected into placeholders
+         * @return {string}
          */
         _: function()
         {
@@ -346,9 +386,11 @@ $(function() {
         /**
          * translate a string
          *
-         * @param string $messageId
-         * @param mixed args one or multiple parameters injected into placeholders
-         * @return string
+         * @name   i18n.translate
+         * @function
+         * @param  {string} messageId
+         * @param  {...*} args - one or multiple parameters injected into placeholders
+         * @return {string}
          */
         translate: function()
         {
@@ -402,10 +444,12 @@ $(function() {
 
         /**
          * per language functions to use to determine the plural form
-         * From: http://localization-guide.readthedocs.org/en/latest/l10n/pluralforms.html
          *
-         * @param int number
-         * @return int array key
+         * @see    {@link http://localization-guide.readthedocs.org/en/latest/l10n/pluralforms.html}
+         * @name   i18n.getPluralForm
+         * @function
+         * @param  {number} n
+         * @return {number} array key
          */
         getPluralForm: function(n) {
             switch (this.language)
@@ -429,7 +473,9 @@ $(function() {
         /**
          * load translations into cache, then execute callback function
          *
-         * @param function callback
+         * @name   i18n.loadTranslations
+         * @function
+         * @param  {Function} callback
          */
         loadTranslations: function(callback)
         {
@@ -452,24 +498,35 @@ $(function() {
 
         /**
          * built in language
+         *
+         * @name   i18n.language
+         * @prop   {string}
          */
         language: 'en',
 
         /**
          * translation cache
+         *
+         * @name   i18n.translations
+         * @enum   {Object}
          */
         translations: {}
     };
 
     /**
      * filter methods
+     *
+     * @name filter
+     * @class
      */
     var filter = {
         /**
-         * Compress a message (deflate compression). Returns base64 encoded data.
+         * compress a message (deflate compression), returns base64 encoded data
          *
-         * @param string message
-         * @return base64 string data
+         * @name   filter.compress
+         * @function
+         * @param  {string} message
+         * @return {string} base64 data
          */
         compress: function(message)
         {
@@ -477,10 +534,12 @@ $(function() {
         },
 
         /**
-         * Decompress a message compressed with compress().
+         * decompress a message compressed with filter.compress()
          *
-         * @param base64 string data
-         * @return string message
+         * @name   filter.decompress
+         * @function
+         * @param  {string} base64 data
+         * @return {string} message
          */
         decompress: function(data)
         {
@@ -488,12 +547,14 @@ $(function() {
         },
 
         /**
-         * Compress, then encrypt message with key.
+         * compress, then encrypt message with given key and password
          *
-         * @param string key
-         * @param string password
-         * @param string message
-         * @return encrypted string data
+         * @name   filter.cipher
+         * @function
+         * @param  {string} key
+         * @param  {string} password
+         * @param  {string} message
+         * @return {string} JSON with encrypted data
          */
         cipher: function(key, password, message)
         {
@@ -507,12 +568,14 @@ $(function() {
         },
 
         /**
-         * Decrypt message with key, then decompress.
+         * decrypt message with key, then decompress
          *
-         * @param string key
-         * @param string password
-         * @param encrypted string data
-         * @return string readable message
+         * @name   filter.decipher
+         * @function
+         * @param  {string} key
+         * @param  {string} password
+         * @param  {string} JSON with encrypted data
+         * @return {string} decrypted message
          */
         decipher: function(key, password, data)
         {
@@ -536,27 +599,44 @@ $(function() {
         }
     };
 
+    /**
+     * PrivateBin logic
+     *
+     * @name privatebin
+     * @class
+     */
     var privatebin = {
         /**
          * headers to send in AJAX requests
+         *
+         * @name   privatebin.headers
+         * @enum   {Object}
          */
         headers: {'X-Requested-With': 'JSONHttpRequest'},
 
         /**
          * URL shortners create address
+         *
+         * @name   privatebin.shortenerUrl
+         * @prop   {string}
          */
         shortenerUrl: '',
 
         /**
          * URL of newly created paste
+         *
+         * @name   privatebin.createdPasteUrl
+         * @prop   {string}
          */
         createdPasteUrl: '',
 
         /**
-         * Get the current script location (without search or hash part of the URL).
-         * eg. http://server.com/zero/?aaaa#bbbb --> http://server.com/zero/
+         * get the current script location (without search or hash part of the URL),
+         * eg. http://example.com/zero/?aaaa#bbbb --> http://example.com/zero/
          *
-         * @return string current script location
+         * @name   privatebin.scriptLocation
+         * @function
+         * @return {string} current script location
          */
         scriptLocation: function()
         {
@@ -571,10 +651,12 @@ $(function() {
         },
 
         /**
-         * Get the pastes unique identifier from the URL
-         * eg. http://server.com/zero/?c05354954c49a487#c05354954c49a487 returns c05354954c49a487
+         * get the pastes unique identifier from the URL,
+         * eg. http://example.com/zero/?c05354954c49a487#c05354954c49a487 returns c05354954c49a487
          *
-         * @return string unique identifier
+         * @name   privatebin.pasteID
+         * @function
+         * @return {string} unique identifier
          */
         pasteID: function()
         {
@@ -582,9 +664,11 @@ $(function() {
         },
 
         /**
-         * Return the deciphering key stored in anchor part of the URL
+         * return the deciphering key stored in anchor part of the URL
          *
-         * @return string key
+         * @name   privatebin.pageKey
+         * @function
+         * @return {string} key
          */
         pageKey: function()
         {
@@ -618,6 +702,9 @@ $(function() {
 
         /**
          * ask the user for the password and set it
+         *
+         * @name   privatebin.requestPassword
+         * @function
          */
         requestPassword: function()
         {
@@ -642,8 +729,10 @@ $(function() {
         /**
          * use given format on paste, defaults to plain text
          *
-         * @param string format
-         * @param string text
+         * @name   privatebin.formatPaste
+         * @function
+         * @param  {string} format
+         * @param  {string} text
          */
         formatPaste: function(format, text)
         {
@@ -683,7 +772,7 @@ $(function() {
                     }
                     // fall through, as the rest is the same
                 default:
-                    // Convert URLs to clickable links.
+                    // convert URLs to clickable links
                     helper.urls2links(this.clearText);
                     helper.urls2links(this.prettyPrint);
                     this.clearText.addClass('hidden');
@@ -698,9 +787,11 @@ $(function() {
         },
 
         /**
-         * Show decrypted text in the display area, including discussion (if open)
+         * show decrypted text in the display area, including discussion (if open)
          *
-         * @param object paste (optional) object including comments to display (items = array with keys ('data','meta')
+         * @name   privatebin.displayMessages
+         * @function
+         * @param  {Object} [paste] - (optional) object including comments to display (items = array with keys ('data','meta'))
          */
         displayMessages: function(paste)
         {
@@ -779,7 +870,7 @@ $(function() {
                 }
             }
 
-            // Display paste expiration / for your eyes only.
+            // display paste expiration / for your eyes only
             if (paste.meta.expire_date)
             {
                 var expiration = helper.secondsToHuman(paste.meta.remaining_time),
@@ -809,11 +900,11 @@ $(function() {
                 ));
                 this.remainingTime.addClass('foryoureyesonly')
                                   .removeClass('hidden');
-                // Discourage cloning (as it can't really be prevented).
+                // discourage cloning (as it can't really be prevented)
                 this.cloneButton.addClass('hidden');
             }
 
-            // If the discussion is opened on this paste, display it.
+            // if the discussion is opened on this paste, display it
             if (paste.meta.opendiscussion)
             {
                 this.comments.html('');
@@ -824,10 +915,10 @@ $(function() {
                     var place = this.comments;
                     var comment = paste.comments[i];
                     var commenttext = filter.decipher(key, password, comment.data);
-                    // If parent comment exists, display below (CSS will automatically shift it right.)
+                    // if parent comment exists, display below (CSS will automatically shift it to the right)
                     var cname = '#comment_' + comment.parentid;
 
-                    // If the element exists in page
+                    // if the element exists in page
                     if ($(cname).length)
                     {
                         place = $(cname);
@@ -838,10 +929,9 @@ $(function() {
                                    + '</div></article>');
                     divComment.find('button').click({commentid: comment.id}, $.proxy(this.openReply, this));
                     helper.setElementText(divComment.find('div.commentdata'), commenttext);
-                    // Convert URLs to clickable links in comment.
                     helper.urls2links(divComment.find('div.commentdata'));
 
-                    // Try to get optional nickname:
+                    // try to get optional nickname
                     var nick = filter.decipher(key, password, comment.meta.nickname);
                     if (nick.length > 0)
                     {
@@ -855,7 +945,7 @@ $(function() {
                               .text(' (' + (new Date(comment.meta.postdate * 1000).toLocaleString()) + ')')
                               .attr('title', 'CommentID: ' + comment.id);
 
-                    // If an avatar is available, display it.
+                    // if an avatar is available, display it
                     if (comment.meta.vizhash)
                     {
                         divComment.find('span.nickname')
@@ -878,9 +968,11 @@ $(function() {
         },
 
         /**
-         * Open the comment entry when clicking the "Reply" button of a comment.
+         * open the comment entry when clicking the "Reply" button of a comment
          *
-         * @param Event event
+         * @name   privatebin.openReply
+         * @function
+         * @param  {Event} event
          */
         openReply: function(event)
         {
@@ -889,7 +981,7 @@ $(function() {
                 commentid = event.data.commentid,
                 hint = i18n._('Optional nickname...');
 
-            // Remove any other reply area.
+            // remove any other reply area
             $('div.reply').remove();
             var reply = $(
                 '<div class="reply">' +
@@ -905,15 +997,17 @@ $(function() {
         },
 
         /**
-         * Send a reply in a discussion.
+         * send a reply in a discussion
          *
-         * @param Event event
+         * @name   privatebin.sendComment
+         * @function
+         * @param  {Event} event
          */
         sendComment: function(event)
         {
             event.preventDefault();
             this.errorMessage.addClass('hidden');
-            // Do not send if no data.
+            // do not send if no data
             var replyMessage = $('#replymessage');
             if (replyMessage.val().length === 0)
             {
@@ -946,7 +1040,7 @@ $(function() {
                 {
                     if (data.status === 0)
                     {
-                        privatebin.showStatus(i18n._('Comment posted.'), false);
+                        privatebin.showStatus(i18n._('Comment posted.'));
                         $.ajax({
                             type: 'GET',
                             url: privatebin.scriptLocation() + '?' + privatebin.pasteID(),
@@ -988,9 +1082,11 @@ $(function() {
         },
 
         /**
-         * Send a new paste to server
+         * send a new paste to server
          *
-         * @param Event event
+         * @name   privatebin.sendData
+         * @function
+         * @param  {Event} event
          */
         sendData: function(event)
         {
@@ -998,13 +1094,13 @@ $(function() {
             var file = document.getElementById('file'),
                 files = (file && file.files) ? file.files : null; // FileList object
 
-            // Do not send if no data.
+            // do not send if no data.
             if (this.message.val().length === 0 && !(files && files[0]))
             {
                 return;
             }
 
-            // If sjcl has not collected enough entropy yet, display a message.
+            // if sjcl has not collected enough entropy yet, display a message
             if (!sjcl.random.isReady())
             {
                 this.showStatus(i18n._('Sending paste (Please move your mouse for more entropy)...'), true);
@@ -1028,7 +1124,7 @@ $(function() {
                     return;
                 }
                 var reader = new FileReader();
-                // Closure to capture the file information.
+                // closure to capture the file information
                 reader.onload = (function(theFile)
                 {
                     return function(e) {
@@ -1056,11 +1152,13 @@ $(function() {
         },
 
         /**
-         * Send a new paste to server, step 2
+         * send a new paste to server, step 2
          *
-         * @param string randomkey
-         * @param encrypted string cipherdata_attachment
-         * @param encrypted string cipherdata_attachment_name
+         * @name   privatebin.sendDataContinue
+         * @function
+         * @param  {string} randomkey
+         * @param  {string} cipherdata_attachment
+         * @param  {string} cipherdata_attachment_name
          */
         sendDataContinue: function(randomkey, cipherdata_attachment, cipherdata_attachment_name)
         {
@@ -1092,7 +1190,7 @@ $(function() {
                         privatebin.stateExistingPaste();
                         var url = privatebin.scriptLocation() + '?' + data.id + '#' + randomkey;
                         var deleteUrl = privatebin.scriptLocation() + '?pasteid=' + data.id + '&deletetoken=' + data.deletetoken;
-                        privatebin.showStatus('', false);
+                        privatebin.showStatus('');
                         privatebin.errorMessage.addClass('hidden');
 
                         $('#pastelink').html(
@@ -1107,9 +1205,9 @@ $(function() {
                         }
                         $('#deletelink').html('<a href="' + deleteUrl + '">' + i18n._('Delete data') + '</a>');
                         privatebin.pasteResult.removeClass('hidden');
-                        // We pre-select the link so that the user only has to [Ctrl]+[c] the link.
+                        // we pre-select the link so that the user only has to [Ctrl]+[c] the link
                         helper.selectText('pasteurl');
-                        privatebin.showStatus('', false);
+                        privatebin.showStatus('');
                         privatebin.formatPaste(data_to_send.formatter, privatebin.message.val());
                     }
                     else if (data.status === 1)
@@ -1129,10 +1227,12 @@ $(function() {
         },
 
         /**
-         * Check if a URL shortener was defined and create HTML containing a link to it.
+         * check if a URL shortener was defined and create HTML containing a link to it
          *
-         * @param string url
-         * @return string html
+         * @name   privatebin.shortenUrl
+         * @function
+         * @param  {string} url
+         * @return {string} html
          */
         shortenUrl: function(url)
         {
@@ -1146,7 +1246,10 @@ $(function() {
         },
 
         /**
-         * Put the screen in "New paste" mode.
+         * put the screen in "New paste" mode
+         *
+         * @name   privatebin.stateNewPaste
+         * @function
          */
         stateNewPaste: function()
         {
@@ -1173,9 +1276,11 @@ $(function() {
         },
 
         /**
-         * Put the screen in "Existing paste" mode.
+         * put the screen in "Existing paste" mode
          *
-         * @param boolean preview (optional) tell if the preview tabs should be displayed, defaults to false.
+         * @name   privatebin.stateExistingPaste
+         * @function
+         * @param  {boolean} [preview=false] - (optional) tell if the preview tabs should be displayed, defaults to false
          */
         stateExistingPaste: function(preview)
         {
@@ -1183,7 +1288,7 @@ $(function() {
 
             if (!preview)
             {
-                // No "clone" for IE<10.
+                // no "clone" for IE<10.
                 if ($('#oldienotice').is(":visible"))
                 {
                     this.cloneButton.addClass('hidden');
@@ -1211,7 +1316,10 @@ $(function() {
         },
 
         /**
-         * If "burn after reading" is checked, disable discussion.
+         * when "burn after reading" is checked, disable discussion
+         *
+         * @name   privatebin.changeBurnAfterReading
+         * @function
          */
         changeBurnAfterReading: function()
         {
@@ -1228,7 +1336,10 @@ $(function() {
         },
 
         /**
-         * If discussion is checked, disable "burn after reading".
+         * when discussion is checked, disable "burn after reading"
+         *
+         * @name   privatebin.changeOpenDisc
+         * @function
          */
         changeOpenDisc: function()
         {
@@ -1245,9 +1356,11 @@ $(function() {
         },
 
         /**
-         * Forward to URL shortener.
+         * forward to URL shortener
          *
-         * @param Event event
+         * @name   privatebin.sendToShortener
+         * @function
+         * @param  {Event} event
          */
         sendToShortener: function(event)
         {
@@ -1256,9 +1369,11 @@ $(function() {
         },
 
         /**
-         * Reload the page.
+         * reload the page
          *
-         * @param Event event
+         * @name   privatebin.reloadPage
+         * @function
+         * @param  {Event} event
          */
         reloadPage: function(event)
         {
@@ -1267,9 +1382,11 @@ $(function() {
         },
 
         /**
-         * Return raw text.
+         * return raw text
          *
-         * @param Event event
+         * @name   privatebin.rawText
+         * @function
+         * @param  {Event} event
          */
         rawText: function(event)
         {
@@ -1288,19 +1405,21 @@ $(function() {
         },
 
         /**
-         * Clone the current paste.
+         * clone the current paste
          *
-         * @param Event event
+         * @name   privatebin.clonePaste
+         * @function
+         * @param  {Event} event
          */
         clonePaste: function(event)
         {
             event.preventDefault();
             this.stateNewPaste();
 
-            // Erase the id and the key in url
+            // erase the id and the key in url
             history.replaceState(null, document.title, this.scriptLocation());
 
-            this.showStatus('', false);
+            this.showStatus('');
             if (this.attachmentLink.attr('href'))
             {
                 this.clonedFile.removeClass('hidden');
@@ -1314,9 +1433,11 @@ $(function() {
         },
 
         /**
-         * Set the expiration on bootstrap templates.
+         * set the expiration on bootstrap templates
          *
-         * @param Event event
+         * @name   privatebin.setExpiration
+         * @function
+         * @param  {Event} event
          */
         setExpiration: function(event)
         {
@@ -1327,9 +1448,11 @@ $(function() {
         },
 
         /**
-         * Set the format on bootstrap templates.
+         * set the format on bootstrap templates
          *
-         * @param Event event
+         * @name   privatebin.setFormat
+         * @function
+         * @param  {Event} event
          */
         setFormat: function(event)
         {
@@ -1344,11 +1467,11 @@ $(function() {
         },
 
         /**
-         * Set the language on bootstrap templates.
+         * set the language in a cookie and reload the page
          *
-         * Sets the language cookie and reloads the page.
-         *
-         * @param Event event
+         * @name   privatebin.setLanguage
+         * @function
+         * @param  {Event} event
          */
         setLanguage: function(event)
         {
@@ -1357,9 +1480,11 @@ $(function() {
         },
 
         /**
-         * Support input of tab character.
+         * support input of tab character
          *
-         * @param Event event
+         * @name   privatebin.supportTabs
+         * @function
+         * @param  {Event} event
          */
         supportTabs: function(event)
         {
@@ -1381,9 +1506,11 @@ $(function() {
         },
 
         /**
-         * View the editor tab.
+         * view the editor tab
          *
-         * @param Event event
+         * @name   privatebin.viewEditor
+         * @function
+         * @param  {Event} event
          */
         viewEditor: function(event)
         {
@@ -1395,9 +1522,11 @@ $(function() {
         },
 
         /**
-         * View the preview tab.
+         * view the preview tab
          *
-         * @param Event event
+         * @name   privatebin.viewPreview
+         * @function
+         * @param  {Event} event
          */
         viewPreview: function(event)
         {
@@ -1410,19 +1539,25 @@ $(function() {
         },
 
         /**
-         * Create a new paste.
+         * create a new paste
+         *
+         * @name   privatebin.newPaste
+         * @function
          */
         newPaste: function()
         {
             this.stateNewPaste();
-            this.showStatus('', false);
+            this.showStatus('');
             this.message.text('');
             this.changeBurnAfterReading();
             this.changeOpenDisc();
         },
 
         /**
-         * Removes an attachment.
+         * removes an attachment
+         *
+         * @name   privatebin.removeAttachment
+         * @function
          */
         removeAttachment: function()
         {
@@ -1435,7 +1570,10 @@ $(function() {
         },
 
         /**
-         * Focus on the modal password dialog.
+         * focus on the modal password dialog
+         *
+         * @name   privatebin.focusPasswordModal
+         * @function
          */
         focusPasswordModal: function()
         {
@@ -1443,7 +1581,10 @@ $(function() {
         },
 
         /**
-         * Decrypt using the password from the modal dialog.
+         * decrypt using the password from the modal dialog
+         *
+         * @name   privatebin.decryptPasswordModal
+         * @function
          */
         decryptPasswordModal: function()
         {
@@ -1452,9 +1593,11 @@ $(function() {
         },
 
         /**
-         * Submit a password in the modal dialog.
+         * submit a password in the modal dialog
          *
-         * @param Event event
+         * @name   privatebin.submitPasswordModal
+         * @function
+         * @param  {Event} event
          */
         submitPasswordModal: function(event)
         {
@@ -1463,10 +1606,12 @@ $(function() {
         },
 
         /**
-         * Display an error message
-         * (We use the same function for paste and reply to comments)
+         * display an error message,
+         * we use the same function for paste and reply to comments
          *
-         * @param string message : text to display
+         * @name   privatebin.showError
+         * @function
+         * @param  {string} message - text to display
          */
         showError: function(message)
         {
@@ -1494,14 +1639,24 @@ $(function() {
         },
 
         /**
-         * Display a status message
-         * (We use the same function for paste and reply to comments)
+         * display a status message,
+         * we use the same function for paste and reply to comments
          *
-         * @param string message : text to display
-         * @param boolean spin (optional) : tell if the "spinning" animation should be displayed.
+         * @name   privatebin.showStatus
+         * @function
+         * @param  {string} message - text to display
+         * @param  {boolean} [spin=false] - (optional) tell if the "spinning" animation should be displayed, defaults to false
          */
         showStatus: function(message, spin)
         {
+            if (spin || false)
+            {
+                var img = '<img src="img/busy.gif" style="width:16px;height:9px;margin:0 4px 0 0;" />';
+                this.status.prepend(img);
+                if (typeof this.replyStatus !== 'undefined') {
+                    this.replyStatus.prepend(img);
+                }
+            }
             if (typeof this.replyStatus !== 'undefined') {
                 this.replyStatus.removeClass('errorMessage').text(message);
             }
@@ -1516,18 +1671,13 @@ $(function() {
                 return;
             }
             this.status.removeClass('errorMessage').text(message);
-            if (spin)
-            {
-                var img = '<img src="img/busy.gif" style="width:16px;height:9px;margin:0 4px 0 0;" />';
-                this.status.prepend(img);
-                if (typeof this.replyStatus !== 'undefined') {
-                    this.replyStatus.prepend(img);
-                }
-            }
         },
 
         /**
          * bind events to DOM elements
+         *
+         * @name   privatebin.bindEvents
+         * @function
          */
         bindEvents: function()
         {
@@ -1558,6 +1708,9 @@ $(function() {
 
         /**
          * main application
+         *
+         * @name   privatebin.init
+         * @function
          */
         init: function()
         {
@@ -1603,36 +1756,36 @@ $(function() {
             this.status = $('#status');
             this.bindEvents();
 
-            // Display status returned by php code if any (eg. Paste was properly deleted.)
+            // display status returned by php code, if any (eg. paste was properly deleted)
             if (this.status.text().length > 0)
             {
-                this.showStatus(this.status.text(), false);
+                this.showStatus(this.status.text());
                 return;
             }
 
-            // Keep line height even if content empty.
+            // keep line height even if content empty
             this.status.html(' ');
 
-            // Display an existing paste
+            // display an existing paste
             if (this.cipherData.text().length > 1)
             {
-                // Missing decryption key in URL?
+                // missing decryption key in URL?
                 if (window.location.hash.length === 0)
                 {
                     this.showError(i18n._('Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)'));
                     return;
                 }
 
-                // Show proper elements on screen.
+                // show proper elements on screen
                 this.stateExistingPaste();
                 this.displayMessages();
             }
-            // Display error message from php code.
+            // display error message from php code
             else if (this.errorMessage.text().length > 1)
             {
                 this.showError(this.errorMessage.text());
             }
-            // Create a new paste.
+            // create a new paste
             else
             {
                 this.newPaste();
