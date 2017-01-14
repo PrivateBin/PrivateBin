@@ -115,7 +115,8 @@ The table prefix option is called `tbl`.
 > know.
 
 For reference or if you want to create the table schema for yourself (replace
-`prefix_` with your own table prefix):
+`prefix_` with your own table prefix and create the table schema with phpMyAdmin
+or the MYSQL console):
 
     CREATE TABLE prefix_paste (
         dataid CHAR(16) NOT NULL,
