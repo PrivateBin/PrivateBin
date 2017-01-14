@@ -75,23 +75,23 @@ $(function() {
          *
          * @name   helper.hashToParameterString
          * @function
-         * @param  {Object} associative_array - Object to be serialized
+         * @param  {Object} hashMap - Object to be serialized
          * @return {string}
          */
-        hashToParameterString: function(associativeArray)
+        hashToParameterString: function(hashMap)
         {
             var parameterString = '';
-            for (var key in associativeArray)
+            for (var key in hashMap)
             {
                 if(parameterString === '')
                 {
                     parameterString = encodeURIComponent(key);
-                    parameterString += '=' + encodeURIComponent(associativeArray[key]);
+                    parameterString += '=' + encodeURIComponent(hashMap[key]);
                 }
                 else
                 {
                     parameterString += '&' + encodeURIComponent(key);
-                    parameterString += '=' + encodeURIComponent(associativeArray[key]);
+                    parameterString += '=' + encodeURIComponent(hashMap[key]);
                 }
             }
             // padding for URL shorteners
@@ -105,8 +105,8 @@ $(function() {
          *
          * @name   helper.parameterStringToHash
          * @function
-         * @param  {string} parameter_string - String containing parameters
-         * @return {Object}
+         * @param  {string} parameterString - String containing parameters
+         * @return {Object} hash map
          */
         parameterStringToHash: function(parameterString)
         {
@@ -267,9 +267,9 @@ $(function() {
             {
                 args = arguments[0];
             }
-            var string = args[0],
+            var format = args[0],
                 i = 1;
-            return string.replace(/%((%)|s|d)/g, function (m) {
+            return format.replace(/%((%)|s|d)/g, function (m) {
                 // m is the matched format, e.g. %s, %d
                 var val;
                 if (m[2]) {
@@ -538,7 +538,7 @@ $(function() {
          *
          * @name   filter.decompress
          * @function
-         * @param  {string} base64 data
+         * @param  {string} data - base64 data
          * @return {string} message
          */
         decompress: function(data)
@@ -554,7 +554,7 @@ $(function() {
          * @param  {string} key
          * @param  {string} password
          * @param  {string} message
-         * @return {string} JSON with encrypted data
+         * @return {string} data - JSON with encrypted data
          */
         cipher: function(key, password, message)
         {
@@ -574,7 +574,7 @@ $(function() {
          * @function
          * @param  {string} key
          * @param  {string} password
-         * @param  {string} JSON with encrypted data
+         * @param  {string} data - JSON with encrypted data
          * @return {string} decrypted message
          */
         decipher: function(key, password, data)
@@ -1570,17 +1570,6 @@ $(function() {
         },
 
         /**
-         * focus on the modal password dialog
-         *
-         * @name   privatebin.focusPasswordModal
-         * @function
-         */
-        focusPasswordModal: function()
-        {
-            this.passwordDecrypt.focus();
-        },
-
-        /**
          * decrypt using the password from the modal dialog
          *
          * @name   privatebin.decryptPasswordModal
@@ -1701,7 +1690,7 @@ $(function() {
             $('#language select option').click($.proxy(this.setLanguage, this));
 
             // handle modal password request on decryption
-            this.passwordModal.on('shown.bs.modal', $.proxy(this.focusPasswordModal, this));
+            this.passwordModal.on('shown.bs.modal', $.proxy(this.passwordDecrypt.focus, this));
             this.passwordModal.on('hidden.bs.modal', $.proxy(this.decryptPasswordModal, this));
             this.passwordForm.submit($.proxy(this.submitPasswordModal, this));
         },
