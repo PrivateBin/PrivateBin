@@ -25,7 +25,7 @@
 // Immediately start random number generator collector.
 sjcl.random.startCollectors();
 
-$(function() {
+jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
     /**
      * static helper methods
      *
@@ -1782,9 +1782,17 @@ $(function() {
         }
     }
 
-    /**
-     * main application start, called when DOM is fully loaded
-     * runs privatebin when translations were loaded
-     */
-    i18n.loadTranslations($.proxy(privatebin.init, privatebin));
-});
+    return {
+        helper: helper,
+        i18n: i18n,
+        filter: filter,
+        privatebin: privatebin
+    };
+}(jQuery, sjcl, Base64, RawDeflate);
+
+/**
+ * main application start, called when DOM is fully loaded
+ * runs privatebin when translations were loaded
+ */
+jQuery(jQuery.PrivateBin.i18n.loadTranslations(jQuery.proxy(jQuery.PrivateBin.privatebin.init, jQuery.PrivateBin.privatebin)));
+
