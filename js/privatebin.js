@@ -115,9 +115,9 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         {
             var parameterHash = {};
             var parameterArray = parameterString.split('&');
-            if (parameterArray[0] != '') {
-                for (var i = 0; i < parameterArray.length; i++)
-                {
+            for (var i = 0; i < parameterArray.length; i++)
+            {
+                if (parameterArray[i] != '') {
                     var pair = parameterArray[i].split('=');
                     var key = decodeURIComponent(pair[0]);
                     var value = decodeURIComponent(pair[1]);

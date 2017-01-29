@@ -4,7 +4,7 @@ var jsc = require('jsverify');
 before(function () {
     this.jsdom = require('jsdom-global')();
     global.$ = global.jQuery = require('./jquery-3.1.1');
-    global.sjcl = require('./sjcl-1.0.4');
+    global.sjcl = require('./sjcl-1.0.6');
     global.Base64 = require('./base64-2.1.9');
     global.RawDeflate = require('./rawdeflate-0.5');
     require('./rawinflate-0.3');
