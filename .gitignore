@@ -26,6 +26,7 @@ vendor/**/build_phar.php
 composer.lock
 
 # Ignore unit testing logs, api docs and eclipse project files
+js/node_modules/
 tst/log/
 .settings
 .buildpath

@@ -1,0 +1,7 @@
+---
+instrumentation:
+  excludes:
+    - jquery-3.1.1.js
+  baseline-file: ../tst/log/js-coverage-baseline.json
+reporting:
+  dir: ../tst/log/js-coverage-report
