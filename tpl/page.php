@@ -21,7 +21,7 @@ if ($SYNTAXHIGHLIGHTING):
 endif;
 ?>
 		<script type="text/javascript" src="js/jquery-3.1.1.js" integrity="sha512-U6K1YLIFUWcvuw5ucmMtT9HH4t0uz3M366qrF5y4vnyH6dgDzndlcGvH/Lz5k8NFh80SN95aJ5rqGZEdaQZ7ZQ==" crossorigin="anonymous"></script>
-		<script type="text/javascript" src="js/sjcl-1.0.4.js" integrity="sha512-BqVQ8GgWfMCcdsDuP6Ggm1BV7+mmoWH3PC4UqcYpEKSdEq1rthy6NUsa6gu5sydewbi/ilI3E3ohdCxlPPF9ww==" crossorigin="anonymous"></script>
+		<script type="text/javascript" src="js/sjcl-1.0.6.js" integrity="sha512-DsyxLV/uBoQlRTJmW5Gb2SxXUXB+aYeZ6zk+NuXy8LuLyi8oGti9AGn6He5fUY2DtgQ2//RjfaZog8exFuunUQ==" crossorigin="anonymous"></script>
 <?php
 if ($ZEROBINCOMPATIBILITY):
 ?>
@@ -43,7 +43,7 @@ if ($SYNTAXHIGHLIGHTING):
 endif;
 if ($MARKDOWN):
 ?>
-		<script type="text/javascript" src="js/showdown-1.4.1.js" integrity="sha512-Kbz1FIlDnqUJu/3yW8H8USzURA3JuUqSKRwz13lM4kWt6C0n6s4tjl81PCfnWtE4gBIzyj5uGePcfUyotk/icw==" crossorigin="anonymous"></script>
+		<script type="text/javascript" src="js/showdown-1.6.0.js" integrity="sha512-yHDzJ1/LQoVrAeiQdjim4MBp7qwWwPDDkEqjTQmu4KMLT5h4lRkhKspC36bl1t1gRhuS7ziFDFWj2NF4dbo5KQ==" crossorigin="anonymous"></script>
 <?php
 endif;
 ?>

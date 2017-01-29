@@ -23,8 +23,6 @@ vendor/**/tests
 vendor/**/build_phar.php
 !vendor/**/*.php
 
-composer.lock
-
 # Ignore unit testing logs, api docs and eclipse project files
 tst/log/
 .settings
