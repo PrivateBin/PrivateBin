@@ -83,7 +83,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             var parameterString = '';
             for (var key in hashMap)
             {
-                if(parameterString === '')
+                if (parameterString === '')
                 {
                     parameterString = encodeURIComponent(key);
                     parameterString += '=' + encodeURIComponent(hashMap[key]);
@@ -95,7 +95,10 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                 }
             }
             // padding for URL shorteners
-            parameterString += '&p=p';
+            if (parameterString.length > 0) {
+                parameterString += '&';
+            }
+            parameterString += 'p=p';
 
             return parameterString;
         },
@@ -112,14 +115,15 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         {
             var parameterHash = {};
             var parameterArray = parameterString.split('&');
-            for (var i = 0; i < parameterArray.length; i++)
-            {
-                var pair = parameterArray[i].split('=');
-                var key = decodeURIComponent(pair[0]);
-                var value = decodeURIComponent(pair[1]);
-                parameterHash[key] = value;
+            if (parameterArray[0] != '') {
+                for (var i = 0; i < parameterArray.length; i++)
+                {
+                    var pair = parameterArray[i].split('=');
+                    var key = decodeURIComponent(pair[0]);
+                    var value = decodeURIComponent(pair[1]);
+                    parameterHash[key] = value;
+                }
             }
-
             return parameterHash;
         },
 
@@ -602,14 +606,14 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
     /**
      * PrivateBin logic
      *
-     * @name privatebin
+     * @name controller
      * @class
      */
-    var privatebin = {
+    var controller = {
         /**
          * headers to send in AJAX requests
          *
-         * @name   privatebin.headers
+         * @name   controller.headers
          * @enum   {Object}
          */
         headers: {'X-Requested-With': 'JSONHttpRequest'},
@@ -617,7 +621,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         /**
          * URL shortners create address
          *
-         * @name   privatebin.shortenerUrl
+         * @name   controller.shortenerUrl
          * @prop   {string}
          */
         shortenerUrl: '',
@@ -625,7 +629,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         /**
          * URL of newly created paste
          *
-         * @name   privatebin.createdPasteUrl
+         * @name   controller.createdPasteUrl
          * @prop   {string}
          */
         createdPasteUrl: '',
@@ -634,7 +638,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          * get the current script location (without search or hash part of the URL),
          * eg. http://example.com/zero/?aaaa#bbbb --> http://example.com/zero/
          *
-         * @name   privatebin.scriptLocation
+         * @name   controller.scriptLocation
          * @function
          * @return {string} current script location
          */
@@ -654,7 +658,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          * get the pastes unique identifier from the URL,
          * eg. http://example.com/zero/?c05354954c49a487#c05354954c49a487 returns c05354954c49a487
          *
-         * @name   privatebin.pasteID
+         * @name   controller.pasteID
          * @function
          * @return {string} unique identifier
          */
@@ -666,7 +670,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         /**
          * return the deciphering key stored in anchor part of the URL
          *
-         * @name   privatebin.pageKey
+         * @name   controller.pageKey
          * @function
          * @return {string} key
          */
@@ -703,7 +707,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         /**
          * ask the user for the password and set it
          *
-         * @name   privatebin.requestPassword
+         * @name   controller.requestPassword
          * @function
          */
         requestPassword: function()
@@ -729,7 +733,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         /**
          * use given format on paste, defaults to plain text
          *
-         * @name   privatebin.formatPaste
+         * @name   controller.formatPaste
          * @function
          * @param  {string} format
          * @param  {string} text
@@ -789,7 +793,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         /**
          * show decrypted text in the display area, including discussion (if open)
          *
-         * @name   privatebin.displayMessages
+         * @name   controller.displayMessages
          * @function
          * @param  {Object} [paste] - (optional) object including comments to display (items = array with keys ('data','meta'))
          */
@@ -893,7 +897,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                     headers: this.headers
                 })
                 .fail(function() {
-                    privatebin.showError(i18n._('Could not delete the paste, it was not stored in burn after reading mode.'));
+                    controller.showError(i18n._('Could not delete the paste, it was not stored in burn after reading mode.'));
                 });
                 helper.setMessage(this.remainingTime, i18n._(
                     'FOR YOUR EYES ONLY. Don\'t close this window, this message can\'t be displayed again.'
@@ -970,7 +974,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         /**
          * open the comment entry when clicking the "Reply" button of a comment
          *
-         * @name   privatebin.openReply
+         * @name   controller.openReply
          * @function
          * @param  {Event} event
          */
@@ -999,7 +1003,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         /**
          * send a reply in a discussion
          *
-         * @name   privatebin.sendComment
+         * @name   controller.sendComment
          * @function
          * @param  {Event} event
          */
@@ -1040,51 +1044,51 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                 {
                     if (data.status === 0)
                     {
-                        privatebin.showStatus(i18n._('Comment posted.'));
+                        controller.showStatus(i18n._('Comment posted.'));
                         $.ajax({
                             type: 'GET',
-                            url: privatebin.scriptLocation() + '?' + privatebin.pasteID(),
+                            url: controller.scriptLocation() + '?' + controller.pasteID(),
                             dataType: 'json',
-                            headers: privatebin.headers,
+                            headers: controller.headers,
                             success: function(data)
                             {
                                 if (data.status === 0)
                                 {
-                                    privatebin.displayMessages(data);
+                                    controller.displayMessages(data);
                                 }
                                 else if (data.status === 1)
                                 {
-                                    privatebin.showError(i18n._('Could not refresh display: %s', data.message));
+                                    controller.showError(i18n._('Could not refresh display: %s', data.message));
                                 }
                                 else
                                 {
-                                    privatebin.showError(i18n._('Could not refresh display: %s', i18n._('unknown status')));
+                                    controller.showError(i18n._('Could not refresh display: %s', i18n._('unknown status')));
                                 }
                             }
                         })
                         .fail(function() {
-                            privatebin.showError(i18n._('Could not refresh display: %s', i18n._('server error or not responding')));
+                            controller.showError(i18n._('Could not refresh display: %s', i18n._('server error or not responding')));
                         });
                     }
                     else if (data.status === 1)
                     {
-                        privatebin.showError(i18n._('Could not post comment: %s', data.message));
+                        controller.showError(i18n._('Could not post comment: %s', data.message));
                     }
                     else
                     {
-                        privatebin.showError(i18n._('Could not post comment: %s', i18n._('unknown status')));
+                        controller.showError(i18n._('Could not post comment: %s', i18n._('unknown status')));
                     }
                 }
             })
             .fail(function() {
-                privatebin.showError(i18n._('Could not post comment: %s', i18n._('server error or not responding')));
+                controller.showError(i18n._('Could not post comment: %s', i18n._('server error or not responding')));
             });
         },
 
         /**
          * send a new paste to server
          *
-         * @name   privatebin.sendData
+         * @name   controller.sendData
          * @function
          * @param  {Event} event
          */
@@ -1128,7 +1132,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                 reader.onload = (function(theFile)
                 {
                     return function(e) {
-                        privatebin.sendDataContinue(
+                        controller.sendDataContinue(
                             randomkey,
                             filter.cipher(randomkey, password, e.target.result),
                             filter.cipher(randomkey, password, theFile.name)
@@ -1154,7 +1158,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         /**
          * send a new paste to server, step 2
          *
-         * @name   privatebin.sendDataContinue
+         * @name   controller.sendDataContinue
          * @function
          * @param  {string} randomkey
          * @param  {string} cipherdata_attachment
@@ -1187,49 +1191,49 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                 success: function(data)
                 {
                     if (data.status === 0) {
-                        privatebin.stateExistingPaste();
-                        var url = privatebin.scriptLocation() + '?' + data.id + '#' + randomkey;
-                        var deleteUrl = privatebin.scriptLocation() + '?pasteid=' + data.id + '&deletetoken=' + data.deletetoken;
-                        privatebin.showStatus('');
-                        privatebin.errorMessage.addClass('hidden');
+                        controller.stateExistingPaste();
+                        var url = controller.scriptLocation() + '?' + data.id + '#' + randomkey;
+                        var deleteUrl = controller.scriptLocation() + '?pasteid=' + data.id + '&deletetoken=' + data.deletetoken;
+                        controller.showStatus('');
+                        controller.errorMessage.addClass('hidden');
 
                         $('#pastelink').html(
                             i18n._(
                                 'Your paste is <a id="pasteurl" href="%s">%s</a> <span id="copyhint">(Hit [Ctrl]+[c] to copy)</span>',
                                 url, url
-                            ) + privatebin.shortenUrl(url)
+                            ) + controller.shortenUrl(url)
                         );
                         var shortenButton = $('#shortenbutton');
                         if (shortenButton) {
-                            shortenButton.click($.proxy(privatebin.sendToShortener, privatebin));
+                            shortenButton.click($.proxy(controller.sendToShortener, controller));
                         }
                         $('#deletelink').html('<a href="' + deleteUrl + '">' + i18n._('Delete data') + '</a>');
-                        privatebin.pasteResult.removeClass('hidden');
+                        controller.pasteResult.removeClass('hidden');
                         // we pre-select the link so that the user only has to [Ctrl]+[c] the link
                         helper.selectText('pasteurl');
-                        privatebin.showStatus('');
-                        privatebin.formatPaste(data_to_send.formatter, privatebin.message.val());
+                        controller.showStatus('');
+                        controller.formatPaste(data_to_send.formatter, controller.message.val());
                     }
                     else if (data.status === 1)
                     {
-                        privatebin.showError(i18n._('Could not create paste: %s', data.message));
+                        controller.showError(i18n._('Could not create paste: %s', data.message));
                     }
                     else
                     {
-                        privatebin.showError(i18n._('Could not create paste: %s', i18n._('unknown status')));
+                        controller.showError(i18n._('Could not create paste: %s', i18n._('unknown status')));
                     }
                 }
             })
             .fail(function()
             {
-                privatebin.showError(i18n._('Could not create paste: %s', i18n._('server error or not responding')));
+                controller.showError(i18n._('Could not create paste: %s', i18n._('server error or not responding')));
             });
         },
 
         /**
          * check if a URL shortener was defined and create HTML containing a link to it
          *
-         * @name   privatebin.shortenUrl
+         * @name   controller.shortenUrl
          * @function
          * @param  {string} url
          * @return {string} html
@@ -1248,7 +1252,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         /**
          * put the screen in "New paste" mode
          *
-         * @name   privatebin.stateNewPaste
+         * @name   controller.stateNewPaste
          * @function
          */
         stateNewPaste: function()
@@ -1278,7 +1282,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         /**
          * put the screen in "Existing paste" mode
          *
-         * @name   privatebin.stateExistingPaste
+         * @name   controller.stateExistingPaste
          * @function
          * @param  {boolean} [preview=false] - (optional) tell if the preview tabs should be displayed, defaults to false
          */
@@ -1318,7 +1322,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         /**
          * when "burn after reading" is checked, disable discussion
          *
-         * @name   privatebin.changeBurnAfterReading
+         * @name   controller.changeBurnAfterReading
          * @function
          */
         changeBurnAfterReading: function()
@@ -1338,7 +1342,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         /**
          * when discussion is checked, disable "burn after reading"
          *
-         * @name   privatebin.changeOpenDisc
+         * @name   controller.changeOpenDisc
          * @function
          */
         changeOpenDisc: function()
@@ -1358,7 +1362,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         /**
          * forward to URL shortener
          *
-         * @name   privatebin.sendToShortener
+         * @name   controller.sendToShortener
          * @function
          * @param  {Event} event
          */
@@ -1371,7 +1375,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         /**
          * reload the page
          *
-         * @name   privatebin.reloadPage
+         * @name   controller.reloadPage
          * @function
          * @param  {Event} event
          */
@@ -1384,7 +1388,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         /**
          * return raw text
          *
-         * @name   privatebin.rawText
+         * @name   controller.rawText
          * @function
          * @param  {Event} event
          */
@@ -1407,7 +1411,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         /**
          * clone the current paste
          *
-         * @name   privatebin.clonePaste
+         * @name   controller.clonePaste
          * @function
          * @param  {Event} event
          */
@@ -1435,7 +1439,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         /**
          * set the expiration on bootstrap templates
          *
-         * @name   privatebin.setExpiration
+         * @name   controller.setExpiration
          * @function
          * @param  {Event} event
          */
@@ -1450,7 +1454,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         /**
          * set the format on bootstrap templates
          *
-         * @name   privatebin.setFormat
+         * @name   controller.setFormat
          * @function
          * @param  {Event} event
          */
@@ -1469,7 +1473,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         /**
          * set the language in a cookie and reload the page
          *
-         * @name   privatebin.setLanguage
+         * @name   controller.setLanguage
          * @function
          * @param  {Event} event
          */
@@ -1482,7 +1486,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         /**
          * support input of tab character
          *
-         * @name   privatebin.supportTabs
+         * @name   controller.supportTabs
          * @function
          * @param  {Event} event
          */
@@ -1508,7 +1512,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         /**
          * view the editor tab
          *
-         * @name   privatebin.viewEditor
+         * @name   controller.viewEditor
          * @function
          * @param  {Event} event
          */
@@ -1524,7 +1528,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         /**
          * view the preview tab
          *
-         * @name   privatebin.viewPreview
+         * @name   controller.viewPreview
          * @function
          * @param  {Event} event
          */
@@ -1541,7 +1545,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         /**
          * create a new paste
          *
-         * @name   privatebin.newPaste
+         * @name   controller.newPaste
          * @function
          */
         newPaste: function()
@@ -1556,7 +1560,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         /**
          * removes an attachment
          *
-         * @name   privatebin.removeAttachment
+         * @name   controller.removeAttachment
          * @function
          */
         removeAttachment: function()
@@ -1572,7 +1576,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         /**
          * decrypt using the password from the modal dialog
          *
-         * @name   privatebin.decryptPasswordModal
+         * @name   controller.decryptPasswordModal
          * @function
          */
         decryptPasswordModal: function()
@@ -1584,7 +1588,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         /**
          * submit a password in the modal dialog
          *
-         * @name   privatebin.submitPasswordModal
+         * @name   controller.submitPasswordModal
          * @function
          * @param  {Event} event
          */
@@ -1598,7 +1602,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          * display an error message,
          * we use the same function for paste and reply to comments
          *
-         * @name   privatebin.showError
+         * @name   controller.showError
          * @function
          * @param  {string} message - text to display
          */
@@ -1631,7 +1635,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          * display a status message,
          * we use the same function for paste and reply to comments
          *
-         * @name   privatebin.showStatus
+         * @name   controller.showStatus
          * @function
          * @param  {string} message - text to display
          * @param  {boolean} [spin=false] - (optional) tell if the "spinning" animation should be displayed, defaults to false
@@ -1665,7 +1669,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         /**
          * bind events to DOM elements
          *
-         * @name   privatebin.bindEvents
+         * @name   controller.bindEvents
          * @function
          */
         bindEvents: function()
@@ -1698,7 +1702,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         /**
          * main application
          *
-         * @name   privatebin.init
+         * @name   controller.init
          * @function
          */
         init: function()
@@ -1782,17 +1786,16 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         }
     }
 
+    /**
+     * main application start, called when DOM is fully loaded and
+     * runs controller initalization after translations are loaded
+     */
+    $(i18n.loadTranslations($.proxy(controller.init, controller)));
+
     return {
         helper: helper,
         i18n: i18n,
         filter: filter,
-        privatebin: privatebin
+        controller: controller
     };
 }(jQuery, sjcl, Base64, RawDeflate);
-
-/**
- * main application start, called when DOM is fully loaded
- * runs privatebin when translations were loaded
- */
-jQuery(jQuery.PrivateBin.i18n.loadTranslations(jQuery.proxy(jQuery.PrivateBin.privatebin.init, jQuery.PrivateBin.privatebin)));
-
