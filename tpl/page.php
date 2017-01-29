@@ -43,11 +43,11 @@ if ($SYNTAXHIGHLIGHTING):
 endif;
 if ($MARKDOWN):
 ?>
-		<script type="text/javascript" src="js/showdown-1.6.0.js" integrity="sha512-yHDzJ1/LQoVrAeiQdjim4MBp7qwWwPDDkEqjTQmu4KMLT5h4lRkhKspC36bl1t1gRhuS7ziFDFWj2NF4dbo5KQ==" crossorigin="anonymous"></script>
+		<script type="text/javascript" src="js/showdown-1.6.1.js" integrity="sha512-e6kAsBTgFnTBnEQXrq8BV6+XFwxb3kyWHeEPOl+KhxaWt3xImE2zAW2+yP3E2CQ7F9yoJl1poVU9qxkOEtVsTQ==" crossorigin="anonymous"></script>
 <?php
 endif;
 ?>
-		<script type="text/javascript" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-beT6rKtLu5r1n//Inx7Itv4vXYH5+1ZVG5EMk4LaWU37s7L7PrRVarqlvpESseZGlvvJ8mFJMnePh/2RjGnyLA==" crossorigin="anonymous"></script>
+		<script type="text/javascript" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-x8GMx3+kjkTYcs0woYYfMJuezva4bPJ4UasYido780GxFWcVEB9YnEvb5tvGoissx2Vdymvb6bg7hgdmUG+8Cg==" crossorigin="anonymous"></script>
 		<!--[if lt IE 10]>
 		<style type="text/css">body {padding-left:60px;padding-right:60px;} #ienotice {display:block;} #oldienotice {display:block;}</style>
 		<![endif]-->
