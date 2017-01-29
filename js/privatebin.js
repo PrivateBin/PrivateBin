@@ -70,84 +70,6 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         },
 
         /**
-         * converts an associative array to an encoded string
-         * for appending to the anchor
-         *
-         * @name   helper.hashToParameterString
-         * @function
-         * @param  {Object} hashMap - Object to be serialized
-         * @return {string}
-         */
-        hashToParameterString: function(hashMap)
-        {
-            var parameterString = '';
-            for (var key in hashMap)
-            {
-                if (parameterString === '')
-                {
-                    parameterString = encodeURIComponent(key);
-                    parameterString += '=' + encodeURIComponent(hashMap[key]);
-                }
-                else
-                {
-                    parameterString += '&' + encodeURIComponent(key);
-                    parameterString += '=' + encodeURIComponent(hashMap[key]);
-                }
-            }
-            // padding for URL shorteners
-            if (parameterString.length > 0) {
-                parameterString += '&';
-            }
-            parameterString += 'p=p';
-
-            return parameterString;
-        },
-
-        /**
-         * converts a anchor string to an associative array
-         *
-         * @name   helper.parameterStringToHash
-         * @function
-         * @param  {string} parameterString - String containing parameters
-         * @return {Object} hash map
-         */
-        parameterStringToHash: function(parameterString)
-        {
-            var parameterHash = {};
-            var parameterArray = parameterString.split('&');
-            for (var i = 0; i < parameterArray.length; i++)
-            {
-                if (parameterArray[i] != '') {
-                    var pair = parameterArray[i].split('=');
-                    var key = decodeURIComponent(pair[0]);
-                    var value = decodeURIComponent(pair[1]);
-                    parameterHash[key] = value;
-                }
-            }
-            return parameterHash;
-        },
-
-        /**
-         * get an associative array of the parameters found in the anchor
-         *
-         * @name   helper.getParameterHash
-         * @function
-         * @return {Object}
-         */
-        getParameterHash: function()
-        {
-            var hashIndex = window.location.href.indexOf('#');
-            if (hashIndex >= 0)
-            {
-                return this.parameterStringToHash(window.location.href.substring(hashIndex + 1));
-            }
-            else
-            {
-                return {};
-            }
-        },
-
-        /**
          * text range selection
          *
          * @see    {@link https://stackoverflow.com/questions/985272/jquery-selecting-text-in-an-element-akin-to-highlighting-with-your-mouse}
@@ -747,10 +669,11 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                 case 'markdown':
                     if (typeof showdown === 'object')
                     {
-                        showdown.setOption('strikethrough', true);
-                        showdown.setOption('tables', true);
-                        showdown.setOption('tablesHeaderId', true);
-                        var converter = new showdown.Converter();
+                        var converter = new showdown.Converter({
+                            strikethrough: true,
+                            tables: true,
+                            tablesHeaderId: true
+                        });
                         this.clearText.html(
                             converter.makeHtml(text)
                         );

@@ -56,23 +56,5 @@ describe('helper', function () {
             return $.PrivateBin.helper.secondsToHuman(number)[1] === 'month';
         });
     });
-
-    describe('hashToParameterString', function () {
-        jsc.property('returns strings', 'dict nestring', function (dict) {
-            return typeof $.PrivateBin.helper.hashToParameterString(dict) === 'string';
-        });
-    });
-
-    describe('parameterStringToHash', function () {
-        jsc.property('returns objects', 'string', function (string) {
-            return typeof $.PrivateBin.helper.parameterStringToHash(string) === 'object';
-        });
-        jsc.property('decodes hashes generated with hashToParameterString', 'dict nestring', function (dict) {
-            var result = $.PrivateBin.helper.parameterStringToHash($.PrivateBin.helper.hashToParameterString(dict));
-            // padding for URL shorteners
-            dict.p = 'p';
-            return JSON.stringify(result) === JSON.stringify(dict);
-        });
-    });
 });
 
