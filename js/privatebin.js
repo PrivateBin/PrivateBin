@@ -1205,7 +1205,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                         );
                         var shortenButton = $('#shortenbutton');
                         if (shortenButton) {
-                            shortenButton.click($.proxy(controller.sendToShortener, privatebin));
+                            shortenButton.click($.proxy(controller.sendToShortener, controller));
                         }
                         $('#deletelink').html('<a href="' + deleteUrl + '">' + i18n._('Delete data') + '</a>');
                         controller.pasteResult.removeClass('hidden');
@@ -1787,8 +1787,8 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
     }
 
     /**
-     * main application start, called when DOM is fully loaded
-     * runs privatebin when translations were loaded
+     * main application start, called when DOM is fully loaded and
+     * runs controller initalization after translations are loaded
      */
     $(i18n.loadTranslations($.proxy(controller.init, controller)));
 
