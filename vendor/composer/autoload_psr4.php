@@ -7,5 +7,4 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'PrivateBin\\' => array($baseDir . '/lib'),
-    'CodeClimate\\PhpTestReporter\\' => array($vendorDir . '/codeclimate/php-test-reporter/src'),
 );

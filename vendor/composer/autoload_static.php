@@ -15,20 +15,12 @@ class ComposerStaticInitDontChange
         array (
             'PrivateBin\\' => 11,
         ),
-        'C' => 
-        array (
-            'CodeClimate\\PhpTestReporter\\' => 28,
-        ),
     );
 
     public static $prefixDirsPsr4 = array (
         'PrivateBin\\' => 
         array (
             0 => __DIR__ . '/../..' . '/lib',
-        ),
-        'CodeClimate\\PhpTestReporter\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/codeclimate/php-test-reporter/src',
         ),
     );
 

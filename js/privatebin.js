@@ -397,27 +397,26 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         },
 
         /**
-         * load translations into cache, then execute callback function
+         * load translations into cache, then trigger controller initialization
          *
          * @name   i18n.loadTranslations
          * @function
-         * @param  {Function} callback
          */
-        loadTranslations: function(callback)
+        loadTranslations: function()
         {
             var selectedLang = helper.getCookie('lang');
             var language = selectedLang.length > 0 ? selectedLang : (navigator.language || navigator.userLanguage).substring(0, 2);
             // note that 'en' is built in, so no translation is necessary
-            if (this.supportedLanguages.indexOf(language) === -1)
+            if (i18n.supportedLanguages.indexOf(language) === -1)
             {
-                callback();
+                controller.init();
             }
             else
             {
                 $.getJSON('i18n/' + language + '.json', function(data) {
                     i18n.language = language;
                     i18n.translations = data;
-                    callback();
+                    controller.init();
                 });
             }
         },
@@ -1713,7 +1712,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
      * main application start, called when DOM is fully loaded and
      * runs controller initalization after translations are loaded
      */
-    $(i18n.loadTranslations($.proxy(controller.init, controller)));
+    $(i18n.loadTranslations);
 
     return {
         helper: helper,
