@@ -1118,6 +1118,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                         var deleteUrl = controller.scriptLocation() + '?pasteid=' + data.id + '&deletetoken=' + data.deletetoken;
                         controller.showStatus('');
                         controller.errorMessage.addClass('hidden');
+                        history.pushState({type: 'newpaste'}, '', url);
 
                         $('#pastelink').html(
                             i18n._(
@@ -1150,6 +1151,26 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             {
                 controller.showError(i18n._('Could not create paste: %s', i18n._('server error or not responding')));
             });
+        },
+
+        /**
+         * handle history (pop) state changes
+         *
+         * currently this does only handle redirects to the home page.
+         *
+         * @name   controller.historyChange
+         * @function
+         * @param  {Event} event
+         */
+        historyChange: function(event)
+        {
+            if (event.originalEvent.state === null && // no state object passed
+                this.scriptLocation() === event.originalEvent.target.location.href && // target location is home page
+                this.scriptLocation() === window.location.href // and we are not already on the home page
+            ) {
+                // redirect to home page
+                window.location.href = this.scriptLocation();
+            }
         },
 
         /**
@@ -1619,6 +1640,8 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             this.passwordModal.on('shown.bs.modal', $.proxy(this.passwordDecrypt.focus, this));
             this.passwordModal.on('hidden.bs.modal', $.proxy(this.decryptPasswordModal, this));
             this.passwordForm.submit($.proxy(this.submitPasswordModal, this));
+
+            $(window).on('popstate', $.proxy(this.historyChange, this));
         },
 
         /**
