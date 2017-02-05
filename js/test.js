@@ -6,7 +6,12 @@ var jsc = require('jsverify'),
     a2zString = ['a','b','c','d','e','f','g','h','i','j','k','l','m',
                  'n','o','p','q','r','s','t','u','v','w','x','y','z'],
     alnumString = a2zString.concat(['0','1','2','3','4','5','6','7','8','9']),
-    queryString = alnumString.concat(['+','%','&','.','*','-','_']);
+    queryString = alnumString.concat(['+','%','&','.','*','-','_']),
+    base64String = alnumString.concat(['+','/','=']).concat(
+        a2zString.map(function(c) {
+            return c.toUpperCase();
+        })
+    );
 
 global.$ = global.jQuery = require('./jquery-3.1.1');
 global.sjcl = require('./sjcl-1.0.6');
@@ -94,6 +99,44 @@ describe('helper', function () {
                     result = $.PrivateBin.helper.pasteId();
                 clean();
                 return query === result;
+            }
+        );
+    });
+
+    describe('pageKey', function () {
+        jsc.property(
+            'returns the fragment of the URL',
+            jsc.nearray(jsc.elements(a2zString)),
+            jsc.nearray(jsc.elements(a2zString)),
+            jsc.array(jsc.elements(queryString)),
+            jsc.array(jsc.elements(base64String)),
+            function (schema, address, query, fragment) {
+                var fragment = fragment.join(''),
+                    clean = jsdom('', {
+                        url: schema.join('') + '://' + address.join('') +
+                             '/?' + query.join('') + '#' + fragment
+                    }),
+                    result = $.PrivateBin.helper.pageKey();
+                clean();
+                return fragment === result;
+            }
+        );
+        jsc.property(
+            'returns the fragment stripped of trailing query parts',
+            jsc.nearray(jsc.elements(a2zString)),
+            jsc.nearray(jsc.elements(a2zString)),
+            jsc.array(jsc.elements(queryString)),
+            jsc.array(jsc.elements(base64String)),
+            jsc.array(jsc.elements(queryString)),
+            function (schema, address, query, fragment, trail) {
+                var fragment = fragment.join(''),
+                    clean = jsdom('', {
+                        url: schema.join('') + '://' + address.join('') + '/?' +
+                             query.join('') + '#' + fragment + '&' + trail.join('')
+                    }),
+                    result = $.PrivateBin.helper.pageKey();
+                clean();
+                return fragment === result;
             }
         );
     });
