@@ -1,7 +1,13 @@
 'use strict';
 var jsc = require('jsverify'),
     jsdom = require('jsdom-global'),
-    cleanup = jsdom();
+    cleanup = jsdom(),
+
+    a2zString = ['a','b','c','d','e','f','g','h','i','j','k','l','m',
+                 'n','o','p','q','r','s','t','u','v','w','x','y','z'],
+    alnumString = a2zString.concat(['0','1','2','3','4','5','6','7','8','9']),
+    queryString = alnumString.concat(['+','%','&','.','*','-','_']);
+
 global.$ = global.jQuery = require('./jquery-3.1.1');
 global.sjcl = require('./sjcl-1.0.6');
 global.Base64 = require('./base64-2.1.9');
@@ -56,13 +62,6 @@ describe('helper', function () {
     });
 
     describe('scriptLocation', function () {
-        after(function () {
-            cleanup();
-        });
-
-        var a2zString = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'],
-            alnumString = a2zString.concat(['0','1','2','3','4','5','6','7','8','9']),
-            queryString = alnumString.concat(['+','%','&','.','*','-','_']);
         jsc.property(
             'returns the URL without query & fragment',
             jsc.nearray(jsc.elements(a2zString)),
@@ -75,6 +74,26 @@ describe('helper', function () {
                     result = $.PrivateBin.helper.scriptLocation();
                 clean();
                 return expected === result;
+            }
+        );
+    });
+
+    describe('pasteId', function () {
+        jsc.property(
+            'returns the query string without separator, if any',
+            jsc.nearray(jsc.elements(a2zString)),
+            jsc.nearray(jsc.elements(a2zString)),
+            jsc.array(jsc.elements(queryString)),
+            'string',
+            function (schema, address, query, fragment) {
+                var query = query.join(''),
+                    clean = jsdom('', {
+                        url: schema.join('') + '://' + address.join('') +
+                             '/?' + query + '#' + fragment
+                    }),
+                    result = $.PrivateBin.helper.pasteId();
+                clean();
+                return query === result;
             }
         );
     });
