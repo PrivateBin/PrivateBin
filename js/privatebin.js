@@ -259,7 +259,8 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             var scriptLocation = window.location.href.substring(
                     0,
                     window.location.href.length - window.location.search.length - window.location.hash.length
-                ), hashIndex = scriptLocation.indexOf('#');
+                ),
+                hashIndex = scriptLocation.indexOf('?');
             if (hashIndex !== -1)
             {
                 scriptLocation = scriptLocation.substring(0, hashIndex);
