@@ -1507,7 +1507,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          */
         pasteLinkClick: function(event)
         {
-            // check if location is (already) correctly shown in URL bar
+            // check if location is (already) shown in URL bar
             if (window.location.href === this.pasteUrl.attr('href')) {
                 // if so we need to load link by reloading the site
                 location.reload(true);
