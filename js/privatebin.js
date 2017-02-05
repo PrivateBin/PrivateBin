@@ -1121,7 +1121,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                             deleteUrl = helper.scriptLocation() + '?pasteid=' + data.id + '&deletetoken=' + data.deletetoken;
                         controller.showStatus('');
                         controller.errorMessage.addClass('hidden');
-                        history.pushState({type: 'newpaste'}, '', url);
+                        history.pushState({type: 'newpaste'}, document.title, url);
 
                         $('#pastelink').html(
                             i18n._(
