@@ -115,8 +115,8 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         {
             // For IE<10: Doesn't support white-space:pre-wrap; so we have to do this...
             if ($('#oldienotice').is(':visible')) {
-                var html = this.htmlEntities(text).replace(/\n/ig,'\r\n<br>');
-                element.html('<pre>'+html+'</pre>');
+                var html = this.htmlEntities(text).replace(/\n/ig, '\r\n<br>');
+                element.html('<pre>' + html + '</pre>');
             }
             // for other (sane) browsers:
             else
@@ -230,17 +230,91 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          * @return {string}
          */
         getCookie: function(cname) {
-            var name = cname + '=';
-            var ca = document.cookie.split(';');
+            var name = cname + '=',
+                ca = document.cookie.split(';');
             for (var i = 0; i < ca.length; ++i) {
                 var c = ca[i];
-                while (c.charAt(0) === ' ') c = c.substring(1);
+                while (c.charAt(0) === ' ')
+                {
+                    c = c.substring(1);
+                }
                 if (c.indexOf(name) === 0)
                 {
                     return c.substring(name.length, c.length);
                 }
             }
             return '';
+        },
+
+        /**
+         * get the current script location (without search or hash part of the URL),
+         * eg. http://example.com/path/?aaaa#bbbb --> http://example.com/path/
+         *
+         * @name   helper.scriptLocation
+         * @function
+         * @return {string} current script location
+         */
+        scriptLocation: function()
+        {
+            var scriptLocation = window.location.href.substring(
+                    0,
+                    window.location.href.length - window.location.search.length - window.location.hash.length
+                ), hashIndex = scriptLocation.indexOf('#');
+            if (hashIndex !== -1)
+            {
+                scriptLocation = scriptLocation.substring(0, hashIndex);
+            }
+            return scriptLocation;
+        },
+
+        /**
+         * get the pastes unique identifier from the URL,
+         * eg. http://example.com/path/?c05354954c49a487#c05354954c49a487 returns c05354954c49a487
+         *
+         * @name   helper.pasteId
+         * @function
+         * @return {string} unique identifier
+         */
+        pasteId: function()
+        {
+            return window.location.search.substring(1);
+        },
+
+        /**
+         * return the deciphering key stored in anchor part of the URL
+         *
+         * @name   helper.pageKey
+         * @function
+         * @return {string} key
+         */
+        pageKey: function()
+        {
+            // Some web 2.0 services and redirectors add data AFTER the anchor
+            // (such as &utm_source=...). We will strip any additional data.
+
+            var key = window.location.hash.substring(1),    // Get key
+                i = key.indexOf('=');
+
+            // First, strip everything after the equal sign (=) which signals end of base64 string.
+            if (i > -1)
+            {
+                key = key.substring(0, i + 1);
+            }
+
+            // If the equal sign was not present, some parameters may remain:
+            i = key.indexOf('&');
+            if (i > -1)
+            {
+                key = key.substring(0, i);
+            }
+
+            // Then add trailing equal sign if it's missing
+            if (key.charAt(key.length - 1) !== '=')
+            {
+                key += '=';
+            }
+
+            return key;
         },
 
         /**
@@ -404,8 +478,11 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          */
         loadTranslations: function()
         {
-            var selectedLang = helper.getCookie('lang');
-            var language = selectedLang.length > 0 ? selectedLang : (navigator.language || navigator.userLanguage).substring(0, 2);
+            var language = helper.getCookie('lang');
+            if (language.length === 0)
+            {
+                language = (navigator.language || navigator.userLanguage).substring(0, 2);
+            }
             // note that 'en' is built in, so no translation is necessary
             if (i18n.supportedLanguages.indexOf(language) === -1)
             {
@@ -556,76 +633,6 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         createdPasteUrl: '',
 
         /**
-         * get the current script location (without search or hash part of the URL),
-         * eg. http://example.com/zero/?aaaa#bbbb --> http://example.com/zero/
-         *
-         * @name   controller.scriptLocation
-         * @function
-         * @return {string} current script location
-         */
-        scriptLocation: function()
-        {
-            var scriptLocation = window.location.href.substring(0,window.location.href.length
-                - window.location.search.length - window.location.hash.length),
-                hashIndex = scriptLocation.indexOf('#');
-            if (hashIndex !== -1)
-            {
-                scriptLocation = scriptLocation.substring(0, hashIndex);
-            }
-            return scriptLocation;
-        },
-
-        /**
-         * get the pastes unique identifier from the URL,
-         * eg. http://example.com/zero/?c05354954c49a487#c05354954c49a487 returns c05354954c49a487
-         *
-         * @name   controller.pasteID
-         * @function
-         * @return {string} unique identifier
-         */
-        pasteID: function()
-        {
-            return window.location.search.substring(1);
-        },
-
-        /**
-         * return the deciphering key stored in anchor part of the URL
-         *
-         * @name   controller.pageKey
-         * @function
-         * @return {string} key
-         */
-        pageKey: function()
-        {
-            // Some web 2.0 services and redirectors add data AFTER the anchor
-            // (such as &utm_source=...). We will strip any additional data.
-
-            var key = window.location.hash.substring(1),    // Get key
-                i = key.indexOf('=');
-
-            // First, strip everything after the equal sign (=) which signals end of base64 string.
-            if (i > -1)
-            {
-                key = key.substring(0, i + 1);
-            }
-
-            // If the equal sign was not present, some parameters may remain:
-            i = key.indexOf('&');
-            if (i > -1)
-            {
-                key = key.substring(0, i);
-            }
-
-            // Then add trailing equal sign if it's missing
-            if (key.charAt(key.length - 1) !== '=')
-            {
-                key += '=';
-            }
-
-            return key;
-        },
-
-        /**
          * ask the user for the password and set it
          *
          * @name   controller.requestPassword
@@ -722,8 +729,8 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         displayMessages: function(paste)
         {
             paste = paste || $.parseJSON(this.cipherData.text());
-            var key = this.pageKey();
-            var password = this.passwordInput.val();
+            var key = helper.pageKey(),
+                password = this.passwordInput.val();
             if (!this.prettyPrint.hasClass('prettyprinted')) {
                 // Try to decrypt the paste.
                 try
@@ -813,7 +820,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                 // unfortunately many web servers don't support DELETE (and PUT) out of the box
                 $.ajax({
                     type: 'POST',
-                    url: this.scriptLocation() + '?' + this.pasteID(),
+                    url: helper.scriptLocation() + '?' + helper.pasteId(),
                     data: {deletetoken: 'burnafterreading'},
                     dataType: 'json',
                     headers: this.headers
@@ -838,24 +845,27 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                 // iterate over comments
                 for (var i = 0; i < paste.comments.length; ++i)
                 {
-                    var place = this.comments;
-                    var comment = paste.comments[i];
-                    var commenttext = filter.decipher(key, password, comment.data);
-                    // if parent comment exists, display below (CSS will automatically shift it to the right)
-                    var cname = '#comment_' + comment.parentid;
+                    var place = this.comments,
+                        comment = paste.comments[i],
+                        commenttext = filter.decipher(key, password, comment.data),
+                        // if parent comment exists, display below (CSS will automatically shift it to the right)
+                        cname = '#comment_' + comment.parentid,
+                        divComment = $('<article><div class="comment" id="comment_' + comment.id
+                                   + '"><div class="commentmeta"><span class="nickname"></span>'
+                                   + '<span class="commentdate"></span></div>'
+                                   + '<div class="commentdata"></div>'
+                                   + '<button class="btn btn-default btn-sm">'
+                                   + i18n._('Reply') + '</button></div></article>'),
+                        divCommentData = divComment.find('div.commentdata');
 
                     // if the element exists in page
                     if ($(cname).length)
                     {
                         place = $(cname);
                     }
-                    var divComment = $('<article><div class="comment" id="comment_' + comment.id + '">'
-                                   + '<div class="commentmeta"><span class="nickname"></span><span class="commentdate"></span></div><div class="commentdata"></div>'
-                                   + '<button class="btn btn-default btn-sm">' + i18n._('Reply') + '</button>'
-                                   + '</div></article>');
                     divComment.find('button').click({commentid: comment.id}, $.proxy(this.openReply, this));
-                    helper.setElementText(divComment.find('div.commentdata'), commenttext);
-                    helper.urls2links(divComment.find('div.commentdata'));
+                    helper.setElementText(divCommentData, commenttext);
+                    helper.urls2links(divCommentData);
 
                     // try to get optional nickname
                     var nick = filter.decipher(key, password, comment.meta.nickname);
@@ -887,7 +897,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                     '<div class="comment"><button class="btn btn-default btn-sm">' +
                     i18n._('Add comment') + '</button></div>'
                 );
-                divComment.find('button').click({commentid: this.pasteID()}, $.proxy(this.openReply, this));
+                divComment.find('button').click({commentid: helper.pasteId()}, $.proxy(this.openReply, this));
                 this.comments.append(divComment);
                 this.discussion.removeClass('hidden');
             }
@@ -903,20 +913,26 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         openReply: function(event)
         {
             event.preventDefault();
-            var source = $(event.target),
-                commentid = event.data.commentid,
-                hint = i18n._('Optional nickname...');
 
             // remove any other reply area
             $('div.reply').remove();
-            var reply = $(
-                '<div class="reply">' +
-                '<input type="text" id="nickname" class="form-control" title="' + hint + '" placeholder="' + hint + '" />' +
-                '<textarea id="replymessage" class="replymessage form-control" cols="80" rows="7"></textarea>' +
-                '<br /><div id="replystatus"></div><button id="replybutton" class="btn btn-default btn-sm">' +
-                i18n._('Post comment') + '</button></div>'
+
+            var source = $(event.target),
+                commentid = event.data.commentid,
+                hint = i18n._('Optional nickname...'),
+                reply = $(
+                    '<div class="reply"><input type="text" id="nickname" ' +
+                    'class="form-control" title="' + hint + '" placeholder="' +
+                    hint + '" /><textarea id="replymessage" class="replymessage ' +
+                    'form-control" cols="80" rows="7"></textarea><br />' +
+                    '<div id="replystatus"></div><button id="replybutton" ' +
+                    'class="btn btn-default btn-sm">' + i18n._('Post comment') +
+                    '</button></div>'
+                );
+            reply.find('button').click(
+                {parentid: commentid},
+                $.proxy(this.sendComment, this)
             );
-            reply.find('button').click({parentid: commentid}, $.proxy(this.sendComment, this));
             source.after(reply);
             this.replyStatus = $('#replystatus');
             $('#replymessage').focus();
@@ -941,24 +957,25 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             }
 
             this.showStatus(i18n._('Sending comment...'), true);
-            var parentid = event.data.parentid;
-            var cipherdata = filter.cipher(this.pageKey(), this.passwordInput.val(), replyMessage.val());
-            var ciphernickname = '';
-            var nick = $('#nickname').val();
-            if (nick !== '')
+            var parentid = event.data.parentid,
+                key = helper.pageKey(),
+                cipherdata = filter.cipher(key, this.passwordInput.val(), replyMessage.val()),
+                ciphernickname = '',
+                nick = $('#nickname').val();
+            if (nick.length > 0)
             {
-                ciphernickname = filter.cipher(this.pageKey(), this.passwordInput.val(), nick);
+                ciphernickname = filter.cipher(key, this.passwordInput.val(), nick);
             }
             var data_to_send = {
                 data:     cipherdata,
                 parentid: parentid,
-                pasteid:  this.pasteID(),
+                pasteid:  helper.pasteId(),
                 nickname: ciphernickname
             };
 
             $.ajax({
                 type: 'POST',
-                url: this.scriptLocation(),
+                url: helper.scriptLocation(),
                 data: data_to_send,
                 dataType: 'json',
                 headers: this.headers,
@@ -969,7 +986,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                         controller.showStatus(i18n._('Comment posted.'));
                         $.ajax({
                             type: 'GET',
-                            url: controller.scriptLocation() + '?' + controller.pasteID(),
+                            url: helper.scriptLocation() + '?' + helper.pasteId(),
                             dataType: 'json',
                             headers: controller.headers,
                             success: function(data)
@@ -1040,8 +1057,8 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             this.password.addClass('hidden');
             this.showStatus(i18n._('Sending paste...'), true);
 
-            var randomkey = sjcl.codec.base64.fromBits(sjcl.random.randomWords(8, 0), 0);
-            var password = this.passwordInput.val();
+            var randomkey = sjcl.codec.base64.fromBits(sjcl.random.randomWords(8, 0), 0),
+                password = this.passwordInput.val();
             if(files && files[0])
             {
                 if(typeof FileReader === undefined)
@@ -1088,14 +1105,14 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          */
         sendDataContinue: function(randomkey, cipherdata_attachment, cipherdata_attachment_name)
         {
-            var cipherdata = filter.cipher(randomkey, this.passwordInput.val(), this.message.val());
-            var data_to_send = {
-                data:             cipherdata,
-                expire:           $('#pasteExpiration').val(),
-                formatter:        $('#pasteFormatter').val(),
-                burnafterreading: this.burnAfterReading.is(':checked') ? 1 : 0,
-                opendiscussion:   this.openDiscussion.is(':checked') ? 1 : 0
-            };
+            var cipherdata = filter.cipher(randomkey, this.passwordInput.val(), this.message.val()),
+                data_to_send = {
+                    data:             cipherdata,
+                    expire:           $('#pasteExpiration').val(),
+                    formatter:        $('#pasteFormatter').val(),
+                    burnafterreading: this.burnAfterReading.is(':checked') ? 1 : 0,
+                    opendiscussion:   this.openDiscussion.is(':checked') ? 1 : 0
+                };
             if (cipherdata_attachment.length > 0)
             {
                 data_to_send.attachment = cipherdata_attachment;
@@ -1106,7 +1123,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             }
             $.ajax({
                 type: 'POST',
-                url: this.scriptLocation(),
+                url: helper.scriptLocation(),
                 data: data_to_send,
                 dataType: 'json',
                 headers: this.headers,
@@ -1114,8 +1131,8 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                 {
                     if (data.status === 0) {
                         controller.stateExistingPaste();
-                        var url = controller.scriptLocation() + '?' + data.id + '#' + randomkey;
-                        var deleteUrl = controller.scriptLocation() + '?pasteid=' + data.id + '&deletetoken=' + data.deletetoken;
+                        var url = helper.scriptLocation() + '?' + data.id + '#' + randomkey,
+                            deleteUrl = helper.scriptLocation() + '?pasteid=' + data.id + '&deletetoken=' + data.deletetoken;
                         controller.showStatus('');
                         controller.errorMessage.addClass('hidden');
                         history.pushState({type: 'newpaste'}, '', url);
@@ -1151,26 +1168,6 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             {
                 controller.showError(i18n._('Could not create paste: %s', i18n._('server error or not responding')));
             });
-        },
-
-        /**
-         * handle history (pop) state changes
-         *
-         * currently this does only handle redirects to the home page.
-         *
-         * @name   controller.historyChange
-         * @function
-         * @param  {Event} event
-         */
-        historyChange: function(event)
-        {
-            if (event.originalEvent.state === null && // no state object passed
-                this.scriptLocation() === event.originalEvent.target.location.href && // target location is home page
-                this.scriptLocation() === window.location.href // and we are not already on the home page
-            ) {
-                // redirect to home page
-                window.location.href = this.scriptLocation();
-            }
         },
 
         /**
@@ -1325,7 +1322,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         reloadPage: function(event)
         {
             event.preventDefault();
-            window.location.href = this.scriptLocation();
+            window.location.href = helper.scriptLocation();
         },
 
         /**
@@ -1341,8 +1338,8 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             var paste = $('#pasteFormatter').val() === 'markdown' ?
                 this.prettyPrint.text() : this.clearText.text();
             history.pushState(
-                null, document.title, this.scriptLocation() + '?' +
-                this.pasteID() + '#' + this.pageKey()
+                null, document.title, helper.scriptLocation() + '?' +
+                helper.pasteId() + '#' + helper.pageKey()
             );
             // we use text/html instead of text/plain to avoid a bug when
             // reloading the raw text view (it reverts to type text/html)
@@ -1364,7 +1361,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             this.stateNewPaste();
 
             // erase the id and the key in url
-            history.replaceState(null, document.title, this.scriptLocation());
+            history.replaceState(null, document.title, helper.scriptLocation());
 
             this.showStatus('');
             if (this.attachmentLink.attr('href'))
@@ -1483,6 +1480,27 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             this.message.focus();
             this.stateExistingPaste(true);
             this.formatPaste($('#pasteFormatter').val(), this.message.val());
+        },
+
+        /**
+         * handle history (pop) state changes
+         *
+         * currently this does only handle redirects to the home page.
+         *
+         * @name   controller.historyChange
+         * @function
+         * @param  {Event} event
+         */
+        historyChange: function(event)
+        {
+            var currentLocation = helper.scriptLocation();
+            if (event.originalEvent.state === null && // no state object passed
+                event.originalEvent.target.location.href === currentLocation && // target location is home page
+                window.location.href === currentLocation // and we are not already on the home page
+            ) {
+                // redirect to home page
+                window.location.href = currentLocation;
+            }
         },
 
         /**
