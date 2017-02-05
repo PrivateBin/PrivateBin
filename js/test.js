@@ -140,5 +140,20 @@ describe('helper', function () {
             }
         );
     });
+
+    describe('htmlEntities', function () {
+        after(function () {
+            cleanup();
+        });
+
+        jsc.property(
+            'removes all HTML entities from any given string',
+            'string',
+            function (string) {
+                var result = $.PrivateBin.helper.htmlEntities(string);
+                return !(/[<>"'`=\/]/.test(result)) && !(string.indexOf('&') > -1 && !(/&amp;/.test(result)));
+            }
+        );
+    });
 });
 
