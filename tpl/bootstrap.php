@@ -69,7 +69,7 @@ if ($MARKDOWN):
 <?php
 endif;
 ?>
-		<script type="text/javascript" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-bOZxf+ELU4lyYdlSIVM0z+GDBdeO1BZQvkr7HKPz89rmnw6x7w669QOsCOqLoNJ8vcIsFas288doubME9pSE4Q==" crossorigin="anonymous"></script>
+		<script type="text/javascript" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-t9Cu6FqbM6WD2Vc8iRxZtqwJdFaXTW85JdcBUpKRWioikGyBtNiT6R8E8imQQ6kakTI2gDU7GDsYfrz9vhuoVQ==" crossorigin="anonymous"></script>
 		<!--[if lt IE 10]>
 		<style type="text/css">body {padding-left:60px;padding-right:60px;} #ienotice {display:block;} #oldienotice {display:block;}</style>
 		<![endif]-->
@@ -120,6 +120,10 @@ endif;
 			</div>
 			<div id="navbar" class="navbar-collapse collapse">
 				<ul class="nav navbar-nav">
+					<li id="loadingindicator" class="navbar-text hidden">
+						<span class="glyphicon glyphicon-upload" aria-hidden="true"></span>
+						<?php echo I18n::_('Uploading paste… Please wait.'), PHP_EOL; ?>
+					</li>
 					<li>
 <?php
 if ($isPage):
