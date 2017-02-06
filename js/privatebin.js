@@ -1125,6 +1125,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                             deleteUrl = helper.scriptLocation() + '?pasteid=' + data.id + '&deletetoken=' + data.deletetoken;
                         controller.showStatus('');
                         controller.errorMessage.addClass('hidden');
+                        // show new URL in browser bar
                         history.pushState({type: 'newpaste'}, document.title, url);
 
                         $('#pastelink').html(
@@ -1133,6 +1134,11 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                                 url, url
                             ) + controller.shortenUrl(url)
                         );
+                        // save newly created element
+                        controller.pasteUrl = $('#pasteurl');
+                        // and add click event
+                        controller.pasteUrl.click($.proxy(controller.pasteLinkClick, controller));
+
                         var shortenButton = $('#shortenbutton');
                         if (shortenButton) {
                             shortenButton.click($.proxy(controller.sendToShortener, controller));
@@ -1533,6 +1539,25 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         },
 
         /**
+         * Forces opening the paste if the link does not do this automatically.
+         *
+         * This is necessary as browsers will not reload the page when it is
+         * already loaded (which is fake as it is set via history.pushState()).
+         *
+         * @name   controller.pasteLinkClick
+         * @function
+         * @param  {Event} event
+         */
+        pasteLinkClick: function(event)
+        {
+            // check if location is (already) shown in URL bar
+            if (window.location.href === this.pasteUrl.attr('href')) {
+                // if so we need to load link by reloading the site
+                this.reloadPage(event);
+            }
+        },
+
+        /**
          * create a new paste
          *
          * @name   controller.newPaste
@@ -1733,6 +1758,8 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             this.passwordForm = $('#passwordform');
             this.passwordDecrypt = $('#passworddecrypt');
             this.pasteResult = $('#pasteresult');
+            // this.pasteUrl is saved in sendDataContinue() if/after it is
+            // actually created
             this.prettyMessage = $('#prettymessage');
             this.prettyPrint = $('#prettyprint');
             this.preview = $('#preview');

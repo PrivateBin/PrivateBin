@@ -69,7 +69,7 @@ if ($MARKDOWN):
 <?php
 endif;
 ?>
-		<script type="text/javascript" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-U3vFk3jjVZbBFNUfv20uP9Qef6aGt3MbbiXGqHvH/ngJhGEWZKXQc6MhVNlHD2taiz3mm2PhtRbh8bwm9UmrKA==" crossorigin="anonymous"></script>
+		<script type="text/javascript" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-oojW5CP3H92XSLVeiMzHPgDrhxptPF8XzaQQrGp9SbGlBM9nDSlYMNtE2vH7wwXjYX+iL58pUCct29uEQtMvNw==" crossorigin="anonymous"></script>
 		<!--[if lt IE 10]>
 		<style type="text/css">body {padding-left:60px;padding-right:60px;} #ienotice {display:block;} #oldienotice {display:block;}</style>
 		<![endif]-->
