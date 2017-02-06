@@ -781,9 +781,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                 }
                 catch(err)
                 {
-                    this.clearText.addClass('hidden');
-                    this.prettyMessage.addClass('hidden');
-                    this.cloneButton.addClass('hidden');
+                    this.stateOnlyNewPaste();
                     this.showError(i18n._('Could not decrypt data (Wrong key?)'));
                     return;
                 }
@@ -1251,6 +1249,38 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             this.preview.addClass('hidden');
 
             this.loadingIndicator.removeClass('hidden');
+        },
+
+        /**
+         * put the screen in a state where the only option is to submit a
+         * new paste
+         *
+         * @name   controller.stateOnlyNewPaste
+         * @function
+         */
+        stateOnlyNewPaste: function()
+        {
+            this.message.text('');
+            this.attachment.addClass('hidden');
+            this.cloneButton.addClass('hidden');
+            this.rawTextButton.addClass('hidden');
+            this.remainingTime.addClass('hidden');
+            this.pasteResult.addClass('hidden');
+            this.clearText.addClass('hidden');
+            this.discussion.addClass('hidden');
+            this.prettyMessage.addClass('hidden');
+            this.sendButton.addClass('hidden');
+            this.expiration.addClass('hidden');
+            this.formatter.addClass('hidden');
+            this.burnAfterReadingOption.addClass('hidden');
+            this.openDisc.addClass('hidden');
+            this.password.addClass('hidden');
+            this.attach.addClass('hidden');
+            this.message.addClass('hidden');
+            this.preview.addClass('hidden');
+            this.loadingIndicator.addClass('hidden');
+
+            this.newButton.removeClass('hidden');
         },
 
         /**
