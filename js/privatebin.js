@@ -1043,6 +1043,8 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             this.password.addClass('hidden');
             this.showStatus(i18n._('Sending paste...'), true);
 
+            this.stateSubmittingPaste();
+
             var randomkey = sjcl.codec.base64.fromBits(sjcl.random.randomWords(8, 0), 0),
                 password = this.passwordInput.val();
             if(files && files[0])
