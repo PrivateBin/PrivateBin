@@ -91,14 +91,14 @@ describe('helper', function () {
             jsc.array(jsc.elements(queryString)),
             'string',
             function (schema, address, query, fragment) {
-                var query = query.join(''),
+                var queryString = query.join(''),
                     clean = jsdom('', {
                         url: schema.join('') + '://' + address.join('') +
-                             '/?' + query + '#' + fragment
+                             '/?' + queryString + '#' + fragment
                     }),
                     result = $.PrivateBin.helper.pasteId();
                 clean();
-                return query === result;
+                return queryString === result;
             }
         );
     });
@@ -111,14 +111,14 @@ describe('helper', function () {
             jsc.array(jsc.elements(queryString)),
             jsc.array(jsc.elements(base64String)),
             function (schema, address, query, fragment) {
-                var fragment = fragment.join(''),
+                var fragmentString = fragment.join(''),
                     clean = jsdom('', {
                         url: schema.join('') + '://' + address.join('') +
-                             '/?' + query.join('') + '#' + fragment
+                             '/?' + query.join('') + '#' + fragmentString
                     }),
                     result = $.PrivateBin.helper.pageKey();
                 clean();
-                return fragment === result;
+                return fragmentString === result;
             }
         );
         jsc.property(
@@ -129,14 +129,14 @@ describe('helper', function () {
             jsc.array(jsc.elements(base64String)),
             jsc.array(jsc.elements(queryString)),
             function (schema, address, query, fragment, trail) {
-                var fragment = fragment.join(''),
+                var fragmentString = fragment.join(''),
                     clean = jsdom('', {
                         url: schema.join('') + '://' + address.join('') + '/?' +
-                             query.join('') + '#' + fragment + '&' + trail.join('')
+                             query.join('') + '#' + fragmentString + '&' + trail.join('')
                     }),
                     result = $.PrivateBin.helper.pageKey();
                 clean();
-                return fragment === result;
+                return fragmentString === result;
             }
         );
     });
@@ -156,4 +156,3 @@ describe('helper', function () {
         );
     });
 });
-
