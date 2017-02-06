@@ -1350,6 +1350,8 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         /**
          * reload the page
          *
+         * This takes the user to the PrivateBin home page.
+         *
          * @name   controller.reloadPage
          * @function
          * @param  {Event} event
@@ -1552,8 +1554,8 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         {
             // check if location is (already) shown in URL bar
             if (window.location.href === this.pasteUrl.attr('href')) {
-                // if so we need to load link by reloading the site
-                this.reloadPage(event);
+                // if so we need to load link by reloading the current site
+                window.location.reload(true);
             }
         },
 
