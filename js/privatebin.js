@@ -1049,6 +1049,8 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             {
                 if(typeof FileReader === undefined)
                 {
+                    // revert loading status…
+                    this.stateNewPaste();
                     this.showError(i18n._('Your browser does not support uploading encrypted files. Please use a newer browser.'));
                     return;
                 }
@@ -1142,16 +1144,22 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                     }
                     else if (data.status === 1)
                     {
+                        // revert loading status…
+                        controller.stateNewPaste();
                         controller.showError(i18n._('Could not create paste: %s', data.message));
                     }
                     else
                     {
+                        // revert loading status…
+                        controller.stateNewPaste();
                         controller.showError(i18n._('Could not create paste: %s', i18n._('unknown status')));
                     }
                 }
             })
             .fail(function()
             {
+                // revert loading status…
+                this.stateNewPaste();
                 controller.showError(i18n._('Could not create paste: %s', i18n._('server error or not responding')));
             });
         },
@@ -1192,6 +1200,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             this.clearText.addClass('hidden');
             this.discussion.addClass('hidden');
             this.prettyMessage.addClass('hidden');
+            this.loadingIndicator.addClass('hidden');
             this.sendButton.removeClass('hidden');
             this.expiration.removeClass('hidden');
             this.formatter.removeClass('hidden');
@@ -1203,6 +1212,37 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             this.message.removeClass('hidden');
             this.preview.removeClass('hidden');
             this.message.focus();
+        },
+
+        /**
+         * put the screen in mode after submitting a paste
+         *
+         * @name   controller.stateSubmittingPaste
+         * @function
+         */
+        stateSubmittingPaste: function()
+        {
+            this.message.text('');
+            this.attachment.addClass('hidden');
+            this.cloneButton.addClass('hidden');
+            this.rawTextButton.addClass('hidden');
+            this.remainingTime.addClass('hidden');
+            this.pasteResult.addClass('hidden');
+            this.clearText.addClass('hidden');
+            this.discussion.addClass('hidden');
+            this.prettyMessage.addClass('hidden');
+            this.sendButton.addClass('hidden');
+            this.expiration.addClass('hidden');
+            this.formatter.addClass('hidden');
+            this.burnAfterReadingOption.addClass('hidden');
+            this.openDisc.addClass('hidden');
+            this.newButton.addClass('hidden');
+            this.password.addClass('hidden');
+            this.attach.addClass('hidden');
+            this.message.addClass('hidden');
+            this.preview.addClass('hidden');
+
+            this.loadingIndicator.removeClass('hidden');
         },
 
         /**
@@ -1243,6 +1283,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             this.message.addClass('hidden');
             this.clearText.addClass('hidden');
             this.prettyMessage.addClass('hidden');
+            this.loadingIndicator.addClass('hidden');
         },
 
         /**
@@ -1677,6 +1718,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             this.fileWrap = $('#filewrap');
             this.formatter = $('#formatter');
             this.image = $('#image');
+            this.loadingIndicator = $('#loadingindicator');
             this.message = $('#message');
             this.messageEdit = $('#messageedit');
             this.messagePreview = $('#messagepreview');
