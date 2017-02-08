@@ -99,7 +99,7 @@ rules:
   no-with: 2
   radix: 2
   vars-on-top: 0
-  wrap-iife: 2
+  wrap-iife: 0
   yoda: 0
 
   # Strict
