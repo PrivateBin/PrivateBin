@@ -135,26 +135,25 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         };
 
         /**
-         * set text of a DOM element (required for IE),
+         * set text of a jQuery element (required for IE),
          *
          * @name   helper.setElementText
          * @function
-         * @param  {Object} element - a DOM element
+         * @param  {jQuery} $element - a jQuery element
          * @param  {string} text - the text to enter
-         * @this is equivalent to element.text(text)
          * @TODO check for XSS attacks, usually no CSS can prevent them so this looks weird on the first look
          */
-        me.setElementText = function(element, text)
+        me.setElementText = function($element, text)
         {
             // For IE<10: Doesn't support white-space:pre-wrap; so we have to do this...
             if ($('#oldienotice').is(':visible')) {
                 var html = me.htmlEntities(text).replace(/\n/ig, '\r\n<br>');
-                element.html('<pre>' + html + '</pre>');
+                $element.html('<pre>' + html + '</pre>');
             }
             // for other (sane) browsers:
             else
             {
-                element.text(text);
+                $element.text(text);
             }
         };
 
@@ -163,19 +162,19 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          *
          * @name   helper.setMessage
          * @function
-         * @param  {Object} element - a jQuery wrapped DOM element
+         * @param  {jQuery} $element - a jQuery wrapped DOM element
          * @param  {string} message - the message to append
          */
-        me.setMessage = function(element, message)
+        me.setMessage = function($element, message)
         {
-            var content = element.contents();
+            var content = $element.contents();
             if (content.length > 0)
             {
                 content[content.length - 1].nodeValue = ' ' + message;
             }
             else
             {
-                me.setElementText(element, message);
+                me.setElementText($element, message);
             }
         };
 
@@ -931,63 +930,68 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             {
                 $comments.html('');
 
+                var $divComment;
+
                 // iterate over comments
                 for (var i = 0; i < paste.comments.length; ++i)
                 {
                     var $place = $comments,
                         comment = paste.comments[i],
-                        commenttext = filter.decipher(key, password, comment.data),
-                        // if parent comment exists, display below (CSS will automatically shift it to the right)
-                        cname = '#comment_' + comment.parentid,
-                        divComment = $('<article><div class="comment" id="comment_' + comment.id
-                                   + '"><div class="commentmeta"><span class="nickname"></span>'
-                                   + '<span class="commentdate"></span></div>'
-                                   + '<div class="commentdata"></div>'
-                                   + '<button class="btn btn-default btn-sm">'
-                                   + i18n._('Reply') + '</button></div></article>'),
-                        divCommentData = divComment.find('div.commentdata');
+                        commentText = filter.decipher(key, password, comment.data),
+                        $parentComment = $('#comment_' + comment.parentid);
 
-                    // if the element exists in page
-                    if ($(cname).length)
+                    $divComment = $('<article><div class="comment" id="comment_' + comment.id
+                               + '"><div class="commentmeta"><span class="nickname"></span>'
+                               + '<span class="commentdate"></span></div>'
+                               + '<div class="commentdata"></div>'
+                               + '<button class="btn btn-default btn-sm">'
+                               + i18n._('Reply') + '</button></div></article>');
+                    var $divCommentData = $divComment.find('div.commentdata');
+
+                    // if parent comment exists
+                    if ($parentComment.length)
                     {
-                        $place = $(cname);
+                        // shift comment to the right
+                        $place = $parentComment;
                     }
-                    divComment.find('button').click({commentid: comment.id}, me.openReply);
-                    helper.setElementText(divCommentData, commenttext);
-                    helper.urls2links(divCommentData);
+                    $divComment.find('button').click({commentid: comment.id}, me.openReply);
+                    helper.setElementText($divCommentData, commentText);
+                    helper.urls2links($divCommentData);
 
                     // try to get optional nickname
                     var nick = filter.decipher(key, password, comment.meta.nickname);
                     if (nick.length > 0)
                     {
-                        divComment.find('span.nickname').text(nick);
+                        $divComment.find('span.nickname').text(nick);
                     }
                     else
                     {
                         divComment.find('span.nickname').html('<i>' + i18n._('Anonymous') + '</i>');
                     }
-                    divComment.find('span.commentdate')
+                    $divComment.find('span.commentdate')
                               .text(' (' + (new Date(comment.meta.postdate * 1000).toLocaleString()) + ')')
                               .attr('title', 'CommentID: ' + comment.id);
 
                     // if an avatar is available, display it
                     if (comment.meta.vizhash)
                     {
-                        divComment.find('span.nickname')
+                        $divComment.find('span.nickname')
                                   .before(
                                     '<img src="' + comment.meta.vizhash + '" class="vizhash" title="' +
                                     i18n._('Anonymous avatar (Vizhash of the IP address)') + '" /> '
                                   );
                     }
 
-                    $place.append(divComment);
+                    $place.append($divComment);
                 }
-                var divComment = $(
+
+                // add 'add new comment' area
+                $divComment = $(
                     '<div class="comment"><button class="btn btn-default btn-sm">' +
                     i18n._('Add comment') + '</button></div>'
                 );
-                divComment.find('button').click({commentid: helper.pasteId()}, me.openReply);
-                $comments.append(divComment);
+                $divComment.find('button').click({commentid: helper.pasteId()}, me.openReply);
+                $comments.append($divComment);
                 $discussion.removeClass('hidden');
             }
         };
