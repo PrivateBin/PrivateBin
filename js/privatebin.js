@@ -952,7 +952,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                     {
                         $place = $(cname);
                     }
-                    divComment.find('button').click({commentid: comment.id}, $.proxy(me.openReply, me));
+                    divComment.find('button').click({commentid: comment.id}, me.openReply);
                     helper.setElementText(divCommentData, commenttext);
                     helper.urls2links(divCommentData);
 
@@ -986,7 +986,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                     '<div class="comment"><button class="btn btn-default btn-sm">' +
                     i18n._('Add comment') + '</button></div>'
                 );
-                divComment.find('button').click({commentid: helper.pasteId()}, $.proxy(me.openReply, me));
+                divComment.find('button').click({commentid: helper.pasteId()}, me.openReply);
                 $comments.append(divComment);
                 $discussion.removeClass('hidden');
             }
@@ -1020,7 +1020,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                 );
             reply.find('button').click(
                 {parentid: commentid},
-                $.proxy(me.sendComment, me)
+                me.sendComment
             );
             source.after(reply);
             $replyStatus = $('#replystatus');
@@ -1240,11 +1240,11 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                         // save newly created element
                         $pasteUrl = $('#pasteurl');
                         // and add click event
-                        $pasteUrl.click($.proxy(me.pasteLinkClick, me));
+                        $pasteUrl.click(me.pasteLinkClick);
 
                         var shortenButton = $('#shortenbutton');
                         if (shortenButton) {
-                            shortenButton.click($.proxy(me.sendToShortener, me));
+                            shortenButton.click(me.sendToShortener);
                         }
                         $('#deletelink').html('<a href="' + deleteUrl + '">' + i18n._('Delete data') + '</a>');
                         $pasteResult.removeClass('hidden');
@@ -1830,31 +1830,34 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          */
         function bindEvents()
         {
-            $burnAfterReading.change($.proxy(me.changeBurnAfterReading, me));
-            $openDisc.change($.proxy(me.changeOpenDisc, me));
-            $sendButton.click($.proxy(me.sendData, me));
-            $cloneButton.click($.proxy(me.clonePaste, me));
-            $rawTextButton.click($.proxy(me.rawText, me));
-            $fileRemoveButton.click($.proxy(me.removeAttachment, me));
-            $('.reloadlink').click($.proxy(me.reloadPage, me));
+            $burnAfterReading.change(me.changeBurnAfterReading);
+            $openDisc.change(me.changeOpenDisc);
+            $sendButton.click(me.sendData);
+            $cloneButton.click(me.clonePaste);
+            $rawTextButton.click(me.rawText);
+            $fileRemoveButton.click(me.removeAttachment);
+            $('.reloadlink').click(me.reloadPage);
             $message.keydown(me.supportTabs);
-            $messageEdit.click($.proxy(me.viewEditor, me));
-            $messagePreview.click($.proxy(me.viewPreview, me));
+            $messageEdit.click(me.viewEditor);
+            $messagePreview.click(me.viewPreview);
 
             // bootstrap template drop downs
-            $('ul.dropdown-menu li a', $('#expiration').parent()).click($.proxy(me.setExpiration, me));
-            $('ul.dropdown-menu li a', $('#formatter').parent()).click($.proxy(me.setFormat, me));
-            $('#language ul.dropdown-menu li a').click($.proxy(me.setLanguage, me));
+            $('ul.dropdown-menu li a', $('#expiration').parent()).click(me.setExpiration);
+            $('ul.dropdown-menu li a', $('#formatter').parent()).click(me.setFormat);
+            $('#language ul.dropdown-menu li a').click(me.setLanguage);
 
             // page template drop down
-            $('#language select option').click($.proxy(me.setLanguage, me));
+            $('#language select option').click(me.setLanguage);
 
+            // focus password input when it is shown
+            $passwordModal.on('shown.bs.modal', function () {
+                $passwordDecrypt.focus();
+            });
             // handle modal password request on decryption
-            $passwordModal.on('shown.bs.modal', $.proxy($passwordDecrypt.focus, me));
-            $passwordModal.on('hidden.bs.modal', $.proxy(me.decryptPasswordModal, me));
-            $passwordForm.submit($.proxy(me.submitPasswordModal, me));
+            $passwordModal.on('hidden.bs.modal', me.decryptPasswordModal);
+            $passwordForm.submit(me.submitPasswordModal);
 
-            $(window).on('popstate', $.proxy(me.historyChange, me));
+            $(window).on('popstate', me.historyChange);
         };
 
         /**
