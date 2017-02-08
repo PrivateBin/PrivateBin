@@ -1,5 +1,5 @@
 <!-- Please have a look at our FAQ before submitting an issue: https://github.com/PrivateBin/PrivateBin/wiki/FAQ -->
-<!-- This is a template for an bug report. If you would like to suggest a feature, feel free to delete the part below. -->
+<!-- This is a template for a bug report. If you would like to suggest a feature, feel free to delete the part below. -->
 
 ## Steps to reproduce
 <!-- Tell us how to reproduce the problem. -->
@@ -18,8 +18,6 @@ Here you can add screenshots. If the issue is e.g. a client-side issue (= an iss
 If you have access to the server log files, also copy them here.
 -->
 
-* I can reproduce this issue on <https://privatebin.net>: Yes / No
-
 ## Basic information
 
 <!-- If you use a public server enter the address of it here. -->
@@ -36,3 +34,6 @@ If you have access to the server log files, also copy them here.
 
 <!-- The version of PrivateBin, if you use an unstable version paste the commit hash or the GitHub link to the commit here (you can get it by running `git rev-parse HEAD`) -->
 **PrivateBin version:**
+
+* I can reproduce this issue on <https://privatebin.net>: Yes / No
+
