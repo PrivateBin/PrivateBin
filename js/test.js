@@ -66,6 +66,33 @@ describe('helper', function () {
         });
     });
 
+    // this test is not yet meaningful using jsdom, as it does not contain getSelection support.
+    // TODO: This needs to be tested using a browser.
+    describe('selectText', function () {
+        jsc.property(
+            'selection contains content of given ID',
+            'nearray string',
+            'nearray nestring',
+            function (ids, contents) {
+                //console.log(ids, contents);
+                var html = '',
+                    result = true;
+                ids.forEach(function(item, i) {
+                    html += '<div id="' + item + '">' + (contents[i] || contents[0]) + '</div>';
+                });
+                var clean = jsdom(html);
+                ids.forEach(function(item, i) {
+                    $.PrivateBin.helper.selectText(item);
+                    // TODO: As per https://github.com/tmpvar/jsdom/issues/321 there is no getSelection in jsdom, yet.
+                    // Once there is one, uncomment the line below to actually check the result.
+                    //result *= (contents[i] || contents[0]) === window.getSelection().toString();
+                });
+                clean();
+                return result;
+            }
+        );
+    });
+
     describe('scriptLocation', function () {
         jsc.property(
             'returns the URL without query & fragment',
