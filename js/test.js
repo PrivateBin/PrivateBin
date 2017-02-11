@@ -71,24 +71,48 @@ describe('helper', function () {
     describe('selectText', function () {
         jsc.property(
             'selection contains content of given ID',
+            jsc.nearray(jsc.nearray(jsc.elements(alnumString))),
             'nearray string',
-            'nearray nestring',
             function (ids, contents) {
-                //console.log(ids, contents);
                 var html = '',
                     result = true;
                 ids.forEach(function(item, i) {
-                    html += '<div id="' + item + '">' + (contents[i] || contents[0]) + '</div>';
+                    html += '<div id="' + item.join('') + '">' + (contents[i] || contents[0]) + '</div>';
                 });
                 var clean = jsdom(html);
                 ids.forEach(function(item, i) {
-                    $.PrivateBin.helper.selectText(item);
+                    $.PrivateBin.helper.selectText(item.join(''));
                     // TODO: As per https://github.com/tmpvar/jsdom/issues/321 there is no getSelection in jsdom, yet.
                     // Once there is one, uncomment the line below to actually check the result.
                     //result *= (contents[i] || contents[0]) === window.getSelection().toString();
                 });
                 clean();
-                return result;
+                return Boolean(result);
+            }
+        );
+    });
+
+    describe('setElementText', function () {
+        jsc.property(
+            'replaces the content of an element',
+            jsc.nearray(jsc.nearray(jsc.elements(alnumString))),
+            'nearray string',
+            'string',
+            function (ids, contents, replacingContent) {
+                var html = '',
+                    result = true;
+                ids.forEach(function(item, i) {
+                    html += '<div id="' + item.join('') + '">' + (contents[i] || contents[0]) + '</div>';
+                });
+                var clean = jsdom(html);
+                ids.forEach(function(item, i) {
+                    var id = item.join(''),
+                        element = $(document.getElementById(id));
+                    $.PrivateBin.helper.setElementText(element, replacingContent);
+                    result *= replacingContent === $(document.getElementById(id)).text();
+                });
+                clean();
+                return Boolean(result);
             }
         );
     });
