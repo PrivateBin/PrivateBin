@@ -136,7 +136,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         setMessage: function(element, message)
         {
             var content = element.contents();
-            if (content.length > 0)
+            if (content.length > 1)
             {
                 content[content.length - 1].nodeValue = ' ' + message;
             }

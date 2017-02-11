@@ -77,7 +77,7 @@ describe('helper', function () {
                 var html = '',
                     result = true;
                 ids.forEach(function(item, i) {
-                    html += '<div id="' + item.join('') + '">' + (contents[i] || contents[0]) + '</div>';
+                    html += '<div id="' + item.join('') + '">' + $.PrivateBin.helper.htmlEntities(contents[i] || contents[0]) + '</div>';
                 });
                 var clean = jsdom(html);
                 ids.forEach(function(item, i) {
@@ -102,7 +102,7 @@ describe('helper', function () {
                 var html = '',
                     result = true;
                 ids.forEach(function(item, i) {
-                    html += '<div id="' + item.join('') + '">' + (contents[i] || contents[0]) + '</div>';
+                    html += '<div id="' + item.join('') + '">' + $.PrivateBin.helper.htmlEntities(contents[i] || contents[0]) + '</div>';
                 });
                 var clean = jsdom(html);
                 ids.forEach(function(item, i) {
@@ -110,6 +110,54 @@ describe('helper', function () {
                         element = $(document.getElementById(id));
                     $.PrivateBin.helper.setElementText(element, replacingContent);
                     result *= replacingContent === $(document.getElementById(id)).text();
+                });
+                clean();
+                return Boolean(result);
+            }
+        );
+    });
+
+    describe('setMessage', function () {
+        jsc.property(
+            'replaces the content of an empty element, analog to setElementText',
+            jsc.nearray(jsc.nearray(jsc.elements(alnumString))),
+            'nearray string',
+            'string',
+            function (ids, contents, replacingContent) {
+                var html = '',
+                    result = true;
+                ids.forEach(function(item, i) {
+                    html += '<div id="' + item.join('') + '">' + $.PrivateBin.helper.htmlEntities(contents[i] || contents[0]) + '</div>';
+                });
+                var clean = jsdom(html);
+                ids.forEach(function(item, i) {
+                    var id = item.join(''),
+                        element = $(document.getElementById(id));
+                    $.PrivateBin.helper.setMessage(element, replacingContent);
+                    result *= replacingContent === $(document.getElementById(id)).text();
+                });
+                clean();
+                return Boolean(result);
+            }
+        );
+        jsc.property(
+            'replaces the last child of a non-empty element',
+            jsc.nearray(jsc.nearray(jsc.elements(alnumString))),
+            jsc.nearray(jsc.nearray(jsc.elements(alnumString))),
+            'nearray string',
+            'string',
+            function (ids, classes, contents, replacingContent) {
+                var html = '',
+                    result = true;
+                ids.forEach(function(item, i) {
+                    html += '<div id="' + item.join('') + '"><span class="' + (classes[i] || classes[0]) + '"></span> ' + $.PrivateBin.helper.htmlEntities(contents[i] || contents[0]) + '</div>';
+                });
+                var clean = jsdom(html);
+                ids.forEach(function(item, i) {
+                    var id = item.join(''),
+                        element = $(document.getElementById(id));
+                    $.PrivateBin.helper.setMessage(element, replacingContent);
+                    result *= ' ' + replacingContent === $(document.getElementById(id)).contents()[1].nodeValue;
                 });
                 clean();
                 return Boolean(result);
