@@ -179,6 +179,9 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         /**
          * minimal sprintf emulation for %s and %d formats
          *
+         * Note that this function needs the parameters in the same order as the
+         * format strings appear in the string, contrary to the original.
+         *
          * @see    {@link https://stackoverflow.com/questions/610406/javascript-equivalent-to-printf-string-format#4795914}
          * @name   helper.sprintf
          * @function
@@ -195,27 +198,22 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             }
             var format = args[0],
                 i = 1;
-            return format.replace(/%((%)|s|d)/g, function (m) {
+            return format.replace(/%(s|d)/g, function (m) {
                 // m is the matched format, e.g. %s, %d
-                var val;
-                if (m[2]) {
-                    val = m[2];
-                } else {
-                    val = args[i];
-                    // A switch statement so that the formatter can be extended.
-                    switch (m)
-                    {
-                        case '%d':
-                            val = parseFloat(val);
-                            if (isNaN(val)) {
-                                val = 0;
-                            }
-                            break;
-                        default:
-                            // Default is %s
-                    }
-                    ++i;
+                var val = args[i];
+                // A switch statement so that the formatter can be extended.
+                switch (m)
+                {
+                    case '%d':
+                        val = parseFloat(val);
+                        if (isNaN(val)) {
+                            val = 0;
+                        }
+                        break;
+                    default:
+                        // Default is %s
                 }
+                ++i;
                 return val;
             });
         },

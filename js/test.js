@@ -93,6 +93,10 @@ describe('helper', function () {
     });
 
     describe('setElementText', function () {
+        after(function () {
+            cleanup();
+        });
+
         jsc.property(
             'replaces the content of an element',
             jsc.nearray(jsc.nearray(jsc.elements(alnumString))),
@@ -104,20 +108,23 @@ describe('helper', function () {
                 ids.forEach(function(item, i) {
                     html += '<div id="' + item.join('') + '">' + $.PrivateBin.helper.htmlEntities(contents[i] || contents[0]) + '</div>';
                 });
-                var clean = jsdom(html);
+                var elements = $('<body />').html(html);
                 ids.forEach(function(item, i) {
                     var id = item.join(''),
-                        element = $(document.getElementById(id));
+                        element = elements.find('#' + id).first();
                     $.PrivateBin.helper.setElementText(element, replacingContent);
-                    result *= replacingContent === $(document.getElementById(id)).text();
+                    result *= replacingContent === element.text();
                 });
-                clean();
                 return Boolean(result);
             }
         );
     });
 
     describe('setMessage', function () {
+        after(function () {
+            cleanup();
+        });
+
         jsc.property(
             'replaces the content of an empty element, analog to setElementText',
             jsc.nearray(jsc.nearray(jsc.elements(alnumString))),
@@ -129,14 +136,13 @@ describe('helper', function () {
                 ids.forEach(function(item, i) {
                     html += '<div id="' + item.join('') + '">' + $.PrivateBin.helper.htmlEntities(contents[i] || contents[0]) + '</div>';
                 });
-                var clean = jsdom(html);
+                var elements = $('<body />').html(html);
                 ids.forEach(function(item, i) {
                     var id = item.join(''),
-                        element = $(document.getElementById(id));
+                        element = elements.find('#' + id).first();
                     $.PrivateBin.helper.setMessage(element, replacingContent);
-                    result *= replacingContent === $(document.getElementById(id)).text();
+                    result *= replacingContent === element.text();
                 });
-                clean();
                 return Boolean(result);
             }
         );
@@ -152,20 +158,23 @@ describe('helper', function () {
                 ids.forEach(function(item, i) {
                     html += '<div id="' + item.join('') + '"><span class="' + (classes[i] || classes[0]) + '"></span> ' + $.PrivateBin.helper.htmlEntities(contents[i] || contents[0]) + '</div>';
                 });
-                var clean = jsdom(html);
+                var elements = $('<body />').html(html);
                 ids.forEach(function(item, i) {
                     var id = item.join(''),
-                        element = $(document.getElementById(id));
+                        element = elements.find('#' + id).first();
                     $.PrivateBin.helper.setMessage(element, replacingContent);
-                    result *= ' ' + replacingContent === $(document.getElementById(id)).contents()[1].nodeValue;
+                    result *= ' ' + replacingContent === element.contents()[1].nodeValue;
                 });
-                clean();
                 return Boolean(result);
             }
         );
     });
 
     describe('urls2links', function () {
+        after(function () {
+            cleanup();
+        });
+
         jsc.property(
             'ignores non-URL content',
             'string',
@@ -219,6 +228,77 @@ describe('helper', function () {
                     element = $('<div>' + prefix + url + ' ' + postfix + '</div>');
                 $.PrivateBin.helper.urls2links(element);
                 return element.html() === $('<div>' + prefix + '<a href="' + url + '" rel="nofollow">' + url + '</a> ' + postfix + '</div>').html();
+            }
+        );
+    });
+
+    describe('sprintf', function () {
+        after(function () {
+            cleanup();
+        });
+
+        jsc.property(
+            'replaces %s in strings with first given parameter',
+            'string',
+            '(small nearray) string',
+            'string',
+            function (prefix, params, postfix) {
+                params.unshift(prefix + '%s' + postfix);
+                var result = prefix + params[1] + postfix;
+                return result === $.PrivateBin.helper.sprintf.apply(this, params) &&
+                    result === $.PrivateBin.helper.sprintf(params);
+            }
+        );
+        jsc.property(
+            'replaces %d in strings with first given parameter',
+            'string',
+            '(small nearray) nat',
+            'string',
+            function (prefix, params, postfix) {
+                params.unshift(prefix + '%d' + postfix);
+                var result = prefix + params[1] + postfix;
+                return result === $.PrivateBin.helper.sprintf.apply(this, params) &&
+                    result === $.PrivateBin.helper.sprintf(params);
+            }
+        );
+        jsc.property(
+            'replaces %d in strings with 0 if first parameter is not a number',
+            'string',
+            '(small nearray) falsy',
+            'string',
+            function (prefix, params, postfix) {
+                params.unshift(prefix + '%d' + postfix);
+                var result = prefix + '0' + postfix;
+                return result === $.PrivateBin.helper.sprintf.apply(this, params) &&
+                    result === $.PrivateBin.helper.sprintf(params);
+            }
+        );
+        jsc.property(
+            'replaces %d and %s in strings in order',
+            'string',
+            'nat',
+            'string',
+            'string',
+            'string',
+            function (prefix, uint, middle, string, postfix) {
+                var params = [prefix + '%d' + middle + '%s' + postfix, uint, string],
+                    result = prefix + uint + middle + string + postfix;
+                return result === $.PrivateBin.helper.sprintf.apply(this, params) &&
+                    result === $.PrivateBin.helper.sprintf(params);
+            }
+        );
+        jsc.property(
+            'replaces %d and %s in strings in reverse order',
+            'string',
+            'nat',
+            'string',
+            'string',
+            'string',
+            function (prefix, uint, middle, string, postfix) {
+                var params = [prefix + '%s' + middle + '%d' + postfix, string, uint],
+                    result = prefix + string + middle + uint + postfix;
+                return result === $.PrivateBin.helper.sprintf.apply(this, params) &&
+                    result === $.PrivateBin.helper.sprintf(params);
             }
         );
     });
