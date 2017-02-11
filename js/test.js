@@ -165,6 +165,64 @@ describe('helper', function () {
         );
     });
 
+    describe('urls2links', function () {
+        jsc.property(
+            'ignores non-URL content',
+            'string',
+            function (content) {
+                var element = $('<div>' + content + '</div>'),
+                    before = element.html();
+                $.PrivateBin.helper.urls2links(element);
+                return before === element.html();
+            }
+        );
+        jsc.property(
+            'replaces URLs with anchors',
+            'string',
+            jsc.elements(['http', 'https', 'ftp']),
+            jsc.nearray(jsc.elements(a2zString)),
+            jsc.array(jsc.elements(queryString)),
+            jsc.array(jsc.elements(queryString)),
+            'string',
+            function (prefix, schema, address, query, fragment, postfix) {
+                var query = query.join(''),
+                    fragment = fragment.join(''),
+                    url = schema + '://' + address.join('') + '/?' + query + '#' + fragment,
+                    prefix = $.PrivateBin.helper.htmlEntities(prefix),
+                    postfix = ' ' + $.PrivateBin.helper.htmlEntities(postfix),
+                    element = $('<div>' + prefix + url + postfix + '</div>');
+
+                // special cases: When the query string and fragment imply the beginning of an HTML entity, eg. &#0 or &#x
+                if (
+                    query.slice(-1) === '&' &&
+                    (parseInt(fragment.substring(0, 1), 10) >= 0 || fragment.charAt(0) === 'x' )
+                )
+                {
+                    url = schema + '://' + address.join('') + '/?' + query.substring(0, query.length - 1);
+                    postfix = '';
+                    element = $('<div>' + prefix + url + '</div>');
+                }
+
+                $.PrivateBin.helper.urls2links(element);
+                return element.html() === $('<div>' + prefix + '<a href="' + url + '" rel="nofollow">' + url + '</a>' + postfix + '</div>').html();
+            }
+        );
+        jsc.property(
+            'replaces magnet links with anchors',
+            'string',
+            jsc.array(jsc.elements(queryString)),
+            'string',
+            function (prefix, query, postfix) {
+                var url = 'magnet:?' + query.join(''),
+                    prefix = $.PrivateBin.helper.htmlEntities(prefix),
+                    postfix = $.PrivateBin.helper.htmlEntities(postfix),
+                    element = $('<div>' + prefix + url + ' ' + postfix + '</div>');
+                $.PrivateBin.helper.urls2links(element);
+                return element.html() === $('<div>' + prefix + '<a href="' + url + '" rel="nofollow">' + url + '</a> ' + postfix + '</div>').html();
+            }
+        );
+    });
+
     describe('scriptLocation', function () {
         jsc.property(
             'returns the URL without query & fragment',

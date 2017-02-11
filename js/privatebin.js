@@ -164,13 +164,13 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             var markup = '<a href="$1" rel="nofollow">$1</a>';
             element.html(
                 element.html().replace(
-                    /((http|https|ftp):\/\/[\w?=&.\/-;#@~%+-]+(?![\w\s?&.\/;#~%"=-]*>))/ig,
+                    /((http|https|ftp):\/\/[\w?=&.\/-;#@~%+*-]+(?![\w\s?&.\/;#~%"=-]*>))/ig,
                     markup
                 )
             );
             element.html(
                 element.html().replace(
-                    /((magnet):[\w?=&.\/-;#@~%+-]+)/ig,
+                    /((magnet):[\w?=&.\/-;#@~%+*-]+)/ig,
                     markup
                 )
             );
