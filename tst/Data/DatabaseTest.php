@@ -311,7 +311,7 @@ class DatabaseTest extends PHPUnit_Framework_TestCase
             'vizhash BLOB, ' .
             'postdate INT );'
         );
-        $this->assertInstanceOf(Database::class, Database::getInstance($this->_options));
+        $this->assertInstanceOf('PrivateBin\\Data\\Database', Database::getInstance($this->_options));
 
         // check if version number was upgraded in created configuration table
         $statement = $db->prepare('SELECT value FROM foo_config WHERE id LIKE ?');
