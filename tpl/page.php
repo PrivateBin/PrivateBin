@@ -47,7 +47,7 @@ if ($MARKDOWN):
 <?php
 endif;
 ?>
-		<script type="text/javascript" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-vYYJYraxQNOf41XtehLBU2JbIQ2Uffe+n8TjHyWkpqoZdZX4aL5zyABrUNvRUP02+AxoRsmNJkpvIbmeQqcIXg==" crossorigin="anonymous"></script>
+		<script type="text/javascript" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-/n0xL/OCmeki+nYzqkpLjJNaoEcEBR3cVxvjXF9ESuqVuD81WpicSm2ZF/bHA+pjNuC0QzMBzsKaQwBI96/6JA==" crossorigin="anonymous"></script>
 		<!--[if lt IE 10]>
 		<style type="text/css">body {padding-left:60px;padding-right:60px;} #ienotice {display:block;} #oldienotice {display:block;}</style>
 		<![endif]-->
@@ -203,6 +203,7 @@ if ($FILEUPLOAD):
 				<div id="attach" class="hidden">
 					<span id="clonedfile" class="hidden"><?php echo I18n::_('Cloned file attached.'); ?></span>
 					<span id="filewrap"><?php echo I18n::_('Attach a file'); ?>: <input type="file" id="file" name="file" /></span>
+					<span id="dragAndDropFileName" class="dragAndDropFile"><?php echo I18n::_('or drag & drop file'); ?></span>
 					<button id="fileremovebutton"><?php echo I18n::_('Remove attachment'); ?></button>
 				</div>
 <?php
@@ -212,7 +213,7 @@ endif;
 					<button id="messageedit"><?php echo I18n::_('Editor'); ?></button>
 					<button id="messagepreview"><?php echo I18n::_('Preview'); ?></button>
 				</div>
-				<div id="image" class="hidden"></div>
+				<div id="attachmentPreview" class="hidden"></div>
 				<div id="prettymessage" class="hidden">
 					<pre id="prettyprint" class="prettyprint linenums:1"></pre>
 				</div>

@@ -64,11 +64,24 @@ body.navbar-spacing {
 	margin-right: 8px;
 }
 
-#image img {
+#attachmentPreview img {
 	max-width: 100%;
 	height: auto;
 	margin-bottom: 20px;
 }
+
+#attachmentPreview .pdfPreview {
+	width: 100%;
+	height: 100vh;
+	margin-bottom: 20px;
+}
+
+.dragAndDropFile{
+        color:#777;
+        font-size:1em;
+        display:inline;
+}
+
 
 #deletelink {
 	float: right;

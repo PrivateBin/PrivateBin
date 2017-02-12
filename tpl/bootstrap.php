@@ -69,7 +69,7 @@ if ($MARKDOWN):
 <?php
 endif;
 ?>
-		<script type="text/javascript" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-vYYJYraxQNOf41XtehLBU2JbIQ2Uffe+n8TjHyWkpqoZdZX4aL5zyABrUNvRUP02+AxoRsmNJkpvIbmeQqcIXg==" crossorigin="anonymous"></script>
+		<script type="text/javascript" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-/n0xL/OCmeki+nYzqkpLjJNaoEcEBR3cVxvjXF9ESuqVuD81WpicSm2ZF/bHA+pjNuC0QzMBzsKaQwBI96/6JA==" crossorigin="anonymous"></script>
 		<!--[if lt IE 10]>
 		<style type="text/css">body {padding-left:60px;padding-right:60px;} #ienotice {display:block;} #oldienotice {display:block;}</style>
 		<![endif]-->
@@ -292,8 +292,9 @@ if ($FILEUPLOAD):
 						<ul class="dropdown-menu">
 							<li id="filewrap">
 								<div>
-									<input type="file" id="file" name="file" />
+									<input type="file" id="file" name="file"/>
 								</div>
+								<div id="dragAndDropFileName" class="dragAndDropFile"><?php echo I18n::_('or drag & drop file'); ?></div>
 							</li>
 							<li>
 								<a id="fileremovebutton"  href="#">
@@ -447,7 +448,7 @@ endif;
 		</header>
 		<section class="container">
 			<article class="row">
-				<div id="image" class="col-md-12 text-center hidden"></div>
+				<div id="attachmentPreview" class="col-md-12 text-center hidden"></div>
 				<div id="prettymessage" class="col-md-12 hidden">
 					<pre id="prettyprint" class="col-md-12 prettyprint linenums:1"></pre>
 				</div>

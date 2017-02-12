@@ -72,13 +72,13 @@ h3.title {
 	bottom: 8px;
 }
 
-#aboutbox { 
-	color: #94a3b4; 
+#aboutbox {
+	color: #94a3b4;
 	padding: 4px 8px 4px 16px;
-	position: relative; 
+	position: relative;
 	top: 10px;
 	border-left: 2px solid #94a3b4;
-	float: right;  
+	float: right;
 	width: 60%;
 }
 
@@ -104,17 +104,29 @@ h3.title {
 	font-family: Consolas, "Lucida Console", "DejaVu Sans Mono", Monaco, monospace;
 }
 
-#image img {
+#attachmentPreview img {
 	max-width: 100%;
 	height: auto;
 }
 
-#status { 
+#attachmentPreview .pdfPreview {
+	width: 100%;
+	height: 100vh;
+	margin-bottom: 20px;
+}
+
+.dragAndDropFile{
+        color:#777;
+        font-size:1em;
+        display:inline;
+}
+
+#status {
 	clear: both;
 	padding: 5px 10px;
 }
 
-#pasteresult { 
+#pasteresult {
 	background-color: #1F2833;
 	color: #fff;
 	padding: 4px 12px;
@@ -249,7 +261,7 @@ input {
 	font-weight: bold !important;
 }
 
-#image, .nonworking {
+#attachmentPreview, .nonworking {
 	background-color: #fff;
 	color: #000;
 	width: 100%;

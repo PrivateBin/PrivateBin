@@ -51,7 +51,7 @@ class Configuration
             'languagedefault'          => '',
             'urlshortener'             => '',
             'icon'                     => 'identicon',
-            'cspheader'                => 'default-src \'none\'; manifest-src \'self\'; connect-src *; script-src \'self\'; style-src \'self\'; font-src \'self\'; img-src \'self\' data:; referrer no-referrer; sandbox allow-same-origin allow-scripts allow-forms allow-popups',
+            'cspheader'                => 'default-src \'none\'; manifest-src \'self\'; connect-src *; script-src \'self\'; style-src \'self\'; font-src \'self\'; img-src \'self\' data:; media-src \'self\' data:; object-src \'self\' data:; Referrer-Policy: \'no-referrer\'',
             'zerobincompatibility'     => false,
         ),
         'expire' => array(

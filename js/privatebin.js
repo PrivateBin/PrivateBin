@@ -340,6 +340,180 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
     };
 
     /**
+     * static attachment helper methods
+     *
+     * @name helper
+     * @class
+     */
+    var attachmentHelpers = {
+        attachmentData: undefined,
+        file: undefined,
+
+        /*
+         * Read file data as dataURL using the FileReader API
+         * https://developer.mozilla.org/en-US/docs/Web/API/FileReader#readAsDataURL()
+         */
+        readFileData: function (file) {
+            if (typeof FileReader === undefined) {
+                // revert loading status…
+                this.stateNewPaste();
+                this.showError(i18n._('Your browser does not support uploading encrypted files. Please use a newer browser.'));
+                return;
+            }
+
+            var fr = new FileReader();
+            if (file === undefined) {
+                file = controller.fileInput[0].files[0];
+                $('#dragAndDropFileName').text('');
+            } else {
+                $('#dragAndDropFileName').text(file.name);
+            }
+
+            attachmentHelpers.file = file;
+
+            fr.onload = function (e) {
+                var dataURL = e.target.result;
+                attachmentHelpers.attachmentData = dataURL;
+
+                if (controller.messagePreview.parent().hasClass('active')) {
+                    attachmentHelpers.handleFilePreviews(controller.attachmentPreview, dataURL);
+                }
+            };
+            fr.readAsDataURL(file);
+        },
+
+        /**
+         *  Handle the preview of files.
+         *  @argument {DOM Element} element where the preview should be appended.
+         *  @argument {File Data} data of the file to be displayed.
+         */
+        handleFilePreviews: function (element, data) {
+            if (data) {
+                var mimeType = this.getMimeTypeFromDataURL(data);
+
+                if (mimeType.match(/image\//i)) {
+                    this.showImagePreview(element, data);
+                } else if (mimeType.match(/video\//i)) {
+                    this.showVideoPreview(element, data, mimeType);
+                } else if (mimeType.match(/audio\//i)) {
+                    this.showAudioPreview(element, data, mimeType);
+                } else if (mimeType.match(/\/pdf/i)) {
+                    this.showPDFPreview(element, data);
+                }
+                //else {
+                //console.log("file but no image/video/audio/pdf");
+                //}
+            }
+        },
+
+        /**
+         * Get Mime Type from a DataURL
+         *
+         * @param {type} dataURL
+         * @returns Mime Type from a dataURL as obtained for a file using the FileReader API https://developer.mozilla.org/en-US/docs/Web/API/FileReader#readAsDataURL()
+         */
+        getMimeTypeFromDataURL: function (dataURL) {
+            return dataURL.slice(dataURL.indexOf('data:') + 5, dataURL.indexOf(';base64,'));
+        },
+
+        showImagePreview: function (element, image) {
+            element.html(
+                    $(document.createElement('img'))
+                    .attr('src', image)
+                    .attr('class', 'img-thumbnail')
+                    );
+            element.removeClass('hidden');
+        },
+
+        showVideoPreview: function (element, video, mimeType) {
+            var videoPlayer = $(document.createElement('video'))
+                    .attr('controls', 'true')
+                    .attr('autoplay', 'true')
+                    .attr('loop', 'true')
+                    .attr('class', 'img-thumbnail');
+
+            videoPlayer.append($(document.createElement('source'))
+                    .attr('type', mimeType)
+                    .attr('src', video));
+            element.html(videoPlayer);
+            element.removeClass('hidden');
+        },
+
+        showAudioPreview: function (element, audio, mimeType) {
+            var audioPlayer = $(document.createElement('audio'))
+                    .attr('controls', 'true')
+                    .attr('autoplay', 'true');
+
+            audioPlayer.append($(document.createElement('source'))
+                    .attr('type', mimeType)
+                    .attr('src', audio));
+            element.html(audioPlayer);
+            element.removeClass('hidden');
+        },
+
+        showPDFPreview: function (element, pdf) {
+            //PDFs are only displayed if the filesize is smaller than about 1MB (after base64 encoding).
+            //Bigger filesizes currently cause crashes in various browsers.
+            //See also: https://code.google.com/p/chromium/issues/detail?id=69227
+
+            //Firefox crashes with files that are about 1.5MB
+            //The performance with 1MB files is bareable
+            if (pdf.length < 1398488) {
+
+                //Fallback for browsers, that don't support the vh unit
+                var clientHeight = $(window).height();
+
+                element.html(
+                        $(document.createElement('embed'))
+                        .attr('src', pdf)
+                        .attr('type', 'application/pdf')
+                        .attr('class', 'pdfPreview')
+                        .css('height', clientHeight)
+                        );
+                element.removeClass('hidden');
+            } else {
+                controller.showError(i18n._('File too large, to display a preview. Please download the attachment.'));
+            }
+        },
+
+        addDragDropHandler: function () {
+            var fileInput = controller.fileInput;
+
+            if (fileInput.length === 0) {
+                return;
+            }
+
+            function ignoreDragDrop(e) {
+                e.stopPropagation();
+                e.preventDefault();
+            }
+
+            function drop(e) {
+                e.stopPropagation();
+                e.preventDefault();
+
+                if (fileInput) {
+                    var file = e.dataTransfer.files[0];
+                    //Clear the file input:
+                    fileInput.wrap('<form>').closest('form').get(0).reset();
+                    fileInput.unwrap();
+                    //Only works in Chrome:
+                    //fileInput[0].files = e.dataTransfer.files;
+
+                    attachmentHelpers.readFileData(file);
+                }
+            }
+
+            document.addEventListener("drop", drop, false);
+            document.addEventListener("dragenter", ignoreDragDrop, false);
+            document.addEventListener("dragover", ignoreDragDrop, false);
+            fileInput.on("change", function () {
+                attachmentHelpers.readFileData();
+            });
+        }
+    };
+
+    /**
      * internationalization methods
      *
      * @name i18n
@@ -748,18 +922,8 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                         }
                         this.attachmentLink.attr('href', attachment);
                         this.attachment.removeClass('hidden');
+                        attachmentHelpers.handleFilePreviews(this.attachmentPreview, attachment);
 
-                        // if the attachment is an image, display it
-                        var imagePrefix = 'data:image/';
-                        if (attachment.substring(0, imagePrefix.length) === imagePrefix)
-                        {
-                            this.image.html(
-                                $(document.createElement('img'))
-                                    .attr('src', attachment)
-                                    .attr('class', 'img-thumbnail')
-                            );
-                            this.image.removeClass('hidden');
-                        }
                     }
                     var cleartext = filter.decipher(key, password, paste.data);
                     if (cleartext.length === 0 && password.length === 0 && !paste.attachment)
@@ -1018,11 +1182,12 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         sendData: function(event)
         {
             event.preventDefault();
-            var file = document.getElementById('file'),
-                files = (file && file.files) ? file.files : null; // FileList object
+
+            var fileName = attachmentHelpers.file ? attachmentHelpers.file.name : this.attachmentLink.attr('download');
+            var attachmentData = attachmentHelpers.attachmentData || this.attachmentLink.attr('href');
 
             // do not send if no data.
-            if (this.message.val().length === 0 && !(files && files[0]))
+            if (this.message.val().length === 0 && !(fileName && attachmentData))
             {
                 return;
             }
@@ -1045,35 +1210,12 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
 
             var randomkey = sjcl.codec.base64.fromBits(sjcl.random.randomWords(8, 0), 0),
                 password = this.passwordInput.val();
-            if(files && files[0])
+            if(fileName)
             {
-                if(typeof FileReader === undefined)
-                {
-                    // revert loading status…
-                    this.stateNewPaste();
-                    this.showError(i18n._('Your browser does not support uploading encrypted files. Please use a newer browser.'));
-                    return;
-                }
-                var reader = new FileReader();
-                // closure to capture the file information
-                reader.onload = (function(theFile)
-                {
-                    return function(e) {
-                        controller.sendDataContinue(
-                            randomkey,
-                            filter.cipher(randomkey, password, e.target.result),
-                            filter.cipher(randomkey, password, theFile.name)
-                        );
-                    };
-                })(files[0]);
-                reader.readAsDataURL(files[0]);
-            }
-            else if(this.attachmentLink.attr('href'))
-            {
-                this.sendDataContinue(
+                controller.sendDataContinue(
                     randomkey,
-                    filter.cipher(randomkey, password, this.attachmentLink.attr('href')),
-                    this.attachmentLink.attr('download')
+                    filter.cipher(randomkey, password, attachmentData),
+                    filter.cipher(randomkey, password, fileName)
                 );
             }
             else
@@ -1199,6 +1341,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         {
             this.message.text('');
             this.attachment.addClass('hidden');
+            this.attachmentPreview.addClass('hidden');
             this.cloneButton.addClass('hidden');
             this.rawTextButton.addClass('hidden');
             this.remainingTime.addClass('hidden');
@@ -1317,6 +1460,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                 this.preview.addClass('hidden');
             }
 
+            this.attachmentPreview.removeClass('hidden');
             this.pasteResult.addClass('hidden');
             this.message.addClass('hidden');
             this.clearText.addClass('hidden');
@@ -1547,6 +1691,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             this.message.focus();
             this.stateExistingPaste(true);
             this.formatPaste($('#pasteFormatter').val(), this.message.val());
+            attachmentHelpers.handleFilePreviews(this.attachmentPreview, attachmentHelpers.attachmentData);
         },
 
         /**
@@ -1602,6 +1747,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             this.message.text('');
             this.changeBurnAfterReading();
             this.changeOpenDisc();
+            attachmentHelpers.addDragDropHandler();
         },
 
         /**
@@ -1618,6 +1764,9 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             // the only way to deselect the file is to recreate the input
             this.fileWrap.html(this.fileWrap.html());
             this.fileWrap.removeClass('hidden');
+
+            attachmentHelpers.file = undefined;
+            attachmentHelpers.attachmentData = undefined;
         },
 
         /**
@@ -1776,7 +1925,8 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             this.fileRemoveButton = $('#fileremovebutton');
             this.fileWrap = $('#filewrap');
             this.formatter = $('#formatter');
-            this.image = $('#image');
+            this.attachmentPreview = $('#attachmentPreview');
+            this.fileInput = $('#file');
             this.loadingIndicator = $('#loadingindicator');
             this.message = $('#message');
             this.messageEdit = $('#messageedit');
@@ -1846,6 +1996,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
 
     return {
         helper: helper,
+        attachmentHelpers: attachmentHelpers,
         i18n: i18n,
         filter: filter,
         controller: controller
