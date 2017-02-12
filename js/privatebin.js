@@ -11,7 +11,6 @@
  * @namespace
  */
 
-'use strict';
 /** global: Base64 */
 /** global: FileReader */
 /** global: RawDeflate */
@@ -25,17 +24,14 @@
 // Immediately start random number generator collector.
 sjcl.random.startCollectors();
 
-// jQuery(document).ready(function() {
-//     // startup
-// }
-
 jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
+    'use strict';
+
     /**
      * static helper methods
      *
      * @param  {object} window
      * @param  {object} document
-     * @name helper
      * @class
      */
     var helper = (function (window, document) {
@@ -154,27 +150,6 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             else
             {
                 $element.text(text);
-            }
-        };
-
-        /**
-         * replace last child of element with message
-         *
-         * @name   helper.setMessage
-         * @function
-         * @param  {jQuery} $element - a jQuery wrapped DOM element
-         * @param  {string} message - the message to append
-         */
-        me.setMessage = function($element, message)
-        {
-            var content = $element.contents();
-            if (content.length > 0)
-            {
-                content[content.length - 1].nodeValue = ' ' + message;
-            }
-            else
-            {
-                me.setElementText($element, message);
             }
         };
 
@@ -367,7 +342,6 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
      *
      * @param  {object} window
      * @param  {object} document
-     * @name i18n
      * @class
      */
     var i18n = (function (window, document) {
@@ -516,17 +490,13 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             }
 
             // if language is already used (e.g, default 'en'), skip update
-            if (newLanguage === language)
-            {
-                controller.init();
+            if (newLanguage === language) {
                 return;
             }
 
             // if language is not supported, show error
-            if (supportedLanguages.indexOf(newLanguage) === -1)
-            {
+            if (supportedLanguages.indexOf(newLanguage) === -1) {
                 console.error('Language \'%s\' is not supported. Translation failed, fallback to English.', newLanguage);
-                controller.init();
             }
 
             // load strongs from JSON
@@ -536,54 +506,53 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             }).fail(function (data, textStatus, errorMsg) {
                 console.error('Language \'%s\' could not be loaded (%s: %s). Translation failed, fallback to English.', newLanguage, textStatus, errorMsg);
             });
-
-            controller.init();
         };
 
         return me;
     })(window, document);
 
     /**
-     * filter methods
+     * cryptTool methods
      *
      * @param  {object} window
      * @param  {object} document
-     * @name filter
      * @class
      */
-    var filter = (function (window, document) {
+    var cryptTool = (function () {
         var me = {};
 
         /**
          * compress a message (deflate compression), returns base64 encoded data
          *
-         * @name   filter.compress
+         * @name   cryptToolcompress
          * @function
+         * @private
          * @param  {string} message
          * @return {string} base64 data
          */
-        me.compress = function(message)
+        function compress(message)
         {
             return Base64.toBase64( RawDeflate.deflate( Base64.utob(message) ) );
-        },
+        }
 
         /**
-         * decompress a message compressed with filter.compress()
+         * decompress a message compressed with cryptToolcompress()
          *
-         * @name   filter.decompress
+         * @name   cryptTooldecompress
          * @function
+         * @private
          * @param  {string} data - base64 data
          * @return {string} message
          */
-        me.decompress = function(data)
+        function decompress(data)
         {
             return Base64.btou( RawDeflate.inflate( Base64.fromBase64(data) ) );
-        },
+        }
 
         /**
          * compress, then encrypt message with given key and password
          *
-         * @name   filter.cipher
+         * @name   cryptToolcipher
          * @function
          * @param  {string} key
          * @param  {string} password
@@ -596,15 +565,15 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             var options = {mode: 'gcm', ks: 256, ts: 128};
             if ((password || '').trim().length === 0)
             {
-                return sjcl.encrypt(key, me.compress(message), options);
+                return sjcl.encrypt(key, compress(message), options);
             }
             return sjcl.encrypt(key + sjcl.codec.hex.fromBits(sjcl.hash.sha256.hash(password)), me.compress(message), options);
-        },
+        };
 
         /**
          * decrypt message with key, then decompress
          *
-         * @name   filter.decipher
+         * @name   cryptTooldecipher
          * @function
          * @param  {string} key
          * @param  {string} password
@@ -617,13 +586,13 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             {
                 try
                 {
-                    return me.decompress(sjcl.decrypt(key, data));
+                    return decompress(sjcl.decrypt(key, data));
                 }
                 catch(err)
                 {
                     try
                     {
-                        return me.decompress(sjcl.decrypt(key + sjcl.codec.hex.fromBits(sjcl.hash.sha256.hash(password)), data));
+                        return decompress(sjcl.decrypt(key + sjcl.codec.hex.fromBits(sjcl.hash.sha256.hash(password)), data));
                     }
                     catch(e)
                     {
@@ -632,113 +601,35 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                 }
             }
             return '';
-        }
+        };
 
         return me;
-    })(window, document);
+    })();
 
     /**
-     * PrivateBin logic
+     * User interface manager
      *
      * @param  {object} window
      * @param  {object} document
-     * @name controller
      * @class
      */
-    var controller = (function (window, document) {
+    var uiMan = (function (window, document) {
         var me = {};
 
-        /**
-         * headers to send in AJAX requests
-         *
-         * @private
-         * @enum   {Object}
-         */
-        var headers = {'X-Requested-With': 'JSONHttpRequest'};
-
-        /**
-         * URL shortners create address
-         *
-         * @private
-         * @prop   {string}
-         */
-        var shortenerUrl = '';
-
-        /**
-         * URL of newly created paste
-         *
-         * @private
-         * @prop   {string}
-         */
-        var createdPasteUrl = '';
-
         // jQuery pre-loaded objects
-        var $attach,
-            $attachment,
-            $attachmentLink,
-            $burnAfterReading,
-            $burnAfterReadingOption,
-            $cipherData,
+        var $cipherData,
             $clearText,
-            $cloneButton,
             $clonedFile,
             $comments,
             $discussion,
-            $errorMessage,
-            $expiration,
-            $fileRemoveButton,
-            $fileWrap,
-            $formatter,
             $image,
-            $loadingIndicator,
-            $message,
-            $messageEdit,
-            $messagePreview,
-            $newButton,
-            $openDisc, // @TODO: rename - too similar to openDiscussion, difference unclear
-            $openDiscussion,
-            $password,
-            $passwordInput,
-            $passwordModal,
-            $passwordForm,
-            $passwordDecrypt,
             $pasteResult,
             $pasteUrl,
             $prettyMessage,
             $prettyPrint,
             $preview,
-            $rawTextButton,
             $remainingTime,
-            $replyStatus,
-            $sendButton,
-            $status;
-
-        /**
-         * ask the user for the password and set it
-         *
-         * @name   controller.requestPassword
-         * @function
-         */
-        me.requestPassword = function()
-        {
-            if ($passwordModal.length === 0) {
-                var password = prompt(i18n._('Please enter the password for this paste:'), '');
-                if (password === null)
-                {
-                    throw 'password prompt canceled';
-                }
-                if (password.length === 0)
-                {
-                    // recursive…
-                    me.requestPassword();
-                } else {
-                    $passwordInput.val(password);
-                    me.displayMessages();
-                }
-            } else {
-                $passwordModal.modal();
-            }
-        };
+            $replyStatus;
 
         /**
          * use given format on paste, defaults to plain text
@@ -827,7 +718,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                 {
                     if (paste.attachment)
                     {
-                        var attachment = filter.decipher(key, password, paste.attachment);
+                        var attachment = cryptTooldecipher(key, password, paste.attachment);
                         if (attachment.length === 0)
                         {
                             if (password.length === 0)
@@ -835,7 +726,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                                 me.requestPassword();
                                 return;
                             }
-                            attachment = filter.decipher(key, password, paste.attachment);
+                            attachment = cryptTooldecipher(key, password, paste.attachment);
                         }
                         if (attachment.length === 0)
                         {
@@ -844,7 +735,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
 
                         if (paste.attachmentname)
                         {
-                            var attachmentname = filter.decipher(key, password, paste.attachmentname);
+                            var attachmentname = cryptTooldecipher(key, password, paste.attachmentname);
                             if (attachmentname.length > 0)
                             {
                                 $attachmentLink.attr('download', attachmentname);
@@ -865,7 +756,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                             $image.removeClass('hidden');
                         }
                     }
-                    var cleartext = filter.decipher(key, password, paste.data);
+                    var cleartext = cryptTooldecipher(key, password, paste.data);
                     if (cleartext.length === 0 && password.length === 0 && !paste.attachment)
                     {
                         me.requestPassword();
@@ -899,7 +790,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                         'This document will expire in %d ' + expiration[1] + '.',
                         'This document will expire in %d ' + expiration[1] + 's.'
                     ];
-                helper.setMessage($remainingTime, i18n._(expirationLabel, expiration[0]));
+                me.appendMessage($remainingTime, i18n._(expirationLabel, expiration[0]));
                 $remainingTime.removeClass('foryoureyesonly')
                                   .removeClass('hidden');
             }
@@ -916,7 +807,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                 .fail(function() {
                     controller.showError(i18n._('Could not delete the paste, it was not stored in burn after reading mode.'));
                 });
-                helper.setMessage($remainingTime, i18n._(
+                me.appendMessage($remainingTime, i18n._(
                     'FOR YOUR EYES ONLY. Don\'t close this window, this message can\'t be displayed again.'
                 ));
                 $remainingTime.addClass('foryoureyesonly')
@@ -937,7 +828,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                 {
                     var $place = $comments,
                         comment = paste.comments[i],
-                        commentText = filter.decipher(key, password, comment.data),
+                        commentText = cryptTooldecipher(key, password, comment.data),
                         $parentComment = $('#comment_' + comment.parentid);
 
                     $divComment = $('<article><div class="comment" id="comment_' + comment.id
@@ -959,7 +850,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                     helper.urls2links($divCommentData);
 
                     // try to get optional nickname
-                    var nick = filter.decipher(key, password, comment.meta.nickname);
+                    var nick = cryptTooldecipher(key, password, comment.meta.nickname);
                     if (nick.length > 0)
                     {
                         $divComment.find('span.nickname').text(nick);
@@ -1013,23 +904,919 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             var source = $(event.target),
                 commentid = event.data.commentid,
                 hint = i18n._('Optional nickname...'),
-                reply = $(
-                    '<div class="reply"><input type="text" id="nickname" ' +
-                    'class="form-control" title="' + hint + '" placeholder="' +
-                    hint + '" /><textarea id="replymessage" class="replymessage ' +
-                    'form-control" cols="80" rows="7"></textarea><br />' +
-                    '<div id="replystatus"></div><button id="replybutton" ' +
-                    'class="btn btn-default btn-sm">' + i18n._('Post comment') +
-                    '</button></div>'
-                );
-            reply.find('button').click(
+                $reply = $('#replytemplate');
+            $reply.find('button').click(
                 {parentid: commentid},
                 me.sendComment
             );
-            source.after(reply);
-            $replyStatus = $('#replystatus');
+            source.after($reply);
+            $replyStatus = $('#replystatus'); // when ID --> put into HTML
             $('#replymessage').focus();
         };
+
+        /**
+         * replace last child of element with message
+         *
+         * @name   me.appendMessage
+         * @function
+         * @param  {jQuery} $element - a jQuery wrapped DOM element
+         * @param  {string} message - the message to append
+         * @TODO: make private if possible
+         */
+        me.appendMessage = function($element, message)
+        {
+            var content = $element.contents();
+            if (content.length > 0)
+            {
+                content[content.length - 1].nodeValue = ' ' + message;
+            }
+            else
+            {
+                me.setElementText($element, message);
+            }
+        };
+
+        /**
+         * handle history (pop) state changes
+         *
+         * currently this does only handle redirects to the home page.
+         *
+         * @name   controller.historyChange
+         * @function
+         * @param  {Event} event
+         */
+        me.historyChange = function(event)
+        {
+            var currentLocation = helper.scriptLocation();
+            if (event.originalEvent.state === null && // no state object passed
+                event.originalEvent.target.location.href === currentLocation && // target location is home page
+                window.location.href === currentLocation // and we are not already on the home page
+            ) {
+                // redirect to home page
+                window.location.href = currentLocation;
+            }
+        };
+
+        /**
+         * Forces opening the paste if the link does not do this automatically.
+         *
+         * This is necessary as browsers will not reload the page when it is
+         * already loaded (which is fake as it is set via history.pushState()).
+         *
+         * @name   controller.pasteLinkClick
+         * @function
+         * @param  {Event} event
+         */
+        me.pasteLinkClick = function(event)
+        {
+            // check if location is (already) shown in URL bar
+            if (window.location.href === $pasteUrl.attr('href')) {
+                // if so we need to load link by reloading the current site
+                window.location.reload(true);
+            }
+        };
+
+        /**
+         * reload the page
+         *
+         * This takes the user to the PrivateBin home page.
+         *
+         * @name   controller.reloadPage
+         * @function
+         * @param  {Event} event
+         */
+        me.reloadPage = function(event)
+        {
+            window.location.href = helper.scriptLocation();
+            event.preventDefault();
+        };
+
+        /**
+         * main UI manager
+         *
+         * @name   controller.init
+         * @function
+         */
+        me.init = function()
+        {
+            // hide "no javascript" message
+            $('#noscript').hide();
+
+            // preload jQuery elements
+            $cipherData = $('#cipherdata');
+            $clearText = $('#cleartext');
+            $clonedFile = $('#clonedfile');
+            $comments = $('#comments');
+            $discussion = $('#discussion');
+            $errorMessage = $('#errormessage');
+            $image = $('#image');
+            $pasteResult = $('#pasteresult');
+            // $pasteUrl is saved in sendDataContinue() if/after it is
+            // actually created
+            $prettyMessage = $('#prettymessage');
+            $prettyPrint = $('#prettyprint');
+            $preview = $('#preview');
+            $remainingTime = $('#remainingtime');
+
+            // bind events
+            $('.reloadlink').click(me.reloadPage);
+
+            // bootstrap template drop downs
+            $('ul.dropdown-menu li a', $('#expiration').parent()).click(me.setExpiration);
+            $('ul.dropdown-menu li a', $('#formatter').parent()).click(me.setFormat);
+
+            $(window).on('popstate', me.historyChange);
+        };
+
+        return me;
+    })(window, document);
+
+    /**
+     * UI state manager
+     *
+     * @param  {object} window
+     * @param  {object} document
+     * @class
+     */
+    var state = (function (window, document) {
+        var me = {};
+
+        /**
+         * put the screen in "New paste" mode
+         *
+         * @name   controller.stateNewPaste
+         * @function
+         */
+        me.stateNewPaste = function()
+        {
+            $remainingTime.removeClass('hidden');
+
+            $loadingIndicator.addClass('hidden');
+            console.error('stateNewPaste is depreciated');
+        };
+
+        /**
+         * put the screen in mode after submitting a paste
+         *
+         * @name   controller.stateSubmittingPaste
+         * @function
+         */
+        me.stateSubmittingPaste = function()
+        {
+            console.error('stateSubmittingPaste is depreciated');
+        };
+
+        /**
+         * put the screen in a state where the only option is to submit a
+         * new paste
+         *
+         * @name   controller.stateOnlyNewPaste
+         * @function
+         */
+        me.stateOnlyNewPaste = function()
+        {
+            console.error('stateOnlyNewPaste is depreciated');
+        };
+
+        /**
+         * put the screen in "Existing paste" mode
+         *
+         * @name   controller.stateExistingPaste
+         * @function
+         * @param  {boolean} [preview=false] - (optional) tell if the preview tabs should be displayed, defaults to false
+         */
+        me.stateExistingPaste = function(preview)
+        {
+            preview = preview || false;
+            console.error('stateExistingPaste is depreciated');
+
+            if (!preview)
+            {
+                // no "clone" for IE<10.
+                if ($('#oldienotice').is(":visible"))
+                {
+                    $cloneButton.addClass('hidden');
+                }
+                else
+                {
+                    $cloneButton.removeClass('hidden');
+                }
+
+                console.log('show no preview');
+            }
+        };
+
+        return me;
+    })(window, document);
+
+    /**
+     * UI status/error manager
+     *
+     * @param  {object} window
+     * @param  {object} document
+     * @class
+     */
+    var status = (function (window, document) {
+        var me = {};
+
+        var $errorMessage,
+            $status,
+            $loadingIndicator;
+
+        /**
+         * display a status message
+         *
+         * @name   controller.showStatus
+         * @function
+         * @param  {string} message - text to display
+         * @param  {boolean} [spin=false] - (optional) tell if the "spinning" animation should be displayed, defaults to false
+         */
+        me.showStatus = function(message, spin)
+        {
+            // spin is ignored for now
+            $status.text(message);
+        };
+
+        // @TODO: add showLoading()
+
+        /**
+         * display a status message for replying to comments
+         *
+         * @name   controller.showStatus
+         * @function
+         * @param  {string} message - text to display
+         * @param  {boolean} [spin=false] - (optional) tell if the "spinning" animation should be displayed, defaults to false
+         */
+        me.showReplyStatus = function(message, spin)
+        {
+            if (spin || false) {
+                $replyStatus.find('.spinner').removeClass('hidden')
+            }
+            $replyStatus.text(message);
+        };
+
+        /**
+         * hides any status messages
+         *
+         * @name   controller.hideSTatus
+         * @function
+         */
+        me.hideStatus = function()
+        {
+            $status.html(' ');
+        };
+
+        /**
+         * display an error message
+         *
+         * @name   controller.showError
+         * @function
+         * @param  {string} message - text to display
+         */
+        me.showError = function(message)
+        {
+            $errorMessage.removeClass('hidden');
+            me.appendMessage($errorMessage, message);
+        };
+
+        /**
+         * display an error message
+         *
+         * @name   controller.showError
+         * @function
+         * @param  {string} message - text to display
+         */
+        me.showReplyError = function(message)
+        {
+            $replyStatus.addClass('alert-danger');
+            $replyStatus.addClass($errorMessage.attr('class')); // @TODO ????
+
+            $replyStatus.text(message);
+        };
+
+        /**
+         * init status manager
+         *
+         * preloads jQuery elements
+         *
+         * @name   controller.init
+         * @function
+         */
+        me.init = function()
+        {
+            // hide "no javascript" message
+            $('#noscript').hide();
+
+            $loadingIndicator = $('#loadingindicator'); // TODO: integrate $loadingIndicator into this module or leave it in state and remove it here
+            $errorMessage = $('#errormessage');
+            $status = $('#status');
+            // @TODO $replyStatus …
+
+            // display status returned by php code, if any (eg. paste was properly deleted)
+            // @TODO remove this by handling errors in a different way
+            if ($status.text().length > 0)
+            {
+                me.showStatus($status.text());
+                return;
+            }
+
+            // keep line height even if content empty
+            $status.html(' '); // @TODO what? remove?
+        };
+
+        return me;
+    })(window, document);
+
+    /**
+     * Passwort modal manager
+     *
+     * @param  {object} window
+     * @param  {object} document
+     * @name modal
+     * @class
+     */
+    var modal = (function (window, document) {
+        var me = {};
+
+        var $password,
+            $passwordInput,
+            $passwordModal,
+            $passwordForm,
+            $passwordDecrypt;
+
+        /**
+         * ask the user for the password and set it
+         *
+         * @name   controller.requestPassword
+         * @function
+         */
+        me.requestPassword = function()
+        {
+            if ($passwordModal.length === 0) {
+                var password = prompt(i18n._('Please enter the password for this paste:'), '');
+                if (password === null)
+                {
+                    throw 'password prompt canceled';
+                }
+                if (password.length === 0)
+                {
+                    // recursive…
+                    me.requestPassword();
+                } else {
+                    $passwordInput.val(password);
+                    me.displayMessages();
+                }
+            } else {
+                $passwordModal.modal();
+            }
+        };
+
+        /**
+         * decrypt using the password from the modal dialog
+         *
+         * @name   controller.decryptPasswordModal
+         * @function
+         */
+        me.decryptPasswordModal = function()
+        {
+            $passwordInput.val($passwordDecrypt.val());
+            me.displayMessages();
+        };
+
+        /**
+         * submit a password in the modal dialog
+         *
+         * @name   controller.submitPasswordModal
+         * @function
+         * @param  {Event} event
+         */
+        me.submitPasswordModal = function(event)
+        {
+            event.preventDefault();
+            $passwordModal.modal('hide');
+        };
+
+
+        /**
+         * init status manager
+         *
+         * preloads jQuery elements
+         *
+         * @name   controller.init
+         * @function
+         */
+        me.init = function()
+        {
+            $password = $('#password');
+            $passwordInput = $('#passwordinput');
+            $passwordModal = $('#passwordmodal');
+            $passwordForm = $('#passwordform');
+            $passwordDecrypt = $('#passworddecrypt');
+
+            // bind events
+
+            // focus password input when it is shown
+            $passwordModal.on('shown.bs.modal', function () {
+                $passwordDecrypt.focus();
+            });
+            // handle modal password request on decryption
+            $passwordModal.on('hidden.bs.modal', me.decryptPasswordModal);
+            $passwordForm.submit(me.submitPasswordModal);
+        };
+
+        return me;
+    })(window, document);
+
+    /**
+     * Manage paste/message input
+     *
+     * @param  {object} window
+     * @param  {object} document
+     * @class
+     */
+    var editor = (function (window, document) {
+        var me = {};
+
+        var $message,
+            $messageEdit,
+            $messagePreview;
+
+        /**
+         * support input of tab character
+         *
+         * @name   editor.supportTabs
+         * @function
+         * @param  {Event} event
+         * @TODO doc what is @this here?
+         * @TODO replace this with $message ??
+         */
+        function supportTabs(event)
+        {
+            var keyCode = event.keyCode || event.which;
+            // tab was pressed
+            if (keyCode === 9)
+            {
+                // prevent the textarea to lose focus
+                event.preventDefault();
+                // get caret position & selection
+                var val   = this.value,
+                    start = this.selectionStart,
+                    end   = this.selectionEnd;
+                // set textarea value to: text before caret + tab + text after caret
+                this.value = val.substring(0, start) + '\t' + val.substring(end);
+                // put caret at right position again
+                this.selectionStart = this.selectionEnd = start + 1;
+            }
+        }
+
+        /**
+         * view the editor tab
+         *
+         * @name   editor.viewEditor
+         * @function
+         * @param  {Event} event
+         */
+        function viewEditor(event)
+        {
+            $messagePreview.parent().removeClass('active');
+            $messageEdit.parent().addClass('active');
+            $message.focus();
+            me.stateNewPaste();
+
+            event.preventDefault();
+        }
+
+        /**
+         * view the preview tab
+         *
+         * @name   editor.viewPreview
+         * @function
+         * @param  {Event} event
+         */
+        function viewPreview(event)
+        {
+            $messageEdit.parent().removeClass('active');
+            $messagePreview.parent().addClass('active');
+            $message.focus();
+            me.stateExistingPaste(true);
+            me.formatPaste($('#pasteFormatter').val(), $message.val());
+
+            event.preventDefault();
+        }
+
+        /**
+         * reset the editor view
+         *
+         * @name   editor.reset
+         * @function
+         */
+        me.reset = function()
+        {
+            // clear content
+            $message.text('');
+        };
+
+        /**
+         * shows the editor
+         *
+         * @name   editor.show
+         * @function
+         */
+        me.show = function()
+        {
+            $attachment.removeClass('hidden');
+            $clearText.removeClass('hidden');
+            $discussion.removeClass('hidden');
+            $pasteResult.removeClass('hidden'); //??
+            // $prettyMessage.removeClass('hidden');
+            $remainingTime.removeClass('hidden');
+        };
+
+        /**
+         * hides the editor
+         *
+         * @name   editor.reset
+         * @function
+         */
+        me.hide = function()
+        {
+            $attachment.addClass('hidden');
+            $clearText.addClass('hidden');
+            $discussion.addClass('hidden');
+            $pasteResult.addClass('hidden');
+            $prettyMessage.addClass('hidden');
+            $remainingTime.addClass('hidden');
+        };
+
+        /**
+         * focuses the message input
+         *
+         * @name   editor.focus
+         * @function
+         */
+        me.focus = function()
+        {
+            $message.focus();
+        };
+
+        /**
+         * init status manager
+         *
+         * preloads jQuery elements
+         *
+         * @name   editor.init
+         * @function
+         */
+        me.init = function()
+        {
+            $message = $('#message');
+            $messageEdit = $('#messageedit');
+            $messagePreview = $('#messagepreview');
+
+            // bind events
+            $message.keydown(supportTabs);
+            $messageEdit.click(viewEditor);
+            $messagePreview.click(viewPreview);
+        };
+
+        return me;
+    })(window, document);
+
+    /**
+     * Manage top (navigation) bar
+     *
+     * @param  {object} window
+     * @param  {object} document
+     * @name state
+     * @class
+     */
+    var topNav = (function (window, document) {
+        var me = {};
+
+        var $attach,
+            $attachment,
+            $attachmentLink,
+            $burnAfterReading,
+            $burnAfterReadingOption,
+            $cloneButton,
+            $expiration,
+            $fileRemoveButton,
+            $fileWrap,
+            $formatter,
+            $newButton,
+            $openDisc, // @TODO: rename - too similar to openDiscussion, difference unclear
+            $openDiscussion,
+            $rawTextButton,
+            $sendButton;
+
+        /**
+         * set the expiration on bootstrap templates
+         *
+         * @name   topNav.setExpiration
+         * @function
+         * @param  {Event} event
+         */
+        function setExpiration(event)
+        {
+            event.preventDefault();
+            var target = $(event.target);
+            $('#pasteExpiration').val(target.data('expiration'));
+            $('#pasteExpirationDisplay').text(target.text());
+        }
+
+        /**
+         * set the format on bootstrap templates
+         *
+         * @name   topNav.setFormat
+         * @function
+         * @param  {Event} event
+         */
+        me.setFormat = function(event)
+        {
+            var target = $(event.target);
+            $('#pasteFormatter').val(target.data('format'));
+            $('#pasteFormatterDisplay').text(target.text());
+
+            if ($messagePreview.parent().hasClass('active')) {
+                me.viewPreview(event);
+            }
+            event.preventDefault();
+        };
+
+        /**
+         * when "burn after reading" is checked, disable discussion
+         *
+         * @name   topNav.changeBurnAfterReading
+         * @function
+         */
+        function changeBurnAfterReading()
+        {
+            if ($burnAfterReading.is(':checked') )
+            {
+                $openDisc.addClass('buttondisabled');
+                $openDiscussion.attr({checked: false, disabled: true});
+            }
+            else
+            {
+                $openDisc.removeClass('buttondisabled');
+                $openDiscussion.removeAttr('disabled');
+            }
+        }
+
+        /**
+         * when discussion is checked, disable "burn after reading"
+         *
+         * @name   topNav.changeOpenDisc
+         * @function
+         */
+        function changeOpenDisc()
+        {
+            if ($openDiscussion.is(':checked') )
+            {
+                $burnAfterReadingOption.addClass('buttondisabled');
+                $burnAfterReading.attr({checked: false, disabled: true});
+            }
+            else
+            {
+                $burnAfterReadingOption.removeClass('buttondisabled');
+                $burnAfterReading.removeAttr('disabled');
+            }
+        }
+
+        /**
+         * return raw text
+         *
+         * @name   topNav.rawText
+         * @function
+         * @param  {Event} event
+         */
+        function rawText(event)
+        {
+            var paste = $('#pasteFormatter').val() === 'markdown' ?
+                $prettyPrint.text() : $clearText.text();
+            history.pushState(
+                null, document.title, helper.scriptLocation() + '?' +
+                helper.pasteId() + '#' + helper.pageKey()
+            );
+            // we use text/html instead of text/plain to avoid a bug when
+            // reloading the raw text view (it reverts to type text/html)
+            var newDoc = document.open('text/html', 'replace');
+            newDoc.write('<pre>' + helper.htmlEntities(paste) + '</pre>');
+            newDoc.close();
+
+            event.preventDefault();
+        }
+
+        /**
+         * set the language in a cookie and reload the page
+         *
+         * @name   topNav.setLanguage
+         * @function
+         * @param  {Event} event
+         */
+        function setLanguage(event)
+        {
+            document.cookie = 'lang=' + $(event.target).data('lang');
+            me.reloadPage(event);
+        }
+
+        /**
+         * removes an attachment
+         *
+         * @name   controller.removeAttachment
+         * @function
+         */
+        me.removeAttachment = function()
+        {
+            $clonedFile.addClass('hidden');
+            // removes the saved decrypted file data
+            $attachmentLink.attr('href', '');
+            // the only way to deselect the file is to recreate the input // @TODO really?
+            $fileWrap.html($fileWrap.html());
+            $fileWrap.removeClass('hidden');
+        };
+
+        /**
+         * Shows all elements belonging to viwing an existing pastes
+         *
+         * @name   topNav.hideAllElem
+         * @function
+         */
+        me.showViewButtons = function()
+        {
+            $cloneButton.removeClass('hidden');
+            $rawTextButton.removeClass('hidden');
+        };
+
+        /**
+         * Hides all elements belonging to existing pastes
+         *
+         * @name   topNav.hideAllElem
+         * @function
+         */
+        me.hideViewButtons = function()
+        {
+            $cloneButton.addClass('hidden');
+            $rawTextButton.addClass('hidden');
+        };
+
+        /**
+         * shows all elements needed when creating a new paste
+         *
+         * @name   topNav.setLanguage
+         * @function
+         */
+        me.showCreateButtons = function()
+        {
+            $sendButton.removeClass('hidden');
+            $expiration.removeClass('hidden');
+            $formatter.removeClass('hidden');
+            $burnAfterReadingOption.removeClass('hidden');
+            $openDisc.removeClass('hidden');
+            $newButton.removeClass('hidden');
+            $password.removeClass('hidden');
+            $attach.removeClass('hidden');
+            $message.removeClass('hidden');
+            $preview.removeClass('hidden');
+        };
+
+        /**
+         * shows all elements needed when creating a new paste
+         *
+         * @name   topNav.setLanguage
+         * @function
+         */
+        me.hideCreateButtons = function()
+        {
+            $sendButton.addClass('hidden');
+            $expiration.addClass('hidden');
+            $formatter.addClass('hidden');
+            $burnAfterReadingOption.addClass('hidden');
+            $openDisc.addClass('hidden');
+            $newButton.addClass('hidden');
+            $password.addClass('hidden');
+            $attach.addClass('hidden');
+            $message.addClass('hidden');
+            $preview.addClass('hidden');
+        };
+
+        /**
+         * only shows the "new paste" button
+         *
+         * @name   topNav.setLanguage
+         * @function
+         */
+        me.showNewPasteButton = function()
+        {
+            $newButton.addClass('hidden');
+        };
+
+        /**
+         * shows a loading message, optionally with a percentage
+         *
+         * @name   topNav.showLoading
+         * @function
+         * @param  {string} message
+         * @param  {int}    percentage
+         */
+        me.showLoading = function(message, percentage)
+        {
+            // currently parameters are ignored
+            $loadingIndicator.removeClass('hidden');
+        };
+
+        /**
+         * hides the loading message
+         *
+         * @name   topNav.hideLoading
+         * @function
+         */
+        me.hideLoading = function()
+        {
+            $loadingIndicator.removeClass('hidden');
+        };
+
+        /**
+         * init navigation manager
+         *
+         * preloads jQuery elements
+         *
+         * @name   topNav.init
+         * @function
+         */
+        me.init = function()
+        {
+            $attach = $('#attach');
+            $attachment = $('#attachment');
+            $attachmentLink = $('#attachment a');
+            $burnAfterReading = $('#burnafterreading');
+            $burnAfterReadingOption = $('#burnafterreadingoption');
+            $cloneButton = $('#clonebutton');
+            $expiration = $('#expiration');
+            $fileRemoveButton = $('#fileremovebutton');
+            $fileWrap = $('#filewrap');
+            $formatter = $('#formatter');
+            $newButton = $('#newbutton');
+            $openDisc = $('#opendisc');
+            $openDiscussion = $('#opendiscussion');
+            $rawTextButton = $('#rawtextbutton');
+            $sendButton = $('#sendbutton');
+
+            // bootstrap template drop down
+            $('#language ul.dropdown-menu li a').click(me.setLanguage);
+            // page template drop down
+            $('#language select option').click(me.setLanguage);
+
+            // bind events
+            $burnAfterReading.change(changeBurnAfterReading);
+            $openDisc.change(changeOpenDisc);
+            $sendButton.click(controller.sendData);
+            $cloneButton.click(controller.clonePaste);
+            $rawTextButton.click(me.rawText);
+            $fileRemoveButton.click(me.removeAttachment);
+
+            // initiate default state of checkboxes
+            changeBurnAfterReading();
+            changeOpenDisc();
+        };
+
+        return me;
+    })(window, document);
+
+    /**
+     * PrivateBin logic
+     *
+     * @param  {object} window
+     * @param  {object} document
+     * @name controller
+     * @class
+     */
+    var controller = (function (window, document) {
+        var me = {};
+
+        /**
+         * headers to send in AJAX requests
+         *
+         * @private
+         * @enum   {Object}
+         */
+        var headers = {'X-Requested-With': 'JSONHttpRequest'};
+
+        /**
+         * URL shortners create address
+         *
+         * @private
+         * @prop   {string}
+         */
+        var shortenerUrl = '';
+
+        /**
+         * URL of newly created paste
+         *
+         * @private
+         * @prop   {string}
+         */
+        var createdPasteUrl = '';
 
         /**
          * send a reply in a discussion
@@ -1052,12 +1839,12 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             me.showStatus(i18n._('Sending comment...'), true);
             var parentid = event.data.parentid,
                 key = helper.pageKey(),
-                cipherdata = filter.cipher(key, $passwordInput.val(), replyMessage.val()),
+                cipherdata = cryptToolcipher(key, $passwordInput.val(), replyMessage.val()),
                 ciphernickname = '',
                 nick = $('#nickname').val();
             if (nick.length > 0)
             {
-                ciphernickname = filter.cipher(key, $passwordInput.val(), nick);
+                ciphernickname = cryptToolcipher(key, $passwordInput.val(), nick);
             }
             var data_to_send = {
                 data:     cipherdata,
@@ -1170,8 +1957,8 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                     return function(e) {
                         controller.sendDataContinue(
                             randomkey,
-                            filter.cipher(randomkey, password, e.target.result),
-                            filter.cipher(randomkey, password, theFile.name)
+                            cryptToolcipher(randomkey, password, e.target.result),
+                            cryptToolcipher(randomkey, password, theFile.name)
                         );
                     };
                 })(files[0]);
@@ -1181,7 +1968,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             {
                 me.sendDataContinue(
                     randomkey,
-                    filter.cipher(randomkey, password, $attachmentLink.attr('href')),
+                    cryptToolcipher(randomkey, password, $attachmentLink.attr('href')),
                     $attachmentLink.attr('download')
                 );
             }
@@ -1202,7 +1989,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          */
         me.sendDataContinue = function(randomkey, cipherdata_attachment, cipherdata_attachment_name)
         {
-            var cipherdata = filter.cipher(randomkey, $passwordInput.val(), $message.val()),
+            var cipherdata = cryptToolcipher(randomkey, $passwordInput.val(), $message.val()),
                 data_to_send = {
                     data:             cipherdata,
                     expire:           $('#pasteExpiration').val(),
@@ -1230,7 +2017,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                         me.stateExistingPaste();
                         var url = helper.scriptLocation() + '?' + data.id + '#' + randomkey,
                             deleteUrl = helper.scriptLocation() + '?pasteid=' + data.id + '&deletetoken=' + data.deletetoken;
-                        me.showStatus('');
+                        me.hideStatus();
                         $errorMessage.addClass('hidden');
                         // show new URL in browser bar
                         history.pushState({type: 'newpaste'}, document.title, url);
@@ -1254,7 +2041,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                         $pasteResult.removeClass('hidden');
                         // we pre-select the link so that the user only has to [Ctrl]+[c] the link
                         helper.selectText($pasteUrl[0]);
-                        me.showStatus('');
+                        me.hideStatus();
                         me.formatPaste(data_to_send.formatter, $message.val());
                     }
                     else if (data.status === 1)
@@ -1299,181 +2086,6 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         };
 
         /**
-         * put the screen in "New paste" mode
-         *
-         * @name   controller.stateNewPaste
-         * @function
-         */
-        me.stateNewPaste = function()
-        {
-            $message.text('');
-            $attachment.addClass('hidden');
-            $cloneButton.addClass('hidden');
-            $rawTextButton.addClass('hidden');
-            $remainingTime.addClass('hidden');
-            $pasteResult.addClass('hidden');
-            $clearText.addClass('hidden');
-            $discussion.addClass('hidden');
-            $prettyMessage.addClass('hidden');
-            $loadingIndicator.addClass('hidden');
-            $sendButton.removeClass('hidden');
-            $expiration.removeClass('hidden');
-            $formatter.removeClass('hidden');
-            $burnAfterReadingOption.removeClass('hidden');
-            $openDisc.removeClass('hidden');
-            $newButton.removeClass('hidden');
-            $password.removeClass('hidden');
-            $attach.removeClass('hidden');
-            $message.removeClass('hidden');
-            $preview.removeClass('hidden');
-            $message.focus();
-        };
-
-        /**
-         * put the screen in mode after submitting a paste
-         *
-         * @name   controller.stateSubmittingPaste
-         * @function
-         */
-        me.stateSubmittingPaste = function()
-        {
-            $message.text('');
-            $attachment.addClass('hidden');
-            $cloneButton.addClass('hidden');
-            $rawTextButton.addClass('hidden');
-            $remainingTime.addClass('hidden');
-            $pasteResult.addClass('hidden');
-            $clearText.addClass('hidden');
-            $discussion.addClass('hidden');
-            $prettyMessage.addClass('hidden');
-            $sendButton.addClass('hidden');
-            $expiration.addClass('hidden');
-            $formatter.addClass('hidden');
-            $burnAfterReadingOption.addClass('hidden');
-            $openDisc.addClass('hidden');
-            $newButton.addClass('hidden');
-            $password.addClass('hidden');
-            $attach.addClass('hidden');
-            $message.addClass('hidden');
-            $preview.addClass('hidden');
-
-            $loadingIndicator.removeClass('hidden');
-        };
-
-        /**
-         * put the screen in a state where the only option is to submit a
-         * new paste
-         *
-         * @name   controller.stateOnlyNewPaste
-         * @function
-         */
-        me.stateOnlyNewPaste = function()
-        {
-            $message.text('');
-            $attachment.addClass('hidden');
-            $cloneButton.addClass('hidden');
-            $rawTextButton.addClass('hidden');
-            $remainingTime.addClass('hidden');
-            $pasteResult.addClass('hidden');
-            $clearText.addClass('hidden');
-            $discussion.addClass('hidden');
-            $prettyMessage.addClass('hidden');
-            $sendButton.addClass('hidden');
-            $expiration.addClass('hidden');
-            $formatter.addClass('hidden');
-            $burnAfterReadingOption.addClass('hidden');
-            $openDisc.addClass('hidden');
-            $password.addClass('hidden');
-            $attach.addClass('hidden');
-            $message.addClass('hidden');
-            $preview.addClass('hidden');
-            $loadingIndicator.addClass('hidden');
-
-            $newButton.removeClass('hidden');
-        };
-
-        /**
-         * put the screen in "Existing paste" mode
-         *
-         * @name   controller.stateExistingPaste
-         * @function
-         * @param  {boolean} [preview=false] - (optional) tell if the preview tabs should be displayed, defaults to false
-         */
-        me.stateExistingPaste = function(preview)
-        {
-            preview = preview || false;
-
-            if (!preview)
-            {
-                // no "clone" for IE<10.
-                if ($('#oldienotice').is(":visible"))
-                {
-                    $cloneButton.addClass('hidden');
-                }
-                else
-                {
-                    $cloneButton.removeClass('hidden');
-                }
-
-                $rawTextButton.removeClass('hidden');
-                $sendButton.addClass('hidden');
-                $attach.addClass('hidden');
-                $expiration.addClass('hidden');
-                $formatter.addClass('hidden');
-                $burnAfterReadingOption.addClass('hidden');
-                $openDisc.addClass('hidden');
-                $newButton.removeClass('hidden');
-                $preview.addClass('hidden');
-            }
-
-            $pasteResult.addClass('hidden');
-            $message.addClass('hidden');
-            $clearText.addClass('hidden');
-            $prettyMessage.addClass('hidden');
-            $loadingIndicator.addClass('hidden');
-        };
-
-        /**
-         * when "burn after reading" is checked, disable discussion
-         *
-         * @name   controller.changeBurnAfterReading
-         * @function
-         */
-        me.changeBurnAfterReading = function()
-        {
-            if ($burnAfterReading.is(':checked') )
-            {
-                $openDisc.addClass('buttondisabled');
-                $openDiscussion.attr({checked: false, disabled: true});
-            }
-            else
-            {
-                $openDisc.removeClass('buttondisabled');
-                $openDiscussion.removeAttr('disabled');
-            }
-        };
-
-        /**
-         * when discussion is checked, disable "burn after reading"
-         *
-         * @name   controller.changeOpenDisc
-         * @function
-         */
-        me.changeOpenDisc = function()
-        {
-            if ($openDiscussion.is(':checked') )
-            {
-                $burnAfterReadingOption.addClass('buttondisabled');
-                $burnAfterReading.attr({checked: false, disabled: true});
-            }
-            else
-            {
-                $burnAfterReadingOption.removeClass('buttondisabled');
-                $burnAfterReading.removeAttr('disabled');
-            }
-        };
-
-        /**
          * forward to URL shortener
          *
          * @name   controller.sendToShortener
@@ -1487,45 +2099,6 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         };
 
         /**
-         * reload the page
-         *
-         * This takes the user to the PrivateBin home page.
-         *
-         * @name   controller.reloadPage
-         * @function
-         * @param  {Event} event
-         */
-        me.reloadPage = function(event)
-        {
-            window.location.href = helper.scriptLocation();
-            event.preventDefault();
-        };
-
-        /**
-         * return raw text
-         *
-         * @name   controller.rawText
-         * @function
-         * @param  {Event} event
-         */
-        me.rawText = function(event)
-        {
-            var paste = $('#pasteFormatter').val() === 'markdown' ?
-                $prettyPrint.text() : $clearText.text();
-            history.pushState(
-                null, document.title, helper.scriptLocation() + '?' +
-                helper.pasteId() + '#' + helper.pageKey()
-            );
-            // we use text/html instead of text/plain to avoid a bug when
-            // reloading the raw text view (it reverts to type text/html)
-            var newDoc = document.open('text/html', 'replace');
-            newDoc.write('<pre>' + helper.htmlEntities(paste) + '</pre>');
-            newDoc.close();
-
-            event.preventDefault();
-        };
-
-        /**
          * clone the current paste
          *
          * @name   controller.clonePaste
@@ -1534,13 +2107,12 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          */
         me.clonePaste = function(event)
         {
-            event.preventDefault();
             me.stateNewPaste();
 
             // erase the id and the key in url
             history.replaceState(null, document.title, helper.scriptLocation());
 
-            me.showStatus('');
+            status.hideStatus();
             if ($attachmentLink.attr('href'))
             {
                 $clonedFile.removeClass('hidden');
@@ -1551,155 +2123,8 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                     $prettyPrint.text() : $clearText.text()
             );
             $('.navbar-toggle').click();
-        };
-
-        /**
-         * set the expiration on bootstrap templates
-         *
-         * @name   controller.setExpiration
-         * @function
-         * @param  {Event} event
-         */
-        me.setExpiration = function(event)
-        {
-            event.preventDefault();
-            var target = $(event.target);
-            $('#pasteExpiration').val(target.data('expiration'));
-            $('#pasteExpirationDisplay').text(target.text());
-        };
-
-        /**
-         * set the format on bootstrap templates
-         *
-         * @name   controller.setFormat
-         * @function
-         * @param  {Event} event
-         */
-        me.setFormat = function(event)
-        {
-            var target = $(event.target);
-            $('#pasteFormatter').val(target.data('format'));
-            $('#pasteFormatterDisplay').text(target.text());
-
-            if ($messagePreview.parent().hasClass('active')) {
-                me.viewPreview(event);
-            }
-            event.preventDefault();
-        };
-
-        /**
-         * set the language in a cookie and reload the page
-         *
-         * @name   controller.setLanguage
-         * @function
-         * @param  {Event} event
-         */
-        me.setLanguage = function(event)
-        {
-            document.cookie = 'lang=' + $(event.target).data('lang');
-            me.reloadPage(event);
-        };
-
-        /**
-         * support input of tab character
-         *
-         * @name   controller.supportTabs
-         * @function
-         * @param  {Event} event
-         * @TODO doc what is @this here?
-         */
-        me.supportTabs = function(event)
-        {
-            var keyCode = event.keyCode || event.which;
-            // tab was pressed
-            if (keyCode === 9)
-            {
-                // prevent the textarea to lose focus
-                event.preventDefault();
-                // get caret position & selection
-                var val   = this.value,
-                    start = this.selectionStart,
-                    end   = this.selectionEnd;
-                // set textarea value to: text before caret + tab + text after caret
-                this.value = val.substring(0, start) + '\t' + val.substring(end);
-                // put caret at right position again
-                this.selectionStart = this.selectionEnd = start + 1;
-            }
-        };
-
-        /**
-         * view the editor tab
-         *
-         * @name   controller.viewEditor
-         * @function
-         * @param  {Event} event
-         */
-        me.viewEditor = function(event)
-        {
-            $messagePreview.parent().removeClass('active');
-            $messageEdit.parent().addClass('active');
-            $message.focus();
-            me.stateNewPaste();
 
             event.preventDefault();
-        };
-
-        /**
-         * view the preview tab
-         *
-         * @name   controller.viewPreview
-         * @function
-         * @param  {Event} event
-         */
-        me.viewPreview = function(event)
-        {
-            $messageEdit.parent().removeClass('active');
-            $messagePreview.parent().addClass('active');
-            $message.focus();
-            me.stateExistingPaste(true);
-            me.formatPaste($('#pasteFormatter').val(), $message.val());
-
-            event.preventDefault();
-        };
-
-        /**
-         * handle history (pop) state changes
-         *
-         * currently this does only handle redirects to the home page.
-         *
-         * @name   controller.historyChange
-         * @function
-         * @param  {Event} event
-         */
-        me.historyChange = function(event)
-        {
-            var currentLocation = helper.scriptLocation();
-            if (event.originalEvent.state === null && // no state object passed
-                event.originalEvent.target.location.href === currentLocation && // target location is home page
-                window.location.href === currentLocation // and we are not already on the home page
-            ) {
-                // redirect to home page
-                window.location.href = currentLocation;
-            }
-        };
-
-        /**
-         * Forces opening the paste if the link does not do this automatically.
-         *
-         * This is necessary as browsers will not reload the page when it is
-         * already loaded (which is fake as it is set via history.pushState()).
-         *
-         * @name   controller.pasteLinkClick
-         * @function
-         * @param  {Event} event
-         */
-        me.pasteLinkClick = function(event)
-        {
-            // check if location is (already) shown in URL bar
-            if (window.location.href === $pasteUrl.attr('href')) {
-                // if so we need to load link by reloading the current site
-                window.location.reload(true);
-            }
         };
 
         /**
@@ -1711,222 +2136,23 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         me.newPaste = function()
         {
             me.stateNewPaste();
-            me.showStatus('');
+            me.hideStatus();
             $message.text('');
-            me.changeBurnAfterReading();
-            me.changeOpenDisc();
         };
 
         /**
-         * removes an attachment
-         *
-         * @name   controller.removeAttachment
-         * @function
-         */
-        me.removeAttachment = function()
-        {
-            $clonedFile.addClass('hidden');
-            // removes the saved decrypted file data
-            $attachmentLink.attr('href', '');
-            // the only way to deselect the file is to recreate the input // @TODO really?
-            $fileWrap.html($fileWrap.html());
-            $fileWrap.removeClass('hidden');
-        };
-
-        /**
-         * decrypt using the password from the modal dialog
-         *
-         * @name   controller.decryptPasswordModal
-         * @function
-         */
-        me.decryptPasswordModal = function()
-        {
-            $passwordInput.val($passwordDecrypt.val());
-            me.displayMessages();
-        };
-
-        /**
-         * submit a password in the modal dialog
-         *
-         * @name   controller.submitPasswordModal
-         * @function
-         * @param  {Event} event
-         */
-        me.submitPasswordModal = function(event)
-        {
-            event.preventDefault();
-            $passwordModal.modal('hide');
-        };
-
-        /**
-         * display an error message,
-         * we use the same function for paste and reply to comments
-         *
-         * @name   controller.showError
-         * @function
-         * @param  {string} message - text to display
-         */
-        me.showError = function(message)
-        {
-            if ($status.length)
-            {
-                $status.addClass('errorMessage').text(message);
-            }
-            else
-            {
-                $errorMessage.removeClass('hidden');
-                helper.setMessage($errorMessage, message);
-            }
-            if (typeof $replyStatus !== 'undefined') {
-                $replyStatus.addClass('errorMessage');
-                $replyStatus.addClass($errorMessage.attr('class'));
-                if ($status.length)
-                {
-                    $replyStatus.html($status.html());
-                }
-                else
-                {
-                    $replyStatus.html($errorMessage.html());
-                }
-            }
-        };
-
-        /**
-         * display a status message,
-         * we use the same function for paste and reply to comments
-         *
-         * @name   controller.showStatus
-         * @function
-         * @param  {string} message - text to display
-         * @param  {boolean} [spin=false] - (optional) tell if the "spinning" animation should be displayed, defaults to false
-         */
-        me.showStatus = function(message, spin)
-        {
-            if (spin || false)
-            {
-                var img = '<img src="img/busy.gif" style="width:16px;height:9px;margin:0 4px 0 0;" />';
-                $status.prepend(img);
-                if (typeof $replyStatus !== 'undefined') {
-                    $replyStatus.prepend(img);
-                }
-            }
-            if (typeof $replyStatus !== 'undefined') {
-                $replyStatus.removeClass('errorMessage').text(message);
-            }
-            if (!message)
-            {
-                $status.html(' ');
-                return;
-            }
-            if (message === '')
-            {
-                $status.html(' ');
-                return;
-            }
-            $status.removeClass('errorMessage').text(message);
-        };
-
-        /**
-         * bind events to DOM elements
-         *
-         * @private
-         * @function
-         */
-        function bindEvents()
-        {
-            $burnAfterReading.change(me.changeBurnAfterReading);
-            $openDisc.change(me.changeOpenDisc);
-            $sendButton.click(me.sendData);
-            $cloneButton.click(me.clonePaste);
-            $rawTextButton.click(me.rawText);
-            $fileRemoveButton.click(me.removeAttachment);
-            $('.reloadlink').click(me.reloadPage);
-            $message.keydown(me.supportTabs);
-            $messageEdit.click(me.viewEditor);
-            $messagePreview.click(me.viewPreview);
-
-            // bootstrap template drop downs
-            $('ul.dropdown-menu li a', $('#expiration').parent()).click(me.setExpiration);
-            $('ul.dropdown-menu li a', $('#formatter').parent()).click(me.setFormat);
-            $('#language ul.dropdown-menu li a').click(me.setLanguage);
-
-            // page template drop down
-            $('#language select option').click(me.setLanguage);
-
-            // focus password input when it is shown
-            $passwordModal.on('shown.bs.modal', function () {
-                $passwordDecrypt.focus();
-            });
-            // handle modal password request on decryption
-            $passwordModal.on('hidden.bs.modal', me.decryptPasswordModal);
-            $passwordForm.submit(me.submitPasswordModal);
-
-            $(window).on('popstate', me.historyChange);
-        };
-
-        /**
-         * main application
+         * application start
          *
          * @name   controller.init
          * @function
          */
         me.init = function()
         {
-            // hide "no javascript" message
-            $('#noscript').hide();
+            // first load translations
+            i18n.loadTranslations();
 
-            // preload jQuery wrapped DOM elements and bind events
-            $attach = $('#attach');
-            $attachment = $('#attachment');
-            $attachmentLink = $('#attachment a');
-            $burnAfterReading = $('#burnafterreading');
-            $burnAfterReadingOption = $('#burnafterreadingoption');
-            $cipherData = $('#cipherdata');
-            $clearText = $('#cleartext');
-            $cloneButton = $('#clonebutton');
-            $clonedFile = $('#clonedfile');
-            $comments = $('#comments');
-            $discussion = $('#discussion');
-            $errorMessage = $('#errormessage');
-            $expiration = $('#expiration');
-            $fileRemoveButton = $('#fileremovebutton');
-            $fileWrap = $('#filewrap');
-            $formatter = $('#formatter');
-            $image = $('#image');
-            $loadingIndicator = $('#loadingindicator');
-            $message = $('#message');
-            $messageEdit = $('#messageedit');
-            $messagePreview = $('#messagepreview');
-            $newButton = $('#newbutton');
-            $openDisc = $('#opendisc');
-            $openDiscussion = $('#opendiscussion');
-            $password = $('#password');
-            $passwordInput = $('#passwordinput');
-            $passwordModal = $('#passwordmodal');
-            $passwordForm = $('#passwordform');
-            $passwordDecrypt = $('#passworddecrypt');
-            $pasteResult = $('#pasteresult');
-            // $pasteUrl is saved in sendDataContinue() if/after it is
-            // actually created
-            $prettyMessage = $('#prettymessage');
-            $prettyPrint = $('#prettyprint');
-            $preview = $('#preview');
-            $rawTextButton = $('#rawtextbutton');
-            $remainingTime = $('#remainingtime');
-            // $replyStatus is saved in openReply()
-            $sendButton = $('#sendbutton');
-            $status = $('#status');
-            bindEvents();
-
-            // display status returned by php code, if any (eg. paste was properly deleted)
-            if ($status.text().length > 0)
-            {
-                me.showStatus($status.text());
-                return;
-            }
-
-            // keep line height even if content empty
-            $status.html(' ');
+            // init UI @TODO show loading
+            uiMan.init();
 
             // display an existing paste
             if ($cipherData.text().length > 1)
@@ -1959,9 +2185,9 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
 
     /**
      * main application start, called when DOM is fully loaded and
-     * runs controller initalization after translations are loaded
+     * runs controller initalization
      */
-    $(i18n.loadTranslations);
+    $(controller.init);
 
     return {
         helper: helper,

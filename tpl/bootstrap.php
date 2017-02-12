@@ -404,19 +404,14 @@ if ($FILEUPLOAD):
 			</div>
 <?php
 endif;
-if (strlen($STATUS)):
 ?>
-			<div id="status" role="alert" class="alert alert-success">
-				<span class="glyphicon glyphicon-ok" aria-hidden="true"></span> <?php echo htmlspecialchars($STATUS), PHP_EOL; ?>
+			<div id="status" role="alert" class="alert alert-success <?php echo empty($STATUS) ? 'hidden' : '' ?>">
+				<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+				<?php echo htmlspecialchars($STATUS), PHP_EOL; ?>
 			</div>
 <?php
-endif;
 ?>
-			<div id="errormessage" role="alert" class="<?php
-if (!strlen($ERROR)):
-?>hidden <?php
-endif;
-?>alert alert-danger"><span class="glyphicon glyphicon-alert" aria-hidden="true"></span> <?php echo htmlspecialchars($ERROR); ?></div>
+			<div id="errormessage" role="alert" class="<?php echo empty($ERROR) ? 'hidden' : '' ?> alert alert-danger"><span class="glyphicon glyphicon-alert" aria-hidden="true"></span> <?php echo htmlspecialchars($ERROR); ?></div>
 			<noscript><div id="noscript" role="alert" class="nonworking alert alert-<?php echo $isDark ? 'error' : 'warning'; ?>"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> <?php echo I18n::_('JavaScript is required for %s to work.<br />Sorry for the inconvenience.', I18n::_($NAME)); ?></div></noscript>
 			<div id="oldienotice" role="alert" class="hidden nonworking alert alert-danger"><span class="glyphicon glyphicon-alert" aria-hidden="true"></span> <?php echo I18n::_('%s requires a modern browser to work.', I18n::_($NAME)); ?></div>
 			<div id="ienotice" role="alert" class="hidden alert alert-<?php echo $isDark ? 'error' : 'warning'; ?>"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span> <?php echo I18n::_('Still using Internet Explorer? Do yourself a favor, switch to a modern browser:'), PHP_EOL; ?>
@@ -477,5 +472,15 @@ endif;
 			</div>
 		</footer>
 		<div id="cipherdata" class="hidden"><?php echo htmlspecialchars($CIPHERDATA, ENT_NOQUOTES); ?></div>
+
+		<div id="replytemplate" class="reply hidden">
+			<input type="text" id="nickname" class="form-control" title="HINT" placeholder="HINT" />
+			<textarea id="replymessage" class="replymessage form-control" cols="80" rows="7"></textarea>
+			<br />
+			<div id="replystatus">
+				<img class="spinner" src="img/busy.gif" style="width:16px;height:9px;margin:0 4px 0 0;" class="hidden" />
+			</div>
+			<button id="replybutton" class="btn btn-default btn-sm"><?php echo I18n::_('Post comment'); ?></button>
+		</div>
 	</body>
 </html>
