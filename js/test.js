@@ -313,6 +313,33 @@ describe('helper', function () {
         );
     });
 
+    describe('getCookie', function () {
+        jsc.property(
+            'returns the requested cookie',
+            'nearray asciinestring',
+            'nearray asciistring',
+            function (labels, values) {
+                var selectedKey = '', selectedValue = '',
+                    cookieArray = [],
+                    count = 0;
+                labels.forEach(function(item, i) {
+                    var key = item.replace(/[\s;,=]/g, 'x'),
+                        value = (values[i] || values[0]).replace(/[\s;,=]/g, '');
+                    cookieArray.push(key + '=' + value);
+                    if (Math.random() < 1 / i)
+                    {
+                        selectedKey = key;
+                        selectedValue = value;
+                    }
+                });
+                var clean = jsdom('', {cookie: cookieArray}),
+                    result = $.PrivateBin.helper.getCookie(selectedKey);
+                clean();
+                return result === selectedValue;
+            }
+        );
+    });
+
     describe('scriptLocation', function () {
         jsc.property(
             'returns the URL without query & fragment',

@@ -224,7 +224,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          * @see    {@link http://www.w3schools.com/js/js_cookies.asp}
          * @name   helper.getCookie
          * @function
-         * @param  {string} cname
+         * @param  {string} cname - may not be empty
          * @return {string}
          */
         getCookie: function(cname) {
