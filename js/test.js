@@ -243,8 +243,10 @@ describe('helper', function () {
             '(small nearray) string',
             'string',
             function (prefix, params, postfix) {
+                var prefix = prefix.replace(/%(s|d)/g, '%%'),
+                    postfix = postfix.replace(/%(s|d)/g, '%%'),
+                    result = prefix + params[0] + postfix;
                 params.unshift(prefix + '%s' + postfix);
-                var result = prefix + params[1] + postfix;
                 return result === $.PrivateBin.helper.sprintf.apply(this, params) &&
                     result === $.PrivateBin.helper.sprintf(params);
             }
@@ -255,8 +257,10 @@ describe('helper', function () {
             '(small nearray) nat',
             'string',
             function (prefix, params, postfix) {
+                var prefix = prefix.replace(/%(s|d)/g, '%%'),
+                    postfix = postfix.replace(/%(s|d)/g, '%%'),
+                    result = prefix + params[0] + postfix;
                 params.unshift(prefix + '%d' + postfix);
-                var result = prefix + params[1] + postfix;
                 return result === $.PrivateBin.helper.sprintf.apply(this, params) &&
                     result === $.PrivateBin.helper.sprintf(params);
             }
@@ -267,8 +271,10 @@ describe('helper', function () {
             '(small nearray) falsy',
             'string',
             function (prefix, params, postfix) {
+                var prefix = prefix.replace(/%(s|d)/g, '%%'),
+                    postfix = postfix.replace(/%(s|d)/g, '%%'),
+                    result = prefix + '0' + postfix;
                 params.unshift(prefix + '%d' + postfix);
-                var result = prefix + '0' + postfix;
                 return result === $.PrivateBin.helper.sprintf.apply(this, params) &&
                     result === $.PrivateBin.helper.sprintf(params);
             }
@@ -281,7 +287,9 @@ describe('helper', function () {
             'string',
             'string',
             function (prefix, uint, middle, string, postfix) {
-                var params = [prefix + '%d' + middle + '%s' + postfix, uint, string],
+                var prefix = prefix.replace(/%(s|d)/g, '%%'),
+                    postfix = postfix.replace(/%(s|d)/g, '%%'),
+                    params = [prefix + '%d' + middle + '%s' + postfix, uint, string],
                     result = prefix + uint + middle + string + postfix;
                 return result === $.PrivateBin.helper.sprintf.apply(this, params) &&
                     result === $.PrivateBin.helper.sprintf(params);
@@ -295,7 +303,9 @@ describe('helper', function () {
             'string',
             'string',
             function (prefix, uint, middle, string, postfix) {
-                var params = [prefix + '%s' + middle + '%d' + postfix, string, uint],
+                var prefix = prefix.replace(/%(s|d)/g, '%%'),
+                    postfix = postfix.replace(/%(s|d)/g, '%%'),
+                    params = [prefix + '%s' + middle + '%d' + postfix, string, uint],
                     result = prefix + string + middle + uint + postfix;
                 return result === $.PrivateBin.helper.sprintf.apply(this, params) &&
                     result === $.PrivateBin.helper.sprintf(params);
