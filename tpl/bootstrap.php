@@ -122,7 +122,7 @@ endif;
 				<ul class="nav navbar-nav">
 					<li id="loadingindicator" class="navbar-text hidden">
 						<span class="glyphicon glyphicon-upload" aria-hidden="true"></span>
-						<?php echo I18n::_('Uploading paste… Please wait.'), PHP_EOL; ?>
+						<span><?php echo I18n::_('Loading…'), PHP_EOL; ?></span>
 					</li>
 					<li>
 <?php
@@ -384,6 +384,7 @@ endif;
 ?>
 			<div id="remainingtime" role="alert" class="hidden alert alert-info">
 				<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+				<span></span>
 			</div>
 <?php
 if ($FILEUPLOAD):
@@ -398,7 +399,7 @@ endif;
 				<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
 				<?php echo htmlspecialchars($STATUS), PHP_EOL; ?>
 			</div>
-			<div id="errormessage" role="alert" class="<?php echo empty($ERROR) ? 'hidden' : '' ?> alert alert-danger"><span class="glyphicon glyphicon-alert" aria-hidden="true"></span> <?php echo htmlspecialchars($ERROR); ?></div>
+			<div id="errormessage" role="alert" class="<?php echo empty($ERROR) ? 'hidden' : '' ?> alert alert-danger"><span class="glyphicon glyphicon-alert" aria-hidden="true"></span><span><?php echo htmlspecialchars($ERROR); ?></span></div>
 			<noscript><div id="noscript" role="alert" class="nonworking alert alert-<?php echo $isDark ? 'error' : 'warning'; ?>"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> <?php echo I18n::_('JavaScript is required for %s to work.<br />Sorry for the inconvenience.', I18n::_($NAME)); ?></div></noscript>
 			<div id="oldienotice" role="alert" class="hidden nonworking alert alert-danger"><span class="glyphicon glyphicon-alert" aria-hidden="true"></span> <?php echo I18n::_('%s requires a modern browser to work.', I18n::_($NAME)); ?></div>
 			<div id="ienotice" role="alert" class="hidden alert alert-<?php echo $isDark ? 'error' : 'warning'; ?>"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span> <?php echo I18n::_('Still using Internet Explorer? Do yourself a favor, switch to a modern browser:'), PHP_EOL; ?>
@@ -407,10 +408,11 @@ endif;
 				<a href="https://www.google.com/chrome">Chrome</a>,
 				<a href="https://www.apple.com/safari">Safari</a>...
 			</div>
-			<div id="pasteresult" role="alert" class="hidden alert alert-success">
+			<div id="pasteSuccess" role="alert" class="hidden alert alert-success">
 				<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
 				<div id="deletelink"></div>
 				<div id="pastelink">
+					<span></span>
 <?php
 if (strlen($URLSHORTENER)):
 ?>
