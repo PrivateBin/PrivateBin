@@ -361,7 +361,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                 return;
             }
 
-            var fr = new FileReader();
+            var fileReader = new FileReader();
             if (file === undefined) {
                 file = controller.fileInput[0].files[0];
                 $('#dragAndDropFileName').text('');
@@ -371,34 +371,34 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
 
             attachmentHelpers.file = file;
 
-            fr.onload = function (e) {
-                var dataURL = e.target.result;
+            fileReader.onload = function (event) {
+                var dataURL = event.target.result;
                 attachmentHelpers.attachmentData = dataURL;
 
                 if (controller.messagePreview.parent().hasClass('active')) {
                     attachmentHelpers.handleFilePreviews(controller.attachmentPreview, dataURL);
                 }
             };
-            fr.readAsDataURL(file);
+            fileReader.readAsDataURL(file);
         },
 
         /**
          *  Handle the preview of files.
-         *  @argument {DOM Element} element where the preview should be appended.
+         *  @argument {DOM Element} targetElement where the preview should be appended.
          *  @argument {File Data} data of the file to be displayed.
          */
-        handleFilePreviews: function (element, data) {
+        handleFilePreviews: function (targetElement, data) {
             if (data) {
                 var mimeType = this.getMimeTypeFromDataURL(data);
 
                 if (mimeType.match(/image\//i)) {
-                    this.showImagePreview(element, data);
+                    this.showImagePreview(targetElement, data);
                 } else if (mimeType.match(/video\//i)) {
-                    this.showVideoPreview(element, data, mimeType);
+                    this.showVideoPreview(targetElement, data, mimeType);
                 } else if (mimeType.match(/audio\//i)) {
-                    this.showAudioPreview(element, data, mimeType);
+                    this.showAudioPreview(targetElement, data, mimeType);
                 } else if (mimeType.match(/\/pdf/i)) {
-                    this.showPDFPreview(element, data);
+                    this.showPDFPreview(targetElement, data);
                 }
                 //else {
                 //console.log("file but no image/video/audio/pdf");
@@ -416,16 +416,16 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             return dataURL.slice(dataURL.indexOf('data:') + 5, dataURL.indexOf(';base64,'));
         },
 
-        showImagePreview: function (element, image) {
-            element.html(
+        showImagePreview: function (targetElement, image) {
+            targetElement.html(
                     $(document.createElement('img'))
                     .attr('src', image)
                     .attr('class', 'img-thumbnail')
                     );
-            element.removeClass('hidden');
+            targetElement.removeClass('hidden');
         },
 
-        showVideoPreview: function (element, video, mimeType) {
+        showVideoPreview: function (targetElement, video, mimeType) {
             var videoPlayer = $(document.createElement('video'))
                     .attr('controls', 'true')
                     .attr('autoplay', 'true')
@@ -435,11 +435,11 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             videoPlayer.append($(document.createElement('source'))
                     .attr('type', mimeType)
                     .attr('src', video));
-            element.html(videoPlayer);
-            element.removeClass('hidden');
+            targetElement.html(videoPlayer);
+            targetElement.removeClass('hidden');
         },
 
-        showAudioPreview: function (element, audio, mimeType) {
+        showAudioPreview: function (targetElement, audio, mimeType) {
             var audioPlayer = $(document.createElement('audio'))
                     .attr('controls', 'true')
                     .attr('autoplay', 'true');
@@ -447,11 +447,11 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             audioPlayer.append($(document.createElement('source'))
                     .attr('type', mimeType)
                     .attr('src', audio));
-            element.html(audioPlayer);
-            element.removeClass('hidden');
+            targetElement.html(audioPlayer);
+            targetElement.removeClass('hidden');
         },
 
-        showPDFPreview: function (element, pdf) {
+        showPDFPreview: function (targetElement, pdf) {
             //PDFs are only displayed if the filesize is smaller than about 1MB (after base64 encoding).
             //Bigger filesizes currently cause crashes in various browsers.
             //See also: https://code.google.com/p/chromium/issues/detail?id=69227
@@ -463,14 +463,14 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                 //Fallback for browsers, that don't support the vh unit
                 var clientHeight = $(window).height();
 
-                element.html(
+                targetElement.html(
                         $(document.createElement('embed'))
                         .attr('src', pdf)
                         .attr('type', 'application/pdf')
                         .attr('class', 'pdfPreview')
                         .css('height', clientHeight)
                         );
-                element.removeClass('hidden');
+                targetElement.removeClass('hidden');
             } else {
                 controller.showError(i18n._('File too large, to display a preview. Please download the attachment.'));
             }
@@ -483,17 +483,17 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                 return;
             }
 
-            function ignoreDragDrop(e) {
-                e.stopPropagation();
-                e.preventDefault();
+            function ignoreDragDrop(event) {
+                event.stopPropagation();
+                event.preventDefault();
             }
 
-            function drop(e) {
-                e.stopPropagation();
-                e.preventDefault();
+            function drop(event) {
+                event.stopPropagation();
+                event.preventDefault();
 
                 if (fileInput) {
-                    var file = e.dataTransfer.files[0];
+                    var file = event.dataTransfer.files[0];
                     //Clear the file input:
                     fileInput.wrap('<form>').closest('form').get(0).reset();
                     fileInput.unwrap();
