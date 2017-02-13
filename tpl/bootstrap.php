@@ -198,7 +198,7 @@ if ($isCpct):
 <?php
     if ($DISCUSSION):
 ?>
-							<li id="opendisc" class="checkbox hidden">
+							<li id="opendiscussionoption" class="checkbox hidden">
 								<label>
 									<input type="checkbox" id="opendiscussion" name="opendiscussion"<?php
         if ($OPENDISCUSSION):
@@ -230,17 +230,6 @@ if ($isCpct):
 ?>
 						</ul>
 						<select id="pasteFormatter" name="pasteFormatter" class="hidden">
-<?php
-    foreach ($FORMATTER as $key => $value):
-?>
-							<option value="<?php echo $key; ?>"<?php
-        if ($key == $FORMATTERDEFAULT):
-?> selected="selected"<?php
-        endif;
-?>><?php echo $value; ?></option>
-<?php
-    endforeach;
-?>
 						</select>
 					</li>
 <?php
@@ -262,7 +251,7 @@ else:
     if ($DISCUSSION):
 ?>
 					<li>
-						<div id="opendisc" class="navbar-text checkbox hidden">
+						<div id="opendiscussionoption" class="navbar-text checkbox hidden">
 							<label>
 								<input type="checkbox" id="opendiscussion" name="opendiscussion"<?php
         if ($OPENDISCUSSION):
@@ -433,13 +422,14 @@ endif;
 ?>
 				</div>
 			</div>
-			<ul id="preview" class="nav nav-tabs hidden">
+			<ul id="editorTabs" class="nav nav-tabs hidden">
 				<li role="presentation" class="active"><a id="messageedit" href="#"><?php echo I18n::_('Editor'); ?></a></li>
 				<li role="presentation"><a id="messagepreview" href="#"><?php echo I18n::_('Preview'); ?></a></li>
 			</ul>
 		</header>
 		<section class="container">
 			<article class="row">
+				<div id="placeholder" class="col-md-12 hidden"><?php echo I18n::_('Nothing to see… Try to enter some text.'); ?></div>
 				<div id="image" class="col-md-12 text-center hidden"></div>
 				<div id="prettymessage" class="col-md-12 hidden">
 					<pre id="prettyprint" class="col-md-12 prettyprint linenums:1"></pre>
