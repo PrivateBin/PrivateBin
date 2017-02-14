@@ -85,7 +85,7 @@
     "Could not delete the paste, it was not stored in burn after reading mode.":
         "Konnte den Text nicht löschen, er wurde nicht im Einmal-Modus gespeichert.",
     "FOR YOUR EYES ONLY. Don't close this window, this message can't be displayed again.":
-        "DIESER TEXT IST NUR FÜR DICH GEDACHT. Schliesse das Fenster nicht, diese Nachricht kann nur einmal geöffnet werden.",
+        "DIESER TEXT IST NUR FÜR DICH GEDACHT. Schließe das Fenster nicht, diese Nachricht kann nur einmal geöffnet werden.",
     "Could not decrypt comment; Wrong key?":
         "Konnte Kommentar nicht entschlüsseln; Falscher Schlüssel?",
     "Reply":
@@ -147,5 +147,7 @@
         "Passwort eingeben",
     "Loading…": "Lädt…",
     "In case this message never disappears please have a look at <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">this FAQ for information to troubleshoot</a>.":
-        "Wenn diese Nachricht nicht mehr verschwindet, schau bitte in <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">die FAQ</a> (englisch), um zu sehen, wie der Fehler behoben werden kann."
+        "Wenn diese Nachricht nicht mehr verschwindet, schau bitte in <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">die FAQ</a> (englisch), um zu sehen, wie der Fehler behoben werden kann.",
+    "Nothing to see… Try to enter some text.":
+        "Nichts zu sehen… Versuche etwas Text einzugeben."
 }

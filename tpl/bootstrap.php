@@ -132,7 +132,7 @@ if ($isPage):
 							<span class="glyphicon glyphicon-upload" aria-hidden="true"></span> <?php echo I18n::_('Send'), PHP_EOL;
 else:
 ?>
-						<button id="newbutton" type="button" class="reloadlink hidden btn btn-<?php echo $isDark ? 'warning' : 'default'; ?> navbar-btn">
+						<button id="newbutton" type="button" class="hidden btn btn-<?php echo $isDark ? 'warning' : 'default'; ?> navbar-btn">
 							<span class="glyphicon glyphicon-file" aria-hidden="true"></span> <?php echo I18n::_('New'), PHP_EOL;
 endif;
 ?>
@@ -399,7 +399,7 @@ endif;
 				<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
 				<?php echo htmlspecialchars($STATUS), PHP_EOL; ?>
 			</div>
-			<div id="errormessage" role="alert" class="<?php echo empty($ERROR) ? 'hidden' : '' ?> alert alert-danger"><span class="glyphicon glyphicon-alert" aria-hidden="true"></span><span><?php echo htmlspecialchars($ERROR); ?></span></div>
+			<div id="errormessage" role="alert" class="<?php echo empty($ERROR) ? 'hidden' : '' ?> alert alert-danger"><span class="glyphicon glyphicon-alert" aria-hidden="true"></span><span> <?php echo htmlspecialchars($ERROR); ?></span></div>
 			<noscript><div id="noscript" role="alert" class="nonworking alert alert-<?php echo $isDark ? 'error' : 'warning'; ?>"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> <?php echo I18n::_('JavaScript is required for %s to work.<br />Sorry for the inconvenience.', I18n::_($NAME)); ?></div></noscript>
 			<div id="oldienotice" role="alert" class="hidden nonworking alert alert-danger"><span class="glyphicon glyphicon-alert" aria-hidden="true"></span> <?php echo I18n::_('%s requires a modern browser to work.', I18n::_($NAME)); ?></div>
 			<div id="ienotice" role="alert" class="hidden alert alert-<?php echo $isDark ? 'error' : 'warning'; ?>"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span> <?php echo I18n::_('Still using Internet Explorer? Do yourself a favor, switch to a modern browser:'), PHP_EOL; ?>
@@ -432,11 +432,11 @@ endif;
 		<section class="container">
 			<article class="row">
 				<div id="placeholder" class="col-md-12 hidden"><?php echo I18n::_('Nothing to see… Try to enter some text.'); ?></div>
-				<div id="image" class="col-md-12 text-center hidden"></div>
+				<div id="attachmentPreview" class="col-md-12 text-center hidden"></div>
 				<div id="prettymessage" class="col-md-12 hidden">
 					<pre id="prettyprint" class="col-md-12 prettyprint linenums:1"></pre>
 				</div>
-				<div id="cleartext" class="col-md-12 hidden"></div>
+				<div id="plaintext" class="col-md-12 hidden"></div>
 				<p class="col-md-12"><textarea id="message" name="message" cols="80" rows="25" class="form-control hidden"></textarea></p>
 			</article>
 		</section>
