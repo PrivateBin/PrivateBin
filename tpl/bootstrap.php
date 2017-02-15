@@ -121,7 +121,7 @@ endif;
 			<div id="navbar" class="navbar-collapse collapse">
 				<ul class="nav navbar-nav">
 					<li id="loadingindicator" class="navbar-text hidden">
-						<span class="glyphicon glyphicon-upload" aria-hidden="true"></span>
+						<span class="glyphicon glyphicon-time" aria-hidden="true"></span>
 						<span><?php echo I18n::_('Loading…'), PHP_EOL; ?></span>
 					</li>
 					<li>
@@ -284,6 +284,7 @@ if ($FILEUPLOAD):
 									<input type="file" id="file" name="file" />
 								</div>
 							</li>
+							<li id="customattachment" class="hidden"></li>
 							<li>
 								<a id="fileremovebutton"  href="#">
 									<?php echo I18n::_('Remove attachment'), PHP_EOL; ?>
@@ -377,32 +378,31 @@ endif;
 if (strlen($NOTICE)):
 ?>
 			<div role="alert" class="alert alert-info">
-				<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> <?php echo htmlspecialchars($NOTICE), PHP_EOL; ?>
+				<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span><?php echo htmlspecialchars($NOTICE), PHP_EOL; ?>
 			</div>
 <?php
 endif;
 ?>
 			<div id="remainingtime" role="alert" class="hidden alert alert-info">
-				<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
-				<span></span>
+				<span class="glyphicon glyphicon-fire" aria-hidden="true"></span><span></span>
 			</div>
 <?php
 if ($FILEUPLOAD):
 ?>
 			<div id="attachment" role="alert" class="hidden alert alert-info">
-				<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> <a><?php echo I18n::_('Download attachment'); ?></a> <span id="clonedfile" class="hidden"><?php echo I18n::_('Cloned file attached.'); ?></span>
+				<span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span><a><?php echo I18n::_('Download attachment'); ?></a></span>
 			</div>
 <?php
 endif;
 ?>
-			<div id="status" role="alert" class="alert alert-success <?php echo empty($STATUS) ? 'hidden' : '' ?>">
-				<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
-				<?php echo htmlspecialchars($STATUS), PHP_EOL; ?>
+			<div id="status" role="alert" class="alert alert-info <?php echo empty($STATUS) ? 'hidden' : '' ?>">
+				<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+				<span><?php echo htmlspecialchars($STATUS), PHP_EOL; ?></span>
 			</div>
-			<div id="errormessage" role="alert" class="<?php echo empty($ERROR) ? 'hidden' : '' ?> alert alert-danger"><span class="glyphicon glyphicon-alert" aria-hidden="true"></span><span> <?php echo htmlspecialchars($ERROR); ?></span></div>
-			<noscript><div id="noscript" role="alert" class="nonworking alert alert-<?php echo $isDark ? 'error' : 'warning'; ?>"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> <?php echo I18n::_('JavaScript is required for %s to work.<br />Sorry for the inconvenience.', I18n::_($NAME)); ?></div></noscript>
-			<div id="oldienotice" role="alert" class="hidden nonworking alert alert-danger"><span class="glyphicon glyphicon-alert" aria-hidden="true"></span> <?php echo I18n::_('%s requires a modern browser to work.', I18n::_($NAME)); ?></div>
-			<div id="ienotice" role="alert" class="hidden alert alert-<?php echo $isDark ? 'error' : 'warning'; ?>"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span> <?php echo I18n::_('Still using Internet Explorer? Do yourself a favor, switch to a modern browser:'), PHP_EOL; ?>
+			<div id="errormessage" role="alert" class="<?php echo empty($ERROR) ? 'hidden' : '' ?> alert alert-danger"><span class="glyphicon glyphicon-alert" aria-hidden="true"></span><span><?php echo htmlspecialchars($ERROR); ?></span></div>
+			<noscript><div id="noscript" role="alert" class="nonworking alert alert-<?php echo $isDark ? 'error' : 'warning'; ?>"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span><?php echo I18n::_('JavaScript is required for %s to work.<br />Sorry for the inconvenience.', I18n::_($NAME)); ?></div></noscript>
+			<div id="oldienotice" role="alert" class="hidden nonworking alert alert-danger"><span class="glyphicon glyphicon-alert" aria-hidden="true"></span><?php echo I18n::_('%s requires a modern browser to work.', I18n::_($NAME)); ?></div>
+			<div id="ienotice" role="alert" class="hidden alert alert-<?php echo $isDark ? 'error' : 'warning'; ?>"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span><?php echo I18n::_('Still using Internet Explorer? Do yourself a favor, switch to a modern browser:'), PHP_EOL; ?>
 				<a href="https://www.mozilla.org/firefox/">Firefox</a>,
 				<a href="https://www.opera.com/">Opera</a>,
 				<a href="https://www.google.com/chrome">Chrome</a>,

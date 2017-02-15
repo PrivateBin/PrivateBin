@@ -98,6 +98,10 @@ body.navbar-spacing {
 	margin-bottom: 10px;
 }
 
+.glyphicon {
+	margin-right: 5px;
+}
+
 .comment {
 	border-left: 1px solid #ccc;
 	padding: 5px 0 5px 10px;

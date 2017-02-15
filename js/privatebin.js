@@ -107,6 +107,19 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         };
 
         /**
+         * checks if a string is valid text (and not onyl whitespace)
+         *
+         * @name Helper.isValidText
+         * @function
+         * @param  {string} string
+         * @return {bool}
+         */
+        me.isValidText = function(string)
+        {
+            return (string.length > 0 && $.trim(string) !== '')
+        };
+
+        /**
          * text range selection
          *
          * @see    {@link https://stackoverflow.com/questions/985272/jquery-selecting-text-in-an-element-akin-to-highlighting-with-your-mouse}
@@ -409,10 +422,10 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                     // handle the error by attaching the language loaded event
                     var orgArguments = arguments;
                     $(document).on(languageLoadedEvent, function () {
+                        // log to show that the previous error could be mitigated
+                        console.log('Fix missing translation of \'' + messageId + '\' with now loaded language ' + language);
                         // re-execute this function
                         me.translate.apply(this, orgArguments);
-                        // log to show that the previous error could be mitigated
-                        console.log('Fixed missing translation of \'' + messageId + '\' with now loaded language ' + language);
                     });
 
                     // and fall back to English for now until the real language
@@ -462,8 +475,8 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          * @see    {@link http://localization-guide.readthedocs.org/en/latest/l10n/pluralforms.html}
          * @name   I18n.getPluralForm
          * @function
-         * @param  {number} n
-         * @return {number} array key
+         * @param  {int} n
+         * @return {int} array key
          */
         me.getPluralForm = function(n) {
             switch (language)
@@ -683,13 +696,13 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
     })();
 
     /**
-     * (modal) Data source (aka MVC)
+     * (Model) Data source (aka MVC)
      *
      * @param  {object} window
      * @param  {object} document
      * @class
      */
-    var Modal = (function (window, document) {
+    var Model = (function (window, document) {
         var me = {};
 
         var $cipherData;
@@ -699,7 +712,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         /**
          * returns the expiration set in the HTML
          *
-         * @name   Modal.getExpirationDefault
+         * @name   Model.getExpirationDefault
          * @function
          * @return string
          * @TODO the template can be simplified as #pasteExpiration is no longer modified (only default value)
@@ -712,7 +725,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         /**
          * returns the format set in the HTML
          *
-         * @name   Modal.getFormatDefault
+         * @name   Model.getFormatDefault
          * @function
          * @return string
          * @TODO the template can be simplified as #pasteFormatter is no longer modified (only default value)
@@ -725,7 +738,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         /**
          * check if cipher data was supplied
          *
-         * @name   Modal.getCipherData
+         * @name   Model.getCipherData
          * @function
          * @return boolean
          */
@@ -737,7 +750,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         /**
          * returns the cipher data
          *
-         * @name   Modal.getCipherData
+         * @name   Model.getCipherData
          * @function
          * @return string
          */
@@ -750,7 +763,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          * get the pastes unique identifier from the URL,
          * eg. http://example.com/path/?c05354954c49a487#dfdsdgdgdfgdf returns c05354954c49a487
          *
-         * @name   Modal.getPasteId
+         * @name   Model.getPasteId
          * @function
          * @return {string} unique identifier
          */
@@ -766,7 +779,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         /**
          * return the deciphering key stored in anchor part of the URL
          *
-         * @name   Modal.getPasteKey
+         * @name   Model.getPasteKey
          * @function
          * @return {string} key
          */
@@ -793,7 +806,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          *
          * preloads jQuery elements
          *
-         * @name   Modal.init
+         * @name   Model.init
          * @function
          */
         me.init = function()
@@ -878,47 +891,165 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         var me = {};
 
         var $errorMessage,
-            $status;
+            $statusMessage,
+            $loadingIndicator;
+
+        var currentIcon = [
+            'glyphicon-time', // loading icon
+            'glyphicon-info-sign', // status icon
+            '', // resevered for warning, not used yet
+            'glyphicon-alert' // error icon
+        ];
+
+        /**
+         * forwards a request to the i18n module and shows the element
+         *
+         * @private
+         * @function
+         * @param  {int} id - id of notification
+         * @param  {jQuery} $element - jQuery object
+         * @param  {string|array} args
+         * @param  {string|null} icon - optional, icon
+         */
+        function handleNotification(id, $element, args, icon)
+        {
+            // handle icon
+            if (
+                typeof icon !== 'undefined' && // if icon is passed
+                icon !== currentIcon[id] // and it differs from current icon
+            ) {
+                var $glyphIcon = $element.find(':first');
+
+                // remove (previous) icon
+                $glyphIcon.removeClass(currentIcon[id]);
+
+                // any other thing as a string (e.g. 'null') (only) removes the icon
+                if (typeof icon === 'string') {
+                    // set new icon
+                    currentIcon[id] = 'glyphicon-' + icon;
+                    $glyphIcon.addClass(currentIcon[id]);
+                }
+            }
+
+            // show text
+            if (typeof args !== 'undefined' && args !== null) {
+                // convert string to array if needed
+                if (typeof args === 'string') {
+                    args = [args];
+                }
+
+                // add jQuery object to it as first parameter
+                args.unshift($element.find(':last'));
+
+                // pass it to I18n
+                I18n._.apply(this, args);
+            }
+
+            // show notification
+            $element.removeClass('hidden');
+        }
 
         /**
          * display a status message
          *
+         * This automatically passes the text to I18n for translation.
+         *
          * @name   Alert.showStatus
          * @function
-         * @param  {string} message - text to display
-         * @param  {boolean} [spin=false] - (optional) tell if the "spinning" animation should be displayed, defaults to false
+         * @param  {string|array} message     string, use an array for %s/%d options
+         * @param  {string|null}  icon        optional, the icon to show,
+         *                                    default: leave previous icon
+         * @param  {bool}         dismissable optional, whether the notification
+         *                                    can be dismissed (closed), default: false
+         * @param  {bool|int}     autoclose   optional, after how many seconds the
+         *                                    notification should be hidden automatically;
+         *                                    default: disabled (0); use true for default value
          */
-        me.showStatus = function(message, spin)
+        me.showStatus = function(message, icon, dismissable, autoclose)
         {
-            // spin is ignored for now
-            $status.text(message);
+            console.log('status shown: ', message);
+            // @TODO: implement dismissable
+            // @TODO: implement autoclose
+
+            handleNotification(1, $statusMessage, message, icon);
         };
 
         /**
-         * hides any status messages
+         * display an error message
+         *
+         * This automatically passes the text to I18n for translation.
+         *
+         * @name   Alert.showError
+         * @function
+         * @param  {string|array} message     string, use an array for %s/%d options
+         * @param  {string|null}  icon        optional, the icon to show, default:
+         *                                    leave previous icon
+         * @param  {bool}         dismissable optional, whether the notification
+         *                                    can be dismissed (closed), default: false
+         * @param  {bool|int}     autoclose   optional, after how many seconds the
+         *                                    notification should be hidden automatically;
+         *                                    default: disabled (0); use true for default value
+         */
+        me.showError = function(message, icon, dismissable, autoclose)
+        {
+            console.error('error message shown: ', message);
+            // @TODO: implement dismissable
+            // @TODO: implement autoclose
+
+            handleNotification(3, $errorMessage, message, icon);
+        };
+
+        /**
+         * shows a loading message, optionally with a percentage
+         *
+         * This automatically passes all texts to the i10s module.
+         *
+         * @name   Alert.showLoading
+         * @function
+         * @param  {string|array|null} message      optional, use an array for %s/%d options, default: 'Loading…'
+         * @param  {int}               percentage   optional, default: null
+         * @param  {string|null}       icon         optional, the icon to show, default: leave previous icon
+         */
+        me.showLoading = function(message, percentage, icon)
+        {
+            if (typeof message !== 'undefined' && message !== null) {
+                console.log('status changed: ', message);
+            }
+
+            // default message text
+            if (typeof message === 'undefined') {
+                message = 'Loading…';
+            }
+
+            // currently percentage parameter is ignored
+            // // @TODO handle it here…
+
+            handleNotification(0, $loadingIndicator, message, icon);
+        };
+
+        /**
+         * hides the loading message
+         *
+         * @name   Alert.hideLoading
+         * @function
+         */
+        me.hideLoading = function()
+        {
+            $loadingIndicator.addClass('hidden');
+        };
+
+        /**
+         * hides any status/error messages
+         *
+         * This does not include the loading message.
          *
          * @name   Alert.hideMessages
          * @function
          */
         me.hideMessages = function()
         {
-            $status.html(' ');
+            $statusMessage.addClass('hidden');
             $errorMessage.addClass('hidden');
-        };
-
-        /**
-         * display an error message
-         *
-         * @name   Alert.showError
-         * @function
-         * @param  {string} message - text to display
-         */
-        me.showError = function(message)
-        {
-            console.error('Error shown: ' + message);
-
-            $errorMessage.removeClass('hidden');
-            $errorMessage.find(':last').text(' ' + message);
         };
 
         /**
@@ -935,22 +1066,19 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             $('#noscript').hide();
 
             $errorMessage = $('#errormessage');
-            $status = $('#status');
+            $statusMessage = $('#status');
+            $loadingIndicator = $('#loadingindicator');
 
-            // display status returned by php code, if any (eg. paste was properly deleted)
-            // @TODO remove this by handling errors in a different way
-            if ($status.text().length > 0)
-            {
-                me.showStatus($status.text());
-                return;
+            // display status returned by php code, if any (e.g. paste was properly deleted)
+            var serverStatus = $statusMessage.text();
+            if (Helper.isValidText(serverStatus)) {
+                me.showStatus();
             }
 
-            // keep line height even if content empty
-            $status.html(' '); // @TODO what? remove?
-
             // display error message from php code
-            if ($errorMessage.text().length > 1) {
-                Alert.showError($errorMessage.text());
+            var serverError = $errorMessage.text();
+            if (Helper.isValidText(serverError)) {
+                Alert.showError();
             }
         };
 
@@ -1037,6 +1165,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         /**
          * shows the remaining time
          *
+         * @name PasteStatus.showRemainingTime
          * @function
          * @param {object} pasteMetaData
          */
@@ -1046,7 +1175,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                 // display paste "for your eyes only" if it is deleted
 
                 // actually remove paste, before we claim it is deleted
-                Controller.removePaste(Modal.getPasteId(), 'burnafterreading');
+                Controller.removePaste(Model.getPasteId(), 'burnafterreading');
 
                 I18n._($remainingTime.find(':last'), "FOR YOUR EYES ONLY. Don't close this window, this message can't be displayed again.");
                 $remainingTime.addClass('foryoureyesonly');
@@ -1071,6 +1200,18 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
 
             // in the end, display notification
             $remainingTime.removeClass('hidden');
+        };
+
+        /**
+         * hides the remaining time and successful upload notification
+         *
+         * @name PasteStatus.hideRemainingTime
+         * @function
+         */
+        me.hideMessages = function()
+        {
+            $remainingTime.addClass('hidden');
+            $pasteSuccess.addClass('hidden');
         };
 
         /**
@@ -1105,7 +1246,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
     var Prompt = (function (window, document) {
         var me = {};
 
-        var $passwordModal,
+        var $passwordModel,
             $passwordForm,
             $passwordDecrypt;
 
@@ -1123,41 +1264,44 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         me.requestPassword = function()
         {
             // show new bootstrap method
-            $passwordModal.modal({
+            $passwordModel.Model({
                 backdrop: 'static',
                 keyboard: false
             });
-        };
 
-        /**
-         * get cached password or password from easy Prompt
-         *
-         * If you do not get a password with this function, use
-         * requestPassword
-         *
-         * @name   Prompt.getPassword
-         * @function
-         */
-        me.getPassword = function()
-        {
-            if (password.length !== 0) {
-                return password;
-            }
-
-            if ($passwordModal.length === 0) {
+            if ($passwordModel.length === 0) {
                 // old method for page template
-                var newPassword = Prompt(I18n._('Please enter the password for this paste:'), '');
+                var newPassword = prompt(I18n._('Please enter the password for this paste:'), '');
                 if (newPassword === null) {
-                    throw 'password Prompt canceled';
+                    throw 'password prompt canceled';
                 }
                 if (password.length === 0) {
                     // recursive…
-                    me.getPassword();
-                } else {
-                    password = newPassword;
+                    return me.requestPassword();
                 }
-            }
 
+                password = newPassword;
+
+                if (passwordCallback !== null) {
+                    passwordCallback();
+                }
+
+                return;
+            }
+        };
+
+        /**
+         * getthe cached password
+         *
+         * If you do not get a password with this function
+         * (returns an empty string), use requestPassword.
+         *
+         * @name   Prompt.getPassword
+         * @function
+         * @return {string}
+         */
+        me.getPassword = function()
+        {
             return password;
         };
 
@@ -1174,19 +1318,19 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         };
 
         /**
-         * submit a password in the Modal dialog
+         * submit a password in the Model dialog
          *
          * @private
          * @function
          * @param  {Event} event
          */
-        function submitPasswordModal(event)
+        function submitPasswordModel(event)
         {
             // get input
             password = $passwordDecrypt.val();
 
-            // hide modal
-            $passwordModal.modal('hide');
+            // hide Model
+            $passwordModel.Model('hide');
 
             if (passwordCallback !== null) {
                 passwordCallback();
@@ -1206,18 +1350,18 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          */
         me.init = function()
         {
-            $passwordModal = $('#passwordmodal');
+            $passwordModel = $('#passwordModel');
             $passwordForm = $('#passwordform');
             $passwordDecrypt = $('#passworddecrypt');
 
             // bind events
 
             // focus password input when it is shown
-            $passwordModal.on('shown.bs.Modal', function () {
+            $passwordModel.on('shown.bs.Model', function () {
                 $passwordDecrypt.focus();
             });
-            // handle Modal password submission
-            $passwordForm.submit(submitPasswordModal);
+            // handle Model password submission
+            $passwordForm.submit(submitPasswordModel);
         };
 
         return me;
@@ -1248,17 +1392,13 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          * @name   Editor.supportTabs
          * @function
          * @param  {Event} event
-         * @TODO doc what is @this here?
-         * @TODO replace this with $message ??
+         * @this $message (but not used, so it is jQuery-free, possibly faster)
          */
         function supportTabs(event)
         {
             var keyCode = event.keyCode || event.which;
             // tab was pressed
-            if (keyCode === 9)
-            {
-                // prevent the textarea to lose focus
-                event.preventDefault();
+            if (keyCode === 9) {
                 // get caret position & selection
                 var val   = this.value,
                     start = this.selectionStart,
@@ -1267,6 +1407,8 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                 this.value = val.substring(0, start) + '\t' + val.substring(end);
                 // put caret at right position again
                 this.selectionStart = this.selectionEnd = start + 1;
+                // prevent the textarea to lose focus
+                event.preventDefault();
             }
         }
 
@@ -1393,6 +1535,18 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         };
 
         /**
+         * sets a new text
+         *
+         * @name   Editor.setText
+         * @function
+         * @param {string} newText
+         */
+        me.setText = function(newText)
+        {
+            $message.val(newText);
+        };
+
+        /**
          * returns the current text
          *
          * @name   Editor.getText
@@ -1439,8 +1593,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
     var PasteViewer = (function (window, document) {
         var me = {};
 
-        var $clonedFile,
-            $plainText,
+        var $plainText,
             $placeholder,
             $prettyMessage,
             $prettyPrint;
@@ -1537,14 +1690,22 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          *
          * @name   PasteViewer.setFormat
          * @function
-         * @param {string}  the the new format
+         * @param {string} newFormat the the new format
          */
         me.setFormat = function(newFormat)
         {
-            if (format !== newFormat) {
-                format = newFormat;
-                isChanged = true;
+            // skip if there is no update
+            if (format === newFormat) {
+                return;
             }
+
+            // needs to update display too, if from or to Markdown is switched
+            if (format === 'markdown' || newFormat === 'markdown') {
+                isDisplayed = false;
+            }
+
+            format = newFormat;
+            isChanged = true;
         };
 
         /**
@@ -1574,7 +1735,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         /**
          * sets the text to show
          *
-         * @name   Editor.init
+         * @name   PasteViewer.setText
          * @function
          * @param {string} newText the text to show
          */
@@ -1584,6 +1745,18 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                 text = newText;
                 isChanged = true;
             }
+        };
+
+        /**
+         * gets the current cached text
+         *
+         * @name   PasteViewer.getText
+         * @function
+         * @return {string}
+         */
+        me.getText = function(newText)
+        {
+            return text;
         };
 
         /**
@@ -1641,20 +1814,20 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
 
             // check requirements
             if (typeof prettyPrintOne !== 'function') {
-                Alert.showError(
-                    I18n._('The library %s is not available.', 'pretty print') +
-                    I18n._('This may cause display errors.')
-                );
+                Alert.showError([
+                    'The library %s is not available. This may cause display errors.',
+                    'pretty print'
+                ]);
             }
             if (typeof showdown !== 'object') {
-                Alert.showError(
-                    I18n._('The library %s is not available.', 'showdown') +
-                    I18n._('This may cause display errors.')
-                );
+                Alert.showError([
+                    'The library %s is not available. This may cause display errors.',
+                    'showdown'
+                ]);
             }
 
             // get default option from template/HTML or fall back to set value
-            format = Modal.getFormatDefault() || format;
+            format = Model.getFormatDefault() || format;
         };
 
         return me;
@@ -1672,9 +1845,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
 
         var $attachment,
             $attachmentLink,
-            $clonedFile,
-            $attachmentPreview,
-            $fileWrap;
+            $attachmentPreview;
 
         var attachmentChanged = false,
             attachmentHasPreview = false;
@@ -1725,26 +1896,48 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         }
 
         /**
-         * removes the existing attachment
+         * removes the attachment
          *
-         * @name   AttachmentViewer.removeAttachment
+         * This automatically hides the attachment containers to, to
+         * prevent an inconsistent display.
+         *
+         * @name AttachmentViewer.removeAttachment
          * @function
          */
         me.removeAttachment = function()
         {
-             // (new)
+            me.hideAttachment();
+            me.hideAttachmentPreview();
+            $attachmentLink.prop('href', '');
+            $attachmentLink.prop('download', '');
+            $attachmentPreview.html('');
+        }
+
+        /**
+         * hides the attachment
+         *
+         * This will not hide the preview {@see me.hideAttachmentPreview}
+         * nor will it hide the attachment link if it was moved somewhere
+         * else {@see moveAttachmentTo}.
+         *
+         * @name AttachmentViewer.hideAttachment
+         * @function
+         */
+        me.hideAttachment = function()
+        {
             $attachment.addClass('hidden');
+        }
+
+        /**
+         * hides the attachment preview
+         *
+         * @name AttachmentViewer.hideAttachmentPreview
+         * @function
+         */
+        me.hideAttachmentPreview = function()
+        {
             $attachmentPreview.addClass('hidden');
-
-            $clonedFile.addClass('hidden');
-            // removes the saved decrypted file data
-            $attachmentLink.attr('href', '');
-            // the only way to deselect the file is to recreate the input // @TODO really?
-            $fileWrap.html($fileWrap.html());
-            $fileWrap.removeClass('hidden');
-
-            // reset internal variables
-        };
+        }
 
         /**
          * checks if there is an attachment
@@ -1754,7 +1947,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          */
         me.hasAttachment = function()
         {
-            return typeof $attachmentLink.attr('href') !== 'undefined'
+            return ($attachmentLink.prop('href') !== '')
         };
 
         /**
@@ -1767,9 +1960,28 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         me.getAttachment = function()
         {
             return [
-                $attachmentLink.attr('href'),
-                $attachmentLink.attr('download')
+                $attachmentLink.prop('href'),
+                $attachmentLink.prop('download')
             ];
+        };
+
+        /**
+         * moves the attachment link to another element
+         *
+         * It is advisable to hide the attachment afterwards (AttachmentViewer.hideAttachment)
+         *
+         * @name   AttachmentViewer.setClonedAttachment
+         * @function
+         * @param {jQuery} $element - the wrapper/container element where this should be moved to
+         * @param {string} label - the text to show (%s will be replaced with the file name), will automatically be translated
+         */
+        me.moveAttachmentTo = function($element, label)
+        {
+            // move elemement to new place
+            $attachmentLink.appendTo($element);
+
+            // update text
+            I18n._($attachmentLink, label, $attachmentLink.attr('download'));
         };
 
         /**
@@ -1785,8 +1997,6 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             $attachmentPreview = $('#attachmentPreview');
             $attachment = $('#attachment');
             $attachmentLink = $('#attachment a');
-            $clonedFile = $('#clonedfile');
-            $fileWrap = $('#filewrap');
         };
 
         return me;
@@ -1808,7 +2018,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         /**
          * display a status message for replying to comments
          *
-         * @name   Controller.showStatus
+         * @name   DiscussionViewer.showStatus
          * @function
          * @param  {string} message - text to display
          * @param  {boolean} [spin=false] - (optional) tell if the "spinning" animation should be displayed, defaults to false
@@ -1824,7 +2034,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         /**
          * display an error message
          *
-         * @name   Alert.showError
+         * @name   DiscussionViewer.showReplyError
          * @function
          * @param  {string} message - text to display
          */
@@ -1839,7 +2049,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         /**
          * open the comment entry when clicking the "Reply" button of a comment
          *
-         * @name   PasteViewer.openReply
+         * @name   DiscussionViewer.openReply
          * @function
          * @param  {Event} event
          */
@@ -1868,7 +2078,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          *
          * preloads jQuery elements
          *
-         * @name   AttachmentViewer.init
+         * @name   DiscussionViewer.init
          * @function
          */
         me.init = function()
@@ -1898,6 +2108,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             $burnAfterReading,
             $burnAfterReadingOption,
             $cloneButton,
+            $customAttachment,
             $expiration,
             $fileRemoveButton,
             $formatter,
@@ -1908,7 +2119,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             $passwordInput,
             $rawTextButton,
             $sendButton,
-            $loadingIndicator;
+            $fileWrap;
 
         var pasteExpiration = '1week';
 
@@ -2003,12 +2214,17 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          */
         function rawText(event)
         {
-            var paste = PasteViewer.getFormat() === 'markdown' ?
-                $prettyPrint.text() : $plainText.text();
+            var paste = PasteViewer.getText();
+
+            // push a new state to allow back navigation with browser back button
             history.pushState(
-                null, document.title, Helper.baseUri() + '?' +
-                Modal.getPasteId() + '#' + Modal.getPasteKey()
+                {type: 'raw'},
+                document.title,
+                // recreate paste URL
+                Helper.baseUri() + '?' + Model.getPasteId() + '#' +
+                Model.getPasteKey()
             );
+
             // we use text/html instead of text/plain to avoid a bug when
             // reloading the raw text view (it reverts to type text/html)
             var newDoc = document.open('text/html', 'replace');
@@ -2030,6 +2246,53 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             document.cookie = 'lang=' + $(event.target).data('lang');
             UiHelper.reloadHome();
         }
+
+        /**
+         * hides all messages and creates a new paste
+         *
+         * @private
+         * @function
+         * @param  {Event} event
+         */
+        function clickNewPaste(event)
+        {
+            Controller.hideStatusMessages();
+            Controller.newPaste();
+        }
+
+        /**
+         * removes the existing attachment
+         *
+         * @private
+         * @function
+         * @param  {Event} event
+         */
+        function removeAttachment(event)
+        {
+            // if custom attachment is used, remove it first
+            if (!$customAttachment.hasClass('hidden')) {
+                AttachmentViewer.removeAttachment();
+                $customAttachment.addClass('hidden');
+                $fileWrap.removeClass('hidden');
+            }
+
+            // our up-to-date jQuery can handle it :)
+            $fileWrap.find('input').val('');
+
+            // pevent '#' from appearing in the URL
+            event.preventDefault();
+        }
+
+        /**
+         * Loads the default options for creating a paste.
+         *
+         * @name   TopNav.loadDefaults
+         * @function
+         */
+        me.loadDefaults = function()
+        {
+            // @TODO
+        };
 
         /**
          * Shows all elements belonging to viwing an existing pastes
@@ -2091,7 +2354,6 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             $newButton.removeClass('hidden');
             $password.removeClass('hidden');
             $attach.removeClass('hidden');
-            // $clonedFile.removeClass('hidden'); // @TODO
 
             createButtonsDisplayed = true;
         };
@@ -2117,7 +2379,6 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             $openDiscussionOption.addClass('hidden');
             $password.addClass('hidden');
             $attach.addClass('hidden');
-            // $clonedFile.addClass('hidden'); // @TODO
 
             createButtonsDisplayed = false;
         };
@@ -2156,36 +2417,26 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         };
 
         /**
-         * shows a loading message, optionally with a percentage
+         * hides the file selector in attachment
          *
-         * @name   TopNav.showLoading
+         * @name   TopNav.hideFileSelector
          * @function
-         * @param  {string} message optional, default: 'Loading…'
-         * @param  {int}    percentage optional, default: null
          */
-        me.showLoading = function(message, percentage)
+        me.hideFileSelector = function()
         {
-            // default message text
-            if (typeof message === 'undefined') {
-                message = I18n._('Loading…');
-            }
-
-            // currently percentage parameter is ignored
-            if (message !== null) {
-                $loadingIndicator.find(':last').text(message);
-            }
-            $loadingIndicator.removeClass('hidden');
+            $fileWrap.addClass('hidden');
         };
 
+
         /**
-         * hides the loading message
+         * shows the custom attachment
          *
-         * @name   TopNav.hideLoading
+         * @name   TopNav.showCustomAttachment
          * @function
          */
-        me.hideLoading = function()
+        me.showCustomAttachment = function()
         {
-            $loadingIndicator.addClass('hidden');
+            $customAttachment.removeClass('hidden');
         };
 
         /**
@@ -2277,6 +2528,20 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         };
 
         /**
+         * returns the element where custom attachments can be placed
+         *
+         * Used by AttachmentViewer when an attachment is cloned here.
+         *
+         * @name   TopNav.getCustomAttachment
+         * @function
+         * @return {jQuery}
+         */
+        me.getCustomAttachment = function()
+        {
+            return $customAttachment;
+        };
+
+        /**
          * init navigation manager
          *
          * preloads jQuery elements
@@ -2290,6 +2555,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             $burnAfterReading = $('#burnafterreading');
             $burnAfterReadingOption = $('#burnafterreadingoption');
             $cloneButton = $('#clonebutton');
+            $customAttachment = $('#customattachment');
             $expiration = $('#expiration');
             $fileRemoveButton = $('#fileremovebutton');
             $formatter = $('#formatter');
@@ -2300,7 +2566,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             $passwordInput = $('#passwordinput');
             $rawTextButton = $('#rawtextbutton');
             $sendButton = $('#sendbutton');
-            $loadingIndicator = $('#loadingindicator');
+            $fileWrap = $('#filewrap');
 
             // bootstrap template drop down
             $('#language ul.dropdown-menu li a').click(me.setLanguage);
@@ -2310,11 +2576,11 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             // bind events
             $burnAfterReading.change(changeBurnAfterReading);
             $openDiscussionOption.change(changeOpenDiscussion);
-            $newButton.click(Controller.newPaste);
+            $newButton.click(clickNewPaste);
             $sendButton.click(PasteEncrypter.submitPaste);
             $cloneButton.click(Controller.clonePaste);
             $rawTextButton.click(rawText);
-            $fileRemoveButton.click(me.removeAttachment);
+            $fileRemoveButton.click(removeAttachment);
 
             // bootstrap template drop downs
             $('ul.dropdown-menu li a', $('#expiration').parent()).click(updateExpiration);
@@ -2325,7 +2591,9 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             changeOpenDiscussion();
 
             // get default value from template or fall back to set value
-            pasteExpiration = Modal.getExpirationDefault() || pasteExpiration;
+            pasteExpiration = Model.getExpirationDefault() || pasteExpiration;
+
+            me.loadDefaults();
         };
 
         return me;
@@ -2566,12 +2834,12 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         function checkRequirements(retryCallback) {
             // skip double requirement checks
             if (requirementsChecked === true) {
-                return false;
+                return true;
             }
 
             if (!CryptTool.isEntropyReady()) {
                 // display a message and wait
-                Alert.showStatus(I18n._('Please move your mouse for more entropy...'));
+                Alert.showStatus('Please move your mouse for more entropy…');
 
                 CryptTool.addEntropySeedListener(retryCallback);
                 return false;
@@ -2591,7 +2859,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          * @param {int} data
          */
         function showCreatedPaste(status, data) {
-            TopNav.hideLoading();
+            Alert.hideLoading();
 
             var url = Helper.baseUri() + '?' + data.id + '#' + data.encryptionKey,
                 deleteUrl = Helper.baseUri() + '?pasteid=' + data.id + '&deletetoken=' + data.deletetoken;
@@ -2625,7 +2893,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             if (typeof file !== 'undefined' && file !== null) {
                 // check file reader requirements for upload
                 if (typeof FileReader === 'undefined') {
-                    Alert.showError(I18n._('Your browser does not support uploading encrypted files. Please use a newer browser.'));
+                    Alert.showError('Your browser does not support uploading encrypted files. Please use a newer browser.');
                     // cancels process as it does not execute callback
                     return;
                 }
@@ -2638,7 +2906,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                     Uploader.setData('attachmentname', file.name);
 
                     // run callback
-                    callback();
+                    return callback();
                 };
 
                 // actually read first file
@@ -2648,11 +2916,11 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                 var attachment = AttachmentViewer.getAttachment();
 
                 Uploader.setData('attachment', attachment[0]);
-                Uploader.setUnencryptedData('attachmentname', attachment[1]); // @TODO does not encrypt file name??!
-                callback();
+                Uploader.setData('attachmentname', attachment[1]);
+                return callback();
             } else {
                 // if there are no attachments, this is of course still successful
-                callback();
+                return callback();
             }
         }
 
@@ -2677,7 +2945,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
 
             me.showStatus(I18n._('Sending comment...'), true);
             var parentid = event.data.parentid,
-                key = Modal.getPasteKey(),
+                key = Model.getPasteKey(),
                 cipherdata = CryptTool.cipher(key, $passwordInput.val(), replyMessage.val()),
                 ciphernickname = '',
                 nick = $('#nickname').val();
@@ -2688,7 +2956,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             var dataToSend = {
                 data:     cipherdata,
                 parentid: parentid,
-                pasteid:  Modal.getPasteId(),
+                pasteid:  Model.getPasteId(),
                 nickname: ciphernickname
             };
 
@@ -2704,7 +2972,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                         status.showStatus(I18n._('Comment posted.'));
                         $.ajax({
                             type: 'GET',
-                            url: Helper.baseUri() + '?' + Modal.getPasteId(),
+                            url: Helper.baseUri() + '?' + Model.getPasteId(),
                             dataType: 'json',
                             headers: ajaxHeaders,
                             success: function(data) {
@@ -2714,30 +2982,30 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                                 }
                                 else if (data.status === 1)
                                 {
-                                    Alert.showError(I18n._('Could not refresh display: %s', data.message));
+                                    Alert.showError(['Could not refresh display: %s', data.message]);
                                 }
                                 else
                                 {
-                                    Alert.showError(I18n._('Could not refresh display: %s', I18n._('unknown status')));
+                                    Alert.showError(['Could not refresh display: %s', I18n._('unknown status')]);
                                 }
                             }
                         })
                         .fail(function() {
-                            Alert.showError(I18n._('Could not refresh display: %s', I18n._('server error or not responding')));
+                            Alert.showError(['Could not refresh display: %s', I18n._('server error or not responding')]);
                         });
                     }
                     else if (data.status === 1)
                     {
-                        Alert.showError(I18n._('Could not post comment: %s', data.message));
+                        Alert.showError(['Could not post comment: %s', data.message]);
                     }
                     else
                     {
-                        Alert.showError(I18n._('Could not post comment: %s', I18n._('unknown status')));
+                        Alert.showError(['Could not post comment: %s', I18n._('unknown status')]);
                     }
                 }
             })
             .fail(function() {
-                Alert.showError(I18n._('Could not post comment: %s', I18n._('server error or not responding')));
+                Alert.showError(['Could not post comment: %s', I18n._('server error or not responding')]);
             });
         };
 
@@ -2749,9 +3017,12 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          */
         me.submitPaste = function()
         {
+            // hide previous (error) messages
+            Alert.hideMessages();
+
             // UI loading state
             TopNav.hideCreateButtons();
-            TopNav.showLoading(I18n._('Sending paste...'), 0);
+            Alert.showLoading('Sending paste…', 0, 'cloud-upload');
             TopNav.collapseBar();
 
             // get data
@@ -2762,12 +3033,12 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             // do not send if there is no data
             if (plainText.length === 0 && files === null) {
                 // revert loading status…
-                TopNav.hideLoading();
+                Alert.hideLoading();
                 TopNav.showCreateButtons();
                 return;
             }
 
-            TopNav.showLoading(I18n._('Sending paste...'), 10);
+            Alert.showLoading(null, 10);
 
             // check entropy
             if (!checkRequirements(function () {
@@ -2783,22 +3054,22 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             Uploader.setSuccess(showCreatedPaste);
             Uploader.setFailure(function (status, data) {
                 // revert loading status…
-                TopNav.hideLoading();
+                Alert.hideLoading();
                 TopNav.showCreateButtons();
 
                 // show error message
                 switch (status) {
                     case Uploader.error['custom']:
-                        Alert.showError(I18n._('Could not create paste: %s', data.message));
+                        Alert.showError(['Could not create paste: %s', data.message]);
                         break;
                     case Uploader.error['unknown']:
-                        Alert.showError(I18n._('Could not create paste: %s', I18n._('unknown status')));
+                        Alert.showError(['Could not create paste: %s', I18n._('unknown status')]);
                         break;
                     case Uploader.error['serverError']:
-                        Alert.showError(I18n._('Could not create paste: %s', I18n._('server error or not responding')));
+                        Alert.showError(['Could not create paste: %s', I18n._('server error or not responding')]);
                         break;
                     default:
-                        Alert.showError(I18n._('Could not create paste: %s', I18n._('unknown error')));
+                        Alert.showError(['Could not create paste: %s', I18n._('unknown error')]);
                         break;
                 }
             });
@@ -2869,7 +3140,15 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             // if it fails, request password
             if (plaintext.length === 0 && password.length === 0) {
                 // get password
-                password = Prompt.getPassword();
+                try {
+                    console.log('bef');
+                    password = Prompt.getPassword();
+                    console.log('pass');
+                } catch (e) {
+                    console.error(e);
+                    return false;
+                }
+
 
                 // if password is there, re-try
                 if (password.length !== 0) {
@@ -2942,13 +3221,13 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          */
         me.run = function(paste)
         {
-            TopNav.showLoading('Decrypting paste…');
+            Alert.showLoading('Decrypting paste…', 0, 'cloud-download'); // @TODO icon maybe rotation-lock, but needs full Glyphicons
 
             if (typeof paste === 'undefined') {
-                paste = $.parseJSON(Modal.getCipherData());
+                paste = $.parseJSON(Model.getCipherData());
             }
 
-            var key = Modal.getPasteKey(),
+            var key = Model.getPasteKey(),
                 password = Prompt.getPassword();
 
             if (PasteViewer.isPrettyPrinted()) {
@@ -2973,11 +3252,11 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                     decryptAttachment(paste, key, password);
                 }
             } catch(err) {
-                TopNav.hideLoading();
+                Alert.hideLoading();
 
                 // log and show error
                 console.error(err);
-                Alert.showError(I18n._('Could not decrypt data (Wrong key?)')); // @TODO error is not translated
+                Alert.showError('Could not decrypt data (Wrong key?)'); // @TODO error is not translated
 
                 // still go on to potentially show potentially partially decrypted data
             }
@@ -3050,12 +3329,12 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                     '<div class="comment"><button class="btn btn-default btn-sm">' +
                     I18n._('Add comment') + '</button></div>'
                 );
-                $divComment.find('button').click({commentid: Modal.getPasteId()}, me.openReply);
+                $divComment.find('button').click({commentid: Model.getPasteId()}, me.openReply);
                 $comments.append($divComment);
                 $discussion.removeClass('hidden');
             }
 
-            TopNav.hideLoading();
+            Alert.hideLoading();
             TopNav.showViewButtons();
         };
 
@@ -3084,6 +3363,18 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         var me = {};
 
         /**
+         * hides all status messages no matter which module showed them
+         *
+         * @name   Controller.hideStatusMessages
+         * @function
+         */
+        me.hideStatusMessages = function()
+        {
+            PasteStatus.hideMessages();
+            Alert.hideMessages();
+        };
+
+        /**
          * creates a new paste
          *
          * @name   Controller.newPaste
@@ -3092,12 +3383,16 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         me.newPaste = function()
         {
             TopNav.hideViewButtons();
-            TopNav.showCreateButtons();
+            Alert.showLoading('Preparing new paste…', 0, 'time');
+
             PasteViewer.hide();
             Editor.resetInput();
             Editor.show();
             Editor.focusInput();
-            Alert.hideMessages();
+
+            TopNav.loadDefaults();
+            TopNav.showCreateButtons();
+            Alert.hideLoading();
         };
 
         /**
@@ -3109,22 +3404,43 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          */
         me.clonePaste = function(event)
         {
-            me.stateNewPaste();
+            TopNav.collapseBar();
+            TopNav.hideViewButtons();
+            Alert.showLoading('Cloning paste…', 0, 'transfer');
+
+            // hide messages from previous paste
+            me.hideStatusMessages();
 
             // erase the id and the key in url
-            history.replaceState(null, document.title, Helper.baseUri());
+            history.pushState({type: 'clone'}, document.title, Helper.baseUri());
 
-            Alert.hideMessages();
-            if ($attachmentLink.attr('href'))
-            {
-                $clonedFile.removeClass('hidden');
-                $fileWrap.addClass('hidden');
+            if (AttachmentViewer.hasAttachment()) {
+                AttachmentViewer.moveAttachmentTo(
+                    TopNav.getCustomAttachment(),
+                    'Cloned: \'%s\''
+                );
+                TopNav.hideFileSelector();
+                AttachmentViewer.hideAttachment();
+                // NOTE: it also looks nice without removing the attachment
+                // but for a consistent display we remove it…
+                AttachmentViewer.hideAttachmentPreview();
+                TopNav.showCustomAttachment();
+
+                // show another status message to make the user aware that the
+                // file was cloned too!
+                Alert.showStatus(
+                    [
+                        'The cloned file \'%s\' was attached to this paste.',
+                        AttachmentViewer.getAttachment()[1]
+                    ], 'copy', true, true);
             }
-            $message.val(
-                PasteViewer.getFormat() === 'markdown' ?
-                    $prettyPrint.val() : $plainText.val()
-            );
-            TopNav.collapseBar();
+
+            Editor.setText(PasteViewer.getText())
+            PasteViewer.hide();
+            Editor.show();
+
+            Alert.hideLoading();
+            TopNav.showCreateButtons();
         };
 
         /**
@@ -3162,7 +3478,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             // initialize other modules/"classes"
             Alert.init();
             Uploader.init();
-            Modal.init();
+            Model.init();
             CryptTool.init();
             UiHelper.init();
             TopNav.init();
@@ -3176,10 +3492,10 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             Prompt.init();
 
             // display an existing paste
-            if (Modal.hasCipherData()) {
+            if (Model.hasCipherData()) {
                 // missing decryption key in URL?
                 if (window.location.hash.length === 0) {
-                    Alert.showError(I18n._('Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)'));
+                    Alert.showError('Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)');
                     return;
                 }
 
