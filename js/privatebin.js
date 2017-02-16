@@ -353,7 +353,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          * @prop   {string[]}
          * @readonly
          */
-        supportedLanguages: ['de', 'es', 'fr', 'it', 'no', 'pl', 'oc', 'ru', 'sl', 'zh'],
+        supportedLanguages: ['de', 'es', 'fr', 'it', 'no', 'pl', 'pt', 'oc', 'ru', 'sl', 'zh'],
 
         /**
          * translate a string, alias for i18n.translate()
