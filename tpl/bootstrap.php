@@ -4,7 +4,7 @@ $isCpct = substr($template, 9, 8) === '-compact';
 $isDark = substr($template, 9, 5) === '-dark';
 $isPage = substr($template, -5) === '-page';
 ?><!DOCTYPE html>
-<html lang="en">
+<html>
 	<head>
 		<meta charset="utf-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">

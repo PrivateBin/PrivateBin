@@ -2560,6 +2560,8 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          */
         function rawText(event)
         {
+            TopNav.hideAllButtons();
+            Alert.showLoading('Showing raw text…', 0, 'time');
             var paste = PasteViewer.getText();
 
             // push a new state to allow back navigation with browser back button
@@ -2573,11 +2575,14 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
 
             // we use text/html instead of text/plain to avoid a bug when
             // reloading the raw text view (it reverts to type text/html)
+            var $head = $('head').children().not('noscript, script, link[type="text/css"]');
             var newDoc = document.open('text/html', 'replace');
-            newDoc.write('<pre>' + Helper.htmlEntities(paste) + '</pre>');
+            newDoc.write('<!DOCTYPE html><html><head>');
+            for (var i = 0; i < $head.length; i++) {
+                newDoc.write($head[i].outerHTML);
+            }
+            newDoc.write('</head><body><pre>' + Helper.htmlEntities(paste) + '</pre></body></html>');
             newDoc.close();
-
-            event.preventDefault();
         }
 
         /**
@@ -2643,7 +2648,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         /**
          * Shows all elements belonging to viwing an existing pastes
          *
-         * @name   TopNav.hideAllElem
+         * @name   TopNav.showViewButtons
          * @function
          */
         me.showViewButtons = function()
@@ -2663,7 +2668,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         /**
          * Hides all elements belonging to existing pastes
          *
-         * @name   TopNav.hideAllElem
+         * @name   TopNav.hideViewButtons
          * @function
          */
         me.hideViewButtons = function()
@@ -2678,6 +2683,18 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             $rawTextButton.addClass('hidden');
 
             viewButtonsDisplayed = false;
+        };
+
+        /**
+         * Hides all elements belonging to existing pastes
+         *
+         * @name   TopNav.hideAllButtons
+         * @function
+         */
+        me.hideAllButtons = function()
+        {
+            me.hideViewButtons();
+            me.hideCreateButtons();
         };
 
         /**
@@ -3393,7 +3410,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             Alert.setCustomHandler(DiscussionViewer.handleNotification);
 
             // UI loading state
-            TopNav.hideViewButtons();
+            TopNav.hideAllButtons();
             Alert.showLoading('Sending comment…', 0, 'cloud-upload');
 
             // get data
@@ -3467,7 +3484,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             Controller.hideStatusMessages();
 
             // UI loading state
-            TopNav.hideCreateButtons();
+            TopNav.hideAllButtons();
             Alert.showLoading('Sending paste…', 0, 'cloud-upload');
             TopNav.collapseBar();
 
@@ -3826,7 +3843,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         {
             // Important: This *must not* run Alert.hideMessages() as previous
             // errors from viewing a paste should be shown.
-            TopNav.hideViewButtons();
+            TopNav.hideAllButtons();
             Alert.showLoading('Preparing new paste…', 0, 'time');
 
             PasteStatus.hideMessages();
@@ -3911,7 +3928,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         me.clonePaste = function(event)
         {
             TopNav.collapseBar();
-            TopNav.hideViewButtons();
+            TopNav.hideAllButtons();
             Alert.showLoading('Cloning paste…', 0, 'transfer');
 
             // hide messages from previous paste
