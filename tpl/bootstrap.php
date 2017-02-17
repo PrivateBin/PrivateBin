@@ -369,108 +369,108 @@ endif;
 				</ul>
 			</div>
 		<?php
-if ($isCpct):
-?></div><?php
-endif;
-?></nav>
-		<header class="container">
+	if ($isCpct):
+	?></div><?php
+	endif;
+	?></nav>
+		<main>
+			<section class="container">
 <?php
 if (strlen($NOTICE)):
 ?>
-			<div role="alert" class="alert alert-info">
-				<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span><?php echo htmlspecialchars($NOTICE), PHP_EOL; ?>
-			</div>
+				<div role="alert" class="alert alert-info">
+					<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span><span><?php echo htmlspecialchars($NOTICE), PHP_EOL; ?></span>
+				</div>
 <?php
 endif;
 ?>
-			<div id="remainingtime" role="alert" class="hidden alert alert-info">
-				<span class="glyphicon glyphicon-fire" aria-hidden="true"></span><span></span>
-			</div>
+				<div id="remainingtime" role="alert" class="hidden alert alert-info">
+					<span class="glyphicon glyphicon-fire" aria-hidden="true"></span><span></span>
+				</div>
 <?php
 if ($FILEUPLOAD):
 ?>
-			<div id="attachment" role="alert" class="hidden alert alert-info">
-				<span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span><a><?php echo I18n::_('Download attachment'); ?></a></span>
-			</div>
+				<div id="attachment" role="alert" class="hidden alert alert-info">
+					<span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span><a class="alert-link"><?php echo I18n::_('Download attachment'); ?></a>
+				</div>
 <?php
 endif;
 ?>
-			<div id="status" role="alert" class="alert alert-info <?php echo empty($STATUS) ? 'hidden' : '' ?>">
-				<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
-				<span><?php echo htmlspecialchars($STATUS), PHP_EOL; ?></span>
-			</div>
-			<div id="errormessage" role="alert" class="<?php echo empty($ERROR) ? 'hidden' : '' ?> alert alert-danger"><span class="glyphicon glyphicon-alert" aria-hidden="true"></span><span><?php echo htmlspecialchars($ERROR); ?></span></div>
-			<noscript><div id="noscript" role="alert" class="nonworking alert alert-<?php echo $isDark ? 'error' : 'warning'; ?>"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span><?php echo I18n::_('JavaScript is required for %s to work.<br />Sorry for the inconvenience.', I18n::_($NAME)); ?></div></noscript>
-			<div id="oldienotice" role="alert" class="hidden nonworking alert alert-danger"><span class="glyphicon glyphicon-alert" aria-hidden="true"></span><?php echo I18n::_('%s requires a modern browser to work.', I18n::_($NAME)); ?></div>
-			<div id="ienotice" role="alert" class="hidden alert alert-<?php echo $isDark ? 'error' : 'warning'; ?>"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span><?php echo I18n::_('Still using Internet Explorer? Do yourself a favor, switch to a modern browser:'), PHP_EOL; ?>
-				<a href="https://www.mozilla.org/firefox/">Firefox</a>,
-				<a href="https://www.opera.com/">Opera</a>,
-				<a href="https://www.google.com/chrome">Chrome</a>,
-				<a href="https://www.apple.com/safari">Safari</a>...
-			</div>
-			<div id="pasteSuccess" role="alert" class="hidden alert alert-success">
-				<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
-				<div id="deletelink"></div>
-				<div id="pastelink">
-					<span></span>
+				<div id="status" role="alert" class="statusmessage alert alert-info <?php echo empty($STATUS) ? 'hidden' : '' ?>">
+					<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+					<span><?php echo htmlspecialchars($STATUS); ?></span>
+				</div>
+				<div id="errormessage" role="alert" class="statusmessage <?php echo empty($ERROR) ? 'hidden' : '' ?> alert alert-danger"><span class="glyphicon glyphicon-alert" aria-hidden="true"></span><span><?php echo htmlspecialchars($ERROR); ?></span></div>
+				<noscript><div id="noscript" role="alert" class="nonworking alert alert-<?php echo $isDark ? 'error' : 'warning'; ?>"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span><?php echo I18n::_('JavaScript is required for %s to work.<br />Sorry for the inconvenience.', I18n::_($NAME)); ?></div></noscript>
+				<div id="oldienotice" role="alert" class="hidden nonworking alert alert-danger"><span class="glyphicon glyphicon-alert" aria-hidden="true"></span><?php echo I18n::_('%s requires a modern browser to work.', I18n::_($NAME)); ?></div>
+				<div id="ienotice" role="alert" class="hidden alert alert-<?php echo $isDark ? 'error' : 'warning'; ?>"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span><?php echo I18n::_('Still using Internet Explorer? Do yourself a favor, switch to a modern browser:'), PHP_EOL; ?>
+					<a href="https://www.mozilla.org/firefox/">Firefox</a>,
+					<a href="https://www.opera.com/">Opera</a>,
+					<a href="https://www.google.com/chrome">Chrome</a>,
+					<a href="https://www.apple.com/safari">Safari</a>...
+				</div>
+				<div id="pasteSuccess" role="alert" class="hidden alert alert-success">
+					<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+					<div id="deletelink"></div>
+					<div id="pastelink">
+						<span></span>
 <?php
 if (strlen($URLSHORTENER)):
 ?>
-					<button id="shortenbutton" data-shortener="<?php echo htmlspecialchars($URLSHORTENER); ?>" type="button" class="btn btn-<?php echo $isDark ? 'warning' : 'primary'; ?>">
-						<span class="glyphicon glyphicon-send" aria-hidden="true"></span> <?php echo I18n::_('Shorten URL'), PHP_EOL; ?>
-					</button>
+						<button id="shortenbutton" data-shortener="<?php echo htmlspecialchars($URLSHORTENER); ?>" type="button" class="btn btn-<?php echo $isDark ? 'warning' : 'primary'; ?>">
+							<span class="glyphicon glyphicon-send" aria-hidden="true"></span> <?php echo I18n::_('Shorten URL'), PHP_EOL; ?>
+						</button>
 <?php
 endif;
 ?>
+					</div>
 				</div>
-			</div>
-			<ul id="editorTabs" class="nav nav-tabs hidden">
-				<li role="presentation" class="active"><a id="messageedit" href="#"><?php echo I18n::_('Editor'); ?></a></li>
-				<li role="presentation"><a id="messagepreview" href="#"><?php echo I18n::_('Preview'); ?></a></li>
-			</ul>
-		</header>
-		<section class="container">
-			<article class="row">
-				<div id="placeholder" class="col-md-12 hidden"><?php echo I18n::_('Nothing to see… Try to enter some text.'); ?></div>
-				<div id="attachmentPreview" class="col-md-12 text-center hidden"></div>
-				<div id="prettymessage" class="col-md-12 hidden">
-					<pre id="prettyprint" class="col-md-12 prettyprint linenums:1"></pre>
+				<ul id="editorTabs" class="nav nav-tabs hidden">
+					<li role="presentation" class="active"><a id="messageedit" href="#"><?php echo I18n::_('Editor'); ?></a></li>
+					<li role="presentation"><a id="messagepreview" href="#"><?php echo I18n::_('Preview'); ?></a></li>
+				</ul>
+			</section>
+			<section class="container">
+				<article class="row">
+					<div id="placeholder" class="col-md-12 hidden"><?php echo I18n::_('+++ no paste text +++'); ?></div>
+					<div id="attachmentPreview" class="col-md-12 text-center hidden"></div>
+					<div id="prettymessage" class="col-md-12 hidden">
+						<pre id="prettyprint" class="col-md-12 prettyprint linenums:1"></pre>
+					</div>
+					<div id="plaintext" class="col-md-12 hidden"></div>
+					<p class="col-md-12"><textarea id="message" name="message" cols="80" rows="25" class="form-control hidden"></textarea></p>
+				</article>
+			</section>
+			<section class="container">
+				<div id="discussion" class="hidden">
+					<h4><?php echo I18n::_('Discussion'); ?></h4>
+					<div id="commentcontainer"></div>
 				</div>
-				<div id="plaintext" class="col-md-12 hidden"></div>
-				<p class="col-md-12"><textarea id="message" name="message" cols="80" rows="25" class="form-control hidden"></textarea></p>
-			</article>
-		</section>
-		<section class="container">
-			<div id="discussion" class="hidden">
-				<h4><?php echo I18n::_('Discussion'); ?></h4>
-				<div id="comments"></div>
+			</section>
+			<section class="container">
+				<div id="noscript" role="alert" class="nonworking alert alert-info noscript-hide"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true">
+					<span> <?php echo I18n::_('Loading…'); ?></span><br>
+					<span class="small"><?php echo I18n::_('In case this message never disappears please have a look at <a href="https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away">this FAQ for information to troubleshoot</a>.'); ?></span>
+				</div>
+			</section>
+			<footer class="container">
+				<div class="row">
+					<h4 class="col-md-5 col-xs-8"><?php echo I18n::_($NAME); ?> <small>- <?php echo I18n::_('Because ignorance is bliss'); ?></small></h4>
+					<p class="col-md-1 col-xs-4 text-center"><?php echo $VERSION; ?></p>
+					<p id="aboutbox" class="col-md-6 col-xs-12">
+						<?php echo I18n::_('%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href="https://privatebin.info/">project page</a>.', I18n::_($NAME)), PHP_EOL; ?>
+					</p>
+				</div>
+			</footer>
+		</main>
+		<div id="serverdata" class="hidden" aria-hidden="true">
+			<div id="cipherdata"><?php echo htmlspecialchars($CIPHERDATA, ENT_NOQUOTES); ?></div>
+			<div id="templates">
+				<!-- @TODO: when I intend/structure this corrrectly Firefox adds whitespaces everywhere which completly destroy the layout. (same possible when you remove the template data below and show this area in the browser) -->
+				<article id="commenttemplate" class="comment"><div class="commentmeta"><span class="nickname">name</span><span class="commentdate">0000-00-00</span></div><div class="commentdata">c</div><button class="btn btn-default btn-sm"><?php echo I18n::_('Reply'); ?></button></article>
+				<div id="commenttailtemplate" class="comment"><button class="btn btn-default btn-sm"><?php echo I18n::_('Add comment'); ?></button></div>
+				<div id="replytemplate" class="reply hidden"><input type="text" id="nickname" class="form-control" title="<?php echo I18n::_('Optional nickname…'); ?>" placeholder="<?php echo I18n::_('Optional nickname…'); ?>" /><textarea id="replymessage" class="replymessage form-control" cols="80" rows="7"></textarea><br /><div id="replystatus" role="alert" class="statusmessage hidden alert"><span class="glyphicon" aria-hidden="true"></span><span></span></div><button id="replybutton" class="btn btn-default btn-sm"><?php echo I18n::_('Post comment'); ?></button></div>
 			</div>
-		</section>
-		<section class="container">
-			<div id="noscript" role="alert" class="nonworking alert alert-info noscript-hide"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true">
-				<span> <?php echo I18n::_('Loading…'); ?></span><br>
-				<span class="small"><?php echo I18n::_('In case this message never disappears please have a look at <a href="https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away">this FAQ for information to troubleshoot</a>.'); ?></span>
-			</div>
-		</section>
-		<footer class="container">
-			<div class="row">
-				<h4 class="col-md-5 col-xs-8"><?php echo I18n::_($NAME); ?> <small>- <?php echo I18n::_('Because ignorance is bliss'); ?></small></h4>
-				<p class="col-md-1 col-xs-4 text-center"><?php echo $VERSION; ?></p>
-				<p id="aboutbox" class="col-md-6 col-xs-12">
-					<?php echo I18n::_('%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href="https://privatebin.info/">project page</a>.', I18n::_($NAME)), PHP_EOL; ?>
-				</p>
-			</div>
-		</footer>
-		<div id="cipherdata" class="hidden"><?php echo htmlspecialchars($CIPHERDATA, ENT_NOQUOTES); ?></div>
-
-		<div id="replytemplate" class="reply hidden">
-			<input type="text" id="nickname" class="form-control" title="HINT" placeholder="HINT" />
-			<textarea id="replymessage" class="replymessage form-control" cols="80" rows="7"></textarea>
-			<br />
-			<div id="replystatus">
-				<img class="spinner" src="img/busy.gif" style="width:16px;height:9px;margin:0 4px 0 0;" class="hidden" />
-			</div>
-			<button id="replybutton" class="btn btn-default btn-sm"><?php echo I18n::_('Post comment'); ?></button>
 		</div>
 	</body>
 </html>

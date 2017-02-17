@@ -96,12 +96,12 @@
         "Avatar anónimo (Vizhash de la dirección IP)",
     "Add comment":
         "Añadir comentario",
-    "Optional nickname...":
-        "Seudónimo opcional...",
+    "Optional nickname…":
+        "Seudónimo opcional…",
     "Post comment":
         "Publicar comentario",
-    "Sending comment...":
-        "Enviando comentario...",
+    "Sending comment…":
+        "Enviando comentario…",
     "Comment posted.":
         "Comentario publicado.",
     "Could not refresh display: %s":
@@ -112,10 +112,10 @@
         "Error del servidor o el servidor no responde",
     "Could not post comment: %s":
         "No fue posible publicar comentario: %s",
-    "Sending paste (Please move your mouse for more entropy)...":
-        "Enviando texto (Por favor, mueva el ratón para mayor entropía)...",
-    "Sending paste...":
-        "Enviando texto...",
+    "Sending paste (Please move your mouse for more entropy)…":
+        "Enviando texto (Por favor, mueva el ratón para mayor entropía)…",
+    "Sending paste…":
+        "Enviando texto…",
     "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit [Ctrl]+[c] to copy)</span>":
         "Su texto está en <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Presione [Ctrl]+[c] para copiar)</span>",
     "Delete data":
