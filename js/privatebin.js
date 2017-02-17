@@ -2457,7 +2457,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             $customAttachment,
             $expiration,
             $fileRemoveButton,
-            $fileWrap;
+            $fileWrap,
             $formatter,
             $newButton,
             $openDiscussion,
