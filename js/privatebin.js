@@ -986,8 +986,8 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         var me = {};
 
         var $errorMessage,
-            $statusMessage,
-            $loadingIndicator;
+            $loadingIndicator,
+            $statusMessage;
 
         var currentIcon = [
             'glyphicon-time', // loading icon
@@ -1220,8 +1220,8 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
 
             // not a reset, but first set of the elements
             $errorMessage = $('#errormessage');
-            $statusMessage = $('#status');
             $loadingIndicator = $('#loadingindicator');
+            $statusMessage = $('#status');
 
             // display status returned by php code, if any (e.g. paste was properly deleted)
             var serverStatus = $statusMessage.text();
@@ -1250,9 +1250,9 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         var me = {};
 
         var $pasteSuccess,
-            $shortenButton,
             $pasteUrl,
-            $remainingTime;
+            $remainingTime,
+            $shortenButton;
 
         /**
          * forward to URL shortener
@@ -1378,10 +1378,10 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          */
         me.init = function()
         {
-            $shortenButton = $('#shortenbutton');
             $pasteSuccess = $('#pasteSuccess');
             // $pasteUrl is saved in me.createPasteNotification() after creation
             $remainingTime = $('#remainingtime');
+            $shortenButton = $('#shortenbutton');
 
             // bind elements
             $shortenButton.click(sendToShortener);
@@ -1400,9 +1400,9 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
     var Prompt = (function (window, document) {
         var me = {};
 
-        var $passwordModal,
+        var $passwordDecrypt,
             $passwordForm,
-            $passwordDecrypt;
+            $passwordModal;
 
         var password = '',
             passwordCallback = null;
@@ -1504,9 +1504,9 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          */
         me.init = function()
         {
-            $passwordModal = $('#passwordmodal');
-            $passwordForm = $('#passwordform');
             $passwordDecrypt = $('#passworddecrypt');
+            $passwordForm = $('#passwordform');
+            $passwordModal = $('#passwordmodal');
 
             // bind events
 
@@ -1533,10 +1533,10 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
     var Editor = (function (window, document) {
         var me = {};
 
-        var $message,
+        var $editorTabs,
             $messageEdit,
             $messagePreview,
-            $editorTabs;
+            $message;
 
         var isPreview = false;
 
@@ -1722,8 +1722,8 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          */
         me.init = function()
         {
-            $message = $('#message');
             $editorTabs = $('#editorTabs');
+            $message = $('#message');
 
             // bind events
             $message.keydown(supportTabs);
@@ -1747,10 +1747,10 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
     var PasteViewer = (function (window, document) {
         var me = {};
 
-        var $plainText,
-            $placeholder,
+        var $placeholder,
             $prettyMessage,
-            $prettyPrint;
+            $prettyPrint,
+            $plainText;
 
         var text,
             format = 'plaintext',
@@ -1961,8 +1961,8 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          */
         me.init = function()
         {
-            $plainText = $('#plaintext');
             $placeholder = $('#placeholder');
+            $plainText = $('#plaintext');
             $prettyMessage = $('#prettymessage');
             $prettyPrint = $('#prettyprint');
 
@@ -1997,9 +1997,9 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
     var AttachmentViewer = (function (window, document) {
         var me = {};
 
-        var $attachment,
-            $attachmentLink,
-            $attachmentPreview;
+        var $attachmentLink,
+            $attachmentPreview,
+            $attachment;
 
         var attachmentChanged = false,
             attachmentHasPreview = false;
@@ -2148,9 +2148,9 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          */
         me.init = function()
         {
-            $attachmentPreview = $('#attachmentPreview');
             $attachment = $('#attachment');
             $attachmentLink = $('#attachment a');
+            $attachmentPreview = $('#attachmentPreview');
         };
 
         return me;
@@ -2166,13 +2166,13 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
     var DiscussionViewer = (function (window, document) {
         var me = {};
 
-        var $commentContainer,
-            $commentTail,
+        var $commentTail,
             $discussion,
             $reply,
             $replyMessage,
             $replyNickname,
-            $replyStatus;
+            $replyStatus,
+            $commentContainer;
 
         var replyCommentId;
 
@@ -2457,15 +2457,15 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             $customAttachment,
             $expiration,
             $fileRemoveButton,
+            $fileWrap;
             $formatter,
             $newButton,
-            $openDiscussionOption,
             $openDiscussion,
+            $openDiscussionOption,
             $password,
             $passwordInput,
             $rawTextButton,
-            $sendButton,
-            $fileWrap;
+            $sendButton;
 
         var pasteExpiration = '1week';
 
@@ -2922,15 +2922,15 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             $customAttachment = $('#customattachment');
             $expiration = $('#expiration');
             $fileRemoveButton = $('#fileremovebutton');
+            $fileWrap = $('#filewrap');
             $formatter = $('#formatter');
             $newButton = $('#newbutton');
-            $openDiscussionOption = $('#opendiscussionoption');
             $openDiscussion = $('#opendiscussion');
+            $openDiscussionOption = $('#opendiscussionoption');
             $password = $('#password');
             $passwordInput = $('#passwordinput');
             $rawTextButton = $('#rawtextbutton');
             $sendButton = $('#sendbutton');
-            $fileWrap = $('#filewrap');
 
             // bootstrap template drop down
             $('#language ul.dropdown-menu li a').click(setLanguage);
@@ -4000,19 +4000,20 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
 
             // initialize other modules/"classes"
             Alert.init();
-            Uploader.init();
             Model.init();
+
+            AttachmentViewer.init();
             CryptTool.init();
-            UiHelper.init();
-            TopNav.init();
+            DiscussionViewer.init();
             Editor.init();
+            PasteDecrypter.init();
+            PasteEncrypter.init();
             PasteStatus.init();
             PasteViewer.init();
-            AttachmentViewer.init();
-            DiscussionViewer.init();
-            PasteEncrypter.init();
-            PasteDecrypter.init();
             Prompt.init();
+            TopNav.init();
+            UiHelper.init();
+            Uploader.init();
 
             // display an existing paste
             if (Model.hasCipherData()) {
@@ -4027,16 +4028,22 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
     })(window, document);
 
     return {
-        Editor: Editor,
         Helper: Helper,
         I18n: I18n,
         CryptTool: CryptTool,
-        TopNav: TopNav,
+        Model: Model,
+        UiHelper: UiHelper,
         Alert: Alert,
-        Uploader: Uploader,
-        Controller: Controller,
-        DiscussionViewer: DiscussionViewer,
+        PasteStatus: PasteStatus,
+        Prompt: Prompt,
+        Editor: Editor,
         PasteViewer: PasteViewer,
-        AttachmentViewer: AttachmentViewer
+        AttachmentViewer: AttachmentViewer,
+        DiscussionViewer: DiscussionViewer,
+        TopNav: TopNav,
+        Uploader: Uploader,
+        PasteEncrypter: PasteEncrypter,
+        PasteDecrypter: PasteDecrypter,
+        Controller: Controller
     };
 }(jQuery, sjcl, Base64, RawDeflate);
