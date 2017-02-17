@@ -3426,11 +3426,13 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             Uploader.setFailure(function (status, data) {
                 // revert loading status…
                 Alert.hideLoading();
-                Alert.setCustomHandler(null);
                 TopNav.showViewButtons();
 
                 // show error message
                 Alert.showError(Uploader.parseUploadError(status, data, 'post comment'));
+
+                // reset error handler
+                Alert.setCustomHandler(null);
             });
 
             // fill it with unencrypted params
