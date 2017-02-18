@@ -6,6 +6,7 @@
         "Porque a ignorância é uma benção",
     "en": "pt",
     "Paste does not exist, has expired or has been deleted.":
+        "A cópia não existe, expirou ou já foi excluída.",
     "%s requires php 5.3.0 or above to work. Sorry.":
         "%s requer php 5.3.0 ou superior para funcionar. Desculpa.",
     "%s requires configuration section [%s] to be present in configuration file.":
@@ -17,6 +18,7 @@
     "Invalid data.":
         "Dados inválidos.",
     "You are unlucky. Try again.":
+        "Você é azarado. Tente novamente",
     "Error saving comment. Sorry.":
         "Erro ao salvar comentário. Desculpa.",
     "Error saving paste. Sorry.":
@@ -28,11 +30,13 @@
     "Wrong deletion token. Paste was not deleted.":
         "Token de remoção inválido. A cópia não foi excluída.",
     "Paste was properly deleted.":
+        "A cópia foi devidamente excluída.",
     "JavaScript is required for %s to work.<br />Sorry for the inconvenience.":
         "JavaScript é necessário para que %s funcione.<br />Pedimos desculpas pela inconveniência.",
     "%s requires a modern browser to work.":
         "%s requer um navegador moderno para funcionar.",
     "Still using Internet Explorer? Do yourself a favor, switch to a modern browser:":
+        "Ainda usando Internet Explorer? Faça-se um favor, mude para um navegador moderno:",
     "New":
         "Novo",
     "Send":
@@ -42,7 +46,9 @@
     "Raw text":
         "Texto sem formato",
     "Expires":
+        "Expirar em",
     "Burn after reading":
+        "Queime após ler",
     "Open discussion":
         "Discussão aberta",
     "Password (recommended)":
@@ -103,6 +109,7 @@
     "unknown status":
         "Estado desconhecido",
     "server error or not responding":
+        "Servidor em erro ou não responsivo",
     "Could not post comment: %s":
         "Não foi possível publicar o comentário: %s",
     "Sending paste (Please move your mouse for more entropy)...":
@@ -116,6 +123,7 @@
     "Could not create paste: %s":
         "Não foi possível criar cópia: %s",
     "Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)":
+        "Não foi possível decifrar a cópia: chave de decriptografia ausente na URL (Você utilizou um redirecionador ou encurtador de URL que removeu parte dela?)",
     "Format": "Formato",
     "Plain Text": "Texto sem formato",
     "Source Code": "Código fonte",
@@ -139,4 +147,5 @@
         "Digite a senha",
     "Loading…": "Carregando…",
     "In case this message never disappears please have a look at <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">this FAQ for information to troubleshoot</a>.":
+        "Caso essa mensagem nunca desapareça, por favor veja <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">este FAQ para saber como resolver os problemas</a>."
 }
