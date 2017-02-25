@@ -20,7 +20,7 @@ global.RawDeflate = require('./rawdeflate-0.5');
 require('./rawinflate-0.3');
 require('./privatebin');
 
-describe('helper', function () {
+describe('Helper', function () {
     describe('secondsToHuman', function () {
         after(function () {
             cleanup();
@@ -66,7 +66,7 @@ describe('helper', function () {
         });
     });
 
-    describe('scriptLocation', function () {
+    describe('baseUri', function () {
         jsc.property(
             'returns the URL without query & fragment',
             jsc.nearray(jsc.elements(a2zString)),
@@ -76,67 +76,9 @@ describe('helper', function () {
             function (schema, address, query, fragment) {
                 var expected = schema.join('') + '://' + address.join('') + '/',
                     clean = jsdom('', {url: expected + '?' + query.join('') + '#' + fragment}),
-                    result = $.PrivateBin.Helper.scriptLocation();
+                    result = $.PrivateBin.Helper.baseUri();
                 clean();
                 return expected === result;
-            }
-        );
-    });
-
-    describe('pasteId', function () {
-        jsc.property(
-            'returns the query string without separator, if any',
-            jsc.nearray(jsc.elements(a2zString)),
-            jsc.nearray(jsc.elements(a2zString)),
-            jsc.array(jsc.elements(queryString)),
-            'string',
-            function (schema, address, query, fragment) {
-                var queryString = query.join(''),
-                    clean = jsdom('', {
-                        url: schema.join('') + '://' + address.join('') +
-                             '/?' + queryString + '#' + fragment
-                    }),
-                    result = $.PrivateBin.Helper.pasteId();
-                clean();
-                return queryString === result;
-            }
-        );
-    });
-
-    describe('pageKey', function () {
-        jsc.property(
-            'returns the fragment of the URL',
-            jsc.nearray(jsc.elements(a2zString)),
-            jsc.nearray(jsc.elements(a2zString)),
-            jsc.array(jsc.elements(queryString)),
-            jsc.array(jsc.elements(base64String)),
-            function (schema, address, query, fragment) {
-                var fragmentString = fragment.join(''),
-                    clean = jsdom('', {
-                        url: schema.join('') + '://' + address.join('') +
-                             '/?' + query.join('') + '#' + fragmentString
-                    }),
-                    result = $.PrivateBin.Modal.getPasteKey();
-                clean();
-                return fragmentString === result;
-            }
-        );
-        jsc.property(
-            'returns the fragment stripped of trailing query parts',
-            jsc.nearray(jsc.elements(a2zString)),
-            jsc.nearray(jsc.elements(a2zString)),
-            jsc.array(jsc.elements(queryString)),
-            jsc.array(jsc.elements(base64String)),
-            jsc.array(jsc.elements(queryString)),
-            function (schema, address, query, fragment, trail) {
-                var fragmentString = fragment.join(''),
-                    clean = jsdom('', {
-                        url: schema.join('') + '://' + address.join('') + '/?' +
-                             query.join('') + '#' + fragmentString + '&' + trail.join('')
-                    }),
-                    result = $.PrivateBin.Modal.getPasteKey();
-                clean();
-                return fragmentString === result;
             }
         );
     });
@@ -152,6 +94,69 @@ describe('helper', function () {
             function (string) {
                 var result = $.PrivateBin.Helper.htmlEntities(string);
                 return !(/[<>"'`=\/]/.test(result)) && !(string.indexOf('&') > -1 && !(/&amp;/.test(result)));
+            }
+        );
+    });
+});
+
+describe('Model', function () {
+    describe('getPasteId', function () {
+        jsc.property(
+            'returns the query string without separator, if any',
+            jsc.nearray(jsc.elements(a2zString)),
+            jsc.nearray(jsc.elements(a2zString)),
+            jsc.nearray(jsc.elements(queryString)),
+            'string',
+            function (schema, address, query, fragment) {
+                var queryString = query.join(''),
+                    clean = jsdom('', {
+                        url: schema.join('') + '://' + address.join('') +
+                             '/?' + queryString + '#' + fragment
+                    }),
+                    result = $.PrivateBin.Model.getPasteId();
+                $.PrivateBin.Model.reset();
+                clean();
+                return queryString === result;
+            }
+        );
+    });
+
+    describe('getPasteKey', function () {
+        jsc.property(
+            'returns the fragment of the URL',
+            jsc.nearray(jsc.elements(a2zString)),
+            jsc.nearray(jsc.elements(a2zString)),
+            jsc.array(jsc.elements(queryString)),
+            jsc.nearray(jsc.elements(base64String)),
+            function (schema, address, query, fragment) {
+                var fragmentString = fragment.join(''),
+                    clean = jsdom('', {
+                        url: schema.join('') + '://' + address.join('') +
+                             '/?' + query.join('') + '#' + fragmentString
+                    }),
+                    result = $.PrivateBin.Model.getPasteKey();
+                $.PrivateBin.Model.reset();
+                clean();
+                return fragmentString === result;
+            }
+        );
+        jsc.property(
+            'returns the fragment stripped of trailing query parts',
+            jsc.nearray(jsc.elements(a2zString)),
+            jsc.nearray(jsc.elements(a2zString)),
+            jsc.array(jsc.elements(queryString)),
+            jsc.nearray(jsc.elements(base64String)),
+            jsc.array(jsc.elements(queryString)),
+            function (schema, address, query, fragment, trail) {
+                var fragmentString = fragment.join(''),
+                    clean = jsdom('', {
+                        url: schema.join('') + '://' + address.join('') + '/?' +
+                             query.join('') + '#' + fragmentString + '&' + trail.join('')
+                    }),
+                    result = $.PrivateBin.Model.getPasteKey();
+                $.PrivateBin.Model.reset();
+                clean();
+                return fragmentString === result;
             }
         );
     });

@@ -47,7 +47,7 @@ if ($MARKDOWN):
 <?php
 endif;
 ?>
-		<script type="text/javascript" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-vYYJYraxQNOf41XtehLBU2JbIQ2Uffe+n8TjHyWkpqoZdZX4aL5zyABrUNvRUP02+AxoRsmNJkpvIbmeQqcIXg==" crossorigin="anonymous"></script>
+		<script type="text/javascript" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-iGFkRUeioseXBM4QLP9xFBK9RaGHPqTnl4NgVhjw0wm0xURcjpL5HE9WP+XJRY0UF3VbIoiuyFXSp0JpxSbc+A==" crossorigin="anonymous"></script>
 		<!--[if lt IE 10]>
 		<style type="text/css">body {padding-left:60px;padding-right:60px;} #ienotice {display:block;} #oldienotice {display:block;}</style>
 		<![endif]-->
@@ -125,7 +125,7 @@ endif;
 <?php
 if ($DISCUSSION):
 ?>
-					<div id="opendisc" class="button hidden">
+					<div id="opendiscussionoption" class="button hidden">
 						<input type="checkbox" id="opendiscussion" name="opendiscussion"<?php
     if ($OPENDISCUSSION):
 ?> checked="checked"<?php

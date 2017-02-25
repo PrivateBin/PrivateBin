@@ -739,10 +739,10 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
         new PrivateBin;
         $content = ob_get_contents();
         ob_end_clean();
-        $this->assertContains(
-            '<div id="cipherdata" class="hidden">' .
-            htmlspecialchars(Helper::getPasteAsJson(), ENT_NOQUOTES) .
-            '</div>',
+        $this->assertRegExp(
+            '#<div id="cipherdata"[^>]*>' .
+            preg_quote(htmlspecialchars(Helper::getPasteAsJson(), ENT_NOQUOTES)) .
+            '</div>#',
             $content,
             'outputs data correctly'
         );
@@ -818,10 +818,10 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
         $content = ob_get_contents();
         ob_end_clean();
         unset($burnPaste['meta']['salt']);
-        $this->assertContains(
-            '<div id="cipherdata" class="hidden">' .
-            htmlspecialchars(Helper::getPasteAsJson($burnPaste['meta']), ENT_NOQUOTES) .
-            '</div>',
+        $this->assertRegExp(
+            '#<div id="cipherdata"[^>]*>' .
+            preg_quote(htmlspecialchars(Helper::getPasteAsJson($burnPaste['meta']), ENT_NOQUOTES)) .
+            '</div>#',
             $content,
             'outputs data correctly'
         );
@@ -889,10 +889,10 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
         $content = ob_get_contents();
         ob_end_clean();
         $meta['formatter'] = 'syntaxhighlighting';
-        $this->assertContains(
-            '<div id="cipherdata" class="hidden">' .
-            htmlspecialchars(Helper::getPasteAsJson($meta), ENT_NOQUOTES) .
-            '</div>',
+        $this->assertRegExp(
+            '#<div id="cipherdata"[^>]*>' .
+            preg_quote(htmlspecialchars(Helper::getPasteAsJson($meta), ENT_NOQUOTES)) .
+            '</div>#',
             $content,
             'outputs data correctly'
         );
@@ -914,10 +914,10 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
         ob_end_clean();
         $oldPaste['meta']['formatter'] = 'plaintext';
         unset($oldPaste['meta']['salt']);
-        $this->assertContains(
-            '<div id="cipherdata" class="hidden">' .
-            htmlspecialchars(Helper::getPasteAsJson($oldPaste['meta']), ENT_NOQUOTES) .
-            '</div>',
+        $this->assertRegExp(
+            '#<div id="cipherdata"[^>]*>' .
+            preg_quote(htmlspecialchars(Helper::getPasteAsJson($oldPaste['meta']), ENT_NOQUOTES)) .
+            '</div>#',
             $content,
             'outputs data correctly'
         );

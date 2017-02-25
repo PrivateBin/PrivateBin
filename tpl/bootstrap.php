@@ -69,7 +69,7 @@ if ($MARKDOWN):
 <?php
 endif;
 ?>
-		<script type="text/javascript" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-vYYJYraxQNOf41XtehLBU2JbIQ2Uffe+n8TjHyWkpqoZdZX4aL5zyABrUNvRUP02+AxoRsmNJkpvIbmeQqcIXg==" crossorigin="anonymous"></script>
+		<script type="text/javascript" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-iGFkRUeioseXBM4QLP9xFBK9RaGHPqTnl4NgVhjw0wm0xURcjpL5HE9WP+XJRY0UF3VbIoiuyFXSp0JpxSbc+A==" crossorigin="anonymous"></script>
 		<!--[if lt IE 10]>
 		<style type="text/css">body {padding-left:60px;padding-right:60px;} #ienotice {display:block;} #oldienotice {display:block;}</style>
 		<![endif]-->
@@ -122,7 +122,7 @@ endif;
 				<ul class="nav navbar-nav">
 					<li id="loadingindicator" class="navbar-text hidden">
 						<span class="glyphicon glyphicon-time" aria-hidden="true"></span>
-						<span><?php echo I18n::_('Loading…'), PHP_EOL; ?></span>
+						<?php echo I18n::_('Loading…'), PHP_EOL; ?>
 					</li>
 					<li>
 <?php
@@ -369,23 +369,23 @@ endif;
 				</ul>
 			</div>
 		<?php
-	if ($isCpct):
-	?></div><?php
-	endif;
-	?></nav>
+if ($isCpct):
+?></div><?php
+endif;
+?></nav>
 		<main>
 			<section class="container">
 <?php
 if (strlen($NOTICE)):
 ?>
 				<div role="alert" class="alert alert-info">
-					<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span><span><?php echo htmlspecialchars($NOTICE), PHP_EOL; ?></span>
+					<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span><?php echo htmlspecialchars($NOTICE), PHP_EOL; ?>
 				</div>
 <?php
 endif;
 ?>
 				<div id="remainingtime" role="alert" class="hidden alert alert-info">
-					<span class="glyphicon glyphicon-fire" aria-hidden="true"></span><span></span>
+					<span class="glyphicon glyphicon-fire" aria-hidden="true"></span>
 				</div>
 <?php
 if ($FILEUPLOAD):
@@ -398,9 +398,9 @@ endif;
 ?>
 				<div id="status" role="alert" class="statusmessage alert alert-info <?php echo empty($STATUS) ? 'hidden' : '' ?>">
 					<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
-					<span><?php echo htmlspecialchars($STATUS); ?></span>
+					<?php echo htmlspecialchars($STATUS); ?>
 				</div>
-				<div id="errormessage" role="alert" class="statusmessage <?php echo empty($ERROR) ? 'hidden' : '' ?> alert alert-danger"><span class="glyphicon glyphicon-alert" aria-hidden="true"></span><span><?php echo htmlspecialchars($ERROR); ?></span></div>
+				<div id="errormessage" role="alert" class="statusmessage <?php echo empty($ERROR) ? 'hidden' : '' ?> alert alert-danger"><span class="glyphicon glyphicon-alert" aria-hidden="true"></span><?php echo htmlspecialchars($ERROR); ?></div>
 				<noscript><div id="noscript" role="alert" class="nonworking alert alert-<?php echo $isDark ? 'error' : 'warning'; ?>"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span><?php echo I18n::_('JavaScript is required for %s to work.<br />Sorry for the inconvenience.', I18n::_($NAME)); ?></div></noscript>
 				<div id="oldienotice" role="alert" class="hidden nonworking alert alert-danger"><span class="glyphicon glyphicon-alert" aria-hidden="true"></span><?php echo I18n::_('%s requires a modern browser to work.', I18n::_($NAME)); ?></div>
 				<div id="ienotice" role="alert" class="hidden alert alert-<?php echo $isDark ? 'error' : 'warning'; ?>"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span><?php echo I18n::_('Still using Internet Explorer? Do yourself a favor, switch to a modern browser:'), PHP_EOL; ?>
@@ -413,7 +413,6 @@ endif;
 					<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
 					<div id="deletelink"></div>
 					<div id="pastelink">
-						<span></span>
 <?php
 if (strlen($URLSHORTENER)):
 ?>
@@ -449,7 +448,7 @@ endif;
 			</section>
 			<section class="container">
 				<div id="noscript" role="alert" class="nonworking alert alert-info noscript-hide"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true">
-					<span> <?php echo I18n::_('Loading…'); ?></span><br>
+					<?php echo I18n::_('Loading…'); ?><br />
 					<span class="small"><?php echo I18n::_('In case this message never disappears please have a look at <a href="https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away">this FAQ for information to troubleshoot</a>.'); ?></span>
 				</div>
 			</section>
@@ -465,12 +464,18 @@ endif;
 		</main>
 		<div id="serverdata" class="hidden" aria-hidden="true">
 			<div id="cipherdata"><?php echo htmlspecialchars($CIPHERDATA, ENT_NOQUOTES); ?></div>
+<?php
+if ($DISCUSSION):
+?>
 			<div id="templates">
 				<!-- @TODO: when I intend/structure this corrrectly Firefox adds whitespaces everywhere which completly destroy the layout. (same possible when you remove the template data below and show this area in the browser) -->
 				<article id="commenttemplate" class="comment"><div class="commentmeta"><span class="nickname">name</span><span class="commentdate">0000-00-00</span></div><div class="commentdata">c</div><button class="btn btn-default btn-sm"><?php echo I18n::_('Reply'); ?></button></article>
 				<div id="commenttailtemplate" class="comment"><button class="btn btn-default btn-sm"><?php echo I18n::_('Add comment'); ?></button></div>
 				<div id="replytemplate" class="reply hidden"><input type="text" id="nickname" class="form-control" title="<?php echo I18n::_('Optional nickname…'); ?>" placeholder="<?php echo I18n::_('Optional nickname…'); ?>" /><textarea id="replymessage" class="replymessage form-control" cols="80" rows="7"></textarea><br /><div id="replystatus" role="alert" class="statusmessage hidden alert"><span class="glyphicon" aria-hidden="true"></span><span></span></div><button id="replybutton" class="btn btn-default btn-sm"><?php echo I18n::_('Post comment'); ?></button></div>
 			</div>
+<?php
+endif;
+?>
 		</div>
 	</body>
 </html>
