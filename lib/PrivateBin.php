@@ -334,19 +334,16 @@ class PrivateBin
                 // accessing this property ensures that the paste would be
                 // deleted if it has already expired
                 $burnafterreading = $paste->isBurnafterreading();
-                if ($deletetoken == 'burnafterreading') {
-                    if ($burnafterreading) {
-                        $paste->delete();
-                        $this->_return_message(0, $dataid);
-                    } else {
-                        $this->_return_message(1, 'Paste is not of burn-after-reading type.');
-                    }
+                if (
+                    ($burnafterreading && $deletetoken == 'burnafterreading') ||
+                    Filter::slowEquals($deletetoken, $paste->getDeleteToken())
+                ) {
+                    // Paste exists and deletion token is valid: Delete the paste.
+                    $paste->delete();
+                    $this->_status = 'Paste was properly deleted.';
                 } else {
-                    // Make sure the token is valid.
-                    if (Filter::slowEquals($deletetoken, $paste->getDeleteToken())) {
-                        // Paste exists and deletion token is valid: Delete the paste.
-                        $paste->delete();
-                        $this->_status = 'Paste was properly deleted.';
+                    if (!$burnafterreading && $deletetoken == 'burnafterreading') {
+                        $this->_error = 'Paste is not of burn-after-reading type.';
                     } else {
                         $this->_error = 'Wrong deletion token. Paste was not deleted.';
                     }
@@ -356,6 +353,13 @@ class PrivateBin
             }
         } catch (Exception $e) {
             $this->_error = $e->getMessage();
+        }
+        if ($this->_request->isJsonApiCall()) {
+            if (strlen($this->_error)) {
+                $this->_return_message(1, $this->_error);
+            } else {
+                $this->_return_message(0, $dataid);
+            }
         }
     }
 

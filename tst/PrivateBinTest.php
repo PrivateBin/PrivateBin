@@ -1047,7 +1047,7 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
         ob_end_clean();
         $response = json_decode($content, true);
         $this->assertEquals(1, $response['status'], 'outputs status');
-        $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste successfully deleted');
+        $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste exists after failing to delete data');
     }
 
     /**

@@ -147,10 +147,9 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste exists before deleting data');
         $paste = $this->_model->read(Helper::getPasteId());
         $_POST = array(
-            'action'      => 'delete',
+            'pasteid'     => Helper::getPasteId(),
             'deletetoken' => hash_hmac('sha256', Helper::getPasteId(), $paste->meta->salt),
         );
-        $_SERVER['QUERY_STRING']          = Helper::getPasteId();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD']        = 'POST';
         ob_start();
