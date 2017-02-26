@@ -62,43 +62,147 @@ class FilterTest extends PHPUnit_Framework_TestCase
      */
     public function testFilterFailTimesHumanlyReadable()
     {
-        Filter::formatHumanReadableTime('five_minutes');
+        $this->forAll(
+            Generator\string()
+        )->then(
+            function ($string)
+            {
+                Filter::formatHumanReadableTime($string);
+            }
+        );
     }
 
     public function testFilterMakesSizesHumanlyReadable()
     {
-        $this->assertEquals('1 B', Filter::formatHumanReadableSize(1));
-        $this->assertEquals('1 000 B', Filter::formatHumanReadableSize(1000));
-        $this->assertEquals('1.00 KiB', Filter::formatHumanReadableSize(1024));
-        $this->assertEquals('1.21 KiB', Filter::formatHumanReadableSize(1234));
+        $this->forAll(
+            Generator\neg()
+        )->then(
+            function ($int)
+            {
+                $this->assertEquals(number_format($int, 0, '.', ' ') . ' B', Filter::formatHumanReadableSize($int));
+            }
+        );
+        $from = 0;
         $exponent = 1024;
-        $this->assertEquals('1 000.00 KiB', Filter::formatHumanReadableSize(1000 * $exponent));
-        $this->assertEquals('1.00 MiB', Filter::formatHumanReadableSize(1024 * $exponent));
-        $this->assertEquals('1.21 MiB', Filter::formatHumanReadableSize(1234 * $exponent));
+        $to = $exponent - 1;
+        $this->forAll(
+            Generator\choose($from, $to)
+        )->then(
+            function ($int)
+            {
+                $this->assertEquals(number_format($int, 0, '.', ' ') . ' B', Filter::formatHumanReadableSize($int));
+            }
+        );
+        $from = $exponent;
         $exponent *= 1024;
-        $this->assertEquals('1 000.00 MiB', Filter::formatHumanReadableSize(1000 * $exponent));
-        $this->assertEquals('1.00 GiB', Filter::formatHumanReadableSize(1024 * $exponent));
-        $this->assertEquals('1.21 GiB', Filter::formatHumanReadableSize(1234 * $exponent));
+        $to = $exponent - 1;
+        $this->forAll(
+            Generator\choose($from, $to),
+            $from
+        )->then(
+            function ($int, $divisor)
+            {
+                $this->assertEquals(number_format($int / $divisor, 2, '.', ' ') . ' KiB', Filter::formatHumanReadableSize($int));
+            }
+        );
+        $from = $exponent;
         $exponent *= 1024;
-        $this->assertEquals('1 000.00 GiB', Filter::formatHumanReadableSize(1000 * $exponent));
-        $this->assertEquals('1.00 TiB', Filter::formatHumanReadableSize(1024 * $exponent));
-        $this->assertEquals('1.21 TiB', Filter::formatHumanReadableSize(1234 * $exponent));
+        $to = $exponent - 1;
+        $this->forAll(
+            Generator\choose($from, $to),
+            $from
+        )->then(
+            function ($int, $divisor)
+            {
+                $this->assertEquals(number_format($int / $divisor, 2, '.', ' ') . ' MiB', Filter::formatHumanReadableSize($int));
+            }
+        );
+        $from = $exponent;
         $exponent *= 1024;
-        $this->assertEquals('1 000.00 TiB', Filter::formatHumanReadableSize(1000 * $exponent));
-        $this->assertEquals('1.00 PiB', Filter::formatHumanReadableSize(1024 * $exponent));
-        $this->assertEquals('1.21 PiB', Filter::formatHumanReadableSize(1234 * $exponent));
+        $to = $exponent - 1;
+        $this->forAll(
+            Generator\choose($from, $to),
+            $from
+        )->then(
+            function ($int, $divisor)
+            {
+                $this->assertEquals(number_format($int / $divisor, 2, '.', ' ') . ' GiB', Filter::formatHumanReadableSize($int));
+            }
+        );
+        $from = $exponent;
         $exponent *= 1024;
-        $this->assertEquals('1 000.00 PiB', Filter::formatHumanReadableSize(1000 * $exponent));
-        $this->assertEquals('1.00 EiB', Filter::formatHumanReadableSize(1024 * $exponent));
-        $this->assertEquals('1.21 EiB', Filter::formatHumanReadableSize(1234 * $exponent));
+        $to = $exponent - 1;
+        $this->forAll(
+            Generator\choose($from, $to),
+            $from
+        )->then(
+            function ($int, $divisor)
+            {
+                $this->assertEquals(number_format($int / $divisor, 2, '.', ' ') . ' TiB', Filter::formatHumanReadableSize($int));
+            }
+        );
+        $from = $exponent;
         $exponent *= 1024;
-        $this->assertEquals('1 000.00 EiB', Filter::formatHumanReadableSize(1000 * $exponent));
-        $this->assertEquals('1.00 ZiB', Filter::formatHumanReadableSize(1024 * $exponent));
-        $this->assertEquals('1.21 ZiB', Filter::formatHumanReadableSize(1234 * $exponent));
+        $to = $exponent - 1;
+        $this->forAll(
+            Generator\choose($from, $to),
+            $from
+        )->then(
+            function ($int, $divisor)
+            {
+                $this->assertEquals(number_format($int / $divisor, 2, '.', ' ') . ' PiB', Filter::formatHumanReadableSize($int));
+            }
+        );
+        $from = $exponent;
         $exponent *= 1024;
-        $this->assertEquals('1 000.00 ZiB', Filter::formatHumanReadableSize(1000 * $exponent));
-        $this->assertEquals('1.00 YiB', Filter::formatHumanReadableSize(1024 * $exponent));
-        $this->assertEquals('1.21 YiB', Filter::formatHumanReadableSize(1234 * $exponent));
+        $to = $exponent - 1;
+        // on 64bit systems, this gets larger then PHP_INT_MAX, so PHP casts it
+        // to double and the "choose" generator can't handle it
+        if ($to > PHP_INT_MAX) {
+            $this->assertEquals('1.00 EiB', Filter::formatHumanReadableSize($from));
+            $this->assertEquals('1.23 EiB', Filter::formatHumanReadableSize(1.234 * $from));
+            $this->assertEquals('1 000.00 EiB', Filter::formatHumanReadableSize(1000 * $from));
+            $this->assertEquals('1.00 ZiB', Filter::formatHumanReadableSize($exponent));
+            $this->assertEquals('1.23 ZiB', Filter::formatHumanReadableSize(1.234 * $exponent));
+            $this->assertEquals('1 000.00 ZiB', Filter::formatHumanReadableSize(1000 * $exponent));
+            $exponent *= 1024;
+            $this->assertEquals('1.00 YiB', Filter::formatHumanReadableSize($exponent));
+            $this->assertEquals('1.23 YiB', Filter::formatHumanReadableSize(1.234 * $exponent));
+        } else {
+            $this->forAll(
+                Generator\choose($from, $to),
+                $from
+            )->then(
+                function ($int, $divisor)
+                {
+                    $this->assertEquals(number_format($int / $divisor, 2, '.', ' ') . ' EiB', Filter::formatHumanReadableSize($int));
+                }
+            );
+            $from = $exponent;
+            $exponent *= 1024;
+            $to = $exponent - 1;
+            $this->forAll(
+                Generator\choose($from, $to),
+                $from
+            )->then(
+                function ($int, $divisor)
+                {
+                    $this->assertEquals(number_format($int / $divisor, 2, '.', ' ') . ' ZiB', Filter::formatHumanReadableSize($int));
+                }
+            );
+            $from = $exponent;
+            $exponent *= 1024;
+            $to = $exponent - 1;
+            $this->forAll(
+                Generator\choose($from, $to),
+                $from
+            )->then(
+                function ($int, $divisor)
+                {
+                    $this->assertEquals(number_format($int / $divisor, 2, '.', ' ') . ' YiB', Filter::formatHumanReadableSize($int));
+                }
+            );
+        }
     }
 
     public function testSlowEquals()
