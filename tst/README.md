@@ -8,10 +8,13 @@ and its dependencies:
 * php-sqlite3
 * php-curl (optional, for codeclimate test reporter)
 * php-xdebug (optional, for code coverage reports)
+* composer (to install eris property based unit tests)
 
 Example for Debian and Ubuntu:
 ```console
-$ sudo apt install phpunit php-gd php-sqlite php-curl php-xdebug
+$ sudo apt install phpunit php-gd php-sqlite php-curl php-xdebug composer
+$ cd PrivateBin
+$ composer update
 ```
 
 To run the tests, just change into this directory and run phpunit:
