@@ -236,8 +236,7 @@ class FilterTest extends PHPUnit_Framework_TestCase
             Generator\string(),
             Generator\int()
         )->then(
-            function ($string, $int)
-            {
+            function ($string, $int) {
                 $this->assertFalse(Filter::slowEquals($string, $int), 'string and integer');
             }
         );
