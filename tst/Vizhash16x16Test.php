@@ -2,9 +2,12 @@
 
 use PrivateBin\Persistence\ServerSalt;
 use PrivateBin\Vizhash16x16;
+use Eris\Generator;
 
 class Vizhash16x16Test extends PHPUnit_Framework_TestCase
 {
+    use Eris\TestTrait;
+
     private $_file;
 
     private $_path;
@@ -25,6 +28,35 @@ class Vizhash16x16Test extends PHPUnit_Framework_TestCase
         /* Tear Down Routine */
         chmod($this->_path, 0700);
         Helper::rmDir($this->_path);
+    }
+
+    public function testVizhashGeneratesPngs()
+    {
+        $this->forAll(
+            Generator\string(),
+            Generator\string()
+        )->then(
+            function ($string1, $string2)
+            {
+                $vz      = new Vizhash16x16();
+                $pngdata = $vz->generate($string1);
+
+                if (empty($string1))
+                {
+                    $this->assertEquals($pngdata, '');
+                } else {
+                    $this->assertNotEquals($pngdata, '');
+                    file_put_contents($this->_file, $pngdata);
+                    $finfo = new finfo(FILEINFO_MIME_TYPE);
+                    $this->assertEquals('image/png', $finfo->file($this->_file));
+                    if ($string1 !== $string2)
+                    {
+                        $this->assertNotEquals($pngdata, $string2);
+                    }
+                }
+                $this->assertEquals($pngdata, $vz->generate($string1));
+            }
+        );
     }
 
     public function testVizhashGeneratesUniquePngsPerIp()

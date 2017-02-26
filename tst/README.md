@@ -6,11 +6,12 @@ and its dependencies:
 * phpunit
 * php-gd
 * php-sqlite3
-* php-xdebug (for code coverage reports)
+* php-curl (optional, for codeclimate test reporter)
+* php-xdebug (optional, for code coverage reports)
 
 Example for Debian and Ubuntu:
 ```console
-$ sudo apt install phpunit php-gd php-sqlite php-xdebug
+$ sudo apt install phpunit php-gd php-sqlite php-curl php-xdebug
 ```
 
 To run the tests, just change into this directory and run phpunit:

@@ -80,7 +80,7 @@ class Vizhash16x16
      */
     public function generate($text)
     {
-        if (!function_exists('gd_info')) {
+        if (!function_exists('gd_info') || strlen($text) < 1) {
             return '';
         }
 
