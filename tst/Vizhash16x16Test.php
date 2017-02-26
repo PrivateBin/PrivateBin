@@ -1,8 +1,8 @@
 <?php
 
+use Eris\Generator;
 use PrivateBin\Persistence\ServerSalt;
 use PrivateBin\Vizhash16x16;
-use Eris\Generator;
 
 class Vizhash16x16Test extends PHPUnit_Framework_TestCase
 {
@@ -36,8 +36,7 @@ class Vizhash16x16Test extends PHPUnit_Framework_TestCase
             Generator\string(),
             Generator\string()
         )->then(
-            function ($string1, $string2)
-            {
+            function ($string1, $string2) {
                 $vz      = new Vizhash16x16();
                 $pngdata = $vz->generate($string1);
 
@@ -62,8 +61,7 @@ class Vizhash16x16Test extends PHPUnit_Framework_TestCase
         $this->forAll(
             Generator\vector(2, Generator\vector(4, Generator\byte()))
         )->then(
-            function ($ips)
-            {
+            function ($ips) {
                 $hash1   = hash('sha512', implode('.', $ips[0]));
                 $hash2   = hash('sha512', implode('.', $ips[1]));
                 $vz      = new Vizhash16x16();
@@ -84,8 +82,7 @@ class Vizhash16x16Test extends PHPUnit_Framework_TestCase
         $this->forAll(
             Generator\vector(2, Generator\vector(16, Generator\byte()))
         )->then(
-            function ($ips)
-            {
+            function ($ips) {
                 $hash1   = hash('sha512', inet_ntop(implode(array_map('chr', $ips[0]))));
                 $hash2   = hash('sha512', inet_ntop(implode(array_map('chr', $ips[1]))));
                 $vz      = new Vizhash16x16();

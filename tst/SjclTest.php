@@ -1,7 +1,7 @@
 <?php
 
-use PrivateBin\Sjcl;
 use Eris\Generator;
+use PrivateBin\Sjcl;
 
 class SjclTest extends PHPUnit_Framework_TestCase
 {
@@ -15,8 +15,7 @@ class SjclTest extends PHPUnit_Framework_TestCase
             Generator\string(),
             Generator\choose(0,100)
         )->then(
-            function ($pasteArray, $key, $value, $lowInt)
-            {
+            function ($pasteArray, $key, $value, $lowInt) {
                 $paste = Helper::getPasteFromGeneratedArray($pasteArray);
                 $this->assertTrue(Sjcl::isValid($paste['data']), 'valid sjcl');
                 $this->assertTrue(Sjcl::isValid($paste['attachment']), 'valid sjcl');

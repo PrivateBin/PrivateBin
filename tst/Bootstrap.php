@@ -1,7 +1,7 @@
 <?php
 
-use PrivateBin\Persistence\ServerSalt;
 use Eris\Generator;
+use PrivateBin\Persistence\ServerSalt;
 
 error_reporting(E_ALL | E_STRICT);
 
@@ -137,14 +137,14 @@ class Helper
      */
     public static function getPasteGenerator($meta = array(), $withAttachment = false)
     {
-        $generatedMeta = array(
+        $generatedMeta  = array(
             'salt'           => ServerSalt::generate(),
             'formatter'      => Generator\elements('plaintext', 'syntaxhighlighting', 'markdown'),
             'postdate'       => Generator\int(),
             'opendiscussion' => Generator\elements(true, false),
         );
-        $generatedMeta = array_merge($generatedMeta, $meta);
-        $example = array(
+        $generatedMeta  = array_merge($generatedMeta, $meta);
+        $example        = array(
             'data'      => Generator\associative(array(
                 'iv'    => Generator\vector(16, Generator\byte()),
                 'v'     => 1,
@@ -172,22 +172,22 @@ class Helper
      */
     public static function getPasteFromGeneratedArray($paste)
     {
-        $paste['data']['iv'] = self::byteArray2Base64($paste['data']['iv']);
+        $paste['data']['iv']   = self::byteArray2Base64($paste['data']['iv']);
         $paste['data']['salt'] = self::byteArray2Base64($paste['data']['salt']);
         // deflate cipher text to maximize entropy
-        $paste['data']['ct'] = self::byteArray2Base64($paste['data']['ct'], true);
-        $paste['data'] = json_encode($paste['data']);
+        $paste['data']['ct']   = self::byteArray2Base64($paste['data']['ct'], true);
+        $paste['data']         = json_encode($paste['data']);
         if (array_key_exists('attachment', $paste)) {
-            $paste['attachment']['iv'] = self::byteArray2Base64($paste['attachment']['iv']);
+            $paste['attachment']['iv']   = self::byteArray2Base64($paste['attachment']['iv']);
             $paste['attachment']['salt'] = self::byteArray2Base64($paste['attachment']['salt']);
-            $paste['attachment']['ct'] = self::byteArray2Base64($paste['attachment']['ct'], true);
-            $paste['attachment'] = json_encode($paste['attachment']);
+            $paste['attachment']['ct']   = self::byteArray2Base64($paste['attachment']['ct'], true);
+            $paste['attachment']         = json_encode($paste['attachment']);
         }
         if (array_key_exists('attachmentname', $paste)) {
-            $paste['attachmentname']['iv'] = self::byteArray2Base64($paste['attachmentname']['iv']);
+            $paste['attachmentname']['iv']   = self::byteArray2Base64($paste['attachmentname']['iv']);
             $paste['attachmentname']['salt'] = self::byteArray2Base64($paste['attachmentname']['salt']);
-            $paste['attachmentname']['ct'] = self::byteArray2Base64($paste['attachmentname']['ct'], true);
-            $paste['attachmentname'] = json_encode($paste['attachmentname']);
+            $paste['attachmentname']['ct']   = self::byteArray2Base64($paste['attachmentname']['ct'], true);
+            $paste['attachmentname']         = json_encode($paste['attachmentname']);
         }
         return $paste;
     }
