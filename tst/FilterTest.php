@@ -207,14 +207,103 @@ class FilterTest extends PHPUnit_Framework_TestCase
 
     public function testSlowEquals()
     {
-        $this->assertTrue(Filter::slowEquals('foo', 'foo'), 'same string');
-        $this->assertFalse(Filter::slowEquals('foo', true), 'string and boolean');
-        $this->assertFalse(Filter::slowEquals('foo', 0), 'string and integer');
-        $this->assertFalse(Filter::slowEquals('123foo', 123), 'string and integer');
-        $this->assertFalse(Filter::slowEquals('123foo', '123'), 'different strings');
-        $this->assertFalse(Filter::slowEquals('6', ' 6'), 'strings with space');
-        $this->assertFalse(Filter::slowEquals('4.2', '4.20'), 'floats as strings');
-        $this->assertFalse(Filter::slowEquals('1e3', '1000'), 'integers as strings');
+        $this->forAll(
+            Generator\string()
+        )->then(
+            function ($string)
+            {
+                $this->assertTrue(Filter::slowEquals($string, $string), 'same string');
+            }
+        );
+        $this->forAll(
+            Generator\int()
+        )->then(
+            function ($int)
+            {
+                $this->assertTrue(Filter::slowEquals($int, $int), 'same integer');
+            }
+        );
+        $this->forAll(
+            Generator\float()
+        )->then(
+            function ($float)
+            {
+                $this->assertTrue(Filter::slowEquals($float, $float), 'same float');
+            }
+        );
+        $this->forAll(
+            Generator\string()
+        )->then(
+            function ($string)
+            {
+                $this->assertFalse(Filter::slowEquals($string, true), 'string and boolean true');
+            }
+        );
+        $this->forAll(
+            Generator\string()
+        )->then(
+            function ($string)
+            {
+                // false is casted into an empty string
+                if ($string !== '') {
+                    $this->assertFalse(Filter::slowEquals($string, false), 'string and boolean false');
+                }
+            }
+        );
+        $this->forAll(
+            Generator\string(),
+            Generator\int()
+        )->then(
+            function ($string, $int)
+            {
+                $this->assertFalse(Filter::slowEquals($string, $int), 'string and integer');
+            }
+        );
+        $this->forAll(
+            Generator\string(),
+            Generator\float()
+        )->then(
+            function ($string, $float)
+            {
+                $this->assertFalse(Filter::slowEquals($string, $float), 'string and float');
+            }
+        );
+        $this->forAll(
+            Generator\string(),
+            Generator\string()
+        )->then(
+            function ($string1, $string2)
+            {
+                if ($string1 !== $string2) {
+                    $this->assertFalse(Filter::slowEquals($string1, $string2), 'different strings');
+                }
+            }
+        );
+        $this->forAll(
+            Generator\string()
+        )->then(
+            function ($string)
+            {
+                $this->assertFalse(Filter::slowEquals($string, ' ' . $string), 'strings with space');
+            }
+        );
+        $this->forAll(
+            Generator\float()
+        )->then(
+            function ($float)
+            {
+                $this->assertFalse(Filter::slowEquals(strval($float), $float . '0'), 'floats as strings');
+            }
+        );
+        $this->forAll(
+            Generator\int()
+        )->then(
+            function ($int)
+            {
+                $this->assertFalse(Filter::slowEquals($int . 'e3', $int . '000'), 'integers as strings');
+            }
+        );
+        // these two tests would be compared equal if casted to integers as they are larger then PHP_INT_MAX
         $this->assertFalse(Filter::slowEquals('9223372036854775807', '9223372036854775808'), 'large integers as strings');
         $this->assertFalse(Filter::slowEquals('61529519452809720693702583126814', '61529519452809720000000000000000'), 'larger integers as strings');
     }
