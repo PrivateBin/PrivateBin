@@ -1,31 +1,89 @@
 <?php
 
 use PrivateBin\Sjcl;
+use Eris\Generator;
 
 class SjclTest extends PHPUnit_Framework_TestCase
 {
+    use Eris\TestTrait;
+
     public function testSjclValidatorValidatesCorrectly()
     {
-        $paste = Helper::getPasteWithAttachment();
-        $this->assertTrue(Sjcl::isValid($paste['data']), 'valid sjcl');
-        $this->assertTrue(Sjcl::isValid($paste['attachment']), 'valid sjcl');
-        $this->assertTrue(Sjcl::isValid($paste['attachmentname']), 'valid sjcl');
-        $this->assertTrue(Sjcl::isValid(Helper::getComment()['data']), 'valid sjcl');
+        $this->minimumEvaluationRatio(0.01)->forAll(
+            Helper::getPasteGenerator(array(), true),
+            Generator\string(),
+            Generator\string(),
+            Generator\choose(0,100)
+        )->then(
+            function ($pasteArray, $key, $value, $lowInt)
+            {
+                $paste = Helper::getPasteFromGeneratedArray($pasteArray);
+                $this->assertTrue(Sjcl::isValid($paste['data']), 'valid sjcl');
+                $this->assertTrue(Sjcl::isValid($paste['attachment']), 'valid sjcl');
+                $this->assertTrue(Sjcl::isValid($paste['attachmentname']), 'valid sjcl');
 
-        $this->assertTrue(Sjcl::isValid('{"iv":"83Ax/OdUav3SanDW9dcQPg","v":1,"iter":1000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"Gx1vA2/gQ3U","ct":"j7ImByuE5xCqD2YXm6aSyA"}'), 'valid sjcl');
-        $this->assertFalse(Sjcl::isValid('{"iv":"$","v":1,"iter":1000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"Gx1vA2/gQ3U","ct":"j7ImByuE5xCqD2YXm6aSyA"}'), 'invalid base64 encoding of iv');
-        $this->assertFalse(Sjcl::isValid('{"iv":"83Ax/OdUav3SanDW9dcQPg","v":1,"iter":1000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"$","ct":"j7ImByuE5xCqD2YXm6aSyA"}'), 'invalid base64 encoding of salt');
-        $this->assertFalse(Sjcl::isValid('{"iv":"83Ax/OdUav3SanDW9dcQPg","v":1,"iter":1000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"Gx1vA2/gQ3U","ct":"$"}'), 'invalid base64 encoding of ct');
-        $this->assertFalse(Sjcl::isValid('{"iv":"83Ax/OdUav3SanDW9dcQPg","v":1,"iter":1000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"Gx1vA2/gQ3U","ct":"bm9kYXRhbm9kYXRhbm9kYXRhbm9kYXRhbm9kYXRhCg=="}'), 'low ct entropy');
-        $this->assertFalse(Sjcl::isValid('{"iv":"MTIzNDU2Nzg5MDEyMzQ1Njc4OTA=","v":1,"iter":1000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"Gx1vA2/gQ3U","ct":"j7ImByuE5xCqD2YXm6aSyA"}'), 'iv to long');
-        $this->assertFalse(Sjcl::isValid('{"iv":"83Ax/OdUav3SanDW9dcQPg","v":1,"iter":1000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"MTIzNDU2Nzg5MDEyMzQ1Njc4OTA=","ct":"j7ImByuE5xCqD2YXm6aSyA"}'), 'salt to long');
-        $this->assertFalse(Sjcl::isValid('{"iv":"83Ax/OdUav3SanDW9dcQPg","v":1,"iter":1000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"Gx1vA2/gQ3U","ct":"j7ImByuE5xCqD2YXm6aSyA","foo":"MTIzNDU2Nzg5MDEyMzQ1Njc4OTA="}'), 'invalid additional key');
-        $this->assertFalse(Sjcl::isValid('{"iv":"83Ax/OdUav3SanDW9dcQPg","v":0.9,"iter":1000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"Gx1vA2/gQ3U","ct":"j7ImByuE5xCqD2YXm6aSyA"}'), 'unsupported version');
-        $this->assertFalse(Sjcl::isValid('{"iv":"83Ax/OdUav3SanDW9dcQPg","v":1,"iter":100,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"Gx1vA2/gQ3U","ct":"j7ImByuE5xCqD2YXm6aSyA"}'), 'not enough iterations');
-        $this->assertFalse(Sjcl::isValid('{"iv":"83Ax/OdUav3SanDW9dcQPg","v":1,"iter":1000,"ks":127,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"Gx1vA2/gQ3U","ct":"j7ImByuE5xCqD2YXm6aSyA"}'), 'invalid key size');
-        $this->assertFalse(Sjcl::isValid('{"iv":"83Ax/OdUav3SanDW9dcQPg","v":1,"iter":1000,"ks":128,"ts":63,"mode":"ccm","adata":"","cipher":"aes","salt":"Gx1vA2/gQ3U","ct":"j7ImByuE5xCqD2YXm6aSyA"}'), 'invalid tag length');
-        $this->assertFalse(Sjcl::isValid('{"iv":"83Ax/OdUav3SanDW9dcQPg","v":1,"iter":1000,"ks":128,"ts":64,"mode":"!#@","adata":"","cipher":"aes","salt":"Gx1vA2/gQ3U","ct":"j7ImByuE5xCqD2YXm6aSyA"}'), 'invalid mode');
-        $this->assertFalse(Sjcl::isValid('{"iv":"83Ax/OdUav3SanDW9dcQPg","v":1,"iter":1000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"!#@","salt":"Gx1vA2/gQ3U","ct":"j7ImByuE5xCqD2YXm6aSyA"}'), 'invalid cipher');
-        // @note adata is not validated, except as part of the total message length
+                // common error cases
+                $this->assertFalse(Sjcl::isValid($value), 'non-json data');
+
+                $sjclArray = json_decode($paste['data'], true);
+                $sjclError = $sjclArray;
+                $sjclError['iv'] = '$' . $value;
+                $this->assertFalse(Sjcl::isValid(json_encode($sjclError)), 'invalid base64 encoding of iv');
+
+                $sjclError = $sjclArray;
+                $sjclError['salt'] = '$' . $value;
+                $this->assertFalse(Sjcl::isValid(json_encode($sjclError)), 'invalid base64 encoding of salt');
+
+                $sjclError = $sjclArray;
+                $sjclError['ct'] = '$' . $value;
+                $this->assertFalse(Sjcl::isValid(json_encode($sjclError)), 'invalid base64 encoding of ct');
+
+                $sjclError = $sjclArray;
+                $sjclError['ct'] = 'bm9kYXRhbm9kYXRhbm9kYXRhbm9kYXRhbm9kYXRhCg==';
+                $this->assertFalse(Sjcl::isValid(json_encode($sjclError)), 'low ct entropy');
+
+                $sjclError = $sjclArray;
+                $sjclError['iv'] = 'MTIzNDU2Nzg5MDEyMzQ1Njc4OTA=';
+                $this->assertFalse(Sjcl::isValid(json_encode($sjclError)), 'iv to long');
+
+                $sjclError = $sjclArray;
+                $sjclError['salt'] = 'MTIzNDU2Nzg5MDEyMzQ1Njc4OTA=';
+                $this->assertFalse(Sjcl::isValid(json_encode($sjclError)), 'salt to long');
+
+                $sjclError = $sjclArray;
+                $sjclError[$key] = $value;
+                $this->assertFalse(Sjcl::isValid(json_encode($sjclError)), 'invalid additional key');
+
+                if (!in_array($key, array('1', 'ccm', 'ocb2', 'gcm', 'aes'))) {
+                    $sjclError = $sjclArray;
+                    $sjclError['v'] = $key;
+                    $this->assertFalse(Sjcl::isValid(json_encode($sjclError)), 'unsupported version');
+
+                    $sjclError = $sjclArray;
+                    $sjclError['mode'] = $key;
+                    $this->assertFalse(Sjcl::isValid(json_encode($sjclError)), 'invalid mode');
+
+                    $sjclError = $sjclArray;
+                    $sjclError['cipher'] = $key;
+                    $this->assertFalse(Sjcl::isValid(json_encode($sjclError)), 'invalid cipher');
+                }
+
+                $sjclError = $sjclArray;
+                $sjclError['iter'] = $lowInt;
+                $this->assertFalse(Sjcl::isValid(json_encode($sjclError)), 'not enough iterations');
+
+                if (!in_array($lowInt, array(64, 96))) {
+                    $sjclError = $sjclArray;
+                    $sjclError['ks'] = $lowInt;
+                    $this->assertFalse(Sjcl::isValid(json_encode($sjclError)), 'invalid key size');
+
+                    $sjclError = $sjclArray;
+                    $sjclError['ts'] = $lowInt;
+                    $this->assertFalse(Sjcl::isValid(json_encode($sjclError)), 'invalid authentication strength');
+                }
+                // @note adata is not validated, except as part of the total message length
+            }
+        );
+        $this->assertTrue(Sjcl::isValid(Helper::getComment()['data']), 'valid sjcl');
     }
 }
