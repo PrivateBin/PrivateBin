@@ -23,6 +23,12 @@ $ cd PrivateBin/tst
 $ phpunit
 ```
 
+Or you can also use the phpunit installed as dependency of eris by composer:
+```console
+$ cd PrivateBin/tst
+$ ../vendor/phpunit/phpunit/phpunit
+```
+
 Running JavaScript unit tests
 =============================
 
