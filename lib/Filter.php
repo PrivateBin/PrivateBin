@@ -39,7 +39,9 @@ class Filter
     /**
      * format a given time string into a human readable label (localized)
      *
-     * accepts times in the format "[integer][time unit]"
+     * accepts times in the format "[integer][time unit]", valid time units are:
+     * sec, second, seconds, min, minute, minutes, hour, hours, day, days, week,
+     * weeks, month, months, year, years
      *
      * @access public
      * @static

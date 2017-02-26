@@ -41,16 +41,14 @@ class Vizhash16x16Test extends PHPUnit_Framework_TestCase
                 $vz      = new Vizhash16x16();
                 $pngdata = $vz->generate($string1);
 
-                if (empty($string1))
-                {
+                if (empty($string1)) {
                     $this->assertEquals($pngdata, '');
                 } else {
                     $this->assertNotEquals($pngdata, '');
                     file_put_contents($this->_file, $pngdata);
                     $finfo = new finfo(FILEINFO_MIME_TYPE);
                     $this->assertEquals('image/png', $finfo->file($this->_file));
-                    if ($string1 !== $string2)
-                    {
+                    if ($string1 !== $string2) {
                         $this->assertNotEquals($pngdata, $string2);
                     }
                 }
@@ -73,8 +71,7 @@ class Vizhash16x16Test extends PHPUnit_Framework_TestCase
                 file_put_contents($this->_file, $pngdata);
                 $finfo = new finfo(FILEINFO_MIME_TYPE);
                 $this->assertEquals('image/png', $finfo->file($this->_file));
-                if ($hash1 !== $hash2)
-                {
+                if ($hash1 !== $hash2) {
                     $this->assertNotEquals($pngdata, $vz->generate($hash2));
                 }
                 $this->assertEquals($pngdata, $vz->generate($hash1));
@@ -96,8 +93,7 @@ class Vizhash16x16Test extends PHPUnit_Framework_TestCase
                 file_put_contents($this->_file, $pngdata);
                 $finfo = new finfo(FILEINFO_MIME_TYPE);
                 $this->assertEquals('image/png', $finfo->file($this->_file));
-                if ($hash1 !== $hash2)
-                {
+                if ($hash1 !== $hash2) {
                     $this->assertNotEquals($pngdata, $vz->generate($hash2));
                 }
                 $this->assertEquals($pngdata, $vz->generate($hash1));

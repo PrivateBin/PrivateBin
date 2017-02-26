@@ -1,9 +1,12 @@
 <?php
 
 use PrivateBin\Filter;
+use Eris\Generator;
 
 class FilterTest extends PHPUnit_Framework_TestCase
 {
+    use Eris\TestTrait;
+
     public function testFilterStripsSlashesDeeply()
     {
         $this->assertEquals(
@@ -14,10 +17,43 @@ class FilterTest extends PHPUnit_Framework_TestCase
 
     public function testFilterMakesTimesHumanlyReadable()
     {
-        $this->assertEquals('5 minutes', Filter::formatHumanReadableTime('5min'));
-        $this->assertEquals('90 seconds', Filter::formatHumanReadableTime('90sec'));
-        $this->assertEquals('1 week', Filter::formatHumanReadableTime('1week'));
-        $this->assertEquals('6 months', Filter::formatHumanReadableTime('6months'));
+        $this->forAll(
+            Generator\nat(),
+            Generator\oneOf(
+                'sec', 'second', 'seconds'
+            )
+        )->then(
+            function ($int, $unit)
+            {
+                $suffix = $int === 1 ? '' : 's';
+                $this->assertEquals($int . ' second' . $suffix, Filter::formatHumanReadableTime($int . $unit));
+            }
+        );
+        $this->forAll(
+            Generator\nat(),
+            Generator\oneOf(
+                'min', 'minute', 'minutes'
+            )
+        )->then(
+            function ($int, $unit)
+            {
+                $suffix = $int === 1 ? '' : 's';
+                $this->assertEquals($int . ' minute' . $suffix, Filter::formatHumanReadableTime($int . $unit));
+            }
+        );
+        $this->forAll(
+            Generator\nat(),
+            Generator\oneOf(
+                'hour', 'hours', 'day', 'days', 'week', 'weeks',
+                'month', 'months', 'year', 'years'
+            )
+        )->then(
+            function ($int, $unit)
+            {
+                $suffix = $int === 1 ? '' : 's';
+                $this->assertEquals($int . ' ' . rtrim($unit, 's') . $suffix, Filter::formatHumanReadableTime($int . $unit));
+            }
+        );
     }
 
     /**
