@@ -59,14 +59,49 @@ class Vizhash16x16Test extends PHPUnit_Framework_TestCase
         );
     }
 
-    public function testVizhashGeneratesUniquePngsPerIp()
+    public function testVizhashGeneratesUniquePngsPerIpv4Hash()
     {
-        $vz      = new Vizhash16x16();
-        $pngdata = $vz->generate(hash('sha512', '127.0.0.1'));
-        file_put_contents($this->_file, $pngdata);
-        $finfo = new finfo(FILEINFO_MIME_TYPE);
-        $this->assertEquals('image/png', $finfo->file($this->_file));
-        $this->assertNotEquals($pngdata, $vz->generate(hash('sha512', '2001:1620:2057:dead:beef::cafe:babe')));
-        $this->assertEquals($pngdata, $vz->generate(hash('sha512', '127.0.0.1')));
+        $this->forAll(
+            Generator\vector(2, Generator\vector(4, Generator\byte()))
+        )->then(
+            function ($ips)
+            {
+                $hash1   = hash('sha512', implode('.', $ips[0]));
+                $hash2   = hash('sha512', implode('.', $ips[1]));
+                $vz      = new Vizhash16x16();
+                $pngdata = $vz->generate($hash1);
+                file_put_contents($this->_file, $pngdata);
+                $finfo = new finfo(FILEINFO_MIME_TYPE);
+                $this->assertEquals('image/png', $finfo->file($this->_file));
+                if ($hash1 !== $hash2)
+                {
+                    $this->assertNotEquals($pngdata, $vz->generate($hash2));
+                }
+                $this->assertEquals($pngdata, $vz->generate($hash1));
+            }
+        );
+    }
+
+    public function testVizhashGeneratesUniquePngsPerIpv6Hash()
+    {
+        $this->forAll(
+            Generator\vector(2, Generator\vector(16, Generator\byte()))
+        )->then(
+            function ($ips)
+            {
+                $hash1   = hash('sha512', inet_ntop(implode(array_map('chr', $ips[0]))));
+                $hash2   = hash('sha512', inet_ntop(implode(array_map('chr', $ips[1]))));
+                $vz      = new Vizhash16x16();
+                $pngdata = $vz->generate($hash1);
+                file_put_contents($this->_file, $pngdata);
+                $finfo = new finfo(FILEINFO_MIME_TYPE);
+                $this->assertEquals('image/png', $finfo->file($this->_file));
+                if ($hash1 !== $hash2)
+                {
+                    $this->assertNotEquals($pngdata, $vz->generate($hash2));
+                }
+                $this->assertEquals($pngdata, $vz->generate($hash1));
+            }
+        );
     }
 }
