@@ -102,8 +102,8 @@ body.loading {
 	margin-bottom: 10px;
 }
 
-.glyphicon {
-	margin-right: 5px;
+.pl-1::before {
+	content: " ";
 }
 
 .comment {

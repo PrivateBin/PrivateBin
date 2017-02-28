@@ -122,7 +122,7 @@ endif;
 				<ul class="nav navbar-nav">
 					<li id="loadingindicator" class="navbar-text hidden">
 						<span class="glyphicon glyphicon-time" aria-hidden="true"></span>
-						<?php echo I18n::_('Loading…'), PHP_EOL; ?>
+						<span class="pl-1"><?php echo I18n::_('Loading…'), PHP_EOL; ?></span>
 					</li>
 					<li>
 <?php
@@ -379,28 +379,28 @@ endif;
 if (strlen($NOTICE)):
 ?>
 				<div role="alert" class="alert alert-info">
-					<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span><?php echo htmlspecialchars($NOTICE), PHP_EOL; ?>
+					<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span><span class="pl-1"><?php echo htmlspecialchars($NOTICE), PHP_EOL; ?></span>
 				</div>
 <?php
 endif;
 ?>
 				<div id="remainingtime" role="alert" class="hidden alert alert-info">
-					<span class="glyphicon glyphicon-fire" aria-hidden="true"></span>
+					<span class="glyphicon glyphicon-fire" aria-hidden="true"></span><span class="pl-1"></span>
 				</div>
 <?php
 if ($FILEUPLOAD):
 ?>
 				<div id="attachment" role="alert" class="hidden alert alert-info">
-					<span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span><a class="alert-link"><?php echo I18n::_('Download attachment'); ?></a>
+					<span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span><a class="alert-link pl-1"><?php echo I18n::_('Download attachment'); ?></a>
 				</div>
 <?php
 endif;
 ?>
 				<div id="status" role="alert" class="statusmessage alert alert-info <?php echo empty($STATUS) ? 'hidden' : '' ?>">
 					<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
-					<?php echo htmlspecialchars($STATUS); ?>
+					<span class="pl-1"><?php echo htmlspecialchars($STATUS); ?></span>
 				</div>
-				<div id="errormessage" role="alert" class="statusmessage <?php echo empty($ERROR) ? 'hidden' : '' ?> alert alert-danger"><span class="glyphicon glyphicon-alert" aria-hidden="true"></span><?php echo htmlspecialchars($ERROR); ?></div>
+				<div id="errormessage" role="alert" class="statusmessage <?php echo empty($ERROR) ? 'hidden' : '' ?> alert alert-danger"><span class="glyphicon glyphicon-alert" aria-hidden="true"></span><span class="pl-1"><?php echo htmlspecialchars($ERROR); ?></span></div>
 				<noscript><div id="noscript" role="alert" class="nonworking alert alert-<?php echo $isDark ? 'error' : 'warning'; ?>"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span><?php echo I18n::_('JavaScript is required for %s to work.<br />Sorry for the inconvenience.', I18n::_($NAME)); ?></div></noscript>
 				<div id="oldienotice" role="alert" class="hidden nonworking alert alert-danger"><span class="glyphicon glyphicon-alert" aria-hidden="true"></span><?php echo I18n::_('%s requires a modern browser to work.', I18n::_($NAME)); ?></div>
 				<div id="ienotice" role="alert" class="hidden alert alert-<?php echo $isDark ? 'error' : 'warning'; ?>"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span><?php echo I18n::_('Still using Internet Explorer? Do yourself a favor, switch to a modern browser:'), PHP_EOL; ?>
@@ -448,7 +448,7 @@ endif;
 			</section>
 			<section class="container">
 				<div id="noscript" role="alert" class="nonworking alert alert-info noscript-hide"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true">
-					<?php echo I18n::_('Loading…'); ?><br />
+					<span class="pl-1"><?php echo I18n::_('Loading…'); ?></span><br />
 					<span class="small"><?php echo I18n::_('In case this message never disappears please have a look at <a href="https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away">this FAQ for information to troubleshoot</a>.'); ?></span>
 				</div>
 			</section>
