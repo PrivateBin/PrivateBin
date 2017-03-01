@@ -79,8 +79,7 @@ endif;
 			<div id="ienotice"><?php echo I18n::_('Still using Internet Explorer? Do yourself a favor, switch to a modern browser:'), PHP_EOL; ?>
 				<a href="https://www.mozilla.org/firefox/">Firefox</a>,
 				<a href="https://www.opera.com/">Opera</a>,
-				<a href="https://www.google.com/chrome">Chrome</a>,
-				<a href="https://www.apple.com/safari">Safari</a>...
+				<a href="https://www.google.com/chrome">Chrome</a>...
 			</div>
 		</header>
 		<section>
