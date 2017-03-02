@@ -396,11 +396,11 @@ if ($FILEUPLOAD):
 <?php
 endif;
 ?>
-				<div id="status" role="alert" class="statusmessage alert alert-info <?php echo empty($STATUS) ? 'hidden' : '' ?>">
+				<div id="status" role="alert" class="statusmessage alert alert-info<?php echo empty($STATUS) ? ' hidden' : '' ?>">
 					<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
 					<span class="pl-1"><?php echo htmlspecialchars($STATUS); ?></span>
 				</div>
-				<div id="errormessage" role="alert" class="statusmessage <?php echo empty($ERROR) ? 'hidden' : '' ?> alert alert-danger"><span class="glyphicon glyphicon-alert" aria-hidden="true"></span><span class="pl-1"><?php echo htmlspecialchars($ERROR); ?></span></div>
+				<div id="errormessage" role="alert" class="statusmessage<?php echo empty($ERROR) ? ' hidden' : '' ?> alert alert-danger"><span class="glyphicon glyphicon-alert" aria-hidden="true"></span><span class="pl-1"><?php echo htmlspecialchars($ERROR); ?></span></div>
 				<noscript><div id="noscript" role="alert" class="nonworking alert alert-<?php echo $isDark ? 'error' : 'warning'; ?>"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span><?php echo I18n::_('JavaScript is required for %s to work.<br />Sorry for the inconvenience.', I18n::_($NAME)); ?></div></noscript>
 				<div id="oldienotice" role="alert" class="hidden nonworking alert alert-danger"><span class="glyphicon glyphicon-alert" aria-hidden="true"></span><?php echo I18n::_('%s requires a modern browser to work.', I18n::_($NAME)); ?></div>
 				<div id="ienotice" role="alert" class="hidden alert alert-<?php echo $isDark ? 'error' : 'warning'; ?>"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span><?php echo I18n::_('Still using Internet Explorer? Do yourself a favor, switch to a modern browser:'), PHP_EOL; ?>

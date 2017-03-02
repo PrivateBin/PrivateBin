@@ -760,7 +760,7 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
         $content = ob_get_contents();
         ob_end_clean();
         $this->assertRegExp(
-            '#<div[^>]*id="errormessage"[^>]*>.*Invalid paste ID\.</div>#',
+            '#<div[^>]*id="errormessage"[^>]*>.*Invalid paste ID\.</#',
             $content,
             'outputs error correctly'
         );
@@ -778,7 +778,7 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
         $content = ob_get_contents();
         ob_end_clean();
         $this->assertRegExp(
-            '#<div[^>]*id="errormessage"[^>]*>.*Paste does not exist[^<]*</div>#',
+            '#<div[^>]*id="errormessage"[^>]*>.*Paste does not exist, has expired or has been deleted\.</#',
             $content,
             'outputs error correctly'
         );
@@ -798,7 +798,7 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
         $content = ob_get_contents();
         ob_end_clean();
         $this->assertRegExp(
-            '#<div[^>]*id="errormessage"[^>]*>.*Paste does not exist[^<]*</div>#',
+            '#<div[^>]*id="errormessage"[^>]*>.*Paste does not exist, has expired or has been deleted\.</#',
             $content,
             'outputs error correctly'
         );
@@ -939,7 +939,7 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
         $content = ob_get_contents();
         ob_end_clean();
         $this->assertRegExp(
-            '#<div[^>]*id="status"[^>]*>.*Paste was properly deleted[^<]*</div>#s',
+            '#<div[^>]*id="status"[^>]*>.*Paste was properly deleted\.</#s',
             $content,
             'outputs deleted status correctly'
         );
@@ -960,7 +960,7 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
         $content = ob_get_contents();
         ob_end_clean();
         $this->assertRegExp(
-            '#<div[^>]*id="errormessage"[^>]*>.*Invalid paste ID\.</div>#',
+            '#<div[^>]*id="errormessage"[^>]*>.*Invalid paste ID\.</#',
             $content,
             'outputs delete error correctly'
         );
@@ -980,7 +980,7 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
         $content = ob_get_contents();
         ob_end_clean();
         $this->assertRegExp(
-            '#<div[^>]*id="errormessage"[^>]*>.*Paste does not exist[^<]*</div>#',
+            '#<div[^>]*id="errormessage"[^>]*>.*Paste does not exist, has expired or has been deleted\.</#',
             $content,
             'outputs delete error correctly'
         );
@@ -1000,7 +1000,7 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
         $content = ob_get_contents();
         ob_end_clean();
         $this->assertRegExp(
-            '#<div[^>]*id="errormessage"[^>]*>.*Wrong deletion token[^<]*</div>#',
+            '#<div[^>]*id="errormessage"[^>]*>.*Wrong deletion token\. Paste was not deleted\.</#',
             $content,
             'outputs delete error correctly'
         );
@@ -1067,7 +1067,7 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
         $content = ob_get_contents();
         ob_end_clean();
         $this->assertRegExp(
-            '#<div[^>]*id="errormessage"[^>]*>.*Paste does not exist[^<]*</div>#',
+            '#<div[^>]*id="errormessage"[^>]*>.*Paste does not exist, has expired or has been deleted\.</#',
             $content,
             'outputs error correctly'
         );
@@ -1091,7 +1091,7 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
         $content = ob_get_contents();
         ob_end_clean();
         $this->assertRegExp(
-            '#<div[^>]*id="status"[^>]*>.*Paste was properly deleted[^<]*</div>#s',
+            '#<div[^>]*id="status"[^>]*>.*Paste was properly deleted\.</#s',
             $content,
             'outputs deleted status correctly'
         );
