@@ -304,7 +304,7 @@ class I18n
                 return $n % 10 == 1 && $n % 100 != 11 ? 0 : ($n % 10 >= 2 && $n % 10 <= 4 && ($n % 100 < 10 || $n % 100 >= 20) ? 1 : 2);
             case 'sl':
                 return $n % 100 == 1 ? 1 : ($n % 100 == 2 ? 2 : ($n % 100 == 3 || $n % 100 == 4 ? 3 : 0));
-            // de, en, es, it, no
+            // de, en, es, it, no, pt
             default:
                 return $n != 1 ? 1 : 0;
         }
