@@ -4,14 +4,6 @@ use PrivateBin\Filter;
 
 class FilterTest extends PHPUnit_Framework_TestCase
 {
-    public function testFilterStripsSlashesDeeply()
-    {
-        $this->assertEquals(
-            array("f'oo", "b'ar", array("fo'o", "b'ar")),
-            Filter::stripslashesDeep(array("f\\'oo", "b\\'ar", array("fo\\'o", "b\\'ar")))
-        );
-    }
-
     public function testFilterMakesTimesHumanlyReadable()
     {
         $this->assertEquals('5 minutes', Filter::formatHumanReadableTime('5min'));

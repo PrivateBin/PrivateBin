@@ -67,6 +67,10 @@ describe('Helper', function () {
     });
 
     describe('baseUri', function () {
+        before(function () {
+            $.PrivateBin.Helper.reset();
+        });
+
         jsc.property(
             'returns the URL without query & fragment',
             jsc.nearray(jsc.elements(a2zString)),
@@ -77,6 +81,7 @@ describe('Helper', function () {
                 var expected = schema.join('') + '://' + address.join('') + '/',
                     clean = jsdom('', {url: expected + '?' + query.join('') + '#' + fragment}),
                     result = $.PrivateBin.Helper.baseUri();
+                $.PrivateBin.Helper.reset();
                 clean();
                 return expected === result;
             }
@@ -101,6 +106,10 @@ describe('Helper', function () {
 
 describe('Model', function () {
     describe('getPasteId', function () {
+        before(function () {
+            $.PrivateBin.Model.reset();
+        });
+
         jsc.property(
             'returns the query string without separator, if any',
             jsc.nearray(jsc.elements(a2zString)),

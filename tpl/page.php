@@ -47,7 +47,7 @@ if ($MARKDOWN):
 <?php
 endif;
 ?>
-		<script type="text/javascript" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-iGFkRUeioseXBM4QLP9xFBK9RaGHPqTnl4NgVhjw0wm0xURcjpL5HE9WP+XJRY0UF3VbIoiuyFXSp0JpxSbc+A==" crossorigin="anonymous"></script>
+		<script type="text/javascript" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-BqQUrn7gw41w/GPvE28nN9ANnl59EAuo0xdcfzSIkw/b/SzT7WF0PS1SNs4hSc6hU6S1eJzS8qjgOI+8qt//RQ==" crossorigin="anonymous"></script>
 		<!--[if lt IE 10]>
 		<style type="text/css">body {padding-left:60px;padding-right:60px;} #ienotice {display:block;} #oldienotice {display:block;}</style>
 		<![endif]-->
@@ -79,8 +79,7 @@ endif;
 			<div id="ienotice"><?php echo I18n::_('Still using Internet Explorer? Do yourself a favor, switch to a modern browser:'), PHP_EOL; ?>
 				<a href="https://www.mozilla.org/firefox/">Firefox</a>,
 				<a href="https://www.opera.com/">Opera</a>,
-				<a href="https://www.google.com/chrome">Chrome</a>,
-				<a href="https://www.apple.com/safari">Safari</a>...
+				<a href="https://www.google.com/chrome">Chrome</a>…
 			</div>
 		</header>
 		<section>

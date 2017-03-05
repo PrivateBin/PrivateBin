@@ -80,13 +80,6 @@ class Request
      */
     public function __construct()
     {
-        // in case stupid admin has left magic_quotes enabled in php.ini (for PHP < 5.4)
-        if (version_compare(PHP_VERSION, '5.4.0') < 0 && get_magic_quotes_gpc()) {
-            $_POST   = array_map('PrivateBin\\Filter::stripslashesDeep', $_POST);
-            $_GET    = array_map('PrivateBin\\Filter::stripslashesDeep', $_GET);
-            $_COOKIE = array_map('PrivateBin\\Filter::stripslashesDeep', $_COOKIE);
-        }
-
         // decide if we are in JSON API or HTML context
         $this->_isJsonApi = $this->_detectJsonRequest();
 
