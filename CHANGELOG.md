@@ -1,7 +1,7 @@
 # PrivateBin version history
 
   * **next (not yet released)**
-    * ADDED: Translations for Spanish, Occitan and Norwegian
+    * ADDED: Translations for Spanish, Occitan, Norwegian and Portuguese
     * ADDED: Option in configuration to change the default "PrivateBin" title of the site
     * CHANGED: Cleanup of bootstrap template variants and moved icons to `img` directory
   * **1.1 (2016-12-26)**
