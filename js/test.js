@@ -11,7 +11,9 @@ var jsc = require('jsverify'),
         a2zString.map(function(c) {
             return c.toUpperCase();
         })
-    );
+    ),
+    // schemas supported by the whatwg-url library
+    schemas = ['ftp','gopher','http','https','ws','wss'];
 
 global.$ = global.jQuery = require('./jquery-3.1.1');
 global.sjcl = require('./sjcl-1.0.6');
@@ -73,12 +75,12 @@ describe('Helper', function () {
 
         jsc.property(
             'returns the URL without query & fragment',
-            jsc.nearray(jsc.elements(a2zString)),
+            jsc.elements(schemas),
             jsc.nearray(jsc.elements(a2zString)),
             jsc.array(jsc.elements(queryString)),
             'string',
             function (schema, address, query, fragment) {
-                var expected = schema.join('') + '://' + address.join('') + '/',
+                var expected = schema + '://' + address.join('') + '/',
                     clean = jsdom('', {url: expected + '?' + query.join('') + '#' + fragment}),
                     result = $.PrivateBin.Helper.baseUri();
                 $.PrivateBin.Helper.reset();

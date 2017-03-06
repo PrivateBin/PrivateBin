@@ -276,21 +276,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                 return baseUri;
             }
 
-            // window.baseURI isn't emulated by JSdom
-            var loc = window.location;
-            baseUri = loc.href.substring(
-                0,
-                loc.href.length - loc.search.length - loc.hash.length
-            );
-
-            // if base uri contains query string (when no base tag is present),
-            // it is unwanted
-            var queryIndex = baseUri.indexOf('?');
-            if (queryIndex !== -1) {
-                // so we built our own baseuri
-                baseUri = baseUri.substring(0, queryIndex);
-            }
-
+            baseUri = window.location.origin + window.location.pathname;
             return baseUri;
         }
 
