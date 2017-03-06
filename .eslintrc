@@ -15,7 +15,9 @@ globals:
 # http://eslint.org/docs/rules/
 rules:
   # Possible Errors
-  comma-dangle: [2, never]
+  comma-dangle:
+    - error
+    - never
   no-cond-assign: 2
   no-console: 0
   no-constant-condition: 2
@@ -31,7 +33,9 @@ rules:
   no-extra-parens: 0
   no-extra-semi: 2
   no-func-assign: 2
-  no-inner-declarations: [2, functions]
+  no-inner-declarations:
+    - error
+    - functions
   no-invalid-regexp: 2
   no-irregular-whitespace: 2
   no-negated-in-lhs: 2
@@ -47,7 +51,9 @@ rules:
   # Best Practices
   accessor-pairs: 2
   block-scoped-var: 0
-  complexity: [2, 6]
+  complexity:
+    - error
+    - 20
   consistent-return: 0
   curly: 0
   default-case: 0
@@ -152,7 +158,9 @@ rules:
   max-len: 0
   max-nested-callbacks: 0
   max-params: 0
-  max-statements: [2, 30]
+  max-statements:
+    - error
+    - 60
   new-cap: 0
   new-parens: 0
   newline-after-var: 0
