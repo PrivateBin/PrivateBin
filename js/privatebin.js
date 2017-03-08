@@ -531,7 +531,7 @@ jQuery.PrivateBin = function($, pako, sjcl, Base64) {
          */
         decompress: function(data)
         {
-            return Base64.btou( pako.inflate( Base64.fromBase64(data) { to: 'string' } ) );
+            return Base64.btou( pako.inflate( Base64.fromBase64(data), { to: 'string' } ) );
         },
 
         /**
