@@ -33,8 +33,7 @@ else:
 <?php
 endif;
 ?>
-		<script type="text/javascript" src="js/rawdeflate-0.5.js" integrity="sha512-tTdZ7qMr7tt5VQy4iCHu6/aGB12eRwbUy+AEI5rXntfsjcRfBeeqJloMsBU9FrGk1bIYLiuND/FhU42LO1bi0g==" crossorigin="anonymous"></script>
-		<script type="text/javascript" src="js/rawinflate-0.3.js" integrity="sha512-g8uelGgJW9A/Z1tB6Izxab++oj5kdD7B4qC7DHwZkB6DGMXKyzx7v5mvap2HXueI2IIn08YlRYM56jwWdm2ucQ==" crossorigin="anonymous"></script>
+		<script type="text/javascript" src="js/pako.min.js" integrity="sha512-+0Qbu/wpfmGapJ83qFN6myWI3Dq0nT8uShfqM5KhsHIiPDpzVjSt7xDdDhLVUik5AkPDxh0vpsVtaNKa/WJqJQ==" crossorigin="anonymous"></script>
 <?php
 if ($SYNTAXHIGHLIGHTING):
 ?>
@@ -47,7 +46,7 @@ if ($MARKDOWN):
 <?php
 endif;
 ?>
-		<script type="text/javascript" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-TETJUplZ4Gwfsyq+4b1auYItvlfa9BLoT+IzcQ6Xt2mlmMwKbso7b07/mTF2H2UqMy9I3j6nMAZGsPvIcAPzrQ==" crossorigin="anonymous"></script>
+		<script type="text/javascript" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-BJwep9Sa7gyXWaUWGPixYl6Z4TiA1T0FO9zprO/AKu2nh/sCEA7tLMJ/LgpmJSrZebRCHn6XoictUOw8ixDcTA==" crossorigin="anonymous"></script>
 		<!--[if lt IE 10]>
 		<style type="text/css">body {padding-left:60px;padding-right:60px;} #ienotice {display:block;} #oldienotice {display:block;}</style>
 		<![endif]-->

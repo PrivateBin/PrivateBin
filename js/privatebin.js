@@ -14,9 +14,9 @@
 'use strict';
 /** global: Base64 */
 /** global: FileReader */
-/** global: RawDeflate */
 /** global: history */
 /** global: navigator */
+/** global: pako */
 /** global: prettyPrint */
 /** global: prettyPrintOne */
 /** global: showdown */
@@ -25,7 +25,7 @@
 // Immediately start random number generator collector.
 sjcl.random.startCollectors();
 
-jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
+jQuery.PrivateBin = function($, pako, sjcl, Base64) {
     /**
      * static helper methods
      *
@@ -518,7 +518,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          */
         compress: function(message)
         {
-            return Base64.toBase64( RawDeflate.deflate( Base64.utob(message) ) );
+            return Base64.toBase64( pako.deflate( Base64.utob(message), { to: 'string' } ) );
         },
 
         /**
@@ -531,7 +531,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          */
         decompress: function(data)
         {
-            return Base64.btou( RawDeflate.inflate( Base64.fromBase64(data) ) );
+            return Base64.btou( pako.inflate( Base64.fromBase64(data) { to: 'string' } ) );
         },
 
         /**
@@ -1850,4 +1850,4 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         filter: filter,
         controller: controller
     };
-}(jQuery, sjcl, Base64, RawDeflate);
+}(jQuery, pako, sjcl, Base64);
