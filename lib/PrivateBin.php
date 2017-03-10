@@ -451,6 +451,7 @@ class PrivateBin
         $page->assign('PASSWORD', $this->_conf->getKey('password'));
         $page->assign('FILEUPLOAD', $this->_conf->getKey('fileupload'));
         $page->assign('ZEROBINCOMPATIBILITY', $this->_conf->getKey('zerobincompatibility'));
+        $page->assign('OLDCOMPRESSION', $this->_conf->getKey('oldcompression'));
         $page->assign('LANGUAGESELECTION', $languageselection);
         $page->assign('LANGUAGES', I18n::getLanguageLabels(I18n::getAvailableLanguages()));
         $page->assign('EXPIRE', $expire);

@@ -53,8 +53,17 @@ else:
 		<script type="text/javascript" src="js/base64-2.1.9.js" integrity="sha512-rbqAby7hObftbEoGQzkhUbEh5YkUn2MtekTLs4btvo2oly4CZ3DxhJzEh0u/rNzS54tcJdqi5Ug1ruugEd2U1g==" crossorigin="anonymous"></script>
 <?php
 endif;
+if ($OLDCOMPRESSION):
+?>
+		<script type="text/javascript" src="js/rawdeflate-0.5.js" integrity="sha512-tTdZ7qMr7tt5VQy4iCHu6/aGB12eRwbUy+AEI5rXntfsjcRfBeeqJloMsBU9FrGk1bIYLiuND/FhU42LO1bi0g==" crossorigin="anonymous"></script>
+		<script type="text/javascript" src="js/rawinflate-0.3.js" integrity="sha512-g8uelGgJW9A/Z1tB6Izxab++oj5kdD7B4qC7DHwZkB6DGMXKyzx7v5mvap2HXueI2IIn08YlRYM56jwWdm2ucQ==" crossorigin="anonymous"></script>
+<?php
+else:
 ?>
 		<script type="text/javascript" src="js/pako.min.js" integrity="sha512-+0Qbu/wpfmGapJ83qFN6myWI3Dq0nT8uShfqM5KhsHIiPDpzVjSt7xDdDhLVUik5AkPDxh0vpsVtaNKa/WJqJQ==" crossorigin="anonymous"></script>
+<?php
+endif;
+?>
 		<script type="text/javascript" src="js/bootstrap-3.3.7.js" integrity="sha512-iztkobsvnjKfAtTNdHkGVjAYTrrtlC7mGp/54c40wowO7LhURYl3gVzzcEqGl/qKXQltJ2HwMrdLcNUdo+N/RQ==" crossorigin="anonymous"></script>
 <?php
 if ($SYNTAXHIGHLIGHTING):
@@ -68,7 +77,7 @@ if ($MARKDOWN):
 <?php
 endif;
 ?>
-		<script type="text/javascript" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-qNLY263bZJrxDzJHcOWtfbFFMTlFPDLBO4HvaMOc9TVB+BckBjHw59/ZgKTlOXcOKdGgtVFq0b+9wOyqlxfNFg==" crossorigin="anonymous"></script>
+		<script type="text/javascript" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-RjHIzS//2/wMv0qabFz7OC7PUow3uB1RiH9AqSac09ArgILhVK1snLUMe9xa42MKMOV8/a0eJ0l2q/4NVjKgiQ==" crossorigin="anonymous"></script>
 		<!--[if lt IE 10]>
 		<style type="text/css">body {padding-left:60px;padding-right:60px;} #ienotice {display:block;} #oldienotice {display:block;}</style>
 		<![endif]-->

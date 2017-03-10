@@ -25,7 +25,16 @@
 // Immediately start random number generator collector.
 sjcl.random.startCollectors();
 
-jQuery.PrivateBin = function($, pako, sjcl, Base64) {
+if (typeof RawDeflate === 'undefined')
+{
+    var compression = 'pako';
+}
+else
+{
+    var compression = 'RawDeflate';
+}
+
+jQuery.PrivateBin = function($, compression, sjcl, Base64) {
     /**
      * static helper methods
      *
@@ -518,7 +527,14 @@ jQuery.PrivateBin = function($, pako, sjcl, Base64) {
          */
         compress: function(message)
         {
-            return Base64.toBase64( pako.deflate( Base64.utob(message), { to: 'string' } ) );
+            if (typeof RawDeflate === 'undefined')
+            {
+                return Base64.toBase64( pako.deflate( Base64.utob(message), { to: 'string' } ) );
+            }
+            else
+            {
+                return Base64.toBase64( RawDeflate.deflate( Base64.utob(message), { to: 'string' } ) );
+            }
         },
 
         /**
@@ -531,7 +547,14 @@ jQuery.PrivateBin = function($, pako, sjcl, Base64) {
          */
         decompress: function(data)
         {
-            return Base64.btou( pako.inflate( Base64.fromBase64(data), { to: 'string' } ) );
+            if (typeof RawDeflate === 'undefined')
+            {
+                return Base64.btou( pako.inflate( Base64.fromBase64(data), { to: 'string' } ) );
+            }
+            else
+            {
+                return Base64.btou( RawDeflate.inflate( Base64.fromBase64(data), { to: 'string' } ) );
+            }
         },
 
         /**
@@ -1850,4 +1873,4 @@ jQuery.PrivateBin = function($, pako, sjcl, Base64) {
         filter: filter,
         controller: controller
     };
-}(jQuery, pako, sjcl, Base64);
+}(jQuery, compression, sjcl, Base64);

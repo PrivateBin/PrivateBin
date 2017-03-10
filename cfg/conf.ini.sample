@@ -71,6 +71,11 @@ languageselection = false
 ; sha256 in HMAC for the deletion token
 zerobincompatibility = false
 
+; stay compatible with old PrivateBin versions, incompatible with standart ZLIB
+; library, used for compress and decompress data. If enabled, will use
+; rawdeflate-0.5.js and rawinflate-0.3.js instead pako.min.js
+oldcompression = false
+
 [expire]
 ; expire value that is selected per default
 ; make sure the value exists in [expire_options]
