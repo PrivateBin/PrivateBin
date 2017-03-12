@@ -416,7 +416,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             }
 
             // if no translation string cannot be found (in translations object)
-            if (!translations.hasOwnProperty(messageId)) {
+            if (!translations.hasOwnProperty(messageId) || language === null) {
                 // if language is still loading and we have an elemt assigned
                 if (language === null && $element !== null) {
                     // handle the error by attaching the language loaded event
@@ -432,9 +432,9 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                     // file is loaded
                 }
 
-                // for all other langauges than English for which thsi behaviour
+                // for all other langauges than English for which this behaviour
                 // is expected as it is built-in, log error
-                if (language !== 'en') {
+                if (language !== null && language !== 'en') {
                     console.error('Missing translation for: \'' + messageId + '\' in language ' + language);
                     // fallback to English
                 }
@@ -463,7 +463,13 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
 
             // if $element is given, apply text to element
             if ($element !== null) {
-                $element.text(output);
+                // get last text node of element
+                var content = $element.contents();
+                if (content.length > 1) {
+                    content[content.length - 1].nodeValue = ' ' + output;
+                } else {
+                    $element.text(output);
+                }
             }
 
             return output;
@@ -1070,13 +1076,10 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
 
             // show text
             if (args !== null) {
-                // get last text node of element
-                var content = $element.contents();
-                if (content.length > 1) {
-                    content[content.length - 1].nodeValue = ' ' + I18n._(args);
-                } else {
-                    $element.text(I18n._(args));
-                }
+                // add jQuery object to it as first parameter
+                args.unshift($element);
+                // pass it to I18n
+                I18n._.apply(this, args);
             }
 
             // show notification
@@ -1144,7 +1147,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          */
         me.showRemaining = function(message)
         {
-            console.error('remaining message shown: ', message);
+            console.log('remaining message shown: ', message);
             handleNotification(1, $remainingTime, message);
         }
 
@@ -1360,7 +1363,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                         'This document will expire in %d ' + expiration[1] + 's.'
                     ];
 
-                Alert.showRemaining(expirationLabel, expiration[0]);
+                Alert.showRemaining([expirationLabel, expiration[0]]);
                 $remainingTime.removeClass('foryoureyesonly')
             } else {
                 // never expires
@@ -2283,10 +2286,11 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             Helper.urls2links($commentEntryData);
 
             // set nickname
-            if (nickname.length > 0){
+            if (nickname.length > 0) {
                 $commentEntry.find('span.nickname').text(nickname);
             } else {
-                $commentEntry.find('span.nickname').html('<i>' + I18n._('Anonymous') + '</i>');
+                $commentEntry.find('span.nickname').html('<i></i>');
+                I18n._($commentEntry.find('span.nickname i'), 'Anonymous');
             }
 
             // set date
@@ -2297,10 +2301,13 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             // if an avatar is available, display it
             if (comment.meta.vizhash) {
                 $commentEntry.find('span.nickname')
-                          .before(
-                            '<img src="' + comment.meta.vizhash + '" class="vizhash" title="' +
-                            I18n._('Avatar generated from IP address') + '" /> '
-                          );
+                             .before(
+                                '<img src="' + comment.meta.vizhash + '" class="vizhash" /> '
+                             );
+                $(document).on('languageLoaded', function () {
+                    $commentEntry.find('img.vizhash')
+                                 .prop('title', I18n._('Avatar generated from IP address'));
+                });
             }
 
             // finally append comment
