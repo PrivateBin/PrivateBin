@@ -104,7 +104,7 @@ class ViewTest extends PHPUnit_Framework_TestCase
                 $template . ': outputs data correctly'
             );
             $this->assertRegExp(
-                '#<div[^>]+id="errormessage"[^>]*>.*' . self::$error . '</#',
+                '#<div[^>]+id="errormessage"[^>]*>.*' . self::$error . '#s',
                 $content,
                 $template . ': outputs error correctly'
             );

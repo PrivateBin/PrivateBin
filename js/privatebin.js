@@ -995,7 +995,8 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
 
         var $errorMessage,
             $loadingIndicator,
-            $statusMessage;
+            $statusMessage,
+            $remainingTime;
 
         var currentIcon = [
             'glyphicon-time', // loading icon
@@ -1036,7 +1037,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                 args = [args];
             }
 
-            // pass to custom handler if dfined
+            // pass to custom handler if defined
             if (typeof customHandler === 'function') {
                 var handlerResult = customHandler(alertType[id], $element, args, icon);
                 if (handlerResult === true) {
@@ -1069,11 +1070,13 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
 
             // show text
             if (args !== null) {
-                // add jQuery object to it as first parameter
-                args.unshift($element.find(':last'));
-
-                // pass it to I18n
-                I18n._.apply(this, args);
+                // get last text node of element
+                var content = $element.contents();
+                if (content.length > 1) {
+                    content[content.length - 1].nodeValue = ' ' + I18n._(args);
+                } else {
+                    $element.text(I18n._(args));
+                }
             }
 
             // show notification
@@ -1128,6 +1131,21 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             // @TODO: implement autoclose
 
             handleNotification(3, $errorMessage, message, icon);
+        }
+
+        /**
+         * display remaining message
+         *
+         * This automatically passes the text to I18n for translation.
+         *
+         * @name   Alert.showRemaining
+         * @function
+         * @param  {string|array} message     string, use an array for %s/%d options
+         */
+        me.showRemaining = function(message)
+        {
+            console.error('remaining message shown: ', message);
+            handleNotification(1, $remainingTime, message);
         }
 
         /**
@@ -1230,18 +1248,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             $errorMessage = $('#errormessage');
             $loadingIndicator = $('#loadingindicator');
             $statusMessage = $('#status');
-
-            // display status returned by php code, if any (e.g. paste was properly deleted)
-            var serverStatus = $statusMessage.text();
-            if (Helper.isValidText(serverStatus)) {
-                me.showStatus();
-            }
-
-            // display error message from php code
-            var serverError = $errorMessage.text();
-            if (Helper.isValidText(serverError)) {
-                Alert.showError();
-            }
+            $remainingTime = $('#remainingtime');
         }
 
         return me;
@@ -1339,7 +1346,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                 // actually remove paste, before we claim it is deleted
                 Controller.removePaste(Model.getPasteId(), 'burnafterreading');
 
-                I18n._($remainingTime.find(':last'), "FOR YOUR EYES ONLY. Don't close this window, this message can't be displayed again.");
+                Alert.showRemaining("FOR YOUR EYES ONLY. Don't close this window, this message can't be displayed again.");
                 $remainingTime.addClass('foryoureyesonly');
 
                 // discourage cloning (it cannot really be prevented)
@@ -1353,7 +1360,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                         'This document will expire in %d ' + expiration[1] + 's.'
                     ];
 
-                I18n._($remainingTime.find(':last'), expirationLabel, expiration[0]);
+                Alert.showRemaining(expirationLabel, expiration[0]);
                 $remainingTime.removeClass('foryoureyesonly')
             } else {
                 // never expires
@@ -1620,7 +1627,6 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             $message.addClass('hidden');
 
             // show preview
-            $('#errormessage').find(':last')
             PasteViewer.setText($message.val());
             PasteViewer.run();
 

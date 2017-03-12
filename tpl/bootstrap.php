@@ -69,7 +69,7 @@ if ($MARKDOWN):
 <?php
 endif;
 ?>
-		<script type="text/javascript" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-rvc7nkZjk/ntvq0byTiVQX6lP+vXkg0TwZ+LLd7EpeV+7Rr2hm/bUwOrc77t1JkIicywjvfu6tKYBWVkjuCHNw==" crossorigin="anonymous"></script>
+		<script type="text/javascript" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-Np6M1TYAhyN/c5SaNYsTnQW+yLyMW3zr/TuiJipi77GxWdayOxcc/3CqCodtm5YPxxdyIwhjjJTclMOdwjdBKQ==" crossorigin="anonymous"></script>
 		<!--[if lt IE 10]>
 		<style type="text/css">body {padding-left:60px;padding-right:60px;} #ienotice {display:block;} #oldienotice {display:block;}</style>
 		<![endif]-->
@@ -122,7 +122,7 @@ endif;
 				<ul class="nav navbar-nav">
 					<li id="loadingindicator" class="navbar-text hidden">
 						<span class="glyphicon glyphicon-time" aria-hidden="true"></span>
-						<span class="pl-1"><?php echo I18n::_('Loading…'), PHP_EOL; ?></span>
+						<?php echo I18n::_('Loading…'), PHP_EOL; ?>
 					</li>
 					<li>
 <?php
@@ -379,31 +379,46 @@ endif;
 if (strlen($NOTICE)):
 ?>
 				<div role="alert" class="alert alert-info">
-					<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span><span class="pl-1"><?php echo htmlspecialchars($NOTICE), PHP_EOL; ?></span>
+					<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+					<?php echo htmlspecialchars($NOTICE), PHP_EOL; ?>
 				</div>
 <?php
 endif;
 ?>
 				<div id="remainingtime" role="alert" class="hidden alert alert-info">
-					<span class="glyphicon glyphicon-fire" aria-hidden="true"></span><span class="pl-1"></span>
+					<span class="glyphicon glyphicon-fire" aria-hidden="true"></span>
 				</div>
 <?php
 if ($FILEUPLOAD):
 ?>
 				<div id="attachment" role="alert" class="hidden alert alert-info">
-					<span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span><a class="alert-link pl-1"><?php echo I18n::_('Download attachment'); ?></a>
+					<span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
+					<a class="alert-link"><?php echo I18n::_('Download attachment'), PHP_EOL; ?></a>
 				</div>
 <?php
 endif;
 ?>
 				<div id="status" role="alert" class="statusmessage alert alert-info<?php echo empty($STATUS) ? ' hidden' : '' ?>">
 					<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
-					<span class="pl-1"><?php echo htmlspecialchars($STATUS); ?></span>
+					<?php echo htmlspecialchars($STATUS), PHP_EOL; ?>
 				</div>
-				<div id="errormessage" role="alert" class="statusmessage<?php echo empty($ERROR) ? ' hidden' : '' ?> alert alert-danger"><span class="glyphicon glyphicon-alert" aria-hidden="true"></span><span class="pl-1"><?php echo htmlspecialchars($ERROR); ?></span></div>
-				<noscript><div id="noscript" role="alert" class="nonworking alert alert-<?php echo $isDark ? 'error' : 'warning'; ?>"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span><?php echo I18n::_('JavaScript is required for %s to work.<br />Sorry for the inconvenience.', I18n::_($NAME)); ?></div></noscript>
-				<div id="oldienotice" role="alert" class="hidden nonworking alert alert-danger"><span class="glyphicon glyphicon-alert" aria-hidden="true"></span><?php echo I18n::_('%s requires a modern browser to work.', I18n::_($NAME)); ?></div>
-				<div id="ienotice" role="alert" class="hidden alert alert-<?php echo $isDark ? 'error' : 'warning'; ?>"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span><?php echo I18n::_('Still using Internet Explorer? Do yourself a favor, switch to a modern browser:'), PHP_EOL; ?>
+				<div id="errormessage" role="alert" class="statusmessage<?php echo empty($ERROR) ? ' hidden' : '' ?> alert alert-danger">
+					<span class="glyphicon glyphicon-alert" aria-hidden="true"></span>
+					<?php echo htmlspecialchars($ERROR), PHP_EOL; ?>
+				</div>
+				<noscript>
+					<div id="noscript" role="alert" class="nonworking alert alert-<?php echo $isDark ? 'error' : 'warning'; ?>">
+						<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+						<?php echo I18n::_('JavaScript is required for %s to work.<br />Sorry for the inconvenience.', I18n::_($NAME)), PHP_EOL; ?>
+					</div>
+				</noscript>
+				<div id="oldienotice" role="alert" class="hidden nonworking alert alert-danger">
+					<span class="glyphicon glyphicon-alert" aria-hidden="true"></span>
+					<?php echo I18n::_('%s requires a modern browser to work.', I18n::_($NAME)), PHP_EOL; ?>
+				</div>
+				<div id="ienotice" role="alert" class="hidden alert alert-<?php echo $isDark ? 'error' : 'warning'; ?>">
+					<span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+					<?php echo I18n::_('Still using Internet Explorer? Do yourself a favor, switch to a modern browser:'), PHP_EOL; ?>
 					<a href="https://www.mozilla.org/firefox/">Firefox</a>,
 					<a href="https://www.opera.com/">Opera</a>,
 					<a href="https://www.google.com/chrome">Chrome</a>…
@@ -446,8 +461,9 @@ endif;
 				</div>
 			</section>
 			<section class="container">
-				<div id="noscript" role="alert" class="nonworking alert alert-info noscript-hide"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true">
-					<span class="pl-1"><?php echo I18n::_('Loading…'); ?></span><br />
+				<div id="noscript" role="alert" class="nonworking alert alert-info noscript-hide">
+					<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+					<?php echo I18n::_('Loading…'); ?><br />
 					<span class="small"><?php echo I18n::_('In case this message never disappears please have a look at <a href="https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away">this FAQ for information to troubleshoot</a>.'); ?></span>
 				</div>
 			</section>
@@ -469,7 +485,7 @@ if ($DISCUSSION):
 			<div id="templates">
 				<!-- @TODO: when I intend/structure this corrrectly Firefox adds whitespaces everywhere which completly destroy the layout. (same possible when you remove the template data below and show this area in the browser) -->
 				<article id="commenttemplate" class="comment"><div class="commentmeta"><span class="nickname">name</span><span class="commentdate">0000-00-00</span></div><div class="commentdata">c</div><button class="btn btn-default btn-sm"><?php echo I18n::_('Reply'); ?></button></article>
-				<div id="commenttailtemplate" class="comment"><button class="btn btn-default btn-sm"><?php echo I18n::_('Add comment'); ?></button></div>
+				<p id="commenttailtemplate" class="comment"><button class="btn btn-default btn-sm"><?php echo I18n::_('Add comment'); ?></button></p>
 				<div id="replytemplate" class="reply hidden"><input type="text" id="nickname" class="form-control" title="<?php echo I18n::_('Optional nickname…'); ?>" placeholder="<?php echo I18n::_('Optional nickname…'); ?>" /><textarea id="replymessage" class="replymessage form-control" cols="80" rows="7"></textarea><br /><div id="replystatus" role="alert" class="statusmessage hidden alert"><span class="glyphicon" aria-hidden="true"></span><span></span></div><button id="replybutton" class="btn btn-default btn-sm"><?php echo I18n::_('Post comment'); ?></button></div>
 			</div>
 <?php
