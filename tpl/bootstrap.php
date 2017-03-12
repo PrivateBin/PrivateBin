@@ -69,7 +69,7 @@ if ($MARKDOWN):
 <?php
 endif;
 ?>
-		<script type="text/javascript" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-Np6M1TYAhyN/c5SaNYsTnQW+yLyMW3zr/TuiJipi77GxWdayOxcc/3CqCodtm5YPxxdyIwhjjJTclMOdwjdBKQ==" crossorigin="anonymous"></script>
+		<script type="text/javascript" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-Twits2in/YkEGNmhvYLmBl6zBKLtymFOzwAqxcJHQ0zJBpXCvxxmbIoW0LUWnzTq2hUtPgjAMZznSU2xkMPjjQ==" crossorigin="anonymous"></script>
 		<!--[if lt IE 10]>
 		<style type="text/css">body {padding-left:60px;padding-right:60px;} #ienotice {display:block;} #oldienotice {display:block;}</style>
 		<![endif]-->
@@ -94,7 +94,7 @@ endif;
 						<form id="passwordform" role="form">
 							<div class="form-group">
 								<label for="passworddecrypt"><span class="glyphicon glyphicon-eye-open"></span> <?php echo I18n::_('Please enter the password for this paste:') ?></label>
-								<input id="passworddecrypt" type="password" class="form-control" placeholder="<?php echo I18n::_('Enter password') ?>" autofocus>
+								<input id="passworddecrypt" type="password" class="form-control" placeholder="<?php echo I18n::_('Enter password') ?>">
 							</div>
 							<button type="submit" class="btn btn-success btn-block"><span class="glyphicon glyphicon-off"></span> <?php echo I18n::_('Decrypt') ?></button>
 						</form>

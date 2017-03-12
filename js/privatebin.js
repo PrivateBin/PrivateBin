@@ -1419,13 +1419,10 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             $passwordForm,
             $passwordModal;
 
-        var password = '',
-            passwordCallback = null;
+        var password = '';
 
         /**
          * ask the user for the password and set it
-         *
-         * the callback set via setPasswordCallback is executed
          *
          * @name Prompt.requestPassword()
          * @function
@@ -1438,7 +1435,6 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                     backdrop: 'static',
                     keyboard: false
                 });
-
                 return;
             }
 
@@ -1453,10 +1449,6 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             }
 
             password = newPassword;
-
-            if (passwordCallback !== null) {
-                passwordCallback();
-            }
         }
 
         /**
@@ -1475,18 +1467,6 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         }
 
         /**
-         * setsthe callback called when password is entered
-         *
-         * @name   Prompt.setPasswordCallback
-         * @function
-         * @param {functions} setPasswordCallback
-         */
-        me.setPasswordCallback = function(callback)
-        {
-            passwordCallback = callback;
-        }
-
-        /**
          * submit a password in the modal dialog
          *
          * @private
@@ -1495,17 +1475,15 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          */
         function submitPasswordModal(event)
         {
+            event.preventDefault();
+
             // get input
             password = $passwordDecrypt.val();
 
             // hide modal
             $passwordModal.modal('hide');
 
-            if (passwordCallback !== null) {
-                passwordCallback();
-            }
-
-            event.preventDefault();
+            PasteDecrypter.run();
         }
 
 
@@ -3613,19 +3591,14 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                 password = Prompt.getPassword();
 
                 // if password is there, re-try
-                if (password.length !== 0) {
-                    // recursive
-                    // note: an infinite loop is prevented as the previous if
-                    // clause checks whether a password is already set and ignores
-                    // errors when a password has been passed
-                    return decryptOrPromptPassword.apply(arguments);
+                if (password.length == 0) {
+                    password = Prompt.requestPassword();
                 }
-
-                // trigger password request
-                Prompt.requestPassword();
-                // the callback (via setPasswordCallback()) should have been set
-                // by a parent function
-                return false;
+                // recursive
+                // note: an infinite loop is prevented as the previous if
+                // clause checks whether a password is already set and ignores
+                // errors when a password has been passed
+                return decryptOrPromptPassword.apply(key, password, cipherdata);
             }
 
             // if all tries failed, we can only return an error
@@ -3700,7 +3673,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             var attachmentName;
             if (paste.attachmentname) {
                 try {
-                    var attachmentName = decryptOrPromptPassword(key, password, paste.attachmentname);
+                    attachmentName = decryptOrPromptPassword(key, password, paste.attachmentname);
                 } catch (err) {
                     throw 'failed to decipher attachment name: ' + err
                 }
@@ -3755,6 +3728,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          */
         me.run = function(paste)
         {
+            Alert.hideMessages();
             Alert.showLoading('Decrypting paste…', 0, 'cloud-download'); // @TODO icon maybe rotation-lock, but needs full Glyphicons
 
             if (typeof paste === 'undefined') {
@@ -3771,10 +3745,6 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
 
             // try to decrypt the paste
             try {
-                Prompt.setPasswordCallback(function () {
-                    me.run(paste);
-                });
-
                 // decrypt attachments
                 if (paste.attachment) {
                     // try to decrypt paste and if it fails (because the password is
@@ -3782,15 +3752,11 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                     if (!decryptAttachment(paste, key, password)) {
                         return;
                     }
+                    // ignore empty paste, as this is allowed when pasting attachments
+                    decryptPaste(paste, key, password, true);
+                } else {
+                    decryptPaste(paste, key, password);
                 }
-
-                // Deliberately ignores non-critical errors as this decryption
-                // can also return an empty string and when this is done, the
-                // decryption routine cannot differenciate this to an error.
-                // As, however, the attachment could already be decrypted we
-                // can continue here without showing an error, but just an empty
-                // paste text.
-                decryptPaste(paste, key, password, true);
             } catch(err) {
                 Alert.hideLoading();
 
