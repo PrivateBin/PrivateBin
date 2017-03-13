@@ -36,6 +36,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
     /**
      * static Helper methods
      *
+     * @name Helper
      * @class
      */
     var Helper = (function () {
@@ -45,6 +46,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          * character to HTML entity lookup table
          *
          * @see    {@link https://github.com/janl/mustache.js/blob/master/mustache.js#L60}
+         * @name Helper.entityMap
          * @private
          * @enum   {Object}
          * @readonly
@@ -63,6 +65,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         /**
          * cache for script location
          *
+         * @name Helper.baseUri
          * @private
          * @enum   {string|null}
          */
@@ -299,7 +302,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         /**
          * resets state, used for unit testing
          *
-         * @name   Model.reset
+         * @name   Helper.reset
          * @function
          */
         me.reset = function()
@@ -313,6 +316,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
     /**
      * internationalization module
      *
+     * @name I18n
      * @param  {object} window
      * @param  {object} document
      * @class
@@ -323,6 +327,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         /**
          * const for string of loaded language
          *
+         * @name I18n.languageLoadedEvent
          * @private
          * @prop   {string}
          * @readonly
@@ -332,6 +337,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         /**
          * supported languages, minus the built in 'en'
          *
+         * @name I18n.supportedLanguages
          * @private
          * @prop   {string[]}
          * @readonly
@@ -341,6 +347,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         /**
          * built in language
          *
+         * @name I18n.language
          * @private
          * @prop   {string|null}
          */
@@ -349,15 +356,14 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         /**
          * translation cache
          *
+         * @name I18n.translations
          * @private
          * @enum   {Object}
          */
         var translations = {};
 
         /**
-         * translate a string, alias for I18n.translate()
-         *
-         * for a full description see me.translate
+         * translate a string, alias for I18n.translate
          *
          * @name   I18n._
          * @function
@@ -553,6 +559,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
     /**
      * handles everything related to en/decryption
      *
+     * @name CryptTool
      * @class
      */
     var CryptTool = (function () {
@@ -561,7 +568,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         /**
          * compress a message (deflate compression), returns base64 encoded data
          *
-         * @name   cryptToolcompress
+         * @name   CryptTool.compress
          * @function
          * @private
          * @param  {string} message
@@ -575,7 +582,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         /**
          * decompress a message compressed with cryptToolcompress()
          *
-         * @name   cryptTooldecompress
+         * @name   CryptTool.decompress
          * @function
          * @private
          * @param  {string} data - base64 data
@@ -638,9 +645,9 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         }
 
         /**
-         * checks whether the crypt tool is ready.
+         * checks whether the crypt tool has collected enough entropy
          *
-         * @name   CryptTool.isReady
+         * @name   CryptTool.isEntropyReady
          * @function
          * @return {bool}
          */
@@ -650,9 +657,9 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         }
 
         /**
-         * checks whether the crypt tool is ready.
+         * add a listener function, triggered when enough entropy is available
          *
-         * @name   CryptTool.isReady
+         * @name   CryptTool.addEntropySeedListener
          * @function
          * @param {function} func
          */
@@ -673,29 +680,13 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             return sjcl.codec.base64.fromBits(sjcl.random.randomWords(8, 0), 0);
         }
 
-        /**
-         * initialize crypt tool
-         *
-         * @name   CryptTool.init
-         * @function
-         */
-        me.init = function()
-        {
-            // will fail earlier as sjcl is already passed as a parameter
-            // if (typeof sjcl !== 'object') {
-            //     Alert.showError(
-            //         I18n._('The library %s is not available.', 'sjcl') +
-            //         I18n._('Messages cannot be decrypted or encrypted.')
-            //     );
-            // }
-        }
-
         return me;
     })();
 
     /**
      * (Model) Data source (aka MVC)
      *
+     * @name   Model
      * @class
      */
     var Model = (function () {
@@ -857,6 +848,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
      *
      * everything directly UI-related, which fits nowhere else
      *
+     * @name   UiHelper
      * @param  {object} window
      * @param  {object} document
      * @class
@@ -869,6 +861,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          *
          * currently this does only handle redirects to the home page.
          *
+         * @name   UiHelper.historyChange
          * @private
          * @function
          * @param  {Event} event
@@ -902,8 +895,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          * checks whether the element is currently visible in the viewport (so
          * the user can actually see it)
          *
-         * THanks to https://stackoverflow.com/a/40658647
-         *
+         * @see    {@link https://stackoverflow.com/a/40658647}
          * @name   UiHelper.isVisible
          * @function
          * @param  {jQuery} $element The link hash to move to.
@@ -922,9 +914,9 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         /**
          * scrolls to a specific element
          *
-         * Based on code by @hanoo: https://stackoverflow.com/questions/4198041/jquery-smooth-scroll-to-an-anchor#answer-12714767
-         *
+         * @see    {@link https://stackoverflow.com/questions/4198041/jquery-smooth-scroll-to-an-anchor#answer-12714767}
          * @name   UiHelper.scrollTo
+         * @function
          * @param  {jQuery}           $element        The link hash to move to.
          * @param  {(number|string)}  animationDuration passed to jQuery .animate, when set to 0 the animation is skipped
          * @param  {string}           animationEffect   passed to jQuery .animate
@@ -992,6 +984,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
     /**
      * Alert/error manager
      *
+     * @name   Alert
      * @param  {object} window
      * @param  {object} document
      * @class
@@ -1023,6 +1016,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         /**
          * forwards a request to the i18n module and shows the element
          *
+         * @name   Alert.handleNotification
          * @private
          * @function
          * @param  {int} id - id of notification
@@ -1260,6 +1254,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
     /**
      * handles paste status/result
      *
+     * @name   PasteStatus
      * @param  {object} window
      * @param  {object} document
      * @class
@@ -1275,6 +1270,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         /**
          * forward to URL shortener
          *
+         * @name   PasteStatus.sendToShortener
          * @private
          * @function
          * @param  {Event} event
@@ -1291,7 +1287,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          * This is necessary as browsers will not reload the page when it is
          * already loaded (which is fake as it is set via history.pushState()).
          *
-         * @name   Controller.pasteLinkClick
+         * @name   PasteStatus.pasteLinkClick
          * @function
          * @param  {Event} event
          */
@@ -1391,7 +1387,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          *
          * preloads jQuery elements
          *
-         * @name   Alert.init
+         * @name   PasteStatus.init
          * @function
          */
         me.init = function()
@@ -1411,6 +1407,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
     /**
      * password prompt
      *
+     * @name Prompt
      * @param  {object} window
      * @param  {object} document
      * @class
@@ -1425,9 +1422,30 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         var password = '';
 
         /**
+         * submit a password in the modal dialog
+         *
+         * @name Prompt.submitPasswordModal
+         * @private
+         * @function
+         * @param  {Event} event
+         */
+        function submitPasswordModal(event)
+        {
+            event.preventDefault();
+
+            // get input
+            password = $passwordDecrypt.val();
+
+            // hide modal
+            $passwordModal.modal('hide');
+
+            PasteDecrypter.run();
+        }
+
+        /**
          * ask the user for the password and set it
          *
-         * @name Prompt.requestPassword()
+         * @name Prompt.requestPassword
          * @function
          */
         me.requestPassword = function()
@@ -1470,32 +1488,11 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         }
 
         /**
-         * submit a password in the modal dialog
-         *
-         * @private
-         * @function
-         * @param  {Event} event
-         */
-        function submitPasswordModal(event)
-        {
-            event.preventDefault();
-
-            // get input
-            password = $passwordDecrypt.val();
-
-            // hide modal
-            $passwordModal.modal('hide');
-
-            PasteDecrypter.run();
-        }
-
-
-        /**
          * init status manager
          *
          * preloads jQuery elements
          *
-         * @name   Controller.init
+         * @name   Prompt.init
          * @function
          */
         me.init = function()
@@ -1522,6 +1519,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
      *
      * Note that the actual preview is handled by PasteViewer.
      *
+     * @name   Editor
      * @param  {object} window
      * @param  {object} document
      * @class
@@ -1735,6 +1733,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
     /**
      * (view) Parse and show paste.
      *
+     * @name   PasteViewer
      * @param  {object} window
      * @param  {object} document
      * @class
@@ -1755,6 +1754,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         /**
          * apply the set format on paste and displays it
          *
+         * @name   PasteViewer.parsePaste
          * @private
          * @function
          */
@@ -1809,6 +1809,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         /**
          * displays the paste
          *
+         * @name   PasteViewer.showPaste
          * @private
          * @function
          */
@@ -1860,7 +1861,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         /**
          * returns the current format
          *
-         * @name   PasteViewer.setFormat
+         * @name   PasteViewer.getFormat
          * @function
          * @return {string}
          */
@@ -1951,7 +1952,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          *
          * preloads jQuery elements
          *
-         * @name   Editor.init
+         * @name   PasteViewer.init
          * @function
          */
         me.init = function()
@@ -1985,6 +1986,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
     /**
      * (view) Show attachment and preview if possible
      *
+     * @name   AttachmentViewer
      * @param  {object} window
      * @param  {object} document
      * @class
@@ -2065,9 +2067,9 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         /**
          * hides the attachment
          *
-         * This will not hide the preview {@see me.hideAttachmentPreview}
-         * nor will it hide the attachment link if it was moved somewhere
-         * else {@see moveAttachmentTo}.
+         * This will not hide the preview (see AttachmentViewer.hideAttachmentPreview
+         * for that) nor will it hide the attachment link if it was moved somewhere
+         * else (see AttachmentViewer.moveAttachmentTo).
          *
          * @name AttachmentViewer.hideAttachment
          * @function
@@ -2119,7 +2121,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          *
          * It is advisable to hide the attachment afterwards (AttachmentViewer.hideAttachment)
          *
-         * @name   AttachmentViewer.setClonedAttachment
+         * @name   AttachmentViewer.moveAttachmentTo
          * @function
          * @param {jQuery} $element - the wrapper/container element where this should be moved to
          * @param {string} label - the text to show (%s will be replaced with the file name), will automatically be translated
@@ -2154,6 +2156,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
     /**
      * (view) Shows discussion thread and handles replies
      *
+     * @name   DiscussionViewer
      * @param  {object} window
      * @param  {object} document
      * @class
@@ -2174,6 +2177,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         /**
          * initializes the templates
          *
+         * @name   DiscussionViewer.initTemplates
          * @private
          * @function
          */
@@ -2186,6 +2190,35 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
 
             // cache jQuery elements
             $commentTail = Model.getTemplate('commenttail');
+        }
+
+        /**
+         * open the comment entry when clicking the "Reply" button of a comment
+         *
+         * @name   DiscussionViewer.openReply
+         * @private
+         * @function
+         * @param  {Event} event
+         */
+        function openReply(event)
+        {
+            var $source = $(event.target);
+
+            // clear input
+            $replyMessage.val('');
+            $replyNickname.val('');
+
+            // get comment id from source element
+            replyCommentId = $source.parent().prop('id').split('_')[1];
+
+            // move to correct position
+            $source.after($reply);
+
+            // show
+            $reply.removeClass('hidden');
+            $replyMessage.focus();
+
+            event.preventDefault();
         }
 
         /**
@@ -2219,34 +2252,6 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             }
 
             return $replyStatus;
-        }
-
-        /**
-         * open the comment entry when clicking the "Reply" button of a comment
-         *
-         * @private
-         * @function
-         * @param  {Event} event
-         */
-        function openReply(event)
-        {
-            var $source = $(event.target);
-
-            // clear input
-            $replyMessage.val('');
-            $replyNickname.val('');
-
-            // get comment id from source element
-            replyCommentId = $source.parent().prop('id').split('_')[1];
-
-            // move to correct position
-            $source.after($reply);
-
-            // show
-            $reply.removeClass('hidden');
-            $replyMessage.focus();
-
-            event.preventDefault();
         }
 
         /**
@@ -2439,8 +2444,9 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
     /**
      * Manage top (navigation) bar
      *
-     * @param {object} window
-     * @param {object} document
+     * @name   TopNav
+     * @param  {object} window
+     * @param  {object} document
      * @class
      */
     var TopNav = (function (window, document) {
@@ -2472,6 +2478,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          * set the expiration on bootstrap templates in dropdown
          *
          * @name   TopNav.updateExpiration
+         * @private
          * @function
          * @param  {Event} event
          */
@@ -2491,6 +2498,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          * set the format on bootstrap templates in dropdown
          *
          * @name   TopNav.updateFormat
+         * @private
          * @function
          * @param  {Event} event
          */
@@ -2516,6 +2524,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          * when "burn after reading" is checked, disable discussion
          *
          * @name   TopNav.changeBurnAfterReading
+         * @private
          * @function
          */
         function changeBurnAfterReading()
@@ -2535,6 +2544,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          * when discussion is checked, disable "burn after reading"
          *
          * @name   TopNav.changeOpenDiscussion
+         * @private
          * @function
          */
         function changeOpenDiscussion()
@@ -2554,6 +2564,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          * return raw text
          *
          * @name   TopNav.rawText
+         * @private
          * @function
          * @param  {Event} event
          */
@@ -2588,6 +2599,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          * saves the language in a cookie and reloads the page
          *
          * @name   TopNav.setLanguage
+         * @private
          * @function
          * @param  {Event} event
          */
@@ -2600,6 +2612,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         /**
          * hides all messages and creates a new paste
          *
+         * @name   TopNav.clickNewPaste
          * @private
          * @function
          * @param  {Event} event
@@ -2613,6 +2626,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         /**
          * removes the existing attachment
          *
+         * @name   TopNav.removeAttachment
          * @private
          * @function
          * @param  {Event} event
@@ -2631,17 +2645,6 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
 
             // pevent '#' from appearing in the URL
             event.preventDefault();
-        }
-
-        /**
-         * Loads the default options for creating a paste.
-         *
-         * @name   TopNav.loadDefaults
-         * @function
-         */
-        me.loadDefaults = function()
-        {
-            // @TODO
         }
 
         /**
@@ -2940,7 +2943,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             $burnAfterReading.change(changeBurnAfterReading);
             $openDiscussionOption.change(changeOpenDiscussion);
             $newButton.click(clickNewPaste);
-            $sendButton.click(PasteEncrypter.submitPaste);
+            $sendButton.click(PasteEncrypter.sendPaste);
             $cloneButton.click(Controller.clonePaste);
             $rawTextButton.click(rawText);
             $fileRemoveButton.click(removeAttachment);
@@ -2955,8 +2958,6 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
 
             // get default value from template or fall back to set value
             pasteExpiration = Model.getExpirationDefault() || pasteExpiration;
-
-            me.loadDefaults();
         }
 
         return me;
@@ -2965,6 +2966,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
     /**
      * Responsible for AJAX requests, transparently handles encryption…
      *
+     * @name   Uploader
      * @class
      */
     var Uploader = (function () {
@@ -2980,6 +2982,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         /**
          * public variable ('constant') for errors to prevent magic numbers
          *
+         * @name   Uploader.error
          * @readonly
          * @enum   {Object}
          */
@@ -2993,6 +2996,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         /**
          * ajaxHeaders to send in AJAX requests
          *
+         * @name   Uploader.ajaxHeaders
          * @private
          * @readonly
          * @enum   {Object}
@@ -3002,6 +3006,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         /**
          * called after successful upload
          *
+         * @name   Uploader.checkCryptParameters
          * @private
          * @function
          * @throws {string}
@@ -3034,6 +3039,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         /**
          * called after successful upload
          *
+         * @name   Uploader.success
          * @private
          * @function
          * @param {int} status
@@ -3053,6 +3059,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         /**
          * called after a upload failure
          *
+         * @name   Uploader.fail
          * @private
          * @function
          * @param {int} status - internal code
@@ -3267,7 +3274,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
      *
      * Does upload, encryption is done transparently by Uploader.
      *
-     * @name state
+     * @name PasteEncrypter
      * @class
      */
     var PasteEncrypter = (function () {
@@ -3278,6 +3285,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         /**
          * checks whether there is a suitable amount of entrophy
          *
+         * @name PasteEncrypter.checkRequirements
          * @private
          * @function
          * @param {function} retryCallback - the callback to execute to retry the upload
@@ -3305,6 +3313,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         /**
          * called after successful paste upload
          *
+         * @name PasteEncrypter.showCreatedPaste
          * @private
          * @function
          * @param {int} status
@@ -3329,13 +3338,14 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             Editor.hide();
 
             // parse and show text
-            // (preparation already done in me.submitPaste())
+            // (preparation already done in me.sendPaste())
             PasteViewer.run();
         }
 
         /**
          * called after successful comment upload
          *
+         * @name PasteEncrypter.showUploadedComment
          * @private
          * @function
          * @param {int} status
@@ -3357,6 +3367,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         /**
          * adds attachments to the Uploader
          *
+         * @name PasteEncrypter.encryptAttachments
          * @private
          * @function
          * @param {File|null|undefined} file - optional, falls back to cloned attachment
@@ -3476,10 +3487,10 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         /**
          * sends a new paste to server
          *
-         * @name   PasteEncrypter.submitPaste
+         * @name   PasteEncrypter.sendPaste
          * @function
          */
-        me.submitPaste = function()
+        me.sendPaste = function()
         {
             // hide previous (error) messages
             Controller.hideStatusMessages();
@@ -3506,7 +3517,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
 
             // check entropy
             if (!checkRequirements(function () {
-                me.submitPaste();
+                me.sendPaste();
             })) {
                 return; // to prevent multiple executions
             }
@@ -3570,7 +3581,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
      *
      * Only decryption, no download.
      *
-     * @name state
+     * @name PasteDecrypter
      * @class
      */
     var PasteDecrypter = (function () {
@@ -3579,13 +3590,14 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         /**
          * decrypt data or prompts for password in cvase of failure
          *
+         * @name   PasteDecrypter.decryptOrPromptPassword
          * @private
          * @function
-         * @param {string} key
-         * @param {string} password - optional, may be an empty string
-         * @param {string} cipherdata
+         * @param  {string} key
+         * @param  {string} password - optional, may be an empty string
+         * @param  {string} cipherdata
          * @throws {string}
-         * @return {false|string} - false, when unsuccessful or string (decrypted data)
+         * @return {false|string} false, when unsuccessful or string (decrypted data)
          */
         function decryptOrPromptPassword(key, password, cipherdata)
         {
@@ -3619,13 +3631,14 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         /**
          * decrypt the actual paste text
          *
+         * @name   PasteDecrypter.decryptOrPromptPassword
          * @private
          * @function
-         * @param {object} paste - paste data in object form
-         * @param {string} key
-         * @param {string} password
-         * @param {bool} ignoreError - ignore decryption errors iof set to true
-         * @return {bool} - whether action was successful
+         * @param  {object} paste - paste data in object form
+         * @param  {string} key
+         * @param  {string} password
+         * @param  {bool} ignoreError - ignore decryption errors iof set to true
+         * @return {bool} whether action was successful
          * @throws {string}
          */
         function decryptPaste(paste, key, password, ignoreError)
@@ -3656,12 +3669,13 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         /**
          * decrypts any attachment
          *
+         * @name   PasteDecrypter.decryptAttachment
          * @private
          * @function
-         * @param {object} paste - paste data in object form
-         * @param {string} key
-         * @param {string} password
-         * @return {bool} - whether action was successful
+         * @param  {object} paste - paste data in object form
+         * @param  {string} key
+         * @param  {string} password
+         * @return {bool} whether action was successful
          * @throws {string}
          */
         function decryptAttachment(paste, key, password)
@@ -3698,12 +3712,13 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         /**
          * decrypts all comments and shows them
          *
+         * @name   PasteDecrypter.decryptComments
          * @private
          * @function
-         * @param {object} paste - paste data in object form
-         * @param {string} key
-         * @param {string} password
-         * @return {bool} - whether action was successful
+         * @param  {object} paste - paste data in object form
+         * @param  {string} key
+         * @param  {string} password
+         * @return {bool} whether action was successful
          */
         function decryptComments(paste, key, password)
         {
@@ -3802,6 +3817,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
     /**
      * (controller) main PrivateBin logic
      *
+     * @name   Controller
      * @param  {object} window
      * @param  {object} document
      * @class
@@ -3840,7 +3856,6 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             Editor.show();
             Editor.focusInput();
 
-            TopNav.loadDefaults();
             TopNav.showCreateButtons();
             Alert.hideLoading();
         }
@@ -3877,7 +3892,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          *
          * @name   Controller.refreshPaste
          * @function
-         * @param {function} callback
+         * @param  {function} callback
          */
         me.refreshPaste = function(callback)
         {
@@ -3991,7 +4006,6 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             Model.init();
 
             AttachmentViewer.init();
-            CryptTool.init();
             DiscussionViewer.init();
             Editor.init();
             PasteDecrypter.init();
