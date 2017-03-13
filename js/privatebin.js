@@ -3764,26 +3764,25 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                 } else {
                     decryptPaste(paste, key, password);
                 }
+
+
+                // shows the remaining time (until) deletion
+                PasteStatus.showRemainingTime(paste.meta);
+
+                // if the discussion is opened on this paste, display it
+                if (paste.meta.opendiscussion) {
+                    decryptComments(paste, key, password);
+                }
+
+                Alert.hideLoading();
+                TopNav.showViewButtons();
             } catch(err) {
                 Alert.hideLoading();
 
                 // log and show error
                 console.error(err);
                 Alert.showError('Could not decrypt data (Wrong key?)');
-
-                // still go on to potentially show potentially partially decrypted data
             }
-
-            // shows the remaining time (until) deletion
-            PasteStatus.showRemainingTime(paste.meta);
-
-            // if the discussion is opened on this paste, display it
-            if (paste.meta.opendiscussion) {
-                decryptComments(paste, key, password);
-            }
-
-            Alert.hideLoading();
-            TopNav.showViewButtons();
         }
 
         /**
