@@ -3610,7 +3610,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                 password = Prompt.getPassword();
 
                 // if password is there, re-try
-                if (password.length == 0) {
+                if (password.length === 0) {
                     password = Prompt.requestPassword();
                 }
                 // recursive
