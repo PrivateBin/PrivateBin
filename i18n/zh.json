@@ -137,15 +137,15 @@
     "Invalid attachment.": "无效的附件",
     "Options": "选项",
     "Shorten URL": "缩短链接",
-    "Editor": "編輯",
-    "Preview": "預習",
+    "Editor": "编辑",
+    "Preview": "预览",
     "%s requires the PATH to end in a \"%s\". Please update the PATH in your index.php.":
-        "%s requires the PATH to end in a \"%s\". Please update the PATH in your index.php.",
+        "%s 的 PATH 变量必须结束于 \"%s\"。 请修改你的 index.php 中的 PATH 变量。",
     "Decrypt":
-        "Decrypt",
+        "解密",
     "Enter password":
-        "Enter password",
-    "Loading…": "Loading…",
+        "输入密码",
+    "Loading…": "载入中…",
     "In case this message never disappears please have a look at <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">this FAQ for information to troubleshoot</a>.":
-        "In case this message never disappears please have a look at <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">this FAQ for information to troubleshoot</a> (in English)."
+        "如果这个消息一直不消失，请参考 <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">这里的 FAQ 进行故障排除</a> (英文版)。"
 }
