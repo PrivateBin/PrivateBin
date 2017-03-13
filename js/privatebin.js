@@ -3105,7 +3105,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         /**
          * set success function
          *
-         * @name   Uploader.setSuccess
+         * @name   Uploader.setUrl
          * @function
          * @param {function} func
          */
@@ -3149,7 +3149,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         /**
          * set failure function
          *
-         * @name   Uploader.setSuccess
+         * @name   Uploader.setFailure
          * @function
          * @param {function} func
          */
