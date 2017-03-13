@@ -96,12 +96,12 @@
         "Avatar anonime (Vizhash de l'adreça IP)",
     "Add comment":
         "Apondre un comentari",
-    "Optional nickname...":
-        "Escais opcional...",
+    "Optional nickname…":
+        "Escais opcional…",
     "Post comment":
         "Mandar lo comentari",
-    "Sending comment...":
-        "Mandadís del comentari...",
+    "Sending comment…":
+        "Mandadís del comentari…",
     "Comment posted.":
         "Comentari mandat.",
     "Could not refresh display: %s":
@@ -112,10 +112,10 @@
         "Lo servidor respond pas o a rencontrat una error",
     "Could not post comment: %s":
         "Impossible de mandar lo comentari : %s",
-    "Sending paste (Please move your mouse for more entropy)...":
-        "Mandadís del tèxte (Mercés de bolegar vòstra mirga per mai entropia)...",
-    "Sending paste...":
-        "Mandadís del tèxte...",
+    "Sending paste (Please move your mouse for more entropy)…":
+        "Mandadís del tèxte (Mercés de bolegar vòstra mirga per mai entropia)…",
+    "Sending paste…":
+        "Mandadís del tèxte…",
     "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit [Ctrl]+[c] to copy)</span>":
         "Vòstre tèxte es disponible a l'adreça <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Picatz sus [Ctrl]+[c] per copiar)</span>",
     "Delete data":

@@ -96,12 +96,12 @@
         "Anonym avatar (Vizhash av IP adressen)",
     "Add comment":
         "Legg til kommentar",
-    "Optional nickname...":
-        "Valgfritt kallenavn...",
+    "Optional nickname…":
+        "Valgfritt kallenavn…",
     "Post comment":
         "Send kommentar",
-    "Sending comment...":
-        "Sender Kommentar...",
+    "Sending comment…":
+        "Sender Kommentar…",
     "Comment posted.":
         "Kommentar sendt.",
     "Could not refresh display: %s":
@@ -112,10 +112,10 @@
         "server feilet eller svarer ikke",
     "Could not post comment: %s":
         "Kunne ikke sende kommentar: %s",
-    "Sending paste (Please move your mouse for more entropy)...":
-        "Sender innlegg (Flytt musen for mere entropi)...",
-    "Sending paste...":
-        "Sender innlegg...",
+    "Sending paste (Please move your mouse for more entropy)…":
+        "Sender innlegg (Flytt musen for mere entropi)…",
+    "Sending paste…":
+        "Sender innlegg…",
     "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit [Ctrl]+[c] to copy)</span>":
         "Ditt innlegg er <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Trykk [Ctrl]+[c] for å kopiere)</span>",
     "Delete data":
