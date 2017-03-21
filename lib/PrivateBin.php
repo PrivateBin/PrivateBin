@@ -120,8 +120,8 @@ class PrivateBin
      */
     public function __construct()
     {
-        if (version_compare(PHP_VERSION, '5.3.0') < 0) {
-            throw new Exception(I18n::_('%s requires php 5.3.0 or above to work. Sorry.', I18n::_('PrivateBin')), 1);
+        if (version_compare(PHP_VERSION, '5.4.0') < 0) {
+            throw new Exception(I18n::_('%s requires php 5.4.0 or above to work. Sorry.', I18n::_('PrivateBin')), 1);
         }
         if (strlen(PATH) < 0 && substr(PATH, -1) !== DIRECTORY_SEPARATOR) {
             throw new Exception(I18n::_('%s requires the PATH to end in a "%s". Please update the PATH in your index.php.', I18n::_('PrivateBin'), DIRECTORY_SEPARATOR), 5);

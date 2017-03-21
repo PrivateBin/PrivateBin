@@ -96,12 +96,12 @@
         "Avatar Anonino (Vizhash dell'indirizzo IP)",
     "Add comment":
         "Aggiungi un commento",
-    "Optional nickname...":
-        "Nickname opzionale...",
+    "Optional nickname…":
+        "Nickname opzionale…",
     "Post comment":
         "Invia commento",
-    "Sending comment...":
-        "Commento in fase di invio...",
+    "Sending comment…":
+        "Commento in fase di invio…",
     "Comment posted.":
         "Commento inviato.",
     "Could not refresh display: %s":
@@ -112,10 +112,10 @@
         "errore o mancata risposta dal server",
     "Could not post comment: %s":
         "Impossibile inviare il commento: %s",
-    "Sending paste (Please move your mouse for more entropy)...":
-        "Invio messaggio (Muovi il mouse in modo casuale, per generare maggior entropia)...",
-    "Sending paste...":
-        "Messaggio in fase di invio...",
+    "Sending paste (Please move your mouse for more entropy)…":
+        "Invio messaggio (Muovi il mouse in modo casuale, per generare maggior entropia)…",
+    "Sending paste…":
+        "Messaggio in fase di invio…",
     "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit [Ctrl]+[c] to copy)</span>":
         "Il tuo messaggio è qui: <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">([CTRL | CMD]+[C] per copiare il link)</span>",
     "Delete data":
