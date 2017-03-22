@@ -11,7 +11,7 @@ class FilesystemTest extends PHPUnit_Framework_TestCase
     public function setUp()
     {
         /* Setup Routine */
-        $this->_path = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'privatebin_data';
+        $this->_path  = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'privatebin_data';
         $this->_model = Filesystem::getInstance(array('dir' => $this->_path));
     }
 
@@ -37,8 +37,8 @@ class FilesystemTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($this->_model->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId()), 'comment does not yet exist');
         $this->assertTrue($this->_model->createComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId(), Helper::getComment()), 'store comment');
         $this->assertTrue($this->_model->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId()), 'comment exists after storing it');
-        $comment = json_decode(json_encode(Helper::getComment()));
-        $comment->id = Helper::getCommentId();
+        $comment           = json_decode(json_encode(Helper::getComment()));
+        $comment->id       = Helper::getCommentId();
         $comment->parentid = Helper::getPasteId();
         $this->assertEquals(
             array($comment->meta->postdate => $comment),
@@ -55,8 +55,8 @@ class FilesystemTest extends PHPUnit_Framework_TestCase
     public function testFileBasedAttachmentStoreWorks()
     {
         $this->_model->delete(Helper::getPasteId());
-        $original = $paste = Helper::getPasteWithAttachment(array('expire_date' => 1344803344));
-        $paste['meta']['attachment'] = $paste['attachment'];
+        $original                        = $paste                        = Helper::getPasteWithAttachment(array('expire_date' => 1344803344));
+        $paste['meta']['attachment']     = $paste['attachment'];
         $paste['meta']['attachmentname'] = $paste['attachmentname'];
         unset($paste['attachment'], $paste['attachmentname']);
         $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste does not yet exist');
@@ -66,18 +66,23 @@ class FilesystemTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(json_decode(json_encode($original)), $this->_model->read(Helper::getPasteId()));
     }
 
+    /**
+     * pastes a-g are expired and should get deleted, x never expires and y-z expire in an hour
+     */
     public function testPurge()
     {
         mkdir($this->_path . DIRECTORY_SEPARATOR . '00', 0777, true);
         $expired = Helper::getPaste(array('expire_date' => 1344803344));
-        $paste = Helper::getPaste(array('expire_date' => time() + 3600));
-        $keys = array('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'x', 'y', 'z');
-        $ids = array();
+        $paste   = Helper::getPaste(array('expire_date' => time() + 3600));
+        $keys    = array('a', 'b', 'c', 'd', 'e', 'f', 'g', 'x', 'y', 'z');
+        $ids     = array();
         foreach ($keys as $key) {
             $ids[$key] = substr(md5($key), 0, 16);
             $this->assertFalse($this->_model->exists($ids[$key]), "paste $key does not yet exist");
             if (in_array($key, array('x', 'y', 'z'))) {
                 $this->assertTrue($this->_model->create($ids[$key], $paste), "store $key paste");
+            } elseif ($key === 'x') {
+                $this->assertTrue($this->_model->create($ids[$key], Helper::getPaste()), "store $key paste");
             } else {
                 $this->assertTrue($this->_model->create($ids[$key], $expired), "store $key paste");
             }

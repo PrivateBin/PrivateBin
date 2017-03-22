@@ -1,11 +1,16 @@
 {
+    "PrivateBin": "PrivateBin",
+    "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href=\"https://privatebin.info/\">project page</a>.":
+        "%s是一个极简，开源，对粘贴内容毫不知情的在线粘贴板，数据<i>在浏览器内</i>进行AES-256加密。更多信息请查看<a href=\"https://privatebin.info/\">项目主页</a>。",
+    "Because ignorance is bliss":
+        "因为无知是福",
     "en": "zh",
     "Paste does not exist, has expired or has been deleted.":
         "粘贴不存在，已过期或者已被删除。",
-    "PrivateBin requires php 5.3.0 or above to work. Sorry.":
-        "PrivateBin需要工作于PHP 5.3.0及以上版本，抱歉。",
-    "PrivateBin requires configuration section [%s] to be present in configuration file.":
-        "PrivateBin需要设置配置文件中 [%s] 的部分。",
+    "%s requires php 5.3.0 or above to work. Sorry.":
+        "%s需要工作于PHP 5.3.0及以上版本，抱歉。",
+    "%s requires configuration section [%s] to be present in configuration file.":
+        "%s需要设置配置文件中 [%s] 的部分。",
     "Please wait %d seconds between each post.":
         "每 %d 秒只能粘贴一次。",
     "Paste is limited to %s of encrypted data.":
@@ -26,15 +31,10 @@
         "错误的删除token，粘贴没有被删除。",
     "Paste was properly deleted.":
         "粘贴已被正确删除。",
-    "PrivateBin": "PrivateBin",
-    "PrivateBin is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href=\"https://privatebin.info/\">project page</a>.":
-        "PrivateBin是一个极简，开源，对粘贴内容毫不知情的在线粘贴板，数据<i>在浏览器内</i>进行AES-256加密。更多信息请查看<a href=\"https://privatebin.info/\">项目主页</a>。",
-    "Because ignorance is bliss":
-        "因为无知是福",
-    "Javascript is required for PrivateBin to work.<br />Sorry for the inconvenience.":
-        "PrivateBin需要JavaScript来进行加解密。<br />带来的不便敬请谅解。",
-    "PrivateBin requires a modern browser to work.":
-        "PrivateBin需要工作于现代化的浏览器。",
+    "JavaScript is required for %s to work.<br />Sorry for the inconvenience.":
+        "%s需要JavaScript来进行加解密。<br />带来的不便敬请谅解。",
+    "%s requires a modern browser to work.":
+        "%s需要工作于现代化的浏览器。",
     "Still using Internet Explorer? Do yourself a favor, switch to a modern browser:":
         "还在使用Internet Explorer？帮自己个忙，换上一个现代化的浏览器：",
     "New":
@@ -96,12 +96,12 @@
         "匿名头像 (由IP地址生成Vizhash)",
     "Add comment":
         "添加评论",
-    "Optional nickname...":
-        "可选昵称...",
+    "Optional nickname…":
+        "可选昵称…",
     "Post comment":
         "评论",
-    "Sending comment...":
-        "评论发送中...",
+    "Sending comment…":
+        "评论发送中…",
     "Comment posted.":
         "评论已发送。",
     "Could not refresh display: %s":
@@ -112,10 +112,10 @@
         "服务器错误或无回应",
     "Could not post comment: %s":
         "无法发送评论： %s",
-    "Sending paste (Please move your mouse for more entropy)...":
-        "粘贴提交中 (请移动鼠标以产生更多熵)...",
-    "Sending paste...":
-        "粘贴提交中...",
+    "Sending paste (Please move your mouse for more entropy)…":
+        "粘贴提交中 (请移动鼠标以产生更多熵)…",
+    "Sending paste…":
+        "粘贴提交中…",
     "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit [Ctrl]+[c] to copy)</span>":
         "您的粘贴的链接是<a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(按下 [Ctrl]+[c] 以复制)</span>",
     "Delete data":
@@ -137,8 +137,15 @@
     "Invalid attachment.": "无效的附件",
     "Options": "选项",
     "Shorten URL": "缩短链接",
-    "Editor": "編輯",
-    "Preview": "預習",
-    "PrivateBin requires the PATH to end in a \"%s\". Please update the PATH in your index.php.":
-        "PrivateBin requires the PATH to end in a \"%s\". Please update the PATH in your index.php."
+    "Editor": "编辑",
+    "Preview": "预览",
+    "%s requires the PATH to end in a \"%s\". Please update the PATH in your index.php.":
+        "%s 的 PATH 变量必须结束于 \"%s\"。 请修改你的 index.php 中的 PATH 变量。",
+    "Decrypt":
+        "解密",
+    "Enter password":
+        "输入密码",
+    "Loading…": "载入中…",
+    "In case this message never disappears please have a look at <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">this FAQ for information to troubleshoot</a>.":
+        "如果这个消息一直不消失，请参考 <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">这里的 FAQ 进行故障排除</a> (英文版)。"
 }

@@ -1,6 +1,7 @@
 # Ignore server files for safety
 .htaccess
 .htpasswd
+cfg/conf.ini
 
 # Ignore data/
 data/
@@ -8,6 +9,10 @@ data/
 # Ignore PhpDoc
 doc/*
 !doc/*.md
+
+# Ignore developers composer status so it isn't accidentally checked in,
+# see https://github.com/PrivateBin/PrivateBin/issues/84
+composer.lock
 
 # Ignore vendor dir of Composer except PHP files
 vendor/*.*
@@ -23,9 +28,8 @@ vendor/**/tests
 vendor/**/build_phar.php
 !vendor/**/*.php
 
-composer.lock
-
-# Ignore unit testing logs, api docs and eclipse project files
+# Ignore local node modules, unit testing logs, api docs and eclipse project files
+js/node_modules/
 tst/log/
 .settings
 .buildpath

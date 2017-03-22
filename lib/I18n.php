@@ -7,7 +7,7 @@
  * @link      https://github.com/PrivateBin/PrivateBin
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
- * @version   1.0
+ * @version   1.1
  */
 
 namespace PrivateBin;
@@ -295,13 +295,18 @@ class I18n
     {
         switch (self::$_language) {
             case 'fr':
+            case 'oc':
             case 'zh':
-                return ($n > 1 ? 1 : 0);
+                return $n > 1 ? 1 : 0;
             case 'pl':
-                return ($n == 1 ? 0 : $n % 10 >= 2 && $n % 10 <= 4 && ($n % 100 < 10 || $n % 100 >= 20) ? 1 : 2);
-            // en, de
+                return $n == 1 ? 0 : ($n % 10 >= 2 && $n % 10 <= 4 && ($n % 100 < 10 || $n % 100 >= 20) ? 1 : 2);
+            case 'ru':
+                return $n % 10 == 1 && $n % 100 != 11 ? 0 : ($n % 10 >= 2 && $n % 10 <= 4 && ($n % 100 < 10 || $n % 100 >= 20) ? 1 : 2);
+            case 'sl':
+                return $n % 100 == 1 ? 1 : ($n % 100 == 2 ? 2 : ($n % 100 == 3 || $n % 100 == 4 ? 3 : 0));
+            // de, en, es, it, no, pt
             default:
-                return ($n != 1 ? 1 : 0);
+                return $n != 1 ? 1 : 0;
         }
     }
 

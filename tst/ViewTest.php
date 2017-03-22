@@ -10,15 +10,15 @@ class ViewTest extends PHPUnit_Framework_TestCase
     private static $status = '!*#@?$+';
 
     private static $formatters = array(
-        'plaintext' => 'Plain Text',
+        'plaintext'          => 'Plain Text',
         'syntaxhighlighting' => 'Source Code',
-        'markdown' => 'Markdown',
+        'markdown'           => 'Markdown',
     );
 
     private static $formatter_default = 'plaintext';
 
     private static $expire = array(
-        '5min' => '5 minutes',
+        '5min'  => '5 minutes',
         '1hour' => '1 hour',
         'never' => 'Never',
     );
@@ -27,12 +27,13 @@ class ViewTest extends PHPUnit_Framework_TestCase
 
     private static $version = 'Version 1.2.3';
 
-    private $_content;
+    private $_content = array();
 
     public function setUp()
     {
         /* Setup Routine */
         $page = new View;
+        $page->assign('NAME', 'PrivateBinTest');
         $page->assign('CIPHERDATA', Helper::getPaste()['data']);
         $page->assign('ERROR', self::$error);
         $page->assign('STATUS', self::$status);
@@ -50,15 +51,41 @@ class ViewTest extends PHPUnit_Framework_TestCase
         $page->assign('ZEROBINCOMPATIBILITY', false);
         $page->assign('NOTICE', 'example');
         $page->assign('LANGUAGESELECTION', '');
-        $page->assign('LANGUAGES', I18n::getLanguageLabels(i18n::getAvailableLanguages()));
+        $page->assign('LANGUAGES', I18n::getLanguageLabels(I18n::getAvailableLanguages()));
         $page->assign('EXPIRE', self::$expire);
         $page->assign('EXPIREDEFAULT', self::$expire_default);
         $page->assign('EXPIRECLONE', true);
         $page->assign('URLSHORTENER', '');
+
+        $dir = dir(PATH . 'tpl');
+        while (false !== ($file = $dir->read())) {
+            if (substr($file, -4) === '.php') {
+                $template = substr($file, 0, -4);
+                ob_start();
+                $page->draw($template);
+                $this->_content[$template] = ob_get_contents();
+                ob_end_clean();
+            }
+        }
+        // check bootstrap variants
+        $template = 'bootstrap-page';
         ob_start();
-        $page->draw('page');
-        $this->_content = ob_get_contents();
+        $page->draw($template);
+        $this->_content[$template] = ob_get_contents();
         ob_end_clean();
+        foreach (array('-dark', '-compact') as $suffix) {
+            $template = 'bootstrap' . $suffix;
+            ob_start();
+            $page->draw($template);
+            $this->_content[$template] = ob_get_contents();
+            ob_end_clean();
+
+            $template .= '-page';
+            ob_start();
+            $page->draw($template);
+            $this->_content[$template] = ob_get_contents();
+            ob_end_clean();
+        }
     }
 
     public function tearDown()
@@ -68,39 +95,41 @@ class ViewTest extends PHPUnit_Framework_TestCase
 
     public function testTemplateRendersCorrectly()
     {
-        $this->assertContains(
-            '<div id="cipherdata" class="hidden">' .
-            htmlspecialchars(Helper::getPaste()['data'], ENT_NOQUOTES) .
-            '</div>',
-            $this->_content,
-            'outputs data correctly'
-        );
-        $this->assertRegExp(
-            '#<div[^>]+id="errormessage"[^>]*>.*' . self::$error . '</div>#',
-            $this->_content,
-            'outputs error correctly'
-        );
-        $this->assertRegExp(
-            '#<[^>]+id="password"[^>]*>#',
-            $this->_content,
-            'password available if configured'
-        );
-        $this->assertRegExp(
-            '#<input[^>]+id="opendiscussion"[^>]*checked="checked"[^>]*>#',
-            $this->_content,
-            'checked discussion if configured'
-        );
-        $this->assertRegExp(
-            '#<[^>]+id="opendisc"[^>]*>#',
-            $this->_content,
-            'discussions available if configured'
-        );
-        // testing version number in JS address, since other instances may not be present in different templates
-        $this->assertRegExp(
-            '#<script[^>]+src="js/privatebin.js\\?' . rawurlencode(self::$version) . '"[^>]*>#',
-            $this->_content,
-            'outputs version correctly'
-        );
+        foreach ($this->_content as $template => $content) {
+            $this->assertRegExp(
+                '#<div[^>]+id="cipherdata"[^>]*>' .
+                preg_quote(htmlspecialchars(Helper::getPaste()['data'], ENT_NOQUOTES)) .
+                '</div>#',
+                $content,
+                $template . ': outputs data correctly'
+            );
+            $this->assertRegExp(
+                '#<div[^>]+id="errormessage"[^>]*>.*' . self::$error . '#s',
+                $content,
+                $template . ': outputs error correctly'
+            );
+            $this->assertRegExp(
+                '#<[^>]+id="password"[^>]*>#',
+                $content,
+                $template . ': password available if configured'
+            );
+            $this->assertRegExp(
+                '#<input[^>]+id="opendiscussion"[^>]*checked="checked"[^>]*>#',
+                $content,
+                $template . ': checked discussion if configured'
+            );
+            $this->assertRegExp(
+                '#<[^>]+id="opendiscussionoption"[^>]*>#',
+                $content,
+                $template . ': discussions available if configured'
+            );
+            // testing version number in JS address, since other instances may not be present in different templates
+            $this->assertRegExp(
+                '#<script[^>]+src="js/privatebin.js\\?' . rawurlencode(self::$version) . '"[^>]*>#',
+                $content,
+                $template . ': outputs version correctly'
+            );
+        }
     }
 
     /**

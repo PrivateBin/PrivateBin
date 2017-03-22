@@ -8,7 +8,7 @@
  * @link      http://sebsauvage.net/wiki/doku.php?id=php:vizhash_gd
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
- * @version   0.0.5 beta PrivateBin 1.0
+ * @version   0.0.5 beta PrivateBin 1.1
  */
 
 namespace PrivateBin;
@@ -23,7 +23,6 @@ namespace PrivateBin;
  * echo $data;
  * exit;
  */
-
 class Vizhash16x16
 {
     /**
@@ -105,7 +104,7 @@ class Vizhash16x16
         $op = 'v';
         if (($this->getInt() % 2) == 0) {
             $op = 'h';
-        };
+        }
         $image = $this->degrade($image, $op, array($r0, $g0, $b0), array(0, 0, 0));
 
         for ($i = 0; $i < 7; ++$i) {
@@ -189,7 +188,7 @@ class Vizhash16x16
         $diffs = array(
             (($color2[0] - $color1[0]) / $size),
             (($color2[1] - $color1[1]) / $size),
-            (($color2[2] - $color1[2]) / $size)
+            (($color2[2] - $color1[2]) / $size),
         );
         for ($i = 0; $i < $size; ++$i) {
             $r = $color1[0] + ($diffs[0] * $i);
@@ -217,20 +216,20 @@ class Vizhash16x16
     {
         switch ($action % 7) {
             case 0:
-                ImageFilledRectangle($image, $this->getX(), $this->getY(), $this->getX(), $this->getY(), $color);
+                imagefilledrectangle($image, $this->getX(), $this->getY(), $this->getX(), $this->getY(), $color);
                 break;
             case 1:
             case 2:
-                ImageFilledEllipse($image, $this->getX(), $this->getY(), $this->getX(), $this->getY(), $color);
+                imagefilledellipse($image, $this->getX(), $this->getY(), $this->getX(), $this->getY(), $color);
                 break;
             case 3:
                 $points = array($this->getX(), $this->getY(), $this->getX(), $this->getY(), $this->getX(), $this->getY(), $this->getX(), $this->getY());
-                ImageFilledPolygon($image, $points, 4, $color);
+                imagefilledpolygon($image, $points, 4, $color);
                 break;
             default:
                 $start = $this->getInt() * 360 / 256;
                 $end   = $start + $this->getInt() * 180 / 256;
-                ImageFilledArc($image, $this->getX(), $this->getY(), $this->getX(), $this->getY(), $start, $end, $color, IMG_ARC_PIE);
+                imagefilledarc($image, $this->getX(), $this->getY(), $this->getX(), $this->getY(), $start, $end, $color, IMG_ARC_PIE);
         }
     }
 }

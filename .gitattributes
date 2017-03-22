@@ -1,7 +1,12 @@
 doc/ export-ignore
 tst/ export-ignore
+js/.istanbul.yml export-ignore
+js/test.js export-ignore
+js/mocha-3.2.0.js export-ignore
+css/mocha-3.2.0.css export-ignore
 .codeclimate.yml export-ignore
 .csslintrc export-ignore
+.dockerignore export-ignore
 .editorconfig export-ignore
 .eslintignore export-ignore
 .eslintrc export-ignore
@@ -9,4 +14,6 @@ tst/ export-ignore
 .github export-ignore
 .gitignore export-ignore
 .php_cs export-ignore
+.styleci.yml export-ignore
 .travis.yml export-ignore
+Dockerfile export-ignore

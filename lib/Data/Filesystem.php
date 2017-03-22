@@ -7,13 +7,13 @@
  * @link      https://github.com/PrivateBin/PrivateBin
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
- * @version   1.0
+ * @version   1.1
  */
 
 namespace PrivateBin\Data;
 
-use PrivateBin\Model\Paste;
 use PrivateBin\Json;
+use PrivateBin\Model\Paste;
 
 /**
  * Filesystem

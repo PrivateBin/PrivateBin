@@ -1,11 +1,16 @@
 {
+    "PrivateBin": "PrivateBin",
+    "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href=\"https://privatebin.info/\">project page</a>.":
+        "%s jest minimalistycznym, otwartoźródłowym serwisem typu pastebin, w którym serwer nie ma jakichkolwiek informacji o tym, co jest wklejane. Dane są szyfrowane i deszyfrowane <i>w przeglądarce</i> z użyciem 256-bitowego klucza AES. Więcej informacji na <a href=\"https://privatebin.info/\">stronie projektu</a>.",
+    "Because ignorance is bliss":
+        "Ponieważ ignorancja jest cnotą",
     "en": "pl",
     "Paste does not exist, has expired or has been deleted.":
         "Wklejka nie istnieje, wygasła albo została usunięta.",
-    "PrivateBin requires php 5.3.0 or above to work. Sorry.":
-        "PrivateBin wymaga PHP w wersji 5.3.0 lub nowszej, sorry.",
-    "PrivateBin requires configuration section [%s] to be present in configuration file.":
-        "PrivateBin wymaga obecności sekcji [%s] w pliku konfiguracyjnym.",
+    "%s requires php 5.3.0 or above to work. Sorry.":
+        "%s wymaga PHP w wersji 5.3.0 lub nowszej, sorry.",
+    "%s requires configuration section [%s] to be present in configuration file.":
+        "%s wymaga obecności sekcji [%s] w pliku konfiguracyjnym.",
     "Please wait %d seconds between each post.":
         "Poczekaj %d sekund pomiędzy każdą wklejką.",
     "Paste is limited to %s of encrypted data.":
@@ -26,15 +31,10 @@
         "Nieprawidłowy token usuwania. Wklejka nie została usunięta.",
     "Paste was properly deleted.":
         "Wklejka usunięta poprawnie.",
-    "PrivateBin": "PrivateBin",
-    "PrivateBin is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href=\"https://privatebin.info/\">project page</a>.":
-        "PrivateBin jest minimalistycznym, otwartoźródłowym serwisem typu pastebin, w którym serwer nie ma jakichkolwiek informacji o tym, co jest wklejane. Dane są szyfrowane i deszyfrowane <i>w przeglądarce</i> z użyciem 256-bitowego klucza AES. Więcej informacji na <a href=\"https://privatebin.info/\">stronie projektu</a>.",
-    "Because ignorance is bliss":
-        "Ponieważ ignorancja jest cnotą",
-    "Javascript is required for PrivateBin to work.<br />Sorry for the inconvenience.":
-        "Do działania PrivateBina jest wymagany JavaScript. Przepraszamy za tę niedogodność.",
-    "PrivateBin requires a modern browser to work.":
-        "PrivateBin wymaga do działania nowoczesnej przeglądarki.",
+    "JavaScript is required for %s to work.<br />Sorry for the inconvenience.":
+        "Do działania %sa jest wymagany JavaScript. Przepraszamy za tę niedogodność.",
+    "%s requires a modern browser to work.":
+        "%s wymaga do działania nowoczesnej przeglądarki.",
     "Still using Internet Explorer? Do yourself a favor, switch to a modern browser:":
         "Cały czas używasz Internet Explorera? Zrób sobie przysługę, przesiądź się na nowoczesną przeglądarkę:",
     "New":
@@ -59,11 +59,11 @@
         "Przełącz nawigację",
     "%d seconds": ["%d second", "%d second", "%d second"],
     "%d minutes": ["%d minut", "%d minut", "%d minut"],
-    "%d hours": ["%d godzina", "%d godzina", "godzinę"],
+    "%d hours": ["%d godzina", "%d godzina", "%d godzinę"],
     "%d days": ["%d dzień", "%d dzień", "%d dzień"],
-    "%d weeks": ["%d tydzień", "%d tydzień", "tydzień"],
-    "%d months": ["%d miesiąc", "%d miesiąc", "miesiąc"],
-    "%d years": ["%d rok", "%d rok", "rok"],
+    "%d weeks": ["%d tydzień", "%d tydzień", "%d tydzień"],
+    "%d months": ["%d miesiąc", "%d miesiąc", "%d miesiąc"],
+    "%d years": ["%d rok", "%d rok", "%d rok"],
     "Never":
         "nigdy",
     "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.":
@@ -96,12 +96,12 @@
         "Anonimowy avatar (Vizhash z adresu IP)",
     "Add comment":
         "Dodaj komentarz",
-    "Optional nickname...":
-        "Opcjonalny nick...",
+    "Optional nickname…":
+        "Opcjonalny nick…",
     "Post comment":
         "Wyślij komentarz",
-    "Sending comment...":
-        "Wysyłanie komentarza...",
+    "Sending comment…":
+        "Wysyłanie komentarza…",
     "Comment posted.":
         "Wysłano komentarz.",
     "Could not refresh display: %s":
@@ -112,10 +112,10 @@
         "bląd serwera lub brak odpowiedzi",
     "Could not post comment: %s":
         "Nie udało się wysłać komentarza: %s",
-    "Sending paste (Please move your mouse for more entropy)...":
-        "Wysyłanie wklejki (proszę poruszać myszą aby uzyskać większą entropię)...",
-    "Sending paste...":
-        "Wysyłanie wklejki...",
+    "Sending paste (Please move your mouse for more entropy)…":
+        "Wysyłanie wklejki (proszę poruszać myszą aby uzyskać większą entropię)…",
+    "Sending paste…":
+        "Wysyłanie wklejki…",
     "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit [Ctrl]+[c] to copy)</span>":
         "Twoja wklejka to <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(wciśnij [Ctrl]+[c] aby skopiować)</span>",
     "Delete data":
@@ -139,6 +139,13 @@
     "Shorten URL": "Skróć adres URL",
     "Editor": "Edytować",
     "Preview": "Zapowiedź",
-    "PrivateBin requires the PATH to end in a \"%s\". Please update the PATH in your index.php.":
-        "PrivateBin requires the PATH to end in a \"%s\". Please update the PATH in your index.php."
+    "%s requires the PATH to end in a \"%s\". Please update the PATH in your index.php.":
+        "%s requires the PATH to end in a \"%s\". Please update the PATH in your index.php.",
+    "Decrypt":
+        "Decrypt",
+    "Enter password":
+        "Wpisz hasło",
+    "Loading…": "Loading…",
+    "In case this message never disappears please have a look at <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">this FAQ for information to troubleshoot</a>.":
+        "In case this message never disappears please have a look at <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">this FAQ for information to troubleshoot</a> (in English)."
 }

@@ -7,12 +7,11 @@
  * @link      https://github.com/PrivateBin/PrivateBin
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
- * @version   1.0
+ * @version   1.1
  */
 
 namespace PrivateBin;
 
-use PrivateBin\I18n;
 use Exception;
 
 /**
@@ -22,21 +21,6 @@ use Exception;
  */
 class Filter
 {
-    /**
-     * strips slashes deeply
-     *
-     * @access public
-     * @static
-     * @param  mixed $value
-     * @return mixed
-     */
-    public static function stripslashesDeep($value)
-    {
-        return is_array($value) ?
-            array_map('self::stripslashesDeep', $value) :
-            stripslashes($value);
-    }
-
     /**
      * format a given time string into a human readable label (localized)
      *

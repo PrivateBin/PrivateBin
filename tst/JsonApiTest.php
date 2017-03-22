@@ -1,9 +1,9 @@
 <?php
 
 use PrivateBin\Data\Filesystem;
+use PrivateBin\Persistence\ServerSalt;
 use PrivateBin\PrivateBin;
 use PrivateBin\Request;
-use PrivateBin\Persistence\ServerSalt;
 
 class JsonApiTest extends PHPUnit_Framework_TestCase
 {
@@ -15,7 +15,7 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
     {
         /* Setup Routine */
         Helper::confBackup();
-        $this->_path = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'privatebin_data';
+        $this->_path  = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'privatebin_data';
         $this->_model = Filesystem::getInstance(array('dir' => $this->_path));
         ServerSalt::setPath($this->_path);
         $this->reset();
@@ -30,16 +30,16 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
 
     public function reset()
     {
-        $_POST = array();
-        $_GET = array();
+        $_POST   = array();
+        $_GET    = array();
         $_SERVER = array();
         if ($this->_model->exists(Helper::getPasteId())) {
             $this->_model->delete(Helper::getPasteId());
         }
         Helper::confRestore();
-        $options = parse_ini_file(CONF, true);
-        $options['purge']['dir'] = $this->_path;
-        $options['traffic']['dir'] = $this->_path;
+        $options                         = parse_ini_file(CONF, true);
+        $options['purge']['dir']         = $this->_path;
+        $options['traffic']['dir']       = $this->_path;
         $options['model_options']['dir'] = $this->_path;
         Helper::confBackup();
         Helper::createIniFile(CONF, $options);
@@ -51,14 +51,14 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
     public function testCreate()
     {
         $this->reset();
-        $options = parse_ini_file(CONF, true);
+        $options                     = parse_ini_file(CONF, true);
         $options['traffic']['limit'] = 0;
         Helper::confBackup();
         Helper::createIniFile(CONF, $options);
-        $_POST = Helper::getPaste();
+        $_POST                            = Helper::getPaste();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
-        $_SERVER['REQUEST_METHOD'] = 'POST';
-        $_SERVER['REMOTE_ADDR'] = '::1';
+        $_SERVER['REQUEST_METHOD']        = 'POST';
+        $_SERVER['REMOTE_ADDR']           = '::1';
         ob_start();
         new PrivateBin;
         $content = ob_get_contents();
@@ -81,7 +81,7 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
     public function testPut()
     {
         $this->reset();
-        $options = parse_ini_file(CONF, true);
+        $options                     = parse_ini_file(CONF, true);
         $options['traffic']['limit'] = 0;
         Helper::confBackup();
         Helper::createIniFile(CONF, $options);
@@ -90,10 +90,10 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
         $file = tempnam(sys_get_temp_dir(), 'FOO');
         file_put_contents($file, http_build_query($paste));
         Request::setInputStream($file);
-        $_SERVER['QUERY_STRING'] = Helper::getPasteId();
+        $_SERVER['QUERY_STRING']          = Helper::getPasteId();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
-        $_SERVER['REQUEST_METHOD'] = 'PUT';
-        $_SERVER['REMOTE_ADDR'] = '::1';
+        $_SERVER['REQUEST_METHOD']        = 'PUT';
+        $_SERVER['REMOTE_ADDR']           = '::1';
         ob_start();
         new PrivateBin;
         $content = ob_get_contents();
@@ -120,14 +120,14 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
         $this->_model->create(Helper::getPasteId(), Helper::getPaste());
         $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste exists before deleting data');
         $paste = $this->_model->read(Helper::getPasteId());
-        $file = tempnam(sys_get_temp_dir(), 'FOO');
+        $file  = tempnam(sys_get_temp_dir(), 'FOO');
         file_put_contents($file, http_build_query(array(
             'deletetoken' => hash_hmac('sha256', Helper::getPasteId(), $paste->meta->salt),
         )));
         Request::setInputStream($file);
-        $_SERVER['QUERY_STRING'] = Helper::getPasteId();
+        $_SERVER['QUERY_STRING']          = Helper::getPasteId();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
-        $_SERVER['REQUEST_METHOD'] = 'DELETE';
+        $_SERVER['REQUEST_METHOD']        = 'DELETE';
         ob_start();
         new PrivateBin;
         $content = ob_get_contents();
@@ -147,12 +147,11 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste exists before deleting data');
         $paste = $this->_model->read(Helper::getPasteId());
         $_POST = array(
-            'action' => 'delete',
+            'pasteid'     => Helper::getPasteId(),
             'deletetoken' => hash_hmac('sha256', Helper::getPasteId(), $paste->meta->salt),
         );
-        $_SERVER['QUERY_STRING'] = Helper::getPasteId();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
-        $_SERVER['REQUEST_METHOD'] = 'POST';
+        $_SERVER['REQUEST_METHOD']        = 'POST';
         ob_start();
         new PrivateBin;
         $content = ob_get_contents();
@@ -168,13 +167,13 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
     public function testRead()
     {
         $this->reset();
-        $paste = Helper::getPasteWithAttachment();
-        $paste['meta']['attachment'] = $paste['attachment'];
+        $paste                           = Helper::getPasteWithAttachment();
+        $paste['meta']['attachment']     = $paste['attachment'];
         $paste['meta']['attachmentname'] = $paste['attachmentname'];
         unset($paste['attachment']);
         unset($paste['attachmentname']);
         $this->_model->create(Helper::getPasteId(), $paste);
-        $_SERVER['QUERY_STRING'] = Helper::getPasteId();
+        $_SERVER['QUERY_STRING']          = Helper::getPasteId();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         ob_start();
         new PrivateBin;

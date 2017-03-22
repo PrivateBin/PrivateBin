@@ -7,16 +7,16 @@
  * @link      https://github.com/PrivateBin/PrivateBin
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
- * @version   1.0
+ * @version   1.1
  */
 
 namespace PrivateBin\Model;
 
-use PrivateBin\Sjcl;
-use PrivateBin\Persistence\TrafficLimiter;
-use PrivateBin\Vizhash16x16;
-use Identicon\Identicon;
 use Exception;
+use Identicon\Identicon;
+use PrivateBin\Persistence\TrafficLimiter;
+use PrivateBin\Sjcl;
+use PrivateBin\Vizhash16x16;
 
 /**
  * Comment

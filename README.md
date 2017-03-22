@@ -7,7 +7,7 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Coverage/094500f62abf4c9aa0c8a8a4520e4789)](https://www.codacy.com/app/PrivateBin/PrivateBin)
 [![Test Coverage](https://codeclimate.com/github/PrivateBin/PrivateBin/badges/coverage.svg)](https://codeclimate.com/github/PrivateBin/PrivateBin/coverage) [![Code Coverage](https://scrutinizer-ci.com/g/PrivateBin/PrivateBin/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/PrivateBin/PrivateBin/?branch=master)
 
-*Current version: 1.0*
+*Current version: 1.1*
 
 **PrivateBin** is a minimalist, open source online pastebin where the server has
 zero knowledge of pasted data.
@@ -16,10 +16,10 @@ Data is encrypted/decrypted in the browser using 256bit AES in [Galois Counter m
 
 This is a fork of ZeroBin, originally developed by
 [Sébastien Sauvage](https://github.com/sebsauvage/ZeroBin). It was refactored
-to allow easier and cleaner extensions and has now much more features than the
+to allow easier and cleaner extensions and has now many more features than the
 original. It is however still fully compatible to the original ZeroBin 0.19
 data storage scheme. Therefore such installations can be upgraded to this fork
-without loosing any data.
+without losing any data.
 
 ## What PrivateBin provides
 

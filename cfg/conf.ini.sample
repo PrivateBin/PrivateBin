@@ -3,6 +3,9 @@
 ; An explanation of each setting can be find online at https://github.com/PrivateBin/PrivateBin/wiki/Configuration.
 
 [main]
+; (optional) set a project name to be displayed on the website
+; name = "PrivateBin"
+
 ; enable or disable the discussion feature, defaults to true
 discussion = true
 
@@ -25,10 +28,10 @@ defaultformatter = "plaintext"
 ; (optional) set a syntax highlighting theme, as found in css/prettify/
 ; syntaxhighlightingtheme = "sons-of-obsidian"
 
-; size limit per paste or comment in bytes, defaults to 2 Mibibytes
+; size limit per paste or comment in bytes, defaults to 2 Mebibytes
 sizelimit = 2097152
 
-; template to include, default is "bootstrap" (tpl/bootstrap.html)
+; template to include, default is "bootstrap" (tpl/bootstrap.php)
 template = "bootstrap"
 
 ; (optional) notice to display
@@ -60,7 +63,8 @@ languageselection = false
 ; custom scripts from third-party domains to your templates, e.g. tracking
 ; scripts or run your site behind certain DDoS-protection services.
 ; Check the documentation at https://content-security-policy.com/
-; cspheader = "default-src 'none'; manifest-src 'self'; connect-src *; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self' data:; referrer no-referrer;"
+; Note: If you use a bootstrap theme, you can remove the allow-popups from the sandbox restrictions.
+; cspheader = "default-src 'none'; manifest-src 'self'; connect-src *; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self' data:; referrer no-referrer; sandbox allow-same-origin allow-scripts allow-forms allow-popups"
 
 ; stay compatible with PrivateBin Alpha 0.19, less secure
 ; if enabled will use base64.js version 1.7 instead of 2.1.9 and sha1 instead of

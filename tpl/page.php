@@ -6,7 +6,7 @@ use PrivateBin\I18n;
 		<meta charset="utf-8" />
 		<meta name="robots" content="noindex" />
 		<meta name="referrer" content="no-referrer">
-		<title><?php echo I18n::_('PrivateBin'); ?></title>
+		<title><?php echo I18n::_($NAME); ?></title>
 		<link type="text/css" rel="stylesheet" href="css/privatebin.css?<?php echo rawurlencode($VERSION); ?>" />
 <?php
 if ($SYNTAXHIGHLIGHTING):
@@ -20,8 +20,8 @@ if ($SYNTAXHIGHLIGHTING):
     endif;
 endif;
 ?>
-		<script type="text/javascript" src="js/jquery-1.11.3.js" integrity="sha512-xAERw8wHVOkM9x9y9/FvQ7g1t+gIQj39mfkN1Rd1OLcC5k/x2e6NO8hq6qEbb3oO+CYYTjVLFiFYg5/7ddF0zA==" crossorigin="anonymous"></script>
-		<script type="text/javascript" src="js/sjcl-1.0.4.js" integrity="sha512-BqVQ8GgWfMCcdsDuP6Ggm1BV7+mmoWH3PC4UqcYpEKSdEq1rthy6NUsa6gu5sydewbi/ilI3E3ohdCxlPPF9ww==" crossorigin="anonymous"></script>
+		<script type="text/javascript" src="js/jquery-3.1.1.js" integrity="sha512-U6K1YLIFUWcvuw5ucmMtT9HH4t0uz3M366qrF5y4vnyH6dgDzndlcGvH/Lz5k8NFh80SN95aJ5rqGZEdaQZ7ZQ==" crossorigin="anonymous"></script>
+		<script type="text/javascript" src="js/sjcl-1.0.6.js" integrity="sha512-DsyxLV/uBoQlRTJmW5Gb2SxXUXB+aYeZ6zk+NuXy8LuLyi8oGti9AGn6He5fUY2DtgQ2//RjfaZog8exFuunUQ==" crossorigin="anonymous"></script>
 <?php
 if ($ZEROBINCOMPATIBILITY):
 ?>
@@ -43,27 +43,27 @@ if ($SYNTAXHIGHLIGHTING):
 endif;
 if ($MARKDOWN):
 ?>
-		<script type="text/javascript" src="js/showdown-1.4.1.js" integrity="sha512-Kbz1FIlDnqUJu/3yW8H8USzURA3JuUqSKRwz13lM4kWt6C0n6s4tjl81PCfnWtE4gBIzyj5uGePcfUyotk/icw==" crossorigin="anonymous"></script>
+		<script type="text/javascript" src="js/showdown-1.6.1.js" integrity="sha512-e6kAsBTgFnTBnEQXrq8BV6+XFwxb3kyWHeEPOl+KhxaWt3xImE2zAW2+yP3E2CQ7F9yoJl1poVU9qxkOEtVsTQ==" crossorigin="anonymous"></script>
 <?php
 endif;
 ?>
-		<script type="text/javascript" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-Jx4qD49amdzpNe9FLtxLO84Xt5LZeQ2PGaM0I9UCS2Kr4xhrnFyvP+0hrLIMgDTwjWFDpTSCoDHuj0SHzuqXuQ==" crossorigin="anonymous"></script>
+		<script type="text/javascript" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-7/bLmiTErcH3lMJi1JxXk/lb20NUO7TCqasWeFybnNhnfOUnJ9GQGqPVJxPf+7fnw9dgLa1s18FXQuRanLD8Hw==" crossorigin="anonymous"></script>
 		<!--[if lt IE 10]>
 		<style type="text/css">body {padding-left:60px;padding-right:60px;} #ienotice {display:block;} #oldienotice {display:block;}</style>
 		<![endif]-->
-		<link rel="apple-touch-icon" href="apple-touch-icon.png?<?php echo rawurlencode($VERSION); ?>" sizes="180x180" />
-		<link rel="icon" type="image/png" href="favicon-32x32.png?<?php echo rawurlencode($VERSION); ?>" sizes="32x32" />
-		<link rel="icon" type="image/png" href="favicon-16x16.png?<?php echo rawurlencode($VERSION); ?>" sizes="16x16" />
+		<link rel="apple-touch-icon" href="img/apple-touch-icon.png?<?php echo rawurlencode($VERSION); ?>" sizes="180x180" />
+		<link rel="icon" type="image/png" href="img/favicon-32x32.png?<?php echo rawurlencode($VERSION); ?>" sizes="32x32" />
+		<link rel="icon" type="image/png" href="img/favicon-16x16.png?<?php echo rawurlencode($VERSION); ?>" sizes="16x16" />
 		<link rel="manifest" href="manifest.json?<?php echo rawurlencode($VERSION); ?>" />
-		<link rel="mask-icon" href="safari-pinned-tab.svg?<?php echo rawurlencode($VERSION); ?>" color="#ffcc00" />
-		<link rel="shortcut icon" href="favicon.ico">
+		<link rel="mask-icon" href="img/safari-pinned-tab.svg?<?php echo rawurlencode($VERSION); ?>" color="#ffcc00" />
+		<link rel="shortcut icon" href="img/favicon.ico">
 		<meta name="msapplication-config" content="browserconfig.xml">
 		<meta name="theme-color" content="#ffe57e" />
 	</head>
 	<body>
 		<header>
 			<div id="aboutbox">
-				<?php echo I18n::_('PrivateBin is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href="https://privatebin.info/">project page</a>.'); ?><br />
+				<?php echo I18n::_('%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href="https://privatebin.info/">project page</a>.', I18n::_($NAME)); ?><br />
 <?php
 if (strlen($NOTICE)):
 ?>
@@ -71,20 +71,20 @@ if (strlen($NOTICE)):
 endif;
 ?>
 			</div>
-			<h1 class="title reloadlink"><?php echo I18n::_('PrivateBin'); ?></h1><br />
+			<h1 class="title reloadlink"><?php echo I18n::_($NAME); ?></h1><br />
 			<h2 class="title"><?php echo I18n::_('Because ignorance is bliss'); ?></h2><br />
 			<h3 class="title"><?php echo $VERSION; ?></h3>
-			<noscript><div id="noscript" class="nonworking"><?php echo I18n::_('Javascript is required for PrivateBin to work.<br />Sorry for the inconvenience.'); ?></div></noscript>
-			<div id="oldienotice" class="nonworking"><?php echo I18n::_('PrivateBin requires a modern browser to work.'); ?></div>
+			<noscript><div id="noscript" class="nonworking"><?php echo I18n::_('JavaScript is required for %s to work.<br />Sorry for the inconvenience.', I18n::_($NAME)); ?></div></noscript>
+			<div id="oldienotice" class="nonworking"><?php echo I18n::_('%s requires a modern browser to work.', I18n::_($NAME)); ?></div>
 			<div id="ienotice"><?php echo I18n::_('Still using Internet Explorer? Do yourself a favor, switch to a modern browser:'), PHP_EOL; ?>
 				<a href="https://www.mozilla.org/firefox/">Firefox</a>,
 				<a href="https://www.opera.com/">Opera</a>,
-				<a href="https://www.google.com/chrome">Chrome</a>,
-				<a href="https://www.apple.com/safari">Safari</a>...
+				<a href="https://www.google.com/chrome">Chrome</a>…
 			</div>
 		</header>
 		<section>
 			<article>
+				<div id="loadingindicator" class="hidden"><?php echo I18n::_('Loading…'); ?></div>
 				<div id="status"><?php echo htmlspecialchars($STATUS); ?></div>
 				<div id="errormessage" class="hidden"><?php echo htmlspecialchars($ERROR); ?></div>
 				<div id="toolbar">
@@ -125,7 +125,7 @@ endif;
 <?php
 if ($DISCUSSION):
 ?>
-					<div id="opendisc" class="button hidden">
+					<div id="opendiscussionoption" class="button hidden">
 						<input type="checkbox" id="opendiscussion" name="opendiscussion"<?php
     if ($OPENDISCUSSION):
 ?> checked="checked"<?php
@@ -216,16 +216,36 @@ endif;
 				<div id="prettymessage" class="hidden">
 					<pre id="prettyprint" class="prettyprint linenums:1"></pre>
 				</div>
-				<div id="cleartext" class="hidden"></div>
+				<div id="plaintext" class="hidden"></div>
 				<textarea id="message" name="message" cols="80" rows="25" class="hidden"></textarea>
 			</article>
 		</section>
 		<section>
 			<div id="discussion" class="hidden">
 				<h4 class="title"><?php echo I18n::_('Discussion'); ?></h4>
-				<div id="comments"></div>
+				<div id="commentcontainer"></div>
 			</div>
 		</section>
-		<div id="cipherdata" class="hidden"><?php echo htmlspecialchars($CIPHERDATA, ENT_NOQUOTES); ?></div>
+		<div id="serverdata" class="hidden" aria-hidden="true">
+			<div id="cipherdata" class="hidden"><?php echo htmlspecialchars($CIPHERDATA, ENT_NOQUOTES); ?></div>
+<?php
+if ($DISCUSSION):
+?>
+			<div id="templates">
+				<!-- @TODO: when I intend/structure this corrrectly Firefox adds whitespaces everywhere which completly destroy the layout. (same possible when you remove the template data below and show this area in the browser) -->
+				<article id="commenttemplate" class="comment"><div class="commentmeta"><span class="nickname">name</span><span class="commentdate">0000-00-00</span></div><div class="commentdata">c</div><button class="btn btn-default btn-sm"><?php echo I18n::_('Reply'); ?></button></article>
+				<div id="commenttailtemplate" class="comment"><button class="btn btn-default btn-sm"><?php echo I18n::_('Add comment'); ?></button></div>
+				<div id="replytemplate" class="reply hidden"><input type="text" id="nickname" class="form-control" title="<?php echo I18n::_('Optional nickname…'); ?>" placeholder="<?php echo I18n::_('Optional nickname…'); ?>" /><textarea id="replymessage" class="replymessage form-control" cols="80" rows="7"></textarea><br /><div id="replystatus" role="alert" class="statusmessage hidden alert"><span class="glyphicon" aria-hidden="true"></span> </div><button id="replybutton" class="btn btn-default btn-sm"><?php echo I18n::_('Post comment'); ?></button></div>
+			</div>
+<?php
+endif;
+?>
+		</div>
+        <section class="container">
+			<div id="noscript" role="alert" class="nonworking alert alert-info noscript-hide"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true">
+				<span> <?php echo I18n::_('Loading…'); ?></span><br>
+				<span class="small"><?php echo I18n::_('In case this message never disappears please have a look at <a href="https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away">this FAQ for information to troubleshoot</a>.'); ?></span>
+			</div>
+		</section>
 	</body>
 </html>

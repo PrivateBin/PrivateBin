@@ -1,5 +1,20 @@
 # PrivateBin version history
 
+  * **next (not yet released)**
+    * ADDED: Translations for Spanish, Occitan, Norwegian and Portuguese
+    * ADDED: Option in configuration to change the default "PrivateBin" title of the site
+    * CHANGED: Minimum required PHP version is 5.4 (#186)
+    * CHANGED: Shipped .htaccess files were updated for Apache 2.4 (#192)
+    * CHANGED: Cleanup of bootstrap template variants and moved icons to `img` directory
+  * **1.1 (2016-12-26)**
+    * ADDED: Translations for Italian and Russian
+    * ADDED: Loading message displayed until decryption succeeded for slower (in terms of CPU or network) systems
+    * ADDED: Dockerfile for docker container creation
+    * CHANGED: Using modal dialog to request password input instead of native JS input window (#69)
+    * CHANGED: Suppressed referrer HTTP header sending when following links in a paste or comment (#96) and added additional HTTP headers for XSS mitigation (#91)
+    * CHANGED: Updated random_compat and jQuery libraries
+    * FIXED: XSS using JavaScript stored as markdown formatted paste, after clicking on Raw paste button (#137)
+    * FIXED: Automatic purging deleting non-expiring pastes, when using database store (#149)
   * **1.0 (2016-08-25)**
     * ADDED: Translations for Slowene and Chinese
     * ADDED: re-introduced (optional) URL shortener support, which was removed back in version 0.16 for privacy concerns

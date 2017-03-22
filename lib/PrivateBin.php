@@ -7,14 +7,14 @@
  * @link      https://github.com/PrivateBin/PrivateBin
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
- * @version   1.0
+ * @version   1.1
  */
 
 namespace PrivateBin;
 
-use PrivateBin\Persistence\TrafficLimiter;
-use PrivateBin\Persistence\ServerSalt;
 use Exception;
+use PrivateBin\Persistence\ServerSalt;
+use PrivateBin\Persistence\TrafficLimiter;
 
 /**
  * PrivateBin
@@ -28,7 +28,7 @@ class PrivateBin
      *
      * @const string
      */
-    const VERSION = '1.0';
+    const VERSION = '1.1';
 
     /**
      * show the same error message if the paste expired or does not exist
@@ -120,11 +120,11 @@ class PrivateBin
      */
     public function __construct()
     {
-        if (version_compare(PHP_VERSION, '5.3.0') < 0) {
-            throw new Exception(I18n::_('PrivateBin requires php 5.3.0 or above to work. Sorry.'), 1);
+        if (version_compare(PHP_VERSION, '5.4.0') < 0) {
+            throw new Exception(I18n::_('%s requires php 5.4.0 or above to work. Sorry.', I18n::_('PrivateBin')), 1);
         }
         if (strlen(PATH) < 0 && substr(PATH, -1) !== DIRECTORY_SEPARATOR) {
-            throw new Exception(I18n::_('PrivateBin requires the PATH to end in a "%s". Please update the PATH in your index.php.', DIRECTORY_SEPARATOR), 5);
+            throw new Exception(I18n::_('%s requires the PATH to end in a "%s". Please update the PATH in your index.php.', I18n::_('PrivateBin'), DIRECTORY_SEPARATOR), 5);
         }
 
         // load config from ini file, initialize required classes
@@ -334,19 +334,16 @@ class PrivateBin
                 // accessing this property ensures that the paste would be
                 // deleted if it has already expired
                 $burnafterreading = $paste->isBurnafterreading();
-                if ($deletetoken == 'burnafterreading') {
-                    if ($burnafterreading) {
-                        $paste->delete();
-                        $this->_return_message(0, $dataid);
-                    } else {
-                        $this->_return_message(1, 'Paste is not of burn-after-reading type.');
-                    }
+                if (
+                    ($burnafterreading && $deletetoken == 'burnafterreading') ||
+                    Filter::slowEquals($deletetoken, $paste->getDeleteToken())
+                ) {
+                    // Paste exists and deletion token is valid: Delete the paste.
+                    $paste->delete();
+                    $this->_status = 'Paste was properly deleted.';
                 } else {
-                    // Make sure the token is valid.
-                    if (Filter::slowEquals($deletetoken, $paste->getDeleteToken())) {
-                        // Paste exists and deletion token is valid: Delete the paste.
-                        $paste->delete();
-                        $this->_status = 'Paste was properly deleted.';
+                    if (!$burnafterreading && $deletetoken == 'burnafterreading') {
+                        $this->_error = 'Paste is not of burn-after-reading type.';
                     } else {
                         $this->_error = 'Wrong deletion token. Paste was not deleted.';
                     }
@@ -356,6 +353,13 @@ class PrivateBin
             }
         } catch (Exception $e) {
             $this->_error = $e->getMessage();
+        }
+        if ($this->_request->isJsonApiCall()) {
+            if (strlen($this->_error)) {
+                $this->_return_message(1, $this->_error);
+            } else {
+                $this->_return_message(0, $dataid);
+            }
         }
     }
 
@@ -430,6 +434,7 @@ class PrivateBin
         }
 
         $page = new View;
+        $page->assign('NAME', $this->_conf->getKey('name'));
         $page->assign('CIPHERDATA', $this->_data);
         $page->assign('ERROR', I18n::_($this->_error));
         $page->assign('STATUS', I18n::_($this->_status));
