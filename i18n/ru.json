@@ -140,8 +140,8 @@
     "Download attachment": "Скачать прикрепленный файл",
     "Cloned file attached.": "Дубликат файла прикреплен.",
     "Cloned: '%s'": "Дублировано: '%s'",
-    "Дубликат файла '%s' был прикреплен к этой записи.":
-        "Die geklonte Datei '%s' wurde angehängt.",
+    "The cloned file '%s' was attached to this paste.":
+        "Дубликат файла '%s' был прикреплен к этой записи.",
     "Attach a file": "Прикрепить файл",
     "Remove attachment": "Удалить вложение",
     "Your browser does not support uploading encrypted files. Please use a newer browser.":
