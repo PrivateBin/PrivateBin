@@ -17,6 +17,10 @@ body.navbar-spacing {
 	padding-top: 70px;
 }
 
+body.loading {
+	cursor: wait;
+}
+
 .buttondisabled {
 	opacity: 0.3;
 }
@@ -102,6 +106,12 @@ body.navbar-spacing {
 	border-left: 1px solid #ccc;
 	padding: 5px 0 5px 10px;
 	white-space: pre-wrap;
+	transition: background-color 0.75s ease-out;
+}
+
+.comment.highlight {
+	background-color: #ffdd86;
+	transition: background-color 0.2s ease-in;
 }
 
 footer h4 {

@@ -96,12 +96,12 @@
         "匿名头像 (由IP地址生成Vizhash)",
     "Add comment":
         "添加评论",
-    "Optional nickname...":
-        "可选昵称...",
+    "Optional nickname…":
+        "可选昵称…",
     "Post comment":
         "评论",
-    "Sending comment...":
-        "评论发送中...",
+    "Sending comment…":
+        "评论发送中…",
     "Comment posted.":
         "评论已发送。",
     "Could not refresh display: %s":
@@ -112,10 +112,10 @@
         "服务器错误或无回应",
     "Could not post comment: %s":
         "无法发送评论： %s",
-    "Sending paste (Please move your mouse for more entropy)...":
-        "粘贴提交中 (请移动鼠标以产生更多熵)...",
-    "Sending paste...":
-        "粘贴提交中...",
+    "Sending paste (Please move your mouse for more entropy)…":
+        "粘贴提交中 (请移动鼠标以产生更多熵)…",
+    "Sending paste…":
+        "粘贴提交中…",
     "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit [Ctrl]+[c] to copy)</span>":
         "您的粘贴的链接是<a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(按下 [Ctrl]+[c] 以复制)</span>",
     "Delete data":
@@ -137,15 +137,15 @@
     "Invalid attachment.": "无效的附件",
     "Options": "选项",
     "Shorten URL": "缩短链接",
-    "Editor": "編輯",
-    "Preview": "預習",
+    "Editor": "编辑",
+    "Preview": "预览",
     "%s requires the PATH to end in a \"%s\". Please update the PATH in your index.php.":
-        "%s requires the PATH to end in a \"%s\". Please update the PATH in your index.php.",
+        "%s 的 PATH 变量必须结束于 \"%s\"。 请修改你的 index.php 中的 PATH 变量。",
     "Decrypt":
-        "Decrypt",
+        "解密",
     "Enter password":
-        "Enter password",
-    "Loading…": "Loading…",
+        "输入密码",
+    "Loading…": "载入中…",
     "In case this message never disappears please have a look at <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">this FAQ for information to troubleshoot</a>.":
-        "In case this message never disappears please have a look at <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">this FAQ for information to troubleshoot</a> (in English)."
+        "如果这个消息一直不消失，请参考 <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">这里的 FAQ 进行故障排除</a> (英文版)。"
 }

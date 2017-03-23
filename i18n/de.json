@@ -83,25 +83,25 @@
     "Could not decrypt data (Wrong key?)":
         "Konnte Daten nicht entschlüsseln (Falscher Schlüssel?)",
     "Could not delete the paste, it was not stored in burn after reading mode.":
-        "Konnte den Text nicht löschen, er wurde nicht im Einmal-Modus gespeichert.",
+        "Konnte das Paste nicht löschen, es wurde nicht im Einmal-Modus gespeichert.",
     "FOR YOUR EYES ONLY. Don't close this window, this message can't be displayed again.":
-        "DIESER TEXT IST NUR FÜR DICH GEDACHT. Schliesse das Fenster nicht, diese Nachricht kann nur einmal geöffnet werden.",
+        "DIESER TEXT IST NUR FÜR DICH GEDACHT. Schließe das Fenster nicht, diese Nachricht kann nur einmal geöffnet werden.",
     "Could not decrypt comment; Wrong key?":
         "Konnte Kommentar nicht entschlüsseln; Falscher Schlüssel?",
     "Reply":
         "Antworten",
     "Anonymous":
         "Anonym",
-    "Anonymous avatar (Vizhash of the IP address)":
-        "Anonymer Avatar (Vizhash der IP-Addresse)",
+    "Avatar generated from IP address":
+        "Avatar (generiert aus der IP-Adresse)",
     "Add comment":
         "Kommentar hinzufügen",
-    "Optional nickname...":
-        "Optionales Pseudonym...",
+    "Optional nickname…":
+        "Optionales Pseudonym…",
     "Post comment":
         "Kommentar absenden",
-    "Sending comment...":
-        "Sende Kommentar...",
+    "Sending comment…":
+        "Sende Kommentar…",
     "Comment posted.":
         "Kommentar gesendet.",
     "Could not refresh display: %s":
@@ -112,24 +112,25 @@
         "Fehler auf dem Server oder keine Antwort vom Server",
     "Could not post comment: %s":
         "Konnte Kommentar nicht senden: %s",
-    "Sending paste (Please move your mouse for more entropy)...":
-        "Sende Text (Bitte bewege Deine Maus um die Entropie zu erhöhen)...",
-    "Sending paste...":
-        "Sende Text...",
+    "Please move your mouse for more entropy…":
+        "Bitte bewege Deine Maus um die Entropie zu erhöhen…",
+    "Sending paste…":
+        "Sende Paste…",
     "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit [Ctrl]+[c] to copy)</span>":
-        "Dein Text ist unter <a id=\"pasteurl\" href=\"%s\">%s</a> zu finden <span id=\"copyhint\">(Drücke [Strg]+[c] um den Link zu kopieren)</span>",
+        "Dein Paste ist unter <a id=\"pasteurl\" href=\"%s\">%s</a> zu finden <span id=\"copyhint\">(Drücke [Strg]+[c] um den Link zu kopieren)</span>",
     "Delete data":
         "Lösche Daten",
     "Could not create paste: %s":
-        "Konnte Text nicht erstellen: %s",
+        "Konnte Paste nicht erstellen: %s",
     "Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)":
-        "Konnte Text nicht entschlüsseln: Der Schlüssel fehlt in der Adresse (Hast du eine Umleitung oder einen URL-Verkürzer benutzt, der Teile der Adresse entfernt?)",
+        "Konnte Paste nicht entschlüsseln: Der Schlüssel fehlt in der Adresse (Hast du eine Umleitung oder einen URL-Verkürzer benutzt, der Teile der Adresse entfernt?)",
     "Format": "Format",
     "Plain Text": "Nur Text",
     "Source Code": "Quellcode",
     "Markdown": "Markdown",
     "Download attachment": "Anhang herunterladen",
-    "Cloned file attached.": "Kopierte Datei angehängt.",
+    "Cloned: '%s'": "Geklont: '%s'",
+    "The cloned file '%s' was attached to this paste.": "Die geklonte Datei '%s' wurde angehängt.",
     "Attach a file": "Datei anhängen",
     "Remove attachment": "Anhang entfernen",
     "Your browser does not support uploading encrypted files. Please use a newer browser.":
@@ -146,6 +147,10 @@
     "Enter password":
         "Passwort eingeben",
     "Loading…": "Lädt…",
+    "Decrypting paste…": "Entschlüssle Paste…",
+    "Preparing new paste…": "Bereite neues Paste vor…",
     "In case this message never disappears please have a look at <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">this FAQ for information to troubleshoot</a>.":
-        "Wenn diese Nachricht nicht mehr verschwindet, schau bitte in <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">die FAQ</a> (englisch), um zu sehen, wie der Fehler behoben werden kann."
+        "Wenn diese Nachricht nicht mehr verschwindet, schau bitte in <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">die FAQ</a> (englisch), um zu sehen, wie der Fehler behoben werden kann.",
+    "+++ no paste text +++":
+        "+++ kein Paste-Text +++"
 }
