@@ -28,7 +28,7 @@ class DataStore extends AbstractPersistence
      * @access public
      * @static
      * @param  string $filename
-     * @param  string $data
+     * @param  array  $data
      * @return bool
      */
     public static function store($filename, $data)
