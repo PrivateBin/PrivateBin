@@ -31,6 +31,13 @@ class PrivateBin
     const VERSION = '1.1';
 
     /**
+     * minimal required PHP version
+     *
+     * @const string
+     */
+    const MIN_PHP_VERSION = '5.4.0';
+
+    /**
      * show the same error message if the paste expired or does not exist
      *
      * @const string
@@ -120,8 +127,8 @@ class PrivateBin
      */
     public function __construct()
     {
-        if (version_compare(PHP_VERSION, '5.4.0') < 0) {
-            throw new Exception(I18n::_('%s requires php 5.4.0 or above to work. Sorry.', I18n::_('PrivateBin')), 1);
+        if (version_compare(PHP_VERSION, self::MIN_PHP_VERSION) < 0) {
+            throw new Exception(I18n::_('%s requires php %s or above to work. Sorry.', I18n::_('PrivateBin'), self::MIN_PHP_VERSION), 1);
         }
         if (strlen(PATH) < 0 && substr(PATH, -1) !== DIRECTORY_SEPARATOR) {
             throw new Exception(I18n::_('%s requires the PATH to end in a "%s". Please update the PATH in your index.php.', I18n::_('PrivateBin'), DIRECTORY_SEPARATOR), 5);

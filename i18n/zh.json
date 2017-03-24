@@ -7,8 +7,8 @@
     "en": "zh",
     "Paste does not exist, has expired or has been deleted.":
         "粘贴不存在，已过期或者已被删除。",
-    "%s requires php 5.4.0 or above to work. Sorry.":
-        "%s需要工作于PHP 5.4.0及以上版本，抱歉。",
+    "%s requires php %s or above to work. Sorry.":
+        "%s需要工作于PHP %s及以上版本，抱歉。",
     "%s requires configuration section [%s] to be present in configuration file.":
         "%s需要设置配置文件中 [%s] 的部分。",
     "Please wait %d seconds between each post.":

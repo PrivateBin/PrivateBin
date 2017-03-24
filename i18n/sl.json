@@ -7,8 +7,8 @@
     "en": "sl",
     "Paste does not exist, has expired or has been deleted.":
         "Prilepek ne obstaja, mu je potekla življenjska doba, ali pa je izbrisan.",
-    "%s requires php 5.3.0 or above to work. Sorry.":
-        "Oprosti, %s za delovanje potrebuje vsaj php 5.3.0.",
+    "%s requires php %s or above to work. Sorry.":
+        "Oprosti, %s za delovanje potrebuje vsaj php %s.",
     "%s requires configuration section [%s] to be present in configuration file.":
         "%s potrebuje sekcijo konfiguracij [%s] v konfiguracijski datoteki.",
     "Please wait %d seconds between each post.":

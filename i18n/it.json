@@ -7,8 +7,8 @@
     "en": "it",
     "Paste does not exist, has expired or has been deleted.":
         "Questo messaggio non esiste, è scaduto o è stato cancellato.",
-    "%s requires php 5.4.0 or above to work. Sorry.":
-        "%s richiede php 5.4.0 o superiore per funzionare. Ci spiace.",
+    "%s requires php %s or above to work. Sorry.":
+        "%s richiede php %s o superiore per funzionare. Ci spiace.",
     "%s requires configuration section [%s] to be present in configuration file.":
         "%s richiede la presenza della sezione [%s] nei file di configurazione.",
     "Please wait %d seconds between each post.":

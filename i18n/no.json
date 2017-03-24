@@ -7,8 +7,8 @@
     "en": "no",
     "Paste does not exist, has expired or has been deleted.":
         "Innlegget eksisterer ikke, er utløpt eller har blitt slettet.",
-    "%s requires php 5.3.0 or above to work. Sorry.":
-        "Beklager, %s krever php 5.3.0 eller nyere for å kjøre.",
+    "%s requires php %s or above to work. Sorry.":
+        "Beklager, %s krever php %s eller nyere for å kjøre.",
     "%s requires configuration section [%s] to be present in configuration file.":
         "%s krever konfigurasjonsdel [%s] å være til stede i konfigurasjonsfilen .",
     "Please wait %d seconds between each post.":
