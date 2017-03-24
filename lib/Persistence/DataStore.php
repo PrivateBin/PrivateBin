@@ -13,7 +13,6 @@
 namespace PrivateBin\Persistence;
 
 use Exception;
-use PrivateBin\Configuration;
 use PrivateBin\Json;
 
 /**
