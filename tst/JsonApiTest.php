@@ -98,6 +98,7 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
         new PrivateBin;
         $content = ob_get_contents();
         ob_end_clean();
+        unlink($file);
         $response = json_decode($content, true);
         $this->assertEquals(0, $response['status'], 'outputs status');
         $this->assertEquals(Helper::getPasteId(), $response['id'], 'outputted paste ID matches input');
@@ -132,6 +133,7 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
         new PrivateBin;
         $content = ob_get_contents();
         ob_end_clean();
+        unlink($file);
         $response = json_decode($content, true);
         $this->assertEquals(0, $response['status'], 'outputs status');
         $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste successfully deleted');

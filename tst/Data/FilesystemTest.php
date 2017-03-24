@@ -110,10 +110,6 @@ class FilesystemTest extends PHPUnit_Framework_TestCase
         }
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionCode 90
-     */
     public function testErrorDetection()
     {
         $this->_model->delete(Helper::getPasteId());
@@ -123,10 +119,6 @@ class FilesystemTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste does still not exist');
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionCode 90
-     */
     public function testCommentErrorDetection()
     {
         $this->_model->delete(Helper::getPasteId());
@@ -137,27 +129,5 @@ class FilesystemTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($this->_model->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId()), 'comment does not yet exist');
         $this->assertFalse($this->_model->createComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId(), $comment), 'unable to store broken comment');
         $this->assertFalse($this->_model->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId()), 'comment does still not exist');
-    }
-
-    /**
-     * @expectedException Exception
-     * @expectedExceptionCode 10
-     */
-    public function testPermissionShenanigans()
-    {
-        // try creating an invalid path
-        chmod($this->_invalidPath, 0000);
-        Filesystem::getInstance(array('dir' => $this->_invalidPath . DIRECTORY_SEPARATOR . 'baz'));
-    }
-
-    /**
-     * @expectedException Exception
-     * @expectedExceptionCode 11
-     */
-    public function testPathShenanigans()
-    {
-        // try setting an invalid path
-        chmod($this->_invalidPath, 0000);
-        Filesystem::getInstance(array('dir' => $this->_invalidPath));
     }
 }
