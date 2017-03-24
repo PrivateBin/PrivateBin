@@ -12,6 +12,7 @@
 
 namespace PrivateBin\Data;
 
+use Exception;
 use PrivateBin\Json;
 use PrivateBin\Model\Paste;
 
@@ -41,16 +42,16 @@ class Filesystem extends AbstractData
      */
     public static function getInstance($options = null)
     {
+        // if needed initialize the singleton
+        if (!(self::$_instance instanceof self)) {
+            self::$_instance = new self;
+        }
         // if given update the data directory
         if (
             is_array($options) &&
             array_key_exists('dir', $options)
         ) {
             self::$_dir = $options['dir'] . DIRECTORY_SEPARATOR;
-        }
-        // if needed initialize the singleton
-        if (!(self::$_instance instanceof self)) {
-            self::$_instance = new self;
             self::_init();
         }
         return self::$_instance;
@@ -293,7 +294,7 @@ class Filesystem extends AbstractData
     }
 
     /**
-     * initialize privatebin
+     * Initialize data store
      *
      * @access private
      * @static
@@ -303,15 +304,20 @@ class Filesystem extends AbstractData
     {
         // Create storage directory if it does not exist.
         if (!is_dir(self::$_dir)) {
-            mkdir(self::$_dir, 0700);
+            if (!@mkdir(self::$_dir, 0700)) {
+                throw new Exception('unable to create directory ' . self::$_dir, 10);
+            }
         }
-        // Create .htaccess file if it does not exist.
-        if (!is_file(self::$_dir . '.htaccess')) {
-            file_put_contents(
-                self::$_dir . '.htaccess',
-                'Allow from none' . PHP_EOL .
-                'Deny from all' . PHP_EOL
+        $file = self::$_dir . DIRECTORY_SEPARATOR . '.htaccess';
+        if (!is_file($file)) {
+            $writtenBytes = @file_put_contents(
+                $file,
+                'Require all denied' . PHP_EOL,
+                LOCK_EX
             );
+            if ($writtenBytes === false || $writtenBytes < 19) {
+                throw new Exception('unable to write to file ' . $file, 11);
+            }
         }
     }
 

@@ -1,11 +1,13 @@
 <?php
 
+use PrivateBin\Persistence\ServerSalt;
 use PrivateBin\Sjcl;
 
 class SjclTest extends PHPUnit_Framework_TestCase
 {
     public function testSjclValidatorValidatesCorrectly()
     {
+        ServerSalt::setPath(sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'privatebin_data');
         $paste = Helper::getPasteWithAttachment();
         $this->assertTrue(Sjcl::isValid($paste['data']), 'valid sjcl');
         $this->assertTrue(Sjcl::isValid($paste['attachment']), 'valid sjcl');

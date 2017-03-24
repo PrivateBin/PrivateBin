@@ -175,17 +175,6 @@ class PrivateBin
      */
     private function _init()
     {
-        foreach (array('cfg', 'lib') as $dir) {
-            if (!is_file(PATH . $dir . DIRECTORY_SEPARATOR . '.htaccess')) {
-                file_put_contents(
-                PATH . $dir . DIRECTORY_SEPARATOR . '.htaccess',
-                'Allow from none' . PHP_EOL .
-                'Deny from all' . PHP_EOL,
-                LOCK_EX
-            );
-            }
-        }
-
         $this->_conf    = new Configuration;
         $this->_model   = new Model($this->_conf);
         $this->_request = new Request;

@@ -82,6 +82,7 @@ class ModelTest extends PHPUnit_Framework_TestCase
         $comment = $paste->getComment(Helper::getPasteId());
         $comment->setData($commentData['data']);
         $comment->setNickname($commentData['meta']['nickname']);
+        $comment->getParentId();
         $comment->store();
 
         $comment = $paste->getComment(Helper::getPasteId(), Helper::getCommentId());
@@ -191,12 +192,64 @@ class ModelTest extends PHPUnit_Framework_TestCase
 
     /**
      * @expectedException Exception
+     * @expectedExceptionCode 64
+     */
+    public function testInvalidPaste()
+    {
+        $this->_model->getPaste(Helper::getPasteId())->delete();
+        $paste = $this->_model->getPaste(Helper::getPasteId());
+        $paste->get();
+    }
+
+    /**
+     * @expectedException Exception
+     * @expectedExceptionCode 61
+     */
+    public function testInvalidData()
+    {
+        $paste = $this->_model->getPaste();
+        $paste->setData('');
+    }
+
+    /**
+     * @expectedException Exception
      * @expectedExceptionCode 62
      */
     public function testInvalidComment()
     {
         $paste = $this->_model->getPaste();
         $paste->getComment(Helper::getPasteId());
+    }
+
+    /**
+     * @expectedException Exception
+     * @expectedExceptionCode 67
+     */
+    public function testInvalidCommentDeletedPaste()
+    {
+        $pasteData = Helper::getPaste();
+        $paste = $this->_model->getPaste(Helper::getPasteId());
+        $paste->setData($pasteData['data']);
+        $paste->store();
+
+        $comment = $paste->getComment(Helper::getPasteId());
+        $paste->delete();
+        $comment->store();
+    }
+
+    /**
+     * @expectedException Exception
+     * @expectedExceptionCode 68
+     */
+    public function testInvalidCommentData()
+    {
+        $pasteData = Helper::getPaste();
+        $paste = $this->_model->getPaste(Helper::getPasteId());
+        $paste->setData($pasteData['data']);
+        $paste->store();
+
+        $comment = $paste->getComment(Helper::getPasteId());
+        $comment->store();
     }
 
     public function testExpiration()
