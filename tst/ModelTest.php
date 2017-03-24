@@ -228,7 +228,7 @@ class ModelTest extends PHPUnit_Framework_TestCase
     public function testInvalidCommentDeletedPaste()
     {
         $pasteData = Helper::getPaste();
-        $paste = $this->_model->getPaste(Helper::getPasteId());
+        $paste     = $this->_model->getPaste(Helper::getPasteId());
         $paste->setData($pasteData['data']);
         $paste->store();
 
@@ -244,7 +244,7 @@ class ModelTest extends PHPUnit_Framework_TestCase
     public function testInvalidCommentData()
     {
         $pasteData = Helper::getPaste();
-        $paste = $this->_model->getPaste(Helper::getPasteId());
+        $paste     = $this->_model->getPaste(Helper::getPasteId());
         $paste->setData($pasteData['data']);
         $paste->store();
 
