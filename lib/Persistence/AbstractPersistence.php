@@ -36,7 +36,6 @@ abstract class AbstractPersistence
      * @access public
      * @static
      * @param  string $path
-     * @return void
      */
     public static function setPath($path)
     {
@@ -80,7 +79,6 @@ abstract class AbstractPersistence
      * @access protected
      * @static
      * @throws Exception
-     * @return void
      */
     protected static function _initialize()
     {

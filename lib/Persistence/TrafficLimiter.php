@@ -45,7 +45,6 @@ class TrafficLimiter extends AbstractPersistence
      * @access public
      * @static
      * @param  int $limit
-     * @return void
      */
     public static function setLimit($limit)
     {
@@ -58,7 +57,6 @@ class TrafficLimiter extends AbstractPersistence
      * @access public
      * @static
      * @param Configuration $conf
-     * @return void
      */
     public static function setConfiguration(Configuration $conf)
     {

@@ -95,7 +95,6 @@ class ServerSalt extends AbstractPersistence
      * @access public
      * @static
      * @param  string $path
-     * @return void
      */
     public static function setPath($path)
     {

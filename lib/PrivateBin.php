@@ -123,7 +123,6 @@ class PrivateBin
      *
      * @access public
      * @throws Exception
-     * @return void
      */
     public function __construct()
     {
@@ -171,7 +170,6 @@ class PrivateBin
      * initialize privatebin
      *
      * @access private
-     * @return void
      */
     private function _init()
     {
@@ -320,7 +318,6 @@ class PrivateBin
      * @access private
      * @param  string $dataid
      * @param  string $deletetoken
-     * @return void
      */
     private function _delete($dataid, $deletetoken)
     {
@@ -364,7 +361,6 @@ class PrivateBin
      *
      * @access private
      * @param  string $dataid
-     * @return void
      */
     private function _read($dataid)
     {
@@ -397,7 +393,6 @@ class PrivateBin
      * Display PrivateBin frontend.
      *
      * @access private
-     * @return void
      */
     private function _view()
     {
@@ -461,7 +456,6 @@ class PrivateBin
      *
      * @access private
      * @param string $type
-     * @return void
      */
     private function _jsonld($type)
     {
@@ -494,7 +488,6 @@ class PrivateBin
      * @param  int $status
      * @param  string $message
      * @param  array $other
-     * @return void
      */
     private function _return_message($status, $message, $other = array())
     {

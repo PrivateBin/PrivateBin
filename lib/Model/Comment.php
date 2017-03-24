@@ -61,7 +61,6 @@ class Comment extends AbstractModel
      *
      * @access public
      * @throws Exception
-     * @return void
      */
     public function store()
     {
@@ -101,7 +100,6 @@ class Comment extends AbstractModel
      *
      * @access public
      * @throws Exception
-     * @return void
      */
     public function delete()
     {
@@ -129,7 +127,6 @@ class Comment extends AbstractModel
      * @access public
      * @param Paste $paste
      * @throws Exception
-     * @return void
      */
     public function setPaste(Paste $paste)
     {
@@ -154,7 +151,6 @@ class Comment extends AbstractModel
      * @access public
      * @param string $id
      * @throws Exception
-     * @return void
      */
     public function setParentId($id)
     {
@@ -184,7 +180,6 @@ class Comment extends AbstractModel
      * @access public
      * @param string $nickname
      * @throws Exception
-     * @return void
      */
     public function setNickname($nickname)
     {

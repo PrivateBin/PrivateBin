@@ -98,7 +98,6 @@ class Filesystem extends AbstractData
      *
      * @access public
      * @param  string $pasteid
-     * @return void
      */
     public function delete($pasteid)
     {

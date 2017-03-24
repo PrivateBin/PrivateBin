@@ -179,7 +179,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          *
          * @name   Helper.urls2links
          * @function
-         * @param  {Object} element - a jQuery DOM element
+         * @param  {Object} $element - a jQuery DOM element
          */
         me.urls2links = function($element)
         {
@@ -675,7 +675,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          * @function
          * @return {string} func
          */
-        me.getSymmetricKey = function(func)
+        me.getSymmetricKey = function()
         {
             return sjcl.codec.base64.fromBits(sjcl.random.randomWords(8, 0), 0);
         }
@@ -903,8 +903,6 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         me.isVisible = function($element)
         {
             var elementTop = $element.offset().top;
-            var elementBottom = elementTop + $element.outerHeight();
-
             var viewportTop = $(window).scrollTop();
             var viewportBottom = viewportTop + $(window).height();
 
@@ -985,11 +983,9 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
      * Alert/error manager
      *
      * @name   Alert
-     * @param  {object} window
-     * @param  {object} document
      * @class
      */
-    var Alert = (function (window, document) {
+    var Alert = (function () {
         var me = {};
 
         var $errorMessage,
@@ -1249,17 +1245,16 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         }
 
         return me;
-    })(window, document);
+    })();
 
     /**
      * handles paste status/result
      *
      * @name   PasteStatus
      * @param  {object} window
-     * @param  {object} document
      * @class
      */
-    var PasteStatus = (function (window, document) {
+    var PasteStatus = (function (window) {
         var me = {};
 
         var $pasteSuccess,
@@ -1402,17 +1397,15 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         }
 
         return me;
-    })(window, document);
+    })(window);
 
     /**
      * password prompt
      *
      * @name Prompt
-     * @param  {object} window
-     * @param  {object} document
      * @class
      */
-    var Prompt = (function (window, document) {
+    var Prompt = (function () {
         var me = {};
 
         var $passwordDecrypt,
@@ -1512,7 +1505,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         }
 
         return me;
-    })(window, document);
+    })();
 
     /**
      * Manage paste/message input, and preview tab
@@ -1520,11 +1513,9 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
      * Note that the actual preview is handled by PasteViewer.
      *
      * @name   Editor
-     * @param  {object} window
-     * @param  {object} document
      * @class
      */
-    var Editor = (function (window, document) {
+    var Editor = (function () {
         var me = {};
 
         var $editorTabs,
@@ -1728,17 +1719,15 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         }
 
         return me;
-    })(window, document);
+    })();
 
     /**
      * (view) Parse and show paste.
      *
      * @name   PasteViewer
-     * @param  {object} window
-     * @param  {object} document
      * @class
      */
-    var PasteViewer = (function (window, document) {
+    var PasteViewer = (function () {
         var me = {};
 
         var $placeholder,
@@ -1904,7 +1893,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          * @function
          * @return {string}
          */
-        me.getText = function(newText)
+        me.getText = function()
         {
             return text;
         }
@@ -1981,7 +1970,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         }
 
         return me;
-    })(window, document);
+    })();
 
     /**
      * (view) Show attachment and preview if possible
@@ -1998,8 +1987,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             $attachmentPreview,
             $attachment;
 
-        var attachmentChanged = false,
-            attachmentHasPreview = false;
+        var attachmentHasPreview = false;
 
         /**
          * sets the attachment but does not yet show it
@@ -2027,8 +2015,6 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                 );
                 attachmentHasPreview = true;
             }
-
-            attachmentChanged = true;
         }
 
         /**
@@ -3043,7 +3029,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          * @private
          * @function
          * @param {int} status
-         * @param {int} data - optional
+         * @param {int} result - optional
          */
         function success(status, result)
         {
@@ -3063,7 +3049,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          * @private
          * @function
          * @param {int} status - internal code
-         * @param {int} data - original error code
+         * @param {int} result - original error code
          */
         function fail(status, result)
         {
@@ -3107,7 +3093,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          *
          * @name   Uploader.setUrl
          * @function
-         * @param {function} func
+         * @param {function} newUrl
          */
         me.setUrl = function(newUrl)
         {
@@ -3236,17 +3222,18 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          * @return {array}
          */
         me.parseUploadError = function(status, data, doThisThing) {
-            var errorArray = ['Error while parsing error message.'];
+            var errorArray;
 
             switch (status) {
-                case Uploader.error['custom']:
+                case me.error['custom']:
                     errorArray = ['Could not ' + doThisThing + ': %s', data.message];
                     break;
-                case Uploader.error['unknown']:
+                case me.error['unknown']:
                     errorArray = ['Could not ' + doThisThing + ': %s', I18n._('unknown status')];
                     break;
-                case Uploader.error['serverError']:
-                    errorArray = ['Could not ' + doThisThing + ': %s', I18n._('server error or not responding')];                        break;
+                case me.error['serverError']:
+                    errorArray = ['Could not ' + doThisThing + ': %s', I18n._('server error or not responding')];
+                    break;
                 default:
                     errorArray = ['Could not ' + doThisThing + ': %s', I18n._('unknown error')];
                     break;
@@ -3884,7 +3871,6 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
 
             // show proper elements on screen
             PasteDecrypter.run();
-            return;
         }
 
         /**
