@@ -7,8 +7,8 @@
     "en": "ru",
     "Paste does not exist, has expired or has been deleted.":
         "Запись не существует, просрочена или была удалена.",
-    "%s requires php 5.4.0 or above to work. Sorry.":
-        "Для работы %s требуется PHP 5.4.0 или выше. Извините.",
+    "%s requires php %s or above to work. Sorry.":
+        "Для работы %s требуется php %s или выше. Извините.",
     "%s requires configuration section [%s] to be present in configuration file.":
         "%s необходимо наличие секции [%s] в конфигурационном файле.",
     "Please wait %d seconds between each post.":
