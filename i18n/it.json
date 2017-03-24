@@ -7,8 +7,8 @@
     "en": "it",
     "Paste does not exist, has expired or has been deleted.":
         "Questo messaggio non esiste, è scaduto o è stato cancellato.",
-    "%s requires php 5.3.0 or above to work. Sorry.":
-        "%s richiede PHP 5.3.0 o superiore.",
+    "%s requires php 5.4.0 or above to work. Sorry.":
+        "%s richiede php 5.4.0 o superiore per funzionare. Ci spiace.",
     "%s requires configuration section [%s] to be present in configuration file.":
         "%s richiede la presenza della sezione [%s] nei file di configurazione.",
     "Please wait %d seconds between each post.":
@@ -67,7 +67,7 @@
     "Never":
         "Mai",
     "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.":
-        "Nota: questo è un servizio di prova, i dati possono essere cancellati in qualsiasi momento. Ti preghiamo di non abusare di questo servizio, grazie.",
+        "Nota: questo è un servizio di prova, i messaggi salvati possono essere cancellati in qualsiasi momento. Moriranno dei gattini se abuserai di questo servizio.",
     "This document will expire in %d seconds.":
         ["Questo documento scadrà tra un secondo.", "Questo documento scadrà in %d secondi."],
     "This document will expire in %d minutes.":
@@ -87,13 +87,13 @@
     "FOR YOUR EYES ONLY. Don't close this window, this message can't be displayed again.":
         "FOR YOUR EYES ONLY. Non chiudere questa finestra, il messaggio non può essere visualizzato una seconda volta.",
     "Could not decrypt comment; Wrong key?":
-        "Non riesco a decifrari il commento (Chiave errata?)",
+        "Non riesco a decifrare il commento (Chiave errata?)",
     "Reply":
         "Rispondi",
     "Anonymous":
         "Anonimo",
     "Anonymous avatar (Vizhash of the IP address)":
-        "Avatar Anonino (Vizhash dell'indirizzo IP)",
+        "Avatar Anonimo (Vizhash dell'indirizzo IP)",
     "Add comment":
         "Aggiungi un commento",
     "Optional nickname…":
@@ -147,5 +147,5 @@
         "Inserisci la password",
     "Loading…": "Loading…",
     "In case this message never disappears please have a look at <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">this FAQ for information to troubleshoot</a>.":
-        "In case this message never disappears please have a look at <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">this FAQ for information to troubleshoot</a> (in English)."
+        "Nel caso questo messaggio non scompaia, controlla questa <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\"> FAQ</a> per trovare informazioni su come risolvere il problema (in Inglese)."
 }
