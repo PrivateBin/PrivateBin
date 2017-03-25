@@ -8,16 +8,26 @@ class FilesystemTest extends PHPUnit_Framework_TestCase
 
     private $_path;
 
+    private $_invalidPath;
+
     public function setUp()
     {
         /* Setup Routine */
-        $this->_path  = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'privatebin_data';
-        $this->_model = Filesystem::getInstance(array('dir' => $this->_path));
+        $this->_path        = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'privatebin_data';
+        $this->_invalidPath = $this->_path . DIRECTORY_SEPARATOR . 'bar';
+        $this->_model       = Filesystem::getInstance(array('dir' => $this->_path));
+        if (!is_dir($this->_path)) {
+            mkdir($this->_path);
+        }
+        if (!is_dir($this->_invalidPath)) {
+            mkdir($this->_invalidPath);
+        }
     }
 
     public function tearDown()
     {
         /* Tear Down Routine */
+        chmod($this->_invalidPath, 0700);
         Helper::rmDir($this->_path);
     }
 
@@ -37,6 +47,7 @@ class FilesystemTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($this->_model->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId()), 'comment does not yet exist');
         $this->assertTrue($this->_model->createComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId(), Helper::getComment()), 'store comment');
         $this->assertTrue($this->_model->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId()), 'comment exists after storing it');
+        $this->assertFalse($this->_model->createComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId(), Helper::getComment()), 'unable to store the same comment twice');
         $comment           = json_decode(json_encode(Helper::getComment()));
         $comment->id       = Helper::getCommentId();
         $comment->parentid = Helper::getPasteId();
@@ -99,10 +110,6 @@ class FilesystemTest extends PHPUnit_Framework_TestCase
         }
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionCode 90
-     */
     public function testErrorDetection()
     {
         $this->_model->delete(Helper::getPasteId());
@@ -112,10 +119,6 @@ class FilesystemTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste does still not exist');
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionCode 90
-     */
     public function testCommentErrorDetection()
     {
         $this->_model->delete(Helper::getPasteId());

@@ -7,8 +7,8 @@
     "en": "no",
     "Paste does not exist, has expired or has been deleted.":
         "Innlegget eksisterer ikke, er utløpt eller har blitt slettet.",
-    "%s requires php 5.3.0 or above to work. Sorry.":
-        "Beklager, %s krever php 5.3.0 eller nyere for å kjøre.",
+    "%s requires php %s or above to work. Sorry.":
+        "Beklager, %s krever php %s eller nyere for å kjøre.",
     "%s requires configuration section [%s] to be present in configuration file.":
         "%s krever konfigurasjonsdel [%s] å være til stede i konfigurasjonsfilen .",
     "Please wait %d seconds between each post.":
@@ -92,7 +92,7 @@
         "Svar",
     "Anonymous":
         "Anonym",
-    "Anonymous avatar (Vizhash of the IP address)":
+    "Avatar generated from IP address":
         "Anonym avatar (Vizhash av IP adressen)",
     "Add comment":
         "Legg til kommentar",
@@ -112,8 +112,8 @@
         "server feilet eller svarer ikke",
     "Could not post comment: %s":
         "Kunne ikke sende kommentar: %s",
-    "Sending paste (Please move your mouse for more entropy)…":
-        "Sender innlegg (Flytt musen for mere entropi)…",
+    "Please move your mouse for more entropy…":
+        "Flytt musen for mere entropi…",
     "Sending paste…":
         "Sender innlegg…",
     "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit [Ctrl]+[c] to copy)</span>":
@@ -129,7 +129,8 @@
     "Source Code": "Kildekode",
     "Markdown": "Oppmerket",
     "Download attachment": "Last ned vedlegg",
-    "Cloned file attached.": "Kopier vedlegg.",
+    "Cloned: '%s'": "Kopier: '%s'",
+    "The cloned file '%s' was attached to this paste.": "The cloned file '%s' was attached to this paste.",
     "Attach a file": "Legg til fil",
     "Remove attachment": "Slett vedlegg",
     "Your browser does not support uploading encrypted files. Please use a newer browser.":
@@ -146,6 +147,9 @@
     "Enter password":
         "Skriv inn passord",
     "Loading…": "Laster…",
+    "Decrypting paste…": "Decrypting paste…",
+    "Preparing new paste…": "Preparing new paste…",
     "In case this message never disappears please have a look at <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">this FAQ for information to troubleshoot</a>.":
-        "Hvis denne meldingen ikke forsvinner kan du ta en titt på siden med <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">ofte stilte spørsmål</a> for informasjon om feilsøking."
+        "Hvis denne meldingen ikke forsvinner kan du ta en titt på siden med <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">ofte stilte spørsmål</a> for informasjon om feilsøking.",
+    "+++ no paste text +++": "+++ no paste text +++"
 }

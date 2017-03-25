@@ -35,7 +35,6 @@ class View
      * @access public
      * @param  string $name
      * @param  mixed  $value
-     * @return void
      */
     public function assign($name, $value)
     {
@@ -48,7 +47,6 @@ class View
      * @access public
      * @param  string $template
      * @throws Exception
-     * @return void
      */
     public function draw($template)
     {

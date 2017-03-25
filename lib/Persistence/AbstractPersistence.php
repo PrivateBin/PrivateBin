@@ -36,7 +36,6 @@ abstract class AbstractPersistence
      * @access public
      * @static
      * @param  string $path
-     * @return void
      */
     public static function setPath($path)
     {
@@ -80,27 +79,23 @@ abstract class AbstractPersistence
      * @access protected
      * @static
      * @throws Exception
-     * @return void
      */
     protected static function _initialize()
     {
         // Create storage directory if it does not exist.
         if (!is_dir(self::$_path)) {
-            if (!@mkdir(self::$_path)) {
+            if (!@mkdir(self::$_path, 0700)) {
                 throw new Exception('unable to create directory ' . self::$_path, 10);
             }
         }
-
-        // Create .htaccess file if it does not exist.
         $file = self::$_path . DIRECTORY_SEPARATOR . '.htaccess';
         if (!is_file($file)) {
             $writtenBytes = @file_put_contents(
                 $file,
-                'Allow from none' . PHP_EOL .
-                'Deny from all' . PHP_EOL,
+                'Require all denied' . PHP_EOL,
                 LOCK_EX
             );
-            if ($writtenBytes === false || $writtenBytes < 30) {
+            if ($writtenBytes === false || $writtenBytes < 19) {
                 throw new Exception('unable to write to file ' . $file, 11);
             }
         }
