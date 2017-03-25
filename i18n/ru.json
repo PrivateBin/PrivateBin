@@ -93,7 +93,7 @@
     "Anonymous":
         "Аноним",
     "Avatar generated from IP address":
-        "Анонимный аватар (Vizhash IP адреса)",
+        "Аватар, сгенерированный из IP-адреса",
     "Add comment":
         "Добавить комментарий",
     "Optional nickname…":
@@ -105,7 +105,7 @@
     "Comment posted.":
         "Комментарий опубликован.",
     "Could not refresh display: %s":
-        "Could not refresh display: %s",
+        "Не удалось обновить отображение: %s",
     "unknown status":
         "неизвестная причина",
     "server error or not responding":
