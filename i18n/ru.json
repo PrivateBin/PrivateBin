@@ -7,8 +7,8 @@
     "en": "ru",
     "Paste does not exist, has expired or has been deleted.":
         "Запись не существует, просрочена или была удалена.",
-    "%s requires php 5.3.0 or above to work. Sorry.":
-        "Для работы %s требуется PHP 5.3.0 или выше. Извините.",
+    "%s requires php %s or above to work. Sorry.":
+        "Для работы %s требуется php %s или выше. Извините.",
     "%s requires configuration section [%s] to be present in configuration file.":
         "%s необходимо наличие секции [%s] в конфигурационном файле.",
     "Please wait %d seconds between each post.":
@@ -32,7 +32,7 @@
     "Paste was properly deleted.":
         "Запись была успешно удалена.",
     "JavaScript is required for %s to work.<br />Sorry for the inconvenience.":
-        "Для работы %s требуется включенный JavaScript.<br />Приносим извинения за неудобства..",
+        "Для работы %s требуется включенный JavaScript.<br />Приносим извинения за неудобства.",
     "%s requires a modern browser to work.":
         "Для работы %s требуется более современный браузер.",
     "Still using Internet Explorer? Do yourself a favor, switch to a modern browser:":
@@ -96,26 +96,26 @@
         "Анонимный аватар (Vizhash IP адреса)",
     "Add comment":
         "Добавить комментарий",
-    "Optional nickname...":
-        "Опциональный никнейм...",
+    "Optional nickname…":
+        "Опциональный никнейм…",
     "Post comment":
         "Отправить комментарий",
-    "Sending comment...":
-        "Отправка комментария...",
+    "Sending comment…":
+        "Отправка комментария…",
     "Comment posted.":
         "Комментарий опубликован.",
-    "Could not refresh display: %s":
-        "Невозможно обновить данные: %s",
     "unknown status":
         "неизвестная причина",
     "server error or not responding":
         "ошибка сервера или нет ответа",
+    "unknown error":
+        "неизвестная ошибка",
     "Could not post comment: %s":
         "Не удалось опубликовать комментарий: %s",
-    "Sending paste (Please move your mouse for more entropy)...":
-        "Отправка записи (Пожалуйста двигайте мышкой для большей энтропии)...",
-    "Sending paste...":
-        "Отправка записи...",
+    "Please move your mouse for more entropy…":
+        "Пожалуйста двигайте мышкой для большей энтропии…",
+    "Sending paste…":
+        "Отправка записи…",
     "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit [Ctrl]+[c] to copy)</span>":
         "Ссылка на запись <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Нажмите [Ctrl]+[c] чтобы скопировать ссылку)</span>",
     "Delete data":
@@ -138,7 +138,10 @@
     "Source Code": "Исходный код",
     "Markdown": "Язык разметки",
     "Download attachment": "Скачать прикрепленный файл",
-    "Cloned file attached.": "Дубль файла прикреплен.",
+    "Cloned file attached.": "Дубликат файла прикреплен.",
+    "Cloned: '%s'": "Дублировано: '%s'",
+    "The cloned file '%s' was attached to this paste.":
+        "Дубликат файла '%s' был прикреплен к этой записи.",
     "Attach a file": "Прикрепить файл",
     "Remove attachment": "Удалить вложение",
     "Your browser does not support uploading encrypted files. Please use a newer browser.":
@@ -155,5 +158,12 @@
     "Enter password":
         "Введите пароль",
     "Uploading paste… Please wait.":
-        "Отправка записи... Пожалуйста подождите."
+        "Отправка записи… Пожалуйста подождите.",
+    "Loading…": "Загрузка…",
+    "Decrypting paste…": "Расшифровка записи…",
+    "Preparing new paste…": "Подготовка новой записи…",
+    "In case this message never disappears please have a look at <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">this FAQ for information to troubleshoot</a>.":
+        "Если данное сообщение не исчезает длительное время, посмотрите <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">этот FAQ с информацией о возможном решении проблемы (на английском)</a>.",
+    "+++ no paste text +++":
+        "+++ в записи нет текста +++"
 }

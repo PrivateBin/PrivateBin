@@ -22,21 +22,6 @@ use Exception;
 class Filter
 {
     /**
-     * strips slashes deeply
-     *
-     * @access public
-     * @static
-     * @param  mixed $value
-     * @return mixed
-     */
-    public static function stripslashesDeep($value)
-    {
-        return is_array($value) ?
-            array_map('self::stripslashesDeep', $value) :
-            stripslashes($value);
-    }
-
-    /**
      * format a given time string into a human readable label (localized)
      *
      * accepts times in the format "[integer][time unit]"

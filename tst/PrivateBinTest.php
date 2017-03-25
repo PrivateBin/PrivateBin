@@ -140,21 +140,18 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
     public function testHtaccess()
     {
         $this->reset();
-        $dirs = array('cfg', 'lib');
-        foreach ($dirs as $dir) {
-            $file = PATH . $dir . DIRECTORY_SEPARATOR . '.htaccess';
-            @unlink($file);
-        }
+        $file = $this->_path . DIRECTORY_SEPARATOR . '.htaccess';
+        @unlink($file);
+
+        $_POST                            = Helper::getPaste();
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
+        $_SERVER['REQUEST_METHOD']        = 'POST';
+        $_SERVER['REMOTE_ADDR']           = '::1';
         ob_start();
         new PrivateBin;
         ob_end_clean();
-        foreach ($dirs as $dir) {
-            $file = PATH . $dir . DIRECTORY_SEPARATOR . '.htaccess';
-            $this->assertFileExists(
-                $file,
-                "$dir htaccess recreated"
-            );
-        }
+
+        $this->assertFileExists($file, 'htaccess recreated');
     }
 
     /**
@@ -739,10 +736,10 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
         new PrivateBin;
         $content = ob_get_contents();
         ob_end_clean();
-        $this->assertContains(
-            '<div id="cipherdata" class="hidden">' .
-            htmlspecialchars(Helper::getPasteAsJson(), ENT_NOQUOTES) .
-            '</div>',
+        $this->assertRegExp(
+            '#<div id="cipherdata"[^>]*>' .
+            preg_quote(htmlspecialchars(Helper::getPasteAsJson(), ENT_NOQUOTES)) .
+            '</div>#',
             $content,
             'outputs data correctly'
         );
@@ -760,7 +757,7 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
         $content = ob_get_contents();
         ob_end_clean();
         $this->assertRegExp(
-            '#<div[^>]*id="errormessage"[^>]*>.*Invalid paste ID\.</div>#',
+            '#<div[^>]*id="errormessage"[^>]*>.*Invalid paste ID\.#s',
             $content,
             'outputs error correctly'
         );
@@ -778,7 +775,7 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
         $content = ob_get_contents();
         ob_end_clean();
         $this->assertRegExp(
-            '#<div[^>]*id="errormessage"[^>]*>.*Paste does not exist[^<]*</div>#',
+            '#<div[^>]*id="errormessage"[^>]*>.*Paste does not exist, has expired or has been deleted\.#s',
             $content,
             'outputs error correctly'
         );
@@ -798,7 +795,7 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
         $content = ob_get_contents();
         ob_end_clean();
         $this->assertRegExp(
-            '#<div[^>]*id="errormessage"[^>]*>.*Paste does not exist[^<]*</div>#',
+            '#<div[^>]*id="errormessage"[^>]*>.*Paste does not exist, has expired or has been deleted\.#s',
             $content,
             'outputs error correctly'
         );
@@ -818,10 +815,10 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
         $content = ob_get_contents();
         ob_end_clean();
         unset($burnPaste['meta']['salt']);
-        $this->assertContains(
-            '<div id="cipherdata" class="hidden">' .
-            htmlspecialchars(Helper::getPasteAsJson($burnPaste['meta']), ENT_NOQUOTES) .
-            '</div>',
+        $this->assertRegExp(
+            '#<div id="cipherdata"[^>]*>' .
+            preg_quote(htmlspecialchars(Helper::getPasteAsJson($burnPaste['meta']), ENT_NOQUOTES)) .
+            '</div>#',
             $content,
             'outputs data correctly'
         );
@@ -889,10 +886,10 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
         $content = ob_get_contents();
         ob_end_clean();
         $meta['formatter'] = 'syntaxhighlighting';
-        $this->assertContains(
-            '<div id="cipherdata" class="hidden">' .
-            htmlspecialchars(Helper::getPasteAsJson($meta), ENT_NOQUOTES) .
-            '</div>',
+        $this->assertRegExp(
+            '#<div id="cipherdata"[^>]*>' .
+            preg_quote(htmlspecialchars(Helper::getPasteAsJson($meta), ENT_NOQUOTES)) .
+            '</div>#',
             $content,
             'outputs data correctly'
         );
@@ -914,10 +911,10 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
         ob_end_clean();
         $oldPaste['meta']['formatter'] = 'plaintext';
         unset($oldPaste['meta']['salt']);
-        $this->assertContains(
-            '<div id="cipherdata" class="hidden">' .
-            htmlspecialchars(Helper::getPasteAsJson($oldPaste['meta']), ENT_NOQUOTES) .
-            '</div>',
+        $this->assertRegExp(
+            '#<div id="cipherdata"[^>]*>' .
+            preg_quote(htmlspecialchars(Helper::getPasteAsJson($oldPaste['meta']), ENT_NOQUOTES)) .
+            '</div>#',
             $content,
             'outputs data correctly'
         );
@@ -939,7 +936,7 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
         $content = ob_get_contents();
         ob_end_clean();
         $this->assertRegExp(
-            '#<div[^>]*id="status"[^>]*>.*Paste was properly deleted[^<]*</div>#s',
+            '#<div[^>]*id="status"[^>]*>.*Paste was properly deleted\.#s',
             $content,
             'outputs deleted status correctly'
         );
@@ -960,7 +957,7 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
         $content = ob_get_contents();
         ob_end_clean();
         $this->assertRegExp(
-            '#<div[^>]*id="errormessage"[^>]*>.*Invalid paste ID\.</div>#',
+            '#<div[^>]*id="errormessage"[^>]*>.*Invalid paste ID\.#s',
             $content,
             'outputs delete error correctly'
         );
@@ -980,7 +977,7 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
         $content = ob_get_contents();
         ob_end_clean();
         $this->assertRegExp(
-            '#<div[^>]*id="errormessage"[^>]*>.*Paste does not exist[^<]*</div>#',
+            '#<div[^>]*id="errormessage"[^>]*>.*Paste does not exist, has expired or has been deleted\.#s',
             $content,
             'outputs delete error correctly'
         );
@@ -1000,7 +997,7 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
         $content = ob_get_contents();
         ob_end_clean();
         $this->assertRegExp(
-            '#<div[^>]*id="errormessage"[^>]*>.*Wrong deletion token[^<]*</div>#',
+            '#<div[^>]*id="errormessage"[^>]*>.*Wrong deletion token\. Paste was not deleted\.#s',
             $content,
             'outputs delete error correctly'
         );
@@ -1047,7 +1044,7 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
         ob_end_clean();
         $response = json_decode($content, true);
         $this->assertEquals(1, $response['status'], 'outputs status');
-        $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste successfully deleted');
+        $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste exists after failing to delete data');
     }
 
     /**
@@ -1067,7 +1064,7 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
         $content = ob_get_contents();
         ob_end_clean();
         $this->assertRegExp(
-            '#<div[^>]*id="errormessage"[^>]*>.*Paste does not exist[^<]*</div>#',
+            '#<div[^>]*id="errormessage"[^>]*>.*Paste does not exist, has expired or has been deleted\.#s',
             $content,
             'outputs error correctly'
         );
@@ -1091,7 +1088,7 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
         $content = ob_get_contents();
         ob_end_clean();
         $this->assertRegExp(
-            '#<div[^>]*id="status"[^>]*>.*Paste was properly deleted[^<]*</div>#s',
+            '#<div[^>]*id="status"[^>]*>.*Paste was properly deleted\.#s',
             $content,
             'outputs deleted status correctly'
         );

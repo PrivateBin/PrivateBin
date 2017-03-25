@@ -47,7 +47,7 @@ if ($MARKDOWN):
 <?php
 endif;
 ?>
-		<script type="text/javascript" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-Ap3kgrXsOa+7xANzug/xGKb3rEOzCYuJoxUG5vmwYRWn/8wI9Cc/RYZehKnFwHuFCFnQzfqJ9GT2D1HSOdnd5g==" crossorigin="anonymous"></script>
+		<script type="text/javascript" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-xfoNRo43UxDcd7m1P2IsvSPcOeGJo1oUjbA+CNCBoBilKRU3Iuqbf7awv3knP50bX7PVGEjtS6yJ2KtOtqnhTA==" crossorigin="anonymous"></script>
 		<!--[if lt IE 10]>
 		<style type="text/css">body {padding-left:60px;padding-right:60px;} #ienotice {display:block;} #oldienotice {display:block;}</style>
 		<![endif]-->
@@ -79,12 +79,12 @@ endif;
 			<div id="ienotice"><?php echo I18n::_('Still using Internet Explorer? Do yourself a favor, switch to a modern browser:'), PHP_EOL; ?>
 				<a href="https://www.mozilla.org/firefox/">Firefox</a>,
 				<a href="https://www.opera.com/">Opera</a>,
-				<a href="https://www.google.com/chrome">Chrome</a>,
-				<a href="https://www.apple.com/safari">Safari</a>...
+				<a href="https://www.google.com/chrome">Chrome</a>…
 			</div>
 		</header>
 		<section>
 			<article>
+				<div id="loadingindicator" class="hidden"><?php echo I18n::_('Loading…'); ?></div>
 				<div id="status"><?php echo htmlspecialchars($STATUS); ?></div>
 				<div id="errormessage" class="hidden"><?php echo htmlspecialchars($ERROR); ?></div>
 				<div id="toolbar">
@@ -125,7 +125,7 @@ endif;
 <?php
 if ($DISCUSSION):
 ?>
-					<div id="opendisc" class="button hidden">
+					<div id="opendiscussionoption" class="button hidden">
 						<input type="checkbox" id="opendiscussion" name="opendiscussion"<?php
     if ($OPENDISCUSSION):
 ?> checked="checked"<?php
@@ -216,17 +216,31 @@ endif;
 				<div id="prettymessage" class="hidden">
 					<pre id="prettyprint" class="prettyprint linenums:1"></pre>
 				</div>
-				<div id="cleartext" class="hidden"></div>
+				<div id="plaintext" class="hidden"></div>
 				<textarea id="message" name="message" cols="80" rows="25" class="hidden"></textarea>
 			</article>
 		</section>
 		<section>
 			<div id="discussion" class="hidden">
 				<h4 class="title"><?php echo I18n::_('Discussion'); ?></h4>
-				<div id="comments"></div>
+				<div id="commentcontainer"></div>
 			</div>
 		</section>
-		<div id="cipherdata" class="hidden"><?php echo htmlspecialchars($CIPHERDATA, ENT_NOQUOTES); ?></div>
+		<div id="serverdata" class="hidden" aria-hidden="true">
+			<div id="cipherdata" class="hidden"><?php echo htmlspecialchars($CIPHERDATA, ENT_NOQUOTES); ?></div>
+<?php
+if ($DISCUSSION):
+?>
+			<div id="templates">
+				<!-- @TODO: when I intend/structure this corrrectly Firefox adds whitespaces everywhere which completly destroy the layout. (same possible when you remove the template data below and show this area in the browser) -->
+				<article id="commenttemplate" class="comment"><div class="commentmeta"><span class="nickname">name</span><span class="commentdate">0000-00-00</span></div><div class="commentdata">c</div><button class="btn btn-default btn-sm"><?php echo I18n::_('Reply'); ?></button></article>
+				<div id="commenttailtemplate" class="comment"><button class="btn btn-default btn-sm"><?php echo I18n::_('Add comment'); ?></button></div>
+				<div id="replytemplate" class="reply hidden"><input type="text" id="nickname" class="form-control" title="<?php echo I18n::_('Optional nickname…'); ?>" placeholder="<?php echo I18n::_('Optional nickname…'); ?>" /><textarea id="replymessage" class="replymessage form-control" cols="80" rows="7"></textarea><br /><div id="replystatus" role="alert" class="statusmessage hidden alert"><span class="glyphicon" aria-hidden="true"></span> </div><button id="replybutton" class="btn btn-default btn-sm"><?php echo I18n::_('Post comment'); ?></button></div>
+			</div>
+<?php
+endif;
+?>
+		</div>
         <section class="container">
 			<div id="noscript" role="alert" class="nonworking alert alert-info noscript-hide"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true">
 				<span> <?php echo I18n::_('Loading…'); ?></span><br>

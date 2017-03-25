@@ -63,6 +63,7 @@ class RequestTest extends PHPUnit_Framework_TestCase
         file_put_contents($file, 'data=foo');
         Request::setInputStream($file);
         $request = new Request;
+        unlink($file);
         $this->assertTrue($request->isJsonApiCall(), 'is JSON Api call');
         $this->assertEquals('create', $request->getOperation());
         $this->assertEquals('foo', $request->getParam('data'));

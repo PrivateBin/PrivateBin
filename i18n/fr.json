@@ -7,8 +7,8 @@
     "en": "fr",
     "Paste does not exist, has expired or has been deleted.":
         "Le paste n'existe pas, a expiré, ou a été supprimé.",
-    "%s requires php 5.3.0 or above to work. Sorry.":
-        "Désolé, %s nécessite php 5.3.0 ou supérieur pour fonctionner.",
+    "%s requires php %s or above to work. Sorry.":
+        "Désolé, %s nécessite php %s ou supérieur pour fonctionner.",
     "%s requires configuration section [%s] to be present in configuration file.":
         "%s a besoin de la section de configuration [%s] dans le fichier de configuration pour fonctionner.",
     "Please wait %d seconds between each post.":
@@ -96,12 +96,12 @@
         "Avatar anonyme (Vizhash de l'adresse IP)",
     "Add comment":
         "Ajouter un commentaire",
-    "Optional nickname...":
-        "Pseudonyme optionnel...",
+    "Optional nickname…":
+        "Pseudonyme optionnel…",
     "Post comment":
         "Poster le commentaire",
-    "Sending comment...":
-        "Envoi du commentaire...",
+    "Sending comment…":
+        "Envoi du commentaire…",
     "Comment posted.":
         "Commentaire posté.",
     "Could not refresh display: %s":
@@ -112,10 +112,10 @@
         "Le serveur ne répond pas ou a rencontré une erreur",
     "Could not post comment: %s":
         "Impossible de poster le commentaire : %s",
-    "Sending paste (Please move your mouse for more entropy)...":
-        "Envoi du paste (Merci de bouger votre souris pour plus d'entropie)...",
-    "Sending paste...":
-        "Envoi du paste...",
+    "Sending paste (Please move your mouse for more entropy)…":
+        "Envoi du paste (Merci de bouger votre souris pour plus d'entropie)…",
+    "Sending paste…":
+        "Envoi du paste…",
     "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit [Ctrl]+[c] to copy)</span>":
         "Votre paste est disponible à l'adresse <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Appuyez sur [Ctrl]+[c] pour copier)</span>",
     "Delete data":
@@ -149,12 +149,12 @@
     "Editor": "Éditer",
     "Preview": "Prévisualiser",
     "%s requires the PATH to end in a \"%s\". Please update the PATH in your index.php.":
-        "%s requires the PATH to end in a \"%s\". Please update the PATH in your index.php.",
+        "%s requiert que le PATH se termine dans un \"%s\". Veuillez mettre à jour le PATH dans votre index.php.",
     "Decrypt":
-        "Decrypt",
+        "Déchiffrer",
     "Enter password":
         "Entrez le mot de passe",
-    "Loading…": "Loading…",
+    "Loading…": "Chargement…",
     "In case this message never disappears please have a look at <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">this FAQ for information to troubleshoot</a>.":
-        "In case this message never disappears please have a look at <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">this FAQ for information to troubleshoot</a> (in English)."
+        "Si ce message ne disparaîssait pas, jetez un oeil à <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">cette FAQ pour des idées de résolution</a> (en Anglais)."
 }

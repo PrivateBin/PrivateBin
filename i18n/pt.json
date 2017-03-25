@@ -1,0 +1,151 @@
+{
+    "PrivateBin": "PrivateBin",
+    "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href=\"https://privatebin.info/\">project page</a>.":
+        "%s é um serviço minimalista e de código aberto do tipo \"pastebin\", em que o servidor tem zero conhecimento dos dados copiados. Os dados são cifrados e decifrados <i>no navegador</i> usando 256 bits AES. Mais informações na <a href=\"https://privatebin.info/\">página do projeto</a>.",
+    "Because ignorance is bliss":
+        "Porque a ignorância é uma benção",
+    "en": "pt",
+    "Paste does not exist, has expired or has been deleted.":
+        "A cópia não existe, expirou ou já foi excluída.",
+    "%s requires php %s or above to work. Sorry.":
+        "%s requer php %s ou superior para funcionar. Desculpa.",
+    "%s requires configuration section [%s] to be present in configuration file.":
+        "%s requer que a seção de configuração [% s] esteja no arquivo de configuração.",
+    "Please wait %d seconds between each post.":
+        "Por favor espere %d segundos entre cada publicação.",
+    "Paste is limited to %s of encrypted data.":
+        "A cópia está limitada a %s de dados cifrados.",
+    "Invalid data.":
+        "Dados inválidos.",
+    "You are unlucky. Try again.":
+        "Você é azarado. Tente novamente",
+    "Error saving comment. Sorry.":
+        "Erro ao salvar comentário. Desculpa.",
+    "Error saving paste. Sorry.":
+        "Erro ao salvar cópia. Desculpa.",
+    "Invalid paste ID.":
+        "ID de cópia inválido.",
+    "Paste is not of burn-after-reading type.":
+        "Cópia não é do tipo \"queime após ler\".",
+    "Wrong deletion token. Paste was not deleted.":
+        "Token de remoção inválido. A cópia não foi excluída.",
+    "Paste was properly deleted.":
+        "A cópia foi devidamente excluída.",
+    "JavaScript is required for %s to work.<br />Sorry for the inconvenience.":
+        "JavaScript é necessário para que %s funcione.<br />Pedimos desculpas pela inconveniência.",
+    "%s requires a modern browser to work.":
+        "%s requer um navegador moderno para funcionar.",
+    "Still using Internet Explorer? Do yourself a favor, switch to a modern browser:":
+        "Ainda usando Internet Explorer? Faça-se um favor, mude para um navegador moderno:",
+    "New":
+        "Novo",
+    "Send":
+        "Enviar",
+    "Clone":
+        "Clonar",
+    "Raw text":
+        "Texto sem formato",
+    "Expires":
+        "Expirar em",
+    "Burn after reading":
+        "Queime após ler",
+    "Open discussion":
+        "Discussão aberta",
+    "Password (recommended)":
+        "Senha (recomendada)",
+    "Discussion":
+        "Discussão",
+    "Toggle navigation":
+        "Mudar navegação",
+    "%d seconds": ["%d segundo", "%d segundos"],
+    "%d minutes": ["%d minuto", "%d minutos"],
+    "%d hours": ["%d hora", "%d horas"],
+    "%d days": ["%d dia", "%d dias"],
+    "%d weeks": ["%d semana", "%d semanas"],
+    "%d months": ["%d mês", "%d meses"],
+    "%d years": ["%d ano", "%d anos"],
+    "Never":
+        "Nunca",
+    "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.":
+        "Nota: Este é um serviço de teste. Dados podem ser perdidos a qualquer momento. Gatinhos morrerão se você abusar desse serviço.",
+    "This document will expire in %d seconds.":
+        ["Este documento irá expirar em um segundo.", "Este documento irá expirar em %d segundos."],
+    "This document will expire in %d minutes.":
+        ["Este documento irá expirar em um minuto.", "Este documento irá expirar em %d minutos."],
+    "This document will expire in %d hours.":
+        ["Este documento irá expirar em uma hora.", "Este documento irá expirar em %d horas."],
+    "This document will expire in %d days.":
+        ["Este documento irá expirar em um dia.", "Este documento irá expirar em %d dias."],
+    "This document will expire in %d months.":
+        ["Este documento irá expirar em um mês.", "Este documento irá expirar em %d meses."],
+    "Please enter the password for this paste:":
+        "Por favor, digite a senha para essa cópia:",
+    "Could not decrypt data (Wrong key?)":
+        "Não foi possível decifrar os dados (Chave errada?)",
+    "Could not delete the paste, it was not stored in burn after reading mode.":
+        "Não foi possível excluir a cópia, ela não foi salva no modo de \"queime após ler\".",
+    "FOR YOUR EYES ONLY. Don't close this window, this message can't be displayed again.":
+        "APENAS PARA SEUS OLHOS. Não feche essa janela, essa mensagem não pode ser exibida novamente.",
+    "Could not decrypt comment; Wrong key?":
+        "Não foi possível decifrar o comentário; Chave errada?",
+    "Reply":
+        "Responder",
+    "Anonymous":
+        "Anônimo",
+    "Avatar generated from IP address":
+        "Avatar gerado à partir do endereço IP",
+    "Add comment":
+        "Adicionar comentário",
+    "Optional nickname…":
+        "Apelido opcional…",
+    "Post comment":
+        "Publicar comentário",
+    "Sending comment…":
+        "Enviando comentário…",
+    "Comment posted.":
+        "Comentário publicado.",
+    "Could not refresh display: %s":
+        "Não foi possível atualizar a tela: %s",
+    "unknown status":
+        "Estado desconhecido",
+    "server error or not responding":
+        "Servidor em erro ou não responsivo",
+    "Could not post comment: %s":
+        "Não foi possível publicar o comentário: %s",
+    "Please move your mouse for more entropy…":
+        "Por favor, mova o mouse para maior entropia…",
+    "Sending paste…":
+        "Enviando cópia…",
+    "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit [Ctrl]+[c] to copy)</span>":
+        "Sua cópia é <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Pressione [Ctrl]+[c] para copiar)</span>",
+    "Delete data":
+        "Excluir dados",
+    "Could not create paste: %s":
+        "Não foi possível criar cópia: %s",
+    "Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)":
+        "Não foi possível decifrar a cópia: chave de decriptografia ausente na URL (Você utilizou um redirecionador ou encurtador de URL que removeu parte dela?)",
+    "Format": "Formato",
+    "Plain Text": "Texto sem formato",
+    "Source Code": "Código fonte",
+    "Markdown": "Markdown",
+    "Download attachment": "Baixar anexo",
+    "Cloned: '%s'": "Clonado: '%s'",
+    "Attach a file": "Anexar um arquivo",
+    "Remove attachment": "Remover anexo",
+    "Your browser does not support uploading encrypted files. Please use a newer browser.":
+        "Seu navegador não permite subir arquivos cifrados. Por favor, utilize um navegador mais recente.",
+    "Invalid attachment.": "Anexo inválido.",
+    "Options": "Opções",
+    "Shorten URL": "Encurtar URL",
+    "Editor": "Editor",
+    "Preview": "Visualizar",
+    "%s requires the PATH to end in a \"%s\". Please update the PATH in your index.php.":
+        "%s requer que o PATH termine em \"%s\". Por favor, atualize o PATH em seu index.php.",
+    "Decrypt":
+        "Decifrar",
+    "Enter password":
+        "Digite a senha",
+    "Loading…": "Carregando…",
+    "In case this message never disappears please have a look at <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">this FAQ for information to troubleshoot</a>.":
+        "Caso essa mensagem nunca desapareça, por favor veja <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">este FAQ para saber como resolver os problemas</a>."
+}

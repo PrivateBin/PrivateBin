@@ -7,10 +7,10 @@
     "en": "es",
     "Paste does not exist, has expired or has been deleted.":
         "El texto no existe, ha caducado o ha sido eliminado.",
-    "%s requires php 5.3.0 or above to work. Sorry.":
-        "%s requiere php 5.3.0 o superior para funcionar. Lo siento.",
+    "%s requires php %s or above to work. Sorry.":
+        "%s requiere php %s o superior para funcionar. Lo siento.",
     "%s requires configuration section [%s] to be present in configuration file.":
-        "%s requiere que la sección de configuración [% s] esté presente en el archivo de configuración.",
+        "%s requiere que la sección de configuración [%s] esté presente en el archivo de configuración.",
     "Please wait %d seconds between each post.":
         "Por favor espere %d segundos entre cada publicación.",
     "Paste is limited to %s of encrypted data.":
@@ -96,12 +96,12 @@
         "Avatar anónimo (Vizhash de la dirección IP)",
     "Add comment":
         "Añadir comentario",
-    "Optional nickname...":
-        "Seudónimo opcional...",
+    "Optional nickname…":
+        "Seudónimo opcional…",
     "Post comment":
         "Publicar comentario",
-    "Sending comment...":
-        "Enviando comentario...",
+    "Sending comment…":
+        "Enviando comentario…",
     "Comment posted.":
         "Comentario publicado.",
     "Could not refresh display: %s":
@@ -112,10 +112,10 @@
         "Error del servidor o el servidor no responde",
     "Could not post comment: %s":
         "No fue posible publicar comentario: %s",
-    "Sending paste (Please move your mouse for more entropy)...":
-        "Enviando texto (Por favor, mueva el ratón para mayor entropía)...",
-    "Sending paste...":
-        "Enviando texto...",
+    "Sending paste (Please move your mouse for more entropy)…":
+        "Enviando texto (Por favor, mueva el ratón para mayor entropía)…",
+    "Sending paste…":
+        "Enviando texto…",
     "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit [Ctrl]+[c] to copy)</span>":
         "Su texto está en <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Presione [Ctrl]+[c] para copiar)</span>",
     "Delete data":

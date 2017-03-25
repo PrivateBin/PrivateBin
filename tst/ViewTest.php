@@ -96,15 +96,15 @@ class ViewTest extends PHPUnit_Framework_TestCase
     public function testTemplateRendersCorrectly()
     {
         foreach ($this->_content as $template => $content) {
-            $this->assertContains(
-                '<div id="cipherdata" class="hidden">' .
-                htmlspecialchars(Helper::getPaste()['data'], ENT_NOQUOTES) .
-                '</div>',
+            $this->assertRegExp(
+                '#<div[^>]+id="cipherdata"[^>]*>' .
+                preg_quote(htmlspecialchars(Helper::getPaste()['data'], ENT_NOQUOTES)) .
+                '</div>#',
                 $content,
                 $template . ': outputs data correctly'
             );
             $this->assertRegExp(
-                '#<div[^>]+id="errormessage"[^>]*>.*' . self::$error . '</div>#',
+                '#<div[^>]+id="errormessage"[^>]*>.*' . self::$error . '#s',
                 $content,
                 $template . ': outputs error correctly'
             );
@@ -119,7 +119,7 @@ class ViewTest extends PHPUnit_Framework_TestCase
                 $template . ': checked discussion if configured'
             );
             $this->assertRegExp(
-                '#<[^>]+id="opendisc"[^>]*>#',
+                '#<[^>]+id="opendiscussionoption"[^>]*>#',
                 $content,
                 $template . ': discussions available if configured'
             );

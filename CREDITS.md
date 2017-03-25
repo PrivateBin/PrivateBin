@@ -35,3 +35,4 @@ Sébastien Sauvage - original idea and main developer
 * Alfredo Fabián Altamirano Tena - Spanish
 * Quent-in - Occitan
 * idarlund - Norwegian
+* Tulio Leao - Portuguese

@@ -75,7 +75,6 @@ class Paste extends AbstractModel
      *
      * @access public
      * @throws Exception
-     * @return void
      */
     public function store()
     {
@@ -103,7 +102,6 @@ class Paste extends AbstractModel
      *
      * @access public
      * @throws Exception
-     * @return void
      */
     public function delete()
     {
@@ -183,7 +181,6 @@ class Paste extends AbstractModel
      * @access public
      * @param string $attachment
      * @throws Exception
-     * @return void
      */
     public function setAttachment($attachment)
     {
@@ -199,7 +196,6 @@ class Paste extends AbstractModel
      * @access public
      * @param string $attachmentname
      * @throws Exception
-     * @return void
      */
     public function setAttachmentName($attachmentname)
     {
@@ -214,7 +210,6 @@ class Paste extends AbstractModel
      *
      * @access public
      * @param string $expiration
-     * @return void
      */
     public function setExpiration($expiration)
     {
@@ -236,7 +231,6 @@ class Paste extends AbstractModel
      * @access public
      * @param string $burnafterreading
      * @throws Exception
-     * @return void
      */
     public function setBurnafterreading($burnafterreading = '1')
     {
@@ -257,7 +251,6 @@ class Paste extends AbstractModel
      * @access public
      * @param string $opendiscussion
      * @throws Exception
-     * @return void
      */
     public function setOpendiscussion($opendiscussion = '1')
     {
@@ -281,7 +274,6 @@ class Paste extends AbstractModel
      * @access public
      * @param string $format
      * @throws Exception
-     * @return void
      */
     public function setFormatter($format)
     {
