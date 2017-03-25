@@ -195,9 +195,10 @@ describe('Helper', function () {
             '(small nearray) string',
             'string',
             function (prefix, params, postfix) {
-                var prefix = prefix.replace(/%(s|d)/g, '%%'),
-                    postfix = postfix.replace(/%(s|d)/g, '%%'),
-                    result = prefix + params[0] + postfix;
+                prefix    =    prefix.replace(/%(s|d)/g, '%%');
+                params[0] = params[0].replace(/%(s|d)/g, '%%');
+                postfix   =   postfix.replace(/%(s|d)/g, '%%');
+                var result = prefix + params[0] + postfix;
                 params.unshift(prefix + '%s' + postfix);
                 return result === $.PrivateBin.Helper.sprintf.apply(this, params);
             }
@@ -208,9 +209,9 @@ describe('Helper', function () {
             '(small nearray) nat',
             'string',
             function (prefix, params, postfix) {
-                var prefix = prefix.replace(/%(s|d)/g, '%%'),
-                    postfix = postfix.replace(/%(s|d)/g, '%%'),
-                    result = prefix + params[0] + postfix;
+                prefix  =  prefix.replace(/%(s|d)/g, '%%');
+                postfix = postfix.replace(/%(s|d)/g, '%%');
+                var result = prefix + params[0] + postfix;
                 params.unshift(prefix + '%d' + postfix);
                 return result === $.PrivateBin.Helper.sprintf.apply(this, params);
             }
@@ -221,9 +222,9 @@ describe('Helper', function () {
             '(small nearray) falsy',
             'string',
             function (prefix, params, postfix) {
-                var prefix = prefix.replace(/%(s|d)/g, '%%'),
-                    postfix = postfix.replace(/%(s|d)/g, '%%'),
-                    result = prefix + '0' + postfix;
+                prefix  =  prefix.replace(/%(s|d)/g, '%%');
+                postfix = postfix.replace(/%(s|d)/g, '%%');
+                var result = prefix + '0' + postfix;
                 params.unshift(prefix + '%d' + postfix);
                 return result === $.PrivateBin.Helper.sprintf.apply(this, params)
             }
@@ -236,9 +237,10 @@ describe('Helper', function () {
             'string',
             'string',
             function (prefix, uint, middle, string, postfix) {
-                var prefix = prefix.replace(/%(s|d)/g, '%%'),
-                    postfix = postfix.replace(/%(s|d)/g, '%%'),
-                    params = [prefix + '%d' + middle + '%s' + postfix, uint, string],
+                prefix  =  prefix.replace(/%(s|d)/g, '%%');
+                middle  =  middle.replace(/%(s|d)/g, '%%');
+                postfix = postfix.replace(/%(s|d)/g, '%%');
+                var params = [prefix + '%d' + middle + '%s' + postfix, uint, string],
                     result = prefix + uint + middle + string + postfix;
                 return result === $.PrivateBin.Helper.sprintf.apply(this, params);
             }
@@ -251,9 +253,10 @@ describe('Helper', function () {
             'string',
             'string',
             function (prefix, uint, middle, string, postfix) {
-                var prefix = prefix.replace(/%(s|d)/g, '%%'),
-                    postfix = postfix.replace(/%(s|d)/g, '%%'),
-                    params = [prefix + '%s' + middle + '%d' + postfix, string, uint],
+                prefix  =  prefix.replace(/%(s|d)/g, '%%');
+                middle  =  middle.replace(/%(s|d)/g, '%%');
+                postfix = postfix.replace(/%(s|d)/g, '%%');
+                var params = [prefix + '%s' + middle + '%d' + postfix, string, uint],
                     result = prefix + string + middle + uint + postfix;
                 return result === $.PrivateBin.Helper.sprintf.apply(this, params);
             }
@@ -336,6 +339,7 @@ describe('I18n', function () {
             'returns message ID unchanged if no translation found',
             'string',
             function (messageId) {
+                messageId = messageId.replace(/%(s|d)/g, '%%');
                 var result = $.PrivateBin.I18n.translate(messageId);
                 $.PrivateBin.I18n.reset();
                 var alias = $.PrivateBin.I18n._(messageId);
@@ -349,9 +353,10 @@ describe('I18n', function () {
             '(small nearray) string',
             'string',
             function (prefix, params, postfix) {
-                var prefix = prefix.replace(/%(s|d)/g, '%%'),
-                    postfix = postfix.replace(/%(s|d)/g, '%%'),
-                    translation = prefix + params[0] + postfix;
+                prefix    =    prefix.replace(/%(s|d)/g, '%%');
+                params[0] = params[0].replace(/%(s|d)/g, '%%');
+                postfix   =   postfix.replace(/%(s|d)/g, '%%');
+                var translation = prefix + params[0] + postfix;
                 params.unshift(prefix + '%s' + postfix);
                 var result = $.PrivateBin.I18n.translate.apply(this, params);
                 $.PrivateBin.I18n.reset();
