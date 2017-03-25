@@ -108,19 +108,6 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         }
 
         /**
-         * checks if a string is valid text (and not onyl whitespace)
-         *
-         * @name Helper.isValidText
-         * @function
-         * @param  {string} string
-         * @return {bool}
-         */
-        me.isValidText = function(string)
-        {
-            return (string.length > 0 && $.trim(string) !== '')
-        }
-
-        /**
          * text range selection
          *
          * @see    {@link https://stackoverflow.com/questions/985272/jquery-selecting-text-in-an-element-akin-to-highlighting-with-your-mouse}
