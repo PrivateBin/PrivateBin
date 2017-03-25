@@ -139,6 +139,7 @@
     "Markdown": "Markdown",
     "Download attachment": "Telecargar la pèça junta",
     "Cloned: '%s'": "Clonar: '%s'",
+    "The cloned file '%s' was attached to this paste.": "The cloned file '%s' was attached to this paste.",
     "Attach a file": "Juntar un fichièr ",
     "Remove attachment": "Levar la pèca junta",
     "Your browser does not support uploading encrypted files. Please use a newer browser.":

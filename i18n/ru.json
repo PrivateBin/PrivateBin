@@ -110,8 +110,6 @@
         "неизвестная причина",
     "server error or not responding":
         "ошибка сервера или нет ответа",
-    "unknown error":
-        "неизвестная ошибка",
     "Could not post comment: %s":
         "Не удалось опубликовать комментарий: %s",
     "Please move your mouse for more entropy…":

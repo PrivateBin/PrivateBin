@@ -130,6 +130,7 @@
     "Markdown": "Oppmerket",
     "Download attachment": "Last ned vedlegg",
     "Cloned: '%s'": "Kopier: '%s'",
+    "The cloned file '%s' was attached to this paste.": "The cloned file '%s' was attached to this paste.",
     "Attach a file": "Legg til fil",
     "Remove attachment": "Slett vedlegg",
     "Your browser does not support uploading encrypted files. Please use a newer browser.":
