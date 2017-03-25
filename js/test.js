@@ -271,7 +271,7 @@ describe('Helper', function () {
                     count = 0;
                 labels.forEach(function(item, i) {
                     // deliberatly using a non-ascii key for replacing invalid characters
-                    var key = item.replace(/[\s;,=]/g, '£'),
+                    var key = item.replace(/[\s;,=]/g, Array(i+2).join('£')),
                         value = (values[i] || values[0]).replace(/[\s;,=]/g, '');
                     cookieArray.push(key + '=' + value);
                     if (Math.random() < 1 / i)
@@ -340,8 +340,24 @@ describe('I18n', function () {
                 $.PrivateBin.I18n.reset();
                 var alias = $.PrivateBin.I18n._(messageId);
                 $.PrivateBin.I18n.reset();
-                return messageId === result &&
-                    messageId === alias;
+                return messageId === result && messageId === alias;
+            }
+        );
+        jsc.property(
+            'replaces %s in strings with first given parameter',
+            'string',
+            '(small nearray) string',
+            'string',
+            function (prefix, params, postfix) {
+                var prefix = prefix.replace(/%(s|d)/g, '%%'),
+                    postfix = postfix.replace(/%(s|d)/g, '%%'),
+                    translation = prefix + params[0] + postfix;
+                params.unshift(prefix + '%s' + postfix);
+                var result = $.PrivateBin.I18n.translate.apply(this, params);
+                $.PrivateBin.I18n.reset();
+                var alias = $.PrivateBin.I18n._.apply(this, params);
+                $.PrivateBin.I18n.reset();
+                return translation === result && translation === alias;
             }
         );
     });
@@ -369,6 +385,28 @@ describe('Model', function () {
                 $.PrivateBin.Model.reset();
                 clean();
                 return queryString === result;
+            }
+        );
+        jsc.property(
+            'throws exception on empty query string',
+            jsc.nearray(jsc.elements(a2zString)),
+            jsc.nearray(jsc.elements(a2zString)),
+            'string',
+            function (schema, address, fragment) {
+                var clean = jsdom('', {
+                        url: schema.join('') + '://' + address.join('') +
+                             '/#' + fragment
+                    }),
+                    result = false;
+                try {
+                    $.PrivateBin.Model.getPasteId();
+                }
+                catch(err) {
+                    result = true;
+                }
+                $.PrivateBin.Model.reset();
+                clean();
+                return result;
             }
         );
     });
@@ -409,6 +447,28 @@ describe('Model', function () {
                 $.PrivateBin.Model.reset();
                 clean();
                 return fragmentString === result;
+            }
+        );
+        jsc.property(
+            'throws exception on empty fragment of the URL',
+            jsc.nearray(jsc.elements(a2zString)),
+            jsc.nearray(jsc.elements(a2zString)),
+            jsc.array(jsc.elements(queryString)),
+            function (schema, address, query) {
+                var clean = jsdom('', {
+                        url: schema.join('') + '://' + address.join('') +
+                             '/?' + query.join('')
+                    }),
+                    result = false;
+                try {
+                    $.PrivateBin.Model.getPasteKey();
+                }
+                catch(err) {
+                    result = true;
+                }
+                $.PrivateBin.Model.reset();
+                clean();
+                return result;
             }
         );
     });
