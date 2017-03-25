@@ -130,7 +130,7 @@
     "Markdown": "Markdown",
     "Download attachment": "Baixar anexo",
     "Cloned: '%s'": "Clonado: '%s'",
-    "The cloned file '%s' was attached to this paste.": "The cloned file '%s' was attached to this paste.",
+    "The cloned file '%s' was attached to this paste.": "O arquivo clonado '%s' foi anexado a essa cópia.",
     "Attach a file": "Anexar um arquivo",
     "Remove attachment": "Remover anexo",
     "Your browser does not support uploading encrypted files. Please use a newer browser.":
@@ -147,9 +147,9 @@
     "Enter password":
         "Digite a senha",
     "Loading…": "Carregando…",
-    "Decrypting paste…": "Decrypting paste…",
-    "Preparing new paste…": "Preparing new paste…",
+    "Decrypting paste…": "Decifrando cópia…",
+    "Preparing new paste…": "Preparando nova cópia…",
     "In case this message never disappears please have a look at <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">this FAQ for information to troubleshoot</a>.":
         "Caso essa mensagem nunca desapareça, por favor veja <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">este FAQ para saber como resolver os problemas</a>.",
-    "+++ no paste text +++": "+++ no paste text +++"
+    "+++ no paste text +++": "+++ sem texto de cópia +++"
 }
