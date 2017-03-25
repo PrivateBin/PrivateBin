@@ -146,6 +146,9 @@
     "Enter password":
         "Digite a senha",
     "Loading…": "Carregando…",
+    "Decrypting paste…": "Decrypting paste…",
+    "Preparing new paste…": "Preparing new paste…",
     "In case this message never disappears please have a look at <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">this FAQ for information to troubleshoot</a>.":
-        "Caso essa mensagem nunca desapareça, por favor veja <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">este FAQ para saber como resolver os problemas</a>."
+        "Caso essa mensagem nunca desapareça, por favor veja <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">este FAQ para saber como resolver os problemas</a>.",
+    "+++ no paste text +++": "+++ no paste text +++"
 }

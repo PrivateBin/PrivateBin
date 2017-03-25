@@ -92,7 +92,7 @@
         "Rispondi",
     "Anonymous":
         "Anonimo",
-    "Anonymous avatar (Vizhash of the IP address)":
+    "Avatar generated from IP address":
         "Avatar Anonimo (Vizhash dell'indirizzo IP)",
     "Add comment":
         "Aggiungi un commento",
@@ -112,8 +112,8 @@
         "errore o mancata risposta dal server",
     "Could not post comment: %s":
         "Impossibile inviare il commento: %s",
-    "Sending paste (Please move your mouse for more entropy)…":
-        "Invio messaggio (Muovi il mouse in modo casuale, per generare maggior entropia)…",
+    "Please move your mouse for more entropy…":
+        "Muovi il mouse in modo casuale, per generare maggior entropia…",
     "Sending paste…":
         "Messaggio in fase di invio…",
     "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit [Ctrl]+[c] to copy)</span>":
@@ -129,7 +129,7 @@
     "Source Code": "Codice Sorgente",
     "Markdown": "Markdown",
     "Download attachment": "Scarica Allegato",
-    "Cloned file attached.": "Copia del file allegata.",
+    "Cloned: '%s'": "Copia: '%s'",
     "Attach a file": "Allega un file",
     "Remove attachment": "Rimuovi allegato",
     "Your browser does not support uploading encrypted files. Please use a newer browser.":
@@ -146,6 +146,9 @@
     "Enter password":
         "Inserisci la password",
     "Loading…": "Loading…",
+    "Decrypting paste…": "Decrypting paste…",
+    "Preparing new paste…": "Preparing new paste…",
     "In case this message never disappears please have a look at <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">this FAQ for information to troubleshoot</a>.":
-        "Nel caso questo messaggio non scompaia, controlla questa <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\"> FAQ</a> per trovare informazioni su come risolvere il problema (in Inglese)."
+        "Nel caso questo messaggio non scompaia, controlla questa <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\"> FAQ</a> per trovare informazioni su come risolvere il problema (in Inglese).",
+    "+++ no paste text +++": "+++ no paste text +++"
 }

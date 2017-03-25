@@ -92,7 +92,7 @@
         "Odgovori",
     "Anonymous":
         "Aninomno",
-    "Anonymous avatar (Vizhash of the IP address)":
+    "Avatar generated from IP address":
         "Anonimen avatar (Vizhash IP naslova)",
     "Add comment":
         "Dodaj komentar",
@@ -112,8 +112,8 @@
         "napaka na strežniku, ali pa se strežnik ne odziva",
     "Could not post comment: %s":
         "Komentarja ni bilo mogoče objaviti : %s",
-    "Sending paste (Please move your mouse for more entropy)…":
-        "Pošiljam prilepek (prosim premakni svojo miško za več entropije) …",
+    "Please move your mouse for more entropy…":
+        "Prosim premakni svojo miško za več entropije…",
     "Sending paste…":
         "Pošiljam prilepek…",
     "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit [Ctrl]+[c] to copy)</span>":
@@ -138,7 +138,7 @@
     "Source Code": "Odprta koda",
     "Markdown": "Markdown",
     "Download attachment": "Pretoči priponko",
-    "Cloned file attached.": "Pripeta datoteka klonirana",
+    "Cloned: '%s'": "'%s' klonirana",
     "Attach a file": "Pripni datoteko",
     "Remove attachment": "Odstrani priponko",
     "Your browser does not support uploading encrypted files. Please use a newer browser.":
@@ -155,6 +155,9 @@
     "Enter password":
         "Prosim vnesi geslo",
     "Loading…": "Loading…",
+    "Decrypting paste…": "Decrypting paste…",
+    "Preparing new paste…": "Preparing new paste…",
     "In case this message never disappears please have a look at <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">this FAQ for information to troubleshoot</a>.":
-        "In case this message never disappears please have a look at <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">this FAQ for information to troubleshoot</a> (in English)."
+        "In case this message never disappears please have a look at <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">this FAQ for information to troubleshoot</a> (in English).",
+    "+++ no paste text +++": "+++ no paste text +++"
 }

@@ -92,7 +92,7 @@
         "Ответить",
     "Anonymous":
         "Аноним",
-    "Anonymous avatar (Vizhash of the IP address)":
+    "Avatar generated from IP address":
         "Анонимный аватар (Vizhash IP адреса)",
     "Add comment":
         "Добавить комментарий",
@@ -104,6 +104,8 @@
         "Отправка комментария…",
     "Comment posted.":
         "Комментарий опубликован.",
+    "Could not refresh display: %s":
+        "Could not refresh display: %s",
     "unknown status":
         "неизвестная причина",
     "server error or not responding":
@@ -138,7 +140,6 @@
     "Source Code": "Исходный код",
     "Markdown": "Язык разметки",
     "Download attachment": "Скачать прикрепленный файл",
-    "Cloned file attached.": "Дубликат файла прикреплен.",
     "Cloned: '%s'": "Дублировано: '%s'",
     "The cloned file '%s' was attached to this paste.":
         "Дубликат файла '%s' был прикреплен к этой записи.",
@@ -157,13 +158,10 @@
         "Расшифровать",
     "Enter password":
         "Введите пароль",
-    "Uploading paste… Please wait.":
-        "Отправка записи… Пожалуйста подождите.",
     "Loading…": "Загрузка…",
     "Decrypting paste…": "Расшифровка записи…",
     "Preparing new paste…": "Подготовка новой записи…",
     "In case this message never disappears please have a look at <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">this FAQ for information to troubleshoot</a>.":
         "Если данное сообщение не исчезает длительное время, посмотрите <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">этот FAQ с информацией о возможном решении проблемы (на английском)</a>.",
-    "+++ no paste text +++":
-        "+++ в записи нет текста +++"
+    "+++ no paste text +++": "+++ в записи нет текста +++"
 }
