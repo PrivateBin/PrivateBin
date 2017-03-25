@@ -63,7 +63,6 @@ abstract class AbstractModel
      * @access public
      * @param  Configuration $configuration
      * @param  AbstractData $storage
-     * @return void
      */
     public function __construct(Configuration $configuration, AbstractData $storage)
     {
@@ -90,7 +89,6 @@ abstract class AbstractModel
      * @access public
      * @param string $id
      * @throws Exception
-     * @return void
      */
     public function setId($id)
     {
@@ -106,7 +104,6 @@ abstract class AbstractModel
      * @access public
      * @param string $data
      * @throws Exception
-     * @return void
      */
     public function setData($data)
     {
@@ -133,7 +130,6 @@ abstract class AbstractModel
      *
      * @access public
      * @throws Exception
-     * @return void
      */
     abstract public function store();
 
@@ -142,7 +138,6 @@ abstract class AbstractModel
      *
      * @access public
      * @throws Exception
-     * @return void
      */
     abstract public function delete();
 

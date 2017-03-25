@@ -61,7 +61,6 @@ class Vizhash16x16
      * constructor
      *
      * @access public
-     * @return void
      */
     public function __construct()
     {
@@ -210,7 +209,6 @@ class Vizhash16x16
      * @param  resource $image
      * @param  int $action
      * @param  int $color
-     * @return void
      */
     private function drawshape($image, $action, $color)
     {

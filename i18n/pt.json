@@ -7,8 +7,8 @@
     "en": "pt",
     "Paste does not exist, has expired or has been deleted.":
         "A cópia não existe, expirou ou já foi excluída.",
-    "%s requires php 5.3.0 or above to work. Sorry.":
-        "%s requer php 5.3.0 ou superior para funcionar. Desculpa.",
+    "%s requires php %s or above to work. Sorry.":
+        "%s requer php %s ou superior para funcionar. Desculpa.",
     "%s requires configuration section [%s] to be present in configuration file.":
         "%s requer que a seção de configuração [% s] esteja no arquivo de configuração.",
     "Please wait %d seconds between each post.":
@@ -93,7 +93,7 @@
     "Anonymous":
         "Anônimo",
     "Avatar generated from IP address":
-        "Avatar (do endereço IP)",
+        "Avatar gerado à partir do endereço IP",
     "Add comment":
         "Adicionar comentário",
     "Optional nickname…":
@@ -130,6 +130,7 @@
     "Markdown": "Markdown",
     "Download attachment": "Baixar anexo",
     "Cloned: '%s'": "Clonado: '%s'",
+    "The cloned file '%s' was attached to this paste.": "The cloned file '%s' was attached to this paste.",
     "Attach a file": "Anexar um arquivo",
     "Remove attachment": "Remover anexo",
     "Your browser does not support uploading encrypted files. Please use a newer browser.":
@@ -146,6 +147,9 @@
     "Enter password":
         "Digite a senha",
     "Loading…": "Carregando…",
+    "Decrypting paste…": "Decrypting paste…",
+    "Preparing new paste…": "Preparing new paste…",
     "In case this message never disappears please have a look at <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">this FAQ for information to troubleshoot</a>.":
-        "Caso essa mensagem nunca desapareça, por favor veja <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">este FAQ para saber como resolver os problemas</a>."
+        "Caso essa mensagem nunca desapareça, por favor veja <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">este FAQ para saber como resolver os problemas</a>.",
+    "+++ no paste text +++": "+++ no paste text +++"
 }

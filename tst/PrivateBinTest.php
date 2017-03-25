@@ -140,21 +140,18 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
     public function testHtaccess()
     {
         $this->reset();
-        $dirs = array('cfg', 'lib');
-        foreach ($dirs as $dir) {
-            $file = PATH . $dir . DIRECTORY_SEPARATOR . '.htaccess';
-            @unlink($file);
-        }
+        $file = $this->_path . DIRECTORY_SEPARATOR . '.htaccess';
+        @unlink($file);
+
+        $_POST                            = Helper::getPaste();
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
+        $_SERVER['REQUEST_METHOD']        = 'POST';
+        $_SERVER['REMOTE_ADDR']           = '::1';
         ob_start();
         new PrivateBin;
         ob_end_clean();
-        foreach ($dirs as $dir) {
-            $file = PATH . $dir . DIRECTORY_SEPARATOR . '.htaccess';
-            $this->assertFileExists(
-                $file,
-                "$dir htaccess recreated"
-            );
-        }
+
+        $this->assertFileExists($file, 'htaccess recreated');
     }
 
     /**

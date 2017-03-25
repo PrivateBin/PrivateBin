@@ -7,8 +7,8 @@
     "en": "de",
     "Paste does not exist, has expired or has been deleted.":
         "Diesen Text gibt es nicht, er ist abgelaufen oder wurde gelöscht.",
-    "%s requires php 5.3.0 or above to work. Sorry.":
-        "%s benötigt PHP 5.3.0 oder höher, um zu funktionieren. Sorry.",
+    "%s requires php %s or above to work. Sorry.":
+        "%s benötigt PHP %s oder höher, um zu funktionieren. Sorry.",
     "%s requires configuration section [%s] to be present in configuration file.":
         "%s benötigt den Konfigurationsabschnitt [%s] in der Konfigurationsdatei um zu funktionieren.",
     "Please wait %d seconds between each post.":
@@ -151,6 +151,5 @@
     "Preparing new paste…": "Bereite neues Paste vor…",
     "In case this message never disappears please have a look at <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">this FAQ for information to troubleshoot</a>.":
         "Wenn diese Nachricht nicht mehr verschwindet, schau bitte in <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">die FAQ</a> (englisch), um zu sehen, wie der Fehler behoben werden kann.",
-    "+++ no paste text +++":
-        "+++ kein Paste-Text +++"
+    "+++ no paste text +++": "+++ kein Paste-Text +++"
 }

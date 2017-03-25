@@ -41,7 +41,7 @@ class Request
     const MIME_XHTML = 'application/xhtml+xml';
 
     /**
-     * Input stream to use for PUT parameter parsing.
+     * Input stream to use for PUT parameter parsing
      *
      * @access private
      * @var string
@@ -49,7 +49,7 @@ class Request
     private static $_inputStream = 'php://input';
 
     /**
-     * Operation to perform.
+     * Operation to perform
      *
      * @access private
      * @var string
@@ -57,7 +57,7 @@ class Request
     private $_operation = 'view';
 
     /**
-     * Request parameters.
+     * Request parameters
      *
      * @access private
      * @var array
@@ -65,7 +65,7 @@ class Request
     private $_params = array();
 
     /**
-     * If we are in a JSON API context.
+     * If we are in a JSON API context
      *
      * @access private
      * @var bool
@@ -73,10 +73,9 @@ class Request
     private $_isJsonApi = false;
 
     /**
-     * Constructor.
+     * Constructor
      *
      * @access public
-     * @return void
      */
     public function __construct()
     {
@@ -122,7 +121,7 @@ class Request
     }
 
     /**
-     * Get current operation.
+     * Get current operation
      *
      * @access public
      * @return string
@@ -133,7 +132,7 @@ class Request
     }
 
     /**
-     * Get a request parameter.
+     * Get a request parameter
      *
      * @access public
      * @param  string $param
@@ -146,7 +145,7 @@ class Request
     }
 
     /**
-     * If we are in a JSON API context.
+     * If we are in a JSON API context
      *
      * @access public
      * @return bool
@@ -157,7 +156,7 @@ class Request
     }
 
     /**
-     * Override the default input stream source, used for unit testing.
+     * Override the default input stream source, used for unit testing
      *
      * @param string $input
      */
@@ -167,7 +166,7 @@ class Request
     }
 
     /**
-     * detect the clients supported media type and decide if its a JSON API call or not
+     * Detect the clients supported media type and decide if its a JSON API call or not
      *
      * Adapted from: https://stackoverflow.com/questions/3770513/detect-browser-language-in-php#3771447
      *
