@@ -270,7 +270,8 @@ describe('Helper', function () {
                     cookieArray = [],
                     count = 0;
                 labels.forEach(function(item, i) {
-                    var key = item.replace(/[\s;,=]/g, 'x'),
+                    // deliberatly using a non-ascii key for replacing invalid characters
+                    var key = item.replace(/[\s;,=]/g, '£'),
                         value = (values[i] || values[0]).replace(/[\s;,=]/g, '');
                     cookieArray.push(key + '=' + value);
                     if (Math.random() < 1 / i)
@@ -320,6 +321,27 @@ describe('Helper', function () {
             function (string) {
                 var result = $.PrivateBin.Helper.htmlEntities(string);
                 return !(/[<>"'`=\/]/.test(result)) && !(string.indexOf('&') > -1 && !(/&amp;/.test(result)));
+            }
+        );
+    });
+});
+
+describe('I18n', function () {
+    describe('translate', function () {
+        before(function () {
+            $.PrivateBin.I18n.reset();
+        });
+
+        jsc.property(
+            'returns message ID unchanged if no translation found',
+            'string',
+            function (messageId) {
+                var result = $.PrivateBin.I18n.translate(messageId);
+                $.PrivateBin.I18n.reset();
+                var alias = $.PrivateBin.I18n._(messageId);
+                $.PrivateBin.I18n.reset();
+                return messageId === result &&
+                    messageId === alias;
             }
         );
     });

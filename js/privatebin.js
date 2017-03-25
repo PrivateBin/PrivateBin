@@ -538,6 +538,18 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             });
         }
 
+        /**
+         * resets state, used for unit testing
+         *
+         * @name   I18n.reset
+         * @function
+         */
+        me.reset = function()
+        {
+            language = null;
+            translations = {};
+        }
+
         return me;
     })(window, document);
 
@@ -809,7 +821,6 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         {
             $cipherData = $templates = id = symmetricKey = null;
         }
-
 
         /**
          * init navigation manager
