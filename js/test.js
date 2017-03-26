@@ -2,6 +2,9 @@
 var jsc = require('jsverify'),
     jsdom = require('jsdom-global'),
     cleanup = jsdom(),
+    base64lib = require('./base64-2.1.9'),
+    rawdeflatelib = require('./rawdeflate-0.5'),
+    rawinflatelib = require('./rawinflate-0.3'),
 
     a2zString = ['a','b','c','d','e','f','g','h','i','j','k','l','m',
                  'n','o','p','q','r','s','t','u','v','w','x','y','z'],
@@ -19,9 +22,9 @@ var jsc = require('jsverify'),
 
 global.$ = global.jQuery = require('./jquery-3.1.1');
 global.sjcl = require('./sjcl-1.0.6');
-global.Base64 = require('./base64-2.1.9');
-global.RawDeflate = require('./rawdeflate-0.5');
-require('./rawinflate-0.3');
+global.Base64 = base64lib.Base64;
+global.RawDeflate = rawdeflatelib.RawDeflate;
+global.RawDeflate.inflate = rawinflatelib.RawDeflate.inflate;
 require('./privatebin');
 
 // redirect console messages to log file
@@ -433,6 +436,28 @@ describe('I18n', function () {
                 return language === result && language === alias;
             }
         );
+    });
+});
+
+describe('CryptTool', function () {
+    describe('cipher & decipher', function () {
+        this.timeout(20000);
+        it('can en- and decrypt any message', function () {
+            jsc.check(jsc.forall(
+                'string',
+                'string',
+                'string',
+                function (key, password, message) {
+                    return message === $.PrivateBin.CryptTool.decipher(
+                        key,
+                        password,
+                        $.PrivateBin.CryptTool.cipher(key, password, message)
+                    );
+                }
+            ),
+            // reducing amount of checks as running 100 takes about 5 minutes
+            {tests: 5, quiet: true});
+        });
     });
 });
 
