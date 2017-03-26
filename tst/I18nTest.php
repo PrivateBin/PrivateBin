@@ -142,4 +142,36 @@ class I18nTest extends PHPUnit_Framework_TestCase
         I18n::loadTranslations();
         $this->assertEquals('some string + 1', I18n::_('some %s + %d', 'string', 1), 'browser language en');
     }
+
+    public function testMessageIdsExistInAllLanguages()
+    {
+        $messageIds = array();
+        $languages  = array();
+        $dir        = dir(PATH . 'i18n');
+        while (false !== ($file = $dir->read())) {
+            if (strlen($file) === 7) {
+                $language             = substr($file, 0, 2);
+                $languageMessageIds   = array_keys(
+                    json_decode(
+                        file_get_contents(PATH . 'i18n' . DIRECTORY_SEPARATOR . $file),
+                        true
+                    )
+                );
+                $messageIds           = array_unique(array_merge($messageIds, $languageMessageIds));
+                $languages[$language] = $languageMessageIds;
+            }
+        }
+        foreach ($messageIds as $messageId) {
+            foreach (array_keys($languages) as $language) {
+                // most languages don't translate the data size units, ignore those
+                if ($messageId !== 'B' && strlen($messageId) !== 3 && strpos($messageId, 'B', 2) !== 2) {
+                    $this->assertContains(
+                        $messageId,
+                        $languages[$language],
+                        "message ID '$messageId' exists in translation file $language.json"
+                    );
+                }
+            }
+        }
+    }
 }

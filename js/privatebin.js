@@ -2080,7 +2080,8 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          */
         me.hasAttachment = function()
         {
-            return ($attachmentLink.prop('href') !== '')
+            var link = $attachmentLink.prop('href');
+            return (typeof link !== 'undefined' && link !== '')
         }
 
         /**
