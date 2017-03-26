@@ -277,7 +277,7 @@ describe('Helper', function () {
                     var key = item.replace(/[\s;,=]/g, Array(i+2).join('£')),
                         value = (values[i] || values[0]).replace(/[\s;,=]/g, '');
                     cookieArray.push(key + '=' + value);
-                    if (Math.random() < 1 / i)
+                    if (Math.random() < 1 / i || selectedKey === key)
                     {
                         selectedKey = key;
                         selectedValue = value;
