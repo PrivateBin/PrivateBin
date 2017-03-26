@@ -13,7 +13,9 @@ var jsc = require('jsverify'),
         })
     ),
     // schemas supported by the whatwg-url library
-    schemas = ['ftp','gopher','http','https','ws','wss'];
+    schemas = ['ftp','gopher','http','https','ws','wss'],
+    supportedLanguages = ['de', 'es', 'fr', 'it', 'no', 'pl', 'pt', 'oc', 'ru', 'sl', 'zh'],
+    logFile = require('fs').createWriteStream('test.log');
 
 global.$ = global.jQuery = require('./jquery-3.1.1');
 global.sjcl = require('./sjcl-1.0.6');
@@ -21,6 +23,11 @@ global.Base64 = require('./base64-2.1.9');
 global.RawDeflate = require('./rawdeflate-0.5');
 require('./rawinflate-0.3');
 require('./privatebin');
+
+// redirect console messages to log file
+console.warn = console.error = function (msg) {
+    logFile.write(msg + '\n');
+}
 
 describe('Helper', function () {
     describe('secondsToHuman', function () {
@@ -339,12 +346,30 @@ describe('I18n', function () {
             'returns message ID unchanged if no translation found',
             'string',
             function (messageId) {
-                messageId = messageId.replace(/%(s|d)/g, '%%');
-                var result = $.PrivateBin.I18n.translate(messageId);
+                messageId   = messageId.replace(/%(s|d)/g, '%%');
+                var plurals = [messageId, messageId + 's'],
+                    fake    = [messageId],
+                    result  = $.PrivateBin.I18n.translate(messageId);
                 $.PrivateBin.I18n.reset();
+
                 var alias = $.PrivateBin.I18n._(messageId);
                 $.PrivateBin.I18n.reset();
-                return messageId === result && messageId === alias;
+
+                var p_result = $.PrivateBin.I18n.translate(plurals);
+                $.PrivateBin.I18n.reset();
+
+                var p_alias = $.PrivateBin.I18n._(plurals);
+                $.PrivateBin.I18n.reset();
+
+                var f_result = $.PrivateBin.I18n.translate(fake);
+                $.PrivateBin.I18n.reset();
+
+                var f_alias = $.PrivateBin.I18n._(fake);
+                $.PrivateBin.I18n.reset();
+
+                return messageId === result && messageId === alias &&
+                    messageId === p_result && messageId === p_alias &&
+                    messageId === f_result && messageId === f_alias;
             }
         );
         jsc.property(
@@ -363,6 +388,49 @@ describe('I18n', function () {
                 var alias = $.PrivateBin.I18n._.apply(this, params);
                 $.PrivateBin.I18n.reset();
                 return translation === result && translation === alias;
+            }
+        );
+    });
+
+    describe('getPluralForm', function () {
+        before(function () {
+            $.PrivateBin.I18n.reset();
+        });
+
+        jsc.property(
+            'returns valid key for plural form',
+            jsc.elements(supportedLanguages),
+            'integer',
+            function(language, n) {
+                $.PrivateBin.I18n.reset(language);
+                var result = $.PrivateBin.I18n.getPluralForm(n);
+                // arabic seems to have the highest plural count with 6 forms
+                return result >= 0 && result <= 5;
+            }
+        );
+    });
+
+    // loading of JSON via AJAX needs to be tested in the browser, this just mocks it
+    // TODO: This needs to be tested using a browser.
+    describe('loadTranslations', function () {
+        before(function () {
+            $.PrivateBin.I18n.reset();
+        });
+
+        jsc.property(
+            'downloads and handles any supported language',
+            jsc.elements(supportedLanguages),
+            function(language) {
+                var clean = jsdom('', {url: 'https://privatebin.net/', cookie: ['lang=' + language]});
+
+                $.PrivateBin.I18n.reset('en');
+                $.PrivateBin.I18n.loadTranslations();
+                $.PrivateBin.I18n.reset(language, require('../i18n/' + language + '.json'));
+                var result = $.PrivateBin.I18n.translate('en'),
+                    alias  = $.PrivateBin.I18n._('en');
+
+                clean();
+                return language === result && language === alias;
             }
         );
     });

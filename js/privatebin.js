@@ -306,7 +306,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
      * @param  {object} document
      * @class
      */
-    var I18n = (function (window, document) {
+    var I18n = (function () {
         var me = {};
 
         /**
@@ -544,14 +544,14 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          * @name   I18n.reset
          * @function
          */
-        me.reset = function()
+        me.reset = function(mockLanguage, mockTranslations)
         {
-            language = null;
-            translations = {};
+            language = mockLanguage || null;
+            translations = mockTranslations || {};
         }
 
         return me;
-    })(window, document);
+    })();
 
     /**
      * handles everything related to en/decryption
