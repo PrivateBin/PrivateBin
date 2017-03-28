@@ -26,13 +26,13 @@
     "Invalid paste ID.":
         "Feil innlegg ID.",
     "Paste is not of burn-after-reading type.":
-        "Innlegg er ikke av type slett-etter-lesing.",
+        "Innlegg er ikke av typen slett etter lesing.",
     "Wrong deletion token. Paste was not deleted.":
         "Feil slettingsnøkkel. Innlegg ble ikke fjernet.",
     "Paste was properly deleted.":
         "Innlegget er slettet.",
     "JavaScript is required for %s to work.<br />Sorry for the inconvenience.":
-        "Javascript kreves for at %s skal fungere<br />Beklager ulempene.",
+        "Javascript kreves for at %s skal fungere<br />Beklager.",
     "%s requires a modern browser to work.":
         "%s krever en moderne nettleser for å fungere.",
     "Still using Internet Explorer? Do yourself a favor, switch to a modern browser:":
@@ -83,7 +83,7 @@
     "Could not decrypt data (Wrong key?)":
         "Kunne ikke dekryptere data (Feil nøkkel?)",
     "Could not delete the paste, it was not stored in burn after reading mode.":
-        "Kan ikke slette innlegget, det ble ikke lagret i slett-etter-les modus.",
+        "Kan ikke slette innlegget, det ble ikke lagret som 'slett etter les' type.",
     "FOR YOUR EYES ONLY. Don't close this window, this message can't be displayed again.":
         "KUN FOR DINE ØYNE. Ikke lukk dette vinduet, denne meldingen kan ikke bli vist igjen.",
     "Could not decrypt comment; Wrong key?":
@@ -93,7 +93,7 @@
     "Anonymous":
         "Anonym",
     "Avatar generated from IP address":
-        "Anonym avatar (Vizhash av IP adressen)",
+        "Anonym avatar generert med data fra IP adressen)",
     "Add comment":
         "Legg til kommentar",
     "Optional nickname…":
@@ -105,15 +105,15 @@
     "Comment posted.":
         "Kommentar sendt.",
     "Could not refresh display: %s":
-        "Kunne ikke oppdatere skjermen: %s",
+        "Kunne ikke oppdatere bildet: %s",
     "unknown status":
         "ukjent status",
     "server error or not responding":
-        "server feilet eller svarer ikke",
+        "tjener feilet eller svarer ikke",
     "Could not post comment: %s":
         "Kunne ikke sende kommentar: %s",
     "Please move your mouse for more entropy…":
-        "Flytt musen for mere entropi…",
+        "Flytt musen for mer entropi…",
     "Sending paste…":
         "Sender innlegg…",
     "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit [Ctrl]+[c] to copy)</span>":
@@ -129,7 +129,7 @@
     "Source Code": "Kildekode",
     "Markdown": "Oppmerket",
     "Download attachment": "Last ned vedlegg",
-    "Cloned: '%s'": "Kopier: '%s'",
+    "Cloned: '%s'": "Kopiert: '%s'",
     "The cloned file '%s' was attached to this paste.": "The cloned file '%s' was attached to this paste.",
     "Attach a file": "Legg til fil",
     "Remove attachment": "Slett vedlegg",
@@ -137,7 +137,7 @@
         "Nettleseren din støtter ikke å laste opp krypterte filer. Vennligst bruk en nyere nettleser.",
     "Invalid attachment.": "Ugyldig vedlegg.",
     "Options": "Alternativer",
-    "Shorten URL": "Adresse-forkorter",
+    "Shorten URL": "Adresse forkorter",
     "Editor": "Rediger",
     "Preview": "Forhåndsvis",
     "%s requires the PATH to end in a \"%s\". Please update the PATH in your index.php.":
@@ -147,9 +147,9 @@
     "Enter password":
         "Skriv inn passord",
     "Loading…": "Laster…",
-    "Decrypting paste…": "Decrypting paste…",
-    "Preparing new paste…": "Preparing new paste…",
+    "Decrypting paste…": "Dekrypterer innlegg…",
+    "Preparing new paste…": "Klargjør nytt innlegg…",
     "In case this message never disappears please have a look at <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">this FAQ for information to troubleshoot</a>.":
         "Hvis denne meldingen ikke forsvinner kan du ta en titt på siden med <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">ofte stilte spørsmål</a> for informasjon om feilsøking.",
-    "+++ no paste text +++": "+++ no paste text +++"
+    "+++ no paste text +++": "+++ ingen innleggstekst +++"
 }
