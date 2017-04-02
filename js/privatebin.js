@@ -2163,9 +2163,9 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
     var AttachmentViewer = (function (window, document) {
         var me = {};
 
-        me.$attachmentLink;
-        me.$attachmentPreview;
-        me.$attachment;
+        me.$attachmentLink = undefined;
+        me.$attachmentPreview = undefined;
+        me.$attachment = undefined;
 
         var attachmentHasPreview = false;
 
