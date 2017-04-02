@@ -308,6 +308,185 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             baseUri = null;
         }
 
+        me.attachmentHelpers = {
+            attachmentData: undefined,
+            file: undefined,
+            $fileInput: undefined,
+
+            init: function () {
+                me.attachmentHelpers.$fileInput = $('#file');
+                me.attachmentHelpers.addDragDropHandler();
+            },
+
+            /*
+             * Read file data as dataURL using the FileReader API
+             * https://developer.mozilla.org/en-US/docs/Web/API/FileReader#readAsDataURL()
+             */
+            readFileData: function (file) {
+                if (typeof FileReader === 'undefined') {
+                    // revert loading status…
+                    AttachmentViewer.hideAttachment();
+                    AttachmentViewer.hideAttachmentPreview();
+                    Alert.showError(I18n._('Your browser does not support uploading encrypted files. Please use a newer browser.'));
+                    return;
+                }
+
+                var fileReader = new FileReader();
+                if (file === undefined) {
+                    file = me.attachmentHelpers.$fileInput[0].files[0];
+                    $('#dragAndDropFileName').text('');
+                } else {
+                    $('#dragAndDropFileName').text(file.name);
+                }
+
+                me.attachmentHelpers.file = file;
+
+                fileReader.onload = function (event) {
+                    var dataURL = event.target.result;
+                    me.attachmentHelpers.attachmentData = dataURL;
+
+                    if (Editor.isPreview()) {
+                        me.attachmentHelpers.handleAttachmentPreview(AttachmentViewer.$attachmentPreview, dataURL);
+                    }
+                };
+                fileReader.readAsDataURL(file);
+            },
+
+            /**
+             *  Handle the preview of files that can either be an image, video, audio or pdf element.
+             *  @argument {DOM Element} targetElement where the preview should be appended.
+             *  @argument {File Data} data of the file to be displayed.
+             */
+            handleAttachmentPreview: function (targetElement, data) {
+                if (data) {
+                    var mimeType = this.getMimeTypeFromDataURL(data);
+
+                    if (mimeType.match(/image\//i)) {
+                        this.showImagePreview(targetElement, data);
+                    } else if (mimeType.match(/video\//i)) {
+                        this.showVideoPreview(targetElement, data, mimeType);
+                    } else if (mimeType.match(/audio\//i)) {
+                        this.showAudioPreview(targetElement, data, mimeType);
+                    } else if (mimeType.match(/\/pdf/i)) {
+                        this.showPDFPreview(targetElement, data);
+                    }
+                    //else {
+                    //console.log("file but no image/video/audio/pdf");
+                    //}
+                }
+            },
+
+            /**
+             * Get Mime Type from a DataURL
+             *
+             * @param {type} dataURL
+             * @returns Mime Type from a dataURL as obtained for a file using the FileReader API https://developer.mozilla.org/en-US/docs/Web/API/FileReader#readAsDataURL()
+             */
+            getMimeTypeFromDataURL: function (dataURL) {
+                return dataURL.slice(dataURL.indexOf('data:') + 5, dataURL.indexOf(';base64,'));
+            },
+
+            showImagePreview: function (targetElement, image) {
+                targetElement.html(
+                        $(document.createElement('img'))
+                        .attr('src', image)
+                        .attr('class', 'img-thumbnail')
+                        );
+                targetElement.removeClass('hidden');
+            },
+
+            showVideoPreview: function (targetElement, video, mimeType) {
+                var videoPlayer = $(document.createElement('video'))
+                        .attr('controls', 'true')
+                        .attr('autoplay', 'true')
+                        .attr('loop', 'true')
+                        .attr('class', 'img-thumbnail');
+
+                videoPlayer.append($(document.createElement('source'))
+                        .attr('type', mimeType)
+                        .attr('src', video));
+                targetElement.html(videoPlayer);
+                targetElement.removeClass('hidden');
+            },
+
+            showAudioPreview: function (targetElement, audio, mimeType) {
+                var audioPlayer = $(document.createElement('audio'))
+                        .attr('controls', 'true')
+                        .attr('autoplay', 'true');
+
+                audioPlayer.append($(document.createElement('source'))
+                        .attr('type', mimeType)
+                        .attr('src', audio));
+                targetElement.html(audioPlayer);
+                targetElement.removeClass('hidden');
+            },
+
+            showPDFPreview: function (targetElement, pdf) {
+                //PDFs are only displayed if the filesize is smaller than about 1MB (after base64 encoding).
+                //Bigger filesizes currently cause crashes in various browsers.
+                //See also: https://code.google.com/p/chromium/issues/detail?id=69227
+
+                //Firefox crashes with files that are about 1.5MB
+                //The performance with 1MB files is bareable
+                if (pdf.length < 1398488) {
+
+                    //Fallback for browsers, that don't support the vh unit
+                    var clientHeight = $(window).height();
+
+                    targetElement.html(
+                            $(document.createElement('embed'))
+                            .attr('src', pdf)
+                            .attr('type', 'application/pdf')
+                            .attr('class', 'pdfPreview')
+                            .css('height', clientHeight)
+                            );
+                    targetElement.removeClass('hidden');
+                } else {
+                    Alert.showError(I18n._('File too large, to display a preview. Please download the attachment.'));
+                }
+            },
+
+            /**
+             * Attaches the file attachment drag & drop handler to the page.
+             * @returns {undefined}
+             */
+            addDragDropHandler: function () {
+                var fileInput = me.attachmentHelpers.$fileInput;
+
+                if (typeof fileInput === 'undefined' || fileInput.length === 0) {
+                    return;
+                }
+
+                var ignoreDragDrop = function(event) {
+                    event.stopPropagation();
+                    event.preventDefault();
+                };
+
+                var drop = function(event) {
+                    event.stopPropagation();
+                    event.preventDefault();
+
+                    if (fileInput) {
+                        var file = event.dataTransfer.files[0];
+                        //Clear the file input:
+                        fileInput.wrap('<form>').closest('form').get(0).reset();
+                        fileInput.unwrap();
+                        //Only works in Chrome:
+                        //fileInput[0].files = e.dataTransfer.files;
+
+                        me.attachmentHelpers.readFileData(file);
+                    }
+                };
+
+                document.addEventListener("drop", drop, false);
+                document.addEventListener("dragenter", ignoreDragDrop, false);
+                document.addEventListener("dragover", ignoreDragDrop, false);
+                fileInput.on("change", function () {
+                    me.attachmentHelpers.readFileData();
+                });
+            }
+        };
+
         return me;
     })();
 
@@ -1596,6 +1775,8 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
 
             // show preview
             PasteViewer.setText($message.val());
+            var attachmentData = Helper.attachmentHelpers.attachmentData || AttachmentViewer.$attachmentLink.attr('href');
+            Helper.attachmentHelpers.handleAttachmentPreview(AttachmentViewer.$attachmentPreview, attachmentData);
             PasteViewer.run();
 
             // finish
@@ -1930,6 +2111,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             $plainText.addClass('hidden');
             $prettyMessage.addClass('hidden');
             $placeholder.addClass('hidden');
+            AttachmentViewer.hideAttachmentPreview();
 
             isDisplayed = false;
         }
@@ -1981,9 +2163,9 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
     var AttachmentViewer = (function (window, document) {
         var me = {};
 
-        var $attachmentLink,
-            $attachmentPreview,
-            $attachment;
+        me.$attachmentLink;
+        me.$attachmentPreview;
+        me.$attachment;
 
         var attachmentHasPreview = false;
 
@@ -1997,22 +2179,14 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          */
         me.setAttachment = function(attachmentData, fileName)
         {
-            var imagePrefix = 'data:image/';
-
-            $attachmentLink.attr('href', attachmentData);
+            me.$attachmentLink.attr('href', attachmentData);
             if (typeof fileName !== 'undefined') {
-                $attachmentLink.attr('download', fileName);
+                me.$attachmentLink.attr('download', fileName);
             }
 
-            // if the attachment is an image, display it
-            if (attachmentData.substring(0, imagePrefix.length) === imagePrefix) {
-                $attachmentPreview.html(
-                    $(document.createElement('img'))
-                        .attr('src', attachmentData)
-                        .attr('class', 'img-thumbnail')
-                );
-                attachmentHasPreview = true;
-            }
+            Helper.attachmentHelpers.handleAttachmentPreview(AttachmentViewer.$attachmentPreview, attachmentData);
+            attachmentHasPreview = true;
+
         }
 
         /**
@@ -2023,10 +2197,10 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          */
         me.showAttachment = function()
         {
-            $attachment.removeClass('hidden');
+            me.$attachment.removeClass('hidden');
 
             if (attachmentHasPreview) {
-                $attachmentPreview.removeClass('hidden');
+                me.$attachmentPreview.removeClass('hidden');
             }
         }
 
@@ -2043,9 +2217,12 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         {
             me.hideAttachment();
             me.hideAttachmentPreview();
-            $attachmentLink.prop('href', '');
-            $attachmentLink.prop('download', '');
-            $attachmentPreview.html('');
+            me.$attachmentLink.prop('href', '');
+            me.$attachmentLink.prop('download', '');
+            me.$attachmentPreview.html('');
+
+            Helper.attachmentHelpers.file = undefined;
+            Helper.attachmentHelpers.attachmentData = undefined;
         }
 
         /**
@@ -2060,7 +2237,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          */
         me.hideAttachment = function()
         {
-            $attachment.addClass('hidden');
+            me.$attachment.addClass('hidden');
         }
 
         /**
@@ -2071,7 +2248,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          */
         me.hideAttachmentPreview = function()
         {
-            $attachmentPreview.addClass('hidden');
+            me.$attachmentPreview.addClass('hidden');
         }
 
         /**
@@ -2082,7 +2259,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          */
         me.hasAttachment = function()
         {
-            var link = $attachmentLink.prop('href');
+            var link = me.$attachmentLink.prop('href');
             return (typeof link !== 'undefined' && link !== '')
         }
 
@@ -2096,8 +2273,8 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         me.getAttachment = function()
         {
             return [
-                $attachmentLink.prop('href'),
-                $attachmentLink.prop('download')
+                me.$attachmentLink.prop('href'),
+                me.$attachmentLink.prop('download')
             ];
         }
 
@@ -2114,10 +2291,10 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         me.moveAttachmentTo = function($element, label)
         {
             // move elemement to new place
-            $attachmentLink.appendTo($element);
+            me.$attachmentLink.appendTo($element);
 
             // update text
-            I18n._($attachmentLink, label, $attachmentLink.attr('download'));
+            I18n._(me.$attachmentLink, label, me.$attachmentLink.attr('download'));
         }
 
         /**
@@ -2130,9 +2307,9 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          */
         me.init = function()
         {
-            $attachment = $('#attachment');
-            $attachmentLink = $('#attachment a');
-            $attachmentPreview = $('#attachmentPreview');
+            me.$attachment = $('#attachment');
+            me.$attachmentLink = $('#attachment a');
+            me.$attachmentPreview = $('#attachmentPreview');
         }
 
         return me;
@@ -3356,31 +3533,19 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          * @name PasteEncrypter.encryptAttachments
          * @private
          * @function
-         * @param {File|null|undefined} file - optional, falls back to cloned attachment
          * @param {function} callback - excuted when action is successful
          */
-        function encryptAttachments(file, callback) {
+        function encryptAttachments(callback) {
+            var file = Helper.attachmentHelpers.attachmentData;
+
             if (typeof file !== 'undefined' && file !== null) {
-                // check file reader requirements for upload
-                if (typeof FileReader === 'undefined') {
-                    Alert.showError('Your browser does not support uploading encrypted files. Please use a newer browser.');
-                    // cancels process as it does not execute callback
-                    return;
-                }
+                var fileName = Helper.attachmentHelpers.file.name;
 
-                var reader = new FileReader();
+                Uploader.setData('attachment', file);
+                Uploader.setData('attachmentname', fileName);
 
-                // closure to capture the file information
-                reader.onload = function(event) {
-                    Uploader.setData('attachment', event.target.result);
-                    Uploader.setData('attachmentname', file.name);
-
-                    // run callback
-                    return callback();
-                }
-
-                // actually read first file
-                reader.readAsDataURL(file);
+                // run callback
+                return callback();
             } else if (AttachmentViewer.hasAttachment()) {
                 // fall back to cloned part
                 var attachment = AttachmentViewer.getAttachment();
@@ -3489,7 +3654,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             // get data
             var plainText = Editor.getText(),
                 format = PasteViewer.getFormat(),
-                files = TopNav.getFileList();
+                files = TopNav.getFileList() || Helper.attachmentHelpers.file || AttachmentViewer.hasAttachment();
 
             // do not send if there is no data
             if (plainText.length === 0 && files === null) {
@@ -3540,7 +3705,6 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
 
             // encrypt attachments
             encryptAttachments(
-                files === null ? null : files[0],
                 function () {
                     // send data
                     Uploader.run();
@@ -4001,6 +4165,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             TopNav.init();
             UiHelper.init();
             Uploader.init();
+            Helper.attachmentHelpers.init();
 
             // display an existing paste
             if (Model.hasCipherData()) {
