@@ -1,2 +1,1 @@
-Allow from none
-Deny from all
+Require all denied

@@ -7,8 +7,8 @@
     "en": "oc",
     "Paste does not exist, has expired or has been deleted.":
         "Lo tèxte existís pas, a expirat, o es estat suprimit.",
-    "%s requires php 5.3.0 or above to work. Sorry.":
-        "O planhèm, %s necessita php 5.3.0 o superior per foncionar.",
+    "%s requires php %s or above to work. Sorry.":
+        "O planhèm, %s necessita php %s o superior per foncionar.",
     "%s requires configuration section [%s] to be present in configuration file.":
         "%s fa besonh de la seccion de configuracion [%s] dins lo fichièr de configuracion per foncionar.",
     "Please wait %d seconds between each post.":
@@ -92,16 +92,16 @@
         "Respondre",
     "Anonymous":
         "Anonime",
-    "Anonymous avatar (Vizhash of the IP address)":
+    "Avatar generated from IP address":
         "Avatar anonime (Vizhash de l'adreça IP)",
     "Add comment":
         "Apondre un comentari",
-    "Optional nickname...":
-        "Escais opcional...",
+    "Optional nickname…":
+        "Escais opcional…",
     "Post comment":
         "Mandar lo comentari",
-    "Sending comment...":
-        "Mandadís del comentari...",
+    "Sending comment…":
+        "Mandadís del comentari…",
     "Comment posted.":
         "Comentari mandat.",
     "Could not refresh display: %s":
@@ -112,10 +112,10 @@
         "Lo servidor respond pas o a rencontrat una error",
     "Could not post comment: %s":
         "Impossible de mandar lo comentari : %s",
-    "Sending paste (Please move your mouse for more entropy)...":
-        "Mandadís del tèxte (Mercés de bolegar vòstra mirga per mai entropia)...",
-    "Sending paste...":
-        "Mandadís del tèxte...",
+    "Please move your mouse for more entropy…":
+        "Mercés de bolegar vòstra mirga per mai entropia…",
+    "Sending paste…":
+        "Mandadís del tèxte…",
     "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit [Ctrl]+[c] to copy)</span>":
         "Vòstre tèxte es disponible a l'adreça <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Picatz sus [Ctrl]+[c] per copiar)</span>",
     "Delete data":
@@ -138,7 +138,8 @@
     "Source Code": "Còdi font",
     "Markdown": "Markdown",
     "Download attachment": "Telecargar la pèça junta",
-    "Cloned file attached.": "Clonar lo fichièr junt.",
+    "Cloned: '%s'": "Clonar: '%s'",
+    "The cloned file '%s' was attached to this paste.": "The cloned file '%s' was attached to this paste.",
     "Attach a file": "Juntar un fichièr ",
     "Remove attachment": "Levar la pèca junta",
     "Your browser does not support uploading encrypted files. Please use a newer browser.":
@@ -155,6 +156,9 @@
     "Enter password":
         "Picatz lo senhal",
     "Loading…": "Cargament…",
+    "Decrypting paste…": "Decrypting paste…",
+    "Preparing new paste…": "Preparing new paste…",
     "In case this message never disappears please have a look at <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">this FAQ for information to troubleshoot</a>.":
-        "Se per cas aqueste messatge quita pas de s'afichar mercés de gaitar <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">aquesta FAQ per las solucions</a> (en Anglés)."
+        "Se per cas aqueste messatge quita pas de s'afichar mercés de gaitar <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">aquesta FAQ per las solucions</a> (en Anglés).",
+    "+++ no paste text +++": "+++ no paste text +++"
 }

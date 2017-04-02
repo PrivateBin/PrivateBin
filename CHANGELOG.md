@@ -1,8 +1,10 @@
 # PrivateBin version history
 
   * **next (not yet released)**
-    * ADDED: Translations for Spanish, Occitan and Norwegian
+    * ADDED: Translations for Spanish, Occitan, Norwegian and Portuguese
     * ADDED: Option in configuration to change the default "PrivateBin" title of the site
+    * CHANGED: Minimum required PHP version is 5.4 (#186)
+    * CHANGED: Shipped .htaccess files were updated for Apache 2.4 (#192)
     * CHANGED: Cleanup of bootstrap template variants and moved icons to `img` directory
   * **1.1 (2016-12-26)**
     * ADDED: Translations for Italian and Russian

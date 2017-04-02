@@ -7,8 +7,8 @@
     "en": "sl",
     "Paste does not exist, has expired or has been deleted.":
         "Prilepek ne obstaja, mu je potekla življenjska doba, ali pa je izbrisan.",
-    "%s requires php 5.3.0 or above to work. Sorry.":
-        "Oprosti, %s za delovanje potrebuje vsaj php 5.3.0.",
+    "%s requires php %s or above to work. Sorry.":
+        "Oprosti, %s za delovanje potrebuje vsaj php %s.",
     "%s requires configuration section [%s] to be present in configuration file.":
         "%s potrebuje sekcijo konfiguracij [%s] v konfiguracijski datoteki.",
     "Please wait %d seconds between each post.":
@@ -92,16 +92,16 @@
         "Odgovori",
     "Anonymous":
         "Aninomno",
-    "Anonymous avatar (Vizhash of the IP address)":
+    "Avatar generated from IP address":
         "Anonimen avatar (Vizhash IP naslova)",
     "Add comment":
         "Dodaj komentar",
-    "Optional nickname...":
+    "Optional nickname…":
         "Uporabniško ime (lahko izpustiš)",
     "Post comment":
         "Objavi komentar",
-    "Sending comment...":
-        "Pošiljam komentar ...",
+    "Sending comment…":
+        "Pošiljam komentar …",
     "Comment posted.":
         "Komentar poslan.",
     "Could not refresh display: %s":
@@ -112,10 +112,10 @@
         "napaka na strežniku, ali pa se strežnik ne odziva",
     "Could not post comment: %s":
         "Komentarja ni bilo mogoče objaviti : %s",
-    "Sending paste (Please move your mouse for more entropy)...":
-        "Pošiljam prilepek (prosim premakni svojo miško za več entropije) ...",
-    "Sending paste...":
-        "Pošiljam prilepek...",
+    "Please move your mouse for more entropy…":
+        "Prosim premakni svojo miško za več entropije…",
+    "Sending paste…":
+        "Pošiljam prilepek…",
     "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit [Ctrl]+[c] to copy)</span>":
         "Tvoj prilepek je dostopen na naslovu: <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Pritisni [Ctrl]+[c] ali [Cmd] + [c] in skopiraj)</span>",
     "Delete data":
@@ -138,7 +138,8 @@
     "Source Code": "Odprta koda",
     "Markdown": "Markdown",
     "Download attachment": "Pretoči priponko",
-    "Cloned file attached.": "Pripeta datoteka klonirana",
+    "Cloned: '%s'": "'%s' klonirana",
+    "The cloned file '%s' was attached to this paste.": "The cloned file '%s' was attached to this paste.",
     "Attach a file": "Pripni datoteko",
     "Remove attachment": "Odstrani priponko",
     "Your browser does not support uploading encrypted files. Please use a newer browser.":
@@ -155,6 +156,9 @@
     "Enter password":
         "Prosim vnesi geslo",
     "Loading…": "Loading…",
+    "Decrypting paste…": "Decrypting paste…",
+    "Preparing new paste…": "Preparing new paste…",
     "In case this message never disappears please have a look at <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">this FAQ for information to troubleshoot</a>.":
-        "In case this message never disappears please have a look at <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">this FAQ for information to troubleshoot</a> (in English)."
+        "In case this message never disappears please have a look at <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">this FAQ for information to troubleshoot</a> (in English).",
+    "+++ no paste text +++": "+++ no paste text +++"
 }

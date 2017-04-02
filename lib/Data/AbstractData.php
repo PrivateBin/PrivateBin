@@ -58,7 +58,7 @@ abstract class AbstractData
      * @access public
      * @static
      * @param  array $options
-     * @return privatebin_abstract
+     * @return AbstractData
      */
     public static function getInstance($options)
     {
@@ -88,7 +88,6 @@ abstract class AbstractData
      *
      * @access public
      * @param  string $pasteid
-     * @return void
      */
     abstract public function delete($pasteid);
 
@@ -147,7 +146,6 @@ abstract class AbstractData
      *
      * @access public
      * @param  int $batchsize
-     * @return void
      */
     public function purge($batchsize)
     {

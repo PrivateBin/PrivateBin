@@ -31,6 +31,13 @@ class PrivateBin
     const VERSION = '1.1';
 
     /**
+     * minimal required PHP version
+     *
+     * @const string
+     */
+    const MIN_PHP_VERSION = '5.4.0';
+
+    /**
      * show the same error message if the paste expired or does not exist
      *
      * @const string
@@ -116,12 +123,11 @@ class PrivateBin
      *
      * @access public
      * @throws Exception
-     * @return void
      */
     public function __construct()
     {
-        if (version_compare(PHP_VERSION, '5.3.0') < 0) {
-            throw new Exception(I18n::_('%s requires php 5.3.0 or above to work. Sorry.', I18n::_('PrivateBin')), 1);
+        if (version_compare(PHP_VERSION, self::MIN_PHP_VERSION) < 0) {
+            throw new Exception(I18n::_('%s requires php %s or above to work. Sorry.', I18n::_('PrivateBin'), self::MIN_PHP_VERSION), 1);
         }
         if (strlen(PATH) < 0 && substr(PATH, -1) !== DIRECTORY_SEPARATOR) {
             throw new Exception(I18n::_('%s requires the PATH to end in a "%s". Please update the PATH in your index.php.', I18n::_('PrivateBin'), DIRECTORY_SEPARATOR), 5);
@@ -164,21 +170,9 @@ class PrivateBin
      * initialize privatebin
      *
      * @access private
-     * @return void
      */
     private function _init()
     {
-        foreach (array('cfg', 'lib') as $dir) {
-            if (!is_file(PATH . $dir . DIRECTORY_SEPARATOR . '.htaccess')) {
-                file_put_contents(
-                PATH . $dir . DIRECTORY_SEPARATOR . '.htaccess',
-                'Allow from none' . PHP_EOL .
-                'Deny from all' . PHP_EOL,
-                LOCK_EX
-            );
-            }
-        }
-
         $this->_conf    = new Configuration;
         $this->_model   = new Model($this->_conf);
         $this->_request = new Request;
@@ -324,7 +318,6 @@ class PrivateBin
      * @access private
      * @param  string $dataid
      * @param  string $deletetoken
-     * @return void
      */
     private function _delete($dataid, $deletetoken)
     {
@@ -334,19 +327,16 @@ class PrivateBin
                 // accessing this property ensures that the paste would be
                 // deleted if it has already expired
                 $burnafterreading = $paste->isBurnafterreading();
-                if ($deletetoken == 'burnafterreading') {
-                    if ($burnafterreading) {
-                        $paste->delete();
-                        $this->_return_message(0, $dataid);
-                    } else {
-                        $this->_return_message(1, 'Paste is not of burn-after-reading type.');
-                    }
+                if (
+                    ($burnafterreading && $deletetoken == 'burnafterreading') ||
+                    Filter::slowEquals($deletetoken, $paste->getDeleteToken())
+                ) {
+                    // Paste exists and deletion token is valid: Delete the paste.
+                    $paste->delete();
+                    $this->_status = 'Paste was properly deleted.';
                 } else {
-                    // Make sure the token is valid.
-                    if (Filter::slowEquals($deletetoken, $paste->getDeleteToken())) {
-                        // Paste exists and deletion token is valid: Delete the paste.
-                        $paste->delete();
-                        $this->_status = 'Paste was properly deleted.';
+                    if (!$burnafterreading && $deletetoken == 'burnafterreading') {
+                        $this->_error = 'Paste is not of burn-after-reading type.';
                     } else {
                         $this->_error = 'Wrong deletion token. Paste was not deleted.';
                     }
@@ -357,6 +347,13 @@ class PrivateBin
         } catch (Exception $e) {
             $this->_error = $e->getMessage();
         }
+        if ($this->_request->isJsonApiCall()) {
+            if (strlen($this->_error)) {
+                $this->_return_message(1, $this->_error);
+            } else {
+                $this->_return_message(0, $dataid);
+            }
+        }
     }
 
     /**
@@ -364,7 +361,6 @@ class PrivateBin
      *
      * @access private
      * @param  string $dataid
-     * @return void
      */
     private function _read($dataid)
     {
@@ -397,7 +393,6 @@ class PrivateBin
      * Display PrivateBin frontend.
      *
      * @access private
-     * @return void
      */
     private function _view()
     {
@@ -461,7 +456,6 @@ class PrivateBin
      *
      * @access private
      * @param string $type
-     * @return void
      */
     private function _jsonld($type)
     {
@@ -494,7 +488,6 @@ class PrivateBin
      * @param  int $status
      * @param  string $message
      * @param  array $other
-     * @return void
      */
     private function _return_message($status, $message, $other = array())
     {

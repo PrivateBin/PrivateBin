@@ -1,15 +1,26 @@
 language: php
 sudo: false
 php:
-  - 5.5
-  - 5.6
-  - 7.0
+  - '5.4'
+  - '5.5'
+  - '5.6'
+  - '7.0'
+  - '7.1'
+
+# as this is a php project, node.js v4 (for JS unit testing) isn't installed
+install:
+  - rm -rf ~/.nvm && git clone https://github.com/creationix/nvm.git ~/.nvm && (cd ~/.nvm && git checkout `git describe --abbrev=0 --tags`) && source ~/.nvm/nvm.sh && nvm install 4
 
 before_script:
   - composer install -n
+  - npm install -g mocha
+  - cd js
+  - npm install jsverify jsdom jsdom-global
+  - cd ..
 
 script:
-  - cd tst && phpunit
+  - cd tst && ../vendor/bin/phpunit
+  - cd ../js && mocha
 
 after_script:
   - cd ..

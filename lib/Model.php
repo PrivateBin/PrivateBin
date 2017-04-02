@@ -40,7 +40,6 @@ class Model
      * Factory constructor.
      *
      * @param configuration $conf
-     * @return void
      */
     public function __construct(Configuration $conf)
     {
@@ -64,8 +63,6 @@ class Model
 
     /**
      * Checks if a purge is necessary and triggers it if yes.
-     *
-     * @return void
      */
     public function purge()
     {

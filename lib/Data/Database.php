@@ -282,7 +282,6 @@ class Database extends AbstractData
      *
      * @access public
      * @param  string $pasteid
-     * @return void
      */
     public function delete($pasteid)
     {
@@ -375,11 +374,10 @@ class Database extends AbstractData
                 $comments[$i]->data           = $row['data'];
                 $comments[$i]->meta           = new stdClass;
                 $comments[$i]->meta->postdate = (int) $row['postdate'];
-                if (array_key_exists('nickname', $row) && !empty($row['nickname'])) {
-                    $comments[$i]->meta->nickname = $row['nickname'];
-                }
-                if (array_key_exists('vizhash', $row) && !empty($row['vizhash'])) {
-                    $comments[$i]->meta->vizhash = $row['vizhash'];
+                foreach (array('nickname', 'vizhash') as $key) {
+                    if (array_key_exists($key, $row) && !empty($row[$key])) {
+                        $comments[$i]->meta->$key = $row[$key];
+                    }
                 }
             }
             ksort($comments);
@@ -564,7 +562,6 @@ class Database extends AbstractData
      *
      * @access private
      * @static
-     * @return void
      */
     private static function _createPasteTable()
     {
@@ -589,7 +586,6 @@ class Database extends AbstractData
      *
      * @access private
      * @static
-     * @return void
      */
     private static function _createCommentTable()
     {
@@ -616,7 +612,6 @@ class Database extends AbstractData
      *
      * @access private
      * @static
-     * @return void
      */
     private static function _createConfigTable()
     {
@@ -651,7 +646,6 @@ class Database extends AbstractData
      * @access private
      * @static
      * @param  string $oldversion
-     * @return void
      */
     private static function _upgradeDatabase($oldversion)
     {

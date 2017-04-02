@@ -172,22 +172,24 @@ class Helper
      */
     public static function rmDir($path)
     {
-        $path .= DIRECTORY_SEPARATOR;
-        $dir = dir($path);
-        while (false !== ($file = $dir->read())) {
-            if ($file != '.' && $file != '..') {
-                if (is_dir($path . $file)) {
-                    self::rmDir($path . $file);
-                } elseif (is_file($path . $file)) {
-                    if (!unlink($path . $file)) {
-                        throw new Exception('Error deleting file "' . $path . $file . '".');
+        if (is_dir($path)) {
+            $path .= DIRECTORY_SEPARATOR;
+            $dir = dir($path);
+            while (false !== ($file = $dir->read())) {
+                if ($file != '.' && $file != '..') {
+                    if (is_dir($path . $file)) {
+                        self::rmDir($path . $file);
+                    } elseif (is_file($path . $file)) {
+                        if (!unlink($path . $file)) {
+                            throw new Exception('Error deleting file "' . $path . $file . '".');
+                        }
                     }
                 }
             }
-        }
-        $dir->close();
-        if (!rmdir($path)) {
-            throw new Exception('Error deleting directory "' . $path . '".');
+            $dir->close();
+            if (!rmdir($path)) {
+                throw new Exception('Error deleting directory "' . $path . '".');
+            }
         }
     }
 

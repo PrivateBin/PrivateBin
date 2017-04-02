@@ -12,8 +12,8 @@
 
 namespace PrivateBin\Data;
 
-use PrivateBin\Json;
 use PrivateBin\Model\Paste;
+use PrivateBin\Persistence\DataStore;
 
 /**
  * Filesystem
@@ -22,15 +22,6 @@ use PrivateBin\Model\Paste;
  */
 class Filesystem extends AbstractData
 {
-    /**
-     * directory where data is stored
-     *
-     * @access private
-     * @static
-     * @var string
-     */
-    private static $_dir = 'data/';
-
     /**
      * get instance of singleton
      *
@@ -41,17 +32,16 @@ class Filesystem extends AbstractData
      */
     public static function getInstance($options = null)
     {
+        // if needed initialize the singleton
+        if (!(self::$_instance instanceof self)) {
+            self::$_instance = new self;
+        }
         // if given update the data directory
         if (
             is_array($options) &&
             array_key_exists('dir', $options)
         ) {
-            self::$_dir = $options['dir'] . DIRECTORY_SEPARATOR;
-        }
-        // if needed initialize the singleton
-        if (!(self::$_instance instanceof self)) {
-            self::$_instance = new self;
-            self::_init();
+            DataStore::setPath($options['dir']);
         }
         return self::$_instance;
     }
@@ -62,19 +52,19 @@ class Filesystem extends AbstractData
      * @access public
      * @param  string $pasteid
      * @param  array  $paste
-     * @throws Exception
      * @return bool
      */
     public function create($pasteid, $paste)
     {
         $storagedir = self::_dataid2path($pasteid);
-        if (is_file($storagedir . $pasteid)) {
+        $file       = $storagedir . $pasteid;
+        if (is_file($file)) {
             return false;
         }
         if (!is_dir($storagedir)) {
             mkdir($storagedir, 0700, true);
         }
-        return (bool) file_put_contents($storagedir . $pasteid, Json::encode($paste));
+        return DataStore::store($file, $paste);
     }
 
     /**
@@ -108,7 +98,6 @@ class Filesystem extends AbstractData
      *
      * @access public
      * @param  string $pasteid
-     * @return void
      */
     public function delete($pasteid)
     {
@@ -155,20 +144,19 @@ class Filesystem extends AbstractData
      * @param  string $parentid
      * @param  string $commentid
      * @param  array  $comment
-     * @throws Exception
      * @return bool
      */
     public function createComment($pasteid, $parentid, $commentid, $comment)
     {
         $storagedir = self::_dataid2discussionpath($pasteid);
-        $filename   = $pasteid . '.' . $commentid . '.' . $parentid;
-        if (is_file($storagedir . $filename)) {
+        $file       = $storagedir . $pasteid . '.' . $commentid . '.' . $parentid;
+        if (is_file($file)) {
             return false;
         }
         if (!is_dir($storagedir)) {
             mkdir($storagedir, 0700, true);
         }
-        return (bool) file_put_contents($storagedir . $filename, Json::encode($comment));
+        return DataStore::store($file, $comment);
     }
 
     /**
@@ -237,8 +225,9 @@ class Filesystem extends AbstractData
     protected function _getExpiredPastes($batchsize)
     {
         $pastes     = array();
+        $mainpath   = DataStore::getPath();
         $firstLevel = array_filter(
-            scandir(self::$_dir),
+            scandir($mainpath),
             'self::_isFirstLevelDir'
         );
         if (count($firstLevel) > 0) {
@@ -246,7 +235,7 @@ class Filesystem extends AbstractData
             for ($i = 0, $max = $batchsize * 10; $i < $max; ++$i) {
                 $firstKey    = array_rand($firstLevel);
                 $secondLevel = array_filter(
-                    scandir(self::$_dir . $firstLevel[$firstKey]),
+                    scandir($mainpath . DIRECTORY_SEPARATOR . $firstLevel[$firstKey]),
                     'self::_isSecondLevelDir'
                 );
 
@@ -257,8 +246,9 @@ class Filesystem extends AbstractData
                 }
 
                 $secondKey = array_rand($secondLevel);
-                $path      = self::$_dir . $firstLevel[$firstKey] .
-                    DIRECTORY_SEPARATOR . $secondLevel[$secondKey];
+                $path      = $mainpath . DIRECTORY_SEPARATOR .
+                    $firstLevel[$firstKey] . DIRECTORY_SEPARATOR .
+                    $secondLevel[$secondKey];
                 if (!is_dir($path)) {
                     continue;
                 }
@@ -293,29 +283,6 @@ class Filesystem extends AbstractData
     }
 
     /**
-     * initialize privatebin
-     *
-     * @access private
-     * @static
-     * @return void
-     */
-    private static function _init()
-    {
-        // Create storage directory if it does not exist.
-        if (!is_dir(self::$_dir)) {
-            mkdir(self::$_dir, 0700);
-        }
-        // Create .htaccess file if it does not exist.
-        if (!is_file(self::$_dir . '.htaccess')) {
-            file_put_contents(
-                self::$_dir . '.htaccess',
-                'Allow from none' . PHP_EOL .
-                'Deny from all' . PHP_EOL
-            );
-        }
-    }
-
-    /**
      * Convert paste id to storage path.
      *
      * The idea is to creates subdirectories in order to limit the number of files per directory.
@@ -332,8 +299,10 @@ class Filesystem extends AbstractData
      */
     private static function _dataid2path($dataid)
     {
-        return self::$_dir . substr($dataid, 0, 2) . DIRECTORY_SEPARATOR .
-            substr($dataid, 2, 2) . DIRECTORY_SEPARATOR;
+        return DataStore::getPath(
+            substr($dataid, 0, 2) . DIRECTORY_SEPARATOR .
+            substr($dataid, 2, 2) . DIRECTORY_SEPARATOR
+        );
     }
 
     /**
@@ -363,7 +332,7 @@ class Filesystem extends AbstractData
     private static function _isFirstLevelDir($element)
     {
         return self::_isSecondLevelDir($element) &&
-            is_dir(self::$_dir . DIRECTORY_SEPARATOR . $element);
+            is_dir(DataStore::getPath($element));
     }
 
     /**

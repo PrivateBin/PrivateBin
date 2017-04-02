@@ -98,6 +98,7 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
         new PrivateBin;
         $content = ob_get_contents();
         ob_end_clean();
+        unlink($file);
         $response = json_decode($content, true);
         $this->assertEquals(0, $response['status'], 'outputs status');
         $this->assertEquals(Helper::getPasteId(), $response['id'], 'outputted paste ID matches input');
@@ -132,6 +133,7 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
         new PrivateBin;
         $content = ob_get_contents();
         ob_end_clean();
+        unlink($file);
         $response = json_decode($content, true);
         $this->assertEquals(0, $response['status'], 'outputs status');
         $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste successfully deleted');
@@ -147,10 +149,9 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste exists before deleting data');
         $paste = $this->_model->read(Helper::getPasteId());
         $_POST = array(
-            'action'      => 'delete',
+            'pasteid'     => Helper::getPasteId(),
             'deletetoken' => hash_hmac('sha256', Helper::getPasteId(), $paste->meta->salt),
         );
-        $_SERVER['QUERY_STRING']          = Helper::getPasteId();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD']        = 'POST';
         ob_start();
