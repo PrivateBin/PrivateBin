@@ -2,9 +2,6 @@
 var jsc = require('jsverify'),
     jsdom = require('jsdom-global'),
     cleanup = jsdom(),
-    base64lib = require('./base64-2.1.9'),
-    rawdeflatelib = require('./rawdeflate-0.5'),
-    rawinflatelib = require('./rawinflate-0.3'),
 
     a2zString = ['a','b','c','d','e','f','g','h','i','j','k','l','m',
                  'n','o','p','q','r','s','t','u','v','w','x','y','z'],
@@ -22,9 +19,9 @@ var jsc = require('jsverify'),
 
 global.$ = global.jQuery = require('./jquery-3.1.1');
 global.sjcl = require('./sjcl-1.0.6');
-global.Base64 = base64lib.Base64;
-global.RawDeflate = rawdeflatelib.RawDeflate;
-global.RawDeflate.inflate = rawinflatelib.RawDeflate.inflate;
+global.Base64 = require('./base64-2.1.9').Base64;
+global.RawDeflate = require('./rawdeflate-0.5').RawDeflate;
+global.RawDeflate.inflate = require('./rawinflate-0.3').RawDeflate.inflate;
 require('./privatebin');
 
 // redirect console messages to log file
@@ -441,7 +438,7 @@ describe('I18n', function () {
 
 describe('CryptTool', function () {
     describe('cipher & decipher', function () {
-        this.timeout(20000);
+        this.timeout(30000);
         it('can en- and decrypt any message', function () {
             jsc.check(jsc.forall(
                 'string',
@@ -461,10 +458,12 @@ describe('CryptTool', function () {
 
         // The below static unit test is included to ensure deciphering of "classic"
         // SJCL based pastes still works
-        it('supports v1 ciphertext (SJCL)', function () {
-            // Of course you can easily decipher the following texts, if you like.
-            // Bonus points for finding their sources and hidden meanings.
-            var paste1 = $.PrivateBin.CryptTool.decipher(
+        it(
+            'supports v1 ciphertext (SJCL)',
+            function () {
+                // Of course you can easily decipher the following texts, if you like.
+                // Bonus points for finding their sources and hidden meanings.
+                var paste1 = $.PrivateBin.CryptTool.decipher(
                     '6t2qsmLyfXIokNCL+3/yl15rfTUBQvm5SOnFPvNE7Q8=',
                     // -- "That's amazing. I've got the same combination on my luggage."
                     Array.apply(0, Array(6)).map(function(_,b) { return b + 1; }).join(''),
@@ -475,10 +474,57 @@ describe('CryptTool', function () {
                     '', // no password
                     '{"iv":"WA42mdxIVXUwBqZu7JYNiw==","v":1,"iter":10000,"ks":256,"ts":128,"mode":"gcm","adata":"","cipher":"aes","salt":"jN6CjbQMJCM=","ct":"kYYMo5DFG1+w0UHiYXT5pdV0IUuXxzOlslkW/c3DRCbGFROCVkAskHce7HoRczee1N9c5MhHjVMJUIZE02qIS8UyHdJ/GqcPVidTUcj9rnDNWsTXkjVv8jCwHS/cwmAjDTWpwp5ThECN+ov/wNp/NdtTj8Qj7f/T3rfZIOCWfwLH9s4Des35UNcUidfPTNQ1l0Gm0X+r98CCUSYZjQxkZc6hRZBLPQ8EaNVooUwd5eP4GiYlmSDNA0wOSA+5isPYxomVCt+kFf58VBlNhpfNi7BLYAUTPpXT4SfH5drR9+C7NTeZ+tTCYjbU94PzYItOpu8vgnB1/a6BAM5h3m9w+giUb0df4hgTWeZnZxLjo5BN8WV+kdTXMj3/Vv0gw0DQrDcCuX/cBAjpy3lQGwlAN1vXoOIyZJUjMpQRrOLdKvLB+zcmVNtGDbgnfP2IYBzk9NtodpUa27ne0T0ZpwOPlVwevsIVZO224WLa+iQmmHOWDFFpVDlS0t0fLfOk7Hcb2xFsTxiCIiyKMho/IME1Du3X4e6BVa3hobSSZv0rRtNgY1KcyYPrUPW2fxZ+oik3y9SgGvb7XpjVIta8DWlDWRfZ9kzoweWEYqz9IA8Xd373RefpyuWI25zlHoX3nwljzsZU6dC//h/Dt2DNr+IAvKO3+u23cWoB9kgcZJ2FJuqjLvVfCF+OWcig7zs2pTYJW6Rg6lqbBCxiUUlae6xJrjfv0pzD2VYCLY7v1bVTagppwKzNI3WaluCOrdDYUCxUSe56yd1oAoLPRVbYvomRboUO6cjQhEknERyvt45og2kORJOEJayHW+jZgR0Y0jM3Nk17ubpij2gHxNx9kiLDOiCGSV5mn9mV7qd3HHcOMSykiBgbyzjobi96LT2dIGLeDXTIdPOog8wyobO4jWq0GGs0vBB8oSYXhHvixZLcSjX2KQuHmEoWzmJcr3DavdoXZmAurGWLKjzEdJc5dSD/eNr99gjHX7wphJ6umKMM+fn6PcbYJkhDh2GlJL5COXjXfm/5aj/vuyaRRWZMZtmnYpGAtAPg7AUG"}'
                 );
-            if (!paste1.includes('securely packed in iron') || !paste2.includes('Sol is right')) {
-                throw Error('v1 (SJCL based) pastes could not be deciphered');
+                if (!paste1.includes('securely packed in iron') || !paste2.includes('Sol is right')) {
+                    throw Error('v1 (SJCL based) pastes could not be deciphered');
+                }
             }
-        });
+        );
+    });
+
+    describe('isEntropyReady & addEntropySeedListener', function () {
+        it(
+            'lets us know that enough entropy is collected or make us wait for it',
+            function(done) {
+                if ($.PrivateBin.CryptTool.isEntropyReady()) {
+                    done();
+                } else {
+                    $.PrivateBin.CryptTool.addEntropySeedListener(function() {
+                        done();
+                    });
+                }
+            }
+        );
+    });
+
+    describe('getSymmetricKey', function () {
+        var keys = [];
+
+        // the parameter is used to ensure the test is run more then one time
+        jsc.property(
+            'returns random, non-empty keys',
+            'nat',
+            function(n) {
+                var key = $.PrivateBin.CryptTool.getSymmetricKey(),
+                    result = (key !== '' && keys.indexOf(key) === -1);
+                keys.push(key);
+                return result;
+            }
+        );
+    });
+
+    describe('Base64.js vs SJCL.js vs abab.js', function () {
+        var btoa = require('abab').btoa;
+
+        jsc.property(
+            'these all return the same base64 string',
+            'string',
+            function(string) {
+                var base64 = Base64.toBase64(string),
+                    sjcl = global.sjcl.codec.base64.fromBits(global.sjcl.codec.utf8String.toBits(string)),
+                    abab = btoa(Base64.utob(string));
+                return base64 === sjcl && sjcl === abab;
+            }
+        );
     });
 });
 
