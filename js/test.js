@@ -547,15 +547,13 @@ describe('CryptTool', function () {
     });
 
     describe('Base64.js vs SJCL.js vs abab.js', function () {
-        var btoa = require('abab').btoa;
-
         jsc.property(
             'these all return the same base64 string',
             'string',
             function(string) {
                 var base64 = Base64.toBase64(string),
                     sjcl = global.sjcl.codec.base64.fromBits(global.sjcl.codec.utf8String.toBits(string)),
-                    abab = btoa(Base64.utob(string));
+                    abab = window.btoa(Base64.utob(string));
                 return base64 === sjcl && sjcl === abab;
             }
         );
