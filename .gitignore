@@ -30,6 +30,7 @@ vendor/**/build_phar.php
 
 # Ignore local node modules, unit testing logs, api docs and eclipse project files
 js/node_modules/
+js/test.log
 tst/log/
 tst/ConfigurationCombinationsTest.php
 .settings
