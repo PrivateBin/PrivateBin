@@ -158,7 +158,7 @@ class Paste extends AbstractModel
      *
      * The token is the hmac of the pastes ID signed with the server salt.
      * The paste can be deleted by calling:
-     * http://example.com/privatebin/?pasteid=<pasteid>&deletetoken=<deletetoken>
+     * https://example.com/privatebin/?pasteid=<pasteid>&deletetoken=<deletetoken>
      *
      * @access public
      * @return string

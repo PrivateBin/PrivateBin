@@ -47,7 +47,7 @@ if ($MARKDOWN):
 <?php
 endif;
 ?>
-		<script type="text/javascript" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-7WGautcQxef6PeNh1sNcdCFCNRNo2uULN7QCgjqd+fWalRubtu1mtMEz8BLQ8sKgzPRF8E6dqgBQJ5ycwt03gA==" crossorigin="anonymous"></script>
+		<script type="text/javascript" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-TCwmpH2nrRe3mLYIsGG90FGOFAqZal8SUQVNp16iA7K1B80I//RXp8mYxXdyyk/eluKilwCNY5wo9MYC4vdEoQ==" crossorigin="anonymous"></script>
 		<!--[if lt IE 10]>
 		<style type="text/css">body {padding-left:60px;padding-right:60px;} #ienotice {display:block;} #oldienotice {display:block;}</style>
 		<![endif]-->
@@ -227,7 +227,6 @@ endif;
 			</div>
 		</section>
 		<div id="serverdata" class="hidden" aria-hidden="true">
-			<div id="cipherdata" class="hidden"><?php echo htmlspecialchars($CIPHERDATA, ENT_NOQUOTES); ?></div>
 <?php
 if ($DISCUSSION):
 ?>

@@ -64,7 +64,7 @@ process (see also
 > #### PATH Example
 > Your PrivateBin installation lives in a subfolder called "paste" inside of
 > your document root. The URL looks like this:
-> http://example.com/paste/
+> https://example.com/paste/
 >
 > The full path of PrivateBin on your webserver is:
 > /home/example.com/htdocs/paste

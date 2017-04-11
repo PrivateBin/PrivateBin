@@ -147,7 +147,10 @@ class PrivateBin
                 );
                 break;
             case 'read':
-                $this->_read($this->_request->getParam('pasteid'));
+                // reading paste is disallowed in HTML display
+                if ($this->_request->isJsonApiCall()) {
+                    $this->_read($this->_request->getParam('pasteid'));
+                }
                 break;
             case 'jsonld':
                 $this->_jsonld($this->_request->getParam('jsonld'));
@@ -328,10 +331,10 @@ class PrivateBin
                 // deleted if it has already expired
                 $burnafterreading = $paste->isBurnafterreading();
                 if (
-                    ($burnafterreading && $deletetoken == 'burnafterreading') ||
-                    Filter::slowEquals($deletetoken, $paste->getDeleteToken())
+                    ($burnafterreading && $deletetoken == 'burnafterreading') || // either we burn-after it has been read //@TODO: not needed anymore now?
+                    Filter::slowEquals($deletetoken, $paste->getDeleteToken()) // or we manually delete it with this secret token
                 ) {
-                    // Paste exists and deletion token is valid: Delete the paste.
+                    // Paste exists and deletion token (if required) is valid: Delete the paste.
                     $paste->delete();
                     $this->_status = 'Paste was properly deleted.';
                 } else {
@@ -373,6 +376,11 @@ class PrivateBin
                     unset($data->meta->salt);
                 }
                 $this->_data = json_encode($data);
+
+                // If the paste was meant to be read only once, delete it.
+                if ($paste->isBurnafterreading()) {
+                    $paste->delete();
+                }
             } else {
                 $this->_error = self::GENERIC_ERROR;
             }
