@@ -10,7 +10,7 @@ and their dependencies:
 
 Example for Debian and Ubuntu:
 ```console
-$ sudo apt install phpunit php-gd php-sqlite php-xdebug
+$ sudo apt install phpunit php-gd php-sqlite3 php-xdebug
 ```
 
 To run the tests, change into the `tst` directory and run phpunit:
