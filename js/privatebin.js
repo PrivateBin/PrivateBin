@@ -460,7 +460,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                     // file is loaded
                 }
 
-                // for all other langauges than English for which this behaviour
+                // for all other languages than English for which this behaviour
                 // is expected as it is built-in, log error
                 if (language !== null && language !== 'en') {
                     console.error('Missing translation for: \'' + messageId + '\' in language ' + language);
@@ -1534,6 +1534,21 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         }
 
         /**
+         * resets the password to an empty string
+         *
+         * @name   Prompt.reset
+         * @function
+         */
+        me.reset = function()
+        {
+            // reset internal
+            password = '';
+
+            // and also reset UI
+            $passwordDecrypt.val('');
+        }
+
+        /**
          * init status manager
          *
          * preloads jQuery elements
@@ -2510,9 +2525,11 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             $password,
             $passwordInput,
             $rawTextButton,
-            $sendButton;
+            $sendButton,
+            $retryButton;
 
-        var pasteExpiration = '1week';
+        var pasteExpiration = '1week',
+            retryButtonCallback;
 
         /**
          * set the expiration on bootstrap templates in dropdown
@@ -2664,6 +2681,19 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         }
 
         /**
+         * retrys some callback registered before
+         *
+         * @name   TopNav.clickRetryButton
+         * @private
+         * @function
+         * @param  {Event} event
+         */
+        function clickRetryButton(event)
+        {
+            retryButtonCallback();
+        }
+
+        /**
          * removes the existing attachment
          *
          * @name   TopNav.removeAttachment
@@ -2720,8 +2750,8 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                 return;
             }
 
-            $newButton.addClass('hidden');
             $cloneButton.addClass('hidden');
+            $newButton.addClass('hidden');
             $rawTextButton.addClass('hidden');
 
             viewButtonsDisplayed = false;
@@ -2752,14 +2782,14 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                 return;
             }
 
-            $sendButton.removeClass('hidden');
+            $attach.removeClass('hidden');
+            $burnAfterReadingOption.removeClass('hidden');
             $expiration.removeClass('hidden');
             $formatter.removeClass('hidden');
-            $burnAfterReadingOption.removeClass('hidden');
-            $openDiscussionOption.removeClass('hidden');
             $newButton.removeClass('hidden');
+            $openDiscussionOption.removeClass('hidden');
             $password.removeClass('hidden');
-            $attach.removeClass('hidden');
+            $sendButton.removeClass('hidden');
 
             createButtonsDisplayed = true;
         }
@@ -2798,6 +2828,28 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         me.showNewPasteButton = function()
         {
             $newButton.removeClass('hidden');
+        }
+
+        /**
+         * only shows the "retry" button
+         *
+         * @name   TopNav.showRetryButton
+         * @function
+         */
+        me.showRetryButton = function()
+        {
+            $retryButton.removeClass('hidden');
+        }
+
+        /**
+         * hides the "retry" button
+         *
+         * @name   TopNav.hideRetryButton
+         * @function
+         */
+        me.hideRetryButton = function()
+        {
+            $retryButton.addClass('hidden');
         }
 
         /**
@@ -2948,6 +3000,18 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         }
 
         /**
+         * Set a function to call when the retry button is clicked.
+         *
+         * @name   TopNav.setRetryCallback
+         * @function
+         * @param {function} callback
+         */
+        me.setRetryCallback = function(callback)
+        {
+            retryButtonCallback = callback;
+        }
+
+        /**
          * init navigation manager
          *
          * preloads jQuery elements
@@ -2972,6 +3036,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             $password = $('#password');
             $passwordInput = $('#passwordinput');
             $rawTextButton = $('#rawtextbutton');
+            $retryButton = $('#retrybutton');
             $sendButton = $('#sendbutton');
 
             // bootstrap template drop down
@@ -2986,6 +3051,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             $sendButton.click(PasteEncrypter.sendPaste);
             $cloneButton.click(Controller.clonePaste);
             $rawTextButton.click(rawText);
+            $retryButton.click(clickRetryButton);
             $fileRemoveButton.click(removeAttachment);
 
             // bootstrap template drop downs
@@ -3796,6 +3862,9 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          */
         me.run = function(paste)
         {
+            // in case the button has been there previously
+            TopNav.hideRetryButton();
+
             Alert.hideMessages();
             Alert.showLoading('Decrypting paste…', 0, 'cloud-download'); // @TODO icon maybe rotation-lock, but needs full Glyphicons
 
@@ -3845,7 +3914,11 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
 
                 // log and show error
                 console.error(err);
-                Alert.showError('Could not decrypt data (Wrong key?)');
+                Alert.showError('Could not decrypt data. Did you enter a wrong password? Retry with the button at the top.');
+                // reset password, so it can be re-entered and sow retry button
+                Prompt.reset();
+                TopNav.setRetryCallback(me.run);
+                TopNav.showRetryButton();
             }
         }
 

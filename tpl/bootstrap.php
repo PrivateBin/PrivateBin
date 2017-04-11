@@ -69,7 +69,7 @@ if ($MARKDOWN):
 <?php
 endif;
 ?>
-		<script type="text/javascript" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-TCwmpH2nrRe3mLYIsGG90FGOFAqZal8SUQVNp16iA7K1B80I//RXp8mYxXdyyk/eluKilwCNY5wo9MYC4vdEoQ==" crossorigin="anonymous"></script>
+		<script type="text/javascript" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-tGE0CigbTPqWg1xkIeJrdAT3U9QsTTI2k/8qviRyBVbyuevBiyM3XBlmpARRjHwv075QSK4h4TuI8TlU9ScS2Q==" crossorigin="anonymous"></script>
 		<!--[if lt IE 10]>
 		<style type="text/css">body {padding-left:60px;padding-right:60px;} #ienotice {display:block;} #oldienotice {display:block;}</style>
 		<![endif]-->
@@ -123,6 +123,11 @@ endif;
 					<li id="loadingindicator" class="navbar-text hidden">
 						<span class="glyphicon glyphicon-time" aria-hidden="true"></span>
 						<?php echo I18n::_('Loading…'), PHP_EOL; ?>
+					</li>
+					<li>
+						<button id="retrybutton" type="button" class="reloadlink hidden btn btn-<?php echo $isDark ? 'warning' : 'primary'; ?> navbar-btn">
+							<span class="glyphicon glyphicon-repeat" aria-hidden="true"></span> <?php echo I18n::_('Retry'), PHP_EOL; ?>
+						</button>
 					</li>
 					<li>
 <?php

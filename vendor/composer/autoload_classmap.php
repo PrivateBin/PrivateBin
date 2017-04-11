@@ -23,6 +23,7 @@ return array(
     'PrivateBin\\Model\\Comment' => $baseDir . '/lib/Model/Comment.php',
     'PrivateBin\\Model\\Paste' => $baseDir . '/lib/Model/Paste.php',
     'PrivateBin\\Persistence\\AbstractPersistence' => $baseDir . '/lib/Persistence/AbstractPersistence.php',
+    'PrivateBin\\Persistence\\DataStore' => $baseDir . '/lib/Persistence/DataStore.php',
     'PrivateBin\\Persistence\\PurgeLimiter' => $baseDir . '/lib/Persistence/PurgeLimiter.php',
     'PrivateBin\\Persistence\\ServerSalt' => $baseDir . '/lib/Persistence/ServerSalt.php',
     'PrivateBin\\Persistence\\TrafficLimiter' => $baseDir . '/lib/Persistence/TrafficLimiter.php',
