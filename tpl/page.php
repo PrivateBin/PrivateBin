@@ -89,6 +89,7 @@ endif;
 				<div id="errormessage" class="hidden"><?php echo htmlspecialchars($ERROR); ?></div>
 				<div id="toolbar">
 					<button id="newbutton" class="reloadlink hidden"><img src="img/icon_new.png" width="11" height="15" alt="" /><?php echo I18n::_('New'); ?></button>
+					<button id="retrybutton" class="reloadlink hidden"><?php echo I18n::_('Retry'), PHP_EOL; ?></button>
 					<button id="sendbutton" class="hidden"><img src="img/icon_send.png" width="18" height="15" alt="" /><?php echo I18n::_('Send'); ?></button>
 <?php
 if ($EXPIRECLONE):
