@@ -2690,7 +2690,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          */
         function clickRetryButton(event)
         {
-            retryButtonCallback();
+            retryButtonCallback(event);
         }
 
         /**
@@ -3862,9 +3862,6 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          */
         me.run = function(paste)
         {
-            // in case the button has been there previously
-            TopNav.hideRetryButton();
-
             Alert.hideMessages();
             Alert.showLoading('Decrypting paste…', 0, 'cloud-download'); // @TODO icon maybe rotation-lock, but needs full Glyphicons
 
@@ -3917,7 +3914,11 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                 Alert.showError('Could not decrypt data. Did you enter a wrong password? Retry with the button at the top.');
                 // reset password, so it can be re-entered and sow retry button
                 Prompt.reset();
-                TopNav.setRetryCallback(me.run);
+                TopNav.setRetryCallback(function () {
+                    TopNav.hideRetryButton();
+
+                    me.run(paste);
+                });
                 TopNav.showRetryButton();
             }
         }
