@@ -43,7 +43,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         var me = {};
 
         /**
-         * list of UserAgents (parts) known to belong to a bot
+         * blacklist of UserAgents (parts) known to belong to a bot
          *
          * @private
          * @enum   {Object}
@@ -1390,7 +1390,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             if (pasteMetaData.burnafterreading) {
                 // display paste "for your eyes only" if it is deleted
 
-                // the paste has been deleted when the JSOn with the ciohertext
+                // the paste has been deleted when the JSON with the ciphertext
                 // has been downloaded
 
                 Alert.showRemaining("FOR YOUR EYES ONLY. Don't close this window, this message can't be displayed again.");

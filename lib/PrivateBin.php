@@ -376,11 +376,6 @@ class PrivateBin
                     unset($data->meta->salt);
                 }
                 $this->_data = json_encode($data);
-
-                // If the paste was meant to be read only once, delete it.
-                if ($paste->isBurnafterreading()) {
-                    $paste->delete();
-                }
             } else {
                 $this->_error = self::GENERIC_ERROR;
             }
