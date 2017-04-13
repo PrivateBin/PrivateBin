@@ -48,11 +48,6 @@ class Paste extends AbstractModel
             $data->meta->remaining_time = $data->meta->expire_date - time();
         }
 
-        // If the paste was meant to be read only once, delete it.
-        if ($paste->isBurnafterreading()) {
-            $paste->delete();
-        }
-
         // set formatter for for the view.
         if (!property_exists($data->meta, 'formatter')) {
             // support < 0.21 syntax highlighting
@@ -72,6 +67,12 @@ class Paste extends AbstractModel
         $data->comment_offset = 0;
         $data->{'@context'}   = 'js/paste.jsonld';
         $this->_data          = $data;
+
+        // If the paste was meant to be read only once, delete it.
+        if ($this->isBurnafterreading()) {
+            $this->delete();
+        }
+
         return $this->_data;
     }
 
