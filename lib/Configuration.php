@@ -42,6 +42,7 @@ class Configuration
             'password'                 => true,
             'fileupload'               => false,
             'burnafterreadingselected' => false,
+            'instantburnafterreading'  => false,
             'defaultformatter'         => 'plaintext',
             'syntaxhighlightingtheme'  => null,
             'sizelimit'                => 2097152,

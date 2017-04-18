@@ -822,6 +822,37 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
             $content,
             'outputs data correctly'
         );
+        // by default it will be deleted after encryption by the JS
+        $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste exists after reading');
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testReadInstantBurn()
+    {
+        $this->reset();
+        $options                                    = parse_ini_file(CONF, true);
+        $options['main']['instantburnafterreading'] = 1;
+        Helper::confBackup();
+        Helper::createIniFile(CONF, $options);
+        $burnPaste = Helper::getPaste(array('burnafterreading' => true));
+        $this->_model->create(Helper::getPasteId(), $burnPaste);
+        $_SERVER['QUERY_STRING'] = Helper::getPasteId();
+        ob_start();
+        new PrivateBin;
+        $content = ob_get_contents();
+        ob_end_clean();
+        unset($burnPaste['meta']['salt']);
+        $this->assertRegExp(
+            '#<div id="cipherdata"[^>]*>' .
+            preg_quote(htmlspecialchars(Helper::getPasteAsJson($burnPaste['meta']), ENT_NOQUOTES)) .
+            '</div>#',
+            $content,
+            'outputs data correctly'
+        );
+        // in this case the changed configuration deletes it instantly
+        $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste exists after reading');
     }
 
     /**
