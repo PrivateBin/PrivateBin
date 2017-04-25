@@ -36,13 +36,11 @@ class Configuration
      */
     private static $_defaults = array(
         'main' => array(
-            'name'                     => 'PrivateBin',
             'discussion'               => true,
             'opendiscussion'           => false,
             'password'                 => true,
             'fileupload'               => false,
             'burnafterreadingselected' => false,
-            'instantburnafterreading'  => false,
             'defaultformatter'         => 'plaintext',
             'syntaxhighlightingtheme'  => null,
             'sizelimit'                => 2097152,
@@ -52,8 +50,9 @@ class Configuration
             'languagedefault'          => '',
             'urlshortener'             => '',
             'icon'                     => 'identicon',
-            'cspheader'                => 'default-src \'none\'; manifest-src \'self\'; connect-src *; script-src \'self\'; style-src \'self\'; font-src \'self\'; img-src \'self\' data:; referrer no-referrer; sandbox allow-same-origin allow-scripts allow-forms allow-popups',
+            'cspheader'                => 'default-src \'none\'; manifest-src \'self\'; connect-src *; script-src \'self\'; style-src \'self\'; font-src \'self\'; img-src \'self\' data:; referrer no-referrer;',
             'zerobincompatibility'     => false,
+            'webserver'     	       => 'apache',
         ),
         'expire' => array(
             'default' => '1week',
@@ -241,7 +240,7 @@ class Configuration
     public function getSection($section)
     {
         if (!array_key_exists($section, $this->_configuration)) {
-            throw new Exception(I18n::_('%s requires configuration section [%s] to be present in configuration file.', I18n::_($this->getKey('name')), $section), 3);
+            throw new Exception(I18n::_('PrivateBin requires configuration section [%s] to be present in configuration file.', $section), 3);
         }
         return $this->_configuration[$section];
     }
