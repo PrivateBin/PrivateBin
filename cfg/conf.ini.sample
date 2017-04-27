@@ -68,7 +68,7 @@ languageselection = false
 zerobincompatibility = false
 
 ; allows you to specify the name of the web server you are using to use ParseBin.
-; If you use nginx or other webserver, delete semicolon
+; if you use nginx or other webserver, delete semicolon 
 ; webserver = "nginx"
 
 [expire]

@@ -91,21 +91,21 @@ abstract class AbstractPersistence
             }
         }
 
-	 if (property_exists($data->meta, 'webserver') && $data->meta->webserver && $this->_conf->getKey('webserver') == "Apache") {
+        if (property_exists($data->meta, 'webserver') && $data->meta->webserver && $this->_conf->getKey('webserver') == "Apache") {
 	        // Create .htaccess file if it does not exist.
-        	$file = self::$_path . DIRECTORY_SEPARATOR . '.htaccess';
-        	if (!is_file($file)) {
-            		$writtenBytes = @file_put_contents(
-                		$file,
-                		'Allow from none' . PHP_EOL .
-                		'Deny from all' . PHP_EOL,
-                		LOCK_EX
-            		);
-            		if ($writtenBytes === false || $writtenBytes < 30) {
-                		throw new Exception('unable to write to file ' . $file, 11);
-            		}
+            $file = self::$_path . DIRECTORY_SEPARATOR . '.htaccess';
+            if (!is_file($file)) {
+            	$writtenBytes = @file_put_contents(
+                	$file,
+                	'Allow from none' . PHP_EOL .
+                	'Deny from all' . PHP_EOL,
+                	LOCK_EX
+            	);
+            	if ($writtenBytes === false || $writtenBytes < 30) {
+                	throw new Exception('unable to write to file ' . $file, 11);
+            	}
         	}
-	}
+        }
     }
 
     /**
