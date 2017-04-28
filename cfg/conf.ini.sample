@@ -75,6 +75,10 @@ languageselection = false
 ; sha256 in HMAC for the deletion token
 zerobincompatibility = false
 
+; allows you to specify the name of the web server you are using to use ParseBin.
+; if you use Nginx, decommente and add nginx.
+webserver = "Nginx"
+
 [expire]
 ; expire value that is selected per default
 ; make sure the value exists in [expire_options]
