@@ -82,13 +82,13 @@ abstract class AbstractPersistence
      */
     protected static function _initialize()
     {
-        if (property_exists($data->meta, 'webserver') && $data->meta->webserver && $this->_conf->getKey('webserver') == "Apache") {
-            // Create storage directory if it does not exist.
-            if (!is_dir(self::$_path)) {
-                if (!@mkdir(self::$_path, 0700)) {
-                    throw new Exception('unable to create directory ' . self::$_path, 10);
-                }
+        // Create storage directory if it does not exist.
+        if (!is_dir(self::$_path)) {
+            if (!@mkdir(self::$_path, 0700)) {
+                throw new Exception('unable to create directory ' . self::$_path, 10);
             }
+        }
+        if (property_exists($data->meta, 'webserver') && $data->meta->webserver && $this->_conf->getKey('webserver') == "Apache") {
             $file = self::$_path . DIRECTORY_SEPARATOR . '.htaccess';
             if (!is_file($file)) {
                 $writtenBytes = @file_put_contents(
