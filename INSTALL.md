@@ -149,3 +149,6 @@ CREATE TABLE prefix_config (
 );
 INSERT INTO prefix_config VALUES('VERSION', '1.1');
 ```
+
+In PostgreSQL the attachment column needs to be TEXT and not BLOB or MEDIUMBLOB.
+
