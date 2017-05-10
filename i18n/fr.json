@@ -1,7 +1,7 @@
 {
     "PrivateBin": "PrivateBin",
     "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href=\"https://privatebin.info/\">project page</a>.":
-        "%s est un 'pastebin' (ou gestionnaire d'extraits de texte et de code source) minimaliste et open source, dans lequel le serveur n'a aucune connaissance des données envoyées. Les données sont chiffrées/déchiffrées <i>dans le navigateur</i> par un chiffrage AES 256 bits. Plus d'informations sur <a href=\"https://privatebin.info/\">la page du projet</a>.",
+        "%s est un 'pastebin' (ou gestionnaire d'extraits de texte et de code source) minimaliste et open source, dans lequel le serveur n'a aucune connaissance des données envoyées. Les données sont chiffrées/déchiffrées <i>dans le navigateur</i> par un chiffrement AES 256 bits. Plus d'informations sur <a href=\"https://privatebin.info/\">la page du projet</a>.",
     "Because ignorance is bliss":
         "Parce que l'ignorance c'est le bonheur",
     "en": "fr",
@@ -123,7 +123,7 @@
     "Could not create paste: %s":
         "Impossible de créer le paste : %s",
     "Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)":
-        "Impossible de déchiffrer le paste : Clé de déchiffrage manquante dans l'URL (Avez-vous utilisé un redirecteur ou un site de réduction d'URL qui supprime une partie de l'URL ?)",
+        "Impossible de déchiffrer le paste : Clé de déchiffrement manquante dans l'URL (Avez-vous utilisé un redirecteur ou un site de réduction d'URL qui supprime une partie de l'URL ?)",
     "B": "o",
     "KiB": "Kio",
     "MiB": "Mio",
@@ -156,8 +156,8 @@
     "Enter password":
         "Entrez le mot de passe",
     "Loading…": "Chargement…",
-    "Decrypting paste…": "Decrypting paste…",
-    "Preparing new paste…": "Preparing new paste…",
+    "Decrypting paste…": "Déchiffrement du paste…",
+    "Preparing new paste…": "Préparation du paste…",
     "In case this message never disappears please have a look at <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">this FAQ for information to troubleshoot</a>.":
         "Si ce message ne disparaîssait pas, jetez un oeil à <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">cette FAQ pour des idées de résolution</a> (en Anglais).",
     "+++ no paste text +++": "+++ no paste text +++"
