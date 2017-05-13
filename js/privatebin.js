@@ -2299,6 +2299,23 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         };
 
         /**
+         * Attaches the clipboard attachment handler to the page.
+         * @returns {undefined}
+         */
+        me.addClipboardEventHandler = function () {
+            document.addEventListener("paste",
+                    function (event) {
+                        var items = (event.clipboardData || event.originalEvent.clipboardData).items;
+                        for (var i in items) {
+                            var item = items[i];
+                            if (item.kind === 'file') {
+                                me.readFileData(item.getAsFile());
+                            }
+                        }
+                    }, false);
+        };
+
+        /**
          * initiate
          *
          * preloads jQuery elements
@@ -2315,6 +2332,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
 
                 me.$fileInput = $('#file');
                 me.addDragDropHandler();
+                me.addClipboardEventHandler();
             }
         }
 

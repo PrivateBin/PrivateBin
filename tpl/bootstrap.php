@@ -69,7 +69,7 @@ if ($MARKDOWN):
 <?php
 endif;
 ?>
-		<script type="text/javascript" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-pOe2H/Z6no88ilmHnSzSPrN5jYaj4B0VrxeVKHZ728CwUxNKwI8xIAUH+B/UPnKXgT33IV2EHbBIXYJERQxinA==" crossorigin="anonymous"></script>
+		<script type="text/javascript" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-wrGlxXZ5UYLGd+2CJB2I4xXJXoG632WaqM+glL2g669ta/mDwPgDhB+mhoXGdD7PWLpZ9JIgcjovMou/wrPtRg==" crossorigin="anonymous"></script>
 		<!--[if lt IE 10]>
 		<style type="text/css">body {padding-left:60px;padding-right:60px;} #ienotice {display:block;} #oldienotice {display:block;}</style>
 		<![endif]-->
@@ -283,7 +283,7 @@ if ($FILEUPLOAD):
 								<div>
 									<input type="file" id="file" name="file"/>
 								</div>
-								<div id="dragAndDropFileName" class="dragAndDropFile"><?php echo I18n::_('or drag & drop file'); ?></div>
+								<div id="dragAndDropFileName" class="dragAndDropFile"><?php echo I18n::_('alternatively drag & drop a file or paste an image from the clipboard'); ?></div>
 							</li>
 							<li id="customattachment" class="hidden"></li>
 							<li>
