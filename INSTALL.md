@@ -64,7 +64,7 @@ process (see also
 > #### PATH Example
 > Your PrivateBin installation lives in a subfolder called "paste" inside of
 > your document root. The URL looks like this:
-> http://example.com/paste/
+> https://example.com/paste/
 >
 > The full path of PrivateBin on your webserver is:
 > /home/example.com/htdocs/paste
@@ -118,32 +118,37 @@ For reference or if you want to create the table schema for yourself (replace
 `prefix_` with your own table prefix and create the table schema with phpMyAdmin
 or the MYSQL console):
 
-    CREATE TABLE prefix_paste (
-        dataid CHAR(16) NOT NULL,
-        data BLOB,
-        postdate INT,
-        expiredate INT,
-        opendiscussion INT,
-        burnafterreading INT,
-        meta TEXT,
-        attachment MEDIUMBLOB,
-        attachmentname BLOB,
-        PRIMARY KEY (dataid)
-    );
-    
-    CREATE TABLE prefix_comment (
-        dataid CHAR(16),
-        pasteid CHAR(16),
-        parentid CHAR(16),
-        data BLOB,
-        nickname BLOB,
-        vizhash BLOB,
-        postdate INT,
-        PRIMARY KEY (dataid)
-    );
-    CREATE INDEX parent ON prefix_comment(pasteid);
-    
-    CREATE TABLE prefix_config (
-        id CHAR(16) NOT NULL, value TEXT, PRIMARY KEY (id)
-    );
-    INSERT INTO prefix_config VALUES('VERSION', '1.1');
+```sql
+CREATE TABLE prefix_paste (
+    dataid CHAR(16) NOT NULL,
+    data BLOB,
+    postdate INT,
+    expiredate INT,
+    opendiscussion INT,
+    burnafterreading INT,
+    meta TEXT,
+    attachment MEDIUMBLOB,
+    attachmentname BLOB,
+    PRIMARY KEY (dataid)
+);
+
+CREATE TABLE prefix_comment (
+    dataid CHAR(16),
+    pasteid CHAR(16),
+    parentid CHAR(16),
+    data BLOB,
+    nickname BLOB,
+    vizhash BLOB,
+    postdate INT,
+    PRIMARY KEY (dataid)
+);
+CREATE INDEX parent ON prefix_comment(pasteid);
+
+CREATE TABLE prefix_config (
+    id CHAR(16) NOT NULL, value TEXT, PRIMARY KEY (id)
+);
+INSERT INTO prefix_config VALUES('VERSION', '1.1');
+```
+
+In PostgreSQL the attachment column needs to be TEXT and not BLOB or MEDIUMBLOB.
+

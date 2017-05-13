@@ -48,6 +48,11 @@ class Paste extends AbstractModel
             $data->meta->remaining_time = $data->meta->expire_date - time();
         }
 
+        // check if non-expired burn after reading paste needs to be deleted
+        if (property_exists($data->meta, 'burnafterreading') && $data->meta->burnafterreading && $this->_conf->getKey('instantburnafterreading')) {
+            $this->delete();
+        }
+
         // set formatter for for the view.
         if (!property_exists($data->meta, 'formatter')) {
             // support < 0.21 syntax highlighting

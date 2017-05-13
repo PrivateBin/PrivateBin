@@ -108,19 +108,6 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         }
 
         /**
-         * checks if a string is valid text (and not onyl whitespace)
-         *
-         * @name Helper.isValidText
-         * @function
-         * @param  {string} string
-         * @return {bool}
-         */
-        me.isValidText = function(string)
-        {
-            return (string.length > 0 && $.trim(string) !== '')
-        }
-
-        /**
          * text range selection
          *
          * @see    {@link https://stackoverflow.com/questions/985272/jquery-selecting-text-in-an-element-akin-to-highlighting-with-your-mouse}
@@ -319,7 +306,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
      * @param  {object} document
      * @class
      */
-    var I18n = (function (window, document) {
+    var I18n = (function () {
         var me = {};
 
         /**
@@ -551,8 +538,20 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             });
         }
 
+        /**
+         * resets state, used for unit testing
+         *
+         * @name   I18n.reset
+         * @function
+         */
+        me.reset = function(mockLanguage, mockTranslations)
+        {
+            language = mockLanguage || null;
+            translations = mockTranslations || {};
+        }
+
         return me;
-    })(window, document);
+    })();
 
     /**
      * handles everything related to en/decryption
@@ -822,7 +821,6 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         {
             $cipherData = $templates = id = symmetricKey = null;
         }
-
 
         /**
          * init navigation manager
