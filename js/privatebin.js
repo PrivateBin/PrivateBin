@@ -1594,8 +1594,10 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
 
             // show preview
             PasteViewer.setText($message.val());
-            var attachmentData = AttachmentViewer.attachmentData || AttachmentViewer.$attachmentLink.attr('href');
-            AttachmentViewer.handleAttachmentPreview(AttachmentViewer.$attachmentPreview, attachmentData);
+            if (AttachmentViewer.$attachment.length) {
+                var attachmentData = AttachmentViewer.attachmentData || AttachmentViewer.$attachmentLink.attr('href');
+                AttachmentViewer.handleAttachmentPreview(AttachmentViewer.$attachmentPreview, attachmentData);
+            }
             PasteViewer.run();
 
             // finish
@@ -2037,6 +2039,9 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          */
         me.removeAttachment = function()
         {
+            if (!me.$attachment.length) {
+                return;
+            }
             me.hideAttachment();
             me.hideAttachmentPreview();
             me.$attachmentLink.prop('href', '');
@@ -2070,7 +2075,9 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          */
         me.hideAttachmentPreview = function()
         {
-            me.$attachmentPreview.addClass('hidden');
+            if(me.$attachmentPreview){
+                me.$attachmentPreview.addClass('hidden');
+            }
         }
 
         /**
@@ -2081,6 +2088,9 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          */
         me.hasAttachment = function()
         {
+            if (!AttachmentViewer.$attachment.length) {
+                return false;
+            }
             var link = me.$attachmentLink.prop('href');
             return (typeof link !== 'undefined' && link !== '')
         }
@@ -2299,11 +2309,13 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         me.init = function()
         {
             me.$attachment = $('#attachment');
-            me.$attachmentLink = $('#attachment a');
-            me.$attachmentPreview = $('#attachmentPreview');
+            if(me.$attachment.length){
+                me.$attachmentLink = $('#attachment a');
+                me.$attachmentPreview = $('#attachmentPreview');
 
-            me.$fileInput = $('#file');
-            me.addDragDropHandler();
+                me.$fileInput = $('#file');
+                me.addDragDropHandler();
+            }
         }
 
         return me;
@@ -3913,10 +3925,12 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             try {
                 // decrypt attachments
                 if (paste.attachment) {
-                    // try to decrypt paste and if it fails (because the password is
-                    // missing) return to let JS continue and wait for user
-                    if (!decryptAttachment(paste, key, password)) {
-                        return;
+                    if (AttachmentViewer.$attachment.length) {
+                        // try to decrypt paste and if it fails (because the password is
+                        // missing) return to let JS continue and wait for user
+                        if (!decryptAttachment(paste, key, password)) {
+                            return;
+                        }
                     }
                     // ignore empty paste, as this is allowed when pasting attachments
                     decryptPaste(paste, key, password, true);
@@ -3999,6 +4013,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             Editor.resetInput();
             Editor.show();
             Editor.focusInput();
+            AttachmentViewer.removeAttachment();
 
             TopNav.showCreateButtons();
             Alert.hideLoading();
