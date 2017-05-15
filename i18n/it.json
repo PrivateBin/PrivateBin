@@ -133,6 +133,7 @@
     "The cloned file '%s' was attached to this paste.": "Il file clonato '%s' era allegato a questo messaggio.",
     "Attach a file": "Allega un file",
     "alternatively drag & drop a file or paste an image from the clipboard": "alternatively drag & drop a file or paste an image from the clipboard",
+    "File too large, to display a preview. Please download the attachment.": "File too large, to display a preview. Please download the attachment.",
     "Remove attachment": "Rimuovi allegato",
     "Your browser does not support uploading encrypted files. Please use a newer browser.":
         "Il tuo browser non supporta l'invio di file cifrati. Utilizza un browser più recente.",

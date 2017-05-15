@@ -133,6 +133,7 @@
     "The cloned file '%s' was attached to this paste.": "克隆文件 '%s' 已附加到此粘贴。",
     "Attach a file": "添加一个附件",
     "alternatively drag & drop a file or paste an image from the clipboard": "alternatively drag & drop a file or paste an image from the clipboard",
+    "File too large, to display a preview. Please download the attachment.": "File too large, to display a preview. Please download the attachment.",
     "Remove attachment": "移除附件",
     "Your browser does not support uploading encrypted files. Please use a newer browser.":
         "您的浏览器不支持上传加密的文件，请使用更新的浏览器。",
