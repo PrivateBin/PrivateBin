@@ -141,6 +141,7 @@
     "Cloned: '%s'": "Cloner '%s'",
     "The cloned file '%s' was attached to this paste.": "The cloned file '%s' was attached to this paste.",
     "Attach a file": "Attacher un fichier ",
+    "alternatively drag & drop a file or paste an image from the clipboard": "alternatively drag & drop a file or paste an image from the clipboard",
     "Remove attachment": "Enlever l'attachement",
     "Your browser does not support uploading encrypted files. Please use a newer browser.":
         "Votre navigateur ne supporte pas l'envoi de fichiers chiffrés. Merci d'utiliser un navigateur plus récent.",

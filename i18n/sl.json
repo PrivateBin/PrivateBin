@@ -141,6 +141,7 @@
     "Cloned: '%s'": "'%s' klonirana",
     "The cloned file '%s' was attached to this paste.": "The cloned file '%s' was attached to this paste.",
     "Attach a file": "Pripni datoteko",
+    "alternatively drag & drop a file or paste an image from the clipboard": "alternatively drag & drop a file or paste an image from the clipboard",
     "Remove attachment": "Odstrani priponko",
     "Your browser does not support uploading encrypted files. Please use a newer browser.":
         "Tvoj brskalnik ne omogoča nalaganje zakodiranih datotek. Prosim uporabi novejši brskalnik.",
