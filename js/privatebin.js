@@ -1984,13 +1984,13 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
     var AttachmentViewer = (function (window, document) {
         var me = {};
 
-        var $attachmentLink = undefined;
-        var $attachmentPreview = undefined;
-        var $attachment = undefined;
-        var attachmentData = undefined;
-        var file = undefined;
-        var $fileInput = undefined;
-        var $dragAndDropFileName = undefined;
+        var $attachmentLink;
+        var $attachmentPreview;
+        var $attachment;
+        var attachmentData;
+        var file;
+        var $fileInput;
+        var $dragAndDropFileName;
         var attachmentHasPreview = false;
 
         /**
@@ -2144,11 +2144,11 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
 
         /**
          * Read file data as dataURL using the FileReader API.
-         * @param {type} aFile The loaded file.
-         * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/FileReader#readAsDataURL()}
+         * @param {object} loadedFile The loaded file.
+         * @see {@link https://d function (aFileeveloper.mozilla.org/en-US/docs/Web/API/FileReader#readAsDataURL()}
          * @returns {undefined}
          */
-        me.readFileData = function (aFile) {
+        me.readFileData = function (loadedFile) {
             if (typeof FileReader === 'undefined') {
                 // revert loading status…
                 me.hideAttachment();
@@ -2158,14 +2158,14 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             }
 
             var fileReader = new FileReader();
-            if (aFile === undefined) {
-                aFile = $fileInput[0].files[0];
-                $($dragAndDropFileName).text('');
+            if (loadedFile === undefined) {
+                loadedFile = $fileInput[0].files[0];
+                $dragAndDropFileName.text('');
             } else {
-                $($dragAndDropFileName).text(aFile.name);
+                $dragAndDropFileName.text(loadedFile.name);
             }
 
-            file = aFile;
+            file = loadedFile;
 
             fileReader.onload = function (event) {
                 var dataURL = event.target.result;
@@ -2175,12 +2175,12 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                     me.handleAttachmentPreview($attachmentPreview, dataURL);
                 }
             };
-            fileReader.readAsDataURL(aFile);
+            fileReader.readAsDataURL(loadedFile);
         };
 
         /**
          *  Handle the preview of files that can either be an image, video, audio or pdf element.
-         *  @argument {DOM Element} $targetElement where the preview should be appended.
+         *  @argument {jQuery} $targetElement where the preview should be appended.
          *  @argument {File Data} data of the file to be displayed.
          */
         me.handleAttachmentPreview = function ($targetElement, data) {
@@ -2202,9 +2202,9 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         /**
          * Get Mime Type from a DataURL
          *
-         * @param {type} dataURL
+         * @param {string} dataURL
          * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/FileReader#readAsDataURL()}
-         * @returns Mime Type from a dataURL as obtained for a file using the FileReader API
+         * @returns {string} Mime Type from a dataURL as obtained for a file using the FileReader API
          */
         me.getMimeTypeFromDataURL = function (dataURL) {
             return dataURL.slice(dataURL.indexOf('data:') + 5, dataURL.indexOf(';base64,'));
@@ -2212,8 +2212,8 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
 
         /**
          * Displays an image attachment within the $targetElement.
-         * @param {type} $targetElement jQuery reference to the element, where the image should be displayed.
-         * @param {type} image The image to display.
+         * @param {jQuery} $targetElement jQuery reference to the element, where the image should be displayed.
+         * @param {string} image The image to display.
          */
         me.showImagePreview = function ($targetElement, image) {
             $targetElement.html(
@@ -2226,9 +2226,9 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
 
         /**
          * Displays a video with the HTML5 video tag.
-         * @param {type} $targetElement jQuery reference to the element, where the image should be displayed.
-         * @param {type} video The video file.
-         * @param {type} mimeType The mimeType of the video, as returned by getMimeTypeFromDataURL.
+         * @param {jQuery} $targetElement jQuery reference to the element, where the image should be displayed.
+         * @param {string} video The video file.
+         * @param {string} mimeType The mimeType of the video, as returned by getMimeTypeFromDataURL.
          */
         me.showVideoPreview = function ($targetElement, video, mimeType) {
             var $videoPlayer = $(document.createElement('video'))
@@ -2245,9 +2245,9 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
 
         /**
          * Play audio with the HTML5 audio tag.
-         * @param {type} $targetElement jQuery reference to the element, where the image should be displayed.
-         * @param {type} audio The audio file.
-         * @param {type} mimeType The mimeType of the audio file, as returned by getMimeTypeFromDataURL.
+         * @param {jQuery} $targetElement jQuery reference to the element, where the image should be displayed.
+         * @param {string} audio The audio file.
+         * @param {string} mimeType The mimeType of the audio file, as returned by getMimeTypeFromDataURL.
          */
         me.showAudioPreview = function ($targetElement, audio, mimeType) {
             var $audioPlayer = $(document.createElement('audio'))
@@ -2273,17 +2273,17 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                 return;
             }
 
-                //Fallback for browsers, that don't support the vh unit
-                var clientHeight = $(window).height();
+            //Fallback for browsers, that don't support the vh unit
+            var clientHeight = $(window).height();
 
-                $targetElement.html(
-                        $(document.createElement('embed'))
-                        .attr('src', pdf)
-                        .attr('type', 'application/pdf')
-                        .attr('class', 'pdfPreview')
-                        .css('height', clientHeight)
-                        );
-                $targetElement.removeClass('hidden');
+            $targetElement.html(
+                    $(document.createElement('embed'))
+                    .attr('src', pdf)
+                    .attr('type', 'application/pdf')
+                    .attr('class', 'pdfPreview')
+                    .css('height', clientHeight)
+                    );
+            $targetElement.removeClass('hidden');
         };
 
         /**
@@ -2334,9 +2334,11 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                     function (event) {
                         var items = (event.clipboardData || event.originalEvent.clipboardData).items;
                         for (var i in items) {
-                            var item = items[i];
-                            if (item.kind === 'file') {
-                                me.readFileData(item.getAsFile());
+                            if ({}.hasOwnProperty.call(items, i)) {
+                                var item = items[i];
+                                if (item.kind === 'file') {
+                                    me.readFileData(item.getAsFile());
+                                }
                             }
                         }
                     });
