@@ -2334,7 +2334,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                     function (event) {
                         var items = (event.clipboardData || event.originalEvent.clipboardData).items;
                         for (var i in items) {
-                            if ({}.hasOwnProperty.call(items, i)) {
+                            if (items.hasOwnProperty(i)) {
                                 var item = items[i];
                                 if (item.kind === 'file') {
                                     me.readFileData(item.getAsFile());
