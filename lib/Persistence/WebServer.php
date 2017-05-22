@@ -62,10 +62,10 @@ class WebServer extends AbstractPersistence
      * @static
      * @throws Exception
      */
-    public static function canHtaccess()
+    public static function restrictAccessTo()
     {
         $file = '.htaccess';
-        if (is_dir(self::$_path) && !is_file($file)) {
+        if (is_dir(self::$path) && !is_file($file)) {
             $server = self::getWebserver();
             if($server['software'] == "Apache") {
                 if (version_compare($server['version'], '2.2') >= 0) {

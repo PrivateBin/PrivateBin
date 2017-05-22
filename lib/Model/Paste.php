@@ -91,7 +91,7 @@ class Paste extends AbstractModel
 
         $this->_data->meta->postdate = time();
         $this->_data->meta->salt     = ServerSalt::generate();
-        $this->_data->webserver      = WebServer::canHtaccess();
+        $this->_data->webserver      = WebServer::restrictAccessTo();
 
         // store paste
         if (
