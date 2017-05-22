@@ -3,7 +3,7 @@
 ## Active contributors
 
 Simon Rupf - current developer and maintainer  
-rugk - security review, doc improvment & various other stuff
+rugk - security review, doc improvment, JS refactoring & various other stuff
 
 ## Past contributions
 
