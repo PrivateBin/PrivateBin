@@ -51,7 +51,7 @@ and jsdom-global locally:
 ```console
 $ npm install -g mocha istanbul
 $ cd PrivateBin/js
-$ npm install jsverify jsdom jsdom-global
+$ npm install jsverify jsdom@9 jsdom-global@2
 ```
 
 Example for Debian and Ubuntu, including steps to allow the current user to
@@ -63,8 +63,11 @@ $ sudo chown -R $(whoami) $(npm config get prefix)/{lib/node_modules,bin,share}
 $ ln -s /usr/bin/nodejs /usr/local/bin/node
 $ npm install -g mocha istanbul
 $ cd PrivateBin/js
-$ npm install jsverify jsdom jsdom-global
+$ npm install jsverify jsdom@9 jsdom-global@2
 ```
+
+Note: If you use a distribution that provides nodeJS >= 6, then you can install
+the latest jsdom and jsdom-global packages and don't need to use @9 and @2.
 
 To run the tests, just change into the `js` directory and run istanbul:
 ```console
