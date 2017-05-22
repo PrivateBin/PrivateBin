@@ -68,9 +68,7 @@ class WebServer extends AbstractPersistence
         if (is_dir(self::$_path) && !is_file($file)) {
             $server = self::getWebserver();
             if($server['software'] == "Apache") {
-                $pattern = '/2.4/';
-                $regex = preg_match($pattern, $server['version']);
-                if($regex == false) {
+                if (version_compare($server['version'], '2.2') >= 0) {
                     self::_store(
                         $file,
                         'Allow from none' . PHP_EOL .
