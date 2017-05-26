@@ -595,6 +595,40 @@ describe('Model', function () {
         );
     });
 
+    describe('getFormatDefault', function () {
+        before(function () {
+            $.PrivateBin.Model.reset();
+            cleanup();
+        });
+
+        jsc.property(
+            'returns the contents of the element with id "pasteFormatter"',
+            'array asciinestring',
+            'string',
+            'small nat',
+            function (keys, value, key) {
+                keys = keys.map($.PrivateBin.Helper.htmlEntities);
+                value = $.PrivateBin.Helper.htmlEntities(value);
+                var content = keys.length > key ? keys[key] : (keys.length > 0 ? keys[0] : 'null'),
+                    contents = '<select id="pasteFormatter" name="pasteFormatter">';
+                keys.forEach(function(item) {
+                    contents += '<option value="' + item + '"';
+                    if (item === content) {
+                        contents += ' selected="selected"';
+                    }
+                    contents += '>' + value + '</option>';
+                });
+                contents += '</select>';
+                $('body').html(contents);
+                var result = $.PrivateBin.Helper.htmlEntities(
+                    $.PrivateBin.Model.getFormatDefault()
+                );
+                $.PrivateBin.Model.reset();
+                return content === result;
+            }
+        );
+    });
+
     describe('getPasteId', function () {
         before(function () {
             $.PrivateBin.Model.reset();

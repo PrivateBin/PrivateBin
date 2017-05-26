@@ -230,6 +230,17 @@ if ($isCpct):
 ?>
 						</ul>
 						<select id="pasteFormatter" name="pasteFormatter" class="hidden">
+<?php
+    foreach ($FORMATTER as $key => $value):
+?>
+							<option value="<?php echo $key; ?>"<?php
+        if ($key == $FORMATTERDEFAULT):
+?> selected="selected"<?php
+        endif;
+?>><?php echo $value; ?></option>
+<?php
+    endforeach;
+?>
 						</select>
 					</li>
 <?php
