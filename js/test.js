@@ -629,6 +629,48 @@ describe('Model', function () {
         );
     });
 
+    describe('hasCipherData', function () {
+        before(function () {
+            $.PrivateBin.Model.reset();
+            cleanup();
+        });
+
+        jsc.property(
+            'checks if the element with id "cipherdata" contains any data',
+            'asciistring',
+            function (value) {
+                value = $.PrivateBin.Helper.htmlEntities(value).trim();
+                $('body').html('<div id="cipherdata">' + value + '</div>');
+                $.PrivateBin.Model.init();
+                var result = $.PrivateBin.Model.hasCipherData();
+                $.PrivateBin.Model.reset();
+                return (value.length > 0) === result;
+            }
+        );
+    });
+
+    describe('getCipherData', function () {
+        before(function () {
+            $.PrivateBin.Model.reset();
+            cleanup();
+        });
+
+        jsc.property(
+            'returns the contents of the element with id "cipherdata"',
+            'asciistring',
+            function (value) {
+                value = $.PrivateBin.Helper.htmlEntities(value).trim();
+                $('body').html('<div id="cipherdata">' + value + '</div>');
+                $.PrivateBin.Model.init();
+                var result = $.PrivateBin.Helper.htmlEntities(
+                    $.PrivateBin.Model.getCipherData()
+                );
+                $.PrivateBin.Model.reset();
+                return value === result;
+            }
+        );
+    });
+
     describe('getPasteId', function () {
         before(function () {
             $.PrivateBin.Model.reset();
@@ -735,6 +777,35 @@ describe('Model', function () {
                 $.PrivateBin.Model.reset();
                 clean();
                 return result;
+            }
+        );
+    });
+
+    describe('getTemplate', function () {
+        before(function () {
+            $.PrivateBin.Model.reset();
+            cleanup();
+        });
+
+        jsc.property(
+            'returns the contents of the element with id "[name]template"',
+            jsc.nearray(jsc.elements(alnumString)),
+            jsc.nearray(jsc.elements(a2zString)),
+            jsc.nearray(jsc.elements(alnumString)),
+            function (id, element, value) {
+                id = id.join('');
+                element = element.join('');
+                value = value.join('').trim();
+                $('body').html(
+                    '<div id="templates"><' + element + ' id="' + id +
+                    'template">' + value + '</' + element + '></div>'
+                );
+                $.PrivateBin.Model.init();
+                var template = '<' + element + ' id="' + id + '">' + value +
+                    '</' + element + '>',
+                    result = $.PrivateBin.Model.getTemplate(id).wrap('<p/>').parent().html();
+                $.PrivateBin.Model.reset();
+                return template === result;
             }
         );
     });
