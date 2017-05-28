@@ -269,7 +269,7 @@ if ($PASSWORD):
 ?>
 					<li>
 						<div id="password" class="navbar-form hidden">
-							<input type="password" id="passwordinput" placeholder="<?php echo I18n::_('Password (recommended)'); ?>" class="form-control" size="19" />
+							<input type="password" id="passwordinput" placeholder="<?php echo I18n::_('Password (recommended)'); ?>" class="form-control" size="23" />
 						</div>
 					</li>
 <?php
