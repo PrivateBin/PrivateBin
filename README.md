@@ -38,10 +38,11 @@ without losing any data.
 
 ## What it doesn't provide
 
-- As a user you have to trust the server administrator.
+- As a user you have to trust the server administrator not to inject any malicious
+  javascript code.
   For basic security, the PrivateBin installation *has to provide HTTPS*!
   Otherwise you would also have to trust your internet provider, and any country
-  the traffic passes through not to inject any malicious javascript code.
+  the traffic passes through.
   Additionally the instance should be secured by
   [HSTS](https://en.wikipedia.org/wiki/HTTP_Strict_Transport_Security) and
   ideally by [HPKP](https://en.wikipedia.org/wiki/HTTP_Public_Key_Pinning) using a
