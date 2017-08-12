@@ -2030,7 +2030,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         /**
          * removes the attachment
          *
-         * This automatically hides the attachment containers to, to
+         * This automatically hides the attachment containers too, to
          * prevent an inconsistent display.
          *
          * @name AttachmentViewer.removeAttachment
@@ -2043,8 +2043,8 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             }
             me.hideAttachment();
             me.hideAttachmentPreview();
-            $attachmentLink.prop('href', '');
-            $attachmentLink.prop('download', '');
+            $attachmentLink.removeAttr('href');
+            $attachmentLink.removeAttr('download');
             $attachmentPreview.html('');
 
             file = undefined;
