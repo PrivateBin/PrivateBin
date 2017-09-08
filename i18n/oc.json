@@ -1,9 +1,9 @@
 {
     "PrivateBin": "PrivateBin",
     "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href=\"https://privatebin.info/\">project page</a>.":
-        "%s es un 'pastebin' (o gestionari d'extrachs de tèxte e còdi font) minimalista e open source, dins lo qual lo servidor a pas cap de coneissença de las donadas mandadas. Las donadas son chifradas/deschifradas <i>dins lo navigator</i> per un chiframent AES 256 bits. Mai informacions sus <a href=\"https://privatebin.info/\">la pagina del projècte</a>.",
+        "%s es un 'pastebin' (o gestionari d’extrachs de tèxte e còdi font) minimalista e open source, dins lo qual lo servidor a pas cap de coneissença de las donadas mandadas. Las donadas son chifradas/deschifradas <i>dins lo navigator</i> per un chiframent AES 256 bits. Mai informacions sus <a href=\"https://privatebin.info/\">la pagina del projècte</a>.",
     "Because ignorance is bliss":
-        "Perque l'ignorància es bonaür",
+        "Perque lo bonaür es l’ignorància",
     "en": "oc",
     "Paste does not exist, has expired or has been deleted.":
         "Lo tèxte existís pas, a expirat, o es estat suprimit.",
@@ -32,11 +32,11 @@
     "Paste was properly deleted.":
         "Lo tèxte es estat correctament suprimit.",
     "JavaScript is required for %s to work.<br />Sorry for the inconvenience.":
-        "JavaScript es requesit per far foncionar %s. <br />O planhèm per l'inconvenient.",
+        "JavaScript es requesit per far foncionar %s. <br />O planhèm per l’inconvenient.",
     "%s requires a modern browser to work.":
         "%s necessita un navigator modèrn per foncionar.",
     "Still using Internet Explorer? Do yourself a favor, switch to a modern browser:":
-        "Encora sus Internet Explorer ? Fasètz-vos una favor, passatz a un navigator modèrn :",
+        "Encora sus Internet Explorer ? Fasètz-vos una favor, passatz a un navigator modèrn :",
     "New":
         "Nòu",
     "Send":
@@ -67,7 +67,7 @@
     "Never":
         "Jamai",
     "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.":
-        "Nota : Aquò es un servici d'espròva : las donadas pòdon èsser suprimidas a cada moment. De catons moriràn s'abusatz d'aqueste servici.",
+        "Nota : Aquò es un servici d’espròva : las donadas pòdon èsser suprimidas a cada moment. De catons moriràn s’abusatz d’aqueste servici.",
     "This document will expire in %d seconds.":
         ["Ce document expirera dans %d seconde.", "Aqueste document expirarà dins %d segondas."],
     "This document will expire in %d minutes.":
@@ -79,21 +79,21 @@
     "This document will expire in %d months.":
         ["Ce document expirera dans %d mois.", "Aqueste document expirarà dins %d meses."],
     "Please enter the password for this paste:":
-        "Picatz lo senhal per aqueste tèxte :",
+        "Picatz lo senhal per aqueste tèxte :",
     "Could not decrypt data (Wrong key?)":
-        "Impossible de deschifrar las donadas (marrida clau ?)",
+        "Impossible de deschifrar las donadas (marrida clau ?)",
     "Could not delete the paste, it was not stored in burn after reading mode.":
         "Impossible de suprimir lo tèxte, perque es pas estat gardat en mòde \"Escafar aprèp lectura\".",
     "FOR YOUR EYES ONLY. Don't close this window, this message can't be displayed again.":
         "PER VÒSTRES UÈLHS SOLAMENT. Tampetz pas aquesta fenèstra, aqueste tèxte poirà pas mai èsser afichat.",
     "Could not decrypt comment; Wrong key?":
-        "Impossible de deschifrar lo comentari ; marrida clau ?",
+        "Impossible de deschifrar lo comentari ; marrida clau ?",
     "Reply":
         "Respondre",
     "Anonymous":
         "Anonime",
     "Avatar generated from IP address":
-        "Avatar anonime (Vizhash de l'adreça IP)",
+        "Avatar anonime (Vizhash de l’adreça IP)",
     "Add comment":
         "Apondre un comentari",
     "Optional nickname…":
@@ -105,25 +105,25 @@
     "Comment posted.":
         "Comentari mandat.",
     "Could not refresh display: %s":
-        "Impossible d'actualizar l'afichatge : %s",
+        "Impossible d’actualizar l’afichatge : %s",
     "unknown status":
         "Estatut desconegut",
     "server error or not responding":
         "Lo servidor respond pas o a rencontrat una error",
     "Could not post comment: %s":
-        "Impossible de mandar lo comentari : %s",
+        "Impossible de mandar lo comentari : %s",
     "Please move your mouse for more entropy…":
         "Mercés de bolegar vòstra mirga per mai entropia…",
     "Sending paste…":
         "Mandadís del tèxte…",
     "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit [Ctrl]+[c] to copy)</span>":
-        "Vòstre tèxte es disponible a l'adreça <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Picatz sus [Ctrl]+[c] per copiar)</span>",
+        "Vòstre tèxte es disponible a l’adreça <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Picatz sus [Ctrl]+[c] per copiar)</span>",
     "Delete data":
         "Supprimir las donadas del tèxte",
     "Could not create paste: %s":
-        "Impossible de crear lo tèxte : %s",
+        "Impossible de crear lo tèxte : %s",
     "Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)":
-        "Impossible de deschifrar lo tèxte : Clau de deschiframent absenta de l'URL (Avètz utilizat un redirector o un site de reduccion d'URL que suprimís una partida de l'URL ?)",
+        "Impossible de deschifrar lo tèxte : Clau de deschiframent absenta de l’URL (Avètz utilizat un redirector o un site de reduccion d’URL que suprimís una partida de l’URL ?)",
     "B": "o",
     "KiB": "Kio",
     "MiB": "Mio",
@@ -139,14 +139,14 @@
     "Markdown": "Markdown",
     "Download attachment": "Telecargar la pèça junta",
     "Cloned: '%s'": "Clonar: '%s'",
-    "The cloned file '%s' was attached to this paste.": "The cloned file '%s' was attached to this paste.",
+    "The cloned file '%s' was attached to this paste.": "Aqueste fichièr clonat '%s' es estat ajustat a aqueste tèxte.",
     "Attach a file": "Juntar un fichièr ",
     "Remove attachment": "Levar la pèca junta",
     "Your browser does not support uploading encrypted files. Please use a newer browser.":
-        "Vòstre navigator es pas compatible amb lo mandadís de fichièrs chifrats. Mercés d'emplegar un navigator mai recent.",
+        "Vòstre navigator es pas compatible amb lo mandadís de fichièrs chifrats. Mercés d’emplegar un navigator mai recent.",
     "Invalid attachment.": "Pèça junta invalida.",
     "Options": "Opcions",
-    "Shorten URL": "Acorchir l'URL",
+    "Shorten URL": "Acorchir l’URL",
     "Editor": "Editar",
     "Preview": "Previsualizar",
     "%s requires the PATH to end in a \"%s\". Please update the PATH in your index.php.":
@@ -159,6 +159,6 @@
     "Decrypting paste…": "Decrypting paste…",
     "Preparing new paste…": "Preparing new paste…",
     "In case this message never disappears please have a look at <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">this FAQ for information to troubleshoot</a>.":
-        "Se per cas aqueste messatge quita pas de s'afichar mercés de gaitar <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">aquesta FAQ per las solucions</a> (en Anglés).",
+        "Se per cas aqueste messatge quita pas de s’afichar mercés de gaitar <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">aquesta FAQ per las solucions</a> (en Anglés).",
     "+++ no paste text +++": "+++ no paste text +++"
 }
