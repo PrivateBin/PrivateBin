@@ -3,7 +3,7 @@
     "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href=\"https://privatebin.info/\">project page</a>.":
         "%s es un 'pastebin' (o gestionari d’extrachs de tèxte e còdi font) minimalista e open source, dins lo qual lo servidor a pas cap de coneissença de las donadas mandadas. Las donadas son chifradas/deschifradas <i>dins lo navigator</i> per un chiframent AES 256 bits. Mai informacions sus <a href=\"https://privatebin.info/\">la pagina del projècte</a>.",
     "Because ignorance is bliss":
-        "Perque lo es l’ignorància",
+        "Perque lo bonaür es l’ignorància",
     "en": "oc",
     "Paste does not exist, has expired or has been deleted.":
         "Lo tèxte existís pas, a expirat, o es estat suprimit.",
