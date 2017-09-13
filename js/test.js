@@ -2,6 +2,7 @@
 var jsc = require('jsverify'),
     jsdom = require('jsdom-global'),
     cleanup = jsdom(),
+    EventEmitter = require('events'),
 
     a2zString = ['a','b','c','d','e','f','g','h','i','j','k','l','m',
                  'n','o','p','q','r','s','t','u','v','w','x','y','z'],
@@ -810,3 +811,32 @@ describe('Model', function () {
         );
     });
 });
+
+describe('UiHelper', function () {
+    describe('historyChange', function () {
+        before(function () {
+            $.PrivateBin.Helper.reset();
+        });
+
+        jsc.property(
+            'returns the URL without query & fragment',
+            jsc.elements(schemas),
+            jsc.nearray(jsc.elements(a2zString)),
+            jsc.array(jsc.elements(queryString)),
+            'string',
+            function (schema, address, query, fragment) {
+                var expected = schema + '://' + address.join('') + '/',
+                    clean = jsdom('', {url: expected + '?' + query.join('') + '#' + fragment}),
+                    emitter = new EventEmitter();
+
+                $.PrivateBin.UiHelper.init();
+                emitter.emit('popstate');
+                var result = window.location.href;
+                clean();
+                console.log(expected, result);
+                return expected === result;
+            }
+        );
+    });
+});
+
