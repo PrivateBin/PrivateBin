@@ -83,7 +83,7 @@
     "Could not decrypt data (Wrong key?)":
         "Impossible de déchiffrer les données (mauvaise clé ?)",
     "Could not delete the paste, it was not stored in burn after reading mode.":
-        "Impossible de supprimer le paste, car il n'a pas été stoclé en mode \"Effacer après lecture\".",
+        "Impossible de supprimer le paste, car il n'a pas été stocké en mode \"Effacer après lecture\".",
     "FOR YOUR EYES ONLY. Don't close this window, this message can't be displayed again.":
         "POUR VOS YEUX UNIQUEMENT. Ne fermez pas cette fenêtre, ce paste ne pourra plus être affiché.",
     "Could not decrypt comment; Wrong key?":
@@ -93,7 +93,7 @@
     "Anonymous":
         "Anonyme",
     "Avatar generated from IP address":
-        "Avatar anonyme (Vizhash de l'adresse IP)",
+        "Avatar généré à partir de l'adresse IP",
     "Add comment":
         "Ajouter un commentaire",
     "Optional nickname…":
@@ -139,7 +139,7 @@
     "Markdown": "Markdown",
     "Download attachment": "Télécharger la pièce jointe",
     "Cloned: '%s'": "Cloner '%s'",
-    "The cloned file '%s' was attached to this paste.": "The cloned file '%s' was attached to this paste.",
+    "The cloned file '%s' was attached to this paste.": "Le fichier cloné '%s' a été attaché à ce paste.",
     "Attach a file": "Attacher un fichier ",
     "Remove attachment": "Enlever l'attachement",
     "Your browser does not support uploading encrypted files. Please use a newer browser.":
@@ -160,5 +160,5 @@
     "Preparing new paste…": "Préparation du paste…",
     "In case this message never disappears please have a look at <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">this FAQ for information to troubleshoot</a>.":
         "Si ce message ne disparaîssait pas, jetez un oeil à <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">cette FAQ pour des idées de résolution</a> (en Anglais).",
-    "+++ no paste text +++": "+++ no paste text +++"
+    "+++ no paste text +++": "+++ pas de paste-text +++"
 }
