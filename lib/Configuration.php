@@ -98,7 +98,7 @@ class Configuration
     public function __construct()
     {
         $config     = array();
-        $configFile = PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.ini';
+        $configFile = PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.php';
         if (is_readable($configFile)) {
             $config = parse_ini_file($configFile, true);
             foreach (array('main', 'model', 'model_options') as $section) {
