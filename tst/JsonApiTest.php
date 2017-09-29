@@ -283,7 +283,7 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
         $this->reset();
         $paste = Helper::getPasteWithAttachment();
         $this->_model->create(Helper::getPasteId(), $paste);
-        $_GET['jsonld'] = '../cfg/conf.ini';
+        $_GET['jsonld'] = CONF;
         ob_start();
         new PrivateBin;
         $content = ob_get_contents();
