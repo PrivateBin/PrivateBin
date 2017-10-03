@@ -6,6 +6,7 @@ php:
   - 7.0
 
 before_script:
+  - composer config -g github-oauth.github.com "$GITHUB_TOKEN"
   - composer install -n
 
 script:
