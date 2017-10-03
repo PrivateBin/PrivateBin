@@ -12,10 +12,10 @@ if (!defined('PATH')) {
     define('PATH', '..' . DIRECTORY_SEPARATOR);
 }
 if (!defined('CONF')) {
-    define('CONF', PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.ini');
+    define('CONF', PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.php');
 }
 if (!is_file(CONF)) {
-    copy(CONF . '.sample', CONF);
+    copy(PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.sample.php', CONF);
 }
 
 require PATH . 'vendor/autoload.php';
