@@ -157,4 +157,20 @@ class ConfigurationTest extends PHPUnit_Framework_TestCase
             'configuration values get converted'
         );
     }
+
+    public function testRenameIniSample()
+    {
+        $iniSample = PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.ini.sample';
+        $phpSample = PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.sample.php';
+
+        Helper::createIniFile(PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.ini', $this->_options);
+        if (is_file(CONF)) {
+            chmod(CONF, 0600);
+            unlink(CONF);
+        }
+        rename($phpSample, $iniSample);
+        new Configuration;
+        $this->assertFileNotExists($iniSample, 'old sample file gets removed');
+        $this->assertFileExists($phpSample, 'new sample file gets created');
+    }
 }
