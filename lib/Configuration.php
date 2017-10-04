@@ -106,16 +106,16 @@ class Configuration
             // don't overwrite already converted file
             if (!is_file($configFile)) {
                 $iniUpgradeError = false;
-                $context = stream_context_create();
+                $context   = stream_context_create();
                 $iniHandle = fopen($configIni, 'r', 1, $context);
-                $written = file_put_contents($configFile, ';<?php /*' . PHP_EOL);
-                $written = file_put_contents($configFile, $iniHandle, FILE_APPEND);
+                $written   = file_put_contents($configFile, ';<?php /*' . PHP_EOL);
+                $written   = file_put_contents($configFile, $iniHandle, FILE_APPEND);
                 fclose($iniHandle);
                 unlink($configIni);
             }
 
             // cleanup sample, too
-            $configSample = PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.sample.php';
+            $configSample    = PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.sample.php';
             $configIniSample = PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.ini.sample';
             if (is_readable($configIniSample)) {
                 if (is_readable($configSample)) {
