@@ -99,6 +99,33 @@ class Configuration
     {
         $config     = array();
         $configFile = PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.php';
+        $configIni  = PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.ini';
+
+        // rename INI files to avoid configuration leakage
+        if (is_readable($configIni)) {
+            // don't overwrite already converted file
+            if (!is_file($configFile)) {
+                $iniUpgradeError = false;
+                $context = stream_context_create();
+                $iniHandle = fopen($configIni, 'r', 1, $context);
+                $written = file_put_contents($configFile, ';<?php /*' . PHP_EOL);
+                $written = file_put_contents($configFile, $iniHandle, FILE_APPEND);
+                fclose($iniHandle);
+                unlink($configIni);
+            }
+
+            // cleanup sample, too
+            $configSample = PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.sample.php';
+            $configIniSample = PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.ini.sample';
+            if (is_readable($configIniSample)) {
+                if (is_readable($configSample)) {
+                    unlink($configIniSample);
+                } else {
+                    rename($configIniSample, $configSample);
+                }
+            }
+        }
+
         if (is_readable($configFile)) {
             $config = parse_ini_file($configFile, true);
             foreach (array('main', 'model', 'model_options') as $section) {
@@ -107,6 +134,7 @@ class Configuration
                 }
             }
         }
+
         $opts = '_options';
         foreach (self::getDefaults() as $section => $values) {
             // fill missing sections with default values
