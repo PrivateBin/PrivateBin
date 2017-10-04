@@ -105,9 +105,7 @@ class Configuration
         if (is_readable($configIni)) {
             // don't overwrite already converted file
             if (!is_file($configFile)) {
-                $iniUpgradeError = false;
-                $context   = stream_context_create();
-                $iniHandle = fopen($configIni, 'r', 1, $context);
+                $iniHandle = fopen($configIni, 'r', false, stream_context_create());
                 $written   = file_put_contents($configFile, ';<?php /*' . PHP_EOL);
                 $written   = file_put_contents($configFile, $iniHandle, FILE_APPEND);
                 fclose($iniHandle);
