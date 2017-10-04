@@ -1,5 +1,7 @@
 # PrivateBin version history
 
+  * **1.1.1 (2017-10-06)**
+    * CHANGED: Switched to `.php` file extension for configuration file, to avoid leaking configuration data in unprotected installation.
   * **1.1 (2016-12-26)**
     * ADDED: Translations for Italian and Russian
     * ADDED: Loading message displayed until decryption succeeded for slower (in terms of CPU or network) systems
