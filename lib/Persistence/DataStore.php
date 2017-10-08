@@ -80,7 +80,7 @@ class DataStore extends AbstractPersistence
         // don't overwrite already converted file
         if (!is_readable($destFile)) {
             $handle = fopen($srcFile, 'r', false, stream_context_create());
-            file_put_contents($destFile, $prefix . DataStore::PROTECTION_LINE . PHP_EOL);
+            file_put_contents($destFile, $prefix . self::PROTECTION_LINE . PHP_EOL);
             file_put_contents($destFile, $handle, FILE_APPEND);
             fclose($handle);
         }
