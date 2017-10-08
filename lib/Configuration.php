@@ -23,6 +23,13 @@ use PDO;
 class Configuration
 {
     /**
+     * First line in INI file, to hide contents
+     *
+     * @const string
+     */
+    const PROTECTION_LINE = ';<?php http_response_code(403); /*' . PHP_EOL;
+
+    /**
      * parsed configuration
      *
      * @var array
@@ -105,24 +112,27 @@ class Configuration
 
         // rename INI files to avoid configuration leakage
         if (is_readable($configIni)) {
+            $context = stream_context_create();
             // don't overwrite already converted file
             if (!is_file($configFile)) {
-                $iniHandle = fopen($configIni, 'r', false, stream_context_create());
-                $written   = file_put_contents($configFile, ';<?php http_response_code(403); /*' . PHP_EOL);
-                $written   = file_put_contents($configFile, $iniHandle, FILE_APPEND);
+                $iniHandle = fopen($configIni, 'r', false, $context);
+                file_put_contents($configFile, self::PROTECTION_LINE);
+                file_put_contents($configFile, $iniHandle, FILE_APPEND);
                 fclose($iniHandle);
-                unlink($configIni);
             }
+            unlink($configIni);
 
             // cleanup sample, too
             $configSample    = PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.sample.php';
             $configIniSample = PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.ini.sample';
             if (is_readable($configIniSample)) {
-                if (is_readable($configSample)) {
-                    unlink($configIniSample);
-                } else {
-                    rename($configIniSample, $configSample);
+                if (!is_readable($configSample)) {
+                    $iniSampleHandle = fopen($configIniSample, 'r', false, $context);
+                    file_put_contents($configSample, self::PROTECTION_LINE);
+                    file_put_contents($configSample, $iniSampleHandle, FILE_APPEND);
+                    fclose($iniSampleHandle);
                 }
+                unlink($configIniSample);
             }
         }
 

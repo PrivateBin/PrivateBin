@@ -22,12 +22,14 @@ class ConfigurationTest extends PHPUnit_Framework_TestCase
     public function tearDown()
     {
         /* Tear Down Routine */
+        if (is_file(CONF)) {
+            unlink(CONF);
+        }
         Helper::confRestore();
     }
 
     public function testDefaultConfigFile()
     {
-        $this->assertTrue(copy(CONF . '.bak', CONF), 'copy default configuration file');
         $conf = new Configuration;
         $this->assertEquals($this->_options, $conf->get(), 'default configuration is correct');
     }
@@ -41,7 +43,9 @@ class ConfigurationTest extends PHPUnit_Framework_TestCase
 
     public function testHandleMissingConfigFile()
     {
-        @unlink(CONF);
+        if (is_file(CONF)) {
+            unlink(CONF);
+        }
         $conf = new Configuration;
         $this->assertEquals($this->_options, $conf->get(), 'returns correct defaults on missing file');
     }
@@ -161,16 +165,16 @@ class ConfigurationTest extends PHPUnit_Framework_TestCase
     public function testRenameIniSample()
     {
         $iniSample = PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.ini.sample';
-        $phpSample = PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.sample.php';
 
         Helper::createIniFile(PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.ini', $this->_options);
         if (is_file(CONF)) {
-            chmod(CONF, 0600);
             unlink(CONF);
         }
-        rename($phpSample, $iniSample);
+        rename(CONF_SAMPLE, $iniSample);
         new Configuration;
         $this->assertFileNotExists($iniSample, 'old sample file gets removed');
-        $this->assertFileExists($phpSample, 'new sample file gets created');
+        $this->assertFileExists(CONF_SAMPLE, 'new sample file gets created');
+        $this->assertFileExists(CONF, 'old configuration file gets converted');
+        $this->assertFileNotExists(PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.ini', 'old configuration file gets removed');
     }
 }

@@ -57,7 +57,7 @@ class Filesystem extends AbstractData
     public function create($pasteid, $paste)
     {
         $storagedir = self::_dataid2path($pasteid);
-        $file       = $storagedir . $pasteid;
+        $file       = $storagedir . $pasteid . '.php';
         if (is_file($file)) {
             return false;
         }
@@ -79,9 +79,7 @@ class Filesystem extends AbstractData
         if (!$this->exists($pasteid)) {
             return false;
         }
-        $paste = json_decode(
-            file_get_contents(self::_dataid2path($pasteid) . $pasteid)
-        );
+        $paste = self::_decodeFile(self::_dataid2path($pasteid) . $pasteid . '.php');
         if (property_exists($paste->meta, 'attachment')) {
             $paste->attachment = $paste->meta->attachment;
             unset($paste->meta->attachment);
@@ -104,8 +102,8 @@ class Filesystem extends AbstractData
         $pastedir = self::_dataid2path($pasteid);
         if (is_dir($pastedir)) {
             // Delete the paste itself.
-            if (is_file($pastedir . $pasteid)) {
-                unlink($pastedir . $pasteid);
+            if (is_file($pastedir . $pasteid . '.php')) {
+                unlink($pastedir . $pasteid . '.php');
             }
 
             // Delete discussion if it exists.
@@ -133,7 +131,41 @@ class Filesystem extends AbstractData
      */
     public function exists($pasteid)
     {
-        return is_file(self::_dataid2path($pasteid) . $pasteid);
+        $basePath  = self::_dataid2path($pasteid) . $pasteid;
+        $pastePath = $basePath . '.php';
+        // convert to PHP protected files if needed
+        if (is_readable($basePath)) {
+            $context = stream_context_create();
+            // don't overwrite already converted file
+            if (!is_file($pastePath)) {
+                $handle = fopen($basePath, 'r', false, $context);
+                file_put_contents($pastePath, DataStore::PROTECTION_LINE . PHP_EOL);
+                file_put_contents($pastePath, $handle, FILE_APPEND);
+                fclose($handle);
+            }
+            unlink($basePath);
+
+            // convert comments, too
+            $discdir  = self::_dataid2discussionpath($pasteid);
+            if (is_dir($discdir)) {
+                $dir = dir($discdir);
+                while (false !== ($filename = $dir->read())) {
+                    if (substr($filename, -4) !== '.php' && strlen($filename) >= 16) {
+                        $commentFilename = $discdir . $filename . '.php';
+                        // don't overwrite already converted file
+                        if (!is_file($commentFilename)) {
+                            $handle = fopen($discdir . $filename, 'r', false, $context);
+                            file_put_contents($commentFilename, DataStore::PROTECTION_LINE . PHP_EOL);
+                            file_put_contents($commentFilename, $handle, FILE_APPEND);
+                            fclose($handle);
+                        }
+                        unlink($discdir . $filename);
+                    }
+                }
+                $dir->close();
+            }
+        }
+        return is_readable($pastePath);
     }
 
     /**
@@ -149,7 +181,7 @@ class Filesystem extends AbstractData
     public function createComment($pasteid, $parentid, $commentid, $comment)
     {
         $storagedir = self::_dataid2discussionpath($pasteid);
-        $file       = $storagedir . $pasteid . '.' . $commentid . '.' . $parentid;
+        $file       = $storagedir . $pasteid . '.' . $commentid . '.' . $parentid . '.php';
         if (is_file($file)) {
             return false;
         }
@@ -171,15 +203,14 @@ class Filesystem extends AbstractData
         $comments = array();
         $discdir  = self::_dataid2discussionpath($pasteid);
         if (is_dir($discdir)) {
-            // Delete all files in discussion directory
             $dir = dir($discdir);
             while (false !== ($filename = $dir->read())) {
-                // Filename is in the form pasteid.commentid.parentid:
+                // Filename is in the form pasteid.commentid.parentid.php:
                 // - pasteid is the paste this reply belongs to.
                 // - commentid is the comment identifier itself.
                 // - parentid is the comment this comment replies to (It can be pasteid)
                 if (is_file($discdir . $filename)) {
-                    $comment = json_decode(file_get_contents($discdir . $filename));
+                    $comment = self::_decodeFile($discdir . $filename);
                     $items   = explode('.', $filename);
                     // Add some meta information not contained in file.
                     $comment->id       = $items[1];
@@ -211,7 +242,7 @@ class Filesystem extends AbstractData
     {
         return is_file(
             self::_dataid2discussionpath($pasteid) .
-            $pasteid . '.' . $commentid . '.' . $parentid
+            $pasteid . '.' . $commentid . '.' . $parentid . '.php'
         );
     }
 
@@ -253,7 +284,14 @@ class Filesystem extends AbstractData
                     continue;
                 }
                 $thirdLevel = array_filter(
-                    scandir($path),
+                    array_map(
+                        function($filename) {
+                            return strlen($filename) >= 20 ?
+                                substr($filename, 0, -4) :
+                                $filename;
+                        },
+                        scandir($path)
+                    ),
                     'PrivateBin\\Model\\Paste::isValidId'
                 );
                 if (count($thirdLevel) == 0) {
@@ -346,5 +384,18 @@ class Filesystem extends AbstractData
     private static function _isSecondLevelDir($element)
     {
         return (bool) preg_match('/^[a-f0-9]{2}$/', $element);
+    }
+
+    /**
+     * Decodes a paste or comment file.
+     *
+     * @access private
+     * @static
+     * @param  string $file
+     * @return array
+     */
+    private static function _decodeFile($file)
+    {
+        return json_decode(substr(file_get_contents($file), strlen(DataStore::PROTECTION_LINE . PHP_EOL)));
     }
 }

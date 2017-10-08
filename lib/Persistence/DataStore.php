@@ -23,6 +23,13 @@ use PrivateBin\Json;
 class DataStore extends AbstractPersistence
 {
     /**
+     * First line in JSON files, to hide contents
+     *
+     * @const string
+     */
+    const PROTECTION_LINE = '<?php http_response_code(403); /*';
+
+    /**
      * store the data
      *
      * @access public
@@ -38,7 +45,7 @@ class DataStore extends AbstractPersistence
             $filename = substr($filename, strlen($path));
         }
         try {
-            self::_store($filename, Json::encode($data));
+            self::_store($filename, self::PROTECTION_LINE . PHP_EOL . Json::encode($data));
             return true;
         } catch (Exception $e) {
             return false;

@@ -14,8 +14,8 @@ if (!defined('PATH')) {
 if (!defined('CONF')) {
     define('CONF', PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.php');
 }
-if (!is_file(CONF)) {
-    copy(PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.sample.php', CONF);
+if (!defined('CONF_SAMPLE')) {
+    define('CONF_SAMPLE', PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.sample.php');
 }
 
 require PATH . 'vendor/autoload.php';
@@ -203,6 +203,9 @@ class Helper
         if (!is_file(CONF . '.bak') && is_file(CONF)) {
             rename(CONF, CONF . '.bak');
         }
+        if (!is_file(CONF_SAMPLE . '.bak') && is_file(CONF_SAMPLE)) {
+            copy(CONF_SAMPLE, CONF_SAMPLE . '.bak');
+        }
     }
 
     /**
@@ -214,6 +217,9 @@ class Helper
     {
         if (is_file(CONF . '.bak')) {
             rename(CONF . '.bak', CONF);
+        }
+        if (is_file(CONF_SAMPLE . '.bak')) {
+            rename(CONF_SAMPLE . '.bak', CONF_SAMPLE);
         }
     }
 
