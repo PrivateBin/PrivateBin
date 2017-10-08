@@ -1,4 +1,4 @@
-;<?php /*
+;<?php http_response_code(403); /*
 ; config file for PrivateBin
 ;
 ; An explanation of each setting can be find online at https://github.com/PrivateBin/PrivateBin/wiki/Configuration.

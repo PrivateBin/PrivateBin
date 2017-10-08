@@ -106,7 +106,7 @@ class Configuration
             // don't overwrite already converted file
             if (!is_file($configFile)) {
                 $iniHandle = fopen($configIni, 'r', false, stream_context_create());
-                $written   = file_put_contents($configFile, ';<?php /*' . PHP_EOL);
+                $written   = file_put_contents($configFile, ';<?php http_response_code(403); /*' . PHP_EOL);
                 $written   = file_put_contents($configFile, $iniHandle, FILE_APPEND);
                 fclose($iniHandle);
                 unlink($configIni);
