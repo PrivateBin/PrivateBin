@@ -27,7 +27,7 @@ class Configuration
      *
      * @const string
      */
-    const PROTECTION_LINE = ';<?php http_response_code(403); /*' . PHP_EOL;
+    const PROTECTION_LINE = ';<?php http_response_code(403); /*';
 
     /**
      * parsed configuration
@@ -116,7 +116,7 @@ class Configuration
             // don't overwrite already converted file
             if (!is_file($configFile)) {
                 $iniHandle = fopen($configIni, 'r', false, $context);
-                file_put_contents($configFile, self::PROTECTION_LINE);
+                file_put_contents($configFile, self::PROTECTION_LINE . PHP_EOL);
                 file_put_contents($configFile, $iniHandle, FILE_APPEND);
                 fclose($iniHandle);
             }
@@ -128,7 +128,7 @@ class Configuration
             if (is_readable($configIniSample)) {
                 if (!is_readable($configSample)) {
                     $iniSampleHandle = fopen($configIniSample, 'r', false, $context);
-                    file_put_contents($configSample, self::PROTECTION_LINE);
+                    file_put_contents($configSample, self::PROTECTION_LINE . PHP_EOL);
                     file_put_contents($configSample, $iniSampleHandle, FILE_APPEND);
                     fclose($iniSampleHandle);
                 }

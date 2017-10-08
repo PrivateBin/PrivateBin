@@ -51,4 +51,17 @@ class DataStore extends AbstractPersistence
             return false;
         }
     }
+
+    /**
+     * get the data
+     *
+     * @access public
+     * @static
+     * @param  string $filename
+     * @return array  $data
+     */
+    public static function get($filename)
+    {
+        return json_decode(substr(file_get_contents($filename), strlen(self::PROTECTION_LINE . PHP_EOL)));
+    }
 }

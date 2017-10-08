@@ -111,7 +111,7 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
      */
     public function testViewUrlShortener()
     {
-        $shortener = 'https://shortener.example.com/api?link=';
+        $shortener                       = 'https://shortener.example.com/api?link=';
         $options                         = parse_ini_file(CONF, true);
         $options['main']['urlshortener'] = $shortener;
         Helper::createIniFile(CONF, $options);

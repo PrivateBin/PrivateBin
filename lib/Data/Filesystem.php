@@ -79,7 +79,7 @@ class Filesystem extends AbstractData
         if (!$this->exists($pasteid)) {
             return false;
         }
-        $paste = self::_decodeFile(self::_dataid2path($pasteid) . $pasteid . '.php');
+        $paste = DataStore::get(self::_dataid2path($pasteid) . $pasteid . '.php');
         if (property_exists($paste->meta, 'attachment')) {
             $paste->attachment = $paste->meta->attachment;
             unset($paste->meta->attachment);
@@ -210,7 +210,7 @@ class Filesystem extends AbstractData
                 // - commentid is the comment identifier itself.
                 // - parentid is the comment this comment replies to (It can be pasteid)
                 if (is_file($discdir . $filename)) {
-                    $comment = self::_decodeFile($discdir . $filename);
+                    $comment = DataStore::get($discdir . $filename);
                     $items   = explode('.', $filename);
                     // Add some meta information not contained in file.
                     $comment->id       = $items[1];
@@ -285,7 +285,7 @@ class Filesystem extends AbstractData
                 }
                 $thirdLevel = array_filter(
                     array_map(
-                        function($filename) {
+                        function ($filename) {
                             return strlen($filename) >= 20 ?
                                 substr($filename, 0, -4) :
                                 $filename;
@@ -384,18 +384,5 @@ class Filesystem extends AbstractData
     private static function _isSecondLevelDir($element)
     {
         return (bool) preg_match('/^[a-f0-9]{2}$/', $element);
-    }
-
-    /**
-     * Decodes a paste or comment file.
-     *
-     * @access private
-     * @static
-     * @param  string $file
-     * @return array
-     */
-    private static function _decodeFile($file)
-    {
-        return json_decode(substr(file_get_contents($file), strlen(DataStore::PROTECTION_LINE . PHP_EOL)));
     }
 }

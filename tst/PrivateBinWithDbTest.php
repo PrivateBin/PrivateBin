@@ -1,7 +1,6 @@
 <?php
 
 use PrivateBin\Data\Database;
-use PrivateBin\Persistence\ServerSalt;
 
 require_once 'PrivateBinTest.php';
 
