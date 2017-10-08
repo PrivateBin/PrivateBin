@@ -23,7 +23,6 @@ class PrivateBinWithDbTest extends PrivateBinTest
         if (!is_dir($this->_path)) {
             mkdir($this->_path);
         }
-        ServerSalt::setPath($this->_path);
         $this->_options['dsn'] = 'sqlite:' . $this->_path . DIRECTORY_SEPARATOR . 'tst.sq3';
         $this->_model          = Database::getInstance($this->_options);
         $this->reset();
@@ -37,10 +36,7 @@ class PrivateBinWithDbTest extends PrivateBinTest
         $options['model'] = array(
             'class' => 'Database',
         );
-        $options['purge']['dir']   = $this->_path;
-        $options['traffic']['dir'] = $this->_path;
         $options['model_options']  = $this->_options;
-        Helper::confBackup();
         Helper::createIniFile(CONF, $options);
     }
 }

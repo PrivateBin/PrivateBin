@@ -14,30 +14,17 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
     public function setUp()
     {
         /* Setup Routine */
-        Helper::confBackup();
         $this->_path  = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'privatebin_data';
         $this->_model = Filesystem::getInstance(array('dir' => $this->_path));
         ServerSalt::setPath($this->_path);
-        $this->reset();
-    }
 
-    public function tearDown()
-    {
-        /* Tear Down Routine */
-        Helper::confRestore();
-        Helper::rmDir($this->_path);
-    }
-
-    public function reset()
-    {
         $_POST   = array();
         $_GET    = array();
         $_SERVER = array();
         if ($this->_model->exists(Helper::getPasteId())) {
             $this->_model->delete(Helper::getPasteId());
         }
-        Helper::confRestore();
-        $options                         = parse_ini_file(CONF, true);
+        $options                         = parse_ini_file(CONF_SAMPLE, true);
         $options['purge']['dir']         = $this->_path;
         $options['traffic']['dir']       = $this->_path;
         $options['model_options']['dir'] = $this->_path;
@@ -45,15 +32,21 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
         Helper::createIniFile(CONF, $options);
     }
 
+    public function tearDown()
+    {
+        /* Tear Down Routine */
+        unlink(CONF);
+        Helper::confRestore();
+        Helper::rmDir($this->_path);
+    }
+
     /**
      * @runInSeparateProcess
      */
     public function testCreate()
     {
-        $this->reset();
         $options                     = parse_ini_file(CONF, true);
         $options['traffic']['limit'] = 0;
-        Helper::confBackup();
         Helper::createIniFile(CONF, $options);
         $_POST                            = Helper::getPaste();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
@@ -80,10 +73,8 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
      */
     public function testPut()
     {
-        $this->reset();
         $options                     = parse_ini_file(CONF, true);
         $options['traffic']['limit'] = 0;
-        Helper::confBackup();
         Helper::createIniFile(CONF, $options);
         $paste = Helper::getPaste();
         unset($paste['meta']);
@@ -116,7 +107,6 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
      */
     public function testDelete()
     {
-        $this->reset();
         $this->_model->create(Helper::getPasteId(), Helper::getPaste());
         $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste exists before deleting data');
         $paste = $this->_model->read(Helper::getPasteId());
@@ -142,7 +132,6 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
      */
     public function testDeleteWithPost()
     {
-        $this->reset();
         $this->_model->create(Helper::getPasteId(), Helper::getPaste());
         $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste exists before deleting data');
         $paste = $this->_model->read(Helper::getPasteId());
@@ -167,7 +156,6 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
      */
     public function testRead()
     {
-        $this->reset();
         $paste                           = Helper::getPasteWithAttachment();
         $paste['meta']['attachment']     = $paste['attachment'];
         $paste['meta']['attachmentname'] = $paste['attachmentname'];
@@ -199,7 +187,6 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
      */
     public function testJsonLdPaste()
     {
-        $this->reset();
         $paste = Helper::getPasteWithAttachment();
         $this->_model->create(Helper::getPasteId(), $paste);
         $_GET['jsonld'] = 'paste';
@@ -219,7 +206,6 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
      */
     public function testJsonLdComment()
     {
-        $this->reset();
         $paste = Helper::getPasteWithAttachment();
         $this->_model->create(Helper::getPasteId(), $paste);
         $_GET['jsonld'] = 'comment';
@@ -239,7 +225,6 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
      */
     public function testJsonLdPasteMeta()
     {
-        $this->reset();
         $paste = Helper::getPasteWithAttachment();
         $this->_model->create(Helper::getPasteId(), $paste);
         $_GET['jsonld'] = 'pastemeta';
@@ -259,7 +244,6 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
      */
     public function testJsonLdCommentMeta()
     {
-        $this->reset();
         $paste = Helper::getPasteWithAttachment();
         $this->_model->create(Helper::getPasteId(), $paste);
         $_GET['jsonld'] = 'commentmeta';
@@ -279,7 +263,6 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
      */
     public function testJsonLdInvalid()
     {
-        $this->reset();
         $paste = Helper::getPasteWithAttachment();
         $this->_model->create(Helper::getPasteId(), $paste);
         $_GET['jsonld'] = CONF;

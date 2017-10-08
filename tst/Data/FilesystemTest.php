@@ -160,13 +160,16 @@ class FilesystemTest extends PHPUnit_Framework_TestCase
             $this->assertFileExists($storagedir . $dataid . '.php', "paste $dataid exists in new format");
             $this->assertFileNotExists($storagedir . $dataid, "old format paste $dataid got removed");
             $this->assertTrue($this->_model->exists($dataid), "paste $dataid exists");
-            $this->assertEquals($this->_model->read($dataid), $paste, "paste $dataid wasn't modified in the conversion");
+            $this->assertEquals($this->_model->read($dataid), json_decode(json_encode($paste)), "paste $dataid wasn't modified in the conversion");
 
             $storagedir .= $dataid . '.discussion' . DIRECTORY_SEPARATOR;
             $this->assertFileExists($storagedir . $dataid . '.' . $commentid . '.' . $dataid . '.php', "comment of $dataid exists in new format");
             $this->assertFileNotExists($storagedir . $dataid . '.' . $commentid . '.' . $dataid, "old format comment of $dataid got removed");
             $this->assertTrue($this->_model->existsComment($dataid, $dataid, $commentid), "comment in paste $dataid exists");
-            $this->assertEquals($this->_model->readComment($dataid, $dataid, $commentid), $comment, "comment of $dataid wasn't modified in the conversion");
+            $comment           = json_decode(json_encode($comment));
+            $comment->id       = $commentid;
+            $comment->parentid = $dataid;
+            $this->assertEquals($this->_model->readComments($dataid), array($comment->meta->postdate => $comment), "comment of $dataid wasn't modified in the conversion");
         }
     }
 }
