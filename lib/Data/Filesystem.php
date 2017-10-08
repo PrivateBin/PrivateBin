@@ -135,31 +135,16 @@ class Filesystem extends AbstractData
         $pastePath = $basePath . '.php';
         // convert to PHP protected files if needed
         if (is_readable($basePath)) {
-            $context = stream_context_create();
-            // don't overwrite already converted file
-            if (!is_file($pastePath)) {
-                $handle = fopen($basePath, 'r', false, $context);
-                file_put_contents($pastePath, DataStore::PROTECTION_LINE . PHP_EOL);
-                file_put_contents($pastePath, $handle, FILE_APPEND);
-                fclose($handle);
-            }
-            unlink($basePath);
+            DataStore::prependRename($basePath, $pastePath);
 
             // convert comments, too
-            $discdir  = self::_dataid2discussionpath($pasteid);
+            $discdir = self::_dataid2discussionpath($pasteid);
             if (is_dir($discdir)) {
                 $dir = dir($discdir);
                 while (false !== ($filename = $dir->read())) {
                     if (substr($filename, -4) !== '.php' && strlen($filename) >= 16) {
                         $commentFilename = $discdir . $filename . '.php';
-                        // don't overwrite already converted file
-                        if (!is_file($commentFilename)) {
-                            $handle = fopen($discdir . $filename, 'r', false, $context);
-                            file_put_contents($commentFilename, DataStore::PROTECTION_LINE . PHP_EOL);
-                            file_put_contents($commentFilename, $handle, FILE_APPEND);
-                            fclose($handle);
-                        }
-                        unlink($discdir . $filename);
+                        DataStore::prependRename($discdir . $filename, $commentFilename);
                     }
                 }
                 $dir->close();

@@ -39,7 +39,6 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
         $options['purge']['dir']         = $this->_path;
         $options['traffic']['dir']       = $this->_path;
         $options['model_options']['dir'] = $this->_path;
-        Helper::confBackup();
         Helper::createIniFile(CONF, $options);
         ServerSalt::setPath($this->_path);
     }

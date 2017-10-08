@@ -23,7 +23,7 @@ use PrivateBin\Json;
 class DataStore extends AbstractPersistence
 {
     /**
-     * First line in JSON files, to hide contents
+     * first line in file, to protect its contents
      *
      * @const string
      */
@@ -58,10 +58,32 @@ class DataStore extends AbstractPersistence
      * @access public
      * @static
      * @param  string $filename
-     * @return array  $data
+     * @return stdClass|false  $data
      */
     public static function get($filename)
     {
         return json_decode(substr(file_get_contents($filename), strlen(self::PROTECTION_LINE . PHP_EOL)));
+    }
+
+    /**
+     * rename a file, prepending the protection line at the beginning
+     *
+     * @access public
+     * @static
+     * @param  string $srcFile
+     * @param  string $destFile
+     * @param  string $prefix (optional)
+     * @return void
+     */
+    public static function prependRename($srcFile, $destFile, $prefix = '')
+    {
+        // don't overwrite already converted file
+        if (!is_readable($destFile)) {
+            $handle = fopen($srcFile, 'r', false, stream_context_create());
+            file_put_contents($destFile, $prefix . DataStore::PROTECTION_LINE . PHP_EOL);
+            file_put_contents($destFile, $handle, FILE_APPEND);
+            fclose($handle);
+        }
+        unlink($srcFile);
     }
 }

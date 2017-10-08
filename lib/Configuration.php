@@ -12,6 +12,7 @@
 
 namespace PrivateBin;
 
+use PrivateBin\Persistence\DataStore;
 use Exception;
 use PDO;
 
@@ -22,13 +23,6 @@ use PDO;
  */
 class Configuration
 {
-    /**
-     * First line in INI file, to hide contents
-     *
-     * @const string
-     */
-    const PROTECTION_LINE = ';<?php http_response_code(403); /*';
-
     /**
      * parsed configuration
      *
@@ -112,27 +106,12 @@ class Configuration
 
         // rename INI files to avoid configuration leakage
         if (is_readable($configIni)) {
-            $context = stream_context_create();
-            // don't overwrite already converted file
-            if (!is_file($configFile)) {
-                $iniHandle = fopen($configIni, 'r', false, $context);
-                file_put_contents($configFile, self::PROTECTION_LINE . PHP_EOL);
-                file_put_contents($configFile, $iniHandle, FILE_APPEND);
-                fclose($iniHandle);
-            }
-            unlink($configIni);
+            DataStore::prependRename($configIni, $configFile, ';');
 
             // cleanup sample, too
-            $configSample    = PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.sample.php';
-            $configIniSample = PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.ini.sample';
+            $configIniSample = $configIni . '.sample';
             if (is_readable($configIniSample)) {
-                if (!is_readable($configSample)) {
-                    $iniSampleHandle = fopen($configIniSample, 'r', false, $context);
-                    file_put_contents($configSample, self::PROTECTION_LINE . PHP_EOL);
-                    file_put_contents($configSample, $iniSampleHandle, FILE_APPEND);
-                    fclose($iniSampleHandle);
-                }
-                unlink($configIniSample);
+                DataStore::prependRename($configIniSample, PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.sample.php', ';');
             }
         }
 
