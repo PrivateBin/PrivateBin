@@ -27,7 +27,7 @@ class Filesystem extends AbstractData
      *
      * @const string
      */
-    const PROTECTION_LINE = '<?php http_response_code(403); /*' . PHP_EOL;
+    const PROTECTION_LINE = '<?php http_response_code(403); /*';
 
     /**
      * directory where data is stored
@@ -81,7 +81,7 @@ class Filesystem extends AbstractData
         if (!is_dir($storagedir)) {
             mkdir($storagedir, 0700, true);
         }
-        return (bool) file_put_contents($storagedir . $pasteid . '.php', self::PROTECTION_LINE . Json::encode($paste));
+        return (bool) file_put_contents($storagedir . $pasteid . '.php', self::PROTECTION_LINE . PHP_EOL . Json::encode($paste));
     }
 
     /**
@@ -157,7 +157,7 @@ class Filesystem extends AbstractData
             // don't overwrite already converted file
             if (!is_file($pastePath)) {
                 $handle = fopen($basePath, 'r', false, $context);
-                file_put_contents($pastePath, self::PROTECTION_LINE);
+                file_put_contents($pastePath, self::PROTECTION_LINE . PHP_EOL);
                 file_put_contents($pastePath, $handle, FILE_APPEND);
                 fclose($handle);
             }
@@ -173,7 +173,7 @@ class Filesystem extends AbstractData
                         // don't overwrite already converted file
                         if (!is_file($commentFilename)) {
                             $handle = fopen($discdir . $filename, 'r', false, $context);
-                            file_put_contents($commentFilename, self::PROTECTION_LINE);
+                            file_put_contents($commentFilename, self::PROTECTION_LINE . PHP_EOL);
                             file_put_contents($commentFilename, $handle, FILE_APPEND);
                             fclose($handle);
                         }
@@ -207,7 +207,7 @@ class Filesystem extends AbstractData
         if (!is_dir($storagedir)) {
             mkdir($storagedir, 0700, true);
         }
-        return (bool) file_put_contents($storagedir . $filename, self::PROTECTION_LINE . Json::encode($comment));
+        return (bool) file_put_contents($storagedir . $filename, self::PROTECTION_LINE . PHP_EOL . Json::encode($comment));
     }
 
     /**
@@ -302,7 +302,7 @@ class Filesystem extends AbstractData
                 }
                 $thirdLevel = array_filter(
                     array_map(
-                        function($filename) {
+                        function ($filename) {
                             return strlen($filename) >= 20 ?
                                 substr($filename, 0, -4) :
                                 $filename;
@@ -434,6 +434,6 @@ class Filesystem extends AbstractData
      */
     private static function _decodeFile($file)
     {
-        return json_decode(substr(file_get_contents($file), strlen(self::PROTECTION_LINE)));
+        return json_decode(substr(file_get_contents($file), strlen(self::PROTECTION_LINE . PHP_EOL)));
     }
 }
