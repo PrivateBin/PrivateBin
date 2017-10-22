@@ -821,6 +821,7 @@ describe('UiHelper', function () {
     // TODO: As per https://github.com/tmpvar/jsdom/issues/1565 there is no navigation support in jsdom, yet.
     // for now we use a mock function to trigger the event
     describe('historyChange', function () {
+        this.timeout(30000);
         before(function () {
             $.PrivateBin.Helper.reset();
         });
