@@ -845,11 +845,9 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
      * everything directly UI-related, which fits nowhere else
      *
      * @name   UiHelper
-     * @param  {object} window
-     * @param  {object} document
      * @class
      */
-    var UiHelper = (function (window, document) {
+    var UiHelper = (function () {
         var me = {};
 
         /**
@@ -990,7 +988,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         }
 
         return me;
-    })(window, document);
+    })();
 
     /**
      * Alert/error manager

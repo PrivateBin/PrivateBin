@@ -803,8 +803,8 @@ describe('Model', function () {
                 element = element.join('');
                 value = value.join('').trim();
 
-                // <br> tags can't contain strings, so test with a <p> instead
-                if (element == 'br') {
+                // <br> tags can't contain strings, table tags can't be alone, so test with a <p> instead
+                if (['br', 'tr', 'td', 'th'].indexOf(element) >= 0) {
                     element = 'p';
                 }
 
@@ -840,7 +840,13 @@ describe('UiHelper', function () {
                 var expected = schema + '://' + address.join('') + '/',
                     clean = jsdom('', {url: expected});
 
+                // make window.location.href writable
+                Object.defineProperty(window.location, 'href', {
+                    writable: true,
+                    value: window.location.href
+                });
                 $.PrivateBin.UiHelper.mockHistoryChange();
+                $.PrivateBin.Helper.reset();
                 var result = window.location.href;
                 clean();
                 return expected === result;
@@ -857,7 +863,43 @@ describe('UiHelper', function () {
                 var expected = schema + '://' + address.join('') + '/' + '?' + query.join('') + '#' + fragment.join(''),
                     clean = jsdom('', {url: expected});
 
+                // make window.location.href writable
+                Object.defineProperty(window.location, 'href', {
+                    writable: true,
+                    value: window.location.href
+                });
                 $.PrivateBin.UiHelper.mockHistoryChange([{type: 'newpaste'}, '', expected]);
+                $.PrivateBin.Helper.reset();
+                var result = window.location.href;
+                clean();
+                return expected === result;
+            }
+        );
+    });
+
+    describe('reloadHome', function () {
+        this.timeout(30000);
+        before(function () {
+            $.PrivateBin.Helper.reset();
+        });
+
+        jsc.property(
+            'redirects to home',
+            jsc.elements(schemas),
+            jsc.nearray(jsc.elements(a2zString)),
+            jsc.array(jsc.elements(queryString)),
+            jsc.nearray(jsc.elements(base64String)),
+            function (schema, address, query, fragment) {
+                var expected = schema + '://' + address.join('') + '/',
+                    clean = jsdom('', {url: expected + '?' + query.join('') + '#' + fragment.join('')});
+
+                // make window.location.href writable
+                Object.defineProperty(window.location, 'href', {
+                    writable: true,
+                    value: window.location.href
+                });
+                $.PrivateBin.UiHelper.reloadHome();
+                $.PrivateBin.Helper.reset();
                 var result = window.location.href;
                 clean();
                 return expected === result;
