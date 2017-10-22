@@ -965,10 +965,14 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          *
          * @name   UiHelper.mockHistoryChange
          * @function
+         * @param  {string} state   (optional) state to mock
          */
-        me.mockHistoryChange = function()
+        me.mockHistoryChange = function(state)
         {
-            historyChange($.Event('popstate', {originalEvent: new PopStateEvent('popstate', {state: null}), target: window}));
+            if (typeof state === 'undefined') {
+                state = null;
+            }
+            historyChange($.Event('popstate', {originalEvent: new PopStateEvent('popstate', {state: state}), target: window}));
         }
 
         /**

@@ -818,27 +818,41 @@ describe('Model', function () {
 });
 
 describe('UiHelper', function () {
+    // TODO: As per https://github.com/tmpvar/jsdom/issues/1565 there is no navigation support in jsdom, yet.
+    // for now we use a mock function to trigger the event
     describe('historyChange', function () {
         before(function () {
             $.PrivateBin.Helper.reset();
         });
 
-        // TODO: As per https://github.com/tmpvar/jsdom/issues/1565 there is no navigation support in jsdom, yet.
-        // for now we use a mock function to trigger the event
         jsc.property(
-            'returns the URL without query & fragment',
+            'redirects to home, when the state is null',
             jsc.elements(schemas),
             jsc.nearray(jsc.elements(a2zString)),
-            jsc.array(jsc.elements(queryString)),
-            'string',
-            function (schema, address, query, fragment) {
+            function (schema, address) {
                 var expected = schema + '://' + address.join('') + '/',
-                    clean = jsdom('', {url: expected + '?' + query.join('') + '#' + fragment});
+                    clean = jsdom('', {url: expected});
 
                 $.PrivateBin.UiHelper.mockHistoryChange();
                 var result = window.location.href;
                 clean();
-                console.log(expected, result);
+                return expected === result;
+            }
+        );
+
+        jsc.property(
+            'does not redirect to home, when a new paste is created',
+            jsc.elements(schemas),
+            jsc.nearray(jsc.elements(a2zString)),
+            jsc.array(jsc.elements(queryString)),
+            jsc.nearray(jsc.elements(base64String)),
+            function (schema, address, query, fragment) {
+                var expected = schema + '://' + address.join('') + '/' + '?' + query.join('') + '#' + fragment.join(''),
+                    clean = jsdom('', {url: expected});
+
+                $.PrivateBin.UiHelper.mockHistoryChange([{type: 'newpaste'}, '', expected]);
+                var result = window.location.href;
+                clean();
                 return expected === result;
             }
         );
