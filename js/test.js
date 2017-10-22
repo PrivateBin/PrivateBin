@@ -79,6 +79,7 @@ describe('Helper', function () {
     // this test is not yet meaningful using jsdom, as it does not contain getSelection support.
     // TODO: This needs to be tested using a browser.
     describe('selectText', function () {
+        this.timeout(30000);
         jsc.property(
             'selection contains content of given ID',
             jsc.nearray(jsc.nearray(jsc.elements(alnumString))),
@@ -272,6 +273,7 @@ describe('Helper', function () {
     });
 
     describe('getCookie', function () {
+        this.timeout(30000);
         jsc.property(
             'returns the requested cookie',
             'nearray asciinestring',
@@ -300,6 +302,7 @@ describe('Helper', function () {
     });
 
     describe('baseUri', function () {
+        this.timeout(30000);
         before(function () {
             $.PrivateBin.Helper.reset();
         });
@@ -414,6 +417,7 @@ describe('I18n', function () {
     // loading of JSON via AJAX needs to be tested in the browser, this just mocks it
     // TODO: This needs to be tested using a browser.
     describe('loadTranslations', function () {
+        this.timeout(30000);
         before(function () {
             $.PrivateBin.I18n.reset();
         });
@@ -673,6 +677,7 @@ describe('Model', function () {
     });
 
     describe('getPasteId', function () {
+        this.timeout(30000);
         before(function () {
             $.PrivateBin.Model.reset();
             cleanup();
@@ -721,6 +726,7 @@ describe('Model', function () {
     });
 
     describe('getPasteKey', function () {
+        this.timeout(30000);
         jsc.property(
             'returns the fragment of the URL',
             jsc.nearray(jsc.elements(a2zString)),

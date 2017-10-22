@@ -11,6 +11,8 @@ enabled:
 disabled:
   - blank_line_after_opening_tag
   - blank_line_before_return
+  - blank_line_before_throw
+  - blank_line_before_try
   - concat_without_spaces
   - declare_equal_normalize
   - heredoc_to_nowdoc
