@@ -802,6 +802,12 @@ describe('Model', function () {
                 id = id.join('');
                 element = element.join('');
                 value = value.join('').trim();
+
+                // <br> tags can't contain strings, so test with a <p> instead
+                if (element == 'br') {
+                    element = 'p';
+                }
+
                 $('body').html(
                     '<div id="templates"><' + element + ' id="' + id +
                     'template">' + value + '</' + element + '></div>'
