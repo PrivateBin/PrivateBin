@@ -866,7 +866,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         {
             var currentLocation = Helper.baseUri();
             if (event.originalEvent.state === null && // no state object passed
-                event.originalEvent.target.location.href === currentLocation && // target location is home page
+                event.target.location.href === currentLocation && // target location is home page
                 window.location.href === currentLocation // and we are not already on the home page
             ) {
                 // redirect to home page
@@ -956,6 +956,19 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                 }
                 next();
             });
+        }
+
+        /**
+         * trigger a history (pop) state change
+         *
+         * used to test the UiHelper.historyChange private function
+         *
+         * @name   UiHelper.mockHistoryChange
+         * @function
+         */
+        me.mockHistoryChange = function()
+        {
+            historyChange($.Event('popstate', {originalEvent: new PopStateEvent('popstate', {state: null}), target: window}));
         }
 
         /**

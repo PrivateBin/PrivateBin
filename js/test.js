@@ -2,7 +2,6 @@
 var jsc = require('jsverify'),
     jsdom = require('jsdom-global'),
     cleanup = jsdom(),
-    EventEmitter = require('events'),
 
     a2zString = ['a','b','c','d','e','f','g','h','i','j','k','l','m',
                  'n','o','p','q','r','s','t','u','v','w','x','y','z'],
@@ -824,6 +823,8 @@ describe('UiHelper', function () {
             $.PrivateBin.Helper.reset();
         });
 
+        // TODO: As per https://github.com/tmpvar/jsdom/issues/1565 there is no navigation support in jsdom, yet.
+        // for now we use a mock function to trigger the event
         jsc.property(
             'returns the URL without query & fragment',
             jsc.elements(schemas),
@@ -832,11 +833,9 @@ describe('UiHelper', function () {
             'string',
             function (schema, address, query, fragment) {
                 var expected = schema + '://' + address.join('') + '/',
-                    clean = jsdom('', {url: expected + '?' + query.join('') + '#' + fragment}),
-                    emitter = new EventEmitter();
+                    clean = jsdom('', {url: expected + '?' + query.join('') + '#' + fragment});
 
-                $.PrivateBin.UiHelper.init();
-                emitter.emit('popstate');
+                $.PrivateBin.UiHelper.mockHistoryChange();
                 var result = window.location.href;
                 clean();
                 console.log(expected, result);
