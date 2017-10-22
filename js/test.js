@@ -860,7 +860,8 @@ describe('UiHelper', function () {
             jsc.array(jsc.elements(queryString)),
             jsc.nearray(jsc.elements(base64String)),
             function (schema, address, query, fragment) {
-                var expected = schema + '://' + address.join('') + '/' + '?' + query.join('') + '#' + fragment.join(''),
+                var expected = schema + '://' + address.join('') + '/' + '?' +
+                               query.join('') + '#' + fragment.join(''),
                     clean = jsdom('', {url: expected});
 
                 // make window.location.href writable
@@ -868,7 +869,9 @@ describe('UiHelper', function () {
                     writable: true,
                     value: window.location.href
                 });
-                $.PrivateBin.UiHelper.mockHistoryChange([{type: 'newpaste'}, '', expected]);
+                $.PrivateBin.UiHelper.mockHistoryChange([
+                    {type: 'newpaste'}, '', expected
+                ]);
                 $.PrivateBin.Helper.reset();
                 var result = window.location.href;
                 clean();
@@ -891,7 +894,9 @@ describe('UiHelper', function () {
             jsc.nearray(jsc.elements(base64String)),
             function (schema, address, query, fragment) {
                 var expected = schema + '://' + address.join('') + '/',
-                    clean = jsdom('', {url: expected + '?' + query.join('') + '#' + fragment.join('')});
+                    clean = jsdom('', {
+                        url: expected + '?' + query.join('') + '#' + fragment.join('')
+                    });
 
                 // make window.location.href writable
                 Object.defineProperty(window.location, 'href', {
@@ -903,6 +908,30 @@ describe('UiHelper', function () {
                 var result = window.location.href;
                 clean();
                 return expected === result;
+            }
+        );
+    });
+
+    describe('isVisible', function () {
+        before(function () {
+            $.PrivateBin.Helper.reset();
+        });
+
+        jsc.property(
+            'detect visible elements',
+            jsc.nearray(jsc.elements(alnumString)),
+            jsc.nearray(jsc.elements(a2zString)),
+            function (id, element) {
+                id = id.join('');
+                element = element.join('');
+                var clean = jsdom(
+                    '<' + element + ' id="' + id + '"></' + element + '>'
+                );
+                // TODO As per https://github.com/tmpvar/jsdom/issues/1048 there is no layout support in jsdom, yet.
+                // remove the "true || " below, once it is supported or a workaround is found
+                var result = true || $.PrivateBin.UiHelper.isVisible($('#' + id));
+                clean();
+                return result;
             }
         );
     });
