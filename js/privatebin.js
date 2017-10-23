@@ -1004,12 +1004,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             $statusMessage,
             $remainingTime;
 
-        var currentIcon = [
-            'glyphicon-time', // loading icon
-            'glyphicon-info-sign', // status icon
-            '', // resevered for warning, not used yet
-            'glyphicon-alert' // error icon
-        ];
+        var currentIcon;
 
         var alertType = [
             'loading', // not in bootstrap, but using a good value here
@@ -1253,6 +1248,13 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             $loadingIndicator = $('#loadingindicator');
             $statusMessage = $('#status');
             $remainingTime = $('#remainingtime');
+
+            currentIcon = [
+                'glyphicon-time', // loading icon
+                'glyphicon-info-sign', // status icon
+                '', // reserved for warning, not used yet
+                'glyphicon-alert' // error icon
+            ];
         }
 
         return me;

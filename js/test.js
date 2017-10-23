@@ -943,3 +943,93 @@ describe('UiHelper', function () {
     });
 });
 
+describe('Alert', function () {
+    describe('showStatus', function () {
+        before(function () {
+            cleanup();
+        });
+
+        jsc.property(
+            'shows a status message',
+            jsc.array(jsc.elements(alnumString)),
+            jsc.array(jsc.elements(alnumString)),
+            function (icon, message) {
+                icon = icon.join('');
+                message = message.join('');
+                var expected = '<div id="status" role="alert" ' +
+                    'class="statusmessage alert alert-info"><span ' +
+                    'class="glyphicon glyphicon-' + icon +
+                    '" aria-hidden="true"></span> ' + message + '</div>';
+                $('body').html(
+                    '<div id="status" role="alert" class="statusmessage ' +
+                    'alert alert-info hidden"><span class="glyphicon ' +
+                    'glyphicon-info-sign" aria-hidden="true"></span> </div>'
+                );
+                $.PrivateBin.Alert.init();
+                $.PrivateBin.Alert.showStatus(message, icon);
+                var result = $('body').html();
+                return expected === result;
+            }
+        );
+    });
+
+    describe('showError', function () {
+        before(function () {
+            cleanup();
+        });
+
+        jsc.property(
+            'shows an error message',
+            jsc.array(jsc.elements(alnumString)),
+            jsc.array(jsc.elements(alnumString)),
+            function (icon, message) {
+                icon = icon.join('');
+                message = message.join('');
+                var expected = '<div id="errormessage" role="alert" ' +
+                    'class="statusmessage alert alert-danger"><span ' +
+                    'class="glyphicon glyphicon-' + icon +
+                    '" aria-hidden="true"></span> ' + message + '</div>';
+                $('body').html(
+                    '<div id="errormessage" role="alert" class="statusmessage ' +
+                    'alert alert-danger hidden"><span class="glyphicon ' +
+                    'glyphicon-alert" aria-hidden="true"></span> </div>'
+                );
+                $.PrivateBin.Alert.init();
+                $.PrivateBin.Alert.showError(message, icon);
+                var result = $('body').html();
+                return expected === result;
+            }
+        );
+    });
+
+    describe('showRemaining', function () {
+        before(function () {
+            cleanup();
+        });
+
+        jsc.property(
+            'shows remaining time',
+            jsc.array(jsc.elements(alnumString)),
+            jsc.array(jsc.elements(alnumString)),
+            'integer',
+            function (message, string, number) {
+                message = message.join('');
+                string = string.join('');
+                var expected = '<div id="remainingtime" role="alert" ' +
+                    'class="alert alert-info"><span ' +
+                    'class="glyphicon glyphicon-fire" aria-hidden="true">' +
+                    '</span> ' + string + message + number + '</div>';
+                $('body').html(
+                    '<div id="remainingtime" role="alert" class="hidden ' +
+                    'alert alert-info"><span class="glyphicon ' +
+                    'glyphicon-fire" aria-hidden="true"></span> </div>'
+                );
+                $.PrivateBin.Alert.init();
+                $.PrivateBin.Alert.showRemaining(['%s' + message + '%d', string, number]);
+                var result = $('body').html();
+                return expected === result;
+            }
+        );
+    });
+});
+
