@@ -913,6 +913,9 @@ describe('UiHelper', function () {
     });
 
     describe('isVisible', function () {
+        // TODO As per https://github.com/tmpvar/jsdom/issues/1048 there is no layout support in jsdom, yet.
+        // once it is supported or a workaround is found, uncomment the section below
+        /*
         before(function () {
             $.PrivateBin.Helper.reset();
         });
@@ -927,13 +930,16 @@ describe('UiHelper', function () {
                 var clean = jsdom(
                     '<' + element + ' id="' + id + '"></' + element + '>'
                 );
-                // TODO As per https://github.com/tmpvar/jsdom/issues/1048 there is no layout support in jsdom, yet.
-                // remove the "true || " below, once it is supported or a workaround is found
-                var result = true || $.PrivateBin.UiHelper.isVisible($('#' + id));
+                var result = $.PrivateBin.UiHelper.isVisible($('#' + id));
                 clean();
                 return result;
             }
         );
+        */
+    });
+
+    describe('scrollTo', function () {
+        // TODO Did not find a way to test that, see isVisible test above
     });
 });
 
