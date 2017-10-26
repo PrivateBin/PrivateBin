@@ -35,5 +35,4 @@ If you have access to the server log files, also copy them here.
 <!-- The version of PrivateBin, if you use an unstable version paste the commit hash or the GitHub link to the commit here (you can get it by running `git rev-parse HEAD`) -->
 **PrivateBin version:**
 
-* I can reproduce this issue on <https://privatebin.net>: Yes / No
-
+I can reproduce this issue on <https://privatebin.net>: Yes / No

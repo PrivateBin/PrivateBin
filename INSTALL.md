@@ -3,12 +3,13 @@
 **TL;DR:** Download the
 [latest release archive](https://github.com/PrivateBin/PrivateBin/releases/latest)
 and extract it in your web hosts folder where you want to install your PrivateBin
-instance. We try to provide a safe default configuration, but we advise you to
-check the options and adjust them as you see fit.
+instance. We try to provide a mostly safe default configuration, but we urge you to
+check the [security section](#hardening-and-security) below and the [configuration
+options](#configuration) to adjust as you see fit.
 
-## Basic installation
+**NOTE:** See [our FAQ](https://github.com/PrivateBin/PrivateBin/wiki/FAQ#how-can-i-securely-clonedownload-your-project) for information how to securely download the PrivateBin release files.
 
-### Requirements
+### Minimal requirements
 
 - PHP version 5.4 or above
 - _one_ of the following sources of cryptographically safe randomness is required:
@@ -20,37 +21,11 @@ check the options and adjust them as you see fit.
   
   Mcrypt needs to be able to access `/dev/urandom`. This means if `open_basedir` is set, it must include this file.
 - GD extension
-- some disk space or (optional) a database supported by [PDO](https://secure.php.net/manual/book.pdo.php)
-- ability to create files and folders in the installation directory and the PATH
+- some disk space or (optionally) a database supported by [PDO](https://secure.php.net/manual/book.pdo.php)
+- ability to create files and folders in the installation directory and the PATH defined in index.php
 - A web browser with javascript support
 
-### Configuration
-
-In the file `cfg/conf.ini` you can configure PrivateBin. A `cfg/conf.ini.sample`
-is provided containing all options and default values. You can copy it to
-`cfg/conf.ini` and adapt it as needed. The config file is divided into multiple
-sections, which are enclosed in square brackets.
-
-In the `[main]` section you can enable or disable the discussion feature, set
-the limit of stored pastes and comments in bytes. The `[traffic]` section lets
-you set a time limit in seconds. Users may not post more often then this limit
-to your PrivateBin installation.
-
-More details can be found in the
-[configuration documentation](https://github.com/PrivateBin/PrivateBin/wiki/Configuration).
-
-## Further configuration
-
-After (or before) setting up PrivateBin, also set up HTTPS, as without HTTPS
-PrivateBin is not secure. (
-[More information](https://github.com/PrivateBin/PrivateBin/wiki/FAQ#how-should-i-setup-https))
-
-If you want to use PrivateBin behind Cloudflare, make sure you disabled Rocket
-loader and unchecked "Javascript" for Auto Minify, found in your domain settings,
-under "Speed". (More information
-[in this FAQ entry](https://github.com/PrivateBin/PrivateBin/wiki/FAQ#user-content-how-to-make-privatebin-work-when-using-cloudflare-for-ddos-protection))
-
-## Advanced installation
+## Hardening and security
 
 ### Changing the path
 
@@ -64,7 +39,7 @@ process (see also
 > #### PATH Example
 > Your PrivateBin installation lives in a subfolder called "paste" inside of
 > your document root. The URL looks like this:
-> https://example.com/paste/
+> http://example.com/paste/
 >
 > The full path of PrivateBin on your webserver is:
 > /home/example.com/htdocs/paste
@@ -74,6 +49,29 @@ process (see also
 >
 > PrivateBin will look for your includes / data here:
 > /home/example.com/secret/privatebin
+
+### Transport security
+
+When setting up PrivateBin, also set up HTTPS, if you haven't already. Without HTTPS
+PrivateBin is not secure, as the javascript files could be manipulated during transmission.
+For more information on this, see our [FAQ entry on HTTPS setup](https://github.com/PrivateBin/PrivateBin/wiki/FAQ#how-should-i-setup-https).
+
+## Configuration
+
+In the file `cfg/conf.php` you can configure PrivateBin. A `cfg/conf.sample.php`
+is provided containing all options and default values. You can copy it to
+`cfg/conf.php` and adapt it as needed. The config file is divided into multiple
+sections, which are enclosed in square brackets.
+
+In the `[main]` section you can enable or disable the discussion feature, set
+the limit of stored pastes and comments in bytes. The `[traffic]` section lets
+you set a time limit in seconds. Users may not post more often then this limit
+to your PrivateBin installation.
+
+More details can be found in the
+[configuration documentation](https://github.com/PrivateBin/PrivateBin/wiki/Configuration).
+
+## Advanced installation
 
 ### Web server configuration
 
@@ -87,6 +85,13 @@ A `.htaccess.disabled` file is provided in the root dir of PrivateBin. It blocks
 some known robots and link-scanning bots. If you use Apache, you can rename the
 file to `.htaccess` to enable this feature. If you use another webserver, you
 have to configure it manually to do the same.
+
+### On using Cloudflare
+
+If you want to use PrivateBin behind Cloudflare, make sure you have disabled the Rocket
+loader and unchecked "Javascript" for Auto Minify, found in your domain settings,
+under "Speed". (More information
+[in this FAQ entry](https://github.com/PrivateBin/PrivateBin/wiki/FAQ#user-content-how-to-make-privatebin-work-when-using-cloudflare-for-ddos-protection))
 
 ### Using a database instead of flat files
 
@@ -150,5 +155,4 @@ CREATE TABLE prefix_config (
 INSERT INTO prefix_config VALUES('VERSION', '1.1');
 ```
 
-In PostgreSQL the attachment column needs to be TEXT and not BLOB or MEDIUMBLOB.
-
+In PostgreSQL, the attachment column needs to be TEXT and not BLOB or MEDIUMBLOB.

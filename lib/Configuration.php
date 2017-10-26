@@ -7,13 +7,14 @@
  * @link      https://github.com/PrivateBin/PrivateBin
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
- * @version   1.1
+ * @version   1.1.1
  */
 
 namespace PrivateBin;
 
 use Exception;
 use PDO;
+use PrivateBin\Persistence\DataStore;
 
 /**
  * Configuration
@@ -100,7 +101,20 @@ class Configuration
     public function __construct()
     {
         $config     = array();
-        $configFile = PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.ini';
+        $configFile = PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.php';
+        $configIni  = PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.ini';
+
+        // rename INI files to avoid configuration leakage
+        if (is_readable($configIni)) {
+            DataStore::prependRename($configIni, $configFile, ';');
+
+            // cleanup sample, too
+            $configIniSample = $configIni . '.sample';
+            if (is_readable($configIniSample)) {
+                DataStore::prependRename($configIniSample, PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.sample.php', ';');
+            }
+        }
+
         if (is_readable($configFile)) {
             $config = parse_ini_file($configFile, true);
             foreach (array('main', 'model', 'model_options') as $section) {
@@ -109,6 +123,7 @@ class Configuration
                 }
             }
         }
+
         $opts = '_options';
         foreach (self::getDefaults() as $section => $values) {
             // fill missing sections with default values

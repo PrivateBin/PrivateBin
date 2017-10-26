@@ -159,7 +159,7 @@ new ConfigurationTestGenerator(array(
                 array(
                     'type' => 'RegExp',
                     'args' => array(
-                        '#<link[^>]+type="text/css"[^>]+rel="stylesheet"[^>]+href="css/privatebin\.css\\?\d+\.\d+"[^>]*/>#',
+                        '#<link[^>]+type="text/css"[^>]+rel="stylesheet"[^>]+href="css/privatebin\.css\\?\d[\d\.]+\d+"[^>]*/>#',
                         '$content',
                         'outputs "page" stylesheet correctly',
                     ),
@@ -179,7 +179,7 @@ new ConfigurationTestGenerator(array(
                 array(
                     'type' => 'NotRegExp',
                     'args' => array(
-                        '#<link[^>]+type="text/css"[^>]+rel="stylesheet"[^>]+href="css/privatebin\.css\\?\d+\.\d+"[^>]*/>#',
+                        '#<link[^>]+type="text/css"[^>]+rel="stylesheet"[^>]+href="css/privatebin\.css\\?\d[\d\.]+\d+"[^>]*/>#',
                         '$content',
                         'removes "page" stylesheet correctly',
                     ),
@@ -344,7 +344,7 @@ class ConfigurationTestGenerator
      */
     private function _writeConfigurationTest()
     {
-        $defaultOptions = parse_ini_file(CONF, true);
+        $defaultOptions = parse_ini_file(CONF_SAMPLE, true);
         $code           = $this->_getHeader();
         foreach ($this->_configurations as $key => $conf) {
             $fullOptions = array_replace_recursive($defaultOptions, $conf['options']);
@@ -425,7 +425,7 @@ class ConfigurationCombinationsTest extends PHPUnit_Framework_TestCase
     {
         /* Setup Routine */
         Helper::confBackup();
-        $this->_path = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'privatebin_data';
+        $this->_path  = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'privatebin_data';
         $this->_model = Filesystem::getInstance(array('dir' => $this->_path));
         ServerSalt::setPath($this->_path);
         TrafficLimiter::setPath($this->_path);
@@ -435,9 +435,10 @@ class ConfigurationCombinationsTest extends PHPUnit_Framework_TestCase
     public function tearDown()
     {
         /* Tear Down Routine */
+        unlink(CONF);
         Helper::confRestore();
         Helper::rmDir($this->_path);
-}
+    }
 
     public function reset($configuration = array())
     {

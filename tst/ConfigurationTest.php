@@ -12,7 +12,7 @@ class ConfigurationTest extends PHPUnit_Framework_TestCase
     {
         /* Setup Routine */
         Helper::confBackup();
-        $this->_options                         = configuration::getDefaults();
+        $this->_options                         = Configuration::getDefaults();
         $this->_options['model_options']['dir'] = PATH . $this->_options['model_options']['dir'];
         $this->_options['traffic']['dir']       = PATH . $this->_options['traffic']['dir'];
         $this->_options['purge']['dir']         = PATH . $this->_options['purge']['dir'];
@@ -22,12 +22,14 @@ class ConfigurationTest extends PHPUnit_Framework_TestCase
     public function tearDown()
     {
         /* Tear Down Routine */
+        if (is_file(CONF)) {
+            unlink(CONF);
+        }
         Helper::confRestore();
     }
 
     public function testDefaultConfigFile()
     {
-        $this->assertTrue(copy(CONF . '.bak', CONF), 'copy default configuration file');
         $conf = new Configuration;
         $this->assertEquals($this->_options, $conf->get(), 'default configuration is correct');
     }
@@ -41,7 +43,9 @@ class ConfigurationTest extends PHPUnit_Framework_TestCase
 
     public function testHandleMissingConfigFile()
     {
-        @unlink(CONF);
+        if (is_file(CONF)) {
+            unlink(CONF);
+        }
         $conf = new Configuration;
         $this->assertEquals($this->_options, $conf->get(), 'returns correct defaults on missing file');
     }
@@ -134,5 +138,43 @@ class ConfigurationTest extends PHPUnit_Framework_TestCase
         Helper::createIniFile(CONF, $options);
         $conf = new Configuration;
         $this->assertEquals('Database', $conf->getKey('class', 'model'), 'old db class gets renamed');
+    }
+
+    public function testHandleConfigFileRename()
+    {
+        $options                           = $this->_options;
+        Helper::createIniFile(PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.ini.sample', $options);
+
+        $options['main']['opendiscussion'] = true;
+        $options['main']['fileupload']     = true;
+        $options['main']['template']       = 'darkstrap';
+        Helper::createIniFile(PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.ini', $options);
+
+        $conf = new Configuration;
+        $this->assertFileExists(CONF, 'old configuration file gets converted');
+        $this->assertFileNotExists(PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.ini', 'old configuration file gets removed');
+        $this->assertFileNotExists(PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.ini.sample', 'old configuration sample file gets removed');
+        $this->assertTrue(
+            $conf->getKey('opendiscussion') &&
+            $conf->getKey('fileupload') &&
+            $conf->getKey('template') === 'darkstrap',
+            'configuration values get converted'
+        );
+    }
+
+    public function testRenameIniSample()
+    {
+        $iniSample = PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.ini.sample';
+
+        Helper::createIniFile(PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.ini', $this->_options);
+        if (is_file(CONF)) {
+            unlink(CONF);
+        }
+        rename(CONF_SAMPLE, $iniSample);
+        new Configuration;
+        $this->assertFileNotExists($iniSample, 'old sample file gets removed');
+        $this->assertFileExists(CONF_SAMPLE, 'new sample file gets created');
+        $this->assertFileExists(CONF, 'old configuration file gets converted');
+        $this->assertFileNotExists(PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.ini', 'old configuration file gets removed');
     }
 }
