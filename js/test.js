@@ -25,8 +25,8 @@ global.RawDeflate.inflate = require('./rawinflate-0.3').RawDeflate.inflate;
 require('./privatebin');
 
 // redirect console messages to log file
-console.warn = console.error = function (msg) {
-    logFile.write(msg + '\n');
+console.info = console.warn = console.error = function () {
+    logFile.write(Array.prototype.slice.call(arguments).join('') + '\n');
 }
 
 describe('Helper', function () {

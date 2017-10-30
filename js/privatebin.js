@@ -414,7 +414,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                     var orgArguments = arguments;
                     $(document).on(languageLoadedEvent, function () {
                         // log to show that the previous error could be mitigated
-                        console.log('Fix missing translation of \'' + messageId + '\' with now loaded language ' + language);
+                        console.warn('Fix missing translation of \'' + messageId + '\' with now loaded language ' + language);
                         // re-execute this function
                         me.translate.apply(this, orgArguments);
                     });
@@ -1100,7 +1100,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          */
         me.showStatus = function(message, icon, dismissable, autoclose)
         {
-            console.log('status shown: ', message);
+            console.info('status shown: ', message);
             // @TODO: implement dismissable
             // @TODO: implement autoclose
 
@@ -1143,7 +1143,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          */
         me.showRemaining = function(message)
         {
-            console.log('remaining message shown: ', message);
+            console.info('remaining message shown: ', message);
             handleNotification(1, $remainingTime, message);
         }
 
@@ -1161,7 +1161,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         me.showLoading = function(message, percentage, icon)
         {
             if (typeof message !== 'undefined' && message !== null) {
-                console.log('status changed: ', message);
+                console.info('status changed: ', message);
             }
 
             // default message text
@@ -2656,7 +2656,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         me.showViewButtons = function()
         {
             if (viewButtonsDisplayed) {
-                console.log('showViewButtons: view buttons are already displayed');
+                console.warn('showViewButtons: view buttons are already displayed');
                 return;
             }
 
@@ -2676,7 +2676,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         me.hideViewButtons = function()
         {
             if (!viewButtonsDisplayed) {
-                console.log('hideViewButtons: view buttons are already hidden');
+                console.warn('hideViewButtons: view buttons are already hidden');
                 return;
             }
 
@@ -2708,7 +2708,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         me.showCreateButtons = function()
         {
             if (createButtonsDisplayed) {
-                console.log('showCreateButtons: create buttons are already displayed');
+                console.warn('showCreateButtons: create buttons are already displayed');
                 return;
             }
 
@@ -2733,7 +2733,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         me.hideCreateButtons = function()
         {
             if (!createButtonsDisplayed) {
-                console.log('hideCreateButtons: create buttons are already hidden');
+                console.warn('hideCreateButtons: create buttons are already hidden');
                 return;
             }
 
