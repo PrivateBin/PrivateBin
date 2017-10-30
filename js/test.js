@@ -1031,5 +1031,40 @@ describe('Alert', function () {
             }
         );
     });
+
+    describe('showLoading', function () {
+        before(function () {
+            cleanup();
+        });
+
+        jsc.property(
+            'shows a loding message',
+            jsc.array(jsc.elements(alnumString)),
+            jsc.array(jsc.elements(alnumString)),
+            'integer',
+            function (icon, message, number) {
+                icon = icon.join('');
+                message = message.join('');
+                var default_message = 'Loading…';
+                if (message.length == 0) {
+                    message = default_message;
+                }
+                var expected = '<ul class="nav navbar-nav"><li ' +
+                    'id="loadingindicator" class="navbar-text"><span ' +
+                    'class="glyphicon glyphicon-' + icon +
+                    '" aria-hidden="true"></span> ' + message + '</li></ul>';
+                $('body').html(
+                    '<ul class="nav navbar-nav"><li id="loadingindicator" ' +
+                    'class="navbar-text hidden"><span class="glyphicon ' +
+                    'glyphicon-time" aria-hidden="true"></span> ' +
+                    default_message + '</li></ul>'
+                );
+                $.PrivateBin.Alert.init();
+                $.PrivateBin.Alert.showLoading(message, number, icon);
+                var result = $('body').html();
+                return expected === result;
+            }
+        );
+    });
 });
 
