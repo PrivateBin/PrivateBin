@@ -1113,5 +1113,53 @@ describe('Alert', function () {
             }
         );
     });
+
+    describe('setCustomHandler', function () {
+        before(function () {
+            cleanup();
+        });
+
+        jsc.property(
+            'calls a given handler function',
+            'nat 3',
+            jsc.array(jsc.elements(alnumString)),
+            function (trigger, message) {
+                message = message.join('');
+                var handlerCalled = false,
+                    default_message = 'Loading…',
+                    functions = [
+                        $.PrivateBin.Alert.showStatus,
+                        $.PrivateBin.Alert.showError,
+                        $.PrivateBin.Alert.showRemaining,
+                        $.PrivateBin.Alert.showLoading
+                    ];
+                if (message.length == 0) {
+                    message = default_message;
+                }
+                $('body').html(
+                    '<ul class="nav navbar-nav"><li id="loadingindicator" ' +
+                    'class="navbar-text hidden"><span class="glyphicon ' +
+                    'glyphicon-time" aria-hidden="true"></span> ' +
+                    default_message + '</li></ul>' +
+                    '<div id="remainingtime" role="alert" class="hidden ' +
+                    'alert alert-info"><span class="glyphicon ' +
+                    'glyphicon-fire" aria-hidden="true"></span> </div>' +
+                    '<div id="status" role="alert" class="statusmessage ' +
+                    'alert alert-info"><span class="glyphicon ' +
+                    'glyphicon-info-sign" aria-hidden="true"></span> </div>' +
+                    '<div id="errormessage" role="alert" class="statusmessage ' +
+                    'alert alert-danger"><span class="glyphicon ' +
+                    'glyphicon-alert" aria-hidden="true"></span> </div>'
+                );
+                $.PrivateBin.Alert.init();
+                $.PrivateBin.Alert.setCustomHandler(function(id, $element) {
+                    handlerCalled = true;
+                    return true;
+                });
+                functions[trigger](message);
+                return handlerCalled;
+            }
+        );
+    });
 });
 
