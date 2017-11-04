@@ -1089,5 +1089,29 @@ describe('Alert', function () {
             }
         );
     });
+
+    describe('hideMessages', function () {
+        before(function () {
+            cleanup();
+        });
+
+        it(
+            'hides all messages',
+            function() {
+                $('body').html(
+                    '<div id="status" role="alert" class="statusmessage ' +
+                    'alert alert-info"><span class="glyphicon ' +
+                    'glyphicon-info-sign" aria-hidden="true"></span> </div>' +
+                    '<div id="errormessage" role="alert" class="statusmessage ' +
+                    'alert alert-danger"><span class="glyphicon ' +
+                    'glyphicon-alert" aria-hidden="true"></span> </div>'
+                );
+                $.PrivateBin.Alert.init();
+                $.PrivateBin.Alert.hideMessages();
+                return $('#statusmessage').hasClass('hidden') &&
+                    $('#errormessage').hasClass('hidden');
+            }
+        );
+    });
 });
 
