@@ -803,8 +803,8 @@ describe('Model', function () {
                 element = element.join('');
                 value = value.join('').trim();
 
-                // <br> tags can't contain strings, table tags can't be alone, so test with a <p> instead
-                if (['br', 'tr', 'td', 'th'].indexOf(element) >= 0) {
+                // <br>, <hr> and <wbr> tags can't contain strings, table tags can't be alone, so test with a <p> instead
+                if (['br', 'hr', 'tr', 'td', 'th', 'wbr'].indexOf(element) >= 0) {
                     element = 'p';
                 }
 
