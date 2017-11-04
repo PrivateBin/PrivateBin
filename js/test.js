@@ -1038,7 +1038,7 @@ describe('Alert', function () {
         });
 
         jsc.property(
-            'shows a loding message',
+            'shows a loading message',
             jsc.array(jsc.elements(alnumString)),
             jsc.array(jsc.elements(alnumString)),
             'integer',
@@ -1063,6 +1063,29 @@ describe('Alert', function () {
                 $.PrivateBin.Alert.showLoading(message, number, icon);
                 var result = $('body').html();
                 return expected === result;
+            }
+        );
+    });
+
+    describe('hideLoading', function () {
+        before(function () {
+            cleanup();
+        });
+
+        it(
+            'hides the loading message',
+            function() {
+                $('body').html(
+                    '<ul class="nav navbar-nav"><li id="loadingindicator" ' +
+                    'class="navbar-text"><span class="glyphicon ' +
+                    'glyphicon-time" aria-hidden="true"></span> ' +
+                    'Loading…</li></ul>'
+                );
+                $('body').addClass('loading');
+                $.PrivateBin.Alert.init();
+                $.PrivateBin.Alert.hideLoading();
+                return !$('body').hasClass('loading') &&
+                    $('#loadingindicator').hasClass('hidden');
             }
         );
     });
