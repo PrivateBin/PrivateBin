@@ -142,7 +142,7 @@ class ConfigurationTest extends PHPUnit_Framework_TestCase
 
     public function testHandleConfigFileRename()
     {
-        $options                           = $this->_options;
+        $options  = $this->_options;
         Helper::createIniFile(PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.ini.sample', $options);
 
         $options['main']['opendiscussion'] = true;
