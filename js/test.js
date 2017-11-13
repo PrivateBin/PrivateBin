@@ -1154,7 +1154,7 @@ describe('Alert', function () {
                 $.PrivateBin.Alert.init();
                 $.PrivateBin.Alert.setCustomHandler(function(id, $element) {
                     handlerCalled = true;
-                    return true;
+                    return jsc.random(0, 1) ? true : $element;
                 });
                 functions[trigger](message);
                 return handlerCalled;
