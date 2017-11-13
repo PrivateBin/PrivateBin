@@ -64,7 +64,7 @@ class Filter
         $i   = 0;
         while (($size / 1024) >= 1) {
             $size = $size / 1024;
-            $i++;
+            ++$i;
         }
         return number_format($size, ($i ? 2 : 0), '.', ' ') . ' ' . I18n::_($iec[$i]);
     }
@@ -82,7 +82,7 @@ class Filter
     public static function slowEquals($a, $b)
     {
         $diff = strlen($a) ^ strlen($b);
-        for ($i = 0; $i < strlen($a) && $i < strlen($b); $i++) {
+        for ($i = 0; $i < strlen($a) && $i < strlen($b); ++$i) {
             $diff |= ord($a[$i]) ^ ord($b[$i]);
         }
         return $diff === 0;
