@@ -124,7 +124,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                 range = document.body.createTextRange();
                 range.moveToElementText(element);
                 range.select();
-            } else if (window.getSelection){
+            } else if (window.getSelection) {
                 selection = window.getSelection();
                 range = document.createRange();
                 range.selectNodeContents(element);
@@ -302,8 +302,6 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
      * internationalization module
      *
      * @name I18n
-     * @param  {object} window
-     * @param  {object} document
      * @class
      */
     var I18n = (function () {
@@ -1264,10 +1262,9 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
      * handles paste status/result
      *
      * @name   PasteStatus
-     * @param  {object} window
      * @class
      */
-    var PasteStatus = (function (window) {
+    var PasteStatus = (function () {
         var me = {};
 
         var $pasteSuccess,
@@ -1410,7 +1407,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         }
 
         return me;
-    })(window);
+    })();
 
     /**
      * password prompt
