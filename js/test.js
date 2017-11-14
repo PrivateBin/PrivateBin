@@ -1198,5 +1198,47 @@ describe('PasteStatus', function () {
             }
         );
     });
+
+    describe('showRemainingTime', function () {
+        this.timeout(30000);
+        before(function () {
+            cleanup();
+        });
+
+        jsc.property(
+            'shows burn after reading message or remaining time',
+            'bool',
+            'nat',
+            jsc.nearray(jsc.elements(a2zString)),
+            jsc.nearray(jsc.elements(a2zString)),
+            jsc.array(jsc.elements(queryString)),
+            'string',
+            function (
+                burnafterreading, remaining_time,
+                schema, address, query, fragment
+            ) {
+                var clean = jsdom('', {
+                        url: schema.join('') + '://' + address.join('') +
+                             '/?' + queryString + '#' + fragment
+                    });
+                $('body').html('<div id="remainingtime" class="hidden"></div>');
+                $.PrivateBin.PasteStatus.init();
+                $.PrivateBin.PasteStatus.showRemainingTime({
+                    'burnafterreading': burnafterreading,
+                    'remaining_time': remaining_time,
+                    'expire_date': ((new Date()).getTime() / 1000) + remaining_time
+                });
+                if (burnafterreading) {
+                    var result = $('#remainingtime').hasClass('foryoureyesonly') &&
+                                !$('#remainingtime').hasClass('hidden');
+                } else {
+                    var result =!$('#remainingtime').hasClass('foryoureyesonly') &&
+                                !$('#remainingtime').hasClass('hidden');
+                }
+                clean();
+                return result;
+            }
+        );
+    });
 });
 

@@ -1365,7 +1365,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                     ];
 
                 Alert.showRemaining([expirationLabel, expiration[0]]);
-                $remainingTime.removeClass('foryoureyesonly')
+                $remainingTime.removeClass('foryoureyesonly');
             } else {
                 // never expires
                 return;
@@ -3982,7 +3982,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             Uploader.setUnencryptedData('deletetoken', deleteToken);
 
             Uploader.setFailure(function () {
-                Controller.showError(I18n._('Could not delete the paste, it was not stored in burn after reading mode.'));
+                Alert.showError(I18n._('Could not delete the paste, it was not stored in burn after reading mode.'));
             })
             Uploader.run();
         }
