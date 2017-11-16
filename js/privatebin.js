@@ -1397,7 +1397,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          */
         me.init = function()
         {
-            $pasteSuccess = $('#pasteSuccess');
+            $pasteSuccess = $('#pastesuccess');
             // $pasteUrl is saved in me.createPasteNotification() after creation
             $remainingTime = $('#remainingtime');
             $shortenButton = $('#shortenbutton');

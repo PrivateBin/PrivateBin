@@ -47,7 +47,7 @@ if ($MARKDOWN):
 <?php
 endif;
 ?>
-		<script type="text/javascript" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-cOGGzUWy00SQ6bKzceNOd9+tGo584PTWclR+J+uQE7Rux/jkJVW6yEj7sbIIoalACxC+8QngzxdEfpy8iO9CkA==" crossorigin="anonymous"></script>
+		<script type="text/javascript" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-/foCCYtW+1hgr5bCBVfnt2GxFOVEd6p3e3d3Wn4TLeIQy8WI5w8ywxBhxvqjjpOvDNPKoQlIf9Zi7xmEK9IYUQ==" crossorigin="anonymous"></script>
 		<!--[if lt IE 10]>
 		<style type="text/css">body {padding-left:60px;padding-right:60px;} #ienotice {display:block;} #oldienotice {display:block;}</style>
 		<![endif]-->
@@ -184,7 +184,7 @@ if (strlen($LANGUAGESELECTION)):
 endif;
 ?>
 				</div>
-				<div id="pasteresult" class="hidden">
+				<div id="pastesuccess" class="hidden">
 					<div id="deletelink"></div>
 					<div id="pastelink">
 <?php
