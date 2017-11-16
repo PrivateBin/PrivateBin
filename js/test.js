@@ -1226,14 +1226,17 @@ describe('PasteStatus', function () {
                 $.PrivateBin.PasteStatus.showRemainingTime({
                     'burnafterreading': burnafterreading,
                     'remaining_time': remaining_time,
-                    'expire_date': ((new Date()).getTime() / 1000) + remaining_time
+                    'expire_date': remaining_time ? ((new Date()).getTime() / 1000) + remaining_time : 0
                 });
                 if (burnafterreading) {
                     var result = $('#remainingtime').hasClass('foryoureyesonly') &&
                                 !$('#remainingtime').hasClass('hidden');
-                } else {
+                } else if (remaining_time) {
                     var result =!$('#remainingtime').hasClass('foryoureyesonly') &&
                                 !$('#remainingtime').hasClass('hidden');
+                } else {
+                    var result = $('#remainingtime').hasClass('hidden') &&
+                                !$('#remainingtime').hasClass('foryoureyesonly');
                 }
                 clean();
                 return result;
