@@ -1243,5 +1243,24 @@ describe('PasteStatus', function () {
             }
         );
     });
+
+    describe('hideMessages', function () {
+        before(function () {
+            cleanup();
+        });
+
+        it(
+            'hides all messages',
+            function() {
+                $('body').html(
+                    '<div id="remainingtime"></div><div id="pastesuccess"></div>'
+                );
+                $.PrivateBin.PasteStatus.init();
+                $.PrivateBin.PasteStatus.hideMessages();
+                return $('#remainingtime').hasClass('hidden') &&
+                    $('#pastesuccess').hasClass('hidden');
+            }
+        );
+    });
 });
 
