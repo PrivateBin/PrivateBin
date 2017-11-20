@@ -1186,7 +1186,7 @@ describe('PasteStatus', function () {
                 schema2, address2, query2
             ) {
                 var expected1 = schema1 + '://' + address1.join('') + '/?' +
-                    encodeURI(query1.join('') + '#' + fragment1),
+                    encodeURI(query1.join('').replace(/^&+|&+$/gm,'') + '#' + fragment1),
                     expected2 = schema2 + '://' + address2.join('') + '/?' +
                     encodeURI(query2.join('')),
                     clean = jsdom();
