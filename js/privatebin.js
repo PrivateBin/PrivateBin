@@ -1468,7 +1468,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                 throw 'password prompt canceled';
             }
             if (password.length === 0) {
-                // recursive…
+                // recurse…
                 return me.requestPassword();
             }
 
@@ -1476,7 +1476,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         }
 
         /**
-         * getthe cached password
+         * get the cached password
          *
          * If you do not get a password with this function
          * (returns an empty string), use requestPassword.
