@@ -804,8 +804,9 @@ describe('Model', function () {
                 element = element.join('');
                 value = value.join('').trim();
 
-                // <br>, <hr> and <wbr> tags can't contain strings, table tags can't be alone, so test with a <p> instead
-                if (['br', 'col', 'hr', 'tr', 'td', 'th', 'wbr'].indexOf(element) >= 0) {
+                // <br>, <hr>, <img> and <wbr> tags can't contain strings,
+                // table tags can't be alone, so test with a <p> instead
+                if (['br', 'col', 'hr', 'img', 'tr', 'td', 'th', 'wbr'].indexOf(element) >= 0) {
                     element = 'p';
                 }
 
