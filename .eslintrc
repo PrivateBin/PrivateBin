@@ -11,6 +11,7 @@ env:
 
 globals:
   sjcl: false
+  DOMPurify: false
 
 # http://eslint.org/docs/rules/
 rules:

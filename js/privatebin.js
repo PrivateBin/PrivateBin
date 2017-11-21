@@ -1763,6 +1763,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                     });
                     // let showdown convert the HTML and sanitize HTML *afterwards*!
                     $plainText.html(
+                        /** global: DOMPurify */
                         DOMPurify.sanitize(converter.makeHtml(text), {SAFE_FOR_JQUERY: true})
                     );
                     // add table classes from bootstrap css
