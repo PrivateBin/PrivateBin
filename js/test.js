@@ -187,7 +187,7 @@ describe('Helper', function () {
             jsc.array(jsc.elements(queryString)),
             'string',
             function (prefix, query, postfix) {
-                var url = 'magnet:?' + query.join(''),
+                var url = 'magnet:?' + query.join('').replace(/^&+|&+$/gm,''),
                     prefix = $.PrivateBin.Helper.htmlEntities(prefix),
                     postfix = $.PrivateBin.Helper.htmlEntities(postfix),
                     element = $('<div>' + prefix + url + ' ' + postfix + '</div>');
