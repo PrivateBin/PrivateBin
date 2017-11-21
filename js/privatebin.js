@@ -1761,8 +1761,9 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                         tables: true,
                         tablesHeaderId: true
                     });
+                    // let showdown convert the HTML and sanitize HTML *afterwards*!
                     $plainText.html(
-                        converter.makeHtml(text)
+                        DOMPurify.sanitize(converter.makeHtml(text), {SAFE_FOR_JQUERY: true})
                     );
                     // add table classes from bootstrap css
                     $plainText.find('table').addClass('table-condensed table-bordered');

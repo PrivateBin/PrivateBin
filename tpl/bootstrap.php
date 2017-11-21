@@ -66,10 +66,11 @@ endif;
 if ($MARKDOWN):
 ?>
 		<script type="text/javascript" src="js/showdown-1.6.1.js" integrity="sha512-e6kAsBTgFnTBnEQXrq8BV6+XFwxb3kyWHeEPOl+KhxaWt3xImE2zAW2+yP3E2CQ7F9yoJl1poVU9qxkOEtVsTQ==" crossorigin="anonymous"></script>
+		<script type="text/javascript" src="js/purify.min.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-jJuy143F5Oy7oS3VkjzeJGBxIUuQ1H0eSjuvLGD3FiQzeu8Pwp5vI/jQ2dxlxSrzejmNMicdLHnIqH7R8Ft0lQ==" crossorigin="anonymous"></script>
 <?php
 endif;
 ?>
-		<script type="text/javascript" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-gTAGAlxWTLH1PaXA4q9l0kME8wPPWi2iub5uU7HZ3A2bisLtjMIsaZ/Ecu4+sawFvvedAzbh9Y4rR34Ct3oF5Q==" crossorigin="anonymous"></script>
+		<script type="text/javascript" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-P54+G2AsXaL2sYUXOc0Pj5I+0CpbpoFTagysFewcV8IvIbsb5XJiTCXcl3lMNECiY6RZTzUFkvzKn4PIE1pEwA==" crossorigin="anonymous"></script>
 		<!--[if lt IE 10]>
 		<style type="text/css">body {padding-left:60px;padding-right:60px;} #ienotice {display:block;} #oldienotice {display:block;}</style>
 		<![endif]-->
