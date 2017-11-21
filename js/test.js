@@ -22,6 +22,10 @@ global.sjcl = require('./sjcl-1.0.6');
 global.Base64 = require('./base64-2.1.9').Base64;
 global.RawDeflate = require('./rawdeflate-0.5').RawDeflate;
 global.RawDeflate.inflate = require('./rawinflate-0.3').RawDeflate.inflate;
+require('./prettify');
+global.prettyPrint = window.PR.prettyPrint;
+global.prettyPrintOne = window.PR.prettyPrintOne;
+global.showdown = require('./showdown-1.6.1');
 require('./bootstrap-3.3.7');
 require('./privatebin');
 
@@ -1367,6 +1371,73 @@ describe('Editor', function () {
                     !$.PrivateBin.Editor.isPreview() &&
                     !$('#message').hasClass('hidden')
                 );
+                clean();
+                return results.every(element => element);
+            }
+        );
+    });
+});
+
+describe('PasteViewer', function () {
+    describe('run, hide, getText, setText, getFormat, setFormat & isPrettyPrinted', function () {
+        this.timeout(30000);
+        before(function () {
+            cleanup();
+        });
+
+        jsc.property(
+            'displays text according to format',
+            jsc.elements(['plaintext', 'markdown', 'syntaxhighlighting']),
+            'nestring',
+            function (format, text) {
+                var clean = jsdom(),
+                    results = [];
+                $('body').html(
+                    '<div id="placeholder" class="hidden">+++ no paste text ' +
+                    '+++</div><div id="prettymessage" class="hidden"><pre ' +
+                    'id="prettyprint" class="prettyprint linenums:1"></pre>' +
+                    '</div><div id="plaintext" class="hidden"></div>'
+                );
+                $.PrivateBin.PasteViewer.init();
+                $.PrivateBin.PasteViewer.setFormat(format);
+                $.PrivateBin.PasteViewer.setText('');
+                results.push(
+                    $('#placeholder').hasClass('hidden') &&
+                    $('#prettymessage').hasClass('hidden') &&
+                    $('#plaintext').hasClass('hidden') &&
+                    $.PrivateBin.PasteViewer.getFormat() == format &&
+                    $.PrivateBin.PasteViewer.getText() == ''
+                );
+                $.PrivateBin.PasteViewer.run();
+                results.push(
+                    !$('#placeholder').hasClass('hidden') &&
+                    $('#prettymessage').hasClass('hidden') &&
+                    $('#plaintext').hasClass('hidden')
+                );
+                $.PrivateBin.PasteViewer.hide();
+                results.push(
+                    $('#placeholder').hasClass('hidden') &&
+                    $('#prettymessage').hasClass('hidden') &&
+                    $('#plaintext').hasClass('hidden')
+                );
+                $.PrivateBin.PasteViewer.setText(text);
+                $.PrivateBin.PasteViewer.run();
+                results.push(
+                    $('#placeholder').hasClass('hidden') &&
+                    !$.PrivateBin.PasteViewer.isPrettyPrinted() &&
+                    $.PrivateBin.PasteViewer.getText() == text
+                );
+                if (format == 'markdown') {
+                    results.push(
+                        $('#prettymessage').hasClass('hidden') &&
+                        !$('#plaintext').hasClass('hidden')
+                    );
+                } else {
+                    results.push(
+                        !$('#prettymessage').hasClass('hidden') &&
+                        $('#plaintext').hasClass('hidden')
+                    );
+                }
                 clean();
                 return results.every(element => element);
             }

@@ -1839,7 +1839,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          *
          * @name   PasteViewer.setFormat
          * @function
-         * @param {string} newFormat the the new format
+         * @param {string} newFormat the new format
          */
         me.setFormat = function(newFormat)
         {
@@ -1848,7 +1848,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                 return;
             }
 
-            // needs to update display too, if from or to Markdown is switched
+            // needs to update display too, if we switch from or to Markdown
             if (format === 'markdown' || newFormat === 'markdown') {
                 isDisplayed = false;
             }
@@ -1977,6 +1977,9 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
 
             // get default option from template/HTML or fall back to set value
             format = Model.getFormatDefault() || format;
+            text = '';
+            isDisplayed = false;
+            isChanged = true;
         }
 
         return me;
