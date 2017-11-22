@@ -12,6 +12,7 @@
  */
 
 /** global: Base64 */
+/** global: DOMPurify */
 /** global: FileReader */
 /** global: RawDeflate */
 /** global: history */
@@ -1777,7 +1778,6 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                     });
                     // let showdown convert the HTML and sanitize HTML *afterwards*!
                     $plainText.html(
-                        /** global: DOMPurify */
                         DOMPurify.sanitize(converter.makeHtml(text), {SAFE_FOR_JQUERY: true})
                     );
                     // add table classes from bootstrap css
@@ -1800,6 +1800,16 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                     // convert URLs to clickable links
                     Helper.urls2links($plainText);
                     Helper.urls2links($prettyPrint);
+                    $plainText.html(
+                        DOMPurify.sanitize(
+                            $plainText.html(), {SAFE_FOR_JQUERY: true}
+                        )
+                    );
+                    $prettyPrint.html(
+                        DOMPurify.sanitize(
+                            $prettyPrint.html(), {SAFE_FOR_JQUERY: true}
+                        )
+                    );
 
                     $prettyPrint.css('white-space', 'pre-wrap');
                     $prettyPrint.css('word-break', 'normal');
