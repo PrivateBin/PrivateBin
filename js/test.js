@@ -1469,12 +1469,6 @@ describe('PasteViewer', function () {
                 '<TABLE BACKGROUND="javascript:alert(\'XSS\')">',
                 '<TABLE><TD BACKGROUND="javascript:alert(\'XSS\')">',
                 '<SCRIPT>document.write("<SCRI");</SCRIPT>PT SRC="httx://xss.rocks/xss.js"></SCRIPT>',
-                '(alert)(1)',
-                'a=alert,a(1)',
-                'top[“al”+”ert”](1)',
-                'top[/al/.source+/ert/.source](1)',
-                'al\u0065rt(1)',
-                'top[8680439..toString(30)](1)'
             ]),
             'string',
             function (format, prefix, xss, suffix) {
