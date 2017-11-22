@@ -12,6 +12,7 @@
  */
 
 /** global: Base64 */
+/** global: DOMPurify */
 /** global: FileReader */
 /** global: RawDeflate */
 /** global: history */
@@ -41,26 +42,6 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
      */
     var Helper = (function () {
         var me = {};
-
-        /**
-         * character to HTML entity lookup table
-         *
-         * @see    {@link https://github.com/janl/mustache.js/blob/master/mustache.js#L60}
-         * @name Helper.entityMap
-         * @private
-         * @enum   {Object}
-         * @readonly
-         */
-        var entityMap = {
-            '&': '&amp;',
-            '<': '&lt;',
-            '>': '&gt;',
-            '"': '&quot;',
-            "'": '&#39;',
-            '/': '&#x2F;',
-            '`': '&#x60;',
-            '=': '&#x3D;'
-        };
 
         /**
          * cache for script location
@@ -134,28 +115,6 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         }
 
         /**
-         * set text of a jQuery element (required for IE),
-         *
-         * @name   Helper.setElementText
-         * @function
-         * @param  {jQuery} $element - a jQuery element
-         * @param  {string} text - the text to enter
-         */
-        me.setElementText = function($element, text)
-        {
-            // For IE<10: Doesn't support white-space:pre-wrap; so we have to do this...
-            if ($('#oldienotice').is(':visible')) {
-                var html = me.htmlEntities(text).replace(/\n/ig, '\r\n<br>');
-                $element.html('<pre>' + html + '</pre>');
-            }
-            // for other (sane) browsers:
-            else
-            {
-                $element.text(text);
-            }
-        }
-
-        /**
          * convert URLs to clickable links.
          * URLs to handle:
          * <pre>
@@ -166,22 +125,14 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          *
          * @name   Helper.urls2links
          * @function
-         * @param  {Object} $element - a jQuery DOM element
+         * @param  {string} html
+         * @return {string}
          */
-        me.urls2links = function($element)
+        me.urls2links = function(html)
         {
-            var markup = '<a href="$1" rel="nofollow">$1</a>';
-            $element.html(
-                $element.html().replace(
-                    /((http|https|ftp):\/\/[\w?=&.\/-;#@~%+*-]+(?![\w\s?&.\/;#~%"=-]*>))/ig,
-                    markup
-                )
-            );
-            $element.html(
-                $element.html().replace(
-                    /((magnet):[\w?=&.\/-;#@~%+*-]+)/ig,
-                    markup
-                )
+            return html.replace(
+                /(((http|https|ftp):\/\/[\w?=&.\/-;#@~%+*-]+(?![\w\s?&.\/;#~%"=-]*>))|((magnet):[\w?=&.\/-;#@~%+*-]+))/ig,
+                '<a href="$1" rel="nofollow">$1</a>'
             );
         }
 
@@ -266,22 +217,6 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
 
             baseUri = window.location.origin + window.location.pathname;
             return baseUri;
-        }
-
-        /**
-         * convert all applicable characters to HTML entities
-         *
-         * @see    {@link https://www.owasp.org/index.php/XSS_(Cross_Site_Scripting)_Prevention_Cheat_Sheet#RULE_.231_-_HTML_Escape_Before_Inserting_Untrusted_Data_into_HTML_Element_Content}
-         * @name   Helper.htmlEntities
-         * @function
-         * @param  {string} str
-         * @return {string} escaped HTML
-         */
-        me.htmlEntities = function(str) {
-            return String(str).replace(
-                /[&<>"'`=\/]/g, function(s) {
-                    return entityMap[s];
-                });
         }
 
         /**
@@ -1764,9 +1699,10 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                 return;
             }
 
-            // set text
-            Helper.setElementText($plainText, text);
-            Helper.setElementText($prettyPrint, text);
+            // set sanitized and linked text
+            var sanitizedLinkedText = DOMPurify.sanitize(Helper.urls2links(text), {SAFE_FOR_JQUERY: true});
+            $plainText.html(sanitizedLinkedText);
+            $prettyPrint.html(sanitizedLinkedText);
 
             switch (format) {
                 case 'markdown':
@@ -1775,30 +1711,28 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                         tables: true,
                         tablesHeaderId: true
                     });
+                    // let showdown convert the HTML and sanitize HTML *afterwards*!
                     $plainText.html(
-                        converter.makeHtml(text)
+                        DOMPurify.sanitize(converter.makeHtml(text), {SAFE_FOR_JQUERY: true})
                     );
                     // add table classes from bootstrap css
                     $plainText.find('table').addClass('table-condensed table-bordered');
                     break;
                 case 'syntaxhighlighting':
-                    // @TODO is this really needed or is "one" enough?
+                    // yes, this is really needed to initialize the environment
                     if (typeof prettyPrint === 'function')
                     {
                         prettyPrint();
                     }
 
                     $prettyPrint.html(
-                        prettyPrintOne(
-                            Helper.htmlEntities(text), null, true
+                        DOMPurify.sanitize(
+                            prettyPrintOne(Helper.urls2links(text), null, true),
+                            {SAFE_FOR_JQUERY: true}
                         )
                     );
                     // fall through, as the rest is the same
                 default: // = 'plaintext'
-                    // convert URLs to clickable links
-                    Helper.urls2links($plainText);
-                    Helper.urls2links($prettyPrint);
-
                     $prettyPrint.css('white-space', 'pre-wrap');
                     $prettyPrint.css('word-break', 'normal');
                     $prettyPrint.removeClass('prettyprint');
@@ -2287,8 +2221,12 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             var $commentEntryData = $commentEntry.find('div.commentdata');
 
             // set & parse text
-            Helper.setElementText($commentEntryData, commentText);
-            Helper.urls2links($commentEntryData);
+            $commentEntryData.html(
+                DOMPurify.sanitize(
+                    Helper.urls2links(commentText),
+                    {SAFE_FOR_JQUERY: true}
+                )
+            );
 
             // set nickname
             if (nickname.length > 0) {
@@ -2591,7 +2529,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             for (var i = 0; i < $head.length; i++) {
                 newDoc.write($head[i].outerHTML);
             }
-            newDoc.write('</head><body><pre>' + Helper.htmlEntities(paste) + '</pre></body></html>');
+            newDoc.write('</head><body><pre>' + DOMPurify.sanitize(paste, {SAFE_FOR_JQUERY: true}) + '</pre></body></html>');
             newDoc.close();
         }
 

@@ -15,6 +15,22 @@ var jsc = require('jsverify'),
     // schemas supported by the whatwg-url library
     schemas = ['ftp','gopher','http','https','ws','wss'],
     supportedLanguages = ['de', 'es', 'fr', 'it', 'no', 'pl', 'pt', 'oc', 'ru', 'sl', 'zh'],
+
+    /**
+     * character to HTML entity lookup table
+     *
+     * @see    {@link https://github.com/janl/mustache.js/blob/master/mustache.js#L60}
+     */
+    entityMap = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;',
+        '/': '&#x2F;',
+        '`': '&#x60;',
+        '=': '&#x3D;'
+    },
     logFile = require('fs').createWriteStream('test.log');
 
 global.$ = global.jQuery = require('./jquery-3.1.1');
@@ -26,12 +42,29 @@ require('./prettify');
 global.prettyPrint = window.PR.prettyPrint;
 global.prettyPrintOne = window.PR.prettyPrintOne;
 global.showdown = require('./showdown-1.6.1');
+global.DOMPurify = require('./purify.min');
 require('./bootstrap-3.3.7');
 require('./privatebin');
 
 // redirect console messages to log file
 console.info = console.warn = console.error = function () {
     logFile.write(Array.prototype.slice.call(arguments).join('') + '\n');
+}
+
+/**
+ * convert all applicable characters to HTML entities
+ *
+ * @see    {@link https://www.owasp.org/index.php/XSS_(Cross_Site_Scripting)_Prevention_Cheat_Sheet#RULE_.231_-_HTML_Escape_Before_Inserting_Untrusted_Data_into_HTML_Element_Content}
+ * @name   htmlEntities
+ * @function
+ * @param  {string} str
+ * @return {string} escaped HTML
+ */
+function htmlEntities(str) {
+    return String(str).replace(
+        /[&<>"'`=\/]/g, function(s) {
+            return entityMap[s];
+        });
 }
 
 describe('Helper', function () {
@@ -92,7 +125,7 @@ describe('Helper', function () {
                 var html = '',
                     result = true;
                 ids.forEach(function(item, i) {
-                    html += '<div id="' + item.join('') + '">' + $.PrivateBin.Helper.htmlEntities(contents[i] || contents[0]) + '</div>';
+                    html += '<div id="' + item.join('') + '">' + htmlEntities(contents[i] || contents[0]) + '</div>';
                 });
                 var clean = jsdom(html);
                 ids.forEach(function(item, i) {
@@ -107,34 +140,6 @@ describe('Helper', function () {
         );
     });
 
-    describe('setElementText', function () {
-        after(function () {
-            cleanup();
-        });
-
-        jsc.property(
-            'replaces the content of an element',
-            jsc.nearray(jsc.nearray(jsc.elements(alnumString))),
-            'nearray string',
-            'string',
-            function (ids, contents, replacingContent) {
-                var html = '',
-                    result = true;
-                ids.forEach(function(item, i) {
-                    html += '<div id="' + item.join('') + '">' + $.PrivateBin.Helper.htmlEntities(contents[i] || contents[0]) + '</div>';
-                });
-                var elements = $('<body />').html(html);
-                ids.forEach(function(item, i) {
-                    var id = item.join(''),
-                        element = elements.find('#' + id).first();
-                    $.PrivateBin.Helper.setElementText(element, replacingContent);
-                    result *= replacingContent === element.text();
-                });
-                return Boolean(result);
-            }
-        );
-    });
-
     describe('urls2links', function () {
         after(function () {
             cleanup();
@@ -144,10 +149,7 @@ describe('Helper', function () {
             'ignores non-URL content',
             'string',
             function (content) {
-                var element = $('<div>' + content + '</div>'),
-                    before = element.html();
-                $.PrivateBin.Helper.urls2links(element);
-                return before === element.html();
+                return content === $.PrivateBin.Helper.urls2links(content);
             }
         );
         jsc.property(
@@ -162,9 +164,8 @@ describe('Helper', function () {
                 var query = query.join(''),
                     fragment = fragment.join(''),
                     url = schema + '://' + address.join('') + '/?' + query + '#' + fragment,
-                    prefix = $.PrivateBin.Helper.htmlEntities(prefix),
-                    postfix = ' ' + $.PrivateBin.Helper.htmlEntities(postfix),
-                    element = $('<div>' + prefix + url + postfix + '</div>');
+                    prefix = htmlEntities(prefix),
+                    postfix = ' ' + htmlEntities(postfix);
 
                 // special cases: When the query string and fragment imply the beginning of an HTML entity, eg. &#0 or &#x
                 if (
@@ -174,11 +175,9 @@ describe('Helper', function () {
                 {
                     url = schema + '://' + address.join('') + '/?' + query.substring(0, query.length - 1);
                     postfix = '';
-                    element = $('<div>' + prefix + url + '</div>');
                 }
 
-                $.PrivateBin.Helper.urls2links(element);
-                return element.html() === $('<div>' + prefix + '<a href="' + url + '" rel="nofollow">' + url + '</a>' + postfix + '</div>').html();
+                return prefix + '<a href="' + url + '" rel="nofollow">' + url + '</a>' + postfix === $.PrivateBin.Helper.urls2links(prefix + url + postfix);
             }
         );
         jsc.property(
@@ -188,11 +187,9 @@ describe('Helper', function () {
             'string',
             function (prefix, query, postfix) {
                 var url = 'magnet:?' + query.join('').replace(/^&+|&+$/gm,''),
-                    prefix = $.PrivateBin.Helper.htmlEntities(prefix),
-                    postfix = $.PrivateBin.Helper.htmlEntities(postfix),
-                    element = $('<div>' + prefix + url + ' ' + postfix + '</div>');
-                $.PrivateBin.Helper.urls2links(element);
-                return element.html() === $('<div>' + prefix + '<a href="' + url + '" rel="nofollow">' + url + '</a> ' + postfix + '</div>').html();
+                    prefix = htmlEntities(prefix),
+                    postfix = htmlEntities(postfix);
+                return prefix + '<a href="' + url + '" rel="nofollow">' + url + '</a> ' + postfix === $.PrivateBin.Helper.urls2links(prefix + url + ' ' + postfix);
             }
         );
     });
@@ -337,7 +334,7 @@ describe('Helper', function () {
             'removes all HTML entities from any given string',
             'string',
             function (string) {
-                var result = $.PrivateBin.Helper.htmlEntities(string);
+                var result = htmlEntities(string);
                 return !(/[<>"'`=\/]/.test(result)) && !(string.indexOf('&') > -1 && !(/&amp;/.test(result)));
             }
         );
@@ -582,8 +579,8 @@ describe('Model', function () {
             'string',
             'small nat',
             function (keys, value, key) {
-                keys = keys.map($.PrivateBin.Helper.htmlEntities);
-                value = $.PrivateBin.Helper.htmlEntities(value);
+                keys = keys.map(htmlEntities);
+                value = htmlEntities(value);
                 var content = keys.length > key ? keys[key] : (keys.length > 0 ? keys[0] : 'null'),
                     contents = '<select id="pasteExpiration" name="pasteExpiration">';
                 keys.forEach(function(item) {
@@ -595,7 +592,7 @@ describe('Model', function () {
                 });
                 contents += '</select>';
                 $('body').html(contents);
-                var result = $.PrivateBin.Helper.htmlEntities(
+                var result = htmlEntities(
                     $.PrivateBin.Model.getExpirationDefault()
                 );
                 $.PrivateBin.Model.reset();
@@ -616,8 +613,8 @@ describe('Model', function () {
             'string',
             'small nat',
             function (keys, value, key) {
-                keys = keys.map($.PrivateBin.Helper.htmlEntities);
-                value = $.PrivateBin.Helper.htmlEntities(value);
+                keys = keys.map(htmlEntities);
+                value = htmlEntities(value);
                 var content = keys.length > key ? keys[key] : (keys.length > 0 ? keys[0] : 'null'),
                     contents = '<select id="pasteFormatter" name="pasteFormatter">';
                 keys.forEach(function(item) {
@@ -629,7 +626,7 @@ describe('Model', function () {
                 });
                 contents += '</select>';
                 $('body').html(contents);
-                var result = $.PrivateBin.Helper.htmlEntities(
+                var result = htmlEntities(
                     $.PrivateBin.Model.getFormatDefault()
                 );
                 $.PrivateBin.Model.reset();
@@ -648,7 +645,7 @@ describe('Model', function () {
             'checks if the element with id "cipherdata" contains any data',
             'asciistring',
             function (value) {
-                value = $.PrivateBin.Helper.htmlEntities(value).trim();
+                value = htmlEntities(value).trim();
                 $('body').html('<div id="cipherdata">' + value + '</div>');
                 $.PrivateBin.Model.init();
                 var result = $.PrivateBin.Model.hasCipherData();
@@ -668,10 +665,10 @@ describe('Model', function () {
             'returns the contents of the element with id "cipherdata"',
             'asciistring',
             function (value) {
-                value = $.PrivateBin.Helper.htmlEntities(value).trim();
+                value = htmlEntities(value).trim();
                 $('body').html('<div id="cipherdata">' + value + '</div>');
                 $.PrivateBin.Model.init();
-                var result = $.PrivateBin.Helper.htmlEntities(
+                var result = htmlEntities(
                     $.PrivateBin.Model.getCipherData()
                 );
                 $.PrivateBin.Model.reset();
@@ -1450,8 +1447,6 @@ describe('PasteViewer', function () {
             // https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet
             jsc.elements([
                 '<PLAINTEXT>',
-                '\';alert(String.fromCharCode(88,83,83))//\';alert(String.fromCharCode(88,83,83))//";',
-                'alert(String.fromCharCode(88,83,83))//";alert(String.fromCharCode(88,83,83))//--',
                 '></SCRIPT>">\'><SCRIPT>alert(String.fromCharCode(88,83,83))</SCRIPT>',
                 '\'\';!--"<XSS>=&{()}',
                 '<SCRIPT SRC=http://example.com/xss.js></SCRIPT>',
@@ -1464,8 +1459,12 @@ describe('PasteViewer', function () {
                 '<a onmouseover="alert(document.cookie)">xxs link</a>',
                 '<a onmouseover=alert(document.cookie)>xxs link</a>',
                 '<IMG """><SCRIPT>alert("XSS")</SCRIPT>">',
-                '<IMG SRC=javascript:alert(String.fromCharCode(88,83,83))>'
-                // the list goes on…
+                '<IMG SRC=javascript:alert(String.fromCharCode(88,83,83))>',
+                '<IMG STYLE="xss:expr/*XSS*/ession(alert(\'XSS\'))">',
+                '<FRAMESET><FRAME SRC="javascript:alert(\'XSS\');"></FRAMESET>',
+                '<TABLE BACKGROUND="javascript:alert(\'XSS\')">',
+                '<TABLE><TD BACKGROUND="javascript:alert(\'XSS\')">',
+                '<SCRIPT>document.write("<SCRI");</SCRIPT>PT SRC="httx://xss.rocks/xss.js"></SCRIPT>'
             ]),
             'string',
             function (format, prefix, xss, suffix) {
@@ -1481,11 +1480,10 @@ describe('PasteViewer', function () {
                 $.PrivateBin.PasteViewer.setFormat(format);
                 $.PrivateBin.PasteViewer.setText(text);
                 $.PrivateBin.PasteViewer.run();
-                var result = $('body').html().indexOf(xss) !== -1;
+                var result = $('body').html().indexOf(xss) === -1;
                 clean();
                 return result;
             }
         );
     });
 });
-
