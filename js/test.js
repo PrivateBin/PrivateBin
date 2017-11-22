@@ -22,11 +22,16 @@ global.sjcl = require('./sjcl-1.0.6');
 global.Base64 = require('./base64-2.1.9').Base64;
 global.RawDeflate = require('./rawdeflate-0.5').RawDeflate;
 global.RawDeflate.inflate = require('./rawinflate-0.3').RawDeflate.inflate;
+require('./prettify');
+global.prettyPrint = window.PR.prettyPrint;
+global.prettyPrintOne = window.PR.prettyPrintOne;
+global.showdown = require('./showdown-1.6.1');
+require('./bootstrap-3.3.7');
 require('./privatebin');
 
 // redirect console messages to log file
-console.warn = console.error = function (msg) {
-    logFile.write(msg + '\n');
+console.info = console.warn = console.error = function () {
+    logFile.write(Array.prototype.slice.call(arguments).join('') + '\n');
 }
 
 describe('Helper', function () {
@@ -182,7 +187,7 @@ describe('Helper', function () {
             jsc.array(jsc.elements(queryString)),
             'string',
             function (prefix, query, postfix) {
-                var url = 'magnet:?' + query.join(''),
+                var url = 'magnet:?' + query.join('').replace(/^&+|&+$/gm,''),
                     prefix = $.PrivateBin.Helper.htmlEntities(prefix),
                     postfix = $.PrivateBin.Helper.htmlEntities(postfix),
                     element = $('<div>' + prefix + url + ' ' + postfix + '</div>');
@@ -599,6 +604,82 @@ describe('Model', function () {
         );
     });
 
+    describe('getFormatDefault', function () {
+        before(function () {
+            $.PrivateBin.Model.reset();
+            cleanup();
+        });
+
+        jsc.property(
+            'returns the contents of the element with id "pasteFormatter"',
+            'array asciinestring',
+            'string',
+            'small nat',
+            function (keys, value, key) {
+                keys = keys.map($.PrivateBin.Helper.htmlEntities);
+                value = $.PrivateBin.Helper.htmlEntities(value);
+                var content = keys.length > key ? keys[key] : (keys.length > 0 ? keys[0] : 'null'),
+                    contents = '<select id="pasteFormatter" name="pasteFormatter">';
+                keys.forEach(function(item) {
+                    contents += '<option value="' + item + '"';
+                    if (item === content) {
+                        contents += ' selected="selected"';
+                    }
+                    contents += '>' + value + '</option>';
+                });
+                contents += '</select>';
+                $('body').html(contents);
+                var result = $.PrivateBin.Helper.htmlEntities(
+                    $.PrivateBin.Model.getFormatDefault()
+                );
+                $.PrivateBin.Model.reset();
+                return content === result;
+            }
+        );
+    });
+
+    describe('hasCipherData', function () {
+        before(function () {
+            $.PrivateBin.Model.reset();
+            cleanup();
+        });
+
+        jsc.property(
+            'checks if the element with id "cipherdata" contains any data',
+            'asciistring',
+            function (value) {
+                value = $.PrivateBin.Helper.htmlEntities(value).trim();
+                $('body').html('<div id="cipherdata">' + value + '</div>');
+                $.PrivateBin.Model.init();
+                var result = $.PrivateBin.Model.hasCipherData();
+                $.PrivateBin.Model.reset();
+                return (value.length > 0) === result;
+            }
+        );
+    });
+
+    describe('getCipherData', function () {
+        before(function () {
+            $.PrivateBin.Model.reset();
+            cleanup();
+        });
+
+        jsc.property(
+            'returns the contents of the element with id "cipherdata"',
+            'asciistring',
+            function (value) {
+                value = $.PrivateBin.Helper.htmlEntities(value).trim();
+                $('body').html('<div id="cipherdata">' + value + '</div>');
+                $.PrivateBin.Model.init();
+                var result = $.PrivateBin.Helper.htmlEntities(
+                    $.PrivateBin.Model.getCipherData()
+                );
+                $.PrivateBin.Model.reset();
+                return value === result;
+            }
+        );
+    });
+
     describe('getPasteId', function () {
         this.timeout(30000);
         before(function () {
@@ -710,4 +791,657 @@ describe('Model', function () {
             }
         );
     });
+
+    describe('getTemplate', function () {
+        before(function () {
+            $.PrivateBin.Model.reset();
+            cleanup();
+        });
+
+        jsc.property(
+            'returns the contents of the element with id "[name]template"',
+            jsc.nearray(jsc.elements(alnumString)),
+            jsc.nearray(jsc.elements(a2zString)),
+            jsc.nearray(jsc.elements(alnumString)),
+            function (id, element, value) {
+                id = id.join('');
+                element = element.join('');
+                value = value.join('').trim();
+
+                // <br>, <hr>, <img> and <wbr> tags can't contain strings,
+                // table tags can't be alone, so test with a <p> instead
+                if (['br', 'col', 'hr', 'img', 'tr', 'td', 'th', 'wbr'].indexOf(element) >= 0) {
+                    element = 'p';
+                }
+
+                $('body').html(
+                    '<div id="templates"><' + element + ' id="' + id +
+                    'template">' + value + '</' + element + '></div>'
+                );
+                $.PrivateBin.Model.init();
+                var template = '<' + element + ' id="' + id + '">' + value +
+                    '</' + element + '>',
+                    result = $.PrivateBin.Model.getTemplate(id).wrap('<p/>').parent().html();
+                $.PrivateBin.Model.reset();
+                return template === result;
+            }
+        );
+    });
 });
+
+describe('UiHelper', function () {
+    // TODO: As per https://github.com/tmpvar/jsdom/issues/1565 there is no navigation support in jsdom, yet.
+    // for now we use a mock function to trigger the event
+    describe('historyChange', function () {
+        this.timeout(30000);
+        before(function () {
+            $.PrivateBin.Helper.reset();
+        });
+
+        jsc.property(
+            'redirects to home, when the state is null',
+            jsc.elements(schemas),
+            jsc.nearray(jsc.elements(a2zString)),
+            function (schema, address) {
+                var expected = schema + '://' + address.join('') + '/',
+                    clean = jsdom('', {url: expected});
+
+                // make window.location.href writable
+                Object.defineProperty(window.location, 'href', {
+                    writable: true,
+                    value: window.location.href
+                });
+                $.PrivateBin.UiHelper.mockHistoryChange();
+                $.PrivateBin.Helper.reset();
+                var result = window.location.href;
+                clean();
+                return expected === result;
+            }
+        );
+
+        jsc.property(
+            'does not redirect to home, when a new paste is created',
+            jsc.elements(schemas),
+            jsc.nearray(jsc.elements(a2zString)),
+            jsc.array(jsc.elements(queryString)),
+            jsc.nearray(jsc.elements(base64String)),
+            function (schema, address, query, fragment) {
+                var expected = schema + '://' + address.join('') + '/' + '?' +
+                               query.join('') + '#' + fragment.join(''),
+                    clean = jsdom('', {url: expected});
+
+                // make window.location.href writable
+                Object.defineProperty(window.location, 'href', {
+                    writable: true,
+                    value: window.location.href
+                });
+                $.PrivateBin.UiHelper.mockHistoryChange([
+                    {type: 'newpaste'}, '', expected
+                ]);
+                $.PrivateBin.Helper.reset();
+                var result = window.location.href;
+                clean();
+                return expected === result;
+            }
+        );
+    });
+
+    describe('reloadHome', function () {
+        this.timeout(30000);
+        before(function () {
+            $.PrivateBin.Helper.reset();
+        });
+
+        jsc.property(
+            'redirects to home',
+            jsc.elements(schemas),
+            jsc.nearray(jsc.elements(a2zString)),
+            jsc.array(jsc.elements(queryString)),
+            jsc.nearray(jsc.elements(base64String)),
+            function (schema, address, query, fragment) {
+                var expected = schema + '://' + address.join('') + '/',
+                    clean = jsdom('', {
+                        url: expected + '?' + query.join('') + '#' + fragment.join('')
+                    });
+
+                // make window.location.href writable
+                Object.defineProperty(window.location, 'href', {
+                    writable: true,
+                    value: window.location.href
+                });
+                $.PrivateBin.UiHelper.reloadHome();
+                $.PrivateBin.Helper.reset();
+                var result = window.location.href;
+                clean();
+                return expected === result;
+            }
+        );
+    });
+
+    describe('isVisible', function () {
+        // TODO As per https://github.com/tmpvar/jsdom/issues/1048 there is no layout support in jsdom, yet.
+        // once it is supported or a workaround is found, uncomment the section below
+        /*
+        before(function () {
+            $.PrivateBin.Helper.reset();
+        });
+
+        jsc.property(
+            'detect visible elements',
+            jsc.nearray(jsc.elements(alnumString)),
+            jsc.nearray(jsc.elements(a2zString)),
+            function (id, element) {
+                id = id.join('');
+                element = element.join('');
+                var clean = jsdom(
+                    '<' + element + ' id="' + id + '"></' + element + '>'
+                );
+                var result = $.PrivateBin.UiHelper.isVisible($('#' + id));
+                clean();
+                return result;
+            }
+        );
+        */
+    });
+
+    describe('scrollTo', function () {
+        // TODO Did not find a way to test that, see isVisible test above
+    });
+});
+
+describe('Alert', function () {
+    describe('showStatus', function () {
+        before(function () {
+            cleanup();
+        });
+
+        jsc.property(
+            'shows a status message',
+            jsc.array(jsc.elements(alnumString)),
+            jsc.array(jsc.elements(alnumString)),
+            function (icon, message) {
+                icon = icon.join('');
+                message = message.join('');
+                var expected = '<div id="status" role="alert" ' +
+                    'class="statusmessage alert alert-info"><span ' +
+                    'class="glyphicon glyphicon-' + icon +
+                    '" aria-hidden="true"></span> ' + message + '</div>';
+                $('body').html(
+                    '<div id="status" role="alert" class="statusmessage ' +
+                    'alert alert-info hidden"><span class="glyphicon ' +
+                    'glyphicon-info-sign" aria-hidden="true"></span> </div>'
+                );
+                $.PrivateBin.Alert.init();
+                $.PrivateBin.Alert.showStatus(message, icon);
+                var result = $('body').html();
+                return expected === result;
+            }
+        );
+    });
+
+    describe('showError', function () {
+        before(function () {
+            cleanup();
+        });
+
+        jsc.property(
+            'shows an error message',
+            jsc.array(jsc.elements(alnumString)),
+            jsc.array(jsc.elements(alnumString)),
+            function (icon, message) {
+                icon = icon.join('');
+                message = message.join('');
+                var expected = '<div id="errormessage" role="alert" ' +
+                    'class="statusmessage alert alert-danger"><span ' +
+                    'class="glyphicon glyphicon-' + icon +
+                    '" aria-hidden="true"></span> ' + message + '</div>';
+                $('body').html(
+                    '<div id="errormessage" role="alert" class="statusmessage ' +
+                    'alert alert-danger hidden"><span class="glyphicon ' +
+                    'glyphicon-alert" aria-hidden="true"></span> </div>'
+                );
+                $.PrivateBin.Alert.init();
+                $.PrivateBin.Alert.showError(message, icon);
+                var result = $('body').html();
+                return expected === result;
+            }
+        );
+    });
+
+    describe('showRemaining', function () {
+        before(function () {
+            cleanup();
+        });
+
+        jsc.property(
+            'shows remaining time',
+            jsc.array(jsc.elements(alnumString)),
+            jsc.array(jsc.elements(alnumString)),
+            'integer',
+            function (message, string, number) {
+                message = message.join('');
+                string = string.join('');
+                var expected = '<div id="remainingtime" role="alert" ' +
+                    'class="alert alert-info"><span ' +
+                    'class="glyphicon glyphicon-fire" aria-hidden="true">' +
+                    '</span> ' + string + message + number + '</div>';
+                $('body').html(
+                    '<div id="remainingtime" role="alert" class="hidden ' +
+                    'alert alert-info"><span class="glyphicon ' +
+                    'glyphicon-fire" aria-hidden="true"></span> </div>'
+                );
+                $.PrivateBin.Alert.init();
+                $.PrivateBin.Alert.showRemaining(['%s' + message + '%d', string, number]);
+                var result = $('body').html();
+                return expected === result;
+            }
+        );
+    });
+
+    describe('showLoading', function () {
+        before(function () {
+            cleanup();
+        });
+
+        jsc.property(
+            'shows a loading message',
+            jsc.array(jsc.elements(alnumString)),
+            jsc.array(jsc.elements(alnumString)),
+            'integer',
+            function (icon, message, number) {
+                icon = icon.join('');
+                message = message.join('');
+                var default_message = 'Loading…';
+                if (message.length == 0) {
+                    message = default_message;
+                }
+                var expected = '<ul class="nav navbar-nav"><li ' +
+                    'id="loadingindicator" class="navbar-text"><span ' +
+                    'class="glyphicon glyphicon-' + icon +
+                    '" aria-hidden="true"></span> ' + message + '</li></ul>';
+                $('body').html(
+                    '<ul class="nav navbar-nav"><li id="loadingindicator" ' +
+                    'class="navbar-text hidden"><span class="glyphicon ' +
+                    'glyphicon-time" aria-hidden="true"></span> ' +
+                    default_message + '</li></ul>'
+                );
+                $.PrivateBin.Alert.init();
+                $.PrivateBin.Alert.showLoading(message, number, icon);
+                var result = $('body').html();
+                return expected === result;
+            }
+        );
+    });
+
+    describe('hideLoading', function () {
+        before(function () {
+            cleanup();
+        });
+
+        it(
+            'hides the loading message',
+            function() {
+                $('body').html(
+                    '<ul class="nav navbar-nav"><li id="loadingindicator" ' +
+                    'class="navbar-text"><span class="glyphicon ' +
+                    'glyphicon-time" aria-hidden="true"></span> ' +
+                    'Loading…</li></ul>'
+                );
+                $('body').addClass('loading');
+                $.PrivateBin.Alert.init();
+                $.PrivateBin.Alert.hideLoading();
+                return !$('body').hasClass('loading') &&
+                    $('#loadingindicator').hasClass('hidden');
+            }
+        );
+    });
+
+    describe('hideMessages', function () {
+        before(function () {
+            cleanup();
+        });
+
+        it(
+            'hides all messages',
+            function() {
+                $('body').html(
+                    '<div id="status" role="alert" class="statusmessage ' +
+                    'alert alert-info"><span class="glyphicon ' +
+                    'glyphicon-info-sign" aria-hidden="true"></span> </div>' +
+                    '<div id="errormessage" role="alert" class="statusmessage ' +
+                    'alert alert-danger"><span class="glyphicon ' +
+                    'glyphicon-alert" aria-hidden="true"></span> </div>'
+                );
+                $.PrivateBin.Alert.init();
+                $.PrivateBin.Alert.hideMessages();
+                return $('#statusmessage').hasClass('hidden') &&
+                    $('#errormessage').hasClass('hidden');
+            }
+        );
+    });
+
+    describe('setCustomHandler', function () {
+        before(function () {
+            cleanup();
+        });
+
+        jsc.property(
+            'calls a given handler function',
+            'nat 3',
+            jsc.array(jsc.elements(alnumString)),
+            function (trigger, message) {
+                message = message.join('');
+                var handlerCalled = false,
+                    default_message = 'Loading…',
+                    functions = [
+                        $.PrivateBin.Alert.showStatus,
+                        $.PrivateBin.Alert.showError,
+                        $.PrivateBin.Alert.showRemaining,
+                        $.PrivateBin.Alert.showLoading
+                    ];
+                if (message.length == 0) {
+                    message = default_message;
+                }
+                $('body').html(
+                    '<ul class="nav navbar-nav"><li id="loadingindicator" ' +
+                    'class="navbar-text hidden"><span class="glyphicon ' +
+                    'glyphicon-time" aria-hidden="true"></span> ' +
+                    default_message + '</li></ul>' +
+                    '<div id="remainingtime" role="alert" class="hidden ' +
+                    'alert alert-info"><span class="glyphicon ' +
+                    'glyphicon-fire" aria-hidden="true"></span> </div>' +
+                    '<div id="status" role="alert" class="statusmessage ' +
+                    'alert alert-info"><span class="glyphicon ' +
+                    'glyphicon-info-sign" aria-hidden="true"></span> </div>' +
+                    '<div id="errormessage" role="alert" class="statusmessage ' +
+                    'alert alert-danger"><span class="glyphicon ' +
+                    'glyphicon-alert" aria-hidden="true"></span> </div>'
+                );
+                $.PrivateBin.Alert.init();
+                $.PrivateBin.Alert.setCustomHandler(function(id, $element) {
+                    handlerCalled = true;
+                    return jsc.random(0, 1) ? true : $element;
+                });
+                functions[trigger](message);
+                return handlerCalled;
+            }
+        );
+    });
+});
+
+describe('PasteStatus', function () {
+    describe('createPasteNotification', function () {
+        this.timeout(30000);
+        before(function () {
+            cleanup();
+        });
+
+        jsc.property(
+            'creates a notification after a successfull paste upload',
+            jsc.elements(schemas),
+            jsc.nearray(jsc.elements(a2zString)),
+            jsc.array(jsc.elements(queryString)),
+            'string',
+            jsc.elements(schemas),
+            jsc.nearray(jsc.elements(a2zString)),
+            jsc.array(jsc.elements(queryString)),
+            function (
+                schema1, address1, query1, fragment1,
+                schema2, address2, query2
+            ) {
+                var expected1 = schema1 + '://' + address1.join('') + '/?' +
+                    encodeURI(query1.join('').replace(/^&+|&+$/gm,'') + '#' + fragment1),
+                    expected2 = schema2 + '://' + address2.join('') + '/?' +
+                    encodeURI(query2.join('')),
+                    clean = jsdom();
+                $('body').html('<div><div id="deletelink"></div><div id="pastelink"></div></div>');
+                $.PrivateBin.PasteStatus.init();
+                $.PrivateBin.PasteStatus.createPasteNotification(expected1, expected2);
+                var result1 = $('#pasteurl')[0].href,
+                    result2 = $('#deletelink a')[0].href;
+                clean();
+                return result1 == expected1 && result2 == expected2;
+            }
+        );
+    });
+
+    describe('showRemainingTime', function () {
+        this.timeout(30000);
+        before(function () {
+            cleanup();
+        });
+
+        jsc.property(
+            'shows burn after reading message or remaining time',
+            'bool',
+            'nat',
+            jsc.nearray(jsc.elements(a2zString)),
+            jsc.nearray(jsc.elements(a2zString)),
+            jsc.array(jsc.elements(queryString)),
+            'string',
+            function (
+                burnafterreading, remaining_time,
+                schema, address, query, fragment
+            ) {
+                var clean = jsdom('', {
+                        url: schema.join('') + '://' + address.join('') +
+                             '/?' + queryString + '#' + fragment
+                    });
+                $('body').html('<div id="remainingtime" class="hidden"></div>');
+                $.PrivateBin.PasteStatus.init();
+                $.PrivateBin.PasteStatus.showRemainingTime({
+                    'burnafterreading': burnafterreading,
+                    'remaining_time': remaining_time,
+                    'expire_date': remaining_time ? ((new Date()).getTime() / 1000) + remaining_time : 0
+                });
+                if (burnafterreading) {
+                    var result = $('#remainingtime').hasClass('foryoureyesonly') &&
+                                !$('#remainingtime').hasClass('hidden');
+                } else if (remaining_time) {
+                    var result =!$('#remainingtime').hasClass('foryoureyesonly') &&
+                                !$('#remainingtime').hasClass('hidden');
+                } else {
+                    var result = $('#remainingtime').hasClass('hidden') &&
+                                !$('#remainingtime').hasClass('foryoureyesonly');
+                }
+                clean();
+                return result;
+            }
+        );
+    });
+
+    describe('hideMessages', function () {
+        before(function () {
+            cleanup();
+        });
+
+        it(
+            'hides all messages',
+            function() {
+                $('body').html(
+                    '<div id="remainingtime"></div><div id="pastesuccess"></div>'
+                );
+                $.PrivateBin.PasteStatus.init();
+                $.PrivateBin.PasteStatus.hideMessages();
+                return $('#remainingtime').hasClass('hidden') &&
+                    $('#pastesuccess').hasClass('hidden');
+            }
+        );
+    });
+});
+
+describe('Prompt', function () {
+    // TODO: this does not test the prompt() fallback, since that isn't available
+    //       in nodejs -> replace the prompt in the "page" template with a modal
+    describe('requestPassword & getPassword', function () {
+        this.timeout(30000);
+        before(function () {
+            cleanup();
+        });
+
+        jsc.property(
+            'returns the password fed into the dialog',
+            'string',
+            function (password) {
+                password = password.replace(/\r+/g, '');
+                var clean = jsdom('', {url: 'ftp://example.com/#0'});
+                $('body').html(
+                    '<div id="passwordmodal" class="modal fade" role="dialog">' +
+                    '<div class="modal-dialog"><div class="modal-content">' +
+                    '<div class="modal-body"><form id="passwordform" role="form">' +
+                    '<div class="form-group"><input id="passworddecrypt" ' +
+                    'type="password" class="form-control" placeholder="Enter ' +
+                    'password"></div><button type="submit">Decrypt</button>' +
+                    '</form></div></div></div></div><div id="cipherdata">{}</div>'
+                );
+                $.PrivateBin.Model.init();
+                $.PrivateBin.Prompt.init();
+                $.PrivateBin.Prompt.requestPassword();
+                $('#passworddecrypt').val(password);
+                $('#passwordform').submit();
+                var result = $.PrivateBin.Prompt.getPassword();
+                clean();
+                return result == password;
+            }
+        );
+    });
+});
+
+describe('Editor', function () {
+    describe('show, hide, getText, setText & isPreview', function () {
+        this.timeout(30000);
+        before(function () {
+            cleanup();
+        });
+
+        jsc.property(
+            'returns text fed into the textarea, handles editor tabs',
+            'string',
+            function (text) {
+                var clean = jsdom(),
+                    results = [];
+                $('body').html(
+                    '<ul id="editorTabs" class="nav nav-tabs hidden"><li ' +
+                    'role="presentation" class="active"><a id="messageedit" ' +
+                    'href="#">Editor</a></li><li role="presentation"><a ' +
+                    'id="messagepreview" href="#">Preview</a></li></ul><div ' +
+                    'id="placeholder" class="hidden">+++ no paste text +++</div>' +
+                    '<div id="prettymessage" class="hidden"><pre id="prettyprint" ' +
+                    'class="prettyprint linenums:1"></pre></div><div ' +
+                    'id="plaintext" class="hidden"></div><p><textarea ' +
+                    'id="message" name="message" cols="80" rows="25" ' +
+                    'class="form-control hidden"></textarea></p>'
+                );
+                $.PrivateBin.Editor.init();
+                results.push(
+                    $('#editorTabs').hasClass('hidden') &&
+                    $('#message').hasClass('hidden')
+                );
+                $.PrivateBin.Editor.show();
+                results.push(
+                    !$('#editorTabs').hasClass('hidden') &&
+                    !$('#message').hasClass('hidden')
+                );
+                $.PrivateBin.Editor.hide();
+                results.push(
+                    $('#editorTabs').hasClass('hidden') &&
+                    $('#message').hasClass('hidden')
+                );
+                $.PrivateBin.Editor.show();
+                $.PrivateBin.Editor.focusInput();
+                results.push(
+                    $.PrivateBin.Editor.getText().length == 0
+                );
+                $.PrivateBin.Editor.setText(text);
+                results.push(
+                    $.PrivateBin.Editor.getText() == $('#message').val()
+                );
+                $.PrivateBin.Editor.setText();
+                results.push(
+                    !$.PrivateBin.Editor.isPreview() &&
+                    !$('#message').hasClass('hidden')
+                );
+                $('#messagepreview').click();
+                results.push(
+                    $.PrivateBin.Editor.isPreview() &&
+                    $('#message').hasClass('hidden')
+                );
+                $('#messageedit').click();
+                results.push(
+                    !$.PrivateBin.Editor.isPreview() &&
+                    !$('#message').hasClass('hidden')
+                );
+                clean();
+                return results.every(element => element);
+            }
+        );
+    });
+});
+
+describe('PasteViewer', function () {
+    describe('run, hide, getText, setText, getFormat, setFormat & isPrettyPrinted', function () {
+        this.timeout(30000);
+        before(function () {
+            cleanup();
+        });
+
+        jsc.property(
+            'displays text according to format',
+            jsc.elements(['plaintext', 'markdown', 'syntaxhighlighting']),
+            'nestring',
+            function (format, text) {
+                var clean = jsdom(),
+                    results = [];
+                $('body').html(
+                    '<div id="placeholder" class="hidden">+++ no paste text ' +
+                    '+++</div><div id="prettymessage" class="hidden"><pre ' +
+                    'id="prettyprint" class="prettyprint linenums:1"></pre>' +
+                    '</div><div id="plaintext" class="hidden"></div>'
+                );
+                $.PrivateBin.PasteViewer.init();
+                $.PrivateBin.PasteViewer.setFormat(format);
+                $.PrivateBin.PasteViewer.setText('');
+                results.push(
+                    $('#placeholder').hasClass('hidden') &&
+                    $('#prettymessage').hasClass('hidden') &&
+                    $('#plaintext').hasClass('hidden') &&
+                    $.PrivateBin.PasteViewer.getFormat() == format &&
+                    $.PrivateBin.PasteViewer.getText() == ''
+                );
+                $.PrivateBin.PasteViewer.run();
+                results.push(
+                    !$('#placeholder').hasClass('hidden') &&
+                    $('#prettymessage').hasClass('hidden') &&
+                    $('#plaintext').hasClass('hidden')
+                );
+                $.PrivateBin.PasteViewer.hide();
+                results.push(
+                    $('#placeholder').hasClass('hidden') &&
+                    $('#prettymessage').hasClass('hidden') &&
+                    $('#plaintext').hasClass('hidden')
+                );
+                $.PrivateBin.PasteViewer.setText(text);
+                $.PrivateBin.PasteViewer.run();
+                results.push(
+                    $('#placeholder').hasClass('hidden') &&
+                    !$.PrivateBin.PasteViewer.isPrettyPrinted() &&
+                    $.PrivateBin.PasteViewer.getText() == text
+                );
+                if (format == 'markdown') {
+                    results.push(
+                        $('#prettymessage').hasClass('hidden') &&
+                        !$('#plaintext').hasClass('hidden')
+                    );
+                } else {
+                    results.push(
+                        !$('#prettymessage').hasClass('hidden') &&
+                        $('#plaintext').hasClass('hidden')
+                    );
+                }
+                clean();
+                return results.every(element => element);
+            }
+        );
+    });
+});
+

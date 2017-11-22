@@ -2,8 +2,6 @@ doc/ export-ignore
 tst/ export-ignore
 js/.istanbul.yml export-ignore
 js/test.js export-ignore
-js/mocha-3.2.0.js export-ignore
-css/mocha-3.2.0.css export-ignore
 .codeclimate.yml export-ignore
 .csslintrc export-ignore
 .dockerignore export-ignore
