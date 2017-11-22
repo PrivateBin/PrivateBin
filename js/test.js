@@ -1451,9 +1451,6 @@ describe('PasteViewer', function () {
             // https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet
             jsc.elements([
                 '<PLAINTEXT>',
-// @TODO these two pass, but aren't evaluated in this context - do they need to be sanitized, too?
-//                '\';alert(String.fromCharCode(88,83,83))//\';alert(String.fromCharCode(88,83,83))//";',
-//                'alert(String.fromCharCode(88,83,83))//";alert(String.fromCharCode(88,83,83))//--',
                 '></SCRIPT>">\'><SCRIPT>alert(String.fromCharCode(88,83,83))</SCRIPT>',
                 '\'\';!--"<XSS>=&{()}',
                 '<SCRIPT SRC=http://example.com/xss.js></SCRIPT>',
@@ -1466,8 +1463,18 @@ describe('PasteViewer', function () {
                 '<a onmouseover="alert(document.cookie)">xxs link</a>',
                 '<a onmouseover=alert(document.cookie)>xxs link</a>',
                 '<IMG """><SCRIPT>alert("XSS")</SCRIPT>">',
-                '<IMG SRC=javascript:alert(String.fromCharCode(88,83,83))>'
-                // @TODO the list goes on…
+                '<IMG SRC=javascript:alert(String.fromCharCode(88,83,83))>',
+                '<IMG STYLE="xss:expr/*XSS*/ession(alert(\'XSS\'))">',
+                '<FRAMESET><FRAME SRC="javascript:alert(\'XSS\');"></FRAMESET>',
+                '<TABLE BACKGROUND="javascript:alert(\'XSS\')">',
+                '<TABLE><TD BACKGROUND="javascript:alert(\'XSS\')">',
+                '<SCRIPT>document.write("<SCRI");</SCRIPT>PT SRC="httx://xss.rocks/xss.js"></SCRIPT>',
+                '(alert)(1)',
+                'a=alert,a(1)',
+                'top[“al”+”ert”](1)',
+                'top[/al/.source+/ert/.source](1)',
+                'al\u0065rt(1)',
+                'top[8680439..toString(30)](1)'
             ]),
             'string',
             function (format, prefix, xss, suffix) {
@@ -1490,4 +1497,3 @@ describe('PasteViewer', function () {
         );
     });
 });
-
