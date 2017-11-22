@@ -1464,7 +1464,7 @@ describe('PasteViewer', function () {
                 '<FRAMESET><FRAME SRC="javascript:alert(\'XSS\');"></FRAMESET>',
                 '<TABLE BACKGROUND="javascript:alert(\'XSS\')">',
                 '<TABLE><TD BACKGROUND="javascript:alert(\'XSS\')">',
-                '<SCRIPT>document.write("<SCRI");</SCRIPT>PT SRC="httx://xss.rocks/xss.js"></SCRIPT>',
+                '<SCRIPT>document.write("<SCRI");</SCRIPT>PT SRC="httx://xss.rocks/xss.js"></SCRIPT>'
             ]),
             'string',
             function (format, prefix, xss, suffix) {
