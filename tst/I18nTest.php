@@ -150,8 +150,8 @@ class I18nTest extends PHPUnit_Framework_TestCase
         $dir        = dir(PATH . 'i18n');
         while (false !== ($file = $dir->read())) {
             if (strlen($file) === 7) {
-                $language             = substr($file, 0, 2);
-                $languageMessageIds   = array_keys(
+                $language            = substr($file, 0, 2);
+                $languageMessageIds  = array_keys(
                     json_decode(
                         file_get_contents(PATH . 'i18n' . DIRECTORY_SEPARATOR . $file),
                         true

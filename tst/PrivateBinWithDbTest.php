@@ -35,7 +35,7 @@ class PrivateBinWithDbTest extends PrivateBinTest
         $options['model'] = array(
             'class' => 'Database',
         );
-        $options['model_options']  = $this->_options;
+        $options['model_options'] = $this->_options;
         Helper::createIniFile(CONF, $options);
     }
 }

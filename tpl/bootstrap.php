@@ -70,7 +70,7 @@ if ($MARKDOWN):
 <?php
 endif;
 ?>
-		<script type="text/javascript" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-CbxrV468ako77cl5jNqoqohA9EphJI54ha7/3Zv0K7lXW/0fC7l1L+SXpTq94FpQP4vSIZFmQnOkrmPxkgNbag==" crossorigin="anonymous"></script>
+		<script type="text/javascript" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-zbiQgBDsSGOdieFoYhNqu7fnj+GpeuQRXQcUSg1U9lP3HlHUY6Lp1w/Hl/LK2y/RGjkoV3MRcjU/BQVGoZxKlw==" crossorigin="anonymous"></script>
 		<!--[if lt IE 10]>
 		<style type="text/css">body {padding-left:60px;padding-right:60px;} #ienotice {display:block;} #oldienotice {display:block;}</style>
 		<![endif]-->
@@ -231,6 +231,17 @@ if ($isCpct):
 ?>
 						</ul>
 						<select id="pasteFormatter" name="pasteFormatter" class="hidden">
+<?php
+    foreach ($FORMATTER as $key => $value):
+?>
+							<option value="<?php echo $key; ?>"<?php
+        if ($key == $FORMATTERDEFAULT):
+?> selected="selected"<?php
+        endif;
+?>><?php echo $value; ?></option>
+<?php
+    endforeach;
+?>
 						</select>
 					</li>
 <?php
@@ -424,7 +435,7 @@ endif;
 					<a href="https://www.opera.com/">Opera</a>,
 					<a href="https://www.google.com/chrome">Chrome</a>…
 				</div>
-				<div id="pasteSuccess" role="alert" class="hidden alert alert-success">
+				<div id="pastesuccess" role="alert" class="hidden alert alert-success">
 					<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
 					<div id="deletelink"></div>
 					<div id="pastelink">

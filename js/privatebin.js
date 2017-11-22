@@ -124,7 +124,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                 range = document.body.createTextRange();
                 range.moveToElementText(element);
                 range.select();
-            } else if (window.getSelection){
+            } else if (window.getSelection) {
                 selection = window.getSelection();
                 range = document.createRange();
                 range.selectNodeContents(element);
@@ -302,8 +302,6 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
      * internationalization module
      *
      * @name I18n
-     * @param  {object} window
-     * @param  {object} document
      * @class
      */
     var I18n = (function () {
@@ -414,7 +412,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                     var orgArguments = arguments;
                     $(document).on(languageLoadedEvent, function () {
                         // log to show that the previous error could be mitigated
-                        console.log('Fix missing translation of \'' + messageId + '\' with now loaded language ' + language);
+                        console.warn('Fix missing translation of \'' + messageId + '\' with now loaded language ' + language);
                         // re-execute this function
                         me.translate.apply(this, orgArguments);
                     });
@@ -845,11 +843,9 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
      * everything directly UI-related, which fits nowhere else
      *
      * @name   UiHelper
-     * @param  {object} window
-     * @param  {object} document
      * @class
      */
-    var UiHelper = (function (window, document) {
+    var UiHelper = (function () {
         var me = {};
 
         /**
@@ -866,7 +862,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         {
             var currentLocation = Helper.baseUri();
             if (event.originalEvent.state === null && // no state object passed
-                event.originalEvent.target.location.href === currentLocation && // target location is home page
+                event.target.location.href === currentLocation && // target location is home page
                 window.location.href === currentLocation // and we are not already on the home page
             ) {
                 // redirect to home page
@@ -959,6 +955,23 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         }
 
         /**
+         * trigger a history (pop) state change
+         *
+         * used to test the UiHelper.historyChange private function
+         *
+         * @name   UiHelper.mockHistoryChange
+         * @function
+         * @param  {string} state   (optional) state to mock
+         */
+        me.mockHistoryChange = function(state)
+        {
+            if (typeof state === 'undefined') {
+                state = null;
+            }
+            historyChange($.Event('popstate', {originalEvent: new PopStateEvent('popstate', {state: state}), target: window}));
+        }
+
+        /**
          * initialize
          *
          * @name   UiHelper.init
@@ -973,7 +986,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         }
 
         return me;
-    })(window, document);
+    })();
 
     /**
      * Alert/error manager
@@ -989,12 +1002,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             $statusMessage,
             $remainingTime;
 
-        var currentIcon = [
-            'glyphicon-time', // loading icon
-            'glyphicon-info-sign', // status icon
-            '', // resevered for warning, not used yet
-            'glyphicon-alert' // error icon
-        ];
+        var currentIcon;
 
         var alertType = [
             'loading', // not in bootstrap, but using a good value here
@@ -1090,7 +1098,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          */
         me.showStatus = function(message, icon, dismissable, autoclose)
         {
-            console.log('status shown: ', message);
+            console.info('status shown: ', message);
             // @TODO: implement dismissable
             // @TODO: implement autoclose
 
@@ -1133,7 +1141,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          */
         me.showRemaining = function(message)
         {
-            console.log('remaining message shown: ', message);
+            console.info('remaining message shown: ', message);
             handleNotification(1, $remainingTime, message);
         }
 
@@ -1151,7 +1159,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         me.showLoading = function(message, percentage, icon)
         {
             if (typeof message !== 'undefined' && message !== null) {
-                console.log('status changed: ', message);
+                console.info('status changed: ', message);
             }
 
             // default message text
@@ -1238,6 +1246,13 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             $loadingIndicator = $('#loadingindicator');
             $statusMessage = $('#status');
             $remainingTime = $('#remainingtime');
+
+            currentIcon = [
+                'glyphicon-time', // loading icon
+                'glyphicon-info-sign', // status icon
+                '', // reserved for warning, not used yet
+                'glyphicon-alert' // error icon
+            ];
         }
 
         return me;
@@ -1247,10 +1262,9 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
      * handles paste status/result
      *
      * @name   PasteStatus
-     * @param  {object} window
      * @class
      */
-    var PasteStatus = (function (window) {
+    var PasteStatus = (function () {
         var me = {};
 
         var $pasteSuccess,
@@ -1351,7 +1365,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                     ];
 
                 Alert.showRemaining([expirationLabel, expiration[0]]);
-                $remainingTime.removeClass('foryoureyesonly')
+                $remainingTime.removeClass('foryoureyesonly');
             } else {
                 // never expires
                 return;
@@ -1383,7 +1397,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          */
         me.init = function()
         {
-            $pasteSuccess = $('#pasteSuccess');
+            $pasteSuccess = $('#pastesuccess');
             // $pasteUrl is saved in me.createPasteNotification() after creation
             $remainingTime = $('#remainingtime');
             $shortenButton = $('#shortenbutton');
@@ -1393,7 +1407,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         }
 
         return me;
-    })(window);
+    })();
 
     /**
      * password prompt
@@ -1454,7 +1468,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                 throw 'password prompt canceled';
             }
             if (password.length === 0) {
-                // recursive…
+                // recurse…
                 return me.requestPassword();
             }
 
@@ -1462,7 +1476,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         }
 
         /**
-         * getthe cached password
+         * get the cached password
          *
          * If you do not get a password with this function
          * (returns an empty string), use requestPassword.
@@ -1827,7 +1841,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          *
          * @name   PasteViewer.setFormat
          * @function
-         * @param {string} newFormat the the new format
+         * @param {string} newFormat the new format
          */
         me.setFormat = function(newFormat)
         {
@@ -1836,7 +1850,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                 return;
             }
 
-            // needs to update display too, if from or to Markdown is switched
+            // needs to update display too, if we switch from or to Markdown
             if (format === 'markdown' || newFormat === 'markdown') {
                 isDisplayed = false;
             }
@@ -1965,6 +1979,9 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
 
             // get default option from template/HTML or fall back to set value
             format = Model.getFormatDefault() || format;
+            text = '';
+            isDisplayed = false;
+            isChanged = true;
         }
 
         return me;
@@ -2641,7 +2658,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         me.showViewButtons = function()
         {
             if (viewButtonsDisplayed) {
-                console.log('showViewButtons: view buttons are already displayed');
+                console.warn('showViewButtons: view buttons are already displayed');
                 return;
             }
 
@@ -2661,7 +2678,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         me.hideViewButtons = function()
         {
             if (!viewButtonsDisplayed) {
-                console.log('hideViewButtons: view buttons are already hidden');
+                console.warn('hideViewButtons: view buttons are already hidden');
                 return;
             }
 
@@ -2693,7 +2710,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         me.showCreateButtons = function()
         {
             if (createButtonsDisplayed) {
-                console.log('showCreateButtons: create buttons are already displayed');
+                console.warn('showCreateButtons: create buttons are already displayed');
                 return;
             }
 
@@ -2718,7 +2735,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         me.hideCreateButtons = function()
         {
             if (!createButtonsDisplayed) {
-                console.log('hideCreateButtons: create buttons are already hidden');
+                console.warn('hideCreateButtons: create buttons are already hidden');
                 return;
             }
 
@@ -3970,7 +3987,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             Uploader.setUnencryptedData('deletetoken', deleteToken);
 
             Uploader.setFailure(function () {
-                Controller.showError(I18n._('Could not delete the paste, it was not stored in burn after reading mode.'));
+                Alert.showError(I18n._('Could not delete the paste, it was not stored in burn after reading mode.'));
             })
             Uploader.run();
         }
