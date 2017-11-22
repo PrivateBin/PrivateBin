@@ -1766,8 +1766,9 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             }
 
             // set text
-            Helper.setElementText($plainText, text);
-            Helper.setElementText($prettyPrint, text);
+            var sanitizedText = DOMPurify.sanitize(text, {SAFE_FOR_JQUERY: true})
+            Helper.setElementText($plainText, sanitizedText);
+            Helper.setElementText($prettyPrint, sanitizedText);
 
             switch (format) {
                 case 'markdown':
@@ -1792,7 +1793,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
 
                     $prettyPrint.html(
                         prettyPrintOne(
-                            Helper.htmlEntities(text), null, true
+                            Helper.htmlEntities(sanitizedText), null, true
                         )
                     );
                     // fall through, as the rest is the same
@@ -1800,16 +1801,6 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                     // convert URLs to clickable links
                     Helper.urls2links($plainText);
                     Helper.urls2links($prettyPrint);
-                    $plainText.html(
-                        DOMPurify.sanitize(
-                            $plainText.html(), {SAFE_FOR_JQUERY: true}
-                        )
-                    );
-                    $prettyPrint.html(
-                        DOMPurify.sanitize(
-                            $prettyPrint.html(), {SAFE_FOR_JQUERY: true}
-                        )
-                    );
 
                     $prettyPrint.css('white-space', 'pre-wrap');
                     $prettyPrint.css('word-break', 'normal');
