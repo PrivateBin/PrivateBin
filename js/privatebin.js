@@ -44,6 +44,26 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         var me = {};
 
         /**
+         * character to HTML entity lookup table
+         *
+         * @see    {@link https://github.com/janl/mustache.js/blob/master/mustache.js#L60}
+         * @name Helper.entityMap
+         * @private
+         * @enum   {Object}
+         * @readonly
+         */
+        var entityMap = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#39;',
+            '/': '&#x2F;',
+            '`': '&#x60;',
+            '=': '&#x3D;'
+        };
+
+        /**
          * cache for script location
          *
          * @name Helper.baseUri
@@ -51,36 +71,6 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          * @enum   {string|null}
          */
         var baseUri = null;
-
-        /**
-         * convert URLs to clickable links.
-         * URLs to handle:
-         * <pre>
-         *     magnet:?xt.1=urn:sha1:YNCKHTQCWBTRNJIV4WNAE52SJUQCZO5C&xt.2=urn:sha1:TXGCZQTH26NL6OUQAJJPFALHG2LTGBC7
-         *     http://example.com:8800/zero/?6f09182b8ea51997#WtLEUO5Epj9UHAV9JFs+6pUQZp13TuspAUjnF+iM+dM=
-         *     http://user:example.com@localhost:8800/zero/?6f09182b8ea51997#WtLEUO5Epj9UHAV9JFs+6pUQZp13TuspAUjnF+iM+dM=
-         * </pre>
-         * Attention: Does *not* sanitize HTML code! It is strongly advised to sanitize it after running this function.
-         *
-         *
-         * @name   Helper.urls2links
-         * @function
-         * @param  {String} html - HTML code
-         */
-        urls2links = function(html)
-        {
-            var markup = '<a href="$1" rel="nofollow">$1</a>';
-            // short test: https://regex101.com/r/AttfVd/1
-            html.replace(
-                /((http|https|ftp):\/\/[\w?=&.\/-;#@~%+*-]+(?![\w\s?&.\/;#~%"=-]*>))/ig,
-                markup
-            )
-            // shorttest: https://regex101.com/r/sCm8Xe/2
-            html.replace(
-                /((magnet):[\w?=&.\/-;#@~%+*-]+)/ig,
-                markup
-            );
-        }
 
         /**
          * converts a duration (in seconds) into human friendly approximation
@@ -145,38 +135,55 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         }
 
         /**
-         * set text of a jQuery element (required for IE)
+         * set text of a jQuery element (required for IE),
          *
          * @name   Helper.setElementText
          * @function
          * @param  {jQuery} $element - a jQuery element
          * @param  {string} text - the text to enter
-         * @param  {bool} convertLinks - whether to convert the links in the text
          */
-        me.setElementText = function($element, text, convertLinks)
+        me.setElementText = function($element, text)
         {
-            var isIe = $('#oldienotice').is(':visible');
-            // text-only and no IE -> fast way: set text-only
-            if ((convertLinks === false) && isIe === false) {
-                return $element.text(text);
+            // For IE<10: Doesn't support white-space:pre-wrap; so we have to do this...
+            if ($('#oldienotice').is(':visible')) {
+                var html = me.htmlEntities(text).replace(/\n/ig, '\r\n<br>');
+                $element.html('<pre>' + html + '</pre>');
             }
-
-            // convert text to plain-text
-            // but as we need to handle HTML code afterwards
-            var html = $(text).text();
-
-            if (convertLinks === true) {
-                html = me.urls2links(html);
+            // for other (sane) browsers:
+            else
+            {
+                $element.text(text);
             }
+        }
 
-            // workaround: IE<10 doesn't support white-space:pre-wrap; so we have to do this...
-            if (isIe) {
-                html = html.replace(/\n/ig, '\r\n<br>');
-            }
-
-            // finally sanitize it for security (XSS) reasons
-            html = me.sanitizeHtml(text);
-            $element.html(html);
+        /**
+         * convert URLs to clickable links.
+         * URLs to handle:
+         * <pre>
+         *     magnet:?xt.1=urn:sha1:YNCKHTQCWBTRNJIV4WNAE52SJUQCZO5C&xt.2=urn:sha1:TXGCZQTH26NL6OUQAJJPFALHG2LTGBC7
+         *     http://example.com:8800/zero/?6f09182b8ea51997#WtLEUO5Epj9UHAV9JFs+6pUQZp13TuspAUjnF+iM+dM=
+         *     http://user:example.com@localhost:8800/zero/?6f09182b8ea51997#WtLEUO5Epj9UHAV9JFs+6pUQZp13TuspAUjnF+iM+dM=
+         * </pre>
+         *
+         * @name   Helper.urls2links
+         * @function
+         * @param  {Object} $element - a jQuery DOM element
+         */
+        me.urls2links = function($element)
+        {
+            var markup = '<a href="$1" rel="nofollow">$1</a>';
+            $element.html(
+                $element.html().replace(
+                    /((http|https|ftp):\/\/[\w?=&.\/-;#@~%+*-]+(?![\w\s?&.\/;#~%"=-]*>))/ig,
+                    markup
+                )
+            );
+            $element.html(
+                $element.html().replace(
+                    /((magnet):[\w?=&.\/-;#@~%+*-]+)/ig,
+                    markup
+                )
+            );
         }
 
         /**
@@ -263,17 +270,19 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         }
 
         /**
-         * sanitizes html code to prevent XSS attacks
+         * convert all applicable characters to HTML entities
          *
-         * Now uses DOMPurify instead of some self-made stuff for security reasons.
-         *
-         * @name   Helper.sanitizeHtml
+         * @see    {@link https://www.owasp.org/index.php/XSS_(Cross_Site_Scripting)_Prevention_Cheat_Sheet#RULE_.231_-_HTML_Escape_Before_Inserting_Untrusted_Data_into_HTML_Element_Content}
+         * @name   Helper.htmlEntities
          * @function
          * @param  {string} str
          * @return {string} escaped HTML
          */
-        me.sanitizeHtml = function(str) {
-            return DOMPurify.sanitize(str, {SAFE_FOR_JQUERY: true});
+        me.htmlEntities = function(str) {
+            return String(str).replace(
+                /[&<>"'`=\/]/g, function(s) {
+                    return entityMap[s];
+                });
         }
 
         /**
@@ -1757,8 +1766,9 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             }
 
             // set text
-            Helper.setElementText($plainText, text, false);
-            Helper.setElementText($prettyPrint, text, true);
+            var sanitizedText = DOMPurify.sanitize(text, {SAFE_FOR_JQUERY: true})
+            Helper.setElementText($plainText, sanitizedText);
+            Helper.setElementText($prettyPrint, sanitizedText);
 
             switch (format) {
                 case 'markdown':
@@ -1783,12 +1793,15 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
 
                     $prettyPrint.html(
                         prettyPrintOne(
-                            Helper.sanitizeHtml(text), null, true
+                            Helper.htmlEntities(sanitizedText), null, true
                         )
                     );
                     // fall through, as the rest is the same
                 default: // = 'plaintext'
-                    // adjust CSS so it looks good
+                    // convert URLs to clickable links
+                    Helper.urls2links($plainText);
+                    Helper.urls2links($prettyPrint);
+
                     $prettyPrint.css('white-space', 'pre-wrap');
                     $prettyPrint.css('word-break', 'normal');
                     $prettyPrint.removeClass('prettyprint');
@@ -2581,7 +2594,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             for (var i = 0; i < $head.length; i++) {
                 newDoc.write($head[i].outerHTML);
             }
-            newDoc.write('</head><body><pre>' + Helper.sanitizeHtml(paste) + '</pre></body></html>');
+            newDoc.write('</head><body><pre>' + Helper.htmlEntities(paste) + '</pre></body></html>');
             newDoc.close();
         }
 

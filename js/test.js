@@ -93,7 +93,7 @@ describe('Helper', function () {
                 var html = '',
                     result = true;
                 ids.forEach(function(item, i) {
-                    html += '<div id="' + item.join('') + '">' + $.PrivateBin.Helper.sanitizeHtml(contents[i] || contents[0]) + '</div>';
+                    html += '<div id="' + item.join('') + '">' + $.PrivateBin.Helper.htmlEntities(contents[i] || contents[0]) + '</div>';
                 });
                 var clean = jsdom(html);
                 ids.forEach(function(item, i) {
@@ -122,7 +122,7 @@ describe('Helper', function () {
                 var html = '',
                     result = true;
                 ids.forEach(function(item, i) {
-                    html += '<div id="' + item.join('') + '">' + $.PrivateBin.Helper.sanitizeHtml(contents[i] || contents[0]) + '</div>';
+                    html += '<div id="' + item.join('') + '">' + $.PrivateBin.Helper.htmlEntities(contents[i] || contents[0]) + '</div>';
                 });
                 var elements = $('<body />').html(html);
                 ids.forEach(function(item, i) {
@@ -163,9 +163,9 @@ describe('Helper', function () {
                 var query = query.join(''),
                     fragment = fragment.join(''),
                     url = schema + '://' + address.join('') + '/?' + query + '#' + fragment,
-                    prefix = $.PrivateBin.Helper.sanitizeHtml(prefix),
-                    postfix = ' ' + $.PrivateBin.Helper.sanitizeHtml(postfix),
-                    element = '<div>' + prefix + url + postfix + '</div>';
+                    prefix = $.PrivateBin.Helper.htmlEntities(prefix),
+                    postfix = ' ' + $.PrivateBin.Helper.htmlEntities(postfix),
+                    element = $('<div>' + prefix + url + postfix + '</div>');
 
                 // special cases: When the query string and fragment imply the beginning of an HTML entity, eg. &#0 or &#x
                 if (
@@ -175,11 +175,11 @@ describe('Helper', function () {
                 {
                     url = schema + '://' + address.join('') + '/?' + query.substring(0, query.length - 1);
                     postfix = '';
-                    element = '<div>' + prefix + url + '</div>';
+                    element = $('<div>' + prefix + url + '</div>');
                 }
 
                 $.PrivateBin.Helper.urls2links(element);
-                return element.html() === '<div>' + prefix + '<a href="' + url + '" rel="nofollow">' + url + '</a>' + postfix + '</div>';
+                return element.html() === $('<div>' + prefix + '<a href="' + url + '" rel="nofollow">' + url + '</a>' + postfix + '</div>').html();
             }
         );
         jsc.property(
@@ -189,8 +189,8 @@ describe('Helper', function () {
             'string',
             function (prefix, query, postfix) {
                 var url = 'magnet:?' + query.join('').replace(/^&+|&+$/gm,''),
-                    prefix = $.PrivateBin.Helper.sanitizeHtml(prefix),
-                    postfix = $.PrivateBin.Helper.sanitizeHtml(postfix),
+                    prefix = $.PrivateBin.Helper.htmlEntities(prefix),
+                    postfix = $.PrivateBin.Helper.htmlEntities(postfix),
                     element = $('<div>' + prefix + url + ' ' + postfix + '</div>');
                 $.PrivateBin.Helper.urls2links(element);
                 return element.html() === $('<div>' + prefix + '<a href="' + url + '" rel="nofollow">' + url + '</a> ' + postfix + '</div>').html();
@@ -329,7 +329,7 @@ describe('Helper', function () {
         );
     });
 
-    describe('sanitizeHtml', function () {
+    describe('htmlEntities', function () {
         after(function () {
             cleanup();
         });
@@ -338,7 +338,7 @@ describe('Helper', function () {
             'removes all HTML entities from any given string',
             'string',
             function (string) {
-                var result = $.PrivateBin.Helper.sanitizeHtml(string);
+                var result = $.PrivateBin.Helper.htmlEntities(string);
                 return !(/[<>"'`=\/]/.test(result)) && !(string.indexOf('&') > -1 && !(/&amp;/.test(result)));
             }
         );
@@ -583,8 +583,8 @@ describe('Model', function () {
             'string',
             'small nat',
             function (keys, value, key) {
-                keys = keys.map($.PrivateBin.Helper.sanitizeHtml);
-                value = $.PrivateBin.Helper.sanitizeHtml(value);
+                keys = keys.map($.PrivateBin.Helper.htmlEntities);
+                value = $.PrivateBin.Helper.htmlEntities(value);
                 var content = keys.length > key ? keys[key] : (keys.length > 0 ? keys[0] : 'null'),
                     contents = '<select id="pasteExpiration" name="pasteExpiration">';
                 keys.forEach(function(item) {
@@ -596,7 +596,7 @@ describe('Model', function () {
                 });
                 contents += '</select>';
                 $('body').html(contents);
-                var result = $.PrivateBin.Helper.sanitizeHtml(
+                var result = $.PrivateBin.Helper.htmlEntities(
                     $.PrivateBin.Model.getExpirationDefault()
                 );
                 $.PrivateBin.Model.reset();
@@ -617,8 +617,8 @@ describe('Model', function () {
             'string',
             'small nat',
             function (keys, value, key) {
-                keys = keys.map($.PrivateBin.Helper.sanitizeHtml);
-                value = $.PrivateBin.Helper.sanitizeHtml(value);
+                keys = keys.map($.PrivateBin.Helper.htmlEntities);
+                value = $.PrivateBin.Helper.htmlEntities(value);
                 var content = keys.length > key ? keys[key] : (keys.length > 0 ? keys[0] : 'null'),
                     contents = '<select id="pasteFormatter" name="pasteFormatter">';
                 keys.forEach(function(item) {
@@ -630,7 +630,7 @@ describe('Model', function () {
                 });
                 contents += '</select>';
                 $('body').html(contents);
-                var result = $.PrivateBin.Helper.sanitizeHtml(
+                var result = $.PrivateBin.Helper.htmlEntities(
                     $.PrivateBin.Model.getFormatDefault()
                 );
                 $.PrivateBin.Model.reset();
@@ -649,7 +649,7 @@ describe('Model', function () {
             'checks if the element with id "cipherdata" contains any data',
             'asciistring',
             function (value) {
-                value = $.PrivateBin.Helper.sanitizeHtml(value).trim();
+                value = $.PrivateBin.Helper.htmlEntities(value).trim();
                 $('body').html('<div id="cipherdata">' + value + '</div>');
                 $.PrivateBin.Model.init();
                 var result = $.PrivateBin.Model.hasCipherData();
@@ -669,10 +669,10 @@ describe('Model', function () {
             'returns the contents of the element with id "cipherdata"',
             'asciistring',
             function (value) {
-                value = $.PrivateBin.Helper.sanitizeHtml(value).trim();
+                value = $.PrivateBin.Helper.htmlEntities(value).trim();
                 $('body').html('<div id="cipherdata">' + value + '</div>');
                 $.PrivateBin.Model.init();
-                var result = $.PrivateBin.Helper.sanitizeHtml(
+                var result = $.PrivateBin.Helper.htmlEntities(
                     $.PrivateBin.Model.getCipherData()
                 );
                 $.PrivateBin.Model.reset();
