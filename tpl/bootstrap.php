@@ -33,16 +33,17 @@ if ($SYNTAXHIGHLIGHTING):
 ?>
 		<link type="text/css" rel="stylesheet" href="css/prettify/prettify.css?<?php echo rawurlencode($VERSION); ?>" />
 <?php
-    if (strlen($SYNTAXHIGHLIGHTINGTHEME)):
+	if (strlen($SYNTAXHIGHLIGHTINGTHEME)):
 ?>
 		<link type="text/css" rel="stylesheet" href="css/prettify/<?php echo rawurlencode($SYNTAXHIGHLIGHTINGTHEME); ?>.css?<?php echo rawurlencode($VERSION); ?>" />
 <?php
-    endif;
+	endif;
 endif;
 ?>
 		<noscript><link type="text/css" rel="stylesheet" href="css/noscript.css" /></noscript>
 		<script type="text/javascript" src="js/jquery-3.1.1.js" integrity="sha512-U6K1YLIFUWcvuw5ucmMtT9HH4t0uz3M366qrF5y4vnyH6dgDzndlcGvH/Lz5k8NFh80SN95aJ5rqGZEdaQZ7ZQ==" crossorigin="anonymous"></script>
 		<script type="text/javascript" src="js/sjcl-1.0.6.js" integrity="sha512-DsyxLV/uBoQlRTJmW5Gb2SxXUXB+aYeZ6zk+NuXy8LuLyi8oGti9AGn6He5fUY2DtgQ2//RjfaZog8exFuunUQ==" crossorigin="anonymous"></script>
+		<script type="text/javascript" src="js/kjua.min.js" integrity="sha512-hmvfOhcr4J8bjQ2GuNVzfSbuulv72wgQCJpgnXc2+cCHKqvYo8pK2nc0Q4Esem2973zo1radyIMTEkt+xJlhBA==" crossorigin="anonymous"></script>
 <?php
 if ($ZEROBINCOMPATIBILITY):
 ?>
@@ -70,7 +71,7 @@ if ($MARKDOWN):
 <?php
 endif;
 ?>
-		<script type="text/javascript" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-EvNAh1GXOoUiGZ/W8iPtzsce06bvVHy6+ajJztmfSgdQcKMPoj0dB8j1FC90MEChl7MOeR4xozvDymH/6HwIlA==" crossorigin="anonymous"></script>
+		<script type="text/javascript" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-HXQpEiyKGjM1QuKb+BfxjMcyrrmD3FX5nw5hwgOTONCtQqxCM5Q5bGkmsEvSKc+RcBUpGT3Mc48TddPI8kAlIg==" crossorigin="anonymous"></script>
 		<!--[if lt IE 10]>
 		<style type="text/css">body {padding-left:60px;padding-right:60px;} #ienotice {display:block;} #oldienotice {display:block;}</style>
 		<![endif]-->
@@ -88,8 +89,8 @@ if ($isCpct):
 ?> class="navbar-spacing"<?php
 endif;
 ?>>
-		<div id="passwordmodal" class="modal fade" role="dialog">
-			<div class="modal-dialog">
+		<div id="passwordmodal" tabindex="-1" class="modal fade" role="dialog" aria-hidden="true">
+			<div class="modal-dialog" role="document">
 				<div class="modal-content">
 					<div class="modal-body">
 						<form id="passwordform" role="form">
@@ -103,6 +104,29 @@ endif;
 				</div>
 			</div>
 		</div>
+
+		<div id="qrcodemodal" tabindex="-1" class="modal fade" aria-labelledby="qrcodemodalTitle" role="dialog" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<!-- <div class="modal-header">
+						<h5 id="qrcodemodalTitle" class="modal-title">QR code</h5>
+
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div> -->
+
+					<div class="modal-body">
+						<div class="mx-auto" id="qrcode-display"></div>
+					</div>
+
+					<!-- <div class="modal-footer"> -->
+						<button type="button" class="btn btn-primary btn-block" data-dismiss="modal"><?php echo I18n::_('Close') ?></button>
+					<!-- </div> -->
+				</div>
+			</div>
+		</div>
+
 		<nav class="navbar navbar-<?php echo $isDark ? 'inverse' : 'default'; ?> navbar-<?php echo $isCpct ? 'fixed' : 'static'; ?>-top"><?php
 if ($isCpct):
 ?><div class="container"><?php
@@ -157,9 +181,9 @@ endif;
 foreach ($EXPIRE as $key => $value):
 ?>
 							<option value="<?php echo $key; ?>"<?php
-    if ($key == $EXPIREDEFAULT):
+	if ($key == $EXPIREDEFAULT):
 ?> selected="selected"<?php
-    endif;
+	endif;
 ?>><?php echo $value; ?></option>
 <?php
 endforeach;
@@ -189,28 +213,28 @@ if ($isCpct):
 							<li id="burnafterreadingoption" class="checkbox hidden">
 								<label>
 									<input type="checkbox" id="burnafterreading" name="burnafterreading"<?php
-    if ($BURNAFTERREADINGSELECTED):
+	if ($BURNAFTERREADINGSELECTED):
 ?> checked="checked"<?php
-    endif;
+	endif;
 ?> />
 									<?php echo I18n::_('Burn after reading'), PHP_EOL; ?>
 								</label>
 							</li>
 <?php
-    if ($DISCUSSION):
+	if ($DISCUSSION):
 ?>
 							<li id="opendiscussionoption" class="checkbox hidden">
 								<label>
 									<input type="checkbox" id="opendiscussion" name="opendiscussion"<?php
-        if ($OPENDISCUSSION):
+		if ($OPENDISCUSSION):
 ?> checked="checked"<?php
-        endif;
+		endif;
 ?> />
 									<?php echo I18n::_('Open discussion'), PHP_EOL; ?>
 								</label>
 							</li>
 <?php
-    endif;
+	endif;
 ?>
 							<li role="separator" class="divider"></li>
 							<li>
@@ -219,7 +243,7 @@ if ($isCpct):
 								</div>
 							</li>
 <?php
-    foreach ($FORMATTER as $key => $value):
+	foreach ($FORMATTER as $key => $value):
 ?>
 							<li>
 								<a href="#" data-format="<?php echo $key; ?>">
@@ -227,20 +251,20 @@ if ($isCpct):
 								</a>
 							</li>
 <?php
-    endforeach;
+	endforeach;
 ?>
 						</ul>
 						<select id="pasteFormatter" name="pasteFormatter" class="hidden">
 <?php
-    foreach ($FORMATTER as $key => $value):
+	foreach ($FORMATTER as $key => $value):
 ?>
 							<option value="<?php echo $key; ?>"<?php
-        if ($key == $FORMATTERDEFAULT):
+		if ($key == $FORMATTERDEFAULT):
 ?> selected="selected"<?php
-        endif;
+		endif;
 ?>><?php echo $value; ?></option>
 <?php
-    endforeach;
+	endforeach;
 ?>
 						</select>
 					</li>
@@ -251,31 +275,31 @@ else:
 						<div id="burnafterreadingoption" class="navbar-text checkbox hidden">
 							<label>
 								<input type="checkbox" id="burnafterreading" name="burnafterreading"<?php
-    if ($BURNAFTERREADINGSELECTED):
+	if ($BURNAFTERREADINGSELECTED):
 ?> checked="checked"<?php
-    endif;
+	endif;
 ?> />
 								<?php echo I18n::_('Burn after reading'), PHP_EOL; ?>
 							</label>
 						</div>
 					</li>
 <?php
-    if ($DISCUSSION):
+	if ($DISCUSSION):
 ?>
 					<li>
 						<div id="opendiscussionoption" class="navbar-text checkbox hidden">
 							<label>
 								<input type="checkbox" id="opendiscussion" name="opendiscussion"<?php
-        if ($OPENDISCUSSION):
+		if ($OPENDISCUSSION):
 ?> checked="checked"<?php
-        endif;
+		endif;
 ?> />
 								<?php echo I18n::_('Open discussion'), PHP_EOL; ?>
-						 	</label>
+							</label>
 						</div>
 					</li>
 <?php
-    endif;
+	endif;
 endif;
 if ($PASSWORD):
 ?>
@@ -311,21 +335,21 @@ if (!$isCpct):
 					<li class="dropdown">
 						<select id="pasteFormatter" name="pasteFormatter" class="hidden">
 <?php
-    foreach ($FORMATTER as $key => $value):
+	foreach ($FORMATTER as $key => $value):
 ?>
 							<option value="<?php echo $key; ?>"<?php
-        if ($key == $FORMATTERDEFAULT):
+		if ($key == $FORMATTERDEFAULT):
 ?> selected="selected"<?php
-        endif;
+		endif;
 ?>><?php echo $value; ?></option>
 <?php
-    endforeach;
+	endforeach;
 ?>
 						</select>
 						<a id="formatter" href="#" class="hidden dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><?php echo I18n::_('Format'); ?>: <span id="pasteFormatterDisplay"><?php echo $FORMATTER[$FORMATTERDEFAULT]; ?></span> <span class="caret"></span></a>
 						<ul class="dropdown-menu">
 <?php
-    foreach ($FORMATTER as $key => $value):
+	foreach ($FORMATTER as $key => $value):
 ?>
 							<li>
 								<a href="#" data-format="<?php echo $key; ?>">
@@ -333,7 +357,7 @@ if (!$isCpct):
 								</a>
 							</li>
 <?php
-    endforeach;
+	endforeach;
 ?>
 						</ul>
 					</li>
@@ -349,7 +373,7 @@ if (strlen($LANGUAGESELECTION)):
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-flag" aria-hidden="true"></span> <?php echo $LANGUAGES[$LANGUAGESELECTION][0]; ?> <span class="caret"></span></a>
 						<ul class="dropdown-menu">
 <?php
-    foreach ($LANGUAGES as $key => $value):
+	foreach ($LANGUAGES as $key => $value):
 ?>
 							<li>
 								<a href="#" data-lang="<?php echo $key; ?>">
@@ -357,7 +381,7 @@ if (strlen($LANGUAGESELECTION)):
 								</a>
 							</li>
 <?php
-    endforeach;
+	endforeach;
 ?>
 						</ul>
 					</li>
@@ -448,6 +472,9 @@ if (strlen($URLSHORTENER)):
 <?php
 endif;
 ?>
+					</div>
+					<div id="qrcodelink" data-toggle="modal" data-target="#qrcodemodal">
+						<span class="glyphicon glyphicon-qrcode" title="<?php echo I18n::_('Show QR code') ?>"></span>
 					</div>
 				</div>
 				<ul id="editorTabs" class="nav nav-tabs hidden">

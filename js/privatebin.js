@@ -21,6 +21,7 @@
 /** global: prettyPrintOne */
 /** global: showdown */
 /** global: sjcl */
+/** global: kjua */
 
 // Immediately start random number generator collector.
 sjcl.random.startCollectors();
@@ -1205,7 +1206,8 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         var $pasteSuccess,
             $pasteUrl,
             $remainingTime,
-            $shortenButton;
+            $shortenButton,
+            $qrCodeLink;
 
         /**
          * forward to URL shortener
@@ -1238,6 +1240,23 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                 // if so we need to load link by reloading the current site
                 window.location.reload(true);
             }
+        }
+
+        /**
+         * Shows the QR code of the current paste.
+         *
+         * @name   PasteStatus.displayQrCode
+         * @function
+         * @param  {Event} event
+         */
+        function displayQrCode(event)
+        {
+            var qrCanvas = kjua({
+                render: 'canvas',
+                text: $pasteUrl.attr('href')
+            });
+            $('#qrcode-display').html(qrCanvas);
+
         }
 
         /**
@@ -1336,9 +1355,11 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             // $pasteUrl is saved in me.createPasteNotification() after creation
             $remainingTime = $('#remainingtime');
             $shortenButton = $('#shortenbutton');
+            $qrCodeLink = $('#qrcodelink');
 
             // bind elements
             $shortenButton.click(sendToShortener);
+            $qrCodeLink.click(displayQrCode);
         }
 
         return me;

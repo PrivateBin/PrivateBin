@@ -76,6 +76,26 @@ body.loading {
 
 #deletelink {
 	float: right;
+	margin-left: 5px;
+}
+
+#qrcodelink {
+	color: #337ab7;
+	float: right;
+	margin-left: 5px;
+	cursor: pointer;
+}
+#qrcodelink:hover, #qrcodelink:focus {
+	color: #23527c;
+}
+
+#qrcodemodalClose {
+	float: right;
+}
+#qrcode-display {
+	width: 200px;
+	height: 200px;
+	margin: auto;
 }
 
 #pastelink {
