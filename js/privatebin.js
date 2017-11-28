@@ -1923,11 +1923,9 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
      * (view) Show attachment and preview if possible
      *
      * @name   AttachmentViewer
-     * @param  {object} window
-     * @param  {object} document
      * @class
      */
-    var AttachmentViewer = (function (window, document) {
+    var AttachmentViewer = (function () {
         var me = {};
 
         var $attachmentLink,
@@ -2085,7 +2083,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         }
 
         return me;
-    })(window, document);
+    })();
 
     /**
      * (view) Shows discussion thread and handles replies

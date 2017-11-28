@@ -1444,7 +1444,7 @@ describe('PasteViewer', function () {
             'sanitizes XSS',
             jsc.elements(['plaintext', 'markdown', 'syntaxhighlighting']),
             'string',
-            // https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet
+            // @see    {@link https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet}
             jsc.elements([
                 '<PLAINTEXT>',
                 '></SCRIPT>">\'><SCRIPT>alert(String.fromCharCode(88,83,83))</SCRIPT>',
