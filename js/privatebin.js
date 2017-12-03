@@ -2080,6 +2080,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             $attachment = $('#attachment');
             $attachmentLink = $('#attachment a');
             $attachmentPreview = $('#attachmentPreview');
+            attachmentHasPreview = false;
         }
 
         return me;
