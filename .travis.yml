@@ -6,6 +6,7 @@ php:
   - '5.6'
   - '7.0'
   - '7.1'
+  - '7.2'
 
 # as this is a php project, node.js v4 (for JS unit testing) isn't installed
 install:
