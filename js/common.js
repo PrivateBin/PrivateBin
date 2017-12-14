@@ -125,6 +125,11 @@ exports.jscQueryString = function() {
     return jsc.elements(queryString);
 }
 
+// provides random characters allowed in base64 encoded strings
+exports.jscBase64String = function() {
+    return jsc.elements(base64String);
+}
+
 // provides a random URL schema supported by the whatwg-url library
 exports.jscSchemas = function() {
     return jsc.elements(schemas);
