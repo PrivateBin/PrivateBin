@@ -53,7 +53,7 @@ describe('Helper', function () {
         this.timeout(30000);
         jsc.property(
             'selection contains content of given ID',
-            jsc.nearray(jsc.nearray(jsc.elements(common.alnumString))),
+            jsc.nearray(jsc.nearray(common.jscAlnumString())),
             'nearray string',
             function (ids, contents) {
                 var html = '',
@@ -90,9 +90,9 @@ describe('Helper', function () {
             'replaces URLs with anchors',
             'string',
             jsc.elements(['http', 'https', 'ftp']),
-            jsc.nearray(jsc.elements(common.a2zString)),
-            jsc.array(jsc.elements(common.queryString)),
-            jsc.array(jsc.elements(common.queryString)),
+            jsc.nearray(common.jscA2zString()),
+            jsc.array(common.jscQueryString()),
+            jsc.array(common.jscQueryString()),
             'string',
             function (prefix, schema, address, query, fragment, postfix) {
                 var query = query.join(''),
@@ -117,7 +117,7 @@ describe('Helper', function () {
         jsc.property(
             'replaces magnet links with anchors',
             'string',
-            jsc.array(jsc.elements(common.queryString)),
+            jsc.array(common.jscQueryString()),
             'string',
             function (prefix, query, postfix) {
                 var url = 'magnet:?' + query.join('').replace(/^&+|&+$/gm,''),
@@ -244,9 +244,9 @@ describe('Helper', function () {
 
         jsc.property(
             'returns the URL without query & fragment',
-            jsc.elements(common.schemas),
-            jsc.nearray(jsc.elements(common.a2zString)),
-            jsc.array(jsc.elements(common.queryString)),
+            common.jscSchemas(),
+            jsc.nearray(common.jscA2zString()),
+            jsc.array(common.jscQueryString()),
             'string',
             function (schema, address, query, fragment) {
                 var expected = schema + '://' + address.join('') + '/',
