@@ -2090,11 +2090,9 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
      * (view) Shows discussion thread and handles replies
      *
      * @name   DiscussionViewer
-     * @param  {object} window
-     * @param  {object} document
      * @class
      */
-    var DiscussionViewer = (function (window, document) {
+    var DiscussionViewer = (function () {
         var me = {};
 
         var $commentTail,
@@ -2286,10 +2284,10 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          * removes the old discussion and prepares everything for creating a new
          * one.
          *
-         * @name   DiscussionViewer.prepareNewDisucssion
+         * @name   DiscussionViewer.prepareNewDiscussion
          * @function
          */
-        me.prepareNewDisucssion = function()
+        me.prepareNewDiscussion = function()
         {
             $commentContainer.html('');
             $discussion.addClass('hidden');
@@ -2299,18 +2297,39 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         }
 
         /**
-         * returns the user put into the reply form
+         * returns the users message from the reply form
          *
-         * @name   DiscussionViewer.getReplyData
+         * @name   DiscussionViewer.getReplyMessage
          * @function
-         * @return {array}
+         * @return {String}
          */
-        me.getReplyData = function()
+        me.getReplyMessage = function()
         {
-            return [
-                $replyMessage.val(),
-                $replyNickname.val()
-            ];
+            return $replyMessage.val();
+        }
+
+        /**
+         * returns the users nickname (if any) from the reply form
+         *
+         * @name   DiscussionViewer.getReplyNickname
+         * @function
+         * @return {String}
+         */
+        me.getReplyNickname = function()
+        {
+            return $replyNickname.val();
+        }
+
+        /**
+         * returns the id of the parent comment the user is replying to
+         *
+         * @name   DiscussionViewer.getReplyCommentId
+         * @function
+         * @return {int|undefined}
+         */
+        me.getReplyCommentId = function()
+        {
+            return replyCommentId;
         }
 
         /**
@@ -2346,18 +2365,6 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         }
 
         /**
-         * returns the id of the parent comment the user is replying to
-         *
-         * @name   DiscussionViewer.getReplyCommentId
-         * @function
-         * @return {int|undefined}
-         */
-        me.getReplyCommentId = function()
-        {
-            return replyCommentId;
-        }
-
-        /**
          * initiate
          *
          * preloads jQuery elements
@@ -2376,7 +2383,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         }
 
         return me;
-    })(window, document);
+    })();
 
     /**
      * Manage top (navigation) bar
@@ -3361,10 +3368,9 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             TopNav.hideAllButtons();
             Alert.showLoading('Sending comment…', 0, 'cloud-upload');
 
-            // get data, note that "var [x, y] = " structures aren't supported in all JS environments
-            var replyData = DiscussionViewer.getReplyData(),
-                plainText = replyData[0],
-                nickname = replyData[1],
+            // get data
+            var plainText = DiscussionViewer.getReplyMessage(),
+                nickname = DiscussionViewer.getReplyNickname(),
                 parentid = DiscussionViewer.getReplyCommentId();
 
             // do not send if there is no data
@@ -3661,7 +3667,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         function decryptComments(paste, key, password)
         {
             // remove potentially previous discussion
-            DiscussionViewer.prepareNewDisucssion();
+            DiscussionViewer.prepareNewDiscussion();
 
             // iterate over comments
             for (var i = 0; i < paste.comments.length; ++i) {
