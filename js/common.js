@@ -33,6 +33,7 @@ var a2zString = ['a','b','c','d','e','f','g','h','i','j','k','l','m',
     schemas = ['ftp','gopher','http','https','ws','wss'],
     supportedLanguages = ['de', 'es', 'fr', 'it', 'no', 'pl', 'pt', 'oc', 'ru', 'sl', 'zh'],
     mimeTypes = ['image/png', 'application/octet-stream'],
+    formats = ['plaintext', 'markdown', 'syntaxhighlighting'],
     /**
      * character to HTML entity lookup table
      *
@@ -138,5 +139,15 @@ exports.jscSchemas = function() {
 // provides a random supported language string
 exports.jscSupportedLanguages = function() {
     return jsc.elements(supportedLanguages);
+}
+
+// provides a random mime type
+exports.jscMimeTypes = function() {
+    return jsc.elements(mimeTypes);
+}
+
+// provides a random PrivateBin paste formatter
+exports.jscFormats = function() {
+    return jsc.elements(formats);
 }
 
