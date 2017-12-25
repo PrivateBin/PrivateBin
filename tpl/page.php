@@ -13,11 +13,11 @@ if ($SYNTAXHIGHLIGHTING):
 ?>
 		<link type="text/css" rel="stylesheet" href="css/prettify/prettify.css?<?php echo rawurlencode($VERSION); ?>" />
 <?php
-    if (strlen($SYNTAXHIGHLIGHTINGTHEME)):
+	if (strlen($SYNTAXHIGHLIGHTINGTHEME)):
 ?>
 		<link type="text/css" rel="stylesheet" href="css/prettify/<?php echo rawurlencode($SYNTAXHIGHLIGHTINGTHEME); ?>.css?<?php echo rawurlencode($VERSION); ?>" />
 <?php
-    endif;
+	endif;
 endif;
 ?>
 		<script type="text/javascript" src="js/jquery-3.1.1.js" integrity="sha512-U6K1YLIFUWcvuw5ucmMtT9HH4t0uz3M366qrF5y4vnyH6dgDzndlcGvH/Lz5k8NFh80SN95aJ5rqGZEdaQZ7ZQ==" crossorigin="anonymous"></script>
@@ -48,8 +48,13 @@ if ($MARKDOWN):
 		<script type="text/javascript" src="js/purify.min.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-jJuy143F5Oy7oS3VkjzeJGBxIUuQ1H0eSjuvLGD3FiQzeu8Pwp5vI/jQ2dxlxSrzejmNMicdLHnIqH7R8Ft0lQ==" crossorigin="anonymous"></script>
 <?php
 endif;
+if ($QRCODE):
 ?>
-		<script type="text/javascript" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-HXQpEiyKGjM1QuKb+BfxjMcyrrmD3FX5nw5hwgOTONCtQqxCM5Q5bGkmsEvSKc+RcBUpGT3Mc48TddPI8kAlIg==" crossorigin="anonymous"></script>
+		<script async type="text/javascript" src="js/kjua-0.1.2.min.js" integrity="sha512-hmvfOhcr4J8bjQ2GuNVzfSbuulv72wgQCJpgnXc2+cCHKqvYo8pK2nc0Q4Esem2973zo1radyIMTEkt+xJlhBA==" crossorigin="anonymous"></script>
+<?php
+endif;
+?>
+		<script type="text/javascript" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-PMr+homyzdcY7Cmh5XZCbU9Qmg3RjwGdpRk1jBuLyVJRMGPeKscsbklIceXssSVMdv4Y9+d2UNXykuDL7Z4fDg==" crossorigin="anonymous"></script>
 		<!--[if lt IE 10]>
 		<style type="text/css">body {padding-left:60px;padding-right:60px;} #ienotice {display:block;} #oldienotice {display:block;}</style>
 		<![endif]-->
@@ -100,15 +105,22 @@ if ($EXPIRECLONE):
 endif;
 ?>
 					<button id="rawtextbutton" class="hidden"><img src="img/icon_raw.png" width="15" height="15" alt="" /><?php echo I18n::_('Raw text'); ?></button>
+<?php
+if ($QRCODE):
+?>
+					<button id="qrcodelink" class="hidden"><img src="img/icon_qr.png" width="15" height="15" alt="" /><?php echo I18n::_('QR code'); ?></button>
+<?php
+endif;
+?>
 					<div id="expiration" class="hidden button"><?php echo I18n::_('Expires'); ?>:
 						<select id="pasteExpiration" name="pasteExpiration">
 <?php
 foreach ($EXPIRE as $key => $value):
 ?>
 							<option value="<?php echo $key; ?>"<?php
-    if ($key == $EXPIREDEFAULT):
+	if ($key == $EXPIREDEFAULT):
 ?> selected="selected"<?php
-    endif;
+	endif;
 ?>><?php echo $value; ?></option>
 <?php
 endforeach;
@@ -129,14 +141,14 @@ if ($DISCUSSION):
 ?>
 					<div id="opendiscussionoption" class="button hidden">
 						<input type="checkbox" id="opendiscussion" name="opendiscussion"<?php
-    if ($OPENDISCUSSION):
+	if ($OPENDISCUSSION):
 ?> checked="checked"<?php
-    endif;
+	endif;
 ?> />
 						<label for="opendiscussion" <?php
-    if (!$OPENDISCUSSION):
+	if (!$OPENDISCUSSION):
 ?> style="color: #BBBBBB;"<?php
-    endif;
+	endif;
 ?>><?php echo I18n::_('Open discussion'); ?></label>
 					</div>
 <?php
@@ -155,9 +167,9 @@ endif;
 foreach ($FORMATTER as $key => $value):
 ?>
 							<option value="<?php echo $key; ?>"<?php
-    if ($key == $FORMATTERDEFAULT):
+	if ($key == $FORMATTERDEFAULT):
 ?> selected="selected"<?php
-    endif;
+	endif;
 ?>><?php echo $value; ?></option>
 <?php
 endforeach;
@@ -170,21 +182,24 @@ if (strlen($LANGUAGESELECTION)):
 					<div id="language" class="button">
 						<select name="lang">
 <?php
-    foreach ($LANGUAGES as $key => $value):
+	foreach ($LANGUAGES as $key => $value):
 ?>
 							<option data-lang="<?php echo $key; ?>" value="<?php echo $key; ?>"<?php
-        if ($key == $LANGUAGESELECTION):
+		if ($key == $LANGUAGESELECTION):
 ?> selected="selected"<?php
-        endif;
+		endif;
 ?>><?php echo $value[0]; ?> (<?php echo $value[1]; ?>)</option>
 <?php
-    endforeach;
+	endforeach;
 ?>
 						</select>
 					</div>
 <?php
 endif;
 ?>
+				</div>
+				<div id="qrcode-display">
+
 				</div>
 				<div id="pastesuccess" class="hidden">
 					<div id="deletelink"></div>
@@ -243,7 +258,7 @@ if ($DISCUSSION):
 endif;
 ?>
 		</div>
-        <section class="container">
+		<section class="container">
 			<div id="noscript" role="alert" class="nonworking alert alert-info noscript-hide"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true">
 				<span> <?php echo I18n::_('Loading…'); ?></span><br>
 				<span class="small"><?php echo I18n::_('In case this message never disappears please have a look at <a href="https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away">this FAQ for information to troubleshoot</a>.'); ?></span>

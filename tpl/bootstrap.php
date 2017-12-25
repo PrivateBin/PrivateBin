@@ -43,8 +43,12 @@ endif;
 		<noscript><link type="text/css" rel="stylesheet" href="css/noscript.css" /></noscript>
 		<script type="text/javascript" src="js/jquery-3.1.1.js" integrity="sha512-U6K1YLIFUWcvuw5ucmMtT9HH4t0uz3M366qrF5y4vnyH6dgDzndlcGvH/Lz5k8NFh80SN95aJ5rqGZEdaQZ7ZQ==" crossorigin="anonymous"></script>
 		<script type="text/javascript" src="js/sjcl-1.0.6.js" integrity="sha512-DsyxLV/uBoQlRTJmW5Gb2SxXUXB+aYeZ6zk+NuXy8LuLyi8oGti9AGn6He5fUY2DtgQ2//RjfaZog8exFuunUQ==" crossorigin="anonymous"></script>
-		<script type="text/javascript" src="js/kjua.min.js" integrity="sha512-hmvfOhcr4J8bjQ2GuNVzfSbuulv72wgQCJpgnXc2+cCHKqvYo8pK2nc0Q4Esem2973zo1radyIMTEkt+xJlhBA==" crossorigin="anonymous"></script>
 <?php
+if ($QRCODE):
+?>
+		<script async type="text/javascript" src="js/kjua-0.1.2.min.js" integrity="sha512-hmvfOhcr4J8bjQ2GuNVzfSbuulv72wgQCJpgnXc2+cCHKqvYo8pK2nc0Q4Esem2973zo1radyIMTEkt+xJlhBA==" crossorigin="anonymous"></script>
+<?php
+endif;
 if ($ZEROBINCOMPATIBILITY):
 ?>
 		<script type="text/javascript" src="js/base64-1.7.js" integrity="sha512-JdwsSP3GyHR+jaCkns9CL9NTt4JUJqm/BsODGmYhBcj5EAPKcHYh+OiMfyHbcDLECe17TL0hjXADFkusAqiYgA==" crossorigin="anonymous"></script>
@@ -71,7 +75,7 @@ if ($MARKDOWN):
 <?php
 endif;
 ?>
-		<script type="text/javascript" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-HXQpEiyKGjM1QuKb+BfxjMcyrrmD3FX5nw5hwgOTONCtQqxCM5Q5bGkmsEvSKc+RcBUpGT3Mc48TddPI8kAlIg==" crossorigin="anonymous"></script>
+		<script type="text/javascript" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-PMr+homyzdcY7Cmh5XZCbU9Qmg3RjwGdpRk1jBuLyVJRMGPeKscsbklIceXssSVMdv4Y9+d2UNXykuDL7Z4fDg==" crossorigin="anonymous"></script>
 		<!--[if lt IE 10]>
 		<style type="text/css">body {padding-left:60px;padding-right:60px;} #ienotice {display:block;} #oldienotice {display:block;}</style>
 		<![endif]-->
@@ -174,6 +178,15 @@ endif;
 						<button id="rawtextbutton" type="button" class="hidden btn btn-<?php echo $isDark ? 'warning' : 'default'; ?> navbar-btn">
 							<span class="glyphicon glyphicon-text-background" aria-hidden="true"></span> <?php echo I18n::_('Raw text'), PHP_EOL; ?>
 						</button>
+<?php
+if ($QRCODE):
+?>
+						<button id="qrcodelink" type="button" data-toggle="modal" data-target="#qrcodemodal" class="hidden btn btn-<?php echo $isDark ? 'warning' : 'default'; ?> navbar-btn">
+							<span class="glyphicon glyphicon-qrcode" aria-hidden="true"></span> <?php echo I18n::_('QR code'), PHP_EOL; ?>
+						</button>
+<?php
+endif;
+?>
 					</li>
 					<li class="dropdown">
 						<select id="pasteExpiration" name="pasteExpiration" class="hidden">
@@ -472,9 +485,6 @@ if (strlen($URLSHORTENER)):
 <?php
 endif;
 ?>
-					</div>
-					<div id="qrcodelink" data-toggle="modal" data-target="#qrcodemodal">
-						<span class="glyphicon glyphicon-qrcode" title="<?php echo I18n::_('Show QR code') ?>"></span>
 					</div>
 				</div>
 				<ul id="editorTabs" class="nav nav-tabs hidden">

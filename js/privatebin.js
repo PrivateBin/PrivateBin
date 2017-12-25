@@ -1206,8 +1206,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         var $pasteSuccess,
             $pasteUrl,
             $remainingTime,
-            $shortenButton,
-            $qrCodeLink;
+            $shortenButton;
 
         /**
          * forward to URL shortener
@@ -1240,23 +1239,6 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                 // if so we need to load link by reloading the current site
                 window.location.reload(true);
             }
-        }
-
-        /**
-         * Shows the QR code of the current paste.
-         *
-         * @name   PasteStatus.displayQrCode
-         * @function
-         * @param  {Event} event
-         */
-        function displayQrCode(event)
-        {
-            var qrCanvas = kjua({
-                render: 'canvas',
-                text: $pasteUrl.attr('href')
-            });
-            $('#qrcode-display').html(qrCanvas);
-
         }
 
         /**
@@ -1355,11 +1337,9 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             // $pasteUrl is saved in me.createPasteNotification() after creation
             $remainingTime = $('#remainingtime');
             $shortenButton = $('#shortenbutton');
-            $qrCodeLink = $('#qrcodelink');
 
             // bind elements
             $shortenButton.click(sendToShortener);
-            $qrCodeLink.click(displayQrCode);
         }
 
         return me;
@@ -2429,6 +2409,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             $password,
             $passwordInput,
             $rawTextButton,
+            $qrCodeLink,
             $sendButton;
 
         var pasteExpiration = '1week';
@@ -2607,6 +2588,22 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         }
 
         /**
+         * Shows the QR code of the current paste (URL).
+         *
+         * @name   TopNav.displayQrCode
+         * @function
+         * @param  {Event} event
+         */
+        function displayQrCode(event)
+        {
+            var qrCanvas = kjua({
+                render: 'canvas',
+                text: window.location.href
+            });
+            $('#qrcode-display').html(qrCanvas);
+        }
+
+        /**
          * Shows all elements belonging to viwing an existing pastes
          *
          * @name   TopNav.showViewButtons
@@ -2622,6 +2619,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             $newButton.removeClass('hidden');
             $cloneButton.removeClass('hidden');
             $rawTextButton.removeClass('hidden');
+            $qrCodeLink.removeClass('hidden');
 
             viewButtonsDisplayed = true;
         }
@@ -2642,6 +2640,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             $newButton.addClass('hidden');
             $cloneButton.addClass('hidden');
             $rawTextButton.addClass('hidden');
+            $qrCodeLink.addClass('hidden');
 
             viewButtonsDisplayed = false;
         }
@@ -2892,6 +2891,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             $passwordInput = $('#passwordinput');
             $rawTextButton = $('#rawtextbutton');
             $sendButton = $('#sendbutton');
+            $qrCodeLink = $('#qrcodelink');
 
             // bootstrap template drop down
             $('#language ul.dropdown-menu li a').click(setLanguage);
@@ -2906,6 +2906,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             $cloneButton.click(Controller.clonePaste);
             $rawTextButton.click(rawText);
             $fileRemoveButton.click(removeAttachment);
+            $qrCodeLink.click(displayQrCode);
 
             // bootstrap template drop downs
             $('ul.dropdown-menu li a', $('#expiration').parent()).click(updateExpiration);
