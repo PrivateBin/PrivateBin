@@ -27,3 +27,10 @@ after_script:
   - cd ..
   - vendor/bin/codacycoverage clover tst/log/coverage-clover.xml
   - vendor/bin/test-reporter --coverage-report tst/log/coverage-clover.xml
+
+cache:
+  directories:
+    - $HOME/.composer/cache/files
+    - $HOME/.composer/cache/vcs
+    - $HOME/.npm
+    - js/node_modules
