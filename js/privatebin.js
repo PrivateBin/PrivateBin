@@ -1700,7 +1700,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             }
 
             // set sanitized and linked text
-            var sanitizedLinkedText = DOMPurify.sanitize(Helper.urls2links(text), {SAFE_FOR_JQUERY: true});
+            var sanitizedLinkedText = DOMPurify.sanitize(Helper.urls2links(text));
             $plainText.html(sanitizedLinkedText);
             $prettyPrint.html(sanitizedLinkedText);
 
@@ -1713,7 +1713,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                     });
                     // let showdown convert the HTML and sanitize HTML *afterwards*!
                     $plainText.html(
-                        DOMPurify.sanitize(converter.makeHtml(text), {SAFE_FOR_JQUERY: true})
+                        DOMPurify.sanitize(converter.makeHtml(text))
                     );
                     // add table classes from bootstrap css
                     $plainText.find('table').addClass('table-condensed table-bordered');
@@ -1727,8 +1727,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
 
                     $prettyPrint.html(
                         DOMPurify.sanitize(
-                            prettyPrintOne(Helper.urls2links(text), null, true),
-                            {SAFE_FOR_JQUERY: true}
+                            prettyPrintOne(Helper.urls2links(text), null, true)
                         )
                     );
                     // fall through, as the rest is the same
@@ -1824,6 +1823,8 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          */
         me.setText = function(newText)
         {
+            // escape HTML entities
+            newText = $('<div />').text(newText).html();
             if (text !== newText) {
                 text = newText;
                 isChanged = true;
@@ -2223,8 +2224,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             // set & parse text
             $commentEntryData.html(
                 DOMPurify.sanitize(
-                    Helper.urls2links(commentText),
-                    {SAFE_FOR_JQUERY: true}
+                    Helper.urls2links(commentText)
                 )
             );
 
@@ -2529,7 +2529,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             for (var i = 0; i < $head.length; i++) {
                 newDoc.write($head[i].outerHTML);
             }
-            newDoc.write('</head><body><pre>' + DOMPurify.sanitize(paste, {SAFE_FOR_JQUERY: true}) + '</pre></body></html>');
+            newDoc.write('</head><body><pre>' + DOMPurify.sanitize(paste) + '</pre></body></html>');
             newDoc.close();
         }
 
@@ -3939,10 +3939,11 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             // first load translations
             I18n.loadTranslations();
 
+            DOMPurify.setConfig({SAFE_FOR_JQUERY: true});
+
             // initialize other modules/"classes"
             Alert.init();
             Model.init();
-
             AttachmentViewer.init();
             DiscussionViewer.init();
             Editor.init();
