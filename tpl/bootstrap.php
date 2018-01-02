@@ -44,6 +44,11 @@ endif;
 		<script type="text/javascript" src="js/jquery-3.1.1.js" integrity="sha512-U6K1YLIFUWcvuw5ucmMtT9HH4t0uz3M366qrF5y4vnyH6dgDzndlcGvH/Lz5k8NFh80SN95aJ5rqGZEdaQZ7ZQ==" crossorigin="anonymous"></script>
 		<script type="text/javascript" src="js/sjcl-1.0.6.js" integrity="sha512-DsyxLV/uBoQlRTJmW5Gb2SxXUXB+aYeZ6zk+NuXy8LuLyi8oGti9AGn6He5fUY2DtgQ2//RjfaZog8exFuunUQ==" crossorigin="anonymous"></script>
 <?php
+if ($QRCODE):
+?>
+		<script async type="text/javascript" src="js/kjua-0.1.2.js" integrity="sha512-hmvfOhcr4J8bjQ2GuNVzfSbuulv72wgQCJpgnXc2+cCHKqvYo8pK2nc0Q4Esem2973zo1radyIMTEkt+xJlhBA==" crossorigin="anonymous"></script>
+<?php
+endif;
 if ($ZEROBINCOMPATIBILITY):
 ?>
 		<script type="text/javascript" src="js/base64-1.7.js" integrity="sha512-JdwsSP3GyHR+jaCkns9CL9NTt4JUJqm/BsODGmYhBcj5EAPKcHYh+OiMfyHbcDLECe17TL0hjXADFkusAqiYgA==" crossorigin="anonymous"></script>
@@ -70,7 +75,7 @@ if ($MARKDOWN):
 <?php
 endif;
 ?>
-		<script type="text/javascript" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-51v9MtL1fUeIOp2VekfHq4VR6kdR/SyYqkAT1WGRZXDP5+ct6A1qktVW9HNNL6EXYQbMpzgVuYUIZ6HhULcGSA==" crossorigin="anonymous"></script>
+		<script type="text/javascript" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-ongf6gpLgDPRVlBPaFlvxyDu3rCb1APhvzJLUFj9JuXCi6Zd0vqxt//vR8Zz3Ez9Fq+mw14HU8z52H7EjZewfA==" crossorigin="anonymous"></script>
 		<!--[if lt IE 10]>
 		<style type="text/css">body {padding-left:60px;padding-right:60px;} #ienotice {display:block;} #oldienotice {display:block;}</style>
 		<![endif]-->
@@ -88,8 +93,8 @@ if ($isCpct):
 ?> class="navbar-spacing"<?php
 endif;
 ?>>
-		<div id="passwordmodal" class="modal fade" role="dialog">
-			<div class="modal-dialog">
+		<div id="passwordmodal" tabindex="-1" class="modal fade" role="dialog" aria-hidden="true">
+			<div class="modal-dialog" role="document">
 				<div class="modal-content">
 					<div class="modal-body">
 						<form id="passwordform" role="form">
@@ -103,6 +108,22 @@ endif;
 				</div>
 			</div>
 		</div>
+<?php
+if ($QRCODE):
+?>
+		<div id="qrcodemodal" tabindex="-1" class="modal fade" aria-labelledby="qrcodemodalTitle" role="dialog" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-body">
+						<div class="mx-auto" id="qrcode-display"></div>
+					</div>
+					<button type="button" class="btn btn-primary btn-block" data-dismiss="modal"><?php echo I18n::_('Close') ?></button>
+				</div>
+			</div>
+		</div>
+<?php
+endif;
+?>
 		<nav class="navbar navbar-<?php echo $isDark ? 'inverse' : 'default'; ?> navbar-<?php echo $isCpct ? 'fixed' : 'static'; ?>-top"><?php
 if ($isCpct):
 ?><div class="container"><?php
@@ -150,6 +171,15 @@ endif;
 						<button id="rawtextbutton" type="button" class="hidden btn btn-<?php echo $isDark ? 'warning' : 'default'; ?> navbar-btn">
 							<span class="glyphicon glyphicon-text-background" aria-hidden="true"></span> <?php echo I18n::_('Raw text'), PHP_EOL; ?>
 						</button>
+<?php
+if ($QRCODE):
+?>
+						<button id="qrcodelink" type="button" data-toggle="modal" data-target="#qrcodemodal" class="hidden btn btn-<?php echo $isDark ? 'warning' : 'default'; ?> navbar-btn">
+							<span class="glyphicon glyphicon-qrcode" aria-hidden="true"></span> <?php echo I18n::_('QR code'), PHP_EOL; ?>
+						</button>
+<?php
+endif;
+?>
 					</li>
 					<li class="dropdown">
 						<select id="pasteExpiration" name="pasteExpiration" class="hidden">
@@ -271,7 +301,7 @@ else:
         endif;
 ?> />
 								<?php echo I18n::_('Open discussion'), PHP_EOL; ?>
-						 	</label>
+							</label>
 						</div>
 					</li>
 <?php

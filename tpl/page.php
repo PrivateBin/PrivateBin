@@ -22,6 +22,7 @@ endif;
 ?>
 		<script type="text/javascript" src="js/jquery-3.1.1.js" integrity="sha512-U6K1YLIFUWcvuw5ucmMtT9HH4t0uz3M366qrF5y4vnyH6dgDzndlcGvH/Lz5k8NFh80SN95aJ5rqGZEdaQZ7ZQ==" crossorigin="anonymous"></script>
 		<script type="text/javascript" src="js/sjcl-1.0.6.js" integrity="sha512-DsyxLV/uBoQlRTJmW5Gb2SxXUXB+aYeZ6zk+NuXy8LuLyi8oGti9AGn6He5fUY2DtgQ2//RjfaZog8exFuunUQ==" crossorigin="anonymous"></script>
+		<script type="text/javascript" src="js/kjua.min.js" integrity="sha512-hmvfOhcr4J8bjQ2GuNVzfSbuulv72wgQCJpgnXc2+cCHKqvYo8pK2nc0Q4Esem2973zo1radyIMTEkt+xJlhBA==" crossorigin="anonymous"></script>
 <?php
 if ($ZEROBINCOMPATIBILITY):
 ?>
@@ -47,8 +48,13 @@ if ($MARKDOWN):
 		<script type="text/javascript" src="js/purify-1.0.3.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-uhzhZJSgc+XJoaxCOjiuRzQaf5klPlSSVKGw69+zT72hhfLbVwB4jbwI+f7NRucuRz6u0aFGMeZ+0PnGh73iBQ==" crossorigin="anonymous"></script>
 <?php
 endif;
+if ($QRCODE):
 ?>
-		<script type="text/javascript" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-51v9MtL1fUeIOp2VekfHq4VR6kdR/SyYqkAT1WGRZXDP5+ct6A1qktVW9HNNL6EXYQbMpzgVuYUIZ6HhULcGSA==" crossorigin="anonymous"></script>
+		<script async type="text/javascript" src="js/kjua-0.1.2.js" integrity="sha512-hmvfOhcr4J8bjQ2GuNVzfSbuulv72wgQCJpgnXc2+cCHKqvYo8pK2nc0Q4Esem2973zo1radyIMTEkt+xJlhBA==" crossorigin="anonymous"></script>
+<?php
+endif;
+?>
+		<script type="text/javascript" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-ongf6gpLgDPRVlBPaFlvxyDu3rCb1APhvzJLUFj9JuXCi6Zd0vqxt//vR8Zz3Ez9Fq+mw14HU8z52H7EjZewfA==" crossorigin="anonymous"></script>
 		<!--[if lt IE 10]>
 		<style type="text/css">body {padding-left:60px;padding-right:60px;} #ienotice {display:block;} #oldienotice {display:block;}</style>
 		<![endif]-->
@@ -99,6 +105,13 @@ if ($EXPIRECLONE):
 endif;
 ?>
 					<button id="rawtextbutton" class="hidden"><img src="img/icon_raw.png" width="15" height="15" alt="" /><?php echo I18n::_('Raw text'); ?></button>
+<?php
+if ($QRCODE):
+?>
+					<button id="qrcodelink" class="hidden"><img src="img/icon_qr.png" width="15" height="15" alt="" /><?php echo I18n::_('QR code'); ?></button>
+<?php
+endif;
+?>
 					<div id="expiration" class="hidden button"><?php echo I18n::_('Expires'); ?>:
 						<select id="pasteExpiration" name="pasteExpiration">
 <?php
@@ -185,7 +198,13 @@ if (strlen($LANGUAGESELECTION)):
 endif;
 ?>
 				</div>
-				<div id="pastesuccess" class="hidden">
+<?php
+if ($QRCODE):
+?>
+				<div id="qrcode-display"></div>
+<?php
+endif;
+?>				<div id="pastesuccess" class="hidden">
 					<div id="deletelink"></div>
 					<div id="pastelink">
 <?php
@@ -242,7 +261,7 @@ if ($DISCUSSION):
 endif;
 ?>
 		</div>
-        <section class="container">
+		<section class="container">
 			<div id="noscript" role="alert" class="nonworking alert alert-info noscript-hide"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true">
 				<span> <?php echo I18n::_('Loading…'); ?></span><br>
 				<span class="small"><?php echo I18n::_('In case this message never disappears please have a look at <a href="https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away">this FAQ for information to troubleshoot</a>.'); ?></span>

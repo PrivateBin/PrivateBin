@@ -21,6 +21,7 @@
 /** global: prettyPrintOne */
 /** global: showdown */
 /** global: sjcl */
+/** global: kjua */
 
 // Immediately start random number generator collector.
 sjcl.random.startCollectors();
@@ -2408,6 +2409,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             $password,
             $passwordInput,
             $rawTextButton,
+            $qrCodeLink,
             $sendButton;
 
         var pasteExpiration = '1week';
@@ -2586,6 +2588,22 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         }
 
         /**
+         * Shows the QR code of the current paste (URL).
+         *
+         * @name   TopNav.displayQrCode
+         * @function
+         * @param  {Event} event
+         */
+        function displayQrCode(event)
+        {
+            var qrCanvas = kjua({
+                render: 'canvas',
+                text: window.location.href
+            });
+            $('#qrcode-display').html(qrCanvas);
+        }
+
+        /**
          * Shows all elements belonging to viwing an existing pastes
          *
          * @name   TopNav.showViewButtons
@@ -2601,6 +2619,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             $newButton.removeClass('hidden');
             $cloneButton.removeClass('hidden');
             $rawTextButton.removeClass('hidden');
+            $qrCodeLink.removeClass('hidden');
 
             viewButtonsDisplayed = true;
         }
@@ -2621,6 +2640,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             $newButton.addClass('hidden');
             $cloneButton.addClass('hidden');
             $rawTextButton.addClass('hidden');
+            $qrCodeLink.addClass('hidden');
 
             viewButtonsDisplayed = false;
         }
@@ -2871,6 +2891,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             $passwordInput = $('#passwordinput');
             $rawTextButton = $('#rawtextbutton');
             $sendButton = $('#sendbutton');
+            $qrCodeLink = $('#qrcodelink');
 
             // bootstrap template drop down
             $('#language ul.dropdown-menu li a').click(setLanguage);
@@ -2885,6 +2906,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             $cloneButton.click(Controller.clonePaste);
             $rawTextButton.click(rawText);
             $fileRemoveButton.click(removeAttachment);
+            $qrCodeLink.click(displayQrCode);
 
             // bootstrap template drop downs
             $('ul.dropdown-menu li a', $('#expiration').parent()).click(updateExpiration);
