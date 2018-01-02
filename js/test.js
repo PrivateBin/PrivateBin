@@ -42,7 +42,7 @@ require('./prettify');
 global.prettyPrint = window.PR.prettyPrint;
 global.prettyPrintOne = window.PR.prettyPrintOne;
 global.showdown = require('./showdown-1.6.1');
-global.DOMPurify = require('./purify.min');
+global.DOMPurify = require('./purify-1.0.3');
 require('./bootstrap-3.3.7');
 require('./privatebin');
 
@@ -1422,7 +1422,7 @@ describe('PasteViewer', function () {
                 results.push(
                     $('#placeholder').hasClass('hidden') &&
                     !$.PrivateBin.PasteViewer.isPrettyPrinted() &&
-                    $.PrivateBin.PasteViewer.getText() == text
+                    $.PrivateBin.PasteViewer.getText() == $('<div />').text(text).html()
                 );
                 if (format == 'markdown') {
                     results.push(
