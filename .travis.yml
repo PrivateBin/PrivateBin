@@ -16,18 +16,15 @@ install:
 before_script:
   - composer install -n
   - npm install -g mocha
-  - cd js
-  - npm install jsverify jsdom@9 jsdom-global@2
-  - cd ..
+  - cd js && npm install jsverify jsdom@9 jsdom-global@2
 
 script:
-  - cd tst && ../vendor/bin/phpunit
-  - cd ../js && mocha
+  - mocha
+  - cd ../tst && ../vendor/bin/phpunit
 
 after_script:
-  - cd ..
-  - vendor/bin/codacycoverage clover tst/log/coverage-clover.xml
-  - vendor/bin/test-reporter --coverage-report tst/log/coverage-clover.xml
+  - ../vendor/bin/codacycoverage clover log/coverage-clover.xml
+  - ../vendor/bin/test-reporter --coverage-report log/coverage-clover.xml
 
 cache:
   directories:
