@@ -12,8 +12,8 @@ describe('DiscussionViewer', function () {
             'displays & hides comments as requested',
             jsc.array(
                 jsc.record({
-                    id: jsc.nearray(common.jscBase64String()),
-                    parentid: jsc.nearray(common.jscBase64String()),
+                    id: jsc.nearray(common.jscAlnumString()),
+                    parentid: jsc.nearray(common.jscAlnumString()),
                     data: jsc.string,
                     meta: jsc.record({
                         nickname: jsc.string,
