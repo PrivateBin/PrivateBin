@@ -2,86 +2,68 @@
 var common = require('../common');
 
 describe('DiscussionViewer', function () {
-    describe('setAttachment, showAttachment, removeAttachment, hideAttachment, hideAttachmentPreview, hasAttachment, getAttachment & moveAttachmentTo', function () {
+    describe('handleNotification, addComment, finishDiscussion, prepareNewDiscussion, getReplyMessage, getReplyNickname, getReplyCommentId & highlightComment', function () {
         this.timeout(30000);
         before(function () {
             cleanup();
         });
 
         jsc.property(
-            'displays & hides data as requested',
-            common.jscMimeTypes(),
-            jsc.nearray(common.jscBase64String()),
-            'string',
-            'string',
-            'string',
-            function (mimeType, base64, filename, prefix, postfix) {
+            'displays & hides comments as requested',
+            jsc.array(
+                jsc.record({
+                    id: jsc.nearray(common.jscBase64String()),
+                    parentid: jsc.nearray(common.jscBase64String()),
+                    data: jsc.string,
+                    meta: jsc.record({
+                        nickname: jsc.string,
+                        postdate: jsc.nat,
+                        vizhash: jsc.string
+                    })
+                })
+            ),
+            function (comments) {
                 var clean = jsdom(),
-                    data = 'data:' + mimeType + ';base64,' + base64.join(''),
-                    isImage = mimeType.substring(0, 6) === 'image/',
                     results = [];
-                prefix = prefix.replace(/%(s|d)/g, '%%');
-                postfix = postfix.replace(/%(s|d)/g, '%%');
                 $('body').html(
-                    '<div id="attachment" role="alert" class="hidden alert ' +
-                    'alert-info"><span class="glyphicon glyphicon-download-' +
-                    'alt" aria-hidden="true"></span> <a class="alert-link">' +
-                    'Download attachment</a></div><div id="attachmentPrevie' +
-                    'w" class="hidden"></div>'
+                    '<div id="discussion"><h4>Discussion</h4>' +
+                    '<div id="commentcontainer"></div></div><div id="templates">' +
+                    '<article id="commenttemplate" class="comment">' +
+                    '<div class="commentmeta"><span class="nickname">name</span>' +
+                    '<span class="commentdate">0000-00-00</span></div>' +
+                    '<div class="commentdata">c</div>' +
+                    '<button class="btn btn-default btn-sm">Reply</button>' +
+                    '</article><p id="commenttailtemplate" class="comment">' +
+                    '<button class="btn btn-default btn-sm">Add comment</button>' +
+                    '</p><div id="replytemplate" class="reply hidden">' +
+                    '<input type="text" id="nickname" class="form-control" ' +
+                    'title="Optional nickname…" placeholder="Optional ' +
+                    'nickname…" /><textarea id="replymessage" ' +
+                    'class="replymessage form-control" cols="80" rows="7">' +
+                    '</textarea><br /><div id="replystatus" role="alert" ' +
+                    'class="statusmessage hidden alert"><span class="glyphicon" ' +
+                    'aria-hidden="true"></span> </div><button id="replybutton" ' +
+                    'class="btn btn-default btn-sm">Post comment</button></div></div>'
                 );
-                $.PrivateBin.AttachmentViewer.init();
+                $.PrivateBin.DiscussionViewer.init();
                 results.push(
-                    !$.PrivateBin.AttachmentViewer.hasAttachment() &&
-                    $('#attachment').hasClass('hidden') &&
-                    $('#attachmentPreview').hasClass('hidden')
+                    !$('#discussion').hasClass('hidden')
                 );
-                if (filename.length) {
-                    $.PrivateBin.AttachmentViewer.setAttachment(data, filename);
-                } else {
-                    $.PrivateBin.AttachmentViewer.setAttachment(data);
-                }
-                var attachement = $.PrivateBin.AttachmentViewer.getAttachment()
+                $.PrivateBin.DiscussionViewer.prepareNewDiscussion();
                 results.push(
-                    $.PrivateBin.AttachmentViewer.hasAttachment() &&
-                    $('#attachment').hasClass('hidden') &&
-                    $('#attachmentPreview').hasClass('hidden') &&
-                    attachement[0] === data &&
-                    attachement[1] === filename
+                    $('#discussion').hasClass('hidden')
                 );
-                $.PrivateBin.AttachmentViewer.showAttachment();
+                comments.forEach(function (originalComment) {
+                    var comment = {
+                        id: originalComment.id.join(''),
+                        parentid: originalComment.parentid.join(''),
+                        data: originalComment.data,
+                        meta: originalComment.meta
+                    }
+                    $.PrivateBin.DiscussionViewer.addComment(comment, comment.data, comment.meta.nickname);
+                });
                 results.push(
-                    !$('#attachment').hasClass('hidden') &&
-                    (isImage ? !$('#attachmentPreview').hasClass('hidden') : $('#attachmentPreview').hasClass('hidden'))
-                );
-                $.PrivateBin.AttachmentViewer.hideAttachment();
-                results.push(
-                    $('#attachment').hasClass('hidden') &&
-                    (isImage ? !$('#attachmentPreview').hasClass('hidden') : $('#attachmentPreview').hasClass('hidden'))
-                );
-                if (isImage) {
-                    $.PrivateBin.AttachmentViewer.hideAttachmentPreview();
-                    results.push($('#attachmentPreview').hasClass('hidden'));
-                }
-                $.PrivateBin.AttachmentViewer.showAttachment();
-                results.push(
-                    !$('#attachment').hasClass('hidden') &&
-                    (isImage ? !$('#attachmentPreview').hasClass('hidden') : $('#attachmentPreview').hasClass('hidden'))
-                );
-                var element = $('<div></div>');
-                $.PrivateBin.AttachmentViewer.moveAttachmentTo(element, prefix + '%s' + postfix);
-                if (filename.length) {
-                    results.push(
-                        element.children()[0].href === data &&
-                        element.children()[0].getAttribute('download') === filename &&
-                        element.children()[0].text === prefix + filename + postfix
-                    );
-                } else {
-                    results.push(element.children()[0].href === data);
-                }
-                $.PrivateBin.AttachmentViewer.removeAttachment();
-                results.push(
-                    $('#attachment').hasClass('hidden') &&
-                    $('#attachmentPreview').hasClass('hidden')
+                    $('#discussion').hasClass('hidden')
                 );
                 clean();
                 return results.every(element => element);
