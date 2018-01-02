@@ -48,7 +48,7 @@ describe('PasteViewer', function () {
                 results.push(
                     $('#placeholder').hasClass('hidden') &&
                     !$.PrivateBin.PasteViewer.isPrettyPrinted() &&
-                    $.PrivateBin.PasteViewer.getText() == text
+                    $.PrivateBin.PasteViewer.getText() == $('<div />').text(text).html()
                 );
                 if (format == 'markdown') {
                     results.push(

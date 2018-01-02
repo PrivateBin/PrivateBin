@@ -21,6 +21,7 @@
 /** global: prettyPrintOne */
 /** global: showdown */
 /** global: sjcl */
+/** global: kjua */
 
 // Immediately start random number generator collector.
 sjcl.random.startCollectors();
@@ -1700,7 +1701,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             }
 
             // set sanitized and linked text
-            var sanitizedLinkedText = DOMPurify.sanitize(Helper.urls2links(text), {SAFE_FOR_JQUERY: true});
+            var sanitizedLinkedText = DOMPurify.sanitize(Helper.urls2links(text));
             $plainText.html(sanitizedLinkedText);
             $prettyPrint.html(sanitizedLinkedText);
 
@@ -1713,7 +1714,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                     });
                     // let showdown convert the HTML and sanitize HTML *afterwards*!
                     $plainText.html(
-                        DOMPurify.sanitize(converter.makeHtml(text), {SAFE_FOR_JQUERY: true})
+                        DOMPurify.sanitize(converter.makeHtml(text))
                     );
                     // add table classes from bootstrap css
                     $plainText.find('table').addClass('table-condensed table-bordered');
@@ -1727,8 +1728,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
 
                     $prettyPrint.html(
                         DOMPurify.sanitize(
-                            prettyPrintOne(Helper.urls2links(text), null, true),
-                            {SAFE_FOR_JQUERY: true}
+                            prettyPrintOne(Helper.urls2links(text), null, true)
                         )
                     );
                     // fall through, as the rest is the same
@@ -1824,6 +1824,8 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          */
         me.setText = function(newText)
         {
+            // escape HTML entities
+            newText = $('<div />').text(newText).html();
             if (text !== newText) {
                 text = newText;
                 isChanged = true;
@@ -2220,8 +2222,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             // set & parse text
             $commentEntryData.html(
                 DOMPurify.sanitize(
-                    Helper.urls2links(commentText),
-                    {SAFE_FOR_JQUERY: true}
+                    Helper.urls2links(commentText)
                 )
             );
 
@@ -2414,6 +2415,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             $password,
             $passwordInput,
             $rawTextButton,
+            $qrCodeLink,
             $sendButton;
 
         var pasteExpiration = '1week';
@@ -2535,7 +2537,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             for (var i = 0; i < $head.length; i++) {
                 newDoc.write($head[i].outerHTML);
             }
-            newDoc.write('</head><body><pre>' + DOMPurify.sanitize(paste, {SAFE_FOR_JQUERY: true}) + '</pre></body></html>');
+            newDoc.write('</head><body><pre>' + DOMPurify.sanitize(paste) + '</pre></body></html>');
             newDoc.close();
         }
 
@@ -2592,6 +2594,22 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
         }
 
         /**
+         * Shows the QR code of the current paste (URL).
+         *
+         * @name   TopNav.displayQrCode
+         * @function
+         * @param  {Event} event
+         */
+        function displayQrCode(event)
+        {
+            var qrCanvas = kjua({
+                render: 'canvas',
+                text: window.location.href
+            });
+            $('#qrcode-display').html(qrCanvas);
+        }
+
+        /**
          * Shows all elements belonging to viwing an existing pastes
          *
          * @name   TopNav.showViewButtons
@@ -2607,6 +2625,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             $newButton.removeClass('hidden');
             $cloneButton.removeClass('hidden');
             $rawTextButton.removeClass('hidden');
+            $qrCodeLink.removeClass('hidden');
 
             viewButtonsDisplayed = true;
         }
@@ -2627,6 +2646,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             $newButton.addClass('hidden');
             $cloneButton.addClass('hidden');
             $rawTextButton.addClass('hidden');
+            $qrCodeLink.addClass('hidden');
 
             viewButtonsDisplayed = false;
         }
@@ -2877,6 +2897,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             $passwordInput = $('#passwordinput');
             $rawTextButton = $('#rawtextbutton');
             $sendButton = $('#sendbutton');
+            $qrCodeLink = $('#qrcodelink');
 
             // bootstrap template drop down
             $('#language ul.dropdown-menu li a').click(setLanguage);
@@ -2891,6 +2912,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             $cloneButton.click(Controller.clonePaste);
             $rawTextButton.click(rawText);
             $fileRemoveButton.click(removeAttachment);
+            $qrCodeLink.click(displayQrCode);
 
             // bootstrap template drop downs
             $('ul.dropdown-menu li a', $('#expiration').parent()).click(updateExpiration);
@@ -3944,10 +3966,11 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             // first load translations
             I18n.loadTranslations();
 
+            DOMPurify.setConfig({SAFE_FOR_JQUERY: true});
+
             // initialize other modules/"classes"
             Alert.init();
             Model.init();
-
             AttachmentViewer.init();
             DiscussionViewer.init();
             Editor.init();

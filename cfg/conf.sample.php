@@ -56,6 +56,10 @@ languageselection = false
 ; the pastes encryption key
 ; urlshortener = "https://shortener.example.com/api?link="
 
+; (optional) Let users create a QR code for sharing the paste URL with one click.
+; It works both when a new paste is created and when you view a paste.
+; qrcode = true
+
 ; (optional) IP based icons are a weak mechanism to detect if a comment was from
 ; a different user when the same username was used in a comment. It might be
 ; used to get the IP of a non anonymous comment poster if the server salt is
