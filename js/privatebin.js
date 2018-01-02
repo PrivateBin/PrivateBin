@@ -977,7 +977,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             if (typeof customHandler === 'function') {
                 var handlerResult = customHandler(alertType[id], $element, args, icon);
                 if (handlerResult === true) {
-                    // if it returs true, skip own handler
+                    // if it returns true, skip own handler
                     return;
                 }
                 if (handlerResult instanceof jQuery) {

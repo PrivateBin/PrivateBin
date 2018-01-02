@@ -2,7 +2,7 @@
 var common = require('../common');
 
 describe('DiscussionViewer', function () {
-    describe('handleNotification, addComment, finishDiscussion, prepareNewDiscussion, getReplyMessage, getReplyNickname, getReplyCommentId & highlightComment', function () {
+    describe('handleNotification, prepareNewDiscussion, addComment, finishDiscussion, getReplyMessage, getReplyNickname, getReplyCommentId & highlightComment', function () {
         this.timeout(30000);
         before(function () {
             cleanup();
@@ -12,8 +12,8 @@ describe('DiscussionViewer', function () {
             'displays & hides comments as requested',
             jsc.array(
                 jsc.record({
-                    id: jsc.nearray(common.jscAlnumString()),
-                    parentid: jsc.nearray(common.jscAlnumString()),
+                    idArray: jsc.nearray(common.jscAlnumString()),
+                    parentidArray: jsc.nearray(common.jscAlnumString()),
                     data: jsc.string,
                     meta: jsc.record({
                         nickname: jsc.string,
@@ -22,7 +22,13 @@ describe('DiscussionViewer', function () {
                     })
                 })
             ),
-            function (comments) {
+            'nat',
+            'bool',
+            'string',
+            'string',
+            jsc.elements(['loading', 'danger', 'other']),
+            'nestring',
+            function (comments, commentKey, fadeOut, nickname, message, alertType, alert) {
                 var clean = jsdom(),
                     results = [];
                 $('body').html(
@@ -45,6 +51,7 @@ describe('DiscussionViewer', function () {
                     'aria-hidden="true"></span> </div><button id="replybutton" ' +
                     'class="btn btn-default btn-sm">Post comment</button></div></div>'
                 );
+                $.PrivateBin.Model.init();
                 $.PrivateBin.DiscussionViewer.init();
                 results.push(
                     !$('#discussion').hasClass('hidden')
@@ -53,18 +60,53 @@ describe('DiscussionViewer', function () {
                 results.push(
                     $('#discussion').hasClass('hidden')
                 );
-                comments.forEach(function (originalComment) {
-                    var comment = {
-                        id: originalComment.id.join(''),
-                        parentid: originalComment.parentid.join(''),
-                        data: originalComment.data,
-                        meta: originalComment.meta
-                    }
+                comments.forEach(function (comment) {
+                    comment.id = comment.idArray.join('');
+                    comment.parentid = comment.parentidArray.join('');
                     $.PrivateBin.DiscussionViewer.addComment(comment, comment.data, comment.meta.nickname);
                 });
                 results.push(
                     $('#discussion').hasClass('hidden')
                 );
+                $.PrivateBin.DiscussionViewer.finishDiscussion();
+                results.push(
+                    !$('#discussion').hasClass('hidden') &&
+                    comments.length + 1 >= $('#commentcontainer').children().length
+                );
+                if (comments.length > 0) {
+                    if (commentKey >= comments.length) {
+                        commentKey = commentKey % comments.length;
+                    }
+                    $.PrivateBin.DiscussionViewer.highlightComment(comments[commentKey].id, fadeOut);
+                    results.push(
+                        $('#comment_' + comments[commentKey].id).hasClass('highlight')
+                    );
+                }
+                $('#commentcontainer').find('button')[0].click();
+                results.push(
+                    !$('#reply').hasClass('hidden')
+                );
+                $('#reply #nickname').val(nickname);
+                $('#reply #replymessage').val(message);
+                $.PrivateBin.DiscussionViewer.getReplyCommentId();
+                results.push(
+                    $.PrivateBin.DiscussionViewer.getReplyNickname() === $('#reply #nickname').val() &&
+                    $.PrivateBin.DiscussionViewer.getReplyMessage() === $('#reply #replymessage').val()
+                );
+                var notificationResult = $.PrivateBin.DiscussionViewer.handleNotification(alertType == 'other' ? alert : alertType);
+                if (alertType == 'loading') {
+                    results.push(notificationResult === false);
+                } else {
+                    results.push(
+                        alertType == 'danger' ? (
+                            notificationResult.hasClass('alert-danger') &&
+                            !notificationResult.hasClass('alert-info')
+                        ) : (
+                            !notificationResult.hasClass('alert-danger') &&
+                            notificationResult.hasClass('alert-info')
+                        )
+                    );
+                }
                 clean();
                 return results.every(element => element);
             }
