@@ -12,7 +12,6 @@ install:
   - rm -rf ~/.nvm && git clone https://github.com/creationix/nvm.git ~/.nvm && (cd ~/.nvm && git checkout `git describe --abbrev=0 --tags`) && source ~/.nvm/nvm.sh && nvm install 4
 
 before_script:
-  - composer config -g github-oauth.github.com "$GITHUB_TOKEN"
   - composer install -n
   - npm install -g mocha
   - cd js
