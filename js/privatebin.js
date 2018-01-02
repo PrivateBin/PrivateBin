@@ -2194,22 +2194,10 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          * @function
          * @param {object} comment
          * @param {string} commentText
-         * @param {jQuery} $place      - optional, tries to find the best position otherwise
+         * @param {string} nickname
          */
-        me.addComment = function(comment, commentText, nickname, $place)
+        me.addComment = function(comment, commentText, nickname)
         {
-            if (typeof $place === 'undefined') {
-                // starting point (default value/fallback)
-                $place = $commentContainer;
-
-                // if parent comment exists
-                var $parentComment = $('#comment_' + comment.parentid);
-                if ($parentComment.length) {
-                    // use parent as position for noew comment, so it shifted
-                    // to the right
-                    $place = $parentComment;
-                }
-            }
             if (commentText === '') {
                 commentText = 'comment decryption failed';
             }
@@ -2251,6 +2239,17 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                 });
             }
 
+            // starting point (default value/fallback)
+            var $place = $commentContainer;
+
+            // if parent comment exists
+            var $parentComment = $('#comment_' + comment.parentid);
+            if ($parentComment.length) {
+                // use parent as position for new comment, so it is shifted
+                // to the right
+                $place = $parentComment;
+            }
+
             // finally append comment
             $place.append($commentEntry);
         }
@@ -2267,17 +2266,6 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             $commentContainer.append($commentTail);
 
             // show discussions
-            $discussion.removeClass('hidden');
-        }
-
-        /**
-         * shows the discussion area
-         *
-         * @name   DiscussionViewer.showDiscussion
-         * @function
-         */
-        me.showDiscussion = function()
-        {
             $discussion.removeClass('hidden');
         }
 
@@ -3703,7 +3691,6 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
             }
 
             DiscussionViewer.finishDiscussion();
-            DiscussionViewer.showDiscussion();
             return true;
         }
 
