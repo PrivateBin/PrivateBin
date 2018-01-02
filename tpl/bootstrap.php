@@ -33,11 +33,11 @@ if ($SYNTAXHIGHLIGHTING):
 ?>
 		<link type="text/css" rel="stylesheet" href="css/prettify/prettify.css?<?php echo rawurlencode($VERSION); ?>" />
 <?php
-	if (strlen($SYNTAXHIGHLIGHTINGTHEME)):
+    if (strlen($SYNTAXHIGHLIGHTINGTHEME)):
 ?>
 		<link type="text/css" rel="stylesheet" href="css/prettify/<?php echo rawurlencode($SYNTAXHIGHLIGHTINGTHEME); ?>.css?<?php echo rawurlencode($VERSION); ?>" />
 <?php
-	endif;
+    endif;
 endif;
 ?>
 		<noscript><link type="text/css" rel="stylesheet" href="css/noscript.css" /></noscript>
@@ -187,9 +187,9 @@ endif;
 foreach ($EXPIRE as $key => $value):
 ?>
 							<option value="<?php echo $key; ?>"<?php
-	if ($key == $EXPIREDEFAULT):
+    if ($key == $EXPIREDEFAULT):
 ?> selected="selected"<?php
-	endif;
+    endif;
 ?>><?php echo $value; ?></option>
 <?php
 endforeach;
@@ -219,28 +219,28 @@ if ($isCpct):
 							<li id="burnafterreadingoption" class="checkbox hidden">
 								<label>
 									<input type="checkbox" id="burnafterreading" name="burnafterreading"<?php
-	if ($BURNAFTERREADINGSELECTED):
+    if ($BURNAFTERREADINGSELECTED):
 ?> checked="checked"<?php
-	endif;
+    endif;
 ?> />
 									<?php echo I18n::_('Burn after reading'), PHP_EOL; ?>
 								</label>
 							</li>
 <?php
-	if ($DISCUSSION):
+    if ($DISCUSSION):
 ?>
 							<li id="opendiscussionoption" class="checkbox hidden">
 								<label>
 									<input type="checkbox" id="opendiscussion" name="opendiscussion"<?php
-		if ($OPENDISCUSSION):
+        if ($OPENDISCUSSION):
 ?> checked="checked"<?php
-		endif;
+        endif;
 ?> />
 									<?php echo I18n::_('Open discussion'), PHP_EOL; ?>
 								</label>
 							</li>
 <?php
-	endif;
+    endif;
 ?>
 							<li role="separator" class="divider"></li>
 							<li>
@@ -249,7 +249,7 @@ if ($isCpct):
 								</div>
 							</li>
 <?php
-	foreach ($FORMATTER as $key => $value):
+    foreach ($FORMATTER as $key => $value):
 ?>
 							<li>
 								<a href="#" data-format="<?php echo $key; ?>">
@@ -257,20 +257,20 @@ if ($isCpct):
 								</a>
 							</li>
 <?php
-	endforeach;
+    endforeach;
 ?>
 						</ul>
 						<select id="pasteFormatter" name="pasteFormatter" class="hidden">
 <?php
-	foreach ($FORMATTER as $key => $value):
+    foreach ($FORMATTER as $key => $value):
 ?>
 							<option value="<?php echo $key; ?>"<?php
-		if ($key == $FORMATTERDEFAULT):
+        if ($key == $FORMATTERDEFAULT):
 ?> selected="selected"<?php
-		endif;
+        endif;
 ?>><?php echo $value; ?></option>
 <?php
-	endforeach;
+    endforeach;
 ?>
 						</select>
 					</li>
@@ -281,31 +281,31 @@ else:
 						<div id="burnafterreadingoption" class="navbar-text checkbox hidden">
 							<label>
 								<input type="checkbox" id="burnafterreading" name="burnafterreading"<?php
-	if ($BURNAFTERREADINGSELECTED):
+    if ($BURNAFTERREADINGSELECTED):
 ?> checked="checked"<?php
-	endif;
+    endif;
 ?> />
 								<?php echo I18n::_('Burn after reading'), PHP_EOL; ?>
 							</label>
 						</div>
 					</li>
 <?php
-	if ($DISCUSSION):
+    if ($DISCUSSION):
 ?>
 					<li>
 						<div id="opendiscussionoption" class="navbar-text checkbox hidden">
 							<label>
 								<input type="checkbox" id="opendiscussion" name="opendiscussion"<?php
-		if ($OPENDISCUSSION):
+        if ($OPENDISCUSSION):
 ?> checked="checked"<?php
-		endif;
+        endif;
 ?> />
 								<?php echo I18n::_('Open discussion'), PHP_EOL; ?>
 							</label>
 						</div>
 					</li>
 <?php
-	endif;
+    endif;
 endif;
 if ($PASSWORD):
 ?>
@@ -341,21 +341,21 @@ if (!$isCpct):
 					<li class="dropdown">
 						<select id="pasteFormatter" name="pasteFormatter" class="hidden">
 <?php
-	foreach ($FORMATTER as $key => $value):
+    foreach ($FORMATTER as $key => $value):
 ?>
 							<option value="<?php echo $key; ?>"<?php
-		if ($key == $FORMATTERDEFAULT):
+	    if ($key == $FORMATTERDEFAULT):
 ?> selected="selected"<?php
-		endif;
+	    endif;
 ?>><?php echo $value; ?></option>
 <?php
-	endforeach;
+    endforeach;
 ?>
 						</select>
 						<a id="formatter" href="#" class="hidden dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><?php echo I18n::_('Format'); ?>: <span id="pasteFormatterDisplay"><?php echo $FORMATTER[$FORMATTERDEFAULT]; ?></span> <span class="caret"></span></a>
 						<ul class="dropdown-menu">
 <?php
-	foreach ($FORMATTER as $key => $value):
+    foreach ($FORMATTER as $key => $value):
 ?>
 							<li>
 								<a href="#" data-format="<?php echo $key; ?>">
@@ -363,7 +363,7 @@ if (!$isCpct):
 								</a>
 							</li>
 <?php
-	endforeach;
+    endforeach;
 ?>
 						</ul>
 					</li>
@@ -379,7 +379,7 @@ if (strlen($LANGUAGESELECTION)):
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-flag" aria-hidden="true"></span> <?php echo $LANGUAGES[$LANGUAGESELECTION][0]; ?> <span class="caret"></span></a>
 						<ul class="dropdown-menu">
 <?php
-	foreach ($LANGUAGES as $key => $value):
+    foreach ($LANGUAGES as $key => $value):
 ?>
 							<li>
 								<a href="#" data-lang="<?php echo $key; ?>">
@@ -387,7 +387,7 @@ if (strlen($LANGUAGESELECTION)):
 								</a>
 							</li>
 <?php
-	endforeach;
+    endforeach;
 ?>
 						</ul>
 					</li>

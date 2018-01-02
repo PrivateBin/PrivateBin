@@ -13,11 +13,11 @@ if ($SYNTAXHIGHLIGHTING):
 ?>
 		<link type="text/css" rel="stylesheet" href="css/prettify/prettify.css?<?php echo rawurlencode($VERSION); ?>" />
 <?php
-	if (strlen($SYNTAXHIGHLIGHTINGTHEME)):
+    if (strlen($SYNTAXHIGHLIGHTINGTHEME)):
 ?>
 		<link type="text/css" rel="stylesheet" href="css/prettify/<?php echo rawurlencode($SYNTAXHIGHLIGHTINGTHEME); ?>.css?<?php echo rawurlencode($VERSION); ?>" />
 <?php
-	endif;
+    endif;
 endif;
 ?>
 		<script type="text/javascript" src="js/jquery-3.1.1.js" integrity="sha512-U6K1YLIFUWcvuw5ucmMtT9HH4t0uz3M366qrF5y4vnyH6dgDzndlcGvH/Lz5k8NFh80SN95aJ5rqGZEdaQZ7ZQ==" crossorigin="anonymous"></script>
@@ -118,9 +118,9 @@ endif;
 foreach ($EXPIRE as $key => $value):
 ?>
 							<option value="<?php echo $key; ?>"<?php
-	if ($key == $EXPIREDEFAULT):
+    if ($key == $EXPIREDEFAULT):
 ?> selected="selected"<?php
-	endif;
+    endif;
 ?>><?php echo $value; ?></option>
 <?php
 endforeach;
@@ -141,14 +141,14 @@ if ($DISCUSSION):
 ?>
 					<div id="opendiscussionoption" class="button hidden">
 						<input type="checkbox" id="opendiscussion" name="opendiscussion"<?php
-	if ($OPENDISCUSSION):
+    if ($OPENDISCUSSION):
 ?> checked="checked"<?php
-	endif;
+    endif;
 ?> />
 						<label for="opendiscussion" <?php
-	if (!$OPENDISCUSSION):
+    if (!$OPENDISCUSSION):
 ?> style="color: #BBBBBB;"<?php
-	endif;
+    endif;
 ?>><?php echo I18n::_('Open discussion'); ?></label>
 					</div>
 <?php
@@ -167,9 +167,9 @@ endif;
 foreach ($FORMATTER as $key => $value):
 ?>
 							<option value="<?php echo $key; ?>"<?php
-	if ($key == $FORMATTERDEFAULT):
+    if ($key == $FORMATTERDEFAULT):
 ?> selected="selected"<?php
-	endif;
+    endif;
 ?>><?php echo $value; ?></option>
 <?php
 endforeach;
@@ -182,15 +182,15 @@ if (strlen($LANGUAGESELECTION)):
 					<div id="language" class="button">
 						<select name="lang">
 <?php
-	foreach ($LANGUAGES as $key => $value):
+    foreach ($LANGUAGES as $key => $value):
 ?>
 							<option data-lang="<?php echo $key; ?>" value="<?php echo $key; ?>"<?php
-		if ($key == $LANGUAGESELECTION):
+        if ($key == $LANGUAGESELECTION):
 ?> selected="selected"<?php
-		endif;
+        endif;
 ?>><?php echo $value[0]; ?> (<?php echo $value[1]; ?>)</option>
 <?php
-	endforeach;
+    endforeach;
 ?>
 						</select>
 					</div>
