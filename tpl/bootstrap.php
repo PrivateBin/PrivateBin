@@ -344,9 +344,9 @@ if (!$isCpct):
     foreach ($FORMATTER as $key => $value):
 ?>
 							<option value="<?php echo $key; ?>"<?php
-	    if ($key == $FORMATTERDEFAULT):
+        if ($key == $FORMATTERDEFAULT):
 ?> selected="selected"<?php
-	    endif;
+        endif;
 ?>><?php echo $value; ?></option>
 <?php
     endforeach;
