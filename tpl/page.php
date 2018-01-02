@@ -198,10 +198,13 @@ if (strlen($LANGUAGESELECTION)):
 endif;
 ?>
 				</div>
-				<div id="qrcode-display">
-
-				</div>
-				<div id="pastesuccess" class="hidden">
+<?php
+if ($QRCODE):
+?>
+				<div id="qrcode-display"></div>
+<?php
+endif;
+?>				<div id="pastesuccess" class="hidden">
 					<div id="deletelink"></div>
 					<div id="pastelink">
 <?php

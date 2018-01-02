@@ -108,29 +108,22 @@ endif;
 				</div>
 			</div>
 		</div>
-
+<?php
+if ($QRCODE):
+?>
 		<div id="qrcodemodal" tabindex="-1" class="modal fade" aria-labelledby="qrcodemodalTitle" role="dialog" aria-hidden="true">
 			<div class="modal-dialog" role="document">
 				<div class="modal-content">
-					<!-- <div class="modal-header">
-						<h5 id="qrcodemodalTitle" class="modal-title">QR code</h5>
-
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
-						</button>
-					</div> -->
-
 					<div class="modal-body">
 						<div class="mx-auto" id="qrcode-display"></div>
 					</div>
-
-					<!-- <div class="modal-footer"> -->
-						<button type="button" class="btn btn-primary btn-block" data-dismiss="modal"><?php echo I18n::_('Close') ?></button>
-					<!-- </div> -->
+					<button type="button" class="btn btn-primary btn-block" data-dismiss="modal"><?php echo I18n::_('Close') ?></button>
 				</div>
 			</div>
 		</div>
-
+<?php
+endif;
+?>
 		<nav class="navbar navbar-<?php echo $isDark ? 'inverse' : 'default'; ?> navbar-<?php echo $isCpct ? 'fixed' : 'static'; ?>-top"><?php
 if ($isCpct):
 ?><div class="container"><?php
