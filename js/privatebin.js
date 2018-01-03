@@ -1700,8 +1700,11 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
                 return;
             }
 
-            // set sanitized and linked text
-            var sanitizedLinkedText = DOMPurify.sanitize(Helper.urls2links(text));
+            // escape HTML entities, link URLs, sanitize
+            var escapedLinkedText = Helper.urls2links(
+                    $('<div />').text(text).html()
+                ),
+                sanitizedLinkedText = DOMPurify.sanitize(escapedLinkedText);
             $plainText.html(sanitizedLinkedText);
             $prettyPrint.html(sanitizedLinkedText);
 
@@ -1728,7 +1731,7 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
 
                     $prettyPrint.html(
                         DOMPurify.sanitize(
-                            prettyPrintOne(Helper.urls2links(text), null, true)
+                            prettyPrintOne(escapedLinkedText, null, true)
                         )
                     );
                     // fall through, as the rest is the same
@@ -1824,8 +1827,6 @@ jQuery.PrivateBin = function($, sjcl, Base64, RawDeflate) {
          */
         me.setText = function(newText)
         {
-            // escape HTML entities
-            newText = $('<div />').text(newText).html();
             if (text !== newText) {
                 text = newText;
                 isChanged = true;
