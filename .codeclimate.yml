@@ -4,6 +4,15 @@ checks:
   file-lines:
     config:
       threshold: 2000
+  method-complexity:
+    config:
+      threshold: 550
+  method-count:
+    config:
+      threshold: 50
+  method-lines:
+    config:
+      threshold: 250
 plugins:
   csslint:
     enabled: true
@@ -40,6 +49,7 @@ plugins:
     enabled: true
     config:
       standard: "PSR1,PSR2,PHPCS,Zend"
+      ignore_warnings: true
   sonar-php:
     enabled: true
     config:
