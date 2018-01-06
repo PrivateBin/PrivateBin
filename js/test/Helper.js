@@ -62,12 +62,14 @@ describe('Helper', function () {
                     html += '<div id="' + item.join('') + '">' + common.htmlEntities(contents[i] || contents[0]) + '</div>';
                 });
                 var clean = jsdom(html);
+                // TODO: As per https://github.com/tmpvar/jsdom/issues/321 there is no getSelection in jsdom, yet.
+                // Once there is one, uncomment the block below to actually check the result.
+                /*
                 ids.forEach(function(item, i) {
                     $.PrivateBin.Helper.selectText(item.join(''));
-                    // TODO: As per https://github.com/tmpvar/jsdom/issues/321 there is no getSelection in jsdom, yet.
-                    // Once there is one, uncomment the line below to actually check the result.
-                    //result *= (contents[i] || contents[0]) === window.getSelection().toString();
+                    result *= (contents[i] || contents[0]) === window.getSelection().toString();
                 });
+                */
                 clean();
                 return Boolean(result);
             }
@@ -215,8 +217,7 @@ describe('Helper', function () {
             'nearray asciistring',
             function (labels, values) {
                 var selectedKey = '', selectedValue = '',
-                    cookieArray = [],
-                    count = 0;
+                    cookieArray = [];
                 labels.forEach(function(item, i) {
                     // deliberatly using a non-ascii key for replacing invalid characters
                     var key = item.replace(/[\s;,=]/g, Array(i+2).join('£')),

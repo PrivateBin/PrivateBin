@@ -1,5 +1,5 @@
 'use strict';
-var common = require('../common');
+require('../common');
 
 describe('Prompt', function () {
     // TODO: this does not test the prompt() fallback, since that isn't available

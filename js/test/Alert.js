@@ -103,9 +103,9 @@ describe('Alert', function () {
             function (icon, message, number) {
                 icon = icon.join('');
                 message = message.join('');
-                var default_message = 'Loading…';
+                var defaultMessage = 'Loading…';
                 if (message.length === 0) {
-                    message = default_message;
+                    message = defaultMessage;
                 }
                 var expected = '<ul class="nav navbar-nav"><li ' +
                     'id="loadingindicator" class="navbar-text"><span ' +
@@ -115,7 +115,7 @@ describe('Alert', function () {
                     '<ul class="nav navbar-nav"><li id="loadingindicator" ' +
                     'class="navbar-text hidden"><span class="glyphicon ' +
                     'glyphicon-time" aria-hidden="true"></span> ' +
-                    default_message + '</li></ul>'
+                    defaultMessage + '</li></ul>'
                 );
                 $.PrivateBin.Alert.init();
                 $.PrivateBin.Alert.showLoading(message, number, icon);
@@ -184,7 +184,7 @@ describe('Alert', function () {
             function (trigger, message) {
                 message = message.join('');
                 var handlerCalled = false,
-                    default_message = 'Loading…',
+                    defaultMessage = 'Loading…',
                     functions = [
                         $.PrivateBin.Alert.showStatus,
                         $.PrivateBin.Alert.showError,
@@ -192,13 +192,13 @@ describe('Alert', function () {
                         $.PrivateBin.Alert.showLoading
                     ];
                 if (message.length === 0) {
-                    message = default_message;
+                    message = defaultMessage;
                 }
                 $('body').html(
                     '<ul class="nav navbar-nav"><li id="loadingindicator" ' +
                     'class="navbar-text hidden"><span class="glyphicon ' +
                     'glyphicon-time" aria-hidden="true"></span> ' +
-                    default_message + '</li></ul>' +
+                    defaultMessage + '</li></ul>' +
                     '<div id="remainingtime" role="alert" class="hidden ' +
                     'alert alert-info"><span class="glyphicon ' +
                     'glyphicon-fire" aria-hidden="true"></span> </div>' +

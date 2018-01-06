@@ -40,7 +40,7 @@ describe('AttachmentViewer', function () {
                 } else {
                     $.PrivateBin.AttachmentViewer.setAttachment(data);
                 }
-                var attachement = $.PrivateBin.AttachmentViewer.getAttachment()
+                var attachement = $.PrivateBin.AttachmentViewer.getAttachment();
                 results.push(
                     $.PrivateBin.AttachmentViewer.hasAttachment() &&
                     $('#attachment').hasClass('hidden') &&

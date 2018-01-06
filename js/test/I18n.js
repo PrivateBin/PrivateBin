@@ -20,21 +20,21 @@ describe('I18n', function () {
                 var alias = $.PrivateBin.I18n._(messageId);
                 $.PrivateBin.I18n.reset();
 
-                var p_result = $.PrivateBin.I18n.translate(plurals);
+                var pluralResult = $.PrivateBin.I18n.translate(plurals);
                 $.PrivateBin.I18n.reset();
 
-                var p_alias = $.PrivateBin.I18n._(plurals);
+                var pluralAlias = $.PrivateBin.I18n._(plurals);
                 $.PrivateBin.I18n.reset();
 
-                var f_result = $.PrivateBin.I18n.translate(fake);
+                var fakeResult = $.PrivateBin.I18n.translate(fake);
                 $.PrivateBin.I18n.reset();
 
-                var f_alias = $.PrivateBin.I18n._(fake);
+                var fakeAlias = $.PrivateBin.I18n._(fake);
                 $.PrivateBin.I18n.reset();
 
                 return messageId === result && messageId === alias &&
-                    messageId === p_result && messageId === p_alias &&
-                    messageId === f_result && messageId === f_alias;
+                    messageId === pluralResult && messageId === pluralAlias &&
+                    messageId === fakeResult && messageId === fakeAlias;
             }
         );
         jsc.property(
