@@ -12,6 +12,8 @@ engines:
     enabled: true
   fixme:
     enabled: true
+  nodesecurity:
+    enabled: true
   phpmd:
     enabled: true
     checks:
