@@ -20,13 +20,8 @@
     "undef": true,
     "unused": true,
     "jquery": true,
-    "globals": {
-        "sjcl": false,
-        "DOMPurify": false
-    },
     "predef": {
         "after": true,
-        "Base64": false,
         "before": true,
         "cleanup": true,
         "console": true,
@@ -38,8 +33,8 @@
         "it": false,
         "jsc": false,
         "jsdom": true,
-        "navigator": true,
         "require": false,
+        "setTimeout": false,
         "window": true
     }
 }
