@@ -9,7 +9,7 @@
     "latedef": "nofunc",
     "maxcomplexity": 25,
     "maxdepth": 3,
-    "maxparams": 3,
+    "maxparams": 4,
     "maxstatements": 100,
     "noarg": true,
     "nonbsp": true,
@@ -25,9 +25,19 @@
         "DOMPurify": false
     },
     "predef": {
+        "after": true,
+        "before": true,
         "cleanup": true,
+        "describe": false,
+        "document": true,
+        "fs": false,
+        "global": true,
+        "exports": true,
+        "it": false,
         "jsc": false,
-        "jsdom": true
+        "jsdom": true,
+        "require": false,
+        "window": true
     }
 }
 
