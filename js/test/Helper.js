@@ -172,7 +172,7 @@ describe('Helper', function () {
                 postfix = postfix.replace(/%(s|d)/g, '%%');
                 var result = prefix + '0' + postfix;
                 params.unshift(prefix + '%d' + postfix);
-                return result === $.PrivateBin.Helper.sprintf.apply(this, params)
+                return result === $.PrivateBin.Helper.sprintf.apply(this, params);
             }
         );
         jsc.property(

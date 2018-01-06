@@ -52,7 +52,7 @@ describe('PasteStatus', function () {
             jsc.nearray(common.jscQueryString()),
             'string',
             function (
-                burnafterreading, remaining_time,
+                burnafterreading, remainingTime,
                 schema, address, query, fragment
             ) {
                 var clean = jsdom('', {
@@ -64,13 +64,13 @@ describe('PasteStatus', function () {
                 $.PrivateBin.PasteStatus.init();
                 $.PrivateBin.PasteStatus.showRemainingTime({
                     'burnafterreading': burnafterreading,
-                    'remaining_time': remaining_time,
-                    'expire_date': remaining_time ? ((new Date()).getTime() / 1000) + remaining_time : 0
+                    'remaining_time': remainingTime,
+                    'expire_date': remainingTime ? ((new Date()).getTime() / 1000) + remainingTime : 0
                 });
                 if (burnafterreading) {
                     result = $('#remainingtime').hasClass('foryoureyesonly') &&
                             !$('#remainingtime').hasClass('hidden');
-                } else if (remaining_time) {
+                } else if (remainingTime) {
                     result =!$('#remainingtime').hasClass('foryoureyesonly') &&
                             !$('#remainingtime').hasClass('hidden');
                 } else {

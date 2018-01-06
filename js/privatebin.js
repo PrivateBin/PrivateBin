@@ -1639,7 +1639,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
          */
         me.getText = function()
         {
-            return $message.val()
+            return $message.val();
         };
 
         /**
@@ -2033,7 +2033,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
         me.hasAttachment = function()
         {
             var link = $attachmentLink.prop('href');
-            return (typeof link !== 'undefined' && link !== '')
+            return (typeof link !== 'undefined' && link !== '');
         };
 
         /**
@@ -2345,7 +2345,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
                         $comment.removeClass('highlight');
                     }, 300);
                 }
-            }
+            };
 
             if (UiHelper.isVisible($comment)) {
                 return highlightComment();
@@ -3652,7 +3652,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
                 try {
                     attachmentName = decryptOrPromptPassword(key, password, paste.attachmentname);
                 } catch (err) {
-                    throw 'failed to decipher attachment name: ' + err
+                    throw 'failed to decipher attachment name: ' + err;
                 }
                 if (attachmentName === false) {
                     return false;
@@ -3871,7 +3871,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
                 window.scrollTo(0, orgPosition);
 
                 callback();
-            })
+            });
             Uploader.run();
         };
 
@@ -3915,7 +3915,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
                     ], 'copy', true, true);
             }
 
-            Editor.setText(PasteViewer.getText())
+            Editor.setText(PasteViewer.getText());
             PasteViewer.hide();
             Editor.show();
 

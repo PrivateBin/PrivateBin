@@ -7,7 +7,7 @@
     "freeze": true,
     "futurehostile": true,
     "latedef": "nofunc",
-    "maxcomplexity": 7,
+    "maxcomplexity": 25,
     "maxdepth": 3,
     "maxparams": 3,
     "maxstatements": 100,
