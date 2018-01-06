@@ -508,7 +508,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
         function compress(message)
         {
             return Base64.toBase64( RawDeflate.deflate( Base64.utob(message) ) );
-        };
+        }
 
         /**
          * decompress a message compressed with cryptToolcompress()
@@ -522,7 +522,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
         function decompress(data)
         {
             return Base64.btou( RawDeflate.inflate( Base64.fromBase64(data) ) );
-        };
+        }
 
         /**
          * compress, then encrypt message with given key and password
@@ -804,7 +804,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
                 // redirect to home page
                 window.location.href = currentLocation;
             }
-        };
+        }
 
         /**
          * reload the page
@@ -1014,7 +1014,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
 
             // show notification
             $element.removeClass('hidden');
-        };
+        }
 
         /**
          * display a status message
@@ -1220,7 +1220,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
         {
             window.location.href = $shortenButton.data('shortener')
                                    + encodeURIComponent($pasteUrl.attr('href'));
-        };
+        }
 
         /**
          * Forces opening the paste if the link does not do this automatically.
@@ -1239,7 +1239,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
                 // if so we need to load link by reloading the current site
                 window.location.reload(true);
             }
-        };
+        }
 
         /**
          * creates a notification after a successfull paste upload
@@ -1379,7 +1379,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
             $passwordModal.modal('hide');
 
             PasteDecrypter.run();
-        };
+        }
 
         /**
          * ask the user for the password and set it
@@ -1495,7 +1495,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
                 // prevent the textarea to lose focus
                 event.preventDefault();
             }
-        };
+        }
 
         /**
          * view the Editor tab
@@ -1524,7 +1524,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
             if (typeof event !== 'undefined') {
                 event.preventDefault();
             }
-        };
+        }
 
         /**
          * view the preview tab
@@ -1553,7 +1553,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
             if (typeof event !== 'undefined') {
                 event.preventDefault();
             }
-        };
+        }
 
         /**
          * get the state of the preview
@@ -1740,7 +1740,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
                     $prettyPrint.css('word-break', 'normal');
                     $prettyPrint.removeClass('prettyprint');
             }
-        };
+        }
 
         /**
          * displays the paste
@@ -1769,7 +1769,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
                     $prettyMessage.removeClass('hidden');
                     break;
             }
-        };
+        }
 
         /**
          * sets the format in which the text is shown
@@ -2124,7 +2124,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
 
             // cache jQuery elements
             $commentTail = Model.getTemplate('commenttail');
-        };
+        }
 
         /**
          * open the comment entry when clicking the "Reply" button of a comment
@@ -2153,7 +2153,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
             $replyMessage.focus();
 
             event.preventDefault();
-        };
+        }
 
         /**
          * custom handler for displaying notifications in own status message area
@@ -2427,7 +2427,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
             pasteExpiration = target.data('expiration');
 
             event.preventDefault();
-        };
+        }
 
         /**
          * set the format on bootstrap templates in dropdown
@@ -2453,7 +2453,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
             }
 
             event.preventDefault();
-        };
+        }
 
         /**
          * when "burn after reading" is checked, disable discussion
@@ -2473,7 +2473,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
             } else {
                 $openDiscussionOption.removeClass('buttondisabled');
             }
-        };
+        }
 
         /**
          * when discussion is checked, disable "burn after reading"
@@ -2493,7 +2493,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
             } else {
                 $burnAfterReadingOption.removeClass('buttondisabled');
             }
-        };
+        }
 
         /**
          * return raw text
@@ -2528,7 +2528,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
             }
             newDoc.write('</head><body><pre>' + DOMPurify.sanitize(paste) + '</pre></body></html>');
             newDoc.close();
-        };
+        }
 
         /**
          * saves the language in a cookie and reloads the page
@@ -2542,7 +2542,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
         {
             document.cookie = 'lang=' + $(event.target).data('lang');
             UiHelper.reloadHome();
-        };
+        }
 
         /**
          * hides all messages and creates a new paste
@@ -2556,7 +2556,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
         {
             Controller.hideStatusMessages();
             Controller.newPaste();
-        };
+        }
 
         /**
          * removes the existing attachment
@@ -2580,7 +2580,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
 
             // pevent '#' from appearing in the URL
             event.preventDefault();
-        };
+        }
 
         /**
          * Shows the QR code of the current paste (URL).
@@ -2596,7 +2596,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
                 text: window.location.href
             });
             $('#qrcode-display').html(qrCanvas);
-        };
+        }
 
         /**
          * Shows all elements belonging to viwing an existing pastes
@@ -2989,7 +2989,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
                     throw 'symmetricKey is invalid, probably the module was not prepared';
             }
             // password is optional
-        };
+        }
 
         /**
          * called after successful upload
@@ -3009,7 +3009,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
             if (successFunc !== null) {
                 successFunc(status, result);
             }
-        };
+        }
 
         /**
          * called after a upload failure
@@ -3025,7 +3025,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
             if (failureFunc !== null) {
                 failureFunc(status, result);
             }
-        };
+        }
 
         /**
          * actually uploads the data
@@ -3264,7 +3264,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
             requirementsChecked = true;
 
             return true;
-        };
+        }
 
         /**
          * called after successful paste upload
@@ -3296,7 +3296,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
             // parse and show text
             // (preparation already done in me.sendPaste())
             PasteViewer.run();
-        };
+        }
 
         /**
          * called after successful comment upload
@@ -3318,7 +3318,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
                 // reset error handler
                 Alert.setCustomHandler(null);
             });
-        };
+        }
 
         /**
          * adds attachments to the Uploader
@@ -3362,7 +3362,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
                 // if there are no attachments, this is of course still successful
                 return callback();
             }
-        };
+        }
 
         /**
          * send a reply in a discussion
@@ -3581,7 +3581,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
             }
 
             return plaindata;
-        };
+        }
 
         /**
          * decrypt the actual paste text
@@ -3619,7 +3619,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
             PasteViewer.run();
 
             return true;
-        };
+        }
 
         /**
          * decrypts any attachment
@@ -3663,7 +3663,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
             AttachmentViewer.showAttachment();
 
             return true;
-        };
+        }
 
         /**
          * decrypts all comments and shows them
@@ -3694,7 +3694,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
 
             DiscussionViewer.finishDiscussion();
             return true;
-        };
+        }
 
         /**
          * show decrypted text in the display area, including discussion (if open)

@@ -75,7 +75,7 @@ if ($MARKDOWN):
 <?php
 endif;
 ?>
-		<script type="text/javascript" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-cDLxHXCWvHJVduLTnrefONCCzuRC0Jzx7AMAELzGaUizCKPN85RNtZx3r/T4pTnwNwDkUVUlEjFa0VCe12P/HQ==" crossorigin="anonymous"></script>
+		<script type="text/javascript" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-Htj3KgcsEq7pDJx0/qjvEfICFerLY9G/r8XBQ0QAdTKBAXYUNNh8pDun3IIVPyZSqEQf+A3M+DfUZGPNWgrMwg==" crossorigin="anonymous"></script>
 		<!--[if lt IE 10]>
 		<style type="text/css">body {padding-left:60px;padding-right:60px;} #ienotice {display:block;} #oldienotice {display:block;}</style>
 		<![endif]-->
