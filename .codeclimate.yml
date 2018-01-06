@@ -39,7 +39,7 @@ plugins:
   phpcodesniffer:
     enabled: true
     config:
-    	standard: "PSR1,PSR2,PHPCS,Zend"
+      standard: "PSR1,PSR2,PHPCS,Zend"
   sonar-php:
     enabled: true
     config:
