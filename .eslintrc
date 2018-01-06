@@ -98,7 +98,7 @@ rules:
   no-octal-escape: 2
   no-octal: 2
   no-proto: 2
-  no-redeclare: 2
+  no-redeclare: 0
   no-return-assign: 2
   no-script-url: 2
   no-self-compare: 2
