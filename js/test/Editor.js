@@ -1,5 +1,5 @@
 'use strict';
-var common = require('../common');
+require('../common');
 
 describe('Editor', function () {
     describe('show, hide, getText, setText & isPreview', function () {

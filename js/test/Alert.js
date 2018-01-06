@@ -99,10 +99,9 @@ describe('Alert', function () {
             'shows a loading message',
             jsc.array(common.jscAlnumString()),
             jsc.array(common.jscAlnumString()),
-            'integer',
-            function (icon, message, number) {
-                icon = icon.join('');
+            function (message, icon) {
                 message = message.join('');
+                icon = icon.join('');
                 var defaultMessage = 'Loading…';
                 if (message.length === 0) {
                     message = defaultMessage;
@@ -118,7 +117,7 @@ describe('Alert', function () {
                     defaultMessage + '</li></ul>'
                 );
                 $.PrivateBin.Alert.init();
-                $.PrivateBin.Alert.showLoading(message, number, icon);
+                $.PrivateBin.Alert.showLoading(message, icon);
                 var result = $('body').html();
                 return expected === result;
             }

@@ -557,7 +557,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
          * @param  {string} key
          * @param  {string} password
          * @param  {string} data - JSON with encrypted data
-         * @return {string} decrypted message
+         * @return {string} decrypted message, empty if decryption failed
          */
         me.decipher = function(key, password, data)
         {
@@ -568,11 +568,10 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
                     try {
                         return decompress(sjcl.decrypt(key + sjcl.codec.hex.fromBits(sjcl.hash.sha256.hash(password)), data));
                     } catch(e) {
-                        // ignore error, because ????? @TODO
+                        return '';
                     }
                 }
             }
-            return '';
         };
 
         /**
@@ -634,7 +633,6 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
          * @name   Model.getExpirationDefault
          * @function
          * @return string
-         * @TODO the template can be simplified as #pasteExpiration is no longer modified (only default value)
          */
         me.getExpirationDefault = function()
         {
@@ -647,7 +645,6 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
          * @name   Model.getFormatDefault
          * @function
          * @return string
-         * @TODO the template can be simplified as #pasteFormatter is no longer modified (only default value)
          */
         me.getFormatDefault = function()
         {
@@ -1026,18 +1023,10 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
          * @param  {string|array} message     string, use an array for %s/%d options
          * @param  {string|null}  icon        optional, the icon to show,
          *                                    default: leave previous icon
-         * @param  {bool}         dismissable optional, whether the notification
-         *                                    can be dismissed (closed), default: false
-         * @param  {bool|int}     autoclose   optional, after how many seconds the
-         *                                    notification should be hidden automatically;
-         *                                    default: disabled (0); use true for default value
          */
-        me.showStatus = function(message, icon, dismissable, autoclose)
+        me.showStatus = function(message, icon)
         {
             console.info('status shown: ', message);
-            // @TODO: implement dismissable
-            // @TODO: implement autoclose
-
             handleNotification(1, $statusMessage, message, icon);
         };
 
@@ -1051,18 +1040,10 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
          * @param  {string|array} message     string, use an array for %s/%d options
          * @param  {string|null}  icon        optional, the icon to show, default:
          *                                    leave previous icon
-         * @param  {bool}         dismissable optional, whether the notification
-         *                                    can be dismissed (closed), default: false
-         * @param  {bool|int}     autoclose   optional, after how many seconds the
-         *                                    notification should be hidden automatically;
-         *                                    default: disabled (0); use true for default value
          */
-        me.showError = function(message, icon, dismissable, autoclose)
+        me.showError = function(message, icon)
         {
             console.error('error message shown: ', message);
-            // @TODO: implement dismissable (bootstrap add-on has it)
-            // @TODO: implement autoclose
-
             handleNotification(3, $errorMessage, message, icon);
         };
 
@@ -1089,10 +1070,9 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
          * @name   Alert.showLoading
          * @function
          * @param  {string|array|null} message      optional, use an array for %s/%d options, default: 'Loading…'
-         * @param  {int}               percentage   optional, default: null
          * @param  {string|null}       icon         optional, the icon to show, default: leave previous icon
          */
-        me.showLoading = function(message, percentage, icon)
+        me.showLoading = function(message, icon)
         {
             if (typeof message !== 'undefined' && message !== null) {
                 console.info('status changed: ', message);
@@ -1102,9 +1082,6 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
             if (typeof message === 'undefined') {
                 message = 'Loading…';
             }
-
-            // currently percentage parameter is ignored
-            // // @TODO handle it here…
 
             handleNotification(0, $loadingIndicator, message, icon);
 
@@ -1214,9 +1191,8 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
          * @name   PasteStatus.sendToShortener
          * @private
          * @function
-         * @param  {Event} event
          */
-        function sendToShortener(event)
+        function sendToShortener()
         {
             window.location.href = $shortenButton.data('shortener')
                                    + encodeURIComponent($pasteUrl.attr('href'));
@@ -1230,9 +1206,8 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
          *
          * @name   PasteStatus.pasteLinkClick
          * @function
-         * @param  {Event} event
          */
-        function pasteLinkClick(event)
+        function pasteLinkClick()
         {
             // check if location is (already) shown in URL bar
             if (window.location.href === $pasteUrl.attr('href')) {
@@ -2161,12 +2136,9 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
          * @name   DiscussionViewer.handleNotification
          * @function
          * @param  {string} alertType
-         * @param  {jQuery} $element
-         * @param  {string|array} args
-         * @param  {string|null} icon
          * @return {bool|jQuery}
          */
-        me.handleNotification = function(alertType, $element, args, icon)
+        me.handleNotification = function(alertType)
         {
             // ignore loading messages
             if (alertType === 'loading') {
@@ -2501,12 +2473,11 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
          * @name   TopNav.rawText
          * @private
          * @function
-         * @param  {Event} event
          */
-        function rawText(event)
+        function rawText()
         {
             TopNav.hideAllButtons();
-            Alert.showLoading('Showing raw text…', 0, 'time');
+            Alert.showLoading('Showing raw text…', 'time');
             var paste = PasteViewer.getText();
 
             // push a new state to allow back navigation with browser back button
@@ -2550,9 +2521,8 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
          * @name   TopNav.clickNewPaste
          * @private
          * @function
-         * @param  {Event} event
          */
-        function clickNewPaste(event)
+        function clickNewPaste()
         {
             Controller.hideStatusMessages();
             Controller.newPaste();
@@ -2587,9 +2557,8 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
          *
          * @name   TopNav.displayQrCode
          * @function
-         * @param  {Event} event
          */
-        function displayQrCode(event)
+        function displayQrCode()
         {
             var qrCanvas = kjua({
                 render: 'canvas',
@@ -2802,7 +2771,8 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
             if (!$file.length || !$file[0].files.length) {
                 return null;
             }
-            // @TODO is this really necessary
+
+            // ensure the selected file is still accessible
             if (!($file[0].files && $file[0].files[0])) {
                 return null;
             }
@@ -3309,7 +3279,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
          */
         function showUploadedComment(status, data) {
             // show success message
-            // Alert.showStatus('Comment posted.');
+            Alert.showStatus('Comment posted.');
 
             // reload paste
             Controller.refreshPaste(function () {
@@ -3347,7 +3317,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
 
                     // run callback
                     return callback();
-                }
+                };
 
                 // actually read first file
                 reader.readAsDataURL(file);
@@ -3377,7 +3347,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
 
             // UI loading state
             TopNav.hideAllButtons();
-            Alert.showLoading('Sending comment…', 0, 'cloud-upload');
+            Alert.showLoading('Sending comment…', 'cloud-upload');
 
             // get data
             var plainText = DiscussionViewer.getReplyMessage(),
@@ -3399,7 +3369,6 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
             })) {
                 return; // to prevent multiple executions
             }
-            Alert.showLoading(null, 10);
 
             // prepare Uploader
             Uploader.prepare();
@@ -3413,7 +3382,9 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
                 TopNav.showViewButtons();
 
                 // show error message
-                Alert.showError(Uploader.parseUploadError(status, data, 'post comment'));
+                Alert.showError(
+                    Uploader.parseUploadError(status, data, 'post comment')
+                );
 
                 // reset error handler
                 Alert.setCustomHandler(null);
@@ -3423,7 +3394,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
             Uploader.setUnencryptedData('pasteid', Model.getPasteId());
             if (typeof parentid === 'undefined') {
                 // if parent id is not set, this is the top-most comment, so use
-                // paste id as parent @TODO is this really good?
+                // paste id as parent, as the root element of the discussion tree
                 Uploader.setUnencryptedData('parentid', Model.getPasteId());
             } else {
                 Uploader.setUnencryptedData('parentid', parentid);
@@ -3452,7 +3423,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
 
             // UI loading state
             TopNav.hideAllButtons();
-            Alert.showLoading('Sending paste…', 0, 'cloud-upload');
+            Alert.showLoading('Sending paste…', 'cloud-upload');
             TopNav.collapseBar();
 
             // get data
@@ -3467,8 +3438,6 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
                 TopNav.showCreateButtons();
                 return;
             }
-
-            Alert.showLoading(null, 10);
 
             // check entropy
             if (!checkRequirements(function () {
@@ -3489,7 +3458,9 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
                 TopNav.showCreateButtons();
 
                 // show error message
-                Alert.showError(Uploader.parseUploadError(status, data, 'create paste'));
+                Alert.showError(
+                    Uploader.parseUploadError(status, data, 'create paste')
+                );
             });
 
             // fill it with unencrypted submitted options
@@ -3706,7 +3677,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
         me.run = function(paste)
         {
             Alert.hideMessages();
-            Alert.showLoading('Decrypting paste…', 0, 'cloud-download'); // @TODO icon maybe rotation-lock, but needs full Glyphicons
+            Alert.showLoading('Decrypting paste…', 'cloud-download');
 
             if (typeof paste === 'undefined') {
                 paste = $.parseJSON(Model.getCipherData());
@@ -3716,7 +3687,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
                 password = Prompt.getPassword();
 
             if (PasteViewer.isPrettyPrinted()) {
-                console.error('Too pretty! (don\'t know why this check)'); //@TODO
+                // don't decrypt twice
                 return;
             }
 
@@ -3803,7 +3774,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
             // Important: This *must not* run Alert.hideMessages() as previous
             // errors from viewing a paste should be shown.
             TopNav.hideAllButtons();
-            Alert.showLoading('Preparing new paste…', 0, 'time');
+            Alert.showLoading('Preparing new paste…', 'time');
 
             PasteStatus.hideMessages();
             PasteViewer.hide();
@@ -3832,7 +3803,6 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
                 // missing decryption key (or paste ID) in URL?
                 if (window.location.hash.length === 0) {
                     Alert.showError('Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)');
-                    // @TODO adjust error message as it is less specific now, probably include thrown exception for a detailed error
                     return;
                 }
             }
@@ -3862,7 +3832,9 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
                 TopNav.showViewButtons();
 
                 // show error message
-                Alert.showError(Uploader.parseUploadError(status, data, 'refresh display'));
+                Alert.showError(
+                    Uploader.parseUploadError(status, data, 'refresh display')
+                );
             });
             Uploader.setSuccess(function (status, data) {
                 PasteDecrypter.run(data);
@@ -3880,13 +3852,12 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
          *
          * @name   Controller.clonePaste
          * @function
-         * @param  {Event} event
          */
-        me.clonePaste = function(event)
+        me.clonePaste = function()
         {
             TopNav.collapseBar();
             TopNav.hideAllButtons();
-            Alert.showLoading('Cloning paste…', 0, 'transfer');
+            Alert.showLoading('Cloning paste…', 'transfer');
 
             // hide messages from previous paste
             me.hideStatusMessages();
@@ -3912,7 +3883,9 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
                     [
                         'The cloned file \'%s\' was attached to this paste.',
                         AttachmentViewer.getAttachment()[1]
-                    ], 'copy', true, true);
+                    ],
+                    'copy'
+                );
             }
 
             Editor.setText(PasteViewer.getText());
@@ -3939,8 +3912,10 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
             Uploader.setUnencryptedData('deletetoken', deleteToken);
 
             Uploader.setFailure(function () {
-                Alert.showError(I18n._('Could not delete the paste, it was not stored in burn after reading mode.'));
-            })
+                Alert.showError(
+                    I18n._('Could not delete the paste, it was not stored in burn after reading mode.')
+                );
+            });
             Uploader.run();
         };
 

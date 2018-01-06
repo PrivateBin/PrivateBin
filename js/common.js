@@ -109,45 +109,45 @@ exports.htmlEntities = function(str) {
         /[&<>"'`=\/]/g, function(s) {
             return entityMap[s];
         });
-}
+};
 
 // provides random lowercase characters from a to z
 exports.jscA2zString = function() {
     return jsc.elements(a2zString);
-}
+};
 
 // provides random lowercase alpha numeric characters (a to z and 0 to 9)
 exports.jscAlnumString = function() {
     return jsc.elements(alnumString);
-}
+};
 
 // provides random characters allowed in GET queries
 exports.jscQueryString = function() {
     return jsc.elements(queryString);
-}
+};
 
 // provides random characters allowed in base64 encoded strings
 exports.jscBase64String = function() {
     return jsc.elements(base64String);
-}
+};
 
 // provides a random URL schema supported by the whatwg-url library
 exports.jscSchemas = function() {
     return jsc.elements(schemas);
-}
+};
 
 // provides a random supported language string
 exports.jscSupportedLanguages = function() {
     return jsc.elements(supportedLanguages);
-}
+};
 
 // provides a random mime type
 exports.jscMimeTypes = function() {
     return jsc.elements(mimeTypes);
-}
+};
 
 // provides a random PrivateBin paste formatter
 exports.jscFormats = function() {
     return jsc.elements(formats);
-}
+};
 

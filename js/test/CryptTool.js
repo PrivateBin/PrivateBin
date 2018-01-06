@@ -1,5 +1,5 @@
 'use strict';
-var common = require('../common');
+require('../common');
 
 describe('CryptTool', function () {
     describe('cipher & decipher', function () {
@@ -180,8 +180,7 @@ describe('CryptTool', function () {
         // the parameter is used to ensure the test is run more then one time
         jsc.property(
             'returns random, non-empty keys',
-            'nat',
-            function(n) {
+            function() {
                 var key = $.PrivateBin.CryptTool.getSymmetricKey(),
                     result = (key !== '' && keys.indexOf(key) === -1);
                 keys.push(key);
