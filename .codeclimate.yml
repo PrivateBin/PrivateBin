@@ -1,5 +1,10 @@
 ---
-engines:
+version: "2"
+checks:
+  file-lines:
+    config:
+      threshold: 2000
+plugins:
   csslint:
     enabled: true
   duplication:
@@ -31,11 +36,24 @@ engines:
         enabled: false
       CleanCode/StaticAccess:
         enabled: false
-ratings:
-  paths:
-  - "css/privatebin.css"
-  - "css/bootstrap/privatebin.css"
-  - "js/privatebin.js"
-  - "lib/**.php"
-  - "index.php"
-exclude_paths: []
+  phpcodesniffer:
+    enabled: true
+    config:
+    	standard: "PSR1,PSR2,PHPCS,Zend"
+  sonar-php:
+    enabled: true
+    config:
+      tests_patterns:
+        - tst/**
+exclude_patterns:
+  - "cfg/"
+  - "css/"
+  - "!css/privatebin.css"
+  - "!css/noscript.css"
+  - "!css/bootstrap/privatebin.css"
+  - "js/"
+  - "!js/privatebin.js"
+  - "!js/common.js"
+  - "!js/test/"
+  - "vendor/"
+
