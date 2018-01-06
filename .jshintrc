@@ -1,0 +1,27 @@
+{
+    "bitwise": true,
+    "curly": true,
+    "eqeqeq": true,
+    "esversion": 5,
+    "forin": true,
+    "freeze": true,
+    "futurehostile": true,
+    "latedef": "nofunc",
+    "maxcomplexity": 7,
+    "maxdepth": 3,
+    "maxparams": 3,
+    "maxstatements": 100,
+    "noarg": true,
+    "nonbsp": true,
+    "nonew": true,
+    "singleGroups": true,
+    "strict": "global",
+    "undef": true,
+    "unused": true,
+    "jquery": true,
+    "globals": {
+        "sjcl": false,
+        "DOMPurify": false
+    }
+}
+
