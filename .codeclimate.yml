@@ -45,11 +45,6 @@ plugins:
         enabled: false
       CleanCode/StaticAccess:
         enabled: false
-  phpcodesniffer:
-    enabled: true
-    config:
-      standard: "PSR1,PSR2,PHPCS,Zend"
-      ignore_warnings: true
   sonar-php:
     enabled: true
     config:
