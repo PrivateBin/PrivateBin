@@ -23,6 +23,11 @@
     "globals": {
         "sjcl": false,
         "DOMPurify": false
+    },
+    "predef": {
+        "cleanup": true,
+        "jsc": false,
+        "jsdom": true
     }
 }
 
