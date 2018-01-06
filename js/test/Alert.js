@@ -104,7 +104,7 @@ describe('Alert', function () {
                 icon = icon.join('');
                 message = message.join('');
                 var default_message = 'Loading…';
-                if (message.length == 0) {
+                if (message.length === 0) {
                     message = default_message;
                 }
                 var expected = '<ul class="nav navbar-nav"><li ' +
@@ -191,7 +191,7 @@ describe('Alert', function () {
                         $.PrivateBin.Alert.showRemaining,
                         $.PrivateBin.Alert.showLoading
                     ];
-                if (message.length == 0) {
+                if (message.length === 0) {
                     message = default_message;
                 }
                 $('body').html(

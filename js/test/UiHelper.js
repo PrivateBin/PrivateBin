@@ -39,7 +39,7 @@ describe('UiHelper', function () {
             jsc.array(common.jscQueryString()),
             jsc.nearray(common.jscBase64String()),
             function (schema, address, query, fragment) {
-                var expected = schema + '://' + address.join('') + '/' + '?' +
+                var expected = schema + '://' + address.join('') + '/?' +
                                query.join('') + '#' + fragment.join(''),
                     clean = jsdom('', {url: expected});
 

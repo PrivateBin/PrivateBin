@@ -32,7 +32,7 @@ describe('Prompt', function () {
                 $('#passwordform').submit();
                 var result = $.PrivateBin.Prompt.getPassword();
                 clean();
-                return result == password;
+                return result === password;
             }
         );
     });

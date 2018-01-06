@@ -32,7 +32,7 @@ describe('PasteStatus', function () {
                 var result1 = $('#pasteurl')[0].href,
                     result2 = $('#deletelink a')[0].href;
                 clean();
-                return result1 == expected1 && result2 == expected2;
+                return result1 === expected1 && result2 === expected2;
             }
         );
     });
@@ -58,7 +58,8 @@ describe('PasteStatus', function () {
                 var clean = jsdom('', {
                         url: schema.join('') + '://' + address.join('') +
                              '/?' + query.join('') + '#' + fragment
-                    });
+                    }),
+                    result;
                 $('body').html('<div id="remainingtime" class="hidden"></div>');
                 $.PrivateBin.PasteStatus.init();
                 $.PrivateBin.PasteStatus.showRemainingTime({
@@ -67,14 +68,14 @@ describe('PasteStatus', function () {
                     'expire_date': remaining_time ? ((new Date()).getTime() / 1000) + remaining_time : 0
                 });
                 if (burnafterreading) {
-                    var result = $('#remainingtime').hasClass('foryoureyesonly') &&
-                                !$('#remainingtime').hasClass('hidden');
+                    result = $('#remainingtime').hasClass('foryoureyesonly') &&
+                            !$('#remainingtime').hasClass('hidden');
                 } else if (remaining_time) {
-                    var result =!$('#remainingtime').hasClass('foryoureyesonly') &&
-                                !$('#remainingtime').hasClass('hidden');
+                    result =!$('#remainingtime').hasClass('foryoureyesonly') &&
+                            !$('#remainingtime').hasClass('hidden');
                 } else {
-                    var result = $('#remainingtime').hasClass('hidden') &&
-                                !$('#remainingtime').hasClass('foryoureyesonly');
+                    result = $('#remainingtime').hasClass('hidden') &&
+                            !$('#remainingtime').hasClass('foryoureyesonly');
                 }
                 clean();
                 return result;

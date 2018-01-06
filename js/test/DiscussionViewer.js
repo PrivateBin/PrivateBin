@@ -93,12 +93,12 @@ describe('DiscussionViewer', function () {
                     $.PrivateBin.DiscussionViewer.getReplyNickname() === $('#reply #nickname').val() &&
                     $.PrivateBin.DiscussionViewer.getReplyMessage() === $('#reply #replymessage').val()
                 );
-                var notificationResult = $.PrivateBin.DiscussionViewer.handleNotification(alertType == 'other' ? alert : alertType);
-                if (alertType == 'loading') {
+                var notificationResult = $.PrivateBin.DiscussionViewer.handleNotification(alertType === 'other' ? alert : alertType);
+                if (alertType === 'loading') {
                     results.push(notificationResult === false);
                 } else {
                     results.push(
-                        alertType == 'danger' ? (
+                        alertType === 'danger' ? (
                             notificationResult.hasClass('alert-danger') &&
                             !notificationResult.hasClass('alert-info')
                         ) : (

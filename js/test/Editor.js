@@ -44,11 +44,11 @@ describe('Editor', function () {
                 $.PrivateBin.Editor.show();
                 $.PrivateBin.Editor.focusInput();
                 results.push(
-                    $.PrivateBin.Editor.getText().length == 0
+                    $.PrivateBin.Editor.getText().length === 0
                 );
                 $.PrivateBin.Editor.setText(text);
                 results.push(
-                    $.PrivateBin.Editor.getText() == $('#message').val()
+                    $.PrivateBin.Editor.getText() === $('#message').val()
                 );
                 $.PrivateBin.Editor.setText();
                 results.push(

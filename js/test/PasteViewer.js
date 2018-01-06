@@ -28,8 +28,8 @@ describe('PasteViewer', function () {
                     $('#placeholder').hasClass('hidden') &&
                     $('#prettymessage').hasClass('hidden') &&
                     $('#plaintext').hasClass('hidden') &&
-                    $.PrivateBin.PasteViewer.getFormat() == format &&
-                    $.PrivateBin.PasteViewer.getText() == ''
+                    $.PrivateBin.PasteViewer.getFormat() === format &&
+                    $.PrivateBin.PasteViewer.getText() === ''
                 );
                 $.PrivateBin.PasteViewer.run();
                 results.push(
@@ -48,9 +48,9 @@ describe('PasteViewer', function () {
                 results.push(
                     $('#placeholder').hasClass('hidden') &&
                     !$.PrivateBin.PasteViewer.isPrettyPrinted() &&
-                    $.PrivateBin.PasteViewer.getText() == text
+                    $.PrivateBin.PasteViewer.getText() === text
                 );
-                if (format == 'markdown') {
+                if (format === 'markdown') {
                     results.push(
                         $('#prettymessage').hasClass('hidden') &&
                         !$('#plaintext').hasClass('hidden')
