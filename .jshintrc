@@ -14,6 +14,7 @@
     "noarg": true,
     "nonbsp": true,
     "nonew": true,
+    "quotmark": "single",
     "singleGroups": true,
     "strict": "global",
     "undef": true,

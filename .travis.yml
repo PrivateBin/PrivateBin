@@ -23,8 +23,8 @@ script:
   - cd ../tst && ../vendor/bin/phpunit
 
 after_script:
-  - ../vendor/bin/codacycoverage clover log/coverage-clover.xml
   - ../vendor/bin/test-reporter --coverage-report log/coverage-clover.xml
+  - cd .. && vendor/bin/codacycoverage clover tst/log/coverage-clover.xml
 
 cache:
   directories:
