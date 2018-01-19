@@ -75,14 +75,13 @@ body.loading {
 }
 
 #deletelink {
-    float: right;
-    background-color: #ffa;
-    border: 2px solid #fa0;
-    -webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
-    border-radius: 4px;
-    margin-left: 10em;
-    padding: .3em;
+	float: right;
+	border: 2px solid #ccc;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+	margin-left: 10em;
+	padding: .3em;
 }
 
 #pastelink {
