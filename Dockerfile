@@ -14,4 +14,4 @@ RUN apt-get update && apt-get install -y \
     # We enable Apache's mod_rewrite
     a2enmod rewrite
 
-COPY . .
+COPY . /var/www/html
