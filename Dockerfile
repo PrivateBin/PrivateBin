@@ -13,4 +13,12 @@ RUN apt-get update && apt-get install -y \
     # We enable Apache's mod_rewrite
     a2enmod rewrite
 
+
+# Copy app content
 COPY . /var/www/html
+
+# Copy start script
+COPY docker/entrypoint.sh /
+VOLUME /var/www/html/data
+
+CMD /entrypoint.sh
