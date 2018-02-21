@@ -468,17 +468,16 @@ endif;
 				<div id="pastesuccess" role="alert" class="hidden alert alert-success">
 					<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
 					<div id="deletelink"></div>
-					<div id="pastelink">
-<?php
-if (strlen($URLSHORTENER)):
-?>
-						<button id="shortenbutton" data-shortener="<?php echo htmlspecialchars($URLSHORTENER); ?>" type="button" class="btn btn-<?php echo $isDark ? 'warning' : 'primary'; ?>">
-							<span class="glyphicon glyphicon-send" aria-hidden="true"></span> <?php echo I18n::_('Shorten URL'), PHP_EOL; ?>
-						</button>
-<?php
-endif;
-?>
-					</div>
+					<div id="pastelink"></div>
+					<?php
+					if (strlen($URLSHORTENER)):
+					?>
+											<button id="shortenbutton" data-shortener="<?php echo htmlspecialchars($URLSHORTENER); ?>" type="button" class="btn btn-<?php echo $isDark ? 'warning' : 'primary'; ?>">
+												<span class="glyphicon glyphicon-send" aria-hidden="true"></span> <?php echo I18n::_('Shorten URL'), PHP_EOL; ?>
+											</button>
+					<?php
+					endif;
+					?>
 				</div>
 				<ul id="editorTabs" class="nav nav-tabs hidden">
 					<li role="presentation" class="active"><a id="messageedit" href="#"><?php echo I18n::_('Editor'); ?></a></li>
