@@ -16,26 +16,31 @@
     "nonew": true,
     "quotmark": "single",
     "singleGroups": true,
-    "strict": "global",
+    "strict": true,
     "undef": true,
     "unused": true,
     "jquery": true,
+    "browser": true,
     "predef": {
-        "after": true,
-        "before": true,
-        "cleanup": true,
-        "console": true,
-        "describe": false,
-        "document": true,
-        "fs": false,
-        "global": true,
-        "exports": true,
-        "it": false,
-        "jsc": false,
-        "jsdom": true,
-        "require": false,
-        "setTimeout": false,
-        "window": true
+      "after": true,
+      "before": true,
+      "cleanup": true,
+      "console": true,
+      "describe": false,
+      "document": true,
+      "fs": false,
+      "global": true,
+      "exports": true,
+      "it": false,
+      "jsc": false,
+      "jsdom": true,
+      "require": false,
+      "setTimeout": false,
+      "window": true
+    },
+    "globals": {
+      "sjcl": true,
+      "DOMPurify": true,
+      "kjua": true
     }
 }
-
