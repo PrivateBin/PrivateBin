@@ -206,15 +206,14 @@ if ($QRCODE):
 endif;
 ?>				<div id="pastesuccess" class="hidden">
 					<div id="deletelink"></div>
-					<div id="pastelink">
+					<div id="pastelink"></div>
 <?php
 if (strlen($URLSHORTENER)):
 ?>
-						<button id="shortenbutton" data-shortener="<?php echo htmlspecialchars($URLSHORTENER); ?>"><img src="img/icon_shorten.png" width="13" height="15" /><?php echo I18n::_('Shorten URL'); ?></button>
+					<button id="shortenbutton" data-shortener="<?php echo htmlspecialchars($URLSHORTENER); ?>"><img src="img/icon_shorten.png" width="13" height="15" /><?php echo I18n::_('Shorten URL'); ?></button>
 <?php
 endif;
 ?>
-					</div>
 				</div>
 <?php
 if ($FILEUPLOAD):
