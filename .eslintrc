@@ -19,6 +19,7 @@ globals:
   it: false
   jsc: false
   jsdom: true
+  kjua: true
 
 # http://eslint.org/docs/rules/
 rules:
