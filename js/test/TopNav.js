@@ -8,7 +8,7 @@ describe('TopNav', function () {
         });
 
         it(
-            'display & hide navigation elements for viewing an existing paste',
+            'displays & hides navigation elements for viewing an existing paste',
             function () {
                 var results = [];
                 $('body').html(
@@ -36,6 +36,81 @@ describe('TopNav', function () {
                     $('#clonebutton').hasClass('hidden') &&
                     $('#rawtextbutton').hasClass('hidden') &&
                     $('#qrcodelink').hasClass('hidden')
+                );
+                $.PrivateBin.TopNav.showViewButtons();
+                results.push(
+                    !$('#newbutton').hasClass('hidden') &&
+                    !$('#clonebutton').hasClass('hidden') &&
+                    !$('#rawtextbutton').hasClass('hidden') &&
+                    !$('#qrcodelink').hasClass('hidden')
+                );
+                $.PrivateBin.TopNav.hideViewButtons();
+                results.push(
+                    $('#newbutton').hasClass('hidden') &&
+                    $('#clonebutton').hasClass('hidden') &&
+                    $('#rawtextbutton').hasClass('hidden') &&
+                    $('#qrcodelink').hasClass('hidden')
+                );
+                cleanup();
+                return results.every(element => element);
+            }
+        );
+    });
+
+    describe('showCreateButtons & hideCreateButtons', function () {
+        before(function () {
+            cleanup();
+        });
+
+        it(
+            'displays & hides navigation elements for creating a paste',
+            function () {
+                var results = [];
+                $('body').html(
+                    '<nav><div id="navbar"><ul><li><button id="newbutton" ' +
+                    'type="button" class="hidden">New</button></li><li><a ' +
+                    'id="expiration" href="#" class="hidden">Expiration</a>' +
+                    '</li><li><div id="burnafterreadingoption" class="hidden">' +
+                    'Burn after reading</div></li><li><div id="opendiscussion' +
+                    'option" class="hidden">Open discussion</div></li><li>' +
+                    '<div id="password" class="hidden">Password</div></li>' +
+                    '<li id="attach" class="hidden">Attach a file</li><li>' +
+                    '<a id="formatter" href="#" class="hidden">Format</a>' +
+                    '</li><li><button id="sendbutton" type="button" ' +
+                    'class="hidden">Send</button></li></ul></div></nav>'
+                );
+                $.PrivateBin.TopNav.init();
+                results.push(
+                    $('#sendbutton').hasClass('hidden') &&
+                    $('#expiration').hasClass('hidden') &&
+                    $('#formatter').hasClass('hidden') &&
+                    $('#burnafterreadingoption').hasClass('hidden') &&
+                    $('#opendiscussionoption').hasClass('hidden') &&
+                    $('#newbutton').hasClass('hidden') &&
+                    $('#password').hasClass('hidden') &&
+                    $('#attach').hasClass('hidden')
+                );
+                $.PrivateBin.TopNav.showCreateButtons();
+                results.push(
+                    !$('#sendbutton').hasClass('hidden') &&
+                    !$('#expiration').hasClass('hidden') &&
+                    !$('#formatter').hasClass('hidden') &&
+                    !$('#burnafterreadingoption').hasClass('hidden') &&
+                    !$('#opendiscussionoption').hasClass('hidden') &&
+                    !$('#newbutton').hasClass('hidden') &&
+                    !$('#password').hasClass('hidden') &&
+                    !$('#attach').hasClass('hidden')
+                );
+                $.PrivateBin.TopNav.hideCreateButtons();
+                results.push(
+                    $('#sendbutton').hasClass('hidden') &&
+                    $('#expiration').hasClass('hidden') &&
+                    $('#formatter').hasClass('hidden') &&
+                    $('#burnafterreadingoption').hasClass('hidden') &&
+                    $('#opendiscussionoption').hasClass('hidden') &&
+                    $('#newbutton').hasClass('hidden') &&
+                    $('#password').hasClass('hidden') &&
+                    $('#attach').hasClass('hidden')
                 );
                 cleanup();
                 return results.every(element => element);

@@ -2568,7 +2568,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
         }
 
         /**
-         * Shows all elements belonging to viwing an existing pastes
+         * Shows all navigation elements for viewing an existing paste
          *
          * @name   TopNav.showViewButtons
          * @function
@@ -2589,7 +2589,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
         };
 
         /**
-         * Hides all elements belonging to existing pastes
+         * Hides all navigation elements for viewing an existing paste
          *
          * @name   TopNav.hideViewButtons
          * @function
