@@ -4,7 +4,7 @@
     "type": "project",
     "keywords": ["private", "secure", "end-to-end-encrypted", "e2e", "paste", "pastebin", "zero", "zero-knowledge", "encryption", "encrypted", "AES"],
     "homepage": "https://github.com/PrivateBin",
-    "license":"zlib",
+    "license":"zlib-acknowledgement",
     "support": {
         "issues": "https://github.com/PrivateBin/PrivateBin/issues",
         "wiki": "https://github.com/PrivateBin/PrivateBin/wiki",
