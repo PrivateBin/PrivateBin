@@ -28,6 +28,7 @@ sjcl.random.startCollectors();
 
 // main application start, called when DOM is fully loaded
 jQuery(document).ready(function() {
+    'use strict';
     // run main controller
     $.PrivateBin.Controller.init();
 });
@@ -331,7 +332,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
             var usesPlurals = $.isArray(args[0]);
             if (usesPlurals) {
                 // use the first plural form as messageId, otherwise the singular
-                messageId = (args[0].length > 1 ? args[0][1] : args[0][0]);
+                messageId = args[0].length > 1 ? args[0][1] : args[0][0];
             } else {
                 messageId = args[0];
             }
@@ -415,16 +416,16 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
                 case 'fr':
                 case 'oc':
                 case 'zh':
-                    return (n > 1 ? 1 : 0);
+                    return n > 1 ? 1 : 0;
                 case 'pl':
-                    return (n === 1 ? 0 : (n % 10 >= 2 && n %10 <=4 && (n % 100 < 10 || n % 100 >= 20) ? 1 : 2));
+                    return n === 1 ? 0 : (n % 10 >= 2 && n %10 <=4 && (n % 100 < 10 || n % 100 >= 20) ? 1 : 2);
                 case 'ru':
-                    return (n % 10 === 1 && n % 100 !== 11 ? 0 : (n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20) ? 1 : 2));
+                    return n % 10 === 1 && n % 100 !== 11 ? 0 : (n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20) ? 1 : 2);
                 case 'sl':
-                    return (n % 100 === 1 ? 1 : (n % 100 === 2 ? 2 : (n % 100 === 3 || n % 100 === 4 ? 3 : 0)));
+                    return n % 100 === 1 ? 1 : (n % 100 === 2 ? 2 : (n % 100 === 3 || n % 100 === 4 ? 3 : 0));
                 // de, en, es, it, no, pt
                 default:
-                    return (n !== 1 ? 1 : 0);
+                    return n !== 1 ? 1 : 0;
             }
         };
 
@@ -660,7 +661,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
          */
         me.hasCipherData = function()
         {
-            return (me.getCipherData().length > 0);
+            return me.getCipherData().length > 0;
         };
 
         /**
@@ -831,7 +832,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
             var viewportTop = $(window).scrollTop();
             var viewportBottom = viewportTop + $(window).height();
 
-            return (elementTop > viewportTop && elementTop < viewportBottom);
+            return elementTop > viewportTop && elementTop < viewportBottom;
         };
 
         /**
@@ -1194,8 +1195,8 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
          */
         function sendToShortener()
         {
-            window.location.href = $shortenButton.data('shortener')
-                                   + encodeURIComponent($pasteUrl.attr('href'));
+            window.location.href = $shortenButton.data('shortener') +
+                                   encodeURIComponent($pasteUrl.attr('href'));
         }
 
         /**
@@ -2008,7 +2009,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
         me.hasAttachment = function()
         {
             var link = $attachmentLink.prop('href');
-            return (typeof link !== 'undefined' && link !== '');
+            return typeof link !== 'undefined' && link !== '';
         };
 
         /**
