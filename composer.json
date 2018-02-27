@@ -4,19 +4,13 @@
     "type": "project",
     "keywords": ["private", "secure", "end-to-end-encrypted", "e2e", "paste", "pastebin", "zero", "zero-knowledge", "encryption", "encrypted", "AES"],
     "homepage": "https://github.com/PrivateBin",
-    "license":"zlib",
+    "license":"zlib-acknowledgement",
     "support": {
         "issues": "https://github.com/PrivateBin/PrivateBin/issues",
         "wiki": "https://github.com/PrivateBin/PrivateBin/wiki",
         "source": "https://github.com/PrivateBin/PrivateBin",
         "docs": "https://zerobin.dssr.ch/documentation/"
     },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/PrivateBin/PrivateBin"
-        }
-    ],
     "require": {
         "php": "^5.4.0 || ^7.0",
         "paragonie/random_compat": "2.0.4",

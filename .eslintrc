@@ -12,6 +12,14 @@ env:
 globals:
   sjcl: false
   DOMPurify: false
+  after: true
+  before: true
+  cleanup: true
+  describe: false
+  it: false
+  jsc: false
+  jsdom: true
+  kjua: true
 
 # http://eslint.org/docs/rules/
 rules:
@@ -67,7 +75,6 @@ rules:
   no-case-declarations: 2
   no-div-regex: 2
   no-else-return: 0
-  no-empty-label: 2
   no-empty-pattern: 2
   no-eq-null: 2
   no-eval: 2
@@ -92,7 +99,7 @@ rules:
   no-octal-escape: 2
   no-octal: 2
   no-proto: 2
-  no-redeclare: 2
+  no-redeclare: 0
   no-return-assign: 2
   no-script-url: 2
   no-self-compare: 2
@@ -188,7 +195,9 @@ rules:
   operator-linebreak: 0
   padded-blocks: 0
   quote-props: 0
-  quotes: 0
+  quotes:
+    - error
+    - single
   require-jsdoc: 0
   semi-spacing: 0
   semi: 0

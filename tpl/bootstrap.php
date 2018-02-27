@@ -44,6 +44,11 @@ endif;
 		<script type="text/javascript" src="js/jquery-3.1.1.js" integrity="sha512-U6K1YLIFUWcvuw5ucmMtT9HH4t0uz3M366qrF5y4vnyH6dgDzndlcGvH/Lz5k8NFh80SN95aJ5rqGZEdaQZ7ZQ==" crossorigin="anonymous"></script>
 		<script type="text/javascript" src="js/sjcl-1.0.6.js" integrity="sha512-DsyxLV/uBoQlRTJmW5Gb2SxXUXB+aYeZ6zk+NuXy8LuLyi8oGti9AGn6He5fUY2DtgQ2//RjfaZog8exFuunUQ==" crossorigin="anonymous"></script>
 <?php
+if ($QRCODE):
+?>
+		<script async type="text/javascript" src="js/kjua-0.1.2.js" integrity="sha512-hmvfOhcr4J8bjQ2GuNVzfSbuulv72wgQCJpgnXc2+cCHKqvYo8pK2nc0Q4Esem2973zo1radyIMTEkt+xJlhBA==" crossorigin="anonymous"></script>
+<?php
+endif;
 if ($ZEROBINCOMPATIBILITY):
 ?>
 		<script type="text/javascript" src="js/base64-1.7.js" integrity="sha512-JdwsSP3GyHR+jaCkns9CL9NTt4JUJqm/BsODGmYhBcj5EAPKcHYh+OiMfyHbcDLECe17TL0hjXADFkusAqiYgA==" crossorigin="anonymous"></script>
@@ -66,11 +71,11 @@ endif;
 if ($MARKDOWN):
 ?>
 		<script type="text/javascript" src="js/showdown-1.6.1.js" integrity="sha512-e6kAsBTgFnTBnEQXrq8BV6+XFwxb3kyWHeEPOl+KhxaWt3xImE2zAW2+yP3E2CQ7F9yoJl1poVU9qxkOEtVsTQ==" crossorigin="anonymous"></script>
-		<script type="text/javascript" src="js/purify.min.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-jJuy143F5Oy7oS3VkjzeJGBxIUuQ1H0eSjuvLGD3FiQzeu8Pwp5vI/jQ2dxlxSrzejmNMicdLHnIqH7R8Ft0lQ==" crossorigin="anonymous"></script>
+		<script type="text/javascript" src="js/purify-1.0.3.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-uhzhZJSgc+XJoaxCOjiuRzQaf5klPlSSVKGw69+zT72hhfLbVwB4jbwI+f7NRucuRz6u0aFGMeZ+0PnGh73iBQ==" crossorigin="anonymous"></script>
 <?php
 endif;
 ?>
-		<script type="text/javascript" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-EvNAh1GXOoUiGZ/W8iPtzsce06bvVHy6+ajJztmfSgdQcKMPoj0dB8j1FC90MEChl7MOeR4xozvDymH/6HwIlA==" crossorigin="anonymous"></script>
+		<script type="text/javascript" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-9HcFkJcGWfvpGHD7tTGYzBtx4TbVfR9z7oujlX2WZ2dYWVv/2QIW5eMSjpvfxUVTJVF+DHD7Ps/80qR8GcQsIg==" crossorigin="anonymous"></script>
 		<!--[if lt IE 10]>
 		<style type="text/css">body {padding-left:60px;padding-right:60px;} #ienotice {display:block;} #oldienotice {display:block;}</style>
 		<![endif]-->
@@ -88,8 +93,8 @@ if ($isCpct):
 ?> class="navbar-spacing"<?php
 endif;
 ?>>
-		<div id="passwordmodal" class="modal fade" role="dialog">
-			<div class="modal-dialog">
+		<div id="passwordmodal" tabindex="-1" class="modal fade" role="dialog" aria-hidden="true">
+			<div class="modal-dialog" role="document">
 				<div class="modal-content">
 					<div class="modal-body">
 						<form id="passwordform" role="form">
@@ -103,6 +108,22 @@ endif;
 				</div>
 			</div>
 		</div>
+<?php
+if ($QRCODE):
+?>
+		<div id="qrcodemodal" tabindex="-1" class="modal fade" aria-labelledby="qrcodemodalTitle" role="dialog" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-body">
+						<div class="mx-auto" id="qrcode-display"></div>
+					</div>
+					<button type="button" class="btn btn-primary btn-block" data-dismiss="modal"><?php echo I18n::_('Close') ?></button>
+				</div>
+			</div>
+		</div>
+<?php
+endif;
+?>
 		<nav class="navbar navbar-<?php echo $isDark ? 'inverse' : 'default'; ?> navbar-<?php echo $isCpct ? 'fixed' : 'static'; ?>-top"><?php
 if ($isCpct):
 ?><div class="container"><?php
@@ -150,6 +171,15 @@ endif;
 						<button id="rawtextbutton" type="button" class="hidden btn btn-<?php echo $isDark ? 'warning' : 'default'; ?> navbar-btn">
 							<span class="glyphicon glyphicon-text-background" aria-hidden="true"></span> <?php echo I18n::_('Raw text'), PHP_EOL; ?>
 						</button>
+<?php
+if ($QRCODE):
+?>
+						<button id="qrcodelink" type="button" data-toggle="modal" data-target="#qrcodemodal" class="hidden btn btn-<?php echo $isDark ? 'warning' : 'default'; ?> navbar-btn">
+							<span class="glyphicon glyphicon-qrcode" aria-hidden="true"></span> <?php echo I18n::_('QR code'), PHP_EOL; ?>
+						</button>
+<?php
+endif;
+?>
 					</li>
 					<li class="dropdown">
 						<select id="pasteExpiration" name="pasteExpiration" class="hidden">
@@ -271,7 +301,7 @@ else:
         endif;
 ?> />
 								<?php echo I18n::_('Open discussion'), PHP_EOL; ?>
-						 	</label>
+							</label>
 						</div>
 					</li>
 <?php
@@ -438,17 +468,16 @@ endif;
 				<div id="pastesuccess" role="alert" class="hidden alert alert-success">
 					<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
 					<div id="deletelink"></div>
-					<div id="pastelink">
+					<div id="pastelink"></div>
 <?php
 if (strlen($URLSHORTENER)):
 ?>
-						<button id="shortenbutton" data-shortener="<?php echo htmlspecialchars($URLSHORTENER); ?>" type="button" class="btn btn-<?php echo $isDark ? 'warning' : 'primary'; ?>">
-							<span class="glyphicon glyphicon-send" aria-hidden="true"></span> <?php echo I18n::_('Shorten URL'), PHP_EOL; ?>
-						</button>
+					<button id="shortenbutton" data-shortener="<?php echo htmlspecialchars($URLSHORTENER); ?>" type="button" class="btn btn-<?php echo $isDark ? 'warning' : 'primary'; ?>">
+						<span class="glyphicon glyphicon-send" aria-hidden="true"></span> <?php echo I18n::_('Shorten URL'), PHP_EOL; ?>
+					</button>
 <?php
 endif;
 ?>
-					</div>
 				</div>
 				<ul id="editorTabs" class="nav nav-tabs hidden">
 					<li role="presentation" class="active"><a id="messageedit" href="#"><?php echo I18n::_('Editor'); ?></a></li>
@@ -495,7 +524,6 @@ endif;
 if ($DISCUSSION):
 ?>
 			<div id="templates">
-				<!-- @TODO: when I intend/structure this corrrectly Firefox adds whitespaces everywhere which completly destroy the layout. (same possible when you remove the template data below and show this area in the browser) -->
 				<article id="commenttemplate" class="comment"><div class="commentmeta"><span class="nickname">name</span><span class="commentdate">0000-00-00</span></div><div class="commentdata">c</div><button class="btn btn-default btn-sm"><?php echo I18n::_('Reply'); ?></button></article>
 				<p id="commenttailtemplate" class="comment"><button class="btn btn-default btn-sm"><?php echo I18n::_('Add comment'); ?></button></p>
 				<div id="replytemplate" class="reply hidden"><input type="text" id="nickname" class="form-control" title="<?php echo I18n::_('Optional nickname…'); ?>" placeholder="<?php echo I18n::_('Optional nickname…'); ?>" /><textarea id="replymessage" class="replymessage form-control" cols="80" rows="7"></textarea><br /><div id="replystatus" role="alert" class="statusmessage hidden alert"><span class="glyphicon" aria-hidden="true"></span> </div><button id="replybutton" class="btn btn-default btn-sm"><?php echo I18n::_('Post comment'); ?></button></div>

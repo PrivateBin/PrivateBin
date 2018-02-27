@@ -176,8 +176,7 @@ class PrivateBin
         $this->_conf    = new Configuration;
         $this->_model   = new Model($this->_conf);
         $this->_request = new Request;
-        $this->_urlBase = array_key_exists('REQUEST_URI', $_SERVER) ?
-            htmlspecialchars($_SERVER['REQUEST_URI']) : '/';
+        $this->_urlBase = $this->_request->getRequestUri();
         ServerSalt::setPath($this->_conf->getKey('dir', 'traffic'));
 
         // set default language
@@ -448,6 +447,7 @@ class PrivateBin
         $page->assign('EXPIREDEFAULT', $this->_conf->getKey('default', 'expire'));
         $page->assign('EXPIRECLONE', !$this->_doesExpire || ($this->_doesExpire && $this->_conf->getKey('clone', 'expire')));
         $page->assign('URLSHORTENER', $this->_conf->getKey('urlshortener'));
+        $page->assign('QRCODE', $this->_conf->getKey('qrcode'));
         $page->draw($this->_conf->getKey('template'));
     }
 

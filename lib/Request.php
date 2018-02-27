@@ -141,7 +141,20 @@ class Request
      */
     public function getParam($param, $default = '')
     {
-        return array_key_exists($param, $this->_params) ? $this->_params[$param] : $default;
+        return array_key_exists($param, $this->_params) ?
+            $this->_params[$param] : $default;
+    }
+
+    /**
+     * Get request URI
+     *
+     * @access public
+     * @return string
+     */
+    public function getRequestUri()
+    {
+        return array_key_exists('REQUEST_URI', $_SERVER) ?
+            htmlspecialchars($_SERVER['REQUEST_URI']) : '/';
     }
 
     /**

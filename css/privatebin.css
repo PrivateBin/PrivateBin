@@ -72,13 +72,13 @@ h3.title {
 	bottom: 8px;
 }
 
-#aboutbox { 
-	color: #94a3b4; 
+#aboutbox {
+	color: #94a3b4;
 	padding: 4px 8px 4px 16px;
-	position: relative; 
+	position: relative;
 	top: 10px;
 	border-left: 2px solid #94a3b4;
-	float: right;  
+	float: right;
 	width: 60%;
 }
 
@@ -109,12 +109,12 @@ h3.title {
 	height: auto;
 }
 
-#status { 
+#status {
 	clear: both;
 	padding: 5px 10px;
 }
 
-#pasteresult { 
+#pasteresult {
 	background-color: #1F2833;
 	color: #fff;
 	padding: 4px 12px;
@@ -132,7 +132,7 @@ h3.title {
 
 #toolbar, #status { margin-bottom: 5px; }
 
-#copyhint { color: #666; font-size: 0.85em; }
+#copyhint { color: #666; font-size: 0.85em }
 
 button, .button {
 	color: #fff;
