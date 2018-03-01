@@ -1,6 +1,7 @@
 'use strict';
 
 // testing prerequisites
+global.assert = require('assert');
 global.jsc = require('jsverify');
 global.jsdom = require('jsdom-global');
 global.cleanup = global.jsdom();

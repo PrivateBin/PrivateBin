@@ -96,8 +96,10 @@ describe('PasteStatus', function () {
                 );
                 $.PrivateBin.PasteStatus.init();
                 $.PrivateBin.PasteStatus.hideMessages();
-                return $('#remainingtime').hasClass('hidden') &&
-                    $('#pastesuccess').hasClass('hidden');
+                assert.ok(
+                    $('#remainingtime').hasClass('hidden') &&
+                    $('#pastesuccess').hasClass('hidden')
+                );
             }
         );
     });

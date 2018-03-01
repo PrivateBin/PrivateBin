@@ -141,8 +141,10 @@ describe('Alert', function () {
                 $('body').addClass('loading');
                 $.PrivateBin.Alert.init();
                 $.PrivateBin.Alert.hideLoading();
-                return !$('body').hasClass('loading') &&
-                    $('#loadingindicator').hasClass('hidden');
+                assert.ok(
+                    !$('body').hasClass('loading') &&
+                    $('#loadingindicator').hasClass('hidden')
+                );
             }
         );
     });
@@ -165,8 +167,10 @@ describe('Alert', function () {
                 );
                 $.PrivateBin.Alert.init();
                 $.PrivateBin.Alert.hideMessages();
-                return $('#statusmessage').hasClass('hidden') &&
-                    $('#errormessage').hasClass('hidden');
+                assert.ok(
+                    $('#status').hasClass('hidden') &&
+                    $('#errormessage').hasClass('hidden')
+                );
             }
         );
     });

@@ -1290,7 +1290,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
         /**
          * hides the remaining time and successful upload notification
          *
-         * @name PasteStatus.hideRemainingTime
+         * @name PasteStatus.hideMessages
          * @function
          */
         me.hideMessages = function()
@@ -2884,6 +2884,9 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
 
             // get default value from template or fall back to set value
             pasteExpiration = Model.getExpirationDefault() || pasteExpiration;
+
+            createButtonsDisplayed = false;
+            viewButtonsDisplayed = false;
         };
 
         return me;

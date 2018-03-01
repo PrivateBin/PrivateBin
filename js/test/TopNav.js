@@ -52,7 +52,7 @@ describe('TopNav', function () {
                     $('#qrcodelink').hasClass('hidden')
                 );
                 cleanup();
-                return results.every(element => element);
+                assert.ok(results.every(element => element));
             }
         );
     });
@@ -113,7 +113,161 @@ describe('TopNav', function () {
                     $('#attach').hasClass('hidden')
                 );
                 cleanup();
-                return results.every(element => element);
+                assert.ok(results.every(element => element));
+            }
+        );
+    });
+
+    describe('showNewPasteButton', function () {
+        before(function () {
+            cleanup();
+        });
+
+        it(
+            'displays the button for creating a paste',
+            function () {
+                var results = [];
+                $('body').html(
+                    '<nav><div id="navbar"><ul><li><button id="newbutton" type=' +
+                    '"button" class="hidden">New</button></li></ul></div></nav>'
+                );
+                $.PrivateBin.TopNav.init();
+                results.push(
+                    $('#newbutton').hasClass('hidden')
+                );
+                $.PrivateBin.TopNav.showNewPasteButton();
+                results.push(
+                    !$('#newbutton').hasClass('hidden')
+                );
+                cleanup();
+                assert.ok(results.every(element => element));
+            }
+        );
+    });
+
+    describe('hideCloneButton', function () {
+        before(function () {
+            cleanup();
+        });
+
+        it(
+            'hides the button for cloning a paste',
+            function () {
+                var results = [];
+                $('body').html(
+                    '<nav><div id="navbar"><ul><li><button id="clonebutton" ' +
+                    'type="button" class="btn btn-warning navbar-btn">' +
+                    '<span class="glyphicon glyphicon-duplicate" aria-hidden=' +
+                    '"true"></span> Clone</button></li></ul></div></nav>'
+                );
+                $.PrivateBin.TopNav.init();
+                results.push(
+                    !$('#clonebutton').hasClass('hidden')
+                );
+                $.PrivateBin.TopNav.hideCloneButton();
+                results.push(
+                    $('#clonebutton').hasClass('hidden')
+                );
+                cleanup();
+                assert.ok(results.every(element => element));
+            }
+        );
+    });
+
+    describe('hideRawButton', function () {
+        before(function () {
+            cleanup();
+        });
+
+        it(
+            'hides the raw text button',
+            function () {
+                var results = [];
+                $('body').html(
+                    '<nav><div id="navbar"><ul><li><button ' +
+                    'id="rawtextbutton" type="button" class="btn ' +
+                    'btn-warning navbar-btn"><span class="glyphicon ' +
+                    'glyphicon-text-background" aria-hidden="true"></span> ' +
+                    'Raw text</button></li></ul></div></nav>'
+                );
+                $.PrivateBin.TopNav.init();
+                results.push(
+                    !$('#rawtextbutton').hasClass('hidden')
+                );
+                $.PrivateBin.TopNav.hideRawButton();
+                results.push(
+                    $('#rawtextbutton').hasClass('hidden')
+                );
+                cleanup();
+                assert.ok(results.every(element => element));
+            }
+        );
+    });
+
+    describe('hideFileSelector', function () {
+        before(function () {
+            cleanup();
+        });
+
+        it(
+            'hides the file attachment selection button',
+            function () {
+                var results = [];
+                $('body').html(
+                    '<nav><div id="navbar"><ul><li id="attach" class="hidden ' +
+                    'dropdown"><a href="#" class="dropdown-toggle" data-' +
+                    'toggle="dropdown" role="button" aria-haspopup="true" ' +
+                    'aria-expanded="false">Attach a file <span class="caret">' +
+                    '</span></a><ul class="dropdown-menu"><li id="filewrap">' +
+                    '<div><input type="file" id="file" name="file" /></div>' +
+                    '</li><li id="customattachment" class="hidden"></li><li>' +
+                    '<a id="fileremovebutton"  href="#">Remove attachment</a>' +
+                    '</li></ul></li></ul></div></nav>'
+                );
+                $.PrivateBin.TopNav.init();
+                results.push(
+                    !$('#filewrap').hasClass('hidden')
+                );
+                $.PrivateBin.TopNav.hideFileSelector();
+                results.push(
+                    $('#filewrap').hasClass('hidden')
+                );
+                cleanup();
+                assert.ok(results.every(element => element));
+            }
+        );
+    });
+
+    describe('showCustomAttachment', function () {
+        before(function () {
+            cleanup();
+        });
+
+        it(
+            'display the custom file attachment',
+            function () {
+                var results = [];
+                $('body').html(
+                    '<nav><div id="navbar"><ul><li id="attach" class="hidden ' +
+                    'dropdown"><a href="#" class="dropdown-toggle" data-' +
+                    'toggle="dropdown" role="button" aria-haspopup="true" ' +
+                    'aria-expanded="false">Attach a file <span class="caret">' +
+                    '</span></a><ul class="dropdown-menu"><li id="filewrap">' +
+                    '<div><input type="file" id="file" name="file" /></div>' +
+                    '</li><li id="customattachment" class="hidden"></li><li>' +
+                    '<a id="fileremovebutton"  href="#">Remove attachment</a>' +
+                    '</li></ul></li></ul></div></nav>'
+                );
+                $.PrivateBin.TopNav.init();
+                results.push(
+                    $('#customattachment').hasClass('hidden')
+                );
+                $.PrivateBin.TopNav.showCustomAttachment();
+                results.push(
+                    !$('#customattachment').hasClass('hidden')
+                );
+                cleanup();
+                assert.ok(results.every(element => element));
             }
         );
     });

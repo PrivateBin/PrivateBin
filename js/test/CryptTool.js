@@ -87,9 +87,10 @@ describe('CryptTool', function () {
                     'MZtmnYpGAtAPg7AUG"}'
                 );
 
-                if (!paste1.includes('securely packed in iron') || !paste2.includes('Sol is right')) {
-                    throw Error('v1 (SJCL based) pastes could not be deciphered');
-                }
+                assert.ok(
+                    paste1.includes('securely packed in iron') &&
+                    paste2.includes('Sol is right')
+                );
             }
         );
 
@@ -152,9 +153,10 @@ describe('CryptTool', function () {
                 jsdom();
                 delete require.cache[require.resolve('../privatebin')];
                 require('../privatebin');
-                if (!paste1.includes('securely packed in iron') || !paste2.includes('Sol is right')) {
-                    throw Error('v1 (SJCL based) pastes could not be deciphered');
-                }
+                assert.ok(
+                    paste1.includes('securely packed in iron') &&
+                    paste2.includes('Sol is right')
+                );
             }
         );
     });
