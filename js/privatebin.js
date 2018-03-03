@@ -2557,6 +2557,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
          * Shows the QR code of the current paste (URL).
          *
          * @name   TopNav.displayQrCode
+         * @private
          * @function
          */
         function displayQrCode()
@@ -2736,12 +2737,9 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
          */
         me.collapseBar = function()
         {
-            var $bar = $('.navbar-toggle');
-
-            // check if bar is expanded
-            if ($bar.hasClass('collapse in')) {
+            if ($('#navbar').attr('aria-expanded')) {
                 // if so, toggle it
-                $bar.click();
+                $('.navbar-toggle').click();
             }
         };
 
