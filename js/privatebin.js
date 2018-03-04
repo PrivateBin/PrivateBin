@@ -2737,7 +2737,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
          */
         me.collapseBar = function()
         {
-            if ($('#navbar').attr('aria-expanded') == 'true') {
+            if ($('#navbar').attr('aria-expanded') === 'true') {
                 $('.navbar-toggle').click();
             }
         };
