@@ -316,5 +316,97 @@ describe('TopNav', function () {
             }
         );
     });
+
+    describe('getExpiration', function () {
+        before(function () {
+            cleanup();
+        });
+
+        it(
+            'returns the currently selected expiration date',
+            function () {
+                $.PrivateBin.TopNav.init();
+                assert.ok($.PrivateBin.TopNav.getExpiration() === '1week');
+            }
+        );
+    });
+
+    describe('getFileList', function () {
+        before(function () {
+            cleanup();
+        });
+
+        var File = window.File,
+            FileList = window.FileList,
+            path = require('path'),
+            mime = require('mime-types');
+
+        // mocking file input as per https://github.com/jsdom/jsdom/issues/1272
+        function createFile(file_path) {
+            var file = fs.statSync(file_path),
+                lastModified = file.mtimeMs,
+                size = file.size;
+
+            return new File(
+                [new fs.readFileSync(file_path)],
+                path.basename(file_path),
+                {
+                    lastModified,
+                    type: mime.lookup(file_path) || '',
+                }
+            )
+        }
+
+        function addFileList(input, file_paths) {
+            if (typeof file_paths === 'string')
+                file_paths = [file_paths]
+            else if (!Array.isArray(file_paths)) {
+                throw new Error('file_paths needs to be a file path string or an Array of file path strings')
+            }
+
+            const file_list = file_paths.map(fp => createFile(fp))
+            file_list.__proto__ = Object.create(FileList.prototype)
+
+            Object.defineProperty(input, 'files', {
+                value: file_list,
+                writeable: false,
+            })
+
+            return input
+        }
+
+        it(
+            'returns the selected files',
+            function () {
+                var results = [];
+                $('body').html(
+                    '<nav><div id="navbar"><ul><li id="attach" class="hidden ' +
+                    'dropdown"><a href="#" class="dropdown-toggle" data-' +
+                    'toggle="dropdown" role="button" aria-haspopup="true" ' +
+                    'aria-expanded="false">Attach a file <span class="caret">' +
+                    '</span></a><ul class="dropdown-menu"><li id="filewrap">' +
+                    '<div><input type="file" id="file" name="file" /></div>' +
+                    '</li><li id="customattachment" class="hidden"></li><li>' +
+                    '<a id="fileremovebutton"  href="#">Remove attachment</a>' +
+                    '</li></ul></li></ul></div></nav>'
+                );
+                $.PrivateBin.TopNav.init();
+                results.push(
+                    $.PrivateBin.TopNav.getFileList() === null
+                );
+                addFileList($('#file')[0], [
+                    '../img/logo.svg',
+                    '../img/busy.gif'
+                ]);
+                var files = $.PrivateBin.TopNav.getFileList();
+                results.push(
+                    files[0].name === 'logo.svg' &&
+                    files[1].name === 'busy.gif'
+                );
+                cleanup();
+                assert.ok(results.every(element => element));
+            }
+        );
+    });
 });
 
