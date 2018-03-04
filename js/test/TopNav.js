@@ -408,5 +408,141 @@ describe('TopNav', function () {
             }
         );
     });
+
+    describe('getBurnAfterReading', function () {
+        before(function () {
+            cleanup();
+        });
+
+        it(
+            'returns if the burn-after-reading checkbox was ticked',
+            function () {
+                var results = [];
+                $('body').html(
+                    '<nav><div id="navbar"><ul><li id="burnafterreadingoption" ' +
+                    'class="hidden"><label><input type="checkbox" ' +
+                    'id="burnafterreading" name="burnafterreading" /> ' +
+                    'Burn after reading</label></li></ul></div></nav>'
+                );
+                $.PrivateBin.TopNav.init();
+                results.push(
+                    !$.PrivateBin.TopNav.getBurnAfterReading()
+                );
+                $('#burnafterreading').attr('checked', 'checked');
+                results.push(
+                    $.PrivateBin.TopNav.getBurnAfterReading()
+                );
+                $('#burnafterreading').removeAttr('checked');
+                results.push(
+                    !$.PrivateBin.TopNav.getBurnAfterReading()
+                );
+                cleanup();
+                assert.ok(results.every(element => element));
+            }
+        );
+    });
+
+    describe('getOpenDiscussion', function () {
+        before(function () {
+            cleanup();
+        });
+
+        it(
+            'returns if the open-discussion checkbox was ticked',
+            function () {
+                var results = [];
+                $('body').html(
+                    '<nav><div id="navbar"><ul><li id="opendiscussionoption" ' +
+                    'class="hidden"><label><input type="checkbox" ' +
+                    'id="opendiscussion" name="opendiscussion" /> ' +
+                    'Open discussion</label></li></ul></div></nav>'
+                );
+                $.PrivateBin.TopNav.init();
+                results.push(
+                    !$.PrivateBin.TopNav.getOpenDiscussion()
+                );
+                $('#opendiscussion').attr('checked', 'checked');
+                results.push(
+                    $.PrivateBin.TopNav.getOpenDiscussion()
+                );
+                $('#opendiscussion').removeAttr('checked');
+                results.push(
+                    !$.PrivateBin.TopNav.getOpenDiscussion()
+                );
+                cleanup();
+                assert.ok(results.every(element => element));
+            }
+        );
+    });
+
+
+    describe('getPassword', function () {
+        before(function () {
+            cleanup();
+        });
+
+        jsc.property(
+            'returns the contents of the password input',
+            'string',
+            function (password) {
+                password = password.replace(/\r+/g, '');
+                var results = [];
+                $('body').html(
+                    '<nav><div id="navbar"><ul><li><div id="password" ' +
+                    'class="navbar-form hidden"><input type="password" ' +
+                    'id="passwordinput" placeholder="Password (recommended)" ' +
+                    'class="form-control" size="23" /></div></li></ul></div></nav>'
+                );
+                $.PrivateBin.TopNav.init();
+                results.push(
+                    $.PrivateBin.TopNav.getPassword() === ''
+                );
+                $('#passwordinput').val(password);
+                results.push(
+                    $.PrivateBin.TopNav.getPassword() === password
+                );
+                $('#passwordinput').val('');
+                results.push(
+                    $.PrivateBin.TopNav.getPassword() === ''
+                );
+                cleanup();
+                return results.every(element => element);
+            }
+        );
+    });
+
+    describe('getCustomAttachment', function () {
+        before(function () {
+            cleanup();
+        });
+
+        it(
+            'returns the custom attachment element',
+            function () {
+                var results = [];
+                $('body').html(
+                    '<nav><div id="navbar"><ul><li id="attach" class="hidden ' +
+                    'dropdown"><a href="#" class="dropdown-toggle" data-' +
+                    'toggle="dropdown" role="button" aria-haspopup="true" ' +
+                    'aria-expanded="false">Attach a file <span class="caret">' +
+                    '</span></a><ul class="dropdown-menu"><li id="filewrap">' +
+                    '<div><input type="file" id="file" name="file" /></div>' +
+                    '</li><li id="customattachment" class="hidden"></li><li>' +
+                    '<a id="fileremovebutton"  href="#">Remove attachment</a>' +
+                    '</li></ul></li></ul></div></nav>'
+                );
+                $.PrivateBin.TopNav.init();
+                results.push(
+                    !$.PrivateBin.TopNav.getCustomAttachment().hasClass('test')
+                );
+                $('#customattachment').addClass('test');
+                results.push(
+                    $.PrivateBin.TopNav.getCustomAttachment().hasClass('test')
+                );
+                cleanup();
+                assert.ok(results.every(element => element));
+            }
+        );
+    });
 });
 
