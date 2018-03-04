@@ -2730,15 +2730,14 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
         };
 
         /**
-         * collapses the navigation bar if nedded
+         * collapses the navigation bar, only if expanded
          *
          * @name   TopNav.collapseBar
          * @function
          */
         me.collapseBar = function()
         {
-            if ($('#navbar').attr('aria-expanded')) {
-                // if so, toggle it
+            if ($('#navbar').attr('aria-expanded') == 'true') {
                 $('.navbar-toggle').click();
             }
         };
