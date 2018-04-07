@@ -1,6 +1,7 @@
-ecmaFeatures:
-  modules: true
-  jsx: true
+parserOptions:
+  sourceType: module
+  ecmaFeatures:
+    jsx: true
 
 env:
   amd: true
