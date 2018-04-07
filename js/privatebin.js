@@ -1925,7 +1925,34 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
         {
             var imagePrefix = 'data:image/';
 
-            $attachmentLink.attr('href', attachmentData);
+            if (window.Blob) {
+                var base64Start = attachmentData.indexOf(',') + 1;
+                var contentTypeEnd = attachmentData.indexOf(';');
+
+                var contentType = attachmentData.substring(5, contentTypeEnd);
+                var buf = Base64.atob(attachmentData.substring(base64Start));
+                var bufLength = buf.length;
+                var array = new Uint8Array(bufLength);
+
+                for (var i = 0; i < bufLength; i++) {
+                    array[i] = buf.charCodeAt(i);
+                }
+
+                var file = new window.Blob([ array ], { type: contentType });
+
+                if (navigator.msSaveBlob) {
+                    $attachmentLink.bind('click', function () {
+                        navigator.msSaveBlob(file, fileName);
+                    });
+                } else if (window.URL && window.URL.createObjectURL) {
+                    $attachmentLink.attr('href', window.URL.createObjectURL(file));
+                } else {
+                    $attachmentLink.attr('href', attachmentData);
+                }
+            } else {
+                $attachmentLink.attr('href', attachmentData);
+            }
+
             if (typeof fileName !== 'undefined') {
                 $attachmentLink.attr('download', fileName);
             }
@@ -1971,6 +1998,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
             me.hideAttachmentPreview();
             $attachmentLink.prop('href', '');
             $attachmentLink.prop('download', '');
+            $attachmentLink.unbind('click');
             $attachmentPreview.html('');
         };
 
