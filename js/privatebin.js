@@ -1925,12 +1925,22 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
         {
             var imagePrefix = 'data:image/';
 
-            if (window.Blob) {
+            // IE does not support setting a data URI on an a element
+            // Convert dataURI to a Blob and use msSaveBlob to download
+            if (window.Blob && navigator.msSaveBlob) {
+                // data URI format: data:[<contentType>][;base64],<data>
+
+                // position in data URI string of where data begins
                 var base64Start = attachmentData.indexOf(',') + 1;
+                // position in data URI string of where contentType ends
                 var contentTypeEnd = attachmentData.indexOf(';');
 
+                // extract contentType
                 var contentType = attachmentData.substring(5, contentTypeEnd);
+                // extract data and convert to binary
                 var buf = Base64.atob(attachmentData.substring(base64Start));
+
+                // Transform into a Blob
                 var bufLength = buf.length;
                 var array = new Uint8Array(bufLength);
 
@@ -1940,15 +1950,9 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
 
                 var file = new window.Blob([ array ], { type: contentType });
 
-                if (navigator.msSaveBlob) {
-                    $attachmentLink.bind('click', function () {
-                        navigator.msSaveBlob(file, fileName);
-                    });
-                } else if (window.URL && window.URL.createObjectURL) {
-                    $attachmentLink.attr('href', window.URL.createObjectURL(file));
-                } else {
-                    $attachmentLink.attr('href', attachmentData);
-                }
+                $attachmentLink.bind('click', function () {
+                    navigator.msSaveBlob(file, fileName);
+                });
             } else {
                 $attachmentLink.attr('href', attachmentData);
             }
