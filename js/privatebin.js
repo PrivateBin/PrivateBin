@@ -1928,30 +1928,29 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
             // IE does not support setting a data URI on an a element
             // Convert dataURI to a Blob and use msSaveBlob to download
             if (window.Blob && navigator.msSaveBlob) {
-                // data URI format: data:[<contentType>][;base64],<data>
-
-                // position in data URI string of where data begins
-                var base64Start = attachmentData.indexOf(',') + 1;
-                // position in data URI string of where contentType ends
-                var contentTypeEnd = attachmentData.indexOf(';');
-
-                // extract contentType
-                var contentType = attachmentData.substring(5, contentTypeEnd);
-                // extract data and convert to binary
-                var buf = Base64.atob(attachmentData.substring(base64Start));
-
-                // Transform into a Blob
-                var bufLength = buf.length;
-                var array = new Uint8Array(bufLength);
-
-                for (var i = 0; i < bufLength; i++) {
-                    array[i] = buf.charCodeAt(i);
-                }
-
-                var file = new window.Blob([ array ], { type: contentType });
-
                 $attachmentLink.bind('click', function () {
-                    navigator.msSaveBlob(file, fileName);
+                    // data URI format: data:[<mediaType>][;base64],<data>
+
+                    // position in data URI string of where data begins
+                    var base64Start = attachmentData.indexOf(',') + 1;
+                    // position in data URI string of where mediaType ends
+                    var mediaTypeEnd = attachmentData.indexOf(';');
+
+                    // extract mediaType
+                    var mediaType = attachmentData.substring(5, mediaTypeEnd);
+                    // extract data and convert to binary
+                    var decodedData = Base64.atob(attachmentData.substring(base64Start));
+
+                    // Transform into a Blob
+                    var decodedDataLength = decodedData.length;
+                    var buf = new Uint8Array(decodedDataLength);
+
+                    for (var i = 0; i < decodedDataLength; i++) {
+                        buf[i] = decodedData.charCodeAt(i);
+                    }
+
+                    var blob = new window.Blob([ buf ], { type: mediaType });
+                    navigator.msSaveBlob(blob, fileName);
                 });
             } else {
                 $attachmentLink.attr('href', attachmentData);
