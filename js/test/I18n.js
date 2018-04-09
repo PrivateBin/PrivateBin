@@ -99,6 +99,30 @@ describe('I18n', function () {
                 return language === result && language === alias;
             }
         );
+
+        jsc.property(
+            'should default to en',
+            function() {
+                var clean = jsdom('', {url: 'https://privatebin.net/'});
+
+                // when navigator.userLanguage is undefined and no default language
+                // is specified, it would throw an error
+                [ 'language', 'userLanguage' ].forEach(function (key) {
+                    Object.defineProperty(navigator, key, {
+                        value: undefined,
+                        writeable: false
+                    });
+                });
+
+                $.PrivateBin.I18n.reset('en');
+                $.PrivateBin.I18n.loadTranslations();
+                var result = $.PrivateBin.I18n.translate('en'),
+                    alias  = $.PrivateBin.I18n._('en');
+
+                clean();
+                return 'en' === result && 'en' === alias;
+            }
+        );
     });
 });
 

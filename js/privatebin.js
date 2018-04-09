@@ -441,7 +441,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
 
             // auto-select language based on browser settings
             if (newLanguage.length === 0) {
-                newLanguage = (navigator.language || navigator.userLanguage).substring(0, 2);
+                newLanguage = (navigator.language || navigator.userLanguage || 'en').substring(0, 2);
             }
 
             // if language is already used skip update
