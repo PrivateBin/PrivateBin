@@ -1928,7 +1928,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
             // IE does not support setting a data URI on an a element
             // Convert dataURI to a Blob and use msSaveBlob to download
             if (window.Blob && navigator.msSaveBlob) {
-                $attachmentLink.bind('click', function () {
+                $attachmentLink.off('click').on('click', function () {
                     // data URI format: data:[<mediaType>][;base64],<data>
 
                     // position in data URI string of where data begins
@@ -2001,7 +2001,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
             me.hideAttachmentPreview();
             $attachmentLink.prop('href', '');
             $attachmentLink.prop('download', '');
-            $attachmentLink.unbind('click');
+            $attachmentLink.off('click');
             $attachmentPreview.html('');
         };
 
