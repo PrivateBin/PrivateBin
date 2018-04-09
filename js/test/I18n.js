@@ -105,6 +105,8 @@ describe('I18n', function () {
             function() {
                 var clean = jsdom('', {url: 'https://privatebin.net/'});
 
+                // when navigator.userLanguage is undefined and no default language
+                // is specified, it would throw an error
                 [ 'language', 'userLanguage' ].forEach(function (key) {
                     Object.defineProperty(navigator, key, {
                         value: undefined,
