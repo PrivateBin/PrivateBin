@@ -142,6 +142,8 @@
     "The cloned file '%s' was attached to this paste.":
         "Дубликат файла '%s' был прикреплен к этой записи.",
     "Attach a file": "Прикрепить файл",
+    "alternatively drag & drop a file or paste an image from the clipboard": "alternatively drag & drop a file or paste an image from the clipboard",
+    "File too large, to display a preview. Please download the attachment.": "File too large, to display a preview. Please download the attachment.",
     "Remove attachment": "Удалить вложение",
     "Your browser does not support uploading encrypted files. Please use a newer browser.":
         "Ваш браузер не поддерживает отправку зашифрованных файлов. Используйте более новый браузер.",

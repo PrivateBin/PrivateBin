@@ -54,7 +54,7 @@ if ($QRCODE):
 <?php
 endif;
 ?>
-		<script type="text/javascript" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-fJAdh2DQpns2TMhDmiohfNCQXpjX+f/KpRCiRnWI6hq0lOT/RRFc11+qJzGK5zNFjDvDhCMbMADKn4D03p9Uag==" crossorigin="anonymous"></script>
+		<script type="text/javascript" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-5MEpLVeCKou7sL5U7X8uo5O0CG+1+aLGpN2O5Xvo9e31Ql7/7N8X03OCcwqBNEKv61IcSlxkCP9eLXZl8eMeBA==" crossorigin="anonymous"></script>
 		<!--[if lt IE 10]>
 		<style type="text/css">body {padding-left:60px;padding-right:60px;} #ienotice {display:block;} #oldienotice {display:block;}</style>
 		<![endif]-->
@@ -222,6 +222,7 @@ if ($FILEUPLOAD):
 				<div id="attach" class="hidden">
 					<span id="clonedfile" class="hidden"><?php echo I18n::_('Cloned file attached.'); ?></span>
 					<span id="filewrap"><?php echo I18n::_('Attach a file'); ?>: <input type="file" id="file" name="file" /></span>
+					<span id="dragAndDropFileName" class="dragAndDropFile"><?php echo I18n::_('alternatively drag & drop a file or paste an image from the clipboard'); ?></span>
 					<button id="fileremovebutton"><?php echo I18n::_('Remove attachment'); ?></button>
 				</div>
 <?php
@@ -231,7 +232,7 @@ endif;
 					<button id="messageedit"><?php echo I18n::_('Editor'); ?></button>
 					<button id="messagepreview"><?php echo I18n::_('Preview'); ?></button>
 				</div>
-				<div id="image" class="hidden"></div>
+				<div id="attachmentPreview" class="hidden"></div>
 				<div id="prettymessage" class="hidden">
 					<pre id="prettyprint" class="prettyprint linenums:1"></pre>
 				</div>
@@ -246,7 +247,7 @@ endif;
 			</div>
 		</section>
 		<div id="serverdata" class="hidden" aria-hidden="true">
-			<div id="cipherdata" class="hidden"><?php echo htmlspecialchars($CIPHERDATA, ENT_NOQUOTES); ?></div>
+		<div id="cipherdata" class="hidden"><?php echo htmlspecialchars($CIPHERDATA, ENT_NOQUOTES); ?></div>
 <?php
 if ($DISCUSSION):
 ?>

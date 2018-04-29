@@ -104,9 +104,21 @@ h3.title {
 	font-family: Consolas, "Lucida Console", "DejaVu Sans Mono", Monaco, monospace;
 }
 
-#image img {
+#attachmentPreview img {
 	max-width: 100%;
 	height: auto;
+}
+
+#attachmentPreview .pdfPreview {
+	width: 100%;
+	height: 100vh;
+	margin-bottom: 20px;
+}
+
+.dragAndDropFile{
+        color:#777;
+        font-size:1em;
+        display:inline;
 }
 
 #status {
@@ -249,7 +261,7 @@ input {
 	font-weight: bold !important;
 }
 
-#image, .nonworking {
+#attachmentPreview, .nonworking {
 	background-color: #fff;
 	color: #000;
 	width: 100%;

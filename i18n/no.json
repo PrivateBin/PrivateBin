@@ -132,6 +132,8 @@
     "Cloned: '%s'": "Kopiert: '%s'",
     "The cloned file '%s' was attached to this paste.": "The cloned file '%s' was attached to this paste.",
     "Attach a file": "Legg til fil",
+    "alternatively drag & drop a file or paste an image from the clipboard": "alternatively drag & drop a file or paste an image from the clipboard",
+    "File too large, to display a preview. Please download the attachment.": "File too large, to display a preview. Please download the attachment.",
     "Remove attachment": "Slett vedlegg",
     "Your browser does not support uploading encrypted files. Please use a newer browser.":
         "Nettleseren din støtter ikke å laste opp krypterte filer. Vennligst bruk en nyere nettleser.",
