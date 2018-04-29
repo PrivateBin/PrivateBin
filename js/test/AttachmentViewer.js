@@ -18,7 +18,12 @@ describe('AttachmentViewer', function () {
             function (mimeType, base64, filename, prefix, postfix) {
                 var clean = jsdom(),
                     data = 'data:' + mimeType + ';base64,' + base64.join(''),
-                    isImage = mimeType.substring(0, 6) === 'image/',
+                    previewSupported = (
+                        mimeType.substring(0, 6) === 'image/' ||
+                        mimeType.substring(0, 6) === 'audio/' ||
+                        mimeType.substring(0, 6) === 'video/' ||
+                        mimeType.match(/\/pdf/i)
+                    ),
                     results = [];
                 prefix = prefix.replace(/%(s|d)/g, '%%');
                 postfix = postfix.replace(/%(s|d)/g, '%%');
@@ -40,32 +45,32 @@ describe('AttachmentViewer', function () {
                 } else {
                     $.PrivateBin.AttachmentViewer.setAttachment(data);
                 }
-                var attachement = $.PrivateBin.AttachmentViewer.getAttachment();
+                var attachment = $.PrivateBin.AttachmentViewer.getAttachment();
                 results.push(
                     $.PrivateBin.AttachmentViewer.hasAttachment() &&
                     $('#attachment').hasClass('hidden') &&
                     $('#attachmentPreview').hasClass('hidden') &&
-                    attachement[0] === data &&
-                    attachement[1] === filename
+                    attachment[0] === data &&
+                    attachment[1] === filename
                 );
                 $.PrivateBin.AttachmentViewer.showAttachment();
                 results.push(
                     !$('#attachment').hasClass('hidden') &&
-                    (isImage ? !$('#attachmentPreview').hasClass('hidden') : $('#attachmentPreview').hasClass('hidden'))
+                    (previewSupported ? !$('#attachmentPreview').hasClass('hidden') : $('#attachmentPreview').hasClass('hidden'))
                 );
                 $.PrivateBin.AttachmentViewer.hideAttachment();
                 results.push(
                     $('#attachment').hasClass('hidden') &&
-                    (isImage ? !$('#attachmentPreview').hasClass('hidden') : $('#attachmentPreview').hasClass('hidden'))
+                    (previewSupported ? !$('#attachmentPreview').hasClass('hidden') : $('#attachmentPreview').hasClass('hidden'))
                 );
-                if (isImage) {
+                if (previewSupported) {
                     $.PrivateBin.AttachmentViewer.hideAttachmentPreview();
                     results.push($('#attachmentPreview').hasClass('hidden'));
                 }
                 $.PrivateBin.AttachmentViewer.showAttachment();
                 results.push(
                     !$('#attachment').hasClass('hidden') &&
-                    (isImage ? !$('#attachmentPreview').hasClass('hidden') : $('#attachmentPreview').hasClass('hidden'))
+                    (previewSupported ? !$('#attachmentPreview').hasClass('hidden') : $('#attachmentPreview').hasClass('hidden'))
                 );
                 var element = $('<div></div>');
                 $.PrivateBin.AttachmentViewer.moveAttachmentTo(element, prefix + '%s' + postfix);
