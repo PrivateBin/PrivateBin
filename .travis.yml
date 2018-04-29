@@ -16,7 +16,7 @@ install:
 before_script:
   - composer install -n
   - npm install -g mocha
-  - cd js && npm install jsverify jsdom@9 jsdom-global@2
+  - cd js && npm install jsverify jsdom@9 jsdom-global@2 mime-types
 
 script:
   - mocha
