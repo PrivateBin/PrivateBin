@@ -7,7 +7,7 @@
  * @link      https://github.com/PrivateBin/PrivateBin
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
- * @version   1.1
+ * @version   1.1.1
  */
 
 namespace PrivateBin\Model;
@@ -46,6 +46,11 @@ class Paste extends AbstractModel
             }
             // We kindly provide the remaining time before expiration (in seconds)
             $data->meta->remaining_time = $data->meta->expire_date - time();
+        }
+
+        // check if non-expired burn after reading paste needs to be deleted
+        if (property_exists($data->meta, 'burnafterreading') && $data->meta->burnafterreading) {
+            $this->delete();
         }
 
         // set formatter for for the view.

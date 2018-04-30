@@ -1,5 +1,19 @@
 ---
-engines:
+version: "2"
+checks:
+  file-lines:
+    config:
+      threshold: 2000
+  method-complexity:
+    config:
+      threshold: 550
+  method-count:
+    config:
+      threshold: 50
+  method-lines:
+    config:
+      threshold: 250
+plugins:
   csslint:
     enabled: true
   duplication:
@@ -11,6 +25,8 @@ engines:
   eslint:
     enabled: true
   fixme:
+    enabled: true
+  nodesecurity:
     enabled: true
   phpmd:
     enabled: true
@@ -29,11 +45,20 @@ engines:
         enabled: false
       CleanCode/StaticAccess:
         enabled: false
-ratings:
-  paths:
-  - "css/privatebin.css"
-  - "css/bootstrap/privatebin.css"
-  - "js/privatebin.js"
-  - "lib/**.php"
-  - "index.php"
-exclude_paths: []
+  sonar-php:
+    enabled: true
+    config:
+      tests_patterns:
+        - tst/**
+exclude_patterns:
+  - "cfg/"
+  - "css/"
+  - "!css/privatebin.css"
+  - "!css/noscript.css"
+  - "!css/bootstrap/privatebin.css"
+  - "js/"
+  - "!js/privatebin.js"
+  - "!js/common.js"
+  - "!js/test/"
+  - "vendor/"
+

@@ -7,7 +7,7 @@
  * @link      https://github.com/PrivateBin/PrivateBin
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
- * @version   1.1
+ * @version   1.1.1
  */
 
 namespace PrivateBin;
@@ -141,7 +141,20 @@ class Request
      */
     public function getParam($param, $default = '')
     {
-        return array_key_exists($param, $this->_params) ? $this->_params[$param] : $default;
+        return array_key_exists($param, $this->_params) ?
+            $this->_params[$param] : $default;
+    }
+
+    /**
+     * Get request URI
+     *
+     * @access public
+     * @return string
+     */
+    public function getRequestUri()
+    {
+        return array_key_exists('REQUEST_URI', $_SERVER) ?
+            htmlspecialchars($_SERVER['REQUEST_URI']) : '/';
     }
 
     /**

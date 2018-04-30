@@ -1,7 +1,7 @@
 # Ignore server files for safety
 .htaccess
 .htpasswd
-cfg/conf.ini
+cfg/conf.php
 
 # Ignore data/
 data/

@@ -34,7 +34,6 @@ class ViewTest extends PHPUnit_Framework_TestCase
         /* Setup Routine */
         $page = new View;
         $page->assign('NAME', 'PrivateBinTest');
-        $page->assign('CIPHERDATA', Helper::getPaste()['data']);
         $page->assign('ERROR', self::$error);
         $page->assign('STATUS', self::$status);
         $page->assign('VERSION', self::$version);
@@ -56,6 +55,7 @@ class ViewTest extends PHPUnit_Framework_TestCase
         $page->assign('EXPIREDEFAULT', self::$expire_default);
         $page->assign('EXPIRECLONE', true);
         $page->assign('URLSHORTENER', '');
+        $page->assign('QRCODE', true);
 
         $dir = dir(PATH . 'tpl');
         while (false !== ($file = $dir->read())) {
@@ -96,13 +96,6 @@ class ViewTest extends PHPUnit_Framework_TestCase
     public function testTemplateRendersCorrectly()
     {
         foreach ($this->_content as $template => $content) {
-            $this->assertRegExp(
-                '#<div[^>]+id="cipherdata"[^>]*>' .
-                preg_quote(htmlspecialchars(Helper::getPaste()['data'], ENT_NOQUOTES)) .
-                '</div>#',
-                $content,
-                $template . ': outputs data correctly'
-            );
             $this->assertRegExp(
                 '#<div[^>]+id="errormessage"[^>]*>.*' . self::$error . '#s',
                 $content,

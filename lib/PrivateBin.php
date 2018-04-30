@@ -7,7 +7,7 @@
  * @link      https://github.com/PrivateBin/PrivateBin
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
- * @version   1.1
+ * @version   1.1.1
  */
 
 namespace PrivateBin;
@@ -28,7 +28,7 @@ class PrivateBin
      *
      * @const string
      */
-    const VERSION = '1.1';
+    const VERSION = '1.1.1';
 
     /**
      * minimal required PHP version
@@ -147,10 +147,7 @@ class PrivateBin
                 );
                 break;
             case 'read':
-                // reading paste is disallowed in HTML display
-                if ($this->_request->isJsonApiCall()) {
-                    $this->_read($this->_request->getParam('pasteid'));
-                }
+                $this->_read($this->_request->getParam('pasteid'));
                 break;
             case 'jsonld':
                 $this->_jsonld($this->_request->getParam('jsonld'));
@@ -179,8 +176,7 @@ class PrivateBin
         $this->_conf    = new Configuration;
         $this->_model   = new Model($this->_conf);
         $this->_request = new Request;
-        $this->_urlBase = array_key_exists('REQUEST_URI', $_SERVER) ?
-            htmlspecialchars($_SERVER['REQUEST_URI']) : '/';
+        $this->_urlBase = $this->_request->getRequestUri();
         ServerSalt::setPath($this->_conf->getKey('dir', 'traffic'));
 
         // set default language
@@ -370,12 +366,15 @@ class PrivateBin
         try {
             $paste = $this->_model->getPaste($dataid);
             if ($paste->exists()) {
-                $data              = $paste->get();
-                $this->_doesExpire = property_exists($data, 'meta') && property_exists($data->meta, 'expire_date');
-                if (property_exists($data->meta, 'salt')) {
-                    unset($data->meta->salt);
+                // reading paste is only possible via JSON call
+                if ($this->_request->isJsonApiCall()) {
+                    $data              = $paste->get();
+                    $this->_doesExpire = property_exists($data, 'meta') && property_exists($data->meta, 'expire_date');
+                    if (property_exists($data->meta, 'salt')) {
+                        unset($data->meta->salt);
+                    }
+                    $this->_data = json_encode($data);
                 }
-                $this->_data = json_encode($data);
             } else {
                 $this->_error = self::GENERIC_ERROR;
             }
@@ -429,7 +428,6 @@ class PrivateBin
 
         $page = new View;
         $page->assign('NAME', $this->_conf->getKey('name'));
-        $page->assign('CIPHERDATA', $this->_data);
         $page->assign('ERROR', I18n::_($this->_error));
         $page->assign('STATUS', I18n::_($this->_status));
         $page->assign('VERSION', self::VERSION);
@@ -451,6 +449,7 @@ class PrivateBin
         $page->assign('EXPIREDEFAULT', $this->_conf->getKey('default', 'expire'));
         $page->assign('EXPIRECLONE', !$this->_doesExpire || ($this->_doesExpire && $this->_conf->getKey('clone', 'expire')));
         $page->assign('URLSHORTENER', $this->_conf->getKey('urlshortener'));
+        $page->assign('QRCODE', $this->_conf->getKey('qrcode'));
         $page->draw($this->_conf->getKey('template'));
     }
 

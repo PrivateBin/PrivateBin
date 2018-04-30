@@ -11,12 +11,6 @@
         "source": "https://github.com/PrivateBin/PrivateBin",
         "docs": "https://zerobin.dssr.ch/documentation/"
     },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/PrivateBin/PrivateBin"
-        }
-    ],
     "require": {
         "php": "^5.4.0 || ^7.0",
         "paragonie/random_compat": "2.0.4",

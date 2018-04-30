@@ -1,3 +1,4 @@
+;<?php http_response_code(403); /*
 ; config file for PrivateBin
 ;
 ; An explanation of each setting can be find online at https://github.com/PrivateBin/PrivateBin/wiki/Configuration.
@@ -51,6 +52,10 @@ languageselection = false
 ; the pastes encryption key
 ; urlshortener = "https://shortener.example.com/api?link="
 
+; (optional) Let users create a QR code for sharing the paste URL with one click.
+; It works both when a new paste is created and when you view a paste.
+; qrcode = true
+
 ; (optional) IP based icons are a weak mechanism to detect if a comment was from
 ; a different user when the same username was used in a comment. It might be
 ; used to get the IP of a non anonymous comment poster if the server salt is
@@ -64,7 +69,7 @@ languageselection = false
 ; scripts or run your site behind certain DDoS-protection services.
 ; Check the documentation at https://content-security-policy.com/
 ; Note: If you use a bootstrap theme, you can remove the allow-popups from the sandbox restrictions.
-; cspheader = "default-src 'none'; manifest-src 'self'; connect-src *; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self' data:; referrer no-referrer; sandbox allow-same-origin allow-scripts allow-forms allow-popups"
+; cspheader = "default-src 'none'; manifest-src 'self'; connect-src *; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self' data:; media-src data:; object-src data:; Referrer-Policy: 'no-referrer'; sandbox allow-same-origin allow-scripts allow-forms allow-popups"
 
 ; stay compatible with PrivateBin Alpha 0.19, less secure
 ; if enabled will use base64.js version 1.7 instead of 2.1.9 and sha1 instead of
