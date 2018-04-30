@@ -323,7 +323,7 @@ if ($FILEUPLOAD):
 						<ul class="dropdown-menu">
 							<li id="filewrap">
 								<div>
-									<input type="file" id="file" name="file"/>
+									<input type="file" id="file" name="file" />
 								</div>
 								<div id="dragAndDropFileName" class="dragAndDropFile"><?php echo I18n::_('alternatively drag & drop a file or paste an image from the clipboard'); ?></div>
 							</li>
