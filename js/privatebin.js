@@ -1201,7 +1201,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
             {
                 $.get(url, function(d) {
                     $pasteUrl.attr(d);
-                    $pasteUrl.html(d.text());
+                    $pasteUrl.text(d);
                     Helper.selectText($pasteUrl[0]);
                     $shortenButton.remove();
                 })                
