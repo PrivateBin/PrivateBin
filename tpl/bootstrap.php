@@ -75,7 +75,7 @@ if ($MARKDOWN):
 <?php
 endif;
 ?>
-		<script type="text/javascript" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-5MEpLVeCKou7sL5U7X8uo5O0CG+1+aLGpN2O5Xvo9e31Ql7/7N8X03OCcwqBNEKv61IcSlxkCP9eLXZl8eMeBA==" crossorigin="anonymous"></script>
+		<script type="text/javascript" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-pW9/DMkecULCxJA/5uLbi6op7C8Yl6K8YNw43o2BNyH/AxTPEZQGwX49KvNmrDoziRad+CiSAyBHjsvinuwZrw==" crossorigin="anonymous"></script>
 		<!--[if lt IE 10]>
 		<style type="text/css">body {padding-left:60px;padding-right:60px;} #ienotice {display:block;} #oldienotice {display:block;}</style>
 		<![endif]-->
@@ -473,7 +473,7 @@ endif;
 <?php
 if (strlen($URLSHORTENER)):
 ?>
-					<button id="shortenbutton" data-shortener="<?php echo htmlspecialchars($URLSHORTENER); ?>" type="button" class="btn btn-<?php echo $isDark ? 'warning' : 'primary'; ?>">
+					<button id="shortenbutton" data-shortener="<?php echo htmlspecialchars($URLSHORTENER); ?>" data-ajax="<?php echo htmlspecialchars($URLSHORTENERAJAX); ?>" type="button" class="btn btn-<?php echo $isDark ? 'warning' : 'primary'; ?>">
 						<span class="glyphicon glyphicon-send" aria-hidden="true"></span> <?php echo I18n::_('Shorten URL'), PHP_EOL; ?>
 					</button>
 <?php

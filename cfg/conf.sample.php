@@ -56,6 +56,12 @@ languageselection = false
 ; the pastes encryption key
 ; urlshortener = "https://shortener.example.com/api?link="
 
+; you can set urlshortenerajax to yes if the shortener returns the url plain text
+; YOU HAVE TO set Control-Allow-Origin header on the other side!
+; https://enable-cors.org/server_apache.html
+; https://enable-cors.org/server_nginx.html
+; urlshortenerajax = "false"
+
 ; (optional) Let users create a QR code for sharing the paste URL with one click.
 ; It works both when a new paste is created and when you view a paste.
 ; qrcode = true

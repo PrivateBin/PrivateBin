@@ -54,7 +54,7 @@ if ($QRCODE):
 <?php
 endif;
 ?>
-		<script type="text/javascript" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-5MEpLVeCKou7sL5U7X8uo5O0CG+1+aLGpN2O5Xvo9e31Ql7/7N8X03OCcwqBNEKv61IcSlxkCP9eLXZl8eMeBA==" crossorigin="anonymous"></script>
+		<script type="text/javascript" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-pW9/DMkecULCxJA/5uLbi6op7C8Yl6K8YNw43o2BNyH/AxTPEZQGwX49KvNmrDoziRad+CiSAyBHjsvinuwZrw==" crossorigin="anonymous"></script>
 		<!--[if lt IE 10]>
 		<style type="text/css">body {padding-left:60px;padding-right:60px;} #ienotice {display:block;} #oldienotice {display:block;}</style>
 		<![endif]-->
@@ -210,7 +210,7 @@ endif;
 <?php
 if (strlen($URLSHORTENER)):
 ?>
-					<button id="shortenbutton" data-shortener="<?php echo htmlspecialchars($URLSHORTENER); ?>"><img src="img/icon_shorten.png" width="13" height="15" /><?php echo I18n::_('Shorten URL'); ?></button>
+					<button id="shortenbutton" data-shortener="<?php echo htmlspecialchars($URLSHORTENER); ?>" data-ajax="<?php echo htmlspecialchars($URLSHORTENERAJAX); ?>"><img src="img/icon_shorten.png" width="13" height="15" /><?php echo I18n::_('Shorten URL'); ?></button>
 <?php
 endif;
 ?>
