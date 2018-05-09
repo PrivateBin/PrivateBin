@@ -56,8 +56,8 @@ languageselection = false
 ; the pastes encryption key
 ; urlshortener = "https://shortener.example.com/api?link="
 
-; you can set urlshortenerajax to yes if the shortener returns the url plain text
-; YOU HAVE TO set Control-Allow-Origin header on the other side!
+; you can set urlshortenerajax to true if the shortener returns the url plain text
+; YOU HAVE TO set Control-Allow-Origin header in the link shortener Server!
 ; https://enable-cors.org/server_apache.html
 ; https://enable-cors.org/server_nginx.html
 ; urlshortenerajax = "false"

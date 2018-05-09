@@ -1195,17 +1195,21 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
          */
         function sendToShortener()
         {
-            var url = $shortenButton.data('shortener')+encodeURIComponent($pasteUrl.attr('href'));
+            var url = $shortenButton.data('shortener') + encodeURIComponent($pasteUrl.attr('href'));
 
             if($shortenButton.data('ajax'))
+            {
                 $.get(url, function(d) {
                     $pasteUrl.attr(d);
-                    $pasteUrl.html(d);
+                    $pasteUrl.html(d.text());
                     Helper.selectText($pasteUrl[0]);
                     $shortenButton.remove();
-                })
+                })                
+            }
             else
+            {
                 window.location.href = url;
+            }
         }
 
         /**
