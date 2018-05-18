@@ -13,7 +13,7 @@
     "Invalid data.":
         "Ongeldige gegevens",
     "You are unlucky. Try again.":
-        "Jij hebt pech. Probeer het nog eens",
+        "Helaas. Probeer het nog eens",
     "Error saving comment. Sorry.":
         "Fout bij het opslaan van het commentaar. Sorry",
     "Error saving paste. Sorry.":
@@ -28,9 +28,9 @@
         "Geplakte tekst is correct verwijderd.",
     "PrivateBin": "PrivateBin",
     "PrivateBin is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href=\"https://privatebin.info/\">project page</a>.":
-		"PrivateBin is een minimalistische, open source online pastebin waarbij de server geen kennis heeft van de geplakte gegevens. Gegevens worden gecodeerd/gedecodeerd <i> in de browser </i> met behulp van 256 bits AES. Meer informatie is te vinden op de <a href=\"https://privatebin.info/\"> projectpagina </a>.",
+		"PrivateBin is een minimalistische, open source online pastebin waarbij de server geen kennis heeft van de geplakte gegevens. Gegevens worden gecodeerd/gedecodeerd <i> in de browser </i> met behulp van 256 bits AES. Meer informatie is te vinden op de <a href=\"https://privatebin.info/\">projectpagina</a>.",
     "Because ignorance is bliss":
-        "Omdat onwetenheid een zegen is",
+        "Omdat onwetendheid een zegen is",
     "JavaScript is required for PrivateBin to work.<br />Sorry for the inconvenience.":
         "JavaScript vereist om PrivateBin te laten werken. <br /> Sorry voor het ongemak.",
     "PrivateBin requires a modern browser to work.":
@@ -56,7 +56,7 @@
     "Discussion":
         "Discussie",
     "Toggle navigation":
-        "Navigatie schakelen",
+        "Navigatie openen/sluiten",
     "%d seconds": ["%d second", "%d seconden"],
     "%d minutes": ["%d minuut", "%d minuten"],
     "%d hours": ["%d uur"],
@@ -67,7 +67,7 @@
     "Never":
         "Nooit",
     "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.":
-        "Opmerking: Dit is een testservice: Gegevens kunnen op elk gegeven moment verwijderd worden. Kittens zullen sterven als u deze service misbrukt.",
+        "Opmerking: Dit is een testservice: Gegevens kunnen op elk gegeven moment verwijderd worden.",
     "This document will expire in %d seconds.":
         ["Dit document verloopt over %d second.", "Dit document verloopt over %d seconden."],
     "This document will expire in %d minutes.":
@@ -83,7 +83,7 @@
     "Could not decrypt data (Wrong key?)":
         "Kon de gegevens niet decoderen (verkeerde sleutel?)",
     "Could not delete the paste, it was not stored in burn after reading mode.":
-		"Verwijderen van de geplakte tekst niet mogelijk, deze werd niet opgeslagen in 'burn after reading' modus.",
+		"Verwijderen van de geplakte tekst niet mogelijk, deze werd niet opgeslagen in 'vernietig na lezen' modus.",
     "FOR YOUR EYES ONLY. Don't close this window, this message can't be displayed again.":
 		"FOR YOUR EYES ONLY. Sluit dit venster niet, dit bericht kan niet opnieuw worden weergegeven.",
     "Could not decrypt comment; Wrong key?":
