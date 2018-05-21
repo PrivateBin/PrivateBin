@@ -1,15 +1,20 @@
 {
+    "PrivateBin": "PrivateBin",
+    "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href=\"https://privatebin.info/\">project page</a>.":
+		"%s is een minimalistische, open source online pastebin waarbij de server geen kennis heeft van de geplakte gegevens. Gegevens worden gecodeerd/gedecodeerd <i> in de browser </i> met behulp van 256 bits AES. Meer informatie is te vinden op de <a href=\"https://privatebin.info/\">projectpagina</a>.",
+    "Because ignorance is bliss":
+        "Onwetendheid is een zegen",
     "en": "nl",
     "Paste does not exist, has expired or has been deleted.":
-		"Geplakte tekst bestaat niet, is velopen of verwijderd.",
-    "PrivateBin requires php 5.3.0 or above to work. Sorry.":
-		"PrivateBin vereist PHP 5.3.0 of hoger om te kunnen werken. Sorry", 
-    "PrivateBin requires configuration section [%s] to be present in configuration file.":
-		"PrivateBin vereist dat de configuratiesectie [%s] aanwezig is in het configuratiebestand",
+        "Geplakte tekst bestaat niet, is velopen of verwijderd.",
+    "%s requires php %s or above to work. Sorry.":
+        "%s vereist PHP %s of hoger om te kunnen werken. Sorry",
+    "%s requires configuration section [%s] to be present in configuration file.":
+        "%s vereist dat de configuratiesectie [%s] aanwezig is in het configuratiebestand",
     "Please wait %d seconds between each post.":
-		"Alstublieft %d seconden wachten tussen elk bericht",
+	    "Alstublieft %d seconden wachten tussen elk bericht",
     "Paste is limited to %s of encrypted data.":
-		"Geplakte tekst is beperkt tot %s versleutelde gegevens",
+		"Geplakte tekst is beperkt tot %s aan versleutelde gegevens",
     "Invalid data.":
         "Ongeldige gegevens",
     "You are unlucky. Try again.":
@@ -26,15 +31,10 @@
         "Foutieve verwijdercode. Geplakte tekst is niet verwijderd.",
     "Paste was properly deleted.":
         "Geplakte tekst is correct verwijderd.",
-    "PrivateBin": "PrivateBin",
-    "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href=\"https://privatebin.info/\">project page</a>.":
-		"%s is een minimalistische, open source online pastebin waarbij de server geen kennis heeft van de geplakte gegevens. Gegevens worden gecodeerd/gedecodeerd <i> in de browser </i> met behulp van 256 bits AES. Meer informatie is te vinden op de <a href=\"https://privatebin.info/\">projectpagina</a>.",
-    "Because ignorance is bliss":
-        "Omdat onwetendheid een zegen is",
-    "JavaScript is required for PrivateBin to work.<br />Sorry for the inconvenience.":
-        "JavaScript vereist om PrivateBin te laten werken. <br /> Sorry voor het ongemak.",
-    "PrivateBin requires a modern browser to work.":
-        "PrivateBin vereist een moderne browser om te kunnen werken ",
+    "JavaScript is required for %s to work.<br />Sorry for the inconvenience.":
+        "JavaScript vereist om %s te laten werken.<br />Sorry voor het ongemak.",
+    "%s requires a modern browser to work.":
+        "%s vereist een moderne browser om te kunnen werken ",
     "Still using Internet Explorer? Do yourself a favor, switch to a modern browser:":
         "Gebruik je nog steeds Internet explorer? Doe jezelf een plezier en maak gebruik van een moderne browser:",
     "New":
@@ -57,7 +57,7 @@
         "Discussie",
     "Toggle navigation":
         "Navigatie openen/sluiten",
-    "%d seconds": ["%d second", "%d seconden"],
+	"%d seconds": ["%d second", "%d seconden"],
     "%d minutes": ["%d minuut", "%d minuten"],
     "%d hours": ["%d uur"],
     "%d days": ["%d dag", "%d dagen"],
@@ -82,7 +82,7 @@
         "Voer het wachtwoord in voor deze  geplakte tekst:",
     "Could not decrypt data (Wrong key?)":
         "Kon de gegevens niet decoderen (verkeerde sleutel?)",
-    "Could not delete the paste, it was not stored in burn after reading mode.":
+    "Could not delete the paste, it was not stored in 'vernietig na lezen' mode.":
 		"Verwijderen van de geplakte tekst niet mogelijk, deze werd niet opgeslagen in 'vernietig na lezen' modus.",
     "FOR YOUR EYES ONLY. Don't close this window, this message can't be displayed again.":
 		"FOR YOUR EYES ONLY. Sluit dit venster niet, dit bericht kan niet opnieuw worden weergegeven.",
@@ -112,9 +112,9 @@
         "Serverfout of server reageert niet",
     "Could not post comment: %s":
         "Kon het commentaar niet plaatsen: %s",
-    "Sending paste (Please move your mouse for more entropy)...":
-        "Geplakte tekst verzenden (aub uw muis bewegen voor meer entropie)...",
-    "Sending paste...":
+    "Please move your mouse for more entropy…":
+        "Aub uw muis bewegen voor meer entropie…",
+     "Sending paste...":
         "Geplakte tekst verzenden...",
     "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit [Ctrl]+[c] to copy)</span>":
         "Uw geplakte tekst is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Druk [Ctrl]+[c] om te kopiëren)</span>",
@@ -129,9 +129,15 @@
     "Source Code": "Broncode",
     "Markdown": "Markdown",
     "Download attachment": "Bijlage downloaden",
-    "Cloned file attached.": "Gekloond bestand bijgevoegd",
+    "Cloned: '%s'": "Gekloond: '%s'",
+    "The cloned file '%s' was attached to this paste.":
+        "Het gekloonde bestand '%s' is bijgevoegd aan de geplakte tekst.",
     "Attach a file": "Een bestand toevoegen",
-    "Remove attachment": "Bijlage verwijderen",
+    "alternatively drag & drop a file or paste an image from the clipboard":
+        "U kunt ook een bestand slepen en neerzetten of een afbeelding plakken van het klembord",
+    "File too large, to display a preview. Please download the attachment.":
+        "Het bestand is te groot om voorbeeld weer te geven. Aub de bijlage downloaden",   
+	"Remove attachment": "Bijlage verwijderen",
     "Your browser does not support uploading encrypted files. Please use a newer browser.":
 		"Uw browser biedt geen ondersteuning voor het uploaden van gecodeerde bestanden. Gebruik alstublieft een nieuwere browser",
     "Invalid attachment.": "Ongeldige bijlage",
@@ -139,13 +145,16 @@
     "Shorten URL": "URL verkorten",
     "Editor": "Editor",
     "Preview": "Preview",
-    "PrivateBin requires the PATH to end in a \"%s\". Please update the PATH in your index.php.":
-        "PrivateBin vereist dat het PATH eindigt in een \"%s\". Aub het PATH updaten in uw index.php",
+    "%s requires the PATH to end in a \"%s\". Please update the PATH in your index.php.":
+        "%s vereist dat het PATH eindigt in een '%s'. Aub het PATH updaten in uw index.php.",
     "Decrypt":
         "Decoderen",
     "Enter password":
         "Voer het wachtwoord in",
     "Loading…": "Laden…",
+    "Decrypting paste…": "Geplakte tekst decoderen…",
+    "Preparing new paste…": "Nieuwe geplakte tekst voorbereiden…",
     "In case this message never disappears please have a look at <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">this FAQ for information to troubleshoot</a>.":
-        "In het geval dat dit bericht nooit verdwijnt, kijkt u dan eens naar <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\"> veelgestelde vragen voor informatie over het oplossen van problemen </a>."
+        "In het geval dat dit bericht nooit verdwijnt, kijkt u dan eens naar <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\"> veelgestelde vragen voor informatie over het oplossen van problemen </a>.",
+    "+++ no paste text +++": "+++ geen geplakte tekst +++"
 }
