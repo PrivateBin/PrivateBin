@@ -2023,6 +2023,17 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
         };
 
         /**
+         * Cleares the drag & drop data.
+         *
+         * @name AttachmentViewer.clearDragAndDrop
+         * @function
+         */
+        me.clearDragAndDrop = function()
+        {
+            $dragAndDropFileName.text('');
+        };
+
+        /**
          * hides the attachment
          *
          * This will not hide the preview (see AttachmentViewer.hideAttachmentPreview
@@ -2137,6 +2148,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
                 loadedFile = $fileInput[0].files[0];
                 $dragAndDropFileName.text('');
             } else {
+                // TODO: cannot set original $fileWrap here for security reasons…
                 $dragAndDropFileName.text(loadedFile.name);
             }
 
@@ -2206,7 +2218,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
                     // Firefox crashes with files that are about 1.5MB
                     // The performance with 1MB files is bearable
                     if (data.length > 1398488) {
-                        Alert.showError('File too large, to display a preview. Please download the attachment.');
+                        Alert.showError('File too large, to display a preview. Please download the attachment.'); //TODO: is this error really neccessary?
                         return;
                     }
 
@@ -2262,7 +2274,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
             $(document).on('drop', drop);
             $(document).on('dragenter', ignoreDragDrop);
             $(document).on('dragover', ignoreDragDrop);
-            $fileInput.on("change", function () {
+            $fileInput.on('change', function () {
                 me.readFileData();
             });
         };
@@ -2842,8 +2854,10 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
             // in any case, remove saved attachment data
             AttachmentViewer.removeAttachmentData();
 
+            // hide UI for selected files
             // our up-to-date jQuery can handle it :)
             $fileWrap.find('input').val('');
+            AttachmentViewer.clearDragAndDrop();
 
             // pevent '#' from appearing in the URL
             event.preventDefault();
