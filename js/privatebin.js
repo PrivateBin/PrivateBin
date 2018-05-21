@@ -2005,6 +2005,19 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
             $attachmentLink.off('click');
             $attachmentPreview.html('');
 
+            AttachmentViewer.removeAttachmentData();
+        };
+
+        /**
+         * removes the attachment data
+         *
+         * This removes the data, which would be uploaded otherwise.
+         *
+         * @name AttachmentViewer.removeAttachmentData
+         * @function
+         */
+        me.removeAttachmentData = function()
+        {
             file = undefined;
             attachmentData = undefined;
         };
@@ -2038,7 +2051,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
         };
 
         /**
-         * checks if there is an attachment
+         * checks if there is an attachment displayed
          *
          * @name   AttachmentViewer.hasAttachment
          * @function
@@ -2053,7 +2066,9 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
         };
 
         /**
-         * checks if there is attachment data available
+         * checks if there is attachment data (for preview!) available
+         *
+         * It returns true, when there is data that needs to be encrypted.
          *
          * @name   AttachmentViewer.hasAttachmentData
          * @function
@@ -2823,6 +2838,9 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
                 $customAttachment.addClass('hidden');
                 $fileWrap.removeClass('hidden');
             }
+
+            // in any case, remove saved attachment data
+            AttachmentViewer.removeAttachmentData();
 
             // our up-to-date jQuery can handle it :)
             $fileWrap.find('input').val('');
@@ -3696,10 +3714,11 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
             // get data
             var plainText = Editor.getText(),
                 format = PasteViewer.getFormat(),
+                // the methods may return different values if no files are attached (null, undefined or false)
                 files = TopNav.getFileList() || AttachmentViewer.getFile() || AttachmentViewer.hasAttachment();
 
             // do not send if there is no data
-            if (plainText.length === 0 && files === null) {
+            if (plainText.length === 0 && !files) {
                 // revert loading status…
                 Alert.hideLoading();
                 TopNav.showCreateButtons();
