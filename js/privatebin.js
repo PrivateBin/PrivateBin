@@ -2130,11 +2130,12 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
          * read file data as dataURL using the FileReader API
          *
          * @name   AttachmentViewer.readFileData
+         * @private
          * @function
          * @param {object} loadedFile The loaded file.
          * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/FileReader#readAsDataURL()}
          */
-        me.readFileData = function (loadedFile) {
+        readFileData = function (loadedFile) {
             if (typeof FileReader === 'undefined') {
                 // revert loading status…
                 me.hideAttachment();
@@ -2242,9 +2243,10 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
          * attaches the file attachment drag & drop handler to the page
          *
          * @name   AttachmentViewer.addDragDropHandler
+         * @private
          * @function
          */
-        me.addDragDropHandler = function () {
+        addDragDropHandler = function () {
             if (typeof $fileInput === 'undefined' || $fileInput.length === 0) {
                 return;
             }
@@ -2267,7 +2269,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
                     //Only works in Chrome:
                     //fileInput[0].files = e.dataTransfer.files;
 
-                    me.readFileData(file);
+                    readFileData(file);
                 }
             };
 
@@ -2275,7 +2277,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
             $(document).on('dragenter', ignoreDragDrop);
             $(document).on('dragover', ignoreDragDrop);
             $fileInput.on('change', function () {
-                me.readFileData();
+                readFileData();
             });
         };
 
@@ -2283,9 +2285,10 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
          * attaches the clipboard attachment handler to the page
          *
          * @name   AttachmentViewer.addClipboardEventHandler
+         * @private
          * @function
          */
-        me.addClipboardEventHandler = function () {
+        addClipboardEventHandler = function () {
             $(document).on('paste',
                     function (event) {
                         var items = (event.clipboardData || event.originalEvent.clipboardData).items;
@@ -2293,7 +2296,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
                             if (items.hasOwnProperty(i)) {
                                 var item = items[i];
                                 if (item.kind === 'file') {
-                                    me.readFileData(item.getAsFile());
+                                    readFileData(item.getAsFile());
                                 }
                             }
                         }
@@ -2362,8 +2365,8 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
                 $dragAndDropFileName = $('#dragAndDropFileName');
 
                 $fileInput = $('#file');
-                me.addDragDropHandler();
-                me.addClipboardEventHandler();
+                addDragDropHandler();
+                addClipboardEventHandler();
             }
         }
 
