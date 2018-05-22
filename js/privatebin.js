@@ -741,6 +741,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
         me.getPasteId = function()
         {
             if (id === null) {
+                // Attention: This also returns the delete token inside of the ID, if it is specified
                 id = window.location.search.substring(1);
 
                 if (id === '') {
@@ -749,7 +750,19 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
             }
 
             return id;
-        };
+        }
+
+        /**
+         * Returns true, when the URL has a delete token and the current call was used for deleting a paste.
+         *
+         * @name   Model.hasDeleteToken
+         * @function
+         * @return {bool}
+         */
+        me.hasDeleteToken = function()
+        {
+            return window.location.search.indexOf('deletetoken') !== -1;
+        }
 
         /**
          * return the deciphering key stored in anchor part of the URL
@@ -4410,6 +4423,12 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
             } catch (e) {
                 // otherwise create a new paste
                 return me.newPaste();
+            }
+
+            // if delete token is passed (i.e. paste has been deleted by this access)
+            // there is no more stuf we need to do
+            if (Model.hasDeleteToken()) {
+                return;
             }
 
             // prevent bots from viewing a paste and potentially deleting data
