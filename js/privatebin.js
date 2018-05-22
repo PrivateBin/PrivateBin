@@ -2135,7 +2135,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
          * @param {object} loadedFile The loaded file.
          * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/FileReader#readAsDataURL()}
          */
-        readFileData = function (loadedFile) {
+        function readFileData(loadedFile) {
             if (typeof FileReader === 'undefined') {
                 // revert loading status…
                 me.hideAttachment();
@@ -2165,7 +2165,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
                 }
             };
             fileReader.readAsDataURL(loadedFile);
-        };
+        }
 
         /**
          * handle the preview of files that can either be an image, video, audio or pdf element
@@ -2246,7 +2246,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
          * @private
          * @function
          */
-        addDragDropHandler = function () {
+        function addDragDropHandler() {
             if (typeof $fileInput === 'undefined' || $fileInput.length === 0) {
                 return;
             }
@@ -2279,7 +2279,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
             $fileInput.on('change', function () {
                 readFileData();
             });
-        };
+        }
 
         /**
          * attaches the clipboard attachment handler to the page
@@ -2288,20 +2288,19 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
          * @private
          * @function
          */
-        addClipboardEventHandler = function () {
-            $(document).on('paste',
-                    function (event) {
-                        var items = (event.clipboardData || event.originalEvent.clipboardData).items;
-                        for (var i in items) {
-                            if (items.hasOwnProperty(i)) {
-                                var item = items[i];
-                                if (item.kind === 'file') {
-                                    readFileData(item.getAsFile());
-                                }
-                            }
+        function addClipboardEventHandler() {
+            $(document).on('paste', function (event) {
+                var items = (event.clipboardData || event.originalEvent.clipboardData).items;
+                for (var i in items) {
+                    if (items.hasOwnProperty(i)) {
+                        var item = items[i];
+                        if (item.kind === 'file') {
+                            readFileData(item.getAsFile());
                         }
-                    });
-        };
+                    }
+                }
+            });
+        }
 
 
         /**
