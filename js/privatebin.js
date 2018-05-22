@@ -2229,7 +2229,6 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
                 loadedFile = $fileInput[0].files[0];
                 $dragAndDropFileName.text('');
             } else {
-                // TODO: cannot set original $fileWrap here for security reasons…
                 $dragAndDropFileName.text(loadedFile.name);
             }
 
@@ -2375,6 +2374,10 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
                     if (items.hasOwnProperty(i)) {
                         var item = items[i];
                         if (item.kind === 'file') {
+                            //Clear the file input:
+                            $fileInput.wrap('<form>').closest('form').get(0).reset();
+                            $fileInput.unwrap();
+
                             readFileData(item.getAsFile());
                         }
                     }
