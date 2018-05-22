@@ -2072,8 +2072,32 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
             $attachmentLink.off('click');
             $attachmentPreview.html('');
 
+            AttachmentViewer.removeAttachmentData();
+        };
+
+        /**
+         * removes the attachment data
+         *
+         * This removes the data, which would be uploaded otherwise.
+         *
+         * @name AttachmentViewer.removeAttachmentData
+         * @function
+         */
+        me.removeAttachmentData = function()
+        {
             file = undefined;
             attachmentData = undefined;
+        };
+
+        /**
+         * Cleares the drag & drop data.
+         *
+         * @name AttachmentViewer.clearDragAndDrop
+         * @function
+         */
+        me.clearDragAndDrop = function()
+        {
+            $dragAndDropFileName.text('');
         };
 
         /**
@@ -2105,7 +2129,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
         };
 
         /**
-         * checks if there is an attachment
+         * checks if there is an attachment displayed
          *
          * @name   AttachmentViewer.hasAttachment
          * @function
@@ -2120,7 +2144,9 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
         };
 
         /**
-         * checks if there is attachment data available
+         * checks if there is attachment data (for preview!) available
+         *
+         * It returns true, when there is data that needs to be encrypted.
          *
          * @name   AttachmentViewer.hasAttachmentData
          * @function
@@ -2171,11 +2197,12 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
          * read file data as dataURL using the FileReader API
          *
          * @name   AttachmentViewer.readFileData
+         * @private
          * @function
          * @param {object} loadedFile The loaded file.
          * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/FileReader#readAsDataURL()}
          */
-        me.readFileData = function (loadedFile) {
+        function readFileData(loadedFile) {
             if (typeof FileReader === 'undefined') {
                 // revert loading status…
                 me.hideAttachment();
@@ -2189,6 +2216,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
                 loadedFile = $fileInput[0].files[0];
                 $dragAndDropFileName.text('');
             } else {
+                // TODO: cannot set original $fileWrap here for security reasons…
                 $dragAndDropFileName.text(loadedFile.name);
             }
 
@@ -2204,7 +2232,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
                 }
             };
             fileReader.readAsDataURL(loadedFile);
-        };
+        }
 
         /**
          * handle the preview of files that can either be an image, video, audio or pdf element
@@ -2258,7 +2286,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
                     // Firefox crashes with files that are about 1.5MB
                     // The performance with 1MB files is bearable
                     if (data.length > 1398488) {
-                        Alert.showError('File too large, to display a preview. Please download the attachment.');
+                        Alert.showError('File too large, to display a preview. Please download the attachment.'); //TODO: is this error really neccessary?
                         return;
                     }
 
@@ -2282,9 +2310,10 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
          * attaches the file attachment drag & drop handler to the page
          *
          * @name   AttachmentViewer.addDragDropHandler
+         * @private
          * @function
          */
-        me.addDragDropHandler = function () {
+        function addDragDropHandler() {
             if (typeof $fileInput === 'undefined' || $fileInput.length === 0) {
                 return;
             }
@@ -2307,38 +2336,38 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
                     //Only works in Chrome:
                     //fileInput[0].files = e.dataTransfer.files;
 
-                    me.readFileData(file);
+                    readFileData(file);
                 }
             };
 
             $(document).on('drop', drop);
             $(document).on('dragenter', ignoreDragDrop);
             $(document).on('dragover', ignoreDragDrop);
-            $fileInput.on("change", function () {
-                me.readFileData();
+            $fileInput.on('change', function () {
+                readFileData();
             });
-        };
+        }
 
         /**
          * attaches the clipboard attachment handler to the page
          *
          * @name   AttachmentViewer.addClipboardEventHandler
+         * @private
          * @function
          */
-        me.addClipboardEventHandler = function () {
-            $(document).on('paste',
-                    function (event) {
-                        var items = (event.clipboardData || event.originalEvent.clipboardData).items;
-                        for (var i in items) {
-                            if (items.hasOwnProperty(i)) {
-                                var item = items[i];
-                                if (item.kind === 'file') {
-                                    me.readFileData(item.getAsFile());
-                                }
-                            }
+        function addClipboardEventHandler() {
+            $(document).on('paste', function (event) {
+                var items = (event.clipboardData || event.originalEvent.clipboardData).items;
+                for (var i in items) {
+                    if (items.hasOwnProperty(i)) {
+                        var item = items[i];
+                        if (item.kind === 'file') {
+                            readFileData(item.getAsFile());
                         }
-                    });
-        };
+                    }
+                }
+            });
+        }
 
 
         /**
@@ -2402,8 +2431,8 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
                 $dragAndDropFileName = $('#dragAndDropFileName');
 
                 $fileInput = $('#file');
-                me.addDragDropHandler();
-                me.addClipboardEventHandler();
+                addDragDropHandler();
+                addClipboardEventHandler();
             }
         }
 
@@ -2906,8 +2935,13 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
                 $fileWrap.removeClass('hidden');
             }
 
+            // in any case, remove saved attachment data
+            AttachmentViewer.removeAttachmentData();
+
+            // hide UI for selected files
             // our up-to-date jQuery can handle it :)
             $fileWrap.find('input').val('');
+            AttachmentViewer.clearDragAndDrop();
 
             // pevent '#' from appearing in the URL
             event.preventDefault();
@@ -3814,10 +3848,11 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
             // get data
             var plainText = Editor.getText(),
                 format = PasteViewer.getFormat(),
+                // the methods may return different values if no files are attached (null, undefined or false)
                 files = TopNav.getFileList() || AttachmentViewer.getFile() || AttachmentViewer.hasAttachment();
 
             // do not send if there is no data
-            if (plainText.length === 0 && files === null) {
+            if (plainText.length === 0 && !files) {
                 // revert loading status…
                 Alert.hideLoading();
                 TopNav.showCreateButtons();
