@@ -718,14 +718,14 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
 
                 // show error message
                 Alert.showError(Uploader.parseUploadError(status, data, 'getting paste data'));
-            })
+            });
             Uploader.setSuccess(function (status, data) {
                 pasteData = data;
 
                 if (typeof callback === 'function') {
                     return callback(data);
                 }
-            })
+            });
             Uploader.run();
         };
 
