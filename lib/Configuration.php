@@ -211,7 +211,7 @@ class Configuration
     /**
      * get configuration as array
      *
-     * return array
+     * @return array
      */
     public function get()
     {
@@ -221,7 +221,7 @@ class Configuration
     /**
      * get default configuration as array
      *
-     * return array
+     * @return array
      */
     public static function getDefaults()
     {
@@ -234,7 +234,7 @@ class Configuration
      * @param string $key
      * @param string $section defaults to main
      * @throws Exception
-     * return mixed
+     * @return mixed
      */
     public function getKey($key, $section = 'main')
     {
@@ -250,7 +250,7 @@ class Configuration
      *
      * @param string $section
      * @throws Exception
-     * return mixed
+     * @return mixed
      */
     public function getSection($section)
     {
