@@ -679,16 +679,15 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
      */
     public function testReadInvalidId()
     {
-        $_SERVER['QUERY_STRING'] = 'foo';
+        $_SERVER['QUERY_STRING']          = 'foo';
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         ob_start();
         new PrivateBin;
         $content = ob_get_contents();
         ob_end_clean();
-        $this->assertRegExp(
-            '#<div[^>]*id="errormessage"[^>]*>.*Invalid paste ID\.#s',
-            $content,
-            'outputs error correctly'
-        );
+        $response = json_decode($content, true);
+        $this->assertEquals(1, $response['status'], 'outputs error status');
+        $this->assertEquals('Invalid paste ID.', $response['message'], 'outputs error message');
     }
 
     /**
@@ -696,16 +695,15 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
      */
     public function testReadNonexisting()
     {
-        $_SERVER['QUERY_STRING'] = Helper::getPasteId();
+        $_SERVER['QUERY_STRING']          = Helper::getPasteId();
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         ob_start();
         new PrivateBin;
         $content = ob_get_contents();
         ob_end_clean();
-        $this->assertRegExp(
-            '#<div[^>]*id="errormessage"[^>]*>.*Paste does not exist, has expired or has been deleted\.#s',
-            $content,
-            'outputs error correctly'
-        );
+        $response = json_decode($content, true);
+        $this->assertEquals(1, $response['status'], 'outputs error status');
+        $this->assertEquals('Paste does not exist, has expired or has been deleted.', $response['message'], 'outputs error message');
     }
 
     /**
@@ -777,21 +775,6 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($paste['meta']['opendiscussion'], $response['meta']['opendiscussion'], 'outputs opendiscussion correctly');
         $this->assertEquals(0, $response['comment_count'], 'outputs comment_count correctly');
         $this->assertEquals(0, $response['comment_offset'], 'outputs comment_offset correctly');
-    }
-
-    /**
-     * @runInSeparateProcess
-     */
-    public function testReadInvalidJson()
-    {
-        $_SERVER['QUERY_STRING']          = Helper::getPasteId();
-        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
-        ob_start();
-        new PrivateBin;
-        $content = ob_get_contents();
-        ob_end_clean();
-        $response = json_decode($content, true);
-        $this->assertEquals(1, $response['status'], 'outputs error status');
     }
 
     /**

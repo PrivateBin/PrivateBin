@@ -356,38 +356,31 @@ class PrivateBin
     }
 
     /**
-     * Read an existing paste or comment
+     * Read an existing paste or comment, only allowed via a JSON API call
      *
      * @access private
      * @param  string $dataid
      */
     private function _read($dataid)
     {
+        if (!$this->_request->isJsonApiCall()) {
+            return;
+        }
+
         try {
             $paste = $this->_model->getPaste($dataid);
             if ($paste->exists()) {
-                // reading paste is only possible via JSON call
-                if ($this->_request->isJsonApiCall()) {
-                    $data              = $paste->get();
-                    $this->_doesExpire = property_exists($data, 'meta') && property_exists($data->meta, 'expire_date');
-                    if (property_exists($data->meta, 'salt')) {
-                        unset($data->meta->salt);
-                    }
-                    $this->_data = json_encode($data);
+                $data              = $paste->get();
+                $this->_doesExpire = property_exists($data, 'meta') && property_exists($data->meta, 'expire_date');
+                if (property_exists($data->meta, 'salt')) {
+                    unset($data->meta->salt);
                 }
+                $this->_return_message(0, $dataid, (array) $data);
             } else {
-                $this->_error = self::GENERIC_ERROR;
+                $this->_return_message(1, self::GENERIC_ERROR);
             }
         } catch (Exception $e) {
-            $this->_error = $e->getMessage();
-        }
-
-        if ($this->_request->isJsonApiCall()) {
-            if (strlen($this->_error)) {
-                $this->_return_message(1, $this->_error);
-            } else {
-                $this->_return_message(0, $dataid, json_decode($this->_data, true));
-            }
+            $this->_return_message(1, $e->getMessage());
         }
     }
 
