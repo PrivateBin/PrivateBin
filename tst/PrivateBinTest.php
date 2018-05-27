@@ -715,7 +715,7 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
     {
         $expiredPaste = Helper::getPaste(array('expire_date' => 1344803344));
         $this->_model->create(Helper::getPasteId(), $expiredPaste);
-        $_SERVER['QUERY_STRING'] = Helper::getPasteId();
+        $_SERVER['QUERY_STRING']          = Helper::getPasteId();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         ob_start();
         new PrivateBin;
@@ -799,7 +799,7 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
      */
     public function testReadOldSyntax()
     {
-        $paste = Helper::getPaste();
+        $paste         = Helper::getPaste();
         $paste['meta'] = array(
             'syntaxcoloring' => true,
             'postdate'       => $paste['meta']['postdate'],
