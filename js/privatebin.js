@@ -294,7 +294,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
          * @prop   {string[]}
          * @readonly
          */
-        var supportedLanguages = ['de', 'es', 'fr', 'it', 'no', 'pl', 'pt', 'oc', 'ru', 'sl', 'zh'];
+        var supportedLanguages = ['de', 'es', 'fr', 'it', 'no', 'nl', 'pl', 'pt', 'oc', 'ru', 'sl', 'zh'];
 
         /**
          * built in language
