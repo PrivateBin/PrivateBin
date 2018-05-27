@@ -7,6 +7,7 @@ describe('Prompt', function () {
     describe('requestPassword & getPassword', function () {
         this.timeout(30000);
         before(function () {
+            $.PrivateBin.Model.reset();
             cleanup();
         });
 
@@ -15,7 +16,7 @@ describe('Prompt', function () {
             'string',
             function (password) {
                 password = password.replace(/\r+/g, '');
-                var clean = jsdom('', {url: 'ftp://example.com/#0'});
+                var clean = jsdom('', {url: 'ftp://example.com/?0'});
                 $('body').html(
                     '<div id="passwordmodal" class="modal fade" role="dialog">' +
                     '<div class="modal-dialog"><div class="modal-content">' +
@@ -23,7 +24,7 @@ describe('Prompt', function () {
                     '<div class="form-group"><input id="passworddecrypt" ' +
                     'type="password" class="form-control" placeholder="Enter ' +
                     'password"></div><button type="submit">Decrypt</button>' +
-                    '</form></div></div></div></div><div id="cipherdata">{}</div>'
+                    '</form></div></div></div></div>'
                 );
                 $.PrivateBin.Model.init();
                 $.PrivateBin.Prompt.init();
@@ -31,6 +32,7 @@ describe('Prompt', function () {
                 $('#passworddecrypt').val(password);
                 $('#passwordform').submit();
                 var result = $.PrivateBin.Prompt.getPassword();
+                $.PrivateBin.Model.reset();
                 clean();
                 return result === password;
             }

@@ -49,7 +49,7 @@ class Paste extends AbstractModel
         }
 
         // check if non-expired burn after reading paste needs to be deleted
-        if (property_exists($data->meta, 'burnafterreading') && $data->meta->burnafterreading && $this->_conf->getKey('instantburnafterreading')) {
+        if (property_exists($data->meta, 'burnafterreading') && $data->meta->burnafterreading) {
             $this->delete();
         }
 
@@ -72,6 +72,12 @@ class Paste extends AbstractModel
         $data->comment_offset = 0;
         $data->{'@context'}   = 'js/paste.jsonld';
         $this->_data          = $data;
+
+        // If the paste was meant to be read only once, delete it.
+        if ($this->isBurnafterreading()) {
+            $this->delete();
+        }
+
         return $this->_data;
     }
 
@@ -163,7 +169,7 @@ class Paste extends AbstractModel
      *
      * The token is the hmac of the pastes ID signed with the server salt.
      * The paste can be deleted by calling:
-     * http://example.com/privatebin/?pasteid=<pasteid>&deletetoken=<deletetoken>
+     * https://example.com/privatebin/?pasteid=<pasteid>&deletetoken=<deletetoken>
      *
      * @access public
      * @return string

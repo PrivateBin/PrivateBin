@@ -677,38 +677,17 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
     /**
      * @runInSeparateProcess
      */
-    public function testRead()
-    {
-        $this->_model->create(Helper::getPasteId(), Helper::getPaste());
-        $_SERVER['QUERY_STRING'] = Helper::getPasteId();
-        ob_start();
-        new PrivateBin;
-        $content = ob_get_contents();
-        ob_end_clean();
-        $this->assertRegExp(
-            '#<div id="cipherdata"[^>]*>' .
-            preg_quote(htmlspecialchars(Helper::getPasteAsJson(), ENT_NOQUOTES)) .
-            '</div>#',
-            $content,
-            'outputs data correctly'
-        );
-    }
-
-    /**
-     * @runInSeparateProcess
-     */
     public function testReadInvalidId()
     {
-        $_SERVER['QUERY_STRING'] = 'foo';
+        $_SERVER['QUERY_STRING']          = 'foo';
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         ob_start();
         new PrivateBin;
         $content = ob_get_contents();
         ob_end_clean();
-        $this->assertRegExp(
-            '#<div[^>]*id="errormessage"[^>]*>.*Invalid paste ID\.#s',
-            $content,
-            'outputs error correctly'
-        );
+        $response = json_decode($content, true);
+        $this->assertEquals(1, $response['status'], 'outputs error status');
+        $this->assertEquals('Invalid paste ID.', $response['message'], 'outputs error message');
     }
 
     /**
@@ -716,16 +695,15 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
      */
     public function testReadNonexisting()
     {
-        $_SERVER['QUERY_STRING'] = Helper::getPasteId();
+        $_SERVER['QUERY_STRING']          = Helper::getPasteId();
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         ob_start();
         new PrivateBin;
         $content = ob_get_contents();
         ob_end_clean();
-        $this->assertRegExp(
-            '#<div[^>]*id="errormessage"[^>]*>.*Paste does not exist, has expired or has been deleted\.#s',
-            $content,
-            'outputs error correctly'
-        );
+        $response = json_decode($content, true);
+        $this->assertEquals(1, $response['status'], 'outputs error status');
+        $this->assertEquals('Paste does not exist, has expired or has been deleted.', $response['message'], 'outputs error message');
     }
 
     /**
@@ -735,16 +713,15 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
     {
         $expiredPaste = Helper::getPaste(array('expire_date' => 1344803344));
         $this->_model->create(Helper::getPasteId(), $expiredPaste);
-        $_SERVER['QUERY_STRING'] = Helper::getPasteId();
+        $_SERVER['QUERY_STRING']          = Helper::getPasteId();
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         ob_start();
         new PrivateBin;
         $content = ob_get_contents();
         ob_end_clean();
-        $this->assertRegExp(
-            '#<div[^>]*id="errormessage"[^>]*>.*Paste does not exist, has expired or has been deleted\.#s',
-            $content,
-            'outputs error correctly'
-        );
+        $response = json_decode($content, true);
+        $this->assertEquals(1, $response['status'], 'outputs error status');
+        $this->assertEquals('Paste does not exist, has expired or has been deleted.', $response['message'], 'outputs error message');
     }
 
     /**
@@ -752,51 +729,26 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
      */
     public function testReadBurn()
     {
-        $burnPaste = Helper::getPaste(array('burnafterreading' => true));
-        $this->_model->create(Helper::getPasteId(), $burnPaste);
-        $_SERVER['QUERY_STRING'] = Helper::getPasteId();
+        $paste = Helper::getPaste(array('burnafterreading' => true));
+        $this->_model->create(Helper::getPasteId(), $paste);
+        $_SERVER['QUERY_STRING']          = Helper::getPasteId();
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         ob_start();
         new PrivateBin;
         $content = ob_get_contents();
         ob_end_clean();
-        unset($burnPaste['meta']['salt']);
-        $this->assertRegExp(
-            '#<div id="cipherdata"[^>]*>' .
-            preg_quote(htmlspecialchars(Helper::getPasteAsJson($burnPaste['meta']), ENT_NOQUOTES)) .
-            '</div>#',
-            $content,
-            'outputs data correctly'
-        );
-        // by default it will be deleted after encryption by the JS
-        $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste exists after reading');
-    }
-
-    /**
-     * @runInSeparateProcess
-     */
-    public function testReadInstantBurn()
-    {
-        $this->reset();
-        $options                                    = parse_ini_file(CONF, true);
-        $options['main']['instantburnafterreading'] = 1;
-        Helper::confBackup();
-        Helper::createIniFile(CONF, $options);
-        $burnPaste = Helper::getPaste(array('burnafterreading' => true));
-        $this->_model->create(Helper::getPasteId(), $burnPaste);
-        $_SERVER['QUERY_STRING'] = Helper::getPasteId();
-        ob_start();
-        new PrivateBin;
-        $content = ob_get_contents();
-        ob_end_clean();
-        unset($burnPaste['meta']['salt']);
-        $this->assertRegExp(
-            '#<div id="cipherdata"[^>]*>' .
-            preg_quote(htmlspecialchars(Helper::getPasteAsJson($burnPaste['meta']), ENT_NOQUOTES)) .
-            '</div>#',
-            $content,
-            'outputs data correctly'
-        );
-        // in this case the changed configuration deletes it instantly
+        $response = json_decode($content, true);
+        $this->assertEquals(0, $response['status'], 'outputs success status');
+        $this->assertEquals(Helper::getPasteId(), $response['id'], 'outputs data correctly');
+        $this->assertStringEndsWith('?' . $response['id'], $response['url'], 'returned URL points to new paste');
+        $this->assertEquals($paste['data'], $response['data'], 'outputs data correctly');
+        $this->assertEquals($paste['meta']['formatter'], $response['meta']['formatter'], 'outputs format correctly');
+        $this->assertEquals($paste['meta']['postdate'], $response['meta']['postdate'], 'outputs postdate correctly');
+        $this->assertEquals($paste['meta']['opendiscussion'], $response['meta']['opendiscussion'], 'outputs opendiscussion correctly');
+        $this->assertEquals(1, $response['meta']['burnafterreading'], 'outputs burnafterreading correctly');
+        $this->assertEquals(0, $response['comment_count'], 'outputs comment_count correctly');
+        $this->assertEquals(0, $response['comment_offset'], 'outputs comment_offset correctly');
+        // by default it will be deleted instantly after it is read
         $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste exists after reading');
     }
 
@@ -828,8 +780,15 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
     /**
      * @runInSeparateProcess
      */
-    public function testReadInvalidJson()
+    public function testReadOldSyntax()
     {
+        $paste         = Helper::getPaste();
+        $paste['meta'] = array(
+            'syntaxcoloring' => true,
+            'postdate'       => $paste['meta']['postdate'],
+            'opendiscussion' => $paste['meta']['opendiscussion'],
+        );
+        $this->_model->create(Helper::getPasteId(), $paste);
         $_SERVER['QUERY_STRING']          = Helper::getPasteId();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         ob_start();
@@ -837,59 +796,15 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
         $content = ob_get_contents();
         ob_end_clean();
         $response = json_decode($content, true);
-        $this->assertEquals(1, $response['status'], 'outputs error status');
-    }
-
-    /**
-     * @runInSeparateProcess
-     */
-    public function testReadOldSyntax()
-    {
-        $oldPaste = Helper::getPaste();
-        $meta     = array(
-            'syntaxcoloring' => true,
-            'postdate'       => $oldPaste['meta']['postdate'],
-            'opendiscussion' => $oldPaste['meta']['opendiscussion'],
-        );
-        $oldPaste['meta'] = $meta;
-        $this->_model->create(Helper::getPasteId(), $oldPaste);
-        $_SERVER['QUERY_STRING'] = Helper::getPasteId();
-        ob_start();
-        new PrivateBin;
-        $content = ob_get_contents();
-        ob_end_clean();
-        $meta['formatter'] = 'syntaxhighlighting';
-        $this->assertRegExp(
-            '#<div id="cipherdata"[^>]*>' .
-            preg_quote(htmlspecialchars(Helper::getPasteAsJson($meta), ENT_NOQUOTES)) .
-            '</div>#',
-            $content,
-            'outputs data correctly'
-        );
-    }
-
-    /**
-     * @runInSeparateProcess
-     */
-    public function testReadOldFormat()
-    {
-        $oldPaste = Helper::getPaste();
-        unset($oldPaste['meta']['formatter']);
-        $this->_model->create(Helper::getPasteId(), $oldPaste);
-        $_SERVER['QUERY_STRING'] = Helper::getPasteId();
-        ob_start();
-        new PrivateBin;
-        $content = ob_get_contents();
-        ob_end_clean();
-        $oldPaste['meta']['formatter'] = 'plaintext';
-        unset($oldPaste['meta']['salt']);
-        $this->assertRegExp(
-            '#<div id="cipherdata"[^>]*>' .
-            preg_quote(htmlspecialchars(Helper::getPasteAsJson($oldPaste['meta']), ENT_NOQUOTES)) .
-            '</div>#',
-            $content,
-            'outputs data correctly'
-        );
+        $this->assertEquals(0, $response['status'], 'outputs success status');
+        $this->assertEquals(Helper::getPasteId(), $response['id'], 'outputs data correctly');
+        $this->assertStringEndsWith('?' . $response['id'], $response['url'], 'returned URL points to new paste');
+        $this->assertEquals($paste['data'], $response['data'], 'outputs data correctly');
+        $this->assertEquals('syntaxhighlighting', $response['meta']['formatter'], 'outputs format correctly');
+        $this->assertEquals($paste['meta']['postdate'], $response['meta']['postdate'], 'outputs postdate correctly');
+        $this->assertEquals($paste['meta']['opendiscussion'], $response['meta']['opendiscussion'], 'outputs opendiscussion correctly');
+        $this->assertEquals(0, $response['comment_count'], 'outputs comment_count correctly');
+        $this->assertEquals(0, $response['comment_offset'], 'outputs comment_offset correctly');
     }
 
     /**

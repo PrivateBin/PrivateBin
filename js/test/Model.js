@@ -70,48 +70,6 @@ describe('Model', function () {
         );
     });
 
-    describe('hasCipherData', function () {
-        before(function () {
-            $.PrivateBin.Model.reset();
-            cleanup();
-        });
-
-        jsc.property(
-            'checks if the element with id "cipherdata" contains any data',
-            'asciistring',
-            function (value) {
-                value = common.htmlEntities(value).trim();
-                $('body').html('<div id="cipherdata">' + value + '</div>');
-                $.PrivateBin.Model.init();
-                var result = $.PrivateBin.Model.hasCipherData();
-                $.PrivateBin.Model.reset();
-                return (value.length > 0) === result;
-            }
-        );
-    });
-
-    describe('getCipherData', function () {
-        before(function () {
-            $.PrivateBin.Model.reset();
-            cleanup();
-        });
-
-        jsc.property(
-            'returns the contents of the element with id "cipherdata"',
-            'asciistring',
-            function (value) {
-                value = common.htmlEntities(value).trim();
-                $('body').html('<div id="cipherdata">' + value + '</div>');
-                $.PrivateBin.Model.init();
-                var result = common.htmlEntities(
-                    $.PrivateBin.Model.getCipherData()
-                );
-                $.PrivateBin.Model.reset();
-                return value === result;
-            }
-        );
-    });
-
     describe('getPasteId', function () {
         this.timeout(30000);
         before(function () {

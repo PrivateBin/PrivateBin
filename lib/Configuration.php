@@ -43,7 +43,6 @@ class Configuration
             'password'                 => true,
             'fileupload'               => false,
             'burnafterreadingselected' => false,
-            'instantburnafterreading'  => false,
             'defaultformatter'         => 'plaintext',
             'syntaxhighlightingtheme'  => null,
             'sizelimit'                => 2097152,
@@ -59,7 +58,6 @@ class Configuration
         ),
         'expire' => array(
             'default' => '1week',
-            'clone'   => true,
         ),
         'expire_options' => array(
             '5min'   => 300,

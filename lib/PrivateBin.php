@@ -53,22 +53,6 @@ class PrivateBin
     private $_conf;
 
     /**
-     * data
-     *
-     * @access private
-     * @var    string
-     */
-    private $_data = '';
-
-    /**
-     * does the paste expire
-     *
-     * @access private
-     * @var    bool
-     */
-    private $_doesExpire = false;
-
-    /**
      * error message
      *
      * @access private
@@ -327,10 +311,10 @@ class PrivateBin
                 // deleted if it has already expired
                 $burnafterreading = $paste->isBurnafterreading();
                 if (
-                    ($burnafterreading && $deletetoken == 'burnafterreading') ||
-                    Filter::slowEquals($deletetoken, $paste->getDeleteToken())
+                    ($burnafterreading && $deletetoken == 'burnafterreading') || // either we burn-after it has been read //@TODO: not needed anymore now?
+                    Filter::slowEquals($deletetoken, $paste->getDeleteToken()) // or we manually delete it with this secret token
                 ) {
-                    // Paste exists and deletion token is valid: Delete the paste.
+                    // Paste exists and deletion token (if required) is valid: Delete the paste.
                     $paste->delete();
                     $this->_status = 'Paste was properly deleted.';
                 } else {
@@ -356,35 +340,30 @@ class PrivateBin
     }
 
     /**
-     * Read an existing paste or comment
+     * Read an existing paste or comment, only allowed via a JSON API call
      *
      * @access private
      * @param  string $dataid
      */
     private function _read($dataid)
     {
+        if (!$this->_request->isJsonApiCall()) {
+            return;
+        }
+
         try {
             $paste = $this->_model->getPaste($dataid);
             if ($paste->exists()) {
-                $data              = $paste->get();
-                $this->_doesExpire = property_exists($data, 'meta') && property_exists($data->meta, 'expire_date');
+                $data = $paste->get();
                 if (property_exists($data->meta, 'salt')) {
                     unset($data->meta->salt);
                 }
-                $this->_data = json_encode($data);
+                $this->_return_message(0, $dataid, (array) $data);
             } else {
-                $this->_error = self::GENERIC_ERROR;
+                $this->_return_message(1, self::GENERIC_ERROR);
             }
         } catch (Exception $e) {
-            $this->_error = $e->getMessage();
-        }
-
-        if ($this->_request->isJsonApiCall()) {
-            if (strlen($this->_error)) {
-                $this->_return_message(1, $this->_error);
-            } else {
-                $this->_return_message(0, $dataid, json_decode($this->_data, true));
-            }
+            $this->_return_message(1, $e->getMessage());
         }
     }
 
@@ -425,7 +404,6 @@ class PrivateBin
 
         $page = new View;
         $page->assign('NAME', $this->_conf->getKey('name'));
-        $page->assign('CIPHERDATA', $this->_data);
         $page->assign('ERROR', I18n::_($this->_error));
         $page->assign('STATUS', I18n::_($this->_status));
         $page->assign('VERSION', self::VERSION);
@@ -445,7 +423,6 @@ class PrivateBin
         $page->assign('LANGUAGES', I18n::getLanguageLabels(I18n::getAvailableLanguages()));
         $page->assign('EXPIRE', $expire);
         $page->assign('EXPIREDEFAULT', $this->_conf->getKey('default', 'expire'));
-        $page->assign('EXPIRECLONE', !$this->_doesExpire || ($this->_doesExpire && $this->_conf->getKey('clone', 'expire')));
         $page->assign('URLSHORTENER', $this->_conf->getKey('urlshortener'));
         $page->assign('QRCODE', $this->_conf->getKey('qrcode'));
         $page->draw($this->_conf->getKey('template'));

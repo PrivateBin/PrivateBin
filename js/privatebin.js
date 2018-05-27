@@ -46,6 +46,18 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
         var me = {};
 
         /**
+         * blacklist of UserAgents (parts) known to belong to a bot
+         *
+         * @private
+         * @enum   {Object}
+         * @readonly
+         */
+        var BadBotUA = [
+            'Bot',
+            'bot'
+        ];
+
+        /**
          * cache for script location
          *
          * @name Helper.baseUri
@@ -121,7 +133,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
          * URLs to handle:
          * <pre>
          *     magnet:?xt.1=urn:sha1:YNCKHTQCWBTRNJIV4WNAE52SJUQCZO5C&xt.2=urn:sha1:TXGCZQTH26NL6OUQAJJPFALHG2LTGBC7
-         *     http://example.com:8800/zero/?6f09182b8ea51997#WtLEUO5Epj9UHAV9JFs+6pUQZp13TuspAUjnF+iM+dM=
+         *     https://example.com:8800/zero/?6f09182b8ea51997#WtLEUO5Epj9UHAV9JFs+6pUQZp13TuspAUjnF+iM+dM=
          *     http://user:example.com@localhost:8800/zero/?6f09182b8ea51997#WtLEUO5Epj9UHAV9JFs+6pUQZp13TuspAUjnF+iM+dM=
          * </pre>
          *
@@ -204,7 +216,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
 
         /**
          * get the current location (without search or hash part of the URL),
-         * eg. http://example.com/path/?aaaa#bbbb --> http://example.com/path/
+         * eg. https://example.com/path/?aaaa#bbbb --> https://example.com/path/
          *
          * @name   Helper.baseUri
          * @function
@@ -231,6 +243,26 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
         {
             baseUri = null;
         };
+
+        /**
+         * checks whether this is a bot we dislike
+         *
+         * @name   Helper.isBadBot
+         * @function
+         * @return {bool}
+         */
+        me.isBadBot = function() {
+            // check whether a bot user agent part can be found in the current
+            // user agent
+            var arrayLength = BadBotUA.length;
+            for (var i = 0; i < arrayLength; i++) {
+                if (navigator.userAgent.indexOf(BadBotUA) >= 0) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
 
         return me;
     })();
@@ -358,7 +390,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
                     // file is loaded
                 }
 
-                // for all other langauges than English for which this behaviour
+                // for all other languages than English for which this behaviour
                 // is expected as it is built-in, log error
                 if (language !== null && language !== 'en') {
                     console.error('Missing translation for: \'' + messageId + '\' in language ' + language);
@@ -623,7 +655,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
     var Model = (function () {
         var me = {};
 
-        var $cipherData,
+        var pasteData = null,
             $templates;
 
         var id = null, symmetricKey = null;
@@ -653,32 +685,53 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
         };
 
         /**
-         * check if cipher data was supplied
+         * returns the paste data (including the cipher data)
          *
-         * @name   Model.getCipherData
+         * @name   Model.getPasteData
          * @function
-         * @return boolean
-         */
-        me.hasCipherData = function()
-        {
-            return me.getCipherData().length > 0;
-        };
-
-        /**
-         * returns the cipher data
-         *
-         * @name   Model.getCipherData
-         * @function
+         * @param {function} callback (optional) Called when data is available
+         * @param {function} useCache (optional) Whether to use the cache or
+         *                            force a data reload. Default: true
          * @return string
          */
-        me.getCipherData = function()
+        me.getPasteData = function(callback, useCache)
         {
-            return $cipherData.text();
+            // use cache if possible/allowed
+            if (useCache !== false && pasteData !== null) {
+                //execute callback
+                if (typeof callback === 'function') {
+                    return callback(pasteData);
+                }
+
+                // alternatively just using inline
+                return pasteData;
+            }
+
+            // reload data
+            Uploader.prepare();
+            Uploader.setUrl(Helper.baseUri() + '?' + me.getPasteId());
+
+            Uploader.setFailure(function (status, data) {
+                // revert loading status…
+                Alert.hideLoading();
+                TopNav.showViewButtons();
+
+                // show error message
+                Alert.showError(Uploader.parseUploadError(status, data, 'getting paste data'));
+            });
+            Uploader.setSuccess(function (status, data) {
+                pasteData = data;
+
+                if (typeof callback === 'function') {
+                    return callback(data);
+                }
+            });
+            Uploader.run();
         };
 
         /**
          * get the pastes unique identifier from the URL,
-         * eg. http://example.com/path/?c05354954c49a487#dfdsdgdgdfgdf returns c05354954c49a487
+         * eg. https://example.com/path/?c05354954c49a487#dfdsdgdgdfgdf returns c05354954c49a487
          *
          * @name   Model.getPasteId
          * @function
@@ -688,6 +741,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
         me.getPasteId = function()
         {
             if (id === null) {
+                // Attention: This also returns the delete token inside of the ID, if it is specified
                 id = window.location.search.substring(1);
 
                 if (id === '') {
@@ -696,7 +750,19 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
             }
 
             return id;
-        };
+        }
+
+        /**
+         * Returns true, when the URL has a delete token and the current call was used for deleting a paste.
+         *
+         * @name   Model.hasDeleteToken
+         * @function
+         * @return {bool}
+         */
+        me.hasDeleteToken = function()
+        {
+            return window.location.search.indexOf('deletetoken') !== -1;
+        }
 
         /**
          * return the deciphering key stored in anchor part of the URL
@@ -751,7 +817,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
          */
         me.reset = function()
         {
-            $cipherData = $templates = id = symmetricKey = null;
+            pasteData = $templates = id = symmetricKey = null;
         };
 
         /**
@@ -764,7 +830,6 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
          */
         me.init = function()
         {
-            $cipherData = $('#cipherdata');
             $templates = $('#templates');
         };
 
@@ -1259,8 +1324,8 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
             if (pasteMetaData.burnafterreading) {
                 // display paste "for your eyes only" if it is deleted
 
-                // actually remove paste, before we claim it is deleted
-                Controller.removePaste(Model.getPasteId(), 'burnafterreading');
+                // the paste has been deleted when the JSON with the ciphertext
+                // has been downloaded
 
                 Alert.showRemaining("FOR YOUR EYES ONLY. Don't close this window, this message can't be displayed again.");
                 $remainingTime.addClass('foryoureyesonly');
@@ -1401,6 +1466,21 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
         {
             return password;
         };
+
+        /**
+         * resets the password to an empty string
+         *
+         * @name   Prompt.reset
+         * @function
+         */
+        me.reset = function()
+        {
+            // reset internal
+            password = '';
+
+            // and also reset UI
+            $passwordDecrypt.val('');
+        }
 
         /**
          * init status manager
@@ -2149,7 +2229,6 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
                 loadedFile = $fileInput[0].files[0];
                 $dragAndDropFileName.text('');
             } else {
-                // TODO: cannot set original $fileWrap here for security reasons…
                 $dragAndDropFileName.text(loadedFile.name);
             }
 
@@ -2295,6 +2374,10 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
                     if (items.hasOwnProperty(i)) {
                         var item = items[i];
                         if (item.kind === 'file') {
+                            //Clear the file input:
+                            $fileInput.wrap('<form>').closest('form').get(0).reset();
+                            $fileInput.unwrap();
+
                             readFileData(item.getAsFile());
                         }
                     }
@@ -2685,9 +2768,11 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
             $passwordInput,
             $rawTextButton,
             $qrCodeLink,
-            $sendButton;
+            $sendButton,
+            $retryButton;
 
-        var pasteExpiration = '1week';
+        var pasteExpiration = '1week',
+            retryButtonCallback;
 
         /**
          * set the expiration on bootstrap templates in dropdown
@@ -2837,6 +2922,19 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
         }
 
         /**
+         * retrys some callback registered before
+         *
+         * @name   TopNav.clickRetryButton
+         * @private
+         * @function
+         * @param  {Event} event
+         */
+        function clickRetryButton(event)
+        {
+            retryButtonCallback(event);
+        }
+
+        /**
          * removes the existing attachment
          *
          * @name   TopNav.removeAttachment
@@ -2915,8 +3013,8 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
                 return;
             }
 
-            $newButton.addClass('hidden');
             $cloneButton.addClass('hidden');
+            $newButton.addClass('hidden');
             $rawTextButton.addClass('hidden');
             $qrCodeLink.addClass('hidden');
 
@@ -2948,14 +3046,14 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
                 return;
             }
 
-            $sendButton.removeClass('hidden');
+            $attach.removeClass('hidden');
+            $burnAfterReadingOption.removeClass('hidden');
             $expiration.removeClass('hidden');
             $formatter.removeClass('hidden');
-            $burnAfterReadingOption.removeClass('hidden');
-            $openDiscussionOption.removeClass('hidden');
             $newButton.removeClass('hidden');
+            $openDiscussionOption.removeClass('hidden');
             $password.removeClass('hidden');
-            $attach.removeClass('hidden');
+            $sendButton.removeClass('hidden');
 
             createButtonsDisplayed = true;
         };
@@ -2995,6 +3093,28 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
         {
             $newButton.removeClass('hidden');
         };
+
+        /**
+         * only shows the "retry" button
+         *
+         * @name   TopNav.showRetryButton
+         * @function
+         */
+        me.showRetryButton = function()
+        {
+            $retryButton.removeClass('hidden');
+        }
+
+        /**
+         * hides the "retry" button
+         *
+         * @name   TopNav.hideRetryButton
+         * @function
+         */
+        me.hideRetryButton = function()
+        {
+            $retryButton.addClass('hidden');
+        }
 
         /**
          * only hides the clone button
@@ -3141,6 +3261,18 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
         };
 
         /**
+         * Set a function to call when the retry button is clicked.
+         *
+         * @name   TopNav.setRetryCallback
+         * @function
+         * @param {function} callback
+         */
+        me.setRetryCallback = function(callback)
+        {
+            retryButtonCallback = callback;
+        }
+
+        /**
          * init navigation manager
          *
          * preloads jQuery elements
@@ -3165,6 +3297,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
             $password = $('#password');
             $passwordInput = $('#passwordinput');
             $rawTextButton = $('#rawtextbutton');
+            $retryButton = $('#retrybutton');
             $sendButton = $('#sendbutton');
             $qrCodeLink = $('#qrcodelink');
 
@@ -3180,6 +3313,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
             $sendButton.click(PasteEncrypter.sendPaste);
             $cloneButton.click(Controller.clonePaste);
             $rawTextButton.click(rawText);
+            $retryButton.click(clickRetryButton);
             $fileRemoveButton.click(removeAttachment);
             $qrCodeLink.click(displayQrCode);
 
@@ -3815,7 +3949,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
         var me = {};
 
         /**
-         * decrypt data or prompts for password in cvase of failure
+         * decrypt data or prompts for password in case of failure
          *
          * @name   PasteDecrypter.decryptOrPromptPassword
          * @private
@@ -3833,18 +3967,23 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
 
             // if it fails, request password
             if (plaindata.length === 0 && password.length === 0) {
-                // try to get cached password first
-                password = Prompt.getPassword();
+                // show prompt
+                Prompt.requestPassword();
 
-                // if password is there, re-try
-                if (password.length === 0) {
-                    password = Prompt.requestPassword();
+                // if password is there instantly (legacy method), re-try encryption
+                if (Prompt.getPassword().length !== 0) {
+                    // recursive
+                    // note: an infinite loop is prevented as the previous if
+                    // clause checks whether a password is already set and ignores
+                    // errors when a password has been passed
+                    return decryptOrPromptPassword(key, password, cipherdata);
                 }
-                // recursive
-                // note: an infinite loop is prevented as the previous if
-                // clause checks whether a password is already set and ignores
-                // errors when a password has been passed
-                return decryptOrPromptPassword.apply(key, password, cipherdata);
+
+                // if password could not be received yet, the new modal is used,
+                // which uses asyncronous event-driven methods to get the password.
+                // Thus, we cannot do anything yet, we need to wait for the user
+                // input.
+                return false;
             }
 
             // if all tries failed, we can only return an error
@@ -3858,7 +3997,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
         /**
          * decrypt the actual paste text
          *
-         * @name   PasteDecrypter.decryptOrPromptPassword
+         * @name   PasteDecrypter.decryptPaste
          * @private
          * @function
          * @param  {object} paste - paste data in object form
@@ -3981,7 +4120,9 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
             Alert.showLoading('Decrypting paste…', 'cloud-download');
 
             if (typeof paste === 'undefined') {
-                paste = $.parseJSON(Model.getCipherData());
+                // get cipher data and wait until it is available
+                Model.getPasteData(me.run);
+                return;
             }
 
             var key = Model.getPasteKey(),
@@ -4006,9 +4147,10 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
                     // ignore empty paste, as this is allowed when pasting attachments
                     decryptPaste(paste, key, password, true);
                 } else {
-                    decryptPaste(paste, key, password);
+                    if (decryptPaste(paste, key, password) === false) {
+                        return false;
+                    }
                 }
-
 
                 // shows the remaining time (until) deletion
                 PasteStatus.showRemainingTime(paste.meta);
@@ -4025,7 +4167,15 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
 
                 // log and show error
                 console.error(err);
-                Alert.showError('Could not decrypt data (Wrong key?)');
+                Alert.showError('Could not decrypt data. Did you enter a wrong password? Retry with the button at the top.');
+                // reset password, so it can be re-entered and sow retry button
+                Prompt.reset();
+                TopNav.setRetryCallback(function () {
+                    TopNav.hideRetryButton();
+
+                    me.run(paste);
+                });
+                TopNav.showRetryButton();
             }
         };
 
@@ -4091,6 +4241,18 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
         };
 
         /**
+         * shows how we much we love bots that execute JS ;)
+         *
+         * @name   Controller.showBadBotMessage
+         * @function
+         */
+        me.showBadBotMessage = function()
+        {
+            TopNav.hideAllButtons();
+            Alert.showError('I love you too, bot…');
+        }
+
+        /**
          * shows the loaded paste
          *
          * @name   Controller.showPaste
@@ -4099,7 +4261,6 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
         me.showPaste = function()
         {
             try {
-                Model.getPasteId();
                 Model.getPasteKey();
             } catch (err) {
                 console.error(err);
@@ -4127,29 +4288,36 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
             // save window position to restore it later
             var orgPosition = $(window).scrollTop();
 
-            Uploader.prepare();
-            Uploader.setUrl(Helper.baseUri() + '?' + Model.getPasteId());
+            Model.getPasteData(function (data) {
+                Uploader.prepare();
+                Uploader.setUrl(Helper.baseUri() + '?' + Model.getPasteId());
 
-            Uploader.setFailure(function (status, data) {
-                // revert loading status…
-                Alert.hideLoading();
-                TopNav.showViewButtons();
+                Uploader.setFailure(function (status, data) {
+                    // revert loading status…
+                    Alert.hideLoading();
+                    TopNav.showViewButtons();
 
-                // show error message
-                Alert.showError(
-                    Uploader.parseUploadError(status, data, 'refresh display')
-                );
-            });
-            Uploader.setSuccess(function (status, data) {
-                PasteDecrypter.run(data);
+                    // show error message
+                    Alert.showError(
+                        Uploader.parseUploadError(status, data, 'refresh display')
+                    );
+                });
+                Uploader.setSuccess(function (status, data) {
+                    PasteDecrypter.run(data);
 
-                // restore position
-                window.scrollTo(0, orgPosition);
+                    // restore position
+                    window.scrollTo(0, orgPosition);
 
-                callback();
-            });
-            Uploader.run();
-        };
+                    PasteDecrypter.run(data);
+
+                    // NOTE: could create problems as callback may be called
+                    // asyncronously if PasteDecrypter e.g. needs to wait for a
+                    // password being entered
+                    callback();
+                });
+                Uploader.run();
+            }, false); // this false is important as it circumvents the cache
+        }
 
         /**
          * clone the current paste
@@ -4207,6 +4375,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
          * @function
          * @param  {string} pasteId
          * @param  {string} deleteToken
+         * @deprecated not used anymore, de we still need it?
          */
         me.removePaste = function(pasteId, deleteToken) {
             // unfortunately many web servers don't support DELETE (and PUT) out of the box
@@ -4251,14 +4420,30 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
             UiHelper.init();
             Uploader.init();
 
-            // display an existing paste
-            if (Model.hasCipherData()) {
-                return me.showPaste();
+            // check whether existing paste needs to be shown
+            try {
+                Model.getPasteId();
+            } catch (e) {
+                // otherwise create a new paste
+                return me.newPaste();
             }
 
-            // otherwise create a new paste
-            me.newPaste();
-        };
+            // if delete token is passed (i.e. paste has been deleted by this access)
+            // there is no more stuf we need to do
+            if (Model.hasDeleteToken()) {
+                return;
+            }
+
+            // prevent bots from viewing a paste and potentially deleting data
+            // when burn-after-reading is set
+            // see https://github.com/elrido/ZeroBin/issues/11
+            if (Helper.isBadBot()) {
+                return me.showBadBotMessage();
+            }
+
+            // display an existing paste
+            return me.showPaste();
+        }
 
         return me;
     })(window, document);

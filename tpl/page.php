@@ -54,7 +54,7 @@ if ($QRCODE):
 <?php
 endif;
 ?>
-		<script type="text/javascript" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-Q3ZXxdH/2epUyO1qorIGVt2JLRZg7QU5YYeBe1evtjOGuHQPUr3zppGtncyNLmaYXbac09NJXeANiy7WeU2NmA==" crossorigin="anonymous"></script>
+		<script type="text/javascript" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-P+tLS0U2r7om1G6T0qLVMntNKoQnBvd3qcHGTgyOfHnj5qkyRWdMppa5q5hdQrxjGevb4hBnLsQKrLMyyRpsiw==" crossorigin="anonymous"></script>
 		<!--[if lt IE 10]>
 		<style type="text/css">body {padding-left:60px;padding-right:60px;} #ienotice {display:block;} #oldienotice {display:block;}</style>
 		<![endif]-->
@@ -96,14 +96,9 @@ endif;
 				<div id="errormessage" class="hidden"><?php echo htmlspecialchars($ERROR); ?></div>
 				<div id="toolbar">
 					<button id="newbutton" class="reloadlink hidden"><img src="img/icon_new.png" width="11" height="15" alt="" /><?php echo I18n::_('New'); ?></button>
+					<button id="retrybutton" class="reloadlink hidden"><?php echo I18n::_('Retry'), PHP_EOL; ?></button>
 					<button id="sendbutton" class="hidden"><img src="img/icon_send.png" width="18" height="15" alt="" /><?php echo I18n::_('Send'); ?></button>
-<?php
-if ($EXPIRECLONE):
-?>
 					<button id="clonebutton" class="hidden"><img src="img/icon_clone.png" width="15" height="17" alt="" /><?php echo I18n::_('Clone'); ?></button>
-<?php
-endif;
-?>
 					<button id="rawtextbutton" class="hidden"><img src="img/icon_raw.png" width="15" height="15" alt="" /><?php echo I18n::_('Raw text'); ?></button>
 <?php
 if ($QRCODE):
@@ -246,20 +241,19 @@ endif;
 				<div id="commentcontainer"></div>
 			</div>
 		</section>
-		<div id="serverdata" class="hidden" aria-hidden="true">
-		<div id="cipherdata" class="hidden"><?php echo htmlspecialchars($CIPHERDATA, ENT_NOQUOTES); ?></div>
 <?php
 if ($DISCUSSION):
 ?>
+		<div id="serverdata" class="hidden" aria-hidden="true">
 			<div id="templates">
 				<article id="commenttemplate" class="comment"><div class="commentmeta"><span class="nickname">name</span><span class="commentdate">0000-00-00</span></div><div class="commentdata">c</div><button class="btn btn-default btn-sm"><?php echo I18n::_('Reply'); ?></button></article>
 				<div id="commenttailtemplate" class="comment"><button class="btn btn-default btn-sm"><?php echo I18n::_('Add comment'); ?></button></div>
 				<div id="replytemplate" class="reply hidden"><input type="text" id="nickname" class="form-control" title="<?php echo I18n::_('Optional nickname…'); ?>" placeholder="<?php echo I18n::_('Optional nickname…'); ?>" /><textarea id="replymessage" class="replymessage form-control" cols="80" rows="7"></textarea><br /><div id="replystatus" role="alert" class="statusmessage hidden alert"><span class="glyphicon" aria-hidden="true"></span> </div><button id="replybutton" class="btn btn-default btn-sm"><?php echo I18n::_('Post comment'); ?></button></div>
 			</div>
+		</div>
 <?php
 endif;
 ?>
-		</div>
 		<section class="container">
 			<div id="noscript" role="alert" class="nonworking alert alert-info noscript-hide"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true">
 				<span> <?php echo I18n::_('Loading…'); ?></span><br>

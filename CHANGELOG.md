@@ -6,6 +6,7 @@
     * CHANGED: Minimum required PHP version is 5.4 (#186)
     * CHANGED: Shipped .htaccess files were updated for Apache 2.4 (#192)
     * CHANGED: Cleanup of bootstrap template variants and moved icons to `img` directory
+    * CHANGED: Removed option to hide clone button on expiring pastes, since this requires reading the paste for rendering the template, which leaks information on the pastes state
   * **1.1.1 (2017-10-06)**
     * CHANGED: Switched to `.php` file extension for configuration file, to avoid leaking configuration data in unprotected installation.
   * **1.1 (2016-12-26)**
