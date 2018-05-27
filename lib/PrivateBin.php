@@ -53,22 +53,6 @@ class PrivateBin
     private $_conf;
 
     /**
-     * data
-     *
-     * @access private
-     * @var    string
-     */
-    private $_data = '';
-
-    /**
-     * does the paste expire
-     *
-     * @access private
-     * @var    bool
-     */
-    private $_doesExpire = false;
-
-    /**
      * error message
      *
      * @access private
@@ -370,8 +354,7 @@ class PrivateBin
         try {
             $paste = $this->_model->getPaste($dataid);
             if ($paste->exists()) {
-                $data              = $paste->get();
-                $this->_doesExpire = property_exists($data, 'meta') && property_exists($data->meta, 'expire_date');
+                $data = $paste->get();
                 if (property_exists($data->meta, 'salt')) {
                     unset($data->meta->salt);
                 }
@@ -440,7 +423,6 @@ class PrivateBin
         $page->assign('LANGUAGES', I18n::getLanguageLabels(I18n::getAvailableLanguages()));
         $page->assign('EXPIRE', $expire);
         $page->assign('EXPIREDEFAULT', $this->_conf->getKey('default', 'expire'));
-        $page->assign('EXPIRECLONE', !$this->_doesExpire || ($this->_doesExpire && $this->_conf->getKey('clone', 'expire')));
         $page->assign('URLSHORTENER', $this->_conf->getKey('urlshortener'));
         $page->assign('QRCODE', $this->_conf->getKey('qrcode'));
         $page->draw($this->_conf->getKey('template'));

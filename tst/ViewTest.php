@@ -53,7 +53,6 @@ class ViewTest extends PHPUnit_Framework_TestCase
         $page->assign('LANGUAGES', I18n::getLanguageLabels(I18n::getAvailableLanguages()));
         $page->assign('EXPIRE', self::$expire);
         $page->assign('EXPIREDEFAULT', self::$expire_default);
-        $page->assign('EXPIRECLONE', true);
         $page->assign('URLSHORTENER', '');
         $page->assign('QRCODE', true);
 
