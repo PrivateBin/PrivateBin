@@ -716,15 +716,14 @@ class PrivateBinTest extends PHPUnit_Framework_TestCase
         $expiredPaste = Helper::getPaste(array('expire_date' => 1344803344));
         $this->_model->create(Helper::getPasteId(), $expiredPaste);
         $_SERVER['QUERY_STRING'] = Helper::getPasteId();
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         ob_start();
         new PrivateBin;
         $content = ob_get_contents();
         ob_end_clean();
-        $this->assertRegExp(
-            '#<div[^>]*id="errormessage"[^>]*>.*Paste does not exist, has expired or has been deleted\.#s',
-            $content,
-            'outputs error correctly'
-        );
+        $response = json_decode($content, true);
+        $this->assertEquals(1, $response['status'], 'outputs error status');
+        $this->assertEquals('Paste does not exist, has expired or has been deleted.', $response['message'], 'outputs error message');
     }
 
     /**
