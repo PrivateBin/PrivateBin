@@ -1,7 +1,7 @@
 doc/ export-ignore
 tst/ export-ignore
 js/.istanbul.yml export-ignore
-js/test.js export-ignore
+js/test/ export-ignore
 .codeclimate.yml export-ignore
 .csslintrc export-ignore
 .dockerignore export-ignore
@@ -15,3 +15,6 @@ js/test.js export-ignore
 .styleci.yml export-ignore
 .travis.yml export-ignore
 Dockerfile export-ignore
+docker-compose.yml export-ignore
+docker/ export-ignore
+composer.json export-ignore

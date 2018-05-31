@@ -36,3 +36,5 @@ Sébastien Sauvage - original idea and main developer
 * Quent-in - Occitan
 * idarlund - Norwegian
 * Tulio Leao - Portuguese
+* Michael van Schaik - Dutch
+* Péter Tabajdi - Hungarian
