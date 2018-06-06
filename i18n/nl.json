@@ -6,7 +6,7 @@
         "Onwetendheid is een zegen",
     "en": "nl",
     "Paste does not exist, has expired or has been deleted.":
-        "Geplakte tekst bestaat niet, is velopen of verwijderd.",
+        "Geplakte tekst bestaat niet, is verlopen of verwijderd.",
     "%s requires php %s or above to work. Sorry.":
         "%s vereist PHP %s of hoger om te kunnen werken. Sorry",
     "%s requires configuration section [%s] to be present in configuration file.":
