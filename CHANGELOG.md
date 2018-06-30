@@ -1,12 +1,18 @@
 # PrivateBin version history
 
-  * **next (not yet released)**
+  * **1.2 (not yet released)**
     * ADDED: Translations for Spanish, Occitan, Norwegian, Portuguese, Dutch and Hungarian
     * ADDED: Option in configuration to change the default "PrivateBin" title of the site
+    * ADDED: Added display of video, audio & PDF, drag & drop, preview of attachments (#182)
+    * ADDED: QR code generation (#169)
+    * ADDED: Introduced DOMpurify library to sanitize generated HTML before display (#183)
+    * CHANGED: Force JSON request for getting paste data & password retry (#216)
     * CHANGED: Minimum required PHP version is 5.4 (#186)
     * CHANGED: Shipped .htaccess files were updated for Apache 2.4 (#192)
     * CHANGED: Cleanup of bootstrap template variants and moved icons to `img` directory
     * CHANGED: Removed option to hide clone button on expiring pastes, since this requires reading the paste for rendering the template, which leaks information on the pastes state
+    * CHANGED: Refactored JavaScript code, making it modular with private and public functions, making it much easier to maintain (#178)
+    * FIXED: To counteract regressions introduced by the refactoring, we finally introduced property based unit testing for the JavaScript code, this caught several regressions, but also some very old bugs not found so far (#32)
   * **1.1.1 (2017-10-06)**
     * CHANGED: Switched to `.php` file extension for configuration file, to avoid leaking configuration data in unprotected installation.
   * **1.1 (2016-12-26)**

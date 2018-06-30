@@ -22,6 +22,7 @@ Sébastien Sauvage - original idea and main developer
 * Nathaniel Olsen - jQuery upgrade
 * Alexander Demenshin - modal password dialog
 * PunKeel - Dockerfile
+* thororm - Display of video, audio & PDF, drag & drop, preview of attachments
 
 ## Translations
 * Hexalyse - French

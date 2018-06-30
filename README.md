@@ -7,7 +7,7 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Coverage/094500f62abf4c9aa0c8a8a4520e4789)](https://www.codacy.com/app/PrivateBin/PrivateBin)
 [![Test Coverage](https://codeclimate.com/github/PrivateBin/PrivateBin/badges/coverage.svg)](https://codeclimate.com/github/PrivateBin/PrivateBin/coverage) [![Code Coverage](https://scrutinizer-ci.com/g/PrivateBin/PrivateBin/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/PrivateBin/PrivateBin/?branch=master)
 
-*Current version: 1.1.1*
+*Current version: 1.2*
 
 **PrivateBin** is a minimalist, open source online [pastebin](https://en.wikipedia.org/wiki/Pastebin)
 where the server has zero knowledge of pasted data.
@@ -90,17 +90,19 @@ file](https://github.com/PrivateBin/PrivateBin/wiki/Configuration):
   to adjust size limit)
 
 * Templates: By default there are bootstrap CSS, darkstrap and "classic ZeroBin"
-  themes and it is easy to adapt these to your own websites layout or create
-  your own.
+  to choose from and it is easy to adapt these to your own websites layout or
+  create your own.
 
 * Translation system and automatic browser language detection (if enabled in
   browser)
 
 * Language selection (disabled by default, as it uses a session cookie)
 
+* QR code generation of URL, to easily transfer pastes over to a mobile device
+
 ## Further resources
 
-* [Installation guide](https://github.com/PrivateBin/PrivateBin/wiki/Installation)
+* [Installation guide](https://github.com/PrivateBin/PrivateBin/blob/master/INSTALL.md)
 
 * [Upgrading from ZeroBin 0.19 Alpha](https://github.com/PrivateBin/PrivateBin/wiki/Upgrading-from-ZeroBin-0.19-Alpha)
 
