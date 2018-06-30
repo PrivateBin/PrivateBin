@@ -4329,7 +4329,6 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
         {
             TopNav.collapseBar();
             TopNav.hideAllButtons();
-            Alert.showLoading('Cloning paste…', 'transfer');
 
             // hide messages from previous paste
             me.hideStatusMessages();
@@ -4364,7 +4363,6 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
             PasteViewer.hide();
             Editor.show();
 
-            Alert.hideLoading();
             TopNav.showCreateButtons();
         };
 
