@@ -11,8 +11,8 @@
  */
 include 'Bootstrap.php';
 
-$vrd  = array('view', 'read', 'delete');
-$vcud = array('view', 'create', 'read', 'delete');
+$vd  = array('view', 'delete');
+$vcd = array('view', 'create', 'delete');
 
 new ConfigurationTestGenerator(array(
     'main/discussion' => array(
@@ -20,10 +20,10 @@ new ConfigurationTestGenerator(array(
             'setting' => true,
             'tests'   => array(
                 array(
-                    'conditions' => array('steps' => $vrd),
+                    'conditions' => array('steps' => $vd),
                     'type'       => 'RegExp',
                     'args'       => array(
-                        '#<div[^>]*id="opendisc"[^>]*>#',
+                        '#<div[^>]*id="opendiscussionoption"[^>]*>#',
                         '$content',
                         'outputs enabled discussion correctly',
                     ),
@@ -46,20 +46,20 @@ new ConfigurationTestGenerator(array(
                     ),
                 ),
             ),
-            'affects' => $vcud,
+            'affects' => $vcd,
         ), array(
             'setting' => false,
             'tests'   => array(
                 array(
                     'type' => 'NotRegExp',
                     'args' => array(
-                        '#<div[^>]*id="opendisc"[^>]*>#',
+                        '#<div[^>]*id="opendiscussionoption"[^>]*>#',
                         '$content',
                         'outputs disabled discussion correctly',
                     ),
                 ),
             ),
-            'affects' => $vrd,
+            'affects' => $vd,
         ),
     ),
     'main/opendiscussion' => array(
@@ -76,7 +76,7 @@ new ConfigurationTestGenerator(array(
                     ),
                 ),
             ),
-            'affects' => $vrd,
+            'affects' => $vd,
         ), array(
             'setting' => false,
             'tests'   => array(
@@ -90,7 +90,7 @@ new ConfigurationTestGenerator(array(
                     ),
                 ),
             ),
-            'affects' => $vrd,
+            'affects' => $vd,
         ),
     ),
     'main/burnafterreadingselected' => array(
@@ -135,7 +135,7 @@ new ConfigurationTestGenerator(array(
                     ),
                 ),
             ),
-            'affects' => $vrd,
+            'affects' => $vd,
         ), array(
             'setting' => false,
             'tests'   => array(
@@ -149,7 +149,7 @@ new ConfigurationTestGenerator(array(
                     ),
                 ),
             ),
-            'affects' => $vrd,
+            'affects' => $vd,
         ),
     ),
     'main/template' => array(
@@ -172,7 +172,7 @@ new ConfigurationTestGenerator(array(
                     ),
                 ),
             ),
-            'affects' => $vrd,
+            'affects' => $vd,
         ), array(
             'setting' => 'bootstrap',
             'tests'   => array(
@@ -192,7 +192,7 @@ new ConfigurationTestGenerator(array(
                     ),
                 ),
             ),
-            'affects' => $vrd,
+            'affects' => $vd,
         ),
     ),
     'main/sizelimit' => array(
@@ -507,6 +507,7 @@ EOT;
                 $code .= PHP_EOL . <<<'EOT'
         $this->_model->create(Helper::getPasteId(), Helper::getPaste());
         $_SERVER['QUERY_STRING'] = Helper::getPasteId();
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
 EOT;
                 break;
             case 'Delete':
@@ -539,11 +540,10 @@ EOT;
             case 'Read':
                 $code .= <<<'EOT'
 
-        $this->assertContains(
-            htmlspecialchars(json_encode(Helper::getPaste()['data']), ENT_NOQUOTES),
-            $content,
-            'outputs data correctly'
-        );
+        $response = json_decode($content, true);
+        $this->assertEquals(0, $response['status'], 'outputs success status');
+        $this->assertEquals(Helper::getPasteId(), $response['id'], 'outputs id correctly');
+        $this->assertEquals(Helper::getPaste()['data'], $response['data'], 'outputs data correctly');
 EOT;
                 break;
             case 'Delete':
