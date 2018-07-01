@@ -4099,7 +4099,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
                 DiscussionViewer.addComment(
                     comment,
                     CryptTool.decipher(key, password, comment.data),
-                    CryptTool.decipher(key, password, comment.meta.nickname)
+                    comment.meta.nickname ? CryptTool.decipher(key, password, comment.meta.nickname) : ''
                 );
             }
 
