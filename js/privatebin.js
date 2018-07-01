@@ -1773,7 +1773,9 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
                     var converter = new showdown.Converter({
                         strikethrough: true,
                         tables: true,
-                        tablesHeaderId: true
+                        tablesHeaderId: true,
+                        simplifiedAutoLink: true,
+                        excludeTrailingPunctuationFromURLs: true
                     });
                     // let showdown convert the HTML and sanitize HTML *afterwards*!
                     $plainText.html(
