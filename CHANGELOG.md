@@ -11,7 +11,7 @@
     * CHANGED: Shipped .htaccess files were updated for Apache 2.4 (#192)
     * CHANGED: Cleanup of bootstrap template variants and moved icons to `img` directory
     * CHANGED: Removed option to hide clone button on expiring pastes, since this requires reading the paste for rendering the template, which leaks information on the pastes state
-    * CHANGED: Upgrading libraries to: SJCL 1.0.7, jQuery 3.3.1 & Base64 2.4.5
+    * CHANGED: Upgrading libraries to: SJCL 1.0.7, jQuery 3.3.1, Base64 2.4.5 & Showdown 1.8.6
     * CHANGED: Refactored JavaScript code, making it modular with private and public functions, making it much easier to maintain (#178)
     * FIXED: To counteract regressions introduced by the refactoring, we finally introduced property based unit testing for the JavaScript code, this caught several regressions, but also some very old bugs not found so far (#32)
   * **1.1.1 (2017-10-06)**
