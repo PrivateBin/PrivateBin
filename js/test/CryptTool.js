@@ -24,7 +24,7 @@ describe('CryptTool', function () {
         // The below static unit tests are included to ensure deciphering of "classic"
         // SJCL based pastes still works
         it(
-            'supports PrivateBin v1 ciphertext (SJCL & Base64 2.1.9)',
+            'supports PrivateBin v1 ciphertext (SJCL & Base64)',
             function () {
                 // Of course you can easily decipher the following texts, if you like.
                 // Bonus points for finding their sources and hidden meanings.

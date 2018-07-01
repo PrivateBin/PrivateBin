@@ -55,7 +55,7 @@ if ($ZEROBINCOMPATIBILITY):
 <?php
 else:
 ?>
-		<script type="text/javascript" data-cfasync="false" src="js/base64-2.1.9.js" integrity="sha512-rbqAby7hObftbEoGQzkhUbEh5YkUn2MtekTLs4btvo2oly4CZ3DxhJzEh0u/rNzS54tcJdqi5Ug1ruugEd2U1g==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/base64-2.4.5.js" integrity="sha512-YINE6agO8ZrYuzlrZZwQJTu0uqURJDxD4gjsfZ6mV4fP2gW5j8giNJ734iyJVTBrnF2XMiUBM/DSi7ON1V5RMQ==" crossorigin="anonymous"></script>
 <?php
 endif;
 ?>
