@@ -4128,11 +4128,6 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
             var key = Model.getPasteKey(),
                 password = Prompt.getPassword();
 
-            if (PasteViewer.isPrettyPrinted()) {
-                // don't decrypt twice
-                return;
-            }
-
             // try to decrypt the paste
             try {
                 // decrypt attachments
