@@ -54,7 +54,7 @@ if ($QRCODE):
 <?php
 endif;
 ?>
-		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-twC6EsE/JGPMf6jyFt/r+9rK8FptYmyWO3K9XaoNnsbXg2F4x3YGIOIO+meWSlxGHIs0Gg2/+IDM/svCmtQRtg==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-19QipeKjOhdFEn7KpfTd9p1YJqXIxSDm+KrTTIQKRhKErCq82AtFkOUVf2+qXDi/xJoYXW5QVIksKK6w2hgFXQ==" crossorigin="anonymous"></script>
 		<!--[if lt IE 10]>
 		<style type="text/css">body {padding-left:60px;padding-right:60px;} #ienotice {display:block;} #oldienotice {display:block;}</style>
 		<![endif]-->

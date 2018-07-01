@@ -2701,8 +2701,8 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
                 return;
             }
 
+            $comment.addClass('highlight');
             var highlightComment = function () {
-                $comment.addClass('highlight');
                 if (fadeOut === true) {
                     setTimeout(function () {
                         $comment.removeClass('highlight');
