@@ -30,7 +30,7 @@ vendor/**/tests
 vendor/**/build_phar.php
 !vendor/**/*.php
 
-# Ignore local node modules, unit testing logs, api docs and eclipse project files
+# Ignore local node modules, unit testing logs, api docs and IDE project files
 js/node_modules/
 js/test.log
 tst/log/
@@ -39,3 +39,4 @@ tst/ConfigurationCombinationsTest.php
 .buildpath
 .project
 .externalToolBuilders
+.c9
