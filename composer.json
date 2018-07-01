@@ -13,7 +13,7 @@
     },
     "require": {
         "php": "^5.4.0 || ^7.0",
-        "paragonie/random_compat": "2.0.4",
+        "paragonie/random_compat": "2.0.15",
         "yzalis/identicon": "1.1.0"
     },
     "require-dev": {
