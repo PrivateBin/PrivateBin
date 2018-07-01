@@ -315,12 +315,12 @@ class Helper
                     PATH . 'tpl' . DIRECTORY_SEPARATOR . $file
                 );
                 $content = preg_replace_callback(
-                    '#<script type="text/javascript" src="js/([a-z0-9.-]+.js)([^"]*)"( integrity="[^"]+" crossorigin="[^"]+")?></script>#',
+                    '#<script ([^>]+) src="js/([a-z0-9.-]+.js)([^"]*)"( integrity="[^"]+" crossorigin="[^"]+")?></script>#',
                     function ($matches) {
-                        if (array_key_exists($matches[1], Helper::$hashes)) {
-                            return '<script type="text/javascript" src="js/' .
-                                $matches[1] . $matches[2] .
-                                '" integrity="sha512-' . Helper::$hashes[$matches[1]] .
+                        if (array_key_exists($matches[2], Helper::$hashes)) {
+                            return '<script ' . $matches[1] . ' src="js/' .
+                                $matches[2] . $matches[3] .
+                                '" integrity="sha512-' . Helper::$hashes[$matches[2]] .
                                 '" crossorigin="anonymous"></script>';
                         } else {
                             return $matches[0];
