@@ -717,7 +717,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
                 TopNav.showViewButtons();
 
                 // show error message
-                Alert.showError(Uploader.parseUploadError(status, data, 'getting paste data'));
+                Alert.showError(Uploader.parseUploadError(status, data, 'get paste data'));
             });
             Uploader.setSuccess(function (status, data) {
                 pasteData = data;
@@ -1440,16 +1440,15 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
             }
 
             // fallback to old method for page template
-            var newPassword = prompt(I18n._('Please enter the password for this paste:'), '');
-            if (newPassword === null) {
+            password = prompt(I18n._('Please enter the password for this paste:'), '');
+            if (password === null) {
                 throw 'password prompt canceled';
             }
             if (password.length === 0) {
                 // recurse…
                 return me.requestPassword();
             }
-
-            password = newPassword;
+            PasteDecrypter.run();
         };
 
         /**
@@ -3972,17 +3971,6 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
                 // show prompt
                 Prompt.requestPassword();
 
-                // if password is there instantly (legacy method), re-try encryption
-                if (Prompt.getPassword().length !== 0) {
-                    // recursive
-                    // note: an infinite loop is prevented as the previous if
-                    // clause checks whether a password is already set and ignores
-                    // errors when a password has been passed
-                    return decryptOrPromptPassword(key, password, cipherdata);
-                }
-
-                // if password could not be received yet, the new modal is used,
-                // which uses asyncronous event-driven methods to get the password.
                 // Thus, we cannot do anything yet, we need to wait for the user
                 // input.
                 return false;

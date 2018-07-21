@@ -70,12 +70,12 @@ if ($SYNTAXHIGHLIGHTING):
 endif;
 if ($MARKDOWN):
 ?>
-		<script type="text/javascript" data-cfasync="false" src="js/showdown-1.8.6.js" integrity="sha512-IWAOP5QX4d1WA8ZSKXJtMWdAW8fOifwB0LyZFKaq2WcvsWF/Xmg8aQwxMOUpCjSaYY/V+NASlReVD6uCSDDvHg==" crossorigin="anonymous"></script>
-		<script type="text/javascript" data-cfasync="false" src="js/purify-1.0.5.js" integrity="sha512-y68WmhxZiNWBzbhCnMOhRIQDLQPN2zPTCbLHsjggRAjvLVzt4wihsvaMAdtz+VpoFP/SYXFJQUB6h6BH3gvDpA==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/showdown-1.8.6.js" integrity="sha512-YFg2sBCGT00I6X5KzgCLP4VqRlmPMRhkVvJS9oJKk5LxiUzzcjzV5m4fNf6mQMctLrhgS5LFKiFF3vzIuXbjAw==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/purify-1.0.5.js" integrity="sha512-IpCJCwlqipmuhbr7fdEOTA4ENcBURsQSDAqXqbr/3dcA2swwJon7D6IStGUQntycGCNCdIM/FdPciBq0gUrLJA==" crossorigin="anonymous"></script>
 <?php
 endif;
 ?>
-		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-0G0kfqJ9im61vY7wBS3UlCjwLvQw8EeNppPy/SWDIuX+2iS6hgM4KbvgTQ6nJwDZPwbsT3R2bPanQKBWKTXcqA==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-l8K/QzXxp/AhoBXhZK6/tkpDn6JckqzRmIX8NcESonR2nVp+dgunCYY07ap+jNM2julZL5Sq5QpOQ6oXz+U+og==" crossorigin="anonymous"></script>
 		<!--[if lt IE 10]>
 		<style type="text/css">body {padding-left:60px;padding-right:60px;} #ienotice {display:block;} #oldienotice {display:block;}</style>
 		<![endif]-->
@@ -100,7 +100,7 @@ endif;
 						<form id="passwordform" role="form">
 							<div class="form-group">
 								<label for="passworddecrypt"><span class="glyphicon glyphicon-eye-open"></span> <?php echo I18n::_('Please enter the password for this paste:') ?></label>
-								<input id="passworddecrypt" type="password" class="form-control" placeholder="<?php echo I18n::_('Enter password') ?>">
+								<input id="passworddecrypt" type="password" class="form-control" placeholder="<?php echo I18n::_('Enter password') ?>" required="required">
 							</div>
 							<button type="submit" class="btn btn-success btn-block"><span class="glyphicon glyphicon-off"></span> <?php echo I18n::_('Decrypt') ?></button>
 						</form>
