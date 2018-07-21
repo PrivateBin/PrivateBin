@@ -162,5 +162,7 @@
     "Preparing new paste…": "Préparation du paste…",
     "In case this message never disappears please have a look at <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">this FAQ for information to troubleshoot</a>.":
         "Si ce message ne disparaîssait pas, jetez un oeil à <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">cette FAQ pour des idées de résolution</a> (en Anglais).",
-    "+++ no paste text +++": "+++ pas de paste-text +++"
+    "+++ no paste text +++": "+++ pas de paste-text +++",
+    "Could not get paste data: %s":
+        "Could not get paste data: %s"
 }

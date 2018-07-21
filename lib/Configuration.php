@@ -53,7 +53,7 @@ class Configuration
             'urlshortener'             => '',
             'qrcode'                   => true,
             'icon'                     => 'identicon',
-            'cspheader'                => 'default-src \'none\'; manifest-src \'self\'; connect-src *; script-src \'self\'; style-src \'self\'; font-src \'self\'; img-src \'self\' data:; media-src data:; object-src data:; Referrer-Policy: \'no-referrer\'; sandbox allow-same-origin allow-scripts allow-forms allow-popups',
+            'cspheader'                => 'default-src \'none\'; manifest-src \'self\'; connect-src *; script-src \'self\'; style-src \'self\'; font-src \'self\'; img-src \'self\' data:; media-src data:; object-src data:; Referrer-Policy: \'no-referrer\'; sandbox allow-same-origin allow-scripts allow-forms allow-popups allow-modals',
             'zerobincompatibility'     => false,
         ),
         'expire' => array(
