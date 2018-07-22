@@ -2208,12 +2208,12 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
         };
 
         /**
-         * read file data as dataURL using the FileReader API
+         * read file data as data URL using the FileReader API
          *
          * @name   AttachmentViewer.readFileData
          * @private
          * @function
-         * @param {object} loadedFile The loaded file.
+         * @param {object} loadedFile (optional) loaded file object
          * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/FileReader#readAsDataURL()}
          */
         function readFileData(loadedFile) {
@@ -2252,8 +2252,8 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
          *
          * @name   AttachmentViewer.handleAttachmentPreview
          * @function
-         * @argument {jQuery} $targetElement where the preview should be appended.
-         * @argument {File Data} data of the file to be displayed.
+         * @argument {jQuery} $targetElement element where the preview should be appended
+         * @argument {string} file as a data URL
          */
         me.handleAttachmentPreview = function ($targetElement, data) {
             if (data) {
