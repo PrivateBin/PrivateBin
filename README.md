@@ -102,7 +102,7 @@ file](https://github.com/PrivateBin/PrivateBin/wiki/Configuration):
 
 ## Further resources
 
-* [Installation guide](https://github.com/PrivateBin/PrivateBin/blob/master/INSTALL.md)
+* [Installation guide](https://github.com/PrivateBin/PrivateBin/blob/master/INSTALL.md#installation)
 
 * [Upgrading from ZeroBin 0.19 Alpha](https://github.com/PrivateBin/PrivateBin/wiki/Upgrading-from-ZeroBin-0.19-Alpha)
 
