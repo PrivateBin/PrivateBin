@@ -1,6 +1,7 @@
 # PrivateBin version history
 
-  * **1.2 (not yet released)**
+  * **1.3 (not yet released)**
+  * **1.2 (2018-07-22)**
     * ADDED: Translations for Spanish, Occitan, Norwegian, Portuguese, Dutch and Hungarian
     * ADDED: Option in configuration to change the default "PrivateBin" title of the site
     * ADDED: Added display of video, audio & PDF, drag & drop, preview of attachments (#182)
