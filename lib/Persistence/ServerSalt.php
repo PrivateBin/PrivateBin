@@ -83,7 +83,7 @@ class ServerSalt extends AbstractPersistence
             self::$_salt = self::generate();
             self::_store(
                 self::$_file,
-                '<?php /* |' . self::$_salt . '| */ ?>'
+                '<?php # |' . self::$_salt . '|'
             );
         }
         return self::$_salt;
