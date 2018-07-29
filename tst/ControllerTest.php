@@ -1,9 +1,9 @@
 <?php
 
+use PrivateBin\Controller;
 use PrivateBin\Data\Filesystem;
 use PrivateBin\Persistence\ServerSalt;
 use PrivateBin\Persistence\TrafficLimiter;
-use PrivateBin\Controller;
 
 class ControllerTest extends PHPUnit_Framework_TestCase
 {

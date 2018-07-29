@@ -1,8 +1,8 @@
 <?php
 
+use PrivateBin\Controller;
 use PrivateBin\Data\Filesystem;
 use PrivateBin\Persistence\ServerSalt;
-use PrivateBin\Controller;
 use PrivateBin\Request;
 
 class JsonApiTest extends PHPUnit_Framework_TestCase

@@ -1,7 +1,7 @@
 <?php
 
-use PrivateBin\Data\Database;
 use PrivateBin\Controller;
+use PrivateBin\Data\Database;
 
 class DatabaseTest extends PHPUnit_Framework_TestCase
 {

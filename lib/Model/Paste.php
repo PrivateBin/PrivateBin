@@ -13,8 +13,8 @@
 namespace PrivateBin\Model;
 
 use Exception;
-use PrivateBin\Persistence\ServerSalt;
 use PrivateBin\Controller;
+use PrivateBin\Persistence\ServerSalt;
 use PrivateBin\Sjcl;
 
 /**
