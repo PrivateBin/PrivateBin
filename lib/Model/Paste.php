@@ -14,7 +14,7 @@ namespace PrivateBin\Model;
 
 use Exception;
 use PrivateBin\Persistence\ServerSalt;
-use PrivateBin\PrivateBin;
+use PrivateBin\Controller;
 use PrivateBin\Sjcl;
 
 /**
@@ -35,14 +35,14 @@ class Paste extends AbstractModel
     {
         $data = $this->_store->read($this->getId());
         if ($data === false) {
-            throw new Exception(PrivateBin::GENERIC_ERROR, 64);
+            throw new Exception(Controller::GENERIC_ERROR, 64);
         }
 
         // check if paste has expired and delete it if neccessary.
         if (property_exists($data->meta, 'expire_date')) {
             if ($data->meta->expire_date < time()) {
                 $this->delete();
-                throw new Exception(PrivateBin::GENERIC_ERROR, 63);
+                throw new Exception(Controller::GENERIC_ERROR, 63);
             }
             // We kindly provide the remaining time before expiration (in seconds)
             $data->meta->remaining_time = $data->meta->expire_date - time();

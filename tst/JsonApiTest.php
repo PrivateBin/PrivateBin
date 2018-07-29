@@ -2,7 +2,7 @@
 
 use PrivateBin\Data\Filesystem;
 use PrivateBin\Persistence\ServerSalt;
-use PrivateBin\PrivateBin;
+use PrivateBin\Controller;
 use PrivateBin\Request;
 
 class JsonApiTest extends PHPUnit_Framework_TestCase
@@ -53,7 +53,7 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
         $_SERVER['REQUEST_METHOD']        = 'POST';
         $_SERVER['REMOTE_ADDR']           = '::1';
         ob_start();
-        new PrivateBin;
+        new Controller;
         $content = ob_get_contents();
         ob_end_clean();
         $response = json_decode($content, true);
@@ -86,7 +86,7 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
         $_SERVER['REQUEST_METHOD']        = 'PUT';
         $_SERVER['REMOTE_ADDR']           = '::1';
         ob_start();
-        new PrivateBin;
+        new Controller;
         $content = ob_get_contents();
         ob_end_clean();
         unlink($file);
@@ -120,7 +120,7 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD']        = 'DELETE';
         ob_start();
-        new PrivateBin;
+        new Controller;
         $content = ob_get_contents();
         ob_end_clean();
         unlink($file);
@@ -144,7 +144,7 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD']        = 'POST';
         ob_start();
-        new PrivateBin;
+        new Controller;
         $content = ob_get_contents();
         ob_end_clean();
         $response = json_decode($content, true);
@@ -166,7 +166,7 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
         $_SERVER['QUERY_STRING']          = Helper::getPasteId();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         ob_start();
-        new PrivateBin;
+        new Controller;
         $content = ob_get_contents();
         ob_end_clean();
         $response = json_decode($content, true);
@@ -192,7 +192,7 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
         $this->_model->create(Helper::getPasteId(), $paste);
         $_GET['jsonld'] = 'paste';
         ob_start();
-        new PrivateBin;
+        new Controller;
         $content = ob_get_contents();
         ob_end_clean();
         $this->assertEquals(str_replace(
@@ -211,7 +211,7 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
         $this->_model->create(Helper::getPasteId(), $paste);
         $_GET['jsonld'] = 'comment';
         ob_start();
-        new PrivateBin;
+        new Controller;
         $content = ob_get_contents();
         ob_end_clean();
         $this->assertEquals(str_replace(
@@ -230,7 +230,7 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
         $this->_model->create(Helper::getPasteId(), $paste);
         $_GET['jsonld'] = 'pastemeta';
         ob_start();
-        new PrivateBin;
+        new Controller;
         $content = ob_get_contents();
         ob_end_clean();
         $this->assertEquals(str_replace(
@@ -249,7 +249,7 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
         $this->_model->create(Helper::getPasteId(), $paste);
         $_GET['jsonld'] = 'commentmeta';
         ob_start();
-        new PrivateBin;
+        new Controller;
         $content = ob_get_contents();
         ob_end_clean();
         $this->assertEquals(str_replace(
@@ -268,7 +268,7 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
         $this->_model->create(Helper::getPasteId(), $paste);
         $_GET['jsonld'] = CONF;
         ob_start();
-        new PrivateBin;
+        new Controller;
         $content = ob_get_contents();
         ob_end_clean();
         $this->assertEquals('{}', $content, 'does not output nasty data');
