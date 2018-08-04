@@ -231,8 +231,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
                 return baseUri;
             }
 
-            // window.location.origin is a newer alternative, but requires FF 21 / Chrome 31 / Safari 7 / IE 11
-            baseUri = window.location.protocol + '//' + window.location.host + window.location.pathname;
+            baseUri = window.location.origin + window.location.pathname;
             return baseUri;
         };
 
