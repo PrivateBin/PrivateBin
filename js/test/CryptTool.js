@@ -161,28 +161,14 @@ describe('CryptTool', function () {
         );
     });
 
-    describe('isEntropyReady & addEntropySeedListener', function () {
-        it(
-            'lets us know that enough entropy is collected or make us wait for it',
-            function(done) {
-                if ($.PrivateBin.CryptTool.isEntropyReady()) {
-                    done();
-                } else {
-                    $.PrivateBin.CryptTool.addEntropySeedListener(function() {
-                        done();
-                    });
-                }
-            }
-        );
-    });
-
     describe('getSymmetricKey', function () {
         var keys = [];
 
         // the parameter is used to ensure the test is run more then one time
         jsc.property(
             'returns random, non-empty keys',
-            function() {
+            'integer',
+            function(counter) {
                 var key = $.PrivateBin.CryptTool.getSymmetricKey(),
                     result = (key !== '' && keys.indexOf(key) === -1);
                 keys.push(key);
@@ -198,8 +184,11 @@ describe('CryptTool', function () {
             function(string) {
                 var base64 = Base64.toBase64(string),
                     sjcl = global.sjcl.codec.base64.fromBits(global.sjcl.codec.utf8String.toBits(string)),
-                    abab = window.btoa(Base64.utob(string));
-                return base64 === sjcl && sjcl === abab;
+                    abab = window.btoa(Base64.utob(string)),
+                    esab46 = Base64.fromBase64(sjcl),
+                    lcjs = global.sjcl.codec.utf8String.fromBits(global.sjcl.codec.base64.toBits(abab)),
+                    baba = Base64.btou(window.atob(base64));
+                return base64 === sjcl && sjcl === abab && string === esab46 && esab46 === lcjs && lcjs === baba;
             }
         );
     });

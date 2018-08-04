@@ -23,11 +23,6 @@
 /** global: sjcl */
 /** global: kjua */
 
-// Immediately start random number generator collector.
-sjcl.random.startCollectors();
-// Setting this to 10 ensures 1024 bits of entropy get collected before generating the paste key
-sjcl.random.setDefaultParanoia(10);
-
 // main application start, called when DOM is fully loaded
 jQuery(document).ready(function() {
     'use strict';
@@ -257,7 +252,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
             // check whether a bot user agent part can be found in the current
             // user agent
             var arrayLength = BadBotUA.length;
-            for (var i = 0; i < arrayLength; i++) {
+            for (var i = 0; i < arrayLength; ++i) {
                 if (navigator.userAgent.indexOf(BadBotUA) >= 0) {
                     return true;
                 }
@@ -610,39 +605,39 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
         };
 
         /**
-         * checks whether the crypt tool has collected enough entropy
-         *
-         * @name   CryptTool.isEntropyReady
-         * @function
-         * @return {bool}
-         */
-        me.isEntropyReady = function()
-        {
-            return sjcl.random.isReady();
-        };
-
-        /**
-         * add a listener function, triggered when enough entropy is available
-         *
-         * @name   CryptTool.addEntropySeedListener
-         * @function
-         * @param {function} func
-         */
-        me.addEntropySeedListener = function(func)
-        {
-            sjcl.random.addEventListener('seeded', func);
-        };
-
-        /**
          * returns a random symmetric key
+         *
+         * generates 256 bit long keys (8 Bits * 32) for AES with 256 bit long blocks
          *
          * @name   CryptTool.getSymmetricKey
          * @function
-         * @return {string} func
+         * @throws {string}
+         * @return {string} base64 encoded key
          */
         me.getSymmetricKey = function()
         {
-            return sjcl.codec.base64.fromBits(sjcl.random.randomWords(8, 10), 0);
+            var crypto, key;
+            if (typeof module !== 'undefined' && module.exports) {
+                // node environment
+                key = require('crypto').randomBytes(32).toString('base64');
+            } else if (
+                typeof window !== 'undefined' &&
+                typeof Uint8Array !== 'undefined' &&
+                String.fromCodePoint &&
+                (crypto = window.crypto || window.msCrypto)
+            ) {
+                // modern browser environment
+                var bytes = '', byteArray = new Uint8Array(32);
+                crypto.getRandomValues(byteArray);
+                for (var i = 0; i < 32; ++i) {
+                    bytes += String.fromCharCode(byteArray[i]);
+                }
+                key = btoa(bytes);
+            } else {
+                // legacy browser or unsupported environment
+                throw 'No supported crypto API detected, you may read pastes and post comments, but can\'t create pastes.';
+            }
+            return key;
         };
 
         return me;
@@ -2028,13 +2023,13 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
                     // extract mediaType
                     var mediaType = attachmentData.substring(5, mediaTypeEnd);
                     // extract data and convert to binary
-                    var decodedData = Base64.atob(attachmentData.substring(base64Start));
+                    var decodedData = atob(attachmentData.substring(base64Start));
 
                     // Transform into a Blob
                     var decodedDataLength = decodedData.length;
                     var buf = new Uint8Array(decodedDataLength);
 
-                    for (var i = 0; i < decodedDataLength; i++) {
+                    for (var i = 0; i < decodedDataLength; ++i) {
                         buf[i] = decodedData.charCodeAt(i);
                     }
 
@@ -2373,16 +2368,13 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
         function addClipboardEventHandler() {
             $(document).on('paste', function (event) {
                 var items = (event.clipboardData || event.originalEvent.clipboardData).items;
-                for (var i in items) {
-                    if (items.hasOwnProperty(i)) {
-                        var item = items[i];
-                        if (item.kind === 'file') {
-                            //Clear the file input:
-                            $fileInput.wrap('<form>').closest('form').get(0).reset();
-                            $fileInput.unwrap();
+                for (var i = 0; i < items.length; ++i) {
+                    if (items[i].kind === 'file') {
+                        //Clear the file input:
+                        $fileInput.wrap('<form>').closest('form').get(0).reset();
+                        $fileInput.unwrap();
 
-                            readFileData(item.getAsFile());
-                        }
+                        readFileData(items[i].getAsFile());
                     }
                 }
             });
@@ -2890,7 +2882,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
             var $head = $('head').children().not('noscript, script, link[type="text/css"]');
             var newDoc = document.open('text/html', 'replace');
             newDoc.write('<!DOCTYPE html><html><head>');
-            for (var i = 0; i < $head.length; i++) {
+            for (var i = 0; i < $head.length; ++i) {
                 newDoc.write($head[i].outerHTML);
             }
             newDoc.write('</head><body><pre>' + DOMPurify.sanitize(paste) + '</pre></body></html>');
@@ -3405,7 +3397,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
                     symmetricKey = CryptTool.getSymmetricKey();
                     break;
                 default:
-                    console.error('current invalid symmetricKey:', symmetricKey);
+                    console.error('current invalid symmetricKey: ', symmetricKey);
                     throw 'symmetricKey is invalid, probably the module was not prepared';
             }
             // password is optional
@@ -3659,34 +3651,6 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
         var requirementsChecked = false;
 
         /**
-         * checks whether there is a suitable amount of entrophy
-         *
-         * @name PasteEncrypter.checkRequirements
-         * @private
-         * @function
-         * @param {function} retryCallback - the callback to execute to retry the upload
-         * @return {bool}
-         */
-        function checkRequirements(retryCallback) {
-            // skip double requirement checks
-            if (requirementsChecked === true) {
-                return true;
-            }
-
-            if (!CryptTool.isEntropyReady()) {
-                // display a message and wait
-                Alert.showStatus('Please move your mouse for more entropy…');
-
-                CryptTool.addEntropySeedListener(retryCallback);
-                return false;
-            }
-
-            requirementsChecked = true;
-
-            return true;
-        }
-
-        /**
          * called after successful paste upload
          *
          * @name PasteEncrypter.showCreatedPaste
@@ -3801,13 +3765,6 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
                 return;
             }
 
-            // check entropy
-            if (!checkRequirements(function () {
-                me.sendComment();
-            })) {
-                return; // to prevent multiple executions
-            }
-
             // prepare Uploader
             Uploader.prepare();
             Uploader.setCryptParameters(Prompt.getPassword(), Model.getPasteKey());
@@ -3839,7 +3796,11 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
             }
 
             // encrypt data
-            Uploader.setData('data', plainText);
+            try {
+                Uploader.setData('data', plainText);
+            } catch (e) {
+                Alert.showError(e);
+            }
 
             if (nickname.length > 0) {
                 Uploader.setData('nickname', nickname);
@@ -3878,13 +3839,6 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
                 return;
             }
 
-            // check entropy
-            if (!checkRequirements(function () {
-                me.sendPaste();
-            })) {
-                return; // to prevent multiple executions
-            }
-
             // prepare Uploader
             Uploader.prepare();
             Uploader.setCryptParameters(TopNav.getPassword());
@@ -3915,7 +3869,11 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
             PasteViewer.setFormat(format);
 
             // encrypt cipher data
-            Uploader.setData('data', plainText);
+            try {
+                Uploader.setData('data', plainText);
+            } catch (e) {
+                Alert.showError(e);
+            }
 
             // encrypt attachments
             encryptAttachments(

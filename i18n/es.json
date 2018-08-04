@@ -112,8 +112,6 @@
         "Error del servidor o el servidor no responde",
     "Could not post comment: %s":
         "No fue posible publicar comentario: %s",
-    "Please move your mouse for more entropy…":
-        "Por favor, mueva el ratón para mayor entropía…",
     "Sending paste…":
         "Enviando texto…",
     "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit [Ctrl]+[c] to copy)</span>":
