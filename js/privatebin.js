@@ -25,6 +25,8 @@
 
 // Immediately start random number generator collector.
 sjcl.random.startCollectors();
+// Setting this to 10 ensures 1024 bits of entropy get collected before generating the paste key
+sjcl.random.setDefaultParanoia(10);
 
 // main application start, called when DOM is fully loaded
 jQuery(document).ready(function() {
@@ -229,7 +231,8 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
                 return baseUri;
             }
 
-            baseUri = window.location.origin + window.location.pathname;
+            // window.location.origin is a newer alternative, but requires FF 21 / Chrome 31 / Safari 7 / IE 11
+            baseUri = window.location.protocol + '//' + window.location.host + window.location.pathname;
             return baseUri;
         };
 
