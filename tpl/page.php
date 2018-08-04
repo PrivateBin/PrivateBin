@@ -53,7 +53,7 @@ if ($MARKDOWN):
 <?php
 endif;
 ?>
-		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-DXExPuasUzzEw3u6oitAclWcc6XW4Heufg8MxbbwYmBlSDQmnnvCwanBujX7n/48bFW6sPgpW1oMC/898t2AvA==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-o5ooD/VR75PQ2XkiYR0Pnyl1pjRRaeReJM7l1dUuEKXqlkP9Uv8bTR5QfbxiD0eCT2Vsm1SpjgPNhTdwr7zaQg==" crossorigin="anonymous"></script>
 		<!--[if lt IE 10]>
 		<style type="text/css">body {padding-left:60px;padding-right:60px;} #ienotice {display:block;} #oldienotice {display:block;}</style>
 		<![endif]-->

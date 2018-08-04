@@ -4354,30 +4354,6 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
         };
 
         /**
-         * removes a saved paste
-         *
-         * @name   Controller.removePaste
-         * @function
-         * @param  {string} pasteId
-         * @param  {string} deleteToken
-         * @deprecated not used anymore, de we still need it?
-         */
-        me.removePaste = function(pasteId, deleteToken) {
-            // unfortunately many web servers don't support DELETE (and PUT) out of the box
-            // so we use a POST request
-            Uploader.prepare();
-            Uploader.setUrl(Helper.baseUri() + '?' + pasteId);
-            Uploader.setUnencryptedData('deletetoken', deleteToken);
-
-            Uploader.setFailure(function () {
-                Alert.showError(
-                    I18n._('Could not delete the paste, it was not stored in burn after reading mode.')
-                );
-            });
-            Uploader.run();
-        };
-
-        /**
          * application start
          *
          * @name   Controller.init
