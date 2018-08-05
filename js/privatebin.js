@@ -30,7 +30,7 @@ jQuery(document).ready(function() {
     $.PrivateBin.Controller.init();
 });
 
-jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
+jQuery.PrivateBin = (function($, sjcl, RawDeflate) {
     'use strict';
 
     /**
@@ -527,7 +527,54 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
         var me = {};
 
         /**
-         * compress a message (deflate compression), returns base64 encoded data
+         * convert DOMString (UTF-16) to a UTF-8 string stored in a DOMString
+         *
+         * URI encodes the message, then finds the percent encoded characters
+         * and transforms these hexadecimal representation back into bytes
+         *
+         * @name   CryptTool.utob
+         * @function
+         * @private
+         * @param  {string} message UTF-16 string
+         * @return {string} UTF-8 string
+         */
+        function utob(message)
+        {
+            return encodeURIComponent(message).replace(
+                /%([0-9A-F]{2})/g,
+                function (match, hexCharacter)
+                {
+                    return String.fromCharCode('0x' + hexCharacter);
+                }
+            );
+        }
+
+        /**
+         * convert UTF-8 string stored in a DOMString to a standard UTF-16 DOMString
+         *
+         * Iterates over the bytes of the message, converting them all hexadecimal
+         * percent encoded representations, then URI decodes them all
+         *
+         * @name   CryptTool.btou
+         * @function
+         * @private
+         * @param  {string} message UTF-8 string
+         * @return {string} UTF-16 string
+         */
+        function btou(message)
+        {
+            return decodeURIComponent(
+                message.split('').map(
+                    function(character)
+                    {
+                        return '%' + ('00' + character.charCodeAt(0).toString(16)).slice(-2);
+                    }
+                ).join('')
+            );
+        }
+
+        /**
+         * compress a string, returns base64 encoded data (deflate compression)
          *
          * @name   CryptTool.compress
          * @function
@@ -537,21 +584,31 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
          */
         function compress(message)
         {
-            return Base64.toBase64( RawDeflate.deflate( Base64.utob(message) ) );
+            // detect presence of Base64.js, indicating legacy ZeroBin paste
+            if (typeof Base64 === 'undefined') {
+                return btoa( utob( RawDeflate.deflate( utob( message ) ) ) );
+            } else {
+                return Base64.toBase64( RawDeflate.deflate( Base64.utob( message ) ) );
+            }
         }
 
         /**
-         * decompress a message compressed with cryptToolcompress()
+         * decompress a base64 encoded data (deflate compression), returns string
          *
          * @name   CryptTool.decompress
          * @function
          * @private
-         * @param  {string} data - base64 data
+         * @param  {string} data base64 data
          * @return {string} message
          */
         function decompress(data)
         {
-            return Base64.btou( RawDeflate.inflate( Base64.fromBase64(data) ) );
+            // detect presence of Base64.js, indicating legacy ZeroBin paste
+            if (typeof Base64 === 'undefined') {
+                return btou( RawDeflate.inflate( btou( atob( data ) ) ) );
+            } else {
+                return Base64.btou( RawDeflate.inflate( Base64.fromBase64( data ) ) );
+            }
         }
 
         /**
@@ -624,10 +681,15 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
                 typeof window !== 'undefined' &&
                 typeof Uint8Array !== 'undefined' &&
                 String.fromCodePoint &&
-                (crypto = window.crypto || window.msCrypto)
+                (
+                    typeof window.crypto !== 'undefined' ||
+                    typeof window.msCrypto !== 'undefined'
+                )
             ) {
                 // modern browser environment
-                var bytes = '', byteArray = new Uint8Array(32);
+                var bytes = '',
+                    byteArray = new Uint8Array(32),
+                    crypto = window.crypto || window.msCrypto;
                 crypto.getRandomValues(byteArray);
                 for (var i = 0; i < 32; ++i) {
                     bytes += String.fromCharCode(byteArray[i]);
@@ -4386,4 +4448,4 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
         PasteDecrypter: PasteDecrypter,
         Controller: Controller
     };
-})(jQuery, sjcl, Base64, RawDeflate);
+})(jQuery, sjcl, RawDeflate);

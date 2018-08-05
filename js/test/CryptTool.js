@@ -24,8 +24,13 @@ describe('CryptTool', function () {
         // The below static unit tests are included to ensure deciphering of "classic"
         // SJCL based pastes still works
         it(
-            'supports PrivateBin v1 ciphertext (SJCL & Base64)',
+            'supports PrivateBin v1 ciphertext (SJCL & browser atob)',
             function () {
+                delete global.Base64;
+                // make btoa available
+                jsdom();
+                global.btoa = window.btoa;
+
                 // Of course you can easily decipher the following texts, if you like.
                 // Bonus points for finding their sources and hidden meanings.
                 var paste1 = $.PrivateBin.CryptTool.decipher(
@@ -97,11 +102,7 @@ describe('CryptTool', function () {
         it(
             'supports ZeroBin ciphertext (SJCL & Base64 1.7)',
             function () {
-                var newBase64 = global.Base64;
                 global.Base64 = require('../base64-1.7').Base64;
-                jsdom();
-                delete require.cache[require.resolve('../privatebin')];
-                require('../privatebin');
 
                 // Of course you can easily decipher the following texts, if you like.
                 // Bonus points for finding their sources and hidden meanings.
@@ -149,10 +150,7 @@ describe('CryptTool', function () {
                     'QbuspOKrBvMfN5igA1kBqasnxI472KBNXsdZnaDddSVUuvhTcETM="}'
                 );
 
-                global.Base64 = newBase64;
-                jsdom();
-                delete require.cache[require.resolve('../privatebin')];
-                require('../privatebin');
+                delete global.Base64;
                 assert.ok(
                     paste1.includes('securely packed in iron') &&
                     paste2.includes('Sol is right')
@@ -177,18 +175,20 @@ describe('CryptTool', function () {
         );
     });
 
-    describe('Base64.js vs SJCL.js vs abab.js', function () {
+    describe('SJCL.js vs abab.js', function () {
         jsc.property(
             'these all return the same base64 string',
             'string',
             function(string) {
-                var base64 = Base64.toBase64(string),
+                // make btoa/atob available
+                jsdom();
+                // not comparing Base64.js v1.7 encode/decode, that has known issues
+                var Base64 = require('../base64-1.7').Base64,
                     sjcl = global.sjcl.codec.base64.fromBits(global.sjcl.codec.utf8String.toBits(string)),
                     abab = window.btoa(Base64.utob(string)),
-                    esab46 = Base64.fromBase64(sjcl),
                     lcjs = global.sjcl.codec.utf8String.fromBits(global.sjcl.codec.base64.toBits(abab)),
-                    baba = Base64.btou(window.atob(base64));
-                return base64 === sjcl && sjcl === abab && string === esab46 && esab46 === lcjs && lcjs === baba;
+                    baba = Base64.btou(window.atob(sjcl));
+                return sjcl === abab && string === lcjs && lcjs === baba;
             }
         );
     });

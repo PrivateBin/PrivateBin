@@ -10,7 +10,6 @@ global.fs = require('fs');
 // application libraries to test
 global.$ = global.jQuery = require('./jquery-3.3.1');
 global.sjcl = require('./sjcl-1.0.7');
-global.Base64 = require('./base64-2.4.5').Base64;
 global.RawDeflate = require('./rawdeflate-0.5').RawDeflate;
 global.RawDeflate.inflate = require('./rawinflate-0.3').RawDeflate.inflate;
 require('./prettify');
