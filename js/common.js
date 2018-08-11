@@ -26,6 +26,7 @@ var a2zString = ['a','b','c','d','e','f','g','h','i','j','k','l','m',
                      'n','o','p','q','r','s','t','u','v','w','x','y','z'],
     alnumString = a2zString.concat(['0','1','2','3','4','5','6','7','8','9']),
     queryString = alnumString.concat(['+','%','&','.','*','-','_']),
+    hashString = queryString.concat(['!']),
     base64String = alnumString.concat(['+','/','=']).concat(
         a2zString.map(function(c) {
             return c.toUpperCase();
@@ -125,6 +126,11 @@ exports.jscAlnumString = function() {
 // provides random characters allowed in GET queries
 exports.jscQueryString = function() {
     return jsc.elements(queryString);
+};
+
+// provides random characters allowed in hash queries
+exports.jscHashString = function() {
+    return jsc.elements(hashString);
 };
 
 // provides random characters allowed in base64 encoded strings

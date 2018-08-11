@@ -94,7 +94,7 @@ describe('Helper', function () {
             jsc.elements(['http', 'https', 'ftp']),
             jsc.nearray(common.jscA2zString()),
             jsc.array(common.jscQueryString()),
-            jsc.array(common.jscQueryString()),
+            jsc.array(common.jscHashString()),
             'string',
             function (prefix, schema, address, query, fragment, postfix) {
                 var query = query.join(''),
