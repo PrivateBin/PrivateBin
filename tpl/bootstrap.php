@@ -65,17 +65,17 @@ endif;
 <?php
 if ($SYNTAXHIGHLIGHTING):
 ?>
-		<script type="text/javascript" data-cfasync="false" src="js/prettify.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-m8iHxoN+Fe12xxFwWNdY/TS4KoFntHp29qY0xUzBnPd0bkKMOR/dFhEdTWydpt0b/fIXyhB+znGYUvgjfJ2RzQ==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/prettify.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-puO0Ogy++IoA2Pb9IjSxV1n4+kQkKXYAEUtVzfZpQepyDPyXk8hokiYDS7ybMogYlyyEIwMLpZqVhCkARQWLMg==" crossorigin="anonymous"></script>
 <?php
 endif;
 if ($MARKDOWN):
 ?>
-		<script type="text/javascript" data-cfasync="false" src="js/showdown-1.8.6.js" integrity="sha512-IWAOP5QX4d1WA8ZSKXJtMWdAW8fOifwB0LyZFKaq2WcvsWF/Xmg8aQwxMOUpCjSaYY/V+NASlReVD6uCSDDvHg==" crossorigin="anonymous"></script>
-		<script type="text/javascript" data-cfasync="false" src="js/purify-1.0.5.js" integrity="sha512-y68WmhxZiNWBzbhCnMOhRIQDLQPN2zPTCbLHsjggRAjvLVzt4wihsvaMAdtz+VpoFP/SYXFJQUB6h6BH3gvDpA==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/showdown-1.8.6.js" integrity="sha512-YFg2sBCGT00I6X5KzgCLP4VqRlmPMRhkVvJS9oJKk5LxiUzzcjzV5m4fNf6mQMctLrhgS5LFKiFF3vzIuXbjAw==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/purify-1.0.5.js" integrity="sha512-IpCJCwlqipmuhbr7fdEOTA4ENcBURsQSDAqXqbr/3dcA2swwJon7D6IStGUQntycGCNCdIM/FdPciBq0gUrLJA==" crossorigin="anonymous"></script>
 <?php
 endif;
 ?>
-		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-2M6U9Blp1VbBq+FEvFaUCgCeiwPAePSi5Mba0BmOxbibFhB86N6gj/IY7ZzRZSC2/UQHFZwFGNGxUTsk8p7IZg==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-QQHntL2l+OT3v1sze1FcuhjYpzvNVgo6IADzlUXeLjM6wBvHvz9WbEos1j4frW5O6ZzGI4GbRnFj1A6fYnmUKA==" crossorigin="anonymous"></script>
 		<!--[if lt IE 10]>
 		<style type="text/css">body {padding-left:60px;padding-right:60px;} #ienotice {display:block;} #oldienotice {display:block;}</style>
 		<![endif]-->
@@ -100,7 +100,7 @@ endif;
 						<form id="passwordform" role="form">
 							<div class="form-group">
 								<label for="passworddecrypt"><span class="glyphicon glyphicon-eye-open"></span> <?php echo I18n::_('Please enter the password for this paste:') ?></label>
-								<input id="passworddecrypt" type="password" class="form-control" placeholder="<?php echo I18n::_('Enter password') ?>">
+								<input id="passworddecrypt" type="password" class="form-control" placeholder="<?php echo I18n::_('Enter password') ?>" required="required">
 							</div>
 							<button type="submit" class="btn btn-success btn-block"><span class="glyphicon glyphicon-off"></span> <?php echo I18n::_('Decrypt') ?></button>
 						</form>

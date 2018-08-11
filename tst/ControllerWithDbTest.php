@@ -2,9 +2,9 @@
 
 use PrivateBin\Data\Database;
 
-require_once 'PrivateBinTest.php';
+require_once 'ControllerTest.php';
 
-class PrivateBinWithDbTest extends PrivateBinTest
+class ControllerWithDbTest extends ControllerTest
 {
     private $_options = array(
         'usr' => null,

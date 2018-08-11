@@ -1,7 +1,7 @@
 <?php
 
+use PrivateBin\Controller;
 use PrivateBin\Data\Database;
-use PrivateBin\PrivateBin;
 
 class DatabaseTest extends PHPUnit_Framework_TestCase
 {
@@ -318,7 +318,7 @@ class DatabaseTest extends PHPUnit_Framework_TestCase
         $statement->execute(array('VERSION'));
         $result = $statement->fetch(PDO::FETCH_ASSOC);
         $statement->closeCursor();
-        $this->assertEquals(PrivateBin::VERSION, $result['value']);
+        $this->assertEquals(Controller::VERSION, $result['value']);
         Helper::rmDir($this->_path);
     }
 }

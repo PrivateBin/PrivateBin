@@ -142,8 +142,8 @@
     "The cloned file '%s' was attached to this paste.":
         "Дубликат файла '%s' был прикреплен к этой записи.",
     "Attach a file": "Прикрепить файл",
-    "alternatively drag & drop a file or paste an image from the clipboard": "alternatively drag & drop a file or paste an image from the clipboard",
-    "File too large, to display a preview. Please download the attachment.": "File too large, to display a preview. Please download the attachment.",
+    "alternatively drag & drop a file or paste an image from the clipboard": "так же можно перенести файл в окно браузера или вставить изображение из буфера",
+    "File too large, to display a preview. Please download the attachment.": "Файл слишком большой для отображения предпросмотра. Пожалуйста скачайте прикрепленный файл.",
     "Remove attachment": "Удалить вложение",
     "Your browser does not support uploading encrypted files. Please use a newer browser.":
         "Ваш браузер не поддерживает отправку зашифрованных файлов. Используйте более новый браузер.",
@@ -163,5 +163,7 @@
     "Preparing new paste…": "Подготовка новой записи…",
     "In case this message never disappears please have a look at <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">this FAQ for information to troubleshoot</a>.":
         "Если данное сообщение не исчезает длительное время, посмотрите <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">этот FAQ с информацией о возможном решении проблемы (на английском)</a>.",
-    "+++ no paste text +++": "+++ в записи нет текста +++"
+    "+++ no paste text +++": "+++ в записи нет текста +++",
+    "Could not get paste data: %s":
+        "Не удалось получить данные записи: %s"
 }

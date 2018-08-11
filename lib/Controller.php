@@ -17,11 +17,11 @@ use PrivateBin\Persistence\ServerSalt;
 use PrivateBin\Persistence\TrafficLimiter;
 
 /**
- * PrivateBin
+ * Controller
  *
- * Controller, puts it all together.
+ * Puts it all together.
  */
-class PrivateBin
+class Controller
 {
     /**
      * version
@@ -151,7 +151,7 @@ class PrivateBin
     }
 
     /**
-     * initialize privatebin
+     * initialize PrivateBin
      *
      * @access private
      */
@@ -368,7 +368,7 @@ class PrivateBin
     }
 
     /**
-     * Display PrivateBin frontend.
+     * Display frontend.
      *
      * @access private
      */

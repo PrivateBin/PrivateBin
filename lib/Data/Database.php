@@ -15,7 +15,7 @@ namespace PrivateBin\Data;
 use Exception;
 use PDO;
 use PDOException;
-use PrivateBin\PrivateBin;
+use PrivateBin\Controller;
 use stdClass;
 
 /**
@@ -122,7 +122,7 @@ class Database extends AbstractData
                 }
 
                 // create config table if necessary
-                $db_version = PrivateBin::VERSION;
+                $db_version = Controller::VERSION;
                 if (!in_array(self::_sanitizeIdentifier('config'), $tables)) {
                     self::_createConfigTable();
                     // if we only needed to create the config table, the DB is older then 0.22
@@ -134,7 +134,7 @@ class Database extends AbstractData
                 }
 
                 // update database structure if necessary
-                if (version_compare($db_version, PrivateBin::VERSION, '<')) {
+                if (version_compare($db_version, Controller::VERSION, '<')) {
                     self::_upgradeDatabase($db_version);
                 }
             } else {
@@ -623,7 +623,7 @@ class Database extends AbstractData
         self::_exec(
             'INSERT INTO ' . self::_sanitizeIdentifier('config') .
             ' VALUES(?,?)',
-            array('VERSION', PrivateBin::VERSION)
+            array('VERSION', Controller::VERSION)
         );
     }
 
@@ -698,7 +698,7 @@ class Database extends AbstractData
                 self::_exec(
                     'UPDATE ' . self::_sanitizeIdentifier('config') .
                     ' SET value = ? WHERE id = ?',
-                    array(PrivateBin::VERSION, 'VERSION')
+                    array(Controller::VERSION, 'VERSION')
                 );
         }
     }

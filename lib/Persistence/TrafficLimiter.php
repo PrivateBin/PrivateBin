@@ -101,27 +101,22 @@ class TrafficLimiter extends AbstractPersistence
         }
 
         $file = 'traffic_limiter.php';
-        if (!self::_exists($file)) {
-            self::_store(
-                $file,
-                '<?php' . PHP_EOL .
-                '$GLOBALS[\'traffic_limiter\'] = array();' . PHP_EOL
-            );
+        if (self::_exists($file)) {
+            require self::getPath($file);
+            $tl = $GLOBALS['traffic_limiter'];
+        } else {
+            $tl = array();
         }
 
-        $path = self::getPath($file);
-        require $path;
-        $now = time();
-        $tl  = $GLOBALS['traffic_limiter'];
-
         // purge file of expired hashes to keep it small
+        $now = time();
         foreach ($tl as $key => $time) {
             if ($time + self::$_limit < $now) {
                 unset($tl[$key]);
             }
         }
 
-        // this hash is used as an array key, hence a shorter hash is used
+        // this hash is used as an array key, hence a shorter algo is used
         $hash = self::getHash('sha256');
         if (array_key_exists($hash, $tl) && ($tl[$hash] + self::$_limit >= $now)) {
             $result = false;
@@ -132,8 +127,7 @@ class TrafficLimiter extends AbstractPersistence
         self::_store(
             $file,
             '<?php' . PHP_EOL .
-            '$GLOBALS[\'traffic_limiter\'] = ' .
-            var_export($tl, true) . ';' . PHP_EOL
+            '$GLOBALS[\'traffic_limiter\'] = ' . var_export($tl, true) . ';'
         );
         return $result;
     }

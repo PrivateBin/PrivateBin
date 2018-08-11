@@ -5,7 +5,7 @@
  * 
  * The MIT License (MIT)
  * 
- * Copyright (c) 2015 - 2016 Paragon Initiative Enterprises
+ * Copyright (c) 2015 - 2018 Paragon Initiative Enterprises
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -55,6 +55,11 @@ if (!is_callable('random_bytes')) {
         }
 
         $buf = '';
+        if (!class_exists('COM')) {
+            throw new Error(
+                'COM does not exist'
+            );
+        }
         $util = new COM('CAPICOM.Utilities.1');
         $execCount = 0;
 

@@ -25,10 +25,10 @@ class PurgeLimiterTest extends PHPUnit_Framework_TestCase
     public function testLimit()
     {
         // initialize it
+        PurgeLimiter::setLimit(1);
         PurgeLimiter::canPurge();
 
         // try setting it
-        PurgeLimiter::setLimit(1);
         $this->assertEquals(false, PurgeLimiter::canPurge());
         sleep(2);
         $this->assertEquals(true, PurgeLimiter::canPurge());

@@ -1,6 +1,7 @@
 # PrivateBin version history
 
-  * **1.2 (not yet released)**
+  * **1.3 (not yet released)**
+  * **1.2 (2018-07-22)**
     * ADDED: Translations for Spanish, Occitan, Norwegian, Portuguese, Dutch and Hungarian
     * ADDED: Option in configuration to change the default "PrivateBin" title of the site
     * ADDED: Added display of video, audio & PDF, drag & drop, preview of attachments (#182)
@@ -11,7 +12,7 @@
     * CHANGED: Shipped .htaccess files were updated for Apache 2.4 (#192)
     * CHANGED: Cleanup of bootstrap template variants and moved icons to `img` directory
     * CHANGED: Removed option to hide clone button on expiring pastes, since this requires reading the paste for rendering the template, which leaks information on the pastes state
-    * CHANGED: Upgrading libraries to: SJCL 1.0.7, jQuery 3.3.1, Base64 2.4.5, Showdown 1.8.6 & DOMpurify 1.0.5
+    * CHANGED: Upgrading libraries to: SJCL 1.0.7, jQuery 3.3.1, Base64 2.4.5, Showdown 1.8.6, DOMpurify 1.0.5 & Prettify 453bd5f
     * CHANGED: Refactored JavaScript code, making it modular with private and public functions, making it much easier to maintain (#178)
     * FIXED: To counteract regressions introduced by the refactoring, we finally introduced property based unit testing for the JavaScript code, this caught several regressions, but also some very old bugs not found so far (#32)
   * **1.1.1 (2017-10-06)**

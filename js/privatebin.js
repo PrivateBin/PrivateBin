@@ -25,6 +25,8 @@
 
 // Immediately start random number generator collector.
 sjcl.random.startCollectors();
+// Setting this to 10 ensures 1024 bits of entropy get collected before generating the paste key
+sjcl.random.setDefaultParanoia(10);
 
 // main application start, called when DOM is fully loaded
 jQuery(document).ready(function() {
@@ -230,7 +232,8 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
                 return baseUri;
             }
 
-            baseUri = window.location.origin + window.location.pathname;
+            // window.location.origin is a newer alternative, but requires FF 21 / Chrome 31 / Safari 7 / IE 11
+            baseUri = window.location.protocol + '//' + window.location.host + window.location.pathname;
             return baseUri;
         };
 
@@ -641,7 +644,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
          */
         me.getSymmetricKey = function()
         {
-            return sjcl.codec.base64.fromBits(sjcl.random.randomWords(8, 0), 0);
+            return sjcl.codec.base64.fromBits(sjcl.random.randomWords(8, 10), 0);
         };
 
         return me;
@@ -718,7 +721,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
                 TopNav.showViewButtons();
 
                 // show error message
-                Alert.showError(Uploader.parseUploadError(status, data, 'getting paste data'));
+                Alert.showError(Uploader.parseUploadError(status, data, 'get paste data'));
             });
             Uploader.setSuccess(function (status, data) {
                 pasteData = data;
@@ -1441,16 +1444,15 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
             }
 
             // fallback to old method for page template
-            var newPassword = prompt(I18n._('Please enter the password for this paste:'), '');
-            if (newPassword === null) {
+            password = prompt(I18n._('Please enter the password for this paste:'), '');
+            if (password === null) {
                 throw 'password prompt canceled';
             }
             if (password.length === 0) {
                 // recurse…
                 return me.requestPassword();
             }
-
-            password = newPassword;
+            PasteDecrypter.run();
         };
 
         /**
@@ -1774,7 +1776,9 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
                     var converter = new showdown.Converter({
                         strikethrough: true,
                         tables: true,
-                        tablesHeaderId: true
+                        tablesHeaderId: true,
+                        simplifiedAutoLink: true,
+                        excludeTrailingPunctuationFromURLs: true
                     });
                     // let showdown convert the HTML and sanitize HTML *afterwards*!
                     $plainText.html(
@@ -2208,12 +2212,12 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
         };
 
         /**
-         * read file data as dataURL using the FileReader API
+         * read file data as data URL using the FileReader API
          *
          * @name   AttachmentViewer.readFileData
          * @private
          * @function
-         * @param {object} loadedFile The loaded file.
+         * @param {object} loadedFile (optional) loaded file object
          * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/FileReader#readAsDataURL()}
          */
         function readFileData(loadedFile) {
@@ -2252,8 +2256,8 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
          *
          * @name   AttachmentViewer.handleAttachmentPreview
          * @function
-         * @argument {jQuery} $targetElement where the preview should be appended.
-         * @argument {File Data} data of the file to be displayed.
+         * @argument {jQuery} $targetElement element where the preview should be appended
+         * @argument {string} file as a data URL
          */
         me.handleAttachmentPreview = function ($targetElement, data) {
             if (data) {
@@ -3971,17 +3975,6 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
                 // show prompt
                 Prompt.requestPassword();
 
-                // if password is there instantly (legacy method), re-try encryption
-                if (Prompt.getPassword().length !== 0) {
-                    // recursive
-                    // note: an infinite loop is prevented as the previous if
-                    // clause checks whether a password is already set and ignores
-                    // errors when a password has been passed
-                    return decryptOrPromptPassword(key, password, cipherdata);
-                }
-
-                // if password could not be received yet, the new modal is used,
-                // which uses asyncronous event-driven methods to get the password.
                 // Thus, we cannot do anything yet, we need to wait for the user
                 // input.
                 return false;

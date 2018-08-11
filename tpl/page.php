@@ -22,8 +22,12 @@ endif;
 ?>
 		<script type="text/javascript" data-cfasync="false" src="js/jquery-3.3.1.js" integrity="sha512-+NqPlbbtM1QqiK8ZAo4Yrj2c4lNQoGv8P79DPtKzj++l5jnN39rHA/xsqn8zE9l0uSoxaCdrOgFs6yjyfbBxSg==" crossorigin="anonymous"></script>
 		<script type="text/javascript" data-cfasync="false" src="js/sjcl-1.0.7.js" integrity="sha512-J2eNenPwyfXkMVNMFz9Q54kKfYi5AA3mQWpNgtjSJzsKHtpbhUt/7bvcjGwwmzE8ZUVWMI/ndagIX1lG+SfxGA==" crossorigin="anonymous"></script>
-		<script type="text/javascript" data-cfasync="false" src="js/kjua.min.js" integrity="sha512-hmvfOhcr4J8bjQ2GuNVzfSbuulv72wgQCJpgnXc2+cCHKqvYo8pK2nc0Q4Esem2973zo1radyIMTEkt+xJlhBA==" crossorigin="anonymous"></script>
 <?php
+if ($QRCODE):
+?>
+		<script async type="text/javascript" data-cfasync="false" src="js/kjua-0.1.2.js" integrity="sha512-hmvfOhcr4J8bjQ2GuNVzfSbuulv72wgQCJpgnXc2+cCHKqvYo8pK2nc0Q4Esem2973zo1radyIMTEkt+xJlhBA==" crossorigin="anonymous"></script>
+<?php
+endif;
 if ($ZEROBINCOMPATIBILITY):
 ?>
 		<script type="text/javascript" data-cfasync="false" src="js/base64-1.7.js" integrity="sha512-JdwsSP3GyHR+jaCkns9CL9NTt4JUJqm/BsODGmYhBcj5EAPKcHYh+OiMfyHbcDLECe17TL0hjXADFkusAqiYgA==" crossorigin="anonymous"></script>
@@ -39,22 +43,17 @@ endif;
 <?php
 if ($SYNTAXHIGHLIGHTING):
 ?>
-		<script type="text/javascript" data-cfasync="false" src="js/prettify.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-m8iHxoN+Fe12xxFwWNdY/TS4KoFntHp29qY0xUzBnPd0bkKMOR/dFhEdTWydpt0b/fIXyhB+znGYUvgjfJ2RzQ==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/prettify.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-puO0Ogy++IoA2Pb9IjSxV1n4+kQkKXYAEUtVzfZpQepyDPyXk8hokiYDS7ybMogYlyyEIwMLpZqVhCkARQWLMg==" crossorigin="anonymous"></script>
 <?php
 endif;
 if ($MARKDOWN):
 ?>
-		<script type="text/javascript" data-cfasync="false" src="js/showdown-1.8.6.js" integrity="sha512-IWAOP5QX4d1WA8ZSKXJtMWdAW8fOifwB0LyZFKaq2WcvsWF/Xmg8aQwxMOUpCjSaYY/V+NASlReVD6uCSDDvHg==" crossorigin="anonymous"></script>
-		<script type="text/javascript" data-cfasync="false" src="js/purify-1.0.5.js" integrity="sha512-y68WmhxZiNWBzbhCnMOhRIQDLQPN2zPTCbLHsjggRAjvLVzt4wihsvaMAdtz+VpoFP/SYXFJQUB6h6BH3gvDpA==" crossorigin="anonymous"></script>
-<?php
-endif;
-if ($QRCODE):
-?>
-		<script async type="text/javascript" data-cfasync="false" src="js/kjua-0.1.2.js" integrity="sha512-hmvfOhcr4J8bjQ2GuNVzfSbuulv72wgQCJpgnXc2+cCHKqvYo8pK2nc0Q4Esem2973zo1radyIMTEkt+xJlhBA==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/showdown-1.8.6.js" integrity="sha512-YFg2sBCGT00I6X5KzgCLP4VqRlmPMRhkVvJS9oJKk5LxiUzzcjzV5m4fNf6mQMctLrhgS5LFKiFF3vzIuXbjAw==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/purify-1.0.5.js" integrity="sha512-IpCJCwlqipmuhbr7fdEOTA4ENcBURsQSDAqXqbr/3dcA2swwJon7D6IStGUQntycGCNCdIM/FdPciBq0gUrLJA==" crossorigin="anonymous"></script>
 <?php
 endif;
 ?>
-		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-2M6U9Blp1VbBq+FEvFaUCgCeiwPAePSi5Mba0BmOxbibFhB86N6gj/IY7ZzRZSC2/UQHFZwFGNGxUTsk8p7IZg==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-QQHntL2l+OT3v1sze1FcuhjYpzvNVgo6IADzlUXeLjM6wBvHvz9WbEos1j4frW5O6ZzGI4GbRnFj1A6fYnmUKA==" crossorigin="anonymous"></script>
 		<!--[if lt IE 10]>
 		<style type="text/css">body {padding-left:60px;padding-right:60px;} #ienotice {display:block;} #oldienotice {display:block;}</style>
 		<![endif]-->
@@ -140,11 +139,7 @@ if ($DISCUSSION):
 ?> checked="checked"<?php
     endif;
 ?> />
-						<label for="opendiscussion" <?php
-    if (!$OPENDISCUSSION):
-?> style="color: #BBBBBB;"<?php
-    endif;
-?>><?php echo I18n::_('Open discussion'); ?></label>
+						<label for="opendiscussion"><?php echo I18n::_('Open discussion'); ?></label>
 					</div>
 <?php
 endif;
