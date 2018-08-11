@@ -139,6 +139,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
          *     http://user:example.com@localhost:8800/zero/?6f09182b8ea51997#WtLEUO5Epj9UHAV9JFs+6pUQZp13TuspAUjnF+iM+dM=
          * </pre>
          *
+         * @see    {@link https://regex101.com/r/h4ACei/5}
          * @name   Helper.urls2links
          * @function
          * @param  {string} html
@@ -147,7 +148,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
         me.urls2links = function(html)
         {
             return html.replace(
-                /(((https?|ftp):\/\/[\w?!=&.\/-;#@~%+*-]+(?![\w\s?!&.\/;#~%"=-]*>))|((magnet):[\w?=&.\/-;#@~%+*-]+))/ig,
+                /(((https?|ftp):\/\/(([a-z0-9$_\.\+!\*\'\(\),;\?&=-]|%[0-9a-f]{2})+(:([a-z0-9$_\.\+!\*\'\(\),;\?&=-]|%[0-9a-f]{2})+)?@)?((([a-z0-9]\.|[a-z0-9][a-z0-9-]*[a-z0-9]\.)*[a-z][a-z0-9-]*[a-z0-9]?|((\d|[1-9]\d|1\d{2}|2[0-4][0-9]|25[0-5])\.){3}(\d|[1-9]\d|1\d{2}|2[0-4][0-9]|25[0-5]))(:\d+)?)(((\/+([a-z0-9$_\.\+!\*\'\(\),;:@&=-]|%[0-9a-f]{2})*)*(\?([a-z0-9$_\.\+!\*\'\(\),;:@&=-]|%[0-9a-f]{2})*)?)?)?(#([a-z0-9$_\.\+!\*\'\(\),;:@&=-]|%[0-9a-f]{2})*)?|((magnet):[\w?=&.\/-;#@~%+*-]+)))/ig,
                 '<a href="$1" rel="nofollow">$1</a>'
             );
         };
