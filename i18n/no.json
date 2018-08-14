@@ -155,5 +155,5 @@
         "Hvis denne meldingen ikke forsvinner kan du ta en titt på siden med <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">ofte stilte spørsmål</a> for informasjon om feilsøking.",
     "+++ no paste text +++": "+++ ingen innleggstekst +++",
     "Could not get paste data: %s":
-        "Could not get paste data: %s"
+        "Kunne ikke hente utklippsdata: %s"
 }
