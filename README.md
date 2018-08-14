@@ -7,7 +7,7 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Coverage/094500f62abf4c9aa0c8a8a4520e4789)](https://www.codacy.com/app/PrivateBin/PrivateBin)
 [![Test Coverage](https://codeclimate.com/github/PrivateBin/PrivateBin/badges/coverage.svg)](https://codeclimate.com/github/PrivateBin/PrivateBin/coverage) [![Code Coverage](https://scrutinizer-ci.com/g/PrivateBin/PrivateBin/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/PrivateBin/PrivateBin/?branch=master)
 
-*Current version: 1.2*
+*Current version: 1.2.1*
 
 **PrivateBin** is a minimalist, open source online [pastebin](https://en.wikipedia.org/wiki/Pastebin)
 where the server has zero knowledge of pasted data.

@@ -6,7 +6,7 @@
  * @see       {@link https://github.com/PrivateBin/PrivateBin}
  * @copyright 2012 Sébastien SAUVAGE ({@link http://sebsauvage.net})
  * @license   {@link https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License}
- * @version   1.2
+ * @version   1.2.1
  * @name      PrivateBin
  * @namespace
  */
@@ -142,7 +142,7 @@ jQuery.PrivateBin = (function($, sjcl, RawDeflate) {
         me.urls2links = function(html)
         {
             return html.replace(
-                /(((http|https|ftp):\/\/[\w?=&.\/-;#@~%+*-]+(?![\w\s?&.\/;#~%"=-]*>))|((magnet):[\w?=&.\/-;#@~%+*-]+))/ig,
+                /(((https?|ftp):\/\/[\w?!=&.\/-;#@~%+*-]+(?![\w\s?!&.\/;#~%"=-]*>))|((magnet):[\w?=&.\/-;#@~%+*-]+))/ig,
                 '<a href="$1" rel="nofollow">$1</a>'
             );
         };

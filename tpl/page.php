@@ -45,11 +45,11 @@ endif;
 if ($MARKDOWN):
 ?>
 		<script type="text/javascript" data-cfasync="false" src="js/showdown-1.8.6.js" integrity="sha512-YFg2sBCGT00I6X5KzgCLP4VqRlmPMRhkVvJS9oJKk5LxiUzzcjzV5m4fNf6mQMctLrhgS5LFKiFF3vzIuXbjAw==" crossorigin="anonymous"></script>
-		<script type="text/javascript" data-cfasync="false" src="js/purify-1.0.5.js" integrity="sha512-IpCJCwlqipmuhbr7fdEOTA4ENcBURsQSDAqXqbr/3dcA2swwJon7D6IStGUQntycGCNCdIM/FdPciBq0gUrLJA==" crossorigin="anonymous"></script>
 <?php
 endif;
 ?>
-		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-TCsDdtn5xvxYwQNkDhZTUJYJtkVjGTtReq7qvX3DzcCcpgUeWjDW0REEfjtHq7XzlPi2bpkgnuLwSmkR5Lyhww==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/purify-1.0.7.js" integrity="sha512-VnKJHLosO8z2ojNvWk9BEKYqnhZyWK9rM90FgZUUEp/PRnUqR5OLLKE0a3BkVmn7YgB7LXRrjHgFHQYKd6DAIA==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-MBMWkPzbqMbXFxOAWrJ50mzsZLDbDHKL+1z8uJ4E6nJ7BpAUYh7KnxV9GxuSKS7ZTguVoatCdG1KJ1MjdSimmQ==" crossorigin="anonymous"></script>
 		<!--[if lt IE 10]>
 		<style type="text/css">body {padding-left:60px;padding-right:60px;} #ienotice {display:block;} #oldienotice {display:block;}</style>
 		<![endif]-->

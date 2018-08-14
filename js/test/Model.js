@@ -81,7 +81,7 @@ describe('Model', function () {
             'returns the query string without separator, if any',
             jsc.nearray(common.jscA2zString()),
             jsc.nearray(common.jscA2zString()),
-            jsc.nearray(common.jscQueryString()),
+            jsc.nearray(common.jscHashString()),
             'string',
             function (schema, address, query, fragment) {
                 var queryString = query.join(''),
@@ -145,7 +145,7 @@ describe('Model', function () {
             jsc.nearray(common.jscA2zString()),
             jsc.array(common.jscQueryString()),
             jsc.nearray(common.jscBase64String()),
-            jsc.array(common.jscQueryString()),
+            jsc.array(common.jscHashString()),
             function (schema, address, query, fragment, trail) {
                 var fragmentString = fragment.join(''),
                     clean = jsdom('', {

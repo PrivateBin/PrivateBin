@@ -1,6 +1,13 @@
 # PrivateBin version history
 
   * **1.3 (not yet released)**
+  * **1.2.1 (2018-08-11)**
+    * ADDED: Add support for mega.nz links in pastes and comments (#331)
+    * CHANGED: Added some missing Russian translations (#348)
+    * CHANGED: Minor PHP refactoring: Rename PrivateBin class to Controller, improved logic of some persistence classes (#342)
+    * CHANGED: Upgrading DOMpurify library to 1.0.7
+    * FIXED: Ensure legacy browsers without webcrypto support can't create paste keys with insufficient entropy (#346)
+    * FIXED: Re-add support for old browsers (Firefox&lt;21, Chrome&lt;31, Safari&lt;7, IE&lt;11), broken in 1.2, will be removed again in 1.3
   * **1.2 (2018-07-22)**
     * ADDED: Translations for Spanish, Occitan, Norwegian, Portuguese, Dutch and Hungarian
     * ADDED: Option in configuration to change the default "PrivateBin" title of the site
