@@ -11,12 +11,18 @@ describe('CryptTool', function () {
                 'string',
                 'string',
                 'string',
-                async function (key, password, message) {
-                    return message.trim() === await $.PrivateBin.CryptTool.decipher(
-                        key,
-                        password,
-                        await $.PrivateBin.CryptTool.cipher(key, password, message.trim())
-                    );
+                function (key, password, message) {
+                    message = message.trim();
+                    return $.PrivateBin.CryptTool.cipher(
+                        key, password, message
+                    ).then(function(ciphertext) {
+                        return $.PrivateBin.CryptTool.decipher(
+                            key, password, ciphertext
+                        ).then(function(plaintext) {
+                            if (message !== plaintext) console.log([message, plaintext]);
+                            return message === plaintext;
+                        });
+                    });
                 }
             ));
         });
