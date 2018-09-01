@@ -10,10 +10,12 @@ describe('CryptTool', function () {
                 'string',
                 'string',
                 function (key, password, message) {
+                    jsdom();
+                    window.crypto = new WebCrypto();
                     return message === $.PrivateBin.CryptTool.decipher(
                         key,
                         password,
-                        $.PrivateBin.CryptTool.cipher(key, password, message)
+                        $.PrivateBin.CryptTool.cipher(key, password, message.trim())
                     );
                 }
             ),
@@ -25,15 +27,16 @@ describe('CryptTool', function () {
         // SJCL based pastes still works
         it(
             'supports PrivateBin v1 ciphertext (SJCL & browser atob)',
-            function () {
+            async function () {
                 delete global.Base64;
                 // make btoa available
                 jsdom();
                 global.btoa = window.btoa;
+                window.crypto = new WebCrypto();
 
                 // Of course you can easily decipher the following texts, if you like.
                 // Bonus points for finding their sources and hidden meanings.
-                var paste1 = $.PrivateBin.CryptTool.decipher(
+                var paste1 = await $.PrivateBin.CryptTool.decipher(
                     '6t2qsmLyfXIokNCL+3/yl15rfTUBQvm5SOnFPvNE7Q8=',
                     // -- "That's amazing. I've got the same combination on my luggage."
                     Array.apply(0, Array(6)).map(function(_,b) { return b + 1; }).join(''),
@@ -65,7 +68,7 @@ describe('CryptTool', function () {
                     'C5fARPJ4F2BIWgzgzkNj+dVjusft2XnziamWdbS5u3kuRlVuz5LQj+R5' +
                     'imnqQAincdZTkTT1nYx+DatlOLllCYIHffpI="}'
                 ),
-                paste2 = $.PrivateBin.CryptTool.decipher(
+                paste2 = await $.PrivateBin.CryptTool.decipher(
                     's9pmKZKOBN7EVvHpTA8jjLFH3Xlz/0l8lB4+ONPACrM=',
                     '', // no password
                     '{"iv":"WA42mdxIVXUwBqZu7JYNiw==","v":1,"iter":10000,"ks"' +
@@ -101,12 +104,14 @@ describe('CryptTool', function () {
 
         it(
             'supports ZeroBin ciphertext (SJCL & Base64 1.7)',
-            function () {
+            async function () {
                 global.Base64 = require('../base64-1.7').Base64;
+                jsdom();
+                window.crypto = new WebCrypto();
 
                 // Of course you can easily decipher the following texts, if you like.
                 // Bonus points for finding their sources and hidden meanings.
-                var paste1 = $.PrivateBin.CryptTool.decipher(
+                var paste1 = await $.PrivateBin.CryptTool.decipher(
                     '6t2qsmLyfXIokNCL+3/yl15rfTUBQvm5SOnFPvNE7Q8=',
                     // -- "That's amazing. I've got the same combination on my luggage."
                     Array.apply(0, Array(6)).map(function(_,b) { return b + 1; }).join(''),
@@ -130,7 +135,7 @@ describe('CryptTool', function () {
                     'V37AeiNoD2PcI6ZcHbRdPa+XRrRcJhSPPW7UQ0z4OvBfjdu/w390QxAx' +
                     'SxvZewoh49fKKB6hTsRnZb4tpHkjlww=="}'
                 ),
-                paste2 = $.PrivateBin.CryptTool.decipher(
+                paste2 = await $.PrivateBin.CryptTool.decipher(
                     's9pmKZKOBN7EVvHpTA8jjLFH3Xlz/0l8lB4+ONPACrM=',
                     '', // no password
                     '{"iv":"Z7lAZQbkrqGMvruxoSm6Pw==","v":1,"iter":10000,"ks"' +
@@ -167,6 +172,8 @@ describe('CryptTool', function () {
             'returns random, non-empty keys',
             'integer',
             function(counter) {
+                jsdom();
+                window.crypto = new WebCrypto();
                 var key = $.PrivateBin.CryptTool.getSymmetricKey(),
                     result = (key !== '' && keys.indexOf(key) === -1);
                 keys.push(key);

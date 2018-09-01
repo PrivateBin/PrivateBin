@@ -213,15 +213,14 @@ describe('Helper', function () {
         this.timeout(30000);
         jsc.property(
             'returns the requested cookie',
-            'nearray asciinestring',
-            'nearray asciistring',
+            jsc.nearray(jsc.nearray(common.jscAlnumString())),
+            jsc.nearray(jsc.nearray(common.jscAlnumString())),
             function (labels, values) {
                 var selectedKey = '', selectedValue = '',
                     cookieArray = [];
                 labels.forEach(function(item, i) {
-                    // deliberatly using a non-ascii key for replacing invalid characters
-                    var key = item.replace(/[\s;,=]/g, Array(i+2).join('£')),
-                        value = (values[i] || values[0]).replace(/[\s;,=]/g, '');
+                    var key = item.join(''),
+                        value = (values[i] || values[0]).join('');
                     cookieArray.push(key + '=' + value);
                     if (Math.random() < 1 / i || selectedKey === key)
                     {

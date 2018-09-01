@@ -6,6 +6,7 @@ global.jsc = require('jsverify');
 global.jsdom = require('jsdom-global');
 global.cleanup = global.jsdom();
 global.fs = require('fs');
+global.WebCrypto = require('node-webcrypto-ossl');
 
 // application libraries to test
 global.$ = global.jQuery = require('./jquery-3.3.1');

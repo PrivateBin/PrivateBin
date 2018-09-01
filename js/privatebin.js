@@ -527,6 +527,30 @@ jQuery.PrivateBin = (function($, sjcl, RawDeflate) {
         var me = {};
 
         /**
+         * convert UTF-8 string stored in a DOMString to a standard UTF-16 DOMString
+         *
+         * Iterates over the bytes of the message, converting them all hexadecimal
+         * percent encoded representations, then URI decodes them all
+         *
+         * @name   CryptTool.btou
+         * @function
+         * @private
+         * @param  {string} message UTF-8 string
+         * @return {string} UTF-16 string
+         */
+        function btou(message)
+        {
+            return decodeURIComponent(
+                message.split('').map(
+                    function(character)
+                    {
+                        return '%' + ('00' + character.charCodeAt(0).toString(16)).slice(-2);
+                    }
+                ).join('')
+            );
+        }
+
+        /**
          * convert DOMString (UTF-16) to a UTF-8 string stored in a DOMString
          *
          * URI encodes the message, then finds the percent encoded characters
@@ -550,27 +574,49 @@ jQuery.PrivateBin = (function($, sjcl, RawDeflate) {
         }
 
         /**
-         * convert UTF-8 string stored in a DOMString to a standard UTF-16 DOMString
+         * convert ArrayBuffer into a UTF-8 string
          *
-         * Iterates over the bytes of the message, converting them all hexadecimal
-         * percent encoded representations, then URI decodes them all
+         * Iterates over the bytes of the array, catenating them into a string
          *
-         * @name   CryptTool.btou
+         * @name   CryptTool.ArrToStr
+         * @function
+         * @private
+         * @param  {ArrayBuffer} messageArray
+         * @return {string} message
+         */
+        function ArrToStr(messageArray)
+        {
+            var array = new Uint8Array(messageArray),
+                len = array.length,
+                message = '',
+                i = 0;
+            while(i < len) {
+                var c = array[i++];
+                message += String.fromCharCode(c);
+            }
+            return message;
+        }
+
+        /**
+         * convert UTF-8 string into a Uint8Array
+         *
+         * Iterates over the bytes of the message, writing them to the array
+         *
+         * @name   CryptTool.StrToArr
          * @function
          * @private
          * @param  {string} message UTF-8 string
-         * @return {string} UTF-16 string
+         * @return {Uint8Array} array
          */
-        function btou(message)
+        function StrToArr(message)
         {
-            return decodeURIComponent(
-                message.split('').map(
-                    function(character)
-                    {
-                        return '%' + ('00' + character.charCodeAt(0).toString(16)).slice(-2);
-                    }
-                ).join('')
-            );
+            var messageUtf8  = message,
+                messageLen   = messageUtf8.length,
+                messageArray = new Uint8Array(messageLen);
+            for (var i = 0; i < messageLen; ++i) {
+                messageArray[i] = messageUtf8.charCodeAt(i);
+            }
+            return messageArray;
         }
 
         /**
@@ -612,6 +658,42 @@ jQuery.PrivateBin = (function($, sjcl, RawDeflate) {
         }
 
         /**
+         * returns specified number of random bytes
+         *
+         * @name   CryptTool.getRandomBytes
+         * @function
+         * @private
+         * @param  {int} length number of random bytes to fetch
+         * @throws {string}
+         * @return {string} random bytes
+         */
+        function getRandomBytes(length)
+        {
+            if (
+                typeof window !== 'undefined' &&
+                typeof Uint8Array !== 'undefined' &&
+                String.fromCodePoint &&
+                (
+                    typeof window.crypto !== 'undefined' ||
+                    typeof window.msCrypto !== 'undefined'
+                )
+            ) {
+                // modern browser environment
+                var bytes = '',
+                    byteArray = new Uint8Array(length),
+                    crypto = window.crypto || window.msCrypto;
+                crypto.getRandomValues(byteArray);
+                for (var i = 0; i < length; ++i) {
+                    bytes += String.fromCharCode(byteArray[i]);
+                }
+                return bytes;
+            } else {
+                // legacy browser or unsupported environment
+                throw 'No supported crypto API detected, you may read pastes and comments, but can\'t create pastes or add new comments.';
+            }
+        };
+
+        /**
          * compress, then encrypt message with given key and password
          *
          * @name   CryptTool.cipher
@@ -621,19 +703,68 @@ jQuery.PrivateBin = (function($, sjcl, RawDeflate) {
          * @param  {string} message
          * @return {string} data - JSON with encrypted data
          */
-        me.cipher = function(key, password, message)
+        me.cipher = async function(key, password, message)
         {
-            // Galois Counter Mode, keysize 256 bit, authentication tag 128 bit
-            var options = {
-                mode: 'gcm',
-                ks: 256,
-                ts: 128
-            };
+            // AES in Galois Counter Mode, keysize 256 bit, authentication tag 128 bit, 10000 iterations in key derivation
+            var iv     = getRandomBytes(16),
+                salt   = getRandomBytes(8),
+                object = {
+                    iv:     btoa(iv),
+                    v:      1,
+                    iter:   10000,
+                    ks:     256,
+                    ts:     128,
+                    mode:   'gcm',
+                    adata:  '', // if used, base64 encode it with btoa()
+                    cipher: 'aes',
+                    salt:   btoa(salt)
+                },
+                algo   = 'AES-' + object.mode.toUpperCase();
 
-            if ((password || '').trim().length === 0) {
-                return sjcl.encrypt(key, compress(message), options);
+            if ((password || '').trim().length > 0) {
+                key += sjcl.codec.hex.fromBits(sjcl.hash.sha256.hash(password));
             }
-            return sjcl.encrypt(key + sjcl.codec.hex.fromBits(sjcl.hash.sha256.hash(password)), compress(message), options);
+
+            // import raw key
+            var importedKey = await window.crypto.subtle.importKey(
+                'raw', // only 'raw' is allowed
+                StrToArr(key),
+                {name: 'PBKDF2'}, // we use PBKDF2 for key derivation
+                false, // the key may not be exported
+                ["deriveKey"] // we may only use it for key derivation
+            )
+
+            // derive a stronger key for use with AES
+            var derivedKey = await window.crypto.subtle.deriveKey(
+                {
+                    name: 'PBKDF2', // we use PBKDF2 for key derivation
+                    salt: StrToArr(atob(object.salt)), // salt used in HMAC
+                    iterations: object.iter, // amount of iterations to apply
+                    hash: {name: "SHA-256"}, // can be "SHA-1", "SHA-256", "SHA-384" or "SHA-512"
+                },
+                importedKey,
+                {
+                    // can be any supported AES algorithm ("AES-CTR", "AES-CBC", "AES-CMAC", "AES-GCM", "AES-CFB", "AES-KW", "ECDH", "DH" or "HMAC")
+                    name: algo,
+                    length: object.ks, // can be 128, 192 or 256
+                },
+                false, // the key may not be exported
+                ["encrypt"] // we may only use it for decryption
+            )
+
+            // finally, encrypt message
+            var encrypted = await window.crypto.subtle.encrypt(
+                {
+                    // can be any supported AES algorithm ("AES-CTR", "AES-CBC", "AES-CMAC", "AES-GCM", "AES-CFB", "AES-KW", "ECDH", "DH" or "HMAC")
+                    name: algo,
+                    iv: StrToArr(atob(object.iv)), // the initialization vector you used to encrypt
+                    additionalData: StrToArr(atob(object.adata)), // the addtional data you used during encryption (if any)
+                    tagLength: object.ts, // the length of the tag you used to encrypt (if any)
+                },
+                derivedKey,
+                StrToArr(compress(message)) // compressed plain text to encrypt
+            )
+            return btoa(ArrToStr(encrypted));
         };
 
         /**
@@ -646,18 +777,57 @@ jQuery.PrivateBin = (function($, sjcl, RawDeflate) {
          * @param  {string} data - JSON with encrypted data
          * @return {string} decrypted message, empty if decryption failed
          */
-        me.decipher = function(key, password, data)
+        me.decipher = async function(key, password, data)
         {
-            if (data !== undefined) {
-                try {
-                    return decompress(sjcl.decrypt(key, data));
-                } catch(err) {
-                    try {
-                        return decompress(sjcl.decrypt(key + sjcl.codec.hex.fromBits(sjcl.hash.sha256.hash(password)), data));
-                    } catch(e) {
-                        return '';
-                    }
+            try {
+                if (password.length > 0) {
+                    key += sjcl.codec.hex.fromBits(sjcl.hash.sha256.hash(password));
                 }
+                var object = JSON.parse(data),
+                    algo   = 'AES-' + object.mode.toUpperCase();
+
+                // import raw key
+                var importedKey = await window.crypto.subtle.importKey(
+                    'raw', // only 'raw' is allowed
+                    StrToArr(key),
+                    {name: 'PBKDF2'}, // we use PBKDF2 for key derivation
+                    false, // the key may not be exported
+                    ["deriveKey"] // we may only use it for key derivation
+                )
+
+                // derive a stronger key for use with AES
+                var derivedKey = await window.crypto.subtle.deriveKey(
+                    {
+                        name: 'PBKDF2', // we use PBKDF2 for key derivation
+                        salt: StrToArr(atob(object.salt)), // salt used in HMAC
+                        iterations: object.iter, // amount of iterations to apply
+                        hash: {name: "SHA-256"}, // can be "SHA-1", "SHA-256", "SHA-384" or "SHA-512"
+                    },
+                    importedKey,
+                    {
+                        // can be any supported AES algorithm ("AES-CTR", "AES-CBC", "AES-CMAC", "AES-GCM", "AES-CFB", "AES-KW", "ECDH", "DH" or "HMAC")
+                        name: algo,
+                        length: object.ks, // can be 128, 192 or 256
+                    },
+                    false, // the key may not be exported
+                    ["decrypt"] // we may only use it for decryption
+                )
+
+                // finally, decrypt message
+                var decrypted = await window.crypto.subtle.decrypt(
+                    {
+                        // can be any supported AES algorithm ("AES-CTR", "AES-CBC", "AES-CMAC", "AES-GCM", "AES-CFB", "AES-KW", "ECDH", "DH" or "HMAC")
+                        name: algo,
+                        iv: StrToArr(atob(object.iv)), // the initialization vector you used to encrypt
+                        additionalData: StrToArr(atob(object.adata)), // the addtional data you used during encryption (if any)
+                        tagLength: object.ts, // the length of the tag you used to encrypt (if any)
+                    },
+                    derivedKey,
+                    StrToArr(atob(object.ct)) // cipher text to decrypt
+                )
+                return decompress(ArrToStr(decrypted));
+            } catch(err) {
+                return '';
             }
         };
 
@@ -673,33 +843,7 @@ jQuery.PrivateBin = (function($, sjcl, RawDeflate) {
          */
         me.getSymmetricKey = function()
         {
-            var crypto, key;
-            if (typeof module !== 'undefined' && module.exports) {
-                // node environment
-                key = require('crypto').randomBytes(32).toString('base64');
-            } else if (
-                typeof window !== 'undefined' &&
-                typeof Uint8Array !== 'undefined' &&
-                String.fromCodePoint &&
-                (
-                    typeof window.crypto !== 'undefined' ||
-                    typeof window.msCrypto !== 'undefined'
-                )
-            ) {
-                // modern browser environment
-                var bytes = '',
-                    byteArray = new Uint8Array(32),
-                    crypto = window.crypto || window.msCrypto;
-                crypto.getRandomValues(byteArray);
-                for (var i = 0; i < 32; ++i) {
-                    bytes += String.fromCharCode(byteArray[i]);
-                }
-                key = btoa(bytes);
-            } else {
-                // legacy browser or unsupported environment
-                throw 'No supported crypto API detected, you may read pastes and post comments, but can\'t create pastes.';
-            }
-            return key;
+            return btoa(getRandomBytes(32));
         };
 
         return me;
