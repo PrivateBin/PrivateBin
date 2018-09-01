@@ -1,5 +1,7 @@
 'use strict';
 require('../common');
+jsdom();
+window.crypto = new WebCrypto();
 
 describe('CryptTool', function () {
     describe('cipher & decipher', function () {
@@ -9,18 +11,14 @@ describe('CryptTool', function () {
                 'string',
                 'string',
                 'string',
-                function (key, password, message) {
-                    jsdom();
-                    window.crypto = new WebCrypto();
-                    return message === $.PrivateBin.CryptTool.decipher(
+                async function (key, password, message) {
+                    return message.trim() === await $.PrivateBin.CryptTool.decipher(
                         key,
                         password,
-                        $.PrivateBin.CryptTool.cipher(key, password, message.trim())
+                        await $.PrivateBin.CryptTool.cipher(key, password, message.trim())
                     );
                 }
-            ),
-            // reducing amount of checks as running 100 takes about 5 minutes
-            {tests: 5, quiet: true});
+            ));
         });
 
         // The below static unit tests are included to ensure deciphering of "classic"
@@ -30,9 +28,7 @@ describe('CryptTool', function () {
             async function () {
                 delete global.Base64;
                 // make btoa available
-                jsdom();
                 global.btoa = window.btoa;
-                window.crypto = new WebCrypto();
 
                 // Of course you can easily decipher the following texts, if you like.
                 // Bonus points for finding their sources and hidden meanings.
@@ -106,8 +102,6 @@ describe('CryptTool', function () {
             'supports ZeroBin ciphertext (SJCL & Base64 1.7)',
             async function () {
                 global.Base64 = require('../base64-1.7').Base64;
-                jsdom();
-                window.crypto = new WebCrypto();
 
                 // Of course you can easily decipher the following texts, if you like.
                 // Bonus points for finding their sources and hidden meanings.
@@ -172,8 +166,6 @@ describe('CryptTool', function () {
             'returns random, non-empty keys',
             'integer',
             function(counter) {
-                jsdom();
-                window.crypto = new WebCrypto();
                 var key = $.PrivateBin.CryptTool.getSymmetricKey(),
                     result = (key !== '' && keys.indexOf(key) === -1);
                 keys.push(key);
@@ -187,8 +179,6 @@ describe('CryptTool', function () {
             'these all return the same base64 string',
             'string',
             function(string) {
-                // make btoa/atob available
-                jsdom();
                 // not comparing Base64.js v1.7 encode/decode, that has known issues
                 var Base64 = require('../base64-1.7').Base64,
                     sjcl = global.sjcl.codec.base64.fromBits(global.sjcl.codec.utf8String.toBits(string)),

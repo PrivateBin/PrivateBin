@@ -764,7 +764,8 @@ jQuery.PrivateBin = (function($, sjcl, RawDeflate) {
                 derivedKey,
                 StrToArr(compress(message)) // compressed plain text to encrypt
             )
-            return btoa(ArrToStr(encrypted));
+            object.ct = btoa(ArrToStr(encrypted));
+            return JSON.stringify(object);
         };
 
         /**
@@ -780,7 +781,7 @@ jQuery.PrivateBin = (function($, sjcl, RawDeflate) {
         me.decipher = async function(key, password, data)
         {
             try {
-                if (password.length > 0) {
+                if ((password || '').trim().length > 0) {
                     key += sjcl.codec.hex.fromBits(sjcl.hash.sha256.hash(password));
                 }
                 var object = JSON.parse(data),
