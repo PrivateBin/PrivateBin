@@ -3092,7 +3092,7 @@ jQuery.PrivateBin = (function($, sjcl, RawDeflate) {
             for (var i = 0; i < $head.length; ++i) {
                 newDoc.write($head[i].outerHTML);
             }
-            newDoc.write('</head><body><pre>' + DOMPurify.sanitize(paste) + '</pre></body></html>');
+            newDoc.write('</head><body><pre>' + DOMPurify.sanitize($('<div />').text(paste).html()) + '</pre></body></html>');
             newDoc.close();
         }
 
