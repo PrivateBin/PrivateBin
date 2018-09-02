@@ -16,7 +16,7 @@ describe('CryptTool', function () {
                     return $.PrivateBin.CryptTool.cipher(
                         key, password, message
                     ).then(function(ciphertext) {
-                        return $.PrivateBin.CryptTool.decipher(
+                        $.PrivateBin.CryptTool.decipher(
                             key, password, ciphertext
                         ).then(function(plaintext) {
                             clean();
@@ -24,21 +24,23 @@ describe('CryptTool', function () {
                         });
                     });
                 }
-            ));
+            ),
+            // reducing amount of checks as running 100 async ones causes issues for later test scripts
+            {tests: 3});
         });
 
         // The below static unit tests are included to ensure deciphering of "classic"
         // SJCL based pastes still works
         it(
             'supports PrivateBin v1 ciphertext (SJCL & browser atob)',
-            function (done) {
+            function () {
                 delete global.Base64;
                 var clean = jsdom();
                 window.crypto = new WebCrypto();
 
                 // Of course you can easily decipher the following texts, if you like.
                 // Bonus points for finding their sources and hidden meanings.
-                $.PrivateBin.CryptTool.decipher(
+                return $.PrivateBin.CryptTool.decipher(
                     '6t2qsmLyfXIokNCL+3/yl15rfTUBQvm5SOnFPvNE7Q8=',
                     // -- "That's amazing. I've got the same combination on my luggage."
                     Array.apply(0, Array(6)).map(function(_,b) { return b + 1; }).join(''),
@@ -101,7 +103,6 @@ describe('CryptTool', function () {
                             paste1.includes('securely packed in iron') &&
                             paste2.includes('Sol is right')
                         );
-                        done();
                     });
                 });
             }
@@ -109,14 +110,14 @@ describe('CryptTool', function () {
 
         it(
             'supports ZeroBin ciphertext (SJCL & Base64 1.7)',
-            function (done) {
+            function () {
                 global.Base64 = require('../base64-1.7').Base64;
                 var clean = jsdom();
                 window.crypto = new WebCrypto();
 
                 // Of course you can easily decipher the following texts, if you like.
                 // Bonus points for finding their sources and hidden meanings.
-                $.PrivateBin.CryptTool.decipher(
+                return $.PrivateBin.CryptTool.decipher(
                     '6t2qsmLyfXIokNCL+3/yl15rfTUBQvm5SOnFPvNE7Q8=',
                     // -- "That's amazing. I've got the same combination on my luggage."
                     Array.apply(0, Array(6)).map(function(_,b) { return b + 1; }).join(''),
@@ -165,7 +166,6 @@ describe('CryptTool', function () {
                             paste1.includes('securely packed in iron') &&
                             paste2.includes('Sol is right')
                         );
-                        done();
                     });
                 });
             }
