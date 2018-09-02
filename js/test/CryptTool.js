@@ -1,7 +1,5 @@
 'use strict';
 require('../common');
-jsdom();
-window.crypto = new WebCrypto();
 
 describe('CryptTool', function () {
     describe('cipher & decipher', function () {
@@ -12,6 +10,8 @@ describe('CryptTool', function () {
                 'string',
                 'string',
                 function (key, password, message) {
+                    var clean = jsdom();
+                    window.crypto = new WebCrypto();
                     message = message.trim();
                     return $.PrivateBin.CryptTool.cipher(
                         key, password, message
@@ -19,7 +19,7 @@ describe('CryptTool', function () {
                         return $.PrivateBin.CryptTool.decipher(
                             key, password, ciphertext
                         ).then(function(plaintext) {
-                            if (message !== plaintext) console.log([message, plaintext]);
+                            clean();
                             return message === plaintext;
                         });
                     });
@@ -33,8 +33,8 @@ describe('CryptTool', function () {
             'supports PrivateBin v1 ciphertext (SJCL & browser atob)',
             async function () {
                 delete global.Base64;
-                // make btoa available
-                global.btoa = window.btoa;
+                var clean = jsdom();
+                window.crypto = new WebCrypto();
 
                 // Of course you can easily decipher the following texts, if you like.
                 // Bonus points for finding their sources and hidden meanings.
@@ -96,6 +96,7 @@ describe('CryptTool', function () {
                     '99gjHX7wphJ6umKMM+fn6PcbYJkhDh2GlJL5COXjXfm/5aj/vuyaRRWZ' +
                     'MZtmnYpGAtAPg7AUG"}'
                 );
+                clean();
 
                 assert.ok(
                     paste1.includes('securely packed in iron') &&
@@ -108,6 +109,8 @@ describe('CryptTool', function () {
             'supports ZeroBin ciphertext (SJCL & Base64 1.7)',
             async function () {
                 global.Base64 = require('../base64-1.7').Base64;
+                var clean = jsdom();
+                window.crypto = new WebCrypto();
 
                 // Of course you can easily decipher the following texts, if you like.
                 // Bonus points for finding their sources and hidden meanings.
@@ -154,6 +157,7 @@ describe('CryptTool', function () {
                     '7NnhqVk5A6vIBbu4AC5PZf76l6yep4xsoy/QtdDxCMocCXeAML9MQ9uP' +
                     'QbuspOKrBvMfN5igA1kBqasnxI472KBNXsdZnaDddSVUuvhTcETM="}'
                 );
+                clean();
 
                 delete global.Base64;
                 assert.ok(
@@ -165,6 +169,7 @@ describe('CryptTool', function () {
     });
 
     describe('getSymmetricKey', function () {
+        this.timeout(30000);
         var keys = [];
 
         // the parameter is used to ensure the test is run more then one time
@@ -172,25 +177,31 @@ describe('CryptTool', function () {
             'returns random, non-empty keys',
             'integer',
             function(counter) {
+                var clean = jsdom();
+                window.crypto = new WebCrypto();
                 var key = $.PrivateBin.CryptTool.getSymmetricKey(),
                     result = (key !== '' && keys.indexOf(key) === -1);
                 keys.push(key);
+                clean();
                 return result;
             }
         );
     });
 
     describe('SJCL.js vs abab.js', function () {
+        this.timeout(30000);
         jsc.property(
             'these all return the same base64 string',
             'string',
             function(string) {
+                var clean = jsdom();
                 // not comparing Base64.js v1.7 encode/decode, that has known issues
                 var Base64 = require('../base64-1.7').Base64,
                     sjcl = global.sjcl.codec.base64.fromBits(global.sjcl.codec.utf8String.toBits(string)),
                     abab = window.btoa(Base64.utob(string)),
                     lcjs = global.sjcl.codec.utf8String.fromBits(global.sjcl.codec.base64.toBits(abab)),
                     baba = Base64.btou(window.atob(sjcl));
+                clean();
                 return sjcl === abab && string === lcjs && lcjs === baba;
             }
         );

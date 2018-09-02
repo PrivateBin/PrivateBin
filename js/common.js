@@ -56,7 +56,7 @@ var a2zString = ['a','b','c','d','e','f','g','h','i','j','k','l','m',
     mimeLine = '';
 
 // redirect console messages to log file
-console.info = console.warn = function () {
+console.info = console.warn = console.error = function () {
     logFile.write(Array.prototype.slice.call(arguments).join('') + '\n');
 };
 
