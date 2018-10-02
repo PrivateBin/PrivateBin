@@ -92,6 +92,9 @@ endif;
 if ($isCpct):
 ?> class="navbar-spacing"<?php
 endif;
+if ($isDark):
+?> class="dark-theme"<?php
+endif;
 ?>>
 		<div id="passwordmodal" tabindex="-1" class="modal fade" role="dialog" aria-hidden="true">
 			<div class="modal-dialog" role="document">
