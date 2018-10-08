@@ -691,7 +691,7 @@ jQuery.PrivateBin = (function($, sjcl, RawDeflate) {
                 // legacy browser or unsupported environment
                 throw 'No supported crypto API detected, you may read pastes and comments, but can\'t create pastes or add new comments.';
             }
-        };
+        }
 
         /**
          * compress, then encrypt message with given key and password
@@ -731,7 +731,7 @@ jQuery.PrivateBin = (function($, sjcl, RawDeflate) {
                 StrToArr(key),
                 {name: 'PBKDF2'}, // we use PBKDF2 for key derivation
                 false, // the key may not be exported
-                ["deriveKey"] // we may only use it for key derivation
+                ['deriveKey'] // we may only use it for key derivation
             )
 
             // derive a stronger key for use with AES
@@ -740,16 +740,16 @@ jQuery.PrivateBin = (function($, sjcl, RawDeflate) {
                     name: 'PBKDF2', // we use PBKDF2 for key derivation
                     salt: StrToArr(atob(object.salt)), // salt used in HMAC
                     iterations: object.iter, // amount of iterations to apply
-                    hash: {name: "SHA-256"}, // can be "SHA-1", "SHA-256", "SHA-384" or "SHA-512"
+                    hash: {name: 'SHA-256'} // can be "SHA-1", "SHA-256", "SHA-384" or "SHA-512"
                 },
                 importedKey,
                 {
                     // can be any supported AES algorithm ("AES-CTR", "AES-CBC", "AES-CMAC", "AES-GCM", "AES-CFB", "AES-KW", "ECDH", "DH" or "HMAC")
                     name: algo,
-                    length: object.ks, // can be 128, 192 or 256
+                    length: object.ks // can be 128, 192 or 256
                 },
                 false, // the key may not be exported
-                ["encrypt"] // we may only use it for decryption
+                ['encrypt'] // we may only use it for decryption
             )
 
             // finally, encrypt message
@@ -759,7 +759,7 @@ jQuery.PrivateBin = (function($, sjcl, RawDeflate) {
                     name: algo,
                     iv: StrToArr(atob(object.iv)), // the initialization vector you used to encrypt
                     additionalData: StrToArr(atob(object.adata)), // the addtional data you used during encryption (if any)
-                    tagLength: object.ts, // the length of the tag you used to encrypt (if any)
+                    tagLength: object.ts // the length of the tag you used to encrypt (if any)
                 },
                 derivedKey,
                 StrToArr(compress(message)) // compressed plain text to encrypt
@@ -793,7 +793,7 @@ jQuery.PrivateBin = (function($, sjcl, RawDeflate) {
                     StrToArr(key),
                     {name: 'PBKDF2'}, // we use PBKDF2 for key derivation
                     false, // the key may not be exported
-                    ["deriveKey"] // we may only use it for key derivation
+                    ['deriveKey'] // we may only use it for key derivation
                 )
 
                 // derive a stronger key for use with AES
@@ -802,16 +802,16 @@ jQuery.PrivateBin = (function($, sjcl, RawDeflate) {
                         name: 'PBKDF2', // we use PBKDF2 for key derivation
                         salt: StrToArr(atob(object.salt)), // salt used in HMAC
                         iterations: object.iter, // amount of iterations to apply
-                        hash: {name: "SHA-256"}, // can be "SHA-1", "SHA-256", "SHA-384" or "SHA-512"
+                        hash: {name: 'SHA-256'} // can be "SHA-1", "SHA-256", "SHA-384" or "SHA-512"
                     },
                     importedKey,
                     {
                         // can be any supported AES algorithm ("AES-CTR", "AES-CBC", "AES-CMAC", "AES-GCM", "AES-CFB", "AES-KW", "ECDH", "DH" or "HMAC")
                         name: algo,
-                        length: object.ks, // can be 128, 192 or 256
+                        length: object.ks // can be 128, 192 or 256
                     },
                     false, // the key may not be exported
-                    ["decrypt"] // we may only use it for decryption
+                    ['decrypt'] // we may only use it for decryption
                 )
 
                 // finally, decrypt message
@@ -821,7 +821,7 @@ jQuery.PrivateBin = (function($, sjcl, RawDeflate) {
                         name: algo,
                         iv: StrToArr(atob(object.iv)), // the initialization vector you used to encrypt
                         additionalData: StrToArr(atob(object.adata)), // the addtional data you used during encryption (if any)
-                        tagLength: object.ts, // the length of the tag you used to encrypt (if any)
+                        tagLength: object.ts // the length of the tag you used to encrypt (if any)
                     },
                     derivedKey,
                     StrToArr(atob(object.ct)) // cipher text to decrypt
@@ -1531,7 +1531,7 @@ jQuery.PrivateBin = (function($, sjcl, RawDeflate) {
                 // the paste has been deleted when the JSON with the ciphertext
                 // has been downloaded
 
-                Alert.showRemaining("FOR YOUR EYES ONLY. Don't close this window, this message can't be displayed again.");
+                Alert.showRemaining('FOR YOUR EYES ONLY. Don\'t close this window, this message can\'t be displayed again.');
                 $remainingTime.addClass('foryoureyesonly');
 
                 // discourage cloning (it cannot really be prevented)
