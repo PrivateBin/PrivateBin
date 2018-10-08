@@ -3764,14 +3764,15 @@ jQuery.PrivateBin = (function($, sjcl, RawDeflate) {
          * encrypts and sets the data
          *
          * @name   Uploader.setData
+         * @async
          * @function
          * @param {string} index
          * @param {mixed} element
          */
-        me.setData = function(index, element)
+        me.setData = async function(index, element)
         {
             checkCryptParameters();
-            data[index] = CryptTool.cipher(symmetricKey, password, element);
+            data[index] = await CryptTool.cipher(symmetricKey, password, element);
         };
 
         /**
@@ -3922,34 +3923,40 @@ jQuery.PrivateBin = (function($, sjcl, RawDeflate) {
         function encryptAttachments(callback) {
             var file = AttachmentViewer.getAttachmentData();
 
+            let encryptAttachmentPromise, encryptAttachmentNamePromise;
             if (typeof file !== 'undefined' && file !== null) {
                 var fileName = AttachmentViewer.getFile().name;
 
-                Uploader.setData('attachment', file);
-                Uploader.setData('attachmentname', fileName);
-
-                // run callback
-                return callback();
+                // run concurrently to encrypt everything
+                encryptAttachmentPromise = Uploader.setData('attachment', file);
+                encryptAttachmentNamePromise = Uploader.setData('attachmentname', fileName);
             } else if (AttachmentViewer.hasAttachment()) {
                 // fall back to cloned part
                 var attachment = AttachmentViewer.getAttachment();
 
-                Uploader.setData('attachment', attachment[0]);
-                Uploader.setData('attachmentname', attachment[1]);
-                return callback();
+                encryptAttachmentPromise = Uploader.setData('attachment', attachment[0]);
+                encryptAttachmentNamePromise = Uploader.setData('attachmentname', attachment[1]);
             } else {
                 // if there are no attachments, this is of course still successful
                 return callback();
             }
+
+            // TODO: change this callback to also use Promises instead,
+            // this here just waits
+            Promise.all([encryptAttachmentPromise, encryptAttachmentNamePromise]).then(() => {
+                // run callback
+                return callback();
+            });
         }
 
         /**
          * send a reply in a discussion
          *
+         * @async
          * @name   PasteEncrypter.sendComment
          * @function
          */
-        me.sendComment = function()
+        me.sendComment = async function()
         {
             Alert.hideMessages();
             Alert.setCustomHandler(DiscussionViewer.handleNotification);
@@ -4004,13 +4011,17 @@ jQuery.PrivateBin = (function($, sjcl, RawDeflate) {
 
             // encrypt data
             try {
-                Uploader.setData('data', plainText);
+                // start promisesat the same time and wait thereafter
+                let settingData = [];
+                settingData.push(Uploader.setData('data', plainText));
+
+                if (nickname.length > 0) {
+                    settingData(Uploader.setData('nickname', nickname));
+                }
+
+                await Promise.all(settingData);
             } catch (e) {
                 Alert.showError(e);
-            }
-
-            if (nickname.length > 0) {
-                Uploader.setData('nickname', nickname);
             }
 
             Uploader.run();
@@ -4019,10 +4030,11 @@ jQuery.PrivateBin = (function($, sjcl, RawDeflate) {
         /**
          * sends a new paste to server
          *
+         * @async
          * @name   PasteEncrypter.sendPaste
          * @function
          */
-        me.sendPaste = function()
+        me.sendPaste = async function()
         {
             // hide previous (error) messages
             Controller.hideStatusMessages();
@@ -4075,20 +4087,20 @@ jQuery.PrivateBin = (function($, sjcl, RawDeflate) {
             PasteViewer.setText(plainText);
             PasteViewer.setFormat(format);
 
-            // encrypt cipher data
-            try {
-                Uploader.setData('data', plainText);
-            } catch (e) {
-                Alert.showError(e);
-            }
-
             // encrypt attachments
-            encryptAttachments(
+            const encryptAttachmentsPromise = encryptAttachments(
                 function () {
-                    // send data
-                    Uploader.run();
+                    // TODO: remove, is not needed anymore as we use Promises
                 }
             );
+
+            // encrypt plain text
+            const encryptDataPromise = Uploader.setData('data', plainText);
+
+            await Promise.all([encryptAttachmentsPromise, encryptDataPromise]).catch(Alert.showError);
+
+            // send data
+            Uploader.run();
         };
 
         /**
