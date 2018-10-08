@@ -3943,7 +3943,7 @@ jQuery.PrivateBin = (function($, sjcl, RawDeflate) {
 
             // TODO: change this callback to also use Promises instead,
             // this here just waits
-            Promise.all([encryptAttachmentPromise, encryptAttachmentNamePromise]).then(() => {
+            return Promise.all([encryptAttachmentPromise, encryptAttachmentNamePromise]).then(() => {
                 // run callback
                 return callback();
             });
