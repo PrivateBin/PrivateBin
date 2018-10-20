@@ -3990,12 +3990,12 @@ jQuery.PrivateBin = (function($, sjcl, RawDeflate) {
                 Alert.hideLoading();
                 TopNav.showViewButtons();
 
-                // show error message
+                // …show error message…
                 Alert.showError(
                     Uploader.parseUploadError(status, data, 'post comment')
                 );
 
-                // reset error handler
+                // …and reset error handler
                 Alert.setCustomHandler(null);
             });
 
@@ -4009,22 +4009,19 @@ jQuery.PrivateBin = (function($, sjcl, RawDeflate) {
                 Uploader.setUnencryptedData('parentid', parentid);
             }
 
-            // encrypt data
-            try {
-                // start promisesat the same time and wait thereafter
-                let settingData = [];
-                settingData.push(Uploader.setData('data', plainText));
-
-                if (nickname.length > 0) {
-                    settingData(Uploader.setData('nickname', nickname));
-                }
-
-                await Promise.all(settingData);
-            } catch (e) {
-                Alert.showError(e);
+            // start promises to encrypt data…
+            let dataPromises = [];
+            dataPromises.push(Uploader.setData('data', plainText));
+            if (nickname.length > 0) {
+                dataPromises.push(Uploader.setData('nickname', nickname));
             }
 
-            Uploader.run();
+            // …and upload when they are all done
+            Promise.all(dataPromises).then(() => {
+                Uploader.run();
+            }).catch((e) => {
+                Alert.showError(e);
+            });
         };
 
         /**
@@ -4194,7 +4191,7 @@ jQuery.PrivateBin = (function($, sjcl, RawDeflate) {
                     PasteViewer.run();
                 }
             }).catch((err) => {
-                throw 'failed to decipher paste text: ' + err;
+                displayDecryptionError('failed to decipher paste text: ' + err);
             });
         }
 
@@ -4214,10 +4211,10 @@ jQuery.PrivateBin = (function($, sjcl, RawDeflate) {
             let attachmentPromise = decryptOrPromptPassword(key, password, paste.attachment);
             let attachmentNamePromise = decryptOrPromptPassword(key, password, paste.attachmentname);
             attachmentPromise.catch((err) => {
-                throw 'failed to decipher attachment: ' + err;
+                displayDecryptionError('failed to decipher attachment: ' + err);
             })
             attachmentNamePromise.catch((err) => {
-                throw 'failed to decipher attachment name: ' + err;
+                displayDecryptionError('failed to decipher attachment name: ' + err);
             })
             Promise.all([attachmentPromise, attachmentNamePromise]).then((results) => {
                 if (!results.some((result) => {
@@ -4247,12 +4244,15 @@ jQuery.PrivateBin = (function($, sjcl, RawDeflate) {
             let commentDecryptionPromises = [];
             // iterate over comments
             for (var i = 0; i < paste.comments.length; ++i) {
-                commentDecryptionPromises.append(
+                commentDecryptionPromises.push(
                     CryptTool.decipher(key, password, paste.comments[i].data)
                 );
             }
             Promise.all(commentDecryptionPromises).then((plaintexts) => {
                 for (var i = 0; i < paste.comments.length; ++i) {
+                    if (plaintexts[i] === false) {
+                        continue;
+                    }
                     var comment = paste.comments[i];
                     DiscussionViewer.addComment(
                         comment,
@@ -4262,6 +4262,27 @@ jQuery.PrivateBin = (function($, sjcl, RawDeflate) {
                 }
                 DiscussionViewer.finishDiscussion();
             });
+        }
+
+        /**
+         * displays and logs decryption errors
+         *
+         * @name   PasteDecrypter.displayDecryptionError
+         * @private
+         * @function
+         * @param  {string} message
+         */
+        function displayDecryptionError(message)
+        {
+            Alert.hideLoading();
+
+            // log detailed error, but display generic translation
+            console.error(message);
+            Alert.showError('Could not decrypt data. Did you enter a wrong password? Retry with the button at the top.');
+
+            // reset password, so it can be re-entered
+            Prompt.reset();
+            TopNav.showRetryButton();
         }
 
         /**
@@ -4282,50 +4303,43 @@ jQuery.PrivateBin = (function($, sjcl, RawDeflate) {
                 return;
             }
 
-            var key = Model.getPasteKey(),
-                password = Prompt.getPassword();
+            let key = Model.getPasteKey(),
+                password = Prompt.getPassword(),
+                decrytionPromises = [];
 
-            // try to decrypt the paste
-            try {
-                // decrypt attachments
-                if (paste.attachment && AttachmentViewer.hasAttachmentData()) {
-                    // try to decrypt paste and if it fails (because the password is
-                    // missing) return to let JS continue and wait for user
+            TopNav.setRetryCallback(function () {
+                TopNav.hideRetryButton();
+                me.run(paste);
+            });
+
+            // decrypt attachments
+            if (paste.attachment && AttachmentViewer.hasAttachmentData()) {
+                // try to decrypt paste and if it fails (because the password is
+                // missing) return to let JS continue and wait for user
+                decrytionPromises.push(
                     decryptAttachment(paste, key, password).then((attachementIsDecrypted) => {
                         if (attachementIsDecrypted) {
                             // ignore empty paste, as this is allowed when pasting attachments
-                            decryptPaste(paste, key, password, true);
+                            return decryptPaste(paste, key, password, true);
                         }
-                    });
-                } else {
-                    decryptPaste(paste, key, password)
-                }
+                    })
+                );
+            } else {
+                decrytionPromises.push(decryptPaste(paste, key, password))
+            }
 
-                // shows the remaining time (until) deletion
-                PasteStatus.showRemainingTime(paste.meta);
+            // shows the remaining time (until) deletion
+            PasteStatus.showRemainingTime(paste.meta);
 
-                // if the discussion is opened on this paste, display it
-                if (paste.meta.opendiscussion) {
-                    decryptComments(paste, key, password);
-                }
+            // if the discussion is opened on this paste, display it
+            if (paste.meta.opendiscussion) {
+                decrytionPromises(decryptComments(paste, key, password));
+            }
 
+            Promise.all(decrytionPromises).then(() => {
                 Alert.hideLoading();
                 TopNav.showViewButtons();
-            } catch(err) {
-                Alert.hideLoading();
-
-                // log and show error
-                console.error(err);
-                Alert.showError('Could not decrypt data. Did you enter a wrong password? Retry with the button at the top.');
-                // reset password, so it can be re-entered and sow retry button
-                Prompt.reset();
-                TopNav.setRetryCallback(function () {
-                    TopNav.hideRetryButton();
-
-                    me.run(paste);
-                });
-                TopNav.showRetryButton();
-            }
+            });
         };
 
         /**
