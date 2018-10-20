@@ -4166,14 +4166,16 @@ jQuery.PrivateBin = (function($, sjcl, RawDeflate) {
          *
          * @name   PasteDecrypter.decryptPaste
          * @private
+         * @async
          * @function
          * @param  {object} paste - paste data in object form
          * @param  {string} key
          * @param  {string} password
          * @param  {bool} ignoreError - ignore decryption errors iof set to true
          * @throws {string}
+         * @return {Promise}
          */
-        function decryptPaste(paste, key, password, ignoreError)
+        async function decryptPaste(paste, key, password, ignoreError)
         {
             let decyptionPromise;
             if (ignoreError === true) {
@@ -4182,7 +4184,7 @@ jQuery.PrivateBin = (function($, sjcl, RawDeflate) {
                 decyptionPromise = decryptOrPromptPassword(key, password, paste.data);
             }
 
-            decyptionPromise.then((plaintext) => {
+            return decyptionPromise.then((plaintext) => {
                 if (plaintext !== false) {
                     // on success show paste
                     PasteViewer.setFormat(paste.meta.formatter);
@@ -4200,13 +4202,15 @@ jQuery.PrivateBin = (function($, sjcl, RawDeflate) {
          *
          * @name   PasteDecrypter.decryptAttachment
          * @private
+         * @async
          * @function
          * @param  {object} paste - paste data in object form
          * @param  {string} key
          * @param  {string} password
          * @throws {string}
+         * @return {Promise}
          */
-        function decryptAttachment(paste, key, password)
+        async function decryptAttachment(paste, key, password)
         {
             let attachmentPromise = decryptOrPromptPassword(key, password, paste.attachment);
             let attachmentNamePromise = decryptOrPromptPassword(key, password, paste.attachmentname);
@@ -4216,7 +4220,7 @@ jQuery.PrivateBin = (function($, sjcl, RawDeflate) {
             attachmentNamePromise.catch((err) => {
                 displayDecryptionError('failed to decipher attachment name: ' + err);
             })
-            Promise.all([attachmentPromise, attachmentNamePromise]).then((results) => {
+            return Promise.all([attachmentPromise, attachmentNamePromise]).then((results) => {
                 if (!results.some((result) => {
                     return result === false;
                 })) {
@@ -4231,12 +4235,14 @@ jQuery.PrivateBin = (function($, sjcl, RawDeflate) {
          *
          * @name   PasteDecrypter.decryptComments
          * @private
+         * @async
          * @function
          * @param  {object} paste - paste data in object form
          * @param  {string} key
          * @param  {string} password
+         * @return {Promise}
          */
-        function decryptComments(paste, key, password)
+        async function decryptComments(paste, key, password)
         {
             // remove potential previous discussion
             DiscussionViewer.prepareNewDiscussion();
@@ -4248,7 +4254,7 @@ jQuery.PrivateBin = (function($, sjcl, RawDeflate) {
                     CryptTool.decipher(key, password, paste.comments[i].data)
                 );
             }
-            Promise.all(commentDecryptionPromises).then((plaintexts) => {
+            return Promise.all(commentDecryptionPromises).then((plaintexts) => {
                 for (var i = 0; i < paste.comments.length; ++i) {
                     if (plaintexts[i] === false) {
                         continue;
@@ -4333,7 +4339,7 @@ jQuery.PrivateBin = (function($, sjcl, RawDeflate) {
 
             // if the discussion is opened on this paste, display it
             if (paste.meta.opendiscussion) {
-                decrytionPromises(decryptComments(paste, key, password));
+                decrytionPromises.push(decryptComments(paste, key, password));
             }
 
             Promise.all(decrytionPromises).then(() => {
