@@ -697,6 +697,7 @@ jQuery.PrivateBin = (function($, sjcl, RawDeflate) {
          * compress, then encrypt message with given key and password
          *
          * @name   CryptTool.cipher
+         * @async
          * @function
          * @param  {string} key
          * @param  {string} password
@@ -772,6 +773,7 @@ jQuery.PrivateBin = (function($, sjcl, RawDeflate) {
          * decrypt message with key, then decompress
          *
          * @name   CryptTool.decipher
+         * @async
          * @function
          * @param  {string} key
          * @param  {string} password
@@ -3952,8 +3954,8 @@ jQuery.PrivateBin = (function($, sjcl, RawDeflate) {
         /**
          * send a reply in a discussion
          *
-         * @async
          * @name   PasteEncrypter.sendComment
+         * @async
          * @function
          */
         me.sendComment = async function()
@@ -4027,8 +4029,8 @@ jQuery.PrivateBin = (function($, sjcl, RawDeflate) {
         /**
          * sends a new paste to server
          *
-         * @async
          * @name   PasteEncrypter.sendPaste
+         * @async
          * @function
          */
         me.sendPaste = async function()
@@ -4141,7 +4143,7 @@ jQuery.PrivateBin = (function($, sjcl, RawDeflate) {
         async function decryptOrPromptPassword(key, password, cipherdata)
         {
             // try decryption without password
-            var plaindata = await CryptTool.decipher(key, password, cipherdata);
+            const plaindata = await CryptTool.decipher(key, password, cipherdata);
 
             // if it fails, request password
             if (plaindata.length === 0 && password.length === 0) {
@@ -4212,8 +4214,8 @@ jQuery.PrivateBin = (function($, sjcl, RawDeflate) {
          */
         async function decryptAttachment(paste, key, password)
         {
-            let attachmentPromise = decryptOrPromptPassword(key, password, paste.attachment);
-            let attachmentNamePromise = decryptOrPromptPassword(key, password, paste.attachmentname);
+            const attachmentPromise = decryptOrPromptPassword(key, password, paste.attachment),
+                  attachmentNamePromise = decryptOrPromptPassword(key, password, paste.attachmentname);
             attachmentPromise.catch((err) => {
                 displayDecryptionError('failed to decipher attachment: ' + err);
             })
@@ -4249,7 +4251,7 @@ jQuery.PrivateBin = (function($, sjcl, RawDeflate) {
 
             let commentDecryptionPromises = [];
             // iterate over comments
-            for (var i = 0; i < paste.comments.length; ++i) {
+            for (let i = 0; i < paste.comments.length; ++i) {
                 commentDecryptionPromises.push(
                     Promise.all([
                         CryptTool.decipher(key, password, paste.comments[i].data),
@@ -4260,12 +4262,11 @@ jQuery.PrivateBin = (function($, sjcl, RawDeflate) {
                 );
             }
             return Promise.all(commentDecryptionPromises).then((plaintexts) => {
-                for (var i = 0; i < paste.comments.length; ++i) {
+                for (let i = 0; i < paste.comments.length; ++i) {
                     if (plaintexts[i][0].length === 0) {
                         continue;
                     }
-                    var comment = paste.comments[i];
-                    console.log(plaintexts);
+                    const comment = paste.comments[i];
                     DiscussionViewer.addComment(
                         comment,
                         plaintexts[i][0],
@@ -4317,7 +4318,7 @@ jQuery.PrivateBin = (function($, sjcl, RawDeflate) {
 
             let key = Model.getPasteKey(),
                 password = Prompt.getPassword(),
-                decrytionPromises = [];
+                decryptionPromises = [];
 
             TopNav.setRetryCallback(function () {
                 TopNav.hideRetryButton();
@@ -4328,7 +4329,7 @@ jQuery.PrivateBin = (function($, sjcl, RawDeflate) {
             if (paste.attachment && AttachmentViewer.hasAttachmentData()) {
                 // try to decrypt paste and if it fails (because the password is
                 // missing) return to let JS continue and wait for user
-                decrytionPromises.push(
+                decryptionPromises.push(
                     decryptAttachment(paste, key, password).then((attachementIsDecrypted) => {
                         if (attachementIsDecrypted) {
                             // ignore empty paste, as this is allowed when pasting attachments
@@ -4337,18 +4338,18 @@ jQuery.PrivateBin = (function($, sjcl, RawDeflate) {
                     })
                 );
             } else {
-                decrytionPromises.push(decryptPaste(paste, key, password))
+                decryptionPromises.push(decryptPaste(paste, key, password))
             }
 
             // if the discussion is opened on this paste, display it
             if (paste.meta.opendiscussion) {
-                decrytionPromises.push(decryptComments(paste, key, password));
+                decryptionPromises.push(decryptComments(paste, key, password));
             }
 
             // shows the remaining time (until) deletion
             PasteStatus.showRemainingTime(paste.meta);
 
-            Promise.all(decrytionPromises).then(() => {
+            Promise.all(decryptionPromises).then(() => {
                 Alert.hideLoading();
                 TopNav.showViewButtons();
             });
