@@ -13,7 +13,6 @@ env:
   node: true
 
 globals:
-  sjcl: false
   DOMPurify: false
   after: true
   before: true

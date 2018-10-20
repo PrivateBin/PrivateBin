@@ -736,7 +736,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 {name: 'PBKDF2'}, // we use PBKDF2 for key derivation
                 false, // the key may not be exported
                 ['deriveKey'] // we may only use it for key derivation
-            )
+            );
 
             // derive a stronger key for use with AES
             const derivedKey = await window.crypto.subtle.deriveKey(
@@ -754,7 +754,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 },
                 false, // the key may not be exported
                 ['encrypt'] // we may only use it for decryption
-            )
+            );
 
             // finally, encrypt message
             const encrypted = await window.crypto.subtle.encrypt(
@@ -767,7 +767,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 },
                 derivedKey,
                 StrToArr(compress(message)) // compressed plain text to encrypt
-            )
+            );
             object.ct = btoa(ArrToStr(encrypted));
             return JSON.stringify(object);
         };
@@ -821,7 +821,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                     },
                     false, // the key may not be exported
                     ['decrypt'] // we may only use it for decryption
-                )
+                );
 
                 // finally, decrypt message
                 const decrypted = await window.crypto.subtle.decrypt(
@@ -834,7 +834,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                     },
                     derivedKey,
                     StrToArr(atob(object.ct)) // cipher text to decrypt
-                )
+                );
                 return decompress(ArrToStr(decrypted));
             } catch(err) {
                 return '';
