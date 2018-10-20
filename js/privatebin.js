@@ -4251,19 +4251,25 @@ jQuery.PrivateBin = (function($, sjcl, RawDeflate) {
             // iterate over comments
             for (var i = 0; i < paste.comments.length; ++i) {
                 commentDecryptionPromises.push(
-                    CryptTool.decipher(key, password, paste.comments[i].data)
+                    Promise.all([
+                        CryptTool.decipher(key, password, paste.comments[i].data),
+                        paste.comments[i].meta.nickname ?
+                            CryptTool.decipher(key, password, paste.comments[i].meta.nickname) :
+                            Promise.resolve('')
+                    ])
                 );
             }
             return Promise.all(commentDecryptionPromises).then((plaintexts) => {
                 for (var i = 0; i < paste.comments.length; ++i) {
-                    if (plaintexts[i] === false) {
+                    if (plaintexts[i][0].length === 0) {
                         continue;
                     }
                     var comment = paste.comments[i];
+                    console.log(plaintexts);
                     DiscussionViewer.addComment(
                         comment,
-                        plaintexts[i],
-                        comment.meta.nickname ? CryptTool.decipher(key, password, comment.meta.nickname) : ''
+                        plaintexts[i][0],
+                        plaintexts[i][1]
                     );
                 }
                 DiscussionViewer.finishDiscussion();
@@ -4334,13 +4340,13 @@ jQuery.PrivateBin = (function($, sjcl, RawDeflate) {
                 decrytionPromises.push(decryptPaste(paste, key, password))
             }
 
-            // shows the remaining time (until) deletion
-            PasteStatus.showRemainingTime(paste.meta);
-
             // if the discussion is opened on this paste, display it
             if (paste.meta.opendiscussion) {
                 decrytionPromises.push(decryptComments(paste, key, password));
             }
+
+            // shows the remaining time (until) deletion
+            PasteStatus.showRemainingTime(paste.meta);
 
             Promise.all(decrytionPromises).then(() => {
                 Alert.hideLoading();
