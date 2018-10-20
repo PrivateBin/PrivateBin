@@ -4133,6 +4133,7 @@ jQuery.PrivateBin = (function($, sjcl, RawDeflate) {
          *
          * @name   PasteDecrypter.decryptOrPromptPassword
          * @private
+         * @async
          * @function
          * @param  {string} key
          * @param  {string} password - optional, may be an empty string
@@ -4140,10 +4141,10 @@ jQuery.PrivateBin = (function($, sjcl, RawDeflate) {
          * @throws {string}
          * @return {false|string} false, when unsuccessful or string (decrypted data)
          */
-        function decryptOrPromptPassword(key, password, cipherdata)
+        async function decryptOrPromptPassword(key, password, cipherdata)
         {
             // try decryption without password
-            var plaindata = CryptTool.decipher(key, password, cipherdata);
+            var plaindata = await CryptTool.decipher(key, password, cipherdata);
 
             // if it fails, request password
             if (plaindata.length === 0 && password.length === 0) {
@@ -4168,6 +4169,7 @@ jQuery.PrivateBin = (function($, sjcl, RawDeflate) {
          *
          * @name   PasteDecrypter.decryptPaste
          * @private
+         * @async
          * @function
          * @param  {object} paste - paste data in object form
          * @param  {string} key
@@ -4176,29 +4178,30 @@ jQuery.PrivateBin = (function($, sjcl, RawDeflate) {
          * @return {bool} whether action was successful
          * @throws {string}
          */
-        function decryptPaste(paste, key, password, ignoreError)
+        async function decryptPaste(paste, key, password, ignoreError)
         {
-            var plaintext;
+            let decyptionPromise;
             if (ignoreError === true) {
-                plaintext = CryptTool.decipher(key, password, paste.data);
+                decyptionPromise = CryptTool.decipher(key, password, paste.data);
             } else {
-                try {
-                    plaintext = decryptOrPromptPassword(key, password, paste.data);
-                } catch (err) {
-                    throw 'failed to decipher paste text: ' + err;
-                }
+                decyptionPromise = decryptOrPromptPassword(key, password, paste.data);
+            }
+
+            return decyptionPromise.then((plaintext) => {
                 if (plaintext === false) {
                     return false;
                 }
-            }
 
-            // on success show paste
-            PasteViewer.setFormat(paste.meta.formatter);
-            PasteViewer.setText(plaintext);
-            // trigger to show the text (attachment loaded afterwards)
-            PasteViewer.run();
+                // on success show paste
+                PasteViewer.setFormat(paste.meta.formatter);
+                PasteViewer.setText(plaintext);
+                // trigger to show the text (attachment loaded afterwards)
+                PasteViewer.run();
 
-            return true;
+                return true;
+            }).catch((err) => {
+                throw 'failed to decipher paste text: ' + err;
+            });
         }
 
         /**
@@ -4206,6 +4209,7 @@ jQuery.PrivateBin = (function($, sjcl, RawDeflate) {
          *
          * @name   PasteDecrypter.decryptAttachment
          * @private
+         * @async
          * @function
          * @param  {object} paste - paste data in object form
          * @param  {string} key
@@ -4213,36 +4217,26 @@ jQuery.PrivateBin = (function($, sjcl, RawDeflate) {
          * @return {bool} whether action was successful
          * @throws {string}
          */
-        function decryptAttachment(paste, key, password)
+        async function decryptAttachment(paste, key, password)
         {
-            var attachment, attachmentName;
-
-            // decrypt attachment
-            try {
-                attachment = decryptOrPromptPassword(key, password, paste.attachment);
-            } catch (err) {
+            let attachmentPromise = decryptOrPromptPassword(key, password, paste.attachment);
+            let attachmentNamePromise = decryptOrPromptPassword(key, password, paste.attachmentname);
+            attachmentPromise.catch((err) => {
                 throw 'failed to decipher attachment: ' + err;
-            }
-            if (attachment === false) {
-                return false;
-            }
-
-            // decrypt attachment name
-            if (paste.attachmentname) {
-                try {
-                    attachmentName = decryptOrPromptPassword(key, password, paste.attachmentname);
-                } catch (err) {
-                    throw 'failed to decipher attachment name: ' + err;
-                }
-                if (attachmentName === false) {
+            })
+            attachmentNamePromise.catch((err) => {
+                throw 'failed to decipher attachment name: ' + err;
+            })
+            Promise.all([attachmentPromise, attachmentNamePromise]).then((results) => {
+                if (results.some((result) => {
+                    return result === false;
+                })) {
                     return false;
                 }
-            }
-
-            AttachmentViewer.setAttachment(attachment, attachmentName);
-            AttachmentViewer.showAttachment();
-
-            return true;
+                AttachmentViewer.setAttachment(results[0], results[1]);
+                AttachmentViewer.showAttachment();
+                return true;
+            })
         }
 
         /**
@@ -4300,20 +4294,17 @@ jQuery.PrivateBin = (function($, sjcl, RawDeflate) {
             // try to decrypt the paste
             try {
                 // decrypt attachments
-                if (paste.attachment) {
-                    if (AttachmentViewer.hasAttachmentData()) {
-                        // try to decrypt paste and if it fails (because the password is
-                        // missing) return to let JS continue and wait for user
-                        if (!decryptAttachment(paste, key, password)) {
-                            return;
+                if (paste.attachment && AttachmentViewer.hasAttachmentData()) {
+                    // try to decrypt paste and if it fails (because the password is
+                    // missing) return to let JS continue and wait for user
+                    decryptAttachment(paste, key, password).then((attachementIsDecrypted) => {
+                        if (attachementIsDecrypted) {
+                            // ignore empty paste, as this is allowed when pasting attachments
+                            decryptPaste(paste, key, password, true);
                         }
-                    }
-                    // ignore empty paste, as this is allowed when pasting attachments
-                    decryptPaste(paste, key, password, true);
+                    });
                 } else {
-                    if (decryptPaste(paste, key, password) === false) {
-                        return false;
-                    }
+                    decryptPaste(paste, key, password)
                 }
 
                 // shows the remaining time (until) deletion
@@ -4471,8 +4462,6 @@ jQuery.PrivateBin = (function($, sjcl, RawDeflate) {
 
                     // restore position
                     window.scrollTo(0, orgPosition);
-
-                    PasteDecrypter.run(data);
 
                     // NOTE: could create problems as callback may be called
                     // asyncronously if PasteDecrypter e.g. needs to wait for a
