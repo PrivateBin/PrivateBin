@@ -66,15 +66,6 @@ $ cd PrivateBin/js
 $ npm install jsverify jsdom@9 jsdom-global@2 mime-types
 ```
 
-Note: If you use a distribution that provides nodeJS >= 6, then you can install
-the latest jsdom and jsdom-global packages and don't need to use @9 and @2.
-
-Note: When running Ubuntu 18.04, there is [a bug](https://bugs.launchpad.net/ubuntu/+source/nodejs/+bug/1779863)
-due to the mismatch of nodejs 8 and OpenSSL 1.1 library it was compiled against.
-Until this is solved, you may have to use [a PPA of nodejs, compiled against
-OpenSSL 1.0](https://launchpad.net/~ddstreet/+archive/ubuntu/lp1779863) or use
-nodejs 10 or later from a different source.
-
 To run the tests, just change into the `js` directory and run istanbul:
 ```console
 $ cd PrivateBin/js

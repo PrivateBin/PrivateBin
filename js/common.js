@@ -10,7 +10,6 @@ global.WebCrypto = require('node-webcrypto-ossl');
 
 // application libraries to test
 global.$ = global.jQuery = require('./jquery-3.3.1');
-global.sjcl = require('./sjcl-1.0.7');
 global.RawDeflate = require('./rawdeflate-0.5').RawDeflate;
 global.RawDeflate.inflate = require('./rawinflate-0.3').RawDeflate.inflate;
 require('./prettify');

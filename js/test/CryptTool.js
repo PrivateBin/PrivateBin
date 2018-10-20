@@ -191,24 +191,5 @@ describe('CryptTool', function () {
             }
         );
     });
-
-    describe('SJCL.js vs abab.js', function () {
-        this.timeout(30000);
-        jsc.property(
-            'these all return the same base64 string',
-            'string',
-            function(string) {
-                var clean = jsdom();
-                // not comparing Base64.js v1.7 encode/decode, that has known issues
-                var Base64 = require('../base64-1.7').Base64,
-                    sjcl = global.sjcl.codec.base64.fromBits(global.sjcl.codec.utf8String.toBits(string)),
-                    abab = window.btoa(Base64.utob(string)),
-                    lcjs = global.sjcl.codec.utf8String.fromBits(global.sjcl.codec.base64.toBits(abab)),
-                    baba = Base64.btou(window.atob(sjcl));
-                clean();
-                return sjcl === abab && string === lcjs && lcjs === baba;
-            }
-        );
-    });
 });
 

@@ -20,7 +20,6 @@
 /** global: prettyPrint */
 /** global: prettyPrintOne */
 /** global: showdown */
-/** global: sjcl */
 /** global: kjua */
 
 // main application start, called when DOM is fully loaded
@@ -30,7 +29,7 @@ jQuery(document).ready(function() {
     $.PrivateBin.Controller.init();
 });
 
-jQuery.PrivateBin = (function($, sjcl, RawDeflate) {
+jQuery.PrivateBin = (function($, RawDeflate) {
     'use strict';
 
     /**
@@ -707,9 +706,9 @@ jQuery.PrivateBin = (function($, sjcl, RawDeflate) {
         me.cipher = async function(key, password, message)
         {
             // AES in Galois Counter Mode, keysize 256 bit, authentication tag 128 bit, 10000 iterations in key derivation
-            var iv     = getRandomBytes(16),
-                salt   = getRandomBytes(8),
-                object = {
+            const iv     = getRandomBytes(16),
+                  salt   = getRandomBytes(8);
+            let object   = {
                     iv:     btoa(iv),
                     v:      1,
                     iter:   10000,
@@ -720,23 +719,27 @@ jQuery.PrivateBin = (function($, sjcl, RawDeflate) {
                     cipher: 'aes',
                     salt:   btoa(salt)
                 },
-                algo   = 'AES-' + object.mode.toUpperCase();
+                keyArray = StrToArr(key);
+            const algo   = 'AES-' + object.mode.toUpperCase();
 
             if ((password || '').trim().length > 0) {
-                key += sjcl.codec.hex.fromBits(sjcl.hash.sha256.hash(password));
+                keyArray += await window.crypto.subtle.digest(
+                    {name: 'SHA-256'},
+                    StrToArr(password)
+                );
             }
 
             // import raw key
-            var importedKey = await window.crypto.subtle.importKey(
+            const importedKey = await window.crypto.subtle.importKey(
                 'raw', // only 'raw' is allowed
-                StrToArr(key),
+                keyArray,
                 {name: 'PBKDF2'}, // we use PBKDF2 for key derivation
                 false, // the key may not be exported
                 ['deriveKey'] // we may only use it for key derivation
             )
 
             // derive a stronger key for use with AES
-            var derivedKey = await window.crypto.subtle.deriveKey(
+            const derivedKey = await window.crypto.subtle.deriveKey(
                 {
                     name: 'PBKDF2', // we use PBKDF2 for key derivation
                     salt: StrToArr(atob(object.salt)), // salt used in HMAC
@@ -754,7 +757,7 @@ jQuery.PrivateBin = (function($, sjcl, RawDeflate) {
             )
 
             // finally, encrypt message
-            var encrypted = await window.crypto.subtle.encrypt(
+            const encrypted = await window.crypto.subtle.encrypt(
                 {
                     // can be any supported AES algorithm ("AES-CTR", "AES-CBC", "AES-CMAC", "AES-GCM", "AES-CFB", "AES-KW", "ECDH", "DH" or "HMAC")
                     name: algo,
@@ -783,23 +786,27 @@ jQuery.PrivateBin = (function($, sjcl, RawDeflate) {
         me.decipher = async function(key, password, data)
         {
             try {
+                let keyArray = StrToArr(key);
                 if ((password || '').trim().length > 0) {
-                    key += sjcl.codec.hex.fromBits(sjcl.hash.sha256.hash(password));
+                    keyArray += await window.crypto.subtle.digest(
+                        {name: 'SHA-256'},
+                        StrToArr(password)
+                    );
                 }
-                var object = JSON.parse(data),
-                    algo   = 'AES-' + object.mode.toUpperCase();
 
                 // import raw key
-                var importedKey = await window.crypto.subtle.importKey(
-                    'raw', // only 'raw' is allowed
-                    StrToArr(key),
-                    {name: 'PBKDF2'}, // we use PBKDF2 for key derivation
-                    false, // the key may not be exported
-                    ['deriveKey'] // we may only use it for key derivation
-                )
+                const object = JSON.parse(data),
+                      algo   = 'AES-' + object.mode.toUpperCase(),
+                      importedKey = await window.crypto.subtle.importKey(
+                        'raw', // only 'raw' is allowed
+                        keyArray,
+                        {name: 'PBKDF2'}, // we use PBKDF2 for key derivation
+                        false, // the key may not be exported
+                        ['deriveKey'] // we may only use it for key derivation
+                      );
 
                 // derive a stronger key for use with AES
-                var derivedKey = await window.crypto.subtle.deriveKey(
+                const derivedKey = await window.crypto.subtle.deriveKey(
                     {
                         name: 'PBKDF2', // we use PBKDF2 for key derivation
                         salt: StrToArr(atob(object.salt)), // salt used in HMAC
@@ -817,7 +824,7 @@ jQuery.PrivateBin = (function($, sjcl, RawDeflate) {
                 )
 
                 // finally, decrypt message
-                var decrypted = await window.crypto.subtle.decrypt(
+                const decrypted = await window.crypto.subtle.decrypt(
                     {
                         // can be any supported AES algorithm ("AES-CTR", "AES-CBC", "AES-CMAC", "AES-GCM", "AES-CFB", "AES-KW", "ECDH", "DH" or "HMAC")
                         name: algo,
@@ -4615,4 +4622,4 @@ jQuery.PrivateBin = (function($, sjcl, RawDeflate) {
         PasteDecrypter: PasteDecrypter,
         Controller: Controller
     };
-})(jQuery, sjcl, RawDeflate);
+})(jQuery, RawDeflate);
