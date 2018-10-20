@@ -693,35 +693,23 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         }
 
         /**
-         * compress, then encrypt message with given key and password
+         * derive cryptographic key from key string and password
          *
-         * @name   CryptTool.cipher
+         * @name   CryptTool.deriveKey
          * @async
          * @function
+         * @private
+         * @param  {string} mode of AES (ctr, cbc, cmac, gcm, cfb, kw)
          * @param  {string} key
          * @param  {string} password
-         * @param  {string} message
-         * @return {string} data - JSON with encrypted data
+         * @param  {string} salt used in HMAC
+         * @param  {int} iterations amount to apply
+         * @param  {int} keysize (128, 192 or 256)
+         * @return {CryptoKey} derived key
          */
-        me.cipher = async function(key, password, message)
+        async function deriveKey(mode, key, password, salt, iterations, keysize)
         {
-            // AES in Galois Counter Mode, keysize 256 bit, authentication tag 128 bit, 10000 iterations in key derivation
-            const iv     = getRandomBytes(16),
-                  salt   = getRandomBytes(8);
-            let object   = {
-                    iv:     btoa(iv),
-                    v:      1,
-                    iter:   10000,
-                    ks:     256,
-                    ts:     128,
-                    mode:   'gcm',
-                    adata:  '', // if used, base64 encode it with btoa()
-                    cipher: 'aes',
-                    salt:   btoa(salt)
-                },
-                keyArray = StrToArr(key);
-            const algo   = 'AES-' + object.mode.toUpperCase();
-
+            let keyArray = StrToArr(key);
             if ((password || '').trim().length > 0) {
                 keyArray += await window.crypto.subtle.digest(
                     {name: 'SHA-256'},
@@ -739,33 +727,61 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             );
 
             // derive a stronger key for use with AES
-            const derivedKey = await window.crypto.subtle.deriveKey(
+            return await window.crypto.subtle.deriveKey(
                 {
                     name: 'PBKDF2', // we use PBKDF2 for key derivation
-                    salt: StrToArr(atob(object.salt)), // salt used in HMAC
-                    iterations: object.iter, // amount of iterations to apply
+                    salt: StrToArr(atob(salt)), // salt used in HMAC
+                    iterations: iterations, // amount of iterations to apply
                     hash: {name: 'SHA-256'} // can be "SHA-1", "SHA-256", "SHA-384" or "SHA-512"
                 },
                 importedKey,
                 {
                     // can be any supported AES algorithm ("AES-CTR", "AES-CBC", "AES-CMAC", "AES-GCM", "AES-CFB", "AES-KW", "ECDH", "DH" or "HMAC")
-                    name: algo,
-                    length: object.ks // can be 128, 192 or 256
+                    name: 'AES-' + mode.toUpperCase(),
+                    length: keysize // can be 128, 192 or 256
                 },
                 false, // the key may not be exported
                 ['encrypt'] // we may only use it for decryption
             );
+        }
+
+        /**
+         * compress, then encrypt message with given key and password
+         *
+         * @name   CryptTool.cipher
+         * @async
+         * @function
+         * @param  {string} key
+         * @param  {string} password
+         * @param  {string} message
+         * @return {string} data - JSON with encrypted data
+         */
+        me.cipher = async function(key, password, message)
+        {
+            // AES in Galois Counter Mode, keysize 256 bit, authentication tag 128 bit, 10000 iterations in key derivation
+            const iv     = getRandomBytes(16);
+            let object   = {
+                    iv:     btoa(iv),
+                    v:      1,
+                    iter:   10000,
+                    ks:     256,
+                    ts:     128,
+                    mode:   'gcm',
+                    adata:  '', // if used, base64 encode it with btoa()
+                    cipher: 'aes',
+                    salt:   btoa(getRandomBytes(8))
+                };
 
             // finally, encrypt message
             const encrypted = await window.crypto.subtle.encrypt(
                 {
                     // can be any supported AES algorithm ("AES-CTR", "AES-CBC", "AES-CMAC", "AES-GCM", "AES-CFB", "AES-KW", "ECDH", "DH" or "HMAC")
                     name: algo,
-                    iv: StrToArr(atob(object.iv)), // the initialization vector you used to encrypt
+                    iv: StrToArr(iv), // the initialization vector you used to encrypt
                     additionalData: StrToArr(atob(object.adata)), // the addtional data you used during encryption (if any)
                     tagLength: object.ts // the length of the tag you used to encrypt (if any)
                 },
-                derivedKey,
+                await deriveKey(object.mode, key, password, object.salt, object.iter, object.ks),
                 StrToArr(compress(message)) // compressed plain text to encrypt
             );
             object.ct = btoa(ArrToStr(encrypted));
@@ -786,56 +802,21 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         me.decipher = async function(key, password, data)
         {
             try {
-                let keyArray = StrToArr(key);
-                if ((password || '').trim().length > 0) {
-                    keyArray += await window.crypto.subtle.digest(
-                        {name: 'SHA-256'},
-                        StrToArr(password)
-                    );
-                }
-
-                // import raw key
-                const object = JSON.parse(data),
-                      algo   = 'AES-' + object.mode.toUpperCase(),
-                      importedKey = await window.crypto.subtle.importKey(
-                        'raw', // only 'raw' is allowed
-                        keyArray,
-                        {name: 'PBKDF2'}, // we use PBKDF2 for key derivation
-                        false, // the key may not be exported
-                        ['deriveKey'] // we may only use it for key derivation
-                      );
-
-                // derive a stronger key for use with AES
-                const derivedKey = await window.crypto.subtle.deriveKey(
-                    {
-                        name: 'PBKDF2', // we use PBKDF2 for key derivation
-                        salt: StrToArr(atob(object.salt)), // salt used in HMAC
-                        iterations: object.iter, // amount of iterations to apply
-                        hash: {name: 'SHA-256'} // can be "SHA-1", "SHA-256", "SHA-384" or "SHA-512"
-                    },
-                    importedKey,
-                    {
-                        // can be any supported AES algorithm ("AES-CTR", "AES-CBC", "AES-CMAC", "AES-GCM", "AES-CFB", "AES-KW", "ECDH", "DH" or "HMAC")
-                        name: algo,
-                        length: object.ks // can be 128, 192 or 256
-                    },
-                    false, // the key may not be exported
-                    ['decrypt'] // we may only use it for decryption
+                const object = JSON.parse(data);
+                return decompress(
+                    ArrToStr(
+                        await window.crypto.subtle.decrypt(
+                            {
+                                name: algo, // can be any supported AES algorithm ("AES-CTR", "AES-CBC", "AES-CMAC", "AES-GCM", "AES-CFB", "AES-KW", "ECDH", "DH" or "HMAC")
+                                iv: StrToArr(atob(object.iv)), // the initialization vector you used to encrypt
+                                additionalData: StrToArr(atob(object.adata)), // the addtional data you used during encryption (if any)
+                                tagLength: object.ts // the length of the tag you used to encrypt (if any)
+                            },
+                            await deriveKey(object.mode, key, password, object.salt, object.iter, object.ks),
+                            StrToArr(atob(object.ct)) // cipher text to decrypt
+                        )
+                    )
                 );
-
-                // finally, decrypt message
-                const decrypted = await window.crypto.subtle.decrypt(
-                    {
-                        // can be any supported AES algorithm ("AES-CTR", "AES-CBC", "AES-CMAC", "AES-GCM", "AES-CFB", "AES-KW", "ECDH", "DH" or "HMAC")
-                        name: algo,
-                        iv: StrToArr(atob(object.iv)), // the initialization vector you used to encrypt
-                        additionalData: StrToArr(atob(object.adata)), // the addtional data you used during encryption (if any)
-                        tagLength: object.ts // the length of the tag you used to encrypt (if any)
-                    },
-                    derivedKey,
-                    StrToArr(atob(object.ct)) // cipher text to decrypt
-                );
-                return decompress(ArrToStr(decrypted));
             } catch(err) {
                 return '';
             }
