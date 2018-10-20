@@ -699,15 +699,12 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          * @async
          * @function
          * @private
-         * @param  {string} mode of AES (ctr, cbc, cmac, gcm, cfb, kw)
          * @param  {string} key
          * @param  {string} password
-         * @param  {string} salt used in HMAC
-         * @param  {int} iterations amount to apply
-         * @param  {int} keysize (128, 192 or 256)
+         * @param  {object} object cryptographic message
          * @return {CryptoKey} derived key
          */
-        async function deriveKey(mode, key, password, salt, iterations, keysize)
+        async function deriveKey(key, password, object)
         {
             let keyArray = StrToArr(key);
             if ((password || '').trim().length > 0) {
@@ -730,19 +727,37 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             return await window.crypto.subtle.deriveKey(
                 {
                     name: 'PBKDF2', // we use PBKDF2 for key derivation
-                    salt: StrToArr(atob(salt)), // salt used in HMAC
-                    iterations: iterations, // amount of iterations to apply
+                    salt: StrToArr(atob(object.salt)), // salt used in HMAC
+                    iterations: object.iter, // amount of iterations to apply
                     hash: {name: 'SHA-256'} // can be "SHA-1", "SHA-256", "SHA-384" or "SHA-512"
                 },
                 importedKey,
                 {
-                    // can be any supported AES algorithm ("AES-CTR", "AES-CBC", "AES-CMAC", "AES-GCM", "AES-CFB", "AES-KW", "ECDH", "DH" or "HMAC")
-                    name: 'AES-' + mode.toUpperCase(),
-                    length: keysize // can be 128, 192 or 256
+                    name: 'AES-' + object.mode.toUpperCase(), // can be any supported AES algorithm ("AES-CTR", "AES-CBC", "AES-CMAC", "AES-GCM", "AES-CFB", "AES-KW", "ECDH", "DH" or "HMAC")
+                    length: object.ks // can be 128, 192 or 256
                 },
                 false, // the key may not be exported
                 ['encrypt'] // we may only use it for decryption
             );
+        }
+
+        /**
+         * gets crypto settings from given object
+         *
+         * @name   CryptTool.cryptoSettings
+         * @function
+         * @private
+         * @param  {object} object cryptographic message
+         * @return {object} crypto settings
+         */
+        function cryptoSettings(object)
+        {
+            return {
+                name: 'AES-' + object.mode.toUpperCase(), // can be any supported AES algorithm ("AES-CTR", "AES-CBC", "AES-CMAC", "AES-GCM", "AES-CFB", "AES-KW", "ECDH", "DH" or "HMAC")
+                iv: StrToArr(atob(object.iv)), // the initialization vector you used to encrypt
+                additionalData: StrToArr(atob(object.adata)), // the addtional data you used during encryption (if any)
+                tagLength: object.ts // the length of the tag you used to encrypt (if any)
+            };
         }
 
         /**
@@ -774,14 +789,8 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
             // finally, encrypt message
             const encrypted = await window.crypto.subtle.encrypt(
-                {
-                    // can be any supported AES algorithm ("AES-CTR", "AES-CBC", "AES-CMAC", "AES-GCM", "AES-CFB", "AES-KW", "ECDH", "DH" or "HMAC")
-                    name: algo,
-                    iv: StrToArr(iv), // the initialization vector you used to encrypt
-                    additionalData: StrToArr(atob(object.adata)), // the addtional data you used during encryption (if any)
-                    tagLength: object.ts // the length of the tag you used to encrypt (if any)
-                },
-                await deriveKey(object.mode, key, password, object.salt, object.iter, object.ks),
+                cryptoSettings(object),
+                await deriveKey(key, password, object),
                 StrToArr(compress(message)) // compressed plain text to encrypt
             );
             object.ct = btoa(ArrToStr(encrypted));
@@ -806,13 +815,8 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 return decompress(
                     ArrToStr(
                         await window.crypto.subtle.decrypt(
-                            {
-                                name: algo, // can be any supported AES algorithm ("AES-CTR", "AES-CBC", "AES-CMAC", "AES-GCM", "AES-CFB", "AES-KW", "ECDH", "DH" or "HMAC")
-                                iv: StrToArr(atob(object.iv)), // the initialization vector you used to encrypt
-                                additionalData: StrToArr(atob(object.adata)), // the addtional data you used during encryption (if any)
-                                tagLength: object.ts // the length of the tag you used to encrypt (if any)
-                            },
-                            await deriveKey(object.mode, key, password, object.salt, object.iter, object.ks),
+                            cryptoSettings(object),
+                            await deriveKey(key, password, object),
                             StrToArr(atob(object.ct)) // cipher text to decrypt
                         )
                     )
