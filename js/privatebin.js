@@ -4169,16 +4169,14 @@ jQuery.PrivateBin = (function($, sjcl, RawDeflate) {
          *
          * @name   PasteDecrypter.decryptPaste
          * @private
-         * @async
          * @function
          * @param  {object} paste - paste data in object form
          * @param  {string} key
          * @param  {string} password
          * @param  {bool} ignoreError - ignore decryption errors iof set to true
-         * @return {bool} whether action was successful
          * @throws {string}
          */
-        async function decryptPaste(paste, key, password, ignoreError)
+        function decryptPaste(paste, key, password, ignoreError)
         {
             let decyptionPromise;
             if (ignoreError === true) {
@@ -4187,18 +4185,14 @@ jQuery.PrivateBin = (function($, sjcl, RawDeflate) {
                 decyptionPromise = decryptOrPromptPassword(key, password, paste.data);
             }
 
-            return decyptionPromise.then((plaintext) => {
-                if (plaintext === false) {
-                    return false;
+            decyptionPromise.then((plaintext) => {
+                if (plaintext !== false) {
+                    // on success show paste
+                    PasteViewer.setFormat(paste.meta.formatter);
+                    PasteViewer.setText(plaintext);
+                    // trigger to show the text (attachment loaded afterwards)
+                    PasteViewer.run();
                 }
-
-                // on success show paste
-                PasteViewer.setFormat(paste.meta.formatter);
-                PasteViewer.setText(plaintext);
-                // trigger to show the text (attachment loaded afterwards)
-                PasteViewer.run();
-
-                return true;
             }).catch((err) => {
                 throw 'failed to decipher paste text: ' + err;
             });
@@ -4209,15 +4203,13 @@ jQuery.PrivateBin = (function($, sjcl, RawDeflate) {
          *
          * @name   PasteDecrypter.decryptAttachment
          * @private
-         * @async
          * @function
          * @param  {object} paste - paste data in object form
          * @param  {string} key
          * @param  {string} password
-         * @return {bool} whether action was successful
          * @throws {string}
          */
-        async function decryptAttachment(paste, key, password)
+        function decryptAttachment(paste, key, password)
         {
             let attachmentPromise = decryptOrPromptPassword(key, password, paste.attachment);
             let attachmentNamePromise = decryptOrPromptPassword(key, password, paste.attachmentname);
@@ -4228,15 +4220,13 @@ jQuery.PrivateBin = (function($, sjcl, RawDeflate) {
                 throw 'failed to decipher attachment name: ' + err;
             })
             Promise.all([attachmentPromise, attachmentNamePromise]).then((results) => {
-                if (results.some((result) => {
+                if (!results.some((result) => {
                     return result === false;
                 })) {
-                    return false;
+                    AttachmentViewer.setAttachment(results[0], results[1]);
+                    AttachmentViewer.showAttachment();
                 }
-                AttachmentViewer.setAttachment(results[0], results[1]);
-                AttachmentViewer.showAttachment();
-                return true;
-            })
+            });
         }
 
         /**
@@ -4248,26 +4238,30 @@ jQuery.PrivateBin = (function($, sjcl, RawDeflate) {
          * @param  {object} paste - paste data in object form
          * @param  {string} key
          * @param  {string} password
-         * @return {bool} whether action was successful
          */
         function decryptComments(paste, key, password)
         {
-            // remove potentially previous discussion
+            // remove potential previous discussion
             DiscussionViewer.prepareNewDiscussion();
 
+            let commentDecryptionPromises = [];
             // iterate over comments
             for (var i = 0; i < paste.comments.length; ++i) {
-                var comment = paste.comments[i];
-
-                DiscussionViewer.addComment(
-                    comment,
-                    CryptTool.decipher(key, password, comment.data),
-                    comment.meta.nickname ? CryptTool.decipher(key, password, comment.meta.nickname) : ''
+                commentDecryptionPromises.append(
+                    CryptTool.decipher(key, password, paste.comments[i].data)
                 );
             }
-
-            DiscussionViewer.finishDiscussion();
-            return true;
+            Promise.all(commentDecryptionPromises).then((plaintexts) => {
+                for (var i = 0; i < paste.comments.length; ++i) {
+                    var comment = paste.comments[i];
+                    DiscussionViewer.addComment(
+                        comment,
+                        plaintexts[i],
+                        comment.meta.nickname ? CryptTool.decipher(key, password, comment.meta.nickname) : ''
+                    );
+                }
+                DiscussionViewer.finishDiscussion();
+            });
         }
 
         /**
