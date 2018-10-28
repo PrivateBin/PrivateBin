@@ -12,7 +12,7 @@
     "%s requires configuration section [%s] to be present in configuration file.":
         "%s необходимо наличие секции [%s] в конфигурационном файле.",
     "Please wait %d seconds between each post.":
-        ["Пожалуйста ожидайте %d секунду между каждыми записями.", "Пожалуйста ожидайте %d секунды между каждыми записями.", "Пожалуйста ожидайте %d секунд между каждыми записями."],
+        ["Пожалуйста, ожидайте %d секунду между каждыми записями.", "Пожалуйста, ожидайте %d секунды между каждыми записями.", "Пожалуйста, ожидайте %d секунд между каждыми записями."],
     "Paste is limited to %s of encrypted data.":
         "Размер записи ограничен %s зашифрованных данных.",
     "Invalid data.":
@@ -28,7 +28,7 @@
     "Paste is not of burn-after-reading type.":
         "Тип записи не \"Удалить после прочтения\".",
     "Wrong deletion token. Paste was not deleted.":
-        "Неверный ключ удаления записи. Запись не удалена",
+        "Неверный ключ удаления записи. Запись не удалена.",
     "Paste was properly deleted.":
         "Запись была успешно удалена.",
     "JavaScript is required for %s to work.<br />Sorry for the inconvenience.":
@@ -79,11 +79,11 @@
     "This document will expire in %d months.":
         ["Документ будет удален через %d месяц.", "Документ будет удален через %d месяца.", "Документ будет удален через %d месяцев."],
     "Please enter the password for this paste:":
-        "Пожалуйста введите пароль от записи:",
+        "Пожалуйста, введите пароль от записи:",
     "Could not decrypt data (Wrong key?)":
         "Невозможно расшифровать данные (Неверный ключ?)",
     "Could not delete the paste, it was not stored in burn after reading mode.":
-        "Невозможно удалить запись, она не была сохранена в режиме удаления после прочтения",
+        "Невозможно удалить запись, она не была сохранена в режиме удаления после прочтения.",
     "FOR YOUR EYES ONLY. Don't close this window, this message can't be displayed again.":
         "ТОЛЬКО ДЛЯ ВАШИХ ГЛАЗ. Не закрывайте это окно, это сообщение не может быть показано снова.",
     "Could not decrypt comment; Wrong key?":
@@ -113,17 +113,17 @@
     "Could not post comment: %s":
         "Не удалось опубликовать комментарий: %s",
     "Please move your mouse for more entropy…":
-        "Пожалуйста двигайте мышкой для большей энтропии…",
+        "Пожалуйста, двигайте мышкой для большей энтропии…",
     "Sending paste…":
         "Отправка записи…",
     "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit [Ctrl]+[c] to copy)</span>":
-        "Ссылка на запись <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Нажмите [Ctrl]+[c] чтобы скопировать ссылку)</span>",
+        "Ссылка на запись <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Нажмите [Ctrl]+[c], чтобы скопировать ссылку)</span>",
     "Delete data":
         "Удалить запись",
     "Could not create paste: %s":
         "Не удалось опубликовать запись: %s",
     "Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)":
-        "Невозможно расшифровать запись: Ключ расшифровки отсутствует в ссылке (Может быть вы используете сокращатель ссылок, который удаляет часть ссылки?)",
+        "Невозможно расшифровать запись: Ключ расшифровки отсутствует в ссылке (Может быть, вы используете сокращатель ссылок, который удаляет часть ссылки?)",
     "B": "байт",
     "KiB": "Кбайт",
     "MiB": "Мбайт",
@@ -143,7 +143,7 @@
         "Дубликат файла '%s' был прикреплен к этой записи.",
     "Attach a file": "Прикрепить файл",
     "alternatively drag & drop a file or paste an image from the clipboard": "так же можно перенести файл в окно браузера или вставить изображение из буфера",
-    "File too large, to display a preview. Please download the attachment.": "Файл слишком большой для отображения предпросмотра. Пожалуйста скачайте прикрепленный файл.",
+    "File too large, to display a preview. Please download the attachment.": "Файл слишком большой для отображения предпросмотра. Пожалуйста, скачайте прикрепленный файл.",
     "Remove attachment": "Удалить вложение",
     "Your browser does not support uploading encrypted files. Please use a newer browser.":
         "Ваш браузер не поддерживает отправку зашифрованных файлов. Используйте более новый браузер.",
@@ -153,7 +153,7 @@
     "Editor": "Редактор",
     "Preview": "Предпросмотр",
     "%s requires the PATH to end in a \"%s\". Please update the PATH in your index.php.":
-        "Переменная PATH необходима %s в конце \"%s\". Пожалуйста обновите переменную PATH в вашем index.php.",
+        "Переменная PATH необходима %s в конце \"%s\". Пожалуйста, обновите переменную PATH в вашем index.php.",
     "Decrypt":
         "Расшифровать",
     "Enter password":
