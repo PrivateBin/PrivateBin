@@ -8,7 +8,7 @@
     "Paste does not exist, has expired or has been deleted.":
         "Wklejka nie istnieje, wygasła albo została usunięta.",
     "%s requires php %s or above to work. Sorry.":
-        "%s wymaga PHP w wersji %s lub nowszej, sorry.",
+        "%s wymaga PHP w wersji %s lub nowszej. Przykro mi.",
     "%s requires configuration section [%s] to be present in configuration file.":
         "%s wymaga obecności sekcji [%s] w pliku konfiguracyjnym.",
     "Please wait %d seconds between each post.":
@@ -130,10 +130,10 @@
     "Markdown": "Markdown",
     "Download attachment": "Pobierz załącznik",
     "Cloned: '%s'": "Sklonowano: '%s'",
-    "The cloned file '%s' was attached to this paste.": "The cloned file '%s' was attached to this paste.",
+    "The cloned file '%s' was attached to this paste.": "Sklonowany plik '%s' był dołączony do tej wklejki.",
     "Attach a file": "Załącz plik",
-    "alternatively drag & drop a file or paste an image from the clipboard": "alternatively drag & drop a file or paste an image from the clipboard",
-    "File too large, to display a preview. Please download the attachment.": "File too large, to display a preview. Please download the attachment.",
+    "alternatively drag & drop a file or paste an image from the clipboard": "Alternatywnie przeciągnij i upuść plik albo wklej obraz ze schowka",
+    "File too large, to display a preview. Please download the attachment.": "Plik zbyt duży aby wyświetlić podgląd. Proszę pobrać załącznik.",
     "Remove attachment": "Usuń załącznik",
     "Your browser does not support uploading encrypted files. Please use a newer browser.":
         "Twoja przeglądarka nie wspiera wysyłania zaszyfrowanych plików. Użyj nowszej przeglądarki.",
@@ -145,14 +145,15 @@
     "%s requires the PATH to end in a \"%s\". Please update the PATH in your index.php.":
         "%s requires the PATH to end in a \"%s\". Please update the PATH in your index.php.",
     "Decrypt":
-        "Decrypt",
+        "Odszyfruj",
     "Enter password":
         "Wpisz hasło",
-    "Loading…": "Loading…",
-    "Decrypting paste…": "Decrypting paste…",
-    "Preparing new paste…": "Preparing new paste…",
+    "Loading…": 
+        "Wczytywanie…",
+    "Decrypting paste…": "Odszyfrowywanie wklejki…",
+    "Preparing new paste…": "Przygotowywanie nowej wklejki…",
     "In case this message never disappears please have a look at <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">this FAQ for information to troubleshoot</a>.":
-        "In case this message never disappears please have a look at <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">this FAQ for information to troubleshoot</a> (in English).",
+        "W przypadku gdy ten komunikat nigdy nie znika, proszę spójrz na <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">to FAQ aby rozwiązać problem</a> (po angielsku).",
     "+++ no paste text +++": "+++ no paste text +++",
     "Could not get paste data: %s":
         "Could not get paste data: %s"
