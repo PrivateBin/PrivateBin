@@ -164,5 +164,5 @@
         "Se per cas aqueste messatge quita pas de s’afichar mercés de gaitar <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">aquesta FAQ per las solucions</a> (en anglés).",
     "+++ no paste text +++": "+++ cap de tèxte pegat +++",
     "Could not get paste data: %s":
-        "Could not get paste data: %s"
+        "Recuperacion impossibla de las donadas copiadas : %s"
 }
