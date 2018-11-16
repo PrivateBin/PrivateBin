@@ -48,13 +48,13 @@
     "Expires":
         "Ablaufzeit",
     "Burn after reading":
-        "Einmal-Text",
+        "Nach dem Lesen löschen",
     "Open discussion":
-        "Diskussion eröffnen",
+        "Kommentare aktivieren",
     "Password (recommended)":
         "Passwort (empfohlen)",
     "Discussion":
-        "Diskussion",
+        "Kommentare",
     "Toggle navigation":
         "Navigation umschalten",
     "%d seconds": ["%d Sekunde", "%d Sekunden"],
