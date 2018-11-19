@@ -32,7 +32,7 @@ class Model
     /**
      * Data storage.
      *
-     * @var AbstractData
+     * @var Data\AbstractData
      */
     private $_store = null;
 
@@ -75,7 +75,7 @@ class Model
     /**
      * Gets, and creates if neccessary, a store object
      *
-     * @return AbstractData
+     * @return Data\AbstractData
      */
     private function _getStore()
     {

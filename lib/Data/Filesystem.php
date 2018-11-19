@@ -12,7 +12,6 @@
 
 namespace PrivateBin\Data;
 
-use PrivateBin\Model\Paste;
 use PrivateBin\Persistence\DataStore;
 
 /**
@@ -72,7 +71,7 @@ class Filesystem extends AbstractData
      *
      * @access public
      * @param  string $pasteid
-     * @return stdClass|false
+     * @return \stdClass|false
      */
     public function read($pasteid)
     {

@@ -90,7 +90,7 @@ class TrafficLimiter extends AbstractPersistence
      *
      * @access public
      * @static
-     * @throws Exception
+     * @throws \Exception
      * @return bool
      */
     public static function canPass()

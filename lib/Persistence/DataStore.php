@@ -58,7 +58,7 @@ class DataStore extends AbstractPersistence
      * @access public
      * @static
      * @param  string $filename
-     * @return stdClass|false  $data
+     * @return \stdClass|false  $data
      */
     public static function get($filename)
     {
