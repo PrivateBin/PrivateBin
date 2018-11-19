@@ -28,8 +28,8 @@ class Paste extends AbstractModel
      * Get paste data.
      *
      * @access public
-     * @throws Exception
-     * @return stdClass
+     * @throws \Exception
+     * @return \stdClass
      */
     public function get()
     {

@@ -38,7 +38,7 @@ class Comment extends AbstractModel
      *
      * @access public
      * @throws Exception
-     * @return stdClass
+     * @return \stdClass
      */
     public function get()
     {
