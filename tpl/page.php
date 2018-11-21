@@ -6,6 +6,7 @@ use PrivateBin\I18n;
 		<meta charset="utf-8" />
 		<meta name="robots" content="noindex" />
 		<meta name="referrer" content="no-referrer">
+		<meta name="google" content="notranslate">
 		<title><?php echo I18n::_($NAME); ?></title>
 		<link type="text/css" rel="stylesheet" href="css/privatebin.css?<?php echo rawurlencode($VERSION); ?>" />
 <?php
