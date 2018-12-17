@@ -91,5 +91,34 @@
 	"RemainingSeconds": {
 		"@type": "dp:Second",
 		"@minimum": 1
+	},
+	"CipherParameters": {
+		"@container": "@list",
+		"@value": [
+			{
+				"@type": "pb:InitializationVector"
+			},
+			{
+				"@type": "pb:Salt"
+			},
+			{
+				"@type": "pb:Iterations"
+			},
+			{
+				"@type": "pb:KeySize"
+			},
+			{
+				"@type": "pb:TagSize"
+			},
+			{
+				"@type": "pb:Algorithm"
+			},
+			{
+				"@type": "pb:Mode"
+			},
+			{
+				"@type": "pb:Compression"
+			}
+		]
 	}
 }

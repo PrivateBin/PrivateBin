@@ -3,35 +3,6 @@
 		"so": "https://schema.org/",
 		"pb": "?jsonld=types#"
 	},
-	"AuthenticatedData": {
-		"@container": "@list",
-		"@value": [
-			{
-				"@type": "pb:InitializationVector"
-			},
-			{
-				"@type": "pb:Salt"
-			},
-			{
-				"@type": "pb:Iterations"
-			},
-			{
-				"@type": "pb:KeySize"
-			},
-			{
-				"@type": "pb:TagSize"
-			},
-			{
-				"@type": "pb:Algorithm"
-			},
-			{
-				"@type": "pb:Mode"
-			},
-			{
-				"@type": "pb:Compression"
-			}
-		]
-	},
 	"MetaData": {
 		"created": {
 			"@type": "CreationTime"

@@ -23,10 +23,10 @@
 			"@type": "pb:CipherText"
 		},
 		"adata": {
-			"@type": "cm:AuthenticatedData"
+			"@type": "pb:CipherParameters"
 		},
 		"meta": {
 			"@type": "cm:MetaData"
-		},
+		}
 	}
 }
