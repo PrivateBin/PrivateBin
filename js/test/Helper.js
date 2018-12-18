@@ -244,7 +244,7 @@ describe('Helper', function () {
             jsc.elements(['http', 'https']),
             jsc.nearray(common.jscA2zString()),
             jsc.array(common.jscQueryString()),
-            'string',
+            'asciistring',
             function (schema, address, query, fragment) {
                 $.PrivateBin.Helper.reset();
                 var expected = schema + '://' + address.join('') + '/',
