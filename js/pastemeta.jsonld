@@ -17,15 +17,12 @@
 			},
 			{
 				"@type": "pb:BurnAfterReading"
-			},
-			{
-				"@type": "pb:Expire"
 			}
 		]
 	},
 	"MetaData": {
-		"created": {
-			"@type": "pb:CreationTime"
+		"expire": {
+			"@type": "pb:Expiration"
 		},
 		"time_to_live": {
 			"@type": "pb:RemainingSeconds"

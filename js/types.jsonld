@@ -72,7 +72,7 @@
 		"@value": "plaintext",
 		"@enum": ["plaintext", "syntaxhighlighting", "markdown"]
 	},
-	"Expire": {
+	"Expiration": {
 		"@type": "so:Text",
 		"@value": "1week",
 		"@enum": ["5min", "10min", "1hour", "1day", "1week", "1month", "1year", "never"]
@@ -84,9 +84,6 @@
 	"BurnAfterReading": {
 		"@type": "so:Boolean",
 		"@enum": [false, true]
-	},
-	"CreationTime": {
-		"@type": "dp:Unix_time"
 	},
 	"RemainingSeconds": {
 		"@type": "dp:Second",
