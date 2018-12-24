@@ -85,6 +85,9 @@
 		"@type": "so:Boolean",
 		"@enum": [false, true]
 	},
+	"CreationTime": {
+		"@type": "dp:Unix_time"
+	},
 	"RemainingSeconds": {
 		"@type": "dp:Second",
 		"@minimum": 1
