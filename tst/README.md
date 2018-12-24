@@ -51,7 +51,7 @@ and jsdom-global locally:
 ```console
 $ npm install -g mocha istanbul
 $ cd PrivateBin/js
-$ npm install jsverify jsdom@9 jsdom-global@2 mime-types
+$ npm install jsverify jsdom@9 jsdom-global@2 mime-types node-webcrypto-ossl
 ```
 
 Example for Debian and Ubuntu, including steps to allow the current user to
@@ -63,7 +63,7 @@ $ sudo chown -R $(whoami) $(npm config get prefix)/{lib/node_modules,bin,share}
 $ ln -s /usr/bin/nodejs /usr/local/bin/node
 $ npm install -g mocha istanbul
 $ cd PrivateBin/js
-$ npm install jsverify jsdom@9 jsdom-global@2 mime-types
+$ npm install jsverify jsdom@9 jsdom-global@2 mime-types node-webcrypto-ossl
 ```
 
 To run the tests, just change into the `js` directory and run istanbul:
