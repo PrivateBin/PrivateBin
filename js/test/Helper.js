@@ -211,6 +211,10 @@ describe('Helper', function () {
 
     describe('getCookie', function () {
         this.timeout(30000);
+        after(function () {
+            cleanup();
+        });
+
         jsc.property(
             'returns the requested cookie',
             jsc.nearray(jsc.nearray(common.jscAlnumString())),
@@ -245,12 +249,12 @@ describe('Helper', function () {
             jsc.nearray(common.jscA2zString()),
             jsc.array(common.jscA2zString()),
             jsc.array(common.jscQueryString()),
-            jsc.array(common.jscA2zString()),
+            'string',
             function (schema, address, path, query, fragment) {
                 $.PrivateBin.Helper.reset();
                 var path = path.join('') + (path.length > 0 ? '/' : ''),
                     expected = schema + '://' + address.join('') + '/' + path,
-                    clean = jsdom('', {url: expected + '?' + query.join('') + '#' + fragment.join('')}),
+                    clean = jsdom('', {url: expected + '?' + query.join('') + '#' + fragment}),
                     result = $.PrivateBin.Helper.baseUri();
                 clean();
                 return expected === result;

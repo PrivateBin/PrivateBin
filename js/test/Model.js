@@ -72,7 +72,7 @@ describe('Model', function () {
 
     describe('getPasteId', function () {
         this.timeout(30000);
-        before(function () {
+        beforeEach(function () {
             $.PrivateBin.Model.reset();
             cleanup();
         });
@@ -121,6 +121,11 @@ describe('Model', function () {
 
     describe('getPasteKey', function () {
         this.timeout(30000);
+        beforeEach(function () {
+            $.PrivateBin.Model.reset();
+            cleanup();
+        });
+
         jsc.property(
             'returns the fragment of the URL',
             jsc.nearray(common.jscA2zString()),
@@ -183,7 +188,7 @@ describe('Model', function () {
     });
 
     describe('getTemplate', function () {
-        before(function () {
+        beforeEach(function () {
             $.PrivateBin.Model.reset();
             cleanup();
         });
