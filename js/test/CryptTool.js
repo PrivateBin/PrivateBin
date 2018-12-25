@@ -2,6 +2,11 @@
 require('../common');
 
 describe('CryptTool', function () {
+    afterEach(async function () {
+        // pause to let async functions conclude
+        await new Promise(resolve => setTimeout(resolve, 1900));
+    });
+
     describe('cipher & decipher', function () {
         this.timeout(30000);
         it('can en- and decrypt any message', function () {
@@ -9,24 +14,22 @@ describe('CryptTool', function () {
                 'string',
                 'string',
                 'string',
-                function (key, password, message) {
-                    var clean = jsdom();
+                async function (key, password, message) {
+                    // pause to let async functions conclude
+                    await new Promise(resolve => setTimeout(resolve, 300));
+                    let clean = jsdom();
                     window.crypto = new WebCrypto();
                     message = message.trim();
-                    return $.PrivateBin.CryptTool.cipher(
-                        key, password, message
-                    ).then(function(ciphertext) {
-                        $.PrivateBin.CryptTool.decipher(
-                            key, password, ciphertext
-                        ).then(function(plaintext) {
-                            clean();
-                            return message === plaintext;
-                        });
-                    });
+                    let cipherMessage = await $.PrivateBin.CryptTool.cipher(
+                            key, password, message, []
+                        ),
+                        plaintext = await $.PrivateBin.CryptTool.decipher(
+                                key, password, cipherMessage
+                        );
+                    clean();
+                    return message === plaintext;
                 }
-            ),
-            // reducing amount of checks as running 100 async ones causes issues for later test scripts
-            {tests: 3});
+            ));
         });
 
         // The below static unit tests are included to ensure deciphering of "classic"
@@ -35,7 +38,7 @@ describe('CryptTool', function () {
             'supports PrivateBin v1 ciphertext (SJCL & browser atob)',
             function () {
                 delete global.Base64;
-                var clean = jsdom();
+                let clean = jsdom();
                 window.crypto = new WebCrypto();
 
                 // Of course you can easily decipher the following texts, if you like.
@@ -43,7 +46,7 @@ describe('CryptTool', function () {
                 return $.PrivateBin.CryptTool.decipher(
                     '6t2qsmLyfXIokNCL+3/yl15rfTUBQvm5SOnFPvNE7Q8=',
                     // -- "That's amazing. I've got the same combination on my luggage."
-                    Array.apply(0, Array(6)).map(function(_,b) { return b + 1; }).join(''),
+                    Array.apply(0, Array(6)).map((_,b) => b + 1).join(''),
                     '{"iv":"4HNFIl7eYbCh6HuShctTIA==","v":1,"iter":10000,"ks"' +
                     ':256,"ts":128,"mode":"gcm","adata":"","cipher":"aes","sa' +
                     'lt":"u0lQvePq6L0=","ct":"fGPUVrDyaVr1ZDGb+kqQ3CPEW8x4YKG' +
@@ -71,7 +74,7 @@ describe('CryptTool', function () {
                     'QUxMXI5htsn2rf0HxCFu7Po8DNYLxTS+67hYjDIYWYaEIc8LXWMLyDm9' +
                     'C5fARPJ4F2BIWgzgzkNj+dVjusft2XnziamWdbS5u3kuRlVuz5LQj+R5' +
                     'imnqQAincdZTkTT1nYx+DatlOLllCYIHffpI="}'
-                ).then(function(paste1) {
+                ).then(function (paste1) {
                     $.PrivateBin.CryptTool.decipher(
                         's9pmKZKOBN7EVvHpTA8jjLFH3Xlz/0l8lB4+ONPACrM=',
                         '', // no password
@@ -97,7 +100,7 @@ describe('CryptTool', function () {
                         'XhHvixZLcSjX2KQuHmEoWzmJcr3DavdoXZmAurGWLKjzEdJc5dSD/eNr' +
                         '99gjHX7wphJ6umKMM+fn6PcbYJkhDh2GlJL5COXjXfm/5aj/vuyaRRWZ' +
                         'MZtmnYpGAtAPg7AUG"}'
-                    ).then(function(paste2) {
+                    ).then(function (paste2) {
                         clean();
                         assert.ok(
                             paste1.includes('securely packed in iron') &&
@@ -120,7 +123,7 @@ describe('CryptTool', function () {
                 return $.PrivateBin.CryptTool.decipher(
                     '6t2qsmLyfXIokNCL+3/yl15rfTUBQvm5SOnFPvNE7Q8=',
                     // -- "That's amazing. I've got the same combination on my luggage."
-                    Array.apply(0, Array(6)).map(function(_,b) { return b + 1; }).join(''),
+                    Array.apply(0, Array(6)).map((_,b) => b + 1).join(''),
                     '{"iv":"aTnR2qBL1CAmLX8FdWe3VA==","v":1,"iter":10000,"ks"' +
                     ':256,"ts":128,"mode":"gcm","adata":"","cipher":"aes","sa' +
                     'lt":"u0lQvePq6L0=","ct":"A3nBTvICZtYy6xqbIJE0c8Veored5lM' +
@@ -140,7 +143,7 @@ describe('CryptTool', function () {
                     '7mNNo7xba/YT9KoPDaniqnYqb+q2pX1WNWE7dLS2wfroMAS3kh8P22DA' +
                     'V37AeiNoD2PcI6ZcHbRdPa+XRrRcJhSPPW7UQ0z4OvBfjdu/w390QxAx' +
                     'SxvZewoh49fKKB6hTsRnZb4tpHkjlww=="}'
-                ).then(function(paste1) {
+                ).then(function (paste1) {
                     $.PrivateBin.CryptTool.decipher(
                         's9pmKZKOBN7EVvHpTA8jjLFH3Xlz/0l8lB4+ONPACrM=',
                         '', // no password
@@ -159,7 +162,7 @@ describe('CryptTool', function () {
                         '7tmfcF73w9dufDFI3LNca2KxzBnWNPYvIZKBwWbq8ncxkb191dP6mjEi' +
                         '7NnhqVk5A6vIBbu4AC5PZf76l6yep4xsoy/QtdDxCMocCXeAML9MQ9uP' +
                         'QbuspOKrBvMfN5igA1kBqasnxI472KBNXsdZnaDddSVUuvhTcETM="}'
-                    ).then(function(paste2) {
+                    ).then(function (paste2) {
                         clean();
                         delete global.Base64;
                         assert.ok(

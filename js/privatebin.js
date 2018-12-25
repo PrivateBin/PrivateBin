@@ -701,17 +701,25 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          * @private
          * @param  {string} key
          * @param  {string} password
-         * @param  {object} object cryptographic message
+         * @param  {array}  spec cryptographic specification
          * @return {CryptoKey} derived key
          */
-        async function deriveKey(key, password, object)
+        async function deriveKey(key, password, spec)
         {
             let keyArray = StrToArr(key);
             if ((password || '').trim().length > 0) {
-                keyArray += await window.crypto.subtle.digest(
+                let passwordBuffer = await window.crypto.subtle.digest(
                     {name: 'SHA-256'},
-                    StrToArr(password)
+                    StrToArr(utob(password))
                 );
+                let hexHash = Array.prototype.map.call(
+                    new Uint8Array(passwordBuffer), x => ('00' + x.toString(16)).slice(-2)
+                ).join('');
+                let passwordArray = StrToArr(hexHash),
+                    newKeyArray = new Uint8Array(keyArray.length + passwordArray.length);
+                newKeyArray.set(keyArray, 0);
+                newKeyArray.set(passwordArray, keyArray.length);
+                keyArray = newKeyArray;
             }
 
             // import raw key
@@ -724,39 +732,40 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             );
 
             // derive a stronger key for use with AES
-            return await window.crypto.subtle.deriveKey(
+            return window.crypto.subtle.deriveKey(
                 {
                     name: 'PBKDF2', // we use PBKDF2 for key derivation
-                    salt: StrToArr(atob(object.salt)), // salt used in HMAC
-                    iterations: object.iter, // amount of iterations to apply
+                    salt: StrToArr(spec[1]), // salt used in HMAC
+                    iterations: spec[2], // amount of iterations to apply
                     hash: {name: 'SHA-256'} // can be "SHA-1", "SHA-256", "SHA-384" or "SHA-512"
                 },
                 importedKey,
                 {
-                    name: 'AES-' + object.mode.toUpperCase(), // can be any supported AES algorithm ("AES-CTR", "AES-CBC", "AES-CMAC", "AES-GCM", "AES-CFB", "AES-KW", "ECDH", "DH" or "HMAC")
-                    length: object.ks // can be 128, 192 or 256
+                    name: 'AES-' + spec[6].toUpperCase(), // can be any supported AES algorithm ("AES-CTR", "AES-CBC", "AES-CMAC", "AES-GCM", "AES-CFB", "AES-KW", "ECDH", "DH" or "HMAC")
+                    length: spec[3] // can be 128, 192 or 256
                 },
                 false, // the key may not be exported
-                ['encrypt'] // we may only use it for decryption
+                ['encrypt', 'decrypt'] // we use it for de- and encryption
             );
         }
 
         /**
-         * gets crypto settings from given object
+         * gets crypto settings from specification and authenticated data
          *
          * @name   CryptTool.cryptoSettings
          * @function
          * @private
-         * @param  {object} object cryptographic message
+         * @param  {string} adata authenticated data
+         * @param  {array}  spec cryptographic specification
          * @return {object} crypto settings
          */
-        function cryptoSettings(object)
+        function cryptoSettings(adata, spec)
         {
             return {
-                name: 'AES-' + object.mode.toUpperCase(), // can be any supported AES algorithm ("AES-CTR", "AES-CBC", "AES-CMAC", "AES-GCM", "AES-CFB", "AES-KW", "ECDH", "DH" or "HMAC")
-                iv: StrToArr(atob(object.iv)), // the initialization vector you used to encrypt
-                additionalData: StrToArr(atob(object.adata)), // the addtional data you used during encryption (if any)
-                tagLength: object.ts // the length of the tag you used to encrypt (if any)
+                name: 'AES-' + spec[6].toUpperCase(), // can be any supported AES algorithm ("AES-CTR", "AES-CBC", "AES-CMAC", "AES-GCM", "AES-CFB", "AES-KW", "ECDH", "DH" or "HMAC")
+                iv: StrToArr(spec[0]), // the initialization vector you used to encrypt
+                additionalData: StrToArr(adata), // the addtional data you used during encryption (if any)
+                tagLength: spec[4] // the length of the tag you used to encrypt (if any)
             };
         }
 
@@ -769,32 +778,53 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          * @param  {string} key
          * @param  {string} password
          * @param  {string} message
-         * @return {string} data - JSON with encrypted data
+         * @param  {array}  adata
+         * @return {array}  encrypted message & adata containing encryption spec
          */
-        me.cipher = async function(key, password, message)
+        me.cipher = async function(key, password, message, adata)
         {
-            // AES in Galois Counter Mode, keysize 256 bit, authentication tag 128 bit, 10000 iterations in key derivation
-            const iv     = getRandomBytes(16);
-            let object   = {
-                    iv:     btoa(iv),
-                    v:      1,
-                    iter:   10000,
-                    ks:     256,
-                    ts:     128,
-                    mode:   'gcm',
-                    adata:  '', // if used, base64 encode it with btoa()
-                    cipher: 'aes',
-                    salt:   btoa(getRandomBytes(8))
-                };
+            // AES in Galois Counter Mode, keysize 256 bit,
+            // authentication tag 128 bit, 10000 iterations in key derivation
+            const spec = [
+                getRandomBytes(16), // initialization vector
+                getRandomBytes(8),  // salt
+                10000,              // iterations
+                256,                // key size
+                128,                // tag size
+                'aes',              // algorithm
+                'gcm',              // algorithm mode
+                'none'              // compression
+            ], encodedSpec = [
+                btoa(spec[0]),
+                btoa(spec[1]),
+                spec[2],
+                spec[3],
+                spec[4],
+                spec[5],
+                spec[6],
+                spec[7]
+            ];
+            if (adata.length === 0) {
+                // comment
+                adata = encodedSpec;
+            } else if (adata[0] === null) {
+                // paste
+                adata[0] = encodedSpec;
+            }
 
             // finally, encrypt message
-            const encrypted = await window.crypto.subtle.encrypt(
-                cryptoSettings(object),
-                await deriveKey(key, password, object),
-                StrToArr(compress(message)) // compressed plain text to encrypt
-            );
-            object.ct = btoa(ArrToStr(encrypted));
-            return JSON.stringify(object);
+            return [
+                btoa(
+                    ArrToStr(
+                        await window.crypto.subtle.encrypt(
+                            cryptoSettings(JSON.stringify(adata), spec),
+                            await deriveKey(key, password, spec),
+                            StrToArr(utob(message))
+                        )
+                    )
+                ),
+                adata
+            ];
         };
 
         /**
@@ -805,24 +835,56 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          * @function
          * @param  {string} key
          * @param  {string} password
-         * @param  {string} data - JSON with encrypted data
+         * @param  {string|object} data encrypted message
          * @return {string} decrypted message, empty if decryption failed
          */
         me.decipher = async function(key, password, data)
         {
+            let adataString, encodedSpec, compression, cipherMessage;
+            if (data instanceof Array) {
+                // version 2
+                adataString = JSON.stringify(data[1]);
+                encodedSpec = (data[1][0] instanceof Array ? data[1][0] : data[1]);
+                cipherMessage = data[0];
+            } else if (typeof data === 'string') {
+                // version 1
+                let object = JSON.parse(data);
+                adataString = atob(object.adata);
+                encodedSpec = [
+                    object.iv,
+                    object.salt,
+                    object.iter,
+                    object.ks,
+                    object.ts,
+                    object.cipher,
+                    object.mode,
+                    'rawdeflate'
+                ];
+                cipherMessage = object.ct;
+            } else {
+                throw 'unsupported message format';
+            }
+            compression = encodedSpec[7];
+            let spec = encodedSpec, plainText = '';
+            spec[0] = atob(spec[0]);
+            spec[1] = atob(spec[1]);
             try {
-                const object = JSON.parse(data);
-                return decompress(
-                    ArrToStr(
-                        await window.crypto.subtle.decrypt(
-                            cryptoSettings(object),
-                            await deriveKey(key, password, object),
-                            StrToArr(atob(object.ct)) // cipher text to decrypt
-                        )
+                plainText = ArrToStr(
+                    await window.crypto.subtle.decrypt(
+                        cryptoSettings(adataString, spec),
+                        await deriveKey(key, password, spec),
+                        StrToArr(atob(cipherMessage))
                     )
                 );
             } catch(err) {
                 return '';
+            }
+            if (compression === 'none') {
+                return btou(plainText);
+            } else if (compression === 'rawdeflate') {
+                return decompress(plainText);
+            } else {
+                throw 'unsupported compression format';
             }
         };
 
@@ -906,25 +968,25 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             }
 
             // reload data
-            Uploader.prepare();
-            Uploader.setUrl(Helper.baseUri() + '?' + me.getPasteId());
+            ServerInteraction.prepare();
+            ServerInteraction.setUrl(Helper.baseUri() + '?' + me.getPasteId());
 
-            Uploader.setFailure(function (status, data) {
+            ServerInteraction.setFailure(function (status, data) {
                 // revert loading status…
                 Alert.hideLoading();
                 TopNav.showViewButtons();
 
                 // show error message
-                Alert.showError(Uploader.parseUploadError(status, data, 'get paste data'));
+                Alert.showError(ServerInteraction.parseUploadError(status, data, 'get paste data'));
             });
-            Uploader.setSuccess(function (status, data) {
+            ServerInteraction.setSuccess(function (status, data) {
                 pasteData = data;
 
                 if (typeof callback === 'function') {
                     return callback(data);
                 }
             });
-            Uploader.run();
+            ServerInteraction.run();
         };
 
         /**
@@ -1290,7 +1352,6 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         me.showStatus = function(message, icon)
         {
-            console.info('status shown: ', message);
             handleNotification(1, $statusMessage, message, icon);
         };
 
@@ -1307,7 +1368,6 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         me.showError = function(message, icon)
         {
-            console.error('error message shown: ', message);
             handleNotification(3, $errorMessage, message, icon);
         };
 
@@ -1322,7 +1382,6 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         me.showRemaining = function(message)
         {
-            console.info('remaining message shown: ', message);
             handleNotification(1, $remainingTime, message);
         };
 
@@ -1338,10 +1397,6 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         me.showLoading = function(message, icon)
         {
-            if (typeof message !== 'undefined' && message !== null) {
-                console.info('status changed: ', message);
-            }
-
             // default message text
             if (typeof message === 'undefined') {
                 message = 'Loading…';
@@ -2132,7 +2187,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         me.hide = function()
         {
             if (!isDisplayed) {
-                console.warn('PasteViewer was called to hide the parsed view, but it is already hidden.');
+                return;
             }
 
             $plainText.addClass('hidden');
@@ -3184,7 +3239,6 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         me.showViewButtons = function()
         {
             if (viewButtonsDisplayed) {
-                console.warn('showViewButtons: view buttons are already displayed');
                 return;
             }
 
@@ -3205,7 +3259,6 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         me.hideViewButtons = function()
         {
             if (!viewButtonsDisplayed) {
-                console.warn('hideViewButtons: view buttons are already hidden');
                 return;
             }
 
@@ -3238,7 +3291,6 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         me.showCreateButtons = function()
         {
             if (createButtonsDisplayed) {
-                console.warn('showCreateButtons: create buttons are already displayed');
                 return;
             }
 
@@ -3263,7 +3315,6 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         me.hideCreateButtons = function()
         {
             if (!createButtonsDisplayed) {
-                console.warn('hideCreateButtons: create buttons are already hidden');
                 return;
             }
 
@@ -3534,23 +3585,23 @@ jQuery.PrivateBin = (function($, RawDeflate) {
     /**
      * Responsible for AJAX requests, transparently handles encryption…
      *
-     * @name   Uploader
+     * @name   ServerInteraction
      * @class
      */
-    var Uploader = (function () {
+    var ServerInteraction = (function () {
         var me = {};
 
         var successFunc = null,
             failureFunc = null,
+            symmetricKey = null,
             url,
             data,
-            symmetricKey,
             password;
 
         /**
          * public variable ('constant') for errors to prevent magic numbers
          *
-         * @name   Uploader.error
+         * @name   ServerInteraction.error
          * @readonly
          * @enum   {Object}
          */
@@ -3564,7 +3615,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         /**
          * ajaxHeaders to send in AJAX requests
          *
-         * @name   Uploader.ajaxHeaders
+         * @name   ServerInteraction.ajaxHeaders
          * @private
          * @readonly
          * @enum   {Object}
@@ -3574,40 +3625,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         /**
          * called after successful upload
          *
-         * @name   Uploader.checkCryptParameters
-         * @private
-         * @function
-         * @throws {string}
-         */
-        function checkCryptParameters()
-        {
-            // workaround for this nasty 'bug' in ECMAScript
-            // see https://stackoverflow.com/questions/18808226/why-is-typeof-null-object
-            var typeOfKey = typeof symmetricKey;
-            if (symmetricKey === null) {
-                typeOfKey = 'null';
-            }
-
-            // in case of missing preparation, throw error
-            switch (typeOfKey) {
-                case 'string':
-                    // already set, all right
-                    return;
-                case 'null':
-                    // needs to be generated auto-generate
-                    symmetricKey = CryptTool.getSymmetricKey();
-                    break;
-                default:
-                    console.error('current invalid symmetricKey: ', symmetricKey);
-                    throw 'symmetricKey is invalid, probably the module was not prepared';
-            }
-            // password is optional
-        }
-
-        /**
-         * called after successful upload
-         *
-         * @name   Uploader.success
+         * @name   ServerInteraction.success
          * @private
          * @function
          * @param {int} status
@@ -3627,7 +3645,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         /**
          * called after a upload failure
          *
-         * @name   Uploader.fail
+         * @name   ServerInteraction.fail
          * @private
          * @function
          * @param {int} status - internal code
@@ -3643,13 +3661,13 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         /**
          * actually uploads the data
          *
-         * @name   Uploader.run
+         * @name   ServerInteraction.run
          * @function
          */
         me.run = function()
         {
             $.ajax({
-                type: 'POST',
+                type: data ? 'POST' : 'GET',
                 url: url,
                 data: data,
                 dataType: 'json',
@@ -3673,7 +3691,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         /**
          * set success function
          *
-         * @name   Uploader.setUrl
+         * @name   ServerInteraction.setUrl
          * @function
          * @param {function} newUrl
          */
@@ -3684,11 +3702,11 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
         /**
          * sets the password to use (first value) and optionally also the
-         * encryption key (not recommend, it is automatically generated).
+         * encryption key (not recommended, it is automatically generated).
          *
          * Note: Call this after prepare() as prepare() resets these values.
          *
-         * @name   Uploader.setCryptValues
+         * @name   ServerInteraction.setCryptValues
          * @function
          * @param {string} newPassword
          * @param {string} newKey       - optional
@@ -3705,7 +3723,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         /**
          * set success function
          *
-         * @name   Uploader.setSuccess
+         * @name   ServerInteraction.setSuccess
          * @function
          * @param {function} func
          */
@@ -3717,7 +3735,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         /**
          * set failure function
          *
-         * @name   Uploader.setFailure
+         * @name   ServerInteraction.setFailure
          * @function
          * @param {function} func
          */
@@ -3733,7 +3751,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          * previous uploads. Must be called before any other method of this
          * module.
          *
-         * @name   Uploader.prepare
+         * @name   ServerInteraction.prepare
          * @function
          * @return {object}
          */
@@ -3757,22 +3775,33 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         /**
          * encrypts and sets the data
          *
-         * @name   Uploader.setData
+         * @name   ServerInteraction.setCipherMessage
          * @async
          * @function
-         * @param {string} index
-         * @param {mixed} element
+         * @param {object} cipherMessage
          */
-        me.setData = async function(index, element)
+        me.setCipherMessage = async function(cipherMessage)
         {
-            checkCryptParameters();
-            data[index] = await CryptTool.cipher(symmetricKey, password, element);
+            if (
+                symmetricKey === null ||
+                (typeof symmetricKey === 'string' && symmetricKey === '')
+            ) {
+                symmetricKey = CryptTool.getSymmetricKey();
+            }
+            if (!data.hasOwnProperty('adata')) {
+                data['adata'] = [];
+            }
+            let cipherResult = await CryptTool.cipher(symmetricKey, password, JSON.stringify(cipherMessage), data['adata']);
+            data['v'] = 2;
+            data['ct'] = cipherResult[0];
+            data['adata'] = cipherResult[1];
+
         };
 
         /**
          * set the additional metadata to send unencrypted
          *
-         * @name   Uploader.setUnencryptedData
+         * @name   ServerInteraction.setUnencryptedData
          * @function
          * @param {string} index
          * @param {mixed} element
@@ -3783,21 +3812,9 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         };
 
         /**
-         * set the additional metadata to send unencrypted passed at once
+         * Helper, which parses shows a general error message based on the result of the ServerInteraction
          *
-         * @name   Uploader.setUnencryptedData
-         * @function
-         * @param {object} newData
-         */
-        me.setUnencryptedBulkData = function(newData)
-        {
-            $.extend(data, newData);
-        };
-
-        /**
-         * Helper, which parses shows a general error message based on the result of the Uploader
-         *
-         * @name    Uploader.parseUploadError
+         * @name    ServerInteraction.parseUploadError
          * @function
          * @param {int} status
          * @param {object} data
@@ -3825,24 +3842,13 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             return errorArray;
         };
 
-        /**
-         * init Uploader
-         *
-         * @name   Uploader.init
-         * @function
-         */
-        me.init = function()
-        {
-            // nothing yet
-        };
-
         return me;
     })();
 
     /**
      * (controller) Responsible for encrypting paste and sending it to server.
      *
-     * Does upload, encryption is done transparently by Uploader.
+     * Does upload, encryption is done transparently by ServerInteraction.
      *
      * @name PasteEncrypter
      * @class
@@ -3907,43 +3913,6 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         }
 
         /**
-         * adds attachments to the Uploader
-         *
-         * @name PasteEncrypter.encryptAttachments
-         * @private
-         * @function
-         * @param {function} callback - excuted when action is successful
-         */
-        function encryptAttachments(callback) {
-            var file = AttachmentViewer.getAttachmentData();
-
-            let encryptAttachmentPromise, encryptAttachmentNamePromise;
-            if (typeof file !== 'undefined' && file !== null) {
-                var fileName = AttachmentViewer.getFile().name;
-
-                // run concurrently to encrypt everything
-                encryptAttachmentPromise = Uploader.setData('attachment', file);
-                encryptAttachmentNamePromise = Uploader.setData('attachmentname', fileName);
-            } else if (AttachmentViewer.hasAttachment()) {
-                // fall back to cloned part
-                var attachment = AttachmentViewer.getAttachment();
-
-                encryptAttachmentPromise = Uploader.setData('attachment', attachment[0]);
-                encryptAttachmentNamePromise = Uploader.setData('attachmentname', attachment[1]);
-            } else {
-                // if there are no attachments, this is of course still successful
-                return callback();
-            }
-
-            // TODO: change this callback to also use Promises instead,
-            // this here just waits
-            return Promise.all([encryptAttachmentPromise, encryptAttachmentNamePromise]).then(() => {
-                // run callback
-                return callback();
-            });
-        }
-
-        /**
          * send a reply in a discussion
          *
          * @name   PasteEncrypter.sendComment
@@ -3973,20 +3942,20 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 return;
             }
 
-            // prepare Uploader
-            Uploader.prepare();
-            Uploader.setCryptParameters(Prompt.getPassword(), Model.getPasteKey());
+            // prepare server interaction
+            ServerInteraction.prepare();
+            ServerInteraction.setCryptParameters(Prompt.getPassword(), Model.getPasteKey());
 
             // set success/fail functions
-            Uploader.setSuccess(showUploadedComment);
-            Uploader.setFailure(function (status, data) {
+            ServerInteraction.setSuccess(showUploadedComment);
+            ServerInteraction.setFailure(function (status, data) {
                 // revert loading status…
                 Alert.hideLoading();
                 TopNav.showViewButtons();
 
                 // …show error message…
                 Alert.showError(
-                    Uploader.parseUploadError(status, data, 'post comment')
+                    ServerInteraction.parseUploadError(status, data, 'post comment')
                 );
 
                 // …and reset error handler
@@ -3994,28 +3963,24 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             });
 
             // fill it with unencrypted params
-            Uploader.setUnencryptedData('pasteid', Model.getPasteId());
+            ServerInteraction.setUnencryptedData('pasteid', Model.getPasteId());
             if (typeof parentid === 'undefined') {
                 // if parent id is not set, this is the top-most comment, so use
                 // paste id as parent, as the root element of the discussion tree
-                Uploader.setUnencryptedData('parentid', Model.getPasteId());
+                ServerInteraction.setUnencryptedData('parentid', Model.getPasteId());
             } else {
-                Uploader.setUnencryptedData('parentid', parentid);
+                ServerInteraction.setUnencryptedData('parentid', parentid);
             }
 
-            // start promises to encrypt data…
-            let dataPromises = [];
-            dataPromises.push(Uploader.setData('data', plainText));
+            // prepare cypher message
+            let cipherMessage = {
+                'comment': plainText
+            };
             if (nickname.length > 0) {
-                dataPromises.push(Uploader.setData('nickname', nickname));
+                cipherMessage['nickname'] = nickname;
             }
 
-            // …and upload when they are all done
-            Promise.all(dataPromises).then(() => {
-                Uploader.run();
-            }).catch((e) => {
-                Alert.showError(e);
-            });
+            await ServerInteraction.setCipherMessage(cipherMessage).catch(Alert.showError);
         };
 
         /**
@@ -4049,60 +4014,55 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 return;
             }
 
-            // prepare Uploader
-            Uploader.prepare();
-            Uploader.setCryptParameters(TopNav.getPassword());
+            // prepare server interaction
+            ServerInteraction.prepare();
+            ServerInteraction.setCryptParameters(TopNav.getPassword());
 
             // set success/fail functions
-            Uploader.setSuccess(showCreatedPaste);
-            Uploader.setFailure(function (status, data) {
+            ServerInteraction.setSuccess(showCreatedPaste);
+            ServerInteraction.setFailure(function (status, data) {
                 // revert loading status…
                 Alert.hideLoading();
                 TopNav.showCreateButtons();
 
                 // show error message
                 Alert.showError(
-                    Uploader.parseUploadError(status, data, 'create paste')
+                    ServerInteraction.parseUploadError(status, data, 'create paste')
                 );
             });
 
             // fill it with unencrypted submitted options
-            Uploader.setUnencryptedBulkData({
-                expire:           TopNav.getExpiration(),
-                formatter:        format,
-                burnafterreading: TopNav.getBurnAfterReading() ? 1 : 0,
-                opendiscussion:   TopNav.getOpenDiscussion() ? 1 : 0
-            });
+            ServerInteraction.setUnencryptedData('adata', [
+                null, format,
+                TopNav.getOpenDiscussion() ? 1 : 0,
+                TopNav.getBurnAfterReading() ? 1 : 0
+            ]);
+            ServerInteraction.setUnencryptedData('meta', {'expire': TopNav.getExpiration()});
 
             // prepare PasteViewer for later preview
             PasteViewer.setText(plainText);
             PasteViewer.setFormat(format);
 
-            // encrypt attachments
-            const encryptAttachmentsPromise = encryptAttachments(
-                function () {
-                    // TODO: remove, is not needed anymore as we use Promises
-                }
-            );
+            // prepare cypher message
+            let file = AttachmentViewer.getAttachmentData(),
+                cipherMessage = {
+                    'paste': plainText
+                };
+            if (typeof file !== 'undefined' && file !== null) {
+                cipherMessage['attachment'] = file;
+                cipherMessage['attachment_name'] = AttachmentViewer.getFile().name;
+            } else if (AttachmentViewer.hasAttachment()) {
+                // fall back to cloned part
+                let attachment = AttachmentViewer.getAttachment();
+                cipherMessage['attachment'] = attachment[0];
+                cipherMessage['attachment_name'] = attachment[1];
+            }
 
-            // encrypt plain text
-            const encryptDataPromise = Uploader.setData('data', plainText);
-
-            await Promise.all([encryptAttachmentsPromise, encryptDataPromise]).catch(Alert.showError);
+            // encrypt message
+            await ServerInteraction.setCipherMessage(cipherMessage).catch(Alert.showError);
 
             // send data
-            Uploader.run();
-        };
-
-        /**
-         * initialize
-         *
-         * @name   PasteEncrypter.init
-         * @function
-         */
-        me.init = function()
-        {
-            // nothing yet
+            ServerInteraction.run();
         };
 
         return me;
@@ -4347,17 +4307,6 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             });
         };
 
-        /**
-         * initialize
-         *
-         * @name   PasteDecrypter.init
-         * @function
-         */
-        me.init = function()
-        {
-            // nothing yet
-        };
-
         return me;
     })();
 
@@ -4457,20 +4406,20 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             var orgPosition = $(window).scrollTop();
 
             Model.getPasteData(function (data) {
-                Uploader.prepare();
-                Uploader.setUrl(Helper.baseUri() + '?' + Model.getPasteId());
+                ServerInteraction.prepare();
+                ServerInteraction.setUrl(Helper.baseUri() + '?' + Model.getPasteId());
 
-                Uploader.setFailure(function (status, data) {
+                ServerInteraction.setFailure(function (status, data) {
                     // revert loading status…
                     Alert.hideLoading();
                     TopNav.showViewButtons();
 
                     // show error message
                     Alert.showError(
-                        Uploader.parseUploadError(status, data, 'refresh display')
+                        ServerInteraction.parseUploadError(status, data, 'refresh display')
                     );
                 });
-                Uploader.setSuccess(function (status, data) {
+                ServerInteraction.setSuccess(function (status, data) {
                     PasteDecrypter.run(data);
 
                     // restore position
@@ -4481,7 +4430,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                     // password being entered
                     callback();
                 });
-                Uploader.run();
+                ServerInteraction.run();
             }, false); // this false is important as it circumvents the cache
         }
 
@@ -4551,14 +4500,11 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             AttachmentViewer.init();
             DiscussionViewer.init();
             Editor.init();
-            PasteDecrypter.init();
-            PasteEncrypter.init();
             PasteStatus.init();
             PasteViewer.init();
             Prompt.init();
             TopNav.init();
             UiHelper.init();
-            Uploader.init();
 
             // check whether existing paste needs to be shown
             try {
@@ -4602,7 +4548,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         AttachmentViewer: AttachmentViewer,
         DiscussionViewer: DiscussionViewer,
         TopNav: TopNav,
-        Uploader: Uploader,
+        ServerInteraction: ServerInteraction,
         PasteEncrypter: PasteEncrypter,
         PasteDecrypter: PasteDecrypter,
         Controller: Controller
