@@ -788,7 +788,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             const spec = [
                 getRandomBytes(16), // initialization vector
                 getRandomBytes(8),  // salt
-                10000,              // iterations
+                100000,             // iterations
                 256,                // key size
                 128,                // tag size
                 'aes',              // algorithm
