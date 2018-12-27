@@ -2,12 +2,12 @@
 require('../common');
 
 describe('CryptTool', function () {
-    afterEach(async function () {
-        // pause to let async functions conclude
-        await new Promise(resolve => setTimeout(resolve, 1900));
-    });
-
     describe('cipher & decipher', function () {
+        afterEach(async function () {
+            // pause to let async functions conclude
+            await new Promise(resolve => setTimeout(resolve, 1900));
+        });
+
         this.timeout(30000);
         it('can en- and decrypt any message', function () {
             jsc.check(jsc.forall(
@@ -29,7 +29,8 @@ describe('CryptTool', function () {
                     clean();
                     return message === plaintext;
                 }
-            ));
+            ),
+            {tests: 3});
         });
 
         // The below static unit tests are included to ensure deciphering of "classic"

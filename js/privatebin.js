@@ -33,6 +33,13 @@ jQuery.PrivateBin = (function($, RawDeflate) {
     'use strict';
 
     /**
+     * zlib library interface
+     *
+     * @private
+     */
+    let z;
+
+    /**
      * static Helper methods
      *
      * @name Helper
@@ -619,40 +626,67 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         }
 
         /**
-         * compress a string, returns base64 encoded data (deflate compression)
+         * compress a string (deflate compression), returns buffer
          *
          * @name   CryptTool.compress
+         * @async
          * @function
          * @private
          * @param  {string} message
-         * @return {string} base64 data
+         * @param  {string} mode
+         * @return {ArrayBuffer} data
          */
-        function compress(message)
+        async function compress(message, mode)
         {
-            // detect presence of Base64.js, indicating legacy ZeroBin paste
-            if (typeof Base64 === 'undefined') {
-                return btoa( utob( RawDeflate.deflate( utob( message ) ) ) );
-            } else {
-                return Base64.toBase64( RawDeflate.deflate( Base64.utob( message ) ) );
+            message = StrToArr(
+                utob(message)
+            );
+            if (mode === 'zlib') {
+                return z.deflate(message).buffer;
             }
+            return message;
         }
 
         /**
-         * decompress a base64 encoded data (deflate compression), returns string
+         * decompress potentially base64 encoded, deflate compressed buffer, returns string
          *
          * @name   CryptTool.decompress
+         * @async
          * @function
          * @private
-         * @param  {string} data base64 data
+         * @param  {ArrayBuffer} data
+         * @param  {string} mode
          * @return {string} message
          */
-        function decompress(data)
+        async function decompress(data, mode)
         {
+            if (mode === 'zlib' || mode === 'none') {
+                if (mode === 'zlib') {
+                    data = z.inflate(new Uint8Array(data)).buffer;
+                }
+                return btou(
+                    ArrToStr(data)
+                );
+            }
             // detect presence of Base64.js, indicating legacy ZeroBin paste
             if (typeof Base64 === 'undefined') {
-                return btou( RawDeflate.inflate( btou( atob( data ) ) ) );
+                return btou(
+                    RawDeflate.inflate(
+                        btou(
+                            atob(
+                                ArrToStr(data)
+                            )
+                        )
+                    )
+                );
             } else {
-                return Base64.btou( RawDeflate.inflate( Base64.fromBase64( data ) ) );
+                return Base64.btou(
+                    RawDeflate.inflate(
+                        Base64.fromBase64(
+                            ArrToStr(data)
+                        )
+                    )
+                );
             }
         }
 
@@ -779,7 +813,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          * @param  {string} password
          * @param  {string} message
          * @param  {array}  adata
-         * @return {array}  encrypted message & adata containing encryption spec
+         * @return {array}  encrypted message in base64 encoding & adata containing encryption spec
          */
         me.cipher = async function(key, password, message, adata)
         {
@@ -793,17 +827,11 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 128,                // tag size
                 'aes',              // algorithm
                 'gcm',              // algorithm mode
-                'none'              // compression
-            ], encodedSpec = [
-                btoa(spec[0]),
-                btoa(spec[1]),
-                spec[2],
-                spec[3],
-                spec[4],
-                spec[5],
-                spec[6],
-                spec[7]
-            ];
+                'zlib'              // compression
+            ], encodedSpec = [];
+            for (let i = 0; i < spec.length; ++i) {
+                encodedSpec[i] = i < 2 ? btoa(spec[i]) : spec[i];
+            }
             if (adata.length === 0) {
                 // comment
                 adata = encodedSpec;
@@ -819,7 +847,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                         await window.crypto.subtle.encrypt(
                             cryptoSettings(JSON.stringify(adata), spec),
                             await deriveKey(key, password, spec),
-                            StrToArr(utob(message))
+                            await compress(message, spec[7])
                         )
                     )
                 ),
@@ -864,27 +892,20 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             } else {
                 throw 'unsupported message format';
             }
-            compression = encodedSpec[7];
             let spec = encodedSpec, plainText = '';
             spec[0] = atob(spec[0]);
             spec[1] = atob(spec[1]);
             try {
-                plainText = ArrToStr(
+                return await decompress(
                     await window.crypto.subtle.decrypt(
                         cryptoSettings(adataString, spec),
                         await deriveKey(key, password, spec),
                         StrToArr(atob(cipherMessage))
-                    )
+                    ),
+                    encodedSpec[7]
                 );
             } catch(err) {
                 return '';
-            }
-            if (compression === 'none') {
-                return btou(plainText);
-            } else if (compression === 'rawdeflate') {
-                return decompress(plainText);
-            } else {
-                throw 'unsupported compression format';
             }
         };
 
@@ -4487,7 +4508,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          * @name   Controller.init
          * @function
          */
-        me.init = function()
+        me.init = async function()
         {
             // first load translations
             I18n.loadTranslations();
@@ -4505,6 +4526,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             Prompt.init();
             TopNav.init();
             UiHelper.init();
+            z = (await zlib);
 
             // check whether existing paste needs to be shown
             try {
