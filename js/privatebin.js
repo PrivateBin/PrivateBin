@@ -741,15 +741,18 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         async function deriveKey(key, password, spec)
         {
             let keyArray = StrToArr(key);
-            if ((password || '').trim().length > 0) {
-                let passwordBuffer = await window.crypto.subtle.digest(
-                    {name: 'SHA-256'},
-                    StrToArr(utob(password))
-                );
-                let hexHash = Array.prototype.map.call(
-                    new Uint8Array(passwordBuffer), x => ('00' + x.toString(16)).slice(-2)
-                ).join('');
-                let passwordArray = StrToArr(hexHash),
+            if (password.length > 0) {
+                // version 1 pastes did append the passwords SHA-256 hash in hex
+                if (spec[7] === 'rawdeflate') {
+                    let passwordBuffer = await window.crypto.subtle.digest(
+                        {name: 'SHA-256'},
+                        StrToArr(utob(password))
+                    );
+                    password = Array.prototype.map.call(
+                        new Uint8Array(passwordBuffer), x => ('00' + x.toString(16)).slice(-2)
+                    ).join('');
+                }
+                let passwordArray = StrToArr(password),
                     newKeyArray = new Uint8Array(keyArray.length + passwordArray.length);
                 newKeyArray.set(keyArray, 0);
                 newKeyArray.set(passwordArray, keyArray.length);
@@ -779,7 +782,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                     length: spec[3] // can be 128, 192 or 256
                 },
                 false, // the key may not be exported
-                ['encrypt', 'decrypt'] // we use it for de- and encryption
+                ['encrypt', 'decrypt'] // we may only use it for en- and decryption
             );
         }
 
@@ -868,7 +871,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         me.decipher = async function(key, password, data)
         {
-            let adataString, encodedSpec, compression, cipherMessage;
+            let adataString, encodedSpec, cipherMessage;
             if (data instanceof Array) {
                 // version 2
                 adataString = JSON.stringify(data[1]);
