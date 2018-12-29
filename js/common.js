@@ -89,6 +89,8 @@ function parseMime(line) {
 }
 
 // common testing helper functions
+exports.atob = atob;
+exports.btoa = btoa;
 
 /**
  * convert all applicable characters to HTML entities

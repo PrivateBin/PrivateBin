@@ -55,7 +55,7 @@ if ($ZEROBINCOMPATIBILITY):
 <?php
 endif;
 ?>
-		<script type="text/javascript" data-cfasync="false" src="js/zlib-1.2.11.js" integrity="sha512-UOOlXbjGGS/ezf/cbE3Hc4L0ybB2NQBbk523tAT8m1TsnagkIgYUKuFfl+DL4wZbu7IopLvhI2kl+61+2oaaGA==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/zlib-1.2.11.js" integrity="sha512-h8gJuMJ1L95FlbJwo5F8NkjEpK0Nv+9ASHShUrCBnMpIlciQ0d0qfkmAKYJ1jlwfqrbVYhqr8hpyIh5wClIP3w==" crossorigin="anonymous"></script>
 		<script type="text/javascript" data-cfasync="false" src="js/rawinflate-0.3.js" integrity="sha512-g8uelGgJW9A/Z1tB6Izxab++oj5kdD7B4qC7DHwZkB6DGMXKyzx7v5mvap2HXueI2IIn08YlRYM56jwWdm2ucQ==" crossorigin="anonymous"></script>
 		<script type="text/javascript" data-cfasync="false" src="js/bootstrap-3.3.7.js" integrity="sha512-iztkobsvnjKfAtTNdHkGVjAYTrrtlC7mGp/54c40wowO7LhURYl3gVzzcEqGl/qKXQltJ2HwMrdLcNUdo+N/RQ==" crossorigin="anonymous"></script>
 <?php
@@ -71,7 +71,7 @@ if ($MARKDOWN):
 endif;
 ?>
 		<script type="text/javascript" data-cfasync="false" src="js/purify-1.0.7.js" integrity="sha512-VnKJHLosO8z2ojNvWk9BEKYqnhZyWK9rM90FgZUUEp/PRnUqR5OLLKE0a3BkVmn7YgB7LXRrjHgFHQYKd6DAIA==" crossorigin="anonymous"></script>
-		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-BMDTPcsLubRhuPDWSsWRfrgNcARqphGfrYU3sW7tNJDytuPqffzVzPA5U4UvIDrw80kCYKN0eyZ0YjnjZ8tERg==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-DctI/LNueHnbinNWC5AhsfMgABi8pGW7SnF5Q0fg68Cv/rDznb/htcdsnlQzQOxRvSzVKNHW+OOkvOxgIY/qkg==" crossorigin="anonymous"></script>
 		<!--[if lt IE 10]>
 		<style type="text/css">body {padding-left:60px;padding-right:60px;} #ienotice {display:block;} #oldienotice {display:block;}</style>
 		<![endif]-->

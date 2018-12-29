@@ -5,7 +5,7 @@ let ret;
 async function initialize() {
   if (ret) return ret;
 
-  const COMPRESSION_LEVEL = 9;
+  const COMPRESSION_LEVEL = 7;
   const NO_ZLIB_HEADER = -1;
   const CHUNK_SIZE = 32 * 1024;
   const map = {};

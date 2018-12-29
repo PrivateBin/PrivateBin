@@ -131,9 +131,9 @@ describe('Model', function () {
             jsc.nearray(common.jscA2zString()),
             jsc.nearray(common.jscA2zString()),
             jsc.array(common.jscQueryString()),
-            jsc.nearray(common.jscBase64String()),
+            'nestring',
             function (schema, address, query, fragment) {
-                var fragmentString = fragment.join(''),
+                var fragmentString = common.btoa(fragment),
                     clean = jsdom('', {
                         url: schema.join('') + '://' + address.join('') +
                              '/?' + query.join('') + '#' + fragmentString
@@ -141,7 +141,7 @@ describe('Model', function () {
                     result = $.PrivateBin.Model.getPasteKey();
                 $.PrivateBin.Model.reset();
                 clean();
-                return fragmentString === result;
+                return fragment === result;
             }
         );
         jsc.property(
@@ -149,10 +149,10 @@ describe('Model', function () {
             jsc.nearray(common.jscA2zString()),
             jsc.nearray(common.jscA2zString()),
             jsc.array(common.jscQueryString()),
-            jsc.nearray(common.jscBase64String()),
+            'nestring',
             jsc.array(common.jscHashString()),
             function (schema, address, query, fragment, trail) {
-                var fragmentString = fragment.join(''),
+                var fragmentString = common.btoa(fragment),
                     clean = jsdom('', {
                         url: schema.join('') + '://' + address.join('') + '/?' +
                              query.join('') + '#' + fragmentString + '&' + trail.join('')
@@ -160,7 +160,7 @@ describe('Model', function () {
                     result = $.PrivateBin.Model.getPasteKey();
                 $.PrivateBin.Model.reset();
                 clean();
-                return fragmentString === result;
+                return fragment === result;
             }
         );
         jsc.property(
