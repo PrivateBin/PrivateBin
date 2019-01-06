@@ -128,5 +128,5 @@
     "In case this message never disappears please have a look at <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">this FAQ for information to troubleshoot</a>.": "En caso de que este mensaje nunca desaparezca por favor revise <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">este FAQ para obtener información para solucionar problemas</a>.",
     "+++ no paste text +++": "+++ \"paste\" sin texto +++",
     "Could not get paste data: %s": "No se pudieron obtener los datos: %s",
-    "QR code": "QR code"
+    "QR code": "Código QR"
 }
