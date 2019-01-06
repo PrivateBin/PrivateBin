@@ -165,5 +165,6 @@
         "Если данное сообщение не исчезает длительное время, посмотрите <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">этот FAQ с информацией о возможном решении проблемы (на английском)</a>.",
     "+++ no paste text +++": "+++ в записи нет текста +++",
     "Could not get paste data: %s":
-        "Не удалось получить данные записи: %s"
+        "Не удалось получить данные записи: %s",
+    "QR code": "QR code"
 }
