@@ -156,5 +156,5 @@
     "+++ no paste text +++": "+++ \"paste\" sin texto +++",
     "Could not get paste data: %s":
         "No se pudieron obtener los datos: %s",
-    "QR code": "QR code"
+    "QR code": "Código QR"
 }
