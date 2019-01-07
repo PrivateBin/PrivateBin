@@ -1,12 +1,12 @@
 {
     "PrivateBin": "PrivateBin",
     "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href=\"https://privatebin.info/\">project page</a>.":
-        "%s es un servicio de tipo \"Pastebin\" minimalista de código abierto, donde el servidor no tiene ningún conocimiento de los datos guardados. Los datos son cifrados/descifrados <i>en el navegador</i> usando 256 bits AES. Más información en la <a href=\"https://privatebin.info/\">página del proyecto</a>.",
+        "%s es un \"pastebin\" en línea minimalista de código abierto, donde el servidor no tiene ningún conocimiento de los datos guardados. Los datos son cifrados/descifrados <i>en el navegador</i> usando 256 bits AES. Más información en la <a href=\"https://privatebin.info/\">página del proyecto</a>.",
     "Because ignorance is bliss":
         "Porque la ignorancia es dicha",
     "en": "es",
     "Paste does not exist, has expired or has been deleted.":
-        "El texto no existe, ha caducado o ha sido eliminado.",
+        "El \"paste\" no existe, ha caducado o ha sido eliminado.",
     "%s requires php %s or above to work. Sorry.":
         "%s requiere php %s o superior para funcionar. Lo siento.",
     "%s requires configuration section [%s] to be present in configuration file.":
@@ -14,7 +14,7 @@
     "Please wait %d seconds between each post.":
         "Por favor espere %d segundos entre cada publicación.",
     "Paste is limited to %s of encrypted data.":
-        "El texto está limitado a %s de datos cifrados.",
+        "El \"paste\" está limitado a %s de datos cifrados.",
     "Invalid data.":
         "Datos inválidos.",
     "You are unlucky. Try again.":
@@ -22,15 +22,15 @@
     "Error saving comment. Sorry.":
         "Error al guardar el comentario. Lo siento.",
     "Error saving paste. Sorry.":
-        "Error al guardar el texto. Lo siento",
+        "Error al guardar el \"paste\". Lo siento",
     "Invalid paste ID.":
-        "ID del texto inválido.",
+        "ID del \"paste\" inválido.",
     "Paste is not of burn-after-reading type.":
-        "El texto no es del tipo \"destruir despues de leer\".",
+        "El \"paste\" no es del tipo \"destruir despues de leer\".",
     "Wrong deletion token. Paste was not deleted.":
-        "Token de eliminación erróneo. El texto no fue eliminado.",
+        "Token de eliminación erróneo. El \"paste\" no fue eliminado.",
     "Paste was properly deleted.":
-        "El texto se ha eliminado correctamente.",
+        "El \"paste\" se ha eliminado correctamente.",
     "JavaScript is required for %s to work.<br />Sorry for the inconvenience.":
         "JavaScript es necesario para que %s funcione.<br />Sentimos los inconvenientes ocasionados.",
     "%s requires a modern browser to work.":
@@ -67,7 +67,7 @@
     "Never":
         "Nunca",
     "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.":
-        "Nota: Este es un servicio de prueba. Los datos pueden ser eliminados en cualquier momento. Gatitos morirán si se abusa de este servicio.",
+        "Nota: Este es un servicio de prueba. Los datos pueden ser eliminados en cualquier momento. Morirán gatitos si abusas de este servicio.",
     "This document will expire in %d seconds.":
         ["Este documento caducará en un segundo.", "Este documento caducará en %d segundos."],
     "This document will expire in %d minutes.":
@@ -79,13 +79,13 @@
     "This document will expire in %d months.":
         ["Este documento caducará en un mes.", "Este documento caducará en %d meses."],
     "Please enter the password for this paste:":
-        "Por favor ingrese la contraseña para este documento:",
+        "Por favor ingrese la contraseña para este \"paste\":",
     "Could not decrypt data (Wrong key?)":
         "No fue posible descifrar los datos (¿Clave errónea?)",
     "Could not delete the paste, it was not stored in burn after reading mode.":
         "No fue posible eliminar el documento, no fue guardado en modo \"destruir despues de leer\".",
     "FOR YOUR EYES ONLY. Don't close this window, this message can't be displayed again.":
-        "SÓLO PARA TUS OJOS. No cierre esta ventana, este mensaje no se puede volver a mostrar.",
+        "SÓLO PARA TUS OJOS. No cierres esta ventana, este mensaje no se puede volver a mostrar.",
     "Could not decrypt comment; Wrong key?":
         "No se pudo descifrar el comentario; ¿Llave incorrecta?",
     "Reply":
@@ -115,7 +115,7 @@
     "Please move your mouse for more entropy…":
         "Por favor, mueva el ratón para mayor entropía…",
     "Sending paste…":
-        "Enviando texto…",
+        "Enviando \"paste\"…",
     "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit [Ctrl]+[c] to copy)</span>":
         "Su texto está en <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Presione [Ctrl]+[c] para copiar)</span>",
     "Delete data":
@@ -149,11 +149,12 @@
     "Enter password":
         "Ingrese contraseña",
     "Loading…": "Cargando…",
-    "Decrypting paste…": "Descifrando texto…",
-    "Preparing new paste…": "Preparando texto nuevo…",
+    "Decrypting paste…": "Descifrando \"paste\"…",
+    "Preparing new paste…": "Preparando \"paste\" nuevo…",
     "In case this message never disappears please have a look at <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">this FAQ for information to troubleshoot</a>.":
         "En caso de que este mensaje nunca desaparezca por favor revise <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">este FAQ para obtener información para solucionar problemas</a>.",
-    "+++ no paste text +++": "+++ sin texto +++",
+    "+++ no paste text +++": "+++ \"paste\" sin texto +++",
     "Could not get paste data: %s":
-        "Could not get paste data: %s"
+        "No se pudieron obtener los datos: %s",
+    "QR code": "Código QR"
 }

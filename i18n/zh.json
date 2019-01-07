@@ -155,5 +155,6 @@
         "如果这个消息一直不消失，请参考 <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">这里的 FAQ 进行故障排除</a> (英文版)。",
     "+++ no paste text +++": "+++ 没有粘贴内容 +++",
     "Could not get paste data: %s":
-        "Could not get paste data: %s"
+        "Could not get paste data: %s",
+    "QR code": "QR code"
 }
