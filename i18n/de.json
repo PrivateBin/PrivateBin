@@ -153,5 +153,6 @@
         "Wenn diese Nachricht nicht mehr verschwindet, schau bitte in <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">die FAQ</a> (englisch), um zu sehen, wie der Fehler behoben werden kann.",
     "+++ no paste text +++": "+++ kein Paste-Text +++",
     "Could not get paste data: %s":
-        "Text konnte nicht geladen werden: %s"
+        "Text konnte nicht geladen werden: %s",
+    "QR code": "QR code"
 }

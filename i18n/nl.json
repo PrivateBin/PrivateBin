@@ -153,5 +153,6 @@
         "In het geval dat dit bericht nooit verdwijnt, kijkt u dan eens naar <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\"> veelgestelde vragen voor informatie over het oplossen van problemen </a>.",
     "+++ no paste text +++": "+++ geen geplakte tekst +++",
     "Could not get paste data: %s":
-        "Could not get paste data: %s"
+        "Could not get paste data: %s",
+    "QR code": "QR code"
 }

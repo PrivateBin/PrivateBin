@@ -153,5 +153,6 @@
         "Abban az esetben, ha ez az üzenet mindig látható lenne, látogass el a <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">Gyakran Ismételt Kérdések szekcióba a megoldásához</a>.",
     "+++ no paste text +++": "+++ nincs beillesztett szöveg +++",
     "Could not get paste data: %s":
-        "Could not get paste data: %s"
+        "Could not get paste data: %s",
+    "QR code": "QR code"
 }
