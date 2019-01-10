@@ -134,7 +134,7 @@ if ($isCpct):
 endif;
 ?>
 			<div class="navbar-header">
-				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar" aria-expanded="true" aria-controls="navbar">
 					<span class="sr-only"><?php echo I18n::_('Toggle navigation'); ?></span>
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
@@ -144,7 +144,7 @@ endif;
 					<img alt="<?php echo I18n::_($NAME); ?>" src="img/icon.svg" width="38" />
 				</a>
 			</div>
-			<div id="navbar" class="navbar-collapse collapse">
+			<div id="navbar" class="navbar-collapse collapse in">
 				<ul class="nav navbar-nav">
 					<li id="loadingindicator" class="navbar-text hidden">
 						<span class="glyphicon glyphicon-time" aria-hidden="true"></span>
