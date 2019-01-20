@@ -44,7 +44,7 @@ class RequestTest extends PHPUnit_Framework_TestCase
         $queryChars     = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ=';
         $queryCharCount = strlen($queryChars) - 1;
         $resultLength   = random_int(1, 10);
-        $result = '';
+        $result         = '';
         for ($i = 0; $i < $resultLength; ++$i) {
             $result .= $queryChars[random_int(0, $queryCharCount)];
         }
