@@ -81,18 +81,23 @@ describe('Model', function () {
             'returns the query string without separator, if any',
             jsc.nearray(common.jscA2zString()),
             jsc.nearray(common.jscA2zString()),
-            jsc.nearray(common.jscHashString()),
+            jsc.tuple(new Array(16).fill(common.jscHexString)),
+            jsc.array(common.jscQueryString()),
+            jsc.array(common.jscQueryString()),
             'string',
-            function (schema, address, query, fragment) {
-                var queryString = query.join(''),
-                    clean = jsdom('', {
+            function (schema, address, pasteId, queryStart, queryEnd, fragment) {
+                var pasteIdString    = pasteId.join(''),
+                    queryStartString = queryStart.join('') + (queryStart.length > 0 ? '&' : ''),
+                    queryEndString   = (queryEnd.length > 0 ? '&' : '') + queryEnd.join(''),
+                    queryString      = queryStartString + pasteIdString + queryEndString,
+                    clean            = jsdom('', {
                         url: schema.join('') + '://' + address.join('') +
                              '/?' + queryString + '#' + fragment
                     }),
                     result = $.PrivateBin.Model.getPasteId();
                 $.PrivateBin.Model.reset();
                 clean();
-                return queryString === result;
+                return pasteIdString === result;
             }
         );
         jsc.property(
