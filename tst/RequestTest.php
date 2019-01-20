@@ -41,9 +41,9 @@ class RequestTest extends PHPUnit_Framework_TestCase
      */
     public function getRandomQueryChars()
     {
-        $queryChars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ=';
+        $queryChars     = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ=';
         $queryCharCount = strlen($queryChars) - 1;
-        $resultLength = random_int(1, 10);
+        $resultLength   = random_int(1, 10);
         $result = '';
         for ($i = 0; $i < $resultLength; ++$i) {
             $result .= $queryChars[random_int(0, $queryCharCount)];
@@ -63,7 +63,7 @@ class RequestTest extends PHPUnit_Framework_TestCase
     public function testRead()
     {
         $this->reset();
-        $id = $this->getRandomId();
+        $id                        = $this->getRandomId();
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_SERVER['QUERY_STRING']   = $id;
         $request                   = new Request;
@@ -75,7 +75,7 @@ class RequestTest extends PHPUnit_Framework_TestCase
     public function testDelete()
     {
         $this->reset();
-        $id = $this->getRandomId();
+        $id                        = $this->getRandomId();
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_GET['pasteid']           = $id;
         $_GET['deletetoken']       = 'bar';
@@ -116,7 +116,7 @@ class RequestTest extends PHPUnit_Framework_TestCase
     public function testApiRead()
     {
         $this->reset();
-        $id = $this->getRandomId();
+        $id                        = $this->getRandomId();
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_SERVER['HTTP_ACCEPT']    = 'application/json, text/javascript, */*; q=0.01';
         $_SERVER['QUERY_STRING']   = $id;
@@ -129,7 +129,7 @@ class RequestTest extends PHPUnit_Framework_TestCase
     public function testApiDelete()
     {
         $this->reset();
-        $id = $this->getRandomId();
+        $id                               = $this->getRandomId();
         $_SERVER['REQUEST_METHOD']        = 'POST';
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['QUERY_STRING']          = $id;
@@ -144,7 +144,7 @@ class RequestTest extends PHPUnit_Framework_TestCase
     public function testReadWithNegotiation()
     {
         $this->reset();
-        $id = $this->getRandomId();
+        $id                        = $this->getRandomId();
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_SERVER['HTTP_ACCEPT']    = 'text/html,text/html; charset=UTF-8,application/xhtml+xml, application/xml;q=0.9,*/*;q=0.8, text/csv,application/json';
         $_SERVER['QUERY_STRING']   = $id;
@@ -157,7 +157,7 @@ class RequestTest extends PHPUnit_Framework_TestCase
     public function testReadWithXhtmlNegotiation()
     {
         $this->reset();
-        $id = $this->getRandomId();
+        $id                        = $this->getRandomId();
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_SERVER['HTTP_ACCEPT']    = 'application/xhtml+xml,text/html,text/html; charset=UTF-8, application/xml;q=0.9,*/*;q=0.8, text/csv,application/json';
         $_SERVER['QUERY_STRING']   = $id;
@@ -170,7 +170,7 @@ class RequestTest extends PHPUnit_Framework_TestCase
     public function testApiReadWithNegotiation()
     {
         $this->reset();
-        $id = $this->getRandomId();
+        $id                        = $this->getRandomId();
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_SERVER['HTTP_ACCEPT']    = 'text/plain,text/csv, application/xml;q=0.9, application/json, text/html,text/html; charset=UTF-8,application/xhtml+xml, */*;q=0.8';
         $_SERVER['QUERY_STRING']   = $id;
@@ -183,7 +183,7 @@ class RequestTest extends PHPUnit_Framework_TestCase
     public function testReadWithFailedNegotiation()
     {
         $this->reset();
-        $id = $this->getRandomId();
+        $id                        = $this->getRandomId();
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_SERVER['HTTP_ACCEPT']    = 'text/plain,text/csv, application/xml;q=0.9, */*;q=0.8';
         $_SERVER['QUERY_STRING']   = $id;
@@ -196,8 +196,8 @@ class RequestTest extends PHPUnit_Framework_TestCase
     public function testPasteIdExtraction()
     {
         $this->reset();
-        $id = $this->getRandomId();
-        $queryParams = array($id);
+        $id              = $this->getRandomId();
+        $queryParams     = array($id);
         $queryParamCount = random_int(1, 5);
         for ($i = 0; $i < $queryParamCount; ++$i) {
             array_push($queryParams, $this->getRandomQueryChars());
