@@ -100,7 +100,9 @@ class Request
             array_key_exists('QUERY_STRING', $_SERVER) &&
             !empty($_SERVER['QUERY_STRING'])
         ) {
-            $this->_params['pasteid'] = $_SERVER['QUERY_STRING'];
+            $this->_params['pasteid'] = preg_match(
+                '/[a-f0-9]{16}/', $_SERVER['QUERY_STRING'], $match
+            ) ? $match[0] : 'invalid id';
         }
 
         // prepare operation, depending on current parameters

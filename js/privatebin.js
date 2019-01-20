@@ -745,7 +745,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
         {
             if (id === null) {
                 // Attention: This also returns the delete token inside of the ID, if it is specified
-                id = window.location.search.substring(1);
+                id = (window.location.search.match(/[a-z0-9]{16}/) || [''])[0];
 
                 if (id === '') {
                     throw 'no paste id given';
