@@ -73,6 +73,19 @@ class Request
     private $_isJsonApi = false;
 
     /**
+     * Return the paste ID of the current paste.
+     *
+     * @access private
+     * @return string
+     */
+    private function getPasteId()
+    {
+        return preg_match(
+            '/[a-f0-9]{16}/', $_SERVER['QUERY_STRING'], $match
+        ) ? $match[0] : 'invalid id';
+    }
+
+    /**
      * Constructor
      *
      * @access public
@@ -100,9 +113,7 @@ class Request
             array_key_exists('QUERY_STRING', $_SERVER) &&
             !empty($_SERVER['QUERY_STRING'])
         ) {
-            $this->_params['pasteid'] = preg_match(
-                '/[a-f0-9]{16}/', $_SERVER['QUERY_STRING'], $match
-            ) ? $match[0] : 'invalid id';
+            $this->_params['pasteid'] = $this->getPasteId();
         }
 
         // prepare operation, depending on current parameters
