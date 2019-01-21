@@ -680,6 +680,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
     public function testReadInvalidId()
     {
         $_SERVER['QUERY_STRING']          = 'foo';
+        $_GET["foo"]                      = '';
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         ob_start();
         new Controller;
@@ -696,6 +697,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
     public function testReadNonexisting()
     {
         $_SERVER['QUERY_STRING']          = Helper::getPasteId();
+        $_GET[Helper::getPasteId()]       = '';
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         ob_start();
         new Controller;
@@ -714,6 +716,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $expiredPaste = Helper::getPaste(array('expire_date' => 1344803344));
         $this->_model->create(Helper::getPasteId(), $expiredPaste);
         $_SERVER['QUERY_STRING']          = Helper::getPasteId();
+        $_GET[Helper::getPasteId()]       = '';
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         ob_start();
         new Controller;
@@ -732,6 +735,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $paste = Helper::getPaste(array('burnafterreading' => true));
         $this->_model->create(Helper::getPasteId(), $paste);
         $_SERVER['QUERY_STRING']          = Helper::getPasteId();
+        $_GET[Helper::getPasteId()]       = '';
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         ob_start();
         new Controller;
@@ -760,6 +764,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $paste = Helper::getPaste();
         $this->_model->create(Helper::getPasteId(), $paste);
         $_SERVER['QUERY_STRING']          = Helper::getPasteId();
+        $_GET[Helper::getPasteId()]       = '';
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         ob_start();
         new Controller;
@@ -790,6 +795,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         );
         $this->_model->create(Helper::getPasteId(), $paste);
         $_SERVER['QUERY_STRING']          = Helper::getPasteId();
+        $_GET[Helper::getPasteId()]       = '';
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         ob_start();
         new Controller;
@@ -897,6 +903,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste exists before deleting data');
         $_POST['deletetoken']             = 'burnafterreading';
         $_SERVER['QUERY_STRING']          = Helper::getPasteId();
+        $_GET[Helper::getPasteId()]       = '';
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD']        = 'POST';
         ob_start();
@@ -917,6 +924,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste exists before deleting data');
         $_POST['deletetoken']             = 'burnafterreading';
         $_SERVER['QUERY_STRING']          = Helper::getPasteId();
+        $_GET[Helper::getPasteId()]       = '';
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD']        = 'POST';
         ob_start();

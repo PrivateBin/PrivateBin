@@ -66,6 +66,7 @@ class RequestTest extends PHPUnit_Framework_TestCase
         $id                        = $this->getRandomId();
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_SERVER['QUERY_STRING']   = $id;
+        $_GET[$id]                 = '';
         $request                   = new Request;
         $this->assertFalse($request->isJsonApiCall(), 'is HTML call');
         $this->assertEquals($id, $request->getParam('pasteid'));
@@ -120,6 +121,7 @@ class RequestTest extends PHPUnit_Framework_TestCase
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_SERVER['HTTP_ACCEPT']    = 'application/json, text/javascript, */*; q=0.01';
         $_SERVER['QUERY_STRING']   = $id;
+        $_GET[$id]                 = '';
         $request                   = new Request;
         $this->assertTrue($request->isJsonApiCall(), 'is JSON Api call');
         $this->assertEquals($id, $request->getParam('pasteid'));
@@ -133,6 +135,7 @@ class RequestTest extends PHPUnit_Framework_TestCase
         $_SERVER['REQUEST_METHOD']        = 'POST';
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['QUERY_STRING']          = $id;
+        $_GET                             = [$id => ''];
         $_POST['deletetoken']             = 'bar';
         $request                          = new Request;
         $this->assertTrue($request->isJsonApiCall(), 'is JSON Api call');
@@ -148,6 +151,7 @@ class RequestTest extends PHPUnit_Framework_TestCase
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_SERVER['HTTP_ACCEPT']    = 'text/html,text/html; charset=UTF-8,application/xhtml+xml, application/xml;q=0.9,*/*;q=0.8, text/csv,application/json';
         $_SERVER['QUERY_STRING']   = $id;
+        $_GET[$id]                 = '';
         $request                   = new Request;
         $this->assertFalse($request->isJsonApiCall(), 'is HTML call');
         $this->assertEquals($id, $request->getParam('pasteid'));
@@ -161,6 +165,7 @@ class RequestTest extends PHPUnit_Framework_TestCase
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_SERVER['HTTP_ACCEPT']    = 'application/xhtml+xml,text/html,text/html; charset=UTF-8, application/xml;q=0.9,*/*;q=0.8, text/csv,application/json';
         $_SERVER['QUERY_STRING']   = $id;
+        $_GET[$id]                 = '';
         $request                   = new Request;
         $this->assertFalse($request->isJsonApiCall(), 'is HTML call');
         $this->assertEquals($id, $request->getParam('pasteid'));
@@ -174,6 +179,7 @@ class RequestTest extends PHPUnit_Framework_TestCase
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_SERVER['HTTP_ACCEPT']    = 'text/plain,text/csv, application/xml;q=0.9, application/json, text/html,text/html; charset=UTF-8,application/xhtml+xml, */*;q=0.8';
         $_SERVER['QUERY_STRING']   = $id;
+        $_GET[$id]                 = '';
         $request                   = new Request;
         $this->assertTrue($request->isJsonApiCall(), 'is JSON Api call');
         $this->assertEquals($id, $request->getParam('pasteid'));
@@ -187,6 +193,7 @@ class RequestTest extends PHPUnit_Framework_TestCase
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_SERVER['HTTP_ACCEPT']    = 'text/plain,text/csv, application/xml;q=0.9, */*;q=0.8';
         $_SERVER['QUERY_STRING']   = $id;
+        $_GET[$id]                 = '';
         $request                   = new Request;
         $this->assertFalse($request->isJsonApiCall(), 'is HTML call');
         $this->assertEquals($id, $request->getParam('pasteid'));
@@ -205,6 +212,7 @@ class RequestTest extends PHPUnit_Framework_TestCase
         shuffle($queryParams);
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_SERVER['QUERY_STRING']   = implode('&', $queryParams);
+        $_GET[$id]                 = '';
         $request                   = new Request;
         $this->assertEquals($id, $request->getParam('pasteid'));
     }

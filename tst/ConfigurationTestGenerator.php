@@ -507,6 +507,7 @@ EOT;
                 $code .= PHP_EOL . <<<'EOT'
         $this->_model->create(Helper::getPasteId(), Helper::getPaste());
         $_SERVER['QUERY_STRING'] = Helper::getPasteId();
+        $_GET[Helper::getPasteId()] = '';
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
 EOT;
                 break;
