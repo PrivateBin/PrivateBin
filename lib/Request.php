@@ -80,9 +80,17 @@ class Request
      */
     private function getPasteId()
     {
-        return preg_match(
-            '/[a-f0-9]{16}/', $_SERVER['QUERY_STRING'], $match
-        ) ? $match[0] : 'invalid id';
+        // RegEx to check for valid paste ID (16 base64 chars)
+        $pasteIdRegEx = '/^[a-f0-9]{16}$/';
+
+        foreach ($_GET as $key => $value) {
+            // only return if value is empty and key matches RegEx
+            if (($value === "") and preg_match($pasteIdRegEx, $key, $match)) {
+                return $match[0];
+            };
+        }
+
+        return 'invalid id';
     }
 
     /**
