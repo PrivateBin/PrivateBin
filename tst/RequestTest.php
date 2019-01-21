@@ -135,7 +135,7 @@ class RequestTest extends PHPUnit_Framework_TestCase
         $_SERVER['REQUEST_METHOD']        = 'POST';
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['QUERY_STRING']          = $id;
-        $_GET                             = [$id => ''];
+        $_GET                             = array($id => '');
         $_POST['deletetoken']             = 'bar';
         $request                          = new Request;
         $this->assertTrue($request->isJsonApiCall(), 'is JSON Api call');

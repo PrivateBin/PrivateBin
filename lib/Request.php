@@ -85,9 +85,9 @@ class Request
 
         foreach ($_GET as $key => $value) {
             // only return if value is empty and key matches RegEx
-            if (($value === "") and preg_match($pasteIdRegEx, $key, $match)) {
+            if (($value === '') and preg_match($pasteIdRegEx, $key, $match)) {
                 return $match[0];
-            };
+            }
         }
 
         return 'invalid id';

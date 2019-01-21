@@ -680,7 +680,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
     public function testReadInvalidId()
     {
         $_SERVER['QUERY_STRING']          = 'foo';
-        $_GET["foo"]                      = '';
+        $_GET['foo']                      = '';
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         ob_start();
         new Controller;
