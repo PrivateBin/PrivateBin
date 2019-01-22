@@ -1026,13 +1026,44 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         me.getPasteId = function()
         {
-            if (id === null) {
-                // Attention: This also returns the delete token inside of the ID, if it is specified
-                id = window.location.search.substring(1);
+            const idRegEx = /^[a-z0-9]{16}$/;
+            const idRegExFind = /[a-z0-9]{16}/;
 
-                if (id === '') {
-                    throw 'no paste id given';
+            // return cached value
+            if (id !== null) {
+                return id;
+            }
+
+            // do use URL interface, if possible
+            if (window.URL && window.URL.prototype && ('searchParams' in window.URL.prototype)) {
+                try {
+                    const url = new URL(window.location);
+
+                    for (const param of url.searchParams) {
+                        const key = param[0];
+                        const value = param[1];
+
+                        if (value === '' && idRegEx.test(key)) {
+                            // safe, as the whole regex is matched
+                            id = key;
+                            return id;
+                        }
+                    }
+                } catch (e) {
+                    // fallback below
+                    console.error('URL interface not properly supported, error:', e);
                 }
+            } else {
+                console.warn('URL interface appears not to be supported in this browser.');
+            }
+
+            // fallback to simple RegEx
+            console.warn('fallback to simple RegEx search');
+            // Attention: This also returns the delete token inside of the ID, if it is specified
+            id = (window.location.search.match(idRegExFind) || [''])[0];
+
+            if (id === '') {
+                throw 'no paste id given';
             }
 
             return id;
