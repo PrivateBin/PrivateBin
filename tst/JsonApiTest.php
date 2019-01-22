@@ -82,6 +82,7 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
         file_put_contents($file, http_build_query($paste));
         Request::setInputStream($file);
         $_SERVER['QUERY_STRING']          = Helper::getPasteId();
+        $_GET[Helper::getPasteId()]       = '';
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD']        = 'PUT';
         $_SERVER['REMOTE_ADDR']           = '::1';
@@ -117,6 +118,7 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
         )));
         Request::setInputStream($file);
         $_SERVER['QUERY_STRING']          = Helper::getPasteId();
+        $_GET[Helper::getPasteId()]       = '';
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD']        = 'DELETE';
         ob_start();
@@ -164,6 +166,7 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
         unset($paste['attachmentname']);
         $this->_model->create(Helper::getPasteId(), $paste);
         $_SERVER['QUERY_STRING']          = Helper::getPasteId();
+        $_GET[Helper::getPasteId()]       = '';
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         ob_start();
         new Controller;

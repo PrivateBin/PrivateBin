@@ -22,11 +22,13 @@ require('./bootstrap-3.3.7');
 require('./privatebin');
 
 // internal variables
-var a2zString = ['a','b','c','d','e','f','g','h','i','j','k','l','m',
-                     'n','o','p','q','r','s','t','u','v','w','x','y','z'],
-    alnumString = a2zString.concat(['0','1','2','3','4','5','6','7','8','9']),
-    queryString = alnumString.concat(['+','%','&','.','*','-','_']),
-    hashString = queryString.concat(['!']),
+var a2zString    = ['a','b','c','d','e','f','g','h','i','j','k','l','m',
+                    'n','o','p','q','r','s','t','u','v','w','x','y','z'],
+    digitString  = ['0','1','2','3','4','5','6','7','8','9'],
+    alnumString  = a2zString.concat(digitString),
+    hexString    = digitString.concat(['a','b','c','d','e','f']),
+    queryString  = alnumString.concat(['+','%','&','.','*','-','_']),
+    hashString   = queryString.concat(['!']),
     base64String = alnumString.concat(['+','/','=']).concat(
         a2zString.map(function(c) {
             return c.toUpperCase();
@@ -121,6 +123,11 @@ exports.jscA2zString = function() {
 // provides random lowercase alpha numeric characters (a to z and 0 to 9)
 exports.jscAlnumString = function() {
     return jsc.elements(alnumString);
+};
+
+//provides random characters allowed in hexadecimal notation
+exports.jscHexString = function() {
+    return jsc.elements(hexString);
 };
 
 // provides random characters allowed in GET queries
