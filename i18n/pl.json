@@ -109,11 +109,11 @@
     "unknown status":
         "nieznany status",
     "server error or not responding":
-        "bląd serwera lub brak odpowiedzi",
+        "błąd serwera lub brak odpowiedzi",
     "Could not post comment: %s":
         "Nie udało się wysłać komentarza: %s",
     "Please move your mouse for more entropy…":
-        "Proszę poruszać myszą aby uzyskać większą entropię…",
+        "Proszę poruszać myszą, aby uzyskać większą entropię…",
     "Sending paste…":
         "Wysyłanie wklejki…",
     "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit [Ctrl]+[c] to copy)</span>":
@@ -141,7 +141,7 @@
     "Options": "Opcje",
     "Shorten URL": "Skróć adres URL",
     "Editor": "Edytować",
-    "Preview": "Zapowiedź",
+    "Preview": "Podgląd",
     "%s requires the PATH to end in a \"%s\". Please update the PATH in your index.php.":
         "%s requires the PATH to end in a \"%s\". Please update the PATH in your index.php.",
     "Decrypt":
@@ -154,8 +154,8 @@
     "Preparing new paste…": "Przygotowywanie nowej wklejki…",
     "In case this message never disappears please have a look at <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">this FAQ for information to troubleshoot</a>.":
         "W przypadku gdy ten komunikat nigdy nie znika, proszę spójrz na <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">to FAQ aby rozwiązać problem</a> (po angielsku).",
-    "+++ no paste text +++": "+++ no paste text +++",
+    "+++ no paste text +++": "+++ brak wklejonego tekstu +++",
     "Could not get paste data: %s":
-        "Could not get paste data: %s",
-    "QR code": "QR code"
+        "Nie można było pobrać danych wklejki: %s",
+    "QR code": "Kod QR"
 }
