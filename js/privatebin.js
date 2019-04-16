@@ -3737,6 +3737,17 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         };
 
         /**
+         * return currently set data, used in unit testing
+         *
+         * @name   ServerInteraction.getData
+         * @function
+         */
+        me.getData = function()
+        {
+            return data;
+        };
+
+        /**
          * set success function
          *
          * @name   ServerInteraction.setUrl

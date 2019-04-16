@@ -31,11 +31,11 @@ class Helper
     private static $pasteid = '5e9bc25c89fb3bf9';
 
     /**
-     * example paste
+     * example paste version 1
      *
      * @var array
      */
-    private static $paste = array(
+    private static $pasteV1 = array(
         'data'           => '{"iv":"EN39/wd5Nk8HAiSG2K5AsQ","v":1,"iter":1000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"QKN1DBXe5PI","ct":"8hA83xDdXjD7K2qfmw5NdA"}',
         'attachment'     => '{"iv":"Pd4pOKWkmDTT9uPwVwd5Ag","v":1,"iter":1000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"ZIUhFTliVz4","ct":"6nOCU3peNDclDDpFtJEBKA"}',
         'attachmentname' => '{"iv":"76MkAtOGC4oFogX/aSMxRA","v":1,"iter":1000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"ZIUhFTliVz4","ct":"b6Ae/U1xJdsX/+lATud4sQ"}',
@@ -44,6 +44,32 @@ class Helper
             'postdate'       => 1344803344,
             'opendiscussion' => true,
         ),
+    );
+
+    /**
+     * example paste version 2
+     *
+     * @var array
+     */
+    private static $pasteV2 = array(
+        'adata' => array(
+            array(
+                'gMSNoLOk4z0RnmsYwXZ8mw==',
+                'TZO+JWuIuxs=',
+                100000,
+                256,
+                128,
+                'aes',
+                'gcm',
+                'zlib'
+            ),
+            'plaintext',
+            0,
+            0
+        ),
+        'meta' => array( 'expire' => '5min' ),
+        'v' => 2,
+        'ct' => 'ME5JF/YBEijp2uYMzLZozbKtWc5wfy6R59NBb7SmRig='
     );
 
     /**
@@ -103,7 +129,7 @@ class Helper
      */
     public static function getPasteWithAttachment($meta = array())
     {
-        $example                 = self::$paste;
+        $example                 = self::$pasteV1;
         $example['meta']['salt'] = ServerSalt::generate();
         $example['meta']         = array_merge($example['meta'], $meta);
         return $example;
