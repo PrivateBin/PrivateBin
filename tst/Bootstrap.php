@@ -61,15 +61,17 @@ class Helper
                 128,
                 'aes',
                 'gcm',
-                'zlib'
+                'zlib',
             ),
             'plaintext',
             0,
             0
         ),
-        'meta' => array( 'expire' => '5min' ),
+        'meta' => array(
+            'expire' => '5min',
+        ),
         'v' => 2,
-        'ct' => 'ME5JF/YBEijp2uYMzLZozbKtWc5wfy6R59NBb7SmRig='
+        'ct' => 'ME5JF/YBEijp2uYMzLZozbKtWc5wfy6R59NBb7SmRig=',
     );
 
     /**
@@ -84,7 +86,7 @@ class Helper
      *
      * @var array
      */
-    private static $comment = array(
+    private static $commentV1 = array(
         'data' => '{"iv":"Pd4pOKWkmDTT9uPwVwd5Ag","v":1,"iter":1000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"ZIUhFTliVz4","ct":"6nOCU3peNDclDDpFtJEBKA"}',
         'meta' => array(
             'nickname' => '{"iv":"76MkAtOGC4oFogX/aSMxRA","v":1,"iter":1000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"ZIUhFTliVz4","ct":"b6Ae/U1xJdsX/+lATud4sQ"}',
@@ -113,23 +115,30 @@ class Helper
     /**
      * get example paste
      *
+     * @param  int $version
+     * @param  array $meta
      * @return array
      */
-    public static function getPaste($meta = array())
+    public static function getPaste($version = 2, $meta = array())
     {
-        $example = self::getPasteWithAttachment($meta);
-        unset($example['attachment'], $example['attachmentname']);
+        $example = self::getPasteWithAttachment($version, $meta);
+        // v1 has the attachment stored in a separate property
+        if ($version === 1) {
+            unset($example['attachment'], $example['attachmentname']);
+        }
         return $example;
     }
 
     /**
      * get example paste
      *
+     * @param  int $version
+     * @param  array $meta
      * @return array
      */
-    public static function getPasteWithAttachment($meta = array())
+    public static function getPasteWithAttachment($version = 2, $meta = array())
     {
-        $example                 = self::$pasteV1;
+        $example                 = $version === 1 ? self::$pasteV1 :  self::$pasteV2;
         $example['meta']['salt'] = ServerSalt::generate();
         $example['meta']         = array_merge($example['meta'], $meta);
         return $example;
@@ -138,11 +147,13 @@ class Helper
     /**
      * get example paste
      *
+     * @param  int $version
+     * @param  array $meta
      * @return array
      */
-    public static function getPasteAsJson($meta = array())
+    public static function getPasteAsJson($version = 2, $meta = array())
     {
-        $example = self::getPaste();
+        $example = self::getPaste($version);
         // the JSON shouldn't contain the salt
         unset($example['meta']['salt']);
         if (count($meta)) {
@@ -166,27 +177,40 @@ class Helper
     }
 
     /**
-     * get example comment
+     * get example comment, as stored on server / returned to user
      *
+     * @param  int $version
+     * @param  array $meta
      * @return array
      */
-    public static function getComment($meta = array())
+    public static function getComment($version = 2, $meta = array())
     {
-        $example         = self::$comment;
+        $example         = $version === 1 ? self::$commentV1 : self::getPaste($version);
+        if ($version === 2) {
+            $example['pasteid'] = $example['parentid'] = self::getPasteId();
+            $example['meta']['created'] = self::$commentV1['meta']['postdate'];
+            $example['meta']['icon'] = self::$commentV1['meta']['vizhash'];
+            unset($example['meta']['expire']);
+        }
         $example['meta'] = array_merge($example['meta'], $meta);
         return $example;
     }
 
     /**
-     * get example comment
+     * get example comment, as received via POST by user
      *
+     * @param  int $version
      * @return array
      */
-    public static function getCommentPost($meta = array())
+    public static function getCommentPost($version = 2)
     {
-        $example             = self::getComment($meta);
-        $example['nickname'] = $example['meta']['nickname'];
-        unset($example['meta']['nickname']);
+        $example = self::getComment($version);
+        if ($version === 1) {
+            $example['nickname'] = $example['meta']['nickname'];
+            unset($example['meta']['nickname']);
+        } else {
+            unset($example['meta']);
+        }
         return $example;
     }
 

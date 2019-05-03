@@ -9,6 +9,9 @@
 		"id": {
 			"@type": "so:name"
 		},
+		"pasteid": {
+			"@type": "so:name"
+		},
 		"parentid": {
 			"@type": "so:name"
 		},
