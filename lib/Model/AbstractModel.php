@@ -15,7 +15,7 @@ namespace PrivateBin\Model;
 use Exception;
 use PrivateBin\Configuration;
 use PrivateBin\Data\AbstractData;
-use PrivateBin\Sjcl;
+use PrivateBin\FormatV2;
 use stdClass;
 
 /**
@@ -107,14 +107,13 @@ abstract class AbstractModel
      */
     public function setData($data)
     {
-        if (!Sjcl::isValid($data)) {
+        if (!FormatV2::isValid($data)) {
             throw new Exception('Invalid data.', 61);
         }
         $this->_data->data = $data;
 
-        // We just want a small hash to avoid collisions:
-        // Half-MD5 (64 bits) will do the trick
-        $this->setId(substr(hash('md5', $data), 0, 16));
+        // calculate a 64 bit checksum to avoid collisions
+        $this->setId(hash('fnv1a64', $data['ct']));
     }
 
     /**

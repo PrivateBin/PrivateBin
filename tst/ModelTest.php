@@ -60,15 +60,15 @@ class ModelTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($paste->exists(), 'paste does not yet exist');
 
         $paste = $this->_model->getPaste();
-        $paste->setData($pasteData['data']);
+        $paste->setData($pasteData);
         $paste->setOpendiscussion();
-        $paste->setFormatter($pasteData['meta']['formatter']);
+        $paste->setFormatter($pasteData['adata'][1]);
         $paste->store();
 
         $paste = $this->_model->getPaste(Helper::getPasteId());
         $this->assertTrue($paste->exists(), 'paste exists after storing it');
         $paste = $paste->get();
-        $this->assertEquals($pasteData['data'], $paste->data);
+        $this->assertEquals($pasteData, $paste->data);
         foreach (array('opendiscussion', 'formatter') as $key) {
             $this->assertEquals($pasteData['meta'][$key], $paste->meta->$key);
         }
@@ -80,7 +80,7 @@ class ModelTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($comment->exists(), 'comment does not yet exist');
 
         $comment = $paste->getComment(Helper::getPasteId());
-        $comment->setData($commentData['data']);
+        $comment->setData($commentData);
         $comment->setNickname($commentData['meta']['nickname']);
         $comment->getParentId();
         $comment->store();
@@ -88,7 +88,7 @@ class ModelTest extends PHPUnit_Framework_TestCase
         $comment = $paste->getComment(Helper::getPasteId(), Helper::getCommentId());
         $this->assertTrue($comment->exists(), 'comment exists after storing it');
         $comment = $comment->get();
-        $this->assertEquals($commentData['data'], $comment->data);
+        $this->assertEquals($commentData, $comment->data);
         $this->assertEquals($commentData['meta']['nickname'], $comment->meta->nickname);
 
         // deleting pastes
@@ -108,15 +108,15 @@ class ModelTest extends PHPUnit_Framework_TestCase
 
         $this->_model->getPaste(Helper::getPasteId())->delete();
         $paste = $this->_model->getPaste();
-        $paste->setData($pasteData['data']);
+        $paste->setData($pasteData);
         $paste->setOpendiscussion();
-        $paste->setFormatter($pasteData['meta']['formatter']);
+        $paste->setFormatter($pasteData['adata'][1]);
         $paste->store();
 
         $paste = $this->_model->getPaste();
-        $paste->setData($pasteData['data']);
+        $paste->setData($pasteData);
         $paste->setOpendiscussion();
-        $paste->setFormatter($pasteData['meta']['formatter']);
+        $paste->setFormatter($pasteData['adata'][1]);
         $paste->store();
     }
 
@@ -131,18 +131,18 @@ class ModelTest extends PHPUnit_Framework_TestCase
         $this->_model->getPaste(Helper::getPasteId())->delete();
 
         $paste = $this->_model->getPaste();
-        $paste->setData($pasteData['data']);
+        $paste->setData($pasteData);
         $paste->setOpendiscussion();
-        $paste->setFormatter($pasteData['meta']['formatter']);
+        $paste->setFormatter($pasteData['adata'][1]);
         $paste->store();
 
         $comment = $paste->getComment(Helper::getPasteId());
-        $comment->setData($commentData['data']);
+        $comment->setData($commentData);
         $comment->setNickname($commentData['meta']['nickname']);
         $comment->store();
 
         $comment = $paste->getComment(Helper::getPasteId());
-        $comment->setData($commentData['data']);
+        $comment->setData($commentData);
         $comment->setNickname($commentData['meta']['nickname']);
         $comment->store();
     }
@@ -154,7 +154,7 @@ class ModelTest extends PHPUnit_Framework_TestCase
         $this->_model->getPaste(Helper::getPasteId())->delete();
 
         $paste = $this->_model->getPaste();
-        $paste->setData($pasteData['data']);
+        $paste->setData($pasteData);
         $paste->setBurnafterreading();
         $paste->setOpendiscussion();
         // not setting a formatter, should use default one
@@ -167,13 +167,13 @@ class ModelTest extends PHPUnit_Framework_TestCase
 
         $this->_model->getPaste(Helper::getPasteId())->delete();
         $paste = $this->_model->getPaste();
-        $paste->setData($pasteData['data']);
+        $paste->setData($pasteData);
         $paste->setBurnafterreading('0');
         $paste->setOpendiscussion();
         $paste->store();
 
         $comment = $paste->getComment(Helper::getPasteId());
-        $comment->setData($commentData['data']);
+        $comment->setData($commentData);
         $comment->setNickname($commentData['meta']['nickname']);
         $comment->store();
 
@@ -208,7 +208,7 @@ class ModelTest extends PHPUnit_Framework_TestCase
     public function testInvalidData()
     {
         $paste = $this->_model->getPaste();
-        $paste->setData('');
+        $paste->setData(array());
     }
 
     /**
@@ -229,7 +229,7 @@ class ModelTest extends PHPUnit_Framework_TestCase
     {
         $pasteData = Helper::getPaste();
         $paste     = $this->_model->getPaste(Helper::getPasteId());
-        $paste->setData($pasteData['data']);
+        $paste->setData($pasteData);
         $paste->store();
 
         $comment = $paste->getComment(Helper::getPasteId());
@@ -245,7 +245,7 @@ class ModelTest extends PHPUnit_Framework_TestCase
     {
         $pasteData = Helper::getPaste();
         $paste     = $this->_model->getPaste(Helper::getPasteId());
-        $paste->setData($pasteData['data']);
+        $paste->setData($pasteData);
         $paste->store();
 
         $comment = $paste->getComment(Helper::getPasteId());
@@ -260,7 +260,7 @@ class ModelTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($paste->exists(), 'paste does not yet exist');
 
         $paste = $this->_model->getPaste();
-        $paste->setData($pasteData['data']);
+        $paste->setData($pasteData);
         $paste->setExpiration('5min'); // = 300 seconds
         $paste->store();
 
@@ -278,7 +278,7 @@ class ModelTest extends PHPUnit_Framework_TestCase
         $this->_model->getPaste(Helper::getPasteId())->delete();
 
         $paste = $this->_model->getPaste();
-        $paste->setData($pasteData['data']);
+        $paste->setData($pasteData);
         $paste->store();
         $paste->getComment(Helper::getPasteId())->delete();
     }
@@ -336,15 +336,15 @@ class ModelTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($paste->exists(), 'paste does not yet exist');
 
         $paste = $model->getPaste();
-        $paste->setData($pasteData['data']);
+        $paste->setData($pasteData);
         $paste->setOpendiscussion();
-        $paste->setFormatter($pasteData['meta']['formatter']);
+        $paste->setFormatter($pasteData['adata'][1]);
         $paste->store();
 
         $paste = $model->getPaste(Helper::getPasteId());
         $this->assertTrue($paste->exists(), 'paste exists after storing it');
         $paste = $paste->get();
-        $this->assertEquals($pasteData['data'], $paste->data);
+        $this->assertEquals($pasteData, $paste->data);
         foreach (array('opendiscussion', 'formatter') as $key) {
             $this->assertEquals($pasteData['meta'][$key], $paste->meta->$key);
         }
@@ -356,14 +356,14 @@ class ModelTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($comment->exists(), 'comment does not yet exist');
 
         $comment = $paste->getComment(Helper::getPasteId());
-        $comment->setData($commentData['data']);
+        $comment->setData($commentData);
         $comment->setNickname($commentData['meta']['nickname']);
         $comment->store();
 
         $comment = $paste->getComment(Helper::getPasteId(), Helper::getCommentId());
         $this->assertTrue($comment->exists(), 'comment exists after storing it');
         $comment = $comment->get();
-        $this->assertEquals($commentData['data'], $comment->data);
+        $this->assertEquals($commentData, $comment->data);
         $this->assertEquals($commentData['meta']['nickname'], $comment->meta->nickname);
         $this->assertFalse(property_exists($comment->meta, 'vizhash'), 'vizhash was not generated');
     }
@@ -389,13 +389,13 @@ class ModelTest extends PHPUnit_Framework_TestCase
         $model->getPaste(Helper::getPasteId())->delete();
 
         $paste = $model->getPaste();
-        $paste->setData($pasteData['data']);
+        $paste->setData($pasteData);
         $paste->setOpendiscussion();
-        $paste->setFormatter($pasteData['meta']['formatter']);
+        $paste->setFormatter($pasteData['adata'][1]);
         $paste->store();
 
         $comment = $paste->getComment(Helper::getPasteId());
-        $comment->setData($commentData['data']);
+        $comment->setData($commentData);
         $comment->setNickname($commentData['meta']['nickname']);
         $comment->store();
 
@@ -426,13 +426,13 @@ class ModelTest extends PHPUnit_Framework_TestCase
         $model->getPaste(Helper::getPasteId())->delete();
 
         $paste = $model->getPaste();
-        $paste->setData($pasteData['data']);
+        $paste->setData($pasteData);
         $paste->setOpendiscussion();
-        $paste->setFormatter($pasteData['meta']['formatter']);
+        $paste->setFormatter($pasteData['adata'][1]);
         $paste->store();
 
         $comment = $paste->getComment(Helper::getPasteId());
-        $comment->setData($commentData['data']);
+        $comment->setData($commentData);
         $comment->setNickname($commentData['meta']['nickname']);
         $comment->store();
 

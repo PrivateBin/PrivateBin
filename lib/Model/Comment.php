@@ -15,7 +15,7 @@ namespace PrivateBin\Model;
 use Exception;
 use Identicon\Identicon;
 use PrivateBin\Persistence\TrafficLimiter;
-use PrivateBin\Sjcl;
+use PrivateBin\FormatV2;
 use PrivateBin\Vizhash16x16;
 
 /**
@@ -183,7 +183,7 @@ class Comment extends AbstractModel
      */
     public function setNickname($nickname)
     {
-        if (!Sjcl::isValid($nickname)) {
+        if (!FormatV2::isValid($nickname)) {
             throw new Exception('Invalid data.', 66);
         }
         $this->_data->meta->nickname = $nickname;

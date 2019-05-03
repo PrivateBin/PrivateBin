@@ -15,7 +15,7 @@ namespace PrivateBin\Model;
 use Exception;
 use PrivateBin\Controller;
 use PrivateBin\Persistence\ServerSalt;
-use PrivateBin\Sjcl;
+use PrivateBin\FormatV2;
 
 /**
  * Paste
@@ -195,7 +195,7 @@ class Paste extends AbstractModel
      */
     public function setAttachment($attachment)
     {
-        if (!$this->_conf->getKey('fileupload') || !Sjcl::isValid($attachment)) {
+        if (!$this->_conf->getKey('fileupload') || !FormatV2::isValid($attachment)) {
             throw new Exception('Invalid attachment.', 71);
         }
         $this->_data->meta->attachment = $attachment;
@@ -210,7 +210,7 @@ class Paste extends AbstractModel
      */
     public function setAttachmentName($attachmentname)
     {
-        if (!$this->_conf->getKey('fileupload') || !Sjcl::isValid($attachmentname)) {
+        if (!$this->_conf->getKey('fileupload') || !FormatV2::isValid($attachmentname)) {
             throw new Exception('Invalid attachment.', 72);
         }
         $this->_data->meta->attachmentname = $attachmentname;

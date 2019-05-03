@@ -177,16 +177,16 @@ class Controller
      * Store new paste or comment
      *
      * POST contains one or both:
-     * data = json encoded SJCL encrypted text (containing keys: iv,v,iter,ks,ts,mode,adata,cipher,salt,ct)
-     * attachment = json encoded SJCL encrypted text (containing keys: iv,v,iter,ks,ts,mode,adata,cipher,salt,ct)
+     * data = json encoded FormatV2 encrypted text (containing keys: iv,v,iter,ks,ts,mode,adata,cipher,salt,ct)
+     * attachment = json encoded FormatV2 encrypted text (containing keys: iv,v,iter,ks,ts,mode,adata,cipher,salt,ct)
      *
      * All optional data will go to meta information:
      * expire (optional) = expiration delay (never,5min,10min,1hour,1day,1week,1month,1year,burn) (default:never)
      * formatter (optional) = format to display the paste as (plaintext,syntaxhighlighting,markdown) (default:syntaxhighlighting)
      * burnafterreading (optional) = if this paste may only viewed once ? (0/1) (default:0)
      * opendiscusssion (optional) = is the discussion allowed on this paste ? (0/1) (default:0)
-     * attachmentname = json encoded SJCL encrypted text (containing keys: iv,v,iter,ks,ts,mode,adata,cipher,salt,ct)
-     * nickname (optional) = in discussion, encoded SJCL encrypted text nickname of author of comment (containing keys: iv,v,iter,ks,ts,mode,adata,cipher,salt,ct)
+     * attachmentname = json encoded FormatV2 encrypted text (containing keys: iv,v,iter,ks,ts,mode,adata,cipher,salt,ct)
+     * nickname (optional) = in discussion, encoded FormatV2 encrypted text nickname of author of comment (containing keys: iv,v,iter,ks,ts,mode,adata,cipher,salt,ct)
      * parentid (optional) = in discussion, which comment this comment replies to.
      * pasteid (optional) = in discussion, which paste this comment belongs to.
      *

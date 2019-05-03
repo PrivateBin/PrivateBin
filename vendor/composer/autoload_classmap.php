@@ -29,7 +29,7 @@ return array(
     'PrivateBin\\Persistence\\ServerSalt' => $baseDir . '/lib/Persistence/ServerSalt.php',
     'PrivateBin\\Persistence\\TrafficLimiter' => $baseDir . '/lib/Persistence/TrafficLimiter.php',
     'PrivateBin\\Request' => $baseDir . '/lib/Request.php',
-    'PrivateBin\\Sjcl' => $baseDir . '/lib/Sjcl.php',
+    'PrivateBin\\FormatV2' => $baseDir . '/lib/FormatV2.php',
     'PrivateBin\\View' => $baseDir . '/lib/View.php',
     'PrivateBin\\Vizhash16x16' => $baseDir . '/lib/Vizhash16x16.php',
 );

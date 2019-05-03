@@ -28,7 +28,7 @@ class Helper
      *
      * @var string
      */
-    private static $pasteid = '5e9bc25c89fb3bf9';
+    private static $pasteid = '5b65a01b43987bc2';
 
     /**
      * example paste version 1
