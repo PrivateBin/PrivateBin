@@ -543,7 +543,7 @@ class Database extends AbstractData
      *
      * @access private
      * @static
-     * @param string $key
+     * @param  string $key
      * @return array
      */
     private static function _getPrimaryKeyClauses($key = 'dataid')
@@ -558,6 +558,30 @@ class Database extends AbstractData
     }
 
     /**
+     * get the data type, depending on the database driver
+     *
+     * @access private
+     * @static
+     * @return string
+     */
+    private static function _getDataType()
+    {
+        return self::$_type === 'pgsql' ? 'TEXT' : 'BLOB';
+    }
+
+    /**
+     * get the attachment type, depending on the database driver
+     *
+     * @access private
+     * @static
+     * @return string
+     */
+    private static function _getAttachmentType()
+    {
+        return self::$_type === 'pgsql' ? 'TEXT' : 'MEDIUMBLOB';
+    }
+
+    /**
      * create the paste table
      *
      * @access private
@@ -566,7 +590,7 @@ class Database extends AbstractData
     private static function _createPasteTable()
     {
         list($main_key, $after_key) = self::_getPrimaryKeyClauses();
-        $dataType                   = self::$_type === 'pgsql' ? 'TEXT' : 'BLOB';
+        $dataType                   = self::_getDataType();
         self::$_db->exec(
             'CREATE TABLE ' . self::_sanitizeIdentifier('paste') . ' ( ' .
             "dataid CHAR(16) NOT NULL$main_key, " .
@@ -576,7 +600,7 @@ class Database extends AbstractData
             'opendiscussion INT, ' .
             'burnafterreading INT, ' .
             'meta TEXT, ' .
-            'attachment ' . (self::$_type === 'pgsql' ? 'TEXT' : 'MEDIUMBLOB') . ', ' .
+            'attachment ' . self::_getAttachmentType() . ', ' .
             "attachmentname $dataType$after_key );"
         );
     }
@@ -590,7 +614,7 @@ class Database extends AbstractData
     private static function _createCommentTable()
     {
         list($main_key, $after_key) = self::_getPrimaryKeyClauses();
-        $dataType                   = self::$_type === 'pgsql' ? 'text' : 'BLOB';
+        $dataType                   = self::_getDataType();
         self::$_db->exec(
             'CREATE TABLE ' . self::_sanitizeIdentifier('comment') . ' ( ' .
             "dataid CHAR(16) NOT NULL$main_key, " .
@@ -649,7 +673,7 @@ class Database extends AbstractData
      */
     private static function _upgradeDatabase($oldversion)
     {
-        $dataType = self::$_type === 'pgsql' ? 'TEXT' : 'BLOB';
+        $dataType = self::_getDataType();
         switch ($oldversion) {
             case '0.21':
                 // create the meta column if necessary (pre 0.21 change)
@@ -661,8 +685,7 @@ class Database extends AbstractData
                 // SQLite only allows one ALTER statement at a time...
                 self::$_db->exec(
                     'ALTER TABLE ' . self::_sanitizeIdentifier('paste') .
-                    ' ADD COLUMN attachment ' .
-                    (self::$_type === 'pgsql' ? 'TEXT' : 'MEDIUMBLOB') . ';'
+                    ' ADD COLUMN attachment ' . self::_getAttachmentType() . ';'
                 );
                 self::$_db->exec(
                     'ALTER TABLE ' . self::_sanitizeIdentifier('paste') . " ADD COLUMN attachmentname $dataType;"
