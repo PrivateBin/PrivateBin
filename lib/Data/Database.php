@@ -155,7 +155,7 @@ class Database extends AbstractData
      * @param  array  $paste
      * @return bool
      */
-    public function create($pasteid, $paste)
+    public function create(string $pasteid, array $paste)
     {
         if (
             array_key_exists($pasteid, self::$_cache)
@@ -180,11 +180,11 @@ class Database extends AbstractData
             unset($meta['expire_date']);
         }
         if (array_key_exists('opendiscussion', $meta)) {
-            $opendiscussion = (bool) $meta['opendiscussion'];
+            $opendiscussion = $meta['opendiscussion'];
             unset($meta['opendiscussion']);
         }
         if (array_key_exists('burnafterreading', $meta)) {
-            $burnafterreading = (bool) $meta['burnafterreading'];
+            $burnafterreading = $meta['burnafterreading'];
             unset($meta['burnafterreading']);
         }
         if ($isVersion1) {
@@ -196,6 +196,9 @@ class Database extends AbstractData
                 $attachmentname = $meta['attachmentname'];
                 unset($meta['attachmentname']);
             }
+        } else {
+            $opendiscussion   = $paste['adata'][2];
+            $burnafterreading = $paste['adata'][3];
         }
         return self::_exec(
             'INSERT INTO ' . self::_sanitizeIdentifier('paste') .
@@ -221,7 +224,7 @@ class Database extends AbstractData
      * @param  string $pasteid
      * @return stdClass|false
      */
-    public function read($pasteid)
+    public function read(string $pasteid)
     {
         if (
             !array_key_exists($pasteid, self::$_cache)
@@ -250,6 +253,13 @@ class Database extends AbstractData
                     $meta = new stdClass;
                 }
 
+                self::$_cache[$pasteid]->meta = $meta;
+                self::$_cache[$pasteid]->meta->$createdKey = (int) $paste['postdate'];
+                $expire_date = (int) $paste['expiredate'];
+                if ($expire_date > 0) {
+                    self::$_cache[$pasteid]->meta->expire_date = $expire_date;
+                }
+
                 if (!$isVersion2) {
                     // support pre v1 attachments
                     if (property_exists($meta, 'attachment')) {
@@ -267,19 +277,12 @@ class Database extends AbstractData
                             self::$_cache[$pasteid]->attachmentname = $paste['attachmentname'];
                         }
                     }
-                }
-
-                self::$_cache[$pasteid]->meta = $meta;
-                self::$_cache[$pasteid]->meta->$createdKey = (int) $paste['postdate'];
-                $expire_date = (int) $paste['expiredate'];
-                if ($expire_date > 0) {
-                    self::$_cache[$pasteid]->meta->expire_date = $expire_date;
-                }
-                if ($paste['opendiscussion']) {
-                    self::$_cache[$pasteid]->meta->opendiscussion = true;
-                }
-                if ($paste['burnafterreading']) {
-                    self::$_cache[$pasteid]->meta->burnafterreading = true;
+                    if ($paste['opendiscussion']) {
+                        self::$_cache[$pasteid]->meta->opendiscussion = true;
+                    }
+                    if ($paste['burnafterreading']) {
+                        self::$_cache[$pasteid]->meta->burnafterreading = true;
+                    }
                 }
             }
         }
@@ -293,7 +296,7 @@ class Database extends AbstractData
      * @access public
      * @param  string $pasteid
      */
-    public function delete($pasteid)
+    public function delete(string $pasteid)
     {
         self::_exec(
             'DELETE FROM ' . self::_sanitizeIdentifier('paste') .
@@ -317,7 +320,7 @@ class Database extends AbstractData
      * @param  string $pasteid
      * @return bool
      */
-    public function exists($pasteid)
+    public function exists(string $pasteid)
     {
         if (
             !array_key_exists($pasteid, self::$_cache)
@@ -337,7 +340,7 @@ class Database extends AbstractData
      * @param  array  $comment
      * @return bool
      */
-    public function createComment($pasteid, $parentid, $commentid, $comment)
+    public function createComment(string $pasteid, string $parentid, string $commentid, array $comment)
     {
         if (array_key_exists('data', $comment)) {
             $version = 1;
@@ -376,7 +379,7 @@ class Database extends AbstractData
      * @param  string $pasteid
      * @return array
      */
-    public function readComments($pasteid)
+    public function readComments(string $pasteid)
     {
         $rows = self::_select(
             'SELECT * FROM ' . self::_sanitizeIdentifier('comment') .
@@ -422,7 +425,7 @@ class Database extends AbstractData
      * @param  string $commentid
      * @return bool
      */
-    public function existsComment($pasteid, $parentid, $commentid)
+    public function existsComment(string $pasteid, string $parentid, string $commentid)
     {
         return (bool) self::_select(
             'SELECT dataid FROM ' . self::_sanitizeIdentifier('comment') .
@@ -438,7 +441,7 @@ class Database extends AbstractData
      * @param  int $batchsize
      * @return array
      */
-    protected function _getExpiredPastes($batchsize)
+    protected function _getExpiredPastes(int $batchsize)
     {
         $pastes = array();
         $rows   = self::_select(
@@ -463,7 +466,7 @@ class Database extends AbstractData
      * @throws PDOException
      * @return bool
      */
-    private static function _exec($sql, array $params)
+    private static function _exec(string $sql, array $params)
     {
         $statement = self::$_db->prepare($sql);
         $result    = $statement->execute($params);
@@ -482,7 +485,7 @@ class Database extends AbstractData
      * @throws PDOException
      * @return array
      */
-    private static function _select($sql, array $params, $firstOnly = false)
+    private static function _select(string $sql, array $params, bool $firstOnly = false)
     {
         $statement = self::$_db->prepare($sql);
         $statement->execute($params);

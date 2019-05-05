@@ -60,7 +60,7 @@ abstract class AbstractData
      * @param  array $options
      * @return AbstractData
      */
-    public static function getInstance($options)
+    public static function getInstance(array $options)
     {
     }
 
@@ -72,7 +72,7 @@ abstract class AbstractData
      * @param  array  $paste
      * @return bool
      */
-    abstract public function create($pasteid, $paste);
+    abstract public function create(string $pasteid, array $paste);
 
     /**
      * Read a paste.
@@ -81,7 +81,7 @@ abstract class AbstractData
      * @param  string $pasteid
      * @return stdClass|false
      */
-    abstract public function read($pasteid);
+    abstract public function read(string $pasteid);
 
     /**
      * Delete a paste and its discussion.
@@ -89,7 +89,7 @@ abstract class AbstractData
      * @access public
      * @param  string $pasteid
      */
-    abstract public function delete($pasteid);
+    abstract public function delete(string $pasteid);
 
     /**
      * Test if a paste exists.
@@ -98,7 +98,7 @@ abstract class AbstractData
      * @param  string $pasteid
      * @return bool
      */
-    abstract public function exists($pasteid);
+    abstract public function exists(string $pasteid);
 
     /**
      * Create a comment in a paste.
@@ -110,7 +110,7 @@ abstract class AbstractData
      * @param  array  $comment
      * @return bool
      */
-    abstract public function createComment($pasteid, $parentid, $commentid, $comment);
+    abstract public function createComment(string $pasteid, string $parentid, string $commentid, array $comment);
 
     /**
      * Read all comments of paste.
@@ -119,7 +119,7 @@ abstract class AbstractData
      * @param  string $pasteid
      * @return array
      */
-    abstract public function readComments($pasteid);
+    abstract public function readComments(string $pasteid);
 
     /**
      * Test if a comment exists.
@@ -130,7 +130,7 @@ abstract class AbstractData
      * @param  string $commentid
      * @return bool
      */
-    abstract public function existsComment($pasteid, $parentid, $commentid);
+    abstract public function existsComment(string $pasteid, string $parentid, string $commentid);
 
     /**
      * Returns up to batch size number of paste ids that have expired
@@ -139,7 +139,7 @@ abstract class AbstractData
      * @param  int $batchsize
      * @return array
      */
-    abstract protected function _getExpiredPastes($batchsize);
+    abstract protected function _getExpiredPastes(int $batchsize);
 
     /**
      * Perform a purge of old pastes, at most the given batchsize is deleted.
@@ -147,7 +147,7 @@ abstract class AbstractData
      * @access public
      * @param  int $batchsize
      */
-    public function purge($batchsize)
+    public function purge(int $batchsize)
     {
         if ($batchsize < 1) {
             return;
@@ -168,7 +168,7 @@ abstract class AbstractData
      * @param  int|string $postdate
      * @return int|string
      */
-    protected function getOpenSlot(&$comments, $postdate)
+    protected function getOpenSlot(array &$comments, $postdate)
     {
         if (array_key_exists($postdate, $comments)) {
             $parts = explode('.', $postdate, 2);
