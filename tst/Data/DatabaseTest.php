@@ -41,7 +41,7 @@ class DatabaseTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($this->_model->create(Helper::getPasteId(), $paste), 'store new paste');
         $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste exists after storing it');
         $this->assertFalse($this->_model->create(Helper::getPasteId(), $paste), 'unable to store the same paste twice');
-        $this->assertEquals(json_decode(json_encode($paste)), $this->_model->read(Helper::getPasteId()));
+        $this->assertEquals($paste, $this->_model->read(Helper::getPasteId()));
 
         // storing comments
         $this->assertFalse($this->_model->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId()), 'v1 comment does not yet exist');
@@ -50,16 +50,16 @@ class DatabaseTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($this->_model->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getPasteId()), 'v2 comment does not yet exist');
         $this->assertTrue($this->_model->createComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getPasteId(), Helper::getComment(2)) !== false, 'store v2 comment');
         $this->assertTrue($this->_model->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getPasteId()), 'v2 comment exists after storing it');
-        $comment1           = json_decode(json_encode(Helper::getComment(1)));
-        $comment1->id       = Helper::getCommentId();
-        $comment1->parentid = Helper::getPasteId();
-        $comment2           = json_decode(json_encode(Helper::getComment(2)));
-        $comment2->id       = Helper::getPasteId();
-        $comment2->parentid = Helper::getPasteId();
+        $comment1             = Helper::getComment(1);
+        $comment1['id']       = Helper::getCommentId();
+        $comment1['parentid'] = Helper::getPasteId();
+        $comment2             = Helper::getComment(2);
+        $comment2['id']       = Helper::getPasteId();
+        $comment2['parentid'] = Helper::getPasteId();
         $this->assertEquals(
             array(
-                $comment1->meta->postdate       => $comment1,
-                $comment2->meta->created . '.1' => $comment2,
+                $comment1['meta']['postdate']       => $comment1,
+                $comment2['meta']['created'] . '.1' => $comment2,
             ),
             $this->_model->readComments(Helper::getPasteId())
         );
@@ -84,7 +84,7 @@ class DatabaseTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($this->_model->create(Helper::getPasteId(), $paste), 'store new paste');
         $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste exists after storing it');
         $this->assertFalse($this->_model->create(Helper::getPasteId(), $paste), 'unable to store the same paste twice');
-        $this->assertEquals(json_decode(json_encode($original)), $this->_model->read(Helper::getPasteId()));
+        $this->assertEquals($original, $this->_model->read(Helper::getPasteId()));
     }
 
     /**
@@ -282,7 +282,7 @@ class DatabaseTest extends PHPUnit_Framework_TestCase
         $statement->closeCursor();
 
         $this->assertTrue($model->exists(Helper::getPasteId()), 'paste exists after storing it');
-        $this->assertEquals(json_decode(json_encode($original)), $model->read(Helper::getPasteId()));
+        $this->assertEquals($original, $model->read(Helper::getPasteId()));
 
         Helper::rmDir($this->_path);
     }

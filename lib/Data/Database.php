@@ -16,7 +16,6 @@ use Exception;
 use PDO;
 use PDOException;
 use PrivateBin\Controller;
-use stdClass;
 
 /**
  * Database
@@ -222,69 +221,70 @@ class Database extends AbstractData
      *
      * @access public
      * @param  string $pasteid
-     * @return stdClass|false
+     * @return array|false
      */
     public function read(string $pasteid)
     {
-        if (
-            !array_key_exists($pasteid, self::$_cache)
-        ) {
-            self::$_cache[$pasteid] = false;
-            $paste                  = self::_select(
-                'SELECT * FROM ' . self::_sanitizeIdentifier('paste') .
-                ' WHERE dataid = ?', array($pasteid), true
-            );
+        if (array_key_exists($pasteid, self::$_cache)) {
+            return self::$_cache[$pasteid];
+        }
 
-            if (false !== $paste) {
-                // create object
-                $data       = json_decode($paste['data']);
-                $isVersion2 = property_exists($data, 'v') && $data->v >= 2;
-                if ($isVersion2) {
-                    self::$_cache[$pasteid] = $data;
-                    list($createdKey) = self::_getVersionedKeys(2);
-                } else {
-                    self::$_cache[$pasteid]       = new stdClass;
-                    self::$_cache[$pasteid]->data = $paste['data'];
-                    list($createdKey) = self::_getVersionedKeys(1);
-                }
+        self::$_cache[$pasteid] = false;
+        $paste                  = self::_select(
+            'SELECT * FROM ' . self::_sanitizeIdentifier('paste') .
+            ' WHERE dataid = ?', array($pasteid), true
+        );
 
-                $meta = json_decode($paste['meta']);
-                if (!is_object($meta)) {
-                    $meta = new stdClass;
-                }
+        if ($paste === false) {
+            return false;
+        }
+        // create array
+        $data       = json_decode($paste['data'], true);
+        $isVersion2 = array_key_exists('v', $data) && $data['v'] >= 2;
+        if ($isVersion2) {
+            self::$_cache[$pasteid] = $data;
+            list($createdKey) = self::_getVersionedKeys(2);
+        } else {
+            self::$_cache[$pasteid] = array('data' => $paste['data']);
+            list($createdKey) = self::_getVersionedKeys(1);
+        }
 
-                self::$_cache[$pasteid]->meta = $meta;
-                self::$_cache[$pasteid]->meta->$createdKey = (int) $paste['postdate'];
-                $expire_date = (int) $paste['expiredate'];
-                if ($expire_date > 0) {
-                    self::$_cache[$pasteid]->meta->expire_date = $expire_date;
-                }
+        $meta = json_decode($paste['meta'], true);
+        if (!is_array($meta)) {
+            $meta = array();
+        }
 
-                if (!$isVersion2) {
-                    // support pre v1 attachments
-                    if (property_exists($meta, 'attachment')) {
-                        self::$_cache[$pasteid]->attachment = $meta->attachment;
-                        unset($meta->attachment);
-                        if (property_exists($meta, 'attachmentname')) {
-                            self::$_cache[$pasteid]->attachmentname = $meta->attachmentname;
-                            unset($meta->attachmentname);
-                        }
-                    }
-                    // support v1 attachments
-                    elseif (array_key_exists('attachment', $paste) && strlen($paste['attachment'])) {
-                        self::$_cache[$pasteid]->attachment = $paste['attachment'];
-                        if (array_key_exists('attachmentname', $paste) && strlen($paste['attachmentname'])) {
-                            self::$_cache[$pasteid]->attachmentname = $paste['attachmentname'];
-                        }
-                    }
-                    if ($paste['opendiscussion']) {
-                        self::$_cache[$pasteid]->meta->opendiscussion = true;
-                    }
-                    if ($paste['burnafterreading']) {
-                        self::$_cache[$pasteid]->meta->burnafterreading = true;
-                    }
-                }
+        self::$_cache[$pasteid]['meta'] = $meta;
+        self::$_cache[$pasteid]['meta'][$createdKey] = (int) $paste['postdate'];
+        $expire_date = (int) $paste['expiredate'];
+        if ($expire_date > 0) {
+            self::$_cache[$pasteid]['meta']['expire_date'] = $expire_date;
+        }
+        if ($isVersion2) {
+            return self::$_cache[$pasteid];
+        }
+
+        // support pre v1 attachments
+        if (array_key_exists('attachment', $meta)) {
+            self::$_cache[$pasteid]['attachment'] = $meta['attachment'];
+            unset(self::$_cache[$pasteid]['meta']['attachment']);
+            if (array_key_exists('attachmentname', $meta)) {
+                self::$_cache[$pasteid]['attachmentname'] = $meta['attachmentname'];
+                unset(self::$_cache[$pasteid]['meta']['attachmentname']);
             }
+        }
+        // support v1 attachments
+        elseif (array_key_exists('attachment', $paste) && strlen($paste['attachment'])) {
+            self::$_cache[$pasteid]['attachment'] = $paste['attachment'];
+            if (array_key_exists('attachmentname', $paste) && strlen($paste['attachmentname'])) {
+                self::$_cache[$pasteid]['attachmentname'] = $paste['attachmentname'];
+            }
+        }
+        if ($paste['opendiscussion']) {
+            self::$_cache[$pasteid]['meta']['opendiscussion'] = true;
+        }
+        if ($paste['burnafterreading']) {
+            self::$_cache[$pasteid]['meta']['burnafterreading'] = true;
         }
 
         return self::$_cache[$pasteid];
@@ -391,23 +391,21 @@ class Database extends AbstractData
         if (count($rows)) {
             foreach ($rows as $row) {
                 $i = $this->getOpenSlot($comments, (int) $row['postdate']);
-                $data = json_decode($row['data']);
-                if (property_exists($data, 'v') && $data->v >= 2) {
+                $data = json_decode($row['data'], true);
+                if (array_key_exists('v', $data) && $data['v'] >= 2) {
                     $version      = 2;
                     $comments[$i] = $data;
                 } else {
-                    $version            = 1;
-                    $comments[$i]       = new stdClass;
-                    $comments[$i]->data = $row['data'];
+                    $version      = 1;
+                    $comments[$i] = array('data' => $row['data']);
                 }
                 list($createdKey, $iconKey) = self::_getVersionedKeys($version);
-                $comments[$i]->id                 = $row['dataid'];
-                $comments[$i]->parentid           = $row['parentid'];
-                $comments[$i]->meta               = new stdClass;
-                $comments[$i]->meta->$createdKey  = (int) $row['postdate'];
+                $comments[$i]['id']       = $row['dataid'];
+                $comments[$i]['parentid'] = $row['parentid'];
+                $comments[$i]['meta']     = array($createdKey => (int) $row['postdate']);
                 foreach (array('nickname' => 'nickname', 'vizhash' => $iconKey) as $rowKey => $commentKey) {
                     if (array_key_exists($rowKey, $row) && !empty($row[$rowKey])) {
-                        $comments[$i]->meta->$commentKey = $row[$rowKey];
+                        $comments[$i]['meta'][$commentKey] = $row[$rowKey];
                     }
                 }
             }
@@ -446,7 +444,8 @@ class Database extends AbstractData
         $pastes = array();
         $rows   = self::_select(
             'SELECT dataid FROM ' . self::_sanitizeIdentifier('paste') .
-            ' WHERE expiredate < ? AND expiredate != ? LIMIT ?', array(time(), 0, $batchsize)
+            ' WHERE expiredate < ? AND expiredate != ? LIMIT ?',
+            array(time(), 0, $batchsize)
         );
         if (count($rows)) {
             foreach ($rows as $row) {
