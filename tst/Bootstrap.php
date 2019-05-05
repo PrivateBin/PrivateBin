@@ -64,11 +64,12 @@ class Helper
                 'zlib',
             ),
             'plaintext',
-            0,
+            1,
             0
         ),
         'meta' => array(
-            'expire' => '5min',
+            'expire'  => '5min',
+            'created' => 1344803344,
         ),
         'v' => 2,
         'ct' => 'ME5JF/YBEijp2uYMzLZozbKtWc5wfy6R59NBb7SmRig=',
@@ -119,7 +120,7 @@ class Helper
      * @param  array $meta
      * @return array
      */
-    public static function getPaste($version = 2, $meta = array())
+    public static function getPaste(int $version = 2, array $meta = array())
     {
         $example = self::getPasteWithAttachment($version, $meta);
         // v1 has the attachment stored in a separate property
@@ -136,9 +137,9 @@ class Helper
      * @param  array $meta
      * @return array
      */
-    public static function getPasteWithAttachment($version = 2, $meta = array())
+    public static function getPasteWithAttachment(int $version = 2, array $meta = array())
     {
-        $example                 = $version === 1 ? self::$pasteV1 :  self::$pasteV2;
+        $example                 = $version === 1 ? self::$pasteV1 : self::$pasteV2;
         $example['meta']['salt'] = ServerSalt::generate();
         $example['meta']         = array_merge($example['meta'], $meta);
         return $example;
@@ -151,7 +152,7 @@ class Helper
      * @param  array $meta
      * @return array
      */
-    public static function getPasteAsJson($version = 2, $meta = array())
+    public static function getPasteAsJson(int $version = 2, array $meta = array())
     {
         $example = self::getPaste($version);
         // the JSON shouldn't contain the salt
@@ -183,9 +184,9 @@ class Helper
      * @param  array $meta
      * @return array
      */
-    public static function getComment($version = 2, $meta = array())
+    public static function getComment(int $version = 2, array $meta = array())
     {
-        $example         = $version === 1 ? self::$commentV1 : self::getPaste($version);
+        $example         = $version === 1 ? self::$commentV1 : self::$pasteV2;
         if ($version === 2) {
             $example['pasteid'] = $example['parentid'] = self::getPasteId();
             $example['meta']['created'] = self::$commentV1['meta']['postdate'];
@@ -202,7 +203,7 @@ class Helper
      * @param  int $version
      * @return array
      */
-    public static function getCommentPost($version = 2)
+    public static function getCommentPost(int $version = 2)
     {
         $example = self::getComment($version);
         if ($version === 1) {
@@ -220,7 +221,7 @@ class Helper
      * @param string $path
      * @throws Exception
      */
-    public static function rmDir($path)
+    public static function rmDir(string $path)
     {
         if (is_dir($path)) {
             $path .= DIRECTORY_SEPARATOR;
@@ -279,7 +280,7 @@ class Helper
      * @param string $pathToFile
      * @param array $values
      */
-    public static function createIniFile($pathToFile, $values)
+    public static function createIniFile(string $pathToFile, array $values)
     {
         if (count($values)) {
             @unlink($pathToFile);
@@ -322,7 +323,7 @@ class Helper
      * @param bool $return
      * @return void|string
      */
-    public static function varExportMin($var, $return = false)
+    public static function varExportMin($var, bool $return = false)
     {
         if (is_array($var)) {
             $toImplode = array();
