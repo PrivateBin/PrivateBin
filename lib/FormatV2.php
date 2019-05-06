@@ -32,10 +32,12 @@ class FormatV2
      */
     public static function isValid($message, $isComment = false)
     {
-        $required_keys = array('adata', 'meta', 'v', 'ct');
+        $required_keys = array('adata', 'v', 'ct');
         if ($isComment) {
             $required_keys[] = 'pasteid';
             $required_keys[] = 'parentid';
+        } else {
+            $required_keys[] = 'meta';
         }
 
         // Make sure no additionnal keys were added.
@@ -106,6 +108,15 @@ class FormatV2
 
         // Reject data if entropy is too low
         if (strlen($ct) > strlen(gzdeflate($ct))) {
+            return false;
+        }
+
+        // require only the key 'expire' in the metadata of pastes
+        if (!$isComment && (
+            count($message['meta']) === 0 ||
+            !array_key_exists('expire', $message['meta']) ||
+            count($message['meta']) > 1
+        )) {
             return false;
         }
 

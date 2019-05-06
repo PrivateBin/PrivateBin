@@ -168,6 +168,19 @@ class Helper
     }
 
     /**
+     * get example paste, as received via POST by user
+     *
+     * @param  int $version
+     * @return array
+     */
+    public static function getPastePost()
+    {
+        $example = self::getPaste();
+        $example['meta'] = array('expire' => $example['meta']['expire']);
+        return $example;
+    }
+
+    /**
      * get example paste ID
      *
      * @return string
@@ -203,15 +216,10 @@ class Helper
      * @param  int $version
      * @return array
      */
-    public static function getCommentPost(int $version = 2)
+    public static function getCommentPost()
     {
-        $example = self::getComment($version);
-        if ($version === 1) {
-            $example['nickname'] = $example['meta']['nickname'];
-            unset($example['meta']['nickname']);
-        } else {
-            unset($example['meta']);
-        }
+        $example = self::getComment();
+        unset($example['meta']);
         return $example;
     }
 

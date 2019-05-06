@@ -54,42 +54,46 @@ class ModelTest extends PHPUnit_Framework_TestCase
     public function testBasicWorkflow()
     {
         // storing pastes
-        $pasteData = Helper::getPaste();
+        $pasteData = Helper::getPastePost();
+        unset($pasteData['meta']['created'], $pasteData['meta']['salt']);
         $this->_model->getPaste(Helper::getPasteId())->delete();
         $paste = $this->_model->getPaste(Helper::getPasteId());
         $this->assertFalse($paste->exists(), 'paste does not yet exist');
 
         $paste = $this->_model->getPaste();
         $paste->setData($pasteData);
-        $paste->setOpendiscussion();
-        $paste->setFormatter($pasteData['adata'][1]);
         $paste->store();
 
         $paste = $this->_model->getPaste(Helper::getPasteId());
         $this->assertTrue($paste->exists(), 'paste exists after storing it');
         $paste = $paste->get();
-        $this->assertEquals($pasteData, $paste->data);
-        foreach (array('opendiscussion', 'formatter') as $key) {
-            $this->assertEquals($pasteData['meta'][$key], $paste->meta->$key);
-        }
+        unset(
+            $pasteData['meta'],
+            $paste['meta'],
+            $paste['comments'],
+            $paste['comment_count'],
+            $paste['comment_offset'],
+            $paste['@context']
+        );
+        $this->assertEquals($pasteData, $paste);
 
         // storing comments
-        $commentData = Helper::getComment();
+        $commentData = Helper::getCommentPost();
         $paste       = $this->_model->getPaste(Helper::getPasteId());
         $comment     = $paste->getComment(Helper::getPasteId(), Helper::getCommentId());
         $this->assertFalse($comment->exists(), 'comment does not yet exist');
 
         $comment = $paste->getComment(Helper::getPasteId());
         $comment->setData($commentData);
-        $comment->setNickname($commentData['meta']['nickname']);
-        $comment->getParentId();
+        //$comment->getParentId();
         $comment->store();
 
-        $comment = $paste->getComment(Helper::getPasteId(), Helper::getCommentId());
-        $this->assertTrue($comment->exists(), 'comment exists after storing it');
-        $comment = $comment->get();
-        $this->assertEquals($commentData, $comment->data);
-        $this->assertEquals($commentData['meta']['nickname'], $comment->meta->nickname);
+        $comments = $this->_model->getPaste(Helper::getPasteId())->get()['comments'];
+        $this->assertTrue(count($comments) === 1, 'comment exists after storing it');
+        $commentData['id'] = Helper::getPasteId();
+        $commentData['meta']['created'] = current($comments)['meta']['created'];
+        $commentData['meta']['icon'] = current($comments)['meta']['icon'];
+        $this->assertEquals($commentData, current($comments));
 
         // deleting pastes
         $this->_model->getPaste(Helper::getPasteId())->delete();
@@ -104,19 +108,15 @@ class ModelTest extends PHPUnit_Framework_TestCase
      */
     public function testPasteDuplicate()
     {
-        $pasteData = Helper::getPaste();
+        $pasteData = Helper::getPastePost();
 
         $this->_model->getPaste(Helper::getPasteId())->delete();
         $paste = $this->_model->getPaste();
         $paste->setData($pasteData);
-        $paste->setOpendiscussion();
-        $paste->setFormatter($pasteData['adata'][1]);
         $paste->store();
 
         $paste = $this->_model->getPaste();
         $paste->setData($pasteData);
-        $paste->setOpendiscussion();
-        $paste->setFormatter($pasteData['adata'][1]);
         $paste->store();
     }
 
@@ -126,61 +126,42 @@ class ModelTest extends PHPUnit_Framework_TestCase
      */
     public function testCommentDuplicate()
     {
-        $pasteData   = Helper::getPaste();
-        $commentData = Helper::getComment();
+        $pasteData   = Helper::getPastePost();
+        $commentData = Helper::getCommentPost();
         $this->_model->getPaste(Helper::getPasteId())->delete();
 
         $paste = $this->_model->getPaste();
         $paste->setData($pasteData);
-        $paste->setOpendiscussion();
-        $paste->setFormatter($pasteData['adata'][1]);
         $paste->store();
 
         $comment = $paste->getComment(Helper::getPasteId());
         $comment->setData($commentData);
-        $comment->setNickname($commentData['meta']['nickname']);
         $comment->store();
 
         $comment = $paste->getComment(Helper::getPasteId());
         $comment->setData($commentData);
-        $comment->setNickname($commentData['meta']['nickname']);
         $comment->store();
     }
 
     public function testImplicitDefaults()
     {
-        $pasteData   = Helper::getPaste();
-        $commentData = Helper::getComment();
+        $pasteData   = Helper::getPastePost();
+        $commentData = Helper::getCommentPost();
         $this->_model->getPaste(Helper::getPasteId())->delete();
 
         $paste = $this->_model->getPaste();
         $paste->setData($pasteData);
-        $paste->setBurnafterreading();
-        $paste->setOpendiscussion();
-        // not setting a formatter, should use default one
-        $paste->store();
-
-        $paste = $this->_model->getPaste(Helper::getPasteId())->get(); // ID was set based on data
-        $this->assertEquals(true, property_exists($paste->meta, 'burnafterreading') && $paste->meta->burnafterreading, 'burn after reading takes precendence');
-        $this->assertEquals(false, property_exists($paste->meta, 'opendiscussion') && $paste->meta->opendiscussion, 'opendiscussion is disabled');
-        $this->assertEquals($this->_conf->getKey('defaultformatter'), $paste->meta->formatter, 'default formatter is set');
-
-        $this->_model->getPaste(Helper::getPasteId())->delete();
-        $paste = $this->_model->getPaste();
-        $paste->setData($pasteData);
-        $paste->setBurnafterreading('0');
-        $paste->setOpendiscussion();
         $paste->store();
 
         $comment = $paste->getComment(Helper::getPasteId());
         $comment->setData($commentData);
-        $comment->setNickname($commentData['meta']['nickname']);
+        $comment->get();
         $comment->store();
 
         $identicon = new Identicon();
         $pngdata   = $identicon->getImageDataUri(TrafficLimiter::getHash(), 16);
-        $comment   = $paste->getComment(Helper::getPasteId(), Helper::getCommentId())->get();
-        $this->assertEquals($pngdata, $comment->meta->vizhash, 'nickname triggers vizhash to be set');
+        $comment   = current($this->_model->getPaste(Helper::getPasteId())->get()['comments']);
+        $this->assertEquals($pngdata, $comment['meta']['icon'], 'icon gets set');
     }
 
     public function testPasteIdValidation()
@@ -199,6 +180,15 @@ class ModelTest extends PHPUnit_Framework_TestCase
         $this->_model->getPaste(Helper::getPasteId())->delete();
         $paste = $this->_model->getPaste(Helper::getPasteId());
         $paste->get();
+    }
+
+    /**
+     * @expectedException Exception
+     * @expectedExceptionCode 60
+     */
+    public function testInvalidPasteId()
+    {
+        $this->_model->getPaste('');
     }
 
     /**
@@ -227,7 +217,7 @@ class ModelTest extends PHPUnit_Framework_TestCase
      */
     public function testInvalidCommentDeletedPaste()
     {
-        $pasteData = Helper::getPaste();
+        $pasteData = Helper::getPastePost();
         $paste     = $this->_model->getPaste(Helper::getPasteId());
         $paste->setData($pasteData);
         $paste->store();
@@ -243,7 +233,8 @@ class ModelTest extends PHPUnit_Framework_TestCase
      */
     public function testInvalidCommentData()
     {
-        $pasteData = Helper::getPaste();
+        $pasteData = Helper::getPastePost();
+        $pasteData['adata'][2] = 0;
         $paste     = $this->_model->getPaste(Helper::getPasteId());
         $paste->setData($pasteData);
         $paste->store();
@@ -252,20 +243,30 @@ class ModelTest extends PHPUnit_Framework_TestCase
         $comment->store();
     }
 
+    /**
+     * @expectedException Exception
+     * @expectedExceptionCode 65
+     */
+    public function testInvalidCommentParent()
+    {
+        $paste     = $this->_model->getPaste(Helper::getPasteId());
+        $comment = $paste->getComment('');
+        $comment->store();
+    }
+
     public function testExpiration()
     {
-        $pasteData = Helper::getPaste();
+        $pasteData = Helper::getPastePost();
         $this->_model->getPaste(Helper::getPasteId())->delete();
         $paste = $this->_model->getPaste(Helper::getPasteId());
         $this->assertFalse($paste->exists(), 'paste does not yet exist');
 
         $paste = $this->_model->getPaste();
         $paste->setData($pasteData);
-        $paste->setExpiration('5min'); // = 300 seconds
         $paste->store();
 
         $paste = $paste->get();
-        $this->assertEquals(300, $paste->meta->remaining_time, 'remaining time is set correctly');
+        $this->assertEquals((float) 300, (float) $paste['meta']['time_to_live'], 'remaining time is set correctly', 1.0);
     }
 
     /**
@@ -274,7 +275,7 @@ class ModelTest extends PHPUnit_Framework_TestCase
      */
     public function testCommentDeletion()
     {
-        $pasteData = Helper::getPaste();
+        $pasteData = Helper::getPastePost();
         $this->_model->getPaste(Helper::getPasteId())->delete();
 
         $paste = $this->_model->getPaste();
@@ -288,12 +289,12 @@ class ModelTest extends PHPUnit_Framework_TestCase
         $conf  = new Configuration;
         $store = Database::getInstance($conf->getSection('model_options'));
         $store->delete(Helper::getPasteId());
-        $expired = Helper::getPaste(array('expire_date' => 1344803344));
-        $paste   = Helper::getPaste(array('expire_date' => time() + 3600));
+        $expired = Helper::getPaste(2, array('expire_date' => 1344803344));
+        $paste   = Helper::getPaste(2, array('expire_date' => time() + 3600));
         $keys    = array('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'x', 'y', 'z');
         $ids     = array();
         foreach ($keys as $key) {
-            $ids[$key] = substr(md5($key), 0, 16);
+            $ids[$key] = hash('fnv1a64', $key);
             $store->delete($ids[$key]);
             $this->assertFalse($store->exists($ids[$key]), "paste $key does not yet exist");
             if (in_array($key, array('x', 'y', 'z'))) {
@@ -330,79 +331,34 @@ class ModelTest extends PHPUnit_Framework_TestCase
         Helper::createIniFile(CONF, $options);
         $model = new Model(new Configuration);
 
-        $pasteData = Helper::getPaste();
+        $pasteData = Helper::getPastePost();
         $this->_model->getPaste(Helper::getPasteId())->delete();
         $paste = $model->getPaste(Helper::getPasteId());
         $this->assertFalse($paste->exists(), 'paste does not yet exist');
 
         $paste = $model->getPaste();
         $paste->setData($pasteData);
-        $paste->setOpendiscussion();
-        $paste->setFormatter($pasteData['adata'][1]);
         $paste->store();
 
         $paste = $model->getPaste(Helper::getPasteId());
         $this->assertTrue($paste->exists(), 'paste exists after storing it');
-        $paste = $paste->get();
-        $this->assertEquals($pasteData, $paste->data);
-        foreach (array('opendiscussion', 'formatter') as $key) {
-            $this->assertEquals($pasteData['meta'][$key], $paste->meta->$key);
-        }
 
         // storing comments
-        $commentData = Helper::getComment();
+        $commentData = Helper::getCommentPost();
+        unset($commentData['meta']['icon']);
         $paste       = $model->getPaste(Helper::getPasteId());
-        $comment     = $paste->getComment(Helper::getPasteId(), Helper::getCommentId());
+        $comment     = $paste->getComment(Helper::getPasteId(), Helper::getPasteId());
         $this->assertFalse($comment->exists(), 'comment does not yet exist');
 
         $comment = $paste->getComment(Helper::getPasteId());
         $comment->setData($commentData);
-        $comment->setNickname($commentData['meta']['nickname']);
         $comment->store();
 
-        $comment = $paste->getComment(Helper::getPasteId(), Helper::getCommentId());
+        $comment = $paste->getComment(Helper::getPasteId(), Helper::getPasteId());
         $this->assertTrue($comment->exists(), 'comment exists after storing it');
-        $comment = $comment->get();
-        $this->assertEquals($commentData, $comment->data);
-        $this->assertEquals($commentData['meta']['nickname'], $comment->meta->nickname);
-        $this->assertFalse(property_exists($comment->meta, 'vizhash'), 'vizhash was not generated');
-    }
 
-    public function testCommentIdenticon()
-    {
-        $options                 = parse_ini_file(CONF, true);
-        $options['main']['icon'] = 'identicon';
-        $options['model']        = array(
-            'class' => 'Database',
-        );
-        $options['model_options'] = array(
-            'dsn' => 'sqlite::memory:',
-            'usr' => null,
-            'pwd' => null,
-            'opt' => array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION),
-        );
-        Helper::createIniFile(CONF, $options);
-        $model = new Model(new Configuration);
-
-        $pasteData   = Helper::getPaste();
-        $commentData = Helper::getComment();
-        $model->getPaste(Helper::getPasteId())->delete();
-
-        $paste = $model->getPaste();
-        $paste->setData($pasteData);
-        $paste->setOpendiscussion();
-        $paste->setFormatter($pasteData['adata'][1]);
-        $paste->store();
-
-        $comment = $paste->getComment(Helper::getPasteId());
-        $comment->setData($commentData);
-        $comment->setNickname($commentData['meta']['nickname']);
-        $comment->store();
-
-        $identicon = new Identicon();
-        $pngdata   = $identicon->getImageDataUri(TrafficLimiter::getHash(), 16);
-        $comment   = $paste->getComment(Helper::getPasteId(), Helper::getCommentId())->get();
-        $this->assertEquals($pngdata, $comment->meta->vizhash, 'nickname triggers vizhash to be set');
+        $comment = current($this->_model->getPaste(Helper::getPasteId())->get()['comments']);
+        $this->assertFalse(array_key_exists('icon', $comment['meta']), 'icon was not generated');
     }
 
     public function testCommentVizhash()
@@ -421,24 +377,21 @@ class ModelTest extends PHPUnit_Framework_TestCase
         Helper::createIniFile(CONF, $options);
         $model = new Model(new Configuration);
 
-        $pasteData   = Helper::getPaste();
-        $commentData = Helper::getComment();
+        $pasteData   = Helper::getPastePost();
+        $commentData = Helper::getCommentPost();
         $model->getPaste(Helper::getPasteId())->delete();
 
         $paste = $model->getPaste();
         $paste->setData($pasteData);
-        $paste->setOpendiscussion();
-        $paste->setFormatter($pasteData['adata'][1]);
         $paste->store();
 
         $comment = $paste->getComment(Helper::getPasteId());
         $comment->setData($commentData);
-        $comment->setNickname($commentData['meta']['nickname']);
         $comment->store();
 
         $vz      = new Vizhash16x16();
         $pngdata = 'data:image/png;base64,' . base64_encode($vz->generate(TrafficLimiter::getHash()));
-        $comment = $paste->getComment(Helper::getPasteId(), Helper::getCommentId())->get();
-        $this->assertEquals($pngdata, $comment->meta->vizhash, 'nickname triggers vizhash to be set');
+        $comment   = current($this->_model->getPaste(Helper::getPasteId())->get()['comments']);
+        $this->assertEquals($pngdata, $comment['meta']['icon'], 'nickname triggers vizhash to be set');
     }
 }

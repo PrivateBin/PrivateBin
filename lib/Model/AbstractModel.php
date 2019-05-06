@@ -16,7 +16,6 @@ use Exception;
 use PrivateBin\Configuration;
 use PrivateBin\Data\AbstractData;
 use PrivateBin\FormatV2;
-use stdClass;
 
 /**
  * AbstractModel
@@ -37,9 +36,9 @@ abstract class AbstractModel
      * Instance data.
      *
      * @access protected
-     * @var stdClass
+     * @var array
      */
-    protected $_data;
+    protected $_data = array('meta' => array());
 
     /**
      * Configuration.
@@ -68,8 +67,6 @@ abstract class AbstractModel
     {
         $this->_conf       = $configuration;
         $this->_store      = $storage;
-        $this->_data       = new stdClass;
-        $this->_data->meta = new stdClass;
     }
 
     /**
@@ -90,7 +87,7 @@ abstract class AbstractModel
      * @param string $id
      * @throws Exception
      */
-    public function setId($id)
+    public function setId(string $id)
     {
         if (!self::isValidId($id)) {
             throw new Exception('Invalid paste ID.', 60);
@@ -102,15 +99,17 @@ abstract class AbstractModel
      * Set data and recalculate ID.
      *
      * @access public
-     * @param string $data
+     * @param  array $data
      * @throws Exception
      */
-    public function setData($data)
+    public function setData(array $data)
     {
-        if (!FormatV2::isValid($data)) {
+        if (!FormatV2::isValid($data, $this instanceof Comment)) {
             throw new Exception('Invalid data.', 61);
         }
-        $this->_data->data = $data;
+        $data = $this->_sanitize($data);
+        $this->_validate($data);
+        $this->_data = $data;
 
         // calculate a 64 bit checksum to avoid collisions
         $this->setId(hash('fnv1a64', $data['ct']));
@@ -120,9 +119,12 @@ abstract class AbstractModel
      * Get instance data.
      *
      * @access public
-     * @return stdClass
+     * @return array
      */
-    abstract public function get();
+    public function get()
+    {
+        return $this->_data;
+    }
 
     /**
      * Store the instance's data.
@@ -156,8 +158,29 @@ abstract class AbstractModel
      * @param  string $id
      * @return bool
      */
-    public static function isValidId($id)
+    public static function isValidId(string $id)
     {
         return (bool) preg_match('#\A[a-f\d]{16}\z#', (string) $id);
+    }
+
+    /**
+     * Sanitizes data to conform with current configuration.
+     *
+     * @access protected
+     * @param  array $data
+     * @return array
+     */
+    abstract protected function _sanitize(array $data);
+
+    /**
+     * Validate data.
+     *
+     * @access protected
+     * @param  array $data
+     * @throws Exception
+     */
+    protected function _validate(array $data)
+    {
+        return;
     }
 }
