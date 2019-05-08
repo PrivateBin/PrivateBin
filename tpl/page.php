@@ -39,7 +39,7 @@ else:
 <?php
 endif;
 ?>
-		<script type="text/javascript" data-cfasync="false" src="js/base-x-3.0.5.1.js" integrity="sha512-tZCra9cpyEtRlLCuglgHQ1pZyX1yZ09NYTTUawN/ptrXkK5I2ndKCWdrswIGGq4fYb2LVcodw3lEzT1UiHlCEg==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/base-x-3.0.5.1.js" integrity="sha512-/zL3MWKMtl1IBF0URx3laql2jUw+rWfFFabNlILY/Qm+hUsQR/XULjUyNHkW/FkrV7A0sMQ7tsppH7sj5ht8wA==" crossorigin="anonymous"></script>
 		<script type="text/javascript" data-cfasync="false" src="js/rawdeflate-0.5.js" integrity="sha512-tTdZ7qMr7tt5VQy4iCHu6/aGB12eRwbUy+AEI5rXntfsjcRfBeeqJloMsBU9FrGk1bIYLiuND/FhU42LO1bi0g==" crossorigin="anonymous"></script>
 		<script type="text/javascript" data-cfasync="false" src="js/rawinflate-0.3.js" integrity="sha512-g8uelGgJW9A/Z1tB6Izxab++oj5kdD7B4qC7DHwZkB6DGMXKyzx7v5mvap2HXueI2IIn08YlRYM56jwWdm2ucQ==" crossorigin="anonymous"></script>
 <?php
@@ -55,7 +55,7 @@ if ($MARKDOWN):
 endif;
 ?>
 		<script type="text/javascript" data-cfasync="false" src="js/purify-1.0.7.js" integrity="sha512-VnKJHLosO8z2ojNvWk9BEKYqnhZyWK9rM90FgZUUEp/PRnUqR5OLLKE0a3BkVmn7YgB7LXRrjHgFHQYKd6DAIA==" crossorigin="anonymous"></script>
-		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-zkRNN1TQ1h2agLdyIpjZ7ALamBxeSbmSA1eDUhEZeNyPXq2XiERPacNXyO8dvxW5oShb8VyTgQ0ueNUKgRsQSQ==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-IFu+B5qYMnATrGKpfxXw3TdUoxBV31HiaGGP76RknlT62iiugvTHikKX9yW5AxqaRd+12mefuoF80GXgoa35Tg==" crossorigin="anonymous"></script>
 		<!--[if lt IE 10]>
 		<style type="text/css">body {padding-left:60px;padding-right:60px;} #ienotice {display:block;} #oldienotice {display:block;}</style>
 		<![endif]-->
