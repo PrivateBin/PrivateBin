@@ -643,7 +643,8 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
          */
         me.getSymmetricKey = function()
         {
-            return sjcl.codec.base64.fromBits(sjcl.random.randomWords(8, 10), 0);
+            var bs58 = new baseX('123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz');
+            return bs58.encode(sjcl.codec.base64.fromBits(sjcl.random.randomWords(8, 10), 0));
         };
 
         return me;
