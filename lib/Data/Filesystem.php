@@ -71,23 +71,16 @@ class Filesystem extends AbstractData
      *
      * @access public
      * @param  string $pasteid
-     * @return \stdClass|false
+     * @return array|false
      */
     public function read($pasteid)
     {
         if (!$this->exists($pasteid)) {
             return false;
         }
-        $paste = DataStore::get(self::_dataid2path($pasteid) . $pasteid . '.php');
-        if (property_exists($paste->meta, 'attachment')) {
-            $paste->attachment = $paste->meta->attachment;
-            unset($paste->meta->attachment);
-            if (property_exists($paste->meta, 'attachmentname')) {
-                $paste->attachmentname = $paste->meta->attachmentname;
-                unset($paste->meta->attachmentname);
-            }
-        }
-        return $paste;
+        return self::upgradePreV1Format(
+            DataStore::get(self::_dataid2path($pasteid) . $pasteid . '.php')
+        );
     }
 
     /**

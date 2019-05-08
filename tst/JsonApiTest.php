@@ -48,7 +48,7 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
         $options                     = parse_ini_file(CONF, true);
         $options['traffic']['limit'] = 0;
         Helper::createIniFile(CONF, $options);
-        $_POST                            = Helper::getPaste();
+        $_POST                            = Helper::getPastePost();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD']        = 'POST';
         $_SERVER['REMOTE_ADDR']           = '::1';
@@ -62,7 +62,7 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($this->_model->exists($response['id']), 'paste exists after posting data');
         $paste = $this->_model->read($response['id']);
         $this->assertEquals(
-            hash_hmac('sha256', $response['id'], $paste->meta->salt),
+            hash_hmac('sha256', $response['id'], $paste['meta']['salt']),
             $response['deletetoken'],
             'outputs valid delete token'
         );
@@ -76,8 +76,7 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
         $options                     = parse_ini_file(CONF, true);
         $options['traffic']['limit'] = 0;
         Helper::createIniFile(CONF, $options);
-        $paste = Helper::getPaste();
-        unset($paste['meta']);
+        $paste = Helper::getPastePost();
         $file = tempnam(sys_get_temp_dir(), 'FOO');
         file_put_contents($file, http_build_query($paste));
         Request::setInputStream($file);
@@ -98,7 +97,7 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($this->_model->exists($response['id']), 'paste exists after posting data');
         $paste = $this->_model->read($response['id']);
         $this->assertEquals(
-            hash_hmac('sha256', $response['id'], $paste->meta->salt),
+            hash_hmac('sha256', $response['id'], $paste['meta']['salt']),
             $response['deletetoken'],
             'outputs valid delete token'
         );
@@ -114,7 +113,7 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
         $paste = $this->_model->read(Helper::getPasteId());
         $file  = tempnam(sys_get_temp_dir(), 'FOO');
         file_put_contents($file, http_build_query(array(
-            'deletetoken' => hash_hmac('sha256', Helper::getPasteId(), $paste->meta->salt),
+            'deletetoken' => hash_hmac('sha256', Helper::getPasteId(), $paste['meta']['salt']),
         )));
         Request::setInputStream($file);
         $_SERVER['QUERY_STRING']          = Helper::getPasteId();
@@ -141,7 +140,7 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
         $paste = $this->_model->read(Helper::getPasteId());
         $_POST = array(
             'pasteid'     => Helper::getPasteId(),
-            'deletetoken' => hash_hmac('sha256', Helper::getPasteId(), $paste->meta->salt),
+            'deletetoken' => hash_hmac('sha256', Helper::getPasteId(), $paste['meta']['salt']),
         );
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD']        = 'POST';
@@ -159,11 +158,7 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
      */
     public function testRead()
     {
-        $paste                           = Helper::getPasteWithAttachment();
-        $paste['meta']['attachment']     = $paste['attachment'];
-        $paste['meta']['attachmentname'] = $paste['attachmentname'];
-        unset($paste['attachment']);
-        unset($paste['attachmentname']);
+        $paste                           = Helper::getPaste();
         $this->_model->create(Helper::getPasteId(), $paste);
         $_SERVER['QUERY_STRING']          = Helper::getPasteId();
         $_GET[Helper::getPasteId()]       = '';
@@ -176,12 +171,8 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(0, $response['status'], 'outputs success status');
         $this->assertEquals(Helper::getPasteId(), $response['id'], 'outputs data correctly');
         $this->assertStringEndsWith('?' . $response['id'], $response['url'], 'returned URL points to new paste');
-        $this->assertEquals($paste['data'], $response['data'], 'outputs data correctly');
-        $this->assertEquals($paste['meta']['attachment'], $response['attachment'], 'outputs attachment correctly');
-        $this->assertEquals($paste['meta']['attachmentname'], $response['attachmentname'], 'outputs attachmentname correctly');
-        $this->assertEquals($paste['meta']['formatter'], $response['meta']['formatter'], 'outputs format correctly');
-        $this->assertEquals($paste['meta']['postdate'], $response['meta']['postdate'], 'outputs postdate correctly');
-        $this->assertEquals($paste['meta']['opendiscussion'], $response['meta']['opendiscussion'], 'outputs opendiscussion correctly');
+        $this->assertEquals($paste['ct'], $response['ct'], 'outputs data correctly');
+        $this->assertEquals($paste['meta']['created'], $response['meta']['created'], 'outputs postdate correctly');
         $this->assertEquals(0, $response['comment_count'], 'outputs comment_count correctly');
         $this->assertEquals(0, $response['comment_offset'], 'outputs comment_offset correctly');
     }
@@ -191,7 +182,7 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
      */
     public function testJsonLdPaste()
     {
-        $paste = Helper::getPasteWithAttachment();
+        $paste = Helper::getPaste();
         $this->_model->create(Helper::getPasteId(), $paste);
         $_GET['jsonld'] = 'paste';
         ob_start();
@@ -210,7 +201,7 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
      */
     public function testJsonLdComment()
     {
-        $paste = Helper::getPasteWithAttachment();
+        $paste = Helper::getPaste();
         $this->_model->create(Helper::getPasteId(), $paste);
         $_GET['jsonld'] = 'comment';
         ob_start();
@@ -229,7 +220,7 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
      */
     public function testJsonLdPasteMeta()
     {
-        $paste = Helper::getPasteWithAttachment();
+        $paste = Helper::getPaste();
         $this->_model->create(Helper::getPasteId(), $paste);
         $_GET['jsonld'] = 'pastemeta';
         ob_start();
@@ -248,7 +239,7 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
      */
     public function testJsonLdCommentMeta()
     {
-        $paste = Helper::getPasteWithAttachment();
+        $paste = Helper::getPaste();
         $this->_model->create(Helper::getPasteId(), $paste);
         $_GET['jsonld'] = 'commentmeta';
         ob_start();
@@ -267,7 +258,7 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
      */
     public function testJsonLdInvalid()
     {
-        $paste = Helper::getPasteWithAttachment();
+        $paste = Helper::getPaste();
         $this->_model->create(Helper::getPasteId(), $paste);
         $_GET['jsonld'] = CONF;
         ob_start();

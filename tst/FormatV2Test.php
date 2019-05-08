@@ -6,10 +6,13 @@ class FormatV2Test extends PHPUnit_Framework_TestCase
 {
     public function testFormatV2ValidatorValidatesCorrectly()
     {
-        $this->assertTrue(FormatV2::isValid(Helper::getPaste()), 'valid format');
-        $this->assertTrue(FormatV2::isValid(Helper::getComment(), true), 'valid format');
-
         $paste = Helper::getPaste();
+        $paste['meta'] = array('expire' => $paste['meta']['expire']);
+        $this->assertTrue(FormatV2::isValid($paste), 'valid format');
+        $comment = Helper::getComment();
+        unset($comment['meta']);
+        $this->assertTrue(FormatV2::isValid($comment, true), 'valid format');
+
         $paste['adata'][0][0] = '$';
         $this->assertFalse(FormatV2::isValid($paste), 'invalid base64 encoding of iv');
 

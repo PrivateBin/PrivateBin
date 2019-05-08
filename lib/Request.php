@@ -126,8 +126,8 @@ class Request
 
         // prepare operation, depending on current parameters
         if (
-            (array_key_exists('data', $this->_params) && !empty($this->_params['data'])) ||
-            (array_key_exists('attachment', $this->_params) && !empty($this->_params['attachment']))
+            array_key_exists('ct', $this->_params) &&
+            !empty($this->_params['ct'])
         ) {
             $this->_operation = 'create';
         } elseif (array_key_exists('pasteid', $this->_params) && !empty($this->_params['pasteid'])) {
@@ -150,6 +150,33 @@ class Request
     public function getOperation()
     {
         return $this->_operation;
+    }
+
+    /**
+     * Get data of paste or comment
+     *
+     * @access public
+     * @return array
+     */
+    public function getData()
+    {
+        $data = array(
+            'adata' => json_decode($this->getParam('adata', '[]'), true)
+        );
+        $required_keys = array('v', 'ct');
+        $meta = $this->getParam('meta');
+        if (empty($meta)) {
+            $required_keys[] = 'pasteid';
+            $required_keys[] = 'parentid';
+        } else {
+            $data['meta'] = json_decode($meta, true);
+        }
+        foreach ($required_keys as $key) {
+            $data[$key] = $this->getParam($key);
+        }
+        // forcing a cast to int or float
+        $data['v'] = $data['v'] + 0;
+        return $data;
     }
 
     /**

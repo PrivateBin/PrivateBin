@@ -249,12 +249,12 @@ class Database extends AbstractData
             list($createdKey) = self::_getVersionedKeys(1);
         }
 
-        $meta = json_decode($paste['meta'], true);
-        if (!is_array($meta)) {
-            $meta = array();
+        $paste['meta'] = json_decode($paste['meta'], true);
+        if (!is_array($paste['meta'])) {
+            $paste['meta'] = array();
         }
-
-        self::$_cache[$pasteid]['meta'] = $meta;
+        $paste = self::upgradePreV1Format($paste);
+        self::$_cache[$pasteid]['meta'] = $paste['meta'];
         self::$_cache[$pasteid]['meta'][$createdKey] = (int) $paste['postdate'];
         $expire_date = (int) $paste['expiredate'];
         if ($expire_date > 0) {
@@ -264,17 +264,8 @@ class Database extends AbstractData
             return self::$_cache[$pasteid];
         }
 
-        // support pre v1 attachments
-        if (array_key_exists('attachment', $meta)) {
-            self::$_cache[$pasteid]['attachment'] = $meta['attachment'];
-            unset(self::$_cache[$pasteid]['meta']['attachment']);
-            if (array_key_exists('attachmentname', $meta)) {
-                self::$_cache[$pasteid]['attachmentname'] = $meta['attachmentname'];
-                unset(self::$_cache[$pasteid]['meta']['attachmentname']);
-            }
-        }
         // support v1 attachments
-        elseif (array_key_exists('attachment', $paste) && strlen($paste['attachment'])) {
+        if (array_key_exists('attachment', $paste) && strlen($paste['attachment'])) {
             self::$_cache[$pasteid]['attachment'] = $paste['attachment'];
             if (array_key_exists('attachmentname', $paste) && strlen($paste['attachmentname'])) {
                 self::$_cache[$pasteid]['attachmentname'] = $paste['attachmentname'];

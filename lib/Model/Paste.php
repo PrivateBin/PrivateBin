@@ -173,13 +173,31 @@ class Paste extends AbstractModel
      */
     public function getDeleteToken()
     {
-        if (!property_exists($this->_data->meta, 'salt')) {
+        if (!array_key_exists('salt', $this->_data['meta'])) {
             $this->get();
         }
         return hash_hmac(
             $this->_conf->getKey('zerobincompatibility') ? 'sha1' : 'sha256',
             $this->getId(),
-            $this->_data->meta->salt
+            $this->_data['meta']['salt']
+        );
+    }
+
+    /**
+     * Check if paste is of burn-after-reading type.
+     *
+     * @access public
+     * @throws Exception
+     * @return bool
+     */
+    public function isBurnafterreading()
+    {
+        if (!array_key_exists('adata', $this->_data) && !array_key_exists('data', $this->_data)) {
+            $this->get();
+        }
+        return (
+            (array_key_exists('adata', $this->_data) && $this->_data['adata'][3] === 1) ||
+            (array_key_exists('burnafterreading', $this->_data['meta']) && $this->_data['meta']['burnafterreading'])
         );
     }
 
@@ -198,7 +216,7 @@ class Paste extends AbstractModel
         return (
             (array_key_exists('adata', $this->_data) && $this->_data['adata'][2] === 1) ||
             (array_key_exists('opendiscussion', $this->_data['meta']) && $this->_data['meta']['opendiscussion'])
-        );
+            );
     }
 
     /**

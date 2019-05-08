@@ -199,50 +199,32 @@ class Controller
         TrafficLimiter::setConfiguration($this->_conf);
         if (!TrafficLimiter::canPass()) {
             return $this->_return_message(
-            1, I18n::_(
-                'Please wait %d seconds between each post.',
-                $this->_conf->getKey('limit', 'traffic')
-            )
-        );
+                1, I18n::_(
+                    'Please wait %d seconds between each post.',
+                    $this->_conf->getKey('limit', 'traffic')
+                )
+            );
         }
-
-        $data           = $this->_request->getParam('data');
-        $attachment     = $this->_request->getParam('attachment');
-        $attachmentname = $this->_request->getParam('attachmentname');
 
         // Ensure content is not too big.
+        $data      = $this->_request->getData();
         $sizelimit = $this->_conf->getKey('sizelimit');
-        if (
-            strlen($data) + strlen($attachment) + strlen($attachmentname) > $sizelimit
-        ) {
+        if (strlen($data['ct']) > $sizelimit) {
             return $this->_return_message(
-            1,
-            I18n::_(
-                'Paste is limited to %s of encrypted data.',
-                Filter::formatHumanReadableSize($sizelimit)
-            )
-        );
-        }
-
-        // Ensure attachment did not get lost due to webserver limits or Suhosin
-        if (strlen($attachmentname) > 0 && strlen($attachment) == 0) {
-            return $this->_return_message(1, 'Attachment missing in data received by server. Please check your webserver or suhosin configuration for maximum POST parameter limitations.');
+                1,
+                I18n::_(
+                    'Paste is limited to %s of encrypted data.',
+                    Filter::formatHumanReadableSize($sizelimit)
+                )
+            );
         }
 
         // The user posts a comment.
-        $pasteid  = $this->_request->getParam('pasteid');
-        $parentid = $this->_request->getParam('parentid');
-        if (!empty($pasteid) && !empty($parentid)) {
-            $paste = $this->_model->getPaste($pasteid);
+        if (!empty($data['pasteid']) && !empty($data['parentid'])) {
+            $paste = $this->_model->getPaste($data['pasteid']);
             if ($paste->exists()) {
                 try {
-                    $comment = $paste->getComment($parentid);
-
-                    $nickname = $this->_request->getParam('nickname');
-                    if (!empty($nickname)) {
-                        $comment->setNickname($nickname);
-                    }
-
+                    $comment = $paste->getComment($data['parentid']);
                     $comment->setData($data);
                     $comment->store();
                 } catch (Exception $e) {
@@ -259,34 +241,6 @@ class Controller
             $paste = $this->_model->getPaste();
             try {
                 $paste->setData($data);
-
-                if (!empty($attachment)) {
-                    $paste->setAttachment($attachment);
-                    if (!empty($attachmentname)) {
-                        $paste->setAttachmentName($attachmentname);
-                    }
-                }
-
-                $expire = $this->_request->getParam('expire');
-                if (!empty($expire)) {
-                    $paste->setExpiration($expire);
-                }
-
-                $burnafterreading = $this->_request->getParam('burnafterreading');
-                if (!empty($burnafterreading)) {
-                    $paste->setBurnafterreading($burnafterreading);
-                }
-
-                $opendiscussion = $this->_request->getParam('opendiscussion');
-                if (!empty($opendiscussion)) {
-                    $paste->setOpendiscussion($opendiscussion);
-                }
-
-                $formatter = $this->_request->getParam('formatter');
-                if (!empty($formatter)) {
-                    $paste->setFormatter($formatter);
-                }
-
                 $paste->store();
             } catch (Exception $e) {
                 return $this->_return_message(1, $e->getMessage());
@@ -307,22 +261,17 @@ class Controller
         try {
             $paste = $this->_model->getPaste($dataid);
             if ($paste->exists()) {
-                // accessing this property ensures that the paste would be
+                // accessing this method ensures that the paste would be
                 // deleted if it has already expired
-                $burnafterreading = $paste->isBurnafterreading();
+                $paste->get();
                 if (
-                    ($burnafterreading && $deletetoken == 'burnafterreading') || // either we burn-after it has been read //@TODO: not needed anymore now?
-                    Filter::slowEquals($deletetoken, $paste->getDeleteToken()) // or we manually delete it with this secret token
+                    Filter::slowEquals($deletetoken, $paste->getDeleteToken())
                 ) {
-                    // Paste exists and deletion token (if required) is valid: Delete the paste.
+                    // Paste exists and deletion token is valid: Delete the paste.
                     $paste->delete();
                     $this->_status = 'Paste was properly deleted.';
                 } else {
-                    if (!$burnafterreading && $deletetoken == 'burnafterreading') {
-                        $this->_error = 'Paste is not of burn-after-reading type.';
-                    } else {
-                        $this->_error = 'Wrong deletion token. Paste was not deleted.';
-                    }
+                    $this->_error = 'Wrong deletion token. Paste was not deleted.';
                 }
             } else {
                 $this->_error = self::GENERIC_ERROR;
@@ -355,8 +304,8 @@ class Controller
             $paste = $this->_model->getPaste($dataid);
             if ($paste->exists()) {
                 $data = $paste->get();
-                if (property_exists($data->meta, 'salt')) {
-                    unset($data->meta->salt);
+                if (array_key_exists('salt', $data['meta'])) {
+                    unset($data['meta']['salt']);
                 }
                 $this->_return_message(0, $dataid, (array) $data);
             } else {

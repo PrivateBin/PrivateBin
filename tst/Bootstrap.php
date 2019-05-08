@@ -176,7 +176,8 @@ class Helper
     public static function getPastePost()
     {
         $example = self::getPaste();
-        $example['meta'] = array('expire' => $example['meta']['expire']);
+        $example['adata'] = json_encode($example['adata']);
+        $example['meta'] = json_encode(array('expire' => $example['meta']['expire']));
         return $example;
     }
 
