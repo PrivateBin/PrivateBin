@@ -121,7 +121,7 @@ class Filesystem extends AbstractData
      * @param  string $pasteid
      * @return bool
      */
-    public functio(($pasteid)
+    public function exists($pasteid)
     {
         $basePath  = self::_dataid2path($pasteid) . $pasteid;
         $pastePath = $basePath . '.php';
@@ -230,7 +230,7 @@ class Filesystem extends AbstractData
      * @param  int $batchsize
      * @return array
      */
-    protected function _getExpiredPastes(int $batchsize)
+    protected function _getExpiredPastes($batchsize)
     {
         $pastes     = array();
         $mainpath   = DataStore::getPath();

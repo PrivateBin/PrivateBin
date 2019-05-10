@@ -430,7 +430,7 @@ class Database extends AbstractData
      * @param  int $batchsize
      * @return array
      */
-    protected function _getExpiredPastes(int $batchsize)
+    protected function _getExpiredPastes($batchsize)
     {
         $pastes = array();
         $rows   = self::_select(
@@ -494,7 +494,7 @@ class Database extends AbstractData
      * @param  int $version
      * @return array
      */
-    private static function _getVersionedKeys(int $version)
+    private static function _getVersionedKeys($version)
     {
         if ($version === 1) {
             return array('postdate', 'vizhash');
