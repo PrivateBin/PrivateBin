@@ -136,7 +136,7 @@ class Paste extends AbstractModel
      * @throws Exception
      * @return Comment
      */
-    public function getComment(string $parentId, string $commentId = '')
+    public function getComment($parentId, $commentId = '')
     {
         if (!$this->exists()) {
             throw new Exception('Invalid data.', 62);

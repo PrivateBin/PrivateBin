@@ -86,7 +86,7 @@ abstract class AbstractModel
      * @param string $id
      * @throws Exception
      */
-    public function setId(string $id)
+    public function setId($id)
     {
         if (!self::isValidId($id)) {
             throw new Exception('Invalid paste ID.', 60);
@@ -154,7 +154,7 @@ abstract class AbstractModel
      * @param  string $id
      * @return bool
      */
-    public static function isValidId(string $id)
+    public static function isValidId($id)
     {
         return (bool) preg_match('#\A[a-f\d]{16}\z#', (string) $id);
     }
