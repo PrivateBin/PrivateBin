@@ -67,7 +67,7 @@ class Database extends AbstractData
      * @throws Exception
      * @return Database
      */
-    public static function getInstance($options = null)
+    public static function getInstance(array $options)
     {
         // if needed initialize the singleton
         if (!(self::$_instance instanceof self)) {
