@@ -29,7 +29,7 @@ class Filesystem extends AbstractData
      * @param  array $options
      * @return Filesystem
      */
-    public static function getInstance($options = null)
+    public static function getInstance(array $options)
     {
         // if needed initialize the singleton
         if (!(self::$_instance instanceof self)) {
@@ -53,7 +53,7 @@ class Filesystem extends AbstractData
      * @param  array  $paste
      * @return bool
      */
-    public function create($pasteid, $paste)
+    public function create($pasteid, array $paste)
     {
         $storagedir = self::_dataid2path($pasteid);
         $file       = $storagedir . $pasteid . '.php';
@@ -121,7 +121,7 @@ class Filesystem extends AbstractData
      * @param  string $pasteid
      * @return bool
      */
-    public function exists($pasteid)
+    public functio(($pasteid)
     {
         $basePath  = self::_dataid2path($pasteid) . $pasteid;
         $pastePath = $basePath . '.php';
@@ -155,7 +155,7 @@ class Filesystem extends AbstractData
      * @param  array  $comment
      * @return bool
      */
-    public function createComment($pasteid, $parentid, $commentid, $comment)
+    public function createComment($pasteid, $parentid, $commentid, array $comment)
     {
         $storagedir = self::_dataid2discussionpath($pasteid);
         $file       = $storagedir . $pasteid . '.' . $commentid . '.' . $parentid . '.php';
@@ -230,7 +230,7 @@ class Filesystem extends AbstractData
      * @param  int $batchsize
      * @return array
      */
-    protected function _getExpiredPastes($batchsize)
+    protected function _getExpiredPastes(int $batchsize)
     {
         $pastes     = array();
         $mainpath   = DataStore::getPath();

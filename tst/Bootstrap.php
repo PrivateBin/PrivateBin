@@ -3,6 +3,7 @@
 use PrivateBin\Persistence\ServerSalt;
 
 error_reporting(E_ALL | E_STRICT);
+ini_set('display_errors', 1);
 
 // change this, if your php files and data is outside of your webservers document root
 if (!defined('PUBLIC_PATH')) {
@@ -120,7 +121,7 @@ class Helper
      * @param  array $meta
      * @return array
      */
-    public static function getPaste(int $version = 2, array $meta = array())
+    public static function getPaste($version = 2, array $meta = array())
     {
         $example = self::getPasteWithAttachment($version, $meta);
         // v1 has the attachment stored in a separate property
@@ -137,7 +138,7 @@ class Helper
      * @param  array $meta
      * @return array
      */
-    public static function getPasteWithAttachment(int $version = 2, array $meta = array())
+    public static function getPasteWithAttachment($version = 2, array $meta = array())
     {
         $example                 = $version === 1 ? self::$pasteV1 : self::$pasteV2;
         $example['meta']['salt'] = ServerSalt::generate();
@@ -152,7 +153,7 @@ class Helper
      * @param  array $meta
      * @return array
      */
-    public static function getPastePost(int $version = 2, array $meta = array())
+    public static function getPastePost($version = 2, array $meta = array())
     {
         $example = self::getPaste($version, $meta);
         $example['meta'] = array('expire' => $example['meta']['expire']);
@@ -165,7 +166,7 @@ class Helper
      * @param  array $meta
      * @return array
      */
-    public static function getPastePostJson(int $version = 2, array $meta = array())
+    public static function getPastePostJson($version = 2, array $meta = array())
     {
         $example = self::getPastePost($version, $meta);
         $example['adata'] = json_encode($example['adata']);
@@ -190,7 +191,7 @@ class Helper
      * @param  array $meta
      * @return array
      */
-    public static function getComment(int $version = 2, array $meta = array())
+    public static function getComment($version = 2, array $meta = array())
     {
         $example         = $version === 1 ? self::$commentV1 : self::$pasteV2;
         if ($version === 2) {

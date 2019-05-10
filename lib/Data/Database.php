@@ -154,7 +154,7 @@ class Database extends AbstractData
      * @param  array  $paste
      * @return bool
      */
-    public function create(string $pasteid, array $paste)
+    public function create($pasteid, array $paste)
     {
         if (
             array_key_exists($pasteid, self::$_cache)
@@ -223,7 +223,7 @@ class Database extends AbstractData
      * @param  string $pasteid
      * @return array|false
      */
-    public function read(string $pasteid)
+    public function read($pasteid)
     {
         if (array_key_exists($pasteid, self::$_cache)) {
             return self::$_cache[$pasteid];
@@ -287,7 +287,7 @@ class Database extends AbstractData
      * @access public
      * @param  string $pasteid
      */
-    public function delete(string $pasteid)
+    public function delete($pasteid)
     {
         self::_exec(
             'DELETE FROM ' . self::_sanitizeIdentifier('paste') .
@@ -311,7 +311,7 @@ class Database extends AbstractData
      * @param  string $pasteid
      * @return bool
      */
-    public function exists(string $pasteid)
+    public function exists($pasteid)
     {
         if (
             !array_key_exists($pasteid, self::$_cache)
@@ -331,7 +331,7 @@ class Database extends AbstractData
      * @param  array  $comment
      * @return bool
      */
-    public function createComment(string $pasteid, string $parentid, string $commentid, array $comment)
+    public function createComment($pasteid, $parentid, $commentid, array $comment)
     {
         if (array_key_exists('data', $comment)) {
             $version = 1;
@@ -370,7 +370,7 @@ class Database extends AbstractData
      * @param  string $pasteid
      * @return array
      */
-    public function readComments(string $pasteid)
+    public function readComments($pasteid)
     {
         $rows = self::_select(
             'SELECT * FROM ' . self::_sanitizeIdentifier('comment') .
@@ -414,7 +414,7 @@ class Database extends AbstractData
      * @param  string $commentid
      * @return bool
      */
-    public function existsComment(string $pasteid, string $parentid, string $commentid)
+    public function existsComment($pasteid, $parentid, $commentid)
     {
         return (bool) self::_select(
             'SELECT dataid FROM ' . self::_sanitizeIdentifier('comment') .
@@ -456,7 +456,7 @@ class Database extends AbstractData
      * @throws PDOException
      * @return bool
      */
-    private static function _exec(string $sql, array $params)
+    private static function _exec($sql, array $params)
     {
         $statement = self::$_db->prepare($sql);
         $result    = $statement->execute($params);
@@ -475,7 +475,7 @@ class Database extends AbstractData
      * @throws PDOException
      * @return array
      */
-    private static function _select(string $sql, array $params, bool $firstOnly = false)
+    private static function _select($sql, array $params, bool $firstOnly = false)
     {
         $statement = self::$_db->prepare($sql);
         $statement->execute($params);
