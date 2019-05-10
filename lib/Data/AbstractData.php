@@ -147,7 +147,7 @@ abstract class AbstractData
      * @access public
      * @param  int $batchsize
      */
-    public function purge(int $batchsize)
+    public function purge($batchsize)
     {
         if ($batchsize < 1) {
             return;
