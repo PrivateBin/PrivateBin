@@ -237,7 +237,7 @@ class Helper
      * @param string $path
      * @throws Exception
      */
-    public static function rmDir(string $path)
+    public static function rmDir($path)
     {
         if (is_dir($path)) {
             $path .= DIRECTORY_SEPARATOR;
@@ -296,7 +296,7 @@ class Helper
      * @param string $pathToFile
      * @param array $values
      */
-    public static function createIniFile(string $pathToFile, array $values)
+    public static function createIniFile($pathToFile, array $values)
     {
         if (count($values)) {
             @unlink($pathToFile);
@@ -339,7 +339,7 @@ class Helper
      * @param bool $return
      * @return void|string
      */
-    public static function varExportMin($var, bool $return = false)
+    public static function varExportMin($var, $return = false)
     {
         if (is_array($var)) {
             $toImplode = array();
