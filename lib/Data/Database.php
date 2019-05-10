@@ -475,7 +475,7 @@ class Database extends AbstractData
      * @throws PDOException
      * @return array
      */
-    private static function _select($sql, array $params, bool $firstOnly = false)
+    private static function _select($sql, array $params, $firstOnly = false)
     {
         $statement = self::$_db->prepare($sql);
         $statement->execute($params);
