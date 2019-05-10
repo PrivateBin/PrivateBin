@@ -48,7 +48,7 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
         $options                     = parse_ini_file(CONF, true);
         $options['traffic']['limit'] = 0;
         Helper::createIniFile(CONF, $options);
-        $_POST                            = Helper::getPastePost();
+        $_POST                            = Helper::getPastePostJson();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD']        = 'POST';
         $_SERVER['REMOTE_ADDR']           = '::1';
@@ -76,7 +76,7 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
         $options                     = parse_ini_file(CONF, true);
         $options['traffic']['limit'] = 0;
         Helper::createIniFile(CONF, $options);
-        $paste = Helper::getPastePost();
+        $paste = Helper::getPastePostJson();
         $file = tempnam(sys_get_temp_dir(), 'FOO');
         file_put_contents($file, http_build_query($paste));
         Request::setInputStream($file);

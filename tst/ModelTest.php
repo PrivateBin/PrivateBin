@@ -193,16 +193,6 @@ class ModelTest extends PHPUnit_Framework_TestCase
 
     /**
      * @expectedException Exception
-     * @expectedExceptionCode 61
-     */
-    public function testInvalidData()
-    {
-        $paste = $this->_model->getPaste();
-        $paste->setData(array());
-    }
-
-    /**
-     * @expectedException Exception
      * @expectedExceptionCode 62
      */
     public function testInvalidComment()

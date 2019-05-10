@@ -15,7 +15,6 @@ namespace PrivateBin\Model;
 use Exception;
 use PrivateBin\Configuration;
 use PrivateBin\Data\AbstractData;
-use PrivateBin\FormatV2;
 
 /**
  * AbstractModel
@@ -104,9 +103,6 @@ abstract class AbstractModel
      */
     public function setData(array $data)
     {
-        if (!FormatV2::isValid($data, $this instanceof Comment)) {
-            throw new Exception('Invalid data.', 61);
-        }
         $data = $this->_sanitize($data);
         $this->_validate($data);
         $this->_data = $data;

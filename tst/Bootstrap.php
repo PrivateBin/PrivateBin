@@ -114,7 +114,7 @@ class Helper
     }
 
     /**
-     * get example paste
+     * get example paste, as stored on server
      *
      * @param  int $version
      * @param  array $meta
@@ -131,7 +131,7 @@ class Helper
     }
 
     /**
-     * get example paste
+     * get example paste with attachment, as stored on server
      *
      * @param  int $version
      * @param  array $meta
@@ -146,38 +146,30 @@ class Helper
     }
 
     /**
-     * get example paste
+     * get example paste, as decoded from POST by the request object
      *
      * @param  int $version
      * @param  array $meta
      * @return array
      */
-    public static function getPasteAsJson(int $version = 2, array $meta = array())
+    public static function getPastePost(int $version = 2, array $meta = array())
     {
-        $example = self::getPaste($version);
-        // the JSON shouldn't contain the salt
-        unset($example['meta']['salt']);
-        if (count($meta)) {
-            $example['meta'] = $meta;
-        }
-        $example['comments']       = array();
-        $example['comment_count']  = 0;
-        $example['comment_offset'] = 0;
-        $example['@context']       = 'js/paste.jsonld';
-        return json_encode($example);
+        $example = self::getPaste($version, $meta);
+        $example['meta'] = array('expire' => $example['meta']['expire']);
+        return $example;
     }
-
     /**
-     * get example paste, as received via POST by user
+     * get example paste, as received via POST by the user
      *
      * @param  int $version
+     * @param  array $meta
      * @return array
      */
-    public static function getPastePost()
+    public static function getPastePostJson(int $version = 2, array $meta = array())
     {
-        $example = self::getPaste();
+        $example = self::getPastePost($version, $meta);
         $example['adata'] = json_encode($example['adata']);
-        $example['meta'] = json_encode(array('expire' => $example['meta']['expire']));
+        $example['meta'] = json_encode($example['meta']);
         return $example;
     }
 
@@ -192,7 +184,7 @@ class Helper
     }
 
     /**
-     * get example comment, as stored on server / returned to user
+     * get example comment, as stored on server
      *
      * @param  int $version
      * @param  array $meta
@@ -212,7 +204,7 @@ class Helper
     }
 
     /**
-     * get example comment, as received via POST by user
+     * get example comment, as decoded from POST by the request object
      *
      * @param  int $version
      * @return array
@@ -221,6 +213,19 @@ class Helper
     {
         $example = self::getComment();
         unset($example['meta']);
+        return $example;
+    }
+
+    /**
+     * get example comment, as received via POST by user
+     *
+     * @param  int $version
+     * @return array
+     */
+    public static function getCommentPostJson()
+    {
+        $example = self::getCommentPost();
+        $example['adata'] = json_encode($example['adata']);
         return $example;
     }
 

@@ -134,7 +134,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $file = $this->_path . DIRECTORY_SEPARATOR . '.htaccess';
         @unlink($file);
 
-        $_POST                            = Helper::getPaste();
+        $_POST                            = Helper::getPastePostJson();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD']        = 'POST';
         $_SERVER['REMOTE_ADDR']           = '::1';
@@ -163,7 +163,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $options                     = parse_ini_file(CONF, true);
         $options['traffic']['limit'] = 0;
         Helper::createIniFile(CONF, $options);
-        $_POST                            = Helper::getPaste();
+        $_POST                            = Helper::getPastePostJson();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD']        = 'POST';
         $_SERVER['REMOTE_ADDR']           = '::1';
@@ -176,7 +176,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($this->_model->exists($response['id']), 'paste exists after posting data');
         $paste = $this->_model->read($response['id']);
         $this->assertEquals(
-            hash_hmac('sha256', $response['id'], $paste->meta->salt),
+            hash_hmac('sha256', $response['id'], $paste['meta']['salt']),
             $response['deletetoken'],
             'outputs valid delete token'
         );
@@ -190,7 +190,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $options                     = parse_ini_file(CONF, true);
         $options['traffic']['limit'] = 0;
         Helper::createIniFile(CONF, $options);
-        $_POST                            = Helper::getPaste(array('expire' => 25));
+        $_POST                            = Helper::getPastePostJson(2, array('expire' => 25));
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD']        = 'POST';
         $_SERVER['REMOTE_ADDR']           = '::1';
@@ -204,7 +204,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($this->_model->exists($response['id']), 'paste exists after posting data');
         $paste = $this->_model->read($response['id']);
         $this->assertEquals(
-            hash_hmac('sha256', $response['id'], $paste->meta->salt),
+            hash_hmac('sha256', $response['id'], $paste['meta']['salt']),
             $response['deletetoken'],
             'outputs valid delete token'
         );
@@ -219,7 +219,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $options['main']['sizelimit'] = 10;
         $options['traffic']['limit']  = 0;
         Helper::createIniFile(CONF, $options);
-        $_POST                            = Helper::getPaste();
+        $_POST                            = Helper::getPastePostJson();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD']        = 'POST';
         $_SERVER['REMOTE_ADDR']           = '::1';
@@ -240,7 +240,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $options                      = parse_ini_file(CONF, true);
         $options['traffic']['header'] = 'X_FORWARDED_FOR';
         Helper::createIniFile(CONF, $options);
-        $_POST                            = Helper::getPaste();
+        $_POST                            = Helper::getPastePostJson();
         $_SERVER['HTTP_X_FORWARDED_FOR']  = '::2';
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD']        = 'POST';
@@ -254,7 +254,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($this->_model->exists($response['id']), 'paste exists after posting data');
         $paste = $this->_model->read($response['id']);
         $this->assertEquals(
-            hash_hmac('sha256', $response['id'], $paste->meta->salt),
+            hash_hmac('sha256', $response['id'], $paste['meta']['salt']),
             $response['deletetoken'],
             'outputs valid delete token'
         );
@@ -269,7 +269,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $options['traffic']['limit'] = 0;
         Helper::createIniFile(CONF, $options);
         $this->_model->create(Helper::getPasteId(), Helper::getPaste());
-        $_POST                            = Helper::getPaste();
+        $_POST                            = Helper::getPastePostJson();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD']        = 'POST';
         $_SERVER['REMOTE_ADDR']           = '::1';
@@ -290,7 +290,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $options                     = parse_ini_file(CONF, true);
         $options['traffic']['limit'] = 0;
         Helper::createIniFile(CONF, $options);
-        $_POST                            = Helper::getPaste();
+        $_POST                            = Helper::getPastePostJson();
         $_POST['expire']                  = '5min';
         $_POST['formatter']               = 'foo';
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
@@ -306,11 +306,11 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($this->_model->exists($response['id']), 'paste exists after posting data');
         $paste = $this->_model->read($response['id']);
         $this->assertEquals(
-            hash_hmac('sha256', $response['id'], $paste->meta->salt),
+            hash_hmac('sha256', $response['id'], $paste['meta']['salt']),
             $response['deletetoken'],
             'outputs valid delete token'
         );
-        $this->assertGreaterThanOrEqual($time + 300, $paste->meta->expire_date, 'time is set correctly');
+        $this->assertGreaterThanOrEqual($time + 300, $paste['meta']['expire_date'], 'time is set correctly');
     }
 
     /**
@@ -321,7 +321,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $options                     = parse_ini_file(CONF, true);
         $options['traffic']['limit'] = 0;
         Helper::createIniFile(CONF, $options);
-        $_POST                            = Helper::getPaste();
+        $_POST                            = Helper::getPastePostJson();
         $_POST['expire']                  = '5min';
         $_POST['opendiscussion']          = '1';
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
@@ -337,12 +337,12 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($this->_model->exists($response['id']), 'paste exists after posting data');
         $paste = $this->_model->read($response['id']);
         $this->assertEquals(
-            hash_hmac('sha256', $response['id'], $paste->meta->salt),
+            hash_hmac('sha256', $response['id'], $paste['meta']['salt']),
             $response['deletetoken'],
             'outputs valid delete token'
         );
-        $this->assertGreaterThanOrEqual($time + 300, $paste->meta->expire_date, 'time is set correctly');
-        $this->assertEquals(1, $paste->meta->opendiscussion, 'discussion is enabled');
+        $this->assertGreaterThanOrEqual($time + 300, $paste['meta']['expire_date'], 'time is set correctly');
+        $this->assertEquals(1, $paste['adata'][2], 'discussion is enabled');
     }
 
     /**
@@ -353,7 +353,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $options                     = parse_ini_file(CONF, true);
         $options['traffic']['limit'] = 0;
         Helper::createIniFile(CONF, $options);
-        $_POST                            = Helper::getPaste();
+        $_POST                            = Helper::getPastePostJson();
         $_POST['expire']                  = 'foo';
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD']        = 'POST';
@@ -367,7 +367,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($this->_model->exists($response['id']), 'paste exists after posting data');
         $paste = $this->_model->read($response['id']);
         $this->assertEquals(
-            hash_hmac('sha256', $response['id'], $paste->meta->salt),
+            hash_hmac('sha256', $response['id'], $paste['meta']['salt']),
             $response['deletetoken'],
             'outputs valid delete token'
         );
@@ -381,8 +381,10 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $options                     = parse_ini_file(CONF, true);
         $options['traffic']['limit'] = 0;
         Helper::createIniFile(CONF, $options);
-        $_POST                            = Helper::getPaste();
-        $_POST['burnafterreading']        = 'neither 1 nor 0';
+        $_POST                            = Helper::getPastePostJson();
+        $adata                            = Helper::getPaste()['adata'];
+        $adata[3]                         = 'neither 1 nor 0';
+        $_POST['adata']                   = json_encode($adata);
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD']        = 'POST';
         $_SERVER['REMOTE_ADDR']           = '::1';
@@ -403,8 +405,10 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $options                     = parse_ini_file(CONF, true);
         $options['traffic']['limit'] = 0;
         Helper::createIniFile(CONF, $options);
-        $_POST                            = Helper::getPaste();
-        $_POST['opendiscussion']          = 'neither 1 nor 0';
+        $_POST                            = Helper::getPastePostJson();
+        $adata                            = Helper::getPaste()['adata'];
+        $adata[2]                         = 'neither 1 nor 0';
+        $_POST['adata']                   = json_encode($adata);
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD']        = 'POST';
         $_SERVER['REMOTE_ADDR']           = '::1';
@@ -418,55 +422,18 @@ class ControllerTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @runInSeparateProcess
-     */
-    public function testCreateAttachment()
-    {
-        $options                       = parse_ini_file(CONF, true);
-        $options['traffic']['limit']   = 0;
-        $options['main']['fileupload'] = true;
-        Helper::createIniFile(CONF, $options);
-        $_POST                            = Helper::getPasteWithAttachment();
-        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
-        $_SERVER['REQUEST_METHOD']        = 'POST';
-        $_SERVER['REMOTE_ADDR']           = '::1';
-        $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste does not exists before posting data');
-        ob_start();
-        new Controller;
-        $content = ob_get_contents();
-        ob_end_clean();
-        $response = json_decode($content, true);
-        $this->assertEquals(0, $response['status'], 'outputs status');
-        $this->assertTrue($this->_model->exists($response['id']), 'paste exists after posting data');
-        $original = json_decode(json_encode($_POST));
-        $stored   = $this->_model->read($response['id']);
-        foreach (array('data', 'attachment', 'attachmentname') as $key) {
-            $this->assertEquals($original->$key, $stored->$key);
-        }
-        $this->assertEquals(
-            hash_hmac('sha256', $response['id'], $stored->meta->salt),
-            $response['deletetoken'],
-            'outputs valid delete token'
-        );
-    }
-
-    /**
      * In some webserver setups (found with Suhosin) overly long POST params are
      * silently removed, check that this case is handled
      *
      * @runInSeparateProcess
      */
-    public function testCreateBrokenAttachmentUpload()
+    public function testCreateBrokenUpload()
     {
-        $options                       = parse_ini_file(CONF, true);
-        $options['traffic']['limit']   = 0;
-        $options['main']['fileupload'] = true;
-        Helper::createIniFile(CONF, $options);
-        $_POST = Helper::getPasteWithAttachment();
-        unset($_POST['attachment']);
+        $_POST                            = Helper::getPastePostJson();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD']        = 'POST';
         $_SERVER['REMOTE_ADDR']           = '::1';
+        $_POST['ct'] = ' ';
         $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste does not exists before posting data');
         ob_start();
         new Controller;
@@ -482,7 +449,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
      */
     public function testCreateTooSoon()
     {
-        $_POST                            = Helper::getPaste();
+        $_POST                            = Helper::getPastePostJson();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD']        = 'POST';
         $_SERVER['REMOTE_ADDR']           = '::1';
@@ -502,67 +469,12 @@ class ControllerTest extends PHPUnit_Framework_TestCase
     /**
      * @runInSeparateProcess
      */
-    public function testCreateValidNick()
-    {
-        $options                     = parse_ini_file(CONF, true);
-        $options['traffic']['limit'] = 0;
-        Helper::createIniFile(CONF, $options);
-        $_POST                            = Helper::getPaste();
-        $_POST['nickname']                = Helper::getComment()['meta']['nickname'];
-        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
-        $_SERVER['REQUEST_METHOD']        = 'POST';
-        $_SERVER['REMOTE_ADDR']           = '::1';
-        ob_start();
-        new Controller;
-        $content = ob_get_contents();
-        ob_end_clean();
-        $response = json_decode($content, true);
-        $this->assertEquals(0, $response['status'], 'outputs status');
-        $this->assertTrue($this->_model->exists($response['id']), 'paste exists after posting data');
-        $paste = $this->_model->read($response['id']);
-        $this->assertEquals(
-            hash_hmac('sha256', $response['id'], $paste->meta->salt),
-            $response['deletetoken'],
-            'outputs valid delete token'
-        );
-    }
-
-    /**
-     * @runInSeparateProcess
-     */
-    public function testCreateInvalidNick()
-    {
-        $options                     = parse_ini_file(CONF, true);
-        $options['traffic']['limit'] = 0;
-        Helper::createIniFile(CONF, $options);
-        $_POST                            = Helper::getCommentPost();
-        $_POST['pasteid']                 = Helper::getPasteId();
-        $_POST['parentid']                = Helper::getPasteId();
-        $_POST['nickname']                = 'foo';
-        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
-        $_SERVER['REQUEST_METHOD']        = 'POST';
-        $_SERVER['REMOTE_ADDR']           = '::1';
-        $this->_model->create(Helper::getPasteId(), Helper::getPaste());
-        ob_start();
-        new Controller;
-        $content = ob_get_contents();
-        ob_end_clean();
-        $response = json_decode($content, true);
-        $this->assertEquals(1, $response['status'], 'outputs error status');
-        $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste exists after posting data');
-    }
-
-    /**
-     * @runInSeparateProcess
-     */
     public function testCreateComment()
     {
         $options                     = parse_ini_file(CONF, true);
         $options['traffic']['limit'] = 0;
         Helper::createIniFile(CONF, $options);
-        $_POST                            = Helper::getCommentPost();
-        $_POST['pasteid']                 = Helper::getPasteId();
-        $_POST['parentid']                = Helper::getPasteId();
+        $_POST                            = Helper::getCommentPostJson();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD']        = 'POST';
         $_SERVER['REMOTE_ADDR']           = '::1';
@@ -584,8 +496,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $options                     = parse_ini_file(CONF, true);
         $options['traffic']['limit'] = 0;
         Helper::createIniFile(CONF, $options);
-        $_POST                            = Helper::getCommentPost();
-        $_POST['pasteid']                 = Helper::getPasteId();
+        $_POST                            = Helper::getCommentPostJson();
         $_POST['parentid']                = 'foo';
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD']        = 'POST';
@@ -608,13 +519,12 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $options                     = parse_ini_file(CONF, true);
         $options['traffic']['limit'] = 0;
         Helper::createIniFile(CONF, $options);
-        $_POST                            = Helper::getCommentPost();
-        $_POST['pasteid']                 = Helper::getPasteId();
-        $_POST['parentid']                = Helper::getPasteId();
+        $_POST                            = Helper::getCommentPostJson();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD']        = 'POST';
         $_SERVER['REMOTE_ADDR']           = '::1';
-        $paste                            = Helper::getPaste(array('opendiscussion' => false));
+        $paste                            = Helper::getPaste();
+        $paste['adata'][2] = 0;
         $this->_model->create(Helper::getPasteId(), $paste);
         ob_start();
         new Controller;
@@ -633,9 +543,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $options                     = parse_ini_file(CONF, true);
         $options['traffic']['limit'] = 0;
         Helper::createIniFile(CONF, $options);
-        $_POST                            = Helper::getCommentPost();
-        $_POST['pasteid']                 = Helper::getPasteId();
-        $_POST['parentid']                = Helper::getPasteId();
+        $_POST                            = Helper::getCommentPostJson();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD']        = 'POST';
         $_SERVER['REMOTE_ADDR']           = '::1';
@@ -657,11 +565,9 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $options['traffic']['limit'] = 0;
         Helper::createIniFile(CONF, $options);
         $this->_model->create(Helper::getPasteId(), Helper::getPaste());
-        $this->_model->createComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId(), Helper::getComment());
-        $this->assertTrue($this->_model->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId()), 'comment exists before posting data');
-        $_POST                            = Helper::getCommentPost();
-        $_POST['pasteid']                 = Helper::getPasteId();
-        $_POST['parentid']                = Helper::getPasteId();
+        $this->_model->createComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getPasteId(), Helper::getComment());
+        $this->assertTrue($this->_model->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getPasteId()), 'comment exists before posting data');
+        $_POST                            = Helper::getCommentPostJson();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD']        = 'POST';
         $_SERVER['REMOTE_ADDR']           = '::1';
@@ -671,7 +577,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         ob_end_clean();
         $response = json_decode($content, true);
         $this->assertEquals(1, $response['status'], 'outputs error status');
-        $this->assertTrue($this->_model->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId()), 'paste exists after posting data');
+        $this->assertTrue($this->_model->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getPasteId()), 'paste exists after posting data');
     }
 
     /**
@@ -713,7 +619,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
      */
     public function testReadExpired()
     {
-        $expiredPaste = Helper::getPaste(array('expire_date' => 1344803344));
+        $expiredPaste = Helper::getPaste(2, array('expire_date' => 1344803344));
         $this->_model->create(Helper::getPasteId(), $expiredPaste);
         $_SERVER['QUERY_STRING']          = Helper::getPasteId();
         $_GET[Helper::getPasteId()]       = '';
@@ -732,7 +638,8 @@ class ControllerTest extends PHPUnit_Framework_TestCase
      */
     public function testReadBurn()
     {
-        $paste = Helper::getPaste(array('burnafterreading' => true));
+        $paste = Helper::getPaste();
+        $paste['adata'][3] = 1;
         $this->_model->create(Helper::getPasteId(), $paste);
         $_SERVER['QUERY_STRING']          = Helper::getPasteId();
         $_GET[Helper::getPasteId()]       = '';
@@ -745,11 +652,11 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(0, $response['status'], 'outputs success status');
         $this->assertEquals(Helper::getPasteId(), $response['id'], 'outputs data correctly');
         $this->assertStringEndsWith('?' . $response['id'], $response['url'], 'returned URL points to new paste');
-        $this->assertEquals($paste['data'], $response['data'], 'outputs data correctly');
-        $this->assertEquals($paste['meta']['formatter'], $response['meta']['formatter'], 'outputs format correctly');
-        $this->assertEquals($paste['meta']['postdate'], $response['meta']['postdate'], 'outputs postdate correctly');
-        $this->assertEquals($paste['meta']['opendiscussion'], $response['meta']['opendiscussion'], 'outputs opendiscussion correctly');
-        $this->assertEquals(1, $response['meta']['burnafterreading'], 'outputs burnafterreading correctly');
+        $this->assertEquals($paste['ct'], $response['ct'], 'outputs ct correctly');
+        $this->assertEquals($paste['adata'][1], $response['adata'][1], 'outputs formatter correctly');
+        $this->assertEquals($paste['adata'][2], $response['adata'][2], 'outputs opendiscussion correctly');
+        $this->assertEquals($paste['adata'][3], $response['adata'][3], 'outputs burnafterreading correctly');
+        $this->assertEquals($paste['meta']['created'], $response['meta']['created'], 'outputs created correctly');
         $this->assertEquals(0, $response['comment_count'], 'outputs comment_count correctly');
         $this->assertEquals(0, $response['comment_offset'], 'outputs comment_offset correctly');
         // by default it will be deleted instantly after it is read
@@ -774,10 +681,11 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(0, $response['status'], 'outputs success status');
         $this->assertEquals(Helper::getPasteId(), $response['id'], 'outputs data correctly');
         $this->assertStringEndsWith('?' . $response['id'], $response['url'], 'returned URL points to new paste');
-        $this->assertEquals($paste['data'], $response['data'], 'outputs data correctly');
-        $this->assertEquals($paste['meta']['formatter'], $response['meta']['formatter'], 'outputs format correctly');
-        $this->assertEquals($paste['meta']['postdate'], $response['meta']['postdate'], 'outputs postdate correctly');
-        $this->assertEquals($paste['meta']['opendiscussion'], $response['meta']['opendiscussion'], 'outputs opendiscussion correctly');
+        $this->assertEquals($paste['ct'], $response['ct'], 'outputs ct correctly');
+        $this->assertEquals($paste['adata'][1], $response['adata'][1], 'outputs formatter correctly');
+        $this->assertEquals($paste['adata'][2], $response['adata'][2], 'outputs opendiscussion correctly');
+        $this->assertEquals($paste['adata'][3], $response['adata'][3], 'outputs burnafterreading correctly');
+        $this->assertEquals($paste['meta']['created'], $response['meta']['created'], 'outputs created correctly');
         $this->assertEquals(0, $response['comment_count'], 'outputs comment_count correctly');
         $this->assertEquals(0, $response['comment_offset'], 'outputs comment_offset correctly');
     }
@@ -787,7 +695,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
      */
     public function testReadOldSyntax()
     {
-        $paste         = Helper::getPaste();
+        $paste         = Helper::getPaste(1);
         $paste['meta'] = array(
             'syntaxcoloring' => true,
             'postdate'       => $paste['meta']['postdate'],
@@ -816,13 +724,34 @@ class ControllerTest extends PHPUnit_Framework_TestCase
     /**
      * @runInSeparateProcess
      */
+    public function testReadBurnAfterReading()
+    {
+        $burnPaste = Helper::getPaste();
+        $burnPaste['adata'][3] = 1;
+        $this->_model->create(Helper::getPasteId(), $burnPaste);
+        $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste exists before deleting data');
+        $_SERVER['QUERY_STRING']          = Helper::getPasteId();
+        $_GET[Helper::getPasteId()]       = '';
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
+        ob_start();
+        new Controller;
+        $content = ob_get_contents();
+        ob_end_clean();
+        $response = json_decode($content, true);
+        $this->assertEquals(0, $response['status'], 'outputs status');
+        $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste successfully deleted');
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
     public function testDelete()
     {
         $this->_model->create(Helper::getPasteId(), Helper::getPaste());
         $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste exists before deleting data');
         $paste               = $this->_model->read(Helper::getPasteId());
         $_GET['pasteid']     = Helper::getPasteId();
-        $_GET['deletetoken'] = hash_hmac('sha256', Helper::getPasteId(), $paste->meta->salt);
+        $_GET['deletetoken'] = hash_hmac('sha256', Helper::getPasteId(), $paste['meta']['salt']);
         ob_start();
         new Controller;
         $content = ob_get_contents();
@@ -896,28 +825,6 @@ class ControllerTest extends PHPUnit_Framework_TestCase
     /**
      * @runInSeparateProcess
      */
-    public function testDeleteBurnAfterReading()
-    {
-        $burnPaste = Helper::getPaste(array('burnafterreading' => true));
-        $this->_model->create(Helper::getPasteId(), $burnPaste);
-        $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste exists before deleting data');
-        $_POST['deletetoken']             = 'burnafterreading';
-        $_SERVER['QUERY_STRING']          = Helper::getPasteId();
-        $_GET[Helper::getPasteId()]       = '';
-        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
-        $_SERVER['REQUEST_METHOD']        = 'POST';
-        ob_start();
-        new Controller;
-        $content = ob_get_contents();
-        ob_end_clean();
-        $response = json_decode($content, true);
-        $this->assertEquals(0, $response['status'], 'outputs status');
-        $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste successfully deleted');
-    }
-
-    /**
-     * @runInSeparateProcess
-     */
     public function testDeleteInvalidBurnAfterReading()
     {
         $this->_model->create(Helper::getPasteId(), Helper::getPaste());
@@ -941,7 +848,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
      */
     public function testDeleteExpired()
     {
-        $expiredPaste = Helper::getPaste(array('expire_date' => 1000));
+        $expiredPaste = Helper::getPaste(2, array('expire_date' => 1000));
         $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste does not exist before being created');
         $this->_model->create(Helper::getPasteId(), $expiredPaste);
         $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste exists before deleting data');

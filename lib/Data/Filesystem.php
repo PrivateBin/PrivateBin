@@ -190,11 +190,11 @@ class Filesystem extends AbstractData
                     $comment = DataStore::get($discdir . $filename);
                     $items   = explode('.', $filename);
                     // Add some meta information not contained in file.
-                    $comment->id       = $items[1];
-                    $comment->parentid = $items[2];
+                    $comment['id']       = $items[1];
+                    $comment['parentid'] = $items[2];
 
                     // Store in array
-                    $key            = $this->getOpenSlot($comments, (int) $comment->meta->postdate);
+                    $key            = $this->getOpenSlot($comments, (int) $comment['meta']['created']);
                     $comments[$key] = $comment;
                 }
             }
@@ -283,8 +283,8 @@ class Filesystem extends AbstractData
                 if ($this->exists($pasteid)) {
                     $data = $this->read($pasteid);
                     if (
-                        property_exists($data->meta, 'expire_date') &&
-                        $data->meta->expire_date < time()
+                        array_key_exists('expire_date', $data['meta']) &&
+                        $data['meta']['expire_date'] < time()
                     ) {
                         $pastes[] = $pasteid;
                         if (count($pastes) >= $batchsize) {

@@ -208,6 +208,13 @@ class Controller
 
         // Ensure content is not too big.
         $data      = $this->_request->getData();
+        $isComment = array_key_exists('pasteid', $data) &&
+            !empty($data['pasteid']) &&
+            array_key_exists('parentid', $data) &&
+            !empty($data['parentid']);
+        if (!FormatV2::isValid($data, $isComment)) {
+            return $this->_return_message(1, 'Invalid data.');
+        }
         $sizelimit = $this->_conf->getKey('sizelimit');
         if (strlen($data['ct']) > $sizelimit) {
             return $this->_return_message(
@@ -220,7 +227,7 @@ class Controller
         }
 
         // The user posts a comment.
-        if (!empty($data['pasteid']) && !empty($data['parentid'])) {
+        if ($isComment) {
             $paste = $this->_model->getPaste($data['pasteid']);
             if ($paste->exists()) {
                 try {
