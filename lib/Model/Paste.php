@@ -195,10 +195,9 @@ class Paste extends AbstractModel
         if (!array_key_exists('adata', $this->_data) && !array_key_exists('data', $this->_data)) {
             $this->get();
         }
-        return (
+        return
             (array_key_exists('adata', $this->_data) && $this->_data['adata'][3] === 1) ||
-            (array_key_exists('burnafterreading', $this->_data['meta']) && $this->_data['meta']['burnafterreading'])
-        );
+            (array_key_exists('burnafterreading', $this->_data['meta']) && $this->_data['meta']['burnafterreading']);
     }
 
     /**
@@ -213,10 +212,9 @@ class Paste extends AbstractModel
         if (!array_key_exists('adata', $this->_data) && !array_key_exists('data', $this->_data)) {
             $this->get();
         }
-        return (
+        return
             (array_key_exists('adata', $this->_data) && $this->_data['adata'][2] === 1) ||
-            (array_key_exists('opendiscussion', $this->_data['meta']) && $this->_data['meta']['opendiscussion'])
-            );
+            (array_key_exists('opendiscussion', $this->_data['meta']) && $this->_data['meta']['opendiscussion']);
     }
 
     /**

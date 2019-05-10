@@ -90,9 +90,9 @@ class ModelTest extends PHPUnit_Framework_TestCase
 
         $comments = $this->_model->getPaste(Helper::getPasteId())->get()['comments'];
         $this->assertTrue(count($comments) === 1, 'comment exists after storing it');
-        $commentData['id'] = Helper::getPasteId();
+        $commentData['id']              = Helper::getPasteId();
         $commentData['meta']['created'] = current($comments)['meta']['created'];
-        $commentData['meta']['icon'] = current($comments)['meta']['icon'];
+        $commentData['meta']['icon']    = current($comments)['meta']['icon'];
         $this->assertEquals($commentData, current($comments));
 
         // deleting pastes
@@ -223,9 +223,9 @@ class ModelTest extends PHPUnit_Framework_TestCase
      */
     public function testInvalidCommentData()
     {
-        $pasteData = Helper::getPastePost();
+        $pasteData             = Helper::getPastePost();
         $pasteData['adata'][2] = 0;
-        $paste     = $this->_model->getPaste(Helper::getPasteId());
+        $paste                 = $this->_model->getPaste(Helper::getPasteId());
         $paste->setData($pasteData);
         $paste->store();
 
@@ -240,7 +240,7 @@ class ModelTest extends PHPUnit_Framework_TestCase
     public function testInvalidCommentParent()
     {
         $paste     = $this->_model->getPaste(Helper::getPasteId());
-        $comment = $paste->getComment('');
+        $comment   = $paste->getComment('');
         $comment->store();
     }
 
@@ -379,8 +379,8 @@ class ModelTest extends PHPUnit_Framework_TestCase
         $comment->setData($commentData);
         $comment->store();
 
-        $vz      = new Vizhash16x16();
-        $pngdata = 'data:image/png;base64,' . base64_encode($vz->generate(TrafficLimiter::getHash()));
+        $vz        = new Vizhash16x16();
+        $pngdata   = 'data:image/png;base64,' . base64_encode($vz->generate(TrafficLimiter::getHash()));
         $comment   = current($this->_model->getPaste(Helper::getPasteId())->get()['comments']);
         $this->assertEquals($pngdata, $comment['meta']['icon'], 'nickname triggers vizhash to be set');
     }

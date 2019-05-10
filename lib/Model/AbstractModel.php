@@ -177,6 +177,5 @@ abstract class AbstractModel
      */
     protected function _validate(array $data)
     {
-        return;
     }
 }

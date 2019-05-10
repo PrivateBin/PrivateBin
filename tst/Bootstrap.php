@@ -66,13 +66,13 @@ class Helper
             ),
             'plaintext',
             1,
-            0
+            0,
         ),
         'meta' => array(
             'expire'  => '5min',
             'created' => 1344803344,
         ),
-        'v' => 2,
+        'v'  => 2,
         'ct' => 'ME5JF/YBEijp2uYMzLZozbKtWc5wfy6R59NBb7SmRig=',
     );
 
@@ -155,10 +155,11 @@ class Helper
      */
     public static function getPastePost($version = 2, array $meta = array())
     {
-        $example = self::getPaste($version, $meta);
+        $example         = self::getPaste($version, $meta);
         $example['meta'] = array('expire' => $example['meta']['expire']);
         return $example;
     }
+
     /**
      * get example paste, as received via POST by the user
      *
@@ -168,9 +169,9 @@ class Helper
      */
     public static function getPastePostJson($version = 2, array $meta = array())
     {
-        $example = self::getPastePost($version, $meta);
+        $example          = self::getPastePost($version, $meta);
         $example['adata'] = json_encode($example['adata']);
-        $example['meta'] = json_encode($example['meta']);
+        $example['meta']  = json_encode($example['meta']);
         return $example;
     }
 
@@ -195,9 +196,9 @@ class Helper
     {
         $example         = $version === 1 ? self::$commentV1 : self::$pasteV2;
         if ($version === 2) {
-            $example['pasteid'] = $example['parentid'] = self::getPasteId();
+            $example['pasteid']         = $example['parentid']         = self::getPasteId();
             $example['meta']['created'] = self::$commentV1['meta']['postdate'];
-            $example['meta']['icon'] = self::$commentV1['meta']['vizhash'];
+            $example['meta']['icon']    = self::$commentV1['meta']['vizhash'];
             unset($example['meta']['expire']);
         }
         $example['meta'] = array_merge($example['meta'], $meta);
@@ -225,7 +226,7 @@ class Helper
      */
     public static function getCommentPostJson()
     {
-        $example = self::getCommentPost();
+        $example          = self::getCommentPost();
         $example['adata'] = json_encode($example['adata']);
         return $example;
     }

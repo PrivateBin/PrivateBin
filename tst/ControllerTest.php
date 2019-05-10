@@ -433,7 +433,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD']        = 'POST';
         $_SERVER['REMOTE_ADDR']           = '::1';
-        $_POST['ct'] = ' ';
+        $_POST['ct']                      = ' ';
         $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste does not exists before posting data');
         ob_start();
         new Controller;
@@ -524,7 +524,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $_SERVER['REQUEST_METHOD']        = 'POST';
         $_SERVER['REMOTE_ADDR']           = '::1';
         $paste                            = Helper::getPaste();
-        $paste['adata'][2] = 0;
+        $paste['adata'][2]                = 0;
         $this->_model->create(Helper::getPasteId(), $paste);
         ob_start();
         new Controller;
@@ -638,7 +638,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
      */
     public function testReadBurn()
     {
-        $paste = Helper::getPaste();
+        $paste             = Helper::getPaste();
         $paste['adata'][3] = 1;
         $this->_model->create(Helper::getPasteId(), $paste);
         $_SERVER['QUERY_STRING']          = Helper::getPasteId();
@@ -726,7 +726,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
      */
     public function testReadBurnAfterReading()
     {
-        $burnPaste = Helper::getPaste();
+        $burnPaste             = Helper::getPaste();
         $burnPaste['adata'][3] = 1;
         $this->_model->create(Helper::getPasteId(), $burnPaste);
         $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste exists before deleting data');

@@ -77,7 +77,7 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
         $options['traffic']['limit'] = 0;
         Helper::createIniFile(CONF, $options);
         $paste = Helper::getPastePostJson();
-        $file = tempnam(sys_get_temp_dir(), 'FOO');
+        $file  = tempnam(sys_get_temp_dir(), 'FOO');
         file_put_contents($file, http_build_query($paste));
         Request::setInputStream($file);
         $_SERVER['QUERY_STRING']          = Helper::getPasteId();

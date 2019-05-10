@@ -161,10 +161,10 @@ class Request
     public function getData()
     {
         $data = array(
-            'adata' => json_decode($this->getParam('adata', '[]'), true)
+            'adata' => json_decode($this->getParam('adata', '[]'), true),
         );
         $required_keys = array('v', 'ct');
-        $meta = $this->getParam('meta');
+        $meta          = $this->getParam('meta');
         if (empty($meta)) {
             $required_keys[] = 'pasteid';
             $required_keys[] = 'parentid';

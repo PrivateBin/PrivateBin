@@ -243,20 +243,20 @@ class Database extends AbstractData
         $isVersion2 = array_key_exists('v', $data) && $data['v'] >= 2;
         if ($isVersion2) {
             self::$_cache[$pasteid] = $data;
-            list($createdKey) = self::_getVersionedKeys(2);
+            list($createdKey)       = self::_getVersionedKeys(2);
         } else {
             self::$_cache[$pasteid] = array('data' => $paste['data']);
-            list($createdKey) = self::_getVersionedKeys(1);
+            list($createdKey)       = self::_getVersionedKeys(1);
         }
 
         $paste['meta'] = json_decode($paste['meta'], true);
         if (!is_array($paste['meta'])) {
             $paste['meta'] = array();
         }
-        $paste = self::upgradePreV1Format($paste);
-        self::$_cache[$pasteid]['meta'] = $paste['meta'];
+        $paste                                       = self::upgradePreV1Format($paste);
+        self::$_cache[$pasteid]['meta']              = $paste['meta'];
         self::$_cache[$pasteid]['meta'][$createdKey] = (int) $paste['postdate'];
-        $expire_date = (int) $paste['expiredate'];
+        $expire_date                                 = (int) $paste['expiredate'];
         if ($expire_date > 0) {
             self::$_cache[$pasteid]['meta']['expire_date'] = $expire_date;
         }
@@ -341,7 +341,7 @@ class Database extends AbstractData
             $data    = json_encode($comment);
         }
         list($createdKey, $iconKey) = self::_getVersionedKeys($version);
-        $meta = $comment['meta'];
+        $meta                       = $comment['meta'];
         unset($comment['meta']);
         foreach (array('nickname', $iconKey) as $key) {
             if (!array_key_exists($key, $meta)) {
@@ -381,7 +381,7 @@ class Database extends AbstractData
         $comments = array();
         if (count($rows)) {
             foreach ($rows as $row) {
-                $i = $this->getOpenSlot($comments, (int) $row['postdate']);
+                $i    = $this->getOpenSlot($comments, (int) $row['postdate']);
                 $data = json_decode($row['data'], true);
                 if (array_key_exists('v', $data) && $data['v'] >= 2) {
                     $version      = 2;
@@ -391,9 +391,9 @@ class Database extends AbstractData
                     $comments[$i] = array('data' => $row['data']);
                 }
                 list($createdKey, $iconKey) = self::_getVersionedKeys($version);
-                $comments[$i]['id']       = $row['dataid'];
-                $comments[$i]['parentid'] = $row['parentid'];
-                $comments[$i]['meta']     = array($createdKey => (int) $row['postdate']);
+                $comments[$i]['id']         = $row['dataid'];
+                $comments[$i]['parentid']   = $row['parentid'];
+                $comments[$i]['meta']       = array($createdKey => (int) $row['postdate']);
                 foreach (array('nickname' => 'nickname', 'vizhash' => $iconKey) as $rowKey => $commentKey) {
                     if (array_key_exists($rowKey, $row) && !empty($row[$rowKey])) {
                         $comments[$i]['meta'][$commentKey] = $row[$rowKey];
@@ -485,7 +485,6 @@ class Database extends AbstractData
         $statement->closeCursor();
         return $result;
     }
-
 
     /**
      * get version dependent key names
