@@ -111,7 +111,7 @@ class Helper
      */
     public static function getPasteId()
     {
-        return self::$pasteid;
+        return version_compare(PHP_VERSION, '5.5') > 0 ? self::$pasteid : hash('fnv164', self::$pasteV2['ct']);
     }
 
     /**
