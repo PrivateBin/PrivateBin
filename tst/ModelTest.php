@@ -284,7 +284,7 @@ class ModelTest extends PHPUnit_Framework_TestCase
         $keys    = array('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'x', 'y', 'z');
         $ids     = array();
         foreach ($keys as $key) {
-            $ids[$key] = hash('fnv1a64', $key);
+            $ids[$key] = hash('fnv164', $key);
             $store->delete($ids[$key]);
             $this->assertFalse($store->exists($ids[$key]), "paste $key does not yet exist");
             if (in_array($key, array('x', 'y', 'z'))) {

@@ -98,7 +98,7 @@ class DatabaseTest extends PHPUnit_Framework_TestCase
         $keys    = array('a', 'b', 'c', 'd', 'e', 'f', 'g', 'x', 'y', 'z');
         $ids     = array();
         foreach ($keys as $key) {
-            $ids[$key] = hash('fnv1a64', $key);
+            $ids[$key] = hash('fnv164', $key);
             $this->_model->delete($ids[$key]);
             $this->assertFalse($this->_model->exists($ids[$key]), "paste $key does not yet exist");
             if (in_array($key, array('y', 'z'))) {
