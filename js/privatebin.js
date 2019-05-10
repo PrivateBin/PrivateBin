@@ -1053,12 +1053,8 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                     // fallback below
                     console.error('URL interface not properly supported, error:', e);
                 }
-            } else {
-                console.warn('URL interface appears not to be supported in this browser.');
             }
 
-            // fallback to simple RegEx
-            console.warn('fallback to simple RegEx search');
             // Attention: This also returns the delete token inside of the ID, if it is specified
             id = (window.location.search.match(idRegExFind) || [''])[0];
 
