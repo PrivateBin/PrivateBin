@@ -9,11 +9,13 @@ and their dependencies:
 * php-xdebug (for code coverage reports)
 
 Example for Debian and Ubuntu:
+
 ```console
 $ sudo apt install phpunit php-gd php-sqlite3 php-xdebug
 ```
 
 To run the tests, change into the `tst` directory and run phpunit:
+
 ```console
 $ cd PrivateBin/tst
 $ phpunit
@@ -67,6 +69,7 @@ $ npm install jsverify jsdom@9 jsdom-global@2 mime-types node-webcrypto-ossl
 ```
 
 To run the tests, just change into the `js` directory and run istanbul:
+
 ```console
 $ cd PrivateBin/js
 $ istanbul cover _mocha
