@@ -1639,7 +1639,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
             } else if (pasteMetaData.expire_date) {
                 // display paste expiration
-                let expiration = Helper.secondsToHuman(pasteMetaData.remaining_time),
+                let expiration = Helper.secondsToHuman(pasteMetaData.time_to_live || pasteMetaData.remaining_time),
                     expirationLabel = [
                         'This document will expire in %d ' + expiration[1] + '.',
                         'This document will expire in %d ' + expiration[1] + 's.'
