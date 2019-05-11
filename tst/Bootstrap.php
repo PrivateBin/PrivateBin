@@ -3,7 +3,6 @@
 use PrivateBin\Persistence\ServerSalt;
 
 error_reporting(E_ALL | E_STRICT);
-ini_set('display_errors', 1);
 
 // change this, if your php files and data is outside of your webservers document root
 if (!defined('PUBLIC_PATH')) {
