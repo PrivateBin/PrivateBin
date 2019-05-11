@@ -4,6 +4,7 @@ use Identicon\Identicon;
 use PrivateBin\Configuration;
 use PrivateBin\Data\Database;
 use PrivateBin\Model;
+use PrivateBin\Model\Comment;
 use PrivateBin\Model\Paste;
 use PrivateBin\Persistence\ServerSalt;
 use PrivateBin\Persistence\TrafficLimiter;
@@ -85,7 +86,6 @@ class ModelTest extends PHPUnit_Framework_TestCase
 
         $comment = $paste->getComment(Helper::getPasteId());
         $comment->setData($commentData);
-        //$comment->getParentId();
         $comment->store();
 
         $comments = $this->_model->getPaste(Helper::getPasteId())->get()['comments'];
@@ -100,6 +100,19 @@ class ModelTest extends PHPUnit_Framework_TestCase
         $paste = $this->_model->getPaste(Helper::getPasteId());
         $this->assertFalse($paste->exists(), 'paste successfully deleted');
         $this->assertEquals(array(), $paste->getComments(), 'comment was deleted with paste');
+    }
+
+    public function testCommentDefaults()
+    {
+        $comment = new Comment(
+            $this->_conf,
+            forward_static_call(
+                'PrivateBin\\Data\\' . $this->_conf->getKey('class', 'model') . '::getInstance',
+                $this->_conf->getSection('model_options')
+            )
+        );
+        $comment->setPaste($this->_model->getPaste(Helper::getPasteId()));
+        $this->assertEquals(Helper::getPasteId(), $comment->getParentId(), 'comment parent ID gets initialized to paste ID');
     }
 
     /**

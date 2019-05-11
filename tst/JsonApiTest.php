@@ -52,6 +52,7 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD']        = 'POST';
         $_SERVER['REMOTE_ADDR']           = '::1';
+        $_SERVER['REQUEST_URI']           = '/';
         ob_start();
         new Controller;
         $content = ob_get_contents();

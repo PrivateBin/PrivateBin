@@ -184,23 +184,6 @@ class Paste extends AbstractModel
     }
 
     /**
-     * Check if paste is of burn-after-reading type.
-     *
-     * @access public
-     * @throws Exception
-     * @return bool
-     */
-    public function isBurnafterreading()
-    {
-        if (!array_key_exists('adata', $this->_data) && !array_key_exists('data', $this->_data)) {
-            $this->get();
-        }
-        return
-            (array_key_exists('adata', $this->_data) && $this->_data['adata'][3] === 1) ||
-            (array_key_exists('burnafterreading', $this->_data['meta']) && $this->_data['meta']['burnafterreading']);
-    }
-
-    /**
      * Check if paste has discussions enabled.
      *
      * @access public

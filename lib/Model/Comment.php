@@ -145,7 +145,7 @@ class Comment extends AbstractModel
     public function getParentId()
     {
         if (!array_key_exists('parentid', $this->_data)) {
-            $this->_data['parentid'] = '';
+            $this->_data['parentid'] = $this->getPaste()->getId();
         }
         return $this->_data['parentid'];
     }
