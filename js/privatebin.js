@@ -3710,11 +3710,10 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         me.run = function()
         {
-            $.ajax({
-                type: data ? 'POST' : 'GET',
+            let isPost = Object.keys(data).length > 0,
+                ajaxParams = {
+                type: isPost ? 'POST' : 'GET',
                 url: url,
-                data: data,
-                dataType: 'json',
                 headers: ajaxHeaders,
                 success: function(result) {
                     if (result.status === 0) {
@@ -3725,8 +3724,17 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                         fail(2, result);
                     }
                 }
-            })
-            .fail(function(jqXHR, textStatus, errorThrown) {
+            };
+            if (isPost) {
+                ajaxParams.data = data;
+                ['adata', 'meta'].map(function (key) {
+                    if (data.hasOwnProperty(key)) {
+                        ajaxParams.data[key] = JSON.stringify(data[key]);
+                    }
+                });
+                ajaxParams.dataType = 'json';
+            }
+            $.ajax(ajaxParams).fail(function(jqXHR, textStatus, errorThrown) {
                 console.error(textStatus, errorThrown);
                 fail(3, jqXHR);
             });
@@ -4186,7 +4194,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         {
             const pastePlain = await decryptOrPromptPassword(
                 key, password,
-                paste.hasOwnProperty('ct') ? paste.ct : paste.data
+                paste.hasOwnProperty('ct') ? [paste.ct, paste.adata] : paste.data
             );
             if (pastePlain === false) {
                 if (password.length === 0) {
@@ -4347,6 +4355,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 .catch((err) => {
                     // wait for the user to type in the password,
                     // then PasteDecrypter.run will be called again
+                    console.log(decryptionPromises);
                 });
         };
 
