@@ -1,3 +1,39 @@
+Running all unit tests
+======================
+
+Since it is non-trivial to setup all dependencies for our unit testing suite,
+we provide a docker image that bundles all of them into one container, both
+phpunit for PHP and mocha for JS.
+
+You can fetch and run the image from the docker hub like this:
+
+```console
+docker run --rm --read-only -v ~/PrivateBin:/srv:ro privatebin/unit-testing
+```
+
+The parameters in detail:
+
+- `-v ~/PrivateBin:/srv:ro` - Replace `~/PrivateBin` with the location of
+  the checked out PrivateBin repository on your machine. It is recommended to
+  mount it read-only, which guarantees that your repository isn't damaged by
+  an accidentally destructive test case in it.
+- `--read-only` - This image supports running in read-only mode. Only /tmp
+  may be written into.
+- `-rm` - Remove the container after the run. This saves you doing a cleanup
+  on your docker environment, if you run the image frequently.
+
+You can also run just the php and javascript test suites instead of both:
+
+```console
+docker run --rm --read-only -v ~/PrivateBin:/srv:ro privatebin/unit-testing phpunit
+docker run --rm --read-only -v ~/PrivateBin:/srv:ro privatebin/unit-testing mocha
+```
+
+We also provide a Janitor image that includes the  Cloud9  and Theia WebIDEs as
+well as the integrated unit testing utilities. See our [docker wiki
+page](https://github.com/PrivateBin/PrivateBin/wiki/Docker#janitor-image-with-cloud9-and-theia-webide-janitortechnologyprivatebin)
+for further details on this.
+
 Running PHP unit tests
 ======================
 
@@ -47,11 +83,11 @@ and its dependencies:
 * npm
 
 Then you can use the node package manager to install the latest stable release
-of mocha and istanbul (for code coverage reports) globally and jsVerify, jsdom
+of mocha and nyc (for code coverage reports) globally and jsVerify, jsdom
 and jsdom-global locally:
 
 ```console
-$ npm install -g mocha istanbul
+$ npm install -g mocha nyc
 $ cd PrivateBin/js
 $ npm install jsverify jsdom@9 jsdom-global@2 mime-types node-webcrypto-ossl
 ```
@@ -63,7 +99,7 @@ $ sudo apt install npm
 $ sudo mkdir /usr/local/lib/node_modules
 $ sudo chown -R $(whoami) $(npm config get prefix)/{lib/node_modules,bin,share}
 $ ln -s /usr/bin/nodejs /usr/local/bin/node
-$ npm install -g mocha istanbul
+$ npm install -g mocha nyc
 $ cd PrivateBin/js
 $ npm install jsverify jsdom@9 jsdom-global@2 mime-types node-webcrypto-ossl
 ```
@@ -72,7 +108,7 @@ To run the tests, just change into the `js` directory and run istanbul:
 
 ```console
 $ cd PrivateBin/js
-$ istanbul cover _mocha
+$ nyc mocha
 ```
 
 Property based unit testing
@@ -115,6 +151,6 @@ After you adjusted the code of the library or the test you can rerun the test
 with the same RNG state as follows:
 
 ```console
-$ istanbul cover _mocha -- test.js --jsverifyRngState 88caf85079d32e416b
+$ nyc mocha test --jsverifyRngState 88caf85079d32e416b
 ```
 
