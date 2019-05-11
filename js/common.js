@@ -11,7 +11,7 @@ global.WebCrypto = require('node-webcrypto-ossl');
 // application libraries to test
 global.$ = global.jQuery = require('./jquery-3.3.1');
 global.RawDeflate = require('./rawinflate-0.3').RawDeflate;
-require('./zlib-1.2.11');
+global.zlib = require('./zlib-1.2.11').zlib;
 require('./prettify');
 global.prettyPrint = window.PR.prettyPrint;
 global.prettyPrintOne = window.PR.prettyPrintOne;
