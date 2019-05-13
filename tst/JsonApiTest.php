@@ -48,7 +48,10 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
         $options                     = parse_ini_file(CONF, true);
         $options['traffic']['limit'] = 0;
         Helper::createIniFile(CONF, $options);
-        $_POST                            = Helper::getPastePostJson();
+        $paste = Helper::getPasteJson();
+        $file  = tempnam(sys_get_temp_dir(), 'FOO');
+        file_put_contents($file, $paste);
+        Request::setInputStream($file);
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD']        = 'POST';
         $_SERVER['REMOTE_ADDR']           = '::1';
@@ -77,9 +80,9 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
         $options                     = parse_ini_file(CONF, true);
         $options['traffic']['limit'] = 0;
         Helper::createIniFile(CONF, $options);
-        $paste = Helper::getPastePostJson();
+        $paste = Helper::getPasteJson();
         $file  = tempnam(sys_get_temp_dir(), 'FOO');
-        file_put_contents($file, http_build_query($paste));
+        file_put_contents($file, $paste);
         Request::setInputStream($file);
         $_SERVER['QUERY_STRING']          = Helper::getPasteId();
         $_GET[Helper::getPasteId()]       = '';
@@ -113,7 +116,7 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste exists before deleting data');
         $paste = $this->_model->read(Helper::getPasteId());
         $file  = tempnam(sys_get_temp_dir(), 'FOO');
-        file_put_contents($file, http_build_query(array(
+        file_put_contents($file, json_encode(array(
             'deletetoken' => hash_hmac('sha256', Helper::getPasteId(), $paste['meta']['salt']),
         )));
         Request::setInputStream($file);
@@ -139,10 +142,12 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
         $this->_model->create(Helper::getPasteId(), Helper::getPaste());
         $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste exists before deleting data');
         $paste = $this->_model->read(Helper::getPasteId());
-        $_POST = array(
+        $file  = tempnam(sys_get_temp_dir(), 'FOO');
+        file_put_contents($file, json_encode(array(
             'pasteid'     => Helper::getPasteId(),
             'deletetoken' => hash_hmac('sha256', Helper::getPasteId(), $paste['meta']['salt']),
-        );
+        )));
+        Request::setInputStream($file);
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD']        = 'POST';
         ob_start();

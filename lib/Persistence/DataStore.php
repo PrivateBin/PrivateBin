@@ -45,7 +45,10 @@ class DataStore extends AbstractPersistence
             $filename = substr($filename, strlen($path));
         }
         try {
-            self::_store($filename, self::PROTECTION_LINE . PHP_EOL . Json::encode($data));
+            self::_store(
+                $filename,
+                self::PROTECTION_LINE . PHP_EOL . Json::encode($data)
+            );
             return true;
         } catch (Exception $e) {
             return false;
@@ -62,7 +65,12 @@ class DataStore extends AbstractPersistence
      */
     public static function get($filename)
     {
-        return json_decode(substr(file_get_contents($filename), strlen(self::PROTECTION_LINE . PHP_EOL)), true);
+        return Json::decode(
+            substr(
+                file_get_contents($filename),
+                strlen(self::PROTECTION_LINE . PHP_EOL)
+            )
+        );
     }
 
     /**

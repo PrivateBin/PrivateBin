@@ -166,12 +166,9 @@ class Helper
      * @param  array $meta
      * @return array
      */
-    public static function getPastePostJson($version = 2, array $meta = array())
+    public static function getPasteJson($version = 2, array $meta = array())
     {
-        $example          = self::getPastePost($version, $meta);
-        $example['adata'] = json_encode($example['adata']);
-        $example['meta']  = json_encode($example['meta']);
-        return $example;
+        return json_encode(self::getPastePost($version, $meta));
     }
 
     /**
@@ -223,11 +220,9 @@ class Helper
      * @param  int $version
      * @return array
      */
-    public static function getCommentPostJson()
+    public static function getCommentJson()
     {
-        $example          = self::getCommentPost();
-        $example['adata'] = json_encode($example['adata']);
-        return $example;
+        return json_encode(self::getCommentPost());
     }
 
     /**

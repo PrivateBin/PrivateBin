@@ -16,6 +16,7 @@ use Exception;
 use PDO;
 use PDOException;
 use PrivateBin\Controller;
+use PrivateBin\Json;
 
 /**
  * Database
@@ -204,12 +205,12 @@ class Database extends AbstractData
             ' VALUES(?,?,?,?,?,?,?,?,?)',
             array(
                 $pasteid,
-                $isVersion1 ? $paste['data'] : json_encode($paste),
+                $isVersion1 ? $paste['data'] : Json::encode($paste),
                 $created,
                 $expire_date,
                 (int) $opendiscussion,
                 (int) $burnafterreading,
-                json_encode($meta),
+                Json::encode($meta),
                 $attachment,
                 $attachmentname,
             )
@@ -239,7 +240,7 @@ class Database extends AbstractData
             return false;
         }
         // create array
-        $data       = json_decode($paste['data'], true);
+        $data       = Json::decode($paste['data']);
         $isVersion2 = array_key_exists('v', $data) && $data['v'] >= 2;
         if ($isVersion2) {
             self::$_cache[$pasteid] = $data;
@@ -249,7 +250,7 @@ class Database extends AbstractData
             list($createdKey)       = self::_getVersionedKeys(1);
         }
 
-        $paste['meta'] = json_decode($paste['meta'], true);
+        $paste['meta'] = Json::decode($paste['meta']);
         if (!is_array($paste['meta'])) {
             $paste['meta'] = array();
         }
@@ -338,7 +339,7 @@ class Database extends AbstractData
             $data    = $comment['data'];
         } else {
             $version = 2;
-            $data    = json_encode($comment);
+            $data    = Json::encode($comment);
         }
         list($createdKey, $iconKey) = self::_getVersionedKeys($version);
         $meta                       = $comment['meta'];
@@ -382,7 +383,7 @@ class Database extends AbstractData
         if (count($rows)) {
             foreach ($rows as $row) {
                 $i    = $this->getOpenSlot($comments, (int) $row['postdate']);
-                $data = json_decode($row['data'], true);
+                $data = Json::decode($row['data']);
                 if (array_key_exists('v', $data) && $data['v'] >= 2) {
                     $version      = 2;
                     $comments[$i] = $data;

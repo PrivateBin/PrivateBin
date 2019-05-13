@@ -98,7 +98,7 @@ class Paste extends AbstractModel
         if (
             $this->_store->create(
                 $this->getId(),
-                json_decode(json_encode($this->_data), true)
+                $this->_data
             ) === false
         ) {
             throw new Exception('Error saving paste. Sorry.', 76);

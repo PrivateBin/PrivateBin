@@ -107,10 +107,10 @@ class Request
         switch (array_key_exists('REQUEST_METHOD', $_SERVER) ? $_SERVER['REQUEST_METHOD'] : 'GET') {
             case 'DELETE':
             case 'PUT':
-                parse_str(file_get_contents(self::$_inputStream), $this->_params);
-                break;
             case 'POST':
-                $this->_params = $_POST;
+                $this->_params = Json::decode(
+                    file_get_contents(self::$_inputStream)
+                );
                 break;
             default:
                 $this->_params = $_GET;
@@ -161,15 +161,15 @@ class Request
     public function getData()
     {
         $data = array(
-            'adata' => json_decode($this->getParam('adata', '[]'), true),
+            'adata' => $this->getParam('adata', array()),
         );
         $required_keys = array('v', 'ct');
-        $meta          = $this->getParam('meta');
+        $meta          = $this->getParam('meta', array());
         if (empty($meta)) {
             $required_keys[] = 'pasteid';
             $required_keys[] = 'parentid';
         } else {
-            $data['meta'] = json_decode($meta, true);
+            $data['meta'] = $meta;
         }
         foreach ($required_keys as $key) {
             $data[$key] = $this->getParam($key);

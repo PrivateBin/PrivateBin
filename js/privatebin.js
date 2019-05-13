@@ -3712,27 +3712,22 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         {
             let isPost = Object.keys(data).length > 0,
                 ajaxParams = {
-                type: isPost ? 'POST' : 'GET',
-                url: url,
-                headers: ajaxHeaders,
-                success: function(result) {
-                    if (result.status === 0) {
-                        success(0, result);
-                    } else if (result.status === 1) {
-                        fail(1, result);
-                    } else {
-                        fail(2, result);
+                    type: isPost ? 'POST' : 'GET',
+                    url: url,
+                    headers: ajaxHeaders,
+                    dataType: 'json',
+                    success: function(result) {
+                        if (result.status === 0) {
+                            success(0, result);
+                        } else if (result.status === 1) {
+                            fail(1, result);
+                        } else {
+                            fail(2, result);
+                        }
                     }
-                }
-            };
+                };
             if (isPost) {
-                ajaxParams.data = data;
-                ['adata', 'meta'].map(function (key) {
-                    if (data.hasOwnProperty(key)) {
-                        ajaxParams.data[key] = JSON.stringify(data[key]);
-                    }
-                });
-                ajaxParams.dataType = 'json';
+                ajaxParams.data = JSON.stringify(data);
             }
             $.ajax(ajaxParams).fail(function(jqXHR, textStatus, errorThrown) {
                 console.error(textStatus, errorThrown);

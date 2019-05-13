@@ -154,6 +154,7 @@ class Controller
      * initialize PrivateBin
      *
      * @access private
+     * @throws Exception
      */
     private function _init()
     {
@@ -206,7 +207,6 @@ class Controller
             );
         }
 
-        // Ensure content is not too big.
         $data      = $this->_request->getData();
         $isComment = array_key_exists('pasteid', $data) &&
             !empty($data['pasteid']) &&
@@ -216,6 +216,7 @@ class Controller
             return $this->_return_message(1, 'Invalid data.');
         }
         $sizelimit = $this->_conf->getKey('sizelimit');
+        // Ensure content is not too big.
         if (strlen($data['ct']) > $sizelimit) {
             return $this->_return_message(
                 1,
@@ -432,6 +433,6 @@ class Controller
             $result['url'] = $this->_urlBase . '?' . $message;
         }
         $result += $other;
-        $this->_json = json_encode($result);
+        $this->_json = Json::encode($result);
     }
 }

@@ -4,6 +4,7 @@ use PrivateBin\Controller;
 use PrivateBin\Data\Filesystem;
 use PrivateBin\Persistence\ServerSalt;
 use PrivateBin\Persistence\TrafficLimiter;
+use PrivateBin\Request;
 
 class ControllerTest extends PHPUnit_Framework_TestCase
 {
@@ -131,10 +132,13 @@ class ControllerTest extends PHPUnit_Framework_TestCase
      */
     public function testHtaccess()
     {
-        $file = $this->_path . DIRECTORY_SEPARATOR . '.htaccess';
-        @unlink($file);
+        $htaccess = $this->_path . DIRECTORY_SEPARATOR . '.htaccess';
+        @unlink($htaccess);
 
-        $_POST                            = Helper::getPastePostJson();
+        $paste = Helper::getPasteJson();
+        $file  = tempnam(sys_get_temp_dir(), 'FOO');
+        file_put_contents($file, $paste);
+        Request::setInputStream($file);
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD']        = 'POST';
         $_SERVER['REMOTE_ADDR']           = '::1';
@@ -142,7 +146,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         new Controller;
         ob_end_clean();
 
-        $this->assertFileExists($file, 'htaccess recreated');
+        $this->assertFileExists($htaccess, 'htaccess recreated');
     }
 
     /**
@@ -163,7 +167,10 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $options                     = parse_ini_file(CONF, true);
         $options['traffic']['limit'] = 0;
         Helper::createIniFile(CONF, $options);
-        $_POST                            = Helper::getPastePostJson();
+        $paste = Helper::getPasteJson();
+        $file  = tempnam(sys_get_temp_dir(), 'FOO');
+        file_put_contents($file, $paste);
+        Request::setInputStream($file);
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD']        = 'POST';
         $_SERVER['REMOTE_ADDR']           = '::1';
@@ -190,7 +197,10 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $options                     = parse_ini_file(CONF, true);
         $options['traffic']['limit'] = 0;
         Helper::createIniFile(CONF, $options);
-        $_POST                            = Helper::getPastePostJson(2, array('expire' => 25));
+        $paste = Helper::getPasteJson(2, array('expire' => 25));
+        $file  = tempnam(sys_get_temp_dir(), 'FOO');
+        file_put_contents($file, $paste);
+        Request::setInputStream($file);
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD']        = 'POST';
         $_SERVER['REMOTE_ADDR']           = '::1';
@@ -219,7 +229,10 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $options['main']['sizelimit'] = 10;
         $options['traffic']['limit']  = 0;
         Helper::createIniFile(CONF, $options);
-        $_POST                            = Helper::getPastePostJson();
+        $paste = Helper::getPasteJson();
+        $file  = tempnam(sys_get_temp_dir(), 'FOO');
+        file_put_contents($file, $paste);
+        Request::setInputStream($file);
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD']        = 'POST';
         $_SERVER['REMOTE_ADDR']           = '::1';
@@ -240,7 +253,10 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $options                      = parse_ini_file(CONF, true);
         $options['traffic']['header'] = 'X_FORWARDED_FOR';
         Helper::createIniFile(CONF, $options);
-        $_POST                            = Helper::getPastePostJson();
+        $paste = Helper::getPasteJson();
+        $file  = tempnam(sys_get_temp_dir(), 'FOO');
+        file_put_contents($file, $paste);
+        Request::setInputStream($file);
         $_SERVER['HTTP_X_FORWARDED_FOR']  = '::2';
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD']        = 'POST';
@@ -269,7 +285,10 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $options['traffic']['limit'] = 0;
         Helper::createIniFile(CONF, $options);
         $this->_model->create(Helper::getPasteId(), Helper::getPaste());
-        $_POST                            = Helper::getPastePostJson();
+        $paste = Helper::getPasteJson();
+        $file  = tempnam(sys_get_temp_dir(), 'FOO');
+        file_put_contents($file, $paste);
+        Request::setInputStream($file);
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD']        = 'POST';
         $_SERVER['REMOTE_ADDR']           = '::1';
@@ -290,9 +309,10 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $options                     = parse_ini_file(CONF, true);
         $options['traffic']['limit'] = 0;
         Helper::createIniFile(CONF, $options);
-        $_POST                            = Helper::getPastePostJson();
-        $_POST['expire']                  = '5min';
-        $_POST['formatter']               = 'foo';
+        $paste = Helper::getPasteJson();
+        $file  = tempnam(sys_get_temp_dir(), 'FOO');
+        file_put_contents($file, $paste);
+        Request::setInputStream($file);
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD']        = 'POST';
         $_SERVER['REMOTE_ADDR']           = '::1';
@@ -321,9 +341,10 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $options                     = parse_ini_file(CONF, true);
         $options['traffic']['limit'] = 0;
         Helper::createIniFile(CONF, $options);
-        $_POST                            = Helper::getPastePostJson();
-        $_POST['expire']                  = '5min';
-        $_POST['opendiscussion']          = '1';
+        $paste = Helper::getPasteJson();
+        $file  = tempnam(sys_get_temp_dir(), 'FOO');
+        file_put_contents($file, $paste);
+        Request::setInputStream($file);
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD']        = 'POST';
         $_SERVER['REMOTE_ADDR']           = '::1';
@@ -353,8 +374,10 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $options                     = parse_ini_file(CONF, true);
         $options['traffic']['limit'] = 0;
         Helper::createIniFile(CONF, $options);
-        $_POST                            = Helper::getPastePostJson();
-        $_POST['expire']                  = 'foo';
+        $paste = Helper::getPasteJson(2, array('expire' => 'foo'));
+        $file  = tempnam(sys_get_temp_dir(), 'FOO');
+        file_put_contents($file, $paste);
+        Request::setInputStream($file);
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD']        = 'POST';
         $_SERVER['REMOTE_ADDR']           = '::1';
@@ -381,10 +404,11 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $options                     = parse_ini_file(CONF, true);
         $options['traffic']['limit'] = 0;
         Helper::createIniFile(CONF, $options);
-        $_POST                            = Helper::getPastePostJson();
-        $adata                            = Helper::getPaste()['adata'];
-        $adata[3]                         = 'neither 1 nor 0';
-        $_POST['adata']                   = json_encode($adata);
+        $paste = Helper::getPastePost();
+        $paste['adata'][3] = 'neither 1 nor 0';
+        $file  = tempnam(sys_get_temp_dir(), 'FOO');
+        file_put_contents($file, json_encode($paste));
+        Request::setInputStream($file);
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD']        = 'POST';
         $_SERVER['REMOTE_ADDR']           = '::1';
@@ -405,10 +429,11 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $options                     = parse_ini_file(CONF, true);
         $options['traffic']['limit'] = 0;
         Helper::createIniFile(CONF, $options);
-        $_POST                            = Helper::getPastePostJson();
-        $adata                            = Helper::getPaste()['adata'];
-        $adata[2]                         = 'neither 1 nor 0';
-        $_POST['adata']                   = json_encode($adata);
+        $paste = Helper::getPastePost();
+        $paste['adata'][2] = 'neither 1 nor 0';
+        $file  = tempnam(sys_get_temp_dir(), 'FOO');
+        file_put_contents($file, json_encode($paste));
+        Request::setInputStream($file);
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD']        = 'POST';
         $_SERVER['REMOTE_ADDR']           = '::1';
@@ -426,21 +451,20 @@ class ControllerTest extends PHPUnit_Framework_TestCase
      * silently removed, check that this case is handled
      *
      * @runInSeparateProcess
+     * @expectedException Exception
+     * @expectedExceptionCode 90
      */
     public function testCreateBrokenUpload()
     {
-        $_POST                            = Helper::getPastePostJson();
+        $paste = substr(Helper::getPasteJson(), 0, -10);
+        $file  = tempnam(sys_get_temp_dir(), 'FOO');
+        file_put_contents($file, $paste);
+        Request::setInputStream($file);
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD']        = 'POST';
         $_SERVER['REMOTE_ADDR']           = '::1';
-        $_POST['ct']                      = ' ';
         $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste does not exists before posting data');
-        ob_start();
         new Controller;
-        $content = ob_get_contents();
-        ob_end_clean();
-        $response = json_decode($content, true);
-        $this->assertEquals(1, $response['status'], 'outputs error status');
         $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste exists after posting data');
     }
 
@@ -449,7 +473,10 @@ class ControllerTest extends PHPUnit_Framework_TestCase
      */
     public function testCreateTooSoon()
     {
-        $_POST                            = Helper::getPastePostJson();
+        $paste = Helper::getPasteJson();
+        $file  = tempnam(sys_get_temp_dir(), 'FOO');
+        file_put_contents($file, $paste);
+        Request::setInputStream($file);
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD']        = 'POST';
         $_SERVER['REMOTE_ADDR']           = '::1';
@@ -474,7 +501,10 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $options                     = parse_ini_file(CONF, true);
         $options['traffic']['limit'] = 0;
         Helper::createIniFile(CONF, $options);
-        $_POST                            = Helper::getCommentPostJson();
+        $comment = Helper::getCommentJson();
+        $file  = tempnam(sys_get_temp_dir(), 'FOO');
+        file_put_contents($file, $comment);
+        Request::setInputStream($file);
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD']        = 'POST';
         $_SERVER['REMOTE_ADDR']           = '::1';
@@ -496,8 +526,11 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $options                     = parse_ini_file(CONF, true);
         $options['traffic']['limit'] = 0;
         Helper::createIniFile(CONF, $options);
-        $_POST                            = Helper::getCommentPostJson();
-        $_POST['parentid']                = 'foo';
+        $comment = Helper::getCommentPost();
+        $comment['parentid'] = 'foo';
+        $file  = tempnam(sys_get_temp_dir(), 'FOO');
+        file_put_contents($file, json_encode($comment));
+        Request::setInputStream($file);
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD']        = 'POST';
         $_SERVER['REMOTE_ADDR']           = '::1';
@@ -519,7 +552,10 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $options                     = parse_ini_file(CONF, true);
         $options['traffic']['limit'] = 0;
         Helper::createIniFile(CONF, $options);
-        $_POST                            = Helper::getCommentPostJson();
+        $comment = Helper::getCommentJson();
+        $file  = tempnam(sys_get_temp_dir(), 'FOO');
+        file_put_contents($file, $comment);
+        Request::setInputStream($file);
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD']        = 'POST';
         $_SERVER['REMOTE_ADDR']           = '::1';
@@ -543,7 +579,10 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $options                     = parse_ini_file(CONF, true);
         $options['traffic']['limit'] = 0;
         Helper::createIniFile(CONF, $options);
-        $_POST                            = Helper::getCommentPostJson();
+        $comment = Helper::getCommentJson();
+        $file  = tempnam(sys_get_temp_dir(), 'FOO');
+        file_put_contents($file, $comment);
+        Request::setInputStream($file);
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD']        = 'POST';
         $_SERVER['REMOTE_ADDR']           = '::1';
@@ -567,7 +606,10 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $this->_model->create(Helper::getPasteId(), Helper::getPaste());
         $this->_model->createComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getPasteId(), Helper::getComment());
         $this->assertTrue($this->_model->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getPasteId()), 'comment exists before posting data');
-        $_POST                            = Helper::getCommentPostJson();
+        $comment = Helper::getCommentJson();
+        $file  = tempnam(sys_get_temp_dir(), 'FOO');
+        file_put_contents($file, $comment);
+        Request::setInputStream($file);
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD']        = 'POST';
         $_SERVER['REMOTE_ADDR']           = '::1';
@@ -829,7 +871,11 @@ class ControllerTest extends PHPUnit_Framework_TestCase
     {
         $this->_model->create(Helper::getPasteId(), Helper::getPaste());
         $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste exists before deleting data');
-        $_POST['deletetoken']             = 'burnafterreading';
+        $file  = tempnam(sys_get_temp_dir(), 'FOO');
+        file_put_contents($file, json_encode(array(
+            'deletetoken' => 'burnafterreading',
+        )));
+        Request::setInputStream($file);
         $_SERVER['QUERY_STRING']          = Helper::getPasteId();
         $_GET[Helper::getPasteId()]       = '';
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
