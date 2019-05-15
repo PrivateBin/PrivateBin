@@ -45,6 +45,7 @@ class Paste extends AbstractModel
             }
             // We kindly provide the remaining time before expiration (in seconds)
             $data['meta']['time_to_live'] = $data['meta']['expire_date'] - time();
+            unset($data['meta']['expire_date']);
         }
 
         // check if non-expired burn after reading paste needs to be deleted

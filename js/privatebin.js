@@ -1621,11 +1621,11 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          *
          * @name PasteStatus.showRemainingTime
          * @function
-         * @param {object} pasteMetaData
+         * @param {object} paste
          */
-        me.showRemainingTime = function(pasteMetaData)
+        me.showRemainingTime = function(paste)
         {
-            if (pasteMetaData.burnafterreading) {
+            if ((paste.adata && paste.adata[3]) || paste.meta.burnafterreading) {
                 // display paste "for your eyes only" if it is deleted
 
                 // the paste has been deleted when the JSON with the ciphertext
@@ -1637,9 +1637,9 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 // discourage cloning (it cannot really be prevented)
                 TopNav.hideCloneButton();
 
-            } else if (pasteMetaData.expire_date) {
+            } else if (paste.meta.time_to_live || paste.meta.remaining_time) {
                 // display paste expiration
-                let expiration = Helper.secondsToHuman(pasteMetaData.time_to_live || pasteMetaData.remaining_time),
+                let expiration = Helper.secondsToHuman(paste.meta.time_to_live || paste.meta.remaining_time),
                     expirationLabel = [
                         'This document will expire in %d ' + expiration[1] + '.',
                         'This document will expire in %d ' + expiration[1] + 's.'
@@ -2885,14 +2885,14 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
             // set date
             $commentEntry.find('span.commentdate')
-                      .text(' (' + (new Date(comment.meta.postdate * 1000).toLocaleString()) + ')')
+                      .text(' (' + (new Date((comment.meta.created || comment.meta.postdate) * 1000).toLocaleString()) + ')')
                       .attr('title', 'CommentID: ' + comment.id);
 
             // if an avatar is available, display it
-            if (comment.meta.vizhash) {
+            if (comment.meta.icon || comment.meta.vizhash) {
                 $commentEntry.find('span.nickname')
                              .before(
-                                '<img src="' + comment.meta.vizhash + '" class="vizhash" /> '
+                                '<img src="' + (comment.meta.icon || comment.meta.vizhash) + '" class="vizhash" /> '
                              );
                 $(document).on('languageLoaded', function () {
                     $commentEntry.find('img.vizhash')
@@ -4038,6 +4038,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             }
 
             await ServerInteraction.setCipherMessage(cipherMessage).catch(Alert.showError);
+            ServerInteraction.run();
         };
 
         /**
@@ -4246,7 +4247,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 if (paste.comments[i].hasOwnProperty('v') && paste.comments[i].v === 2) {
                     // version 2 comment
                     commentDecryptionPromises.push(
-                        CryptTool.decipher(key, password, paste.comments[i].ct)
+                        CryptTool.decipher(key, password, [paste.comments[i].ct, paste.comments[i].adata])
                             .then((commentJson) => {
                                 const commentMessage = JSON.parse(commentJson);
                                 return [
@@ -4335,12 +4336,12 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             decryptionPromises.push(decryptPaste(paste, key, password))
 
             // if the discussion is opened on this paste, display it
-            if (paste.meta.opendiscussion) {
+            if ((paste.adata && paste.adata[2]) || paste.meta.opendiscussion) {
                 decryptionPromises.push(decryptComments(paste, key, password));
             }
 
             // shows the remaining time (until) deletion
-            PasteStatus.showRemainingTime(paste.meta);
+            PasteStatus.showRemainingTime(paste);
 
             Promise.all(decryptionPromises)
                 .then(() => {

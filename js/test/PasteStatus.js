@@ -44,7 +44,45 @@ describe('PasteStatus', function () {
         });
 
         jsc.property(
-            'shows burn after reading message or remaining time',
+            'shows burn after reading message or remaining time v1',
+            'bool',
+            'nat',
+            jsc.nearray(common.jscA2zString()),
+            jsc.nearray(common.jscA2zString()),
+            jsc.nearray(common.jscQueryString()),
+            'string',
+            function (
+                burnafterreading, remainingTime,
+                schema, address, query, fragment
+            ) {
+                var clean = jsdom('', {
+                        url: schema.join('') + '://' + address.join('') +
+                             '/?' + query.join('') + '#' + fragment
+                    }),
+                    result;
+                $('body').html('<div id="remainingtime" class="hidden"></div>');
+                $.PrivateBin.PasteStatus.init();
+                $.PrivateBin.PasteStatus.showRemainingTime({'meta': {
+                    'burnafterreading': burnafterreading,
+                    'remaining_time': remainingTime
+                }});
+                if (burnafterreading) {
+                    result = $('#remainingtime').hasClass('foryoureyesonly') &&
+                            !$('#remainingtime').hasClass('hidden');
+                } else if (remainingTime) {
+                    result =!$('#remainingtime').hasClass('foryoureyesonly') &&
+                            !$('#remainingtime').hasClass('hidden');
+                } else {
+                    result = $('#remainingtime').hasClass('hidden') &&
+                            !$('#remainingtime').hasClass('foryoureyesonly');
+                }
+                clean();
+                return result;
+            }
+        );
+
+        jsc.property(
+            'shows burn after reading message or remaining time v2',
             'bool',
             'nat',
             jsc.nearray(common.jscA2zString()),
@@ -63,9 +101,10 @@ describe('PasteStatus', function () {
                 $('body').html('<div id="remainingtime" class="hidden"></div>');
                 $.PrivateBin.PasteStatus.init();
                 $.PrivateBin.PasteStatus.showRemainingTime({
-                    'burnafterreading': burnafterreading,
-                    'remaining_time': remainingTime,
-                    'expire_date': remainingTime ? ((new Date()).getTime() / 1000) + remainingTime : 0
+                    'adata': [null, null, null, burnafterreading],
+                    'meta': {
+                        'time_to_live': remainingTime
+                    }
                 });
                 if (burnafterreading) {
                     result = $('#remainingtime').hasClass('foryoureyesonly') &&

@@ -52,13 +52,15 @@ class FormatV2
             }
         }
 
+        $cipherParams = $isComment ? $message['adata'] : $message['adata'][0];
+
         // Make sure some fields are base64 data:
         // - initialization vector
-        if (!base64_decode($message['adata'][0][0], true)) {
+        if (!base64_decode($cipherParams[0], true)) {
             return false;
         }
         // - salt
-        if (!base64_decode($message['adata'][0][1], true)) {
+        if (!base64_decode($cipherParams[1], true)) {
             return false;
         }
         // - cipher text
@@ -68,11 +70,11 @@ class FormatV2
 
         // Make sure some fields have a reasonable size:
         // - initialization vector
-        if (strlen($message['adata'][0][0]) > 24) {
+        if (strlen($cipherParams[0]) > 24) {
             return false;
         }
         // - salt
-        if (strlen($message['adata'][0][1]) > 14) {
+        if (strlen($cipherParams[1]) > 14) {
             return false;
         }
 
@@ -82,27 +84,27 @@ class FormatV2
             return false;
         }
         // - iterations, refuse less then 10000 iterations (minimum NIST recommendation)
-        if (!is_int($message['adata'][0][2]) || $message['adata'][0][2] <= 10000) {
+        if (!is_int($cipherParams[2]) || $cipherParams[2] <= 10000) {
             return false;
         }
         // - key size
-        if (!in_array($message['adata'][0][3], array(128, 192, 256), true)) {
+        if (!in_array($cipherParams[3], array(128, 192, 256), true)) {
             return false;
         }
         // - tag size
-        if (!in_array($message['adata'][0][4], array(64, 96, 128), true)) {
+        if (!in_array($cipherParams[4], array(64, 96, 128), true)) {
             return false;
         }
         // - algorithm, must be AES
-        if ($message['adata'][0][5] !== 'aes') {
+        if ($cipherParams[5] !== 'aes') {
             return false;
         }
         // - mode
-        if (!in_array($message['adata'][0][6], array('ctr', 'cbc', 'gcm'), true)) {
+        if (!in_array($cipherParams[6], array('ctr', 'cbc', 'gcm'), true)) {
             return false;
         }
         // - compression
-        if (!in_array($message['adata'][0][7], array('zlib', 'none'), true)) {
+        if (!in_array($cipherParams[7], array('zlib', 'none'), true)) {
             return false;
         }
 

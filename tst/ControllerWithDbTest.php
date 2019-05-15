@@ -23,7 +23,7 @@ class ControllerWithDbTest extends ControllerTest
             mkdir($this->_path);
         }
         $this->_options['dsn'] = 'sqlite:' . $this->_path . DIRECTORY_SEPARATOR . 'tst.sq3';
-        $this->_model          = Database::getInstance($this->_options);
+        $this->_data           = Database::getInstance($this->_options);
         $this->reset();
     }
 

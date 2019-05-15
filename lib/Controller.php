@@ -213,7 +213,7 @@ class Controller
             array_key_exists('parentid', $data) &&
             !empty($data['parentid']);
         if (!FormatV2::isValid($data, $isComment)) {
-            return $this->_return_message(1, 'Invalid data.');
+            return $this->_return_message(1, I18n::_('Invalid data.'));
         }
         $sizelimit = $this->_conf->getKey('sizelimit');
         // Ensure content is not too big.
@@ -240,7 +240,7 @@ class Controller
                 }
                 $this->_return_message(0, $comment->getId());
             } else {
-                $this->_return_message(1, 'Invalid data.');
+                $this->_return_message(1, I18n::_('Invalid data.'));
             }
         }
         // The user posts a standard paste.

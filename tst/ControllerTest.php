@@ -8,7 +8,7 @@ use PrivateBin\Request;
 
 class ControllerTest extends PHPUnit_Framework_TestCase
 {
-    protected $_model;
+    protected $_data;
 
     protected $_path;
 
@@ -16,7 +16,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
     {
         /* Setup Routine */
         $this->_path  = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'privatebin_data';
-        $this->_model = Filesystem::getInstance(array('dir' => $this->_path));
+        $this->_data = Filesystem::getInstance(array('dir' => $this->_path));
         $this->reset();
     }
 
@@ -33,8 +33,8 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $_POST   = array();
         $_GET    = array();
         $_SERVER = array();
-        if ($this->_model->exists(Helper::getPasteId())) {
-            $this->_model->delete(Helper::getPasteId());
+        if ($this->_data->exists(Helper::getPasteId())) {
+            $this->_data->delete(Helper::getPasteId());
         }
         $options                         = parse_ini_file(CONF_SAMPLE, true);
         $options['purge']['dir']         = $this->_path;
@@ -180,8 +180,8 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         ob_end_clean();
         $response = json_decode($content, true);
         $this->assertEquals(0, $response['status'], 'outputs status');
-        $this->assertTrue($this->_model->exists($response['id']), 'paste exists after posting data');
-        $paste = $this->_model->read($response['id']);
+        $this->assertTrue($this->_data->exists($response['id']), 'paste exists after posting data');
+        $paste = $this->_data->read($response['id']);
         $this->assertEquals(
             hash_hmac('sha256', $response['id'], $paste['meta']['salt']),
             $response['deletetoken'],
@@ -211,8 +211,8 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         ob_end_clean();
         $response = json_decode($content, true);
         $this->assertEquals(0, $response['status'], 'outputs status');
-        $this->assertTrue($this->_model->exists($response['id']), 'paste exists after posting data');
-        $paste = $this->_model->read($response['id']);
+        $this->assertTrue($this->_data->exists($response['id']), 'paste exists after posting data');
+        $paste = $this->_data->read($response['id']);
         $this->assertEquals(
             hash_hmac('sha256', $response['id'], $paste['meta']['salt']),
             $response['deletetoken'],
@@ -242,7 +242,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         ob_end_clean();
         $response = json_decode($content, true);
         $this->assertEquals(1, $response['status'], 'outputs error status');
-        $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste exists after posting data');
+        $this->assertFalse($this->_data->exists(Helper::getPasteId()), 'paste exists after posting data');
     }
 
     /**
@@ -267,8 +267,8 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         ob_end_clean();
         $response = json_decode($content, true);
         $this->assertEquals(0, $response['status'], 'outputs status');
-        $this->assertTrue($this->_model->exists($response['id']), 'paste exists after posting data');
-        $paste = $this->_model->read($response['id']);
+        $this->assertTrue($this->_data->exists($response['id']), 'paste exists after posting data');
+        $paste = $this->_data->read($response['id']);
         $this->assertEquals(
             hash_hmac('sha256', $response['id'], $paste['meta']['salt']),
             $response['deletetoken'],
@@ -284,7 +284,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $options                     = parse_ini_file(CONF, true);
         $options['traffic']['limit'] = 0;
         Helper::createIniFile(CONF, $options);
-        $this->_model->create(Helper::getPasteId(), Helper::getPaste());
+        $this->_data->create(Helper::getPasteId(), Helper::getPaste());
         $paste = Helper::getPasteJson();
         $file  = tempnam(sys_get_temp_dir(), 'FOO');
         file_put_contents($file, $paste);
@@ -298,7 +298,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         ob_end_clean();
         $response = json_decode($content, true);
         $this->assertEquals(1, $response['status'], 'outputs error status');
-        $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste exists after posting data');
+        $this->assertTrue($this->_data->exists(Helper::getPasteId()), 'paste exists after posting data');
     }
 
     /**
@@ -323,8 +323,8 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         ob_end_clean();
         $response = json_decode($content, true);
         $this->assertEquals(0, $response['status'], 'outputs status');
-        $this->assertTrue($this->_model->exists($response['id']), 'paste exists after posting data');
-        $paste = $this->_model->read($response['id']);
+        $this->assertTrue($this->_data->exists($response['id']), 'paste exists after posting data');
+        $paste = $this->_data->read($response['id']);
         $this->assertEquals(
             hash_hmac('sha256', $response['id'], $paste['meta']['salt']),
             $response['deletetoken'],
@@ -355,8 +355,8 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         ob_end_clean();
         $response = json_decode($content, true);
         $this->assertEquals(0, $response['status'], 'outputs status');
-        $this->assertTrue($this->_model->exists($response['id']), 'paste exists after posting data');
-        $paste = $this->_model->read($response['id']);
+        $this->assertTrue($this->_data->exists($response['id']), 'paste exists after posting data');
+        $paste = $this->_data->read($response['id']);
         $this->assertEquals(
             hash_hmac('sha256', $response['id'], $paste['meta']['salt']),
             $response['deletetoken'],
@@ -387,8 +387,8 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         ob_end_clean();
         $response = json_decode($content, true);
         $this->assertEquals(0, $response['status'], 'outputs status');
-        $this->assertTrue($this->_model->exists($response['id']), 'paste exists after posting data');
-        $paste = $this->_model->read($response['id']);
+        $this->assertTrue($this->_data->exists($response['id']), 'paste exists after posting data');
+        $paste = $this->_data->read($response['id']);
         $this->assertEquals(
             hash_hmac('sha256', $response['id'], $paste['meta']['salt']),
             $response['deletetoken'],
@@ -418,7 +418,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         ob_end_clean();
         $response = json_decode($content, true);
         $this->assertEquals(1, $response['status'], 'outputs error status');
-        $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste exists after posting data');
+        $this->assertFalse($this->_data->exists(Helper::getPasteId()), 'paste exists after posting data');
     }
 
     /**
@@ -443,7 +443,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         ob_end_clean();
         $response = json_decode($content, true);
         $this->assertEquals(1, $response['status'], 'outputs error status');
-        $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste exists after posting data');
+        $this->assertFalse($this->_data->exists(Helper::getPasteId()), 'paste exists after posting data');
     }
 
     /**
@@ -463,9 +463,9 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD']        = 'POST';
         $_SERVER['REMOTE_ADDR']           = '::1';
-        $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste does not exists before posting data');
+        $this->assertFalse($this->_data->exists(Helper::getPasteId()), 'paste does not exists before posting data');
         new Controller;
-        $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste exists after posting data');
+        $this->assertFalse($this->_data->exists(Helper::getPasteId()), 'paste exists after posting data');
     }
 
     /**
@@ -483,14 +483,14 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         ob_start();
         new Controller;
         ob_end_clean();
-        $this->_model->delete(Helper::getPasteId());
+        $this->_data->delete(Helper::getPasteId());
         ob_start();
         new Controller;
         $content = ob_get_contents();
         ob_end_clean();
         $response = json_decode($content, true);
         $this->assertEquals(1, $response['status'], 'outputs error status');
-        $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste exists after posting data');
+        $this->assertFalse($this->_data->exists(Helper::getPasteId()), 'paste exists after posting data');
     }
 
     /**
@@ -508,14 +508,14 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD']        = 'POST';
         $_SERVER['REMOTE_ADDR']           = '::1';
-        $this->_model->create(Helper::getPasteId(), Helper::getPaste());
+        $this->_data->create(Helper::getPasteId(), Helper::getPaste());
         ob_start();
         new Controller;
         $content = ob_get_contents();
         ob_end_clean();
         $response = json_decode($content, true);
         $this->assertEquals(0, $response['status'], 'outputs status');
-        $this->assertTrue($this->_model->existsComment(Helper::getPasteId(), Helper::getPasteId(), $response['id']), 'paste exists after posting data');
+        $this->assertTrue($this->_data->existsComment(Helper::getPasteId(), Helper::getPasteId(), $response['id']), 'paste exists after posting data');
     }
 
     /**
@@ -534,14 +534,14 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD']        = 'POST';
         $_SERVER['REMOTE_ADDR']           = '::1';
-        $this->_model->create(Helper::getPasteId(), Helper::getPaste());
+        $this->_data->create(Helper::getPasteId(), Helper::getPaste());
         ob_start();
         new Controller;
         $content = ob_get_contents();
         ob_end_clean();
         $response = json_decode($content, true);
         $this->assertEquals(1, $response['status'], 'outputs error status');
-        $this->assertFalse($this->_model->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId()), 'paste exists after posting data');
+        $this->assertFalse($this->_data->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId()), 'paste exists after posting data');
     }
 
     /**
@@ -561,14 +561,14 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $_SERVER['REMOTE_ADDR']           = '::1';
         $paste                            = Helper::getPaste();
         $paste['adata'][2]                = 0;
-        $this->_model->create(Helper::getPasteId(), $paste);
+        $this->_data->create(Helper::getPasteId(), $paste);
         ob_start();
         new Controller;
         $content = ob_get_contents();
         ob_end_clean();
         $response = json_decode($content, true);
         $this->assertEquals(1, $response['status'], 'outputs error status');
-        $this->assertFalse($this->_model->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId()), 'paste exists after posting data');
+        $this->assertFalse($this->_data->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId()), 'paste exists after posting data');
     }
 
     /**
@@ -592,7 +592,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         ob_end_clean();
         $response = json_decode($content, true);
         $this->assertEquals(1, $response['status'], 'outputs error status');
-        $this->assertFalse($this->_model->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId()), 'paste exists after posting data');
+        $this->assertFalse($this->_data->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId()), 'paste exists after posting data');
     }
 
     /**
@@ -603,9 +603,9 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $options                     = parse_ini_file(CONF, true);
         $options['traffic']['limit'] = 0;
         Helper::createIniFile(CONF, $options);
-        $this->_model->create(Helper::getPasteId(), Helper::getPaste());
-        $this->_model->createComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getPasteId(), Helper::getComment());
-        $this->assertTrue($this->_model->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getPasteId()), 'comment exists before posting data');
+        $this->_data->create(Helper::getPasteId(), Helper::getPaste());
+        $this->_data->createComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getPasteId(), Helper::getComment());
+        $this->assertTrue($this->_data->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getPasteId()), 'comment exists before posting data');
         $comment = Helper::getCommentJson();
         $file  = tempnam(sys_get_temp_dir(), 'FOO');
         file_put_contents($file, $comment);
@@ -619,7 +619,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         ob_end_clean();
         $response = json_decode($content, true);
         $this->assertEquals(1, $response['status'], 'outputs error status');
-        $this->assertTrue($this->_model->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getPasteId()), 'paste exists after posting data');
+        $this->assertTrue($this->_data->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getPasteId()), 'paste exists after posting data');
     }
 
     /**
@@ -662,7 +662,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
     public function testReadExpired()
     {
         $expiredPaste = Helper::getPaste(2, array('expire_date' => 1344803344));
-        $this->_model->create(Helper::getPasteId(), $expiredPaste);
+        $this->_data->create(Helper::getPasteId(), $expiredPaste);
         $_SERVER['QUERY_STRING']          = Helper::getPasteId();
         $_GET[Helper::getPasteId()]       = '';
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
@@ -682,7 +682,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
     {
         $paste             = Helper::getPaste();
         $paste['adata'][3] = 1;
-        $this->_model->create(Helper::getPasteId(), $paste);
+        $this->_data->create(Helper::getPasteId(), $paste);
         $_SERVER['QUERY_STRING']          = Helper::getPasteId();
         $_GET[Helper::getPasteId()]       = '';
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
@@ -702,7 +702,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(0, $response['comment_count'], 'outputs comment_count correctly');
         $this->assertEquals(0, $response['comment_offset'], 'outputs comment_offset correctly');
         // by default it will be deleted instantly after it is read
-        $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste exists after reading');
+        $this->assertFalse($this->_data->exists(Helper::getPasteId()), 'paste exists after reading');
     }
 
     /**
@@ -711,7 +711,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
     public function testReadJson()
     {
         $paste = Helper::getPaste();
-        $this->_model->create(Helper::getPasteId(), $paste);
+        $this->_data->create(Helper::getPasteId(), $paste);
         $_SERVER['QUERY_STRING']          = Helper::getPasteId();
         $_GET[Helper::getPasteId()]       = '';
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
@@ -743,7 +743,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
             'postdate'       => $paste['meta']['postdate'],
             'opendiscussion' => $paste['meta']['opendiscussion'],
         );
-        $this->_model->create(Helper::getPasteId(), $paste);
+        $this->_data->create(Helper::getPasteId(), $paste);
         $_SERVER['QUERY_STRING']          = Helper::getPasteId();
         $_GET[Helper::getPasteId()]       = '';
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
@@ -770,8 +770,8 @@ class ControllerTest extends PHPUnit_Framework_TestCase
     {
         $burnPaste             = Helper::getPaste();
         $burnPaste['adata'][3] = 1;
-        $this->_model->create(Helper::getPasteId(), $burnPaste);
-        $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste exists before deleting data');
+        $this->_data->create(Helper::getPasteId(), $burnPaste);
+        $this->assertTrue($this->_data->exists(Helper::getPasteId()), 'paste exists before deleting data');
         $_SERVER['QUERY_STRING']          = Helper::getPasteId();
         $_GET[Helper::getPasteId()]       = '';
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
@@ -781,7 +781,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         ob_end_clean();
         $response = json_decode($content, true);
         $this->assertEquals(0, $response['status'], 'outputs status');
-        $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste successfully deleted');
+        $this->assertFalse($this->_data->exists(Helper::getPasteId()), 'paste successfully deleted');
     }
 
     /**
@@ -789,9 +789,9 @@ class ControllerTest extends PHPUnit_Framework_TestCase
      */
     public function testDelete()
     {
-        $this->_model->create(Helper::getPasteId(), Helper::getPaste());
-        $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste exists before deleting data');
-        $paste               = $this->_model->read(Helper::getPasteId());
+        $this->_data->create(Helper::getPasteId(), Helper::getPaste());
+        $this->assertTrue($this->_data->exists(Helper::getPasteId()), 'paste exists before deleting data');
+        $paste               = $this->_data->read(Helper::getPasteId());
         $_GET['pasteid']     = Helper::getPasteId();
         $_GET['deletetoken'] = hash_hmac('sha256', Helper::getPasteId(), $paste['meta']['salt']);
         ob_start();
@@ -803,7 +803,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
             $content,
             'outputs deleted status correctly'
         );
-        $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste successfully deleted');
+        $this->assertFalse($this->_data->exists(Helper::getPasteId()), 'paste successfully deleted');
     }
 
     /**
@@ -811,7 +811,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
      */
     public function testDeleteInvalidId()
     {
-        $this->_model->create(Helper::getPasteId(), Helper::getPaste());
+        $this->_data->create(Helper::getPasteId(), Helper::getPaste());
         $_GET['pasteid']     = 'foo';
         $_GET['deletetoken'] = 'bar';
         ob_start();
@@ -823,7 +823,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
             $content,
             'outputs delete error correctly'
         );
-        $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste exists after failing to delete data');
+        $this->assertTrue($this->_data->exists(Helper::getPasteId()), 'paste exists after failing to delete data');
     }
 
     /**
@@ -849,7 +849,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
      */
     public function testDeleteInvalidToken()
     {
-        $this->_model->create(Helper::getPasteId(), Helper::getPaste());
+        $this->_data->create(Helper::getPasteId(), Helper::getPaste());
         $_GET['pasteid']     = Helper::getPasteId();
         $_GET['deletetoken'] = 'bar';
         ob_start();
@@ -861,7 +861,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
             $content,
             'outputs delete error correctly'
         );
-        $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste exists after failing to delete data');
+        $this->assertTrue($this->_data->exists(Helper::getPasteId()), 'paste exists after failing to delete data');
     }
 
     /**
@@ -869,8 +869,8 @@ class ControllerTest extends PHPUnit_Framework_TestCase
      */
     public function testDeleteInvalidBurnAfterReading()
     {
-        $this->_model->create(Helper::getPasteId(), Helper::getPaste());
-        $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste exists before deleting data');
+        $this->_data->create(Helper::getPasteId(), Helper::getPaste());
+        $this->assertTrue($this->_data->exists(Helper::getPasteId()), 'paste exists before deleting data');
         $file  = tempnam(sys_get_temp_dir(), 'FOO');
         file_put_contents($file, json_encode(array(
             'deletetoken' => 'burnafterreading',
@@ -886,7 +886,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         ob_end_clean();
         $response = json_decode($content, true);
         $this->assertEquals(1, $response['status'], 'outputs status');
-        $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste exists after failing to delete data');
+        $this->assertTrue($this->_data->exists(Helper::getPasteId()), 'paste exists after failing to delete data');
     }
 
     /**
@@ -895,9 +895,9 @@ class ControllerTest extends PHPUnit_Framework_TestCase
     public function testDeleteExpired()
     {
         $expiredPaste = Helper::getPaste(2, array('expire_date' => 1000));
-        $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste does not exist before being created');
-        $this->_model->create(Helper::getPasteId(), $expiredPaste);
-        $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste exists before deleting data');
+        $this->assertFalse($this->_data->exists(Helper::getPasteId()), 'paste does not exist before being created');
+        $this->_data->create(Helper::getPasteId(), $expiredPaste);
+        $this->assertTrue($this->_data->exists(Helper::getPasteId()), 'paste exists before deleting data');
         $_GET['pasteid']     = Helper::getPasteId();
         $_GET['deletetoken'] = 'does not matter in this context, but has to be set';
         ob_start();
@@ -909,7 +909,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
             $content,
             'outputs error correctly'
         );
-        $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste successfully deleted');
+        $this->assertFalse($this->_data->exists(Helper::getPasteId()), 'paste successfully deleted');
     }
 
     /**
@@ -919,8 +919,8 @@ class ControllerTest extends PHPUnit_Framework_TestCase
     {
         $paste = Helper::getPaste();
         unset($paste['meta']['salt']);
-        $this->_model->create(Helper::getPasteId(), $paste);
-        $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste exists before deleting data');
+        $this->_data->create(Helper::getPasteId(), $paste);
+        $this->assertTrue($this->_data->exists(Helper::getPasteId()), 'paste exists before deleting data');
         $_GET['pasteid']     = Helper::getPasteId();
         $_GET['deletetoken'] = hash_hmac('sha256', Helper::getPasteId(), ServerSalt::get());
         ob_start();
@@ -932,6 +932,6 @@ class ControllerTest extends PHPUnit_Framework_TestCase
             $content,
             'outputs deleted status correctly'
         );
-        $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste successfully deleted');
+        $this->assertFalse($this->_data->exists(Helper::getPasteId()), 'paste successfully deleted');
     }
 }

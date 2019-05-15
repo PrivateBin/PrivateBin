@@ -192,6 +192,7 @@ class Helper
     {
         $example         = $version === 1 ? self::$commentV1 : self::$pasteV2;
         if ($version === 2) {
+            $example['adata']           = $example['adata'][0];
             $example['pasteid']         = $example['parentid']         = self::getPasteId();
             $example['meta']['created'] = self::$commentV1['meta']['postdate'];
             $example['meta']['icon']    = self::$commentV1['meta']['vizhash'];
