@@ -174,6 +174,23 @@ describe('CryptTool', function () {
                 });
             }
         );
+
+        it('does not truncate messages', async function () {
+            let message = fs.readFileSync('test/compression-sample.txt', 'utf8'),
+                clean = jsdom();
+            window.crypto = new WebCrypto();
+            let cipherMessage = await $.PrivateBin.CryptTool.cipher(
+                    'foo', 'bar', message, []
+                ),
+                plaintext = await $.PrivateBin.CryptTool.decipher(
+                        'foo', 'bar', cipherMessage
+                );
+            clean();
+            assert.strictEqual(
+                message,
+                plaintext
+            );
+        });
     });
 
     describe('getSymmetricKey', function () {
