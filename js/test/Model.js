@@ -132,13 +132,14 @@ describe('Model', function () {
         });
 
         jsc.property(
-            'returns the fragment of the URL',
+            'returns the fragment of a v1 URL',
             jsc.nearray(common.jscA2zString()),
             jsc.nearray(common.jscA2zString()),
             jsc.array(common.jscQueryString()),
             'nestring',
             function (schema, address, query, fragment) {
-                var fragmentString = common.btoa(fragment),
+                fragment = fragment.padStart(32, String.fromCharCode(0));
+                let fragmentString = common.btoa(fragment),
                     clean = jsdom('', {
                         url: schema.join('') + '://' + address.join('') +
                              '/?' + query.join('') + '#' + fragmentString
@@ -150,14 +151,52 @@ describe('Model', function () {
             }
         );
         jsc.property(
-            'returns the fragment stripped of trailing query parts',
+            'returns the v1 fragment stripped of trailing query parts',
             jsc.nearray(common.jscA2zString()),
             jsc.nearray(common.jscA2zString()),
             jsc.array(common.jscQueryString()),
             'nestring',
             jsc.array(common.jscHashString()),
             function (schema, address, query, fragment, trail) {
-                var fragmentString = common.btoa(fragment),
+                fragment = fragment.padStart(32, String.fromCharCode(0));
+                let fragmentString = common.btoa(fragment),
+                    clean = jsdom('', {
+                        url: schema.join('') + '://' + address.join('') + '/?' +
+                             query.join('') + '#' + fragmentString + '&' + trail.join('')
+                    }),
+                    result = $.PrivateBin.Model.getPasteKey();
+                $.PrivateBin.Model.reset();
+                clean();
+                return fragment === result;
+            }
+        );
+        jsc.property(
+            'returns the fragment of a v2 URL',
+            jsc.nearray(common.jscA2zString()),
+            jsc.nearray(common.jscA2zString()),
+            jsc.array(common.jscQueryString()),
+            'nestring',
+            function (schema, address, query, fragment) {
+                let fragmentString = $.PrivateBin.CryptTool.base58encode(fragment),
+                    clean = jsdom('', {
+                        url: schema.join('') + '://' + address.join('') +
+                             '/?' + query.join('') + '#' + fragmentString
+                    }),
+                    result = $.PrivateBin.Model.getPasteKey();
+                $.PrivateBin.Model.reset();
+                clean();
+                return fragment === result;
+            }
+        );
+        jsc.property(
+            'returns the v2 fragment stripped of trailing query parts',
+            jsc.nearray(common.jscA2zString()),
+            jsc.nearray(common.jscA2zString()),
+            jsc.array(common.jscQueryString()),
+            'nestring',
+            jsc.array(common.jscHashString()),
+            function (schema, address, query, fragment, trail) {
+                let fragmentString = $.PrivateBin.CryptTool.base58encode(fragment),
                     clean = jsdom('', {
                         url: schema.join('') + '://' + address.join('') + '/?' +
                              query.join('') + '#' + fragmentString + '&' + trail.join('')

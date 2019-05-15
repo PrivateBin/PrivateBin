@@ -532,6 +532,13 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         const me = {};
 
         /**
+         * base58 encoder & decoder
+         *
+         * @private
+         */
+        let base58 = new baseX('123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz');
+
+        /**
          * convert UTF-8 string stored in a DOMString to a standard UTF-16 DOMString
          *
          * Iterates over the bytes of the message, converting them all hexadecimal
@@ -922,12 +929,42 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          * @name   CryptTool.getSymmetricKey
          * @function
          * @throws {string}
-         * @return {string} base64 encoded key
+         * @return {string} raw bytes
          */
         me.getSymmetricKey = function()
         {
             return getRandomBytes(32);
         };
+
+        /**
+         * base58 encode a DOMString (UTF-16)
+         *
+         * @name   CryptTool.base58encode
+         * @function
+         * @param  {string} input
+         * @return {string} output
+         */
+        me.base58encode = function(input)
+        {
+            return base58.encode(
+                stringToArraybuffer(input)
+            );
+        }
+
+        /**
+         * base58 decode a DOMString (UTF-16)
+         *
+         * @name   CryptTool.base58decode
+         * @function
+         * @param  {string} input
+         * @return {string} output
+         */
+        me.base58decode = function(input)
+        {
+            return arraybufferToString(
+                base58.decode(input)
+            );
+        }
 
         return me;
     })();
@@ -1101,7 +1138,12 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                     newKey = newKey.substring(0, ampersandPos);
                 }
 
-                symmetricKey = atob(newKey);
+                // version 2 uses base58, version 1 uses base64
+                try {
+                    symmetricKey = CryptTool.base58decode(newKey);
+                } catch(e) {
+                    symmetricKey = atob(newKey);
+                }
             }
 
             return symmetricKey;
@@ -3174,7 +3216,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 document.title,
                 // recreate paste URL
                 Helper.baseUri() + '?' + Model.getPasteId() + '#' +
-                btoa(Model.getPasteKey())
+                CryptTool.base58encode(Model.getPasteKey())
             );
 
             // we use text/html instead of text/plain to avoid a bug when
@@ -3931,7 +3973,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
             // show notification
             const baseUri   = Helper.baseUri() + '?',
-                  url       = baseUri + data.id + '#' + btoa(data.encryptionKey),
+                  url       = baseUri + data.id + '#' + CryptTool.base58encode(data.encryptionKey),
                   deleteUrl = baseUri + 'pasteid=' + data.id + '&deletetoken=' + data.deletetoken;
             PasteStatus.createPasteNotification(url, deleteUrl);
 
