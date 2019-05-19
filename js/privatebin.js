@@ -4245,27 +4245,34 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 }
             }
 
-            if (paste.hasOwnProperty('attachment') && paste.hasOwnProperty('attachmentname')) {
-                // version 1 paste
-                Promise.all([
-                    CryptTool.decipher(key, password, paste.attachment),
-                    CryptTool.decipher(key, password, paste.attachmentname)
-                ]).then((attachment) => {
-                    AttachmentViewer.setAttachment(attachment[0], attachment[1]);
-                });
-                PasteViewer.setFormat(paste.meta.formatter);
-                PasteViewer.setText(pastePlain);
-            } else {
+            let format = '',
+                text   = '';
+            if (paste.hasOwnProperty('ct')) {
                 // version 2 paste
                 const pasteMessage = JSON.parse(pastePlain);
                 if (pasteMessage.hasOwnProperty('attachment') && pasteMessage.hasOwnProperty('attachment_name')) {
                     AttachmentViewer.setAttachment(pasteMessage.attachment, pasteMessage.attachment_name);
+                    AttachmentViewer.showAttachment();
                 }
-                PasteViewer.setFormat(paste.adata[1]);
-                PasteViewer.setText(pasteMessage.paste);
+                format = paste.adata[1];
+                text = pasteMessage.paste;
+            } else {
+                // version 1 paste
+                if (paste.hasOwnProperty('attachment') && paste.hasOwnProperty('attachmentname')) {
+                    Promise.all([
+                        CryptTool.decipher(key, password, paste.attachment),
+                        CryptTool.decipher(key, password, paste.attachmentname)
+                    ]).then((attachment) => {
+                        AttachmentViewer.setAttachment(attachment[0], attachment[1]);
+                        AttachmentViewer.showAttachment();
+                    });
+                }
+                format = paste.meta.formatter;
+                text = pastePlain;
             }
+            PasteViewer.setFormat(format);
+            PasteViewer.setText(text);
             PasteViewer.run();
-            AttachmentViewer.showAttachment();
         }
 
         /**
@@ -4377,7 +4384,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             });
 
             // decrypt paste & attachments
-            decryptionPromises.push(decryptPaste(paste, key, password))
+            decryptionPromises.push(decryptPaste(paste, key, password));
 
             // if the discussion is opened on this paste, display it
             if ((paste.adata && paste.adata[2]) || paste.meta.opendiscussion) {
@@ -4395,7 +4402,6 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 .catch((err) => {
                     // wait for the user to type in the password,
                     // then PasteDecrypter.run will be called again
-                    console.log(decryptionPromises);
                 });
         };
 
