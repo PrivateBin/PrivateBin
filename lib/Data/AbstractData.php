@@ -79,7 +79,7 @@ abstract class AbstractData
      *
      * @access public
      * @param  string $pasteid
-     * @return stdClass|false
+     * @return array|false
      */
     abstract public function read($pasteid);
 

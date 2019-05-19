@@ -75,73 +75,71 @@ class Database extends AbstractData
             self::$_instance = new self;
         }
 
-        if (is_array($options)) {
-            // set table prefix if given
-            if (array_key_exists('tbl', $options)) {
-                self::$_prefix = $options['tbl'];
+        // set table prefix if given
+        if (array_key_exists('tbl', $options)) {
+            self::$_prefix = $options['tbl'];
+        }
+
+        // initialize the db connection with new options
+        if (
+            array_key_exists('dsn', $options) &&
+            array_key_exists('usr', $options) &&
+            array_key_exists('pwd', $options) &&
+            array_key_exists('opt', $options)
+        ) {
+            // set default options
+            $options['opt'][PDO::ATTR_ERRMODE]          = PDO::ERRMODE_EXCEPTION;
+            $options['opt'][PDO::ATTR_EMULATE_PREPARES] = false;
+            $options['opt'][PDO::ATTR_PERSISTENT]       = true;
+            $db_tables_exist                            = true;
+
+            // setup type and dabase connection
+            self::$_type = strtolower(
+                substr($options['dsn'], 0, strpos($options['dsn'], ':'))
+            );
+            $tableQuery = self::_getTableQuery(self::$_type);
+            self::$_db  = new PDO(
+                $options['dsn'],
+                $options['usr'],
+                $options['pwd'],
+                $options['opt']
+            );
+
+            // check if the database contains the required tables
+            $tables = self::$_db->query($tableQuery)->fetchAll(PDO::FETCH_COLUMN, 0);
+
+            // create paste table if necessary
+            if (!in_array(self::_sanitizeIdentifier('paste'), $tables)) {
+                self::_createPasteTable();
+                $db_tables_exist = false;
             }
 
-            // initialize the db connection with new options
-            if (
-                array_key_exists('dsn', $options) &&
-                array_key_exists('usr', $options) &&
-                array_key_exists('pwd', $options) &&
-                array_key_exists('opt', $options)
-            ) {
-                // set default options
-                $options['opt'][PDO::ATTR_ERRMODE]          = PDO::ERRMODE_EXCEPTION;
-                $options['opt'][PDO::ATTR_EMULATE_PREPARES] = false;
-                $options['opt'][PDO::ATTR_PERSISTENT]       = true;
-                $db_tables_exist                            = true;
+            // create comment table if necessary
+            if (!in_array(self::_sanitizeIdentifier('comment'), $tables)) {
+                self::_createCommentTable();
+                $db_tables_exist = false;
+            }
 
-                // setup type and dabase connection
-                self::$_type = strtolower(
-                    substr($options['dsn'], 0, strpos($options['dsn'], ':'))
-                );
-                $tableQuery = self::_getTableQuery(self::$_type);
-                self::$_db  = new PDO(
-                    $options['dsn'],
-                    $options['usr'],
-                    $options['pwd'],
-                    $options['opt']
-                );
-
-                // check if the database contains the required tables
-                $tables = self::$_db->query($tableQuery)->fetchAll(PDO::FETCH_COLUMN, 0);
-
-                // create paste table if necessary
-                if (!in_array(self::_sanitizeIdentifier('paste'), $tables)) {
-                    self::_createPasteTable();
-                    $db_tables_exist = false;
-                }
-
-                // create comment table if necessary
-                if (!in_array(self::_sanitizeIdentifier('comment'), $tables)) {
-                    self::_createCommentTable();
-                    $db_tables_exist = false;
-                }
-
-                // create config table if necessary
-                $db_version = Controller::VERSION;
-                if (!in_array(self::_sanitizeIdentifier('config'), $tables)) {
-                    self::_createConfigTable();
-                    // if we only needed to create the config table, the DB is older then 0.22
-                    if ($db_tables_exist) {
-                        $db_version = '0.21';
-                    }
-                } else {
-                    $db_version = self::_getConfig('VERSION');
-                }
-
-                // update database structure if necessary
-                if (version_compare($db_version, Controller::VERSION, '<')) {
-                    self::_upgradeDatabase($db_version);
+            // create config table if necessary
+            $db_version = Controller::VERSION;
+            if (!in_array(self::_sanitizeIdentifier('config'), $tables)) {
+                self::_createConfigTable();
+                // if we only needed to create the config table, the DB is older then 0.22
+                if ($db_tables_exist) {
+                    $db_version = '0.21';
                 }
             } else {
-                throw new Exception(
-                    'Missing configuration for key dsn, usr, pwd or opt in the section model_options, please check your configuration file', 6
-                );
+                $db_version = self::_getConfig('VERSION');
             }
+
+            // update database structure if necessary
+            if (version_compare($db_version, Controller::VERSION, '<')) {
+                self::_upgradeDatabase($db_version);
+            }
+        } else {
+            throw new Exception(
+                'Missing configuration for key dsn, usr, pwd or opt in the section model_options, please check your configuration file', 6
+            );
         }
 
         return self::$_instance;
@@ -250,8 +248,9 @@ class Database extends AbstractData
             list($createdKey)       = self::_getVersionedKeys(1);
         }
 
-        $paste['meta'] = Json::decode($paste['meta']);
-        if (!is_array($paste['meta'])) {
+        try {
+            $paste['meta'] = Json::decode($paste['meta']);
+        } catch (Exception $e) {
             $paste['meta'] = array();
         }
         $paste                                       = self::upgradePreV1Format($paste);
@@ -474,7 +473,7 @@ class Database extends AbstractData
      * @param  array $params
      * @param  bool $firstOnly if only the first row should be returned
      * @throws PDOException
-     * @return array
+     * @return array|false
      */
     private static function _select($sql, array $params, $firstOnly = false)
     {

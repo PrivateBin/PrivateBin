@@ -184,7 +184,7 @@ class Request
      *
      * @access public
      * @param  string $param
-     * @param  string $default
+     * @param  string|array $default
      * @return string
      */
     public function getParam($param, $default = '')

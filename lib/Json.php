@@ -63,7 +63,7 @@ class Json
      */
     private static function _detectError()
     {
-        $errorCode  = json_last_error();
+        $errorCode = json_last_error();
         if ($errorCode === JSON_ERROR_NONE) {
             return;
         }

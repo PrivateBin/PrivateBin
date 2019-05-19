@@ -199,12 +199,13 @@ class Controller
         // Ensure last paste from visitors IP address was more than configured amount of seconds ago.
         TrafficLimiter::setConfiguration($this->_conf);
         if (!TrafficLimiter::canPass()) {
-            return $this->_return_message(
+            $this->_return_message(
                 1, I18n::_(
                     'Please wait %d seconds between each post.',
                     $this->_conf->getKey('limit', 'traffic')
                 )
             );
+            return;
         }
 
         $data      = $this->_request->getData();
@@ -213,18 +214,20 @@ class Controller
             array_key_exists('parentid', $data) &&
             !empty($data['parentid']);
         if (!FormatV2::isValid($data, $isComment)) {
-            return $this->_return_message(1, I18n::_('Invalid data.'));
+            $this->_return_message(1, I18n::_('Invalid data.'));
+            return;
         }
         $sizelimit = $this->_conf->getKey('sizelimit');
         // Ensure content is not too big.
         if (strlen($data['ct']) > $sizelimit) {
-            return $this->_return_message(
+            $this->_return_message(
                 1,
                 I18n::_(
                     'Paste is limited to %s of encrypted data.',
                     Filter::formatHumanReadableSize($sizelimit)
                 )
             );
+            return;
         }
 
         // The user posts a comment.
@@ -236,7 +239,8 @@ class Controller
                     $comment->setData($data);
                     $comment->store();
                 } catch (Exception $e) {
-                    return $this->_return_message(1, $e->getMessage());
+                    $this->_return_message(1, $e->getMessage());
+                    return;
                 }
                 $this->_return_message(0, $comment->getId());
             } else {
