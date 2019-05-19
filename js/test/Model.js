@@ -138,16 +138,15 @@ describe('Model', function () {
             jsc.array(common.jscQueryString()),
             'nestring',
             function (schema, address, query, fragment) {
-                fragment = fragment.padStart(32, String.fromCharCode(0));
-                let fragmentString = common.btoa(fragment),
-                    clean = jsdom('', {
+                const fragmentString = common.btoa(fragment.padStart(32, String.fromCharCode(0)));
+                let clean = jsdom('', {
                         url: schema.join('') + '://' + address.join('') +
                              '/?' + query.join('') + '#' + fragmentString
                     }),
                     result = $.PrivateBin.Model.getPasteKey();
                 $.PrivateBin.Model.reset();
                 clean();
-                return fragment === result;
+                return fragmentString === result;
             }
         );
         jsc.property(
@@ -158,16 +157,15 @@ describe('Model', function () {
             'nestring',
             jsc.array(common.jscHashString()),
             function (schema, address, query, fragment, trail) {
-                fragment = fragment.padStart(32, String.fromCharCode(0));
-                let fragmentString = common.btoa(fragment),
-                    clean = jsdom('', {
+                const fragmentString = common.btoa(fragment.padStart(32, String.fromCharCode(0)));
+                let clean = jsdom('', {
                         url: schema.join('') + '://' + address.join('') + '/?' +
                              query.join('') + '#' + fragmentString + '&' + trail.join('')
                     }),
                     result = $.PrivateBin.Model.getPasteKey();
                 $.PrivateBin.Model.reset();
                 clean();
-                return fragment === result;
+                return fragmentString === result;
             }
         );
         jsc.property(

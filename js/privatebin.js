@@ -1138,11 +1138,11 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                     newKey = newKey.substring(0, ampersandPos);
                 }
 
-                // version 2 uses base58, version 1 uses base64
+                // version 2 uses base58, version 1 uses base64 without decoding
                 try {
                     symmetricKey = CryptTool.base58decode(newKey);
                 } catch(e) {
-                    symmetricKey = atob(newKey);
+                    symmetricKey = newKey;
                 }
             }
 
