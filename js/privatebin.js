@@ -1140,7 +1140,9 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
                 // version 2 uses base58, version 1 uses base64 without decoding
                 try {
-                    symmetricKey = CryptTool.base58decode(newKey);
+                    // base58 encode strips NULL bytes at the beginning of the
+                    // string, so we re-add them if necessary
+                    symmetricKey = CryptTool.base58decode(newKey).padStart(32, '\u0000');
                 } catch(e) {
                     symmetricKey = newKey;
                 }

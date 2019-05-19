@@ -138,7 +138,7 @@ describe('Model', function () {
             jsc.array(common.jscQueryString()),
             'nestring',
             function (schema, address, query, fragment) {
-                const fragmentString = common.btoa(fragment.padStart(32, String.fromCharCode(0)));
+                const fragmentString = common.btoa(fragment.padStart(32, '\u0000'));
                 let clean = jsdom('', {
                         url: schema.join('') + '://' + address.join('') +
                              '/?' + query.join('') + '#' + fragmentString
@@ -157,7 +157,7 @@ describe('Model', function () {
             'nestring',
             jsc.array(common.jscHashString()),
             function (schema, address, query, fragment, trail) {
-                const fragmentString = common.btoa(fragment.padStart(32, String.fromCharCode(0)));
+                const fragmentString = common.btoa(fragment.padStart(32, '\u0000'));
                 let clean = jsdom('', {
                         url: schema.join('') + '://' + address.join('') + '/?' +
                              query.join('') + '#' + fragmentString + '&' + trail.join('')
@@ -175,14 +175,8 @@ describe('Model', function () {
             jsc.array(common.jscQueryString()),
             'nestring',
             function (schema, address, query, fragment) {
-                // base58 strips leading NULL bytes
-                while(fragment.charAt(0) === '\u0000') {
-                    fragment = fragment.substr(1);
-                }
-                // string may not be empty (when only NULL bytes and trimmed)
-                if (fragment.length === 0) {
-                    return true;
-                }
+                // base58 strips leading NULL bytes, so the string is padded with these if not found
+                fragment = fragment.padStart(32, '\u0000');
                 let fragmentString = $.PrivateBin.CryptTool.base58encode(fragment),
                     clean = jsdom('', {
                         url: schema.join('') + '://' + address.join('') +
@@ -202,14 +196,8 @@ describe('Model', function () {
             'nestring',
             jsc.array(common.jscHashString()),
             function (schema, address, query, fragment, trail) {
-                // base58 strips leading NULL bytes
-                while(fragment.charAt(0) === '\u0000') {
-                    fragment = fragment.substr(1);
-                }
-                // string may not be empty (when only NULL bytes and trimmed)
-                if (fragment.length === 0) {
-                    return true;
-                }
+                // base58 strips leading NULL bytes, so the string is padded with these if not found
+                fragment = fragment.padStart(32, '\u0000');
                 let fragmentString = $.PrivateBin.CryptTool.base58encode(fragment),
                     clean = jsdom('', {
                         url: schema.join('') + '://' + address.join('') + '/?' +
