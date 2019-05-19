@@ -33,39 +33,6 @@ describe('CryptTool', function () {
             {tests: 3});
         });
 
-        it('can decrypt a particular message (#260)', function () {
-            var message = `
-1 subgoal
-
-inv : Assert
-expr : Expr
-sBody : Instr
-deduction : (|- [|inv /\ assertOfExpr expr|] sBody [|inv|])%assert
-IHdeduction : (|= [|inv /\ assertOfExpr expr |] sBody [|inv|])%assert
-mem : Mem
-preInMem : inv mem
-m : Mem
-n : nat
-interpRel : interp (nth_iterate sBody n) (MemElem mem) = CpoElem Mem m
-lastIter : interp (nth_iterate sBody n) (MemElem mem) |=e expr_neg expr
-notLastIter : forall p : nat,
-              p < n -> interp (nth_iterate sBody p) (MemElem mem) |=e expr
-isWhile : interp (while expr sBody) (MemElem mem) =
-          interp (nth_iterate sBody n) (MemElem mem)
-
-======================== ( 1 / 1 )
-conseq_or_bottom inv (interp (nth_iterate sBody n) (MemElem mem))
-
-`;
-            if (message !== $.PrivateBin.CryptTool.decipher(
-                'y+4So8y7GYliFc+LcyFhXYSyMW/v1CdGqnSND+MPtNw=',
-                '', // no password
-                '{"iv":"LwfPcuKXYo2f6gjrtVRbcg==","v":1,"iter":1000,"ks":256,"ts":128,"mode":"gcm","adata":"","cipher":"aes","salt":"gw7Pe+7WGGI=","ct":"Mk6jTCNQjJUTnOQtFGtNqxTtzwnbDEWNmPd0teSJn5PW2IczTcE5aSvevONSOEpP476aNUA0JfPuK8v8zLqK2rmk8ESmm9wqkEdWWdMY2kvzU8mxo1yp6DBs5aXmy9y585GvB4kaCyh6nH2YFDQczUDZ4AQlGC8T11YMPO4sHM\/SOewS8vCnZ3tTiSuLjV0LC6k+xZ3jTg\/yH+V2cH5vfvj2eQMhUaMOyzjSQF34Ab7+pApuVVHXZ\/0lo86btt7iWo7yOHV59Te9AjpxzWgBI2gzTBBsk\/4WeYYVK3l2lTLy08GS9D8D1AbSsTrp5tSH84StAr+kMnEIsiR6FIbJ\/AP+6v9MQ2ryyUXGOj5HQLUZDsle3QQvtB7F6mqPDUvKtx\/Pxx0OHgNW5ttA581Hn1XWreUF6KzoWfcA6XdDEH4eylNiFrAFX+H1Mxfnxwz3aVOiRlP4+zrtmNcR\/XV87nzuDz2fqScrjFsPQ+FV\/784qe\/ZYs3Kp0Q+kVAnXm31vVwc6GU0b\/1bTZfknts0fKoIjCcH1gLivQfrj87QlTUa4l6TVzqgLLapB4EgW4CxcZ4PBhyexSuw+ZmUw\/kqyXZWP3R\/IzElI5Lt9GyLIzpyI9EvWLpVTn8iN8XOFZuEhHfTGb7Wdl+\/\/la4gsvhEvAx+ADqjjPgX0h4lFbyMZXHU3yN0QJr1jiZhIdbWL0QEyUkuWk6PK6E0ziHu558+8+WEjeYkElPosZwKtCHE4Ogfk6taZJhcV3rQu8U\/icqd1gAzbBFXp0="}'
-            )) {
-                throw Error('a particular message (#260) could not be deciphered');
-            }
-        });
-
         // The below static unit tests are included to ensure deciphering of "classic"
         // SJCL based pastes still works
         it(
@@ -223,6 +190,51 @@ conseq_or_bottom inv (interp (nth_iterate sBody n) (MemElem mem))
                 message,
                 plaintext
             );
+        });
+
+        it('can en- and decrypt a particular message (#260)', function () {
+            jsc.check(jsc.forall(
+                'string',
+                'string',
+                async function (key, password) {
+                    // pause to let async functions conclude
+                    await new Promise(resolve => setTimeout(resolve, 300));
+                    const message = `
+                            1 subgoal
+
+                            inv : Assert
+                            expr : Expr
+                            sBody : Instr
+                            deduction : (|- [|inv /\ assertOfExpr expr|] sBody [|inv|])%assert
+                            IHdeduction : (|= [|inv /\ assertOfExpr expr |] sBody [|inv|])%assert
+                            mem : Mem
+                            preInMem : inv mem
+                            m : Mem
+                            n : nat
+                            interpRel : interp (nth_iterate sBody n) (MemElem mem) = CpoElem Mem m
+                            lastIter : interp (nth_iterate sBody n) (MemElem mem) |=e expr_neg expr
+                            notLastIter : forall p : nat,
+                                          p < n -> interp (nth_iterate sBody p) (MemElem mem) |=e expr
+                            isWhile : interp (while expr sBody) (MemElem mem) =
+                                      interp (nth_iterate sBody n) (MemElem mem)
+
+                            ======================== ( 1 / 1 )
+                            conseq_or_bottom inv (interp (nth_iterate sBody n) (MemElem mem))
+
+`;
+                    let clean = jsdom();
+                    window.crypto = new WebCrypto();
+                    let cipherMessage = await $.PrivateBin.CryptTool.cipher(
+                            key, password, message, []
+                        ),
+                        plaintext = await $.PrivateBin.CryptTool.decipher(
+                                key, password, cipherMessage
+                        );
+                    clean();
+                    return message === plaintext;
+                }
+            ),
+            {tests: 3});
         });
     });
 
