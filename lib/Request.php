@@ -161,10 +161,10 @@ class Request
     public function getData()
     {
         $data = array(
-            'adata' => $this->getParam('adata', array()),
+            'adata' => $this->getParam('adata'),
         );
         $required_keys = array('v', 'ct');
-        $meta          = $this->getParam('meta', array());
+        $meta          = $this->getParam('meta');
         if (empty($meta)) {
             $required_keys[] = 'pasteid';
             $required_keys[] = 'parentid';
@@ -184,8 +184,8 @@ class Request
      *
      * @access public
      * @param  string $param
-     * @param  string|array $default
-     * @return string|array
+     * @param  string $default
+     * @return string
      */
     public function getParam($param, $default = '')
     {
