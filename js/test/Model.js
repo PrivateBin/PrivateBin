@@ -175,6 +175,14 @@ describe('Model', function () {
             jsc.array(common.jscQueryString()),
             'nestring',
             function (schema, address, query, fragment) {
+                // base58 strips leading NULL bytes
+                while(fragment.charAt(0) === '\u0000') {
+                    fragment = fragment.substr(1);
+                }
+                // string may not be empty (when only NULL bytes and trimmed)
+                if (fragment.length === 0) {
+                    return true;
+                }
                 let fragmentString = $.PrivateBin.CryptTool.base58encode(fragment),
                     clean = jsdom('', {
                         url: schema.join('') + '://' + address.join('') +
@@ -194,6 +202,14 @@ describe('Model', function () {
             'nestring',
             jsc.array(common.jscHashString()),
             function (schema, address, query, fragment, trail) {
+                // base58 strips leading NULL bytes
+                while(fragment.charAt(0) === '\u0000') {
+                    fragment = fragment.substr(1);
+                }
+                // string may not be empty (when only NULL bytes and trimmed)
+                if (fragment.length === 0) {
+                    return true;
+                }
                 let fragmentString = $.PrivateBin.CryptTool.base58encode(fragment),
                     clean = jsdom('', {
                         url: schema.join('') + '://' + address.join('') + '/?' +
