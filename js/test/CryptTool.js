@@ -200,27 +200,26 @@ describe('CryptTool', function () {
                     // pause to let async functions conclude
                     await new Promise(resolve => setTimeout(resolve, 300));
                     const message = `
-                            1 subgoal
+1 subgoal
 
-                            inv : Assert
-                            expr : Expr
-                            sBody : Instr
-                            deduction : (|- [|inv /\ assertOfExpr expr|] sBody [|inv|])%assert
-                            IHdeduction : (|= [|inv /\ assertOfExpr expr |] sBody [|inv|])%assert
-                            mem : Mem
-                            preInMem : inv mem
-                            m : Mem
-                            n : nat
-                            interpRel : interp (nth_iterate sBody n) (MemElem mem) = CpoElem Mem m
-                            lastIter : interp (nth_iterate sBody n) (MemElem mem) |=e expr_neg expr
-                            notLastIter : forall p : nat,
-                                          p < n -> interp (nth_iterate sBody p) (MemElem mem) |=e expr
-                            isWhile : interp (while expr sBody) (MemElem mem) =
-                                      interp (nth_iterate sBody n) (MemElem mem)
+inv : Assert
+expr : Expr
+sBody : Instr
+deduction : (|- [|inv /\ assertOfExpr expr|] sBody [|inv|])%assert
+IHdeduction : (|= [|inv /\ assertOfExpr expr |] sBody [|inv|])%assert
+mem : Mem
+preInMem : inv mem
+m : Mem
+n : nat
+interpRel : interp (nth_iterate sBody n) (MemElem mem) = CpoElem Mem m
+lastIter : interp (nth_iterate sBody n) (MemElem mem) |=e expr_neg expr
+notLastIter : forall p : nat,
+              p < n -> interp (nth_iterate sBody p) (MemElem mem) |=e expr
+isWhile : interp (while expr sBody) (MemElem mem) =
+          interp (nth_iterate sBody n) (MemElem mem)
 
-                            ======================== ( 1 / 1 )
-                            conseq_or_bottom inv (interp (nth_iterate sBody n) (MemElem mem))
-
+======================== ( 1 / 1 )
+conseq_or_bottom inv (interp (nth_iterate sBody n) (MemElem mem))
 `;
                     let clean = jsdom();
                     window.crypto = new WebCrypto();
