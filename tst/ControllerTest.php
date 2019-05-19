@@ -16,7 +16,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
     {
         /* Setup Routine */
         $this->_path  = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'privatebin_data';
-        $this->_data = Filesystem::getInstance(array('dir' => $this->_path));
+        $this->_data  = Filesystem::getInstance(array('dir' => $this->_path));
         $this->reset();
     }
 
@@ -404,9 +404,9 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $options                     = parse_ini_file(CONF, true);
         $options['traffic']['limit'] = 0;
         Helper::createIniFile(CONF, $options);
-        $paste = Helper::getPastePost();
+        $paste             = Helper::getPastePost();
         $paste['adata'][3] = 'neither 1 nor 0';
-        $file  = tempnam(sys_get_temp_dir(), 'FOO');
+        $file              = tempnam(sys_get_temp_dir(), 'FOO');
         file_put_contents($file, json_encode($paste));
         Request::setInputStream($file);
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
@@ -429,9 +429,9 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $options                     = parse_ini_file(CONF, true);
         $options['traffic']['limit'] = 0;
         Helper::createIniFile(CONF, $options);
-        $paste = Helper::getPastePost();
+        $paste             = Helper::getPastePost();
         $paste['adata'][2] = 'neither 1 nor 0';
-        $file  = tempnam(sys_get_temp_dir(), 'FOO');
+        $file              = tempnam(sys_get_temp_dir(), 'FOO');
         file_put_contents($file, json_encode($paste));
         Request::setInputStream($file);
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
@@ -502,7 +502,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $options['traffic']['limit'] = 0;
         Helper::createIniFile(CONF, $options);
         $comment = Helper::getCommentJson();
-        $file  = tempnam(sys_get_temp_dir(), 'FOO');
+        $file    = tempnam(sys_get_temp_dir(), 'FOO');
         file_put_contents($file, $comment);
         Request::setInputStream($file);
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
@@ -526,9 +526,9 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $options                     = parse_ini_file(CONF, true);
         $options['traffic']['limit'] = 0;
         Helper::createIniFile(CONF, $options);
-        $comment = Helper::getCommentPost();
+        $comment             = Helper::getCommentPost();
         $comment['parentid'] = 'foo';
-        $file  = tempnam(sys_get_temp_dir(), 'FOO');
+        $file                = tempnam(sys_get_temp_dir(), 'FOO');
         file_put_contents($file, json_encode($comment));
         Request::setInputStream($file);
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
@@ -553,7 +553,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $options['traffic']['limit'] = 0;
         Helper::createIniFile(CONF, $options);
         $comment = Helper::getCommentJson();
-        $file  = tempnam(sys_get_temp_dir(), 'FOO');
+        $file    = tempnam(sys_get_temp_dir(), 'FOO');
         file_put_contents($file, $comment);
         Request::setInputStream($file);
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
@@ -580,7 +580,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $options['traffic']['limit'] = 0;
         Helper::createIniFile(CONF, $options);
         $comment = Helper::getCommentJson();
-        $file  = tempnam(sys_get_temp_dir(), 'FOO');
+        $file    = tempnam(sys_get_temp_dir(), 'FOO');
         file_put_contents($file, $comment);
         Request::setInputStream($file);
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
@@ -607,7 +607,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $this->_data->createComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getPasteId(), Helper::getComment());
         $this->assertTrue($this->_data->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getPasteId()), 'comment exists before posting data');
         $comment = Helper::getCommentJson();
-        $file  = tempnam(sys_get_temp_dir(), 'FOO');
+        $file    = tempnam(sys_get_temp_dir(), 'FOO');
         file_put_contents($file, $comment);
         Request::setInputStream($file);
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
