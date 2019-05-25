@@ -62,10 +62,10 @@ describe('PasteStatus', function () {
                     result;
                 $('body').html('<div id="remainingtime" class="hidden"></div>');
                 $.PrivateBin.PasteStatus.init();
-                $.PrivateBin.PasteStatus.showRemainingTime({'meta': {
+                $.PrivateBin.PasteStatus.showRemainingTime($.PrivateBin.Helper.PasteFactory({'meta': {
                     'burnafterreading': burnafterreading,
                     'remaining_time': remainingTime
-                }});
+                }}));
                 if (burnafterreading) {
                     result = $('#remainingtime').hasClass('foryoureyesonly') &&
                             !$('#remainingtime').hasClass('hidden');
@@ -100,12 +100,13 @@ describe('PasteStatus', function () {
                     result;
                 $('body').html('<div id="remainingtime" class="hidden"></div>');
                 $.PrivateBin.PasteStatus.init();
-                $.PrivateBin.PasteStatus.showRemainingTime({
+                $.PrivateBin.PasteStatus.showRemainingTime($.PrivateBin.Helper.PasteFactory({
                     'adata': [null, null, null, burnafterreading],
+                    'v': 2,
                     'meta': {
                         'time_to_live': remainingTime
                     }
-                });
+                }));
                 if (burnafterreading) {
                     result = $('#remainingtime').hasClass('foryoureyesonly') &&
                             !$('#remainingtime').hasClass('hidden');

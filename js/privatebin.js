@@ -40,17 +40,130 @@ jQuery.PrivateBin = (function($, RawDeflate) {
     let z;
 
     /**
+     * CryptoData class
+     *
+     * bundles helper fuctions used in both paste and comment formats
+     *
+     * @name CryptoData
+     * @class
+     */
+    function CryptoData(data) {
+        this.v = 1;
+        // store all keys in the default locations for drop-in replacement
+        for (let key in data) {
+            this[key] = data[key];
+        }
+
+        /**
+         * gets the cipher data (cipher text + adata)
+         *
+         * @name Paste.getCipherData
+         * @function
+         * @return {Array}|{string}
+         */
+        this.getCipherData = function()
+        {
+            return this.v === 1 ? this.data : [this.ct, this.adata];
+        }
+    }
+
+    /**
      * Paste class
-     * 
+     *
      * bundles helper fuctions around the paste formats
      *
      * @name Paste
      * @class
      */
     function Paste(data) {
-        // store all keys in the default locations for drop-in replacement
-        for (let key in data) {
-            this[key] = raw[key];
+        // inherit constructor and methods of CryptoData
+        CryptoData.call(this, data);
+
+        /**
+         * gets the used formatter
+         *
+         * @name Paste.getFormat
+         * @function
+         * @return {string}
+         */
+        this.getFormat = function()
+        {
+            return this.v === 1 ? this.meta.formatter : this.adata[1];
+        }
+
+        /**
+         * gets the remaining seconds before the paste expires
+         *
+         * returns 0 if there is no expiration
+         *
+         * @name Paste.getTimeToLive
+         * @function
+         * @return {string}
+         */
+        this.getTimeToLive = function()
+        {
+            return (this.v === 1 ? this.meta.remaining_time : this.meta.time_to_live) || 0;
+        }
+
+        /**
+         * is burn-after-reading enabled
+         *
+         * @name Paste.isBurnAfterReadingEnabled
+         * @function
+         * @return {bool}
+         */
+        this.isBurnAfterReadingEnabled = function()
+        {
+            return (this.v === 1 ? this.meta.burnafterreading : this.adata[3]);
+        }
+
+        /**
+         * are discussions enabled
+         *
+         * @name Paste.isDiscussionEnabled
+         * @function
+         * @return {bool}
+         */
+        this.isDiscussionEnabled = function()
+        {
+            return (this.v === 1 ? this.meta.opendiscussion : this.adata[2]);
+        }
+    }
+
+    /**
+     * Comment class
+     *
+     * bundles helper fuctions around the comment formats
+     *
+     * @name Comment
+     * @class
+     */
+    function Comment(data) {
+        // inherit constructor and methods of CryptoData
+        CryptoData.call(this, data);
+
+        /**
+         * gets the UNIX timestamp of the comment creation
+         *
+         * @name Paste.getCreated
+         * @function
+         * @return {int}
+         */
+        this.getCreated = function()
+        {
+            return this.meta[this.v === 1 ? 'postdate' : 'created'];
+        }
+
+        /**
+         * gets the icon of the comment submitter
+         *
+         * @name Paste.getIcon
+         * @function
+         * @return {string}
+         */
+        this.getIcon = function()
+        {
+            return this.meta[this.v === 1 ? 'vizhash' : 'icon'] || '';
         }
     }
 
@@ -148,6 +261,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
         /**
          * convert URLs to clickable links.
+         *
          * URLs to handle:
          * <pre>
          *     magnet:?xt.1=urn:sha1:YNCKHTQCWBTRNJIV4WNAE52SJUQCZO5C&xt.2=urn:sha1:TXGCZQTH26NL6OUQAJJPFALHG2LTGBC7
@@ -251,16 +365,6 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             return baseUri;
         };
 
-        /**
-         * resets state, used for unit testing
-         *
-         * @name   Helper.reset
-         * @function
-         */
-        me.reset = function()
-        {
-            baseUri = null;
-        };
 
         /**
          * checks whether this is a bot we dislike
@@ -277,9 +381,45 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                     return true;
                 }
             }
-
             return false;
         }
+
+        /**
+         * wrap an object into a Paste, used for mocking in the unit tests
+         *
+         * @name   Helper.PasteFactory
+         * @function
+         * @param  {object} data
+         * @return {Paste}
+         */
+        me.PasteFactory = function(data)
+        {
+            return new Paste(data);
+        };
+
+        /**
+         * wrap an object into a Comment, used for mocking in the unit tests
+         *
+         * @name   Helper.CommentFactory
+         * @function
+         * @param  {object} data
+         * @return {Comment}
+         */
+        me.CommentFactory = function(data)
+        {
+            return new Comment(data);
+        };
+
+        /**
+         * resets state, used for unit testing
+         *
+         * @name   Helper.reset
+         * @function
+         */
+        me.reset = function()
+        {
+            baseUri = null;
+        };
 
         return me;
     })();
@@ -1058,10 +1198,10 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 Alert.showError(ServerInteraction.parseUploadError(status, data, 'get paste data'));
             });
             ServerInteraction.setSuccess(function (status, data) {
-                pasteData = data;
+                pasteData = new Paste(data);
 
                 if (typeof callback === 'function') {
-                    return callback(data);
+                    return callback(pasteData);
                 }
             });
             ServerInteraction.run();
@@ -1680,11 +1820,11 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          *
          * @name PasteStatus.showRemainingTime
          * @function
-         * @param {object} paste
+         * @param {Paste} paste
          */
         me.showRemainingTime = function(paste)
         {
-            if ((paste.adata && paste.adata[3]) || paste.meta.burnafterreading) {
+            if (paste.isBurnAfterReadingEnabled()) {
                 // display paste "for your eyes only" if it is deleted
 
                 // the paste has been deleted when the JSON with the ciphertext
@@ -1696,9 +1836,9 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 // discourage cloning (it cannot really be prevented)
                 TopNav.hideCloneButton();
 
-            } else if (paste.meta.time_to_live || paste.meta.remaining_time) {
+            } else if (paste.getTimeToLive() > 0) {
                 // display paste expiration
-                let expiration = Helper.secondsToHuman(paste.meta.time_to_live || paste.meta.remaining_time),
+                let expiration = Helper.secondsToHuman(paste.getTimeToLive()),
                     expirationLabel = [
                         'This document will expire in %d ' + expiration[1] + '.',
                         'This document will expire in %d ' + expiration[1] + 's.'
@@ -2912,7 +3052,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          *
          * @name   DiscussionViewer.addComment
          * @function
-         * @param {object} comment
+         * @param {Comment} comment
          * @param {string} commentText
          * @param {string} nickname
          */
@@ -2944,14 +3084,15 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
             // set date
             $commentEntry.find('span.commentdate')
-                      .text(' (' + (new Date((comment.meta.created || comment.meta.postdate) * 1000).toLocaleString()) + ')')
+                      .text(' (' + (new Date(comment.getCreated() * 1000).toLocaleString()) + ')')
                       .attr('title', 'CommentID: ' + comment.id);
 
             // if an avatar is available, display it
-            if (comment.meta.icon || comment.meta.vizhash) {
+            const icon = comment.getIcon();
+            if (icon) {
                 $commentEntry.find('span.nickname')
                              .before(
-                                '<img src="' + (comment.meta.icon || comment.meta.vizhash) + '" class="vizhash" /> '
+                                '<img src="' + icon + '" class="vizhash" /> '
                              );
                 $(document).on('languageLoaded', function () {
                     $commentEntry.find('img.vizhash')
@@ -3736,11 +3877,9 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         function success(status, result)
         {
-            // add useful data to result
-            result.encryptionKey = symmetricKey;
-            result.requestData = data;
-
             if (successFunc !== null) {
+                // add useful data to result
+                result.encryptionKey = symmetricKey;
                 successFunc(status, result);
             }
         }
@@ -4239,7 +4378,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          * @private
          * @async
          * @function
-         * @param  {object} paste - paste data in object form
+         * @param  {Paste} paste - paste data in object form
          * @param  {string} key
          * @param  {string} password
          * @throws {string}
@@ -4247,9 +4386,9 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         async function decryptPaste(paste, key, password)
         {
-            const pastePlain = await decryptOrPromptPassword(
+            let pastePlain = await decryptOrPromptPassword(
                 key, password,
-                paste.hasOwnProperty('ct') ? [paste.ct, paste.adata] : paste.data
+                paste.getCipherData()
             );
             if (pastePlain === false) {
                 if (password.length === 0) {
@@ -4262,15 +4401,14 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
             let format = '',
                 text   = '';
-            if (paste.hasOwnProperty('ct')) {
+            if (paste.v > 1) {
                 // version 2 paste
                 const pasteMessage = JSON.parse(pastePlain);
                 if (pasteMessage.hasOwnProperty('attachment') && pasteMessage.hasOwnProperty('attachment_name')) {
                     AttachmentViewer.setAttachment(pasteMessage.attachment, pasteMessage.attachment_name);
                     AttachmentViewer.showAttachment();
                 }
-                format = paste.adata[1];
-                text = pasteMessage.paste;
+                pastePlain = pasteMessage.paste;
             } else {
                 // version 1 paste
                 if (paste.hasOwnProperty('attachment') && paste.hasOwnProperty('attachmentname')) {
@@ -4282,11 +4420,9 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                         AttachmentViewer.showAttachment();
                     });
                 }
-                format = paste.meta.formatter;
-                text = pastePlain;
             }
-            PasteViewer.setFormat(format);
-            PasteViewer.setText(text);
+            PasteViewer.setFormat(paste.getFormat());
+            PasteViewer.setText(pastePlain);
             PasteViewer.run();
         }
 
@@ -4297,7 +4433,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          * @private
          * @async
          * @function
-         * @param  {object} paste - paste data in object form
+         * @param  {Paste} paste - paste data in object form
          * @param  {string} key
          * @param  {string} password
          * @return {Promise}
@@ -4310,38 +4446,39 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             const commentDecryptionPromises = [];
             // iterate over comments
             for (let i = 0; i < paste.comments.length; ++i) {
-                if (paste.comments[i].hasOwnProperty('v') && paste.comments[i].v === 2) {
+                const comment        = new Comment(paste.comments[i]),
+                      commentPromise = CryptTool.decipher(key, password, comment.getCipherData());
+                paste.comments[i] = comment;
+                if (comment.v > 1) {
                     // version 2 comment
                     commentDecryptionPromises.push(
-                        CryptTool.decipher(key, password, [paste.comments[i].ct, paste.comments[i].adata])
-                            .then((commentJson) => {
-                                const commentMessage = JSON.parse(commentJson);
-                                return [
-                                    commentMessage.hasOwnProperty('comment') ? commentMessage.comment : '',
-                                    commentMessage.hasOwnProperty('nickname') ? commentMessage.nickname : ''
-                                ];
-                            })
+                        commentPromise.then(function (commentJson) {
+                            const commentMessage = JSON.parse(commentJson);
+                            return [
+                                commentMessage.comment  || '',
+                                commentMessage.nickname || ''
+                            ];
+                        })
                     );
                 } else {
                     // version 1 comment
                     commentDecryptionPromises.push(
                         Promise.all([
-                            CryptTool.decipher(key, password, paste.comments[i].data),
-                            paste.comments[i].meta.nickname ?
+                            commentPromise,
+                            paste.comments[i].meta.hasOwnProperty('nickname') ?
                                 CryptTool.decipher(key, password, paste.comments[i].meta.nickname) :
                                 Promise.resolve('')
                         ])
                     );
                 }
             }
-            return Promise.all(commentDecryptionPromises).then((plaintexts) => {
+            return Promise.all(commentDecryptionPromises).then(function (plaintexts) {
                 for (let i = 0; i < paste.comments.length; ++i) {
                     if (plaintexts[i][0].length === 0) {
                         continue;
                     }
-                    const comment = paste.comments[i];
                     DiscussionViewer.addComment(
-                        comment,
+                        paste.comments[i],
                         plaintexts[i][0],
                         plaintexts[i][1]
                     );
@@ -4376,7 +4513,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          *
          * @name   PasteDecrypter.run
          * @function
-         * @param  {Object} [paste] - (optional) object including comments to display (items = array with keys ('data','meta'))
+         * @param  {Paste} [paste] - (optional) object including comments to display (items = array with keys ('data','meta'))
          */
         me.run = function(paste)
         {
@@ -4402,7 +4539,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             decryptionPromises.push(decryptPaste(paste, key, password));
 
             // if the discussion is opened on this paste, display it
-            if ((paste.adata && paste.adata[2]) || paste.meta.opendiscussion) {
+            if (paste.isDiscussionEnabled()) {
                 decryptionPromises.push(decryptComments(paste, key, password));
             }
 
@@ -4417,6 +4554,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 .catch((err) => {
                     // wait for the user to type in the password,
                     // then PasteDecrypter.run will be called again
+                    console.error(err);
                 });
         };
 
