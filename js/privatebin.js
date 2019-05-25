@@ -40,6 +40,21 @@ jQuery.PrivateBin = (function($, RawDeflate) {
     let z;
 
     /**
+     * Paste class
+     * 
+     * bundles helper fuctions around the paste formats
+     *
+     * @name Paste
+     * @class
+     */
+    function Paste(data) {
+        // store all keys in the default locations for drop-in replacement
+        for (let key in data) {
+            this[key] = raw[key];
+        }
+    }
+
+    /**
      * static Helper methods
      *
      * @name Helper
@@ -4518,7 +4533,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                     );
                 });
                 ServerInteraction.setSuccess(function (status, data) {
-                    PasteDecrypter.run(data);
+                    PasteDecrypter.run(new Paste(data));
 
                     // restore position
                     window.scrollTo(0, orgPosition);
