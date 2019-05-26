@@ -1,0 +1,124 @@
+{
+	"@context": {
+		"so": "https://schema.org/",
+		"dp": "http://dbpedia.org/resource/",
+		"pb": "?jsonld=types#"
+	},
+	"Base64": {
+		"@type": "so:Text"
+	},
+	"CipherText": {
+		"@type": "pb:Base64"
+	},
+	"PasteCipherMessage": {
+		"paste": {
+			"@type": "so:Text"
+		},
+		"attachment": {
+			"@type": "so:MediaObject"
+		},
+		"attachment_name": {
+			"@type": "so:Text"
+		}
+	},
+	"CommentCipherMessage": {
+		"comment": {
+			"@type": "so:Text"
+		},
+		"nickname": {
+			"@type": "so:Text"
+		}
+	},
+	"InitializationVector": {
+		"@type": "pb:Base64"
+	},
+	"Salt": {
+		"@type": "pb:Base64"
+	},
+	"Iterations": {
+		"@type": "so:Integer",
+		"@minimum": 1
+	},
+	"KeySize": {
+		"@type": "so:Integer",
+		"@value": 256,
+		"@minimum": 128,
+		"@maximum": 256,
+		"@enum": [128, 196, 256]
+	},
+	"TagSize": {
+		"@type": "so:Integer",
+		"@value": 128,
+		"@minimum": 32,
+		"@maximum": 128,
+		"@enum": [32, 64, 96, 104, 112, 120, 128]
+	},
+	"Algorithm": {
+		"@type": "so:Text",
+		"@value": "aes"
+	},
+	"Mode": {
+		"@type": "so:Text",
+		"@value": "gcm",
+		"@enum": ["ctr", "cbc", "gcm"]
+	},
+	"Compression": {
+		"@type": "so:Text",
+		"@value": "zlib",
+		"@enum": ["zlib", "none"]
+	},
+	"Formatter": {
+		"@type": "so:Text",
+		"@value": "plaintext",
+		"@enum": ["plaintext", "syntaxhighlighting", "markdown"]
+	},
+	"Expiration": {
+		"@type": "so:Text",
+		"@value": "1week",
+		"@enum": ["5min", "10min", "1hour", "1day", "1week", "1month", "1year", "never"]
+	},
+	"OpenDiscussion": {
+		"@type": "so:Boolean",
+		"@enum": [false, true]
+	},
+	"BurnAfterReading": {
+		"@type": "so:Boolean",
+		"@enum": [false, true]
+	},
+	"CreationTime": {
+		"@type": "dp:Unix_time"
+	},
+	"RemainingSeconds": {
+		"@type": "dp:Second",
+		"@minimum": 1
+	},
+	"CipherParameters": {
+		"@container": "@list",
+		"@value": [
+			{
+				"@type": "pb:InitializationVector"
+			},
+			{
+				"@type": "pb:Salt"
+			},
+			{
+				"@type": "pb:Iterations"
+			},
+			{
+				"@type": "pb:KeySize"
+			},
+			{
+				"@type": "pb:TagSize"
+			},
+			{
+				"@type": "pb:Algorithm"
+			},
+			{
+				"@type": "pb:Mode"
+			},
+			{
+				"@type": "pb:Compression"
+			}
+		]
+	}
+}

@@ -93,13 +93,13 @@ class RequestTest extends PHPUnit_Framework_TestCase
         $_SERVER['REQUEST_METHOD']        = 'PUT';
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $file                             = tempnam(sys_get_temp_dir(), 'FOO');
-        file_put_contents($file, 'data=foo');
+        file_put_contents($file, '{"ct":"foo"}');
         Request::setInputStream($file);
         $request = new Request;
         unlink($file);
         $this->assertTrue($request->isJsonApiCall(), 'is JSON Api call');
         $this->assertEquals('create', $request->getOperation());
-        $this->assertEquals('foo', $request->getParam('data'));
+        $this->assertEquals('foo', $request->getParam('ct'));
     }
 
     public function testApiCreateAlternative()
@@ -107,11 +107,13 @@ class RequestTest extends PHPUnit_Framework_TestCase
         $this->reset();
         $_SERVER['REQUEST_METHOD'] = 'POST';
         $_SERVER['HTTP_ACCEPT']    = 'application/json, text/javascript, */*; q=0.01';
-        $_POST['attachment']       = 'foo';
-        $request                   = new Request;
+        $file                      = tempnam(sys_get_temp_dir(), 'FOO');
+        file_put_contents($file, '{"ct":"foo"}');
+        Request::setInputStream($file);
+        $request = new Request;
         $this->assertTrue($request->isJsonApiCall(), 'is JSON Api call');
         $this->assertEquals('create', $request->getOperation());
-        $this->assertEquals('foo', $request->getParam('attachment'));
+        $this->assertEquals('foo', $request->getParam('ct'));
     }
 
     public function testApiRead()
@@ -136,8 +138,10 @@ class RequestTest extends PHPUnit_Framework_TestCase
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['QUERY_STRING']          = $id;
         $_GET                             = array($id => '');
-        $_POST['deletetoken']             = 'bar';
-        $request                          = new Request;
+        $file                             = tempnam(sys_get_temp_dir(), 'FOO');
+        file_put_contents($file, '{"deletetoken":"bar"}');
+        Request::setInputStream($file);
+        $request = new Request;
         $this->assertTrue($request->isJsonApiCall(), 'is JSON Api call');
         $this->assertEquals('delete', $request->getOperation());
         $this->assertEquals($id, $request->getParam('pasteid'));

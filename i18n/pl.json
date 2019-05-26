@@ -112,8 +112,6 @@
         "błąd serwera lub brak odpowiedzi",
     "Could not post comment: %s":
         "Nie udało się wysłać komentarza: %s",
-    "Please move your mouse for more entropy…":
-        "Proszę poruszać myszą, aby uzyskać większą entropię…",
     "Sending paste…":
         "Wysyłanie wklejki…",
     "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit [Ctrl]+[c] to copy)</span>":
@@ -148,8 +146,7 @@
         "Odszyfruj",
     "Enter password":
         "Wpisz hasło",
-    "Loading…": 
-        "Wczytywanie…",
+    "Loading…": "Wczytywanie…",
     "Decrypting paste…": "Odszyfrowywanie wklejki…",
     "Preparing new paste…": "Przygotowywanie nowej wklejki…",
     "In case this message never disappears please have a look at <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">this FAQ for information to troubleshoot</a>.":

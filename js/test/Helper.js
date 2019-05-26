@@ -211,17 +211,20 @@ describe('Helper', function () {
 
     describe('getCookie', function () {
         this.timeout(30000);
+        after(function () {
+            cleanup();
+        });
+
         jsc.property(
             'returns the requested cookie',
-            'nearray asciinestring',
-            'nearray asciistring',
+            jsc.nearray(jsc.nearray(common.jscAlnumString())),
+            jsc.nearray(jsc.nearray(common.jscAlnumString())),
             function (labels, values) {
                 var selectedKey = '', selectedValue = '',
                     cookieArray = [];
                 labels.forEach(function(item, i) {
-                    // deliberatly using a non-ascii key for replacing invalid characters
-                    var key = item.replace(/[\s;,=]/g, Array(i+2).join('£')),
-                        value = (values[i] || values[0]).replace(/[\s;,=]/g, '');
+                    var key = item.join(''),
+                        value = (values[i] || values[0]).join('');
                     cookieArray.push(key + '=' + value);
                     if (Math.random() < 1 / i || selectedKey === key)
                     {
@@ -231,6 +234,7 @@ describe('Helper', function () {
                 });
                 var clean = jsdom('', {cookie: cookieArray}),
                     result = $.PrivateBin.Helper.getCookie(selectedKey);
+                $.PrivateBin.Helper.reset();
                 clean();
                 return result === selectedValue;
             }
@@ -239,21 +243,19 @@ describe('Helper', function () {
 
     describe('baseUri', function () {
         this.timeout(30000);
-        before(function () {
-            $.PrivateBin.Helper.reset();
-        });
-
         jsc.property(
             'returns the URL without query & fragment',
-            common.jscSchemas(),
+            jsc.elements(['http', 'https']),
             jsc.nearray(common.jscA2zString()),
+            jsc.array(common.jscA2zString()),
             jsc.array(common.jscQueryString()),
             'string',
-            function (schema, address, query, fragment) {
-                var expected = schema + '://' + address.join('') + '/',
+            function (schema, address, path, query, fragment) {
+                $.PrivateBin.Helper.reset();
+                var path = path.join('') + (path.length > 0 ? '/' : ''),
+                    expected = schema + '://' + address.join('') + '/' + path,
                     clean = jsdom('', {url: expected + '?' + query.join('') + '#' + fragment}),
                     result = $.PrivateBin.Helper.baseUri();
-                $.PrivateBin.Helper.reset();
                 clean();
                 return expected === result;
             }

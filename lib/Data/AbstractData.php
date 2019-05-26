@@ -12,8 +12,6 @@
 
 namespace PrivateBin\Data;
 
-use stdClass;
-
 /**
  * AbstractData
  *
@@ -60,7 +58,7 @@ abstract class AbstractData
      * @param  array $options
      * @return AbstractData
      */
-    public static function getInstance($options)
+    public static function getInstance(array $options)
     {
     }
 
@@ -72,14 +70,14 @@ abstract class AbstractData
      * @param  array  $paste
      * @return bool
      */
-    abstract public function create($pasteid, $paste);
+    abstract public function create($pasteid, array $paste);
 
     /**
      * Read a paste.
      *
      * @access public
      * @param  string $pasteid
-     * @return stdClass|false
+     * @return array|false
      */
     abstract public function read($pasteid);
 
@@ -110,7 +108,7 @@ abstract class AbstractData
      * @param  array  $comment
      * @return bool
      */
-    abstract public function createComment($pasteid, $parentid, $commentid, $comment);
+    abstract public function createComment($pasteid, $parentid, $commentid, array $comment);
 
     /**
      * Read all comments of paste.
@@ -163,12 +161,12 @@ abstract class AbstractData
     /**
      * Get next free slot for comment from postdate.
      *
-     * @access public
+     * @access protected
      * @param  array $comments
      * @param  int|string $postdate
      * @return int|string
      */
-    protected function getOpenSlot(&$comments, $postdate)
+    protected function getOpenSlot(array &$comments, $postdate)
     {
         if (array_key_exists($postdate, $comments)) {
             $parts = explode('.', $postdate, 2);
@@ -179,5 +177,26 @@ abstract class AbstractData
             return $this->getOpenSlot($comments, implode('.', $parts));
         }
         return $postdate;
+    }
+
+    /**
+     * Upgrade pre-version 1 pastes with attachment to version 1 format.
+     *
+     * @access protected
+     * @static
+     * @param  array $paste
+     * @return array
+     */
+    protected static function upgradePreV1Format(array $paste)
+    {
+        if (array_key_exists('attachment', $paste['meta'])) {
+            $paste['attachment'] = $paste['meta']['attachment'];
+            unset($paste['meta']['attachment']);
+            if (array_key_exists('attachmentname', $paste['meta'])) {
+                $paste['attachmentname'] = $paste['meta']['attachmentname'];
+                unset($paste['meta']['attachmentname']);
+            }
+        }
+        return $paste;
     }
 }

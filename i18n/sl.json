@@ -112,8 +112,6 @@
         "napaka na strežniku, ali pa se strežnik ne odziva",
     "Could not post comment: %s":
         "Komentarja ni bilo mogoče objaviti : %s",
-    "Please move your mouse for more entropy…":
-        "Prosim premakni svojo miško za več entropije…",
     "Sending paste…":
         "Pošiljam prilepek…",
     "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit [Ctrl]+[c] to copy)</span>":

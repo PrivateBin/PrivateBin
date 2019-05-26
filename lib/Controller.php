@@ -154,6 +154,7 @@ class Controller
      * initialize PrivateBin
      *
      * @access private
+     * @throws Exception
      */
     private function _init()
     {
@@ -177,16 +178,16 @@ class Controller
      * Store new paste or comment
      *
      * POST contains one or both:
-     * data = json encoded SJCL encrypted text (containing keys: iv,v,iter,ks,ts,mode,adata,cipher,salt,ct)
-     * attachment = json encoded SJCL encrypted text (containing keys: iv,v,iter,ks,ts,mode,adata,cipher,salt,ct)
+     * data = json encoded FormatV2 encrypted text (containing keys: iv,v,iter,ks,ts,mode,adata,cipher,salt,ct)
+     * attachment = json encoded FormatV2 encrypted text (containing keys: iv,v,iter,ks,ts,mode,adata,cipher,salt,ct)
      *
      * All optional data will go to meta information:
      * expire (optional) = expiration delay (never,5min,10min,1hour,1day,1week,1month,1year,burn) (default:never)
      * formatter (optional) = format to display the paste as (plaintext,syntaxhighlighting,markdown) (default:syntaxhighlighting)
      * burnafterreading (optional) = if this paste may only viewed once ? (0/1) (default:0)
      * opendiscusssion (optional) = is the discussion allowed on this paste ? (0/1) (default:0)
-     * attachmentname = json encoded SJCL encrypted text (containing keys: iv,v,iter,ks,ts,mode,adata,cipher,salt,ct)
-     * nickname (optional) = in discussion, encoded SJCL encrypted text nickname of author of comment (containing keys: iv,v,iter,ks,ts,mode,adata,cipher,salt,ct)
+     * attachmentname = json encoded FormatV2 encrypted text (containing keys: iv,v,iter,ks,ts,mode,adata,cipher,salt,ct)
+     * nickname (optional) = in discussion, encoded FormatV2 encrypted text nickname of author of comment (containing keys: iv,v,iter,ks,ts,mode,adata,cipher,salt,ct)
      * parentid (optional) = in discussion, which comment this comment replies to.
      * pasteid (optional) = in discussion, which paste this comment belongs to.
      *
@@ -198,59 +199,52 @@ class Controller
         // Ensure last paste from visitors IP address was more than configured amount of seconds ago.
         TrafficLimiter::setConfiguration($this->_conf);
         if (!TrafficLimiter::canPass()) {
-            return $this->_return_message(
-            1, I18n::_(
-                'Please wait %d seconds between each post.',
-                $this->_conf->getKey('limit', 'traffic')
-            )
-        );
+            $this->_return_message(
+                1, I18n::_(
+                    'Please wait %d seconds between each post.',
+                    $this->_conf->getKey('limit', 'traffic')
+                )
+            );
+            return;
         }
 
-        $data           = $this->_request->getParam('data');
-        $attachment     = $this->_request->getParam('attachment');
-        $attachmentname = $this->_request->getParam('attachmentname');
-
-        // Ensure content is not too big.
+        $data      = $this->_request->getData();
+        $isComment = array_key_exists('pasteid', $data) &&
+            !empty($data['pasteid']) &&
+            array_key_exists('parentid', $data) &&
+            !empty($data['parentid']);
+        if (!FormatV2::isValid($data, $isComment)) {
+            $this->_return_message(1, I18n::_('Invalid data.'));
+            return;
+        }
         $sizelimit = $this->_conf->getKey('sizelimit');
-        if (
-            strlen($data) + strlen($attachment) + strlen($attachmentname) > $sizelimit
-        ) {
-            return $this->_return_message(
-            1,
-            I18n::_(
-                'Paste is limited to %s of encrypted data.',
-                Filter::formatHumanReadableSize($sizelimit)
-            )
-        );
-        }
-
-        // Ensure attachment did not get lost due to webserver limits or Suhosin
-        if (strlen($attachmentname) > 0 && strlen($attachment) == 0) {
-            return $this->_return_message(1, 'Attachment missing in data received by server. Please check your webserver or suhosin configuration for maximum POST parameter limitations.');
+        // Ensure content is not too big.
+        if (strlen($data['ct']) > $sizelimit) {
+            $this->_return_message(
+                1,
+                I18n::_(
+                    'Paste is limited to %s of encrypted data.',
+                    Filter::formatHumanReadableSize($sizelimit)
+                )
+            );
+            return;
         }
 
         // The user posts a comment.
-        $pasteid  = $this->_request->getParam('pasteid');
-        $parentid = $this->_request->getParam('parentid');
-        if (!empty($pasteid) && !empty($parentid)) {
-            $paste = $this->_model->getPaste($pasteid);
+        if ($isComment) {
+            $paste = $this->_model->getPaste($data['pasteid']);
             if ($paste->exists()) {
                 try {
-                    $comment = $paste->getComment($parentid);
-
-                    $nickname = $this->_request->getParam('nickname');
-                    if (!empty($nickname)) {
-                        $comment->setNickname($nickname);
-                    }
-
+                    $comment = $paste->getComment($data['parentid']);
                     $comment->setData($data);
                     $comment->store();
                 } catch (Exception $e) {
-                    return $this->_return_message(1, $e->getMessage());
+                    $this->_return_message(1, $e->getMessage());
+                    return;
                 }
                 $this->_return_message(0, $comment->getId());
             } else {
-                $this->_return_message(1, 'Invalid data.');
+                $this->_return_message(1, I18n::_('Invalid data.'));
             }
         }
         // The user posts a standard paste.
@@ -259,34 +253,6 @@ class Controller
             $paste = $this->_model->getPaste();
             try {
                 $paste->setData($data);
-
-                if (!empty($attachment)) {
-                    $paste->setAttachment($attachment);
-                    if (!empty($attachmentname)) {
-                        $paste->setAttachmentName($attachmentname);
-                    }
-                }
-
-                $expire = $this->_request->getParam('expire');
-                if (!empty($expire)) {
-                    $paste->setExpiration($expire);
-                }
-
-                $burnafterreading = $this->_request->getParam('burnafterreading');
-                if (!empty($burnafterreading)) {
-                    $paste->setBurnafterreading($burnafterreading);
-                }
-
-                $opendiscussion = $this->_request->getParam('opendiscussion');
-                if (!empty($opendiscussion)) {
-                    $paste->setOpendiscussion($opendiscussion);
-                }
-
-                $formatter = $this->_request->getParam('formatter');
-                if (!empty($formatter)) {
-                    $paste->setFormatter($formatter);
-                }
-
                 $paste->store();
             } catch (Exception $e) {
                 return $this->_return_message(1, $e->getMessage());
@@ -307,22 +273,17 @@ class Controller
         try {
             $paste = $this->_model->getPaste($dataid);
             if ($paste->exists()) {
-                // accessing this property ensures that the paste would be
+                // accessing this method ensures that the paste would be
                 // deleted if it has already expired
-                $burnafterreading = $paste->isBurnafterreading();
+                $paste->get();
                 if (
-                    ($burnafterreading && $deletetoken == 'burnafterreading') || // either we burn-after it has been read //@TODO: not needed anymore now?
-                    Filter::slowEquals($deletetoken, $paste->getDeleteToken()) // or we manually delete it with this secret token
+                    Filter::slowEquals($deletetoken, $paste->getDeleteToken())
                 ) {
-                    // Paste exists and deletion token (if required) is valid: Delete the paste.
+                    // Paste exists and deletion token is valid: Delete the paste.
                     $paste->delete();
                     $this->_status = 'Paste was properly deleted.';
                 } else {
-                    if (!$burnafterreading && $deletetoken == 'burnafterreading') {
-                        $this->_error = 'Paste is not of burn-after-reading type.';
-                    } else {
-                        $this->_error = 'Wrong deletion token. Paste was not deleted.';
-                    }
+                    $this->_error = 'Wrong deletion token. Paste was not deleted.';
                 }
             } else {
                 $this->_error = self::GENERIC_ERROR;
@@ -355,8 +316,8 @@ class Controller
             $paste = $this->_model->getPaste($dataid);
             if ($paste->exists()) {
                 $data = $paste->get();
-                if (property_exists($data->meta, 'salt')) {
-                    unset($data->meta->salt);
+                if (array_key_exists('salt', $data['meta'])) {
+                    unset($data['meta']['salt']);
                 }
                 $this->_return_message(0, $dataid, (array) $data);
             } else {
@@ -476,6 +437,6 @@ class Controller
             $result['url'] = $this->_urlBase . '?' . $message;
         }
         $result += $other;
-        $this->_json = json_encode($result);
+        $this->_json = Json::encode($result);
     }
 }

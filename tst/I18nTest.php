@@ -26,6 +26,7 @@ class I18nTest extends PHPUnit_Framework_TestCase
         $messageId                       = 'It does not matter if the message ID exists';
         I18n::loadTranslations();
         $this->assertEquals($messageId, I18n::_($messageId), 'fallback to en');
+        I18n::getLanguageLabels();
     }
 
     public function testCookieLanguageDeDetection()
@@ -40,7 +41,7 @@ class I18nTest extends PHPUnit_Framework_TestCase
 
     public function testBrowserLanguageDeDetection()
     {
-        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'de-CH,de;q=0.8,en-GB;q=0.6,en-US;q=0.4,en;q=0.2';
+        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'de-CH,de;q=0.8,en-GB;q=0.6,en-US;q=0.4,en;q=0.2,fr;q=0.0';
         I18n::loadTranslations();
         $this->assertEquals($this->_translations['en'], I18n::_('en'), 'browser language de');
         $this->assertEquals('0 Stunden', I18n::_('%d hours', 0), '0 hours in German');
@@ -50,7 +51,7 @@ class I18nTest extends PHPUnit_Framework_TestCase
 
     public function testBrowserLanguageFrDetection()
     {
-        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'fr-CH,fr;q=0.8,en-GB;q=0.6,en-US;q=0.4,en;q=0.2';
+        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'fr-CH,fr;q=0.8,en-GB;q=0.6,en-US;q=0.4,en;q=0.2,de;q=0.0';
         I18n::loadTranslations();
         $this->assertEquals('fr', I18n::_('en'), 'browser language fr');
         $this->assertEquals('0 heure',  I18n::_('%d hours', 0), '0 hours in French');

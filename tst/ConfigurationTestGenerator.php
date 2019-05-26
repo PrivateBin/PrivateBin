@@ -516,7 +516,7 @@ EOT;
         $this->_model->create(Helper::getPasteId(), Helper::getPaste());
         $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste exists before deleting data');
         $_GET['pasteid'] = Helper::getPasteId();
-        $_GET['deletetoken'] = hash_hmac('sha256', Helper::getPasteId(), $this->_model->read(Helper::getPasteId())->meta->salt);
+        $_GET['deletetoken'] = hash_hmac('sha256', Helper::getPasteId(), $this->_model->read(Helper::getPasteId())['meta']['salt']);
 EOT;
                 break;
         }

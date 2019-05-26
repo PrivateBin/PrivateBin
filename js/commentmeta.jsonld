@@ -1,8 +1,14 @@
 {
 	"@context": {
 		"so": "https://schema.org/",
-		"postdate": "so:Integer",
-		"nickname": "so:Text",
-		"vizhash": "so:Text"
+		"pb": "?jsonld=types#"
+	},
+	"MetaData": {
+		"created": {
+			"@type": "CreationTime"
+		},
+		"icon": {
+			"@type": "so:url"
+		}
 	}
 }

@@ -112,8 +112,6 @@
         "Lo servidor respond pas o a rencontrat una error",
     "Could not post comment: %s":
         "Impossible de mandar lo comentari : %s",
-    "Please move your mouse for more entropy…":
-        "Mercés de bolegar vòstra mirga per mai entropia…",
     "Sending paste…":
         "Mandadís del tèxte…",
     "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit [Ctrl]+[c] to copy)</span>":

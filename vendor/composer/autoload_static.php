@@ -58,7 +58,7 @@ class ComposerStaticInitDontChange
         'PrivateBin\\Persistence\\ServerSalt' => __DIR__ . '/../..' . '/lib/Persistence/ServerSalt.php',
         'PrivateBin\\Persistence\\TrafficLimiter' => __DIR__ . '/../..' . '/lib/Persistence/TrafficLimiter.php',
         'PrivateBin\\Request' => __DIR__ . '/../..' . '/lib/Request.php',
-        'PrivateBin\\Sjcl' => __DIR__ . '/../..' . '/lib/Sjcl.php',
+        'PrivateBin\\FormatV2' => __DIR__ . '/../..' . '/lib/FormatV2.php',
         'PrivateBin\\View' => __DIR__ . '/../..' . '/lib/View.php',
         'PrivateBin\\Vizhash16x16' => __DIR__ . '/../..' . '/lib/Vizhash16x16.php',
     );

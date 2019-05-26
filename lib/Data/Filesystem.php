@@ -29,7 +29,7 @@ class Filesystem extends AbstractData
      * @param  array $options
      * @return Filesystem
      */
-    public static function getInstance($options = null)
+    public static function getInstance(array $options)
     {
         // if needed initialize the singleton
         if (!(self::$_instance instanceof self)) {
@@ -53,7 +53,7 @@ class Filesystem extends AbstractData
      * @param  array  $paste
      * @return bool
      */
-    public function create($pasteid, $paste)
+    public function create($pasteid, array $paste)
     {
         $storagedir = self::_dataid2path($pasteid);
         $file       = $storagedir . $pasteid . '.php';
@@ -71,23 +71,16 @@ class Filesystem extends AbstractData
      *
      * @access public
      * @param  string $pasteid
-     * @return \stdClass|false
+     * @return array|false
      */
     public function read($pasteid)
     {
         if (!$this->exists($pasteid)) {
             return false;
         }
-        $paste = DataStore::get(self::_dataid2path($pasteid) . $pasteid . '.php');
-        if (property_exists($paste->meta, 'attachment')) {
-            $paste->attachment = $paste->meta->attachment;
-            unset($paste->meta->attachment);
-            if (property_exists($paste->meta, 'attachmentname')) {
-                $paste->attachmentname = $paste->meta->attachmentname;
-                unset($paste->meta->attachmentname);
-            }
-        }
-        return $paste;
+        return self::upgradePreV1Format(
+            DataStore::get(self::_dataid2path($pasteid) . $pasteid . '.php')
+        );
     }
 
     /**
@@ -162,7 +155,7 @@ class Filesystem extends AbstractData
      * @param  array  $comment
      * @return bool
      */
-    public function createComment($pasteid, $parentid, $commentid, $comment)
+    public function createComment($pasteid, $parentid, $commentid, array $comment)
     {
         $storagedir = self::_dataid2discussionpath($pasteid);
         $file       = $storagedir . $pasteid . '.' . $commentid . '.' . $parentid . '.php';
@@ -197,11 +190,11 @@ class Filesystem extends AbstractData
                     $comment = DataStore::get($discdir . $filename);
                     $items   = explode('.', $filename);
                     // Add some meta information not contained in file.
-                    $comment->id       = $items[1];
-                    $comment->parentid = $items[2];
+                    $comment['id']       = $items[1];
+                    $comment['parentid'] = $items[2];
 
                     // Store in array
-                    $key            = $this->getOpenSlot($comments, (int) $comment->meta->postdate);
+                    $key            = $this->getOpenSlot($comments, (int) $comment['meta']['created']);
                     $comments[$key] = $comment;
                 }
             }
@@ -290,8 +283,8 @@ class Filesystem extends AbstractData
                 if ($this->exists($pasteid)) {
                     $data = $this->read($pasteid);
                     if (
-                        property_exists($data->meta, 'expire_date') &&
-                        $data->meta->expire_date < time()
+                        array_key_exists('expire_date', $data['meta']) &&
+                        $data['meta']['expire_date'] < time()
                     ) {
                         $pastes[] = $pasteid;
                         if (count($pastes) >= $batchsize) {
