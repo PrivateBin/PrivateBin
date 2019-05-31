@@ -1033,17 +1033,18 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         me.decipher = async function(key, password, data)
         {
-            let adataString, encodedSpec, cipherMessage;
+            let adataString, spec, cipherMessage;
             if (data instanceof Array) {
                 // version 2
                 adataString = JSON.stringify(data[1]);
-                encodedSpec = (data[1][0] instanceof Array ? data[1][0] : data[1]);
+                // clone the array instead of passing the reference
+                spec = (data[1][0] instanceof Array ? data[1][0] : data[1]).slice();
                 cipherMessage = data[0];
             } else if (typeof data === 'string') {
                 // version 1
                 let object = JSON.parse(data);
                 adataString = atob(object.adata);
-                encodedSpec = [
+                spec = [
                     object.iv,
                     object.salt,
                     object.iter,
@@ -1057,7 +1058,6 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             } else {
                 throw 'unsupported message format';
             }
-            let spec = encodedSpec, plainText = '';
             spec[0] = atob(spec[0]);
             spec[1] = atob(spec[1]);
             try {
@@ -1069,7 +1069,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                             atob(cipherMessage)
                         )
                     ),
-                    encodedSpec[7]
+                    spec[7]
                 );
             } catch(err) {
                 return '';
