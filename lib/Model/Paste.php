@@ -73,7 +73,7 @@ class Paste extends AbstractModel
         $data['comments']       = array_values($this->getComments());
         $data['comment_count']  = count($data['comments']);
         $data['comment_offset'] = 0;
-        $data['@context']       = 'js/paste.jsonld';
+        $data['@context']       = '?jsonld=paste';
         $this->_data            = $data;
 
         return $this->_data;

@@ -1187,7 +1187,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
             // reload data
             ServerInteraction.prepare();
-            ServerInteraction.setUrl(Helper.baseUri() + '?' + me.getPasteId());
+            ServerInteraction.setUrl(Helper.baseUri() + '?pasteid=' + me.getPasteId());
 
             ServerInteraction.setFailure(function (status, data) {
                 // revert loading status…
@@ -4658,7 +4658,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
             Model.getPasteData(function (data) {
                 ServerInteraction.prepare();
-                ServerInteraction.setUrl(Helper.baseUri() + '?' + Model.getPasteId());
+                ServerInteraction.setUrl(Helper.baseUri() + '?pasteid=' + Model.getPasteId());
 
                 ServerInteraction.setFailure(function (status, data) {
                     // revert loading status…
