@@ -2533,6 +2533,9 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             }
             const blob = new window.Blob([ buf ], { type: mediaType });
 
+            // Get Blob URL
+            const blobUrl = window.URL.createObjectURL(blob);
+
             // IE does not support setting a data URI on an a element
             // Using msSaveBlob to download
             if (window.Blob && navigator.msSaveBlob) {
@@ -2540,14 +2543,13 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                     navigator.msSaveBlob(blob, fileName);
                 });
             } else {
-                $attachmentLink.attr('href', window.URL.createObjectURL(blob));
+                $attachmentLink.attr('href', blobUrl);
             }
 
             if (typeof fileName !== 'undefined') {
                 $attachmentLink.attr('download', fileName);
             }
 
-            //me.handleAttachmentPreview($attachmentPreview, attachmentData);
             me.handleBlobAttachmentPreview($attachmentPreview, blobUrl, mediaType);
         };
 
@@ -2800,7 +2802,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                     // Firefox crashes with files that are about 1.5MB
                     // The performance with 1MB files is bearable
                     if (data.length > 1398488) {
-                        Alert.showError('File too large, to display a preview. Please download the attachment.'); //TODO: is this error really neccessary?
+                        Alert.showError('File too large, to display a preview. Please download the attachment.'); //TODO: is this error really necessary?
                         return;
                     }
 
@@ -2867,7 +2869,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                     // Firefox crashes with files that are about 1.5MB
                     // The performance with 1MB files is bearable
                     /*if (data.length > 1398488) {
-                        Alert.showError('File too large, to display a preview. Please download the attachment.'); //TODO: is this error really neccessary?
+                        Alert.showError('File too large, to display a preview. Please download the attachment.'); //TODO: is this error really necessary?
                         return;
                     }*/
 
