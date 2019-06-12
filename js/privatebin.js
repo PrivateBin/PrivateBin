@@ -2866,10 +2866,10 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
                     // Firefox crashes with files that are about 1.5MB
                     // The performance with 1MB files is bearable
-                    if (data.length > 1398488) {
+                    /*if (data.length > 1398488) {
                         Alert.showError('File too large, to display a preview. Please download the attachment.'); //TODO: is this error really neccessary?
                         return;
-                    }
+                    }*/
 
                     // Fallback for browsers, that don't support the vh unit
                     var clientHeight = $(window).height();
