@@ -11,13 +11,13 @@ describe('AttachmentViewer', function () {
         jsc.property(
             'displays & hides data as requested',
             common.jscMimeTypes(),
-            jsc.nearray(common.jscBase64String()),
             'string',
             'string',
             'string',
-            function (mimeType, base64, filename, prefix, postfix) {
+            'string',
+            function (mimeType, rawdata, filename, prefix, postfix) {
                 var clean = jsdom(),
-                    data = 'data:' + mimeType + ';base64,' + base64.join(''),
+                    data = 'data:' + mimeType + ';base64,' + btoa(rawdata),
                     previewSupported = (
                         mimeType.substring(0, 6) === 'image/' ||
                         mimeType.substring(0, 6) === 'audio/' ||
@@ -34,6 +34,16 @@ describe('AttachmentViewer', function () {
                     'Download attachment</a></div><div id="attachmentPrevie' +
                     'w" class="hidden"></div>'
                 );
+                // mock createObjectURL for jsDOM
+                if (typeof window.URL.createObjectURL === 'undefined') {
+                    Object.defineProperty(
+                        window.URL,
+                        'createObjectURL',
+                        {value: function(blob) {
+                            return 'blob:' + location.origin + '/1b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed';
+                        }}
+                    )
+                }
                 $.PrivateBin.AttachmentViewer.init();
                 results.push(
                     !$.PrivateBin.AttachmentViewer.hasAttachment() &&
@@ -45,6 +55,8 @@ describe('AttachmentViewer', function () {
                 } else {
                     $.PrivateBin.AttachmentViewer.setAttachment(data);
                 }
+                // beyond this point we will get the blob URL instead of the data
+                data = window.URL.createObjectURL(data);
                 var attachment = $.PrivateBin.AttachmentViewer.getAttachment();
                 results.push(
                     $.PrivateBin.AttachmentViewer.hasAttachment() &&

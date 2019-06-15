@@ -2101,8 +2101,11 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             // show preview
             PasteViewer.setText($message.val());
             if (AttachmentViewer.hasAttachmentData()) {
-                let attachmentData = AttachmentViewer.getAttachmentData() || AttachmentViewer.getAttachmentLink().attr('href');
-                AttachmentViewer.handleAttachmentPreview(AttachmentViewer.getAttachmentPreview(), attachmentData);
+                const attachment = AttachmentViewer.getAttachment();
+                AttachmentViewer.handleBlobAttachmentPreview(
+                    AttachmentViewer.getAttachmentPreview(),
+                    attachment[0], attachment[1]
+                );
             }
             PasteViewer.run();
 
@@ -2514,39 +2517,43 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         me.setAttachment = function(attachmentData, fileName)
         {
+            // data URI format: data:[<mediaType>][;base64],<data>
+
+            // position in data URI string of where data begins
+            const base64Start = attachmentData.indexOf(',') + 1;
+            // position in data URI string of where mediaType ends
+            const mediaTypeEnd = attachmentData.indexOf(';');
+
+            // extract mediaType
+            const mediaType = attachmentData.substring(5, mediaTypeEnd);
+            // extract data and convert to binary
+            const decodedData = atob(attachmentData.substring(base64Start));
+
+            // Transform into a Blob
+            const buf = new Uint8Array(decodedData.length);
+            for (let i = 0; i < decodedData.length; ++i) {
+                buf[i] = decodedData.charCodeAt(i);
+            }
+            const blob = new window.Blob([ buf ], { type: mediaType });
+
+            // Get Blob URL
+            const blobUrl = window.URL.createObjectURL(blob);
+
             // IE does not support setting a data URI on an a element
-            // Convert dataURI to a Blob and use msSaveBlob to download
+            // Using msSaveBlob to download
             if (window.Blob && navigator.msSaveBlob) {
                 $attachmentLink.off('click').on('click', function () {
-                    // data URI format: data:[<mediaType>][;base64],<data>
-
-                    // position in data URI string of where data begins
-                    const base64Start = attachmentData.indexOf(',') + 1;
-                    // position in data URI string of where mediaType ends
-                    const mediaTypeEnd = attachmentData.indexOf(';');
-
-                    // extract mediaType
-                    const mediaType = attachmentData.substring(5, mediaTypeEnd);
-                    // extract data and convert to binary
-                    const decodedData = atob(attachmentData.substring(base64Start));
-
-                    // Transform into a Blob
-                    const buf = new Uint8Array(decodedData.length);
-                    for (let i = 0; i < decodedData.length; ++i) {
-                        buf[i] = decodedData.charCodeAt(i);
-                    }
-                    const blob = new window.Blob([ buf ], { type: mediaType });
                     navigator.msSaveBlob(blob, fileName);
                 });
             } else {
-                $attachmentLink.attr('href', attachmentData);
+                $attachmentLink.attr('href', blobUrl);
             }
 
             if (typeof fileName !== 'undefined') {
                 $attachmentLink.attr('download', fileName);
             }
 
-            me.handleAttachmentPreview($attachmentPreview, attachmentData);
+            me.handleBlobAttachmentPreview($attachmentPreview, blobUrl, mediaType);
         };
 
         /**
@@ -2739,7 +2746,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 attachmentData = dataURL;
 
                 if (Editor.isPreview()) {
-                    me.handleAttachmentPreview($attachmentPreview, dataURL);
+                    me.setAttachment(dataURL, loadedFile.name || '');
                     $attachmentPreview.removeClass('hidden');
                 }
             };
@@ -2747,26 +2754,21 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         }
 
         /**
-         * handle the preview of files that can either be an image, video, audio or pdf element
+         * handle the preview of files decoded to blob that can either be an image, video, audio or pdf element
          *
-         * @name   AttachmentViewer.handleAttachmentPreview
+         * @name   AttachmentViewer.handleBlobAttachmentPreview
          * @function
          * @argument {jQuery} $targetElement element where the preview should be appended
-         * @argument {string} file as a data URL
+         * @argument {string} file as a blob URL
+         * @argument {string} mime type
          */
-        me.handleAttachmentPreview = function ($targetElement, data) {
-            if (data) {
-                // source: https://developer.mozilla.org/en-US/docs/Web/API/FileReader#readAsDataURL()
-                const mimeType = data.slice(
-                    data.indexOf('data:') + 5,
-                    data.indexOf(';base64,')
-                );
-
+        me.handleBlobAttachmentPreview = function ($targetElement, blobUrl, mimeType) {
+            if (blobUrl) {
                 attachmentHasPreview = true;
                 if (mimeType.match(/image\//i)) {
                     $targetElement.html(
                         $(document.createElement('img'))
-                            .attr('src', data)
+                            .attr('src', blobUrl)
                             .attr('class', 'img-thumbnail')
                     );
                 } else if (mimeType.match(/video\//i)) {
@@ -2778,7 +2780,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
                             .append($(document.createElement('source'))
                             .attr('type', mimeType)
-                            .attr('src', data))
+                            .attr('src', blobUrl))
                     );
                 } else if (mimeType.match(/audio\//i)) {
                     $targetElement.html(
@@ -2788,26 +2790,15 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
                             .append($(document.createElement('source'))
                             .attr('type', mimeType)
-                            .attr('src', data))
+                            .attr('src', blobUrl))
                     );
                 } else if (mimeType.match(/\/pdf/i)) {
-                    // PDFs are only displayed if the filesize is smaller than about 1MB (after base64 encoding).
-                    // Bigger filesizes currently cause crashes in various browsers.
-                    // See also: https://code.google.com/p/chromium/issues/detail?id=69227
-
-                    // Firefox crashes with files that are about 1.5MB
-                    // The performance with 1MB files is bearable
-                    if (data.length > 1398488) {
-                        Alert.showError('File too large, to display a preview. Please download the attachment.'); //TODO: is this error really neccessary?
-                        return;
-                    }
-
                     // Fallback for browsers, that don't support the vh unit
-                    const clientHeight = $(window).height();
+                    var clientHeight = $(window).height();
 
                     $targetElement.html(
                         $(document.createElement('embed'))
-                            .attr('src', data)
+                            .attr('src', blobUrl)
                             .attr('type', 'application/pdf')
                             .attr('class', 'pdfPreview')
                             .css('height', clientHeight)
