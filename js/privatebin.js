@@ -2793,17 +2793,6 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                             .attr('src', blobUrl))
                     );
                 } else if (mimeType.match(/\/pdf/i)) {
-                    // PDFs are only displayed if the filesize is smaller than about 1MB (after base64 encoding).
-                    // Bigger filesizes currently cause crashes in various browsers.
-                    // See also: https://code.google.com/p/chromium/issues/detail?id=69227
-
-                    // Firefox crashes with files that are about 1.5MB
-                    // The performance with 1MB files is bearable
-                    /*if (data.length > 1398488) {
-                        Alert.showError('File too large, to display a preview. Please download the attachment.'); //TODO: is this error really necessary?
-                        return;
-                    }*/
-
                     // Fallback for browsers, that don't support the vh unit
                     var clientHeight = $(window).height();
 
