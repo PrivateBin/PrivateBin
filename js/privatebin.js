@@ -2101,8 +2101,11 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             // show preview
             PasteViewer.setText($message.val());
             if (AttachmentViewer.hasAttachmentData()) {
-                let attachmentData = AttachmentViewer.getAttachmentData() || AttachmentViewer.getAttachmentLink().attr('href');
-                AttachmentViewer.handleAttachmentPreview(AttachmentViewer.getAttachmentPreview(), attachmentData);
+                const attachment = AttachmentViewer.getAttachment();
+                AttachmentViewer.handleBlobAttachmentPreview(
+                    AttachmentViewer.getAttachmentPreview(),
+                    attachment[0], attachment[1]
+                );
             }
             PasteViewer.run();
 
@@ -2743,84 +2746,12 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 attachmentData = dataURL;
 
                 if (Editor.isPreview()) {
-                    me.handleAttachmentPreview($attachmentPreview, dataURL);
+                    me.setAttachment(dataURL, loadedFile.name || '');
                     $attachmentPreview.removeClass('hidden');
                 }
             };
             fileReader.readAsDataURL(loadedFile);
         }
-
-        /**
-         * handle the preview of files that can either be an image, video, audio or pdf element
-         *
-         * @name   AttachmentViewer.handleAttachmentPreview
-         * @function
-         * @argument {jQuery} $targetElement element where the preview should be appended
-         * @argument {string} file as a data URL
-         */
-        me.handleAttachmentPreview = function ($targetElement, data) {
-            if (data) {
-                // source: https://developer.mozilla.org/en-US/docs/Web/API/FileReader#readAsDataURL()
-                const mimeType = data.slice(
-                    data.indexOf('data:') + 5,
-                    data.indexOf(';base64,')
-                );
-
-                attachmentHasPreview = true;
-                if (mimeType.match(/image\//i)) {
-                    $targetElement.html(
-                        $(document.createElement('img'))
-                            .attr('src', data)
-                            .attr('class', 'img-thumbnail')
-                    );
-                } else if (mimeType.match(/video\//i)) {
-                    $targetElement.html(
-                        $(document.createElement('video'))
-                            .attr('controls', 'true')
-                            .attr('autoplay', 'true')
-                            .attr('class', 'img-thumbnail')
-
-                            .append($(document.createElement('source'))
-                            .attr('type', mimeType)
-                            .attr('src', data))
-                    );
-                } else if (mimeType.match(/audio\//i)) {
-                    $targetElement.html(
-                        $(document.createElement('audio'))
-                            .attr('controls', 'true')
-                            .attr('autoplay', 'true')
-
-                            .append($(document.createElement('source'))
-                            .attr('type', mimeType)
-                            .attr('src', data))
-                    );
-                } else if (mimeType.match(/\/pdf/i)) {
-                    // PDFs are only displayed if the filesize is smaller than about 1MB (after base64 encoding).
-                    // Bigger filesizes currently cause crashes in various browsers.
-                    // See also: https://code.google.com/p/chromium/issues/detail?id=69227
-
-                    // Firefox crashes with files that are about 1.5MB
-                    // The performance with 1MB files is bearable
-                    if (data.length > 1398488) {
-                        Alert.showError('File too large, to display a preview. Please download the attachment.'); //TODO: is this error really necessary?
-                        return;
-                    }
-
-                    // Fallback for browsers, that don't support the vh unit
-                    const clientHeight = $(window).height();
-
-                    $targetElement.html(
-                        $(document.createElement('embed'))
-                            .attr('src', data)
-                            .attr('type', 'application/pdf')
-                            .attr('class', 'pdfPreview')
-                            .css('height', clientHeight)
-                    );
-                } else {
-                    attachmentHasPreview = false;
-                }
-            }
-        };
 
         /**
          * handle the preview of files decoded to blob that can either be an image, video, audio or pdf element
