@@ -2,7 +2,7 @@
 
 namespace Identicon\Generator;
 
-use Identicon\Generator\GeneratorInterface;
+use Exception;
 
 /**
  * @author Benjamin Laugueux <benjamin@yzalis.com>
@@ -15,22 +15,22 @@ class BaseGenerator
     protected $generatedImage;
 
     /**
-     * @var integer
+     * @var array
      */
     protected $color;
 
     /**
-     * @var integer
+     * @var array
      */
     protected $backgroundColor;
 
     /**
-     * @var integer
+     * @var int
      */
     protected $size;
 
     /**
-     * @var integer
+     * @var int
      */
     protected $pixelRatio;
 
@@ -42,14 +42,14 @@ class BaseGenerator
     /**
      * @var array
      */
-    private $arrayOfSquare = array();
+    private $arrayOfSquare = [];
 
     /**
-     * Set the image color
+     * Set the image color.
      *
-     * @param string|array $color The color in hexa (6 chars) or rgb array
+     * @param string|array $color The color in hexa (3 or 6 chars) or rgb array
      *
-     * @return this
+     * @return $this
      */
     public function setColor($color)
     {
@@ -63,11 +63,11 @@ class BaseGenerator
     }
 
     /**
-     * Set the image background color
+     * Set the image background color.
      *
-     * @param string|array $backgroundColor The color in hexa (6 chars) or rgb array
+     * @param string|array $backgroundColor The color in hexa (3 or 6 chars) or rgb array
      *
-     * @return this
+     * @return $this
      */
     public function setBackgroundColor($backgroundColor)
     {
@@ -80,27 +80,32 @@ class BaseGenerator
         return $this;
     }
 
+    /**
+     * @param array|string $color
+     *
+     * @return array
+     */
     private function convertColor($color)
     {
-        $convertedColor = array();
         if (is_array($color)) {
-            $convertedColor[0] = $color[0];
-            $convertedColor[1] = $color[1];
-            $convertedColor[2] = $color[2];
-        } else {
-            if (false !== strpos($color, '#')) {
-                $color = substr($color, 1);
-            }
-            $convertedColor[0] = hexdec(substr($color, 0, 2));
-            $convertedColor[1] = hexdec(substr($color, 2, 2));
-            $convertedColor[2] = hexdec(substr($color, 4, 2));
+            return $color;
         }
 
-        return $convertedColor;
+        if (preg_match('/^#?([a-z\d])([a-z\d])([a-z\d])$/i', $color, $matches)) {
+            $color = $matches[1].$matches[1];
+            $color .= $matches[2].$matches[2];
+            $color .= $matches[3].$matches[3];
+        }
+
+        preg_match('/#?([a-z\d]{2})([a-z\d]{2})([a-z\d]{2})$/i', $color, $matches);
+
+        return array_map(function ($value) {
+            return hexdec($value);
+        }, array_slice($matches, 1, 3));
     }
 
     /**
-     * Get the color
+     * Get the color.
      *
      * @return array
      */
@@ -109,9 +114,8 @@ class BaseGenerator
         return $this->color;
     }
 
-
     /**
-     * Get the background color
+     * Get the background color.
      *
      * @return array
      */
@@ -121,48 +125,51 @@ class BaseGenerator
     }
 
     /**
-     * Convert the hash into an multidimensionnal array of boolean
+     * Convert the hash into an multidimensional array of boolean.
      *
-     * @return this
+     * @return $this
      */
     private function convertHashToArrayOfBoolean()
     {
         preg_match_all('/(\w)(\w)/', $this->hash, $chars);
+
         foreach ($chars[1] as $i => $char) {
-            if ($i % 3 == 0) {
-                $this->arrayOfSquare[$i/3][0] = $this->convertHexaToBoolean($char);
-                $this->arrayOfSquare[$i/3][4] = $this->convertHexaToBoolean($char);
-            } elseif ($i % 3 == 1) {
-                $this->arrayOfSquare[$i/3][1] = $this->convertHexaToBoolean($char);
-                $this->arrayOfSquare[$i/3][3] = $this->convertHexaToBoolean($char);
-            } else {
-                $this->arrayOfSquare[$i/3][2] = $this->convertHexaToBoolean($char);
+            $index = (int) ($i / 3);
+            $data = $this->convertHexaToBoolean($char);
+
+            $items = [
+                0 => [0, 4],
+                1 => [1, 3],
+                2 => [2],
+            ];
+
+            foreach ($items[$i % 3] as $item) {
+                $this->arrayOfSquare[$index][$item] = $data;
             }
-            ksort($this->arrayOfSquare[$i/3]);
+
+            ksort($this->arrayOfSquare[$index]);
         }
 
-        $this->color[0] = hexdec(array_pop($chars[1]))*16;
-        $this->color[1] = hexdec(array_pop($chars[1]))*16;
-        $this->color[2] = hexdec(array_pop($chars[1]))*16;
+        $this->color = array_map(function ($data) {
+            return hexdec($data) * 16;
+        }, array_reverse($chars[1]));
 
         return $this;
     }
 
     /**
-     * Convert an heaxecimal number into a boolean
+     * Convert an hexadecimal number into a boolean.
      *
      * @param string $hexa
      *
-     * @return boolean
+     * @return bool
      */
     private function convertHexaToBoolean($hexa)
     {
-        return (bool) intval(round(hexdec($hexa)/10));
+        return (bool) round(hexdec($hexa) / 10);
     }
 
     /**
-     *
-     *
      * @return array
      */
     public function getArrayOfSquare()
@@ -171,7 +178,7 @@ class BaseGenerator
     }
 
     /**
-     * Get the identicon string hash
+     * Get the identicon string hash.
      *
      * @return string
      */
@@ -181,16 +188,18 @@ class BaseGenerator
     }
 
     /**
-     * Generate a hash fron the original string
+     * Generate a hash from the original string.
      *
      * @param string $string
      *
-     * @return this
+     * @throws \Exception
+     *
+     * @return $this
      */
     public function setString($string)
     {
         if (null === $string) {
-            throw new \Exception('The string cannot be null.');
+            throw new Exception('The string cannot be null.');
         }
 
         $this->hash = md5($string);
@@ -201,11 +210,11 @@ class BaseGenerator
     }
 
     /**
-     * Set the image size
+     * Set the image size.
      *
-     * @param integer $size
+     * @param int $size
      *
-     * @return this
+     * @return $this
      */
     public function setSize($size)
     {
@@ -214,15 +223,15 @@ class BaseGenerator
         }
 
         $this->size = $size;
-        $this->pixelRatio = round($size / 5);
+        $this->pixelRatio = (int) round($size / 5);
 
         return $this;
     }
 
     /**
-     * Get the image size
+     * Get the image size.
      *
-     * @return integer
+     * @return int
      */
     public function getSize()
     {
@@ -230,9 +239,9 @@ class BaseGenerator
     }
 
     /**
-     * Get the pixel ratio
+     * Get the pixel ratio.
      *
-     * @return array
+     * @return int
      */
     public function getPixelRatio()
     {
