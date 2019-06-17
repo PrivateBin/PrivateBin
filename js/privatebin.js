@@ -177,18 +177,6 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         const me = {};
 
         /**
-         * blacklist of UserAgents (parts) known to belong to a bot
-         *
-         * @private
-         * @enum   {Object}
-         * @readonly
-         */
-        const BadBotUA = [
-            'Bot',
-            'bot'
-        ];
-
-        /**
          * cache for script location
          *
          * @name Helper.baseUri
@@ -364,25 +352,6 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             baseUri = window.location.origin + window.location.pathname;
             return baseUri;
         };
-
-
-        /**
-         * checks whether this is a bot we dislike
-         *
-         * @name   Helper.isBadBot
-         * @function
-         * @return {bool}
-         */
-        me.isBadBot = function() {
-            // check whether a bot user agent part can be found in the current
-            // user agent
-            for (let i = 0; i < BadBotUA.length; ++i) {
-                if (navigator.userAgent.indexOf(BadBotUA) >= 0) {
-                    return true;
-                }
-            }
-            return false;
-        }
 
         /**
          * wrap an object into a Paste, used for mocking in the unit tests
@@ -4561,8 +4530,50 @@ jQuery.PrivateBin = (function($, RawDeflate) {
      * @param  {object} document
      * @class
      */
-    var InitialCheck = (function (window, document) {
+    var InitialCheck = (function () {
         var me = {};
+
+        /**
+         * blacklist of UserAgents (parts) known to belong to a bot
+         *
+         * @private
+         * @enum   {Array}
+         * @readonly
+         */
+        const badBotUA = [
+            'Bot',
+            'bot'
+        ];
+
+        /**
+         * blacklist of UserAgent versions known not to work with this application
+         *
+         * @private
+         * @enum   {Object}
+         * @readonly
+         */
+        const oldUA = [
+            {
+                'regex': /Chrome\/([0-9]+)/,
+                'minVersion': 57,
+            },
+            {
+                'regex': /Edge\/([0-9]+)/,
+                'minVersion': 16,
+            },
+            {
+                'regex': /Firefox\/([0-9]+)/,
+                'minVersion': 54,
+            },
+            {
+                'regex': /Opera\/.*Version\/([0-9]+)/,
+                'minVersion': 44,
+            },
+            {
+                'regex': /Version\/([0-9]+).*Safari/,
+                'minVersion': 11,
+            }
+        ];
 
         /**
          * check if the connection is insecure
@@ -4570,6 +4581,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          * @private
          * @name   InitialCheck.isInsecureConnection
          * @function
+         * @return {bool}
          */
         function isInsecureConnection()
         {
@@ -4601,20 +4613,73 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         }
 
         /**
-         * init on application start
+         * checks whether this is a bot we dislike
+         *
+         * @private
+         * @name   InitialCheck.isBadBot
+         * @function
+         * @return {bool}
+         */
+        function isBadBot() {
+            // check whether a bot user agent part can be found in the current
+            // user agent
+            for (let i = 0; i < badBotUA.length; ++i) {
+                if (navigator.userAgent.indexOf(badBotUA) >= 0) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /**
+         * checks whether this is an unsupported browser
+         *
+         * @private
+         * @name   InitialCheck.isOldBrowser
+         * @function
+         * @return {bool}
+         */
+        function isOldBrowser() {
+            for (let i = 0; i < oldUA.length; ++i) {
+                let result = oldUA[i]['regex'].exec(navigator.userAgent);
+                if (result && result[1] < oldUA[i]['minVersion']) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /**
+         * init on application start, returns an all-clear signal
          *
          * @name   InitialCheck.init
          * @function
+         * @return {bool}
          */
         me.init = function()
         {
+            // prevent bots from viewing a paste and potentially deleting data
+            // when burn-after-reading is set
+            if (isBadBot()) {
+                Alert.showError('I love you too, bot…');
+                return false;
+            }
+
+            if (isOldBrowser()) {
+                $('#oldnotice').toggle(true);
+                // execution will likely fail, but the user agent may be
+                // deliberately set to an incorrect value, so let it proceed
+            }
+
             if (isInsecureConnection()) {
                 Alert.showError('This instance is using an insecure connection! Please only use this for testing.');
             }
+
+            return true;
         }
 
         return me;
-    })(window, document);
+    })();
 
     /**
      * (controller) main PrivateBin logic
@@ -4662,18 +4727,6 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             TopNav.showCreateButtons();
             Alert.hideLoading();
         };
-
-        /**
-         * shows how we much we love bots that execute JS ;)
-         *
-         * @name   Controller.showBadBotMessage
-         * @function
-         */
-        me.showBadBotMessage = function()
-        {
-            TopNav.hideAllButtons();
-            Alert.showError('I love you too, bot…');
-        }
 
         /**
          * shows the loaded paste
@@ -4802,6 +4855,10 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
             // initialize other modules/"classes"
             Alert.init();
+            if (!InitialCheck.init()) {
+                // something major is wrong, stop right away
+                return;
+            }
             Model.init();
             AttachmentViewer.init();
             DiscussionViewer.init();
@@ -4811,7 +4868,6 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             Prompt.init();
             TopNav.init();
             UiHelper.init();
-            InitialCheck.init();
             z = (await zlib);
 
             // check whether existing paste needs to be shown
@@ -4822,17 +4878,10 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 return me.newPaste();
             }
 
-            // if delete token is passed (i.e. paste has been deleted by this access)
-            // there is no more stuf we need to do
+            // if delete token is passed (i.e. paste has been deleted by this
+            // access), there is nothing more to do
             if (Model.hasDeleteToken()) {
                 return;
-            }
-
-            // prevent bots from viewing a paste and potentially deleting data
-            // when burn-after-reading is set
-            // see https://github.com/elrido/ZeroBin/issues/11
-            if (Helper.isBadBot()) {
-                return me.showBadBotMessage();
             }
 
             // display an existing paste

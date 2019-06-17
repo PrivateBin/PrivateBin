@@ -72,9 +72,9 @@ if ($MARKDOWN):
 endif;
 ?>
 		<script type="text/javascript" data-cfasync="false" src="js/purify-1.0.10.js" integrity="sha512-CqskSFXERL38A1PJP9BlO04me7kmwgDIhN1+k24RoFiisEwXA0BMdm0lzJC7g5jCRZ4k5OYdOJGEqW9CwDl4CA==" crossorigin="anonymous"></script>
-		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-RE9PlksCFEcNHrU0eXzMBdNahXuwzbJHdzmCFNR5LlXMK+bSE5f07qniZJcszcW8L0imdN7MFSsBHxXxVdaqqg==" crossorigin="anonymous"></script>
-		<!--[if lt IE 10]>
-		<style type="text/css">body {padding-left:60px;padding-right:60px;} #ienotice {display:block;} #oldienotice {display:block;}</style>
+		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-XBHCzQfUJpMdNvleyRI6rLt0Kvq4qvz0KOyUSOPbuEF9W4ihPFwCrwHyLS0XOxFmhAPbh81YPKCn1BPKXSQc2g==" crossorigin="anonymous"></script>
+		<!--[if IE]>
+		<style type="text/css">body {padding-left:60px;padding-right:60px;} #ienotice {display:block;}</style>
 		<![endif]-->
 		<link rel="apple-touch-icon" href="img/apple-touch-icon.png?<?php echo rawurlencode($VERSION); ?>" sizes="180x180" />
 		<link rel="icon" type="image/png" href="img/favicon-32x32.png?<?php echo rawurlencode($VERSION); ?>" sizes="32x32" />
@@ -449,16 +449,16 @@ endif;
 					<?php echo htmlspecialchars($ERROR), PHP_EOL; ?>
 				</div>
 				<noscript>
-					<div id="noscript" role="alert" class="nonworking alert alert-<?php echo $isDark ? 'error' : 'warning'; ?>">
+					<div id="noscript" role="alert" class="alert alert-<?php echo $isDark ? 'error' : 'warning'; ?>">
 						<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
 						<?php echo I18n::_('JavaScript is required for %s to work.<br />Sorry for the inconvenience.', I18n::_($NAME)), PHP_EOL; ?>
 					</div>
 				</noscript>
-				<div id="oldienotice" role="alert" class="hidden nonworking alert alert-danger">
+				<div id="oldnotice" role="alert" class="hidden alert alert-danger">
 					<span class="glyphicon glyphicon-alert" aria-hidden="true"></span>
 					<?php echo I18n::_('%s requires a modern browser to work.', I18n::_($NAME)), PHP_EOL; ?>
 				</div>
-				<div id="ienotice" role="alert" class="hidden alert alert-<?php echo $isDark ? 'error' : 'warning'; ?>">
+				<div id="ienotice" role="alert" class="hidden alert alert-danger">
 					<span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
 					<?php echo I18n::_('Still using Internet Explorer? Do yourself a favor, switch to a modern browser:'), PHP_EOL; ?>
 					<a href="https://www.mozilla.org/firefox/">Firefox</a>,
