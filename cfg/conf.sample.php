@@ -77,6 +77,9 @@ languageselection = false
 ; sha256 in HMAC for the deletion token
 zerobincompatibility = false
 
+; enable or disable the warning message when the site is served over HTTP instead of HTTPS, defaults to true
+httpwarning = true
+
 [expire]
 ; expire value that is selected per default
 ; make sure the value exists in [expire_options]

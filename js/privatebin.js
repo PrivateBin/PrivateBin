@@ -1651,7 +1651,6 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         me.hideMessages = function()
         {
-            // also possible: $('.statusmessage').addClass('hidden');
             $statusMessage.addClass('hidden');
             $errorMessage.addClass('hidden');
         };
@@ -4672,7 +4671,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             }
 
             if (isInsecureConnection()) {
-                Alert.showError('This website is using an insecure HTTP connection! Please use it only for testing.');
+                $('#httpnotice').toggle(true);
             }
 
             return true;

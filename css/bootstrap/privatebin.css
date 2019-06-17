@@ -81,11 +81,10 @@ body.loading {
 }
 
 .dragAndDropFile{
-        color:#777;
-        font-size:1em;
-        display:inline;
+	color:#777;
+	font-size:1em;
+	display:inline;
 }
-
 
 #deletelink {
 	float: right;

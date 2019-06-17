@@ -72,7 +72,7 @@ if ($MARKDOWN):
 endif;
 ?>
 		<script type="text/javascript" data-cfasync="false" src="js/purify-1.0.10.js" integrity="sha512-CqskSFXERL38A1PJP9BlO04me7kmwgDIhN1+k24RoFiisEwXA0BMdm0lzJC7g5jCRZ4k5OYdOJGEqW9CwDl4CA==" crossorigin="anonymous"></script>
-		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-M0NIZDkl5ZzzzG1ISZjgrgKr2jMDZ7EeTfVAgj7YkkbU83pAddjfkjlak9dp5KsMZYFDw62052a+bT+PPJhMCA==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-nuGweMxu6IG9HcczL7tf6dhR2vGKVaYuv7yC7ap+WsUnI6TMrdyQiT1dZG/k9JvnvW+ptJ+bFkuHpgec1gZ/DA==" crossorigin="anonymous"></script>
 		<!--[if IE]>
 		<style type="text/css">body {padding-left:60px;padding-right:60px;} #ienotice {display:block;}</style>
 		<![endif]-->
@@ -440,11 +440,11 @@ if ($FILEUPLOAD):
 <?php
 endif;
 ?>
-				<div id="status" role="alert" class="statusmessage alert alert-info<?php echo empty($STATUS) ? ' hidden' : '' ?>">
+				<div id="status" role="alert" class="alert alert-info<?php echo empty($STATUS) ? ' hidden' : '' ?>">
 					<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
 					<?php echo htmlspecialchars($STATUS), PHP_EOL; ?>
 				</div>
-				<div id="errormessage" role="alert" class="statusmessage<?php echo empty($ERROR) ? ' hidden' : '' ?> alert alert-danger">
+				<div id="errormessage" role="alert" class="<?php echo empty($ERROR) ? 'hidden' : '' ?> alert alert-danger">
 					<span class="glyphicon glyphicon-alert" aria-hidden="true"></span>
 					<?php echo htmlspecialchars($ERROR), PHP_EOL; ?>
 				</div>
@@ -465,6 +465,16 @@ endif;
 					<a href="https://www.opera.com/">Opera</a>,
 					<a href="https://www.google.com/chrome">Chrome</a>…
 				</div>
+<?php
+if ($HTTPWARNING):
+?>
+				<div id="httpnotice" role="alert" class="hidden alert alert-danger">
+					<span class="glyphicon glyphicon-alert" aria-hidden="true"></span>
+					<?php echo I18n::_('This website is using an insecure HTTP connection! Please use it only for testing.'), PHP_EOL; ?>
+				</div>
+<?php
+endif;
+?>
 				<div id="pastesuccess" role="alert" class="hidden alert alert-success">
 					<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
 					<div id="deletelink"></div>
@@ -502,7 +512,7 @@ endif;
 				</div>
 			</section>
 			<section class="container">
-				<div id="noscript" role="alert" class="nonworking alert alert-info noscript-hide">
+				<div id="noscript" role="alert" class="alert alert-info noscript-hide">
 					<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
 					<?php echo I18n::_('Loading…'); ?><br />
 					<span class="small"><?php echo I18n::_('In case this message never disappears please have a look at <a href="https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away">this FAQ for information to troubleshoot</a>.'); ?></span>
