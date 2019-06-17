@@ -4552,6 +4552,70 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         return me;
     })();
 
+
+    /**
+     * initial (security) check
+     *
+     * @name   InitialCheck
+     * @param  {object} window
+     * @param  {object} document
+     * @class
+     */
+    var InitialCheck = (function (window, document) {
+        var me = {};
+
+        /**
+         * check if the connection is insecure
+         *
+         * @private
+         * @name   InitialCheck.isInsecureConnection
+         * @function
+         */
+        function isInsecureConnection()
+        {
+            const url = new URL(document.URL);
+
+            // HTTP is obviously insecure
+            if (url.protocol !== 'http:') {
+                return false;
+            }
+
+            // filter out actually secure connections over HTTP
+            if (
+                url.hostname.endsWith('.onion') ||
+                url.hostname.endsWith('.i2p')
+            ) {
+                return false;
+            }
+
+            // whitelist localhost for development
+            if (
+                url.hostname === 'localhost' ||
+                url.hostname === '127.0.0.1'
+            ) {
+                return false;
+            }
+
+            // totally INSECURE http protocol!
+            return true;
+        }
+
+        /**
+         * init on application start
+         *
+         * @name   InitialCheck.init
+         * @function
+         */
+        me.init = function()
+        {
+            if (isInsecureConnection()) {
+                Alert.showError('This instance is using an insecure connection! Please only use this for testing.');
+            }
+        }
+
+        return me;
+    })(window, document);
+
     /**
      * (controller) main PrivateBin logic
      *
@@ -4747,6 +4811,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             Prompt.init();
             TopNav.init();
             UiHelper.init();
+            InitialCheck.init();
             z = (await zlib);
 
             // check whether existing paste needs to be shown
@@ -4794,6 +4859,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         ServerInteraction: ServerInteraction,
         PasteEncrypter: PasteEncrypter,
         PasteDecrypter: PasteDecrypter,
+        InitialCheck: InitialCheck,
         Controller: Controller
     };
 })(jQuery, RawDeflate);
