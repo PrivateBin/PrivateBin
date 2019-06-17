@@ -154,5 +154,8 @@
     "+++ no paste text +++": "+++ brak wklejonego tekstu +++",
     "Could not get paste data: %s":
         "Nie można było pobrać danych wklejki: %s",
-    "QR code": "Kod QR"
+    "QR code": "Kod QR",
+    "I love you too, bot…": "I love you too, bot…",
+    "This website is using an insecure HTTP connection! Please use it only for testing.":
+        "This website is using an insecure HTTP connection! Please use it only for testing."
 }

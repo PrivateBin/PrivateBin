@@ -163,5 +163,8 @@
     "+++ no paste text +++": "+++ cap de tèxte pegat +++",
     "Could not get paste data: %s":
         "Recuperacion impossibla de las donadas copiadas : %s",
-    "QR code": "Còdi QR"
+    "QR code": "Còdi QR",
+    "I love you too, bot…": "I love you too, bot…",
+    "This website is using an insecure HTTP connection! Please use it only for testing.":
+        "This website is using an insecure HTTP connection! Please use it only for testing."
 }

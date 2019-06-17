@@ -4672,7 +4672,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             }
 
             if (isInsecureConnection()) {
-                Alert.showError('This instance is using an insecure connection! Please only use this for testing.');
+                Alert.showError('This website is using an insecure HTTP connection! Please use it only for testing.');
             }
 
             return true;

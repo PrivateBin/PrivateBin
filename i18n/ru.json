@@ -164,5 +164,8 @@
     "+++ no paste text +++": "+++ в записи нет текста +++",
     "Could not get paste data: %s":
         "Не удалось получить данные записи: %s",
-    "QR code": "QR code"
+    "QR code": "QR code",
+    "I love you too, bot…": "I love you too, bot…",
+    "This website is using an insecure HTTP connection! Please use it only for testing.":
+        "This website is using an insecure HTTP connection! Please use it only for testing."
 }

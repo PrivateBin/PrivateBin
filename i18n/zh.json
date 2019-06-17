@@ -154,5 +154,8 @@
     "+++ no paste text +++": "+++ 没有粘贴内容 +++",
     "Could not get paste data: %s":
         "无法获取粘贴数据：%s",
-    "QR code": "二维码"
+    "QR code": "二维码",
+    "I love you too, bot…": "I love you too, bot…",
+    "This website is using an insecure HTTP connection! Please use it only for testing.":
+        "This website is using an insecure HTTP connection! Please use it only for testing."
 }

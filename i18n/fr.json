@@ -163,5 +163,8 @@
     "+++ no paste text +++": "+++ pas de paste-text +++",
     "Could not get paste data: %s":
         "Could not get paste data: %s",
-    "QR code": "QR code"
+    "QR code": "QR code",
+    "I love you too, bot…": "I love you too, bot…",
+    "This website is using an insecure HTTP connection! Please use it only for testing.":
+        "This website is using an insecure HTTP connection! Please use it only for testing."
 }
