@@ -93,8 +93,9 @@ describe('Model', function () {
                     clean            = jsdom('', {
                         url: schema.join('') + '://' + address.join('') +
                              '/?' + queryString + '#' + fragment
-                    }),
-                    result = $.PrivateBin.Model.getPasteId();
+                    });
+                    global.URL = require('jsdom-url').URL;
+                    var result = $.PrivateBin.Model.getPasteId();
                 $.PrivateBin.Model.reset();
                 clean();
                 return pasteIdString === result;
@@ -111,6 +112,7 @@ describe('Model', function () {
                              '/#' + fragment
                     }),
                     result = false;
+                global.URL = require('jsdom-url').URL;
                 try {
                     $.PrivateBin.Model.getPasteId();
                 }

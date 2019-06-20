@@ -1196,30 +1196,20 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             }
 
             // do use URL interface, if possible
-            if (window.URL && window.URL.prototype && ('searchParams' in window.URL.prototype)) {
-                try {
-                    const url = new URL(window.location);
+            const url = new URL(window.location);
 
-                    for (const param of url.searchParams) {
-                        const key = param[0];
-                        const value = param[1];
+            for (const param of url.searchParams) {
+                const key = param[0];
+                const value = param[1];
 
-                        if (value === '' && idRegEx.test(key)) {
-                            // safe, as the whole regex is matched
-                            id = key;
-                            return id;
-                        }
-                    }
-                } catch (e) {
-                    // fallback below
-                    console.error('URL interface not properly supported, error:', e);
+                if (value === '' && idRegEx.test(key)) {
+                    // safe, as the whole regex is matched
+                    id = key;
+                    return key;
                 }
             }
 
-            // Attention: This also returns the delete token inside of the ID, if it is specified
-            id = (window.location.search.match(idRegExFind) || [''])[0];
-
-            if (id === '') {
+            if (id === null) {
                 throw 'no paste id given';
             }
 
@@ -4587,7 +4577,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         function isInsecureConnection()
         {
-            const url = new URL(document.URL);
+            const url = new URL(window.location);
 
             // HTTP is obviously insecure
             if (url.protocol !== 'http:') {
