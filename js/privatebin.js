@@ -1513,6 +1513,9 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             } else if (typeof args === 'string') {
                 // convert string to array if needed
                 args = [args];
+            } else if (args  instanceof Error) {
+                // extract message into array if needed
+                args = [args.message];
             }
 
             // pass to custom handler if defined
