@@ -5,6 +5,7 @@ global.assert = require('assert');
 global.jsc = require('jsverify');
 global.jsdom = require('jsdom-global');
 global.cleanup = global.jsdom();
+global.window.URL = require('jsdom-url');
 global.fs = require('fs');
 global.WebCrypto = require('node-webcrypto-ossl');
 

@@ -89,7 +89,7 @@ and jsdom-global locally:
 ```console
 $ npm install -g mocha nyc
 $ cd PrivateBin/js
-$ npm install jsverify jsdom@9 jsdom-global@2 mime-types node-webcrypto-ossl
+$ npm install jsverify jsdom@9 jsdom-global@2 mime-types node-webcrypto-ossl jsdom-url
 ```
 
 Example for Debian and Ubuntu, including steps to allow the current user to
