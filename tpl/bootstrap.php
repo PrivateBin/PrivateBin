@@ -212,8 +212,8 @@ endforeach;
 <?php
 if ($isCpct):
 ?>
-					<li id="formatter" class="dropdown">
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><?php echo I18n::_('Options'); ?> <span class="caret"></span></a>
+					<li class="dropdown">
+						<a id="formatter" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><?php echo I18n::_('Options'); ?> <span class="caret"></span></a>
 						<ul class="dropdown-menu">
 							<li id="burnafterreadingoption" class="checkbox hidden">
 								<label>
