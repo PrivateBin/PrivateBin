@@ -470,7 +470,8 @@ if ($HTTPWARNING):
 ?>
 				<div id="httpnotice" role="alert" class="hidden alert alert-danger">
 					<span class="glyphicon glyphicon-alert" aria-hidden="true"></span>
-					<?php echo I18n::_('This website is using an insecure HTTP connection! Please use it only for testing.'), PHP_EOL; ?>
+					<?php echo I18n::_('This website is using an insecure connection! Please only use it for testing.'), PHP_EOL; ?><br />
+					<span class="small"><?php echo I18n::_('For more information <a href="https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-it-show-me-an-error-about-an-insecure-connection">see this FAQ entry</a>.'); ?></span>
 				</div>
 <?php
 endif;
