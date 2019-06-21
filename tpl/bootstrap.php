@@ -72,7 +72,7 @@ if ($MARKDOWN):
 endif;
 ?>
 		<script type="text/javascript" data-cfasync="false" src="js/purify-1.0.10.js" integrity="sha512-CqskSFXERL38A1PJP9BlO04me7kmwgDIhN1+k24RoFiisEwXA0BMdm0lzJC7g5jCRZ4k5OYdOJGEqW9CwDl4CA==" crossorigin="anonymous"></script>
-		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-sVyyVYPT9SWHwzqnG3KVpxDVDCQVE3Rb3xxe3aaXxMLPvsqzZSS/WnviVLzdT0K8hCeO2bqNLymW/5POz1u11w==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-lddjg/5Djy4VAY2IZk3kdLPchAnjHhoUHEemgxRwi351CjSS9GDu7QUpRT/pPPeB8Xh0owxCB9WvcV6hZ/999w==" crossorigin="anonymous"></script>
 		<!--[if IE]>
 		<style type="text/css">body {padding-left:60px;padding-right:60px;} #ienotice {display:block;}</style>
 		<![endif]-->
@@ -91,7 +91,6 @@ if ($isCpct):
 endif;
 if ($isDark):
 ?> class="dark-theme"<?php
-endif;
 ?>>
 		<div id="passwordmodal" tabindex="-1" class="modal fade" role="dialog" aria-hidden="true">
 			<div class="modal-dialog" role="document">
@@ -109,6 +108,7 @@ endif;
 			</div>
 		</div>
 <?php
+endif;
 if ($QRCODE):
 ?>
 		<div id="qrcodemodal" tabindex="-1" class="modal fade" aria-labelledby="qrcodemodalTitle" role="dialog" aria-hidden="true">

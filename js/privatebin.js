@@ -4577,6 +4577,11 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         function isInsecureConnection()
         {
+            // use .isSecureContext if available
+            if (window.isSecureContext === true || window.isSecureContext === false) {
+                return !window.isSecureContext;
+            }
+        
             const url = new URL(window.location);
 
             // HTTP is obviously insecure
