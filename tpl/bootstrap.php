@@ -91,6 +91,7 @@ if ($isCpct):
 endif;
 if ($isDark):
 ?> class="dark-theme"<?php
+endif;
 ?>>
 		<div id="passwordmodal" tabindex="-1" class="modal fade" role="dialog" aria-hidden="true">
 			<div class="modal-dialog" role="document">
@@ -108,7 +109,6 @@ if ($isDark):
 			</div>
 		</div>
 <?php
-endif;
 if ($QRCODE):
 ?>
 		<div id="qrcodemodal" tabindex="-1" class="modal fade" aria-labelledby="qrcodemodalTitle" role="dialog" aria-hidden="true">
