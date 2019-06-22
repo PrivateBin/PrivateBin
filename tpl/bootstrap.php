@@ -471,7 +471,7 @@ if ($HTTPWARNING):
 				<div id="httpnotice" role="alert" class="hidden alert alert-danger">
 					<span class="glyphicon glyphicon-alert" aria-hidden="true"></span>
 					<?php echo I18n::_('This website is using an insecure connection! Please only use it for testing.'), PHP_EOL; ?><br />
-					<span class="small"><?php echo I18n::_('For more information <a href="https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-it-show-me-an-error-about-an-insecure-connection">see this FAQ entry</a>.'); ?></span>
+					<span class="small"><?php echo I18n::_('For more information <a href="%s">see this FAQ entry</a>.', 'https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-it-show-me-an-error-about-an-insecure-connection'); ?></span>
 				</div>
 <?php
 endif;
@@ -516,7 +516,7 @@ endif;
 				<div id="noscript" role="alert" class="alert alert-info noscript-hide">
 					<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
 					<?php echo I18n::_('Loading…'); ?><br />
-					<span class="small"><?php echo I18n::_('In case this message never disappears please have a look at <a href="https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away">this FAQ for information to troubleshoot</a>.'); ?></span>
+					<span class="small"><?php echo I18n::_('In case this message never disappears please have a look at <a href="%s">this FAQ for information to troubleshoot</a>.', 'https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away'); ?></span>
 				</div>
 			</section>
 			<footer class="container">

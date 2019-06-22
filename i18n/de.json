@@ -149,13 +149,15 @@
     "Loading…": "Lädt…",
     "Decrypting paste…": "Entschlüssle Text…",
     "Preparing new paste…": "Bereite neuen Text vor…",
-    "In case this message never disappears please have a look at <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">this FAQ for information to troubleshoot</a>.":
-        "Wenn diese Nachricht nicht mehr verschwindet, schau bitte in <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">die FAQ</a> (englisch), um zu sehen, wie der Fehler behoben werden kann.",
+    "In case this message never disappears please have a look at <a href=\"%s\">this FAQ for information to troubleshoot</a>.":
+        "Wenn diese Nachricht nicht mehr verschwindet, schau bitte in <a href=\"%s\">die FAQ</a> (englisch), um zu sehen, wie der Fehler behoben werden kann.",
     "+++ no paste text +++": "+++ kein Paste-Text +++",
     "Could not get paste data: %s":
         "Text konnte nicht geladen werden: %s",
     "QR code": "QR code",
     "I love you too, bot…": "I love you too, bot…",
     "This website is using an insecure HTTP connection! Please use it only for testing.":
-        "This website is using an insecure HTTP connection! Please use it only for testing."
+        "This website is using an insecure HTTP connection! Please use it only for testing.",
+    "For more information <a href=\"%s\">see this FAQ entry</a>.":
+        "For more information <a href=\"%s\">see this FAQ entry</a>."
 }

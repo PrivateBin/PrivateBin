@@ -89,7 +89,7 @@ if ($HTTPWARNING):
 ?>
 			<div id="httpnotice" class="errorMessage">
 				<?php echo I18n::_('This website is using an insecure connection! Please only use it for testing.'); ?>
-				<span class="small"><?php echo I18n::_('For more information <a href="https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-it-show-me-an-error-about-an-insecure-connection">see this FAQ entry</a>.'); ?></span>
+				<span class="small"><?php echo I18n::_('For more information <a href="%s">see this FAQ entry</a>.', 'https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-it-show-me-an-error-about-an-insecure-connection'); ?></span>
 			</div>
 <?php
 endif;
