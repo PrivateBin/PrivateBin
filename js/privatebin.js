@@ -830,28 +830,13 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         function getRandomBytes(length)
         {
-            if (
-                typeof window !== 'undefined' &&
-                typeof Uint8Array !== 'undefined' &&
-                String.fromCodePoint &&
-                (
-                    typeof window.crypto !== 'undefined' ||
-                    typeof window.msCrypto !== 'undefined'
-                )
-            ) {
-                // modern browser environment
-                let bytes       = '';
-                const byteArray = new Uint8Array(length),
-                      crypto    = window.crypto || window.msCrypto;
-                crypto.getRandomValues(byteArray);
-                for (let i = 0; i < length; ++i) {
-                    bytes += String.fromCharCode(byteArray[i]);
-                }
-                return bytes;
-            } else {
-                // legacy browser or unsupported environment
-                throw 'No supported crypto API detected, you may read pastes and comments, but can\'t create pastes or add new comments.';
+            let bytes       = '';
+            const byteArray = new Uint8Array(length);
+            window.crypto.getRandomValues(byteArray);
+            for (let i = 0; i < length; ++i) {
+                bytes += String.fromCharCode(byteArray[i]);
             }
+            return bytes;
         }
 
         /**
@@ -4538,36 +4523,6 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         ];
 
         /**
-         * blacklist of UserAgent versions known not to work with this application
-         *
-         * @private
-         * @enum   {Object}
-         * @readonly
-         */
-        const oldUA = [
-            {
-                'regex': /Chrome\/([0-9]+)/,
-                'minVersion': 57,
-            },
-            {
-                'regex': /Edge\/([0-9]+)/,
-                'minVersion': 16,
-            },
-            {
-                'regex': /Firefox\/([0-9]+)/,
-                'minVersion': 54,
-            },
-            {
-                'regex': /Opera\/.*Version\/([0-9]+)/,
-                'minVersion': 44,
-            },
-            {
-                'regex': /Version\/([0-9]+).*Safari/,
-                'minVersion': 11,
-            }
-        ];
-
-        /**
          * check if the connection is insecure
          *
          * @private
@@ -4602,7 +4557,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             // check whether a bot user agent part can be found in the current
             // user agent
             for (let i = 0; i < badBotUA.length; ++i) {
-                if (navigator.userAgent.indexOf(badBotUA) >= 0) {
+                if (navigator.userAgent.indexOf(badBotUA[i]) >= 0) {
                     return true;
                 }
             }
@@ -4610,7 +4565,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         }
 
         /**
-         * checks whether this is an unsupported browser
+         * checks whether this is an unsupported browser, via feature detection
          *
          * @private
          * @name   InitialCheck.isOldBrowser
@@ -4618,13 +4573,34 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          * @return {bool}
          */
         function isOldBrowser() {
-            for (let i = 0; i < oldUA.length; ++i) {
-                let result = oldUA[i]['regex'].exec(navigator.userAgent);
-                if (result && result[1] < oldUA[i]['minVersion']) {
-                    return true;
-                }
+            // webcrypto support
+            if (typeof window.crypto !== 'object') {
+                return false;
             }
-            return false;
+
+            if (typeof WebAssembly !== 'object' && typeof WebAssembly.instantiate !== 'function') {
+                return false;
+            }
+            try {
+                // [\0, 'a', 's', 'm', (uint_32) 1] - smallest valid wasm module
+                const module = new WebAssembly.Module(Uint8Array.of(0x0, 0x61, 0x73, 0x6d, 0x01, 0x00, 0x00, 0x00));
+                if (
+                    !(
+                        module instanceof WebAssembly.Module &&
+                        new WebAssembly.Instance(module) instanceof WebAssembly.Instance
+                    )
+                ) {
+                    return false;
+                }
+            } catch (e) {
+                return false;
+            }
+
+             // not checking for async/await, ES6, Promise or Uint8Array support,
+             // as most browsers introduced these earlier then webassembly and webcrypto:
+             // https://github.com/PrivateBin/PrivateBin/pull/431#issuecomment-493129359
+
+            return true;
         }
 
         /**
@@ -4644,13 +4620,16 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             }
 
             if (isOldBrowser()) {
-                $('#oldnotice').toggle(true);
-                // execution will likely fail, but the user agent may be
-                // deliberately set to an incorrect value, so let it proceed
+                // some browsers (Chrome based ones) would have webcrypto support if using HTTPS
+                if (isInsecureConnection()) {
+                    Alert.showError(['Your browser may require an HTTPS connection to support the WebCrypto API. Try <a href="%s">switching to HTTPS</a>.', 'https' + window.location.href.slice(4)]);
+                }
+                $('#oldnotice').removeClass('hidden');
+                return false;
             }
 
             if (isInsecureConnection()) {
-                $('#httpnotice').toggle(true);
+                $('#httpnotice').removeClass('hidden');
             }
 
             return true;

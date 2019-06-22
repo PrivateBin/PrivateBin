@@ -159,5 +159,7 @@
     "This website is using an insecure HTTP connection! Please use it only for testing.":
         "This website is using an insecure HTTP connection! Please use it only for testing.",
     "For more information <a href=\"%s\">see this FAQ entry</a>.":
-        "For more information <a href=\"%s\">see this FAQ entry</a>."
+        "For more information <a href=\"%s\">see this FAQ entry</a>.",
+    "Your browser may require an HTTPS connection to support the WebCrypto API. Try <a href=\"%s\">switching to HTTPS</a>.":
+        "Your browser may require an HTTPS connection to support the WebCrypto API. Try <a href=\"%s\">switching to HTTPS</a>."
 }

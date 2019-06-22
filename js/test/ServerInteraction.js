@@ -9,7 +9,7 @@ describe('ServerInteraction', function () {
         });
         this.timeout(30000);
         it('can prepare an encrypted paste', function () {
-            jsc.check(jsc.forall(
+            jsc.assert(jsc.forall(
                 'string',
                 'string',
                 'string',
