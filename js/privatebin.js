@@ -177,18 +177,6 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         const me = {};
 
         /**
-         * blacklist of UserAgents (parts) known to belong to a bot
-         *
-         * @private
-         * @enum   {Object}
-         * @readonly
-         */
-        const BadBotUA = [
-            'Bot',
-            'bot'
-        ];
-
-        /**
          * cache for script location
          *
          * @name Helper.baseUri
@@ -364,25 +352,6 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             baseUri = window.location.origin + window.location.pathname;
             return baseUri;
         };
-
-
-        /**
-         * checks whether this is a bot we dislike
-         *
-         * @name   Helper.isBadBot
-         * @function
-         * @return {bool}
-         */
-        me.isBadBot = function() {
-            // check whether a bot user agent part can be found in the current
-            // user agent
-            for (let i = 0; i < BadBotUA.length; ++i) {
-                if (navigator.userAgent.indexOf(BadBotUA) >= 0) {
-                    return true;
-                }
-            }
-            return false;
-        }
 
         /**
          * wrap an object into a Paste, used for mocking in the unit tests
@@ -861,28 +830,13 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         function getRandomBytes(length)
         {
-            if (
-                typeof window !== 'undefined' &&
-                typeof Uint8Array !== 'undefined' &&
-                String.fromCodePoint &&
-                (
-                    typeof window.crypto !== 'undefined' ||
-                    typeof window.msCrypto !== 'undefined'
-                )
-            ) {
-                // modern browser environment
-                let bytes       = '';
-                const byteArray = new Uint8Array(length),
-                      crypto    = window.crypto || window.msCrypto;
-                crypto.getRandomValues(byteArray);
-                for (let i = 0; i < length; ++i) {
-                    bytes += String.fromCharCode(byteArray[i]);
-                }
-                return bytes;
-            } else {
-                // legacy browser or unsupported environment
-                throw 'No supported crypto API detected, you may read pastes and comments, but can\'t create pastes or add new comments.';
+            let bytes       = '';
+            const byteArray = new Uint8Array(length);
+            window.crypto.getRandomValues(byteArray);
+            for (let i = 0; i < length; ++i) {
+                bytes += String.fromCharCode(byteArray[i]);
             }
+            return bytes;
         }
 
         /**
@@ -1227,30 +1181,20 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             }
 
             // do use URL interface, if possible
-            if (window.URL && window.URL.prototype && ('searchParams' in window.URL.prototype)) {
-                try {
-                    const url = new URL(window.location);
+            const url = new URL(window.location);
 
-                    for (const param of url.searchParams) {
-                        const key = param[0];
-                        const value = param[1];
+            for (const param of url.searchParams) {
+                const key = param[0];
+                const value = param[1];
 
-                        if (value === '' && idRegEx.test(key)) {
-                            // safe, as the whole regex is matched
-                            id = key;
-                            return id;
-                        }
-                    }
-                } catch (e) {
-                    // fallback below
-                    console.error('URL interface not properly supported, error:', e);
+                if (value === '' && idRegEx.test(key)) {
+                    // safe, as the whole regex is matched
+                    id = key;
+                    return key;
                 }
             }
 
-            // Attention: This also returns the delete token inside of the ID, if it is specified
-            id = (window.location.search.match(idRegExFind) || [''])[0];
-
-            if (id === '') {
+            if (id === null) {
                 throw 'no paste id given';
             }
 
@@ -1685,7 +1629,6 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         me.hideMessages = function()
         {
-            // also possible: $('.statusmessage').addClass('hidden');
             $statusMessage.addClass('hidden');
             $errorMessage.addClass('hidden');
         };
@@ -4555,6 +4498,163 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         return me;
     })();
 
+
+    /**
+     * initial (security) check
+     *
+     * @name   InitialCheck
+     * @param  {object} window
+     * @param  {object} document
+     * @class
+     */
+    var InitialCheck = (function () {
+        var me = {};
+
+        /**
+         * blacklist of UserAgents (parts) known to belong to a bot
+         *
+         * @private
+         * @enum   {Array}
+         * @readonly
+         */
+        const badBotUA = [
+            'Bot',
+            'bot'
+        ];
+
+        /**
+         * check if the connection is insecure
+         *
+         * @private
+         * @name   InitialCheck.isInsecureConnection
+         * @function
+         * @return {bool}
+         */
+        function isInsecureConnection()
+        {
+            // use .isSecureContext if available
+            if (window.isSecureContext === true || window.isSecureContext === false) {
+                return !window.isSecureContext;
+            }
+
+            const url = new URL(window.location);
+
+            // HTTP is obviously insecure
+            if (url.protocol !== 'http:') {
+                return false;
+            }
+
+            // filter out actually secure connections over HTTP
+            for (const tld of ['.onion', '.i2p']) {
+                if (url.hostname.endsWith(tld)) {
+                    return false;
+                }
+            }
+
+            // whitelist localhost for development
+            for (const hostname of ['localhost', '127.0.0.1', '[::1]']) {
+                if (url.hostname === hostname) {
+                    return false;
+                }
+            }
+
+            // totally INSECURE http protocol!
+            return true;
+        }
+
+        /**
+         * checks whether this is a bot we dislike
+         *
+         * @private
+         * @name   InitialCheck.isBadBot
+         * @function
+         * @return {bool}
+         */
+        function isBadBot() {
+            // check whether a bot user agent part can be found in the current
+            // user agent
+            for (const UAfragment of badBotUA) {
+                if (navigator.userAgent.indexOf(UAfragment) >= 0) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /**
+         * checks whether this is an unsupported browser, via feature detection
+         *
+         * @private
+         * @name   InitialCheck.isOldBrowser
+         * @function
+         * @return {bool}
+         */
+        function isOldBrowser() {
+            // webcrypto support
+            if (typeof window.crypto !== 'object') {
+                return false;
+            }
+
+            if (typeof WebAssembly !== 'object' && typeof WebAssembly.instantiate !== 'function') {
+                return false;
+            }
+            try {
+                // [\0, 'a', 's', 'm', (uint_32) 1] - smallest valid wasm module
+                const module = new WebAssembly.Module(Uint8Array.of(0x0, 0x61, 0x73, 0x6d, 0x01, 0x00, 0x00, 0x00));
+                if (
+                    !(
+                        module instanceof WebAssembly.Module &&
+                        new WebAssembly.Instance(module) instanceof WebAssembly.Instance
+                    )
+                ) {
+                    return false;
+                }
+            } catch (e) {
+                return false;
+            }
+
+             // not checking for async/await, ES6, Promise or Uint8Array support,
+             // as most browsers introduced these earlier then webassembly and webcrypto:
+             // https://github.com/PrivateBin/PrivateBin/pull/431#issuecomment-493129359
+
+            return true;
+        }
+
+        /**
+         * init on application start, returns an all-clear signal
+         *
+         * @name   InitialCheck.init
+         * @function
+         * @return {bool}
+         */
+        me.init = function()
+        {
+            // prevent bots from viewing a paste and potentially deleting data
+            // when burn-after-reading is set
+            if (isBadBot()) {
+                Alert.showError('I love you too, bot…');
+                return false;
+            }
+
+            if (isOldBrowser()) {
+                // some browsers (Chrome based ones) would have webcrypto support if using HTTPS
+                if (isInsecureConnection()) {
+                    Alert.showError(['Your browser may require an HTTPS connection to support the WebCrypto API. Try <a href="%s">switching to HTTPS</a>.', 'https' + window.location.href.slice(4)]);
+                }
+                $('#oldnotice').removeClass('hidden');
+                return false;
+            }
+
+            if (isInsecureConnection()) {
+                $('#httpnotice').removeClass('hidden');
+            }
+
+            return true;
+        }
+
+        return me;
+    })();
+
     /**
      * (controller) main PrivateBin logic
      *
@@ -4601,18 +4701,6 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             TopNav.showCreateButtons();
             Alert.hideLoading();
         };
-
-        /**
-         * shows how we much we love bots that execute JS ;)
-         *
-         * @name   Controller.showBadBotMessage
-         * @function
-         */
-        me.showBadBotMessage = function()
-        {
-            TopNav.hideAllButtons();
-            Alert.showError('I love you too, bot…');
-        }
 
         /**
          * shows the loaded paste
@@ -4741,6 +4829,10 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
             // initialize other modules/"classes"
             Alert.init();
+            if (!InitialCheck.init()) {
+                // something major is wrong, stop right away
+                return;
+            }
             Model.init();
             AttachmentViewer.init();
             DiscussionViewer.init();
@@ -4760,17 +4852,10 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 return me.newPaste();
             }
 
-            // if delete token is passed (i.e. paste has been deleted by this access)
-            // there is no more stuf we need to do
+            // if delete token is passed (i.e. paste has been deleted by this
+            // access), there is nothing more to do
             if (Model.hasDeleteToken()) {
                 return;
-            }
-
-            // prevent bots from viewing a paste and potentially deleting data
-            // when burn-after-reading is set
-            // see https://github.com/elrido/ZeroBin/issues/11
-            if (Helper.isBadBot()) {
-                return me.showBadBotMessage();
             }
 
             // display an existing paste
@@ -4797,6 +4882,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         ServerInteraction: ServerInteraction,
         PasteEncrypter: PasteEncrypter,
         PasteDecrypter: PasteDecrypter,
+        InitialCheck: InitialCheck,
         Controller: Controller
     };
 })(jQuery, RawDeflate);

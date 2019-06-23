@@ -149,10 +149,17 @@
     "Loading…": "Laden…",
     "Decrypting paste…": "Geplakte tekst decoderen…",
     "Preparing new paste…": "Nieuwe geplakte tekst voorbereiden…",
-    "In case this message never disappears please have a look at <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">this FAQ for information to troubleshoot</a>.":
-        "In het geval dat dit bericht nooit verdwijnt, kijkt u dan eens naar <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\"> veelgestelde vragen voor informatie over het oplossen van problemen </a>.",
+    "In case this message never disappears please have a look at <a href=\"%s\">this FAQ for information to troubleshoot</a>.":
+        "In het geval dat dit bericht nooit verdwijnt, kijkt u dan eens naar <a href=\"%s\"> veelgestelde vragen voor informatie over het oplossen van problemen </a>.",
     "+++ no paste text +++": "+++ geen geplakte tekst +++",
     "Could not get paste data: %s":
         "Could not get paste data: %s",
-    "QR code": "QR code"
+    "QR code": "QR code",
+    "I love you too, bot…": "I love you too, bot…",
+    "This website is using an insecure HTTP connection! Please use it only for testing.":
+        "This website is using an insecure HTTP connection! Please use it only for testing.",
+    "For more information <a href=\"%s\">see this FAQ entry</a>.":
+        "For more information <a href=\"%s\">see this FAQ entry</a>.",
+    "Your browser may require an HTTPS connection to support the WebCrypto API. Try <a href=\"%s\">switching to HTTPS</a>.":
+        "Your browser may require an HTTPS connection to support the WebCrypto API. Try <a href=\"%s\">switching to HTTPS</a>."
 }

@@ -77,6 +77,12 @@ languageselection = false
 ; sha256 in HMAC for the deletion token
 zerobincompatibility = false
 
+; Enable or disable the warning message when the site is served over an insecure connection (insecure HTTP instead of HTTPS), defaults to true.
+; Secure transport methods like Tor and I2P domains are automatically whitelisted.
+; It is **strongly discouraged** to disable this.
+; See https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-it-show-me-an-error-about-an-insecure-connection for more information.
+httpwarning = true
+
 [expire]
 ; expire value that is selected per default
 ; make sure the value exists in [expire_options]

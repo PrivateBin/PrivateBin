@@ -10,7 +10,7 @@ describe('CryptTool', function () {
 
         this.timeout(30000);
         it('can en- and decrypt any message', function () {
-            jsc.check(jsc.forall(
+            jsc.assert(jsc.forall(
                 'string',
                 'string',
                 'string',
@@ -193,7 +193,7 @@ describe('CryptTool', function () {
         });
 
         it('can en- and decrypt a particular message (#260)', function () {
-            jsc.check(jsc.forall(
+            jsc.assert(jsc.forall(
                 'string',
                 'string',
                 async function (key, password) {

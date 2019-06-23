@@ -158,10 +158,17 @@
     "Loading…": "Cargament…",
     "Decrypting paste…": "Deschirament del tèxte…",
     "Preparing new paste…": "Preparacion…",
-    "In case this message never disappears please have a look at <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">this FAQ for information to troubleshoot</a>.":
-        "Se per cas aqueste messatge quita pas de s’afichar mercés de gaitar <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">aquesta FAQ per las solucions</a> (en anglés).",
+    "In case this message never disappears please have a look at <a href=\"%s\">this FAQ for information to troubleshoot</a>.":
+        "Se per cas aqueste messatge quita pas de s’afichar mercés de gaitar <a href=\"%s\">aquesta FAQ per las solucions</a> (en anglés).",
     "+++ no paste text +++": "+++ cap de tèxte pegat +++",
     "Could not get paste data: %s":
         "Recuperacion impossibla de las donadas copiadas : %s",
-    "QR code": "Còdi QR"
+    "QR code": "Còdi QR",
+    "I love you too, bot…": "I love you too, bot…",
+    "This website is using an insecure HTTP connection! Please use it only for testing.":
+        "This website is using an insecure HTTP connection! Please use it only for testing.",
+    "For more information <a href=\"%s\">see this FAQ entry</a>.":
+        "For more information <a href=\"%s\">see this FAQ entry</a>.",
+    "Your browser may require an HTTPS connection to support the WebCrypto API. Try <a href=\"%s\">switching to HTTPS</a>.":
+        "Your browser may require an HTTPS connection to support the WebCrypto API. Try <a href=\"%s\">switching to HTTPS</a>."
 }

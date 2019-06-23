@@ -290,9 +290,9 @@ input {
 
 #ienotice a { color: #000; }
 
-#oldienotice { display: none; }
+#oldnotice, #httpnotice { display: none; }
 
-.errorMessage {
+#errormessage, .errorMessage {
 	background-color: #f77 !important;
 	color:#ff0;
 }
