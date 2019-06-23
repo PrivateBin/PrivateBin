@@ -2413,20 +2413,6 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             $prettyMessage = $('#prettymessage');
             $prettyPrint = $('#prettyprint');
 
-            // check requirements
-            if (typeof prettyPrintOne !== 'function') {
-                Alert.showError([
-                    'The library %s is not available. This may cause display errors.',
-                    'pretty print'
-                ]);
-            }
-            if (typeof showdown !== 'object') {
-                Alert.showError([
-                    'The library %s is not available. This may cause display errors.',
-                    'showdown'
-                ]);
-            }
-
             // get default option from template/HTML or fall back to set value
             format = Model.getFormatDefault() || format;
             text = '';
