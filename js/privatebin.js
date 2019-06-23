@@ -4545,20 +4545,17 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             }
 
             // filter out actually secure connections over HTTP
-            if (
-                url.hostname.endsWith('.onion') ||
-                url.hostname.endsWith('.i2p')
-            ) {
-                return false;
+            for (const tld of ['.onion', '.i2p']) {
+                if (url.hostname.endsWith(tld)) {
+                    return false;
+                }
             }
 
             // whitelist localhost for development
-            if (
-                url.hostname === 'localhost' ||
-                url.hostname === '127.0.0.1' ||
-                url.hostname === '[::1]'
-            ) {
-                return false;
+            for (const hostname of ['localhost', '127.0.0.1', '[::1]']) {
+                if (url.hostname === hostname) {
+                    return false;
+                }
             }
 
             // totally INSECURE http protocol!
