@@ -4555,7 +4555,8 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             // whitelist localhost for development
             if (
                 url.hostname === 'localhost' ||
-                url.hostname === '127.0.0.1'
+                url.hostname === '127.0.0.1' ||
+                url.hostname === '[::1]'
             ) {
                 return false;
             }
