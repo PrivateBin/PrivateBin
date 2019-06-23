@@ -387,6 +387,7 @@ class Controller
         $page->assign('URLSHORTENER', $this->_conf->getKey('urlshortener'));
         $page->assign('QRCODE', $this->_conf->getKey('qrcode'));
         $page->assign('HTTPWARNING', $this->_conf->getKey('httpwarning'));
+        $page->assign('COMPRESSION', $this->_conf->getKey('compression'));
         $page->draw($this->_conf->getKey('template'));
     }
 

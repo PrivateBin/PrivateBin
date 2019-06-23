@@ -50,7 +50,7 @@ if ($MARKDOWN):
 endif;
 ?>
 		<script type="text/javascript" data-cfasync="false" src="js/purify-1.0.11.js" integrity="sha512-p7UyJuyBkhMcMgE4mDsgK0Lz70OvetLefua1oXs1OujWv9gOxh4xy8InFux7bZ4/DAZsTmO4rgVwZW9BHKaTaw==" crossorigin="anonymous"></script>
-		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-qbbaN+vdcDPfAPXaU1pMI1MzHrjZNKRwgx/l7jE1Ma1ebJ8K7GhoKbOrqPi/xkYOrWPE94tBxvSxuvqe6czAqA==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-wrACqkssPbx5b/OLzM+ZxUP8L1AmdG+aYefO4uFG8GedXxic3R4ICkWsrPL7jYbwLzzdmnmuIYc58JhCSVh28Q==" crossorigin="anonymous"></script>
 		<!--[if IE]>
 		<style type="text/css">body {padding-left:60px;padding-right:60px;} #ienotice {display:block;}</style>
 		<![endif]-->
@@ -63,7 +63,7 @@ endif;
 		<meta name="msapplication-config" content="browserconfig.xml">
 		<meta name="theme-color" content="#ffe57e" />
 	</head>
-	<body>
+	<body data-compression="<?php echo rawurlencode($COMPRESSION); ?>">
 		<header>
 			<div id="aboutbox">
 				<?php echo I18n::_('%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href="https://privatebin.info/">project page</a>.', I18n::_($NAME)); ?><br />

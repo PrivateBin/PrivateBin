@@ -72,7 +72,7 @@ if ($MARKDOWN):
 endif;
 ?>
 		<script type="text/javascript" data-cfasync="false" src="js/purify-1.0.11.js" integrity="sha512-p7UyJuyBkhMcMgE4mDsgK0Lz70OvetLefua1oXs1OujWv9gOxh4xy8InFux7bZ4/DAZsTmO4rgVwZW9BHKaTaw==" crossorigin="anonymous"></script>
-		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-qbbaN+vdcDPfAPXaU1pMI1MzHrjZNKRwgx/l7jE1Ma1ebJ8K7GhoKbOrqPi/xkYOrWPE94tBxvSxuvqe6czAqA==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-wrACqkssPbx5b/OLzM+ZxUP8L1AmdG+aYefO4uFG8GedXxic3R4ICkWsrPL7jYbwLzzdmnmuIYc58JhCSVh28Q==" crossorigin="anonymous"></script>
 		<!--[if IE]>
 		<style type="text/css">body {padding-left:60px;padding-right:60px;} #ienotice {display:block;}</style>
 		<![endif]-->
@@ -85,13 +85,17 @@ endif;
 		<meta name="msapplication-config" content="browserconfig.xml">
 		<meta name="theme-color" content="#ffe57e" />
 	</head>
-	<body role="document"<?php
-if ($isCpct):
-?> class="navbar-spacing"<?php
-endif;
-if ($isDark):
-?> class="dark-theme"<?php
-endif;
+	<body role="document" data-compression="<?php echo rawurlencode($COMPRESSION); ?>"<?php
+$class = array();
+if ($isCpct) {
+    $class[] = 'navbar-spacing';
+}
+if ($isDark) {
+    $class[] = 'dark-theme';
+}
+if (count($class)) {
+    echo ' class="', implode(' ', $class), '"';
+}
 ?>>
 		<div id="passwordmodal" tabindex="-1" class="modal fade" role="dialog" aria-hidden="true">
 			<div class="modal-dialog" role="document">

@@ -56,6 +56,7 @@ class ViewTest extends PHPUnit_Framework_TestCase
         $page->assign('URLSHORTENER', '');
         $page->assign('QRCODE', true);
         $page->assign('HTTPWARNING', true);
+        $page->assign('COMPRESSION', 'zlib');
 
         $dir = dir(PATH . 'tpl');
         while (false !== ($file = $dir->read())) {

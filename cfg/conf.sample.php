@@ -75,13 +75,19 @@ languageselection = false
 ; stay compatible with PrivateBin Alpha 0.19, less secure
 ; if enabled will use base64.js version 1.7 instead of 2.1.9 and sha1 instead of
 ; sha256 in HMAC for the deletion token
-zerobincompatibility = false
+; zerobincompatibility = false
 
-; Enable or disable the warning message when the site is served over an insecure connection (insecure HTTP instead of HTTPS), defaults to true.
+; Enable or disable the warning message when the site is served over an insecure
+; connection (insecure HTTP instead of HTTPS), defaults to true.
 ; Secure transport methods like Tor and I2P domains are automatically whitelisted.
 ; It is **strongly discouraged** to disable this.
 ; See https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-it-show-me-an-error-about-an-insecure-connection for more information.
-httpwarning = true
+; httpwarning = true
+
+; Pick compression algorithm or disable it. Only applies to pastes/comments
+; created after changing the setting.
+; Can be set to one these values: none / zlib (default).
+; compression = zlib
 
 [expire]
 ; expire value that is selected per default

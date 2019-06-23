@@ -941,14 +941,14 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             // AES in Galois Counter Mode, keysize 256 bit,
             // authentication tag 128 bit, 10000 iterations in key derivation
             const spec = [
-                getRandomBytes(16), // initialization vector
-                getRandomBytes(8),  // salt
-                100000,             // iterations
-                256,                // key size
-                128,                // tag size
-                'aes',              // algorithm
-                'gcm',              // algorithm mode
-                'zlib'              // compression
+                getRandomBytes(16),                     // initialization vector
+                getRandomBytes(8),                      // salt
+                100000,                                 // iterations
+                256,                                    // key size
+                128,                                    // tag size
+                'aes',                                  // algorithm
+                'gcm',                                  // algorithm mode
+                $('body').data('compression') || 'zlib' // compression
             ], encodedSpec = [];
             for (let i = 0; i < spec.length; ++i) {
                 encodedSpec[i] = i < 2 ? btoa(spec[i]) : spec[i];
