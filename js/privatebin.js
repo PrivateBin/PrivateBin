@@ -4538,10 +4538,29 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             }
 
             const url = new URL(window.location);
+
             // HTTP is obviously insecure
             if (url.protocol !== 'http:') {
                 return false;
             }
+
+            // filter out actually secure connections over HTTP
+            if (
+                url.hostname.endsWith('.onion') ||
+                url.hostname.endsWith('.i2p')
+            ) {
+                return false;
+            }
+
+            // whitelist localhost for development
+            if (
+                url.hostname === 'localhost' ||
+                url.hostname === '127.0.0.1'
+            ) {
+                return false;
+            }
+
+            // totally INSECURE http protocol!
             return true;
         }
 
