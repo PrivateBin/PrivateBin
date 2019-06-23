@@ -10,7 +10,7 @@
     * CHANGED: Increase PBKDF2 iterations to 100k (#350)
     * CHANGED: Replaced last use of MD5 with Fowler–Noll–Vo checksum which produces the exact length we need for the paste ID (#49)
     * CHANGED: Simplified some PHP code & renamed PrivateBin class into Controller, to make MVC pattern use more obvious (#342)
-    * CHANGED: Upgrading libraries to: identicon 1.2.0, random_compat 2.0.18, jQuery 3.4.1, Showdown 1.9.0, DOMpurify 1.0.10 & kjua 0.6.0
+    * CHANGED: Upgrading libraries to: identicon 1.2.0, random_compat 2.0.18, jQuery 3.4.1, Showdown 1.9.0, DOMpurify 1.0.11 & kjua 0.6.0
     * FIXED: Prevent Chrome from sending content of paste to Google for translation (#378)
     * FIXED: To support attachments larger then 2 MiB in newer Chrome versions, we switched to blob instead of data URIs (#432)
     * FIXED: Since Outlook strips trailing equal signs in links, the key in URL hash is now base58 encoded, instead of base64 (#377)
