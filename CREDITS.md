@@ -41,3 +41,4 @@ Sébastien Sauvage - original idea and main developer
 * Tulio Leao - Portuguese
 * Michael van Schaik - Dutch
 * Péter Tabajdi - Hungarian
+* info-path - Czech

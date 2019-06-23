@@ -420,7 +420,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          * @prop   {string[]}
          * @readonly
          */
-        const supportedLanguages = ['de', 'es', 'fr', 'it', 'hu', 'no', 'nl', 'pl', 'pt', 'oc', 'ru', 'sl', 'zh'];
+        const supportedLanguages = ['cs', 'de', 'es', 'fr', 'it', 'hu', 'no', 'nl', 'pl', 'pt', 'oc', 'ru', 'sl', 'zh'];
 
         /**
          * built in language
@@ -571,6 +571,8 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         me.getPluralForm = function(n) {
             switch (language)
             {
+                case 'cs':
+                    return n === 1 ? 0 : (n >= 2 && n <=4 ? 1 : 2);
                 case 'fr':
                 case 'oc':
                 case 'zh':

@@ -1,6 +1,7 @@
 # PrivateBin version history
 
   * **1.3 (not yet released)**
+    * ADDED: Translation for Czech (#424)
     * ADDED: Threat modeled the application (#177)
     * CHANGED: Minimum required PHP version is 5.5, due to a change in the identicon library
     * CHANGED: Minimum required browser versions are Firefox 54, Chrome 57, Opera 44, Safari 11, Edge 16, due to use of WebCrypto API, async/await, ES6 & WebAssembly features - all Internet Explorer versions are incompatible

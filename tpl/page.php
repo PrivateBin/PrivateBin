@@ -50,7 +50,7 @@ if ($MARKDOWN):
 endif;
 ?>
 		<script type="text/javascript" data-cfasync="false" src="js/purify-1.0.10.js" integrity="sha512-CqskSFXERL38A1PJP9BlO04me7kmwgDIhN1+k24RoFiisEwXA0BMdm0lzJC7g5jCRZ4k5OYdOJGEqW9CwDl4CA==" crossorigin="anonymous"></script>
-		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-V0v5OOCcrMFtPsP9xWbKjoaRBobWrMdKdiDPn1tK8Kq8uzbEOK8tY0JXCbEqVpPyJ3/hVrtfjdXhgGaxeMUj3g==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-qbbaN+vdcDPfAPXaU1pMI1MzHrjZNKRwgx/l7jE1Ma1ebJ8K7GhoKbOrqPi/xkYOrWPE94tBxvSxuvqe6czAqA==" crossorigin="anonymous"></script>
 		<!--[if IE]>
 		<style type="text/css">body {padding-left:60px;padding-right:60px;} #ienotice {display:block;}</style>
 		<![endif]-->
