@@ -72,7 +72,7 @@ if ($MARKDOWN):
 endif;
 ?>
 		<script type="text/javascript" data-cfasync="false" src="js/purify-1.0.10.js" integrity="sha512-CqskSFXERL38A1PJP9BlO04me7kmwgDIhN1+k24RoFiisEwXA0BMdm0lzJC7g5jCRZ4k5OYdOJGEqW9CwDl4CA==" crossorigin="anonymous"></script>
-		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-PCFDgDmb2Q5KUo65OaSSyFBtXMUBcpvr1ah2jVvgRWMo1UYiuRaShnkmhiq0gKDRlTi5w2Z9Ttb1hmOmljP0+A==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-0Vv7H6Clyx/hCJ0CZGXO+aJr6UERFwpxHXhhqfYyQNTj0F7pZKAYFrKePW3xn/EZVAUvUXnVmVCRFuziKkcOYg==" crossorigin="anonymous"></script>
 		<!--[if IE]>
 		<style type="text/css">body {padding-left:60px;padding-right:60px;} #ienotice {display:block;}</style>
 		<![endif]-->

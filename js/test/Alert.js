@@ -218,6 +218,7 @@ describe('Alert', function () {
                     return jsc.random(0, 1) ? true : $element;
                 });
                 functions[trigger](message);
+                $.PrivateBin.Alert.setCustomHandler(null);
                 return handlerCalled;
             }
         );

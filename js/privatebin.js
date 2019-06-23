@@ -4556,8 +4556,8 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         function isBadBot() {
             // check whether a bot user agent part can be found in the current
             // user agent
-            for (let i = 0; i < badBotUA.length; ++i) {
-                if (navigator.userAgent.indexOf(badBotUA[i]) >= 0) {
+            for (const UAfragment of badBotUA) {
+                if (navigator.userAgent.indexOf(UAfragment) >= 0) {
                     return true;
                 }
             }
