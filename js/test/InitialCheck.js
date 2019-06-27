@@ -22,6 +22,7 @@ describe('InitialCheck', function () {
                         '</body></html>'
                     );
                     $.PrivateBin.Alert.init();
+                    window.crypto = null;
                     const result1 = !$.PrivateBin.InitialCheck.init(),
                           result2 = !$('#errormessage').hasClass('hidden');
                     clean();
@@ -48,13 +49,10 @@ describe('InitialCheck', function () {
                     '<html><body><div id="errormessage" class="hidden"></div>'+
                     '<div id="oldnotice" class="hidden"></div></body></html>'
                 );
-                const crypto = window.crypto;
-                window.crypto = null;
                 $.PrivateBin.Alert.init();
                 const result1 = !$.PrivateBin.InitialCheck.init(),
                       result2 = isSecureContext === $('#errormessage').hasClass('hidden'),
                       result3 = !$('#oldnotice').hasClass('hidden');
-                window.crypto = crypto;
                 clean();
                 return result1 && result2 && result3;
             }
@@ -78,6 +76,7 @@ describe('InitialCheck', function () {
                     '</body></html>'
                 );
                 $.PrivateBin.Alert.init();
+                window.crypto = null;
                 const result1 = $.PrivateBin.InitialCheck.init(),
                       result2 = isSecureContext === $('#httpnotice').hasClass('hidden');
                 clean();

@@ -4580,11 +4580,11 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         function isOldBrowser() {
             // webcrypto support
             if (typeof window.crypto !== 'object') {
-                return false;
+                return true;
             }
 
             if (typeof WebAssembly !== 'object' && typeof WebAssembly.instantiate !== 'function') {
-                return false;
+                return true;
             }
             try {
                 // [\0, 'a', 's', 'm', (uint_32) 1] - smallest valid wasm module
@@ -4595,17 +4595,17 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                         new WebAssembly.Instance(module) instanceof WebAssembly.Instance
                     )
                 ) {
-                    return false;
+                    return true;
                 }
             } catch (e) {
-                return false;
+                return true;
             }
 
              // not checking for async/await, ES6, Promise or Uint8Array support,
              // as most browsers introduced these earlier then webassembly and webcrypto:
              // https://github.com/PrivateBin/PrivateBin/pull/431#issuecomment-493129359
 
-            return true;
+            return false;
         }
 
         /**
