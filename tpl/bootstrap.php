@@ -10,7 +10,6 @@ $isPage = substr($template, -5) === '-page';
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<meta name="robots" content="noindex" />
-		<meta name="referrer" content="no-referrer">
 		<meta name="google" content="notranslate">
 		<title><?php echo I18n::_($NAME); ?></title>
 <?php

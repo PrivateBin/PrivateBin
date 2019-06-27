@@ -343,6 +343,7 @@ class Controller
         header('Last-Modified: ' . $time);
         header('Vary: Accept');
         header('Content-Security-Policy: ' . $this->_conf->getKey('cspheader'));
+        header('Referrer-Policy: no-referrer');
         header('X-Xss-Protection: 1; mode=block');
         header('X-Frame-Options: DENY');
         header('X-Content-Type-Options: nosniff');
