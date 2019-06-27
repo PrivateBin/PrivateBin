@@ -3,10 +3,6 @@ var common = require('../common');
 
 describe('Alert', function () {
     describe('showStatus', function () {
-        before(function () {
-            cleanup();
-        });
-
         jsc.property(
             'shows a status message',
             jsc.array(common.jscAlnumString()),

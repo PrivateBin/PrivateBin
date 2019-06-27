@@ -4817,10 +4817,6 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
             // initialize other modules/"classes"
             Alert.init();
-            if (!InitialCheck.init()) {
-                // something major is wrong, stop right away
-                return;
-            }
             Model.init();
             AttachmentViewer.init();
             DiscussionViewer.init();
@@ -4831,6 +4827,10 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             TopNav.init();
             UiHelper.init();
             z = (await zlib);
+            if (!InitialCheck.init()) {
+                // something major is wrong, stop right away
+                return;
+            }
 
             // check whether existing paste needs to be shown
             try {
