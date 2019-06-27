@@ -4,9 +4,6 @@ var common = require('../common');
 describe('PasteStatus', function () {
     describe('createPasteNotification', function () {
         this.timeout(30000);
-        before(function () {
-            cleanup();
-        });
 
         jsc.property(
             'creates a notification after a successfull paste upload',
@@ -24,7 +21,7 @@ describe('PasteStatus', function () {
                 var expected1 = schema1 + '://' + address1.join('') + '/?' +
                     encodeURI(query1.join('').replace(/^&+|&+$/gm,'') + '#' + fragment1),
                     expected2 = schema2 + '://' + address2.join('') + '/?' +
-                    encodeURI(query2.join('')),
+                    encodeURI(query2.join('').replace(/^&+|&+$/gm,'')),
                     clean = jsdom();
                 $('body').html('<div><div id="deletelink"></div><div id="pastelink"></div></div>');
                 $.PrivateBin.PasteStatus.init();
