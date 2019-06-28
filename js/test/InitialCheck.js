@@ -22,7 +22,7 @@ describe('InitialCheck', function () {
                         '</body></html>'
                     );
                     $.PrivateBin.Alert.init();
-                    window.crypto = null;
+                    window.crypto = new WebCrypto();
                     const result1 = !$.PrivateBin.InitialCheck.init(),
                           result2 = !$('#errormessage').hasClass('hidden');
                     clean();
@@ -76,7 +76,7 @@ describe('InitialCheck', function () {
                     '</body></html>'
                 );
                 $.PrivateBin.Alert.init();
-                window.crypto = null;
+                window.crypto = new WebCrypto();
                 const result1 = $.PrivateBin.InitialCheck.init(),
                       result2 = isSecureContext === $('#httpnotice').hasClass('hidden');
                 clean();

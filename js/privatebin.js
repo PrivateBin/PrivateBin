@@ -925,6 +925,58 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         }
 
         /**
+         * get PBKDF2 protected credentials for server to validate password
+         *
+         * @name   CryptTool.getCredentials
+         * @function
+         * @param  {string} key
+         * @param  {string} password
+         * @return {string} decrypted message, empty if decryption failed
+         */
+        me.getCredentials = async function(key, password)
+        {
+            let keyArray = stringToArraybuffer(key);
+            if (password.length > 0) {
+                let passwordArray = stringToArraybuffer(password),
+                    newKeyArray = new Uint8Array(keyArray.length + passwordArray.length);
+                newKeyArray.set(keyArray, 0);
+                newKeyArray.set(passwordArray, keyArray.length);
+                keyArray = newKeyArray;
+            }
+
+            // import raw key
+            const importedKey = await window.crypto.subtle.importKey(
+                'raw', // only 'raw' is allowed
+                keyArray.slice(16),
+                {name: 'PBKDF2'}, // we use PBKDF2 for key derivation
+                false, // the key may not be exported
+                ['deriveKey'] // we may only use it for key derivation
+            );
+
+            // derive a stronger key for use with AES
+            const derivedKey = await window.crypto.subtle.deriveKey(
+                {
+                    name: 'PBKDF2', // we use PBKDF2 for key derivation
+                    salt: keyArray.slice(0, 16), // salt used in HMAC
+                    iterations: 100000, // amount of iterations to apply
+                    hash: {name: 'SHA-256'} // can be "SHA-1", "SHA-256", "SHA-384" or "SHA-512"
+                },
+                importedKey,
+                {
+                    name: 'AES-GCM', // can be any supported AES algorithm ("AES-CTR", "AES-CBC", "AES-CMAC", "AES-GCM", "AES-CFB", "AES-KW", "ECDH", "DH" or "HMAC")
+                    length: 256 // can be 128, 192 or 256
+                },
+                true, // the key can be exported
+                ['encrypt'] // we want to export it
+            );
+            return btoa(
+                arraybufferToString(
+                    await window.crypto.subtle.exportKey('raw', derivedKey)
+                )
+            );
+        }
+
+        /**
          * compress, then encrypt message with given key and password
          *
          * @name   CryptTool.cipher

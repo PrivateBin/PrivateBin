@@ -4,9 +4,6 @@ var common = require('../common');
 describe('AttachmentViewer', function () {
     describe('setAttachment, showAttachment, removeAttachment, hideAttachment, hideAttachmentPreview, hasAttachment, getAttachment & moveAttachmentTo', function () {
         this.timeout(30000);
-        before(function () {
-            cleanup();
-        });
 
         jsc.property(
             'displays & hides data as requested',

@@ -237,19 +237,48 @@ conseq_or_bottom inv (interp (nth_iterate sBody n) (MemElem mem))
         });
     });
 
+    describe('getCredentials', function () {
+        it('generates credentials with password', async function () {
+            const clean = jsdom();
+            window.crypto = new WebCrypto();
+            // choosen by fair dice roll
+            const key = atob('EqueAutxlrekNNEvJWB1uaaiwbk/GGpn4++cdk+uDMc='),
+                  // -- "That's amazing. I've got the same combination on my luggage."
+                  password = Array.apply(0, Array(6)).map((_,b) => b + 1).join('');
+            const credentials = await $.PrivateBin.CryptTool.getCredentials(
+                key, password
+            );
+            clean();
+            assert.strictEqual(credentials, 'JS8bJWFx1bAPI2LMxfWrw4AQ7cedNVl8UmjUd/pW7Yg=');
+        });
+
+        it('generates credentials without password', async function () {
+            const clean = jsdom();
+            window.crypto = new WebCrypto();
+            // choosen by fair dice roll
+            const key = atob('U844LK1y2uUPthTgMvPECwGyQzwScCwkaEI/+qLfQSE='),
+                  password = '';
+            const credentials = await $.PrivateBin.CryptTool.getCredentials(
+                key, password
+            );
+            clean();
+            assert.strictEqual(credentials, 'VfAvY7T9rm3K3JKtiOeb+B+rXnE6yZ4bYQTaD9jwjEk=');
+        });
+    });
+
     describe('getSymmetricKey', function () {
         this.timeout(30000);
-        var keys = [];
+        let keys = [];
 
         // the parameter is used to ensure the test is run more then one time
         jsc.property(
             'returns random, non-empty keys',
             'integer',
             function(counter) {
-                var clean = jsdom();
+                const clean = jsdom();
                 window.crypto = new WebCrypto();
-                var key = $.PrivateBin.CryptTool.getSymmetricKey(),
-                    result = (key !== '' && keys.indexOf(key) === -1);
+                const key = $.PrivateBin.CryptTool.getSymmetricKey(),
+                      result = (key !== '' && keys.indexOf(key) === -1);
                 keys.push(key);
                 clean();
                 return result;
