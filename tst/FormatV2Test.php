@@ -21,6 +21,10 @@ class FormatV2Test extends PHPUnit_Framework_TestCase
         $paste['ct'] = '$';
         $this->assertFalse(FormatV2::isValid($paste), 'invalid base64 encoding of ct');
 
+        $paste                      = Helper::getPastePost();
+        $paste['meta']['challenge'] = '$';
+        $this->assertFalse(FormatV2::isValid($paste), 'invalid base64 encoding of ct');
+
         $paste       = Helper::getPastePost();
         $paste['ct'] = 'bm9kYXRhbm9kYXRhbm9kYXRhbm9kYXRhbm9kYXRhCg==';
         $this->assertFalse(FormatV2::isValid($paste), 'low ct entropy');

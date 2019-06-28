@@ -130,6 +130,22 @@ class RequestTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('read', $request->getOperation());
     }
 
+    public function testApiReadWithToken()
+    {
+        $this->reset();
+        $id                        = $this->getRandomId();
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+        $_SERVER['HTTP_ACCEPT']    = 'application/json, text/javascript, */*; q=0.01';
+        $_SERVER['QUERY_STRING']   = $id . '&token=foo';
+        $_GET[$id]                 = '';
+        $_GET['token']             = 'foo';
+        $request                   = new Request;
+        $this->assertTrue($request->isJsonApiCall(), 'is JSON Api call');
+        $this->assertEquals($id, $request->getParam('pasteid'));
+        $this->assertEquals('foo', $request->getParam('token'));
+        $this->assertEquals('read', $request->getOperation());
+    }
+
     public function testApiDelete()
     {
         $this->reset();

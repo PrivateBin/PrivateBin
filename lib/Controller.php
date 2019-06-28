@@ -276,9 +276,7 @@ class Controller
                 // accessing this method ensures that the paste would be
                 // deleted if it has already expired
                 $paste->get();
-                if (
-                    Filter::slowEquals($deletetoken, $paste->getDeleteToken())
-                ) {
+                if ($paste->isDeleteTokenCorrect($deletetoken)) {
                     // Paste exists and deletion token is valid: Delete the paste.
                     $paste->delete();
                     $this->_status = 'Paste was properly deleted.';
@@ -315,9 +313,20 @@ class Controller
         try {
             $paste = $this->_model->getPaste($dataid);
             if ($paste->exists()) {
+                // handle challenge response
+                if (!$paste->isTokenCorrect($this->_request->getParam('token'))) {
+                    // we send a generic error to avoid leaking information
+                    // about the existance of a burn after reading pastes
+                    // this avoids an attacker being able to poll, if it has
+                    // been read by the intended recipient or not
+                    $this->_return_message(1, self::GENERIC_ERROR);
+                    return;
+                }
                 $data = $paste->get();
-                if (array_key_exists('salt', $data['meta'])) {
-                    unset($data['meta']['salt']);
+                foreach (array('salt', 'challenge') as $key) {
+                    if (array_key_exists($key, $data['meta'])) {
+                        unset($data['meta'][$key]);
+                    }
                 }
                 $this->_return_message(0, $dataid, (array) $data);
             } else {

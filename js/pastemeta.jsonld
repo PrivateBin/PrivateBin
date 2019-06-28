@@ -26,6 +26,9 @@
 		},
 		"time_to_live": {
 			"@type": "pb:RemainingSeconds"
+		},
+		"challenge": {
+			"@type": "pb:Challenge"
 		}
 	}
 }

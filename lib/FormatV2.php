@@ -67,6 +67,13 @@ class FormatV2
         if (!($ct = base64_decode($message['ct'], true))) {
             return false;
         }
+        // - (optional) challenge
+        if (
+            !$isComment && array_key_exists('challenge', $message['meta']) &&
+            !base64_decode($message['meta']['challenge'], true)
+        ) {
+            return false;
+        }
 
         // Make sure some fields have a reasonable size:
         // - initialization vector

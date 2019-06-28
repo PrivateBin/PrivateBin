@@ -92,6 +92,9 @@
 		"@type": "dp:Second",
 		"@minimum": 1
 	},
+	"Challenge": {
+		"@type": "pb:Base64"
+	},
 	"CipherParameters": {
 		"@container": "@list",
 		"@value": [

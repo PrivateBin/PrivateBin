@@ -155,7 +155,7 @@ class Helper
     public static function getPastePost($version = 2, array $meta = array())
     {
         $example         = self::getPaste($version, $meta);
-        $example['meta'] = array('expire' => $example['meta']['expire']);
+        $example['meta'] = array_merge(array('expire' => $example['meta']['expire']), $meta);
         return $example;
     }
 

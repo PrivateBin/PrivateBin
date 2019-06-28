@@ -14,6 +14,7 @@ namespace PrivateBin\Model;
 
 use Exception;
 use PrivateBin\Controller;
+use PrivateBin\Filter;
 use PrivateBin\Persistence\ServerSalt;
 
 /**
@@ -24,6 +25,14 @@ use PrivateBin\Persistence\ServerSalt;
 class Paste extends AbstractModel
 {
     /**
+     * Token for challenge/response.
+     *
+     * @access protected
+     * @var string
+     */
+    protected $_token = '';
+
+    /**
      * Get paste data.
      *
      * @access public
@@ -32,6 +41,11 @@ class Paste extends AbstractModel
      */
     public function get()
     {
+        // return cached result if one is found
+        if (array_key_exists('adata', $this->_data) || array_key_exists('data', $this->_data)) {
+            return $this->_data;
+        }
+
         $data = $this->_store->read($this->getId());
         if ($data === false) {
             throw new Exception(Controller::GENERIC_ERROR, 64);
@@ -48,10 +62,16 @@ class Paste extends AbstractModel
             unset($data['meta']['expire_date']);
         }
 
-        // check if non-expired burn after reading paste needs to be deleted
+        // check if non-expired burn after reading paste needs to be deleted,
+        // but don't delete it if an incorrect token was sent
         if (
-            (array_key_exists('adata', $data) && $data['adata'][3] === 1) ||
-            (array_key_exists('burnafterreading', $data['meta']) && $data['meta']['burnafterreading'])
+            (
+                (array_key_exists('adata', $data) && $data['adata'][3] === 1) ||
+                (array_key_exists('burnafterreading', $data['meta']) && $data['meta']['burnafterreading'])
+            ) && (
+                !array_key_exists('challenge', $data['meta']) ||
+                $this->_token === $data['meta']['challenge']
+            )
         ) {
             $this->delete();
         }
@@ -94,6 +114,12 @@ class Paste extends AbstractModel
 
         $this->_data['meta']['created'] = time();
         $this->_data['meta']['salt']    = serversalt::generate();
+        // if a challenge was sent, we store the HMAC of paste ID & challenge
+        if (array_key_exists('challenge', $this->_data['meta'])) {
+            $this->_data['meta']['challenge'] = hash_hmac(
+                'sha256', $this->getId(), base64_decode($this->_data['meta']['challenge'])
+            );
+        }
 
         // store paste
         if (
@@ -199,6 +225,40 @@ class Paste extends AbstractModel
         return
             (array_key_exists('adata', $this->_data) && $this->_data['adata'][2] === 1) ||
             (array_key_exists('opendiscussion', $this->_data['meta']) && $this->_data['meta']['opendiscussion']);
+    }
+
+    /**
+     * Check if paste challenge matches provided token.
+     *
+     * @access public
+     * @param  string $token
+     * @throws Exception
+     * @return bool
+     */
+    public function isTokenCorrect($token)
+    {
+        $this->_token = $token;
+        if (!array_key_exists('challenge', $this->_data['meta'])) {
+            $this->get();
+        }
+        if (array_key_exists('challenge', $this->_data['meta'])) {
+            return Filter::slowEquals($token, $this->_data['meta']['challenge']);
+        }
+        // paste created without challenge, accept every token sent
+        return true;
+    }
+
+    /**
+     * Check if paste salt based HMAC matches provided delete token.
+     *
+     * @access public
+     * @param  string $deletetoken
+     * @throws Exception
+     * @return bool
+     */
+    public function isDeleteTokenCorrect($deletetoken)
+    {
+        return Filter::slowEquals($deletetoken, $this->getDeleteToken());
     }
 
     /**

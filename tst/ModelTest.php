@@ -268,8 +268,46 @@ class ModelTest extends PHPUnit_Framework_TestCase
         $paste->setData($pasteData);
         $paste->store();
 
-        $paste = $paste->get();
+        $paste = $this->_model->getPaste(Helper::getPasteId())->get();
         $this->assertEquals((float) 300, (float) $paste['meta']['time_to_live'], 'remaining time is set correctly', 1.0);
+    }
+
+    public function testToken()
+    {
+        $pasteData = Helper::getPastePost();
+        $pasteData['meta']['challenge'] = base64_encode(random_bytes(32));
+        $token = hash_hmac(
+            'sha256', Helper::getPasteId(), base64_decode($pasteData['meta']['challenge'])
+        );
+        $this->_model->getPaste(Helper::getPasteId())->delete();
+        $paste = $this->_model->getPaste(Helper::getPasteId());
+        $this->assertFalse($paste->exists(), 'paste does not yet exist');
+
+        $paste = $this->_model->getPaste();
+        $paste->setData($pasteData);
+        $paste->store();
+
+        $paste = $this->_model->getPaste(Helper::getPasteId());
+        $this->assertTrue(
+            $paste->isTokenCorrect($token),
+            'token is accepted after store and retrieval'
+        );
+    }
+
+    public function testDeleteToken()
+    {
+        $pasteData = Helper::getPastePost();
+        $this->_model->getPaste(Helper::getPasteId())->delete();
+        $paste = $this->_model->getPaste(Helper::getPasteId());
+        $this->assertFalse($paste->exists(), 'paste does not yet exist');
+
+        $paste = $this->_model->getPaste();
+        $paste->setData($pasteData);
+        $paste->store();
+        $deletetoken = $paste->getDeleteToken();
+
+        $paste = $this->_model->getPaste(Helper::getPasteId());
+        $this->assertTrue($paste->isDeleteTokenCorrect($deletetoken), 'delete token is accepted after store and retrieval');
     }
 
     /**
@@ -285,6 +323,20 @@ class ModelTest extends PHPUnit_Framework_TestCase
         $paste->setData($pasteData);
         $paste->store();
         $paste->getComment(Helper::getPasteId())->delete();
+    }
+
+    /**
+     * @expectedException Exception
+     * @expectedExceptionCode 75
+     */
+    public function testInvalidFormat()
+    {
+        $pasteData = Helper::getPastePost();
+        $pasteData['adata'][1] = 'foo';
+        $this->_model->getPaste(Helper::getPasteId())->delete();
+
+        $paste = $this->_model->getPaste();
+        $paste->setData($pasteData);
     }
 
     public function testPurge()

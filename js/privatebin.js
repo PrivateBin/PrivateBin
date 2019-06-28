@@ -4229,7 +4229,9 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
             // prepare server interaction
             ServerInteraction.prepare();
-            ServerInteraction.setCryptParameters(TopNav.getPassword());
+            const key = CryptTool.getSymmetricKey(),
+                  password = TopNav.getPassword();
+            ServerInteraction.setCryptParameters(password, key);
 
             // set success/fail functions
             ServerInteraction.setSuccess(showCreatedPaste);
@@ -4250,7 +4252,10 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 TopNav.getOpenDiscussion() ? 1 : 0,
                 TopNav.getBurnAfterReading() ? 1 : 0
             ]);
-            ServerInteraction.setUnencryptedData('meta', {'expire': TopNav.getExpiration()});
+            ServerInteraction.setUnencryptedData('meta', {
+                'expire':    TopNav.getExpiration(),
+                'challenge': CryptTool.getCredentials(key, password)
+            });
 
             // prepare PasteViewer for later preview
             PasteViewer.setText(plainText);

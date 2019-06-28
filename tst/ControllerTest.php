@@ -369,6 +369,30 @@ class ControllerTest extends PHPUnit_Framework_TestCase
     /**
      * @runInSeparateProcess
      */
+    public function testCreateInvalidFormat()
+    {
+        $options                     = parse_ini_file(CONF, true);
+        $options['traffic']['limit'] = 0;
+        Helper::createIniFile(CONF, $options);
+        $paste = Helper::getPasteJson(2, array('challenge' => '$'));
+        $file  = tempnam(sys_get_temp_dir(), 'FOO');
+        file_put_contents($file, $paste);
+        Request::setInputStream($file);
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
+        $_SERVER['REQUEST_METHOD']        = 'POST';
+        $_SERVER['REMOTE_ADDR']           = '::1';
+        ob_start();
+        new Controller;
+        $content = ob_get_contents();
+        ob_end_clean();
+        $response = json_decode($content, true);
+        $this->assertEquals(1, $response['status'], 'outputs error status');
+        $this->assertFalse($this->_data->exists(Helper::getPasteId()), 'paste exists after posting data');
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
     public function testCreateInvalidExpire()
     {
         $options                     = parse_ini_file(CONF, true);
@@ -782,6 +806,56 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $response = json_decode($content, true);
         $this->assertEquals(0, $response['status'], 'outputs status');
         $this->assertFalse($this->_data->exists(Helper::getPasteId()), 'paste successfully deleted');
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testReadBurnAfterReadingWithToken()
+    {
+        $token = base64_encode(hash_hmac(
+            'sha256', Helper::getPasteId(), random_bytes(32)
+        ));
+        $burnPaste = Helper::getPaste(2, array('challenge' => $token));
+        $burnPaste['adata'][3] = 1;
+        $this->_data->create(Helper::getPasteId(), $burnPaste);
+        $this->assertTrue($this->_data->exists(Helper::getPasteId()), 'paste exists before deleting data');
+        $_SERVER['QUERY_STRING']          = Helper::getPasteId() . '&token=' . $token;
+        $_GET[Helper::getPasteId()]       = '';
+        $_GET['token']                    = $token;
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
+        ob_start();
+        new Controller;
+        $content = ob_get_contents();
+        ob_end_clean();
+        $response = json_decode($content, true);
+        $this->assertEquals(0, $response['status'], 'outputs status');
+        $this->assertFalse($this->_data->exists(Helper::getPasteId()), 'paste successfully deleted');
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testReadBurnAfterReadingWithIncorrectToken()
+    {
+        $token = base64_encode(hash_hmac(
+            'sha256', Helper::getPasteId(), random_bytes(32)
+        ));
+        $burnPaste = Helper::getPaste(2, array('challenge' => base64_encode(random_bytes(32))));
+        $burnPaste['adata'][3] = 1;
+        $this->_data->create(Helper::getPasteId(), $burnPaste);
+        $this->assertTrue($this->_data->exists(Helper::getPasteId()), 'paste exists before deleting data');
+        $_SERVER['QUERY_STRING']          = Helper::getPasteId() . '&token=' . $token;
+        $_GET[Helper::getPasteId()]       = '';
+        $_GET['token']                    = $token;
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
+        ob_start();
+        new Controller;
+        $content = ob_get_contents();
+        ob_end_clean();
+        $response = json_decode($content, true);
+        $this->assertEquals(1, $response['status'], 'outputs status');
+        $this->assertTrue($this->_data->exists(Helper::getPasteId()), 'paste not deleted');
     }
 
     /**
