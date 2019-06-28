@@ -851,10 +851,12 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          * @param  {string} key
          * @param  {string} password
          * @param  {array}  spec cryptographic specification
+         * @param  {bool}   exportKey
          * @return {CryptoKey} derived key
          */
-        async function deriveKey(key, password, spec)
+        async function deriveKey(key, password, spec, exportKey)
         {
+            exportKey = exportKey || false;
             let keyArray = stringToArraybuffer(key);
             if (password.length > 0) {
                 // version 1 pastes did append the passwords SHA-256 hash in hex
@@ -899,7 +901,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                     name: 'AES-' + spec[6].toUpperCase(), // can be any supported AES algorithm ("AES-CTR", "AES-CBC", "AES-CMAC", "AES-GCM", "AES-CFB", "AES-KW", "ECDH", "DH" or "HMAC")
                     length: spec[3] // can be 128, 192 or 256
                 },
-                false, // the key may not be exported
+                exportKey, // may the key get exported, false by default
                 ['encrypt', 'decrypt'] // we may only use it for en- and decryption
             );
         }
@@ -935,40 +937,18 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         me.getCredentials = async function(key, password)
         {
-            let keyArray = stringToArraybuffer(key);
-            if (password.length > 0) {
-                let passwordArray = stringToArraybuffer(password),
-                    newKeyArray = new Uint8Array(keyArray.length + passwordArray.length);
-                newKeyArray.set(keyArray, 0);
-                newKeyArray.set(passwordArray, keyArray.length);
-                keyArray = newKeyArray;
-            }
-
-            // import raw key
-            const importedKey = await window.crypto.subtle.importKey(
-                'raw', // only 'raw' is allowed
-                keyArray.slice(16),
-                {name: 'PBKDF2'}, // we use PBKDF2 for key derivation
-                false, // the key may not be exported
-                ['deriveKey'] // we may only use it for key derivation
-            );
-
-            // derive a stronger key for use with AES
-            const derivedKey = await window.crypto.subtle.deriveKey(
-                {
-                    name: 'PBKDF2', // we use PBKDF2 for key derivation
-                    salt: keyArray.slice(0, 16), // salt used in HMAC
-                    iterations: 100000, // amount of iterations to apply
-                    hash: {name: 'SHA-256'} // can be "SHA-1", "SHA-256", "SHA-384" or "SHA-512"
-                },
-                importedKey,
-                {
-                    name: 'AES-GCM', // can be any supported AES algorithm ("AES-CTR", "AES-CBC", "AES-CMAC", "AES-GCM", "AES-CFB", "AES-KW", "ECDH", "DH" or "HMAC")
-                    length: 256 // can be 128, 192 or 256
-                },
-                true, // the key can be exported
-                ['encrypt'] // we want to export it
-            );
+            const spec = [
+                null,               // initialization vector
+                key.slice(0, 16),   // salt
+                100000,             // iterations
+                256,                // key size
+                null,               // tag size
+                null,               // algorithm
+                'gcm',              // algorithm mode
+                'none'              // compression
+            ];
+            key = key.slice(16);
+            let derivedKey = await deriveKey(key, password, spec, true);
             return btoa(
                 arraybufferToString(
                     await window.crypto.subtle.exportKey('raw', derivedKey)
