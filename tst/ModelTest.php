@@ -274,9 +274,9 @@ class ModelTest extends PHPUnit_Framework_TestCase
 
     public function testToken()
     {
-        $pasteData = Helper::getPastePost();
+        $pasteData                      = Helper::getPastePost();
         $pasteData['meta']['challenge'] = base64_encode(random_bytes(32));
-        $token = base64_encode(hash_hmac(
+        $token                          = base64_encode(hash_hmac(
             'sha256', Helper::getPasteId(), base64_decode($pasteData['meta']['challenge']), true
         ));
         $this->_model->getPaste(Helper::getPasteId())->delete();
@@ -331,7 +331,7 @@ class ModelTest extends PHPUnit_Framework_TestCase
      */
     public function testInvalidFormat()
     {
-        $pasteData = Helper::getPastePost();
+        $pasteData             = Helper::getPastePost();
         $pasteData['adata'][1] = 'foo';
         $this->_model->getPaste(Helper::getPasteId())->delete();
 

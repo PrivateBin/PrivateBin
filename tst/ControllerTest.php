@@ -816,7 +816,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $token = base64_encode(hash_hmac(
             'sha256', Helper::getPasteId(), random_bytes(32), true
         ));
-        $burnPaste = Helper::getPaste(2, array('challenge' => $token));
+        $burnPaste             = Helper::getPaste(2, array('challenge' => $token));
         $burnPaste['adata'][3] = 1;
         $this->_data->create(Helper::getPasteId(), $burnPaste);
         $this->assertTrue($this->_data->exists(Helper::getPasteId()), 'paste exists before deleting data');
@@ -841,7 +841,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $token = base64_encode(hash_hmac(
             'sha256', Helper::getPasteId(), random_bytes(32), true
         ));
-        $burnPaste = Helper::getPaste(2, array('challenge' => base64_encode(random_bytes(32))));
+        $burnPaste             = Helper::getPaste(2, array('challenge' => base64_encode(random_bytes(32))));
         $burnPaste['adata'][3] = 1;
         $this->_data->create(Helper::getPasteId(), $burnPaste);
         $this->assertTrue($this->_data->exists(Helper::getPasteId()), 'paste exists before deleting data');
