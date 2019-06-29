@@ -71,6 +71,8 @@ class FormatV2Test extends PHPUnit_Framework_TestCase
         $paste['adata'][0][7] = '!#@';
         $this->assertFalse(FormatV2::isValid($paste), 'invalid compression');
 
-        $this->assertFalse(FormatV2::isValid(Helper::getPaste()), 'invalid meta key');
+        $paste = Helper::getPastePost();
+        unset($paste['meta']['expire']);
+        $this->assertFalse(FormatV2::isValid($paste), 'invalid missing meta key');
     }
 }

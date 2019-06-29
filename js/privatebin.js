@@ -665,6 +665,23 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         let base58 = new baseX('123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz');
 
         /**
+         * convert hexadecimal string to binary representation
+         *
+         * @name   CryptTool.hex2bin
+         * @function
+         * @private
+         * @param  {string} message hex string
+         * @return {string} binary representation as a DOMString
+         */
+        function hex2bin(message) {
+            let result = [];
+            for (let i = 0, l = message.length; i < l; i += 2) {
+                result.push(parseInt(message.substr(i, 2), 16));
+            }
+            return String.fromCharCode.apply(String, result);
+        }
+
+        /**
          * convert UTF-8 string stored in a DOMString to a standard UTF-16 DOMString
          *
          * Iterates over the bytes of the message, converting them all hexadecimal
@@ -907,6 +924,33 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         }
 
         /**
+         * derive PBKDF2 protected credentials for server to validate password
+         *
+         * @name   CryptTool.deriveCredentials
+         * @function
+         * @private
+         * @param  {string} key
+         * @param  {string} password
+         * @return {string} derived key
+         */
+        async function deriveCredentials(key, password)
+        {
+            const spec = [
+                null,               // initialization vector
+                key.slice(0, 16),   // salt
+                100000,             // iterations
+                256,                // key size
+                null,               // tag size
+                null,               // algorithm
+                'gcm',              // algorithm mode
+                'none'              // compression
+            ];
+            return window.crypto.subtle.exportKey(
+                'raw', await deriveKey(key.slice(16), password, spec, true)
+            );
+        }
+
+        /**
          * gets crypto settings from specification and authenticated data
          *
          * @name   CryptTool.cryptoSettings
@@ -933,25 +977,47 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          * @function
          * @param  {string} key
          * @param  {string} password
-         * @return {string} decrypted message, empty if decryption failed
+         * @return {string} derived key
          */
         me.getCredentials = async function(key, password)
         {
-            const spec = [
-                null,               // initialization vector
-                key.slice(0, 16),   // salt
-                100000,             // iterations
-                256,                // key size
-                null,               // tag size
-                null,               // algorithm
-                'gcm',              // algorithm mode
-                'none'              // compression
-            ];
-            key = key.slice(16);
-            let derivedKey = await deriveKey(key, password, spec, true);
             return btoa(
                 arraybufferToString(
-                    await window.crypto.subtle.exportKey('raw', derivedKey)
+                    await deriveCredentials(key, password)
+                )
+            );
+        }
+
+        /**
+         * get HMAC of paste ID and PBKDF2 protected credentials for server to validate
+         *
+         * @name   CryptTool.getToken
+         * @function
+         * @param  {string} id
+         * @param  {string} key
+         * @param  {string} password
+         * @return {string} decrypted message, empty if decryption failed
+         */
+        me.getToken = async function(id, key, password)
+        {
+            return btoa(
+                arraybufferToString(
+                    await window.crypto.subtle.sign(
+                        {name: 'HMAC'},
+                        await window.crypto.subtle.importKey(
+                            'raw',
+                            await deriveCredentials(key, password),
+                            {
+                                name: 'HMAC',
+                                hash: {name: 'SHA-256'} // can be "SHA-1", "SHA-256", "SHA-384" or "SHA-512"
+                            },
+                            false, // may not export this
+                            ['sign']
+                        ),
+                        stringToArraybuffer(
+                            hex2bin(id)
+                        )
+                    )
                 )
             );
         }
@@ -1160,7 +1226,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          *                            force a data reload. Default: true
          * @return string
          */
-        me.getPasteData = function(callback, useCache)
+        me.getPasteData = async function(callback, useCache)
         {
             // use cache if possible/allowed
             if (useCache !== false && pasteData !== null) {
@@ -1173,17 +1239,31 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 return pasteData;
             }
 
-            // reload data
+            // load data
             ServerInteraction.prepare();
-            ServerInteraction.setUrl(Helper.baseUri() + '?pasteid=' + me.getPasteId());
+            ServerInteraction.setUrl(
+                Helper.baseUri() + '?' + $.param({
+                    pasteid: me.getPasteId(),
+                    token: await CryptTool.getToken(
+                        me.getPasteId(), me.getPasteKey(), Prompt.getPassword()
+                    )
+                })
+            );
 
             ServerInteraction.setFailure(function (status, data) {
                 // revert loading status…
                 Alert.hideLoading();
                 TopNav.showViewButtons();
 
-                // show error message
-                Alert.showError(ServerInteraction.parseUploadError(status, data, 'get paste data'));
+                // might be a missing password, try one more time after getting one
+                if (Prompt.getPassword().length === 0) {
+                    Prompt.requestPassword(function () {
+                        me.getPasteData(callback, useCache);
+                    });
+                } else {
+                    // show error message
+                    Alert.showError(ServerInteraction.parseUploadError(status, data, 'get paste data'));
+                }
             });
             ServerInteraction.setSuccess(function (status, data) {
                 pasteData = new Paste(data);
@@ -1909,8 +1989,9 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          *
          * @name Prompt.requestPassword
          * @function
+         * @param {function} callback
          */
-        me.requestPassword = function()
+        me.requestPassword = function(callback)
         {
             // show new bootstrap method (if available)
             if ($passwordModal.length !== 0) {
@@ -1928,9 +2009,9 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             }
             if (password.length === 0) {
                 // recurse…
-                return me.requestPassword();
+                return me.requestPassword(callback);
             }
-            PasteDecrypter.run();
+            callback();
         };
 
         /**
@@ -4087,7 +4168,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             // show notification
             const baseUri   = Helper.baseUri() + '?',
                   url       = baseUri + data.id + '#' + CryptTool.base58encode(data.encryptionKey),
-                  deleteUrl = baseUri + 'pasteid=' + data.id + '&deletetoken=' + data.deletetoken;
+                  deleteUrl = baseUri + $.param({pasteid: data.id, deletetoken: data.deletetoken});
             PasteStatus.createPasteNotification(url, deleteUrl);
 
             // show new URL in browser bar
@@ -4254,7 +4335,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             ]);
             ServerInteraction.setUnencryptedData('meta', {
                 'expire':    TopNav.getExpiration(),
-                'challenge': CryptTool.getCredentials(key, password)
+                'challenge': await CryptTool.getCredentials(key, password)
             });
 
             // prepare PasteViewer for later preview
@@ -4318,7 +4399,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             // if it fails, request password
             if (plaindata.length === 0 && password.length === 0) {
                 // show prompt
-                Prompt.requestPassword();
+                Prompt.requestPassword(me.run);
 
                 // Thus, we cannot do anything yet, we need to wait for the user
                 // input.
@@ -4764,31 +4845,15 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             const orgPosition = $(window).scrollTop();
 
             Model.getPasteData(function (data) {
-                ServerInteraction.prepare();
-                ServerInteraction.setUrl(Helper.baseUri() + '?pasteid=' + Model.getPasteId());
+                PasteDecrypter.run(new Paste(data));
 
-                ServerInteraction.setFailure(function (status, data) {
-                    // revert loading status…
-                    Alert.hideLoading();
-                    TopNav.showViewButtons();
+                // restore position
+                window.scrollTo(0, orgPosition);
 
-                    // show error message
-                    Alert.showError(
-                        ServerInteraction.parseUploadError(status, data, 'refresh display')
-                    );
-                });
-                ServerInteraction.setSuccess(function (status, data) {
-                    PasteDecrypter.run(new Paste(data));
-
-                    // restore position
-                    window.scrollTo(0, orgPosition);
-
-                    // NOTE: could create problems as callback may be called
-                    // asyncronously if PasteDecrypter e.g. needs to wait for a
-                    // password being entered
-                    callback();
-                });
-                ServerInteraction.run();
+                // NOTE: could create problems as callback may be called
+                // asyncronously if PasteDecrypter e.g. needs to wait for a
+                // password being entered
+                callback();
             }, false); // this false is important as it circumvents the cache
         }
 

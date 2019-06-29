@@ -72,6 +72,7 @@ class Filter
     /**
      * fixed time string comparison operation to prevent timing attacks
      * https://crackstation.net/hashing-security.htm?=rd#slowequals
+     * can be replaced with hash_equals() after we drop PHP 5.5 support
      *
      * @access public
      * @static

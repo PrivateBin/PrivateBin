@@ -116,9 +116,9 @@ class Paste extends AbstractModel
         $this->_data['meta']['salt']    = serversalt::generate();
         // if a challenge was sent, we store the HMAC of paste ID & challenge
         if (array_key_exists('challenge', $this->_data['meta'])) {
-            $this->_data['meta']['challenge'] = hash_hmac(
-                'sha256', $this->getId(), base64_decode($this->_data['meta']['challenge'])
-            );
+            $this->_data['meta']['challenge'] = base64_encode(hash_hmac(
+                'sha256', hex2bin($this->getId()), base64_decode($this->_data['meta']['challenge']), true
+            ));
         }
 
         // store paste

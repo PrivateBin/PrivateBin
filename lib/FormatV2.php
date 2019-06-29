@@ -123,8 +123,7 @@ class FormatV2
         // require only the key 'expire' in the metadata of pastes
         if (!$isComment && (
             count($message['meta']) === 0 ||
-            !array_key_exists('expire', $message['meta']) ||
-            count($message['meta']) > 1
+            !array_key_exists('expire', $message['meta'])
         )) {
             return false;
         }

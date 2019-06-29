@@ -276,9 +276,9 @@ class ModelTest extends PHPUnit_Framework_TestCase
     {
         $pasteData = Helper::getPastePost();
         $pasteData['meta']['challenge'] = base64_encode(random_bytes(32));
-        $token = hash_hmac(
-            'sha256', Helper::getPasteId(), base64_decode($pasteData['meta']['challenge'])
-        );
+        $token = base64_encode(hash_hmac(
+            'sha256', hex2bin(Helper::getPasteId()), base64_decode($pasteData['meta']['challenge']), true
+        ));
         $this->_model->getPaste(Helper::getPasteId())->delete();
         $paste = $this->_model->getPaste(Helper::getPasteId());
         $this->assertFalse($paste->exists(), 'paste does not yet exist');
