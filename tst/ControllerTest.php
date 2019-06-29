@@ -814,7 +814,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
     public function testReadBurnAfterReadingWithToken()
     {
         $token = base64_encode(hash_hmac(
-            'sha256', hex2bin(Helper::getPasteId()), random_bytes(32), true
+            'sha256', Helper::getPasteId(), random_bytes(32), true
         ));
         $burnPaste = Helper::getPaste(2, array('challenge' => $token));
         $burnPaste['adata'][3] = 1;
@@ -839,7 +839,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
     public function testReadBurnAfterReadingWithIncorrectToken()
     {
         $token = base64_encode(hash_hmac(
-            'sha256', hex2bin(Helper::getPasteId()), random_bytes(32), true
+            'sha256', Helper::getPasteId(), random_bytes(32), true
         ));
         $burnPaste = Helper::getPaste(2, array('challenge' => base64_encode(random_bytes(32))));
         $burnPaste['adata'][3] = 1;

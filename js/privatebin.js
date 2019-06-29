@@ -665,23 +665,6 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         let base58 = new baseX('123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz');
 
         /**
-         * convert hexadecimal string to binary representation
-         *
-         * @name   CryptTool.hex2bin
-         * @function
-         * @private
-         * @param  {string} message hex string
-         * @return {string} binary representation as a DOMString
-         */
-        function hex2bin(message) {
-            let result = [];
-            for (let i = 0, l = message.length; i < l; i += 2) {
-                result.push(parseInt(message.substr(i, 2), 16));
-            }
-            return String.fromCharCode.apply(String, result);
-        }
-
-        /**
          * convert UTF-8 string stored in a DOMString to a standard UTF-16 DOMString
          *
          * Iterates over the bytes of the message, converting them all hexadecimal
@@ -1014,9 +997,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                             false, // may not export this
                             ['sign']
                         ),
-                        stringToArraybuffer(
-                            hex2bin(id)
-                        )
+                        stringToArraybuffer(id)
                     )
                 )
             );
