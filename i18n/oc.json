@@ -30,7 +30,7 @@
     "Wrong deletion token. Paste was not deleted.":
         "Geton de supression incorrècte. Lo tèxte es pas estat suprimit.",
     "Paste was properly deleted.":
-        "Lo tèxte es estat correctament suprimit.",
+        "Lo tèxte es estat corrèctament  suprimit.",
     "JavaScript is required for %s to work.<br />Sorry for the inconvenience.":
         "JavaScript es requesit per far foncionar %s. <br />O planhèm per l’inconvenient.",
     "%s requires a modern browser to work.":
@@ -109,7 +109,7 @@
     "unknown status":
         "Estatut desconegut",
     "server error or not responding":
-        "Lo servidor respond pas o a rencontrat una error",
+        "Lo servidor respond pas o a rescontrat una error",
     "Could not post comment: %s":
         "Impossible de mandar lo comentari : %s",
     "Sending paste…":
@@ -159,16 +159,16 @@
     "Decrypting paste…": "Deschirament del tèxte…",
     "Preparing new paste…": "Preparacion…",
     "In case this message never disappears please have a look at <a href=\"%s\">this FAQ for information to troubleshoot</a>.":
-        "Se per cas aqueste messatge quita pas de s’afichar mercés de gaitar <a href=\"%s\">aquesta FAQ per las solucions</a> (en anglés).",
+        "Se per cas aqueste messatge quite pas de s’afichar mercés de gaitar <a href=\"%s\">aquesta FAQ per las solucions</a> (en anglés).",
     "+++ no paste text +++": "+++ cap de tèxte pegat +++",
     "Could not get paste data: %s":
         "Recuperacion impossibla de las donadas copiadas : %s",
     "QR code": "Còdi QR",
-    "I love you too, bot…": "I love you too, bot…",
+    "I love you too, bot…": "T’aimi tanben, robòt…",
     "This website is using an insecure HTTP connection! Please use it only for testing.":
-        "This website is using an insecure HTTP connection! Please use it only for testing.",
+        "Aqueste site utiliza una connexion HTTP pas segura ! Mercés de l’utilizar pas que per d’ensages.",
     "For more information <a href=\"%s\">see this FAQ entry</a>.":
-        "For more information <a href=\"%s\">see this FAQ entry</a>.",
+        "Per mai d’informacions <a href=\"%s\">vejatz aqueste article de FAQ</a>.",
     "Your browser may require an HTTPS connection to support the WebCrypto API. Try <a href=\"%s\">switching to HTTPS</a>.":
-        "Your browser may require an HTTPS connection to support the WebCrypto API. Try <a href=\"%s\">switching to HTTPS</a>."
+        "Se pòt que vòstre navigator faga besonh d’una connexion HTTPS per èsser compatible amb l’API WebCrypto. Ensajatz de <a href=\"%s\">passar al HTTPS</a>."
 }
