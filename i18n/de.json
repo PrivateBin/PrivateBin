@@ -155,11 +155,11 @@
     "Could not get paste data: %s":
         "Text konnte nicht geladen werden: %s",
     "QR code": "QR code",
-    "I love you too, bot…": "I love you too, bot…",
+    "I love you too, bot…": "Ich mag Dich auch, bot…",
     "This website is using an insecure HTTP connection! Please use it only for testing.":
-        "This website is using an insecure HTTP connection! Please use it only for testing.",
+        "Diese Webseite verwendet eine unsichere HTTP Verbindung! Bitte benutze sie nur zum Testen.",
     "For more information <a href=\"%s\">see this FAQ entry</a>.":
-        "For more information <a href=\"%s\">see this FAQ entry</a>.",
+        "<a href=\"%s\">Besuche diesen FAQ Eintrag</a> für weitere Informationen dazu.",
     "Your browser may require an HTTPS connection to support the WebCrypto API. Try <a href=\"%s\">switching to HTTPS</a>.":
-        "Your browser may require an HTTPS connection to support the WebCrypto API. Try <a href=\"%s\">switching to HTTPS</a>."
+        "Dein Browser benötigt möglicherweise eine HTTPS Verbindung um das WebCrypto API nutzen zu können. Versuche <a href=\"%s\">auf HTTPS zu wechseln</a>."
 }
