@@ -71,7 +71,7 @@ if ($MARKDOWN):
 endif;
 ?>
 		<script type="text/javascript" data-cfasync="false" src="js/purify-1.0.11.js" integrity="sha512-p7UyJuyBkhMcMgE4mDsgK0Lz70OvetLefua1oXs1OujWv9gOxh4xy8InFux7bZ4/DAZsTmO4rgVwZW9BHKaTaw==" crossorigin="anonymous"></script>
-		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-Yq2HyT+H1PmQxCaDeh6E/ChOrTBSYsu8BuS4yb8UPHlyMVaxqSOtyfy6hx6vAsVT0G3bKeLRAuejhvPTOoz7fQ==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-dNBKGlXagUZhkKcI+HhEH0otOswA5g2QnJV8BxYxNK/piW9jJWZvADCbzDJNRjt6A6QgMwBM8+lH7K3lgsOuQw==" crossorigin="anonymous"></script>
 		<!--[if IE]>
 		<style type="text/css">body {padding-left:60px;padding-right:60px;} #ienotice {display:block;}</style>
 		<![endif]-->

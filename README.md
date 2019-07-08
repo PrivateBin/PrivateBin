@@ -1,6 +1,6 @@
 # [<img alt="PrivateBin" src="https://cdn.rawgit.com/PrivateBin/assets/master/images/minified/logo.svg" width="500" />](https://privatebin.info/)
 
-*Current version: 1.2.1*
+*Current version: 1.3*
 
 **PrivateBin** is a minimalist, open source online [pastebin](https://en.wikipedia.org/wiki/Pastebin)
 where the server has zero knowledge of pasted data.
