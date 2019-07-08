@@ -1,4 +1,4 @@
-# [<img alt="PrivateBin" src="https://cdn.rawgit.com/PrivateBin/assets/master/images/minified/logo.svg" width="500" />](https://privatebin.info/)
+# [![PrivateBin](https://cdn.rawgit.com/PrivateBin/assets/master/images/preview/logoSmall.png)](https://privatebin.info/)
 
 *Current version: 1.3*
 
