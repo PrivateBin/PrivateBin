@@ -18,3 +18,4 @@ js/test/ export-ignore
 .styleci.yml export-ignore
 .travis.yml export-ignore
 composer.json export-ignore
+BADGES.md export-ignore
