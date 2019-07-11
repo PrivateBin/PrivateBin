@@ -1,6 +1,8 @@
 # PrivateBin version history
 
-  * **1.3 (not yet released)**
+  * **1.4 (not yet released)**
+    * ADDED: Translation for Bulgarian (#455)
+  * **1.3 (2019-07-09)**
     * ADDED: Translation for Czech (#424)
     * ADDED: Threat modeled the application (#177)
     * ADDED: Made compression configurable (#38)

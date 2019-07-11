@@ -42,3 +42,4 @@ Sébastien Sauvage - original idea and main developer
 * Michael van Schaik - Dutch
 * Péter Tabajdi - Hungarian
 * info-path - Czech
+* BigWax - Bulgarian

@@ -1,0 +1,165 @@
+{
+    "PrivateBin": "PrivateBin",
+    "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href=\"https://privatebin.info/\">project page</a>.":
+        "%s е изчистен и изцяло достъпен като отворен код, онлайн \"paste\" услуга, където сървъра не знае подадената информация. Тя се шифрова/дешифрова <i>във браузъра</i> използвайки 256 битов AES алгоритъм. Повече информация може да намерите на <a href=\"https://privatebin.info/\">страницата на проекта (Английски)</a>",
+    "Because ignorance is bliss":
+        "Невежеството е блаженство",
+    "en": "bg",
+    "Paste does not exist, has expired or has been deleted.":
+        "Информацията не съществува, срокът и е изтекъл или е била изтрита.",
+    "%s requires php %s or above to work. Sorry.":
+        "%s има нужда от PHP %s или по-нова, за да работи. Съжалявам.",
+    "%s requires configuration section [%s] to be present in configuration file.":
+        "%s задължава отдела от настройките [%s] да съществува във файла със настройките.",
+    "Please wait %d seconds between each post.":
+        "Моля изчакайте %d секунди между всяка публикация.",
+    "Paste is limited to %s of encrypted data.":
+        "Съдържанието е ограничено до %s криптирана информация.",
+    "Invalid data.":
+        "Невалидна информация.",
+    "You are unlucky. Try again.":
+        "Нямаш късмет. Пробвай отново.",
+    "Error saving comment. Sorry.":
+        "Грешка в запазването на коментара. Съжалявам.",
+    "Error saving paste. Sorry.":
+        "Грешка в записването на информацията. Съжалявам.",
+    "Invalid paste ID.":
+        "Невалиден идентификационен код.",
+    "Paste is not of burn-after-reading type.":
+        "Информацията не е от тип \"унищожаване след преглед\".",
+    "Wrong deletion token. Paste was not deleted.":
+        "Невалиден код за изтриване. Информацията Ви не беше изтрита.",
+    "Paste was properly deleted.":
+        "Информацията Ви е изтрита.",
+    "JavaScript is required for %s to work.<br />Sorry for the inconvenience.":
+        "Услугата %s се нуждае от JavaScript, за да работи.<br />Съжаляваме за неудобството.",
+    "%s requires a modern browser to work.":
+        "%s се нуждае от съвременен браузър за да работи.",
+    "Still using Internet Explorer? Do yourself a favor, switch to a modern browser:":
+        "Все още използваш Internet Explorer? Направи си услуга и го смени с модерен браузър:",
+    "New":
+        "Създаване",
+    "Send":
+        "Изпрати",
+    "Clone":
+        "Дублирай",
+    "Raw text":
+        "Чист текст",
+    "Expires":
+        "Изтича",
+    "Burn after reading":
+        "Унищожи след преглед",
+    "Open discussion":
+        "Отворена дискусия",
+    "Password (recommended)":
+        "Парола (препоръчва се)",
+    "Discussion":
+        "Коментари",
+    "Toggle navigation":
+        "Включи или Изключи навигацията",
+    "%d seconds": ["%d секунди", "%d секунда"],
+    "%d minutes": ["%d минути", "%d минута"],
+    "%d hours": ["%d часа", "%d час"],
+    "%d days": ["%d дни", "%d ден"],
+    "%d weeks": ["%d седмици", "%d седмица"],
+    "%d months": ["%d месеци", "%d месец"],
+    "%d years": ["%d години", "%d година"],
+    "Never":
+        "Никога",
+    "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.":
+        "Забележка: Това е пробна услуга: Информацията може да бъде изтрита по всяко време. Котета ще измрат ако злоупотребиш с услугата.",
+    "This document will expire in %d seconds.":
+        ["Този документ изтича след една секунда.", "Този документ изтича след %d секунди."],
+    "This document will expire in %d minutes.":
+        ["Този документ изтича след една минута.", "Този документ изтича след %d минути."],
+    "This document will expire in %d hours.":
+        ["Този документ изтича след един час.", "Този документ изтича след %d часа."],
+    "This document will expire in %d days.":
+        ["Този документ изтича след един ден.", "Този документ изтича след %d дни."],
+    "This document will expire in %d months.":
+        ["Този документ изтича след една година.", "Този документ изтича след %d години."],
+    "Please enter the password for this paste:":
+        "Моля въведете паролата за това съдържание:",
+    "Could not decrypt data (Wrong key?)":
+        "Информацията не можеше да се дешифрова (Грешен ключ?)",
+    "Could not delete the paste, it was not stored in burn after reading mode.":
+        "Изтриването на информацията беше неуспешно. Тя не е от тип \"унищожаване след преглед\".",
+    "FOR YOUR EYES ONLY. Don't close this window, this message can't be displayed again.":
+        "САМО ЗА ВАШИТЕ ОЧИ. Не затваряйте прозореца, понеже тази информация няма да може да бъде показана отново.",
+    "Could not decrypt comment; Wrong key?":
+        "Дешифроването на коментара беше неуспешно. Грешен ключ?",
+    "Reply":
+        "Отговор",
+    "Anonymous":
+        "Безименен",
+    "Avatar generated from IP address":
+        "Аватар (на базата на IP адреса Ви)",
+    "Add comment":
+        "Добави коментар",
+    "Optional nickname…":
+        "Избирателен псевдоним",
+    "Post comment":
+        "Публикувай коментара",
+    "Sending comment…":
+        "Изпращане на коментара Ви…",
+    "Comment posted.":
+        "Коментара Ви е публикуван.",
+    "Could not refresh display: %s":
+        "Презареждането на екрана беше неуспешно: %s",
+    "unknown status":
+        "Неизвестно състояние",
+    "server error or not responding":
+        "Грешка в сървъра или не отговаря",
+    "Could not post comment: %s":
+        "Публикуването на коментара Ви беше неуспешно: %s",
+    "Sending paste…":
+        "Изпращане на информацията Ви…",
+    "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit [Ctrl]+[c] to copy)</span>":
+        "Вашата връзка е <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Натиснете [Ctrl]+[c] за да копирате)</span>",
+    "Delete data":
+        "Изтриване на информацията",
+    "Could not create paste: %s":
+        "Създаването на връзката ви беше неуспешно: %s",
+    "Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)":
+        "Дешифроването на информацията беше неуспешно: Ключа за декриптиране липсва във връзката (Да не сте използвали услуга за пренасочване или скъсяване на връзката, което би изрязало части от нея?)",
+    "Format": "Format",
+    "Plain Text": "Чист текст",
+    "Source Code": "Изходен код",
+    "Markdown": "Markdown",
+    "Download attachment": "Свали прикачения файл",
+    "Cloned: '%s'": "Дублирано: '%s'",
+    "The cloned file '%s' was attached to this paste.": "Дублирания файл '%s' беше прикачен.",
+    "Attach a file": "Прикачи файл",
+    "alternatively drag & drop a file or paste an image from the clipboard": "Също можеш да пуснеш файла върху този прозорец или да поставиш изображение от клипборда",
+    "File too large, to display a preview. Please download the attachment.": "Файла е твърде голям, за да се представи визуализация. Моля, свалете файла.",
+    "Remove attachment": "Премахнете файла",
+    "Your browser does not support uploading encrypted files. Please use a newer browser.":
+        "Браузърът ви не поддържа прикачване на шифровани файлове. Моля, използвайте по-нов браузър",
+    "Invalid attachment.": "Невалидно прикачване.",
+    "Options": "Настройки",
+    "Shorten URL": "Скъси връзката",
+    "Editor": "Редактор",
+    "Preview": "Визуализация",
+    "%s requires the PATH to end in a \"%s\". Please update the PATH in your index.php.":
+        "PATH трябва да е във края на \"%s\" за да може %s да работи правилно. Моля обновете PATH във вашият index.php .",
+    "Decrypt":
+        "Дешифровай",
+    "Enter password":
+        "Въведи паролата",
+    "Loading…": "Зареждане…",
+    "Decrypting paste…": "Дешифроване на информацията…",
+    "Preparing new paste…": "Приготвяне на връзката Ви…",
+    "In case this message never disappears please have a look at <a href=\"%s\">this FAQ for information to troubleshoot</a>.":
+        "Във случай, че това съобщение не изчезне след време, моля прегледайте <a href=\"%s\">този FAQ (Английски)</a>, за информация, която би ви помогнала.",
+    "+++ no paste text +++": "+++ няма текстово съдържание +++",
+    "Could not get paste data: %s":
+        "Взимането на информацията беше неуспешно: %s",
+    "QR code": "QR код",
+    "I love you too, bot…": "И аз те обичам, бот…",
+    "This website is using an insecure HTTP connection! Please use it only for testing.":
+        "Този сайт използва несигурна HTTP връзка. Моля използвайте само за проби.",
+    "For more information <a href=\"%s\">see this FAQ entry</a>.":
+        "<a href=\"%s\">Вижте тази страница</a> за повече информация.",
+    "Your browser may require an HTTPS connection to support the WebCrypto API. Try <a href=\"%s\">switching to HTTPS</a>.":
+        "Браузъра ви може да се нуждае от HTTPS връзка за да използва WebCrypto API. Пробвай <a href=\"%s\">да минеш на HTTPS</a>."
+}
