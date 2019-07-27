@@ -387,7 +387,7 @@ class ConfigurationTestGenerator
                     }
                 }
                 $code .= $this->_getFunction(
-                    ucfirst($step), $key, $options, $preCode, $testCode
+                    ucfirst($step), $key, $options, $preCode, $testCode, $fullOptions['main']['discussion']
                 );
             }
         }
@@ -408,10 +408,11 @@ class ConfigurationTestGenerator
  * DO NOT EDIT: This file is generated automatically using configGenerator.php
  */
 
-use PrivateBin\PrivateBin;
+use PrivateBin\Controller;
 use PrivateBin\Data\Filesystem;
 use PrivateBin\Persistence\ServerSalt;
 use PrivateBin\Persistence\TrafficLimiter;
+use PrivateBin\Request;
 
 class ConfigurationCombinationsTest extends PHPUnit_Framework_TestCase
 {
@@ -448,8 +449,8 @@ class ConfigurationCombinationsTest extends PHPUnit_Framework_TestCase
         if ($this->_model->exists(Helper::getPasteId()))
             $this->_model->delete(Helper::getPasteId());
         $configuration['model_options']['dir'] = $this->_path;
-        $configuration['traffic']['dir'] = $this->_path;
-        $configuration['purge']['dir'] = $this->_path;
+        $configuration['traffic']['dir']       = $this->_path;
+        $configuration['purge']['dir']         = $this->_path;
         Helper::createIniFile(CONF, $configuration);
     }
 
@@ -467,7 +468,7 @@ EOT;
      * @param array $testCode
      * @return string
      */
-    private function _getFunction($step, $key, &$options, $preCode, $testCode)
+    private function _getFunction($step, $key, &$options, $preCode, $testCode, $discussionEnabled)
     {
         if (count($testCode) == 0) {
             echo "skipping creation of test$step$key, no valid tests found for configuration: $options" . PHP_EOL;
@@ -495,18 +496,31 @@ EOT;
         // step specific initialization
         switch ($step) {
             case 'Create':
+                if ($discussionEnabled) {
+                    $code .= PHP_EOL . <<<'EOT'
+        $paste = Helper::getPasteJson();
+EOT;
+                } else {
+                    $code .= PHP_EOL . <<<'EOT'
+        $paste = json_decode(Helper::getPasteJson(), true);
+        $paste['adata'][2] = 0;
+        $paste = json_encode($paste);
+EOT;
+                }
                 $code .= PHP_EOL . <<<'EOT'
-        $_POST = Helper::getPaste();
+        $file  = tempnam(sys_get_temp_dir(), 'FOO');
+        file_put_contents($file, $paste);
+        Request::setInputStream($file);
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
-        $_SERVER['REQUEST_METHOD'] = 'POST';
-        $_SERVER['REMOTE_ADDR'] = '::1';
+        $_SERVER['REQUEST_METHOD']        = 'POST';
+        $_SERVER['REMOTE_ADDR']           = '::1';
         TrafficLimiter::canPass();
 EOT;
                 break;
             case 'Read':
                 $code .= PHP_EOL . <<<'EOT'
         $this->_model->create(Helper::getPasteId(), Helper::getPaste());
-        $_SERVER['QUERY_STRING'] = Helper::getPasteId();
+        $_SERVER['QUERY_STRING']    = Helper::getPasteId();
         $_GET[Helper::getPasteId()] = '';
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
 EOT;
@@ -516,7 +530,7 @@ EOT;
         $this->_model->create(Helper::getPasteId(), Helper::getPaste());
         $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste exists before deleting data');
         $_GET['pasteid'] = Helper::getPasteId();
-        $_GET['deletetoken'] = hash_hmac('sha256', Helper::getPasteId(), $this->_model->read(Helper::getPasteId())->meta->salt);
+        $_GET['deletetoken'] = hash_hmac('sha256', Helper::getPasteId(), $this->_model->read(Helper::getPasteId())['meta']['salt']);
 EOT;
                 break;
         }
@@ -525,7 +539,7 @@ EOT;
         $code .= PHP_EOL . $preString;
         $code .= <<<'EOT'
         ob_start();
-        new PrivateBin;
+        new Controller;
         $content = ob_get_contents();
         ob_end_clean();
 EOT;

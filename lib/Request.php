@@ -7,7 +7,7 @@
  * @link      https://github.com/PrivateBin/PrivateBin
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
- * @version   1.2.1
+ * @version   1.3
  */
 
 namespace PrivateBin;
@@ -107,10 +107,10 @@ class Request
         switch (array_key_exists('REQUEST_METHOD', $_SERVER) ? $_SERVER['REQUEST_METHOD'] : 'GET') {
             case 'DELETE':
             case 'PUT':
-                parse_str(file_get_contents(self::$_inputStream), $this->_params);
-                break;
             case 'POST':
-                $this->_params = $_POST;
+                $this->_params = Json::decode(
+                    file_get_contents(self::$_inputStream)
+                );
                 break;
             default:
                 $this->_params = $_GET;
@@ -126,8 +126,8 @@ class Request
 
         // prepare operation, depending on current parameters
         if (
-            (array_key_exists('data', $this->_params) && !empty($this->_params['data'])) ||
-            (array_key_exists('attachment', $this->_params) && !empty($this->_params['attachment']))
+            array_key_exists('ct', $this->_params) &&
+            !empty($this->_params['ct'])
         ) {
             $this->_operation = 'create';
         } elseif (array_key_exists('pasteid', $this->_params) && !empty($this->_params['pasteid'])) {
@@ -153,6 +153,33 @@ class Request
     }
 
     /**
+     * Get data of paste or comment
+     *
+     * @access public
+     * @return array
+     */
+    public function getData()
+    {
+        $data = array(
+            'adata' => $this->getParam('adata'),
+        );
+        $required_keys = array('v', 'ct');
+        $meta          = $this->getParam('meta');
+        if (empty($meta)) {
+            $required_keys[] = 'pasteid';
+            $required_keys[] = 'parentid';
+        } else {
+            $data['meta'] = $meta;
+        }
+        foreach ($required_keys as $key) {
+            $data[$key] = $this->getParam($key);
+        }
+        // forcing a cast to int or float
+        $data['v'] = $data['v'] + 0;
+        return $data;
+    }
+
+    /**
      * Get a request parameter
      *
      * @access public
@@ -175,7 +202,9 @@ class Request
     public function getRequestUri()
     {
         return array_key_exists('REQUEST_URI', $_SERVER) ?
-            htmlspecialchars($_SERVER['REQUEST_URI']) : '/';
+            htmlspecialchars(
+                parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH)
+            ) : '/';
     }
 
     /**

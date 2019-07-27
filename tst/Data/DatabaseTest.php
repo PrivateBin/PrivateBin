@@ -36,22 +36,31 @@ class DatabaseTest extends PHPUnit_Framework_TestCase
         $this->_model->delete(Helper::getPasteId());
 
         // storing pastes
-        $paste = Helper::getPaste(array('expire_date' => 1344803344));
+        $paste = Helper::getPaste();
         $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste does not yet exist');
         $this->assertTrue($this->_model->create(Helper::getPasteId(), $paste), 'store new paste');
         $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste exists after storing it');
         $this->assertFalse($this->_model->create(Helper::getPasteId(), $paste), 'unable to store the same paste twice');
-        $this->assertEquals(json_decode(json_encode($paste)), $this->_model->read(Helper::getPasteId()));
+        $this->assertEquals($paste, $this->_model->read(Helper::getPasteId()));
 
         // storing comments
-        $this->assertFalse($this->_model->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId()), 'comment does not yet exist');
-        $this->assertTrue($this->_model->createComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId(), Helper::getComment()) !== false, 'store comment');
-        $this->assertTrue($this->_model->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId()), 'comment exists after storing it');
-        $comment           = json_decode(json_encode(Helper::getComment()));
-        $comment->id       = Helper::getCommentId();
-        $comment->parentid = Helper::getPasteId();
+        $this->assertFalse($this->_model->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId()), 'v1 comment does not yet exist');
+        $this->assertTrue($this->_model->createComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId(), Helper::getComment(1)) !== false, 'store v1 comment');
+        $this->assertTrue($this->_model->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId()), 'v1 comment exists after storing it');
+        $this->assertFalse($this->_model->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getPasteId()), 'v2 comment does not yet exist');
+        $this->assertTrue($this->_model->createComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getPasteId(), Helper::getComment(2)) !== false, 'store v2 comment');
+        $this->assertTrue($this->_model->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getPasteId()), 'v2 comment exists after storing it');
+        $comment1             = Helper::getComment(1);
+        $comment1['id']       = Helper::getCommentId();
+        $comment1['parentid'] = Helper::getPasteId();
+        $comment2             = Helper::getComment(2);
+        $comment2['id']       = Helper::getPasteId();
+        $comment2['parentid'] = Helper::getPasteId();
         $this->assertEquals(
-            array($comment->meta->postdate => $comment),
+            array(
+                $comment1['meta']['postdate']       => $comment1,
+                $comment2['meta']['created'] . '.1' => $comment2,
+            ),
             $this->_model->readComments(Helper::getPasteId())
         );
 
@@ -64,8 +73,9 @@ class DatabaseTest extends PHPUnit_Framework_TestCase
 
     public function testDatabaseBasedAttachmentStoreWorks()
     {
+        // this assumes a version 1 formatted paste
         $this->_model->delete(Helper::getPasteId());
-        $original                          = $paste                          = Helper::getPasteWithAttachment(array('expire_date' => 1344803344));
+        $original                          = $paste                                = Helper::getPasteWithAttachment(1, array('expire_date' => 1344803344));
         $paste['meta']['burnafterreading'] = $original['meta']['burnafterreading'] = true;
         $paste['meta']['attachment']       = $paste['attachment'];
         $paste['meta']['attachmentname']   = $paste['attachmentname'];
@@ -74,7 +84,7 @@ class DatabaseTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($this->_model->create(Helper::getPasteId(), $paste), 'store new paste');
         $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste exists after storing it');
         $this->assertFalse($this->_model->create(Helper::getPasteId(), $paste), 'unable to store the same paste twice');
-        $this->assertEquals(json_decode(json_encode($original)), $this->_model->read(Helper::getPasteId()));
+        $this->assertEquals($original, $this->_model->read(Helper::getPasteId()));
     }
 
     /**
@@ -83,12 +93,12 @@ class DatabaseTest extends PHPUnit_Framework_TestCase
     public function testPurge()
     {
         $this->_model->delete(Helper::getPasteId());
-        $expired = Helper::getPaste(array('expire_date' => 1344803344));
-        $paste   = Helper::getPaste(array('expire_date' => time() + 3600));
+        $expired = Helper::getPaste(2, array('expire_date' => 1344803344));
+        $paste   = Helper::getPaste(2, array('expire_date' => time() + 3600));
         $keys    = array('a', 'b', 'c', 'd', 'e', 'f', 'g', 'x', 'y', 'z');
         $ids     = array();
         foreach ($keys as $key) {
-            $ids[$key] = substr(md5($key), 0, 16);
+            $ids[$key] = hash('fnv164', $key);
             $this->_model->delete($ids[$key]);
             $this->assertFalse($this->_model->exists($ids[$key]), "paste $key does not yet exist");
             if (in_array($key, array('y', 'z'))) {
@@ -243,11 +253,11 @@ class DatabaseTest extends PHPUnit_Framework_TestCase
         $this->_options['tbl'] = 'bar_';
         $model                 = Database::getInstance($this->_options);
 
-        $original                        = $paste                        = Helper::getPasteWithAttachment(array('expire_date' => 1344803344));
-        $paste['meta']['attachment']     = $paste['attachment'];
-        $paste['meta']['attachmentname'] = $paste['attachmentname'];
+        $original               = $paste = Helper::getPasteWithAttachment(1, array('expire_date' => 1344803344));
+        $meta                   = $paste['meta'];
+        $meta['attachment']     = $paste['attachment'];
+        $meta['attachmentname'] = $paste['attachmentname'];
         unset($paste['attachment'], $paste['attachmentname']);
-        $meta = $paste['meta'];
 
         $db = new PDO(
             $this->_options['dsn'],
@@ -261,7 +271,7 @@ class DatabaseTest extends PHPUnit_Framework_TestCase
                 Helper::getPasteId(),
                 $paste['data'],
                 $paste['meta']['postdate'],
-                1344803344,
+                $paste['meta']['expire_date'],
                 0,
                 0,
                 json_encode($meta),
@@ -272,7 +282,7 @@ class DatabaseTest extends PHPUnit_Framework_TestCase
         $statement->closeCursor();
 
         $this->assertTrue($model->exists(Helper::getPasteId()), 'paste exists after storing it');
-        $this->assertEquals(json_decode(json_encode($original)), $model->read(Helper::getPasteId()));
+        $this->assertEquals($original, $model->read(Helper::getPasteId()));
 
         Helper::rmDir($this->_path);
     }

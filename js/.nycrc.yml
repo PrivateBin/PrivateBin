@@ -1,0 +1,8 @@
+---
+include:
+  - privatebin.js
+reporter:
+  - text
+  - html
+report-dir: ../tst/log/js-coverage-report
+temp-dir: /tmp/nyc-output

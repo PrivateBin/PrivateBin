@@ -3,35 +3,51 @@ require('../common');
 
 describe('CryptTool', function () {
     describe('cipher & decipher', function () {
+        afterEach(async function () {
+            // pause to let async functions conclude
+            await new Promise(resolve => setTimeout(resolve, 1900));
+        });
+
         this.timeout(30000);
         it('can en- and decrypt any message', function () {
-            jsc.check(jsc.forall(
+            jsc.assert(jsc.forall(
                 'string',
                 'string',
                 'string',
-                function (key, password, message) {
-                    return message === $.PrivateBin.CryptTool.decipher(
-                        key,
-                        password,
-                        $.PrivateBin.CryptTool.cipher(key, password, message)
-                    );
+                async function (key, password, message) {
+                    // pause to let async functions conclude
+                    await new Promise(resolve => setTimeout(resolve, 300));
+                    let clean = jsdom();
+                    window.crypto = new WebCrypto();
+                    message = message.trim();
+                    let cipherMessage = await $.PrivateBin.CryptTool.cipher(
+                            key, password, message, []
+                        ),
+                        plaintext = await $.PrivateBin.CryptTool.decipher(
+                                key, password, cipherMessage
+                        );
+                    clean();
+                    return message === plaintext;
                 }
             ),
-            // reducing amount of checks as running 100 takes about 5 minutes
-            {tests: 5, quiet: true});
+            {tests: 3});
         });
 
         // The below static unit tests are included to ensure deciphering of "classic"
         // SJCL based pastes still works
         it(
-            'supports PrivateBin v1 ciphertext (SJCL & Base64)',
+            'supports PrivateBin v1 ciphertext (SJCL & browser atob)',
             function () {
+                delete global.Base64;
+                let clean = jsdom();
+                window.crypto = new WebCrypto();
+
                 // Of course you can easily decipher the following texts, if you like.
                 // Bonus points for finding their sources and hidden meanings.
-                var paste1 = $.PrivateBin.CryptTool.decipher(
+                return $.PrivateBin.CryptTool.decipher(
                     '6t2qsmLyfXIokNCL+3/yl15rfTUBQvm5SOnFPvNE7Q8=',
                     // -- "That's amazing. I've got the same combination on my luggage."
-                    Array.apply(0, Array(6)).map(function(_,b) { return b + 1; }).join(''),
+                    Array.apply(0, Array(6)).map((_,b) => b + 1).join(''),
                     '{"iv":"4HNFIl7eYbCh6HuShctTIA==","v":1,"iter":10000,"ks"' +
                     ':256,"ts":128,"mode":"gcm","adata":"","cipher":"aes","sa' +
                     'lt":"u0lQvePq6L0=","ct":"fGPUVrDyaVr1ZDGb+kqQ3CPEW8x4YKG' +
@@ -59,56 +75,56 @@ describe('CryptTool', function () {
                     'QUxMXI5htsn2rf0HxCFu7Po8DNYLxTS+67hYjDIYWYaEIc8LXWMLyDm9' +
                     'C5fARPJ4F2BIWgzgzkNj+dVjusft2XnziamWdbS5u3kuRlVuz5LQj+R5' +
                     'imnqQAincdZTkTT1nYx+DatlOLllCYIHffpI="}'
-                ),
-                paste2 = $.PrivateBin.CryptTool.decipher(
-                    's9pmKZKOBN7EVvHpTA8jjLFH3Xlz/0l8lB4+ONPACrM=',
-                    '', // no password
-                    '{"iv":"WA42mdxIVXUwBqZu7JYNiw==","v":1,"iter":10000,"ks"' +
-                    ':256,"ts":128,"mode":"gcm","adata":"","cipher":"aes","sa' +
-                    'lt":"jN6CjbQMJCM=","ct":"kYYMo5DFG1+w0UHiYXT5pdV0IUuXxzO' +
-                    'lslkW/c3DRCbGFROCVkAskHce7HoRczee1N9c5MhHjVMJUIZE02qIS8U' +
-                    'yHdJ/GqcPVidTUcj9rnDNWsTXkjVv8jCwHS/cwmAjDTWpwp5ThECN+ov' +
-                    '/wNp/NdtTj8Qj7f/T3rfZIOCWfwLH9s4Des35UNcUidfPTNQ1l0Gm0X+' +
-                    'r98CCUSYZjQxkZc6hRZBLPQ8EaNVooUwd5eP4GiYlmSDNA0wOSA+5isP' +
-                    'YxomVCt+kFf58VBlNhpfNi7BLYAUTPpXT4SfH5drR9+C7NTeZ+tTCYjb' +
-                    'U94PzYItOpu8vgnB1/a6BAM5h3m9w+giUb0df4hgTWeZnZxLjo5BN8WV' +
-                    '+kdTXMj3/Vv0gw0DQrDcCuX/cBAjpy3lQGwlAN1vXoOIyZJUjMpQRrOL' +
-                    'dKvLB+zcmVNtGDbgnfP2IYBzk9NtodpUa27ne0T0ZpwOPlVwevsIVZO2' +
-                    '24WLa+iQmmHOWDFFpVDlS0t0fLfOk7Hcb2xFsTxiCIiyKMho/IME1Du3' +
-                    'X4e6BVa3hobSSZv0rRtNgY1KcyYPrUPW2fxZ+oik3y9SgGvb7XpjVIta' +
-                    '8DWlDWRfZ9kzoweWEYqz9IA8Xd373RefpyuWI25zlHoX3nwljzsZU6dC' +
-                    '//h/Dt2DNr+IAvKO3+u23cWoB9kgcZJ2FJuqjLvVfCF+OWcig7zs2pTY' +
-                    'JW6Rg6lqbBCxiUUlae6xJrjfv0pzD2VYCLY7v1bVTagppwKzNI3WaluC' +
-                    'OrdDYUCxUSe56yd1oAoLPRVbYvomRboUO6cjQhEknERyvt45og2kORJO' +
-                    'EJayHW+jZgR0Y0jM3Nk17ubpij2gHxNx9kiLDOiCGSV5mn9mV7qd3HHc' +
-                    'OMSykiBgbyzjobi96LT2dIGLeDXTIdPOog8wyobO4jWq0GGs0vBB8oSY' +
-                    'XhHvixZLcSjX2KQuHmEoWzmJcr3DavdoXZmAurGWLKjzEdJc5dSD/eNr' +
-                    '99gjHX7wphJ6umKMM+fn6PcbYJkhDh2GlJL5COXjXfm/5aj/vuyaRRWZ' +
-                    'MZtmnYpGAtAPg7AUG"}'
-                );
-
-                assert.ok(
-                    paste1.includes('securely packed in iron') &&
-                    paste2.includes('Sol is right')
-                );
+                ).then(function (paste1) {
+                    $.PrivateBin.CryptTool.decipher(
+                        's9pmKZKOBN7EVvHpTA8jjLFH3Xlz/0l8lB4+ONPACrM=',
+                        '', // no password
+                        '{"iv":"WA42mdxIVXUwBqZu7JYNiw==","v":1,"iter":10000,"ks"' +
+                        ':256,"ts":128,"mode":"gcm","adata":"","cipher":"aes","sa' +
+                        'lt":"jN6CjbQMJCM=","ct":"kYYMo5DFG1+w0UHiYXT5pdV0IUuXxzO' +
+                        'lslkW/c3DRCbGFROCVkAskHce7HoRczee1N9c5MhHjVMJUIZE02qIS8U' +
+                        'yHdJ/GqcPVidTUcj9rnDNWsTXkjVv8jCwHS/cwmAjDTWpwp5ThECN+ov' +
+                        '/wNp/NdtTj8Qj7f/T3rfZIOCWfwLH9s4Des35UNcUidfPTNQ1l0Gm0X+' +
+                        'r98CCUSYZjQxkZc6hRZBLPQ8EaNVooUwd5eP4GiYlmSDNA0wOSA+5isP' +
+                        'YxomVCt+kFf58VBlNhpfNi7BLYAUTPpXT4SfH5drR9+C7NTeZ+tTCYjb' +
+                        'U94PzYItOpu8vgnB1/a6BAM5h3m9w+giUb0df4hgTWeZnZxLjo5BN8WV' +
+                        '+kdTXMj3/Vv0gw0DQrDcCuX/cBAjpy3lQGwlAN1vXoOIyZJUjMpQRrOL' +
+                        'dKvLB+zcmVNtGDbgnfP2IYBzk9NtodpUa27ne0T0ZpwOPlVwevsIVZO2' +
+                        '24WLa+iQmmHOWDFFpVDlS0t0fLfOk7Hcb2xFsTxiCIiyKMho/IME1Du3' +
+                        'X4e6BVa3hobSSZv0rRtNgY1KcyYPrUPW2fxZ+oik3y9SgGvb7XpjVIta' +
+                        '8DWlDWRfZ9kzoweWEYqz9IA8Xd373RefpyuWI25zlHoX3nwljzsZU6dC' +
+                        '//h/Dt2DNr+IAvKO3+u23cWoB9kgcZJ2FJuqjLvVfCF+OWcig7zs2pTY' +
+                        'JW6Rg6lqbBCxiUUlae6xJrjfv0pzD2VYCLY7v1bVTagppwKzNI3WaluC' +
+                        'OrdDYUCxUSe56yd1oAoLPRVbYvomRboUO6cjQhEknERyvt45og2kORJO' +
+                        'EJayHW+jZgR0Y0jM3Nk17ubpij2gHxNx9kiLDOiCGSV5mn9mV7qd3HHc' +
+                        'OMSykiBgbyzjobi96LT2dIGLeDXTIdPOog8wyobO4jWq0GGs0vBB8oSY' +
+                        'XhHvixZLcSjX2KQuHmEoWzmJcr3DavdoXZmAurGWLKjzEdJc5dSD/eNr' +
+                        '99gjHX7wphJ6umKMM+fn6PcbYJkhDh2GlJL5COXjXfm/5aj/vuyaRRWZ' +
+                        'MZtmnYpGAtAPg7AUG"}'
+                    ).then(function (paste2) {
+                        clean();
+                        assert.ok(
+                            paste1.includes('securely packed in iron') &&
+                            paste2.includes('Sol is right')
+                        );
+                    });
+                });
             }
         );
 
         it(
             'supports ZeroBin ciphertext (SJCL & Base64 1.7)',
             function () {
-                var newBase64 = global.Base64;
                 global.Base64 = require('../base64-1.7').Base64;
-                jsdom();
-                delete require.cache[require.resolve('../privatebin')];
-                require('../privatebin');
+                var clean = jsdom();
+                window.crypto = new WebCrypto();
 
                 // Of course you can easily decipher the following texts, if you like.
                 // Bonus points for finding their sources and hidden meanings.
-                var paste1 = $.PrivateBin.CryptTool.decipher(
+                return $.PrivateBin.CryptTool.decipher(
                     '6t2qsmLyfXIokNCL+3/yl15rfTUBQvm5SOnFPvNE7Q8=',
                     // -- "That's amazing. I've got the same combination on my luggage."
-                    Array.apply(0, Array(6)).map(function(_,b) { return b + 1; }).join(''),
+                    Array.apply(0, Array(6)).map((_,b) => b + 1).join(''),
                     '{"iv":"aTnR2qBL1CAmLX8FdWe3VA==","v":1,"iter":10000,"ks"' +
                     ':256,"ts":128,"mode":"gcm","adata":"","cipher":"aes","sa' +
                     'lt":"u0lQvePq6L0=","ct":"A3nBTvICZtYy6xqbIJE0c8Veored5lM' +
@@ -128,78 +144,115 @@ describe('CryptTool', function () {
                     '7mNNo7xba/YT9KoPDaniqnYqb+q2pX1WNWE7dLS2wfroMAS3kh8P22DA' +
                     'V37AeiNoD2PcI6ZcHbRdPa+XRrRcJhSPPW7UQ0z4OvBfjdu/w390QxAx' +
                     'SxvZewoh49fKKB6hTsRnZb4tpHkjlww=="}'
-                ),
-                paste2 = $.PrivateBin.CryptTool.decipher(
-                    's9pmKZKOBN7EVvHpTA8jjLFH3Xlz/0l8lB4+ONPACrM=',
-                    '', // no password
-                    '{"iv":"Z7lAZQbkrqGMvruxoSm6Pw==","v":1,"iter":10000,"ks"' +
-                    ':256,"ts":128,"mode":"gcm","adata":"","cipher":"aes","sa' +
-                    'lt":"jN6CjbQMJCM=","ct":"PuOPWB3i2FPcreSrLYeQf84LdE8RHjs' +
-                    'c+MGtiOr4b7doNyWKYtkNorbRadxaPnEee2/Utrp1MIIfY5juJSy8RGw' +
-                    'EPX5ciWcYe6EzsXWznsnvhmpKNj9B7eIIrfSbxfy8E2e/g7xav1nive+' +
-                    'ljToka3WT1DZ8ILQd/NbnJeHWaoSEOfvz8+d8QJPb1tNZvs7zEY95Dum' +
-                    'QwbyOsIMKAvcZHJ9OJNpujXzdMyt6DpcFcqlldWBZ/8q5rAUTw0HNx/r' +
-                    'CgbhAxRYfNoTLIcMM4L0cXbPSgCjwf5FuO3EdE13mgEDhcClW79m0Qvc' +
-                    'nIh8xgzYoxLbp0+AwvC/MbZM8savN/0ieWr2EKkZ04ggiOIEyvfCUuNp' +
-                    'rQBYO+y8kKduNEN6by0Yf4LRCPfmwN+GezDLuzTnZIMhPbGqUAdgV6Ex' +
-                    'qK2ULEEIrQEMoOuQIxfoMhqLlzG79vXGt2O+BY+4IiYfvmuRLks4UXfy' +
-                    'HqxPXTJg48IYbGs0j4TtJPUgp3523EyYLwEGyVTAuWhYAmVIwd/hoV7d' +
-                    '7tmfcF73w9dufDFI3LNca2KxzBnWNPYvIZKBwWbq8ncxkb191dP6mjEi' +
-                    '7NnhqVk5A6vIBbu4AC5PZf76l6yep4xsoy/QtdDxCMocCXeAML9MQ9uP' +
-                    'QbuspOKrBvMfN5igA1kBqasnxI472KBNXsdZnaDddSVUuvhTcETM="}'
-                );
-
-                global.Base64 = newBase64;
-                jsdom();
-                delete require.cache[require.resolve('../privatebin')];
-                require('../privatebin');
-                assert.ok(
-                    paste1.includes('securely packed in iron') &&
-                    paste2.includes('Sol is right')
-                );
-            }
-        );
-    });
-
-    describe('isEntropyReady & addEntropySeedListener', function () {
-        it(
-            'lets us know that enough entropy is collected or make us wait for it',
-            function(done) {
-                if ($.PrivateBin.CryptTool.isEntropyReady()) {
-                    done();
-                } else {
-                    $.PrivateBin.CryptTool.addEntropySeedListener(function() {
-                        done();
+                ).then(function (paste1) {
+                    $.PrivateBin.CryptTool.decipher(
+                        's9pmKZKOBN7EVvHpTA8jjLFH3Xlz/0l8lB4+ONPACrM=',
+                        '', // no password
+                        '{"iv":"Z7lAZQbkrqGMvruxoSm6Pw==","v":1,"iter":10000,"ks"' +
+                        ':256,"ts":128,"mode":"gcm","adata":"","cipher":"aes","sa' +
+                        'lt":"jN6CjbQMJCM=","ct":"PuOPWB3i2FPcreSrLYeQf84LdE8RHjs' +
+                        'c+MGtiOr4b7doNyWKYtkNorbRadxaPnEee2/Utrp1MIIfY5juJSy8RGw' +
+                        'EPX5ciWcYe6EzsXWznsnvhmpKNj9B7eIIrfSbxfy8E2e/g7xav1nive+' +
+                        'ljToka3WT1DZ8ILQd/NbnJeHWaoSEOfvz8+d8QJPb1tNZvs7zEY95Dum' +
+                        'QwbyOsIMKAvcZHJ9OJNpujXzdMyt6DpcFcqlldWBZ/8q5rAUTw0HNx/r' +
+                        'CgbhAxRYfNoTLIcMM4L0cXbPSgCjwf5FuO3EdE13mgEDhcClW79m0Qvc' +
+                        'nIh8xgzYoxLbp0+AwvC/MbZM8savN/0ieWr2EKkZ04ggiOIEyvfCUuNp' +
+                        'rQBYO+y8kKduNEN6by0Yf4LRCPfmwN+GezDLuzTnZIMhPbGqUAdgV6Ex' +
+                        'qK2ULEEIrQEMoOuQIxfoMhqLlzG79vXGt2O+BY+4IiYfvmuRLks4UXfy' +
+                        'HqxPXTJg48IYbGs0j4TtJPUgp3523EyYLwEGyVTAuWhYAmVIwd/hoV7d' +
+                        '7tmfcF73w9dufDFI3LNca2KxzBnWNPYvIZKBwWbq8ncxkb191dP6mjEi' +
+                        '7NnhqVk5A6vIBbu4AC5PZf76l6yep4xsoy/QtdDxCMocCXeAML9MQ9uP' +
+                        'QbuspOKrBvMfN5igA1kBqasnxI472KBNXsdZnaDddSVUuvhTcETM="}'
+                    ).then(function (paste2) {
+                        clean();
+                        delete global.Base64;
+                        assert.ok(
+                            paste1.includes('securely packed in iron') &&
+                            paste2.includes('Sol is right')
+                        );
                     });
-                }
+                });
             }
         );
+
+        it('does not truncate messages', async function () {
+            let message = fs.readFileSync('test/compression-sample.txt', 'utf8'),
+                clean = jsdom();
+            window.crypto = new WebCrypto();
+            let cipherMessage = await $.PrivateBin.CryptTool.cipher(
+                    'foo', 'bar', message, []
+                ),
+                plaintext = await $.PrivateBin.CryptTool.decipher(
+                        'foo', 'bar', cipherMessage
+                );
+            clean();
+            assert.strictEqual(
+                message,
+                plaintext
+            );
+        });
+
+        it('can en- and decrypt a particular message (#260)', function () {
+            jsc.assert(jsc.forall(
+                'string',
+                'string',
+                async function (key, password) {
+                    // pause to let async functions conclude
+                    await new Promise(resolve => setTimeout(resolve, 300));
+                    const message = `
+1 subgoal
+
+inv : Assert
+expr : Expr
+sBody : Instr
+deduction : (|- [|inv /\ assertOfExpr expr|] sBody [|inv|])%assert
+IHdeduction : (|= [|inv /\ assertOfExpr expr |] sBody [|inv|])%assert
+mem : Mem
+preInMem : inv mem
+m : Mem
+n : nat
+interpRel : interp (nth_iterate sBody n) (MemElem mem) = CpoElem Mem m
+lastIter : interp (nth_iterate sBody n) (MemElem mem) |=e expr_neg expr
+notLastIter : forall p : nat,
+              p < n -> interp (nth_iterate sBody p) (MemElem mem) |=e expr
+isWhile : interp (while expr sBody) (MemElem mem) =
+          interp (nth_iterate sBody n) (MemElem mem)
+
+======================== ( 1 / 1 )
+conseq_or_bottom inv (interp (nth_iterate sBody n) (MemElem mem))
+`;
+                    let clean = jsdom();
+                    window.crypto = new WebCrypto();
+                    let cipherMessage = await $.PrivateBin.CryptTool.cipher(
+                            key, password, message, []
+                        ),
+                        plaintext = await $.PrivateBin.CryptTool.decipher(
+                                key, password, cipherMessage
+                        );
+                    clean();
+                    return message === plaintext;
+                }
+            ),
+            {tests: 3});
+        });
     });
 
     describe('getSymmetricKey', function () {
+        this.timeout(30000);
         var keys = [];
 
         // the parameter is used to ensure the test is run more then one time
         jsc.property(
             'returns random, non-empty keys',
-            function() {
+            'integer',
+            function(counter) {
+                var clean = jsdom();
+                window.crypto = new WebCrypto();
                 var key = $.PrivateBin.CryptTool.getSymmetricKey(),
                     result = (key !== '' && keys.indexOf(key) === -1);
                 keys.push(key);
+                clean();
                 return result;
-            }
-        );
-    });
-
-    describe('Base64.js vs SJCL.js vs abab.js', function () {
-        jsc.property(
-            'these all return the same base64 string',
-            'string',
-            function(string) {
-                var base64 = Base64.toBase64(string),
-                    sjcl = global.sjcl.codec.base64.fromBits(global.sjcl.codec.utf8String.toBits(string)),
-                    abab = window.btoa(Base64.utob(string));
-                return base64 === sjcl && sjcl === abab;
             }
         );
     });

@@ -112,8 +112,6 @@
         "Error del servidor o el servidor no responde",
     "Could not post comment: %s":
         "No fue posible publicar comentario: %s",
-    "Please move your mouse for more entropy…":
-        "Por favor, mueva el ratón para mayor entropía…",
     "Sending paste…":
         "Enviando \"paste\"…",
     "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit [Ctrl]+[c] to copy)</span>":
@@ -151,10 +149,17 @@
     "Loading…": "Cargando…",
     "Decrypting paste…": "Descifrando \"paste\"…",
     "Preparing new paste…": "Preparando \"paste\" nuevo…",
-    "In case this message never disappears please have a look at <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">this FAQ for information to troubleshoot</a>.":
-        "En caso de que este mensaje nunca desaparezca por favor revise <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">este FAQ para obtener información para solucionar problemas</a>.",
+    "In case this message never disappears please have a look at <a href=\"%s\">this FAQ for information to troubleshoot</a>.":
+        "En caso de que este mensaje nunca desaparezca por favor revise <a href=\"%s\">este FAQ para obtener información para solucionar problemas</a>.",
     "+++ no paste text +++": "+++ \"paste\" sin texto +++",
     "Could not get paste data: %s":
         "No se pudieron obtener los datos: %s",
-    "QR code": "Código QR"
+    "QR code": "Código QR",
+    "I love you too, bot…": "I love you too, bot…",
+    "This website is using an insecure HTTP connection! Please use it only for testing.":
+        "This website is using an insecure HTTP connection! Please use it only for testing.",
+    "For more information <a href=\"%s\">see this FAQ entry</a>.":
+        "For more information <a href=\"%s\">see this FAQ entry</a>.",
+    "Your browser may require an HTTPS connection to support the WebCrypto API. Try <a href=\"%s\">switching to HTTPS</a>.":
+        "Your browser may require an HTTPS connection to support the WebCrypto API. Try <a href=\"%s\">switching to HTTPS</a>."
 }

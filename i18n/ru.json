@@ -112,8 +112,6 @@
         "ошибка сервера или нет ответа",
     "Could not post comment: %s":
         "Не удалось опубликовать комментарий: %s",
-    "Please move your mouse for more entropy…":
-        "Пожалуйста, двигайте мышкой для большей энтропии…",
     "Sending paste…":
         "Отправка записи…",
     "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit [Ctrl]+[c] to copy)</span>":
@@ -161,10 +159,17 @@
     "Loading…": "Загрузка…",
     "Decrypting paste…": "Расшифровка записи…",
     "Preparing new paste…": "Подготовка новой записи…",
-    "In case this message never disappears please have a look at <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">this FAQ for information to troubleshoot</a>.":
-        "Если данное сообщение не исчезает длительное время, посмотрите <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">этот FAQ с информацией о возможном решении проблемы (на английском)</a>.",
+    "In case this message never disappears please have a look at <a href=\"%s\">this FAQ for information to troubleshoot</a>.":
+        "Если данное сообщение не исчезает длительное время, посмотрите <a href=\"%s\">этот FAQ с информацией о возможном решении проблемы (на английском)</a>.",
     "+++ no paste text +++": "+++ в записи нет текста +++",
     "Could not get paste data: %s":
         "Не удалось получить данные записи: %s",
-    "QR code": "QR code"
+    "QR code": "QR код",
+    "I love you too, bot…": "Я тоже люблю тебя, бот…",
+    "This website is using an insecure HTTP connection! Please use it only for testing.":
+        "Данный сайт использует незащищенное HTTP подключение! Пожалуйста используйте его только для тестирования.",
+    "For more information <a href=\"%s\">see this FAQ entry</a>.":
+        "Для продробностей <a href=\"%s\">прочтите информацию в FAQ</a>.",
+    "Your browser may require an HTTPS connection to support the WebCrypto API. Try <a href=\"%s\">switching to HTTPS</a>.":
+        "Ваш браузер требует использования HTTPS подключения для поддержки WebCrypto API. Попробуйте <a href=\"%s\">переключиться на HTTPS</a>."
 }

@@ -63,7 +63,7 @@ describe('DiscussionViewer', function () {
                 comments.forEach(function (comment) {
                     comment.id = comment.idArray.join('');
                     comment.parentid = comment.parentidArray.join('');
-                    $.PrivateBin.DiscussionViewer.addComment(comment, comment.data, comment.meta.nickname);
+                    $.PrivateBin.DiscussionViewer.addComment($.PrivateBin.Helper.CommentFactory(comment), comment.data, comment.meta.nickname);
                 });
                 results.push(
                     $('#discussion').hasClass('hidden')

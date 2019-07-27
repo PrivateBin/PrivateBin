@@ -28,14 +28,14 @@ class Helper
      *
      * @var string
      */
-    private static $pasteid = '5e9bc25c89fb3bf9';
+    private static $pasteid = '5b65a01b43987bc2';
 
     /**
-     * example paste
+     * example paste version 1
      *
      * @var array
      */
-    private static $paste = array(
+    private static $pasteV1 = array(
         'data'           => '{"iv":"EN39/wd5Nk8HAiSG2K5AsQ","v":1,"iter":1000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"QKN1DBXe5PI","ct":"8hA83xDdXjD7K2qfmw5NdA"}',
         'attachment'     => '{"iv":"Pd4pOKWkmDTT9uPwVwd5Ag","v":1,"iter":1000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"ZIUhFTliVz4","ct":"6nOCU3peNDclDDpFtJEBKA"}',
         'attachmentname' => '{"iv":"76MkAtOGC4oFogX/aSMxRA","v":1,"iter":1000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"ZIUhFTliVz4","ct":"b6Ae/U1xJdsX/+lATud4sQ"}',
@@ -44,6 +44,35 @@ class Helper
             'postdate'       => 1344803344,
             'opendiscussion' => true,
         ),
+    );
+
+    /**
+     * example paste version 2
+     *
+     * @var array
+     */
+    private static $pasteV2 = array(
+        'adata' => array(
+            array(
+                'gMSNoLOk4z0RnmsYwXZ8mw==',
+                'TZO+JWuIuxs=',
+                100000,
+                256,
+                128,
+                'aes',
+                'gcm',
+                'zlib',
+            ),
+            'plaintext',
+            1,
+            0,
+        ),
+        'meta' => array(
+            'expire'  => '5min',
+            'created' => 1344803344,
+        ),
+        'v'  => 2,
+        'ct' => 'ME5JF/YBEijp2uYMzLZozbKtWc5wfy6R59NBb7SmRig=',
     );
 
     /**
@@ -58,7 +87,7 @@ class Helper
      *
      * @var array
      */
-    private static $comment = array(
+    private static $commentV1 = array(
         'data' => '{"iv":"Pd4pOKWkmDTT9uPwVwd5Ag","v":1,"iter":1000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"ZIUhFTliVz4","ct":"6nOCU3peNDclDDpFtJEBKA"}',
         'meta' => array(
             'nickname' => '{"iv":"76MkAtOGC4oFogX/aSMxRA","v":1,"iter":1000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"ZIUhFTliVz4","ct":"b6Ae/U1xJdsX/+lATud4sQ"}',
@@ -81,52 +110,65 @@ class Helper
      */
     public static function getPasteId()
     {
-        return self::$pasteid;
+        return version_compare(PHP_VERSION, '5.6', '<') ? hash('fnv164', self::$pasteV2['ct']) : self::$pasteid;
     }
 
     /**
-     * get example paste
+     * get example paste, as stored on server
      *
+     * @param  int $version
+     * @param  array $meta
      * @return array
      */
-    public static function getPaste($meta = array())
+    public static function getPaste($version = 2, array $meta = array())
     {
-        $example = self::getPasteWithAttachment($meta);
-        unset($example['attachment'], $example['attachmentname']);
+        $example = self::getPasteWithAttachment($version, $meta);
+        // v1 has the attachment stored in a separate property
+        if ($version === 1) {
+            unset($example['attachment'], $example['attachmentname']);
+        }
         return $example;
     }
 
     /**
-     * get example paste
+     * get example paste with attachment, as stored on server
      *
+     * @param  int $version
+     * @param  array $meta
      * @return array
      */
-    public static function getPasteWithAttachment($meta = array())
+    public static function getPasteWithAttachment($version = 2, array $meta = array())
     {
-        $example                 = self::$paste;
+        $example                 = $version === 1 ? self::$pasteV1 : self::$pasteV2;
         $example['meta']['salt'] = ServerSalt::generate();
         $example['meta']         = array_merge($example['meta'], $meta);
         return $example;
     }
 
     /**
-     * get example paste
+     * get example paste, as decoded from POST by the request object
      *
+     * @param  int $version
+     * @param  array $meta
      * @return array
      */
-    public static function getPasteAsJson($meta = array())
+    public static function getPastePost($version = 2, array $meta = array())
     {
-        $example = self::getPaste();
-        // the JSON shouldn't contain the salt
-        unset($example['meta']['salt']);
-        if (count($meta)) {
-            $example['meta'] = $meta;
-        }
-        $example['comments']       = array();
-        $example['comment_count']  = 0;
-        $example['comment_offset'] = 0;
-        $example['@context']       = 'js/paste.jsonld';
-        return json_encode($example);
+        $example         = self::getPaste($version, $meta);
+        $example['meta'] = array('expire' => $example['meta']['expire']);
+        return $example;
+    }
+
+    /**
+     * get example paste, as received via POST by the user
+     *
+     * @param  int $version
+     * @param  array $meta
+     * @return array
+     */
+    public static function getPasteJson($version = 2, array $meta = array())
+    {
+        return json_encode(self::getPastePost($version, $meta));
     }
 
     /**
@@ -140,28 +182,48 @@ class Helper
     }
 
     /**
-     * get example comment
+     * get example comment, as stored on server
      *
+     * @param  int $version
+     * @param  array $meta
      * @return array
      */
-    public static function getComment($meta = array())
+    public static function getComment($version = 2, array $meta = array())
     {
-        $example         = self::$comment;
+        $example         = $version === 1 ? self::$commentV1 : self::$pasteV2;
+        if ($version === 2) {
+            $example['adata']           = $example['adata'][0];
+            $example['pasteid']         = $example['parentid']         = self::getPasteId();
+            $example['meta']['created'] = self::$commentV1['meta']['postdate'];
+            $example['meta']['icon']    = self::$commentV1['meta']['vizhash'];
+            unset($example['meta']['expire']);
+        }
         $example['meta'] = array_merge($example['meta'], $meta);
         return $example;
     }
 
     /**
-     * get example comment
+     * get example comment, as decoded from POST by the request object
      *
+     * @param  int $version
      * @return array
      */
-    public static function getCommentPost($meta = array())
+    public static function getCommentPost()
     {
-        $example             = self::getComment($meta);
-        $example['nickname'] = $example['meta']['nickname'];
-        unset($example['meta']['nickname']);
+        $example = self::getComment();
+        unset($example['meta']);
         return $example;
+    }
+
+    /**
+     * get example comment, as received via POST by user
+     *
+     * @param  int $version
+     * @return array
+     */
+    public static function getCommentJson()
+    {
+        return json_encode(self::getCommentPost());
     }
 
     /**
@@ -229,7 +291,7 @@ class Helper
      * @param string $pathToFile
      * @param array $values
      */
-    public static function createIniFile($pathToFile, $values)
+    public static function createIniFile($pathToFile, array $values)
     {
         if (count($values)) {
             @unlink($pathToFile);

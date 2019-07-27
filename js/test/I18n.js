@@ -87,14 +87,17 @@ describe('I18n', function () {
             'downloads and handles any supported language',
             common.jscSupportedLanguages(),
             function(language) {
-                var clean = jsdom('', {url: 'https://privatebin.net/', cookie: ['lang=' + language]});
-
+                // cleanup
+                var clean = jsdom('', {cookie: ['lang=en']});
                 $.PrivateBin.I18n.reset('en');
                 $.PrivateBin.I18n.loadTranslations();
+                clean();
+
+                // mock
+                clean = jsdom('', {cookie: ['lang=' + language]});
                 $.PrivateBin.I18n.reset(language, require('../../i18n/' + language + '.json'));
                 var result = $.PrivateBin.I18n.translate('en'),
                     alias  = $.PrivateBin.I18n._('en');
-
                 clean();
                 return language === result && language === alias;
             }

@@ -2,15 +2,15 @@
 
 PrivateBin consists of PHP and JS code which was originally written by Sébastien
 Sauvage in 2012 and falls unter the Zlib/libpng license. Also included are
-libraries that fall under the GPLv2 (SJCL, rawinflate, rawdeflate), BSD
-2-clause (SJCL), BSD 3-clause (base64.js version 2.1.9, Showdown), MIT
+libraries that fall under the GPLv2 (rawinflate), BSD 3-clause (Showdown), MIT
 (base64.js version 1.7, Bootstrap, Identicon, random_compat, composer, kjua,
 base-x), Apache (prettify.js) and CC-BY (favicon, icon, logo) licenses. All of
 these license terms can be found here below:
 
-## Zlib/libpng license for PrivateBin
+## Zlib/libpng license for PrivateBin and zlib
 
 Copyright © 2012 Sébastien Sauvage
+Copyright © 1995-2017 Jean-loup Gailly and Mark Adler
 
 This software is provided 'as-is', without any express or implied warranty. In
 no event will the authors be held liable for any damages arising from the use
@@ -30,7 +30,7 @@ the following restrictions:
 
 3. This notice may not be removed or altered from any source distribution.
 
-## GNU General Public License, version 2.0, for SJCL, rawdeflate and rawinflate
+## GNU General Public License, version 2.0, for rawinflate
 
 _Version 2, June 1991_
 _Copyright © 1989, 1991 Free Software Foundation, Inc.,_
@@ -307,31 +307,6 @@ POSSIBILITY OF SUCH DAMAGES.
 
 END OF TERMS AND CONDITIONS
 
-## BSD 2-Clause License for SJCL
-
-_Copyright © 2009-2015, Emily Stark, Mike Hamburg and Dan Boneh at Stanford University._
-_All rights reserved._
-
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are met:
-
-1. Redistributions of source code must retain the above copyright notice, this
-   list of conditions and the following disclaimer.
-2. Redistributions in binary form must reproduce the above copyright notice,
-   this list of conditions and the following disclaimer in the documentation
-   and/or other materials provided with the distribution. 
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS “AS IS” AND
-ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
-ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
 ## BSD 3-Clause License for Showdown
 
 Showdown Copyright © 2007, John Fraser
@@ -367,38 +342,7 @@ any theory of liability, whether in contract, strict liability, or tort
 (including negligence or otherwise) arising in any way out of the use of this
 software, even if advised of the possibility of such damage.
 
-## BSD 3-Clause License for base64.js version 2.1.9
-
-Copyright © 2014, Dan Kogai
-All rights reserved.
-
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are met:
-
-* Redistributions of source code must retain the above copyright notice, this
-  list of conditions and the following disclaimer.
-
-* Redistributions in binary form must reproduce the above copyright notice,
-  this list of conditions and the following disclaimer in the documentation
-  and/or other materials provided with the distribution.
-
-* Neither the name of base64.js nor the names of its contributors may be used
-  to endorse or promote products derived from this software without specific
-  prior written permission.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-## MIT License for base64.js version 1.7, Bootstrap, Identicon, random_compat,
-## Composer, kjua and base-x
+## MIT License for base64.js version 1.7, Bootstrap, Identicon, random_compat, Composer, kjua and base-x
 
 Copyright © 2012 Dan Kogai
 Copyright © 2011-2016 Twitter, Inc.

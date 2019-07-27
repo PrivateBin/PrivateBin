@@ -70,12 +70,24 @@ languageselection = false
 ; Check the documentation at https://content-security-policy.com/
 ; Note: If you use a bootstrap theme, you can remove the allow-popups from the sandbox restrictions.
 ; By default this disallows to load images from third-party servers, e.g. when they are embedded in pastes. If you wish to allow that, you can adjust the policy here. See https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-it-load-embedded-images for details.
-; cspheader = "default-src 'none'; manifest-src 'self'; connect-src *; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self' data:; media-src data:; object-src data:; Referrer-Policy: 'no-referrer'; sandbox allow-same-origin allow-scripts allow-forms allow-popups allow-modals"
+; cspheader = "default-src 'none'; manifest-src 'self'; connect-src *; script-src 'self' 'unsafe-eval'; style-src 'self'; font-src 'self'; img-src 'self' data: blob:; media-src blob:; object-src blob:; sandbox allow-same-origin allow-scripts allow-forms allow-popups allow-modals"
 
 ; stay compatible with PrivateBin Alpha 0.19, less secure
 ; if enabled will use base64.js version 1.7 instead of 2.1.9 and sha1 instead of
 ; sha256 in HMAC for the deletion token
-zerobincompatibility = false
+; zerobincompatibility = false
+
+; Enable or disable the warning message when the site is served over an insecure
+; connection (insecure HTTP instead of HTTPS), defaults to true.
+; Secure transport methods like Tor and I2P domains are automatically whitelisted.
+; It is **strongly discouraged** to disable this.
+; See https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-it-show-me-an-error-about-an-insecure-connection for more information.
+; httpwarning = true
+
+; Pick compression algorithm or disable it. Only applies to pastes/comments
+; created after changing the setting.
+; Can be set to one these values: none / zlib (default).
+; compression = zlib
 
 [expire]
 ; expire value that is selected per default

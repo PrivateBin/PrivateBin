@@ -87,7 +87,7 @@
     "FOR YOUR EYES ONLY. Don't close this window, this message can't be displayed again.":
         "POUR VOS YEUX UNIQUEMENT. Ne fermez pas cette fenêtre, ce paste ne pourra plus être affiché.",
     "Could not decrypt comment; Wrong key?":
-        "Impossible de déchiffrer le commentaire ; mauvaise clé ?",
+        "Impossible de déchiffrer le commentaire; mauvaise clé ?",
     "Reply":
         "Répondre",
     "Anonymous":
@@ -112,8 +112,6 @@
         "Le serveur ne répond pas ou a rencontré une erreur",
     "Could not post comment: %s":
         "Impossible de poster le commentaire : %s",
-    "Please move your mouse for more entropy…":
-        "Merci de bouger votre souris pour plus d'entropie…",
     "Sending paste…":
         "Envoi du paste…",
     "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit [Ctrl]+[c] to copy)</span>":
@@ -141,8 +139,8 @@
     "Cloned: '%s'": "Cloner '%s'",
     "The cloned file '%s' was attached to this paste.": "Le fichier cloné '%s' a été attaché à ce paste.",
     "Attach a file": "Attacher un fichier ",
-    "alternatively drag & drop a file or paste an image from the clipboard": "alternatively drag & drop a file or paste an image from the clipboard",
-    "File too large, to display a preview. Please download the attachment.": "File too large, to display a preview. Please download the attachment.",
+    "alternatively drag & drop a file or paste an image from the clipboard": "alternativement, glisser & déposer un fichier ou coller une image à partir du presse-papiers",
+    "File too large, to display a preview. Please download the attachment.": "Fichier trop volumineux, pour afficher un aperçu. Veuillez télécharger la pièce jointe.",
     "Remove attachment": "Enlever l'attachement",
     "Your browser does not support uploading encrypted files. Please use a newer browser.":
         "Votre navigateur ne supporte pas l'envoi de fichiers chiffrés. Merci d'utiliser un navigateur plus récent.",
@@ -160,10 +158,17 @@
     "Loading…": "Chargement…",
     "Decrypting paste…": "Déchiffrement du paste…",
     "Preparing new paste…": "Préparation du paste…",
-    "In case this message never disappears please have a look at <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">this FAQ for information to troubleshoot</a>.":
-        "Si ce message ne disparaîssait pas, jetez un oeil à <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">cette FAQ pour des idées de résolution</a> (en Anglais).",
+    "In case this message never disappears please have a look at <a href=\"%s\">this FAQ for information to troubleshoot</a>.":
+        "Si ce message ne disparaîssait pas, jetez un oeil à <a href=\"%s\">cette FAQ pour des idées de résolution</a> (en Anglais).",
     "+++ no paste text +++": "+++ pas de paste-text +++",
     "Could not get paste data: %s":
-        "Could not get paste data: %s",
-    "QR code": "QR code"
+        "Impossible d'obtenir les données du paste: %s",
+    "QR code": "QR code",
+    "I love you too, bot…": "Je t’aime aussi, bot…",
+    "This website is using an insecure HTTP connection! Please use it only for testing.":
+        "Ce site web utilise une connexion HTTP non sécurisée ! Veuillez l’utiliser uniquement pour des tests.",
+    "For more information <a href=\"%s\">see this FAQ entry</a>.":
+        "Pour plus d'informations <a href=\"%s\">consultez cette rubrique de la FAQ</a>.",
+    "Your browser may require an HTTPS connection to support the WebCrypto API. Try <a href=\"%s\">switching to HTTPS</a>.":
+        "Votre navigateur peut nécessiter une connexion HTTPS pour prendre en charge l’API WebCrypto. Essayez <a href=\"%s\">de passer en HTTPS</a>."
 }

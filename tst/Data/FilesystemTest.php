@@ -36,23 +36,23 @@ class FilesystemTest extends PHPUnit_Framework_TestCase
         $this->_model->delete(Helper::getPasteId());
 
         // storing pastes
-        $paste = Helper::getPaste(array('expire_date' => 1344803344));
+        $paste = Helper::getPaste(2, array('expire_date' => 1344803344));
         $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste does not yet exist');
         $this->assertTrue($this->_model->create(Helper::getPasteId(), $paste), 'store new paste');
         $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste exists after storing it');
         $this->assertFalse($this->_model->create(Helper::getPasteId(), $paste), 'unable to store the same paste twice');
-        $this->assertEquals(json_decode(json_encode($paste)), $this->_model->read(Helper::getPasteId()));
+        $this->assertEquals($paste, $this->_model->read(Helper::getPasteId()));
 
         // storing comments
         $this->assertFalse($this->_model->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId()), 'comment does not yet exist');
         $this->assertTrue($this->_model->createComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId(), Helper::getComment()), 'store comment');
         $this->assertTrue($this->_model->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId()), 'comment exists after storing it');
         $this->assertFalse($this->_model->createComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId(), Helper::getComment()), 'unable to store the same comment twice');
-        $comment           = json_decode(json_encode(Helper::getComment()));
-        $comment->id       = Helper::getCommentId();
-        $comment->parentid = Helper::getPasteId();
+        $comment             = Helper::getComment();
+        $comment['id']       = Helper::getCommentId();
+        $comment['parentid'] = Helper::getPasteId();
         $this->assertEquals(
-            array($comment->meta->postdate => $comment),
+            array($comment['meta']['created'] => $comment),
             $this->_model->readComments(Helper::getPasteId())
         );
 
@@ -66,7 +66,7 @@ class FilesystemTest extends PHPUnit_Framework_TestCase
     public function testFileBasedAttachmentStoreWorks()
     {
         $this->_model->delete(Helper::getPasteId());
-        $original                        = $paste                        = Helper::getPasteWithAttachment(array('expire_date' => 1344803344));
+        $original                        = $paste = Helper::getPasteWithAttachment(1, array('expire_date' => 1344803344));
         $paste['meta']['attachment']     = $paste['attachment'];
         $paste['meta']['attachmentname'] = $paste['attachmentname'];
         unset($paste['attachment'], $paste['attachmentname']);
@@ -74,7 +74,7 @@ class FilesystemTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($this->_model->create(Helper::getPasteId(), $paste), 'store new paste');
         $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste exists after storing it');
         $this->assertFalse($this->_model->create(Helper::getPasteId(), $paste), 'unable to store the same paste twice');
-        $this->assertEquals(json_decode(json_encode($original)), $this->_model->read(Helper::getPasteId()));
+        $this->assertEquals($original, $this->_model->read(Helper::getPasteId()));
     }
 
     /**
@@ -83,12 +83,12 @@ class FilesystemTest extends PHPUnit_Framework_TestCase
     public function testPurge()
     {
         mkdir($this->_path . DIRECTORY_SEPARATOR . '00', 0777, true);
-        $expired = Helper::getPaste(array('expire_date' => 1344803344));
-        $paste   = Helper::getPaste(array('expire_date' => time() + 3600));
+        $expired = Helper::getPaste(2, array('expire_date' => 1344803344));
+        $paste   = Helper::getPaste(2, array('expire_date' => time() + 3600));
         $keys    = array('a', 'b', 'c', 'd', 'e', 'f', 'g', 'x', 'y', 'z');
         $ids     = array();
         foreach ($keys as $key) {
-            $ids[$key] = substr(md5($key), 0, 16);
+            $ids[$key] = hash('fnv164', $key);
             $this->assertFalse($this->_model->exists($ids[$key]), "paste $key does not yet exist");
             if (in_array($key, array('x', 'y', 'z'))) {
                 $this->assertTrue($this->_model->create($ids[$key], $paste), "store $key paste");
@@ -113,7 +113,7 @@ class FilesystemTest extends PHPUnit_Framework_TestCase
     public function testErrorDetection()
     {
         $this->_model->delete(Helper::getPasteId());
-        $paste = Helper::getPaste(array('formatter' => "Invalid UTF-8 sequence: \xB1\x31"));
+        $paste = Helper::getPaste(2, array('expire' => "Invalid UTF-8 sequence: \xB1\x31"));
         $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste does not yet exist');
         $this->assertFalse($this->_model->create(Helper::getPasteId(), $paste), 'unable to store broken paste');
         $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste does still not exist');
@@ -122,7 +122,7 @@ class FilesystemTest extends PHPUnit_Framework_TestCase
     public function testCommentErrorDetection()
     {
         $this->_model->delete(Helper::getPasteId());
-        $comment = Helper::getComment(array('formatter' => "Invalid UTF-8 sequence: \xB1\x31"));
+        $comment = Helper::getComment(1, array('nickname' => "Invalid UTF-8 sequence: \xB1\x31"));
         $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste does not yet exist');
         $this->assertTrue($this->_model->create(Helper::getPasteId(), Helper::getPaste()), 'store new paste');
         $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste exists after storing it');
@@ -163,16 +163,16 @@ class FilesystemTest extends PHPUnit_Framework_TestCase
             $this->assertFileExists($storagedir . $dataid . '.php', "paste $dataid exists in new format");
             $this->assertFileNotExists($storagedir . $dataid, "old format paste $dataid got removed");
             $this->assertTrue($this->_model->exists($dataid), "paste $dataid exists");
-            $this->assertEquals($this->_model->read($dataid), json_decode(json_encode($paste)), "paste $dataid wasn't modified in the conversion");
+            $this->assertEquals($this->_model->read($dataid), $paste, "paste $dataid wasn't modified in the conversion");
 
             $storagedir .= $dataid . '.discussion' . DIRECTORY_SEPARATOR;
             $this->assertFileExists($storagedir . $dataid . '.' . $commentid . '.' . $dataid . '.php', "comment of $dataid exists in new format");
             $this->assertFileNotExists($storagedir . $dataid . '.' . $commentid . '.' . $dataid, "old format comment of $dataid got removed");
             $this->assertTrue($this->_model->existsComment($dataid, $dataid, $commentid), "comment in paste $dataid exists");
-            $comment           = json_decode(json_encode($comment));
-            $comment->id       = $commentid;
-            $comment->parentid = $dataid;
-            $this->assertEquals($this->_model->readComments($dataid), array($comment->meta->postdate => $comment), "comment of $dataid wasn't modified in the conversion");
+            $comment             = $comment;
+            $comment['id']       = $commentid;
+            $comment['parentid'] = $dataid;
+            $this->assertEquals($this->_model->readComments($dataid), array($comment['meta']['created'] => $comment), "comment of $dataid wasn't modified in the conversion");
         }
     }
 }

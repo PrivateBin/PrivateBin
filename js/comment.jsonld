@@ -1,16 +1,35 @@
 {
 	"@context": {
 		"so": "https://schema.org/",
-		"status": "so:Integer",
-		"id": "so:name",
-		"parentid": "so:name",
-		"url: {
-			"@id": "so:url",
-			"@type": "@id"
+		"pb": "?jsonld=types#",
+		"cm": "?jsonld=commentmeta#",
+		"status": {
+			"@type": "so:Integer"
 		},
-		"data": "so:Text",
+		"id": {
+			"@type": "so:name"
+		},
+		"pasteid": {
+			"@type": "so:name"
+		},
+		"parentid": {
+			"@type": "so:name"
+		},
+		"url": {
+			"@type": "so:url"
+		},
+		"v": {
+			"@type": "so:Integer",
+			"@value": 2
+		},
+		"ct": {
+			"@type": "pb:CipherText"
+		},
+		"adata": {
+			"@type": "pb:CipherParameters"
+		},
 		"meta": {
-			"@id": "?jsonld=commentmeta"
+			"@type": "cm:MetaData"
 		}
 	}
 }

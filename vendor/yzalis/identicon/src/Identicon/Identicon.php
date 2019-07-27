@@ -11,10 +11,15 @@ use Identicon\Generator\GeneratorInterface;
 class Identicon
 {
     /**
-     * @var GeneratorInterface
+     * @var \Identicon\Generator\GeneratorInterface
      */
     private $generator;
 
+    /**
+     * Identicon constructor.
+     *
+     * @param \Identicon\Generator\GeneratorInterface|null $generator
+     */
     public function __construct($generator = null)
     {
         if (null === $generator) {
@@ -22,15 +27,14 @@ class Identicon
         } else {
             $this->generator = $generator;
         }
-
     }
 
     /**
-     * Set the image generetor
+     * Set the image generator.
      *
-     * @param GeneratorInterface $generator
+     * @param \Identicon\Generator\GeneratorInterface $generator
      *
-     * @throws \Exception
+     * @return $this
      */
     public function setGenerator(GeneratorInterface $generator)
     {
@@ -40,26 +44,26 @@ class Identicon
     }
 
     /**
-     * Display an Identicon image
+     * Display an Identicon image.
      *
-     * @param string  $string
-     * @param integer $size
-     * @param string  $color
-     * @param string  $backgroundColor
+     * @param string $string
+     * @param int    $size
+     * @param string $color
+     * @param string $backgroundColor
      */
     public function displayImage($string, $size = 64, $color = null, $backgroundColor = null)
     {
-        header("Content-Type: image/png");
+        header('Content-Type: '.$this->generator->getMimeType());
         echo $this->getImageData($string, $size, $color, $backgroundColor);
     }
 
     /**
-     * Get an Identicon PNG image data
+     * Get an Identicon PNG image data.
      *
-     * @param string  $string
-     * @param integer $size
-     * @param string  $color
-     * @param string  $backgroundColor
+     * @param string $string
+     * @param int    $size
+     * @param string $color
+     * @param string $backgroundColor
      *
      * @return string
      */
@@ -69,12 +73,12 @@ class Identicon
     }
 
     /**
-     * Get an Identicon PNG image resource
+     * Get an Identicon PNG image resource.
      *
-     * @param string  $string
-     * @param integer $size
-     * @param string  $color
-     * @param string  $backgroundColor
+     * @param string $string
+     * @param int    $size
+     * @param string $color
+     * @param string $backgroundColor
      *
      * @return string
      */
@@ -84,17 +88,36 @@ class Identicon
     }
 
     /**
-     * Get an Identicon PNG image data as base 64 encoded
+     * Get an Identicon PNG image data as base 64 encoded.
      *
-     * @param string  $string
-     * @param integer $size
-     * @param string  $color
-     * @param string  $backgroundColor
+     * @param string $string
+     * @param int    $size
+     * @param string $color
+     * @param string $backgroundColor
      *
      * @return string
      */
     public function getImageDataUri($string, $size = 64, $color = null, $backgroundColor = null)
     {
-        return sprintf('data:image/png;base64,%s', base64_encode($this->getImageData($string, $size, $color, $backgroundColor)));
+        return sprintf('data:%s;base64,%s', $this->generator->getMimeType(), base64_encode($this->getImageData($string, $size, $color, $backgroundColor)));
     }
+	
+	/**
+	 * Get the color of the Identicon
+     *
+     * Returns an array with RGB values of the Identicon's color. Colors may be NULL if no image has been generated
+     * so far (e.g., when calling the method on a new Identicon()).
+	 * 
+	 * @return array
+	 */
+	public function getColor()
+    {
+		$colors = $this->generator->getColor();
+
+        return [
+            "r" => $colors[0],
+            "g" => $colors[1],
+            "b" => $colors[2]
+        ];
+	}
 }

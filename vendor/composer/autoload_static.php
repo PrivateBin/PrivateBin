@@ -15,6 +15,10 @@ class ComposerStaticInitDontChange
         array (
             'PrivateBin\\' => 11,
         ),
+        'I' => 
+        array (
+            'Identicon\\' => 10,
+        ),
     );
 
     public static $prefixDirsPsr4 = array (
@@ -22,15 +26,9 @@ class ComposerStaticInitDontChange
         array (
             0 => __DIR__ . '/../..' . '/lib',
         ),
-    );
-
-    public static $prefixesPsr0 = array (
-        'I' => 
+        'Identicon\\' => 
         array (
-            'Identicon' => 
-            array (
-                0 => __DIR__ . '/..' . '/yzalis/identicon/src',
-            ),
+            0 => __DIR__ . '/..' . '/yzalis/identicon/src/Identicon',
         ),
     );
 
@@ -39,6 +37,7 @@ class ComposerStaticInitDontChange
         'Identicon\\Generator\\GdGenerator' => __DIR__ . '/..' . '/yzalis/identicon/src/Identicon/Generator/GdGenerator.php',
         'Identicon\\Generator\\GeneratorInterface' => __DIR__ . '/..' . '/yzalis/identicon/src/Identicon/Generator/GeneratorInterface.php',
         'Identicon\\Generator\\ImageMagickGenerator' => __DIR__ . '/..' . '/yzalis/identicon/src/Identicon/Generator/ImageMagickGenerator.php',
+        'Identicon\\Generator\\SvgGenerator' => __DIR__ . '/..' . '/yzalis/identicon/src/Identicon/Generator/SvgGenerator.php',
         'Identicon\\Identicon' => __DIR__ . '/..' . '/yzalis/identicon/src/Identicon/Identicon.php',
         'PrivateBin\\Configuration' => __DIR__ . '/../..' . '/lib/Configuration.php',
         'PrivateBin\\Controller' => __DIR__ . '/../..' . '/lib/Controller.php',
@@ -46,6 +45,7 @@ class ComposerStaticInitDontChange
         'PrivateBin\\Data\\Database' => __DIR__ . '/../..' . '/lib/Data/Database.php',
         'PrivateBin\\Data\\Filesystem' => __DIR__ . '/../..' . '/lib/Data/Filesystem.php',
         'PrivateBin\\Filter' => __DIR__ . '/../..' . '/lib/Filter.php',
+        'PrivateBin\\FormatV2' => __DIR__ . '/../..' . '/lib/FormatV2.php',
         'PrivateBin\\I18n' => __DIR__ . '/../..' . '/lib/I18n.php',
         'PrivateBin\\Json' => __DIR__ . '/../..' . '/lib/Json.php',
         'PrivateBin\\Model' => __DIR__ . '/../..' . '/lib/Model.php',
@@ -58,7 +58,6 @@ class ComposerStaticInitDontChange
         'PrivateBin\\Persistence\\ServerSalt' => __DIR__ . '/../..' . '/lib/Persistence/ServerSalt.php',
         'PrivateBin\\Persistence\\TrafficLimiter' => __DIR__ . '/../..' . '/lib/Persistence/TrafficLimiter.php',
         'PrivateBin\\Request' => __DIR__ . '/../..' . '/lib/Request.php',
-        'PrivateBin\\Sjcl' => __DIR__ . '/../..' . '/lib/Sjcl.php',
         'PrivateBin\\View' => __DIR__ . '/../..' . '/lib/View.php',
         'PrivateBin\\Vizhash16x16' => __DIR__ . '/../..' . '/lib/Vizhash16x16.php',
     );
@@ -68,7 +67,6 @@ class ComposerStaticInitDontChange
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInitDontChange::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInitDontChange::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInitDontChange::$prefixesPsr0;
             $loader->classMap = ComposerStaticInitDontChange::$classMap;
 
         }, null, ClassLoader::class);

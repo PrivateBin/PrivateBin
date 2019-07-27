@@ -7,7 +7,7 @@
  * @link      https://github.com/PrivateBin/PrivateBin
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
- * @version   1.2.1
+ * @version   1.3
  */
 
 namespace PrivateBin\Data;
@@ -16,7 +16,7 @@ use Exception;
 use PDO;
 use PDOException;
 use PrivateBin\Controller;
-use stdClass;
+use PrivateBin\Json;
 
 /**
  * Database
@@ -68,80 +68,78 @@ class Database extends AbstractData
      * @throws Exception
      * @return Database
      */
-    public static function getInstance($options = null)
+    public static function getInstance(array $options)
     {
         // if needed initialize the singleton
         if (!(self::$_instance instanceof self)) {
             self::$_instance = new self;
         }
 
-        if (is_array($options)) {
-            // set table prefix if given
-            if (array_key_exists('tbl', $options)) {
-                self::$_prefix = $options['tbl'];
+        // set table prefix if given
+        if (array_key_exists('tbl', $options)) {
+            self::$_prefix = $options['tbl'];
+        }
+
+        // initialize the db connection with new options
+        if (
+            array_key_exists('dsn', $options) &&
+            array_key_exists('usr', $options) &&
+            array_key_exists('pwd', $options) &&
+            array_key_exists('opt', $options)
+        ) {
+            // set default options
+            $options['opt'][PDO::ATTR_ERRMODE]          = PDO::ERRMODE_EXCEPTION;
+            $options['opt'][PDO::ATTR_EMULATE_PREPARES] = false;
+            $options['opt'][PDO::ATTR_PERSISTENT]       = true;
+            $db_tables_exist                            = true;
+
+            // setup type and dabase connection
+            self::$_type = strtolower(
+                substr($options['dsn'], 0, strpos($options['dsn'], ':'))
+            );
+            $tableQuery = self::_getTableQuery(self::$_type);
+            self::$_db  = new PDO(
+                $options['dsn'],
+                $options['usr'],
+                $options['pwd'],
+                $options['opt']
+            );
+
+            // check if the database contains the required tables
+            $tables = self::$_db->query($tableQuery)->fetchAll(PDO::FETCH_COLUMN, 0);
+
+            // create paste table if necessary
+            if (!in_array(self::_sanitizeIdentifier('paste'), $tables)) {
+                self::_createPasteTable();
+                $db_tables_exist = false;
             }
 
-            // initialize the db connection with new options
-            if (
-                array_key_exists('dsn', $options) &&
-                array_key_exists('usr', $options) &&
-                array_key_exists('pwd', $options) &&
-                array_key_exists('opt', $options)
-            ) {
-                // set default options
-                $options['opt'][PDO::ATTR_ERRMODE]          = PDO::ERRMODE_EXCEPTION;
-                $options['opt'][PDO::ATTR_EMULATE_PREPARES] = false;
-                $options['opt'][PDO::ATTR_PERSISTENT]       = true;
-                $db_tables_exist                            = true;
+            // create comment table if necessary
+            if (!in_array(self::_sanitizeIdentifier('comment'), $tables)) {
+                self::_createCommentTable();
+                $db_tables_exist = false;
+            }
 
-                // setup type and dabase connection
-                self::$_type = strtolower(
-                    substr($options['dsn'], 0, strpos($options['dsn'], ':'))
-                );
-                $tableQuery = self::_getTableQuery(self::$_type);
-                self::$_db  = new PDO(
-                    $options['dsn'],
-                    $options['usr'],
-                    $options['pwd'],
-                    $options['opt']
-                );
-
-                // check if the database contains the required tables
-                $tables = self::$_db->query($tableQuery)->fetchAll(PDO::FETCH_COLUMN, 0);
-
-                // create paste table if necessary
-                if (!in_array(self::_sanitizeIdentifier('paste'), $tables)) {
-                    self::_createPasteTable();
-                    $db_tables_exist = false;
-                }
-
-                // create comment table if necessary
-                if (!in_array(self::_sanitizeIdentifier('comment'), $tables)) {
-                    self::_createCommentTable();
-                    $db_tables_exist = false;
-                }
-
-                // create config table if necessary
-                $db_version = Controller::VERSION;
-                if (!in_array(self::_sanitizeIdentifier('config'), $tables)) {
-                    self::_createConfigTable();
-                    // if we only needed to create the config table, the DB is older then 0.22
-                    if ($db_tables_exist) {
-                        $db_version = '0.21';
-                    }
-                } else {
-                    $db_version = self::_getConfig('VERSION');
-                }
-
-                // update database structure if necessary
-                if (version_compare($db_version, Controller::VERSION, '<')) {
-                    self::_upgradeDatabase($db_version);
+            // create config table if necessary
+            $db_version = Controller::VERSION;
+            if (!in_array(self::_sanitizeIdentifier('config'), $tables)) {
+                self::_createConfigTable();
+                // if we only needed to create the config table, the DB is older then 0.22
+                if ($db_tables_exist) {
+                    $db_version = '0.21';
                 }
             } else {
-                throw new Exception(
-                    'Missing configuration for key dsn, usr, pwd or opt in the section model_options, please check your configuration file', 6
-                );
+                $db_version = self::_getConfig('VERSION');
             }
+
+            // update database structure if necessary
+            if (version_compare($db_version, Controller::VERSION, '<')) {
+                self::_upgradeDatabase($db_version);
+            }
+        } else {
+            throw new Exception(
+                'Missing configuration for key dsn, usr, pwd or opt in the section model_options, please check your configuration file', 6
+            );
         }
 
         return self::$_instance;
@@ -155,7 +153,7 @@ class Database extends AbstractData
      * @param  array  $paste
      * @return bool
      */
-    public function create($pasteid, $paste)
+    public function create($pasteid, array $paste)
     {
         if (
             array_key_exists($pasteid, self::$_cache)
@@ -167,42 +165,50 @@ class Database extends AbstractData
             }
         }
 
-        $opendiscussion = $burnafterreading = false;
-        $attachment     = $attachmentname     = '';
-        $meta           = $paste['meta'];
-        unset($meta['postdate']);
-        $expire_date = 0;
-        if (array_key_exists('expire_date', $paste['meta'])) {
-            $expire_date = (int) $paste['meta']['expire_date'];
+        $expire_date      = 0;
+        $opendiscussion   = $burnafterreading = false;
+        $attachment       = $attachmentname   = null;
+        $meta             = $paste['meta'];
+        $isVersion1       = array_key_exists('data', $paste);
+        list($createdKey) = self::_getVersionedKeys($isVersion1 ? 1 : 2);
+        $created          = (int) $meta[$createdKey];
+        unset($meta[$createdKey], $paste['meta']);
+        if (array_key_exists('expire_date', $meta)) {
+            $expire_date = (int) $meta['expire_date'];
             unset($meta['expire_date']);
         }
-        if (array_key_exists('opendiscussion', $paste['meta'])) {
-            $opendiscussion = (bool) $paste['meta']['opendiscussion'];
+        if (array_key_exists('opendiscussion', $meta)) {
+            $opendiscussion = $meta['opendiscussion'];
             unset($meta['opendiscussion']);
         }
-        if (array_key_exists('burnafterreading', $paste['meta'])) {
-            $burnafterreading = (bool) $paste['meta']['burnafterreading'];
+        if (array_key_exists('burnafterreading', $meta)) {
+            $burnafterreading = $meta['burnafterreading'];
             unset($meta['burnafterreading']);
         }
-        if (array_key_exists('attachment', $paste['meta'])) {
-            $attachment = $paste['meta']['attachment'];
-            unset($meta['attachment']);
-        }
-        if (array_key_exists('attachmentname', $paste['meta'])) {
-            $attachmentname = $paste['meta']['attachmentname'];
-            unset($meta['attachmentname']);
+        if ($isVersion1) {
+            if (array_key_exists('attachment', $meta)) {
+                $attachment = $meta['attachment'];
+                unset($meta['attachment']);
+            }
+            if (array_key_exists('attachmentname', $meta)) {
+                $attachmentname = $meta['attachmentname'];
+                unset($meta['attachmentname']);
+            }
+        } else {
+            $opendiscussion   = $paste['adata'][2];
+            $burnafterreading = $paste['adata'][3];
         }
         return self::_exec(
             'INSERT INTO ' . self::_sanitizeIdentifier('paste') .
             ' VALUES(?,?,?,?,?,?,?,?,?)',
             array(
                 $pasteid,
-                $paste['data'],
-                $paste['meta']['postdate'],
+                $isVersion1 ? $paste['data'] : Json::encode($paste),
+                $created,
                 $expire_date,
                 (int) $opendiscussion,
                 (int) $burnafterreading,
-                json_encode($meta),
+                Json::encode($meta),
                 $attachment,
                 $attachmentname,
             )
@@ -214,64 +220,62 @@ class Database extends AbstractData
      *
      * @access public
      * @param  string $pasteid
-     * @return stdClass|false
+     * @return array|false
      */
     public function read($pasteid)
     {
-        if (
-            !array_key_exists($pasteid, self::$_cache)
-        ) {
-            self::$_cache[$pasteid] = false;
-            $paste                  = self::_select(
-                'SELECT * FROM ' . self::_sanitizeIdentifier('paste') .
-                ' WHERE dataid = ?', array($pasteid), true
-            );
+        if (array_key_exists($pasteid, self::$_cache)) {
+            return self::$_cache[$pasteid];
+        }
 
-            if (false !== $paste) {
-                // create object
-                self::$_cache[$pasteid]       = new stdClass;
-                self::$_cache[$pasteid]->data = $paste['data'];
+        self::$_cache[$pasteid] = false;
+        $paste                  = self::_select(
+            'SELECT * FROM ' . self::_sanitizeIdentifier('paste') .
+            ' WHERE dataid = ?', array($pasteid), true
+        );
 
-                $meta = json_decode($paste['meta']);
-                if (!is_object($meta)) {
-                    $meta = new stdClass;
-                }
+        if ($paste === false) {
+            return false;
+        }
+        // create array
+        $data       = Json::decode($paste['data']);
+        $isVersion2 = array_key_exists('v', $data) && $data['v'] >= 2;
+        if ($isVersion2) {
+            self::$_cache[$pasteid] = $data;
+            list($createdKey)       = self::_getVersionedKeys(2);
+        } else {
+            self::$_cache[$pasteid] = array('data' => $paste['data']);
+            list($createdKey)       = self::_getVersionedKeys(1);
+        }
 
-                // support older attachments
-                if (property_exists($meta, 'attachment')) {
-                    self::$_cache[$pasteid]->attachment = $meta->attachment;
-                    unset($meta->attachment);
-                    if (property_exists($meta, 'attachmentname')) {
-                        self::$_cache[$pasteid]->attachmentname = $meta->attachmentname;
-                        unset($meta->attachmentname);
-                    }
-                }
-                // support current attachments
-                elseif (array_key_exists('attachment', $paste) && strlen($paste['attachment'])) {
-                    self::$_cache[$pasteid]->attachment = $paste['attachment'];
-                    if (array_key_exists('attachmentname', $paste) && strlen($paste['attachmentname'])) {
-                        self::$_cache[$pasteid]->attachmentname = $paste['attachmentname'];
-                    }
-                }
-                self::$_cache[$pasteid]->meta           = $meta;
-                self::$_cache[$pasteid]->meta->postdate = (int) $paste['postdate'];
-                $expire_date                            = (int) $paste['expiredate'];
-                if (
-                    $expire_date > 0
-                ) {
-                    self::$_cache[$pasteid]->meta->expire_date = $expire_date;
-                }
-                if (
-                    $paste['opendiscussion']
-                ) {
-                    self::$_cache[$pasteid]->meta->opendiscussion = true;
-                }
-                if (
-                    $paste['burnafterreading']
-                ) {
-                    self::$_cache[$pasteid]->meta->burnafterreading = true;
-                }
+        try {
+            $paste['meta'] = Json::decode($paste['meta']);
+        } catch (Exception $e) {
+            $paste['meta'] = array();
+        }
+        $paste                                       = self::upgradePreV1Format($paste);
+        self::$_cache[$pasteid]['meta']              = $paste['meta'];
+        self::$_cache[$pasteid]['meta'][$createdKey] = (int) $paste['postdate'];
+        $expire_date                                 = (int) $paste['expiredate'];
+        if ($expire_date > 0) {
+            self::$_cache[$pasteid]['meta']['expire_date'] = $expire_date;
+        }
+        if ($isVersion2) {
+            return self::$_cache[$pasteid];
+        }
+
+        // support v1 attachments
+        if (array_key_exists('attachment', $paste) && strlen($paste['attachment'])) {
+            self::$_cache[$pasteid]['attachment'] = $paste['attachment'];
+            if (array_key_exists('attachmentname', $paste) && strlen($paste['attachmentname'])) {
+                self::$_cache[$pasteid]['attachmentname'] = $paste['attachmentname'];
             }
+        }
+        if ($paste['opendiscussion']) {
+            self::$_cache[$pasteid]['meta']['opendiscussion'] = true;
+        }
+        if ($paste['burnafterreading']) {
+            self::$_cache[$pasteid]['meta']['burnafterreading'] = true;
         }
 
         return self::$_cache[$pasteid];
@@ -327,11 +331,21 @@ class Database extends AbstractData
      * @param  array  $comment
      * @return bool
      */
-    public function createComment($pasteid, $parentid, $commentid, $comment)
+    public function createComment($pasteid, $parentid, $commentid, array $comment)
     {
-        foreach (array('nickname', 'vizhash') as $key) {
-            if (!array_key_exists($key, $comment['meta'])) {
-                $comment['meta'][$key] = null;
+        if (array_key_exists('data', $comment)) {
+            $version = 1;
+            $data    = $comment['data'];
+        } else {
+            $version = 2;
+            $data    = Json::encode($comment);
+        }
+        list($createdKey, $iconKey) = self::_getVersionedKeys($version);
+        $meta                       = $comment['meta'];
+        unset($comment['meta']);
+        foreach (array('nickname', $iconKey) as $key) {
+            if (!array_key_exists($key, $meta)) {
+                $meta[$key] = null;
             }
         }
         return self::_exec(
@@ -341,10 +355,10 @@ class Database extends AbstractData
                 $commentid,
                 $pasteid,
                 $parentid,
-                $comment['data'],
-                $comment['meta']['nickname'],
-                $comment['meta']['vizhash'],
-                $comment['meta']['postdate'],
+                $data,
+                $meta['nickname'],
+                $meta[$iconKey],
+                $meta[$createdKey],
             )
         );
     }
@@ -367,16 +381,22 @@ class Database extends AbstractData
         $comments = array();
         if (count($rows)) {
             foreach ($rows as $row) {
-                $i                            = $this->getOpenSlot($comments, (int) $row['postdate']);
-                $comments[$i]                 = new stdClass;
-                $comments[$i]->id             = $row['dataid'];
-                $comments[$i]->parentid       = $row['parentid'];
-                $comments[$i]->data           = $row['data'];
-                $comments[$i]->meta           = new stdClass;
-                $comments[$i]->meta->postdate = (int) $row['postdate'];
-                foreach (array('nickname', 'vizhash') as $key) {
-                    if (array_key_exists($key, $row) && !empty($row[$key])) {
-                        $comments[$i]->meta->$key = $row[$key];
+                $i    = $this->getOpenSlot($comments, (int) $row['postdate']);
+                $data = Json::decode($row['data']);
+                if (array_key_exists('v', $data) && $data['v'] >= 2) {
+                    $version      = 2;
+                    $comments[$i] = $data;
+                } else {
+                    $version      = 1;
+                    $comments[$i] = array('data' => $row['data']);
+                }
+                list($createdKey, $iconKey) = self::_getVersionedKeys($version);
+                $comments[$i]['id']         = $row['dataid'];
+                $comments[$i]['parentid']   = $row['parentid'];
+                $comments[$i]['meta']       = array($createdKey => (int) $row['postdate']);
+                foreach (array('nickname' => 'nickname', 'vizhash' => $iconKey) as $rowKey => $commentKey) {
+                    if (array_key_exists($rowKey, $row) && !empty($row[$rowKey])) {
+                        $comments[$i]['meta'][$commentKey] = $row[$rowKey];
                     }
                 }
             }
@@ -415,7 +435,8 @@ class Database extends AbstractData
         $pastes = array();
         $rows   = self::_select(
             'SELECT dataid FROM ' . self::_sanitizeIdentifier('paste') .
-            ' WHERE expiredate < ? AND expiredate != ? LIMIT ?', array(time(), 0, $batchsize)
+            ' WHERE expiredate < ? AND expiredate != ? LIMIT ?',
+            array(time(), 0, $batchsize)
         );
         if (count($rows)) {
             foreach ($rows as $row) {
@@ -452,7 +473,7 @@ class Database extends AbstractData
      * @param  array $params
      * @param  bool $firstOnly if only the first row should be returned
      * @throws PDOException
-     * @return array
+     * @return array|false
      */
     private static function _select($sql, array $params, $firstOnly = false)
     {
@@ -463,6 +484,22 @@ class Database extends AbstractData
             $statement->fetchAll(PDO::FETCH_ASSOC);
         $statement->closeCursor();
         return $result;
+    }
+
+    /**
+     * get version dependent key names
+     *
+     * @access private
+     * @static
+     * @param  int $version
+     * @return array
+     */
+    private static function _getVersionedKeys($version)
+    {
+        if ($version === 1) {
+            return array('postdate', 'vizhash');
+        }
+        return array('created', 'icon');
     }
 
     /**
@@ -543,7 +580,7 @@ class Database extends AbstractData
      *
      * @access private
      * @static
-     * @param string $key
+     * @param  string $key
      * @return array
      */
     private static function _getPrimaryKeyClauses($key = 'dataid')
@@ -558,6 +595,30 @@ class Database extends AbstractData
     }
 
     /**
+     * get the data type, depending on the database driver
+     *
+     * @access private
+     * @static
+     * @return string
+     */
+    private static function _getDataType()
+    {
+        return self::$_type === 'pgsql' ? 'TEXT' : 'BLOB';
+    }
+
+    /**
+     * get the attachment type, depending on the database driver
+     *
+     * @access private
+     * @static
+     * @return string
+     */
+    private static function _getAttachmentType()
+    {
+        return self::$_type === 'pgsql' ? 'TEXT' : 'MEDIUMBLOB';
+    }
+
+    /**
      * create the paste table
      *
      * @access private
@@ -566,7 +627,7 @@ class Database extends AbstractData
     private static function _createPasteTable()
     {
         list($main_key, $after_key) = self::_getPrimaryKeyClauses();
-        $dataType                   = self::$_type === 'pgsql' ? 'TEXT' : 'BLOB';
+        $dataType                   = self::_getDataType();
         self::$_db->exec(
             'CREATE TABLE ' . self::_sanitizeIdentifier('paste') . ' ( ' .
             "dataid CHAR(16) NOT NULL$main_key, " .
@@ -576,7 +637,7 @@ class Database extends AbstractData
             'opendiscussion INT, ' .
             'burnafterreading INT, ' .
             'meta TEXT, ' .
-            'attachment ' . (self::$_type === 'pgsql' ? 'TEXT' : 'MEDIUMBLOB') . ', ' .
+            'attachment ' . self::_getAttachmentType() . ', ' .
             "attachmentname $dataType$after_key );"
         );
     }
@@ -590,7 +651,7 @@ class Database extends AbstractData
     private static function _createCommentTable()
     {
         list($main_key, $after_key) = self::_getPrimaryKeyClauses();
-        $dataType                   = self::$_type === 'pgsql' ? 'text' : 'BLOB';
+        $dataType                   = self::_getDataType();
         self::$_db->exec(
             'CREATE TABLE ' . self::_sanitizeIdentifier('comment') . ' ( ' .
             "dataid CHAR(16) NOT NULL$main_key, " .
@@ -649,7 +710,7 @@ class Database extends AbstractData
      */
     private static function _upgradeDatabase($oldversion)
     {
-        $dataType = self::$_type === 'pgsql' ? 'TEXT' : 'BLOB';
+        $dataType = self::_getDataType();
         switch ($oldversion) {
             case '0.21':
                 // create the meta column if necessary (pre 0.21 change)
@@ -661,8 +722,7 @@ class Database extends AbstractData
                 // SQLite only allows one ALTER statement at a time...
                 self::$_db->exec(
                     'ALTER TABLE ' . self::_sanitizeIdentifier('paste') .
-                    ' ADD COLUMN attachment ' .
-                    (self::$_type === 'pgsql' ? 'TEXT' : 'MEDIUMBLOB') . ';'
+                    ' ADD COLUMN attachment ' . self::_getAttachmentType() . ';'
                 );
                 self::$_db->exec(
                     'ALTER TABLE ' . self::_sanitizeIdentifier('paste') . " ADD COLUMN attachmentname $dataType;"

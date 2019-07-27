@@ -72,7 +72,7 @@ describe('Model', function () {
 
     describe('getPasteId', function () {
         this.timeout(30000);
-        before(function () {
+        beforeEach(function () {
             $.PrivateBin.Model.reset();
             cleanup();
         });
@@ -93,8 +93,9 @@ describe('Model', function () {
                     clean            = jsdom('', {
                         url: schema.join('') + '://' + address.join('') +
                              '/?' + queryString + '#' + fragment
-                    }),
-                    result = $.PrivateBin.Model.getPasteId();
+                    });
+                    global.URL = require('jsdom-url').URL;
+                    var result = $.PrivateBin.Model.getPasteId();
                 $.PrivateBin.Model.reset();
                 clean();
                 return pasteIdString === result;
@@ -111,6 +112,7 @@ describe('Model', function () {
                              '/#' + fragment
                     }),
                     result = false;
+                global.URL = require('jsdom-url').URL;
                 try {
                     $.PrivateBin.Model.getPasteId();
                 }
@@ -126,15 +128,20 @@ describe('Model', function () {
 
     describe('getPasteKey', function () {
         this.timeout(30000);
+        beforeEach(function () {
+            $.PrivateBin.Model.reset();
+            cleanup();
+        });
+
         jsc.property(
-            'returns the fragment of the URL',
+            'returns the fragment of a v1 URL',
             jsc.nearray(common.jscA2zString()),
             jsc.nearray(common.jscA2zString()),
             jsc.array(common.jscQueryString()),
-            jsc.nearray(common.jscBase64String()),
+            'nestring',
             function (schema, address, query, fragment) {
-                var fragmentString = fragment.join(''),
-                    clean = jsdom('', {
+                const fragmentString = common.btoa(fragment.padStart(32, '\u0000'));
+                let clean = jsdom('', {
                         url: schema.join('') + '://' + address.join('') +
                              '/?' + query.join('') + '#' + fragmentString
                     }),
@@ -145,15 +152,15 @@ describe('Model', function () {
             }
         );
         jsc.property(
-            'returns the fragment stripped of trailing query parts',
+            'returns the v1 fragment stripped of trailing query parts',
             jsc.nearray(common.jscA2zString()),
             jsc.nearray(common.jscA2zString()),
             jsc.array(common.jscQueryString()),
-            jsc.nearray(common.jscBase64String()),
+            'nestring',
             jsc.array(common.jscHashString()),
             function (schema, address, query, fragment, trail) {
-                var fragmentString = fragment.join(''),
-                    clean = jsdom('', {
+                const fragmentString = common.btoa(fragment.padStart(32, '\u0000'));
+                let clean = jsdom('', {
                         url: schema.join('') + '://' + address.join('') + '/?' +
                              query.join('') + '#' + fragmentString + '&' + trail.join('')
                     }),
@@ -161,6 +168,47 @@ describe('Model', function () {
                 $.PrivateBin.Model.reset();
                 clean();
                 return fragmentString === result;
+            }
+        );
+        jsc.property(
+            'returns the fragment of a v2 URL',
+            jsc.nearray(common.jscA2zString()),
+            jsc.nearray(common.jscA2zString()),
+            jsc.array(common.jscQueryString()),
+            'nestring',
+            function (schema, address, query, fragment) {
+                // base58 strips leading NULL bytes, so the string is padded with these if not found
+                fragment = fragment.padStart(32, '\u0000');
+                let fragmentString = $.PrivateBin.CryptTool.base58encode(fragment),
+                    clean = jsdom('', {
+                        url: schema.join('') + '://' + address.join('') +
+                             '/?' + query.join('') + '#' + fragmentString
+                    }),
+                    result = $.PrivateBin.Model.getPasteKey();
+                $.PrivateBin.Model.reset();
+                clean();
+                return fragment === result;
+            }
+        );
+        jsc.property(
+            'returns the v2 fragment stripped of trailing query parts',
+            jsc.nearray(common.jscA2zString()),
+            jsc.nearray(common.jscA2zString()),
+            jsc.array(common.jscQueryString()),
+            'nestring',
+            jsc.array(common.jscHashString()),
+            function (schema, address, query, fragment, trail) {
+                // base58 strips leading NULL bytes, so the string is padded with these if not found
+                fragment = fragment.padStart(32, '\u0000');
+                let fragmentString = $.PrivateBin.CryptTool.base58encode(fragment),
+                    clean = jsdom('', {
+                        url: schema.join('') + '://' + address.join('') + '/?' +
+                             query.join('') + '#' + fragmentString + '&' + trail.join('')
+                    }),
+                    result = $.PrivateBin.Model.getPasteKey();
+                $.PrivateBin.Model.reset();
+                clean();
+                return fragment === result;
             }
         );
         jsc.property(
@@ -188,7 +236,7 @@ describe('Model', function () {
     });
 
     describe('getTemplate', function () {
-        before(function () {
+        beforeEach(function () {
             $.PrivateBin.Model.reset();
             cleanup();
         });

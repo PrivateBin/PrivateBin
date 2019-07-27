@@ -10,17 +10,16 @@ $isPage = substr($template, -5) === '-page';
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<meta name="robots" content="noindex" />
-		<meta name="referrer" content="no-referrer">
 		<meta name="google" content="notranslate">
 		<title><?php echo I18n::_($NAME); ?></title>
 <?php
 if (!$isDark):
 ?>
-		<link type="text/css" rel="stylesheet" href="css/bootstrap/bootstrap-3.3.5.css" />
+		<link type="text/css" rel="stylesheet" href="css/bootstrap/bootstrap-3.4.1.css" />
 <?php
 endif;
 ?>
-		<link type="text/css" rel="stylesheet" href="css/bootstrap/bootstrap-theme-3.3.5.css" />
+		<link type="text/css" rel="stylesheet" href="css/bootstrap/bootstrap-theme-3.4.1.css" />
 <?php
 if ($isDark):
 ?>
@@ -42,26 +41,21 @@ if ($SYNTAXHIGHLIGHTING):
 endif;
 ?>
 		<noscript><link type="text/css" rel="stylesheet" href="css/noscript.css" /></noscript>
-		<script type="text/javascript" data-cfasync="false" src="js/jquery-3.3.1.js" integrity="sha512-+NqPlbbtM1QqiK8ZAo4Yrj2c4lNQoGv8P79DPtKzj++l5jnN39rHA/xsqn8zE9l0uSoxaCdrOgFs6yjyfbBxSg==" crossorigin="anonymous"></script>
-		<script type="text/javascript" data-cfasync="false" src="js/sjcl-1.0.7.js" integrity="sha512-J2eNenPwyfXkMVNMFz9Q54kKfYi5AA3mQWpNgtjSJzsKHtpbhUt/7bvcjGwwmzE8ZUVWMI/ndagIX1lG+SfxGA==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/jquery-3.4.1.js" integrity="sha512-bnIvzh6FU75ZKxp0GXLH9bewza/OIw6dLVh9ICg0gogclmYGguQJWl8U30WpbsGTqbIiAwxTsbe76DErLq5EDQ==" crossorigin="anonymous"></script>
 <?php
 if ($QRCODE):
 ?>
-		<script async type="text/javascript" data-cfasync="false" src="js/kjua-0.1.2.js" integrity="sha512-hmvfOhcr4J8bjQ2GuNVzfSbuulv72wgQCJpgnXc2+cCHKqvYo8pK2nc0Q4Esem2973zo1radyIMTEkt+xJlhBA==" crossorigin="anonymous"></script>
+		<script async type="text/javascript" data-cfasync="false" src="js/kjua-0.6.0.js" integrity="sha512-GEEIHvphDt1NmaxzX8X1ZkBiGKXCv+Ofzwi8SMEH5wQVWqdGIvBO/fnxxKZ90RU1bVp6srS68nHIpZo6iVcG9g==" crossorigin="anonymous"></script>
 <?php
 endif;
 if ($ZEROBINCOMPATIBILITY):
 ?>
 		<script type="text/javascript" data-cfasync="false" src="js/base64-1.7.js" integrity="sha512-JdwsSP3GyHR+jaCkns9CL9NTt4JUJqm/BsODGmYhBcj5EAPKcHYh+OiMfyHbcDLECe17TL0hjXADFkusAqiYgA==" crossorigin="anonymous"></script>
 <?php
-else:
-?>
-		<script type="text/javascript" data-cfasync="false" src="js/base64-2.4.5.js" integrity="sha512-YINE6agO8ZrYuzlrZZwQJTu0uqURJDxD4gjsfZ6mV4fP2gW5j8giNJ734iyJVTBrnF2XMiUBM/DSi7ON1V5RMQ==" crossorigin="anonymous"></script>
-<?php
 endif;
 ?>
+		<script type="text/javascript" data-cfasync="false" src="js/zlib-1.2.11.js" integrity="sha512-Yey/0yoaVmSbqMEyyff3DIu8kCPwpHvHf7tY1AuZ1lrX9NPCMg87PwzngMi+VNbe4ilCApmePeuKT869RTcyCQ==" crossorigin="anonymous"></script>
 		<script type="text/javascript" data-cfasync="false" src="js/base-x-3.0.5.1.js" integrity="sha512-/zL3MWKMtl1IBF0URx3laql2jUw+rWfFFabNlILY/Qm+hUsQR/XULjUyNHkW/FkrV7A0sMQ7tsppH7sj5ht8wA==" crossorigin="anonymous"></script>
-		<script type="text/javascript" data-cfasync="false" src="js/rawdeflate-0.5.js" integrity="sha512-tTdZ7qMr7tt5VQy4iCHu6/aGB12eRwbUy+AEI5rXntfsjcRfBeeqJloMsBU9FrGk1bIYLiuND/FhU42LO1bi0g==" crossorigin="anonymous"></script>
 		<script type="text/javascript" data-cfasync="false" src="js/rawinflate-0.3.js" integrity="sha512-g8uelGgJW9A/Z1tB6Izxab++oj5kdD7B4qC7DHwZkB6DGMXKyzx7v5mvap2HXueI2IIn08YlRYM56jwWdm2ucQ==" crossorigin="anonymous"></script>
 		<script type="text/javascript" data-cfasync="false" src="js/bootstrap-3.3.7.js" integrity="sha512-iztkobsvnjKfAtTNdHkGVjAYTrrtlC7mGp/54c40wowO7LhURYl3gVzzcEqGl/qKXQltJ2HwMrdLcNUdo+N/RQ==" crossorigin="anonymous"></script>
 <?php
@@ -72,14 +66,14 @@ if ($SYNTAXHIGHLIGHTING):
 endif;
 if ($MARKDOWN):
 ?>
-		<script type="text/javascript" data-cfasync="false" src="js/showdown-1.8.6.js" integrity="sha512-YFg2sBCGT00I6X5KzgCLP4VqRlmPMRhkVvJS9oJKk5LxiUzzcjzV5m4fNf6mQMctLrhgS5LFKiFF3vzIuXbjAw==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/showdown-1.9.0.js" integrity="sha512-Kv8oAge9h2QmRyzb52jUomyXAvSMrpE9kWF3QRMFajo1a/TXjtY8u71vUA6t4+LE7huz4TSVH8VLJBEmcZiPRA==" crossorigin="anonymous"></script>
 <?php
 endif;
 ?>
-		<script type="text/javascript" data-cfasync="false" src="js/purify-1.0.7.js" integrity="sha512-VnKJHLosO8z2ojNvWk9BEKYqnhZyWK9rM90FgZUUEp/PRnUqR5OLLKE0a3BkVmn7YgB7LXRrjHgFHQYKd6DAIA==" crossorigin="anonymous"></script>
-		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-IFu+B5qYMnATrGKpfxXw3TdUoxBV31HiaGGP76RknlT62iiugvTHikKX9yW5AxqaRd+12mefuoF80GXgoa35Tg==" crossorigin="anonymous"></script>
-		<!--[if lt IE 10]>
-		<style type="text/css">body {padding-left:60px;padding-right:60px;} #ienotice {display:block;} #oldienotice {display:block;}</style>
+		<script type="text/javascript" data-cfasync="false" src="js/purify-1.0.11.js" integrity="sha512-p7UyJuyBkhMcMgE4mDsgK0Lz70OvetLefua1oXs1OujWv9gOxh4xy8InFux7bZ4/DAZsTmO4rgVwZW9BHKaTaw==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-8n4HbSmQC++v3AfA2nqlueUp3RkfeU7POcpga+yS4Rlz95G+paRjMmw5B+3HAC7TlswME16n0wIxHD1dkScC8A==" crossorigin="anonymous"></script>
+		<!--[if IE]>
+		<style type="text/css">body {padding-left:60px;padding-right:60px;} #ienotice {display:block;}</style>
 		<![endif]-->
 		<link rel="apple-touch-icon" href="img/apple-touch-icon.png?<?php echo rawurlencode($VERSION); ?>" sizes="180x180" />
 		<link rel="icon" type="image/png" href="img/favicon-32x32.png?<?php echo rawurlencode($VERSION); ?>" sizes="32x32" />
@@ -90,13 +84,17 @@ endif;
 		<meta name="msapplication-config" content="browserconfig.xml">
 		<meta name="theme-color" content="#ffe57e" />
 	</head>
-	<body role="document"<?php
-if ($isCpct):
-?> class="navbar-spacing"<?php
-endif;
-if ($isDark):
-?> class="dark-theme"<?php
-endif;
+	<body role="document" data-compression="<?php echo rawurlencode($COMPRESSION); ?>"<?php
+$class = array();
+if ($isCpct) {
+    $class[] = 'navbar-spacing';
+}
+if ($isDark) {
+    $class[] = 'dark-theme';
+}
+if (count($class)) {
+    echo ' class="', implode(' ', $class), '"';
+}
 ?>>
 		<div id="passwordmodal" tabindex="-1" class="modal fade" role="dialog" aria-hidden="true">
 			<div class="modal-dialog" role="document">
@@ -217,8 +215,8 @@ endforeach;
 <?php
 if ($isCpct):
 ?>
-					<li id="formatter" class="dropdown">
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><?php echo I18n::_('Options'); ?> <span class="caret"></span></a>
+					<li class="dropdown">
+						<a id="formatter" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><?php echo I18n::_('Options'); ?> <span class="caret"></span></a>
 						<ul class="dropdown-menu">
 							<li id="burnafterreadingoption" class="checkbox hidden">
 								<label>
@@ -445,31 +443,42 @@ if ($FILEUPLOAD):
 <?php
 endif;
 ?>
-				<div id="status" role="alert" class="statusmessage alert alert-info<?php echo empty($STATUS) ? ' hidden' : '' ?>">
+				<div id="status" role="alert" class="alert alert-info<?php echo empty($STATUS) ? ' hidden' : '' ?>">
 					<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
 					<?php echo htmlspecialchars($STATUS), PHP_EOL; ?>
 				</div>
-				<div id="errormessage" role="alert" class="statusmessage<?php echo empty($ERROR) ? ' hidden' : '' ?> alert alert-danger">
+				<div id="errormessage" role="alert" class="<?php echo empty($ERROR) ? 'hidden' : '' ?> alert alert-danger">
 					<span class="glyphicon glyphicon-alert" aria-hidden="true"></span>
 					<?php echo htmlspecialchars($ERROR), PHP_EOL; ?>
 				</div>
 				<noscript>
-					<div id="noscript" role="alert" class="nonworking alert alert-<?php echo $isDark ? 'error' : 'warning'; ?>">
+					<div id="noscript" role="alert" class="alert alert-<?php echo $isDark ? 'error' : 'warning'; ?>">
 						<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
 						<?php echo I18n::_('JavaScript is required for %s to work.<br />Sorry for the inconvenience.', I18n::_($NAME)), PHP_EOL; ?>
 					</div>
 				</noscript>
-				<div id="oldienotice" role="alert" class="hidden nonworking alert alert-danger">
+				<div id="oldnotice" role="alert" class="hidden alert alert-danger">
 					<span class="glyphicon glyphicon-alert" aria-hidden="true"></span>
 					<?php echo I18n::_('%s requires a modern browser to work.', I18n::_($NAME)), PHP_EOL; ?>
 				</div>
-				<div id="ienotice" role="alert" class="hidden alert alert-<?php echo $isDark ? 'error' : 'warning'; ?>">
+				<div id="ienotice" role="alert" class="hidden alert alert-danger">
 					<span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
 					<?php echo I18n::_('Still using Internet Explorer? Do yourself a favor, switch to a modern browser:'), PHP_EOL; ?>
 					<a href="https://www.mozilla.org/firefox/">Firefox</a>,
 					<a href="https://www.opera.com/">Opera</a>,
 					<a href="https://www.google.com/chrome">Chrome</a>…
 				</div>
+<?php
+if ($HTTPWARNING):
+?>
+				<div id="httpnotice" role="alert" class="hidden alert alert-danger">
+					<span class="glyphicon glyphicon-alert" aria-hidden="true"></span>
+					<?php echo I18n::_('This website is using an insecure connection! Please only use it for testing.'), PHP_EOL; ?><br />
+					<span class="small"><?php echo I18n::_('For more information <a href="%s">see this FAQ entry</a>.', 'https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-it-show-me-an-error-about-an-insecure-connection'); ?></span>
+				</div>
+<?php
+endif;
+?>
 				<div id="pastesuccess" role="alert" class="hidden alert alert-success">
 					<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
 					<div id="deletelink"></div>
@@ -507,10 +516,10 @@ endif;
 				</div>
 			</section>
 			<section class="container">
-				<div id="noscript" role="alert" class="nonworking alert alert-info noscript-hide">
+				<div id="noscript" role="alert" class="alert alert-info noscript-hide">
 					<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
 					<?php echo I18n::_('Loading…'); ?><br />
-					<span class="small"><?php echo I18n::_('In case this message never disappears please have a look at <a href="https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away">this FAQ for information to troubleshoot</a>.'); ?></span>
+					<span class="small"><?php echo I18n::_('In case this message never disappears please have a look at <a href="%s">this FAQ for information to troubleshoot</a>.', 'https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away'); ?></span>
 				</div>
 			</section>
 			<footer class="container">

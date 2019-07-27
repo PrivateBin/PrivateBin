@@ -1,32 +1,44 @@
 {
-    "name": "privatebin/privatebin",
-    "description": "PrivateBin is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted in the browser using 256 bit AES in Galois Counter mode (GCM).",
-    "type": "project",
-    "keywords": ["private", "secure", "end-to-end-encrypted", "e2e", "paste", "pastebin", "zero", "zero-knowledge", "encryption", "encrypted", "AES"],
-    "homepage": "https://github.com/PrivateBin",
-    "license":"zlib-acknowledgement",
-    "support": {
-        "issues": "https://github.com/PrivateBin/PrivateBin/issues",
-        "wiki": "https://github.com/PrivateBin/PrivateBin/wiki",
-        "source": "https://github.com/PrivateBin/PrivateBin",
-        "docs": "https://zerobin.dssr.ch/documentation/"
-    },
-    "require": {
-        "php": "^5.4.0 || ^7.0",
-        "paragonie/random_compat": "2.0.15",
-        "yzalis/identicon": "1.1.0"
-    },
-    "require-dev": {
-        "codacy/coverage": "dev-master",
-        "codeclimate/php-test-reporter": "dev-master",
-        "phpunit/phpunit": "^4.6 || ^5.0"
-    },
-    "autoload": {
-        "psr-4": {
-            "PrivateBin\\": "lib/"
-        }
-    },
-    "config": {
-        "autoloader-suffix": "DontChange"
-    }
+	"name" : "privatebin/privatebin",
+	"description" : "PrivateBin is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted in the browser using 256 bit AES in Galois Counter mode (GCM).",
+	"type" : "project",
+	"keywords" : [
+		"private",
+		"secure",
+		"end-to-end-encrypted",
+		"e2e",
+		"paste",
+		"pastebin",
+		"zero",
+		"zero-knowledge",
+		"encryption",
+		"encrypted",
+		"AES"
+	],
+	"homepage" : "https://privatebin.info/",
+	"license" : "zlib-acknowledgement",
+	"support" : {
+		"issues" : "https://github.com/PrivateBin/PrivateBin/issues",
+		"wiki" : "https://github.com/PrivateBin/PrivateBin/wiki",
+		"source" : "https://github.com/PrivateBin/PrivateBin",
+		"docs" : "https://privatebin.info/codedoc/"
+	},
+	"require" : {
+		"php" : "^5.5.0 || ^7.0",
+		"paragonie/random_compat" : "2.0.18",
+		"yzalis/identicon" : "1.2.0"
+	},
+	"require-dev" : {
+		"codacy/coverage" : "dev-master",
+		"codeclimate/php-test-reporter" : "dev-master",
+		"phpunit/phpunit" : "^4.6 || ^5.0"
+	},
+	"autoload" : {
+		"psr-4" : {
+			"PrivateBin\\" : "lib/"
+		}
+	},
+	"config" : {
+		"autoloader-suffix" : "DontChange"
+	}
 }

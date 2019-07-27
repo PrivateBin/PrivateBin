@@ -7,4 +7,5 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'PrivateBin\\' => array($baseDir . '/lib'),
+    'Identicon\\' => array($vendorDir . '/yzalis/identicon/src/Identicon'),
 );

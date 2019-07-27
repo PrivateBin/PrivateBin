@@ -7,7 +7,7 @@
  * @link      https://github.com/PrivateBin/PrivateBin
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
- * @version   1.2.1
+ * @version   1.3
  */
 
 namespace PrivateBin;
@@ -156,9 +156,8 @@ class I18n
 
         // load translations
         self::$_language     = $match;
-        self::$_translations = ($match == 'en') ? array() : json_decode(
-            file_get_contents(self::_getPath($match . '.json')),
-            true
+        self::$_translations = ($match == 'en') ? array() : Json::decode(
+            file_get_contents(self::_getPath($match . '.json'))
         );
     }
 
@@ -244,7 +243,7 @@ class I18n
     {
         $file = self::_getPath('languages.json');
         if (count(self::$_languageLabels) == 0 && is_readable($file)) {
-            self::$_languageLabels = json_decode(file_get_contents($file), true);
+            self::$_languageLabels = Json::decode(file_get_contents($file));
         }
         if (count($languages) == 0) {
             return self::$_languageLabels;
@@ -295,6 +294,8 @@ class I18n
     protected static function _getPluralForm($n)
     {
         switch (self::$_language) {
+            case 'cs':
+                return $n == 1 ? 0 : ($n >= 2 && $n <= 4 ? 1 : 2);
             case 'fr':
             case 'oc':
             case 'zh':
@@ -305,7 +306,7 @@ class I18n
                 return $n % 10 == 1 && $n % 100 != 11 ? 0 : ($n % 10 >= 2 && $n % 10 <= 4 && ($n % 100 < 10 || $n % 100 >= 20) ? 1 : 2);
             case 'sl':
                 return $n % 100 == 1 ? 1 : ($n % 100 == 2 ? 2 : ($n % 100 == 3 || $n % 100 == 4 ? 3 : 0));
-            // de, en, es, hu, it, nl, no, pt
+            // bg, de, en, es, hu, it, nl, no, pt
             default:
                 return $n != 1 ? 1 : 0;
         }

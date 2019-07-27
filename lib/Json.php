@@ -7,7 +7,7 @@
  * @link      https://github.com/PrivateBin/PrivateBin
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
- * @version   1.2.1
+ * @version   1.3
  */
 
 namespace PrivateBin;
@@ -33,9 +33,39 @@ class Json
     public static function encode($input)
     {
         $jsonString = json_encode($input);
-        $errorCode  = json_last_error();
+        self::_detectError();
+        return $jsonString;
+    }
+
+    /**
+     * Returns an array with the contents as described in the given JSON input
+     *
+     * @access public
+     * @static
+     * @param  string $input
+     * @throws Exception
+     * @return array
+     */
+    public static function decode($input)
+    {
+        $array = json_decode($input, true);
+        self::_detectError();
+        return $array;
+    }
+
+    /**
+     * Detects JSON errors and raises an exception if one is found
+     *
+     * @access private
+     * @static
+     * @throws Exception
+     * @return void
+     */
+    private static function _detectError()
+    {
+        $errorCode = json_last_error();
         if ($errorCode === JSON_ERROR_NONE) {
-            return $jsonString;
+            return;
         }
 
         $message = 'A JSON error occurred';

@@ -1,3 +1,6 @@
+parserOptions:
+  ecmaVersion: 2017
+
 ecmaFeatures:
   modules: true
   jsx: true
@@ -10,7 +13,6 @@ env:
   node: true
 
 globals:
-  sjcl: false
   DOMPurify: false
   after: true
   before: true

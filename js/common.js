@@ -5,19 +5,19 @@ global.assert = require('assert');
 global.jsc = require('jsverify');
 global.jsdom = require('jsdom-global');
 global.cleanup = global.jsdom();
+global.URL = require('jsdom-url').URL;
 global.fs = require('fs');
+global.WebCrypto = require('node-webcrypto-ossl');
 
 // application libraries to test
-global.$ = global.jQuery = require('./jquery-3.3.1');
-global.sjcl = require('./sjcl-1.0.7');
-global.Base64 = require('./base64-2.4.5').Base64;
-global.RawDeflate = require('./rawdeflate-0.5').RawDeflate;
-global.RawDeflate.inflate = require('./rawinflate-0.3').RawDeflate.inflate;
+global.$ = global.jQuery = require('./jquery-3.4.1');
+global.RawDeflate = require('./rawinflate-0.3').RawDeflate;
+global.zlib = require('./zlib-1.2.11').zlib;
 require('./prettify');
 global.prettyPrint = window.PR.prettyPrint;
 global.prettyPrintOne = window.PR.prettyPrintOne;
-global.showdown = require('./showdown-1.8.6');
-global.DOMPurify = require('./purify-1.0.7');
+global.showdown = require('./showdown-1.9.0');
+global.DOMPurify = require('./purify-1.0.11');
 global.baseX = require('./base-x-3.0.5.1').baseX;
 require('./bootstrap-3.3.7');
 require('./privatebin');
@@ -54,14 +54,8 @@ var a2zString    = ['a','b','c','d','e','f','g','h','i','j','k','l','m',
         '`': '&#x60;',
         '=': '&#x3D;'
     },
-    logFile = fs.createWriteStream('test.log'),
     mimeFile = fs.createReadStream('/etc/mime.types'),
     mimeLine = '';
-
-// redirect console messages to log file
-console.info = console.warn = console.error = function () {
-    logFile.write(Array.prototype.slice.call(arguments).join('') + '\n');
-};
 
 // populate mime types from environment
 mimeFile.on('data', function(data) {
@@ -99,6 +93,8 @@ function parseMime(line) {
 }
 
 // common testing helper functions
+exports.atob = atob;
+exports.btoa = btoa;
 
 /**
  * convert all applicable characters to HTML entities

@@ -26,6 +26,7 @@ class I18nTest extends PHPUnit_Framework_TestCase
         $messageId                       = 'It does not matter if the message ID exists';
         I18n::loadTranslations();
         $this->assertEquals($messageId, I18n::_($messageId), 'fallback to en');
+        I18n::getLanguageLabels();
     }
 
     public function testCookieLanguageDeDetection()
@@ -40,7 +41,7 @@ class I18nTest extends PHPUnit_Framework_TestCase
 
     public function testBrowserLanguageDeDetection()
     {
-        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'de-CH,de;q=0.8,en-GB;q=0.6,en-US;q=0.4,en;q=0.2';
+        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'de-CH,de;q=0.8,en-GB;q=0.6,en-US;q=0.4,en;q=0.2,fr;q=0.0';
         I18n::loadTranslations();
         $this->assertEquals($this->_translations['en'], I18n::_('en'), 'browser language de');
         $this->assertEquals('0 Stunden', I18n::_('%d hours', 0), '0 hours in German');
@@ -50,7 +51,7 @@ class I18nTest extends PHPUnit_Framework_TestCase
 
     public function testBrowserLanguageFrDetection()
     {
-        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'fr-CH,fr;q=0.8,en-GB;q=0.6,en-US;q=0.4,en;q=0.2';
+        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'fr-CH,fr;q=0.8,en-GB;q=0.6,en-US;q=0.4,en;q=0.2,de;q=0.0';
         I18n::loadTranslations();
         $this->assertEquals('fr', I18n::_('en'), 'browser language fr');
         $this->assertEquals('0 heure',  I18n::_('%d hours', 0), '0 hours in French');
@@ -127,6 +128,17 @@ class I18nTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('101 uri',  I18n::_('%d hours', 101), '101 hours in Slowene');
         $this->assertEquals('102 ure', I18n::_('%d hours', 102), '102 hours in Slowene');
         $this->assertEquals('104 ur',  I18n::_('%d hours', 104), '104 hours in Slowene');
+    }
+
+    public function testBrowserLanguageCsDetection()
+    {
+        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'cs;q=0.8,en-GB;q=0.6,en-US;q=0.4,en;q=0.2';
+        I18n::loadTranslations();
+        $this->assertEquals('cs', I18n::_('en'), 'browser language cs');
+        $this->assertEquals('1 hodin', I18n::_('%d hours', 1), '1 hour in Czech');
+        $this->assertEquals('2 hodiny', I18n::_('%d hours', 2), '2 hours in Czech');
+        $this->assertEquals('5 minut',  I18n::_('%d minutes', 5), '5 minutes in Czech');
+        $this->assertEquals('14 minut',  I18n::_('%d minutes', 14), '14 minutes in Czech');
     }
 
     public function testBrowserLanguageAnyDetection()

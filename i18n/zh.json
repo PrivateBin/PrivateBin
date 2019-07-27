@@ -112,8 +112,6 @@
         "服务器错误或无回应",
     "Could not post comment: %s":
         "无法发送评论： %s",
-    "Please move your mouse for more entropy…":
-        "请移动鼠标增加随机性…",
     "Sending paste…":
         "粘贴内容提交中…",
     "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit [Ctrl]+[c] to copy)</span>":
@@ -151,10 +149,17 @@
     "Loading…": "载入中…",
     "Decrypting paste…": "正在解密",
     "Preparing new paste…": "正在准备新的粘贴内容",
-    "In case this message never disappears please have a look at <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">this FAQ for information to troubleshoot</a>.":
-        "如果这个消息一直存在，请参考 <a href=\"https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away\">这里的 FAQ （英文版）</a>进行故障排除。",
+    "In case this message never disappears please have a look at <a href=\"%s\">this FAQ for information to troubleshoot</a>.":
+        "如果这个消息一直存在，请参考 <a href=\"%s\">这里的 FAQ （英文版）</a>进行故障排除。",
     "+++ no paste text +++": "+++ 没有粘贴内容 +++",
     "Could not get paste data: %s":
         "无法获取粘贴数据：%s",
-    "QR code": "二维码"
+    "QR code": "二维码",
+    "I love you too, bot…": "I love you too, bot…",
+    "This website is using an insecure HTTP connection! Please use it only for testing.":
+        "This website is using an insecure HTTP connection! Please use it only for testing.",
+    "For more information <a href=\"%s\">see this FAQ entry</a>.":
+        "For more information <a href=\"%s\">see this FAQ entry</a>.",
+    "Your browser may require an HTTPS connection to support the WebCrypto API. Try <a href=\"%s\">switching to HTTPS</a>.":
+        "Your browser may require an HTTPS connection to support the WebCrypto API. Try <a href=\"%s\">switching to HTTPS</a>."
 }

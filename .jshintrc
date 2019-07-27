@@ -2,7 +2,7 @@
     "bitwise": true,
     "curly": true,
     "eqeqeq": true,
-    "esversion": 5,
+    "esversion": 6,
     "forin": true,
     "freeze": true,
     "futurehostile": true,
@@ -39,7 +39,6 @@
       "window": true
     },
     "globals": {
-      "sjcl": true,
       "DOMPurify": true,
       "kjua": true
     }
