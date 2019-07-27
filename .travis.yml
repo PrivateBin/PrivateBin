@@ -1,5 +1,7 @@
 language: php
 sudo: false
+# only needed for PHP 5.5 support as of 2019-07
+dist: trusty
 php:
   - '5.5'
   - '5.6'
