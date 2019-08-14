@@ -1711,8 +1711,58 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         function sendToShortener()
         {
-            window.location.href = $shortenButton.data('shortener') +
-                                   encodeURIComponent($pasteUrl.attr('href'));
+            if ($shortenButton.hasClass('buttondisabled')) {
+                return;
+            }
+            $.ajax({
+                type: 'GET',
+                url: `${$shortenButton.data('shortener')}${encodeURIComponent($pasteUrl.attr('href'))}`,
+                headers: {'Accept': 'text/html, application/xhtml+xml, application/xml, application/json'},
+                processData: false,
+                timeout: 10000,
+                xhrFields: {
+                    withCredentials: false
+                },
+                success: function(response) {
+                    let responseString = response;
+                    if (typeof responseString === 'object') {
+                        responseString = JSON.stringify(responseString);
+                    }
+                    if (typeof responseString === 'string' && responseString.length > 0) {
+                        const shortUrlMatcher = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g;
+                        const shortUrl = responseString.match(shortUrlMatcher).sort(function(a, b) {
+                            return a.length - b.length;
+                        })[0];
+                        if (typeof shortUrl === 'string' && shortUrl.length > 0) {
+                            $('#pastelink').html(
+                                I18n._(
+                                    'Your paste is <a id="pasteurl" href="%s">%s</a> <span id="copyhint">(Hit [Ctrl]+[c] to copy)</span>',
+                                    shortUrl, shortUrl
+                                )
+                            );
+                            // we disable the button to avoid calling shortener again
+                            $shortenButton.addClass('buttondisabled');
+                            // save newly created element
+                            $pasteUrl = $('#pasteurl');
+                            // we pre-select the link so that the user only has to [Ctrl]+[c] the link
+                            Helper.selectText($pasteUrl[0]);
+                            return;
+                        }
+                    }
+                    Alert.showError(
+                        I18n._('Cannot parse response from URL shortener.')
+                    );
+                }
+            })
+            .fail(function(data, textStatus, errorThrown) {
+                console.error(textStatus, errorThrown);
+                // we don't know why it failed, could be CORS of the external server not setup properly, in which case we follow old behavior to open it in new tab
+                window.open(
+                    `${$shortenButton.data('shortener')}${encodeURIComponent($pasteUrl.attr('href'))}`,
+                    '_blank',
+                    'noopener, noreferrer'
+                )
+            });
         }
 
         /**
@@ -1754,7 +1804,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             // and add click event
             $pasteUrl.click(pasteLinkClick);
 
-            // shorten button
+            // delete link
             $('#deletelink').html('<a href="' + deleteUrl + '">' + I18n._('Delete data') + '</a>');
 
             // show result
@@ -4688,6 +4738,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
             TopNav.showCreateButtons();
             Alert.hideLoading();
+            history.pushState({type: 'create'}, document.title, Helper.baseUri());
         };
 
         /**

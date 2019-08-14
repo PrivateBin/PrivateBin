@@ -49,7 +49,7 @@ if ($MARKDOWN):
 endif;
 ?>
 		<script type="text/javascript" data-cfasync="false" src="js/purify-1.0.11.js" integrity="sha512-p7UyJuyBkhMcMgE4mDsgK0Lz70OvetLefua1oXs1OujWv9gOxh4xy8InFux7bZ4/DAZsTmO4rgVwZW9BHKaTaw==" crossorigin="anonymous"></script>
-		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-8n4HbSmQC++v3AfA2nqlueUp3RkfeU7POcpga+yS4Rlz95G+paRjMmw5B+3HAC7TlswME16n0wIxHD1dkScC8A==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="E1by7odRhqoGUagLzMUrqU2hxDB55Tnn8WThNJRUEWjW4JbGdsCBiV9WLGzGlwomJ2XLnYcZGPYd7PMx05SRnw==" crossorigin="anonymous"></script>
 		<!--[if IE]>
 		<style type="text/css">body {padding-left:60px;padding-right:60px;} #ienotice {display:block;}</style>
 		<![endif]-->
