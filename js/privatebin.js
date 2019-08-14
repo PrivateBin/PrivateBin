@@ -1730,7 +1730,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                     }
                     if (typeof responseString === 'string' && responseString.length > 0) {
                         const shortUrlMatcher = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g;
-                        const shortUrl = responseString.match(shortUrlMatcher).sort(function(a, b) {
+                        const shortUrl = (responseString.match(shortUrlMatcher) || []).sort(function(a, b) {
                             return a.length - b.length;
                         })[0];
                         if (typeof shortUrl === 'string' && shortUrl.length > 0) {
