@@ -4108,6 +4108,9 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                   deleteUrl = baseUri + 'pasteid=' + data.id + '&deletetoken=' + data.deletetoken;
             PasteStatus.createPasteNotification(url, deleteUrl);
 
+            // enable shortener button
+            $shortenButton.removeClass('buttondisabled');
+
             // show new URL in browser bar
             history.pushState({type: 'newpaste'}, document.title, url);
 
