@@ -44,7 +44,7 @@ if ($SYNTAXHIGHLIGHTING):
 endif;
 if ($MARKDOWN):
 ?>
-		<script type="text/javascript" data-cfasync="false" src="js/showdown-1.9.0.js" integrity="sha512-Kv8oAge9h2QmRyzb52jUomyXAvSMrpE9kWF3QRMFajo1a/TXjtY8u71vUA6t4+LE7huz4TSVH8VLJBEmcZiPRA==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/showdown-1.9.0.js" integrity="sha512-VeINC2WUWLyxgeQ56SsYFjQ5+d7RLvLPYOEYDFtEDd3AyVsgIsHYsWZ6WwgALwB6YR6qrVEM3IH4Bck96IfbMw==" crossorigin="anonymous"></script>
 <?php
 endif;
 ?>
