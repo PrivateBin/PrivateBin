@@ -1807,6 +1807,9 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             // delete link
             $('#deletelink').html('<a href="' + deleteUrl + '">' + I18n._('Delete data') + '</a>');
 
+            // enable shortener button
+            $shortenButton.removeClass('buttondisabled');
+
             // show result
             $pasteSuccess.removeClass('hidden');
             // we pre-select the link so that the user only has to [Ctrl]+[c] the link
@@ -4108,9 +4111,6 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                   deleteUrl = baseUri + 'pasteid=' + data.id + '&deletetoken=' + data.deletetoken;
             PasteStatus.createPasteNotification(url, deleteUrl);
 
-            // enable shortener button
-            $shortenButton.removeClass('buttondisabled');
-
             // show new URL in browser bar
             history.pushState({type: 'newpaste'}, document.title, url);
 
@@ -4742,6 +4742,9 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             TopNav.showCreateButtons();
             Alert.hideLoading();
             history.pushState({type: 'create'}, document.title, Helper.baseUri());
+
+            // clear discussion
+            DiscussionViewer.prepareNewDiscussion();
         };
 
         /**
@@ -4854,6 +4857,9 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             Editor.show();
 
             TopNav.showCreateButtons();
+
+            // clear discussion
+            DiscussionViewer.prepareNewDiscussion();
         };
 
         /**
