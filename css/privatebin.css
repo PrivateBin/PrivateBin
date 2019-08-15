@@ -115,10 +115,29 @@ h3.title {
 	margin-bottom: 20px;
 }
 
+#dropzone {
+	text-align: center;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 1000;
+	opacity: 0.6;
+	background-color: #99ccff;
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M0 0h24v24H0z' fill='none'/%3E%3Cpath d='M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z'/%3E%3C/svg%3E");
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: 25vh;
+	outline: 2px dashed #228bff;
+	outline-offset: -50px;
+}
+
 .dragAndDropFile{
-        color:#777;
-        font-size:1em;
-        display:inline;
+	color: #777;
+	font-size: 1em;
+	display: inline;
+	white-space: normal;
 }
 
 #status {
@@ -404,6 +423,15 @@ h4.title {
 }
 
 .commentdate { color: #bfcede; }
+
+#filewrap {
+	transition: background-color 0.75s ease-out;
+}
+
+.highlight {
+	background-color: #ffdd86;
+	transition: background-color 0.2s ease-in;
+}
 
 img.vizhash {
 	width: 16px;

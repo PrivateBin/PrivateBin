@@ -553,5 +553,12 @@ if ($DISCUSSION):
 <?php
 endif;
 ?>
+<?php
+if ($FILEUPLOAD):
+?>
+		<div id="dropzone" class="hidden" tabindex="-1" aria-hidden="true"></div>
+<?php
+endif;
+?>
 	</body>
 </html>

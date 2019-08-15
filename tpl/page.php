@@ -255,6 +255,13 @@ if ($DISCUSSION):
 <?php
 endif;
 ?>
+<?php
+if ($FILEUPLOAD):
+?>
+		<div id="dropzone" class="hidden" tabindex="-1" aria-hidden="true"></div>
+<?php
+endif;
+?>
 		<section class="container">
 			<div id="noscript" role="alert" class="nonworking alert alert-info noscript-hide"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true">
 				<span> <?php echo I18n::_('Loading…'); ?></span><br>
