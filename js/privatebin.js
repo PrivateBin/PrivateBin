@@ -2750,9 +2750,8 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 $dragAndDropFileName.text(loadedFile.name);
             }
 
-            file = loadedFile;
-
             if (typeof loadedFile !== 'undefined') {
+                file = loadedFile;
                 fileReader.onload = function (event) {
                     const dataURL = event.target.result;
                     attachmentData = dataURL;
@@ -2765,6 +2764,8 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                     TopNav.highlightFileupload();
                 };
                 fileReader.readAsDataURL(loadedFile);
+            } else {
+                me.removeAttachmentData();
             }
         }
 
