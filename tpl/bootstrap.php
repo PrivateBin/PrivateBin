@@ -397,20 +397,6 @@ if (strlen($LANGUAGESELECTION)):
 <?php
 endif;
 ?>
-					<li>
-<?php
-if ($isPage):
-?>
-						<button id="newbutton" type="button" class="reloadlink hidden btn btn-<?php echo $isDark ? 'warning' : 'default'; ?> navbar-btn">
-							<span class="glyphicon glyphicon-file" aria-hidden="true"></span> <?php echo I18n::_('New'), PHP_EOL;
-else:
-?>
-						<button id="sendbutton" type="button" class="hidden btn btn-<?php echo $isDark ? 'warning' : 'primary'; ?> navbar-btn">
-							<span class="glyphicon glyphicon-upload" aria-hidden="true"></span> <?php echo I18n::_('Send'), PHP_EOL;
-endif;
-?>
-						</button>
-					</li>
 				</ul>
 			</div>
 		<?php
@@ -479,16 +465,24 @@ if ($HTTPWARNING):
 <?php
 endif;
 ?>
-				<div id="pastesuccess" role="alert" class="hidden alert alert-success">
-					<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
-					<div id="deletelink"></div>
-					<div id="pastelink"></div>
+				<div id="pastesuccess" class="hidden">
+					<div role="alert" class="alert alert-success">
+						<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+						<div id="deletelink"></div>
+						<div id="pastelink"></div>
+					</div>
 <?php
 if (strlen($URLSHORTENER)):
 ?>
-					<button id="shortenbutton" data-shortener="<?php echo htmlspecialchars($URLSHORTENER); ?>" type="button" class="btn btn-<?php echo $isDark ? 'warning' : 'primary'; ?>">
+					<p>
+						<button id="shortenbutton" data-shortener="<?php echo htmlspecialchars($URLSHORTENER); ?>" type="button" class="btn btn-<?php echo $isDark ? 'warning' : 'primary'; ?> btn-block">
 						<span class="glyphicon glyphicon-send" aria-hidden="true"></span> <?php echo I18n::_('Shorten URL'), PHP_EOL; ?>
 					</button>
+					</p>
+					<div role="alert" class="alert alert-danger">
+						<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+						<?php echo I18n::_('URL shortener may expose your decrypt key in URL.'), PHP_EOL; ?>
+					</div>
 <?php
 endif;
 ?>
@@ -496,6 +490,20 @@ endif;
 				<ul id="editorTabs" class="nav nav-tabs hidden">
 					<li role="presentation" class="active"><a id="messageedit" href="#"><?php echo I18n::_('Editor'); ?></a></li>
 					<li role="presentation"><a id="messagepreview" href="#"><?php echo I18n::_('Preview'); ?></a></li>
+					<li role="presentation" class="pull-right">
+<?php
+if ($isPage):
+?>
+						<button id="newbutton" type="button" class="reloadlink hidden btn btn-<?php echo $isDark ? 'warning' : 'default'; ?>">
+							<span class="glyphicon glyphicon-file" aria-hidden="true"></span> <?php echo I18n::_('New'), PHP_EOL;
+else:
+?>
+						<button id="sendbutton" type="button" class="hidden btn btn-<?php echo $isDark ? 'warning' : 'primary'; ?>">
+							<span class="glyphicon glyphicon-upload" aria-hidden="true"></span> <?php echo I18n::_('Send'), PHP_EOL;
+endif;
+?>
+						</button>
+					</li>
 				</ul>
 			</section>
 			<section class="container">
