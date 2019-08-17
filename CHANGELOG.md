@@ -2,6 +2,7 @@
 
   * **1.4 (not yet released)**
     * ADDED: Translation for Bulgarian (#455)
+    * CHANGED: Improved mobile UI - obscured send button and hard to click shortener button (#477)
   * **1.3 (2019-07-09)**
     * ADDED: Translation for Czech (#424)
     * ADDED: Threat modeled the application (#177)
