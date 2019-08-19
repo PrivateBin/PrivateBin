@@ -131,8 +131,9 @@ body.loading {
 	margin-bottom: 10px;
 }
 
-#message {
+#message, .replymessage {
 	font-family: monospace;
+	resize: vertical;
 }
 
 #nickname {
