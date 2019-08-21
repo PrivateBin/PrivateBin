@@ -4,10 +4,12 @@
     * ADDED: Translation for Bulgarian (#455)
     * CHANGED: Improved mobile UI - obscured send button and hard to click shortener button (#477)
     * CHANGED: Enhanced URL shortener integration (#479)
+    * CHANGED: Improved file upload drag & drop UI (#317)
     * FIXED: Clicking 'New' on a previously submitted paste does not blank address bar (#354)
     * FIXED: Clear address bar when create new paste from existing paste (#479)
     * FIXED: Discussion section not hiding when new/clone paste is clicked on (#484)
     * FIXED: Showdown.js error when posting svg qrcode (#485)
+    * FIXED: Failed to handle the case where user cancelled attachment selection properly (#487)
   * **1.3 (2019-07-09)**
     * ADDED: Translation for Czech (#424)
     * ADDED: Threat modeled the application (#177)

@@ -22,6 +22,27 @@
 /** global: showdown */
 /** global: kjua */
 
+jQuery.fn.draghover = function() {
+    return this.each(function() {
+        let collection = $(),
+            self = $(this);
+  
+        self.on('dragenter', function(e) {
+            if (collection.length === 0) {
+                self.trigger('draghoverstart');
+            }
+            collection = collection.add(e.target);
+        });
+  
+        self.on('dragleave drop', function(e) {
+            collection = collection.not(e.target);
+            if (collection.length === 0) {
+                self.trigger('draghoverend');
+            }
+        });
+    });
+};
+
 // main application start, called when DOM is fully loaded
 jQuery(document).ready(function() {
     'use strict';
@@ -2492,7 +2513,8 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             file,
             $fileInput,
             $dragAndDropFileName,
-            attachmentHasPreview = false;
+            attachmentHasPreview = false,
+            $dropzone;
 
         /**
          * sets the attachment but does not yet show it
@@ -2714,7 +2736,9 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 // revert loading status…
                 me.hideAttachment();
                 me.hideAttachmentPreview();
-                Alert.showError('Your browser does not support uploading encrypted files. Please use a newer browser.');
+                Alert.showError(
+                    I18n._('Your browser does not support uploading encrypted files. Please use a newer browser.')
+                );
                 return;
             }
 
@@ -2726,18 +2750,23 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 $dragAndDropFileName.text(loadedFile.name);
             }
 
-            file = loadedFile;
+            if (typeof loadedFile !== 'undefined') {
+                file = loadedFile;
+                fileReader.onload = function (event) {
+                    const dataURL = event.target.result;
+                    attachmentData = dataURL;
 
-            fileReader.onload = function (event) {
-                const dataURL = event.target.result;
-                attachmentData = dataURL;
+                    if (Editor.isPreview()) {
+                        me.handleAttachmentPreview($attachmentPreview, dataURL);
+                        $attachmentPreview.removeClass('hidden');
+                    }
 
-                if (Editor.isPreview()) {
-                    me.setAttachment(dataURL, loadedFile.name || '');
-                    $attachmentPreview.removeClass('hidden');
-                }
-            };
-            fileReader.readAsDataURL(loadedFile);
+                    TopNav.highlightFileupload();
+                };
+                fileReader.readAsDataURL(loadedFile);
+            } else {
+                me.removeAttachmentData();
+            }
         }
 
         /**
@@ -2781,7 +2810,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                     );
                 } else if (mimeType.match(/\/pdf/i)) {
                     // Fallback for browsers, that don't support the vh unit
-                    var clientHeight = $(window).height();
+                    const clientHeight = $(window).height();
 
                     $targetElement.html(
                         $(document.createElement('embed'))
@@ -2808,12 +2837,12 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 return;
             }
 
-            const ignoreDragDrop = function(event) {
+            const handleDragEnterOrOver = function(event) {
                 event.stopPropagation();
                 event.preventDefault();
             };
 
-            const drop = function(event) {
+            const handleDrop = function(event) {
                 const evt = event.originalEvent;
                 evt.stopPropagation();
                 evt.preventDefault();
@@ -2830,9 +2859,19 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 }
             };
 
-            $(document).on('drop', drop);
-            $(document).on('dragenter', ignoreDragDrop);
-            $(document).on('dragover', ignoreDragDrop);
+            $(document).draghover().on({
+                'draghoverstart': function() {
+                    // show dropzone to indicate drop support
+                    $dropzone.removeClass('hidden');
+                },
+                'draghoverend': function() {
+                    $dropzone.addClass('hidden');
+                }
+            });
+
+            $(document).on('drop', handleDrop);
+            $(document).on('dragenter dragover', handleDragEnterOrOver);
+
             $fileInput.on('change', function () {
                 readFileData();
             });
@@ -2920,6 +2959,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 $attachmentLink = $('#attachment a');
                 $attachmentPreview = $('#attachmentPreview');
                 $dragAndDropFileName = $('#dragAndDropFileName');
+                $dropzone = $('#dropzone');
 
                 $fileInput = $('#file');
                 addDragDropHandler();
@@ -3742,6 +3782,25 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         }
 
         /**
+         * Highlight file upload
+         * 
+         * @name  TopNav.highlightFileupload
+         * @function
+         */
+        me.highlightFileupload = function()
+        {
+            // visually indicate file uploaded
+            const $attachDropdownToggle = $attach.children('.dropdown-toggle');
+            if ($attachDropdownToggle.attr('aria-expanded') === 'false') {
+                $attachDropdownToggle.click();
+            }
+            $fileWrap.addClass('highlight');
+            setTimeout(function () {
+                $fileWrap.removeClass('highlight');
+            }, 300);
+        }
+
+        /**
          * init navigation manager
          *
          * preloads jQuery elements
@@ -4479,7 +4538,9 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
             // log detailed error, but display generic translation
             console.error(message);
-            Alert.showError('Could not decrypt data. Did you enter a wrong password? Retry with the button at the top.');
+            Alert.showError(
+                I18n._('Could not decrypt data. Did you enter a wrong password? Retry with the button at the top.')
+            );
 
             // reset password, so it can be re-entered
             Prompt.reset();
@@ -4548,8 +4609,8 @@ jQuery.PrivateBin = (function($, RawDeflate) {
      * @param  {object} document
      * @class
      */
-    var InitialCheck = (function () {
-        var me = {};
+    const InitialCheck = (function () {
+        const me = {};
 
         /**
          * blacklist of UserAgents (parts) known to belong to a bot
@@ -4762,7 +4823,9 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
                 // missing decryption key (or paste ID) in URL?
                 if (window.location.hash.length === 0) {
-                    Alert.showError('Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)');
+                    Alert.showError(
+                        I18n._('Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)')
+                    );
                     return;
                 }
             }
