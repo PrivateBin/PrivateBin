@@ -411,6 +411,45 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             baseUri = null;
         };
 
+        /**
+         * calculate expiration date
+         * 
+         * @name   Helper.calculateExpirationDate
+         * @function
+         * @param  {Date} initialDate - may not be empty
+         * @param  {string|number} expirationDisplayStringOrSecondsToExpire - may not be empty
+         * @return {Date}
+         */
+        me.calculateExpirationDate = function(initialDate, expirationDisplayStringOrSecondsToExpire) {
+            let expirationDate = new Date(initialDate);
+
+            const expirationDisplayStringToSecondsDict = {
+                '5min': 300,
+                '10min': 600,
+                '1hour': 3500,
+                '1day': 86400,
+                '1week': 604800,
+                '1month': 2592000,
+                '1year': 31536000,
+                'never': 0
+            };
+
+            let secondsToExpiration = expirationDisplayStringOrSecondsToExpire;
+            if (typeof expirationDisplayStringOrSecondsToExpire === 'string') {
+                secondsToExpiration = expirationDisplayStringToSecondsDict[expirationDisplayStringOrSecondsToExpire];
+            }
+            
+            if (typeof secondsToExpiration !== 'number') {
+                throw new Error('Cannot calculate expiration date.');
+            }
+            if (secondsToExpiration === 0) {
+                return null;
+            }
+
+            expirationDate = expirationDate.setUTCSeconds(expirationDate.getUTCSeconds() + secondsToExpiration);
+            return expirationDate;
+        }
+
         return me;
     })();
 
@@ -3292,9 +3331,10 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             $passwordInput,
             $rawTextButton,
             $qrCodeLink,
+            $emailLink,
             $sendButton,
             $retryButton,
-            pasteExpiration = '1week',
+            pasteExpiration = null,
             retryButtonCallback;
 
         /**
@@ -3503,6 +3543,64 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         }
 
         /**
+         * Send Email with current paste (URL).
+         *
+         * @name   TopNav.sendEmail
+         * @private
+         * @function
+         * @param  {Date|null} expirationDate date of expiration
+         * @param  {bool} isBurnafterreading whether it is burn after reading
+         */
+        function sendEmail(expirationDate, isBurnafterreading)
+        {
+            const EOL = '\n';
+            const BULLET = '  - ';
+            let emailBody = '';
+            const expirationDateRoundedToSecond = new Date(expirationDate);
+
+            // round down at least 30 seconds to make up for the delay of request
+            expirationDateRoundedToSecond.setUTCSeconds(
+                expirationDateRoundedToSecond.getUTCSeconds() - 30
+            );
+            expirationDateRoundedToSecond.setUTCSeconds(0);
+
+            const expirationDateString = window.confirm(
+                I18n._('Recipient may become aware of your timezone, convert time to GMT?')
+            ) ? expirationDateRoundedToSecond.toUTCString() : expirationDateRoundedToSecond.toLocaleString();
+            if (expirationDate !== null || isBurnafterreading) {
+                emailBody += I18n._('Notice:');
+                emailBody += EOL;
+
+                if (expirationDate !== null) {
+                    emailBody += EOL;
+                    emailBody += BULLET;
+                    emailBody += I18n._(
+                        'This link will expire after %s.',
+                        expirationDateString
+                    );
+                }
+                if (isBurnafterreading) {
+                    emailBody += EOL;
+                    emailBody += BULLET;
+                    emailBody += I18n._(
+                        'This link can only be accessed once, do not use back or refresh button in your browser.'
+                    );
+                }
+
+                emailBody += EOL;
+                emailBody += EOL;
+            }
+            emailBody += I18n._('Link:');
+            emailBody += EOL;
+            emailBody += `${window.location.href}`;
+            window.open(
+                `mailto:?body=${encodeURIComponent(emailBody)}`,
+                '_self',
+                'noopener, noreferrer'
+            );
+        }
+
+        /**
          * Shows all navigation elements for viewing an existing paste
          *
          * @name   TopNav.showViewButtons
@@ -3538,6 +3636,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             $newButton.addClass('hidden');
             $rawTextButton.addClass('hidden');
             $qrCodeLink.addClass('hidden');
+            me.hideEmailbutton();
 
             viewButtonsDisplayed = false;
         };
@@ -3636,6 +3735,47 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         }
 
         /**
+         * show the "email" button
+         * 
+         * @name   TopNav.showEmailbutton
+         * @function
+         * @param {function} optionalRemainingTimeInSeconds
+         */
+        me.showEmailButton = function(optionalRemainingTimeInSeconds)
+        {
+            try {
+                // we cache expiration date in closure to avoid inaccurate expiration datetime
+                const expirationDate = Helper.calculateExpirationDate(new Date(), optionalRemainingTimeInSeconds || TopNav.getExpiration());
+                const isBurnafterreading = TopNav.getBurnAfterReading();
+
+                $emailLink.removeClass('hidden');
+                $emailLink.off('click.sendEmail');
+                $emailLink.on('click.sendEmail', function(expirationDate, isBurnafterreading) {
+                    return function() {
+                        sendEmail(expirationDate, isBurnafterreading);
+                    };
+                } (expirationDate, isBurnafterreading));
+            } catch (error) {
+                console.error(error);
+                Alert.showError(
+                    I18n._('Cannot calculate expiration date.')
+                );
+            }
+        }
+
+        /**
+         * hide the "email" button
+         * 
+         * @name   TopNav.hideEmailbutton
+         * @function
+         */
+        me.hideEmailbutton = function()
+        {
+            $emailLink.addClass('hidden');
+            $emailLink.off('click.sendEmail');
+        }
+
+        /**
          * only hides the clone button
          *
          * @name   TopNav.hideCloneButton
@@ -3656,6 +3796,30 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         {
             $rawTextButton.addClass('hidden');
         };
+
+        /**
+         * only hides the qr code button
+         * 
+         * @name   TopNav.hideQrCodeButton
+         * @function
+         */
+        me.hideQrCodeButton = function()
+        {
+            $qrCodeLink.addClass('hidden');
+        }
+
+        /**
+         * hide all irrelevant buttons when viewing burn after reading paste
+         * 
+         * @name   TopNav.hideBurnAfterReadingButtons
+         * @function
+         */
+        me.hideBurnAfterReadingButtons = function()
+        {
+            me.hideCloneButton();
+            me.hideQrCodeButton();
+            me.hideEmailbutton();
+        }
 
         /**
          * hides the file selector in attachment
@@ -3873,6 +4037,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             $retryButton = $('#retrybutton');
             $sendButton = $('#sendbutton');
             $qrCodeLink = $('#qrcodelink');
+            $emailLink = $('#emaillink');
 
             // bootstrap template drop down
             $('#language ul.dropdown-menu li a').click(setLanguage);
@@ -4219,6 +4384,10 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             history.pushState({type: 'newpaste'}, document.title, url);
 
             TopNav.showViewButtons();
+
+            // this cannot be grouped with showViewButtons due to remaining time calculation
+            TopNav.showEmailButton();
+
             TopNav.hideRawButton();
             Editor.hide();
 
@@ -4684,7 +4853,10 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
                     // discourage cloning (it cannot really be prevented)
                     if (paste.isBurnAfterReadingEnabled()) {
-                        TopNav.hideCloneButton();
+                        TopNav.hideBurnAfterReadingButtons();
+                    } else {
+                        // we have to pass in remaining_time here
+                        TopNav.showEmailButton(paste.getTimeToLive());
                     }
                 })
                 .catch((err) => {
