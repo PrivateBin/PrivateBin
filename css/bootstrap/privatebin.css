@@ -180,3 +180,28 @@ li.L0, li.L1, li.L2, li.L3, li.L5, li.L6, li.L7, li.L8 {
 		padding-right: 4ch;
 	}
 }
+
+.modal-dialog {
+	margin: auto !important;
+}
+
+/* makeup for the original margin on modal-dialog */
+@media (min-width: 768px) {
+	.modal-content {
+		margin: 30px 0;
+	}
+}
+
+.modal-content {
+	margin: 10px;
+}
+
+.modal-body {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.modal .modal-content button {
+	margin: 0.5em 0;
+}
