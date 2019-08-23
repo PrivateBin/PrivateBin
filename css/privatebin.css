@@ -102,6 +102,7 @@ h3.title {
 	padding: 5px;
 	white-space: pre-wrap;
 	font-family: Consolas, "Lucida Console", "DejaVu Sans Mono", Monaco, monospace;
+	resize: vertical;
 }
 
 #attachmentPreview img {

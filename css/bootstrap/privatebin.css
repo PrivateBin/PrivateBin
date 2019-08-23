@@ -131,8 +131,9 @@ body.loading {
 	margin-bottom: 10px;
 }
 
-#message {
+#message, .replymessage {
 	font-family: monospace;
+	resize: vertical;
 }
 
 #nickname {
@@ -169,4 +170,13 @@ li.L0, li.L1, li.L2, li.L3, li.L5, li.L6, li.L7, li.L8 {
 
 .dark-theme .alert-info .alert-link {
 	color: #fff;
+}
+
+/* address 2K or 4K monitors when using bootstrap 3 */
+@media (min-width: 1280px) {
+	.container {
+		width: 100%;
+		padding-left: 4ch;
+		padding-right: 4ch;
+	}
 }
