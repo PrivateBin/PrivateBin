@@ -527,8 +527,6 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                     // handle the error by attaching the language loaded event
                     let orgArguments = arguments;
                     $(document).on(languageLoadedEvent, function () {
-                        // log to show that the previous error could be mitigated
-                        console.warn('Fix missing translation of \'' + messageId + '\' with now loaded language ' + language);
                         // re-execute this function
                         me.translate.apply(this, orgArguments);
                     });
