@@ -2146,6 +2146,18 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         };
 
         /**
+         * gets the visibility of the editor
+         *
+         * @name   Editor.isHidden
+         * @function
+         * @return {bool}
+         */
+        me.isHidden = function()
+        {
+            return $message.hasClass('hidden');
+        };
+
+        /**
          * reset the Editor view
          *
          * @name   Editor.resetInput
@@ -2219,18 +2231,6 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         me.getText = function()
         {
             return $message.val();
-        };
-
-        /**
-         * returns if status is editing
-         *
-         * @name   Editor.isEditing
-         * @function
-         * @return {bool}
-         */
-        me.isEditing = function()
-        {
-            return !$message.hasClass('hidden');
         };
 
         /**
@@ -2855,7 +2855,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 evt.stopPropagation();
                 evt.preventDefault();
 
-                if (!Editor.isEditing()) {
+                if (Editor.isHidden()) {
                     return false;
                 }
 
@@ -2873,7 +2873,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
             $(document).draghover().on({
                 'draghoverstart': function(e) {
-                    if (!Editor.isEditing()) {
+                    if (Editor.isHidden()) {
                         e.stopPropagation();
                         e.preventDefault();
                         return false;
@@ -2903,7 +2903,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         function addClipboardEventHandler() {
             $(document).on('paste', function (event) {
-                if (!Editor.isEditing()) {
+                if (Editor.isHidden()) {
                     event.stopPropagation();
                     event.preventDefault();
                     return false;
