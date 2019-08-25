@@ -2146,18 +2146,6 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         };
 
         /**
-         * gets the visibility of the editor
-         *
-         * @name   Editor.isHidden
-         * @function
-         * @return {bool}
-         */
-        me.isHidden = function()
-        {
-            return $message.hasClass('hidden');
-        };
-
-        /**
          * reset the Editor view
          *
          * @name   Editor.resetInput
@@ -2855,7 +2843,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 evt.stopPropagation();
                 evt.preventDefault();
 
-                if (Editor.isHidden()) {
+                if (TopNav.isAttachmentReadonly()) {
                     return false;
                 }
 
@@ -2873,7 +2861,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
             $(document).draghover().on({
                 'draghoverstart': function(e) {
-                    if (Editor.isHidden()) {
+                    if (TopNav.isAttachmentReadonly()) {
                         e.stopPropagation();
                         e.preventDefault();
                         return false;
@@ -2903,7 +2891,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         function addClipboardEventHandler() {
             $(document).on('paste', function (event) {
-                if (Editor.isHidden()) {
+                if (TopNav.isAttachmentReadonly()) {
                     event.stopPropagation();
                     event.preventDefault();
                     return false;
@@ -3843,6 +3831,18 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         me.setFormat = function(format)
         {
             $formatter.parent().find(`a[data-format="${format}"]`).click();
+        }
+
+        /**
+         * returns if attachment dropdown is readonly, not editable
+         * 
+         * @name   TopNav.isAttachmentReadonly
+         * @function
+         * @return {bool}
+         */
+        me.isAttachmentReadonly = function()
+        {
+            return $attach.hasClass('hidden');
         }
 
         /**
