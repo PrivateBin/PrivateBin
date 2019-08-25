@@ -1852,10 +1852,6 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
                 Alert.showRemaining('FOR YOUR EYES ONLY. Don\'t close this window, this message can\'t be displayed again.');
                 $remainingTime.addClass('foryoureyesonly');
-
-                // discourage cloning (it cannot really be prevented)
-                TopNav.hideCloneButton();
-
             } else if (paste.getTimeToLive() > 0) {
                 // display paste expiration
                 let expiration = Helper.secondsToHuman(paste.getTimeToLive()),
@@ -2147,6 +2143,18 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         me.isPreview = function()
         {
             return isPreview;
+        };
+
+        /**
+         * gets the visibility of the editor
+         *
+         * @name   Editor.isHidden
+         * @function
+         * @return {bool}
+         */
+        me.isHidden = function()
+        {
+            return $message.hasClass('hidden');
         };
 
         /**
@@ -2598,6 +2606,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             $attachmentLink.removeAttr('download');
             $attachmentLink.off('click');
             $attachmentPreview.html('');
+            $dragAndDropFileName.text('');
 
             AttachmentViewer.removeAttachmentData();
         };
@@ -2838,12 +2847,17 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             const handleDragEnterOrOver = function(event) {
                 event.stopPropagation();
                 event.preventDefault();
+                return false;
             };
 
             const handleDrop = function(event) {
                 const evt = event.originalEvent;
                 evt.stopPropagation();
                 evt.preventDefault();
+
+                if (Editor.isHidden()) {
+                    return false;
+                }
 
                 if ($fileInput) {
                     const file = evt.dataTransfer.files[0];
@@ -2858,7 +2872,12 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             };
 
             $(document).draghover().on({
-                'draghoverstart': function() {
+                'draghoverstart': function(e) {
+                    if (Editor.isHidden()) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        return false;
+                    }
                     // show dropzone to indicate drop support
                     $dropzone.removeClass('hidden');
                 },
@@ -2884,6 +2903,11 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         function addClipboardEventHandler() {
             $(document).on('paste', function (event) {
+                if (Editor.isHidden()) {
+                    event.stopPropagation();
+                    event.preventDefault();
+                    return false;
+                }
                 const items = (event.clipboardData || event.originalEvent.clipboardData).items;
                 for (let i = 0; i < items.length; ++i) {
                     if (items[i].kind === 'file') {
@@ -3306,7 +3330,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         }
 
         /**
-         * set the format on bootstrap templates in dropdown
+         * set the format on bootstrap templates in dropdown from user interaction
          *
          * @name   TopNav.updateFormat
          * @private
@@ -3669,6 +3693,18 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         };
 
         /**
+         * hides the custom attachment
+         * 
+         * @name  TopNav.hideCustomAttachment
+         * @function
+         */
+        me.hideCustomAttachment = function()
+        {
+            $customAttachment.addClass('hidden');
+            $fileWrap.removeClass('hidden');
+        };
+
+        /**
          * collapses the navigation bar, only if expanded
          *
          * @name   TopNav.collapseBar
@@ -3796,6 +3832,17 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             setTimeout(function () {
                 $fileWrap.removeClass('highlight');
             }, 300);
+        }
+
+        /**
+         * set the format on bootstrap templates in dropdown programmatically
+         * 
+         * @name    TopNav.setFormat
+         * @function
+         */
+        me.setFormat = function(format)
+        {
+            $formatter.parent().find(`a[data-format="${format}"]`).click();
         }
 
         /**
@@ -4347,6 +4394,53 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 let attachment = AttachmentViewer.getAttachment();
                 cipherMessage['attachment'] = attachment[0];
                 cipherMessage['attachment_name'] = attachment[1];
+
+                // we need to retrieve data from blob if browser already parsed it in memory
+                if (typeof attachment[0] === 'string' && attachment[0].startsWith('blob:')) {
+                    Alert.showStatus(
+                        [
+                            'Retrieving cloned file \'%s\' from memory...',
+                            attachment[1]
+                        ],
+                        'copy'
+                    );
+                    try {
+                        const blobData = await $.ajax({
+                            type: 'GET',
+                            url: `${attachment[0]}`,
+                            processData: false,
+                            timeout: 10000,
+                            xhrFields: {
+                                withCredentials: false,
+                                responseType: 'blob'
+                            }
+                        });
+                        if (blobData instanceof window.Blob) {
+                            const fileReading = new Promise(function(resolve, reject) {
+                                const fileReader = new FileReader();
+                                fileReader.onload = function (event) {
+                                    resolve(event.target.result);
+                                };
+                                fileReader.onerror = function (error) {
+                                    reject(error);
+                                }
+                                fileReader.readAsDataURL(blobData);
+                            });
+                            cipherMessage['attachment'] = await fileReading;
+                        } else {
+                            Alert.showError(
+                                I18n._('Cannot process attachment data.')
+                            );
+                            throw new TypeError('Cannot process attachment data.');
+                        }
+                    } catch (error) {
+                        console.error(error);
+                        Alert.showError(
+                            I18n._('Cannot retrieve attachment.')
+                        );
+                        throw error;
+                    }
+                }
             }
 
             // encrypt message
@@ -4587,6 +4681,11 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 .then(() => {
                     Alert.hideLoading();
                     TopNav.showViewButtons();
+
+                    // discourage cloning (it cannot really be prevented)
+                    if (paste.isBurnAfterReadingEnabled()) {
+                        TopNav.hideCloneButton();
+                    }
                 })
                 .catch((err) => {
                     // wait for the user to type in the password,
@@ -4799,6 +4898,12 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             AttachmentViewer.removeAttachment();
 
             TopNav.showCreateButtons();
+
+            // newPaste could be called when user is on paste clone editing view
+            TopNav.hideCustomAttachment();
+            AttachmentViewer.clearDragAndDrop();
+            AttachmentViewer.removeAttachmentData();
+
             Alert.hideLoading();
             history.pushState({type: 'create'}, document.title, Helper.baseUri());
 
@@ -4914,6 +5019,8 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             }
 
             Editor.setText(PasteViewer.getText());
+            // also clone the format
+            TopNav.setFormat(PasteViewer.getFormat());
             PasteViewer.hide();
             Editor.show();
 

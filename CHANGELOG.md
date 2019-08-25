@@ -5,6 +5,8 @@
     * CHANGED: Improved mobile UI - obscured send button and hard to click shortener button (#477)
     * CHANGED: Enhanced URL shortener integration (#479)
     * CHANGED: Improved file upload drag & drop UI (#317)
+    * FIXED: Cloning related issues (#489, #491, #493, #494)
+    * FIXED: Enable file operation only when editing (#497) 
     * FIXED: Clicking 'New' on a previously submitted paste does not blank address bar (#354)
     * FIXED: Clear address bar when create new paste from existing paste (#479)
     * FIXED: Discussion section not hiding when new/clone paste is clicked on (#484)
