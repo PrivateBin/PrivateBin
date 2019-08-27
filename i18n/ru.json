@@ -171,5 +171,7 @@
     "For more information <a href=\"%s\">see this FAQ entry</a>.":
         "Для продробностей <a href=\"%s\">прочтите информацию в FAQ</a>.",
     "Your browser may require an HTTPS connection to support the WebCrypto API. Try <a href=\"%s\">switching to HTTPS</a>.":
-        "Ваш браузер требует использования HTTPS подключения для поддержки WebCrypto API. Попробуйте <a href=\"%s\">переключиться на HTTPS</a>."
+        "Ваш браузер требует использования HTTPS подключения для поддержки WebCrypto API. Попробуйте <a href=\"%s\">переключиться на HTTPS</a>.",
+    "Your browser doesn't support WebAssembly, used for zlib compression. You can create uncompressed documents, but can't read compressed ones.":
+        "Your browser doesn't support WebAssembly, used for zlib compression. You can create uncompressed documents, but can't read compressed ones."
 }

@@ -170,5 +170,7 @@
     "For more information <a href=\"%s\">see this FAQ entry</a>.":
         "Per mai d’informacions <a href=\"%s\">vejatz aqueste article de FAQ</a>.",
     "Your browser may require an HTTPS connection to support the WebCrypto API. Try <a href=\"%s\">switching to HTTPS</a>.":
-        "Se pòt que vòstre navigator faga besonh d’una connexion HTTPS per èsser compatible amb l’API WebCrypto. Ensajatz de <a href=\"%s\">passar al HTTPS</a>."
+        "Se pòt que vòstre navigator faga besonh d’una connexion HTTPS per èsser compatible amb l’API WebCrypto. Ensajatz de <a href=\"%s\">passar al HTTPS</a>.",
+    "Your browser doesn't support WebAssembly, used for zlib compression. You can create uncompressed documents, but can't read compressed ones.":
+        "Your browser doesn't support WebAssembly, used for zlib compression. You can create uncompressed documents, but can't read compressed ones."
 }

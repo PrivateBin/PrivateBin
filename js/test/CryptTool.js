@@ -8,6 +8,9 @@ describe('CryptTool', function () {
             await new Promise(resolve => setTimeout(resolve, 1900));
         });
 
+        // ensure zlib is getting loaded
+        $.PrivateBin.InitialCheck.init();
+
         this.timeout(30000);
         it('can en- and decrypt any message', function () {
             jsc.assert(jsc.forall(
