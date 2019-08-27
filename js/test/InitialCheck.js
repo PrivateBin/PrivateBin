@@ -22,7 +22,6 @@ describe('InitialCheck', function () {
                         '</body></html>'
                     );
                     $.PrivateBin.Alert.init();
-                    window.crypto = null;
                     const result1 = !$.PrivateBin.InitialCheck.init(),
                           result2 = !$('#errormessage').hasClass('hidden');
                     clean();
@@ -61,24 +60,19 @@ describe('InitialCheck', function () {
         jsc.property(
             'shows error, if HTTP only site is detected',
             'bool',
-            jsc.elements(['localhost', '127.0.0.1', '[::1]', '']),
             jsc.nearray(common.jscA2zString()),
-            jsc.elements(['.onion', '.i2p', '']),
-            function (secureProtocol, localhost, domain, tld) {
-                const isDomain = localhost === '',
-                      isSecureContext = secureProtocol || !isDomain || tld.length > 0,
-                      clean = jsdom('', {
-                          'url': (secureProtocol ? 'https' : 'http' ) + '://' +
-                               (isDomain ? domain.join('') + tld : localhost) + '/'
+            function (secureProtocol, domain) {
+                const clean = jsdom('', {
+                          'url': (secureProtocol ? 'https' : 'http' ) + '://' + domain.join('') + '/'
                       });
                 $('body').html(
                     '<html><body><div id="httpnotice" class="hidden"></div>'+
                     '</body></html>'
                 );
                 $.PrivateBin.Alert.init();
-                window.crypto = null;
+                window.crypto = new WebCrypto();
                 const result1 = $.PrivateBin.InitialCheck.init(),
-                      result2 = isSecureContext === $('#httpnotice').hasClass('hidden');
+                      result2 = secureProtocol === $('#httpnotice').hasClass('hidden');
                 clean();
                 return result1 && result2;
             }

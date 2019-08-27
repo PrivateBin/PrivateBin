@@ -10,7 +10,7 @@ describe('Alert', function () {
             function (icon, message) {
                 icon = icon.join('');
                 message = message.join('');
-                var expected = '<div id="status" role="alert" ' +
+                const expected = '<div id="status" role="alert" ' +
                     'class="statusmessage alert alert-info"><span ' +
                     'class="glyphicon glyphicon-' + icon +
                     '" aria-hidden="true"></span> ' + message + '</div>';
@@ -21,7 +21,7 @@ describe('Alert', function () {
                 );
                 $.PrivateBin.Alert.init();
                 $.PrivateBin.Alert.showStatus(message, icon);
-                var result = $('body').html();
+                const result = $('body').html();
                 return expected === result;
             }
         );
@@ -39,7 +39,7 @@ describe('Alert', function () {
             function (icon, message) {
                 icon = icon.join('');
                 message = message.join('');
-                var expected = '<div id="errormessage" role="alert" ' +
+                const expected = '<div id="errormessage" role="alert" ' +
                     'class="statusmessage alert alert-danger"><span ' +
                     'class="glyphicon glyphicon-' + icon +
                     '" aria-hidden="true"></span> ' + message + '</div>';
@@ -50,7 +50,7 @@ describe('Alert', function () {
                 );
                 $.PrivateBin.Alert.init();
                 $.PrivateBin.Alert.showError(message, icon);
-                var result = $('body').html();
+                const result = $('body').html();
                 return expected === result;
             }
         );
@@ -69,7 +69,7 @@ describe('Alert', function () {
             function (message, string, number) {
                 message = message.join('');
                 string = string.join('');
-                var expected = '<div id="remainingtime" role="alert" ' +
+                const expected = '<div id="remainingtime" role="alert" ' +
                     'class="alert alert-info"><span ' +
                     'class="glyphicon glyphicon-fire" aria-hidden="true">' +
                     '</span> ' + string + message + number + '</div>';
@@ -80,7 +80,7 @@ describe('Alert', function () {
                 );
                 $.PrivateBin.Alert.init();
                 $.PrivateBin.Alert.showRemaining(['%s' + message + '%d', string, number]);
-                var result = $('body').html();
+                const result = $('body').html();
                 return expected === result;
             }
         );
@@ -98,7 +98,7 @@ describe('Alert', function () {
             function (message, icon) {
                 message = message.join('');
                 icon = icon.join('');
-                var defaultMessage = 'Loading…';
+                const defaultMessage = 'Loading…';
                 if (message.length === 0) {
                     message = defaultMessage;
                 }
@@ -114,7 +114,7 @@ describe('Alert', function () {
                 );
                 $.PrivateBin.Alert.init();
                 $.PrivateBin.Alert.showLoading(message, icon);
-                var result = $('body').html();
+                const result = $('body').html();
                 return expected === result;
             }
         );
@@ -182,7 +182,7 @@ describe('Alert', function () {
             jsc.array(common.jscAlnumString()),
             function (trigger, message) {
                 message = message.join('');
-                var handlerCalled = false,
+                let handlerCalled = false,
                     defaultMessage = 'Loading…',
                     functions = [
                         $.PrivateBin.Alert.showStatus,

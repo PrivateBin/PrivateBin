@@ -566,10 +566,10 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
             // if $element is given, apply text to element
             if ($element !== null) {
-                // get last text node of element
+                // set the last text node of element
                 let content = $element.contents();
                 if (content.length > 1) {
-                    content[content.length - 1].nodeValue = ' ' + output;
+                    $element.html(' ' + output).prepend(content[0]);
                 } else {
                     $element.text(output);
                 }
@@ -4803,11 +4803,21 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         function isOldBrowser() {
             // webcrypto support
-            if (typeof window.crypto !== 'object') {
+            if (!(
+                'crypto' in window &&
+                'getRandomValues' in window.crypto &&
+                'subtle' in window.crypto &&
+                'encrypt' in window.crypto.subtle &&
+                'decrypt' in window.crypto.subtle &&
+                'Uint32Array' in window
+            )) {
                 return true;
             }
 
-            if (typeof WebAssembly !== 'object' && typeof WebAssembly.instantiate !== 'function') {
+            if (!(
+                'WebAssembly' in window &&
+                'instantiate' in window.WebAssembly
+            )) {
                 return true;
             }
             try {
