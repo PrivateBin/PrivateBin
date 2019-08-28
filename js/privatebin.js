@@ -1493,7 +1493,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         const alertType = [
             'loading', // not in bootstrap CSS, but using a plausible value here
             'info',    // status icon
-            'warning', // not used yet
+            'warning', // warning icon
             'danger'   // error icon
         ];
 
@@ -1537,28 +1537,35 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                     icon = null; // icons not supported in this case
                 }
             }
+            let $translationTarget = $element;
 
-            // handle icon
-            if (icon !== null && // icon was passed
-                icon !== currentIcon[id] // and it differs from current icon
-            ) {
-                let $glyphIcon = $element.find(':first');
+            // handle icon, if template uses one
+            const $glyphIcon = $element.find(':first');
+            if ($glyphIcon.length) {
+                // if there is an icon, we need to provide an inner element
+                // to translate the message into, instead of the parent
+                $translationTarget = $('<span>');
+                $element.html(' ').prepend($glyphIcon).append($translationTarget);
 
-                // remove (previous) icon
-                $glyphIcon.removeClass(currentIcon[id]);
+                if (icon !== null && // icon was passed
+                    icon !== currentIcon[id] // and it differs from current icon
+                ) {
+                    // remove (previous) icon
+                    $glyphIcon.removeClass(currentIcon[id]);
 
-                // any other thing as a string (e.g. 'null') (only) removes the icon
-                if (typeof icon === 'string') {
-                    // set new icon
-                    currentIcon[id] = 'glyphicon-' + icon;
-                    $glyphIcon.addClass(currentIcon[id]);
+                    // any other thing as a string (e.g. 'null') (only) removes the icon
+                    if (typeof icon === 'string') {
+                        // set new icon
+                        currentIcon[id] = 'glyphicon-' + icon;
+                        $glyphIcon.addClass(currentIcon[id]);
+                    }
                 }
             }
 
             // show text
             if (args !== null) {
                 // add jQuery object to it as first parameter
-                args.unshift($element);
+                args.unshift($translationTarget);
                 // pass it to I18n
                 I18n._.apply(this, args);
             }
@@ -1596,7 +1603,9 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         me.showWarning = function(message, icon)
         {
-            $errorMessage.find(':first').removeClass(currentIcon[3]);
+            $errorMessage.find(':first')
+                         .removeClass(currentIcon[3])
+                         .addClass(currentIcon[2]);
             handleNotification(2, $errorMessage, message, icon);
         };
 
@@ -2990,11 +2999,11 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         me.init = function()
         {
             $attachment = $('#attachment');
-            if($attachment.length){
+            $dragAndDropFileName = $('#dragAndDropFileName');
+            $dropzone = $('#dropzone');
+            if($attachment.length) {
                 $attachmentLink = $('#attachment a');
                 $attachmentPreview = $('#attachmentPreview');
-                $dragAndDropFileName = $('#dragAndDropFileName');
-                $dropzone = $('#dropzone');
 
                 $fileInput = $('#file');
                 addDragDropHandler();
