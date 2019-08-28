@@ -566,12 +566,11 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
             // if $element is given, apply text to element
             if ($element !== null) {
-                // set the last text node of element
-                let content = $element.contents();
-                if (content.length > 1) {
-                    $element.html(' ' + output).prepend(content[0]);
-                } else {
+                // avoid HTML entity encoding if translation contains link
+                if (output.indexOf('<a') === -1) {
                     $element.text(output);
+                } else {
+                    $element.html(output);
                 }
             }
 
