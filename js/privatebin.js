@@ -1596,6 +1596,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         me.showWarning = function(message, icon)
         {
+            $errorMessage.find(':first').removeClass(currentIcon[3]);
             handleNotification(2, $errorMessage, message, icon);
         };
 
