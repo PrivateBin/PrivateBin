@@ -1822,7 +1822,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                     `${$shortenButton.data('shortener')}${encodeURIComponent($pasteUrl.attr('href'))}`,
                     '_blank',
                     'noopener, noreferrer'
-                )
+                );
             });
         }
 
