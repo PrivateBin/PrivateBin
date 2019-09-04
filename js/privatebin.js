@@ -412,7 +412,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         };
 
         /**
-         * calculate expiration date
+         * calculate expiration date given initial date and expiration period
          * 
          * @name   Helper.calculateExpirationDate
          * @function
@@ -3565,8 +3565,12 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             expirationDateRoundedToSecond.setUTCSeconds(0);
 
             const expirationDateString = window.confirm(
-                I18n._('Recipient may become aware of your timezone, convert time to GMT?')
-            ) ? expirationDateRoundedToSecond.toUTCString() : expirationDateRoundedToSecond.toLocaleString();
+                I18n._('Recipient may become aware of your timezone, convert time to UTC?')
+            ) ? expirationDateRoundedToSecond.toLocaleString(
+                    undefined,
+                    // we don't use Date.prototype.toUTCString() because we would like to avoid GMT
+                    { timeZone: 'UTC', dateStyle: 'long', timeStyle: 'long' }
+                ) : expirationDateRoundedToSecond.toLocaleString();
             if (expirationDate !== null || isBurnafterreading) {
                 emailBody += I18n._('Notice:');
                 emailBody += EOL;
