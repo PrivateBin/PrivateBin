@@ -16,12 +16,8 @@ env:
 
 globals:
   DOMPurify: readonly
-#  after: writable
-#  assert: writable
-#  before: writable
   cleanup: writable
   describe: readonly
-#  it: readonly
   jsc: readonly
   jsdom: writable
   kjua: writable
