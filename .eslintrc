@@ -16,6 +16,7 @@ env:
 globals:
   DOMPurify: readonly
   after: writable
+  assert: writable
   before: writable
   cleanup: writable
   describe: readonly
@@ -23,7 +24,7 @@ globals:
   jsc: readonly
   jsdom: writable
   kjua: writable
-  WebCrypto: readonly
+  WebCrypto: writable
 
 # http://eslint.org/docs/rules/
 rules:
