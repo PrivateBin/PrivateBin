@@ -8,9 +8,6 @@ describe('CryptTool', function () {
             await new Promise(resolve => setTimeout(resolve, 1900));
         });
 
-        // ensure zlib is getting loaded
-        $.PrivateBin.InitialCheck.init();
-
         this.timeout(30000);
         it('can en- and decrypt any message', function () {
             jsc.assert(jsc.forall(
@@ -21,13 +18,15 @@ describe('CryptTool', function () {
                     // pause to let async functions conclude
                     await new Promise(resolve => setTimeout(resolve, 300));
                     let clean = jsdom();
+                    // ensure zlib is getting loaded
+                    $.PrivateBin.InitialCheck.init();
                     window.crypto = new WebCrypto();
                     message = message.trim();
                     let cipherMessage = await $.PrivateBin.CryptTool.cipher(
                             key, password, message, []
                         ),
                         plaintext = await $.PrivateBin.CryptTool.decipher(
-                                key, password, cipherMessage
+                            key, password, cipherMessage
                         );
                     clean();
                     return message === plaintext;
@@ -182,6 +181,8 @@ describe('CryptTool', function () {
             let message = fs.readFileSync('test/compression-sample.txt', 'utf8'),
                 clean = jsdom();
             window.crypto = new WebCrypto();
+            // ensure zlib is getting loaded
+            $.PrivateBin.InitialCheck.init();
             let cipherMessage = await $.PrivateBin.CryptTool.cipher(
                     'foo', 'bar', message, []
                 ),
@@ -225,6 +226,8 @@ isWhile : interp (while expr sBody) (MemElem mem) =
 conseq_or_bottom inv (interp (nth_iterate sBody n) (MemElem mem))
 `;
                     let clean = jsdom();
+                    // ensure zlib is getting loaded
+                    $.PrivateBin.InitialCheck.init();
                     window.crypto = new WebCrypto();
                     let cipherMessage = await $.PrivateBin.CryptTool.cipher(
                             key, password, message, []

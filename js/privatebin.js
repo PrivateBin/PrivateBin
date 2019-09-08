@@ -780,15 +780,19 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          * @private
          * @param  {string} message
          * @param  {string} mode
+         * @param  {object} zlib
+         * @throws {string}
          * @return {ArrayBuffer} data
          */
-        async function compress(message, mode)
+        async function compress(message, mode, zlib)
         {
             message = stringToArraybuffer(
                 utf16To8(message)
             );
             if (mode === 'zlib') {
-                let zlib = (await z);
+                if (typeof zlib === 'undefined') {
+                    throw 'Error compressing paste, due to missing WebAssembly support.'
+                }
                 return zlib.deflate(message).buffer;
             }
             return message;
@@ -803,16 +807,16 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          * @private
          * @param  {ArrayBuffer} data
          * @param  {string} mode
+         * @param  {object} zlib
+         * @throws {string}
          * @return {string} message
          */
-        async function decompress(data, mode)
+        async function decompress(data, mode, zlib)
         {
             if (mode === 'zlib' || mode === 'none') {
                 if (mode === 'zlib') {
-                    let zlib = (await z);
                     if (typeof zlib === 'undefined') {
-                        Alert.showError('Your browser doesn\'t support WebAssembly, used for zlib compression. You can create uncompressed documents, but can\'t read compressed ones.')
-                        return '';
+                        throw 'Error decompressing paste, due to missing WebAssembly support.'
                     }
                     data = zlib.inflate(
                         new Uint8Array(data)
@@ -962,12 +966,13 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         me.cipher = async function(key, password, message, adata)
         {
+            let zlib = (await z);
             // AES in Galois Counter Mode, keysize 256 bit,
             // authentication tag 128 bit, 10000 iterations in key derivation
             const compression = (
-                    typeof (await z) === 'undefined' ?
+                    typeof zlib === 'undefined' ?
                     'none' : // client lacks support for WASM
-                    $('body').data('compression') || 'zlib'
+                    ($('body').data('compression') || 'zlib')
                 ),
                 spec = [
                     getRandomBytes(16), // initialization vector
@@ -997,7 +1002,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                         await window.crypto.subtle.encrypt(
                             cryptoSettings(JSON.stringify(adata), spec),
                             await deriveKey(key, password, spec),
-                            await compress(message, compression)
+                            await compress(message, compression, zlib)
                         ).catch(Alert.showError)
                     )
                 ),
@@ -1018,7 +1023,8 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         me.decipher = async function(key, password, data)
         {
-            let adataString, spec, cipherMessage;
+            let adataString, spec, cipherMessage, plaintext;
+            let zlib = (await z);
             if (data instanceof Array) {
                 // version 2
                 adataString = JSON.stringify(data[1]);
@@ -1045,19 +1051,28 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             }
             spec[0] = atob(spec[0]);
             spec[1] = atob(spec[1]);
+            if (spec[7] === 'zlib') {
+                if (typeof zlib === 'undefined') {
+                    throw 'Error decompressing paste, due to missing WebAssembly support.'
+                }
+            }
             try {
-                return await decompress(
-                    await window.crypto.subtle.decrypt(
-                        cryptoSettings(adataString, spec),
-                        await deriveKey(key, password, spec),
-                        stringToArraybuffer(
-                            atob(cipherMessage)
-                        )
-                    ).catch(Alert.showError),
-                    spec[7]
+                plaintext = await window.crypto.subtle.decrypt(
+                    cryptoSettings(adataString, spec),
+                    await deriveKey(key, password, spec),
+                    stringToArraybuffer(
+                        atob(cipherMessage)
+                    )
                 );
             } catch(err) {
+                console.error(err);
                 return '';
+            }
+            try {
+                return await decompress(plaintext, spec[7], zlib);
+            } catch(err) {
+                Alert.showError(err);
+                return err;
             }
         };
 
@@ -4522,7 +4537,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
             // if all tries failed, we can only return an error
             if (plaindata.length === 0) {
-                throw 'failed to decipher data';
+                return false;
             }
 
             return plaindata;
@@ -4551,8 +4566,11 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 if (password.length === 0) {
                     throw 'waiting on user to provide a password';
                 } else {
-                    displayDecryptionError('failed to decipher paste text: Incorrect password?');
-                    throw 'waiting on user to provide correct password';
+                    Alert.hideLoading();
+                    // reset password, so it can be re-entered
+                    Prompt.reset();
+                    TopNav.showRetryButton();
+                    throw 'Could not decrypt data. Did you enter a wrong password? Retry with the button at the top.';
                 }
             }
 
@@ -4643,27 +4661,6 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         }
 
         /**
-         * displays and logs decryption errors
-         *
-         * @name   PasteDecrypter.displayDecryptionError
-         * @private
-         * @function
-         * @param  {string} message
-         */
-        function displayDecryptionError(message)
-        {
-            Alert.hideLoading();
-
-            // log detailed error, but display generic translation
-            console.error(message);
-            Alert.showError('Could not decrypt data. Did you enter a wrong password? Retry with the button at the top.');
-
-            // reset password, so it can be re-entered
-            Prompt.reset();
-            TopNav.showRetryButton();
-        }
-
-        /**
          * show decrypted text in the display area, including discussion (if open)
          *
          * @name   PasteDecrypter.run
@@ -4714,7 +4711,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 .catch((err) => {
                     // wait for the user to type in the password,
                     // then PasteDecrypter.run will be called again
-                    console.error(err);
+                    Alert.showError(err);
                 });
         };
 
@@ -4818,34 +4815,14 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 'subtle' in window.crypto &&
                 'encrypt' in window.crypto.subtle &&
                 'decrypt' in window.crypto.subtle &&
+                'Uint8Array' in window &&
                 'Uint32Array' in window
             )) {
                 return true;
             }
 
-            if (!(
-                'WebAssembly' in window &&
-                'instantiate' in window.WebAssembly
-            )) {
-                return true;
-            }
-            try {
-                // [\0, 'a', 's', 'm', (uint_32) 1] - smallest valid wasm module
-                const module = new WebAssembly.Module(Uint8Array.of(0x0, 0x61, 0x73, 0x6d, 0x01, 0x00, 0x00, 0x00));
-                if (
-                    !(
-                        module instanceof WebAssembly.Module &&
-                        new WebAssembly.Instance(module) instanceof WebAssembly.Instance
-                    )
-                ) {
-                    return true;
-                }
-            } catch (e) {
-                return true;
-            }
-
-             // not checking for async/await, ES6, Promise or Uint8Array support,
-             // as most browsers introduced these earlier then webassembly and webcrypto:
+             // not checking for async/await, ES6 or Promise support, as most
+             // browsers introduced these earlier then webassembly and webcrypto:
              // https://github.com/PrivateBin/PrivateBin/pull/431#issuecomment-493129359
 
             return false;
@@ -4881,7 +4858,9 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             }
 
             z = zlib.catch(function () {
-                Alert.showWarning('Your browser doesn\'t support WebAssembly, used for zlib compression. You can create uncompressed documents, but can\'t read compressed ones.');
+                if ($('body').data('compression') !== 'none') {
+                    Alert.showWarning('Your browser doesn\'t support WebAssembly, used for zlib compression. You can create uncompressed documents, but can\'t read compressed ones.');
+                }
             });
             return true;
         }
