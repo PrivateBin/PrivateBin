@@ -12,15 +12,16 @@ env:
   es6: true
   jquery: true
   node: true
+  mocha: true
 
 globals:
   DOMPurify: readonly
-  after: writable
-  assert: writable
-  before: writable
+#  after: writable
+#  assert: writable
+#  before: writable
   cleanup: writable
   describe: readonly
-  it: readonly
+#  it: readonly
   jsc: readonly
   jsdom: writable
   kjua: writable

@@ -1,5 +1,6 @@
 'use strict';
 var common = require('../common');
+/* global WebCrypto */
 
 describe('InitialCheck', function () {
     describe('init', function () {
