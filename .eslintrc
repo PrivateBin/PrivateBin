@@ -1,3 +1,4 @@
+---
 parserOptions:
   ecmaVersion: 2017
 
@@ -13,16 +14,16 @@ env:
   node: true
 
 globals:
-  DOMPurify: false
-  after: true
-  before: true
-  cleanup: true
-  describe: false
-  it: false
-  jsc: false
-  jsdom: true
-  kjua: true
-  WebCrypto: true
+  DOMPurify: readonly
+  after: writable
+  before: writable
+  cleanup: writable
+  describe: readonly
+  it: readonly
+  jsc: readonly
+  jsdom: writable
+  kjua: writable
+  WebCrypto: readonly
 
 # http://eslint.org/docs/rules/
 rules:
