@@ -9,18 +9,9 @@
  * @version   1.3
  * @name      PrivateBin
  * @namespace
+ *
+ * global Base64, DOMPurify, FileReader, RawDeflate, history, navigator, prettyPrint, prettyPrintOne, showdown, kjua
  */
-
-/** global: Base64 */
-/** global: DOMPurify */
-/** global: FileReader */
-/** global: RawDeflate */
-/** global: history */
-/** global: navigator */
-/** global: prettyPrint */
-/** global: prettyPrintOne */
-/** global: showdown */
-/** global: kjua */
 
 jQuery.fn.draghover = function() {
     return this.each(function() {

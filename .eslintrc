@@ -22,6 +22,7 @@ globals:
   jsc: false
   jsdom: true
   kjua: true
+  WebCrypto: true
 
 # http://eslint.org/docs/rules/
 rules:
