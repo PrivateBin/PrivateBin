@@ -130,8 +130,8 @@ jQuery.Legacy = (function($) {
             }
 
             // whitelist localhost for development
-            for (var i = 0; i < hostname.length; i++) {
-                if (window.location.hostname === hostname[i]) {
+            for (var j = 0; j < hostname.length; j++) {
+                if (window.location.hostname === hostname[j]) {
                     return true;
                 }
             }
