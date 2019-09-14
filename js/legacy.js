@@ -198,7 +198,7 @@ jQuery.Legacy = (function($) {
         me.getInit = function()
         {
             return init;
-        }
+        };
         
         /**
          * returns the current status of the check
@@ -210,7 +210,7 @@ jQuery.Legacy = (function($) {
         me.getStatus = function()
         {
             return status;
-        }
+        };
         
         /**
          * init on application start, returns an all-clear signal
@@ -245,7 +245,7 @@ jQuery.Legacy = (function($) {
 
             // only if everything passed, we set the status to true
             status = true;
-        }
+        };
 
         return me;
     })();
