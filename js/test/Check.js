@@ -2,7 +2,7 @@
 var common = require('../common');
 /* global WebCrypto */
 
-describe('InitialCheck', function () {
+describe('Check', function () {
     describe('init', function () {
         this.timeout(30000);
         before(function () {
@@ -23,7 +23,8 @@ describe('InitialCheck', function () {
                         '</body></html>'
                     );
                     $.PrivateBin.Alert.init();
-                    const result1 = !$.PrivateBin.InitialCheck.init(),
+                    $.Legacy.Check.init();
+                    const result1 = $.Legacy.Check.getInit() && !$.Legacy.Check.getStatus(),
                           result2 = !$('#errormessage').hasClass('hidden');
                     clean();
                     return result1 && result2;
@@ -50,7 +51,8 @@ describe('InitialCheck', function () {
                     '<div id="oldnotice" class="hidden"></div></body></html>'
                 );
                 $.PrivateBin.Alert.init();
-                const result1 = !$.PrivateBin.InitialCheck.init(),
+                $.Legacy.Check.init();
+                const result1 = $.Legacy.Check.getInit() && !$.Legacy.Check.getStatus(),
                       result2 = isSecureContext === $('#errormessage').hasClass('hidden'),
                       result3 = !$('#oldnotice').hasClass('hidden');
                 clean();
@@ -70,9 +72,10 @@ describe('InitialCheck', function () {
                     '<html><body><div id="httpnotice" class="hidden"></div>'+
                     '</body></html>'
                 );
-                $.PrivateBin.Alert.init();
                 window.crypto = new WebCrypto();
-                const result1 = $.PrivateBin.InitialCheck.init(),
+                $.PrivateBin.Alert.init();
+                $.Legacy.Check.init();
+                const result1 = $.Legacy.Check.getInit() && $.Legacy.Check.getStatus(),
                       result2 = secureProtocol === $('#httpnotice').hasClass('hidden');
                 clean();
                 return result1 && result2;

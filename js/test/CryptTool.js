@@ -19,7 +19,7 @@ describe('CryptTool', function () {
                     await new Promise(resolve => setTimeout(resolve, 300));
                     let clean = jsdom();
                     // ensure zlib is getting loaded
-                    $.PrivateBin.InitialCheck.init();
+                    $.PrivateBin.Controller.initZ();
                     window.crypto = new WebCrypto();
                     message = message.trim();
                     let cipherMessage = await $.PrivateBin.CryptTool.cipher(
@@ -182,7 +182,7 @@ describe('CryptTool', function () {
                 clean = jsdom();
             window.crypto = new WebCrypto();
             // ensure zlib is getting loaded
-            $.PrivateBin.InitialCheck.init();
+            $.PrivateBin.Controller.initZ();
             let cipherMessage = await $.PrivateBin.CryptTool.cipher(
                     'foo', 'bar', message, []
                 ),
@@ -227,7 +227,7 @@ conseq_or_bottom inv (interp (nth_iterate sBody n) (MemElem mem))
 `;
                     let clean = jsdom();
                     // ensure zlib is getting loaded
-                    $.PrivateBin.InitialCheck.init();
+                    $.PrivateBin.Controller.initZ();
                     window.crypto = new WebCrypto();
                     let cipherMessage = await $.PrivateBin.CryptTool.cipher(
                             key, password, message, []

@@ -14,6 +14,7 @@
  */
 
 jQuery.fn.draghover = function() {
+    'use strict';
     return this.each(function() {
         let collection = $(),
             self = $(this);
@@ -4709,156 +4710,6 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         return me;
     })();
 
-
-    /**
-     * initial (security) check
-     *
-     * @name   InitialCheck
-     * @class
-     */
-    const InitialCheck = (function () {
-        const me = {};
-
-        /**
-         * blacklist of UserAgents (parts) known to belong to a bot
-         *
-         * @private
-         * @enum   {Array}
-         * @readonly
-         */
-        const badBotUA = [
-            'Bot',
-            'bot'
-        ];
-
-        /**
-         * check if the connection is insecure
-         *
-         * @private
-         * @name   InitialCheck.isInsecureConnection
-         * @function
-         * @return {bool}
-         */
-        function isInsecureConnection()
-        {
-            // use .isSecureContext if available
-            if (window.isSecureContext === true || window.isSecureContext === false) {
-                return !window.isSecureContext;
-            }
-
-            const url = new URL(window.location);
-
-            // HTTP is obviously insecure
-            if (url.protocol !== 'http:') {
-                return false;
-            }
-
-            // filter out actually secure connections over HTTP
-            for (const tld of ['.onion', '.i2p']) {
-                if (url.hostname.endsWith(tld)) {
-                    return false;
-                }
-            }
-
-            // whitelist localhost for development
-            for (const hostname of ['localhost', '127.0.0.1', '[::1]']) {
-                if (url.hostname === hostname) {
-                    return false;
-                }
-            }
-
-            // totally INSECURE http protocol!
-            return true;
-        }
-
-        /**
-         * checks whether this is a bot we dislike
-         *
-         * @private
-         * @name   InitialCheck.isBadBot
-         * @function
-         * @return {bool}
-         */
-        function isBadBot() {
-            // check whether a bot user agent part can be found in the current
-            // user agent
-            for (const UAfragment of badBotUA) {
-                if (navigator.userAgent.indexOf(UAfragment) >= 0) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        /**
-         * checks whether this is an unsupported browser, via feature detection
-         *
-         * @private
-         * @name   InitialCheck.isOldBrowser
-         * @function
-         * @return {bool}
-         */
-        function isOldBrowser() {
-            // webcrypto support
-            if (!(
-                'crypto' in window &&
-                'getRandomValues' in window.crypto &&
-                'subtle' in window.crypto &&
-                'encrypt' in window.crypto.subtle &&
-                'decrypt' in window.crypto.subtle &&
-                'Uint8Array' in window &&
-                'Uint32Array' in window
-            )) {
-                return true;
-            }
-
-             // not checking for async/await, ES6 or Promise support, as most
-             // browsers introduced these earlier then webassembly and webcrypto:
-             // https://github.com/PrivateBin/PrivateBin/pull/431#issuecomment-493129359
-
-            return false;
-        }
-
-        /**
-         * init on application start, returns an all-clear signal
-         *
-         * @name   InitialCheck.init
-         * @function
-         * @return {bool}
-         */
-        me.init = function()
-        {
-            // prevent bots from viewing a paste and potentially deleting data
-            // when burn-after-reading is set
-            if (isBadBot()) {
-                Alert.showError('I love you too, bot…');
-                return false;
-            }
-
-            if (isOldBrowser()) {
-                // some browsers (Chrome based ones) would have webcrypto support if using HTTPS
-                if (isInsecureConnection()) {
-                    Alert.showError(['Your browser may require an HTTPS connection to support the WebCrypto API. Try <a href="%s">switching to HTTPS</a>.', 'https' + window.location.href.slice(4)]);
-                }
-                $('#oldnotice').removeClass('hidden');
-                return false;
-            }
-
-            if (isInsecureConnection()) {
-                $('#httpnotice').removeClass('hidden');
-            }
-
-            z = zlib.catch(function () {
-                if ($('body').data('compression') !== 'none') {
-                    Alert.showWarning('Your browser doesn\'t support WebAssembly, used for zlib compression. You can create uncompressed documents, but can\'t read compressed ones.');
-                }
-            });
-            return true;
-        }
-
-        return me;
-    })();
-
     /**
      * (controller) main PrivateBin logic
      *
@@ -5034,12 +4885,28 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         };
 
         /**
+         * try initializing zlib or display a warning if it fails,
+         * extracted from main init to allow unit testing
+         *
+         * @name   Controller.initZ
+         * @function
+         */
+        me.initZ = function()
+        {
+            z = zlib.catch(function () {
+                if ($('body').data('compression') !== 'none') {
+                    Alert.showWarning('Your browser doesn\'t support WebAssembly, used for zlib compression. You can create uncompressed documents, but can\'t read compressed ones.');
+                }
+            });
+        }
+
+        /**
          * application start
          *
          * @name   Controller.init
          * @function
          */
-        me.init = async function()
+        me.init = function()
         {
             // first load translations
             I18n.loadTranslations();
@@ -5057,10 +4924,18 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             Prompt.init();
             TopNav.init();
             UiHelper.init();
-            if (!InitialCheck.init()) {
+
+            // check for legacy browsers before going any further
+            if (!$.Legacy.Check.getInit()) {
+                // Legacy check didn't complete, wait and try again
+                setTimeout(init, 500);
+                return;
+            }
+            if (!$.Legacy.Check.getStatus()) {
                 // something major is wrong, stop right away
                 return;
             }
+            me.initZ();
 
             // check whether existing paste needs to be shown
             try {
@@ -5100,7 +4975,6 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         ServerInteraction: ServerInteraction,
         PasteEncrypter: PasteEncrypter,
         PasteDecrypter: PasteDecrypter,
-        InitialCheck: InitialCheck,
         Controller: Controller
     };
 })(jQuery, RawDeflate);

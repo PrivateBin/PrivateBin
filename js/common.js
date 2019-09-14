@@ -20,6 +20,7 @@ global.showdown = require('./showdown-1.9.1');
 global.DOMPurify = require('./purify-1.0.11');
 global.baseX = require('./base-x-3.0.5.1').baseX;
 require('./bootstrap-3.3.7');
+require('./legacy');
 require('./privatebin');
 
 // internal variables
