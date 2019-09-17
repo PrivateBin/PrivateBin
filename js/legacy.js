@@ -189,6 +189,35 @@ jQuery.Legacy = (function($) {
         }
 
         /**
+         * shows an error message
+         *
+         * @private
+         * @name   Check.showError
+         * @param  {string} message
+         * @function
+         */
+        function showError(message)
+        {
+            var $error = $('#errormessage'),
+                $glyphIcon = $error.find(':first'),
+                $element;
+            if ($glyphIcon.length) {
+                // if there is an icon, we need to provide an inner element
+                // to translate the message into, instead of the parent
+                $element = $('<span>');
+                $error.html(' ').prepend($glyphIcon).append($element);
+            } else {
+                $element = $error;
+            }
+            if (message.indexOf('<a') === -1) {
+                $element.text(message);
+            } else {
+                $element.html(message);
+            }
+            $error.removeClass('hidden');
+        }
+
+        /**
          * returns if the check has concluded
          *
          * @name   Check.getInit
@@ -223,7 +252,7 @@ jQuery.Legacy = (function($) {
             // prevent bots from viewing a paste and potentially deleting data
             // when burn-after-reading is set
             if (isBadBot()) {
-                $.PrivateBin.Alert.showError('I love you too, bot…');
+                showError('I love you too, bot…');
                 init = true;
                 return;
             }
@@ -231,7 +260,12 @@ jQuery.Legacy = (function($) {
             if (isOldBrowser()) {
                 // some browsers (Chrome based ones) would have webcrypto support if using HTTPS
                 if (!isSecureContext()) {
-                    $.PrivateBin.Alert.showError(['Your browser may require an HTTPS connection to support the WebCrypto API. Try <a href="%s">switching to HTTPS</a>.', 'https' + window.location.href.slice(4)]);
+                    showError(
+                        'Your browser may require an HTTPS connection to support the WebCrypto API. Try <a href="%s">switching to HTTPS</a>.'.replace(
+                            '%s',
+                            'https' + window.location.href.slice(4)
+                        )
+                    );
                 }
                 $('#oldnotice').removeClass('hidden');
                 init = true;
