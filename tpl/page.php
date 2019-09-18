@@ -49,7 +49,7 @@ if ($MARKDOWN):
 endif;
 ?>
 		<script type="text/javascript" data-cfasync="false" src="js/purify-1.0.11.js" integrity="sha512-p7UyJuyBkhMcMgE4mDsgK0Lz70OvetLefua1oXs1OujWv9gOxh4xy8InFux7bZ4/DAZsTmO4rgVwZW9BHKaTaw==" crossorigin="anonymous"></script>
-		<script type="text/javascript" data-cfasync="false" src="js/legacy.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-mLqRoF9An6JCayodTEduwZLCissP4ItBQmNl1FCN8tgFlnOa0pd5Lu6SOJTDJaWVkiBf87FkLu3hq5LFV8p0jA==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/legacy.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-FBwnGgsB5Qngl269bVeaieYSqd8wKIXjHdBmhH5X2QQYtaT2RKdcULCdK2CAQ+GrKsSqq9q8xxowRzcChwp6tQ==" crossorigin="anonymous"></script>
 		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-4iMFqnyyoJ/FJ33aHov+QeItaZ0JegMUjx7J5pXeknEwjXzx4oLw9F9ePI3WK/h3sUYTOK+hdv2JINNGMwi2Vg==" crossorigin="anonymous"></script>
 		<!--[if IE]>
 		<style type="text/css">body {padding-left:60px;padding-right:60px;} #ienotice {display:block;}</style>

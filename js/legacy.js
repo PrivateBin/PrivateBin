@@ -174,9 +174,16 @@
                 return true;
             }
 
-             // not checking for async/await, ES6 or Promise support, as most
-             // browsers introduced these earlier then webassembly and webcrypto:
-             // https://github.com/PrivateBin/PrivateBin/pull/431#issuecomment-493129359
+            // async & ES6 support
+            try {
+                eval('async () => {}');
+            } catch (e) {
+                if (e instanceof SyntaxError) {
+                    return true;
+                } else {
+                    throw e; // throws CSP error
+                }
+            }
 
             return false;
         }
