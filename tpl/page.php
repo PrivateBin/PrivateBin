@@ -49,8 +49,8 @@ if ($MARKDOWN):
 endif;
 ?>
 		<script type="text/javascript" data-cfasync="false" src="js/purify-1.0.11.js" integrity="sha512-p7UyJuyBkhMcMgE4mDsgK0Lz70OvetLefua1oXs1OujWv9gOxh4xy8InFux7bZ4/DAZsTmO4rgVwZW9BHKaTaw==" crossorigin="anonymous"></script>
-		<script type="text/javascript" data-cfasync="false" src="js/legacy.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-tujqWT2EpSr9Iw6z9ET4P7x4lO6hMT+ccqVvWsq9lZjgbWa52AcML4MMiK6/VNFGna9i1IlyvloY9vBf3HH9XQ==" crossorigin="anonymous"></script>
-		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-qJ7Lfyl7375UWjsItSmAUFwhvynGHUy9U1ldU2OCpFOr5YWhAluEIN0/8ztO7p+5DcljE3wYst1b0ZBiVBEnag==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/legacy.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-mLqRoF9An6JCayodTEduwZLCissP4ItBQmNl1FCN8tgFlnOa0pd5Lu6SOJTDJaWVkiBf87FkLu3hq5LFV8p0jA==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-4iMFqnyyoJ/FJ33aHov+QeItaZ0JegMUjx7J5pXeknEwjXzx4oLw9F9ePI3WK/h3sUYTOK+hdv2JINNGMwi2Vg==" crossorigin="anonymous"></script>
 		<!--[if IE]>
 		<style type="text/css">body {padding-left:60px;padding-right:60px;} #ienotice {display:block;}</style>
 		<![endif]-->

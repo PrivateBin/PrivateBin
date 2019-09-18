@@ -1,6 +1,6 @@
 'use strict';
 var common = require('../common');
-/* global WebCrypto */
+/* global Legacy, WebCrypto */
 
 describe('Check', function () {
     describe('init', function () {
@@ -15,17 +15,15 @@ describe('Check', function () {
                 jsc.elements(['Bot', 'bot']),
                 'string',
                 function (prefix, botBit, suffix) {
-                    const clean = jsdom('', {
-                        'userAgent': prefix + botBit + suffix
-                    });
-                    $('body').html(
+                    const clean = jsdom(
                         '<html><body><div id="errormessage" class="hidden"></div>' +
-                        '</body></html>'
+                        '</body></html>', {
+                            'userAgent': prefix + botBit + suffix
+                        }
                     );
-                    $.PrivateBin.Alert.init();
-                    $.Legacy.Check.init();
-                    const result1 = $.Legacy.Check.getInit() && !$.Legacy.Check.getStatus(),
-                          result2 = !$('#errormessage').hasClass('hidden');
+                    Legacy.Check.init();
+                    const result1 = Legacy.Check.getInit() && !Legacy.Check.getStatus(),
+                          result2 = (document.getElementById('errormessage').className !== 'hidden');
                     clean();
                     return result1 && result2;
                 }
@@ -42,19 +40,18 @@ describe('Check', function () {
             function (secureProtocol, localhost, domain, tld) {
                 const isDomain = localhost === '',
                       isSecureContext = secureProtocol || !isDomain || tld.length > 0,
-                      clean = jsdom('', {
-                          'url': (secureProtocol ? 'https' : 'http' ) + '://' +
-                                 (isDomain ? domain.join('') + tld : localhost) + '/'
-                      });
-                $('body').html(
-                    '<html><body><div id="errormessage" class="hidden"></div>'+
-                    '<div id="oldnotice" class="hidden"></div></body></html>'
-                );
-                $.PrivateBin.Alert.init();
-                $.Legacy.Check.init();
-                const result1 = $.Legacy.Check.getInit() && !$.Legacy.Check.getStatus(),
-                      result2 = isSecureContext === $('#errormessage').hasClass('hidden'),
-                      result3 = !$('#oldnotice').hasClass('hidden');
+                      clean = jsdom(
+                          '<html><body><div id="errormessage" class="hidden"></div>' +
+                          '<div id="oldnotice" class="hidden"></div></body></html>',
+                          {
+                              'url': (secureProtocol ? 'https' : 'http' ) + '://' +
+                                     (isDomain ? domain.join('') + tld : localhost) + '/'
+                          }
+                      );
+                Legacy.Check.init();
+                const result1 = Legacy.Check.getInit() && !Legacy.Check.getStatus(),
+                      result2 = isSecureContext === (document.getElementById('errormessage').className === 'hidden'),
+                      result3 = (document.getElementById('oldnotice').className !== 'hidden');
                 clean();
                 return result1 && result2 && result3;
             }
@@ -65,18 +62,17 @@ describe('Check', function () {
             'bool',
             jsc.nearray(common.jscA2zString()),
             function (secureProtocol, domain) {
-                const clean = jsdom('', {
-                          'url': (secureProtocol ? 'https' : 'http' ) + '://' + domain.join('') + '/'
-                      });
-                $('body').html(
-                    '<html><body><div id="httpnotice" class="hidden"></div>'+
-                    '</body></html>'
-                );
+                const clean = jsdom(
+                          '<html><body><div id="httpnotice" class="hidden"></div>' +
+                          '</body></html>',
+                          {
+                              'url': (secureProtocol ? 'https' : 'http' ) + '://' + domain.join('') + '/'
+                          }
+                      );
                 window.crypto = new WebCrypto();
-                $.PrivateBin.Alert.init();
-                $.Legacy.Check.init();
-                const result1 = $.Legacy.Check.getInit() && $.Legacy.Check.getStatus(),
-                      result2 = secureProtocol === $('#httpnotice').hasClass('hidden');
+                Legacy.Check.init();
+                const result1 = Legacy.Check.getInit() && Legacy.Check.getStatus(),
+                      result2 = secureProtocol === (document.getElementById('httpnotice').className === 'hidden');
                 clean();
                 return result1 && result2;
             }

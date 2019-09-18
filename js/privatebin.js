@@ -4926,12 +4926,12 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             UiHelper.init();
 
             // check for legacy browsers before going any further
-            if (!$.Legacy.Check.getInit()) {
+            if (!Legacy.Check.getInit()) {
                 // Legacy check didn't complete, wait and try again
                 setTimeout(init, 500);
                 return;
             }
-            if (!$.Legacy.Check.getStatus()) {
+            if (!Legacy.Check.getStatus()) {
                 // something major is wrong, stop right away
                 return;
             }

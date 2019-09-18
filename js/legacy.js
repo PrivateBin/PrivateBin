@@ -12,26 +12,19 @@
  *
  * IMPORTANT NOTICE FOR DEVELOPERS:
  * The logic in this file is intended to run in legacy browsers. Avoid any use of:
- * - ES6 or newer in general
+ * - jQuery (doesn't work in older browsers)
+ * - ES5 or newer in general
  * - const/let, use the traditional var declarations instead
  * - async/await or Promises, use traditional callbacks
  * - shorthand function notation "() => output", use the full "function() {return output;}" style
  * - IE doesn't support:
  *   - URL(), use the traditional window.location object
  *   - endsWith(), use indexof()
- * - yes, this logic needs to support IE 5 or 6, to at least display the error message
+ * - yes, this logic needs to support IE 6, to at least display the error message
  */
 
-// main application start, called when DOM is fully loaded
-jQuery(document).ready(function() {
-    'use strict';
-    // run main controller
-    $.Legacy.Check.init();
-});
-
-jQuery.Legacy = (function($) {
-    'use strict';
-
+'use strict';
+(function() {
     /**
      * compatibility check
      *
@@ -198,23 +191,29 @@ jQuery.Legacy = (function($) {
          */
         function showError(message)
         {
-            var $error = $('#errormessage'),
-                $glyphIcon = $error.find(':first'),
-                $element;
-            if ($glyphIcon.length) {
-                // if there is an icon, we need to provide an inner element
-                // to translate the message into, instead of the parent
-                $element = $('<span>');
-                $error.html(' ').prepend($glyphIcon).append($element);
-            } else {
-                $element = $error;
-            }
+            var element = document.getElementById('errormessage');
             if (message.indexOf('<a') === -1) {
-                $element.text(message);
+                element.appendChild(
+                    document.createTextNode(message)
+                );
             } else {
-                $element.html(message);
+                element.innerHTML = message;
             }
-            $error.removeClass('hidden');
+            removeHiddenFromId('errormessage');
+        }
+
+        /**
+         * removes "hidden" CSS class from element with given ID
+         *
+         * @private
+         * @name   Check.removeHiddenFromId
+         * @param  {string} id
+         * @function
+         */
+        function removeHiddenFromId(id)
+        {
+            var element = document.getElementById(id);
+            if (element) element.className = element.className.replace(/\bhidden\b/g, '');
         }
 
         /**
@@ -267,13 +266,13 @@ jQuery.Legacy = (function($) {
                         )
                     );
                 }
-                $('#oldnotice').removeClass('hidden');
+                removeHiddenFromId('oldnotice');
                 init = true;
                 return;
             }
 
             if (!isSecureContext()) {
-                $('#httpnotice').removeClass('hidden');
+                removeHiddenFromId('httpnotice');
             }
             init = true;
 
@@ -284,7 +283,23 @@ jQuery.Legacy = (function($) {
         return me;
     })();
 
-    return {
+    // main application start, called when DOM is fully loaded
+    if (document.readyState === 'complete' || (!document.attachEvent && document.readyState === 'interactive')) {
+        Check.init();
+    } else {
+        if (document.addEventListener) {
+            // first choice is DOMContentLoaded event
+            document.addEventListener('DOMContentLoaded', Check.init, false);
+            // backup is window load event
+            window.addEventListener('load', Check.init, false);
+        } else {
+            // must be IE
+            document.attachEvent('onreadystatechange', Check.init);
+            window.attachEvent('onload', Check.init);
+        }
+    }
+
+    this.Legacy = {
         Check: Check
     };
-})(jQuery);
+}).call(this);
