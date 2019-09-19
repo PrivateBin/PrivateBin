@@ -5,6 +5,7 @@
     * CHANGED: Improved mobile UI - obscured send button and hard to click shortener button (#477)
     * CHANGED: Enhanced URL shortener integration (#479)
     * CHANGED: Improved file upload drag & drop UI (#317)
+    * CHANGED: Upgrading libraries to: DOMpurify 2.0.1
     * FIXED: Cloning related issues (#489, #491, #493, #494)
     * FIXED: Enable file operation only when editing (#497) 
     * FIXED: Clicking 'New' on a previously submitted paste does not blank address bar (#354)
