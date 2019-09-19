@@ -1,5 +1,6 @@
 doc/ export-ignore
 tst/ export-ignore
+img/browserstack.svg export-ignore
 js/.istanbul.yml export-ignore
 js/.nycrc.yml export-ignore
 js/common.js export-ignore
