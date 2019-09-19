@@ -35,8 +35,6 @@
         "%s需要JavaScript来进行加解密。<br />给你带来的不便敬请谅解。",
     "%s requires a modern browser to work.":
         "%s需要在现代浏览器上工作。",
-    "Still using Internet Explorer? Do yourself a favor, switch to a modern browser:":
-        "还在使用Internet Explorer？对自己好点，换一个现代浏览器：",
     "New":
         "新建",
     "Send":

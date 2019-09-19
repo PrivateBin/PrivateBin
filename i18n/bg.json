@@ -35,8 +35,6 @@
         "Услугата %s се нуждае от JavaScript, за да работи.<br />Съжаляваме за неудобството.",
     "%s requires a modern browser to work.":
         "%s се нуждае от съвременен браузър за да работи.",
-    "Still using Internet Explorer? Do yourself a favor, switch to a modern browser:":
-        "Все още използваш Internet Explorer? Направи си услуга и го смени с модерен браузър:",
     "New":
         "Създаване",
     "Send":
