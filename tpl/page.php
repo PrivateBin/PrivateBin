@@ -48,7 +48,7 @@ if ($MARKDOWN):
 <?php
 endif;
 ?>
-		<script type="text/javascript" data-cfasync="false" src="js/purify-1.0.11.js" integrity="sha512-p7UyJuyBkhMcMgE4mDsgK0Lz70OvetLefua1oXs1OujWv9gOxh4xy8InFux7bZ4/DAZsTmO4rgVwZW9BHKaTaw==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/purify-2.0.1.js" integrity="sha512-ddI36MdUoXp/o7yhQtr9/qj4G3oFwCRga4jCGaoUYtORg0PPmFKVKG4Ess3fIknYzxwwKMlrIL9o4NwuPTCc1Q==" crossorigin="anonymous"></script>
 		<script type="text/javascript" data-cfasync="false" src="js/legacy.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-dReLYyMJO3kV7/etVKlGWSbmJoWavMpbgG8Hg3759MNHv0mYuonh4Azif3y0F0oopKKlz3vtj8XZV7VY+e6dSQ==" crossorigin="anonymous"></script>
 		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-4iMFqnyyoJ/FJ33aHov+QeItaZ0JegMUjx7J5pXeknEwjXzx4oLw9F9ePI3WK/h3sUYTOK+hdv2JINNGMwi2Vg==" crossorigin="anonymous"></script>
 		<link rel="apple-touch-icon" href="img/apple-touch-icon.png?<?php echo rawurlencode($VERSION); ?>" sizes="180x180" />
