@@ -220,7 +220,9 @@
         function removeHiddenFromId(id)
         {
             var element = document.getElementById(id);
-            if (element) element.className = element.className.replace(/\bhidden\b/g, '');
+            if (element) {
+                element.className = element.className.replace(/\bhidden\b/g, '');
+            }
         }
 
         /**
