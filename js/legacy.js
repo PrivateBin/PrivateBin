@@ -266,12 +266,7 @@
             if (isOldBrowser()) {
                 // some browsers (Chrome based ones) would have webcrypto support if using HTTPS
                 if (!isSecureContext()) {
-                    showError(
-                        'Your browser may require an HTTPS connection to support the WebCrypto API. Try <a href="%s">switching to HTTPS</a>.'.replace(
-                            '%s',
-                            'https' + window.location.href.slice(4)
-                        )
-                    );
+                    removeHiddenFromId('insecurecontextnotice');
                 }
                 removeHiddenFromId('oldnotice');
                 init = true;

@@ -71,7 +71,7 @@ if ($MARKDOWN):
 endif;
 ?>
 		<script type="text/javascript" data-cfasync="false" src="js/purify-1.0.11.js" integrity="sha512-p7UyJuyBkhMcMgE4mDsgK0Lz70OvetLefua1oXs1OujWv9gOxh4xy8InFux7bZ4/DAZsTmO4rgVwZW9BHKaTaw==" crossorigin="anonymous"></script>
-		<script type="text/javascript" data-cfasync="false" src="js/legacy.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-FBwnGgsB5Qngl269bVeaieYSqd8wKIXjHdBmhH5X2QQYtaT2RKdcULCdK2CAQ+GrKsSqq9q8xxowRzcChwp6tQ==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/legacy.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-7c7kPu/72+/ROPV+BVuwIx6/7DM/EbGekeP3vhSvOf0immWFTsO8iq/EiJcuDBJTVzRcaE+hsEK1lDWCMykpEQ==" crossorigin="anonymous"></script>
 		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-4iMFqnyyoJ/FJ33aHov+QeItaZ0JegMUjx7J5pXeknEwjXzx4oLw9F9ePI3WK/h3sUYTOK+hdv2JINNGMwi2Vg==" crossorigin="anonymous"></script>
 		<!--[if IE]>
 		<style type="text/css">body {padding-left:60px;padding-right:60px;} #ienotice {display:block;}</style>
@@ -462,6 +462,10 @@ if ($HTTPWARNING):
 					<span class="glyphicon glyphicon-alert" aria-hidden="true"></span>
 					<?php echo I18n::_('This website is using an insecure connection! Please only use it for testing.'), PHP_EOL; ?><br />
 					<span class="small"><?php echo I18n::_('For more information <a href="%s">see this FAQ entry</a>.', 'https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-it-show-me-an-error-about-an-insecure-connection'); ?></span>
+				</div>
+				<div id="insecurecontextnotice" role="alert" class="hidden alert alert-danger">
+					<span class="glyphicon glyphicon-alert" aria-hidden="true"></span>
+					<?php echo I18n::_('Your browser may require an HTTPS connection to support the WebCrypto API. Try <a href="%s">switching to HTTPS</a>.', $HTTPSLINK); ?>
 				</div>
 <?php
 endif;

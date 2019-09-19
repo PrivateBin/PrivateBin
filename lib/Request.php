@@ -194,6 +194,19 @@ class Request
     }
 
     /**
+     * Get host as requested by the client
+     *
+     * @access public
+     * @return string
+     */
+    public function getHost()
+    {
+        return array_key_exists('HTTP_HOST', $_SERVER) ?
+            htmlspecialchars($_SERVER['HTTP_HOST']) :
+            'localhost';
+    }
+
+    /**
      * Get request URI
      *
      * @access public
@@ -202,8 +215,8 @@ class Request
     public function getRequestUri()
     {
         return array_key_exists('REQUEST_URI', $_SERVER) ?
-            htmlspecialchars(
-                parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH)
+        htmlspecialchars(
+            parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH)
             ) : '/';
     }
 

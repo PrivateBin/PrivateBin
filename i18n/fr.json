@@ -164,7 +164,6 @@
     "Could not get paste data: %s":
         "Impossible d'obtenir les données du paste: %s",
     "QR code": "QR code",
-    "I love you too, bot…": "Je t’aime aussi, bot…",
     "This website is using an insecure HTTP connection! Please use it only for testing.":
         "Ce site web utilise une connexion HTTP non sécurisée ! Veuillez l’utiliser uniquement pour des tests.",
     "For more information <a href=\"%s\">see this FAQ entry</a>.":

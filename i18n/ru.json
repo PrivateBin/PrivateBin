@@ -165,7 +165,6 @@
     "Could not get paste data: %s":
         "Не удалось получить данные записи: %s",
     "QR code": "QR код",
-    "I love you too, bot…": "Я тоже люблю тебя, бот…",
     "This website is using an insecure HTTP connection! Please use it only for testing.":
         "Данный сайт использует незащищенное HTTP подключение! Пожалуйста используйте его только для тестирования.",
     "For more information <a href=\"%s\">see this FAQ entry</a>.":

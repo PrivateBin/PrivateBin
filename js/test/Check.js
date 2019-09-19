@@ -42,7 +42,8 @@ describe('Check', function () {
                       isSecureContext = secureProtocol || !isDomain || tld.length > 0,
                       clean = jsdom(
                           '<html><body><div id="errormessage" class="hidden"></div>' +
-                          '<div id="oldnotice" class="hidden"></div></body></html>',
+                          '<div id="oldnotice" class="hidden"></div>' +
+                          '<div id="insecurecontextnotice" class="hidden"></div></body></html>',
                           {
                               'url': (secureProtocol ? 'https' : 'http' ) + '://' +
                                      (isDomain ? domain.join('') + tld : localhost) + '/'
@@ -50,7 +51,7 @@ describe('Check', function () {
                       );
                 Legacy.Check.init();
                 const result1 = Legacy.Check.getInit() && !Legacy.Check.getStatus(),
-                      result2 = isSecureContext === (document.getElementById('errormessage').className === 'hidden'),
+                      result2 = isSecureContext === (document.getElementById('insecurecontextnotice').className === 'hidden'),
                       result3 = (document.getElementById('oldnotice').className !== 'hidden');
                 clean();
                 return result1 && result2 && result3;
