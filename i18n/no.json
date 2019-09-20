@@ -35,8 +35,6 @@
         "Javascript kreves for at %s skal fungere<br />Beklager.",
     "%s requires a modern browser to work.":
         "%s krever en moderne nettleser for å fungere.",
-    "Still using Internet Explorer? Do yourself a favor, switch to a modern browser:":
-        "Fortsatt bruker av Internet Explorer? Gjør deg selv en tjeneste og bytt til en moderne nettleser:",
     "New":
         "Ny",
     "Send":
@@ -155,11 +153,12 @@
     "Could not get paste data: %s":
         "Kunne ikke hente utklippsdata: %s",
     "QR code": "QR kode",
-    "I love you too, bot…": "Jeg elsker deg også, bot…",
     "This website is using an insecure HTTP connection! Please use it only for testing.":
         "Denne websiden bruker usikker HTTP tilkobling! Bruk den kun for testing.",
     "For more information <a href=\"%s\">see this FAQ entry</a>.":
         "For mer informasjon <a href=\"%s\">se ofte stilte spørsmål</a>.",
     "Your browser may require an HTTPS connection to support the WebCrypto API. Try <a href=\"%s\">switching to HTTPS</a>.":
-        "Din nettleser har behov for HTTPS tilkobling for å støtte WebCrypto biblioteket. Prøv å <a href=\"%s\">bytt til HTTPS</a>."
+        "Din nettleser har behov for HTTPS tilkobling for å støtte WebCrypto biblioteket. Prøv å <a href=\"%s\">bytt til HTTPS</a>.",
+    "Your browser doesn't support WebAssembly, used for zlib compression. You can create uncompressed documents, but can't read compressed ones.":
+        "Your browser doesn't support WebAssembly, used for zlib compression. You can create uncompressed documents, but can't read compressed ones."
 }

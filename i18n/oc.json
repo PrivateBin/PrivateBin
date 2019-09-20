@@ -35,8 +35,6 @@
         "JavaScript es requesit per far foncionar %s. <br />O planhèm per l’inconvenient.",
     "%s requires a modern browser to work.":
         "%s necessita un navigator modèrn per foncionar.",
-    "Still using Internet Explorer? Do yourself a favor, switch to a modern browser:":
-        "Encora sus Internet Explorer ? Fasètz-vos una favor, passatz a un navigator modèrn :",
     "New":
         "Nòu",
     "Send":
@@ -164,11 +162,12 @@
     "Could not get paste data: %s":
         "Recuperacion impossibla de las donadas copiadas : %s",
     "QR code": "Còdi QR",
-    "I love you too, bot…": "T’aimi tanben, robòt…",
     "This website is using an insecure HTTP connection! Please use it only for testing.":
         "Aqueste site utiliza una connexion HTTP pas segura ! Mercés de l’utilizar pas que per d’ensages.",
     "For more information <a href=\"%s\">see this FAQ entry</a>.":
         "Per mai d’informacions <a href=\"%s\">vejatz aqueste article de FAQ</a>.",
     "Your browser may require an HTTPS connection to support the WebCrypto API. Try <a href=\"%s\">switching to HTTPS</a>.":
-        "Se pòt que vòstre navigator faga besonh d’una connexion HTTPS per èsser compatible amb l’API WebCrypto. Ensajatz de <a href=\"%s\">passar al HTTPS</a>."
+        "Se pòt que vòstre navigator faga besonh d’una connexion HTTPS per èsser compatible amb l’API WebCrypto. Ensajatz de <a href=\"%s\">passar al HTTPS</a>.",
+    "Your browser doesn't support WebAssembly, used for zlib compression. You can create uncompressed documents, but can't read compressed ones.":
+        "Your browser doesn't support WebAssembly, used for zlib compression. You can create uncompressed documents, but can't read compressed ones."
 }

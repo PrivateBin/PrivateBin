@@ -35,8 +35,6 @@
         "JavaScript vereist om %s te laten werken.<br />Sorry voor het ongemak.",
     "%s requires a modern browser to work.":
         "%s vereist een moderne browser om te kunnen werken ",
-    "Still using Internet Explorer? Do yourself a favor, switch to a modern browser:":
-        "Gebruik je nog steeds Internet explorer? Doe jezelf een plezier en maak gebruik van een moderne browser:",
     "New":
         "Nieuw",
     "Send":
@@ -155,11 +153,12 @@
     "Could not get paste data: %s":
         "Could not get paste data: %s",
     "QR code": "QR code",
-    "I love you too, bot…": "I love you too, bot…",
     "This website is using an insecure HTTP connection! Please use it only for testing.":
         "This website is using an insecure HTTP connection! Please use it only for testing.",
     "For more information <a href=\"%s\">see this FAQ entry</a>.":
         "For more information <a href=\"%s\">see this FAQ entry</a>.",
     "Your browser may require an HTTPS connection to support the WebCrypto API. Try <a href=\"%s\">switching to HTTPS</a>.":
-        "Your browser may require an HTTPS connection to support the WebCrypto API. Try <a href=\"%s\">switching to HTTPS</a>."
+        "Your browser may require an HTTPS connection to support the WebCrypto API. Try <a href=\"%s\">switching to HTTPS</a>.",
+    "Your browser doesn't support WebAssembly, used for zlib compression. You can create uncompressed documents, but can't read compressed ones.":
+        "Your browser doesn't support WebAssembly, used for zlib compression. You can create uncompressed documents, but can't read compressed ones."
 }

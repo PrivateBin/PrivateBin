@@ -9,20 +9,12 @@
  * @version   1.3
  * @name      PrivateBin
  * @namespace
+ *
+ * global Base64, DOMPurify, FileReader, RawDeflate, history, navigator, prettyPrint, prettyPrintOne, showdown, kjua
  */
 
-/** global: Base64 */
-/** global: DOMPurify */
-/** global: FileReader */
-/** global: RawDeflate */
-/** global: history */
-/** global: navigator */
-/** global: prettyPrint */
-/** global: prettyPrintOne */
-/** global: showdown */
-/** global: kjua */
-
 jQuery.fn.draghover = function() {
+    'use strict';
     return this.each(function() {
         let collection = $(),
             self = $(this);
@@ -566,12 +558,11 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
             // if $element is given, apply text to element
             if ($element !== null) {
-                // get last text node of element
-                let content = $element.contents();
-                if (content.length > 1) {
-                    content[content.length - 1].nodeValue = ' ' + output;
-                } else {
+                // avoid HTML entity encoding if translation contains link
+                if (output.indexOf('<a') === -1) {
                     $element.text(output);
+                } else {
+                    $element.html(output);
                 }
             }
 
@@ -781,15 +772,20 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          * @private
          * @param  {string} message
          * @param  {string} mode
+         * @param  {object} zlib
+         * @throws {string}
          * @return {ArrayBuffer} data
          */
-        async function compress(message, mode)
+        async function compress(message, mode, zlib)
         {
             message = stringToArraybuffer(
                 utf16To8(message)
             );
             if (mode === 'zlib') {
-                return z.deflate(message).buffer;
+                if (typeof zlib === 'undefined') {
+                    throw 'Error compressing paste, due to missing WebAssembly support.'
+                }
+                return zlib.deflate(message).buffer;
             }
             return message;
         }
@@ -803,13 +799,18 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          * @private
          * @param  {ArrayBuffer} data
          * @param  {string} mode
+         * @param  {object} zlib
+         * @throws {string}
          * @return {string} message
          */
-        async function decompress(data, mode)
+        async function decompress(data, mode, zlib)
         {
             if (mode === 'zlib' || mode === 'none') {
                 if (mode === 'zlib') {
-                    data = z.inflate(
+                    if (typeof zlib === 'undefined') {
+                        throw 'Error decompressing paste, due to missing WebAssembly support.'
+                    }
+                    data = zlib.inflate(
                         new Uint8Array(data)
                     ).buffer;
                 }
@@ -883,7 +884,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                         stringToArraybuffer(
                             utf16To8(password)
                         )
-                    );
+                    ).catch(Alert.showError);
                     password = Array.prototype.map.call(
                         new Uint8Array(passwordBuffer),
                         x => ('00' + x.toString(16)).slice(-2)
@@ -903,7 +904,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 {name: 'PBKDF2'}, // we use PBKDF2 for key derivation
                 false, // the key may not be exported
                 ['deriveKey'] // we may only use it for key derivation
-            );
+            ).catch(Alert.showError);
 
             // derive a stronger key for use with AES
             return window.crypto.subtle.deriveKey(
@@ -920,7 +921,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 },
                 false, // the key may not be exported
                 ['encrypt', 'decrypt'] // we may only use it for en- and decryption
-            );
+            ).catch(Alert.showError);
         }
 
         /**
@@ -957,18 +958,24 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         me.cipher = async function(key, password, message, adata)
         {
+            let zlib = (await z);
             // AES in Galois Counter Mode, keysize 256 bit,
             // authentication tag 128 bit, 10000 iterations in key derivation
-            const spec = [
-                getRandomBytes(16),                     // initialization vector
-                getRandomBytes(8),                      // salt
-                100000,                                 // iterations
-                256,                                    // key size
-                128,                                    // tag size
-                'aes',                                  // algorithm
-                'gcm',                                  // algorithm mode
-                $('body').data('compression') || 'zlib' // compression
-            ], encodedSpec = [];
+            const compression = (
+                    typeof zlib === 'undefined' ?
+                    'none' : // client lacks support for WASM
+                    ($('body').data('compression') || 'zlib')
+                ),
+                spec = [
+                    getRandomBytes(16), // initialization vector
+                    getRandomBytes(8),  // salt
+                    100000,             // iterations
+                    256,                // key size
+                    128,                // tag size
+                    'aes',              // algorithm
+                    'gcm',              // algorithm mode
+                    compression         // compression
+                ], encodedSpec = [];
             for (let i = 0; i < spec.length; ++i) {
                 encodedSpec[i] = i < 2 ? btoa(spec[i]) : spec[i];
             }
@@ -987,8 +994,8 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                         await window.crypto.subtle.encrypt(
                             cryptoSettings(JSON.stringify(adata), spec),
                             await deriveKey(key, password, spec),
-                            await compress(message, spec[7])
-                        )
+                            await compress(message, compression, zlib)
+                        ).catch(Alert.showError)
                     )
                 ),
                 adata
@@ -1008,7 +1015,8 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         me.decipher = async function(key, password, data)
         {
-            let adataString, spec, cipherMessage;
+            let adataString, spec, cipherMessage, plaintext;
+            let zlib = (await z);
             if (data instanceof Array) {
                 // version 2
                 adataString = JSON.stringify(data[1]);
@@ -1035,19 +1043,28 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             }
             spec[0] = atob(spec[0]);
             spec[1] = atob(spec[1]);
+            if (spec[7] === 'zlib') {
+                if (typeof zlib === 'undefined') {
+                    throw 'Error decompressing paste, due to missing WebAssembly support.'
+                }
+            }
             try {
-                return await decompress(
-                    await window.crypto.subtle.decrypt(
-                        cryptoSettings(adataString, spec),
-                        await deriveKey(key, password, spec),
-                        stringToArraybuffer(
-                            atob(cipherMessage)
-                        )
-                    ),
-                    spec[7]
+                plaintext = await window.crypto.subtle.decrypt(
+                    cryptoSettings(adataString, spec),
+                    await deriveKey(key, password, spec),
+                    stringToArraybuffer(
+                        atob(cipherMessage)
+                    )
                 );
             } catch(err) {
+                console.error(err);
                 return '';
+            }
+            try {
+                return await decompress(plaintext, spec[7], zlib);
+            } catch(err) {
+                Alert.showError(err);
+                return err;
             }
         };
 
@@ -1194,7 +1211,6 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         me.getPasteId = function()
         {
             const idRegEx = /^[a-z0-9]{16}$/;
-            const idRegExFind = /[a-z0-9]{16}/;
 
             // return cached value
             if (id !== null) {
@@ -1483,7 +1499,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         const alertType = [
             'loading', // not in bootstrap CSS, but using a plausible value here
             'info',    // status icon
-            'warning', // not used yet
+            'warning', // warning icon
             'danger'   // error icon
         ];
 
@@ -1527,28 +1543,35 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                     icon = null; // icons not supported in this case
                 }
             }
+            let $translationTarget = $element;
 
-            // handle icon
-            if (icon !== null && // icon was passed
-                icon !== currentIcon[id] // and it differs from current icon
-            ) {
-                let $glyphIcon = $element.find(':first');
+            // handle icon, if template uses one
+            const $glyphIcon = $element.find(':first');
+            if ($glyphIcon.length) {
+                // if there is an icon, we need to provide an inner element
+                // to translate the message into, instead of the parent
+                $translationTarget = $('<span>');
+                $element.html(' ').prepend($glyphIcon).append($translationTarget);
 
-                // remove (previous) icon
-                $glyphIcon.removeClass(currentIcon[id]);
+                if (icon !== null && // icon was passed
+                    icon !== currentIcon[id] // and it differs from current icon
+                ) {
+                    // remove (previous) icon
+                    $glyphIcon.removeClass(currentIcon[id]);
 
-                // any other thing as a string (e.g. 'null') (only) removes the icon
-                if (typeof icon === 'string') {
-                    // set new icon
-                    currentIcon[id] = 'glyphicon-' + icon;
-                    $glyphIcon.addClass(currentIcon[id]);
+                    // any other thing as a string (e.g. 'null') (only) removes the icon
+                    if (typeof icon === 'string') {
+                        // set new icon
+                        currentIcon[id] = 'glyphicon-' + icon;
+                        $glyphIcon.addClass(currentIcon[id]);
+                    }
                 }
             }
 
             // show text
             if (args !== null) {
                 // add jQuery object to it as first parameter
-                args.unshift($element);
+                args.unshift($translationTarget);
                 // pass it to I18n
                 I18n._.apply(this, args);
             }
@@ -1571,6 +1594,25 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         me.showStatus = function(message, icon)
         {
             handleNotification(1, $statusMessage, message, icon);
+        };
+
+        /**
+         * display a warning message
+         *
+         * This automatically passes the text to I18n for translation.
+         *
+         * @name   Alert.showWarning
+         * @function
+         * @param  {string|array} message     string, use an array for %s/%d options
+         * @param  {string|null}  icon        optional, the icon to show, default:
+         *                                    leave previous icon
+         */
+        me.showWarning = function(message, icon)
+        {
+            $errorMessage.find(':first')
+                         .removeClass(currentIcon[3])
+                         .addClass(currentIcon[2]);
+            handleNotification(2, $errorMessage, message, icon);
         };
 
         /**
@@ -1699,7 +1741,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             currentIcon = [
                 'glyphicon-time', // loading icon
                 'glyphicon-info-sign', // status icon
-                '', // reserved for warning, not used yet
+                'glyphicon-warning-sign', // warning icon
                 'glyphicon-alert' // error icon
             ];
         };
@@ -1768,14 +1810,14 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                             return;
                         }
                     }
-                    Alert.showError(
-                        I18n._('Cannot parse response from URL shortener.')
-                    );
+                    Alert.showError('Cannot parse response from URL shortener.');
                 }
             })
             .fail(function(data, textStatus, errorThrown) {
                 console.error(textStatus, errorThrown);
-                // we don't know why it failed, could be CORS of the external server not setup properly, in which case we follow old behavior to open it in new tab
+                // we don't know why it failed, could be CORS of the external
+                // server not setup properly, in which case we follow old
+                // behavior to open it in new tab
                 window.open(
                     `${$shortenButton.data('shortener')}${encodeURIComponent($pasteUrl.attr('href'))}`,
                     '_blank',
@@ -2731,9 +2773,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 // revert loading status…
                 me.hideAttachment();
                 me.hideAttachmentPreview();
-                Alert.showError(
-                    I18n._('Your browser does not support uploading encrypted files. Please use a newer browser.')
-                );
+                Alert.showWarning('Your browser does not support uploading encrypted files. Please use a newer browser.');
                 return;
             }
 
@@ -2965,11 +3005,11 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         me.init = function()
         {
             $attachment = $('#attachment');
-            if($attachment.length){
+            $dragAndDropFileName = $('#dragAndDropFileName');
+            $dropzone = $('#dropzone');
+            if($attachment.length) {
                 $attachmentLink = $('#attachment a');
                 $attachmentPreview = $('#attachmentPreview');
-                $dragAndDropFileName = $('#dragAndDropFileName');
-                $dropzone = $('#dropzone');
 
                 $fileInput = $('#file');
                 addDragDropHandler();
@@ -4194,8 +4234,6 @@ jQuery.PrivateBin = (function($, RawDeflate) {
     const PasteEncrypter = (function () {
         const me = {};
 
-        let requirementsChecked = false;
-
         /**
          * called after successful paste upload
          *
@@ -4428,16 +4466,13 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                             });
                             cipherMessage['attachment'] = await fileReading;
                         } else {
-                            Alert.showError(
-                                I18n._('Cannot process attachment data.')
-                            );
-                            throw new TypeError('Cannot process attachment data.');
+                            const error = 'Cannot process attachment data.';
+                            Alert.showError(error);
+                            throw new TypeError(error);
                         }
                     } catch (error) {
                         console.error(error);
-                        Alert.showError(
-                            I18n._('Cannot retrieve attachment.')
-                        );
+                        Alert.showError('Cannot retrieve attachment.');
                         throw error;
                     }
                 }
@@ -4494,7 +4529,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
             // if all tries failed, we can only return an error
             if (plaindata.length === 0) {
-                throw 'failed to decipher data';
+                return false;
             }
 
             return plaindata;
@@ -4523,13 +4558,14 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 if (password.length === 0) {
                     throw 'waiting on user to provide a password';
                 } else {
-                    displayDecryptionError('failed to decipher paste text: Incorrect password?');
-                    throw 'waiting on user to provide correct password';
+                    Alert.hideLoading();
+                    // reset password, so it can be re-entered
+                    Prompt.reset();
+                    TopNav.showRetryButton();
+                    throw 'Could not decrypt data. Did you enter a wrong password? Retry with the button at the top.';
                 }
             }
 
-            let format = '',
-                text   = '';
             if (paste.v > 1) {
                 // version 2 paste
                 const pasteMessage = JSON.parse(pastePlain);
@@ -4617,29 +4653,6 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         }
 
         /**
-         * displays and logs decryption errors
-         *
-         * @name   PasteDecrypter.displayDecryptionError
-         * @private
-         * @function
-         * @param  {string} message
-         */
-        function displayDecryptionError(message)
-        {
-            Alert.hideLoading();
-
-            // log detailed error, but display generic translation
-            console.error(message);
-            Alert.showError(
-                I18n._('Could not decrypt data. Did you enter a wrong password? Retry with the button at the top.')
-            );
-
-            // reset password, so it can be re-entered
-            Prompt.reset();
-            TopNav.showRetryButton();
-        }
-
-        /**
          * show decrypted text in the display area, including discussion (if open)
          *
          * @name   PasteDecrypter.run
@@ -4690,166 +4703,9 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 .catch((err) => {
                     // wait for the user to type in the password,
                     // then PasteDecrypter.run will be called again
-                    console.error(err);
+                    Alert.showError(err);
                 });
         };
-
-        return me;
-    })();
-
-
-    /**
-     * initial (security) check
-     *
-     * @name   InitialCheck
-     * @param  {object} window
-     * @param  {object} document
-     * @class
-     */
-    const InitialCheck = (function () {
-        const me = {};
-
-        /**
-         * blacklist of UserAgents (parts) known to belong to a bot
-         *
-         * @private
-         * @enum   {Array}
-         * @readonly
-         */
-        const badBotUA = [
-            'Bot',
-            'bot'
-        ];
-
-        /**
-         * check if the connection is insecure
-         *
-         * @private
-         * @name   InitialCheck.isInsecureConnection
-         * @function
-         * @return {bool}
-         */
-        function isInsecureConnection()
-        {
-            // use .isSecureContext if available
-            if (window.isSecureContext === true || window.isSecureContext === false) {
-                return !window.isSecureContext;
-            }
-
-            const url = new URL(window.location);
-
-            // HTTP is obviously insecure
-            if (url.protocol !== 'http:') {
-                return false;
-            }
-
-            // filter out actually secure connections over HTTP
-            for (const tld of ['.onion', '.i2p']) {
-                if (url.hostname.endsWith(tld)) {
-                    return false;
-                }
-            }
-
-            // whitelist localhost for development
-            for (const hostname of ['localhost', '127.0.0.1', '[::1]']) {
-                if (url.hostname === hostname) {
-                    return false;
-                }
-            }
-
-            // totally INSECURE http protocol!
-            return true;
-        }
-
-        /**
-         * checks whether this is a bot we dislike
-         *
-         * @private
-         * @name   InitialCheck.isBadBot
-         * @function
-         * @return {bool}
-         */
-        function isBadBot() {
-            // check whether a bot user agent part can be found in the current
-            // user agent
-            for (const UAfragment of badBotUA) {
-                if (navigator.userAgent.indexOf(UAfragment) >= 0) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        /**
-         * checks whether this is an unsupported browser, via feature detection
-         *
-         * @private
-         * @name   InitialCheck.isOldBrowser
-         * @function
-         * @return {bool}
-         */
-        function isOldBrowser() {
-            // webcrypto support
-            if (typeof window.crypto !== 'object') {
-                return true;
-            }
-
-            if (typeof WebAssembly !== 'object' && typeof WebAssembly.instantiate !== 'function') {
-                return true;
-            }
-            try {
-                // [\0, 'a', 's', 'm', (uint_32) 1] - smallest valid wasm module
-                const module = new WebAssembly.Module(Uint8Array.of(0x0, 0x61, 0x73, 0x6d, 0x01, 0x00, 0x00, 0x00));
-                if (
-                    !(
-                        module instanceof WebAssembly.Module &&
-                        new WebAssembly.Instance(module) instanceof WebAssembly.Instance
-                    )
-                ) {
-                    return true;
-                }
-            } catch (e) {
-                return true;
-            }
-
-             // not checking for async/await, ES6, Promise or Uint8Array support,
-             // as most browsers introduced these earlier then webassembly and webcrypto:
-             // https://github.com/PrivateBin/PrivateBin/pull/431#issuecomment-493129359
-
-            return false;
-        }
-
-        /**
-         * init on application start, returns an all-clear signal
-         *
-         * @name   InitialCheck.init
-         * @function
-         * @return {bool}
-         */
-        me.init = function()
-        {
-            // prevent bots from viewing a paste and potentially deleting data
-            // when burn-after-reading is set
-            if (isBadBot()) {
-                Alert.showError('I love you too, bot…');
-                return false;
-            }
-
-            if (isOldBrowser()) {
-                // some browsers (Chrome based ones) would have webcrypto support if using HTTPS
-                if (isInsecureConnection()) {
-                    Alert.showError(['Your browser may require an HTTPS connection to support the WebCrypto API. Try <a href="%s">switching to HTTPS</a>.', 'https' + window.location.href.slice(4)]);
-                }
-                $('#oldnotice').removeClass('hidden');
-                return false;
-            }
-
-            if (isInsecureConnection()) {
-                $('#httpnotice').removeClass('hidden');
-            }
-
-            return true;
-        }
 
         return me;
     })();
@@ -4926,9 +4782,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
                 // missing decryption key (or paste ID) in URL?
                 if (window.location.hash.length === 0) {
-                    Alert.showError(
-                        I18n._('Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)')
-                    );
+                    Alert.showError('Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)');
                     return;
                 }
             }
@@ -5031,12 +4885,28 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         };
 
         /**
+         * try initializing zlib or display a warning if it fails,
+         * extracted from main init to allow unit testing
+         *
+         * @name   Controller.initZ
+         * @function
+         */
+        me.initZ = function()
+        {
+            z = zlib.catch(function () {
+                if ($('body').data('compression') !== 'none') {
+                    Alert.showWarning('Your browser doesn\'t support WebAssembly, used for zlib compression. You can create uncompressed documents, but can\'t read compressed ones.');
+                }
+            });
+        }
+
+        /**
          * application start
          *
          * @name   Controller.init
          * @function
          */
-        me.init = async function()
+        me.init = function()
         {
             // first load translations
             I18n.loadTranslations();
@@ -5054,11 +4924,18 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             Prompt.init();
             TopNav.init();
             UiHelper.init();
-            z = (await zlib);
-            if (!InitialCheck.init()) {
+
+            // check for legacy browsers before going any further
+            if (!Legacy.Check.getInit()) {
+                // Legacy check didn't complete, wait and try again
+                setTimeout(init, 500);
+                return;
+            }
+            if (!Legacy.Check.getStatus()) {
                 // something major is wrong, stop right away
                 return;
             }
+            me.initZ();
 
             // check whether existing paste needs to be shown
             try {
@@ -5098,7 +4975,6 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         ServerInteraction: ServerInteraction,
         PasteEncrypter: PasteEncrypter,
         PasteDecrypter: PasteDecrypter,
-        InitialCheck: InitialCheck,
         Controller: Controller
     };
 })(jQuery, RawDeflate);

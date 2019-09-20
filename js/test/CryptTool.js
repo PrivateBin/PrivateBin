@@ -18,13 +18,15 @@ describe('CryptTool', function () {
                     // pause to let async functions conclude
                     await new Promise(resolve => setTimeout(resolve, 300));
                     let clean = jsdom();
+                    // ensure zlib is getting loaded
+                    $.PrivateBin.Controller.initZ();
                     window.crypto = new WebCrypto();
                     message = message.trim();
                     let cipherMessage = await $.PrivateBin.CryptTool.cipher(
                             key, password, message, []
                         ),
                         plaintext = await $.PrivateBin.CryptTool.decipher(
-                                key, password, cipherMessage
+                            key, password, cipherMessage
                         );
                     clean();
                     return message === plaintext;
@@ -179,6 +181,8 @@ describe('CryptTool', function () {
             let message = fs.readFileSync('test/compression-sample.txt', 'utf8'),
                 clean = jsdom();
             window.crypto = new WebCrypto();
+            // ensure zlib is getting loaded
+            $.PrivateBin.Controller.initZ();
             let cipherMessage = await $.PrivateBin.CryptTool.cipher(
                     'foo', 'bar', message, []
                 ),
@@ -222,6 +226,8 @@ isWhile : interp (while expr sBody) (MemElem mem) =
 conseq_or_bottom inv (interp (nth_iterate sBody n) (MemElem mem))
 `;
                     let clean = jsdom();
+                    // ensure zlib is getting loaded
+                    $.PrivateBin.Controller.initZ();
                     window.crypto = new WebCrypto();
                     let cipherMessage = await $.PrivateBin.CryptTool.cipher(
                             key, password, message, []

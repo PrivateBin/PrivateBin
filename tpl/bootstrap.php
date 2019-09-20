@@ -71,10 +71,8 @@ if ($MARKDOWN):
 endif;
 ?>
 		<script type="text/javascript" data-cfasync="false" src="js/purify-2.0.1.js" integrity="sha512-ddI36MdUoXp/o7yhQtr9/qj4G3oFwCRga4jCGaoUYtORg0PPmFKVKG4Ess3fIknYzxwwKMlrIL9o4NwuPTCc1Q==" crossorigin="anonymous"></script>
-		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-86VTqw2HsaCQ0DAunK2MH68P+8RLbbaK7HZP8nwDtwNoF44usxDCptmD8TC+zwQc7HM46AkrvVFb3ZkIb6VhMQ==" crossorigin="anonymous"></script>
-		<!--[if IE]>
-		<style type="text/css">body {padding-left:60px;padding-right:60px;} #ienotice {display:block;}</style>
-		<![endif]-->
+		<script type="text/javascript" data-cfasync="false" src="js/legacy.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-dReLYyMJO3kV7/etVKlGWSbmJoWavMpbgG8Hg3759MNHv0mYuonh4Azif3y0F0oopKKlz3vtj8XZV7VY+e6dSQ==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-4iMFqnyyoJ/FJ33aHov+QeItaZ0JegMUjx7J5pXeknEwjXzx4oLw9F9ePI3WK/h3sUYTOK+hdv2JINNGMwi2Vg==" crossorigin="anonymous"></script>
 		<link rel="apple-touch-icon" href="img/apple-touch-icon.png?<?php echo rawurlencode($VERSION); ?>" sizes="180x180" />
 		<link rel="icon" type="image/png" href="img/favicon-32x32.png?<?php echo rawurlencode($VERSION); ?>" sizes="32x32" />
 		<link rel="icon" type="image/png" href="img/favicon-16x16.png?<?php echo rawurlencode($VERSION); ?>" sizes="16x16" />
@@ -446,10 +444,6 @@ endif;
 				<div id="oldnotice" role="alert" class="hidden alert alert-danger">
 					<span class="glyphicon glyphicon-alert" aria-hidden="true"></span>
 					<?php echo I18n::_('%s requires a modern browser to work.', I18n::_($NAME)), PHP_EOL; ?>
-				</div>
-				<div id="ienotice" role="alert" class="hidden alert alert-danger">
-					<span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
-					<?php echo I18n::_('Still using Internet Explorer? Do yourself a favor, switch to a modern browser:'), PHP_EOL; ?>
 					<a href="https://www.mozilla.org/firefox/">Firefox</a>,
 					<a href="https://www.opera.com/">Opera</a>,
 					<a href="https://www.google.com/chrome">Chrome</a>…
@@ -461,6 +455,10 @@ if ($HTTPWARNING):
 					<span class="glyphicon glyphicon-alert" aria-hidden="true"></span>
 					<?php echo I18n::_('This website is using an insecure connection! Please only use it for testing.'), PHP_EOL; ?><br />
 					<span class="small"><?php echo I18n::_('For more information <a href="%s">see this FAQ entry</a>.', 'https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-it-show-me-an-error-about-an-insecure-connection'); ?></span>
+				</div>
+				<div id="insecurecontextnotice" role="alert" class="hidden alert alert-danger">
+					<span class="glyphicon glyphicon-alert" aria-hidden="true"></span>
+					<?php echo I18n::_('Your browser may require an HTTPS connection to support the WebCrypto API. Try <a href="%s">switching to HTTPS</a>.', $HTTPSLINK); ?>
 				</div>
 <?php
 endif;

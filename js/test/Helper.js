@@ -183,9 +183,9 @@ describe('Helper', function () {
             'string',
             'string',
             function (prefix, uint, middle, string, postfix) {
-                prefix  =  prefix.replace(/%(s|d)/g, '%%');
-                middle  =  middle.replace(/%(s|d)/g, '%%');
-                postfix = postfix.replace(/%(s|d)/g, '%%');
+                prefix  =  prefix.replace(/%(s|d)/g, '');
+                middle  =  middle.replace(/%(s|d)/g, '');
+                postfix = postfix.replace(/%(s|d)/g, '');
                 var params = [prefix + '%d' + middle + '%s' + postfix, uint, string],
                     result = prefix + uint + middle + string + postfix;
                 return result === $.PrivateBin.Helper.sprintf.apply(this, params);
@@ -199,9 +199,9 @@ describe('Helper', function () {
             'string',
             'string',
             function (prefix, uint, middle, string, postfix) {
-                prefix  =  prefix.replace(/%(s|d)/g, '%%');
-                middle  =  middle.replace(/%(s|d)/g, '%%');
-                postfix = postfix.replace(/%(s|d)/g, '%%');
+                prefix  =  prefix.replace(/%(s|d)/g, '');
+                middle  =  middle.replace(/%(s|d)/g, '');
+                postfix = postfix.replace(/%(s|d)/g, '');
                 var params = [prefix + '%s' + middle + '%d' + postfix, string, uint],
                     result = prefix + string + middle + uint + postfix;
                 return result === $.PrivateBin.Helper.sprintf.apply(this, params);

@@ -35,8 +35,6 @@
         "JavaScript est requis pour faire fonctionner %s. <br />Désolé pour cet inconvénient.",
     "%s requires a modern browser to work.":
         "%s nécessite un navigateur moderne pour fonctionner.",
-    "Still using Internet Explorer? Do yourself a favor, switch to a modern browser:":
-        "Encore sur Internet Explorer ? Faites-vous une faveur, passez à un navigateur moderne :",
     "New":
         "Nouveau",
     "Send":
@@ -164,11 +162,12 @@
     "Could not get paste data: %s":
         "Impossible d'obtenir les données du paste: %s",
     "QR code": "QR code",
-    "I love you too, bot…": "Je t’aime aussi, bot…",
     "This website is using an insecure HTTP connection! Please use it only for testing.":
         "Ce site web utilise une connexion HTTP non sécurisée ! Veuillez l’utiliser uniquement pour des tests.",
     "For more information <a href=\"%s\">see this FAQ entry</a>.":
         "Pour plus d'informations <a href=\"%s\">consultez cette rubrique de la FAQ</a>.",
     "Your browser may require an HTTPS connection to support the WebCrypto API. Try <a href=\"%s\">switching to HTTPS</a>.":
-        "Votre navigateur peut nécessiter une connexion HTTPS pour prendre en charge l’API WebCrypto. Essayez <a href=\"%s\">de passer en HTTPS</a>."
+        "Votre navigateur peut nécessiter une connexion HTTPS pour prendre en charge l’API WebCrypto. Essayez <a href=\"%s\">de passer en HTTPS</a>.",
+    "Your browser doesn't support WebAssembly, used for zlib compression. You can create uncompressed documents, but can't read compressed ones.":
+        "Your browser doesn't support WebAssembly, used for zlib compression. You can create uncompressed documents, but can't read compressed ones."
 }
