@@ -139,7 +139,7 @@ For reference or if you want to create the table schema for yourself to avoid ha
 ```sql
 CREATE TABLE prefix_paste (
     dataid CHAR(16) NOT NULL,
-    data BLOB,
+    data MEDIUMBLOB,
     postdate INT,
     expiredate INT,
     opendiscussion INT,

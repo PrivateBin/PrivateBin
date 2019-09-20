@@ -45,7 +45,7 @@ class Configuration
             'burnafterreadingselected' => false,
             'defaultformatter'         => 'plaintext',
             'syntaxhighlightingtheme'  => null,
-            'sizelimit'                => 2097152,
+            'sizelimit'                => 10485760,
             'template'                 => 'bootstrap',
             'notice'                   => '',
             'languageselection'        => false,

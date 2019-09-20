@@ -597,6 +597,8 @@ class Database extends AbstractData
     /**
      * get the data type, depending on the database driver
      *
+     * PostgreSQL uses a different API for BLOBs then SQL, hence we use TEXT
+     *
      * @access private
      * @static
      * @return string
@@ -608,6 +610,8 @@ class Database extends AbstractData
 
     /**
      * get the attachment type, depending on the database driver
+     *
+     * PostgreSQL uses a different API for BLOBs then SQL, hence we use TEXT
      *
      * @access private
      * @static
@@ -628,16 +632,17 @@ class Database extends AbstractData
     {
         list($main_key, $after_key) = self::_getPrimaryKeyClauses();
         $dataType                   = self::_getDataType();
+        $attachmentType             = self::_getAttachmentType();
         self::$_db->exec(
             'CREATE TABLE ' . self::_sanitizeIdentifier('paste') . ' ( ' .
             "dataid CHAR(16) NOT NULL$main_key, " .
-            "data $dataType, " .
+            "data $attachmentType, " .
             'postdate INT, ' .
             'expiredate INT, ' .
             'opendiscussion INT, ' .
             'burnafterreading INT, ' .
             'meta TEXT, ' .
-            'attachment ' . self::_getAttachmentType() . ', ' .
+            "attachment $attachmentType, " .
             "attachmentname $dataType$after_key );"
         );
     }
@@ -710,7 +715,8 @@ class Database extends AbstractData
      */
     private static function _upgradeDatabase($oldversion)
     {
-        $dataType = self::_getDataType();
+        $dataType       = self::_getDataType();
+        $attachmentType = self::_getAttachmentType();
         switch ($oldversion) {
             case '0.21':
                 // create the meta column if necessary (pre 0.21 change)
@@ -722,7 +728,7 @@ class Database extends AbstractData
                 // SQLite only allows one ALTER statement at a time...
                 self::$_db->exec(
                     'ALTER TABLE ' . self::_sanitizeIdentifier('paste') .
-                    ' ADD COLUMN attachment ' . self::_getAttachmentType() . ';'
+                    " ADD COLUMN attachment $attachmentType;"
                 );
                 self::$_db->exec(
                     'ALTER TABLE ' . self::_sanitizeIdentifier('paste') . " ADD COLUMN attachmentname $dataType;"
@@ -732,7 +738,7 @@ class Database extends AbstractData
                 if (self::$_type !== 'sqlite') {
                     self::$_db->exec(
                         'ALTER TABLE ' . self::_sanitizeIdentifier('paste') .
-                        ' ADD PRIMARY KEY (dataid), MODIFY COLUMN data $dataType;'
+                        " ADD PRIMARY KEY (dataid), MODIFY COLUMN data $dataType;"
                     );
                     self::$_db->exec(
                         'ALTER TABLE ' . self::_sanitizeIdentifier('comment') .
@@ -754,6 +760,17 @@ class Database extends AbstractData
                     self::_sanitizeIdentifier('comment') . '(pasteid);'
                 );
                 // no break, continue with updates for 0.22 and later
+            case '1.3':
+                // SQLite doesn't support MODIFY, but it allows TEXT of similar
+                // size as BLOB and PostgreSQL uses TEXT, so there is no need
+                // to change it there
+                if (self::$_type !== 'sqlite' && self::$_type !== 'pgsql') {
+                    self::$_db->exec(
+                        'ALTER TABLE ' . self::_sanitizeIdentifier('paste') .
+                        " MODIFY COLUMN data $attachmentType;"
+                    );
+                }
+                // no break, continue with updates for 1.3.1 and later
             default:
                 self::_exec(
                     'UPDATE ' . self::_sanitizeIdentifier('config') .
