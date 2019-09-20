@@ -5,6 +5,7 @@
     * CHANGED: Improved mobile UI - obscured send button and hard to click shortener button (#477)
     * CHANGED: Enhanced URL shortener integration (#479)
     * CHANGED: Improved file upload drag & drop UI (#317)
+    * CHANGED: Increased default size limit from 2 to 10 MiB, switch data from BLOB to MEDIUMBLOB in MySQL (#458)
     * CHANGED: Upgrading libraries to: DOMpurify 2.0.1
     * FIXED: Enabling browsers without WASM to create pastes and read uncompressed ones (#454)
     * FIXED: Cloning related issues (#489, #491, #493, #494)
