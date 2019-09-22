@@ -6,10 +6,12 @@
  * @see       {@link https://github.com/PrivateBin/PrivateBin}
  * @copyright 2012 Sébastien SAUVAGE ({@link http://sebsauvage.net})
  * @license   {@link https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License}
- * @version   1.3
+ * @version   1.3.1
  * @name      Legacy
  * @namespace
- *
+ */
+
+/**
  * IMPORTANT NOTICE FOR DEVELOPERS:
  * The logic in this file is intended to run in legacy browsers. Avoid any use of:
  * - jQuery (doesn't work in older browsers)

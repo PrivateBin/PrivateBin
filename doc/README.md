@@ -55,6 +55,6 @@ $ ln -s /usr/bin/nodejs /usr/local/bin/node
 To generate the documentation, change into the main directory and run phpdoc:
 ```console
 $ cd PrivateBin
-$ jsdoc -p -d doc/jsdoc js/privatebin.js
+$ jsdoc -p -d doc/jsdoc js/privatebin.js js/legacy.js
 ```
 

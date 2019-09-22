@@ -9,9 +9,9 @@
  * @version   1.3.1
  * @name      PrivateBin
  * @namespace
- *
- * global Base64, DOMPurify, FileReader, RawDeflate, history, navigator, prettyPrint, prettyPrintOne, showdown, kjua
  */
+
+// global Base64, DOMPurify, FileReader, RawDeflate, history, navigator, prettyPrint, prettyPrintOne, showdown, kjua
 
 jQuery.fn.draghover = function() {
     'use strict';
