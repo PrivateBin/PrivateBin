@@ -16,6 +16,7 @@ install:
   - source ~/.nvm/nvm.sh && nvm install --lts
 
 before_script:
+  - rm composer.lock
   - composer install -n
   - npm install -g mocha
   - cd js && npm install
