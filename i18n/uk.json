@@ -165,6 +165,8 @@
     "QR code": "QR код",
     "This website is using an insecure HTTP connection! Please use it only for testing.":
         "Цей сайт використовує незахищене HTTP підключення! Будь ласка, використовуйте його лише для тестування.",
+    "This website is using an insecure connection! Please only use it for testing.":
+        "Цей сайт використовує незахищене підключення! Будь ласка, використовуйте його лише для тестування.",
     "For more information <a href=\"%s\">see this FAQ entry</a>.":
         "Для подробиць <a href=\"%s\">дивіться інформацію в FAQ</a>.",
     "Your browser may require an HTTPS connection to support the WebCrypto API. Try <a href=\"%s\">switching to HTTPS</a>.":
