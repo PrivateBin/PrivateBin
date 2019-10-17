@@ -142,7 +142,7 @@
     "File too large, to display a preview. Please download the attachment.": "Файл завеликий для відображення передогляду. Будь ласка, звантажте прикріплений файл.",
     "Remove attachment": "Видалити вкладення",
     "Your browser does not support uploading encrypted files. Please use a newer browser.":
-        "Ваш переглядач не підтримує відправлення зашифрованих файлів. Використовуйте більш новий переглядач.",
+        "Ваш переглядач не підтримує відправлення зашифрованих файлів. Використовуйте сучасніший переглядач.",
     "Invalid attachment.": "Невідоме вкладення.",
     "Options": "Опції",
     "Shorten URL": "Коротке посилання",
@@ -154,7 +154,7 @@
         "Розшифрувати",
     "Enter password":
         "Введіть пароль",
-    "Loading…": "Завантження...",
+    "Loading…": "Завантаження...",
     "Decrypting paste…": "Розшифровування допису...",
     "Preparing new paste…": "Приготування нового допису...",
     "In case this message never disappears please have a look at <a href=\"%s\">this FAQ for information to troubleshoot</a>.":
@@ -170,5 +170,5 @@
     "Your browser may require an HTTPS connection to support the WebCrypto API. Try <a href=\"%s\">switching to HTTPS</a>.":
         "Ваш переглядач вимагає підключення HTTPS для підтримки  WebCrypto API. Спробуйте <a href=\"%s\">перемкнутися на HTTPS</a>.",
     "Your browser doesn't support WebAssembly, used for zlib compression. You can create uncompressed documents, but can't read compressed ones.":
-        "Ваш перелядач не підтримує WebAssembly, що використовується для стиснення zlib. Ви можете створювати нестиснені документи, але не зможете читати стиснені."
+        "Ваш переглядач не підтримує WebAssembly, що використовується для стиснення zlib. Ви можете створювати нестиснені документи, але не зможете читати стиснені."
 }
