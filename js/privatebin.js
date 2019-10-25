@@ -3814,7 +3814,8 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         me.getPassword = function()
         {
-            return $passwordInput.val();
+            // when password is disabled $passwordInput.val() will return undefined
+            return $passwordInput.val() || '';
         };
 
         /**
