@@ -1,6 +1,7 @@
 # PrivateBin version history
 
   * **1.4 (not yet released)**
+    * FIXED: Password disabling option (#527)
   * **1.3.1 (2019-09-22)**
     * ADDED: Translation for Bulgarian (#455)
     * CHANGED: Improved mobile UI - obscured send button and hard to click shortener button (#477)
