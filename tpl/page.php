@@ -50,7 +50,7 @@ endif;
 ?>
 		<script type="text/javascript" data-cfasync="false" src="js/purify-2.0.1.js" integrity="sha512-ddI36MdUoXp/o7yhQtr9/qj4G3oFwCRga4jCGaoUYtORg0PPmFKVKG4Ess3fIknYzxwwKMlrIL9o4NwuPTCc1Q==" crossorigin="anonymous"></script>
 		<script type="text/javascript" data-cfasync="false" src="js/legacy.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-LYos+qXHIRqFf5ZPNphvtTB0cgzHUizu2wwcOwcwz/VIpRv9lpcBgPYz4uq6jx0INwCAj6Fbnl5HoKiLufS2jg==" crossorigin="anonymous"></script>
-		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-rgDjBvJguZa4Liw2R/0vtFNZBSBTLhjdHROUseVyl+x1aVUbo5U8x/5lewWzYxrS9dxHOtgQkEWjx5ZM31JiNg==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-60d7BURzTV858Sry9vJEMgDXEqLT/IqQnjnx/iR3QfQ0LLWZI3bbM9nb4vbS0vQPYFVOP8lXpHRnNE7QEohsDw==" crossorigin="anonymous"></script>
 		<link rel="apple-touch-icon" href="img/apple-touch-icon.png?<?php echo rawurlencode($VERSION); ?>" sizes="180x180" />
 		<link rel="icon" type="image/png" href="img/favicon-32x32.png?<?php echo rawurlencode($VERSION); ?>" sizes="32x32" />
 		<link rel="icon" type="image/png" href="img/favicon-16x16.png?<?php echo rawurlencode($VERSION); ?>" sizes="16x16" />
@@ -105,6 +105,7 @@ endif;
 					<button id="sendbutton" class="hidden"><img src="img/icon_send.png" width="18" height="15" alt="" /><?php echo I18n::_('Send'); ?></button>
 					<button id="clonebutton" class="hidden"><img src="img/icon_clone.png" width="15" height="17" alt="" /><?php echo I18n::_('Clone'); ?></button>
 					<button id="rawtextbutton" class="hidden"><img src="img/icon_raw.png" width="15" height="15" alt="" /><?php echo I18n::_('Raw text'); ?></button>
+					<button id="emaillink" class="hidden"><img src="img/icon_email.png" width="15" height="15" alt="" /><?php echo I18n::_('Email'); ?></button>
 <?php
 if ($QRCODE):
 ?>

@@ -326,7 +326,7 @@ describe('TopNav', function () {
             'returns the currently selected expiration date',
             function () {
                 $.PrivateBin.TopNav.init();
-                assert.ok($.PrivateBin.TopNav.getExpiration() === '1week');
+                assert.ok($.PrivateBin.TopNav.getExpiration() === null);
             }
         );
     });

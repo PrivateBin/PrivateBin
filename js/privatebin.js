@@ -403,6 +403,45 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             baseUri = null;
         };
 
+        /**
+         * calculate expiration date given initial date and expiration period
+         * 
+         * @name   Helper.calculateExpirationDate
+         * @function
+         * @param  {Date} initialDate - may not be empty
+         * @param  {string|number} expirationDisplayStringOrSecondsToExpire - may not be empty
+         * @return {Date}
+         */
+        me.calculateExpirationDate = function(initialDate, expirationDisplayStringOrSecondsToExpire) {
+            let expirationDate = new Date(initialDate);
+
+            const expirationDisplayStringToSecondsDict = {
+                '5min': 300,
+                '10min': 600,
+                '1hour': 3500,
+                '1day': 86400,
+                '1week': 604800,
+                '1month': 2592000,
+                '1year': 31536000,
+                'never': 0
+            };
+
+            let secondsToExpiration = expirationDisplayStringOrSecondsToExpire;
+            if (typeof expirationDisplayStringOrSecondsToExpire === 'string') {
+                secondsToExpiration = expirationDisplayStringToSecondsDict[expirationDisplayStringOrSecondsToExpire];
+            }
+            
+            if (typeof secondsToExpiration !== 'number') {
+                throw new Error('Cannot calculate expiration date.');
+            }
+            if (secondsToExpiration === 0) {
+                return null;
+            }
+
+            expirationDate = expirationDate.setUTCSeconds(expirationDate.getUTCSeconds() + secondsToExpiration);
+            return expirationDate;
+        }
+
         return me;
     })();
 
@@ -1822,7 +1861,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                     `${$shortenButton.data('shortener')}${encodeURIComponent($pasteUrl.attr('href'))}`,
                     '_blank',
                     'noopener, noreferrer'
-                )
+                );
             });
         }
 
@@ -3332,9 +3371,10 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             $passwordInput,
             $rawTextButton,
             $qrCodeLink,
+            $emailLink,
             $sendButton,
             $retryButton,
-            pasteExpiration = '1week',
+            pasteExpiration = null,
             retryButtonCallback;
 
         /**
@@ -3543,6 +3583,133 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         }
 
         /**
+         * Template Email body.
+         * 
+         * @name   TopNav.templateEmailBody
+         * @private 
+         * @param {string} expirationDateString 
+         * @param {bool} isBurnafterreading 
+         */
+        function templateEmailBody(expirationDateString, isBurnafterreading)
+        {
+            const EOL = '\n';
+            const BULLET = '  - ';
+            let emailBody = '';
+            if (expirationDateString !== null || isBurnafterreading) {
+                emailBody += I18n._('Notice:');
+                emailBody += EOL;
+
+                if (expirationDateString !== null) {
+                    emailBody += EOL;
+                    emailBody += BULLET;
+                    emailBody += I18n._(
+                        'This link will expire after %s.',
+                        expirationDateString
+                    );
+                }
+                if (isBurnafterreading) {
+                    emailBody += EOL;
+                    emailBody += BULLET;
+                    emailBody += I18n._(
+                        'This link can only be accessed once, do not use back or refresh button in your browser.'
+                    );
+                }
+
+                emailBody += EOL;
+                emailBody += EOL;
+            }
+            emailBody += I18n._('Link:');
+            emailBody += EOL;
+            emailBody += `${window.location.href}`;
+            return emailBody;
+        }
+
+        /**
+         * Trigger Email send.
+         * 
+         * @name   TopNav.triggerEmailSend
+         * @private 
+         * @param {string} emailBody 
+         */
+        function triggerEmailSend(emailBody)
+        {
+            window.open(
+                `mailto:?body=${encodeURIComponent(emailBody)}`,
+                '_self',
+                'noopener, noreferrer'
+            );
+        }
+
+        /**
+         * Send Email with current paste (URL).
+         *
+         * @name   TopNav.sendEmail
+         * @private
+         * @function
+         * @param  {Date|null} expirationDate date of expiration
+         * @param  {bool} isBurnafterreading whether it is burn after reading
+         */
+        function sendEmail(expirationDate, isBurnafterreading)
+        {
+            const expirationDateRoundedToSecond = new Date(expirationDate);
+
+            // round down at least 30 seconds to make up for the delay of request
+            expirationDateRoundedToSecond.setUTCSeconds(
+                expirationDateRoundedToSecond.getUTCSeconds() - 30
+            );
+            expirationDateRoundedToSecond.setUTCSeconds(0);
+
+            const $emailconfirmmodal = $('#emailconfirmmodal');
+            if ($emailconfirmmodal.length > 0) {
+                if (expirationDate !== null) {
+                    $emailconfirmmodal.find('#emailconfirm-display').text(
+                        I18n._('Recipient may become aware of your timezone, convert time to UTC?')
+                    );
+                    const $emailconfirmTimezoneCurrent = $emailconfirmmodal.find('#emailconfirm-timezone-current');
+                    const $emailconfirmTimezoneUtc = $emailconfirmmodal.find('#emailconfirm-timezone-utc');
+                    $emailconfirmTimezoneCurrent.off('click.sendEmailCurrentTimezone');
+                    $emailconfirmTimezoneCurrent.on('click.sendEmailCurrentTimezone', function(expirationDateRoundedToSecond, isBurnafterreading) {
+                        return function() {
+                            const emailBody = templateEmailBody(expirationDateRoundedToSecond.toLocaleString(), isBurnafterreading);
+                            $emailconfirmmodal.modal('hide');
+                            triggerEmailSend(emailBody);
+                        };
+                    } (expirationDateRoundedToSecond, isBurnafterreading));
+                    $emailconfirmTimezoneUtc.off('click.sendEmailUtcTimezone');
+                    $emailconfirmTimezoneUtc.on('click.sendEmailUtcTimezone', function(expirationDateRoundedToSecond, isBurnafterreading) {
+                        return function() {
+                            const emailBody = templateEmailBody(expirationDateRoundedToSecond.toLocaleString(
+                                undefined,
+                                // we don't use Date.prototype.toUTCString() because we would like to avoid GMT
+                                { timeZone: 'UTC', dateStyle: 'long', timeStyle: 'long' }
+                            ), isBurnafterreading);
+                            $emailconfirmmodal.modal('hide');
+                            triggerEmailSend(emailBody);
+                        };
+                    } (expirationDateRoundedToSecond, isBurnafterreading));
+                    $emailconfirmmodal.modal('show');
+                } else {
+                    triggerEmailSend(templateEmailBody(null, isBurnafterreading));
+                }
+            } else {
+                let emailBody = '';
+                if (expirationDate !== null) {
+                    const expirationDateString = window.confirm(
+                        I18n._('Recipient may become aware of your timezone, convert time to UTC?')
+                    ) ? expirationDateRoundedToSecond.toLocaleString(
+                        undefined,
+                        // we don't use Date.prototype.toUTCString() because we would like to avoid GMT
+                        { timeZone: 'UTC', dateStyle: 'long', timeStyle: 'long' }
+                    ) : expirationDateRoundedToSecond.toLocaleString();
+                    emailBody = templateEmailBody(expirationDateString, isBurnafterreading);
+                } else {
+                    emailBody = templateEmailBody(null, isBurnafterreading);
+                }
+                triggerEmailSend(emailBody);
+            }
+        }
+
+        /**
          * Shows all navigation elements for viewing an existing paste
          *
          * @name   TopNav.showViewButtons
@@ -3578,6 +3745,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             $newButton.addClass('hidden');
             $rawTextButton.addClass('hidden');
             $qrCodeLink.addClass('hidden');
+            me.hideEmailButton();
 
             viewButtonsDisplayed = false;
         };
@@ -3676,6 +3844,50 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         }
 
         /**
+         * show the "email" button
+         * 
+         * @name   TopNav.showEmailbutton
+         * @function
+         * @param {int|undefined} optionalRemainingTimeInSeconds
+         */
+        me.showEmailButton = function(optionalRemainingTimeInSeconds)
+        {
+            try {
+                // we cache expiration date in closure to avoid inaccurate expiration datetime
+                const expirationDate = Helper.calculateExpirationDate(
+                    new Date(),
+                    typeof optionalRemainingTimeInSeconds === 'number' ? optionalRemainingTimeInSeconds : TopNav.getExpiration()
+                );
+                const isBurnafterreading = TopNav.getBurnAfterReading();
+
+                $emailLink.removeClass('hidden');
+                $emailLink.off('click.sendEmail');
+                $emailLink.on('click.sendEmail', function(expirationDate, isBurnafterreading) {
+                    return function() {
+                        sendEmail(expirationDate, isBurnafterreading);
+                    };
+                } (expirationDate, isBurnafterreading));
+            } catch (error) {
+                console.error(error);
+                Alert.showError(
+                    I18n._('Cannot calculate expiration date.')
+                );
+            }
+        }
+
+        /**
+         * hide the "email" button
+         * 
+         * @name   TopNav.hideEmailButton
+         * @function
+         */
+        me.hideEmailButton = function()
+        {
+            $emailLink.addClass('hidden');
+            $emailLink.off('click.sendEmail');
+        }
+
+        /**
          * only hides the clone button
          *
          * @name   TopNav.hideCloneButton
@@ -3696,6 +3908,30 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         {
             $rawTextButton.addClass('hidden');
         };
+
+        /**
+         * only hides the qr code button
+         * 
+         * @name   TopNav.hideQrCodeButton
+         * @function
+         */
+        me.hideQrCodeButton = function()
+        {
+            $qrCodeLink.addClass('hidden');
+        }
+
+        /**
+         * hide all irrelevant buttons when viewing burn after reading paste
+         * 
+         * @name   TopNav.hideBurnAfterReadingButtons
+         * @function
+         */
+        me.hideBurnAfterReadingButtons = function()
+        {
+            me.hideCloneButton();
+            me.hideQrCodeButton();
+            me.hideEmailButton();
+        }
 
         /**
          * hides the file selector in attachment
@@ -3784,7 +4020,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         /**
          * returns the state of the burn after reading checkbox
          *
-         * @name   TopNav.getExpiration
+         * @name   TopNav.getBurnAfterReading
          * @function
          * @return {bool}
          */
@@ -3914,6 +4150,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             $retryButton = $('#retrybutton');
             $sendButton = $('#sendbutton');
             $qrCodeLink = $('#qrcodelink');
+            $emailLink = $('#emaillink');
 
             // bootstrap template drop down
             $('#language ul.dropdown-menu li a').click(setLanguage);
@@ -4258,6 +4495,10 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             history.pushState({type: 'newpaste'}, document.title, url);
 
             TopNav.showViewButtons();
+
+            // this cannot be grouped with showViewButtons due to remaining time calculation
+            TopNav.showEmailButton();
+
             TopNav.hideRawButton();
             Editor.hide();
 
@@ -4698,7 +4939,10 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
                     // discourage cloning (it cannot really be prevented)
                     if (paste.isBurnAfterReadingEnabled()) {
-                        TopNav.hideCloneButton();
+                        TopNav.hideBurnAfterReadingButtons();
+                    } else {
+                        // we have to pass in remaining_time here
+                        TopNav.showEmailButton(paste.getTimeToLive());
                     }
                 })
                 .catch((err) => {
@@ -4913,6 +5157,13 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             I18n.loadTranslations();
 
             DOMPurify.setConfig({SAFE_FOR_JQUERY: true});
+
+            // center all modals
+            $('.modal').on('show.bs.modal', function(e) {
+                $(e.target).css({
+                    display: 'flex'
+                });
+            });
 
             // initialize other modules/"classes"
             Alert.init();

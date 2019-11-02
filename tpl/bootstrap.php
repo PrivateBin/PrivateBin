@@ -72,7 +72,7 @@ endif;
 ?>
 		<script type="text/javascript" data-cfasync="false" src="js/purify-2.0.1.js" integrity="sha512-ddI36MdUoXp/o7yhQtr9/qj4G3oFwCRga4jCGaoUYtORg0PPmFKVKG4Ess3fIknYzxwwKMlrIL9o4NwuPTCc1Q==" crossorigin="anonymous"></script>
 		<script type="text/javascript" data-cfasync="false" src="js/legacy.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-LYos+qXHIRqFf5ZPNphvtTB0cgzHUizu2wwcOwcwz/VIpRv9lpcBgPYz4uq6jx0INwCAj6Fbnl5HoKiLufS2jg==" crossorigin="anonymous"></script>
-		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-rgDjBvJguZa4Liw2R/0vtFNZBSBTLhjdHROUseVyl+x1aVUbo5U8x/5lewWzYxrS9dxHOtgQkEWjx5ZM31JiNg==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-60d7BURzTV858Sry9vJEMgDXEqLT/IqQnjnx/iR3QfQ0LLWZI3bbM9nb4vbS0vQPYFVOP8lXpHRnNE7QEohsDw==" crossorigin="anonymous"></script>
 		<link rel="apple-touch-icon" href="img/apple-touch-icon.png?<?php echo rawurlencode($VERSION); ?>" sizes="180x180" />
 		<link rel="icon" type="image/png" href="img/favicon-32x32.png?<?php echo rawurlencode($VERSION); ?>" sizes="32x32" />
 		<link rel="icon" type="image/png" href="img/favicon-16x16.png?<?php echo rawurlencode($VERSION); ?>" sizes="16x16" />
@@ -118,13 +118,41 @@ if ($QRCODE):
 					<div class="modal-body">
 						<div class="mx-auto" id="qrcode-display"></div>
 					</div>
-					<button type="button" class="btn btn-primary btn-block" data-dismiss="modal"><?php echo I18n::_('Close') ?></button>
+					<div class="row">
+						<div class="btn-group col-xs-12">
+							<span class="col-xs-12">
+								<button type="button" class="btn btn-primary btn-block" data-dismiss="modal"><?php echo I18n::_('Close') ?></button>
+							</span>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
 <?php
 endif;
 ?>
+		<div id="emailconfirmmodal" tabindex="-1" class="modal fade" aria-labelledby="emailconfirmmodalTitle" role="dialog" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-body">
+						<div id="emailconfirm-display"></div>
+					</div>
+					<div class="row">
+						<div class="btn-group col-xs-12" data-toggle="buttons">
+							<span class="col-xs-12 col-md-4">
+								<button id="emailconfirm-timezone-current" type="button" class="btn btn-danger btn-block" data-dismiss="modal"><?php echo I18n::_('Use Current Timezone') ?></button>
+							</span>
+							<span class="col-xs-12 col-md-4">
+								<button id="emailconfirm-timezone-utc" type="button" class="btn btn-default btn-block" data-dismiss="modal"><?php echo I18n::_('Convert To UTC') ?></button>
+							</span>
+							<span class="col-xs-12 col-md-4">
+								<button type="button" class="btn btn-primary btn-block" data-dismiss="modal"><?php echo I18n::_('Close') ?></button>
+							</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 		<nav class="navbar navbar-<?php echo $isDark ? 'inverse' : 'default'; ?> navbar-<?php echo $isCpct ? 'fixed' : 'static'; ?>-top"><?php
 if ($isCpct):
 ?><div class="container"><?php
@@ -170,6 +198,9 @@ endif;
 						</button>
 						<button id="rawtextbutton" type="button" class="hidden btn btn-<?php echo $isDark ? 'warning' : 'default'; ?> navbar-btn">
 							<span class="glyphicon glyphicon-text-background" aria-hidden="true"></span> <?php echo I18n::_('Raw text'), PHP_EOL; ?>
+						</button>
+						<button id="emaillink" type="button" class="hidden btn btn-<?php echo $isDark ? 'warning' : 'default'; ?> navbar-btn">
+							<span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> <?php echo I18n::_('Email'), PHP_EOL; ?>
 						</button>
 <?php
 if ($QRCODE):
