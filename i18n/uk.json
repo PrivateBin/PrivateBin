@@ -1,0 +1,174 @@
+{
+    "PrivateBin": "PrivateBin",
+    "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href=\"https://privatebin.info/\">project page</a>.":
+        "%s це мінімалістичний Open Source проєкт для створення нотаток, де сервер не знає нічого про дані, що зберігаються. Дані шифруються/розшифровуються <i>у переглядачі</i> з використанням 256-бітного шифрувания AES. Подробиці можна дізнатися на <a href=\"https://privatebin.info/\">сайті проєкту</a>.",
+    "Because ignorance is bliss":
+        "Бо незнання - благо",
+    "en": "uk",
+    "Paste does not exist, has expired or has been deleted.":
+        "Допис не існує, протермінований чи був видалений.",
+    "%s requires php %s or above to work. Sorry.":
+        "Для роботи %s потрібен php %s и вище. Вибачте.",
+    "%s requires configuration section [%s] to be present in configuration file.":
+        "%s потрібна секція [%s] в конфігураційному файлі.",
+    "Please wait %d seconds between each post.":
+        ["Будь ласка, зачекайте %d секунду між дописами.", "Будь ласка, зачекайте %d секунди між дописами.", "Будь ласка, зачекайте %d секунд між дописами."],
+    "Paste is limited to %s of encrypted data.":
+        "Розмір допису обмежений %s зашифрованих даних.",
+    "Invalid data.":
+        "Неправильні дані.",
+    "You are unlucky. Try again.":
+        "Вам не пощастило. Спробуйте ще раз.",
+    "Error saving comment. Sorry.":
+        "Помилка при збереженні коментаря. Вибачте.",
+    "Error saving paste. Sorry.":
+        "Помилка при збереженні допису. Вибачте.",
+    "Invalid paste ID.":
+        "Неправильний ID допису.",
+    "Paste is not of burn-after-reading type.":
+        "Тип допису не \"Знищити після прочитання\".",
+    "Wrong deletion token. Paste was not deleted.":
+        "Неправильний ключ вилучення допису. Допис не вилучено.",
+    "Paste was properly deleted.":
+        "Допис був вилучений повністю.",
+    "JavaScript is required for %s to work.<br />Sorry for the inconvenience.":
+        "Для роботи %s потрібен увімкнутий JavaScript.<br />Вибачте.",
+    "%s requires a modern browser to work.":
+        "Для роботи %s потрібен більш сучасний переглядач.",
+    "New":
+        "Новий допис",
+    "Send":
+        "Відправити",
+    "Clone":
+        "Дублювати",
+    "Raw text":
+        "Початковий текст",
+    "Expires":
+        "Вилучити через",
+    "Burn after reading":
+        "Знищити після прочитання",
+    "Open discussion":
+        "Відкрити обговорення",
+    "Password (recommended)":
+        "Пароль (рекомендується)",
+    "Discussion":
+        "Обговорення",
+    "Toggle navigation":
+        "Перемкнути навігацію",
+    "%d seconds": ["%d секунду", "%d секунди", "%d секунд"],
+    "%d minutes": ["%d хвилину", "%d хвилини", "%d хвилин"],
+    "%d hours": ["%d годину", "%d години", "%d годин"],
+    "%d days": ["%d день", "%d дні", "%d днів"],
+    "%d weeks": ["%d тиждень", "%d тижні", "%d тижнів"],
+    "%d months": ["%d місяць", "%d місяці", "%d місяців"],
+    "%d years": ["%d рік", "%d роки", "%d років"],
+    "Never":
+        "Ніколи",
+    "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.":
+        "Примітка: Це тестовий сервіс: Дані можуть бути вилучені в будь який момент. Кошенята помруть, якщо ви будете зловживати сервісом.",
+    "This document will expire in %d seconds.":
+        ["Документ буде вилучений через %d секунду.", "Документ буде вилучений через %d секунди.", "Документ буде вилучений через %d секунд."],
+    "This document will expire in %d minutes.":
+        ["Документ буде вилучений через %d хвилину.", "Документ буде вилучений через %d хвилини.", "Документ буде вилучений через %d хвилин."],
+    "This document will expire in %d hours.":
+        ["Документ буде вилучений через %d годину.", "Документ буде вилучений через %d години.", "Документ буде вилучений через %d годин."],
+    "This document will expire in %d days.":
+        ["Документ буде вилучений через %d день.", "Документ буде вилучений через %d дні.", "Документ буде вилучений через %d днів."],
+    "This document will expire in %d months.":
+        ["Документ буде вилучений через %d місяць.", "Документ буде вилучений через %d місяці.", "Документ буде вилучений через %d місяців."],
+    "Please enter the password for this paste:":
+        "Будь ласка, введіть пароль від допису:",
+    "Could not decrypt data (Wrong key?)":
+        "Неможливо розшифрувати дані (Неправильний  ключ?)",
+    "Could not delete the paste, it was not stored in burn after reading mode.":
+        "Неможливо вилучити допис, він не був збережений в режимі знищити після прочитання.",
+    "FOR YOUR EYES ONLY. Don't close this window, this message can't be displayed again.":
+        "ЛИШЕ ДЛЯ ВАШИХ ОЧЕЙ. Не закривайте це вікно, це повідомлення не може бути показано знову.",
+    "Could not decrypt comment; Wrong key?":
+        "Неможливо розшифрувати коментар; Неправильний ключ?",
+    "Reply":
+        "Відповісти",
+    "Anonymous":
+        "Анонім",
+    "Avatar generated from IP address":
+        "Аватар зґенерований з IP-адреси",
+    "Add comment":
+        "Додати коментар",
+    "Optional nickname…":
+        "Необов’язкове прізвисько…",
+    "Post comment":
+        "Відправити коментар",
+    "Sending comment…":
+        "Відправка коментаря…",
+    "Comment posted.":
+        "Коментар опублікований.",
+    "Could not refresh display: %s":
+        "Не вдалося оновити екран: %s",
+    "unknown status":
+        "невідома причина",
+    "server error or not responding":
+        "помилка на сервері чи немає відповіді",
+    "Could not post comment: %s":
+        "Не вдалося опублікувати коментар: %s",
+    "Sending paste…":
+        "Відправка допису…",
+    "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit [Ctrl]+[c] to copy)</span>":
+        "Посилання на допис <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Тисніть [Ctrl]+[c], щоб скопіювати посилання)</span>",
+    "Delete data":
+        "Видалити допис",
+    "Could not create paste: %s":
+        "Не вдалося опублікувати допис: %s",
+    "Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)":
+        "Неможливо розшифрувати запис: Ключ дешифрування відсутній в посиланні (Можливо, ви використовуєте скорочувач посилань, що видаляє частину посилання?)",
+    "B": "байт",
+    "KiB": "Кбайт",
+    "MiB": "Мбайт",
+    "GiB": "Гбайт",
+    "TiB": "Тбайт",
+    "PiB": "Пбайт",
+    "EiB": "Ебайт",
+    "ZiB": "Збайт",
+    "YiB": "Йбайт",
+    "Format": "Формат",
+    "Plain Text": "Звичайний текст",
+    "Source Code": "Джерельний код",
+    "Markdown": "Мова розмітки",
+    "Download attachment": "Звантажити прикріплений файл",
+    "Cloned: '%s'": "Дубльовано: '%s'",
+    "The cloned file '%s' was attached to this paste.":
+        "Дублікат файлу '%s' був прикріплений до цього запису.",
+    "Attach a file": "Прикріпити файл",
+    "alternatively drag & drop a file or paste an image from the clipboard": "також можна перенести файл у вікно переглядача чи вставити зображення з буфера",
+    "File too large, to display a preview. Please download the attachment.": "Файл завеликий для відображення передогляду. Будь ласка, звантажте прикріплений файл.",
+    "Remove attachment": "Видалити вкладення",
+    "Your browser does not support uploading encrypted files. Please use a newer browser.":
+        "Ваш переглядач не підтримує відправлення зашифрованих файлів. Використовуйте сучасніший переглядач.",
+    "Invalid attachment.": "Невідоме вкладення.",
+    "Options": "Опції",
+    "Shorten URL": "Коротке посилання",
+    "Editor": "Редактор",
+    "Preview": "Передогляд",
+    "%s requires the PATH to end in a \"%s\". Please update the PATH in your index.php.":
+        "Змінна PATH необхідна %s в конці \"%s\". Будь ласка, оновіть змінну PATH у вашому index.php.",
+    "Decrypt":
+        "Розшифрувати",
+    "Enter password":
+        "Введіть пароль",
+    "Loading…": "Завантаження…",
+    "Decrypting paste…": "Розшифровування допису…",
+    "Preparing new paste…": "Приготування нового допису…",
+    "In case this message never disappears please have a look at <a href=\"%s\">this FAQ for information to troubleshoot</a>.":
+        "Якщо це повідомлення не зникатиме тривалий час, подивіться <a href=\"%s\">цей FAQ з інформацією про можливе вирішення проблеми</a>.",
+    "+++ no paste text +++": "+++ у дописі немає тексту +++",
+    "Could not get paste data: %s":
+        "Не вдалося отримати дані допису: %s",
+    "QR code": "QR код",
+    "This website is using an insecure HTTP connection! Please use it only for testing.":
+        "Цей сайт використовує незахищене HTTP підключення! Будь ласка, використовуйте його лише для тестування.",
+    "For more information <a href=\"%s\">see this FAQ entry</a>.":
+        "Для подробиць <a href=\"%s\">дивіться інформацію в FAQ</a>.",
+    "Your browser may require an HTTPS connection to support the WebCrypto API. Try <a href=\"%s\">switching to HTTPS</a>.":
+        "Ваш переглядач вимагає підключення HTTPS для підтримки  WebCrypto API. Спробуйте <a href=\"%s\">перемкнутися на HTTPS</a>.",
+    "Your browser doesn't support WebAssembly, used for zlib compression. You can create uncompressed documents, but can't read compressed ones.":
+        "Ваш переглядач не підтримує WebAssembly, що використовується для стиснення zlib. Ви можете створювати нестиснені документи, але не зможете читати стиснені."
+}
