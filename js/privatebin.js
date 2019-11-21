@@ -3669,25 +3669,21 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                     const $emailconfirmTimezoneCurrent = $emailconfirmmodal.find('#emailconfirm-timezone-current');
                     const $emailconfirmTimezoneUtc = $emailconfirmmodal.find('#emailconfirm-timezone-utc');
                     $emailconfirmTimezoneCurrent.off('click.sendEmailCurrentTimezone');
-                    $emailconfirmTimezoneCurrent.on('click.sendEmailCurrentTimezone', function(expirationDateRoundedToSecond, isBurnafterreading) {
-                        return function() {
-                            const emailBody = templateEmailBody(expirationDateRoundedToSecond.toLocaleString(), isBurnafterreading);
-                            $emailconfirmmodal.modal('hide');
-                            triggerEmailSend(emailBody);
-                        };
-                    } (expirationDateRoundedToSecond, isBurnafterreading));
+                    $emailconfirmTimezoneCurrent.on('click.sendEmailCurrentTimezone', () => {
+                        const emailBody = templateEmailBody(expirationDateRoundedToSecond.toLocaleString(), isBurnafterreading);
+                        $emailconfirmmodal.modal('hide');
+                        triggerEmailSend(emailBody);
+                    });
                     $emailconfirmTimezoneUtc.off('click.sendEmailUtcTimezone');
-                    $emailconfirmTimezoneUtc.on('click.sendEmailUtcTimezone', function(expirationDateRoundedToSecond, isBurnafterreading) {
-                        return function() {
-                            const emailBody = templateEmailBody(expirationDateRoundedToSecond.toLocaleString(
-                                undefined,
-                                // we don't use Date.prototype.toUTCString() because we would like to avoid GMT
-                                { timeZone: 'UTC', dateStyle: 'long', timeStyle: 'long' }
-                            ), isBurnafterreading);
-                            $emailconfirmmodal.modal('hide');
-                            triggerEmailSend(emailBody);
-                        };
-                    } (expirationDateRoundedToSecond, isBurnafterreading));
+                    $emailconfirmTimezoneUtc.on('click.sendEmailUtcTimezone', () => {
+                        const emailBody = templateEmailBody(expirationDateRoundedToSecond.toLocaleString(
+                            undefined,
+                            // we don't use Date.prototype.toUTCString() because we would like to avoid GMT
+                            { timeZone: 'UTC', dateStyle: 'long', timeStyle: 'long' }
+                        ), isBurnafterreading);
+                        $emailconfirmmodal.modal('hide');
+                        triggerEmailSend(emailBody);
+                    });
                     $emailconfirmmodal.modal('show');
                 } else {
                     triggerEmailSend(templateEmailBody(null, isBurnafterreading));
@@ -3863,11 +3859,9 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
                 $emailLink.removeClass('hidden');
                 $emailLink.off('click.sendEmail');
-                $emailLink.on('click.sendEmail', function(expirationDate, isBurnafterreading) {
-                    return function() {
-                        sendEmail(expirationDate, isBurnafterreading);
-                    };
-                } (expirationDate, isBurnafterreading));
+                $emailLink.on('click.sendEmail', () => {
+                    sendEmail(expirationDate, isBurnafterreading);
+                });
             } catch (error) {
                 console.error(error);
                 Alert.showError(
