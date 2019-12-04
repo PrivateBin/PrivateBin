@@ -160,5 +160,13 @@
     "Your browser may require an HTTPS connection to support the WebCrypto API. Try <a href=\"%s\">switching to HTTPS</a>.":
         "Your browser may require an HTTPS connection to support the WebCrypto API. Try <a href=\"%s\">switching to HTTPS</a>.",
     "Your browser doesn't support WebAssembly, used for zlib compression. You can create uncompressed documents, but can't read compressed ones.":
-        "Your browser doesn't support WebAssembly, used for zlib compression. You can create uncompressed documents, but can't read compressed ones."
+        "Your browser doesn't support WebAssembly, used for zlib compression. You can create uncompressed documents, but can't read compressed ones.",
+        "waiting on user to provide a password":
+    	"请输入密码",
+    "Could not decrypt data. Did you enter a wrong password? Retry with the button at the top.":
+    	"无法解密数据。 您输入了错误的密码吗？ 点顶部的按钮重试。",
+    "Retry":
+    	"重试",
+    "Showing raw text…":
+    	"显示原始文字..."
 }
