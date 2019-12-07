@@ -162,11 +162,11 @@
     "Your browser doesn't support WebAssembly, used for zlib compression. You can create uncompressed documents, but can't read compressed ones.":
         "Dein Browser unterstützt WebAssembly nicht, welches für zlib Komprimierung benötigt wird. Du kannst unkomprimierte Dokumente erzeugen, aber keine komprimierten lesen.",
     "waiting on user to provide a password":
-        "waiting on user to provide a password",
+        "warte auf Passworteingabe durch Benutzer",
     "Could not decrypt data. Did you enter a wrong password? Retry with the button at the top.":
-        "Could not decrypt data. Did you enter a wrong password? Retry with the button at the top.",
+        "Konnte Daten nicht entschlüsseln. Hast Du das falsche Passwort eingegeben? Wiederhole den Vorgang mit dem oben stehenden Knopf.",
     "Retry":
-        "Retry",
+        "Wiederholen",
     "Showing raw text…":
-        "Showing raw text…"
+        "Zeige reinen Text an…"
 }
