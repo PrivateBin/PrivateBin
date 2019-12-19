@@ -102,8 +102,14 @@ class Configuration
     public function __construct()
     {
         $config     = array();
-        $configFile = PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.php';
-        $configIni  = PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.ini';
+        $basePath   = PATH. 'cfg' . DIRECTORY_SEPARATOR;
+        $configIni  = $basePath . 'conf.ini';
+
+        if (getenv('CONFIG_PATH') !== false) {
+            $configFile = getenv('CONFIG_PATH');
+        } else {
+            $configFile = $basePath . 'conf.php';
+        }
 
         // rename INI files to avoid configuration leakage
         if (is_readable($configIni)) {
@@ -112,7 +118,7 @@ class Configuration
             // cleanup sample, too
             $configIniSample = $configIni . '.sample';
             if (is_readable($configIniSample)) {
-                DataStore::prependRename($configIniSample, PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.sample.php', ';');
+                DataStore::prependRename($configIniSample, $basePath . 'conf.sample.php', ';');
             }
         }
 
