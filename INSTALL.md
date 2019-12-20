@@ -18,7 +18,7 @@ options](#configuration) to adjust as you see fit.
   - open_basedir access to `/dev/urandom`
   - mcrypt extension
   - com_dotnet extension
-  
+
   Mcrypt needs to be able to access `/dev/urandom`. This means if `open_basedir` is set, it must include this file.
 - GD extension
 - some disk space or (optionally) a database supported by [PDO](https://secure.php.net/manual/book.pdo.php)
@@ -43,12 +43,33 @@ process (see also
 >
 > The full path of PrivateBin on your webserver is:
 > /home/example.com/htdocs/paste
-> 
+>
 > When setting the path like this:
 > define('PATH', '../../secret/privatebin/');
 >
 > PrivateBin will look for your includes / data here:
 > /home/example.com/secret/privatebin
+
+### Changing the config path only
+
+In situations where you want to keep the PrivateBin static files separate from the
+rest of your data, or you want to reuse the installation files on multiple vhosts,
+you may only want to change the `conf.php`. In this instance, you can set the
+`CONFIG_PATH` environment variable to the absolute path to the `conf.php` file.
+This can be done in your web server's virtual host config, the PHP config, or in
+the index.php if you choose to customize it.
+
+Note that your PHP process will need read access to the config wherever it may be.
+
+> #### CONFIG_PATH example
+> Setting the value in an Apache Vhost:
+> SetEnv CONFIG_PATH /var/lib/privatebin/conf.php
+>
+> In a php-fpm pool config:
+> env[CONFIG_PATH] = /var/lib/privatebin/conf.php
+>
+> In the index.php, near the top:
+> putenv('CONFIG_PATH=/var/lib/privatebin/conf.php');
 
 ### Transport security
 
@@ -66,8 +87,9 @@ See [this FAQ item](https://github.com/PrivateBin/PrivateBin/wiki/FAQ#what-are-t
 
 In the file `cfg/conf.php` you can configure PrivateBin. A `cfg/conf.sample.php`
 is provided containing all options and default values. You can copy it to
-`cfg/conf.php` and adapt it as needed. The config file is divided into multiple
-sections, which are enclosed in square brackets.
+`cfg/conf.php` and adapt it as needed. Alternatively you can copy it anywhere and
+set the `CONFIG_PATH` environment variable (see above notes). The config file is
+divided into multiple sections, which are enclosed in square brackets.
 
 In the `[main]` section you can enable or disable the discussion feature, set
 the limit of stored pastes and comments in bytes. The `[traffic]` section lets
