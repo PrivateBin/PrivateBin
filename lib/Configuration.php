@@ -102,7 +102,7 @@ class Configuration
     public function __construct()
     {
         $config     = array();
-        $basePath   = PATH. 'cfg' . DIRECTORY_SEPARATOR;
+        $basePath   = PATH . 'cfg' . DIRECTORY_SEPARATOR;
         $configIni  = $basePath . 'conf.ini';
 
         if (getenv('CONFIG_PATH') !== false) {
