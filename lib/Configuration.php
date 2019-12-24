@@ -107,7 +107,8 @@ class Configuration
         $configFile = $basePath . 'conf.php';
 
         if (getenv('CONFIG_PATH') !== false) {
-            $configFile = getenv('CONFIG_PATH');
+            $configFile    = getenv('CONFIG_PATH');
+            $configFilePhp = substr($configFile, 0, -3) . 'php';
 
             // Rename INI files to avoid configuration leakage
             if (
@@ -115,9 +116,12 @@ class Configuration
                 is_readable($configFile) &&
                 is_writable(dirname($configFile))
             ) {
-                $oldConfigFile = $configFile;
-                $configFile    = substr($configFile, 0, -3) . 'php';
-                DataStore::prependRename($oldConfigFile, $configFile, ';');
+                DataStore::prependRename($configFile, $configFilePhp, ';');
+            }
+
+            // Rename successful? Already renamed? use that file
+            if (is_readable($configFilePhp)) {
+                $configFile = $configFilePhp;
             }
         }
 
