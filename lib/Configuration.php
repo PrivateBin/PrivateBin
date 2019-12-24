@@ -104,11 +104,21 @@ class Configuration
         $config     = array();
         $basePath   = PATH . 'cfg' . DIRECTORY_SEPARATOR;
         $configIni  = $basePath . 'conf.ini';
+        $configFile = $basePath . 'conf.php';
 
         if (getenv('CONFIG_PATH') !== false) {
             $configFile = getenv('CONFIG_PATH');
-        } else {
-            $configFile = $basePath . 'conf.php';
+
+            // Rename INI files to avoid configuration leakage
+            if (
+                strtolower(substr($configFile, -3, 3)) == 'ini' &&
+                is_readable($configFile) &&
+                is_writable(dirname($configFile))
+            ) {
+                $oldConfigFile = $configFile;
+                $configFile    = substr($configFile, 0, -3) . 'php';
+                DataStore::prependRename($oldConfigFile, $configFile, ';');
+            }
         }
 
         // rename INI files to avoid configuration leakage
