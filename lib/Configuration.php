@@ -102,28 +102,9 @@ class Configuration
     public function __construct()
     {
         $config     = array();
-        $basePath   = PATH . 'cfg' . DIRECTORY_SEPARATOR;
+        $basePath   = (getenv('CONFIG_PATH') !== false ? getenv('CONFIG_PATH') : PATH . 'cfg') . DIRECTORY_SEPARATOR;
         $configIni  = $basePath . 'conf.ini';
         $configFile = $basePath . 'conf.php';
-
-        if (getenv('CONFIG_PATH') !== false) {
-            $configFile    = getenv('CONFIG_PATH');
-            $configFilePhp = substr($configFile, 0, -3) . 'php';
-
-            // Rename INI files to avoid configuration leakage
-            if (
-                strtolower(substr($configFile, -3, 3)) == 'ini' &&
-                is_readable($configFile) &&
-                is_writable(dirname($configFile))
-            ) {
-                DataStore::prependRename($configFile, $configFilePhp, ';');
-            }
-
-            // Rename successful? Already renamed? use that file
-            if (is_readable($configFilePhp)) {
-                $configFile = $configFilePhp;
-            }
-        }
 
         // rename INI files to avoid configuration leakage
         if (is_readable($configIni)) {
