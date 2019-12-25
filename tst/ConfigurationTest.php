@@ -4,24 +4,31 @@ use PrivateBin\Configuration;
 
 class ConfigurationTest extends PHPUnit_Framework_TestCase
 {
+    private $_minimalConfig;
+
     private $_options;
 
-    private $_minimalConfig;
+    private $_path;
 
     public function setUp()
     {
         /* Setup Routine */
         Helper::confBackup();
+        $this->_minimalConfig                   = '[main]' . PHP_EOL . '[model]' . PHP_EOL . '[model_options]';
         $this->_options                         = Configuration::getDefaults();
         $this->_options['model_options']['dir'] = PATH . $this->_options['model_options']['dir'];
         $this->_options['traffic']['dir']       = PATH . $this->_options['traffic']['dir'];
         $this->_options['purge']['dir']         = PATH . $this->_options['purge']['dir'];
-        $this->_minimalConfig                   = '[main]' . PHP_EOL . '[model]' . PHP_EOL . '[model_options]';
+        $this->_path                            = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'privatebin_cfg';
+        if (!is_dir($this->_path)) {
+            mkdir($this->_path);
+        }
     }
 
     public function tearDown()
     {
         /* Tear Down Routine */
+        Helper::rmDir($this->_path);
         if (is_file(CONF)) {
             unlink(CONF);
         }
@@ -176,5 +183,50 @@ class ConfigurationTest extends PHPUnit_Framework_TestCase
         $this->assertFileExists(CONF_SAMPLE, 'new sample file gets created');
         $this->assertFileExists(CONF, 'old configuration file gets converted');
         $this->assertFileNotExists(PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.ini', 'old configuration file gets removed');
+    }
+
+    public function testConfigPath()
+    {
+        // setup
+        $configFile              = $this->_path . DIRECTORY_SEPARATOR . 'conf.php';
+        $options                 = $this->_options;
+        $options['main']['name'] = 'OtherBin';
+        Helper::createIniFile($configFile, $options);
+
+        // test
+        putenv('CONFIG_PATH=' . $this->_path);
+        $conf = new Configuration;
+        $this->assertEquals('OtherBin', $conf->getKey('name'), 'changing config path is supported');
+
+        // cleanup environment
+        if (is_file($configFile)) {
+            unlink($configFile);
+        }
+        putenv('CONFIG_PATH');
+    }
+
+    public function testConfigPathIni()
+    {
+        // setup
+        $configFile              = $this->_path . DIRECTORY_SEPARATOR . 'conf.ini';
+        $configMigrated          = $this->_path . DIRECTORY_SEPARATOR . 'conf.php';
+        $options                 = $this->_options;
+        $options['main']['name'] = 'OtherBin';
+        Helper::createIniFile($configFile, $options);
+        $this->assertFileNotExists(CONF, 'configuration in the default location is non existing');
+
+        // test
+        putenv('CONFIG_PATH=' . $this->_path);
+        $conf = new Configuration;
+        $this->assertEquals('OtherBin', $conf->getKey('name'), 'changing config path is supported for ini files as well');
+        $this->assertFileExists($configMigrated, 'old configuration file gets converted');
+        $this->assertFileNotExists($configFile, 'old configuration file gets removed');
+        $this->assertFileNotExists(CONF, 'configuration is not created in the default location');
+
+        // cleanup environment
+        if (is_file($configFile)) {
+            unlink($configFile);
+        }
+        putenv('CONFIG_PATH');
     }
 }

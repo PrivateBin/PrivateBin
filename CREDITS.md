@@ -26,6 +26,7 @@ Sébastien Sauvage - original idea and main developer
 * thororm - Display of video, audio & PDF, drag & drop, preview of attachments
 * Harald Leithner - base58 encoding of key
 * Haocen - lots of bugfixes and UI improvements
+* Lucas Savva - configurable config file location, NixOS packaging
 
 ## Translations
 * Hexalyse - French
