@@ -2795,8 +2795,12 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             // move elemement to new place
             $attachmentLink.appendTo($element);
 
-            // update text
-            I18n._($attachmentLink, label, $attachmentLink.attr('download'));
+            // update text - ensuring no HTML is inserted into the text node
+            I18n._(
+                $attachmentLink,
+                $('<div />').text(label).html(),
+                $('<div />').text($attachmentLink.attr('download')).html()
+            );
         };
 
         /**

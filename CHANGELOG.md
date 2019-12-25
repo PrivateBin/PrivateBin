@@ -4,6 +4,7 @@
     * ADDED: Translation for Ukrainian (#533)
     * ADDED: Option to send a mail with the link, when creating a paste (#398)
     * ADDED: Add support for CONFIG_PATH environment variable (#552)
+    * FIXED: HTML injection via unescaped attachment filename (#554)
     * FIXED: Password disabling option (#527)
   * **1.3.1 (2019-09-22)**
     * ADDED: Translation for Bulgarian (#455)

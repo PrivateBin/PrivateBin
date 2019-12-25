@@ -25,7 +25,7 @@ describe('AttachmentViewer', function () {
                         mimeType.match(/\/pdf/i)
                     ),
                     results = [];
-                prefix = prefix.replace(/%(s|d)/g, '%%');
+                prefix  = prefix.replace(/%(s|d)/g, '%%');
                 postfix = postfix.replace(/%(s|d)/g, '%%');
                 $('body').html(
                     '<div id="attachment" role="alert" class="hidden alert ' +
@@ -90,7 +90,7 @@ describe('AttachmentViewer', function () {
                     results.push(
                         element.children()[0].href === data &&
                         element.children()[0].getAttribute('download') === filename &&
-                        element.children()[0].text === prefix + filename + postfix
+                        element.children()[0].text === $('<div />').text(prefix + filename + postfix).html()
                     );
                 } else {
                     results.push(element.children()[0].href === data);
