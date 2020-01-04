@@ -40,21 +40,6 @@ var a2zString    = ['a','b','c','d','e','f','g','h','i','j','k','l','m',
     supportedLanguages = ['de', 'es', 'fr', 'it', 'no', 'pl', 'pt', 'oc', 'ru', 'sl', 'zh'],
     mimeTypes = ['image/png', 'application/octet-stream'],
     formats = ['plaintext', 'markdown', 'syntaxhighlighting'],
-    /**
-     * character to HTML entity lookup table
-     *
-     * @see    {@link https://github.com/janl/mustache.js/blob/master/mustache.js#L60}
-     */
-    entityMap = {
-        '&': '&amp;',
-        '<': '&lt;',
-        '>': '&gt;',
-        '"': '&quot;',
-        "'": '&#39;',
-        '/': '&#x2F;',
-        '`': '&#x60;',
-        '=': '&#x3D;'
-    },
     mimeFile = fs.createReadStream('/etc/mime.types'),
     mimeLine = '';
 
@@ -96,22 +81,6 @@ function parseMime(line) {
 // common testing helper functions
 exports.atob = atob;
 exports.btoa = btoa;
-
-/**
- * convert all applicable characters to HTML entities
- *
- * @see    {@link https://www.owasp.org/index.php/XSS_(Cross_Site_Scripting)_Prevention_Cheat_Sheet#RULE_.231_-_HTML_Escape_Before_Inserting_Untrusted_Data_into_HTML_Element_Content}
- * @name   htmlEntities
- * @function
- * @param  {string} str
- * @return {string} escaped HTML
- */
-exports.htmlEntities = function(str) {
-    return String(str).replace(
-        /[&<>"'`=\/]/g, function(s) {
-            return entityMap[s];
-        });
-};
 
 // provides random lowercase characters from a to z
 exports.jscA2zString = function() {

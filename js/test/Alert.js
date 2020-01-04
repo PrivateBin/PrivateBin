@@ -67,10 +67,6 @@ describe('Alert', function () {
     });
 
     describe('showWarning', function () {
-        before(function () {
-            cleanup();
-        });
-
         jsc.property(
             'shows a warning message (basic)',
             jsc.array(common.jscAlnumString()),
@@ -136,10 +132,6 @@ describe('Alert', function () {
     });
 
     describe('showError', function () {
-        before(function () {
-            cleanup();
-        });
-
         jsc.property(
             'shows an error message (basic)',
             jsc.array(common.jscAlnumString()),
@@ -205,10 +197,6 @@ describe('Alert', function () {
     });
 
     describe('showRemaining', function () {
-        before(function () {
-            cleanup();
-        });
-
         jsc.property(
             'shows remaining time (basic)',
             jsc.array(common.jscAlnumString()),
@@ -254,10 +242,6 @@ describe('Alert', function () {
     });
 
     describe('showLoading', function () {
-        before(function () {
-            cleanup();
-        });
-
         jsc.property(
             'shows a loading message (basic)',
             jsc.array(common.jscAlnumString()),
@@ -310,10 +294,6 @@ describe('Alert', function () {
     });
 
     describe('hideLoading', function () {
-        before(function () {
-            cleanup();
-        });
-
         it(
             'hides the loading message',
             function() {
@@ -335,10 +315,6 @@ describe('Alert', function () {
     });
 
     describe('hideMessages', function () {
-        before(function () {
-            cleanup();
-        });
-
         it(
             'hides all messages',
             function() {
@@ -361,10 +337,6 @@ describe('Alert', function () {
     });
 
     describe('setCustomHandler', function () {
-        before(function () {
-            cleanup();
-        });
-
         jsc.property(
             'calls a given handler function',
             'nat 3',

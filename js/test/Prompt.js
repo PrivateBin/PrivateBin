@@ -6,10 +6,6 @@ describe('Prompt', function () {
     //       in nodejs -> replace the prompt in the "page" template with a modal
     describe('requestPassword & getPassword', function () {
         this.timeout(30000);
-        before(function () {
-            $.PrivateBin.Model.reset();
-            cleanup();
-        });
 
         jsc.property(
             'returns the password fed into the dialog',
@@ -26,6 +22,7 @@ describe('Prompt', function () {
                     'password"></div><button type="submit">Decrypt</button>' +
                     '</form></div></div></div></div>'
                 );
+                $.PrivateBin.Model.reset();
                 $.PrivateBin.Model.init();
                 $.PrivateBin.Prompt.init();
                 $.PrivateBin.Prompt.requestPassword();

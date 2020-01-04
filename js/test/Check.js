@@ -5,9 +5,6 @@ var common = require('../common');
 describe('Check', function () {
     describe('init', function () {
         this.timeout(30000);
-        before(function () {
-            cleanup();
-        });
 
         it('returns false and shows error, if a bot UA is detected', function () {
             jsc.assert(jsc.forall(

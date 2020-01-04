@@ -4,9 +4,6 @@ var common = require('../common');
 describe('AttachmentViewer', function () {
     describe('setAttachment, showAttachment, removeAttachment, hideAttachment, hideAttachmentPreview, hasAttachment, getAttachment & moveAttachmentTo', function () {
         this.timeout(30000);
-        before(function () {
-            cleanup();
-        });
 
         jsc.property(
             'displays & hides data as requested',
@@ -16,7 +13,7 @@ describe('AttachmentViewer', function () {
             'string',
             'string',
             function (mimeType, rawdata, filename, prefix, postfix) {
-                var clean = jsdom(),
+                let clean = jsdom(),
                     data = 'data:' + mimeType + ';base64,' + btoa(rawdata),
                     previewSupported = (
                         mimeType.substring(0, 6) === 'image/' ||
@@ -24,7 +21,8 @@ describe('AttachmentViewer', function () {
                         mimeType.substring(0, 6) === 'video/' ||
                         mimeType.match(/\/pdf/i)
                     ),
-                    results = [];
+                    results = [],
+                    result = '';
                 prefix  = prefix.replace(/%(s|d)/g, '%%');
                 postfix = postfix.replace(/%(s|d)/g, '%%');
                 $('body').html(
@@ -57,7 +55,7 @@ describe('AttachmentViewer', function () {
                 }
                 // beyond this point we will get the blob URL instead of the data
                 data = window.URL.createObjectURL(data);
-                var attachment = $.PrivateBin.AttachmentViewer.getAttachment();
+                const attachment = $.PrivateBin.AttachmentViewer.getAttachment();
                 results.push(
                     $.PrivateBin.AttachmentViewer.hasAttachment() &&
                     $('#attachment').hasClass('hidden') &&
@@ -84,13 +82,19 @@ describe('AttachmentViewer', function () {
                     !$('#attachment').hasClass('hidden') &&
                     (previewSupported ? !$('#attachmentPreview').hasClass('hidden') : $('#attachmentPreview').hasClass('hidden'))
                 );
-                var element = $('<div></div>');
+                let element = $('<div>');
                 $.PrivateBin.AttachmentViewer.moveAttachmentTo(element, prefix + '%s' + postfix);
+                // messageIDs with links get a relaxed treatment
+                if (prefix.indexOf('<a') === -1 && postfix.indexOf('<a') === -1) {
+                    result = $.PrivateBin.Helper.htmlEntities(prefix + filename + postfix);
+                } else {
+                    result = $('<div>').html(prefix + $.PrivateBin.Helper.htmlEntities(filename) + postfix).html();
+                }
                 if (filename.length) {
                     results.push(
                         element.children()[0].href === data &&
                         element.children()[0].getAttribute('download') === filename &&
-                        element.children()[0].text === $('<div />').text(prefix + filename + postfix).html()
+                        element.children()[0].text === result
                     );
                 } else {
                     results.push(element.children()[0].href === data);

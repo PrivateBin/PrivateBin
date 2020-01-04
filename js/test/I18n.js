@@ -32,6 +32,7 @@ describe('I18n', function () {
                 var fakeAlias = $.PrivateBin.I18n._(fake);
                 $.PrivateBin.I18n.reset();
 
+                messageId = $.PrivateBin.Helper.htmlEntities(messageId);
                 return messageId === result && messageId === alias &&
                     messageId === pluralResult && messageId === pluralAlias &&
                     messageId === fakeResult && messageId === fakeAlias;
@@ -46,7 +47,7 @@ describe('I18n', function () {
                 prefix    =    prefix.replace(/%(s|d)/g, '%%');
                 params[0] = params[0].replace(/%(s|d)/g, '%%');
                 postfix   =   postfix.replace(/%(s|d)/g, '%%');
-                var translation = prefix + params[0] + postfix;
+                var translation = $.PrivateBin.Helper.htmlEntities(prefix + params[0] + postfix);
                 params.unshift(prefix + '%s' + postfix);
                 var result = $.PrivateBin.I18n.translate.apply(this, params);
                 $.PrivateBin.I18n.reset();

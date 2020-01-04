@@ -5,18 +5,18 @@ describe('Model', function () {
     describe('getExpirationDefault', function () {
         before(function () {
             $.PrivateBin.Model.reset();
-            cleanup();
+            cleanup = jsdom();
         });
 
         jsc.property(
             'returns the contents of the element with id "pasteExpiration"',
-            'array asciinestring',
+            'nearray asciinestring',
             'string',
             'small nat',
             function (keys, value, key) {
-                keys = keys.map(common.htmlEntities);
-                value = common.htmlEntities(value);
-                var content = keys.length > key ? keys[key] : (keys.length > 0 ? keys[0] : 'null'),
+                keys = keys.map($.PrivateBin.Helper.htmlEntities);
+                value = $.PrivateBin.Helper.htmlEntities(value);
+                var content = keys.length > key ? keys[key] : keys[0],
                     contents = '<select id="pasteExpiration" name="pasteExpiration">';
                 keys.forEach(function(item) {
                     contents += '<option value="' + item + '"';
@@ -27,7 +27,7 @@ describe('Model', function () {
                 });
                 contents += '</select>';
                 $('body').html(contents);
-                var result = common.htmlEntities(
+                var result = $.PrivateBin.Helper.htmlEntities(
                     $.PrivateBin.Model.getExpirationDefault()
                 );
                 $.PrivateBin.Model.reset();
@@ -39,18 +39,20 @@ describe('Model', function () {
     describe('getFormatDefault', function () {
         before(function () {
             $.PrivateBin.Model.reset();
+        });
+        after(function () {
             cleanup();
         });
 
         jsc.property(
             'returns the contents of the element with id "pasteFormatter"',
-            'array asciinestring',
+            'nearray asciinestring',
             'string',
             'small nat',
             function (keys, value, key) {
-                keys = keys.map(common.htmlEntities);
-                value = common.htmlEntities(value);
-                var content = keys.length > key ? keys[key] : (keys.length > 0 ? keys[0] : 'null'),
+                keys = keys.map($.PrivateBin.Helper.htmlEntities);
+                value = $.PrivateBin.Helper.htmlEntities(value);
+                var content = keys.length > key ? keys[key] : keys[0],
                     contents = '<select id="pasteFormatter" name="pasteFormatter">';
                 keys.forEach(function(item) {
                     contents += '<option value="' + item + '"';
@@ -61,7 +63,7 @@ describe('Model', function () {
                 });
                 contents += '</select>';
                 $('body').html(contents);
-                var result = common.htmlEntities(
+                var result = $.PrivateBin.Helper.htmlEntities(
                     $.PrivateBin.Model.getFormatDefault()
                 );
                 $.PrivateBin.Model.reset();
@@ -74,7 +76,6 @@ describe('Model', function () {
         this.timeout(30000);
         beforeEach(function () {
             $.PrivateBin.Model.reset();
-            cleanup();
         });
 
         jsc.property(
@@ -130,7 +131,6 @@ describe('Model', function () {
         this.timeout(30000);
         beforeEach(function () {
             $.PrivateBin.Model.reset();
-            cleanup();
         });
 
         jsc.property(
@@ -238,7 +238,6 @@ describe('Model', function () {
     describe('getTemplate', function () {
         beforeEach(function () {
             $.PrivateBin.Model.reset();
-            cleanup();
         });
 
         jsc.property(
