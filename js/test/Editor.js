@@ -4,9 +4,6 @@ require('../common');
 describe('Editor', function () {
     describe('show, hide, getText, setText & isPreview', function () {
         this.timeout(30000);
-        before(function () {
-            cleanup();
-        });
 
         jsc.property(
             'returns text fed into the textarea, handles editor tabs',

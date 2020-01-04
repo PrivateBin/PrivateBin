@@ -4,9 +4,6 @@ var common = require('../common');
 describe('PasteViewer', function () {
     describe('run, hide, getText, setText, getFormat, setFormat & isPrettyPrinted', function () {
         this.timeout(30000);
-        before(function () {
-            cleanup();
-        });
 
         jsc.property(
             'displays text according to format',

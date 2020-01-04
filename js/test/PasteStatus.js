@@ -39,9 +39,6 @@ describe('PasteStatus', function () {
 
     describe('showRemainingTime', function () {
         this.timeout(30000);
-        before(function () {
-            cleanup();
-        });
 
         jsc.property(
             'shows burn after reading message or remaining time',
@@ -84,10 +81,6 @@ describe('PasteStatus', function () {
     });
 
     describe('hideMessages', function () {
-        before(function () {
-            cleanup();
-        });
-
         it(
             'hides all messages',
             function() {

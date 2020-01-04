@@ -4,9 +4,6 @@ var common = require('../common');
 describe('DiscussionViewer', function () {
     describe('handleNotification, prepareNewDiscussion, addComment, finishDiscussion, getReplyMessage, getReplyNickname, getReplyCommentId & highlightComment', function () {
         this.timeout(30000);
-        before(function () {
-            cleanup();
-        });
 
         jsc.property(
             'displays & hides comments as requested',

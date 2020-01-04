@@ -267,6 +267,32 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
             return false;
         }
 
+        /**
+         * encode all applicable characters to HTML entities
+         *
+         * @see    {@link https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html}
+         *
+         * @name   Helper.htmlEntities
+         * @function
+         * @param  string str
+         * @return string escaped HTML
+         */
+        me.htmlEntities = function(str) {
+            // using textarea, since other tags may allow and execute scripts, even when detached from DOM
+            let holder = document.createElement('textarea');
+            holder.textContent = str;
+            // as per OWASP recommendation, also encoding quotes and slash
+            return holder.innerHTML.replace(
+                /["'\/]/g,
+                function(s) {
+                    return {
+                        '"': '&quot;',
+                        "'": '&#x27;',
+                        '/': '&#x2F;'
+                    }[s];
+                });
+        };
+
         return me;
     })();
 
@@ -419,17 +445,31 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
                 args[0] = translations[messageId];
             }
 
+            // messageID may contain links, but should be from a trusted source (code or translation JSON files)
+            let containsNoLinks = args[0].indexOf('<a') === -1;
+            for (let i = 0; i < args.length; ++i) {
+                // parameters (i > 0) may never contain HTML as they may come from untrusted parties
+                if (i > 0 || containsNoLinks) {
+                    args[i] = Helper.htmlEntities(args[i]);
+                }
+            }
+
             // format string
             var output = Helper.sprintf.apply(this, args);
 
             // if $element is given, apply text to element
             if ($element !== null) {
-                // get last text node of element
-                var content = $element.contents();
-                if (content.length > 1) {
-                    content[content.length - 1].nodeValue = ' ' + output;
-                } else {
+                if (containsNoLinks) {
+                    // avoid HTML entity encoding if translation contains links
                     $element.text(output);
+                } else {
+                    // only allow tags/attributes we actually use in our translations
+                    $element.html(
+                        DOMPurify.sanitize(output, {
+                            ALLOWED_TAGS: ['a', 'br', 'i', 'span'],
+                            ALLOWED_ATTR: ['href', 'id']
+                        })
+                    );
                 }
             }
 
@@ -1052,28 +1092,35 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
                     icon = null; // icons not supported in this case
                 }
             }
+            var $translationTarget = $element;
 
-            // handle icon
-            if (icon !== null && // icon was passed
-                icon !== currentIcon[id] // and it differs from current icon
-            ) {
-                var $glyphIcon = $element.find(':first');
+            // handle icon, if template uses one
+            var $glyphIcon = $element.find(':first');
+            if ($glyphIcon.length) {
+                // if there is an icon, we need to provide an inner element
+                // to translate the message into, instead of the parent
+                $translationTarget = $('<span>');
+                $element.html(' ').prepend($glyphIcon).append($translationTarget);
 
-                // remove (previous) icon
-                $glyphIcon.removeClass(currentIcon[id]);
+                if (icon !== null && // icon was passed
+                    icon !== currentIcon[id] // and it differs from current icon
+                ) {
+                    // remove (previous) icon
+                    $glyphIcon.removeClass(currentIcon[id]);
 
-                // any other thing as a string (e.g. 'null') (only) removes the icon
-                if (typeof icon === 'string') {
-                    // set new icon
-                    currentIcon[id] = 'glyphicon-' + icon;
-                    $glyphIcon.addClass(currentIcon[id]);
+                    // any other thing as a string (e.g. 'null') (only) removes the icon
+                    if (typeof icon === 'string') {
+                        // set new icon
+                        currentIcon[id] = 'glyphicon-' + icon;
+                        $glyphIcon.addClass(currentIcon[id]);
+                    }
                 }
             }
 
             // show text
             if (args !== null) {
                 // add jQuery object to it as first parameter
-                args.unshift($element);
+                args.unshift($translationTarget);
                 // pass it to I18n
                 I18n._.apply(this, args);
             }
@@ -1764,9 +1811,9 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
 
             // escape HTML entities, link URLs, sanitize
             var escapedLinkedText = Helper.urls2links(
-                    $('<div />').text(text).html()
-                ),
-                sanitizedLinkedText = DOMPurify.sanitize(escapedLinkedText);
+                    Helper.htmlEntities(text)
+                  ),
+                  sanitizedLinkedText = DOMPurify.sanitize(escapedLinkedText);
             $plainText.html(sanitizedLinkedText);
             $prettyPrint.html(sanitizedLinkedText);
 
@@ -2894,7 +2941,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
             for (var i = 0; i < $head.length; i++) {
                 newDoc.write($head[i].outerHTML);
             }
-            newDoc.write('</head><body><pre>' + DOMPurify.sanitize(paste) + '</pre></body></html>');
+            newDoc.write('</head><body><pre>' + DOMPurify.sanitize(Helper.htmlEntities(paste)) + '</pre></body></html>');
             newDoc.close();
         }
 
