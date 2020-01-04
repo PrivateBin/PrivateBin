@@ -3088,8 +3088,8 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             $attachment = $('#attachment');
             $dragAndDropFileName = $('#dragAndDropFileName');
             $dropzone = $('#dropzone');
+            $attachmentLink = $('#attachment a') || $('<a>');
             if($attachment.length) {
-                $attachmentLink = $('#attachment a');
                 $attachmentPreview = $('#attachmentPreview');
 
                 $fileInput = $('#file');
