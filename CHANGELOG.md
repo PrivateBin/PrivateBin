@@ -1,6 +1,8 @@
 # PrivateBin version history
 
-  * **1.3 (not yet released)**
+  * **1.2.2 (2020-01-11)**
+    * CHANGED: Upgrading libraries to: bootstrap 3.4.1, DOMpurify 2.0.7, jQuery 3.4.1, kjua 0.6.0, Showdown 1.9.1 & SJCL 1.0.8
+    * FIXED: HTML injection via unescaped attachment filename (#554)
   * **1.2.1 (2018-08-11)**
     * ADDED: Add support for mega.nz links in pastes and comments (#331)
     * CHANGED: Added some missing Russian translations (#348)
