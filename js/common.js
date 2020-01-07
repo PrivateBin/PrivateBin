@@ -16,7 +16,7 @@ global.RawDeflate.inflate = require('./rawinflate-0.3').RawDeflate.inflate;
 require('./prettify');
 global.prettyPrint = window.PR.prettyPrint;
 global.prettyPrintOne = window.PR.prettyPrintOne;
-global.showdown = require('./showdown-1.8.6');
+global.showdown = require('./showdown-1.9.1');
 global.DOMPurify = require('./purify-2.0.7');
 require('./bootstrap-3.3.7');
 require('./privatebin');
