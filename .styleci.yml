@@ -19,6 +19,7 @@ disabled:
   - heredoc_to_nowdoc
   - method_argument_space
   - new_with_braces
+  - no_alternative_syntax
   - phpdoc_align
   - phpdoc_no_access
   - phpdoc_separation
