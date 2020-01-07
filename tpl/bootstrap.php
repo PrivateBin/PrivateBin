@@ -42,7 +42,7 @@ endif;
 ?>
 		<noscript><link type="text/css" rel="stylesheet" href="css/noscript.css" /></noscript>
 		<script type="text/javascript" data-cfasync="false" src="js/jquery-3.4.1.js" integrity="sha512-bnIvzh6FU75ZKxp0GXLH9bewza/OIw6dLVh9ICg0gogclmYGguQJWl8U30WpbsGTqbIiAwxTsbe76DErLq5EDQ==" crossorigin="anonymous"></script>
-		<script type="text/javascript" data-cfasync="false" src="js/sjcl-1.0.7.js" integrity="sha512-J2eNenPwyfXkMVNMFz9Q54kKfYi5AA3mQWpNgtjSJzsKHtpbhUt/7bvcjGwwmzE8ZUVWMI/ndagIX1lG+SfxGA==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/sjcl-1.0.8.js" integrity="sha512-J2eNenPwyfXkMVNMFz9Q54kKfYi5AA3mQWpNgtjSJzsKHtpbhUt/7bvcjGwwmzE8ZUVWMI/ndagIX1lG+SfxGA==" crossorigin="anonymous"></script>
 <?php
 if ($QRCODE):
 ?>
