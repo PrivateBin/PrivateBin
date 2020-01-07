@@ -1,12 +1,16 @@
 # PrivateBin version history
 
   * **1.4 (not yet released)**
+  * **1.3.2 (2020-01-11)**
     * ADDED: Translation for Ukrainian (#533)
     * ADDED: Option to send a mail with the link, when creating a paste (#398)
     * ADDED: Add support for CONFIG_PATH environment variable (#552)
     * CHANGED: Upgrading libraries to: base-x 3.0.7, DOMpurify 2.0.7 & Showdown 1.9.1
     * FIXED: HTML injection via unescaped attachment filename (#554)
     * FIXED: Password disabling option (#527)
+  * **1.2.2 (2020-01-11)**
+    * CHANGED: Upgrading libraries to: bootstrap 3.4.1, DOMpurify 2.0.7, jQuery 3.4.1, kjua 0.6.0, Showdown 1.9.1 & SJCL 1.0.8
+    * FIXED: HTML injection via unescaped attachment filename (#554)
   * **1.3.1 (2019-09-22)**
     * ADDED: Translation for Bulgarian (#455)
     * CHANGED: Improved mobile UI - obscured send button and hard to click shortener button (#477)
