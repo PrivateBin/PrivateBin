@@ -4,7 +4,7 @@
     * ADDED: Translation for Ukrainian (#533)
     * ADDED: Option to send a mail with the link, when creating a paste (#398)
     * ADDED: Add support for CONFIG_PATH environment variable (#552)
-    * CHANGED: Upgrading libraries to: DOMpurify 2.0.7 & Showdown 1.9.1
+    * CHANGED: Upgrading libraries to: base-x 3.0.7, DOMpurify 2.0.7 & Showdown 1.9.1
     * FIXED: HTML injection via unescaped attachment filename (#554)
     * FIXED: Password disabling option (#527)
   * **1.3.1 (2019-09-22)**
