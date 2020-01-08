@@ -4926,7 +4926,6 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                         plaintexts[i][1]
                     );
                 }
-                DiscussionViewer.finishDiscussion();
             });
         }
 
@@ -4980,6 +4979,12 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                         // we have to pass in remaining_time here
                         TopNav.showEmailButton(paste.getTimeToLive());
                     }
+
+                    // only offer adding comments, after paste was successfully decrypted
+                    if (paste.isDiscussionEnabled()) {
+                        DiscussionViewer.finishDiscussion();
+                    }
+
                 })
                 .catch((err) => {
                     // wait for the user to type in the password,
