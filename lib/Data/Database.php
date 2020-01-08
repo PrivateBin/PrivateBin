@@ -7,7 +7,7 @@
  * @link      https://github.com/PrivateBin/PrivateBin
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
- * @version   1.3.1
+ * @version   1.3.2
  */
 
 namespace PrivateBin\Data;
@@ -770,7 +770,7 @@ class Database extends AbstractData
                         " MODIFY COLUMN data $attachmentType;"
                     );
                 }
-                // no break, continue with updates for 1.3.1 and later
+                // no break, continue with updates for all newer versions
             default:
                 self::_exec(
                     'UPDATE ' . self::_sanitizeIdentifier('config') .
