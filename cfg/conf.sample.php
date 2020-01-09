@@ -60,8 +60,8 @@ languageselection = false
 ; a different user when the same username was used in a comment. It might be
 ; used to get the IP of a non anonymous comment poster if the server salt is
 ; leaked and a SHA256 HMAC rainbow table is generated for all (relevant) IPs.
-; Can be set to one these values: none / vizhash / identicon (default).
-; icon = none
+; Can be set to one these values: "none" / "vizhash" / "identicon" (default).
+; icon = "none"
 
 ; Content Security Policy headers allow a website to restrict what sources are
 ; allowed to be accessed in its context. You need to change this if you added
@@ -95,8 +95,8 @@ languageselection = false
 
 ; Pick compression algorithm or disable it. Only applies to pastes/comments
 ; created after changing the setting.
-; Can be set to one these values: none / zlib (default).
-; compression = zlib
+; Can be set to one these values: "none" / "zlib" (default).
+; compression = "zlib"
 
 [expire]
 ; expire value that is selected per default
