@@ -7,10 +7,11 @@ php:
   - '7.0'
   - '7.1'
   - '7.2'
+  - '7.3'
 
-# as this is a php project, node.js v4 (for JS unit testing) isn't installed
+# as this is a php project, node.js (for JS unit testing) isn't installed
 install:
-  - if [ ! -d "$HOME/.nvm" ]; then mkdir -p $HOME/.nvm && curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | NVM_METHOD=script bash; fi
+  - if [ ! -d "$HOME/.nvm" ]; then mkdir -p $HOME/.nvm && curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | NVM_METHOD=script bash; fi
   - source ~/.nvm/nvm.sh && nvm install --lts
 
 before_script:
