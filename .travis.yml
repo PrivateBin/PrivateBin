@@ -10,13 +10,13 @@ php:
 
 # as this is a php project, node.js v4 (for JS unit testing) isn't installed
 install:
-  - if [ ! -d "$HOME/.nvm" ]; then mkdir -p $HOME/.nvm && curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.8/install.sh | NVM_METHOD=script bash; fi
-  - source ~/.nvm/nvm.sh && nvm install 4
+  - if [ ! -d "$HOME/.nvm" ]; then mkdir -p $HOME/.nvm && curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | NVM_METHOD=script bash; fi
+  - source ~/.nvm/nvm.sh && nvm install --lts
 
 before_script:
   - composer install -n
   - npm install -g mocha
-  - cd js && npm install jsverify jsdom@9 jsdom-global@2 mime-types
+  - cd js && npm install
 
 script:
   - mocha

@@ -1,0 +1,43 @@
+{
+  "name": "privatebin",
+  "version": "1.2.1",
+  "description": "PrivateBin is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted in the browser using 256 bit AES in Galois Counter mode (GCM).",
+  "main": "privatebin.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "jsdom": "^9.12.0",
+    "jsdom-global": "^2.1.1",
+    "jsverify": "^0.8.3",
+    "mime-types": "^2.1.20",
+    "node-webcrypto-ossl": "^1.0.37"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PrivateBin/PrivateBin.git"
+  },
+  "keywords": [
+    "private",
+    "secure",
+    "end-to-end-encrypted",
+    "e2e",
+    "paste",
+    "pastebin",
+    "zero",
+    "zero-knowledge",
+    "encryption",
+    "encrypted",
+    "AES"
+  ],
+  "author": "",
+  "license": "zlib-acknowledgement",
+  "bugs": {
+    "url": "https://github.com/PrivateBin/PrivateBin/issues"
+  },
+  "homepage": "https://privatebin.info/"
+}
