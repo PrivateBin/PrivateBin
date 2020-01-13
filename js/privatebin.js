@@ -618,21 +618,15 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 args[0] = translations[messageId];
             }
 
-            // messageID may contain links, but should be from a trusted source (code or translation JSON files)
-            let containsNoLinks = args[0].indexOf('<a') === -1;
-            for (let i = 0; i < args.length; ++i) {
-                // parameters (i > 0) may never contain HTML as they may come from untrusted parties
-                if (i > 0 || containsNoLinks) {
-                    args[i] = Helper.htmlEntities(args[i]);
-                }
-            }
+            // messageID may contain links, but only the first parameter, as that is from a trusted source (code or translation JSON files)
+            let containsLinks = args[0].indexOf('<a') !== -1;
 
             // format string
             let output = Helper.sprintf.apply(this, args);
 
             // if $element is given, apply text to element
             if ($element !== null) {
-                if (containsNoLinks) {
+                if (!containsLinks) {
                     // avoid HTML entity encoding if translation contains links
                     $element.text(output);
                 } else {
