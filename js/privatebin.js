@@ -453,11 +453,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          * @return string escaped HTML
          */
         me.htmlEntities = function(str) {
-            // using textarea, since other tags may allow and execute scripts, even when detached from DOM
-            let holder = document.createElement('textarea');
-            holder.textContent = str;
-            // as per OWASP recommendation, also encoding quotes and slash
-            return holder.innerHTML.replace(
+            return str.replace(
                 /["'\/]/g,
                 function(s) {
                     return {
@@ -629,10 +625,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
             // if $element is given, apply text to element
             if ($element !== null) {
-                if (!containsLinks) {
-                    // avoid HTML entity encoding if translation contains links
-                    $element.text(output);
-                } else {
+                if (containsLinks) {
                     // only allow tags/attributes we actually use in our translations
                     $element.html(
                         DOMPurify.sanitize(output, {
@@ -640,6 +633,9 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                             ALLOWED_ATTR: ['href', 'id']
                         })
                     );
+                } else {
+                    // avoid HTML entity encoding if translation contains no links
+                    $element.text(output);                    
                 }
             }
 
