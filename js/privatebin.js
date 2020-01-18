@@ -616,9 +616,6 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
             // messageID may contain links, but only the first parameter, as that is from a trusted source (code or translation JSON files)
             let containsLinks = args[0].indexOf('<a') !== -1;
-            if (containsLinks && args.length > 0) {
-                throw new Error('security violation detected: do not concatenate links and untrusted data!');
-            }
 
             // format string
             let output = Helper.sprintf.apply(this, args);
