@@ -415,7 +415,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         /**
          * convert all applicable characters to HTML entities
          *
-         * @see    {@link https://www.owasp.org/index.php/XSS_(Cross_Site_Scripting)_Prevention_Cheat_Sheet#RULE_.231_-_HTML_Escape_Before_Inserting_Untrusted_Data_into_HTML_Element_Content}
+         * @see    {@link https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html}
          * @name   Helper.htmlEntities
          * @function
          * @param  {string} str
@@ -425,7 +425,8 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             return String(str).replace(
                 /[&<>"'`=\/]/g, function(s) {
                     return entityMap[s];
-                });
+                }
+            );
         }
 
         /**
@@ -476,28 +477,6 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
             expirationDate = expirationDate.setUTCSeconds(expirationDate.getUTCSeconds() + secondsToExpiration);
             return expirationDate;
-        };
-
-        /**
-         * encode all applicable characters to HTML entities
-         *
-         * @see    {@link https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html}
-         *
-         * @name   Helper.htmlEntities
-         * @function
-         * @param  string str
-         * @return string escaped HTML
-         */
-        me.htmlEntities = function(str) {
-            return str.replace(
-                /["'\/]/g,
-                function(s) {
-                    return {
-                        '"': '&quot;',
-                        "'": '&#x27;',
-                        '/': '&#x2F;'
-                    }[s];
-                });
         };
 
         return me;
