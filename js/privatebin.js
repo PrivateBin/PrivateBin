@@ -662,6 +662,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                     // text node takes care of entity encoding
                     $element.text(output);                    
                 }
+                return '';
             }
 
             return output;
