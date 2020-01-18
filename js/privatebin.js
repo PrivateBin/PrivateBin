@@ -631,28 +631,35 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
             // messageID may contain links, but should be from a trusted source (code or translation JSON files)
             let containsLinks = args[0].indexOf('<a') !== -1;
-            for (let i = 0; i < args.length; ++i) {
-                // parameters (i > 0) may never contain HTML as they may come from untrusted parties
-                if (i > 0 || !containsLinks) {
-                    args[i] = Helper.htmlEntities(args[i]);
+
+            // prevent double encoding, when we insert into a text node
+            if (!containsLinks || $element === null) {
+                for (let i = 0; i < args.length; ++i) {
+                    // parameters (i > 0) may never contain HTML as they may come from untrusted parties
+                    if (i > 0 || !containsLinks) {
+                        args[i] = Helper.htmlEntities(args[i]);
+                    }
                 }
             }
-
             // format string
             let output = Helper.sprintf.apply(this, args);
 
-            // if $element is given, apply text to element
+            if (containsLinks) {
+                // only allow tags/attributes we actually use in translations
+                output = DOMPurify.sanitize(
+                    output, {
+                        ALLOWED_TAGS: ['a', 'br', 'i', 'span'],
+                        ALLOWED_ATTR: ['href', 'id']
+                    }
+                );
+            }
+
+            // if $element is given, insert translation
             if ($element !== null) {
                 if (containsLinks) {
-                    // only allow tags/attributes we actually use in our translations
-                    $element.html(
-                        DOMPurify.sanitize(output, {
-                            ALLOWED_TAGS: ['a', 'br', 'i', 'span'],
-                            ALLOWED_ATTR: ['href', 'id']
-                        })
-                    );
+                    $element.html(output);
                 } else {
-                    // avoid HTML entity encoding if translation contains no links
+                    // text node takes care of entity encoding
                     $element.text(output);                    
                 }
             }
@@ -1946,11 +1953,10 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         me.createPasteNotification = function(url, deleteUrl)
         {
-            $('#pastelink').html(
-                I18n._(
-                    'Your paste is <a id="pasteurl" href="%s">%s</a> <span id="copyhint">(Hit [Ctrl]+[c] to copy)</span>',
-                    url, url
-                )
+            I18n._(
+                $('#pastelink'),
+                'Your paste is <a id="pasteurl" href="%s">%s</a> <span id="copyhint">(Hit [Ctrl]+[c] to copy)</span>',
+                url, url
             );
             // save newly created element
             $pasteUrl = $('#pasteurl');

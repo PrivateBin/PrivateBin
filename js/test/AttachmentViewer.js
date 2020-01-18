@@ -88,7 +88,7 @@ describe('AttachmentViewer', function () {
                 if (prefix.indexOf('<a') === -1 && postfix.indexOf('<a') === -1) {
                     result = $.PrivateBin.Helper.htmlEntities(prefix + filename + postfix);
                 } else {
-                    result = $('<div>').html(prefix + $.PrivateBin.Helper.htmlEntities(filename) + postfix).html();
+                    result = prefix + $.PrivateBin.Helper.htmlEntities(filename) + postfix;
                 }
                 if (filename.length) {
                     results.push(

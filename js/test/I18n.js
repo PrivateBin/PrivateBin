@@ -3,6 +3,7 @@ var common = require('../common');
 
 describe('I18n', function () {
     describe('translate', function () {
+        this.timeout(30000);
         before(function () {
             $.PrivateBin.I18n.reset();
         });
@@ -45,13 +46,13 @@ describe('I18n', function () {
             'string',
             function (prefix, params, postfix) {
                 prefix    =    prefix.replace(/%(s|d)/g, '%%');
-                params[0] = params[0].replace(/%(s|d)/g, '%%').replace(/%<a/g, '');
+                params[0] = params[0].replace(/%(s|d)/g, '%%').replace(/<a/g, '');
                 postfix   =   postfix.replace(/%(s|d)/g, '%%');
-                var translation = $.PrivateBin.Helper.htmlEntities(prefix + params[0] + postfix);
+                const translation = $.PrivateBin.Helper.htmlEntities(prefix + params[0] + postfix);
                 params.unshift(prefix + '%s' + postfix);
-                var result = $.PrivateBin.I18n.translate.apply(this, params);
+                const result = $.PrivateBin.I18n.translate.apply(this, params);
                 $.PrivateBin.I18n.reset();
-                var alias = $.PrivateBin.I18n._.apply(this, params);
+                const alias = $.PrivateBin.I18n._.apply(this, params);
                 $.PrivateBin.I18n.reset();
                 return translation === result && translation === alias;
             }
@@ -63,14 +64,81 @@ describe('I18n', function () {
             'string',
             function (prefix, params, postfix) {
                 prefix    =    prefix.replace(/%(s|d)/g, '%%');
-                params[0] = params[0].replace(/%(s|d)/g, '%%') + '<a/>';
+                params[0] = params[0].replace(/%(s|d)/g, '%%');
                 postfix   =   postfix.replace(/%(s|d)/g, '%%');
-                var translation = $.PrivateBin.Helper.htmlEntities(prefix) + params[0] + $.PrivateBin.Helper.htmlEntities(postfix);
+                const translation = DOMPurify.sanitize(
+                    prefix + $.PrivateBin.Helper.htmlEntities(params[0]) + '<a></a>' + postfix, {
+                        ALLOWED_TAGS: ['a', 'br', 'i', 'span'],
+                        ALLOWED_ATTR: ['href', 'id']
+                    }
+                );
+                params.unshift(prefix + '%s<a></a>' + postfix);
+                const result = $.PrivateBin.I18n.translate.apply(this, params);
+                $.PrivateBin.I18n.reset();
+                const alias = $.PrivateBin.I18n._.apply(this, params);
+                $.PrivateBin.I18n.reset();
+                return translation === result && translation === alias;
+            }
+        );
+        jsc.property(
+            'replaces %s in strings with first given parameter into an element, encoding all, when no link is in the messageID',
+            'string',
+            '(small nearray) string',
+            'string',
+            function (prefix, params, postfix) {
+                prefix    =    prefix.replace(/%(s|d)/g, '%%');
+                params[0] = params[0].replace(/%(s|d)/g, '%%').replace(/<a/g, '');
+                postfix   =   postfix.replace(/%(s|d)/g, '%%');
+                const translation = $.PrivateBin.Helper.htmlEntities(prefix + params[0] + postfix);
                 params.unshift(prefix + '%s' + postfix);
-                var result = $.PrivateBin.I18n.translate.apply(this, params);
+                let clean = jsdom();
+                $('body').html('<div id="i18n"></div>');
+                params.unshift($('#i18n'));
+                $.PrivateBin.I18n.translate.apply(this, params);
+                const result = $('#i18n').text();
                 $.PrivateBin.I18n.reset();
-                var alias = $.PrivateBin.I18n._.apply(this, params);
+                clean();
+                clean = jsdom();
+                $('body').html('<div id="i18n"></div>');
+                params[0] = $('#i18n');
+                $.PrivateBin.I18n._.apply(this, params);
+                const alias = $('#i18n').text();
                 $.PrivateBin.I18n.reset();
+                clean();
+                return translation === result && translation === alias;
+            }
+        );
+        jsc.property(
+            'replaces %s in strings with first given parameter into an element, encoding params only, when a link is part of the messageID inserted',
+            'string',
+            '(small nearray) string',
+            'string',
+            function (prefix, params, postfix) {
+                prefix    =    prefix.replace(/%(s|d)/g, '%%');
+                params[0] = params[0].replace(/%(s|d)/g, '%%');
+                postfix   =   postfix.replace(/%(s|d)/g, '%%');
+                const translation = $('<div>').html(DOMPurify.sanitize(
+                    prefix + $.PrivateBin.Helper.htmlEntities(params[0]) + '<a></a>' + postfix, {
+                        ALLOWED_TAGS: ['a', 'br', 'i', 'span'],
+                        ALLOWED_ATTR: ['href', 'id']
+                    }
+                )).html();
+                let args = Array.prototype.slice.call(params);
+                args.unshift(prefix + '%s<a></a>' + postfix);
+                let clean = jsdom();
+                $('body').html('<div id="i18n"></div>');
+                args.unshift($('#i18n'));
+                $.PrivateBin.I18n.translate.apply(this, args);
+                const result = $('#i18n').html();
+                $.PrivateBin.I18n.reset();
+                clean();
+                clean = jsdom();
+                $('body').html('<div id="i18n"></div>');
+                args[0] = $('#i18n');
+                $.PrivateBin.I18n._.apply(this, args);
+                const alias = $('#i18n').html();
+                $.PrivateBin.I18n.reset();
+                clean();
                 return translation === result && translation === alias;
             }
         );
