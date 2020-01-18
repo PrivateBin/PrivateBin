@@ -633,7 +633,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             let containsLinks = args[0].indexOf('<a') !== -1;
             for (let i = 0; i < args.length; ++i) {
                 // parameters (i > 0) may never contain HTML as they may come from untrusted parties
-                if (i > 0 || containsNoLinks) {
+                if (i > 0 || !containsLinks) {
                     args[i] = Helper.htmlEntities(args[i]);
                 }
             }

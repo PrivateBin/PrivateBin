@@ -57,23 +57,23 @@ describe('I18n', function () {
             }
         );
         jsc.property(
-                'replaces %s in strings with first given parameter, encoding params only, when a link is part of the messageID',
-                'string',
-                '(small nearray) string',
-                'string',
-                function (prefix, params, postfix) {
-                    prefix    =    prefix.replace(/%(s|d)/g, '%%');
-                    params[0] = params[0].replace(/%(s|d)/g, '%%') + '<a/>';
-                    postfix   =   postfix.replace(/%(s|d)/g, '%%');
-                    var translation = $.PrivateBin.Helper.htmlEntities(prefix + params[0] + postfix);
-                    params.unshift(prefix + '%s' + postfix);
-                    var result = $.PrivateBin.I18n.translate.apply(this, params);
-                    $.PrivateBin.I18n.reset();
-                    var alias = $.PrivateBin.I18n._.apply(this, params);
-                    $.PrivateBin.I18n.reset();
-                    return translation === result && translation === alias;
-                }
-            );
+            'replaces %s in strings with first given parameter, encoding params only, when a link is part of the messageID',
+            'string',
+            '(small nearray) string',
+            'string',
+            function (prefix, params, postfix) {
+                prefix    =    prefix.replace(/%(s|d)/g, '%%');
+                params[0] = params[0].replace(/%(s|d)/g, '%%') + '<a/>';
+                postfix   =   postfix.replace(/%(s|d)/g, '%%');
+                var translation = $.PrivateBin.Helper.htmlEntities(prefix) + params[0] + $.PrivateBin.Helper.htmlEntities(postfix);
+                params.unshift(prefix + '%s' + postfix);
+                var result = $.PrivateBin.I18n.translate.apply(this, params);
+                $.PrivateBin.I18n.reset();
+                var alias = $.PrivateBin.I18n._.apply(this, params);
+                $.PrivateBin.I18n.reset();
+                return translation === result && translation === alias;
+            }
+        );
     });
 
     describe('getPluralForm', function () {
