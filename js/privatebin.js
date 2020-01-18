@@ -190,6 +190,26 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         const me = {};
 
         /**
+         * character to HTML entity lookup table
+         *
+         * @see    {@link https://github.com/janl/mustache.js/blob/master/mustache.js#L60}
+         * @name Helper.entityMap
+         * @private
+         * @enum   {Object}
+         * @readonly
+         */
+        var entityMap = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#39;',
+            '/': '&#x2F;',
+            '`': '&#x60;',
+            '=': '&#x3D;'
+        };
+
+        /**
          * cache for script location
          *
          * @name Helper.baseUri
@@ -391,6 +411,22 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         {
             return new Comment(data);
         };
+
+        /**
+         * convert all applicable characters to HTML entities
+         *
+         * @see    {@link https://www.owasp.org/index.php/XSS_(Cross_Site_Scripting)_Prevention_Cheat_Sheet#RULE_.231_-_HTML_Escape_Before_Inserting_Untrusted_Data_into_HTML_Element_Content}
+         * @name   Helper.htmlEntities
+         * @function
+         * @param  {string} str
+         * @return {string} escaped HTML
+         */
+        me.htmlEntities = function(str) {
+            return String(str).replace(
+                /[&<>"'`=\/]/g, function(s) {
+                    return entityMap[s];
+                });
+        }
 
         /**
          * resets state, used for unit testing
