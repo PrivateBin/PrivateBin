@@ -177,5 +177,21 @@
     "Retry":
         "Tornar ensajar",
     "Showing raw text…":
-        "Afichatge del tèxte brut…"
+        "Afichatge del tèxte brut…",
+    "Notice:":
+        "Notice:",
+    "This link will expire after %s.":
+        "This link will expire after %s.",
+    "This link can only be accessed once, do not use back or refresh button in your browser.":
+        "This link can only be accessed once, do not use back or refresh button in your browser.",
+    "Link:":
+        "Link:",
+    "Recipient may become aware of your timezone, convert time to UTC?":
+        "Recipient may become aware of your timezone, convert time to UTC?",
+    "Use Current Timezone":
+        "Use Current Timezone",
+    "Convert To UTC":
+        "Convert To UTC",
+    "Close":
+        "Close"
 }
