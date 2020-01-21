@@ -179,19 +179,19 @@
     "Showing raw text…":
         "Afichatge del tèxte brut…",
     "Notice:":
-        "Notice:",
+        "Avertiment :",
     "This link will expire after %s.":
-        "This link will expire after %s.",
+        "Aqueste ligam expirarà aprèp %s.",
     "This link can only be accessed once, do not use back or refresh button in your browser.":
-        "This link can only be accessed once, do not use back or refresh button in your browser.",
+        "Òm pòt pas qu’accedir a aqueste ligam qu’un còp, utilizetz pas lo boton precedent o actualizar del navigator.",
     "Link:":
-        "Link:",
+        "Ligam :",
     "Recipient may become aware of your timezone, convert time to UTC?":
-        "Recipient may become aware of your timezone, convert time to UTC?",
+        "Lo destinatari pòt s’avisar de vòstre fus orari, convertir en UTC ?",
     "Use Current Timezone":
-        "Use Current Timezone",
+        "Utilizar l’actual",
     "Convert To UTC":
-        "Convert To UTC",
+        "Convertir en UTC",
     "Close":
-        "Close"
+        "Tampar"
 }
