@@ -1895,11 +1895,10 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                             return a.length - b.length;
                         })[0];
                         if (typeof shortUrl === 'string' && shortUrl.length > 0) {
-                            $('#pastelink').html(
-                                I18n._(
-                                    'Your paste is <a id="pasteurl" href="%s">%s</a> <span id="copyhint">(Hit [Ctrl]+[c] to copy)</span>',
-                                    shortUrl, shortUrl
-                                )
+                            I18n._(
+                                $('#pastelink'),
+                                'Your paste is <a id="pasteurl" href="%s">%s</a> <span id="copyhint">(Hit [Ctrl]+[c] to copy)</span>',
+                                shortUrl, shortUrl
                             );
                             // we disable the button to avoid calling shortener again
                             $shortenButton.addClass('buttondisabled');
@@ -1965,7 +1964,8 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             $pasteUrl.click(pasteLinkClick);
 
             // delete link
-            $('#deletelink').html('<a href="' + deleteUrl + '">' + I18n._('Delete data') + '</a>');
+            $('#deletelink').html('<a href="' + deleteUrl + '"></a>');
+            I18n._($('#deletelink a').first(), 'Delete data');
 
             // enable shortener button
             $shortenButton.removeClass('buttondisabled');
@@ -3722,8 +3722,9 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             const $emailconfirmmodal = $('#emailconfirmmodal');
             if ($emailconfirmmodal.length > 0) {
                 if (expirationDate !== null) {
-                    $emailconfirmmodal.find('#emailconfirm-display').text(
-                        I18n._('Recipient may become aware of your timezone, convert time to UTC?')
+                    I18n._(
+                        $emailconfirmmodal.find('#emailconfirm-display'),
+                        'Recipient may become aware of your timezone, convert time to UTC?'
                     );
                     const $emailconfirmTimezoneCurrent = $emailconfirmmodal.find('#emailconfirm-timezone-current');
                     const $emailconfirmTimezoneUtc = $emailconfirmmodal.find('#emailconfirm-timezone-utc');
@@ -3923,9 +3924,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 });
             } catch (error) {
                 console.error(error);
-                Alert.showError(
-                    I18n._('Cannot calculate expiration date.')
-                );
+                Alert.showError('Cannot calculate expiration date.');
             }
         }
 
