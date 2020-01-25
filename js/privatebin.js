@@ -322,12 +322,19 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             let format = args[0],
                 i = 1;
             return format.replace(/%(s|d)/g, function (m) {
+                // m is the matched format, e.g. %s, %d
                 let val = args[i];
-                if (m === '%d') {
-                    val = parseFloat(val);
-                    if (isNaN(val)) {
-                        val = 0;
-                    }
+                // A switch statement so that the formatter can be extended.
+                switch (m)
+                {
+                    case '%d':
+                        val = parseFloat(val);
+                        if (isNaN(val)) {
+                            val = 0;
+                        }
+                        break;
+                    default:
+                        // Default is %s
                 }
                 ++i;
                 return val;
@@ -540,23 +547,19 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         /**
          * translate a string
          *
-         * As the first parameter a jQuery element has to be provided, to let
-         * the text of this element be replaced. In case the (asynchronously
+         * Optionally pass a jQuery element as the first parameter, to automatically
+         * let the text of this element be replaced. In case the (asynchronously
          * loaded) language is not downloadet yet, this will make sure the string
-         * is replaced when it is actually loaded. This also handles HTML in
-         * secure fashion, to avoid XSS.
-         * The second parameter is the message ID, matching the ones found in
-         * the translation files under the i18n directory.
-         * Any additional parameters will get inserted into the message ID in
-         * place of %s (strings) or %d (digits), applying the appropriate plural
-         * in case of digits. See also Helper.sprintf().
+         * is replaced when it is actually loaded.
+         * So for easy translations passing the jQuery object to apply it to is
+         * more save, especially when they are loaded in the beginning.
          *
          * @name   I18n.translate
          * @function
-         * @param  {jQuery} $element
+         * @param  {jQuery} $element - optional
          * @param  {string} messageId
          * @param  {...*} args - one or multiple parameters injected into placeholders
-         * @throws {string}
+         * @return {string}
          */
         me.translate = function()
         {
@@ -570,8 +573,6 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 // optional jQuery element as first parameter
                 $element = args[0];
                 args.shift();
-            } else {
-                throw 'translation requires a jQuery element to be passed, for secure insertion of messages and to avoid double encoding of HTML entities';
             }
 
             // extract messageId from arguments
@@ -632,10 +633,10 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             let containsLinks = args[0].indexOf('<a') !== -1;
 
             // prevent double encoding, when we insert into a text node
-            if (!containsLinks) {
+            if (!containsLinks || $element === null) {
                 for (let i = 0; i < args.length; ++i) {
                     // parameters (i > 0) may never contain HTML as they may come from untrusted parties
-                    if (i > 0) {
+                    if (i > 0 || !containsLinks) {
                         args[i] = Helper.htmlEntities(args[i]);
                     }
                 }
@@ -653,37 +654,18 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 );
             }
 
-            if (containsLinks) {
-                $element.html(output);
-            } else {
-                // text node takes care of entity encoding
-                $element.text(output);
+            // if $element is given, insert translation
+            if ($element !== null) {
+                if (containsLinks) {
+                    $element.html(output);
+                } else {
+                    // text node takes care of entity encoding
+                    $element.text(output);                    
+                }
+                return '';
             }
-        };
 
-        /**
-         * translate a string, outputs the result
-         *
-         * This function is identical to I18n.translate, but doesn't require a
-         * jQuery element as the first parameter, instead it returns the
-         * translated message as string.
-         * Avoid using this function, if possible, as it may double encode your
-         * message's HTML entities. This is done to fail safe, preventing XSS.
-         *
-         * @name   I18n.translate2string
-         * @function
-         * @param  {string} messageId
-         * @param  {...*} args - one or multiple parameters injected into placeholders
-         * @throws {string}
-         * @return {string}
-         */
-        me.translate2string = function()
-        {
-            let args = Array.prototype.slice.call(arguments),
-                $element = $('<textarea>');
-            args.unshift($element);
-            me.translate.apply(this, args);
-            return $element.text();
+            return output;
         };
 
         /**
