@@ -2205,6 +2205,9 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             $messageEdit.addClass('active');
             $messagePreview.removeClass('active');
 
+            $('#messageedit').attr("aria-selected",true);
+            $('#messagepreview').attr("aria-selected",false);
+
             PasteViewer.hide();
 
             // reshow input
@@ -2233,6 +2236,9 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             // toggle buttons
             $messageEdit.removeClass('active');
             $messagePreview.addClass('active');
+
+            $('#messageedit').attr("aria-selected","false");
+            $('#messagepreview').attr("aria-selected","true");
 
             // hide input as now preview is shown
             $message.addClass('hidden');
