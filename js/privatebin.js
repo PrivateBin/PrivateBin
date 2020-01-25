@@ -322,19 +322,12 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             let format = args[0],
                 i = 1;
             return format.replace(/%(s|d)/g, function (m) {
-                // m is the matched format, e.g. %s, %d
                 let val = args[i];
-                // A switch statement so that the formatter can be extended.
-                switch (m)
-                {
-                    case '%d':
-                        val = parseFloat(val);
-                        if (isNaN(val)) {
-                            val = 0;
-                        }
-                        break;
-                    default:
-                        // Default is %s
+                if (m === '%d') {
+                    val = parseFloat(val);
+                    if (isNaN(val)) {
+                        val = 0;
+                    }
                 }
                 ++i;
                 return val;
@@ -549,10 +542,14 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          *
          * Optionally pass a jQuery element as the first parameter, to automatically
          * let the text of this element be replaced. In case the (asynchronously
-         * loaded) language is not downloadet yet, this will make sure the string
-         * is replaced when it is actually loaded.
-         * So for easy translations passing the jQuery object to apply it to is
-         * more save, especially when they are loaded in the beginning.
+         * loaded) language is not downloaded yet, this will make sure the string
+         * is replaced when it eventually gets loaded. Using this is both simpler
+         * and more secure, as it avoids potential XSS when inserting text.
+         * The next parameter is the message ID, matching the ones found in
+         * the translation files under the i18n directory.
+         * Any additional parameters will get inserted into the message ID in
+         * place of %s (strings) or %d (digits), applying the appropriate plural
+         * in case of digits. See also Helper.sprintf().
          *
          * @name   I18n.translate
          * @function
