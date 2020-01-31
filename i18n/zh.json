@@ -170,19 +170,19 @@
     "Showing raw text…":
         "显示原始文字…",
     "Notice:":
-        "Notice:",
+        "注意:",
     "This link will expire after %s.":
-        "This link will expire after %s.",
+        "这个链接将会在 %s 过期。",
     "This link can only be accessed once, do not use back or refresh button in your browser.":
-        "This link can only be accessed once, do not use back or refresh button in your browser.",
+        "这个链接只能被访问一次，请勿使用浏览器中的返回和刷新按钮。",
     "Link:":
-        "Link:",
+        "链接地址:",
     "Recipient may become aware of your timezone, convert time to UTC?":
-        "Recipient may become aware of your timezone, convert time to UTC?",
+        "收件人可能会知道您的时区，将时间转换为UTC？",
     "Use Current Timezone":
-        "Use Current Timezone",
+        "使用当前时区",
     "Convert To UTC":
-        "Convert To UTC",
+        "转换为UTC",
     "Close":
-        "Close"
+        "关闭"
 }
