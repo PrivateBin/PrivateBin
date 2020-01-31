@@ -89,19 +89,20 @@ describe('I18n', function () {
                 prefix    =    prefix.replace(/%(s|d)/g, '%%');
                 params[0] = params[0].replace(/%(s|d)/g, '%%').replace(/<a/g, '');
                 postfix   =   postfix.replace(/%(s|d)/g, '%%');
-                const translation = $.PrivateBin.Helper.htmlEntities(prefix + params[0] + postfix);
-                params.unshift(prefix + '%s' + postfix);
+                const translation = $('<textarea>').text((prefix + params[0] + postfix)).text();
+                let args = Array.prototype.slice.call(params);
+                args.unshift(prefix + '%s' + postfix);
                 let clean = jsdom();
                 $('body').html('<div id="i18n"></div>');
-                params.unshift($('#i18n'));
-                $.PrivateBin.I18n.translate.apply(this, params);
+                args.unshift($('#i18n'));
+                $.PrivateBin.I18n.translate.apply(this, args);
                 const result = $('#i18n').text();
                 $.PrivateBin.I18n.reset();
                 clean();
                 clean = jsdom();
                 $('body').html('<div id="i18n"></div>');
-                params[0] = $('#i18n');
-                $.PrivateBin.I18n._.apply(this, params);
+                args[0] = $('#i18n');
+                $.PrivateBin.I18n._.apply(this, args);
                 const alias = $('#i18n').text();
                 $.PrivateBin.I18n.reset();
                 clean();
@@ -114,15 +115,15 @@ describe('I18n', function () {
             '(small nearray) string',
             'string',
             function (prefix, params, postfix) {
-                prefix    =    prefix.replace(/%(s|d)/g, '%%');
-                params[0] = params[0].replace(/%(s|d)/g, '%%');
-                postfix   =   postfix.replace(/%(s|d)/g, '%%');
-                const translation = $('<div>').html(DOMPurify.sanitize(
+                prefix    =    prefix.replace(/%(s|d)/g, '%%').trim();
+                params[0] = params[0].replace(/%(s|d)/g, '%%').trim();
+                postfix   =   postfix.replace(/%(s|d)/g, '%%').trim();
+                const translation = DOMPurify.sanitize(
                     prefix + $.PrivateBin.Helper.htmlEntities(params[0]) + '<a></a>' + postfix, {
                         ALLOWED_TAGS: ['a', 'br', 'i', 'span'],
                         ALLOWED_ATTR: ['href', 'id']
                     }
-                )).html();
+                );
                 let args = Array.prototype.slice.call(params);
                 args.unshift(prefix + '%s<a></a>' + postfix);
                 let clean = jsdom();

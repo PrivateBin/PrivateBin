@@ -630,7 +630,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             let containsLinks = args[0].indexOf('<a') !== -1;
 
             // prevent double encoding, when we insert into a text node
-            if (!containsLinks || $element === null) {
+            if (containsLinks || $element === null) {
                 for (let i = 0; i < args.length; ++i) {
                     // parameters (i > 0) may never contain HTML as they may come from untrusted parties
                     if (i > 0 || !containsLinks) {
@@ -657,7 +657,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                     $element.html(output);
                 } else {
                     // text node takes care of entity encoding
-                    $element.text(output);                    
+                    $element.text(output);
                 }
                 return '';
             }
