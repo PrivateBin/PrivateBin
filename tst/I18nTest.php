@@ -143,6 +143,13 @@ class I18nTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('some string + 1', I18n::_('some %s + %d', 'string', 1), 'browser language en');
     }
 
+    public function testHtmlEntityEncoding()
+    {
+        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'foobar';
+        I18n::loadTranslations();
+        $this->assertEquals('some ' . htmlentities('&<>"\'/`=', ENT_QUOTES | ENT_XHTML | ENT_DISALLOWED, 'UTF-8') . ' + 1', I18n::_('some %s + %d', '&<>"\'/`=', 1), 'browser language en');
+    }
+
     public function testMessageIdsExistInAllLanguages()
     {
         $messageIds = array();
