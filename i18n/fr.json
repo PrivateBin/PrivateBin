@@ -177,5 +177,21 @@
     "Retry":
         "Retry",
     "Showing raw text…":
-        "Showing raw text…"
+        "Affichage du texte brut…",
+    "Notice:":
+        "Avertissement :",
+    "This link will expire after %s.":
+        "Ce lien expire après le %s.",
+    "This link can only be accessed once, do not use back or refresh button in your browser.":
+        "Vous ne pouvez accéder à ce lien qu'une seule fois, n'utilisez pas le bouton précédent ou rafraîchir de votre navigateur.",
+    "Link:":
+        "Lien :",
+    "Recipient may become aware of your timezone, convert time to UTC?":
+        "Le destinataire peut connaître votre fuseau horaire, convertir l'heure au format UTC ?",
+    "Use Current Timezone":
+        "Conserver l'actuel",
+    "Convert To UTC":
+        "Convertir en UTC",
+    "Close":
+        "Fermer"
 }
