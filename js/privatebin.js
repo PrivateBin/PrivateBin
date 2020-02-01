@@ -190,6 +190,26 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         const me = {};
 
         /**
+         * character to HTML entity lookup table
+         *
+         * @see    {@link https://github.com/janl/mustache.js/blob/master/mustache.js#L60}
+         * @name Helper.entityMap
+         * @private
+         * @enum   {Object}
+         * @readonly
+         */
+        var entityMap = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#39;',
+            '/': '&#x2F;',
+            '`': '&#x60;',
+            '=': '&#x3D;'
+        };
+
+        /**
          * cache for script location
          *
          * @name Helper.baseUri
@@ -302,19 +322,12 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             let format = args[0],
                 i = 1;
             return format.replace(/%(s|d)/g, function (m) {
-                // m is the matched format, e.g. %s, %d
                 let val = args[i];
-                // A switch statement so that the formatter can be extended.
-                switch (m)
-                {
-                    case '%d':
-                        val = parseFloat(val);
-                        if (isNaN(val)) {
-                            val = 0;
-                        }
-                        break;
-                    default:
-                        // Default is %s
+                if (m === '%d') {
+                    val = parseFloat(val);
+                    if (isNaN(val)) {
+                        val = 0;
+                    }
                 }
                 ++i;
                 return val;
@@ -393,6 +406,23 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         };
 
         /**
+         * convert all applicable characters to HTML entities
+         *
+         * @see    {@link https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html}
+         * @name   Helper.htmlEntities
+         * @function
+         * @param  {string} str
+         * @return {string} escaped HTML
+         */
+        me.htmlEntities = function(str) {
+            return String(str).replace(
+                /[&<>"'`=\/]/g, function(s) {
+                    return entityMap[s];
+                }
+            );
+        }
+
+        /**
          * resets state, used for unit testing
          *
          * @name   Helper.reset
@@ -440,32 +470,6 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
             expirationDate = expirationDate.setUTCSeconds(expirationDate.getUTCSeconds() + secondsToExpiration);
             return expirationDate;
-        };
-
-        /**
-         * encode all applicable characters to HTML entities
-         *
-         * @see    {@link https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html}
-         *
-         * @name   Helper.htmlEntities
-         * @function
-         * @param  string str
-         * @return string escaped HTML
-         */
-        me.htmlEntities = function(str) {
-            // using textarea, since other tags may allow and execute scripts, even when detached from DOM
-            let holder = document.createElement('textarea');
-            holder.textContent = str;
-            // as per OWASP recommendation, also encoding quotes and slash
-            return holder.innerHTML.replace(
-                /["'\/]/g,
-                function(s) {
-                    return {
-                        '"': '&quot;',
-                        "'": '&#x27;',
-                        '/': '&#x2F;'
-                    }[s];
-                });
         };
 
         return me;
@@ -538,10 +542,14 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          *
          * Optionally pass a jQuery element as the first parameter, to automatically
          * let the text of this element be replaced. In case the (asynchronously
-         * loaded) language is not downloadet yet, this will make sure the string
-         * is replaced when it is actually loaded.
-         * So for easy translations passing the jQuery object to apply it to is
-         * more save, especially when they are loaded in the beginning.
+         * loaded) language is not downloaded yet, this will make sure the string
+         * is replaced when it eventually gets loaded. Using this is both simpler
+         * and more secure, as it avoids potential XSS when inserting text.
+         * The next parameter is the message ID, matching the ones found in
+         * the translation files under the i18n directory.
+         * Any additional parameters will get inserted into the message ID in
+         * place of %s (strings) or %d (digits), applying the appropriate plural
+         * in case of digits. See also Helper.sprintf().
          *
          * @name   I18n.translate
          * @function
@@ -619,31 +627,39 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             }
 
             // messageID may contain links, but should be from a trusted source (code or translation JSON files)
-            let containsNoLinks = args[0].indexOf('<a') === -1;
-            for (let i = 0; i < args.length; ++i) {
-                // parameters (i > 0) may never contain HTML as they may come from untrusted parties
-                if (i > 0 || containsNoLinks) {
-                    args[i] = Helper.htmlEntities(args[i]);
+            let containsLinks = args[0].indexOf('<a') !== -1;
+
+            // prevent double encoding, when we insert into a text node
+            if (containsLinks || $element === null) {
+                for (let i = 0; i < args.length; ++i) {
+                    // parameters (i > 0) may never contain HTML as they may come from untrusted parties
+                    if (i > 0 || !containsLinks) {
+                        args[i] = Helper.htmlEntities(args[i]);
+                    }
                 }
             }
-
             // format string
             let output = Helper.sprintf.apply(this, args);
 
-            // if $element is given, apply text to element
+            if (containsLinks) {
+                // only allow tags/attributes we actually use in translations
+                output = DOMPurify.sanitize(
+                    output, {
+                        ALLOWED_TAGS: ['a', 'br', 'i', 'span'],
+                        ALLOWED_ATTR: ['href', 'id']
+                    }
+                );
+            }
+
+            // if $element is given, insert translation
             if ($element !== null) {
-                if (containsNoLinks) {
-                    // avoid HTML entity encoding if translation contains links
-                    $element.text(output);
+                if (containsLinks) {
+                    $element.html(output);
                 } else {
-                    // only allow tags/attributes we actually use in our translations
-                    $element.html(
-                        DOMPurify.sanitize(output, {
-                            ALLOWED_TAGS: ['a', 'br', 'i', 'span'],
-                            ALLOWED_ATTR: ['href', 'id']
-                        })
-                    );
+                    // text node takes care of entity encoding
+                    $element.text(output);
                 }
+                return '';
             }
 
             return output;
@@ -1876,11 +1892,10 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                             return a.length - b.length;
                         })[0];
                         if (typeof shortUrl === 'string' && shortUrl.length > 0) {
-                            $('#pastelink').html(
-                                I18n._(
-                                    'Your paste is <a id="pasteurl" href="%s">%s</a> <span id="copyhint">(Hit [Ctrl]+[c] to copy)</span>',
-                                    shortUrl, shortUrl
-                                )
+                            I18n._(
+                                $('#pastelink'),
+                                'Your paste is <a id="pasteurl" href="%s">%s</a> <span id="copyhint">(Hit [Ctrl]+[c] to copy)</span>',
+                                shortUrl, shortUrl
                             );
                             // we disable the button to avoid calling shortener again
                             $shortenButton.addClass('buttondisabled');
@@ -1935,11 +1950,10 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         me.createPasteNotification = function(url, deleteUrl)
         {
-            $('#pastelink').html(
-                I18n._(
-                    'Your paste is <a id="pasteurl" href="%s">%s</a> <span id="copyhint">(Hit [Ctrl]+[c] to copy)</span>',
-                    url, url
-                )
+            I18n._(
+                $('#pastelink'),
+                'Your paste is <a id="pasteurl" href="%s">%s</a> <span id="copyhint">(Hit [Ctrl]+[c] to copy)</span>',
+                url, url
             );
             // save newly created element
             $pasteUrl = $('#pasteurl');
@@ -1947,7 +1961,8 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             $pasteUrl.click(pasteLinkClick);
 
             // delete link
-            $('#deletelink').html('<a href="' + deleteUrl + '">' + I18n._('Delete data') + '</a>');
+            $('#deletelink').html('<a href="' + deleteUrl + '"></a>');
+            I18n._($('#deletelink a').first(), 'Delete data');
 
             // enable shortener button
             $shortenButton.removeClass('buttondisabled');
@@ -3710,8 +3725,9 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             const $emailconfirmmodal = $('#emailconfirmmodal');
             if ($emailconfirmmodal.length > 0) {
                 if (expirationDate !== null) {
-                    $emailconfirmmodal.find('#emailconfirm-display').text(
-                        I18n._('Recipient may become aware of your timezone, convert time to UTC?')
+                    I18n._(
+                        $emailconfirmmodal.find('#emailconfirm-display'),
+                        'Recipient may become aware of your timezone, convert time to UTC?'
                     );
                     const $emailconfirmTimezoneCurrent = $emailconfirmmodal.find('#emailconfirm-timezone-current');
                     const $emailconfirmTimezoneUtc = $emailconfirmmodal.find('#emailconfirm-timezone-utc');
@@ -3911,9 +3927,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 });
             } catch (error) {
                 console.error(error);
-                Alert.showError(
-                    I18n._('Cannot calculate expiration date.')
-                );
+                Alert.showError('Cannot calculate expiration date.');
             }
         }
 

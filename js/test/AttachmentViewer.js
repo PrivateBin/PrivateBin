@@ -86,9 +86,9 @@ describe('AttachmentViewer', function () {
                 $.PrivateBin.AttachmentViewer.moveAttachmentTo(element, prefix + '%s' + postfix);
                 // messageIDs with links get a relaxed treatment
                 if (prefix.indexOf('<a') === -1 && postfix.indexOf('<a') === -1) {
-                    result = $.PrivateBin.Helper.htmlEntities(prefix + filename + postfix);
+                    result = $('<textarea>').text((prefix + filename + postfix)).text();
                 } else {
-                    result = $('<div>').html(prefix + $.PrivateBin.Helper.htmlEntities(filename) + postfix).html();
+                    result = prefix + $.PrivateBin.Helper.htmlEntities(filename) + postfix;
                 }
                 if (filename.length) {
                     results.push(
