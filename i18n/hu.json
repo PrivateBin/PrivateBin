@@ -31,7 +31,7 @@
         "Hibás törlési azonosító. A bejegyzés nem lett törölve.",
     "Paste was properly deleted.":
         "A bejegyzés sikeresen törölve.",
-    "JavaScript is required for %s to work.<br />Sorry for the inconvenience.":
+    "JavaScript is required for %s to work. Sorry for the inconvenience.":
         "JavaScript szükséges a %s működéséhez. Elnézést a fennakadásért.",
     "%s requires a modern browser to work.":
         "A %s működéséhez a jelenleginél újabb böngészőre van szükség.",

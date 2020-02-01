@@ -31,8 +31,8 @@
         "Невалиден код за изтриване. Информацията Ви не беше изтрита.",
     "Paste was properly deleted.":
         "Информацията Ви е изтрита.",
-    "JavaScript is required for %s to work.<br />Sorry for the inconvenience.":
-        "Услугата %s се нуждае от JavaScript, за да работи.<br />Съжаляваме за неудобството.",
+    "JavaScript is required for %s to work. Sorry for the inconvenience.":
+        "Услугата %s се нуждае от JavaScript, за да работи. Съжаляваме за неудобството.",
     "%s requires a modern browser to work.":
         "%s се нуждае от съвременен браузър за да работи.",
     "New":

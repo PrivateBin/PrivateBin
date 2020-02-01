@@ -31,8 +31,8 @@
         "Неверный ключ удаления записи. Запись не удалена.",
     "Paste was properly deleted.":
         "Запись была успешно удалена.",
-    "JavaScript is required for %s to work.<br />Sorry for the inconvenience.":
-        "Для работы %s требуется включенный JavaScript.<br />Приносим извинения за неудобства.",
+    "JavaScript is required for %s to work. Sorry for the inconvenience.":
+        "Для работы %s требуется включенный JavaScript. Приносим извинения за неудобства.",
     "%s requires a modern browser to work.":
         "Для работы %s требуется более современный браузер.",
     "New":

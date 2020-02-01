@@ -31,8 +31,8 @@
         "Napačen token za izbris. Prilepek ni bil izbrisan..",
     "Paste was properly deleted.":
         "Prilepek je uspešno izbrisan.",
-    "JavaScript is required for %s to work.<br />Sorry for the inconvenience.":
-        "Da %s deluje, moraš vklopiti JavaScript.<br />Oprosti za povročene nevšečnosti.",
+    "JavaScript is required for %s to work. Sorry for the inconvenience.":
+        "Da %s deluje, moraš vklopiti JavaScript. Oprosti za povročene nevšečnosti.",
     "%s requires a modern browser to work.":
         "%s za svoje delovanje potrebuje moderen brskalnik.",
     "New":
