@@ -147,7 +147,11 @@ class I18nTest extends PHPUnit_Framework_TestCase
     {
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'foobar';
         I18n::loadTranslations();
-        $this->assertEquals('some ' . htmlentities('&<>"\'/`=', ENT_QUOTES | ENT_XHTML | ENT_DISALLOWED, 'UTF-8') . ' + 1', I18n::_('some %s + %d', '&<>"\'/`=', 1), 'browser language en');
+        $input = '&<>"\'/`=';
+        $result = htmlspecialchars($input, ENT_QUOTES | ENT_HTML5 | ENT_DISALLOWED, 'UTF-8', false);
+        $this->assertEquals($result, I18n::encode($input), 'encodes HTML entities');
+        $this->assertEquals('<a>some ' . $result . ' + 1</a>', I18n::_('<a>some %s + %d</a>', $input, 1), 'encodes parameters in translations');
+        $this->assertEquals($result . $result, I18n::_($input . '%s', $input), 'encodes message ID as well, when no link');
     }
 
     public function testMessageIdsExistInAllLanguages()
