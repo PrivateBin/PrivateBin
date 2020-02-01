@@ -2424,7 +2424,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
             // escape HTML entities, link URLs, sanitize
             const escapedLinkedText = Helper.urls2links(
-                    Helper.htmlEntities(text)
+                    Helper.htmlEntities(text).split('&#x2F;').join('/')
                   ),
                   sanitizedLinkedText = DOMPurify.sanitize(escapedLinkedText);
             $plainText.html(sanitizedLinkedText);
