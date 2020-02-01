@@ -1,7 +1,7 @@
 <?php
 use PrivateBin\I18n;
 ?><!DOCTYPE html>
-<html lang="en">
+<html lang="<?php echo I18n::_('en'); ?>">
 	<head>
 		<meta charset="utf-8" />
 		<meta name="robots" content="noindex" />
@@ -67,7 +67,7 @@ endif;
 <?php
 if (strlen($NOTICE)):
 ?>
-				<span class="blink">▶</span> <?php echo htmlspecialchars($NOTICE);
+				<span class="blink">▶</span> <?php echo I18n::encode($NOTICE);
 endif;
 ?>
 			</div>
@@ -97,8 +97,8 @@ endif;
 		<section>
 			<article>
 				<div id="loadingindicator" class="hidden"><?php echo I18n::_('Loading…'); ?></div>
-				<div id="status"><?php echo htmlspecialchars($STATUS); ?></div>
-				<div id="errormessage" class="hidden"><?php echo htmlspecialchars($ERROR); ?></div>
+				<div id="status"><?php echo I18n::encode($STATUS); ?></div>
+				<div id="errormessage" class="hidden"><?php echo I18n::encode($ERROR); ?></div>
 				<div id="toolbar">
 					<button id="newbutton" class="reloadlink hidden"><img src="img/icon_new.png" width="11" height="15" alt="" /><?php echo I18n::_('New'); ?></button>
 					<button id="retrybutton" class="reloadlink hidden"><?php echo I18n::_('Retry'), PHP_EOL; ?></button>
@@ -207,7 +207,7 @@ endif;
 <?php
 if (strlen($URLSHORTENER)):
 ?>
-					<button id="shortenbutton" data-shortener="<?php echo htmlspecialchars($URLSHORTENER); ?>"><img src="img/icon_shorten.png" width="13" height="15" /><?php echo I18n::_('Shorten URL'); ?></button>
+					<button id="shortenbutton" data-shortener="<?php echo I18n::encode($URLSHORTENER); ?>"><img src="img/icon_shorten.png" width="13" height="15" /><?php echo I18n::_('Shorten URL'); ?></button>
 <?php
 endif;
 ?>

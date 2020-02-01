@@ -4,7 +4,7 @@ $isCpct = substr($template, 9, 8) === '-compact';
 $isDark = substr($template, 9, 5) === '-dark';
 $isPage = substr($template, -5) === '-page';
 ?><!DOCTYPE html>
-<html>
+<html lang="<?php echo I18n::_('en'); ?>">
 	<head>
 		<meta charset="utf-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -440,7 +440,7 @@ if (strlen($NOTICE)):
 ?>
 				<div role="alert" class="alert alert-info">
 					<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
-					<?php echo htmlspecialchars($NOTICE), PHP_EOL; ?>
+					<?php echo I18n::encode($NOTICE), PHP_EOL; ?>
 				</div>
 <?php
 endif;
@@ -460,11 +460,11 @@ endif;
 ?>
 				<div id="status" role="alert" class="alert alert-info<?php echo empty($STATUS) ? ' hidden' : '' ?>">
 					<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
-					<?php echo htmlspecialchars($STATUS), PHP_EOL; ?>
+					<?php echo I18n::encode($STATUS), PHP_EOL; ?>
 				</div>
 				<div id="errormessage" role="alert" class="<?php echo empty($ERROR) ? 'hidden' : '' ?> alert alert-danger">
 					<span class="glyphicon glyphicon-alert" aria-hidden="true"></span>
-					<?php echo htmlspecialchars($ERROR), PHP_EOL; ?>
+					<?php echo I18n::encode($ERROR), PHP_EOL; ?>
 				</div>
 				<noscript>
 					<div id="noscript" role="alert" class="alert alert-<?php echo $isDark ? 'error' : 'warning'; ?>">
@@ -504,7 +504,7 @@ endif;
 if (strlen($URLSHORTENER)):
 ?>
 					<p>
-						<button id="shortenbutton" data-shortener="<?php echo htmlspecialchars($URLSHORTENER); ?>" type="button" class="btn btn-<?php echo $isDark ? 'warning' : 'primary'; ?> btn-block">
+						<button id="shortenbutton" data-shortener="<?php echo I18n::encode($URLSHORTENER); ?>" type="button" class="btn btn-<?php echo $isDark ? 'warning' : 'primary'; ?> btn-block">
 						<span class="glyphicon glyphicon-send" aria-hidden="true"></span> <?php echo I18n::_('Shorten URL'), PHP_EOL; ?>
 					</button>
 					</p>
