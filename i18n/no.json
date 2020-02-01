@@ -31,8 +31,8 @@
         "Feil slettingsnøkkel. Innlegg ble ikke fjernet.",
     "Paste was properly deleted.":
         "Innlegget er slettet.",
-    "JavaScript is required for %s to work.<br />Sorry for the inconvenience.":
-        "Javascript kreves for at %s skal fungere<br />Beklager.",
+    "JavaScript is required for %s to work. Sorry for the inconvenience.":
+        "Javascript kreves for at %s skal fungere. Beklager.",
     "%s requires a modern browser to work.":
         "%s krever en moderne nettleser for å fungere.",
     "Still using Internet Explorer? Do yourself a favor, switch to a modern browser:":

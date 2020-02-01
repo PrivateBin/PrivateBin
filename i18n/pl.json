@@ -31,7 +31,7 @@
         "Nieprawidłowy token usuwania. Wklejka nie została usunięta.",
     "Paste was properly deleted.":
         "Wklejka usunięta poprawnie.",
-    "JavaScript is required for %s to work.<br />Sorry for the inconvenience.":
+    "JavaScript is required for %s to work. Sorry for the inconvenience.":
         "Do działania %sa jest wymagany JavaScript. Przepraszamy za tę niedogodność.",
     "%s requires a modern browser to work.":
         "%s wymaga do działania nowoczesnej przeglądarki.",

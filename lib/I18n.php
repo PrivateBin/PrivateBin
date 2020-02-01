@@ -125,6 +125,15 @@ class I18n
         } else {
             $args[0] = self::$_translations[$messageId];
         }
+        // encode any non-integer arguments and the message ID, if it doesn't contain a link
+        $argsCount = count($args);
+        if ($argsCount > 1) {
+            for ($i = 0; $i < $argsCount; ++$i) {
+                if (($i > 0 && !is_int($args[$i])) || strpos($args[0], '<a') === false) {
+                    $args[$i] = htmlentities($args[$i], ENT_QUOTES | ENT_XHTML | ENT_DISALLOWED, 'UTF-8');
+                }
+            }
+        }
         return call_user_func_array('sprintf', $args);
     }
 

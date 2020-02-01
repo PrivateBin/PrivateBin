@@ -31,8 +31,8 @@
         "Geton de supression incorrècte. Lo tèxte es pas estat suprimit.",
     "Paste was properly deleted.":
         "Lo tèxte es estat correctament suprimit.",
-    "JavaScript is required for %s to work.<br />Sorry for the inconvenience.":
-        "JavaScript es requesit per far foncionar %s. <br />O planhèm per l’inconvenient.",
+    "JavaScript is required for %s to work. Sorry for the inconvenience.":
+        "JavaScript es requesit per far foncionar %s. O planhèm per l’inconvenient.",
     "%s requires a modern browser to work.":
         "%s necessita un navigator modèrn per foncionar.",
     "Still using Internet Explorer? Do yourself a favor, switch to a modern browser:":

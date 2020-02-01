@@ -31,8 +31,8 @@
         "Jeton de suppression incorrect. Le paste n'a pas été supprimé.",
     "Paste was properly deleted.":
         "Le paste a été correctement supprimé.",
-    "JavaScript is required for %s to work.<br />Sorry for the inconvenience.":
-        "JavaScript est requis pour faire fonctionner %s. <br />Désolé pour cet inconvénient.",
+    "JavaScript is required for %s to work. Sorry for the inconvenience.":
+        "JavaScript est requis pour faire fonctionner %s. Désolé pour cet inconvénient.",
     "%s requires a modern browser to work.":
         "%s nécessite un navigateur moderne pour fonctionner.",
     "Still using Internet Explorer? Do yourself a favor, switch to a modern browser:":

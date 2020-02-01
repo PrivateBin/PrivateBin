@@ -31,8 +31,8 @@
         "错误的删除token，粘贴没有被删除。",
     "Paste was properly deleted.":
         "粘贴已被正确删除。",
-    "JavaScript is required for %s to work.<br />Sorry for the inconvenience.":
-        "%s需要JavaScript来进行加解密。<br />带来的不便敬请谅解。",
+    "JavaScript is required for %s to work. Sorry for the inconvenience.":
+        "%s需要JavaScript来进行加解密。 给你带来的不便敬请谅解。",
     "%s requires a modern browser to work.":
         "%s需要工作于现代化的浏览器。",
     "Still using Internet Explorer? Do yourself a favor, switch to a modern browser:":

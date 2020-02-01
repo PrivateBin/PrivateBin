@@ -31,8 +31,8 @@
         "Foutieve verwijdercode. Geplakte tekst is niet verwijderd.",
     "Paste was properly deleted.":
         "Geplakte tekst is correct verwijderd.",
-    "JavaScript is required for %s to work.<br />Sorry for the inconvenience.":
-        "JavaScript vereist om %s te laten werken.<br />Sorry voor het ongemak.",
+    "JavaScript is required for %s to work. Sorry for the inconvenience.":
+        "JavaScript vereist om %s te laten werken. Sorry voor het ongemak.",
     "%s requires a modern browser to work.":
         "%s vereist een moderne browser om te kunnen werken ",
     "Still using Internet Explorer? Do yourself a favor, switch to a modern browser:":

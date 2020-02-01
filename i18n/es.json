@@ -31,8 +31,8 @@
         "Token de eliminación erróneo. El texto no fue eliminado.",
     "Paste was properly deleted.":
         "El texto se ha eliminado correctamente.",
-    "JavaScript is required for %s to work.<br />Sorry for the inconvenience.":
-        "JavaScript es necesario para que %s funcione.<br />Sentimos los inconvenientes ocasionados.",
+    "JavaScript is required for %s to work. Sorry for the inconvenience.":
+        "JavaScript es necesario para que %s funcione. Sentimos los inconvenientes ocasionados.",
     "%s requires a modern browser to work.":
         "%s requiere un navegador moderno para funcionar.",
     "Still using Internet Explorer? Do yourself a favor, switch to a modern browser:":
