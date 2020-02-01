@@ -33,7 +33,16 @@ describe('I18n', function () {
                 var fakeAlias = $.PrivateBin.I18n._(fake);
                 $.PrivateBin.I18n.reset();
 
-                messageId = $.PrivateBin.Helper.htmlEntities(messageId);
+                if (messageId.indexOf('<a') === -1) {
+                    messageId = $.PrivateBin.Helper.htmlEntities(messageId);
+                } else {
+                    messageId = DOMPurify.sanitize(
+                        messageId, {
+                            ALLOWED_TAGS: ['a', 'br', 'i', 'span'],
+                            ALLOWED_ATTR: ['href', 'id']
+                        }
+                    );
+                }
                 return messageId === result && messageId === alias &&
                     messageId === pluralResult && messageId === pluralAlias &&
                     messageId === fakeResult && messageId === fakeAlias;
@@ -45,9 +54,9 @@ describe('I18n', function () {
             '(small nearray) string',
             'string',
             function (prefix, params, postfix) {
-                prefix    =    prefix.replace(/%(s|d)/g, '%%');
-                params[0] = params[0].replace(/%(s|d)/g, '%%').replace(/<a/g, '');
-                postfix   =   postfix.replace(/%(s|d)/g, '%%');
+                prefix    =    prefix.replace(/%(s|d)/g, '%%').replace(/<a/g, '');
+                params[0] = params[0].replace(/%(s|d)/g, '%%');
+                postfix   =   postfix.replace(/%(s|d)/g, '%%').replace(/<a/g, '');
                 const translation = $.PrivateBin.Helper.htmlEntities(prefix + params[0] + postfix);
                 params.unshift(prefix + '%s' + postfix);
                 const result = $.PrivateBin.I18n.translate.apply(this, params);
@@ -86,9 +95,9 @@ describe('I18n', function () {
             '(small nearray) string',
             'string',
             function (prefix, params, postfix) {
-                prefix    =    prefix.replace(/%(s|d)/g, '%%');
-                params[0] = params[0].replace(/%(s|d)/g, '%%').replace(/<a/g, '');
-                postfix   =   postfix.replace(/%(s|d)/g, '%%');
+                prefix    =    prefix.replace(/%(s|d)/g, '%%').replace(/<a/g, '');
+                params[0] = params[0].replace(/%(s|d)/g, '%%');
+                postfix   =   postfix.replace(/%(s|d)/g, '%%').replace(/<a/g, '');
                 const translation = $('<textarea>').text((prefix + params[0] + postfix)).text();
                 let args = Array.prototype.slice.call(params);
                 args.unshift(prefix + '%s' + postfix);
