@@ -31,8 +31,8 @@
         "Wrong deletion token. Paste was not deleted.",
     "Paste was properly deleted.":
         "Paste was properly deleted.",
-    "JavaScript is required for %s to work.<br />Sorry for the inconvenience.":
-        "JavaScript is required for %s to work.<br />Sorry for the inconvenience.",
+    "JavaScript is required for %s to work. Sorry for the inconvenience.":
+        "JavaScript is required for %s to work. Sorry for the inconvenience.",
     "%s requires a modern browser to work.":
         "%%s requires a modern browser to work.",
     "New":

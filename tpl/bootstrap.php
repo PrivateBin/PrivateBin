@@ -4,7 +4,7 @@ $isCpct = substr($template, 9, 8) === '-compact';
 $isDark = substr($template, 9, 5) === '-dark';
 $isPage = substr($template, -5) === '-page';
 ?><!DOCTYPE html>
-<html>
+<html lang="<?php echo I18n::_('en'); ?>">
 	<head>
 		<meta charset="utf-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -72,7 +72,7 @@ endif;
 ?>
 		<script type="text/javascript" data-cfasync="false" src="js/purify-2.0.7.js" integrity="sha512-XjNEK1xwh7SJ/7FouwV4VZcGW9cMySL3SwNpXgrURLBcXXQYtZdqhGoNdEwx9vwLvFjUGDQVNgpOrTsXlSTiQg==" crossorigin="anonymous"></script>
 		<script type="text/javascript" data-cfasync="false" src="js/legacy.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-LYos+qXHIRqFf5ZPNphvtTB0cgzHUizu2wwcOwcwz/VIpRv9lpcBgPYz4uq6jx0INwCAj6Fbnl5HoKiLufS2jg==" crossorigin="anonymous"></script>
-		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-Q7yHFlVuPYWw/SJFiMv83PPVwGKqBwoqZhNtHAwkTIxocS6Zpqyj1I0/nUCRWv15xuurctViB3lSVs6s+7f0jw==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-F6du+TJ3nokfL4mt94qSzqIXrf/dmwBMMfHwe3tDI86xE47VgwVHUC2tmbEpDQZkoydhXR+Lrnj/wCepoK144w==" crossorigin="anonymous"></script>
 		<link rel="apple-touch-icon" href="img/apple-touch-icon.png?<?php echo rawurlencode($VERSION); ?>" sizes="180x180" />
 		<link rel="icon" type="image/png" href="img/favicon-32x32.png?<?php echo rawurlencode($VERSION); ?>" sizes="32x32" />
 		<link rel="icon" type="image/png" href="img/favicon-16x16.png?<?php echo rawurlencode($VERSION); ?>" sizes="16x16" />
@@ -440,7 +440,7 @@ if (strlen($NOTICE)):
 ?>
 				<div role="alert" class="alert alert-info">
 					<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
-					<?php echo htmlspecialchars($NOTICE), PHP_EOL; ?>
+					<?php echo I18n::encode($NOTICE), PHP_EOL; ?>
 				</div>
 <?php
 endif;
@@ -460,16 +460,16 @@ endif;
 ?>
 				<div id="status" role="alert" class="alert alert-info<?php echo empty($STATUS) ? ' hidden' : '' ?>">
 					<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
-					<?php echo htmlspecialchars($STATUS), PHP_EOL; ?>
+					<?php echo I18n::encode($STATUS), PHP_EOL; ?>
 				</div>
 				<div id="errormessage" role="alert" class="<?php echo empty($ERROR) ? 'hidden' : '' ?> alert alert-danger">
 					<span class="glyphicon glyphicon-alert" aria-hidden="true"></span>
-					<?php echo htmlspecialchars($ERROR), PHP_EOL; ?>
+					<?php echo I18n::encode($ERROR), PHP_EOL; ?>
 				</div>
 				<noscript>
 					<div id="noscript" role="alert" class="alert alert-<?php echo $isDark ? 'error' : 'warning'; ?>">
 						<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-						<?php echo I18n::_('JavaScript is required for %s to work.<br />Sorry for the inconvenience.', I18n::_($NAME)), PHP_EOL; ?>
+						<?php echo I18n::_('JavaScript is required for %s to work. Sorry for the inconvenience.', I18n::_($NAME)), PHP_EOL; ?>
 					</div>
 				</noscript>
 				<div id="oldnotice" role="alert" class="hidden alert alert-danger">
@@ -504,7 +504,7 @@ endif;
 if (strlen($URLSHORTENER)):
 ?>
 					<p>
-						<button id="shortenbutton" data-shortener="<?php echo htmlspecialchars($URLSHORTENER); ?>" type="button" class="btn btn-<?php echo $isDark ? 'warning' : 'primary'; ?> btn-block">
+						<button id="shortenbutton" data-shortener="<?php echo I18n::encode($URLSHORTENER); ?>" type="button" class="btn btn-<?php echo $isDark ? 'warning' : 'primary'; ?> btn-block">
 						<span class="glyphicon glyphicon-send" aria-hidden="true"></span> <?php echo I18n::_('Shorten URL'), PHP_EOL; ?>
 					</button>
 					</p>

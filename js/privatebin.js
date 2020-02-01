@@ -645,7 +645,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 // only allow tags/attributes we actually use in translations
                 output = DOMPurify.sanitize(
                     output, {
-                        ALLOWED_TAGS: ['a', 'br', 'i', 'span'],
+                        ALLOWED_TAGS: ['a', 'i', 'span'],
                         ALLOWED_ATTR: ['href', 'id']
                     }
                 );

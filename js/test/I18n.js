@@ -38,7 +38,7 @@ describe('I18n', function () {
                 } else {
                     messageId = DOMPurify.sanitize(
                         messageId, {
-                            ALLOWED_TAGS: ['a', 'br', 'i', 'span'],
+                            ALLOWED_TAGS: ['a', 'i', 'span'],
                             ALLOWED_ATTR: ['href', 'id']
                         }
                     );
@@ -77,7 +77,7 @@ describe('I18n', function () {
                 postfix   =   postfix.replace(/%(s|d)/g, '%%');
                 const translation = DOMPurify.sanitize(
                     prefix + $.PrivateBin.Helper.htmlEntities(params[0]) + '<a></a>' + postfix, {
-                        ALLOWED_TAGS: ['a', 'br', 'i', 'span'],
+                        ALLOWED_TAGS: ['a', 'i', 'span'],
                         ALLOWED_ATTR: ['href', 'id']
                     }
                 );
@@ -129,7 +129,7 @@ describe('I18n', function () {
                 postfix   =   postfix.replace(/%(s|d)/g, '%%').trim();
                 const translation = DOMPurify.sanitize(
                     prefix + $.PrivateBin.Helper.htmlEntities(params[0]) + '<a></a>' + postfix, {
-                        ALLOWED_TAGS: ['a', 'br', 'i', 'span'],
+                        ALLOWED_TAGS: ['a', 'i', 'span'],
                         ALLOWED_ATTR: ['href', 'id']
                     }
                 );

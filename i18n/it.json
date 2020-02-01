@@ -31,8 +31,8 @@
         "Codice cancellazione errato. Il messaggio NON è stato cancellato.",
     "Paste was properly deleted.":
         "Il messaggio è stato correttamente cancellato.",
-    "JavaScript is required for %s to work.<br />Sorry for the inconvenience.":
-        "%s funziona solo con JavaScript attivo.<br />Ci dispiace per l'inconveniente.",
+    "JavaScript is required for %s to work. Sorry for the inconvenience.":
+        "%s funziona solo con JavaScript attivo. Ci dispiace per l'inconveniente.",
     "%s requires a modern browser to work.":
         "%s richiede un browser moderno e aggiornato per funzionare.",
     "New":

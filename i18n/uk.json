@@ -31,8 +31,8 @@
         "Неправильний ключ вилучення допису. Допис не вилучено.",
     "Paste was properly deleted.":
         "Допис був вилучений повністю.",
-    "JavaScript is required for %s to work.<br />Sorry for the inconvenience.":
-        "Для роботи %s потрібен увімкнутий JavaScript.<br />Вибачте.",
+    "JavaScript is required for %s to work. Sorry for the inconvenience.":
+        "Для роботи %s потрібен увімкнутий JavaScript. Вибачте.",
     "%s requires a modern browser to work.":
         "Для роботи %s потрібен більш сучасний переглядач.",
     "New":

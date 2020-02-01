@@ -125,7 +125,29 @@ class I18n
         } else {
             $args[0] = self::$_translations[$messageId];
         }
+        // encode any non-integer arguments and the message ID, if it doesn't contain a link
+        $argsCount = count($args);
+        if ($argsCount > 1) {
+            for ($i = 0; $i < $argsCount; ++$i) {
+                if (($i > 0 && !is_int($args[$i])) || strpos($args[0], '<a') === false) {
+                    $args[$i] = self::encode($args[$i]);
+                }
+            }
+        }
         return call_user_func_array('sprintf', $args);
+    }
+
+    /**
+     * encode HTML entities for output into an HTML5 document
+     *
+     * @access public
+     * @static
+     * @param  string $string
+     * @return string
+     */
+    public static function encode($string)
+    {
+        return htmlspecialchars($string, ENT_QUOTES | ENT_HTML5 | ENT_DISALLOWED, 'UTF-8', false);
     }
 
     /**
