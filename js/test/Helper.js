@@ -93,11 +93,11 @@ describe('Helper', function () {
             jsc.array(common.jscHashString()),
             'string',
             function (prefix, schema, address, query, fragment, postfix) {
-                var query    = query.join(''),
-                    fragment = fragment.join(''),
-                    url      = schema + '://' + address.join('') + '/?' + query + '#' + fragment,
-                    prefix   = $.PrivateBin.Helper.htmlEntities(prefix),
-                    postfix  = ' ' + $.PrivateBin.Helper.htmlEntities(postfix);
+                query    = query.join('');
+                fragment = fragment.join('');
+                prefix   = $.PrivateBin.Helper.htmlEntities(prefix);
+                postfix  = ' ' + $.PrivateBin.Helper.htmlEntities(postfix);
+                let url  = schema + '://' + address.join('') + '/?' + query + '#' + fragment;
 
                 // special cases: When the query string and fragment imply the beginning of an HTML entity, eg. &#0 or &#x
                 if (
@@ -118,9 +118,9 @@ describe('Helper', function () {
             jsc.array(common.jscQueryString()),
             'string',
             function (prefix, query, postfix) {
-                var url     = 'magnet:?' + query.join('').replace(/^&+|&+$/gm,''),
-                    prefix  = $.PrivateBin.Helper.htmlEntities(prefix),
-                    postfix = $.PrivateBin.Helper.htmlEntities(postfix);
+                prefix   = $.PrivateBin.Helper.htmlEntities(prefix);
+                postfix  = $.PrivateBin.Helper.htmlEntities(postfix);
+                let url  = 'magnet:?' + query.join('').replace(/^&+|&+$/gm,'');
                 return prefix + '<a href="' + url + '" rel="nofollow">' + url + '</a> ' + postfix === $.PrivateBin.Helper.urls2links(prefix + url + ' ' + postfix);
             }
         );

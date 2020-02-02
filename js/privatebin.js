@@ -198,7 +198,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          * @enum   {Object}
          * @readonly
          */
-        var entityMap = {
+        const entityMap = {
             '&': '&amp;',
             '<': '&lt;',
             '>': '&gt;',
@@ -423,17 +423,6 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         }
 
         /**
-         * resets state, used for unit testing
-         *
-         * @name   Helper.reset
-         * @function
-         */
-        me.reset = function()
-        {
-            baseUri = null;
-        };
-
-        /**
          * calculate expiration date given initial date and expiration period
          * 
          * @name   Helper.calculateExpirationDate
@@ -470,6 +459,17 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
             expirationDate = expirationDate.setUTCSeconds(expirationDate.getUTCSeconds() + secondsToExpiration);
             return expirationDate;
+        };
+
+        /**
+         * resets state, used for unit testing
+         *
+         * @name   Helper.reset
+         * @function
+         */
+        me.reset = function()
+        {
+            baseUri = null;
         };
 
         return me;
@@ -633,7 +633,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             if (containsLinks || $element === null) {
                 for (let i = 0; i < args.length; ++i) {
                     // parameters (i > 0) may never contain HTML as they may come from untrusted parties
-                    if (i > 0 || !containsLinks) {
+                    if ((containsLinks ? i > 1 : i > 0) || !containsLinks) {
                         args[i] = Helper.htmlEntities(args[i]);
                     }
                 }
@@ -2423,10 +2423,13 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             }
 
             // escape HTML entities, link URLs, sanitize
-            const escapedLinkedText = Helper.urls2links(
-                    Helper.htmlEntities(text).split('&#x2F;').join('/')
-                  ),
-                  sanitizedLinkedText = DOMPurify.sanitize(escapedLinkedText);
+            const escapedLinkedText = Helper.urls2links(text),
+                  sanitizedLinkedText = DOMPurify.sanitize(
+                    escapedLinkedText, {
+                        ALLOWED_TAGS: ['a'],
+                        ALLOWED_ATTR: ['href', 'rel']
+                    }
+                  );
             $plainText.html(sanitizedLinkedText);
             $prettyPrint.html(sanitizedLinkedText);
 
@@ -3240,7 +3243,10 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             // set & parse text
             $commentEntryData.html(
                 DOMPurify.sanitize(
-                    Helper.urls2links(commentText)
+                    Helper.urls2links(commentText), {
+                        ALLOWED_TAGS: ['a'],
+                        ALLOWED_ATTR: ['href', 'rel']
+                    }
                 )
             );
 
@@ -5217,7 +5223,10 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             // first load translations
             I18n.loadTranslations();
 
-            DOMPurify.setConfig({SAFE_FOR_JQUERY: true});
+            DOMPurify.setConfig({
+                ALLOWED_URI_REGEXP: /^(?:(?:(?:f|ht)tps?|mailto|magnet):)/i,
+                SAFE_FOR_JQUERY: true
+            });
 
             // center all modals
             $('.modal').on('show.bs.modal', function(e) {
