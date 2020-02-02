@@ -75,16 +75,18 @@ endif;
 			<h2 class="title"><?php echo I18n::_('Because ignorance is bliss'); ?></h2><br />
 			<h3 class="title"><?php echo $VERSION; ?></h3>
 			<noscript><div id="noscript" class="nonworking"><?php echo I18n::_('JavaScript is required for %s to work. Sorry for the inconvenience.', I18n::_($NAME)); ?></div></noscript>
-			<div id="oldnotice" class="nonworking hidden"><?php echo I18n::_('%s requires a modern browser to work.', I18n::_($NAME)), PHP_EOL; ?>
+			<div id="oldnotice" class="nonworking hidden">
+				<?php echo I18n::_('%s requires a modern browser to work.', I18n::_($NAME)), PHP_EOL; ?>
 				<a href="https://www.mozilla.org/firefox/">Firefox</a>,
 				<a href="https://www.opera.com/">Opera</a>,
-				<a href="https://www.google.com/chrome">Chrome</a>…
+				<a href="https://www.google.com/chrome">Chrome</a>…<br />
+				<span class="small"><?php echo I18n::_('For more information <a href="%s">see this FAQ entry</a>.', 'https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-it-show-me-the-error-privatebin-requires-a-modern-browser-to-work'); ?></span>
 			</div>
 <?php
 if ($HTTPWARNING):
 ?>
 			<div id="httpnotice" class="errorMessage hidden">
-				<?php echo I18n::_('This website is using an insecure connection! Please only use it for testing.'); ?>
+				<?php echo I18n::_('This website is using an insecure connection! Please only use it for testing.'); ?><br />
 				<span class="small"><?php echo I18n::_('For more information <a href="%s">see this FAQ entry</a>.', 'https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-it-show-me-an-error-about-an-insecure-connection'); ?></span>
 			</div>
 			<div id="insecurecontextnotice" class="errorMessage hidden">
@@ -266,7 +268,7 @@ endif;
 		<section class="container">
 			<div id="noscript" role="alert" class="nonworking alert alert-info noscript-hide"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true">
 				<span> <?php echo I18n::_('Loading…'); ?></span><br>
-				<span class="small"><?php echo I18n::_('In case this message never disappears please have a look at <a href="https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away">this FAQ for information to troubleshoot</a>.'); ?></span>
+				<span class="small"><?php echo I18n::_('In case this message never disappears please have a look at <a href="%s">this FAQ for information to troubleshoot</a>.', 'https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-the-loading-message-not-go-away'); ?></span>
 			</div>
 		</section>
 	</body>

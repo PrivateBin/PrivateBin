@@ -477,7 +477,8 @@ endif;
 					<?php echo I18n::_('%s requires a modern browser to work.', I18n::_($NAME)), PHP_EOL; ?>
 					<a href="https://www.mozilla.org/firefox/">Firefox</a>,
 					<a href="https://www.opera.com/">Opera</a>,
-					<a href="https://www.google.com/chrome">Chrome</a>…
+					<a href="https://www.google.com/chrome">Chrome</a>…<br />
+					<span class="small"><?php echo I18n::_('For more information <a href="%s">see this FAQ entry</a>.', 'https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-it-show-me-the-error-privatebin-requires-a-modern-browser-to-work'); ?></span>
 				</div>
 <?php
 if ($HTTPWARNING):
@@ -556,7 +557,7 @@ endif;
 				<div id="noscript" role="alert" class="alert alert-info noscript-hide">
 					<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
 					<?php echo I18n::_('Loading…'); ?><br />
-					<span class="small"><?php echo I18n::_('In case this message never disappears please have a look at <a href="%s">this FAQ for information to troubleshoot</a>.', 'https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-the-loading-message-go-away'); ?></span>
+					<span class="small"><?php echo I18n::_('In case this message never disappears please have a look at <a href="%s">this FAQ for information to troubleshoot</a>.', 'https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-the-loading-message-not-go-away'); ?></span>
 				</div>
 			</section>
 			<footer class="container">
