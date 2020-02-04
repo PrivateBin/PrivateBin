@@ -137,12 +137,12 @@
     "Cloned: '%s'": "Cloner '%s'",
     "The cloned file '%s' was attached to this paste.": "Le fichier cloné '%s' a été attaché à ce paste.",
     "Attach a file": "Attacher un fichier ",
-    "alternatively drag & drop a file or paste an image from the clipboard": "alternativement, glisser & déposer un fichier ou coller une image à partir du presse-papiers",
+    "alternatively drag & drop a file or paste an image from the clipboard": "au choix, glisser & déposer un fichier ou coller une image à partir du presse-papiers",
     "File too large, to display a preview. Please download the attachment.": "Fichier trop volumineux, pour afficher un aperçu. Veuillez télécharger la pièce jointe.",
-    "Remove attachment": "Enlever l'attachement",
+    "Remove attachment": "Enlever la pièce jointe",
     "Your browser does not support uploading encrypted files. Please use a newer browser.":
         "Votre navigateur ne supporte pas l'envoi de fichiers chiffrés. Merci d'utiliser un navigateur plus récent.",
-    "Invalid attachment.": "Attachement invalide.",
+    "Invalid attachment.": "Pièce jointe invalide.",
     "Options": "Options",
     "Shorten URL": "Raccourcir URL",
     "Editor": "Éditer",
@@ -158,7 +158,7 @@
     "Preparing new paste…": "Préparation du paste…",
     "In case this message never disappears please have a look at <a href=\"%s\">this FAQ for information to troubleshoot</a>.":
         "Si ce message ne disparaîssait pas, jetez un oeil à <a href=\"%s\">cette FAQ pour des idées de résolution</a> (en Anglais).",
-    "+++ no paste text +++": "+++ pas de paste-text +++",
+    "+++ no paste text +++": "+++ pas de texte copié +++",
     "Could not get paste data: %s":
         "Impossible d'obtenir les données du paste: %s",
     "QR code": "QR code",
@@ -169,13 +169,13 @@
     "Your browser may require an HTTPS connection to support the WebCrypto API. Try <a href=\"%s\">switching to HTTPS</a>.":
         "Votre navigateur peut nécessiter une connexion HTTPS pour prendre en charge l’API WebCrypto. Essayez <a href=\"%s\">de passer en HTTPS</a>.",
     "Your browser doesn't support WebAssembly, used for zlib compression. You can create uncompressed documents, but can't read compressed ones.":
-        "Your browser doesn't support WebAssembly, used for zlib compression. You can create uncompressed documents, but can't read compressed ones.",
+        "Votre navigateur ne prend pas en charge WebAssembly, utilisé pour la compression zlib. Vous pouvez créer des documents non compressés, mais vous ne pouvez pas lire les documents compressés.",
     "waiting on user to provide a password":
-        "waiting on user to provide a password",
+        "en attendant que l'utilisateur fournisse un mot de passe",
     "Could not decrypt data. Did you enter a wrong password? Retry with the button at the top.":
-        "Could not decrypt data. Did you enter a wrong password? Retry with the button at the top.",
+        "Impossible de décrypter les données. Vous avez saisi un mot de passe incorrect ? Réessayez avec le bouton en haut.",
     "Retry":
-        "Retry",
+        "Réessayer",
     "Showing raw text…":
         "Affichage du texte brut…",
     "Notice:":
