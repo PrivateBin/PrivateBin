@@ -76,12 +76,12 @@ describe('I18n', function () {
                 params[0] = params[0].replace(/%(s|d)/g, '%%');
                 postfix   =   postfix.replace(/%(s|d)/g, '%%');
                 const translation = DOMPurify.sanitize(
-                    prefix + $.PrivateBin.Helper.htmlEntities(params[0]) + '<a></a>' + postfix, {
+                    prefix + '<a href="' + params[0] + '"></a>' + postfix, {
                         ALLOWED_TAGS: ['a', 'i', 'span'],
                         ALLOWED_ATTR: ['href', 'id']
                     }
                 );
-                params.unshift(prefix + '%s<a></a>' + postfix);
+                params.unshift(prefix + '<a href="%s"></a>' + postfix);
                 const result = $.PrivateBin.I18n.translate.apply(this, params);
                 $.PrivateBin.I18n.reset();
                 const alias = $.PrivateBin.I18n._.apply(this, params);
@@ -128,13 +128,13 @@ describe('I18n', function () {
                 params[0] = params[0].replace(/%(s|d)/g, '%%').trim();
                 postfix   =   postfix.replace(/%(s|d)/g, '%%').trim();
                 const translation = DOMPurify.sanitize(
-                    prefix + $.PrivateBin.Helper.htmlEntities(params[0]) + '<a></a>' + postfix, {
+                    prefix + '<a href="' + params[0] + '"></a>' + postfix, {
                         ALLOWED_TAGS: ['a', 'i', 'span'],
                         ALLOWED_ATTR: ['href', 'id']
                     }
                 );
                 let args = Array.prototype.slice.call(params);
-                args.unshift(prefix + '%s<a></a>' + postfix);
+                args.unshift(prefix + '<a href="%s"></a>' + postfix);
                 let clean = jsdom();
                 $('body').html('<div id="i18n"></div>');
                 args.unshift($('#i18n'));
