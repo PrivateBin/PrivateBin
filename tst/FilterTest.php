@@ -56,18 +56,4 @@ class FilterTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('1.00 YiB', Filter::formatHumanReadableSize(1024 * $exponent));
         $this->assertEquals('1.21 YiB', Filter::formatHumanReadableSize(1234 * $exponent));
     }
-
-    public function testSlowEquals()
-    {
-        $this->assertTrue(Filter::slowEquals('foo', 'foo'), 'same string');
-        $this->assertFalse(Filter::slowEquals('foo', true), 'string and boolean');
-        $this->assertFalse(Filter::slowEquals('foo', 0), 'string and integer');
-        $this->assertFalse(Filter::slowEquals('123foo', 123), 'string and integer');
-        $this->assertFalse(Filter::slowEquals('123foo', '123'), 'different strings');
-        $this->assertFalse(Filter::slowEquals('6', ' 6'), 'strings with space');
-        $this->assertFalse(Filter::slowEquals('4.2', '4.20'), 'floats as strings');
-        $this->assertFalse(Filter::slowEquals('1e3', '1000'), 'integers as strings');
-        $this->assertFalse(Filter::slowEquals('9223372036854775807', '9223372036854775808'), 'large integers as strings');
-        $this->assertFalse(Filter::slowEquals('61529519452809720693702583126814', '61529519452809720000000000000000'), 'larger integers as strings');
-    }
 }

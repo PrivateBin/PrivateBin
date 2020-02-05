@@ -1,6 +1,7 @@
 # PrivateBin version history
 
   * **1.4 (not yet released)**
+    * CHANGED: Minimum required PHP version is 5.6, due to a change in the identicon library and to use php's native hash_equals()
     * CHANGED: Upgrading libraries to: DOMpurify 2.0.8
   * **1.3.2 (2020-01-11)**
     * ADDED: Translation for Ukrainian (#533)

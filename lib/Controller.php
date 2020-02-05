@@ -35,7 +35,7 @@ class Controller
      *
      * @const string
      */
-    const MIN_PHP_VERSION = '5.5.0';
+    const MIN_PHP_VERSION = '5.6.0';
 
     /**
      * show the same error message if the paste expired or does not exist
@@ -276,9 +276,7 @@ class Controller
                 // accessing this method ensures that the paste would be
                 // deleted if it has already expired
                 $paste->get();
-                if (
-                    Filter::slowEquals($deletetoken, $paste->getDeleteToken())
-                ) {
+                if (hash_equals($paste->getDeleteToken(), $deletetoken)) {
                     // Paste exists and deletion token is valid: Delete the paste.
                     $paste->delete();
                     $this->_status = 'Paste was properly deleted.';
