@@ -88,7 +88,12 @@ describe('AttachmentViewer', function () {
                 if (prefix.indexOf('<a') === -1 && postfix.indexOf('<a') === -1) {
                     result = $('<textarea>').text((prefix + filename + postfix)).text();
                 } else {
-                    result = prefix + $.PrivateBin.Helper.htmlEntities(filename) + postfix;
+                    result = DOMPurify.sanitize(
+                        prefix + $.PrivateBin.Helper.htmlEntities(filename) + postfix, {
+                            ALLOWED_TAGS: ['a', 'i', 'span'],
+                            ALLOWED_ATTR: ['href', 'id']
+                        }
+                    );
                 }
                 if (filename.length) {
                     results.push(
