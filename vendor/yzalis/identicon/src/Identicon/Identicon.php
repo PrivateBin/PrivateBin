@@ -46,10 +46,10 @@ class Identicon
     /**
      * Display an Identicon image.
      *
-     * @param string $string
-     * @param int    $size
-     * @param string $color
-     * @param string $backgroundColor
+     * @param string       $string
+     * @param int          $size
+     * @param string|array $color
+     * @param string       $backgroundColor
      */
     public function displayImage($string, $size = 64, $color = null, $backgroundColor = null)
     {
@@ -60,10 +60,10 @@ class Identicon
     /**
      * Get an Identicon PNG image data.
      *
-     * @param string $string
-     * @param int    $size
-     * @param string $color
-     * @param string $backgroundColor
+     * @param string       $string
+     * @param int          $size
+     * @param string|array $color
+     * @param string       $backgroundColor
      *
      * @return string
      */
@@ -75,10 +75,10 @@ class Identicon
     /**
      * Get an Identicon PNG image resource.
      *
-     * @param string $string
-     * @param int    $size
-     * @param string $color
-     * @param string $backgroundColor
+     * @param string       $string
+     * @param int          $size
+     * @param string|array $color
+     * @param string       $backgroundColor
      *
      * @return string
      */
@@ -90,10 +90,10 @@ class Identicon
     /**
      * Get an Identicon PNG image data as base 64 encoded.
      *
-     * @param string $string
-     * @param int    $size
-     * @param string $color
-     * @param string $backgroundColor
+     * @param string       $string
+     * @param int          $size
+     * @param string|array $color
+     * @param string       $backgroundColor
      *
      * @return string
      */
@@ -101,13 +101,13 @@ class Identicon
     {
         return sprintf('data:%s;base64,%s', $this->generator->getMimeType(), base64_encode($this->getImageData($string, $size, $color, $backgroundColor)));
     }
-	
+
 	/**
 	 * Get the color of the Identicon
      *
      * Returns an array with RGB values of the Identicon's color. Colors may be NULL if no image has been generated
      * so far (e.g., when calling the method on a new Identicon()).
-	 * 
+	 *
 	 * @return array
 	 */
 	public function getColor()
