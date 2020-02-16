@@ -32,7 +32,7 @@ var a2zString = ['a','b','c','d','e','f','g','h','i','j','k','l','m',
             return c.toUpperCase();
         })
     ),
-    schemas = ['ftp','gopher','http','https','ws','wss'],
+    schemas = ['ftp','http','https'],
     supportedLanguages = ['de', 'es', 'fr', 'it', 'no', 'pl', 'pt', 'oc', 'ru', 'sl', 'zh'],
     mimeTypes = ['image/png', 'application/octet-stream'],
     formats = ['plaintext', 'markdown', 'syntaxhighlighting'],

@@ -8,13 +8,13 @@ describe('AttachmentViewer', function () {
         jsc.property(
             'displays & hides data as requested',
             common.jscMimeTypes(),
-            jsc.nearray(common.jscBase64String()),
             'string',
             'string',
             'string',
-            function (mimeType, base64, filename, prefix, postfix) {
-                var clean = jsdom(),
-                    data = 'data:' + mimeType + ';base64,' + base64.join(''),
+            'string',
+            function (mimeType, rawdata, filename, prefix, postfix) {
+                let clean = jsdom(),
+                    data = 'data:' + mimeType + ';base64,' + btoa(rawdata),
                     previewSupported = (
                         mimeType.substring(0, 6) === 'image/' ||
                         mimeType.substring(0, 6) === 'audio/' ||
@@ -23,7 +23,7 @@ describe('AttachmentViewer', function () {
                     ),
                     results = [],
                     result = '';
-                prefix = prefix.replace(/%(s|d)/g, '%%');
+                prefix  = prefix.replace(/%(s|d)/g, '%%');
                 postfix = postfix.replace(/%(s|d)/g, '%%');
                 $('body').html(
                     '<div id="attachment" role="alert" class="hidden alert ' +
@@ -43,7 +43,7 @@ describe('AttachmentViewer', function () {
                 } else {
                     $.PrivateBin.AttachmentViewer.setAttachment(data);
                 }
-                var attachment = $.PrivateBin.AttachmentViewer.getAttachment();
+                const attachment = $.PrivateBin.AttachmentViewer.getAttachment();
                 results.push(
                     $.PrivateBin.AttachmentViewer.hasAttachment() &&
                     $('#attachment').hasClass('hidden') &&
@@ -74,9 +74,14 @@ describe('AttachmentViewer', function () {
                 $.PrivateBin.AttachmentViewer.moveAttachmentTo(element, prefix + '%s' + postfix);
                 // messageIDs with links get a relaxed treatment
                 if (prefix.indexOf('<a') === -1 && postfix.indexOf('<a') === -1) {
-                    result = $.PrivateBin.Helper.htmlEntities(prefix + filename + postfix);
+                    result = $('<textarea>').text((prefix + filename + postfix)).text();
                 } else {
-                    result = $('<div>').html(prefix + $.PrivateBin.Helper.htmlEntities(filename) + postfix).html();
+                    result = DOMPurify.sanitize(
+                        prefix + $.PrivateBin.Helper.htmlEntities(filename) + postfix, {
+                            ALLOWED_TAGS: ['a', 'i', 'span'],
+                            ALLOWED_ATTR: ['href', 'id']
+                        }
+                    );
                 }
                 if (filename.length) {
                     results.push(

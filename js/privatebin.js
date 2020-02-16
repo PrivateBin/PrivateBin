@@ -69,6 +69,26 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
         var baseUri = null;
 
         /**
+         * character to HTML entity lookup table
+         *
+         * @see    {@link https://github.com/janl/mustache.js/blob/master/mustache.js#L60}
+         * @name Helper.entityMap
+         * @private
+         * @enum   {Object}
+         * @readonly
+         */
+        var entityMap = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#39;',
+            '/': '&#x2F;',
+            '`': '&#x60;',
+            '=': '&#x3D;'
+        };
+
+        /**
          * converts a duration (in seconds) into human friendly approximation
          *
          * @name Helper.secondsToHuman
@@ -171,19 +191,12 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
             var format = args[0],
                 i = 1;
             return format.replace(/%(s|d)/g, function (m) {
-                // m is the matched format, e.g. %s, %d
                 var val = args[i];
-                // A switch statement so that the formatter can be extended.
-                switch (m)
-                {
-                    case '%d':
-                        val = parseFloat(val);
-                        if (isNaN(val)) {
-                            val = 0;
-                        }
-                        break;
-                    default:
-                        // Default is %s
+                if (m === '%d') {
+                    val = parseFloat(val);
+                    if (isNaN(val)) {
+                        val = 0;
+                    }
                 }
                 ++i;
                 return val;
@@ -237,15 +250,21 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
         };
 
         /**
-         * resets state, used for unit testing
+         * convert all applicable characters to HTML entities
          *
-         * @name   Helper.reset
+         * @see    {@link https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html}
+         * @name   Helper.htmlEntities
          * @function
+         * @param  {string} str
+         * @return {string} escaped HTML
          */
-        me.reset = function()
-        {
-            baseUri = null;
-        };
+        me.htmlEntities = function(str) {
+            return String(str).replace(
+                /[&<>"'`=\/]/g, function(s) {
+                    return entityMap[s];
+                }
+            );
+        }
 
         /**
          * checks whether this is a bot we dislike
@@ -268,29 +287,14 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
         }
 
         /**
-         * encode all applicable characters to HTML entities
+         * resets state, used for unit testing
          *
-         * @see    {@link https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html}
-         *
-         * @name   Helper.htmlEntities
+         * @name   Helper.reset
          * @function
-         * @param  string str
-         * @return string escaped HTML
          */
-        me.htmlEntities = function(str) {
-            // using textarea, since other tags may allow and execute scripts, even when detached from DOM
-            let holder = document.createElement('textarea');
-            holder.textContent = str;
-            // as per OWASP recommendation, also encoding quotes and slash
-            return holder.innerHTML.replace(
-                /["'\/]/g,
-                function(s) {
-                    return {
-                        '"': '&quot;',
-                        "'": '&#x27;',
-                        '/': '&#x2F;'
-                    }[s];
-                });
+        me.reset = function()
+        {
+            baseUri = null;
         };
 
         return me;
@@ -363,10 +367,14 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
          *
          * Optionally pass a jQuery element as the first parameter, to automatically
          * let the text of this element be replaced. In case the (asynchronously
-         * loaded) language is not downloadet yet, this will make sure the string
-         * is replaced when it is actually loaded.
-         * So for easy translations passing the jQuery object to apply it to is
-         * more save, especially when they are loaded in the beginning.
+         * loaded) language is not downloaded yet, this will make sure the string
+         * is replaced when it eventually gets loaded. Using this is both simpler
+         * and more secure, as it avoids potential XSS when inserting text.
+         * The next parameter is the message ID, matching the ones found in
+         * the translation files under the i18n directory.
+         * Any additional parameters will get inserted into the message ID in
+         * place of %s (strings) or %d (digits), applying the appropriate plural
+         * in case of digits. See also Helper.sprintf().
          *
          * @name   I18n.translate
          * @function
@@ -446,31 +454,39 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
             }
 
             // messageID may contain links, but should be from a trusted source (code or translation JSON files)
-            let containsNoLinks = args[0].indexOf('<a') === -1;
-            for (let i = 0; i < args.length; ++i) {
-                // parameters (i > 0) may never contain HTML as they may come from untrusted parties
-                if (i > 0 || containsNoLinks) {
-                    args[i] = Helper.htmlEntities(args[i]);
+            var containsLinks = args[0].indexOf('<a') !== -1;
+
+            // prevent double encoding, when we insert into a text node
+            if (containsLinks || $element === null) {
+                for (var i = 0; i < args.length; ++i) {
+                    // parameters (i > 0) may never contain HTML as they may come from untrusted parties
+                    if ((containsLinks ? i > 1 : i > 0) || !containsLinks) {
+                        args[i] = Helper.htmlEntities(args[i]);
+                    }
                 }
             }
-
             // format string
             var output = Helper.sprintf.apply(this, args);
 
-            // if $element is given, apply text to element
+            if (containsLinks) {
+                // only allow tags/attributes we actually use in translations
+                output = DOMPurify.sanitize(
+                    output, {
+                        ALLOWED_TAGS: ['a', 'i', 'span'],
+                        ALLOWED_ATTR: ['href', 'id']
+                    }
+                );
+            }
+
+            // if $element is given, insert translation
             if ($element !== null) {
-                if (containsNoLinks) {
-                    // avoid HTML entity encoding if translation contains links
-                    $element.text(output);
+                if (containsLinks) {
+                    $element.html(output);
                 } else {
-                    // only allow tags/attributes we actually use in our translations
-                    $element.html(
-                        DOMPurify.sanitize(output, {
-                            ALLOWED_TAGS: ['a', 'br', 'i', 'span'],
-                            ALLOWED_ATTR: ['href', 'id']
-                        })
-                    );
+                    // text node takes care of entity encoding
+                    $element.text(output);
                 }
+                return '';
             }
 
             return output;
@@ -1342,11 +1358,10 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
          */
         me.createPasteNotification = function(url, deleteUrl)
         {
-            $('#pastelink').html(
-                I18n._(
-                    'Your paste is <a id="pasteurl" href="%s">%s</a> <span id="copyhint">(Hit [Ctrl]+[c] to copy)</span>',
-                    url, url
-                )
+            I18n._(
+                $('#pastelink'),
+                'Your paste is <a id="pasteurl" href="%s">%s</a> <span id="copyhint">(Hit [Ctrl]+[c] to copy)</span>',
+                url, url
             );
             // save newly created element
             $pasteUrl = $('#pasteurl');
@@ -1354,7 +1369,8 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
             $pasteUrl.click(pasteLinkClick);
 
             // shorten button
-            $('#deletelink').html('<a href="' + deleteUrl + '">' + I18n._('Delete data') + '</a>');
+            $('#deletelink').html('<a href="' + deleteUrl + '"></a>');
+            I18n._($('#deletelink a').first(), 'Delete data');
 
             // show result
             $pasteSuccess.removeClass('hidden');
@@ -1810,10 +1826,13 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
             }
 
             // escape HTML entities, link URLs, sanitize
-            var escapedLinkedText = Helper.urls2links(
-                    Helper.htmlEntities(text)
-                  ),
-                  sanitizedLinkedText = DOMPurify.sanitize(escapedLinkedText);
+            var escapedLinkedText = Helper.urls2links(text),
+                sanitizedLinkedText = DOMPurify.sanitize(
+                    escapedLinkedText, {
+                        ALLOWED_TAGS: ['a'],
+                        ALLOWED_ATTR: ['href', 'rel']
+                    }
+                );
             $plainText.html(sanitizedLinkedText);
             $prettyPrint.html(sanitizedLinkedText);
 
@@ -2625,7 +2644,10 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
             // set & parse text
             $commentEntryData.html(
                 DOMPurify.sanitize(
-                    Helper.urls2links(commentText)
+                    Helper.urls2links(commentText), {
+                        ALLOWED_TAGS: ['a'],
+                        ALLOWED_ATTR: ['href', 'rel']
+                    }
                 )
             );
 
@@ -4418,9 +4440,7 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
             Uploader.setUnencryptedData('deletetoken', deleteToken);
 
             Uploader.setFailure(function () {
-                Alert.showError(
-                    I18n._('Could not delete the paste, it was not stored in burn after reading mode.')
-                );
+                Alert.showError('Could not delete the paste, it was not stored in burn after reading mode.');
             });
             Uploader.run();
         };
@@ -4436,7 +4456,10 @@ jQuery.PrivateBin = (function($, sjcl, Base64, RawDeflate) {
             // first load translations
             I18n.loadTranslations();
 
-            DOMPurify.setConfig({SAFE_FOR_JQUERY: true});
+            DOMPurify.setConfig({
+                ALLOWED_URI_REGEXP: /^(?:(?:(?:f|ht)tps?|mailto|magnet):)/i,
+                SAFE_FOR_JQUERY: true
+            });
 
             // initialize other modules/"classes"
             Alert.init();
