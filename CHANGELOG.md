@@ -2,8 +2,14 @@
 
   * **1.4 (not yet released)**
     * CHANGED: Minimum required PHP version is 5.6, due to a change in the identicon library and to use php's native hash_equals()
+    * CHANGED: Upgrading libraries to: identicon 2.0.0
+  * **1.3.3 (2020-02-16)**
     * CHANGED: Upgrading libraries to: DOMpurify 2.0.8
     * CHANGED: Several translations got updated with missing messages
+    * CHANGED: Introduce HTML entity encoding on server side (#581)
+    * FIXED: HTML entity double encoding issues introduced in 1.3.2 (#560)
+  * **1.2.3 (2020-02-16)**
+    * CHANGED: Upgrading libraries to: DOMpurify 2.0.8
     * CHANGED: Introduce HTML entity encoding on server side (#581)
     * FIXED: HTML entity double encoding issues introduced in 1.3.2 (#560)
   * **1.3.2 (2020-01-11)**
