@@ -1,6 +1,7 @@
 # PrivateBin version history
 
   * **1.2.3 (2020-02-16)**
+    * CHANGED: Introduce HTML entity encoding on server side (#581)
     * FIXED: HTML entity double encoding issues introduced in 1.3.2 (#560)
   * **1.2.2 (2020-01-11)**
     * CHANGED: Upgrading libraries to: bootstrap 3.4.1, DOMpurify 2.0.7, jQuery 3.4.1, kjua 0.6.0, Showdown 1.9.1 & SJCL 1.0.8
