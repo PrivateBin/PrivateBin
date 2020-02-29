@@ -2422,52 +2422,54 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 return;
             }
 
-            // escape HTML entities, link URLs, sanitize
-            const escapedLinkedText = Helper.urls2links(text),
-                  sanitizedLinkedText = DOMPurify.sanitize(
-                    escapedLinkedText, {
-                        ALLOWED_TAGS: ['a'],
-                        ALLOWED_ATTR: ['href', 'rel']
-                    }
-                  );
-            $plainText.html(sanitizedLinkedText);
-            $prettyPrint.html(sanitizedLinkedText);
+            if (format === 'markdown') {
+                const converter = new showdown.Converter({
+                    strikethrough: true,
+                    tables: true,
+                    tablesHeaderId: true,
+                    simplifiedAutoLink: true,
+                    excludeTrailingPunctuationFromURLs: true
+                });
+                // let showdown convert the HTML and sanitize HTML *afterwards*!
+                $plainText.html(
+                    DOMPurify.sanitize(
+                        converter.makeHtml(text)
+                    )
+                );
+                // add table classes from bootstrap css
+                $plainText.find('table').addClass('table-condensed table-bordered');
+            } else {
+                // escape HTML entities, link URLs, sanitize
+                const escapedLinkedText = Helper.urls2links(text);
+                let sanitizeLinkedText = '',
+                    sanitizerConfiguration = {};
 
-            switch (format) {
-                case 'markdown':
-                    const converter = new showdown.Converter({
-                        strikethrough: true,
-                        tables: true,
-                        tablesHeaderId: true,
-                        simplifiedAutoLink: true,
-                        excludeTrailingPunctuationFromURLs: true
-                    });
-                    // let showdown convert the HTML and sanitize HTML *afterwards*!
-                    $plainText.html(
-                        DOMPurify.sanitize(
-                            converter.makeHtml(text)
-                        )
-                    );
-                    // add table classes from bootstrap css
-                    $plainText.find('table').addClass('table-condensed table-bordered');
-                    break;
-                case 'syntaxhighlighting':
+                if (format === 'syntaxhighlighting') {
                     // yes, this is really needed to initialize the environment
                     if (typeof prettyPrint === 'function')
                     {
                         prettyPrint();
                     }
 
-                    $prettyPrint.html(
-                        DOMPurify.sanitize(
-                            prettyPrintOne(escapedLinkedText, null, true)
-                        )
+                    sanitizeLinkedText = prettyPrintOne(
+                        escapedLinkedText, null, true
                     );
-                    // fall through, as the rest is the same
-                default: // = 'plaintext'
-                    $prettyPrint.css('white-space', 'pre-wrap');
-                    $prettyPrint.css('word-break', 'normal');
-                    $prettyPrint.removeClass('prettyprint');
+                } else {
+                    // = 'plaintext'
+                    sanitizeLinkedText = escapedLinkedText;
+                    sanitizerConfiguration = {
+                        ALLOWED_TAGS: ['a'],
+                        ALLOWED_ATTR: ['href', 'rel']
+                    };
+                }
+                $prettyPrint.html(
+                    DOMPurify.sanitize(
+                        sanitizeLinkedText, sanitizerConfiguration
+                    )
+                );
+                $prettyPrint.css('white-space', 'pre-wrap');
+                $prettyPrint.css('word-break', 'normal');
+                $prettyPrint.removeClass('prettyprint');
             }
         }
 
