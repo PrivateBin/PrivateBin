@@ -3,6 +3,7 @@
   * **1.4 (not yet released)**
     * CHANGED: Minimum required PHP version is 5.6, due to a change in the identicon library and to use php's native hash_equals()
     * CHANGED: Upgrading libraries to: identicon 2.0.0
+    * FIXED: Support custom expiration options in email function (#586)
   * **1.3.3 (2020-02-16)**
     * CHANGED: Upgrading libraries to: DOMpurify 2.0.8
     * CHANGED: Several translations got updated with missing messages
