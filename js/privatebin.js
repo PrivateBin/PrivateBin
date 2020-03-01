@@ -210,6 +210,64 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         };
 
         /**
+         * number of seconds in a minute
+         *
+         * @name Helper.minute
+         * @private
+         * @enum   {number}
+         * @readonly
+         */
+        const minute = 60;
+
+        /**
+         * number of seconds in an hour
+         *
+         * = 60 * 60 seconds
+         *
+         * @name Helper.minute
+         * @private
+         * @enum   {number}
+         * @readonly
+         */
+        const hour = 3600;
+
+        /**
+         * number of seconds in a day
+         *
+         * = 60 * 60 * 24 seconds
+         *
+         * @name Helper.day
+         * @private
+         * @enum   {number}
+         * @readonly
+         */
+        const day = 86400;
+
+        /**
+         * number of seconds in a month (30 days, an approximation)
+         *
+         * = 60 * 60 * 24 * 30 seconds
+         *
+         * @name Helper.month
+         * @private
+         * @enum   {number}
+         * @readonly
+         */
+        const month = 2592000;
+
+        /**
+         * number of seconds in a non-leap year
+         *
+         * = 60 * 60 * 24 * 365 seconds
+         *
+         * @name Helper.year
+         * @private
+         * @enum   {number}
+         * @readonly
+         */
+        const year = 31536000;
+
+        /**
          * cache for script location
          *
          * @name Helper.baseUri
@@ -229,29 +287,65 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         me.secondsToHuman = function(seconds)
         {
             let v;
-            if (seconds < 60)
+            if (seconds < minute)
             {
                 v = Math.floor(seconds);
                 return [v, 'second'];
             }
-            if (seconds < 60 * 60)
+            if (seconds < hour)
             {
-                v = Math.floor(seconds / 60);
+                v = Math.floor(seconds / minute);
                 return [v, 'minute'];
             }
-            if (seconds < 60 * 60 * 24)
+            if (seconds < day)
             {
-                v = Math.floor(seconds / (60 * 60));
+                v = Math.floor(seconds / hour);
                 return [v, 'hour'];
             }
             // If less than 2 months, display in days:
-            if (seconds < 60 * 60 * 24 * 60)
+            if (seconds < (2 * month))
             {
-                v = Math.floor(seconds / (60 * 60 * 24));
+                v = Math.floor(seconds / day);
                 return [v, 'day'];
             }
-            v = Math.floor(seconds / (60 * 60 * 24 * 30));
+            v = Math.floor(seconds / month);
             return [v, 'month'];
+        };
+
+        /**
+         * converts a duration string into seconds
+         *
+         * The string is expected to be optional digits, followed by a time.
+         * Supported times are: min, hour, day, month, year, never
+         * Examples: 5min, 13hour, never
+         *
+         * @name Helper.durationToSeconds
+         * @function
+         * @param  {String} duration
+         * @return {number}
+         */
+        me.durationToSeconds = function(duration)
+        {
+            let pieces   = duration.split(/\d+/),
+                factor   = pieces[0] || 0,
+                timespan = pieces[1] || pieces[0];
+            switch (timespan)
+            {
+                case 'min':
+                    return factor * minute;
+                case 'hour':
+                    return factor * hour;
+                case 'day':
+                    return factor * day;
+                case 'month':
+                    return factor * month;
+                case 'year':
+                    return factor * year;
+                case 'never':
+                    return 0;
+                default:
+                    return factor;
+            }
         };
 
         /**
@@ -432,22 +526,10 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          * @return {Date}
          */
         me.calculateExpirationDate = function(initialDate, expirationDisplayStringOrSecondsToExpire) {
-            let expirationDate = new Date(initialDate);
-
-            const expirationDisplayStringToSecondsDict = {
-                '5min': 300,
-                '10min': 600,
-                '1hour': 3500,
-                '1day': 86400,
-                '1week': 604800,
-                '1month': 2592000,
-                '1year': 31536000,
-                'never': 0
-            };
-
-            let secondsToExpiration = expirationDisplayStringOrSecondsToExpire;
+            let expirationDate      = new Date(initialDate),
+                secondsToExpiration = expirationDisplayStringOrSecondsToExpire;
             if (typeof expirationDisplayStringOrSecondsToExpire === 'string') {
-                secondsToExpiration = expirationDisplayStringToSecondsDict[expirationDisplayStringOrSecondsToExpire];
+                secondsToExpiration = me.durationToSeconds(expirationDisplayStringOrSecondsToExpire);
             }
             
             if (typeof secondsToExpiration !== 'number') {
