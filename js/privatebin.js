@@ -18,14 +18,14 @@ jQuery.fn.draghover = function() {
     return this.each(function() {
         let collection = $(),
             self = $(this);
-  
+
         self.on('dragenter', function(e) {
             if (collection.length === 0) {
                 self.trigger('draghoverstart');
             }
             collection = collection.add(e.target);
         });
-  
+
         self.on('dragleave drop', function(e) {
             collection = collection.not(e.target);
             if (collection.length === 0) {
@@ -375,7 +375,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         };
 
         /**
-         * formats the text that needs to be formatted, so DomPurify can properly escape it. 
+         * formats the text that needs to be formatted, so DomPurify can properly escape it.
          *
          * @name   Helper.preformatTextForDomPurify
          * @function
@@ -543,7 +543,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
         /**
          * calculate expiration date given initial date and expiration period
-         * 
+         *
          * @name   Helper.calculateExpirationDate
          * @function
          * @param  {Date} initialDate - may not be empty
@@ -556,7 +556,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             if (typeof expirationDisplayStringOrSecondsToExpire === 'string') {
                 secondsToExpiration = me.durationToSeconds(expirationDisplayStringOrSecondsToExpire);
             }
-            
+
             if (typeof secondsToExpiration !== 'number') {
                 throw new Error('Cannot calculate expiration date.');
             }
@@ -2529,10 +2529,10 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 return;
             }
 
-            text = Helper.preformatTextForDomPurify(text, format);
-            
+            const processedText = Helper.preformatTextForDomPurify(text, format);
+
             // escape HTML entities, link URLs, sanitize
-            const escapedLinkedText = Helper.urls2links(text),
+            const escapedLinkedText = Helper.urls2links(processedText),
                   sanitizedLinkedText = DOMPurify.sanitize(
                     escapedLinkedText, {
                         ALLOWED_TAGS: ['a'],
@@ -3763,11 +3763,11 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
         /**
          * Template Email body.
-         * 
+         *
          * @name   TopNav.templateEmailBody
-         * @private 
-         * @param {string} expirationDateString 
-         * @param {bool} isBurnafterreading 
+         * @private
+         * @param {string} expirationDateString
+         * @param {bool} isBurnafterreading
          */
         function templateEmailBody(expirationDateString, isBurnafterreading)
         {
@@ -3805,10 +3805,10 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
         /**
          * Trigger Email send.
-         * 
+         *
          * @name   TopNav.triggerEmailSend
-         * @private 
-         * @param {string} emailBody 
+         * @private
+         * @param {string} emailBody
          */
         function triggerEmailSend(emailBody)
         {
@@ -4021,7 +4021,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
         /**
          * show the "email" button
-         * 
+         *
          * @name   TopNav.showEmailbutton
          * @function
          * @param {int|undefined} optionalRemainingTimeInSeconds
@@ -4049,7 +4049,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
         /**
          * hide the "email" button
-         * 
+         *
          * @name   TopNav.hideEmailButton
          * @function
          */
@@ -4083,7 +4083,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
         /**
          * only hides the qr code button
-         * 
+         *
          * @name   TopNav.hideQrCodeButton
          * @function
          */
@@ -4094,7 +4094,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
         /**
          * hide all irrelevant buttons when viewing burn after reading paste
-         * 
+         *
          * @name   TopNav.hideBurnAfterReadingButtons
          * @function
          */
@@ -4130,7 +4130,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
         /**
          * hides the custom attachment
-         * 
+         *
          * @name  TopNav.hideCustomAttachment
          * @function
          */
@@ -4254,7 +4254,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
         /**
          * Highlight file upload
-         * 
+         *
          * @name  TopNav.highlightFileupload
          * @function
          */
@@ -4273,7 +4273,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
         /**
          * set the format on bootstrap templates in dropdown programmatically
-         * 
+         *
          * @name    TopNav.setFormat
          * @function
          */
@@ -4284,7 +4284,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
         /**
          * returns if attachment dropdown is readonly, not editable
-         * 
+         *
          * @name   TopNav.isAttachmentReadonly
          * @function
          * @return {bool}
