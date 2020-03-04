@@ -375,6 +375,31 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         };
 
         /**
+         * formats the text that needs to be formatted, so DomPurify can properly escape it. 
+         *
+         * @name   Helper.preformatTextForDomPurify
+         * @function
+         * @param  {string} html
+         * @param  {'markdown'|'syntaxhighlighting'|'plaintext'} text
+         * @return {string} new text
+         */
+        me.preformatTextForDomPurify = function(text, format)
+        {
+            if (!format) {
+                throw new TypeError('invalid format parameter');
+            }
+
+            // encode < to make sure DomPurify does not interpret e.g. HTML or XML markup as code
+            // cf. https://developer.mozilla.org/en-US/docs/Web/HTML/Element/xmp#Summary
+            // As Markdown, by definition, is/allows HTML code, we do not do anything there.
+            if (format !== 'markdown') {
+                // one character is enough, as this is not security-relevant (all output will go through DOMPurify later)
+                text = text.replace(/</g, '&lt;');
+            }
+            return text;
+        };
+
+        /**
          * convert URLs to clickable links.
          *
          * URLs to handle:
@@ -2504,13 +2529,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 return;
             }
 
-            // encode < to make sure DomPurify does not interpret e.g. HTML or XML markup as code
-            // cf. https://developer.mozilla.org/en-US/docs/Web/HTML/Element/xmp#Summary
-            // As Markdown, by definition, is/allows HTML code, we do not do anything there.
-            if (format !== 'markdown') {
-                // one character is enough, as this is not security-relevant (all output will go through DOMPurify later)
-                text = text.replace(/</g, '&lt;');
-            }
+            text = Helper.preformatTextForDomPurify(text, format);
             
             // escape HTML entities, link URLs, sanitize
             const escapedLinkedText = Helper.urls2links(text),
@@ -3321,7 +3340,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         me.addComment = function(comment, commentText, nickname)
         {
-            if (commentText === '') {
+            if (!commentText) {
                 commentText = 'comment decryption failed';
             }
 
@@ -3331,6 +3350,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             const $commentEntryData = $commentEntry.find('div.commentdata');
 
             // set & parse text
+            commentText = Helper.preformatTextForDomPurify(commentText, 'plaintext');
             $commentEntryData.html(
                 DOMPurify.sanitize(
                     Helper.urls2links(commentText), {
