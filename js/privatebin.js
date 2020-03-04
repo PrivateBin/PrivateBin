@@ -2529,20 +2529,24 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 return;
             }
 
-            const processedText = Helper.preformatTextForDomPurify(text, format);
+            let processedText = Helper.preformatTextForDomPurify(text, format);
 
-            // escape HTML entities, link URLs, sanitize
-            const escapedLinkedText = Helper.urls2links(processedText),
-                  sanitizedLinkedText = DOMPurify.sanitize(
-                    escapedLinkedText, {
-                        ALLOWED_TAGS: ['a'],
-                        ALLOWED_ATTR: ['href', 'rel']
-                    }
-                  );
-            $plainText.html(sanitizedLinkedText);
-            $prettyPrint.html(sanitizedLinkedText);
+            // link URLs
+            processedText = Helper.urls2links(processedText);
 
             switch (format) {
+                case 'syntaxhighlighting':
+                    // yes, this is really needed to initialize the environment
+                    if (typeof prettyPrint === 'function')
+                    {
+                        prettyPrint();
+                    }
+
+                    $prettyPrint.html(
+                        DOMPurify.sanitize(
+                            prettyPrintOne(processedText, null, true)
+                        )
+                    );
                 case 'markdown':
                     const converter = new showdown.Converter({
                         strikethrough: true,
@@ -2554,29 +2558,27 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                     // let showdown convert the HTML and sanitize HTML *afterwards*!
                     $plainText.html(
                         DOMPurify.sanitize(
+                            // use original text, because showdown handles autolinking on it's own
                             converter.makeHtml(text)
                         )
                     );
                     // add table classes from bootstrap css
                     $plainText.find('table').addClass('table-condensed table-bordered');
                     break;
-                case 'syntaxhighlighting':
-                    // yes, this is really needed to initialize the environment
-                    if (typeof prettyPrint === 'function')
-                    {
-                        prettyPrint();
-                    }
-
-                    $prettyPrint.html(
-                        DOMPurify.sanitize(
-                            prettyPrintOne(escapedLinkedText, null, true)
-                        )
-                    );
-                    // fall through, as the rest is the same
                 default: // = 'plaintext'
-                    $prettyPrint.css('white-space', 'pre-wrap');
-                    $prettyPrint.css('word-break', 'normal');
-                    $prettyPrint.removeClass('prettyprint');
+                    $prettyPrint.html(DOMPurify.sanitize(
+                        processedText, {
+                            ALLOWED_TAGS: ['a'],
+                            ALLOWED_ATTR: ['href', 'rel']
+                        }
+                    ));
+                }
+
+            // set block style for non-Markdown formatting
+            if (format !== 'markdown') {
+                $prettyPrint.css('white-space', 'pre-wrap');
+                $prettyPrint.css('word-break', 'normal');
+                $prettyPrint.removeClass('prettyprint');
             }
         }
 
