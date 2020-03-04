@@ -392,7 +392,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         {
             element.html(
                 element.html().replace(
-                    /(((https?|ftp):\/\/[\w?!=&.\/-;#@~%+*-]+(?![\w\s?!&.\/;#~%"=-]*>))|((magnet):[\w?=&.\/-;#@~%+*-]+))/ig,
+                    /(((https?|ftp):\/\/[\w?!=&.\/-;#@~%+*-]+(?![\w\s?!&.\/;#~%"=-]>))|((magnet):[\w?=&.\/-;#@~%+*-]+))/ig,
                     '<a href="$1" rel="nofollow">$1</a>'
                 )
             );
