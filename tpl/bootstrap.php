@@ -73,6 +73,7 @@ endif;
 		<script type="text/javascript" data-cfasync="false" src="js/purify-2.0.8.js" integrity="sha512-QwcEKGuEmKtMguCO9pqNtUtZqq9b/tJ8gNr5qhY8hykq3zKTlDOvpZAmf6Rs8yH35Bz1ZdctUjj2qEWxT5aXCg==" crossorigin="anonymous"></script>
 		<script type="text/javascript" data-cfasync="false" src="js/legacy.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-LYos+qXHIRqFf5ZPNphvtTB0cgzHUizu2wwcOwcwz/VIpRv9lpcBgPYz4uq6jx0INwCAj6Fbnl5HoKiLufS2jg==" crossorigin="anonymous"></script>
 		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-5GFThJ8KstWT1bNvB5JTAAXA+5QCNDv21foF7hSNoAc0oOxrHiUCP1ZlZs9zk4SbdIsmTSGL12Ecdj5CRISYxg==" crossorigin="anonymous"></script>
+		<!-- icon -->
 		<link rel="apple-touch-icon" href="img/apple-touch-icon.png?<?php echo rawurlencode($VERSION); ?>" sizes="180x180" />
 		<link rel="icon" type="image/png" href="img/favicon-32x32.png?<?php echo rawurlencode($VERSION); ?>" sizes="32x32" />
 		<link rel="icon" type="image/png" href="img/favicon-16x16.png?<?php echo rawurlencode($VERSION); ?>" sizes="16x16" />
@@ -81,6 +82,19 @@ endif;
 		<link rel="shortcut icon" href="img/favicon.ico">
 		<meta name="msapplication-config" content="browserconfig.xml">
 		<meta name="theme-color" content="#ffe57e" />
+		<!-- Twitter/social media cards -->
+		<meta name="twitter:card" content="summary" />
+		<meta name="twitter:title" content="<?php echo I18n::_('Encrypted note on PrivateBin') ?>" />
+		<meta name="twitter:description" content="<?php echo I18n::_('Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.') ?>" />
+		<meta name="twitter:image" content="img/apple-touch-icon.png?<?php echo rawurlencode($VERSION); ?>" />
+		<meta property="og:audio" content="http://example.com/bond/theme.mp3" />
+		<meta property="og:title" content="<?php echo I18n::_($NAME); ?>" />
+		<meta property="og:site_name" content="<?php echo I18n::_($NAME); ?>" />
+		<meta property="og:description" content="<?php echo I18n::_('Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.') ?>" />
+		<meta property="og:image" content="img/apple-touch-icon.png?<?php echo rawurlencode($VERSION); ?>" />
+		<meta property="og:image:type" content="image/jpeg" />
+		<meta property="og:image:width" content="180" />
+		<meta property="og:image:height" content="180" />
 	</head>
 	<body role="document" data-compression="<?php echo rawurlencode($COMPRESSION); ?>"<?php
 $class = array();
