@@ -392,7 +392,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         me.urls2links = function(html)
         {
             return html.replace(
-                /(((https?|ftp):\/\/[\w?!=&.\/-;#@~%+*-]+(?![\w\s?!&.\/;#~%"=-]*>))|((magnet):[\w?=&.\/-;#@~%+*-]+))/ig,
+                /(((https?|ftp):\/\/[\w?!=&.\/-;#@~%+*-]+(?![\w\s?!&.\/;#~%"=-]>))|((magnet):[\w?=&.\/-;#@~%+*-]+))/ig,
                 '<a href="$1" rel="nofollow">$1</a>'
             );
         };
@@ -2504,6 +2504,14 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 return;
             }
 
+            // encode < to make sure DomPurify does not interpret e.g. HTML or XML markup as code
+            // cf. https://developer.mozilla.org/en-US/docs/Web/HTML/Element/xmp#Summary
+            // As Markdown, by definition, is/allows HTML code, we do not do anything there.
+            if (format !== 'markdown') {
+                // one character is enough, as this is not security-relevant (all output will go through DOMPurify later)
+                text = text.replace(/</g, '&lt;');
+            }
+            
             // escape HTML entities, link URLs, sanitize
             const escapedLinkedText = Helper.urls2links(text),
                   sanitizedLinkedText = DOMPurify.sanitize(

@@ -41,38 +41,38 @@ if ($SYNTAXHIGHLIGHTING):
 endif;
 ?>
 		<noscript><link type="text/css" rel="stylesheet" href="css/noscript.css" /></noscript>
-		<script type="text/javascript" data-cfasync="false" src="js/jquery-3.4.1.js" integrity="sha512-bnIvzh6FU75ZKxp0GXLH9bewza/OIw6dLVh9ICg0gogclmYGguQJWl8U30WpbsGTqbIiAwxTsbe76DErLq5EDQ==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/jquery-3.4.1.js" integrity="sha512-9anGruNHwVXk3XlsUXFrdEe8Iq5EdB/Otrz+4C+VWtQGPThhPyQRCKPh8+H1QPyu2NmEi5oPuCPACVXPmhnvrQ==" crossorigin="anonymous"></script>
 <?php
 if ($QRCODE):
 ?>
-		<script async type="text/javascript" data-cfasync="false" src="js/kjua-0.6.0.js" integrity="sha512-GEEIHvphDt1NmaxzX8X1ZkBiGKXCv+Ofzwi8SMEH5wQVWqdGIvBO/fnxxKZ90RU1bVp6srS68nHIpZo6iVcG9g==" crossorigin="anonymous"></script>
+		<script async type="text/javascript" data-cfasync="false" src="js/kjua-0.6.0.js" integrity="sha512-mS5pSr1OST+Q29k4J4epdY+UFR9EmQ/mm96tV4QN22NHQPaWAXuDOAEAA9RAPpmY5jY2SDz8lMHN9CPysV/Dsg==" crossorigin="anonymous"></script>
 <?php
 endif;
 if ($ZEROBINCOMPATIBILITY):
 ?>
-		<script type="text/javascript" data-cfasync="false" src="js/base64-1.7.js" integrity="sha512-JdwsSP3GyHR+jaCkns9CL9NTt4JUJqm/BsODGmYhBcj5EAPKcHYh+OiMfyHbcDLECe17TL0hjXADFkusAqiYgA==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/base64-1.7.js" integrity="sha512-V6V3jxySWm/c62rSuY64hIU1/xYwaeQ+RJQyOzUMiZEMMlZXlnbif6/v/4v3Nck/cch7LylQU8lMplZUnIhSoA==" crossorigin="anonymous"></script>
 <?php
 endif;
 ?>
-		<script type="text/javascript" data-cfasync="false" src="js/zlib-1.2.11.js" integrity="sha512-Yey/0yoaVmSbqMEyyff3DIu8kCPwpHvHf7tY1AuZ1lrX9NPCMg87PwzngMi+VNbe4ilCApmePeuKT869RTcyCQ==" crossorigin="anonymous"></script>
-		<script type="text/javascript" data-cfasync="false" src="js/base-x-3.0.7.js" integrity="sha512-/Bi1AJIP0TtxEB+Jh6Hk809H1G7vn4iJV80qagslf0+Hm0UjUi1s3qNrn1kZULjzUYuaf6ck0ndLGJ7MxWLmgQ==" crossorigin="anonymous"></script>
-		<script type="text/javascript" data-cfasync="false" src="js/rawinflate-0.3.js" integrity="sha512-g8uelGgJW9A/Z1tB6Izxab++oj5kdD7B4qC7DHwZkB6DGMXKyzx7v5mvap2HXueI2IIn08YlRYM56jwWdm2ucQ==" crossorigin="anonymous"></script>
-		<script type="text/javascript" data-cfasync="false" src="js/bootstrap-3.3.7.js" integrity="sha512-iztkobsvnjKfAtTNdHkGVjAYTrrtlC7mGp/54c40wowO7LhURYl3gVzzcEqGl/qKXQltJ2HwMrdLcNUdo+N/RQ==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/zlib-1.2.11.js" integrity="sha512-ltQiYRTMNyL8c4rObU3wsq1IY9qXWlw3ev19xbLZywKhzLy9Ys3QWkUfbokF8V1yZPGdfFqCPLGpbj+D4NhtDA==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/base-x-3.0.7.js" integrity="sha512-1PEa62gwxcuweDJX3y/hE5hqV1WwUcKWdXnCPVBPu2J0QoONNH90gJSfKqdQCnsJhjMGNUWH6/UFQs1D3ufczQ==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/rawinflate-0.3.js" integrity="sha512-oC3qyjPVFoECDz+NY8EWEweqMF9Aobh+bxwfQsWTO+75CzsvHkZUZHiFI1iWPnCymurCZ8N1IRiA1lQstakAjw==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/bootstrap-3.3.7.js" integrity="sha512-4nvga8iY3PiT8GzEnK/LtrpuOmkQaomlAPaZPldgCzY2OSeEgRI3oaeDln2+BdV6B2nHj4B0oMOlmxa2VbHTUA==" crossorigin="anonymous"></script>
 <?php
 if ($SYNTAXHIGHLIGHTING):
 ?>
-		<script type="text/javascript" data-cfasync="false" src="js/prettify.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-puO0Ogy++IoA2Pb9IjSxV1n4+kQkKXYAEUtVzfZpQepyDPyXk8hokiYDS7ybMogYlyyEIwMLpZqVhCkARQWLMg==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/prettify.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-8Yo8AyWGdIAIogswah43R44ykWSTkNhgYaR4fsn49WSIsZ6GQF8HgO5ZbomYG7N459Rd2Ycl+JZTmJWovIy5TA==" crossorigin="anonymous"></script>
 <?php
 endif;
 if ($MARKDOWN):
 ?>
-		<script type="text/javascript" data-cfasync="false" src="js/showdown-1.9.1.js" integrity="sha512-nRri7kqh3iRLdHbhtjfe8w9eAQPmt+ubH5U88UZyKbz6O9Q0q4haaXF0krOUclKmRJou/kKZYulgBHvHXPqOvg==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/showdown-1.9.1.js" integrity="sha512-XaY4Yp8taiarnpsT49pd5AWWq9BfheHGV7MTt7ER2N5/rcq3v2DK7lbhdAhMic9eCoOD1cnBIgMCcV85ew4OSA==" crossorigin="anonymous"></script>
 <?php
 endif;
 ?>
-		<script type="text/javascript" data-cfasync="false" src="js/purify-2.0.8.js" integrity="sha512-QwcEKGuEmKtMguCO9pqNtUtZqq9b/tJ8gNr5qhY8hykq3zKTlDOvpZAmf6Rs8yH35Bz1ZdctUjj2qEWxT5aXCg==" crossorigin="anonymous"></script>
-		<script type="text/javascript" data-cfasync="false" src="js/legacy.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-LYos+qXHIRqFf5ZPNphvtTB0cgzHUizu2wwcOwcwz/VIpRv9lpcBgPYz4uq6jx0INwCAj6Fbnl5HoKiLufS2jg==" crossorigin="anonymous"></script>
-		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-5GFThJ8KstWT1bNvB5JTAAXA+5QCNDv21foF7hSNoAc0oOxrHiUCP1ZlZs9zk4SbdIsmTSGL12Ecdj5CRISYxg==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/purify-2.0.8.js" integrity="sha512-x2Kev3A7fqc/QKCzRHoJ7qCiglgxXtY8WDUMPOUBI6jVueqRkRMGjP1IqD9iUWVuND81ckCCS27Br5M11tw0IA==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/legacy.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-3L/E22cdC3wDFXKM1i32bw4HdrfX14du2xswUKanOY6CLrD+e0hykmLvES+zfBKF1GFQFKr3OmdCVH2y+zHlsA==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-0Gt+x+QenVjex80M6AXnrJIOqVV19nV+s8P9T9K68+vyvFGW/Fx34viKK8zzu1ME2GYctsJlNB4I1x75P095ZQ==" crossorigin="anonymous"></script>
 		<link rel="apple-touch-icon" href="img/apple-touch-icon.png?<?php echo rawurlencode($VERSION); ?>" sizes="180x180" />
 		<link rel="icon" type="image/png" href="img/favicon-32x32.png?<?php echo rawurlencode($VERSION); ?>" sizes="32x32" />
 		<link rel="icon" type="image/png" href="img/favicon-16x16.png?<?php echo rawurlencode($VERSION); ?>" sizes="16x16" />
