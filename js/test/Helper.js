@@ -81,7 +81,15 @@ describe('Helper', function () {
             'ignores non-URL content',
             'string',
             function (content) {
-                return content === $.PrivateBin.Helper.urls2links(content);
+                content = content.replace("\r", "\n").replace("\u0000", '');
+                let clean = jsdom();
+                $('body').html('<div id="foo"></div>');
+                let e = $('#foo');
+                e.text(content);
+                $.PrivateBin.Helper.urls2links(e);
+                let result = e.text();
+                clean();
+                return content === result;
             }
         );
         jsc.property(
@@ -95,9 +103,12 @@ describe('Helper', function () {
             function (prefix, schema, address, query, fragment, postfix) {
                 query    = query.join('');
                 fragment = fragment.join('');
-                prefix   = $.PrivateBin.Helper.htmlEntities(prefix);
-                postfix  = ' ' + $.PrivateBin.Helper.htmlEntities(postfix);
-                let url  = schema + '://' + address.join('') + '/?' + query + '#' + fragment;
+                prefix = prefix.replace("\r", "\n").replace("\u0000", '');
+                postfix  = ' ' + postfix.replace("\r", "\n").replace("\u0000", '');
+                let url  = schema + '://' + address.join('') + '/?' + query + '#' + fragment,
+                    clean = jsdom();
+                $('body').html('<div id="foo"></div>');
+                let e = $('#foo');
 
                 // special cases: When the query string and fragment imply the beginning of an HTML entity, eg. &#0 or &#x
                 if (
@@ -108,8 +119,12 @@ describe('Helper', function () {
                     url = schema + '://' + address.join('') + '/?' + query.substring(0, query.length - 1);
                     postfix = '';
                 }
-
-                return prefix + '<a href="' + url + '" rel="nofollow">' + url + '</a>' + postfix === $.PrivateBin.Helper.urls2links(prefix + url + postfix);
+                e.text(prefix + url + postfix);
+                $.PrivateBin.Helper.urls2links(e);
+                let result = e.html();
+                clean();
+                url = $('<div />').text(url).html();
+                return $('<div />').text(prefix).html() + '<a href="' + url + '" rel="nofollow">' + url + '</a>' + $('<div />').text(postfix).html() === result;
             }
         );
         jsc.property(
@@ -118,10 +133,18 @@ describe('Helper', function () {
             jsc.array(common.jscQueryString()),
             'string',
             function (prefix, query, postfix) {
-                prefix   = $.PrivateBin.Helper.htmlEntities(prefix);
-                postfix  = $.PrivateBin.Helper.htmlEntities(postfix);
-                let url  = 'magnet:?' + query.join('').replace(/^&+|&+$/gm,'');
-                return prefix + '<a href="' + url + '" rel="nofollow">' + url + '</a> ' + postfix === $.PrivateBin.Helper.urls2links(prefix + url + ' ' + postfix);
+                prefix = prefix.replace("\r", "\n").replace("\u0000", '');
+                postfix = ' ' + postfix.replace("\r", "\n").replace("\u0000", '');
+                let url  = 'magnet:?' + query.join('').replace(/^&+|&+$/gm,''),
+                    clean = jsdom();
+                $('body').html('<div id="foo"></div>');
+                let e = $('#foo');
+                e.text(prefix + url + postfix);
+                $.PrivateBin.Helper.urls2links(e);
+                let result = e.html();
+                clean();
+                url = $('<div />').text(url).html();
+                return $('<div />').text(prefix).html() + '<a href="' + url + '" rel="nofollow">' + url + '</a>' + $('<div />').text(postfix).html() === result;
             }
         );
     });
