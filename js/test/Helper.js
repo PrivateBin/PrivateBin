@@ -81,7 +81,7 @@ describe('Helper', function () {
             'ignores non-URL content',
             'string',
             function (content) {
-                return $.PrivateBin.Helper.htmlEntities(content) === $.PrivateBin.Helper.urls2links(content);
+                return content === $.PrivateBin.Helper.urls2links(content);
             }
         );
         jsc.property(
@@ -95,7 +95,8 @@ describe('Helper', function () {
             function (prefix, schema, address, query, fragment, postfix) {
                 query    = query.join('');
                 fragment = fragment.join('');
-                postfix  = ' ' + postfix;
+                prefix   = $.PrivateBin.Helper.htmlEntities(prefix);
+                postfix  = ' ' + $.PrivateBin.Helper.htmlEntities(postfix);
                 let url  = schema + '://' + address.join('') + '/?' + query + '#' + fragment;
 
                 // special cases: When the query string and fragment imply the beginning of an HTML entity, eg. &#0 or &#x
@@ -108,7 +109,7 @@ describe('Helper', function () {
                     postfix = '';
                 }
 
-                return $.PrivateBin.Helper.htmlEntities(prefix) + '<a href="' + url + '" rel="nofollow">' + $.PrivateBin.Helper.htmlEntities(url) + '</a>' + $.PrivateBin.Helper.htmlEntities(postfix) === $.PrivateBin.Helper.urls2links(prefix + url + postfix);
+                return prefix + '<a href="' + url + '" rel="nofollow">' + url + '</a>' + postfix === $.PrivateBin.Helper.urls2links(prefix + url + postfix);
             }
         );
         jsc.property(
@@ -117,8 +118,10 @@ describe('Helper', function () {
             jsc.array(common.jscQueryString()),
             'string',
             function (prefix, query, postfix) {
+                prefix   = $.PrivateBin.Helper.htmlEntities(prefix);
+                postfix  = $.PrivateBin.Helper.htmlEntities(postfix);
                 let url  = 'magnet:?' + query.join('').replace(/^&+|&+$/gm,'');
-                return $.PrivateBin.Helper.htmlEntities(prefix) + '<a href="' + url + '" rel="nofollow">' + $.PrivateBin.Helper.htmlEntities(url) + '</a> ' + $.PrivateBin.Helper.htmlEntities(postfix) === $.PrivateBin.Helper.urls2links(prefix + url + ' ' + postfix);
+                return prefix + '<a href="' + url + '" rel="nofollow">' + url + '</a> ' + postfix === $.PrivateBin.Helper.urls2links(prefix + url + ' ' + postfix);
             }
         );
     });

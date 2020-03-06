@@ -297,25 +297,10 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         me.urls2links = function(html)
         {
-            let reverseEntityMap = {};
-            for (let entity of ['&', '"', '/', '=']) {
-                reverseEntityMap[entityMap[entity]] = entity;
-            }
-            const entityRegex = new RegExp(Object.keys(reverseEntityMap).join('|'), 'g');
-
-            // encode HTML entities, find and insert links, partially decoding only the href property of it
-            return me.htmlEntities(html)
-                     .replace(
-                        /(((https?|ftp):&#x2F;&#x2F;[\w?!&.-;#@~%+*-]+(?![\w\s?!&.;#~%-]*>))|((magnet):[\w?&.-;#@~%+*-]+))/ig,
-                        function(encodedUrl) {
-                            let decodedUrl = encodedUrl.replace(
-                                entityRegex, function(entity) {
-                                    return reverseEntityMap[entity];
-                                }
-                            );
-                            return '<a href="' + decodedUrl + '" rel="nofollow">' + encodedUrl + '</a>';
-                        }
-                     )
+            return html.replace(
+                /(((https?|ftp):\/\/[\w?!=&.\/-;#@~%+*-]+(?![\w\s?!&.\/;#~%"=-]*>))|((magnet):[\w?=&.\/-;#@~%+*-]+))/ig,
+                '<a href="$1" rel="nofollow">$1</a>'
+            );
         };
 
         /**
