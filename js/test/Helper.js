@@ -81,7 +81,7 @@ describe('Helper', function () {
             'ignores non-URL content',
             'string',
             function (content) {
-                content = content.replace("\r", "\n").replace("\u0000", '');
+                content = content.replace(/\r/g, '\n').replace(/\u0000/g, '');
                 let clean = jsdom();
                 $('body').html('<div id="foo"></div>');
                 let e = $('#foo');
@@ -103,8 +103,8 @@ describe('Helper', function () {
             function (prefix, schema, address, query, fragment, postfix) {
                 query    = query.join('');
                 fragment = fragment.join('');
-                prefix = prefix.replace("\r", "\n").replace("\u0000", '');
-                postfix  = ' ' + postfix.replace("\r", "\n").replace("\u0000", '');
+                prefix = prefix.replace(/\r/g, '\n').replace(/\u0000/g, '');
+                postfix  = ' ' + postfix.replace(/\r/g, '\n').replace(/\u0000/g, '');
                 let url  = schema + '://' + address.join('') + '/?' + query + '#' + fragment,
                     clean = jsdom();
                 $('body').html('<div id="foo"></div>');
@@ -133,8 +133,8 @@ describe('Helper', function () {
             jsc.array(common.jscQueryString()),
             'string',
             function (prefix, query, postfix) {
-                prefix = prefix.replace("\r", "\n").replace("\u0000", '');
-                postfix = ' ' + postfix.replace("\r", "\n").replace("\u0000", '');
+                prefix = prefix.replace(/\r/g, '\n').replace(/\u0000/g, '');
+                postfix = ' ' + postfix.replace(/\r/g, '\n').replace(/\u0000/g, '');
                 let url  = 'magnet:?' + query.join('').replace(/^&+|&+$/gm,''),
                     clean = jsdom();
                 $('body').html('<div id="foo"></div>');
