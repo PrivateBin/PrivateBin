@@ -2547,6 +2547,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                             prettyPrintOne(processedText, null, true)
                         )
                     );
+                    break;
                 case 'markdown':
                     const converter = new showdown.Converter({
                         strikethrough: true,
