@@ -172,9 +172,9 @@
     "Notice:":
         "Hinweis:",
     "This link will expire after %s.":
-        "Dieser Link wird in %s ablaufen.",
+        "Dieser Link wird um %s ablaufen.",
     "This link can only be accessed once, do not use back or refresh button in your browser.":
-        "Dieser Link kann nur einmal geöffnet werden, verwende nicht den \"Zurück\" oder \"Neu laden\" Knopf Deines Browsers.",
+        "Dieser Link kann nur einmal geöffnet werden, verwende nicht den Zurück- oder Neu-laden-Knopf Deines Browsers.",
     "Link:":
         "Link:",
     "Recipient may become aware of your timezone, convert time to UTC?":
