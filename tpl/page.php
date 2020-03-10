@@ -65,12 +65,11 @@ endif;
 		<meta name="twitter:title" content="<?php echo I18n::_('Encrypted note on PrivateBin') ?>" />
 		<meta name="twitter:description" content="<?php echo I18n::_('Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.') ?>" />
 		<meta name="twitter:image" content="img/apple-touch-icon.png?<?php echo rawurlencode($VERSION); ?>" />
-		<meta property="og:audio" content="http://example.com/bond/theme.mp3" />
 		<meta property="og:title" content="<?php echo I18n::_($NAME); ?>" />
 		<meta property="og:site_name" content="<?php echo I18n::_($NAME); ?>" />
 		<meta property="og:description" content="<?php echo I18n::_('Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.') ?>" />
 		<meta property="og:image" content="img/apple-touch-icon.png?<?php echo rawurlencode($VERSION); ?>" />
-		<meta property="og:image:type" content="image/jpeg" />
+		<meta property="og:image:type" content="image/png" />
 		<meta property="og:image:width" content="180" />
 		<meta property="og:image:height" content="180" />
 	</head>

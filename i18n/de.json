@@ -184,5 +184,9 @@
     "Convert To UTC":
         "In UTC Umwandeln",
     "Close":
-        "Schliessen"
+        "Schliessen",
+    "Encrypted note on PrivateBin":
+        "Verschlüsselte Notiz auf PrivateBin",
+    "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.":
+        "Besuche diesen Link um das Dokument zu sehen. Wird die URL an eine andere Person gegeben, so kann diese Person ebenfalls auf diese Notiz zugreifen."
 }

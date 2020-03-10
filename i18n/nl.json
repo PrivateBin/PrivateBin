@@ -129,7 +129,7 @@
     "The cloned file '%s' was attached to this paste.": "Het gekloonde bestand '%s' is bijgevoegd aan de geplakte tekst.",
     "Attach a file": "Een bestand toevoegen",
     "alternatively drag & drop a file or paste an image from the clipboard": "U kunt ook een bestand slepen en neerzetten of een afbeelding plakken van het klembord",
-    "File too large, to display a preview. Please download the attachment.": "Het bestand is te groot om voorbeeld weer te geven. Aub de bijlage downloaden",   
+    "File too large, to display a preview. Please download the attachment.": "Het bestand is te groot om voorbeeld weer te geven. Aub de bijlage downloaden",
 	"Remove attachment": "Bijlage verwijderen",
     "Your browser does not support uploading encrypted files. Please use a newer browser.":
 		"Uw browser biedt geen ondersteuning voor het uploaden van gecodeerde bestanden. Gebruik alstublieft een nieuwere browser",
@@ -184,5 +184,9 @@
     "Convert To UTC":
         "Convert To UTC",
     "Close":
-        "Close"
+        "Close",
+    "Encrypted note on PrivateBin":
+        "Encrypted note on PrivateBin",
+    "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.":
+        "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too."
 }
