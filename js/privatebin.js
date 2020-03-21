@@ -375,7 +375,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         };
 
         /**
-         * convert URLs to clickable links.
+         * convert URLs to clickable links in the provided element.
          *
          * URLs to handle:
          * <pre>
@@ -386,14 +386,15 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          *
          * @name   Helper.urls2links
          * @function
-         * @param  {string} html
-         * @return {string}
+         * @param  {HTMLElement} element
          */
-        me.urls2links = function(html)
+        me.urls2links = function(element)
         {
-            return html.replace(
-                /(((https?|ftp):\/\/[\w?!=&.\/-;#@~%+*-]+(?![\w\s?!&.\/;#~%"=-]*>))|((magnet):[\w?=&.\/-;#@~%+*-]+))/ig,
-                '<a href="$1" rel="nofollow">$1</a>'
+            element.html(
+                element.html().replace(
+                    /(((https?|ftp):\/\/[\w?!=&.\/-;#@~%+*-]+(?![\w\s?!&.\/;#~%"=-]>))|((magnet):[\w?=&.\/-;#@~%+*-]+))/ig,
+                    '<a href="$1" rel="nofollow">$1</a>'
+                )
             );
         };
 
@@ -2504,36 +2505,24 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 return;
             }
 
-            // escape HTML entities, link URLs, sanitize
-            const escapedLinkedText = Helper.urls2links(text),
-                  sanitizedLinkedText = DOMPurify.sanitize(
-                    escapedLinkedText, {
-                        ALLOWED_TAGS: ['a'],
-                        ALLOWED_ATTR: ['href', 'rel']
-                    }
-                  );
-            $plainText.html(sanitizedLinkedText);
-            $prettyPrint.html(sanitizedLinkedText);
-
-            switch (format) {
-                case 'markdown':
-                    const converter = new showdown.Converter({
-                        strikethrough: true,
-                        tables: true,
-                        tablesHeaderId: true,
-                        simplifiedAutoLink: true,
-                        excludeTrailingPunctuationFromURLs: true
-                    });
-                    // let showdown convert the HTML and sanitize HTML *afterwards*!
-                    $plainText.html(
-                        DOMPurify.sanitize(
-                            converter.makeHtml(text)
-                        )
-                    );
-                    // add table classes from bootstrap css
-                    $plainText.find('table').addClass('table-condensed table-bordered');
-                    break;
-                case 'syntaxhighlighting':
+            if (format === 'markdown') {
+                const converter = new showdown.Converter({
+                    strikethrough: true,
+                    tables: true,
+                    tablesHeaderId: true,
+                    simplifiedAutoLink: true,
+                    excludeTrailingPunctuationFromURLs: true
+                });
+                // let showdown convert the HTML and sanitize HTML *afterwards*!
+                $plainText.html(
+                    DOMPurify.sanitize(
+                        converter.makeHtml(text)
+                    )
+                );
+                // add table classes from bootstrap css
+                $plainText.find('table').addClass('table-condensed table-bordered');
+            } else {
+                if (format === 'syntaxhighlighting') {
                     // yes, this is really needed to initialize the environment
                     if (typeof prettyPrint === 'function')
                     {
@@ -2541,15 +2530,18 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                     }
 
                     $prettyPrint.html(
-                        DOMPurify.sanitize(
-                            prettyPrintOne(escapedLinkedText, null, true)
+                        prettyPrintOne(
+                            Helper.htmlEntities(text), null, true
                         )
                     );
-                    // fall through, as the rest is the same
-                default: // = 'plaintext'
-                    $prettyPrint.css('white-space', 'pre-wrap');
-                    $prettyPrint.css('word-break', 'normal');
-                    $prettyPrint.removeClass('prettyprint');
+                } else {
+                    // = 'plaintext'
+                    $prettyPrint.text(text);
+                }
+                Helper.urls2links($prettyPrint);
+                $prettyPrint.css('white-space', 'pre-wrap');
+                $prettyPrint.css('word-break', 'normal');
+                $prettyPrint.removeClass('prettyprint');
             }
         }
 
@@ -3323,14 +3315,8 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             const $commentEntryData = $commentEntry.find('div.commentdata');
 
             // set & parse text
-            $commentEntryData.html(
-                DOMPurify.sanitize(
-                    Helper.urls2links(commentText), {
-                        ALLOWED_TAGS: ['a'],
-                        ALLOWED_ATTR: ['href', 'rel']
-                    }
-                )
-            );
+            $commentEntryData.text(commentText);
+            Helper.urls2links($commentEntryData);
 
             // set nickname
             if (nickname.length > 0) {
