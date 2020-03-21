@@ -3447,6 +3447,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 if (fadeOut === true) {
                     setTimeout(function () {
                         $comment.removeClass('highlight');
+
                     }, 300);
                 }
             };
@@ -4249,7 +4250,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         me.isAttachmentReadonly = function()
         {
-            return $attach.hasClass('hidden');
+            return createButtonsDisplayed && $attach.hasClass('hidden');
         }
 
         /**
