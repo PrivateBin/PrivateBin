@@ -73,6 +73,7 @@ describe('Helper', function () {
     });
 
     describe('urls2links', function () {
+        this.timeout(30000);
         before(function () {
             cleanup = jsdom();
         });
