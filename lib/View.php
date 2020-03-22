@@ -7,7 +7,7 @@
  * @link      https://github.com/PrivateBin/PrivateBin
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   http://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
- * @version   1.3.3
+ * @version   1.3.4
  */
 
 namespace PrivateBin;
