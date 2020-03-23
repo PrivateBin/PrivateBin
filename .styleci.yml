@@ -17,7 +17,7 @@ disabled:
   - concat_without_spaces
   - declare_equal_normalize
   - heredoc_to_nowdoc
-  - method_argument_space
+  - method_argument_space_strict
   - new_with_braces
   - no_alternative_syntax
   - phpdoc_align

@@ -187,7 +187,7 @@ CREATE INDEX parent ON prefix_comment(pasteid);
 CREATE TABLE prefix_config (
     id CHAR(16) NOT NULL, value TEXT, PRIMARY KEY (id)
 );
-INSERT INTO prefix_config VALUES('VERSION', '1.3.3');
+INSERT INTO prefix_config VALUES('VERSION', '1.3.4');
 ```
 
 In **PostgreSQL**, the data, attachment, nickname and vizhash columns needs to be TEXT and not BLOB or MEDIUMBLOB.
