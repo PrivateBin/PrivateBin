@@ -184,5 +184,9 @@
     "Convert To UTC":
         "Converter para UTC",
     "Close":
-        "Fechar"
+        "Fechar",
+    "Encrypted note on PrivateBin":
+        "Encrypted note on PrivateBin",
+    "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.":
+        "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too."
 }
