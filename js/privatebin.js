@@ -3601,6 +3601,20 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             }
         }
 
+
+        /**
+         * Clear the attachment input in the top navigation.
+         *
+         * @name   TopNav.clearAttachmentInput
+         * @function
+         */
+        function clearAttachmentInput()
+        {
+            // hide UI for selected files
+            // our up-to-date jQuery can handle it :)
+            $fileWrap.find('input').val('');
+        }
+
         /**
          * return raw text
          *
@@ -3695,7 +3709,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             // in any case, remove saved attachment data
             AttachmentViewer.removeAttachmentData();
 
-            me.clearAttachmentInput();
+            clearAttachmentInput();
             AttachmentViewer.clearDragAndDrop();
 
             // pevent '#' from appearing in the URL
@@ -4111,16 +4125,21 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         };
 
         /**
-         * Clear the attachment input in the top navigation.
+         * Reset the top navigation back to it's default values.
          *
-         * @name   TopNav.clearAttachmentInput
+         * @name   TopNav.resetInput
          * @function
          */
-        me.clearAttachmentInput = function()
+        me.resetInput = function()
         {
-            // hide UI for selected files
-            // our up-to-date jQuery can handle it :)
-            $fileWrap.find('input').val('');
+            clearAttachmentInput();
+
+            $openDiscussion.prop('checked', false);
+            $burnAfterReading.prop('checked', false);
+            $openDiscussionOption.removeClass('buttondisabled');
+            $burnAfterReadingOption.removeClass('buttondisabled');
+
+            // TODO: reset expiration time
         };
 
         /**
@@ -5144,7 +5163,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             Editor.show();
             Editor.focusInput();
             AttachmentViewer.removeAttachment();
-            TopNav.clearAttachmentInput();
+            TopNav.resetInput();
 
             TopNav.showCreateButtons();
 
