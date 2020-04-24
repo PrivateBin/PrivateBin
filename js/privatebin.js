@@ -18,14 +18,14 @@ jQuery.fn.draghover = function() {
     return this.each(function() {
         let collection = $(),
             self = $(this);
-  
+
         self.on('dragenter', function(e) {
             if (collection.length === 0) {
                 self.trigger('draghoverstart');
             }
             collection = collection.add(e.target);
         });
-  
+
         self.on('dragleave drop', function(e) {
             collection = collection.not(e.target);
             if (collection.length === 0) {
@@ -519,7 +519,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
         /**
          * calculate expiration date given initial date and expiration period
-         * 
+         *
          * @name   Helper.calculateExpirationDate
          * @function
          * @param  {Date} initialDate - may not be empty
@@ -532,7 +532,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             if (typeof expirationDisplayStringOrSecondsToExpire === 'string') {
                 secondsToExpiration = me.durationToSeconds(expirationDisplayStringOrSecondsToExpire);
             }
-            
+
             if (typeof secondsToExpiration !== 'number') {
                 throw new Error('Cannot calculate expiration date.');
             }
@@ -3601,6 +3601,20 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             }
         }
 
+
+        /**
+         * Clear the attachment input in the top navigation.
+         *
+         * @name   TopNav.clearAttachmentInput
+         * @function
+         */
+        function clearAttachmentInput()
+        {
+            // hide UI for selected files
+            // our up-to-date jQuery can handle it :)
+            $fileWrap.find('input').val('');
+        }
+
         /**
          * return raw text
          *
@@ -3695,9 +3709,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             // in any case, remove saved attachment data
             AttachmentViewer.removeAttachmentData();
 
-            // hide UI for selected files
-            // our up-to-date jQuery can handle it :)
-            $fileWrap.find('input').val('');
+            clearAttachmentInput();
             AttachmentViewer.clearDragAndDrop();
 
             // pevent '#' from appearing in the URL
@@ -3722,11 +3734,11 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
         /**
          * Template Email body.
-         * 
+         *
          * @name   TopNav.templateEmailBody
-         * @private 
-         * @param {string} expirationDateString 
-         * @param {bool} isBurnafterreading 
+         * @private
+         * @param {string} expirationDateString
+         * @param {bool} isBurnafterreading
          */
         function templateEmailBody(expirationDateString, isBurnafterreading)
         {
@@ -3764,10 +3776,10 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
         /**
          * Trigger Email send.
-         * 
+         *
          * @name   TopNav.triggerEmailSend
-         * @private 
-         * @param {string} emailBody 
+         * @private
+         * @param {string} emailBody
          */
         function triggerEmailSend(emailBody)
         {
@@ -3980,7 +3992,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
         /**
          * show the "email" button
-         * 
+         *
          * @name   TopNav.showEmailbutton
          * @function
          * @param {int|undefined} optionalRemainingTimeInSeconds
@@ -4008,7 +4020,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
         /**
          * hide the "email" button
-         * 
+         *
          * @name   TopNav.hideEmailButton
          * @function
          */
@@ -4042,7 +4054,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
         /**
          * only hides the qr code button
-         * 
+         *
          * @name   TopNav.hideQrCodeButton
          * @function
          */
@@ -4053,7 +4065,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
         /**
          * hide all irrelevant buttons when viewing burn after reading paste
-         * 
+         *
          * @name   TopNav.hideBurnAfterReadingButtons
          * @function
          */
@@ -4089,7 +4101,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
         /**
          * hides the custom attachment
-         * 
+         *
          * @name  TopNav.hideCustomAttachment
          * @function
          */
@@ -4110,6 +4122,24 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             if ($('#navbar').attr('aria-expanded') === 'true') {
                 $('.navbar-toggle').click();
             }
+        };
+
+        /**
+         * Reset the top navigation back to it's default values.
+         *
+         * @name   TopNav.resetInput
+         * @function
+         */
+        me.resetInput = function()
+        {
+            clearAttachmentInput();
+
+            $openDiscussion.prop('checked', false);
+            $burnAfterReading.prop('checked', false);
+            $openDiscussionOption.removeClass('buttondisabled');
+            $burnAfterReadingOption.removeClass('buttondisabled');
+
+            // TODO: reset expiration time
         };
 
         /**
@@ -4213,7 +4243,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
         /**
          * Highlight file upload
-         * 
+         *
          * @name  TopNav.highlightFileupload
          * @function
          */
@@ -4232,7 +4262,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
         /**
          * set the format on bootstrap templates in dropdown programmatically
-         * 
+         *
          * @name    TopNav.setFormat
          * @function
          */
@@ -4243,7 +4273,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
         /**
          * returns if attachment dropdown is readonly, not editable
-         * 
+         *
          * @name   TopNav.isAttachmentReadonly
          * @function
          * @return {bool}
@@ -5133,6 +5163,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             Editor.show();
             Editor.focusInput();
             AttachmentViewer.removeAttachment();
+            TopNav.resetInput();
 
             TopNav.showCreateButtons();
 
