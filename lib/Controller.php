@@ -196,6 +196,19 @@ class Controller
      */
     private function _create()
     {
+        // Check whitelist if allowed to create
+        $whitelist = explode(',', $this->_conf->getKey('whitelist', 'traffic'));
+        if (($option = $this->_conf->getKey('header', 'traffic')) !== null) {
+            $httpHeader = 'HTTP_' . $option;
+            if (array_key_exists($httpHeader, $_SERVER) && !empty($_SERVER[$httpHeader])) {
+                $remoteip = $_SERVER[$httpHeader];
+            }
+        }
+        if( !in_array($remoteip, $whitelist) ) {
+            $this->_return_message(1, I18n::_('Your IP is not authorized'));
+            return;
+        }
+        
         // Ensure last paste from visitors IP address was more than configured amount of seconds ago.
         TrafficLimiter::setConfiguration($this->_conf);
         if (!TrafficLimiter::canPass()) {
