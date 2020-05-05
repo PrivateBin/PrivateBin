@@ -127,6 +127,10 @@ markdown = "Markdown"
 ; Set this to 0 to disable rate limiting.
 limit = 10
 
+; (optional) if you only want some source IP addresses to create pastes
+; enter their IPv4 address(es) here, separated by commas
+; whitelist = "12.34.56.78,99.88.77.66"
+
 ; (optional) if your website runs behind a reverse proxy or load balancer,
 ; set the HTTP header containing the visitors IP address, i.e. X_FORWARDED_FOR
 ; header = "X_FORWARDED_FOR"
