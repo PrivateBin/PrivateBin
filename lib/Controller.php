@@ -201,12 +201,12 @@ class Controller
         if (($option = $this->_conf->getKey('header', 'traffic')) !== null) {
             $httpHeader = 'HTTP_' . $option;
             if (array_key_exists($httpHeader, $_SERVER) && !empty($_SERVER[$httpHeader])) {
-                $remoteip = $_SERVER[$httpHeader];
+                // compare source IP from web server with whitelist
+                if(!in_array($_SERVER[$httpHeader], $whitelist)) {
+                    $this->_return_message(1, I18n::_('Your IP is not authorized to create pastes.'));
+                    return;
+                }                
             }
-        }
-        if(!in_array($remoteip, $whitelist)) {
-            $this->_return_message(1, I18n::_('Your IP is not authorized to create pastes.'));
-            return;
         }
         
         // Ensure last paste from visitors IP address was more than configured amount of seconds ago.
