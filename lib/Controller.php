@@ -204,7 +204,7 @@ class Controller
                 $remoteip = $_SERVER[$httpHeader];
             }
         }
-        if( !in_array($remoteip, $whitelist) ) {
+        if(!in_array($remoteip, $whitelist)) {
             $this->_return_message(1, I18n::_('Your IP is not authorized to create pastes.'));
             return;
         }
