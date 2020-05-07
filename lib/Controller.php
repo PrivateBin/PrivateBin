@@ -205,7 +205,7 @@ class Controller
             }
         }
         if( !in_array($remoteip, $whitelist) ) {
-            $this->_return_message(1, I18n::_('Your IP is not authorized'));
+            $this->_return_message(1, I18n::_('Your IP is not authorized to create pastes.'));
             return;
         }
         
