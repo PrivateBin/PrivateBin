@@ -197,7 +197,7 @@ class Controller
     private function _create()
     {
         // Check whitelist if allowed to create
-        $whitelist = explode(',', $this->_conf->getKey('whitelist', 'traffic'));
+        $whitelist = explode(',', $this->_conf->getKey('whitelist_paste_creation', 'traffic'));
         if (($option = $this->_conf->getKey('header', 'traffic')) !== null) {
             $httpHeader = 'HTTP_' . $option;
             if (array_key_exists($httpHeader, $_SERVER) && !empty($_SERVER[$httpHeader])) {
