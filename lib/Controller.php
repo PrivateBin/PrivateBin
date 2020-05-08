@@ -209,11 +209,11 @@ class Controller
                     if (!in_array($_SERVER[$httpHeader], $whitelist)) {
                         $this->_return_message(1, I18n::_('Your IP is not authorized to create pastes.'));
                         return;
-                    }                
+                    }
                 }
             }
         }
-        
+
         // Ensure last paste from visitors IP address was more than configured amount of seconds ago.
         TrafficLimiter::setConfiguration($this->_conf);
         if (!TrafficLimiter::canPass()) {
