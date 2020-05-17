@@ -3110,19 +3110,15 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         function addClipboardEventHandler() {
             $(document).on('paste', function (event) {
-                if (TopNav.isAttachmentReadonly()) {
-                    event.stopPropagation();
-                    event.preventDefault();
-                    return false;
-                }
                 const items = (event.clipboardData || event.originalEvent.clipboardData).items;
-                for (let i = 0; i < items.length; ++i) {
-                    if (items[i].kind === 'file') {
-                        //Clear the file input:
-                        $fileInput.wrap('<form>').closest('form').get(0).reset();
-                        $fileInput.unwrap();
-
-                        readFileData(items[i].getAsFile());
+                const lastItem = items[items.length - 1];
+                if (lastItem.kind === 'file') {
+                    if (TopNav.isAttachmentReadonly()) {
+                        event.stopPropagation();
+                        event.preventDefault();
+                        return false;
+                    } else {
+                        readFileData(lastItem.getAsFile());
                     }
                 }
             });
