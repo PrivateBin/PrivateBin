@@ -50,7 +50,7 @@ endif;
 ?>
 		<script type="text/javascript" data-cfasync="false" src="js/purify-2.0.8.js" integrity="sha512-QwcEKGuEmKtMguCO9pqNtUtZqq9b/tJ8gNr5qhY8hykq3zKTlDOvpZAmf6Rs8yH35Bz1ZdctUjj2qEWxT5aXCg==" crossorigin="anonymous"></script>
 		<script type="text/javascript" data-cfasync="false" src="js/legacy.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-LYos+qXHIRqFf5ZPNphvtTB0cgzHUizu2wwcOwcwz/VIpRv9lpcBgPYz4uq6jx0INwCAj6Fbnl5HoKiLufS2jg==" crossorigin="anonymous"></script>
-		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-FC14dIXSJ7iLCcpPOCs7JiCe3619sRbEGsLiSqzD+dGS8qKJTR4X84UvQt0yNYTvQ84QMQ2GtoDpVrJYFeqcYw==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-Spi3y8C77VglVCbgcZTn67AX7OeMEf5XBnAeAr8KJ7lg9aqkQzGIS0icB+xQ3OWwaBOHuqwoqFQ6EAhSxkwwvQ==" crossorigin="anonymous"></script>
 		<!-- icon -->
 		<link rel="apple-touch-icon" href="img/apple-touch-icon.png?<?php echo rawurlencode($VERSION); ?>" sizes="180x180" />
 		<link rel="icon" type="image/png" href="img/favicon-32x32.png?<?php echo rawurlencode($VERSION); ?>" sizes="32x32" />
@@ -128,7 +128,7 @@ if ($QRCODE):
 <?php
 endif;
 ?>
-					<div id="expiration" class="hidden button"><?php echo I18n::_('Expires'); ?>:
+					<div id="expiration" class="hidden button" data-default="<?php echo $EXPIREDEFAULT; ?>"><?php echo I18n::_('Expires'); ?>:
 						<select id="pasteExpiration" name="pasteExpiration">
 <?php
 foreach ($EXPIRE as $key => $value):
@@ -233,8 +233,8 @@ if ($FILEUPLOAD):
 				<div id="attachment" class="hidden"><a><?php echo I18n::_('Download attachment'); ?></a></div>
 				<div id="attach" class="hidden">
 					<span id="clonedfile" class="hidden"><?php echo I18n::_('Cloned file attached.'); ?></span>
-					<span id="filewrap"><?php echo I18n::_('Attach a file'); ?>: <input type="file" id="file" name="file" /></span>
-					<span id="dragAndDropFileName" class="dragAndDropFile"><?php echo I18n::_('alternatively drag & drop a file or paste an image from the clipboard'); ?></span>
+					<span id="filewrap"><?php echo I18n::_('Attachment'); ?>: <input type="file" id="file" name="file" /></span>
+					<span id="dragAndDropFileName" class="dragAndDropFile"></span>
 					<button id="fileremovebutton"><?php echo I18n::_('Remove attachment'); ?></button>
 				</div>
 <?php

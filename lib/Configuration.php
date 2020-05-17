@@ -46,7 +46,7 @@ class Configuration
             'defaultformatter'         => 'plaintext',
             'syntaxhighlightingtheme'  => null,
             'sizelimit'                => 10485760,
-            'template'                 => 'bootstrap',
+            'template'                 => 'bootstrap-auto',
             'notice'                   => '',
             'languageselection'        => false,
             'languagedefault'          => '',

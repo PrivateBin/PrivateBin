@@ -36,3 +36,6 @@ tst/ConfigurationCombinationsTest.php
 .project
 .externalToolBuilders
 .c9
+
+# VSCode directories
+.vscode

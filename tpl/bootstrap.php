@@ -3,12 +3,13 @@ use PrivateBin\I18n;
 $isCpct = substr($template, 9, 8) === '-compact';
 $isDark = substr($template, 9, 5) === '-dark';
 $isPage = substr($template, -5) === '-page';
+$isAuto = substr($template, -5) === '-auto';
 ?><!DOCTYPE html>
 <html lang="<?php echo I18n::_('en'); ?>">
 	<head>
 		<meta charset="utf-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 		<meta name="robots" content="noindex" />
 		<meta name="google" content="notranslate">
 		<title><?php echo I18n::_($NAME); ?></title>
@@ -19,11 +20,21 @@ if (!$isDark):
 <?php
 endif;
 ?>
-		<link type="text/css" rel="stylesheet" href="css/bootstrap/bootstrap-theme-3.4.1.css" />
 <?php
 if ($isDark):
 ?>
 		<link type="text/css" rel="stylesheet" href="css/bootstrap/darkstrap-0.9.3.css" />
+<?php
+endif;
+?>
+<?php
+if ($isAuto):
+?>
+		<link type="text/css" rel="stylesheet" href="css/bootstrap/bootstrap-auto.css" />
+<?php
+else:
+?>
+    <link type="text/css" rel="stylesheet" href="css/bootstrap/bootstrap-theme-3.4.1.css" />
 <?php
 endif;
 ?>
@@ -72,7 +83,7 @@ endif;
 ?>
 		<script type="text/javascript" data-cfasync="false" src="js/purify-2.0.8.js" integrity="sha512-QwcEKGuEmKtMguCO9pqNtUtZqq9b/tJ8gNr5qhY8hykq3zKTlDOvpZAmf6Rs8yH35Bz1ZdctUjj2qEWxT5aXCg==" crossorigin="anonymous"></script>
 		<script type="text/javascript" data-cfasync="false" src="js/legacy.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-LYos+qXHIRqFf5ZPNphvtTB0cgzHUizu2wwcOwcwz/VIpRv9lpcBgPYz4uq6jx0INwCAj6Fbnl5HoKiLufS2jg==" crossorigin="anonymous"></script>
-		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-FC14dIXSJ7iLCcpPOCs7JiCe3619sRbEGsLiSqzD+dGS8qKJTR4X84UvQt0yNYTvQ84QMQ2GtoDpVrJYFeqcYw==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-Spi3y8C77VglVCbgcZTn67AX7OeMEf5XBnAeAr8KJ7lg9aqkQzGIS0icB+xQ3OWwaBOHuqwoqFQ6EAhSxkwwvQ==" crossorigin="anonymous"></script>
 		<!-- icon -->
 		<link rel="apple-touch-icon" href="img/apple-touch-icon.png?<?php echo rawurlencode($VERSION); ?>" sizes="180x180" />
 		<link rel="icon" type="image/png" href="img/favicon-32x32.png?<?php echo rawurlencode($VERSION); ?>" sizes="32x32" />
@@ -239,15 +250,16 @@ foreach ($EXPIRE as $key => $value):
 endforeach;
 ?>
 						</select>
-						<a id="expiration" href="#" class="hidden dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><?php echo I18n::_('Expires'); ?>: <span id="pasteExpirationDisplay"><?php echo $EXPIRE[$EXPIREDEFAULT]; ?></span> <span class="caret"></span></a>
+						<a id="expiration" href="#" class="hidden dropdown-toggle" data-toggle="dropdown" data-default="<?php echo $EXPIREDEFAULT; ?>" role="button" aria-haspopup="true" aria-expanded="false">
+							<span class="glyphicon glyphicon-time hint" aria-hidden="true"></span>
+							<span class="hint-text"><?php echo I18n::_('Expires'); ?>:</span>&nbsp;<span id="pasteExpirationDisplay"><?php echo $EXPIRE[$EXPIREDEFAULT]; ?></span> <span class="caret"></span>
+						</a>
 						<ul class="dropdown-menu">
 <?php
 foreach ($EXPIRE as $key => $value):
 ?>
 							<li>
-								<a href="#" data-expiration="<?php echo $key; ?>">
-									<?php echo $value, PHP_EOL; ?>
-								</a>
+								<a href="#" data-expiration="<?php echo $key; ?>"><?php echo $value; ?></a>
 							</li>
 <?php
 endforeach;
@@ -255,121 +267,19 @@ endforeach;
 						</ul>
 					</li>
 <?php
-if ($isCpct):
-?>
-					<li class="dropdown">
-						<a id="formatter" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><?php echo I18n::_('Options'); ?> <span class="caret"></span></a>
-						<ul class="dropdown-menu">
-							<li id="burnafterreadingoption" class="checkbox hidden">
-								<label>
-									<input type="checkbox" id="burnafterreading" name="burnafterreading"<?php
-    if ($BURNAFTERREADINGSELECTED):
-?> checked="checked"<?php
-    endif;
-?> />
-									<?php echo I18n::_('Burn after reading'), PHP_EOL; ?>
-								</label>
-							</li>
-<?php
-    if ($DISCUSSION):
-?>
-							<li id="opendiscussionoption" class="checkbox hidden">
-								<label>
-									<input type="checkbox" id="opendiscussion" name="opendiscussion"<?php
-        if ($OPENDISCUSSION):
-?> checked="checked"<?php
-        endif;
-?> />
-									<?php echo I18n::_('Open discussion'), PHP_EOL; ?>
-								</label>
-							</li>
-<?php
-    endif;
-?>
-							<li role="separator" class="divider"></li>
-							<li>
-								<div>
-									<?php echo I18n::_('Format'); ?>: <span id="pasteFormatterDisplay"><?php echo $FORMATTER[$FORMATTERDEFAULT]; ?></span> <span class="caret"></span>
-								</div>
-							</li>
-<?php
-    foreach ($FORMATTER as $key => $value):
-?>
-							<li>
-								<a href="#" data-format="<?php echo $key; ?>">
-									<?php echo $value, PHP_EOL; ?>
-								</a>
-							</li>
-<?php
-    endforeach;
-?>
-						</ul>
-						<select id="pasteFormatter" name="pasteFormatter" class="hidden">
-<?php
-    foreach ($FORMATTER as $key => $value):
-?>
-							<option value="<?php echo $key; ?>"<?php
-        if ($key == $FORMATTERDEFAULT):
-?> selected="selected"<?php
-        endif;
-?>><?php echo $value; ?></option>
-<?php
-    endforeach;
-?>
-						</select>
-					</li>
-<?php
-else:
-?>
-					<li>
-						<div id="burnafterreadingoption" class="navbar-text checkbox hidden">
-							<label>
-								<input type="checkbox" id="burnafterreading" name="burnafterreading"<?php
-    if ($BURNAFTERREADINGSELECTED):
-?> checked="checked"<?php
-    endif;
-?> />
-								<?php echo I18n::_('Burn after reading'), PHP_EOL; ?>
-							</label>
-						</div>
-					</li>
-<?php
-    if ($DISCUSSION):
-?>
-					<li>
-						<div id="opendiscussionoption" class="navbar-text checkbox hidden">
-							<label>
-								<input type="checkbox" id="opendiscussion" name="opendiscussion"<?php
-        if ($OPENDISCUSSION):
-?> checked="checked"<?php
-        endif;
-?> />
-								<?php echo I18n::_('Open discussion'), PHP_EOL; ?>
-							</label>
-						</div>
-					</li>
-<?php
-    endif;
-endif;
-if ($PASSWORD):
-?>
-					<li>
-						<div id="password" class="navbar-form hidden">
-							<input type="password" id="passwordinput" placeholder="<?php echo I18n::_('Password (recommended)'); ?>" class="form-control" size="23" />
-						</div>
-					</li>
-<?php
-endif;
 if ($FILEUPLOAD):
 ?>
 					<li id="attach" class="hidden dropdown">
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><?php echo I18n::_('Attach a file'); ?> <span class="caret"></span></a>
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+							<span class="glyphicon glyphicon-paperclip hint" aria-hidden="true"></span>
+							<span class="hint-text"><?php echo I18n::_('Attachment'); ?></span>&nbsp;<span class="caret"></span>
+						</a>
 						<ul class="dropdown-menu">
 							<li id="filewrap">
-								<div>
+								<div class="hidden">
 									<input type="file" id="file" name="file" />
 								</div>
-								<div id="dragAndDropFileName" class="dragAndDropFile"><?php echo I18n::_('alternatively drag & drop a file or paste an image from the clipboard'); ?></div>
+								<a id="dragAndDropFileName" href="#" class="dragAndDropFile"><?php echo I18n::_('Choose file or drag & drop'); ?></a>
 							</li>
 							<li id="customattachment" class="hidden"></li>
 							<li>
@@ -386,31 +296,137 @@ if (!$isCpct):
 					<li class="dropdown">
 						<select id="pasteFormatter" name="pasteFormatter" class="hidden">
 <?php
-    foreach ($FORMATTER as $key => $value):
+		foreach ($FORMATTER as $key => $value):
 ?>
 							<option value="<?php echo $key; ?>"<?php
-        if ($key == $FORMATTERDEFAULT):
+				if ($key == $FORMATTERDEFAULT):
 ?> selected="selected"<?php
-        endif;
+				endif;
 ?>><?php echo $value; ?></option>
 <?php
-    endforeach;
+		endforeach;
 ?>
 						</select>
-						<a id="formatter" href="#" class="hidden dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><?php echo I18n::_('Format'); ?>: <span id="pasteFormatterDisplay"><?php echo $FORMATTER[$FORMATTERDEFAULT]; ?></span> <span class="caret"></span></a>
+						<a id="formatter" href="#" class="hidden dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+							<span class="glyphicon glyphicon-font hint" aria-hidden="true"></span>
+							<span class="hint-text"><?php echo I18n::_('Format'); ?>:</span>&nbsp;<span id="pasteFormatterDisplay"><?php echo $FORMATTER[$FORMATTERDEFAULT]; ?></span> <span class="caret"></span>
+						</a>
 						<ul class="dropdown-menu">
 <?php
-    foreach ($FORMATTER as $key => $value):
+		foreach ($FORMATTER as $key => $value):
 ?>
 							<li>
-								<a href="#" data-format="<?php echo $key; ?>">
-									<?php echo $value, PHP_EOL; ?>
-								</a>
+								<a href="#" data-format="<?php echo $key; ?>"><?php echo $value; ?></a>
 							</li>
 <?php
-    endforeach;
+		endforeach;
 ?>
 						</ul>
+					</li>
+<?php
+endif;
+if ($isCpct):
+?>
+					<li class="dropdown">
+						<a id="formatter" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><?php echo I18n::_('Options'); ?> <span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<li id="burnafterreadingoption" class="checkbox hidden">
+								<label>
+									<input type="checkbox" id="burnafterreading" name="burnafterreading"<?php
+		if ($BURNAFTERREADINGSELECTED):
+?> checked="checked"<?php
+		endif;
+?> />
+									<?php echo I18n::_('Burn after reading'), PHP_EOL; ?>
+								</label>
+							</li>
+<?php
+		if ($DISCUSSION):
+?>
+							<li id="opendiscussionoption" class="checkbox hidden">
+								<label>
+									<input type="checkbox" id="opendiscussion" name="opendiscussion"<?php
+				if ($OPENDISCUSSION):
+?> checked="checked"<?php
+				endif;
+?> />
+									<?php echo I18n::_('Open discussion'), PHP_EOL; ?>
+								</label>
+							</li>
+<?php
+		endif;
+?>
+							<li role="separator" class="divider"></li>
+							<li>
+								<div>
+									<?php echo I18n::_('Format'); ?>: <span id="pasteFormatterDisplay"><?php echo $FORMATTER[$FORMATTERDEFAULT]; ?></span> <span class="caret"></span>
+								</div>
+							</li>
+<?php
+		foreach ($FORMATTER as $key => $value):
+?>
+							<li>
+								<a href="#" data-format="<?php echo $key; ?>"><?php echo $value; ?></a>
+							</li>
+<?php
+		endforeach;
+?>
+						</ul>
+						<select id="pasteFormatter" name="pasteFormatter" class="hidden">
+<?php
+		foreach ($FORMATTER as $key => $value):
+?>
+							<option value="<?php echo $key; ?>"<?php
+				if ($key == $FORMATTERDEFAULT):
+?> selected="selected"<?php
+				endif;
+?>><?php echo $value; ?></option>
+<?php
+		endforeach;
+?>
+						</select>
+					</li>
+<?php
+else:
+?>
+					<li>
+						<div id="burnafterreadingoption" class="navbar-text checkbox hidden">
+							<label>
+								<input type="checkbox" id="burnafterreading" name="burnafterreading"<?php
+		if ($BURNAFTERREADINGSELECTED):
+?> checked="checked"<?php
+		endif;
+?> />
+								<span class="glyphicon glyphicon-fire hint" aria-hidden="true"></span>
+								<span class="hint-text"><?php echo I18n::_('Burn after reading'), PHP_EOL; ?></span>
+							</label>
+						</div>
+					</li>
+<?php
+		if ($DISCUSSION):
+?>
+					<li>
+						<div id="opendiscussionoption" class="navbar-text checkbox hidden">
+							<label>
+								<input type="checkbox" id="opendiscussion" name="opendiscussion"<?php
+				if ($OPENDISCUSSION):
+?> checked="checked"<?php
+				endif;
+?> />
+								<span class="glyphicon glyphicon-comment hint" aria-hidden="true"></span>
+								<span class="hint-text"><?php echo I18n::_('Open discussion'), PHP_EOL; ?></span>
+							</label>
+						</div>
+					</li>
+<?php
+		endif;
+endif;
+if ($PASSWORD):
+?>
+					<li>
+						<div id="password" class="navbar-form hidden">
+							<input type="password" id="passwordinput" placeholder="<?php echo I18n::_('Password (recommended)'); ?>" class="form-control" size="23" />
+						</div>
 					</li>
 <?php
 endif;
@@ -421,15 +437,16 @@ endif;
 if (strlen($LANGUAGESELECTION)):
 ?>
 					<li id="language" class="dropdown">
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-flag" aria-hidden="true"></span> <?php echo $LANGUAGES[$LANGUAGESELECTION][0]; ?> <span class="caret"></span></a>
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+							<span class="glyphicon glyphicon-globe hint" aria-hidden="true"></span>
+							<?php echo $LANGUAGES[$LANGUAGESELECTION][0]; ?> <span class="caret"></span>
+						</a>
 						<ul class="dropdown-menu">
 <?php
     foreach ($LANGUAGES as $key => $value):
 ?>
 							<li>
-								<a href="#" data-lang="<?php echo $key; ?>">
-									<?php echo $value[0]; ?> (<?php echo $value[1]; ?>)
-								</a>
+								<a href="#" data-lang="<?php echo $key; ?>"><?php echo $value[0]; ?> (<?php echo $value[1]; ?>)</a>
 							</li>
 <?php
     endforeach;
@@ -519,8 +536,8 @@ if (strlen($URLSHORTENER)):
 ?>
 					<p>
 						<button id="shortenbutton" data-shortener="<?php echo I18n::encode($URLSHORTENER); ?>" type="button" class="btn btn-<?php echo $isDark ? 'warning' : 'primary'; ?> btn-block">
-						<span class="glyphicon glyphicon-send" aria-hidden="true"></span> <?php echo I18n::_('Shorten URL'), PHP_EOL; ?>
-					</button>
+							<span class="glyphicon glyphicon-send" aria-hidden="true"></span> <?php echo I18n::_('Shorten URL'), PHP_EOL; ?>
+						</button>
 					</p>
 					<div role="alert" class="alert alert-danger">
 						<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
@@ -551,8 +568,8 @@ endif;
 			</section>
 			<section class="container">
 				<article class="row">
-					<div id="placeholder" class="col-md-12 hidden"><?php echo I18n::_('+++ no paste text +++'); ?></div>
 					<div id="attachmentPreview" class="col-md-12 text-center hidden"></div>
+					<div id="placeholder" class="col-md-12 hidden"><?php echo I18n::_('+++ no paste text +++'); ?></div>
 					<div id="prettymessage" class="col-md-12 hidden">
 						<pre id="prettyprint" class="col-md-12 prettyprint linenums:1"></pre>
 					</div>
@@ -570,15 +587,17 @@ endif;
 				<div id="noscript" role="alert" class="alert alert-info noscript-hide">
 					<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
 					<?php echo I18n::_('Loading…'); ?><br />
-					<span class="small"><?php echo I18n::_('In case this message never disappears please have a look at <a href="%s">this FAQ for information to troubleshoot</a>.', 'https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-the-loading-message-not-go-away'); ?></span>
+					<span class="small"><?php echo I18n::_('In case this message never disappears please have a look at <a href="%s" target="_blank" rel="noopener noreferrer">this FAQ for information to troubleshoot</a>.', 'https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-the-loading-message-not-go-away'); ?></span>
 				</div>
 			</section>
 			<footer class="container">
 				<div class="row">
-					<h4 class="col-md-5 col-xs-8"><?php echo I18n::_($NAME); ?> <small>- <?php echo I18n::_('Because ignorance is bliss'); ?></small></h4>
+					<h4 class="col-md-5 col-xs-8"><?php echo I18n::_($NAME); ?> <small class="nowarp">- <?php echo I18n::_('Because ignorance is bliss'); ?></small></h4>
 					<p class="col-md-1 col-xs-4 text-center"><?php echo $VERSION; ?></p>
-					<p id="aboutbox" class="col-md-6 col-xs-12">
-						<?php echo I18n::_('%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href="https://privatebin.info/">project page</a>.', I18n::_($NAME)), PHP_EOL; ?>
+					<p id="aboutbox" class="col-md-6 col-xs-12 about-marquee-parent">
+						<span class="about-marquee">
+							<?php echo I18n::_('%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href="https://privatebin.info/" target="_blank" rel="noopener noreferrer">project page</a>.', I18n::_($NAME)), PHP_EOL; ?>
+						</span>
 					</p>
 				</div>
 			</footer>

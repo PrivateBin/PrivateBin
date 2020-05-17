@@ -105,6 +105,8 @@ body.loading {
 	white-space: normal;
 }
 
+#copyhint { cursor: pointer; white-space: nowrap; }
+
 #deletelink {
 	float: right;
 	margin-left: 5px;
@@ -129,6 +131,10 @@ body.loading {
 
 #preview {
 	margin-bottom: 10px;
+}
+
+#message {
+	height: 80vh;
 }
 
 #message, .replymessage {
@@ -168,16 +174,70 @@ li.L0, li.L1, li.L2, li.L3, li.L5, li.L6, li.L7, li.L8 {
 	list-style-type: decimal !important;
 }
 
+.no-select {
+	user-select: none;
+}
+
+.nowarp {
+	white-space: nowrap;
+}
+
+.hint {
+	margin: 0 3px;
+	vertical-align: -0.1em;
+}
+
+.hint-text {
+	display: inline-block;
+}
+
 .dark-theme .alert-info .alert-link {
 	color: #fff;
+}
+
+.about-marquee {
+	position: relative;
+	animation: about-marquee 24s linear infinite;
+	pointer-events: initial;
+	white-space: nowrap;
+}
+
+.about-marquee:hover {
+	animation-play-state: paused;
+}
+
+.about-marquee-parent {
+	overflow: hidden;
+}
+
+@keyframes about-marquee {
+	0% { left: 0; }
+	10% { left: 0; }
+	55% { left: -180ch; opacity: 1; }
+	55.001% { left: -180ch; opacity: 0; }
+	55.002% { left: 180ch; opacity: 0; }
+	55.003% { left: 180ch; opacity: 1; }
+	100% { left: 0; }
+}
+
+/* hide label on mobile navbar or too narrow screen that can cause warp */
+@media (min-width: 768px) {
+	.hint-text {
+		display: none;
+	}
 }
 
 /* address 2K or 4K monitors when using bootstrap 3 */
 @media (min-width: 1280px) {
 	.container {
 		width: 100%;
-		padding-left: 4ch;
-		padding-right: 4ch;
+		padding-left: 10ch;
+		padding-right: 10ch;
+	}
+
+	/* show label if wide enough to avoid line wrap */
+	.hint-text {
+		display: inline-block;
 	}
 }
 

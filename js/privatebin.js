@@ -25,7 +25,6 @@ jQuery.fn.draghover = function() {
             }
             collection = collection.add(e.target);
         });
-
         self.on('dragleave drop', function(e) {
             collection = collection.not(e.target);
             if (collection.length === 0) {
@@ -244,6 +243,18 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         const day = 86400;
 
         /**
+         * number of seconds in a week
+         *
+         * = 60 * 60 * 24 * 7 seconds
+         *
+         * @name Helper.week
+         * @private
+         * @enum   {number}
+         * @readonly
+         */
+        const week = 604800;
+
+        /**
          * number of seconds in a month (30 days, an approximation)
          *
          * = 60 * 60 * 24 * 30 seconds
@@ -326,7 +337,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         me.durationToSeconds = function(duration)
         {
-            let pieces   = duration.split(/\d+/),
+            let pieces   = duration.split(/(\D+)/),
                 factor   = pieces[0] || 0,
                 timespan = pieces[1] || pieces[0];
             switch (timespan)
@@ -337,6 +348,8 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                     return factor * hour;
                 case 'day':
                     return factor * day;
+                case 'week':
+                    return factor * week;
                 case 'month':
                     return factor * month;
                 case 'year':
@@ -391,9 +404,11 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         me.urls2links = function(element)
         {
             element.html(
-                element.html().replace(
-                    /(((https?|ftp):\/\/[\w?!=&.\/-;#@~%+*-]+(?![\w\s?!&.\/;#~%"=-]>))|((magnet):[\w?=&.\/-;#@~%+*-]+))/ig,
-                    '<a href="$1" rel="nofollow">$1</a>'
+                DOMPurify.sanitize(
+                    element.html().replace(
+                        /(((https?|ftp):\/\/[\w?!=&.\/-;#@~%+*-]+(?![\w\s?!&.\/;#~%"=-]>))|((magnet):[\w?=&.\/-;#@~%+*-]+))/ig,
+                        '<a href="$1" rel="nofollow">$1</a>'
+                    )
                 )
             );
         };
@@ -1361,10 +1376,10 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             ServerInteraction.prepare();
             ServerInteraction.setUrl(Helper.baseUri() + '?pasteid=' + me.getPasteId());
 
-            ServerInteraction.setFailure(function (status, data) {
+            ServerInteraction.setFailure(async function (status, data) {
                 // revert loading status…
-                Alert.hideLoading();
-                TopNav.showViewButtons();
+                await Alert.hideLoading();
+                TopNav.showNewPasteButton();
 
                 // show error message
                 Alert.showError(ServerInteraction.parseUploadError(status, data, 'get paste data'));
@@ -1644,6 +1659,20 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         };
 
         /**
+         * disable event
+         *
+         * @name   UiHelper.disableEvent
+         * @function
+         * @argument {Event} e event to disable
+         * @return {bool} always false
+         */
+        me.disableEvent = function disableEvent(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+        }
+
+        /**
          * initialize
          *
          * @name   UiHelper.init
@@ -1832,10 +1861,11 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          *
          * @name   Alert.showLoading
          * @function
+         * @async
          * @param  {string|array|null} message      optional, use an array for %s/%d options, default: 'Loading…'
          * @param  {string|null}       icon         optional, the icon to show, default: leave previous icon
          */
-        me.showLoading = function(message, icon)
+        me.showLoading = async function(message, icon)
         {
             // default message text
             if (typeof message === 'undefined') {
@@ -1846,6 +1876,9 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
             // show loading status (cursor)
             $('body').addClass('loading');
+
+            // expand bar to show loading message on mobile
+            await TopNav.expandBar();
         };
 
         /**
@@ -1853,9 +1886,13 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          *
          * @name   Alert.hideLoading
          * @function
+         * @async
          */
-        me.hideLoading = function()
+        me.hideLoading = async function()
         {
+            // collapse bar to hide loading message on mobile
+            await TopNav.collapseBar();
+
             $loadingIndicator.addClass('hidden');
 
             // hide loading cursor
@@ -1940,6 +1977,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
         let $pasteSuccess,
             $pasteUrl,
+            $copyHint,
             $remainingTime,
             $shortenButton;
 
@@ -1957,7 +1995,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             }
             $.ajax({
                 type: 'GET',
-                url: `${$shortenButton.data('shortener')}${encodeURIComponent($pasteUrl.attr('href'))}`,
+                url: `${$shortenButton.data('shortener')}${encodeURIComponent($pasteUrl.prop('href'))}`,
                 headers: {'Accept': 'text/html, application/xhtml+xml, application/xml, application/json'},
                 processData: false,
                 timeout: 10000,
@@ -1975,15 +2013,11 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                             return a.length - b.length;
                         })[0];
                         if (typeof shortUrl === 'string' && shortUrl.length > 0) {
-                            I18n._(
-                                $('#pastelink'),
-                                'Your paste is <a id="pasteurl" href="%s">%s</a> <span id="copyhint">(Hit [Ctrl]+[c] to copy)</span>',
-                                shortUrl, shortUrl
-                            );
                             // we disable the button to avoid calling shortener again
                             $shortenButton.addClass('buttondisabled');
-                            // save newly created element
-                            $pasteUrl = $('#pasteurl');
+                            // update link
+                            $pasteUrl.text(shortUrl);
+                            $pasteUrl.prop('href', shortUrl);
                             // we pre-select the link so that the user only has to [Ctrl]+[c] the link
                             Helper.selectText($pasteUrl[0]);
                             return;
@@ -1998,7 +2032,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 // server not setup properly, in which case we follow old
                 // behavior to open it in new tab
                 window.open(
-                    `${$shortenButton.data('shortener')}${encodeURIComponent($pasteUrl.attr('href'))}`,
+                    `${$shortenButton.data('shortener')}${encodeURIComponent($pasteUrl.prop('href'))}`,
                     '_blank',
                     'noopener, noreferrer'
                 );
@@ -2017,9 +2051,37 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         function pasteLinkClick()
         {
             // check if location is (already) shown in URL bar
-            if (window.location.href === $pasteUrl.attr('href')) {
+            if (window.location.href === $pasteUrl.prop('href')) {
                 // if so we need to load link by reloading the current site
                 window.location.reload(true);
+            }
+        }
+
+        /**
+         * Copy the current paste link.
+         *
+         * @name   PasteStatus.pasteHintClick
+         * @function
+         */
+        function pasteHintClick()
+        {
+            const supported = window.document.queryCommandSupported && window.document.queryCommandSupported('copy');
+            if (!supported) {
+                window.alert(
+                    I18n._('Your browser does not support programmatically copy text')
+                );
+                return false;
+            } else {
+                const $temporaryInput = $('<input>');
+                $copyHint.append($temporaryInput);
+                $temporaryInput.val($pasteUrl.prop('href'));
+                $temporaryInput.select();
+                window.document.execCommand('copy');
+                $temporaryInput.remove();
+                window.alert(
+                    I18n._('Copied to clipboard')
+                );
+                return true;
             }
         }
 
@@ -2035,13 +2097,15 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         {
             I18n._(
                 $('#pastelink'),
-                'Your paste is <a id="pasteurl" href="%s">%s</a> <span id="copyhint">(Hit [Ctrl]+[c] to copy)</span>',
+                'Your paste is <a id="pasteurl" href="%s">%s</a> <span id="copyhint">(Hit [Ctrl]+[c] or click here to copy)</span>',
                 url, url
             );
             // save newly created element
             $pasteUrl = $('#pasteurl');
+            $copyHint = $('#copyhint');
             // and add click event
             $pasteUrl.click(pasteLinkClick);
+            $copyHint.click(pasteHintClick);
 
             // delete link
             $('#deletelink').html('<a href="' + deleteUrl + '"></a>');
@@ -2291,38 +2355,6 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         }
 
         /**
-         * view the Editor tab
-         *
-         * @name   Editor.viewEditor
-         * @function
-         * @param  {Event} event - optional
-         */
-        function viewEditor(event)
-        {
-            // toggle buttons
-            $messageEdit.addClass('active');
-            $messagePreview.removeClass('active');
-
-            $('#messageedit').attr('aria-selected','true');
-            $('#messagepreview').attr('aria-selected','false');
-
-            PasteViewer.hide();
-
-            // reshow input
-            $message.removeClass('hidden');
-
-            me.focusInput();
-
-            // finish
-            isPreview = false;
-
-            // prevent jumping of page to top
-            if (typeof event !== 'undefined') {
-                event.preventDefault();
-            }
-        }
-
-        /**
          * view the preview tab
          *
          * @name   Editor.viewPreview
@@ -2335,25 +2367,52 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             $messageEdit.removeClass('active');
             $messagePreview.addClass('active');
 
-            $('#messageedit').attr('aria-selected','false');
-            $('#messagepreview').attr('aria-selected','true');
+            $('#messageedit').prop('aria-selected','false');
+            $('#messagepreview').prop('aria-selected','true');
 
             // hide input as now preview is shown
             $message.addClass('hidden');
 
             // show preview
             PasteViewer.setText($message.val());
-            if (AttachmentViewer.hasAttachmentData()) {
-                const attachment = AttachmentViewer.getAttachment();
-                AttachmentViewer.handleBlobAttachmentPreview(
-                    AttachmentViewer.getAttachmentPreview(),
-                    attachment[0], attachment[1]
-                );
-            }
             PasteViewer.run();
+            AttachmentViewer.showAttachmentPreview();
 
             // finish
             isPreview = true;
+
+            // prevent jumping of page to top
+            if (typeof event !== 'undefined') {
+                event.preventDefault();
+            }
+        }
+
+        /**
+         * view the Editor tab
+         *
+         * @name   Editor.viewEditor
+         * @function
+         * @param  {Event} event - optional
+         */
+        me.viewEditor = function(event)
+        {
+            // toggle buttons
+            $messageEdit.addClass('active');
+            $messagePreview.removeClass('active');
+
+            $('#messageedit').prop('aria-selected','true');
+            $('#messagepreview').prop('aria-selected','false');
+
+            PasteViewer.hide();
+            AttachmentViewer.hideAttachmentPreview();
+
+            // reshow input
+            $message.removeClass('hidden');
+
+            me.focusInput();
+
+            // finish
+            isPreview = false;
 
             // prevent jumping of page to top
             if (typeof event !== 'undefined') {
@@ -2382,7 +2441,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         {
             // go back to input
             if (isPreview) {
-                viewEditor();
+                me.viewEditor();
             }
 
             // clear content
@@ -2404,7 +2463,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         /**
          * hides the Editor
          *
-         * @name   Editor.reset
+         * @name   Editor.hide
          * @function
          */
         me.hide = function()
@@ -2466,7 +2525,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
             // bind click events to tab switchers (a), but save parent of them
             // (li)
-            $messageEdit = $('#messageedit').click(viewEditor).parent();
+            $messageEdit = $('#messageedit').click(me.viewEditor).parent();
             $messagePreview = $('#messagepreview').click(viewPreview).parent();
         };
 
@@ -2572,6 +2631,9 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                     $prettyMessage.removeClass('hidden');
                     break;
             }
+
+            // default enable text select/copy/cut
+            me.enableTextSelectCopyCut();
         }
 
         /**
@@ -2647,6 +2709,34 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         {
             return text;
         };
+
+        /**
+         * disable text highlighting/selecting/copy/cut
+         * 
+         * @name  PasteViewer.disableTextSelectCopyCut
+         * @function
+         */
+        me.disableTextSelectCopyCut = function()
+        {
+            $prettyMessage.on('contextmenu copy cut', UiHelper.disableEvent);
+            $prettyMessage.addClass('no-select');
+            $plainText.on('contextmenu copy cut', UiHelper.disableEvent);
+            $plainText.addClass('no-select');
+        }
+
+        /**
+         * enable text highlighting/selecting/copy/cut
+         * 
+         * @name  PasteViewer.enableTextSelectCopyCut
+         * @function
+         */
+        me.enableTextSelectCopyCut = function()
+        {
+            $prettyMessage.unbind('contextmenu copy cut', UiHelper.disableEvent);
+            $prettyMessage.removeClass('no-select');
+            $plainText.unbind('contextmenu copy cut', UiHelper.disableEvent);
+            $plainText.removeClass('no-select');
+        }
 
         /**
          * show/update the parsed text (preview)
@@ -2770,11 +2860,11 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                     navigator.msSaveBlob(blob, fileName);
                 });
             } else {
-                $attachmentLink.attr('href', blobUrl);
+                $attachmentLink.prop('href', blobUrl);
             }
 
             if (typeof fileName !== 'undefined') {
-                $attachmentLink.attr('download', fileName);
+                $attachmentLink.prop('download', fileName);
             }
 
             me.handleBlobAttachmentPreview($attachmentPreview, blobUrl, mediaType);
@@ -2789,11 +2879,24 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         me.showAttachment = function()
         {
             $attachment.removeClass('hidden');
+            me.showAttachmentPreview();
 
+            // default enable attachment select/copy/save
+            AttachmentViewer.enableCopySave();
+        };
+
+        /**
+         * displays the attachment preview
+         *
+         * @name AttachmentViewer.showAttachmentPreview
+         * @function
+         */
+        me.showAttachmentPreview = function()
+        {
             if (attachmentHasPreview) {
                 $attachmentPreview.removeClass('hidden');
             }
-        };
+        }
 
         /**
          * removes the attachment
@@ -2809,13 +2912,13 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             if (!$attachment.length) {
                 return;
             }
+            TopNav.clearCustomAttachment();
+            me.clearDragAndDropFileName();
             me.hideAttachment();
             me.hideAttachmentPreview();
-            $attachmentLink.removeAttr('href');
-            $attachmentLink.removeAttr('download');
-            $attachmentLink.off('click');
-            $attachmentPreview.html('');
-            $dragAndDropFileName.text('');
+            $attachmentPreview.empty();
+            $fileInput.val('');
+
 
             AttachmentViewer.removeAttachmentData();
         };
@@ -2832,17 +2935,20 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         {
             file = undefined;
             attachmentData = undefined;
+            $attachmentLink.removeAttr('href');
+            $attachmentLink.removeAttr('download');
+            $attachmentLink.off('click');
         };
 
         /**
-         * Cleares the drag & drop data.
+         * Cleares the drag & drop fileName
          *
          * @name AttachmentViewer.clearDragAndDrop
          * @function
          */
-        me.clearDragAndDrop = function()
+        me.clearDragAndDropFileName = function()
         {
-            $dragAndDropFileName.text('');
+            I18n._($dragAndDropFileName, 'Choose file or drag & drop')
         };
 
         /**
@@ -2935,7 +3041,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             $attachmentLink.appendTo($element);
 
             // update text - ensuring no HTML is inserted into the text node
-            I18n._($attachmentLink, label, $attachmentLink.attr('download'));
+            I18n._($attachmentLink, label, $attachmentLink.prop('download'));
         };
 
         /**
@@ -2956,30 +3062,28 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 return;
             }
 
-            const fileReader = new FileReader();
-            if (loadedFile === undefined) {
-                loadedFile = $fileInput[0].files[0];
-                $dragAndDropFileName.text('');
-            } else {
-                $dragAndDropFileName.text(loadedFile.name);
-            }
+            me.removeAttachment();
 
             if (typeof loadedFile !== 'undefined') {
+                const fileReader = new FileReader();
+                $dragAndDropFileName.text(loadedFile.name);
                 file = loadedFile;
                 fileReader.onload = function (event) {
                     const dataURL = event.target.result;
                     attachmentData = dataURL;
+                    const blobUrl = URL.createObjectURL(loadedFile);
+                    $attachmentLink.prop('href', blobUrl);
+                    $attachmentLink.prop('download', loadedFile.name);
 
+                    me.handleBlobAttachmentPreview($attachmentPreview, blobUrl, loadedFile.type);
+                    
                     if (Editor.isPreview()) {
-                        me.handleAttachmentPreview($attachmentPreview, dataURL);
-                        $attachmentPreview.removeClass('hidden');
+                        AttachmentViewer.showAttachmentPreview();
                     }
 
                     TopNav.highlightFileupload();
                 };
                 fileReader.readAsDataURL(loadedFile);
-            } else {
-                me.removeAttachmentData();
             }
         }
 
@@ -2995,42 +3099,45 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         me.handleBlobAttachmentPreview = function ($targetElement, blobUrl, mimeType) {
             if (blobUrl) {
                 attachmentHasPreview = true;
+                $targetElement.empty();
                 if (mimeType.match(/image\//i)) {
-                    $targetElement.html(
-                        $(document.createElement('img'))
-                            .attr('src', blobUrl)
-                            .attr('class', 'img-thumbnail')
+                    $targetElement.append(
+                        $('<img>')
+                            .prop('src', blobUrl)
+                            .addClass('img-thumbnail')
                     );
                 } else if (mimeType.match(/video\//i)) {
-                    $targetElement.html(
-                        $(document.createElement('video'))
-                            .attr('controls', 'true')
-                            .attr('autoplay', 'true')
-                            .attr('class', 'img-thumbnail')
+                    $targetElement.append(
+                        $('<video>')
+                            .prop('controls', 'true')
+                            .addClass('img-thumbnail')
 
-                            .append($(document.createElement('source'))
-                            .attr('type', mimeType)
-                            .attr('src', blobUrl))
+                            .append(
+                                $('<source>')
+                                    .prop('type', mimeType)
+                                    .prop('src', blobUrl)
+                            )
                     );
                 } else if (mimeType.match(/audio\//i)) {
-                    $targetElement.html(
-                        $(document.createElement('audio'))
-                            .attr('controls', 'true')
-                            .attr('autoplay', 'true')
+                    $targetElement.append(
+                        $('<audio>')
+                            .prop('controls', 'true')
 
-                            .append($(document.createElement('source'))
-                            .attr('type', mimeType)
-                            .attr('src', blobUrl))
+                            .append(
+                                $('<source>')
+                                    .prop('type', mimeType)
+                                    .prop('src', blobUrl)
+                            )
                     );
                 } else if (mimeType.match(/\/pdf/i)) {
                     // Fallback for browsers, that don't support the vh unit
                     const clientHeight = $(window).height();
 
-                    $targetElement.html(
-                        $(document.createElement('embed'))
-                            .attr('src', blobUrl)
-                            .attr('type', 'application/pdf')
-                            .attr('class', 'pdfPreview')
+                    $targetElement.append(
+                        $('<embed>')
+                            .prop('src', blobUrl)
+                            .prop('type', 'application/pdf')
+                            .addClass('pdfPreview')
                             .css('height', clientHeight)
                     );
                 } else {
@@ -3096,8 +3203,8 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             $(document).on('drop', handleDrop);
             $(document).on('dragenter dragover', handleDragEnterOrOver);
 
-            $fileInput.on('change', function () {
-                readFileData();
+            $fileInput.on('change', function (event) {
+                readFileData(event.target.files[0]);
             });
         }
 
@@ -3127,7 +3234,6 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 }
             });
         }
-
 
         /**
          * getter for attachment data
@@ -3174,6 +3280,28 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         };
 
         /**
+         * disable attachment copy/save
+         * 
+         * @name   AttachmentViewer.disableCopySave
+         * @function
+         */
+        me.disableCopySave = function () {
+            $attachmentPreview.on('contextmenu copy cut', UiHelper.disableEvent);
+            $attachmentPreview.addClass('no-select');
+        };
+
+        /**
+         * enable attachment copy/save
+         * 
+         * @name   AttachmentViewer.enableCopySave
+         * @function
+         */
+        me.enableCopySave = function () {
+            $attachmentPreview.unbind('contextmenu copy cut', UiHelper.disableEvent);
+            $attachmentPreview.removeClass('no-select');
+        };
+
+        /**
          * initiate
          *
          * preloads jQuery elements
@@ -3189,10 +3317,15 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             $attachmentLink = $('#attachment a') || $('<a>');
             if($attachment.length) {
                 $attachmentPreview = $('#attachmentPreview');
-
                 $fileInput = $('#file');
                 addDragDropHandler();
                 addClipboardEventHandler();
+                $dragAndDropFileName.click(function(event) {
+                    event.preventDefault();
+                    // keep the dropdown open
+                    event.stopPropagation();
+                    $fileInput.click();
+                });
             }
         }
 
@@ -3329,7 +3462,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             // set date
             $commentEntry.find('span.commentdate')
                       .text(' (' + (new Date(comment.getCreated() * 1000).toLocaleString()) + ')')
-                      .attr('title', 'CommentID: ' + comment.id);
+                      .prop('title', 'CommentID: ' + comment.id);
 
             // if an avatar is available, display it
             const icon = comment.getIcon();
@@ -3491,8 +3624,12 @@ jQuery.PrivateBin = (function($, RawDeflate) {
     const TopNav = (function (window, document) {
         const me = {};
 
-        let createButtonsDisplayed = false,
+        // This is to avoid navbar bouncing too often
+        let navbarShouldExpandDebounce = false,
+            createButtonsDisplayed = false,
             viewButtonsDisplayed = false,
+            pasteExpiration = null,
+            retryButtonCallback,
             $attach,
             $burnAfterReading,
             $burnAfterReadingOption,
@@ -3512,8 +3649,8 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             $emailLink,
             $sendButton,
             $retryButton,
-            pasteExpiration = null,
-            retryButtonCallback;
+            $navbar,
+            $navbarToggle;
 
         /**
          * set the expiration on bootstrap templates in dropdown
@@ -3624,7 +3761,10 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         function rawText()
         {
+            /*
+            // hideAllButtons is async now
             TopNav.hideAllButtons();
+            // showLoading is async now
             Alert.showLoading('Showing raw text…', 'time');
             let paste = PasteViewer.getText();
 
@@ -3646,6 +3786,20 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 newDoc.write($head[i].outerHTML);
             }
             newDoc.write('</head><body><pre>' + DOMPurify.sanitize(Helper.htmlEntities(paste)) + '</pre></body></html>');
+            newDoc.close();
+            */
+            const paste = PasteViewer.getText();
+
+            const $head = $('head').children().not('noscript, script, style, link[type="text/css"]');
+            const newWin = window.open('', '_blank');
+            const newDoc = newWin.document;
+            for (let i = 0; i < $head.length; i++) {
+                newDoc.write($head[i].outerHTML);
+            }
+            newDoc.write('</head><body><pre>' + DOMPurify.sanitize(paste, {
+                FORBID_ATTR: ['style'],
+                FORBID_TAGS: ['style']
+            }) + '</pre></body></html>');
             newDoc.close();
         }
 
@@ -3700,20 +3854,17 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         function removeAttachment(event)
         {
             // if custom attachment is used, remove it first
-            if (!$customAttachment.hasClass('hidden')) {
-                AttachmentViewer.removeAttachment();
-                $customAttachment.addClass('hidden');
-                $fileWrap.removeClass('hidden');
-            }
+            me.clearCustomAttachment();
 
             // in any case, remove saved attachment data
-            AttachmentViewer.removeAttachmentData();
+            AttachmentViewer.removeAttachment();
 
             clearAttachmentInput();
-            AttachmentViewer.clearDragAndDrop();
 
             // pevent '#' from appearing in the URL
-            event.preventDefault();
+            if (typeof event !== 'undefined') {
+                event.preventDefault();
+            }
         }
 
         /**
@@ -3752,8 +3903,12 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 if (expirationDateString !== null) {
                     emailBody += EOL;
                     emailBody += BULLET;
-                    emailBody += I18n._(
-                        'This link will expire after %s.',
+                    // avoid DOMPurify mess with forward slash in expirationDateString
+                    emailBody += Helper.sprintf(
+                        I18n._(
+                            'This link will expire after %s.',
+                            '%s'
+                        ),
                         expirationDateString
                     );
                 }
@@ -3857,6 +4012,33 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         }
 
         /**
+         * Reliably click navbar-toggle
+         * 
+         * @name   TopNav.toggleNavbar
+         * @private
+         * @async
+         * @function
+         */
+        async function toggleNavbar()
+        {
+            await new Promise(
+                (resolve) => {
+                    const clickWithResolve = () => {
+                        $navbar.one($.support.transition.end, resolve);
+                        $navbarToggle.click();
+                    }
+                    if ($navbar.hasClass('collapsing')) {
+                        $navbar.one($.support.transition.end, function() {
+                            clickWithResolve();
+                        });
+                    } else {
+                        clickWithResolve();
+                    }
+                }
+            );
+        }
+
+        /**
          * Shows all navigation elements for viewing an existing paste
          *
          * @name   TopNav.showViewButtons
@@ -3902,9 +4084,14 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          *
          * @name   TopNav.hideAllButtons
          * @function
+         * @async
          */
-        me.hideAllButtons = function()
+        me.hideAllButtons = async function()
         {
+            // Hide send button immediately to avoid multiple click
+            // send button is outside TopNav so it won't cause height change
+            $sendButton.addClass('hidden');
+            await me.collapseBar();
             me.hideViewButtons();
             me.hideCreateButtons();
         };
@@ -4072,6 +4259,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         me.hideBurnAfterReadingButtons = function()
         {
             me.hideCloneButton();
+            me.hideRawButton();
             me.hideQrCodeButton();
             me.hideEmailButton();
         }
@@ -4100,15 +4288,16 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         };
 
         /**
-         * hides the custom attachment
+         * clears the custom attachment
          *
-         * @name  TopNav.hideCustomAttachment
+         * @name  TopNav.clearCustomAttachment
          * @function
          */
-        me.hideCustomAttachment = function()
+        me.clearCustomAttachment = function()
         {
             $customAttachment.addClass('hidden');
             $fileWrap.removeClass('hidden');
+            $customAttachment.empty();
         };
 
         /**
@@ -4116,11 +4305,51 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          *
          * @name   TopNav.collapseBar
          * @function
+         * @async
          */
-        me.collapseBar = function()
+        me.collapseBar = async function()
         {
-            if ($('#navbar').attr('aria-expanded') === 'true') {
-                $('.navbar-toggle').click();
+            navbarShouldExpandDebounce = false;
+            if ($navbarToggle.is(':visible')) {
+                await new Promise(
+                    (resolve) => {
+                        setTimeout(function() {
+                            if ($navbarToggle.attr('aria-expanded') === 'true' &&
+                                navbarShouldExpandDebounce === false) {
+                                resolve(toggleNavbar());
+                            } else {
+                                resolve();
+                            }
+                        }, 250);
+                    }
+                );
+            }
+        };
+
+        /**
+         * expends the navigation bar, only if collapsed
+         *
+         * @name   TopNav.expandBar
+         * @function
+         * @async
+         */
+        me.expandBar = async function()
+        {
+            navbarShouldExpandDebounce = true;
+            if ($navbarToggle.is(':visible')) {
+                await new Promise(
+                    (resolve) => {
+                        setTimeout(function() {
+                            if ((typeof $navbarToggle.attr('aria-expanded') === 'undefined' ||
+                                $navbarToggle.attr('aria-expanded') === 'false') &&
+                                navbarShouldExpandDebounce === true) {
+                                resolve(toggleNavbar());
+                            } else {
+                                resolve();
+                            }
+                        }, 250);
+                    }
+                );
             }
         };
 
@@ -4139,7 +4368,10 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             $openDiscussionOption.removeClass('buttondisabled');
             $burnAfterReadingOption.removeClass('buttondisabled');
 
-            // TODO: reset expiration time
+            // reset expiration time and format
+            const defautExpire = $('#expiration').data('default');
+            $expiration.parent().find(`a[data-expiration="${defautExpire}"]`).click();
+            me.setFormat();
         };
 
         /**
@@ -4243,7 +4475,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
         /**
          * Highlight file upload
-         *
+         * 
          * @name  TopNav.highlightFileupload
          * @function
          */
@@ -4265,10 +4497,17 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          *
          * @name    TopNav.setFormat
          * @function
+         * @param {string|undefined} format
          */
         me.setFormat = function(format)
         {
-            $formatter.parent().find(`a[data-format="${format}"]`).click();
+            const $formatOption = $formatter.parent().find(`a[data-format="${format}"]`);
+            if ($formatOption.length !== 1) {
+                $formatter.parent().find(`a[data-format`).first().click();
+            } else {
+                // reset format to default
+                $formatOption.click();
+            }
         }
 
         /**
@@ -4280,7 +4519,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         me.isAttachmentReadonly = function()
         {
-            return createButtonsDisplayed && $attach.hasClass('hidden');
+            return !createButtonsDisplayed || $attach.hasClass('hidden');
         }
 
         /**
@@ -4312,6 +4551,8 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             $sendButton = $('#sendbutton');
             $qrCodeLink = $('#qrcodelink');
             $emailLink = $('#emaillink');
+            $navbar = $('#navbar');
+            $navbarToggle = $('.navbar-toggle[data-target="#navbar"]');
 
             // bootstrap template drop down
             $('#language ul.dropdown-menu li a').click(setLanguage);
@@ -4639,11 +4880,12 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          * @name PasteEncrypter.showCreatedPaste
          * @private
          * @function
+         * @async
          * @param {int} status
          * @param {object} data
          */
-        function showCreatedPaste(status, data) {
-            Alert.hideLoading();
+        async function showCreatedPaste(status, data) {
+            await Alert.hideLoading();
             Alert.hideMessages();
 
             // show notification
@@ -4663,8 +4905,9 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             TopNav.hideRawButton();
             Editor.hide();
 
-            // parse and show text
+            // parse and show text and attachment
             // (preparation already done in me.sendPaste())
+            AttachmentViewer.showAttachmentPreview();
             PasteViewer.run();
         }
 
@@ -4703,8 +4946,8 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             Alert.setCustomHandler(DiscussionViewer.handleNotification);
 
             // UI loading state
-            TopNav.hideAllButtons();
-            Alert.showLoading('Sending comment…', 'cloud-upload');
+            await TopNav.hideAllButtons();
+            await Alert.showLoading('Sending comment…', 'cloud-upload');
 
             // get data
             const plainText = DiscussionViewer.getReplyMessage(),
@@ -4714,7 +4957,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             // do not send if there is no data
             if (plainText.length === 0) {
                 // revert loading status…
-                Alert.hideLoading();
+                await Alert.hideLoading();
                 Alert.setCustomHandler(null);
                 TopNav.showViewButtons();
                 return;
@@ -4726,9 +4969,9 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
             // set success/fail functions
             ServerInteraction.setSuccess(showUploadedComment);
-            ServerInteraction.setFailure(function (status, data) {
+            ServerInteraction.setFailure(async function (status, data) {
                 // revert loading status…
-                Alert.hideLoading();
+                await Alert.hideLoading();
                 TopNav.showViewButtons();
 
                 // …show error message…
@@ -4775,9 +5018,8 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             Controller.hideStatusMessages();
 
             // UI loading state
-            TopNav.hideAllButtons();
-            Alert.showLoading('Sending paste…', 'cloud-upload');
-            TopNav.collapseBar();
+            await TopNav.hideAllButtons();
+            await Alert.showLoading('Sending paste…', 'cloud-upload');
 
             // get data
             const plainText = Editor.getText(),
@@ -4788,7 +5030,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             // do not send if there is no data
             if (plainText.length === 0 && !files) {
                 // revert loading status…
-                Alert.hideLoading();
+                await Alert.hideLoading();
                 TopNav.showCreateButtons();
                 return;
             }
@@ -4799,9 +5041,9 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
             // set success/fail functions
             ServerInteraction.setSuccess(showCreatedPaste);
-            ServerInteraction.setFailure(function (status, data) {
+            ServerInteraction.setFailure(async function (status, data) {
                 // revert loading status…
-                Alert.hideLoading();
+                await Alert.hideLoading();
                 TopNav.showCreateButtons();
 
                 // show error message
@@ -4831,7 +5073,6 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 cipherMessage['attachment'] = file;
                 cipherMessage['attachment_name'] = AttachmentViewer.getFile().name;
             } else if (AttachmentViewer.hasAttachment()) {
-                // fall back to cloned part
                 let attachment = AttachmentViewer.getAttachment();
                 cipherMessage['attachment'] = attachment[0];
                 cipherMessage['attachment_name'] = attachment[1];
@@ -4840,7 +5081,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 if (typeof attachment[0] === 'string' && attachment[0].startsWith('blob:')) {
                     Alert.showStatus(
                         [
-                            'Retrieving cloned file \'%s\' from memory...',
+                            'Reading file \'%s\' from memory...',
                             attachment[1]
                         ],
                         'copy'
@@ -4961,10 +5202,11 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 if (password.length === 0) {
                     throw 'waiting on user to provide a password';
                 } else {
-                    Alert.hideLoading();
+                    await Alert.hideLoading();
                     // reset password, so it can be re-entered
                     Prompt.reset();
                     TopNav.showRetryButton();
+                    await TopNav.expandBar();
                     throw 'Could not decrypt data. Did you enter a wrong password? Retry with the button at the top.';
                 }
             }
@@ -5059,12 +5301,13 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          *
          * @name   PasteDecrypter.run
          * @function
+         * @async
          * @param  {Paste} [paste] - (optional) object including comments to display (items = array with keys ('data','meta'))
          */
-        me.run = function(paste)
+        me.run = async function(paste)
         {
             Alert.hideMessages();
-            Alert.showLoading('Decrypting paste…', 'cloud-download');
+            await Alert.showLoading('Decrypting paste…', 'cloud-download');
 
             if (typeof paste === 'undefined') {
                 // get cipher data and wait until it is available
@@ -5093,13 +5336,15 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             PasteStatus.showRemainingTime(paste);
 
             Promise.all(decryptionPromises)
+                .then(() => Alert.hideLoading())
                 .then(() => {
-                    Alert.hideLoading();
                     TopNav.showViewButtons();
 
                     // discourage cloning (it cannot really be prevented)
                     if (paste.isBurnAfterReadingEnabled()) {
                         TopNav.hideBurnAfterReadingButtons();
+                        PasteViewer.disableTextSelectCopyCut();
+                        AttachmentViewer.disableCopySave();
                     } else {
                         // we have to pass in remaining_time here
                         TopNav.showEmailButton(paste.getTimeToLive());
@@ -5149,13 +5394,14 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          *
          * @name   Controller.newPaste
          * @function
+         * @async
          */
-        me.newPaste = function()
+        me.newPaste = async function()
         {
             // Important: This *must not* run Alert.hideMessages() as previous
             // errors from viewing a paste should be shown.
-            TopNav.hideAllButtons();
-            Alert.showLoading('Preparing new paste…', 'time');
+            await TopNav.hideAllButtons();
+            await Alert.showLoading('Preparing new paste…', 'time');
 
             PasteStatus.hideMessages();
             PasteViewer.hide();
@@ -5165,14 +5411,9 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             AttachmentViewer.removeAttachment();
             TopNav.resetInput();
 
+            await Alert.hideLoading();
             TopNav.showCreateButtons();
 
-            // newPaste could be called when user is on paste clone editing view
-            TopNav.hideCustomAttachment();
-            AttachmentViewer.clearDragAndDrop();
-            AttachmentViewer.removeAttachmentData();
-
-            Alert.hideLoading();
             history.pushState({type: 'create'}, document.title, Helper.baseUri());
 
             // clear discussion
@@ -5194,6 +5435,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
                 // missing decryption key (or paste ID) in URL?
                 if (window.location.hash.length === 0) {
+                    TopNav.showNewPasteButton();
                     Alert.showError('Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)');
                     return;
                 }
@@ -5219,9 +5461,9 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 ServerInteraction.prepare();
                 ServerInteraction.setUrl(Helper.baseUri() + '?pasteid=' + Model.getPasteId());
 
-                ServerInteraction.setFailure(function (status, data) {
+                ServerInteraction.setFailure(async function (status, data) {
                     // revert loading status…
-                    Alert.hideLoading();
+                    await Alert.hideLoading();
                     TopNav.showViewButtons();
 
                     // show error message
@@ -5249,11 +5491,11 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          *
          * @name   Controller.clonePaste
          * @function
+         * @async
          */
-        me.clonePaste = function()
+        me.clonePaste = async function()
         {
-            TopNav.collapseBar();
-            TopNav.hideAllButtons();
+            await TopNav.hideAllButtons();
 
             // hide messages from previous paste
             me.hideStatusMessages();
@@ -5289,6 +5531,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             TopNav.setFormat(PasteViewer.getFormat());
             PasteViewer.hide();
             Editor.show();
+            Editor.viewEditor();
 
             TopNav.showCreateButtons();
 
@@ -5328,6 +5571,23 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 SAFE_FOR_JQUERY: true
             });
 
+            // Add a hook to make all links open a new window
+            DOMPurify.addHook('afterSanitizeAttributes', function(node) {
+                // set all elements owning target to target=_blank
+                if ('target' in node && node.id !== 'pasteurl') {
+                    node.setAttribute('target', '_blank');
+                }
+                // set non-HTML/MathML links to xlink:show=new
+                if (!node.hasAttribute('target') 
+                    && (node.hasAttribute('xlink:href') 
+                        || node.hasAttribute('href'))) {
+                    node.setAttribute('xlink:show', 'new');
+                }
+                if ('rel' in node) {
+                    node.setAttribute('rel', 'nofollow noopener noreferrer');
+                }
+            });
+
             // center all modals
             $('.modal').on('show.bs.modal', function(e) {
                 $(e.target).css({
@@ -5359,6 +5619,12 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             }
             me.initZ();
 
+            // if delete token is passed (i.e. paste has been deleted by this
+            // access), there is nothing more to do
+            if (Model.hasDeleteToken()) {
+                return me.newPaste();
+            }
+
             // check whether existing paste needs to be shown
             try {
                 Model.getPasteId();
@@ -5367,11 +5633,10 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 return me.newPaste();
             }
 
-            // if delete token is passed (i.e. paste has been deleted by this
-            // access), there is nothing more to do
-            if (Model.hasDeleteToken()) {
-                return;
-            }
+            // always reload on back button to invalidate cache(protect burn after read paste)
+            window.addEventListener('popstate', () => {
+                window.location.reload();
+            });
 
             // display an existing paste
             return me.showPaste();

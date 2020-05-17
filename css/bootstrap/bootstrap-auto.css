@@ -1,0 +1,11 @@
+@import url('bootstrap-theme-3.4.1.css') (prefers-color-scheme: light);
+
+@import url('bootstrap-3.4.1.slate.css') (prefers-color-scheme: dark);
+
+@media (prefers-color-scheme: dark) {
+  .navbar-brand { padding: auto; }
+  input { filter: invert(1); }
+  textarea { filter: invert(1); }
+  #prettyprint { filter: invert(1); }
+  #prettyprint a { color: #23527c; }
+}

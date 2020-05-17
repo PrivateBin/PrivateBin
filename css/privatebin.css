@@ -164,7 +164,7 @@ h3.title {
 
 #toolbar, #status { margin-bottom: 5px; }
 
-#copyhint { color: #666; font-size: 0.85em }
+#copyhint { color: #666; font-size: 0.85em; cursor: pointer; white-space: nowrap; }
 
 button, .button {
 	color: #fff;
