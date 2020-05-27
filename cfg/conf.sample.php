@@ -134,6 +134,10 @@ limit = 10
 ; directory to store the traffic limits in
 dir = PATH "data"
 
+; prefix that appends on location of static files like js and css.
+; useful for serving on subdirectory behind reverse proxy.
+staticurlprefix = ""
+
 [purge]
 ; minimum time limit between two purgings of expired pastes, it is only
 ; triggered when pastes are created

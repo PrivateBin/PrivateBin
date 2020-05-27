@@ -77,9 +77,10 @@ class Configuration
             'markdown'           => 'Markdown',
         ),
         'traffic' => array(
-            'limit'  => 10,
-            'header' => null,
-            'dir'    => 'data',
+            'limit'           => 10,
+            'header'          => null,
+            'dir'             => 'data',
+            'staticurlprefix' => '',
         ),
         'purge' => array(
             'limit'     => 300,

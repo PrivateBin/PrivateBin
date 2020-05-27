@@ -377,10 +377,10 @@ class Helper
                     PATH . 'tpl' . DIRECTORY_SEPARATOR . $file
                 );
                 $content = preg_replace_callback(
-                    '#<script ([^>]+) src="js/([a-z0-9.-]+.js)([^"]*)"( integrity="[^"]+" crossorigin="[^"]+")?></script>#',
+                    '#<script ([^>]+) src="<?php echo $STATICURLPREFIX?>/js/([a-z0-9.-]+.js)([^"]*)"( integrity="[^"]+" crossorigin="[^"]+")?></script>#',
                     function ($matches) {
                         if (array_key_exists($matches[2], Helper::$hashes)) {
-                            return '<script ' . $matches[1] . ' src="js/' .
+                            return '<script ' . $matches[1] . ' src="<?php echo $STATICURLPREFIX?>/js/' .
                                 $matches[2] . $matches[3] .
                                 '" integrity="sha512-' . Helper::$hashes[$matches[2]] .
                                 '" crossorigin="anonymous"></script>';
