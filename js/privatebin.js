@@ -3748,8 +3748,12 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 if (expirationDateString !== null) {
                     emailBody += EOL;
                     emailBody += BULLET;
-                    emailBody += I18n._(
-                        'This link will expire after %s.',
+                    // avoid DOMPurify mess with forward slash in expirationDateString
+                    emailBody += Helper.sprintf(
+                        I18n._(
+                            'This link will expire after %s.',
+                            '%s'
+                        ),
                         expirationDateString
                     );
                 }
