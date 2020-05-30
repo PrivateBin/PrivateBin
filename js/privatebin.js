@@ -5373,6 +5373,12 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             }
             me.initZ();
 
+            // if delete token is passed (i.e. paste has been deleted by this
+            // access), there is nothing more to do
+            if (Model.hasDeleteToken()) {
+                return;
+            }
+
             // check whether existing paste needs to be shown
             try {
                 Model.getPasteId();
@@ -5381,11 +5387,6 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 return me.newPaste();
             }
 
-            // if delete token is passed (i.e. paste has been deleted by this
-            // access), there is nothing more to do
-            if (Model.hasDeleteToken()) {
-                return;
-            }
             // always reload on back button to invalidate cache(protect burn after read paste)
             window.addEventListener('popstate', () => {
                 window.location.reload();
