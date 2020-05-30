@@ -1991,15 +1991,11 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                             return a.length - b.length;
                         })[0];
                         if (typeof shortUrl === 'string' && shortUrl.length > 0) {
-                            I18n._(
-                                $('#pastelink'),
-                                'Your paste is <a id="pasteurl" href="%s">%s</a> <span id="copyhint">(Hit [Ctrl]+[c] to copy)</span>',
-                                shortUrl, shortUrl
-                            );
                             // we disable the button to avoid calling shortener again
                             $shortenButton.addClass('buttondisabled');
-                            // save newly created element
-                            $pasteUrl = $('#pasteurl');
+                            // update link
+                            $pasteUrl.text(shortUrl);
+                            $pasteUrl.prop('href', shortUrl);
                             // we pre-select the link so that the user only has to [Ctrl]+[c] the link
                             Helper.selectText($pasteUrl[0]);
                             return;
