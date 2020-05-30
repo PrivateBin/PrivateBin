@@ -244,6 +244,18 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         const day = 86400;
 
         /**
+         * number of seconds in a week
+         *
+         * = 60 * 60 * 24 * 7 seconds
+         *
+         * @name Helper.week
+         * @private
+         * @enum   {number}
+         * @readonly
+         */
+        const week = 604800;
+
+        /**
          * number of seconds in a month (30 days, an approximation)
          *
          * = 60 * 60 * 24 * 30 seconds
@@ -326,7 +338,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         me.durationToSeconds = function(duration)
         {
-            let pieces   = duration.split(/\d+/),
+            let pieces   = duration.split(/(\D+)/),
                 factor   = pieces[0] || 0,
                 timespan = pieces[1] || pieces[0];
             switch (timespan)
@@ -337,6 +349,8 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                     return factor * hour;
                 case 'day':
                     return factor * day;
+                case 'week':
+                    return factor * week;
                 case 'month':
                     return factor * month;
                 case 'year':
