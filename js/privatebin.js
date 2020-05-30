@@ -4276,7 +4276,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         me.isAttachmentReadonly = function()
         {
-            return createButtonsDisplayed && $attach.hasClass('hidden');
+            return !createButtonsDisplayed || $attach.hasClass('hidden');
         }
 
         /**
