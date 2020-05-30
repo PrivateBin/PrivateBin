@@ -405,9 +405,11 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         me.urls2links = function(element)
         {
             element.html(
-                element.html().replace(
-                    /(((https?|ftp):\/\/[\w?!=&.\/-;#@~%+*-]+(?![\w\s?!&.\/;#~%"=-]>))|((magnet):[\w?=&.\/-;#@~%+*-]+))/ig,
-                    '<a href="$1" rel="nofollow">$1</a>'
+                DOMPurify.sanitize(
+                    element.html().replace(
+                        /(((https?|ftp):\/\/[\w?!=&.\/-;#@~%+*-]+(?![\w\s?!&.\/;#~%"=-]>))|((magnet):[\w?=&.\/-;#@~%+*-]+))/ig,
+                        '<a href="$1" rel="nofollow">$1</a>'
+                    )
                 )
             );
         };
