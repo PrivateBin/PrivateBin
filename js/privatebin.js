@@ -5386,6 +5386,10 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             if (Model.hasDeleteToken()) {
                 return;
             }
+            // always reload on back button to invalidate cache(protect burn after read paste)
+            window.addEventListener('popstate', () => {
+                window.location.reload();
+            });
 
             // display an existing paste
             return me.showPaste();
