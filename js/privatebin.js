@@ -2404,7 +2404,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         /**
          * hides the Editor
          *
-         * @name   Editor.reset
+         * @name   Editor.hide
          * @function
          */
         me.hide = function()
