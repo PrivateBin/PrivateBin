@@ -31,7 +31,7 @@ jobs:
     - name: Setup PHPunit
       run: composer install -n
     - name: Run unit tests
-      run: phpunit --no-coverage
+      run: ../vendor/bin/phpunit --no-coverage
       working-directory: tst
   Mocha:
     runs-on: ubuntu-latest

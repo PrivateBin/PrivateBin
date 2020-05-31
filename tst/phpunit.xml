@@ -13,7 +13,7 @@
 	</filter>
 	<logging>
 		<log type="coverage-clover" target="log/coverage-clover.xml" />
-		<log type="coverage-html" target="log/php-coverage-report" charset="UTF-8" yui="true" highlight="true" lowUpperBound="50" highLowerBound="80" />
+		<log type="coverage-html" target="log/php-coverage-report" lowUpperBound="50" highLowerBound="80" />
 		<log type="testdox-html" target="log/testdox.html" />
 	</logging>
 </phpunit>
