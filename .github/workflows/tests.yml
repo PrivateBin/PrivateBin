@@ -26,6 +26,8 @@ jobs:
       with:
         php-version: ${{ matrix.php-versions }}
         extensions: gd, sqlite3
+    - name: Remove composer lock
+      run: rm composer.lock
     - name: Setup PHPunit
       run: composer install -n
     - name: Run unit tests
