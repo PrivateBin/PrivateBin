@@ -5340,6 +5340,23 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 SAFE_FOR_JQUERY: true
             });
 
+            // Add a hook to make all links open a new window
+            DOMPurify.addHook('afterSanitizeAttributes', function(node) {
+                // set all elements owning target to target=_blank
+                if ('target' in node && node.id !== 'pasteurl') {
+                    node.setAttribute('target', '_blank');
+                }
+                // set non-HTML/MathML links to xlink:show=new
+                if (!node.hasAttribute('target') 
+                    && (node.hasAttribute('xlink:href') 
+                        || node.hasAttribute('href'))) {
+                    node.setAttribute('xlink:show', 'new');
+                }
+                if ('rel' in node) {
+                    node.setAttribute('rel', 'nofollow noopener noreferrer');
+                }
+            });
+
             // center all modals
             $('.modal').on('show.bs.modal', function(e) {
                 $(e.target).css({
