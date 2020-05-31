@@ -27,6 +27,9 @@ jobs:
         php-version: ${{ matrix.php-versions }}
         extensions: gd, sqlite3
         tools: phpunit
+    - name: Run unit tests
+      run: phpunit --no-coverage
+      working-directory: tst
   Mocha:
     runs-on: ubuntu-latest
     steps:
@@ -39,6 +42,9 @@ jobs:
     - name: Setup Mocha
       run: npm install -g mocha
     - name: Setup Node modules
-      run: cd js && npm install
+      run: npm install
+      working-directory: js
     - name: Run unit tests
       run: mocha
+      working-directory: js
+
