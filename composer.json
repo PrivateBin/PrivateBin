@@ -29,7 +29,6 @@
 		"yzalis/identicon" : "2.0.0"
 	},
 	"require-dev" : {
-		"codacy/coverage" : "dev-master",
 		"codeclimate/php-test-reporter" : "dev-master",
 		"phpunit/phpunit" : "^4.6 || ^5.0"
 	},
