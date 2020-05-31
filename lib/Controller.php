@@ -196,15 +196,20 @@ class Controller
      */
     private function _create()
     {
-        // Ensure last paste from visitors IP address was more than configured amount of seconds ago.
-        TrafficLimiter::setConfiguration($this->_conf);
-        if (!TrafficLimiter::canPass()) {
-            $this->_return_message(
-                1, I18n::_(
-                    'Please wait %d seconds between each post.',
-                    $this->_conf->getKey('limit', 'traffic')
-                )
-            );
+        try {
+            // Ensure last paste from visitors IP address was more than configured amount of seconds ago.
+            TrafficLimiter::setConfiguration($this->_conf);
+            if (!TrafficLimiter::canPass()) {
+                $this->_return_message(
+                    1, I18n::_(
+                        'Please wait %d seconds between each post.',
+                        $this->_conf->getKey('limit', 'traffic')
+                    )
+                );
+                return;
+            }
+        } catch (Exception $e) {
+            $this->_return_message(1, I18n::_($e->getMessage()));
             return;
         }
 
