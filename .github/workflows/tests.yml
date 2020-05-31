@@ -12,20 +12,19 @@ jobs:
     - name: Install dependencies
       run: composer install --prefer-dist --no-progress --no-suggest
   PHPunit:
-    runs-on: ${{ matrix.operating-system }}
+    runs-on: ubuntu-latest
     strategy:
       matrix:
-        operating-system: [ubuntu-latest, windows-latest, macos-latest]
         php-versions: ['5.6', '7.0', '7.1', '7.2', '7.3', '7.4']
     name: PHP ${{ matrix.php-versions }} unit tests on ${{ matrix.operating-system }}
     steps:
     - name: Checkout
       uses: actions/checkout@v2
     - name: Setup PHP
-      uses: shivammathur/setup-php@develop
+      uses: shivammathur/setup-php@v2
       with:
         php-version: ${{ matrix.php-versions }}
-        extensions: curl, dom, gd, pdo_sqlite3, sqlite3
+        extensions: gd, sqlite3
     - name: Remove composer lock
       run: rm composer.lock
     - name: Setup PHPunit
