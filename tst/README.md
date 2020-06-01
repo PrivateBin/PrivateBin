@@ -104,7 +104,8 @@ $ cd PrivateBin/js
 $ npm install
 ```
 
-To run the tests, just change into the `js` directory and run istanbul:
+To run the tests, just change into the `js` directory and run nyc (will produce
+coverage report) or just mocha:
 
 ```console
 $ cd PrivateBin/js
