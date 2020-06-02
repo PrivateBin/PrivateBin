@@ -408,7 +408,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 DOMPurify.sanitize(
                     element.html().replace(
                         /(((https?|ftp):\/\/[\w?!=&.\/-;#@~%+*-]+(?![\w\s?!&.\/;#~%"=-]>))|((magnet):[\w?=&.\/-;#@~%+*-]+))/ig,
-                        '<a href="$1" rel="nofollow">$1</a>'
+                        '<a href="$1" rel="nofollow noopener noreferrer">$1</a>'
                     )
                 )
             );
