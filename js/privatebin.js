@@ -244,6 +244,18 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         const day = 86400;
 
         /**
+         * number of seconds in a week
+         *
+         * = 60 * 60 * 24 * 7 seconds
+         *
+         * @name Helper.week
+         * @private
+         * @enum   {number}
+         * @readonly
+         */
+        const week = 604800;
+
+        /**
          * number of seconds in a month (30 days, an approximation)
          *
          * = 60 * 60 * 24 * 30 seconds
@@ -326,7 +338,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         me.durationToSeconds = function(duration)
         {
-            let pieces   = duration.split(/\d+/),
+            let pieces   = duration.split(/(\D+)/),
                 factor   = pieces[0] || 0,
                 timespan = pieces[1] || pieces[0];
             switch (timespan)
@@ -337,6 +349,8 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                     return factor * hour;
                 case 'day':
                     return factor * day;
+                case 'week':
+                    return factor * week;
                 case 'month':
                     return factor * month;
                 case 'year':
@@ -391,9 +405,11 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         me.urls2links = function(element)
         {
             element.html(
-                element.html().replace(
-                    /(((https?|ftp):\/\/[\w?!=&.\/-;#@~%+*-]+(?![\w\s?!&.\/;#~%"=-]>))|((magnet):[\w?=&.\/-;#@~%+*-]+))/ig,
-                    '<a href="$1" rel="nofollow">$1</a>'
+                DOMPurify.sanitize(
+                    element.html().replace(
+                        /(((https?|ftp):\/\/[\w?!=&.\/-;#@~%+*-]+(?![\w\s?!&.\/;#~%"=-]>))|((magnet):[\w?=&.\/-;#@~%+*-]+))/ig,
+                        '<a href="$1" rel="nofollow noopener noreferrer">$1</a>'
+                    )
                 )
             );
         };
@@ -1975,15 +1991,11 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                             return a.length - b.length;
                         })[0];
                         if (typeof shortUrl === 'string' && shortUrl.length > 0) {
-                            I18n._(
-                                $('#pastelink'),
-                                'Your paste is <a id="pasteurl" href="%s">%s</a> <span id="copyhint">(Hit [Ctrl]+[c] to copy)</span>',
-                                shortUrl, shortUrl
-                            );
                             // we disable the button to avoid calling shortener again
                             $shortenButton.addClass('buttondisabled');
-                            // save newly created element
-                            $pasteUrl = $('#pasteurl');
+                            // update link
+                            $pasteUrl.text(shortUrl);
+                            $pasteUrl.prop('href', shortUrl);
                             // we pre-select the link so that the user only has to [Ctrl]+[c] the link
                             Helper.selectText($pasteUrl[0]);
                             return;
@@ -2404,7 +2416,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         /**
          * hides the Editor
          *
-         * @name   Editor.reset
+         * @name   Editor.hide
          * @function
          */
         me.hide = function()
@@ -3110,19 +3122,15 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         function addClipboardEventHandler() {
             $(document).on('paste', function (event) {
-                if (TopNav.isAttachmentReadonly()) {
-                    event.stopPropagation();
-                    event.preventDefault();
-                    return false;
-                }
                 const items = (event.clipboardData || event.originalEvent.clipboardData).items;
-                for (let i = 0; i < items.length; ++i) {
-                    if (items[i].kind === 'file') {
-                        //Clear the file input:
-                        $fileInput.wrap('<form>').closest('form').get(0).reset();
-                        $fileInput.unwrap();
-
-                        readFileData(items[i].getAsFile());
+                const lastItem = items[items.length - 1];
+                if (lastItem.kind === 'file') {
+                    if (TopNav.isAttachmentReadonly()) {
+                        event.stopPropagation();
+                        event.preventDefault();
+                        return false;
+                    } else {
+                        readFileData(lastItem.getAsFile());
                     }
                 }
             });
@@ -3752,8 +3760,12 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 if (expirationDateString !== null) {
                     emailBody += EOL;
                     emailBody += BULLET;
-                    emailBody += I18n._(
-                        'This link will expire after %s.',
+                    // avoid DOMPurify mess with forward slash in expirationDateString
+                    emailBody += Helper.sprintf(
+                        I18n._(
+                            'This link will expire after %s.',
+                            '%s'
+                        ),
                         expirationDateString
                     );
                 }
@@ -4280,7 +4292,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         me.isAttachmentReadonly = function()
         {
-            return createButtonsDisplayed && $attach.hasClass('hidden');
+            return !createButtonsDisplayed || $attach.hasClass('hidden');
         }
 
         /**
@@ -5328,6 +5340,23 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 SAFE_FOR_JQUERY: true
             });
 
+            // Add a hook to make all links open a new window
+            DOMPurify.addHook('afterSanitizeAttributes', function(node) {
+                // set all elements owning target to target=_blank
+                if ('target' in node && node.id !== 'pasteurl') {
+                    node.setAttribute('target', '_blank');
+                }
+                // set non-HTML/MathML links to xlink:show=new
+                if (!node.hasAttribute('target') 
+                    && (node.hasAttribute('xlink:href') 
+                        || node.hasAttribute('href'))) {
+                    node.setAttribute('xlink:show', 'new');
+                }
+                if ('rel' in node) {
+                    node.setAttribute('rel', 'nofollow noopener noreferrer');
+                }
+            });
+
             // center all modals
             $('.modal').on('show.bs.modal', function(e) {
                 $(e.target).css({
@@ -5359,6 +5388,12 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             }
             me.initZ();
 
+            // if delete token is passed (i.e. paste has been deleted by this
+            // access), there is nothing more to do
+            if (Model.hasDeleteToken()) {
+                return;
+            }
+
             // check whether existing paste needs to be shown
             try {
                 Model.getPasteId();
@@ -5367,11 +5402,10 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 return me.newPaste();
             }
 
-            // if delete token is passed (i.e. paste has been deleted by this
-            // access), there is nothing more to do
-            if (Model.hasDeleteToken()) {
-                return;
-            }
+            // always reload on back button to invalidate cache(protect burn after read paste)
+            window.addEventListener('popstate', () => {
+                window.location.reload();
+            });
 
             // display an existing paste
             return me.showPaste();
