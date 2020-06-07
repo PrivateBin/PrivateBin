@@ -125,7 +125,7 @@ describe('Helper', function () {
                 let result = e.html();
                 clean();
                 url = $('<div />').text(url).html();
-                return $('<div />').text(prefix).html() + '<a href="' + url + '" rel="nofollow noopener noreferrer">' + url + '</a>' + $('<div />').text(postfix).html() === result;
+                return $('<div />').text(prefix).html() + '<a href="' + url + '" target="_blank" rel="nofollow noopener noreferrer">' + url + '</a>' + $('<div />').text(postfix).html() === result;
             }
         );
         jsc.property(
@@ -145,7 +145,7 @@ describe('Helper', function () {
                 let result = e.html();
                 clean();
                 url = $('<div />').text(url).html();
-                return $('<div />').text(prefix).html() + '<a href="' + url + '" rel="nofollow noopener noreferrer">' + url + '</a>' + $('<div />').text(postfix).html() === result;
+                return $('<div />').text(prefix).html() + '<a href="' + url + '" target="_blank" rel="nofollow noopener noreferrer">' + url + '</a>' + $('<div />').text(postfix).html() === result;
             }
         );
     });
