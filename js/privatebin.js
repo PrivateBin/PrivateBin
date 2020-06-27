@@ -12,9 +12,9 @@
  */
 
 // global Base64, DOMPurify, FileReader, RawDeflate, history, navigator, prettyPrint, prettyPrintOne, showdown, kjua
+'use strict';
 
 jQuery.fn.draghover = function() {
-    'use strict';
     return this.each(function() {
         let collection = $(),
             self = $(this);
@@ -37,14 +37,11 @@ jQuery.fn.draghover = function() {
 
 // main application start, called when DOM is fully loaded
 jQuery(document).ready(function() {
-    'use strict';
     // run main controller
     $.PrivateBin.Controller.init();
 });
 
 jQuery.PrivateBin = (function($, RawDeflate) {
-    'use strict';
-
     /**
      * zlib library interface
      *
@@ -5362,6 +5359,13 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 $(e.target).css({
                     display: 'flex'
                 });
+            });
+
+            // attach memory sidebar toggle
+            $("#menu-toggle").on('click', function(e) {
+                e.preventDefault();
+                $("#menu-toggle .glyphicon").toggleClass("glyphicon glyphicon-menu-down glyphicon glyphicon-menu-up")
+                $("main").toggleClass("toggled");
             });
 
             // initialize other modules/"classes"

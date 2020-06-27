@@ -205,3 +205,49 @@ li.L0, li.L1, li.L2, li.L3, li.L5, li.L6, li.L7, li.L8 {
 .modal .modal-content button {
 	margin: 0.5em 0;
 }
+
+/* sidebar */
+#menu-toggle {
+	position: absolute;
+	top: 145px;
+	left: -3.3ch;
+	transform: rotate(90deg);
+	transition: all 0.5s ease;
+}
+
+main.toggled #menu-toggle {
+	left: 220px;
+}
+
+@media (max-width: 768px) {
+	#menu-toggle {
+		position: static;
+		margin-bottom: 1em;
+		transform: rotate(0);
+	}
+}
+
+main {
+	padding-left: 0;
+	transition: all 0.5s ease;
+}
+
+main.toggled {
+	padding-left: 250px;
+}
+
+#sidebar-wrapper {
+	position: fixed;
+	left: 250px;
+	width: 0;
+	height: 100%;
+	margin-left: -250px;
+	padding-left: 4ch;
+	overflow-y: scroll;
+	overflow-x: hidden;
+	transition: all 0.5s ease;
+}
+
+main.toggled #sidebar-wrapper {
+	width: 250px;
+}

@@ -72,7 +72,7 @@ endif;
 ?>
 		<script type="text/javascript" data-cfasync="false" src="js/purify-2.0.8.js" integrity="sha512-QwcEKGuEmKtMguCO9pqNtUtZqq9b/tJ8gNr5qhY8hykq3zKTlDOvpZAmf6Rs8yH35Bz1ZdctUjj2qEWxT5aXCg==" crossorigin="anonymous"></script>
 		<script type="text/javascript" data-cfasync="false" src="js/legacy.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-LYos+qXHIRqFf5ZPNphvtTB0cgzHUizu2wwcOwcwz/VIpRv9lpcBgPYz4uq6jx0INwCAj6Fbnl5HoKiLufS2jg==" crossorigin="anonymous"></script>
-		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-pIM3/kBh5nI0TNPXyjhhqCrLE2enQc0DjiIfmpH2RoHaeDPNh2aTKIqEf8Ms6JMGWD/xJreAU7XUElWgELCkYQ==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-xXyscWa4PKPNa2wyjP3k1es3nGNnjvupAqpJNdjzOECQU1WWIFzajsdhVE325t5X4BHpKF5M9ash4ubmW2BsVQ==" crossorigin="anonymous"></script>
 		<!-- icon -->
 		<link rel="apple-touch-icon" href="img/apple-touch-icon.png?<?php echo rawurlencode($VERSION); ?>" sizes="180x180" />
 		<link rel="icon" type="image/png" href="img/favicon-32x32.png?<?php echo rawurlencode($VERSION); ?>" sizes="32x32" />
@@ -447,7 +447,15 @@ if ($isCpct):
 endif;
 ?></nav>
 		<main>
+			<div id="sidebar-wrapper">
+				<h4><?php echo I18n::_('Memory'); ?></h4>
+				<p><?php echo I18n::_('The memory lets you remember different paste links. The memory is unique to each website and device.'); ?></p>
+			</div>
 			<section class="container">
+				<button id="menu-toggle" class="btn btn-<?php echo $isDark ? 'warning' : 'default'; ?>">
+					<span class="glyphicon glyphicon-menu-up"  aria-hidden="true"></span>
+					<?php echo I18n::_('Memory'); ?>
+				</button>
 <?php
 if (strlen($NOTICE)):
 ?>
@@ -466,7 +474,7 @@ if ($FILEUPLOAD):
 ?>
 				<div id="attachment" role="alert" class="hidden alert alert-info">
 					<span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
-					<a class="alert-link"><?php echo I18n::_('Download attachment'), PHP_EOL; ?></a>
+					<a class="alert-link"><?php echo I18n::_('Download attachment'); ?></a>
 				</div>
 <?php
 endif;
