@@ -452,10 +452,6 @@ endif;
 				<p><?php echo I18n::_('The memory lets you remember different paste links. The memory is unique to each website and device.'); ?></p>
 			</div>
 			<section class="container">
-				<button id="menu-toggle" class="btn btn-<?php echo $isDark ? 'warning' : 'default'; ?>">
-					<span class="glyphicon glyphicon-menu-up"  aria-hidden="true"></span>
-					<?php echo I18n::_('Memory'); ?>
-				</button>
 <?php
 if (strlen($NOTICE)):
 ?>
@@ -538,6 +534,10 @@ if (strlen($URLSHORTENER)):
 endif;
 ?>
 				</div>
+				<button id="menu-toggle" class="btn btn-<?php echo $isDark ? 'warning' : 'default'; ?>">
+					<span class="glyphicon glyphicon-menu-up"  aria-hidden="true"></span>
+					<?php echo I18n::_('Memory'); ?>
+				</button>
 				<ul id="editorTabs" class="nav nav-tabs hidden">
 					<li role="presentation" class="active"><a role="tab" aria-selected="true" aria-controls="editorTabs" id="messageedit" href="#"><?php echo I18n::_('Editor'); ?></a></li>
 					<li role="presentation"><a role="tab" aria-selected="false" aria-controls="editorTabs" id="messagepreview" href="#"><?php echo I18n::_('Preview'); ?></a></li>

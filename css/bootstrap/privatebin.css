@@ -208,15 +208,11 @@ li.L0, li.L1, li.L2, li.L3, li.L5, li.L6, li.L7, li.L8 {
 
 /* sidebar */
 #menu-toggle {
-	position: absolute;
-	top: 145px;
-	left: -3.3ch;
+	position: relative;
+	bottom: -94px;
+	left: -61px;
+	margin-bottom: -12px;
 	transform: rotate(90deg);
-	transition: all 0.5s ease;
-}
-
-main.toggled #menu-toggle {
-	left: 220px;
 }
 
 @media (max-width: 768px) {
@@ -228,7 +224,6 @@ main.toggled #menu-toggle {
 }
 
 main {
-	padding-left: 0;
 	transition: all 0.5s ease;
 }
 
@@ -238,10 +233,9 @@ main.toggled {
 
 #sidebar-wrapper {
 	position: fixed;
-	left: 250px;
-	width: 0;
+	width: 250px;
 	height: 100%;
-	margin-left: -250px;
+	left: -250px;
 	padding-left: 4ch;
 	overflow-y: scroll;
 	overflow-x: hidden;
@@ -249,5 +243,5 @@ main.toggled {
 }
 
 main.toggled #sidebar-wrapper {
-	width: 250px;
+	left: 0;
 }
