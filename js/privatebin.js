@@ -3517,6 +3517,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             $emailLink,
             $sendButton,
             $retryButton,
+            $rememberButton,
             pasteExpiration = null,
             retryButtonCallback;
 
@@ -3881,6 +3882,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             $cloneButton.removeClass('hidden');
             $rawTextButton.removeClass('hidden');
             $qrCodeLink.removeClass('hidden');
+            $rememberButton.removeClass('hidden');
 
             viewButtonsDisplayed = true;
         };
@@ -3901,6 +3903,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             $newButton.addClass('hidden');
             $rawTextButton.addClass('hidden');
             $qrCodeLink.addClass('hidden');
+            $rememberButton.addClass('hidden');
             me.hideEmailButton();
 
             viewButtonsDisplayed = false;
@@ -3967,17 +3970,6 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         };
 
         /**
-         * only shows the "new paste" button
-         *
-         * @name   TopNav.showNewPasteButton
-         * @function
-         */
-        me.showNewPasteButton = function()
-        {
-            $newButton.removeClass('hidden');
-        };
-
-        /**
          * only shows the "retry" button
          *
          * @name   TopNav.showRetryButton
@@ -4040,17 +4032,6 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         }
 
         /**
-         * only hides the clone button
-         *
-         * @name   TopNav.hideCloneButton
-         * @function
-         */
-        me.hideCloneButton = function()
-        {
-            $cloneButton.addClass('hidden');
-        };
-
-        /**
          * only hides the raw text button
          *
          * @name   TopNav.hideRawButton
@@ -4062,17 +4043,6 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         };
 
         /**
-         * only hides the qr code button
-         *
-         * @name   TopNav.hideQrCodeButton
-         * @function
-         */
-        me.hideQrCodeButton = function()
-        {
-            $qrCodeLink.addClass('hidden');
-        }
-
-        /**
          * hide all irrelevant buttons when viewing burn after reading paste
          *
          * @name   TopNav.hideBurnAfterReadingButtons
@@ -4080,8 +4050,8 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         me.hideBurnAfterReadingButtons = function()
         {
-            me.hideCloneButton();
-            me.hideQrCodeButton();
+            $cloneButton.addClass('hidden');
+            $qrCodeLink.addClass('hidden');
             me.hideEmailButton();
         }
 
@@ -4321,6 +4291,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             $sendButton = $('#sendbutton');
             $qrCodeLink = $('#qrcodelink');
             $emailLink = $('#emaillink');
+            $rememberButton = $('#rememberbutton');
 
             // bootstrap template drop down
             $('#language ul.dropdown-menu li a').click(setLanguage);
@@ -4383,6 +4354,8 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 if (cursor) {
                     urls.push(cursor.value.url);
                     cursor.continue();
+                } else {
+                    me.refreshList();
                 }
             };
         }
@@ -4397,13 +4370,12 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         me.add = function(pasteUrl)
         {
-            urls.push(pasteUrl);
             if (!window.indexedDB || !db) {
                 return false;
             }
             const url = new URL(pasteUrl);
             const memory = db.transaction('pastes', 'readwrite').objectStore('pastes');
-            memory.add({
+            const request = memory.add({
                 'https': url.protocol == 'https:',
                 'service': url.hostname + url.pathname,
                 'pasteid': url.search.replace(/^\?+/, ''),
@@ -4412,6 +4384,10 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 // required to open the paste, like port, username and password
                 'url': pasteUrl
             });
+            request.onsuccess = function(e) {
+                urls.push(pasteUrl);
+                me.refreshList();
+            };
             return true;
         };
 
@@ -4468,15 +4444,19 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             request.onsuccess = function(e) {
                 db = request.result;
                 db.onerror = function(e) {
-                    Alert.showError(e);
+                    Alert.showError(e.target.error.message);
                 }
                 updateCacheFromDb();
             };
 
             $('#menu-toggle').on('click', function(e) {
-                e.preventDefault();
                 $('main').toggleClass('toggled');
                 $('#menu-toggle .glyphicon').toggleClass('glyphicon glyphicon-menu-down glyphicon glyphicon-menu-up')
+            });
+
+            $('#rememberbutton').on('click', function(e) {
+                me.add(window.location.href);
+                $('#menu-toggle').click();
             });
         };
 

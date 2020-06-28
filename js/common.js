@@ -9,6 +9,7 @@ global.URL = require('jsdom-url').URL;
 global.fs = require('fs');
 global.WebCrypto = require('@peculiar/webcrypto').Crypto;
 require('fake-indexeddb/auto');
+global.FDBFactory = require('fake-indexeddb/lib/FDBFactory');
 
 // application libraries to test
 global.$ = global.jQuery = require('./jquery-3.4.1');
