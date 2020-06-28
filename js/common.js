@@ -8,6 +8,7 @@ global.cleanup = global.jsdom();
 global.URL = require('jsdom-url').URL;
 global.fs = require('fs');
 global.WebCrypto = require('@peculiar/webcrypto').Crypto;
+require('fake-indexeddb/auto');
 
 // application libraries to test
 global.$ = global.jQuery = require('./jquery-3.4.1');

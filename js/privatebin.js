@@ -4362,10 +4362,30 @@ jQuery.PrivateBin = (function($, RawDeflate) {
      * @name   Memory
      * @class
      */
-    const Memory = (function (document) {
+    const Memory = (function (document, window) {
         const me = {};
 
-        let urls = [];
+        let urls = [],
+            db;
+
+        /**
+         * called after successfully connecting to the indexedDB
+         *
+         * @name   Memory.updateCacheFromDb
+         * @private
+         * @function
+         */
+        function updateCacheFromDb()
+        {
+            const memory = db.transaction('pastes').objectStore('pastes');
+            memory.openCursor().onsuccess = function(e) {
+                let cursor = e.target.result;
+                if (cursor) {
+                    urls.push(cursor.value.url);
+                    cursor.continue();
+                }
+            };
+        }
 
         /**
          * adds a paste URL to the memory
@@ -4378,6 +4398,20 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         me.add = function(pasteUrl)
         {
             urls.push(pasteUrl);
+            if (!window.indexedDB || !db) {
+                return false;
+            }
+            const url = new URL(pasteUrl);
+            const memory = db.transaction('pastes', 'readwrite').objectStore('pastes');
+            memory.add({
+                'https': url.protocol == 'https:',
+                'service': url.hostname + url.pathname,
+                'pasteid': url.search.replace(/^\?+/, ''),
+                'key': url.hash.replace(/^#+/, ''),
+                // we store the full URL as it may contain additonal information
+                // required to open the paste, like port, username and password
+                'url': pasteUrl
+            });
             return true;
         };
 
@@ -4411,15 +4445,43 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         me.init = function()
         {
             urls = [];
-            $("#menu-toggle").on('click', function(e) {
+            if (!window.indexedDB) {
+                $('#menu-toggle').hide();
+                return;
+            }
+            const request = window.indexedDB.open('privatebin', 1);
+            request.onerror = function(e) {
+                Alert.showWarning('Unable to open indexedDB, memory will not be available in this session.');
+                $('#menu-toggle').hide();
+            };
+            request.onupgradeneeded = function(event) { 
+                const newDb = event.target.result;
+                const objectStore = newDb.createObjectStore('pastes', {keyPath: 'pasteid'});
+                objectStore.createIndex('https', 'https', {unique: false});
+                objectStore.createIndex('service', 'service', {unique: false});
+                objectStore.createIndex('pasteid', 'pasteid', {unique: true});
+                objectStore.transaction.oncomplete = function(e) {
+                    db = newDb;
+                    updateCacheFromDb();
+                };
+            };
+            request.onsuccess = function(e) {
+                db = request.result;
+                db.onerror = function(e) {
+                    Alert.showError(e);
+                }
+                updateCacheFromDb();
+            };
+
+            $('#menu-toggle').on('click', function(e) {
                 e.preventDefault();
-                $("main").toggleClass("toggled");
-                $("#menu-toggle .glyphicon").toggleClass("glyphicon glyphicon-menu-down glyphicon glyphicon-menu-up")
+                $('main').toggleClass('toggled');
+                $('#menu-toggle .glyphicon').toggleClass('glyphicon glyphicon-menu-down glyphicon glyphicon-menu-up')
             });
         };
 
         return me;
-    })(document);
+    })(document, window);
 
     /**
      * Responsible for AJAX requests, transparently handles encryption…

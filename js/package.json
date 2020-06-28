@@ -8,11 +8,12 @@
   },
   "dependencies": {},
   "devDependencies": {
+    "@peculiar/webcrypto": "^1.1.1",
+    "fake-indexeddb": "^3.0.2",
     "jsdom": "^9.12.0",
     "jsdom-global": "^2.1.1",
     "jsdom-url": "^2.2.1",
-    "jsverify": "^0.8.3",
-    "@peculiar/webcrypto": "^1.1.1"
+    "jsverify": "^0.8.3"
   },
   "scripts": {
     "test": "mocha"
