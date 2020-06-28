@@ -4357,6 +4357,58 @@ jQuery.PrivateBin = (function($, RawDeflate) {
     })(window, document);
 
     /**
+     * (view) Handles the memory, storing paste URLs in the browser
+     *
+     * @name   Memory
+     * @class
+     */
+    const Memory = (function () {
+        const me = {};
+
+        /**
+         * adds a paste URL to the memory
+         *
+         * @name   Memory.add
+         * @function
+         * @param  {string} pasteUrl
+         * @return {bool}
+         */
+        me.add = function(pasteUrl)
+        {
+            return true;
+        };
+
+        /**
+         * refresh the displayed list from memory
+         *
+         * @name   Memory.refreshList
+         * @function
+         */
+        me.refreshList = function()
+        {
+        };
+
+        /**
+         * initiate
+         *
+         * attaches click event to toggle memory sidepanel
+         *
+         * @name   Memory.init
+         * @function
+         */
+        me.init = function()
+        {
+            $("#menu-toggle").on('click', function(e) {
+                e.preventDefault();
+                $("main").toggleClass("toggled");
+                $("#menu-toggle .glyphicon").toggleClass("glyphicon glyphicon-menu-down glyphicon glyphicon-menu-up")
+            });
+        };
+
+        return me;
+    })();
+
+    /**
      * Responsible for AJAX requests, transparently handles encryption…
      *
      * @name   ServerInteraction
@@ -5361,13 +5413,6 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 });
             });
 
-            // attach memory sidebar toggle
-            $("#menu-toggle").on('click', function(e) {
-                e.preventDefault();
-                $("#menu-toggle .glyphicon").toggleClass("glyphicon glyphicon-menu-down glyphicon glyphicon-menu-up")
-                $("main").toggleClass("toggled");
-            });
-
             // initialize other modules/"classes"
             Alert.init();
             Model.init();
@@ -5379,6 +5424,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             Prompt.init();
             TopNav.init();
             UiHelper.init();
+            Memory.init();
 
             // check for legacy browsers before going any further
             if (!Legacy.Check.getInit()) {
@@ -5432,6 +5478,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         AttachmentViewer: AttachmentViewer,
         DiscussionViewer: DiscussionViewer,
         TopNav: TopNav,
+        Memory: Memory,
         ServerInteraction: ServerInteraction,
         PasteEncrypter: PasteEncrypter,
         PasteDecrypter: PasteDecrypter,
