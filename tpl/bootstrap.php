@@ -72,7 +72,7 @@ endif;
 ?>
 		<script type="text/javascript" data-cfasync="false" src="js/purify-2.0.8.js" integrity="sha512-QwcEKGuEmKtMguCO9pqNtUtZqq9b/tJ8gNr5qhY8hykq3zKTlDOvpZAmf6Rs8yH35Bz1ZdctUjj2qEWxT5aXCg==" crossorigin="anonymous"></script>
 		<script type="text/javascript" data-cfasync="false" src="js/legacy.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-LYos+qXHIRqFf5ZPNphvtTB0cgzHUizu2wwcOwcwz/VIpRv9lpcBgPYz4uq6jx0INwCAj6Fbnl5HoKiLufS2jg==" crossorigin="anonymous"></script>
-		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-0dH2jwB9G3WPKEuSqYz5//MbCKQObNZx+rmQwmH3PKnVsTFrUG8EqV88U2iy0qj2rlNBNiytbJZ1CmRGJJ6YbQ==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-Ney+hSdITdWT9OPVLg0O3HLbaHKVO64fV/M+cUmKBOsMibv9Dsrug5jQRk17lebetk3jOPL0LyvBy+nAkAcFbw==" crossorigin="anonymous"></script>
 		<!-- icon -->
 		<link rel="apple-touch-icon" href="img/apple-touch-icon.png?<?php echo rawurlencode($VERSION); ?>" sizes="180x180" />
 		<link rel="icon" type="image/png" href="img/favicon-32x32.png?<?php echo rawurlencode($VERSION); ?>" sizes="32x32" />
@@ -450,6 +450,15 @@ endif;
 			<div id="sidebar-wrapper">
 				<h4><?php echo I18n::_('Memory'); ?></h4>
 				<p><?php echo I18n::_('The memory lets you remember different paste links. The memory is unique to each website and device.'); ?></p>
+				<table>
+					<thead>
+						<tr>
+							<th>URL</th>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
 			</div>
 			<section class="container">
 <?php

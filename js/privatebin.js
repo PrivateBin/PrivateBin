@@ -4362,8 +4362,10 @@ jQuery.PrivateBin = (function($, RawDeflate) {
      * @name   Memory
      * @class
      */
-    const Memory = (function () {
+    const Memory = (function (document) {
         const me = {};
+
+        let urls = [];
 
         /**
          * adds a paste URL to the memory
@@ -4375,6 +4377,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         me.add = function(pasteUrl)
         {
+            urls.push(pasteUrl);
             return true;
         };
 
@@ -4386,6 +4389,15 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         me.refreshList = function()
         {
+            const $tbody = $('#sidebar-wrapper table tbody')[0];
+            $tbody.textContent = '';
+            urls.forEach(function(url) {
+                const row  = document.createElement('tr'),
+                      cell = document.createElement('td');
+                cell.textContent = url;
+                row.appendChild(cell);
+                $tbody.appendChild(row);
+            });
         };
 
         /**
@@ -4398,6 +4410,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         me.init = function()
         {
+            urls = [];
             $("#menu-toggle").on('click', function(e) {
                 e.preventDefault();
                 $("main").toggleClass("toggled");
@@ -4406,7 +4419,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         };
 
         return me;
-    })();
+    })(document);
 
     /**
      * Responsible for AJAX requests, transparently handles encryption…

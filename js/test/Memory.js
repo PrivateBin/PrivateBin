@@ -1,7 +1,37 @@
 'use strict';
-require('../common');
+const common = require('../common');
 
 describe('Memory', function () {
+    describe('add & refreshList', function () {
+        this.timeout(30000);
+
+        jsc.property(
+            'allows adding valid paste URLs',
+            common.jscSchemas(),
+            jsc.nearray(common.jscA2zString()),
+            jsc.array(common.jscQueryString()),
+            'string',
+            function (schema, address, query, fragment) {
+                const expected = schema + '://' + address.join('') + '/?' +
+                      encodeURI(
+                          query.join('').replace(/^&+|&+$/gm,'') + '#' + fragment
+                      ),
+                      clean = jsdom();
+                $('body').html(
+                    '<main><div id="sidebar-wrapper"><table><tbody>' +
+                    '</tbody></table></div></main>'
+                );
+                // clear cache, then the first cell will match what we add
+                $.PrivateBin.Memory.init();
+                $.PrivateBin.Memory.add(expected);
+                $.PrivateBin.Memory.refreshList();
+                const result = $('#sidebar-wrapper table tbody tr td')[0].textContent;
+                clean();
+                return result === expected;
+            }
+        );
+    });
+    
     describe('init', function () {
         it(
             'enables toggling the memory sidebar',
