@@ -118,62 +118,6 @@ describe('TopNav', function () {
         );
     });
 
-    describe('showNewPasteButton', function () {
-        before(function () {
-            cleanup();
-        });
-
-        it(
-            'displays the button for creating a paste',
-            function () {
-                var results = [];
-                $('body').html(
-                    '<nav><div id="navbar"><ul><li><button id="newbutton" type=' +
-                    '"button" class="hidden">New</button></li></ul></div></nav>'
-                );
-                $.PrivateBin.TopNav.init();
-                results.push(
-                    $('#newbutton').hasClass('hidden')
-                );
-                $.PrivateBin.TopNav.showNewPasteButton();
-                results.push(
-                    !$('#newbutton').hasClass('hidden')
-                );
-                cleanup();
-                assert.ok(results.every(element => element));
-            }
-        );
-    });
-
-    describe('hideCloneButton', function () {
-        before(function () {
-            cleanup();
-        });
-
-        it(
-            'hides the button for cloning a paste',
-            function () {
-                var results = [];
-                $('body').html(
-                    '<nav><div id="navbar"><ul><li><button id="clonebutton" ' +
-                    'type="button" class="btn btn-warning navbar-btn">' +
-                    '<span class="glyphicon glyphicon-duplicate" aria-hidden=' +
-                    '"true"></span> Clone</button></li></ul></div></nav>'
-                );
-                $.PrivateBin.TopNav.init();
-                results.push(
-                    !$('#clonebutton').hasClass('hidden')
-                );
-                $.PrivateBin.TopNav.hideCloneButton();
-                results.push(
-                    $('#clonebutton').hasClass('hidden')
-                );
-                cleanup();
-                assert.ok(results.every(element => element));
-            }
-        );
-    });
-
     describe('hideRawButton', function () {
         before(function () {
             cleanup();
