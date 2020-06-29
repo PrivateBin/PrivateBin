@@ -4411,6 +4411,10 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             }
             const memory = db.transaction('pastes', 'readwrite').objectStore('pastes');
             const request = memory.add(newPaste);
+            request.onsuccess = function(e) {
+                me.refreshList();
+                $('#rememberbutton').addClass('disabled');
+            }
             return true;
         };
 
@@ -4796,6 +4800,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
             // show new URL in browser bar
             history.pushState({type: 'newpaste'}, document.title, url);
+            $('#rememberbutton').removeClass('disabled');
 
             TopNav.showViewButtons();
 
