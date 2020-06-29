@@ -4374,9 +4374,6 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                     cursor.continue();
                 } else {
                     me.refreshList();
-                    if (isInMemory(window.location.href)) {
-                        $('#rememberbutton').addClass('disabled');
-                    }
                 }
             };
         }
@@ -4413,9 +4410,23 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             const request = memory.add(newPaste);
             request.onsuccess = function(e) {
                 me.refreshList();
-                $('#rememberbutton').addClass('disabled');
             }
             return true;
+        };
+
+        /**
+         * refresh the state of the remember button
+         *
+         * @name   Memory.refreshButton
+         * @function
+         */
+        me.refreshButton = function()
+        {
+            if (isInMemory(window.location.href)) {
+                $('#rememberbutton').addClass('disabled');
+            } else {
+                $('#rememberbutton').removeClass('disabled');
+            }
         };
 
         /**
@@ -4426,6 +4437,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         me.refreshList = function()
         {
+            me.refreshButton();
             const $tbody = $('#sidebar-wrapper table tbody')[0];
             if (!$tbody) {
                 return;
@@ -4800,7 +4812,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
             // show new URL in browser bar
             history.pushState({type: 'newpaste'}, document.title, url);
-            $('#rememberbutton').removeClass('disabled');
+            Memory.refreshButton();
 
             TopNav.showViewButtons();
 
