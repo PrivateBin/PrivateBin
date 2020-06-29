@@ -2,7 +2,7 @@
 const common = require('../common');
 
 describe('Memory', function () {
-    describe('add', function () {
+    describe('add & refreshList', function () {
         this.timeout(30000);
 
         jsc.property(
@@ -24,8 +24,10 @@ describe('Memory', function () {
                 // clear cache, then the first cell will match what we add
                 $.PrivateBin.Memory.init();
                 $.PrivateBin.Memory.add(expected);
+                $.PrivateBin.Memory.refreshList();
+                const result = $('#sidebar-wrapper table tbody tr td')[0].textContent;
                 clean();
-                return true;
+                return result === expected;
             }
         );
     });
@@ -35,8 +37,8 @@ describe('Memory', function () {
             'enables toggling the memory sidebar',
             function() {
                 $('body').html(
-                    '<main><div id="sidebar-wrapper"><table><tbody></tbody>' +
-                    '</table></div><button id="menu-toggle"></button></main>'
+                    '<main><div id="sidebar-wrapper"></div>' +
+                    '<button id="menu-toggle"></button></main>'
                 );
                 assert.ok(!$('main').hasClass('toggled'));
 

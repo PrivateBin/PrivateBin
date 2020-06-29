@@ -4336,8 +4336,26 @@ jQuery.PrivateBin = (function($, RawDeflate) {
     const Memory = (function (document, window) {
         const me = {};
 
-        let urls = [],
+        let pastes = [],
             db;
+
+        /**
+         * checks if the given URL was already memorized
+         *
+         * @name   Memory.isInMemory
+         * @private
+         * @function
+         * @param  {string} pasteUrl
+         * @return {bool}
+         */
+        function isInMemory(pasteUrl)
+        {
+            return pastes.filter(
+                function(memorizedPaste) {
+                    return memorizedPaste.url === pasteUrl;
+                }
+            ).length > 0;
+        }
 
         /**
          * called after successfully connecting to the indexedDB
@@ -4352,10 +4370,13 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             memory.openCursor().onsuccess = function(e) {
                 let cursor = e.target.result;
                 if (cursor) {
-                    urls.push(cursor.value.url);
+                    pastes.push(cursor.value);
                     cursor.continue();
                 } else {
                     me.refreshList();
+                    if (isInMemory(window.location.href)) {
+                        $('#rememberbutton').addClass('disabled');
+                    }
                 }
             };
         }
@@ -4370,12 +4391,8 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         me.add = function(pasteUrl)
         {
-            if (!window.indexedDB || !db) {
-                return false;
-            }
             const url = new URL(pasteUrl);
-            const memory = db.transaction('pastes', 'readwrite').objectStore('pastes');
-            const request = memory.add({
+            const newPaste = {
                 'https': url.protocol == 'https:',
                 'service': url.hostname + url.pathname,
                 'pasteid': url.search.replace(/^\?+/, ''),
@@ -4383,11 +4400,17 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 // we store the full URL as it may contain additonal information
                 // required to open the paste, like port, username and password
                 'url': pasteUrl
-            });
-            request.onsuccess = function(e) {
-                urls.push(pasteUrl);
-                me.refreshList();
             };
+            // don't add an already memorized paste
+            if (isInMemory(pasteUrl)) {
+                return false;
+            }
+            pastes.push(newPaste);
+            if (!window.indexedDB || !db) {
+                return false;
+            }
+            const memory = db.transaction('pastes', 'readwrite').objectStore('pastes');
+            const request = memory.add(newPaste);
             return true;
         };
 
@@ -4400,11 +4423,14 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         me.refreshList = function()
         {
             const $tbody = $('#sidebar-wrapper table tbody')[0];
+            if (!$tbody) {
+                return;
+            }
             $tbody.textContent = '';
-            urls.forEach(function(url) {
+            pastes.forEach(function(paste) {
                 const row  = document.createElement('tr'),
                       cell = document.createElement('td');
-                cell.textContent = url;
+                cell.textContent = paste.url;
                 row.appendChild(cell);
                 $tbody.appendChild(row);
             });
@@ -4420,7 +4446,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         me.init = function()
         {
-            urls = [];
+            pastes = [];
             if (!window.indexedDB) {
                 $('#menu-toggle').hide();
                 return;
@@ -4455,8 +4481,8 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             });
 
             $('#rememberbutton').on('click', function(e) {
-                me.add(window.location.href);
-                $('#menu-toggle').click();
+                if (me.add(window.location.href))
+                    $('#menu-toggle').click();
             });
         };
 
