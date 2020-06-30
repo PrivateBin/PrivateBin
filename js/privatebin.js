@@ -2763,7 +2763,8 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             // extract mediaType
             const mediaType = attachmentData.substring(5, mediaTypeEnd);
             // extract data and convert to binary
-            const decodedData = atob(attachmentData.substring(base64Start));
+            const rawData = attachmentData.substring(base64Start);
+            const decodedData = rawData.length > 0 ? atob(rawData) : '';
 
             // Transform into a Blob
             const buf = new Uint8Array(decodedData.length);
