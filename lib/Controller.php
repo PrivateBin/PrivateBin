@@ -369,7 +369,7 @@ class Controller
 
         $page = new View;
         $page->assign('NAME', $this->_conf->getKey('name'));
-        $page->assign('PATH', I18n::_($this->_conf->getKey('path')));
+        $page->assign('BASEPATH', I18n::_($this->_conf->getKey('basepath')));
         $page->assign('ERROR', I18n::_($this->_error));
         $page->assign('STATUS', I18n::_($this->_status));
         $page->assign('VERSION', self::VERSION);

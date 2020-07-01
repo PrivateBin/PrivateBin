@@ -34,6 +34,7 @@ class ViewTest extends PHPUnit_Framework_TestCase
         /* Setup Routine */
         $page = new View;
         $page->assign('NAME', 'PrivateBinTest');
+        $page->assign('BASEPATH', false);
         $page->assign('ERROR', self::$error);
         $page->assign('STATUS', self::$status);
         $page->assign('VERSION', self::$version);

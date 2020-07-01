@@ -74,7 +74,7 @@ endif;
 		<script type="text/javascript" data-cfasync="false" src="js/legacy.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-LYos+qXHIRqFf5ZPNphvtTB0cgzHUizu2wwcOwcwz/VIpRv9lpcBgPYz4uq6jx0INwCAj6Fbnl5HoKiLufS2jg==" crossorigin="anonymous"></script>
 		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-GCiSgkYlcyJq3SOMOAh52rIlUAoGH8yDJzOm/NkzBorbk2qiBSjc289/RxpeZJcdu36fQObFTzLvz4Do/2LFsA==" crossorigin="anonymous"></script>
 		<!-- icon -->
-		<link rel="apple-touch-icon" href="<?php echo I18n::encode($PATH); ?>img/apple-touch-icon.png" sizes="180x180" />
+		<link rel="apple-touch-icon" href="<?php echo I18n::encode($BASEPATH); ?>img/apple-touch-icon.png" sizes="180x180" />
 		<link rel="icon" type="image/png" href="img/favicon-32x32.png" sizes="32x32" />
 		<link rel="icon" type="image/png" href="img/favicon-16x16.png" sizes="16x16" />
 		<link rel="manifest" href="manifest.json?<?php echo rawurlencode($VERSION); ?>" />
@@ -86,11 +86,11 @@ endif;
 		<meta name="twitter:card" content="summary" />
 		<meta name="twitter:title" content="<?php echo I18n::_('Encrypted note on PrivateBin') ?>" />
 		<meta name="twitter:description" content="<?php echo I18n::_('Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.') ?>" />
-		<meta name="twitter:image" content="<?php echo I18n::encode($PATH); ?>img/apple-touch-icon.png" />
+		<meta name="twitter:image" content="<?php echo I18n::encode($BASEPATH); ?>img/apple-touch-icon.png" />
 		<meta property="og:title" content="<?php echo I18n::_($NAME); ?>" />
 		<meta property="og:site_name" content="<?php echo I18n::_($NAME); ?>" />
 		<meta property="og:description" content="<?php echo I18n::_('Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.') ?>" />
-		<meta property="og:image" content="<?php echo I18n::encode($PATH); ?>img/apple-touch-icon.png" />
+		<meta property="og:image" content="<?php echo I18n::encode($BASEPATH); ?>img/apple-touch-icon.png" />
 		<meta property="og:image:type" content="image/png" />
 		<meta property="og:image:width" content="180" />
 		<meta property="og:image:height" content="180" />
