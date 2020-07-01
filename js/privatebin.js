@@ -562,10 +562,11 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          *
          * @name   Helper.reset
          * @function
+         * @param  {string} uri - (optional) URI to reset to
          */
-        me.reset = function()
+        me.reset = function(uri)
         {
-            baseUri = null;
+            baseUri = typeof uri === 'string' ? uri : null;
         };
 
         return me;
@@ -4389,16 +4390,16 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         me.add = function(pasteUrl)
         {
-            const url = new URL(pasteUrl);
-            const newPaste = {
-                'https': url.protocol == 'https:',
-                'service': url.hostname + url.pathname,
-                'pasteid': url.search.replace(/^\?+/, ''),
-                'key': url.hash.replace(/^#+/, ''),
-                // we store the full URL as it may contain additonal information
-                // required to open the paste, like port, username and password
-                'url': pasteUrl
-            };
+            const url = new URL(pasteUrl),
+                  newPaste = {
+                      'https': url.protocol == 'https:',
+                      'service': url.hostname + url.pathname,
+                      'pasteid': url.search.replace(/^\?+/, ''),
+                      'key': url.hash.replace(/^#+/, ''),
+                      // we store the full URL as it may contain additonal information
+                      // required to open the paste, like port, username and password
+                      'url': pasteUrl
+                  };
             // don't add an already memorized paste
             if (isInMemory(pasteUrl)) {
                 return false;
@@ -4407,12 +4408,31 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             if (!window.indexedDB || !db) {
                 return false;
             }
-            const memory = db.transaction('pastes', 'readwrite').objectStore('pastes');
-            const request = memory.add(newPaste);
+            const memory = db.transaction('pastes', 'readwrite').objectStore('pastes'),
+                  request = memory.add(newPaste);
             request.onsuccess = function(e) {
                 me.refreshList();
             }
             return true;
+        };
+
+        /**
+         * open a given paste URL using the current instance
+         *
+         * @name   Memory.open
+         * @function
+         * @param  {string} pasteUrl
+         */
+        me.open = function(pasteUrl)
+        {
+            // parse URL
+            const url = new URL(pasteUrl);
+            const baseUri = Helper.baseUri();
+            history.pushState({type: 'viewpaste'}, document.title, url.search + url.hash);
+            Helper.reset(url.origin);
+            Model.reset();
+            PasteDecrypter.run();
+            Helper.reset(baseUri);
         };
 
         /**
@@ -4450,6 +4470,9 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 cell.textContent = paste.url;
                 row.appendChild(cell);
                 $tbody.appendChild(row);
+                row.addEventListener('click', function () {
+                    me.open(paste.url);
+                });
             });
         };
 
