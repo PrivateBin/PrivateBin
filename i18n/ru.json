@@ -184,11 +184,11 @@
     "This link will expire after %s.":
         "Срок жизни ссылки истечет через %s.",
     "This link can only be accessed once, do not use back or refresh button in your browser.":
-        "Данная ссылка доступна только один раз, не нажимайте кнопку назад или обноления страницы в вашем браузере.",
+        "Данная ссылка доступна только один раз, не нажимайте кнопку назад или обновления страницы в вашем браузере.",
     "Link:":
         "Ссылка:",
     "Recipient may become aware of your timezone, convert time to UTC?":
-        "Получатель узнает ваш часовой пояс, сконвертировать время в TC?",
+        "Получатель узнает ваш часовой пояс, сконвертировать время в UTC?",
     "Use Current Timezone":
         "Использовать текущий часовой пояс",
     "Convert To UTC":
