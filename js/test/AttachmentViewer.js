@@ -21,6 +21,9 @@ describe('AttachmentViewer', function () {
                         mimeType.substring(0, 6) === 'video/' ||
                         mimeType.match(/\/pdf/i)
                     ),
+                    fileNameAndSizeDisplaySupported = (
+                        typeof filename === 'string' && filename.length && btoa(rawdata).length > 0
+                    ),
                     results = [],
                     result = '';
                 prefix  = prefix.replace(/%(s|d)/g, '%%');
@@ -66,12 +69,12 @@ describe('AttachmentViewer', function () {
                 $.PrivateBin.AttachmentViewer.showAttachment();
                 results.push(
                     !$('#attachment').hasClass('hidden') &&
-                    (previewSupported ? !$('#attachmentPreview').hasClass('hidden') : $('#attachmentPreview').hasClass('hidden'))
+                    (previewSupported || fileNameAndSizeDisplaySupported ? !$('#attachmentPreview').hasClass('hidden') : $('#attachmentPreview').hasClass('hidden'))
                 );
                 $.PrivateBin.AttachmentViewer.hideAttachment();
                 results.push(
                     $('#attachment').hasClass('hidden') &&
-                    (previewSupported ? !$('#attachmentPreview').hasClass('hidden') : $('#attachmentPreview').hasClass('hidden'))
+                    (previewSupported || fileNameAndSizeDisplaySupported ? !$('#attachmentPreview').hasClass('hidden') : $('#attachmentPreview').hasClass('hidden'))
                 );
                 if (previewSupported) {
                     $.PrivateBin.AttachmentViewer.hideAttachmentPreview();
@@ -80,7 +83,7 @@ describe('AttachmentViewer', function () {
                 $.PrivateBin.AttachmentViewer.showAttachment();
                 results.push(
                     !$('#attachment').hasClass('hidden') &&
-                    (previewSupported ? !$('#attachmentPreview').hasClass('hidden') : $('#attachmentPreview').hasClass('hidden'))
+                    (previewSupported || fileNameAndSizeDisplaySupported ? !$('#attachmentPreview').hasClass('hidden') : $('#attachmentPreview').hasClass('hidden'))
                 );
                 let element = $('<div>');
                 $.PrivateBin.AttachmentViewer.moveAttachmentTo(element, prefix + '%s' + postfix);
