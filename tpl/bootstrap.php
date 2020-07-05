@@ -245,9 +245,7 @@ endforeach;
 foreach ($EXPIRE as $key => $value):
 ?>
 							<li>
-								<a href="#" data-expiration="<?php echo $key; ?>">
-									<?php echo $value, PHP_EOL; ?>
-								</a>
+								<a href="#" data-expiration="<?php echo $key; ?>"><?php echo $value; ?></a>
 							</li>
 <?php
 endforeach;
@@ -255,6 +253,64 @@ endforeach;
 						</ul>
 					</li>
 <?php
+if ($FILEUPLOAD):
+?>
+					<li id="attach" class="hidden dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+							<span class="glyphicon glyphicon-paperclip hint" aria-hidden="true"></span>
+							<span class="hint-text"><?php echo I18n::_('Attachment'); ?></span>&nbsp;<span class="caret"></span>
+						</a>
+						<ul class="dropdown-menu">
+							<li id="filewrap">
+								<div class="hidden">
+									<input type="file" id="file" name="file" />
+								</div>
+								<a id="dragAndDropFileName" href="#" class="dragAndDropFile"><?php echo I18n::_('Choose file or drag & drop'); ?></a>
+							</li>
+							<li id="customattachment" class="hidden"></li>
+							<li>
+								<a id="fileremovebutton"  href="#">
+									<?php echo I18n::_('Remove attachment'), PHP_EOL; ?>
+								</a>
+							</li>
+						</ul>
+					</li>
+<?php
+endif;
+if (!$isCpct):
+?>
+					<li class="dropdown">
+						<select id="pasteFormatter" name="pasteFormatter" class="hidden">
+<?php
+		foreach ($FORMATTER as $key => $value):
+?>
+							<option value="<?php echo $key; ?>"<?php
+				if ($key == $FORMATTERDEFAULT):
+?> selected="selected"<?php
+				endif;
+?>><?php echo $value; ?></option>
+<?php
+		endforeach;
+?>
+						</select>
+						<a id="formatter" href="#" class="hidden dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+							<span class="glyphicon glyphicon-font hint" aria-hidden="true"></span>
+							<span class="hint-text"><?php echo I18n::_('Format'); ?>:</span>&nbsp;<span id="pasteFormatterDisplay"><?php echo $FORMATTER[$FORMATTERDEFAULT]; ?></span> <span class="caret"></span>
+								</a>
+						<ul class="dropdown-menu">
+<?php
+		foreach ($FORMATTER as $key => $value):
+?>
+							<li>
+								<a href="#" data-format="<?php echo $key; ?>"><?php echo $value; ?></a>
+							</li>
+<?php
+endforeach;
+?>
+						</ul>
+					</li>
+<?php
+endif;
 if ($isCpct):
 ?>
 					<li class="dropdown">
@@ -360,62 +416,8 @@ if ($PASSWORD):
 					</li>
 <?php
 endif;
-if ($FILEUPLOAD):
-?>
-					<li id="attach" class="hidden dropdown">
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><?php echo I18n::_('Attach a file'); ?> <span class="caret"></span></a>
-						<ul class="dropdown-menu">
-							<li id="filewrap">
-								<div>
-									<input type="file" id="file" name="file" />
-								</div>
-								<div id="dragAndDropFileName" class="dragAndDropFile"><?php echo I18n::_('alternatively drag & drop a file or paste an image from the clipboard'); ?></div>
-							</li>
-							<li id="customattachment" class="hidden"></li>
-							<li>
-								<a id="fileremovebutton"  href="#">
-									<?php echo I18n::_('Remove attachment'), PHP_EOL; ?>
-								</a>
-							</li>
-						</ul>
-					</li>
-<?php
-endif;
-if (!$isCpct):
-?>
-					<li class="dropdown">
-						<select id="pasteFormatter" name="pasteFormatter" class="hidden">
-<?php
-    foreach ($FORMATTER as $key => $value):
-?>
-							<option value="<?php echo $key; ?>"<?php
-        if ($key == $FORMATTERDEFAULT):
-?> selected="selected"<?php
-        endif;
-?>><?php echo $value; ?></option>
-<?php
-    endforeach;
-?>
-						</select>
-						<a id="formatter" href="#" class="hidden dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><?php echo I18n::_('Format'); ?>: <span id="pasteFormatterDisplay"><?php echo $FORMATTER[$FORMATTERDEFAULT]; ?></span> <span class="caret"></span></a>
-						<ul class="dropdown-menu">
-<?php
-    foreach ($FORMATTER as $key => $value):
-?>
-							<li>
-								<a href="#" data-format="<?php echo $key; ?>">
-									<?php echo $value, PHP_EOL; ?>
-								</a>
-							</li>
-<?php
-    endforeach;
 ?>
 						</ul>
-					</li>
-<?php
-endif;
-?>
-				</ul>
 				<ul class="nav navbar-nav pull-right">
 <?php
 if (strlen($LANGUAGESELECTION)):

@@ -71,13 +71,11 @@ body.loading {
 #attachmentPreview img {
 	max-width: 100%;
 	height: auto;
-	margin-bottom: 20px;
 }
 
 #attachmentPreview .pdfPreview {
 	width: 100%;
 	height: 100vh;
-	margin-bottom: 20px;
 }
 
 #dropzone {
@@ -168,6 +166,10 @@ li.L0, li.L1, li.L2, li.L3, li.L5, li.L6, li.L7, li.L8 {
 	list-style-type: decimal !important;
 }
 
+
+.nowarp {
+	white-space: nowrap;
+}
 .dark-theme .alert-info .alert-link {
 	color: #fff;
 }
@@ -204,4 +206,13 @@ li.L0, li.L1, li.L2, li.L3, li.L5, li.L6, li.L7, li.L8 {
 
 .modal .modal-content button {
 	margin: 0.5em 0;
+}
+
+.file-name {
+	word-wrap: break-word;
+}
+
+/* file name may also be displayed in alert */
+.alert {
+	word-wrap: break-word;
 }

@@ -233,8 +233,8 @@ if ($FILEUPLOAD):
 				<div id="attachment" class="hidden"><a><?php echo I18n::_('Download attachment'); ?></a></div>
 				<div id="attach" class="hidden">
 					<span id="clonedfile" class="hidden"><?php echo I18n::_('Cloned file attached.'); ?></span>
-					<span id="filewrap"><?php echo I18n::_('Attach a file'); ?>: <input type="file" id="file" name="file" /></span>
-					<span id="dragAndDropFileName" class="dragAndDropFile"><?php echo I18n::_('alternatively drag & drop a file or paste an image from the clipboard'); ?></span>
+					<span id="filewrap"><?php echo I18n::_('Attachment'); ?>: <input type="file" id="file" name="file" /></span>
+					<span id="dragAndDropFileName" class="dragAndDropFile"></span>
 					<button id="fileremovebutton"><?php echo I18n::_('Remove attachment'); ?></button>
 				</div>
 <?php

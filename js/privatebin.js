@@ -25,7 +25,6 @@ jQuery.fn.draghover = function() {
             }
             collection = collection.add(e.target);
         });
-
         self.on('dragleave drop', function(e) {
             collection = collection.not(e.target);
             if (collection.length === 0) {
@@ -360,6 +359,36 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 default:
                     return factor;
             }
+        };
+
+        /**
+         * converts size in bytes to human readable string
+         *
+         * The string is expected to be optional digits, followed by a time.
+         * Supported times are: min, hour, day, month, year, never
+         * Examples: 5min, 13hour, never
+         *
+         * @name Helper.humanizeBytes
+         * @function
+         * @param  {number} bytes
+         * @param {decimals} decimals - optional
+         * @return {String}
+         */
+        me.humanizeBytes = function(bytes, decimals = 2) {
+            const sizes = [
+                I18n._('Bytes'), I18n._('KB'), I18n._('MB'), I18n._('GB'),
+                I18n._('TB'), I18n._('PB'), I18n._('EB'), I18n._('ZB'), I18n._('YB')
+            ];
+            const signifierByte = I18n._('Byte');
+            if (bytes === 0) return me.sprintf('0 %s', sizes[0]);
+            if (bytes === 1) return me.sprintf('1 %s', signifierByte);
+        
+            const k = 1024;
+            const dm = decimals < 0 ? 0 : decimals;
+        
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+        
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
         };
 
         /**
@@ -2303,38 +2332,6 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         }
 
         /**
-         * view the Editor tab
-         *
-         * @name   Editor.viewEditor
-         * @function
-         * @param  {Event} event - optional
-         */
-        function viewEditor(event)
-        {
-            // toggle buttons
-            $messageEdit.addClass('active');
-            $messagePreview.removeClass('active');
-
-            $('#messageedit').attr('aria-selected','true');
-            $('#messagepreview').attr('aria-selected','false');
-
-            PasteViewer.hide();
-
-            // reshow input
-            $message.removeClass('hidden');
-
-            me.focusInput();
-
-            // finish
-            isPreview = false;
-
-            // prevent jumping of page to top
-            if (typeof event !== 'undefined') {
-                event.preventDefault();
-            }
-        }
-
-        /**
          * view the preview tab
          *
          * @name   Editor.viewPreview
@@ -2347,25 +2344,52 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             $messageEdit.removeClass('active');
             $messagePreview.addClass('active');
 
-            $('#messageedit').attr('aria-selected','false');
-            $('#messagepreview').attr('aria-selected','true');
+            $('#messageedit').prop('aria-selected','false');
+            $('#messagepreview').prop('aria-selected','true');
 
             // hide input as now preview is shown
             $message.addClass('hidden');
 
             // show preview
             PasteViewer.setText($message.val());
-            if (AttachmentViewer.hasAttachmentData()) {
-                const attachment = AttachmentViewer.getAttachment();
-                AttachmentViewer.handleBlobAttachmentPreview(
-                    AttachmentViewer.getAttachmentPreview(),
-                    attachment[0], attachment[1]
-                );
-            }
             PasteViewer.run();
+            AttachmentViewer.showAttachmentPreview();
 
             // finish
             isPreview = true;
+
+            // prevent jumping of page to top
+            if (typeof event !== 'undefined') {
+                event.preventDefault();
+            }
+        }
+
+        /**
+         * view the Editor tab
+         *
+         * @name   Editor.viewEditor
+         * @function
+         * @param  {Event} event - optional
+         */
+        me.viewEditor = function(event)
+        {
+            // toggle buttons
+            $messageEdit.addClass('active');
+            $messagePreview.removeClass('active');
+
+            $('#messageedit').prop('aria-selected','true');
+            $('#messagepreview').prop('aria-selected','false');
+
+            PasteViewer.hide();
+            AttachmentViewer.hideAttachmentPreview();
+
+            // reshow input
+            $message.removeClass('hidden');
+
+            me.focusInput();
+
+            // finish
+            isPreview = false;
 
             // prevent jumping of page to top
             if (typeof event !== 'undefined') {
@@ -2394,7 +2418,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         {
             // go back to input
             if (isPreview) {
-                viewEditor();
+                me.viewEditor();
             }
 
             // clear content
@@ -2478,7 +2502,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
             // bind click events to tab switchers (a), but save parent of them
             // (li)
-            $messageEdit = $('#messageedit').click(viewEditor).parent();
+            $messageEdit = $('#messageedit').click(me.viewEditor).parent();
             $messagePreview = $('#messagepreview').click(viewPreview).parent();
         };
 
@@ -2763,8 +2787,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             // extract mediaType
             const mediaType = attachmentData.substring(5, mediaTypeEnd);
             // extract data and convert to binary
-            const rawData = attachmentData.substring(base64Start);
-            const decodedData = rawData.length > 0 ? atob(rawData) : '';
+            const decodedData = atob(attachmentData.substring(base64Start));
 
             // Transform into a Blob
             const buf = new Uint8Array(decodedData.length);
@@ -2783,14 +2806,14 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                     navigator.msSaveBlob(blob, fileName);
                 });
             } else {
-                $attachmentLink.attr('href', blobUrl);
+                $attachmentLink.prop('href', blobUrl);
             }
 
             if (typeof fileName !== 'undefined') {
-                $attachmentLink.attr('download', fileName);
+                $attachmentLink.prop('download', fileName);
             }
 
-            me.handleBlobAttachmentPreview($attachmentPreview, blobUrl, mediaType);
+            me.handleBlobAttachmentPreview($attachmentPreview, blobUrl, mediaType, fileName, blob.size);
         };
 
         /**
@@ -2802,7 +2825,18 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         me.showAttachment = function()
         {
             $attachment.removeClass('hidden');
+            me.showAttachmentPreview();
 
+        };
+
+        /**
+         * displays the attachment preview
+         *
+         * @name AttachmentViewer.showAttachmentPreview
+         * @function
+         */
+        me.showAttachmentPreview = function()
+        {
             if (attachmentHasPreview) {
                 $attachmentPreview.removeClass('hidden');
             }
@@ -2822,13 +2856,13 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             if (!$attachment.length) {
                 return;
             }
+            TopNav.clearCustomAttachment();
+            me.clearDragAndDropFileName();
             me.hideAttachment();
             me.hideAttachmentPreview();
-            $attachmentLink.removeAttr('href');
-            $attachmentLink.removeAttr('download');
-            $attachmentLink.off('click');
-            $attachmentPreview.html('');
-            $dragAndDropFileName.text('');
+            $attachmentPreview.empty();
+            $fileInput.val('');
+
 
             AttachmentViewer.removeAttachmentData();
         };
@@ -2845,17 +2879,20 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         {
             file = undefined;
             attachmentData = undefined;
+            $attachmentLink.removeAttr('href');
+            $attachmentLink.removeAttr('download');
+            $attachmentLink.off('click');
         };
 
         /**
-         * Cleares the drag & drop data.
+         * Cleares the drag & drop fileName
          *
          * @name AttachmentViewer.clearDragAndDrop
          * @function
          */
-        me.clearDragAndDrop = function()
+        me.clearDragAndDropFileName = function()
         {
-            $dragAndDropFileName.text('');
+            I18n._($dragAndDropFileName, 'Choose file or drag & drop')
         };
 
         /**
@@ -2948,7 +2985,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             $attachmentLink.appendTo($element);
 
             // update text - ensuring no HTML is inserted into the text node
-            I18n._($attachmentLink, label, $attachmentLink.attr('download'));
+            I18n._($attachmentLink, label, $attachmentLink.prop('download'));
         };
 
         /**
@@ -2969,30 +3006,28 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 return;
             }
 
-            const fileReader = new FileReader();
-            if (loadedFile === undefined) {
-                loadedFile = $fileInput[0].files[0];
-                $dragAndDropFileName.text('');
-            } else {
-                $dragAndDropFileName.text(loadedFile.name);
-            }
+            me.removeAttachment();
 
             if (typeof loadedFile !== 'undefined') {
+                const fileReader = new FileReader();
+                $dragAndDropFileName.text(loadedFile.name);
                 file = loadedFile;
                 fileReader.onload = function (event) {
                     const dataURL = event.target.result;
                     attachmentData = dataURL;
+                    const blobUrl = URL.createObjectURL(loadedFile);
+                    $attachmentLink.prop('href', blobUrl);
+                    $attachmentLink.prop('download', loadedFile.name);
 
+                    me.handleBlobAttachmentPreview($attachmentPreview, blobUrl, loadedFile.type, loadedFile.name, loadedFile.size);
+                    
                     if (Editor.isPreview()) {
-                        me.handleAttachmentPreview($attachmentPreview, dataURL);
-                        $attachmentPreview.removeClass('hidden');
+                        AttachmentViewer.showAttachmentPreview();
                     }
 
                     TopNav.highlightFileupload();
                 };
                 fileReader.readAsDataURL(loadedFile);
-            } else {
-                me.removeAttachmentData();
             }
         }
 
@@ -3001,53 +3036,76 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          *
          * @name   AttachmentViewer.handleBlobAttachmentPreview
          * @function
-         * @argument {jQuery} $targetElement element where the preview should be appended
-         * @argument {string} file as a blob URL
-         * @argument {string} mime type
+         * @param {jQuery} $targetElement element where the preview should be appended
+         * @param {string} blobUrl as a blob URL
+         * @param {string} mimeType type
+         * @param {string} fileName
+         * @param {number} sizeInBytes
          */
-        me.handleBlobAttachmentPreview = function ($targetElement, blobUrl, mimeType) {
+        me.handleBlobAttachmentPreview = function ($targetElement, blobUrl, mimeType, fileName = null, sizeInBytes = 0) {
             if (blobUrl) {
                 attachmentHasPreview = true;
+                $targetElement.empty();
                 if (mimeType.match(/image\//i)) {
-                    $targetElement.html(
-                        $(document.createElement('img'))
-                            .attr('src', blobUrl)
-                            .attr('class', 'img-thumbnail')
+                    $targetElement.append(
+                        $('<img>')
+                            .prop('src', blobUrl)
+                            .addClass('img-responsive center-block')
                     );
                 } else if (mimeType.match(/video\//i)) {
-                    $targetElement.html(
-                        $(document.createElement('video'))
-                            .attr('controls', 'true')
-                            .attr('autoplay', 'true')
-                            .attr('class', 'img-thumbnail')
+                    $targetElement.append(
+                        $('<video>')
+                            .prop('controls', 'true')
+                            .addClass('img-responsive center-block')
 
-                            .append($(document.createElement('source'))
-                            .attr('type', mimeType)
-                            .attr('src', blobUrl))
+                            .append(
+                                $('<source>')
+                                    .prop('type', mimeType)
+                                    .prop('src', blobUrl)
+                            )
                     );
                 } else if (mimeType.match(/audio\//i)) {
-                    $targetElement.html(
-                        $(document.createElement('audio'))
-                            .attr('controls', 'true')
-                            .attr('autoplay', 'true')
+                    $targetElement.append(
+                        $('<audio>')
+                            .prop('controls', 'true')
 
-                            .append($(document.createElement('source'))
-                            .attr('type', mimeType)
-                            .attr('src', blobUrl))
+                            .append(
+                                $('<source>')
+                                    .prop('type', mimeType)
+                                    .prop('src', blobUrl)
+                            )
                     );
                 } else if (mimeType.match(/\/pdf/i)) {
                     // Fallback for browsers, that don't support the vh unit
                     const clientHeight = $(window).height();
 
-                    $targetElement.html(
-                        $(document.createElement('embed'))
-                            .attr('src', blobUrl)
-                            .attr('type', 'application/pdf')
-                            .attr('class', 'pdfPreview')
+                    $targetElement.append(
+                        $('<embed>')
+                            .prop('src', blobUrl)
+                            .prop('type', 'application/pdf')
+                            .addClass('pdfPreview')
                             .css('height', clientHeight)
                     );
                 } else {
                     attachmentHasPreview = false;
+                }
+                if (typeof fileName === 'string' && typeof sizeInBytes === 'number' && sizeInBytes > 0) {
+                    const $panel = $('<div>').addClass(['panel', 'panel-default']);
+                    const $panelHeading = $('<div>').addClass('panel-heading');
+                    const $fileName = $('<span>').addClass('file-name');
+                    const $fileSize = $('<span>').addClass('badge');
+                    $fileName.text(Helper.sprintf('%s ', fileName));
+                    $fileSize.text(Helper.humanizeBytes(sizeInBytes));
+                    $panel.append($panelHeading);
+                    $panelHeading.append($fileName, $fileSize);
+                    const $preview = $targetElement.children();
+                    if ($preview.length > 0) {
+                        // move preview into panel
+                        $panel.append($preview);
+                    }
+                    $targetElement.append($panel);
+                    // consider preview available if name and size can be displyed
+                    attachmentHasPreview = true;
                 }
             }
         };
@@ -3109,8 +3167,8 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             $(document).on('drop', handleDrop);
             $(document).on('dragenter dragover', handleDragEnterOrOver);
 
-            $fileInput.on('change', function () {
-                readFileData();
+            $fileInput.on('change', function (event) {
+                readFileData(event.target.files[0]);
             });
         }
 
@@ -3136,7 +3194,6 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 }
             });
         }
-
 
         /**
          * getter for attachment data
@@ -3198,10 +3255,15 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             $attachmentLink = $('#attachment a') || $('<a>');
             if($attachment.length) {
                 $attachmentPreview = $('#attachmentPreview');
-
                 $fileInput = $('#file');
                 addDragDropHandler();
                 addClipboardEventHandler();
+                $dragAndDropFileName.click(function(event) {
+                    event.preventDefault();
+                    // keep the dropdown open
+                    event.stopPropagation();
+                    $fileInput.click();
+                });
             }
         }
 
@@ -3709,20 +3771,17 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         function removeAttachment(event)
         {
             // if custom attachment is used, remove it first
-            if (!$customAttachment.hasClass('hidden')) {
-                AttachmentViewer.removeAttachment();
-                $customAttachment.addClass('hidden');
-                $fileWrap.removeClass('hidden');
-            }
+            me.clearCustomAttachment();
 
             // in any case, remove saved attachment data
-            AttachmentViewer.removeAttachmentData();
+            AttachmentViewer.removeAttachment();
 
             clearAttachmentInput();
-            AttachmentViewer.clearDragAndDrop();
 
             // pevent '#' from appearing in the URL
+            if (typeof event !== 'undefined') {
             event.preventDefault();
+        }
         }
 
         /**
@@ -4113,15 +4172,16 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         };
 
         /**
-         * hides the custom attachment
+         * clears the custom attachment
          *
-         * @name  TopNav.hideCustomAttachment
+         * @name  TopNav.clearCustomAttachment
          * @function
          */
-        me.hideCustomAttachment = function()
+        me.clearCustomAttachment = function()
         {
             $customAttachment.addClass('hidden');
             $fileWrap.removeClass('hidden');
+            $customAttachment.empty();
         };
 
         /**
@@ -4676,8 +4736,9 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             TopNav.hideRawButton();
             Editor.hide();
 
-            // parse and show text
+            // parse and show text and attachment
             // (preparation already done in me.sendPaste())
+            AttachmentViewer.showAttachmentPreview();
             PasteViewer.run();
         }
 
@@ -5178,14 +5239,9 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             AttachmentViewer.removeAttachment();
             TopNav.resetInput();
 
+            Alert.hideLoading();
             TopNav.showCreateButtons();
 
-            // newPaste could be called when user is on paste clone editing view
-            TopNav.hideCustomAttachment();
-            AttachmentViewer.clearDragAndDrop();
-            AttachmentViewer.removeAttachmentData();
-
-            Alert.hideLoading();
             history.pushState({type: 'create'}, document.title, Helper.baseUri());
 
             // clear discussion
@@ -5302,6 +5358,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             TopNav.setFormat(PasteViewer.getFormat());
             PasteViewer.hide();
             Editor.show();
+            Editor.viewEditor();
 
             TopNav.showCreateButtons();
 
