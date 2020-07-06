@@ -7,10 +7,6 @@
 ; (optional) set a project name to be displayed on the website
 ; name = "PrivateBin"
 
-; The full URL, with the domain name and directories that point to the PrivateBin files
-; This URL is essential to allow Opengraph images to be displayed on social networks
-; basepath = ""
-
 ; enable or disable the discussion feature, defaults to true
 discussion = true
 
