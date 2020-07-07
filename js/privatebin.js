@@ -4393,7 +4393,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             const url = new URL(pasteUrl),
                   newPaste = {
                       'https': url.protocol == 'https:',
-                      'service': url.hostname + url.pathname,
+                      'service': url.hostname + (url.pathname.length > 1 ? url.pathname : ''),
                       'pasteid': url.search.replace(/^\?+/, ''),
                       'key': url.hash.replace(/^#+/, ''),
                       // we store the full URL as it may contain additonal information
@@ -4465,10 +4465,41 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             }
             $tbody.textContent = '';
             pastes.forEach(function(paste) {
-                const row  = document.createElement('tr'),
-                      cell = document.createElement('td');
-                cell.textContent = paste.url;
+                const row  = document.createElement('tr');
+
+                let cell = document.createElement('td');
+                let input = document.createElement('input');
+                input.setAttribute('type', 'checkbox');
+                input.setAttribute('name', 'memoryselect-' + paste.pasteid);
+                cell.appendChild(input);
                 row.appendChild(cell);
+
+                cell = document.createElement('td');
+                cell.textContent = paste.https ? '✔' : '✘';
+                row.appendChild(cell);
+
+                cell = document.createElement('td');
+                cell.textContent = paste.service;
+                row.appendChild(cell);
+
+                cell = document.createElement('td');
+                cell.textContent = paste.pasteid;
+                row.appendChild(cell);
+
+                cell = document.createElement('td');
+                cell.addEventListener('click', function () {
+                    navigator.clipboard.writeText(paste.url);
+                });
+                let button = document.createElement('button');
+                button.setAttribute('class', 'btn btn-info btn-xs');
+                button.setAttribute('title', I18n._('Copy paste URL'));
+                let span = document.createElement('span');
+                span.setAttribute('class', 'glyphicon glyphicon-duplicate');
+                span.setAttribute('aria-hidden', 'true');
+                button.appendChild(span);
+                cell.appendChild(button);
+                row.appendChild(cell);
+
                 $tbody.appendChild(row);
                 row.addEventListener('click', function () {
                     me.open(paste.url);

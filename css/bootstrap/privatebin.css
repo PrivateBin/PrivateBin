@@ -228,14 +228,14 @@ main {
 }
 
 main.toggled {
-	padding-left: 250px;
+	padding-left: 450px;
 }
 
 #sidebar-wrapper {
 	position: fixed;
-	width: 250px;
+	width: 450px;
 	height: 100%;
-	left: -250px;
+	left: -450px;
 	padding-left: 4ch;
 	overflow-y: scroll;
 	overflow-x: hidden;

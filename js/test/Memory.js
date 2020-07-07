@@ -12,10 +12,11 @@ describe('Memory', function () {
             jsc.array(common.jscQueryString()),
             'string',
             function (schema, address, query, fragment) {
-                const expected = schema + '://' + address.join('') + '/?' +
-                      encodeURI(
-                          query.join('').replace(/^&+|&+$/gm,'') + '#' + fragment
+                const expectedQuery = encodeURI(
+                          query.join('').replace(/^&+|&+$/gm,'')
                       ),
+                      expected = schema + '://' + address.join('') + '/?' +
+                      expectedQuery + '#' + fragment,
                       clean = jsdom();
                 $('body').html(
                     '<main><div id="sidebar-wrapper"><table><tbody>' +
@@ -25,9 +26,9 @@ describe('Memory', function () {
                 $.PrivateBin.Memory.init();
                 $.PrivateBin.Memory.add(expected);
                 $.PrivateBin.Memory.refreshList();
-                const result = $('#sidebar-wrapper table tbody tr td')[0].textContent;
+                const result = $('#sidebar-wrapper table tbody tr td')[3].textContent;
                 clean();
-                return result === expected;
+                return result === expectedQuery;
             }
         );
     });

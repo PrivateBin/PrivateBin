@@ -72,7 +72,7 @@ endif;
 ?>
 		<script type="text/javascript" data-cfasync="false" src="js/purify-2.0.8.js" integrity="sha512-QwcEKGuEmKtMguCO9pqNtUtZqq9b/tJ8gNr5qhY8hykq3zKTlDOvpZAmf6Rs8yH35Bz1ZdctUjj2qEWxT5aXCg==" crossorigin="anonymous"></script>
 		<script type="text/javascript" data-cfasync="false" src="js/legacy.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-LYos+qXHIRqFf5ZPNphvtTB0cgzHUizu2wwcOwcwz/VIpRv9lpcBgPYz4uq6jx0INwCAj6Fbnl5HoKiLufS2jg==" crossorigin="anonymous"></script>
-		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-qSwODMjBG5A1mG2x18DCdjCSBjS9JSLaqKtnMQ+wIjJdsuY6Eb603N4Sw2PhN1uJHaL0fAXBg+KOp6t9/lvvfw==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-99ODgpO72fZEvwq2E1NnLbXDotlDRIbzzs7b1f/5lfsp8ncghFKyvhrxjgyv4Z/RIf0oiO0MQ45crOKRAHhOWg==" crossorigin="anonymous"></script>
 		<!-- icon -->
 		<link rel="apple-touch-icon" href="<?php echo I18n::encode($BASEPATH); ?>img/apple-touch-icon.png" sizes="180x180" />
 		<link rel="icon" type="image/png" href="img/favicon-32x32.png" sizes="32x32" />
@@ -453,10 +453,14 @@ endif;
 			<div id="sidebar-wrapper">
 				<h4><?php echo I18n::_('Memory'); ?></h4>
 				<p><?php echo I18n::_('The memory lets you remember different paste links. The memory is unique to each website and device.'); ?></p>
-				<table>
+				<table class="table<?php echo $isDark ? '' : ' table-striped'; ?>">
 					<thead>
 						<tr>
-							<th>URL</th>
+							<th title="<?php echo I18n::_('Select all'); ?>"><input type="checkbox" id="memoryselectall" /></th>
+							<th title="<?php echo I18n::_('HTTPS'); ?>">🔒</th>
+							<th><?php echo I18n::_('Service'); ?></th>
+							<th><?php echo I18n::_('ID'); ?></th>
+							<th></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -547,7 +551,7 @@ endif;
 ?>
 				</div>
 				<button id="menu-toggle" class="btn btn-<?php echo $isDark ? 'warning' : 'default'; ?> btn-xs">
-					<span class="glyphicon glyphicon-menu-up"  aria-hidden="true"></span>
+					<span class="glyphicon glyphicon-menu-up" aria-hidden="true"></span>
 					<?php echo I18n::_('Memory'); ?>
 				</button>
 				<ul id="editorTabs" class="nav nav-tabs hidden">
