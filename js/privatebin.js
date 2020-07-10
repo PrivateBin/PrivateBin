@@ -4470,7 +4470,8 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 let cell = document.createElement('td');
                 let input = document.createElement('input');
                 input.setAttribute('type', 'checkbox');
-                input.setAttribute('name', 'memoryselect-' + paste.pasteid);
+                input.setAttribute('name', 'memoryselect');
+                input.setAttribute('value', paste.pasteid);
                 cell.appendChild(input);
                 row.appendChild(cell);
 
@@ -4545,6 +4546,27 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 }
                 updateCacheFromDb();
             };
+            
+            $('#forgetbutton').on('click', function(e) {
+                const memory = db.transaction('pastes', 'readwrite').objectStore('pastes');
+                for (const checkbox of document.getElementsByName('memoryselect')) {
+                    if (checkbox.checked) {
+                        const request = memory.delete(checkbox.value);
+                        request.onsuccess = function(e) {
+                            pastes = [];
+                            $('#sidebar-wrapper table tbody').empty();
+                            updateCacheFromDb();
+                        }
+                    }
+                }
+            });
+
+            $('#memoryselectall').on('click', function(e) {
+                const checkedState = document.getElementById('memoryselectall').checked;
+                for (const checkbox of document.getElementsByName('memoryselect')) {
+                    checkbox.checked = checkedState;
+                }
+            });
 
             $('#menu-toggle').on('click', function(e) {
                 $('main').toggleClass('toggled');
