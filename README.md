@@ -93,6 +93,20 @@ file](https://github.com/PrivateBin/PrivateBin/wiki/Configuration):
 
 * QR code generation of URL, to easily transfer pastes over to a mobile device
 
+## Docker
+
+For a quick, docker-based installation, you can build your own image with all the dependencies:
+
+`$ cd docker`
+
+`$ docker build -t privatebin:1.0 .`
+
+And then run PrivateBin from the project's main folder:
+
+`docker run -d -v $(pwd):/opt/privatebin -p <your-desired-port>:80 privatebin:1.0`
+
+And you should be up and running quickly.
+
 ## Further resources
 
 * [FAQ](https://github.com/PrivateBin/PrivateBin/wiki/FAQ)
