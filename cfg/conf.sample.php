@@ -39,6 +39,9 @@ sizelimit = 10485760
 ; template to include, default is "bootstrap" (tpl/bootstrap.php)
 template = "bootstrap"
 
+; (optional) info text to display
+;info = "More information on the <a href=\"https://privatebin.info/\">project page</a>."
+
 ; (optional) notice to display
 ; notice = "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service."
 
