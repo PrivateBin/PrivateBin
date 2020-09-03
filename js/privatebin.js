@@ -4360,6 +4360,53 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         }
 
         /**
+         * sort the memory list by the given column offset
+         *
+         * @name   Memory.sort
+         * @private
+         * @function
+         * @param  {int} column
+         */
+        function sort(column)
+        {
+            let i, x, y, shouldSwitch, dir, switchcount = 0;
+            let table = $('#sidebar-wrapper table')[0];
+            let header = $('#sidebar-wrapper table thead tr th')[column];
+            let switching = true;
+            if (header.dataset.direction == 'asc') {
+                header.dataset.direction = 'desc';
+            } else {
+                header.dataset.direction = 'asc';
+            }
+            while (switching) {
+                switching = false;
+                let rows = table.rows;
+                // skip first row, containing headers
+                for (i = 1; i < (rows.length - 1); i++) {
+                    shouldSwitch = false;
+                    x = rows[i].getElementsByTagName("td")[column];
+                    y = rows[i + 1].getElementsByTagName("td")[column];
+                    if (header.dataset.direction == 'asc') {
+                        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    } else if (header.dataset.direction == 'desc') {
+                        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    }
+                }
+                if (shouldSwitch) {
+                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                    switching = true;
+                    switchcount ++;
+                }
+            }
+        }
+
+        /**
          * called after successfully connecting to the indexedDB
          *
          * @name   Memory.updateCacheFromDb
@@ -4577,6 +4624,12 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 if (me.add(window.location.href))
                     $('#menu-toggle').click();
             });
+            const headers = $('#sidebar-wrapper table thead tr th');
+            for (let i = 1; i < headers.length; i++) {
+                headers[i].addEventListener('click', function(e) {
+                    sort(i);
+                });
+            }
         };
 
         return me;
