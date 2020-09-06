@@ -50,7 +50,7 @@ endif;
 ?>
 		<script type="text/javascript" data-cfasync="false" src="js/purify-2.0.14.js" integrity="sha512-kbLhjIj/m/AW++o2eErCfqPueoX2btJo7VznhEC2YQRbVR/+Eup3w7thwDZwoCZ/gLrPxTX3W4H2KzupLg2PKA==" crossorigin="anonymous"></script>
 		<script type="text/javascript" data-cfasync="false" src="js/legacy.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-LYos+qXHIRqFf5ZPNphvtTB0cgzHUizu2wwcOwcwz/VIpRv9lpcBgPYz4uq6jx0INwCAj6Fbnl5HoKiLufS2jg==" crossorigin="anonymous"></script>
-		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-GCiSgkYlcyJq3SOMOAh52rIlUAoGH8yDJzOm/NkzBorbk2qiBSjc289/RxpeZJcdu36fQObFTzLvz4Do/2LFsA==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-dtaPrTq+w7d46FIg0x9j7mqowu1y4s0b1JKDJB/+Iq9/tPDoxkvKaG0hyMj1F40IMWSby5uuN6eM9K02M7y0GA==" crossorigin="anonymous"></script>
 		<!-- icon -->
 		<link rel="apple-touch-icon" href="img/apple-touch-icon.png?<?php echo rawurlencode($VERSION); ?>" sizes="180x180" />
 		<link rel="icon" type="image/png" href="img/favicon-32x32.png?<?php echo rawurlencode($VERSION); ?>" sizes="32x32" />
@@ -233,8 +233,8 @@ if ($FILEUPLOAD):
 				<div id="attachment" class="hidden"><a><?php echo I18n::_('Download attachment'); ?></a></div>
 				<div id="attach" class="hidden">
 					<span id="clonedfile" class="hidden"><?php echo I18n::_('Cloned file attached.'); ?></span>
-					<span id="filewrap"><?php echo I18n::_('Attach a file'); ?>: <input type="file" id="file" name="file" /></span>
-					<span id="dragAndDropFileName" class="dragAndDropFile"><?php echo I18n::_('alternatively drag & drop a file or paste an image from the clipboard'); ?></span>
+					<span id="filewrap"><?php echo I18n::_('Attachment'); ?>: <input type="file" id="file" name="file" /></span>
+					<span id="dragAndDropFileName" class="dragAndDropFile"></span>
 					<button id="fileremovebutton"><?php echo I18n::_('Remove attachment'); ?></button>
 				</div>
 <?php
