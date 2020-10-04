@@ -1,125 +1,112 @@
 {
     "PrivateBin": "PrivateBin",
-    "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href=\"https://privatebin.info/\">project page</a>.":
-        "%s jest minimalistycznym, otwartoźródłowym serwisem typu pastebin, w którym serwer nie ma jakichkolwiek informacji o tym, co jest wklejane. Dane są szyfrowane i deszyfrowane <i>w przeglądarce</i> z użyciem 256-bitowego klucza AES. Więcej informacji na <a href=\"https://privatebin.info/\">stronie projektu</a>.",
-    "Because ignorance is bliss":
-        "Ponieważ ignorancja jest cnotą",
+    "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href=\"https://privatebin.info/\">project page</a>.": "%s jest minimalistycznym, otwartoźródłowym serwisem typu pastebin, w którym serwer nie ma jakichkolwiek informacji o tym, co jest wklejane. Dane są szyfrowane i deszyfrowane <i>w przeglądarce</i> z użyciem 256-bitowego klucza AES. Więcej informacji na <a href=\"https://privatebin.info/\">stronie projektu</a>.",
+    "Because ignorance is bliss": "Ponieważ ignorancja jest cnotą",
     "en": "pl",
-    "Paste does not exist, has expired or has been deleted.":
-        "Wklejka nie istnieje, wygasła albo została usunięta.",
-    "%s requires php %s or above to work. Sorry.":
-        "%s wymaga PHP w wersji %s lub nowszej. Przykro mi.",
-    "%s requires configuration section [%s] to be present in configuration file.":
-        "%s wymaga obecności sekcji [%s] w pliku konfiguracyjnym.",
-    "Please wait %d seconds between each post.":
-        "Poczekaj %d sekund pomiędzy każdą wklejką.",
-    "Paste is limited to %s of encrypted data.":
-        "Wklejka jest limitowana do %s zaszyfrowanych danych.",
-    "Invalid data.":
-        "Nieprawidłowe dane.",
-    "You are unlucky. Try again.":
-        "Miałeś pecha. Spróbuj ponownie.",
-    "Error saving comment. Sorry.":
-        "Błąd przy zapisywaniu komentarza, sorry.",
-    "Error saving paste. Sorry.":
-        "Błąd przy zapisywaniu wklejki, sorry.",
-    "Invalid paste ID.":
-        "Nieprawidłowe ID wklejki.",
-    "Paste is not of burn-after-reading type.":
-        "Ta wklejka nie ulega autodestrukcji po przeczytaniu.",
-    "Wrong deletion token. Paste was not deleted.":
-        "Nieprawidłowy token usuwania. Wklejka nie została usunięta.",
-    "Paste was properly deleted.":
-        "Wklejka usunięta poprawnie.",
-    "JavaScript is required for %s to work. Sorry for the inconvenience.":
-        "Do działania %sa jest wymagany JavaScript. Przepraszamy za tę niedogodność.",
-    "%s requires a modern browser to work.":
-        "%s wymaga do działania nowoczesnej przeglądarki.",
-    "New":
-        "Nowa",
-    "Send":
-        "Wyślij",
-    "Clone":
-        "Sklonuj",
-    "Raw text":
-        "Czysty tekst",
-    "Expires":
-        "Wygasa za",
-    "Burn after reading":
-        "Zniszcz po przeczytaniu",
-    "Open discussion":
-        "Otwarta dyskusja",
-    "Password (recommended)":
-        "Hasło (zalecane)",
-    "Discussion":
-        "Dyskusja",
-    "Toggle navigation":
-        "Przełącz nawigację",
-    "%d seconds": ["%d second", "%d second", "%d second"],
-    "%d minutes": ["%d minut", "%d minut", "%d minut"],
-    "%d hours": ["%d godzina", "%d godzina", "%d godzinę"],
-    "%d days": ["%d dzień", "%d dzień", "%d dzień"],
-    "%d weeks": ["%d tydzień", "%d tydzień", "%d tydzień"],
-    "%d months": ["%d miesiąc", "%d miesiąc", "%d miesiąc"],
-    "%d years": ["%d rok", "%d rok", "%d rok"],
-    "Never":
-        "nigdy",
-    "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.":
-        "Notka: To jest usługa testowa. Dane mogą zostać usunięte w dowolnym momencie. Kociątka umrą, jeśli nadużyjesz tej usługi.",
-    "This document will expire in %d seconds.":
-        ["Ten dokument wygaśnie za %d sekundę.", "Ten dokument wygaśnie za %d sekund."],
-    "This document will expire in %d minutes.":
-        ["Ten dokument wygaśnie za %d minutę.", "Ten dokument wygaśnie za %d minut."],
-    "This document will expire in %d hours.":
-        ["Ten dokument wygaśnie za godzinę.", "Ten dokument wygaśnie za %d godzin."],
-    "This document will expire in %d days.":
-        ["Ten dokument wygaśnie za %d dzień.", "Ten dokument wygaśnie za %d dni."],
-    "This document will expire in %d months.":
-        ["Ten dokument wygaśnie za miesiąc.", "Ten dokument wygaśnie za %d miesięcy."],
-    "Please enter the password for this paste:":
-        "Wpisz hasło dla tej wklejki:",
-    "Could not decrypt data (Wrong key?)":
-        "Nie udało się odszyfrować danych (zły klucz?)",
-    "Could not delete the paste, it was not stored in burn after reading mode.":
-        "Nie udało się usunąć wklejki, nie została zapisana w trybie zniszczenia po przeczytaniu.",
-    "FOR YOUR EYES ONLY. Don't close this window, this message can't be displayed again.":
-        "TYLKO DO TWOJEGO WGLĄDU. Nie zamykaj tego okna, ta wiadomość nie będzie mogła być wyświetlona ponownie.",
-    "Could not decrypt comment; Wrong key?":
-        "Nie udało się odszyfrować komentarza; zły klucz?",
-    "Reply":
-        "Odpowiedz",
-    "Anonymous":
-        "Anonim",
-    "Avatar generated from IP address":
-        "Anonimowy avatar (Vizhash z adresu IP)",
-    "Add comment":
-        "Dodaj komentarz",
-    "Optional nickname…":
-        "Opcjonalny nick…",
-    "Post comment":
-        "Wyślij komentarz",
-    "Sending comment…":
-        "Wysyłanie komentarza…",
-    "Comment posted.":
-        "Wysłano komentarz.",
-    "Could not refresh display: %s":
-        "Nie można odświeżyć widoku: %s",
-    "unknown status":
-        "nieznany status",
-    "server error or not responding":
-        "błąd serwera lub brak odpowiedzi",
-    "Could not post comment: %s":
-        "Nie udało się wysłać komentarza: %s",
-    "Sending paste…":
-        "Wysyłanie wklejki…",
-    "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit [Ctrl]+[c] to copy)</span>":
-        "Twoja wklejka to <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(wciśnij [Ctrl]+[c] aby skopiować)</span>",
-    "Delete data":
-        "Skasuj dane",
-    "Could not create paste: %s":
-        "Nie udało się utworzyć wklejki: %s",
-    "Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)":
-        "Nie udało się odszyfrować wklejki - brak klucza deszyfrującego w adresie (użyłeś skracacza linków, który ucina część adresu?)",
+    "Paste does not exist, has expired or has been deleted.": "Wklejka nie istnieje, wygasła albo została usunięta.",
+    "%s requires php %s or above to work. Sorry.": "%s wymaga PHP w wersji %s lub nowszej. Przykro mi.",
+    "%s requires configuration section [%s] to be present in configuration file.": "%s wymaga obecności sekcji [%s] w pliku konfiguracyjnym.",
+    "Please wait %d seconds between each post.": "Poczekaj %d sekund pomiędzy każdą wklejką.",
+    "Paste is limited to %s of encrypted data.": "Wklejka jest limitowana do %s zaszyfrowanych danych.",
+    "Invalid data.": "Nieprawidłowe dane.",
+    "You are unlucky. Try again.": "Miałeś pecha. Spróbuj ponownie.",
+    "Error saving comment. Sorry.": "Błąd przy zapisywaniu komentarza, sorry.",
+    "Error saving paste. Sorry.": "Błąd przy zapisywaniu wklejki, sorry.",
+    "Invalid paste ID.": "Nieprawidłowe ID wklejki.",
+    "Paste is not of burn-after-reading type.": "Ta wklejka nie ulega autodestrukcji po przeczytaniu.",
+    "Wrong deletion token. Paste was not deleted.": "Nieprawidłowy token usuwania. Wklejka nie została usunięta.",
+    "Paste was properly deleted.": "Wklejka usunięta poprawnie.",
+    "JavaScript is required for %s to work. Sorry for the inconvenience.": "Do działania %sa jest wymagany JavaScript. Przepraszamy za tę niedogodność.",
+    "%s requires a modern browser to work.": "%s wymaga do działania nowoczesnej przeglądarki.",
+    "New": "Nowa",
+    "Send": "Wyślij",
+    "Clone": "Sklonuj",
+    "Raw text": "Czysty tekst",
+    "Expires": "Wygasa za",
+    "Burn after reading": "Zniszcz po przeczytaniu",
+    "Open discussion": "Otwarta dyskusja",
+    "Password (recommended)": "Hasło (zalecane)",
+    "Discussion": "Dyskusja",
+    "Toggle navigation": "Przełącz nawigację",
+    "%d seconds": [
+        "%d second",
+        "%d second",
+        "%d second"
+    ],
+    "%d minutes": [
+        "%d minut",
+        "%d minut",
+        "%d minut"
+    ],
+    "%d hours": [
+        "%d godzina",
+        "%d godzina",
+        "%d godzinę"
+    ],
+    "%d days": [
+        "%d dzień",
+        "%d dzień",
+        "%d dzień"
+    ],
+    "%d weeks": [
+        "%d tydzień",
+        "%d tydzień",
+        "%d tydzień"
+    ],
+    "%d months": [
+        "%d miesiąc",
+        "%d miesiąc",
+        "%d miesiąc"
+    ],
+    "%d years": [
+        "%d rok",
+        "%d rok",
+        "%d rok"
+    ],
+    "Never": "nigdy",
+    "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.": "Notka: To jest usługa testowa. Dane mogą zostać usunięte w dowolnym momencie. Kociątka umrą, jeśli nadużyjesz tej usługi.",
+    "This document will expire in %d seconds.": [
+        "Ten dokument wygaśnie za %d sekundę.",
+        "Ten dokument wygaśnie za %d sekund."
+    ],
+    "This document will expire in %d minutes.": [
+        "Ten dokument wygaśnie za %d minutę.",
+        "Ten dokument wygaśnie za %d minut."
+    ],
+    "This document will expire in %d hours.": [
+        "Ten dokument wygaśnie za godzinę.",
+        "Ten dokument wygaśnie za %d godzin."
+    ],
+    "This document will expire in %d days.": [
+        "Ten dokument wygaśnie za %d dzień.",
+        "Ten dokument wygaśnie za %d dni."
+    ],
+    "This document will expire in %d months.": [
+        "Ten dokument wygaśnie za miesiąc.",
+        "Ten dokument wygaśnie za %d miesięcy."
+    ],
+    "Please enter the password for this paste:": "Wpisz hasło dla tej wklejki:",
+    "Could not decrypt data (Wrong key?)": "Nie udało się odszyfrować danych (zły klucz?)",
+    "Could not delete the paste, it was not stored in burn after reading mode.": "Nie udało się usunąć wklejki, nie została zapisana w trybie zniszczenia po przeczytaniu.",
+    "FOR YOUR EYES ONLY. Don't close this window, this message can't be displayed again.": "TYLKO DO TWOJEGO WGLĄDU. Nie zamykaj tego okna, ta wiadomość nie będzie mogła być wyświetlona ponownie.",
+    "Could not decrypt comment; Wrong key?": "Nie udało się odszyfrować komentarza; zły klucz?",
+    "Reply": "Odpowiedz",
+    "Anonymous": "Anonim",
+    "Avatar generated from IP address": "Anonimowy avatar (Vizhash z adresu IP)",
+    "Add comment": "Dodaj komentarz",
+    "Optional nickname…": "Opcjonalny nick…",
+    "Post comment": "Wyślij komentarz",
+    "Sending comment…": "Wysyłanie komentarza…",
+    "Comment posted.": "Wysłano komentarz.",
+    "Could not refresh display: %s": "Nie można odświeżyć widoku: %s",
+    "unknown status": "nieznany status",
+    "server error or not responding": "błąd serwera lub brak odpowiedzi",
+    "Could not post comment: %s": "Nie udało się wysłać komentarza: %s",
+    "Sending paste…": "Wysyłanie wklejki…",
+    "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit [Ctrl]+[c] to copy)</span>": "Twoja wklejka to <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(wciśnij [Ctrl]+[c] aby skopiować)</span>",
+    "Delete data": "Skasuj dane",
+    "Could not create paste: %s": "Nie udało się utworzyć wklejki: %s",
+    "Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)": "Nie udało się odszyfrować wklejki - brak klucza deszyfrującego w adresie (użyłeś skracacza linków, który ucina część adresu?)",
     "Format": "Format",
     "Plain Text": "Czysty tekst",
     "Source Code": "Kod źródłowy",
@@ -131,62 +118,38 @@
     "alternatively drag & drop a file or paste an image from the clipboard": "Alternatywnie przeciągnij i upuść plik albo wklej obraz ze schowka",
     "File too large, to display a preview. Please download the attachment.": "Plik zbyt duży aby wyświetlić podgląd. Proszę pobrać załącznik.",
     "Remove attachment": "Usuń załącznik",
-    "Your browser does not support uploading encrypted files. Please use a newer browser.":
-        "Twoja przeglądarka nie wspiera wysyłania zaszyfrowanych plików. Użyj nowszej przeglądarki.",
+    "Your browser does not support uploading encrypted files. Please use a newer browser.": "Twoja przeglądarka nie wspiera wysyłania zaszyfrowanych plików. Użyj nowszej przeglądarki.",
     "Invalid attachment.": "Nieprawidłowy załącznik.",
     "Options": "Opcje",
     "Shorten URL": "Skróć adres URL",
     "Editor": "Edytować",
     "Preview": "Podgląd",
-    "%s requires the PATH to end in a \"%s\". Please update the PATH in your index.php.":
-        "%s requires the PATH to end in a \"%s\". Please update the PATH in your index.php.",
-    "Decrypt":
-        "Odszyfruj",
-    "Enter password":
-        "Wpisz hasło",
+    "%s requires the PATH to end in a \"%s\". Please update the PATH in your index.php.": "%s requires the PATH to end in a \"%s\". Please update the PATH in your index.php.",
+    "Decrypt": "Odszyfruj",
+    "Enter password": "Wpisz hasło",
     "Loading…": "Wczytywanie…",
     "Decrypting paste…": "Odszyfrowywanie wklejki…",
     "Preparing new paste…": "Przygotowywanie nowej wklejki…",
-    "In case this message never disappears please have a look at <a href=\"%s\">this FAQ for information to troubleshoot</a>.":
-        "W przypadku gdy ten komunikat nigdy nie znika, proszę spójrz na <a href=\"%s\">to FAQ aby rozwiązać problem</a> (po angielsku).",
+    "In case this message never disappears please have a look at <a href=\"%s\">this FAQ for information to troubleshoot</a>.": "W przypadku gdy ten komunikat nigdy nie znika, proszę spójrz na <a href=\"%s\">to FAQ aby rozwiązać problem</a> (po angielsku).",
     "+++ no paste text +++": "+++ brak wklejonego tekstu +++",
-    "Could not get paste data: %s":
-        "Nie można było pobrać danych wklejki: %s",
+    "Could not get paste data: %s": "Nie można było pobrać danych wklejki: %s",
     "QR code": "Kod QR",
-    "This website is using an insecure HTTP connection! Please use it only for testing.":
-        "This website is using an insecure HTTP connection! Please use it only for testing.",
-    "For more information <a href=\"%s\">see this FAQ entry</a>.":
-        "For more information <a href=\"%s\">see this FAQ entry</a>.",
-    "Your browser may require an HTTPS connection to support the WebCrypto API. Try <a href=\"%s\">switching to HTTPS</a>.":
-        "Your browser may require an HTTPS connection to support the WebCrypto API. Try <a href=\"%s\">switching to HTTPS</a>.",
-    "Your browser doesn't support WebAssembly, used for zlib compression. You can create uncompressed documents, but can't read compressed ones.":
-        "Your browser doesn't support WebAssembly, used for zlib compression. You can create uncompressed documents, but can't read compressed ones.",
-    "waiting on user to provide a password":
-        "waiting on user to provide a password",
-    "Could not decrypt data. Did you enter a wrong password? Retry with the button at the top.":
-        "Could not decrypt data. Did you enter a wrong password? Retry with the button at the top.",
-    "Retry":
-        "Retry",
-    "Showing raw text…":
-        "Showing raw text…",
-    "Notice:":
-        "Notice:",
-    "This link will expire after %s.":
-        "This link will expire after %s.",
-    "This link can only be accessed once, do not use back or refresh button in your browser.":
-        "This link can only be accessed once, do not use back or refresh button in your browser.",
-    "Link:":
-        "Link:",
-    "Recipient may become aware of your timezone, convert time to UTC?":
-        "Recipient may become aware of your timezone, convert time to UTC?",
-    "Use Current Timezone":
-        "Use Current Timezone",
-    "Convert To UTC":
-        "Convert To UTC",
-    "Close":
-        "Close",
-    "Encrypted note on PrivateBin":
-        "Encrypted note on PrivateBin",
-    "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.":
-        "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too."
+    "This website is using an insecure HTTP connection! Please use it only for testing.": "This website is using an insecure HTTP connection! Please use it only for testing.",
+    "For more information <a href=\"%s\">see this FAQ entry</a>.": "For more information <a href=\"%s\">see this FAQ entry</a>.",
+    "Your browser may require an HTTPS connection to support the WebCrypto API. Try <a href=\"%s\">switching to HTTPS</a>.": "Your browser may require an HTTPS connection to support the WebCrypto API. Try <a href=\"%s\">switching to HTTPS</a>.",
+    "Your browser doesn't support WebAssembly, used for zlib compression. You can create uncompressed documents, but can't read compressed ones.": "Your browser doesn't support WebAssembly, used for zlib compression. You can create uncompressed documents, but can't read compressed ones.",
+    "waiting on user to provide a password": "waiting on user to provide a password",
+    "Could not decrypt data. Did you enter a wrong password? Retry with the button at the top.": "Could not decrypt data. Did you enter a wrong password? Retry with the button at the top.",
+    "Retry": "Retry",
+    "Showing raw text…": "Showing raw text…",
+    "Notice:": "Notice:",
+    "This link will expire after %s.": "This link will expire after %s.",
+    "This link can only be accessed once, do not use back or refresh button in your browser.": "This link can only be accessed once, do not use back or refresh button in your browser.",
+    "Link:": "Link:",
+    "Recipient may become aware of your timezone, convert time to UTC?": "Recipient may become aware of your timezone, convert time to UTC?",
+    "Use Current Timezone": "Use Current Timezone",
+    "Convert To UTC": "Convert To UTC",
+    "Close": "Close",
+    "Encrypted note on PrivateBin": "Encrypted note on PrivateBin",
+    "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too."
 }
