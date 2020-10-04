@@ -29,76 +29,76 @@
     "Discussion": "Discussion",
     "Toggle navigation": "Basculer la navigation",
     "%d seconds": [
-        "%d second (singular)",
-        "%d seconds (1st plural)",
+        "%d seconde",
+        "%d secondes",
         "%d seconds (2nd plural)",
         "%d seconds (3rd plural)"
     ],
     "%d minutes": [
-        "%d minute (singular)",
-        "%d minutes (1st plural)",
+        "%d minute",
+        "%d minutes",
         "%d minutes (2nd plural)",
         "%d minutes (3rd plural)"
     ],
     "%d hours": [
-        "%d hour (singular)",
-        "%d hours (1st plural)",
+        "%d heure",
+        "%d heures",
         "%d hours (2nd plural)",
         "%d hours (3rd plural)"
     ],
     "%d days": [
-        "%d day (singular)",
-        "%d days (1st plural)",
+        "%d jour",
+        "%d jours",
         "%d days (2nd plural)",
         "%d days (3rd plural)"
     ],
     "%d weeks": [
-        "%d week (singular)",
-        "%d weeks (1st plural)",
+        "%d semaine",
+        "%d semaines",
         "%d weeks (2nd plural)",
         "%d weeks (3rd plural)"
     ],
     "%d months": [
-        "%d month (singular)",
-        "%d months (1st plural)",
+        "%d mois",
+        "%d mois",
         "%d months (2nd plural)",
         "%d months (3rd plural)"
     ],
     "%d years": [
-        "%d year (singular)",
-        "%d years (1st plural)",
+        "%d an",
+        "%d ans",
         "%d years (2nd plural)",
         "%d years (3rd plural)"
     ],
     "Never": "Jamais",
     "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.": "Note : Ceci est un service de test : les données peuvent être supprimées à tout moment. Des chatons mourront si vous utilisez ce service de manière abusive.",
     "This document will expire in %d seconds.": [
-        "This document will expire in %d second. (singular)",
-        "This document will expire in %d seconds (1st plural)",
+        "Ce document expirera dans %d seconde.",
+        "Ce document expirera dans %d secondes.",
         "This document will expire in %d seconds (2nd plural)",
         "This document will expire in %d seconds (3rd plural)"
     ],
     "This document will expire in %d minutes.": [
-        "This document will expire in %d minute. (singular)",
-        "This document will expire in %d minutes (1st plural)",
+        "Ce document expirera dans %d minute.",
+        "Ce document expirera dans %d minutes.",
         "This document will expire in %d minutes (2nd plural)",
         "This document will expire in %d minutes (3rd plural)"
     ],
     "This document will expire in %d hours.": [
-        "This document will expire in %d hour. (singular)",
-        "This document will expire in %d hours (1st plural)",
+        "Ce document expirera dans %d heure.",
+        "Ce document expirera dans %d heures.",
         "This document will expire in %d hours (2nd plural)",
         "This document will expire in %d hours (3rd plural)"
     ],
     "This document will expire in %d days.": [
-        "This document will expire in %d day. (singular)",
-        "This document will expire in %d days (1st plural)",
+        "Ce document expirera dans %d jour.",
+        "Ce document expirera dans %d jours.",
         "This document will expire in %d days (2nd plural)",
         "This document will expire in %d days (3rd plural)"
     ],
     "This document will expire in %d months.": [
-        "This document will expire in %d month. (singular)",
-        "This document will expire in %d months (1st plural)",
+        "Ce document expirera dans %d mois.",
+        "Ce document expirera dans %d mois.",
         "This document will expire in %d months (2nd plural)",
         "This document will expire in %d months (3rd plural)"
     ],
