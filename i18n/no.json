@@ -139,7 +139,7 @@
     "Markdown": "Oppmerket",
     "Download attachment": "Last ned vedlegg",
     "Cloned: '%s'": "Kopiert: '%s'",
-    "The cloned file '%s' was attached to this paste.": "The cloned file '%s' was attached to this paste.",
+    "The cloned file '%s' was attached to this paste.": "Den klonede filen '%s' var koblet til denne innlimingen.",
     "Attach a file": "Legg til fil",
     "alternatively drag & drop a file or paste an image from the clipboard": "alternatively drag & drop a file or paste an image from the clipboard",
     "File too large, to display a preview. Please download the attachment.": "File too large, to display a preview. Please download the attachment.",
