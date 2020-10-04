@@ -29,54 +29,78 @@
     "Discussion": "Discussione",
     "Toggle navigation": "Scambia Navigazione",
     "%d seconds": [
-        "%d secondo",
-        "%d secondi"
+        "%d second (singular)",
+        "%d seconds (1st plural)",
+        "%d seconds (2nd plural)",
+        "%d seconds (3rd plural)"
     ],
     "%d minutes": [
-        "%d minuto",
-        "%d minuti"
+        "%d minute (singular)",
+        "%d minutes (1st plural)",
+        "%d minutes (2nd plural)",
+        "%d minutes (3rd plural)"
     ],
     "%d hours": [
-        "%d ora",
-        "%d ore"
+        "%d hour (singular)",
+        "%d hours (1st plural)",
+        "%d hours (2nd plural)",
+        "%d hours (3rd plural)"
     ],
     "%d days": [
-        "%d giorno",
-        "%d giorni"
+        "%d day (singular)",
+        "%d days (1st plural)",
+        "%d days (2nd plural)",
+        "%d days (3rd plural)"
     ],
     "%d weeks": [
-        "%d settimana",
-        "%d settimane"
+        "%d week (singular)",
+        "%d weeks (1st plural)",
+        "%d weeks (2nd plural)",
+        "%d weeks (3rd plural)"
     ],
     "%d months": [
-        "%d mese",
-        "%d mesi"
+        "%d month (singular)",
+        "%d months (1st plural)",
+        "%d months (2nd plural)",
+        "%d months (3rd plural)"
     ],
     "%d years": [
-        "%d anno",
-        "%d anni"
+        "%d year (singular)",
+        "%d years (1st plural)",
+        "%d years (2nd plural)",
+        "%d years (3rd plural)"
     ],
     "Never": "Mai",
     "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.": "Nota: questo è un servizio di prova, i messaggi salvati possono essere cancellati in qualsiasi momento. Moriranno dei gattini se abuserai di questo servizio.",
     "This document will expire in %d seconds.": [
-        "Questo documento scadrà tra un secondo.",
-        "Questo documento scadrà in %d secondi."
+        "This document will expire in %d second. (singular)",
+        "This document will expire in %d seconds (1st plural)",
+        "This document will expire in %d seconds (2nd plural)",
+        "This document will expire in %d seconds (3rd plural)"
     ],
     "This document will expire in %d minutes.": [
-        "Questo documento scadrà tra un minuto.",
-        "Questo documento scadrà in %d minuti."
+        "This document will expire in %d minute. (singular)",
+        "This document will expire in %d minutes (1st plural)",
+        "This document will expire in %d minutes (2nd plural)",
+        "This document will expire in %d minutes (3rd plural)"
     ],
     "This document will expire in %d hours.": [
-        "Questo documento scadrà tra un'ora.",
-        "Questo documento scadrà in %d ore."
+        "This document will expire in %d hour. (singular)",
+        "This document will expire in %d hours (1st plural)",
+        "This document will expire in %d hours (2nd plural)",
+        "This document will expire in %d hours (3rd plural)"
     ],
     "This document will expire in %d days.": [
-        "Questo documento scadrà tra un giorno.",
-        "Questo documento scadrà in %d giorni."
+        "This document will expire in %d day. (singular)",
+        "This document will expire in %d days (1st plural)",
+        "This document will expire in %d days (2nd plural)",
+        "This document will expire in %d days (3rd plural)"
     ],
     "This document will expire in %d months.": [
-        "Questo documento scadrà tra un mese.",
-        "Questo documento scadrà in %d mesi."
+        "This document will expire in %d month. (singular)",
+        "This document will expire in %d months (1st plural)",
+        "This document will expire in %d months (2nd plural)",
+        "This document will expire in %d months (3rd plural)"
     ],
     "Please enter the password for this paste:": "Inserisci la password per questo messaggio:",
     "Could not decrypt data (Wrong key?)": "Non riesco a decifrari i dati (Chiave errata?)",
@@ -100,6 +124,15 @@
     "Delete data": "Cancella i dati",
     "Could not create paste: %s": "Non riesco a creare il messaggio: %s",
     "Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)": "Non riesco a decifrare il messaggio: manca la chiave di decifrazione nell'URL (La chiave è parte integrante dell'URL. Per caso hai usato un Redirector o un altro servizio che ha rimosso una parte dell'URL?)",
+    "B": "B",
+    "KiB": "KiB",
+    "MiB": "MiB",
+    "GiB": "GiB",
+    "TiB": "TiB",
+    "PiB": "PiB",
+    "EiB": "EiB",
+    "ZiB": "ZiB",
+    "YiB": "YiB",
     "Format": "Formato",
     "Plain Text": "Solo Testo",
     "Source Code": "Codice Sorgente",
