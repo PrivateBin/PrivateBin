@@ -29,77 +29,77 @@
     "Discussion": "Обсуждение",
     "Toggle navigation": "Переключить навигацию",
     "%d seconds": [
-        "%d second (singular)",
-        "%d seconds (1st plural)",
-        "%d seconds (2nd plural)",
+        "%d секунду",
+        "%d секунды",
+        "%d секунд",
         "%d seconds (3rd plural)"
     ],
     "%d minutes": [
-        "%d minute (singular)",
-        "%d minutes (1st plural)",
-        "%d minutes (2nd plural)",
+        "%d минуту",
+        "%d минуты",
+        "%d минут",
         "%d minutes (3rd plural)"
     ],
     "%d hours": [
-        "%d hour (singular)",
-        "%d hours (1st plural)",
-        "%d hours (2nd plural)",
+        "%d час",
+        "%d часа",
+        "%d часов",
         "%d hours (3rd plural)"
     ],
     "%d days": [
-        "%d day (singular)",
-        "%d days (1st plural)",
-        "%d days (2nd plural)",
+        "%d день",
+        "%d дня",
+        "%d дней",
         "%d days (3rd plural)"
     ],
     "%d weeks": [
-        "%d week (singular)",
-        "%d weeks (1st plural)",
-        "%d weeks (2nd plural)",
+        "%d неделю",
+        "%d недели",
+        "%d недель",
         "%d weeks (3rd plural)"
     ],
     "%d months": [
-        "%d month (singular)",
-        "%d months (1st plural)",
-        "%d months (2nd plural)",
+        "%d месяц",
+        "%d месяца",
+        "%d месяцев",
         "%d months (3rd plural)"
     ],
     "%d years": [
-        "%d year (singular)",
-        "%d years (1st plural)",
-        "%d years (2nd plural)",
+        "%d год",
+        "%d года",
+        "%d лет",
         "%d years (3rd plural)"
     ],
     "Never": "Никогда",
     "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.": "Примечание: Этот сервис тестовый: Данные могут быть удалены в любое время. Котята умрут, если вы будете злоупотреблять серсисом.",
     "This document will expire in %d seconds.": [
-        "This document will expire in %d second. (singular)",
-        "This document will expire in %d seconds (1st plural)",
-        "This document will expire in %d seconds (2nd plural)",
+        "Документ будет удален через %d секунду.",
+        "Документ будет удален через %d секунды.",
+        "Документ будет удален через %d секунд.",
         "This document will expire in %d seconds (3rd plural)"
     ],
     "This document will expire in %d minutes.": [
-        "This document will expire in %d minute. (singular)",
-        "This document will expire in %d minutes (1st plural)",
-        "This document will expire in %d minutes (2nd plural)",
+        "Документ будет удален через %d минуту.",
+        "Документ будет удален через %d минуты.",
+        "Документ будет удален через %d минут.",
         "This document will expire in %d minutes (3rd plural)"
     ],
     "This document will expire in %d hours.": [
-        "This document will expire in %d hour. (singular)",
-        "This document will expire in %d hours (1st plural)",
-        "This document will expire in %d hours (2nd plural)",
+        "Документ будет удален через %d час.",
+        "Документ будет удален через %d часа.",
+        "Документ будет удален через %d часов.",
         "This document will expire in %d hours (3rd plural)"
     ],
     "This document will expire in %d days.": [
-        "This document will expire in %d day. (singular)",
-        "This document will expire in %d days (1st plural)",
-        "This document will expire in %d days (2nd plural)",
+        "Документ будет удален через %d день.",
+        "Документ будет удален через %d дня.",
+        "Документ будет удален через %d дней.",
         "This document will expire in %d days (3rd plural)"
     ],
     "This document will expire in %d months.": [
-        "This document will expire in %d month. (singular)",
-        "This document will expire in %d months (1st plural)",
-        "This document will expire in %d months (2nd plural)",
+        "Документ будет удален через %d месяц.",
+        "Документ будет удален через %d месяца.",
+        "Документ будет удален через %d месяцев.",
         "This document will expire in %d months (3rd plural)"
     ],
     "Please enter the password for this paste:": "Пожалуйста, введите пароль от записи:",
