@@ -29,76 +29,76 @@
     "Discussion": "Hozzászólások",
     "Toggle navigation": "Navigáció",
     "%d seconds": [
-        "%d second (singular)",
-        "%d seconds (1st plural)",
+        "%d másodperc",
+        "%d másodperc",
         "%d seconds (2nd plural)",
         "%d seconds (3rd plural)"
     ],
     "%d minutes": [
-        "%d minute (singular)",
-        "%d minutes (1st plural)",
+        "%d perc",
+        "%d perc",
         "%d minutes (2nd plural)",
         "%d minutes (3rd plural)"
     ],
     "%d hours": [
-        "%d hour (singular)",
-        "%d hours (1st plural)",
+        "%d óra",
+        "%d óra",
         "%d hours (2nd plural)",
         "%d hours (3rd plural)"
     ],
     "%d days": [
-        "%d day (singular)",
-        "%d days (1st plural)",
+        "%d nap",
+        "%d nap",
         "%d days (2nd plural)",
         "%d days (3rd plural)"
     ],
     "%d weeks": [
-        "%d week (singular)",
-        "%d weeks (1st plural)",
+        "%d hét",
+        "%d hét",
         "%d weeks (2nd plural)",
         "%d weeks (3rd plural)"
     ],
     "%d months": [
-        "%d month (singular)",
-        "%d months (1st plural)",
+        "%d hónap",
+        "%d hónap",
         "%d months (2nd plural)",
         "%d months (3rd plural)"
     ],
     "%d years": [
-        "%d year (singular)",
-        "%d years (1st plural)",
+        "%d év",
+        "%d év",
         "%d years (2nd plural)",
         "%d years (3rd plural)"
     ],
     "Never": "Soha",
     "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.": "Megjegyzés: ez egy teszt szolgáltatás, az adatok bármikor törlődhetnek. Ha visszaélsz vele, kiscicák bánhatják! :)",
     "This document will expire in %d seconds.": [
-        "This document will expire in %d second. (singular)",
-        "This document will expire in %d seconds (1st plural)",
+        "Ez a bejegyzés %d másodperc után megsemmisül.",
+        "Ez a bejegyzés %d másodperc múlva megsemmisül.",
         "This document will expire in %d seconds (2nd plural)",
         "This document will expire in %d seconds (3rd plural)"
     ],
     "This document will expire in %d minutes.": [
-        "This document will expire in %d minute. (singular)",
-        "This document will expire in %d minutes (1st plural)",
+        "Ez a bejegyzés %d perc után megsemmisül.",
+        "Ez a bejegyzés %d perc múlva megsemmisül.",
         "This document will expire in %d minutes (2nd plural)",
         "This document will expire in %d minutes (3rd plural)"
     ],
     "This document will expire in %d hours.": [
-        "This document will expire in %d hour. (singular)",
-        "This document will expire in %d hours (1st plural)",
+        "Ez a bejegyzés %d óra után megsemmisül.",
+        "Ez a bejegyzés %d óra múlva megsemmisül.",
         "This document will expire in %d hours (2nd plural)",
         "This document will expire in %d hours (3rd plural)"
     ],
     "This document will expire in %d days.": [
-        "This document will expire in %d day. (singular)",
-        "This document will expire in %d days (1st plural)",
+        "Ez a bejegyzés %d nap után megsemmisül.",
+        "Ez a bejegyzés %d nap múlva megsemmisül.",
         "This document will expire in %d days (2nd plural)",
         "This document will expire in %d days (3rd plural)"
     ],
     "This document will expire in %d months.": [
-        "This document will expire in %d month. (singular)",
-        "This document will expire in %d months (1st plural)",
+        "Ez a bejegyzés %d hónap múlva megsemmisül.",
+        "Ez a bejegyzés %d hónap múlva megsemmisül.",
         "This document will expire in %d months (2nd plural)",
         "This document will expire in %d months (3rd plural)"
     ],
