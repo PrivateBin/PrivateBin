@@ -199,7 +199,6 @@ class I18n
                     self::$_availableLanguages[] = $match[1];
                 }
             }
-            self::$_availableLanguages[] = 'en';
         }
         return self::$_availableLanguages;
     }

@@ -1,125 +1,138 @@
 {
     "PrivateBin": "PrivateBin",
-    "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href=\"https://privatebin.info/\">project page</a>.":
-        "%s er en minimalistisk, åpen kildekode, elektronisk tilgjengelig pastebin hvor serveren ikke har kunnskap om dataene som limes inn. Dataene krypteres/dekrypteres <i>i nettleseren</i> ved hjelp av 256 bits AES. Mer informasjon om prosjektet på  <a href=\"https://privatebin.info/\">prosjektsiden</a>.",
-    "Because ignorance is bliss":
-        "Fordi uvitenhet er lykke",
+    "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href=\"https://privatebin.info/\">project page</a>.": "%s er en minimalistisk, åpen kildekode, elektronisk tilgjengelig pastebin hvor serveren ikke har kunnskap om dataene som limes inn. Dataene krypteres/dekrypteres <i>i nettleseren</i> ved hjelp av 256 bits AES. Mer informasjon om prosjektet på  <a href=\"https://privatebin.info/\">prosjektsiden</a>.",
+    "Because ignorance is bliss": "Fordi uvitenhet er lykke",
     "en": "no",
-    "Paste does not exist, has expired or has been deleted.":
-        "Innlegget eksisterer ikke, er utløpt eller har blitt slettet.",
-    "%s requires php %s or above to work. Sorry.":
-        "Beklager, %s krever php %s eller nyere for å kjøre.",
-    "%s requires configuration section [%s] to be present in configuration file.":
-        "%s krever konfigurasjonsdel [%s] å være til stede i konfigurasjonsfilen .",
-    "Please wait %d seconds between each post.":
-        "Vennligst vent %d sekunder mellom hvert innlegg.",
-    "Paste is limited to %s of encrypted data.":
-        "Innlegg er begrenset til %s av kryptert data.",
-    "Invalid data.":
-        "Ugyldige data.",
-    "You are unlucky. Try again.":
-        "Du er uheldig. Prøv igjen.",
-    "Error saving comment. Sorry.":
-        "Beklager, det oppstod en feil ved lagring kommentar.",
-    "Error saving paste. Sorry.":
-        "Beklager, det oppstod en feil ved lagring innlegg.",
-    "Invalid paste ID.":
-        "Feil innlegg ID.",
-    "Paste is not of burn-after-reading type.":
-        "Innlegg er ikke av typen slett etter lesing.",
-    "Wrong deletion token. Paste was not deleted.":
-        "Feil slettingsnøkkel. Innlegg ble ikke fjernet.",
-    "Paste was properly deleted.":
-        "Innlegget er slettet.",
-    "JavaScript is required for %s to work. Sorry for the inconvenience.":
-        "Javascript kreves for at %s skal fungere. Beklager.",
-    "%s requires a modern browser to work.":
-        "%s krever en moderne nettleser for å fungere.",
-    "New":
-        "Ny",
-    "Send":
-        "Send",
-    "Clone":
-        "Kopier",
-    "Raw text":
-        "Ren tekst",
-    "Expires":
-        "Utgår",
-    "Burn after reading":
-        "Slett etter lesing",
-    "Open discussion":
-        "Åpen diskusjon",
-    "Password (recommended)":
-        "Passord (anbefalt)",
-    "Discussion":
-        "Diskusjon",
-    "Toggle navigation":
-        "Veksle navigasjon",
-    "%d seconds": ["%d sekund", "%d sekunder"],
-    "%d minutes": ["%d minutt", "%d minutter"],
-    "%d hours": ["%d time", "%d timer"],
-    "%d days": ["%d dag", "%d dager"],
-    "%d weeks": ["%d uke", "%d uker"],
-    "%d months": ["%d måned", "%d måneder"],
-    "%d years": ["%d år", "%d år"],
-    "Never":
-        "Aldri",
-    "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.":
-        "Merk: Dette er en test tjeneste: Data kan slettes når som helst. Kattunger vil dø hvis du misbruker denne tjenesten.",
-    "This document will expire in %d seconds.":
-        ["Dette dokumentet vil utløpe om %d sekund.", "Dette dokumentet vil utløpe om %d sekunder."],
-    "This document will expire in %d minutes.":
-        ["Dette dokumentet vil utløpe om %d minutt.", "Dette dokumentet vil utløpe om %d minutter."],
-    "This document will expire in %d hours.":
-        ["Dette dokumentet vil utløpe om %d time.", "Dette dokumentet vil utløpe om %d timer."],
-    "This document will expire in %d days.":
-        ["Dette dokumentet vil utløpe om %d dag.", "Dette dokumentet vil utløpe om %d dager."],
-    "This document will expire in %d months.":
-        ["Dette dokumentet vil utløpe om %d måned.", "Dette dokumentet vil utløpe om %d måneder."],
-    "Please enter the password for this paste:":
-        "Vennligst skriv inn passordet for dette innlegget:",
-    "Could not decrypt data (Wrong key?)":
-        "Kunne ikke dekryptere data (Feil nøkkel?)",
-    "Could not delete the paste, it was not stored in burn after reading mode.":
-        "Kan ikke slette innlegget, det ble ikke lagret som 'slett etter les' type.",
-    "FOR YOUR EYES ONLY. Don't close this window, this message can't be displayed again.":
-        "KUN FOR DINE ØYNE. Ikke lukk dette vinduet, denne meldingen kan ikke bli vist igjen.",
-    "Could not decrypt comment; Wrong key?":
-        "Kan ikke dekryptere kommentar; Feil nøkkel?",
-    "Reply":
-        "Svar",
-    "Anonymous":
-        "Anonym",
-    "Avatar generated from IP address":
-        "Anonym avatar generert med data fra IP adressen)",
-    "Add comment":
-        "Legg til kommentar",
-    "Optional nickname…":
-        "Valgfritt kallenavn…",
-    "Post comment":
-        "Send kommentar",
-    "Sending comment…":
-        "Sender Kommentar…",
-    "Comment posted.":
-        "Kommentar sendt.",
-    "Could not refresh display: %s":
-        "Kunne ikke oppdatere bildet: %s",
-    "unknown status":
-        "ukjent status",
-    "server error or not responding":
-        "tjener feilet eller svarer ikke",
-    "Could not post comment: %s":
-        "Kunne ikke sende kommentar: %s",
-    "Sending paste…":
-        "Sender innlegg…",
-    "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit [Ctrl]+[c] to copy)</span>":
-        "Ditt innlegg er <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Trykk [Ctrl]+[c] for å kopiere)</span>",
-    "Delete data":
-        "Slett data",
-    "Could not create paste: %s":
-        "Kunne ikke opprette innlegg: %s",
-    "Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)":
-        "Kan ikke dekryptere innlegg: Dekrypteringsnøkkelen mangler i adressen (Har du bruket en redirector eller en URL forkorter som fjerner en del av addressen?)",
+    "Paste does not exist, has expired or has been deleted.": "Innlegget eksisterer ikke, er utløpt eller har blitt slettet.",
+    "%s requires php %s or above to work. Sorry.": "Beklager, %s krever php %s eller nyere for å kjøre.",
+    "%s requires configuration section [%s] to be present in configuration file.": "%s krever konfigurasjonsdel [%s] å være til stede i konfigurasjonsfilen .",
+    "Please wait %d seconds between each post.": "Vennligst vent %d sekunder mellom hvert innlegg.",
+    "Paste is limited to %s of encrypted data.": "Innlegg er begrenset til %s av kryptert data.",
+    "Invalid data.": "Ugyldige data.",
+    "You are unlucky. Try again.": "Du er uheldig. Prøv igjen.",
+    "Error saving comment. Sorry.": "Beklager, det oppstod en feil ved lagring kommentar.",
+    "Error saving paste. Sorry.": "Beklager, det oppstod en feil ved lagring innlegg.",
+    "Invalid paste ID.": "Feil innlegg ID.",
+    "Paste is not of burn-after-reading type.": "Innlegg er ikke av typen slett etter lesing.",
+    "Wrong deletion token. Paste was not deleted.": "Feil slettingsnøkkel. Innlegg ble ikke fjernet.",
+    "Paste was properly deleted.": "Innlegget er slettet.",
+    "JavaScript is required for %s to work. Sorry for the inconvenience.": "Javascript kreves for at %s skal fungere. Beklager.",
+    "%s requires a modern browser to work.": "%s krever en moderne nettleser for å fungere.",
+    "New": "Ny",
+    "Send": "Send",
+    "Clone": "Kopier",
+    "Raw text": "Ren tekst",
+    "Expires": "Utgår",
+    "Burn after reading": "Slett etter lesing",
+    "Open discussion": "Åpen diskusjon",
+    "Password (recommended)": "Passord (anbefalt)",
+    "Discussion": "Diskusjon",
+    "Toggle navigation": "Veksle navigasjon",
+    "%d seconds": [
+        "%d sekund",
+        "%d sekunder",
+        "%d seconds (2nd plural)",
+        "%d seconds (3rd plural)"
+    ],
+    "%d minutes": [
+        "%d minutt",
+        "%d minutter",
+        "%d minutes (2nd plural)",
+        "%d minutes (3rd plural)"
+    ],
+    "%d hours": [
+        "%d time",
+        "%d timer",
+        "%d hours (2nd plural)",
+        "%d hours (3rd plural)"
+    ],
+    "%d days": [
+        "%d dag",
+        "%d dager",
+        "%d days (2nd plural)",
+        "%d days (3rd plural)"
+    ],
+    "%d weeks": [
+        "%d uke",
+        "%d uker",
+        "%d weeks (2nd plural)",
+        "%d weeks (3rd plural)"
+    ],
+    "%d months": [
+        "%d måned",
+        "%d måneder",
+        "%d months (2nd plural)",
+        "%d months (3rd plural)"
+    ],
+    "%d years": [
+        "%d år",
+        "%d år",
+        "%d years (2nd plural)",
+        "%d years (3rd plural)"
+    ],
+    "Never": "Aldri",
+    "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.": "Merk: Dette er en test tjeneste: Data kan slettes når som helst. Kattunger vil dø hvis du misbruker denne tjenesten.",
+    "This document will expire in %d seconds.": [
+        "Dette dokumentet vil utløpe om %d sekund.",
+        "Dette dokumentet vil utløpe om %d sekunder.",
+        "This document will expire in %d seconds (2nd plural)",
+        "This document will expire in %d seconds (3rd plural)"
+    ],
+    "This document will expire in %d minutes.": [
+        "Dette dokumentet vil utløpe om %d minutt.",
+        "Dette dokumentet vil utløpe om %d minutter.",
+        "This document will expire in %d minutes (2nd plural)",
+        "This document will expire in %d minutes (3rd plural)"
+    ],
+    "This document will expire in %d hours.": [
+        "Dette dokumentet vil utløpe om %d time.",
+        "Dette dokumentet vil utløpe om %d timer.",
+        "This document will expire in %d hours (2nd plural)",
+        "This document will expire in %d hours (3rd plural)"
+    ],
+    "This document will expire in %d days.": [
+        "Dette dokumentet vil utløpe om %d dag.",
+        "Dette dokumentet vil utløpe om %d dager.",
+        "This document will expire in %d days (2nd plural)",
+        "This document will expire in %d days (3rd plural)"
+    ],
+    "This document will expire in %d months.": [
+        "Dette dokumentet vil utløpe om %d måned.",
+        "Dette dokumentet vil utløpe om %d måneder.",
+        "This document will expire in %d months (2nd plural)",
+        "This document will expire in %d months (3rd plural)"
+    ],
+    "Please enter the password for this paste:": "Vennligst skriv inn passordet for dette innlegget:",
+    "Could not decrypt data (Wrong key?)": "Kunne ikke dekryptere data (Feil nøkkel?)",
+    "Could not delete the paste, it was not stored in burn after reading mode.": "Kan ikke slette innlegget, det ble ikke lagret som 'slett etter les' type.",
+    "FOR YOUR EYES ONLY. Don't close this window, this message can't be displayed again.": "KUN FOR DINE ØYNE. Ikke lukk dette vinduet, denne meldingen kan ikke bli vist igjen.",
+    "Could not decrypt comment; Wrong key?": "Kan ikke dekryptere kommentar; Feil nøkkel?",
+    "Reply": "Svar",
+    "Anonymous": "Anonym",
+    "Avatar generated from IP address": "Anonym avatar generert med data fra IP adressen)",
+    "Add comment": "Legg til kommentar",
+    "Optional nickname…": "Valgfritt kallenavn…",
+    "Post comment": "Send kommentar",
+    "Sending comment…": "Sender Kommentar…",
+    "Comment posted.": "Kommentar sendt.",
+    "Could not refresh display: %s": "Kunne ikke oppdatere bildet: %s",
+    "unknown status": "ukjent status",
+    "server error or not responding": "tjener feilet eller svarer ikke",
+    "Could not post comment: %s": "Kunne ikke sende kommentar: %s",
+    "Sending paste…": "Sender innlegg…",
+    "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit [Ctrl]+[c] to copy)</span>": "Ditt innlegg er <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Trykk [Ctrl]+[c] for å kopiere)</span>",
+    "Delete data": "Slett data",
+    "Could not create paste: %s": "Kunne ikke opprette innlegg: %s",
+    "Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)": "Kan ikke dekryptere innlegg: Dekrypteringsnøkkelen mangler i adressen (Har du bruket en redirector eller en URL forkorter som fjerner en del av addressen?)",
+    "B": "B",
+    "KiB": "KiB",
+    "MiB": "MiB",
+    "GiB": "GiB",
+    "TiB": "TiB",
+    "PiB": "PiB",
+    "EiB": "EiB",
+    "ZiB": "ZiB",
+    "YiB": "YiB",
     "Format": "Format",
     "Plain Text": "Ren Tekst",
     "Source Code": "Kildekode",
@@ -131,62 +144,38 @@
     "alternatively drag & drop a file or paste an image from the clipboard": "alternatively drag & drop a file or paste an image from the clipboard",
     "File too large, to display a preview. Please download the attachment.": "File too large, to display a preview. Please download the attachment.",
     "Remove attachment": "Slett vedlegg",
-    "Your browser does not support uploading encrypted files. Please use a newer browser.":
-        "Nettleseren din støtter ikke å laste opp krypterte filer. Vennligst bruk en nyere nettleser.",
+    "Your browser does not support uploading encrypted files. Please use a newer browser.": "Nettleseren din støtter ikke å laste opp krypterte filer. Vennligst bruk en nyere nettleser.",
     "Invalid attachment.": "Ugyldig vedlegg.",
     "Options": "Alternativer",
     "Shorten URL": "Adresse forkorter",
     "Editor": "Rediger",
     "Preview": "Forhåndsvis",
-    "%s requires the PATH to end in a \"%s\". Please update the PATH in your index.php.":
-        "%s krever at PATH ender på \"%s\". Vennligst oppdater PATH i index.php.",
-    "Decrypt":
-        "Dekrypter",
-    "Enter password":
-        "Skriv inn passord",
+    "%s requires the PATH to end in a \"%s\". Please update the PATH in your index.php.": "%s krever at PATH ender på \"%s\". Vennligst oppdater PATH i index.php.",
+    "Decrypt": "Dekrypter",
+    "Enter password": "Skriv inn passord",
     "Loading…": "Laster…",
     "Decrypting paste…": "Dekrypterer innlegg…",
     "Preparing new paste…": "Klargjør nytt innlegg…",
-    "In case this message never disappears please have a look at <a href=\"%s\">this FAQ for information to troubleshoot</a>.":
-        "Hvis denne meldingen ikke forsvinner kan du ta en titt på siden med <a href=\"%s\">ofte stilte spørsmål</a> for informasjon om feilsøking.",
+    "In case this message never disappears please have a look at <a href=\"%s\">this FAQ for information to troubleshoot</a>.": "Hvis denne meldingen ikke forsvinner kan du ta en titt på siden med <a href=\"%s\">ofte stilte spørsmål</a> for informasjon om feilsøking.",
     "+++ no paste text +++": "+++ ingen innleggstekst +++",
-    "Could not get paste data: %s":
-        "Kunne ikke hente utklippsdata: %s",
+    "Could not get paste data: %s": "Kunne ikke hente utklippsdata: %s",
     "QR code": "QR kode",
-    "This website is using an insecure HTTP connection! Please use it only for testing.":
-        "Denne websiden bruker usikker HTTP tilkobling! Bruk den kun for testing.",
-    "For more information <a href=\"%s\">see this FAQ entry</a>.":
-        "For mer informasjon <a href=\"%s\">se ofte stilte spørsmål</a>.",
-    "Your browser may require an HTTPS connection to support the WebCrypto API. Try <a href=\"%s\">switching to HTTPS</a>.":
-        "Din nettleser har behov for HTTPS tilkobling for å støtte WebCrypto biblioteket. Prøv å <a href=\"%s\">bytt til HTTPS</a>.",
-    "Your browser doesn't support WebAssembly, used for zlib compression. You can create uncompressed documents, but can't read compressed ones.":
-        "Nettleseren din støtter ikke WebAssembly som brukes for zlib komprimering. Du kan lage ukomprimerte dokumenter, men du kan ikke lese komprimerte.",
-    "waiting on user to provide a password":
-        "venter på at bruker skal skrive passord",
-    "Could not decrypt data. Did you enter a wrong password? Retry with the button at the top.":
-        "Kunne ikke dekryptere data. Har du tastet riktig pssord? Prøv igjen med knappen på toppen.",
-    "Retry":
-        "Prøv igjen",
-    "Showing raw text…":
-        "Viser rå-tekst…",
-    "Notice:":
-        "Notat:",
-    "This link will expire after %s.":
-        "Denne lenken vil bli inaktiv etter %s.",
-    "This link can only be accessed once, do not use back or refresh button in your browser.":
-        "Denne addressen kan kun bli besøkt en gang, ikke trykk på tilbake eller oppdater knappene i nettleseren.",
-    "Link:":
-        "Lenke:",
-    "Recipient may become aware of your timezone, convert time to UTC?":
-        "Mottaker kan bli kjent med din tidssone, ønsker du å konvertere til UTC?",
-    "Use Current Timezone":
-        "Bruk gjeldende tidssone",
-    "Convert To UTC":
-        "Konverter til UTC",
-    "Close":
-        "Steng",
-    "Encrypted note on PrivateBin":
-        "Kryptert notat på PrivateBin",
-    "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.":
-        "Besøk denne lenken for å se notatet. Hvis lenken deles med andre, vil de også kunne se notatet."
+    "This website is using an insecure HTTP connection! Please use it only for testing.": "Denne websiden bruker usikker HTTP tilkobling! Bruk den kun for testing.",
+    "For more information <a href=\"%s\">see this FAQ entry</a>.": "For mer informasjon <a href=\"%s\">se ofte stilte spørsmål</a>.",
+    "Your browser may require an HTTPS connection to support the WebCrypto API. Try <a href=\"%s\">switching to HTTPS</a>.": "Din nettleser har behov for HTTPS tilkobling for å støtte WebCrypto biblioteket. Prøv å <a href=\"%s\">bytt til HTTPS</a>.",
+    "Your browser doesn't support WebAssembly, used for zlib compression. You can create uncompressed documents, but can't read compressed ones.": "Nettleseren din støtter ikke WebAssembly som brukes for zlib komprimering. Du kan lage ukomprimerte dokumenter, men du kan ikke lese komprimerte.",
+    "waiting on user to provide a password": "venter på at bruker skal skrive passord",
+    "Could not decrypt data. Did you enter a wrong password? Retry with the button at the top.": "Kunne ikke dekryptere data. Har du tastet riktig pssord? Prøv igjen med knappen på toppen.",
+    "Retry": "Prøv igjen",
+    "Showing raw text…": "Viser rå-tekst…",
+    "Notice:": "Notat:",
+    "This link will expire after %s.": "Denne lenken vil bli inaktiv etter %s.",
+    "This link can only be accessed once, do not use back or refresh button in your browser.": "Denne addressen kan kun bli besøkt en gang, ikke trykk på tilbake eller oppdater knappene i nettleseren.",
+    "Link:": "Lenke:",
+    "Recipient may become aware of your timezone, convert time to UTC?": "Mottaker kan bli kjent med din tidssone, ønsker du å konvertere til UTC?",
+    "Use Current Timezone": "Bruk gjeldende tidssone",
+    "Convert To UTC": "Konverter til UTC",
+    "Close": "Steng",
+    "Encrypted note on PrivateBin": "Kryptert notat på PrivateBin",
+    "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "Besøk denne lenken for å se notatet. Hvis lenken deles med andre, vil de også kunne se notatet."
 }
