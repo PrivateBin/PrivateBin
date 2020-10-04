@@ -29,54 +29,78 @@
     "Discussion": "Discusión",
     "Toggle navigation": "Cambiar navegación",
     "%d seconds": [
-        "%d segundo",
-        "%d segundos"
+        "%d second (singular)",
+        "%d seconds (1st plural)",
+        "%d seconds (2nd plural)",
+        "%d seconds (3rd plural)"
     ],
     "%d minutes": [
-        "%d minuto",
-        "%d minutos"
+        "%d minute (singular)",
+        "%d minutes (1st plural)",
+        "%d minutes (2nd plural)",
+        "%d minutes (3rd plural)"
     ],
     "%d hours": [
-        "%d hora",
-        "%d horas"
+        "%d hour (singular)",
+        "%d hours (1st plural)",
+        "%d hours (2nd plural)",
+        "%d hours (3rd plural)"
     ],
     "%d days": [
-        "%d día",
-        "%d días"
+        "%d day (singular)",
+        "%d days (1st plural)",
+        "%d days (2nd plural)",
+        "%d days (3rd plural)"
     ],
     "%d weeks": [
-        "%d semana",
-        "%d semanas"
+        "%d week (singular)",
+        "%d weeks (1st plural)",
+        "%d weeks (2nd plural)",
+        "%d weeks (3rd plural)"
     ],
     "%d months": [
-        "%d mes",
-        "%d meses"
+        "%d month (singular)",
+        "%d months (1st plural)",
+        "%d months (2nd plural)",
+        "%d months (3rd plural)"
     ],
     "%d years": [
-        "%d año",
-        "%d años"
+        "%d year (singular)",
+        "%d years (1st plural)",
+        "%d years (2nd plural)",
+        "%d years (3rd plural)"
     ],
     "Never": "Nunca",
     "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.": "Nota: Este es un servicio de prueba. Los datos pueden ser eliminados en cualquier momento. Morirán gatitos si abusas de este servicio.",
     "This document will expire in %d seconds.": [
-        "Este documento caducará en un segundo.",
-        "Este documento caducará en %d segundos."
+        "This document will expire in %d second. (singular)",
+        "This document will expire in %d seconds (1st plural)",
+        "This document will expire in %d seconds (2nd plural)",
+        "This document will expire in %d seconds (3rd plural)"
     ],
     "This document will expire in %d minutes.": [
-        "Este documento caducará en un minuto.",
-        "Este documento caducará en %d minutos."
+        "This document will expire in %d minute. (singular)",
+        "This document will expire in %d minutes (1st plural)",
+        "This document will expire in %d minutes (2nd plural)",
+        "This document will expire in %d minutes (3rd plural)"
     ],
     "This document will expire in %d hours.": [
-        "Este documento caducará en una hora.",
-        "Este documento caducará en %d horas."
+        "This document will expire in %d hour. (singular)",
+        "This document will expire in %d hours (1st plural)",
+        "This document will expire in %d hours (2nd plural)",
+        "This document will expire in %d hours (3rd plural)"
     ],
     "This document will expire in %d days.": [
-        "Este documento caducará en un día.",
-        "Este documento caducará en %d días."
+        "This document will expire in %d day. (singular)",
+        "This document will expire in %d days (1st plural)",
+        "This document will expire in %d days (2nd plural)",
+        "This document will expire in %d days (3rd plural)"
     ],
     "This document will expire in %d months.": [
-        "Este documento caducará en un mes.",
-        "Este documento caducará en %d meses."
+        "This document will expire in %d month. (singular)",
+        "This document will expire in %d months (1st plural)",
+        "This document will expire in %d months (2nd plural)",
+        "This document will expire in %d months (3rd plural)"
     ],
     "Please enter the password for this paste:": "Por favor ingrese la contraseña para este \"paste\":",
     "Could not decrypt data (Wrong key?)": "No fue posible descifrar los datos (¿Clave errónea?)",
@@ -100,6 +124,15 @@
     "Delete data": "Eliminar datos",
     "Could not create paste: %s": "No fue posible crear el archivo: %s",
     "Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)": "No es posible descifrar el documento: Falta la clave de descifrado en la URL (¿Utilizó un redirector o un acortador de URL que quite parte de la URL?)",
+    "B": "B",
+    "KiB": "KiB",
+    "MiB": "MiB",
+    "GiB": "GiB",
+    "TiB": "TiB",
+    "PiB": "PiB",
+    "EiB": "EiB",
+    "ZiB": "ZiB",
+    "YiB": "YiB",
     "Format": "Formato",
     "Plain Text": "Texto sin formato",
     "Source Code": "Código fuente",
