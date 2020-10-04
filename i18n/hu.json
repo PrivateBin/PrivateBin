@@ -29,54 +29,78 @@
     "Discussion": "Hozzászólások",
     "Toggle navigation": "Navigáció",
     "%d seconds": [
-        "%d másodperc",
-        "%d másodperc"
+        "%d second (singular)",
+        "%d seconds (1st plural)",
+        "%d seconds (2nd plural)",
+        "%d seconds (3rd plural)"
     ],
     "%d minutes": [
-        "%d perc",
-        "%d perc"
+        "%d minute (singular)",
+        "%d minutes (1st plural)",
+        "%d minutes (2nd plural)",
+        "%d minutes (3rd plural)"
     ],
     "%d hours": [
-        "%d óra",
-        "%d óra"
+        "%d hour (singular)",
+        "%d hours (1st plural)",
+        "%d hours (2nd plural)",
+        "%d hours (3rd plural)"
     ],
     "%d days": [
-        "%d nap",
-        "%d nap"
+        "%d day (singular)",
+        "%d days (1st plural)",
+        "%d days (2nd plural)",
+        "%d days (3rd plural)"
     ],
     "%d weeks": [
-        "%d hét",
-        "%d hét"
+        "%d week (singular)",
+        "%d weeks (1st plural)",
+        "%d weeks (2nd plural)",
+        "%d weeks (3rd plural)"
     ],
     "%d months": [
-        "%d hónap",
-        "%d hónap"
+        "%d month (singular)",
+        "%d months (1st plural)",
+        "%d months (2nd plural)",
+        "%d months (3rd plural)"
     ],
     "%d years": [
-        "%d év",
-        "%d év"
+        "%d year (singular)",
+        "%d years (1st plural)",
+        "%d years (2nd plural)",
+        "%d years (3rd plural)"
     ],
     "Never": "Soha",
     "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.": "Megjegyzés: ez egy teszt szolgáltatás, az adatok bármikor törlődhetnek. Ha visszaélsz vele, kiscicák bánhatják! :)",
     "This document will expire in %d seconds.": [
-        "Ez a bejegyzés %d másodperc után megsemmisül.",
-        "Ez a bejegyzés %d másodperc múlva megsemmisül."
+        "This document will expire in %d second. (singular)",
+        "This document will expire in %d seconds (1st plural)",
+        "This document will expire in %d seconds (2nd plural)",
+        "This document will expire in %d seconds (3rd plural)"
     ],
     "This document will expire in %d minutes.": [
-        "Ez a bejegyzés %d perc után megsemmisül.",
-        "Ez a bejegyzés %d perc múlva megsemmisül."
+        "This document will expire in %d minute. (singular)",
+        "This document will expire in %d minutes (1st plural)",
+        "This document will expire in %d minutes (2nd plural)",
+        "This document will expire in %d minutes (3rd plural)"
     ],
     "This document will expire in %d hours.": [
-        "Ez a bejegyzés %d óra után megsemmisül.",
-        "Ez a bejegyzés %d óra múlva megsemmisül."
+        "This document will expire in %d hour. (singular)",
+        "This document will expire in %d hours (1st plural)",
+        "This document will expire in %d hours (2nd plural)",
+        "This document will expire in %d hours (3rd plural)"
     ],
     "This document will expire in %d days.": [
-        "Ez a bejegyzés %d nap után megsemmisül.",
-        "Ez a bejegyzés %d nap múlva megsemmisül."
+        "This document will expire in %d day. (singular)",
+        "This document will expire in %d days (1st plural)",
+        "This document will expire in %d days (2nd plural)",
+        "This document will expire in %d days (3rd plural)"
     ],
     "This document will expire in %d months.": [
-        "Ez a bejegyzés %d hónap múlva megsemmisül.",
-        "Ez a bejegyzés %d hónap múlva megsemmisül."
+        "This document will expire in %d month. (singular)",
+        "This document will expire in %d months (1st plural)",
+        "This document will expire in %d months (2nd plural)",
+        "This document will expire in %d months (3rd plural)"
     ],
     "Please enter the password for this paste:": "Add meg a szükséges jelszót a bejegyzés megtekintéséhez:",
     "Could not decrypt data (Wrong key?)": "Nem tudtuk dekódolni az adatot. Talán rossz kulcsot adtál meg?",
@@ -100,6 +124,15 @@
     "Delete data": "Adat törlése",
     "Could not create paste: %s": "Nem tudtuk létrehozni a bejegyzést: %s",
     "Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)": "Nem tudjuk dekódolni a bejegyzést: a dekódoláshoz szükséges kulcs hiányzik a címből. Talán URL rövidítőt használtál ami kivágta azt belőle?",
+    "B": "B",
+    "KiB": "KiB",
+    "MiB": "MiB",
+    "GiB": "GiB",
+    "TiB": "TiB",
+    "PiB": "PiB",
+    "EiB": "EiB",
+    "ZiB": "ZiB",
+    "YiB": "YiB",
     "Format": "Formátum",
     "Plain Text": "Egyszerű szöveg",
     "Source Code": "Forráskód",
