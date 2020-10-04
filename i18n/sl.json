@@ -30,77 +30,53 @@
     "Toggle navigation": "Preklopi navigacijo",
     "%d seconds": [
         "%d sekunda",
-        "%d sekundi",
-        "%d sekunde",
-        "%d sekund"
+        "%d sekundi"
     ],
     "%d minutes": [
         "%d minuta",
-        "%d minuti",
-        "%d minute",
-        "%d minut"
+        "%d minuti"
     ],
     "%d hours": [
         "%d ura",
-        "%d uri",
-        "%d ure",
-        "%d ur"
+        "%d uri"
     ],
     "%d days": [
         "%d dan",
-        "%d dneva",
-        "%d dnevi",
-        "%d dni"
+        "%d dneva"
     ],
     "%d weeks": [
         "%d teden",
-        "%d tedna",
-        "%d tedni",
-        "%d tednov"
+        "%d tedna"
     ],
     "%d months": [
         "%d mesec",
-        "%d meseca",
-        "%d meseci",
-        "%d mesecev"
+        "%d meseca"
     ],
     "%d years": [
         "%d leto",
-        "%d leti",
-        "%d leta",
-        "%d let"
+        "%d leti"
     ],
     "Never": "Nikoli",
     "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.": "Ne pozabi: To je testna storitev: Podatki so lahko kadarkoli pobrisani. Mucki bodo umrli, če boš zlorabljala to storitev.",
     "This document will expire in %d seconds.": [
         "Ta dokument bo potekel čez %d sekundo.",
-        "Ta dokument bo potekel čez %d sekundi.",
-        "Ta dokument bo potekel čez %d sekunde.",
-        "Ta dokument bo potekel čez %d sekund."
+        "Ta dokument bo potekel čez %d sekundi."
     ],
     "This document will expire in %d minutes.": [
         "Ta dokument bo potekel čez %d minuto.",
-        "Ta dokument bo potekel čez %d minuti.",
-        "Ta dokument bo potekel čez %d minute.",
-        "Ta dokument bo potekel čez %d minut."
+        "Ta dokument bo potekel čez %d minuti."
     ],
     "This document will expire in %d hours.": [
         "Ta dokument bo potekel čez %d uro.",
-        "Ta dokument bo potekel čez %d uri.",
-        "Ta dokument bo potekel čez %d ure.",
-        "Ta dokument bo potekel čez %d ur."
+        "Ta dokument bo potekel čez %d uri."
     ],
     "This document will expire in %d days.": [
         "Ta dokument bo potekel čez %d dan.",
-        "Ta dokument bo potekel čez %d dni.",
-        "Ta dokument bo potekel čez %d dni.",
         "Ta dokument bo potekel čez %d dni."
     ],
     "This document will expire in %d months.": [
         "Ta dokument bo potekel čez %d mesec.",
-        "Ta dokument bo potekel čez %d meseca.",
-        "Ta dokument bo potekel čez %d mesece.",
-        "Ta dokument bo potekel čez %d mesecev."
+        "Ta dokument bo potekel čez %d meseca."
     ],
     "Please enter the password for this paste:": "Prosim vnesi geslo tega prilepka:",
     "Could not decrypt data (Wrong key?)": "Nemogoče odkodirati podakte (Imaš napačen ključ?)",
@@ -124,15 +100,6 @@
     "Delete data": "Izbriši podatke",
     "Could not create paste: %s": "Ne morem ustvariti prilepka: %s",
     "Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)": "Ne morem odkodirati prilepka: V URL-ju manjka ključ (A si uporabil krajšalnik URL-jev, ki odstrani del URL-ja?)",
-    "B": "o",
-    "KiB": "KB",
-    "MiB": "MB",
-    "GiB": "GB",
-    "TiB": "TB",
-    "PiB": "PB",
-    "EiB": "EB",
-    "ZiB": "ZB",
-    "YiB": "YB",
     "Format": "Format",
     "Plain Text": "Surov tekst",
     "Source Code": "Odprta koda",
