@@ -30,53 +30,77 @@
     "Toggle navigation": "切换导航栏",
     "%d seconds": [
         "%d 秒",
-        "%d 秒"
+        "%d 秒",
+        "%d seconds (2nd plural)",
+        "%d seconds (3rd plural)"
     ],
     "%d minutes": [
         "%d 分钟",
-        "%d 分钟"
+        "%d 分钟",
+        "%d minutes (2nd plural)",
+        "%d minutes (3rd plural)"
     ],
     "%d hours": [
         "%d 小时",
-        "%d 小时"
+        "%d 小时",
+        "%d hours (2nd plural)",
+        "%d hours (3rd plural)"
     ],
     "%d days": [
         "%d 天",
-        "%d 天"
+        "%d 天",
+        "%d days (2nd plural)",
+        "%d days (3rd plural)"
     ],
     "%d weeks": [
         "%d 周",
-        "%d 周"
+        "%d 周",
+        "%d weeks (2nd plural)",
+        "%d weeks (3rd plural)"
     ],
     "%d months": [
         "%d 个月",
-        "%d 个月"
+        "%d 个月",
+        "%d months (2nd plural)",
+        "%d months (3rd plural)"
     ],
     "%d years": [
         "%d 年",
-        "%d 年"
+        "%d 年",
+        "%d years (2nd plural)",
+        "%d years (3rd plural)"
     ],
     "Never": "永不过期",
     "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.": "注意：这是一个测试服务，数据随时可能被删除。如果你滥用这个服务的话，小猫咪会死的。",
     "This document will expire in %d seconds.": [
         "这份文档将在一秒后过期。",
-        "这份文档将在 %d 秒后过期"
+        "这份文档将在 %d 秒后过期",
+        "This document will expire in %d seconds (2nd plural)",
+        "This document will expire in %d seconds (3rd plural)"
     ],
     "This document will expire in %d minutes.": [
         "这份文档将在一分钟后过期。",
-        "这份文档将在 %d 分钟后过期。"
+        "这份文档将在 %d 分钟后过期。",
+        "This document will expire in %d minutes (2nd plural)",
+        "This document will expire in %d minutes (3rd plural)"
     ],
     "This document will expire in %d hours.": [
         "这份文档将在一小时后过期。",
-        "这份文档将在 %d 小时后过期。"
+        "这份文档将在 %d 小时后过期。",
+        "This document will expire in %d hours (2nd plural)",
+        "This document will expire in %d hours (3rd plural)"
     ],
     "This document will expire in %d days.": [
         "这份文档将在一天后过期。",
-        "这份文档将在 %d 天后过期。"
+        "这份文档将在 %d 天后过期。",
+        "This document will expire in %d days (2nd plural)",
+        "This document will expire in %d days (3rd plural)"
     ],
     "This document will expire in %d months.": [
         "这份文档将在一个月后过期。",
-        "这份文档将在 %d 个月后过期。"
+        "这份文档将在 %d 个月后过期。",
+        "This document will expire in %d months (2nd plural)",
+        "This document will expire in %d months (3rd plural)"
     ],
     "Please enter the password for this paste:": "请输入这份粘贴内容的密码：",
     "Could not decrypt data (Wrong key?)": "无法解密数据（密钥错误？）",
@@ -100,6 +124,15 @@
     "Delete data": "删除数据",
     "Could not create paste: %s": "无法创建粘贴：%s",
     "Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)": "无法解密粘贴：URL中缺失解密密钥（是否使用了重定向或者短链接导致密钥丢失？）",
+    "B": "B",
+    "KiB": "KiB",
+    "MiB": "MiB",
+    "GiB": "GiB",
+    "TiB": "TiB",
+    "PiB": "PiB",
+    "EiB": "EiB",
+    "ZiB": "ZiB",
+    "YiB": "YiB",
     "Format": "格式",
     "Plain Text": "纯文本",
     "Source Code": "源代码",

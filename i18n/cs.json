@@ -31,64 +31,76 @@
     "%d seconds": [
         "%d sekuda",
         "%d sekundy",
-        "%d sekund"
+        "%d sekund",
+        "%d seconds (3rd plural)"
     ],
     "%d minutes": [
         "%d minuta",
         "%d minuty",
-        "%d minut"
+        "%d minut",
+        "%d minutes (3rd plural)"
     ],
     "%d hours": [
         "%d hodin",
         "%d hodiny",
-        "%d hodin"
+        "%d hodin",
+        "%d hours (3rd plural)"
     ],
     "%d days": [
         "%d den",
         "%d dny",
-        "%d dní"
+        "%d dní",
+        "%d days (3rd plural)"
     ],
     "%d weeks": [
         "%d týden",
         "%d týdeny",
-        "%d týdnů"
+        "%d týdnů",
+        "%d weeks (3rd plural)"
     ],
     "%d months": [
         "%d měsíc",
         "%d měsíce",
-        "%d měsíců"
+        "%d měsíců",
+        "%d months (3rd plural)"
     ],
     "%d years": [
         "%d rok",
         "%d roky",
-        "%d roků"
+        "%d roků",
+        "%d years (3rd plural)"
     ],
     "Never": "Nikdy",
     "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.": "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.",
     "This document will expire in %d seconds.": [
         "Tento dokument expiruje za %d sekundu.",
         "Tento dokument expiruje za %d sekundy.",
-        "Tento dokument expiruje za %d sekund."
+        "Tento dokument expiruje za %d sekund.",
+        "This document will expire in %d seconds (3rd plural)"
     ],
     "This document will expire in %d minutes.": [
         "Tento dokument expiruje za %d minutu.",
         "Tento dokument expiruje za %d minuty.",
-        "Tento dokument expiruje za %d minut."
+        "Tento dokument expiruje za %d minut.",
+        "This document will expire in %d minutes (3rd plural)"
     ],
     "This document will expire in %d hours.": [
         "Tento dokument expiruje za %d hodinu.",
         "Tento dokument expiruje za %d hodiny.",
-        "Tento dokument expiruje za %d hodin."
+        "Tento dokument expiruje za %d hodin.",
+        "This document will expire in %d hours (3rd plural)"
     ],
     "This document will expire in %d days.": [
         "Tento dokument expiruje za %d den.",
         "Tento dokument expiruje za %d dny.",
-        "Tento dokument expiruje za %d dny."
+        "Tento dokument expiruje za %d dny.",
+        "This document will expire in %d days (3rd plural)"
     ],
     "This document will expire in %d months.": [
         "Tento dokument expiruje za %d měsíc.",
         "Tento dokument expiruje za %d měsíce.",
-        "Tento dokument expiruje za %d měsíců."
+        "Tento dokument expiruje za %d měsíců.",
+        "This document will expire in %d months (3rd plural)"
     ],
     "Please enter the password for this paste:": "Zadejte prosím heslo:",
     "Could not decrypt data (Wrong key?)": "Could not decrypt data (Wrong key?)",
@@ -112,6 +124,15 @@
     "Delete data": "Odstranit data",
     "Could not create paste: %s": "Nelze vytvořit příspěvek: %s",
     "Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)": "Nepodařilo se dešifrovat příspěvek: V adrese chybí dešifrovací klíč (Možnou příčinou může být URL shortener?)",
+    "B": "B",
+    "KiB": "KiB",
+    "MiB": "MiB",
+    "GiB": "GiB",
+    "TiB": "TiB",
+    "PiB": "PiB",
+    "EiB": "EiB",
+    "ZiB": "ZiB",
+    "YiB": "YiB",
     "Format": "Formát",
     "Plain Text": "Prostý Text",
     "Source Code": "Zdrojový kód",
