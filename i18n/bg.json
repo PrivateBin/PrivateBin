@@ -29,54 +29,78 @@
     "Discussion": "Коментари",
     "Toggle navigation": "Включи или Изключи навигацията",
     "%d seconds": [
-        "%d секунди",
-        "%d секунда"
+        "%d second (singular)",
+        "%d seconds (1st plural)",
+        "%d seconds (2nd plural)",
+        "%d seconds (3rd plural)"
     ],
     "%d minutes": [
-        "%d минути",
-        "%d минута"
+        "%d minute (singular)",
+        "%d minutes (1st plural)",
+        "%d minutes (2nd plural)",
+        "%d minutes (3rd plural)"
     ],
     "%d hours": [
-        "%d часа",
-        "%d час"
+        "%d hour (singular)",
+        "%d hours (1st plural)",
+        "%d hours (2nd plural)",
+        "%d hours (3rd plural)"
     ],
     "%d days": [
-        "%d дни",
-        "%d ден"
+        "%d day (singular)",
+        "%d days (1st plural)",
+        "%d days (2nd plural)",
+        "%d days (3rd plural)"
     ],
     "%d weeks": [
-        "%d седмици",
-        "%d седмица"
+        "%d week (singular)",
+        "%d weeks (1st plural)",
+        "%d weeks (2nd plural)",
+        "%d weeks (3rd plural)"
     ],
     "%d months": [
-        "%d месеци",
-        "%d месец"
+        "%d month (singular)",
+        "%d months (1st plural)",
+        "%d months (2nd plural)",
+        "%d months (3rd plural)"
     ],
     "%d years": [
-        "%d години",
-        "%d година"
+        "%d year (singular)",
+        "%d years (1st plural)",
+        "%d years (2nd plural)",
+        "%d years (3rd plural)"
     ],
     "Never": "Никога",
     "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.": "Забележка: Това е пробна услуга: Информацията може да бъде изтрита по всяко време. Котета ще измрат ако злоупотребиш с услугата.",
     "This document will expire in %d seconds.": [
-        "Този документ изтича след една секунда.",
-        "Този документ изтича след %d секунди."
+        "This document will expire in %d second. (singular)",
+        "This document will expire in %d seconds (1st plural)",
+        "This document will expire in %d seconds (2nd plural)",
+        "This document will expire in %d seconds (3rd plural)"
     ],
     "This document will expire in %d minutes.": [
-        "Този документ изтича след една минута.",
-        "Този документ изтича след %d минути."
+        "This document will expire in %d minute. (singular)",
+        "This document will expire in %d minutes (1st plural)",
+        "This document will expire in %d minutes (2nd plural)",
+        "This document will expire in %d minutes (3rd plural)"
     ],
     "This document will expire in %d hours.": [
-        "Този документ изтича след един час.",
-        "Този документ изтича след %d часа."
+        "This document will expire in %d hour. (singular)",
+        "This document will expire in %d hours (1st plural)",
+        "This document will expire in %d hours (2nd plural)",
+        "This document will expire in %d hours (3rd plural)"
     ],
     "This document will expire in %d days.": [
-        "Този документ изтича след един ден.",
-        "Този документ изтича след %d дни."
+        "This document will expire in %d day. (singular)",
+        "This document will expire in %d days (1st plural)",
+        "This document will expire in %d days (2nd plural)",
+        "This document will expire in %d days (3rd plural)"
     ],
     "This document will expire in %d months.": [
-        "Този документ изтича след една година.",
-        "Този документ изтича след %d години."
+        "This document will expire in %d month. (singular)",
+        "This document will expire in %d months (1st plural)",
+        "This document will expire in %d months (2nd plural)",
+        "This document will expire in %d months (3rd plural)"
     ],
     "Please enter the password for this paste:": "Моля въведете паролата за това съдържание:",
     "Could not decrypt data (Wrong key?)": "Информацията не можеше да се дешифрова (Грешен ключ?)",
@@ -100,6 +124,15 @@
     "Delete data": "Изтриване на информацията",
     "Could not create paste: %s": "Създаването на връзката ви беше неуспешно: %s",
     "Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)": "Дешифроването на информацията беше неуспешно: Ключа за декриптиране липсва във връзката (Да не сте използвали услуга за пренасочване или скъсяване на връзката, което би изрязало части от нея?)",
+    "B": "B",
+    "KiB": "KiB",
+    "MiB": "MiB",
+    "GiB": "GiB",
+    "TiB": "TiB",
+    "PiB": "PiB",
+    "EiB": "EiB",
+    "ZiB": "ZiB",
+    "YiB": "YiB",
     "Format": "Format",
     "Plain Text": "Чист текст",
     "Source Code": "Изходен код",
