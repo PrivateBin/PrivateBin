@@ -29,78 +29,78 @@
     "Discussion": "Razprava",
     "Toggle navigation": "Preklopi navigacijo",
     "%d seconds": [
-        "%d sekunda",
-        "%d sekundi",
-        "%d sekunde",
-        "%d sekund"
+        "%d second (singular)",
+        "%d seconds (1st plural)",
+        "%d seconds (2nd plural)",
+        "%d seconds (3rd plural)"
     ],
     "%d minutes": [
-        "%d minuta",
-        "%d minuti",
-        "%d minute",
-        "%d minut"
+        "%d minute (singular)",
+        "%d minutes (1st plural)",
+        "%d minutes (2nd plural)",
+        "%d minutes (3rd plural)"
     ],
     "%d hours": [
-        "%d ura",
-        "%d uri",
-        "%d ure",
-        "%d ur"
+        "%d hour (singular)",
+        "%d hours (1st plural)",
+        "%d hours (2nd plural)",
+        "%d hours (3rd plural)"
     ],
     "%d days": [
-        "%d dan",
-        "%d dneva",
-        "%d dnevi",
-        "%d dni"
+        "%d day (singular)",
+        "%d days (1st plural)",
+        "%d days (2nd plural)",
+        "%d days (3rd plural)"
     ],
     "%d weeks": [
-        "%d teden",
-        "%d tedna",
-        "%d tedni",
-        "%d tednov"
+        "%d week (singular)",
+        "%d weeks (1st plural)",
+        "%d weeks (2nd plural)",
+        "%d weeks (3rd plural)"
     ],
     "%d months": [
-        "%d mesec",
-        "%d meseca",
-        "%d meseci",
-        "%d mesecev"
+        "%d month (singular)",
+        "%d months (1st plural)",
+        "%d months (2nd plural)",
+        "%d months (3rd plural)"
     ],
     "%d years": [
-        "%d leto",
-        "%d leti",
-        "%d leta",
-        "%d let"
+        "%d year (singular)",
+        "%d years (1st plural)",
+        "%d years (2nd plural)",
+        "%d years (3rd plural)"
     ],
     "Never": "Nikoli",
     "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.": "Ne pozabi: To je testna storitev: Podatki so lahko kadarkoli pobrisani. Mucki bodo umrli, če boš zlorabljala to storitev.",
     "This document will expire in %d seconds.": [
-        "Ta dokument bo potekel čez %d sekundo.",
-        "Ta dokument bo potekel čez %d sekundi.",
-        "Ta dokument bo potekel čez %d sekunde.",
-        "Ta dokument bo potekel čez %d sekund."
+        "This document will expire in %d second. (singular)",
+        "This document will expire in %d seconds (1st plural)",
+        "This document will expire in %d seconds (2nd plural)",
+        "This document will expire in %d seconds (3rd plural)"
     ],
     "This document will expire in %d minutes.": [
-        "Ta dokument bo potekel čez %d minuto.",
-        "Ta dokument bo potekel čez %d minuti.",
-        "Ta dokument bo potekel čez %d minute.",
-        "Ta dokument bo potekel čez %d minut."
+        "This document will expire in %d minute. (singular)",
+        "This document will expire in %d minutes (1st plural)",
+        "This document will expire in %d minutes (2nd plural)",
+        "This document will expire in %d minutes (3rd plural)"
     ],
     "This document will expire in %d hours.": [
-        "Ta dokument bo potekel čez %d uro.",
-        "Ta dokument bo potekel čez %d uri.",
-        "Ta dokument bo potekel čez %d ure.",
-        "Ta dokument bo potekel čez %d ur."
+        "This document will expire in %d hour. (singular)",
+        "This document will expire in %d hours (1st plural)",
+        "This document will expire in %d hours (2nd plural)",
+        "This document will expire in %d hours (3rd plural)"
     ],
     "This document will expire in %d days.": [
-        "Ta dokument bo potekel čez %d dan.",
-        "Ta dokument bo potekel čez %d dni.",
-        "Ta dokument bo potekel čez %d dni.",
-        "Ta dokument bo potekel čez %d dni."
+        "This document will expire in %d day. (singular)",
+        "This document will expire in %d days (1st plural)",
+        "This document will expire in %d days (2nd plural)",
+        "This document will expire in %d days (3rd plural)"
     ],
     "This document will expire in %d months.": [
-        "Ta dokument bo potekel čez %d mesec.",
-        "Ta dokument bo potekel čez %d meseca.",
-        "Ta dokument bo potekel čez %d mesece.",
-        "Ta dokument bo potekel čez %d mesecev."
+        "This document will expire in %d month. (singular)",
+        "This document will expire in %d months (1st plural)",
+        "This document will expire in %d months (2nd plural)",
+        "This document will expire in %d months (3rd plural)"
     ],
     "Please enter the password for this paste:": "Prosim vnesi geslo tega prilepka:",
     "Could not decrypt data (Wrong key?)": "Nemogoče odkodirati podakte (Imaš napačen ključ?)",
