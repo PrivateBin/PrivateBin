@@ -1,28 +1,3 @@
 files:
-  - source: '**/*'
-    ignore:
-      - /i18n
-      - /img
-      - '**/.*'
-      - '**/*.yml'
-      - /Makefile
-      - /*.*
-      - /vendor
-      - /tst
-      - /doc
-      - /.github/
-      - /css
-      - /cfg
-      - /js/test
-      - /js/base*
-      - /js/bootstrap*
-      - /js/*.json*
-      - /js/raw*
-      - /js/common.js
-      - /js/jquery*
-      - /js/kjua*
-      - /js/prettify*
-      - /js/purify*
-      - /js/showdown*
-      - /js/zlib*
+  - source: /i18n/??.json
     translation: /i18n/%two_letters_code%.json
