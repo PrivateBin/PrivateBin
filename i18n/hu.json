@@ -12,7 +12,7 @@
     "You are unlucky. Try again.": "Peched volt, próbáld újra.",
     "Error saving comment. Sorry.": "Nem sikerült menteni a hozzászólást. Bocs.",
     "Error saving paste. Sorry.": "Nem sikerült menteni a bejegyzést. Bocs.",
-    "Invalid paste ID.": "Érvénytelen bejegyzés azonosító.",
+    "Invalid paste ID.": "Érvénytelen bejegyzésazonosító.",
     "Paste is not of burn-after-reading type.": "A bejegyzés nem semmisül meg azonnal olvasás után.",
     "Wrong deletion token. Paste was not deleted.": "Hibás törlési azonosító. A bejegyzés nem lett törölve.",
     "Paste was properly deleted.": "A bejegyzés sikeresen törölve.",
@@ -73,25 +73,25 @@
     "Never": "Soha",
     "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.": "Megjegyzés: ez egy teszt szolgáltatás, az adatok bármikor törlődhetnek. Ha visszaélsz vele, kiscicák bánhatják! :)",
     "This document will expire in %d seconds.": [
-        "Ez a bejegyzés %d másodperc után megsemmisül.",
+        "Ez a bejegyzés %d másodperc múlva megsemmisül.",
         "Ez a bejegyzés %d másodperc múlva megsemmisül.",
         "This document will expire in %d seconds (2nd plural)",
         "This document will expire in %d seconds (3rd plural)"
     ],
     "This document will expire in %d minutes.": [
-        "Ez a bejegyzés %d perc után megsemmisül.",
+        "Ez a bejegyzés %d perc múlva megsemmisül.",
         "Ez a bejegyzés %d perc múlva megsemmisül.",
         "This document will expire in %d minutes (2nd plural)",
         "This document will expire in %d minutes (3rd plural)"
     ],
     "This document will expire in %d hours.": [
-        "Ez a bejegyzés %d óra után megsemmisül.",
+        "Ez a bejegyzés %d óra múlva megsemmisül.",
         "Ez a bejegyzés %d óra múlva megsemmisül.",
         "This document will expire in %d hours (2nd plural)",
         "This document will expire in %d hours (3rd plural)"
     ],
     "This document will expire in %d days.": [
-        "Ez a bejegyzés %d nap után megsemmisül.",
+        "Ez a bejegyzés %d nap múlva megsemmisül.",
         "Ez a bejegyzés %d nap múlva megsemmisül.",
         "This document will expire in %d days (2nd plural)",
         "This document will expire in %d days (3rd plural)"
@@ -108,7 +108,7 @@
     "FOR YOUR EYES ONLY. Don't close this window, this message can't be displayed again.": "EZT A BEJEGYZÉST CSAK TE LÁTHATOD!!! Ne csukd be ezt az ablakot, mivel nem tudod újra megnézni. Az ugyanis az első olvasás után rögtön megsemmisül.",
     "Could not decrypt comment; Wrong key?": "Nem tudtuk dekódolni a hozzászólást. Talán rossz kulcsot adtál meg?",
     "Reply": "Válasz",
-    "Anonymous": "Anonymous",
+    "Anonymous": "Névtelen",
     "Avatar generated from IP address": "Avatar (az IP cím alapján generáljuk)",
     "Add comment": "Hozzászólok",
     "Optional nickname…": "Becenév (már ha meg akarod adni)",
@@ -158,8 +158,8 @@
     "Preparing new paste…": "Új bejegyzés előkészítése...",
     "In case this message never disappears please have a look at <a href=\"%s\">this FAQ for information to troubleshoot</a>.": "Abban az esetben, ha ez az üzenet mindig látható lenne, látogass el a <a href=\"%s\">Gyakran Ismételt Kérdések szekcióba a megoldásához</a>.",
     "+++ no paste text +++": "+++ nincs beillesztett szöveg +++",
-    "Could not get paste data: %s": "Could not get paste data: %s",
-    "QR code": "QR code",
+    "Could not get paste data: %s": "Az adat megszerzése nem sikerült: %s",
+    "QR code": "QR kód",
     "This website is using an insecure HTTP connection! Please use it only for testing.": "This website is using an insecure HTTP connection! Please use it only for testing.",
     "For more information <a href=\"%s\">see this FAQ entry</a>.": "For more information <a href=\"%s\">see this FAQ entry</a>.",
     "Your browser may require an HTTPS connection to support the WebCrypto API. Try <a href=\"%s\">switching to HTTPS</a>.": "Your browser may require an HTTPS connection to support the WebCrypto API. Try <a href=\"%s\">switching to HTTPS</a>.",
@@ -171,11 +171,11 @@
     "Notice:": "Notice:",
     "This link will expire after %s.": "This link will expire after %s.",
     "This link can only be accessed once, do not use back or refresh button in your browser.": "This link can only be accessed once, do not use back or refresh button in your browser.",
-    "Link:": "Link:",
+    "Link:": "Hivatkozás:",
     "Recipient may become aware of your timezone, convert time to UTC?": "Recipient may become aware of your timezone, convert time to UTC?",
-    "Use Current Timezone": "Use Current Timezone",
-    "Convert To UTC": "Convert To UTC",
-    "Close": "Close",
+    "Use Current Timezone": "Az aktuális időzóna használata",
+    "Convert To UTC": "Átalakítás UTC időzónára",
+    "Close": "Bezárás",
     "Encrypted note on PrivateBin": "Encrypted note on PrivateBin",
     "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too."
 }
