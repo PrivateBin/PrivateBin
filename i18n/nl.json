@@ -42,7 +42,7 @@
     ],
     "%d hours": [
         "%d uur",
-        "%d hours (1st plural)",
+        "%d uren",
         "%d hours (2nd plural)",
         "%d hours (3rd plural)"
     ],
@@ -66,7 +66,7 @@
     ],
     "%d years": [
         "%d jaar",
-        "%d years (1st plural)",
+        "%d jaaren",
         "%d years (2nd plural)",
         "%d years (3rd plural)"
     ],
@@ -86,7 +86,7 @@
     ],
     "This document will expire in %d hours.": [
         "Dit document verloopt over %d uur.",
-        "This document will expire in %d hours (1st plural)",
+        "Dit document verloopt over %d uren.",
         "This document will expire in %d hours (2nd plural)",
         "This document will expire in %d hours (3rd plural)"
     ],
