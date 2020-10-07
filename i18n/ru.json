@@ -32,43 +32,43 @@
         "%d секунду",
         "%d секунды",
         "%d секунд",
-        "%d seconds (3rd plural)"
+        "%d секунд"
     ],
     "%d minutes": [
         "%d минуту",
         "%d минуты",
         "%d минут",
-        "%d minutes (3rd plural)"
+        "%d минут"
     ],
     "%d hours": [
         "%d час",
         "%d часа",
         "%d часов",
-        "%d hours (3rd plural)"
+        "%d часов"
     ],
     "%d days": [
         "%d день",
         "%d дня",
         "%d дней",
-        "%d days (3rd plural)"
+        "%d дней"
     ],
     "%d weeks": [
         "%d неделю",
         "%d недели",
         "%d недель",
-        "%d weeks (3rd plural)"
+        "%d недель"
     ],
     "%d months": [
         "%d месяц",
         "%d месяца",
         "%d месяцев",
-        "%d months (3rd plural)"
+        "%d месяцев"
     ],
     "%d years": [
         "%d год",
         "%d года",
         "%d лет",
-        "%d years (3rd plural)"
+        "%d лет"
     ],
     "Never": "Никогда",
     "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.": "Примечание: Этот сервис тестовый: Данные могут быть удалены в любое время. Котята умрут, если вы будете злоупотреблять серсисом.",
@@ -76,31 +76,31 @@
         "Документ будет удален через %d секунду.",
         "Документ будет удален через %d секунды.",
         "Документ будет удален через %d секунд.",
-        "This document will expire in %d seconds (3rd plural)"
+        "Документ будет удален через %d секунд."
     ],
     "This document will expire in %d minutes.": [
         "Документ будет удален через %d минуту.",
         "Документ будет удален через %d минуты.",
         "Документ будет удален через %d минут.",
-        "This document will expire in %d minutes (3rd plural)"
+        "Документ будет удален через %d минут."
     ],
     "This document will expire in %d hours.": [
         "Документ будет удален через %d час.",
         "Документ будет удален через %d часа.",
         "Документ будет удален через %d часов.",
-        "This document will expire in %d hours (3rd plural)"
+        "Документ будет удален через %d часов."
     ],
     "This document will expire in %d days.": [
         "Документ будет удален через %d день.",
         "Документ будет удален через %d дня.",
         "Документ будет удален через %d дней.",
-        "This document will expire in %d days (3rd plural)"
+        "Документ будет удален через %d дней."
     ],
     "This document will expire in %d months.": [
         "Документ будет удален через %d месяц.",
         "Документ будет удален через %d месяца.",
         "Документ будет удален через %d месяцев.",
-        "This document will expire in %d months (3rd plural)"
+        "Документ будет удален через %d месяцев."
     ],
     "Please enter the password for this paste:": "Пожалуйста, введите пароль от записи:",
     "Could not decrypt data (Wrong key?)": "Невозможно расшифровать данные (Неверный ключ?)",
@@ -176,6 +176,6 @@
     "Use Current Timezone": "Использовать текущий часовой пояс",
     "Convert To UTC": "Конвертировать в UTC",
     "Close": "Закрыть",
-    "Encrypted note on PrivateBin": "Зашифрованная запиь на PrivateBin",
+    "Encrypted note on PrivateBin": "Зашифрованная запись на PrivateBin",
     "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "Посетите эту ссылку чтобы просмотреть запись. Передача ссылки кому либо позволит им получить доступ к записи тоже."
 }
