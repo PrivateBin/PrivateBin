@@ -6,7 +6,12 @@
     "Paste does not exist, has expired or has been deleted.": "Innlegget eksisterer ikke, er utløpt eller har blitt slettet.",
     "%s requires php %s or above to work. Sorry.": "Beklager, %s krever php %s eller nyere for å kjøre.",
     "%s requires configuration section [%s] to be present in configuration file.": "%s krever konfigurasjonsdel [%s] å være til stede i konfigurasjonsfilen .",
-    "Please wait %d seconds between each post.": "Vennligst vent %d sekunder mellom hvert innlegg.",
+    "Please wait %d seconds between each post.": [
+        "Please wait %d second between each post. (singular)",
+        "Please wait %d seconds between each post. (1st plural)",
+        "Please wait %d seconds between each post. (2nd plural)",
+        "Please wait %d seconds between each post. (3rd plural)"
+    ],
     "Paste is limited to %s of encrypted data.": "Innlegg er begrenset til %s av kryptert data.",
     "Invalid data.": "Ugyldige data.",
     "You are unlucky. Try again.": "Du er uheldig. Prøv igjen.",
@@ -74,33 +79,33 @@
     "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.": "Merk: Dette er en test tjeneste: Data kan slettes når som helst. Kattunger vil dø hvis du misbruker denne tjenesten.",
     "This document will expire in %d seconds.": [
         "Dette dokumentet vil utløpe om %d sekund.",
-        "Dette dokumentet vil utløpe om %d sekunder.",
-        "Dette dokumentet vil utløpe om %d sekunder",
-        "Dette dokumentet vil utløpe om %d sekunder"
+        "This document will expire in %d seconds. (1st plural)",
+        "This document will expire in %d seconds. (2nd plural)",
+        "This document will expire in %d seconds. (3rd plural)"
     ],
     "This document will expire in %d minutes.": [
         "Dette dokumentet vil utløpe om %d minutt.",
-        "Dette dokumentet vil utløpe om %d minutter.",
-        "Dette dokumentet vil utløpe om %d minutter",
-        "Dette dokumentet vil utløpe om %d minutter"
+        "This document will expire in %d minutes. (1st plural)",
+        "This document will expire in %d minutes. (2nd plural)",
+        "This document will expire in %d minutes. (3rd plural)"
     ],
     "This document will expire in %d hours.": [
         "Dette dokumentet vil utløpe om %d time.",
-        "Dette dokumentet vil utløpe om %d timer.",
-        "Dette dokumentet vil utløpe om %d timer",
-        "Dette dokumentet vil utløpe om %d timer"
+        "This document will expire in %d hours. (1st plural)",
+        "This document will expire in %d hours. (2nd plural)",
+        "This document will expire in %d hours. (3rd plural)"
     ],
     "This document will expire in %d days.": [
         "Dette dokumentet vil utløpe om %d dag.",
-        "Dette dokumentet vil utløpe om %d dager.",
-        "Dette dokumentet vil utløpe om %d dager",
-        "Dette dokumentet vil utløpe om %d dager"
+        "This document will expire in %d days. (1st plural)",
+        "This document will expire in %d days. (2nd plural)",
+        "This document will expire in %d days. (3rd plural)"
     ],
     "This document will expire in %d months.": [
         "Dette dokumentet vil utløpe om %d måned.",
-        "Dette dokumentet vil utløpe om %d måneder.",
-        "Dette dokumentet vil utløpe om %d måneder",
-        "Dette dokumentet vil utløpe om %d måneder"
+        "This document will expire in %d months. (1st plural)",
+        "This document will expire in %d months. (2nd plural)",
+        "This document will expire in %d months. (3rd plural)"
     ],
     "Please enter the password for this paste:": "Vennligst skriv inn passordet for dette innlegget:",
     "Could not decrypt data (Wrong key?)": "Kunne ikke dekryptere data (Feil nøkkel?)",

@@ -6,7 +6,12 @@
     "Paste does not exist, has expired or has been deleted.": "Информацията не съществува, срокът и е изтекъл или е била изтрита.",
     "%s requires php %s or above to work. Sorry.": "%s има нужда от PHP %s или по-нова, за да работи. Съжалявам.",
     "%s requires configuration section [%s] to be present in configuration file.": "%s задължава отдела от настройките [%s] да съществува във файла със настройките.",
-    "Please wait %d seconds between each post.": "Моля изчакайте %d секунди между всяка публикация.",
+    "Please wait %d seconds between each post.": [
+        "Please wait %d second between each post. (singular)",
+        "Please wait %d seconds between each post. (1st plural)",
+        "Please wait %d seconds between each post. (2nd plural)",
+        "Please wait %d seconds between each post. (3rd plural)"
+    ],
     "Paste is limited to %s of encrypted data.": "Съдържанието е ограничено до %s криптирана информация.",
     "Invalid data.": "Невалидна информация.",
     "You are unlucky. Try again.": "Нямаш късмет. Пробвай отново.",
@@ -74,33 +79,33 @@
     "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.": "Забележка: Това е пробна услуга: Информацията може да бъде изтрита по всяко време. Котета ще измрат ако злоупотребиш с услугата.",
     "This document will expire in %d seconds.": [
         "Този документ изтича след една секунда.",
-        "Този документ изтича след %d секунди.",
-        "This document will expire in %d seconds (2nd plural)",
-        "This document will expire in %d seconds (3rd plural)"
+        "This document will expire in %d seconds. (1st plural)",
+        "This document will expire in %d seconds. (2nd plural)",
+        "This document will expire in %d seconds. (3rd plural)"
     ],
     "This document will expire in %d minutes.": [
         "Този документ изтича след една минута.",
-        "Този документ изтича след %d минути.",
-        "This document will expire in %d minutes (2nd plural)",
-        "This document will expire in %d minutes (3rd plural)"
+        "This document will expire in %d minutes. (1st plural)",
+        "This document will expire in %d minutes. (2nd plural)",
+        "This document will expire in %d minutes. (3rd plural)"
     ],
     "This document will expire in %d hours.": [
         "Този документ изтича след един час.",
-        "Този документ изтича след %d часа.",
-        "This document will expire in %d hours (2nd plural)",
-        "This document will expire in %d hours (3rd plural)"
+        "This document will expire in %d hours. (1st plural)",
+        "This document will expire in %d hours. (2nd plural)",
+        "This document will expire in %d hours. (3rd plural)"
     ],
     "This document will expire in %d days.": [
         "Този документ изтича след един ден.",
-        "Този документ изтича след %d дни.",
-        "This document will expire in %d days (2nd plural)",
-        "This document will expire in %d days (3rd plural)"
+        "This document will expire in %d days. (1st plural)",
+        "This document will expire in %d days. (2nd plural)",
+        "This document will expire in %d days. (3rd plural)"
     ],
     "This document will expire in %d months.": [
         "Този документ изтича след една година.",
-        "Този документ изтича след %d години.",
-        "This document will expire in %d months (2nd plural)",
-        "This document will expire in %d months (3rd plural)"
+        "This document will expire in %d months. (1st plural)",
+        "This document will expire in %d months. (2nd plural)",
+        "This document will expire in %d months. (3rd plural)"
     ],
     "Please enter the password for this paste:": "Моля въведете паролата за това съдържание:",
     "Could not decrypt data (Wrong key?)": "Информацията не можеше да се дешифрова (Грешен ключ?)",

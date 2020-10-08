@@ -6,7 +6,12 @@
     "Paste does not exist, has expired or has been deleted.": "Запись не существует, просрочена или была удалена.",
     "%s requires php %s or above to work. Sorry.": "Для работы %s требуется php %s или выше. Извините.",
     "%s requires configuration section [%s] to be present in configuration file.": "%s необходимо наличие секции [%s] в конфигурационном файле.",
-    "Please wait %d seconds between each post.": "Пожалуйста, ожидайте %d секунду между каждыми записями.",
+    "Please wait %d seconds between each post.": [
+        "Please wait %d second between each post. (singular)",
+        "Please wait %d seconds between each post. (1st plural)",
+        "Please wait %d seconds between each post. (2nd plural)",
+        "Please wait %d seconds between each post. (3rd plural)"
+    ],
     "Paste is limited to %s of encrypted data.": "Размер записи ограничен %s зашифрованных данных.",
     "Invalid data.": "Неверные данные.",
     "You are unlucky. Try again.": "Вам не повезло. Попробуйте еще раз.",
@@ -74,33 +79,33 @@
     "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.": "Примечание: Этот сервис тестовый: Данные могут быть удалены в любое время. Котята умрут, если вы будете злоупотреблять серсисом.",
     "This document will expire in %d seconds.": [
         "Документ будет удален через %d секунду.",
-        "Документ будет удален через %d секунды.",
-        "Документ будет удален через %d секунд.",
-        "Документ будет удален через %d секунд."
+        "This document will expire in %d seconds. (1st plural)",
+        "This document will expire in %d seconds. (2nd plural)",
+        "This document will expire in %d seconds. (3rd plural)"
     ],
     "This document will expire in %d minutes.": [
         "Документ будет удален через %d минуту.",
-        "Документ будет удален через %d минуты.",
-        "Документ будет удален через %d минут.",
-        "Документ будет удален через %d минут."
+        "This document will expire in %d minutes. (1st plural)",
+        "This document will expire in %d minutes. (2nd plural)",
+        "This document will expire in %d minutes. (3rd plural)"
     ],
     "This document will expire in %d hours.": [
         "Документ будет удален через %d час.",
-        "Документ будет удален через %d часа.",
-        "Документ будет удален через %d часов.",
-        "Документ будет удален через %d часов."
+        "This document will expire in %d hours. (1st plural)",
+        "This document will expire in %d hours. (2nd plural)",
+        "This document will expire in %d hours. (3rd plural)"
     ],
     "This document will expire in %d days.": [
         "Документ будет удален через %d день.",
-        "Документ будет удален через %d дня.",
-        "Документ будет удален через %d дней.",
-        "Документ будет удален через %d дней."
+        "This document will expire in %d days. (1st plural)",
+        "This document will expire in %d days. (2nd plural)",
+        "This document will expire in %d days. (3rd plural)"
     ],
     "This document will expire in %d months.": [
         "Документ будет удален через %d месяц.",
-        "Документ будет удален через %d месяца.",
-        "Документ будет удален через %d месяцев.",
-        "Документ будет удален через %d месяцев."
+        "This document will expire in %d months. (1st plural)",
+        "This document will expire in %d months. (2nd plural)",
+        "This document will expire in %d months. (3rd plural)"
     ],
     "Please enter the password for this paste:": "Пожалуйста, введите пароль от записи:",
     "Could not decrypt data (Wrong key?)": "Невозможно расшифровать данные (Неверный ключ?)",
