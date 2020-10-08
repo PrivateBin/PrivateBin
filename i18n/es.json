@@ -31,76 +31,76 @@
     "%d seconds": [
         "%d segundo",
         "%d segundos",
-        "%d seconds (2nd plural)",
-        "%d seconds (3rd plural)"
+        "%d segundos",
+        "%d segundos"
     ],
     "%d minutes": [
         "%d minuto",
         "%d minutos",
-        "%d minutes (2nd plural)",
-        "%d minutes (3rd plural)"
+        "%d minutos",
+        "%d minutos"
     ],
     "%d hours": [
         "%d hora",
         "%d horas",
-        "%d hours (2nd plural)",
-        "%d hours (3rd plural)"
+        "%d horas",
+        "%d horas"
     ],
     "%d days": [
         "%d día",
         "%d días",
-        "%d days (2nd plural)",
-        "%d days (3rd plural)"
+        "%d días",
+        "%d días"
     ],
     "%d weeks": [
         "%d semana",
         "%d semanas",
-        "%d weeks (2nd plural)",
-        "%d weeks (3rd plural)"
+        "%d semanas",
+        "%d semanas"
     ],
     "%d months": [
         "%d mes",
         "%d meses",
-        "%d months (2nd plural)",
-        "%d months (3rd plural)"
+        "%d minutos",
+        "%d meses"
     ],
     "%d years": [
         "%d año",
         "%d años",
-        "%d years (2nd plural)",
-        "%d years (3rd plural)"
+        "%d años",
+        "%d años"
     ],
     "Never": "Nunca",
     "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.": "Nota: Este es un servicio de prueba. Los datos pueden ser eliminados en cualquier momento. Morirán gatitos si abusas de este servicio.",
     "This document will expire in %d seconds.": [
         "Este documento caducará en un segundo.",
         "Este documento caducará en %d segundos.",
-        "This document will expire in %d seconds (2nd plural)",
-        "This document will expire in %d seconds (3rd plural)"
+        "Este documento caducará en %d segundos",
+        "Este documento caducará en %d segundos"
     ],
     "This document will expire in %d minutes.": [
         "Este documento caducará en un minuto.",
         "Este documento caducará en %d minutos.",
-        "This document will expire in %d minutes (2nd plural)",
-        "This document will expire in %d minutes (3rd plural)"
+        "Este documento caducará en %d minutos",
+        "Este documento caducará en %d minutos"
     ],
     "This document will expire in %d hours.": [
         "Este documento caducará en una hora.",
         "Este documento caducará en %d horas.",
-        "This document will expire in %d hours (2nd plural)",
-        "This document will expire in %d hours (3rd plural)"
+        "Este documento caducará en %d horas",
+        "Este documento caducará en %d horas"
     ],
     "This document will expire in %d days.": [
         "Este documento caducará en un día.",
         "Este documento caducará en %d días.",
-        "This document will expire in %d days (2nd plural)",
-        "This document will expire in %d days (3rd plural)"
+        "Este documento caducará en %d días",
+        "Este documento caducará en %d días"
     ],
     "This document will expire in %d months.": [
         "Este documento caducará en un mes.",
         "Este documento caducará en %d meses.",
-        "This document will expire in %d months (2nd plural)",
-        "This document will expire in %d months (3rd plural)"
+        "Este documento caducará en %d meses",
+        "Este documento caducará en %d meses"
     ],
     "Please enter the password for this paste:": "Por favor ingrese la contraseña para este \"paste\":",
     "Could not decrypt data (Wrong key?)": "No fue posible descifrar los datos (¿Clave errónea?)",
@@ -141,8 +141,8 @@
     "Cloned: '%s'": "Clonado: '%s'.",
     "The cloned file '%s' was attached to this paste.": "El archivo clonado '%s' ha sido adjuntado a este texto.",
     "Attach a file": "Adjuntar archivo",
-    "alternatively drag & drop a file or paste an image from the clipboard": "alternatively drag & drop a file or paste an image from the clipboard",
-    "File too large, to display a preview. Please download the attachment.": "File too large, to display a preview. Please download the attachment.",
+    "alternatively drag & drop a file or paste an image from the clipboard": "alternativamente, arrastre y suelte un archivo o pegue una imagen desde el portapapeles",
+    "File too large, to display a preview. Please download the attachment.": "Archivo demasiado grande para mostrar una vista previa. Por favor, descargue el archivo adjunto.",
     "Remove attachment": "Remover adjunto",
     "Your browser does not support uploading encrypted files. Please use a newer browser.": "Tu navegador no admite la carga de archivos cifrados. Utilice un navegador más reciente.",
     "Invalid attachment.": "Adjunto inválido.",

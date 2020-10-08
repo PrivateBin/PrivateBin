@@ -31,76 +31,76 @@
     "%d seconds": [
         "%d segundo",
         "%d segundos",
-        "%d seconds (2nd plural)",
-        "%d seconds (3rd plural)"
+        "%d segundos",
+        "%d segundos"
     ],
     "%d minutes": [
         "%d minuto",
         "%d minutos",
-        "%d minutes (2nd plural)",
-        "%d minutes (3rd plural)"
+        "%d minutos",
+        "%d minutos"
     ],
     "%d hours": [
         "%d hora",
         "%d horas",
-        "%d hours (2nd plural)",
-        "%d hours (3rd plural)"
+        "%d horas (2° plural)",
+        "%d horas"
     ],
     "%d days": [
         "%d dia",
         "%d dias",
-        "%d days (2nd plural)",
-        "%d days (3rd plural)"
+        "%d dias",
+        "%d dias"
     ],
     "%d weeks": [
         "%d semana",
         "%d semanas",
-        "%d weeks (2nd plural)",
-        "%d weeks (3rd plural)"
+        "%d semanas",
+        "%d semanas"
     ],
     "%d months": [
         "%d mês",
         "%d meses",
-        "%d months (2nd plural)",
-        "%d months (3rd plural)"
+        "%d meses",
+        "%d meses"
     ],
     "%d years": [
         "%d ano",
         "%d anos",
-        "%d years (2nd plural)",
-        "%d years (3rd plural)"
+        "%d anos",
+        "%d anos"
     ],
     "Never": "Nunca",
     "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.": "Nota: Este é um serviço de teste. Dados podem ser perdidos a qualquer momento. Gatinhos morrerão se você abusar desse serviço.",
     "This document will expire in %d seconds.": [
         "Este documento irá expirar em um segundo.",
         "Este documento irá expirar em %d segundos.",
-        "This document will expire in %d seconds (2nd plural)",
-        "This document will expire in %d seconds (3rd plural)"
+        "Este documento irá expirar em %d segundos",
+        "Este documento irá expirar em %d segundos"
     ],
     "This document will expire in %d minutes.": [
         "Este documento irá expirar em um minuto.",
         "Este documento irá expirar em %d minutos.",
-        "This document will expire in %d minutes (2nd plural)",
-        "This document will expire in %d minutes (3rd plural)"
+        "Este documento irá expirar em %d minutos",
+        "Este documento irá expirar em %d minutos"
     ],
     "This document will expire in %d hours.": [
         "Este documento irá expirar em uma hora.",
         "Este documento irá expirar em %d horas.",
-        "This document will expire in %d hours (2nd plural)",
-        "This document will expire in %d hours (3rd plural)"
+        "Este documento irá expirar em %d horas",
+        "Este documento irá expirar em %d horas"
     ],
     "This document will expire in %d days.": [
         "Este documento irá expirar em um dia.",
         "Este documento irá expirar em %d dias.",
-        "This document will expire in %d days (2nd plural)",
-        "This document will expire in %d days (3rd plural)"
+        "Este documento irá expirar em %d dias",
+        "Este documento irá expirar em %d dias"
     ],
     "This document will expire in %d months.": [
         "Este documento irá expirar em um mês.",
         "Este documento irá expirar em %d meses.",
-        "This document will expire in %d months (2nd plural)",
-        "This document will expire in %d months (3rd plural)"
+        "Este documento irá expirar em %d meses",
+        "Este documento irá expirar em %d meses"
     ],
     "Please enter the password for this paste:": "Por favor, digite a senha para essa cópia:",
     "Could not decrypt data (Wrong key?)": "Não foi possível decifrar os dados (Chave errada?)",
@@ -141,8 +141,8 @@
     "Cloned: '%s'": "Clonado: '%s'",
     "The cloned file '%s' was attached to this paste.": "O arquivo clonado '%s' foi anexado a essa cópia.",
     "Attach a file": "Anexar um arquivo",
-    "alternatively drag & drop a file or paste an image from the clipboard": "alternatively drag & drop a file or paste an image from the clipboard",
-    "File too large, to display a preview. Please download the attachment.": "File too large, to display a preview. Please download the attachment.",
+    "alternatively drag & drop a file or paste an image from the clipboard": "alternativamente, arraste e solte um arquivo ou cole uma imagem da área de transferência",
+    "File too large, to display a preview. Please download the attachment.": "Arquivo muito grande para exibir uma prévia. Por favor, faça o download do anexo.",
     "Remove attachment": "Remover anexo",
     "Your browser does not support uploading encrypted files. Please use a newer browser.": "Seu navegador não permite subir arquivos cifrados. Por favor, utilize um navegador mais recente.",
     "Invalid attachment.": "Anexo inválido.",
@@ -176,6 +176,6 @@
     "Use Current Timezone": "Usar Fuso Horário Atual",
     "Convert To UTC": "Converter para UTC",
     "Close": "Fechar",
-    "Encrypted note on PrivateBin": "Encrypted note on PrivateBin",
-    "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too."
+    "Encrypted note on PrivateBin": "Nota criptografada no PrivateBin",
+    "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "Visite esse link para ver a nota. Dar a URL para qualquer um permite que eles também acessem a nota."
 }
