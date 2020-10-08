@@ -70,9 +70,9 @@ if ($MARKDOWN) :
 <?php
 endif;
 ?>
-		<script type="text/javascript" data-cfasync="false" src="js/purify-2.0.14.js" integrity="sha512-kbLhjIj/m/AW++o2eErCfqPueoX2btJo7VznhEC2YQRbVR/+Eup3w7thwDZwoCZ/gLrPxTX3W4H2KzupLg2PKA==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/purify-2.1.1.js" integrity="sha512-0RqB620aQhcT40T4kxf/vx3J4DOmFsqcGu2mPha21ZqufRsth3MsiU35ffSHX0OIJbE92XSKyvNcL1I6sYhh4w==" crossorigin="anonymous"></script>
 		<script type="text/javascript" data-cfasync="false" src="js/legacy.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-LYos+qXHIRqFf5ZPNphvtTB0cgzHUizu2wwcOwcwz/VIpRv9lpcBgPYz4uq6jx0INwCAj6Fbnl5HoKiLufS2jg==" crossorigin="anonymous"></script>
-		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-HHR606wkEJVvf3XzEq81itazhXqfj3z54F2Hp2HfBPpUpXjvsI3DAxohlhOR669XLLS/k4v9+QCsQLNWegEA7A==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-9cJdKFvcsrk3G411+Wp5Y6ZvFE6UUMKVzCB6LLXhg1BaN/jkviL01Ox+4HzbYNflFuSYK0USVFLeCW89774A6w==" crossorigin="anonymous"></script>
 		<!-- icon -->
 		<link rel="apple-touch-icon" href="<?php echo I18n::encode($BASEPATH); ?>img/apple-touch-icon.png" sizes="180x180" />
 		<link rel="icon" type="image/png" href="img/favicon-32x32.png" sizes="32x32" />

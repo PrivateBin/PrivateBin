@@ -5613,8 +5613,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             I18n.loadTranslations();
 
             DOMPurify.setConfig({
-                ALLOWED_URI_REGEXP: /^(?:(?:(?:f|ht)tps?|mailto|magnet):)/i,
-                SAFE_FOR_JQUERY: true
+                ALLOWED_URI_REGEXP: /^(?:(?:(?:f|ht)tps?|mailto|magnet):)/i
             });
 
             // Add a hook to make all links open a new window
