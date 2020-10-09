@@ -36,44 +36,44 @@
     "%d seconds": [
         "%d 秒",
         "%d 秒",
-        "%d seconds (2nd plural)",
-        "%d seconds (3rd plural)"
+        "%d 秒",
+        "%d 秒"
     ],
     "%d minutes": [
         "%d 分钟",
         "%d 分钟",
-        "%d minutes (2nd plural)",
-        "%d minutes (3rd plural)"
+        "%d 秒",
+        "%d 秒"
     ],
     "%d hours": [
         "%d 小时",
         "%d 小时",
-        "%d hours (2nd plural)",
-        "%d hours (3rd plural)"
+        "%d 小时",
+        "%d 小时"
     ],
     "%d days": [
         "%d 天",
         "%d 天",
-        "%d days (2nd plural)",
-        "%d days (3rd plural)"
+        "%d 天",
+        "%d 天"
     ],
     "%d weeks": [
         "%d 周",
         "%d 周",
-        "%d weeks (2nd plural)",
-        "%d weeks (3rd plural)"
+        "%d 周",
+        "%d 周"
     ],
     "%d months": [
         "%d 个月",
         "%d 个月",
-        "%d months (2nd plural)",
-        "%d months (3rd plural)"
+        "%d 个月",
+        "%d 个月"
     ],
     "%d years": [
         "%d 年",
         "%d 年",
-        "%d years (2nd plural)",
-        "%d years (3rd plural)"
+        "%d 年",
+        "%d 年"
     ],
     "Never": "永不过期",
     "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.": "注意：这是一个测试服务，数据随时可能被删除。如果你滥用这个服务的话，小猫咪会死的。",
