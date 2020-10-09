@@ -18,7 +18,7 @@
     "Error saving comment. Sorry.": "Error al moment de salvagardar lo comentari. O planhèm.",
     "Error saving paste. Sorry.": "Error al moment de salvagardar lo tèxte. O planhèm.",
     "Invalid paste ID.": "ID del tèxte invalid.",
-    "Paste is not of burn-after-reading type.": "Lo tèxte es pas del tip « Escafar aprèp lectura ».",
+    "Paste is not of burn-after-reading type.": "Lo tèxte es pas del tipe « Escafar aprèp lectura ».",
     "Wrong deletion token. Paste was not deleted.": "Geton de supression incorrècte. Lo tèxte es pas estat suprimit.",
     "Paste was properly deleted.": "Lo tèxte es estat corrèctament suprimit.",
     "JavaScript is required for %s to work. Sorry for the inconvenience.": "JavaScript es requesit per far foncionar %s. O planhèm per l’inconvenient.",
