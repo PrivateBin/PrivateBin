@@ -408,13 +408,14 @@ class ConfigurationTestGenerator
  * DO NOT EDIT: This file is generated automatically using configGenerator.php
  */
 
+use PHPUnit\Framework\TestCase;
 use PrivateBin\Controller;
 use PrivateBin\Data\Filesystem;
 use PrivateBin\Persistence\ServerSalt;
 use PrivateBin\Persistence\TrafficLimiter;
 use PrivateBin\Request;
 
-class ConfigurationCombinationsTest extends PHPUnit_Framework_TestCase
+class ConfigurationCombinationsTest extends TestCase
 {
     private $_conf;
 

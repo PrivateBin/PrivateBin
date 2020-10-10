@@ -1,8 +1,9 @@
 <?php
 
+use PHPUnit\Framework\TestCase;
 use PrivateBin\Persistence\PurgeLimiter;
 
-class PurgeLimiterTest extends PHPUnit_Framework_TestCase
+class PurgeLimiterTest extends TestCase
 {
     private $_path;
 

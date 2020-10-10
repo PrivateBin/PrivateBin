@@ -1,8 +1,9 @@
 <?php
 
+use PHPUnit\Framework\TestCase;
 use PrivateBin\Persistence\TrafficLimiter;
 
-class TrafficLimiterTest extends PHPUnit_Framework_TestCase
+class TrafficLimiterTest extends TestCase
 {
     private $_path;
 

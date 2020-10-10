@@ -1,9 +1,10 @@
 <?php
 
+use PHPUnit\Framework\TestCase;
 use PrivateBin\Persistence\ServerSalt;
 use PrivateBin\Vizhash16x16;
 
-class Vizhash16x16Test extends PHPUnit_Framework_TestCase
+class Vizhash16x16Test extends TestCase
 {
     private $_file;
 

@@ -1,11 +1,12 @@
 <?php
 
+use PHPUnit\Framework\TestCase;
 use PrivateBin\Controller;
 use PrivateBin\Data\Filesystem;
 use PrivateBin\Persistence\ServerSalt;
 use PrivateBin\Request;
 
-class JsonApiTest extends PHPUnit_Framework_TestCase
+class JsonApiTest extends TestCase
 {
     protected $_model;
 

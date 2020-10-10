@@ -1,8 +1,9 @@
 <?php
 
+use PHPUnit\Framework\TestCase;
 use PrivateBin\Persistence\ServerSalt;
 
-class ServerSaltTest extends PHPUnit_Framework_TestCase
+class ServerSaltTest extends TestCase
 {
     private $_path;
 
