@@ -7,7 +7,7 @@
     "%s requires php %s or above to work. Sorry.": "O planhèm, %s necessita php %s o superior per foncionar.",
     "%s requires configuration section [%s] to be present in configuration file.": "%s fa besonh de la seccion de configuracion [%s] dins lo fichièr de configuracion per foncionar.",
     "Please wait %d seconds between each post.": [
-        "Mercés d'esperar %d segonde entre cada publicacion.",
+        "Mercés d'esperar %d segonda entre cada publicacion",
         "Mercés d'esperar %d segondas entre cada publicacion.",
         "Mercés d'esperar %d segondas entre cada publicacion.",
         "Mercés d'esperar %d segondas entre cada publicacion."
