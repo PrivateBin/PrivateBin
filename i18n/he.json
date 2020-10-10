@@ -7,10 +7,10 @@
     "%s requires php %s or above to work. Sorry.": "%s requires php %s or above to work. Sorry.",
     "%s requires configuration section [%s] to be present in configuration file.": "%s דורש שסעיף ההגדרות [%s] יהיה קיים בקובץ ההגדרות.",
     "Please wait %d seconds between each post.": [
-        "Please wait %d second between each post. (singular)",
-        "Please wait %d seconds between each post. (1st plural)",
-        "Please wait %d seconds between each post. (2nd plural)",
-        "Please wait %d seconds between each post. (3rd plural)"
+        "נא להמתין שנייה אחת בין פרסום לפרסום.",
+        "נא להמתין %d שניות בין פרסום לפרסום.",
+        "נא להמתין %d שניות בין פרסום לפרסום.",
+        "נא להמתין %d שניות בין פרסום לפרסום."
     ],
     "Paste is limited to %s of encrypted data.": "ההדבקה מוגבלת ל־%s של נתונים מוצפנים.",
     "Invalid data.": "נתונים שגויים.",
