@@ -37,75 +37,75 @@
         "%d секунду",
         "%d секунди",
         "%d секунд",
-        "%d seconds (3rd plural)"
+        "%d секунд"
     ],
     "%d minutes": [
         "%d хвилину",
         "%d хвилини",
         "%d хвилин",
-        "%d minutes (3rd plural)"
+        "%d хвилин"
     ],
     "%d hours": [
         "%d годину",
         "%d години",
         "%d годин",
-        "%d hours (3rd plural)"
+        "%d годин"
     ],
     "%d days": [
         "%d день",
         "%d дні",
         "%d днів",
-        "%d days (3rd plural)"
+        "%d днів"
     ],
     "%d weeks": [
         "%d тиждень",
         "%d тижні",
         "%d тижнів",
-        "%d weeks (3rd plural)"
+        "%d тижнів"
     ],
     "%d months": [
         "%d місяць",
         "%d місяці",
         "%d місяців",
-        "%d months (3rd plural)"
+        "%d місяців"
     ],
     "%d years": [
         "%d рік",
         "%d роки",
         "%d років",
-        "%d years (3rd plural)"
+        "%d років"
     ],
     "Never": "Ніколи",
     "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.": "Примітка: Це тестовий сервіс: Дані можуть бути вилучені в будь який момент. Кошенята помруть, якщо ви будете зловживати сервісом.",
     "This document will expire in %d seconds.": [
         "Документ буде вилучений через %d секунду.",
-        "This document will expire in %d seconds. (1st plural)",
-        "This document will expire in %d seconds. (2nd plural)",
-        "This document will expire in %d seconds. (3rd plural)"
+        "Документ буде вилучений через %d секунди.",
+        "Документ буде вилучений через %d секунд.",
+        "Документ буде вилучений через %d секунд."
     ],
     "This document will expire in %d minutes.": [
         "Документ буде вилучений через %d хвилину.",
-        "This document will expire in %d minutes. (1st plural)",
-        "This document will expire in %d minutes. (2nd plural)",
-        "This document will expire in %d minutes. (3rd plural)"
+        "Документ буде вилучений через %d хвилини.",
+        "Документ буде вилучений через %d хвилин.",
+        "Документ буде вилучений через %d хвилин."
     ],
     "This document will expire in %d hours.": [
         "Документ буде вилучений через %d годину.",
-        "This document will expire in %d hours. (1st plural)",
-        "This document will expire in %d hours. (2nd plural)",
-        "This document will expire in %d hours. (3rd plural)"
+        "Документ буде вилучений через %d години.",
+        "Документ буде вилучений через %d годин.",
+        "Документ буде вилучений через %d годин."
     ],
     "This document will expire in %d days.": [
         "Документ буде вилучений через %d день.",
-        "This document will expire in %d days. (1st plural)",
-        "This document will expire in %d days. (2nd plural)",
-        "This document will expire in %d days. (3rd plural)"
+        "Документ буде вилучений через %d дні.",
+        "Документ буде вилучений через %d днів.",
+        "Документ буде вилучений через %d днів."
     ],
     "This document will expire in %d months.": [
         "Документ буде вилучений через %d місяць.",
-        "This document will expire in %d months. (1st plural)",
-        "This document will expire in %d months. (2nd plural)",
-        "This document will expire in %d months. (3rd plural)"
+        "Документ буде вилучений через %d місяці.",
+        "Документ буде вилучений через %d місяців.",
+        "Документ буде вилучений через %d місяців."
     ],
     "Please enter the password for this paste:": "Будь ласка, введіть пароль від допису:",
     "Could not decrypt data (Wrong key?)": "Неможливо розшифрувати дані (Неправильний  ключ?)",

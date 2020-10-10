@@ -7,10 +7,10 @@
     "%s requires php %s or above to work. Sorry.": "%s requer php %s ou superior para funcionar. Desculpa.",
     "%s requires configuration section [%s] to be present in configuration file.": "%s requer que a seção de configuração [% s] esteja no arquivo de configuração.",
     "Please wait %d seconds between each post.": [
-        "Please wait %d second between each post. (singular)",
-        "Please wait %d seconds between each post. (1st plural)",
-        "Please wait %d seconds between each post. (2nd plural)",
-        "Please wait %d seconds between each post. (3rd plural)"
+        "Por favor espere %d segundo entre cada publicação.",
+        "Por favor espere %d segundos entre cada publicação.",
+        "Por favor espere %d segundos entre cada publicação.",
+        "Por favor espere %d segundos entre cada publicação."
     ],
     "Paste is limited to %s of encrypted data.": "A cópia está limitada a %s de dados cifrados.",
     "Invalid data.": "Dados inválidos.",
@@ -79,33 +79,33 @@
     "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.": "Nota: Este é um serviço de teste. Dados podem ser perdidos a qualquer momento. Gatinhos morrerão se você abusar desse serviço.",
     "This document will expire in %d seconds.": [
         "Este documento irá expirar em um segundo.",
-        "This document will expire in %d seconds. (1st plural)",
-        "This document will expire in %d seconds. (2nd plural)",
-        "This document will expire in %d seconds. (3rd plural)"
+        "Este documento irá expirar em %d segundos.",
+        "Este documento irá expirar em %d segundos.",
+        "Este documento irá expirar em %d segundos."
     ],
     "This document will expire in %d minutes.": [
         "Este documento irá expirar em um minuto.",
-        "This document will expire in %d minutes. (1st plural)",
-        "This document will expire in %d minutes. (2nd plural)",
-        "This document will expire in %d minutes. (3rd plural)"
+        "Este documento irá expirar em %d minutos.",
+        "Este documento irá expirar em %d minutos.",
+        "Este documento irá expirar em %d minutos."
     ],
     "This document will expire in %d hours.": [
         "Este documento irá expirar em uma hora.",
-        "This document will expire in %d hours. (1st plural)",
-        "This document will expire in %d hours. (2nd plural)",
-        "This document will expire in %d hours. (3rd plural)"
+        "Este documento irá expirar em %d horas.",
+        "Este documento irá expirar em %d horas.",
+        "Este documento irá expirar em %d horas."
     ],
     "This document will expire in %d days.": [
         "Este documento irá expirar em um dia.",
-        "This document will expire in %d days. (1st plural)",
-        "This document will expire in %d days. (2nd plural)",
-        "This document will expire in %d days. (3rd plural)"
+        "Este documento irá expirar em %d dias.",
+        "Este documento irá expirar em %d dias.",
+        "Este documento irá expirar em %d dias."
     ],
     "This document will expire in %d months.": [
         "Este documento irá expirar em um mês.",
-        "This document will expire in %d months. (1st plural)",
-        "This document will expire in %d months. (2nd plural)",
-        "This document will expire in %d months. (3rd plural)"
+        "Este documento irá expirar em %d meses.",
+        "Este documento irá expirar em %d meses.",
+        "Este documento irá expirar em %d meses."
     ],
     "Please enter the password for this paste:": "Por favor, digite a senha para essa cópia:",
     "Could not decrypt data (Wrong key?)": "Não foi possível decifrar os dados (Chave errada?)",
