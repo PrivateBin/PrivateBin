@@ -24,7 +24,7 @@
 		"docs" : "https://privatebin.info/codedoc/"
 	},
 	"require" : {
-		"php" : "^5.6.0 || ^7.0",
+		"php" : "^5.6.0 || ^7.0 || ^8.0",
 		"paragonie/random_compat" : "2.0.18",
 		"yzalis/identicon" : "2.0.0"
 	},
