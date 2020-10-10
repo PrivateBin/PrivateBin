@@ -87,25 +87,25 @@
         "Ez a bejegyzés %d perc múlva megsemmisül.",
         "Ez a bejegyzés %d perc múlva megsemmisül.",
         "Ez a bejegyzés %d perc múlva megsemmisül.",
-        "This document will expire in %d minutes. (3rd plural)"
+        "Ez a bejegyzés %d perc múlva megsemmisül."
     ],
     "This document will expire in %d hours.": [
         "Ez a bejegyzés %d óra múlva megsemmisül.",
-        "This document will expire in %d hours. (1st plural)",
-        "This document will expire in %d hours. (2nd plural)",
-        "This document will expire in %d hours. (3rd plural)"
+        "Ez a bejegyzés %d óra múlva megsemmisül.",
+        "Ez a bejegyzés %d óra múlva megsemmisül.",
+        "Ez a bejegyzés %d óra múlva megsemmisül."
     ],
     "This document will expire in %d days.": [
         "Ez a bejegyzés %d nap múlva megsemmisül.",
-        "This document will expire in %d days. (1st plural)",
-        "This document will expire in %d days. (2nd plural)",
-        "This document will expire in %d days. (3rd plural)"
+        "Ez a bejegyzés %d nap múlva megsemmisül.",
+        "Ez a bejegyzés %d nap múlva megsemmisül.",
+        "Ez a bejegyzés %d nap múlva megsemmisül."
     ],
     "This document will expire in %d months.": [
         "Ez a bejegyzés %d hónap múlva megsemmisül.",
-        "This document will expire in %d months. (1st plural)",
-        "This document will expire in %d months. (2nd plural)",
-        "This document will expire in %d months. (3rd plural)"
+        "Ez a bejegyzés %d hónap múlva megsemmisül.",
+        "Ez a bejegyzés %d hónap múlva megsemmisül.",
+        "Ez a bejegyzés %d hónap múlva megsemmisül."
     ],
     "Please enter the password for this paste:": "Add meg a szükséges jelszót a bejegyzés megtekintéséhez:",
     "Could not decrypt data (Wrong key?)": "Nem tudtuk visszfejteni az adatot. Talán rossz kulcsot adtál meg?",
