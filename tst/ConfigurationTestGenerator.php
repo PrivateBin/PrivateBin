@@ -423,7 +423,7 @@ class ConfigurationCombinationsTest extends TestCase
 
     private $_path;
 
-    public function setUp()
+    public function setUp(): void
     {
         /* Setup Routine */
         Helper::confBackup();
@@ -434,7 +434,7 @@ class ConfigurationCombinationsTest extends TestCase
         $this->reset();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         /* Tear Down Routine */
         unlink(CONF);

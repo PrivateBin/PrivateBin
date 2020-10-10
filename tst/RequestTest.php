@@ -5,16 +5,6 @@ use PrivateBin\Request;
 
 class RequestTest extends TestCase
 {
-    public function setUp()
-    {
-        /* Setup Routine */
-    }
-
-    public function tearDown()
-    {
-        /* Tear Down Routine */
-    }
-
     public function reset()
     {
         $_SERVER = array();

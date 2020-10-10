@@ -30,7 +30,7 @@ class ViewTest extends TestCase
 
     private $_content = array();
 
-    public function setUp()
+    public function setUp(): void
     {
         /* Setup Routine */
         $page = new View;
@@ -90,11 +90,6 @@ class ViewTest extends TestCase
             $this->_content[$template] = ob_get_contents();
             ob_end_clean();
         }
-    }
-
-    public function tearDown()
-    {
-        /* Tear Down Routine */
     }
 
     public function testTemplateRendersCorrectly()

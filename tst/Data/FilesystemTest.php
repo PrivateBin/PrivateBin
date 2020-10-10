@@ -11,7 +11,7 @@ class FilesystemTest extends TestCase
 
     private $_invalidPath;
 
-    public function setUp()
+    public function setUp(): void
     {
         /* Setup Routine */
         $this->_path        = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'privatebin_data';
@@ -25,7 +25,7 @@ class FilesystemTest extends TestCase
         }
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         /* Tear Down Routine */
         chmod($this->_invalidPath, 0700);

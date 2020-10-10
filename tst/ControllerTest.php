@@ -13,7 +13,7 @@ class ControllerTest extends TestCase
 
     protected $_path;
 
-    public function setUp()
+    public function setUp(): void
     {
         /* Setup Routine */
         $this->_path  = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'privatebin_data';
@@ -21,7 +21,7 @@ class ControllerTest extends TestCase
         $this->reset();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         /* Tear Down Routine */
         unlink(CONF);

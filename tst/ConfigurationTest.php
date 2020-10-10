@@ -11,7 +11,7 @@ class ConfigurationTest extends TestCase
 
     private $_path;
 
-    public function setUp()
+    public function setUp(): void
     {
         /* Setup Routine */
         Helper::confBackup();
@@ -26,7 +26,7 @@ class ConfigurationTest extends TestCase
         }
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         /* Tear Down Routine */
         Helper::rmDir($this->_path);

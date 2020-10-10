@@ -13,7 +13,7 @@ class ServerSaltTest extends TestCase
 
     private $_invalidFile;
 
-    public function setUp()
+    public function setUp(): void
     {
         /* Setup Routine */
         $this->_path = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'privatebin_data';
@@ -31,7 +31,7 @@ class ServerSaltTest extends TestCase
         $this->_invalidFile = $this->_invalidPath . DIRECTORY_SEPARATOR . 'salt.php';
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         /* Tear Down Routine */
         chmod($this->_invalidPath, 0700);

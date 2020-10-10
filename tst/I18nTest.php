@@ -7,7 +7,7 @@ class I18nTest extends TestCase
 {
     private $_translations = array();
 
-    public function setUp()
+    public function setUp(): void
     {
         /* Setup Routine */
         $this->_translations = json_decode(
@@ -16,7 +16,7 @@ class I18nTest extends TestCase
         );
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         /* Tear Down Routine */
     }

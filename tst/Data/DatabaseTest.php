@@ -17,14 +17,14 @@ class DatabaseTest extends TestCase
         'opt' => array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION),
     );
 
-    public function setUp()
+    public function setUp(): void
     {
         /* Setup Routine */
         $this->_path  = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'privatebin_data';
         $this->_model = Database::getInstance($this->_options);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         /* Tear Down Routine */
         if (is_dir($this->_path)) {
