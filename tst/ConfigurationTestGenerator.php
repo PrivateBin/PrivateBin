@@ -565,7 +565,7 @@ EOT;
             case 'Delete':
                 $code .= <<<'EOT'
 
-        $this->assertRegExp(
+        $this->assertMatchesRegularExpression(
             '#<div[^>]*id="status"[^>]*>.*Paste was properly deleted[^<]*</div>#s',
             $content,
             'outputs deleted status correctly'

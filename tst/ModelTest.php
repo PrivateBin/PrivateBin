@@ -116,10 +116,6 @@ class ModelTest extends TestCase
         $this->assertEquals(Helper::getPasteId(), $comment->getParentId(), 'comment parent ID gets initialized to paste ID');
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionCode 75
-     */
     public function testPasteDuplicate()
     {
         $pasteData = Helper::getPastePost();
@@ -131,13 +127,11 @@ class ModelTest extends TestCase
 
         $paste = $this->_model->getPaste();
         $paste->setData($pasteData);
+        $this->expectException(Exception::class);
+        $this->expectExceptionCode(75);
         $paste->store();
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionCode 69
-     */
     public function testCommentDuplicate()
     {
         $pasteData   = Helper::getPastePost();
@@ -154,6 +148,8 @@ class ModelTest extends TestCase
 
         $comment = $paste->getComment(Helper::getPasteId());
         $comment->setData($commentData);
+        $this->expectException(Exception::class);
+        $this->expectExceptionCode(69);
         $comment->store();
     }
 
@@ -185,40 +181,30 @@ class ModelTest extends TestCase
         $this->assertFalse(Paste::isValidId('../bar/baz'), 'path attack');
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionCode 64
-     */
     public function testInvalidPaste()
     {
         $this->_model->getPaste(Helper::getPasteId())->delete();
         $paste = $this->_model->getPaste(Helper::getPasteId());
+        $this->expectException(Exception::class);
+        $this->expectExceptionCode(64);
         $paste->get();
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionCode 60
-     */
     public function testInvalidPasteId()
     {
+        $this->expectException(Exception::class);
+        $this->expectExceptionCode(60);
         $this->_model->getPaste('');
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionCode 62
-     */
     public function testInvalidComment()
     {
         $paste = $this->_model->getPaste();
+        $this->expectException(Exception::class);
+        $this->expectExceptionCode(62);
         $paste->getComment(Helper::getPasteId());
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionCode 67
-     */
     public function testInvalidCommentDeletedPaste()
     {
         $pasteData = Helper::getPastePost();
@@ -228,13 +214,11 @@ class ModelTest extends TestCase
 
         $comment = $paste->getComment(Helper::getPasteId());
         $paste->delete();
+        $this->expectException(Exception::class);
+        $this->expectExceptionCode(67);
         $comment->store();
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionCode 68
-     */
     public function testInvalidCommentData()
     {
         $pasteData             = Helper::getPastePost();
@@ -244,18 +228,17 @@ class ModelTest extends TestCase
         $paste->store();
 
         $comment = $paste->getComment(Helper::getPasteId());
+        $this->expectException(Exception::class);
+        $this->expectExceptionCode(68);
         $comment->store();
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionCode 65
-     */
     public function testInvalidCommentParent()
     {
         $paste     = $this->_model->getPaste(Helper::getPasteId());
-        $comment   = $paste->getComment('');
-        $comment->store();
+        $this->expectException(Exception::class);
+        $this->expectExceptionCode(65);
+        $paste->getComment('');
     }
 
     public function testExpiration()
@@ -273,10 +256,6 @@ class ModelTest extends TestCase
         $this->assertEquals((float) 300, (float) $paste['meta']['time_to_live'], 'remaining time is set correctly', 1.0);
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionCode 64
-     */
     public function testCommentDeletion()
     {
         $pasteData = Helper::getPastePost();
@@ -285,6 +264,8 @@ class ModelTest extends TestCase
         $paste = $this->_model->getPaste();
         $paste->setData($pasteData);
         $paste->store();
+        $this->expectException(Exception::class);
+        $this->expectExceptionCode(64);
         $paste->getComment(Helper::getPasteId())->delete();
     }
 

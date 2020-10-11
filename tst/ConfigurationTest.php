@@ -58,13 +58,11 @@ class ConfigurationTest extends TestCase
         $this->assertEquals($this->_options, $conf->get(), 'returns correct defaults on missing file');
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionCode 2
-     */
     public function testHandleBlankConfigFile()
     {
         file_put_contents(CONF, '');
+        $this->expectException(Exception::class);
+        $this->expectExceptionCode(2);
         new Configuration;
     }
 
@@ -75,25 +73,21 @@ class ConfigurationTest extends TestCase
         $this->assertEquals($this->_options, $conf->get(), 'returns correct defaults on empty file');
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionCode 3
-     */
     public function testHandleInvalidSection()
     {
         file_put_contents(CONF, $this->_minimalConfig);
         $conf = new Configuration;
+        $this->expectException(Exception::class);
+        $this->expectExceptionCode(3);
         $conf->getKey('foo', 'bar');
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionCode 4
-     */
     public function testHandleInvalidKey()
     {
         file_put_contents(CONF, $this->_minimalConfig);
         $conf = new Configuration;
+        $this->expectException(Exception::class);
+        $this->expectExceptionCode(4);
         $conf->getKey('foo');
     }
 
@@ -160,8 +154,8 @@ class ConfigurationTest extends TestCase
 
         $conf = new Configuration;
         $this->assertFileExists(CONF, 'old configuration file gets converted');
-        $this->assertFileNotExists(PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.ini', 'old configuration file gets removed');
-        $this->assertFileNotExists(PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.ini.sample', 'old configuration sample file gets removed');
+        $this->assertFileDoesNotExist(PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.ini', 'old configuration file gets removed');
+        $this->assertFileDoesNotExist(PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.ini.sample', 'old configuration sample file gets removed');
         $this->assertTrue(
             $conf->getKey('opendiscussion') &&
             $conf->getKey('fileupload') &&
@@ -180,10 +174,10 @@ class ConfigurationTest extends TestCase
         }
         rename(CONF_SAMPLE, $iniSample);
         new Configuration;
-        $this->assertFileNotExists($iniSample, 'old sample file gets removed');
+        $this->assertFileDoesNotExist($iniSample, 'old sample file gets removed');
         $this->assertFileExists(CONF_SAMPLE, 'new sample file gets created');
         $this->assertFileExists(CONF, 'old configuration file gets converted');
-        $this->assertFileNotExists(PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.ini', 'old configuration file gets removed');
+        $this->assertFileDoesNotExist(PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.ini', 'old configuration file gets removed');
     }
 
     public function testConfigPath()
@@ -214,15 +208,15 @@ class ConfigurationTest extends TestCase
         $options                 = $this->_options;
         $options['main']['name'] = 'OtherBin';
         Helper::createIniFile($configFile, $options);
-        $this->assertFileNotExists(CONF, 'configuration in the default location is non existing');
+        $this->assertFileDoesNotExist(CONF, 'configuration in the default location is non existing');
 
         // test
         putenv('CONFIG_PATH=' . $this->_path);
         $conf = new Configuration;
         $this->assertEquals('OtherBin', $conf->getKey('name'), 'changing config path is supported for ini files as well');
         $this->assertFileExists($configMigrated, 'old configuration file gets converted');
-        $this->assertFileNotExists($configFile, 'old configuration file gets removed');
-        $this->assertFileNotExists(CONF, 'configuration is not created in the default location');
+        $this->assertFileDoesNotExist($configFile, 'old configuration file gets removed');
+        $this->assertFileDoesNotExist(CONF, 'configuration is not created in the default location');
 
         // cleanup environment
         if (is_file($configFile)) {

@@ -51,22 +51,16 @@ class ServerSaltTest extends TestCase
         $this->assertEquals($salt, ServerSalt::get());
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionCode 11
-     */
     public function testPathShenanigans()
     {
         // try setting an invalid path
         chmod($this->_invalidPath, 0000);
         ServerSalt::setPath($this->_invalidPath);
+        $this->expectException(Exception::class);
+        $this->expectExceptionCode(11);
         ServerSalt::get();
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionCode 20
-     */
     public function testFileRead()
     {
         // try setting an invalid file
@@ -74,13 +68,11 @@ class ServerSaltTest extends TestCase
         file_put_contents($this->_invalidFile, '');
         chmod($this->_invalidFile, 0000);
         ServerSalt::setPath($this->_invalidPath);
+        $this->expectException(Exception::class);
+        $this->expectExceptionCode(20);
         ServerSalt::get();
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionCode 13
-     */
     public function testFileWrite()
     {
         // try setting an invalid file
@@ -92,18 +84,18 @@ class ServerSaltTest extends TestCase
         file_put_contents($this->_invalidPath . DIRECTORY_SEPARATOR . '.htaccess', '');
         chmod($this->_invalidPath, 0500);
         ServerSalt::setPath($this->_invalidPath);
+        $this->expectException(Exception::class);
+        $this->expectExceptionCode(13);
         ServerSalt::get();
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionCode 10
-     */
     public function testPermissionShenanigans()
     {
         // try creating an invalid path
         chmod($this->_invalidPath, 0000);
         ServerSalt::setPath($this->_invalidPath . DIRECTORY_SEPARATOR . 'baz');
+        $this->expectException(Exception::class);
+        $this->expectExceptionCode(10);
         ServerSalt::get();
     }
 }

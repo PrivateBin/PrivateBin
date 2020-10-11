@@ -162,13 +162,13 @@ class FilesystemTest extends TestCase
         $this->_model->purge(10);
         foreach ($ids as $dataid => $storagedir) {
             $this->assertFileExists($storagedir . $dataid . '.php', "paste $dataid exists in new format");
-            $this->assertFileNotExists($storagedir . $dataid, "old format paste $dataid got removed");
+            $this->assertFileDoesNotExist($storagedir . $dataid, "old format paste $dataid got removed");
             $this->assertTrue($this->_model->exists($dataid), "paste $dataid exists");
             $this->assertEquals($this->_model->read($dataid), $paste, "paste $dataid wasn't modified in the conversion");
 
             $storagedir .= $dataid . '.discussion' . DIRECTORY_SEPARATOR;
             $this->assertFileExists($storagedir . $dataid . '.' . $commentid . '.' . $dataid . '.php', "comment of $dataid exists in new format");
-            $this->assertFileNotExists($storagedir . $dataid . '.' . $commentid . '.' . $dataid, "old format comment of $dataid got removed");
+            $this->assertFileDoesNotExist($storagedir . $dataid . '.' . $commentid . '.' . $dataid, "old format comment of $dataid got removed");
             $this->assertTrue($this->_model->existsComment($dataid, $dataid, $commentid), "comment in paste $dataid exists");
             $comment             = $comment;
             $comment['id']       = $commentid;

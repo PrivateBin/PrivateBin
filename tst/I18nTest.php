@@ -18,7 +18,7 @@ class I18nTest extends TestCase
 
     public function tearDown(): void
     {
-        /* Tear Down Routine */
+        unset($_COOKIE['lang'], $_SERVER['HTTP_ACCEPT_LANGUAGE']);
     }
 
     public function testTranslationFallback()

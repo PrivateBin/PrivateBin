@@ -95,28 +95,28 @@ class ViewTest extends TestCase
     public function testTemplateRendersCorrectly()
     {
         foreach ($this->_content as $template => $content) {
-            $this->assertRegExp(
+            $this->assertMatchesRegularExpression(
                 '#<div[^>]+id="errormessage"[^>]*>.*' . self::$error . '#s',
                 $content,
                 $template . ': outputs error correctly'
             );
-            $this->assertRegExp(
+            $this->assertMatchesRegularExpression(
                 '#<[^>]+id="password"[^>]*>#',
                 $content,
                 $template . ': password available if configured'
             );
-            $this->assertRegExp(
+            $this->assertMatchesRegularExpression(
                 '#<input[^>]+id="opendiscussion"[^>]*checked="checked"[^>]*>#',
                 $content,
                 $template . ': checked discussion if configured'
             );
-            $this->assertRegExp(
+            $this->assertMatchesRegularExpression(
                 '#<[^>]+id="opendiscussionoption"[^>]*>#',
                 $content,
                 $template . ': discussions available if configured'
             );
             // testing version number in JS address, since other instances may not be present in different templates
-            $this->assertRegExp(
+            $this->assertMatchesRegularExpression(
                 '#<script[^>]+src="js/privatebin.js\\?' . rawurlencode(self::$version) . '"[^>]*>#',
                 $content,
                 $template . ': outputs version correctly'
@@ -124,13 +124,11 @@ class ViewTest extends TestCase
         }
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionCode 80
-     */
     public function testMissingTemplate()
     {
         $test = new View;
+        $this->expectException(Exception::class);
+        $this->expectExceptionCode(80);
         $test->draw('123456789 does not exist!');
     }
 }

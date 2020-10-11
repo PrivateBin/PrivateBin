@@ -54,12 +54,12 @@ class ControllerTest extends TestCase
         new Controller;
         $content = ob_get_contents();
         ob_end_clean();
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<title>PrivateBin</title>',
             $content,
             'outputs title correctly'
         );
-        $this->assertNotContains(
+        $this->assertStringNotContainsString(
             'id="shortenbutton"',
             $content,
             'doesn\'t output shortener button'
@@ -79,7 +79,7 @@ class ControllerTest extends TestCase
         new Controller;
         $content = ob_get_contents();
         ob_end_clean();
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<title>PrivateBin</title>',
             $content,
             'outputs title correctly'
@@ -100,7 +100,7 @@ class ControllerTest extends TestCase
         new Controller;
         $content = ob_get_contents();
         ob_end_clean();
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<title>PrivateBin</title>',
             $content,
             'outputs title correctly'
@@ -121,7 +121,7 @@ class ControllerTest extends TestCase
         new Controller;
         $content = ob_get_contents();
         ob_end_clean();
-        $this->assertRegExp(
+        $this->assertMatchesRegularExpression(
             '#id="shortenbutton"[^>]*data-shortener="' . preg_quote($shortener) . '"#',
             $content,
             'outputs configured shortener URL correctly'
@@ -150,13 +150,11 @@ class ControllerTest extends TestCase
         $this->assertFileExists($htaccess, 'htaccess recreated');
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionCode 2
-     */
     public function testConf()
     {
         file_put_contents(CONF, '');
+        $this->expectException(Exception::class);
+        $this->expectExceptionCode(2);
         new Controller;
     }
 
@@ -452,8 +450,6 @@ class ControllerTest extends TestCase
      * silently removed, check that this case is handled
      *
      * @runInSeparateProcess
-     * @expectedException Exception
-     * @expectedExceptionCode 90
      */
     public function testCreateBrokenUpload()
     {
@@ -465,6 +461,8 @@ class ControllerTest extends TestCase
         $_SERVER['REQUEST_METHOD']        = 'POST';
         $_SERVER['REMOTE_ADDR']           = '::1';
         $this->assertFalse($this->_data->exists(Helper::getPasteId()), 'paste does not exists before posting data');
+        $this->expectException(Exception::class);
+        $this->expectExceptionCode(90);
         new Controller;
         $this->assertFalse($this->_data->exists(Helper::getPasteId()), 'paste exists after posting data');
     }
@@ -799,7 +797,7 @@ class ControllerTest extends TestCase
         new Controller;
         $content = ob_get_contents();
         ob_end_clean();
-        $this->assertRegExp(
+        $this->assertMatchesRegularExpression(
             '#<div[^>]*id="status"[^>]*>.*Paste was properly deleted\.#s',
             $content,
             'outputs deleted status correctly'
@@ -819,7 +817,7 @@ class ControllerTest extends TestCase
         new Controller;
         $content = ob_get_contents();
         ob_end_clean();
-        $this->assertRegExp(
+        $this->assertMatchesRegularExpression(
             '#<div[^>]*id="errormessage"[^>]*>.*Invalid paste ID\.#s',
             $content,
             'outputs delete error correctly'
@@ -838,7 +836,7 @@ class ControllerTest extends TestCase
         new Controller;
         $content = ob_get_contents();
         ob_end_clean();
-        $this->assertRegExp(
+        $this->assertMatchesRegularExpression(
             '#<div[^>]*id="errormessage"[^>]*>.*Paste does not exist, has expired or has been deleted\.#s',
             $content,
             'outputs delete error correctly'
@@ -857,7 +855,7 @@ class ControllerTest extends TestCase
         new Controller;
         $content = ob_get_contents();
         ob_end_clean();
-        $this->assertRegExp(
+        $this->assertMatchesRegularExpression(
             '#<div[^>]*id="errormessage"[^>]*>.*Wrong deletion token\. Paste was not deleted\.#s',
             $content,
             'outputs delete error correctly'
@@ -905,7 +903,7 @@ class ControllerTest extends TestCase
         new Controller;
         $content = ob_get_contents();
         ob_end_clean();
-        $this->assertRegExp(
+        $this->assertMatchesRegularExpression(
             '#<div[^>]*id="errormessage"[^>]*>.*Paste does not exist, has expired or has been deleted\.#s',
             $content,
             'outputs error correctly'
@@ -928,7 +926,7 @@ class ControllerTest extends TestCase
         new Controller;
         $content = ob_get_contents();
         ob_end_clean();
-        $this->assertRegExp(
+        $this->assertMatchesRegularExpression(
             '#<div[^>]*id="status"[^>]*>.*Paste was properly deleted\.#s',
             $content,
             'outputs deleted status correctly'
