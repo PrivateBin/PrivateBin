@@ -1,6 +1,5 @@
 <?php
 
-use PHPUnit\Framework\TestCase;
 use PrivateBin\Data\Database;
 
 require_once 'ControllerTest.php';
