@@ -1,7 +1,7 @@
 {
     "PrivateBin": "PrivateBin",
-    "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES.": "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES.",
-    "More information on the <a href=\"https://privatebin.info/\">project page</a>.": "More information on the <a href=\"https://privatebin.info/\">project page</a>.",
+    "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES.": "%s е изчистен и изцяло достъпен като отворен код, онлайн \"paste\" услуга, където сървъра не знае подадената информация. Тя се шифрова/дешифрова <i>във браузъра</i> използвайки 256 битов AES алгоритъм.",
+    "More information on the <a href=\"https://privatebin.info/\">project page</a>.": "Повече информация може да намерите на страницата на <a href=\"https://privatebin.info/\">проекта</a> (Английски).",
     "Because ignorance is bliss": "Невежеството е блаженство",
     "en": "bg",
     "Paste does not exist, has expired or has been deleted.": "Информацията не съществува, срокът и е изтекъл или е била изтрита.",
