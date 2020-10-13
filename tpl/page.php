@@ -76,7 +76,7 @@ endif;
 	<body data-compression="<?php echo rawurlencode($COMPRESSION); ?>">
 		<header>
 			<div id="aboutbox">
-				<?php echo I18n::_('%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES.', I18n::_($NAME)), ' ', I18n::_($INFO); ?><br />
+				<?php echo I18n::_('%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES.', I18n::_($NAME)), ' ', $INFO; ?><br />
 <?php
 if (strlen($NOTICE)):
 ?>

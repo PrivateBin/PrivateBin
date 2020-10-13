@@ -48,7 +48,7 @@ class Configuration
             'syntaxhighlightingtheme'  => null,
             'sizelimit'                => 10485760,
             'template'                 => 'bootstrap',
-            'info'                     => 'More information on the <a href="https://privatebin.info/">project page</a>.',
+            'info'                     => 'More information on the <a href=\'https://privatebin.info/\'>project page</a>.',
             'notice'                   => '',
             'languageselection'        => false,
             'languagedefault'          => '',
