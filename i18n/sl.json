@@ -1,7 +1,7 @@
 {
     "PrivateBin": "PrivateBin",
-    "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES.": "%s je minimalističen, odprtokodni spletni 'pastebin', kjer server ne ve ničesar o prilepljenih podatkih. Podatki so zakodirani/odkodirani <i>v brskalniku</i> z uporabo 256 bitnega AES.",
-    "More information on the <a href=\"https://privatebin.info/\">project page</a>.": "Več informacij na <a href=\"https://privatebin.info/\">spletni strani projekta.</a>.",
+    "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES.": "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES.",
+    "More information on the <a href=\"https://privatebin.info/\">project page</a>.": "More information on the <a href=\"https://privatebin.info/\">project page</a>.",
     "Because ignorance is bliss": "Ker kar ne veš ne boli.",
     "en": "sl",
     "Paste does not exist, has expired or has been deleted.": "Prilepek ne obstaja, mu je potekla življenjska doba, ali pa je izbrisan.",
