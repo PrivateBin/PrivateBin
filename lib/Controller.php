@@ -380,6 +380,7 @@ class Controller
         $page->assign('SYNTAXHIGHLIGHTINGTHEME', $this->_conf->getKey('syntaxhighlightingtheme'));
         $page->assign('FORMATTER', $formatters);
         $page->assign('FORMATTERDEFAULT', $this->_conf->getKey('defaultformatter'));
+        $page->assign('INFO', I18n::_($this->_conf->getKey('info')));
         $page->assign('NOTICE', I18n::_($this->_conf->getKey('notice')));
         $page->assign('BURNAFTERREADINGSELECTED', $this->_conf->getKey('burnafterreadingselected'));
         $page->assign('PASSWORD', $this->_conf->getKey('password'));
