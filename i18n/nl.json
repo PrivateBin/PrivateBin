@@ -1,7 +1,7 @@
 {
     "PrivateBin": "PrivateBin",
-    "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES.": "%s is een minimalistische, open source online pastebin waarbij de server geen kennis heeft van de geplakte gegevens. Gegevens worden gecodeerd/gedecodeerd <i> in de browser </i> met behulp van 256 bits AES.",
-    "More information on the <a href=\"https://privatebin.info/\">project page</a>.": "Meer informatie is te vinden op de <a href=\"https://privatebin.info/\">projectpagina</a>.",
+    "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES.": "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES.",
+    "More information on the <a href=\"https://privatebin.info/\">project page</a>.": "More information on the <a href=\"https://privatebin.info/\">project page</a>.",
     "Because ignorance is bliss": "Onwetendheid is een zegen",
     "en": "nl",
     "Paste does not exist, has expired or has been deleted.": "Geplakte tekst bestaat niet, is verlopen of verwijderd.",
