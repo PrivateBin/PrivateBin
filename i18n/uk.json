@@ -1,7 +1,7 @@
 {
     "PrivateBin": "PrivateBin",
-    "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES.": "%s це мінімалістичний Open Source проєкт для створення нотаток, де сервер не знає нічого про дані, що зберігаються. Дані шифруються/розшифровуються <i>у переглядачі</i> з використанням 256-бітного шифрувания AES.",
-    "More information on the <a href=\"https://privatebin.info/\">project page</a>.": "Подробиці можна дізнатися на <a href=\"https://privatebin.info/\">сайті проєкту</a>.",
+    "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES.": "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES.",
+    "More information on the <a href=\"https://privatebin.info/\">project page</a>.": "More information on the <a href=\"https://privatebin.info/\">project page</a>.",
     "Because ignorance is bliss": "Бо незнання - благо",
     "en": "uk",
     "Paste does not exist, has expired or has been deleted.": "Допис не існує, протермінований чи був видалений.",
