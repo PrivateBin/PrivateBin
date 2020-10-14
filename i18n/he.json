@@ -5,7 +5,7 @@
     "Because ignorance is bliss": "כיוון שבורות היא ברכה",
     "en": "he",
     "Paste does not exist, has expired or has been deleted.": "ההדבקה לא קיימת, פגה או נמחקה.",
-    "%s requires php %s or above to work. Sorry.": "%s requires php %s or above to work. Sorry.",
+    "%s requires php %s or above to work. Sorry.": "%s דורש PHP %s כדי לפעול.",
     "%s requires configuration section [%s] to be present in configuration file.": "%s דורש שסעיף ההגדרות [%s] יהיה קיים בקובץ ההגדרות.",
     "Please wait %d seconds between each post.": [
         "נא להמתין שנייה אחת בין פרסום לפרסום.",
@@ -23,7 +23,7 @@
     "Wrong deletion token. Paste was not deleted.": "אסימון מחיקה שגוי. ההדבקה לא נמחקה.",
     "Paste was properly deleted.": "ההדבקה נמחקה כראוי.",
     "JavaScript is required for %s to work. Sorry for the inconvenience.": "צריך JavaScript כדי לאפשר ל־%s לפעול. סליחה על חוסר הנוחות.",
-    "%s requires a modern browser to work.": "%s requires a modern browser to work.",
+    "%s requires a modern browser to work.": "%s דורש דפדפן מודרני כדי לפעול.",
     "New": "חדש",
     "Send": "שליחה",
     "Clone": "שכפול",
@@ -53,31 +53,31 @@
         "%d hours (3rd plural)"
     ],
     "%d days": [
-        "%d day (singular)",
-        "%d days (1st plural)",
-        "%d days (2nd plural)",
-        "%d days (3rd plural)"
+        "יום אחד",
+        "%d ימים",
+        "%d ימים",
+        "%d ימים"
     ],
     "%d weeks": [
-        "%d week (singular)",
-        "%d weeks (1st plural)",
-        "%d weeks (2nd plural)",
-        "%d weeks (3rd plural)"
+        "שבוע אחד",
+        "%d שבועות",
+        "%d שבועות",
+        "%d שבועות"
     ],
     "%d months": [
-        "%d month (singular)",
-        "%d months (1st plural)",
-        "%d months (2nd plural)",
-        "%d months (3rd plural)"
+        "חודש אחד",
+        "%d חודשים",
+        "%d חודשים",
+        "%d חודשים"
     ],
     "%d years": [
-        "%d year (singular)",
-        "%d years (1st plural)",
-        "%d years (2nd plural)",
-        "%d years (3rd plural)"
+        "שנה אחת",
+        "%d שנים",
+        "%d שנים",
+        "%d שנים"
     ],
     "Never": "לעולם לא",
-    "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.": "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.",
+    "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.": "הערה: זהו שירות בדקה: המידע לא ישמר.",
     "This document will expire in %d seconds.": [
         "This document will expire in %d second. (singular)",
         "This document will expire in %d seconds. (1st plural)",
@@ -113,7 +113,7 @@
     "Could not delete the paste, it was not stored in burn after reading mode.": "לא ניתן למחוק את ההדבקה, היא לא אוחסנה במצב קוראים-שורפים.",
     "FOR YOUR EYES ONLY. Don't close this window, this message can't be displayed again.": "לעיניך בלבד. לא לסגור את החלון הזה, ההודעה הזאת לא תופיע שוב.",
     "Could not decrypt comment; Wrong key?": "לא ניתן לפענח את ההערה, מפתח שגוי?",
-    "Reply": "Reply",
+    "Reply": "תגובה",
     "Anonymous": "אלמוני",
     "Avatar generated from IP address": "התמונה הייצוגית נוצרה מכתובת ה־IP",
     "Add comment": "הוספת תגובה",
@@ -139,12 +139,12 @@
     "EiB": "EiB",
     "ZiB": "ZiB",
     "YiB": "YiB",
-    "Format": "Format",
+    "Format": "פורמט",
     "Plain Text": "טקסט פשוט",
     "Source Code": "קוד מקור",
     "Markdown": "Markdown",
     "Download attachment": "הורדת קובץ מצורף",
-    "Cloned: '%s'": "Cloned: '%s'",
+    "Cloned: '%s'": "שוכפל: '%s'",
     "The cloned file '%s' was attached to this paste.": "The cloned file '%s' was attached to this paste.",
     "Attach a file": "צירוף קובץ",
     "alternatively drag & drop a file or paste an image from the clipboard": "alternatively drag & drop a file or paste an image from the clipboard",
