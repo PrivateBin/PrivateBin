@@ -1,8 +1,8 @@
 {
-    "PrivateBin": "PrivateBin",
-    "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES.": "%s est un 'pastebin' (ou gestionnaire d'extraits de texte et de code source) minimaliste et open source, dans lequel le serveur n'a aucune connaissance des données envoyées. Les données sont chiffrées/déchiffrées <i>dans le navigateur</i> par un chiffrement AES 256 bits.",
+    "PrivateBin": "SECURE",
+    "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES.": "%s est un 'pastebin' (ou gestionnaire d'extraits de texte et de code source) minimaliste et open source basé sur le projet PrivateBin, dans lequel le serveur n'a aucune connaissance des données envoyées. Les données sont chiffrées/déchiffrées <i>dans le navigateur</i> par un chiffrement AES 256 bits.",
     "More information on the <a href=\"https://privatebin.info/\">project page</a>.": "Plus d'informations sur <a href=\"https://privatebin.info/\">la page du projet</a>.",
-    "Because ignorance is bliss": "Parce que l'ignorance c'est le bonheur",
+    "Because ignorance is bliss": "Mes données sont sécurisées",
     "en": "fr",
     "Paste does not exist, has expired or has been deleted.": "Le paste n'existe pas, a expiré, ou a été supprimé.",
     "%s requires php %s or above to work. Sorry.": "Désolé, %s nécessite php %s ou supérieur pour fonctionner.",
@@ -31,7 +31,7 @@
     "Expires": "Expire",
     "Burn after reading": "Effacer après lecture",
     "Open discussion": "Autoriser la discussion",
-    "Password (recommended)": "Mot de passe (recommandé)",
+    "Password (recommended)": "Mot de passe (Optionnel)",
     "Discussion": "Discussion",
     "Toggle navigation": "Basculer la navigation",
     "%d seconds": [
@@ -182,6 +182,6 @@
     "Use Current Timezone": "Conserver l'actuel",
     "Convert To UTC": "Convertir en UTC",
     "Close": "Fermer",
-    "Encrypted note on PrivateBin": "Message chiffré sur PrivateBin",
+    "Encrypted note on PrivateBin": "Message chiffré sur SECURE",
     "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "Visiter ce lien pour voir la note. Donner l'URL à une autre personne lui permet également d'accéder à la note."
 }
