@@ -422,7 +422,7 @@ if (strlen($LANGUAGESELECTION)) :
 ?>
 					<li id="language" class="dropdown">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-flag" aria-hidden="true"></span> <?php echo $LANGUAGES[$LANGUAGESELECTION][0]; ?> <span class="caret"></span></a>
-						<ul class="dropdown-menu">
+						<ul class="dropdown-menu dropdown-menu-right">
 <?php
     foreach ($LANGUAGES as $key => $value) :
 ?>
