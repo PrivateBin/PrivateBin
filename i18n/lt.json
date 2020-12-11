@@ -8,17 +8,17 @@
     "%s requires php %s or above to work. Sorry.": "%s savo darbui reikalauja php %s arba naujesnės versijos. Apgailestaujame.",
     "%s requires configuration section [%s] to be present in configuration file.": "%s reikalauja, kad konfigūracijos faile būtų [%s] konfigūracijos sekcija.",
     "Please wait %d seconds between each post.": [
-        "Please wait %d second between each post. (singular)",
-        "Please wait %d seconds between each post. (1st plural)",
-        "Please wait %d seconds between each post. (2nd plural)",
-        "Please wait %d seconds between each post. (3rd plural)"
+        "Tarp kiekvieno įrašo palaukite %d sekundę.",
+        "Tarp kiekvieno įrašo palaukite %d sekundes.",
+        "Tarp kiekvieno įrašo palaukite %d sekundžių.",
+        "Tarp kiekvieno įrašo palaukite %d sekundę."
     ],
     "Paste is limited to %s of encrypted data.": "Paste is limited to %s of encrypted data.",
-    "Invalid data.": "Invalid data.",
+    "Invalid data.": "Neteisingi duomenys.",
     "You are unlucky. Try again.": "Jums nesiseka. Bandykite dar kartą.",
     "Error saving comment. Sorry.": "Klaida įrašant komentarą. Apgailestaujame.",
     "Error saving paste. Sorry.": "Klaida įrašant įdėjimą. Apgailestaujame.",
-    "Invalid paste ID.": "Invalid paste ID.",
+    "Invalid paste ID.": "Neteisingas įdėjimo ID.",
     "Paste is not of burn-after-reading type.": "Įdėjimo tipas nėra „Perskaičius sudeginti“.",
     "Wrong deletion token. Paste was not deleted.": "Neteisingas ištrynimo prieigos raktas. Įdėjimas nebuvo ištrintas.",
     "Paste was properly deleted.": "Įdėjimas buvo tinkamai ištrintas.",
