@@ -13,7 +13,7 @@
         "Tarp kiekvieno įrašo palaukite %d sekundžių.",
         "Tarp kiekvieno įrašo palaukite %d sekundę."
     ],
-    "Paste is limited to %s of encrypted data.": "Paste is limited to %s of encrypted data.",
+    "Paste is limited to %s of encrypted data.": "Įdėjimas yra apribotas iki %s šifruotų duomenų.",
     "Invalid data.": "Neteisingi duomenys.",
     "You are unlucky. Try again.": "Jums nesiseka. Bandykite dar kartą.",
     "Error saving comment. Sorry.": "Klaida įrašant komentarą. Apgailestaujame.",
@@ -28,53 +28,53 @@
     "Send": "Siųsti",
     "Clone": "Dubliuoti",
     "Raw text": "Neapdorotas tekstas",
-    "Expires": "Baigia galioti",
+    "Expires": "Baigs galioti po",
     "Burn after reading": "Perskaičius sudeginti",
     "Open discussion": "Atvira diskusija",
     "Password (recommended)": "Slaptažodis (rekomenduojama)",
     "Discussion": "Diskusija",
     "Toggle navigation": "Perjungti naršymą",
     "%d seconds": [
-        "%d second (singular)",
-        "%d seconds (1st plural)",
-        "%d seconds (2nd plural)",
-        "%d seconds (3rd plural)"
+        "%d sekundės",
+        "%d sekundžių",
+        "%d sekundžių",
+        "%d sekundės"
     ],
     "%d minutes": [
-        "%d minute (singular)",
-        "%d minutes (1st plural)",
-        "%d minutes (2nd plural)",
-        "%d minutes (3rd plural)"
+        "%d minutės",
+        "%d minučių",
+        "%d minučių",
+        "%d minutės"
     ],
     "%d hours": [
-        "%d hour (singular)",
-        "%d hours (1st plural)",
-        "%d hours (2nd plural)",
-        "%d hours (3rd plural)"
+        "%d valandos",
+        "%d valandų",
+        "%d valandų",
+        "%d valandos"
     ],
     "%d days": [
-        "%d day (singular)",
-        "%d days (1st plural)",
-        "%d days (2nd plural)",
-        "%d days (3rd plural)"
+        "%d dienos",
+        "%d dienų",
+        "%d dienų",
+        "%d dienos"
     ],
     "%d weeks": [
-        "%d week (singular)",
-        "%d weeks (1st plural)",
-        "%d weeks (2nd plural)",
-        "%d weeks (3rd plural)"
+        "%d savaitės",
+        "%d savaičių",
+        "%d savaičių",
+        "%d savaitės"
     ],
     "%d months": [
-        "%d month (singular)",
-        "%d months (1st plural)",
-        "%d months (2nd plural)",
-        "%d months (3rd plural)"
+        "%d mėnesio",
+        "%d mėnesių",
+        "%d mėnesių",
+        "%d mėnesio"
     ],
     "%d years": [
-        "%d year (singular)",
-        "%d years (1st plural)",
-        "%d years (2nd plural)",
-        "%d years (3rd plural)"
+        "%d metų",
+        "%d metų",
+        "%d metų",
+        "%d metų"
     ],
     "Never": "Niekada",
     "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.": "Pastaba: Tai yra bandomoji paslauga. Duomenys bet kuriuo metu gali būti ištrinti. Kačiukai mirs, jei piktnaudžiausite šia paslauga.",
