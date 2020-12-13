@@ -9,6 +9,8 @@ options](#configuration) to adjust as you see fit.
 
 **NOTE:** See [our FAQ](https://github.com/PrivateBin/PrivateBin/wiki/FAQ#how-can-i-securely-clonedownload-your-project) for information how to securely download the PrivateBin release files.
 
+**NOTE:** There is a [ansible](https://ansible.com) role by @e1mo available to install and configure PrivateBin on your server. It's available on [ansible galaxy](https://galaxy.ansible.com/e1mo/privatebin) ([Source code](https://git.sr.ht/~e1mo/ansible-role-privatebin)).
+
 ### Minimal requirements
 
 - PHP version 5.5 or above
