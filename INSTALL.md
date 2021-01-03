@@ -21,6 +21,7 @@ options](#configuration) to adjust as you see fit.
 
   Mcrypt needs to be able to access `/dev/urandom`. This means if `open_basedir` is set, it must include this file.
 - GD extension
+- zlib extension
 - some disk space or (optionally) a database supported by [PDO](https://secure.php.net/manual/book.pdo.php)
 - ability to create files and folders in the installation directory and the PATH defined in index.php
 - A web browser with javascript support
