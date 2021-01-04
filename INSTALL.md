@@ -18,7 +18,7 @@ options](#configuration) to adjust as you see fit.
     - mcrypt extension (mcrypt needs to be able to access `/dev/urandom`. This means if `open_basedir` is set, it must include this file.)
     - com_dotnet extension
 - GD extension
-- some disk space or (optionally) a MySQL or SQLite database
+- some disk space or (optionally) a MySQL, PostgreSQL or SQLite database
 - ability to create files and folders in the installation directory and the PATH defined in index.php
 - A web browser with JavaScript support
 
