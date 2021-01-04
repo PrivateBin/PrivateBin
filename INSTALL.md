@@ -23,7 +23,7 @@ options](#configuration) to adjust as you see fit.
 - GD extension
 - some disk space or (optionally) a MySQL or SQLite database
 - ability to create files and folders in the installation directory and the PATH defined in index.php
-- A web browser with javascript support
+- A web browser with JavaScript support
 
 ## Hardening and security
 
@@ -74,7 +74,7 @@ Note that your PHP process will need read access to the config wherever it may b
 ### Transport security
 
 When setting up PrivateBin, also set up HTTPS, if you haven't already. Without HTTPS
-PrivateBin is not secure, as the javascript files could be manipulated during transmission.
+PrivateBin is not secure, as the JavaScript files could be manipulated during transmission.
 For more information on this, see our [FAQ entry on HTTPS setup](https://github.com/PrivateBin/PrivateBin/wiki/FAQ#how-should-i-setup-https).
 
 ### File-level permissions
