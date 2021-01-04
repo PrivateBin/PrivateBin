@@ -11,7 +11,7 @@ options](#configuration) to adjust as you see fit.
 
 ### Minimal requirements
 
-- PHP version 5.5 or above
+- PHP version 5.6 or above
 - _one_ of the following sources of cryptographically safe randomness is required:
   - PHP 7 or higher
   - [Libsodium](https://download.libsodium.org/libsodium/content/installation/) and it's [PHP extension](https://paragonie.com/book/pecl-libsodium/read/00-intro.md#installing-libsodium)
