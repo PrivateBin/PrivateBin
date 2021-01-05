@@ -10,7 +10,7 @@ jobs:
     - name: Validate composer.json and composer.lock
       run: composer validate
     - name: Install dependencies
-      run: /usr/bin/php7.4 composer install --prefer-dist --no-suggest
+      run: /usr/bin/php7.4 $(which composer) install --prefer-dist --no-suggest
   PHPunit:
     runs-on: ubuntu-latest
     strategy:
