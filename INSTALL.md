@@ -11,20 +11,17 @@ options](#configuration) to adjust as you see fit.
 
 ### Minimal requirements
 
-- PHP version 5.6 or above
-- _one_ of the following sources of cryptographically safe randomness is required:
-  - PHP 7 or higher
-  - [Libsodium](https://download.libsodium.org/libsodium/content/installation/) and it's [PHP extension](https://paragonie.com/book/pecl-libsodium/read/00-intro.md#installing-libsodium)
-  - open_basedir access to `/dev/urandom`
-  - mcrypt extension
-  - com_dotnet extension
-
-  Mcrypt needs to be able to access `/dev/urandom`. This means if `open_basedir` is set, it must include this file.
+- PHP version 7.0 or above
+  - Or PHP version 5.6 AND _one_ of the following sources of cryptographically safe randomness:
+    - [Libsodium](https://download.libsodium.org/libsodium/content/installation/) and it's [PHP extension](https://paragonie.com/book/pecl-libsodium/read/00-intro.md#installing-libsodium)
+    - open_basedir access to `/dev/urandom`
+    - mcrypt extension (mcrypt needs to be able to access `/dev/urandom`. This means if `open_basedir` is set, it must include this file.)
+    - com_dotnet extension
 - GD extension
 - zlib extension
-- some disk space or (optionally) a database supported by [PDO](https://secure.php.net/manual/book.pdo.php)
+- some disk space or (optionally) a database supported by [PDO](https://php.net/manual/book.pdo.php)
 - ability to create files and folders in the installation directory and the PATH defined in index.php
-- A web browser with javascript support
+- A web browser with JavaScript support
 
 ## Hardening and security
 
@@ -75,7 +72,7 @@ Note that your PHP process will need read access to the config wherever it may b
 ### Transport security
 
 When setting up PrivateBin, also set up HTTPS, if you haven't already. Without HTTPS
-PrivateBin is not secure, as the javascript files could be manipulated during transmission.
+PrivateBin is not secure, as the JavaScript files could be manipulated during transmission.
 For more information on this, see our [FAQ entry on HTTPS setup](https://github.com/PrivateBin/PrivateBin/wiki/FAQ#how-should-i-setup-https).
 
 ### File-level permissions
