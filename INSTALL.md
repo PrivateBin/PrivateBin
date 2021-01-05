@@ -19,7 +19,7 @@ options](#configuration) to adjust as you see fit.
     - com_dotnet extension
 - GD extension
 - zlib extension
-- some disk space or (optionally) a MySQL, PostgreSQL or SQLite database
+- some disk space or (optionally) an SQL database
 - ability to create files and folders in the installation directory and the PATH defined in index.php
 - A web browser with JavaScript support
 
