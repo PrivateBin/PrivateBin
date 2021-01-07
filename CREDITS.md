@@ -46,3 +46,5 @@ Sébastien Sauvage - original idea and main developer
 * info-path - Czech
 * BigWax - Bulgarian
 * AndriiZ - Ukrainian
+* Yaron Shahrabani - Hebrew
+* Moo - Lithuanian

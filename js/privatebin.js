@@ -601,7 +601,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          * @prop   {string[]}
          * @readonly
          */
-        const supportedLanguages = ['bg', 'cs', 'de', 'es', 'fr', 'it', 'hu', 'no', 'nl', 'pl', 'pt', 'oc', 'ru', 'sl', 'uk', 'zh'];
+        const supportedLanguages = ['bg', 'cs', 'de', 'es', 'fr', 'he', 'hu', 'it', 'lt', 'no', 'nl', 'pl', 'pt', 'oc', 'ru', 'sl', 'uk', 'zh'];
 
         /**
          * built in language
@@ -782,6 +782,10 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 case 'oc':
                 case 'zh':
                     return n > 1 ? 1 : 0;
+                case 'he':
+                    return n === 1 ? 0 : (n === 2 ? 1 : ((n < 0 || n > 10) && (n % 10 === 0) ? 2 : 3));
+                case 'lt':
+                    return n % 10 === 1 && n % 100 !== 11 ? 0 : ((n % 10 >= 2 && n % 100 < 10 || n % 100 >= 20) ? 1 : 2);
                 case 'pl':
                     return n === 1 ? 0 : (n % 10 >= 2 && n %10 <=4 && (n % 100 < 10 || n % 100 >= 20) ? 1 : 2);
                 case 'ru':
