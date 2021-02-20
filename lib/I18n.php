@@ -129,7 +129,7 @@ class I18n
         $argsCount = count($args);
         if ($argsCount > 1) {
             for ($i = 0; $i < $argsCount; ++$i) {
-                if (($i > 0 && !is_int($args[$i])) || strpos($args[0], '<a') === false) {
+                if (($i > 0 && !is_int($args[$i]))) {
                     $args[$i] = self::encode($args[$i]);
                 }
             }
@@ -147,7 +147,36 @@ class I18n
      */
     public static function encode($string)
     {
-        return htmlspecialchars($string, ENT_QUOTES | ENT_HTML5 | ENT_DISALLOWED, 'UTF-8', false);
+        $safeEncoded = htmlspecialchars($string, ENT_QUOTES | ENT_HTML5 | ENT_DISALLOWED, 'UTF-8', false);
+        return self::reactiveAuthorizedMarkup($safeEncoded);
+    }
+
+    /**
+     * reactive only some HTML markups
+     *
+     * @access private
+     * @static
+     * @param  string $encoded
+     * @return string
+     */
+    function reactiveAuthorizedMarkup($encoded)
+    {
+        $replacementRegexpMap = array(
+            '#&lt;i&gt;(.*)&lt;/i&gt;#iU'
+            => '<i>$1</i>',
+            '#&lt;a href=&quot;(.*)&quot;&gt;(.*)&lt;/a&gt;#iU'
+            => '<a href="$1">$2</a>',
+            '#&lt;a id=&quot;(.*)&quot; href=&quot;(.*)&quot;&gt;(.*)&lt;/a&gt;#iU'
+            => '<a id="$1" href="$2">$3</a>',
+            '#&lt;span id=&quot;copyhint&quot;&gt;(.*)&lt;/span&gt;#iU'
+            => '<span id="copyhint">$1</span>',
+        );
+        $partiallyDecoded = preg_replace(
+            array_keys($replacementRegexpMap), 
+            array_values($replacementRegexpMap),
+            $encoded
+        );
+        return $partiallyDecoded;
     }
 
     /**
