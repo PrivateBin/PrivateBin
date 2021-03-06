@@ -1,6 +1,6 @@
 {
     "PrivateBin": "PrivateBin",
-    "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES.": "%s je minimalistický open source 'pastebin' server, který neanalyzuje vložená data. Data jsou šifrována <i>v prohlížeči</i> pomocí 256 bitů AES.",
+    "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted %sin the browser%s using 256 bits AES.": "%s je minimalistický open source 'pastebin' server, který neanalyzuje vložená data. Data jsou šifrována %sv prohlížeči%s pomocí 256 bitů AES.",
     "More information on the <a href=\"https://privatebin.info/\">project page</a>.": "Více informací na <a href=\"https://privatebin.info/\">stránce projetu</a>.",
     "Because ignorance is bliss": "Protože nevědomost je sladká",
     "en": "cs",
