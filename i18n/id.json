@@ -1,6 +1,6 @@
 {
     "PrivateBin": "PrivateBin",
-    "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted %sin the browser%s using 256 bits AES.": "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted %sin the browser%s using 256 bits AES.",
+    "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted %sin the browser%s using 256 bits AES.": "%s adalah sebuah pastebin online sumber terbuka dan minimalis, dimana servernya tersebut tidak punya pengetahuan tentang data yang ditempelkan. Data tersebut di enkrip/dekrip %sdi dalam browser%s menggunakan metode enkrip AES 256 bit.",
     "More information on the <a href=\"https://privatebin.info/\">project page</a>.": "Infomasi lebih lanjut pada <a href=\"https://privatebin.info/\">halaman proyek</a>.",
     "Because ignorance is bliss": "Karena ketidaktahuan adalah kebahagiaan",
     "en": "en",
@@ -60,35 +60,35 @@
     ],
     "%d weeks": [
         "%d minggu (tunggal)",
-        "%d weeks (1st plural)",
-        "%d weeks (2nd plural)",
-        "%d weeks (3rd plural)"
+        "%d minggu",
+        "%d minggu",
+        "%d minggu"
     ],
     "%d months": [
-        "%d month (singular)",
-        "%d months (1st plural)",
-        "%d months (2nd plural)",
-        "%d months (3rd plural)"
+        "%d bulan",
+        "%d bulan",
+        "%d bulan",
+        "%d bulan"
     ],
     "%d years": [
-        "%d year (singular)",
-        "%d years (1st plural)",
-        "%d years (2nd plural)",
-        "%d years (3rd plural)"
+        "%d tahun",
+        "%d tahun",
+        "%d tahun",
+        "%d tahun"
     ],
-    "Never": "Never",
-    "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.": "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.",
+    "Never": "Jangan pernah",
+    "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.": "Catatan: Ini adalah layanan percobaan: Data mungkin bisa terhapus kapanpun juga. Anak-anak kucing akan mati jika Anda mengekploitasi layanan ini.",
     "This document will expire in %d seconds.": [
-        "This document will expire in %d second. (singular)",
-        "This document will expire in %d seconds. (1st plural)",
-        "This document will expire in %d seconds. (2nd plural)",
-        "This document will expire in %d seconds. (3rd plural)"
+        "Dokumen ini kadaluarsa dalam %d detik.",
+        "Dokumen ini kadaluarsa dalam %d detik.",
+        "Dokumen ini kadaluarsa dalam %d detik.",
+        "Dokumen ini kadaluarsa dalam %d detik."
     ],
     "This document will expire in %d minutes.": [
-        "This document will expire in %d minute. (singular)",
-        "This document will expire in %d minutes. (1st plural)",
-        "This document will expire in %d minutes. (2nd plural)",
-        "This document will expire in %d minutes. (3rd plural)"
+        "Dokumen ini akan kadaluarsa dalam %d menit.",
+        "Dokumen ini akan kadaluarsa dalam %d menit.",
+        "Dokumen ini akan kadaluarsa dalam %d menit.",
+        "Dokumen ini akan kadaluarsa dalam %d menit."
     ],
     "This document will expire in %d hours.": [
         "This document will expire in %d hour. (singular)",
