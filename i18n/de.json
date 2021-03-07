@@ -1,6 +1,6 @@
 {
     "PrivateBin": "PrivateBin",
-    "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES.": "%s ist ein minimalistischer, quelloffener \"Pastebin\"-artiger Dienst, bei dem der Server keinerlei Kenntnis der Inhalte hat. Die Daten werden <i>im Browser</i> mit 256 Bit AES ver- und entschlüsselt.",
+    "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted %sin the browser%s using 256 bits AES.": "%s ist ein minimalistischer, quelloffener \"Pastebin\"-artiger Dienst, bei dem der Server keinerlei Kenntnis der Inhalte hat. Die Daten werden %sim Browser%s mit 256 Bit AES ver- und entschlüsselt.",
     "More information on the <a href=\"https://privatebin.info/\">project page</a>.": "Weitere Informationen sind auf der <a href=\"https://privatebin.info/\">Projektseite</a> zu finden.",
     "Because ignorance is bliss": "Unwissenheit ist ein Segen",
     "en": "de",

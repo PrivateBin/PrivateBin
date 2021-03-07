@@ -1,6 +1,6 @@
 {
     "PrivateBin": "PrivateBin",
-    "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES.": "%s yra minimalistinis, atvirojo kodo internetinis įdėjimų dėklas, kurį naudojant, serveris nieko nenutuokia apie įdėtus duomenis. Duomenys yra šifruojami/iššifruojami <i>naršyklėje</i> naudojant 256 bitų AES.",
+    "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted %sin the browser%s using 256 bits AES.": "%s yra minimalistinis, atvirojo kodo internetinis įdėjimų dėklas, kurį naudojant, serveris nieko nenutuokia apie įdėtus duomenis. Duomenys yra šifruojami/iššifruojami %snaršyklėje%s naudojant 256 bitų AES.",
     "More information on the <a href=\"https://privatebin.info/\">project page</a>.": "Daugiau informacijos rasite <a href=\"https://privatebin.info/\">projeketo puslapyje</a>.",
     "Because ignorance is bliss": "Nes nežinojimas yra palaima",
     "en": "lt",

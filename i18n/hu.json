@@ -1,6 +1,6 @@
 {
     "PrivateBin": "PrivateBin",
-    "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES.": "A %s egy minimalista, nyílt forráskódú adattároló szoftver, ahol a szerver semmilyen információt nem tárol a feltett adatról. Azt ugyanis a <i>böngésződ</i> segítségével titkosítja és oldja fel 256 bit hosszú titkosítási kulcsú AES-t használva.",
+    "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted %sin the browser%s using 256 bits AES.": "A %s egy minimalista, nyílt forráskódú adattároló szoftver, ahol a szerver semmilyen információt nem tárol a feltett adatról. Azt ugyanis a %sböngésződ%s segítségével titkosítja és oldja fel 256 bit hosszú titkosítási kulcsú AES-t használva.",
     "More information on the <a href=\"https://privatebin.info/\">project page</a>.": "További információt a <a href=\"https://privatebin.info/\">projekt oldalán</a> találsz.",
     "Because ignorance is bliss": "A titok egyfajta hatalom.",
     "en": "hu",
