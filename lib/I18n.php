@@ -323,6 +323,8 @@ class I18n
                 return $n > 1 ? 1 : 0;
             case 'he':
                 return $n === 1 ? 0 : ($n === 2 ? 1 : (($n < 0 || $n > 10) && ($n % 10 === 0) ? 2 : 3));
+            case 'id':
+                return 0;
             case 'lt':
                 return $n % 10 === 1 && $n % 100 !== 11 ? 0 : (($n % 10 >= 2 && $n % 100 < 10 || $n % 100 >= 20) ? 1 : 2);
             case 'pl':
