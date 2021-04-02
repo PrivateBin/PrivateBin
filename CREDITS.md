@@ -49,3 +49,4 @@ Sébastien Sauvage - original idea and main developer
 * Yaron Shahrabani - Hebrew
 * Moo - Lithuanian
 * whenwesober - Indonesian
+* retiolus - Catalan
