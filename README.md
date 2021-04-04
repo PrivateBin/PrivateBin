@@ -37,9 +37,7 @@ without losing any data.
   Otherwise you would also have to trust your internet provider, and any country
   the traffic passes through.
   Additionally the instance should be secured by
-  [HSTS](https://en.wikipedia.org/wiki/HTTP_Strict_Transport_Security) and
-  ideally by [HPKP](https://en.wikipedia.org/wiki/HTTP_Public_Key_Pinning) using a
-  certificate. It can use traditional certificate authorities and/or use
+  [HSTS](https://en.wikipedia.org/wiki/HTTP_Strict_Transport_Security). It can use traditional certificate authorities and/or use
   [DNSSEC](https://en.wikipedia.org/wiki/Domain_Name_System_Security_Extensions)
   protected
   [DANE](https://en.wikipedia.org/wiki/DNS-based_Authentication_of_Named_Entities)
