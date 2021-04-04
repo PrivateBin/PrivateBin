@@ -183,5 +183,6 @@
     "Convert To UTC": "Converter para UTC",
     "Close": "Fechar",
     "Encrypted note on PrivateBin": "Nota criptografada no PrivateBin",
-    "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "Visite esse link para ver a nota. Dar a URL para qualquer um permite que eles também acessem a nota."
+    "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "Visite esse link para ver a nota. Dar a URL para qualquer um permite que eles também acessem a nota.",
+    "URL shortener may expose your decrypt key in URL.": "URL shortener may expose your decrypt key in URL."
 }
