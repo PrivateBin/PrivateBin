@@ -3508,6 +3508,8 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
         let createButtonsDisplayed = false,
             viewButtonsDisplayed = false,
+            burnAfterReadingDefault = false,
+            openDiscussionDefault = false,
             $attach,
             $burnAfterReading,
             $burnAfterReadingOption,
@@ -4152,11 +4154,10 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         me.resetInput = function()
         {
             clearAttachmentInput();
-
-            $openDiscussion.prop('checked', false);
-            $burnAfterReading.prop('checked', false);
-            $openDiscussionOption.removeClass('buttondisabled');
-            $burnAfterReadingOption.removeClass('buttondisabled');
+            $burnAfterReading.prop('checked', burnAfterReadingDefault);
+            $openDiscussion.prop('checked', openDiscussionDefault);
+            if (openDiscussionDefault) $openDiscussionOption.removeClass('buttondisabled');
+            if (burnAfterReadingDefault) $burnAfterReadingOption.removeClass('buttondisabled');
 
             // TODO: reset expiration time
         };
@@ -4356,7 +4357,9 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             changeBurnAfterReading();
             changeOpenDiscussion();
 
-            // get default value from template or fall back to set value
+            // get default values from template or fall back to set value
+            burnAfterReadingDefault = me.getBurnAfterReading();
+            openDiscussionDefault = me.getOpenDiscussion();
             pasteExpiration = Model.getExpirationDefault() || pasteExpiration;
 
             createButtonsDisplayed = false;
