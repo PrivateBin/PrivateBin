@@ -317,6 +317,92 @@ describe('TopNav', function () {
         );
     });
 
+    describe('resetInput', function () {
+        before(function () {
+            cleanup();
+        });
+
+        it(
+            'reset inputs to defaults (options off)',
+            function () {
+                var results = [];
+                $('body').html(
+                    '<nav><div id="navbar"><ul><li id="burnafterreadingoption" ' +
+                    'class="hidden"><label><input type="checkbox" ' +
+                    'id="burnafterreading" name="burnafterreading" /> ' +
+                    'Burn after reading</label></li><li id="opendiscussionoption" ' +
+                    'class="hidden"><label><input type="checkbox" ' +
+                    'id="opendiscussion" name="opendiscussion" /> ' +
+                    'Open discussion</label></li></ul></div></nav>'
+                );
+                $.PrivateBin.TopNav.init();
+                results.push(
+                    !$.PrivateBin.TopNav.getBurnAfterReading()
+                );
+                results.push(
+                    !$.PrivateBin.TopNav.getOpenDiscussion()
+                );
+                $('#burnafterreading').attr('checked', 'checked');
+                $('#opendiscussion').attr('checked', 'checked');
+                results.push(
+                    $.PrivateBin.TopNav.getBurnAfterReading()
+                );
+                results.push(
+                    $.PrivateBin.TopNav.getOpenDiscussion()
+                );
+                $.PrivateBin.TopNav.resetInput();
+                results.push(
+                    !$.PrivateBin.TopNav.getBurnAfterReading()
+                );
+                results.push(
+                    !$.PrivateBin.TopNav.getOpenDiscussion()
+                );
+                cleanup();
+                assert.ok(results.every(element => element));
+            }
+        );
+
+        it(
+            'reset inputs to defaults (options on)',
+            function () {
+                var results = [];
+                $('body').html(
+                    '<nav><div id="navbar"><ul><li id="burnafterreadingoption" ' +
+                    'class="hidden"><label><input type="checkbox" ' +
+                    'id="burnafterreading" name="burnafterreading" checked="checked" /> ' +
+                    'Burn after reading</label></li><li id="opendiscussionoption" ' +
+                    'class="hidden"><label><input type="checkbox" ' +
+                    'id="opendiscussion" name="opendiscussion" checked="checked" /> ' +
+                    'Open discussion</label></li></ul></div></nav>'
+                );
+                $.PrivateBin.TopNav.init();
+                results.push(
+                    $.PrivateBin.TopNav.getBurnAfterReading()
+                );
+                results.push(
+                    $.PrivateBin.TopNav.getOpenDiscussion()
+                );
+                $('#burnafterreading').removeAttr('checked');
+                $('#opendiscussion').removeAttr('checked');
+                results.push(
+                    !$.PrivateBin.TopNav.getBurnAfterReading()
+                );
+                results.push(
+                    !$.PrivateBin.TopNav.getOpenDiscussion()
+                );
+                $.PrivateBin.TopNav.resetInput();
+                results.push(
+                    $.PrivateBin.TopNav.getBurnAfterReading()
+                );
+                results.push(
+                    $.PrivateBin.TopNav.getOpenDiscussion()
+                );
+                cleanup();
+                assert.ok(results.every(element => element));
+            }
+        );
+    });
+
     describe('getExpiration', function () {
         before(function () {
             cleanup();
