@@ -8,6 +8,9 @@ REGEX_VERSION := $(shell echo $(VERSION) | sed "s/\./\\\./g")
 
 all: coverage doc ## Equivalent to running `make coverage doc`.
 
+composer: ## Update composer dependencies (only production ones, optimize the autoloader)
+	composer update --no-dev --optimize-autoloader
+
 coverage: coverage-js coverage-php ## Run all unit tests and generate code coverage reports.
 
 coverage-js: ## Run JS unit tests and generate code coverage reports.
