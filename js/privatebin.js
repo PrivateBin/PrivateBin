@@ -4156,10 +4156,16 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             clearAttachmentInput();
             $burnAfterReading.prop('checked', burnAfterReadingDefault);
             $openDiscussion.prop('checked', openDiscussionDefault);
-            if (openDiscussionDefault) $openDiscussionOption.removeClass('buttondisabled');
-            if (burnAfterReadingDefault) $burnAfterReadingOption.removeClass('buttondisabled');
+            if (openDiscussionDefault || !burnAfterReadingDefault) $openDiscussionOption.removeClass('buttondisabled');
+            if (burnAfterReadingDefault || !openDiscussionDefault) $burnAfterReadingOption.removeClass('buttondisabled');
 
-            // TODO: reset expiration time
+            pasteExpiration = Model.getExpirationDefault() || pasteExpiration;
+            $('#pasteExpiration>option').each(function() {
+                const $this = $(this);
+                if ($this.val() === pasteExpiration) {
+                    $('#pasteExpirationDisplay').text($this.text());
+                }
+            });
         };
 
         /**
