@@ -4,7 +4,7 @@
   * **1.3.5 (2021-04-05)**
     * ADDED: Translation for Hebrew, Lithuanian, Indonesian and Catalan
     * ADDED: Make the project info configurable (#681)
-    * CHANGED: Upgrading libraries to: DOMpurify 2.2.7
+    * CHANGED: Upgrading libraries to: DOMpurify 2.2.7, kjua 0.9.0 & random_compat 2.0.18
     * CHANGED: Open all links in new window (#630)
     * FIXED: PDF display in Firefox (#630)
     * FIXED: Allow pasting into password input dialog (#630)
