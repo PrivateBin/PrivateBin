@@ -111,7 +111,7 @@
     "Please enter the password for this paste:": "请输入这份粘贴内容的密码：",
     "Could not decrypt data (Wrong key?)": "无法解密数据（密钥错误？）",
     "Could not delete the paste, it was not stored in burn after reading mode.": "无法删除此粘贴内容，它没有以阅后即焚模式保存。",
-    "FOR YOUR EYES ONLY. Don't close this window, this message can't be displayed again.": "注意啦！！！不要关闭窗口，否则你再也见不到这条消息了。",
+    "FOR YOUR EYES ONLY. Don't close this window, this message can't be displayed again.": "看！仔！细！了！不要关闭窗口，否则你再也见不到这条消息了。",
     "Could not decrypt comment; Wrong key?": "无法解密评论; 密钥错误？",
     "Reply": "回复",
     "Anonymous": "匿名",
@@ -162,7 +162,7 @@
     "Loading…": "载入中…",
     "Decrypting paste…": "正在解密",
     "Preparing new paste…": "正在准备新的粘贴内容",
-    "In case this message never disappears please have a look at <a href=\"%s\">this FAQ for information to troubleshoot</a>.": "如果这个消息一直存在，请参考 <a href=\"%s\">这里的 参考文档（英文版）</a>进行故障排除。",
+    "In case this message never disappears please have a look at <a href=\"%s\">this FAQ for information to troubleshoot</a>.": "如果这个消息一直存在，请参考 <a href=\"%s\">这里的 FAQ （英文版）</a>进行故障排除。",
     "+++ no paste text +++": "+++ 没有粘贴内容 +++",
     "Could not get paste data: %s": "无法获取粘贴数据：%s",
     "QR code": "二维码",
@@ -184,5 +184,5 @@
     "Close": "关闭",
     "Encrypted note on PrivateBin": "PrivateBin上的加密笔记",
     "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "访问这个链接来查看该笔记。 将这个URL发送给任何人即可允许其访问该笔记。",
-    "URL shortener may expose your decrypt key in URL.": "URL shortener may expose your decrypt key in URL."
+    "URL shortener may expose your decrypt key in URL.": "URL 缩短可能会暴露您在 URL 中的解密密钥。"
 }
