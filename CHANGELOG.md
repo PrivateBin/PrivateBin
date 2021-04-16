@@ -1,9 +1,10 @@
 # PrivateBin version history
 
   * **1.4 (not yet released)**
+  * **1.3.5 (2021-04-05)**
     * ADDED: Translation for Hebrew, Lithuanian, Indonesian and Catalan
     * ADDED: Make the project info configurable (#681)
-    * CHANGED: Upgrading libraries to: DOMpurify 2.2.7
+    * CHANGED: Upgrading libraries to: DOMpurify 2.2.7, kjua 0.9.0 & random_compat 2.0.18
     * CHANGED: Open all links in new window (#630)
     * FIXED: PDF display in Firefox (#630)
     * FIXED: Allow pasting into password input dialog (#630)
@@ -17,6 +18,7 @@
     * FIXED: Downloads in Chrome >= 83 (#634)
     * FIXED: Display of empty files (#663)
     * FIXED: Improve OpenGraph attributes (#651)
+    * FIXED: Reset to configured burn-after-reading, discussion and expiration settings (#682)
     * FIXED: Italic segment of project information (#756)
   * **1.3.4 (2020-03-22)**
     * CHANGED: Minimum required PHP version is 5.6, due to a change in the identicon library and to use php's native hash_equals()

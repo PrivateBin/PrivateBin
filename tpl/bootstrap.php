@@ -45,7 +45,7 @@ endif;
 <?php
 if ($QRCODE) :
 ?>
-		<script async type="text/javascript" data-cfasync="false" src="js/kjua-0.6.0.js" integrity="sha512-GEEIHvphDt1NmaxzX8X1ZkBiGKXCv+Ofzwi8SMEH5wQVWqdGIvBO/fnxxKZ90RU1bVp6srS68nHIpZo6iVcG9g==" crossorigin="anonymous"></script>
+		<script async type="text/javascript" data-cfasync="false" src="js/kjua-0.9.0.js" integrity="sha512-CVn7af+vTMBd9RjoS4QM5fpLFEOtBCoB0zPtaqIDC7sF4F8qgUSRFQQpIyEDGsr6yrjbuOLzdf20tkHHmpaqwQ==" crossorigin="anonymous"></script>
 <?php
 endif;
 if ($ZEROBINCOMPATIBILITY) :
@@ -72,7 +72,7 @@ endif;
 ?>
 		<script type="text/javascript" data-cfasync="false" src="js/purify-2.2.7.js" integrity="sha512-7Ka1I/nJuR2CL8wzIS5PJS4HgEMd0HJ6kfAl6fFhwFBB27rhztFbe0tS+Ex+Qg+5n4nZIT4lty4k4Di3+X9T4A==" crossorigin="anonymous"></script>
 		<script type="text/javascript" data-cfasync="false" src="js/legacy.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-LYos+qXHIRqFf5ZPNphvtTB0cgzHUizu2wwcOwcwz/VIpRv9lpcBgPYz4uq6jx0INwCAj6Fbnl5HoKiLufS2jg==" crossorigin="anonymous"></script>
-		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-3IcMpzyLRym+sBfYDMbQknNHwBW6Yh+B4aqhGrh7nkqvvNEcShmuZSPg+OVbtTvpX/9ylJl217gmtXiMNu0lZg==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-wuKnPu9+bTYhJ0HRhUmw0UxWYP5mbQehFNspkD9N4mTlxLkjRZXPnMt/nfT2/U62rRDUw1HL3SvveKJe2v4EBw==" crossorigin="anonymous"></script>
 		<!-- icon -->
 		<link rel="apple-touch-icon" href="<?php echo I18n::encode($BASEPATH); ?>img/apple-touch-icon.png" sizes="180x180" />
 		<link rel="icon" type="image/png" href="img/favicon-32x32.png" sizes="32x32" />

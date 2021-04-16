@@ -6,7 +6,7 @@
  * @see       {@link https://github.com/PrivateBin/PrivateBin}
  * @copyright 2012 Sébastien SAUVAGE ({@link http://sebsauvage.net})
  * @license   {@link https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License}
- * @version   1.3.4
+ * @version   1.3.5
  * @name      PrivateBin
  * @namespace
  */
@@ -3508,6 +3508,8 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
         let createButtonsDisplayed = false,
             viewButtonsDisplayed = false,
+            burnAfterReadingDefault = false,
+            openDiscussionDefault = false,
             $attach,
             $burnAfterReading,
             $burnAfterReadingOption,
@@ -4152,13 +4154,18 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         me.resetInput = function()
         {
             clearAttachmentInput();
+            $burnAfterReading.prop('checked', burnAfterReadingDefault);
+            $openDiscussion.prop('checked', openDiscussionDefault);
+            if (openDiscussionDefault || !burnAfterReadingDefault) $openDiscussionOption.removeClass('buttondisabled');
+            if (burnAfterReadingDefault || !openDiscussionDefault) $burnAfterReadingOption.removeClass('buttondisabled');
 
-            $openDiscussion.prop('checked', false);
-            $burnAfterReading.prop('checked', false);
-            $openDiscussionOption.removeClass('buttondisabled');
-            $burnAfterReadingOption.removeClass('buttondisabled');
-
-            // TODO: reset expiration time
+            pasteExpiration = Model.getExpirationDefault() || pasteExpiration;
+            $('#pasteExpiration>option').each(function() {
+                const $this = $(this);
+                if ($this.val() === pasteExpiration) {
+                    $('#pasteExpirationDisplay').text($this.text());
+                }
+            });
         };
 
         /**
@@ -4356,7 +4363,9 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             changeBurnAfterReading();
             changeOpenDiscussion();
 
-            // get default value from template or fall back to set value
+            // get default values from template or fall back to set value
+            burnAfterReadingDefault = me.getBurnAfterReading();
+            openDiscussionDefault = me.getOpenDiscussion();
             pasteExpiration = Model.getExpirationDefault() || pasteExpiration;
 
             createButtonsDisplayed = false;
