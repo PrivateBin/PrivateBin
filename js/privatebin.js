@@ -601,7 +601,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          * @prop   {string[]}
          * @readonly
          */
-        const supportedLanguages = ['bg', 'cs', 'de', 'es', 'fr', 'he', 'hu', 'it', 'lt', 'no', 'nl', 'pl', 'pt', 'oc', 'ru', 'sl', 'uk', 'zh'];
+        const supportedLanguages = ['bg', 'ca', 'cs', 'de', 'es', 'et', 'fr', 'he', 'hu', 'id', 'it', 'lt', 'no', 'nl', 'pl', 'pt', 'oc', 'ru', 'sl', 'uk', 'zh'];
 
         /**
          * built in language
@@ -767,7 +767,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         /**
          * per language functions to use to determine the plural form
          *
-         * @see    {@link http://localization-guide.readthedocs.org/en/latest/l10n/pluralforms.html}
+         * @see    {@link https://localization-guide.readthedocs.org/en/latest/l10n/pluralforms.html}
          * @name   I18n.getPluralForm
          * @function
          * @param  {int} n
@@ -795,7 +795,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                     return n % 10 === 1 && n % 100 !== 11 ? 0 : (n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20) ? 1 : 2);
                 case 'sl':
                     return n % 100 === 1 ? 1 : (n % 100 === 2 ? 2 : (n % 100 === 3 || n % 100 === 4 ? 3 : 0));
-                // bg, ca, de, en, es, hu, it, nl, no, pt
+                // bg, ca, de, en, es, et, hu, it, nl, no, pt
                 default:
                     return n !== 1 ? 1 : 0;
             }

@@ -50,3 +50,4 @@ Sébastien Sauvage - original idea and main developer
 * Moo - Lithuanian
 * whenwesober - Indonesian
 * retiolus - Catalan
+* sarnane - Estonian
