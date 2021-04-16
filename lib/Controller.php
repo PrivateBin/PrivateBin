@@ -346,10 +346,13 @@ class Controller
         header('Last-Modified: ' . $time);
         header('Vary: Accept');
         header('Content-Security-Policy: ' . $this->_conf->getKey('cspheader'));
+        header('Cross-Origin-Resource-Policy: same-origin');
+        header('Cross-Origin-Embedder-Policy: require-corp');
+        header('Cross-Origin-Opener-Policy: same-origin');
         header('Referrer-Policy: no-referrer');
-        header('X-Xss-Protection: 1; mode=block');
-        header('X-Frame-Options: DENY');
         header('X-Content-Type-Options: nosniff');
+        header('X-Frame-Options: deny');
+        header('X-XSS-Protection: 1; mode=block');
 
         // label all the expiration options
         $expire = array();

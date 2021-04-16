@@ -2,6 +2,7 @@
 
   * **1.4 (not yet released)**
     * ADDED: Translation for Estonian
+    * ADDED: new HTTP headers improving security (#765)
   * **1.3.5 (2021-04-05)**
     * ADDED: Translation for Hebrew, Lithuanian, Indonesian and Catalan
     * ADDED: Make the project info configurable (#681)
