@@ -55,7 +55,7 @@ class Configuration
             'urlshortener'             => '',
             'qrcode'                   => true,
             'icon'                     => 'identicon',
-            'cspheader'                => 'default-src \'none\'; manifest-src \'self\'; connect-src * blob:; script-src \'self\' \'unsafe-eval\' resource:; style-src \'self\'; font-src \'self\'; img-src \'self\' data: blob:; media-src blob:; object-src blob:; sandbox allow-same-origin allow-scripts allow-forms allow-popups allow-modals allow-downloads',
+            'cspheader'                => 'default-src \'none\'; base-uri \'self\'; manifest-src \'self\'; connect-src * blob:; script-src \'self\' \'unsafe-eval\' resource:; style-src \'self\'; font-src \'self\'; img-src \'self\' data: blob:; media-src blob:; object-src blob:; sandbox allow-same-origin allow-scripts allow-forms allow-popups allow-modals allow-downloads',
             'zerobincompatibility'     => false,
             'httpwarning'              => true,
             'compression'              => 'zlib',
@@ -265,3 +265,4 @@ class Configuration
         return $this->_configuration[$section];
     }
 }
+
