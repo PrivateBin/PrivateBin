@@ -3525,7 +3525,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             $password,
             $passwordInput,
             $rawTextButton,
-	    $downloadTextButton,
+            $downloadTextButton,
             $qrCodeLink,
             $emailLink,
             $sendButton,
@@ -3676,20 +3676,20 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         function downloadText()
         {
-	    var filename='paste.txt';
-	    var text = PasteViewer.getText();
+            var filename='paste.txt';
+            var text = PasteViewer.getText();
 
-	    var element = document.createElement('a');
-	    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
-	    element.setAttribute('download', filename);
+            var element = document.createElement('a');
+            element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+            element.setAttribute('download', filename);
 
-	    element.style.display = 'none';
-	    document.body.appendChild(element);
+            element.style.display = 'none';
+            document.body.appendChild(element);
 
-	    element.click();
+            element.click();
 
-	    document.body.removeChild(element);
-	}
+            document.body.removeChild(element);
+        }
 
         /**
          * saves the language in a cookie and reloads the page
@@ -4729,7 +4729,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             TopNav.showEmailButton();
 
             TopNav.hideRawButton();
-	    TopNav.hideDownloadButton();
+            TopNav.hideDownloadButton();
             Editor.hide();
 
             // parse and show text
