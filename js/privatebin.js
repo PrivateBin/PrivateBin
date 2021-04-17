@@ -3701,7 +3701,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         function setLanguage(event)
         {
-            document.cookie = 'lang=' + $(event.target).data('lang');
+            document.cookie = 'lang=' + $(event.target).data('lang') + ';secure';
             UiHelper.reloadHome();
         }
 

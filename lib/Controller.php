@@ -170,7 +170,7 @@ class Controller
         // force default language, if language selection is disabled and a default is set
         if (!$this->_conf->getKey('languageselection') && strlen($lang) == 2) {
             $_COOKIE['lang'] = $lang;
-            setcookie('lang', $lang);
+            setcookie('lang', $lang, 0, '', '', true);
         }
     }
 
@@ -349,6 +349,7 @@ class Controller
         header('Cross-Origin-Resource-Policy: same-origin');
         header('Cross-Origin-Embedder-Policy: require-corp');
         header('Cross-Origin-Opener-Policy: same-origin');
+        header('Permissions-Policy: interest-cohort=()');
         header('Referrer-Policy: no-referrer');
         header('X-Content-Type-Options: nosniff');
         header('X-Frame-Options: deny');
@@ -367,7 +368,7 @@ class Controller
         $languageselection = '';
         if ($this->_conf->getKey('languageselection')) {
             $languageselection = I18n::getLanguage();
-            setcookie('lang', $languageselection);
+            setcookie('lang', $languageselection, 0, '', '', true);
         }
 
         $page = new View;
