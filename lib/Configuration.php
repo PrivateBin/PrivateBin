@@ -265,4 +265,3 @@ class Configuration
         return $this->_configuration[$section];
     }
 }
-
