@@ -349,6 +349,7 @@ class Controller
         header('Cross-Origin-Resource-Policy: same-origin');
         header('Cross-Origin-Embedder-Policy: require-corp');
         header('Cross-Origin-Opener-Policy: same-origin');
+        header('Permissions-Policy: interest-cohort=()');
         header('Referrer-Policy: no-referrer');
         header('X-Content-Type-Options: nosniff');
         header('X-Frame-Options: deny');
