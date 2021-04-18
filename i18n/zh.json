@@ -184,5 +184,6 @@
     "Close": "关闭",
     "Encrypted note on PrivateBin": "PrivateBin上的加密笔记",
     "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "访问这个链接来查看该笔记。 将这个URL发送给任何人即可允许其访问该笔记。",
-    "URL shortener may expose your decrypt key in URL.": "URL 缩短可能会暴露您在 URL 中的解密密钥。"
+    "URL shortener may expose your decrypt key in URL.": "URL 缩短可能会暴露您在 URL 中的解密密钥。",
+    "Save paste": "Save paste"
 }
