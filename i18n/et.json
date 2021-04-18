@@ -184,5 +184,6 @@
     "Close": "Sulge",
     "Encrypted note on PrivateBin": "Krüpteeritud kiri PrivateBin-is",
     "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "Kirja nägemiseks külasta seda linki. Teistele URL-i andmine lubab ka neil ligi pääseda kirjale.",
-    "URL shortener may expose your decrypt key in URL.": "URL-i lühendaja võib paljastada sinu dekrüpteerimisvõtme URL-is."
+    "URL shortener may expose your decrypt key in URL.": "URL-i lühendaja võib paljastada sinu dekrüpteerimisvõtme URL-is.",
+    "Save paste": "Save paste"
 }
