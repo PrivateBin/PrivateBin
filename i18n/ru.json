@@ -184,6 +184,6 @@
     "Close": "Закрыть",
     "Encrypted note on PrivateBin": "Зашифрованная запись на PrivateBin",
     "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "Посетите эту ссылку чтобы просмотреть запись. Передача ссылки кому либо позволит им получить доступ к записи тоже.",
-    "URL shortener may expose your decrypt key in URL.": "URL shortener may expose your decrypt key in URL.",
-    "Save paste": "Save paste"
+    "URL shortener may expose your decrypt key in URL.": "Сервис сокращения ссылок может получить ваш ключ расшифровки из ссылки.",
+    "Save paste": "Сохранить запись"
 }
