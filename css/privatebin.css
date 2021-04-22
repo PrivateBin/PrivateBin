@@ -249,6 +249,10 @@ button img {
 	padding: 1px 0 1px 0;
 }
 
+#downloadtextbutton img {
+	padding: 1px 0 1px 0;
+}
+
 #remainingtime, #password {
 	color: #94a3b4;
 	display: inline;

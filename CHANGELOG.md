@@ -3,6 +3,7 @@
   * **1.4 (not yet released)**
     * ADDED: Translation for Estonian
     * ADDED: new HTTP headers improving security (#765)
+    * ADDED: Download button for paste text (#774)
     * ADDED: Opt-out of federated learning of cohorts (FLoC) (#776)
     * CHANGED: Language selection cookie only transmitted over HTTPS (#472)
   * **1.3.5 (2021-04-05)**

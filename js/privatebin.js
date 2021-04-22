@@ -3525,6 +3525,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             $password,
             $passwordInput,
             $rawTextButton,
+            $downloadTextButton,
             $qrCodeLink,
             $emailLink,
             $sendButton,
@@ -3664,6 +3665,30 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             }
             newDoc.write('</head><body><pre>' + DOMPurify.sanitize(Helper.htmlEntities(paste)) + '</pre></body></html>');
             newDoc.close();
+        }
+
+        /**
+         * download text
+         *
+         * @name   TopNav.downloadText
+         * @private
+         * @function
+         */
+        function downloadText()
+        {
+            var filename='paste-' + Model.getPasteId() + '.txt';
+            var text = PasteViewer.getText();
+
+            var element = document.createElement('a');
+            element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+            element.setAttribute('download', filename);
+
+            element.style.display = 'none';
+            document.body.appendChild(element);
+
+            element.click();
+
+            document.body.removeChild(element);
         }
 
         /**
@@ -3892,6 +3917,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             $newButton.removeClass('hidden');
             $cloneButton.removeClass('hidden');
             $rawTextButton.removeClass('hidden');
+            $downloadTextButton.removeClass('hidden');
             $qrCodeLink.removeClass('hidden');
 
             viewButtonsDisplayed = true;
@@ -3912,6 +3938,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             $cloneButton.addClass('hidden');
             $newButton.addClass('hidden');
             $rawTextButton.addClass('hidden');
+            $downloadTextButton.addClass('hidden');
             $qrCodeLink.addClass('hidden');
             me.hideEmailButton();
 
@@ -4071,6 +4098,17 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         me.hideRawButton = function()
         {
             $rawTextButton.addClass('hidden');
+        };
+
+        /**
+         * only hides the download text button
+         *
+         * @name   TopNav.hideRawButton
+         * @function
+         */
+        me.hideDownloadButton = function()
+        {
+            $downloadTextButton.addClass('hidden');
         };
 
         /**
@@ -4334,6 +4372,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             $password = $('#password');
             $passwordInput = $('#passwordinput');
             $rawTextButton = $('#rawtextbutton');
+            $downloadTextButton = $('#downloadtextbutton');
             $retryButton = $('#retrybutton');
             $sendButton = $('#sendbutton');
             $qrCodeLink = $('#qrcodelink');
@@ -4351,6 +4390,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             $sendButton.click(PasteEncrypter.sendPaste);
             $cloneButton.click(Controller.clonePaste);
             $rawTextButton.click(rawText);
+            $downloadTextButton.click(downloadText);
             $retryButton.click(clickRetryButton);
             $fileRemoveButton.click(removeAttachment);
             $qrCodeLink.click(displayQrCode);
@@ -4689,6 +4729,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             TopNav.showEmailButton();
 
             TopNav.hideRawButton();
+            TopNav.hideDownloadButton();
             Editor.hide();
 
             // parse and show text
