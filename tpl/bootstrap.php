@@ -16,6 +16,7 @@ $isPage = substr($template, -5) === '-page';
 if (!$isDark) :
 ?>
 		<link type="text/css" rel="stylesheet" href="css/bootstrap/bootstrap-3.4.1.css" />
+		<link type="text/css" rel="stylesheet" href="css/linehighlighting.css?<?php echo rawurlencode($VERSION); ?>" />
 <?php
 endif;
 ?>
@@ -24,6 +25,7 @@ endif;
 if ($isDark) :
 ?>
 		<link type="text/css" rel="stylesheet" href="css/bootstrap/darkstrap-0.9.3.css" />
+		<link type="text/css" rel="stylesheet" href="css/linehighlighting_dark.css?<?php echo rawurlencode($VERSION); ?>" />
 <?php
 endif;
 ?>
