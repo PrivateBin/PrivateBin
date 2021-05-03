@@ -1,12 +1,12 @@
 {
     "PrivateBin": "PrivateBin",
-    "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted %sin the browser%s using 256 bits AES.": "%s是一个极简、开源、对粘贴内容毫不知情的在线粘贴板，数据%s在浏览器内%s进行AES-256加密。",
+    "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted %sin the browser%s using 256 bits AES.": "%s是一个极简、开源、对粘贴内容毫不知情的在线粘贴板，数据%s在浏览器内%s进行AES-256加密和解密。",
     "More information on the <a href=\"https://privatebin.info/\">project page</a>.": "更多信息请查看<a href=\"https://privatebin.info/\">项目主页</a>。",
     "Because ignorance is bliss": "因为无知是福",
     "en": "zh",
-    "Paste does not exist, has expired or has been deleted.": "粘贴内容不存在，已过期或已被删除。",
-    "%s requires php %s or above to work. Sorry.": "%s需要PHP %s及以上版本来工作，抱歉。",
-    "%s requires configuration section [%s] to be present in configuration file.": "%s需要设置配置文件中 [%s] 部分。",
+    "Paste does not exist, has expired or has been deleted.": "粘贴内容不存在、已过期或已被删除。",
+    "%s requires php %s or above to work. Sorry.": "抱歉，%s需要PHP %s及以上版本才能运行。",
+    "%s requires configuration section [%s] to be present in configuration file.": "%s需要设置配置文件中的 [%s] 部分。",
     "Please wait %d seconds between each post.": [
         "每 %d 秒只能粘贴一次。",
         "每 %d 秒只能粘贴一次。",
