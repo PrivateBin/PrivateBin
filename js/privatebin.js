@@ -6,7 +6,7 @@
  * @see       {@link https://github.com/PrivateBin/PrivateBin}
  * @copyright 2012 Sébastien SAUVAGE ({@link http://sebsauvage.net})
  * @license   {@link https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License}
- * @version   1.3.4
+ * @version   1.3.5
  * @name      PrivateBin
  * @namespace
  */
@@ -601,7 +601,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          * @prop   {string[]}
          * @readonly
          */
-        const supportedLanguages = ['bg', 'cs', 'de', 'es', 'fr', 'he', 'hu', 'it', 'lt', 'no', 'nl', 'pl', 'pt', 'oc', 'ru', 'sl', 'uk', 'zh'];
+        const supportedLanguages = ['bg', 'ca', 'cs', 'de', 'es', 'et', 'fr', 'he', 'hu', 'id', 'it', 'lt', 'no', 'nl', 'pl', 'pt', 'oc', 'ru', 'sl', 'uk', 'zh'];
 
         /**
          * built in language
@@ -767,7 +767,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         /**
          * per language functions to use to determine the plural form
          *
-         * @see    {@link http://localization-guide.readthedocs.org/en/latest/l10n/pluralforms.html}
+         * @see    {@link https://localization-guide.readthedocs.org/en/latest/l10n/pluralforms.html}
          * @name   I18n.getPluralForm
          * @function
          * @param  {int} n
@@ -784,6 +784,8 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                     return n > 1 ? 1 : 0;
                 case 'he':
                     return n === 1 ? 0 : (n === 2 ? 1 : ((n < 0 || n > 10) && (n % 10 === 0) ? 2 : 3));
+                case 'id':
+                    return 0;
                 case 'lt':
                     return n % 10 === 1 && n % 100 !== 11 ? 0 : ((n % 10 >= 2 && n % 100 < 10 || n % 100 >= 20) ? 1 : 2);
                 case 'pl':
@@ -793,7 +795,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                     return n % 10 === 1 && n % 100 !== 11 ? 0 : (n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20) ? 1 : 2);
                 case 'sl':
                     return n % 100 === 1 ? 1 : (n % 100 === 2 ? 2 : (n % 100 === 3 || n % 100 === 4 ? 3 : 0));
-                // bg, de, en, es, hu, it, nl, no, pt
+                // bg, ca, de, en, es, et, hu, it, nl, no, pt
                 default:
                     return n !== 1 ? 1 : 0;
             }
@@ -3506,6 +3508,8 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
         let createButtonsDisplayed = false,
             viewButtonsDisplayed = false,
+            burnAfterReadingDefault = false,
+            openDiscussionDefault = false,
             $attach,
             $burnAfterReading,
             $burnAfterReadingOption,
@@ -3521,6 +3525,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             $password,
             $passwordInput,
             $rawTextButton,
+            $downloadTextButton,
             $qrCodeLink,
             $emailLink,
             $sendButton,
@@ -3663,6 +3668,30 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         }
 
         /**
+         * download text
+         *
+         * @name   TopNav.downloadText
+         * @private
+         * @function
+         */
+        function downloadText()
+        {
+            var filename='paste-' + Model.getPasteId() + '.txt';
+            var text = PasteViewer.getText();
+
+            var element = document.createElement('a');
+            element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+            element.setAttribute('download', filename);
+
+            element.style.display = 'none';
+            document.body.appendChild(element);
+
+            element.click();
+
+            document.body.removeChild(element);
+        }
+
+        /**
          * saves the language in a cookie and reloads the page
          *
          * @name   TopNav.setLanguage
@@ -3672,7 +3701,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         function setLanguage(event)
         {
-            document.cookie = 'lang=' + $(event.target).data('lang');
+            document.cookie = 'lang=' + $(event.target).data('lang') + ';secure';
             UiHelper.reloadHome();
         }
 
@@ -3888,6 +3917,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             $newButton.removeClass('hidden');
             $cloneButton.removeClass('hidden');
             $rawTextButton.removeClass('hidden');
+            $downloadTextButton.removeClass('hidden');
             $qrCodeLink.removeClass('hidden');
 
             viewButtonsDisplayed = true;
@@ -3908,6 +3938,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             $cloneButton.addClass('hidden');
             $newButton.addClass('hidden');
             $rawTextButton.addClass('hidden');
+            $downloadTextButton.addClass('hidden');
             $qrCodeLink.addClass('hidden');
             me.hideEmailButton();
 
@@ -4070,6 +4101,17 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         };
 
         /**
+         * only hides the download text button
+         *
+         * @name   TopNav.hideRawButton
+         * @function
+         */
+        me.hideDownloadButton = function()
+        {
+            $downloadTextButton.addClass('hidden');
+        };
+
+        /**
          * only hides the qr code button
          *
          * @name   TopNav.hideQrCodeButton
@@ -4150,13 +4192,18 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         me.resetInput = function()
         {
             clearAttachmentInput();
+            $burnAfterReading.prop('checked', burnAfterReadingDefault);
+            $openDiscussion.prop('checked', openDiscussionDefault);
+            if (openDiscussionDefault || !burnAfterReadingDefault) $openDiscussionOption.removeClass('buttondisabled');
+            if (burnAfterReadingDefault || !openDiscussionDefault) $burnAfterReadingOption.removeClass('buttondisabled');
 
-            $openDiscussion.prop('checked', false);
-            $burnAfterReading.prop('checked', false);
-            $openDiscussionOption.removeClass('buttondisabled');
-            $burnAfterReadingOption.removeClass('buttondisabled');
-
-            // TODO: reset expiration time
+            pasteExpiration = Model.getExpirationDefault() || pasteExpiration;
+            $('#pasteExpiration>option').each(function() {
+                const $this = $(this);
+                if ($this.val() === pasteExpiration) {
+                    $('#pasteExpirationDisplay').text($this.text());
+                }
+            });
         };
 
         /**
@@ -4325,6 +4372,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             $password = $('#password');
             $passwordInput = $('#passwordinput');
             $rawTextButton = $('#rawtextbutton');
+            $downloadTextButton = $('#downloadtextbutton');
             $retryButton = $('#retrybutton');
             $sendButton = $('#sendbutton');
             $qrCodeLink = $('#qrcodelink');
@@ -4342,6 +4390,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             $sendButton.click(PasteEncrypter.sendPaste);
             $cloneButton.click(Controller.clonePaste);
             $rawTextButton.click(rawText);
+            $downloadTextButton.click(downloadText);
             $retryButton.click(clickRetryButton);
             $fileRemoveButton.click(removeAttachment);
             $qrCodeLink.click(displayQrCode);
@@ -4354,7 +4403,9 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             changeBurnAfterReading();
             changeOpenDiscussion();
 
-            // get default value from template or fall back to set value
+            // get default values from template or fall back to set value
+            burnAfterReadingDefault = me.getBurnAfterReading();
+            openDiscussionDefault = me.getOpenDiscussion();
             pasteExpiration = Model.getExpirationDefault() || pasteExpiration;
 
             createButtonsDisplayed = false;
@@ -4678,6 +4729,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             TopNav.showEmailButton();
 
             TopNav.hideRawButton();
+            TopNav.hideDownloadButton();
             Editor.hide();
 
             // parse and show text

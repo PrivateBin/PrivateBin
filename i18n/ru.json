@@ -1,6 +1,6 @@
 {
     "PrivateBin": "PrivateBin",
-    "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES.": "%s это минималистичный Open Source проект для создания заметок, где сервер не знает ничего о сохраняемых данных. Данные шифруются/расшифровываются <i>в браузере</i> с использованием 256 битного шифрования AES.",
+    "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted %sin the browser%s using 256 bits AES.": "%s это минималистичный Open Source проект для создания заметок, где сервер не знает ничего о сохраняемых данных. Данные шифруются/расшифровываются %sв браузере%s с использованием 256 битного шифрования AES.",
     "More information on the <a href=\"https://privatebin.info/\">project page</a>.": "Подробнее можно узнать на <a href=\"https://privatebin.info/\">сайте проекта</a>.",
     "Because ignorance is bliss": "Потому что неведение - благо",
     "en": "ru",
@@ -183,5 +183,7 @@
     "Convert To UTC": "Конвертировать в UTC",
     "Close": "Закрыть",
     "Encrypted note on PrivateBin": "Зашифрованная запись на PrivateBin",
-    "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "Посетите эту ссылку чтобы просмотреть запись. Передача ссылки кому либо позволит им получить доступ к записи тоже."
+    "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "Посетите эту ссылку чтобы просмотреть запись. Передача ссылки кому либо позволит им получить доступ к записи тоже.",
+    "URL shortener may expose your decrypt key in URL.": "Сервис сокращения ссылок может получить ваш ключ расшифровки из ссылки.",
+    "Save paste": "Сохранить запись"
 }
