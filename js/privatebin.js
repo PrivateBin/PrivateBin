@@ -70,7 +70,7 @@ function parse_query_string(query) {
 }
 
 function markLines(a, b) {
-    for (var i = a+1; i < b+1; i++) {
+    for (var i = a; i < b; i++) {
         $(".linenums").children().eq(i).addClass("line-selected-extra");
     }
 }
@@ -86,7 +86,7 @@ function selectLinesBetween() {
     $(".linenums").children().eq(globalScrollPosition).find(".select-line").click();
     allowedReset = true;
 
-    markLines(a, b);
+    markLines(a-1, b);
 }
 
 function attachLineHighlighter() {
@@ -132,22 +132,20 @@ function attachLineHighlighter() {
         });
 
         $(".extend-line").click(function() {
-            globalSecondPositionMultiple = $(this).parents("li").index();
+            globalSecondPositionMultiple = $(this).parents("li").index() + 1;
 
             if (!globalScrollPosition) {
                 var qs = parse_query_string(window.location.href);
                 globalScrollPosition = Number(qs.s);
             }
-
             selectLinesBetween();
-
             var freshURL = window.location.href.split('&')[0];
 
             if (!freshURL.includes("#")) return;
 
             var URLA = "";
-            if (globalScrollPosition && globalScrollPosition!="") URLA+=`&s=${globalScrollPosition+1}`;
-            if (globalSecondPositionMultiple && globalSecondPositionMultiple!="") URLA+=`&e=${globalSecondPositionMultiple+1}`;
+            if (globalScrollPosition && globalScrollPosition!="") URLA+=`&s=${globalScrollPosition}`;
+            if (globalSecondPositionMultiple && globalSecondPositionMultiple!="") URLA+=`&e=${globalSecondPositionMultiple}`;
 
             window.history.pushState('page2', 'Title', freshURL + URLA);
         });
@@ -207,8 +205,7 @@ function attachLineHighlighter() {
             if (qs.s && qs.s != "") {
                 $(".line-selected").removeClass("line-selected");
                 $(".line-selected-extra").removeClass("line-selected-extra");
-
-                selectedLine = $(".linenums").children().eq(qs.s)
+                selectedLine = $(".linenums").children().eq(Number(qs.s)-1)
                 selectedLine.addClass("line-selected");
 
                 $(".line-selected").find(".hc-toggle").one('click', function(event) {
@@ -217,7 +214,7 @@ function attachLineHighlighter() {
                 });
 
                 if (qs.e && qs.e != "") {
-                    markLines(Number(qs.s)-2, Number(qs.e)-1);
+                    markLines(Number(qs.s)-1, Number(qs.e));
                 }
 
                 $([document.documentElement, document.body]).animate({
