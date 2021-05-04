@@ -100,7 +100,7 @@ function attachLineHighlighter() {
             $(this).addClass("line-highlighted");
         });
 
-        $(".L0, .L1, .L2, .L3, .L4, .L5, .L6, .L7, .L8, .L9").click(function() {
+        $(".L0, .L1, .L2, .L3, .L4, .L5, .L6, .L7, .L8, .L9").click(function(event) {
             //todo add config option to disable line highlightning with click
             if(reset){
                 reset = false;
@@ -113,20 +113,30 @@ function attachLineHighlighter() {
                 return;
             }
             if (qs.s && qs.s !== "") {
-                if(Number(qs.s) == $(this).index()+1) {
-                    return;
+                if (event.shiftKey) {
+                    if(Number(qs.s) == $(this).index()+1) {
+                            globalScrollPosition = null;
+                            globalSecondPositionMultiple = null;
+                
+                            $(".line-selected").removeClass("line-selected");
+                            $(".line-selected-extra").removeClass("line-selected-extra");
+                            $(".line-selected-cross").removeClass("line-selected-cross");
+                
+                            window.history.pushState('page2', 'Title', freshURL);
+                        return;
+                    }
+                    globalSecondPositionMultiple = $(this).index() + 1;     
+                    if (!globalScrollPosition) {
+                        globalScrollPosition = Number(qs.s);
+                    }
+                
+                    selectLinesBetween();
+        
+                    if (!freshURL.includes("#")) return;
+                    if (globalScrollPosition && globalScrollPosition!=="") URLA+=`&s=${globalScrollPosition}`;
+                    if (globalSecondPositionMultiple && globalSecondPositionMultiple!=="") URLA+=`&e=${globalSecondPositionMultiple}`;
+                    window.history.pushState('page2', 'Title', freshURL + URLA);
                 }
-                globalSecondPositionMultiple = $(this).index() + 1;     
-                if (!globalScrollPosition) {
-                    globalScrollPosition = Number(qs.s);
-                }
-            
-                selectLinesBetween();
-    
-                if (!freshURL.includes("#")) return;
-                if (globalScrollPosition && globalScrollPosition!=="") URLA+=`&s=${globalScrollPosition}`;
-                if (globalSecondPositionMultiple && globalSecondPositionMultiple!=="") URLA+=`&e=${globalSecondPositionMultiple}`;
-                window.history.pushState('page2', 'Title', freshURL + URLA);
             } else {
                 globalScrollPosition = $(this).index()+1;
                 globalSecondPositionMultiple = null;
