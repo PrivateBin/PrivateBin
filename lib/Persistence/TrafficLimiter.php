@@ -82,7 +82,6 @@ class TrafficLimiter extends AbstractPersistence
      */
     public static function setConfiguration(Configuration $conf)
     {
-    
         self::setLimit($conf->getKey('limit', 'traffic'));
         self::setPath($conf->getKey('dir', 'traffic'));
         self::setExemptedIp($conf->getKey('exemptedIp', 'traffic'));
@@ -127,11 +126,11 @@ class TrafficLimiter extends AbstractPersistence
     
         // Check if $_ipKey is exempted from ratelimiting
         if (!is_null(self::$_exemptedIp)) {
-            $exIp_array = explode(",", self::$_exemptedIp);
+            $exIp_array = explode(',', self::$_exemptedIp);
             foreach ($exIp_array as $ipRange) {
                 // Match $_ipKey to $ipRange and if it matches it will return with a true
                 $address = \IPLib\Factory::addressFromString($_SERVER[self::$_ipKey]);
-                $range = \IPLib\Factory::rangeFromString(trim($ipRange));
+                $range   = \IPLib\Factory::rangeFromString(trim($ipRange));
                 // If $range is null something went wrong (possible invalid ip given in config)
                 if ($range == null) {
                     $contained = false;
