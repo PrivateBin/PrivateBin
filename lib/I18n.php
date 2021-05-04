@@ -7,7 +7,7 @@
  * @link      https://github.com/PrivateBin/PrivateBin
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
- * @version   1.3.4
+ * @version   1.3.5
  */
 
 namespace PrivateBin;
@@ -305,7 +305,7 @@ class I18n
     /**
      * determines the plural form to use based on current language and given number
      *
-     * From: http://localization-guide.readthedocs.org/en/latest/l10n/pluralforms.html
+     * From: https://localization-guide.readthedocs.org/en/latest/l10n/pluralforms.html
      *
      * @access protected
      * @static
@@ -323,6 +323,8 @@ class I18n
                 return $n > 1 ? 1 : 0;
             case 'he':
                 return $n === 1 ? 0 : ($n === 2 ? 1 : (($n < 0 || $n > 10) && ($n % 10 === 0) ? 2 : 3));
+            case 'id':
+                return 0;
             case 'lt':
                 return $n % 10 === 1 && $n % 100 !== 11 ? 0 : (($n % 10 >= 2 && $n % 100 < 10 || $n % 100 >= 20) ? 1 : 2);
             case 'pl':
@@ -332,7 +334,7 @@ class I18n
                 return $n % 10 == 1 && $n % 100 != 11 ? 0 : ($n % 10 >= 2 && $n % 10 <= 4 && ($n % 100 < 10 || $n % 100 >= 20) ? 1 : 2);
             case 'sl':
                 return $n % 100 == 1 ? 1 : ($n % 100 == 2 ? 2 : ($n % 100 == 3 || $n % 100 == 4 ? 3 : 0));
-            // bg, de, en, es, hu, it, nl, no, pt
+            // bg, ca, de, en, es, et, hu, it, nl, no, pt
             default:
                 return $n != 1 ? 1 : 0;
         }

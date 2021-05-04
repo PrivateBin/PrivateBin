@@ -48,3 +48,6 @@ Sébastien Sauvage - original idea and main developer
 * AndriiZ - Ukrainian
 * Yaron Shahrabani - Hebrew
 * Moo - Lithuanian
+* whenwesober - Indonesian
+* retiolus - Catalan
+* sarnane - Estonian

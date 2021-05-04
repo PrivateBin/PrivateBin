@@ -1,6 +1,6 @@
 {
     "PrivateBin": "PrivateBin",
-    "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES.": "%s er en minimalistisk, åpen kildekode, elektronisk tilgjengelig pastebin hvor serveren ikke har kunnskap om dataene som limes inn. Dataene krypteres/dekrypteres <i>i nettleseren</i> ved hjelp av 256 bits AES.",
+    "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted %sin the browser%s using 256 bits AES.": "%s er en minimalistisk, åpen kildekode, elektronisk tilgjengelig pastebin hvor serveren ikke har kunnskap om dataene som limes inn. Dataene krypteres/dekrypteres %si nettleseren%s ved hjelp av 256 bits AES.",
     "More information on the <a href=\"https://privatebin.info/\">project page</a>.": "Mer informasjon om prosjektet på <a href=\"https://privatebin.info/\">prosjektsiden</a>.",
     "Because ignorance is bliss": "Fordi uvitenhet er lykke",
     "en": "no",
@@ -183,5 +183,7 @@
     "Convert To UTC": "Konverter til UTC",
     "Close": "Steng",
     "Encrypted note on PrivateBin": "Kryptert notat på PrivateBin",
-    "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "Besøk denne lenken for å se notatet. Hvis lenken deles med andre, vil de også kunne se notatet."
+    "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "Besøk denne lenken for å se notatet. Hvis lenken deles med andre, vil de også kunne se notatet.",
+    "URL shortener may expose your decrypt key in URL.": "URL forkorter kan avsløre dekrypteringsnøkkelen.",
+    "Save paste": "Lagre utklipp"
 }

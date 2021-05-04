@@ -17,7 +17,7 @@ require('./prettify');
 global.prettyPrint = window.PR.prettyPrint;
 global.prettyPrintOne = window.PR.prettyPrintOne;
 global.showdown = require('./showdown-1.9.1');
-global.DOMPurify = require('./purify-2.0.14');
+global.DOMPurify = require('./purify-2.2.7');
 global.baseX = require('./base-x-3.0.7').baseX;
 global.Legacy = require('./legacy').Legacy;
 require('./bootstrap-3.3.7');

@@ -1,8 +1,30 @@
 # PrivateBin version history
 
   * **1.4 (not yet released)**
-    * ADDED: Translation for Hebrew and Lithuanian
-    * CHANGED: Upgrading libraries to: DOMpurify 2.0.14
+    * ADDED: Translation for Estonian
+    * ADDED: new HTTP headers improving security (#765)
+    * ADDED: Download button for paste text (#774)
+    * ADDED: Opt-out of federated learning of cohorts (FLoC) (#776)
+    * CHANGED: Language selection cookie only transmitted over HTTPS (#472)
+  * **1.3.5 (2021-04-05)**
+    * ADDED: Translation for Hebrew, Lithuanian, Indonesian and Catalan
+    * ADDED: Make the project info configurable (#681)
+    * CHANGED: Upgrading libraries to: DOMpurify 2.2.7, kjua 0.9.0 & random_compat 2.0.18
+    * CHANGED: Open all links in new window (#630)
+    * FIXED: PDF display in Firefox (#630)
+    * FIXED: Allow pasting into password input dialog (#630)
+    * FIXED: Display of expiration date in email (#630)
+    * FIXED: Allow display of durations in weeks (#630)
+    * FIXED: Avoid exposing burn-after-reading messages from cache (#630)
+    * FIXED: Only display the dropzone when it should (#630)
+    * FIXED: Detect delete token properly (#630)
+    * FIXED: Sanitize output from `Helper.urls2links()` (#630)
+    * FIXED: Avoid recreation of existing pasteurl element when calling URL shortener (#630)
+    * FIXED: Downloads in Chrome >= 83 (#634)
+    * FIXED: Display of empty files (#663)
+    * FIXED: Improve OpenGraph attributes (#651)
+    * FIXED: Reset to configured burn-after-reading, discussion and expiration settings (#682)
+    * FIXED: Italic segment of project information (#756)
   * **1.3.4 (2020-03-22)**
     * CHANGED: Minimum required PHP version is 5.6, due to a change in the identicon library and to use php's native hash_equals()
     * CHANGED: Upgrading libraries to: identicon 2.0.0
