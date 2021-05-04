@@ -62,11 +62,11 @@ class TrafficLimiter extends AbstractPersistence
     }
 
     /**
-     * set a list of ip(ranges) as array
+     * set a list of ip(ranges) as string
      *
      * @access public
      * @static
-     * @param array $exemptedIps
+     * @param string $exemptedIps
      */
     public static function setExemptedIp($exemptedIp)
     {
@@ -139,7 +139,7 @@ class TrafficLimiter extends AbstractPersistence
                     // Ip-lib does throws and exception when something goes wrong, if so we want to catch it and set contained to false
                     try {
                         $contained = $address->matches($range);
-                    } catch (Exception $e) {
+                    } catch (\Exception $e) {
                         // If something is wrong with matching the ip, we set $contained to false
                         $contained = false;
                     }
