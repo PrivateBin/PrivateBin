@@ -123,7 +123,7 @@ class TrafficLimiter extends AbstractPersistence
         if (self::$_limit < 1) {
             return true;
         }
-    
+
         // Check if $_ipKey is exempted from ratelimiting
         if (!is_null(self::$_exemptedIp)) {
             $exIp_array = explode(',', self::$_exemptedIp);
