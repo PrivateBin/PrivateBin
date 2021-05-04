@@ -30,7 +30,7 @@ class TrafficLimiter extends AbstractPersistence
      * @var    int
      */
     private static $_limit = 10;
-    
+
     /**
      * listed ips are exempted from limits, defaults to null
      *
