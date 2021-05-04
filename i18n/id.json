@@ -9,9 +9,9 @@
     "%s requires configuration section [%s] to be present in configuration file.": "%s membutuhkan bagian konfigurasi [%s] untuk ada di file konfigurasi.",
     "Please wait %d seconds between each post.": [
         "Silahkan menunggu %d detik antara masing-masing postingan. (tunggal)",
-        "Silahkan menunggu %d detik antara masing-masing postingan. (jamak ke-1)",
-        "Silahkan menunggu %d detik antara masing-masing postingan. (jamak ke-2)",
-        "Silahkan menunggu %d detik antara masing-masing postingan. (jamak ke-3)"
+        "Silahkan menunggu %d detik antara masing-masing postingan.",
+        "Silahkan menunggu %d detik antara masing-masing postingan.",
+        "Silahkan menunggu %d detik antara masing-masing postingan."
     ],
     "Paste is limited to %s of encrypted data.": "Paste dibatasi sampai %s dari data yang dienskripsi.",
     "Invalid data.": "Data tidak valid.",
@@ -36,27 +36,27 @@
     "Toggle navigation": "Alihkan navigasi",
     "%d seconds": [
         "%d detik (tunggal)",
-        "%d detik (jamak ke-1)",
-        "%d detik (jamak ke-2)",
-        "%d detik (jamak ke-3)"
+        "%d detik",
+        "%d detik",
+        "%d detik"
     ],
     "%d minutes": [
         "%d menit (tunggal)",
-        "%d menit (jamak ke-1)",
-        "%d menit (jamak ke-2)",
-        "%d menit (jamak ke-3)"
+        "%d menit",
+        "%d menit",
+        "%d menit"
     ],
     "%d hours": [
         "%d jam (tunggal)",
-        "%d jam (jamak ke-1)",
-        "%d jam (jamak ke-2)",
-        "%d jam (jamak ke-3)"
+        "%d jam",
+        "%d jam",
+        "%d jam"
     ],
     "%d days": [
         "%d hari (tunggal)",
-        "%d hari (jamak ke-1)",
-        "%d hari (jamak ke-2)",
-        "%d hari (jamak ke-3)"
+        "%d hari",
+        "%d hari",
+        "%d hari"
     ],
     "%d weeks": [
         "%d minggu (tunggal)",
@@ -185,5 +185,5 @@
     "Encrypted note on PrivateBin": "Catatan ter-ekrip di PrivateBin",
     "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "Kunjungi tautan ini untuk melihat catatan. Memberikan alamat URL pada siapapun juga, akan mengizinkan mereka untuk mengakses catatan, so pasti gitu loh Kaka.",
     "URL shortener may expose your decrypt key in URL.": "Pemendek URL mungkin akan menampakkan kunci dekrip Anda dalam URL.",
-    "Save paste": "Save paste"
+    "Save paste": "Simpan paste"
 }

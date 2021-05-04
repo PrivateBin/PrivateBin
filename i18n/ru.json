@@ -77,7 +77,7 @@
         "%d лет"
     ],
     "Never": "Никогда",
-    "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.": "Примечание: Этот сервис тестовый: Данные могут быть удалены в любое время. Котята умрут, если вы будете злоупотреблять серсисом.",
+    "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.": "Примечание: Этот сервис тестовый: Данные могут быть удалены в любое время. Котята умрут, если вы будете злоупотреблять сервисом.",
     "This document will expire in %d seconds.": [
         "Документ будет удален через %d секунду.",
         "Документ будет удален через %d секунды.",
