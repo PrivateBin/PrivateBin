@@ -135,6 +135,10 @@ markdown = "Markdown"
 ; Set this to 0 to disable rate limiting.
 limit = 10
 
+; Set ips (v4|v6) which should be exempted for the rate-limit. CIDR also supported. Needed to be comma separated.
+; Unset for enabling and invalid values will be ignored
+; eg: exemptedIp = '1.2.3.4,10.10.10/24'
+
 ; (optional) if your website runs behind a reverse proxy or load balancer,
 ; set the HTTP header containing the visitors IP address, i.e. X_FORWARDED_FOR
 ; header = "X_FORWARDED_FOR"
