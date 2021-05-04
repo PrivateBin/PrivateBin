@@ -45,7 +45,7 @@ jQuery(document).ready(function() {
 var globalScrollPosition;
 var globalSecondPositionMultiple;
 var selectedLine;
-var allowedReset = false;
+var reset = false;
 
 function parse_query_string(query) {
   var vars = query.split("&");
@@ -78,142 +78,100 @@ function markLines(a, b) {
 function selectLinesBetween() {
     var a = globalScrollPosition < globalSecondPositionMultiple ? globalScrollPosition : globalSecondPositionMultiple;
     var b = globalScrollPosition > globalSecondPositionMultiple ? globalScrollPosition : globalSecondPositionMultiple;
-
     globalScrollPosition = a;
     globalSecondPositionMultiple = b;
 
-    allowedReset = false;
-    $(".linenums").children().eq(globalScrollPosition).find(".select-line").click();
-    allowedReset = true;
 
     markLines(a-1, b);
 }
 
 function attachLineHighlighter() {
-    var optsOpen = false;
 
     if ($("#prettyprint").length < 1 || $("#prettyprint").find("li").length < 1) return;
 
     $("#prettyprint").find("li").append(`
-        <div class="highlighter-controls"><div class="hc-toggle"><span class="glyphicon glyphicon-option-horizontal"></span></div><div class="hc-dropdown"><ul><li class="select-line">Scroll here</li><li class="unselect-line">Do not scroll here</li><li class="extend-line">Extend here</li></ul></div></div><div class="highlighter-selected"><span class="left-line"></span></div>
+        <div class="highlighter-controls"> X </div>
     `.trim());
 
     setTimeout(function(){
         $("#prettyprint").find("li").hover(function () {
-            if (optsOpen) return;
-
+            //todo add config option to disable line highlightning while hovering
             $(".line-highlighted").removeClass("line-highlighted");
             $(this).addClass("line-highlighted");
         });
 
-        $(".hc-toggle").click(function(e) {
-            e.stopPropagation();
-
-            optsOpen = true;
-            $(this).parent().addClass("hc-open");
-
-            if (!globalScrollPosition) $(this).find(".extend-line").hide();
-            else {
-                var selectS = $(".linenums").children().eq(globalScrollPosition);
-                selectS.find(".extend-line").hide();
+        $(".L0, .L1, .L2, .L3, .L4, .L5, .L6, .L7, .L8, .L9").click(function() {
+            //todo add config option to disable line highlightning with click
+            if(reset){
+                reset = false;
+                return;
             }
-        });
-
-        $(".hc-toggle").one("click", function() {
-            $(".extend-line").show();
-
             var qs = parse_query_string(window.location.href);
-            if (!globalScrollPosition && !qs.s) $(".extend-line").hide();
-        });
-
-        $(document).on('click', function(e) {
-            optsOpen = false;
-            $(".highlighter-controls").removeClass("hc-open");
-        });
-
-        $(".extend-line").click(function() {
-            globalSecondPositionMultiple = $(this).parents("li").index() + 1;
-
-            if (!globalScrollPosition) {
-                var qs = parse_query_string(window.location.href);
-                globalScrollPosition = Number(qs.s);
+            var freshURL = window.location.href.split('&')[0];
+            var URLA = "";
+            if(qs.s && qs.s !== "" && qs.e && qs.e !== "") {
+                return;
             }
-            selectLinesBetween();
-            var freshURL = window.location.href.split('&')[0];
-
-            if (!freshURL.includes("#")) return;
-
-            var URLA = "";
-            if (globalScrollPosition && globalScrollPosition!="") URLA+=`&s=${globalScrollPosition}`;
-            if (globalSecondPositionMultiple && globalSecondPositionMultiple!="") URLA+=`&e=${globalSecondPositionMultiple}`;
-
-            window.history.pushState('page2', 'Title', freshURL + URLA);
+            if (qs.s && qs.s !== "") {
+                if(Number(qs.s) == $(this).index()+1) {
+                    return;
+                }
+                globalSecondPositionMultiple = $(this).index() + 1;     
+                if (!globalScrollPosition) {
+                    globalScrollPosition = Number(qs.s);
+                }
+            
+                selectLinesBetween();
+    
+                if (!freshURL.includes("#")) return;
+                if (globalScrollPosition && globalScrollPosition!=="") URLA+=`&s=${globalScrollPosition}`;
+                if (globalSecondPositionMultiple && globalSecondPositionMultiple!=="") URLA+=`&e=${globalSecondPositionMultiple}`;
+                window.history.pushState('page2', 'Title', freshURL + URLA);
+            } else {
+                globalScrollPosition = $(this).index()+1;
+                globalSecondPositionMultiple = null;
+    
+                $(".line-selected").removeClass("line-selected");
+                $(".line-selected-extra").removeClass("line-selected-extra");
+                
+                $(this).addClass("line-selected-cross");
+                $(this).addClass("line-selected");
+                
+    
+                if (!freshURL.includes("#")) return;
+    
+                if (globalScrollPosition && globalScrollPosition!=="") URLA+=`&s=${globalScrollPosition}`;
+                if (globalSecondPositionMultiple && globalSecondPositionMultiple!=="") URLA+=`&e=${globalSecondPositionMultiple+1}`;
+                window.history.pushState('page2', 'Title', freshURL + URLA);
+            }
         });
-
-        $(".select-line").click(function() {
-            $(".select-line").show();
-            $(".extend-line").show();
-            $(".unselect-line").hide();
-
-            $(this).hide();
-            $(this).siblings(".extend-line").hide();
-            $(this).siblings(".unselect-line").show();
-
-            globalScrollPosition = $(this).parents("li").index();
-            if (allowedReset) globalSecondPositionMultiple = null;
-
-            $(".line-selected").removeClass("line-selected");
-            $(".line-selected-extra").removeClass("line-selected-extra");
-
-            $(this).parents("li").addClass("line-selected");
-
-            optsOpen = false;
-            $(".highlighter-controls").removeClass("hc-open");
-
+        
+        $(".highlighter-controls").click(function() {
+            reset = true;
+            var qs = parse_query_string(window.location.href);
             var freshURL = window.location.href.split('&')[0];
-
-            if (!freshURL.includes("#")) return;
-
             var URLA = "";
-            if (globalScrollPosition && globalScrollPosition!="") URLA+=`&s=${globalScrollPosition+1}`;
-            if (globalSecondPositionMultiple && globalSecondPositionMultiple!="") URLA+=`&e=${globalSecondPositionMultiple+1}`;
-
-            window.history.pushState('page2', 'Title', freshURL + URLA);
-        });
-
-        $(".unselect-line").click(function() {
-            $(this).hide();
-            $(this).siblings(".select-line").show();
-            $(".extend-line").hide();
-
             globalScrollPosition = null;
             globalSecondPositionMultiple = null;
 
             $(".line-selected").removeClass("line-selected");
             $(".line-selected-extra").removeClass("line-selected-extra");
+            $(".line-selected-cross").removeClass("line-selected-cross");
 
-            optsOpen = false;
-            $(".highlighter-controls").removeClass("hc-open");
-
-            var freshURL = window.location.href.split('&')[0];
             window.history.pushState('page2', 'Title', freshURL);
         });
-
+        
         $(document).ready(function() {
             var qs = parse_query_string(window.location.href);
-
-            if (qs.s && qs.s != "") {
+            if (qs.s && qs.s !== "") {
                 $(".line-selected").removeClass("line-selected");
                 $(".line-selected-extra").removeClass("line-selected-extra");
-                selectedLine = $(".linenums").children().eq(Number(qs.s)-1)
+                $(".line-selected-cross").removeClass("line-selected-cross");
+                selectedLine = $(".linenums").children().eq(Number(qs.s)-1);
+                selectedLine.addClass("line-selected-cross");
                 selectedLine.addClass("line-selected");
-
-                $(".line-selected").find(".hc-toggle").one('click', function(event) {
-                    selectedLine.find(".unselect-line").show();
-                    selectedLine.find(".select-line").hide();
-                });
-
-                if (qs.e && qs.e != "") {
+                
+                if (qs.e && qs.e !== "") {
                     markLines(Number(qs.s)-1, Number(qs.e));
                 }
 
