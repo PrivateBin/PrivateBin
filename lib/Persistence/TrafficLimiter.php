@@ -108,6 +108,39 @@ class TrafficLimiter extends AbstractPersistence
     }
 
     /**
+     * Validate $_ipKey against configured ipranges. If matched ratelimiter will ignore ip
+     *
+     * @access private
+     * @static
+     * @param  string $algo
+     * @return string
+     */
+    private static function matchIp($ipRange = null)
+    {
+        // Match $_ipKey to $ipRange and if it matches it will return with a true
+        $address = \IPLib\Factory::addressFromString($_SERVER[self::$_ipKey]);
+        $range   = \IPLib\Factory::rangeFromString(trim($ipRange));
+        // If $range is null something went wrong (possible invalid ip given in config)
+        if ($range == null) {
+            return false;
+        } else {
+            // Ip-lib does throws and exception when something goes wrong, if so we want to catch it and set contained to false
+            try {
+                $contained = $address->matches($range);
+            } catch (\Exception $e) {
+                // If something is wrong with matching the ip, we set $contained to false
+                return false;
+            }
+        }
+        // Matches return true!
+        if ($contained === true) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * traffic limiter
      *
      * Make sure the IP address makes at most 1 request every 10 seconds.
@@ -123,28 +156,13 @@ class TrafficLimiter extends AbstractPersistence
         if (self::$_limit < 1) {
             return true;
         }
-
+	error_reporting(-1);
         // Check if $_ipKey is exempted from ratelimiting
         if (!is_null(self::$_exemptedIp)) {
             $exIp_array = explode(',', self::$_exemptedIp);
             foreach ($exIp_array as $ipRange) {
-                // Match $_ipKey to $ipRange and if it matches it will return with a true
-                $address = \IPLib\Factory::addressFromString($_SERVER[self::$_ipKey]);
-                $range   = \IPLib\Factory::rangeFromString(trim($ipRange));
-                // If $range is null something went wrong (possible invalid ip given in config)
-                if ($range == null) {
-                    $contained = false;
-                } else {
-                    // Ip-lib does throws and exception when something goes wrong, if so we want to catch it and set contained to false
-                    try {
-                        $contained = $address->matches($range);
-                    } catch (\Exception $e) {
-                        // If something is wrong with matching the ip, we set $contained to false
-                        $contained = false;
-                    }
-                }
-                // Matches return true!
-                if ($contained == true) {
+                if (self::matchIp($ipRange) === true)
+                {
                     return true;
                 }
             }
