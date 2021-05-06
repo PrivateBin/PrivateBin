@@ -112,8 +112,8 @@ class TrafficLimiter extends AbstractPersistence
      *
      * @access private
      * @static
-     * @param  string $algo
-     * @return string
+     * @param  string $ipRange
+     * @return bool
      */
     private static function matchIp($ipRange = null)
     {
@@ -156,13 +156,12 @@ class TrafficLimiter extends AbstractPersistence
         if (self::$_limit < 1) {
             return true;
         }
-	error_reporting(-1);
+
         // Check if $_ipKey is exempted from ratelimiting
         if (!is_null(self::$_exemptedIp)) {
             $exIp_array = explode(',', self::$_exemptedIp);
             foreach ($exIp_array as $ipRange) {
-                if (self::matchIp($ipRange) === true)
-                {
+                if (self::matchIp($ipRange) === true) {
                     return true;
                 }
             }
