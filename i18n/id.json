@@ -8,7 +8,7 @@
     "%s requires php %s or above to work. Sorry.": "%s memerlukan php %s atau versi diatasnya untuk dapat dijalankan. Maaf.",
     "%s requires configuration section [%s] to be present in configuration file.": "%s membutuhkan bagian konfigurasi [%s] untuk ada di file konfigurasi.",
     "Please wait %d seconds between each post.": [
-        "Silahkan menunggu %d detik antara masing-masing postingan. (tunggal)",
+        "Silahkan menunggu %d detik antara masing-masing postingan.",
         "Silahkan menunggu %d detik antara masing-masing postingan.",
         "Silahkan menunggu %d detik antara masing-masing postingan.",
         "Silahkan menunggu %d detik antara masing-masing postingan."
@@ -35,31 +35,31 @@
     "Discussion": "Diskusi",
     "Toggle navigation": "Alihkan navigasi",
     "%d seconds": [
-        "%d detik (tunggal)",
+        "%d detik",
         "%d detik",
         "%d detik",
         "%d detik"
     ],
     "%d minutes": [
-        "%d menit (tunggal)",
+        "%d menit",
         "%d menit",
         "%d menit",
         "%d menit"
     ],
     "%d hours": [
-        "%d jam (tunggal)",
+        "%d jam",
         "%d jam",
         "%d jam",
         "%d jam"
     ],
     "%d days": [
-        "%d hari (tunggal)",
+        "%d hari",
         "%d hari",
         "%d hari",
         "%d hari"
     ],
     "%d weeks": [
-        "%d minggu (tunggal)",
+        "%d minggu",
         "%d minggu",
         "%d minggu",
         "%d minggu"
