@@ -120,24 +120,18 @@ class TrafficLimiter extends AbstractPersistence
         // Match $_ipKey to $ipRange and if it matches it will return with a true
         $address = \IPLib\Factory::addressFromString($_SERVER[self::$_ipKey]);
         $range   = \IPLib\Factory::rangeFromString(trim($ipRange));
-        // If $range is null something went wrong (possible invalid ip given in config)
-        if ($range == null) {
-            return false;
-        } else {
-            // Ip-lib does throws and exception when something goes wrong, if so we want to catch it and set contained to false
-            try {
-                $contained = $address->matches($range);
-            } catch (\Exception $e) {
-                // If something is wrong with matching the ip, we set $contained to false
-                return false;
-            }
+
+        // If $range is null something went wrong (possible invalid ip given in config). It's here becaue matches($range) does not accepts null vallue
+        if ($range == null) return false;
+
+        // Ip-lib does throws and exception when something goes wrong, if so we want to catch it and set contained to false
+        try {
+            return $address->matches($range);
+        } catch (\Exception $e) {
+            // If something is wrong with matching the ip, we do nothing
         }
-        // Matches return true!
-        if ($contained === true) {
-            return true;
-        } else {
-            return false;
-        }
+
+        return false;
     }
 
     /**
