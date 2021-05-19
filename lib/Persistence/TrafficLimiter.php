@@ -122,7 +122,9 @@ class TrafficLimiter extends AbstractPersistence
         $range   = \IPLib\Factory::rangeFromString(trim($ipRange));
 
         // If $range is null something went wrong (possible invalid ip given in config). It's here becaue matches($range) does not accepts null vallue
-        if ($range == null) return false;
+        if ($range == null) {
+            return false;
+        }
 
         // Ip-lib does throws and exception when something goes wrong, if so we want to catch it and set contained to false
         try {
