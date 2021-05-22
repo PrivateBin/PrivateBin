@@ -13,6 +13,8 @@
 
 namespace PrivateBin\Persistence;
 
+use Exception;
+use IPLib\Factory;
 use PrivateBin\Configuration;
 
 /**
@@ -118,8 +120,8 @@ class TrafficLimiter extends AbstractPersistence
     private static function matchIp($ipRange = null)
     {
         // Match $_ipKey to $ipRange and if it matches it will return with a true
-        $address = \IPLib\Factory::addressFromString($_SERVER[self::$_ipKey]);
-        $range   = \IPLib\Factory::rangeFromString(trim($ipRange));
+        $address = Factory::addressFromString($_SERVER[self::$_ipKey]);
+        $range   = Factory::rangeFromString(trim($ipRange));
 
         // address could not be parsed, we might not be in IP space and try a string comparison instead
         if ($address == null) {
@@ -133,7 +135,7 @@ class TrafficLimiter extends AbstractPersistence
         // Ip-lib throws an exception when something goes wrong, if so we want to catch it and set contained to false
         try {
             return $address->matches($range);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             // If something is wrong with matching the ip, we assume it doesn't match
             return false;
         }
