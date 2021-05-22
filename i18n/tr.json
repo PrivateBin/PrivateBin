@@ -1,8 +1,8 @@
 {
     "PrivateBin": "PrivateBin",
     "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted %sin the browser%s using 256 bits AES.": "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted %sin the browser%s using 256 bits AES.",
-    "More information on the <a href=\"https://privatebin.info/\">project page</a>.": "More information on the <a href=\"https://privatebin.info/\">project page</a>.",
-    "Because ignorance is bliss": "Because ignorance is bliss",
+    "More information on the <a href=\"https://privatebin.info/\">project page</a>.": "Daha fazla bilgi için <a href=\"https://privatebin.info/\">proje sayfası</a>'na göz atabilirsiniz.",
+    "Because ignorance is bliss": "Çünkü, cehalet mutluluktur",
     "en": "tr",
     "Paste does not exist, has expired or has been deleted.": "Paste does not exist, has expired or has been deleted.",
     "%s requires php %s or above to work. Sorry.": "%s requires php %s or above to work. Sorry.",
@@ -14,8 +14,8 @@
         "Please wait %d seconds between each post. (3rd plural)"
     ],
     "Paste is limited to %s of encrypted data.": "Paste is limited to %s of encrypted data.",
-    "Invalid data.": "Invalid data.",
-    "You are unlucky. Try again.": "You are unlucky. Try again.",
+    "Invalid data.": "Geçersiz veri.",
+    "You are unlucky. Try again.": "Lütfen tekrar deneyiniz.",
     "Error saving comment. Sorry.": "Error saving comment. Sorry.",
     "Error saving paste. Sorry.": "Error saving paste. Sorry.",
     "Invalid paste ID.": "Invalid paste ID.",
@@ -24,8 +24,8 @@
     "Paste was properly deleted.": "Paste was properly deleted.",
     "JavaScript is required for %s to work. Sorry for the inconvenience.": "JavaScript is required for %s to work. Sorry for the inconvenience.",
     "%s requires a modern browser to work.": "%s requires a modern browser to work.",
-    "New": "New",
-    "Send": "Send",
+    "New": "Yeni",
+    "Send": "Gönder",
     "Clone": "Clone",
     "Raw text": "Raw text",
     "Expires": "Expires",
@@ -59,8 +59,8 @@
         "%d days (3rd plural)"
     ],
     "%d weeks": [
-        "%d week (singular)",
-        "%d weeks (1st plural)",
+        "%d hafta (tekil)",
+        "%d haftalar (çoğul)",
         "%d weeks (2nd plural)",
         "%d weeks (3rd plural)"
     ],
