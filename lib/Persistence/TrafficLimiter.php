@@ -38,7 +38,7 @@ class TrafficLimiter extends AbstractPersistence
      *
      * @access private
      * @static
-     * @var    array
+     * @var    string|null
      */
     private static $_exemptedIp = null;
 
@@ -110,7 +110,7 @@ class TrafficLimiter extends AbstractPersistence
     }
 
     /**
-     * Validate $_ipKey against configured ipranges. If matched ratelimiter will ignore ip
+     * Validate $_ipKey against configured ipranges. If matched we will ignore the ip
      *
      * @access private
      * @static
@@ -119,9 +119,11 @@ class TrafficLimiter extends AbstractPersistence
      */
     private static function matchIp($ipRange = null)
     {
-        // Match $_ipKey to $ipRange and if it matches it will return with a true
+        if (is_string($ipRange)) {
+            $ipRange = trim($ipRange);
+        }
         $address = Factory::addressFromString($_SERVER[self::$_ipKey]);
-        $range   = Factory::rangeFromString(trim($ipRange));
+        $range   = Factory::rangeFromString($ipRange);
 
         // address could not be parsed, we might not be in IP space and try a string comparison instead
         if ($address == null) {
@@ -148,7 +150,7 @@ class TrafficLimiter extends AbstractPersistence
      *
      * @access public
      * @static
-     * @throws \Exception
+     * @throws Exception
      * @return bool
      */
     public static function canPass()
