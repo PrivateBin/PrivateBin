@@ -5,7 +5,9 @@
     * ADDED: new HTTP headers improving security (#765)
     * ADDED: Download button for paste text (#774)
     * ADDED: Opt-out of federated learning of cohorts (FLoC) (#776)
+    * ADDED: Configuration option to exempt ips from the rate-limiter (#787)
     * CHANGED: Language selection cookie only transmitted over HTTPS (#472)
+    * CHANGED: Upgrading libraries to: random_compat 2.0.20
   * **1.3.5 (2021-04-05)**
     * ADDED: Translation for Hebrew, Lithuanian, Indonesian and Catalan
     * ADDED: Make the project info configurable (#681)

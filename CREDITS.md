@@ -27,6 +27,7 @@ Sébastien Sauvage - original idea and main developer
 * Harald Leithner - base58 encoding of key
 * Haocen - lots of bugfixes and UI improvements
 * Lucas Savva - configurable config file location, NixOS packaging
+* rodehoed - option to exempt ips from the rate-limiter
 
 ## Translations
 * Hexalyse - French

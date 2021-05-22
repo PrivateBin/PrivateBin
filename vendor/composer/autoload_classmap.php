@@ -6,6 +6,20 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'IPLib\\Address\\AddressInterface' => $vendorDir . '/mlocati/ip-lib/src/Address/AddressInterface.php',
+    'IPLib\\Address\\AssignedRange' => $vendorDir . '/mlocati/ip-lib/src/Address/AssignedRange.php',
+    'IPLib\\Address\\IPv4' => $vendorDir . '/mlocati/ip-lib/src/Address/IPv4.php',
+    'IPLib\\Address\\IPv6' => $vendorDir . '/mlocati/ip-lib/src/Address/IPv6.php',
+    'IPLib\\Address\\Type' => $vendorDir . '/mlocati/ip-lib/src/Address/Type.php',
+    'IPLib\\Factory' => $vendorDir . '/mlocati/ip-lib/src/Factory.php',
+    'IPLib\\Range\\AbstractRange' => $vendorDir . '/mlocati/ip-lib/src/Range/AbstractRange.php',
+    'IPLib\\Range\\Pattern' => $vendorDir . '/mlocati/ip-lib/src/Range/Pattern.php',
+    'IPLib\\Range\\RangeInterface' => $vendorDir . '/mlocati/ip-lib/src/Range/RangeInterface.php',
+    'IPLib\\Range\\Single' => $vendorDir . '/mlocati/ip-lib/src/Range/Single.php',
+    'IPLib\\Range\\Subnet' => $vendorDir . '/mlocati/ip-lib/src/Range/Subnet.php',
+    'IPLib\\Range\\Type' => $vendorDir . '/mlocati/ip-lib/src/Range/Type.php',
+    'IPLib\\Service\\BinaryMath' => $vendorDir . '/mlocati/ip-lib/src/Service/BinaryMath.php',
+    'IPLib\\Service\\RangesFromBounradyCalculator' => $vendorDir . '/mlocati/ip-lib/src/Service/RangesFromBounradyCalculator.php',
     'Identicon\\Generator\\BaseGenerator' => $vendorDir . '/yzalis/identicon/src/Identicon/Generator/BaseGenerator.php',
     'Identicon\\Generator\\GdGenerator' => $vendorDir . '/yzalis/identicon/src/Identicon/Generator/GdGenerator.php',
     'Identicon\\Generator\\GeneratorInterface' => $vendorDir . '/yzalis/identicon/src/Identicon/Generator/GeneratorInterface.php',

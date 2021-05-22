@@ -18,6 +18,7 @@ class ComposerStaticInitDontChange
         'I' => 
         array (
             'Identicon\\' => 10,
+            'IPLib\\' => 6,
         ),
     );
 
@@ -30,9 +31,27 @@ class ComposerStaticInitDontChange
         array (
             0 => __DIR__ . '/..' . '/yzalis/identicon/src/Identicon',
         ),
+        'IPLib\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/mlocati/ip-lib/src',
+        ),
     );
 
     public static $classMap = array (
+        'IPLib\\Address\\AddressInterface' => __DIR__ . '/..' . '/mlocati/ip-lib/src/Address/AddressInterface.php',
+        'IPLib\\Address\\AssignedRange' => __DIR__ . '/..' . '/mlocati/ip-lib/src/Address/AssignedRange.php',
+        'IPLib\\Address\\IPv4' => __DIR__ . '/..' . '/mlocati/ip-lib/src/Address/IPv4.php',
+        'IPLib\\Address\\IPv6' => __DIR__ . '/..' . '/mlocati/ip-lib/src/Address/IPv6.php',
+        'IPLib\\Address\\Type' => __DIR__ . '/..' . '/mlocati/ip-lib/src/Address/Type.php',
+        'IPLib\\Factory' => __DIR__ . '/..' . '/mlocati/ip-lib/src/Factory.php',
+        'IPLib\\Range\\AbstractRange' => __DIR__ . '/..' . '/mlocati/ip-lib/src/Range/AbstractRange.php',
+        'IPLib\\Range\\Pattern' => __DIR__ . '/..' . '/mlocati/ip-lib/src/Range/Pattern.php',
+        'IPLib\\Range\\RangeInterface' => __DIR__ . '/..' . '/mlocati/ip-lib/src/Range/RangeInterface.php',
+        'IPLib\\Range\\Single' => __DIR__ . '/..' . '/mlocati/ip-lib/src/Range/Single.php',
+        'IPLib\\Range\\Subnet' => __DIR__ . '/..' . '/mlocati/ip-lib/src/Range/Subnet.php',
+        'IPLib\\Range\\Type' => __DIR__ . '/..' . '/mlocati/ip-lib/src/Range/Type.php',
+        'IPLib\\Service\\BinaryMath' => __DIR__ . '/..' . '/mlocati/ip-lib/src/Service/BinaryMath.php',
+        'IPLib\\Service\\RangesFromBounradyCalculator' => __DIR__ . '/..' . '/mlocati/ip-lib/src/Service/RangesFromBounradyCalculator.php',
         'Identicon\\Generator\\BaseGenerator' => __DIR__ . '/..' . '/yzalis/identicon/src/Identicon/Generator/BaseGenerator.php',
         'Identicon\\Generator\\GdGenerator' => __DIR__ . '/..' . '/yzalis/identicon/src/Identicon/Generator/GdGenerator.php',
         'Identicon\\Generator\\GeneratorInterface' => __DIR__ . '/..' . '/yzalis/identicon/src/Identicon/Generator/GeneratorInterface.php',
