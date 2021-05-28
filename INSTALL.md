@@ -191,3 +191,15 @@ INSERT INTO prefix_config VALUES('VERSION', '1.3.5');
 ```
 
 In **PostgreSQL**, the data, attachment, nickname and vizhash columns needs to be TEXT and not BLOB or MEDIUMBLOB.
+
+### Using Google Cloud Storage
+If you want to deploy PrivateBin in a serverless manner, you can choose the `GoogleCloudStorage` as backend.
+To use this backend, you create a GCS bucket and specify the name as the model option `bucket`. Alternatively,
+you can set the name through the environment variable PASTEBIN_GCS_BUCKET.
+
+The default prefix for pastes stored in the bucket is `pastes`. To change the prefix, specify the option `prefix`.
+
+Google Cloud Storage buckets may be significantly slower than a `FileSystem` or `Database` backend. The big advantage 
+is that the deployment on Google Cloud Platform using Google Cloud Run is easy and cheap.
+
+To use the Google Cloud Storage backend you have to install the suggested google/cloud-storage library.

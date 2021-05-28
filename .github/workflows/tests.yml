@@ -11,6 +11,8 @@ jobs:
       run: composer validate
     - name: Install dependencies
       run: /usr/bin/php7.4 $(which composer) install --prefer-dist --no-suggest
+    - name: Install Google Cloud Storage
+      run: /usr/bin/php7.4 $(which composer) require google/cloud-storage
   PHPunit:
     runs-on: ubuntu-latest
     strategy:
@@ -29,6 +31,8 @@ jobs:
       run: rm composer.lock
     - name: Setup PHPunit
       run: composer install -n
+    - name: Install Google Cloud Storage
+      run: composer require google/cloud-storage
     - name: Run unit tests
       run: ../vendor/bin/phpunit --no-coverage
       working-directory: tst

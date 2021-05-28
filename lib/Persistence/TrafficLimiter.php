@@ -126,11 +126,11 @@ class TrafficLimiter extends AbstractPersistence
         $range   = Factory::rangeFromString($ipRange);
 
         // address could not be parsed, we might not be in IP space and try a string comparison instead
-        if ($address == null) {
+        if (is_null($address)) {
             return $_SERVER[self::$_ipKey] === $ipRange;
         }
         // range could not be parsed, possibly an invalid ip range given in config
-        if ($range == null) {
+        if (is_null($range)) {
             return false;
         }
 

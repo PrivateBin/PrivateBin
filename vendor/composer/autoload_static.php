@@ -38,6 +38,7 @@ class ComposerStaticInitDontChange
     );
 
     public static $classMap = array (
+        'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'IPLib\\Address\\AddressInterface' => __DIR__ . '/..' . '/mlocati/ip-lib/src/Address/AddressInterface.php',
         'IPLib\\Address\\AssignedRange' => __DIR__ . '/..' . '/mlocati/ip-lib/src/Address/AssignedRange.php',
         'IPLib\\Address\\IPv4' => __DIR__ . '/..' . '/mlocati/ip-lib/src/Address/IPv4.php',
@@ -63,6 +64,7 @@ class ComposerStaticInitDontChange
         'PrivateBin\\Data\\AbstractData' => __DIR__ . '/../..' . '/lib/Data/AbstractData.php',
         'PrivateBin\\Data\\Database' => __DIR__ . '/../..' . '/lib/Data/Database.php',
         'PrivateBin\\Data\\Filesystem' => __DIR__ . '/../..' . '/lib/Data/Filesystem.php',
+        'PrivateBin\\Data\\GoogleCloudStorage' => __DIR__ . '/../..' . '/lib/Data/GoogleCloudStorage.php',
         'PrivateBin\\Filter' => __DIR__ . '/../..' . '/lib/Filter.php',
         'PrivateBin\\FormatV2' => __DIR__ . '/../..' . '/lib/FormatV2.php',
         'PrivateBin\\I18n' => __DIR__ . '/../..' . '/lib/I18n.php',
