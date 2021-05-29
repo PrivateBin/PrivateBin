@@ -8,9 +8,9 @@
     "%s requires php %s or above to work. Sorry.": "%s requereix php %s o superior per funcionar. Ho sento.",
     "%s requires configuration section [%s] to be present in configuration file.": "%s requereix que la secció de configuració [%s] sigui present al fitxer de configuració.",
     "Please wait %d seconds between each post.": [
-        "Please wait %d second between each post. (singular)",
-        "Please wait %d seconds between each post. (1st plural)",
-        "Please wait %d seconds between each post. (2nd plural)",
+        "Espereu %d segon entre cada entrada. (singular)",
+        "Espereu %d segons entre cada entrada. (1r plural)",
+        "Espereu %d segons entre cada entrada. (2n plural)",
         "Please wait %d seconds between each post. (3rd plural)"
     ],
     "Paste is limited to %s of encrypted data.": "Paste is limited to %s of encrypted data.",
