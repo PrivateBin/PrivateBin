@@ -21,7 +21,7 @@ build:
     tests:
         override:
             -
-                command: 'cd tst && ../vendor/bin/phpunit'
+                command: 'composer require google/cloud-storage && cd tst && ../vendor/bin/phpunit'
                 coverage:
                     file: 'tst/log/coverage-clover.xml'
                     format: 'clover'

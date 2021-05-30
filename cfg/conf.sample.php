@@ -167,6 +167,13 @@ class = Filesystem
 [model_options]
 dir = PATH "data"
 
+[model]
+; example of a Google Cloud Storage configuration
+;class = GoogleCloudStorage
+;[model_options]
+;bucket = "my-private-bin"
+;prefix = "pastes"
+
 ;[model]
 ; example of DB configuration for MySQL
 ;class = Database
