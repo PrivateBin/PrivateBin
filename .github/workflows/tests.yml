@@ -10,7 +10,7 @@ jobs:
     - name: Validate composer.json and composer.lock
       run: composer validate
     - name: Install dependencies
-      run: composer install --prefer-dist --no-suggest
+      run: composer install --prefer-dist --no-dev
     - name: Install Google Cloud Storage
       run: composer require google/cloud-storage
   PHPunit:
