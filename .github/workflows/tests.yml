@@ -12,7 +12,7 @@ jobs:
     - name: Install dependencies
       run: composer install --prefer-dist --no-dev
     - name: Install Google Cloud Storage
-      run: composer require google/cloud-storage
+      run: composer require google/cloud-storage --no-dev
   PHPunit:
     runs-on: ubuntu-latest
     strategy:
