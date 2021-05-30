@@ -13,7 +13,7 @@ Sébastien Sauvage - original idea and main developer
 * Alexey Gladkov - syntax highlighting
 * Greg Knaddison - robots.txt
 * MrKooky - HTML5 markup, CSS cleanup
-* Simon Rupf - WebCrypto, unit tests, current docker containers, MVC, configuration, i18n
+* Simon Rupf - WebCrypto, unit tests, containers images, database backend, MVC, configuration, i18n
 * Hexalyse - Password protection
 * Viktor Stanchev - File upload support
 * azlux - Tab character input support
@@ -28,6 +28,7 @@ Sébastien Sauvage - original idea and main developer
 * Haocen - lots of bugfixes and UI improvements
 * Lucas Savva - configurable config file location, NixOS packaging
 * rodehoed - option to exempt ips from the rate-limiter
+* Mark van Holsteijn - Google Cloud Storage backend
 
 ## Translations
 * Hexalyse - French
