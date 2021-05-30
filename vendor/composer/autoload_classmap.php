@@ -31,6 +31,7 @@ return array(
     'PrivateBin\\Data\\AbstractData' => $baseDir . '/lib/Data/AbstractData.php',
     'PrivateBin\\Data\\Database' => $baseDir . '/lib/Data/Database.php',
     'PrivateBin\\Data\\Filesystem' => $baseDir . '/lib/Data/Filesystem.php',
+    'PrivateBin\\Data\\GoogleCloudStorage' => $baseDir . '/lib/Data/GoogleCloudStorage.php',
     'PrivateBin\\Filter' => $baseDir . '/lib/Filter.php',
     'PrivateBin\\FormatV2' => $baseDir . '/lib/FormatV2.php',
     'PrivateBin\\I18n' => $baseDir . '/lib/I18n.php',

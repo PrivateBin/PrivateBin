@@ -6,7 +6,7 @@ cfg/*
 !cfg/.htaccess
 
 # Ignore data/
-data/
+/data/
 
 # Ignore PhpDoc
 doc/*
@@ -36,3 +36,5 @@ tst/ConfigurationCombinationsTest.php
 .project
 .externalToolBuilders
 .c9
+/.idea/
+*.iml
