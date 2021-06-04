@@ -115,8 +115,15 @@ abstract class AbstractPersistence
     {
         self::_initialize();
         $file         = self::$_path . DIRECTORY_SEPARATOR . $filename;
+
+        // create the file before we get an exclusive write lock
+        $handle = @fopen($file, 'x');
+        if ($handle) {
+            fclose($handle);
+        }
         $writtenBytes = @file_put_contents($file, $data, LOCK_EX);
         if ($writtenBytes === false || $writtenBytes < strlen($data)) {
+            error_log(json_encode(error_get_last()));
             throw new Exception('unable to write to file ' . $file, 13);
         }
         @chmod($file, 0640); // protect file access
