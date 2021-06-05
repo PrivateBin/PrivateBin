@@ -2,7 +2,7 @@
 
 CURRENT_VERSION = 1.3.5
 VERSION ?= 1.3.6
-VERSION_FILES = index.php cfg/ *.md css/ i18n/ img/ js/privatebin.js lib/ Makefile tpl/ tst/
+VERSION_FILES = index.php cfg/ *.md css/ i18n/ img/ js/package.json js/privatebin.js lib/ Makefile tpl/ tst/
 REGEX_CURRENT_VERSION := $(shell echo $(CURRENT_VERSION) | sed "s/\./\\\./g")
 REGEX_VERSION := $(shell echo $(VERSION) | sed "s/\./\\\./g")
 

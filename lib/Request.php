@@ -288,7 +288,7 @@ class Request
             }
             krsort($mediaTypes);
             foreach ($mediaTypes as $acceptedQuality => $acceptedValues) {
-                if ($acceptedQuality === 0.0) {
+                if ($acceptedQuality === '0.0') {
                     continue;
                 }
                 foreach ($acceptedValues as $acceptedValue) {

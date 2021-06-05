@@ -1,0 +1,29 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Snyk scan
+
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+jobs:
+  # https://github.com/snyk/actions/tree/master/php
+  snyk-php:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Install Google Cloud Storage
+        run: composer require --no-update google/cloud-storage && composer update --no-dev
+      - name: Run Snyk to check for vulnerabilities
+        uses: snyk/actions/php@master
+        continue-on-error: true # To make sure that SARIF upload gets called
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: --sarif-file-output=snyk.sarif
+      - name: Upload result to GitHub Code Scanning
+        uses: github/codeql-action/upload-sarif@v1
+        with:
+          sarif_file: snyk.sarif

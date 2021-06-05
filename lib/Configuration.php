@@ -153,6 +153,16 @@ class Configuration
                     'pwd' => null,
                     'opt' => array(PDO::ATTR_PERSISTENT => true),
                 );
+            } elseif (
+                $section == 'model_options' && in_array(
+                    $this->_configuration['model']['class'],
+                    array('GoogleCloudStorage')
+                )
+            ) {
+                $values = array(
+                    'bucket' => getenv('PRIVATEBIN_GCS_BUCKET') ? getenv('PRIVATEBIN_GCS_BUCKET') : null,
+                    'prefix' => 'pastes',
+                );
             }
 
             // "*_options" sections don't require all defaults to be set
