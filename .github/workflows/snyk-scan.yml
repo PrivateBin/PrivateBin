@@ -15,7 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@master
       - name: Install Google Cloud Storage
-        run: composer require --no-dev google/cloud-storage
+        run: composer install --no-dev google/cloud-storage
       - name: Run Snyk to check for vulnerabilities
         uses: snyk/actions/php@master
         continue-on-error: true # To make sure that SARIF upload gets called
