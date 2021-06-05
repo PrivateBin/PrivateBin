@@ -34,6 +34,7 @@ class GoogleCloudStorageTest extends PHPUnit_Framework_TestCase
         // do not report E_NOTICE as fsouza/fake-gcs-server does not return a `generation` value in the response
         // which the Google Cloud Storage PHP library expects.
         error_reporting(E_ERROR | E_WARNING | E_PARSE);
+        ini_set('error_log', stream_get_meta_data(tmpfile())['uri']);
         $this->_model = GoogleCloudStorage::getInstance(array(
             'bucket' => self::$_bucket->name(),
             'prefix' => 'pastes',
