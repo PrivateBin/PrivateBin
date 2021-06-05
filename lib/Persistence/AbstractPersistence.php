@@ -90,12 +90,15 @@ abstract class AbstractPersistence
         }
         $file = self::$_path . DIRECTORY_SEPARATOR . '.htaccess';
         if (!is_file($file)) {
-            $writtenBytes = @file_put_contents(
-                $file,
-                'Require all denied' . PHP_EOL,
-                LOCK_EX
-            );
-            if ($writtenBytes === false || $writtenBytes < 19) {
+            $writtenBytes = 0;
+            if ($fileCreated = @touch($file)) {
+                $writtenBytes = @file_put_contents(
+                    $file,
+                    'Require all denied' . PHP_EOL,
+                    LOCK_EX
+                );
+            }
+            if ($fileCreated === false || $writtenBytes === false || $writtenBytes < 19) {
                 throw new Exception('unable to write to file ' . $file, 11);
             }
         }
@@ -114,9 +117,16 @@ abstract class AbstractPersistence
     protected static function _store($filename, $data)
     {
         self::_initialize();
-        $file         = self::$_path . DIRECTORY_SEPARATOR . $filename;
-        $writtenBytes = @file_put_contents($file, $data, LOCK_EX);
-        if ($writtenBytes === false || $writtenBytes < strlen($data)) {
+        $file = self::$_path . DIRECTORY_SEPARATOR . $filename;
+        $fileCreated = true;
+        $writtenBytes = 0;
+        if (!is_file($file)) {
+            $fileCreated = @touch($file);
+        }
+        if ($fileCreated) {
+            $writtenBytes = @file_put_contents($file, $data, LOCK_EX);
+        }
+        if ($fileCreated === false || $writtenBytes === false || $writtenBytes < strlen($data)) {
             throw new Exception('unable to write to file ' . $file, 13);
         }
         @chmod($file, 0640); // protect file access
