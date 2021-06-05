@@ -117,8 +117,8 @@ abstract class AbstractPersistence
     protected static function _store($filename, $data)
     {
         self::_initialize();
-        $file = self::$_path . DIRECTORY_SEPARATOR . $filename;
-        $fileCreated = true;
+        $file         = self::$_path . DIRECTORY_SEPARATOR . $filename;
+        $fileCreated  = true;
         $writtenBytes = 0;
         if (!is_file($file)) {
             $fileCreated = @touch($file);
