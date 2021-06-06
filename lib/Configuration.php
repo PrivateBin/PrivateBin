@@ -14,7 +14,6 @@ namespace PrivateBin;
 
 use Exception;
 use PDO;
-use PrivateBin\Persistence\DataStore;
 
 /**
  * Configuration
