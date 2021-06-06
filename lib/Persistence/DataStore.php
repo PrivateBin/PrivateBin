@@ -80,15 +80,14 @@ class DataStore extends AbstractPersistence
      * @static
      * @param  string $srcFile
      * @param  string $destFile
-     * @param  string $prefix (optional)
      * @return void
      */
-    public static function prependRename($srcFile, $destFile, $prefix = '')
+    public static function prependRename($srcFile, $destFile)
     {
         // don't overwrite already converted file
         if (!is_readable($destFile)) {
             $handle = fopen($srcFile, 'r', false, stream_context_create());
-            file_put_contents($destFile, $prefix . self::PROTECTION_LINE . PHP_EOL);
+            file_put_contents($destFile, self::PROTECTION_LINE . PHP_EOL);
             file_put_contents($destFile, $handle, FILE_APPEND);
             fclose($handle);
         }

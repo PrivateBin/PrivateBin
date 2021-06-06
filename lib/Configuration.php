@@ -106,19 +106,7 @@ class Configuration
     {
         $config     = array();
         $basePath   = (getenv('CONFIG_PATH') !== false ? getenv('CONFIG_PATH') : PATH . 'cfg') . DIRECTORY_SEPARATOR;
-        $configIni  = $basePath . 'conf.ini';
         $configFile = $basePath . 'conf.php';
-
-        // rename INI files to avoid configuration leakage
-        if (is_readable($configIni)) {
-            DataStore::prependRename($configIni, $configFile, ';');
-
-            // cleanup sample, too
-            $configIniSample = $configIni . '.sample';
-            if (is_readable($configIniSample)) {
-                DataStore::prependRename($configIniSample, $basePath . 'conf.sample.php', ';');
-            }
-        }
 
         if (is_readable($configFile)) {
             $config = parse_ini_file($configFile, true);

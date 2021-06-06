@@ -9,6 +9,7 @@
     * ADDED: Google Cloud Storage backend support (#795)
     * CHANGED: Language selection cookie only transmitted over HTTPS (#472)
     * CHANGED: Upgrading libraries to: random_compat 2.0.20
+    * CHANGED: Removed automatic `.ini` configuration file migration (#808)
   * **1.3.5 (2021-04-05)**
     * ADDED: Translation for Hebrew, Lithuanian, Indonesian and Catalan
     * ADDED: Make the project info configurable (#681)
