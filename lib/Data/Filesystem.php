@@ -251,7 +251,20 @@ class Filesystem extends AbstractData
      */
     public function setValue($value, $namespace, $key = '')
     {
-
+        switch ($namespace) {
+            case 'purge_limiter':
+                ;
+                break;
+            case 'salt':
+                ;
+                break;
+            case 'traffic_limiter':
+                ;
+                break;
+            default:
+                return false;
+                break;
+        }
     }
 
     /**

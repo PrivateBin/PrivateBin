@@ -218,6 +218,46 @@ class GoogleCloudStorage extends AbstractData
     }
 
     /**
+     * Save a value.
+     *
+     * @access public
+     * @param  string $value
+     * @param  string $namespace
+     * @param  string $key
+     * @return bool
+     */
+    public function setValue($value, $namespace, $key = '')
+    {
+        switch ($namespace) {
+            case 'purge_limiter':
+                ;
+                break;
+            case 'salt':
+                ;
+                break;
+            case 'traffic_limiter':
+                ;
+                break;
+            default:
+                return false;
+                break;
+        }
+    }
+
+    /**
+     * Load a value.
+     *
+     * @access public
+     * @param  string $namespace
+     * @param  string $key
+     * @return string
+     */
+    public function getValue($namespace, $key = '')
+    {
+
+    }
+
+    /**
      * @inheritDoc
      */
     protected function _getExpiredPastes($batchsize)

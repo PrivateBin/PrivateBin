@@ -28,12 +28,6 @@ abstract class AbstractData
      */
     protected static $_instance = null;
 
-    protected static $_namespaces = array(
-        'purge_limiter',
-        'salt',
-        'traffic_limiter',
-    );
-
     /**
      * Enforce singleton, disable constructor
      *
