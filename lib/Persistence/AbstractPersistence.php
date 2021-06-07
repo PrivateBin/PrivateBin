@@ -13,6 +13,7 @@
 namespace PrivateBin\Persistence;
 
 use Exception;
+use PrivateBin\Data\AbstractData;
 
 /**
  * AbstractPersistence
@@ -31,6 +32,15 @@ abstract class AbstractPersistence
     private static $_path = 'data';
 
     /**
+     * data storage to use to persist something
+     *
+     * @access private
+     * @static
+     * @var AbstractData
+     */
+    protected static $_store;
+
+    /**
      * set the path
      *
      * @access public
@@ -40,6 +50,18 @@ abstract class AbstractPersistence
     public static function setPath($path)
     {
         self::$_path = $path;
+    }
+
+    /**
+     * set the path
+     *
+     * @access public
+     * @static
+     * @param  AbstractData $store
+     */
+    public static function setStore(AbstractData $store)
+    {
+        self::$_store = $store;
     }
 
     /**

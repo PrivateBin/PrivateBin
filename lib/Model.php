@@ -67,6 +67,7 @@ class Model
     public function purge()
     {
         PurgeLimiter::setConfiguration($this->_conf);
+        PurgeLimiter::setStore($this->_getStore());
         if (PurgeLimiter::canPurge()) {
             $this->_getStore()->purge($this->_conf->getKey('batchsize', 'purge'));
         }

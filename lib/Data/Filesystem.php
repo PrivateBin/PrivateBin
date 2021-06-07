@@ -253,7 +253,10 @@ class Filesystem extends AbstractData
     {
         switch ($namespace) {
             case 'purge_limiter':
-                ;
+                return self::_storeString(
+                    self::$_path . DIRECTORY_SEPARATOR . 'purge_limiter.php',
+                    '<?php' . PHP_EOL . '$GLOBALS[\'purge_limiter\'] = ' . $value . ';'
+                );
                 break;
             case 'salt':
                 ;
@@ -261,10 +264,8 @@ class Filesystem extends AbstractData
             case 'traffic_limiter':
                 ;
                 break;
-            default:
-                return false;
-                break;
         }
+        return false;
     }
 
     /**
@@ -277,7 +278,40 @@ class Filesystem extends AbstractData
      */
     public function getValue($namespace, $key = '')
     {
+        switch ($namespace) {
+            case 'purge_limiter':
+                $file = self::$_path . DIRECTORY_SEPARATOR . 'purge_limiter.php';
+                if (is_file($file)) {
+                    require $file;
+                    return $GLOBALS['purge_limiter'];
+                }
+                break;
+            case 'salt':
+                ;
+                break;
+            case 'traffic_limiter':
+                ;
+                break;
+        }
+        return '';
+    }
 
+    /**
+     * get the data
+     *
+     * @access public
+     * @static
+     * @param  string $filename
+     * @return array|false $data
+     */
+    private static function _get($filename)
+    {
+        return Json::decode(
+            substr(
+                file_get_contents($filename),
+                strlen(self::PROTECTION_LINE . PHP_EOL)
+                )
+            );
     }
 
     /**
@@ -427,16 +461,33 @@ class Filesystem extends AbstractData
      * @param  array  $data
      * @return bool
      */
-    private static function _store($filename, $data)
+    private static function _store($filename, array $data)
     {
-        if (strpos($filename, self::$_path) === 0) {
-            $filename = substr($filename, strlen(self::$_path));
+        try {
+            return self::_storeString(
+                $filename,
+                self::PROTECTION_LINE . PHP_EOL . Json::encode($data)
+            );
+        } catch (Exception $e) {
+            return false;
         }
+    }
 
+    /**
+     * store a string
+     *
+     * @access public
+     * @static
+     * @param  string $filename
+     * @param  string $data
+     * @return bool
+     */
+    private static function _storeString($filename, $data)
+    {
         // Create storage directory if it does not exist.
         if (!is_dir(self::$_path)) {
             if (!@mkdir(self::$_path, 0700)) {
-                throw new Exception('unable to create directory ' . self::$_path, 10);
+                return false;
             }
         }
         $file = self::$_path . DIRECTORY_SEPARATOR . '.htaccess';
@@ -454,43 +505,19 @@ class Filesystem extends AbstractData
             }
         }
 
-        try {
-            $data = self::PROTECTION_LINE . PHP_EOL . Json::encode($data);
-        } catch (Exception $e) {
-            return false;
-        }
-        $file         = self::$_path . DIRECTORY_SEPARATOR . $filename;
         $fileCreated  = true;
         $writtenBytes = 0;
-        if (!is_file($file)) {
-            $fileCreated = @touch($file);
+        if (!is_file($filename)) {
+            $fileCreated = @touch($filename);
         }
         if ($fileCreated) {
-            $writtenBytes = @file_put_contents($file, $data, LOCK_EX);
+            $writtenBytes = @file_put_contents($filename, $data, LOCK_EX);
         }
         if ($fileCreated === false || $writtenBytes === false || $writtenBytes < strlen($data)) {
             return false;
         }
-        @chmod($file, 0640); // protect file access
+        @chmod($filename, 0640); // protect file access
         return true;
-    }
-
-    /**
-     * get the data
-     *
-     * @access public
-     * @static
-     * @param  string $filename
-     * @return array|false $data
-     */
-    private static function _get($filename)
-    {
-        return Json::decode(
-            substr(
-                file_get_contents($filename),
-                strlen(self::PROTECTION_LINE . PHP_EOL)
-                )
-            );
     }
 
     /**

@@ -71,17 +71,11 @@ class PurgeLimiter extends AbstractPersistence
         }
 
         $now  = time();
-        $file = 'purge_limiter.php';
-        if (self::_exists($file)) {
-            require self::getPath($file);
-            $pl = $GLOBALS['purge_limiter'];
-            if ($pl + self::$_limit >= $now) {
-                return false;
-            }
+        $pl = (int) self::$_store->getValue('purge_limiter');
+        if ($pl + self::$_limit >= $now) {
+            return false;
         }
-
-        $content = '<?php' . PHP_EOL . '$GLOBALS[\'purge_limiter\'] = ' . $now . ';';
-        self::_store($file, $content);
+        self::$_store->setValue((string) $now, 'purge_limiter');
         return true;
     }
 }
