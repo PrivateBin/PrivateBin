@@ -218,43 +218,48 @@ class GoogleCloudStorage extends AbstractData
     }
 
     /**
-     * Save a value.
-     *
-     * @access public
-     * @param  string $value
-     * @param  string $namespace
-     * @param  string $key
-     * @return bool
+     * This is the simplest thing that could possibly work.
+     * will be to tested for runtime performance.
+     * @inheritDoc
      */
     public function setValue($value, $namespace, $key = '')
     {
-        switch ($namespace) {
-            case 'purge_limiter':
-                ;
-                break;
-            case 'salt':
-                ;
-                break;
-            case 'traffic_limiter':
-                ;
-                break;
-            default:
-                return false;
-                break;
+        $key  = 'config/' . $namespace . '/' . $key;
+        $data = Json::encode($value);
+
+        try {
+            $this->_bucket->upload($data, array(
+                'name'          => $key,
+                'chunkSize'     => 262144,
+                'predefinedAcl' => 'private',
+                'metadata'      => array(
+                    'content-type' => 'application/json',
+                    'metadata'     => array('namespace' => $namespace),
+                ),
+            ));
+        } catch (Exception $e) {
+            error_log('failed to set key ' . $key . ' to ' . $this->_bucket->name() . ', ' .
+                trim(preg_replace('/\s\s+/', ' ', $e->getMessage())));
+            return false;
         }
+        return true;
     }
 
     /**
-     * Load a value.
-     *
-     * @access public
-     * @param  string $namespace
-     * @param  string $key
-     * @return string
+     * This is the simplest thing that could possibly work.
+     * will be to tested for runtime performance.
+     * @inheritDoc
      */
     public function getValue($namespace, $key = '')
     {
-
+        $key = 'config/' . $namespace . '/' . $key;
+        try {
+            $o    = $this->_bucket->object($key);
+            $data = $o->downloadAsString();
+            return Json::decode($data);
+        } catch (NotFoundException $e) {
+            return false;
+        }
     }
 
     /**
