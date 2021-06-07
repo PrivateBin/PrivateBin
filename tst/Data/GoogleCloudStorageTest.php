@@ -31,9 +31,6 @@ class GoogleCloudStorageTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        // do not report E_NOTICE as fsouza/fake-gcs-server does not return a `generation` value in the response
-        // which the Google Cloud Storage PHP library expects.
-        error_reporting(E_ERROR | E_WARNING | E_PARSE);
         ini_set('error_log', stream_get_meta_data(tmpfile())['uri']);
         $this->_model = GoogleCloudStorage::getInstance(array(
             'bucket' => self::$_bucket->name(),
@@ -137,6 +134,28 @@ class GoogleCloudStorageTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($this->_model->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId()), 'comment does not yet exist');
         $this->assertFalse($this->_model->createComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId(), $comment), 'unable to store broken comment');
         $this->assertFalse($this->_model->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId()), 'comment does still not exist');
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function testKeyValueStore()
+    {
+        $salt = bin2hex(random_bytes(256));
+        $this->_model->setValue($salt, 'salt', 'master');
+        $storedSalt = $this->_model->getValue('salt', 'master');
+        $this->assertEquals($salt, $storedSalt);
+
+        $client = hash_hmac('sha512', '127.0.0.1', $salt);
+        $expire = time();
+        $this->_model->setValue($expire, 'traffic_limiter', $client);
+        $storedExpired = $this->_model->getValue('traffic_limiter', $client);
+        $this->assertEquals($expire, $storedExpired);
+
+        $purgeAt = $expire + (15 * 60);
+        $this->_model->setValue($purgeAt, 'purge_limiter', 'at');
+        $storedPurgedAt = $this->_model->getValue('purge_limiter', 'at');
+        $this->assertEquals($purgeAt, $storedPurgedAt);
     }
 }
 
