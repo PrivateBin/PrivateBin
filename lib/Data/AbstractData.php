@@ -20,7 +20,7 @@ namespace PrivateBin\Data;
 abstract class AbstractData
 {
     /**
-     * singleton instance
+     * Singleton instance
      *
      * @access protected
      * @static
@@ -28,8 +28,14 @@ abstract class AbstractData
      */
     protected static $_instance = null;
 
+    protected static $_namespaces = array(
+        'purge_limiter',
+        'salt',
+        'traffic_limiter',
+    );
+
     /**
-     * enforce singleton, disable constructor
+     * Enforce singleton, disable constructor
      *
      * Instantiate using {@link getInstance()}, privatebin is a singleton object.
      *
@@ -40,7 +46,7 @@ abstract class AbstractData
     }
 
     /**
-     * enforce singleton, disable cloning
+     * Enforce singleton, disable cloning
      *
      * Instantiate using {@link getInstance()}, privatebin is a singleton object.
      *
@@ -51,7 +57,7 @@ abstract class AbstractData
     }
 
     /**
-     * get instance of singleton
+     * Get instance of singleton
      *
      * @access public
      * @static
@@ -129,6 +135,27 @@ abstract class AbstractData
      * @return bool
      */
     abstract public function existsComment($pasteid, $parentid, $commentid);
+
+    /**
+     * Save a value.
+     *
+     * @access public
+     * @param  string $value
+     * @param  string $namespace
+     * @param  string $key
+     * @return bool
+     */
+    abstract public function setValue($value, $namespace, $key = '');
+
+    /**
+     * Load a value.
+     *
+     * @access public
+     * @param  string $namespace
+     * @param  string $key
+     * @return string
+     */
+    abstract public function getValue($namespace, $key = '');
 
     /**
      * Returns up to batch size number of paste ids that have expired

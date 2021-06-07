@@ -12,7 +12,8 @@
 
 namespace PrivateBin\Data;
 
-use PrivateBin\Persistence\DataStore;
+use Exception;
+use PrivateBin\Json;
 
 /**
  * Filesystem
@@ -21,6 +22,22 @@ use PrivateBin\Persistence\DataStore;
  */
 class Filesystem extends AbstractData
 {
+    /**
+     * first line in file, to protect its contents
+     *
+     * @const string
+     */
+    const PROTECTION_LINE = '<?php http_response_code(403); /*';
+
+    /**
+     * path in which to persist something
+     *
+     * @access private
+     * @static
+     * @var    string
+     */
+    private static $_path = 'data';
+
     /**
      * get instance of singleton
      *
@@ -40,7 +57,7 @@ class Filesystem extends AbstractData
             is_array($options) &&
             array_key_exists('dir', $options)
         ) {
-            DataStore::setPath($options['dir']);
+            self::$_path = $options['dir'];
         }
         return self::$_instance;
     }
@@ -63,7 +80,7 @@ class Filesystem extends AbstractData
         if (!is_dir($storagedir)) {
             mkdir($storagedir, 0700, true);
         }
-        return DataStore::store($file, $paste);
+        return self::_store($file, $paste);
     }
 
     /**
@@ -79,7 +96,7 @@ class Filesystem extends AbstractData
             return false;
         }
         return self::upgradePreV1Format(
-            DataStore::get(self::_dataid2path($pasteid) . $pasteid . '.php')
+            self::_get(self::_dataid2path($pasteid) . $pasteid . '.php')
         );
     }
 
@@ -127,7 +144,7 @@ class Filesystem extends AbstractData
         $pastePath = $basePath . '.php';
         // convert to PHP protected files if needed
         if (is_readable($basePath)) {
-            DataStore::prependRename($basePath, $pastePath);
+            self::_prependRename($basePath, $pastePath);
 
             // convert comments, too
             $discdir = self::_dataid2discussionpath($pasteid);
@@ -136,7 +153,7 @@ class Filesystem extends AbstractData
                 while (false !== ($filename = $dir->read())) {
                     if (substr($filename, -4) !== '.php' && strlen($filename) >= 16) {
                         $commentFilename = $discdir . $filename . '.php';
-                        DataStore::prependRename($discdir . $filename, $commentFilename);
+                        self::_prependRename($discdir . $filename, $commentFilename);
                     }
                 }
                 $dir->close();
@@ -165,7 +182,7 @@ class Filesystem extends AbstractData
         if (!is_dir($storagedir)) {
             mkdir($storagedir, 0700, true);
         }
-        return DataStore::store($file, $comment);
+        return self::_store($file, $comment);
     }
 
     /**
@@ -187,7 +204,7 @@ class Filesystem extends AbstractData
                 // - commentid is the comment identifier itself.
                 // - parentid is the comment this comment replies to (It can be pasteid)
                 if (is_file($discdir . $filename)) {
-                    $comment = DataStore::get($discdir . $filename);
+                    $comment = self::_get($discdir . $filename);
                     $items   = explode('.', $filename);
                     // Add some meta information not contained in file.
                     $comment['id']       = $items[1];
@@ -224,6 +241,33 @@ class Filesystem extends AbstractData
     }
 
     /**
+     * Save a value.
+     *
+     * @access public
+     * @param  string $value
+     * @param  string $namespace
+     * @param  string $key
+     * @return bool
+     */
+    public function setValue($value, $namespace, $key = '')
+    {
+
+    }
+
+    /**
+     * Load a value.
+     *
+     * @access public
+     * @param  string $namespace
+     * @param  string $key
+     * @return string
+     */
+    public function getValue($namespace, $key = '')
+    {
+
+    }
+
+    /**
      * Returns up to batch size number of paste ids that have expired
      *
      * @access private
@@ -233,9 +277,8 @@ class Filesystem extends AbstractData
     protected function _getExpiredPastes($batchsize)
     {
         $pastes     = array();
-        $mainpath   = DataStore::getPath();
         $firstLevel = array_filter(
-            scandir($mainpath),
+            scandir(self::$_path),
             'self::_isFirstLevelDir'
         );
         if (count($firstLevel) > 0) {
@@ -243,7 +286,7 @@ class Filesystem extends AbstractData
             for ($i = 0, $max = $batchsize * 10; $i < $max; ++$i) {
                 $firstKey    = array_rand($firstLevel);
                 $secondLevel = array_filter(
-                    scandir($mainpath . DIRECTORY_SEPARATOR . $firstLevel[$firstKey]),
+                    scandir(self::$_path . DIRECTORY_SEPARATOR . $firstLevel[$firstKey]),
                     'self::_isSecondLevelDir'
                 );
 
@@ -254,7 +297,7 @@ class Filesystem extends AbstractData
                 }
 
                 $secondKey = array_rand($secondLevel);
-                $path      = $mainpath . DIRECTORY_SEPARATOR .
+                $path      = self::$_path . DIRECTORY_SEPARATOR .
                     $firstLevel[$firstKey] . DIRECTORY_SEPARATOR .
                     $secondLevel[$secondKey];
                 if (!is_dir($path)) {
@@ -314,10 +357,9 @@ class Filesystem extends AbstractData
      */
     private static function _dataid2path($dataid)
     {
-        return DataStore::getPath(
+        return self::$_path . DIRECTORY_SEPARATOR .
             substr($dataid, 0, 2) . DIRECTORY_SEPARATOR .
-            substr($dataid, 2, 2) . DIRECTORY_SEPARATOR
-        );
+            substr($dataid, 2, 2) . DIRECTORY_SEPARATOR;
     }
 
     /**
@@ -347,7 +389,7 @@ class Filesystem extends AbstractData
     private static function _isFirstLevelDir($element)
     {
         return self::_isSecondLevelDir($element) &&
-            is_dir(DataStore::getPath($element));
+        is_dir(self::$_path . DIRECTORY_SEPARATOR . $element);
     }
 
     /**
@@ -361,5 +403,101 @@ class Filesystem extends AbstractData
     private static function _isSecondLevelDir($element)
     {
         return (bool) preg_match('/^[a-f0-9]{2}$/', $element);
+    }
+
+    /**
+     * store the data
+     *
+     * @access public
+     * @static
+     * @param  string $filename
+     * @param  array  $data
+     * @return bool
+     */
+    private static function _store($filename, $data)
+    {
+        if (strpos($filename, self::$_path) === 0) {
+            $filename = substr($filename, strlen(self::$_path));
+        }
+
+        // Create storage directory if it does not exist.
+        if (!is_dir(self::$_path)) {
+            if (!@mkdir(self::$_path, 0700)) {
+                throw new Exception('unable to create directory ' . self::$_path, 10);
+            }
+        }
+        $file = self::$_path . DIRECTORY_SEPARATOR . '.htaccess';
+        if (!is_file($file)) {
+            $writtenBytes = 0;
+            if ($fileCreated = @touch($file)) {
+                $writtenBytes = @file_put_contents(
+                    $file,
+                    'Require all denied' . PHP_EOL,
+                    LOCK_EX
+                    );
+            }
+            if ($fileCreated === false || $writtenBytes === false || $writtenBytes < 19) {
+                return false;
+            }
+        }
+
+        try {
+            $data = self::PROTECTION_LINE . PHP_EOL . Json::encode($data);
+        } catch (Exception $e) {
+            return false;
+        }
+        $file         = self::$_path . DIRECTORY_SEPARATOR . $filename;
+        $fileCreated  = true;
+        $writtenBytes = 0;
+        if (!is_file($file)) {
+            $fileCreated = @touch($file);
+        }
+        if ($fileCreated) {
+            $writtenBytes = @file_put_contents($file, $data, LOCK_EX);
+        }
+        if ($fileCreated === false || $writtenBytes === false || $writtenBytes < strlen($data)) {
+            return false;
+        }
+        @chmod($file, 0640); // protect file access
+        return true;
+    }
+
+    /**
+     * get the data
+     *
+     * @access public
+     * @static
+     * @param  string $filename
+     * @return array|false $data
+     */
+    private static function _get($filename)
+    {
+        return Json::decode(
+            substr(
+                file_get_contents($filename),
+                strlen(self::PROTECTION_LINE . PHP_EOL)
+                )
+            );
+    }
+
+    /**
+     * rename a file, prepending the protection line at the beginning
+     *
+     * @access public
+     * @static
+     * @param  string $srcFile
+     * @param  string $destFile
+     * @return void
+     */
+    private static function _prependRename($srcFile, $destFile)
+    {
+        // don't overwrite already converted file
+        if (!is_readable($destFile)) {
+            $handle = fopen($srcFile, 'r', false, stream_context_create());
+            file_put_contents($destFile, self::PROTECTION_LINE . PHP_EOL);
+            file_put_contents($destFile, $handle, FILE_APPEND);
+            fclose($handle);
+        }
+        unlink($srcFile);
     }
 }
