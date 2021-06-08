@@ -25,8 +25,6 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
             $this->_model->delete(Helper::getPasteId());
         }
         $options                         = parse_ini_file(CONF_SAMPLE, true);
-        $options['purge']['dir']         = $this->_path;
-        $options['traffic']['dir']       = $this->_path;
         $options['model_options']['dir'] = $this->_path;
         Helper::confBackup();
         Helper::createIniFile(CONF, $options);

@@ -37,11 +37,8 @@ class ControllerTest extends PHPUnit_Framework_TestCase
             $this->_data->delete(Helper::getPasteId());
         }
         $options                         = parse_ini_file(CONF_SAMPLE, true);
-        $options['purge']['dir']         = $this->_path;
-        $options['traffic']['dir']       = $this->_path;
         $options['model_options']['dir'] = $this->_path;
         Helper::createIniFile(CONF, $options);
-        ServerSalt::setPath($this->_path);
     }
 
     /**

@@ -80,13 +80,11 @@ class Configuration
         'traffic' => array(
             'limit'      => 10,
             'header'     => null,
-            'dir'        => 'data',
             'exemptedIp' => null,
         ),
         'purge' => array(
             'limit'     => 300,
             'batchsize' => 10,
-            'dir'       => 'data',
         ),
         'model' => array(
             'class' => 'Filesystem',

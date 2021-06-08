@@ -85,7 +85,6 @@ class TrafficLimiter extends AbstractPersistence
     public static function setConfiguration(Configuration $conf)
     {
         self::setLimit($conf->getKey('limit', 'traffic'));
-        self::setPath($conf->getKey('dir', 'traffic'));
         self::setExemptedIp($conf->getKey('exemptedIp', 'traffic'));
 
         if (($option = $conf->getKey('header', 'traffic')) !== null) {

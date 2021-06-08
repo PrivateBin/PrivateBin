@@ -143,9 +143,6 @@ limit = 10
 ; set the HTTP header containing the visitors IP address, i.e. X_FORWARDED_FOR
 ; header = "X_FORWARDED_FOR"
 
-; directory to store the traffic limits in
-dir = PATH "data"
-
 [purge]
 ; minimum time limit between two purgings of expired pastes, it is only
 ; triggered when pastes are created
@@ -156,9 +153,6 @@ limit = 300
 ; Set this to 0 to disable purging. Set it higher, if you are running a large
 ; site
 batchsize = 10
-
-; directory to store the purge limit in
-dir = PATH "data"
 
 [model]
 ; name of data model class to load and directory for storage
