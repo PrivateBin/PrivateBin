@@ -198,6 +198,7 @@ class Controller
         try {
             // Ensure last paste from visitors IP address was more than configured amount of seconds ago.
             TrafficLimiter::setConfiguration($this->_conf);
+            TrafficLimiter::setStore($this->_model->getStore());
             if (!TrafficLimiter::canPass()) {
                 $this->_return_message(
                     1, I18n::_(

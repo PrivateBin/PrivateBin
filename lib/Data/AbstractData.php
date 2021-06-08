@@ -131,6 +131,16 @@ abstract class AbstractData
     abstract public function existsComment($pasteid, $parentid, $commentid);
 
     /**
+     * Purge outdated entries.
+     *
+     * @access public
+     * @param  string $namespace
+     * @param  int $time
+     * @return void
+     */
+    abstract public function purgeValues($namespace, $time);
+
+    /**
      * Save a value.
      *
      * @access public

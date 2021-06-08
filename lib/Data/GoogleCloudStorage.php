@@ -218,6 +218,23 @@ class GoogleCloudStorage extends AbstractData
     }
 
     /**
+     * Purge outdated entries.
+     *
+     * @access public
+     * @param  string $namespace
+     * @param  int $time
+     * @return void
+     */
+    public function purgeValues($namespace, $time)
+    {
+        switch ($namespace) {
+            case 'traffic_limiter':
+                ;
+                break;
+        }
+    }
+
+    /**
      * This is the simplest thing that could possibly work.
      * will be to tested for runtime performance.
      * @inheritDoc

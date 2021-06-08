@@ -39,6 +39,15 @@ class Filesystem extends AbstractData
     private static $_path = 'data';
 
     /**
+     * cache for the traffic limiter
+     *
+     * @access private
+     * @static
+     * @var    array
+     */
+    private static $_traffic_limiter_cache = array();
+
+    /**
      * get instance of singleton
      *
      * @access public
@@ -241,6 +250,27 @@ class Filesystem extends AbstractData
     }
 
     /**
+     * Purge outdated entries.
+     *
+     * @access public
+     * @param  string $namespace
+     * @param  int $time
+     * @return void
+     */
+    public function purgeValues($namespace, $time)
+    {
+        switch ($namespace) {
+            case 'traffic_limiter':
+                foreach (self::$_traffic_limiter_cache as $key => $last_access) {
+                    if ($last_access <= $time) {
+                        unset(self::$_traffic_limiter_cache[$key]);
+                    }
+                }
+                break;
+        }
+    }
+
+    /**
      * Save a value.
      *
      * @access public
@@ -262,7 +292,11 @@ class Filesystem extends AbstractData
                 ;
                 break;
             case 'traffic_limiter':
-                ;
+                self::$_traffic_limiter_cache[$key] = $value;
+                return self::_storeString(
+                    self::$_path . DIRECTORY_SEPARATOR . 'traffic_limiter.php',
+                    '<?php' . PHP_EOL . '$GLOBALS[\'purge_limiter\'] = ' . var_export(self::$_traffic_limiter_cache, true) . ';'
+                );
                 break;
         }
         return false;
@@ -290,7 +324,14 @@ class Filesystem extends AbstractData
                 ;
                 break;
             case 'traffic_limiter':
-                ;
+                $file = self::$_path . DIRECTORY_SEPARATOR . 'traffic_limiter.php';
+                if (is_file($file)) {
+                    require $file;
+                    self::$_traffic_limiter_cache = $GLOBALS['traffic_limiter'];
+                    if (array_key_exists($key, self::$_traffic_limiter_cache)) {
+                        return self::$_traffic_limiter_cache[$key];
+                    }
+                }
                 break;
         }
         return '';

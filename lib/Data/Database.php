@@ -424,6 +424,23 @@ class Database extends AbstractData
     }
 
     /**
+     * Purge outdated entries.
+     *
+     * @access public
+     * @param  string $namespace
+     * @param  int $time
+     * @return void
+     */
+    public function purgeValues($namespace, $time)
+    {
+        switch ($namespace) {
+            case 'traffic_limiter':
+                ;
+                break;
+        }
+    }
+
+    /**
      * Save a value.
      *
      * @access public

@@ -17,6 +17,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         /* Setup Routine */
         $this->_path  = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'privatebin_data';
         $this->_data  = Filesystem::getInstance(array('dir' => $this->_path));
+        TrafficLimiter::setStore($this->_data);
         $this->reset();
     }
 
