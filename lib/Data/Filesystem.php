@@ -287,17 +287,17 @@ class Filesystem extends AbstractData
                     self::$_path . DIRECTORY_SEPARATOR . 'purge_limiter.php',
                     '<?php' . PHP_EOL . '$GLOBALS[\'purge_limiter\'] = ' . $value . ';'
                 );
-                break;
             case 'salt':
-                ;
-                break;
+                return self::_storeString(
+                    self::$_path . DIRECTORY_SEPARATOR . 'salt.php',
+                    '<?php # |' . $value . '|'
+                );
             case 'traffic_limiter':
                 self::$_traffic_limiter_cache[$key] = $value;
                 return self::_storeString(
                     self::$_path . DIRECTORY_SEPARATOR . 'traffic_limiter.php',
-                    '<?php' . PHP_EOL . '$GLOBALS[\'purge_limiter\'] = ' . var_export(self::$_traffic_limiter_cache, true) . ';'
+                    '<?php' . PHP_EOL . '$GLOBALS[\'traffic_limiter\'] = ' . var_export(self::$_traffic_limiter_cache, true) . ';'
                 );
-                break;
         }
         return false;
     }
@@ -315,17 +315,23 @@ class Filesystem extends AbstractData
         switch ($namespace) {
             case 'purge_limiter':
                 $file = self::$_path . DIRECTORY_SEPARATOR . 'purge_limiter.php';
-                if (is_file($file)) {
+                if (is_readable($file)) {
                     require $file;
                     return $GLOBALS['purge_limiter'];
                 }
                 break;
             case 'salt':
-                ;
+                $file = self::$_path . DIRECTORY_SEPARATOR . 'salt.php';
+                if (is_readable($file)) {
+                    $items = explode('|', file_get_contents($file));
+                    if (is_array($items) && count($items) == 3) {
+                        return $items[1];
+                    }
+                }
                 break;
             case 'traffic_limiter':
                 $file = self::$_path . DIRECTORY_SEPARATOR . 'traffic_limiter.php';
-                if (is_file($file)) {
+                if (is_readable($file)) {
                     require $file;
                     self::$_traffic_limiter_cache = $GLOBALS['traffic_limiter'];
                     if (array_key_exists($key, self::$_traffic_limiter_cache)) {

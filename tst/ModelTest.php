@@ -25,7 +25,6 @@ class ModelTest extends PHPUnit_Framework_TestCase
         if (!is_dir($this->_path)) {
             mkdir($this->_path);
         }
-        ServerSalt::setPath($this->_path);
         $options                   = parse_ini_file(CONF_SAMPLE, true);
         $options['purge']['limit'] = 0;
         $options['model']          = array(
@@ -39,6 +38,7 @@ class ModelTest extends PHPUnit_Framework_TestCase
         );
         Helper::confBackup();
         Helper::createIniFile(CONF, $options);
+        ServerSalt::setStore(Database::getInstance($options['model_options']));
         $this->_conf            = new Configuration;
         $this->_model           = new Model($this->_conf);
         $_SERVER['REMOTE_ADDR'] = '::1';

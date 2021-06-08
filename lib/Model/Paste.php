@@ -93,7 +93,7 @@ class Paste extends AbstractModel
         }
 
         $this->_data['meta']['created'] = time();
-        $this->_data['meta']['salt']    = serversalt::generate();
+        $this->_data['meta']['salt']    = ServerSalt::generate();
 
         // store paste
         if (

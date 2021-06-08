@@ -126,28 +126,6 @@ class ControllerTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @runInSeparateProcess
-     */
-    public function testHtaccess()
-    {
-        $htaccess = $this->_path . DIRECTORY_SEPARATOR . '.htaccess';
-        @unlink($htaccess);
-
-        $paste = Helper::getPasteJson();
-        $file  = tempnam(sys_get_temp_dir(), 'FOO');
-        file_put_contents($file, $paste);
-        Request::setInputStream($file);
-        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
-        $_SERVER['REQUEST_METHOD']        = 'POST';
-        $_SERVER['REMOTE_ADDR']           = '::1';
-        ob_start();
-        new Controller;
-        ob_end_clean();
-
-        $this->assertFileExists($htaccess, 'htaccess recreated');
-    }
-
-    /**
      * @expectedException Exception
      * @expectedExceptionCode 2
      */

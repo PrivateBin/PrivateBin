@@ -16,7 +16,7 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
         /* Setup Routine */
         $this->_path  = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'privatebin_data';
         $this->_model = Filesystem::getInstance(array('dir' => $this->_path));
-        ServerSalt::setPath($this->_path);
+        ServerSalt::setStore($this->_model);
 
         $_POST   = array();
         $_GET    = array();

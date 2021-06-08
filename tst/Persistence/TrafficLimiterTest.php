@@ -1,5 +1,7 @@
 <?php
 
+use PrivateBin\Data\Filesystem;
+use PrivateBin\Persistence\ServerSalt;
 use PrivateBin\Persistence\TrafficLimiter;
 
 class TrafficLimiterTest extends PHPUnit_Framework_TestCase
@@ -10,7 +12,9 @@ class TrafficLimiterTest extends PHPUnit_Framework_TestCase
     {
         /* Setup Routine */
         $this->_path = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'trafficlimit';
-        TrafficLimiter::setPath($this->_path);
+        $store = Filesystem::getInstance(array('dir' => $this->_path));
+        ServerSalt::setStore($store);
+        TrafficLimiter::setStore($store);
     }
 
     public function tearDown()
@@ -19,11 +23,17 @@ class TrafficLimiterTest extends PHPUnit_Framework_TestCase
         Helper::rmDir($this->_path . DIRECTORY_SEPARATOR);
     }
 
+    public function testHtaccess()
+    {
+        $htaccess = $this->_path . DIRECTORY_SEPARATOR . '.htaccess';
+        @unlink($htaccess);
+        $_SERVER['REMOTE_ADDR'] = 'foobar';
+        TrafficLimiter::canPass();
+        $this->assertFileExists($htaccess, 'htaccess recreated');
+    }
+
     public function testTrafficGetsLimited()
     {
-        $this->assertEquals($this->_path, TrafficLimiter::getPath());
-        $file = 'baz';
-        $this->assertEquals($this->_path . DIRECTORY_SEPARATOR . $file, TrafficLimiter::getPath($file));
         TrafficLimiter::setLimit(4);
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
         $this->assertTrue(TrafficLimiter::canPass(), 'first request may pass');

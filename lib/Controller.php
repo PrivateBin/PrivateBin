@@ -197,6 +197,7 @@ class Controller
     {
         try {
             // Ensure last paste from visitors IP address was more than configured amount of seconds ago.
+            ServerSalt::setStore($this->_model->getStore());
             TrafficLimiter::setConfiguration($this->_conf);
             TrafficLimiter::setStore($this->_model->getStore());
             if (!TrafficLimiter::canPass()) {
