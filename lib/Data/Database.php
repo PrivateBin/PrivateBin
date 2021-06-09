@@ -424,23 +424,6 @@ class Database extends AbstractData
     }
 
     /**
-     * Purge outdated entries.
-     *
-     * @access public
-     * @param  string $namespace
-     * @param  int $time
-     * @return void
-     */
-    public function purgeValues($namespace, $time)
-    {
-        switch ($namespace) {
-            case 'traffic_limiter':
-                ;
-                break;
-        }
-    }
-
-    /**
      * Save a value.
      *
      * @access public
@@ -451,20 +434,19 @@ class Database extends AbstractData
      */
     public function setValue($value, $namespace, $key = '')
     {
-        switch ($namespace) {
-            case 'purge_limiter':
-                ;
-                break;
-            case 'salt':
-                ;
-                break;
-            case 'traffic_limiter':
-                ;
-                break;
-            default:
+        if ($namespace === 'traffic_limiter') {
+            self::$_traffic_limiter_cache[$key] = $value;
+            try {
+                $value = Json::encode(self::$_traffic_limiter_cache);
+            } catch (Exception $e) {
                 return false;
-                break;
+            }
         }
+        return self::_exec(
+            'UPDATE ' . self::_sanitizeIdentifier('config') .
+            ' SET value = ? WHERE id = ?',
+            array($value, strtoupper($namespace))
+        );
     }
 
     /**
@@ -477,7 +459,36 @@ class Database extends AbstractData
      */
     public function getValue($namespace, $key = '')
     {
+        $configKey = strtoupper($namespace);
+        $value = $this->_getConfig($configKey);
+        if ($value === '') {
+            // initialize the row, so that setValue can rely on UPDATE queries
+            self::_exec(
+                'INSERT INTO ' . self::_sanitizeIdentifier('config') .
+                ' VALUES(?,?)',
+                array($configKey, '')
+            );
 
+            // migrate filesystem based salt into database
+            $file = 'data' . DIRECTORY_SEPARATOR . 'salt.php';
+            if ($namespace === 'salt' && is_readable($file)) {
+                $value = Filesystem::getInstance(array('dir' => 'data'))->getValue('salt');
+                $this->setValue($value, 'salt');
+                @unlink($file);
+                return $value;
+            }
+        }
+        if ($value && $namespace === 'traffic_limiter') {
+            try {
+                self::$_traffic_limiter_cache = Json::decode($value);
+            } catch (Exception $e) {
+                self::$_traffic_limiter_cache = array();
+            }
+            if (array_key_exists($key, self::$_traffic_limiter_cache)) {
+                return self::$_traffic_limiter_cache[$key];
+            }
+        }
+        return (string) $value;
     }
 
     /**
@@ -629,7 +640,7 @@ class Database extends AbstractData
             'SELECT value FROM ' . self::_sanitizeIdentifier('config') .
             ' WHERE id = ?', array($key), true
         );
-        return $row['value'];
+        return $row ? $row['value']: '';
     }
 
     /**

@@ -2,6 +2,8 @@
 
 use PrivateBin\Controller;
 use PrivateBin\Data\Database;
+use PrivateBin\Data\Filesystem;
+use PrivateBin\Persistence\ServerSalt;
 
 class DatabaseTest extends PHPUnit_Framework_TestCase
 {
@@ -29,6 +31,19 @@ class DatabaseTest extends PHPUnit_Framework_TestCase
         if (is_dir($this->_path)) {
             Helper::rmDir($this->_path);
         }
+    }
+
+    public function testSaltMigration()
+    {
+        ServerSalt::setStore(Filesystem::getInstance(array('dir' => 'data')));
+        $salt = ServerSalt::get();
+        $file = 'data' . DIRECTORY_SEPARATOR . 'salt.php';
+        $this->assertFileExists($file, 'ServerSalt got initialized and stored on disk');
+        $this->assertNotEquals($salt, '');
+        ServerSalt::setStore($this->_model);
+        ServerSalt::get();
+        $this->assertFileNotExists($file, 'legacy ServerSalt got removed');
+        $this->assertEquals($salt, ServerSalt::get(), 'ServerSalt got preserved & migrated');
     }
 
     public function testDatabaseBasedDataStoreWorks()

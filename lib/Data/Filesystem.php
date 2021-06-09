@@ -39,15 +39,6 @@ class Filesystem extends AbstractData
     private static $_path = 'data';
 
     /**
-     * cache for the traffic limiter
-     *
-     * @access private
-     * @static
-     * @var    array
-     */
-    private static $_traffic_limiter_cache = array();
-
-    /**
      * get instance of singleton
      *
      * @access public
@@ -247,27 +238,6 @@ class Filesystem extends AbstractData
             self::_dataid2discussionpath($pasteid) .
             $pasteid . '.' . $commentid . '.' . $parentid . '.php'
         );
-    }
-
-    /**
-     * Purge outdated entries.
-     *
-     * @access public
-     * @param  string $namespace
-     * @param  int $time
-     * @return void
-     */
-    public function purgeValues($namespace, $time)
-    {
-        switch ($namespace) {
-            case 'traffic_limiter':
-                foreach (self::$_traffic_limiter_cache as $key => $last_access) {
-                    if ($last_access <= $time) {
-                        unset(self::$_traffic_limiter_cache[$key]);
-                    }
-                }
-                break;
-        }
     }
 
     /**

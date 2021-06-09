@@ -29,6 +29,15 @@ abstract class AbstractData
     protected static $_instance = null;
 
     /**
+     * cache for the traffic limiter
+     *
+     * @access private
+     * @static
+     * @var    array
+     */
+    protected static $_traffic_limiter_cache = array();
+
+    /**
      * Enforce singleton, disable constructor
      *
      * Instantiate using {@link getInstance()}, privatebin is a singleton object.
@@ -138,7 +147,16 @@ abstract class AbstractData
      * @param  int $time
      * @return void
      */
-    abstract public function purgeValues($namespace, $time);
+    public function purgeValues($namespace, $time)
+    {
+        if ($namespace === 'traffic_limiter') {
+            foreach (self::$_traffic_limiter_cache as $key => $last_access) {
+                if ($last_access <= $time) {
+                    unset(self::$_traffic_limiter_cache[$key]);
+                }
+            }
+        }
+    }
 
     /**
      * Save a value.

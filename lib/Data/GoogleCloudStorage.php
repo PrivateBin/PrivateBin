@@ -227,10 +227,11 @@ class GoogleCloudStorage extends AbstractData
      */
     public function purgeValues($namespace, $time)
     {
-        switch ($namespace) {
-            case 'traffic_limiter':
-                ;
-                break;
+        if ($namespace === 'traffic_limiter') {
+            // TODO implement purging of keys in namespace that are <= $time
+            // if GCS has no easy way to iterate all keys, consider using the
+            // self::$_traffic_limiter_cache in a similar way as the other
+            // implementations.
         }
     }
 
