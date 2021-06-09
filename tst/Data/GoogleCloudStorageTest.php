@@ -43,7 +43,6 @@ class GoogleCloudStorageTest extends PHPUnit_Framework_TestCase
         foreach (self::$_bucket->objects() as $object) {
             $object->delete();
         }
-        error_reporting(E_ALL);
     }
 
     public static function tearDownAfterClass()
@@ -145,17 +144,26 @@ class GoogleCloudStorageTest extends PHPUnit_Framework_TestCase
         $this->_model->setValue($salt, 'salt', 'master');
         $storedSalt = $this->_model->getValue('salt', 'master');
         $this->assertEquals($salt, $storedSalt);
+        $this->_model->purgeValues('salt', time() + 60);
+        $this->assertFalse($this->_model->getValue('salt', 'master'));
 
         $client = hash_hmac('sha512', '127.0.0.1', $salt);
         $expire = time();
         $this->_model->setValue($expire, 'traffic_limiter', $client);
         $storedExpired = $this->_model->getValue('traffic_limiter', $client);
         $this->assertEquals($expire, $storedExpired);
+        $this->assertEquals($expire, $storedExpired);
+        $this->_model->purgeValues('traffic_limiter', time() - 60);
+        $this->assertEquals($storedExpired, $this->_model->getValue('traffic_limiter', $client));
+        $this->_model->purgeValues('traffic_limiter', time() + 60);
+        $this->assertFalse($this->_model->getValue('traffic_limiter', $client));
 
         $purgeAt = $expire + (15 * 60);
         $this->_model->setValue($purgeAt, 'purge_limiter', 'at');
         $storedPurgedAt = $this->_model->getValue('purge_limiter', 'at');
         $this->assertEquals($purgeAt, $storedPurgedAt);
+        $this->_model->purgeValues('purge_limiter', time() + 60);
+        $this->assertFalse($this->_model->getValue('purge_limiter', 'at'));
     }
 }
 
@@ -431,11 +439,13 @@ class StorageObjectStub extends StorageObject
 
     public function __construct(ConnectionInterface $connection, $name, $bucket, $generation = null, array $info = array(), $encryptionKey = null, $encryptionKeySHA256 = null)
     {
-        $this->_name       = $name;
-        $this->_bucket     = $bucket;
-        $this->_generation = $generation;
-        $this->_info       = $info;
-        $this->_connection = $connection;
+        $this->_name                            = $name;
+        $this->_bucket                          = $bucket;
+        $this->_generation                      = $generation;
+        $this->_info                            = $info;
+        $this->_connection                      = $connection;
+        $timeCreated                            = new Datetime();
+        $this->_info['metadata']['timeCreated'] = $timeCreated->format(GoogleCloudStorage::DATETIME_FORMAT);
     }
 
     public function acl()
