@@ -460,7 +460,7 @@ class Database extends AbstractData
     public function getValue($namespace, $key = '')
     {
         $configKey = strtoupper($namespace);
-        $value = $this->_getConfig($configKey);
+        $value     = $this->_getConfig($configKey);
         if ($value === '') {
             // initialize the row, so that setValue can rely on UPDATE queries
             self::_exec(
@@ -640,7 +640,7 @@ class Database extends AbstractData
             'SELECT value FROM ' . self::_sanitizeIdentifier('config') .
             ' WHERE id = ?', array($key), true
         );
-        return $row ? $row['value']: '';
+        return $row ? $row['value'] : '';
     }
 
     /**

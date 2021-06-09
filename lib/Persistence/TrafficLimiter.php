@@ -171,8 +171,8 @@ class TrafficLimiter extends AbstractPersistence
 
         // this hash is used as an array key, hence a shorter algo is used
         $hash = self::getHash('sha256');
-        $now = time();
-        $tl = (int) self::$_store->getValue('traffic_limiter', $hash);
+        $now  = time();
+        $tl   = (int) self::$_store->getValue('traffic_limiter', $hash);
         self::$_store->purgeValues('traffic_limiter', $now - self::$_limit);
         if ($tl > 0 && ($tl + self::$_limit >= $now)) {
             $result = false;
