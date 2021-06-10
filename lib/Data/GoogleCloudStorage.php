@@ -2,6 +2,7 @@
 
 namespace PrivateBin\Data;
 
+use DateTime;
 use Exception;
 use Google\Cloud\Core\Exception\NotFoundException;
 use Google\Cloud\Storage\StorageClient;
@@ -9,6 +10,8 @@ use PrivateBin\Json;
 
 class GoogleCloudStorage extends AbstractData
 {
+    const DATETIME_FORMAT = 'Y-m-d\TH:i:s.u\Z';
+
     /**
      * returns a Google Cloud Storage data backend.
      *
@@ -218,20 +221,32 @@ class GoogleCloudStorage extends AbstractData
     }
 
     /**
-     * Purge outdated entries.
-     *
-     * @access public
-     * @param  string $namespace
-     * @param  int $time
-     * @return void
+     * @inheritDoc
      */
     public function purgeValues($namespace, $time)
     {
-        if ($namespace === 'traffic_limiter') {
-            // TODO implement purging of keys in namespace that are <= $time
-            // if GCS has no easy way to iterate all keys, consider using the
-            // self::$_traffic_limiter_cache in a similar way as the other
-            // implementations.
+        $prefix = 'config/' . $namespace . '/';
+        try {
+            foreach ($this->_bucket->objects(array('prefix' => $prefix)) as $object) {
+                $info        = $object->info();
+                $timeCreated = false;
+                if (key_exists('timeCreated', $info)) {
+                    $timeCreated = DateTime::createFromFormat(GoogleCloudStorage::DATETIME_FORMAT, $info['timeCreated']);
+                }
+                if ($timeCreated && ($timeCreated->getTimestamp() < $time)) {
+                    try {
+                        $object->delete();
+                    } catch (NotFoundException $e) {
+                        // deleted by another instance.
+                    }
+                } else {
+                    if (!$timeCreated) {
+                        error_log('failed to parse create timestamp ' . $info['timeCreated'] . ' of object ' . $object->name());
+                    }
+                }
+            }
+        } catch (NotFoundException $e) {
+            // no objects in the bucket yet
         }
     }
 
