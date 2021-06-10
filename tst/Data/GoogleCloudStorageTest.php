@@ -141,8 +141,8 @@ class GoogleCloudStorageTest extends PHPUnit_Framework_TestCase
     public function testKeyValueStore()
     {
         $salt = bin2hex(random_bytes(256));
-        $this->_model->setValue($salt, 'salt', 'master');
-        $storedSalt = $this->_model->getValue('salt', 'master');
+        $this->_model->setValue($salt, 'salt', '');
+        $storedSalt = $this->_model->getValue('salt', '');
         $this->assertEquals($salt, $storedSalt);
         $this->_model->purgeValues('salt', time() + 60);
         $this->assertFalse($this->_model->getValue('salt', 'master'));
@@ -159,11 +159,46 @@ class GoogleCloudStorageTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($this->_model->getValue('traffic_limiter', $client));
 
         $purgeAt = $expire + (15 * 60);
-        $this->_model->setValue($purgeAt, 'purge_limiter', 'at');
-        $storedPurgedAt = $this->_model->getValue('purge_limiter', 'at');
+        $this->_model->setValue($purgeAt, 'purge_limiter', '');
+        $storedPurgedAt = $this->_model->getValue('purge_limiter', '');
         $this->assertEquals($purgeAt, $storedPurgedAt);
         $this->_model->purgeValues('purge_limiter', time() + 60);
         $this->assertFalse($this->_model->getValue('purge_limiter', 'at'));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function testKeyValuePurgeTrafficLimiter()
+    {
+        $salt   = bin2hex(random_bytes(256));
+        $client = hash_hmac('sha512', '127.0.0.1', $salt);
+        $expire = time();
+        $this->_model->setValue($expire, 'traffic_limiter', $client);
+        $storedExpired = $this->_model->getValue('traffic_limiter', $client);
+        $this->assertEquals($expire, $storedExpired);
+
+        $this->_model->purgeValues('traffic_limiter', time() - 60);
+        $this->assertEquals($storedExpired, $this->_model->getValue('traffic_limiter', $client));
+
+        $this->_model->purgeValues('traffic_limiter', time() + 60);
+        $this->assertFalse($this->_model->getValue('traffic_limiter', $client));
+    }
+
+    public function testKeyValuePurgeTrafficLimiterWithKey()
+    {
+        $salt   = bin2hex(random_bytes(256));
+        $client = hash_hmac('sha512', '127.0.0.1', $salt);
+        $expire = time();
+        $this->_model->setValue($expire, 'traffic_limiter', $client);
+        $storedExpired = $this->_model->getValue('traffic_limiter', $client);
+        $this->assertEquals($expire, $storedExpired);
+
+        $this->_model->purgeValues('traffic_limiter', time() - 60);
+        $this->assertEquals($storedExpired, $this->_model->getValue('traffic_limiter', $client));
+
+        $this->_model->purgeValues('traffic_limiter', time() + 60);
+        $this->assertFalse($this->_model->getValue('traffic_limiter', $client));
     }
 }
 

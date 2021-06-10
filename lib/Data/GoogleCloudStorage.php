@@ -2,7 +2,6 @@
 
 namespace PrivateBin\Data;
 
-use DateTime;
 use Exception;
 use Google\Cloud\Core\Exception\NotFoundException;
 use Google\Cloud\Storage\StorageClient;
@@ -225,23 +224,22 @@ class GoogleCloudStorage extends AbstractData
      */
     public function purgeValues($namespace, $time)
     {
-        $prefix = 'config/' . $namespace . '/';
+        $path = 'config/' . $namespace;
         try {
-            foreach ($this->_bucket->objects(array('prefix' => $prefix)) as $object) {
-                $info        = $object->info();
-                $timeCreated = false;
-                if (key_exists('timeCreated', $info)) {
-                    $timeCreated = DateTime::createFromFormat(GoogleCloudStorage::DATETIME_FORMAT, $info['timeCreated']);
+            foreach ($this->_bucket->objects(array('prefix' => $path)) as $object) {
+                $name = $object->name();
+                if (strlen($name) > strlen($path) && substr($name, strlen($path), 1) !== '/') {
+                    continue;
                 }
-                if ($timeCreated && ($timeCreated->getTimestamp() < $time)) {
-                    try {
-                        $object->delete();
-                    } catch (NotFoundException $e) {
-                        // deleted by another instance.
-                    }
-                } else {
-                    if (!$timeCreated) {
-                        error_log('failed to parse create timestamp ' . $info['timeCreated'] . ' of object ' . $object->name());
+                $info        = $object->info();
+                if (key_exists('metadata', $info) && key_exists('value', $info['metadata'])) {
+                    $value = $info['metadata']['value'];
+                    if (is_numeric($value) && intval($value) < $time) {
+                        try {
+                            $object->delete();
+                        } catch (NotFoundException $e) {
+                            // deleted by another instance.
+                        }
                     }
                 }
             }
@@ -251,15 +249,24 @@ class GoogleCloudStorage extends AbstractData
     }
 
     /**
-     * This is the simplest thing that could possibly work.
-     * will be to tested for runtime performance.
+     * For GoogleCloudStorage, the value will also be stored in the metadata for the
+     * namespaces traffic_limiter and purge_limiter.
      * @inheritDoc
      */
     public function setValue($value, $namespace, $key = '')
     {
-        $key  = 'config/' . $namespace . '/' . $key;
+        if ($key === '') {
+            $key = 'config/' . $namespace;
+        } else {
+            $key = 'config/' . $namespace . '/' . $key;
+        }
+
         $data = Json::encode($value);
 
+        $metadata = array('namespace' => $namespace);
+        if ($namespace != 'salt') {
+            $metadata['value'] = strval($value);
+        }
         try {
             $this->_bucket->upload($data, array(
                 'name'          => $key,
@@ -267,7 +274,7 @@ class GoogleCloudStorage extends AbstractData
                 'predefinedAcl' => 'private',
                 'metadata'      => array(
                     'content-type' => 'application/json',
-                    'metadata'     => array('namespace' => $namespace),
+                    'metadata'     => $metadata,
                 ),
             ));
         } catch (Exception $e) {
@@ -279,13 +286,15 @@ class GoogleCloudStorage extends AbstractData
     }
 
     /**
-     * This is the simplest thing that could possibly work.
-     * will be to tested for runtime performance.
      * @inheritDoc
      */
     public function getValue($namespace, $key = '')
     {
-        $key = 'config/' . $namespace . '/' . $key;
+        if ($key === '') {
+            $key = 'config/' . $namespace;
+        } else {
+            $key = 'config/' . $namespace . '/' . $key;
+        }
         try {
             $o    = $this->_bucket->object($key);
             $data = $o->downloadAsString();
