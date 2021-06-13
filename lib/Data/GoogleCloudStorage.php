@@ -21,7 +21,6 @@ class GoogleCloudStorage extends AbstractData
      */
     public static function getInstance(array $options)
     {
-        $client = null;
         $bucket = null;
         $prefix = 'pastes';
 
