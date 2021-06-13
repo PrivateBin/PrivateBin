@@ -13,7 +13,6 @@
 
 namespace PrivateBin\Persistence;
 
-use Exception;
 use IPLib\Factory;
 use PrivateBin\Configuration;
 
@@ -133,13 +132,7 @@ class TrafficLimiter extends AbstractPersistence
             return false;
         }
 
-        // Ip-lib throws an exception when something goes wrong, if so we want to catch it and set contained to false
-        try {
-            return $address->matches($range);
-        } catch (Exception $e) {
-            // If something is wrong with matching the ip, we assume it doesn't match
-            return false;
-        }
+        return $address->matches($range);
     }
 
     /**
@@ -149,7 +142,6 @@ class TrafficLimiter extends AbstractPersistence
      *
      * @access public
      * @static
-     * @throws Exception
      * @return bool
      */
     public static function canPass()
