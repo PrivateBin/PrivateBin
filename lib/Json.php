@@ -44,13 +44,13 @@ class Json
      * @static
      * @param  string $input
      * @throws Exception
-     * @return array
+     * @return mixed
      */
     public static function decode($input)
     {
-        $array = json_decode($input, true);
+        $output = json_decode($input, true);
         self::_detectError();
-        return $array;
+        return $output;
     }
 
     /**

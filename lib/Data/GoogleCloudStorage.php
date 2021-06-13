@@ -291,7 +291,7 @@ class GoogleCloudStorage extends AbstractData
         try {
             $o    = $this->_bucket->object($key);
             $data = $o->downloadAsString();
-            return Json::decode($data);
+            return (string) Json::decode($data);
         } catch (NotFoundException $e) {
             return '';
         }
