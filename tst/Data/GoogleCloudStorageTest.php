@@ -139,7 +139,7 @@ class GoogleCloudStorageTest extends PHPUnit_Framework_TestCase
         $storedSalt = $this->_model->getValue('salt', '');
         $this->assertEquals($salt, $storedSalt);
         $this->_model->purgeValues('salt', time() + 60);
-        $this->assertFalse($this->_model->getValue('salt', 'master'));
+        $this->assertEquals('', $this->_model->getValue('salt', 'master'));
 
         $client = hash_hmac('sha512', '127.0.0.1', $salt);
         $expire = time();
@@ -150,14 +150,14 @@ class GoogleCloudStorageTest extends PHPUnit_Framework_TestCase
         $this->_model->purgeValues('traffic_limiter', time() - 60);
         $this->assertEquals($storedExpired, $this->_model->getValue('traffic_limiter', $client));
         $this->_model->purgeValues('traffic_limiter', time() + 60);
-        $this->assertFalse($this->_model->getValue('traffic_limiter', $client));
+        $this->assertEquals('', $this->_model->getValue('traffic_limiter', $client));
 
         $purgeAt = $expire + (15 * 60);
         $this->_model->setValue($purgeAt, 'purge_limiter', '');
         $storedPurgedAt = $this->_model->getValue('purge_limiter', '');
         $this->assertEquals($purgeAt, $storedPurgedAt);
         $this->_model->purgeValues('purge_limiter', time() + 60);
-        $this->assertFalse($this->_model->getValue('purge_limiter', 'at'));
+        $this->assertEquals('', $this->_model->getValue('purge_limiter', 'at'));
     }
 
     /**
