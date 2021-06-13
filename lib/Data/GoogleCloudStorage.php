@@ -224,7 +224,7 @@ class GoogleCloudStorage extends AbstractData
                 if (strlen($name) > strlen($path) && substr($name, strlen($path), 1) !== '/') {
                     continue;
                 }
-                $info        = $object->info();
+                $info = $object->info();
                 if (key_exists('metadata', $info) && key_exists('value', $info['metadata'])) {
                     $value = $info['metadata']['value'];
                     if (is_numeric($value) && intval($value) < $time) {
@@ -293,7 +293,7 @@ class GoogleCloudStorage extends AbstractData
             $data = $o->downloadAsString();
             return Json::decode($data);
         } catch (NotFoundException $e) {
-            return false;
+            return '';
         }
     }
 
