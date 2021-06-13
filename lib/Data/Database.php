@@ -233,11 +233,14 @@ class Database extends AbstractData
         }
 
         self::$_cache[$pasteid] = false;
-        $paste                  = self::_select(
-            'SELECT * FROM ' . self::_sanitizeIdentifier('paste') .
-            ' WHERE dataid = ?', array($pasteid), true
-        );
-
+        try {
+            $paste                  = self::_select(
+                'SELECT * FROM ' . self::_sanitizeIdentifier('paste') .
+                ' WHERE dataid = ?', array($pasteid), true
+            );
+        } catch (Exception $e) {
+            $paste = false;
+        }
         if ($paste === false) {
             return false;
         }
@@ -643,15 +646,18 @@ class Database extends AbstractData
      * @access private
      * @static
      * @param  string $key
-     * @throws PDOException
      * @return string
      */
     private static function _getConfig($key)
     {
-        $row = self::_select(
-            'SELECT value FROM ' . self::_sanitizeIdentifier('config') .
-            ' WHERE id = ?', array($key), true
-        );
+        try {
+            $row = self::_select(
+                'SELECT value FROM ' . self::_sanitizeIdentifier('config') .
+                ' WHERE id = ?', array($key), true
+            );
+        } catch (PDOException $e) {
+            return '';
+        }
         return $row ? $row['value'] : '';
     }
 

@@ -259,6 +259,7 @@ class ModelTest extends PHPUnit_Framework_TestCase
         $paste = $model->getPaste();
         $paste->setData($pasteData);
         $paste->store();
+        $paste->exists();
 
         $db = new PDO(
             $options['model_options']['dsn'],
