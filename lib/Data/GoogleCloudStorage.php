@@ -253,14 +253,12 @@ class GoogleCloudStorage extends AbstractData
             $key = 'config/' . $namespace . '/' . $key;
         }
 
-        $data = Json::encode($value);
-
         $metadata = array('namespace' => $namespace);
         if ($namespace != 'salt') {
             $metadata['value'] = strval($value);
         }
         try {
-            $this->_bucket->upload($data, array(
+            $this->_bucket->upload($value, array(
                 'name'          => $key,
                 'chunkSize'     => 262144,
                 'predefinedAcl' => 'private',
@@ -288,9 +286,8 @@ class GoogleCloudStorage extends AbstractData
             $key = 'config/' . $namespace . '/' . $key;
         }
         try {
-            $o    = $this->_bucket->object($key);
-            $data = $o->downloadAsString();
-            return (string) Json::decode($data);
+            $o = $this->_bucket->object($key);
+            return $o->downloadAsString();
         } catch (NotFoundException $e) {
             return '';
         }
