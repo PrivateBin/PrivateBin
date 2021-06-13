@@ -263,10 +263,10 @@ class Filesystem extends AbstractData
                     '<?php # |' . $value . '|'
                 );
             case 'traffic_limiter':
-                self::$_traffic_limiter_cache[$key] = $value;
+                self::$_last_cache[$key] = $value;
                 return self::_storeString(
                     self::$_path . DIRECTORY_SEPARATOR . 'traffic_limiter.php',
-                    '<?php' . PHP_EOL . '$GLOBALS[\'traffic_limiter\'] = ' . var_export(self::$_traffic_limiter_cache, true) . ';'
+                    '<?php' . PHP_EOL . '$GLOBALS[\'traffic_limiter\'] = ' . var_export(self::$_last_cache, true) . ';'
                 );
         }
         return false;
@@ -303,9 +303,9 @@ class Filesystem extends AbstractData
                 $file = self::$_path . DIRECTORY_SEPARATOR . 'traffic_limiter.php';
                 if (is_readable($file)) {
                     require $file;
-                    self::$_traffic_limiter_cache = $GLOBALS['traffic_limiter'];
-                    if (array_key_exists($key, self::$_traffic_limiter_cache)) {
-                        return self::$_traffic_limiter_cache[$key];
+                    self::$_last_cache = $GLOBALS['traffic_limiter'];
+                    if (array_key_exists($key, self::$_last_cache)) {
+                        return self::$_last_cache[$key];
                     }
                 }
                 break;

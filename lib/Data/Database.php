@@ -447,9 +447,9 @@ class Database extends AbstractData
     public function setValue($value, $namespace, $key = '')
     {
         if ($namespace === 'traffic_limiter') {
-            self::$_traffic_limiter_cache[$key] = $value;
+            self::$_last_cache[$key] = $value;
             try {
-                $value = Json::encode(self::$_traffic_limiter_cache);
+                $value = Json::encode(self::$_last_cache);
             } catch (Exception $e) {
                 return false;
             }
@@ -492,12 +492,12 @@ class Database extends AbstractData
         }
         if ($value && $namespace === 'traffic_limiter') {
             try {
-                self::$_traffic_limiter_cache = Json::decode($value);
+                self::$_last_cache = Json::decode($value);
             } catch (Exception $e) {
-                self::$_traffic_limiter_cache = array();
+                self::$_last_cache = array();
             }
-            if (array_key_exists($key, self::$_traffic_limiter_cache)) {
-                return self::$_traffic_limiter_cache[$key];
+            if (array_key_exists($key, self::$_last_cache)) {
+                return self::$_last_cache[$key];
             }
         }
         return (string) $value;

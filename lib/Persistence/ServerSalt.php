@@ -27,15 +27,6 @@ use PrivateBin\Data\AbstractData;
 class ServerSalt extends AbstractPersistence
 {
     /**
-     * file where salt is saved to
-     *
-     * @access private
-     * @static
-     * @var    string
-     */
-    private static $_file = 'salt.php';
-
-    /**
      * generated salt
      *
      * @access private

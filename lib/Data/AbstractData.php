@@ -35,7 +35,7 @@ abstract class AbstractData
      * @static
      * @var    array
      */
-    protected static $_traffic_limiter_cache = array();
+    protected static $_last_cache = array();
 
     /**
      * Enforce singleton, disable constructor
@@ -150,9 +150,9 @@ abstract class AbstractData
     public function purgeValues($namespace, $time)
     {
         if ($namespace === 'traffic_limiter') {
-            foreach (self::$_traffic_limiter_cache as $key => $last_access) {
-                if ($last_access <= $time) {
-                    unset(self::$_traffic_limiter_cache[$key]);
+            foreach (self::$_last_cache as $key => $last_submission) {
+                if ($last_submission <= $time) {
+                    unset(self::$_last_cache[$key]);
                 }
             }
         }
