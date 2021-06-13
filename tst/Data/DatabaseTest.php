@@ -302,6 +302,48 @@ class DatabaseTest extends PHPUnit_Framework_TestCase
         Helper::rmDir($this->_path);
     }
 
+    public function testCorruptMeta()
+    {
+        mkdir($this->_path);
+        $path = $this->_path . DIRECTORY_SEPARATOR . 'meta-test.sq3';
+        if (is_file($path)) {
+            unlink($path);
+        }
+        $this->_options['dsn'] = 'sqlite:' . $path;
+        $this->_options['tbl'] = 'baz_';
+        $model                 = Database::getInstance($this->_options);
+        $paste                 = Helper::getPaste(1, array('expire_date' => 1344803344));
+        unset($paste['meta']['formatter'], $paste['meta']['opendiscussion'], $paste['meta']['salt']);
+        $model->delete(Helper::getPasteId());
+
+        $db = new PDO(
+            $this->_options['dsn'],
+            $this->_options['usr'],
+            $this->_options['pwd'],
+            $this->_options['opt']
+        );
+        $statement = $db->prepare('INSERT INTO baz_paste VALUES(?,?,?,?,?,?,?,?,?)');
+        $statement->execute(
+            array(
+                Helper::getPasteId(),
+                $paste['data'],
+                $paste['meta']['postdate'],
+                $paste['meta']['expire_date'],
+                0,
+                0,
+                '{',
+                null,
+                null,
+            )
+        );
+        $statement->closeCursor();
+
+        $this->assertTrue($model->exists(Helper::getPasteId()), 'paste exists after storing it');
+        $this->assertEquals($paste, $model->read(Helper::getPasteId()));
+
+        Helper::rmDir($this->_path);
+    }
+
     public function testTableUpgrade()
     {
         mkdir($this->_path);

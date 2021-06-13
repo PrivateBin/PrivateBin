@@ -12,7 +12,6 @@
 
 namespace PrivateBin\Persistence;
 
-use Exception;
 use PrivateBin\Data\AbstractData;
 
 /**
@@ -54,8 +53,7 @@ class ServerSalt extends AbstractPersistence
      */
     public static function generate()
     {
-        $randomSalt = bin2hex(random_bytes(256));
-        return $randomSalt;
+        return bin2hex(random_bytes(256));
     }
 
     /**
@@ -63,7 +61,6 @@ class ServerSalt extends AbstractPersistence
      *
      * @access public
      * @static
-     * @throws Exception
      * @return string
      */
     public static function get()

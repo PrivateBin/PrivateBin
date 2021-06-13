@@ -102,6 +102,58 @@ class ModelTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(array(), $paste->getComments(), 'comment was deleted with paste');
     }
 
+    public function testPasteV1()
+    {
+        $pasteData = Helper::getPaste(1);
+        unset($pasteData['meta']['formatter']);
+
+        $path = $this->_path . DIRECTORY_SEPARATOR . 'v1-test.sq3';
+        if (is_file($path)) {
+            unlink($path);
+        }
+        $options                   = parse_ini_file(CONF_SAMPLE, true);
+        $options['purge']['limit'] = 0;
+        $options['model']          = array(
+            'class' => 'Database',
+        );
+        $options['model_options'] = array(
+            'dsn' => 'sqlite:' . $path,
+            'usr' => null,
+            'pwd' => null,
+            'opt' => array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION),
+        );
+        Helper::createIniFile(CONF, $options);
+        $model = new Model(new Configuration);
+        $model->getPaste('0000000000000000')->exists(); // triggers database table creation
+        $model->getPaste(Helper::getPasteId())->delete(); // deletes the cache
+
+        $db = new PDO(
+            $options['model_options']['dsn'],
+            $options['model_options']['usr'],
+            $options['model_options']['pwd'],
+            $options['model_options']['opt']
+        );
+        $statement = $db->prepare('INSERT INTO paste VALUES(?,?,?,?,?,?,?,?,?)');
+        $statement->execute(
+            array(
+                Helper::getPasteId(),
+                $pasteData['data'],
+                $pasteData['meta']['postdate'],
+                0,
+                0,
+                0,
+                json_encode($pasteData['meta']),
+                null,
+                null,
+            )
+        );
+        $statement->closeCursor();
+
+        $paste = $model->getPaste(Helper::getPasteId());
+        $paste->getDeleteToken();
+        $this->assertEquals('plaintext', $paste->get()['meta']['formatter'], 'paste got created with default formatter');
+    }
+
     public function testCommentDefaults()
     {
         $comment = new Comment(
@@ -131,6 +183,96 @@ class ModelTest extends PHPUnit_Framework_TestCase
         $paste = $this->_model->getPaste();
         $paste->setData($pasteData);
         $paste->store();
+    }
+
+    /**
+     * @expectedException Exception
+     * @expectedExceptionCode 76
+     */
+    public function testStoreFail()
+    {
+        $path = $this->_path . DIRECTORY_SEPARATOR . 'model-store-test.sq3';
+        if (is_file($path)) {
+            unlink($path);
+        }
+        $options                   = parse_ini_file(CONF_SAMPLE, true);
+        $options['purge']['limit'] = 0;
+        $options['model']          = array(
+            'class' => 'Database',
+        );
+        $options['model_options'] = array(
+            'dsn' => 'sqlite:' . $path,
+            'usr' => null,
+            'pwd' => null,
+            'opt' => array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION),
+        );
+        Helper::createIniFile(CONF, $options);
+        $model = new Model(new Configuration);
+
+        $pasteData   = Helper::getPastePost();
+        $model->getPaste(Helper::getPasteId())->delete();
+        $model->getPaste(Helper::getPasteId())->exists();
+
+        $db = new PDO(
+            $options['model_options']['dsn'],
+            $options['model_options']['usr'],
+            $options['model_options']['pwd'],
+            $options['model_options']['opt']
+        );
+        $statement = $db->prepare('DROP TABLE paste');
+        $statement->execute();
+        $statement->closeCursor();
+
+        $paste = $model->getPaste();
+        $paste->setData($pasteData);
+        $paste->store();
+    }
+
+    /**
+     * @expectedException Exception
+     * @expectedExceptionCode 70
+     */
+    public function testCommentStoreFail()
+    {
+        $path = $this->_path . DIRECTORY_SEPARATOR . 'model-test.sq3';
+        if (is_file($path)) {
+            unlink($path);
+        }
+        $options                   = parse_ini_file(CONF_SAMPLE, true);
+        $options['purge']['limit'] = 0;
+        $options['model']          = array(
+            'class' => 'Database',
+        );
+        $options['model_options'] = array(
+            'dsn' => 'sqlite:' . $path,
+            'usr' => null,
+            'pwd' => null,
+            'opt' => array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION),
+        );
+        Helper::createIniFile(CONF, $options);
+        $model = new Model(new Configuration);
+
+        $pasteData   = Helper::getPastePost();
+        $commentData = Helper::getCommentPost();
+        $model->getPaste(Helper::getPasteId())->delete();
+
+        $paste = $model->getPaste();
+        $paste->setData($pasteData);
+        $paste->store();
+
+        $db = new PDO(
+            $options['model_options']['dsn'],
+            $options['model_options']['usr'],
+            $options['model_options']['pwd'],
+            $options['model_options']['opt']
+        );
+        $statement = $db->prepare('DROP TABLE comment');
+        $statement->execute();
+        $statement->closeCursor();
+
+        $comment = $paste->getComment(Helper::getPasteId());
+        $comment->setData($commentData);
+        $comment->store();
     }
 
     /**
@@ -193,6 +335,18 @@ class ModelTest extends PHPUnit_Framework_TestCase
         $this->_model->getPaste(Helper::getPasteId())->delete();
         $paste = $this->_model->getPaste(Helper::getPasteId());
         $paste->get();
+    }
+
+    /**
+     * @expectedException Exception
+     * @expectedExceptionCode 75
+     */
+    public function testInvalidPasteFormat()
+    {
+        $pasteData = Helper::getPastePost();
+        $pasteData['adata'][1] = 'format does not exist';
+        $paste = $this->_model->getPaste();
+        $paste->setData($pasteData);
     }
 
     /**

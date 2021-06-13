@@ -34,12 +34,9 @@ class GoogleCloudStorage extends AbstractData
         if (is_array($options) && array_key_exists('prefix', $options)) {
             $prefix = $options['prefix'];
         }
-        if (is_array($options) && array_key_exists('client', $options)) {
-            $client = $options['client'];
-        }
 
         if (!(self::$_instance instanceof self)) {
-            self::$_instance = new self($bucket, $prefix, $client);
+            self::$_instance = new self($bucket, $prefix);
         }
         return self::$_instance;
     }
@@ -48,16 +45,12 @@ class GoogleCloudStorage extends AbstractData
     protected $_bucket = null;
     protected $_prefix = 'pastes';
 
-    public function __construct($bucket, $prefix, $client = null)
+    public function __construct($bucket, $prefix)
     {
         parent::__construct();
-        if ($client == null) {
-            $this->_client = new StorageClient(array('suppressKeyFileNotice' => true));
-        } else {
-            // use given client for test purposes
-            $this->_client = $client;
-        }
-
+        $this->_client = class_exists('StorageClientStub', false) ?
+            new \StorageClientStub(array()) :
+            new StorageClient(array('suppressKeyFileNotice' => true));
         $this->_bucket = $this->_client->bucket($bucket);
         if ($prefix != null) {
             $this->_prefix = $prefix;

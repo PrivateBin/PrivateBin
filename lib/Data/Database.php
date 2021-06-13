@@ -198,21 +198,25 @@ class Database extends AbstractData
             $opendiscussion   = $paste['adata'][2];
             $burnafterreading = $paste['adata'][3];
         }
-        return self::_exec(
-            'INSERT INTO ' . self::_sanitizeIdentifier('paste') .
-            ' VALUES(?,?,?,?,?,?,?,?,?)',
-            array(
-                $pasteid,
-                $isVersion1 ? $paste['data'] : Json::encode($paste),
-                $created,
-                $expire_date,
-                (int) $opendiscussion,
-                (int) $burnafterreading,
-                Json::encode($meta),
-                $attachment,
-                $attachmentname,
-            )
-        );
+        try {
+            return self::_exec(
+                'INSERT INTO ' . self::_sanitizeIdentifier('paste') .
+                ' VALUES(?,?,?,?,?,?,?,?,?)',
+                array(
+                    $pasteid,
+                    $isVersion1 ? $paste['data'] : Json::encode($paste),
+                    $created,
+                    $expire_date,
+                    (int) $opendiscussion,
+                    (int) $burnafterreading,
+                    Json::encode($meta),
+                    $attachment,
+                    $attachmentname,
+                )
+            );
+        } catch (Exception $e) {
+            return false;
+        }
     }
 
     /**
@@ -348,19 +352,23 @@ class Database extends AbstractData
                 $meta[$key] = null;
             }
         }
-        return self::_exec(
-            'INSERT INTO ' . self::_sanitizeIdentifier('comment') .
-            ' VALUES(?,?,?,?,?,?,?)',
-            array(
-                $commentid,
-                $pasteid,
-                $parentid,
-                $data,
-                $meta['nickname'],
-                $meta[$iconKey],
-                $meta[$createdKey],
-            )
-        );
+        try {
+            return self::_exec(
+                'INSERT INTO ' . self::_sanitizeIdentifier('comment') .
+                ' VALUES(?,?,?,?,?,?,?)',
+                array(
+                    $commentid,
+                    $pasteid,
+                    $parentid,
+                    $data,
+                    $meta['nickname'],
+                    $meta[$iconKey],
+                    $meta[$createdKey],
+                )
+            );
+        } catch (Exception $e) {
+            return false;
+        }
     }
 
     /**
@@ -416,11 +424,15 @@ class Database extends AbstractData
      */
     public function existsComment($pasteid, $parentid, $commentid)
     {
-        return (bool) self::_select(
-            'SELECT dataid FROM ' . self::_sanitizeIdentifier('comment') .
-            ' WHERE pasteid = ? AND parentid = ? AND dataid = ?',
-            array($pasteid, $parentid, $commentid), true
-        );
+        try {
+            return (bool) self::_select(
+                'SELECT dataid FROM ' . self::_sanitizeIdentifier('comment') .
+                ' WHERE pasteid = ? AND parentid = ? AND dataid = ?',
+                array($pasteid, $parentid, $commentid), true
+            );
+        } catch (Exception $e) {
+            return false;
+        }
     }
 
     /**

@@ -59,7 +59,6 @@ class PurgeLimiter extends AbstractPersistence
      *
      * @access public
      * @static
-     * @throws \Exception
      * @return bool
      */
     public static function canPurge()
