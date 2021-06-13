@@ -343,9 +343,9 @@ class ModelTest extends PHPUnit_Framework_TestCase
      */
     public function testInvalidPasteFormat()
     {
-        $pasteData = Helper::getPastePost();
+        $pasteData             = Helper::getPastePost();
         $pasteData['adata'][1] = 'format does not exist';
-        $paste = $this->_model->getPaste();
+        $paste                 = $this->_model->getPaste();
         $paste->setData($pasteData);
     }
 

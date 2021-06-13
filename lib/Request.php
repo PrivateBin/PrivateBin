@@ -110,7 +110,7 @@ class Request
             case 'POST':
                 // it might be a creation or a deletion, the latter is detected below
                 $this->_operation = 'create';
-                $this->_params = Json::decode(
+                $this->_params    = Json::decode(
                     file_get_contents(self::$_inputStream)
                 );
                 break;
@@ -130,7 +130,7 @@ class Request
         if (array_key_exists('pasteid', $this->_params) && !empty($this->_params['pasteid'])) {
             if (array_key_exists('deletetoken', $this->_params) && !empty($this->_params['deletetoken'])) {
                 $this->_operation = 'delete';
-            } else if ($this->_operation != 'create') {
+            } elseif ($this->_operation != 'create') {
                 $this->_operation = 'read';
             }
         } elseif (array_key_exists('jsonld', $this->_params) && !empty($this->_params['jsonld'])) {

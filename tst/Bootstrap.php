@@ -1,13 +1,11 @@
 <?php
 
-use Google\Auth\HttpHandler\HttpHandlerFactory;
 use Google\Cloud\Core\Exception\BadRequestException;
 use Google\Cloud\Core\Exception\NotFoundException;
 use Google\Cloud\Storage\Bucket;
 use Google\Cloud\Storage\Connection\ConnectionInterface;
 use Google\Cloud\Storage\StorageClient;
 use Google\Cloud\Storage\StorageObject;
-use GuzzleHttp\Client;
 use PrivateBin\Data\GoogleCloudStorage;
 use PrivateBin\Persistence\ServerSalt;
 
