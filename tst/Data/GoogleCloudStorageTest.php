@@ -176,7 +176,7 @@ class GoogleCloudStorageTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($storedExpired, $this->_model->getValue('traffic_limiter', $client));
 
         $this->_model->purgeValues('traffic_limiter', time() + 60);
-        $this->assertFalse($this->_model->getValue('traffic_limiter', $client));
+        $this->assertEquals('', $this->_model->getValue('traffic_limiter', $client));
     }
 
     public function testKeyValuePurgeTrafficLimiterWithKey()
@@ -192,6 +192,6 @@ class GoogleCloudStorageTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($storedExpired, $this->_model->getValue('traffic_limiter', $client));
 
         $this->_model->purgeValues('traffic_limiter', time() + 60);
-        $this->assertFalse($this->_model->getValue('traffic_limiter', $client));
+        $this->assertEquals('', $this->_model->getValue('traffic_limiter', $client));
     }
 }
