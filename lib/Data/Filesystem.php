@@ -23,11 +23,18 @@ use PrivateBin\Json;
 class Filesystem extends AbstractData
 {
     /**
-     * first line in file, to protect its contents
+     * first line in paste or comment files, to protect their contents from browsing exposed data directories
      *
      * @const string
      */
     const PROTECTION_LINE = '<?php http_response_code(403); /*';
+
+    /**
+     * line in generated .htaccess files, to protect exposed directories from being browsable on apache web servers
+     *
+     * @const string
+     */
+    const HTACCESS_LINE = 'Require all denied';
 
     /**
      * path in which to persist something
@@ -327,8 +334,8 @@ class Filesystem extends AbstractData
             substr(
                 file_get_contents($filename),
                 strlen(self::PROTECTION_LINE . PHP_EOL)
-                )
-            );
+            )
+        );
     }
 
     /**
@@ -453,7 +460,7 @@ class Filesystem extends AbstractData
     private static function _isFirstLevelDir($element)
     {
         return self::_isSecondLevelDir($element) &&
-        is_dir(self::$_path . DIRECTORY_SEPARATOR . $element);
+            is_dir(self::$_path . DIRECTORY_SEPARATOR . $element);
     }
 
     /**
@@ -513,11 +520,15 @@ class Filesystem extends AbstractData
             if ($fileCreated = @touch($file)) {
                 $writtenBytes = @file_put_contents(
                     $file,
-                    'Require all denied' . PHP_EOL,
+                    self::HTACCESS_LINE . PHP_EOL,
                     LOCK_EX
-                    );
+                );
             }
-            if ($fileCreated === false || $writtenBytes === false || $writtenBytes < 19) {
+            if (
+                $fileCreated === false ||
+                $writtenBytes === false ||
+                $writtenBytes < strlen(self::HTACCESS_LINE . PHP_EOL)
+            ) {
                 return false;
             }
         }
@@ -533,7 +544,7 @@ class Filesystem extends AbstractData
         if ($fileCreated === false || $writtenBytes === false || $writtenBytes < strlen($data)) {
             return false;
         }
-        @chmod($filename, 0640); // protect file access
+        @chmod($filename, 0640); // protect file from access by other users on the host
         return true;
     }
 

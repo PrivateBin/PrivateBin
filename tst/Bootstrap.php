@@ -306,7 +306,7 @@ class StorageObjectStub extends StorageObject
         $this->_info                            = $info;
         $this->_connection                      = $connection;
         $timeCreated                            = new Datetime();
-        $this->_info['metadata']['timeCreated'] = $timeCreated->format(GoogleCloudStorage::DATETIME_FORMAT);
+        $this->_info['metadata']['timeCreated'] = $timeCreated->format('Y-m-d\TH:i:s.u\Z');
     }
 
     public function acl()

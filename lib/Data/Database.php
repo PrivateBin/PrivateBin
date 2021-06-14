@@ -234,7 +234,7 @@ class Database extends AbstractData
 
         self::$_cache[$pasteid] = false;
         try {
-            $paste                  = self::_select(
+            $paste = self::_select(
                 'SELECT * FROM ' . self::_sanitizeIdentifier('paste') .
                 ' WHERE dataid = ?', array($pasteid), true
             );

@@ -15,7 +15,7 @@ namespace PrivateBin\Data;
 /**
  * AbstractData
  *
- * Abstract model for PrivateBin data access, implemented as a singleton.
+ * Abstract model for data access, implemented as a singleton.
  */
 abstract class AbstractData
 {
@@ -40,7 +40,7 @@ abstract class AbstractData
     /**
      * Enforce singleton, disable constructor
      *
-     * Instantiate using {@link getInstance()}, privatebin is a singleton object.
+     * Instantiate using {@link getInstance()}, this object implements the singleton pattern.
      *
      * @access protected
      */
@@ -51,7 +51,7 @@ abstract class AbstractData
     /**
      * Enforce singleton, disable cloning
      *
-     * Instantiate using {@link getInstance()}, privatebin is a singleton object.
+     * Instantiate using {@link getInstance()}, this object implements the singleton pattern.
      *
      * @access private
      */

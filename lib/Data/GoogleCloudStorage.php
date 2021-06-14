@@ -9,8 +9,6 @@ use PrivateBin\Json;
 
 class GoogleCloudStorage extends AbstractData
 {
-    const DATETIME_FORMAT = 'Y-m-d\TH:i:s.u\Z';
-
     /**
      * returns a Google Cloud Storage data backend.
      *
