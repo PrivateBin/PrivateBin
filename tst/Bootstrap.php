@@ -6,7 +6,6 @@ use Google\Cloud\Storage\Bucket;
 use Google\Cloud\Storage\Connection\ConnectionInterface;
 use Google\Cloud\Storage\StorageClient;
 use Google\Cloud\Storage\StorageObject;
-use PrivateBin\Data\GoogleCloudStorage;
 use PrivateBin\Persistence\ServerSalt;
 
 error_reporting(E_ALL | E_STRICT);
