@@ -4,6 +4,7 @@ namespace PrivateBin\Data;
 
 use Exception;
 use Google\Cloud\Core\Exception\NotFoundException;
+use Google\Cloud\Storage\Bucket;
 use Google\Cloud\Storage\StorageClient;
 use PrivateBin\Json;
 
@@ -23,7 +24,7 @@ class GoogleCloudStorage extends AbstractData
      *
      * @access private
      * @static
-     * @var    \Google\Cloud\Storage\Bucket
+     * @var    Bucket
      */
     private static $_bucket = null;
 
