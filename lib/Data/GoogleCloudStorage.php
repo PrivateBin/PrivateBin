@@ -74,7 +74,7 @@ class GoogleCloudStorage extends AbstractData
 
     /**
      * returns the google storage object key for $pasteid in self::$_bucket.
-     * 
+     *
      * @access private
      * @param $pasteid string to get the key for
      * @return string
