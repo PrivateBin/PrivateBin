@@ -65,7 +65,9 @@ class ServerSalt extends AbstractPersistence
             self::$_salt = $salt;
         } else {
             self::$_salt = self::generate();
-            self::$_store->setValue(self::$_salt, 'salt');
+            if (!self::$_store->setValue(self::$_salt, 'salt')) {
+                error_log('failed to store the server salt, delete tokens, traffic limiter and user icons won\'t work');
+            }
         }
         return self::$_salt;
     }

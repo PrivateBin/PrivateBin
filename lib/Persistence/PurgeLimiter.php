@@ -73,7 +73,10 @@ class PurgeLimiter extends AbstractPersistence
         if ($pl + self::$_limit >= $now) {
             return false;
         }
-        self::$_store->setValue((string) $now, 'purge_limiter');
-        return true;
+        $hasStored = self::$_store->setValue((string) $now, 'purge_limiter');
+        if (!$hasStored) {
+            error_log('failed to store the purge limiter, skipping purge cycle to avoid getting stuck in a purge loop');
+        }
+        return $hasStored;
     }
 }

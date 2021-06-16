@@ -172,7 +172,9 @@ class TrafficLimiter extends AbstractPersistence
             $tl     = time();
             $result = true;
         }
-        self::$_store->setValue((string) $tl, 'traffic_limiter', $hash);
+        if (!self::$_store->setValue((string) $tl, 'traffic_limiter', $hash)) {
+            error_log('failed to store the traffic limiter, it probably contains outdated information');
+        }
         return $result;
     }
 }
