@@ -150,7 +150,7 @@ class ModelTest extends PHPUnit_Framework_TestCase
         $statement->closeCursor();
 
         $paste = $model->getPaste(Helper::getPasteId());
-        $paste->getDeleteToken();
+        $this->assertNotEmpty($paste->getDeleteToken(), 'excercise the condition to load the data from storage');
         $this->assertEquals('plaintext', $paste->get()['meta']['formatter'], 'paste got created with default formatter');
     }
 
