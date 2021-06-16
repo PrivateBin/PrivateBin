@@ -99,12 +99,13 @@ class Filesystem extends AbstractData
      */
     public function read($pasteid)
     {
-        if (!$this->exists($pasteid)) {
+        if (
+            !$this->exists($pasteid) ||
+            !$paste = self::_get(self::_dataid2path($pasteid) . $pasteid . '.php')
+        ) {
             return false;
         }
-        return self::upgradePreV1Format(
-            self::_get(self::_dataid2path($pasteid) . $pasteid . '.php')
-        );
+        return self::upgradePreV1Format($paste);
     }
 
     /**

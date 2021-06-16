@@ -23,7 +23,7 @@ class GoogleCloudStorage extends AbstractData
      *
      * @access private
      * @static
-     * @var    Bucket
+     * @var    \Google\Cloud\Storage\Bucket
      */
     private static $_bucket = null;
 
