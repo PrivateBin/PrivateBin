@@ -52,6 +52,11 @@ class FormatV2
             }
         }
 
+        // Make sure adata is an array.
+        if (!is_array($message['adata'])) {
+            return false;
+        }
+
         $cipherParams = $isComment ? $message['adata'] : $message['adata'][0];
 
         // Make sure some fields are base64 data:

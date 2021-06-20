@@ -16,7 +16,7 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
         /* Setup Routine */
         $this->_path  = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'privatebin_data';
         $this->_model = Filesystem::getInstance(array('dir' => $this->_path));
-        ServerSalt::setPath($this->_path);
+        ServerSalt::setStore($this->_model);
 
         $_POST   = array();
         $_GET    = array();
@@ -25,8 +25,6 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
             $this->_model->delete(Helper::getPasteId());
         }
         $options                         = parse_ini_file(CONF_SAMPLE, true);
-        $options['purge']['dir']         = $this->_path;
-        $options['traffic']['dir']       = $this->_path;
         $options['model_options']['dir'] = $this->_path;
         Helper::confBackup();
         Helper::createIniFile(CONF, $options);

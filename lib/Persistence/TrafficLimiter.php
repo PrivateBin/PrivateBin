@@ -13,7 +13,6 @@
 
 namespace PrivateBin\Persistence;
 
-use Exception;
 use IPLib\Factory;
 use PrivateBin\Configuration;
 
@@ -85,7 +84,6 @@ class TrafficLimiter extends AbstractPersistence
     public static function setConfiguration(Configuration $conf)
     {
         self::setLimit($conf->getKey('limit', 'traffic'));
-        self::setPath($conf->getKey('dir', 'traffic'));
         self::setExemptedIp($conf->getKey('exemptedIp', 'traffic'));
 
         if (($option = $conf->getKey('header', 'traffic')) !== null) {
@@ -134,13 +132,7 @@ class TrafficLimiter extends AbstractPersistence
             return false;
         }
 
-        // Ip-lib throws an exception when something goes wrong, if so we want to catch it and set contained to false
-        try {
-            return $address->matches($range);
-        } catch (Exception $e) {
-            // If something is wrong with matching the ip, we assume it doesn't match
-            return false;
-        }
+        return $address->matches($range);
     }
 
     /**
@@ -150,7 +142,6 @@ class TrafficLimiter extends AbstractPersistence
      *
      * @access public
      * @static
-     * @throws Exception
      * @return bool
      */
     public static function canPass()
@@ -170,35 +161,20 @@ class TrafficLimiter extends AbstractPersistence
             }
         }
 
-        $file = 'traffic_limiter.php';
-        if (self::_exists($file)) {
-            require self::getPath($file);
-            $tl = $GLOBALS['traffic_limiter'];
-        } else {
-            $tl = array();
-        }
-
-        // purge file of expired hashes to keep it small
-        $now = time();
-        foreach ($tl as $key => $time) {
-            if ($time + self::$_limit < $now) {
-                unset($tl[$key]);
-            }
-        }
-
         // this hash is used as an array key, hence a shorter algo is used
         $hash = self::getHash('sha256');
-        if (array_key_exists($hash, $tl) && ($tl[$hash] + self::$_limit >= $now)) {
+        $now  = time();
+        $tl   = (int) self::$_store->getValue('traffic_limiter', $hash);
+        self::$_store->purgeValues('traffic_limiter', $now - self::$_limit);
+        if ($tl > 0 && ($tl + self::$_limit >= $now)) {
             $result = false;
         } else {
-            $tl[$hash] = time();
-            $result    = true;
+            $tl     = time();
+            $result = true;
         }
-        self::_store(
-            $file,
-            '<?php' . PHP_EOL .
-            '$GLOBALS[\'traffic_limiter\'] = ' . var_export($tl, true) . ';'
-        );
+        if (!self::$_store->setValue((string) $tl, 'traffic_limiter', $hash)) {
+            error_log('failed to store the traffic limiter, it probably contains outdated information');
+        }
         return $result;
     }
 }

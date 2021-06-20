@@ -2,6 +2,8 @@
 
 use PrivateBin\Controller;
 use PrivateBin\Data\Database;
+use PrivateBin\Data\Filesystem;
+use PrivateBin\Persistence\ServerSalt;
 
 class DatabaseTest extends PHPUnit_Framework_TestCase
 {
@@ -29,6 +31,19 @@ class DatabaseTest extends PHPUnit_Framework_TestCase
         if (is_dir($this->_path)) {
             Helper::rmDir($this->_path);
         }
+    }
+
+    public function testSaltMigration()
+    {
+        ServerSalt::setStore(Filesystem::getInstance(array('dir' => 'data')));
+        $salt = ServerSalt::get();
+        $file = 'data' . DIRECTORY_SEPARATOR . 'salt.php';
+        $this->assertFileExists($file, 'ServerSalt got initialized and stored on disk');
+        $this->assertNotEquals($salt, '');
+        ServerSalt::setStore($this->_model);
+        ServerSalt::get();
+        $this->assertFileNotExists($file, 'legacy ServerSalt got removed');
+        $this->assertEquals($salt, ServerSalt::get(), 'ServerSalt got preserved & migrated');
     }
 
     public function testDatabaseBasedDataStoreWorks()
@@ -283,6 +298,48 @@ class DatabaseTest extends PHPUnit_Framework_TestCase
 
         $this->assertTrue($model->exists(Helper::getPasteId()), 'paste exists after storing it');
         $this->assertEquals($original, $model->read(Helper::getPasteId()));
+
+        Helper::rmDir($this->_path);
+    }
+
+    public function testCorruptMeta()
+    {
+        mkdir($this->_path);
+        $path = $this->_path . DIRECTORY_SEPARATOR . 'meta-test.sq3';
+        if (is_file($path)) {
+            unlink($path);
+        }
+        $this->_options['dsn'] = 'sqlite:' . $path;
+        $this->_options['tbl'] = 'baz_';
+        $model                 = Database::getInstance($this->_options);
+        $paste                 = Helper::getPaste(1, array('expire_date' => 1344803344));
+        unset($paste['meta']['formatter'], $paste['meta']['opendiscussion'], $paste['meta']['salt']);
+        $model->delete(Helper::getPasteId());
+
+        $db = new PDO(
+            $this->_options['dsn'],
+            $this->_options['usr'],
+            $this->_options['pwd'],
+            $this->_options['opt']
+        );
+        $statement = $db->prepare('INSERT INTO baz_paste VALUES(?,?,?,?,?,?,?,?,?)');
+        $statement->execute(
+            array(
+                Helper::getPasteId(),
+                $paste['data'],
+                $paste['meta']['postdate'],
+                $paste['meta']['expire_date'],
+                0,
+                0,
+                '{',
+                null,
+                null,
+            )
+        );
+        $statement->closeCursor();
+
+        $this->assertTrue($model->exists(Helper::getPasteId()), 'paste exists after storing it');
+        $this->assertEquals($paste, $model->read(Helper::getPasteId()));
 
         Helper::rmDir($this->_path);
     }

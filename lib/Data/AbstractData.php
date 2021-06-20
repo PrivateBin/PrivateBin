@@ -15,12 +15,12 @@ namespace PrivateBin\Data;
 /**
  * AbstractData
  *
- * Abstract model for PrivateBin data access, implemented as a singleton.
+ * Abstract model for data access, implemented as a singleton.
  */
 abstract class AbstractData
 {
     /**
-     * singleton instance
+     * Singleton instance
      *
      * @access protected
      * @static
@@ -29,9 +29,18 @@ abstract class AbstractData
     protected static $_instance = null;
 
     /**
-     * enforce singleton, disable constructor
+     * cache for the traffic limiter
      *
-     * Instantiate using {@link getInstance()}, privatebin is a singleton object.
+     * @access private
+     * @static
+     * @var    array
+     */
+    protected static $_last_cache = array();
+
+    /**
+     * Enforce singleton, disable constructor
+     *
+     * Instantiate using {@link getInstance()}, this object implements the singleton pattern.
      *
      * @access protected
      */
@@ -40,9 +49,9 @@ abstract class AbstractData
     }
 
     /**
-     * enforce singleton, disable cloning
+     * Enforce singleton, disable cloning
      *
-     * Instantiate using {@link getInstance()}, privatebin is a singleton object.
+     * Instantiate using {@link getInstance()}, this object implements the singleton pattern.
      *
      * @access private
      */
@@ -51,7 +60,7 @@ abstract class AbstractData
     }
 
     /**
-     * get instance of singleton
+     * Get instance of singleton
      *
      * @access public
      * @static
@@ -129,6 +138,46 @@ abstract class AbstractData
      * @return bool
      */
     abstract public function existsComment($pasteid, $parentid, $commentid);
+
+    /**
+     * Purge outdated entries.
+     *
+     * @access public
+     * @param  string $namespace
+     * @param  int $time
+     * @return void
+     */
+    public function purgeValues($namespace, $time)
+    {
+        if ($namespace === 'traffic_limiter') {
+            foreach (self::$_last_cache as $key => $last_submission) {
+                if ($last_submission <= $time) {
+                    unset(self::$_last_cache[$key]);
+                }
+            }
+        }
+    }
+
+    /**
+     * Save a value.
+     *
+     * @access public
+     * @param  string $value
+     * @param  string $namespace
+     * @param  string $key
+     * @return bool
+     */
+    abstract public function setValue($value, $namespace, $key = '');
+
+    /**
+     * Load a value.
+     *
+     * @access public
+     * @param  string $namespace
+     * @param  string $key
+     * @return string
+     */
+    abstract public function getValue($namespace, $key = '');
 
     /**
      * Returns up to batch size number of paste ids that have expired

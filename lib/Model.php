@@ -54,7 +54,7 @@ class Model
      */
     public function getPaste($pasteId = null)
     {
-        $paste = new Paste($this->_conf, $this->_getStore());
+        $paste = new Paste($this->_conf, $this->getStore());
         if ($pasteId !== null) {
             $paste->setId($pasteId);
         }
@@ -67,8 +67,9 @@ class Model
     public function purge()
     {
         PurgeLimiter::setConfiguration($this->_conf);
+        PurgeLimiter::setStore($this->getStore());
         if (PurgeLimiter::canPurge()) {
-            $this->_getStore()->purge($this->_conf->getKey('batchsize', 'purge'));
+            $this->getStore()->purge($this->_conf->getKey('batchsize', 'purge'));
         }
     }
 
@@ -77,7 +78,7 @@ class Model
      *
      * @return Data\AbstractData
      */
-    private function _getStore()
+    public function getStore()
     {
         if ($this->_store === null) {
             $this->_store = forward_static_call(

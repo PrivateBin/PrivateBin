@@ -198,21 +198,25 @@ class Database extends AbstractData
             $opendiscussion   = $paste['adata'][2];
             $burnafterreading = $paste['adata'][3];
         }
-        return self::_exec(
-            'INSERT INTO ' . self::_sanitizeIdentifier('paste') .
-            ' VALUES(?,?,?,?,?,?,?,?,?)',
-            array(
-                $pasteid,
-                $isVersion1 ? $paste['data'] : Json::encode($paste),
-                $created,
-                $expire_date,
-                (int) $opendiscussion,
-                (int) $burnafterreading,
-                Json::encode($meta),
-                $attachment,
-                $attachmentname,
-            )
-        );
+        try {
+            return self::_exec(
+                'INSERT INTO ' . self::_sanitizeIdentifier('paste') .
+                ' VALUES(?,?,?,?,?,?,?,?,?)',
+                array(
+                    $pasteid,
+                    $isVersion1 ? $paste['data'] : Json::encode($paste),
+                    $created,
+                    $expire_date,
+                    (int) $opendiscussion,
+                    (int) $burnafterreading,
+                    Json::encode($meta),
+                    $attachment,
+                    $attachmentname,
+                )
+            );
+        } catch (Exception $e) {
+            return false;
+        }
     }
 
     /**
@@ -229,11 +233,14 @@ class Database extends AbstractData
         }
 
         self::$_cache[$pasteid] = false;
-        $paste                  = self::_select(
-            'SELECT * FROM ' . self::_sanitizeIdentifier('paste') .
-            ' WHERE dataid = ?', array($pasteid), true
-        );
-
+        try {
+            $paste = self::_select(
+                'SELECT * FROM ' . self::_sanitizeIdentifier('paste') .
+                ' WHERE dataid = ?', array($pasteid), true
+            );
+        } catch (Exception $e) {
+            $paste = false;
+        }
         if ($paste === false) {
             return false;
         }
@@ -348,19 +355,23 @@ class Database extends AbstractData
                 $meta[$key] = null;
             }
         }
-        return self::_exec(
-            'INSERT INTO ' . self::_sanitizeIdentifier('comment') .
-            ' VALUES(?,?,?,?,?,?,?)',
-            array(
-                $commentid,
-                $pasteid,
-                $parentid,
-                $data,
-                $meta['nickname'],
-                $meta[$iconKey],
-                $meta[$createdKey],
-            )
-        );
+        try {
+            return self::_exec(
+                'INSERT INTO ' . self::_sanitizeIdentifier('comment') .
+                ' VALUES(?,?,?,?,?,?,?)',
+                array(
+                    $commentid,
+                    $pasteid,
+                    $parentid,
+                    $data,
+                    $meta['nickname'],
+                    $meta[$iconKey],
+                    $meta[$createdKey],
+                )
+            );
+        } catch (Exception $e) {
+            return false;
+        }
     }
 
     /**
@@ -416,11 +427,83 @@ class Database extends AbstractData
      */
     public function existsComment($pasteid, $parentid, $commentid)
     {
-        return (bool) self::_select(
-            'SELECT dataid FROM ' . self::_sanitizeIdentifier('comment') .
-            ' WHERE pasteid = ? AND parentid = ? AND dataid = ?',
-            array($pasteid, $parentid, $commentid), true
+        try {
+            return (bool) self::_select(
+                'SELECT dataid FROM ' . self::_sanitizeIdentifier('comment') .
+                ' WHERE pasteid = ? AND parentid = ? AND dataid = ?',
+                array($pasteid, $parentid, $commentid), true
+            );
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    /**
+     * Save a value.
+     *
+     * @access public
+     * @param  string $value
+     * @param  string $namespace
+     * @param  string $key
+     * @return bool
+     */
+    public function setValue($value, $namespace, $key = '')
+    {
+        if ($namespace === 'traffic_limiter') {
+            self::$_last_cache[$key] = $value;
+            try {
+                $value = Json::encode(self::$_last_cache);
+            } catch (Exception $e) {
+                return false;
+            }
+        }
+        return self::_exec(
+            'UPDATE ' . self::_sanitizeIdentifier('config') .
+            ' SET value = ? WHERE id = ?',
+            array($value, strtoupper($namespace))
         );
+    }
+
+    /**
+     * Load a value.
+     *
+     * @access public
+     * @param  string $namespace
+     * @param  string $key
+     * @return string
+     */
+    public function getValue($namespace, $key = '')
+    {
+        $configKey = strtoupper($namespace);
+        $value     = $this->_getConfig($configKey);
+        if ($value === '') {
+            // initialize the row, so that setValue can rely on UPDATE queries
+            self::_exec(
+                'INSERT INTO ' . self::_sanitizeIdentifier('config') .
+                ' VALUES(?,?)',
+                array($configKey, '')
+            );
+
+            // migrate filesystem based salt into database
+            $file = 'data' . DIRECTORY_SEPARATOR . 'salt.php';
+            if ($namespace === 'salt' && is_readable($file)) {
+                $value = Filesystem::getInstance(array('dir' => 'data'))->getValue('salt');
+                $this->setValue($value, 'salt');
+                @unlink($file);
+                return $value;
+            }
+        }
+        if ($value && $namespace === 'traffic_limiter') {
+            try {
+                self::$_last_cache = Json::decode($value);
+            } catch (Exception $e) {
+                self::$_last_cache = array();
+            }
+            if (array_key_exists($key, self::$_last_cache)) {
+                return self::$_last_cache[$key];
+            }
+        }
+        return (string) $value;
     }
 
     /**
@@ -563,16 +646,19 @@ class Database extends AbstractData
      * @access private
      * @static
      * @param  string $key
-     * @throws PDOException
      * @return string
      */
     private static function _getConfig($key)
     {
-        $row = self::_select(
-            'SELECT value FROM ' . self::_sanitizeIdentifier('config') .
-            ' WHERE id = ?', array($key), true
-        );
-        return $row['value'];
+        try {
+            $row = self::_select(
+                'SELECT value FROM ' . self::_sanitizeIdentifier('config') .
+                ' WHERE id = ?', array($key), true
+            );
+        } catch (PDOException $e) {
+            return '';
+        }
+        return $row ? $row['value'] : '';
     }
 
     /**

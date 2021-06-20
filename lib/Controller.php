@@ -162,7 +162,6 @@ class Controller
         $this->_model   = new Model($this->_conf);
         $this->_request = new Request;
         $this->_urlBase = $this->_request->getRequestUri();
-        ServerSalt::setPath($this->_conf->getKey('dir', 'traffic'));
 
         // set default language
         $lang = $this->_conf->getKey('languagedefault');
@@ -196,20 +195,17 @@ class Controller
      */
     private function _create()
     {
-        try {
-            // Ensure last paste from visitors IP address was more than configured amount of seconds ago.
-            TrafficLimiter::setConfiguration($this->_conf);
-            if (!TrafficLimiter::canPass()) {
-                $this->_return_message(
-                    1, I18n::_(
-                        'Please wait %d seconds between each post.',
-                        $this->_conf->getKey('limit', 'traffic')
-                    )
-                );
-                return;
-            }
-        } catch (Exception $e) {
-            $this->_return_message(1, I18n::_($e->getMessage()));
+        // Ensure last paste from visitors IP address was more than configured amount of seconds ago.
+        ServerSalt::setStore($this->_model->getStore());
+        TrafficLimiter::setConfiguration($this->_conf);
+        TrafficLimiter::setStore($this->_model->getStore());
+        if (!TrafficLimiter::canPass()) {
+            $this->_return_message(
+                1, I18n::_(
+                    'Please wait %d seconds between each post.',
+                    $this->_conf->getKey('limit', 'traffic')
+                )
+            );
             return;
         }
 

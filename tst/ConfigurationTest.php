@@ -17,8 +17,6 @@ class ConfigurationTest extends PHPUnit_Framework_TestCase
         $this->_minimalConfig                   = '[main]' . PHP_EOL . '[model]' . PHP_EOL . '[model_options]';
         $this->_options                         = Configuration::getDefaults();
         $this->_options['model_options']['dir'] = PATH . $this->_options['model_options']['dir'];
-        $this->_options['traffic']['dir']       = PATH . $this->_options['traffic']['dir'];
-        $this->_options['purge']['dir']         = PATH . $this->_options['purge']['dir'];
         $this->_path                            = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'privatebin_cfg';
         if (!is_dir($this->_path)) {
             mkdir($this->_path);

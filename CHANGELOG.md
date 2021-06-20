@@ -10,6 +10,8 @@
     * CHANGED: Language selection cookie only transmitted over HTTPS (#472)
     * CHANGED: Upgrading libraries to: random_compat 2.0.20
     * CHANGED: Removed automatic `.ini` configuration file migration (#808)
+    * CHANGED: Removed configurable `dir` for `traffic` & `purge` limiters (#419)
+    * CHANGED: Server salt, traffic and purge limiter now stored in the storage backend (#419)
   * **1.3.5 (2021-04-05)**
     * ADDED: Translation for Hebrew, Lithuanian, Indonesian and Catalan
     * ADDED: Make the project info configurable (#681)

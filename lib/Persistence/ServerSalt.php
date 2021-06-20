@@ -12,7 +12,7 @@
 
 namespace PrivateBin\Persistence;
 
-use Exception;
+use PrivateBin\Data\AbstractData;
 
 /**
  * ServerSalt
@@ -26,15 +26,6 @@ use Exception;
  */
 class ServerSalt extends AbstractPersistence
 {
-    /**
-     * file where salt is saved to
-     *
-     * @access private
-     * @static
-     * @var    string
-     */
-    private static $_file = 'salt.php';
-
     /**
      * generated salt
      *
@@ -53,8 +44,7 @@ class ServerSalt extends AbstractPersistence
      */
     public static function generate()
     {
-        $randomSalt = bin2hex(random_bytes(256));
-        return $randomSalt;
+        return bin2hex(random_bytes(256));
     }
 
     /**
@@ -62,7 +52,6 @@ class ServerSalt extends AbstractPersistence
      *
      * @access public
      * @static
-     * @throws Exception
      * @return string
      */
     public static function get()
@@ -71,20 +60,14 @@ class ServerSalt extends AbstractPersistence
             return self::$_salt;
         }
 
-        if (self::_exists(self::$_file)) {
-            if (is_readable(self::getPath(self::$_file))) {
-                $items = explode('|', file_get_contents(self::getPath(self::$_file)));
-            }
-            if (!isset($items) || !is_array($items) || count($items) != 3) {
-                throw new Exception('unable to read file ' . self::getPath(self::$_file), 20);
-            }
-            self::$_salt = $items[1];
+        $salt = self::$_store->getValue('salt');
+        if ($salt) {
+            self::$_salt = $salt;
         } else {
             self::$_salt = self::generate();
-            self::_store(
-                self::$_file,
-                '<?php # |' . self::$_salt . '|'
-            );
+            if (!self::$_store->setValue(self::$_salt, 'salt')) {
+                error_log('failed to store the server salt, delete tokens, traffic limiter and user icons won\'t work');
+            }
         }
         return self::$_salt;
     }
@@ -94,11 +77,11 @@ class ServerSalt extends AbstractPersistence
      *
      * @access public
      * @static
-     * @param  string $path
+     * @param  AbstractData $store
      */
-    public static function setPath($path)
+    public static function setStore(AbstractData $store)
     {
         self::$_salt = '';
-        parent::setPath($path);
+        parent::setStore($store);
     }
 }

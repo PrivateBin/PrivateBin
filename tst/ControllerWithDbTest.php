@@ -1,6 +1,8 @@
 <?php
 
 use PrivateBin\Data\Database;
+use PrivateBin\Persistence\ServerSalt;
+use PrivateBin\Persistence\TrafficLimiter;
 
 require_once 'ControllerTest.php';
 
@@ -24,6 +26,8 @@ class ControllerWithDbTest extends ControllerTest
         }
         $this->_options['dsn'] = 'sqlite:' . $this->_path . DIRECTORY_SEPARATOR . 'tst.sq3';
         $this->_data           = Database::getInstance($this->_options);
+        ServerSalt::setStore($this->_data);
+        TrafficLimiter::setStore($this->_data);
         $this->reset();
     }
 
