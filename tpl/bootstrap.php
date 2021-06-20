@@ -54,7 +54,7 @@ if ($ZEROBINCOMPATIBILITY) :
 <?php
 endif;
 ?>
-		<script type="text/javascript" data-cfasync="false" src="js/zlib-1.2.11.js" integrity="sha512-Yey/0yoaVmSbqMEyyff3DIu8kCPwpHvHf7tY1AuZ1lrX9NPCMg87PwzngMi+VNbe4ilCApmePeuKT869RTcyCQ==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/zlib-1.2.11.js" integrity="sha512-Ji/WNgLpfd+sJgYjJv67Tjs4aYeMVrMeYIgCp5VU+EB8INzpfilh0ptjBHa3xem8tLCMROgJR10ilK3saci2YA==" crossorigin="anonymous"></script>
 		<script type="text/javascript" data-cfasync="false" src="js/base-x-3.0.7.js" integrity="sha512-/Bi1AJIP0TtxEB+Jh6Hk809H1G7vn4iJV80qagslf0+Hm0UjUi1s3qNrn1kZULjzUYuaf6ck0ndLGJ7MxWLmgQ==" crossorigin="anonymous"></script>
 		<script type="text/javascript" data-cfasync="false" src="js/rawinflate-0.3.js" integrity="sha512-g8uelGgJW9A/Z1tB6Izxab++oj5kdD7B4qC7DHwZkB6DGMXKyzx7v5mvap2HXueI2IIn08YlRYM56jwWdm2ucQ==" crossorigin="anonymous"></script>
 		<script type="text/javascript" data-cfasync="false" src="js/bootstrap-3.3.7.js" integrity="sha512-iztkobsvnjKfAtTNdHkGVjAYTrrtlC7mGp/54c40wowO7LhURYl3gVzzcEqGl/qKXQltJ2HwMrdLcNUdo+N/RQ==" crossorigin="anonymous"></script>
