@@ -1,7 +1,7 @@
 # Installation
 
 **TL;DR:** Download the
-[latest release archive](https://github.com/PrivateBin/PrivateBin/releases/latest)
+[latest release archive](https://github.com/PrivateBin/PrivateBin/releases/latest) (with the link labelled as „Source code (…)“)
 and extract it in your web hosts folder where you want to install your PrivateBin
 instance. We try to provide a mostly safe default configuration, but we urge you to
 check the [security section](#hardening-and-security) below and the [configuration
