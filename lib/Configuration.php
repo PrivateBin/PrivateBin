@@ -101,15 +101,20 @@ class Configuration
      */
     public function __construct()
     {
-        $config     = array();
-        $basePath   = (getenv('CONFIG_PATH') !== false ? getenv('CONFIG_PATH') : PATH . 'cfg') . DIRECTORY_SEPARATOR;
-        $configFile = $basePath . 'conf.php';
-
-        if (is_readable($configFile)) {
-            $config = parse_ini_file($configFile, true);
-            foreach (array('main', 'model', 'model_options') as $section) {
-                if (!array_key_exists($section, $config)) {
-                    throw new Exception(I18n::_('PrivateBin requires configuration section [%s] to be present in configuration file.', $section), 2);
+        $config = $basePaths = array();
+        $configPath = getenv('CONFIG_PATH');
+        if ($configPath !== false && !empty($configPath)) {
+            $basePaths[] = $configPath;
+        }
+        $basePaths[] = PATH . 'cfg';
+        foreach ($basePaths as $basePath) {
+            $configFile = $basePath . DIRECTORY_SEPARATOR . 'conf.php';
+            if (is_readable($configFile)) {
+                $config = parse_ini_file($configFile, true);
+                foreach (array('main', 'model', 'model_options') as $section) {
+                    if (!array_key_exists($section, $config)) {
+                        throw new Exception(I18n::_('PrivateBin requires configuration section [%s] to be present in configuration file.', $section), 2);
+                    }
                 }
             }
         }
