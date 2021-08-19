@@ -161,7 +161,7 @@ class = Filesystem
 [model_options]
 dir = PATH "data"
 
-[model]
+;[model]
 ; example of a Google Cloud Storage configuration
 ;class = GoogleCloudStorage
 ;[model_options]
