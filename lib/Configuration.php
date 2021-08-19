@@ -101,7 +101,7 @@ class Configuration
      */
     public function __construct()
     {
-        $config = $basePaths = array();
+        $config     = $basePaths     = array();
         $configPath = getenv('CONFIG_PATH');
         if ($configPath !== false && !empty($configPath)) {
             $basePaths[] = $configPath;
@@ -116,6 +116,7 @@ class Configuration
                         throw new Exception(I18n::_('PrivateBin requires configuration section [%s] to be present in configuration file.', $section), 2);
                     }
                 }
+                break;
             }
         }
 
