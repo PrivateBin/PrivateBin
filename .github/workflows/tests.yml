@@ -45,7 +45,7 @@ jobs:
       with:
         path: ${{ steps.composer-cache.outputs.dir }}
         key: ${{ runner.os }}-composer-${{ steps.get-date.outputs.date }}-${{ hashFiles('**/composer.lock') }}
-        restore-keys: ${{ runner.os }}-composer-
+        restore-keys: ${{ runner.os }}-composer-${{ steps.get-date.outputs.date }}-
     
     # composer
     - name: Setup PHPunit
