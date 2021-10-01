@@ -44,7 +44,7 @@ jobs:
       uses: actions/cache@v2
       with:
         path: ${{ steps.composer-cache.outputs.dir }}
-        key: ${{ runner.os }}-composer-${{ steps.get-date.outputs.date }}-${{ hashFiles('**/composer.lock') }}
+        key: ${{ runner.os }}-composer-${{ steps.get-date.outputs.date }}-${{ hashFiles('**/composer.json') }}
         restore-keys: ${{ runner.os }}-composer-${{ steps.get-date.outputs.date }}-
     
     # composer
