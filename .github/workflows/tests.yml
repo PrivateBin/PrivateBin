@@ -50,6 +50,14 @@ jobs:
       with:
         php-version: ${{ matrix.php-versions }}
         extensions: ${{ env.extensions }}
+  
+    # Setup GitHub CI PHP problem matchers
+    # https://github.com/shivammathur/setup-php#problem-matchers
+    - name: Setup problem matchers for PHP
+      run: echo "::add-matcher::${{ runner.tool_cache }}/php.json" 
+    
+    - name: Setup problem matchers for PHPUnit
+      run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
       
     # composer cache
     - name: Remove composer lock
