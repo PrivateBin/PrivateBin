@@ -74,9 +74,10 @@ jobs:
         key: ${{ runner.os }}-composer-${{ steps.get-date.outputs.date }}-${{ hashFiles('**/composer.json') }}
         restore-keys: ${{ runner.os }}-composer-${{ steps.get-date.outputs.date }}-
     
-    # composer
+    # composer installation
     - name: Setup PHPunit
       run: composer install -n
+
     - name: Install Google Cloud Storage
       run: composer require google/cloud-storage
     
