@@ -21,7 +21,7 @@ jobs:
     name: PHP ${{ matrix.php-versions }} unit tests on ${{ matrix.operating-system }}
     env:
       extensions: gd, sqlite3
-      extensions-cache-key: ${{ runner.os }}-phpextensions
+      extensions-cache-key-name: phpextensions
       
     steps:
     
@@ -36,14 +36,14 @@ jobs:
       with:
         php-version: ${{ matrix.php-versions }}
         extensions: ${{ env.extensions }}
-        key: ${{ env.extensions-cache-key }}
+        key: ${{ runner.os }}-${{ env.extensions-cache-key }}
 
     - name: Cache extensions
       uses: actions/cache@v2
       with:
         path: ${{ steps.extcache.outputs.dir }}
         key: ${{ steps.extcache.outputs.key }}
-        restore-keys: ${{ env.extensions-cache-key }}
+        restore-keys: ${{ runner.os }}-${{ env.extensions-cache-key }}
       
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
