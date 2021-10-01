@@ -17,15 +17,33 @@ jobs:
       matrix:
         php-versions: ['5.6', '7.0', '7.1', '7.2', '7.3', '7.4']
     name: PHP ${{ matrix.php-versions }} unit tests on ${{ matrix.operating-system }}
+    env:
+      extensions: gd, sqlite3
     steps:
     - name: Checkout
       uses: actions/checkout@v2
+      
+    # cache PHP extensions
+    - name: Setup cache environment
+      id: extcache
+      uses: shivammathur/cache-extensions@v1
+      with:
+        php-version: ${{ matrix.php-versions }}
+        extensions: ${{ env.extensions }}
+        key: ${{ runner.os }}-phpextensions
+
+    - name: Cache extensions
+      uses: actions/cache@v2
+      with:
+        path: ${{ steps.extcache.outputs.dir }}
+        key: ${{ steps.extcache.outputs.key }}
+        restore-keys: ${{ env.extensions }}
       
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
       with:
         php-version: ${{ matrix.php-versions }}
-        extensions: gd, sqlite3
+        extensions: ${{ env.extensions }}
       
     # composer cache
     - name: Remove composer lock
