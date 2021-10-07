@@ -7,14 +7,13 @@
  * @link      https://github.com/PrivateBin/PrivateBin
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
- * @version   1.3.4
+ * @version   1.3.5
  */
 
 namespace PrivateBin;
 
 use Exception;
 use PDO;
-use PrivateBin\Persistence\DataStore;
 
 /**
  * Configuration
@@ -48,13 +47,14 @@ class Configuration
             'syntaxhighlightingtheme'  => null,
             'sizelimit'                => 10485760,
             'template'                 => 'bootstrap',
+            'info'                     => 'More information on the <a href=\'https://privatebin.info/\'>project page</a>.',
             'notice'                   => '',
             'languageselection'        => false,
             'languagedefault'          => '',
             'urlshortener'             => '',
             'qrcode'                   => true,
             'icon'                     => 'identicon',
-            'cspheader'                => 'default-src \'none\'; manifest-src \'self\'; connect-src * blob:; script-src \'self\' \'unsafe-eval\' resource:; style-src \'self\'; font-src \'self\'; img-src \'self\' data: blob:; media-src blob:; object-src blob:; sandbox allow-same-origin allow-scripts allow-forms allow-popups allow-modals allow-downloads',
+            'cspheader'                => 'default-src \'none\'; base-uri \'self\'; form-action \'none\'; manifest-src \'self\'; connect-src * blob:; script-src \'self\' \'unsafe-eval\' resource:; style-src \'self\'; font-src \'self\'; img-src \'self\' data: blob:; media-src blob:; object-src blob:; sandbox allow-same-origin allow-scripts allow-forms allow-popups allow-modals allow-downloads',
             'zerobincompatibility'     => false,
             'httpwarning'              => true,
             'compression'              => 'zlib',
@@ -78,14 +78,13 @@ class Configuration
             'markdown'           => 'Markdown',
         ),
         'traffic' => array(
-            'limit'  => 10,
-            'header' => null,
-            'dir'    => 'data',
+            'limit'      => 10,
+            'header'     => null,
+            'exemptedIp' => null,
         ),
         'purge' => array(
             'limit'     => 300,
             'batchsize' => 10,
-            'dir'       => 'data',
         ),
         'model' => array(
             'class' => 'Filesystem',
@@ -102,28 +101,23 @@ class Configuration
      */
     public function __construct()
     {
+        $basePaths  = array();
         $config     = array();
-        $basePath   = (getenv('CONFIG_PATH') !== false ? getenv('CONFIG_PATH') : PATH . 'cfg') . DIRECTORY_SEPARATOR;
-        $configIni  = $basePath . 'conf.ini';
-        $configFile = $basePath . 'conf.php';
-
-        // rename INI files to avoid configuration leakage
-        if (is_readable($configIni)) {
-            DataStore::prependRename($configIni, $configFile, ';');
-
-            // cleanup sample, too
-            $configIniSample = $configIni . '.sample';
-            if (is_readable($configIniSample)) {
-                DataStore::prependRename($configIniSample, $basePath . 'conf.sample.php', ';');
-            }
+        $configPath = getenv('CONFIG_PATH');
+        if ($configPath !== false && !empty($configPath)) {
+            $basePaths[] = $configPath;
         }
-
-        if (is_readable($configFile)) {
-            $config = parse_ini_file($configFile, true);
-            foreach (array('main', 'model', 'model_options') as $section) {
-                if (!array_key_exists($section, $config)) {
-                    throw new Exception(I18n::_('PrivateBin requires configuration section [%s] to be present in configuration file.', $section), 2);
+        $basePaths[] = PATH . 'cfg';
+        foreach ($basePaths as $basePath) {
+            $configFile = $basePath . DIRECTORY_SEPARATOR . 'conf.php';
+            if (is_readable($configFile)) {
+                $config = parse_ini_file($configFile, true);
+                foreach (array('main', 'model', 'model_options') as $section) {
+                    if (!array_key_exists($section, $config)) {
+                        throw new Exception(I18n::_('PrivateBin requires configuration section [%s] to be present in configuration file.', $section), 2);
+                    }
                 }
+                break;
             }
         }
 
@@ -150,6 +144,16 @@ class Configuration
                     'usr' => null,
                     'pwd' => null,
                     'opt' => array(PDO::ATTR_PERSISTENT => true),
+                );
+            } elseif (
+                $section == 'model_options' && in_array(
+                    $this->_configuration['model']['class'],
+                    array('GoogleCloudStorage')
+                )
+            ) {
+                $values = array(
+                    'bucket' => getenv('PRIVATEBIN_GCS_BUCKET') ? getenv('PRIVATEBIN_GCS_BUCKET') : null,
+                    'prefix' => 'pastes',
                 );
             }
 

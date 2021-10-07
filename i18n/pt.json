@@ -1,6 +1,7 @@
 {
     "PrivateBin": "PrivateBin",
-    "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href=\"https://privatebin.info/\">project page</a>.": "%s é um serviço minimalista e de código aberto do tipo \"pastebin\", em que o servidor tem zero conhecimento dos dados copiados. Os dados são cifrados e decifrados <i>no navegador</i> usando 256 bits AES. Mais informações na <a href=\"https://privatebin.info/\">página do projeto</a>.",
+    "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted %sin the browser%s using 256 bits AES.": "%s é um serviço minimalista e de código aberto do tipo \"pastebin\", em que o servidor tem zero conhecimento dos dados copiados. Os dados são cifrados e decifrados %sno navegador%s usando 256 bits AES.",
+    "More information on the <a href=\"https://privatebin.info/\">project page</a>.": "Mais informações na <a href=\"https://privatebin.info/\">página do projeto</a>.",
     "Because ignorance is bliss": "Porque a ignorância é uma benção",
     "en": "pt",
     "Paste does not exist, has expired or has been deleted.": "A cópia não existe, expirou ou já foi excluída.",
@@ -182,5 +183,7 @@
     "Convert To UTC": "Converter para UTC",
     "Close": "Fechar",
     "Encrypted note on PrivateBin": "Nota criptografada no PrivateBin",
-    "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "Visite esse link para ver a nota. Dar a URL para qualquer um permite que eles também acessem a nota."
+    "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "Visite esse link para ver a nota. Dar a URL para qualquer um permite que eles também acessem a nota.",
+    "URL shortener may expose your decrypt key in URL.": "URL shortener may expose your decrypt key in URL.",
+    "Save paste": "Save paste"
 }

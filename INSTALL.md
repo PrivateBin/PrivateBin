@@ -1,7 +1,7 @@
 # Installation
 
 **TL;DR:** Download the
-[latest release archive](https://github.com/PrivateBin/PrivateBin/releases/latest)
+[latest release archive](https://github.com/PrivateBin/PrivateBin/releases/latest) (with the link labelled as „Source code (…)“)
 and extract it in your web hosts folder where you want to install your PrivateBin
 instance. We try to provide a mostly safe default configuration, but we urge you to
 check the [security section](#hardening-and-security) below and the [configuration
@@ -9,21 +9,21 @@ options](#configuration) to adjust as you see fit.
 
 **NOTE:** See [our FAQ](https://github.com/PrivateBin/PrivateBin/wiki/FAQ#how-can-i-securely-clonedownload-your-project) for information how to securely download the PrivateBin release files.
 
+**NOTE:** There is a [ansible](https://ansible.com) role by @e1mo available to install and configure PrivateBin on your server. It's available on [ansible galaxy](https://galaxy.ansible.com/e1mo/privatebin) ([source code](https://git.sr.ht/~e1mo/ansible-role-privatebin)).
+
 ### Minimal requirements
 
-- PHP version 5.5 or above
-- _one_ of the following sources of cryptographically safe randomness is required:
-  - PHP 7 or higher
-  - [Libsodium](https://download.libsodium.org/libsodium/content/installation/) and it's [PHP extension](https://paragonie.com/book/pecl-libsodium/read/00-intro.md#installing-libsodium)
-  - open_basedir access to `/dev/urandom`
-  - mcrypt extension
-  - com_dotnet extension
-
-  Mcrypt needs to be able to access `/dev/urandom`. This means if `open_basedir` is set, it must include this file.
+- PHP version 7.0 or above
+  - Or PHP version 5.6 AND _one_ of the following sources of cryptographically safe randomness:
+    - [Libsodium](https://download.libsodium.org/libsodium/content/installation/) and it's [PHP extension](https://paragonie.com/book/pecl-libsodium/read/00-intro.md#installing-libsodium)
+    - open_basedir access to `/dev/urandom`
+    - mcrypt extension (mcrypt needs to be able to access `/dev/urandom`. This means if `open_basedir` is set, it must include this file.)
+    - com_dotnet extension
 - GD extension
-- some disk space or (optionally) a database supported by [PDO](https://secure.php.net/manual/book.pdo.php)
+- zlib extension
+- some disk space or (optionally) a database supported by [PDO](https://php.net/manual/book.pdo.php)
 - ability to create files and folders in the installation directory and the PATH defined in index.php
-- A web browser with javascript support
+- A web browser with JavaScript support
 
 ## Hardening and security
 
@@ -74,7 +74,7 @@ Note that your PHP process will need read access to the config wherever it may b
 ### Transport security
 
 When setting up PrivateBin, also set up HTTPS, if you haven't already. Without HTTPS
-PrivateBin is not secure, as the javascript files could be manipulated during transmission.
+PrivateBin is not secure, as the JavaScript files could be manipulated during transmission.
 For more information on this, see our [FAQ entry on HTTPS setup](https://github.com/PrivateBin/PrivateBin/wiki/FAQ#how-should-i-setup-https).
 
 ### File-level permissions
@@ -187,7 +187,24 @@ CREATE INDEX parent ON prefix_comment(pasteid);
 CREATE TABLE prefix_config (
     id CHAR(16) NOT NULL, value TEXT, PRIMARY KEY (id)
 );
-INSERT INTO prefix_config VALUES('VERSION', '1.3.4');
+INSERT INTO prefix_config VALUES('VERSION', '1.3.5');
 ```
 
-In **PostgreSQL**, the data, attachment, nickname and vizhash columns needs to be TEXT and not BLOB or MEDIUMBLOB.
+In **PostgreSQL**, the data, attachment, nickname and vizhash columns needs to
+be TEXT and not BLOB or MEDIUMBLOB.
+
+### Using Google Cloud Storage
+If you want to deploy PrivateBin in a serverless manner in the Google Cloud, you
+can choose the `GoogleCloudStorage` as backend. To use this backend, you create
+a GCS bucket and specify the name as the model option `bucket`. Alternatively,
+you can set the name through the environment variable PASTEBIN_GCS_BUCKET.
+
+The default prefix for pastes stored in the bucket is `pastes`. To change the
+prefix, specify the option `prefix`.
+
+Google Cloud Storage buckets may be significantly slower than a `FileSystem` or
+`Database` backend. The big advantage is that the deployment on Google Cloud
+Platform using Google Cloud Run is easy and cheap.
+
+To use the Google Cloud Storage backend you have to install the suggested
+library using the command `composer require google/cloud-storage`.

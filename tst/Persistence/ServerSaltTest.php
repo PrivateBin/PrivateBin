@@ -1,6 +1,7 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
+use PrivateBin\Data\Filesystem;
 use PrivateBin\Persistence\ServerSalt;
 
 class ServerSaltTest extends TestCase
@@ -20,7 +21,9 @@ class ServerSaltTest extends TestCase
         if (!is_dir($this->_path)) {
             mkdir($this->_path);
         }
-        ServerSalt::setPath($this->_path);
+        ServerSalt::setStore(
+            Filesystem::getInstance(array('dir' => $this->_path))
+        );
 
         $this->_otherPath = $this->_path . DIRECTORY_SEPARATOR . 'foo';
 
@@ -41,13 +44,19 @@ class ServerSaltTest extends TestCase
     public function testGeneration()
     {
         // generating new salt
-        ServerSalt::setPath($this->_path);
+        ServerSalt::setStore(
+            Filesystem::getInstance(array('dir' => $this->_path))
+        );
         $salt = ServerSalt::get();
 
         // try setting a different path and resetting it
-        ServerSalt::setPath($this->_otherPath);
+        ServerSalt::setStore(
+            Filesystem::getInstance(array('dir' => $this->_otherPath))
+        );
         $this->assertNotEquals($salt, ServerSalt::get());
-        ServerSalt::setPath($this->_path);
+        ServerSalt::setStore(
+            Filesystem::getInstance(array('dir' => $this->_path))
+        );
         $this->assertEquals($salt, ServerSalt::get());
     }
 
@@ -55,10 +64,11 @@ class ServerSaltTest extends TestCase
     {
         // try setting an invalid path
         chmod($this->_invalidPath, 0000);
-        ServerSalt::setPath($this->_invalidPath);
-        $this->expectException(Exception::class);
-        $this->expectExceptionCode(11);
-        ServerSalt::get();
+        $store = Filesystem::getInstance(array('dir' => $this->_invalidPath));
+        ServerSalt::setStore($store);
+        $salt = ServerSalt::get();
+        ServerSalt::setStore($store);
+        $this->assertNotEquals($salt, ServerSalt::get());
     }
 
     public function testFileRead()
@@ -67,10 +77,11 @@ class ServerSaltTest extends TestCase
         chmod($this->_invalidPath, 0700);
         file_put_contents($this->_invalidFile, '');
         chmod($this->_invalidFile, 0000);
-        ServerSalt::setPath($this->_invalidPath);
-        $this->expectException(Exception::class);
-        $this->expectExceptionCode(20);
-        ServerSalt::get();
+        $store = Filesystem::getInstance(array('dir' => $this->_invalidPath));
+        ServerSalt::setStore($store);
+        $salt = ServerSalt::get();
+        ServerSalt::setStore($store);
+        $this->assertNotEquals($salt, ServerSalt::get());
     }
 
     public function testFileWrite()
@@ -83,19 +94,24 @@ class ServerSaltTest extends TestCase
         }
         file_put_contents($this->_invalidPath . DIRECTORY_SEPARATOR . '.htaccess', '');
         chmod($this->_invalidPath, 0500);
-        ServerSalt::setPath($this->_invalidPath);
-        $this->expectException(Exception::class);
-        $this->expectExceptionCode(13);
-        ServerSalt::get();
+        $store = Filesystem::getInstance(array('dir' => $this->_invalidPath));
+        ServerSalt::setStore($store);
+        $salt = ServerSalt::get();
+        ServerSalt::setStore($store);
+        $this->assertNotEquals($salt, ServerSalt::get());
     }
 
     public function testPermissionShenanigans()
     {
         // try creating an invalid path
         chmod($this->_invalidPath, 0000);
-        ServerSalt::setPath($this->_invalidPath . DIRECTORY_SEPARATOR . 'baz');
-        $this->expectException(Exception::class);
-        $this->expectExceptionCode(10);
-        ServerSalt::get();
+        ServerSalt::setStore(
+            Filesystem::getInstance(array('dir' => $this->_invalidPath . DIRECTORY_SEPARATOR . 'baz'))
+        );
+        $store = Filesystem::getInstance(array('dir' => $this->_invalidPath));
+        ServerSalt::setStore($store);
+        $salt = ServerSalt::get();
+        ServerSalt::setStore($store);
+        $this->assertNotEquals($salt, ServerSalt::get());
     }
 }

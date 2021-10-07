@@ -18,8 +18,6 @@ class ConfigurationTest extends TestCase
         $this->_minimalConfig                   = '[main]' . PHP_EOL . '[model]' . PHP_EOL . '[model_options]';
         $this->_options                         = Configuration::getDefaults();
         $this->_options['model_options']['dir'] = PATH . $this->_options['model_options']['dir'];
-        $this->_options['traffic']['dir']       = PATH . $this->_options['traffic']['dir'];
-        $this->_options['purge']['dir']         = PATH . $this->_options['purge']['dir'];
         $this->_path                            = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'privatebin_cfg';
         if (!is_dir($this->_path)) {
             mkdir($this->_path);
@@ -142,44 +140,6 @@ class ConfigurationTest extends TestCase
         $this->assertEquals('Database', $conf->getKey('class', 'model'), 'old db class gets renamed');
     }
 
-    public function testHandleConfigFileRename()
-    {
-        $options  = $this->_options;
-        Helper::createIniFile(PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.ini.sample', $options);
-
-        $options['main']['opendiscussion'] = true;
-        $options['main']['fileupload']     = true;
-        $options['main']['template']       = 'darkstrap';
-        Helper::createIniFile(PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.ini', $options);
-
-        $conf = new Configuration;
-        $this->assertFileExists(CONF, 'old configuration file gets converted');
-        $this->assertFileDoesNotExist(PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.ini', 'old configuration file gets removed');
-        $this->assertFileDoesNotExist(PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.ini.sample', 'old configuration sample file gets removed');
-        $this->assertTrue(
-            $conf->getKey('opendiscussion') &&
-            $conf->getKey('fileupload') &&
-            $conf->getKey('template') === 'darkstrap',
-            'configuration values get converted'
-        );
-    }
-
-    public function testRenameIniSample()
-    {
-        $iniSample = PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.ini.sample';
-
-        Helper::createIniFile(PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.ini', $this->_options);
-        if (is_file(CONF)) {
-            unlink(CONF);
-        }
-        rename(CONF_SAMPLE, $iniSample);
-        new Configuration;
-        $this->assertFileDoesNotExist($iniSample, 'old sample file gets removed');
-        $this->assertFileExists(CONF_SAMPLE, 'new sample file gets created');
-        $this->assertFileExists(CONF, 'old configuration file gets converted');
-        $this->assertFileDoesNotExist(PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.ini', 'old configuration file gets removed');
-    }
-
     public function testConfigPath()
     {
         // setup
@@ -192,31 +152,6 @@ class ConfigurationTest extends TestCase
         putenv('CONFIG_PATH=' . $this->_path);
         $conf = new Configuration;
         $this->assertEquals('OtherBin', $conf->getKey('name'), 'changing config path is supported');
-
-        // cleanup environment
-        if (is_file($configFile)) {
-            unlink($configFile);
-        }
-        putenv('CONFIG_PATH');
-    }
-
-    public function testConfigPathIni()
-    {
-        // setup
-        $configFile              = $this->_path . DIRECTORY_SEPARATOR . 'conf.ini';
-        $configMigrated          = $this->_path . DIRECTORY_SEPARATOR . 'conf.php';
-        $options                 = $this->_options;
-        $options['main']['name'] = 'OtherBin';
-        Helper::createIniFile($configFile, $options);
-        $this->assertFileDoesNotExist(CONF, 'configuration in the default location is non existing');
-
-        // test
-        putenv('CONFIG_PATH=' . $this->_path);
-        $conf = new Configuration;
-        $this->assertEquals('OtherBin', $conf->getKey('name'), 'changing config path is supported for ini files as well');
-        $this->assertFileExists($configMigrated, 'old configuration file gets converted');
-        $this->assertFileDoesNotExist($configFile, 'old configuration file gets removed');
-        $this->assertFileDoesNotExist(CONF, 'configuration is not created in the default location');
 
         // cleanup environment
         if (is_file($configFile)) {

@@ -7,7 +7,7 @@
  * @link      https://github.com/PrivateBin/PrivateBin
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
- * @version   1.3.4
+ * @version   1.3.5
  */
 
 namespace PrivateBin\Persistence;
@@ -52,7 +52,6 @@ class PurgeLimiter extends AbstractPersistence
     public static function setConfiguration(Configuration $conf)
     {
         self::setLimit($conf->getKey('limit', 'purge'));
-        self::setPath($conf->getKey('dir', 'purge'));
     }
 
     /**
@@ -60,7 +59,6 @@ class PurgeLimiter extends AbstractPersistence
      *
      * @access public
      * @static
-     * @throws \Exception
      * @return bool
      */
     public static function canPurge()
@@ -71,17 +69,14 @@ class PurgeLimiter extends AbstractPersistence
         }
 
         $now  = time();
-        $file = 'purge_limiter.php';
-        if (self::_exists($file)) {
-            require self::getPath($file);
-            $pl = $GLOBALS['purge_limiter'];
-            if ($pl + self::$_limit >= $now) {
-                return false;
-            }
+        $pl   = (int) self::$_store->getValue('purge_limiter');
+        if ($pl + self::$_limit >= $now) {
+            return false;
         }
-
-        $content = '<?php' . PHP_EOL . '$GLOBALS[\'purge_limiter\'] = ' . $now . ';';
-        self::_store($file, $content);
-        return true;
+        $hasStored = self::$_store->setValue((string) $now, 'purge_limiter');
+        if (!$hasStored) {
+            error_log('failed to store the purge limiter, skipping purge cycle to avoid getting stuck in a purge loop');
+        }
+        return $hasStored;
     }
 }

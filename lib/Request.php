@@ -7,7 +7,7 @@
  * @link      https://github.com/PrivateBin/PrivateBin
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
- * @version   1.3.4
+ * @version   1.3.5
  */
 
 namespace PrivateBin;
@@ -108,7 +108,9 @@ class Request
             case 'DELETE':
             case 'PUT':
             case 'POST':
-                $this->_params = Json::decode(
+                // it might be a creation or a deletion, the latter is detected below
+                $this->_operation = 'create';
+                $this->_params    = Json::decode(
                     file_get_contents(self::$_inputStream)
                 );
                 break;
@@ -125,15 +127,10 @@ class Request
         }
 
         // prepare operation, depending on current parameters
-        if (
-            array_key_exists('ct', $this->_params) &&
-            !empty($this->_params['ct'])
-        ) {
-            $this->_operation = 'create';
-        } elseif (array_key_exists('pasteid', $this->_params) && !empty($this->_params['pasteid'])) {
+        if (array_key_exists('pasteid', $this->_params) && !empty($this->_params['pasteid'])) {
             if (array_key_exists('deletetoken', $this->_params) && !empty($this->_params['deletetoken'])) {
                 $this->_operation = 'delete';
-            } else {
+            } elseif ($this->_operation != 'create') {
                 $this->_operation = 'read';
             }
         } elseif (array_key_exists('jsonld', $this->_params) && !empty($this->_params['jsonld'])) {
@@ -172,7 +169,7 @@ class Request
             $data['meta'] = $meta;
         }
         foreach ($required_keys as $key) {
-            $data[$key] = $this->getParam($key);
+            $data[$key] = $this->getParam($key, $key == 'v' ? 1 : '');
         }
         // forcing a cast to int or float
         $data['v'] = $data['v'] + 0;
@@ -288,7 +285,7 @@ class Request
             }
             krsort($mediaTypes);
             foreach ($mediaTypes as $acceptedQuality => $acceptedValues) {
-                if ($acceptedQuality === 0.0) {
+                if ($acceptedQuality === '0.0') {
                     continue;
                 }
                 foreach ($acceptedValues as $acceptedValue) {

@@ -118,6 +118,7 @@ class FilesystemTest extends TestCase
         $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste does not yet exist');
         $this->assertFalse($this->_model->create(Helper::getPasteId(), $paste), 'unable to store broken paste');
         $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste does still not exist');
+        $this->assertFalse($this->_model->setValue('foo', 'non existing namespace'), 'rejects setting value in non existing namespace');
     }
 
     public function testCommentErrorDetection()

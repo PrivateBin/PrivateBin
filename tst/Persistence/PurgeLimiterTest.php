@@ -1,6 +1,7 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
+use PrivateBin\Data\Filesystem;
 use PrivateBin\Persistence\PurgeLimiter;
 
 class PurgeLimiterTest extends TestCase
@@ -14,7 +15,9 @@ class PurgeLimiterTest extends TestCase
         if (!is_dir($this->_path)) {
             mkdir($this->_path);
         }
-        PurgeLimiter::setPath($this->_path);
+        PurgeLimiter::setStore(
+            Filesystem::getInstance(array('dir' => $this->_path))
+        );
     }
 
     public function tearDown(): void

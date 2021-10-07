@@ -45,7 +45,7 @@ endif;
 <?php
 if ($QRCODE) :
 ?>
-		<script async type="text/javascript" data-cfasync="false" src="js/kjua-0.6.0.js" integrity="sha512-GEEIHvphDt1NmaxzX8X1ZkBiGKXCv+Ofzwi8SMEH5wQVWqdGIvBO/fnxxKZ90RU1bVp6srS68nHIpZo6iVcG9g==" crossorigin="anonymous"></script>
+		<script async type="text/javascript" data-cfasync="false" src="js/kjua-0.9.0.js" integrity="sha512-CVn7af+vTMBd9RjoS4QM5fpLFEOtBCoB0zPtaqIDC7sF4F8qgUSRFQQpIyEDGsr6yrjbuOLzdf20tkHHmpaqwQ==" crossorigin="anonymous"></script>
 <?php
 endif;
 if ($ZEROBINCOMPATIBILITY) :
@@ -70,9 +70,9 @@ if ($MARKDOWN) :
 <?php
 endif;
 ?>
-		<script type="text/javascript" data-cfasync="false" src="js/purify-2.0.14.js" integrity="sha512-kbLhjIj/m/AW++o2eErCfqPueoX2btJo7VznhEC2YQRbVR/+Eup3w7thwDZwoCZ/gLrPxTX3W4H2KzupLg2PKA==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/purify-2.2.7.js" integrity="sha512-7Ka1I/nJuR2CL8wzIS5PJS4HgEMd0HJ6kfAl6fFhwFBB27rhztFbe0tS+Ex+Qg+5n4nZIT4lty4k4Di3+X9T4A==" crossorigin="anonymous"></script>
 		<script type="text/javascript" data-cfasync="false" src="js/legacy.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-LYos+qXHIRqFf5ZPNphvtTB0cgzHUizu2wwcOwcwz/VIpRv9lpcBgPYz4uq6jx0INwCAj6Fbnl5HoKiLufS2jg==" crossorigin="anonymous"></script>
-		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-GCiSgkYlcyJq3SOMOAh52rIlUAoGH8yDJzOm/NkzBorbk2qiBSjc289/RxpeZJcdu36fQObFTzLvz4Do/2LFsA==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-lJwDAY69TQuYQZ7FjUFPfhgYeZ2L6y5bmGt1hR+d3kMm2sddivGr7ZDdLLSe/CBgn1JrsKMj3th9dPyXN3dLHw==" crossorigin="anonymous"></script>
 		<!-- icon -->
 		<link rel="apple-touch-icon" href="<?php echo I18n::encode($BASEPATH); ?>img/apple-touch-icon.png" sizes="180x180" />
 		<link rel="icon" type="image/png" href="img/favicon-32x32.png" sizes="32x32" />
@@ -211,6 +211,9 @@ endif;
 						</button>
 						<button id="rawtextbutton" type="button" class="hidden btn btn-<?php echo $isDark ? 'warning' : 'default'; ?> navbar-btn">
 							<span class="glyphicon glyphicon-text-background" aria-hidden="true"></span> <?php echo I18n::_('Raw text'), PHP_EOL; ?>
+						</button>
+						<button id="downloadtextbutton" type="button" class="hidden btn btn-<?php echo $isDark ? 'warning' : 'default'; ?> navbar-btn">
+							<span class="glyphicon glyphicon glyphicon-download-alt" aria-hidden="true"></span> <?php echo I18n::_('Save paste'), PHP_EOL; ?>
 						</button>
 						<button id="emaillink" type="button" class="hidden btn btn-<?php echo $isDark ? 'warning' : 'default'; ?> navbar-btn">
 							<span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> <?php echo I18n::_('Email'), PHP_EOL; ?>
@@ -422,7 +425,7 @@ if (strlen($LANGUAGESELECTION)) :
 ?>
 					<li id="language" class="dropdown">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-flag" aria-hidden="true"></span> <?php echo $LANGUAGES[$LANGUAGESELECTION][0]; ?> <span class="caret"></span></a>
-						<ul class="dropdown-menu">
+						<ul class="dropdown-menu dropdown-menu-right">
 <?php
     foreach ($LANGUAGES as $key => $value) :
 ?>
@@ -578,7 +581,13 @@ endif;
 					<h4 class="col-md-5 col-xs-8"><?php echo I18n::_($NAME); ?> <small>- <?php echo I18n::_('Because ignorance is bliss'); ?></small></h4>
 					<p class="col-md-1 col-xs-4 text-center"><?php echo $VERSION; ?></p>
 					<p id="aboutbox" class="col-md-6 col-xs-12">
-						<?php echo I18n::_('%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href="https://privatebin.info/">project page</a>.', I18n::_($NAME)), PHP_EOL; ?>
+						<?php echo sprintf(
+                            I18n::_('%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted %sin the browser%s using 256 bits AES.',
+                                I18n::_($NAME),
+                                '%s', '%s'
+                            ),
+                            '<i>', '</i>'), ' ', $INFO, PHP_EOL;
+                        ?>
 					</p>
 				</div>
 			</footer>

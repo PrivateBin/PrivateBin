@@ -1,6 +1,7 @@
 {
     "PrivateBin": "PrivateBin",
-    "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href=\"https://privatebin.info/\">project page</a>.": "%s ist ein minimalistischer, quelloffener \"Pastebin\"-artiger Dienst, bei dem der Server keinerlei Kenntnis der Inhalte hat. Die Daten werden <i>im Browser</i> mit 256 Bit AES ver- und entschlüsselt. Weitere Informationen sind auf der <a href=\"https://privatebin.info/\">Projektseite</a> zu finden.",
+    "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted %sin the browser%s using 256 bits AES.": "%s ist ein minimalistischer, quelloffener \"Pastebin\"-artiger Dienst, bei dem der Server keinerlei Kenntnis der Inhalte hat. Die Daten werden %sim Browser%s mit 256 Bit AES ver- und entschlüsselt.",
+    "More information on the <a href=\"https://privatebin.info/\">project page</a>.": "Weitere Informationen sind auf der <a href=\"https://privatebin.info/\">Projektseite</a> zu finden.",
     "Because ignorance is bliss": "Unwissenheit ist ein Segen",
     "en": "de",
     "Paste does not exist, has expired or has been deleted.": "Diesen Text gibt es nicht, er ist abgelaufen oder wurde gelöscht.",
@@ -182,5 +183,7 @@
     "Convert To UTC": "In UTC umwandeln",
     "Close": "Schliessen",
     "Encrypted note on PrivateBin": "Verschlüsselte Notiz auf PrivateBin",
-    "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "Besuche diese Verknüpfung um das Dokument zu sehen. Wird die URL an eine andere Person gegeben, so kann diese Person ebenfalls auf dieses Dokument zugreifen."
+    "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "Besuche diese Verknüpfung um das Dokument zu sehen. Wird die URL an eine andere Person gegeben, so kann diese Person ebenfalls auf dieses Dokument zugreifen.",
+    "URL shortener may expose your decrypt key in URL.": "Der URL-Verkürzer kann den Schlüssel in der URL enthüllen.",
+    "Save paste": "Text speichern"
 }

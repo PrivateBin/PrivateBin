@@ -1,0 +1,36 @@
+checks:
+    php: true
+    javascript: true
+filter:
+    paths:
+        - "css/privatebin.css"
+        - "css/bootstrap/privatebin.css"
+        - "js/privatebin.js"
+        - "lib/*.php"
+        - "index.php"
+coding_style:
+    php:
+        spaces:
+            around_operators:
+                additive: false
+                concatenation: true
+build:
+    environment:
+        php:
+            version: '7.2'
+    tests:
+        override:
+            -
+                command: 'composer require google/cloud-storage && cd tst && ../vendor/bin/phpunit'
+                coverage:
+                    file: 'tst/log/coverage-clover.xml'
+                    format: 'clover'
+    nodes:
+        tests: true
+        analysis:
+            tests:
+                override:
+                    -
+                        command: phpcs-run
+                        use_website_config: true
+                    - php-scrutinizer-run

@@ -7,7 +7,7 @@
  * @link      https://github.com/PrivateBin/PrivateBin
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
- * @version   1.3.4
+ * @version   1.3.5
  */
 
 namespace PrivateBin;
@@ -28,7 +28,7 @@ class Controller
      *
      * @const string
      */
-    const VERSION = '1.3.4';
+    const VERSION = '1.3.5';
 
     /**
      * minimal required PHP version
@@ -162,7 +162,6 @@ class Controller
         $this->_model   = new Model($this->_conf);
         $this->_request = new Request;
         $this->_urlBase = $this->_request->getRequestUri();
-        ServerSalt::setPath($this->_conf->getKey('dir', 'traffic'));
 
         // set default language
         $lang = $this->_conf->getKey('languagedefault');
@@ -170,7 +169,7 @@ class Controller
         // force default language, if language selection is disabled and a default is set
         if (!$this->_conf->getKey('languageselection') && strlen($lang) == 2) {
             $_COOKIE['lang'] = $lang;
-            setcookie('lang', $lang);
+            setcookie('lang', $lang, 0, '', '', true);
         }
     }
 
@@ -196,20 +195,17 @@ class Controller
      */
     private function _create()
     {
-        try {
-            // Ensure last paste from visitors IP address was more than configured amount of seconds ago.
-            TrafficLimiter::setConfiguration($this->_conf);
-            if (!TrafficLimiter::canPass()) {
-                $this->_return_message(
-                    1, I18n::_(
-                        'Please wait %d seconds between each post.',
-                        $this->_conf->getKey('limit', 'traffic')
-                    )
-                );
-                return;
-            }
-        } catch (Exception $e) {
-            $this->_return_message(1, I18n::_($e->getMessage()));
+        // Ensure last paste from visitors IP address was more than configured amount of seconds ago.
+        ServerSalt::setStore($this->_model->getStore());
+        TrafficLimiter::setConfiguration($this->_conf);
+        TrafficLimiter::setStore($this->_model->getStore());
+        if (!TrafficLimiter::canPass()) {
+            $this->_return_message(
+                1, I18n::_(
+                    'Please wait %d seconds between each post.',
+                    $this->_conf->getKey('limit', 'traffic')
+                )
+            );
             return;
         }
 
@@ -346,10 +342,14 @@ class Controller
         header('Last-Modified: ' . $time);
         header('Vary: Accept');
         header('Content-Security-Policy: ' . $this->_conf->getKey('cspheader'));
+        header('Cross-Origin-Resource-Policy: same-origin');
+        header('Cross-Origin-Embedder-Policy: require-corp');
+        header('Cross-Origin-Opener-Policy: same-origin');
+        header('Permissions-Policy: interest-cohort=()');
         header('Referrer-Policy: no-referrer');
-        header('X-Xss-Protection: 1; mode=block');
-        header('X-Frame-Options: DENY');
         header('X-Content-Type-Options: nosniff');
+        header('X-Frame-Options: deny');
+        header('X-XSS-Protection: 1; mode=block');
 
         // label all the expiration options
         $expire = array();
@@ -364,7 +364,7 @@ class Controller
         $languageselection = '';
         if ($this->_conf->getKey('languageselection')) {
             $languageselection = I18n::getLanguage();
-            setcookie('lang', $languageselection);
+            setcookie('lang', $languageselection, 0, '', '', true);
         }
 
         $page = new View;
@@ -380,6 +380,7 @@ class Controller
         $page->assign('SYNTAXHIGHLIGHTINGTHEME', $this->_conf->getKey('syntaxhighlightingtheme'));
         $page->assign('FORMATTER', $formatters);
         $page->assign('FORMATTERDEFAULT', $this->_conf->getKey('defaultformatter'));
+        $page->assign('INFO', I18n::_(str_replace("'", '"', $this->_conf->getKey('info'))));
         $page->assign('NOTICE', I18n::_($this->_conf->getKey('notice')));
         $page->assign('BURNAFTERREADINGSELECTED', $this->_conf->getKey('burnafterreadingselected'));
         $page->assign('PASSWORD', $this->_conf->getKey('password'));

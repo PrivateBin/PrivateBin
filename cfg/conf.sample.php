@@ -39,6 +39,10 @@ sizelimit = 10485760
 ; template to include, default is "bootstrap" (tpl/bootstrap.php)
 template = "bootstrap"
 
+; (optional) info text to display
+; use single, instead of double quotes for HTML attributes
+;info = "More information on the <a href='https://privatebin.info/'>project page</a>."
+
 ; (optional) notice to display
 ; notice = "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service."
 
@@ -83,7 +87,7 @@ languageselection = false
 ;   async functions and display an error if not and for Chrome to enable
 ;   webassembly support (used for zlib compression). You can remove it if Chrome
 ;   doesn't need to be supported and old browsers don't need to be warned.
-; cspheader = "default-src 'none'; manifest-src 'self'; connect-src * blob:; script-src 'self' 'unsafe-eval' resource:; style-src 'self'; font-src 'self'; img-src 'self' data: blob:; media-src blob:; object-src blob:; sandbox allow-same-origin allow-scripts allow-forms allow-popups allow-modals allow-downloads"
+; cspheader = "default-src 'none'; base-uri 'self'; form-action 'none'; manifest-src 'self'; connect-src * blob:; script-src 'self' 'unsafe-eval' resource:; style-src 'self'; font-src 'self'; img-src 'self' data: blob:; media-src blob:; object-src blob:; sandbox allow-same-origin allow-scripts allow-forms allow-popups allow-modals allow-downloads"
 
 ; stay compatible with PrivateBin Alpha 0.19, less secure
 ; if enabled will use base64.js version 1.7 instead of 2.1.9 and sha1 instead of
@@ -131,12 +135,13 @@ markdown = "Markdown"
 ; Set this to 0 to disable rate limiting.
 limit = 10
 
+; Set ips (v4|v6) which should be exempted for the rate-limit. CIDR also supported. Needed to be comma separated.
+; Unset for enabling and invalid values will be ignored
+; eg: exemptedIp = '1.2.3.4,10.10.10/24'
+
 ; (optional) if your website runs behind a reverse proxy or load balancer,
 ; set the HTTP header containing the visitors IP address, i.e. X_FORWARDED_FOR
 ; header = "X_FORWARDED_FOR"
-
-; directory to store the traffic limits in
-dir = PATH "data"
 
 [purge]
 ; minimum time limit between two purgings of expired pastes, it is only
@@ -149,15 +154,19 @@ limit = 300
 ; site
 batchsize = 10
 
-; directory to store the purge limit in
-dir = PATH "data"
-
 [model]
 ; name of data model class to load and directory for storage
 ; the default model "Filesystem" stores everything in the filesystem
 class = Filesystem
 [model_options]
 dir = PATH "data"
+
+;[model]
+; example of a Google Cloud Storage configuration
+;class = GoogleCloudStorage
+;[model_options]
+;bucket = "my-private-bin"
+;prefix = "pastes"
 
 ;[model]
 ; example of DB configuration for MySQL

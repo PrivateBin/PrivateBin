@@ -18,6 +18,8 @@ class ControllerTest extends TestCase
         /* Setup Routine */
         $this->_path  = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'privatebin_data';
         $this->_data  = Filesystem::getInstance(array('dir' => $this->_path));
+        ServerSalt::setStore($this->_data);
+        TrafficLimiter::setStore($this->_data);
         $this->reset();
     }
 
@@ -38,11 +40,8 @@ class ControllerTest extends TestCase
             $this->_data->delete(Helper::getPasteId());
         }
         $options                         = parse_ini_file(CONF_SAMPLE, true);
-        $options['purge']['dir']         = $this->_path;
-        $options['traffic']['dir']       = $this->_path;
         $options['model_options']['dir'] = $this->_path;
         Helper::createIniFile(CONF, $options);
-        ServerSalt::setPath($this->_path);
     }
 
     /**
@@ -50,6 +49,8 @@ class ControllerTest extends TestCase
      */
     public function testView()
     {
+        $_SERVER['QUERY_STRING']          = Helper::getPasteId();
+        $_GET[Helper::getPasteId()]       = '';
         ob_start();
         new Controller;
         $content = ob_get_contents();
@@ -129,27 +130,9 @@ class ControllerTest extends TestCase
     }
 
     /**
-     * @runInSeparateProcess
+     * @expectedException Exception
+     * @expectedExceptionCode 2
      */
-    public function testHtaccess()
-    {
-        $htaccess = $this->_path . DIRECTORY_SEPARATOR . '.htaccess';
-        @unlink($htaccess);
-
-        $paste = Helper::getPasteJson();
-        $file  = tempnam(sys_get_temp_dir(), 'FOO');
-        file_put_contents($file, $paste);
-        Request::setInputStream($file);
-        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
-        $_SERVER['REQUEST_METHOD']        = 'POST';
-        $_SERVER['REMOTE_ADDR']           = '::1';
-        ob_start();
-        new Controller;
-        ob_end_clean();
-
-        $this->assertFileExists($htaccess, 'htaccess recreated');
-    }
-
     public function testConf()
     {
         file_put_contents(CONF, '');
@@ -495,6 +478,29 @@ class ControllerTest extends TestCase
     /**
      * @runInSeparateProcess
      */
+    public function testCreateInvalidFormat()
+    {
+        $options                     = parse_ini_file(CONF, true);
+        $options['traffic']['limit'] = 0;
+        Helper::createIniFile(CONF, $options);
+        $file = tempnam(sys_get_temp_dir(), 'FOO');
+        file_put_contents($file, Helper::getPasteJson(1));
+        Request::setInputStream($file);
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
+        $_SERVER['REQUEST_METHOD']        = 'POST';
+        $_SERVER['REMOTE_ADDR']           = '::1';
+        ob_start();
+        new Controller;
+        $content = ob_get_contents();
+        ob_end_clean();
+        $response = json_decode($content, true);
+        $this->assertEquals(1, $response['status'], 'outputs error status');
+        $this->assertFalse($this->_data->exists(Helper::getPasteId()), 'paste exists after posting data');
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
     public function testCreateComment()
     {
         $options                     = parse_ini_file(CONF, true);
@@ -540,7 +546,7 @@ class ControllerTest extends TestCase
         ob_end_clean();
         $response = json_decode($content, true);
         $this->assertEquals(1, $response['status'], 'outputs error status');
-        $this->assertFalse($this->_data->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId()), 'paste exists after posting data');
+        $this->assertFalse($this->_data->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId()), 'comment exists after posting data');
     }
 
     /**

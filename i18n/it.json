@@ -1,6 +1,7 @@
 {
     "PrivateBin": "PrivateBin",
-    "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href=\"https://privatebin.info/\">project page</a>.": "%s è un sistema di tipo \"Pastebin\" online, open source, minimalista. Il server non possiede alcuna conoscenza (\"Zero Knowledge\") del contenuto dei dati inviati. I dati sono cifrati/decifrati <i>nel Browser</i> con algoritmo AES a 256 Bit. Per ulteriori informazioni, vedi <a href=\"https://privatebin.info/\">Sito del progetto</a>.",
+    "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted %sin the browser%s using 256 bits AES.": "%s è un sistema di tipo \"Pastebin\" online, open source, minimalista. Il server non possiede alcuna conoscenza (\"Zero Knowledge\") del contenuto dei dati inviati. I dati sono cifrati/decifrati %snel Browser%s con algoritmo AES a 256 Bit.",
+    "More information on the <a href=\"https://privatebin.info/\">project page</a>.": "Per ulteriori informazioni, vedi <a href=\"https://privatebin.info/\">Sito del progetto</a>.",
     "Because ignorance is bliss": "Perché l'ignoranza è una benedizione (Because ignorance is bliss)",
     "en": "it",
     "Paste does not exist, has expired or has been deleted.": "Questo messaggio non esiste, è scaduto o è stato cancellato.",
@@ -182,5 +183,7 @@
     "Convert To UTC": "Converti a UTC",
     "Close": "Chiudi",
     "Encrypted note on PrivateBin": "Nota crittografata su PrivateBin",
-    "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "Visita questo collegamento per vedere la nota. Dare l'URL a chiunque consente anche a loro di accedere alla nota."
+    "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "Visita questo collegamento per vedere la nota. Dare l'URL a chiunque consente anche a loro di accedere alla nota.",
+    "URL shortener may expose your decrypt key in URL.": "URL shortener può esporre la tua chiave decrittografata nell'URL.",
+    "Save paste": "Salva il messagio"
 }

@@ -7,7 +7,7 @@
  * @link      https://github.com/PrivateBin/PrivateBin
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
- * @version   1.3.4
+ * @version   1.3.5
  */
 
 namespace PrivateBin;
@@ -50,6 +50,11 @@ class FormatV2
             if (!array_key_exists($k, $message)) {
                 return false;
             }
+        }
+
+        // Make sure adata is an array.
+        if (!is_array($message['adata'])) {
+            return false;
         }
 
         $cipherParams = $isComment ? $message['adata'] : $message['adata'][0];

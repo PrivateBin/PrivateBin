@@ -1,6 +1,7 @@
 {
     "PrivateBin": "PrivateBin",
-    "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted <i>in the browser</i> using 256 bits AES. More information on the <a href=\"https://privatebin.info/\">project page</a>.": "%s is een minimalistische, open source online pastebin waarbij de server geen kennis heeft van de geplakte gegevens. Gegevens worden gecodeerd/gedecodeerd <i> in de browser </i> met behulp van 256 bits AES. Meer informatie is te vinden op de <a href=\"https://privatebin.info/\">projectpagina</a>.",
+    "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted %sin the browser%s using 256 bits AES.": "%s is een minimalistische, open source online pastebin waarbij de server geen kennis heeft van de geplakte gegevens. Gegevens worden gecodeerd/gedecodeerd %s in de browser %s met behulp van 256 bits AES.",
+    "More information on the <a href=\"https://privatebin.info/\">project page</a>.": "Meer informatie is te vinden op de <a href=\"https://privatebin.info/\">projectpagina</a>.",
     "Because ignorance is bliss": "Onwetendheid is een zegen",
     "en": "nl",
     "Paste does not exist, has expired or has been deleted.": "Geplakte tekst bestaat niet, is verlopen of verwijderd.",
@@ -182,5 +183,7 @@
     "Convert To UTC": "Convert To UTC",
     "Close": "Close",
     "Encrypted note on PrivateBin": "Encrypted note on PrivateBin",
-    "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too."
+    "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.",
+    "URL shortener may expose your decrypt key in URL.": "URL shortener may expose your decrypt key in URL.",
+    "Save paste": "Save paste"
 }

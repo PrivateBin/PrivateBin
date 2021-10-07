@@ -1,0 +1,28 @@
+name: Refresh PHP 8 branch
+
+on:
+  push:
+    branches: [ master ]    
+  schedule:
+      - cron: '42 2 * * *'  
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Checkout php8 branch 
+        run: git checkout php8
+
+      - name: Merge master changes into php8
+        run: git merge master
+      
+      - name: Push new changes
+        uses: github-actions-x/commit@v2.8
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          push-branch: 'php8'
+

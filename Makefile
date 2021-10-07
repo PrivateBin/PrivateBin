@@ -1,12 +1,15 @@
 .PHONY: all coverage coverage-js coverage-php doc doc-js doc-php increment sign test test-js test-php help
 
-CURRENT_VERSION = 1.3.4
-VERSION ?= 1.3.5
-VERSION_FILES = index.php cfg/ *.md css/ i18n/ img/ js/privatebin.js lib/ Makefile tpl/ tst/
+CURRENT_VERSION = 1.3.5
+VERSION ?= 1.3.6
+VERSION_FILES = index.php cfg/ *.md css/ i18n/ img/ js/package.json js/privatebin.js lib/ Makefile tpl/ tst/
 REGEX_CURRENT_VERSION := $(shell echo $(CURRENT_VERSION) | sed "s/\./\\\./g")
 REGEX_VERSION := $(shell echo $(VERSION) | sed "s/\./\\\./g")
 
 all: coverage doc ## Equivalent to running `make coverage doc`.
+
+composer: ## Update composer dependencies (only production ones, optimize the autoloader)
+	composer update --no-dev --optimize-autoloader
 
 coverage: coverage-js coverage-php ## Run all unit tests and generate code coverage reports.
 
@@ -15,7 +18,7 @@ coverage-js: ## Run JS unit tests and generate code coverage reports.
 
 coverage-php: ## Run PHP unit tests and generate code coverage reports.
 	cd tst && phpunit 2> /dev/null
-	cd log/php-coverage-report && sed -i "s#$(CURDIR)##g" *.html */*.html
+	cd tst/log/php-coverage-report && sed -i "s#$(CURDIR)##g" *.html */*.html
 
 doc: doc-js doc-php ## Generate all code documentation.
 

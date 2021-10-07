@@ -50,6 +50,7 @@ class ViewTest extends TestCase
         $page->assign('PASSWORD', true);
         $page->assign('FILEUPLOAD', false);
         $page->assign('ZEROBINCOMPATIBILITY', false);
+        $page->assign('INFO', 'example');
         $page->assign('NOTICE', 'example');
         $page->assign('LANGUAGESELECTION', '');
         $page->assign('LANGUAGES', I18n::getLanguageLabels(I18n::getAvailableLanguages()));

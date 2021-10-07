@@ -1,6 +1,7 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
+use PrivateBin\Data\Filesystem;
 use PrivateBin\Persistence\ServerSalt;
 use PrivateBin\Vizhash16x16;
 
@@ -18,7 +19,7 @@ class Vizhash16x16Test extends TestCase
             mkdir($this->_path);
         }
         $this->_file = $this->_path . DIRECTORY_SEPARATOR . 'vizhash.png';
-        ServerSalt::setPath($this->_path);
+        ServerSalt::setStore(Filesystem::getInstance(array('dir' => $this->_path)));
     }
 
     public function tearDown(): void

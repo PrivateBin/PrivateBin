@@ -429,8 +429,6 @@ class ConfigurationCombinationsTest extends TestCase
         Helper::confBackup();
         $this->_path  = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'privatebin_data';
         $this->_model = Filesystem::getInstance(array('dir' => $this->_path));
-        ServerSalt::setPath($this->_path);
-        TrafficLimiter::setPath($this->_path);
         $this->reset();
     }
 
@@ -450,8 +448,6 @@ class ConfigurationCombinationsTest extends TestCase
         if ($this->_model->exists(Helper::getPasteId()))
             $this->_model->delete(Helper::getPasteId());
         $configuration['model_options']['dir'] = $this->_path;
-        $configuration['traffic']['dir']       = $this->_path;
-        $configuration['purge']['dir']         = $this->_path;
         Helper::createIniFile(CONF, $configuration);
     }
 

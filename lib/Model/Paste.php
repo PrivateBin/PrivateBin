@@ -7,7 +7,7 @@
  * @link      https://github.com/PrivateBin/PrivateBin
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
- * @version   1.3.4
+ * @version   1.3.5
  */
 
 namespace PrivateBin\Model;
@@ -93,7 +93,7 @@ class Paste extends AbstractModel
         }
 
         $this->_data['meta']['created'] = time();
-        $this->_data['meta']['salt']    = serversalt::generate();
+        $this->_data['meta']['salt']    = ServerSalt::generate();
 
         // store paste
         if (
