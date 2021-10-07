@@ -73,7 +73,6 @@ class ComposerStaticInitDontChange
         'PrivateBin\\Model\\Comment' => __DIR__ . '/../..' . '/lib/Model/Comment.php',
         'PrivateBin\\Model\\Paste' => __DIR__ . '/../..' . '/lib/Model/Paste.php',
         'PrivateBin\\Persistence\\AbstractPersistence' => __DIR__ . '/../..' . '/lib/Persistence/AbstractPersistence.php',
-        'PrivateBin\\Persistence\\DataStore' => __DIR__ . '/../..' . '/lib/Persistence/DataStore.php',
         'PrivateBin\\Persistence\\PurgeLimiter' => __DIR__ . '/../..' . '/lib/Persistence/PurgeLimiter.php',
         'PrivateBin\\Persistence\\ServerSalt' => __DIR__ . '/../..' . '/lib/Persistence/ServerSalt.php',
         'PrivateBin\\Persistence\\TrafficLimiter' => __DIR__ . '/../..' . '/lib/Persistence/TrafficLimiter.php',
