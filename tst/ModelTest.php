@@ -329,22 +329,16 @@ class ModelTest extends TestCase
         $paste->get();
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionCode 75
-     */
     public function testInvalidPasteFormat()
     {
         $pasteData             = Helper::getPastePost();
         $pasteData['adata'][1] = 'format does not exist';
         $paste                 = $this->_model->getPaste();
+        $this->expectException(Exception::class);
+        $this->expectExceptionCode(75);
         $paste->setData($pasteData);
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionCode 60
-     */
     public function testInvalidPasteId()
     {
         $this->expectException(Exception::class);
