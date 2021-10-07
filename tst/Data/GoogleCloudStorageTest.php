@@ -2,9 +2,10 @@
 
 use Google\Auth\HttpHandler\HttpHandlerFactory;
 use GuzzleHttp\Client;
+use PHPUnit\Framework\TestCase;
 use PrivateBin\Data\GoogleCloudStorage;
 
-class GoogleCloudStorageTest extends PHPUnit_Framework_TestCase
+class GoogleCloudStorageTest extends TestCase
 {
     private static $_client;
     private static $_bucket;
