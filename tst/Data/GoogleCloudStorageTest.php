@@ -40,7 +40,7 @@ class GoogleCloudStorageTest extends TestCase
         }
     }
 
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         self::$_bucket->delete();
     }
