@@ -43,7 +43,7 @@ class DatabaseTest extends TestCase
         $this->assertNotEquals($salt, '');
         ServerSalt::setStore($this->_model);
         ServerSalt::get();
-        $this->assertFileNotExists($file, 'legacy ServerSalt got removed');
+        $this->assertFileDoesNotExist($file, 'legacy ServerSalt got removed');
         $this->assertEquals($salt, ServerSalt::get(), 'ServerSalt got preserved & migrated');
     }
 

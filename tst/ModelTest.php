@@ -184,10 +184,6 @@ class ModelTest extends TestCase
         $paste->store();
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionCode 76
-     */
     public function testStoreFail()
     {
         $path = $this->_path . DIRECTORY_SEPARATOR . 'model-store-test.sq3';
@@ -224,13 +220,11 @@ class ModelTest extends TestCase
 
         $paste = $model->getPaste();
         $paste->setData($pasteData);
+        $this->expectException(Exception::class);
+        $this->expectExceptionCode(76);
         $paste->store();
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionCode 70
-     */
     public function testCommentStoreFail()
     {
         $path = $this->_path . DIRECTORY_SEPARATOR . 'model-test.sq3';
@@ -272,13 +266,11 @@ class ModelTest extends TestCase
 
         $comment = $paste->getComment(Helper::getPasteId());
         $comment->setData($commentData);
+        $this->expectException(Exception::class);
+        $this->expectExceptionCode(70);
         $comment->store();
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionCode 69
-     */
     public function testCommentDuplicate()
     {
         $pasteData   = Helper::getPastePost();
