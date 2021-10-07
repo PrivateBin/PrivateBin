@@ -14,7 +14,7 @@ class ControllerWithGcsTest extends ControllerTest
     private static $_bucket;
     private $_options = array();
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         $httpClient = new Client(array('debug'=>false));
         $handler    = HttpHandlerFactory::build($httpClient);
@@ -28,7 +28,7 @@ class ControllerWithGcsTest extends ControllerTest
         self::$_bucket = self::$_client->createBucket($name);
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         /* Setup Routine */
         $this->_path = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'privatebin_data';
