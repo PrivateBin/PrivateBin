@@ -77,7 +77,7 @@
         "%d years (3rd plural)"
     ],
     "Never": "Nikdy",
-    "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.": "Poznámka: Toto služba slouží ke vyzkoušení: Data mohou být kdykoliv smazána. Při zneužití této služby zemřou koťátka.",
+    "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.": "Poznámka: Tato služba slouží k vyzkoušení: Data mohou být kdykoliv smazána. Při zneužití této služby zemřou koťátka.",
     "This document will expire in %d seconds.": [
         "Tento dokument expiruje za %d sekundu.",
         "Tento dokument expiruje za %d sekundy.",
@@ -178,12 +178,12 @@
     "This link will expire after %s.": "Tento odkaz vyprší za %s.",
     "This link can only be accessed once, do not use back or refresh button in your browser.": "Tento odkaz je přístupný pouze jednou, nepoužívejte tlačítko zpět ani neobnovujte tuto stránku ve vašem prohlížeči.",
     "Link:": "Odkaz:",
-    "Recipient may become aware of your timezone, convert time to UTC?": "Recipient may become aware of your timezone, convert time to UTC?",
-    "Use Current Timezone": "Use Current Timezone",
-    "Convert To UTC": "Convert To UTC",
-    "Close": "Close",
-    "Encrypted note on PrivateBin": "Encrypted note on PrivateBin",
-    "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.",
+    "Recipient may become aware of your timezone, convert time to UTC?": "Příjemce se může dozvědět o vašem časovém pásmu, převést čas na UTC?",
+    "Use Current Timezone": "Použít aktuální časové pásmo",
+    "Convert To UTC": "Převést na UTC",
+    "Close": "Zavřít",
+    "Encrypted note on PrivateBin": "Šifrovaná poznámka ve službě PrivateBin",
+    "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "Navštivte tento odkaz pro zobrazení poznámky. Přeposláním URL umožníte také jiným lidem přístup.",
     "URL shortener may expose your decrypt key in URL.": "Zkracovač URL může odhalit váš dešifrovací klíč v URL.",
     "Save paste": "Uložit příspěvek"
 }
