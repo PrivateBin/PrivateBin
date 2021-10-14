@@ -22,7 +22,7 @@ jobs:
           fetch-depth: 0
 
       - name: Merge master changes into php8
-        run: git merge master
+        run: git merge origin/master
       
       - name: Push new changes
         uses: github-actions-x/commit@v2.8
