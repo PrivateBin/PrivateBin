@@ -27,6 +27,8 @@ jobs:
       - name: Push new changes
         uses: github-actions-x/commit@v2.8
         with:
+          name: github-actions[bot]
+          email: 41898282+github-actions[bot]@users.noreply.github.com
           github-token: ${{ secrets.GITHUB_TOKEN }}
           push-branch: 'php8'
 
