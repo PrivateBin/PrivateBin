@@ -11,7 +11,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    steps:
+    steps:      
       - name: Checkout php8 branch 
         uses: actions/checkout@v2
         with:
@@ -22,7 +22,10 @@ jobs:
           fetch-depth: 0
 
       - name: Merge master changes into php8
-        run: git merge origin/master
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git merge origin/master
       
       - name: Push new changes
         uses: github-actions-x/commit@v2.8
