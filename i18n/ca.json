@@ -20,8 +20,8 @@
     "Error saving paste. Sorry.": "S'ha produït un error en desar l'enganxat. Ho sento.",
     "Invalid paste ID.": "Identificador d'enganxament no vàlid.",
     "Paste is not of burn-after-reading type.": "Paste is not of burn-after-reading type.",
-    "Wrong deletion token. Paste was not deleted.": "Wrong deletion token. Paste was not deleted.",
-    "Paste was properly deleted.": "Paste was properly deleted.",
+    "Wrong deletion token. Paste was not deleted.": "El token d'eliminació és incorrecte. El Paste no s'ha eliminat.",
+    "Paste was properly deleted.": "El Paste s'ha esborrat correctament.",
     "JavaScript is required for %s to work. Sorry for the inconvenience.": "Cal JavaScript perquè %s funcioni. Em sap greu les molèsties.",
     "%s requires a modern browser to work.": "%s requereix un navegador modern per funcionar.",
     "New": "Nou",
@@ -35,16 +35,16 @@
     "Discussion": "Discussió",
     "Toggle navigation": "Alternar navegació",
     "%d seconds": [
-        "%d second (singular)",
-        "%d seconds (1st plural)",
-        "%d seconds (2nd plural)",
-        "%d seconds (3rd plural)"
+        "%d segon (singular)",
+        "%d segons (1r plural)",
+        "%d segons (2n plural)",
+        "%d segons (3r plural)"
     ],
     "%d minutes": [
-        "%d minute (singular)",
-        "%d minutes (1st plural)",
-        "%d minutes (2nd plural)",
-        "%d minutes (3rd plural)"
+        "%d minut (singular)",
+        "%d minuts (1r plural)",
+        "%d minuts (2n plural)",
+        "%d minuts (3r plural)"
     ],
     "%d hours": [
         "%d hour (singular)",
