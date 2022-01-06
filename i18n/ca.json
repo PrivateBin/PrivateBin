@@ -47,32 +47,32 @@
         "%d minutes (3rd plural)"
     ],
     "%d hours": [
-        "%d hour (singular)",
+        "%d hora",
         "%d hores",
         "%d hours (2nd plural)",
         "%d hours (3rd plural)"
     ],
     "%d days": [
-        "%d day (singular)",
-        "%d days (1st plural)",
+        "%d dia",
+        "%d dies",
         "%d days (2nd plural)",
         "%d days (3rd plural)"
     ],
     "%d weeks": [
-        "%d week (singular)",
-        "%d weeks (1st plural)",
+        "%d setmana",
+        "%d setmanes",
         "%d weeks (2nd plural)",
         "%d weeks (3rd plural)"
     ],
     "%d months": [
-        "%d month (singular)",
-        "%d months (1st plural)",
+        "%d mes",
+        "%d mesos",
         "%d months (2nd plural)",
         "%d months (3rd plural)"
     ],
     "%d years": [
-        "%d year (singular)",
-        "%d years (1st plural)",
+        "%d any",
+        "%d anys",
         "%d years (2nd plural)",
         "%d years (3rd plural)"
     ],
