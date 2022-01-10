@@ -31,5 +31,7 @@ disabled:
   - unalign_equals
 
 finder:
-  exclude:
-    - "cfg"
+  path:
+    - "lib/"
+    - "tpl/"
+    - "tst/"
