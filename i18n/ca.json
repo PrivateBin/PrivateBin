@@ -8,10 +8,10 @@
     "%s requires php %s or above to work. Sorry.": "%s requereix php %s o superior per funcionar. Ho sento.",
     "%s requires configuration section [%s] to be present in configuration file.": "%s requereix que la secció de configuració [%s] sigui present al fitxer de configuració.",
     "Please wait %d seconds between each post.": [
-        "Espereu %d segon entre cada entrada. (singular)",
-        "Espereu %d segons entre cada entrada. (1r plural)",
-        "Espereu %d segons entre cada entrada. (2n plural)",
-        "Please wait %d seconds between each post. (3er plural)"
+        "Espereu %d segon entre cada entrada.",
+        "Espereu %d segons entre cada entrada.",
+        "Please wait %d seconds between each post. (2nd plural)",
+        "Please wait %d seconds between each post. (3rd plural)"
     ],
     "Paste is limited to %s of encrypted data.": "L'enganxat està limitat a %s de dades encriptades.",
     "Invalid data.": "Dades no vàlides.",
@@ -20,8 +20,8 @@
     "Error saving paste. Sorry.": "S'ha produït un error en desar l'enganxat. Ho sento.",
     "Invalid paste ID.": "Identificador d'enganxament no vàlid.",
     "Paste is not of burn-after-reading type.": "Paste is not of burn-after-reading type.",
-    "Wrong deletion token. Paste was not deleted.": "Wrong deletion token. Paste was not deleted.",
-    "Paste was properly deleted.": "Paste was properly deleted.",
+    "Wrong deletion token. Paste was not deleted.": "El token d'eliminació és incorrecte. El Paste no s'ha eliminat.",
+    "Paste was properly deleted.": "El Paste s'ha esborrat correctament.",
     "JavaScript is required for %s to work. Sorry for the inconvenience.": "Cal JavaScript perquè %s funcioni. Em sap greu les molèsties.",
     "%s requires a modern browser to work.": "%s requereix un navegador modern per funcionar.",
     "New": "Nou",
@@ -35,44 +35,44 @@
     "Discussion": "Discussió",
     "Toggle navigation": "Alternar navegació",
     "%d seconds": [
-        "%d second (singular)",
-        "%d seconds (1st plural)",
+        "%d segon",
+        "%d segons",
         "%d seconds (2nd plural)",
         "%d seconds (3rd plural)"
     ],
     "%d minutes": [
-        "%d minute (singular)",
-        "%d minutes (1st plural)",
+        "%d minut",
+        "%d minuts",
         "%d minutes (2nd plural)",
         "%d minutes (3rd plural)"
     ],
     "%d hours": [
-        "%d hour (singular)",
-        "%d hours (1st plural)",
+        "%d hora",
+        "%d hores",
         "%d hours (2nd plural)",
         "%d hours (3rd plural)"
     ],
     "%d days": [
-        "%d day (singular)",
-        "%d days (1st plural)",
+        "%d dia",
+        "%d dies",
         "%d days (2nd plural)",
         "%d days (3rd plural)"
     ],
     "%d weeks": [
-        "%d week (singular)",
-        "%d weeks (1st plural)",
+        "%d setmana",
+        "%d setmanes",
         "%d weeks (2nd plural)",
         "%d weeks (3rd plural)"
     ],
     "%d months": [
-        "%d month (singular)",
-        "%d months (1st plural)",
+        "%d mes",
+        "%d mesos",
         "%d months (2nd plural)",
         "%d months (3rd plural)"
     ],
     "%d years": [
-        "%d year (singular)",
-        "%d years (1st plural)",
+        "%d any",
+        "%d anys",
         "%d years (2nd plural)",
         "%d years (3rd plural)"
     ],
