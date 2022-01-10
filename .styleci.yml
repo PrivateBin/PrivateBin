@@ -18,6 +18,7 @@ disabled:
   - declare_equal_normalize
   - heredoc_to_nowdoc
   - method_argument_space_strict
+  - multiline_comment_opening_closing
   - new_with_braces
   - no_alternative_syntax
   - phpdoc_align
