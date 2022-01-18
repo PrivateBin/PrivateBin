@@ -199,12 +199,30 @@ class Database extends AbstractData
             $burnafterreading = $paste['adata'][3];
         }
         try {
+            $big_string       = $isVersion1 ? $paste['data'] : Json::encode($paste); 
+            if (self::$_type === 'oci') {
+                # It is not possible to execute in the normal way if strlen($big_string) >= 4000
+                $stmt = self::$_db->prepare(
+                    'INSERT INTO ' . self::_sanitizeIdentifier('paste') .
+                    ' VALUES(?,?,?,?,?,?,?,?,?)'
+                );
+                $stmt->bindParam(1, $pasteid);
+                $stmt->bindParam(2, $big_string, PDO::PARAM_STR, strlen($big_string));
+                $stmt->bindParam(3, $created, PDO::PARAM_INT);
+                $stmt->bindParam(4, $expire_date, PDO::PARAM_INT);
+                $stmt->bindParam(5, $opendiscussion, PDO::PARAM_INT);
+                $stmt->bindParam(6, $burnafterreading, PDO::PARAM_INT);
+                $stmt->bindParam(7, Json::encode($meta));
+                $stmt->bindParam(8, $attachment, PDO::PARAM_STR, strlen($attachment));
+                $stmt->bindParam(9, $attachmentname);
+                return $stmt->execute();
+            }
             return self::_exec(
                 'INSERT INTO ' . self::_sanitizeIdentifier('paste') .
                 ' VALUES(?,?,?,?,?,?,?,?,?)',
                 array(
                     $pasteid,
-                    $isVersion1 ? $paste['data'] : Json::encode($paste),
+                    $big_string,
                     $created,
                     $expire_date,
                     (int) $opendiscussion,
@@ -233,11 +251,15 @@ class Database extends AbstractData
         }
 
         self::$_cache[$pasteid] = false;
+        $rawData    = "";
         try {
             $paste = self::_select(
                 'SELECT * FROM ' . self::_sanitizeIdentifier('paste') .
                 ' WHERE dataid = ?', array($pasteid), true
             );
+            if ($paste !== false) {
+                $rawData = self::$_type === 'oci' ? self::_clob($paste['DATA']) : $paste['data'];
+            }
         } catch (Exception $e) {
             $paste = false;
         }
@@ -245,25 +267,25 @@ class Database extends AbstractData
             return false;
         }
         // create array
-        $data       = Json::decode($paste['data']);
+        $data       = Json::decode($rawData);
         $isVersion2 = array_key_exists('v', $data) && $data['v'] >= 2;
         if ($isVersion2) {
             self::$_cache[$pasteid] = $data;
             list($createdKey)       = self::_getVersionedKeys(2);
         } else {
-            self::$_cache[$pasteid] = array('data' => $paste['data']);
+            self::$_cache[$pasteid] = array('data' => $paste[self::_sanitizeColumn('data')]);
             list($createdKey)       = self::_getVersionedKeys(1);
         }
 
         try {
-            $paste['meta'] = Json::decode($paste['meta']);
+            $paste['meta'] = Json::decode($paste[self::_sanitizeColumn('meta')]);
         } catch (Exception $e) {
             $paste['meta'] = array();
         }
         $paste                                       = self::upgradePreV1Format($paste);
         self::$_cache[$pasteid]['meta']              = $paste['meta'];
-        self::$_cache[$pasteid]['meta'][$createdKey] = (int) $paste['postdate'];
-        $expire_date                                 = (int) $paste['expiredate'];
+        self::$_cache[$pasteid]['meta'][$createdKey] = (int) $paste[self::_sanitizeColumn('postdate')];
+        $expire_date                                 = (int) $paste[self::_sanitizeColumn('expiredate')];
         if ($expire_date > 0) {
             self::$_cache[$pasteid]['meta']['expire_date'] = $expire_date;
         }
@@ -272,16 +294,16 @@ class Database extends AbstractData
         }
 
         // support v1 attachments
-        if (array_key_exists('attachment', $paste) && strlen($paste['attachment'])) {
-            self::$_cache[$pasteid]['attachment'] = $paste['attachment'];
-            if (array_key_exists('attachmentname', $paste) && strlen($paste['attachmentname'])) {
-                self::$_cache[$pasteid]['attachmentname'] = $paste['attachmentname'];
+        if (array_key_exists(self::_sanitizeColumn('attachment'), $paste) && strlen($paste[self::_sanitizeColumn('attachment')])) {
+            self::$_cache[$pasteid]['attachment'] = $paste[self::_sanitizeColumn('attachment')];
+            if (array_key_exists(self::_sanitizeColumn('attachmentname'), $paste) && strlen($paste[self::_sanitizeColumn('attachmentname')])) {
+                self::$_cache[$pasteid]['attachmentname'] = $paste[self::_sanitizeColumn('attachmentname')];
             }
         }
-        if ($paste['opendiscussion']) {
+        if ($paste[self::_sanitizeColumn('opendiscussion')]) {
             self::$_cache[$pasteid]['meta']['opendiscussion'] = true;
         }
-        if ($paste['burnafterreading']) {
+        if ($paste[self::_sanitizeColumn('burnafterreading')]) {
             self::$_cache[$pasteid]['meta']['burnafterreading'] = true;
         }
 
@@ -356,6 +378,21 @@ class Database extends AbstractData
             }
         }
         try {
+            if (self::$_type === 'oci') {
+                # It is not possible to execute in the normal way if strlen($big_string) >= 4000
+                $stmt = self::$_db->prepare(
+                    'INSERT INTO ' . self::_sanitizeIdentifier('comment') .
+                    ' VALUES(?,?,?,?,?,?,?)'
+                );
+                $stmt->bindParam(1, $commentid);
+                $stmt->bindParam(2, $pasteid);
+                $stmt->bindParam(3, $parentid);
+                $stmt->bindParam(4, $data, PDO::PARAM_STR, strlen($data));
+                $stmt->bindParam(5, $meta['nickname']);
+                $stmt->bindParam(6, $meta[$iconKey]);
+                $stmt->bindParam(7, $meta[$createdKey], PDO::PARAM_INT);
+                return $stmt->execute();
+            }
             return self::_exec(
                 'INSERT INTO ' . self::_sanitizeIdentifier('comment') .
                 ' VALUES(?,?,?,?,?,?,?)',
@@ -392,22 +429,33 @@ class Database extends AbstractData
         $comments = array();
         if (count($rows)) {
             foreach ($rows as $row) {
-                $i    = $this->getOpenSlot($comments, (int) $row['postdate']);
-                $data = Json::decode($row['data']);
+                $i      = $this->getOpenSlot($comments, (int) $row[self::_sanitizeColumn('postdate')]);
+                $id     = $row[self::_sanitizeColumn('dataid')];
+                if (self::$_type === 'oci') {
+                    $newrow = self::_select(
+                        'SELECT data FROM ' . self::_sanitizeIdentifier('comment') .
+                        ' WHERE dataid = ?', array($id), true
+                    );
+                    $rawData = self::_clob($newrow['DATA']);
+                }
+                else {
+                    $rawData = $row['data'];
+                }
+                $data   = Json::decode($rawData);
                 if (array_key_exists('v', $data) && $data['v'] >= 2) {
                     $version      = 2;
                     $comments[$i] = $data;
                 } else {
                     $version      = 1;
-                    $comments[$i] = array('data' => $row['data']);
+                    $comments[$i] = array('data' => $rawData);
                 }
                 list($createdKey, $iconKey) = self::_getVersionedKeys($version);
-                $comments[$i]['id']         = $row['dataid'];
-                $comments[$i]['parentid']   = $row['parentid'];
-                $comments[$i]['meta']       = array($createdKey => (int) $row['postdate']);
+                $comments[$i]['id']         = $id;
+                $comments[$i]['parentid']   = $row[self::_sanitizeColumn('parentid')];
+                $comments[$i]['meta']       = array($createdKey => (int) $row[self::_sanitizeColumn('postdate')]);
                 foreach (array('nickname' => 'nickname', 'vizhash' => $iconKey) as $rowKey => $commentKey) {
-                    if (array_key_exists($rowKey, $row) && !empty($row[$rowKey])) {
-                        $comments[$i]['meta'][$commentKey] = $row[$rowKey];
+                    if (array_key_exists(self::_sanitizeColumn($rowKey), $row) && !empty($row[self::_sanitizeColumn($rowKey)])) {
+                        $comments[$i]['meta'][$commentKey] = $row[self::_sanitizeColumn($rowKey)];
                     }
                 }
             }
@@ -518,7 +566,8 @@ class Database extends AbstractData
         $pastes = array();
         $rows   = self::_select(
             'SELECT dataid FROM ' . self::_sanitizeIdentifier('paste') .
-            ' WHERE expiredate < ? AND expiredate != ? LIMIT ?',
+            ' WHERE expiredate < ? AND expiredate != ? ' .
+            (self::$_type === 'oci' ? 'FETCH NEXT ? ROWS ONLY' : 'LIMIT ?'),
             array(time(), 0, $batchsize)
         );
         if (count($rows)) {
@@ -658,7 +707,7 @@ class Database extends AbstractData
         } catch (PDOException $e) {
             return '';
         }
-        return $row ? $row['value'] : '';
+        return $row ? $row[self::_sanitizeColumn('value')] : '';
     }
 
     /**
@@ -789,7 +838,21 @@ class Database extends AbstractData
      */
     private static function _sanitizeIdentifier($identifier)
     {
-        return preg_replace('/[^A-Za-z0-9_]+/', '', self::$_prefix . $identifier);
+        $id = preg_replace('/[^A-Za-z0-9_]+/', '', self::$_prefix . $identifier);
+        return self::_sanitizeColumn($id);
+    }
+
+    /**
+     * sanitizes column name because OCI
+     *
+     * @access private
+     * @static
+     * @param  string $name
+     * @return string
+     */
+    private static function _sanitizeColumn($name)
+    {
+        return self::$_type === 'oci' ? strtoupper($name) : $name;
     }
 
     /**
@@ -864,5 +927,23 @@ class Database extends AbstractData
                     array(Controller::VERSION, 'VERSION')
                 );
         }
+    }
+
+    /**
+     * read CLOB for OCI
+     * https://stackoverflow.com/questions/36200534/pdo-oci-into-a-clob-field
+     *
+     * @access private
+     * @static
+     * @param  object $column
+     * @return string
+     */
+    private static function _clob($column)
+    {
+        if ($column == null) return null;
+        $str = "";
+        while ($column !== null and $tmp = fread($column, 1024))
+            $str .= $tmp;
+        return $str;
     }
 }
