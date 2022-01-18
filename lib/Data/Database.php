@@ -572,7 +572,7 @@ class Database extends AbstractData
         );
         if (count($rows)) {
             foreach ($rows as $row) {
-                $pastes[] = $row['dataid'];
+                $pastes[] = $row[self::_sanitizeIdentifier('dataid')];
             }
         }
         return $pastes;
@@ -711,6 +711,18 @@ class Database extends AbstractData
     }
 
     /**
+     * OCI cannot accept semicolons
+     *
+     * @access private
+     * @static
+     * @return string
+     */
+    private static function _getSemicolon()
+    {
+        return self::$_type === 'oci' ? "" : ";";
+    }
+
+    /**
      * get the primary key clauses, depending on the database driver
      *
      * @access private
@@ -721,7 +733,7 @@ class Database extends AbstractData
     private static function _getPrimaryKeyClauses($key = 'dataid')
     {
         $main_key = $after_key = '';
-        if (self::$_type === 'mysql') {
+        if (self::$_type === 'mysql' || self::$_type === 'oci') {
             $after_key = ", PRIMARY KEY ($key)";
         } else {
             $main_key = ' PRIMARY KEY';
@@ -740,13 +752,13 @@ class Database extends AbstractData
      */
     private static function _getDataType()
     {
-        return self::$_type === 'pgsql' ? 'TEXT' : 'BLOB';
+        return self::$_type === 'pgsql' ? 'TEXT' : (self::$_type === 'oci' ? 'VARCHAR2(4000)' : 'BLOB');
     }
 
     /**
      * get the attachment type, depending on the database driver
      *
-     * PostgreSQL uses a different API for BLOBs then SQL, hence we use TEXT
+     * PostgreSQL and OCI use different APIs for BLOBs then SQL, hence we use TEXT and CLOB
      *
      * @access private
      * @static
@@ -754,7 +766,21 @@ class Database extends AbstractData
      */
     private static function _getAttachmentType()
     {
-        return self::$_type === 'pgsql' ? 'TEXT' : 'MEDIUMBLOB';
+        return self::$_type === 'pgsql' ? 'TEXT' : (self::$_type === 'oci' ? 'CLOB' : 'MEDIUMBLOB');
+    }
+
+    /**
+     * get the meta type, depending on the database driver
+     *
+     * OCI can't even accept TEXT so it has to be VARCHAR2(200)
+     *
+     * @access private
+     * @static
+     * @return string
+     */
+    private static function _getMetaType()
+    {
+        return self::$_type === 'oci' ? 'VARCHAR2(4000)' : 'TEXT';
     }
 
     /**
@@ -768,6 +794,7 @@ class Database extends AbstractData
         list($main_key, $after_key) = self::_getPrimaryKeyClauses();
         $dataType                   = self::_getDataType();
         $attachmentType             = self::_getAttachmentType();
+        $metaType                   = self::_getMetaType();
         self::$_db->exec(
             'CREATE TABLE ' . self::_sanitizeIdentifier('paste') . ' ( ' .
             "dataid CHAR(16) NOT NULL$main_key, " .
@@ -776,10 +803,24 @@ class Database extends AbstractData
             'expiredate INT, ' .
             'opendiscussion INT, ' .
             'burnafterreading INT, ' .
-            'meta TEXT, ' .
+            "meta $metaType, " .
             "attachment $attachmentType, " .
-            "attachmentname $dataType$after_key );"
+            "attachmentname $dataType$after_key )" . self::_getSemicolon()
         );
+    }
+
+    /**
+     * get the nullable text type, depending on the database driver
+     *
+     * OCI will pad CHAR columns with spaces, hence VARCHAR2
+     *
+     * @access private
+     * @static
+     * @return string
+     */
+    private static function _getParentType()
+    {
+        return self::$_type === 'oci' ? 'VARCHAR2(16)' : 'CHAR(16)';
     }
 
     /**
@@ -792,19 +833,21 @@ class Database extends AbstractData
     {
         list($main_key, $after_key) = self::_getPrimaryKeyClauses();
         $dataType                   = self::_getDataType();
+        $parentType                 = self::_getParentType();
+        $attachmentType             = self::_getAttachmentType();
         self::$_db->exec(
             'CREATE TABLE ' . self::_sanitizeIdentifier('comment') . ' ( ' .
             "dataid CHAR(16) NOT NULL$main_key, " .
             'pasteid CHAR(16), ' .
-            'parentid CHAR(16), ' .
-            "data $dataType, " .
+            "parentid $parentType, " .
+            "data $attachmentType, " .
             "nickname $dataType, " .
             "vizhash $dataType, " .
-            "postdate INT$after_key );"
+            "postdate INT$after_key )" . self::_getSemicolon()
         );
         self::$_db->exec(
-            'CREATE INDEX IF NOT EXISTS comment_parent ON ' .
-            self::_sanitizeIdentifier('comment') . '(pasteid);'
+            'CREATE INDEX comment_parent ON ' .
+            self::_sanitizeIdentifier('comment') . '(pasteid)' . self::_getSemicolon()
         );
     }
 
@@ -817,9 +860,11 @@ class Database extends AbstractData
     private static function _createConfigTable()
     {
         list($main_key, $after_key) = self::_getPrimaryKeyClauses('id');
+        $charType                   = self::$_type === 'oci' ? 'VARCHAR2(16)' : 'CHAR(16)';
+        $textType                   = self::$_type === 'oci' ? 'VARCHAR2(4000)' : 'TEXT';
         self::$_db->exec(
             'CREATE TABLE ' . self::_sanitizeIdentifier('config') .
-            " ( id CHAR(16) NOT NULL$main_key, value TEXT$after_key );"
+            " ( id $charType NOT NULL$main_key, value $textType$after_key )" . self::_getSemicolon()
         );
         self::_exec(
             'INSERT INTO ' . self::_sanitizeIdentifier('config') .
