@@ -199,9 +199,10 @@ class Database extends AbstractData
             $burnafterreading = $paste['adata'][3];
         }
         try {
-            $big_string       = $isVersion1 ? $paste['data'] : Json::encode($paste); 
+            $big_string       = $isVersion1 ? $paste['data'] : Json::encode($paste);
+            $metajson         = Json::encode($meta);
             if (self::$_type === 'oci') {
-                # It is not possible to execute in the normal way if strlen($big_string) >= 4000
+                // It is not possible to execute in the normal way if strlen($big_string) >= 4000
                 $stmt = self::$_db->prepare(
                     'INSERT INTO ' . self::_sanitizeIdentifier('paste') .
                     ' VALUES(?,?,?,?,?,?,?,?,?)'
@@ -212,7 +213,7 @@ class Database extends AbstractData
                 $stmt->bindParam(4, $expire_date, PDO::PARAM_INT);
                 $stmt->bindParam(5, $opendiscussion, PDO::PARAM_INT);
                 $stmt->bindParam(6, $burnafterreading, PDO::PARAM_INT);
-                $stmt->bindParam(7, Json::encode($meta));
+                $stmt->bindParam(7, $metajson);
                 $stmt->bindParam(8, $attachment, PDO::PARAM_STR, strlen($attachment));
                 $stmt->bindParam(9, $attachmentname);
                 return $stmt->execute();
@@ -251,7 +252,7 @@ class Database extends AbstractData
         }
 
         self::$_cache[$pasteid] = false;
-        $rawData    = "";
+        $rawData                = '';
         try {
             $paste = self::_select(
                 'SELECT * FROM ' . self::_sanitizeIdentifier('paste') .
@@ -379,7 +380,7 @@ class Database extends AbstractData
         }
         try {
             if (self::$_type === 'oci') {
-                # It is not possible to execute in the normal way if strlen($big_string) >= 4000
+                // It is not possible to execute in the normal way if strlen($big_string) >= 4000
                 $stmt = self::$_db->prepare(
                     'INSERT INTO ' . self::_sanitizeIdentifier('comment') .
                     ' VALUES(?,?,?,?,?,?,?)'
@@ -437,8 +438,7 @@ class Database extends AbstractData
                         ' WHERE dataid = ?', array($id), true
                     );
                     $rawData = self::_clob($newrow['DATA']);
-                }
-                else {
+                } else {
                     $rawData = $row['data'];
                 }
                 $data   = Json::decode($rawData);
@@ -719,7 +719,7 @@ class Database extends AbstractData
      */
     private static function _getSemicolon()
     {
-        return self::$_type === 'oci' ? "" : ";";
+        return self::$_type === 'oci' ? '' : ';';
     }
 
     /**
@@ -980,15 +980,18 @@ class Database extends AbstractData
      *
      * @access private
      * @static
-     * @param  object $column
+     * @param  resource $column
      * @return string
      */
     private static function _clob($column)
     {
-        if ($column == null) return null;
-        $str = "";
-        while ($column !== null and $tmp = fread($column, 1024))
+        if ($column == null) {
+            return null;
+        }
+        $str = '';
+        while ($tmp = fread($column, 1024)) {
             $str .= $tmp;
+        }
         return $str;
     }
 }
