@@ -391,9 +391,9 @@ class DatabaseTest extends PHPUnit_Framework_TestCase
 
     public function testOciClob()
     {
-        $int = (int) random_bytes(1);
+        $int    = (int) random_bytes(1);
         $string = random_bytes(10);
-        $clob = fopen('php://memory', 'r+');
+        $clob   = fopen('php://memory', 'r+');
         fwrite($clob, $string);
         rewind($clob);
         $this->assertEquals($int, Database::_sanitizeClob($int));
