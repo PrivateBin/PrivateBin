@@ -822,7 +822,7 @@ class Database extends AbstractData
     {
         list($main_key, $after_key) = self::_getPrimaryKeyClauses('id');
         $charType                   = self::$_type === 'oci' ? 'VARCHAR2(16)' : 'CHAR(16)';
-        $textType                   = self::$_type === 'oci' ? 'VARCHAR2(4000)' : 'TEXT';
+        $textType                   = self::_getMetaType();
         self::$_db->exec(
             'CREATE TABLE ' . self::_sanitizeIdentifier('config') .
             " ( id $charType NOT NULL$main_key, value $textType$after_key )"
