@@ -792,10 +792,24 @@ class Database extends AbstractData
             "vizhash $dataType, " .
             "postdate INT$after_key )"
         );
-        self::$_db->exec(
-            'CREATE INDEX IF NOT EXISTS comment_parent ON ' .
-            self::_sanitizeIdentifier('comment') . '(pasteid)'
-        );
+        if (self::$_type === 'oci') {
+            self::$_db->exec(
+                'declare
+                    already_exists  exception;
+                    columns_indexed exception;
+                    pragma exception_init( already_exists, -955 );
+                    pragma exception_init(columns_indexed, -1408);
+                begin
+                    execute immediate \'create index comment_parent on ' . self::_sanitizeIdentifier('comment') . ' (pasteid)\';
+                exception
+                end'
+            );
+        } else {
+            self::$_db->exec(
+                'CREATE INDEX IF NOT EXISTS comment_parent ON ' .
+                self::_sanitizeIdentifier('comment') . '(pasteid)'
+            );
+        }
     }
 
     /**
