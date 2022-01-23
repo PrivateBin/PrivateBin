@@ -777,7 +777,7 @@ class Database extends AbstractData
         self::$_db->exec(
             'CREATE TABLE "' . self::_sanitizeIdentifier('paste') . '" ( ' .
             "\"dataid\" CHAR(16) NOT NULL$main_key, " .
-            "\"data\" $dataType, " .
+            "\"data\" $attachmentType, " .
             '"postdate" INT, ' .
             '"expiredate" INT, ' .
             '"opendiscussion" INT, ' .
