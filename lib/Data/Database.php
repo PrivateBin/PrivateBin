@@ -585,10 +585,9 @@ class Database extends AbstractData
         if (self::$_type === 'oci' && is_array($result)) {
             // returned column names are all upper case, convert these back
             // returned CLOB values are streams, convert these into strings
-            $result = array_combine(
-                array_map('strtolower', array_keys($result)),
-                array_map('self::_sanitizeClob', array_values($result))
-            );
+            $result = $firstOnly ?
+                self::_sanitizeOciRow($result) :
+                array_map('self::_sanitizeOciRow', $result);
         }
         return $result;
     }
@@ -839,7 +838,7 @@ class Database extends AbstractData
      *
      * From: https://stackoverflow.com/questions/36200534/pdo-oci-into-a-clob-field
      *
-     * @access private
+     * @access public
      * @static
      * @param  int|string|resource $value
      * @return int|string
@@ -863,6 +862,22 @@ class Database extends AbstractData
     private static function _sanitizeIdentifier($identifier)
     {
         return preg_replace('/[^A-Za-z0-9_]+/', '', self::$_prefix . $identifier);
+    }
+
+    /**
+     * sanitizes row returned by OCI
+     *
+     * @access private
+     * @static
+     * @param  array $row
+     * @return array
+     */
+    private static function _sanitizeOciRow($row)
+    {
+        return array_combine(
+            array_map('strtolower', array_keys($row)),
+            array_map('self::_sanitizeClob', array_values($row))
+        );
     }
 
     /**
