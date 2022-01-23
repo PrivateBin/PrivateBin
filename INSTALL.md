@@ -190,8 +190,14 @@ CREATE TABLE prefix_config (
 INSERT INTO prefix_config VALUES('VERSION', '1.3.5');
 ```
 
-In **PostgreSQL**, the data, attachment, nickname and vizhash columns needs to
-be TEXT and not BLOB or MEDIUMBLOB.
+In **PostgreSQL**, the `data`, `attachment`, `nickname` and `vizhash` columns
+need to be `TEXT` and not `BLOB` or `MEDIUMBLOB`. The key names in brackets,
+after `PRIMARY KEY`, need to be removed.
+
+In **Oracle**, the `data`, `attachment`, `nickname` and `vizhash` columns need
+to be `CLOB` and not `BLOB` or `MEDIUMBLOB`, the `id` column in the `config`
+table needs to be `VARCHAR2(16)` and the `meta` column in the `paste` table
+and the `value` column in the `config` table need to be `VARCHAR2(4000)`.
 
 ### Using Google Cloud Storage
 If you want to deploy PrivateBin in a serverless manner in the Google Cloud, you
