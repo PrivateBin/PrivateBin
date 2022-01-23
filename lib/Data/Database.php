@@ -583,9 +583,17 @@ class Database extends AbstractData
     {
         $statement = self::$_db->prepare($sql);
         $statement->execute($params);
-        $result = $firstOnly ?
-            $statement->fetch(PDO::FETCH_ASSOC) :
-            $statement->fetchAll(PDO::FETCH_ASSOC);
+        if ($firstOnly) {
+            $result = $statement->fetch(PDO::FETCH_ASSOC);
+        } elseif (self::$_type === 'oci') {
+            // workaround for https://bugs.php.net/bug.php?id=46728
+            $result = array();
+            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+                $result[] = $row;
+            }
+        } else {
+            $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+        }
         $statement->closeCursor();
         if (self::$_type === 'oci' && is_array($result)) {
             // returned column names are all upper case, convert these back
