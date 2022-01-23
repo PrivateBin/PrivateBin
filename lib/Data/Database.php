@@ -548,11 +548,11 @@ class Database extends AbstractData
             foreach ($params as $key => $parameter) {
                 $position = $key + 1;
                 if (is_int($parameter)) {
-                    $statement->bindParam($position, $parameter, PDO::PARAM_INT);
+                    $statement->bindValue($position, $parameter, PDO::PARAM_INT);
                 } elseif ($length = strlen($parameter) >= 4000) {
-                    $statement->bindParam($position, $parameter, PDO::PARAM_STR, $length);
+                    $statement->bindValue($position, $parameter, PDO::PARAM_STR, $length);
                 } else {
-                    $statement->bindParam($position, $parameter);
+                    $statement->bindValue($position, $parameter);
                 }
             }
             $result = $statement->execute();
