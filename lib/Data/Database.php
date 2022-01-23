@@ -395,7 +395,7 @@ class Database extends AbstractData
 
         // create comment list
         $comments = array();
-        if (count($rows)) {
+        if (is_array($rows) && count($rows)) {
             foreach ($rows as $row) {
                 $i    = $this->getOpenSlot($comments, (int) $row['postdate']);
                 $data = Json::decode($row['data']);
@@ -527,7 +527,7 @@ class Database extends AbstractData
             (self::$_type === 'oci' ? 'FETCH NEXT ? ROWS ONLY' : 'LIMIT ?'),
             array(time(), 0, $batchsize)
         );
-        if (count($rows)) {
+        if (is_array($rows) && count($rows)) {
             foreach ($rows as $row) {
                 $pastes[] = $row['dataid'];
             }
@@ -554,8 +554,6 @@ class Database extends AbstractData
                 $position = $key + 1;
                 if (is_int($parameter)) {
                     $statement->bindValue($position, $parameter, PDO::PARAM_INT);
-                } elseif ($length = strlen($parameter) >= 4000) {
-                    $statement->bindValue($position, $parameter, PDO::PARAM_STR, $length);
                 } else {
                     $statement->bindValue($position, $parameter);
                 }
