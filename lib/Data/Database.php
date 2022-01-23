@@ -582,7 +582,7 @@ class Database extends AbstractData
             $statement->fetch(PDO::FETCH_ASSOC) :
             $statement->fetchAll(PDO::FETCH_ASSOC);
         $statement->closeCursor();
-        if (self::$_type === 'oci') {
+        if (self::$_type === 'oci' && is_array($result)) {
             // returned column names are all upper case, convert these back
             // returned CLOB values are streams, convert these into strings
             $result = array_combine(
