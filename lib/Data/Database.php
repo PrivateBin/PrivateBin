@@ -589,7 +589,6 @@ class Database extends AbstractData
         }
         $statement->closeCursor();
         if (self::$_type === 'oci' && is_array($result)) {
-            // returned column names are all upper case, convert these back
             // returned CLOB values are streams, convert these into strings
             $result = $firstOnly ?
                 array_map('self::_sanitizeClob', $result) :
