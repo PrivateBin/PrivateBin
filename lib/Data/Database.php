@@ -913,7 +913,10 @@ class Database extends AbstractData
             case '0.21':
                 // create the meta column if necessary (pre 0.21 change)
                 try {
-                    self::$_db->exec('SELECT "meta" FROM "' . self::_sanitizeIdentifier('paste') . '" LIMIT 1');
+                    self::$_db->exec(
+                        'SELECT "meta" FROM "' . self::_sanitizeIdentifier('paste') . '" ' .
+                        (self::$_type === 'oci' ? 'FETCH NEXT 1 ROWS ONLY' : 'LIMIT 1')
+                    );
                 } catch (PDOException $e) {
                     self::$_db->exec('ALTER TABLE "' . self::_sanitizeIdentifier('paste') . '" ADD COLUMN "meta" TEXT');
                 }
