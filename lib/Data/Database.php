@@ -705,10 +705,14 @@ class Database extends AbstractData
     private static function _getPrimaryKeyClauses($key = 'dataid')
     {
         $main_key = $after_key = '';
-        if (self::$_type === 'mysql' || self::$_type === 'oci') {
-            $after_key = ", PRIMARY KEY (\"$key\")";
-        } else {
-            $main_key = ' PRIMARY KEY';
+        switch (self::$_type) {
+            case 'mysql':
+            case 'oci':
+                $after_key = ", PRIMARY KEY (\"$key\")";
+                break;
+            default:
+                $main_key = ' PRIMARY KEY';
+                break;
         }
         return array($main_key, $after_key);
     }
@@ -724,7 +728,14 @@ class Database extends AbstractData
      */
     private static function _getDataType()
     {
-        return self::$_type === 'pgsql' ? 'TEXT' : (self::$_type === 'oci' ? 'CLOB' : 'BLOB');
+        switch (self::$_type) {
+            case 'oci':
+                return 'CLOB';
+            case 'pgsql':
+                return 'TEXT';
+            default:
+                return 'BLOB';
+        }
     }
 
     /**
@@ -738,7 +749,14 @@ class Database extends AbstractData
      */
     private static function _getAttachmentType()
     {
-        return self::$_type === 'pgsql' ? 'TEXT' : (self::$_type === 'oci' ? 'CLOB' : 'MEDIUMBLOB');
+        switch (self::$_type) {
+            case 'oci':
+                return 'CLOB';
+            case 'pgsql':
+                return 'TEXT';
+            default:
+                return 'MEDIUMBLOB';
+        }
     }
 
     /**
@@ -752,7 +770,12 @@ class Database extends AbstractData
      */
     private static function _getMetaType()
     {
-        return self::$_type === 'oci' ? 'VARCHAR2(4000)' : 'TEXT';
+        switch (self::$_type) {
+            case 'oci':
+                return 'VARCHAR2(4000)';
+            default:
+                return 'TEXT';
+        }
     }
 
     /**
