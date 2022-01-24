@@ -643,7 +643,7 @@ class Database extends AbstractData
                 $sql = 'SHOW TABLES';
                 break;
             case 'oci':
-                $sql = 'SELECT "table_name" FROM "all_tables"';
+                $sql = 'SELECT table_name FROM all_tables';
                 break;
             case 'pgsql':
                 $sql = 'SELECT c."relname" AS "table_name" '
