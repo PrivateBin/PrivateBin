@@ -833,7 +833,9 @@ class Database extends AbstractData
                 begin
                     execute immediate \'create index "comment_parent" on "' . self::_sanitizeIdentifier('comment') . '" ("pasteid")\';
                 exception
-                end'
+                    when already_exists or columns_indexed then
+                    NULL;
+                end;'
             );
         } else {
             self::$_db->exec(
