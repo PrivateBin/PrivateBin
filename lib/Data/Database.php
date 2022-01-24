@@ -582,7 +582,7 @@ class Database extends AbstractData
             // workaround for https://bugs.php.net/bug.php?id=46728
             $result = array();
             while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
-                $result[] = $row;
+                $result[] = array_map('self::_sanitizeClob', $row);
             }
         } else {
             $result = $statement->fetchAll(PDO::FETCH_ASSOC);
