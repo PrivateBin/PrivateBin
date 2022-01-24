@@ -548,20 +548,15 @@ class Database extends AbstractData
     private static function _exec($sql, array $params)
     {
         $statement = self::$_db->prepare($sql);
-        if (self::$_type === 'oci') {
-            // It is not possible to execute in the normal way if strlen($param) >= 4000
-            foreach ($params as $key => $parameter) {
-                $position = $key + 1;
-                if (is_int($parameter)) {
-                    $statement->bindValue($position, $parameter, PDO::PARAM_INT);
-                } else {
-                    $statement->bindValue($position, $parameter);
-                }
+        foreach ($params as $key => $parameter) {
+            $position = $key + 1;
+            if (is_int($parameter)) {
+                $statement->bindValue($position, $parameter, PDO::PARAM_INT);
+            } else {
+                $statement->bindValue($position, $parameter);
             }
-            $result = $statement->execute();
-        } else {
-            $result = $statement->execute($params);
         }
+        $result = $statement->execute();
         $statement->closeCursor();
         return $result;
     }
