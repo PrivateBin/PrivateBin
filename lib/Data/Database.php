@@ -593,11 +593,7 @@ class Database extends AbstractData
             // returned CLOB values are streams, convert these into strings
             $result = $firstOnly ?
                 array_map('self::_sanitizeClob', $result) :
-                array_map(
-                    function ($row) {
-                        return array_map('self::_sanitizeClob', $row);
-                    }, $result
-                );
+                $result;
         }
         return $result;
     }
