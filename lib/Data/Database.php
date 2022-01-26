@@ -633,6 +633,7 @@ class Database extends AbstractData
                 $sql = 'SELECT "tabname" FROM "systables"';
                 break;
             case 'mssql':
+                // U: tables created by the user
                 $sql = 'SELECT "name" FROM "sysobjects" '
                      . 'WHERE "type" = \'U\' ORDER BY "name"';
                 break;
