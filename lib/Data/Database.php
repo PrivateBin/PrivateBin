@@ -549,12 +549,13 @@ class Database extends AbstractData
     {
         $statement = self::$_db->prepare($sql);
         foreach ($params as $key => &$parameter) {
+            $position = $key + 1;
             if (is_int($parameter)) {
-                $statement->bindParam($key + 1, $parameter, PDO::PARAM_INT);
+                $statement->bindParam($position, $parameter, PDO::PARAM_INT);
             } elseif (strlen($parameter) >= 4000) {
-                $statement->bindParam($key + 1, $parameter, PDO::PARAM_STR, strlen($parameter));
+                $statement->bindParam($position, $parameter, PDO::PARAM_STR, strlen($parameter));
             } else {
-                $statement->bindParam($key + 1, $parameter);
+                $statement->bindParam($position, $parameter);
             }
         }
         $result = $statement->execute();
