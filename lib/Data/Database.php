@@ -647,7 +647,7 @@ class Database extends AbstractData
             case 'pgsql':
                 $sql = 'SELECT c."relname" AS "table_name" '
                      . 'FROM "pg_class" c, "pg_user" u '
-                     . "WHERE c.\"relowner\" = u.\"usesysid\" AND c.\"relkind\" = 'r' "
+                     . 'WHERE c."relowner" = u."usesysid" AND c."relkind" = \'r\' '
                      . 'AND NOT EXISTS (SELECT 1 FROM "pg_views" WHERE "viewname" = c."relname") '
                      . "AND c.\"relname\" !~ '^(pg_|sql_)' "
                      . 'UNION '
