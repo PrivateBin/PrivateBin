@@ -97,6 +97,11 @@ class Database extends AbstractData
             self::$_type = strtolower(
                 substr($options['dsn'], 0, strpos($options['dsn'], ':'))
             );
+            // MySQL uses backticks to quote identifiers by default,
+            // tell it to expect ANSI SQL double quotes
+            if (self::$_type === 'mysql' && defined('PDO::MYSQL_ATTR_INIT_COMMAND')) {
+                $options['opt'][PDO::MYSQL_ATTR_INIT_COMMAND] = "SET sql_mode='ANSI_QUOTES'";
+            }
             $tableQuery = self::_getTableQuery(self::$_type);
             self::$_db  = new PDO(
                 $options['dsn'],
@@ -200,8 +205,8 @@ class Database extends AbstractData
         }
         try {
             return self::_exec(
-                'INSERT INTO ' . self::_sanitizeIdentifier('paste') .
-                ' VALUES(?,?,?,?,?,?,?,?,?)',
+                'INSERT INTO "' . self::_sanitizeIdentifier('paste') .
+                '" VALUES(?,?,?,?,?,?,?,?,?)',
                 array(
                     $pasteid,
                     $isVersion1 ? $paste['data'] : Json::encode($paste),
@@ -235,8 +240,8 @@ class Database extends AbstractData
         self::$_cache[$pasteid] = false;
         try {
             $paste = self::_select(
-                'SELECT * FROM ' . self::_sanitizeIdentifier('paste') .
-                ' WHERE dataid = ?', array($pasteid), true
+                'SELECT * FROM "' . self::_sanitizeIdentifier('paste') .
+                '" WHERE "dataid" = ?', array($pasteid), true
             );
         } catch (Exception $e) {
             $paste = false;
@@ -297,12 +302,12 @@ class Database extends AbstractData
     public function delete($pasteid)
     {
         self::_exec(
-            'DELETE FROM ' . self::_sanitizeIdentifier('paste') .
-            ' WHERE dataid = ?', array($pasteid)
+            'DELETE FROM "' . self::_sanitizeIdentifier('paste') .
+            '" WHERE "dataid" = ?', array($pasteid)
         );
         self::_exec(
-            'DELETE FROM ' . self::_sanitizeIdentifier('comment') .
-            ' WHERE pasteid = ?', array($pasteid)
+            'DELETE FROM "' . self::_sanitizeIdentifier('comment') .
+            '" WHERE "pasteid" = ?', array($pasteid)
         );
         if (
             array_key_exists($pasteid, self::$_cache)
@@ -357,8 +362,8 @@ class Database extends AbstractData
         }
         try {
             return self::_exec(
-                'INSERT INTO ' . self::_sanitizeIdentifier('comment') .
-                ' VALUES(?,?,?,?,?,?,?)',
+                'INSERT INTO "' . self::_sanitizeIdentifier('comment') .
+                '" VALUES(?,?,?,?,?,?,?)',
                 array(
                     $commentid,
                     $pasteid,
@@ -384,13 +389,13 @@ class Database extends AbstractData
     public function readComments($pasteid)
     {
         $rows = self::_select(
-            'SELECT * FROM ' . self::_sanitizeIdentifier('comment') .
-            ' WHERE pasteid = ?', array($pasteid)
+            'SELECT * FROM "' . self::_sanitizeIdentifier('comment') .
+            '" WHERE "pasteid" = ?', array($pasteid)
         );
 
         // create comment list
         $comments = array();
-        if (count($rows)) {
+        if (is_array($rows) && count($rows)) {
             foreach ($rows as $row) {
                 $i    = $this->getOpenSlot($comments, (int) $row['postdate']);
                 $data = Json::decode($row['data']);
@@ -429,8 +434,8 @@ class Database extends AbstractData
     {
         try {
             return (bool) self::_select(
-                'SELECT dataid FROM ' . self::_sanitizeIdentifier('comment') .
-                ' WHERE pasteid = ? AND parentid = ? AND dataid = ?',
+                'SELECT "dataid" FROM "' . self::_sanitizeIdentifier('comment') .
+                '" WHERE "pasteid" = ? AND "parentid" = ? AND "dataid" = ?',
                 array($pasteid, $parentid, $commentid), true
             );
         } catch (Exception $e) {
@@ -458,8 +463,8 @@ class Database extends AbstractData
             }
         }
         return self::_exec(
-            'UPDATE ' . self::_sanitizeIdentifier('config') .
-            ' SET value = ? WHERE id = ?',
+            'UPDATE "' . self::_sanitizeIdentifier('config') .
+            '" SET "value" = ? WHERE "id" = ?',
             array($value, strtoupper($namespace))
         );
     }
@@ -479,8 +484,8 @@ class Database extends AbstractData
         if ($value === '') {
             // initialize the row, so that setValue can rely on UPDATE queries
             self::_exec(
-                'INSERT INTO ' . self::_sanitizeIdentifier('config') .
-                ' VALUES(?,?)',
+                'INSERT INTO "' . self::_sanitizeIdentifier('config') .
+                '" VALUES(?,?)',
                 array($configKey, '')
             );
 
@@ -517,11 +522,12 @@ class Database extends AbstractData
     {
         $pastes = array();
         $rows   = self::_select(
-            'SELECT dataid FROM ' . self::_sanitizeIdentifier('paste') .
-            ' WHERE expiredate < ? AND expiredate != ? LIMIT ?',
+            'SELECT "dataid" FROM "' . self::_sanitizeIdentifier('paste') .
+            '" WHERE "expiredate" < ? AND "expiredate" != ? ' .
+            (self::$_type === 'oci' ? 'FETCH NEXT ? ROWS ONLY' : 'LIMIT ?'),
             array(time(), 0, $batchsize)
         );
-        if (count($rows)) {
+        if (is_array($rows) && count($rows)) {
             foreach ($rows as $row) {
                 $pastes[] = $row['dataid'];
             }
@@ -542,7 +548,17 @@ class Database extends AbstractData
     private static function _exec($sql, array $params)
     {
         $statement = self::$_db->prepare($sql);
-        $result    = $statement->execute($params);
+        foreach ($params as $key => &$parameter) {
+            $position = $key + 1;
+            if (is_int($parameter)) {
+                $statement->bindParam($position, $parameter, PDO::PARAM_INT);
+            } elseif (strlen($parameter) >= 4000) {
+                $statement->bindParam($position, $parameter, PDO::PARAM_STR, strlen($parameter));
+            } else {
+                $statement->bindParam($position, $parameter);
+            }
+        }
+        $result = $statement->execute();
         $statement->closeCursor();
         return $result;
     }
@@ -562,10 +578,24 @@ class Database extends AbstractData
     {
         $statement = self::$_db->prepare($sql);
         $statement->execute($params);
-        $result = $firstOnly ?
-            $statement->fetch(PDO::FETCH_ASSOC) :
-            $statement->fetchAll(PDO::FETCH_ASSOC);
+        if ($firstOnly) {
+            $result = $statement->fetch(PDO::FETCH_ASSOC);
+        } elseif (self::$_type === 'oci') {
+            // workaround for https://bugs.php.net/bug.php?id=46728
+            $result = array();
+            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+                $result[] = array_map('self::_sanitizeClob', $row);
+            }
+        } else {
+            $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+        }
         $statement->closeCursor();
+        if (self::$_type === 'oci' && is_array($result)) {
+            // returned CLOB values are streams, convert these into strings
+            $result = $firstOnly ?
+                array_map('self::_sanitizeClob', $result) :
+                $result;
+        }
         return $result;
     }
 
@@ -598,14 +628,15 @@ class Database extends AbstractData
     {
         switch ($type) {
             case 'ibm':
-                $sql = 'SELECT tabname FROM SYSCAT.TABLES ';
+                $sql = 'SELECT "tabname" FROM "SYSCAT"."TABLES"';
                 break;
             case 'informix':
-                $sql = 'SELECT tabname FROM systables ';
+                $sql = 'SELECT "tabname" FROM "systables"';
                 break;
             case 'mssql':
-                $sql = 'SELECT name FROM sysobjects '
-                     . "WHERE type = 'U' ORDER BY name";
+                // U: tables created by the user
+                $sql = 'SELECT "name" FROM "sysobjects" '
+                     . 'WHERE "type" = \'U\' ORDER BY "name"';
                 break;
             case 'mysql':
                 $sql = 'SHOW TABLES';
@@ -614,23 +645,23 @@ class Database extends AbstractData
                 $sql = 'SELECT table_name FROM all_tables';
                 break;
             case 'pgsql':
-                $sql = 'SELECT c.relname AS table_name '
-                     . 'FROM pg_class c, pg_user u '
-                     . "WHERE c.relowner = u.usesysid AND c.relkind = 'r' "
-                     . 'AND NOT EXISTS (SELECT 1 FROM pg_views WHERE viewname = c.relname) '
-                     . "AND c.relname !~ '^(pg_|sql_)' "
+                $sql = 'SELECT c."relname" AS "table_name" '
+                     . 'FROM "pg_class" c, "pg_user" u '
+                     . 'WHERE c."relowner" = u."usesysid" AND c."relkind" = \'r\' '
+                     . 'AND NOT EXISTS (SELECT 1 FROM "pg_views" WHERE "viewname" = c."relname") '
+                     . "AND c.\"relname\" !~ '^(pg_|sql_)' "
                      . 'UNION '
-                     . 'SELECT c.relname AS table_name '
-                     . 'FROM pg_class c '
-                     . "WHERE c.relkind = 'r' "
-                     . 'AND NOT EXISTS (SELECT 1 FROM pg_views WHERE viewname = c.relname) '
-                     . 'AND NOT EXISTS (SELECT 1 FROM pg_user WHERE usesysid = c.relowner) '
-                     . "AND c.relname !~ '^pg_'";
+                     . 'SELECT c."relname" AS "table_name" '
+                     . 'FROM "pg_class" c '
+                     . "WHERE c.\"relkind\" = 'r' "
+                     . 'AND NOT EXISTS (SELECT 1 FROM "pg_views" WHERE "viewname" = c."relname") '
+                     . 'AND NOT EXISTS (SELECT 1 FROM "pg_user" WHERE "usesysid" = c."relowner") '
+                     . "AND c.\"relname\" !~ '^pg_'";
                 break;
             case 'sqlite':
-                $sql = "SELECT name FROM sqlite_master WHERE type='table' "
-                     . 'UNION ALL SELECT name FROM sqlite_temp_master '
-                     . "WHERE type='table' ORDER BY name";
+                $sql = 'SELECT "name" FROM "sqlite_master" WHERE "type"=\'table\' '
+                     . 'UNION ALL SELECT "name" FROM "sqlite_temp_master" '
+                     . 'WHERE "type"=\'table\' ORDER BY "name"';
                 break;
             default:
                 throw new Exception(
@@ -652,8 +683,8 @@ class Database extends AbstractData
     {
         try {
             $row = self::_select(
-                'SELECT value FROM ' . self::_sanitizeIdentifier('config') .
-                ' WHERE id = ?', array($key), true
+                'SELECT "value" FROM "' . self::_sanitizeIdentifier('config') .
+                '" WHERE "id" = ?', array($key), true
             );
         } catch (PDOException $e) {
             return '';
@@ -672,10 +703,14 @@ class Database extends AbstractData
     private static function _getPrimaryKeyClauses($key = 'dataid')
     {
         $main_key = $after_key = '';
-        if (self::$_type === 'mysql') {
-            $after_key = ", PRIMARY KEY ($key)";
-        } else {
-            $main_key = ' PRIMARY KEY';
+        switch (self::$_type) {
+            case 'mysql':
+            case 'oci':
+                $after_key = ", PRIMARY KEY (\"$key\")";
+                break;
+            default:
+                $main_key = ' PRIMARY KEY';
+                break;
         }
         return array($main_key, $after_key);
     }
@@ -683,7 +718,7 @@ class Database extends AbstractData
     /**
      * get the data type, depending on the database driver
      *
-     * PostgreSQL uses a different API for BLOBs then SQL, hence we use TEXT
+     * PostgreSQL and OCI uses a different API for BLOBs then SQL, hence we use TEXT and CLOB
      *
      * @access private
      * @static
@@ -691,13 +726,20 @@ class Database extends AbstractData
      */
     private static function _getDataType()
     {
-        return self::$_type === 'pgsql' ? 'TEXT' : 'BLOB';
+        switch (self::$_type) {
+            case 'oci':
+                return 'CLOB';
+            case 'pgsql':
+                return 'TEXT';
+            default:
+                return 'BLOB';
+        }
     }
 
     /**
      * get the attachment type, depending on the database driver
      *
-     * PostgreSQL uses a different API for BLOBs then SQL, hence we use TEXT
+     * PostgreSQL and OCI use different APIs for BLOBs then SQL, hence we use TEXT and CLOB
      *
      * @access private
      * @static
@@ -705,7 +747,33 @@ class Database extends AbstractData
      */
     private static function _getAttachmentType()
     {
-        return self::$_type === 'pgsql' ? 'TEXT' : 'MEDIUMBLOB';
+        switch (self::$_type) {
+            case 'oci':
+                return 'CLOB';
+            case 'pgsql':
+                return 'TEXT';
+            default:
+                return 'MEDIUMBLOB';
+        }
+    }
+
+    /**
+     * get the meta type, depending on the database driver
+     *
+     * OCI doesn't accept TEXT so it has to be VARCHAR2(4000)
+     *
+     * @access private
+     * @static
+     * @return string
+     */
+    private static function _getMetaType()
+    {
+        switch (self::$_type) {
+            case 'oci':
+                return 'VARCHAR2(4000)';
+            default:
+                return 'TEXT';
+        }
     }
 
     /**
@@ -719,17 +787,18 @@ class Database extends AbstractData
         list($main_key, $after_key) = self::_getPrimaryKeyClauses();
         $dataType                   = self::_getDataType();
         $attachmentType             = self::_getAttachmentType();
+        $metaType                   = self::_getMetaType();
         self::$_db->exec(
-            'CREATE TABLE ' . self::_sanitizeIdentifier('paste') . ' ( ' .
-            "dataid CHAR(16) NOT NULL$main_key, " .
-            "data $attachmentType, " .
-            'postdate INT, ' .
-            'expiredate INT, ' .
-            'opendiscussion INT, ' .
-            'burnafterreading INT, ' .
-            'meta TEXT, ' .
-            "attachment $attachmentType, " .
-            "attachmentname $dataType$after_key );"
+            'CREATE TABLE "' . self::_sanitizeIdentifier('paste') . '" ( ' .
+            "\"dataid\" CHAR(16) NOT NULL$main_key, " .
+            "\"data\" $attachmentType, " .
+            '"postdate" INT, ' .
+            '"expiredate" INT, ' .
+            '"opendiscussion" INT, ' .
+            '"burnafterreading" INT, ' .
+            "\"meta\" $metaType, " .
+            "\"attachment\" $attachmentType, " .
+            "\"attachmentname\" $dataType$after_key )"
         );
     }
 
@@ -744,19 +813,35 @@ class Database extends AbstractData
         list($main_key, $after_key) = self::_getPrimaryKeyClauses();
         $dataType                   = self::_getDataType();
         self::$_db->exec(
-            'CREATE TABLE ' . self::_sanitizeIdentifier('comment') . ' ( ' .
-            "dataid CHAR(16) NOT NULL$main_key, " .
-            'pasteid CHAR(16), ' .
-            'parentid CHAR(16), ' .
-            "data $dataType, " .
-            "nickname $dataType, " .
-            "vizhash $dataType, " .
-            "postdate INT$after_key );"
+            'CREATE TABLE "' . self::_sanitizeIdentifier('comment') . '" ( ' .
+            "\"dataid\" CHAR(16) NOT NULL$main_key, " .
+            '"pasteid" CHAR(16), ' .
+            '"parentid" CHAR(16), ' .
+            "\"data\" $dataType, " .
+            "\"nickname\" $dataType, " .
+            "\"vizhash\" $dataType, " .
+            "\"postdate\" INT$after_key )"
         );
-        self::$_db->exec(
-            'CREATE INDEX IF NOT EXISTS comment_parent ON ' .
-            self::_sanitizeIdentifier('comment') . '(pasteid);'
-        );
+        if (self::$_type === 'oci') {
+            self::$_db->exec(
+                'declare
+                    already_exists  exception;
+                    columns_indexed exception;
+                    pragma exception_init( already_exists, -955 );
+                    pragma exception_init(columns_indexed, -1408);
+                begin
+                    execute immediate \'create index "comment_parent" on "' . self::_sanitizeIdentifier('comment') . '" ("pasteid")\';
+                exception
+                    when already_exists or columns_indexed then
+                    NULL;
+                end;'
+            );
+        } else {
+            self::$_db->exec(
+                'CREATE INDEX IF NOT EXISTS "comment_parent" ON "' .
+                self::_sanitizeIdentifier('comment') . '" ("pasteid")'
+            );
+        }
     }
 
     /**
@@ -768,15 +853,35 @@ class Database extends AbstractData
     private static function _createConfigTable()
     {
         list($main_key, $after_key) = self::_getPrimaryKeyClauses('id');
+        $charType                   = self::$_type === 'oci' ? 'VARCHAR2(16)' : 'CHAR(16)';
+        $textType                   = self::_getMetaType();
         self::$_db->exec(
-            'CREATE TABLE ' . self::_sanitizeIdentifier('config') .
-            " ( id CHAR(16) NOT NULL$main_key, value TEXT$after_key );"
+            'CREATE TABLE "' . self::_sanitizeIdentifier('config') .
+            "\" ( \"id\" $charType NOT NULL$main_key, \"value\" $textType$after_key )"
         );
         self::_exec(
-            'INSERT INTO ' . self::_sanitizeIdentifier('config') .
-            ' VALUES(?,?)',
+            'INSERT INTO "' . self::_sanitizeIdentifier('config') .
+            '" VALUES(?,?)',
             array('VERSION', Controller::VERSION)
         );
+    }
+
+    /**
+     * sanitizes CLOB values used with OCI
+     *
+     * From: https://stackoverflow.com/questions/36200534/pdo-oci-into-a-clob-field
+     *
+     * @access public
+     * @static
+     * @param  int|string|resource $value
+     * @return int|string
+     */
+    public static function _sanitizeClob($value)
+    {
+        if (is_resource($value)) {
+            $value = stream_get_contents($value);
+        }
+        return $value;
     }
 
     /**
@@ -807,43 +912,46 @@ class Database extends AbstractData
             case '0.21':
                 // create the meta column if necessary (pre 0.21 change)
                 try {
-                    self::$_db->exec('SELECT meta FROM ' . self::_sanitizeIdentifier('paste') . ' LIMIT 1;');
+                    self::$_db->exec(
+                        'SELECT "meta" FROM "' . self::_sanitizeIdentifier('paste') . '" ' .
+                        (self::$_type === 'oci' ? 'FETCH NEXT 1 ROWS ONLY' : 'LIMIT 1')
+                    );
                 } catch (PDOException $e) {
-                    self::$_db->exec('ALTER TABLE ' . self::_sanitizeIdentifier('paste') . ' ADD COLUMN meta TEXT;');
+                    self::$_db->exec('ALTER TABLE "' . self::_sanitizeIdentifier('paste') . '" ADD COLUMN "meta" TEXT');
                 }
                 // SQLite only allows one ALTER statement at a time...
                 self::$_db->exec(
-                    'ALTER TABLE ' . self::_sanitizeIdentifier('paste') .
-                    " ADD COLUMN attachment $attachmentType;"
+                    'ALTER TABLE "' . self::_sanitizeIdentifier('paste') .
+                    "\" ADD COLUMN \"attachment\" $attachmentType"
                 );
                 self::$_db->exec(
-                    'ALTER TABLE ' . self::_sanitizeIdentifier('paste') . " ADD COLUMN attachmentname $dataType;"
+                    'ALTER TABLE "' . self::_sanitizeIdentifier('paste') . "\" ADD COLUMN \"attachmentname\" $dataType"
                 );
                 // SQLite doesn't support MODIFY, but it allows TEXT of similar
                 // size as BLOB, so there is no need to change it there
                 if (self::$_type !== 'sqlite') {
                     self::$_db->exec(
-                        'ALTER TABLE ' . self::_sanitizeIdentifier('paste') .
-                        " ADD PRIMARY KEY (dataid), MODIFY COLUMN data $dataType;"
+                        'ALTER TABLE "' . self::_sanitizeIdentifier('paste') .
+                        "\" ADD PRIMARY KEY (\"dataid\"), MODIFY COLUMN \"data\" $dataType"
                     );
                     self::$_db->exec(
-                        'ALTER TABLE ' . self::_sanitizeIdentifier('comment') .
-                        " ADD PRIMARY KEY (dataid), MODIFY COLUMN data $dataType, " .
-                        "MODIFY COLUMN nickname $dataType, MODIFY COLUMN vizhash $dataType;"
+                        'ALTER TABLE "' . self::_sanitizeIdentifier('comment') .
+                        "\" ADD PRIMARY KEY (\"dataid\"), MODIFY COLUMN \"data\" $dataType, " .
+                        "MODIFY COLUMN \"nickname\" $dataType, MODIFY COLUMN \"vizhash\" $dataType"
                     );
                 } else {
                     self::$_db->exec(
-                        'CREATE UNIQUE INDEX IF NOT EXISTS paste_dataid ON ' .
-                        self::_sanitizeIdentifier('paste') . '(dataid);'
+                        'CREATE UNIQUE INDEX IF NOT EXISTS "paste_dataid" ON "' .
+                        self::_sanitizeIdentifier('paste') . '" ("dataid")'
                     );
                     self::$_db->exec(
-                        'CREATE UNIQUE INDEX IF NOT EXISTS comment_dataid ON ' .
-                        self::_sanitizeIdentifier('comment') . '(dataid);'
+                        'CREATE UNIQUE INDEX IF NOT EXISTS "comment_dataid" ON "' .
+                        self::_sanitizeIdentifier('comment') . '" ("dataid")'
                     );
                 }
                 self::$_db->exec(
-                    'CREATE INDEX IF NOT EXISTS comment_parent ON ' .
-                    self::_sanitizeIdentifier('comment') . '(pasteid);'
+                    'CREATE INDEX IF NOT EXISTS "comment_parent" ON "' .
+                    self::_sanitizeIdentifier('comment') . '" ("pasteid")'
                 );
                 // no break, continue with updates for 0.22 and later
             case '1.3':
@@ -852,15 +960,15 @@ class Database extends AbstractData
                 // to change it there
                 if (self::$_type !== 'sqlite' && self::$_type !== 'pgsql') {
                     self::$_db->exec(
-                        'ALTER TABLE ' . self::_sanitizeIdentifier('paste') .
-                        " MODIFY COLUMN data $attachmentType;"
+                        'ALTER TABLE "' . self::_sanitizeIdentifier('paste') .
+                        "\" MODIFY COLUMN \"data\" $attachmentType"
                     );
                 }
                 // no break, continue with updates for all newer versions
             default:
                 self::_exec(
-                    'UPDATE ' . self::_sanitizeIdentifier('config') .
-                    ' SET value = ? WHERE id = ?',
+                    'UPDATE "' . self::_sanitizeIdentifier('config') .
+                    '" SET "value" = ? WHERE "id" = ?',
                     array(Controller::VERSION, 'VERSION')
                 );
         }
