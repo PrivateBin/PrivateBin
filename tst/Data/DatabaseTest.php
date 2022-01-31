@@ -367,4 +367,16 @@ class DatabaseTest extends TestCase
         $this->assertEquals(Controller::VERSION, $result['value']);
         Helper::rmDir($this->_path);
     }
+
+    public function testOciClob()
+    {
+        $int    = (int) random_bytes(1);
+        $string = random_bytes(10);
+        $clob   = fopen('php://memory', 'r+');
+        fwrite($clob, $string);
+        rewind($clob);
+        $this->assertEquals($int, Database::_sanitizeClob($int));
+        $this->assertEquals($string, Database::_sanitizeClob($string));
+        $this->assertEquals($string, Database::_sanitizeClob($clob));
+    }
 }
