@@ -1,6 +1,6 @@
 {
     "PrivateBin": "sivlolnitvanku'a",
-    "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted %sin the browser%s using 256 bits AES.": "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted %sin the browser%s using 256 bits AES.",
+    "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted %sin the browser%s using 256 bits AES.": ".i la %s mupli lo sorcu lo'e se setca kibro .i ji'a zo'e se zancari gi'e fingubni .i lo samse'u na djuno lo datni selru'e cu .i ba'e %sle brauzero%s mipri le do datni ku fi la'oi AES poi bitni li 256",
     "More information on the <a href=\"https://privatebin.info/\">project page</a>.": "More information on the <a href=\"https://privatebin.info/\">project page</a>.",
     "Because ignorance is bliss": "Because ignorance is bliss",
     "en": "jb",
