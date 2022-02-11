@@ -10,7 +10,7 @@ global.fs = require('fs');
 global.WebCrypto = require('@peculiar/webcrypto').Crypto;
 
 // application libraries to test
-global.$ = global.jQuery = require('./jquery-3.4.1');
+global.$ = global.jQuery = require('./jquery-3.6.0');
 global.RawDeflate = require('./rawinflate-0.3').RawDeflate;
 global.zlib = require('./zlib-1.2.11').zlib;
 require('./prettify');
