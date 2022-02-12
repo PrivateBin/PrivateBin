@@ -54,3 +54,4 @@ Sébastien Sauvage - original idea and main developer
 * whenwesober - Indonesian
 * retiolus - Catalan
 * sarnane - Estonian
+* foxsouns - Lojban
