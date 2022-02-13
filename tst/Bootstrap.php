@@ -304,7 +304,7 @@ class StorageObjectStub extends StorageObject
         $this->_generation                      = $generation;
         $this->_info                            = $info;
         $this->_connection                      = $connection;
-        $timeCreated                            = new Datetime();
+        $timeCreated                            = new DateTime();
         $this->_info['metadata']['timeCreated'] = $timeCreated->format('Y-m-d\TH:i:s.u\Z');
     }
 

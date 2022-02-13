@@ -195,7 +195,7 @@ class I18n
         if (count(self::$_availableLanguages) == 0) {
             $i18n = dir(self::_getPath());
             while (false !== ($file = $i18n->read())) {
-                if (preg_match('/^([a-z]{2}).json$/', $file, $match) === 1) {
+                if (preg_match('/^([a-z]{2,3}).json$/', $file, $match) === 1) {
                     self::$_availableLanguages[] = $match[1];
                 }
             }
@@ -324,6 +324,7 @@ class I18n
             case 'he':
                 return $n === 1 ? 0 : ($n === 2 ? 1 : (($n < 0 || $n > 10) && ($n % 10 === 0) ? 2 : 3));
             case 'id':
+            case 'jbo':
                 return 0;
             case 'lt':
                 return $n % 10 === 1 && $n % 100 !== 11 ? 0 : (($n % 10 >= 2 && $n % 100 < 10 || $n % 100 >= 20) ? 1 : 2);
