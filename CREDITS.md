@@ -29,6 +29,7 @@ Sébastien Sauvage - original idea and main developer
 * Lucas Savva - configurable config file location, NixOS packaging
 * rodehoed - option to exempt ips from the rate-limiter
 * Mark van Holsteijn - Google Cloud Storage backend
+* Austin Huang - Oracle database support
 
 ## Translations
 * Hexalyse - French
@@ -53,3 +54,4 @@ Sébastien Sauvage - original idea and main developer
 * whenwesober - Indonesian
 * retiolus - Catalan
 * sarnane - Estonian
+* foxsouns - Lojban

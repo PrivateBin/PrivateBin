@@ -601,7 +601,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          * @prop   {string[]}
          * @readonly
          */
-        const supportedLanguages = ['bg', 'ca', 'cs', 'de', 'es', 'et', 'fr', 'he', 'hu', 'id', 'it', 'lt', 'no', 'nl', 'pl', 'pt', 'oc', 'ru', 'sl', 'uk', 'zh'];
+        const supportedLanguages = ['bg', 'ca', 'cs', 'de', 'es', 'et', 'fr', 'he', 'hu', 'id', 'it', 'jbo', 'lt', 'no', 'nl', 'pl', 'pt', 'oc', 'ru', 'sl', 'uk', 'zh'];
 
         /**
          * built in language
@@ -785,6 +785,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 case 'he':
                     return n === 1 ? 0 : (n === 2 ? 1 : ((n < 0 || n > 10) && (n % 10 === 0) ? 2 : 3));
                 case 'id':
+                case 'jbo':
                     return 0;
                 case 'lt':
                     return n % 10 === 1 && n % 100 !== 11 ? 0 : ((n % 10 >= 2 && n % 100 < 10 || n % 100 >= 20) ? 1 : 2);
@@ -5404,8 +5405,8 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                     node.setAttribute('target', '_blank');
                 }
                 // set non-HTML/MathML links to xlink:show=new
-                if (!node.hasAttribute('target') 
-                    && (node.hasAttribute('xlink:href') 
+                if (!node.hasAttribute('target')
+                    && (node.hasAttribute('xlink:href')
                         || node.hasAttribute('href'))) {
                     node.setAttribute('xlink:show', 'new');
                 }
