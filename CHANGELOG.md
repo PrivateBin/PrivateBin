@@ -1,7 +1,7 @@
 # PrivateBin version history
 
   * **1.4 (not yet released)**
-    * ADDED: Translation for Estonian
+    * ADDED: Translations for Estonian and Lojban
     * ADDED: new HTTP headers improving security (#765)
     * ADDED: Download button for paste text (#774)
     * ADDED: Opt-out of federated learning of cohorts (FLoC) (#776)
@@ -14,7 +14,7 @@
     * CHANGED: Removed configurable `dir` for `traffic` & `purge` limiters (#419)
     * CHANGED: Server salt, traffic and purge limiter now stored in the storage backend (#419)
   * **1.3.5 (2021-04-05)**
-    * ADDED: Translation for Hebrew, Lithuanian, Indonesian and Catalan
+    * ADDED: Translations for Hebrew, Lithuanian, Indonesian and Catalan
     * ADDED: Make the project info configurable (#681)
     * CHANGED: Upgrading libraries to: DOMpurify 2.2.7, kjua 0.9.0 & random_compat 2.0.18
     * CHANGED: Open all links in new window (#630)
