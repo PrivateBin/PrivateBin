@@ -44,7 +44,7 @@ class Configuration
             'fileupload'               => false,
             'burnafterreadingselected' => false,
             'defaultformatter'         => 'plaintext',
-            'syntaxhighlightingtheme'  => null,
+            'syntaxhighlightingtheme'  => '',
             'sizelimit'                => 10485760,
             'template'                 => 'bootstrap',
             'info'                     => 'More information on the <a href=\'https://privatebin.info/\'>project page</a>.',
