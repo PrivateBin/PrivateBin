@@ -76,7 +76,7 @@
         "%d years (2nd plural)",
         "%d years (3rd plural)"
     ],
-    "Never": "Never",
+    "Never": "Mai",
     "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.": "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.",
     "This document will expire in %d seconds.": [
         "This document will expire in %d second. (singular)",
@@ -108,8 +108,8 @@
         "This document will expire in %d months. (2nd plural)",
         "This document will expire in %d months. (3rd plural)"
     ],
-    "Please enter the password for this paste:": "Please enter the password for this paste:",
-    "Could not decrypt data (Wrong key?)": "Could not decrypt data (Wrong key?)",
+    "Please enter the password for this paste:": "Si us plau, introdueix la contrasenya per aquest paste:",
+    "Could not decrypt data (Wrong key?)": "No s'han pogut desxifrar les dades (Clau incorrecte?)",
     "Could not delete the paste, it was not stored in burn after reading mode.": "Could not delete the paste, it was not stored in burn after reading mode.",
     "FOR YOUR EYES ONLY. Don't close this window, this message can't be displayed again.": "FOR YOUR EYES ONLY. Don't close this window, this message can't be displayed again.",
     "Could not decrypt comment; Wrong key?": "Could not decrypt comment; Wrong key?",
