@@ -145,7 +145,7 @@ class I18nTest extends PHPUnit_Framework_TestCase
     {
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = '*';
         I18n::loadTranslations();
-        $this->assertTrue(strlen(I18n::_('en')) == 2, 'browser language any');
+        $this->assertTrue(strlen(I18n::_('en')) >= 2, 'browser language any');
     }
 
     public function testVariableInjection()
