@@ -9,7 +9,7 @@
     * ADDED: Google Cloud Storage backend support (#795)
     * ADDED: Oracle database support (#868)
     * CHANGED: Language selection cookie only transmitted over HTTPS (#472)
-    * CHANGED: Upgrading libraries to: random_compat 2.0.20
+    * CHANGED: Upgrading libraries to: base-x 4.0.0, DOMpurify 2.3.6, ip-lib 1.18.0, jQuery 3.6.0, random_compat 2.0.21 & Showdown 2.0.0
     * CHANGED: Removed automatic `.ini` configuration file migration (#808)
     * CHANGED: Removed configurable `dir` for `traffic` & `purge` limiters (#419)
     * CHANGED: Server salt, traffic and purge limiter now stored in the storage backend (#419)

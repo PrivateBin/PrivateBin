@@ -183,7 +183,7 @@ if (!is_callable('random_bytes')) {
             try {
                 $RandomCompatCOMtest = new COM('CAPICOM.Utilities.1');
                 /** @psalm-suppress TypeDoesNotContainType */
-                if (method_exists($RandomCompatCOMtest, 'GetRandom')) {
+                if (is_callable(array($RandomCompatCOMtest, 'GetRandom'))) {
                     // See random_bytes_com_dotnet.php
                     require_once $RandomCompatDIR.DIRECTORY_SEPARATOR.'random_bytes_com_dotnet.php';
                 }
