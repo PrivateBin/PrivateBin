@@ -139,6 +139,11 @@ limit = 10
 ; Unset for enabling and invalid values will be ignored
 ; eg: exemptedIp = '1.2.3.4,10.10.10/24'
 
+; (optional) if you only want some source IP addresses to create pastes
+; enter their IPv4 address(es) here, separated by commas. This does not
+; currently support CIDR notation, only individual IPv4 addresses.
+; whitelist_paste_creation = "12.34.56.78,99.88.77.66"
+
 ; (optional) if your website runs behind a reverse proxy or load balancer,
 ; set the HTTP header containing the visitors IP address, i.e. X_FORWARDED_FOR
 ; header = "X_FORWARDED_FOR"

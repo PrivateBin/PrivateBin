@@ -81,6 +81,7 @@ class Configuration
             'limit'      => 10,
             'header'     => null,
             'exemptedIp' => null,
+            'whitelist'  => null,
         ),
         'purge' => array(
             'limit'     => 300,
