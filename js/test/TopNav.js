@@ -280,7 +280,8 @@ describe('TopNav', function () {
         it(
             'collapses the navigation when displayed on a small screen',
             function () {
-                var results = [];
+                var clean = jsdom(),
+                    results = [];
                 $('body').html(
                     '<nav><div class="navbar-header"><button type="button" ' +
                     'class="navbar-toggle collapsed" data-toggle="collapse" ' +
@@ -301,7 +302,7 @@ describe('TopNav', function () {
                     $('.navbar-toggle').hasClass('collapsed') &&
                     $('#navbar').attr('aria-expanded') != 'true'
                 );
-                $('.navbar-toggle').click();
+                $('.navbar-toggle').trigger('click');
                 results.push(
                     !$('.navbar-toggle').hasClass('collapsed') &&
                     $('#navbar').attr('aria-expanded') == 'true'
@@ -311,7 +312,7 @@ describe('TopNav', function () {
                     $('.navbar-toggle').hasClass('collapsed') &&
                     $('#navbar').attr('aria-expanded') == 'false'
                 );
-                cleanup();
+                clean();
                 assert.ok(results.every(element => element));
             }
         );
@@ -670,4 +671,3 @@ describe('TopNav', function () {
         );
     });
 });
-

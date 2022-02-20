@@ -52,12 +52,12 @@ describe('Editor', function () {
                     !$.PrivateBin.Editor.isPreview() &&
                     !$('#message').hasClass('hidden')
                 );
-                $('#messagepreview').click();
+                $('#messagepreview').trigger('click');
                 results.push(
                     $.PrivateBin.Editor.isPreview() &&
                     $('#message').hasClass('hidden')
                 );
-                $('#messageedit').click();
+                $('#messageedit').trigger('click');
                 results.push(
                     !$.PrivateBin.Editor.isPreview() &&
                     !$('#message').hasClass('hidden')
@@ -68,4 +68,3 @@ describe('Editor', function () {
         );
     });
 });
-
