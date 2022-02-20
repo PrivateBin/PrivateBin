@@ -38,13 +38,21 @@ class TrafficLimiterTest extends PHPUnit_Framework_TestCase
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
         $this->assertTrue(TrafficLimiter::canPass(), 'first request may pass');
         sleep(1);
-        $this->assertFalse(TrafficLimiter::canPass(), 'second request is to fast, may not pass');
+        try {
+            $this->assertFalse(TrafficLimiter::canPass(), 'expected an exception');
+        } catch (Exception $e) {
+            $this->assertEquals($e->getMessage(), 'Please wait 4 seconds between each post.', 'second request is to fast, may not pass');
+        }
         sleep(4);
         $this->assertTrue(TrafficLimiter::canPass(), 'third request waited long enough and may pass');
         $_SERVER['REMOTE_ADDR'] = '2001:1620:2057:dead:beef::cafe:babe';
         $this->assertTrue(TrafficLimiter::canPass(), 'fourth request has different ip and may pass');
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
-        $this->assertFalse(TrafficLimiter::canPass(), 'fifth request is to fast, may not pass');
+        try {
+            $this->assertFalse(TrafficLimiter::canPass(), 'expected an exception');
+        } catch (Exception $e) {
+            $this->assertEquals($e->getMessage(), 'Please wait 4 seconds between each post.', 'fifth request is to fast, may not pass');
+        }
     }
 
     public function testTrafficLimitExempted()
@@ -52,7 +60,11 @@ class TrafficLimiterTest extends PHPUnit_Framework_TestCase
         TrafficLimiter::setExempted('1.2.3.4,10.10.10.0/24,2001:1620:2057::/48');
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
         $this->assertTrue(TrafficLimiter::canPass(), 'first request may pass');
-        $this->assertFalse(TrafficLimiter::canPass(), 'not exempted');
+        try {
+            $this->assertFalse(TrafficLimiter::canPass(), 'expected an exception');
+        } catch (Exception $e) {
+            $this->assertEquals($e->getMessage(), 'Please wait 4 seconds between each post.', 'not exempted');
+        }
         $_SERVER['REMOTE_ADDR'] = '10.10.10.10';
         $this->assertTrue(TrafficLimiter::canPass(), 'IPv4 in exempted range');
         $this->assertTrue(TrafficLimiter::canPass(), 'request is to fast, but IPv4 in exempted range');
@@ -61,7 +73,11 @@ class TrafficLimiterTest extends PHPUnit_Framework_TestCase
         $this->assertTrue(TrafficLimiter::canPass(), 'request is to fast, but IPv6 in exempted range');
         TrafficLimiter::setExempted('127.*,foobar');
         $this->assertTrue(TrafficLimiter::canPass(), 'first cached request may pass');
-        $this->assertFalse(TrafficLimiter::canPass(), 'request is to fast, invalid range');
+        try {
+            $this->assertFalse(TrafficLimiter::canPass(), 'expected an exception');
+        } catch (Exception $e) {
+            $this->assertEquals($e->getMessage(), 'Please wait 4 seconds between each post.', 'request is to fast, invalid range');
+        }
         $_SERVER['REMOTE_ADDR'] = 'foobar';
         $this->assertTrue(TrafficLimiter::canPass(), 'non-IP address');
         $this->assertTrue(TrafficLimiter::canPass(), 'request is to fast, but non-IP address matches exempted range');
@@ -71,16 +87,23 @@ class TrafficLimiterTest extends PHPUnit_Framework_TestCase
     {
         TrafficLimiter::setCreators('1.2.3.4,10.10.10.0/24,2001:1620:2057::/48');
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
-        $this->assertFalse(TrafficLimiter::canPass(), 'not a creator');
+        try {
+            $this->assertFalse(TrafficLimiter::canPass(), 'expected an exception');
+        } catch (Exception $e) {
+            $this->assertEquals($e->getMessage(), 'Your IP is not authorized to create pastes.', 'not a creator');
+        }
         $_SERVER['REMOTE_ADDR'] = '10.10.10.10';
         $this->assertTrue(TrafficLimiter::canPass(), 'IPv4 in creator range');
         $this->assertTrue(TrafficLimiter::canPass(), 'request is to fast, but IPv4 in creator range');
         $_SERVER['REMOTE_ADDR'] = '2001:1620:2057:dead:beef::cafe:babe';
         $this->assertTrue(TrafficLimiter::canPass(), 'IPv6 in creator range');
         $this->assertTrue(TrafficLimiter::canPass(), 'request is to fast, but IPv6 in creator range');
-        TrafficLimiter::setExempted('127.*,foobar');
-        $this->assertTrue(TrafficLimiter::canPass(), 'first cached request may pass');
-        $this->assertFalse(TrafficLimiter::canPass(), 'request is to fast, not a creator');
+        TrafficLimiter::setCreators('127.*,foobar');
+        try {
+            $this->assertFalse(TrafficLimiter::canPass(), 'expected an exception');
+        } catch (Exception $e) {
+            $this->assertEquals($e->getMessage(), 'Your IP is not authorized to create pastes.', 'request is to fast, not a creator');
+        }
         $_SERVER['REMOTE_ADDR'] = 'foobar';
         $this->assertTrue(TrafficLimiter::canPass(), 'non-IP address');
         $this->assertTrue(TrafficLimiter::canPass(), 'request is to fast, but non-IP address matches creator');

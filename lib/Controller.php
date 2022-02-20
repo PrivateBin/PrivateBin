@@ -195,35 +195,14 @@ class Controller
      */
     private function _create()
     {
-        // Check if whitelist feature is enabled
-        if (($option = $this->_conf->getKey('creators', 'traffic')) !== '') {
-            // Parse whitelist into array
-            $whitelist = explode(',', $option);
-            // Check for source IP in HTTP header
-            if (($option = $this->_conf->getKey('header', 'traffic')) !== null) {
-                $httpHeader = 'HTTP_' . $option;
-                // Grab source IP from HTTP header (if it exists)
-                if (array_key_exists($httpHeader, $_SERVER) && !empty($_SERVER[$httpHeader])) {
-                    // Check if source IP reported from HTTP header is in whitelist array
-                    if (!in_array($_SERVER[$httpHeader], $whitelist)) {
-                        $this->_return_message(1, I18n::_('Your IP is not authorized to create pastes.'));
-                        return;
-                    }
-                }
-            }
-        }
-
         // Ensure last paste from visitors IP address was more than configured amount of seconds ago.
         ServerSalt::setStore($this->_model->getStore());
         TrafficLimiter::setConfiguration($this->_conf);
         TrafficLimiter::setStore($this->_model->getStore());
-        if (!TrafficLimiter::canPass()) {
-            $this->_return_message(
-                1, I18n::_(
-                    'Please wait %d seconds between each post.',
-                    $this->_conf->getKey('limit', 'traffic')
-                )
-            );
+        try {
+            TrafficLimiter::canPass();
+        } catch (Exception $e) {
+            $this->_return_message(1, $e->getMessage());
             return;
         }
 
