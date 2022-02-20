@@ -161,7 +161,7 @@ class TrafficLimiter extends AbstractPersistence
             }
         }
 
-        // this hash is used as an array key, hence a shorter algo is used
+        // used as array key, which are limited in length, hence using algo with shorter range
         $hash = self::getHash('sha256');
         $now  = time();
         $tl   = (int) self::$_store->getValue('traffic_limiter', $hash);
