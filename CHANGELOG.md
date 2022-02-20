@@ -8,6 +8,7 @@
     * ADDED: Configuration option to exempt IPs from the rate-limiter (#787)
     * ADDED: Google Cloud Storage backend support (#795)
     * ADDED: Oracle database support (#868)
+    * ADDED: Configuration option to limit paste creation and commenting to certain IPs (#883)
     * CHANGED: Language selection cookie only transmitted over HTTPS (#472)
     * CHANGED: Upgrading libraries to: random_compat 2.0.20
     * CHANGED: Removed automatic `.ini` configuration file migration (#808)
