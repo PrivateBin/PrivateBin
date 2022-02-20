@@ -20,7 +20,7 @@ global.showdown = require('./showdown-2.0.0');
 global.DOMPurify = require('./purify-2.3.6');
 global.baseX = require('./base-x-4.0.0').baseX;
 global.Legacy = require('./legacy').Legacy;
-require('./bootstrap-3.3.7');
+require('./bootstrap-3.4.1');
 require('./privatebin');
 
 // internal variables
@@ -131,4 +131,3 @@ exports.jscMimeTypes = function() {
 exports.jscFormats = function() {
     return jsc.elements(formats);
 };
-
