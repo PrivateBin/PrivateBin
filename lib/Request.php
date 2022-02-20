@@ -73,6 +73,14 @@ class Request
     private $_isJsonApi = false;
 
     /**
+     * If we are in a CORS-preflight fetch context
+     *
+     * @access private
+     * @var bool
+     */
+    private $_isCorsPreflight = false;
+
+    /**
      * Return the paste ID of the current paste.
      *
      * @access private
@@ -119,6 +127,7 @@ class Request
             case 'OPTIONS':
                 // likely CORS-preflight
                 $this->_operation = 'cors-preflight';
+                break;
             default:
                 $this->_params = $_GET;
         }
@@ -264,9 +273,9 @@ class Request
     private function _detectCorsPreflightFetch()
     {
         $hasSecFetchMode = array_key_exists('HTTP_SEC_FETCH_MODE', $_SERVER);
-        $secFetchMode = $secFetchMode ? SERVER['HTTP_SEC_FETCH_MODE'] : '';
+        $secFetchMode = $hasSecFetchMode ? $_SERVER['HTTP_SEC_FETCH_MODE'] : '';
         $hasSecFetchSite = array_key_exists('HTTP_SEC_FETCH_SITE', $_SERVER);
-        $secFetchSite = $secFetchSite ? SERVER['HTTP_SEC_FETCH_SITE'] : '';
+        $secFetchSite = $hasSecFetchSite ? $_SERVER['HTTP_SEC_FETCH_SITE'] : '';
         // simplest case
         if (
             ((mb_strtolower($secFetchMode) === 'cors') ||
@@ -274,8 +283,7 @@ class Request
             (array_key_exists('HTTP_ACCESS_CONTROL_REQUEST_METHOD', $_SERVER))
         ) {
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
