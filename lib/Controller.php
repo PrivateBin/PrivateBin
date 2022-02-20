@@ -139,7 +139,7 @@ class Controller
         }
 
         // output JSON or HTML
-        if ($this->_request->isJsonApiCall()) {
+        if ($this->_request->isJsonApiCall() || $this->_request->isCorsPreflightCall()) {
             header('Content-type: ' . Request::MIME_JSON);
             header('Access-Control-Allow-Origin: *');
             header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');

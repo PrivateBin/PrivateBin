@@ -102,6 +102,8 @@ class Request
     {
         // decide if we are in JSON API or HTML context
         $this->_isJsonApi = $this->_detectJsonRequest();
+        // decide if we are in CORS-preflight fetch context
+        $this->_isCorsPreflight = $this->_detectCorsPreflightFetch();
 
         // parse parameters, depending on request type
         switch (array_key_exists('REQUEST_METHOD', $_SERVER) ? $_SERVER['REQUEST_METHOD'] : 'GET') {
@@ -114,6 +116,9 @@ class Request
                     file_get_contents(self::$_inputStream)
                 );
                 break;
+            case 'OPTIONS':
+                // likely CORS-preflight
+                $this->_operation = 'cors-preflight';
             default:
                 $this->_params = $_GET;
         }
@@ -218,6 +223,17 @@ class Request
     }
 
     /**
+     * If we are in a CORS-preflight fetch context
+     *
+     * @access public
+     * @return bool
+     */
+    public function isCorsPreflightCall()
+    {
+        return $this->_isCorsPreflight;
+    }
+
+    /**
      * If we are in a JSON API context
      *
      * @access public
@@ -236,6 +252,32 @@ class Request
     public static function setInputStream($input)
     {
         self::$_inputStream = $input;
+    }
+
+    /**
+     * Detect if client is doing a CORS-preflight fetch before the actual CORS request.
+     * https://fetch.spec.whatwg.org/#cors-preflight-fetch
+     *
+     * @access private
+     * @return bool
+     */
+    private function _detectCorsPreflightFetch()
+    {
+        $hasSecFetchMode = array_key_exists('HTTP_SEC_FETCH_MODE', $_SERVER);
+        $secFetchMode = $secFetchMode ? SERVER['HTTP_SEC_FETCH_MODE'] : '';
+        $hasSecFetchSite = array_key_exists('HTTP_SEC_FETCH_SITE', $_SERVER);
+        $secFetchSite = $secFetchSite ? SERVER['HTTP_SEC_FETCH_SITE'] : '';
+        // simplest case
+        if (
+            ((mb_strtolower($secFetchMode) === 'cors') ||
+             (mb_strtolower($secFetchSite) === 'cors-site')) &&
+            (array_key_exists('HTTP_ACCESS_CONTROL_REQUEST_METHOD', $_SERVER))
+        ) {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
     /**
