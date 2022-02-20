@@ -33,13 +33,13 @@ class TrafficLimiter extends AbstractPersistence
     private static $_limit = 10;
 
     /**
-     * listed ips are exempted from limits, defaults to null
+     * listed IPs are exempted from limits, defaults to null
      *
      * @access private
      * @static
      * @var    string|null
      */
-    private static $_exemptedIp = null;
+    private static $_exempted = null;
 
     /**
      * key to fetch IP address
@@ -63,15 +63,15 @@ class TrafficLimiter extends AbstractPersistence
     }
 
     /**
-     * set a list of ip(ranges) as string
+     * set a list of IP(-ranges) as string
      *
      * @access public
      * @static
-     * @param string $exemptedIps
+     * @param string $exempted
      */
-    public static function setExemptedIp($exemptedIp)
+    public static function setExempted($exempted)
     {
-        self::$_exemptedIp = $exemptedIp;
+        self::$_exempted = $exempted;
     }
 
     /**
@@ -84,9 +84,9 @@ class TrafficLimiter extends AbstractPersistence
     public static function setConfiguration(Configuration $conf)
     {
         self::setLimit($conf->getKey('limit', 'traffic'));
-        self::setExemptedIp($conf->getKey('exemptedIp', 'traffic'));
+        self::setExempted($conf->getKey('exempted', 'traffic'));
 
-        if (($option = $conf->getKey('header', 'traffic')) !== null) {
+        if (($option = $conf->getKey('header', 'traffic')) !== '') {
             $httpHeader = 'HTTP_' . $option;
             if (array_key_exists($httpHeader, $_SERVER) && !empty($_SERVER[$httpHeader])) {
                 self::$_ipKey = $httpHeader;
@@ -152,8 +152,8 @@ class TrafficLimiter extends AbstractPersistence
         }
 
         // Check if $_ipKey is exempted from ratelimiting
-        if (!is_null(self::$_exemptedIp)) {
-            $exIp_array = explode(',', self::$_exemptedIp);
+        if (!empty(self::$_exempted)) {
+            $exIp_array = explode(',', self::$_exempted);
             foreach ($exIp_array as $ipRange) {
                 if (self::matchIp($ipRange) === true) {
                     return true;

@@ -196,7 +196,7 @@ class Controller
     private function _create()
     {
         // Check if whitelist feature is enabled
-        if (($option = $this->_conf->getKey('whitelist_paste_creation', 'traffic')) !== null) {
+        if (($option = $this->_conf->getKey('creators', 'traffic')) !== '') {
             // Parse whitelist into array
             $whitelist = explode(',', $option);
             // Check for source IP in HTTP header
