@@ -210,7 +210,9 @@ class TrafficLimiter extends AbstractPersistence
         if (!self::$_store->setValue((string) $tl, 'traffic_limiter', $hash)) {
             error_log('failed to store the traffic limiter, it probably contains outdated information');
         }
-        if ($result) return true;
+        if ($result) {
+            return true;
+        }
         throw new Exception(I18n::_(
             'Please wait %d seconds between each post.',
             self::$_limit
