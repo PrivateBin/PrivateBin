@@ -79,6 +79,7 @@ class Configuration
         ),
         'traffic' => array(
             'limit'      => 10,
+            'whitelist'  => null,
             'header'     => null,
             'exemptedIp' => null,
         ),

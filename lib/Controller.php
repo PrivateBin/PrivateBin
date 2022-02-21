@@ -195,6 +195,39 @@ class Controller
      */
     private function _create()
     {
+        // Check if whitelist feature is enabled
+        if (($option = $this->_conf->getKey('whitelist', 'traffic')) !== null) {
+            // Parse whitelist into array
+            $whitelist_ips = explode(',', $option);
+            $whitelisted = False;
+            // Define HTTP header to get
+            if (($option = $this->_conf->getKey('header', 'traffic')) !== null) {
+                $httpHeader = 'HTTP_' . $option;
+            } else{
+                $httpHeader = 'REMOTE_ADDR';
+            }
+            // Grab source IP from HTTP header (if it exists)
+            if (array_key_exists($httpHeader, $_SERVER) && !empty($_SERVER[$httpHeader])) {
+                // Check if source IP reported from HTTP header is in whitelist array
+                foreach($whitelist_ips as $whitelist){
+                  if(strpos($whitelist, '/')){
+                    if($this->_cidr_match($_SERVER[$httpHeader], $whitelist)){
+                      $whitelisted = True;
+                    }
+                  }else{
+                    if ($_SERVER[$httpHeader] == $whitelist){
+                      $whitelisted = True;
+                    }
+                  }
+                }
+
+                if ($whitelisted == False){
+                    $this->_return_message(1, I18n::_('Your IP is not authorized to create pastes.'));
+                    return;
+                }
+            }
+        }
+
         // Ensure last paste from visitors IP address was more than configured amount of seconds ago.
         ServerSalt::setStore($this->_model->getStore());
         TrafficLimiter::setConfiguration($this->_conf);
@@ -396,6 +429,25 @@ class Controller
         $page->assign('HTTPSLINK', 'https://' . $this->_request->getHost() . $this->_request->getRequestUri());
         $page->assign('COMPRESSION', $this->_conf->getKey('compression'));
         $page->draw($this->_conf->getKey('template'));
+    }
+
+    /**
+     * match ip address ranges (performance seems to be not optimal)
+     *
+     * @access private
+     * @param string $ip
+     * @param string $ranges
+     */
+    private function _cidr_match($ip, $ranges)
+    {
+      $ranges = (array) $ranges;
+      foreach ($ranges as $range) {
+          list($subnet, $mask) = explode('/', $range);
+          if ((ip2long($ip) & ~((1 << 32 - $mask) - 1)) == ip2long($subnet)) {
+              return true;
+          }
+      }
+      return false;
     }
 
     /**

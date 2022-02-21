@@ -135,6 +135,11 @@ markdown = "Markdown"
 ; Set this to 0 to disable rate limiting.
 limit = 10
 
+; (optional) if you only want some source IP addresses to create pastes
+; enter their IPv4 address(es) here, separated by commas. 
+; currently support CIDR notation, individual IPv4 addresses and subnets.
+;whitelist = "12.34.56.78,99.88.77.66,192.168.178.0/24"
+
 ; Set ips (v4|v6) which should be exempted for the rate-limit. CIDR also supported. Needed to be comma separated.
 ; Unset for enabling and invalid values will be ignored
 ; eg: exemptedIp = '1.2.3.4,10.10.10/24'
