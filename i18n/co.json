@@ -7,7 +7,7 @@
     "Paste does not exist, has expired or has been deleted.": "L’appiccicu ùn esiste micca, hè scadutu o hè statu squassatu.",
     "%s requires php %s or above to work. Sorry.": "Per disgrazzia, %s richiede php %s o più recente per funziunà.  ",
     "%s requires configuration section [%s] to be present in configuration file.": "%s richiede a presenza di a sezzione di cunfigurazione [%s] in a schedariu di cunfigurazione.",
-    "Aspettate %d seconds between each post.": [
+    "Please wait %d seconds between each post.": [
         "Aspettate %d seconda trà dui publicazioni.",
         "Aspettate %d seconde trà dui publicazioni.",
         "Please wait %d seconds between each post. (2nd plural)",
