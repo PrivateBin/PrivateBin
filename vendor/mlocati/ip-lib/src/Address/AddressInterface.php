@@ -21,6 +21,8 @@ interface AddressInterface
      *
      * @return int
      *
+     * @since 1.14.0
+     *
      * @example 32 for IPv4
      * @example 128 for IPv6
      */
@@ -51,6 +53,8 @@ interface AddressInterface
      *
      * @return string
      *
+     * @since 1.14.0
+     *
      * @example For localhost: For IPv4 you'll get '01111111000000000000000000000001' (32 digits), for IPv6 '00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001' (128 digits)
      */
     public function getBits();
@@ -66,6 +70,8 @@ interface AddressInterface
      * Get the default RFC reserved range type.
      *
      * @return int One of the \IPLib\Range\Type::T_... constants
+     *
+     * @since 1.5.0
      */
     public static function getDefaultReservedRangeType();
 
@@ -73,6 +79,8 @@ interface AddressInterface
      * Get the RFC reserved ranges (except the ones of type getDefaultReservedRangeType).
      *
      * @return \IPLib\Address\AssignedRange[] ranges are sorted
+     *
+     * @since 1.5.0
      */
     public static function getReservedRanges();
 
@@ -100,9 +108,27 @@ interface AddressInterface
     public function matches(RangeInterface $range);
 
     /**
+     * Get the address at a certain distance from this address.
+     *
+     * @param int $n the distance of the address (can be negative)
+     *
+     * @return \IPLib\Address\AddressInterface|null return NULL if $n is not an integer or if the final address would be invalid
+     *
+     * @since 1.15.0
+     *
+     * @example passing 1 to the address 127.0.0.1 will result in 127.0.0.2
+     * @example passing -1 to the address 127.0.0.1 will result in 127.0.0.0
+     * @example passing -1 to the address 0.0.0.0 will result in NULL
+     */
+    public function getAddressAtOffset($n);
+
+    /**
      * Get the address right after this IP address (if available).
      *
      * @return \IPLib\Address\AddressInterface|null
+     *
+     * @see \IPLib\Address\AddressInterface::getAddressAtOffset()
+     * @since 1.4.0
      */
     public function getNextAddress();
 
@@ -110,6 +136,9 @@ interface AddressInterface
      * Get the address right before this IP address (if available).
      *
      * @return \IPLib\Address\AddressInterface|null
+     *
+     * @see \IPLib\Address\AddressInterface::getAddressAtOffset()
+     * @since 1.4.0
      */
     public function getPreviousAddress();
 
@@ -117,6 +146,8 @@ interface AddressInterface
      * Get the Reverse DNS Lookup Address of this IP address.
      *
      * @return string
+     *
+     * @since 1.12.0
      *
      * @example for IPv4 it returns something like x.x.x.x.in-addr.arpa
      * @example for IPv6 it returns something like x.x.x.x..x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.ip6.arpa

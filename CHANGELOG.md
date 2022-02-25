@@ -9,7 +9,7 @@
     * ADDED: Google Cloud Storage backend support (#795)
     * ADDED: Oracle database support (#868)
     * CHANGED: Language selection cookie only transmitted over HTTPS (#472)
-    * CHANGED: Upgrading libraries to: random_compat 2.0.20
+    * CHANGED: Upgrading libraries to: base-x 4.0.0, bootstrap 3.4.1 (JS), DOMpurify 2.3.6, ip-lib 1.18.0, jQuery 3.6.0, random_compat 2.0.21 & Showdown 2.0.0
     * CHANGED: Removed automatic `.ini` configuration file migration (#808)
     * CHANGED: Removed configurable `dir` for `traffic` & `purge` limiters (#419)
     * CHANGED: Server salt, traffic and purge limiter now stored in the storage backend (#419)
@@ -55,7 +55,7 @@
     * FIXED: HTML injection via unescaped attachment filename (#554)
     * FIXED: Password disabling option (#527)
   * **1.2.2 (2020-01-11)**
-    * CHANGED: Upgrading libraries to: bootstrap 3.4.1, DOMpurify 2.0.7, jQuery 3.4.1, kjua 0.6.0, Showdown 1.9.1 & SJCL 1.0.8
+    * CHANGED: Upgrading libraries to: bootstrap 3.4.1 (CSS), DOMpurify 2.0.7, jQuery 3.4.1, kjua 0.6.0, Showdown 1.9.1 & SJCL 1.0.8
     * FIXED: HTML injection via unescaped attachment filename (#554)
   * **1.3.1 (2019-09-22)**
     * ADDED: Translation for Bulgarian (#455)

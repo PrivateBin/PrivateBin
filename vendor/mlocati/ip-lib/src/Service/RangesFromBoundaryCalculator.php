@@ -7,12 +7,14 @@ use IPLib\Factory;
 use IPLib\Range\Subnet;
 
 /**
- * Helper class to calculate the subnets describing all (and only all) the addresses between two bouundaries.
+ * Helper class to calculate the subnets describing all (and only all) the addresses between two boundaries.
+ *
+ * @internal
  */
-class RangesFromBounradyCalculator
+class RangesFromBoundaryCalculator
 {
     /**
-     * The BinaryMath instance to be used to perform bitwise poerations.
+     * The BinaryMath instance to be used to perform bitwise operations.
      *
      * @var \IPLib\Service\BinaryMath
      */
@@ -53,7 +55,7 @@ class RangesFromBounradyCalculator
     }
 
     /**
-     * Calculate the subnets describing all (and only all) the addresses between two bouundaries.
+     * Calculate the subnets describing all (and only all) the addresses between two boundaries.
      *
      * @param \IPLib\Address\AddressInterface $from
      * @param \IPLib\Address\AddressInterface $to
@@ -154,8 +156,13 @@ class RangesFromBounradyCalculator
      */
     private function subnetFromBits($bits, $networkPrefix)
     {
-        $address = $this->addressFromBits($bits);
+        $startAddress = $this->addressFromBits($bits);
+        $numOnes = $this->numBits - $networkPrefix;
+        if ($numOnes === 0) {
+            return new Subnet($startAddress, $startAddress, $networkPrefix);
+        }
+        $endAddress = $this->addressFromBits(substr($bits, 0, -$numOnes) . str_repeat('1', $numOnes));
 
-        return new Subnet($address, $address, $networkPrefix);
+        return new Subnet($startAddress, $endAddress, $networkPrefix);
     }
 }

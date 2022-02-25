@@ -6,6 +6,8 @@ use IPLib\Range\RangeInterface;
 
 /**
  * Represents an IP address range with an assigned range type.
+ *
+ * @since 1.5.0
  */
 class AssignedRange
 {
