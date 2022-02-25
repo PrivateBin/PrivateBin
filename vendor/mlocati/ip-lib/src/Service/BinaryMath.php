@@ -4,6 +4,8 @@ namespace IPLib\Service;
 
 /**
  * Helper class to work with unsigned binary integers.
+ *
+ * @internal
  */
 class BinaryMath
 {

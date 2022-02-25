@@ -102,6 +102,8 @@ class Type
      * Carrier-grade NAT address.
      *
      * @var int
+     *
+     * @since 1.10.0
      */
     const T_CGNAT = 14;
 
