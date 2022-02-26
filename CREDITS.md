@@ -55,3 +55,4 @@ Sébastien Sauvage - original idea and main developer
 * retiolus - Catalan
 * sarnane - Estonian
 * foxsouns - Lojban
+* Patriccollu di Santa Maria è Sichè - Corsican
