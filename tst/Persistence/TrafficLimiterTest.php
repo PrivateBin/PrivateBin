@@ -76,7 +76,7 @@ class TrafficLimiterTest extends PHPUnit_Framework_TestCase
         try {
             $this->assertFalse(TrafficLimiter::canPass(), 'expected an exception');
         } catch (Exception $e) {
-            $this->assertEquals($e->getMessage(), 'Please wait 4 seconds between each post.', 'request is to fast, invalid range');
+            $this->assertEquals($e->getMessage(), 'Please wait 4 seconds between each post.', 'request is too fast, invalid range');
         }
         $_SERVER['REMOTE_ADDR'] = 'foobar';
         $this->assertTrue(TrafficLimiter::canPass(), 'non-IP address');
