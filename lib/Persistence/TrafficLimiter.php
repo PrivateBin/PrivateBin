@@ -15,6 +15,7 @@ namespace PrivateBin\Persistence;
 
 use Exception;
 use IPLib\Factory;
+use IPLib\ParseStringFlag;
 use PrivateBin\Configuration;
 use PrivateBin\I18n;
 
@@ -144,8 +145,8 @@ class TrafficLimiter extends AbstractPersistence
         if (is_string($ipRange)) {
             $ipRange = trim($ipRange);
         }
-        $address = Factory::addressFromString($_SERVER[self::$_ipKey]);
-        $range   = Factory::rangeFromString($ipRange);
+        $address = Factory::parseAddressString($_SERVER[self::$_ipKey]);
+        $range   = Factory::parseRangeString($ipRange, ParseStringFlag::IPV4_MAYBE_NON_DECIMAL);
 
         // address could not be parsed, we might not be in IP space and try a string comparison instead
         if (is_null($address)) {
