@@ -78,31 +78,31 @@
     ],
     "Never": "Mai",
     "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.": "Nota : Què hè un serviziu di prova ; i dati ponu esse squassati à ogni mumentu. Parechji catorni anu da esse tombi s’è vò impiegate troppu stu serviziu.",
-    "Stu ducumentu serà scadutu in %d seconds.": [
+    "This document will expire in %d seconds.": [
         "Stu ducumentu serà scadutu in %d seconda.",
         "Stu ducumentu serà scadutu in %d seconde.",
         "This document will expire in %d seconds. (2nd plural)",
         "This document will expire in %d seconds. (3rd plural)"
     ],
-    "Stu ducumentu serà scadutu in %d minutes.": [
+    "This document will expire in %d minutes.": [
         "Stu ducumentu serà scadutu in %d minutu.",
         "Stu ducumentu serà scadutu in %d minuti.",
         "This document will expire in %d minutes. (2nd plural)",
         "This document will expire in %d minutes. (3rd plural)"
     ],
-    "Stu ducumentu serà scadutu in %d hours.": [
+    "This document will expire in %d hours.": [
         "Stu ducumentu serà scadutu in %d ora.",
         "Stu ducumentu serà scadutu in %d ore.",
         "This document will expire in %d hours. (2nd plural)",
         "This document will expire in %d hours. (3rd plural)"
     ],
-    "Stu ducumentu serà scadutu in %d days.": [
+    "This document will expire in %d days.": [
         "Stu ducumentu serà scadutu in %d ghjornu.",
         "Stu ducumentu serà scadutu in %d ghjorni.",
         "This document will expire in %d days. (2nd plural)",
         "This document will expire in %d days. (3rd plural)"
     ],
-    "Stu ducumentu serà scadutu in %d months.": [
+    "This document will expire in %d months.": [
         "Stu ducumentu serà scadutu in %d mese.",
         "Stu ducumentu serà scadutu in %d mesi.",
         "This document will expire in %d months. (2nd plural)",
