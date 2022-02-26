@@ -97,7 +97,7 @@ class TrafficLimiterTest extends PHPUnit_Framework_TestCase
         $this->assertTrue(TrafficLimiter::canPass(), 'request is too fast, but IPv4 in creator range');
         $_SERVER['REMOTE_ADDR'] = '2001:1620:2057:dead:beef::cafe:babe';
         $this->assertTrue(TrafficLimiter::canPass(), 'IPv6 in creator range');
-        $this->assertTrue(TrafficLimiter::canPass(), 'request is to fast, but IPv6 in creator range');
+        $this->assertTrue(TrafficLimiter::canPass(), 'request is too fast, but IPv6 in creator range');
         TrafficLimiter::setCreators('127.*,foobar');
         try {
             $this->assertFalse(TrafficLimiter::canPass(), 'expected an exception');
