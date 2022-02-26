@@ -317,6 +317,7 @@ class I18n
         switch (self::$_language) {
             case 'cs':
                 return $n == 1 ? 0 : ($n >= 2 && $n <= 4 ? 1 : 2);
+            case 'co':
             case 'fr':
             case 'oc':
             case 'zh':

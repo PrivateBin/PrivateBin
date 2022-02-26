@@ -72,7 +72,7 @@ endif;
 ?>
 		<script type="text/javascript" data-cfasync="false" src="js/purify-2.3.6.js" integrity="sha512-N1GGPjbqLbwK821ZN7C925WuTwU4aDxz2CEEOXQ6/s6m6MBwVj8fh5fugiE2hzsm0xud3q7jpjZQ4ILnpMREYQ==" crossorigin="anonymous"></script>
 		<script type="text/javascript" data-cfasync="false" src="js/legacy.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-LYos+qXHIRqFf5ZPNphvtTB0cgzHUizu2wwcOwcwz/VIpRv9lpcBgPYz4uq6jx0INwCAj6Fbnl5HoKiLufS2jg==" crossorigin="anonymous"></script>
-		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-PTOcxIWIPWCnb5vC4fmQDMqYGerwsu3AndVyPxn9NlQffIWYMPf/p28Z9SIygXsmcYjmTRmUiW5y7df63mNTfg==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-EdUms2nI12Cmtv014stIEBlyPjeKMHlkg7NiBJup1b7jJF5amKhev2RwTaldINXK4UaWbZtQ6hGuMPNvvNQZFA==" crossorigin="anonymous"></script>
 		<!-- icon -->
 		<link rel="apple-touch-icon" href="<?php echo I18n::encode($BASEPATH); ?>img/apple-touch-icon.png" sizes="180x180" />
 		<link rel="icon" type="image/png" href="img/favicon-32x32.png" sizes="32x32" />
