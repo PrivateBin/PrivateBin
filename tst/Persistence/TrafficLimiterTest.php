@@ -80,7 +80,7 @@ class TrafficLimiterTest extends PHPUnit_Framework_TestCase
         }
         $_SERVER['REMOTE_ADDR'] = 'foobar';
         $this->assertTrue(TrafficLimiter::canPass(), 'non-IP address');
-        $this->assertTrue(TrafficLimiter::canPass(), 'request is to fast, but non-IP address matches exempted range');
+        $this->assertTrue(TrafficLimiter::canPass(), 'request is too fast, but non-IP address matches exempted range');
     }
 
     public function testTrafficLimitCreators()
