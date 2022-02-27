@@ -37,76 +37,76 @@
     "%d seconds": [
         "%d seconda",
         "%d seconde",
-        "%d seconds (2nd plural)",
-        "%d seconds (3rd plural)"
+        "%d seconde",
+        "%d seconde"
     ],
     "%d minutes": [
         "%d minutu",
         "%d minuti",
-        "%d minutes (2nd plural)",
-        "%d minutes (3rd plural)"
+        "%d minuti",
+        "%d minuti"
     ],
     "%d hours": [
         "%d ora",
         "%d ore",
-        "%d hours (2nd plural)",
-        "%d hours (3rd plural)"
+        "%d ore",
+        "%d ore"
     ],
     "%d days": [
         "%d ghjornu",
         "%d ghjorni",
-        "%d days (2nd plural)",
-        "%d days (3rd plural)"
+        "%d ghjorni",
+        "%d ghjorni"
     ],
     "%d weeks": [
         "%d settimana",
         "%d settimane",
-        "%d weeks (2nd plural)",
-        "%d weeks (3rd plural)"
+        "%d settimane",
+        "%d settimane"
     ],
     "%d months": [
         "%d mese",
         "%d mesi",
-        "%d months (2nd plural)",
-        "%d months (3rd plural)"
+        "%d mesi",
+        "%d mesi"
     ],
     "%d years": [
         "%d annu",
         "%d anni",
-        "%d years (2nd plural)",
-        "%d years (3rd plural)"
+        "%d anni",
+        "%d anni"
     ],
     "Never": "Mai",
     "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.": "Nota : Què hè un serviziu di prova ; i dati ponu esse squassati à ogni mumentu. Parechji catorni anu da esse tombi s’è vò impiegate troppu stu serviziu.",
     "This document will expire in %d seconds.": [
         "Stu ducumentu serà scadutu in %d seconda.",
         "Stu ducumentu serà scadutu in %d seconde.",
-        "This document will expire in %d seconds. (2nd plural)",
-        "This document will expire in %d seconds. (3rd plural)"
+        "Stu ducumentu serà scadutu in %d seconde.",
+        "Stu ducumentu serà scadutu in %d seconde."
     ],
     "This document will expire in %d minutes.": [
         "Stu ducumentu serà scadutu in %d minutu.",
         "Stu ducumentu serà scadutu in %d minuti.",
-        "This document will expire in %d minutes. (2nd plural)",
-        "This document will expire in %d minutes. (3rd plural)"
+        "Stu ducumentu serà scadutu in %d minuti.",
+        "Stu ducumentu serà scadutu in %d minuti."
     ],
     "This document will expire in %d hours.": [
         "Stu ducumentu serà scadutu in %d ora.",
         "Stu ducumentu serà scadutu in %d ore.",
-        "This document will expire in %d hours. (2nd plural)",
-        "This document will expire in %d hours. (3rd plural)"
+        "Stu ducumentu serà scadutu in %d ore.",
+        "Stu ducumentu serà scadutu in %d ore."
     ],
     "This document will expire in %d days.": [
         "Stu ducumentu serà scadutu in %d ghjornu.",
         "Stu ducumentu serà scadutu in %d ghjorni.",
-        "This document will expire in %d days. (2nd plural)",
-        "This document will expire in %d days. (3rd plural)"
+        "Stu ducumentu serà scadutu in %d ghjorni.",
+        "Stu ducumentu serà scadutu in %d ghjorni."
     ],
     "This document will expire in %d months.": [
         "Stu ducumentu serà scadutu in %d mese.",
         "Stu ducumentu serà scadutu in %d mesi.",
-        "This document will expire in %d months. (2nd plural)",
-        "This document will expire in %d months. (3rd plural)"
+        "Stu ducumentu serà scadutu in %d mesi.",
+        "Stu ducumentu serà scadutu in %d mesi."
     ],
     "Please enter the password for this paste:": "Stampittate a parolla d’intesa per st’appiccicu :",
     "Could not decrypt data (Wrong key?)": "Ùn si pò micca dicifrà i dati ; seria incurretta a chjave ?",
@@ -186,5 +186,5 @@
     "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "Visitate stu liame per vede a nota. Date l’indirizzu à qualunque li permette d’accede à a nota dinù.",
     "URL shortener may expose your decrypt key in URL.": "Un ammuzzatore d’indirizzu pò palisà a vostra chjave di dicifratura in l’indirizzu.",
     "Save paste": "Arregistrà l’appiccicu",
-    "Your IP is not authorized to create pastes.": "Your IP is not authorized to create pastes."
+    "Your IP is not authorized to create pastes.": "U vostru indirizzu IP ùn hè micca auturizatu à creà l’appiccichi."
 }
