@@ -199,13 +199,10 @@ class Controller
         ServerSalt::setStore($this->_model->getStore());
         TrafficLimiter::setConfiguration($this->_conf);
         TrafficLimiter::setStore($this->_model->getStore());
-        if (!TrafficLimiter::canPass()) {
-            $this->_return_message(
-                1, I18n::_(
-                    'Please wait %d seconds between each post.',
-                    $this->_conf->getKey('limit', 'traffic')
-                )
-            );
+        try {
+            TrafficLimiter::canPass();
+        } catch (Exception $e) {
+            $this->_return_message(1, $e->getMessage());
             return;
         }
 

@@ -135,9 +135,17 @@ markdown = "Markdown"
 ; Set this to 0 to disable rate limiting.
 limit = 10
 
-; Set ips (v4|v6) which should be exempted for the rate-limit. CIDR also supported. Needed to be comma separated.
-; Unset for enabling and invalid values will be ignored
-; eg: exemptedIp = '1.2.3.4,10.10.10/24'
+; (optional) Set IPs adresses (v4 or v6) or subnets (CIDR) which are exempted
+; from the rate-limit. Invalid IPs will be ignored. If multiple values are to
+; be exempted, the list needs to be comma separated. Leave unset to disable
+; exemptions.
+; exempted = "1.2.3.4,10.10.10/24"
+
+; (optional) If you want only some source IP addresses (v4 or v6) or subnets
+; (CIDR) to be allowed to create pastes, set these here. Invalid IPs will be
+; ignored. If multiple values are to be exempted, the list needs to be comma
+; separated. Leave unset to allow anyone to create pastes.
+; creators = "1.2.3.4,10.10.10/24"
 
 ; (optional) if your website runs behind a reverse proxy or load balancer,
 ; set the HTTP header containing the visitors IP address, i.e. X_FORWARDED_FOR

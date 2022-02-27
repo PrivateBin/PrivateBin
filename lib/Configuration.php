@@ -78,9 +78,10 @@ class Configuration
             'markdown'           => 'Markdown',
         ),
         'traffic' => array(
-            'limit'      => 10,
-            'header'     => null,
-            'exemptedIp' => null,
+            'limit'     => 10,
+            'header'    => '',
+            'exempted'  => '',
+            'creators'  => '',
         ),
         'purge' => array(
             'limit'     => 300,

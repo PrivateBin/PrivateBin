@@ -8,6 +8,7 @@
     * ADDED: Configuration option to exempt IPs from the rate-limiter (#787)
     * ADDED: Google Cloud Storage backend support (#795)
     * ADDED: Oracle database support (#868)
+    * ADDED: Configuration option to limit paste creation and commenting to certain IPs (#883)
     * CHANGED: Language selection cookie only transmitted over HTTPS (#472)
     * CHANGED: Upgrading libraries to: base-x 4.0.0, bootstrap 3.4.1 (JS), DOMpurify 2.3.6, ip-lib 1.18.0, jQuery 3.6.0, random_compat 2.0.21 & Showdown 2.0.0
     * CHANGED: Removed automatic `.ini` configuration file migration (#808)
