@@ -146,7 +146,10 @@ class TrafficLimiter extends AbstractPersistence
             $ipRange = trim($ipRange);
         }
         $address = Factory::parseAddressString($_SERVER[self::$_ipKey]);
-        $range   = Factory::parseRangeString($ipRange, ParseStringFlag::IPV4_MAYBE_NON_DECIMAL);
+        $range   = Factory::parseRangeString(
+            $ipRange,
+            ParseStringFlag::IPV4_MAYBE_NON_DECIMAL | ParseStringFlag::IPV4SUBNET_MAYBE_COMPACT | ParseStringFlag::IPV4ADDRESS_MAYBE_NON_QUAD_DOTTED
+        );
 
         // address could not be parsed, we might not be in IP space and try a string comparison instead
         if (is_null($address)) {

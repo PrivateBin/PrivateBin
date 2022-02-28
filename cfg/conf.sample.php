@@ -135,7 +135,7 @@ markdown = "Markdown"
 ; Set this to 0 to disable rate limiting.
 limit = 10
 
-; (optional) Set IPs adresses (v4 or v6) or subnets (CIDR) which are exempted
+; (optional) Set IPs addresses (v4 or v6) or subnets (CIDR) which are exempted
 ; from the rate-limit. Invalid IPs will be ignored. If multiple values are to
 ; be exempted, the list needs to be comma separated. Leave unset to disable
 ; exemptions.
