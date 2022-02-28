@@ -58,7 +58,7 @@ class TrafficLimiterTest extends TestCase
 
     public function testTrafficLimitExempted()
     {
-        TrafficLimiter::setExempted('1.2.3.4,10.10.10.0/24,2001:1620:2057::/48');
+        TrafficLimiter::setExempted('1.2.3.4,10.10.10/24,2001:1620:2057::/48');
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
         $this->assertTrue(TrafficLimiter::canPass(), 'first request may pass');
         try {
@@ -86,7 +86,7 @@ class TrafficLimiterTest extends TestCase
 
     public function testTrafficLimitCreators()
     {
-        TrafficLimiter::setCreators('1.2.3.4,10.10.10.0/24,2001:1620:2057::/48');
+        TrafficLimiter::setCreators('1.2.3.4,10.10.10/24,2001:1620:2057::/48');
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
         try {
             $this->assertFalse(TrafficLimiter::canPass(), 'expected an exception');
