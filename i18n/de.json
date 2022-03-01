@@ -186,5 +186,5 @@
     "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "Besuche diesen Link um das Dokument zu sehen. Wird die URL an eine andere Person gegeben, so kann diese Person ebenfalls auf dieses Dokument zugreifen.",
     "URL shortener may expose your decrypt key in URL.": "Der URL-Verkürzer kann den Schlüssel in der URL enthüllen.",
     "Save paste": "Text speichern",
-    "Your IP is not authorized to create pastes.": "Your IP is not authorized to create pastes."
+    "Your IP is not authorized to create pastes.": "Deine IP ist nicht berechtigt, Texte zu erstellen."
 }
