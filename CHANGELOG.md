@@ -17,6 +17,7 @@
     * CHANGED: Removed configurable `dir` for `traffic` & `purge` limiters (#419)
     * CHANGED: Server salt, traffic and purge limiter now stored in the storage backend (#419)
     * CHANGED: Drop support for attachment download in IE
+    * FIXED: Error when attachments are disabled, but paste with attachment gets displayed
   * **1.3.5 (2021-04-05)**
     * ADDED: Translations for Hebrew, Lithuanian, Indonesian and Catalan
     * ADDED: Make the project info configurable (#681)

@@ -2816,6 +2816,9 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         me.setAttachment = function(attachmentData, fileName)
         {
+            // skip, if attachments got disabled
+            if (!$attachmentLink || !$attachmentPreview) return;
+
             // data URI format: data:[<mimeType>][;base64],<data>
 
             // position in data URI string of where data begins
@@ -2859,6 +2862,9 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         me.showAttachment = function()
         {
+            // skip, if attachments got disabled
+            if (!$attachment || !$attachmentPreview) return;
+
             $attachment.removeClass('hidden');
 
             if (attachmentHasPreview) {
