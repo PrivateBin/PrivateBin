@@ -16,7 +16,7 @@ global.zlib = require('./zlib-1.2.11').zlib;
 require('./prettify');
 global.prettyPrint = window.PR.prettyPrint;
 global.prettyPrintOne = window.PR.prettyPrintOne;
-global.showdown = require('./showdown-2.0.0');
+global.showdown = require('./showdown-2.0.3');
 global.DOMPurify = require('./purify-2.3.6');
 global.baseX = require('./base-x-4.0.0').baseX;
 global.Legacy = require('./legacy').Legacy;

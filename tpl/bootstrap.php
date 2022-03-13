@@ -67,7 +67,7 @@ if ($SYNTAXHIGHLIGHTING) :
 endif;
 if ($MARKDOWN) :
 ?>
-		<script type="text/javascript" data-cfasync="false" src="js/showdown-2.0.0.js" integrity="sha512-UB9jpMTOJLSnVzePuqlSGT34G70wEGqtIWabMeAh+Drnj4/uQ8rFkFn1zkN9vkWp/7nA51U2LmP23H5MJvBXsw==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/showdown-2.0.3.js" integrity="sha512-vcfjvW3UKHD/4vlQx804cqWK88jFmjsWRsZ8/u5YEcyHB1IituxrXDU7TvdqsFVsMnxpE/UIEo25/SYW+puWHw==" crossorigin="anonymous"></script>
 <?php
 endif;
 ?>
