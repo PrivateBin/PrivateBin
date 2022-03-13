@@ -364,6 +364,16 @@ class Controller
             setcookie('lang', $languageselection, 0, '', '', true);
         }
 
+        // strip policies that are unsupported in meta tag
+        $metacspheader = str_replace(
+            array(
+                'frame-ancestors \'none\'; ',
+                '; sandbox allow-same-origin allow-scripts allow-forms allow-popups allow-modals allow-downloads',
+            ),
+            '',
+            $this->_conf->getKey('cspheader')
+        );
+
         $page = new View;
         $page->assign('NAME', $this->_conf->getKey('name'));
         $page->assign('BASEPATH', I18n::_($this->_conf->getKey('basepath')));
@@ -392,6 +402,7 @@ class Controller
         $page->assign('HTTPWARNING', $this->_conf->getKey('httpwarning'));
         $page->assign('HTTPSLINK', 'https://' . $this->_request->getHost() . $this->_request->getRequestUri());
         $page->assign('COMPRESSION', $this->_conf->getKey('compression'));
+        $page->assign('CSPHEADER', $metacspheader);
         $page->draw($this->_conf->getKey('template'));
     }
 
