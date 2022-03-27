@@ -2802,7 +2802,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 }
             );
 
-            // Get Blob URL
+            // Get blob URL
             return window.URL.createObjectURL(blob);
          }
 
