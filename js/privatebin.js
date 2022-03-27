@@ -2843,7 +2843,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             // prevents executing embedded scripts when CSP is not set and user
             // right-clicks/long-taps and opens the SVG in a new tab - prevented
             // in the preview by use of an img tag, which disables scripts, too
-            if (mimeType.match(/image\/svg/i)) {
+            if (mimeType.match(/^image\/.*svg/i)) {
                 const sanitizedData = DOMPurify.sanitize(
                     decodedData,
                     purifySvgConfig
@@ -3072,13 +3072,13 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         me.handleBlobAttachmentPreview = function ($targetElement, blobUrl, mimeType) {
             if (blobUrl) {
                 attachmentHasPreview = true;
-                if (mimeType.match(/image\//i)) {
+                if (mimeType.match(/^image\//i)) {
                     $targetElement.html(
                         $(document.createElement('img'))
                             .attr('src', blobUrl)
                             .attr('class', 'img-thumbnail')
                     );
-                } else if (mimeType.match(/video\//i)) {
+                } else if (mimeType.match(/^video\//i)) {
                     $targetElement.html(
                         $(document.createElement('video'))
                             .attr('controls', 'true')
@@ -3089,7 +3089,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                             .attr('type', mimeType)
                             .attr('src', blobUrl))
                     );
-                } else if (mimeType.match(/audio\//i)) {
+                } else if (mimeType.match(/^audio\//i)) {
                     $targetElement.html(
                         $(document.createElement('audio'))
                             .attr('controls', 'true')
