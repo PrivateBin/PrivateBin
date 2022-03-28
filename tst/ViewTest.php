@@ -60,6 +60,7 @@ class ViewTest extends PHPUnit_Framework_TestCase
         $page->assign('HTTPWARNING', true);
         $page->assign('HTTPSLINK', 'https://example.com/');
         $page->assign('COMPRESSION', 'zlib');
+        $page->assign('CSPHEADER', 'default-src \'none\'');
 
         $dir = dir(PATH . 'tpl');
         while (false !== ($file = $dir->read())) {

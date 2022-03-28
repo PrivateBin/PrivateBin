@@ -7,6 +7,7 @@ $isPage = substr($template, -5) === '-page';
 <html lang="<?php echo I18n::_('en'); ?>">
 	<head>
 		<meta charset="utf-8" />
+		<meta http-equiv="Content-Security-Policy" content="<?php echo I18n::encode($CSPHEADER); ?>">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<meta name="robots" content="noindex" />
@@ -66,13 +67,13 @@ if ($SYNTAXHIGHLIGHTING) :
 endif;
 if ($MARKDOWN) :
 ?>
-		<script type="text/javascript" data-cfasync="false" src="js/showdown-2.0.0.js" integrity="sha512-UB9jpMTOJLSnVzePuqlSGT34G70wEGqtIWabMeAh+Drnj4/uQ8rFkFn1zkN9vkWp/7nA51U2LmP23H5MJvBXsw==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/showdown-2.0.3.js" integrity="sha512-vcfjvW3UKHD/4vlQx804cqWK88jFmjsWRsZ8/u5YEcyHB1IituxrXDU7TvdqsFVsMnxpE/UIEo25/SYW+puWHw==" crossorigin="anonymous"></script>
 <?php
 endif;
 ?>
 		<script type="text/javascript" data-cfasync="false" src="js/purify-2.3.6.js" integrity="sha512-N1GGPjbqLbwK821ZN7C925WuTwU4aDxz2CEEOXQ6/s6m6MBwVj8fh5fugiE2hzsm0xud3q7jpjZQ4ILnpMREYQ==" crossorigin="anonymous"></script>
 		<script type="text/javascript" data-cfasync="false" src="js/legacy.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-LYos+qXHIRqFf5ZPNphvtTB0cgzHUizu2wwcOwcwz/VIpRv9lpcBgPYz4uq6jx0INwCAj6Fbnl5HoKiLufS2jg==" crossorigin="anonymous"></script>
-		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-EdUms2nI12Cmtv014stIEBlyPjeKMHlkg7NiBJup1b7jJF5amKhev2RwTaldINXK4UaWbZtQ6hGuMPNvvNQZFA==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-kFUoM3Qg6VzRTJGau3wWP2IRZQF2WToL7Dgvazxqp0jgYIKA5cCK9xFy9Zes208XX0nYP64scW2nJIYNk9pL6Q==" crossorigin="anonymous"></script>
 		<!-- icon -->
 		<link rel="apple-touch-icon" href="<?php echo I18n::encode($BASEPATH); ?>img/apple-touch-icon.png" sizes="180x180" />
 		<link rel="icon" type="image/png" href="img/favicon-32x32.png" sizes="32x32" />
