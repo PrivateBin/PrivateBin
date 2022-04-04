@@ -203,7 +203,7 @@ and the `value` column in the `config` table need to be `VARCHAR2(4000)`.
 If you want to deploy PrivateBin in a serverless manner in the Google Cloud, you
 can choose the `GoogleCloudStorage` as backend. To use this backend, you create
 a GCS bucket and specify the name as the model option `bucket`. Alternatively,
-you can set the name through the environment variable PASTEBIN_GCS_BUCKET.
+you can set the name through the environment variable `PRIVATEBIN_GCS_BUCKET`.
 
 The default prefix for pastes stored in the bucket is `pastes`. To change the
 prefix, specify the option `prefix`.
