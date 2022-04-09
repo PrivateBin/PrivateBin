@@ -1,7 +1,7 @@
 # PrivateBin version history
 
-  * **1.4 (not yet released)**
-    * ADDED: Translations for Corsican, Estonian and Lojban
+  * **1.4 (2022-04-09)**
+    * ADDED: Translations for Corsican, Estonian, Finnish and Lojban
     * ADDED: new HTTP headers improving security (#765)
     * ADDED: Download button for paste text (#774)
     * ADDED: Opt-out of federated learning of cohorts (FLoC) (#776)
