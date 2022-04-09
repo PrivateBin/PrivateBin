@@ -2,18 +2,17 @@
 
 ## Active contributors
 
-Simon Rupf - current developer and maintainer  
-rugk - security review, doc improvment, JS refactoring & various other stuff  
-R4SAS - python client, compression, blob URI to support larger attachments
+* Simon Rupf - current developer and maintainer
+* rugk - security review, doc improvment, JS refactoring & various other stuff
+* R4SAS - python client, compression, blob URI to support larger attachments
 
 ## Past contributions
 
-Sébastien Sauvage - original idea and main developer
-
+* Sébastien Sauvage - original idea and main developer
 * Alexey Gladkov - syntax highlighting
 * Greg Knaddison - robots.txt
 * MrKooky - HTML5 markup, CSS cleanup
-* Simon Rupf - WebCrypto, unit tests, containers images, database backend, MVC, configuration, i18n
+* Simon Rupf - WebCrypto, unit tests, container images, database backend, MVC, configuration, i18n
 * Hexalyse - Password protection
 * Viktor Stanchev - File upload support
 * azlux - Tab character input support
@@ -56,3 +55,4 @@ Sébastien Sauvage - original idea and main developer
 * sarnane - Estonian
 * foxsouns - Lojban
 * Patriccollu di Santa Maria è Sichè - Corsican
+* Markus Mikkonen - Finnish

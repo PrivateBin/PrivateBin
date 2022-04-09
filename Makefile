@@ -1,7 +1,7 @@
 .PHONY: all coverage coverage-js coverage-php doc doc-js doc-php increment sign test test-js test-php help
 
-CURRENT_VERSION = 1.3.5
-VERSION ?= 1.3.6
+CURRENT_VERSION = 1.4.0
+VERSION ?= 1.4.1
 VERSION_FILES = index.php cfg/ *.md css/ i18n/ img/ js/package.json js/privatebin.js lib/ Makefile tpl/ tst/
 REGEX_CURRENT_VERSION := $(shell echo $(CURRENT_VERSION) | sed "s/\./\\\./g")
 REGEX_VERSION := $(shell echo $(VERSION) | sed "s/\./\\\./g")
@@ -33,12 +33,13 @@ increment: ## Increment and commit new version number, set target version using 
 	do \
 		sed -i "s/$(REGEX_CURRENT_VERSION)/$(REGEX_VERSION)/g" $$F; \
 	done
-	git add $(VERSION_FILES)
+	cd tst && phpunit --no-coverage && cd ..
+	git add $(VERSION_FILES) tpl/
 	git commit -m "incrementing version"
 
 sign: ## Sign a release.
 	git tag $(VERSION)
-	git push --tags
+	git push origin $(VERSION)
 	signrelease.sh
 
 test: test-js test-php ## Run all unit tests.
