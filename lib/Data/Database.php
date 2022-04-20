@@ -100,7 +100,7 @@ class Database extends AbstractData
             // MySQL uses backticks to quote identifiers by default,
             // tell it to expect ANSI SQL double quotes
             if (self::$_type === 'mysql' && defined('PDO::MYSQL_ATTR_INIT_COMMAND')) {
-                $options['opt'][PDO::MYSQL_ATTR_INIT_COMMAND] = "SET sql_mode='ANSI_QUOTES'";
+                $options['opt'][PDO::MYSQL_ATTR_INIT_COMMAND] = "SET SESSION sql_mode='ANSI_QUOTES'";
             }
             $tableQuery = self::_getTableQuery(self::$_type);
             self::$_db  = new PDO(

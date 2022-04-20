@@ -1,5 +1,7 @@
 # PrivateBin version history
 
+  * **1.4.1 (not yet released)**
+    * CHANGED: Avoid `SUPER` privilege for setting the `sql_mode` for MariaDB/MySQL (#919)
   * **1.4 (2022-04-09)**
     * ADDED: Translations for Corsican, Estonian, Finnish and Lojban
     * ADDED: new HTTP headers improving security (#765)
