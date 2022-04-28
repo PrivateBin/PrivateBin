@@ -56,3 +56,4 @@
 * foxsouns - Lojban
 * Patriccollu di Santa Maria è Sichè - Corsican
 * Markus Mikkonen - Finnish
+* Emir Ensar Rahmanlar - Turkish
