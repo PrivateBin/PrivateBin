@@ -320,6 +320,7 @@ class I18n
             case 'co':
             case 'fr':
             case 'oc':
+            case 'tr':
             case 'zh':
                 return $n > 1 ? 1 : 0;
             case 'he':

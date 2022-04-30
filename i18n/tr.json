@@ -8,10 +8,10 @@
     "%s requires php %s or above to work. Sorry.": "%s PHP %s veya daha üstünü gerektirir.",
     "%s requires configuration section [%s] to be present in configuration file.": "%s konfigürasyon bölümünün [%s] bulunmasını gerektir.",
     "Please wait %d seconds between each post.": [
-        "Lütfen paylaşımlar arasında %d saniye bekleyiniz. (singular)",
-        "Lütfen paylaşımlar arasında %d saniye bekleyiniz. (1st plural)",
-        "Lütfen paylaşımlar arasında %d saniye bekleyiniz. (2nd plural)",
-        "Lütfen paylaşımlar arasında %d saniye bekleyiniz. (3rd plural)"
+        "Lütfen paylaşımlar arasında %d saniye bekleyiniz.",
+        "Lütfen paylaşımlar arasında %d saniye bekleyiniz.",
+        "Lütfen paylaşımlar arasında %d saniye bekleyiniz.",
+        "Lütfen paylaşımlar arasında %d saniye bekleyiniz."
     ],
     "Paste is limited to %s of encrypted data.": "Yazılar %s şifreli veriyle sınırlıdır.",
     "Invalid data.": "Geçersiz veri.",
@@ -35,78 +35,78 @@
     "Discussion": "Tartışma",
     "Toggle navigation": "Gezinmeyi değiştir",
     "%d seconds": [
-        "%d saniye (singular)",
-        "%d saniye (1st plural)",
-        "%d saniye (2nd plural)",
-        "%d saniye (3rd plural)"
+        "%d saniye",
+        "%d saniye",
+        "%d saniye",
+        "%d saniye"
     ],
     "%d minutes": [
-        "%d dakika (singular)",
-        "%d dakika (1st plural)",
-        "%d dakika (2nd plural)",
-        "%d dakika (3rd plural)"
+        "%d dakika",
+        "%d dakika",
+        "%d dakika",
+        "%d dakika"
     ],
     "%d hours": [
-        "%d saat (singular)",
-        "%d saat (1st plural)",
-        "%d saat (2nd plural)",
-        "%d saat (3rd plural)"
+        "%d saat",
+        "%d saat",
+        "%d saat",
+        "%d saat"
     ],
     "%d days": [
-        "%d gün (singular)",
-        "%d gün (1st plural)",
-        "%d gün (2nd plural)",
-        "%d gün (3rd plural)"
+        "%d gün",
+        "%d gün",
+        "%d gün",
+        "%d gün"
     ],
     "%d weeks": [
-        "%d hafta (tekil)",
-        "%d hafta (çoğul)",
-        "%d hafta (2nd plural)",
-        "%d hafta (3rd plural)"
+        "%d hafta",
+        "%d hafta",
+        "%d hafta",
+        "%d hafta"
     ],
     "%d months": [
-        "%d ay (singular)",
-        "%d ay (1st plural)",
-        "%d ay (2nd plural)",
-        "%d ay (3rd plural)"
+        "%d ay",
+        "%d ay",
+        "%d ay",
+        "%d ay"
     ],
     "%d years": [
-        "%d yıl (singular)",
-        "%d yıl (1st plural)",
-        "%d yıl (2nd plural)",
-        "%d yıl (3rd plural)"
+        "%d yıl",
+        "%d yıl",
+        "%d yıl",
+        "%d yıl"
     ],
     "Never": "Asla",
     "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.": "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.",
     "This document will expire in %d seconds.": [
-        "Bu belge %s saniyede silinecektir. (singular)",
-        "Bu belge %s saniyede silinecektir. (1st plural)",
-        "Bu belge %s saniyede silinecektir. (2nd plural)",
-        "Bu belge %s saniyede silinecektir. (3rd plural)"
+        "Bu belge %s saniyede silinecektir.",
+        "Bu belge %s saniyede silinecektir.",
+        "Bu belge %s saniyede silinecektir.",
+        "Bu belge %s saniyede silinecektir."
     ],
     "This document will expire in %d minutes.": [
-        "Bu belge %s dakikada silinecektir. (singular)",
-        "Bu belge %s dakikada silinecektir. (1st plural)",
-        "Bu belge %s dakikada silinecektir. (2nd plural)",
-        "Bu belge %s dakikada silinecektir. (3rd plural)"
+        "Bu belge %s dakikada silinecektir.",
+        "Bu belge %s dakikada silinecektir.",
+        "Bu belge %s dakikada silinecektir.",
+        "Bu belge %s dakikada silinecektir."
     ],
     "This document will expire in %d hours.": [
-        "Bu belge %s saatte silinecektir. (singular)",
-        "Bu belge %s saatte silinecektir. (1st plural)",
-        "Bu belge %s saatte silinecektir. (2nd plural)",
-        "Bu belge %s saatte silinecektir.. (3rd plural)"
+        "Bu belge %s saatte silinecektir.",
+        "Bu belge %s saatte silinecektir.",
+        "Bu belge %s saatte silinecektir.",
+        "Bu belge %s saatte silinecektir.."
     ],
     "This document will expire in %d days.": [
-        "Bu belge %s günde silinecektir. (singular)",
-        "Bu belge %s günde silinecektir. (1st plural)",
-        "Bu belge %s günde silinecektir. (2nd plural)",
+        "Bu belge %s günde silinecektir.",
+        "Bu belge %s günde silinecektir.",
+        "Bu belge %s günde silinecektir.",
         "Bu belge %s günde silinecektir.(3rd plural)"
     ],
     "This document will expire in %d months.": [
-        "Bu belge %s ayda silinecektir. (singular)",
-        "Bu belge %s ayda silinecektir (1st plural)",
-        "Bu belge %s ayda silinecektir (2nd plural)",
-        "Bu belge %s ayda silinecektir (3rd plural)"
+        "Bu belge %s ayda silinecektir.",
+        "Bu belge %s ayda silinecektir",
+        "Bu belge %s ayda silinecektir",
+        "Bu belge %s ayda silinecektir"
     ],
     "Please enter the password for this paste:": "Lütfen bu yazı için şifrenizi girin:",
     "Could not decrypt data (Wrong key?)": "Şifre çözülemedi (Yanlış anahtar mı kullandınız?)",
