@@ -79,34 +79,34 @@
     "Never": "Mai",
     "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.": "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.",
     "This document will expire in %d seconds.": [
-        "This document will expire in %d second. (singular)",
-        "This document will expire in %d seconds. (1st plural)",
-        "This document will expire in %d seconds. (2nd plural)",
-        "This document will expire in %d seconds. (3rd plural)"
+        "Aquest document caducarà d'aquí %d segon.",
+        "Aquest document caducarà d'aquí %d segons.",
+        "Aquest document caducarà d'aquí %d segons.",
+        "Aquest document caducarà d'aquí %d segons."
     ],
     "This document will expire in %d minutes.": [
-        "This document will expire in %d minute. (singular)",
-        "This document will expire in %d minutes. (1st plural)",
-        "This document will expire in %d minutes. (2nd plural)",
-        "This document will expire in %d minutes. (3rd plural)"
+        "Aquest document caducarà d'aquí %d minut.",
+        "Aquest document caducarà d'aquí %d minuts.",
+        "Aquest document caducarà d'aquí %d minuts.",
+        "Aquest document caducarà d'aquí %d minuts."
     ],
     "This document will expire in %d hours.": [
-        "This document will expire in %d hour. (singular)",
-        "This document will expire in %d hours. (1st plural)",
-        "This document will expire in %d hours. (2nd plural)",
-        "This document will expire in %d hours. (3rd plural)"
+        "Aquest document caducarà d'aquí %d hora.",
+        "Aquest document caducarà d'aquí %d hores.",
+        "Aquest document caducarà d'aquí %d hores.",
+        "Aquest document caducarà d'aquí %d hores."
     ],
     "This document will expire in %d days.": [
-        "This document will expire in %d day. (singular)",
-        "This document will expire in %d days. (1st plural)",
-        "This document will expire in %d days. (2nd plural)",
-        "This document will expire in %d days. (3rd plural)"
+        "Aquest document caducarà d'aquí %d dia.",
+        "Aquest document caducarà d'aquí %d dies.",
+        "Aquest document caducarà d'aquí %d dies.",
+        "Aquest document caducarà d'aquí %d dies."
     ],
     "This document will expire in %d months.": [
-        "This document will expire in %d month. (singular)",
-        "This document will expire in %d months. (1st plural)",
-        "This document will expire in %d months. (2nd plural)",
-        "This document will expire in %d months. (3rd plural)"
+        "Aquest document caducarà d'aquí %d mes.",
+        "Aquest document caducarà d'aquí %d mesos.",
+        "Aquest document caducarà d'aquí %d mesos.",
+        "Aquest document caducarà d'aquí %d mesos."
     ],
     "Please enter the password for this paste:": "Si us plau, introdueix la contrasenya per aquest paste:",
     "Could not decrypt data (Wrong key?)": "No s'han pogut desxifrar les dades (Clau incorrecte?)",
@@ -124,7 +124,7 @@
     "Could not refresh display: %s": "Could not refresh display: %s",
     "unknown status": "estat desconegut",
     "server error or not responding": "server error or not responding",
-    "Could not post comment: %s": "Could not post comment: %s",
+    "Could not post comment: %s": "No s'ha pogut publicar el comentari: %s",
     "Sending paste…": "Enviant paste…",
     "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit [Ctrl]+[c] to copy)</span>": "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit [Ctrl]+[c] to copy)</span>",
     "Delete data": "Esborrar les dades",
@@ -146,7 +146,7 @@
     "Download attachment": "Baixar els adjunts",
     "Cloned: '%s'": "Cloned: '%s'",
     "The cloned file '%s' was attached to this paste.": "The cloned file '%s' was attached to this paste.",
-    "Attach a file": "Attach a file",
+    "Attach a file": "Adjuntar un fitxer",
     "alternatively drag & drop a file or paste an image from the clipboard": "alternatively drag & drop a file or paste an image from the clipboard",
     "File too large, to display a preview. Please download the attachment.": "File too large, to display a preview. Please download the attachment.",
     "Remove attachment": "Remove attachment",
