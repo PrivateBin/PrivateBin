@@ -1,18 +1,26 @@
 # PrivateBin version history
 
-  * **1.4 (not yet released)**
-    * ADDED: Translations for Estonian and Lojban
+  * **1.4.1 (not yet released)**
+    * ADDED: Translations for Turkish
+    * CHANGED: Avoid `SUPER` privilege for setting the `sql_mode` for MariaDB/MySQL (#919)
+  * **1.4 (2022-04-09)**
+    * ADDED: Translations for Corsican, Estonian, Finnish and Lojban
     * ADDED: new HTTP headers improving security (#765)
     * ADDED: Download button for paste text (#774)
     * ADDED: Opt-out of federated learning of cohorts (FLoC) (#776)
     * ADDED: Configuration option to exempt IPs from the rate-limiter (#787)
     * ADDED: Google Cloud Storage backend support (#795)
     * ADDED: Oracle database support (#868)
+    * ADDED: Configuration option to limit paste creation and commenting to certain IPs (#883)
+    * ADDED: Set CSP also as meta tag, to deal with misconfigured webservers mangling the HTTP header
+    * ADDED: Sanitize SVG preview, preventing script execution in instance context
     * CHANGED: Language selection cookie only transmitted over HTTPS (#472)
-    * CHANGED: Upgrading libraries to: base-x 4.0.0, bootstrap 3.4.1 (JS), DOMpurify 2.3.6, ip-lib 1.18.0, jQuery 3.6.0, random_compat 2.0.21 & Showdown 2.0.0
+    * CHANGED: Upgrading libraries to: base-x 4.0.0, bootstrap 3.4.1 (JS), DOMpurify 2.3.6, ip-lib 1.18.0, jQuery 3.6.0, random_compat 2.0.21, Showdown 2.0.3 & zlib 1.2.12
     * CHANGED: Removed automatic `.ini` configuration file migration (#808)
     * CHANGED: Removed configurable `dir` for `traffic` & `purge` limiters (#419)
     * CHANGED: Server salt, traffic and purge limiter now stored in the storage backend (#419)
+    * CHANGED: Drop support for attachment download in IE
+    * FIXED: Error when attachments are disabled, but paste with attachment gets displayed
   * **1.3.5 (2021-04-05)**
     * ADDED: Translations for Hebrew, Lithuanian, Indonesian and Catalan
     * ADDED: Make the project info configurable (#681)

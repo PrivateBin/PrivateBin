@@ -15,11 +15,11 @@
     ],
     "Paste is limited to %s of encrypted data.": "Paste on rajoitettu kokoon %s salattua dataa.",
     "Invalid data.": "Virheellinen data.",
-    "You are unlucky. Try again.": "Olet epäonnekas. Yritä uudelleen",
+    "You are unlucky. Try again.": "Olet epäonnekas. Yritä uudelleen.",
     "Error saving comment. Sorry.": "Virhe kommenttia tallentaessa. Anteeksi.",
     "Error saving paste. Sorry.": "Virhe pastea tallentaessa. Anteeksi.",
     "Invalid paste ID.": "Virheellinen paste ID.",
-    "Paste is not of burn-after-reading type.": "Paste ei ole polta-lukemisen-jälkeen-tyyppiä",
+    "Paste is not of burn-after-reading type.": "Paste ei ole polta-lukemisen-jälkeen-tyyppiä.",
     "Wrong deletion token. Paste was not deleted.": "Virheellinen poistotunniste. Pastea ei poistettu.",
     "Paste was properly deleted.": "Paste poistettiin kunnolla.",
     "JavaScript is required for %s to work. Sorry for the inconvenience.": "JavaScriptiä tarvitaan jotta %s toimisi. Anteeksi haitasta.",
@@ -185,5 +185,6 @@
     "Encrypted note on PrivateBin": "Salattu viesti PrivateBinissä",
     "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "Käy tässä linkissä nähdäksesi viestin. URL:n antaminen kenellekään antaa heidänkin päästä katsomeen viestiä. ",
     "URL shortener may expose your decrypt key in URL.": "URL-lyhentäjä voi paljastaa purkuavaimesi URL:ssä.",
-    "Save paste": "Tallenna paste"
+    "Save paste": "Tallenna paste",
+    "Your IP is not authorized to create pastes.": "IP:llesi ei ole annettu oikeutta luoda pasteja."
 }

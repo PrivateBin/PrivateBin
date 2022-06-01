@@ -2,9 +2,9 @@ name: Refresh PHP 8 branch
 
 on:
   push:
-    branches: [ master ]    
+    branches: [ master ]
   schedule:
-      - cron: '42 2 * * *'  
+      - cron: '42 2 * * *'
   workflow_dispatch:
 
 jobs:
@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout php8 branch 
+      - name: Checkout php8 branch
         uses: actions/checkout@v2
         with:
           # directly checkout the php8 branch
@@ -28,7 +28,7 @@ jobs:
           git merge origin/master
 
       - name: Push new changes
-        uses: github-actions-x/commit@v2.8
+        uses: github-actions-x/commit@v2.9
         with:
           name: github-actions[bot]
           email: 41898282+github-actions[bot]@users.noreply.github.com

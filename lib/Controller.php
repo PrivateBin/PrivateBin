@@ -7,7 +7,7 @@
  * @link      https://github.com/PrivateBin/PrivateBin
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
- * @version   1.3.5
+ * @version   1.4.0
  */
 
 namespace PrivateBin;
@@ -28,7 +28,7 @@ class Controller
      *
      * @const string
      */
-    const VERSION = '1.3.5';
+    const VERSION = '1.4.0';
 
     /**
      * minimal required PHP version
@@ -199,13 +199,10 @@ class Controller
         ServerSalt::setStore($this->_model->getStore());
         TrafficLimiter::setConfiguration($this->_conf);
         TrafficLimiter::setStore($this->_model->getStore());
-        if (!TrafficLimiter::canPass()) {
-            $this->_return_message(
-                1, I18n::_(
-                    'Please wait %d seconds between each post.',
-                    $this->_conf->getKey('limit', 'traffic')
-                )
-            );
+        try {
+            TrafficLimiter::canPass();
+        } catch (Exception $e) {
+            $this->_return_message(1, $e->getMessage());
             return;
         }
 
@@ -345,7 +342,7 @@ class Controller
         header('Cross-Origin-Resource-Policy: same-origin');
         header('Cross-Origin-Embedder-Policy: require-corp');
         header('Cross-Origin-Opener-Policy: same-origin');
-        header('Permissions-Policy: interest-cohort=()');
+        header('Permissions-Policy: browsing-topics=()');
         header('Referrer-Policy: no-referrer');
         header('X-Content-Type-Options: nosniff');
         header('X-Frame-Options: deny');
@@ -366,6 +363,16 @@ class Controller
             $languageselection = I18n::getLanguage();
             setcookie('lang', $languageselection, 0, '', '', true);
         }
+
+        // strip policies that are unsupported in meta tag
+        $metacspheader = str_replace(
+            array(
+                'frame-ancestors \'none\'; ',
+                '; sandbox allow-same-origin allow-scripts allow-forms allow-popups allow-modals allow-downloads',
+            ),
+            '',
+            $this->_conf->getKey('cspheader')
+        );
 
         $page = new View;
         $page->assign('NAME', $this->_conf->getKey('name'));
@@ -395,6 +402,7 @@ class Controller
         $page->assign('HTTPWARNING', $this->_conf->getKey('httpwarning'));
         $page->assign('HTTPSLINK', 'https://' . $this->_request->getHost() . $this->_request->getRequestUri());
         $page->assign('COMPRESSION', $this->_conf->getKey('compression'));
+        $page->assign('CSPHEADER', $metacspheader);
         $page->draw($this->_conf->getKey('template'));
     }
 

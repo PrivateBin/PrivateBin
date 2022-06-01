@@ -87,7 +87,7 @@ languageselection = false
 ;   async functions and display an error if not and for Chrome to enable
 ;   webassembly support (used for zlib compression). You can remove it if Chrome
 ;   doesn't need to be supported and old browsers don't need to be warned.
-; cspheader = "default-src 'none'; base-uri 'self'; form-action 'none'; manifest-src 'self'; connect-src * blob:; script-src 'self' 'unsafe-eval' resource:; style-src 'self'; font-src 'self'; frame-ancestors 'none'; img-src 'self' data: blob:; media-src blob:; object-src blob:; sandbox allow-same-origin allow-scripts allow-forms allow-popups allow-modals allow-downloads"
+; cspheader = "default-src 'none'; base-uri 'self'; form-action 'none'; manifest-src 'self'; connect-src * blob:; script-src 'self' 'unsafe-eval'; style-src 'self'; font-src 'self'; frame-ancestors 'none'; img-src 'self' data: blob:; media-src blob:; object-src blob:; sandbox allow-same-origin allow-scripts allow-forms allow-popups allow-modals allow-downloads"
 
 ; stay compatible with PrivateBin Alpha 0.19, less secure
 ; if enabled will use base64.js version 1.7 instead of 2.1.9 and sha1 instead of
@@ -135,9 +135,17 @@ markdown = "Markdown"
 ; Set this to 0 to disable rate limiting.
 limit = 10
 
-; Set ips (v4|v6) which should be exempted for the rate-limit. CIDR also supported. Needed to be comma separated.
-; Unset for enabling and invalid values will be ignored
-; eg: exemptedIp = '1.2.3.4,10.10.10/24'
+; (optional) Set IPs addresses (v4 or v6) or subnets (CIDR) which are exempted
+; from the rate-limit. Invalid IPs will be ignored. If multiple values are to
+; be exempted, the list needs to be comma separated. Leave unset to disable
+; exemptions.
+; exempted = "1.2.3.4,10.10.10/24"
+
+; (optional) If you want only some source IP addresses (v4 or v6) or subnets
+; (CIDR) to be allowed to create pastes, set these here. Invalid IPs will be
+; ignored. If multiple values are to be exempted, the list needs to be comma
+; separated. Leave unset to allow anyone to create pastes.
+; creators = "1.2.3.4,10.10.10/24"
 
 ; (optional) if your website runs behind a reverse proxy or load balancer,
 ; set the HTTP header containing the visitors IP address, i.e. X_FORWARDED_FOR
