@@ -277,9 +277,9 @@ class Database extends AbstractData
         }
 
         // support v1 attachments
-        if (array_key_exists('attachment', $paste) && strlen($paste['attachment'])) {
+        if (array_key_exists('attachment', $paste) && !empty($paste['attachment'])) {
             self::$_cache[$pasteid]['attachment'] = $paste['attachment'];
-            if (array_key_exists('attachmentname', $paste) && strlen($paste['attachmentname'])) {
+            if (array_key_exists('attachmentname', $paste) && !empty($paste['attachmentname'])) {
                 self::$_cache[$pasteid]['attachmentname'] = $paste['attachmentname'];
             }
         }
@@ -552,7 +552,7 @@ class Database extends AbstractData
             $position = $key + 1;
             if (is_int($parameter)) {
                 $statement->bindParam($position, $parameter, PDO::PARAM_INT);
-            } elseif (strlen($parameter) >= 4000) {
+            } elseif (is_string($parameter) && strlen($parameter) >= 4000) {
                 $statement->bindParam($position, $parameter, PDO::PARAM_STR, strlen($parameter));
             } else {
                 $statement->bindParam($position, $parameter);
