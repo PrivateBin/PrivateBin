@@ -199,7 +199,7 @@ dir = PATH "data"
 ; example of DB configuration for PostgreSQL
 ;class = Database
 ;[model_options]
-;dsn = "pgsql:host=localhost;dbname=pastebin"
+;dsn = "pgsql:host=localhost;dbname=privatebin"
 ;tbl = "privatebin_"     ; table prefix
 ;usr = "privatebin"
 ;pwd = "Z3r0P4ss"
