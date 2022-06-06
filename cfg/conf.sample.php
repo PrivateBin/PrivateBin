@@ -194,3 +194,13 @@ dir = PATH "data"
 ;usr = null
 ;pwd = null
 ;opt[12] = true	; PDO::ATTR_PERSISTENT
+
+;[model]
+; example of DB configuration for PostgreSQL
+;class = Database
+;[model_options]
+;dsn = "pgsql:host=localhost;dbname=privatebin"
+;tbl = "privatebin_"     ; table prefix
+;usr = "privatebin"
+;pwd = "Z3r0P4ss"
+;opt[12] = true    ; PDO::ATTR_PERSISTENT
