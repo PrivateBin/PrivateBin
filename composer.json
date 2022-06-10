@@ -25,7 +25,7 @@
 	},
 	"require" : {
 		"php" : "^5.6.0 || ^7.0 || ^8.0",
-		"paragonie/random_compat" : "2.0.21",
+		"paragonie/random_compat" : "9.99.100",
 		"yzalis/identicon" : "2.0.0",
 		"mlocati/ip-lib" : "1.18.0"
 	},
