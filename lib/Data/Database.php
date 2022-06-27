@@ -837,8 +837,9 @@ class Database extends AbstractData
                 end;'
             );
         } else {
+            // CREATE INDEX IF NOT EXISTS not supported as of MySQL <= 8.0
             self::$_db->exec(
-                'CREATE INDEX IF NOT EXISTS "comment_parent" ON "' .
+                'CREATE INDEX "comment_parent" ON "' .
                 self::_sanitizeIdentifier('comment') . '" ("pasteid")'
             );
         }
@@ -949,8 +950,9 @@ class Database extends AbstractData
                         self::_sanitizeIdentifier('comment') . '" ("dataid")'
                     );
                 }
+                // CREATE INDEX IF NOT EXISTS not supported as of MySQL <= 8.0
                 self::$_db->exec(
-                    'CREATE INDEX IF NOT EXISTS "comment_parent" ON "' .
+                    'CREATE INDEX "comment_parent" ON "' .
                     self::_sanitizeIdentifier('comment') . '" ("pasteid")'
                 );
                 // no break, continue with updates for 0.22 and later
