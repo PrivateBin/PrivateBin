@@ -106,13 +106,13 @@ jobs:
       with:
         node-version: '12'
         cache: 'npm'
-        cache-dependency-path: 'js/package.json'
+        cache-dependency-path: 'js/package-lock.json'
         
     - name: Setup Mocha
       run: npm install -g mocha
       
     - name: Setup Node modules
-      run: npm install
+      run: npm ci
       working-directory: js
       
     - name: Run unit tests
