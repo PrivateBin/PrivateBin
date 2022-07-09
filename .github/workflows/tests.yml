@@ -112,7 +112,7 @@ jobs:
       run: npm install -g mocha
       
     - name: Setup Node modules
-      run: npm install
+      run: npm ci
       working-directory: js
       
     - name: Run unit tests
