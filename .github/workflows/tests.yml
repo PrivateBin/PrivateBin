@@ -104,7 +104,7 @@ jobs:
     - name: Setup Node
       uses: actions/setup-node@v3
       with:
-        node-version: '12'
+        node-version: '14'
         cache: 'npm'
         cache-dependency-path: 'js/package-lock.json'
         
@@ -116,6 +116,6 @@ jobs:
       working-directory: js
       
     - name: Run unit tests
-      run: mocha
+      run: npm test
       working-directory: js
 
