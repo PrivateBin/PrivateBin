@@ -186,5 +186,5 @@
     "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "Norėdami matyti užrašus, aplankykite šį tinklalapį. Pasidalinus šiuo URL adresu su kitais žmonėmis, jiems taip pat bus leidžiama prieiga prie šių užrašų.",
     "URL shortener may expose your decrypt key in URL.": "URL trumpinimo įrankis gali atskleisti URL adrese jūsų iššifravimo raktą.",
     "Save paste": "Įrašyti įdėjimą",
-    "Your IP is not authorized to create pastes.": "Your IP is not authorized to create pastes."
+    "Your IP is not authorized to create pastes.": "Jūsų IP adresas neturi įgaliojimų kurti įdėjimų."
 }
