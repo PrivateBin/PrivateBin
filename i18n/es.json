@@ -2,7 +2,7 @@
     "PrivateBin": "PrivateBin",
     "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted %sin the browser%s using 256 bits AES.": "%s es un \"pastebin\" en línea minimalista de código abierto, donde el servidor no tiene ningún conocimiento de los datos guardados. Los datos son cifrados/descifrados %sen el navegador%s usando 256 bits AES.",
     "More information on the <a href=\"https://privatebin.info/\">project page</a>.": "Más información en la <a href=\"https://privatebin.info/\">página del proyecto</a>.",
-    "Because ignorance is bliss": "Porque la ignorancia es dicha",
+    "Because ignorance is bliss": "Porque la ignorancia es felicidad",
     "en": "es",
     "Paste does not exist, has expired or has been deleted.": "El \"paste\" no existe, ha caducado o ha sido eliminado.",
     "%s requires php %s or above to work. Sorry.": "%s requiere php %s o superior para funcionar. Lo siento.",
@@ -186,5 +186,5 @@
     "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "Visite este enlace para ver la nota. Dar la URL a cualquier persona también les permite acceder a la nota.",
     "URL shortener may expose your decrypt key in URL.": "El acortador de URL puede exponer su clave de descifrado en el URL.",
     "Save paste": "Guardar \"paste\"",
-    "Your IP is not authorized to create pastes.": "Your IP is not authorized to create pastes."
+    "Your IP is not authorized to create pastes.": "Tu IP no está autorizada para crear contenido."
 }

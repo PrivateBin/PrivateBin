@@ -837,8 +837,10 @@ class Database extends AbstractData
                 end;'
             );
         } else {
+            // CREATE INDEX IF NOT EXISTS not supported as of Oracle MySQL <= 8.0
             self::$_db->exec(
-                'CREATE INDEX IF NOT EXISTS "comment_parent" ON "' .
+                'CREATE INDEX "' .
+                self::_sanitizeIdentifier('comment_parent') . '" ON "' .
                 self::_sanitizeIdentifier('comment') . '" ("pasteid")'
             );
         }
@@ -941,16 +943,20 @@ class Database extends AbstractData
                     );
                 } else {
                     self::$_db->exec(
-                        'CREATE UNIQUE INDEX IF NOT EXISTS "paste_dataid" ON "' .
+                        'CREATE UNIQUE INDEX IF NOT EXISTS "' .
+                        self::_sanitizeIdentifier('paste_dataid') . '" ON "' .
                         self::_sanitizeIdentifier('paste') . '" ("dataid")'
                     );
                     self::$_db->exec(
-                        'CREATE UNIQUE INDEX IF NOT EXISTS "comment_dataid" ON "' .
+                        'CREATE UNIQUE INDEX IF NOT EXISTS "' .
+                        self::_sanitizeIdentifier('comment_dataid') . '" ON "' .
                         self::_sanitizeIdentifier('comment') . '" ("dataid")'
                     );
                 }
+                // CREATE INDEX IF NOT EXISTS not supported as of Oracle MySQL <= 8.0
                 self::$_db->exec(
-                    'CREATE INDEX IF NOT EXISTS "comment_parent" ON "' .
+                    'CREATE INDEX "' .
+                    self::_sanitizeIdentifier('comment_parent') . '" ON "' .
                     self::_sanitizeIdentifier('comment') . '" ("pasteid")'
                 );
                 // no break, continue with updates for 0.22 and later

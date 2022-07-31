@@ -3,6 +3,8 @@
   * **1.4.1 (not yet released)**
     * ADDED: Translations for Turkish
     * CHANGED: Avoid `SUPER` privilege for setting the `sql_mode` for MariaDB/MySQL (#919)
+    * FIXED: Revert to CREATE INDEX without IF NOT EXISTS clauses, to support MySQL (#943)
+    * FIXED: Apply table prefix to indexes as well, to support multiple instances sharing a single database (#943)
   * **1.4 (2022-04-09)**
     * ADDED: Translations for Corsican, Estonian, Finnish and Lojban
     * ADDED: new HTTP headers improving security (#765)
