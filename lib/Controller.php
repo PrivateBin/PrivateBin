@@ -341,7 +341,10 @@ class Controller
         header('Content-Security-Policy: ' . $this->_conf->getKey('cspheader'));
         header('Cross-Origin-Resource-Policy: same-origin');
         header('Cross-Origin-Embedder-Policy: require-corp');
-        header('Cross-Origin-Opener-Policy: same-origin');
+        // disabled, because it prevents links from a paste to the same site to
+        // be opened. Didn't work with `same-origin-allow-popups` either.
+        // See issue https://github.com/PrivateBin/PrivateBin/issues/970 for details.
+        // header('Cross-Origin-Opener-Policy: same-origin');
         header('Permissions-Policy: browsing-topics=()');
         header('Referrer-Policy: no-referrer');
         header('X-Content-Type-Options: nosniff');
