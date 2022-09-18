@@ -186,5 +186,5 @@
     "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "Navštivte tento odkaz pro zobrazení poznámky. Přeposláním URL umožníte také jiným lidem přístup.",
     "URL shortener may expose your decrypt key in URL.": "Zkracovač URL může odhalit váš dešifrovací klíč v URL.",
     "Save paste": "Uložit příspěvek",
-    "Your IP is not authorized to create pastes.": "Your IP is not authorized to create pastes."
+    "Your IP is not authorized to create pastes.": "Vaše IP adresa nemá oprávnění k vytvoření vložení."
 }
