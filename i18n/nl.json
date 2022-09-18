@@ -35,7 +35,7 @@
     "Discussion": "Discussie",
     "Toggle navigation": "Navigatie openen/sluiten",
     "%d seconds": [
-        "%d second",
+        "%d seconde",
         "%d seconden",
         "%d seconds (2nd plural)",
         "%d seconds (3rd plural)"
@@ -72,14 +72,14 @@
     ],
     "%d years": [
         "%d jaar",
-        "%d jaaren",
+        "%d jaren",
         "%d years (2nd plural)",
         "%d years (3rd plural)"
     ],
     "Never": "Nooit",
     "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.": "Opmerking: Dit is een testservice: Gegevens kunnen op elk gegeven moment verwijderd worden.",
     "This document will expire in %d seconds.": [
-        "Dit document verloopt over %d second.",
+        "Dit document verloopt over %d seconde.",
         "Dit document verloopt over %d seconden.",
         "Dit document verloopt over %d seconden.",
         "Dit document verloopt over %d seconden."
@@ -108,7 +108,7 @@
         "Dit document verloopt over %d maanden.",
         "Dit document verloopt over %d maanden."
     ],
-    "Please enter the password for this paste:": "Voer het wachtwoord in voor deze  geplakte tekst:",
+    "Please enter the password for this paste:": "Voer het wachtwoord in voor deze geplakte tekst:",
     "Could not decrypt data (Wrong key?)": "Kon de gegevens niet decoderen (verkeerde sleutel?)",
     "Could not delete the paste, it was not stored in burn after reading mode.": "Verwijderen van de geplakte tekst niet mogelijk, deze werd niet opgeslagen in 'vernietig na lezen' modus.",
     "FOR YOUR EYES ONLY. Don't close this window, this message can't be displayed again.": "FOR YOUR EYES ONLY. Sluit dit venster niet, dit bericht kan niet opnieuw worden weergegeven.",
