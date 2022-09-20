@@ -35,38 +35,38 @@
     "Discussion": "Komentáre",
     "Toggle navigation": "Toggle navigation",
     "%d seconds": [
-        "%d second (singular)",
-        "%d seconds (1st plural)",
-        "%d seconds (2nd plural)",
-        "%d seconds (3rd plural)"
+        "%d sekunda",
+        "%d sekundy",
+        "%d sekúnd",
+        "%d sekúnd"
     ],
     "%d minutes": [
-        "%d minute (singular)",
-        "%d minutes (1st plural)",
-        "%d minutes (2nd plural)",
-        "%d minutes (3rd plural)"
+        "%d minúta",
+        "%d minúty",
+        "%d minút",
+        "%d minút"
     ],
     "%d hours": [
-        "%d hour (singular)",
-        "%d hours (1st plural)",
-        "%d hours (2nd plural)",
-        "%d hours (3rd plural)"
+        "%d hodina",
+        "%d hodiny",
+        "%d hodín",
+        "%d hodín"
     ],
     "%d days": [
-        "%d day (singular)",
-        "%d days (1st plural)",
-        "%d days (2nd plural)",
-        "%d days (3rd plural)"
+        "%d deň",
+        "%d dni",
+        "%d dní",
+        "%d dní"
     ],
     "%d weeks": [
-        "%d week (singular)",
-        "%d weeks (1st plural)",
-        "%d weeks (2nd plural)",
-        "%d weeks (3rd plural)"
+        "%d týždeň",
+        "%d týždne",
+        "%d týždňov",
+        "%d týždňov"
     ],
     "%d months": [
-        "%d month (singular)",
-        "%d months (1st plural)",
+        "%d mesiac",
+        "%d mesiace",
         "%d months (2nd plural)",
         "%d months (3rd plural)"
     ],
