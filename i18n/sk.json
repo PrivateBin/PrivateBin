@@ -67,16 +67,16 @@
     "%d months": [
         "%d mesiac",
         "%d mesiace",
-        "%d months (2nd plural)",
-        "%d months (3rd plural)"
+        "%d mesiacov",
+        "%d mesiacov"
     ],
     "%d years": [
-        "%d year (singular)",
-        "%d years (1st plural)",
-        "%d years (2nd plural)",
-        "%d years (3rd plural)"
+        "%d rok",
+        "%d roky",
+        "%d rokov",
+        "%d rokov"
     ],
-    "Never": "Never",
+    "Never": "Nikdy",
     "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.": "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.",
     "This document will expire in %d seconds.": [
         "This document will expire in %d second. (singular)",
