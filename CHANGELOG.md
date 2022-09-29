@@ -1,7 +1,7 @@
 # PrivateBin version history
 
   * **1.4.1 (not yet released)**
-    * ADDED: Translations for Turkish
+    * ADDED: Translations for Turkish and Slovak
     * CHANGED: Avoid `SUPER` privilege for setting the `sql_mode` for MariaDB/MySQL (#919)
     * FIXED: Revert to CREATE INDEX without IF NOT EXISTS clauses, to support MySQL (#943)
     * FIXED: Apply table prefix to indexes as well, to support multiple instances sharing a single database (#943)
