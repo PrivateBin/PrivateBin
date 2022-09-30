@@ -316,7 +316,8 @@ class I18n
     {
         switch (self::$_language) {
             case 'cs':
-                return $n == 1 ? 0 : ($n >= 2 && $n <= 4 ? 1 : 2);
+            case 'sk':
+                return $n === 1 ? 0 : ($n >= 2 && $n <= 4 ? 1 : 2);
             case 'co':
             case 'fr':
             case 'oc':
@@ -331,15 +332,15 @@ class I18n
             case 'lt':
                 return $n % 10 === 1 && $n % 100 !== 11 ? 0 : (($n % 10 >= 2 && $n % 100 < 10 || $n % 100 >= 20) ? 1 : 2);
             case 'pl':
-                return $n == 1 ? 0 : ($n % 10 >= 2 && $n % 10 <= 4 && ($n % 100 < 10 || $n % 100 >= 20) ? 1 : 2);
+                return $n === 1 ? 0 : ($n % 10 >= 2 && $n % 10 <= 4 && ($n % 100 < 10 || $n % 100 >= 20) ? 1 : 2);
             case 'ru':
             case 'uk':
-                return $n % 10 == 1 && $n % 100 != 11 ? 0 : ($n % 10 >= 2 && $n % 10 <= 4 && ($n % 100 < 10 || $n % 100 >= 20) ? 1 : 2);
+                return $n % 10 === 1 && $n % 100 != 11 ? 0 : ($n % 10 >= 2 && $n % 10 <= 4 && ($n % 100 < 10 || $n % 100 >= 20) ? 1 : 2);
             case 'sl':
-                return $n % 100 == 1 ? 1 : ($n % 100 == 2 ? 2 : ($n % 100 == 3 || $n % 100 == 4 ? 3 : 0));
-            // bg, ca, de, en, es, et, fi, hu, it, nl, no, pt
+                return $n % 100 === 1 ? 1 : ($n % 100 === 2 ? 2 : ($n % 100 === 3 || $n % 100 === 4 ? 3 : 0));
+            // bg, ca, de, el, en, es, et, fi, hu, it, nl, no, pt
             default:
-                return $n != 1 ? 1 : 0;
+                return $n !== 1 ? 1 : 0;
         }
     }
 
