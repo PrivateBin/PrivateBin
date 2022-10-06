@@ -38,6 +38,15 @@ class GoogleCloudStorage extends AbstractData
     private static $_prefix = 'pastes';
 
     /**
+     * bucket acl type
+     *
+     * @access private
+     * @static
+     * @var    bool
+     */
+    private static $_uniformacl = false;
+
+    /**
      * returns a Google Cloud Storage data backend.
      *
      * @access public
@@ -61,6 +70,9 @@ class GoogleCloudStorage extends AbstractData
         }
         if (is_array($options) && array_key_exists('prefix', $options)) {
             self::$_prefix = $options['prefix'];
+        }
+        if (is_array($options) && array_key_exists('uniformacl', $options)) {
+            self::$_uniformacl = $options['uniformacl'];
         }
 
         if (empty(self::$_client)) {
@@ -100,21 +112,19 @@ class GoogleCloudStorage extends AbstractData
      */
     private function _upload($key, $payload)
     {
-        $metadata = array_key_exists('meta', $payload) ? $payload['meta'] : array();
-        unset($metadata['attachment'], $metadata['attachmentname'], $metadata['salt']);
-        foreach ($metadata as $k => $v) {
-            $metadata[$k] = strval($v);
-        }
         try {
-            self::$_bucket->upload(Json::encode($payload), array(
+            $data = array(
                 'name'          => $key,
                 'chunkSize'     => 262144,
-                'predefinedAcl' => 'private',
                 'metadata'      => array(
                     'content-type' => 'application/json',
-                    'metadata'     => $metadata,
+                    'metadata'     => $payload,
                 ),
-            ));
+            );
+            if (!self::$_uniformacl) {
+                $data['predefinedAcl'] = 'private';
+            }
+            self::$_bucket->upload(Json::encode($payload), $data);
         } catch (Exception $e) {
             error_log('failed to upload ' . $key . ' to ' . self::$_bucket->name() . ', ' .
                 trim(preg_replace('/\s\s+/', ' ', $e->getMessage())));
@@ -277,15 +287,18 @@ class GoogleCloudStorage extends AbstractData
             $metadata['value'] = strval($value);
         }
         try {
-            self::$_bucket->upload($value, array(
+            $data = array(
                 'name'          => $key,
                 'chunkSize'     => 262144,
-                'predefinedAcl' => 'private',
                 'metadata'      => array(
                     'content-type' => 'application/json',
                     'metadata'     => $metadata,
                 ),
-            ));
+            );
+            if (!self::$_uniformacl) {
+                $data['predefinedAcl'] = 'private';
+            }
+            self::$_bucket->upload($value, $data);
         } catch (Exception $e) {
             error_log('failed to set key ' . $key . ' to ' . self::$_bucket->name() . ', ' .
                 trim(preg_replace('/\s\s+/', ' ', $e->getMessage())));
