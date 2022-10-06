@@ -156,7 +156,7 @@
     "Shorten URL": "Skrátiť URL",
     "Editor": "Editor",
     "Preview": "Náhľad",
-    "%s requires the PATH to end in a \"%s\". Please update the PATH in your index.php.": "%s vyžaduje, aby PATH končila na \"%s\". Aktualizujte prosím PATH vo svojom index.php.",
+    "%s requires the PATH to end in a \"%s\". Please update the PATH in your index.php.": "%s vyžaduje, aby PATH končila na „%s\". Aktualizujte prosím PATH vo svojom index.php.",
     "Decrypt": "Dešifrovať",
     "Enter password": "Zadajte heslo",
     "Loading…": "Načítava sa…",
