@@ -112,13 +112,18 @@ class GoogleCloudStorage extends AbstractData
      */
     private function _upload($key, $payload)
     {
+        $metadata = array_key_exists('meta', $payload) ? $payload['meta'] : array();
+        unset($metadata['attachment'], $metadata['attachmentname'], $metadata['salt']);
+        foreach ($metadata as $k => $v) {
+            $metadata[$k] = strval($v);
+        }
         try {
             $data = array(
                 'name'          => $key,
                 'chunkSize'     => 262144,
                 'metadata'      => array(
                     'content-type' => 'application/json',
-                    'metadata'     => $payload,
+                    'metadata'     => $metadata,
                 ),
             );
             if (!self::$_uniformacl) {
