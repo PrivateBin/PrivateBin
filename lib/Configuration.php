@@ -153,8 +153,9 @@ class Configuration
                 )
             ) {
                 $values = array(
-                    'bucket' => getenv('PRIVATEBIN_GCS_BUCKET') ? getenv('PRIVATEBIN_GCS_BUCKET') : null,
-                    'prefix' => 'pastes',
+                    'bucket'     => getenv('PRIVATEBIN_GCS_BUCKET') ? getenv('PRIVATEBIN_GCS_BUCKET') : null,
+                    'prefix'     => 'pastes',
+                    'uniformacl' => false,
                 );
             }
 
