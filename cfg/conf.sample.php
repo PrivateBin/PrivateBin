@@ -175,6 +175,7 @@ dir = PATH "data"
 ;[model_options]
 ;bucket = "my-private-bin"
 ;prefix = "pastes"
+;uniformacl = false
 
 ;[model]
 ; example of DB configuration for MySQL
