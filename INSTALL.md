@@ -232,3 +232,42 @@ Platform using Google Cloud Run is easy and cheap.
 
 To use the Google Cloud Storage backend you have to install the suggested
 library using the command `composer require google/cloud-storage`.
+
+#### Using S3 Storage
+Similar to Google Cloud Storage, you can choose S3 as storage backend. It uses
+the AWS SDK for PHP, but can also talk to a Rados gateway as part of a CEPH
+cluster. To use this backend, you first have to install the SDK in the
+document root of PrivateBin: `composer require aws/aws-sdk-php`. You have to
+create the S3 bucket on the CEPH cluster before using the S3 backend.
+
+In the `[model]` section of cfg/conf.php, set `class` to `S3Storage`.
+
+You can set any combination of the following options in the `[model_options]`
+section:
+
+  * region
+  * version
+  * endpoint
+  * bucket
+  * prefix
+  * accesskey
+  * secretkey
+  * use_path_style_endpoint
+
+By default, prefix is empty. If set, the S3 backend will place all PrivateBin
+data beneath this prefix.
+
+For AWS, you have to provide at least `region`, `bucket`, `accesskey`, and
+`secretkey`.
+
+For CEPH, follow this example:
+
+```
+region = ""
+version = "2006-03-01"
+endpoint = "https://s3.my-ceph.invalid"
+use_path_style_endpoint = true
+bucket = "my-bucket"
+accesskey = "my-rados-user"
+secretkey = "my-rados-pass"
+```
