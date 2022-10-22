@@ -95,7 +95,7 @@ class Configuration
         ),
         'yourls' => array(
             'signature' => '',
-            'apiurl' => '',
+            'apiurl'    => '',
         ),
     );
 
