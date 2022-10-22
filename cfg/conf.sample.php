@@ -205,3 +205,25 @@ dir = PATH "data"
 ;usr = "privatebin"
 ;pwd = "Z3r0P4ss"
 ;opt[12] = true    ; PDO::ATTR_PERSISTENT
+
+;[model]
+; example of S3 configuration for Rados gateway / CEPH
+;class = S3Storage
+;[model_options]
+;region = ""
+;version = "2006-03-01"
+;endpoint = "https://s3.my-ceph.invalid"
+;use_path_style_endpoint = true
+;bucket = "my-bucket"
+;accesskey = "my-rados-user"
+;secretkey = "my-rados-pass"
+
+;[model]
+; example of S3 configuration for AWS
+;class = S3Storage
+;[model_options]
+;region = "eu-central-1"
+;version = "latest"
+;bucket = "my-bucket"
+;accesskey = "access key id"
+;secretkey = "secret access key"
