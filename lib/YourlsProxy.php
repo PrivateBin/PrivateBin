@@ -55,22 +55,24 @@ class YourlsProxy
             return;
         }
 
-        // Init the CURL session
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $conf->getKey("apiurl", "yourls"));
-        curl_setopt($ch, CURLOPT_HEADER, 0);            // No header in the result
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); // Return, do not echo result
-        curl_setopt($ch, CURLOPT_POST, 1);              // This is a POST request
-        curl_setopt($ch, CURLOPT_POSTFIELDS, array(     // Data to POST
-                            'signature' => $conf->getKey("signature", "yourls"),
-                            'format'   => 'json',
-                            'action'   => 'shorturl',
-                            'url' =>  $link
-        ));
-        // Fetch and return content
-        $data = curl_exec($ch);
-        curl_close($ch);
-
+        $data = file_get_contents(
+            $conf->getKey('apiurl', 'yourls'), false, stream_context_create(
+                array(
+                    'http' => array(
+                        'method'  => 'POST',
+                        'header'  => "Content-Type: application/x-www-form-urlencoded\r\n",
+                        'content' => http_build_query(
+                            array(
+                                'signature' => $conf->getKey('signature', 'yourls'),
+                                'format'    => 'json',
+                                'action'    => 'shorturl',
+                                'url'       => $link
+                            )
+                        )
+                    )
+                )
+            )
+        );
         if ($data === false || !is_string($data)) {
             $this->_error = 'Error calling YOURLS. Probably a configuration issue, like wrong or missing "apiurl" or "signature".';
             return;
