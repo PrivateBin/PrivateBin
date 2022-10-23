@@ -227,3 +227,15 @@ dir = PATH "data"
 ;bucket = "my-bucket"
 ;accesskey = "access key id"
 ;secretkey = "secret access key"
+
+[yourls]
+; don't mix this up with "urlshortener" config item:
+; - when using a standard configuration, "urlshortener" will point to the YOURLS API, including access credentials, and will be part of the PrivateBin public web page (insecure!)
+; - when using the parameters in this section ("signature" and "apiurl"), "urlshortener" will point to a fixed PrivateBin page ("$basepath/shortenviayourls.php") and
+;   that PHP will in turn call YOURLS server-side, using the URL from "apiurl" and using the "access signature" from "signature" parameter.
+
+; (optional) the "signature" (access key) issued by YOURLS for the using account
+; signature = ""
+
+; (optional) the URL of the YOURLS API, called to shorten a PrivateBin URL
+; apiurl = ""
