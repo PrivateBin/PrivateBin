@@ -48,6 +48,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
      */
     public function testView()
     {
+        $_SERVER['HTTP_HOST']             = 'example.com';
         $_SERVER['QUERY_STRING']          = Helper::getPasteId();
         $_GET[Helper::getPasteId()]       = '';
         ob_start();
@@ -63,6 +64,11 @@ class ControllerTest extends PHPUnit_Framework_TestCase
             'id="shortenbutton"',
             $content,
             'doesn\'t output shortener button'
+        );
+        $this->assertRegExp(
+            '# href="https://' . preg_quote($_SERVER['HTTP_HOST']) . '/">switching to HTTPS#',
+            $content,
+            'outputs configured https URL correctly'
         );
     }
 

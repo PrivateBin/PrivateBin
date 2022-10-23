@@ -106,6 +106,10 @@ class ViewTest extends PHPUnit_Framework_TestCase
                 $content,
                 $template . ': outputs error correctly'
             );
+            if ($template === 'yourlsproxy') {
+                // yourlsproxy template only displays error message
+                continue;
+            }
             $this->assertRegExp(
                 '#<[^>]+id="password"[^>]*>#',
                 $content,

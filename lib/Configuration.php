@@ -93,6 +93,10 @@ class Configuration
         'model_options' => array(
             'dir' => 'data',
         ),
+        'yourls' => array(
+            'signature' => '',
+            'apiurl'    => '',
+        ),
     );
 
     /**

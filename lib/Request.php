@@ -120,6 +120,7 @@ class Request
         if (
             !array_key_exists('pasteid', $this->_params) &&
             !array_key_exists('jsonld', $this->_params) &&
+            !array_key_exists('link', $this->_params) &&
             array_key_exists('QUERY_STRING', $_SERVER) &&
             !empty($_SERVER['QUERY_STRING'])
         ) {
@@ -135,6 +136,10 @@ class Request
             }
         } elseif (array_key_exists('jsonld', $this->_params) && !empty($this->_params['jsonld'])) {
             $this->_operation = 'jsonld';
+        } elseif (array_key_exists('link', $this->_params) && !empty($this->_params['link'])) {
+            if (strpos($this->getRequestUri(), '/shortenviayourls') !== false) {
+                $this->_operation = 'yourlsproxy';
+            }
         }
     }
 

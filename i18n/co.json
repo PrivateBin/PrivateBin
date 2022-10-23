@@ -186,5 +186,8 @@
     "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "Visitate stu liame per vede a nota. Date l’indirizzu à qualunque li permette d’accede à a nota dinù.",
     "URL shortener may expose your decrypt key in URL.": "Un ammuzzatore d’indirizzu pò palisà a vostra chjave di dicifratura in l’indirizzu.",
     "Save paste": "Arregistrà l’appiccicu",
-    "Your IP is not authorized to create pastes.": "U vostru indirizzu IP ùn hè micca auturizatu à creà l’appiccichi."
+    "Your IP is not authorized to create pastes.": "U vostru indirizzu IP ùn hè micca auturizatu à creà l’appiccichi.",
+    "Trying to shorten a URL that isn't pointing at our instance.": "Trying to shorten a URL that isn't pointing at our instance.",
+    "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".",
+    "Error parsing YOURLS response.": "Error parsing YOURLS response."
 }
