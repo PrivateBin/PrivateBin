@@ -12,7 +12,9 @@
 
 namespace PrivateBin;
 
+use Exception;
 use PrivateBin\Configuration;
+use PrivateBin\Json;
 
 /**
  * YourlsProxy
@@ -74,7 +76,13 @@ class YourlsProxy
             return;
         }
 
-        $data = json_decode($data, true);
+        try {
+            $data = Json::decode($data);
+        } catch (Exception $e) {
+            $this->_error = $e->getMessage();
+            return;
+        }
+
         if (
             !is_null($data) &&
             array_key_exists('statusCode', $data) &&
