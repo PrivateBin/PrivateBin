@@ -66,7 +66,7 @@ class YourlsProxyTest extends PHPUnit_Framework_TestCase
     public function testServerError()
     {
         // simulate some other server error that results in a non-JSON reply
-        file_put_contents($this->_mock_yourls_service, '');
+        file_put_contents($this->_mock_yourls_service, '500 Internal Server Error');
 
         $yourls = new YourlsProxy($this->_conf, 'https://example.com/?foo#bar');
         $this->assertTrue($yourls->isError());
