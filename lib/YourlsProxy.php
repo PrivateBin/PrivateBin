@@ -48,40 +48,42 @@ class YourlsProxy
      */
     public function __construct(Configuration $conf, $link)
     {
-        if (strpos($link, $conf->getKey('basepath') . '/?') !== false) {
-            // Init the CURL session
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $conf->getKey("apiurl", "yourls"));
-            curl_setopt($ch, CURLOPT_HEADER, 0);            // No header in the result
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); // Return, do not echo result
-            curl_setopt($ch, CURLOPT_POST, 1);              // This is a POST request
-            curl_setopt($ch, CURLOPT_POSTFIELDS, array(     // Data to POST
-                                'signature' => $conf->getKey("signature", "yourls"),
-                                'format'   => 'json',
-                                'action'   => 'shorturl',
-                                'url' =>  $link
-            ));
-            // Fetch and return content
-            $data = curl_exec($ch);
-            curl_close($ch);
-
-            if (!($data === FALSE) && is_string($data))
-            {
-                $data = json_decode( $data, true);
-
-                if (!is_null($data) && array_key_exists('statusCode', $data)
-                        && array_key_exists('shorturl', $data) &&  ($data['statusCode'] == 200))
-                {
-                    $this->_url = $data['shorturl'];
-                    $opSuccess = TRUE;
-                } else {
-                    $this->_error = 'Error parsing YOURLS response.';
-                }
-            } else {
-                $this->_error = 'Error calling YOURLS. Probably a configuration issue, like wrong or missing "apiurl" or "signature".';
-            }
-        } else {
+        if (strpos($link, $conf->getKey('basepath') . '/?') === false) {
             $this->_error = 'Trying to shorten a URL not pointing to our PrivateBin instance.';
+            return;
+        }
+
+        // Init the CURL session
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $conf->getKey("apiurl", "yourls"));
+        curl_setopt($ch, CURLOPT_HEADER, 0);            // No header in the result
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); // Return, do not echo result
+        curl_setopt($ch, CURLOPT_POST, 1);              // This is a POST request
+        curl_setopt($ch, CURLOPT_POSTFIELDS, array(     // Data to POST
+                            'signature' => $conf->getKey("signature", "yourls"),
+                            'format'   => 'json',
+                            'action'   => 'shorturl',
+                            'url' =>  $link
+        ));
+        // Fetch and return content
+        $data = curl_exec($ch);
+        curl_close($ch);
+
+        if ($data === false || !is_string($data)) {
+            $this->_error = 'Error calling YOURLS. Probably a configuration issue, like wrong or missing "apiurl" or "signature".';
+            return;
+        }
+
+        $data = json_decode($data, true);
+        if (
+            !is_null($data) &&
+            array_key_exists('statusCode', $data) &&
+            array_key_exists('shorturl', $data) &&
+            $data['statusCode'] == 200
+        ) {
+            $this->_url = $data['shorturl'];
+        } else {
+            $this->_error = 'Error parsing YOURLS response.';
         }
     }
 
