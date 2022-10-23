@@ -49,7 +49,7 @@ class YourlsProxy
     public function __construct(Configuration $conf, $link)
     {
         if (strpos($link, $conf->getKey('basepath') . '/?') === false) {
-            $this->_error = 'Trying to shorten a URL not pointing to our PrivateBin instance.';
+            $this->_error = 'Trying to shorten a URL that isn\'t pointing at our instance.';
             return;
         }
 
