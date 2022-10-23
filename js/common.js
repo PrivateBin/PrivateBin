@@ -12,7 +12,7 @@ global.WebCrypto = require('@peculiar/webcrypto').Crypto;
 // application libraries to test
 global.$ = global.jQuery = require('./jquery-3.6.0');
 global.RawDeflate = require('./rawinflate-0.3').RawDeflate;
-global.zlib = require('./zlib-1.2.12').zlib;
+global.zlib = require('./zlib-1.2.13').zlib;
 require('./prettify');
 global.prettyPrint = window.PR.prettyPrint;
 global.prettyPrintOne = window.PR.prettyPrintOne;
