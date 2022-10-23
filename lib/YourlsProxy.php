@@ -13,8 +13,6 @@
 namespace PrivateBin;
 
 use Exception;
-use PrivateBin\Configuration;
-use PrivateBin\Json;
 
 /**
  * YourlsProxy
@@ -66,10 +64,10 @@ class YourlsProxy
                                 'signature' => $conf->getKey('signature', 'yourls'),
                                 'format'    => 'json',
                                 'action'    => 'shorturl',
-                                'url'       => $link
+                                'url'       => $link,
                             )
-                        )
-                    )
+                        ),
+                    ),
                 )
             )
         );
