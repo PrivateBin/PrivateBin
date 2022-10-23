@@ -137,8 +137,7 @@ class Request
         } elseif (array_key_exists('jsonld', $this->_params) && !empty($this->_params['jsonld'])) {
             $this->_operation = 'jsonld';
         } elseif (array_key_exists('link', $this->_params) && !empty($this->_params['link'])) {
-            $request_url = filter_var($_SERVER['REQUEST_URI'], FILTER_SANITIZE_URL);
-            if (strpos($request_url, '/shortenviayourls?link=') !== false) {
+            if (strpos($this->getRequestUri(), '/shortenviayourls') !== false) {
                 $this->_operation = 'yourlsproxy';
             }
         }

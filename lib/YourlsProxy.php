@@ -53,8 +53,14 @@ class YourlsProxy
             return;
         }
 
+        $yourls_api_url = $conf->getKey('apiurl', 'yourls');
+        if (empty($yourls_api_url)) {
+            $this->_error = 'Error calling YOURLS. Probably a configuration issue, like wrong or missing "apiurl" or "signature".';
+            return;
+        }
+
         $data = file_get_contents(
-            $conf->getKey('apiurl', 'yourls'), false, stream_context_create(
+            $yourls_api_url, false, stream_context_create(
                 array(
                     'http' => array(
                         'method'  => 'POST',
@@ -71,23 +77,19 @@ class YourlsProxy
                 )
             )
         );
-        if ($data === false || !is_string($data)) {
-            $this->_error = 'Error calling YOURLS. Probably a configuration issue, like wrong or missing "apiurl" or "signature".';
-            return;
-        }
-
         try {
             $data = Json::decode($data);
         } catch (Exception $e) {
-            $this->_error = $e->getMessage();
+            $this->_error = 'Error calling YOURLS. Probably a configuration issue, like wrong or missing "apiurl" or "signature".';
+            error_log('Error calling YOURLS: ' . $e->getMessage());
             return;
         }
 
         if (
             !is_null($data) &&
             array_key_exists('statusCode', $data) &&
-            array_key_exists('shorturl', $data) &&
-            $data['statusCode'] == 200
+            $data['statusCode'] == 200 &&
+            array_key_exists('shorturl', $data)
         ) {
             $this->_url = $data['shorturl'];
         } else {
