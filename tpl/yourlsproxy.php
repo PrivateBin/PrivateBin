@@ -17,7 +17,9 @@ if (empty($ERROR)) :
 <?php
 else:
 ?>
-		<p><?php echo I18n::_('Could not create paste: %s', $ERROR); ?></p>
+		<div id="errormessage">
+			<p><?php echo I18n::_('Could not create paste: %s', $ERROR); ?></p>
+		</div>
 <?php
 endif;
 ?>
