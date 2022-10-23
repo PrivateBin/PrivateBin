@@ -281,7 +281,7 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
         file_put_contents($mock_yourls_service, '{"shorturl":"https:\/\/example.com\/1","statusCode":200}');
 
         $_SERVER['REQUEST_URI'] = '/path/shortenviayourls?link=https%3A%2F%2Fexample.com%2Fpath%2F%3Ffoo%23bar';
-        $_GET['link'] = 'https://example.com/path/?foo#bar';
+        $_GET['link']           = 'https://example.com/path/?foo#bar';
         ob_start();
         new Controller;
         $content = ob_get_contents();
