@@ -30,6 +30,7 @@
 * Mark van Holsteijn - Google Cloud Storage backend
 * Austin Huang - Oracle database support
 * Felix J. Ogris - S3 Storage backend
+* Mounir Idrassi & J. Mozdzen - secure YOURLS integration
 
 ## Translations
 * Hexalyse - French
