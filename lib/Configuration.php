@@ -157,6 +157,22 @@ class Configuration
                     'prefix'     => 'pastes',
                     'uniformacl' => false,
                 );
+            } elseif (
+                $section == 'model_options' && in_array(
+                    $this->_configuration['model']['class'],
+                    array('S3Storage')
+                )
+            ) {
+                $values = array(
+                    'region'                  => null,
+                    'version'                 => null,
+                    'endpoint'                => null,
+                    'accesskey'               => null,
+                    'secretkey'               => null,
+                    'use_path_style_endpoint' => null,
+                    'bucket'                  => null,
+                    'prefix'                  => '',
+                );
             }
 
             // "*_options" sections don't require all defaults to be set
