@@ -1,5 +1,6 @@
 <?php
 
+use PHPUnit\Framework\TestCase;
 use PrivateBin\Configuration;
 use PrivateBin\YourlsProxy;
 
