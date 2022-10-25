@@ -3,7 +3,7 @@
 use PrivateBin\Configuration;
 use PrivateBin\YourlsProxy;
 
-class YourlsProxyTest extends PHPUnit_Framework_TestCase
+class YourlsProxyTest extends TestCase
 {
     private $_conf;
 
