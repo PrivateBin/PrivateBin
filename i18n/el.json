@@ -182,7 +182,7 @@
     "Use Current Timezone": "Χρήση τρέχουσας ζώνης ώρας",
     "Convert To UTC": "Μετατροπή σε UTC",
     "Close": "Κλείσιμο",
-    "Encrypted note on %s": "Encrypted note on %s",
+    "Encrypted note on %s": "Κρυπτογραφημένο μήνυμα από το %s",
     "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "Επισκεφτείτε αυτόν τον σύνδεσμο για να δείτε το μήνυμα. Δίνοντας τον σύνδεσμο σε οποιονδήποτε, του επιτρέπετε να επισκεφτεί το μήνυμα επίσης.",
     "URL shortener may expose your decrypt key in URL.": "Συντομευτές συνδέσμων πιθανώς να δημοσιοποιήσουν το κλειδί αποκρυπτογράφισης στον σύνδεσμο.",
     "Save paste": "Αποθήκευση επικόλλησης",

@@ -182,7 +182,7 @@
     "Use Current Timezone": "Käytä nykyistä aikavyöhykettä",
     "Convert To UTC": "Muuta UTC:ksi",
     "Close": "Sulje",
-    "Encrypted note on %s": "Encrypted note on %s",
+    "Encrypted note on %s": "Salattu viesti %sissä",
     "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "Käy tässä linkissä nähdäksesi viestin. URL:n antaminen kenellekään antaa heidänkin päästä katsomeen viestiä. ",
     "URL shortener may expose your decrypt key in URL.": "URL-lyhentäjä voi paljastaa purkuavaimesi URL:ssä.",
     "Save paste": "Tallenna paste",
