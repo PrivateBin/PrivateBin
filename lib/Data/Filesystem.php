@@ -351,7 +351,7 @@ class Filesystem extends AbstractData
         $pastes     = array();
         $firstLevel = array_filter(
             scandir(self::$_path),
-            'self::_isFirstLevelDir'
+            'PrivateBin\Data\Filesystem::_isFirstLevelDir'
         );
         if (count($firstLevel) > 0) {
             // try at most 10 times the $batchsize pastes before giving up
@@ -359,7 +359,7 @@ class Filesystem extends AbstractData
                 $firstKey    = array_rand($firstLevel);
                 $secondLevel = array_filter(
                     scandir(self::$_path . DIRECTORY_SEPARATOR . $firstLevel[$firstKey]),
-                    'self::_isSecondLevelDir'
+                    'PrivateBin\Data\Filesystem::_isSecondLevelDir'
                 );
 
                 // skip this folder in the next checks if it is empty

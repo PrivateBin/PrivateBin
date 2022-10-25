@@ -584,7 +584,7 @@ class Database extends AbstractData
             // workaround for https://bugs.php.net/bug.php?id=46728
             $result = array();
             while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
-                $result[] = array_map('self::_sanitizeClob', $row);
+                $result[] = array_map('PrivateBin\Data\Database::_sanitizeClob', $row);
             }
         } else {
             $result = $statement->fetchAll(PDO::FETCH_ASSOC);
@@ -593,7 +593,7 @@ class Database extends AbstractData
         if (self::$_type === 'oci' && is_array($result)) {
             // returned CLOB values are streams, convert these into strings
             $result = $firstOnly ?
-                array_map('self::_sanitizeClob', $result) :
+                array_map('PrivateBin\Data\Database::_sanitizeClob', $result) :
                 $result;
         }
         return $result;
