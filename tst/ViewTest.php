@@ -102,6 +102,10 @@ class ViewTest extends TestCase
                 $content,
                 $template . ': outputs error correctly'
             );
+            if ($template === 'yourlsproxy') {
+                // yourlsproxy template only displays error message
+                continue;
+            }
             $this->assertMatchesRegularExpression(
                 '#<[^>]+id="password"[^>]*>#',
                 $content,

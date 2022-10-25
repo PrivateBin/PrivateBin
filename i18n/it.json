@@ -182,9 +182,12 @@
     "Use Current Timezone": "Usa Fuso Orario Corrente",
     "Convert To UTC": "Converti a UTC",
     "Close": "Chiudi",
-    "Encrypted note on PrivateBin": "Nota crittografata su PrivateBin",
+    "Encrypted note on %s": "Nota crittografata su %s",
     "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "Visita questo collegamento per vedere la nota. Dare l'URL a chiunque consente anche a loro di accedere alla nota.",
     "URL shortener may expose your decrypt key in URL.": "URL shortener può esporre la tua chiave decrittografata nell'URL.",
     "Save paste": "Salva il messagio",
-    "Your IP is not authorized to create pastes.": "Il tuo IP non è autorizzato a creare dei messaggi."
+    "Your IP is not authorized to create pastes.": "Il tuo IP non è autorizzato a creare dei messaggi.",
+    "Trying to shorten a URL that isn't pointing at our instance.": "Trying to shorten a URL that isn't pointing at our instance.",
+    "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".",
+    "Error parsing YOURLS response.": "Error parsing YOURLS response."
 }

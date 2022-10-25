@@ -182,9 +182,12 @@
     "Use Current Timezone": "Use Current Timezone",
     "Convert To UTC": "galfi lo cabni la utc",
     "Close": "ganlo",
-    "Encrypted note on PrivateBin": ".i lo lo notci ku mifra cu zvati sivlolnitvanku'a",
+    "Encrypted note on %s": ".i lo lo notci ku mifra cu zvati %s",
     "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.",
     "URL shortener may expose your decrypt key in URL.": "URL shortener may expose your decrypt key in URL.",
     "Save paste": "rejgau fukpi",
-    "Your IP is not authorized to create pastes.": "Your IP is not authorized to create pastes."
+    "Your IP is not authorized to create pastes.": "Your IP is not authorized to create pastes.",
+    "Trying to shorten a URL that isn't pointing at our instance.": "Trying to shorten a URL that isn't pointing at our instance.",
+    "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".",
+    "Error parsing YOURLS response.": "Error parsing YOURLS response."
 }

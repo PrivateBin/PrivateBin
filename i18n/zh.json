@@ -182,9 +182,12 @@
     "Use Current Timezone": "使用当前时区",
     "Convert To UTC": "转换为 UTC",
     "Close": "关闭",
-    "Encrypted note on PrivateBin": "PrivateBin 上的加密笔记",
+    "Encrypted note on %s": "%s 上的加密笔记",
     "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "访问此链接来查看该笔记。将此 URL 发送给任何人即可允许其访问该笔记。",
     "URL shortener may expose your decrypt key in URL.": "短链接服务可能会暴露您在 URL 中的解密密钥。",
     "Save paste": "保存内容",
-    "Your IP is not authorized to create pastes.": "您的 IP 无权创建粘贴。"
+    "Your IP is not authorized to create pastes.": "您的 IP 无权创建粘贴。",
+    "Trying to shorten a URL that isn't pointing at our instance.": "Trying to shorten a URL that isn't pointing at our instance.",
+    "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".",
+    "Error parsing YOURLS response.": "Error parsing YOURLS response."
 }

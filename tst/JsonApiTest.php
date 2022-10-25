@@ -16,6 +16,9 @@ class JsonApiTest extends TestCase
     {
         /* Setup Routine */
         $this->_path  = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'privatebin_data';
+        if (!is_dir($this->_path)) {
+            mkdir($this->_path);
+        }
         $this->_model = Filesystem::getInstance(array('dir' => $this->_path));
         ServerSalt::setStore($this->_model);
 
@@ -187,8 +190,6 @@ class JsonApiTest extends TestCase
      */
     public function testJsonLdPaste()
     {
-        $paste = Helper::getPaste();
-        $this->_model->create(Helper::getPasteId(), $paste);
         $_GET['jsonld'] = 'paste';
         ob_start();
         new Controller;
@@ -206,8 +207,6 @@ class JsonApiTest extends TestCase
      */
     public function testJsonLdComment()
     {
-        $paste = Helper::getPaste();
-        $this->_model->create(Helper::getPasteId(), $paste);
         $_GET['jsonld'] = 'comment';
         ob_start();
         new Controller;
@@ -225,8 +224,6 @@ class JsonApiTest extends TestCase
      */
     public function testJsonLdPasteMeta()
     {
-        $paste = Helper::getPaste();
-        $this->_model->create(Helper::getPasteId(), $paste);
         $_GET['jsonld'] = 'pastemeta';
         ob_start();
         new Controller;
@@ -244,8 +241,6 @@ class JsonApiTest extends TestCase
      */
     public function testJsonLdCommentMeta()
     {
-        $paste = Helper::getPaste();
-        $this->_model->create(Helper::getPasteId(), $paste);
         $_GET['jsonld'] = 'commentmeta';
         ob_start();
         new Controller;
@@ -263,13 +258,49 @@ class JsonApiTest extends TestCase
      */
     public function testJsonLdInvalid()
     {
-        $paste = Helper::getPaste();
-        $this->_model->create(Helper::getPasteId(), $paste);
         $_GET['jsonld'] = CONF;
         ob_start();
         new Controller;
         $content = ob_get_contents();
         ob_end_clean();
         $this->assertEquals('{}', $content, 'does not output nasty data');
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testShortenViaYourls()
+    {
+        $mock_yourls_service                = $this->_path . DIRECTORY_SEPARATOR . 'yourls.json';
+        $options                            = parse_ini_file(CONF, true);
+        $options['main']['basepath']        = 'https://example.com/path';
+        $options['main']['urlshortener']    = 'https://example.com/path/shortenviayourls?link=';
+        $options['yourls']['apiurl']        = $mock_yourls_service;
+        Helper::createIniFile(CONF, $options);
+
+        // the real service answer is more complex, but we only look for the shorturl & statusCode
+        file_put_contents($mock_yourls_service, '{"shorturl":"https:\/\/example.com\/1","statusCode":200}');
+
+        $_SERVER['REQUEST_URI'] = '/path/shortenviayourls?link=https%3A%2F%2Fexample.com%2Fpath%2F%3Ffoo%23bar';
+        $_GET['link']           = 'https://example.com/path/?foo#bar';
+        ob_start();
+        new Controller;
+        $content = ob_get_contents();
+        ob_end_clean();
+        $this->assertContains('id="pasteurl" href="https://example.com/1"', $content, 'outputs shortened URL correctly');
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testShortenViaYourlsFailure()
+    {
+        $_SERVER['REQUEST_URI'] = '/path/shortenviayourls?link=https%3A%2F%2Fexample.com%2Fpath%2F%3Ffoo%23bar';
+        $_GET['link']           = 'https://example.com/path/?foo#bar';
+        ob_start();
+        new Controller;
+        $content = ob_get_contents();
+        ob_end_clean();
+        $this->assertContains('Error calling YOURLS.', $content, 'outputs error correctly');
     }
 }

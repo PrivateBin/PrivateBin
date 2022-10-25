@@ -182,9 +182,12 @@
     "Use Current Timezone": "Gebruik huidige tijdzone",
     "Convert To UTC": "Omzetten naar UTC",
     "Close": "Sluiten",
-    "Encrypted note on PrivateBin": "Versleutelde notitie op PrivateBin",
+    "Encrypted note on %s": "Versleutelde notitie op %s",
     "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "Bezoek deze link om de notitie te bekijken. Als je de URL aan iemand geeft, kan die de notitie ook bekijken.",
     "URL shortener may expose your decrypt key in URL.": "URL-verkorter kan uw ontcijferingssleutel in URL blootleggen.",
     "Save paste": "Notitie opslaan",
-    "Your IP is not authorized to create pastes.": "Uw IP-adres is niet gemachtigd om geplakte tekst te maken."
+    "Your IP is not authorized to create pastes.": "Uw IP-adres is niet gemachtigd om geplakte tekst te maken.",
+    "Trying to shorten a URL that isn't pointing at our instance.": "Trying to shorten a URL that isn't pointing at our instance.",
+    "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".",
+    "Error parsing YOURLS response.": "Error parsing YOURLS response."
 }

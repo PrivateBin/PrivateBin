@@ -182,9 +182,12 @@
     "Use Current Timezone": "Az aktuális időzóna használata",
     "Convert To UTC": "Átalakítás UTC időzónára",
     "Close": "Bezárás",
-    "Encrypted note on PrivateBin": "Titkosított jegyzet a PrivateBinen",
+    "Encrypted note on %s": "Titkosított jegyzet a %sen",
     "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "Látogasd meg ezt a hivatkozást a bejegyzés megtekintéséhez. Ha mások számára is megadod ezt a linket, azzal hozzáférnek ők is.",
     "URL shortener may expose your decrypt key in URL.": "URL shortener may expose your decrypt key in URL.",
     "Save paste": "Save paste",
-    "Your IP is not authorized to create pastes.": "Your IP is not authorized to create pastes."
+    "Your IP is not authorized to create pastes.": "Your IP is not authorized to create pastes.",
+    "Trying to shorten a URL that isn't pointing at our instance.": "Trying to shorten a URL that isn't pointing at our instance.",
+    "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".",
+    "Error parsing YOURLS response.": "Error parsing YOURLS response."
 }

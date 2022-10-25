@@ -136,6 +136,9 @@ class Controller
             case 'jsonld':
                 $this->_jsonld($this->_request->getParam('jsonld'));
                 return;
+            case 'yourlsproxy':
+                $this->_yourlsproxy($this->_request->getParam('link'));
+                break;
         }
 
         // output JSON or HTML
@@ -378,9 +381,15 @@ class Controller
         );
 
         $page = new View;
-        $page->assign('NAME', $this->_conf->getKey('name'));
-        $page->assign('BASEPATH', I18n::_($this->_conf->getKey('basepath')));
+        $page->assign('CSPHEADER', $metacspheader);
         $page->assign('ERROR', I18n::_($this->_error));
+        $page->assign('NAME', $this->_conf->getKey('name'));
+        if ($this->_request->getOperation() === 'yourlsproxy') {
+            $page->assign('SHORTURL', $this->_status);
+            $page->draw('yourlsproxy');
+            return;
+        }
+        $page->assign('BASEPATH', I18n::_($this->_conf->getKey('basepath')));
         $page->assign('STATUS', I18n::_($this->_status));
         $page->assign('VERSION', self::VERSION);
         $page->assign('DISCUSSION', $this->_conf->getKey('discussion'));
@@ -405,7 +414,6 @@ class Controller
         $page->assign('HTTPWARNING', $this->_conf->getKey('httpwarning'));
         $page->assign('HTTPSLINK', 'https://' . $this->_request->getHost() . $this->_request->getRequestUri());
         $page->assign('COMPRESSION', $this->_conf->getKey('compression'));
-        $page->assign('CSPHEADER', $metacspheader);
         $page->draw($this->_conf->getKey('template'));
     }
 
@@ -437,6 +445,22 @@ class Controller
         header('Access-Control-Allow-Origin: *');
         header('Access-Control-Allow-Methods: GET');
         echo $content;
+    }
+
+    /**
+     * proxies link to YOURLS, updates status or error with response
+     *
+     * @access private
+     * @param string $link
+     */
+    private function _yourlsproxy($link)
+    {
+        $yourls = new YourlsProxy($this->_conf, $link);
+        if ($yourls->isError()) {
+            $this->_error = $yourls->getError();
+        } else {
+            $this->_status = $yourls->getUrl();
+        }
     }
 
     /**

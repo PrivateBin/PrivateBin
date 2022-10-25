@@ -182,9 +182,12 @@
     "Use Current Timezone": "Χρήση τρέχουσας ζώνης ώρας",
     "Convert To UTC": "Μετατροπή σε UTC",
     "Close": "Κλείσιμο",
-    "Encrypted note on PrivateBin": "Κρυπτογραφημένο μήνυμα από το PrivateBin",
+    "Encrypted note on %s": "Κρυπτογραφημένο μήνυμα από το %s",
     "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "Επισκεφτείτε αυτόν τον σύνδεσμο για να δείτε το μήνυμα. Δίνοντας τον σύνδεσμο σε οποιονδήποτε, του επιτρέπετε να επισκεφτεί το μήνυμα επίσης.",
     "URL shortener may expose your decrypt key in URL.": "Συντομευτές συνδέσμων πιθανώς να δημοσιοποιήσουν το κλειδί αποκρυπτογράφισης στον σύνδεσμο.",
     "Save paste": "Αποθήκευση επικόλλησης",
-    "Your IP is not authorized to create pastes.": "Η IP σας δεν επιτρέπεται να δημιουργεί επικολλήσεις."
+    "Your IP is not authorized to create pastes.": "Η IP σας δεν επιτρέπεται να δημιουργεί επικολλήσεις.",
+    "Trying to shorten a URL that isn't pointing at our instance.": "Trying to shorten a URL that isn't pointing at our instance.",
+    "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".",
+    "Error parsing YOURLS response.": "Error parsing YOURLS response."
 }

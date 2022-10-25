@@ -182,9 +182,12 @@
     "Use Current Timezone": "Şuanki zaman dilimini kullan",
     "Convert To UTC": "UTC zaman dilimine çevir",
     "Close": "Kapat",
-    "Encrypted note on PrivateBin": "PrivateBin üzerinde şifrelenmiş not",
+    "Encrypted note on %s": "%s üzerinde şifrelenmiş not",
     "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "Notu görmek için bu bağlantıyı ziyaret et. Bağlantıya sahip olan birisi notu görebilir.",
     "URL shortener may expose your decrypt key in URL.": "URL kısaltıcı şifreleme anahtarınızı URL içerisinde gösterebilir.",
     "Save paste": "Yazıyı kaydet",
-    "Your IP is not authorized to create pastes.": "IP adresinizin yazı oluşturmaya yetkisi yoktur."
+    "Your IP is not authorized to create pastes.": "IP adresinizin yazı oluşturmaya yetkisi yoktur.",
+    "Trying to shorten a URL that isn't pointing at our instance.": "Trying to shorten a URL that isn't pointing at our instance.",
+    "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".",
+    "Error parsing YOURLS response.": "Error parsing YOURLS response."
 }

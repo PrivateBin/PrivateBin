@@ -182,9 +182,12 @@
     "Use Current Timezone": "Utilizar l’actual",
     "Convert To UTC": "Convertir en UTC",
     "Close": "Tampar",
-    "Encrypted note on PrivateBin": "Nòtas chifradas sus PrivateBin",
+    "Encrypted note on %s": "Nòtas chifradas sus %s",
     "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "Visitatz aqueste ligam per veire la nòta. Fornir lo ligam a qualqu’un mai li permet tanben d’accedir a la nòta.",
     "URL shortener may expose your decrypt key in URL.": "Los espleches d’acorchiment d’URL pòdon expausar la clau de deschiframent dins l’URL.",
     "Save paste": "Enregistrar lo tèxt",
-    "Your IP is not authorized to create pastes.": "Vòstra adreça IP a pas l’autorizacion de crear de tèxtes."
+    "Your IP is not authorized to create pastes.": "Vòstra adreça IP a pas l’autorizacion de crear de tèxtes.",
+    "Trying to shorten a URL that isn't pointing at our instance.": "Trying to shorten a URL that isn't pointing at our instance.",
+    "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".",
+    "Error parsing YOURLS response.": "Error parsing YOURLS response."
 }

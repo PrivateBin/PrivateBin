@@ -182,9 +182,12 @@
     "Use Current Timezone": "Bruk gjeldende tidssone",
     "Convert To UTC": "Konverter til UTC",
     "Close": "Steng",
-    "Encrypted note on PrivateBin": "Kryptert notat på PrivateBin",
+    "Encrypted note on %s": "Kryptert notat på %s",
     "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "Besøk denne lenken for å se notatet. Hvis lenken deles med andre, vil de også kunne se notatet.",
     "URL shortener may expose your decrypt key in URL.": "URL forkorter kan avsløre dekrypteringsnøkkelen.",
     "Save paste": "Lagre utklipp",
-    "Your IP is not authorized to create pastes.": "Your IP is not authorized to create pastes."
+    "Your IP is not authorized to create pastes.": "Your IP is not authorized to create pastes.",
+    "Trying to shorten a URL that isn't pointing at our instance.": "Trying to shorten a URL that isn't pointing at our instance.",
+    "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".",
+    "Error parsing YOURLS response.": "Error parsing YOURLS response."
 }

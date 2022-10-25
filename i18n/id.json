@@ -182,9 +182,12 @@
     "Use Current Timezone": "Gunakan Zonawaktu Saat Ini",
     "Convert To UTC": "Konversi Ke UTC",
     "Close": "Tutup",
-    "Encrypted note on PrivateBin": "Catatan ter-ekrip di PrivateBin",
+    "Encrypted note on %s": "Catatan ter-ekrip di %s",
     "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "Kunjungi tautan ini untuk melihat catatan. Memberikan alamat URL pada siapapun juga, akan mengizinkan mereka untuk mengakses catatan, so pasti gitu loh Kaka.",
     "URL shortener may expose your decrypt key in URL.": "Pemendek URL mungkin akan menampakkan kunci dekrip Anda dalam URL.",
     "Save paste": "Simpan paste",
-    "Your IP is not authorized to create pastes.": "Your IP is not authorized to create pastes."
+    "Your IP is not authorized to create pastes.": "Your IP is not authorized to create pastes.",
+    "Trying to shorten a URL that isn't pointing at our instance.": "Trying to shorten a URL that isn't pointing at our instance.",
+    "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".",
+    "Error parsing YOURLS response.": "Error parsing YOURLS response."
 }

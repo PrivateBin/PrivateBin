@@ -182,9 +182,12 @@
     "Use Current Timezone": "Naudoti esamą laiko juostą",
     "Convert To UTC": "Konvertuoti į UTC",
     "Close": "Užverti",
-    "Encrypted note on PrivateBin": "Šifruoti užrašai ties PrivateBin",
+    "Encrypted note on %s": "Šifruoti užrašai ties %s",
     "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "Norėdami matyti užrašus, aplankykite šį tinklalapį. Pasidalinus šiuo URL adresu su kitais žmonėmis, jiems taip pat bus leidžiama prieiga prie šių užrašų.",
     "URL shortener may expose your decrypt key in URL.": "URL trumpinimo įrankis gali atskleisti URL adrese jūsų iššifravimo raktą.",
     "Save paste": "Įrašyti įdėjimą",
-    "Your IP is not authorized to create pastes.": "Jūsų IP adresas neturi įgaliojimų kurti įdėjimų."
+    "Your IP is not authorized to create pastes.": "Jūsų IP adresas neturi įgaliojimų kurti įdėjimų.",
+    "Trying to shorten a URL that isn't pointing at our instance.": "Trying to shorten a URL that isn't pointing at our instance.",
+    "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".",
+    "Error parsing YOURLS response.": "Error parsing YOURLS response."
 }

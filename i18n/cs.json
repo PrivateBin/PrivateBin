@@ -182,9 +182,12 @@
     "Use Current Timezone": "Použít aktuální časové pásmo",
     "Convert To UTC": "Převést na UTC",
     "Close": "Zavřít",
-    "Encrypted note on PrivateBin": "Šifrovaná poznámka ve službě PrivateBin",
+    "Encrypted note on %s": "Šifrovaná poznámka ve službě %s",
     "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "Navštivte tento odkaz pro zobrazení poznámky. Přeposláním URL umožníte také jiným lidem přístup.",
     "URL shortener may expose your decrypt key in URL.": "Zkracovač URL může odhalit váš dešifrovací klíč v URL.",
     "Save paste": "Uložit příspěvek",
-    "Your IP is not authorized to create pastes.": "Vaše IP adresa nemá oprávnění k vytvoření vložení."
+    "Your IP is not authorized to create pastes.": "Vaše IP adresa nemá oprávnění k vytvoření vložení.",
+    "Trying to shorten a URL that isn't pointing at our instance.": "Trying to shorten a URL that isn't pointing at our instance.",
+    "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".",
+    "Error parsing YOURLS response.": "Error parsing YOURLS response."
 }

@@ -182,9 +182,12 @@
     "Use Current Timezone": "Käytä nykyistä aikavyöhykettä",
     "Convert To UTC": "Muuta UTC:ksi",
     "Close": "Sulje",
-    "Encrypted note on PrivateBin": "Salattu viesti PrivateBinissä",
+    "Encrypted note on %s": "Salattu viesti %sissä",
     "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "Käy tässä linkissä nähdäksesi viestin. URL:n antaminen kenellekään antaa heidänkin päästä katsomeen viestiä. ",
     "URL shortener may expose your decrypt key in URL.": "URL-lyhentäjä voi paljastaa purkuavaimesi URL:ssä.",
     "Save paste": "Tallenna paste",
-    "Your IP is not authorized to create pastes.": "IP:llesi ei ole annettu oikeutta luoda pasteja."
+    "Your IP is not authorized to create pastes.": "IP:llesi ei ole annettu oikeutta luoda pasteja.",
+    "Trying to shorten a URL that isn't pointing at our instance.": "Trying to shorten a URL that isn't pointing at our instance.",
+    "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".",
+    "Error parsing YOURLS response.": "Error parsing YOURLS response."
 }
