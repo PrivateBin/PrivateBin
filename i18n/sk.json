@@ -182,7 +182,7 @@
     "Use Current Timezone": "Použiť aktuálne časové pásmo",
     "Convert To UTC": "Previesť na UTC",
     "Close": "Zavrieť",
-    "Encrypted note on %s": "Encrypted note on %s",
+    "Encrypted note on %s": "Zašifrovaná poznámka na %s",
     "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "Ak chcete zobraziť poznámku, navštívte tento odkaz. Poskytnutie adresy URL komukoľvek im umožní prístup aj k poznámke.",
     "URL shortener may expose your decrypt key in URL.": "Skracovač adries URL môže odhaliť váš dešifrovací kľúč v adrese URL.",
     "Save paste": "Uložiť príspevok",
