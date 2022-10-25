@@ -287,7 +287,7 @@ class JsonApiTest extends TestCase
         new Controller;
         $content = ob_get_contents();
         ob_end_clean();
-        $this->assertContains('id="pasteurl" href="https://example.com/1"', $content, 'outputs shortened URL correctly');
+        $this->assertStringContains('id="pasteurl" href="https://example.com/1"', $content, 'outputs shortened URL correctly');
     }
 
     /**
@@ -301,6 +301,6 @@ class JsonApiTest extends TestCase
         new Controller;
         $content = ob_get_contents();
         ob_end_clean();
-        $this->assertContains('Error calling YOURLS.', $content, 'outputs error correctly');
+        $this->assertStringContains('Error calling YOURLS.', $content, 'outputs error correctly');
     }
 }

@@ -189,7 +189,7 @@ class I18nTest extends TestCase
             foreach (array_keys($languages) as $language) {
                 // most languages don't translate the data size units, ignore those
                 if ($messageId !== 'B' && strlen($messageId) !== 3 && strpos($messageId, 'B', 2) !== 2) {
-                    $this->assertContains(
+                    $this->assertStringContains(
                         $messageId,
                         $languages[$language],
                         "message ID '$messageId' exists in translation file $language.json"

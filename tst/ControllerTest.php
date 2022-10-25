@@ -66,7 +66,7 @@ class ControllerTest extends TestCase
             $content,
             'doesn\'t output shortener button'
         );
-        $this->assertRegExp(
+        $this->assertMatchesRegularExpression(
             '# href="https://' . preg_quote($_SERVER['HTTP_HOST']) . '/">switching to HTTPS#',
             $content,
             'outputs configured https URL correctly'
