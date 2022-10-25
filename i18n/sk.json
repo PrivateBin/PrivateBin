@@ -187,7 +187,7 @@
     "URL shortener may expose your decrypt key in URL.": "Skracovač adries URL môže odhaliť váš dešifrovací kľúč v adrese URL.",
     "Save paste": "Uložiť príspevok",
     "Your IP is not authorized to create pastes.": "Vaša IP adresa nie je oprávnená vytvárať príspevky.",
-    "Trying to shorten a URL that isn't pointing at our instance.": "Trying to shorten a URL that isn't pointing at our instance.",
+    "Trying to shorten a URL that isn't pointing at our instance.": "Pokúšate sa skrátiť adresu URL, ktorá neukazuje na túto inštanciu.",
     "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".",
     "Error parsing YOURLS response.": "Error parsing YOURLS response."
 }
