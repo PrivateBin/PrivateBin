@@ -187,7 +187,7 @@
     "URL shortener may expose your decrypt key in URL.": "Der URL-Verkürzer kann den Schlüssel in der URL enthüllen.",
     "Save paste": "Text speichern",
     "Your IP is not authorized to create pastes.": "Deine IP ist nicht berechtigt, Texte zu erstellen.",
-    "Trying to shorten a URL that isn't pointing at our instance.": "Trying to shorten a URL that isn't pointing at our instance.",
-    "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".",
-    "Error parsing YOURLS response.": "Error parsing YOURLS response."
+    "Trying to shorten a URL that isn't pointing at our instance.": "Versuch eine URL zu verkürzen, die nicht auf unsere Instanz zeigt.",
+    "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "Fehler beim Aufruf von YOURLS. Wahrscheinlich ein Konfigurationsproblem, wie eine falsche oder fehlende \"apiurl\" oder \"signature\".",
+    "Error parsing YOURLS response.": "Fehler beim Verarbeiten der YOURLS-Antwort."
 }
