@@ -17,7 +17,7 @@ coding_style:
 build:
     environment:
         php:
-            version: '7.4'
+            version: '7.2'
     tests:
         override:
             -
@@ -28,12 +28,9 @@ build:
     nodes:
         tests: true
         analysis:
-            dependencies:
-                after:
-                    - composer require --dev "squizlabs/php_codesniffer=^3"
             tests:
                 override:
                     -
-                        command: vendor/bin/phpcs
-                        use_website_config: false
+                        command: phpcs-run
+                        use_website_config: true
                     - php-scrutinizer-run
