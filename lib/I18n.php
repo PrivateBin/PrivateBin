@@ -84,7 +84,7 @@ class I18n
      */
     public static function _($messageId)
     {
-        return forward_static_call_array('self::translate', func_get_args());
+        return forward_static_call_array('PrivateBin\I18n::translate', func_get_args());
     }
 
     /**
