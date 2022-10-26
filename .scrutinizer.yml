@@ -35,5 +35,5 @@ build:
                 override:
                     -
                         command: vendor/bin/phpcs
-                        use_website_config: true
+                        use_website_config: false
                     - php-scrutinizer-run
