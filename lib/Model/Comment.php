@@ -14,6 +14,7 @@ namespace PrivateBin\Model;
 
 use Exception;
 use Identicon\Identicon;
+use Jdenticon\Identicon as Jdenticon;
 use PrivateBin\Persistence\TrafficLimiter;
 use PrivateBin\Vizhash16x16;
 
@@ -164,7 +165,17 @@ class Comment extends AbstractModel
         if ($icon != 'none') {
             $pngdata = '';
             $hmac    = TrafficLimiter::getHash();
-            if ($icon == 'identicon') {
+            if ($icon == 'jdenticon') {
+                $jdenticon = new Jdenticon(array(
+                    'hash'  => $hmac,
+                    'size'  => 16,
+                    'style' => array(
+                        'backgroundColor'   => '#fff0', // fully transparent, for dark mode
+                        'padding'           => 0,
+                    ),
+                ));
+                $pngdata   = $jdenticon->getImageDataUri('png');
+            } elseif ($icon == 'identicon') {
                 $identicon = new Identicon();
                 $pngdata   = $identicon->getImageDataUri($hmac, 16);
             } elseif ($icon == 'vizhash') {
