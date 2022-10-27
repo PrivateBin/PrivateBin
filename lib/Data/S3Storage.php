@@ -45,86 +45,71 @@ class S3Storage extends AbstractData
      * S3 client
      *
      * @access private
-     * @static
      * @var    S3Client
      */
-    private static $_client = null;
+    private $_client = null;
 
     /**
      * S3 client options
      *
      * @access private
-     * @static
      * @var    array
      */
-    private static $_options = array();
+    private $_options = array();
 
     /**
      * S3 bucket
      *
      * @access private
-     * @static
      * @var    string
      */
-    private static $_bucket = null;
+    private $_bucket = null;
 
     /**
      * S3 prefix for all PrivateBin data in this bucket
      *
      * @access private
-     * @static
      * @var    string
      */
-    private static $_prefix = '';
+    private $_prefix = '';
 
     /**
-     * returns an S3 data backend.
+     * instantiates a new S3 data backend.
      *
      * @access public
-     * @static
      * @param array $options
-     * @return S3Storage
+     * @return 
      */
-    public static function getInstance(array $options)
+    public function __construct(array $options)
     {
-        // if needed initialize the singleton
-        if (!(self::$_instance instanceof self)) {
-            self::$_instance = new self;
-        }
-
-        self::$_options                = array();
-        self::$_options['credentials'] = array();
+        $this->_options['credentials'] = array();
 
         if (is_array($options) && array_key_exists('region', $options)) {
-            self::$_options['region'] = $options['region'];
+            $this->_options['region'] = $options['region'];
         }
         if (is_array($options) && array_key_exists('version', $options)) {
-            self::$_options['version'] = $options['version'];
+            $this->_options['version'] = $options['version'];
         }
         if (is_array($options) && array_key_exists('endpoint', $options)) {
-            self::$_options['endpoint'] = $options['endpoint'];
+            $this->_options['endpoint'] = $options['endpoint'];
         }
         if (is_array($options) && array_key_exists('accesskey', $options)) {
-            self::$_options['credentials']['key'] = $options['accesskey'];
+            $this->_options['credentials']['key'] = $options['accesskey'];
         }
         if (is_array($options) && array_key_exists('secretkey', $options)) {
-            self::$_options['credentials']['secret'] = $options['secretkey'];
+            $this->_options['credentials']['secret'] = $options['secretkey'];
         }
         if (is_array($options) && array_key_exists('use_path_style_endpoint', $options)) {
-            self::$_options['use_path_style_endpoint'] = filter_var($options['use_path_style_endpoint'], FILTER_VALIDATE_BOOLEAN);
+            $this->_options['use_path_style_endpoint'] = filter_var($options['use_path_style_endpoint'], FILTER_VALIDATE_BOOLEAN);
         }
         if (is_array($options) && array_key_exists('bucket', $options)) {
-            self::$_bucket = $options['bucket'];
+            $this->_bucket = $options['bucket'];
         }
         if (is_array($options) && array_key_exists('prefix', $options)) {
-            self::$_prefix = $options['prefix'];
+            $this->_prefix = $options['prefix'];
         }
 
-        if (empty(self::$_client)) {
-            self::$_client = new S3Client(self::$_options);
-        }
-
-        return self::$_instance;
+        $this->_client = new S3Client($this->_options);
     }
 
     /**
@@ -138,12 +123,12 @@ class S3Storage extends AbstractData
     {
         $allObjects = array();
         $options    = array(
-            'Bucket' => self::$_bucket,
+            'Bucket' => $this->_bucket,
             'Prefix' => $prefix,
         );
 
         do {
-            $objectsListResponse = self::$_client->listObjects($options);
+            $objectsListResponse = $this->_client->listObjects($options);
             $objects             = $objectsListResponse['Contents'] ?? array();
             foreach ($objects as $object) {
                 $allObjects[]      = $object;
@@ -155,7 +140,7 @@ class S3Storage extends AbstractData
     }
 
     /**
-     * returns the S3 storage object key for $pasteid in self::$_bucket.
+     * returns the S3 storage object key for $pasteid in $this->_bucket.
      *
      * @access private
      * @param $pasteid string to get the key for
@@ -163,14 +148,14 @@ class S3Storage extends AbstractData
      */
     private function _getKey($pasteid)
     {
-        if (self::$_prefix != '') {
-            return self::$_prefix . '/' . $pasteid;
+        if ($this->_prefix != '') {
+            return $this->_prefix . '/' . $pasteid;
         }
         return $pasteid;
     }
 
     /**
-     * Uploads the payload in the self::$_bucket under the specified key.
+     * Uploads the payload in the $this->_bucket under the specified key.
      * The entire payload is stored as a JSON document. The metadata is replicated
      * as the S3 object's metadata except for the fields attachment, attachmentname
      * and salt.
@@ -187,15 +172,15 @@ class S3Storage extends AbstractData
             $metadata[$k] = strval($v);
         }
         try {
-            self::$_client->putObject(array(
-                'Bucket'      => self::$_bucket,
+            $this->_client->putObject(array(
+                'Bucket'      => $this->_bucket,
                 'Key'         => $key,
                 'Body'        => Json::encode($payload),
                 'ContentType' => 'application/json',
                 'Metadata'    => $metadata,
             ));
         } catch (S3Exception $e) {
-            error_log('failed to upload ' . $key . ' to ' . self::$_bucket . ', ' .
+            error_log('failed to upload ' . $key . ' to ' . $this->_bucket . ', ' .
                 trim(preg_replace('/\s\s+/', ' ', $e->getMessage())));
             return false;
         }
@@ -220,14 +205,14 @@ class S3Storage extends AbstractData
     public function read($pasteid)
     {
         try {
-            $object = self::$_client->getObject(array(
-                'Bucket' => self::$_bucket,
+            $object = $this->_client->getObject(array(
+                'Bucket' => $this->_bucket,
                 'Key'    => $this->_getKey($pasteid),
             ));
             $data = $object['Body']->getContents();
             return Json::decode($data);
         } catch (S3Exception $e) {
-            error_log('failed to read ' . $pasteid . ' from ' . self::$_bucket . ', ' .
+            error_log('failed to read ' . $pasteid . ' from ' . $this->_bucket . ', ' .
                 trim(preg_replace('/\s\s+/', ' ', $e->getMessage())));
             return false;
         }
@@ -244,8 +229,8 @@ class S3Storage extends AbstractData
             $comments = $this->_listAllObjects($name . '/discussion/');
             foreach ($comments as $comment) {
                 try {
-                    self::$_client->deleteObject(array(
-                        'Bucket' => self::$_bucket,
+                    $this->_client->deleteObject(array(
+                        'Bucket' => $this->_bucket,
                         'Key'    => $comment['Key'],
                     ));
                 } catch (S3Exception $e) {
@@ -257,8 +242,8 @@ class S3Storage extends AbstractData
         }
 
         try {
-            self::$_client->deleteObject(array(
-                'Bucket' => self::$_bucket,
+            $this->_client->deleteObject(array(
+                'Bucket' => $this->_bucket,
                 'Key'    => $name,
             ));
         } catch (S3Exception $e) {
@@ -271,7 +256,7 @@ class S3Storage extends AbstractData
      */
     public function exists($pasteid)
     {
-        return self::$_client->doesObjectExistV2(self::$_bucket, $this->_getKey($pasteid));
+        return $this->_client->doesObjectExistV2($this->_bucket, $this->_getKey($pasteid));
     }
 
     /**
@@ -296,8 +281,8 @@ class S3Storage extends AbstractData
         try {
             $entries = $this->_listAllObjects($prefix);
             foreach ($entries as $entry) {
-                $object = self::$_client->getObject(array(
-                    'Bucket' => self::$_bucket,
+                $object = $this->_client->getObject(array(
+                    'Bucket' => $this->_bucket,
                     'Key'    => $entry['Key'],
                 ));
                 $body             = JSON::decode($object['Body']->getContents());
@@ -319,7 +304,7 @@ class S3Storage extends AbstractData
     public function existsComment($pasteid, $parentid, $commentid)
     {
         $name = $this->_getKey($pasteid) . '/discussion/' . $parentid . '/' . $commentid;
-        return self::$_client->doesObjectExistV2(self::$_bucket, $name);
+        return $this->_client->doesObjectExistV2($this->_bucket, $name);
     }
 
     /**
@@ -327,7 +312,7 @@ class S3Storage extends AbstractData
      */
     public function purgeValues($namespace, $time)
     {
-        $path = self::$_prefix;
+        $path = $this->_prefix;
         if ($path != '') {
             $path .= '/';
         }
@@ -339,16 +324,16 @@ class S3Storage extends AbstractData
                 if (strlen($name) > strlen($path) && substr($name, strlen($path), 1) !== '/') {
                     continue;
                 }
-                $head = self::$_client->headObject(array(
-                    'Bucket' => self::$_bucket,
+                $head = $this->_client->headObject(array(
+                    'Bucket' => $this->_bucket,
                     'Key'    => $name,
                 ));
-                if (array_key_exists('Metadata', $head) && array_key_exists('value', $head['Metadata'])) {
-                    $value = $head['Metadata']['value'];
+                if ($head->get('Metadata') != null && array_key_exists('value', $head->get('Metadata'))) {
+                    $value = $head->get('Metadata')['value'];
                     if (is_numeric($value) && intval($value) < $time) {
                         try {
-                            self::$_client->deleteObject(array(
-                                'Bucket' => self::$_bucket,
+                            $this->_client->deleteObject(array(
+                                'Bucket' => $this->_bucket,
                                 'Key'    => $name,
                             ));
                         } catch (S3Exception $e) {
@@ -369,7 +354,7 @@ class S3Storage extends AbstractData
      */
     public function setValue($value, $namespace, $key = '')
     {
-        $prefix = self::$_prefix;
+        $prefix = $this->_prefix;
         if ($prefix != '') {
             $prefix .= '/';
         }
@@ -385,15 +370,15 @@ class S3Storage extends AbstractData
             $metadata['value'] = strval($value);
         }
         try {
-            self::$_client->putObject(array(
-                'Bucket'      => self::$_bucket,
+            $this->_client->putObject(array(
+                'Bucket'      => $this->_bucket,
                 'Key'         => $key,
                 'Body'        => $value,
                 'ContentType' => 'application/json',
                 'Metadata'    => $metadata,
             ));
         } catch (S3Exception $e) {
-            error_log('failed to set key ' . $key . ' to ' . self::$_bucket . ', ' .
+            error_log('failed to set key ' . $key . ' to ' . $this->_bucket . ', ' .
                 trim(preg_replace('/\s\s+/', ' ', $e->getMessage())));
             return false;
         }
@@ -405,7 +390,7 @@ class S3Storage extends AbstractData
      */
     public function getValue($namespace, $key = '')
     {
-        $prefix = self::$_prefix;
+        $prefix = $this->_prefix;
         if ($prefix != '') {
             $prefix .= '/';
         }
@@ -417,8 +402,8 @@ class S3Storage extends AbstractData
         }
 
         try {
-            $object = self::$_client->getObject(array(
-                'Bucket' => self::$_bucket,
+            $object = $this->_client->getObject(array(
+                'Bucket' => $this->_bucket,
                 'Key'    => $key,
             ));
             return $object['Body']->getContents();
@@ -434,19 +419,19 @@ class S3Storage extends AbstractData
     {
         $expired = array();
         $now     = time();
-        $prefix  = self::$_prefix;
+        $prefix  = $this->_prefix;
         if ($prefix != '') {
             $prefix .= '/';
         }
 
         try {
             foreach ($this->_listAllObjects($prefix) as $object) {
-                $head = self::$_client->headObject(array(
-                    'Bucket' => self::$_bucket,
+                $head = $this->_client->headObject(array(
+                    'Bucket' => $this->_bucket,
                     'Key'    => $object['Key'],
                 ));
-                if (array_key_exists('Metadata', $head) && array_key_exists('expire_date', $head['Metadata'])) {
-                    $expire_at = intval($head['Metadata']['expire_date']);
+                if ($head->get('Metadata') != null && array_key_exists('expire_date', $head->get('Metadata'))) {
+                    $expire_at = intval($head->get('Metadata')['expire_date']);
                     if ($expire_at != 0 && $expire_at < $now) {
                         array_push($expired, $object['Key']);
                     }
@@ -460,5 +445,29 @@ class S3Storage extends AbstractData
             // no objects in the bucket yet
         }
         return $expired;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getAllPastes()
+    {
+        $pastes = array();
+        $prefix  = $this->_prefix;
+        if ($prefix != '') {
+            $prefix .= '/';
+        }
+
+        try {
+            foreach ($this->_listAllObjects($prefix) as $object) {
+                $candidate = substr($object["Key"], strlen($prefix));
+                if (strpos($candidate, "/") === false) {
+                    $pastes[] = $candidate;
+                }
+            }
+        } catch (S3Exception $e) {
+            // no objects in the bucket yet
+        }
+        return $pastes;
     }
 }

@@ -21,7 +21,7 @@ class ServerSaltTest extends PHPUnit_Framework_TestCase
             mkdir($this->_path);
         }
         ServerSalt::setStore(
-            Filesystem::getInstance(array('dir' => $this->_path))
+            new Filesystem(array('dir' => $this->_path))
         );
 
         $this->_otherPath = $this->_path . DIRECTORY_SEPARATOR . 'foo';
@@ -44,17 +44,17 @@ class ServerSaltTest extends PHPUnit_Framework_TestCase
     {
         // generating new salt
         ServerSalt::setStore(
-            Filesystem::getInstance(array('dir' => $this->_path))
+            new Filesystem(array('dir' => $this->_path))
         );
         $salt = ServerSalt::get();
 
         // try setting a different path and resetting it
         ServerSalt::setStore(
-            Filesystem::getInstance(array('dir' => $this->_otherPath))
+            new Filesystem(array('dir' => $this->_otherPath))
         );
         $this->assertNotEquals($salt, ServerSalt::get());
         ServerSalt::setStore(
-            Filesystem::getInstance(array('dir' => $this->_path))
+            new Filesystem(array('dir' => $this->_path))
         );
         $this->assertEquals($salt, ServerSalt::get());
     }
@@ -63,7 +63,7 @@ class ServerSaltTest extends PHPUnit_Framework_TestCase
     {
         // try setting an invalid path
         chmod($this->_invalidPath, 0000);
-        $store = Filesystem::getInstance(array('dir' => $this->_invalidPath));
+        $store = new Filesystem(array('dir' => $this->_invalidPath));
         ServerSalt::setStore($store);
         $salt = ServerSalt::get();
         ServerSalt::setStore($store);
@@ -76,7 +76,7 @@ class ServerSaltTest extends PHPUnit_Framework_TestCase
         chmod($this->_invalidPath, 0700);
         file_put_contents($this->_invalidFile, '');
         chmod($this->_invalidFile, 0000);
-        $store = Filesystem::getInstance(array('dir' => $this->_invalidPath));
+        $store = new Filesystem(array('dir' => $this->_invalidPath));
         ServerSalt::setStore($store);
         $salt = ServerSalt::get();
         ServerSalt::setStore($store);
@@ -93,7 +93,7 @@ class ServerSaltTest extends PHPUnit_Framework_TestCase
         }
         file_put_contents($this->_invalidPath . DIRECTORY_SEPARATOR . '.htaccess', '');
         chmod($this->_invalidPath, 0500);
-        $store = Filesystem::getInstance(array('dir' => $this->_invalidPath));
+        $store = new Filesystem(array('dir' => $this->_invalidPath));
         ServerSalt::setStore($store);
         $salt = ServerSalt::get();
         ServerSalt::setStore($store);
@@ -105,9 +105,9 @@ class ServerSaltTest extends PHPUnit_Framework_TestCase
         // try creating an invalid path
         chmod($this->_invalidPath, 0000);
         ServerSalt::setStore(
-            Filesystem::getInstance(array('dir' => $this->_invalidPath . DIRECTORY_SEPARATOR . 'baz'))
+            new Filesystem(array('dir' => $this->_invalidPath . DIRECTORY_SEPARATOR . 'baz'))
         );
-        $store = Filesystem::getInstance(array('dir' => $this->_invalidPath));
+        $store = new Filesystem(array('dir' => $this->_invalidPath));
         ServerSalt::setStore($store);
         $salt = ServerSalt::get();
         ServerSalt::setStore($store);
