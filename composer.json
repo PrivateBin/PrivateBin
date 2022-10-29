@@ -27,7 +27,8 @@
 		"php" : "^5.6.0 || ^7.0 || ^8.0",
 		"paragonie/random_compat" : "2.0.21",
 		"yzalis/identicon" : "2.0.0",
-		"mlocati/ip-lib" : "1.18.0"
+		"mlocati/ip-lib" : "1.18.0",
+		"jdenticon/jdenticon": "^1.0"
 	},
 	"suggest" : {
 		"google/cloud-storage" : "1.26.1",

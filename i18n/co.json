@@ -187,7 +187,7 @@
     "URL shortener may expose your decrypt key in URL.": "Un ammuzzatore d’indirizzu pò palisà a vostra chjave di dicifratura in l’indirizzu.",
     "Save paste": "Arregistrà l’appiccicu",
     "Your IP is not authorized to create pastes.": "U vostru indirizzu IP ùn hè micca auturizatu à creà l’appiccichi.",
-    "Trying to shorten a URL that isn't pointing at our instance.": "Trying to shorten a URL that isn't pointing at our instance.",
-    "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".",
-    "Error parsing YOURLS response.": "Error parsing YOURLS response."
+    "Trying to shorten a URL that isn't pointing at our instance.": "Pruvate d’ammuzzà un indirizzu web chì ùn punta micca versu a vostra instanza.",
+    "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "Sbagliu à a chjama di YOURLS. Seria forse una cunfigurazione gattiva, tale una \"apiurl\" o \"signature\" falsa o assente.",
+    "Error parsing YOURLS response.": "Sbagliu durante l’analisa di a risposta di YOURLS."
 }

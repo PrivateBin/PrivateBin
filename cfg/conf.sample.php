@@ -65,10 +65,11 @@ languageselection = false
 ; qrcode = true
 
 ; (optional) IP based icons are a weak mechanism to detect if a comment was from
-; a different user when the same username was used in a comment. It might be
-; used to get the IP of a non anonymous comment poster if the server salt is
-; leaked and a SHA256 HMAC rainbow table is generated for all (relevant) IPs.
-; Can be set to one these values: "none" / "vizhash" / "identicon" (default).
+; a different user when the same username was used in a comment. It might get
+; used to get the IP of a comment poster if the server salt is leaked and a
+; SHA512 HMAC rainbow table is generated for all (relevant) IPs.
+; Can be set to one these values:
+; "none" / "vizhash" / "identicon" / "jdenticon" (default).
 ; icon = "none"
 
 ; Content Security Policy headers allow a website to restrict what sources are

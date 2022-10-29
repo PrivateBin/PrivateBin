@@ -7,6 +7,7 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'PrivateBin\\' => array($baseDir . '/lib'),
+    'Jdenticon\\' => array($vendorDir . '/jdenticon/jdenticon/src'),
     'Identicon\\' => array($vendorDir . '/yzalis/identicon/src/Identicon'),
     'IPLib\\' => array($vendorDir . '/mlocati/ip-lib/src'),
 );
