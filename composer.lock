@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "jdenticon/jdenticon",
-            "version": "1.0.1",
+            "version": "1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dmester/jdenticon-php.git",
-                "reference": "994ee07293fb978f983393ffcb2c0250592a6ac4"
+                "reference": "cabb7a44c413c318392a341c5d3ca30fcdd57a6f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dmester/jdenticon-php/zipball/994ee07293fb978f983393ffcb2c0250592a6ac4",
-                "reference": "994ee07293fb978f983393ffcb2c0250592a6ac4",
+                "url": "https://api.github.com/repos/dmester/jdenticon-php/zipball/cabb7a44c413c318392a341c5d3ca30fcdd57a6f",
+                "reference": "cabb7a44c413c318392a341c5d3ca30fcdd57a6f",
                 "shasum": ""
             },
             "require": {
@@ -53,7 +53,7 @@
                 "issues": "https://github.com/dmester/jdenticon-php/issues",
                 "source": "https://github.com/dmester/jdenticon-php"
             },
-            "time": "2022-07-02T11:03:15+00:00"
+            "time": "2022-10-30T17:15:02+00:00"
         },
         {
             "name": "mlocati/ip-lib",
