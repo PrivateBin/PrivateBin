@@ -5,18 +5,18 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '78aa70e3ab9277172489f9d88f8fd08cc1d03c97',
+        'reference' => '46013df6201304840c8dab82af63cc9000a6d239',
         'name' => 'privatebin/privatebin',
         'dev' => false,
     ),
     'versions' => array(
         'jdenticon/jdenticon' => array(
-            'pretty_version' => '1.0.1',
-            'version' => '1.0.1.0',
+            'pretty_version' => '1.0.2',
+            'version' => '1.0.2.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../jdenticon/jdenticon',
             'aliases' => array(),
-            'reference' => '994ee07293fb978f983393ffcb2c0250592a6ac4',
+            'reference' => 'cabb7a44c413c318392a341c5d3ca30fcdd57a6f',
             'dev_requirement' => false,
         ),
         'mlocati/ip-lib' => array(
@@ -43,7 +43,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '78aa70e3ab9277172489f9d88f8fd08cc1d03c97',
+            'reference' => '46013df6201304840c8dab82af63cc9000a6d239',
             'dev_requirement' => false,
         ),
         'yzalis/identicon' => array(

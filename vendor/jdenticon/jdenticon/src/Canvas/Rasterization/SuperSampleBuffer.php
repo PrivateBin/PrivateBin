@@ -21,6 +21,15 @@ class SuperSampleBuffer
     const IDX_G = 3;
     const IDX_B = 4;
 
+    private $samples;
+    private $samplesPerPixel;
+
+    private $pixelOffset;
+    private $subPixelOffset;
+
+    private $width;
+    private $used;
+
     /**
      * Creates a color buffer keeping an average color out of several
      * color samples per pixel.
