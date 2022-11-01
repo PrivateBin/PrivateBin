@@ -156,7 +156,7 @@ class ModelTest extends PHPUnit_Framework_TestCase
 
     public function testCommentDefaults()
     {
-        $class = 'PrivateBin\\Data\\' . $this->_conf->getKey('class', 'model');
+        $class   = 'PrivateBin\\Data\\' . $this->_conf->getKey('class', 'model');
         $comment = new Comment(
             $this->_conf,
             new $class(

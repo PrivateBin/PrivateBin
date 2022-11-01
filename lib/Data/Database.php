@@ -481,7 +481,7 @@ class Database extends AbstractData
             // migrate filesystem based salt into database
             $file = 'data' . DIRECTORY_SEPARATOR . 'salt.php';
             if ($namespace === 'salt' && is_readable($file)) {
-                $fs = new Filesystem(array('dir' => 'data'));
+                $fs    = new Filesystem(array('dir' => 'data'));
                 $value = $fs->getValue('salt');
                 $this->setValue($value, 'salt');
                 @unlink($file);

@@ -78,7 +78,7 @@ class S3Storage extends AbstractData
      *
      * @access public
      * @param array $options
-     * @return 
+     * @return
      */
     public function __construct(array $options)
     {
@@ -453,15 +453,15 @@ class S3Storage extends AbstractData
     public function getAllPastes()
     {
         $pastes = array();
-        $prefix  = $this->_prefix;
+        $prefix = $this->_prefix;
         if ($prefix != '') {
             $prefix .= '/';
         }
 
         try {
             foreach ($this->_listAllObjects($prefix) as $object) {
-                $candidate = substr($object["Key"], strlen($prefix));
-                if (strpos($candidate, "/") === false) {
+                $candidate = substr($object['Key'], strlen($prefix));
+                if (strpos($candidate, '/') === false) {
                     $pastes[] = $candidate;
                 }
             }

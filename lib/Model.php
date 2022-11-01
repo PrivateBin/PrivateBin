@@ -81,7 +81,7 @@ class Model
     public function getStore()
     {
         if ($this->_store === null) {
-            $class = 'PrivateBin\\Data\\' . $this->_conf->getKey('class', 'model');
+            $class        = 'PrivateBin\\Data\\' . $this->_conf->getKey('class', 'model');
             $this->_store = new $class($this->_conf->getSection('model_options'));
         }
         return $this->_store;

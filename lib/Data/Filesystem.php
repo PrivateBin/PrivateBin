@@ -409,29 +409,29 @@ class Filesystem extends AbstractData
      */
     public function getAllPastes()
     {
-        $pastes = array();
+        $pastes  = array();
         $subdirs = scandir($this->_path);
         if ($subdirs === false) {
-            dieerr("Unable to list directory " . $this->_path);
+            dieerr('Unable to list directory ' . $this->_path);
         }
-        $subdirs = preg_grep("/^[^.].$/", $subdirs);
+        $subdirs = preg_grep('/^[^.].$/', $subdirs);
 
         foreach ($subdirs as $subdir) {
             $subpath = $this->_path . DIRECTORY_SEPARATOR . $subdir;
 
             $subsubdirs = scandir($subpath);
             if ($subsubdirs === false) {
-                dieerr("Unable to list directory " . $subpath);
+                dieerr('Unable to list directory ' . $subpath);
             }
-            $subsubdirs = preg_grep("/^[^.].$/", $subsubdirs);
+            $subsubdirs = preg_grep('/^[^.].$/', $subsubdirs);
             foreach ($subsubdirs as $subsubdir) {
                 $subsubpath = $subpath . DIRECTORY_SEPARATOR . $subsubdir;
 
                 $files = scandir($subsubpath);
                 if ($files === false) {
-                    dieerr("Unable to list directory " . $subsubpath);
+                    dieerr('Unable to list directory ' . $subsubpath);
                 }
-                $files = preg_grep("/\.php$/", $files);
+                $files = preg_grep('/\.php$/', $files);
 
                 foreach ($files as $file) {
                     if (substr($file, 0, 4) === $subdir . $subsubdir) {

@@ -353,7 +353,7 @@ class GoogleCloudStorage extends AbstractData
     public function getAllPastes()
     {
         $pastes = array();
-        $prefix  = $this->_prefix;
+        $prefix = $this->_prefix;
         if ($prefix != '') {
             $prefix .= '/';
         }
@@ -361,7 +361,7 @@ class GoogleCloudStorage extends AbstractData
         try {
             foreach ($this->_bucket->objects(array('prefix' => $prefix)) as $object) {
                 $candidate = substr($object->name(), strlen($prefix));
-                if (strpos($candidate, "/") === false) {
+                if (strpos($candidate, '/') === false) {
                     $pastes[] = $candidate;
                 }
             }
