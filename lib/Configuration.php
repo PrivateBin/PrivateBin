@@ -236,6 +236,14 @@ class Configuration
         if (!array_key_exists($this->_configuration['expire']['default'], $this->_configuration['expire_options'])) {
             $this->_configuration['expire']['default'] = key($this->_configuration['expire_options']);
         }
+
+        // ensure the basepath ends in a slash, if one is set
+        if (
+            strlen($this->_configuration['main']['basepath']) &&
+            substr_compare($this->_configuration['main']['basepath'], '/', -1) !== 0
+        ) {
+            $this->_configuration['main']['basepath'] .= '/';
+        }
     }
 
     /**

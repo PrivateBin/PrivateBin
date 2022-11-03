@@ -7,9 +7,10 @@
 ; (optional) set a project name to be displayed on the website
 ; name = "PrivateBin"
 
-; The full URL, with the domain name and directories that point to the PrivateBin files
-; This URL is essential to allow Opengraph images to be displayed on social networks
-; basepath = ""
+; The full URL, with the domain name and directories that point to the
+; PrivateBin files, including an ending slash (/). This URL is essential to
+; allow Opengraph images to be displayed on social networks.
+; basepath = "https://privatebin.example.com/"
 
 ; enable or disable the discussion feature, defaults to true
 discussion = true
@@ -55,9 +56,9 @@ languageselection = false
 ; if this is set and language selection is disabled, this will be the only language
 ; languagedefault = "en"
 
-; (optional) URL shortener address to offer after a new paste is created
-; it is suggested to only use this with self-hosted shorteners as this will leak
-; the pastes encryption key
+; (optional) URL shortener address to offer after a new paste is created.
+; It is suggested to only use this with self-hosted shorteners as this will leak
+; the pastes encryption key.
 ; urlshortener = "https://shortener.example.com/api?link="
 
 ; (optional) Let users create a QR code for sharing the paste URL with one click.
@@ -230,18 +231,18 @@ dir = PATH "data"
 ;secretkey = "secret access key"
 
 [yourls]
-; don't mix this up with "urlshortener" config item:
-; - when using a standard configuration, "urlshortener" will point to the YOURLS
-;   API, including access credentials, and will be part of the PrivateBin public
-;   web page (insecure!)
-; - when using the parameters in this section ("signature" and "apiurl"),
-;   "urlshortener" will point to a fixed PrivateBin page
-;   ("$basepath/shortenviayourls?link=") and that URL will in turn call YOURLS
-;   server-side, using the URL from "apiurl" and the "access signature" from the
-;   "signature" parameters below.
+; When using YOURLS as a "urlshortener" config item:
+; - By default, "urlshortener" will point to the YOURLS API URL, with or without
+;   credentials, and will be visible in public on the PrivateBin web page.
+;   Only use this if you allow short URL creation without credentials.
+; - Alternatively, using the parameters in this section ("signature" and
+;   "apiurl"), "urlshortener" needs to point to the base URL of your PrivateBin
+;   instance with "shortenviayourls?link=" appended. For example:
+;   urlshortener = "${basepath}shortenviayourls?link="
+;   This URL will in turn call YOURLS on the server side, using the URL from
+;   "apiurl" and the "access signature" from the "signature" parameters below.
 
 ; (optional) the "signature" (access key) issued by YOURLS for the using account
 ; signature = ""
-
 ; (optional) the URL of the YOURLS API, called to shorten a PrivateBin URL
-; apiurl = ""
+; apiurl = "https://yourls.example.com/yourls-api.php"
