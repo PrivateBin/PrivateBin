@@ -272,7 +272,7 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
     {
         $mock_yourls_service                = $this->_path . DIRECTORY_SEPARATOR . 'yourls.json';
         $options                            = parse_ini_file(CONF, true);
-        $options['main']['basepath']        = 'https://example.com/path/';
+        $options['main']['basepath']        = 'https://example.com/path'; // missing slash gets added by Configuration constructor
         $options['main']['urlshortener']    = 'https://example.com/path/shortenviayourls?link=';
         $options['yourls']['apiurl']        = $mock_yourls_service;
         Helper::createIniFile(CONF, $options);
