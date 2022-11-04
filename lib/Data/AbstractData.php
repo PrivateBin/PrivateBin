@@ -108,7 +108,7 @@ abstract class AbstractData
         if ($namespace === 'traffic_limiter') {
             foreach ($this->_last_cache as $key => $last_submission) {
                 if ($last_submission <= $time) {
-                    unset($thi->_last_cache[$key]);
+                    unset($this->_last_cache[$key]);
                 }
             }
         }
