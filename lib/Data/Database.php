@@ -839,10 +839,11 @@ class Database extends AbstractData
      * From: https://stackoverflow.com/questions/36200534/pdo-oci-into-a-clob-field
      *
      * @access public
+     * @static
      * @param  int|string|resource $value
      * @return int|string
      */
-    public function _sanitizeClob($value)
+    public static function _sanitizeClob($value)
     {
         if (is_resource($value)) {
             $value = stream_get_contents($value);
