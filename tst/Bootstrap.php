@@ -32,9 +32,9 @@ Helper::updateSubresourceIntegrity();
  */
 class StorageClientStub extends StorageClient
 {
-    private $_config     = null;
-    private $_connection = null;
-    private static $_buckets    = array();
+    private $_config         = null;
+    private $_connection     = null;
+    private static $_buckets = array();
 
     public function __construct(array $config = array())
     {
