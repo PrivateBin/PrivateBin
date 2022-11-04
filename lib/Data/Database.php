@@ -26,13 +26,6 @@ use PrivateBin\Json;
 class Database extends AbstractData
 {
     /**
-     * cache for select queries
-     *
-     * @var array
-     */
-    private $_cache = array();
-
-    /**
      * instance of database connection
      *
      * @access private
@@ -149,16 +142,6 @@ class Database extends AbstractData
      */
     public function create($pasteid, array $paste)
     {
-        if (
-            array_key_exists($pasteid, $this->_cache)
-        ) {
-            if (false !== $this->_cache[$pasteid]) {
-                return false;
-            } else {
-                unset($this->_cache[$pasteid]);
-            }
-        }
-
         $expire_date      = 0;
         $opendiscussion   = $burnafterreading = false;
         $attachment       = $attachmentname   = null;
@@ -222,64 +205,59 @@ class Database extends AbstractData
      */
     public function read($pasteid)
     {
-        if (array_key_exists($pasteid, $this->_cache)) {
-            return $this->_cache[$pasteid];
-        }
-
-        $this->_cache[$pasteid] = false;
         try {
-            $paste = $this->_select(
+            $row = $this->_select(
                 'SELECT * FROM "' . $this->_sanitizeIdentifier('paste') .
                 '" WHERE "dataid" = ?', array($pasteid), true
             );
         } catch (Exception $e) {
-            $paste = false;
+            $row = false;
         }
-        if ($paste === false) {
+        if ($row === false) {
             return false;
         }
         // create array
-        $data       = Json::decode($paste['data']);
+        $data       = Json::decode($row['data']);
         $isVersion2 = array_key_exists('v', $data) && $data['v'] >= 2;
         if ($isVersion2) {
-            $this->_cache[$pasteid] = $data;
-            list($createdKey)       = $this->_getVersionedKeys(2);
+            $paste            = $data;
+            list($createdKey) = $this->_getVersionedKeys(2);
         } else {
-            $this->_cache[$pasteid] = array('data' => $paste['data']);
-            list($createdKey)       = $this->_getVersionedKeys(1);
+            $paste            = array('data' => $row['data']);
+            list($createdKey) = $this->_getVersionedKeys(1);
         }
 
         try {
-            $paste['meta'] = Json::decode($paste['meta']);
+            $row['meta'] = Json::decode($row['meta']);
         } catch (Exception $e) {
-            $paste['meta'] = array();
+            $row['meta'] = array();
         }
-        $paste                                       = self::upgradePreV1Format($paste);
-        $this->_cache[$pasteid]['meta']              = $paste['meta'];
-        $this->_cache[$pasteid]['meta'][$createdKey] = (int) $paste['postdate'];
-        $expire_date                                 = (int) $paste['expiredate'];
+        $row                        = self::upgradePreV1Format($row);
+        $paste['meta']              = $row['meta'];
+        $paste['meta'][$createdKey] = (int) $row['postdate'];
+        $expire_date                = (int) $row['expiredate'];
         if ($expire_date > 0) {
-            $this->_cache[$pasteid]['meta']['expire_date'] = $expire_date;
+            $paste['meta']['expire_date'] = $expire_date;
         }
         if ($isVersion2) {
-            return $this->_cache[$pasteid];
+            return $paste;
         }
 
         // support v1 attachments
-        if (array_key_exists('attachment', $paste) && !empty($paste['attachment'])) {
-            $this->_cache[$pasteid]['attachment'] = $paste['attachment'];
-            if (array_key_exists('attachmentname', $paste) && !empty($paste['attachmentname'])) {
-                $this->_cache[$pasteid]['attachmentname'] = $paste['attachmentname'];
+        if (array_key_exists('attachment', $row) && !empty($row['attachment'])) {
+            $paste['attachment'] = $row['attachment'];
+            if (array_key_exists('attachmentname', $row) && !empty($row['attachmentname'])) {
+                $paste['attachmentname'] = $row['attachmentname'];
             }
         }
-        if ($paste['opendiscussion']) {
-            $this->_cache[$pasteid]['meta']['opendiscussion'] = true;
+        if ($row['opendiscussion']) {
+            $paste['meta']['opendiscussion'] = true;
         }
-        if ($paste['burnafterreading']) {
-            $this->_cache[$pasteid]['meta']['burnafterreading'] = true;
+        if ($row['burnafterreading']) {
+            $paste['meta']['burnafterreading'] = true;
         }
 
-        return $this->_cache[$pasteid];
+        return $paste;
     }
 
     /**
@@ -298,11 +276,6 @@ class Database extends AbstractData
             'DELETE FROM "' . $this->_sanitizeIdentifier('comment') .
             '" WHERE "pasteid" = ?', array($pasteid)
         );
-        if (
-            array_key_exists($pasteid, $this->_cache)
-        ) {
-            unset($this->_cache[$pasteid]);
-        }
     }
 
     /**
@@ -314,12 +287,15 @@ class Database extends AbstractData
      */
     public function exists($pasteid)
     {
-        if (
-            !array_key_exists($pasteid, $this->_cache)
-        ) {
-            $this->_cache[$pasteid] = $this->read($pasteid);
+        try {
+            $row = $this->_select(
+                'SELECT * FROM "' . $this->_sanitizeIdentifier('paste') .
+                '" WHERE "dataid" = ?', array($pasteid), true
+            );
+        } catch (Exception $e) {
+            $row = false;
         }
-        return (bool) $this->_cache[$pasteid];
+        return (bool) $row;
     }
 
     /**
