@@ -500,7 +500,7 @@ class Database extends AbstractData
      */
     public function getAllPastes()
     {
-        return $this->_db->_query(
+        return $this->_db->query(
             'SELECT "dataid" FROM "' . $this->_sanitizeIdentifier('paste') . '"'
         )->fetchAll(PDO::FETCH_COLUMN, 0);
     }
