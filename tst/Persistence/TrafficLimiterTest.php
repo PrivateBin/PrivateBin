@@ -12,7 +12,7 @@ class TrafficLimiterTest extends PHPUnit_Framework_TestCase
     {
         /* Setup Routine */
         $this->_path = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'trafficlimit';
-        $store       = Filesystem::getInstance(array('dir' => $this->_path));
+        $store       = new Filesystem(array('dir' => $this->_path));
         ServerSalt::setStore($store);
         TrafficLimiter::setStore($store);
     }

@@ -31,6 +31,7 @@
 * Austin Huang - Oracle database support
 * Felix J. Ogris - S3 Storage backend
 * Mounir Idrassi & J. Mozdzen - secure YOURLS integration
+* Felix J. Ogris - script for data backend migrations, dropped singleton behaviour of data backends
 
 ## Translations
 * Hexalyse - French

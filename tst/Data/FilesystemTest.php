@@ -15,7 +15,7 @@ class FilesystemTest extends PHPUnit_Framework_TestCase
         /* Setup Routine */
         $this->_path        = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'privatebin_data';
         $this->_invalidPath = $this->_path . DIRECTORY_SEPARATOR . 'bar';
-        $this->_model       = Filesystem::getInstance(array('dir' => $this->_path));
+        $this->_model       = new Filesystem(array('dir' => $this->_path));
         if (!is_dir($this->_path)) {
             mkdir($this->_path);
         }

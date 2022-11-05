@@ -1,6 +1,7 @@
 # PrivateBin version history
 
   * **1.4.1 (not yet released)**
+    * ADDED: script for data storage backend migrations (#1012)
     * ADDED: Translations for Turkish, Slovak and Greek
     * ADDED: S3 Storage backend (#994)
     * CHANGED: Switched to Jdenticons as the default for comment icons (#793)
