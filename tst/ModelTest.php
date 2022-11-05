@@ -261,6 +261,9 @@ class ModelTest extends PHPUnit_Framework_TestCase
         $paste->store();
         $paste->exists();
 
+        $comment = $paste->getComment(Helper::getPasteId());
+        $comment->setData($commentData);
+
         $db = new PDO(
             $options['model_options']['dsn'],
             $options['model_options']['usr'],
@@ -271,8 +274,6 @@ class ModelTest extends PHPUnit_Framework_TestCase
         $statement->execute();
         $statement->closeCursor();
 
-        $comment = $paste->getComment(Helper::getPasteId());
-        $comment->setData($commentData);
         $comment->store();
     }
 
