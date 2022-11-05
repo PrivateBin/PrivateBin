@@ -427,7 +427,7 @@ class ConfigurationCombinationsTest extends PHPUnit_Framework_TestCase
         /* Setup Routine */
         Helper::confBackup();
         $this->_path  = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'privatebin_data';
-        $this->_model = Filesystem::getInstance(array('dir' => $this->_path));
+        $this->_model = new Filesystem(array('dir' => $this->_path));
         $this->reset();
     }
 

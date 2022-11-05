@@ -39,7 +39,7 @@ class ControllerWithGcsTest extends ControllerTest
             'bucket' => self::$_bucket->name(),
             'prefix' => 'pastes',
         );
-        $this->_data    = GoogleCloudStorage::getInstance($this->_options);
+        $this->_data    = new GoogleCloudStorage($this->_options);
         ServerSalt::setStore($this->_data);
         TrafficLimiter::setStore($this->_data);
         $this->reset();

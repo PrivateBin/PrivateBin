@@ -38,7 +38,7 @@ class ModelTest extends PHPUnit_Framework_TestCase
         );
         Helper::confBackup();
         Helper::createIniFile(CONF, $options);
-        ServerSalt::setStore(Database::getInstance($options['model_options']));
+        ServerSalt::setStore(new Database($options['model_options']));
         $this->_conf            = new Configuration;
         $this->_model           = new Model($this->_conf);
         $_SERVER['REMOTE_ADDR'] = '::1';
@@ -156,10 +156,10 @@ class ModelTest extends PHPUnit_Framework_TestCase
 
     public function testCommentDefaults()
     {
+        $class   = 'PrivateBin\\Data\\' . $this->_conf->getKey('class', 'model');
         $comment = new Comment(
             $this->_conf,
-            forward_static_call(
-                'PrivateBin\\Data\\' . $this->_conf->getKey('class', 'model') . '::getInstance',
+            new $class(
                 $this->_conf->getSection('model_options')
             )
         );
@@ -452,7 +452,7 @@ class ModelTest extends PHPUnit_Framework_TestCase
     public function testPurge()
     {
         $conf  = new Configuration;
-        $store = Database::getInstance($conf->getSection('model_options'));
+        $store = new Database($conf->getSection('model_options'));
         $store->delete(Helper::getPasteId());
         $expired = Helper::getPaste(2, array('expire_date' => 1344803344));
         $paste   = Helper::getPaste(2, array('expire_date' => time() + 3600));
