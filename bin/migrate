@@ -1,7 +1,8 @@
+#!/usr/bin/env php
 <?php
 
 // change this, if your php files and data is outside of your webservers document root
-define('PATH', '..' . DIRECTORY_SEPARATOR);
+define('PATH', dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR);
 
 define('PUBLIC_PATH', __DIR__ . DIRECTORY_SEPARATOR);
 require PATH . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
@@ -171,9 +172,9 @@ function helpexit ()
     print("migrate.php - Copy data between PrivateBin backends
 
 Usage:
-  php migrate.php [--delete-after] [--delete-during] [-f] [-n] [-v] srcconfdir
-                  [<dstconfdir>]
-  php migrate.php [-h]
+  migrate [--delete-after] [--delete-during] [-f] [-n] [-v] srcconfdir
+          [<dstconfdir>]
+  migrate [-h]
 
 Options:
   --delete-after   delete data from source after all pastes and comments have

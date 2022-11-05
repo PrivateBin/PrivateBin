@@ -1,7 +1,6 @@
 <phpunit bootstrap="Bootstrap.php" colors="true">
 	<testsuite name="PrivateBin Test Suite">
 		<directory suffix=".php">./</directory>
-		<exclude>ConfigurationTestGenerator.php</exclude>
 	</testsuite>
 	<filter>
 		<whitelist>
