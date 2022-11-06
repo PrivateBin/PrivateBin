@@ -259,7 +259,7 @@ class ModelTest extends PHPUnit_Framework_TestCase
         $paste = $model->getPaste();
         $paste->setData($pasteData);
         $paste->store();
-        $paste->exists();
+        $this->assertTrue($paste->exists(), 'paste exists before creating comment');
 
         $comment = $paste->getComment(Helper::getPasteId());
         $comment->setData($commentData);
