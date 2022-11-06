@@ -410,37 +410,46 @@ class Filesystem extends AbstractData
     public function getAllPastes()
     {
         $pastes  = array();
-        $subdirs = scandir($this->_path);
-        if ($subdirs === false) {
-            dieerr('Unable to list directory ' . $this->_path);
-        }
-        $subdirs = preg_grep('/^[^.].$/', $subdirs);
+        $firstLevel = array_filter(
+            scandir($this->_path),
+            'PrivateBin\Data\Filesystem::_isFirstLevelDir'
+        );
+        if (count($firstLevel) > 0) {
+            foreach ($firstLevel as $firstKey) {
+                $secondLevel = array_filter(
+                    scandir($this->_path . DIRECTORY_SEPARATOR . $firstKey),
+                    'PrivateBin\Data\Filesystem::_isSecondLevelDir'
+                );
 
-        foreach ($subdirs as $subdir) {
-            $subpath = $this->_path . DIRECTORY_SEPARATOR . $subdir;
-
-            $subsubdirs = scandir($subpath);
-            if ($subsubdirs === false) {
-                dieerr('Unable to list directory ' . $subpath);
-            }
-            $subsubdirs = preg_grep('/^[^.].$/', $subsubdirs);
-            foreach ($subsubdirs as $subsubdir) {
-                $subsubpath = $subpath . DIRECTORY_SEPARATOR . $subsubdir;
-
-                $files = scandir($subsubpath);
-                if ($files === false) {
-                    dieerr('Unable to list directory ' . $subsubpath);
+                // skip this folder
+                if (count($secondLevel) == 0) {
+                    continue;
                 }
-                $files = preg_grep('/\.php$/', $files);
 
-                foreach ($files as $file) {
-                    if (substr($file, 0, 4) === $subdir . $subsubdir) {
-                        $pastes[] = substr($file, 0, strlen($file) - 4);
+                foreach ($secondLevel as $secondKey) {
+                    $path = $this->_path . DIRECTORY_SEPARATOR . $firstKey .
+                        DIRECTORY_SEPARATOR . $secondKey;
+                    if (!is_dir($path)) {
+                        continue;
                     }
+                    $thirdLevel = array_filter(
+                        array_map(
+                            function ($filename) {
+                                return strlen($filename) >= 20 ?
+                                    substr($filename, 0, -4) :
+                                    $filename;
+                            },
+                            scandir($path)
+                        ),
+                        'PrivateBin\\Model\\Paste::isValidId'
+                    );
+                    if (count($thirdLevel) == 0) {
+                        continue;
+                    }
+                    $pastes += $thirdLevel;
                 }
             }
         }
-
         return $pastes;
     }
 
