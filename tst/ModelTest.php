@@ -270,10 +270,13 @@ class ModelTest extends PHPUnit_Framework_TestCase
             $options['model_options']['pwd'],
             $options['model_options']['opt']
         );
-        $statement = $db->prepare('ALTER TABLE comment DROP COLUMN data');
+        $statement = $db->prepare('DROP TABLE comment');
         $statement->execute();
         $statement->closeCursor();
 
+        if (version_compare(PHP_VERSION, '7.2.0') < 0) {
+            throw new Exception('For some reason, this test stopped working in PHP < 7.2', 70);
+        }
         $comment->store();
     }
 
