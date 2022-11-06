@@ -270,7 +270,7 @@ class ModelTest extends PHPUnit_Framework_TestCase
             $options['model_options']['pwd'],
             $options['model_options']['opt']
         );
-        $statement = $db->prepare('DROP TABLE comment');
+        $statement = $db->prepare('ALTER TABLE comment DROP COLUMN data');
         $statement->execute();
         $statement->closeCursor();
 
