@@ -183,7 +183,7 @@
     "Convert To UTC": "แปลงเป็น UTC",
     "Close": "ปิด",
     "Encrypted note on %s": "เขารหัสบันทึกย่อบน %s",
-    "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "ไปที่ลิงก์นี้เพื่อดูบันทึกย่อทั้งหมด ส่ง URL นี้ให้ใครก็ได้เพื่อให้สามารถเข้าถึงโน้ตได้",
+    "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "ไปที่ลิงก์นี้เพื่อดูบันทึกย่อทั้งหมด ส่ง URL นี้ให้ใครก็ได้เพื่อให้สามารถเข้าถึงบันทึกย่อได้",
     "URL shortener may expose your decrypt key in URL.": "เครื่องมือสร้างลิงก์ย่ออาจเปิดเผยคีย์ถอดรหัสของคุณใน URL ได้",
     "Save paste": "ดาวน์โหลดข้อมูลการฝากโค้ด",
     "Your IP is not authorized to create pastes.": "IP ของคุณไม่ได้รับอนุญาตให้สร้างการฝากโค้ด",
