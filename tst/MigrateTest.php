@@ -54,6 +54,10 @@ class MigrateTest extends PHPUnit_Framework_TestCase
 
     public function testMigrate()
     {
+        if (version_compare(PHP_VERSION, '7.1.0') < 0) {
+            return; // skip test on unsupported PHP versions
+        }
+
         $this->_model_1->delete(Helper::getPasteId());
         $this->_model_2->delete(Helper::getPasteId());
 
