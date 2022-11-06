@@ -17,7 +17,7 @@ class MigrateTest extends PHPUnit_Framework_TestCase
     public function setUp()
     {
         /* Setup Routine */
-        $this->_path = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'privatebin_data';
+        $this->_path            = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'privatebin_data';
         $this->_path_instance_1 = $this->_path . DIRECTORY_SEPARATOR . 'instance_1';
         $this->_path_instance_2 = $this->_path . DIRECTORY_SEPARATOR . 'instance_2';
         if (!is_dir($this->_path)) {
@@ -27,10 +27,10 @@ class MigrateTest extends PHPUnit_Framework_TestCase
         mkdir($this->_path_instance_1 . DIRECTORY_SEPARATOR . 'cfg');
         mkdir($this->_path_instance_2);
         mkdir($this->_path_instance_2 . DIRECTORY_SEPARATOR . 'cfg');
-        $options                   = parse_ini_file(CONF_SAMPLE, true);
-        $options['purge']['limit'] = 0;
+        $options                         = parse_ini_file(CONF_SAMPLE, true);
+        $options['purge']['limit']       = 0;
         $options['model_options']['dir'] = $this->_path_instance_1 . DIRECTORY_SEPARATOR . 'data';
-        $this->_model_1 = new Filesystem($options['model_options']);
+        $this->_model_1                  = new Filesystem($options['model_options']);
         Helper::createIniFile($this->_path_instance_1 . DIRECTORY_SEPARATOR . 'cfg' . DIRECTORY_SEPARATOR . 'conf.php', $options);
 
         $options['model']          = array(
@@ -62,9 +62,9 @@ class MigrateTest extends PHPUnit_Framework_TestCase
         $this->_model_1->createComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId(), Helper::getComment());
 
         // migrate files to database
-        $output = null;
+        $output    = null;
         $exit_code = 255;
-        exec('php ' . PATH . "bin" . DIRECTORY_SEPARATOR . 'migrate --delete-after ' . $this->_path_instance_1 . DIRECTORY_SEPARATOR . 'cfg '. $this->_path_instance_2 . DIRECTORY_SEPARATOR . 'cfg', $output, $exit_code);
+        exec('php ' . PATH . 'bin' . DIRECTORY_SEPARATOR . 'migrate --delete-after ' . $this->_path_instance_1 . DIRECTORY_SEPARATOR . 'cfg ' . $this->_path_instance_2 . DIRECTORY_SEPARATOR . 'cfg', $output, $exit_code);
         $this->assertEquals(0, $exit_code, 'migrate script exits 0');
         $this->assertFalse($this->_model_1->exists(Helper::getPasteId()), 'paste removed after migrating it');
         $this->assertFalse($this->_model_1->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId()), 'comment removed after migrating it');
@@ -73,7 +73,7 @@ class MigrateTest extends PHPUnit_Framework_TestCase
 
         // migrate back to files
         $exit_code = 255;
-        exec('php ' . PATH . "bin" . DIRECTORY_SEPARATOR . 'migrate ' . $this->_path_instance_2 . DIRECTORY_SEPARATOR . 'cfg '. $this->_path_instance_1 . DIRECTORY_SEPARATOR . 'cfg', $output, $exit_code);
+        exec('php ' . PATH . 'bin' . DIRECTORY_SEPARATOR . 'migrate ' . $this->_path_instance_2 . DIRECTORY_SEPARATOR . 'cfg ' . $this->_path_instance_1 . DIRECTORY_SEPARATOR . 'cfg', $output, $exit_code);
         $this->assertEquals(0, $exit_code, 'migrate script exits 0');
         $this->assertTrue($this->_model_1->exists(Helper::getPasteId()), 'paste migrated back');
         $this->assertTrue($this->_model_1->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId()), 'comment migrated back');
