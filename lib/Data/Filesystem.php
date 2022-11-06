@@ -409,7 +409,7 @@ class Filesystem extends AbstractData
      */
     public function getAllPastes()
     {
-        $pastes  = array();
+        $pastes     = array();
         $firstLevel = array_filter(
             scandir($this->_path),
             'PrivateBin\Data\Filesystem::_isFirstLevelDir'
