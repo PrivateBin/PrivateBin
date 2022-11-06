@@ -289,11 +289,11 @@ class Database extends AbstractData
     {
         try {
             $row = $this->_select(
-                'SELECT * FROM "' . $this->_sanitizeIdentifier('paste') .
+                'SELECT "dataid" FROM "' . $this->_sanitizeIdentifier('paste') .
                 '" WHERE "dataid" = ?', array($pasteid), true
             );
         } catch (Exception $e) {
-            $row = false;
+            return false;
         }
         return (bool) $row;
     }
