@@ -28,7 +28,7 @@ $jdenticon = new Jdenticon(array(
     ),
 ));
 $jdenticonGenerators = array(
-    'jdenticon GD' => 'png',
+    'jdenticon PNG' => 'png',
     'jdenticon SVG' => 'svg',
 );
 $results = array(
@@ -48,7 +48,7 @@ $results = array(
         'lengths' => array(),
         'time' => 0
     ),
-    'jdenticon GD' => array(
+    'jdenticon PNG' => array(
         'lengths' => array(),
         'time' => 0
     ),
