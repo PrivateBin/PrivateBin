@@ -28,7 +28,8 @@ $jdenticon = new Jdenticon(array(
     ),
 ));
 $jdenticonGenerators = array(
-    'jdenticon PNG' => 'png',
+    'jdenticon' => 'png',
+    'jdenticon ImageMagick' => 'png',
     'jdenticon SVG' => 'svg',
 );
 $results = array(
@@ -48,7 +49,11 @@ $results = array(
         'lengths' => array(),
         'time' => 0
     ),
-    'jdenticon PNG' => array(
+    'jdenticon' => array(
+        'lengths' => array(),
+        'time' => 0
+    ),
+    'jdenticon ImageMagick' => array(
         'lengths' => array(),
         'time' => 0
     ),
@@ -89,6 +94,11 @@ foreach ($identiconGenerators as $key => $identicon) {
 
 foreach ($jdenticonGenerators as $key => $format) {
     echo 'run ', $key,' tests', PHP_EOL;
+    if ($key === 'jdenticon ImageMagick') {
+        $jdenticon->enableImageMagick = true;
+    } else {
+        $jdenticon->enableImageMagick = false;
+    }
     $start = microtime(true);
     foreach ($hmacs as $i => $hmac) {
         $jdenticon->setHash($hmac);
