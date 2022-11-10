@@ -4,7 +4,7 @@
     * ADDED: script for data storage backend migrations (#1012)
     * ADDED: Translations for Turkish, Slovak, Greek and Thai
     * ADDED: S3 Storage backend (#994)
-    * CHANGED: Switched to Jdenticons as the default for comment icons (#793)
+    * ADDED: Jdenticons as an option for comment icons (#793)
     * CHANGED: Avoid `SUPER` privilege for setting the `sql_mode` for MariaDB/MySQL (#919)
     * CHANGED: Upgrading libraries to: zlib 1.2.13
     * FIXED: Revert to CREATE INDEX without IF NOT EXISTS clauses, to support MySQL (#943)
