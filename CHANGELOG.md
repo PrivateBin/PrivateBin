@@ -2,6 +2,7 @@
 
   * **1.4.1 (not yet released)**
     * ADDED: script for data storage backend migrations (#1012)
+    * ADDED: script for administrative tasks: deleting pastes (#274), removing empty directories (#277), purging expired pastes (#276) & statistics (#319)
     * ADDED: Translations for Turkish, Slovak, Greek and Thai
     * ADDED: S3 Storage backend (#994)
     * ADDED: Jdenticons as an option for comment icons (#793)
