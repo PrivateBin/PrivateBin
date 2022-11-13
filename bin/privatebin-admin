@@ -1,0 +1,184 @@
+#!/usr/bin/env php
+<?php
+
+define('PATH', dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR);
+require PATH . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
+
+use PrivateBin\Configuration;
+use PrivateBin\Model\Paste;
+
+$options = array();
+
+function error($message, $code = 1) {
+    error_echo($message);
+    exit($code);
+}
+
+function error_echo($message) {
+    fwrite(STDERR, 'Error: ' . $message . PHP_EOL);
+}
+
+function help($code = 0) {
+    echo <<<'EOT'
+Usage:
+  privatebin-admin [--delete <paste id> | --empty-dirs | --help | --statistics]
+
+Options:
+  -d, --delete      deletes the requested paste ID
+  -e, --empty-dirs  removes empty directories (only if Filesystem storage is
+                    configured)
+  -h, --help        displays this help message
+  -s, --statistics  reads all stored pastes and comments and reports statistics
+EOT, PHP_EOL;
+    exit($code);
+}
+
+function option($short, $long) {
+    global $options;
+    $option = null;
+    foreach (array($short, $long) as $key) {
+        if (array_key_exists($key, $options)) {
+            $option = $options[$key];
+        }
+    }
+    return $option;
+}
+
+function main() {
+    if ($_SERVER['argc'] > 3) {
+        error_echo('too many arguments given');
+        fwrite(STDERR, PHP_EOL);
+        help(1);
+    }
+
+    if ($_SERVER['argc'] < 2) {
+        error_echo('missing arguments');
+        fwrite(STDERR, PHP_EOL);
+        help(2);
+    }
+
+    global $options;
+    $options = getopt('hd:eps', array('help', 'delete:', 'empty-dirs', 'purge', 'statistics'));
+    if (!$options) {
+        error_echo('unsupported arguments given');
+        fwrite(STDERR, PHP_EOL);
+        help(3);
+    }
+
+    if (option('h', 'help') !== null) {
+        help();
+    }
+
+    $conf = new Configuration;
+
+    if (option('e', 'empty-dirs') !== null) {
+        if ($conf->getKey('class', 'model') !== 'Filesystem') {
+            error('instance not using Filesystem storage, no directories to empty', 4);
+        }
+        $dir = $conf->getKey('dir', 'model_options');
+        passthru("find $dir -type d -empty -delete", $code);
+        exit($code);
+    }
+
+    $class = 'PrivateBin\\Data\\' . $conf->getKey('class', 'model');
+    $store = new $class($conf->getSection('model_options'));
+
+    if (($pasteid = option('d', 'delete')) !== null) {
+        if (!Paste::isValidId($pasteid)) {
+            error('given ID is not a valid paste ID (16 hexadecimal digits)', 5);
+        }
+        if (!$store->exists($pasteid)) {
+            error('given ID does not exist, has expired or was already deleted', 6);
+        }
+        $store->delete($pasteid);
+        if ($store->exists($pasteid)) {
+            error('paste ID exists after deletion, permission problem?', 7);
+        }
+        exit("paste $pasteid successfully deleted" . PHP_EOL);
+    }
+
+    if (option('p', 'purge') !== null) {
+        $store->purge(PHP_INT_MAX);
+        exit('purging of expired pastes concluded' . PHP_EOL);
+    }
+
+    if (option('s', 'statistics') !== null) {
+        $counters = array(
+            'burn'          => 0,
+            'discussion'    => 0,
+            'expired'       => 0,
+            'md'            => 0,
+            'percent'       => 1,
+            'plain'         => 0,
+            'progress'      => 0,
+            'syntax'        => 0,
+            'total'         => 0,
+            'unknown'       => 0,
+        );
+        $time = time();
+        $ids = $store->getAllPastes();
+        $counters['total'] = count($ids);
+        $dots = $counters['total'] < 100 ? 10 : (
+            $counters['total'] < 1000 ? 50 : 100
+        );
+        $percentages = $counters['total'] < 100 ? 0 : (
+            $counters['total'] < 1000 ? 4 : 10
+        );
+        echo "Total:\t\t\t${counters['total']}", PHP_EOL;
+        foreach ($ids as $pasteid) {
+            $paste = $store->read($pasteid);
+            ++$counters['progress'];
+            if (
+                array_key_exists('expire_date', $paste['meta']) &&
+                $paste['meta']['expire_date'] < $time
+            ) {
+                ++$counters['expired'];
+            }
+            if (array_key_exists('adata', $paste)) {
+                $format = $paste['adata'][1];
+                $discussion = $paste['adata'][2];
+                $burn = $paste['adata'][3];
+            } else {
+                $format = array_key_exists('formatter', $paste['meta']) ? $paste['meta']['formatter'] : 'plaintext';
+                $discussion = array_key_exists('opendiscussion', $paste['meta']) ? $paste['meta']['opendiscussion'] : false;
+                $burn = array_key_exists('burnafterreading', $paste['meta']) ? $paste['meta']['burnafterreading'] : false;
+            }
+            if ($format === 'plaintext') {
+                ++$counters['plain'];
+            } elseif ($format === 'syntaxhighlighting') {
+                ++$counters['syntax'];
+            } elseif ($format === 'markdown') {
+                ++$counters['md'];
+            } else {
+                ++$counters['unknown'];
+            }
+            $counters['discussion'] += (int) $discussion;
+            $counters['burn'] += (int) $burn;
+
+            // display progress
+            if ($counters['progress'] % $dots === 0) {
+                echo '.';
+                if ($percentages) {
+                    $progress = $percentages / $counters['total'] * $counters['progress'];
+                    if ($progress >= $counters['percent']) {
+                        printf(' %d%% ', 100 / $percentages * $progress);
+                        ++$counters['percent'];
+                    }
+                }
+            }
+        }
+        echo PHP_EOL, <<<EOT
+Expired:\t\t${counters['expired']}
+Burn after reading:\t${counters['burn']}
+Discussions:\t\t${counters['discussion']}
+Plain Text:\t\t${counters['plain']}
+Source Code:\t\t${counters['syntax']}
+Markdown:\t\t${counters['md']}
+EOT, PHP_EOL;
+        if ($counters['unknown'] > 0) {
+            echo "Unknown format:\t\t${counters['unknown']}", PHP_EOL;
+        }
+    }
+}
+
+main();
