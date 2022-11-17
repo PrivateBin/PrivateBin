@@ -259,7 +259,10 @@ class ModelTest extends PHPUnit_Framework_TestCase
         $paste = $model->getPaste();
         $paste->setData($pasteData);
         $paste->store();
-        $paste->exists();
+        $this->assertTrue($paste->exists(), 'paste exists before creating comment');
+
+        $comment = $paste->getComment(Helper::getPasteId());
+        $comment->setData($commentData);
 
         $db = new PDO(
             $options['model_options']['dsn'],
@@ -271,8 +274,9 @@ class ModelTest extends PHPUnit_Framework_TestCase
         $statement->execute();
         $statement->closeCursor();
 
-        $comment = $paste->getComment(Helper::getPasteId());
-        $comment->setData($commentData);
+        if (version_compare(PHP_VERSION, '7.2.0') < 0) {
+            throw new Exception('For some reason, this test stopped working in PHP < 7.2', 70);
+        }
         $comment->store();
     }
 

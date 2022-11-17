@@ -340,63 +340,25 @@ class Filesystem extends AbstractData
      */
     protected function _getExpiredPastes($batchsize)
     {
-        $pastes     = array();
-        $firstLevel = array_filter(
-            scandir($this->_path),
-            'PrivateBin\Data\Filesystem::_isFirstLevelDir'
-        );
-        if (count($firstLevel) > 0) {
-            // try at most 10 times the $batchsize pastes before giving up
-            for ($i = 0, $max = $batchsize * 10; $i < $max; ++$i) {
-                $firstKey    = array_rand($firstLevel);
-                $secondLevel = array_filter(
-                    scandir($this->_path . DIRECTORY_SEPARATOR . $firstLevel[$firstKey]),
-                    'PrivateBin\Data\Filesystem::_isSecondLevelDir'
-                );
-
-                // skip this folder in the next checks if it is empty
-                if (count($secondLevel) == 0) {
-                    unset($firstLevel[$firstKey]);
-                    continue;
-                }
-
-                $secondKey = array_rand($secondLevel);
-                $path      = $this->_path . DIRECTORY_SEPARATOR .
-                    $firstLevel[$firstKey] . DIRECTORY_SEPARATOR .
-                    $secondLevel[$secondKey];
-                if (!is_dir($path)) {
-                    continue;
-                }
-                $thirdLevel = array_filter(
-                    array_map(
-                        function ($filename) {
-                            return strlen($filename) >= 20 ?
-                                substr($filename, 0, -4) :
-                                $filename;
-                        },
-                        scandir($path)
-                    ),
-                    'PrivateBin\\Model\\Paste::isValidId'
-                );
-                if (count($thirdLevel) == 0) {
-                    continue;
-                }
-                $thirdKey = array_rand($thirdLevel);
-                $pasteid  = $thirdLevel[$thirdKey];
-                if (in_array($pasteid, $pastes)) {
-                    continue;
-                }
-
-                if ($this->exists($pasteid)) {
-                    $data = $this->read($pasteid);
-                    if (
-                        array_key_exists('expire_date', $data['meta']) &&
-                        $data['meta']['expire_date'] < time()
-                    ) {
-                        $pastes[] = $pasteid;
-                        if (count($pastes) >= $batchsize) {
-                            break;
-                        }
+        $pastes = array();
+        $files  = $this->_getPasteIterator();
+        $count  = 0;
+        $time   = time();
+        foreach ($files as $file) {
+            if ($file->isDir()) {
+                continue;
+            }
+            $pasteid = $file->getBasename('.php');
+            if ($this->exists($pasteid)) {
+                $data = $this->read($pasteid);
+                if (
+                    array_key_exists('expire_date', $data['meta']) &&
+                    $data['meta']['expire_date'] < $time
+                ) {
+                    $pastes[] = $pasteid;
+                    ++$count;
+                    if ($count >= $batchsize) {
+                        break;
                     }
                 }
             }
@@ -409,38 +371,13 @@ class Filesystem extends AbstractData
      */
     public function getAllPastes()
     {
-        $pastes  = array();
-        $subdirs = scandir($this->_path);
-        if ($subdirs === false) {
-            dieerr('Unable to list directory ' . $this->_path);
-        }
-        $subdirs = preg_grep('/^[^.].$/', $subdirs);
-
-        foreach ($subdirs as $subdir) {
-            $subpath = $this->_path . DIRECTORY_SEPARATOR . $subdir;
-
-            $subsubdirs = scandir($subpath);
-            if ($subsubdirs === false) {
-                dieerr('Unable to list directory ' . $subpath);
-            }
-            $subsubdirs = preg_grep('/^[^.].$/', $subsubdirs);
-            foreach ($subsubdirs as $subsubdir) {
-                $subsubpath = $subpath . DIRECTORY_SEPARATOR . $subsubdir;
-
-                $files = scandir($subsubpath);
-                if ($files === false) {
-                    dieerr('Unable to list directory ' . $subsubpath);
-                }
-                $files = preg_grep('/\.php$/', $files);
-
-                foreach ($files as $file) {
-                    if (substr($file, 0, 4) === $subdir . $subsubdir) {
-                        $pastes[] = substr($file, 0, strlen($file) - 4);
-                    }
-                }
+        $pastes = array();
+        $files  = $this->_getPasteIterator();
+        foreach ($files as $file) {
+            if ($file->isFile()) {
+                $pastes[] = $file->getBasename('.php');
             }
         }
-
         return $pastes;
     }
 
@@ -481,28 +418,20 @@ class Filesystem extends AbstractData
     }
 
     /**
-     * Check that the given element is a valid first level directory.
+     * Get an iterator matching paste files.
      *
      * @access private
-     * @param  string $element
-     * @return bool
+     * @return \GlobIterator
      */
-    private function _isFirstLevelDir($element)
+    private function _getPasteIterator()
     {
-        return $this->_isSecondLevelDir($element) &&
-            is_dir($this->_path . DIRECTORY_SEPARATOR . $element);
-    }
-
-    /**
-     * Check that the given element is a valid second level directory.
-     *
-     * @access private
-     * @param  string $element
-     * @return bool
-     */
-    private function _isSecondLevelDir($element)
-    {
-        return (bool) preg_match('/^[a-f0-9]{2}$/', $element);
+        return new \GlobIterator($this->_path . DIRECTORY_SEPARATOR .
+            '[a-f0-9][a-f0-9]' . DIRECTORY_SEPARATOR .
+            '[a-f0-9][a-f0-9]' . DIRECTORY_SEPARATOR .
+            '[a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9]' .
+            '[a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9]*');
+        // need to return both files with and without .php suffix, so they can
+        // be hardened by _prependRename(), which is hooked into exists()
     }
 
     /**
