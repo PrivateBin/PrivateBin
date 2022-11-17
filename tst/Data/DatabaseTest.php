@@ -23,7 +23,7 @@ class DatabaseTest extends TestCase
     {
         /* Setup Routine */
         $this->_path  = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'privatebin_data';
-        $this->_model = Database::getInstance($this->_options);
+        $this->_model = new Database($this->_options);
     }
 
     public function tearDown(): void
@@ -36,7 +36,7 @@ class DatabaseTest extends TestCase
 
     public function testSaltMigration()
     {
-        ServerSalt::setStore(Filesystem::getInstance(array('dir' => 'data')));
+        ServerSalt::setStore(new Filesystem(array('dir' => 'data')));
         $salt = ServerSalt::get();
         $file = 'data' . DIRECTORY_SEPARATOR . 'salt.php';
         $this->assertFileExists($file, 'ServerSalt got initialized and stored on disk');
@@ -140,7 +140,7 @@ class DatabaseTest extends TestCase
     public function testGetIbmInstance()
     {
         $this->expectException(PDOException::class);
-        Database::getInstance(array(
+        new Database(array(
             'dsn' => 'ibm:', 'usr' => null, 'pwd' => null,
             'opt' => array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION),
         ));
@@ -149,7 +149,7 @@ class DatabaseTest extends TestCase
     public function testGetInformixInstance()
     {
         $this->expectException(PDOException::class);
-        Database::getInstance(array(
+        new Database(array(
             'dsn' => 'informix:', 'usr' => null, 'pwd' => null,
             'opt' => array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION),
         ));
@@ -158,7 +158,7 @@ class DatabaseTest extends TestCase
     public function testGetMssqlInstance()
     {
         $this->expectException(PDOException::class);
-        Database::getInstance(array(
+        new Database(array(
             'dsn' => 'mssql:', 'usr' => null, 'pwd' => null,
             'opt' => array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION),
         ));
@@ -167,7 +167,7 @@ class DatabaseTest extends TestCase
     public function testGetMysqlInstance()
     {
         $this->expectException(PDOException::class);
-        Database::getInstance(array(
+        new Database(array(
             'dsn' => 'mysql:', 'usr' => null, 'pwd' => null,
             'opt' => array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION),
         ));
@@ -176,7 +176,7 @@ class DatabaseTest extends TestCase
     public function testGetOciInstance()
     {
         $this->expectException(PDOException::class);
-        Database::getInstance(array(
+        new Database(array(
             'dsn' => 'oci:', 'usr' => null, 'pwd' => null,
             'opt' => array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION),
         ));
@@ -185,7 +185,7 @@ class DatabaseTest extends TestCase
     public function testGetPgsqlInstance()
     {
         $this->expectException(PDOException::class);
-        Database::getInstance(array(
+        new Database(array(
             'dsn' => 'pgsql:', 'usr' => null, 'pwd' => null,
             'opt' => array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION),
         ));
@@ -195,7 +195,7 @@ class DatabaseTest extends TestCase
     {
         $this->expectException(Exception::class);
         $this->expectExceptionCode(5);
-        Database::getInstance(array(
+        new Database(array(
             'dsn' => 'foo:', 'usr' => null, 'pwd' => null, 'opt' => null,
         ));
     }
@@ -206,7 +206,7 @@ class DatabaseTest extends TestCase
         unset($options['dsn']);
         $this->expectException(Exception::class);
         $this->expectExceptionCode(6);
-        Database::getInstance($options);
+        new Database($options);
     }
 
     public function testMissingUsr()
@@ -215,7 +215,7 @@ class DatabaseTest extends TestCase
         unset($options['usr']);
         $this->expectException(Exception::class);
         $this->expectExceptionCode(6);
-        Database::getInstance($options);
+        new Database($options);
     }
 
     public function testMissingPwd()
@@ -224,7 +224,7 @@ class DatabaseTest extends TestCase
         unset($options['pwd']);
         $this->expectException(Exception::class);
         $this->expectExceptionCode(6);
-        Database::getInstance($options);
+        new Database($options);
     }
 
     public function testMissingOpt()
@@ -233,7 +233,7 @@ class DatabaseTest extends TestCase
         unset($options['opt']);
         $this->expectException(Exception::class);
         $this->expectExceptionCode(6);
-        Database::getInstance($options);
+        new Database($options);
     }
 
     public function testOldAttachments()
@@ -245,7 +245,7 @@ class DatabaseTest extends TestCase
         }
         $this->_options['dsn'] = 'sqlite:' . $path;
         $this->_options['tbl'] = 'bar_';
-        $model                 = Database::getInstance($this->_options);
+        $model                 = new Database($this->_options);
 
         $original               = $paste = Helper::getPasteWithAttachment(1, array('expire_date' => 1344803344));
         $meta                   = $paste['meta'];
@@ -290,7 +290,7 @@ class DatabaseTest extends TestCase
         }
         $this->_options['dsn'] = 'sqlite:' . $path;
         $this->_options['tbl'] = 'baz_';
-        $model                 = Database::getInstance($this->_options);
+        $model                 = new Database($this->_options);
         $paste                 = Helper::getPaste(1, array('expire_date' => 1344803344));
         unset($paste['meta']['formatter'], $paste['meta']['opendiscussion'], $paste['meta']['salt']);
         $model->delete(Helper::getPasteId());
@@ -357,7 +357,7 @@ class DatabaseTest extends TestCase
             'vizhash BLOB, ' .
             'postdate INT );'
         );
-        $this->assertInstanceOf('PrivateBin\\Data\\Database', Database::getInstance($this->_options));
+        $this->assertInstanceOf('PrivateBin\\Data\\Database', new Database($this->_options));
 
         // check if version number was upgraded in created configuration table
         $statement = $db->prepare('SELECT value FROM foo_config WHERE id LIKE ?');

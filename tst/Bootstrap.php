@@ -32,9 +32,9 @@ Helper::updateSubresourceIntegrity();
  */
 class StorageClientStub extends StorageClient
 {
-    private $_config     = null;
-    private $_connection = null;
-    private $_buckets    = array();
+    private $_config         = null;
+    private $_connection     = null;
+    private static $_buckets = array();
 
     public function __construct(array $config = array())
     {
@@ -44,11 +44,11 @@ class StorageClientStub extends StorageClient
 
     public function bucket($name, $userProject = false)
     {
-        if (!key_exists($name, $this->_buckets)) {
+        if (!key_exists($name, self::$_buckets)) {
             $b                     = new BucketStub($this->_connection, $name, array(), $this);
-            $this->_buckets[$name] = $b;
+            self::$_buckets[$name] = $b;
         }
-        return $this->_buckets[$name];
+        return self::$_buckets[$name];
     }
 
     /**
@@ -56,8 +56,8 @@ class StorageClientStub extends StorageClient
      */
     public function deleteBucket($name)
     {
-        if (key_exists($name, $this->_buckets)) {
-            unset($this->_buckets[$name]);
+        if (key_exists($name, self::$_buckets)) {
+            unset(self::$_buckets[$name]);
         } else {
             throw new NotFoundException();
         }
@@ -110,11 +110,11 @@ class StorageClientStub extends StorageClient
 
     public function createBucket($name, array $options = array())
     {
-        if (key_exists($name, $this->_buckets)) {
+        if (key_exists($name, self::$_buckets)) {
             throw new BadRequestException('already exists');
         }
         $b                     = new BucketStub($this->_connection, $name, array(), $this);
-        $this->_buckets[$name] = $b;
+        self::$_buckets[$name] = $b;
         return $b;
     }
 }

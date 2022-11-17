@@ -14,7 +14,6 @@
   </coverage>
   <testsuite name="PrivateBin Test Suite">
     <directory suffix=".php">./</directory>
-    <exclude>ConfigurationTestGenerator.php</exclude>
   </testsuite>
   <logging>
     <testdoxHtml outputFile="log/testdox.html"/>

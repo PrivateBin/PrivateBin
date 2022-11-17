@@ -27,7 +27,7 @@ class GoogleCloudStorageTest extends TestCase
     public function setUp(): void
     {
         ini_set('error_log', stream_get_meta_data(tmpfile())['uri']);
-        $this->_model = GoogleCloudStorage::getInstance(array(
+        $this->_model = new GoogleCloudStorage(array(
             'bucket' => self::$_bucket->name(),
             'prefix' => 'pastes',
         ));

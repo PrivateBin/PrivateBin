@@ -16,7 +16,7 @@ class PurgeLimiterTest extends TestCase
             mkdir($this->_path);
         }
         PurgeLimiter::setStore(
-            Filesystem::getInstance(array('dir' => $this->_path))
+            new Filesystem(array('dir' => $this->_path))
         );
     }
 

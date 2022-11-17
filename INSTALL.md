@@ -26,7 +26,7 @@ install and configure PrivateBin on your server. It's available on
     - `open_basedir` access to `/dev/urandom`
     - mcrypt extension AND `open_basedir` access to `/dev/urandom`
     - com_dotnet extension
-- GD extension
+- GD extension (when using identicon or vizhash icons, jdenticon works without it)
 - zlib extension
 - some disk space or a database supported by [PDO](https://php.net/manual/book.pdo.php)
 - ability to create files and folders in the installation directory and the PATH
@@ -38,10 +38,10 @@ install and configure PrivateBin on your server. It's available on
 ### Changing the Path
 
 In the index.php you can define a different `PATH`. This is useful to secure
-your installation. You can move the configuration, data files, templates and PHP
-libraries (directories cfg, doc, data, lib, tpl, tst and vendor) outside of your
-document root. This new location must still be accessible to your webserver and
-PHP process (see also
+your installation. You can move the utilities, configuration, data files,
+templates and PHP libraries (directories bin, cfg, doc, data, lib, tpl, tst and
+vendor) outside of your document root. This new location must still be
+accessible to your webserver and PHP process (see also
 [open_basedir setting](https://secure.php.net/manual/en/ini.core.php#ini.open-basedir)).
 
 > #### PATH Example

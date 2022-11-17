@@ -1,6 +1,6 @@
 <?php
 
-use Jdenticon\Identicon;
+use Identicon\Identicon;
 use PHPUnit\Framework\TestCase;
 use PrivateBin\Configuration;
 use PrivateBin\Data\Database;
@@ -39,7 +39,7 @@ class ModelTest extends TestCase
         );
         Helper::confBackup();
         Helper::createIniFile(CONF, $options);
-        ServerSalt::setStore(Database::getInstance($options['model_options']));
+        ServerSalt::setStore(new Database($options['model_options']));
         $this->_conf            = new Configuration;
         $this->_model           = new Model($this->_conf);
         $_SERVER['REMOTE_ADDR'] = '::1';
@@ -157,10 +157,10 @@ class ModelTest extends TestCase
 
     public function testCommentDefaults()
     {
+        $class   = 'PrivateBin\\Data\\' . $this->_conf->getKey('class', 'model');
         $comment = new Comment(
             $this->_conf,
-            forward_static_call(
-                'PrivateBin\\Data\\' . $this->_conf->getKey('class', 'model') . '::getInstance',
+            new $class(
                 $this->_conf->getSection('model_options')
             )
         );
@@ -252,7 +252,10 @@ class ModelTest extends TestCase
         $paste = $model->getPaste();
         $paste->setData($pasteData);
         $paste->store();
-        $paste->exists();
+        $this->assertTrue($paste->exists(), 'paste exists before creating comment');
+
+        $comment = $paste->getComment(Helper::getPasteId());
+        $comment->setData($commentData);
 
         $db = new PDO(
             $options['model_options']['dsn'],
@@ -264,8 +267,6 @@ class ModelTest extends TestCase
         $statement->execute();
         $statement->closeCursor();
 
-        $comment = $paste->getComment(Helper::getPasteId());
-        $comment->setData($commentData);
         $this->expectException(Exception::class);
         $this->expectExceptionCode(70);
         $comment->store();
@@ -307,15 +308,8 @@ class ModelTest extends TestCase
         $comment->get();
         $comment->store();
 
-        $identicon = new Identicon(array(
-            'hash'  => TrafficLimiter::getHash(),
-            'size'  => 16,
-            'style' => array(
-                'backgroundColor'   => '#fff0', // fully transparent, for dark mode
-                'padding'           => 0,
-            ),
-        ));
-        $pngdata   = $identicon->getImageDataUri('png');
+        $identicon = new Identicon();
+        $pngdata   = $identicon->getImageDataUri(TrafficLimiter::getHash(), 16);
         $comment   = current($this->_model->getPaste(Helper::getPasteId())->get()['comments']);
         $this->assertEquals($pngdata, $comment['meta']['icon'], 'icon gets set');
     }
@@ -428,7 +422,7 @@ class ModelTest extends TestCase
     public function testPurge()
     {
         $conf  = new Configuration;
-        $store = Database::getInstance($conf->getSection('model_options'));
+        $store = new Database($conf->getSection('model_options'));
         $store->delete(Helper::getPasteId());
         $expired = Helper::getPaste(2, array('expire_date' => 1344803344));
         $paste   = Helper::getPaste(2, array('expire_date' => time() + 3600));

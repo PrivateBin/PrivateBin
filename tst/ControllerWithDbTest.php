@@ -25,7 +25,7 @@ class ControllerWithDbTest extends ControllerTest
             mkdir($this->_path);
         }
         $this->_options['dsn'] = 'sqlite:' . $this->_path . DIRECTORY_SEPARATOR . 'tst.sq3';
-        $this->_data           = Database::getInstance($this->_options);
+        $this->_data           = new Database($this->_options);
         ServerSalt::setStore($this->_data);
         TrafficLimiter::setStore($this->_data);
         $this->reset();

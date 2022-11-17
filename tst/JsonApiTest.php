@@ -19,7 +19,7 @@ class JsonApiTest extends TestCase
         if (!is_dir($this->_path)) {
             mkdir($this->_path);
         }
-        $this->_model = Filesystem::getInstance(array('dir' => $this->_path));
+        $this->_model = new Filesystem(array('dir' => $this->_path));
         ServerSalt::setStore($this->_model);
 
         $_POST   = array();

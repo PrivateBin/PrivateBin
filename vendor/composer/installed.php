@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '46013df6201304840c8dab82af63cc9000a6d239',
+        'reference' => 'ba5c859d85244c30711263d61e691217c1bc95e4',
         'name' => 'privatebin/privatebin',
         'dev' => false,
     ),
@@ -43,7 +43,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '46013df6201304840c8dab82af63cc9000a6d239',
+            'reference' => 'ba5c859d85244c30711263d61e691217c1bc95e4',
             'dev_requirement' => false,
         ),
         'yzalis/identicon' => array(
