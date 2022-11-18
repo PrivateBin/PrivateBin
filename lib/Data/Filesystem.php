@@ -26,10 +26,10 @@ class Filesystem extends AbstractData
      * glob() pattern of the two folder levels and the paste files under the
      * configured path. Needs to return both files with and without .php suffix,
      * so they can be hardened by _prependRename(), which is hooked into exists().
-     * 
+     *
      * > Note that wildcard patterns are not regular expressions, although they
      * > are a bit similar.
-     * 
+     *
      * @link  https://man7.org/linux/man-pages/man7/glob.7.html
      * @const string
      */
@@ -433,7 +433,7 @@ class Filesystem extends AbstractData
 
     /**
      * Get an iterator matching paste files.
-     * 
+     *
      * Note that creating the iterator issues the glob() call, so we can't pre-
      * generate this object before files that should get matched exist.
      *
