@@ -5,7 +5,7 @@
  * Visual Hash implementation in php4+GD,
  * stripped down and modified version for PrivateBin
  *
- * @link      http://sebsauvage.net/wiki/doku.php?id=php:vizhash_gd
+ * @link      https://sebsauvage.net/wiki/doku.php?id=php:vizhash_gd
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
  * @version   0.0.5 beta PrivateBin 1.4.0
@@ -166,7 +166,7 @@ class Vizhash16x16
      * Gradient function
      *
      * taken from:
-     * http://www.supportduweb.com/scripts_tutoriaux-code-source-41-gd-faire-un-degrade-en-php-gd-fonction-degrade-imagerie.html
+     * @link   https://www.supportduweb.com/scripts_tutoriaux-code-source-41-gd-faire-un-degrade-en-php-gd-fonction-degrade-imagerie.html
      *
      * @access private
      * @param  resource $img
