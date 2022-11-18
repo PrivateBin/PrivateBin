@@ -23,6 +23,22 @@ use PrivateBin\Json;
 class Filesystem extends AbstractData
 {
     /**
+     * glob() pattern of the two folder levels and the paste files under the
+     * configured path. Needs to return both files with and without .php suffix,
+     * so they can be hardened by _prependRename(), which is hooked into exists().
+     * 
+     * > Note that wildcard patterns are not regular expressions, although they
+     * > are a bit similar.
+     * 
+     * @link  https://man7.org/linux/man-pages/man7/glob.7.html
+     * @const string
+     */
+    const PASTE_FILE_PATTERN = DIRECTORY_SEPARATOR . '[a-f0-9][a-f0-9]' .
+        DIRECTORY_SEPARATOR . '[a-f0-9][a-f0-9]' . DIRECTORY_SEPARATOR .
+        '[a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9]' .
+        '[a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9]*';
+
+    /**
      * first line in paste or comment files, to protect their contents from browsing exposed data directories
      *
      * @const string
@@ -341,10 +357,9 @@ class Filesystem extends AbstractData
     protected function _getExpiredPastes($batchsize)
     {
         $pastes = array();
-        $files  = $this->_getPasteIterator();
         $count  = 0;
         $time   = time();
-        foreach ($files as $file) {
+        foreach ($this->_getPasteIterator() as $file) {
             if ($file->isDir()) {
                 continue;
             }
@@ -372,8 +387,7 @@ class Filesystem extends AbstractData
     public function getAllPastes()
     {
         $pastes = array();
-        $files  = $this->_getPasteIterator();
-        foreach ($files as $file) {
+        foreach ($this->_getPasteIterator() as $file) {
             if ($file->isFile()) {
                 $pastes[] = $file->getBasename('.php');
             }
@@ -419,19 +433,16 @@ class Filesystem extends AbstractData
 
     /**
      * Get an iterator matching paste files.
+     * 
+     * Note that creating the iterator issues the glob() call, so we can't pre-
+     * generate this object before files that should get matched exist.
      *
      * @access private
      * @return \GlobIterator
      */
     private function _getPasteIterator()
     {
-        return new \GlobIterator($this->_path . DIRECTORY_SEPARATOR .
-            '[a-f0-9][a-f0-9]' . DIRECTORY_SEPARATOR .
-            '[a-f0-9][a-f0-9]' . DIRECTORY_SEPARATOR .
-            '[a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9]' .
-            '[a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9]*');
-        // need to return both files with and without .php suffix, so they can
-        // be hardened by _prependRename(), which is hooked into exists()
+        return new \GlobIterator($this->_path . self::PASTE_FILE_PATTERN);
     }
 
     /**
