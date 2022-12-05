@@ -46,7 +46,6 @@ class ComposerStaticInitDontChange
     );
 
     public static $classMap = array (
-        'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'IPLib\\Address\\AddressInterface' => __DIR__ . '/..' . '/mlocati/ip-lib/src/Address/AddressInterface.php',
         'IPLib\\Address\\AssignedRange' => __DIR__ . '/..' . '/mlocati/ip-lib/src/Address/AssignedRange.php',
         'IPLib\\Address\\IPv4' => __DIR__ . '/..' . '/mlocati/ip-lib/src/Address/IPv4.php',
@@ -93,6 +92,7 @@ class ComposerStaticInitDontChange
         'Jdenticon\\Rendering\\ColorTheme' => __DIR__ . '/..' . '/jdenticon/jdenticon/src/Rendering/ColorTheme.php',
         'Jdenticon\\Rendering\\IconGenerator' => __DIR__ . '/..' . '/jdenticon/jdenticon/src/Rendering/IconGenerator.php',
         'Jdenticon\\Rendering\\ImagickRenderer' => __DIR__ . '/..' . '/jdenticon/jdenticon/src/Rendering/ImagickRenderer.php',
+        'Jdenticon\\Rendering\\ImagickRendererLine' => __DIR__ . '/..' . '/jdenticon/jdenticon/src/Rendering/ImagickRenderer.php',
         'Jdenticon\\Rendering\\InternalPngRenderer' => __DIR__ . '/..' . '/jdenticon/jdenticon/src/Rendering/InternalPngRenderer.php',
         'Jdenticon\\Rendering\\Point' => __DIR__ . '/..' . '/jdenticon/jdenticon/src/Rendering/Point.php',
         'Jdenticon\\Rendering\\Rectangle' => __DIR__ . '/..' . '/jdenticon/jdenticon/src/Rendering/Rectangle.php',

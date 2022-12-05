@@ -289,11 +289,11 @@ class Database extends AbstractData
     {
         try {
             $row = $this->_select(
-                'SELECT * FROM "' . $this->_sanitizeIdentifier('paste') .
+                'SELECT "dataid" FROM "' . $this->_sanitizeIdentifier('paste') .
                 '" WHERE "dataid" = ?', array($pasteid), true
             );
         } catch (Exception $e) {
-            $row = false;
+            return false;
         }
         return (bool) $row;
     }
@@ -486,19 +486,13 @@ class Database extends AbstractData
      */
     protected function _getExpiredPastes($batchsize)
     {
-        $pastes = array();
-        $rows   = $this->_select(
+        $statement = $this->_db->prepare(
             'SELECT "dataid" FROM "' . $this->_sanitizeIdentifier('paste') .
             '" WHERE "expiredate" < ? AND "expiredate" != ? ' .
-            ($this->_type === 'oci' ? 'FETCH NEXT ? ROWS ONLY' : 'LIMIT ?'),
-            array(time(), 0, $batchsize)
+            ($this->_type === 'oci' ? 'FETCH NEXT ? ROWS ONLY' : 'LIMIT ?')
         );
-        if (is_array($rows) && count($rows)) {
-            foreach ($rows as $row) {
-                $pastes[] = $row['dataid'];
-            }
-        }
-        return $pastes;
+        $statement->execute(array(time(), 0, $batchsize));
+        return $statement->fetchAll(PDO::FETCH_COLUMN, 0);
     }
 
     /**
@@ -506,10 +500,9 @@ class Database extends AbstractData
      */
     public function getAllPastes()
     {
-        $pastes = $this->_db->_query(
+        return $this->_db->query(
             'SELECT "dataid" FROM "' . $this->_sanitizeIdentifier('paste') . '"'
         )->fetchAll(PDO::FETCH_COLUMN, 0);
-        return $pastes;
     }
 
     /**

@@ -9,7 +9,9 @@
  * DANGER: Too many options/settings and too high max iteration setting may trigger
  *         a fork bomb. Please save your work before executing this script.
  */
-include 'Bootstrap.php';
+
+define('PATH', dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR);
+include PATH . 'tst' . DIRECTORY_SEPARATOR . 'Bootstrap.php';
 
 $vd  = array('view', 'delete');
 $vcd = array('view', 'create', 'delete');
@@ -392,7 +394,7 @@ class ConfigurationTestGenerator
             }
         }
         $code .= '}' . PHP_EOL;
-        file_put_contents('ConfigurationCombinationsTest.php', $code);
+        file_put_contents(dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'tst' . DIRECTORY_SEPARATOR . 'ConfigurationCombinationsTest.php', $code);
     }
 
     /**
@@ -428,6 +430,8 @@ class ConfigurationCombinationsTest extends PHPUnit_Framework_TestCase
         Helper::confBackup();
         $this->_path  = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'privatebin_data';
         $this->_model = new Filesystem(array('dir' => $this->_path));
+        ServerSalt::setStore($this->_model);
+        TrafficLimiter::setStore($this->_model);
         $this->reset();
     }
 

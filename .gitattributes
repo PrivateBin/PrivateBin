@@ -1,3 +1,5 @@
+bin/configuration-test-generator export-ignore
+bin/icon-test export-ignore
 doc/ export-ignore
 tst/ export-ignore
 img/browserstack.svg export-ignore

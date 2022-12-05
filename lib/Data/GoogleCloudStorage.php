@@ -67,7 +67,9 @@ class GoogleCloudStorage extends AbstractData
         $this->_client = class_exists('StorageClientStub', false) ?
             new \StorageClientStub(array()) :
             new StorageClient(array('suppressKeyFileNotice' => true));
-        $this->_bucket = $this->_client->bucket($bucket);
+        if (isset($bucket)) {
+            $this->_bucket = $this->_client->bucket($bucket);
+        }
     }
 
     /**
