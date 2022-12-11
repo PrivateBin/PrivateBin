@@ -1,6 +1,6 @@
 # PrivateBin version history
 
-  * **1.5 (not yet released)**
+  * **1.5 (2022-12-11)**
     * ADDED: script for data storage backend migrations (#1012)
     * ADDED: Translations for Turkish, Slovak, Greek and Thai
     * ADDED: S3 Storage backend (#994)
