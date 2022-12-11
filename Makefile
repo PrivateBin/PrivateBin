@@ -38,7 +38,7 @@ increment: ## Increment and commit new version number, set target version using 
 	git commit -m "incrementing version"
 
 sign: ## Sign a release.
-	git tag $(VERSION)
+	git tag --sign --message "Release v$(VERSION)" $(VERSION)
 	git push origin $(VERSION)
 	signrelease.sh
 
