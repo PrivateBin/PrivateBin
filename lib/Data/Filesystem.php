@@ -228,7 +228,13 @@ class Filesystem extends AbstractData
                     $comment['parentid'] = $items[2];
 
                     // Store in array
-                    $key            = $this->getOpenSlot($comments, (int) $comment['meta']['created']);
+                    $key            = $this->getOpenSlot(
+                        $comments, (
+                            (int) array_key_exists('created', $comment['meta']) ?
+                            $comment['meta']['created'] : // v2 comments
+                            $comment['meta']['postdate'] // v1 comments
+                        )
+                    );
                     $comments[$key] = $comment;
                 }
             }
@@ -358,6 +364,8 @@ class Filesystem extends AbstractData
     {
         $pastes = array();
         $count  = 0;
+        $opened = 0;
+        $limit  = $batchsize * 10; // try at most 10 times $batchsize pastes before giving up
         $time   = time();
         foreach ($this->_getPasteIterator() as $file) {
             if ($file->isDir()) {
@@ -371,10 +379,12 @@ class Filesystem extends AbstractData
                     $data['meta']['expire_date'] < $time
                 ) {
                     $pastes[] = $pasteid;
-                    ++$count;
-                    if ($count >= $batchsize) {
+                    if (++$count >= $batchsize) {
                         break;
                     }
+                }
+                if (++$opened >= $limit) {
+                    break;
                 }
             }
         }
