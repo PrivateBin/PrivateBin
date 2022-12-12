@@ -367,11 +367,9 @@ class Filesystem extends AbstractData
         $opened = 0;
         $limit  = $batchsize * 10; // try at most 10 times $batchsize pastes before giving up
         $time   = time();
-        foreach ($this->_getPasteIterator() as $file) {
-            if ($file->isDir()) {
-                continue;
-            }
-            $pasteid = $file->getBasename('.php');
+        $files  = $this->getAllPastes();
+        shuffle($files);
+        foreach ($files as $pasteid) {
             if ($this->exists($pasteid)) {
                 $data = $this->read($pasteid);
                 if (
