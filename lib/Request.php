@@ -12,6 +12,8 @@
 
 namespace PrivateBin;
 
+use Exception;
+
 /**
  * Request
  *
@@ -110,9 +112,13 @@ class Request
             case 'POST':
                 // it might be a creation or a deletion, the latter is detected below
                 $this->_operation = 'create';
-                $this->_params    = Json::decode(
-                    file_get_contents(self::$_inputStream)
-                );
+                try {
+                    $this->_params = Json::decode(
+                        file_get_contents(self::$_inputStream)
+                    );
+                } catch (Exception $e) {
+                    // ignore error, $this->_params will remain empty
+                }
                 break;
             default:
                 $this->_params = $_GET;
