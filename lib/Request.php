@@ -7,10 +7,12 @@
  * @link      https://github.com/PrivateBin/PrivateBin
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
- * @version   1.4.0
+ * @version   1.5.0
  */
 
 namespace PrivateBin;
+
+use Exception;
 
 /**
  * Request
@@ -110,9 +112,13 @@ class Request
             case 'POST':
                 // it might be a creation or a deletion, the latter is detected below
                 $this->_operation = 'create';
-                $this->_params    = Json::decode(
-                    file_get_contents(self::$_inputStream)
-                );
+                try {
+                    $this->_params = Json::decode(
+                        file_get_contents(self::$_inputStream)
+                    );
+                } catch (Exception $e) {
+                    // ignore error, $this->_params will remain empty
+                }
                 break;
             default:
                 $this->_params = $_GET;

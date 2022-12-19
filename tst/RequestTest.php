@@ -97,7 +97,7 @@ class RequestTest extends PHPUnit_Framework_TestCase
         Request::setInputStream($file);
         $request = new Request;
         unlink($file);
-        $this->assertTrue($request->isJsonApiCall(), 'is JSON Api call');
+        $this->assertTrue($request->isJsonApiCall(), 'is JSON API call');
         $this->assertEquals('create', $request->getOperation());
         $this->assertEquals('foo', $request->getParam('ct'));
     }
@@ -111,7 +111,7 @@ class RequestTest extends PHPUnit_Framework_TestCase
         file_put_contents($file, '{"ct":"foo"}');
         Request::setInputStream($file);
         $request = new Request;
-        $this->assertTrue($request->isJsonApiCall(), 'is JSON Api call');
+        $this->assertTrue($request->isJsonApiCall(), 'is JSON API call');
         $this->assertEquals('create', $request->getOperation());
         $this->assertEquals('foo', $request->getParam('ct'));
     }
@@ -125,7 +125,7 @@ class RequestTest extends PHPUnit_Framework_TestCase
         $_SERVER['QUERY_STRING']   = $id;
         $_GET[$id]                 = '';
         $request                   = new Request;
-        $this->assertTrue($request->isJsonApiCall(), 'is JSON Api call');
+        $this->assertTrue($request->isJsonApiCall(), 'is JSON API call');
         $this->assertEquals($id, $request->getParam('pasteid'));
         $this->assertEquals('read', $request->getOperation());
     }
@@ -142,10 +142,23 @@ class RequestTest extends PHPUnit_Framework_TestCase
         file_put_contents($file, '{"deletetoken":"bar"}');
         Request::setInputStream($file);
         $request = new Request;
-        $this->assertTrue($request->isJsonApiCall(), 'is JSON Api call');
+        $this->assertTrue($request->isJsonApiCall(), 'is JSON API call');
         $this->assertEquals('delete', $request->getOperation());
         $this->assertEquals($id, $request->getParam('pasteid'));
         $this->assertEquals('bar', $request->getParam('deletetoken'));
+    }
+
+    public function testPostGarbage()
+    {
+        $this->reset();
+        $_SERVER['REQUEST_METHOD']        = 'POST';
+        $file                             = tempnam(sys_get_temp_dir(), 'FOO');
+        file_put_contents($file, random_bytes(256));
+        Request::setInputStream($file);
+        $request = new Request;
+        unlink($file);
+        $this->assertFalse($request->isJsonApiCall(), 'is HTML call');
+        $this->assertEquals('create', $request->getOperation());
     }
 
     public function testReadWithNegotiation()

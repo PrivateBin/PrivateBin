@@ -149,7 +149,7 @@ class BucketStub extends Bucket
         throw new BadMethodCallException('not supported by this stub');
     }
 
-    public function exists()
+    public function exists(array $options = array())
     {
         return true;
     }
