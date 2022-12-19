@@ -228,7 +228,13 @@ class Filesystem extends AbstractData
                     $comment['parentid'] = $items[2];
 
                     // Store in array
-                    $key            = $this->getOpenSlot($comments, (int) $comment['meta']['created']);
+                    $key            = $this->getOpenSlot(
+                        $comments, (
+                            (int) array_key_exists('created', $comment['meta']) ?
+                            $comment['meta']['created'] : // v2 comments
+                            $comment['meta']['postdate'] // v1 comments
+                        )
+                    );
                     $comments[$key] = $comment;
                 }
             }
@@ -358,12 +364,12 @@ class Filesystem extends AbstractData
     {
         $pastes = array();
         $count  = 0;
+        $opened = 0;
+        $limit  = $batchsize * 10; // try at most 10 times $batchsize pastes before giving up
         $time   = time();
-        foreach ($this->_getPasteIterator() as $file) {
-            if ($file->isDir()) {
-                continue;
-            }
-            $pasteid = $file->getBasename('.php');
+        $files  = $this->getAllPastes();
+        shuffle($files);
+        foreach ($files as $pasteid) {
             if ($this->exists($pasteid)) {
                 $data = $this->read($pasteid);
                 if (
@@ -371,10 +377,12 @@ class Filesystem extends AbstractData
                     $data['meta']['expire_date'] < $time
                 ) {
                     $pastes[] = $pasteid;
-                    ++$count;
-                    if ($count >= $batchsize) {
+                    if (++$count >= $batchsize) {
                         break;
                     }
+                }
+                if (++$opened >= $limit) {
+                    break;
                 }
             }
         }
@@ -387,7 +395,7 @@ class Filesystem extends AbstractData
     public function getAllPastes()
     {
         $pastes = array();
-        foreach ($this->_getPasteIterator() as $file) {
+        foreach (new \GlobIterator($this->_path . self::PASTE_FILE_PATTERN) as $file) {
             if ($file->isFile()) {
                 $pastes[] = $file->getBasename('.php');
             }
@@ -429,20 +437,6 @@ class Filesystem extends AbstractData
     {
         return $this->_dataid2path($dataid) . $dataid .
             '.discussion' . DIRECTORY_SEPARATOR;
-    }
-
-    /**
-     * Get an iterator matching paste files.
-     *
-     * Note that creating the iterator issues the glob() call, so we can't pre-
-     * generate this object before files that should get matched exist.
-     *
-     * @access private
-     * @return \GlobIterator
-     */
-    private function _getPasteIterator()
-    {
-        return new \GlobIterator($this->_path . self::PASTE_FILE_PATTERN);
     }
 
     /**
