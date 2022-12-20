@@ -1,5 +1,9 @@
 # PrivateBin version history
 
+  * **1.5.1 (not yet released)**
+    * FIXED: Revert Filesystem purge to limited and randomized lookup (#1030)
+    * FIXED: Catch JSON decode errors when invalid data gets sent to the API (#1030)
+    * FIXED: Support sorting v1 format in mixed version comments in Filesystem backend (#1030)
   * **1.5 (2022-12-11)**
     * ADDED: script for data storage backend migrations (#1012)
     * ADDED: Translations for Turkish, Slovak, Greek and Thai

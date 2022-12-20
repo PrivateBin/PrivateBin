@@ -450,9 +450,12 @@ class ControllerTest extends TestCase
         $_SERVER['REQUEST_METHOD']        = 'POST';
         $_SERVER['REMOTE_ADDR']           = '::1';
         $this->assertFalse($this->_data->exists(Helper::getPasteId()), 'paste does not exists before posting data');
-        $this->expectException(Exception::class);
-        $this->expectExceptionCode(90);
+        ob_start();
         new Controller;
+        $content = ob_get_contents();
+        ob_end_clean();
+        $response = json_decode($content, true);
+        $this->assertEquals(1, $response['status'], 'outputs error status');
         $this->assertFalse($this->_data->exists(Helper::getPasteId()), 'paste exists after posting data');
     }
 
