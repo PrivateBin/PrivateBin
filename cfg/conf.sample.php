@@ -5,12 +5,12 @@
 
 [main]
 ; (optional) set a project name to be displayed on the website
-; name = "PrivateBin"
+name = "San Marino PrivateBin"
 
 ; The full URL, with the domain name and directories that point to the
 ; PrivateBin files, including an ending slash (/). This URL is essential to
 ; allow Opengraph images to be displayed on social networks.
-; basepath = "https://privatebin.example.com/"
+basepath = "https://p.5s.cl/"
 
 ; enable or disable the discussion feature, defaults to true
 discussion = true
@@ -22,10 +22,10 @@ opendiscussion = false
 password = true
 
 ; enable or disable the file upload feature, defaults to false
-fileupload = false
+fileupload = true
 
 ; preselect the burn-after-reading feature, defaults to false
-burnafterreadingselected = false
+burnafterreadingselected = true
 
 ; which display mode to preselect by default, defaults to "plaintext"
 ; make sure the value exists in [formatter_options]
@@ -35,7 +35,7 @@ defaultformatter = "plaintext"
 ; syntaxhighlightingtheme = "sons-of-obsidian"
 
 ; size limit per paste or comment in bytes, defaults to 10 Mebibytes
-sizelimit = 10485760
+sizelimit = 100485760
 
 ; template to include, default is "bootstrap" (tpl/bootstrap.php)
 template = "bootstrap"
@@ -50,7 +50,7 @@ template = "bootstrap"
 ; by default PrivateBin will guess the visitors language based on the browsers
 ; settings. Optionally you can enable the language selection menu, which uses
 ; a session cookie to store the choice until the browser is closed.
-languageselection = false
+languageselection = true
 
 ; set the language your installs defaults to, defaults to English
 ; if this is set and language selection is disabled, this will be the only language
@@ -63,7 +63,7 @@ languageselection = false
 
 ; (optional) Let users create a QR code for sharing the paste URL with one click.
 ; It works both when a new paste is created and when you view a paste.
-; qrcode = true
+qrcode = true
 
 ; (optional) IP based icons are a weak mechanism to detect if a comment was from
 ; a different user when the same username was used in a comment. It might get
@@ -151,7 +151,7 @@ limit = 10
 
 ; (optional) if your website runs behind a reverse proxy or load balancer,
 ; set the HTTP header containing the visitors IP address, i.e. X_FORWARDED_FOR
-; header = "X_FORWARDED_FOR"
+header = "X_FORWARDED_FOR"
 
 [purge]
 ; minimum time limit between two purgings of expired pastes, it is only
