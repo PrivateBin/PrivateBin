@@ -187,7 +187,7 @@
     "URL shortener may expose your decrypt key in URL.": "URL trumpinimo įrankis gali atskleisti URL adrese jūsų iššifravimo raktą.",
     "Save paste": "Įrašyti įdėjimą",
     "Your IP is not authorized to create pastes.": "Jūsų IP adresas neturi įgaliojimų kurti įdėjimų.",
-    "Trying to shorten a URL that isn't pointing at our instance.": "Trying to shorten a URL that isn't pointing at our instance.",
-    "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".",
-    "Error parsing YOURLS response.": "Error parsing YOURLS response."
+    "Trying to shorten a URL that isn't pointing at our instance.": "Bandoma sutrumpinti URL adresą, kuris nenurodo į mūsų egzempliorių.",
+    "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "Klaida iškviečiant YOURLS. Tikriausiai, konfigūracijos klaida, pavyzdžiui, neteisingi „apiurl“ ar „signature“, arba jų nėra.",
+    "Error parsing YOURLS response.": "Klaida nagrinėjant YOURLS atsaką."
 }
