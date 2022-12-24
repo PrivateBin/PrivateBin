@@ -1,8 +1,8 @@
 .PHONY: all coverage coverage-js coverage-php doc doc-js doc-php increment sign test test-js test-php help
 
-CURRENT_VERSION = 1.5.0
-VERSION ?= 1.5.1
-VERSION_FILES = index.php cfg/ *.md css/ i18n/ img/ js/package.json js/privatebin.js lib/ Makefile tpl/ tst/
+CURRENT_VERSION = 1.5.1
+VERSION ?= 1.5.2
+VERSION_FILES = index.php bin/ cfg/ *.md css/ i18n/ img/ js/package.json js/privatebin.js lib/ Makefile tpl/ tst/
 REGEX_CURRENT_VERSION := $(shell echo $(CURRENT_VERSION) | sed "s/\./\\\./g")
 REGEX_VERSION := $(shell echo $(VERSION) | sed "s/\./\\\./g")
 
