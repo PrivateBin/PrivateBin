@@ -1,6 +1,7 @@
 # PrivateBin version history
 
   * **1.5.1 (not yet released)**
+    * ADDED: script for administrative tasks: deleting pastes (#274), removing empty directories (#277), purging expired pastes (#276) & statistics (#319)
     * FIXED: Revert Filesystem purge to limited and randomized lookup (#1030)
     * FIXED: Catch JSON decode errors when invalid data gets sent to the API (#1030)
     * FIXED: Support sorting v1 format in mixed version comments in Filesystem backend (#1030)
