@@ -445,8 +445,8 @@ class Controller
         }
         if ($type === 'types') {
             $content = str_replace(
-                '"' . implode('", "', array_keys($this->_conf->getDefaults()['expire_options'])) . '"',
-                '"' . implode('", "', array_keys($this->_conf->getSection('expire_options'))) . '"',
+                implode('", "', array_keys($this->_conf->getDefaults()['expire_options'])),
+                implode('", "', array_keys($this->_conf->getSection('expire_options'))),
                 $content
             );
         }
