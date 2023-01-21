@@ -256,6 +256,23 @@ class JsonApiTest extends TestCase
     /**
      * @runInSeparateProcess
      */
+    public function testJsonLdTypes()
+    {
+        $_GET['jsonld'] = 'types';
+        ob_start();
+        new Controller;
+        $content = ob_get_contents();
+        ob_end_clean();
+        $this->assertEquals(str_replace(
+                '?jsonld=',
+                '/?jsonld=',
+                file_get_contents(PUBLIC_PATH . '/js/types.jsonld')
+            ), $content, 'outputs data correctly');
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
     public function testJsonLdInvalid()
     {
         $_GET['jsonld'] = CONF;
