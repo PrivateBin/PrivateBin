@@ -425,10 +425,13 @@ class Controller
      */
     private function _jsonld($type)
     {
-        if (
-            $type !== 'paste' && $type !== 'comment' &&
-            $type !== 'pastemeta' && $type !== 'commentmeta'
-        ) {
+        if (!in_array($type, array(
+            'comment',
+            'commentmeta',
+            'paste',
+            'pastemeta',
+            'types',
+        ))) {
             $type = '';
         }
         $content = '{}';
@@ -438,6 +441,13 @@ class Controller
                 '?jsonld=',
                 $this->_urlBase . '?jsonld=',
                 file_get_contents($file)
+            );
+        }
+        if ($type === 'types') {
+            $content = str_replace(
+                implode('", "', array_keys($this->_conf->getDefaults()['expire_options'])),
+                implode('", "', array_keys($this->_conf->getSection('expire_options'))),
+                $content
             );
         }
 
