@@ -122,8 +122,8 @@
     "Sending comment…": "Mandadís del comentari…",
     "Comment posted.": "Comentari mandat.",
     "Could not refresh display: %s": "Impossible d’actualizar l’afichatge : %s",
-    "unknown status": "Estatut desconegut",
-    "server error or not responding": "Lo servidor respond pas o a rescontrat una error",
+    "unknown status": "estatut desconegut",
+    "server error or not responding": "lo servidor respond pas o a rescontrat una error",
     "Could not post comment: %s": "Impossible de mandar lo comentari : %s",
     "Sending paste…": "Mandadís del tèxte…",
     "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit [Ctrl]+[c] to copy)</span>": "Vòstre tèxte es disponible a l’adreça <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Picatz sus [Ctrl]+[c] per copiar)</span>",
@@ -187,7 +187,7 @@
     "URL shortener may expose your decrypt key in URL.": "Los espleches d’acorchiment d’URL pòdon expausar la clau de deschiframent dins l’URL.",
     "Save paste": "Enregistrar lo tèxt",
     "Your IP is not authorized to create pastes.": "Vòstra adreça IP a pas l’autorizacion de crear de tèxtes.",
-    "Trying to shorten a URL that isn't pointing at our instance.": "Trying to shorten a URL that isn't pointing at our instance.",
-    "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".",
-    "Error parsing YOURLS response.": "Error parsing YOURLS response."
+    "Trying to shorten a URL that isn't pointing at our instance.": "Ensag d’abracar una URL que mena pas a nòstra instància.",
+    "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "Error en cridant YOURLS. Es probablament un problèma de configuracion, quicòm coma « apirul » o « signature » marrit o absent.",
+    "Error parsing YOURLS response.": "Error d'analisi de la responsa YOURLS."
 }
