@@ -1,6 +1,6 @@
 {
     "PrivateBin": "PrivateBin",
-    "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted %sin the browser%s using 256 bits AES.": "%s เป็น pastebin ออนไลน์แบบโอเพ่นซอร์สที่มีสไตล์แบบมินิมัลลิสท์ เซิร์ฟเวอร์ไม่สามารถรู้ได้ว่าข้อมูลโค้ดที่มาฝากนั้นเป็นข้อมูลอะไร โดยจะถูก %sเข้ารหัส/ถอดรหัส%s ด้วยกระบวนการ AES จำนวน 256 บิตผ่านเบราว์เซอร์",
+    "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted %sin the browser%s using 256 bits AES.": "%s เป็น pastebin ออนไลน์แบบโอเพ่นซอร์สที่มีรูปแบบการใช้งานที่เรียบง่าย เซิร์ฟเวอร์ไม่สามารถรู้ได้ว่าข้อมูลโค้ดที่มาฝากนั้นเป็นข้อมูลอะไร โดยจะถูกเข้ารหัส/ถอดรหัสด้วยกระบวนการ AES จำนวน 256 บิต%sผ่านเบราว์เซอร์%s",
     "More information on the <a href=\"https://privatebin.info/\">project page</a>.": "ข้อมูลเพิ่มเติม ดูได้ที่<a href=\"https://privatebin.info/\">หน้าโครงการ</a>",
     "Because ignorance is bliss": "ไม่รู้ไม่ชี้ดีที่สุด",
     "en": "th",
@@ -77,7 +77,7 @@
         "%d ปี"
     ],
     "Never": "ไม่หมดอายุ",
-    "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.": "โปรดทราบ: เว็บไซต์นี้เป็นการให้บริการแบบเบต้า ข้อมูลอาจถูกลบได้ตลอดเวลา หากคุณใช้บริการนี้ในทางที่ผิดอาจจะทำให้ข้อมูลของคุณสูญหายอย่างถาวรได้",
+    "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.": "โปรดทราบ: เว็บไซต์นี้เป็นการให้บริการสำหรับทดสอบเท่านั้น ข้อมูลอาจถูกลบได้ตลอดเวลา หากคุณใช้บริการนี้ในทางที่ผิดอาจจะทำให้ข้อมูลของคุณสูญหายอย่างถาวรได้",
     "This document will expire in %d seconds.": [
         "เอกสารนี้จะหมดอายุใน %d วินาที",
         "เอกสารนี้จะหมดอายุใน %d วินาที",
