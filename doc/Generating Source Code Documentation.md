@@ -1,5 +1,6 @@
-Generating PHP documentation
-============================
+# Generating Source Code Documentation
+
+## Generating PHP documentation
 
 In order to generate the documentation, you will need to install the following
 packages and its dependencies:
@@ -28,8 +29,7 @@ manually installed by downloading it from
 [GitHub](https://github.com/phpDocumentor/phpDocumentor2/releases/download/v2.9.0/phpDocumentor.phar)
 and then manually moving it to e.g. `/usr/local/bin` and making it executable.
 
-Generating JS documentation
-============================
+## Generating JS documentation
 
 In order to generate the documentation, you will need to install the following
 packages and its dependencies:
@@ -57,4 +57,3 @@ To generate the documentation, change into the main directory and run phpdoc:
 $ cd PrivateBin
 $ jsdoc -p -d doc/jsdoc js/privatebin.js js/legacy.js
 ```
-
