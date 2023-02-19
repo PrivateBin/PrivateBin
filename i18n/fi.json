@@ -154,7 +154,7 @@
     "Invalid attachment.": "Virheellinen liite.",
     "Options": "Asetukset",
     "Shorten URL": "Lyhennä URL",
-    "Editor": "Muokkaaja",
+    "Editor": "Muokkain",
     "Preview": "Esikatselu",
     "%s requires the PATH to end in a \"%s\". Please update the PATH in your index.php.": "%s vaatii PATH:in loppuvan \"%s\"-merkkiin. Päivitäthän PATH:in index.php:ssäsi.",
     "Decrypt": "Pura",
