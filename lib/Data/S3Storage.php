@@ -83,11 +83,12 @@ class S3Storage extends AbstractData
     public function __construct(array $options)
     {
         if (is_array($options)) {
-            // AWS SDK will try to load credentials from environment if credentials are not passed via configuration 
+            // AWS SDK will try to load credentials from environment if credentials are not passed via configuration
             // ref: https://docs.aws.amazon.com/sdk-for-php/v3/developer-guide/guide_credentials.html#default-credential-chain
             if (isset($options['accesskey']) && isset($options['secretkey'])) {
                 $this->_options['credentials'] = array();
-                $this->_options['credentials']['key'] = $options['accesskey'];
+
+                $this->_options['credentials']['key']    = $options['accesskey'];
                 $this->_options['credentials']['secret'] = $options['secretkey'];
             }
             if (array_key_exists('region', $options)) {
