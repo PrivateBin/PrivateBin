@@ -230,6 +230,19 @@ dir = PATH "data"
 ;accesskey = "access key id"
 ;secretkey = "secret access key"
 
+;[model]
+; example of S3 configuration for AWS using its SDK default credential provider chain
+; if relying on environment variables, the AWS SDK will look for the following:
+; - AWS_ACCESS_KEY_ID
+; - AWS_SECRET_ACCESS_KEY
+; - AWS_SESSION_TOKEN (if needed)
+; for more details, see https://docs.aws.amazon.com/sdk-for-php/v3/developer-guide/guide_credentials.html#default-credential-chain 
+;class = S3Storage
+;[model_options]
+;region = "eu-central-1"
+;version = "latest"
+;bucket = "my-bucket"
+
 [yourls]
 ; When using YOURLS as a "urlshortener" config item:
 ; - By default, "urlshortener" will point to the YOURLS API URL, with or without
