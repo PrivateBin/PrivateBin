@@ -189,5 +189,5 @@
     "Your IP is not authorized to create pastes.": "您的 IP 无权创建粘贴。",
     "Trying to shorten a URL that isn't pointing at our instance.": "Trying to shorten a URL that isn't pointing at our instance.",
     "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".",
-    "Error parsing YOURLS response.": "Error parsing YOURLS response."
+    "Error parsing YOURLS response.": "解析 YOURLS 响应时出错。"
 }
