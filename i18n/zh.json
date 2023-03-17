@@ -187,7 +187,7 @@
     "URL shortener may expose your decrypt key in URL.": "短链接服务可能会暴露您在 URL 中的解密密钥。",
     "Save paste": "保存内容",
     "Your IP is not authorized to create pastes.": "您的 IP 无权创建粘贴。",
-    "Trying to shorten a URL that isn't pointing at our instance.": "Trying to shorten a URL that isn't pointing at our instance.",
-    "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".",
-    "Error parsing YOURLS response.": "Error parsing YOURLS response."
+    "Trying to shorten a URL that isn't pointing at our instance.": "尝试缩短一个不指向我们实例的URL。",
+    "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "调用 YOURLS 时出错。可能是配置问题，例如“apiurl”或“signature”错误或缺失。",
+    "Error parsing YOURLS response.": "解析 YOURLS 响应时出错。"
 }
