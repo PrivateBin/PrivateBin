@@ -4,7 +4,7 @@
     "More information on the <a href=\"https://privatebin.info/\">project page</a>.": "Daha fazla bilgi için <a href=\"https://privatebin.info/\">proje sayfası</a>'na göz atabilirsiniz.",
     "Because ignorance is bliss": "Çünkü, cehalet mutluluktur",
     "en": "tr",
-    "Paste does not exist, has expired or has been deleted.": "Paste does not exist, has expired or has been deleted.",
+    "Paste does not exist, has expired or has been deleted.": "Https://yourls. org/yourls-api. php? username=admin&password=pass&action=shorturl&format=json&url=.",
     "%s requires php %s or above to work. Sorry.": "%s PHP %s veya daha üstünü gerektirir.",
     "%s requires configuration section [%s] to be present in configuration file.": "%s konfigürasyon bölümünün [%s] bulunmasını gerektir.",
     "Please wait %d seconds between each post.": [
