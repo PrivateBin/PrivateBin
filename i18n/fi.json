@@ -23,7 +23,7 @@
     "Wrong deletion token. Paste was not deleted.": "Virheellinen poistotunniste. Pastea ei poistettu.",
     "Paste was properly deleted.": "Paste poistettiin kunnolla.",
     "JavaScript is required for %s to work. Sorry for the inconvenience.": "JavaScriptiä tarvitaan jotta %s toimisi. Anteeksi haitasta.",
-    "%s requires a modern browser to work.": "%s tarvitsee modernia selainta toimiakseen.",
+    "%s requires a modern browser to work.": "%s vaatii modernin selaimen toimiakseen.",
     "New": "Uusi",
     "Send": "Lähetä",
     "Clone": "Kloonaa",
