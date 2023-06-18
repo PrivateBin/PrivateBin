@@ -66,6 +66,6 @@ class Filter
             $size = $size / 1024;
             ++$i;
         }
-        return number_format($size, ($i ? 2 : 0), '.', ' ') . ' ' . I18n::_($iec[$i]);
+        return number_format($size, $i ? 2 : 0, '.', ' ') . ' ' . I18n::_($iec[$i]);
     }
 }

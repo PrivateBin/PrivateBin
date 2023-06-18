@@ -225,7 +225,7 @@ class Request
         return array_key_exists('REQUEST_URI', $_SERVER) ?
         htmlspecialchars(
             parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH)
-            ) : '/';
+        ) : '/';
     }
 
     /**
