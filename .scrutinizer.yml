@@ -17,7 +17,7 @@ coding_style:
 build:
     environment:
         php:
-            version: '7.2'
+            version: '7.4'
     tests:
         override:
             -
