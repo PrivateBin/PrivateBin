@@ -15,9 +15,10 @@ coding_style:
                 additive: false
                 concatenation: true
 build:
+    image: default-bionic
     environment:
         php:
-            version: '7.4'
+            version: 7.4
     tests:
         override:
             -
