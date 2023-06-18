@@ -195,10 +195,10 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
         $content = ob_get_contents();
         ob_end_clean();
         $this->assertEquals(str_replace(
-                '?jsonld=',
-                '/?jsonld=',
-                file_get_contents(PUBLIC_PATH . '/js/paste.jsonld')
-            ), $content, 'outputs data correctly');
+            '?jsonld=',
+            '/?jsonld=',
+            file_get_contents(PUBLIC_PATH . '/js/paste.jsonld')
+        ), $content, 'outputs data correctly');
     }
 
     /**
@@ -212,10 +212,10 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
         $content = ob_get_contents();
         ob_end_clean();
         $this->assertEquals(str_replace(
-                '?jsonld=',
-                '/?jsonld=',
-                file_get_contents(PUBLIC_PATH . '/js/comment.jsonld')
-            ), $content, 'outputs data correctly');
+            '?jsonld=',
+            '/?jsonld=',
+            file_get_contents(PUBLIC_PATH . '/js/comment.jsonld')
+        ), $content, 'outputs data correctly');
     }
 
     /**
@@ -229,10 +229,10 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
         $content = ob_get_contents();
         ob_end_clean();
         $this->assertEquals(str_replace(
-                '?jsonld=',
-                '/?jsonld=',
-                file_get_contents(PUBLIC_PATH . '/js/pastemeta.jsonld')
-            ), $content, 'outputs data correctly');
+            '?jsonld=',
+            '/?jsonld=',
+            file_get_contents(PUBLIC_PATH . '/js/pastemeta.jsonld')
+        ), $content, 'outputs data correctly');
     }
 
     /**
@@ -246,10 +246,10 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
         $content = ob_get_contents();
         ob_end_clean();
         $this->assertEquals(str_replace(
-                '?jsonld=',
-                '/?jsonld=',
-                file_get_contents(PUBLIC_PATH . '/js/commentmeta.jsonld')
-            ), $content, 'outputs data correctly');
+            '?jsonld=',
+            '/?jsonld=',
+            file_get_contents(PUBLIC_PATH . '/js/commentmeta.jsonld')
+        ), $content, 'outputs data correctly');
     }
 
     /**
@@ -263,10 +263,10 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
         $content = ob_get_contents();
         ob_end_clean();
         $this->assertEquals(str_replace(
-                '?jsonld=',
-                '/?jsonld=',
-                file_get_contents(PUBLIC_PATH . '/js/types.jsonld')
-            ), $content, 'outputs data correctly');
+            '?jsonld=',
+            '/?jsonld=',
+            file_get_contents(PUBLIC_PATH . '/js/types.jsonld')
+        ), $content, 'outputs data correctly');
     }
 
     /**
