@@ -29,6 +29,9 @@ build:
     nodes:
         tests: true
         analysis:
+            dependencies:
+              after:
+                  - composer require --dev "squizlabs/php_codesniffer=3.*"
             tests:
                 override:
                     -
