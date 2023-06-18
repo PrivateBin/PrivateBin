@@ -21,7 +21,7 @@ if ($SYNTAXHIGHLIGHTING):
     endif;
 endif;
 ?>
-		<script type="text/javascript" data-cfasync="false" src="js/jquery-3.6.1.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/jquery-3.7.0.js" integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw==" crossorigin="anonymous"></script>
 <?php
 if ($QRCODE):
 ?>
@@ -49,9 +49,9 @@ if ($MARKDOWN):
 <?php
 endif;
 ?>
-		<script type="text/javascript" data-cfasync="false" src="js/purify-2.4.6.js" integrity="sha512-+jcx+EqNbaFT4OHS86zGwU1SNAAZ7hG2pJlwMpXoe9AvTp37BrXMQ29g2GhdyQHTvYWaNlTQIkWXYM0Lvt8GiQ==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/purify-3.0.3.js" integrity="sha512-brRjZM5EVE2mppHbTNum/7LLNnB/arNlnNanw6dJcemJ+IsBSxTGxmBXyw8oPr+njDWeQ2PhRYvrusMeIKYjOg==" crossorigin="anonymous"></script>
 		<script type="text/javascript" data-cfasync="false" src="js/legacy.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-LYos+qXHIRqFf5ZPNphvtTB0cgzHUizu2wwcOwcwz/VIpRv9lpcBgPYz4uq6jx0INwCAj6Fbnl5HoKiLufS2jg==" crossorigin="anonymous"></script>
-		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-ST1B/QBH9m/TImh2pzKU88qbgwqto4N34X8bnn9+Iuye3x2pTb3aMiX5gU4gh15T7HCTw2jehB9+BtC6a/M81A==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-OIIcHnsT4XQD92pVp5xGGX0qFJ+TImhvUNdy3p8j+1bZ3GN8d2fvOZgnX2ninUIxbbD9naYohaqRpR4Fq73THA==" crossorigin="anonymous"></script>
 		<!-- icon -->
 		<link rel="apple-touch-icon" href="img/apple-touch-icon.png?<?php echo rawurlencode($VERSION); ?>" sizes="180x180" />
 		<link rel="icon" type="image/png" href="img/favicon-32x32.png?<?php echo rawurlencode($VERSION); ?>" sizes="32x32" />
