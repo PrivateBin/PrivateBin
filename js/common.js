@@ -10,14 +10,14 @@ global.fs = require('fs');
 global.WebCrypto = require('@peculiar/webcrypto').Crypto;
 
 // application libraries to test
-global.$ = global.jQuery = require('./jquery-3.6.1');
+global.$ = global.jQuery = require('./jquery-3.7.0');
 global.RawDeflate = require('./rawinflate-0.3').RawDeflate;
 global.zlib = require('./zlib-1.2.13').zlib;
 require('./prettify');
 global.prettyPrint = window.PR.prettyPrint;
 global.prettyPrintOne = window.PR.prettyPrintOne;
 global.showdown = require('./showdown-2.1.0');
-global.DOMPurify = require('./purify-2.4.6');
+global.DOMPurify = require('./purify-3.0.4');
 global.baseX = require('./base-x-4.0.0').baseX;
 global.Legacy = require('./legacy').Legacy;
 require('./bootstrap-3.4.1');

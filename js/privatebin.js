@@ -3649,7 +3649,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         function changeBurnAfterReading()
         {
-            if ($burnAfterReading.is(':checked')) {
+            if (me.getBurnAfterReading()) {
                 $openDiscussionOption.addClass('buttondisabled');
                 $openDiscussion.prop('checked', false);
 
@@ -3669,7 +3669,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         function changeOpenDiscussion()
         {
-            if ($openDiscussion.is(':checked')) {
+            if (me.getOpenDiscussion()) {
                 $burnAfterReadingOption.addClass('buttondisabled');
                 $burnAfterReading.prop('checked', false);
 
@@ -4319,7 +4319,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         me.getBurnAfterReading = function()
         {
-            return $burnAfterReading.is(':checked');
+            return $burnAfterReading.prop('checked');
         };
 
         /**
@@ -4331,7 +4331,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         me.getOpenDiscussion = function()
         {
-            return $openDiscussion.is(':checked');
+            return $openDiscussion.prop('checked');
         };
 
         /**

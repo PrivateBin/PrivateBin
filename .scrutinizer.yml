@@ -15,9 +15,10 @@ coding_style:
                 additive: false
                 concatenation: true
 build:
+    image: default-bionic
     environment:
         php:
-            version: '7.2'
+            version: 7.4
     tests:
         override:
             -
@@ -30,7 +31,4 @@ build:
         analysis:
             tests:
                 override:
-                    -
-                        command: phpcs-run
-                        use_website_config: true
                     - php-scrutinizer-run
