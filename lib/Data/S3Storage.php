@@ -4,7 +4,7 @@
  *
  * an S3 compatible data backend for PrivateBin with CEPH/RadosGW in mind
  * see https://docs.ceph.com/en/latest/radosgw/s3/php/
- * based on lib/Data/GoogleCloudStorage.php from PrivateBin version 1.5.1
+ * based on lib/Data/GoogleCloudStorage.php from PrivateBin version 1.5.2
  *
  * @link      https://github.com/PrivateBin/PrivateBin
  * @copyright 2022 Felix J. Ogris (https://ogris.de/)
