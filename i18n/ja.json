@@ -25,7 +25,7 @@
     "JavaScript is required for %s to work. Sorry for the inconvenience.": "JavaScript is required for %s to work. Sorry for the inconvenience.",
     "%s requires a modern browser to work.": "%s requires a modern browser to work.",
     "New": "新しい",
-    "Send": "Send",
+    "Send": "送る",
     "Clone": "Clone",
     "Raw text": "Raw text",
     "Expires": "Expires",
@@ -47,10 +47,10 @@
         "%d 分"
     ],
     "%d hours": [
-        "%d hour (singular)",
-        "%d hours (1st plural)",
-        "%d hours (2nd plural)",
-        "%d hours (3rd plural)"
+        "%d 時間",
+        "%d 時間",
+        "%d 時間",
+        "%d 時間"
     ],
     "%d days": [
         "%d 日",
