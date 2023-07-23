@@ -35,7 +35,7 @@ class Controller
      *
      * @const string
      */
-    const MIN_PHP_VERSION = '5.6.0';
+    const MIN_PHP_VERSION = '7.3.0';
 
     /**
      * show the same error message if the paste expired or does not exist

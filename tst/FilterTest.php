@@ -1,8 +1,9 @@
 <?php
 
+use PHPUnit\Framework\TestCase;
 use PrivateBin\Filter;
 
-class FilterTest extends PHPUnit_Framework_TestCase
+class FilterTest extends TestCase
 {
     public function testFilterMakesTimesHumanlyReadable()
     {
@@ -12,12 +13,10 @@ class FilterTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('6 months', Filter::formatHumanReadableTime('6months'));
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionCode 30
-     */
     public function testFilterFailTimesHumanlyReadable()
     {
+        $this->expectException(Exception::class);
+        $this->expectExceptionCode(30);
         Filter::formatHumanReadableTime('five_minutes');
     }
 

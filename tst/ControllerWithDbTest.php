@@ -17,7 +17,7 @@ class ControllerWithDbTest extends ControllerTest
         ),
     );
 
-    public function setUp()
+    public function setUp(): void
     {
         /* Setup Routine */
         $this->_path = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'privatebin_data';

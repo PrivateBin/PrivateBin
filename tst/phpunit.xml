@@ -1,18 +1,21 @@
-<phpunit bootstrap="Bootstrap.php" colors="true">
-	<testsuite name="PrivateBin Test Suite">
-		<directory suffix=".php">./</directory>
-	</testsuite>
-	<filter>
-		<whitelist>
-			<directory suffix=".php">../lib</directory>
-			<exclude>
-				<file>../lib/Data/AbstractData.php</file>
-			</exclude>
-		</whitelist>
-	</filter>
-	<logging>
-		<log type="coverage-clover" target="log/coverage-clover.xml" />
-		<log type="coverage-html" target="log/php-coverage-report" lowUpperBound="50" highLowerBound="80" />
-		<log type="testdox-html" target="log/testdox.html" />
-	</logging>
+<?xml version="1.0"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" bootstrap="Bootstrap.php" colors="true" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
+  <coverage>
+    <include>
+      <directory suffix=".php">../lib</directory>
+    </include>
+    <exclude>
+      <file>../lib/Data/AbstractData.php</file>
+    </exclude>
+    <report>
+      <clover outputFile="log/coverage-clover.xml"/>
+      <html outputDirectory="log/php-coverage-report" lowUpperBound="50" highLowerBound="80"/>
+    </report>
+  </coverage>
+  <testsuite name="PrivateBin Test Suite">
+    <directory suffix=".php">./</directory>
+  </testsuite>
+  <logging>
+    <testdoxHtml outputFile="log/testdox.html"/>
+  </logging>
 </phpunit>

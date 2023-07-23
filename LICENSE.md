@@ -342,12 +342,11 @@ any theory of liability, whether in contract, strict liability, or tort
 (including negligence or otherwise) arising in any way out of the use of this
 software, even if advised of the possibility of such damage.
 
-## MIT License for base64.js version 1.7, Bootstrap, Identicon, random_compat, Composer, kjua and base-x
+## MIT License for base64.js version 1.7, Bootstrap, Identicon, Composer, kjua and base-x
 
 Copyright © 2012 Dan Kogai
 Copyright © 2011-2016 Twitter, Inc.
 Copyright © 2013 Benjamin Laugueux <benjamin@yzalis.com>
-Copyright © 2015 Paragon Initiative Enterprises
 Copyright © 2016 Nils Adermann, Jordi Boggiano
 Copyright © 2016 Lars Jung (https://larsjung.de)
 Copyright © 2018 base-x contributors

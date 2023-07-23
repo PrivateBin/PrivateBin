@@ -1,19 +1,10 @@
 <?php
 
+use PHPUnit\Framework\TestCase;
 use PrivateBin\Request;
 
-class RequestTest extends PHPUnit_Framework_TestCase
+class RequestTest extends TestCase
 {
-    public function setUp()
-    {
-        /* Setup Routine */
-    }
-
-    public function tearDown()
-    {
-        /* Tear Down Routine */
-    }
-
     public function reset()
     {
         $_SERVER = array();

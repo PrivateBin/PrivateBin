@@ -1,8 +1,9 @@
 <?php
 
+use PHPUnit\Framework\TestCase;
 use PrivateBin\Configuration;
 
-class ConfigurationTest extends PHPUnit_Framework_TestCase
+class ConfigurationTest extends TestCase
 {
     private $_minimalConfig;
 
@@ -10,7 +11,7 @@ class ConfigurationTest extends PHPUnit_Framework_TestCase
 
     private $_path;
 
-    public function setUp()
+    public function setUp(): void
     {
         /* Setup Routine */
         Helper::confBackup();
@@ -23,7 +24,7 @@ class ConfigurationTest extends PHPUnit_Framework_TestCase
         }
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         /* Tear Down Routine */
         Helper::rmDir($this->_path);
@@ -55,13 +56,11 @@ class ConfigurationTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($this->_options, $conf->get(), 'returns correct defaults on missing file');
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionCode 2
-     */
     public function testHandleBlankConfigFile()
     {
         file_put_contents(CONF, '');
+        $this->expectException(Exception::class);
+        $this->expectExceptionCode(2);
         new Configuration;
     }
 
@@ -72,25 +71,21 @@ class ConfigurationTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($this->_options, $conf->get(), 'returns correct defaults on empty file');
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionCode 3
-     */
     public function testHandleInvalidSection()
     {
         file_put_contents(CONF, $this->_minimalConfig);
         $conf = new Configuration;
+        $this->expectException(Exception::class);
+        $this->expectExceptionCode(3);
         $conf->getKey('foo', 'bar');
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionCode 4
-     */
     public function testHandleInvalidKey()
     {
         file_put_contents(CONF, $this->_minimalConfig);
         $conf = new Configuration;
+        $this->expectException(Exception::class);
+        $this->expectExceptionCode(4);
         $conf->getKey('foo');
     }
 

@@ -1,9 +1,10 @@
 <?php
 
+use PHPUnit\Framework\TestCase;
 use PrivateBin\Configuration;
 use PrivateBin\YourlsProxy;
 
-class YourlsProxyTest extends PHPUnit_Framework_TestCase
+class YourlsProxyTest extends TestCase
 {
     private $_conf;
 
@@ -11,7 +12,7 @@ class YourlsProxyTest extends PHPUnit_Framework_TestCase
 
     private $_mock_yourls_service;
 
-    public function setUp()
+    public function setUp(): void
     {
         /* Setup Routine */
         $this->_path = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'privatebin_data';
@@ -28,7 +29,7 @@ class YourlsProxyTest extends PHPUnit_Framework_TestCase
         $this->_conf = new Configuration;
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         /* Tear Down Routine */
         unlink(CONF);

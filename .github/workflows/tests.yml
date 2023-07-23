@@ -1,5 +1,7 @@
 name: Tests
-on: [push]
+on:
+  push:
+  workflow_dispatch:
 
 jobs:
 
@@ -12,23 +14,23 @@ jobs:
       run: composer validate
     - name: Install dependencies
       run: composer install --prefer-dist --no-dev
-      
+
   PHPunit:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php-versions: ['5.6', '7.0', '7.1', '7.2', '7.3', '7.4']
+        php-versions: ['7.3', '7.4', '8.0', '8.1', '8.2']
     name: PHP ${{ matrix.php-versions }} unit tests on ${{ matrix.operating-system }}
     env:
       extensions: gd, sqlite3
       extensions-cache-key-name: phpextensions
-      
+
     steps:
-    
+
     # let's get started!
     - name: Checkout
       uses: actions/checkout@v3
-      
+
     # cache PHP extensions
     - name: Setup cache environment
       id: extcache
@@ -44,77 +46,75 @@ jobs:
         path: ${{ steps.extcache.outputs.dir }}
         key: ${{ steps.extcache.outputs.key }}
         restore-keys: ${{ runner.os }}-${{ env.extensions-cache-key }}
-      
+
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
       with:
         php-version: ${{ matrix.php-versions }}
         extensions: ${{ env.extensions }}
-  
+
     # Setup GitHub CI PHP problem matchers
     # https://github.com/shivammathur/setup-php#problem-matchers
     - name: Setup problem matchers for PHP
-      run: echo "::add-matcher::${{ runner.tool_cache }}/php.json" 
-    
+      run: echo "::add-matcher::${{ runner.tool_cache }}/php.json"
+
     - name: Setup problem matchers for PHPUnit
       run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
-      
+
     # composer cache
     - name: Remove composer lock
       run: rm composer.lock
-      
+
     - name: Get composer cache directory
       id: composer-cache
       run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
-    
     # http://man7.org/linux/man-pages/man1/date.1.html
     # https://github.com/actions/cache#creating-a-cache-key
     - name: Get Date
       id: get-date
       run: echo "date=$(/bin/date -u "+%Y%m%d")" >> $GITHUB_OUTPUT
       shell: bash
-    
+
     - name: Cache dependencies
       uses: actions/cache@v3
       with:
         path: ${{ steps.composer-cache.outputs.dir }}
         key: ${{ runner.os }}-composer-${{ steps.get-date.outputs.date }}-${{ hashFiles('**/composer.json') }}
         restore-keys: ${{ runner.os }}-composer-${{ steps.get-date.outputs.date }}-
-    
+
     # composer installation
     - name: Setup PHPunit
       run: composer install -n
 
     - name: Install Google Cloud Storage
       run: composer require google/cloud-storage
-    
+
     # testing
     - name: Run unit tests
       run: ../vendor/bin/phpunit --no-coverage
       working-directory: tst
-      
+
   Mocha:
     runs-on: ubuntu-latest
     steps:
-    
+
     - name: Checkout
       uses: actions/checkout@v3
-      
+
     - name: Setup Node
       uses: actions/setup-node@v3
       with:
         node-version: '16'
         cache: 'npm'
         cache-dependency-path: 'js/package-lock.json'
-        
+
     - name: Setup Mocha
       run: npm install -g mocha
-      
+
     - name: Setup Node modules
       run: npm ci
       working-directory: js
-      
+
     - name: Run unit tests
       run: npm test
       working-directory: js
-
