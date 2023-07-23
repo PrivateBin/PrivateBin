@@ -1,5 +1,7 @@
 # PrivateBin version history
 
+  * **1.6.0 (not yet released)**
+    * CHANGED: Minimum required PHP version is 7.3, due to upgrading PHPunit (#707)
   * **1.5.2 (2023-07-09)**
     * ADDED: Allow AWS SDK to use default credential provider chain for S3Storage (#1070)
     * CHANGED: Upgrading libraries to: DOMpurify 3.0.4 & jQuery 3.7.0
