@@ -42,6 +42,12 @@
 		}
 	},
 	"config" : {
-		"autoloader-suffix" : "DontChange"
+		"autoloader-suffix" : "DontChange",
+		"optimize-autoloader": true,
+		"preferred-install": "dist",
+		"sort-packages": true,
+		"platform": {
+			"php": "7.3"
+		}
 	}
 }
