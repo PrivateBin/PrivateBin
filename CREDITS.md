@@ -63,3 +63,5 @@
 * Stevo984 - Slovak
 * Christos Karamolegkos - Greek
 * jaideejung007 - Thai
+* Nicolas Le Gall - Japanese
+* lazerns - Arabic
