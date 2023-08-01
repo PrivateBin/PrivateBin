@@ -97,19 +97,19 @@
         "ستنتهي صلاحية هذا المستند في غضون %d ساعات."
     ],
     "This document will expire in %d days.": [
-        "This document will expire in %d day. (singular)",
-        "This document will expire in %d days. (1st plural)",
-        "This document will expire in %d days. (2nd plural)",
-        "This document will expire in %d days. (3rd plural)"
+        "ستنتهي صلاحية هذا المستند خلال %d يوم.",
+        "ستنتهي صلاحية هذا المستند خلال %d أيام.",
+        "ستنتهي صلاحية هذا المستند خلال %d أيام.",
+        "ستنتهي صلاحية هذا المستند خلال %d أيام."
     ],
     "This document will expire in %d months.": [
-        "This document will expire in %d month. (singular)",
-        "This document will expire in %d months. (1st plural)",
-        "This document will expire in %d months. (2nd plural)",
-        "This document will expire in %d months. (3rd plural)"
+        "ستنتهي صلاحية هذا المستند خلال %d شهر.",
+        "ستنتهي صلاحية هذا المستند خلال %d شهور.",
+        "ستنتهي صلاحية هذا المستند خلال %d شهور.",
+        "ستنتهي صلاحية هذا المستند خلال %d شهور."
     ],
-    "Please enter the password for this paste:": "Please enter the password for this paste:",
-    "Could not decrypt data (Wrong key?)": "Could not decrypt data (Wrong key?)",
+    "Please enter the password for this paste:": "الرجاء إدخال كلمة المرور لهذا اللصق:",
+    "Could not decrypt data (Wrong key?)": "تعذر فك تشفير البيانات (مفتاح خاطئ؟)",
     "Could not delete the paste, it was not stored in burn after reading mode.": "Could not delete the paste, it was not stored in burn after reading mode.",
     "FOR YOUR EYES ONLY. Don't close this window, this message can't be displayed again.": "FOR YOUR EYES ONLY. Don't close this window, this message can't be displayed again.",
     "Could not decrypt comment; Wrong key?": "Could not decrypt comment; Wrong key?",
