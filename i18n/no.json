@@ -11,6 +11,8 @@
         "Vennligst vent %d sekund mellom hvert innlegg.",
         "Vennligst vent %d sekunder mellom hvert innlegg.",
         "Vennligst vent %d sekunder mellom hvert innlegg.",
+        "Vennligst vent %d sekunder mellom hvert innlegg.",
+        "Vennligst vent %d sekunder mellom hvert innlegg.",
         "Vennligst vent %d sekunder mellom hvert innlegg."
     ],
     "Paste is limited to %s of encrypted data.": "Innlegg er begrenset til %s av kryptert data.",
@@ -38,10 +40,14 @@
         "%d sekund",
         "%d sekunder",
         "%d sekunder",
+        "%d sekunder",
+        "%d sekunder",
         "%d sekunder"
     ],
     "%d minutes": [
         "%d minutt",
+        "%d minutter",
+        "%d minutter",
         "%d minutter",
         "%d minutter",
         "%d minutter"
@@ -50,10 +56,14 @@
         "%d time",
         "%d timer",
         "%d timer",
+        "%d timer",
+        "%d timer",
         "%d timer"
     ],
     "%d days": [
         "%d dag",
+        "%d dager",
+        "%d dager",
         "%d dager",
         "%d dager",
         "%d dager"
@@ -62,15 +72,21 @@
         "%d uke",
         "%d uker",
         "%d uker",
+        "%d uker",
+        "%d uker",
         "%d uker"
     ],
     "%d months": [
         "%d måned",
         "%d måneder",
         "%d måneder",
+        "%d måneder",
+        "%d måneder",
         "%d måneder"
     ],
     "%d years": [
+        "%d år",
+        "%d år",
         "%d år",
         "%d år",
         "%d år",
@@ -82,10 +98,14 @@
         "Dette dokumentet vil utløpe om %d sekund.",
         "Dette dokumentet vil utløpe om %d sekunder.",
         "Dette dokumentet vil utløpe om %d sekunder.",
+        "Dette dokumentet vil utløpe om %d sekunder.",
+        "Dette dokumentet vil utløpe om %d sekunder.",
         "Dette dokumentet vil utløpe om %d sekunder."
     ],
     "This document will expire in %d minutes.": [
         "Dette dokumentet vil utløpe om %d minutt.",
+        "Dette dokumentet vil utløpe om %d minutter.",
+        "Dette dokumentet vil utløpe om %d minutter.",
         "Dette dokumentet vil utløpe om %d minutter.",
         "Dette dokumentet vil utløpe om %d minutter.",
         "Dette dokumentet vil utløpe om %d minutter."
@@ -94,16 +114,22 @@
         "Dette dokumentet vil utløpe om %d time.",
         "Dette dokumentet vil utløpe om %d timer.",
         "Dette dokumentet vil utløpe om %d timer.",
+        "Dette dokumentet vil utløpe om %d timer.",
+        "Dette dokumentet vil utløpe om %d timer.",
         "Dette dokumentet vil utløpe om %d timer."
     ],
     "This document will expire in %d days.": [
         "Dette dokumentet vil utløpe om %d dag.",
         "Dette dokumentet vil utløpe om %d dager.",
         "Dette dokumentet vil utløpe om %d dager.",
+        "Dette dokumentet vil utløpe om %d dager.",
+        "Dette dokumentet vil utløpe om %d dager.",
         "Dette dokumentet vil utløpe om %d dager."
     ],
     "This document will expire in %d months.": [
         "Dette dokumentet vil utløpe om %d måned.",
+        "Dette dokumentet vil utløpe om %d måneder.",
+        "Dette dokumentet vil utløpe om %d måneder.",
         "Dette dokumentet vil utløpe om %d måneder.",
         "Dette dokumentet vil utløpe om %d måneder.",
         "Dette dokumentet vil utløpe om %d måneder."

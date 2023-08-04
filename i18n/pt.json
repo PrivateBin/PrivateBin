@@ -11,6 +11,8 @@
         "Por favor espere %d segundo entre cada publicação.",
         "Por favor espere %d segundos entre cada publicação.",
         "Por favor espere %d segundos entre cada publicação.",
+        "Por favor espere %d segundos entre cada publicação.",
+        "Por favor espere %d segundos entre cada publicação.",
         "Por favor espere %d segundos entre cada publicação."
     ],
     "Paste is limited to %s of encrypted data.": "A cópia está limitada a %s de dados cifrados.",
@@ -38,10 +40,14 @@
         "%d segundo",
         "%d segundos",
         "%d segundos",
+        "%d segundos",
+        "%d segundos",
         "%d segundos"
     ],
     "%d minutes": [
         "%d minuto",
+        "%d minutos",
+        "%d minutos",
         "%d minutos",
         "%d minutos",
         "%d minutos"
@@ -50,10 +56,14 @@
         "%d hora",
         "%d horas",
         "%d horas (2° plural)",
+        "%d horas",
+        "%d horas",
         "%d horas"
     ],
     "%d days": [
         "%d dia",
+        "%d dias",
+        "%d dias",
         "%d dias",
         "%d dias",
         "%d dias"
@@ -62,16 +72,22 @@
         "%d semana",
         "%d semanas",
         "%d semanas",
+        "%d semanas",
+        "%d semanas",
         "%d semanas"
     ],
     "%d months": [
         "%d mês",
         "%d meses",
         "%d meses",
+        "%d meses",
+        "%d meses",
         "%d meses"
     ],
     "%d years": [
         "%d ano",
+        "%d anos",
+        "%d anos",
         "%d anos",
         "%d anos",
         "%d anos"
@@ -82,10 +98,14 @@
         "Este documento irá expirar em um segundo.",
         "Este documento irá expirar em %d segundos.",
         "Este documento irá expirar em %d segundos.",
+        "Este documento irá expirar em %d segundos.",
+        "Este documento irá expirar em %d segundos.",
         "Este documento irá expirar em %d segundos."
     ],
     "This document will expire in %d minutes.": [
         "Este documento irá expirar em um minuto.",
+        "Este documento irá expirar em %d minutos.",
+        "Este documento irá expirar em %d minutos.",
         "Este documento irá expirar em %d minutos.",
         "Este documento irá expirar em %d minutos.",
         "Este documento irá expirar em %d minutos."
@@ -94,16 +114,22 @@
         "Este documento irá expirar em uma hora.",
         "Este documento irá expirar em %d horas.",
         "Este documento irá expirar em %d horas.",
+        "Este documento irá expirar em %d horas.",
+        "Este documento irá expirar em %d horas.",
         "Este documento irá expirar em %d horas."
     ],
     "This document will expire in %d days.": [
         "Este documento irá expirar em um dia.",
         "Este documento irá expirar em %d dias.",
         "Este documento irá expirar em %d dias.",
+        "Este documento irá expirar em %d dias.",
+        "Este documento irá expirar em %d dias.",
         "Este documento irá expirar em %d dias."
     ],
     "This document will expire in %d months.": [
         "Este documento irá expirar em um mês.",
+        "Este documento irá expirar em %d meses.",
+        "Este documento irá expirar em %d meses.",
         "Este documento irá expirar em %d meses.",
         "Este documento irá expirar em %d meses.",
         "Este documento irá expirar em %d meses."

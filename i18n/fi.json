@@ -11,6 +11,8 @@
         "Odotathan %d sekuntin jokaisen lähetyksen välillä.",
         "Odotathan %d sekuntia jokaisen lähetyksen välillä.",
         "Odotathan %d sekuntia jokaisen lähetyksen välillä.",
+        "Odotathan %d sekuntia jokaisen lähetyksen välillä.",
+        "Odotathan %d sekuntia jokaisen lähetyksen välillä.",
         "Odotathan %d sekuntia jokaisen lähetyksen välillä."
     ],
     "Paste is limited to %s of encrypted data.": "Paste on rajoitettu kokoon %s salattua dataa.",
@@ -38,10 +40,14 @@
         "%d sekunti",
         "%d sekuntia",
         "%d sekuntia",
+        "%d sekuntia",
+        "%d sekuntia",
         "%d sekuntia"
     ],
     "%d minutes": [
         "%d minuutti",
+        "%d minuuttia",
+        "%d minuuttia",
         "%d minuuttia",
         "%d minuuttia",
         "%d minuuttia"
@@ -50,10 +56,14 @@
         "%d tunti",
         "%d tuntia",
         "%d tuntia",
+        "%d tuntia",
+        "%d tuntia",
         "%d tuntia"
     ],
     "%d days": [
         "%d päivä",
+        "%d päivää",
+        "%d päivää",
         "%d päivää",
         "%d päivää",
         "%d päivää"
@@ -62,16 +72,22 @@
         "%d viikko",
         "%d viikkoa",
         "%d viikkoa",
+        "%d viikkoa",
+        "%d viikkoa",
         "%d viikkoa"
     ],
     "%d months": [
         "%d kuukausi",
         "%d kuukautta",
         "%d kuukautta",
+        "%d kuukautta",
+        "%d kuukautta",
         "%d kuukautta"
     ],
     "%d years": [
         "%d vuosi",
+        "%d vuotta",
+        "%d vuotta",
         "%d vuotta",
         "%d vuotta",
         "%d vuotta"
@@ -82,9 +98,13 @@
         "Tämä dokumentti vanhenee %d sekuntissa.",
         "Tämä dokumentti vanhenee %d sekunnissa.",
         "Tämä dokumentti vanhenee %d sekunnissa.",
+        "Tämä dokumentti vanhenee %d sekunnissa.",
+        "Tämä dokumentti vanhenee %d sekunnissa.",
         "Tämä dokumentti vanhenee %d sekunnissa."
     ],
     "This document will expire in %d minutes.": [
+        "Tämä dokumentti vanhenee %d minuutissa.",
+        "Tämä dokumentti vanhenee %d minuutissa.",
         "Tämä dokumentti vanhenee %d minuutissa.",
         "Tämä dokumentti vanhenee %d minuutissa.",
         "Tämä dokumentti vanhenee %d minuutissa.",
@@ -94,15 +114,21 @@
         "Tämä dokumentti vanhenee %d tunnissa.",
         "Tämä dokumentti vanhenee %d tunnissa.",
         "Tämä dokumentti vanhenee %d tunnissa.",
+        "Tämä dokumentti vanhenee %d tunnissa.",
+        "Tämä dokumentti vanhenee %d tunnissa.",
         "Tämä dokumentti vanhenee %d tunnissa."
     ],
     "This document will expire in %d days.": [
         "Tämä dokumentti vanhenee %d päivässä.",
         "Tämä dokumentti vanhenee %d päivässä.",
         "Tämä dokumentti vanhenee %d päivässä.",
+        "Tämä dokumentti vanhenee %d päivässä.",
+        "Tämä dokumentti vanhenee %d päivässä.",
         "Tämä dokumentti vanhenee %d päivässä."
     ],
     "This document will expire in %d months.": [
+        "Tämä dokumentti vanhenee %d kuukaudessa.",
+        "Tämä dokumentti vanhenee %d kuukaudessa.",
         "Tämä dokumentti vanhenee %d kuukaudessa.",
         "Tämä dokumentti vanhenee %d kuukaudessa.",
         "Tämä dokumentti vanhenee %d kuukaudessa.",

@@ -11,6 +11,8 @@
         "Počet sekúnd do ďalšieho príspevku: %d",
         "Počet sekúnd do ďalšieho príspevku: %d",
         "Počet sekúnd do ďalšieho príspevku: %d",
+        "Počet sekúnd do ďalšieho príspevku: %d",
+        "Počet sekúnd do ďalšieho príspevku: %d",
         "Počet sekúnd do ďalšieho príspevku: %d"
     ],
     "Paste is limited to %s of encrypted data.": "Príspevok je obmedzený na %s zašifrovaných údajov.",
@@ -38,11 +40,15 @@
         "%d sekunda",
         "%d sekundy",
         "%d sekúnd",
+        "%d sekúnd",
+        "%d sekúnd",
         "%d sekúnd"
     ],
     "%d minutes": [
         "%d minúta",
         "%d minúty",
+        "%d minút",
+        "%d minút",
         "%d minút",
         "%d minút"
     ],
@@ -50,11 +56,15 @@
         "%d hodina",
         "%d hodiny",
         "%d hodín",
+        "%d hodín",
+        "%d hodín",
         "%d hodín"
     ],
     "%d days": [
         "%d deň",
         "%d dni",
+        "%d dní",
+        "%d dní",
         "%d dní",
         "%d dní"
     ],
@@ -62,17 +72,23 @@
         "%d týždeň",
         "%d týždne",
         "%d týždňov",
+        "%d týždňov",
+        "%d týždňov",
         "%d týždňov"
     ],
     "%d months": [
         "%d mesiac",
         "%d mesiace",
         "%d mesiacov",
+        "%d mesiacov",
+        "%d mesiacov",
         "%d mesiacov"
     ],
     "%d years": [
         "%d rok",
         "%d roky",
+        "%d rokov",
+        "%d rokov",
         "%d rokov",
         "%d rokov"
     ],
@@ -82,11 +98,15 @@
         "Platnosť tohto dokumentu vyprší o %d sekundu.",
         "Platnosť tohto dokumentu vyprší o %d sekundy.",
         "Platnosť tohto dokumentu vyprší o %d sekúnd.",
+        "Platnosť tohto dokumentu vyprší o %d sekúnd.",
+        "Platnosť tohto dokumentu vyprší o %d sekúnd.",
         "Platnosť tohto dokumentu vyprší o %d sekúnd."
     ],
     "This document will expire in %d minutes.": [
         "Platnosť tohto dokumentu vyprší o %d minútu.",
         "Platnosť tohto dokumentu vyprší o %d minúty.",
+        "Platnosť tohto dokumentu vyprší o %d minút.",
+        "Platnosť tohto dokumentu vyprší o %d minút.",
         "Platnosť tohto dokumentu vyprší o %d minút.",
         "Platnosť tohto dokumentu vyprší o %d minút."
     ],
@@ -94,17 +114,23 @@
         "Platnosť tohto dokumentu vyprší o %d hodinu.",
         "Platnosť tohto dokumentu vyprší o %d hodiny.",
         "Platnosť tohto dokumentu vyprší o %d hodín.",
+        "Platnosť tohto dokumentu vyprší o %d hodín.",
+        "Platnosť tohto dokumentu vyprší o %d hodín.",
         "Platnosť tohto dokumentu vyprší o %d hodín."
     ],
     "This document will expire in %d days.": [
         "Platnosť tohto dokumentu vyprší o %d deň.",
         "Platnosť tohto dokumentu vyprší o %d dni.",
         "Platnosť tohto dokumentu vyprší o %d dní.",
+        "Platnosť tohto dokumentu vyprší o %d dní.",
+        "Platnosť tohto dokumentu vyprší o %d dní.",
         "Platnosť tohto dokumentu vyprší o %d dní."
     ],
     "This document will expire in %d months.": [
         "Platnosť tohto dokumentu vyprší o %d mesiac.",
         "Platnosť tohto dokumentu vyprší o %d mesiace.",
+        "Platnosť tohto dokumentu vyprší o %d mesiacov.",
+        "Platnosť tohto dokumentu vyprší o %d mesiacov.",
         "Platnosť tohto dokumentu vyprší o %d mesiacov.",
         "Platnosť tohto dokumentu vyprší o %d mesiacov."
     ],

@@ -11,6 +11,8 @@
         "Aspettate %d seconda trà dui publicazioni.",
         "Aspettate %d seconde trà dui publicazioni.",
         "Aspettate %d seconde trà dui publicazioni.",
+        "Aspettate %d seconde trà dui publicazioni.",
+        "Aspettate %d seconde trà dui publicazioni.",
         "Aspettate %d seconde trà dui publicazioni."
     ],
     "Paste is limited to %s of encrypted data.": "L’appiccicu hè limitatu à %s di dati cifrati.",
@@ -38,10 +40,14 @@
         "%d seconda",
         "%d seconde",
         "%d seconde",
+        "%d seconde",
+        "%d seconde",
         "%d seconde"
     ],
     "%d minutes": [
         "%d minutu",
+        "%d minuti",
+        "%d minuti",
         "%d minuti",
         "%d minuti",
         "%d minuti"
@@ -50,10 +56,14 @@
         "%d ora",
         "%d ore",
         "%d ore",
+        "%d ore",
+        "%d ore",
         "%d ore"
     ],
     "%d days": [
         "%d ghjornu",
+        "%d ghjorni",
+        "%d ghjorni",
         "%d ghjorni",
         "%d ghjorni",
         "%d ghjorni"
@@ -62,16 +72,22 @@
         "%d settimana",
         "%d settimane",
         "%d settimane",
+        "%d settimane",
+        "%d settimane",
         "%d settimane"
     ],
     "%d months": [
         "%d mese",
         "%d mesi",
         "%d mesi",
+        "%d mesi",
+        "%d mesi",
         "%d mesi"
     ],
     "%d years": [
         "%d annu",
+        "%d anni",
+        "%d anni",
         "%d anni",
         "%d anni",
         "%d anni"
@@ -82,10 +98,14 @@
         "Stu ducumentu serà scadutu in %d seconda.",
         "Stu ducumentu serà scadutu in %d seconde.",
         "Stu ducumentu serà scadutu in %d seconde.",
+        "Stu ducumentu serà scadutu in %d seconde.",
+        "Stu ducumentu serà scadutu in %d seconde.",
         "Stu ducumentu serà scadutu in %d seconde."
     ],
     "This document will expire in %d minutes.": [
         "Stu ducumentu serà scadutu in %d minutu.",
+        "Stu ducumentu serà scadutu in %d minuti.",
+        "Stu ducumentu serà scadutu in %d minuti.",
         "Stu ducumentu serà scadutu in %d minuti.",
         "Stu ducumentu serà scadutu in %d minuti.",
         "Stu ducumentu serà scadutu in %d minuti."
@@ -94,16 +114,22 @@
         "Stu ducumentu serà scadutu in %d ora.",
         "Stu ducumentu serà scadutu in %d ore.",
         "Stu ducumentu serà scadutu in %d ore.",
+        "Stu ducumentu serà scadutu in %d ore.",
+        "Stu ducumentu serà scadutu in %d ore.",
         "Stu ducumentu serà scadutu in %d ore."
     ],
     "This document will expire in %d days.": [
         "Stu ducumentu serà scadutu in %d ghjornu.",
         "Stu ducumentu serà scadutu in %d ghjorni.",
         "Stu ducumentu serà scadutu in %d ghjorni.",
+        "Stu ducumentu serà scadutu in %d ghjorni.",
+        "Stu ducumentu serà scadutu in %d ghjorni.",
         "Stu ducumentu serà scadutu in %d ghjorni."
     ],
     "This document will expire in %d months.": [
         "Stu ducumentu serà scadutu in %d mese.",
+        "Stu ducumentu serà scadutu in %d mesi.",
+        "Stu ducumentu serà scadutu in %d mesi.",
         "Stu ducumentu serà scadutu in %d mesi.",
         "Stu ducumentu serà scadutu in %d mesi.",
         "Stu ducumentu serà scadutu in %d mesi."
