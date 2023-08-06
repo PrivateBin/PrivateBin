@@ -12,8 +12,8 @@
         "Mercés d'esperar %d segondas entre cada publicacion.",
         "Mercés d'esperar %d segondas entre cada publicacion.",
         "Mercés d'esperar %d segondas entre cada publicacion.",
-        "Please wait %d seconds between each post. (4th plural)",
-        "Please wait %d seconds between each post. (5th plural)"
+        "Mercés d'esperar %d segondas entre cada publicacion.",
+        "Mercés d'esperar %d segondas entre cada publicacion."
     ],
     "Paste is limited to %s of encrypted data.": "Lo tèxte es limitat a %s de donadas chifradas.",
     "Invalid data.": "Donadas invalidas.",
@@ -41,56 +41,56 @@
         "%d segondas",
         "%d segondas",
         "%d segondas",
-        "%d seconds (4th plural)",
-        "%d seconds (5th plural)"
+        "%d segondas",
+        "%d segondas"
     ],
     "%d minutes": [
         "%d minuta",
         "%d minutas",
         "%d minutas",
         "%d minutas",
-        "%d minutes (4th plural)",
-        "%d minutes (5th plural)"
+        "%d minutas",
+        "%d minutas"
     ],
     "%d hours": [
         "%d ora",
         "%d oras",
         "%d oras",
         "%d oras",
-        "%d hours (4th plural)",
-        "%d hours (5th plural)"
+        "%d oras",
+        "%d oras"
     ],
     "%d days": [
         "%d jorn",
         "%d jorns",
         "%d jorns",
         "%d jorns",
-        "%d days (4th plural)",
-        "%d days (5th plural)"
+        "%d jorns",
+        "%d jorns"
     ],
     "%d weeks": [
         "%d setmana",
         "%d setmanas",
         "%d setmanas",
         "%d setmanas",
-        "%d weeks (4th plural)",
-        "%d weeks (5th plural)"
+        "%d setmanas",
+        "%d setmanas"
     ],
     "%d months": [
         "%d mes",
         "%d meses",
         "%d meses",
         "%d meses",
-        "%d months (4th plural)",
-        "%d months (5th plural)"
+        "%d meses",
+        "%d meses"
     ],
     "%d years": [
         "%d an",
         "%d ans",
         "%d ans",
         "%d ans",
-        "%d years (4th plural)",
-        "%d years (5th plural)"
+        "%d ans",
+        "%d ans"
     ],
     "Never": "Jamai",
     "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.": "Nota : Aquò es un servici d’espròva : las donadas pòdon èsser suprimidas a cada moment. De catons moriràn s’abusatz d’aqueste servici.",
@@ -99,40 +99,40 @@
         "Aqueste document expirarà d’aquí %d segondas.",
         "Aqueste document expirarà d’aquí %d segondas.",
         "Aqueste document expirarà d’aquí %d segondas.",
-        "This document will expire in %d seconds. (4th plural)",
-        "This document will expire in %d seconds. (5th plural)"
+        "Aqueste document expirarà d’aquí %d segondas.",
+        "Aqueste document expirarà d’aquí %d segondas."
     ],
     "This document will expire in %d minutes.": [
         "Aqueste document expirarà d’aquí %d minuta.",
         "Aqueste document expirarà d’aquí %d minutas.",
         "Aqueste document expirarà d’aquí %d minutas.",
         "Aqueste document expirarà d’aquí %d minutas.",
-        "This document will expire in %d minutes. (4th plural)",
-        "This document will expire in %d minutes. (5th plural)"
+        "Aqueste document expirarà d’aquí %d minutas.",
+        "Aqueste document expirarà d’aquí %d minutas."
     ],
     "This document will expire in %d hours.": [
         "Aqueste document expirarà d’aquí %d ora.",
         "Aqueste document expirarà d’aquí %d oras.",
         "Aqueste document expirarà d’aquí %d oras.",
         "Aqueste document expirarà d’aquí %d oras.",
-        "This document will expire in %d hours. (4th plural)",
-        "This document will expire in %d hours. (5th plural)"
+        "Aqueste document expirarà d’aquí %d oras.",
+        "Aqueste document expirarà d’aquí %d oras."
     ],
     "This document will expire in %d days.": [
         "Aqueste document expirarà d’aquí %d jorn.",
         "Aqueste document expirarà d’aquí %d jorns.",
         "Aqueste document expirarà d’aquí %d jorns.",
         "Aqueste document expirarà d’aquí %d jorns.",
-        "This document will expire in %d days. (4th plural)",
-        "This document will expire in %d days. (5th plural)"
+        "Aqueste document expirarà d’aquí %d jorns.",
+        "Aqueste document expirarà d’aquí %d jorns."
     ],
     "This document will expire in %d months.": [
         "Aqueste document expirarà d’aquí %d mes.",
         "Aqueste document expirarà d’aquí %d meses.",
         "Aqueste document expirarà d’aquí %d meses.",
         "Aqueste document expirarà d’aquí %d meses.",
-        "This document will expire in %d months. (4th plural)",
-        "This document will expire in %d months. (5th plural)"
+        "Aqueste document expirarà d’aquí %d meses.",
+        "Aqueste document expirarà d’aquí %d meses."
     ],
     "Please enter the password for this paste:": "Picatz lo senhal per aqueste tèxte :",
     "Could not decrypt data (Wrong key?)": "Impossible de deschifrar las donadas (marrida clau ?)",
