@@ -12,8 +12,8 @@
         "Моля изчакайте %d секунди между всяка публикация.",
         "Моля изчакайте %d секунди между всяка публикация.",
         "Моля изчакайте %d секунди между всяка публикация.",
-        "Моля изчакайте %d секунди между всяка публикация.",
-        "Моля изчакайте %d секунди между всяка публикация."
+        "Please wait %d seconds between each post. (4th plural)",
+        "Please wait %d seconds between each post. (5th plural)"
     ],
     "Paste is limited to %s of encrypted data.": "Съдържанието е ограничено до %s криптирана информация.",
     "Invalid data.": "Невалидна информация.",
@@ -41,56 +41,56 @@
         "%d секунда",
         "%d секунда",
         "%d секунда",
-        "%d секунда",
-        "%d секунда"
+        "%d seconds (4th plural)",
+        "%d seconds (5th plural)"
     ],
     "%d minutes": [
         "%d минути",
         "%d минута",
         "%d минута",
         "%d минута",
-        "%d минута",
-        "%d минута"
+        "%d minutes (4th plural)",
+        "%d minutes (5th plural)"
     ],
     "%d hours": [
         "%d часа",
         "%d час",
         "%d час",
         "%d час",
-        "%d час",
-        "%d час"
+        "%d hours (4th plural)",
+        "%d hours (5th plural)"
     ],
     "%d days": [
         "%d дни",
         "%d ден",
         "%d ден",
         "%d ден",
-        "%d ден",
-        "%d ден"
+        "%d days (4th plural)",
+        "%d days (5th plural)"
     ],
     "%d weeks": [
         "%d седмици",
         "%d седмица",
         "%d седмица",
         "%d седмица",
-        "%d седмица",
-        "%d седмица"
+        "%d weeks (4th plural)",
+        "%d weeks (5th plural)"
     ],
     "%d months": [
         "%d месеци",
         "%d месец",
         "%d месец",
         "%d месец",
-        "%d месец",
-        "%d месец"
+        "%d months (4th plural)",
+        "%d months (5th plural)"
     ],
     "%d years": [
         "%d години",
         "%d година",
         "%d година",
         "%d година",
-        "%d година",
-        "%d година"
+        "%d years (4th plural)",
+        "%d years (5th plural)"
     ],
     "Never": "Никога",
     "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.": "Забележка: Това е пробна услуга: Информацията може да бъде изтрита по всяко време. Котета ще измрат ако злоупотребиш с услугата.",
@@ -99,40 +99,40 @@
         "Този документ изтича след %d секунди.",
         "Този документ изтича след %d секунди.",
         "Този документ изтича след %d секунди.",
-        "Този документ изтича след %d секунди.",
-        "Този документ изтича след %d секунди."
+        "This document will expire in %d seconds. (4th plural)",
+        "This document will expire in %d seconds. (5th plural)"
     ],
     "This document will expire in %d minutes.": [
         "Този документ изтича след една минута.",
         "Този документ изтича след %d минути.",
         "Този документ изтича след %d минути.",
         "Този документ изтича след %d минути.",
-        "Този документ изтича след %d минути.",
-        "Този документ изтича след %d минути."
+        "This document will expire in %d minutes. (4th plural)",
+        "This document will expire in %d minutes. (5th plural)"
     ],
     "This document will expire in %d hours.": [
         "Този документ изтича след един час.",
         "Този документ изтича след %d часа.",
         "Този документ изтича след %d часа.",
         "Този документ изтича след %d часа.",
-        "Този документ изтича след %d часа.",
-        "Този документ изтича след %d часа."
+        "This document will expire in %d hours. (4th plural)",
+        "This document will expire in %d hours. (5th plural)"
     ],
     "This document will expire in %d days.": [
         "Този документ изтича след един ден.",
         "Този документ изтича след %d дни.",
         "Този документ изтича след %d дни.",
         "Този документ изтича след %d дни.",
-        "Този документ изтича след %d дни.",
-        "Този документ изтича след %d дни."
+        "This document will expire in %d days. (4th plural)",
+        "This document will expire in %d days. (5th plural)"
     ],
     "This document will expire in %d months.": [
         "Този документ изтича след една година.",
         "Този документ изтича след %d години.",
         "Този документ изтича след %d години.",
         "Този документ изтича след %d години.",
-        "Този документ изтича след %d години.",
-        "Този документ изтича след %d години."
+        "This document will expire in %d months. (4th plural)",
+        "This document will expire in %d months. (5th plural)"
     ],
     "Please enter the password for this paste:": "Моля въведете паролата за това съдържание:",
     "Could not decrypt data (Wrong key?)": "Информацията не можеше да се дешифрова (Грешен ключ?)",
