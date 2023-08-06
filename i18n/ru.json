@@ -12,8 +12,8 @@
         "Пожалуйста, ожидайте %d секунды между каждыми записями.",
         "Пожалуйста, ожидайте %d секунд между каждыми записями.",
         "Пожалуйста, ожидайте %d секунд между каждыми записями.",
-        "Please wait %d seconds between each post. (4th plural)",
-        "Please wait %d seconds between each post. (5th plural)"
+        "Пожалуйста, ожидайте %d секунд между каждыми записями.",
+        "Пожалуйста, ожидайте %d секунд между каждыми записями."
     ],
     "Paste is limited to %s of encrypted data.": "Размер записи ограничен %s зашифрованных данных.",
     "Invalid data.": "Неверные данные.",
@@ -41,56 +41,56 @@
         "%d секунды",
         "%d секунд",
         "%d секунд",
-        "%d seconds (4th plural)",
-        "%d seconds (5th plural)"
+        "%d секунд",
+        "%d секунд"
     ],
     "%d minutes": [
         "%d минуту",
         "%d минуты",
         "%d минут",
         "%d минут",
-        "%d minutes (4th plural)",
-        "%d minutes (5th plural)"
+        "%d минут",
+        "%d минут"
     ],
     "%d hours": [
         "%d час",
         "%d часа",
         "%d часов",
         "%d часов",
-        "%d hours (4th plural)",
-        "%d hours (5th plural)"
+        "%d часов",
+        "%d часов"
     ],
     "%d days": [
         "%d день",
         "%d дня",
         "%d дней",
         "%d дней",
-        "%d days (4th plural)",
-        "%d days (5th plural)"
+        "%d дней",
+        "%d дней"
     ],
     "%d weeks": [
         "%d неделю",
         "%d недели",
         "%d недель",
         "%d недель",
-        "%d weeks (4th plural)",
-        "%d weeks (5th plural)"
+        "%d недель",
+        "%d недель"
     ],
     "%d months": [
         "%d месяц",
         "%d месяца",
         "%d месяцев",
         "%d месяцев",
-        "%d months (4th plural)",
-        "%d months (5th plural)"
+        "%d месяцев",
+        "%d месяцев"
     ],
     "%d years": [
         "%d год",
         "%d года",
         "%d лет",
         "%d лет",
-        "%d years (4th plural)",
-        "%d years (5th plural)"
+        "%d лет",
+        "%d лет"
     ],
     "Never": "Никогда",
     "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.": "Примечание: Этот сервис тестовый: Данные могут быть удалены в любое время. Котята умрут, если вы будете злоупотреблять сервисом.",
@@ -99,40 +99,40 @@
         "Документ будет удален через %d секунды.",
         "Документ будет удален через %d секунд.",
         "Документ будет удален через %d секунд.",
-        "This document will expire in %d seconds. (4th plural)",
-        "This document will expire in %d seconds. (5th plural)"
+        "Документ будет удален через %d секунд.",
+        "Документ будет удален через %d секунд."
     ],
     "This document will expire in %d minutes.": [
         "Документ будет удален через %d минуту.",
         "Документ будет удален через %d минуты.",
         "Документ будет удален через %d минут.",
         "Документ будет удален через %d минут.",
-        "This document will expire in %d minutes. (4th plural)",
-        "This document will expire in %d minutes. (5th plural)"
+        "Документ будет удален через %d минут.",
+        "Документ будет удален через %d минут."
     ],
     "This document will expire in %d hours.": [
         "Документ будет удален через %d час.",
         "Документ будет удален через %d часа.",
         "Документ будет удален через %d часов.",
         "Документ будет удален через %d часов.",
-        "This document will expire in %d hours. (4th plural)",
-        "This document will expire in %d hours. (5th plural)"
+        "Документ будет удален через %d часов.",
+        "Документ будет удален через %d часов."
     ],
     "This document will expire in %d days.": [
         "Документ будет удален через %d день.",
         "Документ будет удален через %d дня.",
         "Документ будет удален через %d дней.",
         "Документ будет удален через %d дней.",
-        "This document will expire in %d days. (4th plural)",
-        "This document will expire in %d days. (5th plural)"
+        "Документ будет удален через %d дней.",
+        "Документ будет удален через %d дней."
     ],
     "This document will expire in %d months.": [
         "Документ будет удален через %d месяц.",
         "Документ будет удален через %d месяца.",
         "Документ будет удален через %d месяцев.",
         "Документ будет удален через %d месяцев.",
-        "This document will expire in %d months. (4th plural)",
-        "This document will expire in %d months. (5th plural)"
+        "Документ будет удален через %d месяцев.",
+        "Документ будет удален через %d месяцев."
     ],
     "Please enter the password for this paste:": "Пожалуйста, введите пароль от записи:",
     "Could not decrypt data (Wrong key?)": "Невозможно расшифровать данные (Неверный ключ?)",
