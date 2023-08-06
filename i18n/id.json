@@ -12,8 +12,8 @@
         "Silahkan menunggu %d detik antara masing-masing postingan.",
         "Silahkan menunggu %d detik antara masing-masing postingan.",
         "Silahkan menunggu %d detik antara masing-masing postingan.",
-        "Please wait %d seconds between each post. (4th plural)",
-        "Please wait %d seconds between each post. (5th plural)"
+        "Silahkan menunggu %d detik antara masing-masing postingan.",
+        "Silahkan menunggu %d detik antara masing-masing postingan."
     ],
     "Paste is limited to %s of encrypted data.": "Paste dibatasi sampai %s dari data yang dienskripsi.",
     "Invalid data.": "Data tidak valid.",
@@ -41,56 +41,56 @@
         "%d detik",
         "%d detik",
         "%d detik",
-        "%d seconds (4th plural)",
-        "%d seconds (5th plural)"
+        "%d detik",
+        "%d detik"
     ],
     "%d minutes": [
         "%d menit",
         "%d menit",
         "%d menit",
         "%d menit",
-        "%d minutes (4th plural)",
-        "%d minutes (5th plural)"
+        "%d menit",
+        "%d menit"
     ],
     "%d hours": [
         "%d jam",
         "%d jam",
         "%d jam",
         "%d jam",
-        "%d hours (4th plural)",
-        "%d hours (5th plural)"
+        "%d jam",
+        "%d jam"
     ],
     "%d days": [
         "%d hari",
         "%d hari",
         "%d hari",
         "%d hari",
-        "%d days (4th plural)",
-        "%d days (5th plural)"
+        "%d hari",
+        "%d hari"
     ],
     "%d weeks": [
         "%d minggu",
         "%d minggu",
         "%d minggu",
         "%d minggu",
-        "%d weeks (4th plural)",
-        "%d weeks (5th plural)"
+        "%d minggu",
+        "%d minggu"
     ],
     "%d months": [
         "%d bulan",
         "%d bulan",
         "%d bulan",
         "%d bulan",
-        "%d months (4th plural)",
-        "%d months (5th plural)"
+        "%d bulan",
+        "%d bulan"
     ],
     "%d years": [
         "%d tahun",
         "%d tahun",
         "%d tahun",
         "%d tahun",
-        "%d years (4th plural)",
-        "%d years (5th plural)"
+        "%d tahun",
+        "%d tahun"
     ],
     "Never": "Jangan pernah",
     "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.": "Catatan: Ini adalah layanan percobaan: Data mungkin bisa terhapus kapanpun juga. Anak-anak kucing akan mati jika Anda mengekploitasi layanan ini.",
@@ -99,40 +99,40 @@
         "Dokumen ini kadaluarsa dalam %d detik.",
         "Dokumen ini kadaluarsa dalam %d detik.",
         "Dokumen ini kadaluarsa dalam %d detik.",
-        "This document will expire in %d seconds. (4th plural)",
-        "This document will expire in %d seconds. (5th plural)"
+        "Dokumen ini kadaluarsa dalam %d detik.",
+        "Dokumen ini kadaluarsa dalam %d detik."
     ],
     "This document will expire in %d minutes.": [
         "Dokumen ini akan kadaluarsa dalam %d menit.",
         "Dokumen ini akan kadaluarsa dalam %d menit.",
         "Dokumen ini akan kadaluarsa dalam %d menit.",
         "Dokumen ini akan kadaluarsa dalam %d menit.",
-        "This document will expire in %d minutes. (4th plural)",
-        "This document will expire in %d minutes. (5th plural)"
+        "Dokumen ini akan kadaluarsa dalam %d menit.",
+        "Dokumen ini akan kadaluarsa dalam %d menit."
     ],
     "This document will expire in %d hours.": [
         "Dokumen ini akan kadaluarsa dalam %d jam.",
         "Dokumen ini akan kadaluarsa dalam %d jam.",
         "Dokumen ini akan kadaluarsa dalam %d jam.",
         "Dokumen ini akan kadaluarsa dalam %d jam.",
-        "This document will expire in %d hours. (4th plural)",
-        "This document will expire in %d hours. (5th plural)"
+        "Dokumen ini akan kadaluarsa dalam %d jam.",
+        "Dokumen ini akan kadaluarsa dalam %d jam."
     ],
     "This document will expire in %d days.": [
         "Dokumen ini akan kadaluarsa dalam %d hari.",
         "Dokumen ini akan kadaluarsa dalam %d hari.",
         "Dokumen ini akan kadaluarsa dalam %d hari.",
         "Dokumen ini akan kadaluarsa dalam %d hari.",
-        "This document will expire in %d days. (4th plural)",
-        "This document will expire in %d days. (5th plural)"
+        "Dokumen ini akan kadaluarsa dalam %d hari.",
+        "Dokumen ini akan kadaluarsa dalam %d hari."
     ],
     "This document will expire in %d months.": [
         "Dokumen ini akan kadaluarsa dalam %d bulan.",
         "Dokumen ini akan kadaluarsa dalam %d bulan.",
         "Dokumen ini akan kadaluarsa dalam %d bulan.",
         "Dokumen ini akan kadaluarsa dalam %d bulan.",
-        "This document will expire in %d months. (4th plural)",
-        "This document will expire in %d months. (5th plural)"
+        "Dokumen ini akan kadaluarsa dalam %d bulan.",
+        "Dokumen ini akan kadaluarsa dalam %d bulan."
     ],
     "Please enter the password for this paste:": "Silahkan masukkan kata sandi untuk paste ini:",
     "Could not decrypt data (Wrong key?)": "Tidak dapat mendekrip data (Salah kunci?)",
