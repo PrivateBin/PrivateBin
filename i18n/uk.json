@@ -12,8 +12,8 @@
         "Будь ласка, зачекайте %d секунди між створеннями.",
         "Будь ласка, зачекайте %d секунд між створеннями.",
         "Будь ласка, зачекайте %d секунд між створеннями.",
-        "Будь ласка, зачекайте %d секунд між створеннями.",
-        "Будь ласка, зачекайте %d секунд між створеннями."
+        "Please wait %d seconds between each post. (4th plural)",
+        "Please wait %d seconds between each post. (5th plural)"
     ],
     "Paste is limited to %s of encrypted data.": "Розмір допису обмежений %s зашифрованих даних.",
     "Invalid data.": "Неправильні дані.",
@@ -41,56 +41,56 @@
         "%d секунди",
         "%d секунд",
         "%d секунд",
-        "%d секунд",
-        "%d секунд"
+        "%d seconds (4th plural)",
+        "%d seconds (5th plural)"
     ],
     "%d minutes": [
         "%d хвилину",
         "%d хвилини",
         "%d хвилин",
         "%d хвилин",
-        "%d хвилин",
-        "%d хвилин"
+        "%d minutes (4th plural)",
+        "%d minutes (5th plural)"
     ],
     "%d hours": [
         "%d годину",
         "%d години",
         "%d годин",
         "%d годин",
-        "%d годин",
-        "%d годин"
+        "%d hours (4th plural)",
+        "%d hours (5th plural)"
     ],
     "%d days": [
         "%d день",
         "%d дні",
         "%d днів",
         "%d днів",
-        "%d днів",
-        "%d днів"
+        "%d days (4th plural)",
+        "%d days (5th plural)"
     ],
     "%d weeks": [
         "%d тиждень",
         "%d тижні",
         "%d тижнів",
         "%d тижнів",
-        "%d тижнів",
-        "%d тижнів"
+        "%d weeks (4th plural)",
+        "%d weeks (5th plural)"
     ],
     "%d months": [
         "%d місяць",
         "%d місяці",
         "%d місяців",
         "%d місяців",
-        "%d місяців",
-        "%d місяців"
+        "%d months (4th plural)",
+        "%d months (5th plural)"
     ],
     "%d years": [
         "%d рік",
         "%d роки",
         "%d років",
         "%d років",
-        "%d років",
-        "%d років"
+        "%d years (4th plural)",
+        "%d years (5th plural)"
     ],
     "Never": "Ніколи",
     "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.": "Примітка: Це тестовий сервіс: Дані можуть бути вилучені в будь який момент. Кошенята помруть, якщо ви будете зловживати сервісом.",
@@ -99,40 +99,40 @@
         "Документ буде вилучений через %d секунди.",
         "Документ буде вилучений через %d секунд.",
         "Документ буде вилучений через %d секунд.",
-        "Документ буде вилучений через %d секунд.",
-        "Документ буде вилучений через %d секунд."
+        "This document will expire in %d seconds. (4th plural)",
+        "This document will expire in %d seconds. (5th plural)"
     ],
     "This document will expire in %d minutes.": [
         "Документ буде вилучений через %d хвилину.",
         "Документ буде вилучений через %d хвилини.",
         "Документ буде вилучений через %d хвилин.",
         "Документ буде вилучений через %d хвилин.",
-        "Документ буде вилучений через %d хвилин.",
-        "Документ буде вилучений через %d хвилин."
+        "This document will expire in %d minutes. (4th plural)",
+        "This document will expire in %d minutes. (5th plural)"
     ],
     "This document will expire in %d hours.": [
         "Документ буде вилучений через %d годину.",
         "Документ буде вилучений через %d години.",
         "Документ буде вилучений через %d годин.",
         "Документ буде вилучений через %d годин.",
-        "Документ буде вилучений через %d годин.",
-        "Документ буде вилучений через %d годин."
+        "This document will expire in %d hours. (4th plural)",
+        "This document will expire in %d hours. (5th plural)"
     ],
     "This document will expire in %d days.": [
         "Документ буде вилучений через %d день.",
         "Документ буде вилучений через %d дні.",
         "Документ буде вилучений через %d днів.",
         "Документ буде вилучений через %d днів.",
-        "Документ буде вилучений через %d днів.",
-        "Документ буде вилучений через %d днів."
+        "This document will expire in %d days. (4th plural)",
+        "This document will expire in %d days. (5th plural)"
     ],
     "This document will expire in %d months.": [
         "Документ буде вилучений через %d місяць.",
         "Документ буде вилучений через %d місяці.",
         "Документ буде вилучений через %d місяців.",
         "Документ буде вилучений через %d місяців.",
-        "Документ буде вилучений через %d місяців.",
-        "Документ буде вилучений через %d місяців."
+        "This document will expire in %d months. (4th plural)",
+        "This document will expire in %d months. (5th plural)"
     ],
     "Please enter the password for this paste:": "Будь ласка, введіть пароль від допису:",
     "Could not decrypt data (Wrong key?)": "Неможливо розшифрувати дані (Неправильний  ключ?)",
