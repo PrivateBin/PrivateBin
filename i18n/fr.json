@@ -39,56 +39,56 @@
     "%d seconds": [
         "%d seconde",
         "%d secondes",
-        "%d seconds (2nd plural)",
-        "%d seconds (3rd plural)",
+        "%d secondes",
+        "%d secondes",
         "%d secondes",
         "%d secondes"
     ],
     "%d minutes": [
         "%d minute",
         "%d minutes",
-        "%d minutes (2nd plural)",
-        "%d minutes (3rd plural)",
+        "%d minutes",
+        "%d minutes",
         "%d minutes",
         "%d minutes"
     ],
     "%d hours": [
         "%d heure",
         "%d heures",
-        "%d hours (2nd plural)",
-        "%d hours (3rd plural)",
+        "%d heures",
+        "%d heures",
         "%d heures",
         "%d heures"
     ],
     "%d days": [
         "%d jour",
         "%d jours",
-        "%d days (2nd plural)",
-        "%d days (3rd plural)",
+        "%d jours",
+        "%d jours",
         "%d jours",
         "%d jours"
     ],
     "%d weeks": [
         "%d semaine",
         "%d semaines",
-        "%d weeks (2nd plural)",
-        "%d weeks (3rd plural)",
+        "%d semaines",
+        "%d semaines",
         "%d semaines",
         "%d semaines"
     ],
     "%d months": [
         "%d mois",
         "%d mois",
-        "%d months (2nd plural)",
-        "%d months (3rd plural)",
+        "%d mois",
+        "%d mois",
         "%d mois",
         "%d mois"
     ],
     "%d years": [
         "%d an",
         "%d ans",
-        "%d years (2nd plural)",
-        "%d years (3rd plural)",
+        "%d ans",
+        "%d ans",
         "%d ans",
         "%d ans"
     ],
@@ -97,8 +97,8 @@
     "This document will expire in %d seconds.": [
         "Ce document expirera dans %d seconde.",
         "Ce document expirera dans %d secondes.",
-        "This document will expire in %d seconds (2nd plural)",
-        "This document will expire in %d seconds (3rd plural)",
+        "Ce document expirera dans %d secondes.",
+        "Ce document expirera dans %d secondes.",
         "Ce document expirera dans %d secondes.",
         "Ce document expirera dans %d secondes."
     ],
