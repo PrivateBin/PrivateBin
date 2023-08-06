@@ -12,8 +12,8 @@
         "Odotathan %d sekuntia jokaisen lähetyksen välillä.",
         "Odotathan %d sekuntia jokaisen lähetyksen välillä.",
         "Odotathan %d sekuntia jokaisen lähetyksen välillä.",
-        "Please wait %d seconds between each post. (4th plural)",
-        "Please wait %d seconds between each post. (5th plural)"
+        "Odotathan %d sekuntia jokaisen lähetyksen välillä.",
+        "Odotathan %d sekuntia jokaisen lähetyksen välillä."
     ],
     "Paste is limited to %s of encrypted data.": "Paste on rajoitettu kokoon %s salattua dataa.",
     "Invalid data.": "Virheellinen data.",
@@ -41,56 +41,56 @@
         "%d sekuntia",
         "%d sekuntia",
         "%d sekuntia",
-        "%d seconds (4th plural)",
-        "%d seconds (5th plural)"
+        "%d sekuntia",
+        "%d sekuntia"
     ],
     "%d minutes": [
         "%d minuutti",
         "%d minuuttia",
         "%d minuuttia",
         "%d minuuttia",
-        "%d minutes (4th plural)",
-        "%d minutes (5th plural)"
+        "%d minuuttia",
+        "%d minuuttia"
     ],
     "%d hours": [
         "%d tunti",
         "%d tuntia",
         "%d tuntia",
         "%d tuntia",
-        "%d hours (4th plural)",
-        "%d hours (5th plural)"
+        "%d tuntia",
+        "%d tuntia"
     ],
     "%d days": [
         "%d päivä",
         "%d päivää",
         "%d päivää",
         "%d päivää",
-        "%d days (4th plural)",
-        "%d days (5th plural)"
+        "%d päivää",
+        "%d päivää"
     ],
     "%d weeks": [
         "%d viikko",
         "%d viikkoa",
         "%d viikkoa",
         "%d viikkoa",
-        "%d weeks (4th plural)",
-        "%d weeks (5th plural)"
+        "%d viikkoa",
+        "%d viikkoa"
     ],
     "%d months": [
         "%d kuukausi",
         "%d kuukautta",
         "%d kuukautta",
         "%d kuukautta",
-        "%d months (4th plural)",
-        "%d months (5th plural)"
+        "%d kuukautta",
+        "%d kuukautta"
     ],
     "%d years": [
         "%d vuosi",
         "%d vuotta",
         "%d vuotta",
         "%d vuotta",
-        "%d years (4th plural)",
-        "%d years (5th plural)"
+        "%d vuotta",
+        "%d vuotta"
     ],
     "Never": "Ei koskaan",
     "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.": "Huomaa: Tämä on testipalvelu: Data voidaan poistaa milloin tahansa. Kissanpennut kuolevat jos väärinkäytät tätä palvelua.",
@@ -99,40 +99,40 @@
         "Tämä dokumentti vanhenee %d sekunnissa.",
         "Tämä dokumentti vanhenee %d sekunnissa.",
         "Tämä dokumentti vanhenee %d sekunnissa.",
-        "This document will expire in %d seconds. (4th plural)",
-        "This document will expire in %d seconds. (5th plural)"
+        "Tämä dokumentti vanhenee %d sekunnissa.",
+        "Tämä dokumentti vanhenee %d sekunnissa."
     ],
     "This document will expire in %d minutes.": [
         "Tämä dokumentti vanhenee %d minuutissa.",
         "Tämä dokumentti vanhenee %d minuutissa.",
         "Tämä dokumentti vanhenee %d minuutissa.",
         "Tämä dokumentti vanhenee %d minuutissa.",
-        "This document will expire in %d minutes. (4th plural)",
-        "This document will expire in %d minutes. (5th plural)"
+        "Tämä dokumentti vanhenee %d minuutissa.",
+        "Tämä dokumentti vanhenee %d minuutissa."
     ],
     "This document will expire in %d hours.": [
         "Tämä dokumentti vanhenee %d tunnissa.",
         "Tämä dokumentti vanhenee %d tunnissa.",
         "Tämä dokumentti vanhenee %d tunnissa.",
         "Tämä dokumentti vanhenee %d tunnissa.",
-        "This document will expire in %d hours. (4th plural)",
-        "This document will expire in %d hours. (5th plural)"
+        "Tämä dokumentti vanhenee %d tunnissa.",
+        "Tämä dokumentti vanhenee %d tunnissa."
     ],
     "This document will expire in %d days.": [
         "Tämä dokumentti vanhenee %d päivässä.",
         "Tämä dokumentti vanhenee %d päivässä.",
         "Tämä dokumentti vanhenee %d päivässä.",
         "Tämä dokumentti vanhenee %d päivässä.",
-        "This document will expire in %d days. (4th plural)",
-        "This document will expire in %d days. (5th plural)"
+        "Tämä dokumentti vanhenee %d päivässä.",
+        "Tämä dokumentti vanhenee %d päivässä."
     ],
     "This document will expire in %d months.": [
         "Tämä dokumentti vanhenee %d kuukaudessa.",
         "Tämä dokumentti vanhenee %d kuukaudessa.",
         "Tämä dokumentti vanhenee %d kuukaudessa.",
         "Tämä dokumentti vanhenee %d kuukaudessa.",
-        "This document will expire in %d months. (4th plural)",
-        "This document will expire in %d months. (5th plural)"
+        "Tämä dokumentti vanhenee %d kuukaudessa.",
+        "Tämä dokumentti vanhenee %d kuukaudessa."
     ],
     "Please enter the password for this paste:": "Syötä salasana tälle pastelle:",
     "Could not decrypt data (Wrong key?)": "Dataa ei voitu purkaa (Väärä avain?)",
