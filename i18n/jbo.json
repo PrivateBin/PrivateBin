@@ -208,7 +208,7 @@
     "Use Current Timezone": "Use Current Timezone",
     "Convert To UTC": "galfi lo cabni la utc",
     "Close": "ganlo",
-    "Encrypted note on %s": ".i lo lo notci ku mifra cu zvati %s",
+    "Encrypted note on %s": "Encrypted note on %s",
     "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.",
     "URL shortener may expose your decrypt key in URL.": "URL shortener may expose your decrypt key in URL.",
     "Save paste": "rejgau fukpi",
