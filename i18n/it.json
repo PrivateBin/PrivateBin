@@ -12,8 +12,8 @@
         "Attendi per favore %d secondi prima di ciascun invio.",
         "Attendi per favore %d secondi prima di ciascun invio.",
         "Attendi per favore %d secondi prima di ciascun invio.",
-        "Attendi per favore %d secondi prima di ciascun invio.",
-        "Attendi per favore %d secondi prima di ciascun invio."
+        "Please wait %d seconds between each post. (4th plural)",
+        "Please wait %d seconds between each post. (5th plural)"
     ],
     "Paste is limited to %s of encrypted data.": "La dimensione del messaggio è limitata a %s di dati cifrati.",
     "Invalid data.": "Dati non validi.",
@@ -99,40 +99,40 @@
         "Questo documento scadrà in %d secondi.",
         "Questo documento scadrà in %d secondi.",
         "Questo documento scadrà in %d secondi.",
-        "Questo documento scadrà in %d secondi.",
-        "Questo documento scadrà in %d secondi."
+        "This document will expire in %d seconds. (4th plural)",
+        "This document will expire in %d seconds. (5th plural)"
     ],
     "This document will expire in %d minutes.": [
         "Questo documento scadrà tra un minuto.",
         "Questo documento scadrà in %d minuti.",
         "Questo documento scadrà in %d minuti.",
         "Questo documento scadrà in %d minuti.",
-        "Questo documento scadrà in %d minuti.",
-        "Questo documento scadrà in %d minuti."
+        "This document will expire in %d minutes. (4th plural)",
+        "This document will expire in %d minutes. (5th plural)"
     ],
     "This document will expire in %d hours.": [
         "Questo documento scadrà tra un'ora.",
         "Questo documento scadrà in %d ore.",
         "Questo documento scadrà in %d ore.",
         "Questo documento scadrà in %d ore.",
-        "Questo documento scadrà in %d ore.",
-        "Questo documento scadrà in %d ore."
+        "This document will expire in %d hours. (4th plural)",
+        "This document will expire in %d hours. (5th plural)"
     ],
     "This document will expire in %d days.": [
         "Questo documento scadrà tra un giorno.",
         "Questo documento scadrà in %d giorni.",
         "Questo documento scadrà in %d giorni.",
         "Questo documento scadrà in %d giorni.",
-        "Questo documento scadrà in %d giorni.",
-        "Questo documento scadrà in %d giorni."
+        "This document will expire in %d days. (4th plural)",
+        "This document will expire in %d days. (5th plural)"
     ],
     "This document will expire in %d months.": [
         "Questo documento scadrà tra un mese.",
         "Questo documento scadrà in %d mesi.",
         "Questo documento scadrà in %d mesi.",
         "Questo documento scadrà in %d mesi.",
-        "Questo documento scadrà in %d mesi.",
-        "Questo documento scadrà in %d mesi."
+        "This document will expire in %d months. (4th plural)",
+        "This document will expire in %d months. (5th plural)"
     ],
     "Please enter the password for this paste:": "Inserisci la password per questo messaggio:",
     "Could not decrypt data (Wrong key?)": "Non riesco a decifrare i dati (chiave sbagliata?)",
