@@ -99,40 +99,40 @@
         "Aquest document caducarà d'aquí %d segons.",
         "Aquest document caducarà d'aquí %d segons.",
         "Aquest document caducarà d'aquí %d segons.",
-        "Aquest document caducarà d'aquí %d segons.",
-        "Aquest document caducarà d'aquí %d segons."
+        "This document will expire in %d seconds. (4th plural)",
+        "This document will expire in %d seconds. (5th plural)"
     ],
     "This document will expire in %d minutes.": [
         "Aquest document caducarà d'aquí %d minut.",
         "Aquest document caducarà d'aquí %d minuts.",
         "Aquest document caducarà d'aquí %d minuts.",
         "Aquest document caducarà d'aquí %d minuts.",
-        "Aquest document caducarà d'aquí %d minuts.",
-        "Aquest document caducarà d'aquí %d minuts."
+        "This document will expire in %d minutes. (4th plural)",
+        "This document will expire in %d minutes. (5th plural)"
     ],
     "This document will expire in %d hours.": [
         "Aquest document caducarà d'aquí %d hora.",
         "Aquest document caducarà d'aquí %d hores.",
         "Aquest document caducarà d'aquí %d hores.",
         "Aquest document caducarà d'aquí %d hores.",
-        "Aquest document caducarà d'aquí %d hores.",
-        "Aquest document caducarà d'aquí %d hores."
+        "This document will expire in %d hours. (4th plural)",
+        "This document will expire in %d hours. (5th plural)"
     ],
     "This document will expire in %d days.": [
         "Aquest document caducarà d'aquí %d dia.",
         "Aquest document caducarà d'aquí %d dies.",
         "Aquest document caducarà d'aquí %d dies.",
         "Aquest document caducarà d'aquí %d dies.",
-        "Aquest document caducarà d'aquí %d dies.",
-        "Aquest document caducarà d'aquí %d dies."
+        "This document will expire in %d days. (4th plural)",
+        "This document will expire in %d days. (5th plural)"
     ],
     "This document will expire in %d months.": [
         "Aquest document caducarà d'aquí %d mes.",
         "Aquest document caducarà d'aquí %d mesos.",
         "Aquest document caducarà d'aquí %d mesos.",
         "Aquest document caducarà d'aquí %d mesos.",
-        "Aquest document caducarà d'aquí %d mesos.",
-        "Aquest document caducarà d'aquí %d mesos."
+        "This document will expire in %d months. (4th plural)",
+        "This document will expire in %d months. (5th plural)"
     ],
     "Please enter the password for this paste:": "Si us plau, introdueix la contrasenya per aquest paste:",
     "Could not decrypt data (Wrong key?)": "No s'han pogut desxifrar les dades (Clau incorrecte?)",
