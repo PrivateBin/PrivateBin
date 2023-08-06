@@ -12,8 +12,8 @@
         "Bitte warte %d Sekunden zwischen dem Absenden zweier Beiträge.",
         "Bitte warte %d Sekunden zwischen dem Absenden zweier Beiträge.",
         "Bitte warte %d Sekunden zwischen dem Absenden zweier Beiträge.",
-        "Bitte warte %d Sekunden zwischen dem Absenden zweier Beiträge.",
-        "Bitte warte %d Sekunden zwischen dem Absenden zweier Beiträge."
+        "Please wait %d seconds between each post. (4th plural)",
+        "Please wait %d seconds between each post. (5th plural)"
     ],
     "Paste is limited to %s of encrypted data.": "Texte sind auf %s verschlüsselte Datenmenge beschränkt.",
     "Invalid data.": "Ungültige Daten.",
@@ -99,40 +99,40 @@
         "Dieses Dokument läuft in %d Sekunden ab.",
         "Dieses Dokument läuft in %d Sekunden ab.",
         "Dieses Dokument läuft in %d Sekunden ab.",
-        "Dieses Dokument läuft in %d Sekunden ab.",
-        "Dieses Dokument läuft in %d Sekunden ab."
+        "This document will expire in %d seconds. (4th plural)",
+        "This document will expire in %d seconds. (5th plural)"
     ],
     "This document will expire in %d minutes.": [
         "Dieses Dokument läuft in einer Minute ab.",
         "Dieses Dokument läuft in %d Minuten ab.",
         "Dieses Dokument läuft in %d Minuten ab.",
         "Dieses Dokument läuft in %d Minuten ab.",
-        "Dieses Dokument läuft in %d Minuten ab.",
-        "Dieses Dokument läuft in %d Minuten ab."
+        "This document will expire in %d minutes. (4th plural)",
+        "This document will expire in %d minutes. (5th plural)"
     ],
     "This document will expire in %d hours.": [
         "Dieses Dokument läuft in einer Stunde ab.",
         "Dieses Dokument läuft in %d Stunden ab.",
         "This document will expire in %d hours (2nd plural)",
         "This document will expire in %d hours (3rd plural)",
-        "This document will expire in %d hours (4th plural)",
-        "This document will expire in %d hours (5th plural)"
+        "This document will expire in %d hours. (4th plural)",
+        "This document will expire in %d hours. (5th plural)"
     ],
     "This document will expire in %d days.": [
         "Dieses Dokument läuft in einem Tag ab.",
         "Dieses Dokument läuft in %d Tagen ab.",
         "Dieses Dokument läuft in %d Tagen ab.",
         "Dieses Dokument läuft in %d Tagen ab.",
-        "Dieses Dokument läuft in %d Tagen ab.",
-        "Dieses Dokument läuft in %d Tagen ab."
+        "This document will expire in %d days. (4th plural)",
+        "This document will expire in %d days. (5th plural)"
     ],
     "This document will expire in %d months.": [
         "Dieses Dokument läuft in einem Monat ab.",
         "Dieses Dokument läuft in %d Monaten ab.",
         "Dieses Dokument läuft in %d Monaten ab.",
         "Dieses Dokument läuft in %d Monaten ab.",
-        "Dieses Dokument läuft in %d Monaten ab.",
-        "Dieses Dokument läuft in %d Monaten ab."
+        "This document will expire in %d months. (4th plural)",
+        "This document will expire in %d months. (5th plural)"
     ],
     "Please enter the password for this paste:": "Bitte gib das Passwort für diesen Text ein:",
     "Could not decrypt data (Wrong key?)": "Konnte Daten nicht entschlüsseln (Falscher Schlüssel?)",
