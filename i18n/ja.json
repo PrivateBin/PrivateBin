@@ -49,24 +49,24 @@
         "%d 分",
         "%d 分",
         "%d 分",
-        "%d 分",
-        "%d 分"
+        "%d minutes (4th plural)",
+        "%d minutes (5th plural)"
     ],
     "%d hours": [
         "%d 時間",
         "%d 時間",
         "%d 時間",
         "%d 時間",
-        "%d 時間",
-        "%d 時間"
+        "%d hours (4th plural)",
+        "%d hours (5th plural)"
     ],
     "%d days": [
         "%d 日",
         "%d 日",
         "%d 日",
         "%d 日",
-        "%d 日",
-        "%d 日"
+        "%d days (4th plural)",
+        "%d days (5th plural)"
     ],
     "%d weeks": [
         "%d week (singular)",
