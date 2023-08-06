@@ -12,8 +12,8 @@
         "กรุณาเว้นระยะเวลาการส่งข้อมูลอย่างน้อย %d วินาที",
         "กรุณาเว้นระยะเวลาการส่งข้อมูลอย่างน้อย %d วินาที",
         "กรุณาเว้นระยะเวลาการส่งข้อมูลอย่างน้อย %d วินาที",
-        "กรุณาเว้นระยะเวลาการส่งข้อมูลอย่างน้อย %d วินาที",
-        "กรุณาเว้นระยะเวลาการส่งข้อมูลอย่างน้อย %d วินาที"
+        "Please wait %d seconds between each post. (4th plural)",
+        "Please wait %d seconds between each post. (5th plural)"
     ],
     "Paste is limited to %s of encrypted data.": "การฝากโค้ดแบบเข้ารหัส ขีดจำกัดสูงสุดคือ %s",
     "Invalid data.": "ข้อมูลไม่ถูกต้อง",
@@ -41,56 +41,56 @@
         "%d วินาที",
         "%d วินาที",
         "%d วินาที",
-        "%d วินาที",
-        "%d วินาที"
+        "%d seconds (4th plural)",
+        "%d seconds (5th plural)"
     ],
     "%d minutes": [
         "%d นาที",
         "%d นาที",
         "%d นาที",
         "%d นาที",
-        "%d นาที",
-        "%d นาที"
+        "%d minutes (4th plural)",
+        "%d minutes (5th plural)"
     ],
     "%d hours": [
         "%d ชั่วโมง",
         "%d ชั่วโมง",
         "%d ชั่วโมง",
         "%d ชั่วโมง",
-        "%d ชั่วโมง",
-        "%d ชั่วโมง"
+        "%d hours (4th plural)",
+        "%d hours (5th plural)"
     ],
     "%d days": [
         "%d วัน",
         "%d วัน",
         "%d วัน",
         "%d วัน",
-        "%d วัน",
-        "%d วัน"
+        "%d days (4th plural)",
+        "%d days (5th plural)"
     ],
     "%d weeks": [
         "%d สัปดาห์",
         "%d สัปดาห์",
         "%d สัปดาห์",
         "%d สัปดาห์",
-        "%d สัปดาห์",
-        "%d สัปดาห์"
+        "%d weeks (4th plural)",
+        "%d weeks (5th plural)"
     ],
     "%d months": [
         "%d เดือน",
         "%d เดือน",
         "%d เดือน",
         "%d เดือน",
-        "%d เดือน",
-        "%d เดือน"
+        "%d months (4th plural)",
+        "%d months (5th plural)"
     ],
     "%d years": [
         "%d ปี",
         "%d ปี",
         "%d ปี",
         "%d ปี",
-        "%d ปี",
-        "%d ปี"
+        "%d years (4th plural)",
+        "%d years (5th plural)"
     ],
     "Never": "ไม่หมดอายุ",
     "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.": "โปรดทราบ: เว็บไซต์นี้เป็นการให้บริการสำหรับทดสอบเท่านั้น ข้อมูลอาจถูกลบได้ตลอดเวลา หากคุณใช้บริการนี้ในทางที่ผิดอาจจะทำให้ข้อมูลของคุณสูญหายอย่างถาวรได้",
@@ -99,40 +99,40 @@
         "เอกสารนี้จะหมดอายุใน %d วินาที",
         "เอกสารนี้จะหมดอายุใน %d วินาที",
         "เอกสารนี้จะหมดอายุใน %d วินาที",
-        "เอกสารนี้จะหมดอายุใน %d วินาที",
-        "เอกสารนี้จะหมดอายุใน %d วินาที"
+        "This document will expire in %d seconds. (4th plural)",
+        "This document will expire in %d seconds. (5th plural)"
     ],
     "This document will expire in %d minutes.": [
         "เอกสารนี้จะหมดอายุใน %d นาที",
         "เอกสารนี้จะหมดอายุใน %d นาที",
         "เอกสารนี้จะหมดอายุใน %d นาที",
         "เอกสารนี้จะหมดอายุใน %d นาที",
-        "เอกสารนี้จะหมดอายุใน %d นาที",
-        "เอกสารนี้จะหมดอายุใน %d นาที"
+        "This document will expire in %d minutes. (4th plural)",
+        "This document will expire in %d minutes. (5th plural)"
     ],
     "This document will expire in %d hours.": [
         "เอกสารนี้จะหมดอายุใน %d ชั่วโมง",
         "เอกสารนี้จะหมดอายุใน %d ชั่วโมง",
         "เอกสารนี้จะหมดอายุใน %d ชั่วโมง",
         "เอกสารนี้จะหมดอายุใน %d ชั่วโมง",
-        "เอกสารนี้จะหมดอายุใน %d ชั่วโมง",
-        "เอกสารนี้จะหมดอายุใน %d ชั่วโมง"
+        "This document will expire in %d hours. (4th plural)",
+        "This document will expire in %d hours. (5th plural)"
     ],
     "This document will expire in %d days.": [
         "เอกสารนี้จะหมดอายุใน %d วัน",
         "เอกสารนี้จะหมดอายุใน %d วัน",
         "เอกสารนี้จะหมดอายุใน %d วัน",
         "เอกสารนี้จะหมดอายุใน %d วัน",
-        "เอกสารนี้จะหมดอายุใน %d วัน",
-        "เอกสารนี้จะหมดอายุใน %d วัน"
+        "This document will expire in %d days. (4th plural)",
+        "This document will expire in %d days. (5th plural)"
     ],
     "This document will expire in %d months.": [
         "เอกสารนี้จะหมดอายุใน %d เดือน",
         "เอกสารนี้จะหมดอายุใน %d เดือน",
         "เอกสารนี้จะหมดอายุใน %d เดือน",
         "เอกสารนี้จะหมดอายุใน %d เดือน",
-        "เอกสารนี้จะหมดอายุใน %d เดือน",
-        "เอกสารนี้จะหมดอายุใน %d เดือน"
+        "This document will expire in %d months. (4th plural)",
+        "This document will expire in %d months. (5th plural)"
     ],
     "Please enter the password for this paste:": "กรุณากรอกรหัสผ่านเพื่อเปิดข้อมูลการฝากโค้ดนี้:",
     "Could not decrypt data (Wrong key?)": "ไม่สามารถถอดรหัสข้อมูลได้ (คีย์ไม่ถูกต้องหรือไม่)",
