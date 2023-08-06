@@ -12,8 +12,8 @@
         "נא להמתין %d שניות בין פרסום לפרסום.",
         "נא להמתין %d שניות בין פרסום לפרסום.",
         "נא להמתין %d שניות בין פרסום לפרסום.",
-        "Please wait %d seconds between each post. (4th plural)",
-        "Please wait %d seconds between each post. (5th plural)"
+        "נא להמתין %d שניות בין פרסום לפרסום.",
+        "נא להמתין %d שניות בין פרסום לפרסום."
     ],
     "Paste is limited to %s of encrypted data.": "ההדבקה מוגבלת ל־%s של נתונים מוצפנים.",
     "Invalid data.": "נתונים שגויים.",
@@ -39,18 +39,18 @@
     "%d seconds": [
         "שנייה אחת",
         "%d שניות",
-        "%d שניות (צורת ריבוי 2)",
         "%d שניות",
-        "%d seconds (4th plural)",
-        "%d seconds (5th plural)"
+        "%d שניות",
+        "%d שניות",
+        "%d שניות"
     ],
     "%d minutes": [
         "דקה אחת",
         "%d דקות",
         "%d דקות",
         "%d דקות",
-        "%d minutes (4th plural)",
-        "%d minutes (5th plural)"
+        "%d דקות",
+        "%d דקות"
     ],
     "%d hours": [
         "שעה אחת",
@@ -65,32 +65,32 @@
         "%d ימים",
         "%d ימים",
         "%d ימים",
-        "%d days (4th plural)",
-        "%d days (5th plural)"
+        "%d ימים",
+        "%d ימים"
     ],
     "%d weeks": [
         "שבוע אחד",
         "%d שבועות",
         "%d שבועות",
         "%d שבועות",
-        "%d weeks (4th plural)",
-        "%d weeks (5th plural)"
+        "%d שבועות",
+        "%d שבועות"
     ],
     "%d months": [
         "חודש אחד",
         "%d חודשים",
         "%d חודשים",
         "%d חודשים",
-        "%d months (4th plural)",
-        "%d months (5th plural)"
+        "%d חודשים",
+        "%d חודשים"
     ],
     "%d years": [
         "שנה אחת",
         "%d שנים",
         "%d שנים",
         "%d שנים",
-        "%d years (4th plural)",
-        "%d years (5th plural)"
+        "%d שנים",
+        "%d שנים"
     ],
     "Never": "לעולם לא",
     "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.": "הערה: זהו שירות בדקה: המידע לא ישמר.",
