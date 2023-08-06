@@ -12,8 +12,8 @@
         "每 %d 秒只能粘贴一次。",
         "每 %d 秒只能粘贴一次。",
         "每 %d 秒只能粘贴一次。",
-        "Please wait %d seconds between each post. (4th plural)",
-        "Please wait %d seconds between each post. (5th plural)"
+        "每 %d 秒只能粘贴一次。",
+        "每 %d 秒只能粘贴一次。"
     ],
     "Paste is limited to %s of encrypted data.": "对于加密数据，上限为 %s。",
     "Invalid data.": "无效的数据。",
@@ -41,56 +41,56 @@
         "%d 秒",
         "%d 秒",
         "%d 秒",
-        "%d seconds (4th plural)",
-        "%d seconds (5th plural)"
+        "%d 秒",
+        "%d 秒"
     ],
     "%d minutes": [
         "%d 分钟",
         "%d 分钟",
         "%d 秒",
         "%d 秒",
-        "%d minutes (4th plural)",
-        "%d minutes (5th plural)"
+        "%d 秒",
+        "%d 秒"
     ],
     "%d hours": [
         "%d 小时",
         "%d 小时",
         "%d 小时",
         "%d 小时",
-        "%d hours (4th plural)",
-        "%d hours (5th plural)"
+        "%d 小时",
+        "%d 小时"
     ],
     "%d days": [
         "%d 天",
         "%d 天",
         "%d 天",
         "%d 天",
-        "%d days (4th plural)",
-        "%d days (5th plural)"
+        "%d 天",
+        "%d 天"
     ],
     "%d weeks": [
         "%d 周",
         "%d 周",
         "%d 周",
         "%d 周",
-        "%d weeks (4th plural)",
-        "%d weeks (5th plural)"
+        "%d 周",
+        "%d 周"
     ],
     "%d months": [
         "%d 个月",
         "%d 个月",
         "%d 个月",
         "%d 个月",
-        "%d months (4th plural)",
-        "%d months (5th plural)"
+        "%d 个月",
+        "%d 个月"
     ],
     "%d years": [
         "%d 年",
         "%d 年",
         "%d 年",
         "%d 年",
-        "%d years (4th plural)",
-        "%d years (5th plural)"
+        "%d 年",
+        "%d 年"
     ],
     "Never": "永不过期",
     "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.": "注意：这是一个测试服务，数据随时可能被删除。如果你滥用这个服务的话，小猫咪会死的。",
@@ -99,40 +99,40 @@
         "这份文档将在 %d 秒后过期。",
         "这份文档将在 %d 秒后过期。",
         "这份文档将在 %d 秒后过期。",
-        "This document will expire in %d seconds. (4th plural)",
-        "This document will expire in %d seconds. (5th plural)"
+        "这份文档将在 %d 秒后过期。",
+        "这份文档将在 %d 秒后过期。"
     ],
     "This document will expire in %d minutes.": [
         "这份文档将在一分钟后过期。",
         "这份文档将在 %d 分钟后过期。",
         "这份文档将在 %d 分钟后过期。",
         "这份文档将在 %d 分钟后过期。",
-        "This document will expire in %d minutes. (4th plural)",
-        "This document will expire in %d minutes. (5th plural)"
+        "这份文档将在 %d 分钟后过期。",
+        "这份文档将在 %d 分钟后过期。"
     ],
     "This document will expire in %d hours.": [
         "这份文档将在一小时后过期。",
         "这份文档将在 %d 小时后过期。",
         "这份文档将在 %d 小时后过期。",
         "这份文档将在 %d 小时后过期。",
-        "This document will expire in %d hours. (4th plural)",
-        "This document will expire in %d hours. (5th plural)"
+        "这份文档将在 %d 小时后过期。",
+        "这份文档将在 %d 小时后过期。"
     ],
     "This document will expire in %d days.": [
         "这份文档将在一天后过期。",
         "这份文档将在 %d 天后过期。",
         "这份文档将在 %d 天后过期。",
         "这份文档将在 %d 天后过期。",
-        "This document will expire in %d days. (4th plural)",
-        "This document will expire in %d days. (5th plural)"
+        "这份文档将在 %d 天后过期。",
+        "这份文档将在 %d 天后过期。"
     ],
     "This document will expire in %d months.": [
         "这份文档将在一个月后过期。",
         "这份文档将在 %d 个月后过期。",
         "这份文档将在 %d 个月后过期。",
         "这份文档将在 %d 个月后过期。",
-        "This document will expire in %d months. (4th plural)",
-        "This document will expire in %d months. (5th plural)"
+        "这份文档将在 %d 个月后过期。",
+        "这份文档将在 %d 个月后过期。"
     ],
     "Please enter the password for this paste:": "请输入这份粘贴内容的密码：",
     "Could not decrypt data (Wrong key?)": "无法解密数据（密钥错误？）",
