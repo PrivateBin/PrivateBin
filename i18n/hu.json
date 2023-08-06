@@ -12,8 +12,8 @@
         "Kérlek várj %d másodpercet két beküldés között.",
         "Kérlek várj %d másodpercet két beküldés között.",
         "Kérlek várj %d másodpercet két beküldés között.",
-        "Kérlek várj %d másodpercet két beküldés között.",
-        "Kérlek várj %d másodpercet két beküldés között."
+        "Please wait %d seconds between each post. (4th plural)",
+        "Please wait %d seconds between each post. (5th plural)"
     ],
     "Paste is limited to %s of encrypted data.": "A bejegyzés maximális hossza: %s",
     "Invalid data.": "Érvénytelen adat.",
@@ -99,40 +99,40 @@
         "Ez a bejegyzés %d másodperc múlva megsemmisül.",
         "Ez a bejegyzés %d másodperc múlva megsemmisül.",
         "Ez a bejegyzés %d másodperc múlva megsemmisül.",
-        "Ez a bejegyzés %d másodperc múlva megsemmisül.",
-        "Ez a bejegyzés %d másodperc múlva megsemmisül."
+        "This document will expire in %d seconds. (4th plural)",
+        "This document will expire in %d seconds. (5th plural)"
     ],
     "This document will expire in %d minutes.": [
         "Ez a bejegyzés %d perc múlva megsemmisül.",
         "Ez a bejegyzés %d perc múlva megsemmisül.",
         "Ez a bejegyzés %d perc múlva megsemmisül.",
         "Ez a bejegyzés %d perc múlva megsemmisül.",
-        "Ez a bejegyzés %d perc múlva megsemmisül.",
-        "Ez a bejegyzés %d perc múlva megsemmisül."
+        "This document will expire in %d minutes. (4th plural)",
+        "This document will expire in %d minutes. (5th plural)"
     ],
     "This document will expire in %d hours.": [
         "Ez a bejegyzés %d óra múlva megsemmisül.",
         "Ez a bejegyzés %d óra múlva megsemmisül.",
         "Ez a bejegyzés %d óra múlva megsemmisül.",
         "Ez a bejegyzés %d óra múlva megsemmisül.",
-        "Ez a bejegyzés %d óra múlva megsemmisül.",
-        "Ez a bejegyzés %d óra múlva megsemmisül."
+        "This document will expire in %d hours. (4th plural)",
+        "This document will expire in %d hours. (5th plural)"
     ],
     "This document will expire in %d days.": [
         "Ez a bejegyzés %d nap múlva megsemmisül.",
         "Ez a bejegyzés %d nap múlva megsemmisül.",
         "Ez a bejegyzés %d nap múlva megsemmisül.",
         "Ez a bejegyzés %d nap múlva megsemmisül.",
-        "Ez a bejegyzés %d nap múlva megsemmisül.",
-        "Ez a bejegyzés %d nap múlva megsemmisül."
+        "This document will expire in %d days. (4th plural)",
+        "This document will expire in %d days. (5th plural)"
     ],
     "This document will expire in %d months.": [
         "Ez a bejegyzés %d hónap múlva megsemmisül.",
         "Ez a bejegyzés %d hónap múlva megsemmisül.",
         "Ez a bejegyzés %d hónap múlva megsemmisül.",
         "Ez a bejegyzés %d hónap múlva megsemmisül.",
-        "Ez a bejegyzés %d hónap múlva megsemmisül.",
-        "Ez a bejegyzés %d hónap múlva megsemmisül."
+        "This document will expire in %d months. (4th plural)",
+        "This document will expire in %d months. (5th plural)"
     ],
     "Please enter the password for this paste:": "Add meg a szükséges jelszót a bejegyzés megtekintéséhez:",
     "Could not decrypt data (Wrong key?)": "Nem tudtuk visszfejteni az adatot. Talán rossz kulcsot adtál meg?",
