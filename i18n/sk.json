@@ -12,8 +12,8 @@
         "Počet sekúnd do ďalšieho príspevku: %d",
         "Počet sekúnd do ďalšieho príspevku: %d",
         "Počet sekúnd do ďalšieho príspevku: %d",
-        "Please wait %d seconds between each post. (4th plural)",
-        "Please wait %d seconds between each post. (5th plural)"
+        "Počet sekúnd do ďalšieho príspevku: %d",
+        "Počet sekúnd do ďalšieho príspevku: %d"
     ],
     "Paste is limited to %s of encrypted data.": "Príspevok je obmedzený na %s zašifrovaných údajov.",
     "Invalid data.": "Neplatné údaje.",
@@ -41,56 +41,56 @@
         "%d sekundy",
         "%d sekúnd",
         "%d sekúnd",
-        "%d seconds (4th plural)",
-        "%d seconds (5th plural)"
+        "%d sekúnd",
+        "%d sekúnd"
     ],
     "%d minutes": [
         "%d minúta",
         "%d minúty",
         "%d minút",
         "%d minút",
-        "%d minutes (4th plural)",
-        "%d minutes (5th plural)"
+        "%d minút",
+        "%d minút"
     ],
     "%d hours": [
         "%d hodina",
         "%d hodiny",
         "%d hodín",
         "%d hodín",
-        "%d hours (4th plural)",
-        "%d hours (5th plural)"
+        "%d hodín",
+        "%d hodín"
     ],
     "%d days": [
         "%d deň",
         "%d dni",
         "%d dní",
         "%d dní",
-        "%d days (4th plural)",
-        "%d days (5th plural)"
+        "%d dní",
+        "%d dní"
     ],
     "%d weeks": [
         "%d týždeň",
         "%d týždne",
         "%d týždňov",
         "%d týždňov",
-        "%d weeks (4th plural)",
-        "%d weeks (5th plural)"
+        "%d týždňov",
+        "%d týždňov"
     ],
     "%d months": [
         "%d mesiac",
         "%d mesiace",
         "%d mesiacov",
         "%d mesiacov",
-        "%d months (4th plural)",
-        "%d months (5th plural)"
+        "%d mesiacov",
+        "%d mesiacov"
     ],
     "%d years": [
         "%d rok",
         "%d roky",
         "%d rokov",
         "%d rokov",
-        "%d years (4th plural)",
-        "%d years (5th plural)"
+        "%d rokov",
+        "%d rokov"
     ],
     "Never": "Nikdy",
     "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.": "Poznámka: Toto je testovacia služba: Údaje môžu byť kedykoľvek vymazané. Pri zneužití tejto služby zomrú mačiatka.",
@@ -99,40 +99,40 @@
         "Platnosť tohto dokumentu vyprší o %d sekundy.",
         "Platnosť tohto dokumentu vyprší o %d sekúnd.",
         "Platnosť tohto dokumentu vyprší o %d sekúnd.",
-        "This document will expire in %d seconds. (4th plural)",
-        "This document will expire in %d seconds. (5th plural)"
+        "Platnosť tohto dokumentu vyprší o %d sekúnd.",
+        "Platnosť tohto dokumentu vyprší o %d sekúnd."
     ],
     "This document will expire in %d minutes.": [
         "Platnosť tohto dokumentu vyprší o %d minútu.",
         "Platnosť tohto dokumentu vyprší o %d minúty.",
         "Platnosť tohto dokumentu vyprší o %d minút.",
         "Platnosť tohto dokumentu vyprší o %d minút.",
-        "This document will expire in %d minutes. (4th plural)",
-        "This document will expire in %d minutes. (5th plural)"
+        "Platnosť tohto dokumentu vyprší o %d minút.",
+        "Platnosť tohto dokumentu vyprší o %d minút."
     ],
     "This document will expire in %d hours.": [
         "Platnosť tohto dokumentu vyprší o %d hodinu.",
         "Platnosť tohto dokumentu vyprší o %d hodiny.",
         "Platnosť tohto dokumentu vyprší o %d hodín.",
         "Platnosť tohto dokumentu vyprší o %d hodín.",
-        "This document will expire in %d hours. (4th plural)",
-        "This document will expire in %d hours. (5th plural)"
+        "Platnosť tohto dokumentu vyprší o %d hodín.",
+        "Platnosť tohto dokumentu vyprší o %d hodín."
     ],
     "This document will expire in %d days.": [
         "Platnosť tohto dokumentu vyprší o %d deň.",
         "Platnosť tohto dokumentu vyprší o %d dni.",
         "Platnosť tohto dokumentu vyprší o %d dní.",
         "Platnosť tohto dokumentu vyprší o %d dní.",
-        "This document will expire in %d days. (4th plural)",
-        "This document will expire in %d days. (5th plural)"
+        "Platnosť tohto dokumentu vyprší o %d dní.",
+        "Platnosť tohto dokumentu vyprší o %d dní."
     ],
     "This document will expire in %d months.": [
         "Platnosť tohto dokumentu vyprší o %d mesiac.",
         "Platnosť tohto dokumentu vyprší o %d mesiace.",
         "Platnosť tohto dokumentu vyprší o %d mesiacov.",
         "Platnosť tohto dokumentu vyprší o %d mesiacov.",
-        "This document will expire in %d months. (4th plural)",
-        "This document will expire in %d months. (5th plural)"
+        "Platnosť tohto dokumentu vyprší o %d mesiacov.",
+        "Platnosť tohto dokumentu vyprší o %d mesiacov."
     ],
     "Please enter the password for this paste:": "Zadajte prosím heslo:",
     "Could not decrypt data (Wrong key?)": "Nepodarilo sa dešifrovať údaje (nesprávny kľúč?)",
