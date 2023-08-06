@@ -12,8 +12,8 @@
         "Παρακαλώ περιμένετε %d δευτερόλεπτα μεταξύ κάθε επικόλλησης.",
         "Παρακαλώ περιμένετε %d δευτερόλεπτα μεταξύ κάθε επικόλλησης.",
         "Παρακαλώ περιμένετε %d δευτερόλεπτα μεταξύ κάθε επικόλλησης.",
-        "Please wait %d seconds between each post. (4th plural)",
-        "Please wait %d seconds between each post. (5th plural)"
+        "Παρακαλώ περιμένετε %d δευτερόλεπτα μεταξύ κάθε επικόλλησης.",
+        "Παρακαλώ περιμένετε %d δευτερόλεπτα μεταξύ κάθε επικόλλησης."
     ],
     "Paste is limited to %s of encrypted data.": "Η επικόλληση είναι περιορισμένη σε %s κρυπτογραφημένων δεδομένων.",
     "Invalid data.": "Λάθος δεδομένα.",
@@ -41,56 +41,56 @@
         "%d δευτερόλεπτα",
         "%d δευτερόλεπτα",
         "%d δευτερόλεπτα",
-        "%d seconds (4th plural)",
-        "%d seconds (5th plural)"
+        "%d δευτερόλεπτα",
+        "%d δευτερόλεπτα"
     ],
     "%d minutes": [
         "%d λεπτό",
         "%d λεπτά",
         "%d λεπτά",
         "%d λεπτά",
-        "%d minutes (4th plural)",
-        "%d minutes (5th plural)"
+        "%d λεπτά",
+        "%d λεπτά"
     ],
     "%d hours": [
         "%d ώρα",
         "%d ώρες",
         "%d ώρες",
         "%d ώρες",
-        "%d hours (4th plural)",
-        "%d hours (5th plural)"
+        "%d ώρες",
+        "%d ώρες"
     ],
     "%d days": [
         "%d ημέρα",
         "%d ημέρες",
         "%d ημέρες",
         "%d ημέρες",
-        "%d days (4th plural)",
-        "%d days (5th plural)"
+        "%d ημέρες",
+        "%d ημέρες"
     ],
     "%d weeks": [
         "%d εβδομάδα",
         "%d εβδομάδες",
         "%d εβδομάδες",
         "%d εβδομάδες",
-        "%d weeks (4th plural)",
-        "%d weeks (5th plural)"
+        "%d εβδομάδες",
+        "%d εβδομάδες"
     ],
     "%d months": [
         "%d μήνας",
         "%d μήνες",
         "%d μήνες",
         "%d μήνες",
-        "%d months (4th plural)",
-        "%d months (5th plural)"
+        "%d μήνες",
+        "%d μήνες"
     ],
     "%d years": [
         "%d χρόνο",
         "%d χρόνια",
         "%d χρόνια",
         "%d χρόνια",
-        "%d years (4th plural)",
-        "%d years (5th plural)"
+        "%d χρόνια",
+        "%d χρόνια"
     ],
     "Never": "Ποτέ",
     "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.": "Σημείωση: αυτή είναι μία δοκιμαστική υπηρεσία. Τα δεδομένα μπορεί να σβηστούν ανά πάσα στιγμή.",
@@ -99,40 +99,40 @@
         "Αυτό το έγγραφο θα λήξει σε %d δευτερόλεπτα.",
         "Αυτό το έγγραφο θα λήξει σε %d δευτερόλεπτα.",
         "Αυτό το έγγραφο θα λήξει σε %d δευτερόλεπτα.",
-        "This document will expire in %d seconds. (4th plural)",
-        "This document will expire in %d seconds. (5th plural)"
+        "Αυτό το έγγραφο θα λήξει σε %d δευτερόλεπτα.",
+        "Αυτό το έγγραφο θα λήξει σε %d δευτερόλεπτα."
     ],
     "This document will expire in %d minutes.": [
         "Αυτό το έγγραφο θα λήξει σε %d λεπτό.",
         "Αυτό το έγγραφο θα λήξει σε %d λεπτά.",
         "Αυτό το έγγραφο θα λήξει σε %d λεπτά.",
         "Αυτό το έγγραφο θα λήξει σε %d λεπτά.",
-        "This document will expire in %d minutes. (4th plural)",
-        "This document will expire in %d minutes. (5th plural)"
+        "Αυτό το έγγραφο θα λήξει σε %d λεπτά.",
+        "Αυτό το έγγραφο θα λήξει σε %d λεπτά."
     ],
     "This document will expire in %d hours.": [
         "Αυτό το έγγραφο θα λήξει σε %d ώρα.",
         "Αυτό το έγγραφο θα λήξει σε %d ώρες.",
         "Αυτό το έγγραφο θα λήξει σε %d ώρες.",
         "Αυτό το έγγραφο θα λήξει σε %d ώρες.",
-        "This document will expire in %d hours. (4th plural)",
-        "This document will expire in %d hours. (5th plural)"
+        "Αυτό το έγγραφο θα λήξει σε %d ώρες.",
+        "Αυτό το έγγραφο θα λήξει σε %d ώρες."
     ],
     "This document will expire in %d days.": [
         "Αυτό το έγγραφο θα λήξει σε %d ημέρα.",
         "Αυτό το έγγραφο θα λήξει σε %d ημέρες.",
         "Αυτό το έγγραφο θα λήξει σε %d ημέρες.",
         "Αυτό το έγγραφο θα λήξει σε %d ημέρες.",
-        "This document will expire in %d days. (4th plural)",
-        "This document will expire in %d days. (5th plural)"
+        "Αυτό το έγγραφο θα λήξει σε %d ημέρες.",
+        "Αυτό το έγγραφο θα λήξει σε %d ημέρες."
     ],
     "This document will expire in %d months.": [
         "Αυτό το έγγραφο θα λήξει σε %d μήνα.",
         "Αυτό το έγγραφο θα λήξει σε %d μήνες.",
         "Αυτό το έγγραφο θα λήξει σε %d μήνες.",
         "Αυτό το έγγραφο θα λήξει σε %d μήνες.",
-        "This document will expire in %d months. (4th plural)",
-        "This document will expire in %d months. (5th plural)"
+        "Αυτό το έγγραφο θα λήξει σε %d μήνες.",
+        "Αυτό το έγγραφο θα λήξει σε %d μήνες."
     ],
     "Please enter the password for this paste:": "Παρακαλώ εισάγετε τον κωδικό για αυτή την επικόληση:",
     "Could not decrypt data (Wrong key?)": "Δεν ήταν δυνατή η αποκρυπτογράφηση των δεδομένων (πιθανώς λανθασμένο κλειδί;)",
