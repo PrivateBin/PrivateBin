@@ -1,7 +1,7 @@
 {
     "PrivateBin": "PrivateBin",
     "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted %sin the browser%s using 256 bits AES.": "%s je minimalistický open source 'pastebin' server, který neanalyzuje vložená data. Data jsou šifrována %sv prohlížeči%s pomocí 256 bitů AES.",
-    "More information on the <a href=\"https://privatebin.info/\">project page</a>.": "Více informací na <a href=\"https://privatebin.info/\">stránce projektu</a>.",
+    "More information on the <a href=\"https://privatebin.info/\">project page</a>.": "Více informací na <a href=\"https://privatebin.info/\">stránce projetu</a>.",
     "Because ignorance is bliss": "Protože nevědomost je sladká",
     "en": "cs",
     "Paste does not exist, has expired or has been deleted.": "Vložený text neexistuje, expiroval nebo byl odstraněn.",
@@ -12,8 +12,8 @@
         "Počet sekund do dalšího příspěvku: %d.",
         "Počet sekund do dalšího příspěvku: %d.",
         "Počet sekund do dalšího příspěvku: %d.",
-        "Počet sekund do dalšího příspěvku: %d.",
-        "Počet sekund do dalšího příspěvku: %d."
+        "Please wait %d seconds between each post. (4th plural)",
+        "Please wait %d seconds between each post. (5th plural)"
     ],
     "Paste is limited to %s of encrypted data.": "Příspěvek je limitován na %s šífrovaných dat",
     "Invalid data.": "Chybná data.",
@@ -99,40 +99,40 @@
         "Tento dokument expiruje za %d sekundy.",
         "Tento dokument expiruje za %d sekund.",
         "Tento dokument expiruje za %d sekund.",
-        "Tento dokument expiruje za %d sekund.",
-        "Tento dokument expiruje za %d sekund."
+        "This document will expire in %d seconds. (4th plural)",
+        "This document will expire in %d seconds. (5th plural)"
     ],
     "This document will expire in %d minutes.": [
         "Tento dokument expiruje za %d minutu.",
         "Tento dokument expiruje za %d minuty.",
         "Tento dokument expiruje za %d minut.",
         "Tento dokument expiruje za %d minut.",
-        "Tento dokument expiruje za %d minut.",
-        "Tento dokument expiruje za %d minut."
+        "This document will expire in %d minutes. (4th plural)",
+        "This document will expire in %d minutes. (5th plural)"
     ],
     "This document will expire in %d hours.": [
         "Tento dokument expiruje za %d hodinu.",
         "Tento dokument expiruje za %d hodiny.",
         "Tento dokument expiruje za %d hodin.",
         "Tento dokument expiruje za %d hodin.",
-        "Tento dokument expiruje za %d hodin.",
-        "Tento dokument expiruje za %d hodin."
+        "This document will expire in %d hours. (4th plural)",
+        "This document will expire in %d hours. (5th plural)"
     ],
     "This document will expire in %d days.": [
         "Tento dokument expiruje za %d den.",
         "Tento dokument expiruje za %d dny.",
         "Tento dokument expiruje za %d dny.",
         "Tento dokument expiruje za %d dny.",
-        "Tento dokument expiruje za %d dny.",
-        "Tento dokument expiruje za %d dny."
+        "This document will expire in %d days. (4th plural)",
+        "This document will expire in %d days. (5th plural)"
     ],
     "This document will expire in %d months.": [
         "Tento dokument expiruje za %d měsíc.",
         "Tento dokument expiruje za %d měsíce.",
         "Tento dokument expiruje za %d měsíců.",
         "Tento dokument expiruje za %d měsíců.",
-        "Tento dokument expiruje za %d měsíců.",
-        "Tento dokument expiruje za %d měsíců."
+        "This document will expire in %d months. (4th plural)",
+        "This document will expire in %d months. (5th plural)"
     ],
     "Please enter the password for this paste:": "Zadejte prosím heslo:",
     "Could not decrypt data (Wrong key?)": "Nepodařilo se dešifrovat data (Špatný klíč?)",
