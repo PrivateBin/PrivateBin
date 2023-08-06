@@ -11,6 +11,8 @@
         "Lütfen paylaşımlar arasında %d saniye bekleyiniz.",
         "Lütfen paylaşımlar arasında %d saniye bekleyiniz.",
         "Lütfen paylaşımlar arasında %d saniye bekleyiniz.",
+        "Lütfen paylaşımlar arasında %d saniye bekleyiniz.",
+        "Lütfen paylaşımlar arasında %d saniye bekleyiniz.",
         "Lütfen paylaşımlar arasında %d saniye bekleyiniz."
     ],
     "Paste is limited to %s of encrypted data.": "Yazılar %s şifreli veriyle sınırlıdır.",
@@ -38,9 +40,13 @@
         "%d saniye",
         "%d saniye",
         "%d saniye",
+        "%d saniye",
+        "%d saniye",
         "%d saniye"
     ],
     "%d minutes": [
+        "%d dakika",
+        "%d dakika",
         "%d dakika",
         "%d dakika",
         "%d dakika",
@@ -50,9 +56,13 @@
         "%d saat",
         "%d saat",
         "%d saat",
+        "%d saat",
+        "%d saat",
         "%d saat"
     ],
     "%d days": [
+        "%d gün",
+        "%d gün",
         "%d gün",
         "%d gün",
         "%d gün",
@@ -62,15 +72,21 @@
         "%d hafta",
         "%d haftalar",
         "%d hafta",
+        "%d hafta",
+        "%d hafta",
         "%d hafta"
     ],
     "%d months": [
         "%d ay",
         "%d ay",
         "%d ay",
+        "%d ay",
+        "%d ay",
         "%d ay"
     ],
     "%d years": [
+        "%d yıl",
+        "%d yıl",
         "%d yıl",
         "%d yıl",
         "%d yıl",
@@ -82,9 +98,13 @@
         "Bu belge %d saniyede silinecektir.",
         "Bu belge %d saniyede silinecektir.",
         "Bu belge %d saniyede silinecektir.",
+        "Bu belge %d saniyede silinecektir.",
+        "Bu belge %d saniyede silinecektir.",
         "Bu belge %d saniyede silinecektir."
     ],
     "This document will expire in %d minutes.": [
+        "Bu belge %d dakikada silinecektir.",
+        "Bu belge %d dakikada silinecektir.",
         "Bu belge %d dakikada silinecektir.",
         "Bu belge %d dakikada silinecektir.",
         "Bu belge %d dakikada silinecektir.",
@@ -94,15 +114,21 @@
         "Bu belge %d saatte silinecektir.",
         "Bu belge %d saatte silinecektir.",
         "Bu belge %d saatte silinecektir.",
+        "Bu belge %d saatte silinecektir.",
+        "Bu belge %d saatte silinecektir.",
         "Bu belge %d saatte silinecektir."
     ],
     "This document will expire in %d days.": [
         "Bu belge %d günde silinecektir.",
         "Bu belge %d günde silinecektir.",
         "Bu belge %d günde silinecektir.",
+        "Bu belge %d günde silinecektir.",
+        "Bu belge %d günde silinecektir.",
         "Bu belge %d günde silinecektir."
     ],
     "This document will expire in %d months.": [
+        "Bu belge %d ayda silinecektir.",
+        "Bu belge %d ayda silinecektir.",
         "Bu belge %d ayda silinecektir.",
         "Bu belge %d ayda silinecektir.",
         "Bu belge %d ayda silinecektir.",

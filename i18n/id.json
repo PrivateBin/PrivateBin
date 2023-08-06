@@ -11,6 +11,8 @@
         "Silahkan menunggu %d detik antara masing-masing postingan.",
         "Silahkan menunggu %d detik antara masing-masing postingan.",
         "Silahkan menunggu %d detik antara masing-masing postingan.",
+        "Silahkan menunggu %d detik antara masing-masing postingan.",
+        "Silahkan menunggu %d detik antara masing-masing postingan.",
         "Silahkan menunggu %d detik antara masing-masing postingan."
     ],
     "Paste is limited to %s of encrypted data.": "Paste dibatasi sampai %s dari data yang dienskripsi.",
@@ -38,9 +40,13 @@
         "%d detik",
         "%d detik",
         "%d detik",
+        "%d detik",
+        "%d detik",
         "%d detik"
     ],
     "%d minutes": [
+        "%d menit",
+        "%d menit",
         "%d menit",
         "%d menit",
         "%d menit",
@@ -50,9 +56,13 @@
         "%d jam",
         "%d jam",
         "%d jam",
+        "%d jam",
+        "%d jam",
         "%d jam"
     ],
     "%d days": [
+        "%d hari",
+        "%d hari",
         "%d hari",
         "%d hari",
         "%d hari",
@@ -62,15 +72,21 @@
         "%d minggu",
         "%d minggu",
         "%d minggu",
+        "%d minggu",
+        "%d minggu",
         "%d minggu"
     ],
     "%d months": [
         "%d bulan",
         "%d bulan",
         "%d bulan",
+        "%d bulan",
+        "%d bulan",
         "%d bulan"
     ],
     "%d years": [
+        "%d tahun",
+        "%d tahun",
         "%d tahun",
         "%d tahun",
         "%d tahun",
@@ -82,9 +98,13 @@
         "Dokumen ini kadaluarsa dalam %d detik.",
         "Dokumen ini kadaluarsa dalam %d detik.",
         "Dokumen ini kadaluarsa dalam %d detik.",
+        "Dokumen ini kadaluarsa dalam %d detik.",
+        "Dokumen ini kadaluarsa dalam %d detik.",
         "Dokumen ini kadaluarsa dalam %d detik."
     ],
     "This document will expire in %d minutes.": [
+        "Dokumen ini akan kadaluarsa dalam %d menit.",
+        "Dokumen ini akan kadaluarsa dalam %d menit.",
         "Dokumen ini akan kadaluarsa dalam %d menit.",
         "Dokumen ini akan kadaluarsa dalam %d menit.",
         "Dokumen ini akan kadaluarsa dalam %d menit.",
@@ -94,15 +114,21 @@
         "Dokumen ini akan kadaluarsa dalam %d jam.",
         "Dokumen ini akan kadaluarsa dalam %d jam.",
         "Dokumen ini akan kadaluarsa dalam %d jam.",
+        "Dokumen ini akan kadaluarsa dalam %d jam.",
+        "Dokumen ini akan kadaluarsa dalam %d jam.",
         "Dokumen ini akan kadaluarsa dalam %d jam."
     ],
     "This document will expire in %d days.": [
         "Dokumen ini akan kadaluarsa dalam %d hari.",
         "Dokumen ini akan kadaluarsa dalam %d hari.",
         "Dokumen ini akan kadaluarsa dalam %d hari.",
+        "Dokumen ini akan kadaluarsa dalam %d hari.",
+        "Dokumen ini akan kadaluarsa dalam %d hari.",
         "Dokumen ini akan kadaluarsa dalam %d hari."
     ],
     "This document will expire in %d months.": [
+        "Dokumen ini akan kadaluarsa dalam %d bulan.",
+        "Dokumen ini akan kadaluarsa dalam %d bulan.",
         "Dokumen ini akan kadaluarsa dalam %d bulan.",
         "Dokumen ini akan kadaluarsa dalam %d bulan.",
         "Dokumen ini akan kadaluarsa dalam %d bulan.",

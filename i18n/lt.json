@@ -11,6 +11,8 @@
         "Tarp kiekvieno įrašo palaukite %d sekundę.",
         "Tarp kiekvieno įrašo palaukite %d sekundes.",
         "Tarp kiekvieno įrašo palaukite %d sekundžių.",
+        "Tarp kiekvieno įrašo palaukite %d sekundę.",
+        "Tarp kiekvieno įrašo palaukite %d sekundę.",
         "Tarp kiekvieno įrašo palaukite %d sekundę."
     ],
     "Paste is limited to %s of encrypted data.": "Įdėjimas yra apribotas iki %s šifruotų duomenų.",
@@ -38,39 +40,53 @@
         "%d sekundės",
         "%d sekundžių",
         "%d sekundžių",
+        "%d sekundės",
+        "%d sekundės",
         "%d sekundės"
     ],
     "%d minutes": [
         "%d minutės",
         "%d minučių",
         "%d minučių",
+        "%d minutės",
+        "%d minutės",
         "%d minutės"
     ],
     "%d hours": [
         "%d valandos",
         "%d valandų",
         "%d valandų",
+        "%d valandos",
+        "%d valandos",
         "%d valandos"
     ],
     "%d days": [
         "%d dienos",
         "%d dienų",
         "%d dienų",
+        "%d dienos",
+        "%d dienos",
         "%d dienos"
     ],
     "%d weeks": [
         "%d savaitės",
         "%d savaičių",
         "%d savaičių",
+        "%d savaitės",
+        "%d savaitės",
         "%d savaitės"
     ],
     "%d months": [
         "%d mėnesio",
         "%d mėnesių",
         "%d mėnesių",
+        "%d mėnesio",
+        "%d mėnesio",
         "%d mėnesio"
     ],
     "%d years": [
+        "%d metų",
+        "%d metų",
         "%d metų",
         "%d metų",
         "%d metų",
@@ -82,30 +98,40 @@
         "Šis dokumentas nustos galioti po %d sekundės.",
         "Šis dokumentas nustos galioti po %d sekundžių.",
         "Šis dokumentas nustos galioti po %d sekundžių.",
+        "Šis dokumentas nustos galioti po %d sekundės.",
+        "Šis dokumentas nustos galioti po %d sekundės.",
         "Šis dokumentas nustos galioti po %d sekundės."
     ],
     "This document will expire in %d minutes.": [
         "Šis dokumentas nustos galioti po %d minutės.",
         "Šis dokumentas nustos galioti po %d minučių.",
         "Šis dokumentas nustos galioti po %d minučių.",
+        "Šis dokumentas nustos galioti po %d minutės.",
+        "Šis dokumentas nustos galioti po %d minutės.",
         "Šis dokumentas nustos galioti po %d minutės."
     ],
     "This document will expire in %d hours.": [
         "Šis dokumentas nustos galioti po %d valandos.",
         "Šis dokumentas nustos galioti po %d valandų.",
         "Šis dokumentas nustos galioti po %d valandų.",
+        "Šis dokumentas nustos galioti po %d valandos.",
+        "Šis dokumentas nustos galioti po %d valandos.",
         "Šis dokumentas nustos galioti po %d valandos."
     ],
     "This document will expire in %d days.": [
         "Šis dokumentas nustos galioti po %d dienos.",
         "Šis dokumentas nustos galioti po %d dienų.",
         "Šis dokumentas nustos galioti po %d dienų.",
+        "Šis dokumentas nustos galioti po %d dienos.",
+        "Šis dokumentas nustos galioti po %d dienos.",
         "Šis dokumentas nustos galioti po %d dienos."
     ],
     "This document will expire in %d months.": [
         "Šis dokumentas nustos galioti po %d mėnesio.",
         "Šis dokumentas nustos galioti po %d mėnesių.",
         "Šis dokumentas nustos galioti po %d mėnesių.",
+        "Šis dokumentas nustos galioti po %d mėnesio.",
+        "Šis dokumentas nustos galioti po %d mėnesio.",
         "Šis dokumentas nustos galioti po %d mėnesio."
     ],
     "Please enter the password for this paste:": "Įveskite šio įdėjimo slaptažodį:",
