@@ -12,8 +12,8 @@
         "Por favor espere %d segundos entre cada publicación.",
         "Por favor espere %d segundos entre cada publicación.",
         "Por favor espere %d segundos entre cada publicación.",
-        "Please wait %d seconds between each post. (4th plural)",
-        "Please wait %d seconds between each post. (5th plural)"
+        "Por favor espere %d segundos entre cada publicación.",
+        "Por favor espere %d segundos entre cada publicación."
     ],
     "Paste is limited to %s of encrypted data.": "El \"paste\" está limitado a %s de datos cifrados.",
     "Invalid data.": "Datos inválidos.",
@@ -41,56 +41,56 @@
         "%d segundos",
         "%d segundos",
         "%d segundos",
-        "%d seconds (4th plural)",
-        "%d seconds (5th plural)"
+        "%d segundos",
+        "%d segundos"
     ],
     "%d minutes": [
         "%d minuto",
         "%d minutos",
         "%d minutos",
         "%d minutos",
-        "%d minutes (4th plural)",
-        "%d minutes (5th plural)"
+        "%d minutos",
+        "%d minutos"
     ],
     "%d hours": [
         "%d hora",
         "%d horas",
         "%d horas",
         "%d horas",
-        "%d hours (4th plural)",
-        "%d hours (5th plural)"
+        "%d horas",
+        "%d horas"
     ],
     "%d days": [
         "%d día",
         "%d días",
         "%d días",
         "%d días",
-        "%d days (4th plural)",
-        "%d days (5th plural)"
+        "%d días",
+        "%d días"
     ],
     "%d weeks": [
         "%d semana",
         "%d semanas",
         "%d semanas",
         "%d semanas",
-        "%d weeks (4th plural)",
-        "%d weeks (5th plural)"
+        "%d semanas",
+        "%d semanas"
     ],
     "%d months": [
         "%d mes",
         "%d meses",
-        "%d minutos",
         "%d meses",
-        "%d months (4th plural)",
-        "%d months (5th plural)"
+        "%d meses",
+        "%d meses",
+        "%d meses"
     ],
     "%d years": [
         "%d año",
         "%d años",
         "%d años",
         "%d años",
-        "%d years (4th plural)",
-        "%d years (5th plural)"
+        "%d años",
+        "%d años"
     ],
     "Never": "Nunca",
     "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.": "Nota: Este es un servicio de prueba. Los datos pueden ser eliminados en cualquier momento. Morirán gatitos si abusas de este servicio.",
@@ -99,40 +99,40 @@
         "Este documento caducará en %d segundos.",
         "Este documento caducará en %d segundos",
         "Este documento caducará en %d segundos",
-        "This document will expire in %d seconds. (4th plural)",
-        "This document will expire in %d seconds. (5th plural)"
+        "Este documento caducará en %d segundos",
+        "Este documento caducará en %d segundos"
     ],
     "This document will expire in %d minutes.": [
         "Este documento caducará en un minuto.",
         "Este documento caducará en %d minutos.",
         "Este documento caducará en %d minutos",
         "Este documento caducará en %d minutos",
-        "This document will expire in %d minutes. (4th plural)",
-        "This document will expire in %d minutes. (5th plural)"
+        "Este documento caducará en %d minutos",
+        "Este documento caducará en %d minutos"
     ],
     "This document will expire in %d hours.": [
         "Este documento caducará en una hora.",
         "Este documento caducará en %d horas.",
         "Este documento caducará en %d horas",
         "Este documento caducará en %d horas",
-        "This document will expire in %d hours. (4th plural)",
-        "This document will expire in %d hours. (5th plural)"
+        "Este documento caducará en %d horas",
+        "Este documento caducará en %d horas"
     ],
     "This document will expire in %d days.": [
         "Este documento caducará en un día.",
         "Este documento caducará en %d días.",
         "Este documento caducará en %d días",
         "Este documento caducará en %d días",
-        "This document will expire in %d days. (4th plural)",
-        "This document will expire in %d days. (5th plural)"
+        "Este documento caducará en %d días",
+        "Este documento caducará en %d días"
     ],
     "This document will expire in %d months.": [
         "Este documento caducará en un mes.",
         "Este documento caducará en %d meses.",
         "Este documento caducará en %d meses",
         "Este documento caducará en %d meses",
-        "This document will expire in %d months. (4th plural)",
-        "This document will expire in %d months. (5th plural)"
+        "Este documento caducará en %d meses",
+        "Este documento caducará en %d meses"
     ],
     "Please enter the password for this paste:": "Por favor ingrese la contraseña para este \"paste\":",
     "Could not decrypt data (Wrong key?)": "No fue posible descifrar los datos (¿Clave errónea?)",
