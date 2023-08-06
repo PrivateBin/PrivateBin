@@ -12,8 +12,8 @@
         "Merci d'attendre %d secondes entre chaque publication.",
         "Merci d'attendre %d secondes entre chaque publication.",
         "Merci d'attendre %d secondes entre chaque publication.",
-        "Merci d'attendre %d secondes entre chaque publication.",
-        "Merci d'attendre %d secondes entre chaque publication."
+        "Please wait %d seconds between each post. (4th plural)",
+        "Please wait %d seconds between each post. (5th plural)"
     ],
     "Paste is limited to %s of encrypted data.": "Le paste est limité à %s de données chiffrées.",
     "Invalid data.": "Données invalides.",
@@ -99,40 +99,40 @@
         "Ce document expirera dans %d secondes.",
         "This document will expire in %d seconds (2nd plural)",
         "This document will expire in %d seconds (3rd plural)",
-        "This document will expire in %d seconds (4th plural)",
-        "This document will expire in %d seconds (5th plural)"
+        "This document will expire in %d seconds. (4th plural)",
+        "This document will expire in %d seconds. (5th plural)"
     ],
     "This document will expire in %d minutes.": [
         "Ce document expirera dans %d minute.",
         "Ce document expirera dans %d minutes.",
         "Ce document expirera dans %d minutes.",
         "Ce document expirera dans %d minutes.",
-        "Ce document expirera dans %d minutes.",
-        "Ce document expirera dans %d minutes."
+        "This document will expire in %d minutes. (4th plural)",
+        "This document will expire in %d minutes. (5th plural)"
     ],
     "This document will expire in %d hours.": [
         "Ce document expirera dans %d heure.",
         "Ce document expirera dans %d heures.",
         "Ce document expirera dans %d heures.",
         "Ce document expirera dans %d heures.",
-        "Ce document expirera dans %d heures.",
-        "Ce document expirera dans %d heures."
+        "This document will expire in %d hours. (4th plural)",
+        "This document will expire in %d hours. (5th plural)"
     ],
     "This document will expire in %d days.": [
         "Ce document expirera dans %d jour.",
         "Ce document expirera dans %d jours.",
         "Ce document expirera dans %d jours.",
         "Ce document expirera dans %d jours.",
-        "Ce document expirera dans %d jours.",
-        "Ce document expirera dans %d jours."
+        "This document will expire in %d days. (4th plural)",
+        "This document will expire in %d days. (5th plural)"
     ],
     "This document will expire in %d months.": [
         "Ce document expirera dans %d mois.",
         "Ce document expirera dans %d mois.",
         "Ce document expirera dans %d mois.",
         "Ce document expirera dans %d mois.",
-        "Ce document expirera dans %d mois.",
-        "Ce document expirera dans %d mois."
+        "This document will expire in %d months. (4th plural)",
+        "This document will expire in %d months. (5th plural)"
     ],
     "Please enter the password for this paste:": "Entrez le mot de passe pour ce paste:",
     "Could not decrypt data (Wrong key?)": "Impossible de déchiffrer les données (mauvaise clé ?)",
