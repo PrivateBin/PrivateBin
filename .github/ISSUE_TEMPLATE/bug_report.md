@@ -7,7 +7,7 @@ assignees: ''
 
 ---
 
-<!-- Please make sure to **only** use this template when it is about bugs in the PrivateBin PHO project.
+<!-- Please make sure to **only** use this template when it is about bugs in the PrivateBin PHP project.
 Otherwise, for help and support issues e.g. for deployment issues, please go back and chose the appropiate category. -->
 
 <-- Describe the bug: A clear and concise description of what the bug is. -->
