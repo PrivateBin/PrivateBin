@@ -1,13 +1,15 @@
 {
     "PrivateBin": "PrivateBin",
     "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted %sin the browser%s using 256 bits AES.": "%s je minimalistický open source 'pastebin' server, který neanalyzuje vložená data. Data jsou šifrována %sv prohlížeči%s pomocí 256 bitů AES.",
-    "More information on the <a href=\"https://privatebin.info/\">project page</a>.": "Více informací na <a href=\"https://privatebin.info/\">stránce projektu</a>.",
+    "More information on the <a href=\"https://privatebin.info/\">project page</a>.": "Více informací na <a href=\"https://privatebin.info/\">stránce projetu</a>.",
     "Because ignorance is bliss": "Protože nevědomost je sladká",
     "en": "cs",
     "Paste does not exist, has expired or has been deleted.": "Vložený text neexistuje, expiroval nebo byl odstraněn.",
     "%s requires php %s or above to work. Sorry.": "%s vyžaduje php %s nebo vyšší. Lituji.",
     "%s requires configuration section [%s] to be present in configuration file.": "%s vyžaduje, aby byla v konfiguračním souboru přítomna sekce [%s].",
     "Please wait %d seconds between each post.": [
+        "Počet sekund do dalšího příspěvku: %d.",
+        "Počet sekund do dalšího příspěvku: %d.",
         "Počet sekund do dalšího příspěvku: %d.",
         "Počet sekund do dalšího příspěvku: %d.",
         "Počet sekund do dalšího příspěvku: %d.",
@@ -38,43 +40,57 @@
         "%d sekuda",
         "%d sekundy",
         "%d sekund",
-        "%d seconds (3rd plural)"
+        "%d sekund",
+        "%d sekund",
+        "%d sekund"
     ],
     "%d minutes": [
         "%d minuta",
         "%d minuty",
         "%d minut",
-        "%d minutes (3rd plural)"
+        "%d minut",
+        "%d minut",
+        "%d minut"
     ],
     "%d hours": [
         "%d hodina",
         "%d hodiny",
         "%d hodin",
-        "%d hours (3rd plural)"
+        "%d hodin",
+        "%d hodin",
+        "%d hodin"
     ],
     "%d days": [
         "%d den",
         "%d dny",
         "%d dní",
-        "%d days (3rd plural)"
+        "%d dní",
+        "%d dní",
+        "%d dní"
     ],
     "%d weeks": [
         "%d týden",
         "%d týdeny",
         "%d týdnů",
-        "%d weeks (3rd plural)"
+        "%d týdnů",
+        "%d týdnů",
+        "%d týdnů"
     ],
     "%d months": [
         "%d měsíc",
         "%d měsíce",
         "%d měsíců",
-        "%d months (3rd plural)"
+        "%d měsíců",
+        "%d měsíců",
+        "%d měsíců"
     ],
     "%d years": [
         "%d rok",
         "%d roky",
         "%d roků",
-        "%d years (3rd plural)"
+        "%d roků",
+        "%d roků",
+        "%d roků"
     ],
     "Never": "Nikdy",
     "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.": "Poznámka: Tato služba slouží k vyzkoušení: Data mohou být kdykoliv smazána. Při zneužití této služby zemřou koťátka.",
@@ -82,11 +98,15 @@
         "Tento dokument expiruje za %d sekundu.",
         "Tento dokument expiruje za %d sekundy.",
         "Tento dokument expiruje za %d sekund.",
+        "Tento dokument expiruje za %d sekund.",
+        "Tento dokument expiruje za %d sekund.",
         "Tento dokument expiruje za %d sekund."
     ],
     "This document will expire in %d minutes.": [
         "Tento dokument expiruje za %d minutu.",
         "Tento dokument expiruje za %d minuty.",
+        "Tento dokument expiruje za %d minut.",
+        "Tento dokument expiruje za %d minut.",
         "Tento dokument expiruje za %d minut.",
         "Tento dokument expiruje za %d minut."
     ],
@@ -94,10 +114,14 @@
         "Tento dokument expiruje za %d hodinu.",
         "Tento dokument expiruje za %d hodiny.",
         "Tento dokument expiruje za %d hodin.",
+        "Tento dokument expiruje za %d hodin.",
+        "Tento dokument expiruje za %d hodin.",
         "Tento dokument expiruje za %d hodin."
     ],
     "This document will expire in %d days.": [
         "Tento dokument expiruje za %d den.",
+        "Tento dokument expiruje za %d dny.",
+        "Tento dokument expiruje za %d dny.",
         "Tento dokument expiruje za %d dny.",
         "Tento dokument expiruje za %d dny.",
         "Tento dokument expiruje za %d dny."
@@ -105,6 +129,8 @@
     "This document will expire in %d months.": [
         "Tento dokument expiruje za %d měsíc.",
         "Tento dokument expiruje za %d měsíce.",
+        "Tento dokument expiruje za %d měsíců.",
+        "Tento dokument expiruje za %d měsíců.",
         "Tento dokument expiruje za %d měsíců.",
         "Tento dokument expiruje za %d měsíců."
     ],

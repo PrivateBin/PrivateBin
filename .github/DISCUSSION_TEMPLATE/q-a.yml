@@ -1,0 +1,62 @@
+title: "[Question and support] "
+labels: ["question/support"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Describe the problem/question: A clear and concise description of what the problem/issue or question is.
+  - type: checkboxes
+    attributes:
+      label: Please tick this to confirm
+      options:
+        - label: Yes, I have read [the FAQ](https://github.com/PrivateBin/PrivateBin/wiki/FAQ) and I found no solution/answer there.
+  - type: markdown
+    attributes:
+      value: |
+        ## What you did
+        Tell us how to reproduce the problem.
+
+        1.
+        2.
+  - type: textarea
+    id: what_happens
+    attributes:
+      label: What happens
+  - type: textarea
+    id: what_should_happen
+    attributes:
+      label: What should happen
+  - type: textarea
+    id: additional_info
+    attributes:
+      label: Additional information
+      description: If you have access to the server log files, copy them here.
+  - type: input
+    id: server_address
+    attributes:
+      label: Server address
+  - type: input
+    id: server_os
+    attributes:
+      label: Server OS
+  - type: input
+    id: webserver
+    attributes:
+      label: Webserver
+  - type: input
+    id: browser
+    attributes:
+      label: Browser
+  - type: input
+    id: privatebin_version
+    attributes:
+      label: PrivateBin version
+  - type: radio
+    id: reproduce_issue
+    attributes:
+      label: I can reproduce this issue on [https://privatebin.net](https://privatebin.net)
+      options:
+        - label: Yes
+          value: Yes
+        - label: No
+          value: No

@@ -1,5 +1,16 @@
-<!-- Please have a look at our FAQ before submitting an issue: https://github.com/PrivateBin/PrivateBin/wiki/FAQ -->
-<!-- This is a template for a bug report. If you would like to suggest a feature, feel free to delete the part below. -->
+---
+name: Bug report
+about: Create a report to help us improve (only for software bugs)
+title: ''
+labels: bug
+assignees: ''
+
+---
+
+<!-- Please make sure to **only** use this template when it is about bugs in the PrivateBin PHP project.
+Otherwise, for help and support issues e.g. for deployment issues, please go back and chose the appropiate category. -->
+
+<-- Describe the bug: A clear and concise description of what the bug is. -->
 
 ## Steps to reproduce
 <!-- Tell us how to reproduce the problem. -->
@@ -26,7 +37,7 @@ If you have access to the server log files, also copy them here.
 <!-- The Operation System of your server -->
 **Server OS:**
 
-<!-- The webserver running on your server, preferrably including the version -->
+<!-- The webserver running on your server, preferably including the version -->
 **Webserver:**
 
 <!-- The version of your browser (when it is a client-side issue) -->

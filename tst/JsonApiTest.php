@@ -1,17 +1,18 @@
 <?php
 
+use PHPUnit\Framework\TestCase;
 use PrivateBin\Controller;
 use PrivateBin\Data\Filesystem;
 use PrivateBin\Persistence\ServerSalt;
 use PrivateBin\Request;
 
-class JsonApiTest extends PHPUnit_Framework_TestCase
+class JsonApiTest extends TestCase
 {
     protected $_model;
 
     protected $_path;
 
-    public function setUp()
+    public function setUp(): void
     {
         /* Setup Routine */
         $this->_path  = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'privatebin_data';
@@ -33,7 +34,7 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
         Helper::createIniFile(CONF, $options);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         /* Tear Down Routine */
         unlink(CONF);
@@ -195,10 +196,10 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
         $content = ob_get_contents();
         ob_end_clean();
         $this->assertEquals(str_replace(
-                '?jsonld=',
-                '/?jsonld=',
-                file_get_contents(PUBLIC_PATH . '/js/paste.jsonld')
-            ), $content, 'outputs data correctly');
+            '?jsonld=',
+            '/?jsonld=',
+            file_get_contents(PUBLIC_PATH . '/js/paste.jsonld')
+        ), $content, 'outputs data correctly');
     }
 
     /**
@@ -212,10 +213,10 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
         $content = ob_get_contents();
         ob_end_clean();
         $this->assertEquals(str_replace(
-                '?jsonld=',
-                '/?jsonld=',
-                file_get_contents(PUBLIC_PATH . '/js/comment.jsonld')
-            ), $content, 'outputs data correctly');
+            '?jsonld=',
+            '/?jsonld=',
+            file_get_contents(PUBLIC_PATH . '/js/comment.jsonld')
+        ), $content, 'outputs data correctly');
     }
 
     /**
@@ -229,10 +230,10 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
         $content = ob_get_contents();
         ob_end_clean();
         $this->assertEquals(str_replace(
-                '?jsonld=',
-                '/?jsonld=',
-                file_get_contents(PUBLIC_PATH . '/js/pastemeta.jsonld')
-            ), $content, 'outputs data correctly');
+            '?jsonld=',
+            '/?jsonld=',
+            file_get_contents(PUBLIC_PATH . '/js/pastemeta.jsonld')
+        ), $content, 'outputs data correctly');
     }
 
     /**
@@ -246,10 +247,10 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
         $content = ob_get_contents();
         ob_end_clean();
         $this->assertEquals(str_replace(
-                '?jsonld=',
-                '/?jsonld=',
-                file_get_contents(PUBLIC_PATH . '/js/commentmeta.jsonld')
-            ), $content, 'outputs data correctly');
+            '?jsonld=',
+            '/?jsonld=',
+            file_get_contents(PUBLIC_PATH . '/js/commentmeta.jsonld')
+        ), $content, 'outputs data correctly');
     }
 
     /**
@@ -263,10 +264,10 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
         $content = ob_get_contents();
         ob_end_clean();
         $this->assertEquals(str_replace(
-                '?jsonld=',
-                '/?jsonld=',
-                file_get_contents(PUBLIC_PATH . '/js/types.jsonld')
-            ), $content, 'outputs data correctly');
+            '?jsonld=',
+            '/?jsonld=',
+            file_get_contents(PUBLIC_PATH . '/js/types.jsonld')
+        ), $content, 'outputs data correctly');
     }
 
     /**
@@ -303,7 +304,7 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
         new Controller;
         $content = ob_get_contents();
         ob_end_clean();
-        $this->assertContains('id="pasteurl" href="https://example.com/1"', $content, 'outputs shortened URL correctly');
+        $this->assertStringContainsString('id="pasteurl" href="https://example.com/1"', $content, 'outputs shortened URL correctly');
     }
 
     /**
@@ -317,6 +318,6 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
         new Controller;
         $content = ob_get_contents();
         ob_end_clean();
-        $this->assertContains('Error calling YOURLS.', $content, 'outputs error correctly');
+        $this->assertStringContainsString('Error calling YOURLS.', $content, 'outputs error correctly');
     }
 }

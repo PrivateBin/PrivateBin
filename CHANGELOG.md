@@ -1,5 +1,13 @@
 # PrivateBin version history
 
+  * **1.6.0 (not yet released)**
+    * ADDED: Translations for Japanese & Arabic
+    * CHANGED: Minimum required PHP version is 7.3, due to upgrading PHPunit (#707)
+  * **1.5.2 (2023-07-09)**
+    * ADDED: Allow AWS SDK to use default credential provider chain for S3Storage (#1070)
+    * CHANGED: Upgrading libraries to: DOMpurify 3.0.4 & jQuery 3.7.0
+    * FIXED: Addressed PHP 8.2 deprecation warnings (#1092)
+    * FIXED: Expose types JSON-LD incl. configured expiration dates (#1045)
   * **1.5.1 (2022-12-24)**
     * ADDED: script for administrative tasks: deleting pastes (#274), removing empty directories (#277), purging expired pastes (#276) & statistics (#319)
     * FIXED: Revert Filesystem purge to limited and randomized lookup (#1030)

@@ -11,6 +11,8 @@
         "Mercés d'esperar %d segonda entre cada publicacion.",
         "Mercés d'esperar %d segondas entre cada publicacion.",
         "Mercés d'esperar %d segondas entre cada publicacion.",
+        "Mercés d'esperar %d segondas entre cada publicacion.",
+        "Mercés d'esperar %d segondas entre cada publicacion.",
         "Mercés d'esperar %d segondas entre cada publicacion."
     ],
     "Paste is limited to %s of encrypted data.": "Lo tèxte es limitat a %s de donadas chifradas.",
@@ -38,10 +40,14 @@
         "%d segonda",
         "%d segondas",
         "%d segondas",
+        "%d segondas",
+        "%d segondas",
         "%d segondas"
     ],
     "%d minutes": [
         "%d minuta",
+        "%d minutas",
+        "%d minutas",
         "%d minutas",
         "%d minutas",
         "%d minutas"
@@ -50,10 +56,14 @@
         "%d ora",
         "%d oras",
         "%d oras",
+        "%d oras",
+        "%d oras",
         "%d oras"
     ],
     "%d days": [
         "%d jorn",
+        "%d jorns",
+        "%d jorns",
         "%d jorns",
         "%d jorns",
         "%d jorns"
@@ -62,16 +72,22 @@
         "%d setmana",
         "%d setmanas",
         "%d setmanas",
+        "%d setmanas",
+        "%d setmanas",
         "%d setmanas"
     ],
     "%d months": [
         "%d mes",
         "%d meses",
         "%d meses",
+        "%d meses",
+        "%d meses",
         "%d meses"
     ],
     "%d years": [
         "%d an",
+        "%d ans",
+        "%d ans",
         "%d ans",
         "%d ans",
         "%d ans"
@@ -82,10 +98,14 @@
         "Aqueste document expirarà d’aquí %d segonda.",
         "Aqueste document expirarà d’aquí %d segondas.",
         "Aqueste document expirarà d’aquí %d segondas.",
+        "Aqueste document expirarà d’aquí %d segondas.",
+        "Aqueste document expirarà d’aquí %d segondas.",
         "Aqueste document expirarà d’aquí %d segondas."
     ],
     "This document will expire in %d minutes.": [
         "Aqueste document expirarà d’aquí %d minuta.",
+        "Aqueste document expirarà d’aquí %d minutas.",
+        "Aqueste document expirarà d’aquí %d minutas.",
         "Aqueste document expirarà d’aquí %d minutas.",
         "Aqueste document expirarà d’aquí %d minutas.",
         "Aqueste document expirarà d’aquí %d minutas."
@@ -94,16 +114,22 @@
         "Aqueste document expirarà d’aquí %d ora.",
         "Aqueste document expirarà d’aquí %d oras.",
         "Aqueste document expirarà d’aquí %d oras.",
+        "Aqueste document expirarà d’aquí %d oras.",
+        "Aqueste document expirarà d’aquí %d oras.",
         "Aqueste document expirarà d’aquí %d oras."
     ],
     "This document will expire in %d days.": [
         "Aqueste document expirarà d’aquí %d jorn.",
         "Aqueste document expirarà d’aquí %d jorns.",
         "Aqueste document expirarà d’aquí %d jorns.",
+        "Aqueste document expirarà d’aquí %d jorns.",
+        "Aqueste document expirarà d’aquí %d jorns.",
         "Aqueste document expirarà d’aquí %d jorns."
     ],
     "This document will expire in %d months.": [
         "Aqueste document expirarà d’aquí %d mes.",
+        "Aqueste document expirarà d’aquí %d meses.",
+        "Aqueste document expirarà d’aquí %d meses.",
         "Aqueste document expirarà d’aquí %d meses.",
         "Aqueste document expirarà d’aquí %d meses.",
         "Aqueste document expirarà d’aquí %d meses."

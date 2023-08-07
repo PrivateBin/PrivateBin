@@ -1,8 +1,9 @@
 <?php
+use PHPUnit\Framework\TestCase;
 use PrivateBin\Data\Database;
 use PrivateBin\Data\Filesystem;
 
-class MigrateTest extends PHPUnit_Framework_TestCase
+class MigrateTest extends TestCase
 {
     protected $_model_1;
 
@@ -14,7 +15,7 @@ class MigrateTest extends PHPUnit_Framework_TestCase
 
     protected $_path_instance_2;
 
-    public function setUp()
+    public function setUp(): void
     {
         /* Setup Routine */
         $this->_path            = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'privatebin_data';
@@ -46,7 +47,7 @@ class MigrateTest extends PHPUnit_Framework_TestCase
         Helper::createIniFile($this->_path_instance_2 . DIRECTORY_SEPARATOR . 'cfg' . DIRECTORY_SEPARATOR . 'conf.php', $options);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         /* Tear Down Routine */
         Helper::rmDir($this->_path);
@@ -54,10 +55,6 @@ class MigrateTest extends PHPUnit_Framework_TestCase
 
     public function testMigrate()
     {
-        if (version_compare(PHP_VERSION, '7.1.0') < 0) {
-            return; // skip test on unsupported PHP versions
-        }
-
         $this->_model_1->delete(Helper::getPasteId());
         $this->_model_2->delete(Helper::getPasteId());
 

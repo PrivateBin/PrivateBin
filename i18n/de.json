@@ -11,6 +11,8 @@
         "Bitte warte eine Sekunde zwischen dem Absenden zweier Beiträge.",
         "Bitte warte %d Sekunden zwischen dem Absenden zweier Beiträge.",
         "Bitte warte %d Sekunden zwischen dem Absenden zweier Beiträge.",
+        "Bitte warte %d Sekunden zwischen dem Absenden zweier Beiträge.",
+        "Bitte warte %d Sekunden zwischen dem Absenden zweier Beiträge.",
         "Bitte warte %d Sekunden zwischen dem Absenden zweier Beiträge."
     ],
     "Paste is limited to %s of encrypted data.": "Texte sind auf %s verschlüsselte Datenmenge beschränkt.",
@@ -37,49 +39,65 @@
     "%d seconds": [
         "%d Sekunde",
         "%d Sekunden",
-        "%d seconds (2nd plural)",
-        "%d seconds (3rd plural)"
+        "%d Sekunden",
+        "%d Sekunden",
+        "%d Sekunden",
+        "%d Sekunden"
     ],
     "%d minutes": [
         "%d Minute",
         "%d Minuten",
-        "%d minutes (2nd plural)",
-        "%d minutes (3rd plural)"
+        "%d Minuten",
+        "%d Minuten",
+        "%d Minuten",
+        "%d Minuten"
     ],
     "%d hours": [
         "%d Stunde",
         "%d Stunden",
-        "%d hours (2nd plural)",
-        "%d hours (3rd plural)"
+        "%d Stunden",
+        "%d Stunden",
+        "%d Stunden",
+        "%d Stunden"
     ],
     "%d days": [
         "%d Tag",
         "%d Tage",
-        "%d days (2nd plural)",
-        "%d days (3rd plural)"
+        "%d Tage",
+        "%d Tage",
+        "%d Tage",
+        "%d Tage"
     ],
     "%d weeks": [
         "%d Woche",
         "%d Wochen",
-        "%d weeks (2nd plural)",
-        "%d weeks (3rd plural)"
+        "%d Wochen",
+        "%d Wochen",
+        "%d Wochen",
+        "%d Wochen"
     ],
     "%d months": [
         "%d Monat",
         "%d Monate",
-        "%d months (2nd plural)",
-        "%d months (3rd plural)"
+        "%d Monate",
+        "%d Monate",
+        "%d Monate",
+        "%d Monate"
     ],
     "%d years": [
         "%d Jahr",
         "%d Jahre",
-        "%d years (2nd plural)",
-        "%d years (3rd plural)"
+        "%d Monate",
+        "%d Monate",
+        "%d Monate",
+        "%d Monate"
     ],
     "Never": "Nie",
     "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.": "Hinweis: Dies ist ein Versuchsdienst. Daten können jederzeit gelöscht werden. Kätzchen werden sterben, wenn du diesen Dienst missbrauchst.",
     "This document will expire in %d seconds.": [
         "Dieses Dokument läuft in einer Sekunde ab.",
+        "Dieses Dokument läuft in %d Sekunden ab.",
+        "Dieses Dokument läuft in %d Sekunden ab.",
         "Dieses Dokument läuft in %d Sekunden ab.",
         "Dieses Dokument läuft in %d Sekunden ab.",
         "Dieses Dokument läuft in %d Sekunden ab."
@@ -88,22 +106,30 @@
         "Dieses Dokument läuft in einer Minute ab.",
         "Dieses Dokument läuft in %d Minuten ab.",
         "Dieses Dokument läuft in %d Minuten ab.",
+        "Dieses Dokument läuft in %d Minuten ab.",
+        "Dieses Dokument läuft in %d Minuten ab.",
         "Dieses Dokument läuft in %d Minuten ab."
     ],
     "This document will expire in %d hours.": [
         "Dieses Dokument läuft in einer Stunde ab.",
         "Dieses Dokument läuft in %d Stunden ab.",
-        "This document will expire in %d hours (2nd plural)",
-        "This document will expire in %d hours (3rd plural)"
+        "Dieses Dokument läuft in %d Stunden ab.",
+        "Dieses Dokument läuft in %d Stunden ab.",
+        "Dieses Dokument läuft in %d Stunden ab.",
+        "Dieses Dokument läuft in %d Stunden ab."
     ],
     "This document will expire in %d days.": [
         "Dieses Dokument läuft in einem Tag ab.",
+        "Dieses Dokument läuft in %d Tagen ab.",
+        "Dieses Dokument läuft in %d Tagen ab.",
         "Dieses Dokument läuft in %d Tagen ab.",
         "Dieses Dokument läuft in %d Tagen ab.",
         "Dieses Dokument läuft in %d Tagen ab."
     ],
     "This document will expire in %d months.": [
         "Dieses Dokument läuft in einem Monat ab.",
+        "Dieses Dokument läuft in %d Monaten ab.",
+        "Dieses Dokument läuft in %d Monaten ab.",
         "Dieses Dokument läuft in %d Monaten ab.",
         "Dieses Dokument läuft in %d Monaten ab.",
         "Dieses Dokument läuft in %d Monaten ab."

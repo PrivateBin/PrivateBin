@@ -196,10 +196,10 @@ class BucketStub extends Bucket
         $prefix = key_exists('prefix', $options) ? $options['prefix'] : '';
 
         return new CallbackFilterIterator(
-                new ArrayIterator($this->_objects),
-                function ($current, $key, $iterator) use ($prefix) {
-                    return substr($key, 0, strlen($prefix)) == $prefix;
-                }
+            new ArrayIterator($this->_objects),
+            function ($current, $key, $iterator) use ($prefix) {
+                return substr($key, 0, strlen($prefix)) == $prefix;
+            }
         );
     }
 

@@ -11,7 +11,9 @@
         "Please wait %d second between each post. (singular)",
         "Please wait %d seconds between each post. (1st plural)",
         "Please wait %d seconds between each post. (2nd plural)",
-        "Please wait %d seconds between each post. (3rd plural)"
+        "Please wait %d seconds between each post. (3rd plural)",
+        "Please wait %d seconds between each post. (4th plural)",
+        "Please wait %d seconds between each post. (5th plural)"
     ],
     "Paste is limited to %s of encrypted data.": "Paste is limited to %s of encrypted data.",
     "Invalid data.": ".i le selru'e cu na drani",
@@ -38,43 +40,57 @@
         "%d second (singular)",
         "%d seconds (1st plural)",
         "%d seconds (2nd plural)",
-        "%d seconds (3rd plural)"
+        "%d seconds (3rd plural)",
+        "%d seconds (4th plural)",
+        "%d seconds (5th plural)"
     ],
     "%d minutes": [
         "%d minute (singular)",
         "%d minutes (1st plural)",
         "%d minutes (2nd plural)",
-        "%d minutes (3rd plural)"
+        "%d minutes (3rd plural)",
+        "%d minutes (4th plural)",
+        "%d minutes (5th plural)"
     ],
     "%d hours": [
         "%d hour (singular)",
         "%d hours (1st plural)",
         "%d hours (2nd plural)",
-        "%d hours (3rd plural)"
+        "%d hours (3rd plural)",
+        "%d hours (4th plural)",
+        "%d hours (5th plural)"
     ],
     "%d days": [
         "%d day (singular)",
         "%d days (1st plural)",
         "%d days (2nd plural)",
-        "%d days (3rd plural)"
+        "%d days (3rd plural)",
+        "%d days (4th plural)",
+        "%d days (5th plural)"
     ],
     "%d weeks": [
         "%d week (singular)",
         "%d weeks (1st plural)",
         "%d weeks (2nd plural)",
-        "%d weeks (3rd plural)"
+        "%d weeks (3rd plural)",
+        "%d weeks (4th plural)",
+        "%d weeks (5th plural)"
     ],
     "%d months": [
         "%d month (singular)",
         "%d months (1st plural)",
         "%d months (2nd plural)",
-        "%d months (3rd plural)"
+        "%d months (3rd plural)",
+        "%d months (4th plural)",
+        "%d months (5th plural)"
     ],
     "%d years": [
         "%d year (singular)",
         "%d years (1st plural)",
         "%d years (2nd plural)",
-        "%d years (3rd plural)"
+        "%d years (3rd plural)",
+        "%d years (4th plural)",
+        "%d years (5th plural)"
     ],
     "Never": "Never",
     "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.": "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.",
@@ -82,31 +98,41 @@
         "This document will expire in %d second. (singular)",
         "This document will expire in %d seconds. (1st plural)",
         "This document will expire in %d seconds. (2nd plural)",
-        "This document will expire in %d seconds. (3rd plural)"
+        "This document will expire in %d seconds. (3rd plural)",
+        "This document will expire in %d seconds. (4th plural)",
+        "This document will expire in %d seconds. (5th plural)"
     ],
     "This document will expire in %d minutes.": [
         "This document will expire in %d minute. (singular)",
         "This document will expire in %d minutes. (1st plural)",
         "This document will expire in %d minutes. (2nd plural)",
-        "This document will expire in %d minutes. (3rd plural)"
+        "This document will expire in %d minutes. (3rd plural)",
+        "This document will expire in %d minutes. (4th plural)",
+        "This document will expire in %d minutes. (5th plural)"
     ],
     "This document will expire in %d hours.": [
         "This document will expire in %d hour. (singular)",
         "This document will expire in %d hours. (1st plural)",
         "This document will expire in %d hours. (2nd plural)",
-        "This document will expire in %d hours. (3rd plural)"
+        "This document will expire in %d hours. (3rd plural)",
+        "This document will expire in %d hours. (4th plural)",
+        "This document will expire in %d hours. (5th plural)"
     ],
     "This document will expire in %d days.": [
         "This document will expire in %d day. (singular)",
         "This document will expire in %d days. (1st plural)",
         "This document will expire in %d days. (2nd plural)",
-        "This document will expire in %d days. (3rd plural)"
+        "This document will expire in %d days. (3rd plural)",
+        "This document will expire in %d days. (4th plural)",
+        "This document will expire in %d days. (5th plural)"
     ],
     "This document will expire in %d months.": [
         "This document will expire in %d month. (singular)",
         "This document will expire in %d months. (1st plural)",
         "This document will expire in %d months. (2nd plural)",
-        "This document will expire in %d months. (3rd plural)"
+        "This document will expire in %d months. (3rd plural)",
+        "This document will expire in %d months. (4th plural)",
+        "This document will expire in %d months. (5th plural)"
     ],
     "Please enter the password for this paste:": "Please enter the password for this paste:",
     "Could not decrypt data (Wrong key?)": "Could not decrypt data (Wrong key?)",

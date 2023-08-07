@@ -7,7 +7,7 @@
  * @link      https://github.com/PrivateBin/PrivateBin
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
- * @version   1.5.1
+ * @version   1.5.2
  */
 
 namespace PrivateBin\Data;
@@ -229,11 +229,10 @@ class Filesystem extends AbstractData
 
                     // Store in array
                     $key            = $this->getOpenSlot(
-                        $comments, (
-                            (int) array_key_exists('created', $comment['meta']) ?
-                            $comment['meta']['created'] : // v2 comments
-                            $comment['meta']['postdate'] // v1 comments
-                        )
+                        $comments,
+                        (int) array_key_exists('created', $comment['meta']) ?
+                        $comment['meta']['created'] : // v2 comments
+                        $comment['meta']['postdate']  // v1 comments
                     );
                     $comments[$key] = $comment;
                 }

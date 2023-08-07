@@ -11,6 +11,8 @@
         "Palun oota %d sekund iga postituse vahel.",
         "Palun oota %d sekundit iga postituse vahel.",
         "Palun oota %d sekundit iga postituse vahel.",
+        "Palun oota %d sekundit iga postituse vahel.",
+        "Palun oota %d sekundit iga postituse vahel.",
         "Palun oota %d sekundit iga postituse vahel."
     ],
     "Paste is limited to %s of encrypted data.": "Kleepe limiit on %s krüpteeritud andmeid.",
@@ -38,10 +40,14 @@
         "%d sekund",
         "%d sekundit",
         "%d sekundit",
+        "%d sekundit",
+        "%d sekundit",
         "%d sekundit"
     ],
     "%d minutes": [
         "%d minut",
+        "%d minutit",
+        "%d minutit",
         "%d minutit",
         "%d minutit",
         "%d minutit"
@@ -50,10 +56,14 @@
         "%d tund",
         "%d tundi",
         "%d tundi",
+        "%d tundi",
+        "%d tundi",
         "%d tundi"
     ],
     "%d days": [
         "%d päev",
+        "%d päeva",
+        "%d päeva",
         "%d päeva",
         "%d päeva",
         "%d päeva"
@@ -62,16 +72,22 @@
         "%d nädal",
         "%d nädalat",
         "%d nädalat",
+        "%d nädalat",
+        "%d nädalat",
         "%d nädalat"
     ],
     "%d months": [
         "%d kuu",
         "%d kuud",
         "%d kuud",
+        "%d kuud",
+        "%d kuud",
         "%d kuud"
     ],
     "%d years": [
         "%d aasta",
+        "%d aastat",
+        "%d aastat",
         "%d aastat",
         "%d aastat",
         "%d aastat"
@@ -82,9 +98,13 @@
         "See dokument aegub %d sekundi pärast.",
         "See dokument aegub %d sekundi pärast.",
         "See dokument aegub %d sekundi pärast.",
+        "See dokument aegub %d sekundi pärast.",
+        "See dokument aegub %d sekundi pärast.",
         "See dokument aegub %d sekundi pärast."
     ],
     "This document will expire in %d minutes.": [
+        "See dokument aegub %d minuti pärast.",
+        "See dokument aegub %d minuti pärast.",
         "See dokument aegub %d minuti pärast.",
         "See dokument aegub %d minuti pärast.",
         "See dokument aegub %d minuti pärast.",
@@ -94,15 +114,21 @@
         "See dokument aegub %d tunni pärast.",
         "See dokument aegub %d tunni pärast.",
         "See dokument aegub %d tunni pärast.",
+        "See dokument aegub %d tunni pärast.",
+        "See dokument aegub %d tunni pärast.",
         "See dokument aegub %d tunni pärast."
     ],
     "This document will expire in %d days.": [
         "See dokument aegub %d päeva pärast.",
         "See dokument aegub %d päeva pärast.",
         "See dokument aegub %d päeva pärast.",
+        "See dokument aegub %d päeva pärast.",
+        "See dokument aegub %d päeva pärast.",
         "See dokument aegub %d päeva pärast."
     ],
     "This document will expire in %d months.": [
+        "See dokument aegub %d kuu pärast.",
+        "See dokument aegub %d kuu pärast.",
         "See dokument aegub %d kuu pärast.",
         "See dokument aegub %d kuu pärast.",
         "See dokument aegub %d kuu pärast.",

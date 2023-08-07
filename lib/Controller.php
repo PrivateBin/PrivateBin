@@ -7,7 +7,7 @@
  * @link      https://github.com/PrivateBin/PrivateBin
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
- * @version   1.5.1
+ * @version   1.5.2
  */
 
 namespace PrivateBin;
@@ -28,14 +28,14 @@ class Controller
      *
      * @const string
      */
-    const VERSION = '1.5.1';
+    const VERSION = '1.5.2';
 
     /**
      * minimal required PHP version
      *
      * @const string
      */
-    const MIN_PHP_VERSION = '5.6.0';
+    const MIN_PHP_VERSION = '7.3.0';
 
     /**
      * show the same error message if the paste expired or does not exist

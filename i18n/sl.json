@@ -11,6 +11,8 @@
         "Prosim počakaj vsaj %d sekundo pred vsako naslednjo objavo.",
         "Prosim počakaj vsaj %d sekundi pred vsako naslednjo objavo.",
         "Prosim počakaj vsaj %d sekunde pred vsako naslednjo objavo.",
+        "Prosim počakaj vsaj %d sekund pred vsako naslednjo objavo.",
+        "Prosim počakaj vsaj %d sekund pred vsako naslednjo objavo.",
         "Prosim počakaj vsaj %d sekund pred vsako naslednjo objavo."
     ],
     "Paste is limited to %s of encrypted data.": "Velikost prilepka je omejena na %s zakodiranih podatkov.",
@@ -38,42 +40,56 @@
         "%d sekunda",
         "%d sekundi",
         "%d sekunde",
+        "%d sekund",
+        "%d sekund",
         "%d sekund"
     ],
     "%d minutes": [
         "%d minuta",
         "%d minuti",
         "%d minute",
+        "%d minut",
+        "%d minut",
         "%d minut"
     ],
     "%d hours": [
         "%d ura",
         "%d uri",
         "%d ure",
+        "%d ur",
+        "%d ur",
         "%d ur"
     ],
     "%d days": [
         "%d dan",
         "%d dneva",
         "%d dnevi",
+        "%d dni",
+        "%d dni",
         "%d dni"
     ],
     "%d weeks": [
         "%d teden",
         "%d tedna",
         "%d tedni",
+        "%d tednov",
+        "%d tednov",
         "%d tednov"
     ],
     "%d months": [
         "%d mesec",
         "%d meseca",
         "%d meseci",
+        "%d mesecev",
+        "%d mesecev",
         "%d mesecev"
     ],
     "%d years": [
         "%d leto",
         "%d leti",
         "%d leta",
+        "%d let",
+        "%d let",
         "%d let"
     ],
     "Never": "Nikoli",
@@ -82,22 +98,30 @@
         "Ta dokument bo potekel čez %d sekundo.",
         "Ta dokument bo potekel čez %d sekundi.",
         "Ta dokument bo potekel čez %d sekunde.",
+        "Ta dokument bo potekel čez %d sekund.",
+        "Ta dokument bo potekel čez %d sekund.",
         "Ta dokument bo potekel čez %d sekund."
     ],
     "This document will expire in %d minutes.": [
         "Ta dokument bo potekel čez %d minuto.",
         "Ta dokument bo potekel čez %d minuti.",
         "Ta dokument bo potekel čez %d minute.",
+        "Ta dokument bo potekel čez %d minut.",
+        "Ta dokument bo potekel čez %d minut.",
         "Ta dokument bo potekel čez %d minut."
     ],
     "This document will expire in %d hours.": [
         "Ta dokument bo potekel čez %d uro.",
         "Ta dokument bo potekel čez %d uri.",
         "Ta dokument bo potekel čez %d ure.",
+        "Ta dokument bo potekel čez %d ur.",
+        "Ta dokument bo potekel čez %d ur.",
         "Ta dokument bo potekel čez %d ur."
     ],
     "This document will expire in %d days.": [
         "Ta dokument bo potekel čez %d dan.",
+        "Ta dokument bo potekel čez %d dni.",
+        "Ta dokument bo potekel čez %d dni.",
         "Ta dokument bo potekel čez %d dni.",
         "Ta dokument bo potekel čez %d dni.",
         "Ta dokument bo potekel čez %d dni."
@@ -106,6 +130,8 @@
         "Ta dokument bo potekel čez %d mesec.",
         "Ta dokument bo potekel čez %d meseca.",
         "Ta dokument bo potekel čez %d mesece.",
+        "Ta dokument bo potekel čez %d mesecev.",
+        "Ta dokument bo potekel čez %d mesecev.",
         "Ta dokument bo potekel čez %d mesecev."
     ],
     "Please enter the password for this paste:": "Prosim vnesi geslo tega prilepka:",

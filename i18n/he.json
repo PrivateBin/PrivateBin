@@ -11,6 +11,8 @@
         "נא להמתין שנייה אחת בין פרסום לפרסום.",
         "נא להמתין %d שניות בין פרסום לפרסום.",
         "נא להמתין %d שניות בין פרסום לפרסום.",
+        "נא להמתין %d שניות בין פרסום לפרסום.",
+        "נא להמתין %d שניות בין פרסום לפרסום.",
         "נא להמתין %d שניות בין פרסום לפרסום."
     ],
     "Paste is limited to %s of encrypted data.": "ההדבקה מוגבלת ל־%s של נתונים מוצפנים.",
@@ -37,11 +39,15 @@
     "%d seconds": [
         "שנייה אחת",
         "%d שניות",
-        "%d שניות (צורת ריבוי 2)",
+        "%d שניות",
+        "%d שניות",
+        "%d שניות",
         "%d שניות"
     ],
     "%d minutes": [
         "דקה אחת",
+        "%d דקות",
+        "%d דקות",
         "%d דקות",
         "%d דקות",
         "%d דקות"
@@ -50,10 +56,14 @@
         "שעה אחת",
         "%d hours (1st plural)",
         "%d hours (2nd plural)",
-        "%d hours (3rd plural)"
+        "%d hours (3rd plural)",
+        "%d hours (4th plural)",
+        "%d hours (5th plural)"
     ],
     "%d days": [
         "יום אחד",
+        "%d ימים",
+        "%d ימים",
         "%d ימים",
         "%d ימים",
         "%d ימים"
@@ -62,16 +72,22 @@
         "שבוע אחד",
         "%d שבועות",
         "%d שבועות",
+        "%d שבועות",
+        "%d שבועות",
         "%d שבועות"
     ],
     "%d months": [
         "חודש אחד",
         "%d חודשים",
         "%d חודשים",
+        "%d חודשים",
+        "%d חודשים",
         "%d חודשים"
     ],
     "%d years": [
         "שנה אחת",
+        "%d שנים",
+        "%d שנים",
         "%d שנים",
         "%d שנים",
         "%d שנים"
@@ -82,31 +98,41 @@
         "This document will expire in %d second. (singular)",
         "This document will expire in %d seconds. (1st plural)",
         "This document will expire in %d seconds. (2nd plural)",
-        "This document will expire in %d seconds. (3rd plural)"
+        "This document will expire in %d seconds. (3rd plural)",
+        "This document will expire in %d seconds. (4th plural)",
+        "This document will expire in %d seconds. (5th plural)"
     ],
     "This document will expire in %d minutes.": [
         "This document will expire in %d minute. (singular)",
         "This document will expire in %d minutes. (1st plural)",
         "This document will expire in %d minutes. (2nd plural)",
-        "This document will expire in %d minutes. (3rd plural)"
+        "This document will expire in %d minutes. (3rd plural)",
+        "This document will expire in %d minutes. (4th plural)",
+        "This document will expire in %d minutes. (5th plural)"
     ],
     "This document will expire in %d hours.": [
         "This document will expire in %d hour. (singular)",
         "This document will expire in %d hours. (1st plural)",
         "This document will expire in %d hours. (2nd plural)",
-        "This document will expire in %d hours. (3rd plural)"
+        "This document will expire in %d hours. (3rd plural)",
+        "This document will expire in %d hours. (4th plural)",
+        "This document will expire in %d hours. (5th plural)"
     ],
     "This document will expire in %d days.": [
         "This document will expire in %d day. (singular)",
         "This document will expire in %d days. (1st plural)",
         "This document will expire in %d days. (2nd plural)",
-        "This document will expire in %d days. (3rd plural)"
+        "This document will expire in %d days. (3rd plural)",
+        "This document will expire in %d days. (4th plural)",
+        "This document will expire in %d days. (5th plural)"
     ],
     "This document will expire in %d months.": [
         "This document will expire in %d month. (singular)",
         "This document will expire in %d months. (1st plural)",
         "This document will expire in %d months. (2nd plural)",
-        "This document will expire in %d months. (3rd plural)"
+        "This document will expire in %d months. (3rd plural)",
+        "This document will expire in %d months. (4th plural)",
+        "This document will expire in %d months. (5th plural)"
     ],
     "Please enter the password for this paste:": "נא למלא את הססמה להדבקה הזו:",
     "Could not decrypt data (Wrong key?)": "לא ניתן לפענח את הנתונים (מפתח שגוי?)",

@@ -9,7 +9,7 @@
  * @link      https://github.com/PrivateBin/PrivateBin
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
- * @version   1.5.1
+ * @version   1.5.2
  */
 
 namespace PrivateBin;
@@ -215,7 +215,7 @@ EOT, PHP_EOL;
             $counters['total'] < 1000 ? 4 : 10
         );
 
-        echo "Total:\t\t\t${counters['total']}", PHP_EOL;
+        echo "Total:\t\t\t{$counters['total']}", PHP_EOL;
         foreach ($ids as $pasteid) {
             $paste = $this->_store->read($pasteid);
             ++$counters['progress'];
@@ -264,15 +264,15 @@ EOT, PHP_EOL;
         }
 
         echo PHP_EOL, <<<EOT
-Expired:\t\t${counters['expired']}
-Burn after reading:\t${counters['burn']}
-Discussions:\t\t${counters['discussion']}
-Plain Text:\t\t${counters['plain']}
-Source Code:\t\t${counters['syntax']}
-Markdown:\t\t${counters['md']}
+Expired:\t\t{$counters['expired']}
+Burn after reading:\t{$counters['burn']}
+Discussions:\t\t{$counters['discussion']}
+Plain Text:\t\t{$counters['plain']}
+Source Code:\t\t{$counters['syntax']}
+Markdown:\t\t{$counters['md']}
 EOT, PHP_EOL;
         if ($counters['unknown'] > 0) {
-            echo "Unknown format:\t\t${counters['unknown']}", PHP_EOL;
+            echo "Unknown format:\t\t{$counters['unknown']}", PHP_EOL;
         }
     }
 

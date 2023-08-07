@@ -11,12 +11,14 @@
         "Alstublieft %d second wachten tussen elk bericht.",
         "Alstublieft %d seconden wachten tussen elk bericht.",
         "Alstublieft %d seconden wachten tussen elk bericht.",
+        "Alstublieft %d seconden wachten tussen elk bericht.",
+        "Alstublieft %d seconden wachten tussen elk bericht.",
         "Alstublieft %d seconden wachten tussen elk bericht."
     ],
     "Paste is limited to %s of encrypted data.": "Paste is beperkt tot %s aan versleutelde gegevens.",
     "Invalid data.": "Ongeldige gegevens.",
     "You are unlucky. Try again.": "Helaas. Probeer het nog eens.",
-    "Error saving comment. Sorry.": "Fout bij het opslaan van het commentaar. Sorry",
+    "Error saving comment. Sorry.": "Fout bij het opslaan van het commentaar. Sorry.",
     "Error saving paste. Sorry.": "Fout bij het opslaan van de paste. Sorry.",
     "Invalid paste ID.": "Ongeldige ID.",
     "Paste is not of burn-after-reading type.": "Paste is geen 'vernietig na lezen' type.",
@@ -37,49 +39,65 @@
     "%d seconds": [
         "%d seconde",
         "%d seconden",
-        "%d seconds (2nd plural)",
-        "%d seconds (3rd plural)"
+        "%d seconden",
+        "%d seconden",
+        "%d seconden",
+        "%d seconden"
     ],
     "%d minutes": [
         "%d minuut",
         "%d minuten",
-        "%d minutes (2nd plural)",
-        "%d minutes (3rd plural)"
+        "%d minuten",
+        "%d minuten",
+        "%d minuten",
+        "%d minuten"
     ],
     "%d hours": [
         "%d uur",
         "%d uren",
-        "%d hours (2nd plural)",
-        "%d hours (3rd plural)"
+        "%d uren",
+        "%d uren",
+        "%d uren",
+        "%d uren"
     ],
     "%d days": [
         "%d dag",
         "%d dagen",
-        "%d days (2nd plural)",
-        "%d days (3rd plural)"
+        "%d dagen",
+        "%d dagen",
+        "%d dagen",
+        "%d dagen"
     ],
     "%d weeks": [
         "%d week",
         "%d weken",
-        "%d weeks (2nd plural)",
-        "%d weeks (3rd plural)"
+        "%d weken",
+        "%d weken",
+        "%d weken",
+        "%d weken"
     ],
     "%d months": [
         "%d maand",
         "%d maanden",
-        "%d months (2nd plural)",
-        "%d months (3rd plural)"
+        "%d maanden",
+        "%d maanden",
+        "%d maanden",
+        "%d maanden"
     ],
     "%d years": [
         "%d jaar",
         "%d jaren",
-        "%d years (2nd plural)",
-        "%d years (3rd plural)"
+        "%d jaren",
+        "%d jaren",
+        "%d jaren",
+        "%d jaren"
     ],
     "Never": "Nooit",
     "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.": "Opmerking: Dit is een testservice: Gegevens kunnen op elk gegeven moment verwijderd worden. Katten zullen doodgaan als je misbruikt maakt van deze service.",
     "This document will expire in %d seconds.": [
         "Dit document verloopt over %d seconde.",
+        "Dit document verloopt over %d seconden.",
+        "Dit document verloopt over %d seconden.",
         "Dit document verloopt over %d seconden.",
         "Dit document verloopt over %d seconden.",
         "Dit document verloopt over %d seconden."
@@ -88,10 +106,14 @@
         "Dit document verloopt over %d minuut.",
         "Dit document verloopt over %d minuten.",
         "Dit document verloopt over %d minuten.",
+        "Dit document verloopt over %d minuten.",
+        "Dit document verloopt over %d minuten.",
         "Dit document verloopt over %d minuten."
     ],
     "This document will expire in %d hours.": [
         "Dit document verloopt over %d uur.",
+        "Dit document verloopt over %d uren.",
+        "Dit document verloopt over %d uren.",
         "Dit document verloopt over %d uren.",
         "Dit document verloopt over %d uren.",
         "Dit document verloopt over %d uren."
@@ -100,10 +122,14 @@
         "Dit document verloopt over %d dag.",
         "Dit document verloopt over %d dagen.",
         "Dit document verloopt over %d dagen.",
+        "Dit document verloopt over %d dagen.",
+        "Dit document verloopt over %d dagen.",
         "Dit document verloopt over %d dagen."
     ],
     "This document will expire in %d months.": [
         "Dit document verloopt over %d maand.",
+        "Dit document verloopt over %d maanden.",
+        "Dit document verloopt over %d maanden.",
         "Dit document verloopt over %d maanden.",
         "Dit document verloopt over %d maanden.",
         "Dit document verloopt over %d maanden."
@@ -162,7 +188,7 @@
     "Loading…": "Laden…",
     "Decrypting paste…": "Paste decoderen…",
     "Preparing new paste…": "Nieuwe paste voorbereiden…",
-    "In case this message never disappears please have a look at <a href=\"%s\">this FAQ for information to troubleshoot</a>.": "In het geval dat dit bericht nooit verdwijnt, kijkt dan eens naar <a href=\"%s\"> veelgestelde vragen voor informatie over het oplossen van problemen </a>.",
+    "In case this message never disappears please have a look at <a href=\"%s\">this FAQ for information to troubleshoot</a>.": "In het geval dat dit bericht nooit verdwijnt, kijkt dan eens naar <a href=\"%s\"> veelgestelde vragen voor informatie over het oplossen van problemen</a>.",
     "+++ no paste text +++": "+++ geen paste tekst +++",
     "Could not get paste data: %s": "Kon geen paste data verkrijgen: %s",
     "QR code": "QR-code",

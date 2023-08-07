@@ -7,7 +7,7 @@
  * @link      https://github.com/PrivateBin/PrivateBin
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
- * @version   1.5.1
+ * @version   1.5.2
  */
 
 namespace PrivateBin;
@@ -225,7 +225,7 @@ class Request
         return array_key_exists('REQUEST_URI', $_SERVER) ?
         htmlspecialchars(
             parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH)
-            ) : '/';
+        ) : '/';
     }
 
     /**

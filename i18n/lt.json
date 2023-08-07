@@ -9,9 +9,11 @@
     "%s requires configuration section [%s] to be present in configuration file.": "%s reikalauja, kad konfigūracijos faile būtų [%s] konfigūracijos sekcija.",
     "Please wait %d seconds between each post.": [
         "Tarp kiekvieno įrašo palaukite %d sekundę.",
-        "Tarp kiekvieno įrašo palaukite %d sekundes.",
+        "Tarp kiekvieno įrašo palaukite %d sekundės.",
         "Tarp kiekvieno įrašo palaukite %d sekundžių.",
-        "Tarp kiekvieno įrašo palaukite %d sekundę."
+        "Tarp kiekvieno įrašo palaukite %d sekundžių.",
+        "Tarp kiekvieno įrašo palaukite %d sekundžių.",
+        "Tarp kiekvieno įrašo palaukite %d sekundžių."
     ],
     "Paste is limited to %s of encrypted data.": "Įdėjimas yra apribotas iki %s šifruotų duomenų.",
     "Invalid data.": "Neteisingi duomenys.",
@@ -35,42 +37,56 @@
     "Discussion": "Diskusija",
     "Toggle navigation": "Perjungti naršymą",
     "%d seconds": [
+        "%d sekundę",
         "%d sekundės",
         "%d sekundžių",
         "%d sekundžių",
-        "%d sekundės"
+        "%d sekundžių",
+        "%d sekundžių"
     ],
     "%d minutes": [
         "%d minutės",
         "%d minučių",
         "%d minučių",
-        "%d minutės"
+        "%d minučių",
+        "%d minučių",
+        "%d minučių"
     ],
     "%d hours": [
         "%d valandos",
         "%d valandų",
         "%d valandų",
-        "%d valandos"
+        "%d valandų",
+        "%d valandų",
+        "%d valandų"
     ],
     "%d days": [
         "%d dienos",
         "%d dienų",
         "%d dienų",
-        "%d dienos"
+        "%d dienų",
+        "%d dienų",
+        "%d dienų"
     ],
     "%d weeks": [
         "%d savaitės",
         "%d savaičių",
         "%d savaičių",
-        "%d savaitės"
+        "%d savaičių",
+        "%d savaičių",
+        "%d savaičių"
     ],
     "%d months": [
         "%d mėnesio",
         "%d mėnesių",
         "%d mėnesių",
-        "%d mėnesio"
+        "%d mėnesių",
+        "%d mėnesių",
+        "%d mėnesių"
     ],
     "%d years": [
+        "%d metų",
+        "%d metų",
         "%d metų",
         "%d metų",
         "%d metų",
@@ -82,31 +98,41 @@
         "Šis dokumentas nustos galioti po %d sekundės.",
         "Šis dokumentas nustos galioti po %d sekundžių.",
         "Šis dokumentas nustos galioti po %d sekundžių.",
-        "Šis dokumentas nustos galioti po %d sekundės."
+        "Šis dokumentas nustos galioti po %d sekundžių.",
+        "Šis dokumentas nustos galioti po %d sekundžių.",
+        "Šis dokumentas nustos galioti po %d sekundžių."
     ],
     "This document will expire in %d minutes.": [
         "Šis dokumentas nustos galioti po %d minutės.",
         "Šis dokumentas nustos galioti po %d minučių.",
         "Šis dokumentas nustos galioti po %d minučių.",
-        "Šis dokumentas nustos galioti po %d minutės."
+        "Šis dokumentas nustos galioti po %d minučių.",
+        "Šis dokumentas nustos galioti po %d minučių.",
+        "Šis dokumentas nustos galioti po %d minučių."
     ],
     "This document will expire in %d hours.": [
         "Šis dokumentas nustos galioti po %d valandos.",
         "Šis dokumentas nustos galioti po %d valandų.",
         "Šis dokumentas nustos galioti po %d valandų.",
-        "Šis dokumentas nustos galioti po %d valandos."
+        "Šis dokumentas nustos galioti po %d valandų.",
+        "Šis dokumentas nustos galioti po %d valandų.",
+        "Šis dokumentas nustos galioti po %d valandų."
     ],
     "This document will expire in %d days.": [
         "Šis dokumentas nustos galioti po %d dienos.",
         "Šis dokumentas nustos galioti po %d dienų.",
         "Šis dokumentas nustos galioti po %d dienų.",
-        "Šis dokumentas nustos galioti po %d dienos."
+        "Šis dokumentas nustos galioti po %d dienų.",
+        "Šis dokumentas nustos galioti po %d dienų.",
+        "Šis dokumentas nustos galioti po %d dienų."
     ],
     "This document will expire in %d months.": [
         "Šis dokumentas nustos galioti po %d mėnesio.",
         "Šis dokumentas nustos galioti po %d mėnesių.",
         "Šis dokumentas nustos galioti po %d mėnesių.",
-        "Šis dokumentas nustos galioti po %d mėnesio."
+        "Šis dokumentas nustos galioti po %d mėnesių.",
+        "Šis dokumentas nustos galioti po %d mėnesių.",
+        "Šis dokumentas nustos galioti po %d mėnesių."
     ],
     "Please enter the password for this paste:": "Įveskite šio įdėjimo slaptažodį:",
     "Could not decrypt data (Wrong key?)": "Nepavyko iššifruoti duomenų (Neteisingas raktas?)",

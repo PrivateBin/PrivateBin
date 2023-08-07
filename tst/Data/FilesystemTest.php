@@ -1,8 +1,9 @@
 <?php
 
+use PHPUnit\Framework\TestCase;
 use PrivateBin\Data\Filesystem;
 
-class FilesystemTest extends PHPUnit_Framework_TestCase
+class FilesystemTest extends TestCase
 {
     private $_model;
 
@@ -10,7 +11,7 @@ class FilesystemTest extends PHPUnit_Framework_TestCase
 
     private $_invalidPath;
 
-    public function setUp()
+    public function setUp(): void
     {
         /* Setup Routine */
         $this->_path        = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'privatebin_data';
@@ -24,7 +25,7 @@ class FilesystemTest extends PHPUnit_Framework_TestCase
         }
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         /* Tear Down Routine */
         chmod($this->_invalidPath, 0700);
@@ -162,13 +163,13 @@ class FilesystemTest extends PHPUnit_Framework_TestCase
         $this->_model->purge(10);
         foreach ($ids as $dataid => $storagedir) {
             $this->assertFileExists($storagedir . $dataid . '.php', "paste $dataid exists in new format");
-            $this->assertFileNotExists($storagedir . $dataid, "old format paste $dataid got removed");
+            $this->assertFileDoesNotExist($storagedir . $dataid, "old format paste $dataid got removed");
             $this->assertTrue($this->_model->exists($dataid), "paste $dataid exists");
             $this->assertEquals($this->_model->read($dataid), $paste, "paste $dataid wasn't modified in the conversion");
 
             $storagedir .= $dataid . '.discussion' . DIRECTORY_SEPARATOR;
             $this->assertFileExists($storagedir . $dataid . '.' . $commentid . '.' . $dataid . '.php', "comment of $dataid exists in new format");
-            $this->assertFileNotExists($storagedir . $dataid . '.' . $commentid . '.' . $dataid, "old format comment of $dataid got removed");
+            $this->assertFileDoesNotExist($storagedir . $dataid . '.' . $commentid . '.' . $dataid, "old format comment of $dataid got removed");
             $this->assertTrue($this->_model->existsComment($dataid, $dataid, $commentid), "comment in paste $dataid exists");
             $comment             = $comment;
             $comment['id']       = $commentid;

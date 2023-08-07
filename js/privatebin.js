@@ -6,7 +6,7 @@
  * @see       {@link https://github.com/PrivateBin/PrivateBin}
  * @copyright 2012 Sébastien SAUVAGE ({@link http://sebsauvage.net})
  * @license   {@link https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License}
- * @version   1.5.1
+ * @version   1.5.2
  * @name      PrivateBin
  * @namespace
  */
@@ -627,7 +627,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          * @prop   {string[]}
          * @readonly
          */
-        const supportedLanguages = ['bg', 'ca', 'co', 'cs', 'de', 'el', 'es', 'et', 'fi', 'fr', 'he', 'hu', 'id', 'it', 'jbo', 'lt', 'no', 'nl', 'pl', 'pt', 'oc', 'ru', 'sk', 'sl', 'th', 'tr', 'uk', 'zh'];
+        const supportedLanguages = ['ar', 'bg', 'ca', 'co', 'cs', 'de', 'el', 'es', 'et', 'fi', 'fr', 'he', 'hu', 'id', 'it', 'ja', 'jbo', 'lt', 'no', 'nl', 'pl', 'pt', 'oc', 'ru', 'sk', 'sl', 'th', 'tr', 'uk', 'zh'];
 
         /**
          * built in language
@@ -802,6 +802,8 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         me.getPluralForm = function(n) {
             switch (language)
             {
+                case 'ar':
+                    return n === 0 ? 0 : (n === 1 ? 1 : (n === 2 ? 2 : (n % 100 >= 3 && n % 100 <= 10 ? 3 : (n % 100 >= 11 ? 4 : 5))));
                 case 'cs':
                 case 'sk':
                     return n === 1 ? 0 : (n >= 2 && n <= 4 ? 1 : 2);
@@ -814,6 +816,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 case 'he':
                     return n === 1 ? 0 : (n === 2 ? 1 : ((n < 0 || n > 10) && (n % 10 === 0) ? 2 : 3));
                 case 'id':
+                case 'ja':
                 case 'jbo':
                 case 'th':
                     return 0;
@@ -3649,7 +3652,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         function changeBurnAfterReading()
         {
-            if ($burnAfterReading.is(':checked')) {
+            if (me.getBurnAfterReading()) {
                 $openDiscussionOption.addClass('buttondisabled');
                 $openDiscussion.prop('checked', false);
 
@@ -3669,7 +3672,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         function changeOpenDiscussion()
         {
-            if ($openDiscussion.is(':checked')) {
+            if (me.getOpenDiscussion()) {
                 $burnAfterReadingOption.addClass('buttondisabled');
                 $burnAfterReading.prop('checked', false);
 
@@ -4319,7 +4322,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         me.getBurnAfterReading = function()
         {
-            return $burnAfterReading.is(':checked');
+            return $burnAfterReading.prop('checked');
         };
 
         /**
@@ -4331,7 +4334,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         me.getOpenDiscussion = function()
         {
-            return $openDiscussion.is(':checked');
+            return $openDiscussion.prop('checked');
         };
 
         /**

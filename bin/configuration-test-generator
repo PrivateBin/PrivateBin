@@ -410,13 +410,14 @@ class ConfigurationTestGenerator
  * DO NOT EDIT: This file is generated automatically using configGenerator.php
  */
 
+use PHPUnit\Framework\TestCase;
 use PrivateBin\Controller;
 use PrivateBin\Data\Filesystem;
 use PrivateBin\Persistence\ServerSalt;
 use PrivateBin\Persistence\TrafficLimiter;
 use PrivateBin\Request;
 
-class ConfigurationCombinationsTest extends PHPUnit_Framework_TestCase
+class ConfigurationCombinationsTest extends TestCase
 {
     private $_conf;
 
@@ -424,7 +425,7 @@ class ConfigurationCombinationsTest extends PHPUnit_Framework_TestCase
 
     private $_path;
 
-    public function setUp()
+    public function setUp(): void
     {
         /* Setup Routine */
         Helper::confBackup();
@@ -435,7 +436,7 @@ class ConfigurationCombinationsTest extends PHPUnit_Framework_TestCase
         $this->reset();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         /* Tear Down Routine */
         unlink(CONF);
@@ -564,7 +565,7 @@ EOT;
             case 'Delete':
                 $code .= <<<'EOT'
 
-        $this->assertRegExp(
+        $this->assertMatchesRegularExpression(
             '#<div[^>]*id="status"[^>]*>.*Paste was properly deleted[^<]*</div>#s',
             $content,
             'outputs deleted status correctly'

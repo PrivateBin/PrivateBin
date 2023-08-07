@@ -11,6 +11,8 @@
         "Kérlek várj %d másodpercet két beküldés között.",
         "Kérlek várj %d másodpercet két beküldés között.",
         "Kérlek várj %d másodpercet két beküldés között.",
+        "Kérlek várj %d másodpercet két beküldés között.",
+        "Kérlek várj %d másodpercet két beküldés között.",
         "Kérlek várj %d másodpercet két beküldés között."
     ],
     "Paste is limited to %s of encrypted data.": "A bejegyzés maximális hossza: %s",
@@ -37,48 +39,64 @@
     "%d seconds": [
         "%d másodperc",
         "%d másodperc",
-        "%d seconds (2nd plural)",
-        "%d seconds (3rd plural)"
+        "%d másodperc",
+        "%d másodperc",
+        "%d másodperc",
+        "%d másodperc"
     ],
     "%d minutes": [
         "%d perc",
         "%d perc",
-        "%d minutes (2nd plural)",
-        "%d minutes (3rd plural)"
+        "%d perc",
+        "%d perc",
+        "%d perc",
+        "%d perc"
     ],
     "%d hours": [
         "%d óra",
         "%d óra",
-        "%d hours (2nd plural)",
-        "%d hours (3rd plural)"
+        "%d óra",
+        "%d óra",
+        "%d óra",
+        "%d óra"
     ],
     "%d days": [
         "%d nap",
         "%d nap",
-        "%d days (2nd plural)",
-        "%d days (3rd plural)"
+        "%d nap",
+        "%d nap",
+        "%d nap",
+        "%d nap"
     ],
     "%d weeks": [
         "%d hét",
         "%d hét",
-        "%d weeks (2nd plural)",
-        "%d weeks (3rd plural)"
+        "%d hét",
+        "%d hét",
+        "%d hét",
+        "%d hét"
     ],
     "%d months": [
         "%d hónap",
         "%d hónap",
-        "%d months (2nd plural)",
-        "%d months (3rd plural)"
+        "%d hónap",
+        "%d hónap",
+        "%d hónap",
+        "%d hónap"
     ],
     "%d years": [
         "%d év",
         "%d év",
-        "%d years (2nd plural)",
-        "%d years (3rd plural)"
+        "%d év",
+        "%d év",
+        "%d év",
+        "%d év"
     ],
     "Never": "Soha",
     "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.": "Megjegyzés: ez egy teszt szolgáltatás, az adatok bármikor törlődhetnek. Ha visszaélsz vele, kiscicák bánhatják! :)",
     "This document will expire in %d seconds.": [
+        "Ez a bejegyzés %d másodperc múlva megsemmisül.",
+        "Ez a bejegyzés %d másodperc múlva megsemmisül.",
         "Ez a bejegyzés %d másodperc múlva megsemmisül.",
         "Ez a bejegyzés %d másodperc múlva megsemmisül.",
         "Ez a bejegyzés %d másodperc múlva megsemmisül.",
@@ -88,9 +106,13 @@
         "Ez a bejegyzés %d perc múlva megsemmisül.",
         "Ez a bejegyzés %d perc múlva megsemmisül.",
         "Ez a bejegyzés %d perc múlva megsemmisül.",
+        "Ez a bejegyzés %d perc múlva megsemmisül.",
+        "Ez a bejegyzés %d perc múlva megsemmisül.",
         "Ez a bejegyzés %d perc múlva megsemmisül."
     ],
     "This document will expire in %d hours.": [
+        "Ez a bejegyzés %d óra múlva megsemmisül.",
+        "Ez a bejegyzés %d óra múlva megsemmisül.",
         "Ez a bejegyzés %d óra múlva megsemmisül.",
         "Ez a bejegyzés %d óra múlva megsemmisül.",
         "Ez a bejegyzés %d óra múlva megsemmisül.",
@@ -100,9 +122,13 @@
         "Ez a bejegyzés %d nap múlva megsemmisül.",
         "Ez a bejegyzés %d nap múlva megsemmisül.",
         "Ez a bejegyzés %d nap múlva megsemmisül.",
+        "Ez a bejegyzés %d nap múlva megsemmisül.",
+        "Ez a bejegyzés %d nap múlva megsemmisül.",
         "Ez a bejegyzés %d nap múlva megsemmisül."
     ],
     "This document will expire in %d months.": [
+        "Ez a bejegyzés %d hónap múlva megsemmisül.",
+        "Ez a bejegyzés %d hónap múlva megsemmisül.",
         "Ez a bejegyzés %d hónap múlva megsemmisül.",
         "Ez a bejegyzés %d hónap múlva megsemmisül.",
         "Ez a bejegyzés %d hónap múlva megsemmisül.",

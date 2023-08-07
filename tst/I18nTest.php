@@ -1,12 +1,13 @@
 <?php
 
+use PHPUnit\Framework\TestCase;
 use PrivateBin\I18n;
 
-class I18nTest extends PHPUnit_Framework_TestCase
+class I18nTest extends TestCase
 {
     private $_translations = array();
 
-    public function setUp()
+    public function setUp(): void
     {
         /* Setup Routine */
         $this->_translations = json_decode(
@@ -15,9 +16,9 @@ class I18nTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
-        /* Tear Down Routine */
+        unset($_COOKIE['lang'], $_SERVER['HTTP_ACCEPT_LANGUAGE']);
     }
 
     public function testTranslationFallback()

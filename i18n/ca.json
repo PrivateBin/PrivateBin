@@ -10,8 +10,10 @@
     "Please wait %d seconds between each post.": [
         "Espereu %d segon entre cada entrada.",
         "Espereu %d segons entre cada entrada.",
-        "Please wait %d seconds between each post. (2nd plural)",
-        "Please wait %d seconds between each post. (3rd plural)"
+        "Espereu %d segons entre cada entrada.",
+        "Espereu %d segons entre cada entrada.",
+        "Espereu %d segons entre cada entrada.",
+        "Espereu %d segons entre cada entrada."
     ],
     "Paste is limited to %s of encrypted data.": "L'enganxat està limitat a %s de dades encriptades.",
     "Invalid data.": "Dades no vàlides.",
@@ -37,49 +39,65 @@
     "%d seconds": [
         "%d segon",
         "%d segons",
-        "%d seconds (2nd plural)",
-        "%d seconds (3rd plural)"
+        "%d segons",
+        "%d segons",
+        "%d segons",
+        "%d segons"
     ],
     "%d minutes": [
         "%d minut",
         "%d minuts",
         "%d minutes (2nd plural)",
-        "%d minutes (3rd plural)"
+        "%d minutes (3rd plural)",
+        "%d minuts",
+        "%d minuts"
     ],
     "%d hours": [
         "%d hora",
         "%d hores",
         "%d hours (2nd plural)",
-        "%d hours (3rd plural)"
+        "%d hours (3rd plural)",
+        "%d hores",
+        "%d hores"
     ],
     "%d days": [
         "%d dia",
         "%d dies",
-        "%d days (2nd plural)",
-        "%d days (3rd plural)"
+        "%d dies",
+        "%d dies",
+        "%d dies",
+        "%d dies"
     ],
     "%d weeks": [
         "%d setmana",
         "%d setmanes",
-        "%d weeks (2nd plural)",
-        "%d weeks (3rd plural)"
+        "%d setmanes",
+        "%d setmanes",
+        "%d setmanes",
+        "%d setmanes"
     ],
     "%d months": [
         "%d mes",
         "%d mesos",
-        "%d months (2nd plural)",
-        "%d months (3rd plural)"
+        "%d mesos",
+        "%d mesos",
+        "%d mesos",
+        "%d mesos"
     ],
     "%d years": [
         "%d any",
         "%d anys",
-        "%d years (2nd plural)",
-        "%d years (3rd plural)"
+        "%d anys",
+        "%d anys",
+        "%d anys",
+        "%d anys"
     ],
     "Never": "Mai",
     "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.": "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.",
     "This document will expire in %d seconds.": [
         "Aquest document caducarà d'aquí %d segon.",
+        "Aquest document caducarà d'aquí %d segons.",
+        "Aquest document caducarà d'aquí %d segons.",
         "Aquest document caducarà d'aquí %d segons.",
         "Aquest document caducarà d'aquí %d segons.",
         "Aquest document caducarà d'aquí %d segons."
@@ -88,10 +106,14 @@
         "Aquest document caducarà d'aquí %d minut.",
         "Aquest document caducarà d'aquí %d minuts.",
         "Aquest document caducarà d'aquí %d minuts.",
+        "Aquest document caducarà d'aquí %d minuts.",
+        "Aquest document caducarà d'aquí %d minuts.",
         "Aquest document caducarà d'aquí %d minuts."
     ],
     "This document will expire in %d hours.": [
         "Aquest document caducarà d'aquí %d hora.",
+        "Aquest document caducarà d'aquí %d hores.",
+        "Aquest document caducarà d'aquí %d hores.",
         "Aquest document caducarà d'aquí %d hores.",
         "Aquest document caducarà d'aquí %d hores.",
         "Aquest document caducarà d'aquí %d hores."
@@ -100,10 +122,14 @@
         "Aquest document caducarà d'aquí %d dia.",
         "Aquest document caducarà d'aquí %d dies.",
         "Aquest document caducarà d'aquí %d dies.",
+        "Aquest document caducarà d'aquí %d dies.",
+        "Aquest document caducarà d'aquí %d dies.",
         "Aquest document caducarà d'aquí %d dies."
     ],
     "This document will expire in %d months.": [
         "Aquest document caducarà d'aquí %d mes.",
+        "Aquest document caducarà d'aquí %d mesos.",
+        "Aquest document caducarà d'aquí %d mesos.",
         "Aquest document caducarà d'aquí %d mesos.",
         "Aquest document caducarà d'aquí %d mesos.",
         "Aquest document caducarà d'aquí %d mesos."
