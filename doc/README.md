@@ -1,60 +1,37 @@
-Generating PHP documentation
-============================
+# PrivateBin Documentation
 
-In order to generate the documentation, you will need to install the following
-packages and its dependencies:
-* phpdoc
-* graphviz
+## [Frequently Asked Questions](https://github.com/PrivateBin/PrivateBin/wiki/FAQ)
 
-Details about
-[installing phpDocumentor](https://phpdoc.org/docs/latest/getting-started/installing.html)
-can be found in that projects documentation.
+Please have a look at these questions *before* opening an issue in this repo.
 
-Example for Debian and Ubuntu:
-```console
-$ sudo apt install php-pear graphviz
-$ sudo pear channel-discover pear.phpdoc.org
-$ sudo pear install phpdoc/phpDocumentor
-```
+## [Installation guide](https://github.com/PrivateBin/PrivateBin/blob/master/doc/Installation.md#installation)
 
-To generate the documentation, change into the main directory and run phpdoc:
-```console
-$ cd PrivateBin
-$ phpdoc --visibility public,protected,private -t doc/phpdoc -d lib/
-```
+Minimal requirements, hardening and securing your installation and initial
+configuration.
 
-**Note:** When used with PHP 7, the prerelease of phpDocumentator 2.9 needs to be
-manually installed by downloading it from
-[GitHub](https://github.com/phpDocumentor/phpDocumentor2/releases/download/v2.9.0/phpDocumentor.phar)
-and then manually moving it to e.g. `/usr/local/bin` and making it executable.
+## [Configuration guide](https://github.com/PrivateBin/PrivateBin/wiki/Configuration)
 
-Generating JS documentation
-============================
+Detailed guide on each configuration option and their effects.
 
-In order to generate the documentation, you will need to install the following
-packages and its dependencies:
-* npm
+## [Templates](https://github.com/PrivateBin/PrivateBin/wiki/Templates)
 
-Then you can use the node package manager to install the latest stable release
-of jsdoc globally:
+How to change an existing template or create your own, as well as an overview of
+the currently included templates.
 
-```console
-$ npm install -g jsdoc
-```
+## [Translation guide](https://github.com/PrivateBin/PrivateBin/wiki/Translation)
 
-Example for Debian and Ubuntu, including steps to allow current user to install
-node modules globally:
-```console
-$ sudo apt install npm
-$ sudo mkdir /usr/local/lib/node_modules
-$ sudo chown -R $(whoami) $(npm config get prefix)/{lib/node_modules,bin,share}
-$ npm install -g jsdoc
-$ ln -s /usr/bin/nodejs /usr/local/bin/node
-```
+How to help translate PrivateBin and technical background on it's implementation.
 
-To generate the documentation, change into the main directory and run phpdoc:
-```console
-$ cd PrivateBin
-$ jsdoc -p -d doc/jsdoc js/privatebin.js js/legacy.js
-```
+## [Developer guide](https://github.com/PrivateBin/PrivateBin/wiki/Development)
 
+Know how for participating in PrivateBins development.
+
+### [Generating Source Code Documentation](https://github.com/PrivateBin/PrivateBin/blob/master/doc/Generating%20Source%20Code%20Documentation.md#generating-source-code-documentation)
+
+How to generate the source code API documentation, as found on the project
+website for [PHP](https://privatebin.info/codedoc/) and [JS](https://privatebin.info/jsdoc/)
+
+### [Running Unit Tests](https://github.com/PrivateBin/PrivateBin/blob/master/tst/README.md#running-all-unit-tests)
+
+How to run the PHP & JS unit tests, including a brief introduction to property
+based unit testing.

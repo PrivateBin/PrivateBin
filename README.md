@@ -96,7 +96,7 @@ file](https://github.com/PrivateBin/PrivateBin/wiki/Configuration):
 
 * [FAQ](https://github.com/PrivateBin/PrivateBin/wiki/FAQ)
 
-* [Installation guide](https://github.com/PrivateBin/PrivateBin/blob/master/INSTALL.md#installation)
+* [Installation guide](https://github.com/PrivateBin/PrivateBin/blob/master/doc/Installation.md#installation)
 
 * [Configuration guide](https://github.com/PrivateBin/PrivateBin/wiki/Configuration)
 

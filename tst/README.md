@@ -1,5 +1,4 @@
-Running all unit tests
-======================
+# Running All Unit Tests
 
 Since it is non-trivial to setup all dependencies for our unit testing suite,
 we provide a docker image that bundles all of them into one container, both
@@ -34,8 +33,7 @@ well as the integrated unit testing utilities. See our [docker wiki
 page](https://github.com/PrivateBin/PrivateBin/wiki/Docker#janitor-image-with-cloud9-and-theia-webide-janitortechnologyprivatebin)
 for further details on this.
 
-Running PHP unit tests
-======================
+## Running PHP Unit Tests
 
 In order to run these tests, you will need to install the following packages
 and their dependencies:
@@ -75,8 +73,7 @@ $ phpunit ConfigurationCombinationsTest.php
 Note that it can take an hour or longer to run the several thousand tests.
 
 
-Running JavaScript unit tests
-=============================
+## Running JavaScript Unit Tests
 
 In order to run these tests, you will need to install the following packages
 and its dependencies:
@@ -112,8 +109,7 @@ $ cd PrivateBin/js
 $ nyc mocha
 ```
 
-Property based unit testing
----------------------------
+### Property Based Unit Testing
 
 In the JavaScript unit tests we use the JSVerify library to leverage property
 based unit testing. Instead of artificially creating specific test cases to
@@ -154,4 +150,3 @@ with the same RNG state as follows:
 ```console
 $ nyc mocha test --jsverifyRngState 88caf85079d32e416b
 ```
-
