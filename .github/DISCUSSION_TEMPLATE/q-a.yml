@@ -3,17 +3,19 @@ labels: ["question/support"]
 body:
   - type: markdown
     attributes:
-      value: |
-        Describe the problem/question: A clear and concise description of what the problem/issue or question is.
+      label: Describe the problem/question
+      description: |
+        A clear and concise description of what the problem/issue or question is.
   - type: checkboxes
     attributes:
       label: Please tick this to confirm
       options:
         - label: Yes, I have read [the FAQ](https://github.com/PrivateBin/PrivateBin/wiki/FAQ) and I found no solution/answer there.
   - type: markdown
+    id: what_you_did
     attributes:
-      value: |
-        ## What you did
+      label: What you did
+      description: |
         Tell us how to reproduce the problem.
 
         1.
@@ -51,12 +53,12 @@ body:
     id: privatebin_version
     attributes:
       label: PrivateBin version
-  - type: radio
+  - type: dropdown
     id: reproduce_issue
     attributes:
       label: I can reproduce this issue on [https://privatebin.net](https://privatebin.net)
       options:
-        - label: Yes
-          value: Yes
         - label: No
           value: No
+        - label: Yes
+          value: Yes
