@@ -1,9 +1,148 @@
 # PrivateBin version history
 
-  * **next (not yet released)**
-    * ADDED: Translations for Spanish and Occitan
+  * **1.6.0 (not yet released)**
+    * ADDED: Translations for Japanese & Arabic
+    * CHANGED: Minimum required PHP version is 7.3, due to upgrading PHPunit (#707)
+  * **1.5.2 (2023-07-09)**
+    * ADDED: Allow AWS SDK to use default credential provider chain for S3Storage (#1070)
+    * CHANGED: Upgrading libraries to: DOMpurify 3.0.4 & jQuery 3.7.0
+    * FIXED: Addressed PHP 8.2 deprecation warnings (#1092)
+    * FIXED: Expose types JSON-LD incl. configured expiration dates (#1045)
+  * **1.5.1 (2022-12-24)**
+    * ADDED: script for administrative tasks: deleting pastes (#274), removing empty directories (#277), purging expired pastes (#276) & statistics (#319)
+    * FIXED: Revert Filesystem purge to limited and randomized lookup (#1030)
+    * FIXED: Catch JSON decode errors when invalid data gets sent to the API (#1030)
+    * FIXED: Support sorting v1 format in mixed version comments in Filesystem backend (#1030)
+  * **1.5 (2022-12-11)**
+    * ADDED: script for data storage backend migrations (#1012)
+    * ADDED: Translations for Turkish, Slovak, Greek and Thai
+    * ADDED: S3 Storage backend (#994)
+    * ADDED: Jdenticons as an option for comment icons (#793)
+    * CHANGED: Avoid `SUPER` privilege for setting the `sql_mode` for MariaDB/MySQL (#919)
+    * CHANGED: Upgrading libraries to: DOMpurify 2.4.6, jQuery 3.6.1, Showdown 2.1.0 & zlib 1.2.13
+    * FIXED: Revert to CREATE INDEX without IF NOT EXISTS clauses, to support MySQL (#943)
+    * FIXED: Apply table prefix to indexes as well, to support multiple instances sharing a single database (#943)
+    * FIXED: YOURLS integration via new proxy, storing signature in configuration (#725)
+  * **1.4 (2022-04-09)**
+    * ADDED: Translations for Corsican, Estonian, Finnish and Lojban
+    * ADDED: new HTTP headers improving security (#765)
+    * ADDED: Download button for paste text (#774)
+    * ADDED: Opt-out of federated learning of cohorts (FLoC) (#776)
+    * ADDED: Configuration option to exempt IPs from the rate-limiter (#787)
+    * ADDED: Google Cloud Storage backend support (#795)
+    * ADDED: Oracle database support (#868)
+    * ADDED: Configuration option to limit paste creation and commenting to certain IPs (#883)
+    * ADDED: Set CSP also as meta tag, to deal with misconfigured webservers mangling the HTTP header
+    * ADDED: Sanitize SVG preview, preventing script execution in instance context
+    * CHANGED: Language selection cookie only transmitted over HTTPS (#472)
+    * CHANGED: Upgrading libraries to: base-x 4.0.0, bootstrap 3.4.1 (JS), DOMpurify 2.3.6, ip-lib 1.18.0, jQuery 3.6.0, random_compat 2.0.21, Showdown 2.0.3 & zlib 1.2.12
+    * CHANGED: Removed automatic `.ini` configuration file migration (#808)
+    * CHANGED: Removed configurable `dir` for `traffic` & `purge` limiters (#419)
+    * CHANGED: Server salt, traffic and purge limiter now stored in the storage backend (#419)
+    * CHANGED: Drop support for attachment download in IE
+    * FIXED: Error when attachments are disabled, but paste with attachment gets displayed
+  * **1.3.5 (2021-04-05)**
+    * ADDED: Translations for Hebrew, Lithuanian, Indonesian and Catalan
+    * ADDED: Make the project info configurable (#681)
+    * CHANGED: Upgrading libraries to: DOMpurify 2.2.7, kjua 0.9.0 & random_compat 2.0.18
+    * CHANGED: Open all links in new window (#630)
+    * FIXED: PDF display in Firefox (#630)
+    * FIXED: Allow pasting into password input dialog (#630)
+    * FIXED: Display of expiration date in email (#630)
+    * FIXED: Allow display of durations in weeks (#630)
+    * FIXED: Avoid exposing burn-after-reading messages from cache (#630)
+    * FIXED: Only display the dropzone when it should (#630)
+    * FIXED: Detect delete token properly (#630)
+    * FIXED: Sanitize output from `Helper.urls2links()` (#630)
+    * FIXED: Avoid recreation of existing pasteurl element when calling URL shortener (#630)
+    * FIXED: Downloads in Chrome >= 83 (#634)
+    * FIXED: Display of empty files (#663)
+    * FIXED: Improve OpenGraph attributes (#651)
+    * FIXED: Reset to configured burn-after-reading, discussion and expiration settings (#682)
+    * FIXED: Italic segment of project information (#756)
+  * **1.3.4 (2020-03-22)**
+    * CHANGED: Minimum required PHP version is 5.6, due to a change in the identicon library and to use php's native hash_equals()
+    * CHANGED: Upgrading libraries to: identicon 2.0.0
+    * FIXED: Support custom expiration options in email function (#586)
+    * FIXED: Regression with encoding of HTML entities (#588)
+    * FIXED: Unable to paste password on paste with attachment (#565 & #595)
+  * **1.3.3 (2020-02-16)**
+    * CHANGED: Upgrading libraries to: DOMpurify 2.0.8
+    * CHANGED: Several translations got updated with missing messages
+    * CHANGED: Introduce HTML entity encoding on server side (#581)
+    * FIXED: HTML entity double encoding issues introduced in 1.3.2 (#560)
+  * **1.2.3 (2020-02-16)**
+    * CHANGED: Upgrading libraries to: DOMpurify 2.0.8
+    * CHANGED: Introduce HTML entity encoding on server side (#581)
+    * FIXED: HTML entity double encoding issues introduced in 1.3.2 (#560)
+  * **1.3.2 (2020-01-11)**
+    * ADDED: Translation for Ukrainian (#533)
+    * ADDED: Option to send a mail with the link, when creating a paste (#398)
+    * ADDED: Add support for CONFIG_PATH environment variable (#552)
+    * CHANGED: Upgrading libraries to: base-x 3.0.7, DOMpurify 2.0.7 & Showdown 1.9.1
+    * FIXED: HTML injection via unescaped attachment filename (#554)
+    * FIXED: Password disabling option (#527)
+  * **1.2.2 (2020-01-11)**
+    * CHANGED: Upgrading libraries to: bootstrap 3.4.1 (CSS), DOMpurify 2.0.7, jQuery 3.4.1, kjua 0.6.0, Showdown 1.9.1 & SJCL 1.0.8
+    * FIXED: HTML injection via unescaped attachment filename (#554)
+  * **1.3.1 (2019-09-22)**
+    * ADDED: Translation for Bulgarian (#455)
+    * CHANGED: Improved mobile UI - obscured send button and hard to click shortener button (#477)
+    * CHANGED: Enhanced URL shortener integration (#479)
+    * CHANGED: Improved file upload drag & drop UI (#317)
+    * CHANGED: Increased default size limit from 2 to 10 MiB, switch data from BLOB to MEDIUMBLOB in MySQL (#458)
+    * CHANGED: Upgrading libraries to: DOMpurify 2.0.1
+    * FIXED: Enabling browsers without WASM to create pastes and read uncompressed ones (#454)
+    * FIXED: Cloning related issues (#489, #491, #493, #494)
+    * FIXED: Enable file operation only when editing (#497)
+    * FIXED: Clicking 'New' on a previously submitted paste does not blank address bar (#354)
+    * FIXED: Clear address bar when create new paste from existing paste (#479)
+    * FIXED: Discussion section not hiding when new/clone paste is clicked on (#484)
+    * FIXED: Showdown.js error when posting svg qrcode (#485)
+    * FIXED: Failed to handle the case where user cancelled attachment selection properly (#487)
+    * FIXED: Displaying the appropriate errors in older browsers (#508)
+  * **1.3 (2019-07-09)**
+    * ADDED: Translation for Czech (#424)
+    * ADDED: Threat modeled the application (#177)
+    * ADDED: Made compression configurable (#38)
+    * CHANGED: Minimum required PHP version is 5.5, due to a change in the identicon library
+    * CHANGED: Minimum required browser versions are Firefox 54, Chrome 57, Opera 44, Safari 11, Edge 16, due to use of WebCrypto API, async/await, ES6 & WebAssembly features - all Internet Explorer versions are incompatible
+    * CHANGED: JSON and encryption formats were changed to replace SJCL library by browser integrated WebCrypto API (#28, #74)
+    * CHANGED: Replaced rawdeflate.js with zlib.wasm to resolve decompression failures and gain compatibility with standard deflate implementations (#193, #260, #328, #434, #440)
+    * CHANGED: Increase PBKDF2 iterations to 100k (#350)
+    * CHANGED: Replaced last use of MD5 with Fowler–Noll–Vo checksum which produces the exact length we need for the paste ID (#49)
+    * CHANGED: Simplified some PHP code & renamed PrivateBin class into Controller, to make MVC pattern use more obvious (#342)
+    * CHANGED: Upgrading libraries to: identicon 1.2.0, random_compat 2.0.18, jQuery 3.4.1, Showdown 1.9.0, DOMpurify 1.0.11 & kjua 0.6.0
+    * FIXED: Prevent Chrome from sending content of paste to Google for translation (#378)
+    * FIXED: To support attachments larger then 2 MiB in newer Chrome versions, we switched to blob instead of data URIs (#432)
+    * FIXED: Since Outlook strips trailing equal signs in links, the key in URL hash is now base58 encoded, instead of base64 (#377)
+    * FIXED: Facebooks started injecting parameters into shared URLs for tracking that lead to inaccessible pastes (#396)
+    * FIXED: Properly escaped HTML in raw text mode (#358)
+    * FIXED: Made download links better readable in the dark bootstrap theme (#364)
+    * FIXED: Allow Letsencrypt bot to access on apache servers (#413)
+  * **1.2.1 (2018-08-11)**
+    * ADDED: Add support for mega.nz links in pastes and comments (#331)
+    * CHANGED: Added some missing Russian translations (#348)
+    * CHANGED: Minor PHP refactoring: Rename PrivateBin class to Controller, improved logic of some persistence classes (#342)
+    * CHANGED: Upgrading DOMpurify library to 1.0.7
+    * FIXED: Ensure legacy browsers without webcrypto support can't create paste keys with insufficient entropy (#346)
+    * FIXED: Re-add support for old browsers (Firefox&lt;21, Chrome&lt;31, Safari&lt;7, IE&lt;11), broken in 1.2, will be removed again in 1.3
+  * **1.2 (2018-07-22)**
+    * ADDED: Translations for Spanish, Occitan, Norwegian, Portuguese, Dutch and Hungarian
     * ADDED: Option in configuration to change the default "PrivateBin" title of the site
+    * ADDED: Added display of video, audio & PDF, drag & drop, preview of attachments (#182)
+    * ADDED: QR code generation (#169)
+    * ADDED: Introduced DOMpurify library to sanitize generated HTML before display (#183)
+    * CHANGED: Force JSON request for getting paste data & password retry (#216)
+    * CHANGED: Minimum required PHP version is 5.4 (#186)
+    * CHANGED: Shipped .htaccess files were updated for Apache 2.4 (#192)
     * CHANGED: Cleanup of bootstrap template variants and moved icons to `img` directory
+    * CHANGED: Removed option to hide clone button on expiring pastes, since this requires reading the paste for rendering the template, which leaks information on the pastes state
+    * CHANGED: Upgrading libraries to: SJCL 1.0.7, jQuery 3.3.1, Base64 2.4.5, Showdown 1.8.6, DOMpurify 1.0.5 & Prettify 453bd5f
+    * CHANGED: Refactored JavaScript code, making it modular with private and public functions, making it much easier to maintain (#178)
+    * FIXED: To counteract regressions introduced by the refactoring, we finally introduced property based unit testing for the JavaScript code, this caught several regressions, but also some very old bugs not found so far (#32)
+  * **1.1.1 (2017-10-06)**
+    * CHANGED: Switched to `.php` file extension for configuration file, to avoid leaking configuration data in unprotected installation.
   * **1.1 (2016-12-26)**
     * ADDED: Translations for Italian and Russian
     * ADDED: Loading message displayed until decryption succeeded for slower (in terms of CPU or network) systems
@@ -118,7 +257,7 @@ encryption), i18n (translation, counterpart of i18n.php) and helper (stateless u
     * FIXED: 2 minor corrections to avoid notices in php log.
     * FIXED: Sources converted to UTF-8.
   * **Alpha 0.14 (2012-04-20):**
-    * ADDED: GD presence is checked. 
+    * ADDED: GD presence is checked.
     * CHANGED: Traffic limiter data files moved to data/ (→easier rights management)
     * ADDED: "Burn after reading" implemented. Opening the URL will display the paste and immediately destroy it on server.
   * **Alpha 0.13 (2012-04-18):**
@@ -126,16 +265,16 @@ encryption), i18n (translation, counterpart of i18n.php) and helper (stateless u
     * FIXED: $error not properly initialized in index.php
   * **Alpha 0.12 (2012-04-18):**
     * **DISCUSSIONS !** Now you can enable discussions on your pastes. Of course, posted comments and nickname are also encrypted and the server cannot see them.
-    * This feature implies a change in storage format. You will have to delete all previous pastes in your ZeroBin. 
+    * This feature implies a change in storage format. You will have to delete all previous pastes in your ZeroBin.
     * Added [[php:vizhash_gd|Vizhash]] as avatars, so you can match posters IP addresses without revealing them. (Same image = same IP). Of course the IP address cannot be deduced from the Vizhash.
     * Remaining time before expiration is now displayed.
-    * Explicit tags were added to CSS and jQuery selectors (eg. div#aaa instead of #aaa) to speed up browser. 
+    * Explicit tags were added to CSS and jQuery selectors (eg. div#aaa instead of #aaa) to speed up browser.
     * Better cleaning of the URL (to make sure the key is not broken by some stupid redirection service)
   * **Alpha 0.11 (2012-04-12):**
     * Automatically ignore parameters (such as &utm_source=...) added //after// the anchor by some stupid Web 2.0 services.
     * First public release.
   * **Alpha 0.10 (2012-04-12):**
-    * IE9 does not seem to correctly support ''pre-wrap'' either. Special handling mode activated for all version of IE<10. (Note: **ALL other browsers** correctly support this feature.) 
+    * IE9 does not seem to correctly support ''pre-wrap'' either. Special handling mode activated for all version of IE<10. (Note: **ALL other browsers** correctly support this feature.)
   * **Alpha 0.9 (2012-04-11):**
     * Oh bummer... IE 8 is as shitty as IE6/7: Its does not seem to support ''white-space:pre-wrap'' correctly. I had to activate the special handling mode. I still have to test IE 9.
   * **Alpha 0.8 (2012-04-11):**

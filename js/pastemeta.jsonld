@@ -1,11 +1,31 @@
 {
 	"@context": {
 		"so": "https://schema.org/",
-		"formatter": {"@id": "so:Text"},
-		"postdate": {"@id": "so:Integer"},
-		"opendiscussion": {"@id": "so:True"},
-		"burnafterreading": {"@id": "so:True"},
-		"expire_date": {"@id": "so:Integer"},
-		"remaining_time": {"@id": "so:Integer"}
+		"pb": "?jsonld=types#"
+	},
+	"AuthenticatedData": {
+		"@container": "@list",
+		"@value": [
+			{
+				"@type": "pb:CipherParameters"
+			},
+			{
+				"@type": "pb:Formatter"
+			},
+			{
+				"@type": "pb:OpenDiscussion"
+			},
+			{
+				"@type": "pb:BurnAfterReading"
+			}
+		]
+	},
+	"MetaData": {
+		"expire": {
+			"@type": "pb:Expiration"
+		},
+		"time_to_live": {
+			"@type": "pb:RemainingSeconds"
+		}
 	}
 }

@@ -7,7 +7,7 @@
  * @link      https://github.com/PrivateBin/PrivateBin
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
- * @version   1.1
+ * @version   1.5.2
  */
 
 namespace PrivateBin\Model;
@@ -15,8 +15,6 @@ namespace PrivateBin\Model;
 use Exception;
 use PrivateBin\Configuration;
 use PrivateBin\Data\AbstractData;
-use PrivateBin\Sjcl;
-use stdClass;
 
 /**
  * AbstractModel
@@ -37,9 +35,9 @@ abstract class AbstractModel
      * Instance data.
      *
      * @access protected
-     * @var stdClass
+     * @var array
      */
-    protected $_data;
+    protected $_data = array('meta' => array());
 
     /**
      * Configuration.
@@ -63,14 +61,11 @@ abstract class AbstractModel
      * @access public
      * @param  Configuration $configuration
      * @param  AbstractData $storage
-     * @return void
      */
     public function __construct(Configuration $configuration, AbstractData $storage)
     {
         $this->_conf       = $configuration;
         $this->_store      = $storage;
-        $this->_data       = new stdClass;
-        $this->_data->meta = new stdClass;
     }
 
     /**
@@ -90,7 +85,6 @@ abstract class AbstractModel
      * @access public
      * @param string $id
      * @throws Exception
-     * @return void
      */
     public function setId($id)
     {
@@ -104,36 +98,35 @@ abstract class AbstractModel
      * Set data and recalculate ID.
      *
      * @access public
-     * @param string $data
+     * @param  array $data
      * @throws Exception
-     * @return void
      */
-    public function setData($data)
+    public function setData(array $data)
     {
-        if (!Sjcl::isValid($data)) {
-            throw new Exception('Invalid data.', 61);
-        }
-        $this->_data->data = $data;
+        $data = $this->_sanitize($data);
+        $this->_validate($data);
+        $this->_data = $data;
 
-        // We just want a small hash to avoid collisions:
-        // Half-MD5 (64 bits) will do the trick
-        $this->setId(substr(hash('md5', $data), 0, 16));
+        // calculate a 64 bit checksum to avoid collisions
+        $this->setId(hash(version_compare(PHP_VERSION, '5.6', '<') ? 'fnv164' : 'fnv1a64', $data['ct']));
     }
 
     /**
      * Get instance data.
      *
      * @access public
-     * @return stdClass
+     * @return array
      */
-    abstract public function get();
+    public function get()
+    {
+        return $this->_data;
+    }
 
     /**
      * Store the instance's data.
      *
      * @access public
      * @throws Exception
-     * @return void
      */
     abstract public function store();
 
@@ -142,7 +135,6 @@ abstract class AbstractModel
      *
      * @access public
      * @throws Exception
-     * @return void
      */
     abstract public function delete();
 
@@ -165,5 +157,25 @@ abstract class AbstractModel
     public static function isValidId($id)
     {
         return (bool) preg_match('#\A[a-f\d]{16}\z#', (string) $id);
+    }
+
+    /**
+     * Sanitizes data to conform with current configuration.
+     *
+     * @access protected
+     * @param  array $data
+     * @return array
+     */
+    abstract protected function _sanitize(array $data);
+
+    /**
+     * Validate data.
+     *
+     * @access protected
+     * @param  array $data
+     * @throws Exception
+     */
+    protected function _validate(array $data)
+    {
     }
 }

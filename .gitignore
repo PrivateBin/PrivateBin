@@ -1,9 +1,12 @@
 # Ignore server files for safety
 .htaccess
 .htpasswd
+cfg/*
+!cfg/conf.sample.php
+!cfg/.htaccess
 
 # Ignore data/
-data/
+/data/
 
 # Ignore PhpDoc
 doc/*
@@ -23,11 +26,16 @@ vendor/**/tests
 vendor/**/build_phar.php
 !vendor/**/*.php
 
-composer.lock
-
-# Ignore unit testing logs, api docs and eclipse project files
+# Ignore local node modules, unit testing logs, api docs and IDE project files
+js/node_modules/
+js/test.log
 tst/log/
+tst/ConfigurationCombinationsTest.php
+tst/.phpunit.result.cache
 .settings
 .buildpath
 .project
 .externalToolBuilders
+.c9
+/.idea/
+*.iml

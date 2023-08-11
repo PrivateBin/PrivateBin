@@ -7,7 +7,7 @@
  * @link      https://github.com/PrivateBin/PrivateBin
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
- * @version   1.1
+ * @version   1.5.2
  */
 
 namespace PrivateBin;
@@ -32,7 +32,7 @@ class Model
     /**
      * Data storage.
      *
-     * @var AbstractData
+     * @var Data\AbstractData
      */
     private $_store = null;
 
@@ -40,7 +40,6 @@ class Model
      * Factory constructor.
      *
      * @param configuration $conf
-     * @return void
      */
     public function __construct(Configuration $conf)
     {
@@ -55,7 +54,7 @@ class Model
      */
     public function getPaste($pasteId = null)
     {
-        $paste = new Paste($this->_conf, $this->_getStore());
+        $paste = new Paste($this->_conf, $this->getStore());
         if ($pasteId !== null) {
             $paste->setId($pasteId);
         }
@@ -64,29 +63,26 @@ class Model
 
     /**
      * Checks if a purge is necessary and triggers it if yes.
-     *
-     * @return void
      */
     public function purge()
     {
         PurgeLimiter::setConfiguration($this->_conf);
+        PurgeLimiter::setStore($this->getStore());
         if (PurgeLimiter::canPurge()) {
-            $this->_getStore()->purge($this->_conf->getKey('batchsize', 'purge'));
+            $this->getStore()->purge($this->_conf->getKey('batchsize', 'purge'));
         }
     }
 
     /**
      * Gets, and creates if neccessary, a store object
      *
-     * @return AbstractData
+     * @return Data\AbstractData
      */
-    private function _getStore()
+    public function getStore()
     {
         if ($this->_store === null) {
-            $this->_store = forward_static_call(
-                'PrivateBin\\Data\\' . $this->_conf->getKey('class', 'model') . '::getInstance',
-                $this->_conf->getSection('model_options')
-            );
+            $class        = 'PrivateBin\\Data\\' . $this->_conf->getKey('class', 'model');
+            $this->_store = new $class($this->_conf->getSection('model_options'));
         }
         return $this->_store;
     }

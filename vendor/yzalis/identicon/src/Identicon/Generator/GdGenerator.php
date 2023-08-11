@@ -2,20 +2,34 @@
 
 namespace Identicon\Generator;
 
-use Identicon\Generator\GeneratorInterface;
+use Exception;
 
 /**
  * @author Benjamin Laugueux <benjamin@yzalis.com>
  */
 class GdGenerator extends BaseGenerator implements GeneratorInterface
 {
+    /**
+     * GdGenerator constructor.
+     */
     public function __construct()
     {
-        if (!extension_loaded('gd')) {
-            throw new \Exception('GD does not appear to be avaliable in your PHP installation. Please try another generator');
+        if (!extension_loaded('gd') && !extension_loaded('ext-gd')) {
+            throw new Exception('GD does not appear to be available in your PHP installation. Please try another generator');
         }
     }
 
+    /**
+     * @return string
+     */
+    public function getMimeType()
+    {
+        return 'image/png';
+    }
+
+    /**
+     * @return $this
+     */
     private function generateImage()
     {
         // prepare image
@@ -30,7 +44,7 @@ class GdGenerator extends BaseGenerator implements GeneratorInterface
             imagefill($this->generatedImage, 0, 0, $background);
         }
 
-        // prepage color
+        // prepare color
         $rgbColor = $this->getColor();
         $gdColor = imagecolorallocate($this->generatedImage, $rgbColor[0], $rgbColor[1], $rgbColor[2]);
 
@@ -47,7 +61,7 @@ class GdGenerator extends BaseGenerator implements GeneratorInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getImageBinaryData($string, $size = null, $color = null, $backgroundColor = null)
     {
@@ -60,7 +74,7 @@ class GdGenerator extends BaseGenerator implements GeneratorInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getImageResource($string, $size = null, $color = null, $backgroundColor = null)
     {

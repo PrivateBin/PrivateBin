@@ -7,13 +7,13 @@
  * @link      https://github.com/PrivateBin/PrivateBin
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
- * @version   1.1
+ * @version   1.5.2
  */
 
 namespace PrivateBin\Data;
 
+use Exception;
 use PrivateBin\Json;
-use PrivateBin\Model\Paste;
 
 /**
  * Filesystem
@@ -23,37 +23,59 @@ use PrivateBin\Model\Paste;
 class Filesystem extends AbstractData
 {
     /**
-     * directory where data is stored
+     * glob() pattern of the two folder levels and the paste files under the
+     * configured path. Needs to return both files with and without .php suffix,
+     * so they can be hardened by _prependRename(), which is hooked into exists().
      *
-     * @access private
-     * @static
-     * @var string
+     * > Note that wildcard patterns are not regular expressions, although they
+     * > are a bit similar.
+     *
+     * @link  https://man7.org/linux/man-pages/man7/glob.7.html
+     * @const string
      */
-    private static $_dir = 'data/';
+    const PASTE_FILE_PATTERN = DIRECTORY_SEPARATOR . '[a-f0-9][a-f0-9]' .
+        DIRECTORY_SEPARATOR . '[a-f0-9][a-f0-9]' . DIRECTORY_SEPARATOR .
+        '[a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9]' .
+        '[a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9]*';
 
     /**
-     * get instance of singleton
+     * first line in paste or comment files, to protect their contents from browsing exposed data directories
+     *
+     * @const string
+     */
+    const PROTECTION_LINE = '<?php http_response_code(403); /*';
+
+    /**
+     * line in generated .htaccess files, to protect exposed directories from being browsable on apache web servers
+     *
+     * @const string
+     */
+    const HTACCESS_LINE = 'Require all denied';
+
+    /**
+     * path in which to persist something
+     *
+     * @access private
+     * @var    string
+     */
+    private $_path = 'data';
+
+    /**
+     * instantiates a new Filesystem data backend
      *
      * @access public
-     * @static
      * @param  array $options
-     * @return Filesystem
+     * @return
      */
-    public static function getInstance($options = null)
+    public function __construct(array $options)
     {
         // if given update the data directory
         if (
             is_array($options) &&
             array_key_exists('dir', $options)
         ) {
-            self::$_dir = $options['dir'] . DIRECTORY_SEPARATOR;
+            $this->_path = $options['dir'];
         }
-        // if needed initialize the singleton
-        if (!(self::$_instance instanceof self)) {
-            self::$_instance = new self;
-            self::_init();
-        }
-        return self::$_instance;
     }
 
     /**
@@ -62,19 +84,19 @@ class Filesystem extends AbstractData
      * @access public
      * @param  string $pasteid
      * @param  array  $paste
-     * @throws Exception
      * @return bool
      */
-    public function create($pasteid, $paste)
+    public function create($pasteid, array $paste)
     {
-        $storagedir = self::_dataid2path($pasteid);
-        if (is_file($storagedir . $pasteid)) {
+        $storagedir = $this->_dataid2path($pasteid);
+        $file       = $storagedir . $pasteid . '.php';
+        if (is_file($file)) {
             return false;
         }
         if (!is_dir($storagedir)) {
             mkdir($storagedir, 0700, true);
         }
-        return (bool) file_put_contents($storagedir . $pasteid, Json::encode($paste));
+        return $this->_store($file, $paste);
     }
 
     /**
@@ -82,25 +104,17 @@ class Filesystem extends AbstractData
      *
      * @access public
      * @param  string $pasteid
-     * @return stdClass|false
+     * @return array|false
      */
     public function read($pasteid)
     {
-        if (!$this->exists($pasteid)) {
+        if (
+            !$this->exists($pasteid) ||
+            !$paste = $this->_get($this->_dataid2path($pasteid) . $pasteid . '.php')
+        ) {
             return false;
         }
-        $paste = json_decode(
-            file_get_contents(self::_dataid2path($pasteid) . $pasteid)
-        );
-        if (property_exists($paste->meta, 'attachment')) {
-            $paste->attachment = $paste->meta->attachment;
-            unset($paste->meta->attachment);
-            if (property_exists($paste->meta, 'attachmentname')) {
-                $paste->attachmentname = $paste->meta->attachmentname;
-                unset($paste->meta->attachmentname);
-            }
-        }
-        return $paste;
+        return self::upgradePreV1Format($paste);
     }
 
     /**
@@ -108,19 +122,18 @@ class Filesystem extends AbstractData
      *
      * @access public
      * @param  string $pasteid
-     * @return void
      */
     public function delete($pasteid)
     {
-        $pastedir = self::_dataid2path($pasteid);
+        $pastedir = $this->_dataid2path($pasteid);
         if (is_dir($pastedir)) {
             // Delete the paste itself.
-            if (is_file($pastedir . $pasteid)) {
-                unlink($pastedir . $pasteid);
+            if (is_file($pastedir . $pasteid . '.php')) {
+                unlink($pastedir . $pasteid . '.php');
             }
 
             // Delete discussion if it exists.
-            $discdir = self::_dataid2discussionpath($pasteid);
+            $discdir = $this->_dataid2discussionpath($pasteid);
             if (is_dir($discdir)) {
                 // Delete all files in discussion directory
                 $dir = dir($discdir);
@@ -144,7 +157,26 @@ class Filesystem extends AbstractData
      */
     public function exists($pasteid)
     {
-        return is_file(self::_dataid2path($pasteid) . $pasteid);
+        $basePath  = $this->_dataid2path($pasteid) . $pasteid;
+        $pastePath = $basePath . '.php';
+        // convert to PHP protected files if needed
+        if (is_readable($basePath)) {
+            $this->_prependRename($basePath, $pastePath);
+
+            // convert comments, too
+            $discdir = $this->_dataid2discussionpath($pasteid);
+            if (is_dir($discdir)) {
+                $dir = dir($discdir);
+                while (false !== ($filename = $dir->read())) {
+                    if (substr($filename, -4) !== '.php' && strlen($filename) >= 16) {
+                        $commentFilename = $discdir . $filename . '.php';
+                        $this->_prependRename($discdir . $filename, $commentFilename);
+                    }
+                }
+                $dir->close();
+            }
+        }
+        return is_readable($pastePath);
     }
 
     /**
@@ -155,20 +187,19 @@ class Filesystem extends AbstractData
      * @param  string $parentid
      * @param  string $commentid
      * @param  array  $comment
-     * @throws Exception
      * @return bool
      */
-    public function createComment($pasteid, $parentid, $commentid, $comment)
+    public function createComment($pasteid, $parentid, $commentid, array $comment)
     {
-        $storagedir = self::_dataid2discussionpath($pasteid);
-        $filename   = $pasteid . '.' . $commentid . '.' . $parentid;
-        if (is_file($storagedir . $filename)) {
+        $storagedir = $this->_dataid2discussionpath($pasteid);
+        $file       = $storagedir . $pasteid . '.' . $commentid . '.' . $parentid . '.php';
+        if (is_file($file)) {
             return false;
         }
         if (!is_dir($storagedir)) {
             mkdir($storagedir, 0700, true);
         }
-        return (bool) file_put_contents($storagedir . $filename, Json::encode($comment));
+        return $this->_store($file, $comment);
     }
 
     /**
@@ -181,24 +212,28 @@ class Filesystem extends AbstractData
     public function readComments($pasteid)
     {
         $comments = array();
-        $discdir  = self::_dataid2discussionpath($pasteid);
+        $discdir  = $this->_dataid2discussionpath($pasteid);
         if (is_dir($discdir)) {
-            // Delete all files in discussion directory
             $dir = dir($discdir);
             while (false !== ($filename = $dir->read())) {
-                // Filename is in the form pasteid.commentid.parentid:
+                // Filename is in the form pasteid.commentid.parentid.php:
                 // - pasteid is the paste this reply belongs to.
                 // - commentid is the comment identifier itself.
                 // - parentid is the comment this comment replies to (It can be pasteid)
                 if (is_file($discdir . $filename)) {
-                    $comment = json_decode(file_get_contents($discdir . $filename));
+                    $comment = $this->_get($discdir . $filename);
                     $items   = explode('.', $filename);
                     // Add some meta information not contained in file.
-                    $comment->id       = $items[1];
-                    $comment->parentid = $items[2];
+                    $comment['id']       = $items[1];
+                    $comment['parentid'] = $items[2];
 
                     // Store in array
-                    $key            = $this->getOpenSlot($comments, (int) $comment->meta->postdate);
+                    $key            = $this->getOpenSlot(
+                        $comments,
+                        (int) array_key_exists('created', $comment['meta']) ?
+                        $comment['meta']['created'] : // v2 comments
+                        $comment['meta']['postdate']  // v1 comments
+                    );
                     $comments[$key] = $comment;
                 }
             }
@@ -222,8 +257,98 @@ class Filesystem extends AbstractData
     public function existsComment($pasteid, $parentid, $commentid)
     {
         return is_file(
-            self::_dataid2discussionpath($pasteid) .
-            $pasteid . '.' . $commentid . '.' . $parentid
+            $this->_dataid2discussionpath($pasteid) .
+            $pasteid . '.' . $commentid . '.' . $parentid . '.php'
+        );
+    }
+
+    /**
+     * Save a value.
+     *
+     * @access public
+     * @param  string $value
+     * @param  string $namespace
+     * @param  string $key
+     * @return bool
+     */
+    public function setValue($value, $namespace, $key = '')
+    {
+        switch ($namespace) {
+            case 'purge_limiter':
+                return $this->_storeString(
+                    $this->_path . DIRECTORY_SEPARATOR . 'purge_limiter.php',
+                    '<?php' . PHP_EOL . '$GLOBALS[\'purge_limiter\'] = ' . $value . ';'
+                );
+            case 'salt':
+                return $this->_storeString(
+                    $this->_path . DIRECTORY_SEPARATOR . 'salt.php',
+                    '<?php # |' . $value . '|'
+                );
+            case 'traffic_limiter':
+                $this->_last_cache[$key] = $value;
+                return $this->_storeString(
+                    $this->_path . DIRECTORY_SEPARATOR . 'traffic_limiter.php',
+                    '<?php' . PHP_EOL . '$GLOBALS[\'traffic_limiter\'] = ' . var_export($this->_last_cache, true) . ';'
+                );
+        }
+        return false;
+    }
+
+    /**
+     * Load a value.
+     *
+     * @access public
+     * @param  string $namespace
+     * @param  string $key
+     * @return string
+     */
+    public function getValue($namespace, $key = '')
+    {
+        switch ($namespace) {
+            case 'purge_limiter':
+                $file = $this->_path . DIRECTORY_SEPARATOR . 'purge_limiter.php';
+                if (is_readable($file)) {
+                    require $file;
+                    return $GLOBALS['purge_limiter'];
+                }
+                break;
+            case 'salt':
+                $file = $this->_path . DIRECTORY_SEPARATOR . 'salt.php';
+                if (is_readable($file)) {
+                    $items = explode('|', file_get_contents($file));
+                    if (is_array($items) && count($items) == 3) {
+                        return $items[1];
+                    }
+                }
+                break;
+            case 'traffic_limiter':
+                $file = $this->_path . DIRECTORY_SEPARATOR . 'traffic_limiter.php';
+                if (is_readable($file)) {
+                    require $file;
+                    $this->_last_cache = $GLOBALS['traffic_limiter'];
+                    if (array_key_exists($key, $this->_last_cache)) {
+                        return $this->_last_cache[$key];
+                    }
+                }
+                break;
+        }
+        return '';
+    }
+
+    /**
+     * get the data
+     *
+     * @access public
+     * @param  string $filename
+     * @return array|false $data
+     */
+    private function _get($filename)
+    {
+        return Json::decode(
+            substr(
+                file_get_contents($filename),
+                strlen(self::PROTECTION_LINE . PHP_EOL)
+            )
         );
     }
 
@@ -236,56 +361,27 @@ class Filesystem extends AbstractData
      */
     protected function _getExpiredPastes($batchsize)
     {
-        $pastes     = array();
-        $firstLevel = array_filter(
-            scandir(self::$_dir),
-            'self::_isFirstLevelDir'
-        );
-        if (count($firstLevel) > 0) {
-            // try at most 10 times the $batchsize pastes before giving up
-            for ($i = 0, $max = $batchsize * 10; $i < $max; ++$i) {
-                $firstKey    = array_rand($firstLevel);
-                $secondLevel = array_filter(
-                    scandir(self::$_dir . $firstLevel[$firstKey]),
-                    'self::_isSecondLevelDir'
-                );
-
-                // skip this folder in the next checks if it is empty
-                if (count($secondLevel) == 0) {
-                    unset($firstLevel[$firstKey]);
-                    continue;
-                }
-
-                $secondKey = array_rand($secondLevel);
-                $path      = self::$_dir . $firstLevel[$firstKey] .
-                    DIRECTORY_SEPARATOR . $secondLevel[$secondKey];
-                if (!is_dir($path)) {
-                    continue;
-                }
-                $thirdLevel = array_filter(
-                    scandir($path),
-                    'PrivateBin\\Model\\Paste::isValidId'
-                );
-                if (count($thirdLevel) == 0) {
-                    continue;
-                }
-                $thirdKey = array_rand($thirdLevel);
-                $pasteid  = $thirdLevel[$thirdKey];
-                if (in_array($pasteid, $pastes)) {
-                    continue;
-                }
-
-                if ($this->exists($pasteid)) {
-                    $data = $this->read($pasteid);
-                    if (
-                        property_exists($data->meta, 'expire_date') &&
-                        $data->meta->expire_date < time()
-                    ) {
-                        $pastes[] = $pasteid;
-                        if (count($pastes) >= $batchsize) {
-                            break;
-                        }
+        $pastes = array();
+        $count  = 0;
+        $opened = 0;
+        $limit  = $batchsize * 10; // try at most 10 times $batchsize pastes before giving up
+        $time   = time();
+        $files  = $this->getAllPastes();
+        shuffle($files);
+        foreach ($files as $pasteid) {
+            if ($this->exists($pasteid)) {
+                $data = $this->read($pasteid);
+                if (
+                    array_key_exists('expire_date', $data['meta']) &&
+                    $data['meta']['expire_date'] < $time
+                ) {
+                    $pastes[] = $pasteid;
+                    if (++$count >= $batchsize) {
+                        break;
                     }
+                }
+                if (++$opened >= $limit) {
+                    break;
                 }
             }
         }
@@ -293,26 +389,17 @@ class Filesystem extends AbstractData
     }
 
     /**
-     * initialize privatebin
-     *
-     * @access private
-     * @static
-     * @return void
+     * @inheritDoc
      */
-    private static function _init()
+    public function getAllPastes()
     {
-        // Create storage directory if it does not exist.
-        if (!is_dir(self::$_dir)) {
-            mkdir(self::$_dir, 0700);
+        $pastes = array();
+        foreach (new \GlobIterator($this->_path . self::PASTE_FILE_PATTERN) as $file) {
+            if ($file->isFile()) {
+                $pastes[] = $file->getBasename('.php');
+            }
         }
-        // Create .htaccess file if it does not exist.
-        if (!is_file(self::$_dir . '.htaccess')) {
-            file_put_contents(
-                self::$_dir . '.htaccess',
-                'Allow from none' . PHP_EOL .
-                'Deny from all' . PHP_EOL
-            );
-        }
+        return $pastes;
     }
 
     /**
@@ -326,13 +413,13 @@ class Filesystem extends AbstractData
      * eg. input 'e3570978f9e4aa90' --> output 'data/e3/57/'
      *
      * @access private
-     * @static
      * @param  string $dataid
      * @return string
      */
-    private static function _dataid2path($dataid)
+    private function _dataid2path($dataid)
     {
-        return self::$_dir . substr($dataid, 0, 2) . DIRECTORY_SEPARATOR .
+        return $this->_path . DIRECTORY_SEPARATOR .
+            substr($dataid, 0, 2) . DIRECTORY_SEPARATOR .
             substr($dataid, 2, 2) . DIRECTORY_SEPARATOR;
     }
 
@@ -342,40 +429,102 @@ class Filesystem extends AbstractData
      * eg. input 'e3570978f9e4aa90' --> output 'data/e3/57/e3570978f9e4aa90.discussion/'
      *
      * @access private
-     * @static
      * @param  string $dataid
      * @return string
      */
-    private static function _dataid2discussionpath($dataid)
+    private function _dataid2discussionpath($dataid)
     {
-        return self::_dataid2path($dataid) . $dataid .
+        return $this->_dataid2path($dataid) . $dataid .
             '.discussion' . DIRECTORY_SEPARATOR;
     }
 
     /**
-     * Check that the given element is a valid first level directory.
+     * store the data
      *
-     * @access private
-     * @static
-     * @param  string $element
+     * @access public
+     * @param  string $filename
+     * @param  array  $data
      * @return bool
      */
-    private static function _isFirstLevelDir($element)
+    private function _store($filename, array $data)
     {
-        return self::_isSecondLevelDir($element) &&
-            is_dir(self::$_dir . DIRECTORY_SEPARATOR . $element);
+        try {
+            return $this->_storeString(
+                $filename,
+                self::PROTECTION_LINE . PHP_EOL . Json::encode($data)
+            );
+        } catch (Exception $e) {
+            return false;
+        }
     }
 
     /**
-     * Check that the given element is a valid second level directory.
+     * store a string
      *
-     * @access private
-     * @static
-     * @param  string $element
+     * @access public
+     * @param  string $filename
+     * @param  string $data
      * @return bool
      */
-    private static function _isSecondLevelDir($element)
+    private function _storeString($filename, $data)
     {
-        return (bool) preg_match('/^[a-f0-9]{2}$/', $element);
+        // Create storage directory if it does not exist.
+        if (!is_dir($this->_path)) {
+            if (!@mkdir($this->_path, 0700)) {
+                return false;
+            }
+        }
+        $file = $this->_path . DIRECTORY_SEPARATOR . '.htaccess';
+        if (!is_file($file)) {
+            $writtenBytes = 0;
+            if ($fileCreated = @touch($file)) {
+                $writtenBytes = @file_put_contents(
+                    $file,
+                    self::HTACCESS_LINE . PHP_EOL,
+                    LOCK_EX
+                );
+            }
+            if (
+                $fileCreated === false ||
+                $writtenBytes === false ||
+                $writtenBytes < strlen(self::HTACCESS_LINE . PHP_EOL)
+            ) {
+                return false;
+            }
+        }
+
+        $fileCreated  = true;
+        $writtenBytes = 0;
+        if (!is_file($filename)) {
+            $fileCreated = @touch($filename);
+        }
+        if ($fileCreated) {
+            $writtenBytes = @file_put_contents($filename, $data, LOCK_EX);
+        }
+        if ($fileCreated === false || $writtenBytes === false || $writtenBytes < strlen($data)) {
+            return false;
+        }
+        @chmod($filename, 0640); // protect file from access by other users on the host
+        return true;
+    }
+
+    /**
+     * rename a file, prepending the protection line at the beginning
+     *
+     * @access public
+     * @param  string $srcFile
+     * @param  string $destFile
+     * @return void
+     */
+    private function _prependRename($srcFile, $destFile)
+    {
+        // don't overwrite already converted file
+        if (!is_readable($destFile)) {
+            $handle = fopen($srcFile, 'r', false, stream_context_create());
+            file_put_contents($destFile, self::PROTECTION_LINE . PHP_EOL);
+            file_put_contents($destFile, $handle, FILE_APPEND);
+            fclose($handle);
+        }
+        unlink($srcFile);
     }
 }

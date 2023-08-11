@@ -1,17 +1,10 @@
 <?php
 
+use PHPUnit\Framework\TestCase;
 use PrivateBin\Filter;
 
-class FilterTest extends PHPUnit_Framework_TestCase
+class FilterTest extends TestCase
 {
-    public function testFilterStripsSlashesDeeply()
-    {
-        $this->assertEquals(
-            array("f'oo", "b'ar", array("fo'o", "b'ar")),
-            Filter::stripslashesDeep(array("f\\'oo", "b\\'ar", array("fo\\'o", "b\\'ar")))
-        );
-    }
-
     public function testFilterMakesTimesHumanlyReadable()
     {
         $this->assertEquals('5 minutes', Filter::formatHumanReadableTime('5min'));
@@ -20,12 +13,10 @@ class FilterTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('6 months', Filter::formatHumanReadableTime('6months'));
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionCode 30
-     */
     public function testFilterFailTimesHumanlyReadable()
     {
+        $this->expectException(Exception::class);
+        $this->expectExceptionCode(30);
         Filter::formatHumanReadableTime('five_minutes');
     }
 
@@ -63,19 +54,5 @@ class FilterTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('1 000.00 ZiB', Filter::formatHumanReadableSize(1000 * $exponent));
         $this->assertEquals('1.00 YiB', Filter::formatHumanReadableSize(1024 * $exponent));
         $this->assertEquals('1.21 YiB', Filter::formatHumanReadableSize(1234 * $exponent));
-    }
-
-    public function testSlowEquals()
-    {
-        $this->assertTrue(Filter::slowEquals('foo', 'foo'), 'same string');
-        $this->assertFalse(Filter::slowEquals('foo', true), 'string and boolean');
-        $this->assertFalse(Filter::slowEquals('foo', 0), 'string and integer');
-        $this->assertFalse(Filter::slowEquals('123foo', 123), 'string and integer');
-        $this->assertFalse(Filter::slowEquals('123foo', '123'), 'different strings');
-        $this->assertFalse(Filter::slowEquals('6', ' 6'), 'strings with space');
-        $this->assertFalse(Filter::slowEquals('4.2', '4.20'), 'floats as strings');
-        $this->assertFalse(Filter::slowEquals('1e3', '1000'), 'integers as strings');
-        $this->assertFalse(Filter::slowEquals('9223372036854775807', '9223372036854775808'), 'large integers as strings');
-        $this->assertFalse(Filter::slowEquals('61529519452809720693702583126814', '61529519452809720000000000000000'), 'larger integers as strings');
     }
 }

@@ -1,33 +1,41 @@
 <?php
 
+use PHPUnit\Framework\TestCase;
 use PrivateBin\Configuration;
 
-class ConfigurationTest extends PHPUnit_Framework_TestCase
+class ConfigurationTest extends TestCase
 {
-    private $_options;
-
     private $_minimalConfig;
 
-    public function setUp()
+    private $_options;
+
+    private $_path;
+
+    public function setUp(): void
     {
         /* Setup Routine */
         Helper::confBackup();
-        $this->_options                         = configuration::getDefaults();
-        $this->_options['model_options']['dir'] = PATH . $this->_options['model_options']['dir'];
-        $this->_options['traffic']['dir']       = PATH . $this->_options['traffic']['dir'];
-        $this->_options['purge']['dir']         = PATH . $this->_options['purge']['dir'];
         $this->_minimalConfig                   = '[main]' . PHP_EOL . '[model]' . PHP_EOL . '[model_options]';
+        $this->_options                         = Configuration::getDefaults();
+        $this->_options['model_options']['dir'] = PATH . $this->_options['model_options']['dir'];
+        $this->_path                            = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'privatebin_cfg';
+        if (!is_dir($this->_path)) {
+            mkdir($this->_path);
+        }
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         /* Tear Down Routine */
+        Helper::rmDir($this->_path);
+        if (is_file(CONF)) {
+            unlink(CONF);
+        }
         Helper::confRestore();
     }
 
     public function testDefaultConfigFile()
     {
-        $this->assertTrue(copy(CONF . '.bak', CONF), 'copy default configuration file');
         $conf = new Configuration;
         $this->assertEquals($this->_options, $conf->get(), 'default configuration is correct');
     }
@@ -41,18 +49,18 @@ class ConfigurationTest extends PHPUnit_Framework_TestCase
 
     public function testHandleMissingConfigFile()
     {
-        @unlink(CONF);
+        if (is_file(CONF)) {
+            unlink(CONF);
+        }
         $conf = new Configuration;
         $this->assertEquals($this->_options, $conf->get(), 'returns correct defaults on missing file');
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionCode 2
-     */
     public function testHandleBlankConfigFile()
     {
         file_put_contents(CONF, '');
+        $this->expectException(Exception::class);
+        $this->expectExceptionCode(2);
         new Configuration;
     }
 
@@ -63,25 +71,21 @@ class ConfigurationTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($this->_options, $conf->get(), 'returns correct defaults on empty file');
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionCode 3
-     */
     public function testHandleInvalidSection()
     {
         file_put_contents(CONF, $this->_minimalConfig);
         $conf = new Configuration;
+        $this->expectException(Exception::class);
+        $this->expectExceptionCode(3);
         $conf->getKey('foo', 'bar');
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionCode 4
-     */
     public function testHandleInvalidKey()
     {
         file_put_contents(CONF, $this->_minimalConfig);
         $conf = new Configuration;
+        $this->expectException(Exception::class);
+        $this->expectExceptionCode(4);
         $conf->getKey('foo');
     }
 
@@ -134,5 +138,25 @@ class ConfigurationTest extends PHPUnit_Framework_TestCase
         Helper::createIniFile(CONF, $options);
         $conf = new Configuration;
         $this->assertEquals('Database', $conf->getKey('class', 'model'), 'old db class gets renamed');
+    }
+
+    public function testConfigPath()
+    {
+        // setup
+        $configFile              = $this->_path . DIRECTORY_SEPARATOR . 'conf.php';
+        $options                 = $this->_options;
+        $options['main']['name'] = 'OtherBin';
+        Helper::createIniFile($configFile, $options);
+
+        // test
+        putenv('CONFIG_PATH=' . $this->_path);
+        $conf = new Configuration;
+        $this->assertEquals('OtherBin', $conf->getKey('name'), 'changing config path is supported');
+
+        // cleanup environment
+        if (is_file($configFile)) {
+            unlink($configFile);
+        }
+        putenv('CONFIG_PATH');
     }
 }

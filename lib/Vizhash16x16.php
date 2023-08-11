@@ -5,10 +5,10 @@
  * Visual Hash implementation in php4+GD,
  * stripped down and modified version for PrivateBin
  *
- * @link      http://sebsauvage.net/wiki/doku.php?id=php:vizhash_gd
+ * @link      https://sebsauvage.net/wiki/doku.php?id=php:vizhash_gd
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
- * @version   0.0.5 beta PrivateBin 1.1
+ * @version   0.0.5 beta PrivateBin 1.5.2
  */
 
 namespace PrivateBin;
@@ -61,7 +61,6 @@ class Vizhash16x16
      * constructor
      *
      * @access public
-     * @return void
      */
     public function __construct()
     {
@@ -167,7 +166,7 @@ class Vizhash16x16
      * Gradient function
      *
      * taken from:
-     * http://www.supportduweb.com/scripts_tutoriaux-code-source-41-gd-faire-un-degrade-en-php-gd-fonction-degrade-imagerie.html
+     * @link   https://www.supportduweb.com/scripts_tutoriaux-code-source-41-gd-faire-un-degrade-en-php-gd-fonction-degrade-imagerie.html
      *
      * @access private
      * @param  resource $img
@@ -186,9 +185,9 @@ class Vizhash16x16
             $sizeinv = imagesx($img);
         }
         $diffs = array(
-            (($color2[0] - $color1[0]) / $size),
-            (($color2[1] - $color1[1]) / $size),
-            (($color2[2] - $color1[2]) / $size),
+            ($color2[0] - $color1[0]) / $size,
+            ($color2[1] - $color1[1]) / $size,
+            ($color2[2] - $color1[2]) / $size,
         );
         for ($i = 0; $i < $size; ++$i) {
             $r = $color1[0] + ($diffs[0] * $i);
@@ -210,7 +209,6 @@ class Vizhash16x16
      * @param  resource $image
      * @param  int $action
      * @param  int $color
-     * @return void
      */
     private function drawshape($image, $action, $color)
     {

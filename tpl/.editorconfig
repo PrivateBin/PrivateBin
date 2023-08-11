@@ -1,0 +1,7 @@
+# editorconfig.org
+
+root = false
+
+# special format for PHP templates
+[*.php]
+indent_style = tab

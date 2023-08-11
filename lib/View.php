@@ -6,8 +6,8 @@
  *
  * @link      https://github.com/PrivateBin/PrivateBin
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
- * @license   http://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
- * @version   1.1
+ * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
+ * @version   1.5.2
  */
 
 namespace PrivateBin;
@@ -35,7 +35,6 @@ class View
      * @access public
      * @param  string $name
      * @param  mixed  $value
-     * @return void
      */
     public function assign($name, $value)
     {
@@ -48,7 +47,6 @@ class View
      * @access public
      * @param  string $template
      * @throws Exception
-     * @return void
      */
     public function draw($template)
     {

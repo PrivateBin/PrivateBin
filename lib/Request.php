@@ -7,10 +7,12 @@
  * @link      https://github.com/PrivateBin/PrivateBin
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
- * @version   1.1
+ * @version   1.5.2
  */
 
 namespace PrivateBin;
+
+use Exception;
 
 /**
  * Request
@@ -41,7 +43,7 @@ class Request
     const MIME_XHTML = 'application/xhtml+xml';
 
     /**
-     * Input stream to use for PUT parameter parsing.
+     * Input stream to use for PUT parameter parsing
      *
      * @access private
      * @var string
@@ -49,7 +51,7 @@ class Request
     private static $_inputStream = 'php://input';
 
     /**
-     * Operation to perform.
+     * Operation to perform
      *
      * @access private
      * @var string
@@ -57,7 +59,7 @@ class Request
     private $_operation = 'view';
 
     /**
-     * Request parameters.
+     * Request parameters
      *
      * @access private
      * @var array
@@ -65,7 +67,7 @@ class Request
     private $_params = array();
 
     /**
-     * If we are in a JSON API context.
+     * If we are in a JSON API context
      *
      * @access private
      * @var bool
@@ -73,20 +75,33 @@ class Request
     private $_isJsonApi = false;
 
     /**
-     * Constructor.
+     * Return the paste ID of the current paste.
+     *
+     * @access private
+     * @return string
+     */
+    private function getPasteId()
+    {
+        // RegEx to check for valid paste ID (16 base64 chars)
+        $pasteIdRegEx = '/^[a-f0-9]{16}$/';
+
+        foreach ($_GET as $key => $value) {
+            // only return if value is empty and key matches RegEx
+            if (($value === '') and preg_match($pasteIdRegEx, $key, $match)) {
+                return $match[0];
+            }
+        }
+
+        return 'invalid id';
+    }
+
+    /**
+     * Constructor
      *
      * @access public
-     * @return void
      */
     public function __construct()
     {
-        // in case stupid admin has left magic_quotes enabled in php.ini (for PHP < 5.4)
-        if (version_compare(PHP_VERSION, '5.4.0') < 0 && get_magic_quotes_gpc()) {
-            $_POST   = array_map('PrivateBin\\Filter::stripslashesDeep', $_POST);
-            $_GET    = array_map('PrivateBin\\Filter::stripslashesDeep', $_GET);
-            $_COOKIE = array_map('PrivateBin\\Filter::stripslashesDeep', $_COOKIE);
-        }
-
         // decide if we are in JSON API or HTML context
         $this->_isJsonApi = $this->_detectJsonRequest();
 
@@ -94,10 +109,16 @@ class Request
         switch (array_key_exists('REQUEST_METHOD', $_SERVER) ? $_SERVER['REQUEST_METHOD'] : 'GET') {
             case 'DELETE':
             case 'PUT':
-                parse_str(file_get_contents(self::$_inputStream), $this->_params);
-                break;
             case 'POST':
-                $this->_params = $_POST;
+                // it might be a creation or a deletion, the latter is detected below
+                $this->_operation = 'create';
+                try {
+                    $this->_params = Json::decode(
+                        file_get_contents(self::$_inputStream)
+                    );
+                } catch (Exception $e) {
+                    // ignore error, $this->_params will remain empty
+                }
                 break;
             default:
                 $this->_params = $_GET;
@@ -105,31 +126,31 @@ class Request
         if (
             !array_key_exists('pasteid', $this->_params) &&
             !array_key_exists('jsonld', $this->_params) &&
+            !array_key_exists('link', $this->_params) &&
             array_key_exists('QUERY_STRING', $_SERVER) &&
             !empty($_SERVER['QUERY_STRING'])
         ) {
-            $this->_params['pasteid'] = $_SERVER['QUERY_STRING'];
+            $this->_params['pasteid'] = $this->getPasteId();
         }
 
         // prepare operation, depending on current parameters
-        if (
-            (array_key_exists('data', $this->_params) && !empty($this->_params['data'])) ||
-            (array_key_exists('attachment', $this->_params) && !empty($this->_params['attachment']))
-        ) {
-            $this->_operation = 'create';
-        } elseif (array_key_exists('pasteid', $this->_params) && !empty($this->_params['pasteid'])) {
+        if (array_key_exists('pasteid', $this->_params) && !empty($this->_params['pasteid'])) {
             if (array_key_exists('deletetoken', $this->_params) && !empty($this->_params['deletetoken'])) {
                 $this->_operation = 'delete';
-            } else {
+            } elseif ($this->_operation != 'create') {
                 $this->_operation = 'read';
             }
         } elseif (array_key_exists('jsonld', $this->_params) && !empty($this->_params['jsonld'])) {
             $this->_operation = 'jsonld';
+        } elseif (array_key_exists('link', $this->_params) && !empty($this->_params['link'])) {
+            if (strpos($this->getRequestUri(), '/shortenviayourls') !== false) {
+                $this->_operation = 'yourlsproxy';
+            }
         }
     }
 
     /**
-     * Get current operation.
+     * Get current operation
      *
      * @access public
      * @return string
@@ -140,7 +161,34 @@ class Request
     }
 
     /**
-     * Get a request parameter.
+     * Get data of paste or comment
+     *
+     * @access public
+     * @return array
+     */
+    public function getData()
+    {
+        $data = array(
+            'adata' => $this->getParam('adata'),
+        );
+        $required_keys = array('v', 'ct');
+        $meta          = $this->getParam('meta');
+        if (empty($meta)) {
+            $required_keys[] = 'pasteid';
+            $required_keys[] = 'parentid';
+        } else {
+            $data['meta'] = $meta;
+        }
+        foreach ($required_keys as $key) {
+            $data[$key] = $this->getParam($key, $key == 'v' ? 1 : '');
+        }
+        // forcing a cast to int or float
+        $data['v'] = $data['v'] + 0;
+        return $data;
+    }
+
+    /**
+     * Get a request parameter
      *
      * @access public
      * @param  string $param
@@ -149,11 +197,39 @@ class Request
      */
     public function getParam($param, $default = '')
     {
-        return array_key_exists($param, $this->_params) ? $this->_params[$param] : $default;
+        return array_key_exists($param, $this->_params) ?
+            $this->_params[$param] : $default;
     }
 
     /**
-     * If we are in a JSON API context.
+     * Get host as requested by the client
+     *
+     * @access public
+     * @return string
+     */
+    public function getHost()
+    {
+        return array_key_exists('HTTP_HOST', $_SERVER) ?
+            htmlspecialchars($_SERVER['HTTP_HOST']) :
+            'localhost';
+    }
+
+    /**
+     * Get request URI
+     *
+     * @access public
+     * @return string
+     */
+    public function getRequestUri()
+    {
+        return array_key_exists('REQUEST_URI', $_SERVER) ?
+        htmlspecialchars(
+            parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH)
+        ) : '/';
+    }
+
+    /**
+     * If we are in a JSON API context
      *
      * @access public
      * @return bool
@@ -164,7 +240,7 @@ class Request
     }
 
     /**
-     * Override the default input stream source, used for unit testing.
+     * Override the default input stream source, used for unit testing
      *
      * @param string $input
      */
@@ -174,7 +250,7 @@ class Request
     }
 
     /**
-     * detect the clients supported media type and decide if its a JSON API call or not
+     * Detect the clients supported media type and decide if its a JSON API call or not
      *
      * Adapted from: https://stackoverflow.com/questions/3770513/detect-browser-language-in-php#3771447
      *
@@ -220,7 +296,7 @@ class Request
             }
             krsort($mediaTypes);
             foreach ($mediaTypes as $acceptedQuality => $acceptedValues) {
-                if ($acceptedQuality === 0.0) {
+                if ($acceptedQuality === '0.0') {
                     continue;
                 }
                 foreach ($acceptedValues as $acceptedValue) {

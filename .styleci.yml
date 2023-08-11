@@ -3,24 +3,35 @@ preset: recommended
 risky: false
 
 enabled:
-  - no_empty_comment
   - align_equals
-  - long_array_syntax
   - concat_with_spaces
+  - long_array_syntax
+  - no_empty_comment
+  - pre_increment
 
 disabled:
   - blank_line_after_opening_tag
   - blank_line_before_return
+  - blank_line_before_throw
+  - blank_line_before_try
   - concat_without_spaces
   - declare_equal_normalize
   - heredoc_to_nowdoc
-  - method_argument_space
+  - method_argument_space_strict
   - new_with_braces
+  - no_alternative_syntax
   - phpdoc_align
   - phpdoc_no_access
   - phpdoc_separation
   - phpdoc_single_line_var_spacing
   - phpdoc_summary
+  - post_increment
   - short_array_syntax
   - single_line_after_imports
   - unalign_equals
+
+finder:
+  path:
+    - "lib/"
+    - "tpl/"
+    - "tst/"

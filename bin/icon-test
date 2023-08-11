@@ -1,0 +1,147 @@
+#!/usr/bin/env php
+<?php
+define('ITERATIONS', 100000);
+
+
+
+require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
+use Identicon\Generator\GdGenerator;
+use Identicon\Generator\ImageMagickGenerator;
+use Identicon\Generator\SvgGenerator;
+use Identicon\Identicon;
+use Jdenticon\Identicon as Jdenticon;
+use PrivateBin\Vizhash16x16;
+
+
+
+$vizhash = new Vizhash16x16();
+$identiconGenerators = array(
+    'identicon GD' => new Identicon(new GdGenerator()),
+    'identicon ImageMagick' => new Identicon(new ImageMagickGenerator()),
+    'identicon SVG' => new Identicon(new SvgGenerator()),
+);
+$jdenticon = new Jdenticon(array(
+    'size'  => 16,
+    'style' => array(
+        'backgroundColor'   => '#fff0', // fully transparent, for dark mode
+        'padding'           => 0,
+    ),
+));
+$jdenticonGenerators = array(
+    'jdenticon' => 'png',
+    'jdenticon ImageMagick' => 'png',
+    'jdenticon SVG' => 'svg',
+);
+$results = array(
+    'vizhash' => array(
+        'lengths' => array(),
+        'time' => 0
+    ),
+    'identicon GD' => array(
+        'lengths' => array(),
+        'time' => 0
+    ),
+    'identicon ImageMagick' => array(
+        'lengths' => array(),
+        'time' => 0
+    ),
+    'identicon SVG' => array(
+        'lengths' => array(),
+        'time' => 0
+    ),
+    'jdenticon' => array(
+        'lengths' => array(),
+        'time' => 0
+    ),
+    'jdenticon ImageMagick' => array(
+        'lengths' => array(),
+        'time' => 0
+    ),
+    'jdenticon SVG' => array(
+        'lengths' => array(),
+        'time' => 0
+    ),
+);
+$hmacs = array();
+
+echo 'generate ', ITERATIONS, ' hmacs and pre-populate the result array, so tests wont be slowed down', PHP_EOL;
+for ($i = 0; $i < ITERATIONS; ++$i) {
+    $hmacs[$i] = hash_hmac('sha512', '127.0.0.1', bin2hex(random_bytes(256)));
+    foreach (array_keys($results) as $test) {
+        $results[$test]['lengths'][$i] = 0;
+    }
+}
+
+echo 'run vizhash tests', PHP_EOL;
+$start = microtime(true);
+foreach ($hmacs as $i => $hmac) {
+    $data = 'data:image/png;base64,' . base64_encode(
+        $vizhash->generate($hmac)
+    );
+    $results['vizhash']['lengths'][$i] = strlen($data);
+}
+$results['vizhash']['time'] = microtime(true) - $start;
+
+foreach ($identiconGenerators as $key => $identicon) {
+    echo 'run ', $key,' tests', PHP_EOL;
+    $start = microtime(true);
+    foreach ($hmacs as $i => $hmac) {
+        $data = $identicon->getImageDataUri($hmac, 16);
+        $results[$key]['lengths'][$i] = strlen($data);
+    }
+    $results[$key]['time'] = microtime(true) - $start;
+}
+
+foreach ($jdenticonGenerators as $key => $format) {
+    echo 'run ', $key,' tests', PHP_EOL;
+    if ($key === 'jdenticon ImageMagick') {
+        $jdenticon->enableImageMagick = true;
+    } else {
+        $jdenticon->enableImageMagick = false;
+    }
+    $start = microtime(true);
+    foreach ($hmacs as $i => $hmac) {
+        $jdenticon->setHash($hmac);
+        $data = $jdenticon->getImageDataUri($format);
+        $results[$key]['lengths'][$i] = strlen($data);
+    }
+    $results[$key]['time'] = microtime(true) - $start;
+}
+
+
+define(
+    'PADDING_LENGTH',
+    max(
+        array_map(
+            function ($key) {
+                return strlen($key);
+            },
+            array_keys($results)
+        )
+    ) + 1
+);
+
+function format_result_line($generator, $min, $max, $avg, $sec) {
+    echo str_pad($generator, PADDING_LENGTH, ' '), "\t",
+        str_pad($min, 4, ' ', STR_PAD_LEFT), "\t",
+        str_pad($max, 4, ' ', STR_PAD_LEFT), "\t",
+        str_pad($avg, 4, ' ', STR_PAD_LEFT), "\t",
+        str_pad($sec, 7, ' ', STR_PAD_LEFT), PHP_EOL;
+}
+
+echo PHP_EOL;
+format_result_line('Generator:', 'min', 'max', 'avg', 'seconds');
+format_result_line(
+    str_repeat('─', PADDING_LENGTH), str_repeat('─', 4), str_repeat('─', 4),
+    str_repeat('─', 4), str_repeat('─', 7)
+);
+foreach ($results as $generator => $result) {
+    sort($result['lengths']);
+    format_result_line(
+        $generator . ':',
+        $result['lengths'][0],
+        $result['lengths'][ITERATIONS-1],
+        round(array_sum($result['lengths']) / ITERATIONS),
+        round($result['time'], 3)
+    );
+}

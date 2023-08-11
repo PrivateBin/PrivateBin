@@ -7,15 +7,15 @@
  * @link      https://github.com/PrivateBin/PrivateBin
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
- * @version   1.1
+ * @version   1.5.2
  */
 
 namespace PrivateBin\Model;
 
 use Exception;
 use Identicon\Identicon;
+use Jdenticon\Identicon as Jdenticon;
 use PrivateBin\Persistence\TrafficLimiter;
-use PrivateBin\Sjcl;
 use PrivateBin\Vizhash16x16;
 
 /**
@@ -34,34 +34,10 @@ class Comment extends AbstractModel
     private $_paste;
 
     /**
-     * Get comment data.
-     *
-     * @access public
-     * @throws Exception
-     * @return stdClass
-     */
-    public function get()
-    {
-        // @todo add support to read specific comment
-        $comments = $this->_store->readComments($this->getPaste()->getId());
-        foreach ($comments as $comment) {
-            if (
-                $comment->parentid == $this->getParentId() &&
-                $comment->id == $this->getId()
-            ) {
-                $this->_data = $comment;
-                break;
-            }
-        }
-        return $this->_data;
-    }
-
-    /**
      * Store the comment's data.
      *
      * @access public
      * @throws Exception
-     * @return void
      */
     public function store()
     {
@@ -81,7 +57,7 @@ class Comment extends AbstractModel
             throw new Exception('You are unlucky. Try again.', 69);
         }
 
-        $this->_data->meta->postdate = time();
+        $this->_data['meta']['created'] = time();
 
         // store comment
         if (
@@ -89,7 +65,7 @@ class Comment extends AbstractModel
                 $pasteid,
                 $this->getParentId(),
                 $this->getId(),
-                json_decode(json_encode($this->_data), true)
+                $this->_data
             ) === false
         ) {
             throw new Exception('Error saving comment. Sorry.', 70);
@@ -101,7 +77,6 @@ class Comment extends AbstractModel
      *
      * @access public
      * @throws Exception
-     * @return void
      */
     public function delete()
     {
@@ -129,12 +104,11 @@ class Comment extends AbstractModel
      * @access public
      * @param Paste $paste
      * @throws Exception
-     * @return void
      */
     public function setPaste(Paste $paste)
     {
-        $this->_paste               = $paste;
-        $this->_data->meta->pasteid = $paste->getId();
+        $this->_paste           = $paste;
+        $this->_data['pasteid'] = $paste->getId();
     }
 
     /**
@@ -154,14 +128,13 @@ class Comment extends AbstractModel
      * @access public
      * @param string $id
      * @throws Exception
-     * @return void
      */
     public function setParentId($id)
     {
         if (!self::isValidId($id)) {
             throw new Exception('Invalid paste ID.', 65);
         }
-        $this->_data->meta->parentid = $id;
+        $this->_data['parentid'] = $id;
     }
 
     /**
@@ -172,30 +145,22 @@ class Comment extends AbstractModel
      */
     public function getParentId()
     {
-        if (!property_exists($this->_data->meta, 'parentid')) {
-            $this->_data->meta->parentid = '';
+        if (!array_key_exists('parentid', $this->_data)) {
+            $this->_data['parentid'] = $this->getPaste()->getId();
         }
-        return $this->_data->meta->parentid;
+        return $this->_data['parentid'];
     }
 
     /**
-     * Set nickname.
+     * Sanitizes data to conform with current configuration.
      *
-     * @access public
-     * @param string $nickname
-     * @throws Exception
-     * @return void
+     * @access protected
+     * @param  array $data
+     * @return array
      */
-    public function setNickname($nickname)
+    protected function _sanitize(array $data)
     {
-        if (!Sjcl::isValid($nickname)) {
-            throw new Exception('Invalid data.', 66);
-        }
-        $this->_data->meta->nickname = $nickname;
-
-        // If a nickname is provided, we generate an icon based on a SHA512 HMAC
-        // of the users IP. (We assume that if the user did not enter a nickname,
-        // the user wants to be anonymous and we will not generate an icon.)
+        // we generate an icon based on a SHA512 HMAC of the users IP, if configured
         $icon = $this->_conf->getKey('icon');
         if ($icon != 'none') {
             $pngdata = '';
@@ -203,6 +168,16 @@ class Comment extends AbstractModel
             if ($icon == 'identicon') {
                 $identicon = new Identicon();
                 $pngdata   = $identicon->getImageDataUri($hmac, 16);
+            } elseif ($icon == 'jdenticon') {
+                $jdenticon = new Jdenticon(array(
+                    'hash'  => $hmac,
+                    'size'  => 16,
+                    'style' => array(
+                        'backgroundColor'   => '#fff0', // fully transparent, for dark mode
+                        'padding'           => 0,
+                    ),
+                ));
+                $pngdata   = $jdenticon->getImageDataUri('png');
             } elseif ($icon == 'vizhash') {
                 $vh      = new Vizhash16x16();
                 $pngdata = 'data:image/png;base64,' . base64_encode(
@@ -210,9 +185,12 @@ class Comment extends AbstractModel
                 );
             }
             if ($pngdata != '') {
-                $this->_data->meta->vizhash = $pngdata;
+                if (!array_key_exists('meta', $data)) {
+                    $data['meta'] = array();
+                }
+                $data['meta']['icon'] = $pngdata;
             }
         }
-        // Once the icon is generated, we do not keep the IP address hash.
+        return $data;
     }
 }

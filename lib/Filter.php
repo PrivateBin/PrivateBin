@@ -7,7 +7,7 @@
  * @link      https://github.com/PrivateBin/PrivateBin
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
- * @version   1.1
+ * @version   1.5.2
  */
 
 namespace PrivateBin;
@@ -21,21 +21,6 @@ use Exception;
  */
 class Filter
 {
-    /**
-     * strips slashes deeply
-     *
-     * @access public
-     * @static
-     * @param  mixed $value
-     * @return mixed
-     */
-    public static function stripslashesDeep($value)
-    {
-        return is_array($value) ?
-            array_map('self::stripslashesDeep', $value) :
-            stripslashes($value);
-    }
-
     /**
      * format a given time string into a human readable label (localized)
      *
@@ -79,27 +64,8 @@ class Filter
         $i   = 0;
         while (($size / 1024) >= 1) {
             $size = $size / 1024;
-            $i++;
+            ++$i;
         }
-        return number_format($size, ($i ? 2 : 0), '.', ' ') . ' ' . I18n::_($iec[$i]);
-    }
-
-    /**
-     * fixed time string comparison operation to prevent timing attacks
-     * https://crackstation.net/hashing-security.htm?=rd#slowequals
-     *
-     * @access public
-     * @static
-     * @param  string $a
-     * @param  string $b
-     * @return bool
-     */
-    public static function slowEquals($a, $b)
-    {
-        $diff = strlen($a) ^ strlen($b);
-        for ($i = 0; $i < strlen($a) && $i < strlen($b); $i++) {
-            $diff |= ord($a[$i]) ^ ord($b[$i]);
-        }
-        return $diff === 0;
+        return number_format($size, $i ? 2 : 0, '.', ' ') . ' ' . I18n::_($iec[$i]);
     }
 }

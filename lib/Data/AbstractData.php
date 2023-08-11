@@ -7,62 +7,25 @@
  * @link      https://github.com/PrivateBin/PrivateBin
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
- * @version   1.1
+ * @version   1.5.2
  */
 
 namespace PrivateBin\Data;
 
-use stdClass;
-
 /**
  * AbstractData
  *
- * Abstract model for PrivateBin data access, implemented as a singleton.
+ * Abstract model for data access
  */
 abstract class AbstractData
 {
     /**
-     * singleton instance
+     * cache for the traffic limiter
      *
      * @access protected
-     * @static
-     * @var AbstractData
+     * @var    array
      */
-    protected static $_instance = null;
-
-    /**
-     * enforce singleton, disable constructor
-     *
-     * Instantiate using {@link getInstance()}, privatebin is a singleton object.
-     *
-     * @access protected
-     */
-    protected function __construct()
-    {
-    }
-
-    /**
-     * enforce singleton, disable cloning
-     *
-     * Instantiate using {@link getInstance()}, privatebin is a singleton object.
-     *
-     * @access private
-     */
-    private function __clone()
-    {
-    }
-
-    /**
-     * get instance of singleton
-     *
-     * @access public
-     * @static
-     * @param  array $options
-     * @return privatebin_abstract
-     */
-    public static function getInstance($options)
-    {
-    }
+    protected $_last_cache = array();
 
     /**
      * Create a paste.
@@ -72,14 +35,14 @@ abstract class AbstractData
      * @param  array  $paste
      * @return bool
      */
-    abstract public function create($pasteid, $paste);
+    abstract public function create($pasteid, array $paste);
 
     /**
      * Read a paste.
      *
      * @access public
      * @param  string $pasteid
-     * @return stdClass|false
+     * @return array|false
      */
     abstract public function read($pasteid);
 
@@ -88,7 +51,6 @@ abstract class AbstractData
      *
      * @access public
      * @param  string $pasteid
-     * @return void
      */
     abstract public function delete($pasteid);
 
@@ -111,7 +73,7 @@ abstract class AbstractData
      * @param  array  $comment
      * @return bool
      */
-    abstract public function createComment($pasteid, $parentid, $commentid, $comment);
+    abstract public function createComment($pasteid, $parentid, $commentid, array $comment);
 
     /**
      * Read all comments of paste.
@@ -134,6 +96,46 @@ abstract class AbstractData
     abstract public function existsComment($pasteid, $parentid, $commentid);
 
     /**
+     * Purge outdated entries.
+     *
+     * @access public
+     * @param  string $namespace
+     * @param  int $time
+     * @return void
+     */
+    public function purgeValues($namespace, $time)
+    {
+        if ($namespace === 'traffic_limiter') {
+            foreach ($this->_last_cache as $key => $last_submission) {
+                if ($last_submission <= $time) {
+                    unset($this->_last_cache[$key]);
+                }
+            }
+        }
+    }
+
+    /**
+     * Save a value.
+     *
+     * @access public
+     * @param  string $value
+     * @param  string $namespace
+     * @param  string $key
+     * @return bool
+     */
+    abstract public function setValue($value, $namespace, $key = '');
+
+    /**
+     * Load a value.
+     *
+     * @access public
+     * @param  string $namespace
+     * @param  string $key
+     * @return string
+     */
+    abstract public function getValue($namespace, $key = '');
+
+    /**
      * Returns up to batch size number of paste ids that have expired
      *
      * @access protected
@@ -147,7 +149,6 @@ abstract class AbstractData
      *
      * @access public
      * @param  int $batchsize
-     * @return void
      */
     public function purge($batchsize)
     {
@@ -163,14 +164,22 @@ abstract class AbstractData
     }
 
     /**
-     * Get next free slot for comment from postdate.
+     * Returns all paste ids
      *
      * @access public
+     * @return array
+     */
+    abstract public function getAllPastes();
+
+    /**
+     * Get next free slot for comment from postdate.
+     *
+     * @access protected
      * @param  array $comments
      * @param  int|string $postdate
      * @return int|string
      */
-    protected function getOpenSlot(&$comments, $postdate)
+    protected function getOpenSlot(array &$comments, $postdate)
     {
         if (array_key_exists($postdate, $comments)) {
             $parts = explode('.', $postdate, 2);
@@ -181,5 +190,26 @@ abstract class AbstractData
             return $this->getOpenSlot($comments, implode('.', $parts));
         }
         return $postdate;
+    }
+
+    /**
+     * Upgrade pre-version 1 pastes with attachment to version 1 format.
+     *
+     * @access protected
+     * @static
+     * @param  array $paste
+     * @return array
+     */
+    protected static function upgradePreV1Format(array $paste)
+    {
+        if (array_key_exists('attachment', $paste['meta'])) {
+            $paste['attachment'] = $paste['meta']['attachment'];
+            unset($paste['meta']['attachment']);
+            if (array_key_exists('attachmentname', $paste['meta'])) {
+                $paste['attachmentname'] = $paste['meta']['attachmentname'];
+                unset($paste['meta']['attachmentname']);
+            }
+        }
+        return $paste;
     }
 }

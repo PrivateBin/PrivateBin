@@ -7,7 +7,7 @@
  * @link      https://github.com/PrivateBin/PrivateBin
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
- * @version   1.1
+ * @version   1.5.2
  */
 
 namespace PrivateBin\Persistence;
@@ -36,7 +36,6 @@ class PurgeLimiter extends AbstractPersistence
      * @access public
      * @static
      * @param  int $limit
-     * @return void
      */
     public static function setLimit($limit)
     {
@@ -49,12 +48,10 @@ class PurgeLimiter extends AbstractPersistence
      * @access public
      * @static
      * @param Configuration $conf
-     * @return void
      */
     public static function setConfiguration(Configuration $conf)
     {
         self::setLimit($conf->getKey('limit', 'purge'));
-        self::setPath($conf->getKey('dir', 'purge'));
     }
 
     /**
@@ -62,7 +59,6 @@ class PurgeLimiter extends AbstractPersistence
      *
      * @access public
      * @static
-     * @throws Exception
      * @return bool
      */
     public static function canPurge()
@@ -72,23 +68,15 @@ class PurgeLimiter extends AbstractPersistence
             return true;
         }
 
-        $file    = 'purge_limiter.php';
-        $now     = time();
-        $content = '<?php' . PHP_EOL . '$GLOBALS[\'purge_limiter\'] = ' . $now . ';' . PHP_EOL;
-        if (!self::_exists($file)) {
-            self::_store($file, $content);
-        }
-
-        $path = self::getPath($file);
-        require $path;
-        $pl = $GLOBALS['purge_limiter'];
-
+        $now  = time();
+        $pl   = (int) self::$_store->getValue('purge_limiter');
         if ($pl + self::$_limit >= $now) {
-            $result = false;
-        } else {
-            $result = true;
-            self::_store($file, $content);
+            return false;
         }
-        return $result;
+        $hasStored = self::$_store->setValue((string) $now, 'purge_limiter');
+        if (!$hasStored) {
+            error_log('failed to store the purge limiter, skipping purge cycle to avoid getting stuck in a purge loop');
+        }
+        return $hasStored;
     }
 }

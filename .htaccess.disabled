@@ -1,3 +1,12 @@
 RewriteEngine on
+RewriteCond !%{HTTP_USER_AGENT} "Let's Encrypt validation server" [NC]
 RewriteCond %{HTTP_USER_AGENT} ^.*(bot|spider|crawl|https?://|WhatsApp|SkypeUriPreview|facebookexternalhit) [NC]
 RewriteRule .* - [R=403,L]
+
+<IfModule mod_php7.c>
+php_value max_execution_time 30
+php_value post_max_size 10M
+php_value upload_max_size 10M
+php_value upload_max_filesize 10M
+php_value max_file_uploads 100
+</IfModule>

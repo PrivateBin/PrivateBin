@@ -7,7 +7,7 @@
  * @link      https://github.com/PrivateBin/PrivateBin
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
- * @version   1.1
+ * @version   1.5.2
  */
 
 namespace PrivateBin;
@@ -84,7 +84,7 @@ class I18n
      */
     public static function _($messageId)
     {
-        return forward_static_call_array('self::translate', func_get_args());
+        return forward_static_call_array('PrivateBin\I18n::translate', func_get_args());
     }
 
     /**
@@ -125,7 +125,29 @@ class I18n
         } else {
             $args[0] = self::$_translations[$messageId];
         }
+        // encode any non-integer arguments and the message ID, if it doesn't contain a link
+        $argsCount = count($args);
+        if ($argsCount > 1) {
+            for ($i = 0; $i < $argsCount; ++$i) {
+                if (($i > 0 && !is_int($args[$i])) || strpos($args[0], '<a') === false) {
+                    $args[$i] = self::encode($args[$i]);
+                }
+            }
+        }
         return call_user_func_array('sprintf', $args);
+    }
+
+    /**
+     * encode HTML entities for output into an HTML5 document
+     *
+     * @access public
+     * @static
+     * @param  string $string
+     * @return string
+     */
+    public static function encode($string)
+    {
+        return htmlspecialchars($string, ENT_QUOTES | ENT_HTML5 | ENT_DISALLOWED, 'UTF-8', false);
     }
 
     /**
@@ -135,15 +157,17 @@ class I18n
      *
      * @access public
      * @static
-     * @return void
      */
     public static function loadTranslations()
     {
         $availableLanguages = self::getAvailableLanguages();
 
         // check if the lang cookie was set and that language exists
-        if (array_key_exists('lang', $_COOKIE) && in_array($_COOKIE['lang'], $availableLanguages)) {
-            $match = $_COOKIE['lang'];
+        if (
+            array_key_exists('lang', $_COOKIE) &&
+            ($key = array_search($_COOKIE['lang'], $availableLanguages)) !== false
+        ) {
+            $match = $availableLanguages[$key];
         }
         // find a translation file matching the browsers language preferences
         else {
@@ -154,9 +178,8 @@ class I18n
 
         // load translations
         self::$_language     = $match;
-        self::$_translations = ($match == 'en') ? array() : json_decode(
-            file_get_contents(self::_getPath($match . '.json')),
-            true
+        self::$_translations = ($match == 'en') ? array() : Json::decode(
+            file_get_contents(self::_getPath($match . '.json'))
         );
     }
 
@@ -172,11 +195,10 @@ class I18n
         if (count(self::$_availableLanguages) == 0) {
             $i18n = dir(self::_getPath());
             while (false !== ($file = $i18n->read())) {
-                if (preg_match('/^([a-z]{2}).json$/', $file, $match) === 1) {
+                if (preg_match('/^([a-z]{2,3}).json$/', $file, $match) === 1) {
                     self::$_availableLanguages[] = $match[1];
                 }
             }
-            self::$_availableLanguages[] = 'en';
         }
         return self::$_availableLanguages;
     }
@@ -242,7 +264,7 @@ class I18n
     {
         $file = self::_getPath('languages.json');
         if (count(self::$_languageLabels) == 0 && is_readable($file)) {
-            self::$_languageLabels = json_decode(file_get_contents($file), true);
+            self::$_languageLabels = Json::decode(file_get_contents($file));
         }
         if (count($languages) == 0) {
             return self::$_languageLabels;
@@ -256,7 +278,6 @@ class I18n
      * @access public
      * @static
      * @param  string $lang
-     * @return void
      */
     public static function setLanguageFallback($lang)
     {
@@ -284,7 +305,7 @@ class I18n
     /**
      * determines the plural form to use based on current language and given number
      *
-     * From: http://localization-guide.readthedocs.org/en/latest/l10n/pluralforms.html
+     * From: https://docs.translatehouse.org/projects/localization-guide/en/latest/l10n/pluralforms.html
      *
      * @access protected
      * @static
@@ -294,19 +315,36 @@ class I18n
     protected static function _getPluralForm($n)
     {
         switch (self::$_language) {
+            case 'ar':
+                return $n === 0 ? 0 : ($n === 1 ? 1 : ($n === 2 ? 2 : ($n % 100 >= 3 && $n % 100 <= 10 ? 3 : ($n % 100 >= 11 ? 4 : 5))));
+            case 'cs':
+            case 'sk':
+                return $n === 1 ? 0 : ($n >= 2 && $n <= 4 ? 1 : 2);
+            case 'co':
             case 'fr':
             case 'oc':
+            case 'tr':
             case 'zh':
                 return $n > 1 ? 1 : 0;
+            case 'he':
+                return $n === 1 ? 0 : ($n === 2 ? 1 : (($n < 0 || $n > 10) && ($n % 10 === 0) ? 2 : 3));
+            case 'id':
+            case 'ja':
+            case 'jbo':
+            case 'th':
+                return 0;
+            case 'lt':
+                return $n % 10 === 1 && $n % 100 !== 11 ? 0 : (($n % 10 >= 2 && $n % 100 < 10 || $n % 100 >= 20) ? 1 : 2);
             case 'pl':
-                return $n == 1 ? 0 : ($n % 10 >= 2 && $n % 10 <= 4 && ($n % 100 < 10 || $n % 100 >= 20) ? 1 : 2);
+                return $n === 1 ? 0 : ($n % 10 >= 2 && $n % 10 <= 4 && ($n % 100 < 10 || $n % 100 >= 20) ? 1 : 2);
             case 'ru':
-                return $n % 10 == 1 && $n % 100 != 11 ? 0 : ($n % 10 >= 2 && $n % 10 <= 4 && ($n % 100 < 10 || $n % 100 >= 20) ? 1 : 2);
+            case 'uk':
+                return $n % 10 === 1 && $n % 100 != 11 ? 0 : ($n % 10 >= 2 && $n % 10 <= 4 && ($n % 100 < 10 || $n % 100 >= 20) ? 1 : 2);
             case 'sl':
-                return $n % 100 == 1 ? 1 : ($n % 100 == 2 ? 2 : ($n % 100 == 3 || $n % 100 == 4 ? 3 : 0));
-            // de, en, es, it
+                return $n % 100 === 1 ? 1 : ($n % 100 === 2 ? 2 : ($n % 100 === 3 || $n % 100 === 4 ? 3 : 0));
             default:
-                return $n != 1 ? 1 : 0;
+                // bg, ca, de, el, en, es, et, fi, hu, it, nl, no, pt
+                return $n !== 1 ? 1 : 0;
         }
     }
 

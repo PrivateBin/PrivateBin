@@ -1,24 +1,42 @@
 {
 	"@context": {
 		"so": "https://schema.org/",
-		"status": {"@id": "so:Integer"},
-		"id": {"@id": "so:name"},
-		"deletetoken": {"@id": "so:Text"},
-		"url": {
-			"@type": "@id",
-			"@id": "so:url"
+		"pb": "?jsonld=types#",
+		"pm": "?jsonld=pastemeta#",
+		"status": {
+			"@type": "so:Integer"
 		},
-		"data": {"@id": "so:Text"},
-		"attachment": {"@id": "so:Text"},
-		"attachmentname": {"@id": "so:Text"},
+		"id": {
+			"@type": "so:name"
+		},
+		"deletetoken": {
+			"@type": "so:Text"
+		},
+		"url": {
+			"@type": "so:url"
+		},
+		"v": {
+			"@type": "so:Integer",
+			"@value": 2
+		},
+		"ct": {
+			"@type": "pb:CipherText"
+		},
+		"adata": {
+			"@type": "pm:AuthenticatedData"
+		},
 		"meta": {
-			"@id": "?jsonld=pastemeta"
+			"@type": "pm:MetaData"
 		},
 		"comments": {
-			"@id": "?jsonld=comment",
+			"@type": "?jsonld=comment",
 			"@container": "@list"
 		},
-		"comment_count": {"@id": "so:Integer"},
-		"comment_offset": {"@id": "so:Integer"}
+		"comment_count": {
+			"@type": "so:Integer"
+		},
+		"comment_offset": {
+			"@type": "so:Integer"
+		}
 	}
 }
