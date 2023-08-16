@@ -1,0 +1,4 @@
+[allowlist]
+    description = "ignore base58 vocabulary & unit test cipher text - yes, it is a secret and a little easter egg"
+    regexTarget = "line"
+    regexes = ['''base58''', '''ME5JF''']
