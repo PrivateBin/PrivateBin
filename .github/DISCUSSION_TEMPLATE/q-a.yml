@@ -68,8 +68,8 @@ body:
     attributes:
       label: I can reproduce this issue on [https://privatebin.net](https://privatebin.net)
       options:
-        - No
-        - Yes
+        - "No"
+        - "Yes"
       default: 0
     validations:
       required: true
