@@ -15,6 +15,7 @@ js/test/ export-ignore
 .gitattributes export-ignore
 .github export-ignore
 .gitignore export-ignore
+.gitleaks.toml export-ignore
 .jshintrc export-ignore
 .nsprc export-ignore
 .php_cs export-ignore
