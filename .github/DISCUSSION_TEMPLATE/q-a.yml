@@ -4,7 +4,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thanks for taking the time to fill out this form!
+        ## Thanks for taking the time to fill out this form!
   - type: textarea
     id: description
     attributes:
@@ -15,7 +15,7 @@ body:
   - type: checkboxes
     id: readed-faq
     attributes:
-      label: Please tick this to confirm
+      label: Did you use the FAQ section?
       description: Have you read [the FAQ](https://github.com/PrivateBin/PrivateBin/wiki/FAQ)?
       options:
         - label: Yes, I have read the FAQ and I found no solution/answer there.
@@ -28,6 +28,7 @@ body:
       value: |
         1.
         2.
+        ...
   - type: textarea
     id: what_happens
     attributes:
@@ -66,7 +67,8 @@ body:
   - type: dropdown
     id: reproduce_issue
     attributes:
-      label: I can reproduce this issue on [https://privatebin.net](https://privatebin.net)
+      label: Issue reproducibility
+      description: Can you reproduce this issue on [https://privatebin.net](https://privatebin.net)?
       options:
         - "No"
         - "Yes"
