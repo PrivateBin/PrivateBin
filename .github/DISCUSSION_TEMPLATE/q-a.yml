@@ -45,7 +45,7 @@ body:
     id: additional_info
     attributes:
       label: Additional information
-      description: E.g. if you have access to the server log files, copy them here. Or copy the browser console, if appropiate.
+      description: E.g. if you have access to the server log files, copy them here. Or copy the browser console content, if appropiate.
   - type: input
     id: server_address
     attributes:
@@ -66,7 +66,7 @@ body:
     id: privatebin_version
     attributes:
       label: PrivateBin version
-      description: The PrivateBin version, where you experience the issue. It is shown at the bottom left in the web interface e.g.
+      description: The PrivateBin version, where you experience the issue. It is e.g. shown at the bottom left in the web interface.
       placeholder: e.g. v1.5.2
   - type: input
     id: browser
@@ -84,8 +84,8 @@ body:
       label: Issue reproducibility
       description: Can you reproduce this issue on [https://privatebin.net](https://privatebin.net)?
       options:
-        - "No, I cannot reproduce it on https://privatebin.net""
-        - "Yes, reproducible on https://privatebin.net"
+        - "No, I cannot reproduce it on https://privatebin.net."
+        - "Yes, reproducible on https://privatebin.net."
       default: 0
     validations:
       required: true
