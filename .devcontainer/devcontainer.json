@@ -21,6 +21,10 @@
 			]
         },
         "codespaces": {
+            "openFiles": [
+                "README.md",
+                "doc/README.md"
+            ],
             "repositories": {
                 "PrivateBin/*": {
                     "permissions": {
