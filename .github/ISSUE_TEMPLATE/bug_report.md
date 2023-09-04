@@ -10,7 +10,7 @@ assignees: ''
 <!-- Please make sure to **only** use this template when it is about bugs in the PrivateBin PHP project.
 Otherwise, for help and support issues e.g. for deployment issues, please go back and chose the appropiate category. -->
 
-<-- Describe the bug: A clear and concise description of what the bug is. -->
+<!-- Describe the bug: A clear and concise description of what the bug is. -->
 
 ## Steps to reproduce
 <!-- Tell us how to reproduce the problem. -->
