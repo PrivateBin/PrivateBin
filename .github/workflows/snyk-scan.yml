@@ -13,7 +13,7 @@ jobs:
   snyk-php:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Install Google Cloud Storage
         run: composer require --no-update google/cloud-storage && composer update --no-dev
       - name: Run Snyk to check for vulnerabilities
