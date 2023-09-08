@@ -13,10 +13,11 @@ mostly safe default configuration, but we urge you to check the
 **NOTE:** See our [FAQ entry on securely downloading release files](https://github.com/PrivateBin/PrivateBin/wiki/FAQ#how-can-i-securely-clonedownload-your-project)
 for more information.
 
-**NOTE:** There is a [ansible](https://ansible.com) role by @e1mo available to
-install and configure PrivateBin on your server. It's available on
-[ansible galaxy](https://galaxy.ansible.com/e1mo/privatebin)
-([source code](https://git.sr.ht/~e1mo/ansible-role-privatebin)).
+**NOTE:** There are Ansible roles available for installing and configuring PrivateBin on your server. You can choose from the following options:
+
+- [Podman Rootless - PrivateBin by @voidquark](https://galaxy.ansible.com/voidquark/privatebin)  ([Github source code](https://github.com/voidquark/privatebin)): Simplifies the deployment and management of a secure PrivateBin service using a rootless Podman container. Key features include root-less deployment, ensuring security within a user namespace, idempotent deployment for consistent state, out-of-the-box setup for Red Hat systems, and the flexibility to customize PrivateBin configurations. It has been tested on EL9.
+
+- [Config Configuration - PrivateBin by @e1mo](https://galaxy.ansible.com/e1mo/privatebin) ([Github source code](https://git.sr.ht/~e1mo/ansible-role-privatebin)): Deploy PrivateBin configuration to disk with a customized configuration.
 
 ### Minimal Requirements
 
