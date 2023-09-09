@@ -1,4 +1,5 @@
-;<?php http_response_code(403); /*
+;<?php http_response_code(403); 
+/*
 ; config file for PrivateBin
 ;
 ; An explanation of each setting can be find online at https://github.com/PrivateBin/PrivateBin/wiki/Configuration.
@@ -64,6 +65,10 @@ languageselection = false
 ; (optional) Let users create a QR code for sharing the paste URL with one click.
 ; It works both when a new paste is created and when you view a paste.
 ; qrcode = true
+
+; (optional) Let users send an email sharing the paste URL with one click.
+; It works both when a new paste is created and when you view a paste.
+; email = true
 
 ; (optional) IP based icons are a weak mechanism to detect if a comment was from
 ; a different user when the same username was used in a comment. It might get
@@ -259,3 +264,4 @@ dir = PATH "data"
 ; signature = ""
 ; (optional) the URL of the YOURLS API, called to shorten a PrivateBin URL
 ; apiurl = "https://yourls.example.com/yourls-api.php"
+*/
