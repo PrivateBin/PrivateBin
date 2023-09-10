@@ -65,6 +65,10 @@ languageselection = false
 ; It works both when a new paste is created and when you view a paste.
 ; qrcode = true
 
+; (optional) Let users send an email sharing the paste URL with one click.
+; It works both when a new paste is created and when you view a paste.
+; email = true
+
 ; (optional) IP based icons are a weak mechanism to detect if a comment was from
 ; a different user when the same username was used in a comment. It might get
 ; used to get the IP of a comment poster if the server salt is leaked and a

@@ -144,6 +144,7 @@ if ($QRCODE) :
 		</div>
 <?php
 endif;
+if ($EMAIL) :
 ?>
 		<div id="emailconfirmmodal" tabindex="-1" class="modal fade" aria-labelledby="emailconfirmmodalTitle" role="dialog" aria-hidden="true">
 			<div class="modal-dialog" role="document">
@@ -167,6 +168,9 @@ endif;
 				</div>
 			</div>
 		</div>
+<?php
+endif;
+?>
 		<nav class="navbar navbar-<?php echo $isDark ? 'inverse' : 'default'; ?> navbar-<?php echo $isCpct ? 'fixed' : 'static'; ?>-top"><?php
 if ($isCpct) :
 ?><div class="container"><?php
@@ -216,10 +220,15 @@ endif;
 						<button id="downloadtextbutton" type="button" class="hidden btn btn-<?php echo $isDark ? 'warning' : 'default'; ?> navbar-btn">
 							<span class="glyphicon glyphicon glyphicon-download-alt" aria-hidden="true"></span> <?php echo I18n::_('Save paste'), PHP_EOL; ?>
 						</button>
+<?php
+if ($EMAIL) :
+?>
+
 						<button id="emaillink" type="button" class="hidden btn btn-<?php echo $isDark ? 'warning' : 'default'; ?> navbar-btn">
 							<span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> <?php echo I18n::_('Email'), PHP_EOL; ?>
 						</button>
 <?php
+endif;
 if ($QRCODE) :
 ?>
 						<button id="qrcodelink" type="button" data-toggle="modal" data-target="#qrcodemodal" class="hidden btn btn-<?php echo $isDark ? 'warning' : 'default'; ?> navbar-btn">

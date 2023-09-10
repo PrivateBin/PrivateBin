@@ -129,8 +129,13 @@ endif;
 					<button id="clonebutton" class="hidden"><img src="img/icon_clone.png" width="15" height="17" alt="" /><?php echo I18n::_('Clone'); ?></button>
 					<button id="rawtextbutton" class="hidden"><img src="img/icon_raw.png" width="15" height="15" alt="" /><?php echo I18n::_('Raw text'); ?></button>
 					<button id="downloadtextbutton" class="hidden"><?php echo I18n::_('Save paste'), PHP_EOL; ?></button>
+<?php
+if ($EMAIL):
+?>
+
 					<button id="emaillink" class="hidden"><img src="img/icon_email.png" width="15" height="15" alt="" /><?php echo I18n::_('Email'); ?></button>
 <?php
+endif;
 if ($QRCODE):
 ?>
 					<button id="qrcodelink" class="hidden"><img src="img/icon_qr.png" width="15" height="15" alt="" /><?php echo I18n::_('QR code'); ?></button>
