@@ -1,5 +1,4 @@
-;<?php http_response_code(403); 
-/*
+;<?php http_response_code(403); /*
 ; config file for PrivateBin
 ;
 ; An explanation of each setting can be find online at https://github.com/PrivateBin/PrivateBin/wiki/Configuration.
@@ -264,4 +263,3 @@ dir = PATH "data"
 ; signature = ""
 ; (optional) the URL of the YOURLS API, called to shorten a PrivateBin URL
 ; apiurl = "https://yourls.example.com/yourls-api.php"
-*/
