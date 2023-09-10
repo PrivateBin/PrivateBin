@@ -229,8 +229,6 @@ if ($EMAIL) :
 						</button>
 <?php
 endif;
-?>
-<?php
 if ($QRCODE) :
 ?>
 						<button id="qrcodelink" type="button" data-toggle="modal" data-target="#qrcodemodal" class="hidden btn btn-<?php echo $isDark ? 'warning' : 'default'; ?> navbar-btn">
