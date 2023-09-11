@@ -1,8 +1,10 @@
 # PrivateBin version history
 
-  * **1.6.0 (not yet released)**
+  * **1.6.0 (2023-09-11)**
     * ADDED: Translations for Japanese & Arabic
+    * ADDED: Configuration option to disable Email button (#1164)
     * CHANGED: Minimum required PHP version is 7.3, due to upgrading PHPunit (#707)
+    * CHANGED: Removed PHP 5 polyfill for random_bytes()
   * **1.5.2 (2023-07-09)**
     * ADDED: Allow AWS SDK to use default credential provider chain for S3Storage (#1070)
     * CHANGED: Upgrading libraries to: DOMpurify 3.0.4 & jQuery 3.7.0
