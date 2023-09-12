@@ -59,7 +59,7 @@ accessible to your webserver and PHP process (see also
 In situations where you want to keep the PrivateBin static files separate from the
 rest of your data, or you want to reuse the installation files on multiple vhosts,
 you may only want to change the `conf.php`. In this case, you can set the
-`CONFIG_PATH` environment variable to the absolute path to the `conf.php` file.
+`CONFIG_PATH` environment variable to the absolute path to the directory containing the `conf.php` file.
 This can be done in your web server's virtual host config, the PHP config, or in
 the index.php, if you choose to customize it.
 
@@ -68,13 +68,13 @@ wherever it may be.
 
 > #### CONFIG_PATH example
 > Setting the value in an Apache Vhost:
-> SetEnv CONFIG_PATH /var/lib/privatebin/conf.php
+> SetEnv CONFIG_PATH /var/lib/privatebin/
 >
 > In a php-fpm pool config:
-> env[CONFIG_PATH] = /var/lib/privatebin/conf.php
+> env[CONFIG_PATH] = /var/lib/privatebin/
 >
 > In the index.php, near the top:
-> putenv('CONFIG_PATH=/var/lib/privatebin/conf.php');
+> putenv('CONFIG_PATH=/var/lib/privatebin/');
 
 ### Transport security
 
