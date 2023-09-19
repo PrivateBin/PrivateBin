@@ -3,7 +3,6 @@
     "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted %sin the browser%s using 256 bits AES.": "%s jest minimalistycznym, otwartoźródłowym serwisem typu pastebin, w którym serwer nie ma jakichkolwiek informacji o tym, co jest wklejane. Dane są szyfrowane i deszyfrowane %sw przeglądarce%s z użyciem 256-bitowego klucza AES.",
     "More information on the <a href=\"https://privatebin.info/\">project page</a>.": "Więcej informacji na <a href=\"https://privatebin.info/\">stronie projektu</a>.",
     "Because ignorance is bliss": "Ponieważ ignorancja jest cnotą",
-    "en": "pl",
     "Paste does not exist, has expired or has been deleted.": "Wklejka nie istnieje, wygasła albo została usunięta.",
     "%s requires php %s or above to work. Sorry.": "%s wymaga PHP w wersji %s lub nowszej. Przykro mi.",
     "%s requires configuration section [%s] to be present in configuration file.": "%s wymaga obecności sekcji [%s] w pliku konfiguracyjnym.",

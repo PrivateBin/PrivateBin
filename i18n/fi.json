@@ -3,7 +3,6 @@
     "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted %sin the browser%s using 256 bits AES.": "%s on minimalistinen, avoimen lähdekoodin online pastebin jossa palvelimella ei ole tietoa syötetystä datasta. Data salataan/puretaan %sselaimessa%s käyttäen 256-bittistä AES:ää.",
     "More information on the <a href=\"https://privatebin.info/\">project page</a>.": "Lisää tietoa <a href=\"https://privatebin.info/\">projektisivulla</a>.",
     "Because ignorance is bliss": "Koska tieto lisää tuskaa",
-    "en": "fi",
     "Paste does not exist, has expired or has been deleted.": "Pastea ei ole olemassa, se on vanhentunut tai se on poistettu.",
     "%s requires php %s or above to work. Sorry.": "%s vaatii php:n %s-version tai uudemman toimiakseen. Anteeksi.",
     "%s requires configuration section [%s] to be present in configuration file.": "%s vaatii konfiguraatio-osion [%s] olevan läsnä konfiguraatiotiedostossa.",
