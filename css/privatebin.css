@@ -261,6 +261,7 @@ button img {
 
 #newbutton {
 	float: right;
+	margin-left: 0;
 	margin-right: 0;
 	margin-bottom: 5px;
 	display: inline;
@@ -487,4 +488,18 @@ img.vizhash {
 
 #cleartext h3 {
 	font-size: 1.2em;
+}
+
+/* right-to-left overrides */
+html[dir="rtl"] #aboutbox, html[dir="rtl"] #deletelink, html[dir="rtl"] #newbutton {
+	float: left;
+}
+
+html[dir="rtl"] button, html[dir="rtl"] .button, html[dir="rtl"] button img {
+	margin-left: 5px;
+	margin-right: inherit;
+}
+
+html[dir="rtl"] button img {
+	margin-left: 8px;
 }
