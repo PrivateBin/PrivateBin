@@ -1,7 +1,7 @@
 <?php
 use PrivateBin\I18n;
 ?><!DOCTYPE html>
-<html lang="<?php echo I18n::_('en'); ?>">
+<html lang="<?php echo I18n::getLanguage(); ?>"<?php echo I18n::isRtl() ? ' dir="rtl"' : ''; ?>>
 	<head>
 		<meta charset="utf-8" />
 		<meta http-equiv="Content-Security-Policy" content="<?php echo I18n::encode($CSPHEADER); ?>">

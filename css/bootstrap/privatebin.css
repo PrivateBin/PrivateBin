@@ -6,7 +6,7 @@
  * @link      https://github.com/PrivateBin/PrivateBin
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
- * @version   1.5.2
+ * @version   1.6.0
  */
 
 body {
@@ -113,6 +113,7 @@ body.loading {
 #qrcodemodalClose {
 	float: right;
 }
+
 #qrcode-display {
 	width: 200px;
 	height: 200px;
@@ -204,4 +205,24 @@ li.L0, li.L1, li.L2, li.L3, li.L5, li.L6, li.L7, li.L8 {
 
 .modal .modal-content button {
 	margin: 0.5em 0;
+}
+
+/* right-to-left overrides */
+html[dir="rtl"] .checkbox label {
+	padding-left: inherit;
+	padding-right: 20px;
+}
+
+html[dir="rtl"] .checkbox input[type="checkbox"] {
+	margin-left: inherit;
+	margin-right: -20px;
+}
+
+html[dir="rtl"] #language {
+	margin-left: inherit;
+	margin-right: 8px;
+}
+
+html[dir="rtl"] #deletelink, html[dir="rtl"] #qrcodemodalClose {
+	float: left;
 }

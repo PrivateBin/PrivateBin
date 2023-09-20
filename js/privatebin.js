@@ -6,7 +6,7 @@
  * @see       {@link https://github.com/PrivateBin/PrivateBin}
  * @copyright 2012 Sébastien SAUVAGE ({@link http://sebsauvage.net})
  * @license   {@link https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License}
- * @version   1.5.2
+ * @version   1.6.0
  * @name      PrivateBin
  * @namespace
  */
@@ -791,6 +791,18 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         };
 
         /**
+         * get currently loaded language
+         *
+         * @name   I18n.getLanguage
+         * @function
+         * @return {string}
+         */
+        me.getLanguage = function()
+        {
+            return language;
+        };
+
+        /**
          * per language functions to use to determine the plural form
          *
          * @see    {@link https://docs.translatehouse.org/projects/localization-guide/en/latest/l10n/pluralforms.html}
@@ -847,7 +859,10 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
             // auto-select language based on browser settings
             if (newLanguage.length === 0) {
-                newLanguage = (navigator.language || navigator.userLanguage || 'en').substring(0, 2);
+                newLanguage = (navigator.language || navigator.userLanguage || 'en');
+                if (newLanguage.indexOf('-') > 0) {
+                    newLanguage = newLanguage.split('-')[0];
+                }
             }
 
             // if language is already used skip update

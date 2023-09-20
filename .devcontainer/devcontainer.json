@@ -1,0 +1,50 @@
+{
+    "name": "PHP",
+    "image": "mcr.microsoft.com/devcontainers/php",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+				"github.codespaces",
+                // PHP from https://github.com/devcontainers/templates/tree/main/src/php
+				"xdebug.php-debug",
+				"bmewburn.vscode-intelephense-client",
+				"xdebug.php-pack",
+                // PHP
+				"DEVSENSE.phptools-vscode",
+				"DEVSENSE.composer-php-vscode",
+                // linting
+				"EditorConfig.EditorConfig",
+				"dbaeumer.vscode-eslint",
+				"raymondcamden.CSSLint",
+                // testing
+				"maty.vscode-mocha-sidebar"
+			]
+        },
+        "codespaces": {
+            "openFiles": [
+                "README.md",
+                "doc/README.md"
+            ],
+            "repositories": {
+                "PrivateBin/*": {
+                    "permissions": {
+                        "pull_requests": "write"
+                    }
+                }
+            }
+        }
+    },
+    "features": {
+        "ghcr.io/devcontainers-contrib/features/mocha:2": {}
+    },
+    "forwardPorts": [
+        8080
+    ],
+    "postCreateCommand": [
+        "composer install --no-dev --optimize-autoloader",
+        "sudo chmod a+x \"$(pwd)\" && sudo rm -rf /var/www/html && sudo ln -s \"$(pwd)\" /var/www/html",
+        "npm install --global nyc"
+    ],
+    // alternatiuve: apache2ctl start (but requires root)
+    "postAttachCommand": "php -S 0.0.0.0:8080"
+}
