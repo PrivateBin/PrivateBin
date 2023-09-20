@@ -34,7 +34,7 @@ class I18nTest extends TestCase
     {
         $_COOKIE['lang'] = 'de';
         I18n::loadTranslations();
-        $this->assertEquals($this->_translations['en'], I18n::_('en'), 'browser language de');
+        $this->assertEquals($_COOKIE['lang'], I18n::getLanguage(), 'browser language de');
         $this->assertEquals('0 Stunden', I18n::_('%d hours', 0), '0 hours in German');
         $this->assertEquals('1 Stunde',  I18n::_('%d hours', 1), '1 hour in German');
         $this->assertEquals('2 Stunden', I18n::_('%d hours', 2), '2 hours in German');
@@ -44,7 +44,7 @@ class I18nTest extends TestCase
     {
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'de-CH,de;q=0.8,en-GB;q=0.6,en-US;q=0.4,en;q=0.2,fr;q=0.0';
         I18n::loadTranslations();
-        $this->assertEquals($this->_translations['en'], I18n::_('en'), 'browser language de');
+        $this->assertEquals('de', I18n::getLanguage(), 'browser language de');
         $this->assertEquals('0 Stunden', I18n::_('%d hours', 0), '0 hours in German');
         $this->assertEquals('1 Stunde',  I18n::_('%d hours', 1), '1 hour in German');
         $this->assertEquals('2 Stunden', I18n::_('%d hours', 2), '2 hours in German');
@@ -54,7 +54,7 @@ class I18nTest extends TestCase
     {
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'fr-CH,fr;q=0.8,en-GB;q=0.6,en-US;q=0.4,en;q=0.2,de;q=0.0';
         I18n::loadTranslations();
-        $this->assertEquals('fr', I18n::_('en'), 'browser language fr');
+        $this->assertEquals('fr', I18n::getLanguage(), 'browser language fr');
         $this->assertEquals('0 heure',  I18n::_('%d hours', 0), '0 hours in French');
         $this->assertEquals('1 heure',  I18n::_('%d hours', 1), '1 hour in French');
         $this->assertEquals('2 heures', I18n::_('%d hours', 2), '2 hours in French');
@@ -64,7 +64,7 @@ class I18nTest extends TestCase
     {
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'no;q=0.8,en-GB;q=0.6,en-US;q=0.4,en;q=0.2';
         I18n::loadTranslations();
-        $this->assertEquals('no', I18n::_('en'), 'browser language no');
+        $this->assertEquals('no', I18n::getLanguage(), 'browser language no');
         $this->assertEquals('0 timer',  I18n::_('%d hours', 0), '0 hours in Norwegian');
         $this->assertEquals('1 time',  I18n::_('%d hours', 1), '1 hour in Norwegian');
         $this->assertEquals('2 timer', I18n::_('%d hours', 2), '2 hours in Norwegian');
@@ -74,7 +74,7 @@ class I18nTest extends TestCase
     {
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'oc;q=0.8,en-GB;q=0.6,en-US;q=0.4,en;q=0.2';
         I18n::loadTranslations();
-        $this->assertEquals('oc', I18n::_('en'), 'browser language oc');
+        $this->assertEquals('oc', I18n::getLanguage(), 'browser language oc');
         $this->assertEquals('0 ora',  I18n::_('%d hours', 0), '0 hours in Occitan');
         $this->assertEquals('1 ora',  I18n::_('%d hours', 1), '1 hour in Occitan');
         $this->assertEquals('2 oras', I18n::_('%d hours', 2), '2 hours in Occitan');
@@ -84,7 +84,7 @@ class I18nTest extends TestCase
     {
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'zh;q=0.8,en-GB;q=0.6,en-US;q=0.4,en;q=0.2';
         I18n::loadTranslations();
-        $this->assertEquals('zh', I18n::_('en'), 'browser language zh');
+        $this->assertEquals('zh', I18n::getLanguage(), 'browser language zh');
         $this->assertEquals('0 小时',  I18n::_('%d hours', 0), '0 hours in Chinese');
         $this->assertEquals('1 小时',  I18n::_('%d hours', 1), '1 hour in Chinese');
         $this->assertEquals('2 小时', I18n::_('%d hours', 2), '2 hours in Chinese');
@@ -94,7 +94,7 @@ class I18nTest extends TestCase
     {
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'pl;q=0.8,en-GB;q=0.6,en-US;q=0.4,en;q=0.2';
         I18n::loadTranslations();
-        $this->assertEquals('pl', I18n::_('en'), 'browser language pl');
+        $this->assertEquals('pl', I18n::getLanguage(), 'browser language pl');
         $this->assertEquals('1 godzina', I18n::_('%d hours', 1), '1 hour in Polish');
         $this->assertEquals('2 godzina', I18n::_('%d hours', 2), '2 hours in Polish');
         $this->assertEquals('12 godzinę', I18n::_('%d hours', 12), '12 hours in Polish');
@@ -109,7 +109,7 @@ class I18nTest extends TestCase
     {
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'ru;q=0.8,en-GB;q=0.6,en-US;q=0.4,en;q=0.2';
         I18n::loadTranslations();
-        $this->assertEquals('ru', I18n::_('en'), 'browser language ru');
+        $this->assertEquals('ru', I18n::getLanguage(), 'browser language ru');
         $this->assertEquals('1 минуту',  I18n::_('%d minutes', 1), '1 minute in Russian');
         $this->assertEquals('3 минуты',  I18n::_('%d minutes', 3), '3 minutes in Russian');
         $this->assertEquals('10 минут',  I18n::_('%d minutes', 10), '10 minutes in Russian');
@@ -120,7 +120,7 @@ class I18nTest extends TestCase
     {
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'sl;q=0.8,en-GB;q=0.6,en-US;q=0.4,en;q=0.2';
         I18n::loadTranslations();
-        $this->assertEquals('sl', I18n::_('en'), 'browser language sl');
+        $this->assertEquals('sl', I18n::getLanguage(), 'browser language sl');
         $this->assertEquals('0 ura',  I18n::_('%d hours', 0), '0 hours in Slowene');
         $this->assertEquals('1 uri',  I18n::_('%d hours', 1), '1 hour in Slowene');
         $this->assertEquals('2 ure', I18n::_('%d hours', 2), '2 hours in Slowene');
@@ -135,7 +135,7 @@ class I18nTest extends TestCase
     {
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'cs;q=0.8,en-GB;q=0.6,en-US;q=0.4,en;q=0.2';
         I18n::loadTranslations();
-        $this->assertEquals('cs', I18n::_('en'), 'browser language cs');
+        $this->assertEquals('cs', I18n::getLanguage(), 'browser language cs');
         $this->assertEquals('1 hodina', I18n::_('%d hours', 1), '1 hour in Czech');
         $this->assertEquals('2 hodiny', I18n::_('%d hours', 2), '2 hours in Czech');
         $this->assertEquals('5 minut',  I18n::_('%d minutes', 5), '5 minutes in Czech');
@@ -146,7 +146,7 @@ class I18nTest extends TestCase
     {
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = '*';
         I18n::loadTranslations();
-        $this->assertTrue(strlen(I18n::_('en')) >= 2, 'browser language any');
+        $this->assertTrue(strlen(I18n::getLanguage()) >= 2, 'browser language any');
     }
 
     public function testVariableInjection()

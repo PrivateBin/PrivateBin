@@ -3,7 +3,6 @@
     "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted %sin the browser%s using 256 bits AES.": "%s adalah sebuah pastebin online sumber terbuka dan minimalis, dimana servernya tersebut tidak punya pengetahuan tentang data yang ditempelkan. Data tersebut di enkrip/dekrip %sdi dalam browser%s menggunakan metode enkrip AES 256 bit.",
     "More information on the <a href=\"https://privatebin.info/\">project page</a>.": "Infomasi lebih lanjut pada <a href=\"https://privatebin.info/\">halaman proyek</a>.",
     "Because ignorance is bliss": "Karena ketidaktahuan adalah kebahagiaan, gitu loh",
-    "en": "id",
     "Paste does not exist, has expired or has been deleted.": "Paste tidak ada, telah kedaluwarsa atau telah dihapus.",
     "%s requires php %s or above to work. Sorry.": "%s memerlukan php %s atau versi diatasnya untuk dapat dijalankan. Maaf.",
     "%s requires configuration section [%s] to be present in configuration file.": "%s membutuhkan bagian konfigurasi [%s] untuk ada di file konfigurasi.",

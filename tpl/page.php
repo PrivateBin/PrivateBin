@@ -1,7 +1,7 @@
 <?php
 use PrivateBin\I18n;
 ?><!DOCTYPE html>
-<html lang="<?php echo I18n::_('en'); ?>">
+<html lang="<?php echo I18n::getLanguage(); ?>"<?php echo I18n::isRtl() ? ' dir="rtl"' : ''; ?>>
 	<head>
 		<meta charset="utf-8" />
 		<meta http-equiv="Content-Security-Policy" content="<?php echo I18n::encode($CSPHEADER); ?>">
@@ -51,7 +51,7 @@ endif;
 ?>
 		<script type="text/javascript" data-cfasync="false" src="js/purify-3.0.4.js" integrity="sha512-N7H+3ylaOUeKuTX57cZoa42hqaG5w1rchG/IP9+BHd48W/vESgPDpb5QuDqzJE1dZhrGVCQgU8peIQGHmdGFhQ==" crossorigin="anonymous"></script>
 		<script type="text/javascript" data-cfasync="false" src="js/legacy.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-LYos+qXHIRqFf5ZPNphvtTB0cgzHUizu2wwcOwcwz/VIpRv9lpcBgPYz4uq6jx0INwCAj6Fbnl5HoKiLufS2jg==" crossorigin="anonymous"></script>
-		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-bvLSauH52p3a1alLFQ7YYbl95KUHaf4oVPsUeIqVEBry0c30By+chwu3o5cXUPWB/+OAz0TY00P+k+lquMsAcQ==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-ykPMZuZDmyGNik7G5dIeqE/+CJ79OKZ0XzPPVWUwAzp+k8PQoP66J8F8zYtI53dM4ITLojkNKrv4vTv6E3bzFQ==" crossorigin="anonymous"></script>
 		<!-- icon -->
 		<link rel="apple-touch-icon" href="img/apple-touch-icon.png?<?php echo rawurlencode($VERSION); ?>" sizes="180x180" />
 		<link rel="icon" type="image/png" href="img/favicon-32x32.png?<?php echo rawurlencode($VERSION); ?>" sizes="32x32" />

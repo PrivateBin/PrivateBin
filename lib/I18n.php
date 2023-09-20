@@ -273,6 +273,18 @@ class I18n
     }
 
     /**
+     * determines if the current language is written right-to-left (RTL)
+     *
+     * @access public
+     * @static
+     * @return bool
+     */
+    public static function isRtl()
+    {
+        return in_array(self::$_language, array('ar', 'he'));
+    }
+
+    /**
      * set the default language
      *
      * @access public

@@ -3,7 +3,6 @@
     "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted %sin the browser%s using 256 bits AES.": "%s عبارة عن أداة لصق على الإنترنت بسيطة ومفتوحة المصدر حيث لا يمتلك الخادم أي معرفة بالبيانات الملصقة. يتم تشفير / فك تشفير البيانات %sفي المتصفح%s باستخدام 256 بت AES.",
     "More information on the <a href=\"https://privatebin.info/\">project page</a>.": "مزيد من المعلومات على <a href=\"https://privatebin.info/\">صفحة المشروع</a>.",
     "Because ignorance is bliss": "لأن الجهل نعمة",
-    "en": "ar",
     "Paste does not exist, has expired or has been deleted.": "اللصق غير موجود أو انتهت صلاحيته أو تم حذفه.",
     "%s requires php %s or above to work. Sorry.": "%s يتطلب php %s أو أعلى للعمل. آسف.",
     "%s requires configuration section [%s] to be present in configuration file.": "%s يتطلب وجود قسم [%s] تضبيط في ملف تضبيط.",

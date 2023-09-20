@@ -3,7 +3,6 @@
     "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted %sin the browser%s using 256 bits AES.": "%s er en minimalistisk, åpen kildekode, elektronisk tilgjengelig pastebin hvor serveren ikke har kunnskap om dataene som limes inn. Dataene krypteres/dekrypteres %si nettleseren%s ved hjelp av 256 bits AES.",
     "More information on the <a href=\"https://privatebin.info/\">project page</a>.": "Mer informasjon om prosjektet på <a href=\"https://privatebin.info/\">prosjektsiden</a>.",
     "Because ignorance is bliss": "Fordi uvitenhet er lykke",
-    "en": "no",
     "Paste does not exist, has expired or has been deleted.": "Innlegget eksisterer ikke, er utløpt eller har blitt slettet.",
     "%s requires php %s or above to work. Sorry.": "Beklager, %s krever php %s eller nyere for å kjøre.",
     "%s requires configuration section [%s] to be present in configuration file.": "%s krever konfigurasjonsdel [%s] å være til stede i konfigurasjonsfilen .",

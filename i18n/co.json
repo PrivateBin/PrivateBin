@@ -3,7 +3,6 @@
     "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted %sin the browser%s using 256 bits AES.": "%s hè un serviziu in linea di tipu « pastebin » (ghjestiunariu d’appiccicu di pezzi di testu è di codice di fonte) minimalistu è à fonte aperta induve u servitore ùn hà micca cunnuscenza di i dati mandati. I dati sò cifrati è dicifrati %sin u navigatore%s cù una cifratura AES di 256 bit.",
     "More information on the <a href=\"https://privatebin.info/\">project page</a>.": "Più d’infurmazione annant’à a <a href=\"https://privatebin.info/\">pagina di u prughjettu</a>.",
     "Because ignorance is bliss": "Perchè l’ignurenza hè una campa",
-    "en": "co",
     "Paste does not exist, has expired or has been deleted.": "L’appiccicu ùn esiste micca, hè scadutu o hè statu squassatu.",
     "%s requires php %s or above to work. Sorry.": "Per disgrazzia, %s richiede php %s o più recente per funziunà.",
     "%s requires configuration section [%s] to be present in configuration file.": "%s richiede a presenza di a sezzione di cunfigurazione [%s] in a schedariu di cunfigurazione.",

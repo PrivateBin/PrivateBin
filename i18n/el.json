@@ -3,7 +3,6 @@
     "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted %sin the browser%s using 256 bits AES.": "%s είναι ένα λιτό, ανοικτού λογισμικού διαδικτυακής υπηρεσίας επικόλλησης όπου ο διακομιστής έχει πλήρη άγνια του περιεχομένου που επικολλήθηκαν. Τα Δεδομένα κρυπτογραφούνται και αποκρυπτογραφούνται %sστον φιλομετρητή (browser)%s χρησιμοποιόντας 256 bits AES.",
     "More information on the <a href=\"https://privatebin.info/\">project page</a>.": "Περισσότερες πληροφορίες στον <a href=\"https://privatebin.info/\">ιστότοπο του εργαλείου</a>.",
     "Because ignorance is bliss": "Επειδή η άγνοια είναι ευτυχία",
-    "en": "el",
     "Paste does not exist, has expired or has been deleted.": "Η επικόλληση δεν υπάρχει, έληξε ή διαγράφηκε",
     "%s requires php %s or above to work. Sorry.": "%s απαιτεί php %s ή νεότερη για να λειτουργήσει. Συγγνώμη.",
     "%s requires configuration section [%s] to be present in configuration file.": "%s απαιτεί οι ρυθμίσεις [%s] να υπάρχουν στο αρχείο ρυθμίσεων.",
