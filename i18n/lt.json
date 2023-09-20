@@ -3,7 +3,6 @@
     "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted %sin the browser%s using 256 bits AES.": "%s yra minimalistinis, atvirojo kodo internetinis įdėjimų dėklas, kurį naudojant, serveris nieko nenutuokia apie įdėtus duomenis. Duomenys yra šifruojami/iššifruojami %snaršyklėje%s naudojant 256 bitų AES.",
     "More information on the <a href=\"https://privatebin.info/\">project page</a>.": "Daugiau informacijos rasite <a href=\"https://privatebin.info/\">projekto puslapyje</a>.",
     "Because ignorance is bliss": "Nes nežinojimas yra palaima",
-    "en": "lt",
     "Paste does not exist, has expired or has been deleted.": "Įdėjimo nėra, jis nebegalioja arba buvo ištrintas.",
     "%s requires php %s or above to work. Sorry.": "%s savo darbui reikalauja php %s arba naujesnės versijos. Apgailestaujame.",
     "%s requires configuration section [%s] to be present in configuration file.": "%s reikalauja, kad konfigūracijos faile būtų [%s] konfigūracijos sekcija.",

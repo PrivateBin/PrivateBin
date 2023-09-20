@@ -2,6 +2,7 @@ bin/configuration-test-generator export-ignore
 bin/icon-test export-ignore
 doc/ export-ignore
 tst/ export-ignore
+i18n/en.json export-ignore
 img/browserstack.svg export-ignore
 js/.istanbul.yml export-ignore
 js/.nycrc.yml export-ignore

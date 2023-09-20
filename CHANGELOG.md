@@ -1,5 +1,8 @@
 # PrivateBin version history
 
+## 1.6.1 (not yet released)
+* ADDED: Right-To-Left (RTL) support for Arabic & Hebrew (#1174)
+
 ## 1.6.0 (2023-09-11)
 * ADDED: Translations for Japanese & Arabic
 * ADDED: Configuration option to disable Email button (#1164)

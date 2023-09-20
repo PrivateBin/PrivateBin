@@ -3,7 +3,6 @@
     "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted %sin the browser%s using 256 bits AES.": "%s je minimalistický, open source online pastebin, kde server nemá žiadne znalosti o vložených údajoch. Údaje sú šifrované/dešifrované %sv prehliadači%s pomocou 256-bitového AES.",
     "More information on the <a href=\"https://privatebin.info/\">project page</a>.": "Viac informácií na <a href=\"https://privatebin.info/\">stránke projektu</a>.",
     "Because ignorance is bliss": "Pretože nevedomosť je sladká",
-    "en": "sk",
     "Paste does not exist, has expired or has been deleted.": "Vložený text neexistuje, jeho platnosť vypršala alebo bol vymazaný.",
     "%s requires php %s or above to work. Sorry.": "%s vyžaduje php %s alebo vyššie. Prepáčte.",
     "%s requires configuration section [%s] to be present in configuration file.": "%s vyžaduje, aby bola v konfiguračnom súbore prítomná sekcia [%s].",

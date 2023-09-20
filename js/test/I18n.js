@@ -193,10 +193,11 @@ describe('I18n', function () {
                 // mock
                 clean = jsdom('', {cookie: ['lang=' + language]});
                 $.PrivateBin.I18n.reset(language, require('../../i18n/' + language + '.json'));
-                var result = $.PrivateBin.I18n.translate('en'),
-                    alias  = $.PrivateBin.I18n._('en');
+                var loadedLang = $.PrivateBin.I18n.getLanguage(),
+                    result = $.PrivateBin.I18n.translate('Never'),
+                    alias  = $.PrivateBin.I18n._('Never');
                 clean();
-                return language === result && language === alias;
+                return language === loadedLang && result === alias;
             }
         );
 
@@ -216,13 +217,12 @@ describe('I18n', function () {
 
                 $.PrivateBin.I18n.reset('en');
                 $.PrivateBin.I18n.loadTranslations();
-                var result = $.PrivateBin.I18n.translate('en'),
-                    alias  = $.PrivateBin.I18n._('en');
+                var result = $.PrivateBin.I18n.translate('Never'),
+                    alias  = $.PrivateBin.I18n._('Never');
 
                 clean();
-                return 'en' === result && 'en' === alias;
+                return 'Never' === result && 'Never' === alias;
             }
         );
     });
 });
-
