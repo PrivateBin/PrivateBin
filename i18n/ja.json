@@ -25,8 +25,8 @@
     "Paste was properly deleted.": "ペーストが正しく削除されました。",
     "JavaScript is required for %s to work. Sorry for the inconvenience.": "%s の動作にはJavaScriptが必要です。ご迷惑をおかけして申し訳ありません。",
     "%s requires a modern browser to work.": "%s の動作には最近のブラウザが必要です。",
-    "New": "新しい",
-    "Send": "送る",
+    "New": "新規",
+    "Send": "送信",
     "Clone": "複製",
     "Raw text": "未加工テキスト",
     "Expires": "有効期限",
@@ -44,19 +44,19 @@
         "%d秒"
     ],
     "%d minutes": [
-        "%d 分",
-        "%d 分",
-        "%d 分",
-        "%d 分",
-        "%d 分",
-        "%d 分"
+        "%d分",
+        "%d分",
+        "%d分",
+        "%d分",
+        "%d分",
+        "%d分"
     ],
     "%d hours": [
-        "%d 時間",
-        "%d 時間",
-        "%d 時間",
-        "%d 時間",
-        "%d 時間",
+        "%d時間",
+        "%d時間",
+        "%d時間",
+        "%d時間",
+        "%d時間",
         "%d 時間"
     ],
     "%d days": [
