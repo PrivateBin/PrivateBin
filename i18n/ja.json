@@ -193,7 +193,7 @@
     "QR code": "QRコード",
     "This website is using an insecure HTTP connection! Please use it only for testing.": "このウェブサイトは安全でない HTTP 接続を使用しています！テストにのみ使用してください。",
     "For more information <a href=\"%s\">see this FAQ entry</a>.": "詳細については、<a href=\"%s\">こちらのFAQエントリー</a>をご覧ください。",
-    "Your browser may require an HTTPS connection to support the WebCrypto API. Try <a href=\"%s\">switching to HTTPS</a>.": "あなたのブラウザーはWebCrypto APIをサポートするためにHTTPS接続を必要とするかもしれません。<a href=\"%s\">HTTPS接続に切り替えてみてください</a>。",
+    "Your browser may require an HTTPS connection to support the WebCrypto API. Try <a href=\"%s\">switching to HTTPS</a>.": "お使いのブラウザーはWebCrypto APIのサポートにHTTPS接続を必要とするかもしれません。<a href=\"%s\">HTTPS接続に切り替えてみてください</a>。",
     "Your browser doesn't support WebAssembly, used for zlib compression. You can create uncompressed documents, but can't read compressed ones.": "お使いのブラウザーはzlib圧縮に必要なWebAssemblyをサポートしていません。圧縮されていないドキュメントを作成することはできますが、圧縮されたドキュメントを読み込むことはできません。",
     "waiting on user to provide a password": "ユーザーがパスワードを入力するのを待機しています",
     "Could not decrypt data. Did you enter a wrong password? Retry with the button at the top.": "データを復号できませんでした。パスワードが間違っていましたか？　上部のボタンで再試行してください。",
