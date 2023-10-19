@@ -91,7 +91,7 @@
         "%d年",
         "%d年"
     ],
-    "Never": "Never",
+    "Never": "無期限",
     "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.": "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.",
     "This document will expire in %d seconds.": [
         "このドキュメントは%d秒後に失効します。",
@@ -175,7 +175,7 @@
     "alternatively drag & drop a file or paste an image from the clipboard": "alternatively drag & drop a file or paste an image from the clipboard",
     "File too large, to display a preview. Please download the attachment.": "ファイルが大きすぎるため、プレビューを表示できません。ダウンロードしてください。",
     "Remove attachment": "添付ファイルを削除",
-    "Your browser does not support uploading encrypted files. Please use a newer browser.": "Your browser does not support uploading encrypted files. Please use a newer browser.",
+    "Your browser does not support uploading encrypted files. Please use a newer browser.": "お使いのブラウザーは暗号化されたファイルのアップロードをサポートしていません。新しいブラウザーを使用してください。",
     "Invalid attachment.": "不正な添付ファイルです。",
     "Options": "設定",
     "Shorten URL": "URLを短縮",
@@ -194,7 +194,7 @@
     "This website is using an insecure HTTP connection! Please use it only for testing.": "このウェブサイトは安全でない HTTP 接続を使用しています！テストにのみ使用してください。",
     "For more information <a href=\"%s\">see this FAQ entry</a>.": "詳細については、<a href=\"%s\">こちらのFAQエントリー</a>をご覧ください。",
     "Your browser may require an HTTPS connection to support the WebCrypto API. Try <a href=\"%s\">switching to HTTPS</a>.": "Your browser may require an HTTPS connection to support the WebCrypto API. Try <a href=\"%s\">switching to HTTPS</a>.",
-    "Your browser doesn't support WebAssembly, used for zlib compression. You can create uncompressed documents, but can't read compressed ones.": "Your browser doesn't support WebAssembly, used for zlib compression. You can create uncompressed documents, but can't read compressed ones.",
+    "Your browser doesn't support WebAssembly, used for zlib compression. You can create uncompressed documents, but can't read compressed ones.": "お使いのブラウザーはzlib圧縮に必要なWebAssemblyをサポートしていません。圧縮されていないドキュメントを作成することはできますが、圧縮されたドキュメントを読み込むことはできません。",
     "waiting on user to provide a password": "ユーザーがパスワードを入力するのを待機しています",
     "Could not decrypt data. Did you enter a wrong password? Retry with the button at the top.": "データを復号できませんでした。パスワードが間違っていましたか？　上部のボタンで再試行してください。",
     "Retry": "再試行",
