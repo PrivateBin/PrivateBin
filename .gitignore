@@ -35,6 +35,7 @@ tst/.phpunit.result.cache
 .settings
 .buildpath
 .project
+.phpdoc
 .externalToolBuilders
 .c9
 /.idea/
