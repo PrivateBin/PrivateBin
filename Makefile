@@ -18,7 +18,7 @@ coverage-js: ## Run JS unit tests and generate code coverage reports.
 
 coverage-php: ## Run PHP unit tests and generate code coverage reports.
 	cd tst && phpunit 2> /dev/null
-	cd tst/log/php-coverage-report && sed -i "s#$(CURDIR)##g" *.html */*.html
+	cd tst/log/php-coverage-report && sed -i "s#$(CURDIR)/##g" *.html */*.html
 
 doc: doc-js doc-php ## Generate all code documentation.
 

@@ -23,7 +23,7 @@ new ConfigurationTestGenerator(array(
             'tests'   => array(
                 array(
                     'conditions' => array('steps' => $vd),
-                    'type'       => 'RegExp',
+                    'type'       => 'MatchesRegularExpression',
                     'args'       => array(
                         '#<div[^>]*id="opendiscussionoption"[^>]*>#',
                         '$content',
@@ -53,7 +53,7 @@ new ConfigurationTestGenerator(array(
             'setting' => false,
             'tests'   => array(
                 array(
-                    'type' => 'NotRegExp',
+                    'type' => 'DoesNotMatchRegularExpression',
                     'args' => array(
                         '#<div[^>]*id="opendiscussionoption"[^>]*>#',
                         '$content',
@@ -70,7 +70,7 @@ new ConfigurationTestGenerator(array(
             'tests'   => array(
                 array(
                     'conditions' => array('main/discussion' => true),
-                    'type'       => 'RegExp',
+                    'type'       => 'MatchesRegularExpression',
                     'args'       => array(
                         '#<input[^>]+id="opendiscussion"[^>]*checked="checked"[^>]*>#',
                         '$content',
@@ -84,7 +84,7 @@ new ConfigurationTestGenerator(array(
             'tests'   => array(
                 array(
                     'conditions' => array('main/discussion' => true),
-                    'type'       => 'NotRegExp',
+                    'type'       => 'DoesNotMatchRegularExpression',
                     'args'       => array(
                         '#<input[^>]+id="opendiscussion"[^>]*checked="checked"[^>]*>#',
                         '$content',
@@ -100,7 +100,7 @@ new ConfigurationTestGenerator(array(
             'setting' => true,
             'tests'   => array(
                 array(
-                    'type' => 'RegExp',
+                    'type' => 'MatchesRegularExpression',
                     'args' => array(
                         '#<input[^>]+id="burnafterreading"[^>]*checked="checked"[^>]*>#',
                         '$content',
@@ -113,7 +113,7 @@ new ConfigurationTestGenerator(array(
             'setting' => false,
             'tests'   => array(
                 array(
-                    'type' => 'NotRegExp',
+                    'type' => 'DoesNotMatchRegularExpression',
                     'args' => array(
                         '#<input[^>]+id="burnafterreading"[^>]*checked="checked"[^>]*>#',
                         '$content',
@@ -129,7 +129,7 @@ new ConfigurationTestGenerator(array(
             'setting' => true,
             'tests'   => array(
                 array(
-                    'type' => 'RegExp',
+                    'type' => 'MatchesRegularExpression',
                     'args' => array(
                         '#<div[^>]*id="password"[^>]*>#',
                         '$content',
@@ -143,7 +143,7 @@ new ConfigurationTestGenerator(array(
             'tests'   => array(
                 array(
                     'conditions' => array('main/discussion' => true),
-                    'type'       => 'NotRegExp',
+                    'type'       => 'DoesNotMatchRegularExpression',
                     'args'       => array(
                         '#<div[^>]*id="password"[^>]*>#',
                         '$content',
@@ -159,14 +159,14 @@ new ConfigurationTestGenerator(array(
             'setting' => 'page',
             'tests'   => array(
                 array(
-                    'type' => 'RegExp',
+                    'type' => 'MatchesRegularExpression',
                     'args' => array(
                         '#<link[^>]+type="text/css"[^>]+rel="stylesheet"[^>]+href="css/privatebin\.css\\?\d[\d\.]+\d+"[^>]*/>#',
                         '$content',
                         'outputs "page" stylesheet correctly',
                     ),
                 ), array(
-                    'type' => 'NotRegExp',
+                    'type' => 'DoesNotMatchRegularExpression',
                     'args' => array(
                         '#<link[^>]+type="text/css"[^>]+rel="stylesheet"[^>]+href="css/bootstrap/bootstrap-\d[\d\.]+\d\.css"[^>]*/>#',
                         '$content',
@@ -179,14 +179,14 @@ new ConfigurationTestGenerator(array(
             'setting' => 'bootstrap',
             'tests'   => array(
                 array(
-                    'type' => 'NotRegExp',
+                    'type' => 'DoesNotMatchRegularExpression',
                     'args' => array(
                         '#<link[^>]+type="text/css"[^>]+rel="stylesheet"[^>]+href="css/privatebin\.css\\?\d[\d\.]+\d+"[^>]*/>#',
                         '$content',
                         'removes "page" stylesheet correctly',
                     ),
                 ), array(
-                    'type' => 'RegExp',
+                    'type' => 'MatchesRegularExpression',
                     'args' => array(
                         '#<link[^>]+type="text/css"[^>]+rel="stylesheet"[^>]+href="css/bootstrap/bootstrap-\d[\d\.]+\d\.css"[^>]*/>#',
                         '$content',
@@ -361,7 +361,7 @@ class ConfigurationTestGenerator
                         }
                         // skip if not all test conditions are met
                         if (array_key_exists('conditions', $test)) {
-                            while (list($path, $setting) = each($test['conditions'])) {
+                            foreach ($test['conditions'] as $path => $setting) {
                                 if ($path == 'steps' && !in_array($step, $setting)) {
                                     continue 2;
                                 } elseif ($path != 'steps') {
@@ -591,8 +591,9 @@ EOT;
             return $this->_configurations;
         }
         echo "generateConfigurations: iteration $this->_iterationCount", PHP_EOL;
-        $continue = list($path, $settings) = each($this->_options);
-        if ($continue === false) {
+        $path = key($this->_options);
+        $settings = current($this->_options);
+        if (next($this->_options) === false) {
             return $this->_configurations;
         }
         list($section, $option) = explode('/', $path);
