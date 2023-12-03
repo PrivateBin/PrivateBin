@@ -26,7 +26,7 @@ doc-js: ## Generate JS code documentation.
 	jsdoc -p -d doc/jsdoc js/privatebin.js js/legacy.js
 
 doc-php: ## Generate JS code documentation.
-	phpdoc --visibility public,protected,private -t doc/phpdoc -d lib/
+	phpdoc --visibility=public,protected,private --target=doc/phpdoc --directory=lib/
 
 increment: ## Increment and commit new version number, set target version using `make increment VERSION=1.2.3`.
 	for F in `grep -l -R $(REGEX_CURRENT_VERSION) $(VERSION_FILES) | grep -v -e tst/log/ -e ":0" -e CHANGELOG.md`; \
