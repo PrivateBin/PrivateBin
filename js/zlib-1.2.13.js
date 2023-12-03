@@ -25,7 +25,7 @@
         };
 
         let buff;
-        if (typeof fetch === 'undefined') {
+        if (typeof fs === 'object') {
             buff = fs.readFileSync('zlib-1.2.13.wasm');
         } else {
             const resp = await fetch('js/zlib-1.2.13.wasm');
