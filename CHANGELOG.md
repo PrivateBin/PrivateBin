@@ -2,6 +2,7 @@
 
 ## 1.6.1 (not yet released)
 * ADDED: Right-To-Left (RTL) support for Arabic & Hebrew (#1174)
+* CHANGED: Upgrading libraries to: DOMpurify 3.0.6
 
 ## 1.6.0 (2023-09-11)
 * ADDED: Translations for Japanese & Arabic

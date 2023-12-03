@@ -21,7 +21,7 @@ $ sudo pear install phpdoc/phpDocumentor
 To generate the documentation, change into the main directory and run phpdoc:
 ```console
 $ cd PrivateBin
-$ phpdoc --visibility public,protected,private -t doc/phpdoc -d lib/
+$ phpdoc --visibility=public,protected,private --target=doc/phpdoc --directory=lib/
 ```
 
 **Note:** When used with PHP 7, the prerelease of phpDocumentator 2.9 needs to be
