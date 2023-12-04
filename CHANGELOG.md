@@ -1,6 +1,6 @@
 # PrivateBin version history
 
-## 1.6.1 (not yet released)
+## 1.6.1 (2023-12-04)
 * ADDED: Right-To-Left (RTL) support for Arabic & Hebrew (#1174)
 * CHANGED: Upgrading libraries to: DOMpurify 3.0.6
 

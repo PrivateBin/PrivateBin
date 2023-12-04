@@ -31,7 +31,7 @@ Know how for participating in PrivateBins development.
 How to generate the source code API documentation, as found on the project
 website for [PHP](https://privatebin.info/codedoc/) and [JS](https://privatebin.info/jsdoc/)
 
-### [Running Unit Tests](https://github.com/PrivateBin/PrivateBin/blob/master/tst/README.md#running-all-unit-tests)
+### [Running Unit Tests](https://github.com/PrivateBin/PrivateBin/blob/master/doc/Running Unit Tests.md#running-all-unit-tests)
 
 How to run the PHP & JS unit tests, including a brief introduction to property
 based unit testing.
