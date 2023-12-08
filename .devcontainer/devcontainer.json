@@ -40,11 +40,7 @@
     "forwardPorts": [
         8080
     ],
-    "postCreateCommand": [
-        "composer install --no-dev --optimize-autoloader",
-        "sudo chmod a+x \"$(pwd)\" && sudo rm -rf /var/www/html && sudo ln -s \"$(pwd)\" /var/www/html",
-        "npm install --global nyc"
-    ],
+    "postCreateCommand": ".devcontainer/postCreateCommand.sh",
     // alternatiuve: apache2ctl start (but requires root)
     "postAttachCommand": "php -S 0.0.0.0:8080"
 }
