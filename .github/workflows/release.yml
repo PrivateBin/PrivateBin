@@ -34,7 +34,7 @@ jobs:
       - name: Generate hashes
         shell: bash
         id: hash
-        run: echo "hashes=$(sha256sum ${GITHUB_REF_NAME} | base64 -w0)" >> "$GITHUB_OUTPUT"
+        run: echo "hashes=$(sha256sum ${GITHUB_REF_NAME}.* | base64 -w0)" >> "$GITHUB_OUTPUT"
 
   provenance:
     needs:
