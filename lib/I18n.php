@@ -197,7 +197,7 @@ class I18n
     {
         if (count(self::$_availableLanguages) == 0) {
             self::$_availableLanguages[] = 'en'; // en.json is not part of the release archive
-            $languageIterator = new AppendIterator();
+            $languageIterator            = new AppendIterator();
             $languageIterator->append(new GlobIterator(self::_getPath('??.json')));
             $languageIterator->append(new GlobIterator(self::_getPath('???.json'))); // for jbo
             foreach ($languageIterator as $file) {
