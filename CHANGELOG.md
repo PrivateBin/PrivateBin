@@ -1,7 +1,8 @@
 # PrivateBin version history
 
-## 1.6.2 (not yet released)
-* FIXED: English not selectable when languageselection enabled (#1208)
+## 1.6.2 (2023-12-15)
+* FIXED: English not selectable when `languageselection` enabled (#1208)
+* FIXED: SRI mismatch due to cached file having changed (#1207)
 
 ## 1.6.1 (2023-12-04)
 * ADDED: Right-To-Left (RTL) support for Arabic & Hebrew (#1174)

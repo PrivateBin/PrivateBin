@@ -55,7 +55,7 @@ if ($ZEROBINCOMPATIBILITY) :
 <?php
 endif;
 ?>
-		<script type="text/javascript" data-cfasync="false" src="js/zlib-1.2.13.js" integrity="sha512-Ltu/5qZMapdRIy4B3/iuLessSK6CvAui1C8txOX0z/uAFDJXXSwjvHsiFg9peQ2Gg/ga2tneKBfS0+00ndFsjQ==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/zlib-1.2.13-1.js" integrity="sha512-Ltu/5qZMapdRIy4B3/iuLessSK6CvAui1C8txOX0z/uAFDJXXSwjvHsiFg9peQ2Gg/ga2tneKBfS0+00ndFsjQ==" crossorigin="anonymous"></script>
 		<script type="text/javascript" data-cfasync="false" src="js/base-x-4.0.0.js" integrity="sha512-nNPg5IGCwwrveZ8cA/yMGr5HiRS5Ps2H+s0J/mKTPjCPWUgFGGw7M5nqdnPD3VsRwCVysUh3Y8OWjeSKGkEQJQ==" crossorigin="anonymous"></script>
 		<script type="text/javascript" data-cfasync="false" src="js/rawinflate-0.3.js" integrity="sha512-g8uelGgJW9A/Z1tB6Izxab++oj5kdD7B4qC7DHwZkB6DGMXKyzx7v5mvap2HXueI2IIn08YlRYM56jwWdm2ucQ==" crossorigin="anonymous"></script>
 		<script type="text/javascript" data-cfasync="false" src="js/bootstrap-3.4.1.js" integrity="sha512-oBTprMeNEKCnqfuqKd6sbvFzmFQtlXS3e0C/RGFV0hD6QzhHV+ODfaQbAlmY6/q0ubbwlAM/nCJjkrgA3waLzg==" crossorigin="anonymous"></script>
@@ -73,7 +73,7 @@ endif;
 ?>
 		<script type="text/javascript" data-cfasync="false" src="js/purify-3.0.6.js" integrity="sha512-N3y6/HOk3pbsw3lFh4O8CKKEVwu1B2CF8kinhjURf8Yqa5OfSUt+/arozxFW+TUPOPw3TsDCRT/0u7BGRTEVUw==" crossorigin="anonymous"></script>
 		<script type="text/javascript" data-cfasync="false" src="js/legacy.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-LYos+qXHIRqFf5ZPNphvtTB0cgzHUizu2wwcOwcwz/VIpRv9lpcBgPYz4uq6jx0INwCAj6Fbnl5HoKiLufS2jg==" crossorigin="anonymous"></script>
-		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-Vhf93RhPJlAbV7jV1kizBzCDsx2xTrvneXe+9vdz6Ceg8wSfVZPzC6HWNdTWQLJIatlSVxd36rTra9M1uj5c+g==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-wkyB+e2HinOE+hZOEfBtNVlg2lneE09dnrDjZKd77dHowLEIxrys1La7neVov1HWcAQlwhqxnZF4yr19kDuunw==" crossorigin="anonymous"></script>
 		<!-- icon -->
 		<link rel="apple-touch-icon" href="<?php echo I18n::encode($BASEPATH); ?>img/apple-touch-icon.png" sizes="180x180" />
 		<link rel="icon" type="image/png" href="img/favicon-32x32.png" sizes="32x32" />
