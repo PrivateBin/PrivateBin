@@ -12,6 +12,9 @@
 
 namespace PrivateBin;
 
+use AppendIterator;
+use GlobIterator;
+
 /**
  * I18n
  *
@@ -193,10 +196,14 @@ class I18n
     public static function getAvailableLanguages()
     {
         if (count(self::$_availableLanguages) == 0) {
-            $i18n = dir(self::_getPath());
-            while (false !== ($file = $i18n->read())) {
-                if (preg_match('/^([a-z]{2,3}).json$/', $file, $match) === 1) {
-                    self::$_availableLanguages[] = $match[1];
+            self::$_availableLanguages[] = 'en'; // en.json is not part of the release archive
+            $languageIterator            = new AppendIterator();
+            $languageIterator->append(new GlobIterator(self::_getPath('??.json')));
+            $languageIterator->append(new GlobIterator(self::_getPath('???.json'))); // for jbo
+            foreach ($languageIterator as $file) {
+                $language = $file->getBasename('.json');
+                if ($language != 'en') {
+                    self::$_availableLanguages[] = $language;
                 }
             }
         }
