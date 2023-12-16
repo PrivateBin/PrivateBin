@@ -14,6 +14,7 @@
 
 namespace PrivateBin;
 
+use Exception;
 use PrivateBin\Configuration;
 use PrivateBin\Data\AbstractData;
 use PrivateBin\Model\Paste;
@@ -195,6 +196,7 @@ EOT, PHP_EOL;
     {
         $counters = array(
             'burn'          => 0,
+            'damaged'       => 0,
             'discussion'    => 0,
             'expired'       => 0,
             'md'            => 0,
@@ -217,7 +219,12 @@ EOT, PHP_EOL;
 
         echo "Total:\t\t\t{$counters['total']}", PHP_EOL;
         foreach ($ids as $pasteid) {
-            $paste = $this->_store->read($pasteid);
+            try {
+                $paste = $this->_store->read($pasteid);
+            } catch (Exception $e) {
+                echo "Error reading paste {$pasteid}: ", $e->getMessage(), PHP_EOL;
+                ++$counters['damaged'];
+            }
             ++$counters['progress'];
 
             if (
@@ -271,6 +278,9 @@ Plain Text:\t\t{$counters['plain']}
 Source Code:\t\t{$counters['syntax']}
 Markdown:\t\t{$counters['md']}
 EOT, PHP_EOL;
+        if ($counters['damaged'] > 0) {
+            echo "Damaged:\t\t{$counters['damaged']}", PHP_EOL;
+        }
         if ($counters['unknown'] > 0) {
             echo "Unknown format:\t\t{$counters['unknown']}", PHP_EOL;
         }
@@ -305,7 +315,12 @@ EOT, PHP_EOL;
         }
 
         if ($this->_option('p', 'purge') !== null) {
-            $this->_store->purge(PHP_INT_MAX);
+            try {
+                $this->_store->purge(PHP_INT_MAX);
+            } catch (Exception $e) {
+                echo 'Error purging pastes: ', $e->getMessage(), PHP_EOL,
+                    'Run the statistics to find damaged paste IDs and either delete them or restore them from backup.', PHP_EOL;
+            }
             exit('purging of expired pastes concluded' . PHP_EOL);
         }
 
