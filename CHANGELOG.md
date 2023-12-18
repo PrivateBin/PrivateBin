@@ -1,5 +1,8 @@
 # PrivateBin version history
 
+## 1.6.3 (not yet released)
+* ADDED: Detect and report on damaged pastes (#1218)
+
 ## 1.6.2 (2023-12-15)
 * FIXED: English not selectable when `languageselection` enabled (#1208)
 * FIXED: SRI mismatch due to cached file having changed (#1207)
