@@ -315,10 +315,10 @@ class I18n
      */
     protected static function _getPath($file = '')
     {
-        if (strlen(self::$_path) == 0) {
+        if (empty(self::$_path)) {
             self::$_path = PUBLIC_PATH . DIRECTORY_SEPARATOR . 'i18n';
         }
-        return self::$_path . (strlen($file) ? DIRECTORY_SEPARATOR . $file : '');
+        return self::$_path . (empty($file) ? '' : DIRECTORY_SEPARATOR . $file);
     }
 
     /**

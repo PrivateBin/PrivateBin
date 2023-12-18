@@ -3,6 +3,24 @@
 use PHPUnit\Framework\TestCase;
 use PrivateBin\I18n;
 
+class I18nMock extends I18n
+{
+    public static function resetAvailableLanguages()
+    {
+        self::$_availableLanguages = array();
+    }
+
+    public static function resetPath($path = '')
+    {
+        self::$_path = $path;
+    }
+
+    public static function getPath($file = '')
+    {
+        return self::_getPath($file);
+    }
+}
+
 class I18nTest extends TestCase
 {
     private $_translations = array();
@@ -165,6 +183,38 @@ class I18nTest extends TestCase
         $this->assertEquals($result, I18n::encode($input), 'encodes HTML entities');
         $this->assertEquals('<a>some ' . $result . ' + 1</a>', I18n::_('<a>some %s + %d</a>', $input, 1), 'encodes parameters in translations');
         $this->assertEquals($result . $result, I18n::_($input . '%s', $input), 'encodes message ID as well, when no link');
+    }
+
+    public function testFallbackAlwaysPresent()
+    {
+        $path = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'privatebin_i18n';
+        if (!is_dir($path)) {
+            mkdir($path);
+        }
+
+        $languageIterator = new AppendIterator();
+        $languageIterator->append(new GlobIterator(I18nMock::getPath('??.json')));
+        $languageIterator->append(new GlobIterator(I18nMock::getPath('???.json'))); // for jbo
+        $languageCount = 0;
+        foreach ($languageIterator as $file) {
+            ++$languageCount;
+            $this->assertTrue(copy($file, $path . DIRECTORY_SEPARATOR . $file->getBasename()));
+        }
+
+        I18nMock::resetPath($path);
+        $languagesDevelopment = I18nMock::getAvailableLanguages();
+        $this->assertEquals($languageCount, count($languagesDevelopment), 'all copied languages detected');
+        $this->assertTrue(in_array('en', $languagesDevelopment), 'English fallback present');
+
+        unlink($path . DIRECTORY_SEPARATOR . 'en.json');
+        I18nMock::resetAvailableLanguages();
+        $languagesDeployed = I18nMock::getAvailableLanguages();
+        $this->assertEquals($languageCount, count($languagesDeployed), 'all copied languages detected, plus fallback');
+        $this->assertTrue(in_array('en', $languagesDeployed), 'English fallback still present');
+
+        I18nMock::resetAvailableLanguages();
+        I18nMock::resetPath();
+        Helper::rmDir($path);
     }
 
     public function testMessageIdsExistInAllLanguages()
