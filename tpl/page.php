@@ -34,7 +34,7 @@ if ($ZEROBINCOMPATIBILITY):
 <?php
 endif;
 ?>
-		<script type="text/javascript" data-cfasync="false" src="js/zlib-1.2.13-1.js" integrity="sha512-Ltu/5qZMapdRIy4B3/iuLessSK6CvAui1C8txOX0z/uAFDJXXSwjvHsiFg9peQ2Gg/ga2tneKBfS0+00ndFsjQ==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/zlib-1.3.js" integrity="sha512-VL3lLnt8EexTr22ze4a4HfVghpgY48c/Lhf4CcQa8bgYaIRRPjV1nP7EA8RiciGoXXQ1IeiU7tjrclPeVEfxOQ==" crossorigin="anonymous"></script>
 		<script type="text/javascript" data-cfasync="false" src="js/base-x-4.0.0.js" integrity="sha512-nNPg5IGCwwrveZ8cA/yMGr5HiRS5Ps2H+s0J/mKTPjCPWUgFGGw7M5nqdnPD3VsRwCVysUh3Y8OWjeSKGkEQJQ==" crossorigin="anonymous"></script>
 		<script type="text/javascript" data-cfasync="false" src="js/rawinflate-0.3.js" integrity="sha512-g8uelGgJW9A/Z1tB6Izxab++oj5kdD7B4qC7DHwZkB6DGMXKyzx7v5mvap2HXueI2IIn08YlRYM56jwWdm2ucQ==" crossorigin="anonymous"></script>
 <?php
