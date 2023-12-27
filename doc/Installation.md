@@ -213,11 +213,25 @@ to be `CLOB` and not `BLOB` or `MEDIUMBLOB`, the `id` column in the `config`
 table needs to be `VARCHAR2(16)` and the `meta` column in the `paste` table
 and the `value` column in the `config` table need to be `VARCHAR2(4000)`.
 
+### Cloud Storage Backends
+
+Due to the large size of the respective cloud SDKs required for these, we didn't
+include these in the `vendor` directory shipped in our release archives. To use
+these in your manual installation, you will need [composer installed](https://getcomposer.org/)
+and require the used library (see instructions below).
+
+This is not required if using the dedicated container images that have these SDKs
+preinstalled.
+
 #### Using Google Cloud Storage
 If you want to deploy PrivateBin in a serverless manner in the Google Cloud, you
-can choose the `GoogleCloudStorage` as backend. To use this backend, you create
-a GCS bucket and specify the name as the model option `bucket`. Alternatively,
-you can set the name through the environment variable `PRIVATEBIN_GCS_BUCKET`.
+can choose the `GoogleCloudStorage` as backend.
+
+To use this backend, you first have to install the SDK from the installation
+directory of PrivateBin: `composer require google/cloud-storage`
+
+You have to create a GCS bucket and specify the name as the model option `bucket`.
+Alternatively, you can set the name through the environment variable `PRIVATEBIN_GCS_BUCKET`.
 
 The default prefix for pastes stored in the bucket is `pastes`. To change the
 prefix, specify the option `prefix`.
@@ -226,15 +240,15 @@ Google Cloud Storage buckets may be significantly slower than a `FileSystem` or
 `Database` backend. The big advantage is that the deployment on Google Cloud
 Platform using Google Cloud Run is easy and cheap.
 
-To use the Google Cloud Storage backend you have to install the suggested
-library using the command `composer require google/cloud-storage`.
-
 #### Using S3 Storage
 Similar to Google Cloud Storage, you can choose S3 as storage backend. It uses
-the AWS SDK for PHP, but can also talk to a Rados gateway as part of a CEPH
-cluster. To use this backend, you first have to install the SDK in the
-document root of PrivateBin: `composer require aws/aws-sdk-php`. You have to
-create the S3 bucket on the CEPH cluster before using the S3 backend.
+the AWS SDK for PHP, but can also talk to a Rados gateway as part of a Ceph
+cluster.
+
+To use this backend, you first have to install the SDK from the installation
+directory of PrivateBin: `composer require aws/aws-sdk-php`
+
+You have to create an S3 bucket on the Ceph cluster before using the S3 backend.
 
 In the `[model]` section of cfg/conf.php, set `class` to `S3Storage`.
 
@@ -256,7 +270,7 @@ data beneath this prefix.
 For AWS, you have to provide at least `region`, `bucket`, `accesskey`, and
 `secretkey`.
 
-For CEPH, follow this example:
+For Ceph, follow this example:
 
 ```
 region = ""
