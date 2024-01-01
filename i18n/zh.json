@@ -2,7 +2,7 @@
     "PrivateBin": "PrivateBin",
     "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted %sin the browser%s using 256 bits AES.": "%s 是一个极简、开源、对粘贴内容毫不知情的在线粘贴板，数据%s在浏览器内%s进行 AES-256 加密和解密。",
     "More information on the <a href=\"https://privatebin.info/\">project page</a>.": "更多信息请查看<a href=\"https://privatebin.info/\">项目主页</a>。",
-    "Because ignorance is bliss": "因为无知是福",
+    "Because ignorance is bliss": "以不知为幸",
     "Paste does not exist, has expired or has been deleted.": "粘贴内容不存在、已过期或已被删除。",
     "%s requires php %s or above to work. Sorry.": "抱歉，%s 需要 PHP %s 及以上版本才能运行。",
     "%s requires configuration section [%s] to be present in configuration file.": "%s 需要设置配置文件中的 [%s] 部分。",
