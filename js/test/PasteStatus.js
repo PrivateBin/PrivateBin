@@ -34,6 +34,51 @@ describe('PasteStatus', function () {
         );
     });
 
+    describe('extractUrl', function () {
+        this.timeout(30000);
+
+        jsc.property(
+            'extracts and updates URLs found in given response',
+            jsc.elements(['http','https']),
+            'nestring',
+            jsc.nearray(common.jscA2zString()),
+            jsc.array(common.jscQueryString()),
+            jsc.array(common.jscAlnumString()),
+            'string',
+            function (schema, domain, tld, query, shortid, fragment) {
+                domain = domain.replace(/\P{Letter}|[\u00AA-\u00BA]/gu,'').toLowerCase();
+                if (domain.length === 0) {
+                    domain = 'a';
+                }
+                const expected = '.' + tld.join('') + '/' + (query.length > 0 ?
+                    ('?' + encodeURI(query.join('').replace(/^&+|&+$/gm,'')) +
+                    shortid.join('')) : '') + (fragment.length > 0 ?
+                    ('#' + encodeURI(fragment)) : ''),
+                    clean = jsdom();
+
+                // not available in node before v19.9.0, v18.17.0
+                if (typeof URL.canParse !== 'function') {
+                    URL.canParse = function(a) {
+                        return true;
+                    }
+                }
+
+                $('body').html('<div><div id="pastelink"></div></div>');
+                $.PrivateBin.PasteStatus.init();
+                $.PrivateBin.PasteStatus.createPasteNotification('', '');
+                $.PrivateBin.PasteStatus.extractUrl(schema + '://' + domain + expected);
+
+                const result = $('#pasteurl')[0].href;
+                clean();
+
+                return result.endsWith(expected) && (
+                    result.startsWith(schema + '://xn--') ||
+                    result.startsWith(schema + '://' + domain)
+                );
+            }
+        );
+    });
+
     describe('showRemainingTime', function () {
         this.timeout(30000);
 
