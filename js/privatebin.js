@@ -2119,7 +2119,11 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             if (typeof response === 'string' && response.length > 0) {
                 const shortUrlMatcher = /https?:\/\/[^\s]+/g;
                 const shortUrl = (response.match(shortUrlMatcher) || []).filter(function(a) {
-                    return URL.canParse(a);
+                    try {
+                        return !!new URL(a);
+                    } catch (error) {
+                        return false;
+                    }
                 }).sort(function(a, b) {
                     return a.length - b.length;
                 })[0];

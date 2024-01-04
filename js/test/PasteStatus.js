@@ -56,13 +56,6 @@ describe('PasteStatus', function () {
                     ('#' + encodeURI(fragment)) : ''),
                     clean = jsdom();
 
-                // not available in node before v19.9.0, v18.17.0
-                if (typeof URL.canParse !== 'function') {
-                    URL.canParse = function(a) {
-                        return true;
-                    }
-                }
-
                 $('body').html('<div><div id="pastelink"></div></div>');
                 $.PrivateBin.PasteStatus.init();
                 $.PrivateBin.PasteStatus.createPasteNotification('', '');
