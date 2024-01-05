@@ -2118,9 +2118,9 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             }
             if (typeof response === 'string' && response.length > 0) {
                 const shortUrlMatcher = /https?:\/\/[^\s]+/g;
-                const shortUrl = (response.match(shortUrlMatcher) || []).filter(function(a) {
+                const shortUrl = (response.match(shortUrlMatcher) || []).filter(function(urlRegExMatch) {
                     try {
-                        return !!new URL(a);
+                        return !!new URL(urlRegExMatch);
                     } catch (error) {
                         return false;
                     }
