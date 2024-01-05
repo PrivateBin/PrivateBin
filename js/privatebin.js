@@ -2119,6 +2119,10 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             if (typeof response === 'string' && response.length > 0) {
                 const shortUrlMatcher = /https?:\/\/[^\s]+/g;
                 const shortUrl = (response.match(shortUrlMatcher) || []).filter(function(urlRegExMatch) {
+                    if (typeof URL.canParse === 'function') {
+                        return URL.canParse(urlRegExMatch);
+                    }
+                    // polyfill for older browsers (< 120) & node (< 19.9 & < 18.17)
                     try {
                         return !!new URL(urlRegExMatch);
                     } catch (error) {
