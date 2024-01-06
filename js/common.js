@@ -37,7 +37,7 @@ var a2zString    = ['a','b','c','d','e','f','g','h','i','j','k','l','m',
         })
     ),
     schemas = ['ftp','http','https'],
-    supportedLanguages = ['de', 'es', 'fr', 'it', 'no', 'pl', 'pt', 'oc', 'ru', 'sl', 'zh'],
+    supportedLanguages = ['ar', 'bg', 'ca', 'co', 'cs', 'de', 'el', 'es', 'et', 'fi', 'fr', 'he', 'hu', 'id', 'it', 'ja', 'jbo', 'lt', 'no', 'nl', 'pl', 'pt', 'oc', 'ru', 'sk', 'sl', 'th', 'tr', 'uk', 'zh'],
     mimeTypes = ['image/png', 'application/octet-stream'],
     formats = ['plaintext', 'markdown', 'syntaxhighlighting'],
     mimeFile = fs.createReadStream('/etc/mime.types'),

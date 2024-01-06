@@ -2035,29 +2035,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 xhrFields: {
                     withCredentials: false
                 },
-                success: function(response) {
-                    let responseString = response;
-                    if (typeof responseString === 'object') {
-                        responseString = JSON.stringify(responseString);
-                    }
-                    if (typeof responseString === 'string' && responseString.length > 0) {
-                        const shortUrlMatcher = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g;
-                        const shortUrl = (responseString.match(shortUrlMatcher) || []).sort(function(a, b) {
-                            return a.length - b.length;
-                        })[0];
-                        if (typeof shortUrl === 'string' && shortUrl.length > 0) {
-                            // we disable the button to avoid calling shortener again
-                            $shortenButton.addClass('buttondisabled');
-                            // update link
-                            $pasteUrl.text(shortUrl);
-                            $pasteUrl.prop('href', shortUrl);
-                            // we pre-select the link so that the user only has to [Ctrl]+[c] the link
-                            Helper.selectText($pasteUrl[0]);
-                            return;
-                        }
-                    }
-                    Alert.showError('Cannot parse response from URL shortener.');
-                }
+                success: PasteStatus.extractUrl
             })
             .fail(function(data, textStatus, errorThrown) {
                 console.error(textStatus, errorThrown);
@@ -2121,6 +2099,50 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             $pasteSuccess.removeClass('hidden');
             // we pre-select the link so that the user only has to [Ctrl]+[c] the link
             Helper.selectText($pasteUrl[0]);
+        };
+
+        /**
+         * extracts URLs from given string
+         *
+         * if at least one is found, it disables the shortener button and
+         * replaces the paste URL
+         *
+         * @name   PasteStatus.extractUrl
+         * @function
+         * @param  {string} response
+         */
+        me.extractUrl = function(response)
+        {
+            if (typeof response === 'object') {
+                response = JSON.stringify(response);
+            }
+            if (typeof response === 'string' && response.length > 0) {
+                const shortUrlMatcher = /https?:\/\/[^\s]+/g;
+                const shortUrl = (response.match(shortUrlMatcher) || []).filter(function(urlRegExMatch) {
+                    if (typeof URL.canParse === 'function') {
+                        return URL.canParse(urlRegExMatch);
+                    }
+                    // polyfill for older browsers (< 120) & node (< 19.9 & < 18.17)
+                    try {
+                        return !!new URL(urlRegExMatch);
+                    } catch (error) {
+                        return false;
+                    }
+                }).sort(function(a, b) {
+                    return a.length - b.length;
+                })[0];
+                if (typeof shortUrl === 'string' && shortUrl.length > 0) {
+                    // we disable the button to avoid calling shortener again
+                    $shortenButton.addClass('buttondisabled');
+                    // update link
+                    $pasteUrl.text(shortUrl);
+                    $pasteUrl.prop('href', shortUrl);
+                    // we pre-select the link so that the user only has to [Ctrl]+[c] the link
+                    Helper.selectText($pasteUrl[0]);
+                    return;
+                }
+            }
+            Alert.showError('Cannot parse response from URL shortener.');
         };
 
         /**
