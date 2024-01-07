@@ -7,21 +7,11 @@ describe('PasteStatus', function () {
 
         jsc.property(
             'creates a notification after a successfull paste upload',
-            common.jscSchemas(),
-            jsc.nearray(common.jscA2zString()),
-            jsc.array(common.jscQueryString()),
-            'string',
-            common.jscSchemas(),
-            jsc.nearray(common.jscA2zString()),
-            jsc.array(common.jscQueryString()),
-            function (
-                schema1, address1, query1, fragment1,
-                schema2, address2, query2
-            ) {
-                var expected1 = schema1 + '://' + address1.join('') + '/?' +
-                    encodeURI(query1.join('').replace(/^&+|&+$/gm,'') + '#' + fragment1),
-                    expected2 = schema2 + '://' + address2.join('') + '/?' +
-                    encodeURI(query2.join('').replace(/^&+|&+$/gm,'')),
+            common.jscUrl(),
+            common.jscUrl(false),
+            function (url1, url2) {
+                const expected1 = common.urlToString(url1),
+                    expected2 = common.urlToString(url2),
                     clean = jsdom();
                 $('body').html('<div><div id="deletelink"></div><div id="pastelink"></div></div>');
                 $.PrivateBin.PasteStatus.init();
@@ -41,25 +31,23 @@ describe('PasteStatus', function () {
             'extracts and updates URLs found in given response',
             jsc.elements(['http','https']),
             'nestring',
-            jsc.nearray(common.jscA2zString()),
-            jsc.array(common.jscQueryString()),
-            jsc.array(common.jscAlnumString()),
-            'string',
-            function (schema, domain, tld, query, shortid, fragment) {
+            common.jscUrl(),
+            function (schema, domain, url) {
                 domain = domain.replace(/\P{Letter}|[\u00AA-\u00BA]/gu,'').toLowerCase();
                 if (domain.length === 0) {
                     domain = 'a';
                 }
-                const expected = '.' + tld.join('') + '/' + (query.length > 0 ?
-                    ('?' + encodeURI(query.join('').replace(/^&+|&+$/gm,'')) +
-                    shortid.join('')) : '') + (fragment.length > 0 ?
-                    ('#' + encodeURI(fragment)) : ''),
+                url.schema = schema;
+                url.address.unshift('.');
+                url.address = domain.split('').concat(url.address);
+                const urlString = common.urlToString(url),
+                    expected = urlString.substring((schema + '://' + domain).length),
                     clean = jsdom();
 
                 $('body').html('<div><div id="pastelink"></div></div>');
                 $.PrivateBin.PasteStatus.init();
                 $.PrivateBin.PasteStatus.createPasteNotification('', '');
-                $.PrivateBin.PasteStatus.extractUrl(schema + '://' + domain + expected);
+                $.PrivateBin.PasteStatus.extractUrl(urlString);
 
                 const result = $('#pasteurl')[0].href;
                 clean();
@@ -79,18 +67,9 @@ describe('PasteStatus', function () {
             'shows burn after reading message or remaining time v1',
             'bool',
             'nat',
-            jsc.nearray(common.jscA2zString()),
-            jsc.nearray(common.jscA2zString()),
-            jsc.nearray(common.jscQueryString()),
-            'string',
-            function (
-                burnafterreading, remainingTime,
-                schema, address, query, fragment
-            ) {
-                var clean = jsdom('', {
-                        url: schema.join('') + '://' + address.join('') +
-                             '/?' + query.join('') + '#' + fragment
-                    }),
+            common.jscUrl(),
+            function (burnafterreading, remainingTime, url) {
+                let clean = jsdom('', {url: common.urlToString(url)}),
                     result;
                 $('body').html('<div id="remainingtime" class="hidden"></div>');
                 $.PrivateBin.PasteStatus.init();
@@ -117,18 +96,9 @@ describe('PasteStatus', function () {
             'shows burn after reading message or remaining time v2',
             'bool',
             'nat',
-            jsc.nearray(common.jscA2zString()),
-            jsc.nearray(common.jscA2zString()),
-            jsc.nearray(common.jscQueryString()),
-            'string',
-            function (
-                burnafterreading, remainingTime,
-                schema, address, query, fragment
-            ) {
-                var clean = jsdom('', {
-                        url: schema.join('') + '://' + address.join('') +
-                             '/?' + query.join('') + '#' + fragment
-                    }),
+            common.jscUrl(),
+            function (burnafterreading, remainingTime, url) {
+                let clean = jsdom('', {url: common.urlToString(url)}),
                     result;
                 $('body').html('<div id="remainingtime" class="hidden"></div>');
                 $.PrivateBin.PasteStatus.init();

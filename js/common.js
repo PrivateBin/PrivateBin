@@ -131,3 +131,24 @@ exports.jscMimeTypes = function() {
 exports.jscFormats = function() {
     return jsc.elements(formats);
 };
+
+// provides random URLs
+exports.jscUrl = function(withFragment = true, withQuery = true) {
+    let url = {
+        schema: exports.jscSchemas(),
+        address: jsc.nearray(exports.jscA2zString()),
+    };
+    if (withFragment) {
+        url.fragment = jsc.string;
+    }
+    if(withQuery) {
+        url.query = jsc.array(exports.jscQueryString());
+    }
+    return jsc.record(url);
+};
+
+exports.urlToString = function (url) {
+    return url.schema + '://' + url.address.join('') + '/' + (url.query ? '?' +
+        encodeURI(url.query.join('').replace(/^&+|&+$/gm,'')) : '') +
+        (url.fragment ? '#' + encodeURI(url.fragment) : '');
+};
