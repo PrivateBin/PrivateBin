@@ -259,16 +259,16 @@ describe('Helper', function () {
         this.timeout(30000);
         jsc.property(
             'returns the URL without query & fragment',
-            jsc.elements(['http', 'https']),
-            jsc.nearray(common.jscA2zString()),
-            jsc.array(common.jscA2zString()),
-            jsc.array(common.jscQueryString()),
-            'string',
-            function (schema, address, path, query, fragment) {
+            common.jscSchemas(false),
+            common.jscUrl(),
+            function (schema, url) {
+                url.schema = schema;
+                const fullUrl = common.urlToString(url);
+                delete(url.query);
+                delete(url.fragment);
                 $.PrivateBin.Helper.reset();
-                var path = path.join('') + (path.length > 0 ? '/' : ''),
-                    expected = schema + '://' + address.join('') + '/' + path,
-                    clean = jsdom('', {url: expected + '?' + query.join('') + '#' + fragment}),
+                const expected = common.urlToString(url),
+                    clean = jsdom('', {url: fullUrl}),
                     result = $.PrivateBin.Helper.baseUri();
                 clean();
                 return expected === result;

@@ -113,8 +113,8 @@ exports.jscBase64String = function() {
 };
 
 // provides a random URL schema supported by the whatwg-url library
-exports.jscSchemas = function() {
-    return jsc.elements(schemas);
+exports.jscSchemas = function(withFtp = true) {
+    return jsc.elements(withFtp ? schemas : schemas.slice(1));
 };
 
 // provides a random supported language string
