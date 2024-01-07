@@ -96,36 +96,34 @@ describe('Helper', function () {
         jsc.property(
             'replaces URLs with anchors',
             'string',
-            jsc.elements(['http', 'https', 'ftp']),
-            jsc.nearray(common.jscA2zString()),
-            jsc.array(common.jscQueryString()),
+            common.jscUrl(),
             jsc.array(common.jscHashString()),
             'string',
-            function (prefix, schema, address, query, fragment, postfix) {
-                query    = query.join('');
-                fragment = fragment.join('');
+            function (prefix, url, fragment, postfix) {
                 prefix = prefix.replace(/\r|\f/g, '\n').replace(/\u0000/g, '').replace(/\u000b/g, '');
                 postfix  = ' ' + postfix.replace(/\r/g, '\n').replace(/\u0000/g, '');
-                let url  = schema + '://' + address.join('') + '/?' + query + '#' + fragment,
+                url.fragment = fragment.join('');
+                let urlString = common.urlToString(url),
                     clean = jsdom();
                 $('body').html('<div id="foo"></div>');
                 let e = $('#foo');
 
                 // special cases: When the query string and fragment imply the beginning of an HTML entity, eg. &#0 or &#x
                 if (
-                    query.slice(-1) === '&' &&
-                    (parseInt(fragment.substring(0, 1), 10) >= 0 || fragment.charAt(0) === 'x' )
-                )
-                {
-                    url = schema + '://' + address.join('') + '/?' + query.substring(0, query.length - 1);
+                    url.query[-1] === '&' &&
+                    (parseInt(url.fragment.charAt(0), 10) >= 0 || url.fragment.charAt(0) === 'x')
+                ) {
+                    url.query.pop();
+                    urlString = common.urlToString(url);
                     postfix = '';
                 }
-                e.text(prefix + url + postfix);
+                e.text(prefix + urlString + postfix);
                 $.PrivateBin.Helper.urls2links(e);
                 let result = e.html();
                 clean();
-                url = $('<div />').text(url).html();
-                return $('<div />').text(prefix).html() + '<a href="' + url + '" target="_blank" rel="nofollow noopener noreferrer">' + url + '</a>' + $('<div />').text(postfix).html() === result;
+                urlString = $('<div />').text(urlString).html();
+                const expected = $('<div />').text(prefix).html() + '<a href="' + urlString + '" target="_blank" rel="nofollow noopener noreferrer">' + urlString + '</a>' + $('<div />').text(postfix).html();
+                return $('<div />').text(prefix).html() + '<a href="' + urlString + '" target="_blank" rel="nofollow noopener noreferrer">' + urlString + '</a>' + $('<div />').text(postfix).html() === result;
             }
         );
         jsc.property(
