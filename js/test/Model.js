@@ -80,7 +80,7 @@ describe('Model', function () {
 
         jsc.property(
             'returns the query string without separator, if any',
-            common.jscUrl(),
+            common.jscUrl(true, false),
             jsc.tuple(new Array(16).fill(common.jscHexString)),
             jsc.array(common.jscQueryString()),
             jsc.array(common.jscQueryString()),
@@ -184,7 +184,7 @@ describe('Model', function () {
         );
         jsc.property(
             'throws exception on empty fragment of the URL',
-            common.jscUrl(false, false),
+            common.jscUrl(false),
             function (url) {
                 let clean = jsdom('', {url: common.urlToString(url)}),
                     result = false;
