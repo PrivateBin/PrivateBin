@@ -27,13 +27,13 @@ describe('PasteStatus', function () {
             common.jscUrl(),
             common.jscUrl(false),
             function (url1, url2) {
-                const expected1 = common.urlToString(url1),
-                    expected2 = common.urlToString(url2),
+                const expected1 = common.urlToString(url1).replace(/&(gt|lt)$/, '&$1a'),
+                    expected2 = common.urlToString(url2).replace(/&(gt|lt)$/, '&$1a'),
                     clean = jsdom();
                 $('body').html('<div><div id="deletelink"></div><div id="pastelink"></div></div>');
                 $.PrivateBin.PasteStatus.init();
                 $.PrivateBin.PasteStatus.createPasteNotification(expected1, expected2);
-                var result1 = $('#pasteurl')[0].href,
+                const result1 = $('#pasteurl')[0].href,
                     result2 = $('#deletelink a')[0].href;
                 clean();
                 return result1 === expected1 && result2 === expected2;
@@ -50,7 +50,7 @@ describe('PasteStatus', function () {
             'nestring',
             common.jscUrl(),
             function (schema, domain, url) {
-                domain = domain.replace(/\P{Letter}|[\u00AA-\u00BA]/gu,'').toLowerCase();
+                domain = domain.replace(/\P{Letter}|[\u00AA-\u00BA]/gu, '').toLowerCase();
                 if (domain.length === 0) {
                     domain = 'a';
                 }
