@@ -228,7 +228,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             '<': '&lt;',
             '>': '&gt;',
             '"': '&quot;',
-            "'": '&#39;',
+            '\'': '&#39;',
             '/': '&#x2F;',
             '`': '&#x60;',
             '=': '&#x3D;'
@@ -2215,7 +2215,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          * @function
          * @param  {Event} event
          */
-        function submitPasswordModal(event)
+        async function submitPasswordModal(event)
         {
             event.preventDefault();
 
@@ -2224,6 +2224,19 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
             // hide modal
             $passwordModal.modal('hide');
+
+            // check if protected pathname
+            const url = new URL(window.location);
+
+            // if protected request password
+            if(url.pathname === '/protected') {
+                const enc = CryptTool.base58decode(newKey).padStart(32, '\u0000');
+                const cipherdata = [enc.ct, enc.adata];
+
+                const plaindata = await CryptTool.decipher(enc.k, password, cipherdata);
+                window.location.replace(Helper.baseUri() + plaindata);
+                return; 
+            }
 
             PasteDecrypter.run();
         }
@@ -4796,15 +4809,31 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          * @param {int} status
          * @param {object} data
          */
-        function showCreatedPaste(status, data) {
+        async function showCreatedPaste(status, data) {
             Alert.hideLoading();
             Alert.hideMessages();
 
             // show notification
             const baseUri   = Helper.baseUri() + '?',
-                  url       = baseUri + data.id + '#' + CryptTool.base58encode(data.encryptionKey),
-                  deleteUrl = baseUri + 'pasteid=' + data.id + '&deletetoken=' + data.deletetoken;
+            deleteUrl = baseUri + 'pasteid=' + data.id + '&deletetoken=' + data.deletetoken;
             PasteStatus.createPasteNotification(url, deleteUrl);
+
+            const pw = TopNav.getPassword()
+            const sm =  CryptTool.getSymmetricKey();
+            
+            let openUri = + '?' + data.id + '#' + CryptTool.base58encode(data.encryptionKey);
+            let cipherResult = await CryptTool.cipher(sm, pw, openUri, []);
+
+            let dt = {}
+            dt['v'] = 2;
+            dt['ct'] = cipherResult[0];
+            dt['adata'] = cipherResult[1];
+            dt['k'] = sm;
+
+            const encUrl = CryptTool.base58encode(JSON.stringify(dt))
+
+            const url = baseUri +  'protected/#' + encUrl;
+
 
             // show new URL in browser bar
             history.pushState({type: 'newpaste'}, document.title, url);
@@ -5536,6 +5565,17 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             try {
                 Model.getPasteId();
             } catch (e) {
+                    
+                // check if protected pathname
+                const url = new URL(window.location);
+
+                // if protected request password
+                if(url.pathname === '/protected') {
+                    const enc = CryptTool.base58decode(newKey).padStart(32, '\u0000');
+                    return Prompt.requestPassword();
+
+                }
+
                 // otherwise create a new paste
                 return me.newPaste();
             }
