@@ -4862,7 +4862,8 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
             const pw = TopNav.getPassword()
 
-            if(pw && pw.length) {
+            // only execute when it is a single time view
+            if(pw && pw.length && TopNav.getBurnAfterReading()) {
 
                 const sm =  CryptTool.getSymmetricKey();
 
@@ -5032,9 +5033,12 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
             // prepare server interaction
             ServerInteraction.prepare();
-            // This is not needed when encrypting browser side
-            // ServerInteraction.setCryptParameters(TopNav.getPassword());
-            ServerInteraction.setCryptParameters('');
+            if(!TopNav.getBurnAfterReading()) {
+                ServerInteraction.setCryptParameters(TopNav.getPassword());
+            } else {
+                // not needed in this scenario
+                ServerInteraction.setCryptParameters('');
+            }
 
             // set success/fail functions
             ServerInteraction.setSuccess(showCreatedPaste);
