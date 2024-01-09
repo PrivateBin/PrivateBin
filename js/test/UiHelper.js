@@ -13,10 +13,9 @@ describe('UiHelper', function () {
 
         jsc.property(
             'redirects to home, when the state is null',
-            common.jscSchemas(),
-            jsc.nearray(common.jscA2zString()),
-            function (schema, address) {
-                var expected = schema + '://' + address.join('') + '/',
+            common.jscUrl(false, false),
+            function (url) {
+                const expected = common.urlToString(url),
                     clean = jsdom('', {url: expected});
 
                 // make window.location.href writable
@@ -34,13 +33,11 @@ describe('UiHelper', function () {
 
         jsc.property(
             'does not redirect to home, when a new paste is created',
-            common.jscSchemas(),
-            jsc.nearray(common.jscA2zString()),
-            jsc.array(common.jscQueryString()),
+            common.jscUrl(false),
             jsc.nearray(common.jscBase64String()),
-            function (schema, address, query, fragment) {
-                var expected = schema + '://' + address.join('') + '/?' +
-                               query.join('') + '#' + fragment.join(''),
+            function (url, fragment) {
+                url.fragment = fragment.join('');
+                const expected = common.urlToString(url),
                     clean = jsdom('', {url: expected});
 
                 // make window.location.href writable
@@ -67,15 +64,12 @@ describe('UiHelper', function () {
 
         jsc.property(
             'redirects to home',
-            common.jscSchemas(),
-            jsc.nearray(common.jscA2zString()),
-            jsc.array(common.jscQueryString()),
-            jsc.nearray(common.jscBase64String()),
-            function (schema, address, query, fragment) {
-                var expected = schema + '://' + address.join('') + '/',
-                    clean = jsdom('', {
-                        url: expected + '?' + query.join('') + '#' + fragment.join('')
-                    });
+            common.jscUrl(),
+            function (url) {
+                const clean = jsdom('', {url: common.urlToString(url)});
+                delete(url.query);
+                delete(url.fragment);
+                const expected = common.urlToString(url);
 
                 // make window.location.href writable
                 Object.defineProperty(window.location, 'href', {

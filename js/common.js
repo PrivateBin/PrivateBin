@@ -113,8 +113,8 @@ exports.jscBase64String = function() {
 };
 
 // provides a random URL schema supported by the whatwg-url library
-exports.jscSchemas = function() {
-    return jsc.elements(schemas);
+exports.jscSchemas = function(withFtp = true) {
+    return jsc.elements(withFtp ? schemas : schemas.slice(1));
 };
 
 // provides a random supported language string
@@ -130,4 +130,25 @@ exports.jscMimeTypes = function() {
 // provides a random PrivateBin paste formatter
 exports.jscFormats = function() {
     return jsc.elements(formats);
+};
+
+// provides random URLs
+exports.jscUrl = function(withFragment = true, withQuery = true) {
+    let url = {
+        schema: exports.jscSchemas(),
+        address: jsc.nearray(exports.jscA2zString()),
+    };
+    if (withFragment) {
+        url.fragment = jsc.string;
+    }
+    if(withQuery) {
+        url.query = jsc.array(exports.jscQueryString());
+    }
+    return jsc.record(url);
+};
+
+exports.urlToString = function (url) {
+    return url.schema + '://' + url.address.join('') + '/' + (url.query ? '?' +
+        encodeURI(url.query.join('').replace(/^&+|&+$/gm,'')) : '') +
+        (url.fragment ? '#' + encodeURI(url.fragment) : '');
 };
