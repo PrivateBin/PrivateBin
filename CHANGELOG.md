@@ -2,8 +2,13 @@
 
 ## 1.6.3 (not yet released)
 * ADDED: Detect and report on damaged pastes (#1218)
+* CHANGED: Ask for confirmation, before loading burn after reading pastes #1237
+* CHANGED: Focus on password input in modal dialog
 * CHANGED: Upgrading libraries to: zlib 1.3
 * FIXED: Support more types of valid URLs for shorteners, incl. IDN ones (#1224)
+* FIXED: Email timezone buttons overlapping in some languages #1039
+* FIXED: Changing language mangles URL #1191
+* FIXED: Needless reload when visiting default URL
 
 ## 1.6.2 (2023-12-15)
 * FIXED: English not selectable when `languageselection` enabled (#1208)
