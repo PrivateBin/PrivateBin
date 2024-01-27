@@ -214,5 +214,7 @@
     "Your IP is not authorized to create pastes.": "Vòstra adreça IP a pas l’autorizacion de crear de tèxtes.",
     "Trying to shorten a URL that isn't pointing at our instance.": "Ensag d’abracar una URL que mena pas a nòstra instància.",
     "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "Error en cridant YOURLS. Es probablament un problèma de configuracion, quicòm coma « apirul » o « signature » marrit o absent.",
-    "Error parsing YOURLS response.": "Error d'analisi de la responsa YOURLS."
+    "Error parsing YOURLS response.": "Error d'analisi de la responsa YOURLS.",
+    "Burn after reading pastes can only be displayed once upon loading it. Do you want to open it now?": "Burn after reading pastes can only be displayed once upon loading it. Do you want to open it now?",
+    "Yes, load it": "Yes, load it"
 }

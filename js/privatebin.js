@@ -78,6 +78,13 @@ jQuery.PrivateBin = (function($, RawDeflate) {
     };
 
     /**
+     * URL fragment prefix requiring load confirmation
+     *
+     * @private
+     */
+    const loadConfirmPrefix = '#?';
+
+    /**
      * CryptoData class
      *
      * bundles helper functions used in both paste and comment formats
@@ -1512,15 +1519,11 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         me.getPasteKey = function()
         {
             if (symmetricKey === null) {
-                let pos = 1;
-                const pt = '#protected/';
-                if(window.location.hash.startsWith(pt)) {
-                    pos = pt.length;
+                let startPos = 1;
+                if(window.location.hash.startsWith(loadConfirmPrefix)) {
+                    startPos = loadConfirmPrefix.length;
                 }
-                let newKey = window.location.hash.substring(pos);
-                if (newKey === '') {
-                    throw 'no encryption key given';
-                }
+                let newKey = window.location.hash.substring(startPos);
 
                 // Some web 2.0 services and redirectors add data AFTER the anchor
                 // (such as &utm_source=...). We will strip any additional data.
@@ -1528,6 +1531,9 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 if (ampersandPos > -1)
                 {
                     newKey = newKey.substring(0, ampersandPos);
+                }
+                if (newKey === '') {
+                    throw 'no encryption key given';
                 }
 
                 // version 2 uses base58, version 1 uses base64 without decoding
@@ -2242,7 +2248,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          * @function
          * @param  {Event} event
          */
-        async function submitPasswordModal(event)
+        function submitPasswordModal(event)
         {
             event.preventDefault();
 
@@ -2252,35 +2258,35 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             // hide modal
             $passwordModal.modal('hide');
 
-            // check if protected pathname
-            const url = new URL(window.location);
-
-            // if protected request password
-            if(url.hash.startsWith('#protected/')) {
-                const pt = '#protected/';
-                let pos = pt.length;
-                let newKey = window.location.hash.substring(pos);
-                if (newKey === '') {
-                    throw 'no encryption key given';
-                }
-
-                // Some web 2.0 services and redirectors add data AFTER the anchor
-                // (such as &utm_source=...). We will strip any additional data.
-                let ampersandPos = newKey.indexOf('&');
-                if (ampersandPos > -1)
-                {
-                    newKey = newKey.substring(0, ampersandPos);
-                }
-                const enc = CryptTool.base58decode(newKey).padStart(32, '\u0000');
-                const dt = JSON.parse(enc);
-                const cipherdata = [dt.ct, dt.adata]
-
-                const plaindata = await CryptTool.decipher(dt.k, password, cipherdata);
-                window.location.replace(Helper.baseUri() + plaindata);
-                return;
-            }
-
             PasteDecrypter.run();
+        }
+
+        /**
+         * Request users confirmation to load possibly burn after reading paste
+         *
+         * @name   Prompt.requestLoadConfirmation
+         * @function
+         */
+        me.requestLoadConfirmation = function()
+        {
+            const $loadconfirmmodal = $('#loadconfirmmodal');
+            if ($loadconfirmmodal.length > 0) {
+                const $loadconfirmOpenNow = $loadconfirmmodal.find('#loadconfirm-open-now');
+                $loadconfirmOpenNow.off('click.loadPaste');
+                $loadconfirmOpenNow.on('click.loadPaste', PasteDecrypter.run);
+                const $loadconfirmClose = $loadconfirmmodal.find('.close');
+                $loadconfirmClose.off('click.close');
+                $loadconfirmClose.on('click.close', Controller.newPaste);
+                $loadconfirmmodal.modal('show');
+            } else {
+                if (window.confirm(
+                    I18n._('Burn after reading pastes can only be displayed once upon loading it. Do you want to open it now?')
+                )) {
+                    PasteDecrypter.run();
+                } else {
+                    Controller.newPaste();
+                }
+            }
         }
 
         /**
@@ -2297,6 +2303,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                     backdrop: 'static',
                     keyboard: false
                 });
+                $passwordDecrypt.focus();
                 return;
             }
 
@@ -3844,6 +3851,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         {
             document.cookie = 'lang=' + $(event.target).data('lang') + ';secure';
             UiHelper.reloadHome();
+            event.preventDefault();
         }
 
         /**
@@ -3999,10 +4007,6 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             const $emailconfirmmodal = $('#emailconfirmmodal');
             if ($emailconfirmmodal.length > 0) {
                 if (expirationDate !== null) {
-                    I18n._(
-                        $emailconfirmmodal.find('#emailconfirm-display'),
-                        'Recipient may become aware of your timezone, convert time to UTC?'
-                    );
                     const $emailconfirmTimezoneCurrent = $emailconfirmmodal.find('#emailconfirm-timezone-current');
                     const $emailconfirmTimezoneUtc = $emailconfirmmodal.find('#emailconfirm-timezone-utc');
                     $emailconfirmTimezoneCurrent.off('click.sendEmailCurrentTimezone');
@@ -4851,43 +4855,15 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          * @param {int} status
          * @param {object} data
          */
-        async function showCreatedPaste(status, data) {
+        function showCreatedPaste(status, data) {
             Alert.hideLoading();
             Alert.hideMessages();
 
             // show notification
-            const baseUri   = Helper.baseUri(),
-            deleteUrl = baseUri + '?pasteid=' + data.id + '&deletetoken=' + data.deletetoken;
-            let url;
-
-            const pw = TopNav.getPassword()
-
-            // only execute when it is a single time view
-            if(pw && pw.length && TopNav.getBurnAfterReading()) {
-
-                const sm =  CryptTool.getSymmetricKey();
-
-                let openUri = '?' + data.id + '#' + CryptTool.base58encode(data.encryptionKey);
-                let cipherResult = await CryptTool.cipher(sm, pw, openUri, []);
-
-                let dt = {}
-                dt['v'] = 2;
-                dt['ct'] = cipherResult[0];
-                dt['adata'] = cipherResult[1];
-                dt['k'] = sm;
-
-                const encUrl = CryptTool.base58encode(JSON.stringify(dt))
-
-                url = baseUri +  '#protected/' + encUrl;
-            } else {
-                url       = baseUri + '?' + data.id + '#' + CryptTool.base58encode(data.encryptionKey);
-            }
-
+            const baseUri   = Helper.baseUri() + '?',
+                  url       = baseUri + data.id + (TopNav.getBurnAfterReading() ? loadConfirmPrefix : '#') + CryptTool.base58encode(data.encryptionKey),
+                  deleteUrl = baseUri + 'pasteid=' + data.id + '&deletetoken=' + data.deletetoken;
             PasteStatus.createPasteNotification(url, deleteUrl);
-
-
-
-
 
             // show new URL in browser bar
             history.pushState({type: 'newpaste'}, document.title, url);
@@ -5033,12 +5009,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
             // prepare server interaction
             ServerInteraction.prepare();
-            if(!TopNav.getBurnAfterReading()) {
-                ServerInteraction.setCryptParameters(TopNav.getPassword());
-            } else {
-                // not needed in this scenario
-                ServerInteraction.setCryptParameters('');
-            }
+            ServerInteraction.setCryptParameters(TopNav.getPassword());
 
             // set success/fail functions
             ServerInteraction.setSuccess(showCreatedPaste);
@@ -5309,7 +5280,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             Alert.hideMessages();
             Alert.showLoading('Decrypting paste…', 'cloud-download');
 
-            if (typeof paste === 'undefined') {
+            if (typeof paste === 'undefined' || paste.type === 'click') {
                 // get cipher data and wait until it is available
                 Model.getPasteData(me.run);
                 return;
@@ -5416,7 +5387,10 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             AttachmentViewer.removeAttachmentData();
 
             Alert.hideLoading();
-            history.pushState({type: 'create'}, document.title, Helper.baseUri());
+            // only push new state if we are coming from a different one
+            if (Helper.baseUri() != window.location) {
+                history.pushState({type: 'create'}, document.title, Helper.baseUri());
+            }
 
             // clear discussion
             DiscussionViewer.prepareNewDiscussion();
@@ -5440,6 +5414,12 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                     Alert.showError('Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)');
                     return;
                 }
+            }
+
+            // check if we should request loading confirmation
+            if(window.location.hash.startsWith(loadConfirmPrefix)) {
+                Prompt.requestLoadConfirmation();
+                return;
             }
 
             // show proper elements on screen
@@ -5624,16 +5604,6 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             try {
                 Model.getPasteId();
             } catch (e) {
-
-                // check if protected pathname
-                const url = new URL(window.location);
-
-                // if protected request password
-                if(url.hash.startsWith('#protected/')) {
-                    return Prompt.requestPassword();
-
-                }
-
                 // otherwise create a new paste
                 return me.newPaste();
             }
