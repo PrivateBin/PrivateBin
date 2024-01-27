@@ -2128,7 +2128,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 response = JSON.stringify(response);
             }
             if (typeof response === 'string' && response.length > 0) {
-                const shortUrlMatcher = /https?:\/\/[^\s]+/g;
+                const shortUrlMatcher = /https?:\/\/[^\s"<]+/g; // JSON API will have URL in quotes, XML in tags
                 const shortUrl = (response.match(shortUrlMatcher) || []).filter(function(urlRegExMatch) {
                     if (typeof URL.canParse === 'function') {
                         return URL.canParse(urlRegExMatch);
@@ -2140,7 +2140,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                         return false;
                     }
                 }).sort(function(a, b) {
-                    return a.length - b.length;
+                    return a.length - b.length; // shortest first
                 })[0];
                 if (typeof shortUrl === 'string' && shortUrl.length > 0) {
                     // we disable the button to avoid calling shortener again
