@@ -82,7 +82,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
      *
      * @private
      */
-    const loadConfirmPrefix = '#?';
+    const loadConfirmPrefix = '#-';
 
     /**
      * CryptoData class
@@ -2303,7 +2303,12 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                     backdrop: 'static',
                     keyboard: false
                 });
+                // focus password input
                 $passwordDecrypt.focus();
+                // then re-focus it, when modal causes it to loose focus again
+                setTimeout(function () {
+                    $passwordDecrypt.focus();
+                }, 500);
                 return;
             }
 
@@ -2363,13 +2368,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             $passwordForm = $('#passwordform');
             $passwordModal = $('#passwordmodal');
 
-            // bind events
-
-            // focus password input when it is shown
-            $passwordModal.on('shown.bs.Model', function () {
-                $passwordDecrypt.focus();
-            });
-            // handle Model password submission
+            // bind events - handle Model password submission
             $passwordForm.submit(submitPasswordModal);
         };
 
@@ -3603,7 +3602,6 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 if (fadeOut === true) {
                     setTimeout(function () {
                         $comment.removeClass('highlight');
-
                     }, 300);
                 }
             };
