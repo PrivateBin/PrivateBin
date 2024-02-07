@@ -214,5 +214,7 @@
     "Your IP is not authorized to create pastes.": "あなたのIPアドレスにはペーストを作成する権限がありません。",
     "Trying to shorten a URL that isn't pointing at our instance.": "このインスタンスを指していないURLを短縮しようとしています。",
     "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "YOURLSの呼び出し中にエラーが発生しました。\"apiurl\"または\"signature\"等の設定に問題がある可能性があります。",
-    "Error parsing YOURLS response.": "YOURLSレスポンスの解析中にエラーが発生しました。"
+    "Error parsing YOURLS response.": "YOURLSレスポンスの解析中にエラーが発生しました。",
+    "Burn after reading pastes can only be displayed once upon loading it. Do you want to open it now?": "Burn after reading pastes can only be displayed once upon loading it. Do you want to open it now?",
+    "Yes, load it": "Yes, load it"
 }
