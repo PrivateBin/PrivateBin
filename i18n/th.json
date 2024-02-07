@@ -214,5 +214,7 @@
     "Your IP is not authorized to create pastes.": "IP ของคุณไม่ได้รับอนุญาตให้สร้างการฝากโค้ด",
     "Trying to shorten a URL that isn't pointing at our instance.": "กำลังพยายามใช้เครื่องมือสร้างลิงก์ย่อ ที่ไม่ได้ชี้ไปที่อินสแตนซ์ของเรา",
     "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "เกิดข้อผิดพลาดในการเรียก YOURLS อาจเป็นปัญหามาจากการกำหนดค่า เช่น \"apiurl\" หรือ \"signature\" ไม่ถูกต้องหรือขาดหายไป",
-    "Error parsing YOURLS response.": "เกิดข้อผิดพลาดในการแยกวิเคราะห์การตอบสนองของ YOURLS"
+    "Error parsing YOURLS response.": "เกิดข้อผิดพลาดในการแยกวิเคราะห์การตอบสนองของ YOURLS",
+    "Burn after reading pastes can only be displayed once upon loading it. Do you want to open it now?": "Burn after reading pastes can only be displayed once upon loading it. Do you want to open it now?",
+    "Yes, load it": "Yes, load it"
 }
