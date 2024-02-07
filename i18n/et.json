@@ -211,8 +211,10 @@
     "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "Kirja nägemiseks külasta seda linki. Teistele URL-i andmine lubab ka neil ligi pääseda kirjale.",
     "URL shortener may expose your decrypt key in URL.": "URL-i lühendaja võib paljastada sinu dekrüpteerimisvõtme URL-is.",
     "Save paste": "Salvesta kleebe",
-    "Your IP is not authorized to create pastes.": "Your IP is not authorized to create pastes.",
-    "Trying to shorten a URL that isn't pointing at our instance.": "Trying to shorten a URL that isn't pointing at our instance.",
-    "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".",
-    "Error parsing YOURLS response.": "Error parsing YOURLS response."
+    "Your IP is not authorized to create pastes.": "Su IP-l ei ole lubatud kleepeid luua.",
+    "Trying to shorten a URL that isn't pointing at our instance.": "Püüame lühendada URL-i, mis ei viita meie instantsile.",
+    "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "Viga YOURLS-i kutsumisel. Tõenäoliselt konfiguratsiooniprobleem, näiteks vale või puuduv \"apiurl\" või \"signature\".",
+    "Error parsing YOURLS response.": "Viga YOURLS vastuse parsimisel.",
+    "Burn after reading pastes can only be displayed once upon loading it. Do you want to open it now?": "Burn after reading pastes can only be displayed once upon loading it. Do you want to open it now?",
+    "Yes, load it": "Yes, load it"
 }
