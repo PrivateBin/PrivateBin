@@ -214,5 +214,7 @@
     "Your IP is not authorized to create pastes.": "Vaša IP adresa nie je oprávnená vytvárať príspevky.",
     "Trying to shorten a URL that isn't pointing at our instance.": "Pokúšate sa skrátiť adresu URL, ktorá neukazuje na túto inštanciu.",
     "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".",
-    "Error parsing YOURLS response.": "Error parsing YOURLS response."
+    "Error parsing YOURLS response.": "Error parsing YOURLS response.",
+    "Burn after reading pastes can only be displayed once upon loading it. Do you want to open it now?": "Burn after reading pastes can only be displayed once upon loading it. Do you want to open it now?",
+    "Yes, load it": "Yes, load it"
 }
