@@ -214,5 +214,7 @@
     "Your IP is not authorized to create pastes.": "IP:llesi ei ole annettu oikeutta luoda pasteja.",
     "Trying to shorten a URL that isn't pointing at our instance.": "Yritetään lyhentää URL-osoite, joka ei osoita meidän instanssiiin.",
     "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "Virhe kutsuttaessa YOURLS. Luultavasti asetusongelma kuten väärä tai puuttuuva \"apiurl\" tai \"signature\".",
-    "Error parsing YOURLS response.": "Virhe jäsennettäessä YOURLS-vastausta."
+    "Error parsing YOURLS response.": "Virhe jäsennettäessä YOURLS-vastausta.",
+    "Burn after reading pastes can only be displayed once upon loading it. Do you want to open it now?": "Burn after reading pastes can only be displayed once upon loading it. Do you want to open it now?",
+    "Yes, load it": "Yes, load it"
 }
