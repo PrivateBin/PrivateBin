@@ -214,5 +214,7 @@
     "Your IP is not authorized to create pastes.": "Il tuo IP non è autorizzato a creare dei messaggi.",
     "Trying to shorten a URL that isn't pointing at our instance.": "Tantativo in corso di accorciare un URL che non punta alla nostra istanza.",
     "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "Errore nella chiamata a YOURLS. Probabilmente un problema di configurazione, come un \"apiurl\" o una \"signature\" sbagliati o mancanti.",
-    "Error parsing YOURLS response.": "Errore nell'analizzare la risposta YOURLS."
+    "Error parsing YOURLS response.": "Errore nell'analizzare la risposta YOURLS.",
+    "Burn after reading pastes can only be displayed once upon loading it. Do you want to open it now?": "Burn after reading pastes can only be displayed once upon loading it. Do you want to open it now?",
+    "Yes, load it": "Yes, load it"
 }
