@@ -3,7 +3,7 @@
 ## 1.6.3 (not yet released)
 * ADDED: Translations for Romanian
 * ADDED: Detect and report on damaged pastes (#1218)
-* CHANGED: Upgrading libraries to: zlib 1.3
+* CHANGED: Upgrading libraries to: DOMpurify 3.0.8 & zlib 1.3.1
 * FIXED: Support more types of valid URLs for shorteners, incl. IDN ones (#1224)
 
 ## 1.6.2 (2023-12-15)

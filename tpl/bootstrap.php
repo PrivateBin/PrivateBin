@@ -55,7 +55,7 @@ if ($ZEROBINCOMPATIBILITY) :
 <?php
 endif;
 ?>
-		<script type="text/javascript" data-cfasync="false" src="js/zlib-1.3.js" integrity="sha512-VL3lLnt8EexTr22ze4a4HfVghpgY48c/Lhf4CcQa8bgYaIRRPjV1nP7EA8RiciGoXXQ1IeiU7tjrclPeVEfxOQ==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/zlib-1.3.1.js" integrity="sha512-VL3lLnt8EexTr22ze4a4HfVghpgY48c/Lhf4CcQa8bgYaIRRPjV1nP7EA8RiciGoXXQ1IeiU7tjrclPeVEfxOQ==" crossorigin="anonymous"></script>
 		<script type="text/javascript" data-cfasync="false" src="js/base-x-4.0.0.js" integrity="sha512-nNPg5IGCwwrveZ8cA/yMGr5HiRS5Ps2H+s0J/mKTPjCPWUgFGGw7M5nqdnPD3VsRwCVysUh3Y8OWjeSKGkEQJQ==" crossorigin="anonymous"></script>
 		<script type="text/javascript" data-cfasync="false" src="js/rawinflate-0.3.js" integrity="sha512-g8uelGgJW9A/Z1tB6Izxab++oj5kdD7B4qC7DHwZkB6DGMXKyzx7v5mvap2HXueI2IIn08YlRYM56jwWdm2ucQ==" crossorigin="anonymous"></script>
 		<script type="text/javascript" data-cfasync="false" src="js/bootstrap-3.4.1.js" integrity="sha512-oBTprMeNEKCnqfuqKd6sbvFzmFQtlXS3e0C/RGFV0hD6QzhHV+ODfaQbAlmY6/q0ubbwlAM/nCJjkrgA3waLzg==" crossorigin="anonymous"></script>
@@ -71,7 +71,7 @@ if ($MARKDOWN) :
 <?php
 endif;
 ?>
-		<script type="text/javascript" data-cfasync="false" src="js/purify-3.0.6.js" integrity="sha512-N3y6/HOk3pbsw3lFh4O8CKKEVwu1B2CF8kinhjURf8Yqa5OfSUt+/arozxFW+TUPOPw3TsDCRT/0u7BGRTEVUw==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/purify-3.0.8.js" integrity="sha512-wWBDKh5wYGtJ1Df+PPZIn59jHVBnJ4/Yb2W/pVnzaXab8cmlZnHVx+FEBGu5JX39s3P2Qlt+aNQou0XnjW86hg==" crossorigin="anonymous"></script>
 		<script type="text/javascript" data-cfasync="false" src="js/legacy.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-LYos+qXHIRqFf5ZPNphvtTB0cgzHUizu2wwcOwcwz/VIpRv9lpcBgPYz4uq6jx0INwCAj6Fbnl5HoKiLufS2jg==" crossorigin="anonymous"></script>
 		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-cfRk8a/8RpvMb4g9Su9kcKNcs7+PyGioUxH6z6k9e4vcdZmtz+gM2HwIP/Gd/1r6h3qoxrkO4jodn2E7gtZ7EA==" crossorigin="anonymous"></script>
 		<!-- icon -->
