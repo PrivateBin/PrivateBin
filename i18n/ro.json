@@ -214,5 +214,7 @@
     "Your IP is not authorized to create pastes.": "Adresa dvs. IP nu este autorizată să creeze paste-uri.",
     "Trying to shorten a URL that isn't pointing at our instance.": "Încercarea de a scurta un URL care nu direcționează spre instanța noastră.",
     "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "Eroare la apelarea YOURLS. Probabil o problemă de configurare, cum ar fi \"apiurl\" sau \"signature\" greșite sau lipsă.",
-    "Error parsing YOURLS response.": "Eroare la analizarea răspunsului YOURLS."
+    "Error parsing YOURLS response.": "Eroare la analizarea răspunsului YOURLS.",
+    "Burn after reading pastes can only be displayed once upon loading it. Do you want to open it now?": "Burn after reading pastes can only be displayed once upon loading it. Do you want to open it now?",
+    "Yes, load it": "Yes, load it"
 }
