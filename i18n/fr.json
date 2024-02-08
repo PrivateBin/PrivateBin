@@ -212,9 +212,9 @@
     "URL shortener may expose your decrypt key in URL.": "Raccourcir l'URL peut exposer votre clé de déchiffrement dans l'URL.",
     "Save paste": "Sauver le paste",
     "Your IP is not authorized to create pastes.": "Votre adresse IP n'est pas autorisée à créer des pastes.",
-    "Trying to shorten a URL that isn't pointing at our instance.": "Trying to shorten a URL that isn't pointing at our instance.",
-    "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".",
-    "Error parsing YOURLS response.": "Error parsing YOURLS response.",
-    "Burn after reading pastes can only be displayed once upon loading it. Do you want to open it now?": "Burn after reading pastes can only be displayed once upon loading it. Do you want to open it now?",
-    "Yes, load it": "Yes, load it"
+    "Trying to shorten a URL that isn't pointing at our instance.": "Essayer de raccourcir une URL qui ne pointe pas vers notre instance.",
+    "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "Erreur lors de l'appel de YOURLS. Peut-être un problème de configuration, comme \"apiurl\" ou \"signature\" manquant.",
+    "Error parsing YOURLS response.": "Erreur d'analyse de la réponse YOURLS.",
+    "Burn after reading pastes can only be displayed once upon loading it. Do you want to open it now?": "Effacer après la lecture des paste ne peut être affiché qu'une seule fois lors du chargement. Voulez-vous l'ouvrir maintenant ?",
+    "Yes, load it": "Oui, chargez-le"
 }
