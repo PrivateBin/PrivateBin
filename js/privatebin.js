@@ -78,6 +78,13 @@ jQuery.PrivateBin = (function($, RawDeflate) {
     };
 
     /**
+     * URL fragment prefix requiring load confirmation
+     *
+     * @private
+     */
+    const loadConfirmPrefix = '#-';
+
+    /**
      * CryptoData class
      *
      * bundles helper functions used in both paste and comment formats
@@ -228,7 +235,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             '<': '&lt;',
             '>': '&gt;',
             '"': '&quot;',
-            "'": '&#39;',
+            '\'': '&#39;',
             '/': '&#x2F;',
             '`': '&#x60;',
             '=': '&#x3D;'
@@ -1514,10 +1521,11 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         me.getPasteKey = function()
         {
             if (symmetricKey === null) {
-                let newKey = window.location.hash.substring(1);
-                if (newKey === '') {
-                    throw 'no encryption key given';
+                let startPos = 1;
+                if(window.location.hash.startsWith(loadConfirmPrefix)) {
+                    startPos = loadConfirmPrefix.length;
                 }
+                let newKey = window.location.hash.substring(startPos);
 
                 // Some web 2.0 services and redirectors add data AFTER the anchor
                 // (such as &utm_source=...). We will strip any additional data.
@@ -1525,6 +1533,9 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 if (ampersandPos > -1)
                 {
                     newKey = newKey.substring(0, ampersandPos);
+                }
+                if (newKey === '') {
+                    throw 'no encryption key given';
                 }
 
                 // version 2 uses base58, version 1 uses base64 without decoding
@@ -2253,6 +2264,34 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         }
 
         /**
+         * Request users confirmation to load possibly burn after reading paste
+         *
+         * @name   Prompt.requestLoadConfirmation
+         * @function
+         */
+        me.requestLoadConfirmation = function()
+        {
+            const $loadconfirmmodal = $('#loadconfirmmodal');
+            if ($loadconfirmmodal.length > 0) {
+                const $loadconfirmOpenNow = $loadconfirmmodal.find('#loadconfirm-open-now');
+                $loadconfirmOpenNow.off('click.loadPaste');
+                $loadconfirmOpenNow.on('click.loadPaste', PasteDecrypter.run);
+                const $loadconfirmClose = $loadconfirmmodal.find('.close');
+                $loadconfirmClose.off('click.close');
+                $loadconfirmClose.on('click.close', Controller.newPaste);
+                $loadconfirmmodal.modal('show');
+            } else {
+                if (window.confirm(
+                    I18n._('Burn after reading pastes can only be displayed once upon loading it. Do you want to open it now?')
+                )) {
+                    PasteDecrypter.run();
+                } else {
+                    Controller.newPaste();
+                }
+            }
+        }
+
+        /**
          * ask the user for the password and set it
          *
          * @name Prompt.requestPassword
@@ -2266,6 +2305,12 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                     backdrop: 'static',
                     keyboard: false
                 });
+                // focus password input
+                $passwordDecrypt.focus();
+                // then re-focus it, when modal causes it to loose focus again
+                setTimeout(function () {
+                    $passwordDecrypt.focus();
+                }, 500);
                 return;
             }
 
@@ -2325,13 +2370,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             $passwordForm = $('#passwordform');
             $passwordModal = $('#passwordmodal');
 
-            // bind events
-
-            // focus password input when it is shown
-            $passwordModal.on('shown.bs.Model', function () {
-                $passwordDecrypt.focus();
-            });
-            // handle Model password submission
+            // bind events - handle Model password submission
             $passwordForm.submit(submitPasswordModal);
         };
 
@@ -3565,7 +3604,6 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 if (fadeOut === true) {
                     setTimeout(function () {
                         $comment.removeClass('highlight');
-
                     }, 300);
                 }
             };
@@ -3813,6 +3851,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         {
             document.cookie = 'lang=' + $(event.target).data('lang') + ';secure';
             UiHelper.reloadHome();
+            event.preventDefault();
         }
 
         /**
@@ -3968,10 +4007,6 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             const $emailconfirmmodal = $('#emailconfirmmodal');
             if ($emailconfirmmodal.length > 0) {
                 if (expirationDate !== null) {
-                    I18n._(
-                        $emailconfirmmodal.find('#emailconfirm-display'),
-                        'Recipient may become aware of your timezone, convert time to UTC?'
-                    );
                     const $emailconfirmTimezoneCurrent = $emailconfirmmodal.find('#emailconfirm-timezone-current');
                     const $emailconfirmTimezoneUtc = $emailconfirmmodal.find('#emailconfirm-timezone-utc');
                     $emailconfirmTimezoneCurrent.off('click.sendEmailCurrentTimezone');
@@ -4826,7 +4861,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
             // show notification
             const baseUri   = Helper.baseUri() + '?',
-                  url       = baseUri + data.id + '#' + CryptTool.base58encode(data.encryptionKey),
+                  url       = baseUri + data.id + (TopNav.getBurnAfterReading() ? loadConfirmPrefix : '#') + CryptTool.base58encode(data.encryptionKey),
                   deleteUrl = baseUri + 'pasteid=' + data.id + '&deletetoken=' + data.deletetoken;
             PasteStatus.createPasteNotification(url, deleteUrl);
 
@@ -5245,7 +5280,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             Alert.hideMessages();
             Alert.showLoading('Decrypting paste…', 'cloud-download');
 
-            if (typeof paste === 'undefined') {
+            if (typeof paste === 'undefined' || paste.type === 'click') {
                 // get cipher data and wait until it is available
                 Model.getPasteData(me.run);
                 return;
@@ -5352,7 +5387,10 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             AttachmentViewer.removeAttachmentData();
 
             Alert.hideLoading();
-            history.pushState({type: 'create'}, document.title, Helper.baseUri());
+            // only push new state if we are coming from a different one
+            if (Helper.baseUri() != window.location) {
+                history.pushState({type: 'create'}, document.title, Helper.baseUri());
+            }
 
             // clear discussion
             DiscussionViewer.prepareNewDiscussion();
@@ -5376,6 +5414,12 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                     Alert.showError('Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)');
                     return;
                 }
+            }
+
+            // check if we should request loading confirmation
+            if(window.location.hash.startsWith(loadConfirmPrefix)) {
+                Prompt.requestLoadConfirmation();
+                return;
             }
 
             // show proper elements on screen

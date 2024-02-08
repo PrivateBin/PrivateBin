@@ -3,8 +3,13 @@
 ## 1.6.3 (not yet released)
 * ADDED: Translations for Romanian
 * ADDED: Detect and report on damaged pastes (#1218)
-* CHANGED: Upgrading libraries to: zlib 1.3
+* CHANGED: Ask for confirmation, before loading burn after reading pastes #1237
+* CHANGED: Focus on password input in modal dialog
+* CHANGED: Upgrading libraries to: DOMpurify 3.0.8 & zlib 1.3.1
 * FIXED: Support more types of valid URLs for shorteners, incl. IDN ones (#1224)
+* FIXED: Email timezone buttons overlapping in some languages #1039
+* FIXED: Changing language mangles URL #1191
+* FIXED: Needless reload when visiting default URL
 
 ## 1.6.2 (2023-12-15)
 * FIXED: English not selectable when `languageselection` enabled (#1208)

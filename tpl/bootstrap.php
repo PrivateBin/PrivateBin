@@ -55,7 +55,7 @@ if ($ZEROBINCOMPATIBILITY) :
 <?php
 endif;
 ?>
-		<script type="text/javascript" data-cfasync="false" src="js/zlib-1.3.js" integrity="sha512-VL3lLnt8EexTr22ze4a4HfVghpgY48c/Lhf4CcQa8bgYaIRRPjV1nP7EA8RiciGoXXQ1IeiU7tjrclPeVEfxOQ==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/zlib-1.3.1.js" integrity="sha512-VL3lLnt8EexTr22ze4a4HfVghpgY48c/Lhf4CcQa8bgYaIRRPjV1nP7EA8RiciGoXXQ1IeiU7tjrclPeVEfxOQ==" crossorigin="anonymous"></script>
 		<script type="text/javascript" data-cfasync="false" src="js/base-x-4.0.0.js" integrity="sha512-nNPg5IGCwwrveZ8cA/yMGr5HiRS5Ps2H+s0J/mKTPjCPWUgFGGw7M5nqdnPD3VsRwCVysUh3Y8OWjeSKGkEQJQ==" crossorigin="anonymous"></script>
 		<script type="text/javascript" data-cfasync="false" src="js/rawinflate-0.3.js" integrity="sha512-g8uelGgJW9A/Z1tB6Izxab++oj5kdD7B4qC7DHwZkB6DGMXKyzx7v5mvap2HXueI2IIn08YlRYM56jwWdm2ucQ==" crossorigin="anonymous"></script>
 		<script type="text/javascript" data-cfasync="false" src="js/bootstrap-3.4.1.js" integrity="sha512-oBTprMeNEKCnqfuqKd6sbvFzmFQtlXS3e0C/RGFV0hD6QzhHV+ODfaQbAlmY6/q0ubbwlAM/nCJjkrgA3waLzg==" crossorigin="anonymous"></script>
@@ -71,9 +71,9 @@ if ($MARKDOWN) :
 <?php
 endif;
 ?>
-		<script type="text/javascript" data-cfasync="false" src="js/purify-3.0.6.js" integrity="sha512-N3y6/HOk3pbsw3lFh4O8CKKEVwu1B2CF8kinhjURf8Yqa5OfSUt+/arozxFW+TUPOPw3TsDCRT/0u7BGRTEVUw==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/purify-3.0.8.js" integrity="sha512-wWBDKh5wYGtJ1Df+PPZIn59jHVBnJ4/Yb2W/pVnzaXab8cmlZnHVx+FEBGu5JX39s3P2Qlt+aNQou0XnjW86hg==" crossorigin="anonymous"></script>
 		<script type="text/javascript" data-cfasync="false" src="js/legacy.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-LYos+qXHIRqFf5ZPNphvtTB0cgzHUizu2wwcOwcwz/VIpRv9lpcBgPYz4uq6jx0INwCAj6Fbnl5HoKiLufS2jg==" crossorigin="anonymous"></script>
-		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-cfRk8a/8RpvMb4g9Su9kcKNcs7+PyGioUxH6z6k9e4vcdZmtz+gM2HwIP/Gd/1r6h3qoxrkO4jodn2E7gtZ7EA==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-FPqSHNhZoXQX1vV5+Sd9vn/indcihNkt0KLmpRpDfXRMM9tTWxokUpbsD07GGpYibfG4mPbCwFy13c2VLvagIg==" crossorigin="anonymous"></script>
 		<!-- icon -->
 		<link rel="apple-touch-icon" href="<?php echo I18n::encode($BASEPATH); ?>img/apple-touch-icon.png" sizes="180x180" />
 		<link rel="icon" type="image/png" href="img/favicon-32x32.png" sizes="32x32" />
@@ -123,21 +123,31 @@ if (count($class)) {
 				</div>
 			</div>
 		</div>
+		<div id="loadconfirmmodal" tabindex="-1" class="modal fade" role="dialog" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="<?php echo I18n::_('Close') ?>"><span aria-hidden="true">&times;</span></button>
+						<h4 class="modal-title"><?php echo I18n::_('Burn after reading pastes can only be displayed once upon loading it. Do you want to open it now?') ?></h4>
+					</div>
+					<div class="modal-body text-center">
+						<button id="loadconfirm-open-now" type="button" class="btn btn-success" data-dismiss="modal"><span class="glyphicon glyphicon-download"></span> <?php echo I18n::_('Yes, load it') ?></button>
+					</div>
+				</div>
+			</div>
+		</div>
 <?php
 if ($QRCODE) :
 ?>
-		<div id="qrcodemodal" tabindex="-1" class="modal fade" aria-labelledby="qrcodemodalTitle" role="dialog" aria-hidden="true">
+		<div id="qrcodemodal" tabindex="-1" class="modal fade" role="dialog" aria-hidden="true">
 			<div class="modal-dialog" role="document">
 				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="<?php echo I18n::_('Close') ?>"><span aria-hidden="true">&times;</span></button>
+						<h4 class="modal-title"><?php echo I18n::_('QR code') ?></h4>
+					</div>
 					<div class="modal-body">
 						<div class="mx-auto" id="qrcode-display"></div>
-					</div>
-					<div class="row">
-						<div class="btn-group col-xs-12">
-							<span class="col-xs-12">
-								<button type="button" class="btn btn-primary btn-block" data-dismiss="modal"><?php echo I18n::_('Close') ?></button>
-							</span>
-						</div>
 					</div>
 				</div>
 			</div>
@@ -146,23 +156,19 @@ if ($QRCODE) :
 endif;
 if ($EMAIL) :
 ?>
-		<div id="emailconfirmmodal" tabindex="-1" class="modal fade" aria-labelledby="emailconfirmmodalTitle" role="dialog" aria-hidden="true">
+		<div id="emailconfirmmodal" tabindex="-1" class="modal fade" role="dialog" aria-hidden="true">
 			<div class="modal-dialog" role="document">
 				<div class="modal-content">
-					<div class="modal-body">
-						<div id="emailconfirm-display"></div>
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="<?php echo I18n::_('Close') ?>"><span aria-hidden="true">&times;</span></button>
+						<h4 class="modal-title"><?php echo I18n::_('Recipient may become aware of your timezone, convert time to UTC?') ?></h4>
 					</div>
-					<div class="row">
-						<div class="btn-group col-xs-12" data-toggle="buttons">
-							<span class="col-xs-12 col-md-4">
-								<button id="emailconfirm-timezone-current" type="button" class="btn btn-danger btn-block" data-dismiss="modal"><?php echo I18n::_('Use Current Timezone') ?></button>
-							</span>
-							<span class="col-xs-12 col-md-4">
-								<button id="emailconfirm-timezone-utc" type="button" class="btn btn-default btn-block" data-dismiss="modal"><?php echo I18n::_('Convert To UTC') ?></button>
-							</span>
-							<span class="col-xs-12 col-md-4">
-								<button type="button" class="btn btn-primary btn-block" data-dismiss="modal"><?php echo I18n::_('Close') ?></button>
-							</span>
+					<div class="modal-body row">
+						<div class="col-xs-12 col-md-6">
+							<button id="emailconfirm-timezone-current" type="button" class="btn btn-danger"><span class="glyphicon glyphicon-time"></span> <?php echo I18n::_('Use Current Timezone') ?></button>
+						</div>
+						<div class="col-xs-12 col-md-6 text-right">
+							<button id="emailconfirm-timezone-utc" type="button" class="btn btn-success"><span class="glyphicon glyphicon-globe"></span> <?php echo I18n::_('Convert To UTC') ?></button>
 						</div>
 					</div>
 				</div>
