@@ -1,6 +1,6 @@
 # PrivateBin version history
 
-## 1.6.3 (not yet released)
+## 1.7.0 (2024-02-11)
 * ADDED: Translations for Romanian
 * ADDED: Detect and report on damaged pastes (#1218)
 * CHANGED: Ask for confirmation, before loading burn after reading pastes #1237
