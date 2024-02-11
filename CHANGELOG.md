@@ -1,6 +1,7 @@
 # PrivateBin version history
 
-## 1.7.1 (not yet released)
+## 1.7.1 (2024-02-11)
+* FIXED: zlib 1.3.1 wasm file reference
 
 ## 1.7.0 (2024-02-11)
 * ADDED: Translations for Romanian

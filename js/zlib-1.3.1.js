@@ -26,9 +26,9 @@
 
         let buff;
         if (typeof fs === 'object') {
-            buff = fs.readFileSync('zlib-1.3.wasm');
+            buff = fs.readFileSync('zlib-1.3.1.wasm');
         } else {
-            const resp = await fetch('js/zlib-1.3.wasm');
+            const resp = await fetch('js/zlib-1.3.1.wasm');
             buff = await resp.arrayBuffer();
         }
         const module = await WebAssembly.compile(buff);
