@@ -228,7 +228,12 @@ If you want to deploy PrivateBin in a serverless manner in the Google Cloud, you
 can choose the `GoogleCloudStorage` as backend.
 
 To use this backend, you first have to install the SDK from the installation
-directory of PrivateBin: `composer require google/cloud-storage`
+directory of PrivateBin:
+
+```console
+composer require --no-update google/cloud-storage
+composer update --no-dev --optimize-autoloader
+```
 
 You have to create a GCS bucket and specify the name as the model option `bucket`.
 Alternatively, you can set the name through the environment variable `PRIVATEBIN_GCS_BUCKET`.
@@ -246,7 +251,12 @@ the AWS SDK for PHP, but can also talk to a Rados gateway as part of a Ceph
 cluster.
 
 To use this backend, you first have to install the SDK from the installation
-directory of PrivateBin: `composer require aws/aws-sdk-php`
+directory of PrivateBin:
+
+```console
+composer require --no-update aws/aws-sdk-php
+composer update --no-dev --optimize-autoloader
+```
 
 You have to create an S3 bucket on the Ceph cluster before using the S3 backend.
 
