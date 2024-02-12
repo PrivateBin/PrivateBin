@@ -1,0 +1,9 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Question and support
+    url: https://github.com/orgs/PrivateBin/discussions/new?category=q-a
+    about: Your setup is not working and you need help or you have a question regarding PrivateBin
+  - name: Problem with the container image
+    url: https://github.com/PrivateBin/docker-nginx-fpm-alpine/issues/new
+    about: Please report all problems that apply only(!) to the official (Docker) image “docker-nginx-fpm-alpine” here.
+

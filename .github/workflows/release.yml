@@ -1,0 +1,50 @@
+name: Draft Release
+
+on:
+  push:
+    tags: '[0-9]+.[0-9]?[0-9]?[0-9]?.?[0-9]+'
+
+jobs:
+  draft:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch changelog from tag
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: CHANGELOG.md
+          sparse-checkout-cone-mode: false
+
+      - name: Extract latest changelog entry and attach it to draft
+        uses: taiki-e/create-gh-release-action@v1
+        with:
+          changelog: CHANGELOG.md
+          draft: true
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+  release:
+    outputs:
+      hashes: ${{ steps.hash.outputs.hashes }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Collect artifacts
+        run: |
+          wget -q https://github.com/PrivateBin/PrivateBin/archive/refs/tags/${GITHUB_REF_NAME}.tar.gz
+          wget -q https://github.com/PrivateBin/PrivateBin/archive/refs/tags/${GITHUB_REF_NAME}.zip
+
+      - name: Generate hashes
+        shell: bash
+        id: hash
+        run: echo "hashes=$(sha256sum ${GITHUB_REF_NAME}.* | base64 -w0)" >> "$GITHUB_OUTPUT"
+
+  provenance:
+    needs:
+      - release
+    permissions:
+      actions: read
+      id-token: write
+      contents: write
+    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v1.9.0
+    with:
+      base64-subjects: "${{ needs.release.outputs.hashes }}"
+      draft-release: true
+      upload-assets: true

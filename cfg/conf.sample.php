@@ -7,9 +7,10 @@
 ; (optional) set a project name to be displayed on the website
 ; name = "PrivateBin"
 
-; The full URL, with the domain name and directories that point to the PrivateBin files
-; This URL is essential to allow Opengraph images to be displayed on social networks
-; basepath = ""
+; The full URL, with the domain name and directories that point to the
+; PrivateBin files, including an ending slash (/). This URL is essential to
+; allow Opengraph images to be displayed on social networks.
+; basepath = "https://privatebin.example.com/"
 
 ; enable or disable the discussion feature, defaults to true
 discussion = true
@@ -55,20 +56,25 @@ languageselection = false
 ; if this is set and language selection is disabled, this will be the only language
 ; languagedefault = "en"
 
-; (optional) URL shortener address to offer after a new paste is created
-; it is suggested to only use this with self-hosted shorteners as this will leak
-; the pastes encryption key
+; (optional) URL shortener address to offer after a new paste is created.
+; It is suggested to only use this with self-hosted shorteners as this will leak
+; the pastes encryption key.
 ; urlshortener = "https://shortener.example.com/api?link="
 
 ; (optional) Let users create a QR code for sharing the paste URL with one click.
 ; It works both when a new paste is created and when you view a paste.
 ; qrcode = true
 
+; (optional) Let users send an email sharing the paste URL with one click.
+; It works both when a new paste is created and when you view a paste.
+; email = true
+
 ; (optional) IP based icons are a weak mechanism to detect if a comment was from
-; a different user when the same username was used in a comment. It might be
-; used to get the IP of a non anonymous comment poster if the server salt is
-; leaked and a SHA256 HMAC rainbow table is generated for all (relevant) IPs.
-; Can be set to one these values: "none" / "vizhash" / "identicon" (default).
+; a different user when the same username was used in a comment. It might get
+; used to get the IP of a comment poster if the server salt is leaked and a
+; SHA512 HMAC rainbow table is generated for all (relevant) IPs.
+; Can be set to one these values:
+; "none" / "identicon" (default) / "jdenticon" / "vizhash".
 ; icon = "none"
 
 ; Content Security Policy headers allow a website to restrict what sources are
@@ -175,6 +181,7 @@ dir = PATH "data"
 ;[model_options]
 ;bucket = "my-private-bin"
 ;prefix = "pastes"
+;uniformacl = false
 
 ;[model]
 ; example of DB configuration for MySQL
@@ -204,3 +211,55 @@ dir = PATH "data"
 ;usr = "privatebin"
 ;pwd = "Z3r0P4ss"
 ;opt[12] = true    ; PDO::ATTR_PERSISTENT
+
+;[model]
+; example of S3 configuration for Rados gateway / CEPH
+;class = S3Storage
+;[model_options]
+;region = ""
+;version = "2006-03-01"
+;endpoint = "https://s3.my-ceph.invalid"
+;use_path_style_endpoint = true
+;bucket = "my-bucket"
+;accesskey = "my-rados-user"
+;secretkey = "my-rados-pass"
+
+;[model]
+; example of S3 configuration for AWS
+;class = S3Storage
+;[model_options]
+;region = "eu-central-1"
+;version = "latest"
+;bucket = "my-bucket"
+;accesskey = "access key id"
+;secretkey = "secret access key"
+
+;[model]
+; example of S3 configuration for AWS using its SDK default credential provider chain
+; if relying on environment variables, the AWS SDK will look for the following:
+; - AWS_ACCESS_KEY_ID
+; - AWS_SECRET_ACCESS_KEY
+; - AWS_SESSION_TOKEN (if needed)
+; for more details, see https://docs.aws.amazon.com/sdk-for-php/v3/developer-guide/guide_credentials.html#default-credential-chain 
+;class = S3Storage
+;[model_options]
+;region = "eu-central-1"
+;version = "latest"
+;bucket = "my-bucket"
+
+[yourls]
+; When using YOURLS as a "urlshortener" config item:
+; - By default, "urlshortener" will point to the YOURLS API URL, with or without
+;   credentials, and will be visible in public on the PrivateBin web page.
+;   Only use this if you allow short URL creation without credentials.
+; - Alternatively, using the parameters in this section ("signature" and
+;   "apiurl"), "urlshortener" needs to point to the base URL of your PrivateBin
+;   instance with "shortenviayourls?link=" appended. For example:
+;   urlshortener = "${basepath}shortenviayourls?link="
+;   This URL will in turn call YOURLS on the server side, using the URL from
+;   "apiurl" and the "access signature" from the "signature" parameters below.
+
+; (optional) the "signature" (access key) issued by YOURLS for the using account
+; signature = ""
+; (optional) the URL of the YOURLS API, called to shorten a PrivateBin URL
+; apiurl = "https://yourls.example.com/yourls-api.php"

@@ -1,6 +1,7 @@
 <?php
 
 use Identicon\Identicon;
+use PHPUnit\Framework\TestCase;
 use PrivateBin\Configuration;
 use PrivateBin\Data\Database;
 use PrivateBin\Model;
@@ -10,7 +11,7 @@ use PrivateBin\Persistence\ServerSalt;
 use PrivateBin\Persistence\TrafficLimiter;
 use PrivateBin\Vizhash16x16;
 
-class ModelTest extends PHPUnit_Framework_TestCase
+class ModelTest extends TestCase
 {
     private $_conf;
 
@@ -18,7 +19,7 @@ class ModelTest extends PHPUnit_Framework_TestCase
 
     protected $_path;
 
-    public function setUp()
+    public function setUp(): void
     {
         /* Setup Routine */
         $this->_path = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'privatebin_data';
@@ -38,13 +39,13 @@ class ModelTest extends PHPUnit_Framework_TestCase
         );
         Helper::confBackup();
         Helper::createIniFile(CONF, $options);
-        ServerSalt::setStore(Database::getInstance($options['model_options']));
+        ServerSalt::setStore(new Database($options['model_options']));
         $this->_conf            = new Configuration;
         $this->_model           = new Model($this->_conf);
         $_SERVER['REMOTE_ADDR'] = '::1';
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         /* Tear Down Routine */
         unlink(CONF);
@@ -156,10 +157,10 @@ class ModelTest extends PHPUnit_Framework_TestCase
 
     public function testCommentDefaults()
     {
+        $class   = 'PrivateBin\\Data\\' . $this->_conf->getKey('class', 'model');
         $comment = new Comment(
             $this->_conf,
-            forward_static_call(
-                'PrivateBin\\Data\\' . $this->_conf->getKey('class', 'model') . '::getInstance',
+            new $class(
                 $this->_conf->getSection('model_options')
             )
         );
@@ -167,10 +168,6 @@ class ModelTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(Helper::getPasteId(), $comment->getParentId(), 'comment parent ID gets initialized to paste ID');
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionCode 75
-     */
     public function testPasteDuplicate()
     {
         $pasteData = Helper::getPastePost();
@@ -182,13 +179,11 @@ class ModelTest extends PHPUnit_Framework_TestCase
 
         $paste = $this->_model->getPaste();
         $paste->setData($pasteData);
+        $this->expectException(Exception::class);
+        $this->expectExceptionCode(75);
         $paste->store();
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionCode 76
-     */
     public function testStoreFail()
     {
         $path = $this->_path . DIRECTORY_SEPARATOR . 'model-store-test.sq3';
@@ -225,13 +220,11 @@ class ModelTest extends PHPUnit_Framework_TestCase
 
         $paste = $model->getPaste();
         $paste->setData($pasteData);
+        $this->expectException(Exception::class);
+        $this->expectExceptionCode(76);
         $paste->store();
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionCode 70
-     */
     public function testCommentStoreFail()
     {
         $path = $this->_path . DIRECTORY_SEPARATOR . 'model-test.sq3';
@@ -259,7 +252,10 @@ class ModelTest extends PHPUnit_Framework_TestCase
         $paste = $model->getPaste();
         $paste->setData($pasteData);
         $paste->store();
-        $paste->exists();
+        $this->assertTrue($paste->exists(), 'paste exists before creating comment');
+
+        $comment = $paste->getComment(Helper::getPasteId());
+        $comment->setData($commentData);
 
         $db = new PDO(
             $options['model_options']['dsn'],
@@ -271,15 +267,11 @@ class ModelTest extends PHPUnit_Framework_TestCase
         $statement->execute();
         $statement->closeCursor();
 
-        $comment = $paste->getComment(Helper::getPasteId());
-        $comment->setData($commentData);
+        $this->expectException(Exception::class);
+        $this->expectExceptionCode(70);
         $comment->store();
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionCode 69
-     */
     public function testCommentDuplicate()
     {
         $pasteData   = Helper::getPastePost();
@@ -296,6 +288,8 @@ class ModelTest extends PHPUnit_Framework_TestCase
 
         $comment = $paste->getComment(Helper::getPasteId());
         $comment->setData($commentData);
+        $this->expectException(Exception::class);
+        $this->expectExceptionCode(69);
         $comment->store();
     }
 
@@ -327,52 +321,40 @@ class ModelTest extends PHPUnit_Framework_TestCase
         $this->assertFalse(Paste::isValidId('../bar/baz'), 'path attack');
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionCode 64
-     */
     public function testInvalidPaste()
     {
         $this->_model->getPaste(Helper::getPasteId())->delete();
         $paste = $this->_model->getPaste(Helper::getPasteId());
+        $this->expectException(Exception::class);
+        $this->expectExceptionCode(64);
         $paste->get();
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionCode 75
-     */
     public function testInvalidPasteFormat()
     {
         $pasteData             = Helper::getPastePost();
         $pasteData['adata'][1] = 'format does not exist';
         $paste                 = $this->_model->getPaste();
+        $this->expectException(Exception::class);
+        $this->expectExceptionCode(75);
         $paste->setData($pasteData);
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionCode 60
-     */
     public function testInvalidPasteId()
     {
+        $this->expectException(Exception::class);
+        $this->expectExceptionCode(60);
         $this->_model->getPaste('');
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionCode 62
-     */
     public function testInvalidComment()
     {
         $paste = $this->_model->getPaste();
+        $this->expectException(Exception::class);
+        $this->expectExceptionCode(62);
         $paste->getComment(Helper::getPasteId());
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionCode 67
-     */
     public function testInvalidCommentDeletedPaste()
     {
         $pasteData = Helper::getPastePost();
@@ -382,13 +364,11 @@ class ModelTest extends PHPUnit_Framework_TestCase
 
         $comment = $paste->getComment(Helper::getPasteId());
         $paste->delete();
+        $this->expectException(Exception::class);
+        $this->expectExceptionCode(67);
         $comment->store();
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionCode 68
-     */
     public function testInvalidCommentData()
     {
         $pasteData             = Helper::getPastePost();
@@ -398,18 +378,17 @@ class ModelTest extends PHPUnit_Framework_TestCase
         $paste->store();
 
         $comment = $paste->getComment(Helper::getPasteId());
+        $this->expectException(Exception::class);
+        $this->expectExceptionCode(68);
         $comment->store();
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionCode 65
-     */
     public function testInvalidCommentParent()
     {
         $paste     = $this->_model->getPaste(Helper::getPasteId());
-        $comment   = $paste->getComment('');
-        $comment->store();
+        $this->expectException(Exception::class);
+        $this->expectExceptionCode(65);
+        $paste->getComment('');
     }
 
     public function testExpiration()
@@ -427,10 +406,6 @@ class ModelTest extends PHPUnit_Framework_TestCase
         $this->assertEquals((float) 300, (float) $paste['meta']['time_to_live'], 'remaining time is set correctly', 1.0);
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionCode 64
-     */
     public function testCommentDeletion()
     {
         $pasteData = Helper::getPastePost();
@@ -439,13 +414,15 @@ class ModelTest extends PHPUnit_Framework_TestCase
         $paste = $this->_model->getPaste();
         $paste->setData($pasteData);
         $paste->store();
+        $this->expectException(Exception::class);
+        $this->expectExceptionCode(64);
         $paste->getComment(Helper::getPasteId())->delete();
     }
 
     public function testPurge()
     {
         $conf  = new Configuration;
-        $store = Database::getInstance($conf->getSection('model_options'));
+        $store = new Database($conf->getSection('model_options'));
         $store->delete(Helper::getPasteId());
         $expired = Helper::getPaste(2, array('expire_date' => 1344803344));
         $paste   = Helper::getPaste(2, array('expire_date' => time() + 3600));

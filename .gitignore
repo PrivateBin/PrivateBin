@@ -31,9 +31,11 @@ js/node_modules/
 js/test.log
 tst/log/
 tst/ConfigurationCombinationsTest.php
+tst/.phpunit.result.cache
 .settings
 .buildpath
 .project
+.phpdoc
 .externalToolBuilders
 .c9
 /.idea/

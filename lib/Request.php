@@ -7,10 +7,12 @@
  * @link      https://github.com/PrivateBin/PrivateBin
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
- * @version   1.4.0
+ * @version   1.7.1
  */
 
 namespace PrivateBin;
+
+use Exception;
 
 /**
  * Request
@@ -110,9 +112,13 @@ class Request
             case 'POST':
                 // it might be a creation or a deletion, the latter is detected below
                 $this->_operation = 'create';
-                $this->_params    = Json::decode(
-                    file_get_contents(self::$_inputStream)
-                );
+                try {
+                    $this->_params = Json::decode(
+                        file_get_contents(self::$_inputStream)
+                    );
+                } catch (Exception $e) {
+                    // ignore error, $this->_params will remain empty
+                }
                 break;
             default:
                 $this->_params = $_GET;
@@ -120,6 +126,7 @@ class Request
         if (
             !array_key_exists('pasteid', $this->_params) &&
             !array_key_exists('jsonld', $this->_params) &&
+            !array_key_exists('link', $this->_params) &&
             array_key_exists('QUERY_STRING', $_SERVER) &&
             !empty($_SERVER['QUERY_STRING'])
         ) {
@@ -135,6 +142,10 @@ class Request
             }
         } elseif (array_key_exists('jsonld', $this->_params) && !empty($this->_params['jsonld'])) {
             $this->_operation = 'jsonld';
+        } elseif (array_key_exists('link', $this->_params) && !empty($this->_params['link'])) {
+            if (strpos($this->getRequestUri(), '/shortenviayourls') !== false) {
+                $this->_operation = 'yourlsproxy';
+            }
         }
     }
 
@@ -214,7 +225,7 @@ class Request
         return array_key_exists('REQUEST_URI', $_SERVER) ?
         htmlspecialchars(
             parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH)
-            ) : '/';
+        ) : '/';
     }
 
     /**

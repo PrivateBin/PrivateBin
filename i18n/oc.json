@@ -3,12 +3,13 @@
     "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted %sin the browser%s using 256 bits AES.": "%s es un 'pastebin' (o gestionari d’extrachs de tèxte e còdi font) minimalista e open source, dins lo qual lo servidor a pas cap de coneissença de las donadas mandadas. Las donadas son chifradas/deschifradas %sdins lo navigator%s per un chiframent AES 256 bits.",
     "More information on the <a href=\"https://privatebin.info/\">project page</a>.": "Mai informacions sus <a href=\"https://privatebin.info/\">la pagina del projècte</a>.",
     "Because ignorance is bliss": "Perque lo bonaür es l’ignorància",
-    "en": "oc",
     "Paste does not exist, has expired or has been deleted.": "Lo tèxte existís pas, a expirat, o es estat suprimit.",
     "%s requires php %s or above to work. Sorry.": "O planhèm, %s necessita php %s o superior per foncionar.",
     "%s requires configuration section [%s] to be present in configuration file.": "%s fa besonh de la seccion de configuracion [%s] dins lo fichièr de configuracion per foncionar.",
     "Please wait %d seconds between each post.": [
         "Mercés d'esperar %d segonda entre cada publicacion.",
+        "Mercés d'esperar %d segondas entre cada publicacion.",
+        "Mercés d'esperar %d segondas entre cada publicacion.",
         "Mercés d'esperar %d segondas entre cada publicacion.",
         "Mercés d'esperar %d segondas entre cada publicacion.",
         "Mercés d'esperar %d segondas entre cada publicacion."
@@ -38,10 +39,14 @@
         "%d segonda",
         "%d segondas",
         "%d segondas",
+        "%d segondas",
+        "%d segondas",
         "%d segondas"
     ],
     "%d minutes": [
         "%d minuta",
+        "%d minutas",
+        "%d minutas",
         "%d minutas",
         "%d minutas",
         "%d minutas"
@@ -50,10 +55,14 @@
         "%d ora",
         "%d oras",
         "%d oras",
+        "%d oras",
+        "%d oras",
         "%d oras"
     ],
     "%d days": [
         "%d jorn",
+        "%d jorns",
+        "%d jorns",
         "%d jorns",
         "%d jorns",
         "%d jorns"
@@ -62,16 +71,22 @@
         "%d setmana",
         "%d setmanas",
         "%d setmanas",
+        "%d setmanas",
+        "%d setmanas",
         "%d setmanas"
     ],
     "%d months": [
         "%d mes",
         "%d meses",
         "%d meses",
+        "%d meses",
+        "%d meses",
         "%d meses"
     ],
     "%d years": [
         "%d an",
+        "%d ans",
+        "%d ans",
         "%d ans",
         "%d ans",
         "%d ans"
@@ -82,10 +97,14 @@
         "Aqueste document expirarà d’aquí %d segonda.",
         "Aqueste document expirarà d’aquí %d segondas.",
         "Aqueste document expirarà d’aquí %d segondas.",
+        "Aqueste document expirarà d’aquí %d segondas.",
+        "Aqueste document expirarà d’aquí %d segondas.",
         "Aqueste document expirarà d’aquí %d segondas."
     ],
     "This document will expire in %d minutes.": [
         "Aqueste document expirarà d’aquí %d minuta.",
+        "Aqueste document expirarà d’aquí %d minutas.",
+        "Aqueste document expirarà d’aquí %d minutas.",
         "Aqueste document expirarà d’aquí %d minutas.",
         "Aqueste document expirarà d’aquí %d minutas.",
         "Aqueste document expirarà d’aquí %d minutas."
@@ -94,16 +113,22 @@
         "Aqueste document expirarà d’aquí %d ora.",
         "Aqueste document expirarà d’aquí %d oras.",
         "Aqueste document expirarà d’aquí %d oras.",
+        "Aqueste document expirarà d’aquí %d oras.",
+        "Aqueste document expirarà d’aquí %d oras.",
         "Aqueste document expirarà d’aquí %d oras."
     ],
     "This document will expire in %d days.": [
         "Aqueste document expirarà d’aquí %d jorn.",
         "Aqueste document expirarà d’aquí %d jorns.",
         "Aqueste document expirarà d’aquí %d jorns.",
+        "Aqueste document expirarà d’aquí %d jorns.",
+        "Aqueste document expirarà d’aquí %d jorns.",
         "Aqueste document expirarà d’aquí %d jorns."
     ],
     "This document will expire in %d months.": [
         "Aqueste document expirarà d’aquí %d mes.",
+        "Aqueste document expirarà d’aquí %d meses.",
+        "Aqueste document expirarà d’aquí %d meses.",
         "Aqueste document expirarà d’aquí %d meses.",
         "Aqueste document expirarà d’aquí %d meses.",
         "Aqueste document expirarà d’aquí %d meses."
@@ -122,8 +147,8 @@
     "Sending comment…": "Mandadís del comentari…",
     "Comment posted.": "Comentari mandat.",
     "Could not refresh display: %s": "Impossible d’actualizar l’afichatge : %s",
-    "unknown status": "Estatut desconegut",
-    "server error or not responding": "Lo servidor respond pas o a rescontrat una error",
+    "unknown status": "estatut desconegut",
+    "server error or not responding": "lo servidor respond pas o a rescontrat una error",
     "Could not post comment: %s": "Impossible de mandar lo comentari : %s",
     "Sending paste…": "Mandadís del tèxte…",
     "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit [Ctrl]+[c] to copy)</span>": "Vòstre tèxte es disponible a l’adreça <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Picatz sus [Ctrl]+[c] per copiar)</span>",
@@ -182,9 +207,14 @@
     "Use Current Timezone": "Utilizar l’actual",
     "Convert To UTC": "Convertir en UTC",
     "Close": "Tampar",
-    "Encrypted note on PrivateBin": "Nòtas chifradas sus PrivateBin",
+    "Encrypted note on %s": "Nòtas chifradas sus %s",
     "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "Visitatz aqueste ligam per veire la nòta. Fornir lo ligam a qualqu’un mai li permet tanben d’accedir a la nòta.",
     "URL shortener may expose your decrypt key in URL.": "Los espleches d’acorchiment d’URL pòdon expausar la clau de deschiframent dins l’URL.",
     "Save paste": "Enregistrar lo tèxt",
-    "Your IP is not authorized to create pastes.": "Vòstra adreça IP a pas l’autorizacion de crear de tèxtes."
+    "Your IP is not authorized to create pastes.": "Vòstra adreça IP a pas l’autorizacion de crear de tèxtes.",
+    "Trying to shorten a URL that isn't pointing at our instance.": "Ensag d’abracar una URL que mena pas a nòstra instància.",
+    "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "Error en cridant YOURLS. Es probablament un problèma de configuracion, quicòm coma « apirul » o « signature » marrit o absent.",
+    "Error parsing YOURLS response.": "Error d'analisi de la responsa YOURLS.",
+    "Burn after reading pastes can only be displayed once upon loading it. Do you want to open it now?": "Burn after reading pastes can only be displayed once upon loading it. Do you want to open it now?",
+    "Yes, load it": "Yes, load it"
 }

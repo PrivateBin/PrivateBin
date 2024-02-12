@@ -3,12 +3,13 @@
     "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted %sin the browser%s using 256 bits AES.": "%s hè un serviziu in linea di tipu « pastebin » (ghjestiunariu d’appiccicu di pezzi di testu è di codice di fonte) minimalistu è à fonte aperta induve u servitore ùn hà micca cunnuscenza di i dati mandati. I dati sò cifrati è dicifrati %sin u navigatore%s cù una cifratura AES di 256 bit.",
     "More information on the <a href=\"https://privatebin.info/\">project page</a>.": "Più d’infurmazione annant’à a <a href=\"https://privatebin.info/\">pagina di u prughjettu</a>.",
     "Because ignorance is bliss": "Perchè l’ignurenza hè una campa",
-    "en": "co",
     "Paste does not exist, has expired or has been deleted.": "L’appiccicu ùn esiste micca, hè scadutu o hè statu squassatu.",
     "%s requires php %s or above to work. Sorry.": "Per disgrazzia, %s richiede php %s o più recente per funziunà.",
     "%s requires configuration section [%s] to be present in configuration file.": "%s richiede a presenza di a sezzione di cunfigurazione [%s] in a schedariu di cunfigurazione.",
     "Please wait %d seconds between each post.": [
         "Aspettate %d seconda trà dui publicazioni.",
+        "Aspettate %d seconde trà dui publicazioni.",
+        "Aspettate %d seconde trà dui publicazioni.",
         "Aspettate %d seconde trà dui publicazioni.",
         "Aspettate %d seconde trà dui publicazioni.",
         "Aspettate %d seconde trà dui publicazioni."
@@ -38,10 +39,14 @@
         "%d seconda",
         "%d seconde",
         "%d seconde",
+        "%d seconde",
+        "%d seconde",
         "%d seconde"
     ],
     "%d minutes": [
         "%d minutu",
+        "%d minuti",
+        "%d minuti",
         "%d minuti",
         "%d minuti",
         "%d minuti"
@@ -50,10 +55,14 @@
         "%d ora",
         "%d ore",
         "%d ore",
+        "%d ore",
+        "%d ore",
         "%d ore"
     ],
     "%d days": [
         "%d ghjornu",
+        "%d ghjorni",
+        "%d ghjorni",
         "%d ghjorni",
         "%d ghjorni",
         "%d ghjorni"
@@ -62,16 +71,22 @@
         "%d settimana",
         "%d settimane",
         "%d settimane",
+        "%d settimane",
+        "%d settimane",
         "%d settimane"
     ],
     "%d months": [
         "%d mese",
         "%d mesi",
         "%d mesi",
+        "%d mesi",
+        "%d mesi",
         "%d mesi"
     ],
     "%d years": [
         "%d annu",
+        "%d anni",
+        "%d anni",
         "%d anni",
         "%d anni",
         "%d anni"
@@ -82,10 +97,14 @@
         "Stu ducumentu serà scadutu in %d seconda.",
         "Stu ducumentu serà scadutu in %d seconde.",
         "Stu ducumentu serà scadutu in %d seconde.",
+        "Stu ducumentu serà scadutu in %d seconde.",
+        "Stu ducumentu serà scadutu in %d seconde.",
         "Stu ducumentu serà scadutu in %d seconde."
     ],
     "This document will expire in %d minutes.": [
         "Stu ducumentu serà scadutu in %d minutu.",
+        "Stu ducumentu serà scadutu in %d minuti.",
+        "Stu ducumentu serà scadutu in %d minuti.",
         "Stu ducumentu serà scadutu in %d minuti.",
         "Stu ducumentu serà scadutu in %d minuti.",
         "Stu ducumentu serà scadutu in %d minuti."
@@ -94,16 +113,22 @@
         "Stu ducumentu serà scadutu in %d ora.",
         "Stu ducumentu serà scadutu in %d ore.",
         "Stu ducumentu serà scadutu in %d ore.",
+        "Stu ducumentu serà scadutu in %d ore.",
+        "Stu ducumentu serà scadutu in %d ore.",
         "Stu ducumentu serà scadutu in %d ore."
     ],
     "This document will expire in %d days.": [
         "Stu ducumentu serà scadutu in %d ghjornu.",
         "Stu ducumentu serà scadutu in %d ghjorni.",
         "Stu ducumentu serà scadutu in %d ghjorni.",
+        "Stu ducumentu serà scadutu in %d ghjorni.",
+        "Stu ducumentu serà scadutu in %d ghjorni.",
         "Stu ducumentu serà scadutu in %d ghjorni."
     ],
     "This document will expire in %d months.": [
         "Stu ducumentu serà scadutu in %d mese.",
+        "Stu ducumentu serà scadutu in %d mesi.",
+        "Stu ducumentu serà scadutu in %d mesi.",
         "Stu ducumentu serà scadutu in %d mesi.",
         "Stu ducumentu serà scadutu in %d mesi.",
         "Stu ducumentu serà scadutu in %d mesi."
@@ -182,9 +207,14 @@
     "Use Current Timezone": "Impiegà u fusu orariu attuale",
     "Convert To UTC": "Cunvertisce in UTC",
     "Close": "Chjode",
-    "Encrypted note on PrivateBin": "Nota cifrata nant’à PrivateBin",
+    "Encrypted note on %s": "Nota cifrata nant’à %s",
     "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "Visitate stu liame per vede a nota. Date l’indirizzu à qualunque li permette d’accede à a nota dinù.",
     "URL shortener may expose your decrypt key in URL.": "Un ammuzzatore d’indirizzu pò palisà a vostra chjave di dicifratura in l’indirizzu.",
     "Save paste": "Arregistrà l’appiccicu",
-    "Your IP is not authorized to create pastes.": "U vostru indirizzu IP ùn hè micca auturizatu à creà l’appiccichi."
+    "Your IP is not authorized to create pastes.": "U vostru indirizzu IP ùn hè micca auturizatu à creà l’appiccichi.",
+    "Trying to shorten a URL that isn't pointing at our instance.": "Pruvate d’ammuzzà un indirizzu web chì ùn punta micca versu a vostra instanza.",
+    "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "Sbagliu à a chjama di YOURLS. Seria forse una cunfigurazione gattiva, tale una \"apiurl\" o \"signature\" falsa o assente.",
+    "Error parsing YOURLS response.": "Sbagliu durante l’analisa di a risposta di YOURLS.",
+    "Burn after reading pastes can only be displayed once upon loading it. Do you want to open it now?": "Si pò affissà l’appiccichi « Squassà dopu a lettura » solu dopu u so caricamentu. Vulete aprelu subitu ?",
+    "Yes, load it": "Iè, caricatelu"
 }

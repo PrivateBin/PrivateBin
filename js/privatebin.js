@@ -6,7 +6,7 @@
  * @see       {@link https://github.com/PrivateBin/PrivateBin}
  * @copyright 2012 Sébastien SAUVAGE ({@link http://sebsauvage.net})
  * @license   {@link https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License}
- * @version   1.4.0
+ * @version   1.7.1
  * @name      PrivateBin
  * @namespace
  */
@@ -78,9 +78,16 @@ jQuery.PrivateBin = (function($, RawDeflate) {
     };
 
     /**
+     * URL fragment prefix requiring load confirmation
+     *
+     * @private
+     */
+    const loadConfirmPrefix = '#-';
+
+    /**
      * CryptoData class
      *
-     * bundles helper fuctions used in both paste and comment formats
+     * bundles helper functions used in both paste and comment formats
      *
      * @name CryptoData
      * @class
@@ -95,7 +102,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         /**
          * gets the cipher data (cipher text + adata)
          *
-         * @name Paste.getCipherData
+         * @name CryptoData.getCipherData
          * @function
          * @return {Array}|{string}
          */
@@ -108,7 +115,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
     /**
      * Paste class
      *
-     * bundles helper fuctions around the paste formats
+     * bundles helper functions around the paste formats
      *
      * @name Paste
      * @class
@@ -171,7 +178,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
     /**
      * Comment class
      *
-     * bundles helper fuctions around the comment formats
+     * bundles helper functions around the comment formats
      *
      * @name Comment
      * @class
@@ -183,7 +190,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         /**
          * gets the UNIX timestamp of the comment creation
          *
-         * @name Paste.getCreated
+         * @name Comment.getCreated
          * @function
          * @return {int}
          */
@@ -195,7 +202,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         /**
          * gets the icon of the comment submitter
          *
-         * @name Paste.getIcon
+         * @name Comment.getIcon
          * @function
          * @return {string}
          */
@@ -228,7 +235,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             '<': '&lt;',
             '>': '&gt;',
             '"': '&quot;',
-            "'": '&#39;',
+            '\'': '&#39;',
             '/': '&#x2F;',
             '`': '&#x60;',
             '=': '&#x3D;'
@@ -627,7 +634,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          * @prop   {string[]}
          * @readonly
          */
-        const supportedLanguages = ['bg', 'ca', 'co', 'cs', 'de', 'es', 'et', 'fi', 'fr', 'he', 'hu', 'id', 'it', 'jbo', 'lt', 'no', 'nl', 'pl', 'pt', 'oc', 'ru', 'sl', 'tr', 'uk', 'zh'];
+        const supportedLanguages = ['ar', 'bg', 'ca', 'co', 'cs', 'de', 'el', 'es', 'et', 'fi', 'fr', 'he', 'hu', 'id', 'it', 'ja', 'jbo', 'lt', 'no', 'nl', 'pl', 'pt', 'oc', 'ro', 'ru', 'sk', 'sl', 'th', 'tr', 'uk', 'zh'];
 
         /**
          * built in language
@@ -791,6 +798,18 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         };
 
         /**
+         * get currently loaded language
+         *
+         * @name   I18n.getLanguage
+         * @function
+         * @return {string}
+         */
+        me.getLanguage = function()
+        {
+            return language;
+        };
+
+        /**
          * per language functions to use to determine the plural form
          *
          * @see    {@link https://docs.translatehouse.org/projects/localization-guide/en/latest/l10n/pluralforms.html}
@@ -802,8 +821,11 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         me.getPluralForm = function(n) {
             switch (language)
             {
+                case 'ar':
+                    return n === 0 ? 0 : (n === 1 ? 1 : (n === 2 ? 2 : (n % 100 >= 3 && n % 100 <= 10 ? 3 : (n % 100 >= 11 ? 4 : 5))));
                 case 'cs':
-                    return n === 1 ? 0 : (n >= 2 && n <=4 ? 1 : 2);
+                case 'sk':
+                    return n === 1 ? 0 : (n >= 2 && n <= 4 ? 1 : 2);
                 case 'co':
                 case 'fr':
                 case 'oc':
@@ -813,18 +835,22 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 case 'he':
                     return n === 1 ? 0 : (n === 2 ? 1 : ((n < 0 || n > 10) && (n % 10 === 0) ? 2 : 3));
                 case 'id':
+                case 'ja':
                 case 'jbo':
+                case 'th':
                     return 0;
                 case 'lt':
                     return n % 10 === 1 && n % 100 !== 11 ? 0 : ((n % 10 >= 2 && n % 100 < 10 || n % 100 >= 20) ? 1 : 2);
                 case 'pl':
-                    return n === 1 ? 0 : (n % 10 >= 2 && n %10 <=4 && (n % 100 < 10 || n % 100 >= 20) ? 1 : 2);
+                    return n === 1 ? 0 : (n % 10 >= 2 && n %10 <= 4 && (n % 100 < 10 || n % 100 >= 20) ? 1 : 2);
+                case 'ro':
+                    return n === 1 ? 0 : ((n === 0 || (n % 100 > 0 && n % 100 < 20)) ? 1 : 2);
                 case 'ru':
                 case 'uk':
                     return n % 10 === 1 && n % 100 !== 11 ? 0 : (n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20) ? 1 : 2);
                 case 'sl':
                     return n % 100 === 1 ? 1 : (n % 100 === 2 ? 2 : (n % 100 === 3 || n % 100 === 4 ? 3 : 0));
-                // bg, ca, de, en, es, et, fi, hu, it, nl, no, pt
+                // bg, ca, de, el, en, es, et, fi, hu, it, nl, no, pt
                 default:
                     return n !== 1 ? 1 : 0;
             }
@@ -842,7 +868,10 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
             // auto-select language based on browser settings
             if (newLanguage.length === 0) {
-                newLanguage = (navigator.language || navigator.userLanguage || 'en').substring(0, 2);
+                newLanguage = (navigator.language || navigator.userLanguage || 'en');
+                if (newLanguage.indexOf('-') > 0) {
+                    newLanguage = newLanguage.split('-')[0];
+                }
             }
 
             // if language is already used skip update
@@ -1492,10 +1521,11 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         me.getPasteKey = function()
         {
             if (symmetricKey === null) {
-                let newKey = window.location.hash.substring(1);
-                if (newKey === '') {
-                    throw 'no encryption key given';
+                let startPos = 1;
+                if(window.location.hash.startsWith(loadConfirmPrefix)) {
+                    startPos = loadConfirmPrefix.length;
                 }
+                let newKey = window.location.hash.substring(startPos);
 
                 // Some web 2.0 services and redirectors add data AFTER the anchor
                 // (such as &utm_source=...). We will strip any additional data.
@@ -1503,6 +1533,9 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 if (ampersandPos > -1)
                 {
                     newKey = newKey.substring(0, ampersandPos);
+                }
+                if (newKey === '') {
+                    throw 'no encryption key given';
                 }
 
                 // version 2 uses base58, version 1 uses base64 without decoding
@@ -2015,29 +2048,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 xhrFields: {
                     withCredentials: false
                 },
-                success: function(response) {
-                    let responseString = response;
-                    if (typeof responseString === 'object') {
-                        responseString = JSON.stringify(responseString);
-                    }
-                    if (typeof responseString === 'string' && responseString.length > 0) {
-                        const shortUrlMatcher = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g;
-                        const shortUrl = (responseString.match(shortUrlMatcher) || []).sort(function(a, b) {
-                            return a.length - b.length;
-                        })[0];
-                        if (typeof shortUrl === 'string' && shortUrl.length > 0) {
-                            // we disable the button to avoid calling shortener again
-                            $shortenButton.addClass('buttondisabled');
-                            // update link
-                            $pasteUrl.text(shortUrl);
-                            $pasteUrl.prop('href', shortUrl);
-                            // we pre-select the link so that the user only has to [Ctrl]+[c] the link
-                            Helper.selectText($pasteUrl[0]);
-                            return;
-                        }
-                    }
-                    Alert.showError('Cannot parse response from URL shortener.');
-                }
+                success: PasteStatus.extractUrl
             })
             .fail(function(data, textStatus, errorThrown) {
                 console.error(textStatus, errorThrown);
@@ -2101,6 +2112,50 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             $pasteSuccess.removeClass('hidden');
             // we pre-select the link so that the user only has to [Ctrl]+[c] the link
             Helper.selectText($pasteUrl[0]);
+        };
+
+        /**
+         * extracts URLs from given string
+         *
+         * if at least one is found, it disables the shortener button and
+         * replaces the paste URL
+         *
+         * @name   PasteStatus.extractUrl
+         * @function
+         * @param  {string} response
+         */
+        me.extractUrl = function(response)
+        {
+            if (typeof response === 'object') {
+                response = JSON.stringify(response);
+            }
+            if (typeof response === 'string' && response.length > 0) {
+                const shortUrlMatcher = /https?:\/\/[^\s"<]+/g; // JSON API will have URL in quotes, XML in tags
+                const shortUrl = (response.match(shortUrlMatcher) || []).filter(function(urlRegExMatch) {
+                    if (typeof URL.canParse === 'function') {
+                        return URL.canParse(urlRegExMatch);
+                    }
+                    // polyfill for older browsers (< 120) & node (< 19.9 & < 18.17)
+                    try {
+                        return !!new URL(urlRegExMatch);
+                    } catch (error) {
+                        return false;
+                    }
+                }).sort(function(a, b) {
+                    return a.length - b.length; // shortest first
+                })[0];
+                if (typeof shortUrl === 'string' && shortUrl.length > 0) {
+                    // we disable the button to avoid calling shortener again
+                    $shortenButton.addClass('buttondisabled');
+                    // update link
+                    $pasteUrl.text(shortUrl);
+                    $pasteUrl.prop('href', shortUrl);
+                    // we pre-select the link so that the user only has to [Ctrl]+[c] the link
+                    Helper.selectText($pasteUrl[0]);
+                    return;
+                }
+            }
+            Alert.showError('Cannot parse response from URL shortener.');
         };
 
         /**
@@ -2209,6 +2264,34 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         }
 
         /**
+         * Request users confirmation to load possibly burn after reading paste
+         *
+         * @name   Prompt.requestLoadConfirmation
+         * @function
+         */
+        me.requestLoadConfirmation = function()
+        {
+            const $loadconfirmmodal = $('#loadconfirmmodal');
+            if ($loadconfirmmodal.length > 0) {
+                const $loadconfirmOpenNow = $loadconfirmmodal.find('#loadconfirm-open-now');
+                $loadconfirmOpenNow.off('click.loadPaste');
+                $loadconfirmOpenNow.on('click.loadPaste', PasteDecrypter.run);
+                const $loadconfirmClose = $loadconfirmmodal.find('.close');
+                $loadconfirmClose.off('click.close');
+                $loadconfirmClose.on('click.close', Controller.newPaste);
+                $loadconfirmmodal.modal('show');
+            } else {
+                if (window.confirm(
+                    I18n._('Burn after reading pastes can only be displayed once upon loading it. Do you want to open it now?')
+                )) {
+                    PasteDecrypter.run();
+                } else {
+                    Controller.newPaste();
+                }
+            }
+        }
+
+        /**
          * ask the user for the password and set it
          *
          * @name Prompt.requestPassword
@@ -2222,6 +2305,12 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                     backdrop: 'static',
                     keyboard: false
                 });
+                // focus password input
+                $passwordDecrypt.focus();
+                // then re-focus it, when modal causes it to loose focus again
+                setTimeout(function () {
+                    $passwordDecrypt.focus();
+                }, 500);
                 return;
             }
 
@@ -2281,13 +2370,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             $passwordForm = $('#passwordform');
             $passwordModal = $('#passwordmodal');
 
-            // bind events
-
-            // focus password input when it is shown
-            $passwordModal.on('shown.bs.Model', function () {
-                $passwordDecrypt.focus();
-            });
-            // handle Model password submission
+            // bind events - handle Model password submission
             $passwordForm.submit(submitPasswordModal);
         };
 
@@ -3521,7 +3604,6 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 if (fadeOut === true) {
                     setTimeout(function () {
                         $comment.removeClass('highlight');
-
                     }, 300);
                 }
             };
@@ -3647,7 +3729,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         function changeBurnAfterReading()
         {
-            if ($burnAfterReading.is(':checked')) {
+            if (me.getBurnAfterReading()) {
                 $openDiscussionOption.addClass('buttondisabled');
                 $openDiscussion.prop('checked', false);
 
@@ -3667,7 +3749,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         function changeOpenDiscussion()
         {
-            if ($openDiscussion.is(':checked')) {
+            if (me.getOpenDiscussion()) {
                 $burnAfterReadingOption.addClass('buttondisabled');
                 $burnAfterReading.prop('checked', false);
 
@@ -3769,6 +3851,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         {
             document.cookie = 'lang=' + $(event.target).data('lang') + ';secure';
             UiHelper.reloadHome();
+            event.preventDefault();
         }
 
         /**
@@ -3924,10 +4007,6 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             const $emailconfirmmodal = $('#emailconfirmmodal');
             if ($emailconfirmmodal.length > 0) {
                 if (expirationDate !== null) {
-                    I18n._(
-                        $emailconfirmmodal.find('#emailconfirm-display'),
-                        'Recipient may become aware of your timezone, convert time to UTC?'
-                    );
                     const $emailconfirmTimezoneCurrent = $emailconfirmmodal.find('#emailconfirm-timezone-current');
                     const $emailconfirmTimezoneUtc = $emailconfirmmodal.find('#emailconfirm-timezone-utc');
                     $emailconfirmTimezoneCurrent.off('click.sendEmailCurrentTimezone');
@@ -4317,7 +4396,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         me.getBurnAfterReading = function()
         {
-            return $burnAfterReading.is(':checked');
+            return $burnAfterReading.prop('checked');
         };
 
         /**
@@ -4329,7 +4408,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         me.getOpenDiscussion = function()
         {
-            return $openDiscussion.is(':checked');
+            return $openDiscussion.prop('checked');
         };
 
         /**
@@ -4782,7 +4861,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
             // show notification
             const baseUri   = Helper.baseUri() + '?',
-                  url       = baseUri + data.id + '#' + CryptTool.base58encode(data.encryptionKey),
+                  url       = baseUri + data.id + (TopNav.getBurnAfterReading() ? loadConfirmPrefix : '#') + CryptTool.base58encode(data.encryptionKey),
                   deleteUrl = baseUri + 'pasteid=' + data.id + '&deletetoken=' + data.deletetoken;
             PasteStatus.createPasteNotification(url, deleteUrl);
 
@@ -5201,7 +5280,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             Alert.hideMessages();
             Alert.showLoading('Decrypting paste…', 'cloud-download');
 
-            if (typeof paste === 'undefined') {
+            if (typeof paste === 'undefined' || paste.type === 'click') {
                 // get cipher data and wait until it is available
                 Model.getPasteData(me.run);
                 return;
@@ -5308,7 +5387,10 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             AttachmentViewer.removeAttachmentData();
 
             Alert.hideLoading();
-            history.pushState({type: 'create'}, document.title, Helper.baseUri());
+            // only push new state if we are coming from a different one
+            if (Helper.baseUri() != window.location) {
+                history.pushState({type: 'create'}, document.title, Helper.baseUri());
+            }
 
             // clear discussion
             DiscussionViewer.prepareNewDiscussion();
@@ -5332,6 +5414,12 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                     Alert.showError('Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)');
                     return;
                 }
+            }
+
+            // check if we should request loading confirmation
+            if(window.location.hash.startsWith(loadConfirmPrefix)) {
+                Prompt.requestLoadConfirmation();
+                return;
             }
 
             // show proper elements on screen

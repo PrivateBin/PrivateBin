@@ -3,11 +3,12 @@
     "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted %sin the browser%s using 256 bits AES.": "%s sunucunun burada paylaştığınız veriyi görmediği, minimal, açık kaynak bir pastebindir. Veriler tarayıcıda 256 bit AES kullanılarak şifrelenir/çözülür.",
     "More information on the <a href=\"https://privatebin.info/\">project page</a>.": "Daha fazla bilgi için <a href=\"https://privatebin.info/\">proje sayfası</a>'na göz atabilirsiniz.",
     "Because ignorance is bliss": "Çünkü, cehalet mutluluktur",
-    "en": "tr",
     "Paste does not exist, has expired or has been deleted.": "Paste does not exist, has expired or has been deleted.",
     "%s requires php %s or above to work. Sorry.": "%s PHP %s veya daha üstünü gerektirir.",
     "%s requires configuration section [%s] to be present in configuration file.": "%s konfigürasyon bölümünün [%s] bulunmasını gerektir.",
     "Please wait %d seconds between each post.": [
+        "Lütfen paylaşımlar arasında %d saniye bekleyiniz.",
+        "Lütfen paylaşımlar arasında %d saniye bekleyiniz.",
         "Lütfen paylaşımlar arasında %d saniye bekleyiniz.",
         "Lütfen paylaşımlar arasında %d saniye bekleyiniz.",
         "Lütfen paylaşımlar arasında %d saniye bekleyiniz.",
@@ -38,9 +39,13 @@
         "%d saniye",
         "%d saniye",
         "%d saniye",
+        "%d saniye",
+        "%d saniye",
         "%d saniye"
     ],
     "%d minutes": [
+        "%d dakika",
+        "%d dakika",
         "%d dakika",
         "%d dakika",
         "%d dakika",
@@ -50,15 +55,21 @@
         "%d saat",
         "%d saat",
         "%d saat",
+        "%d saat",
+        "%d saat",
         "%d saat"
     ],
     "%d days": [
         "%d gün",
         "%d gün",
         "%d gün",
+        "%d gün",
+        "%d gün",
         "%d gün"
     ],
     "%d weeks": [
+        "%d hafta",
+        "%d haftalar",
         "%d hafta",
         "%d hafta",
         "%d hafta",
@@ -68,9 +79,13 @@
         "%d ay",
         "%d ay",
         "%d ay",
+        "%d ay",
+        "%d ay",
         "%d ay"
     ],
     "%d years": [
+        "%d yıl",
+        "%d yıl",
         "%d yıl",
         "%d yıl",
         "%d yıl",
@@ -79,34 +94,44 @@
     "Never": "Asla",
     "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.": "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.",
     "This document will expire in %d seconds.": [
-        "Bu belge %s saniyede silinecektir.",
-        "Bu belge %s saniyede silinecektir.",
-        "Bu belge %s saniyede silinecektir.",
-        "Bu belge %s saniyede silinecektir."
+        "Bu belge %d saniyede silinecektir.",
+        "Bu belge %d saniyede silinecektir.",
+        "Bu belge %d saniyede silinecektir.",
+        "Bu belge %d saniyede silinecektir.",
+        "Bu belge %d saniyede silinecektir.",
+        "Bu belge %d saniyede silinecektir."
     ],
     "This document will expire in %d minutes.": [
-        "Bu belge %s dakikada silinecektir.",
-        "Bu belge %s dakikada silinecektir.",
-        "Bu belge %s dakikada silinecektir.",
-        "Bu belge %s dakikada silinecektir."
+        "Bu belge %d dakikada silinecektir.",
+        "Bu belge %d dakikada silinecektir.",
+        "Bu belge %d dakikada silinecektir.",
+        "Bu belge %d dakikada silinecektir.",
+        "Bu belge %d dakikada silinecektir.",
+        "Bu belge %d dakikada silinecektir."
     ],
     "This document will expire in %d hours.": [
-        "Bu belge %s saatte silinecektir.",
-        "Bu belge %s saatte silinecektir.",
-        "Bu belge %s saatte silinecektir.",
-        "Bu belge %s saatte silinecektir.."
+        "Bu belge %d saatte silinecektir.",
+        "Bu belge %d saatte silinecektir.",
+        "Bu belge %d saatte silinecektir.",
+        "Bu belge %d saatte silinecektir.",
+        "Bu belge %d saatte silinecektir.",
+        "Bu belge %d saatte silinecektir."
     ],
     "This document will expire in %d days.": [
-        "Bu belge %s günde silinecektir.",
-        "Bu belge %s günde silinecektir.",
-        "Bu belge %s günde silinecektir.",
-        "Bu belge %s günde silinecektir.(3rd plural)"
+        "Bu belge %d günde silinecektir.",
+        "Bu belge %d günde silinecektir.",
+        "Bu belge %d günde silinecektir.",
+        "Bu belge %d günde silinecektir.",
+        "Bu belge %d günde silinecektir.",
+        "Bu belge %d günde silinecektir."
     ],
     "This document will expire in %d months.": [
-        "Bu belge %s ayda silinecektir.",
-        "Bu belge %s ayda silinecektir",
-        "Bu belge %s ayda silinecektir",
-        "Bu belge %s ayda silinecektir"
+        "Bu belge %d ayda silinecektir.",
+        "Bu belge %d ayda silinecektir.",
+        "Bu belge %d ayda silinecektir.",
+        "Bu belge %d ayda silinecektir.",
+        "Bu belge %d ayda silinecektir.",
+        "Bu belge %d ayda silinecektir."
     ],
     "Please enter the password for this paste:": "Lütfen bu yazı için şifrenizi girin:",
     "Could not decrypt data (Wrong key?)": "Şifre çözülemedi (Yanlış anahtar mı kullandınız?)",
@@ -117,9 +142,9 @@
     "Anonymous": "Anonim",
     "Avatar generated from IP address": "IP adresinden oluşturulmuş avatar",
     "Add comment": "Yorum ekle",
-    "Optional nickname…": "İsteğe bağlı takma isim...",
+    "Optional nickname…": "İsteğe bağlı takma isim…",
     "Post comment": "Yorumu gönder",
-    "Sending comment…": "Yorum gönderiliyor...",
+    "Sending comment…": "Yorum gönderiliyor…",
     "Comment posted.": "Yorum gönderildi.",
     "Could not refresh display: %s": "Görüntü yenilenemedi: %s",
     "unknown status": "bilinmeyen durum",
@@ -147,7 +172,7 @@
     "Cloned: '%s'": "Klonlandı: '%s'",
     "The cloned file '%s' was attached to this paste.": "Klonlanmış dosya '%s' bu yazıya eklendi.",
     "Attach a file": "Dosya ekle",
-    "alternatively drag & drop a file or paste an image from the clipboard": "alternatif olarak dosyasyı yapıştırabilir veya sürükleyip bırakabilirsin.z",
+    "alternatively drag & drop a file or paste an image from the clipboard": "alternatif olarak dosyasyı yapıştırabilir veya sürükleyip bırakabilirsin",
     "File too large, to display a preview. Please download the attachment.": "Dosya önizleme için çok büyük. Lütfen eki indirin.",
     "Remove attachment": "Eki sil",
     "Your browser does not support uploading encrypted files. Please use a newer browser.": "Tarayıcınız şifreli dosyaları desteklemiyor.",
@@ -160,8 +185,8 @@
     "Decrypt": "Şifreyi çöz",
     "Enter password": "Şifreyi girin",
     "Loading…": "Yükleniyor…",
-    "Decrypting paste…": "Yazı şifresi çözülüyor...",
-    "Preparing new paste…": "Yeni yazı hazırlanıyor...",
+    "Decrypting paste…": "Yazı şifresi çözülüyor…",
+    "Preparing new paste…": "Yeni yazı hazırlanıyor…",
     "In case this message never disappears please have a look at <a href=\"%s\">this FAQ for information to troubleshoot</a>.": "In case this message never disappears please have a look at <a href=\"%s\">this FAQ for information to troubleshoot</a>.",
     "+++ no paste text +++": "+++ no paste text +++",
     "Could not get paste data: %s": "Yazı verisi alınamıyor: %s",
@@ -173,7 +198,7 @@
     "waiting on user to provide a password": "waiting on user to provide a password",
     "Could not decrypt data. Did you enter a wrong password? Retry with the button at the top.": "Dosya şifresi çözülemedi, doğru şifreyi kullandığınıza emin misiniz? Üstteki buton ile tekrar deneyin.",
     "Retry": "Yeniden Dene",
-    "Showing raw text…": "Açık yazı gösteriliyor...",
+    "Showing raw text…": "Açık yazı gösteriliyor…",
     "Notice:": "Bildirim:",
     "This link will expire after %s.": "Bu bağlantı şu kadar zaman sonra etkisiz kalacaktır: %s.",
     "This link can only be accessed once, do not use back or refresh button in your browser.": "Bu bağlantı sadece bir kere erişilebilir, lütfen sayfayı yenilemeyiniz.",
@@ -182,9 +207,14 @@
     "Use Current Timezone": "Şuanki zaman dilimini kullan",
     "Convert To UTC": "UTC zaman dilimine çevir",
     "Close": "Kapat",
-    "Encrypted note on PrivateBin": "PrivateBin üzerinde şifrelenmiş not",
+    "Encrypted note on %s": "%s üzerinde şifrelenmiş not",
     "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "Notu görmek için bu bağlantıyı ziyaret et. Bağlantıya sahip olan birisi notu görebilir.",
     "URL shortener may expose your decrypt key in URL.": "URL kısaltıcı şifreleme anahtarınızı URL içerisinde gösterebilir.",
     "Save paste": "Yazıyı kaydet",
-    "Your IP is not authorized to create pastes.": "IP adresinizin yazı oluşturmaya yetkisi yoktur."
+    "Your IP is not authorized to create pastes.": "IP adresinizin yazı oluşturmaya yetkisi yoktur.",
+    "Trying to shorten a URL that isn't pointing at our instance.": "Trying to shorten a URL that isn't pointing at our instance.",
+    "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".",
+    "Error parsing YOURLS response.": "Error parsing YOURLS response.",
+    "Burn after reading pastes can only be displayed once upon loading it. Do you want to open it now?": "Burn after reading pastes can only be displayed once upon loading it. Do you want to open it now?",
+    "Yes, load it": "Yes, load it"
 }

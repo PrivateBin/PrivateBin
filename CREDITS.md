@@ -29,6 +29,9 @@
 * rodehoed - option to exempt ips from the rate-limiter
 * Mark van Holsteijn - Google Cloud Storage backend
 * Austin Huang - Oracle database support
+* Felix J. Ogris - S3 Storage backend, script for data backend migrations, dropped singleton behaviour of data backends
+* Mounir Idrassi & J. Mozdzen - secure YOURLS integration
+* Felipe Nakandakari - enabled AWS SDK to use default credential provider chain in the S3 Storage backend
 
 ## Translations
 * Hexalyse - French
@@ -57,3 +60,9 @@
 * Patriccollu di Santa Maria è Sichè - Corsican
 * Markus Mikkonen - Finnish
 * Emir Ensar Rahmanlar - Turkish
+* Stevo984 - Slovak
+* Christos Karamolegkos - Greek
+* jaideejung007 - Thai
+* Nicolas Le Gall - Japanese
+* lazerns - Arabic
+* Edward205 - Romanian

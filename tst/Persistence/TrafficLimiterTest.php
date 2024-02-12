@@ -1,23 +1,24 @@
 <?php
 
+use PHPUnit\Framework\TestCase;
 use PrivateBin\Data\Filesystem;
 use PrivateBin\Persistence\ServerSalt;
 use PrivateBin\Persistence\TrafficLimiter;
 
-class TrafficLimiterTest extends PHPUnit_Framework_TestCase
+class TrafficLimiterTest extends TestCase
 {
     private $_path;
 
-    public function setUp()
+    public function setUp(): void
     {
         /* Setup Routine */
         $this->_path = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'trafficlimit';
-        $store       = Filesystem::getInstance(array('dir' => $this->_path));
+        $store       = new Filesystem(array('dir' => $this->_path));
         ServerSalt::setStore($store);
         TrafficLimiter::setStore($store);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         /* Tear Down Routine */
         Helper::rmDir($this->_path . DIRECTORY_SEPARATOR);

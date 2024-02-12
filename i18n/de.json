@@ -3,12 +3,13 @@
     "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted %sin the browser%s using 256 bits AES.": "%s ist ein minimalistischer, quelloffener \"Pastebin\"-artiger Dienst, bei dem der Server keinerlei Kenntnis der Inhalte hat. Die Daten werden %sim Browser%s mit 256 Bit AES ver- und entschlüsselt.",
     "More information on the <a href=\"https://privatebin.info/\">project page</a>.": "Weitere Informationen sind auf der <a href=\"https://privatebin.info/\">Projektseite</a> zu finden.",
     "Because ignorance is bliss": "Unwissenheit ist ein Segen",
-    "en": "de",
     "Paste does not exist, has expired or has been deleted.": "Diesen Text gibt es nicht, er ist abgelaufen oder wurde gelöscht.",
     "%s requires php %s or above to work. Sorry.": "%s benötigt PHP %s oder höher, um zu funktionieren. Sorry.",
     "%s requires configuration section [%s] to be present in configuration file.": "%s benötigt den Konfigurationsabschnitt [%s] in der Konfigurationsdatei um zu funktionieren.",
     "Please wait %d seconds between each post.": [
         "Bitte warte eine Sekunde zwischen dem Absenden zweier Beiträge.",
+        "Bitte warte %d Sekunden zwischen dem Absenden zweier Beiträge.",
+        "Bitte warte %d Sekunden zwischen dem Absenden zweier Beiträge.",
         "Bitte warte %d Sekunden zwischen dem Absenden zweier Beiträge.",
         "Bitte warte %d Sekunden zwischen dem Absenden zweier Beiträge.",
         "Bitte warte %d Sekunden zwischen dem Absenden zweier Beiträge."
@@ -37,49 +38,65 @@
     "%d seconds": [
         "%d Sekunde",
         "%d Sekunden",
-        "%d seconds (2nd plural)",
-        "%d seconds (3rd plural)"
+        "%d Sekunden",
+        "%d Sekunden",
+        "%d Sekunden",
+        "%d Sekunden"
     ],
     "%d minutes": [
         "%d Minute",
         "%d Minuten",
-        "%d minutes (2nd plural)",
-        "%d minutes (3rd plural)"
+        "%d Minuten",
+        "%d Minuten",
+        "%d Minuten",
+        "%d Minuten"
     ],
     "%d hours": [
         "%d Stunde",
         "%d Stunden",
-        "%d hours (2nd plural)",
-        "%d hours (3rd plural)"
+        "%d Stunden",
+        "%d Stunden",
+        "%d Stunden",
+        "%d Stunden"
     ],
     "%d days": [
         "%d Tag",
         "%d Tage",
-        "%d days (2nd plural)",
-        "%d days (3rd plural)"
+        "%d Tage",
+        "%d Tage",
+        "%d Tage",
+        "%d Tage"
     ],
     "%d weeks": [
         "%d Woche",
         "%d Wochen",
-        "%d weeks (2nd plural)",
-        "%d weeks (3rd plural)"
+        "%d Wochen",
+        "%d Wochen",
+        "%d Wochen",
+        "%d Wochen"
     ],
     "%d months": [
         "%d Monat",
         "%d Monate",
-        "%d months (2nd plural)",
-        "%d months (3rd plural)"
+        "%d Monate",
+        "%d Monate",
+        "%d Monate",
+        "%d Monate"
     ],
     "%d years": [
         "%d Jahr",
         "%d Jahre",
-        "%d years (2nd plural)",
-        "%d years (3rd plural)"
+        "%d Monate",
+        "%d Monate",
+        "%d Monate",
+        "%d Monate"
     ],
     "Never": "Nie",
     "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.": "Hinweis: Dies ist ein Versuchsdienst. Daten können jederzeit gelöscht werden. Kätzchen werden sterben, wenn du diesen Dienst missbrauchst.",
     "This document will expire in %d seconds.": [
         "Dieses Dokument läuft in einer Sekunde ab.",
+        "Dieses Dokument läuft in %d Sekunden ab.",
+        "Dieses Dokument läuft in %d Sekunden ab.",
         "Dieses Dokument läuft in %d Sekunden ab.",
         "Dieses Dokument läuft in %d Sekunden ab.",
         "Dieses Dokument läuft in %d Sekunden ab."
@@ -88,22 +105,30 @@
         "Dieses Dokument läuft in einer Minute ab.",
         "Dieses Dokument läuft in %d Minuten ab.",
         "Dieses Dokument läuft in %d Minuten ab.",
+        "Dieses Dokument läuft in %d Minuten ab.",
+        "Dieses Dokument läuft in %d Minuten ab.",
         "Dieses Dokument läuft in %d Minuten ab."
     ],
     "This document will expire in %d hours.": [
         "Dieses Dokument läuft in einer Stunde ab.",
         "Dieses Dokument läuft in %d Stunden ab.",
-        "This document will expire in %d hours (2nd plural)",
-        "This document will expire in %d hours (3rd plural)"
+        "Dieses Dokument läuft in %d Stunden ab.",
+        "Dieses Dokument läuft in %d Stunden ab.",
+        "Dieses Dokument läuft in %d Stunden ab.",
+        "Dieses Dokument läuft in %d Stunden ab."
     ],
     "This document will expire in %d days.": [
         "Dieses Dokument läuft in einem Tag ab.",
+        "Dieses Dokument läuft in %d Tagen ab.",
+        "Dieses Dokument läuft in %d Tagen ab.",
         "Dieses Dokument läuft in %d Tagen ab.",
         "Dieses Dokument läuft in %d Tagen ab.",
         "Dieses Dokument läuft in %d Tagen ab."
     ],
     "This document will expire in %d months.": [
         "Dieses Dokument läuft in einem Monat ab.",
+        "Dieses Dokument läuft in %d Monaten ab.",
+        "Dieses Dokument läuft in %d Monaten ab.",
         "Dieses Dokument läuft in %d Monaten ab.",
         "Dieses Dokument läuft in %d Monaten ab.",
         "Dieses Dokument läuft in %d Monaten ab."
@@ -182,9 +207,14 @@
     "Use Current Timezone": "Aktuelle Zeitzone verwenden",
     "Convert To UTC": "In UTC umwandeln",
     "Close": "Schliessen",
-    "Encrypted note on PrivateBin": "Verschlüsselte Notiz auf PrivateBin",
+    "Encrypted note on %s": "Verschlüsselte Notiz auf %s",
     "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "Besuche diesen Link um das Dokument zu sehen. Wird die URL an eine andere Person gegeben, so kann diese Person ebenfalls auf dieses Dokument zugreifen.",
     "URL shortener may expose your decrypt key in URL.": "Der URL-Verkürzer kann den Schlüssel in der URL enthüllen.",
     "Save paste": "Text speichern",
-    "Your IP is not authorized to create pastes.": "Deine IP ist nicht berechtigt, Texte zu erstellen."
+    "Your IP is not authorized to create pastes.": "Deine IP ist nicht berechtigt, Texte zu erstellen.",
+    "Trying to shorten a URL that isn't pointing at our instance.": "Versuch eine URL zu verkürzen, die nicht auf unsere Instanz zeigt.",
+    "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "Fehler beim Aufruf von YOURLS. Wahrscheinlich ein Konfigurationsproblem, wie eine falsche oder fehlende \"apiurl\" oder \"signature\".",
+    "Error parsing YOURLS response.": "Fehler beim Verarbeiten der YOURLS-Antwort.",
+    "Burn after reading pastes can only be displayed once upon loading it. Do you want to open it now?": "Texte des \"Einmal\"-Typs können nach dem Herunterladen nur einmal angezeigt werden. Möchtest Du ihn jetzt öffnen?",
+    "Yes, load it": "Ja, jetzt öffnen"
 }

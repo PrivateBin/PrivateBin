@@ -7,7 +7,7 @@
  * @link      https://github.com/PrivateBin/PrivateBin
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
- * @version   1.4.0
+ * @version   1.7.1
  */
 
 namespace PrivateBin;
@@ -53,6 +53,7 @@ class Configuration
             'languagedefault'          => '',
             'urlshortener'             => '',
             'qrcode'                   => true,
+            'email'                    => true,
             'icon'                     => 'identicon',
             'cspheader'                => 'default-src \'none\'; base-uri \'self\'; form-action \'none\'; manifest-src \'self\'; connect-src * blob:; script-src \'self\' \'unsafe-eval\'; style-src \'self\'; font-src \'self\'; frame-ancestors \'none\'; img-src \'self\' data: blob:; media-src blob:; object-src blob:; sandbox allow-same-origin allow-scripts allow-forms allow-popups allow-modals allow-downloads',
             'zerobincompatibility'     => false,
@@ -92,6 +93,10 @@ class Configuration
         ),
         'model_options' => array(
             'dir' => 'data',
+        ),
+        'yourls' => array(
+            'signature' => '',
+            'apiurl'    => '',
         ),
     );
 
@@ -153,8 +158,25 @@ class Configuration
                 )
             ) {
                 $values = array(
-                    'bucket' => getenv('PRIVATEBIN_GCS_BUCKET') ? getenv('PRIVATEBIN_GCS_BUCKET') : null,
-                    'prefix' => 'pastes',
+                    'bucket'     => getenv('PRIVATEBIN_GCS_BUCKET') ? getenv('PRIVATEBIN_GCS_BUCKET') : null,
+                    'prefix'     => 'pastes',
+                    'uniformacl' => false,
+                );
+            } elseif (
+                $section == 'model_options' && in_array(
+                    $this->_configuration['model']['class'],
+                    array('S3Storage')
+                )
+            ) {
+                $values = array(
+                    'region'                  => null,
+                    'version'                 => null,
+                    'endpoint'                => null,
+                    'accesskey'               => null,
+                    'secretkey'               => null,
+                    'use_path_style_endpoint' => null,
+                    'bucket'                  => null,
+                    'prefix'                  => '',
                 );
             }
 
@@ -214,6 +236,14 @@ class Configuration
         // ensure a valid expire default key is set
         if (!array_key_exists($this->_configuration['expire']['default'], $this->_configuration['expire_options'])) {
             $this->_configuration['expire']['default'] = key($this->_configuration['expire_options']);
+        }
+
+        // ensure the basepath ends in a slash, if one is set
+        if (
+            strlen($this->_configuration['main']['basepath']) &&
+            substr_compare($this->_configuration['main']['basepath'], '/', -1) !== 0
+        ) {
+            $this->_configuration['main']['basepath'] .= '/';
         }
     }
 
