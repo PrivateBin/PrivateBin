@@ -209,7 +209,7 @@ endif;
 if ($isPage) :
 ?>
 						<button id="sendbutton" type="button" class="hidden btn btn-<?php echo $isDark ? 'warning' : 'primary'; ?> navbar-btn">
-							<span class="glyphicon glyphicon-upload" aria-hidden="true"></span> <?php echo I18n::_('Send'), PHP_EOL;
+							<span class="glyphicon glyphicon-upload" aria-hidden="true"></span> <?php echo I18n::_('Create'), PHP_EOL;
 else :
 ?>
 						<button id="newbutton" type="button" class="hidden btn btn-<?php echo $isDark ? 'warning' : 'default'; ?> navbar-btn">
@@ -561,7 +561,7 @@ if ($isPage) :
 else :
 ?>
 						<button id="sendbutton" type="button" class="hidden btn btn-<?php echo $isDark ? 'warning' : 'primary'; ?>">
-							<span class="glyphicon glyphicon-upload" aria-hidden="true"></span> <?php echo I18n::_('Send'), PHP_EOL;
+							<span class="glyphicon glyphicon-upload" aria-hidden="true"></span> <?php echo I18n::_('Create'), PHP_EOL;
 endif;
 ?>
 						</button>

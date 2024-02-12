@@ -1,6 +1,7 @@
 # PrivateBin version history
 
 ## 1.7.2 (not yet released)
+* CHANGED: "Send" button now labeled "Create" (#946)
 
 ## 1.7.1 (2024-02-11)
 * FIXED: zlib 1.3.1 wasm file reference
