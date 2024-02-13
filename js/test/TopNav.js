@@ -77,7 +77,7 @@ describe('TopNav', function () {
                     '<li id="attach" class="hidden">Attach a file</li><li>' +
                     '<a id="formatter" href="#" class="hidden">Format</a>' +
                     '</li><li><button id="sendbutton" type="button" ' +
-                    'class="hidden">Send</button></li></ul></div></nav>'
+                    'class="hidden">Create</button></li></ul></div></nav>'
                 );
                 $.PrivateBin.TopNav.init();
                 results.push(

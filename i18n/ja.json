@@ -26,7 +26,7 @@
     "JavaScript is required for %s to work. Sorry for the inconvenience.": "%s の動作にはJavaScriptが必要です。ご迷惑をおかけして申し訳ありません。",
     "%s requires a modern browser to work.": "%s の動作には最近のブラウザが必要です。",
     "New": "新規",
-    "Send": "送信",
+    "Create": "送信",
     "Clone": "複製",
     "Raw text": "未加工テキスト",
     "Expires": "有効期限",
