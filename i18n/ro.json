@@ -10,9 +10,9 @@
         "Vă rugăm să așteptați %d secundă între fiecare postare",
         "Vă rugăm să așteptați %d secunde între fiecare postare",
         "Vă rugăm să așteptați %d de secunde între fiecare postare",
-        "Please wait %d seconds between each post. (3rd plural)",
-        "Please wait %d seconds between each post. (4th plural)",
-        "Please wait %d seconds between each post. (5th plural)"
+        "Vă rugăm să așteptați %d de secunde între fiecare postare",
+        "Vă rugăm să așteptați %d de secunde între fiecare postare",
+        "Vă rugăm să așteptați %d de secunde între fiecare postare"
     ],
     "Paste is limited to %s of encrypted data.": "Paste-ul este limitat la %s de date criptate.",
     "Invalid data.": "Date invalide.",
@@ -39,57 +39,57 @@
         "%d secundă",
         "%d secunde",
         "%d de secunde",
-        "%d seconds (3rd plural)",
-        "%d seconds (4th plural)",
-        "%d seconds (5th plural)"
+        "%d de secunde",
+        "%d de secunde",
+        "%d de secunde"
     ],
     "%d minutes": [
         "%d minut",
         "%d minute",
         "%d de minute",
-        "%d minutes (3rd plural)",
-        "%d minutes (4th plural)",
-        "%d minutes (5th plural)"
+        "%d de secunde",
+        "%d de secunde",
+        "%d de secunde"
     ],
     "%d hours": [
         "%d oră",
         "%d ore",
         "%d de ore",
-        "%d hours (3rd plural)",
-        "%d hours (4th plural)",
-        "%d hours (5th plural)"
+        "%d de ore",
+        "%d de ore",
+        "%d de ore"
     ],
     "%d days": [
         "%d zi",
         "%d zile",
         "%d de zile",
-        "%d days (3rd plural)",
-        "%d days (4th plural)",
-        "%d days (5th plural)"
+        "%d de zile",
+        "%d de zile",
+        "%d de zile"
     ],
     "%d weeks": [
-        "%d week (singular)",
+        "%d săptămână",
         "%d săptămână",
         "%d săptămâni",
         "%d de săptămâni",
-        "%d weeks (4th plural)",
-        "%d weeks (5th plural)"
+        "%d de săptămâni",
+        "%d de săptămâni"
     ],
     "%d months": [
         "%d lună",
         "%d luni",
         "%d de luni",
-        "%d months (3rd plural)",
-        "%d months (4th plural)",
-        "%d months (5th plural)"
+        "%d de luni",
+        "%d de luni",
+        "%d de luni"
     ],
     "%d years": [
         "%d an",
         "%d ani",
         "%d de ani",
-        "%d years (3rd plural)",
-        "%d years (4th plural)",
-        "%d years (5th plural)"
+        "%d de ani",
+        "%d de ani",
+        "%d de ani"
     ],
     "Never": "Niciodată",
     "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.": "Notă: Acesta este un serviciu de test: Datele ar putea fi șterse oricând. Vor muri niște pisicuțe dacă abuzați acest serviciu.",
@@ -97,41 +97,41 @@
         "Acest document va expira în %d secundă.",
         "Acest document va expira în %d secunde.",
         "Acest document va expira în %d de secunde.",
-        "This document will expire in %d seconds. (3rd plural)",
-        "This document will expire in %d seconds. (4th plural)",
-        "This document will expire in %d seconds. (5th plural)"
+        "Acest document va expira în %d de secunde.",
+        "Acest document va expira în %d de secunde.",
+        "Acest document va expira în %d de secunde."
     ],
     "This document will expire in %d minutes.": [
-        "This document will expire in %d minute. (singular)",
-        "This document will expire in %d minutes. (1st plural)",
-        "This document will expire in %d minutes. (2nd plural)",
-        "This document will expire in %d minutes. (3rd plural)",
-        "This document will expire in %d minutes. (4th plural)",
-        "This document will expire in %d minutes. (5th plural)"
+        "Acest document va expira în %d minut.",
+        "Acest document va expira în %d minute.",
+        "Acest document va expira în %d de minute.",
+        "Acest document va expira în %d de minute.",
+        "Acest document va expira în %d de minute.",
+        "Acest document va expira în %d de minute."
     ],
     "This document will expire in %d hours.": [
         "Acest document va expira în %d oră.",
         "Acest document va expira în %d ore.",
         "Acest document va expira în %d de ore.",
-        "This document will expire in %d hours. (3rd plural)",
-        "This document will expire in %d hours. (4th plural)",
-        "This document will expire in %d hours. (5th plural)"
+        "Acest document va expira în %d de ore.",
+        "Acest document va expira în %d de ore.",
+        "Acest document va expira în %d de ore."
     ],
     "This document will expire in %d days.": [
         "Acest document va expira în %d zi.",
         "Acest document va expira în %d zile.",
         "Acest document va expira în %d de zile.",
-        "This document will expire in %d days. (3rd plural)",
-        "This document will expire in %d days. (4th plural)",
-        "This document will expire in %d days. (5th plural)"
+        "Acest document va expira în %d de zile.",
+        "Acest document va expira în %d de zile.",
+        "Acest document va expira în %d de zile."
     ],
     "This document will expire in %d months.": [
         "Acest document va expira în %d lună.",
         "Acest document va expira în %d luni.",
         "Acest document va expira în %d de luni.",
-        "This document will expire in %d months. (3rd plural)",
-        "This document will expire in %d months. (4th plural)",
-        "This document will expire in %d months. (5th plural)"
+        "Acest document va expira în %d de luni.",
+        "Acest document va expira în %d de luni.",
+        "Acest document va expira în %d de luni."
     ],
     "Please enter the password for this paste:": "Va rugăm să introduceți parola pentru acest paste:",
     "Could not decrypt data (Wrong key?)": "Nu s-au putut decripta datele (Cheie gresită?)",
@@ -215,6 +215,6 @@
     "Trying to shorten a URL that isn't pointing at our instance.": "Încercarea de a scurta un URL care nu direcționează spre instanța noastră.",
     "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "Eroare la apelarea YOURLS. Probabil o problemă de configurare, cum ar fi \"apiurl\" sau \"signature\" greșite sau lipsă.",
     "Error parsing YOURLS response.": "Eroare la analizarea răspunsului YOURLS.",
-    "Burn after reading pastes can only be displayed once upon loading it. Do you want to open it now?": "Burn after reading pastes can only be displayed once upon loading it. Do you want to open it now?",
-    "Yes, load it": "Yes, load it"
+    "Burn after reading pastes can only be displayed once upon loading it. Do you want to open it now?": "Paste-urile care se șterg după citire pot fi afișate numai o dată după încărcare. Doriți să o deschideți acum?",
+    "Yes, load it": "Da, deschide-o"
 }
