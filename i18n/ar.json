@@ -215,6 +215,6 @@
     "Trying to shorten a URL that isn't pointing at our instance.": "محاولة تقصير عنوان URL لا يشير إلى خادمنا.",
     "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "خطأ في الاتصال بـ YOURLS. ربما تكون هناك مشكلة في التضبيط، مثل \"apiurl\" أو \"التوقيع\" الخاطئ أو المفقود.",
     "Error parsing YOURLS response.": "خطأ في تحليل استجابة YOURLS.",
-    "Burn after reading pastes can only be displayed once upon loading it. Do you want to open it now?": "Burn after reading pastes can only be displayed once upon loading it. Do you want to open it now?",
-    "Yes, load it": "Yes, load it"
+    "Burn after reading pastes can only be displayed once upon loading it. Do you want to open it now?": "الحرق بعد قراءة اللصق لا يمكن عرضه إلا مرة واحدة عند تحميله. هل تريد فتحه الآن؟",
+    "Yes, load it": "نعم، حمله"
 }
