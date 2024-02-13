@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "96f9b3968855bf9f45813d12568f1cac",
+    "content-hash": "b76c0c25f93dc79c4525cb3c86e5af99",
     "packages": [
         {
             "name": "jdenticon/jdenticon",
@@ -1930,5 +1930,5 @@
     "platform-overrides": {
         "php": "7.3"
     },
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.2.0"
 }
