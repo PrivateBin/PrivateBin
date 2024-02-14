@@ -26,7 +26,7 @@
     "JavaScript is required for %s to work. Sorry for the inconvenience.": "JavaScript vereist om %s te laten werken. Sorry voor het ongemak.",
     "%s requires a modern browser to work.": "%s vereist een moderne browser om te kunnen werken.",
     "New": "Nieuw",
-    "Create": "Create",
+    "Create": "Maak",
     "Clone": "Klonen",
     "Raw text": "Onbewerkte tekst",
     "Expires": "Verloopt",
@@ -180,7 +180,7 @@
     "Options": "Opties",
     "Shorten URL": "URL verkorten",
     "Editor": "Editor",
-    "Preview": "Preview",
+    "Preview": "Voorbeeld",
     "%s requires the PATH to end in a \"%s\". Please update the PATH in your index.php.": "%s vereist dat PATH eindigt in een '%s'. a.u.b. PATH updaten in je index.php.",
     "Decrypt": "Decoderen",
     "Enter password": "Voer het wachtwoord in",
@@ -215,6 +215,6 @@
     "Trying to shorten a URL that isn't pointing at our instance.": "Proberen om een URL te verkorten dat niet naar ons systeem wijst.",
     "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "Foutmelding ophalen YOURLS. Waarschijnlijk een configuratiefout, zoals een verkeerde of missende \"apiurl\" of \"signature\".",
     "Error parsing YOURLS response.": "Foutmelding bij parsen van YOURLS respons.",
-    "Burn after reading pastes can only be displayed once upon loading it. Do you want to open it now?": "Burn after reading pastes can only be displayed once upon loading it. Do you want to open it now?",
-    "Yes, load it": "Yes, load it"
+    "Burn after reading pastes can only be displayed once upon loading it. Do you want to open it now?": "Brand na het lezen van de plagen kan slechts eenmaal worden weergegeven wanneer deze worden geladen. Wilt u het nu openen?",
+    "Yes, load it": "Ja, laad het"
 }
