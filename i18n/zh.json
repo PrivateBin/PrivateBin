@@ -26,7 +26,7 @@
     "JavaScript is required for %s to work. Sorry for the inconvenience.": "%s 需要 JavaScript 来进行加解密。 给你带来的不便敬请谅解。",
     "%s requires a modern browser to work.": "%s 需要在现代浏览器上工作。",
     "New": "新建",
-    "Create": "送出",
+    "Create": "Save",
     "Clone": "复制",
     "Raw text": "纯文本",
     "Expires": "有效期",
