@@ -26,7 +26,7 @@
     "JavaScript is required for %s to work. Sorry for the inconvenience.": "Javascript kreves for at %s skal fungere. Beklager.",
     "%s requires a modern browser to work.": "%s krever en moderne nettleser for å fungere.",
     "New": "Ny",
-    "Create": "Create",
+    "Create": "Opprette",
     "Clone": "Kopier",
     "Raw text": "Ren tekst",
     "Expires": "Utgår",
@@ -211,10 +211,10 @@
     "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "Besøk denne lenken for å se notatet. Hvis lenken deles med andre, vil de også kunne se notatet.",
     "URL shortener may expose your decrypt key in URL.": "URL forkorter kan avsløre dekrypteringsnøkkelen.",
     "Save paste": "Lagre utklipp",
-    "Your IP is not authorized to create pastes.": "Your IP is not authorized to create pastes.",
-    "Trying to shorten a URL that isn't pointing at our instance.": "Trying to shorten a URL that isn't pointing at our instance.",
-    "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".",
-    "Error parsing YOURLS response.": "Error parsing YOURLS response.",
-    "Burn after reading pastes can only be displayed once upon loading it. Do you want to open it now?": "Burn after reading pastes can only be displayed once upon loading it. Do you want to open it now?",
-    "Yes, load it": "Yes, load it"
+    "Your IP is not authorized to create pastes.": "Din IP er ikke autorisert til å opprette advarsler.",
+    "Trying to shorten a URL that isn't pointing at our instance.": "Prøver å forkorte en URL som ikke peker i vår instans.",
+    "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "Feil ved å ringe YOURLS. Sannsynligvis et konfigurasjonsproblem, som feil eller mangler, \"apiurl\" eller \"signatur\".",
+    "Error parsing YOURLS response.": "Feil ved analyse av YOURLS svar.",
+    "Burn after reading pastes can only be displayed once upon loading it. Do you want to open it now?": "Brenne etter lesing av pasta kan kun vises når den lastes inn. Vil du åpne den nå?",
+    "Yes, load it": "Ja, last den"
 }
