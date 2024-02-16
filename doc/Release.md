@@ -37,7 +37,7 @@ Primary key fingerprint: 28CA 7C96 4938 EA5C 1481  D42A E11B 7950 E9E1 83DB
 
 For a more step-by-step guide in detail [see this FAQ](https://github.com/PrivateBin/PrivateBin/wiki/FAQ#how-can-i-securely-clonedownload-your-project).
 
-SLSA verification can be performed using the [SLSA verifier](https://github.com/slsa-framework/slsa-verifier#verification-of-slsa-provenance).
+SLSA verification can be performed using the [SLSA verifier](https://github.com/slsa-framework/slsa-verifier?tab=readme-ov-file#verification-for-github-builders).
 
 ## Release process
 
