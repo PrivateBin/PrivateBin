@@ -26,7 +26,7 @@
     "JavaScript is required for %s to work. Sorry for the inconvenience.": "جافاسكرِبت (JavaScript) مطلوب %s للعمل. نأسف للإزعاج.",
     "%s requires a modern browser to work.": "%s يتطلب متصفحًا حديثًا للعمل.",
     "New": "جديد",
-    "Create": "إنشاء",
+    "Create": "أنشِئ",
     "Clone": "استنساخ",
     "Raw text": "نص خام",
     "Expires": "تنتهي",
@@ -215,6 +215,6 @@
     "Trying to shorten a URL that isn't pointing at our instance.": "محاولة تقصير عنوان URL لا يشير إلى خادمنا.",
     "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "خطأ في الاتصال بـ YOURLS. ربما تكون هناك مشكلة في التضبيط، مثل \"apiurl\" أو \"التوقيع\" الخاطئ أو المفقود.",
     "Error parsing YOURLS response.": "خطأ في تحليل استجابة YOURLS.",
-    "Burn after reading pastes can only be displayed once upon loading it. Do you want to open it now?": "الحرق بعد قراءة اللصق لا يمكن عرضه إلا مرة واحدة عند تحميله. هل تريد فتحه الآن؟",
+    "Burn after reading pastes can only be displayed once upon loading it. Do you want to open it now?": "لا يمكن عرض اللصق احرقه بعد قراءته إلا مرة واحدة عند تحميله. هل تريد فتحه الآن؟",
     "Yes, load it": "نعم، حمله"
 }
