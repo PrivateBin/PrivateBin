@@ -215,6 +215,6 @@
     "Trying to shorten a URL that isn't pointing at our instance.": "Versuch eine URL zu verkürzen, die nicht auf unsere Instanz zeigt.",
     "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "Fehler beim Aufruf von YOURLS. Wahrscheinlich ein Konfigurationsproblem, wie eine falsche oder fehlende \"apiurl\" oder \"signature\".",
     "Error parsing YOURLS response.": "Fehler beim Verarbeiten der YOURLS-Antwort.",
-    "Burn after reading pastes can only be displayed once upon loading it. Do you want to open it now?": "Texte des \"Einmal\"-Typs können nach dem Herunterladen nur einmal angezeigt werden. Möchtest Du ihn jetzt öffnen?",
+    "Burn after reading pastes can only be displayed once upon loading it. Do you want to open it now?": "Texte des \"Einmal\"-Typs können nach dem Öffnen nur einmal angezeigt werden. Möchtest Du ihn jetzt öffnen?",
     "Yes, load it": "Ja, jetzt öffnen"
 }
