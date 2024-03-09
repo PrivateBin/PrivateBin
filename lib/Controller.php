@@ -144,7 +144,7 @@ class Controller
         }
 
         $this->_setCacheHeaders();
-        
+
         // output JSON or HTML
         if ($this->_request->isJsonApiCall()) {
             header('Content-type: ' . Request::MIME_JSON);
@@ -179,9 +179,10 @@ class Controller
             setcookie('lang', $lang, 0, '', '', true);
         }
     }
+
     /**
      * Turn off browser caching
-     * 
+     *
      * @access private
      */
     private function _setCacheHeaders()
