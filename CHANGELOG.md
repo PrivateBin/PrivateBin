@@ -3,6 +3,7 @@
 ## 1.7.2 (not yet released)
 * CHANGED: "Send" button now labeled "Create" (#946)
 * FIXED: Add cache control headers also to API calls (#1263)
+* FIXED: Shortened paste URL does not appear in email (#606)
 
 ## 1.7.1 (2024-02-11)
 * FIXED: zlib 1.3.1 wasm file reference
@@ -28,7 +29,7 @@
 
 ## 1.6.0 (2023-09-11)
 * ADDED: Translations for Japanese & Arabic
-* ADDED: Configuration option to disable Email button (#1164)
+* ADDED: Configuration option to disable email button (#1164)
 * CHANGED: Minimum required PHP version is 7.3, due to upgrading PHPunit (#707)
 * CHANGED: Removed PHP 5 polyfill for random_bytes()
 
