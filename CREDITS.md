@@ -32,6 +32,7 @@
 * Felix J. Ogris - S3 Storage backend, script for data backend migrations, dropped singleton behaviour of data backends
 * Mounir Idrassi & J. Mozdzen - secure YOURLS integration
 * Felipe Nakandakari - enabled AWS SDK to use default credential provider chain in the S3 Storage backend
+* Aaron Sherber - cache control headers for API calls
 
 ## Translations
 * Hexalyse - French
