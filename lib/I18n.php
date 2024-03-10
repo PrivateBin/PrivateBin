@@ -81,7 +81,7 @@ class I18n
      *
      * @access public
      * @static
-     * @param  string $messageId
+     * @param  string|array $messageId
      * @param  mixed $args one or multiple parameters injected into placeholders
      * @return string
      */
@@ -95,7 +95,7 @@ class I18n
      *
      * @access public
      * @static
-     * @param  string $messageId
+     * @param  string|array $messageId
      * @param  mixed $args one or multiple parameters injected into placeholders
      * @return string
      */
@@ -104,7 +104,7 @@ class I18n
         if (empty($messageId)) {
             return $messageId;
         }
-        if (count(self::$_translations) === 0) {
+        if (empty(self::$_translations)) {
             self::loadTranslations();
         }
         $messages = $messageId;
