@@ -55,7 +55,6 @@ class Database extends AbstractData
      * @access public
      * @param  array $options
      * @throws Exception
-     * @return
      */
     public function __construct(array $options)
     {

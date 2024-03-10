@@ -47,7 +47,6 @@ class GoogleCloudStorage extends AbstractData
      *
      * @access public
      * @param array $options
-     * @return
      */
     public function __construct(array $options)
     {
