@@ -254,8 +254,8 @@ dir = PATH "data"
 ;   Only use this if you allow short URL creation without credentials.
 ; - Alternatively, using the parameters in this section ("signature" and
 ;   "apiurl"), "urlshortener" needs to point to the base URL of your PrivateBin
-;   instance with "shortenviayourls?link=" appended. For example:
-;   urlshortener = "${basepath}shortenviayourls?link="
+;   instance with "?shortenviayourls&link=" appended. For example:
+;   urlshortener = "${basepath}?shortenviayourls&link="
 ;   This URL will in turn call YOURLS on the server side, using the URL from
 ;   "apiurl" and the "access signature" from the "signature" parameters below.
 
