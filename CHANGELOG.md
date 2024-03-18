@@ -1,6 +1,7 @@
 # PrivateBin version history
 
 ## 1.7.2 (not yet released)
+* ADDED: Allow use of `shortenviayourls` in query parameters (#1267)
 * CHANGED: "Send" button now labeled "Create" (#946)
 * FIXED: Add cache control headers also to API calls (#1263)
 * FIXED: Shortened paste URL does not appear in email (#606)
