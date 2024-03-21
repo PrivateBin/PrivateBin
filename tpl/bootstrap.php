@@ -128,10 +128,10 @@ if (count($class)) {
 				<div class="modal-content">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-label="<?php echo I18n::_('Close') ?>"><span aria-hidden="true">&times;</span></button>
-						<h4 class="modal-title"><?php echo I18n::_('Burn after reading pastes can only be displayed once upon loading it. Do you want to open it now?') ?></h4>
+						<h4 class="modal-title"><?php echo I18n::_('This secret message can only be displayed once. Would you like to see it now?') ?></h4>
 					</div>
 					<div class="modal-body text-center">
-						<button id="loadconfirm-open-now" type="button" class="btn btn-success" data-dismiss="modal"><span class="glyphicon glyphicon-download"></span> <?php echo I18n::_('Yes, load it') ?></button>
+						<button id="loadconfirm-open-now" type="button" class="btn btn-success" data-dismiss="modal"><span class="glyphicon glyphicon-download"></span> <?php echo I18n::_('Yes, see it') ?></button>
 					</div>
 				</div>
 			</div>

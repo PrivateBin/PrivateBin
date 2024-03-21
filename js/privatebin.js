@@ -2282,7 +2282,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 $loadconfirmmodal.modal('show');
             } else {
                 if (window.confirm(
-                    I18n._('Burn after reading pastes can only be displayed once upon loading it. Do you want to open it now?')
+                    I18n._('This secret message can only be displayed once. Would you like to see it now?')
                 )) {
                     PasteDecrypter.run();
                 } else {

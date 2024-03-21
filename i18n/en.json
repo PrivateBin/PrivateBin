@@ -215,6 +215,6 @@
     "Trying to shorten a URL that isn't pointing at our instance.": "Trying to shorten a URL that isn't pointing at our instance.",
     "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".",
     "Error parsing YOURLS response.": "Error parsing YOURLS response.",
-    "Burn after reading pastes can only be displayed once upon loading it. Do you want to open it now?": "This secret message can only be displayed once. Would you like to see it now?",
-    "Yes, load it": "Yes, see it"
+    "This secret message can only be displayed once. Would you like to see it now?": "This secret message can only be displayed once. Would you like to see it now?",
+    "Yes, see it": "Yes, see it"
 }
