@@ -215,6 +215,6 @@
     "Trying to shorten a URL that isn't pointing at our instance.": "Спроба скоротити URL, який не вказує на наш екземпляр.",
     "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "Помилка виклику YOURLS. Ймовірно проблема з конфігурацією, наприклад \"apiurl\" чи \"signature\".",
     "Error parsing YOURLS response.": "Помилка розбору відповіді YOURLS.",
-    "This secret message can only be displayed once. Would you like to see it now?": "Спалити після вставки читання можна вивести лише один раз під час завантаження. Відкрити його зараз?",
-    "Yes, see it": "Так, завантажити"
+    "This secret message can only be displayed once. Would you like to see it now?": "This secret message can only be displayed once. Would you like to see it now?",
+    "Yes, see it": "Yes, see it"
 }
