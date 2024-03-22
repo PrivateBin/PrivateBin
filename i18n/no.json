@@ -215,6 +215,6 @@
     "Trying to shorten a URL that isn't pointing at our instance.": "Prøver å forkorte en URL som ikke peker i vår instans.",
     "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "Feil ved å ringe YOURLS. Sannsynligvis et konfigurasjonsproblem, som feil eller mangler, \"apiurl\" eller \"signatur\".",
     "Error parsing YOURLS response.": "Feil ved analyse av YOURLS svar.",
-    "Burn after reading pastes can only be displayed once upon loading it. Do you want to open it now?": "Brenne etter lesing av pasta kan kun vises når den lastes inn. Vil du åpne den nå?",
-    "Yes, load it": "Ja, last den"
+    "This secret message can only be displayed once. Would you like to see it now?": "Brenne etter lesing av pasta kan kun vises når den lastes inn. Vil du åpne den nå?",
+    "Yes, see it": "Ja, last den"
 }

@@ -215,6 +215,6 @@
     "Trying to shorten a URL that isn't pointing at our instance.": "Püüame lühendada URL-i, mis ei viita meie instantsile.",
     "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "Viga YOURLS-i kutsumisel. Tõenäoliselt konfiguratsiooniprobleem, näiteks vale või puuduv \"apiurl\" või \"signature\".",
     "Error parsing YOURLS response.": "Viga YOURLS vastuse parsimisel.",
-    "Burn after reading pastes can only be displayed once upon loading it. Do you want to open it now?": "Burn after reading pastes can only be displayed once upon loading it. Do you want to open it now?",
-    "Yes, load it": "Yes, load it"
+    "This secret message can only be displayed once. Would you like to see it now?": "This secret message can only be displayed once. Would you like to see it now?",
+    "Yes, see it": "Yes, see it"
 }

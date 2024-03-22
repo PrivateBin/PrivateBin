@@ -215,6 +215,6 @@
     "Trying to shorten a URL that isn't pointing at our instance.": "Попытка сократить URL, который указывает не на наш сервер.",
     "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "Ошибка обращения к YOURLS. Возможно в конфигурации допущена ошибка, например неверный или отсутствующий параметр \"apiurl\" или \"signature\".",
     "Error parsing YOURLS response.": "Ошибка разбора ответа от YOURLS.",
-    "Burn after reading pastes can only be displayed once upon loading it. Do you want to open it now?": "Записи, удаляемые после прочтения, могут быть отображены после загрузки только один раз. Вы хотите открыть её сейчас?",
-    "Yes, load it": "Да, загрузить"
+    "This secret message can only be displayed once. Would you like to see it now?": "Записи, удаляемые после прочтения, могут быть отображены после загрузки только один раз. Вы хотите открыть её сейчас?",
+    "Yes, see it": "Да, загрузить"
 }

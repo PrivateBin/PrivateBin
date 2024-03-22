@@ -215,6 +215,6 @@
     "Trying to shorten a URL that isn't pointing at our instance.": "Pruvate d’ammuzzà un indirizzu web chì ùn punta micca versu a vostra instanza.",
     "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "Sbagliu à a chjama di YOURLS. Seria forse una cunfigurazione gattiva, tale una \"apiurl\" o \"signature\" falsa o assente.",
     "Error parsing YOURLS response.": "Sbagliu durante l’analisa di a risposta di YOURLS.",
-    "Burn after reading pastes can only be displayed once upon loading it. Do you want to open it now?": "Si pò affissà l’appiccichi « Squassà dopu a lettura » solu dopu u so caricamentu. Vulete aprelu subitu ?",
-    "Yes, load it": "Iè, caricatelu"
+    "This secret message can only be displayed once. Would you like to see it now?": "Si pò affissà l’appiccichi « Squassà dopu a lettura » solu dopu u so caricamentu. Vulete aprelu subitu ?",
+    "Yes, see it": "Iè, caricatelu"
 }
