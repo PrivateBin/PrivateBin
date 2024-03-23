@@ -215,6 +215,6 @@
     "Trying to shorten a URL that isn't pointing at our instance.": "Încercarea de a scurta un URL care nu direcționează spre instanța noastră.",
     "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "Eroare la apelarea YOURLS. Probabil o problemă de configurare, cum ar fi \"apiurl\" sau \"signature\" greșite sau lipsă.",
     "Error parsing YOURLS response.": "Eroare la analizarea răspunsului YOURLS.",
-    "This secret message can only be displayed once. Would you like to see it now?": "This secret message can only be displayed once. Would you like to see it now?",
-    "Yes, see it": "Yes, see it"
+    "This secret message can only be displayed once. Would you like to see it now?": "Paste-urile care se șterg după citire pot fi afișate numai o dată după încărcare. Doriți să o vedeți acum?",
+    "Yes, see it": "Da, vezi"
 }
