@@ -108,7 +108,7 @@ abstract class AbstractModel
         $this->_data = $data;
 
         // calculate a 64 bit checksum to avoid collisions
-        $this->setId(hash(version_compare(PHP_VERSION, '5.6', '<') ? 'fnv164' : 'fnv1a64', $data['ct']));
+        $this->setId(hash('fnv1a64', $data['ct']));
     }
 
     /**
