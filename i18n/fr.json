@@ -215,6 +215,6 @@
     "Trying to shorten a URL that isn't pointing at our instance.": "Essayer de raccourcir une URL qui ne pointe pas vers notre instance.",
     "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "Erreur lors de l'appel de YOURLS. Peut-être un problème de configuration, comme \"apiurl\" ou \"signature\" manquant.",
     "Error parsing YOURLS response.": "Erreur d'analyse de la réponse YOURLS.",
-    "This secret message can only be displayed once. Would you like to see it now?": "This secret message can only be displayed once. Would you like to see it now?",
-    "Yes, see it": "Yes, see it"
+    "This secret message can only be displayed once. Would you like to see it now?": "Les pastes de type \"Effacer après la lecture\" ne peuvent être affichés qu'une seule fois. Voulez-vous le voir maintenant ?",
+    "Yes, see it": "Oui, voyez le"
 }
