@@ -151,6 +151,8 @@ class Controller
             header('Access-Control-Allow-Origin: *');
             header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
             header('Access-Control-Allow-Headers: X-Requested-With, Content-Type');
+            header('X-Uncompressed-Content-Length: ' . strlen($this->_json));
+            header('Access-Control-Expose-Headers: X-Uncompressed-Content-Length');
             echo $this->_json;
         } else {
             $this->_view();
