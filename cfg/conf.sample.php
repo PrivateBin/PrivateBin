@@ -85,8 +85,10 @@ languageselection = false
 ; scripts or run your site behind certain DDoS-protection services.
 ; Check the documentation at https://content-security-policy.com/
 ; Notes:
-; - If you use a bootstrap theme, you can remove the allow-popups from the
+; - If you use any bootstrap theme, you can remove the allow-popups from the
 ;   sandbox restrictions.
+; - If you use the bootstrap5 theme, you must change default-src to 'self' to
+;   enable display of the svg icons
 ; - By default this disallows to load images from third-party servers, e.g. when
 ;   they are embedded in pastes. If you wish to allow that, you can adjust the
 ;   policy here. See https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-it-load-embedded-images
@@ -242,7 +244,7 @@ dir = PATH "data"
 ; - AWS_ACCESS_KEY_ID
 ; - AWS_SECRET_ACCESS_KEY
 ; - AWS_SESSION_TOKEN (if needed)
-; for more details, see https://docs.aws.amazon.com/sdk-for-php/v3/developer-guide/guide_credentials.html#default-credential-chain 
+; for more details, see https://docs.aws.amazon.com/sdk-for-php/v3/developer-guide/guide_credentials.html#default-credential-chain
 ;class = S3Storage
 ;[model_options]
 ;region = "eu-central-1"

@@ -57,7 +57,7 @@ endif;
 ?>
 		<script type="text/javascript" data-cfasync="false" src="js/purify-3.0.8.js" integrity="sha512-wWBDKh5wYGtJ1Df+PPZIn59jHVBnJ4/Yb2W/pVnzaXab8cmlZnHVx+FEBGu5JX39s3P2Qlt+aNQou0XnjW86hg==" crossorigin="anonymous"></script>
 		<script type="text/javascript" data-cfasync="false" src="js/legacy.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-LYos+qXHIRqFf5ZPNphvtTB0cgzHUizu2wwcOwcwz/VIpRv9lpcBgPYz4uq6jx0INwCAj6Fbnl5HoKiLufS2jg==" crossorigin="anonymous"></script>
-		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-I0F8qtFtaBvVvTThlXa63q0fLptZHP+hg9SbUqZ/qpimAPvHYGFfRj06aqEvECByNgKlQOWab3p8NQ2waDZ+fQ==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-aECeSOPK7WzmiXLRHmkasTdTGFkCa8Qp9fGZhScji4uMn0QdTlXFhHo70t/orpDJmfoHVta2nyoJ2hseFnSrUQ==" crossorigin="anonymous"></script>
 		<!-- icon -->
 		<link rel="apple-touch-icon" href="<?php echo I18n::encode($BASEPATH); ?>img/apple-touch-icon.png" sizes="180x180" />
 		<link rel="icon" type="image/png" href="img/favicon-32x32.png" sizes="32x32" />
@@ -87,10 +87,10 @@ endif;
 					<div class="modal-body">
 						<form id="passwordform" role="form">
 							<div class="form-group">
-								<label for="passworddecrypt"><span class="glyphicon glyphicon-eye-open"></span> <?php echo I18n::_('Please enter the password for this paste:') ?></label>
+								<label for="passworddecrypt"><svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#eye" /></svg> <?php echo I18n::_('Please enter the password for this paste:') ?></label>
 								<input id="passworddecrypt" type="password" class="form-control" placeholder="<?php echo I18n::_('Enter password') ?>" required="required">
 							</div>
-							<button type="submit" class="btn btn-success btn-block"><span class="glyphicon glyphicon-off"></span> <?php echo I18n::_('Decrypt') ?></button>
+							<button type="submit" class="btn btn-success btn-block"><svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#power" /></svg> <?php echo I18n::_('Decrypt') ?></button>
 						</form>
 					</div>
 				</div>
@@ -100,11 +100,11 @@ endif;
 			<div class="modal-dialog" role="document">
 				<div class="modal-content">
 					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal" aria-label="<?php echo I18n::_('Close') ?>"><span aria-hidden="true">&times;</span></button>
-						<h4 class="modal-title"><?php echo I18n::_('This secret message can only be displayed once. Would you like to see it now?') ?></h4>
+						<h5 class="modal-title"><?php echo I18n::_('This secret message can only be displayed once. Would you like to see it now?') ?></h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="<?php echo I18n::_('Close') ?>"></button>
 					</div>
 					<div class="modal-body text-center">
-						<button id="loadconfirm-open-now" type="button" class="btn btn-success" data-dismiss="modal"><span class="glyphicon glyphicon-download"></span> <?php echo I18n::_('Yes, see it') ?></button>
+						<button id="loadconfirm-open-now" type="button" class="btn btn-success" data-dismiss="modal"><svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#cloud-download" /></svg> <?php echo I18n::_('Yes, see it') ?></button>
 					</div>
 				</div>
 			</div>
@@ -116,8 +116,8 @@ if ($QRCODE) :
 			<div class="modal-dialog" role="document">
 				<div class="modal-content">
 					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal" aria-label="<?php echo I18n::_('Close') ?>"><span aria-hidden="true">&times;</span></button>
-						<h4 class="modal-title"><?php echo I18n::_('QR code') ?></h4>
+						<h5 class="modal-title"><?php echo I18n::_('QR code') ?></h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="<?php echo I18n::_('Close') ?>"></button>
 					</div>
 					<div class="modal-body">
 						<div class="mx-auto" id="qrcode-display"></div>
@@ -133,15 +133,15 @@ if ($EMAIL) :
 			<div class="modal-dialog" role="document">
 				<div class="modal-content">
 					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal" aria-label="<?php echo I18n::_('Close') ?>"><span aria-hidden="true">&times;</span></button>
-						<h4 class="modal-title"><?php echo I18n::_('Recipient may become aware of your timezone, convert time to UTC?') ?></h4>
+						<h5 class="modal-title"><?php echo I18n::_('Recipient may become aware of your timezone, convert time to UTC?') ?></h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="<?php echo I18n::_('Close') ?>"></button>
 					</div>
 					<div class="modal-body row">
 						<div class="col-xs-12 col-md-6">
-							<button id="emailconfirm-timezone-current" type="button" class="btn btn-danger"><span class="glyphicon glyphicon-time"></span> <?php echo I18n::_('Use Current Timezone') ?></button>
+							<button id="emailconfirm-timezone-current" type="button" class="btn btn-danger"><svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#clock" /></svg> <?php echo I18n::_('Use Current Timezone') ?></button>
 						</div>
 						<div class="col-xs-12 col-md-6 text-right">
-							<button id="emailconfirm-timezone-utc" type="button" class="btn btn-success"><span class="glyphicon glyphicon-globe"></span> <?php echo I18n::_('Convert To UTC') ?></button>
+							<button id="emailconfirm-timezone-utc" type="button" class="btn btn-success"><svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#globe" /></svg> <?php echo I18n::_('Convert To UTC') ?></button>
 						</div>
 					</div>
 				</div>
@@ -161,46 +161,46 @@ endif;
 				<div id="navbar" class="collapse navbar-collapse">
 					<ul class="navbar-nav me-auto">
 						<li id="loadingindicator" class="navbar-text hidden me-2">
-							<span class="glyphicon glyphicon-time" aria-hidden="true"></span>
+							<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#clock" /></svg>
 							<?php echo I18n::_('Loading…'), PHP_EOL; ?>
 						</li>
 						<li class="nav-item me-2">
 							<button id="retrybutton" type="button" class="reloadlink hidden btn btn-primary">
-								<span class="glyphicon glyphicon-repeat" aria-hidden="true"></span> <?php echo I18n::_('Retry'), PHP_EOL; ?>
+								<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#repeat" /></svg> <?php echo I18n::_('Retry'), PHP_EOL; ?>
 							</button>
 						</li>
 						<li class="nav-item">
 							<button id="newbutton" type="button" class="hidden btn btn-secondary me-2">
-								<span class="glyphicon glyphicon-file" aria-hidden="true"></span> <?php echo I18n::_('New'), PHP_EOL; ?>
+								<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#file-earmark" /></svg> <?php echo I18n::_('New'), PHP_EOL; ?>
 							</button>
 							<button id="clonebutton" type="button" class="hidden btn btn-secondary me-2">
-								<span class="glyphicon glyphicon-duplicate" aria-hidden="true"></span> <?php echo I18n::_('Clone'), PHP_EOL; ?>
+								<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#copy" /></svg> <?php echo I18n::_('Clone'), PHP_EOL; ?>
 							</button>
 							<button id="rawtextbutton" type="button" class="hidden btn btn-secondary me-2">
-								<span class="glyphicon glyphicon-text-background" aria-hidden="true"></span> <?php echo I18n::_('Raw text'), PHP_EOL; ?>
+								<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#filetype-txt" /></svg> <?php echo I18n::_('Raw text'), PHP_EOL; ?>
 							</button>
 							<button id="downloadtextbutton" type="button" class="hidden btn btn-secondary me-2">
-								<span class="glyphicon glyphicon glyphicon-download-alt" aria-hidden="true"></span> <?php echo I18n::_('Save paste'), PHP_EOL; ?>
+								<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#download" /></svg> <?php echo I18n::_('Save paste'), PHP_EOL; ?>
 							</button>
 <?php
 if ($EMAIL) :
 ?>
 
 							<button id="emaillink" type="button" class="hidden btn btn-secondary me-2">
-								<span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> <?php echo I18n::_('Email'), PHP_EOL; ?>
+								<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#envelope" /></svg> <?php echo I18n::_('Email'), PHP_EOL; ?>
 							</button>
 <?php
 endif;
 if ($QRCODE) :
 ?>
 							<button id="qrcodelink" type="button" data-toggle="modal" data-target="#qrcodemodal" class="hidden btn btn-secondary me-2">
-								<span class="glyphicon glyphicon-qrcode" aria-hidden="true"></span> <?php echo I18n::_('QR code'), PHP_EOL; ?>
+								<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#qr-code" /></svg> <?php echo I18n::_('QR code'), PHP_EOL; ?>
 							</button>
 <?php
 endif;
 ?>
 						</li>
-						<li id="expiration" class="nav-item me-2 d-flex">
+						<li id="expiration" class="nav-item me-2 d-flex hidden">
 							<label for="pasteExpiration" class="form-label my-auto me-1"><?php echo I18n::_('Expires'); ?>:</label>
 							<select id="pasteExpiration" name="pasteExpiration" class="form-select">
 <?php
@@ -259,14 +259,14 @@ if ($FILEUPLOAD) :
 						<li id="attach" class="nav-item hidden dropdown me-2">
 							<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false"><?php echo I18n::_('Attach a file'); ?></a>
 							<ul class="dropdown-menu">
-								<li id="filewrap" class="dropdown-item">
+								<li id="filewrap">
 									<div>
 										<input type="file" id="file" name="file" class="form-control" />
 									</div>
 									<div id="dragAndDropFileName" class="dragAndDropFile"><?php echo I18n::_('alternatively drag & drop a file or paste an image from the clipboard'); ?></div>
 								</li>
-								<li id="customattachment" class="dropdown-item hidden"></li>
-								<li class="dropdown-item">
+								<li id="customattachment" class="hidden"></li>
+								<li>
 									<a id="fileremovebutton"  href="#" class="dropdown-item">
 										<?php echo I18n::_('Remove attachment'), PHP_EOL; ?>
 									</a>
@@ -276,7 +276,7 @@ if ($FILEUPLOAD) :
 <?php
 endif;
 ?>
-						<li id="formatter" class="nav-item me-2 d-flex">
+						<li id="formatter" class="nav-item me-2 d-flex hidden">
 							<label for="pasteFormatter" class="form-label my-auto me-1"><?php echo I18n::_('Format'); ?>:</label>
 							<select id="pasteFormatter" name="pasteFormatter" class="form-select">
 <?php
@@ -305,14 +305,14 @@ if (!empty($LANGUAGESELECTION)) :
 ?>
 						<li id="language" class="nav-item dropdown ms-2">
 							<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false">
-								<span class="glyphicon glyphicon-flag" aria-hidden="true"></span> <?php echo $LANGUAGES[$LANGUAGESELECTION][0], PHP_EOL; ?>
+								<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#flag" /></svg> <?php echo $LANGUAGES[$LANGUAGESELECTION][0], PHP_EOL; ?>
 							</a>
 							<ul class="dropdown-menu dropdown-menu-end">
 <?php
     foreach ($LANGUAGES as $key => $value) :
 ?>
-								<li class="dropdown-item">
-									<a href="#" data-lang="<?php echo $key; ?>">
+								<li>
+									<a href="#" class="dropdown-item" data-lang="<?php echo $key; ?>">
 										<?php echo $value[0]; ?> (<?php echo $value[1]; ?>)
 									</a>
 								</li>
@@ -334,41 +334,41 @@ endif;
 if (!empty($NOTICE)) :
 ?>
 				<div role="alert" class="alert alert-info">
-					<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+					<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#info-circle" /></svg>
 					<?php echo I18n::encode($NOTICE), PHP_EOL; ?>
 				</div>
 <?php
 endif;
 ?>
 				<div id="remainingtime" role="alert" class="hidden alert alert-info">
-					<span class="glyphicon glyphicon-fire" aria-hidden="true"></span>
+					<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#fire" /></svg>
 				</div>
 <?php
 if ($FILEUPLOAD) :
 ?>
 				<div id="attachment" role="alert" class="hidden alert alert-info">
-					<span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
+					<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#download" /></svg>
 					<a class="alert-link"><?php echo I18n::_('Download attachment'), PHP_EOL; ?></a>
 				</div>
 <?php
 endif;
 ?>
 				<div id="status" role="alert" class="alert alert-info<?php echo empty($STATUS) ? ' hidden' : '' ?>">
-					<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+					<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#info-circle" /></svg>
 					<?php echo I18n::encode($STATUS), PHP_EOL; ?>
 				</div>
 				<div id="errormessage" role="alert" class="<?php echo empty($ERROR) ? 'hidden' : '' ?> alert alert-danger">
-					<span class="glyphicon glyphicon-alert" aria-hidden="true"></span>
+					<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#exclamation-triangle" /></svg>
 					<?php echo I18n::encode($ERROR), PHP_EOL; ?>
 				</div>
 				<noscript>
 					<div id="noscript" role="alert" class="alert alert-warning">
-						<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+						<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#exclamation-circle" /></svg>
 						<?php echo I18n::_('JavaScript is required for %s to work. Sorry for the inconvenience.', I18n::_($NAME)), PHP_EOL; ?>
 					</div>
 				</noscript>
 				<div id="oldnotice" role="alert" class="hidden alert alert-danger">
-					<span class="glyphicon glyphicon-alert" aria-hidden="true"></span>
+					<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#exclamation-triangle" /></svg>
 					<?php echo I18n::_('%s requires a modern browser to work.', I18n::_($NAME)), PHP_EOL; ?>
 					<a href="https://www.mozilla.org/firefox/">Firefox</a>,
 					<a href="https://www.opera.com/">Opera</a>,
@@ -379,12 +379,12 @@ endif;
 if ($HTTPWARNING) :
 ?>
 				<div id="httpnotice" role="alert" class="hidden alert alert-danger">
-					<span class="glyphicon glyphicon-alert" aria-hidden="true"></span>
+					<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#exclamation-triangle" /></svg>
 					<?php echo I18n::_('This website is using an insecure connection! Please only use it for testing.'), PHP_EOL; ?><br />
 					<span class="small"><?php echo I18n::_('For more information <a href="%s">see this FAQ entry</a>.', 'https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-it-show-me-an-error-about-an-insecure-connection'); ?></span>
 				</div>
 				<div id="insecurecontextnotice" role="alert" class="hidden alert alert-danger">
-					<span class="glyphicon glyphicon-alert" aria-hidden="true"></span>
+					<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#exclamation-triangle" /></svg>
 					<?php echo I18n::_('Your browser may require an HTTPS connection to support the WebCrypto API. Try <a href="%s">switching to HTTPS</a>.', $HTTPSLINK); ?>
 				</div>
 <?php
@@ -392,7 +392,7 @@ endif;
 ?>
 				<div id="pastesuccess" class="hidden">
 					<div role="alert" class="alert alert-success">
-						<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+						<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#check" /></svg>
 						<div id="deletelink"></div>
 						<div id="pastelink"></div>
 					</div>
@@ -401,11 +401,11 @@ if (!empty($URLSHORTENER)) :
 ?>
 					<p>
 						<button id="shortenbutton" data-shortener="<?php echo I18n::encode($URLSHORTENER); ?>" type="button" class="btn btn-primary btn-block">
-						<span class="glyphicon glyphicon-send" aria-hidden="true"></span> <?php echo I18n::_('Shorten URL'), PHP_EOL; ?>
+						<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#send" /></svg> <?php echo I18n::_('Shorten URL'), PHP_EOL; ?>
 					</button>
 					</p>
 					<div role="alert" class="alert alert-danger">
-						<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+						<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#exclamation-circle" /></svg>
 						<?php echo I18n::_('URL shortener may expose your decrypt key in URL.'), PHP_EOL; ?>
 					</div>
 <?php
@@ -417,7 +417,7 @@ endif;
 					<li role="presentation" class="nav-item me-1"><a class="nav-link" role="tab" id="messagepreview" href="#"><?php echo I18n::_('Preview'); ?></a></li>
 					<li role="presentation" class="nav-item ms-auto">
 						<button id="sendbutton" type="button" class="hidden btn btn-primary">
-							<span class="glyphicon glyphicon-upload" aria-hidden="true"></span> <?php echo I18n::_('Create'), PHP_EOL; ?>
+							<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#cloud-upload" /></svg> <?php echo I18n::_('Create'), PHP_EOL; ?>
 						</button>
 					</li>
 				</ul>
@@ -441,7 +441,7 @@ endif;
 			</section>
 			<section class="container">
 				<div id="noscript" role="alert" class="alert alert-info noscript-hide">
-					<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+					<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#exclamation-circle" /></svg>
 					<?php echo I18n::_('Loading…'); ?><br />
 					<span class="small"><?php echo I18n::_('In case this message never disappears please have a look at <a href="%s">this FAQ for information to troubleshoot</a>.', 'https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-the-loading-message-not-go-away'); ?></span>
 				</div>
@@ -469,7 +469,7 @@ if ($DISCUSSION) :
 			<div id="templates">
 				<article id="commenttemplate" class="comment"><div class="commentmeta"><span class="nickname">name</span><span class="commentdate">0000-00-00</span></div><div class="commentdata">c</div><button class="btn btn-secondary btn-sm"><?php echo I18n::_('Reply'); ?></button></article>
 				<p id="commenttailtemplate" class="comment"><button class="btn btn-secondary btn-sm"><?php echo I18n::_('Add comment'); ?></button></p>
-				<div id="replytemplate" class="reply hidden"><input type="text" id="nickname" class="form-control" title="<?php echo I18n::_('Optional nickname…'); ?>" placeholder="<?php echo I18n::_('Optional nickname…'); ?>" /><textarea id="replymessage" class="replymessage form-control" cols="80" rows="7"></textarea><br /><div id="replystatus" role="alert" class="statusmessage hidden alert"><span class="glyphicon" aria-hidden="true"></span> </div><button id="replybutton" class="btn btn-secondary btn-sm"><?php echo I18n::_('Post comment'); ?></button></div>
+				<div id="replytemplate" class="reply hidden"><input type="text" id="nickname" class="form-control" title="<?php echo I18n::_('Optional nickname…'); ?>" placeholder="<?php echo I18n::_('Optional nickname…'); ?>" /><textarea id="replymessage" class="replymessage form-control" cols="80" rows="7"></textarea><br /><div id="replystatus" role="alert" class="statusmessage hidden alert"><svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#info-circle" /></svg> </div><button id="replybutton" class="btn btn-secondary btn-sm"><?php echo I18n::_('Post comment'); ?></button></div>
 			</div>
 		</div>
 <?php

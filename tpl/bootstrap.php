@@ -34,7 +34,7 @@ if ($SYNTAXHIGHLIGHTING) :
 ?>
 		<link type="text/css" rel="stylesheet" href="css/prettify/prettify.css?<?php echo rawurlencode($VERSION); ?>" />
 <?php
-    if (strlen($SYNTAXHIGHLIGHTINGTHEME)) :
+    if (!empty($SYNTAXHIGHLIGHTINGTHEME)) :
 ?>
 		<link type="text/css" rel="stylesheet" href="css/prettify/<?php echo rawurlencode($SYNTAXHIGHLIGHTINGTHEME); ?>.css?<?php echo rawurlencode($VERSION); ?>" />
 <?php
@@ -73,7 +73,7 @@ endif;
 ?>
 		<script type="text/javascript" data-cfasync="false" src="js/purify-3.0.8.js" integrity="sha512-wWBDKh5wYGtJ1Df+PPZIn59jHVBnJ4/Yb2W/pVnzaXab8cmlZnHVx+FEBGu5JX39s3P2Qlt+aNQou0XnjW86hg==" crossorigin="anonymous"></script>
 		<script type="text/javascript" data-cfasync="false" src="js/legacy.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-LYos+qXHIRqFf5ZPNphvtTB0cgzHUizu2wwcOwcwz/VIpRv9lpcBgPYz4uq6jx0INwCAj6Fbnl5HoKiLufS2jg==" crossorigin="anonymous"></script>
-		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-I0F8qtFtaBvVvTThlXa63q0fLptZHP+hg9SbUqZ/qpimAPvHYGFfRj06aqEvECByNgKlQOWab3p8NQ2waDZ+fQ==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-aECeSOPK7WzmiXLRHmkasTdTGFkCa8Qp9fGZhScji4uMn0QdTlXFhHo70t/orpDJmfoHVta2nyoJ2hseFnSrUQ==" crossorigin="anonymous"></script>
 		<!-- icon -->
 		<link rel="apple-touch-icon" href="<?php echo I18n::encode($BASEPATH); ?>img/apple-touch-icon.png" sizes="180x180" />
 		<link rel="icon" type="image/png" href="img/favicon-32x32.png" sizes="32x32" />
@@ -437,7 +437,7 @@ endif;
 				</ul>
 				<ul class="nav navbar-nav pull-right">
 <?php
-if (strlen($LANGUAGESELECTION)) :
+if (!empty($LANGUAGESELECTION)) :
 ?>
 					<li id="language" class="dropdown">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-flag" aria-hidden="true"></span> <?php echo $LANGUAGES[$LANGUAGESELECTION][0]; ?> <span class="caret"></span></a>
@@ -468,7 +468,7 @@ endif;
 		<main>
 			<section class="container">
 <?php
-if (strlen($NOTICE)) :
+if (!empty($NOTICE)) :
 ?>
 				<div role="alert" class="alert alert-info">
 					<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
@@ -534,7 +534,7 @@ endif;
 						<div id="pastelink"></div>
 					</div>
 <?php
-if (strlen($URLSHORTENER)) :
+if (!empty($URLSHORTENER)) :
 ?>
 					<p>
 						<button id="shortenbutton" data-shortener="<?php echo I18n::encode($URLSHORTENER); ?>" type="button" class="btn btn-<?php echo $isDark ? 'warning' : 'primary'; ?> btn-block">
