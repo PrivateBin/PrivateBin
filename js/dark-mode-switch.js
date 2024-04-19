@@ -2,7 +2,7 @@
  * Color mode toggler for Bootstrap's docs (https://getbootstrap.com/)
  * Copyright 2011-2024 The Bootstrap Authors
  * Licensed under the Creative Commons Attribution 3.0 Unported License.
- * Modified to work with a simpler checkbox toggle
+ * Modified to work with a simpler checkbox toggle & support prettify CSS themes
  */
 
 (() => {
@@ -20,15 +20,39 @@
     return getPreferredTheme()
   }
 
-  const setTheme = theme => {
-    if (theme === 'auto') {
-      document.documentElement.setAttribute('data-bs-theme', getPreferredTheme())
-    } else {
-      document.documentElement.setAttribute('data-bs-theme', theme)
+  const delStoredPrettifyTheme = () => localStorage.removeItem('themePrettify')
+  const getStoredPrettifyTheme = () => localStorage.getItem('themePrettify')
+  const setStoredPrettifyTheme = theme => localStorage.setItem('themePrettify', theme)
+
+  const getPrettifyThemeLink = () => {
+    for (const sheet of document.getElementsByTagName('link')) {
+      if (sheet.rel === 'stylesheet' && sheet.href.includes('css/prettify/') && !sheet.href.includes('css/prettify/prettify.css')) {
+        return sheet
+      }
     }
+    return null
   }
 
-  setTheme(getStoredPreferredTheme())
+  const setTheme = theme => {
+    const preferredTheme = theme === 'auto' ? getPreferredTheme() : theme
+    document.documentElement.setAttribute('data-bs-theme', preferredTheme)
+    const sheetPrettify = getPrettifyThemeLink()
+    if (sheetPrettify) {
+      sheetPrettify.remove()
+    }
+    const link = document.createElement('link')
+    link.rel = 'stylesheet'
+    if (preferredTheme === 'dark') {
+      link.href = 'css/prettify/sons-of-obsidian.css'
+      document.head.appendChild(link)
+    } else {
+      const themePrettify = getStoredPrettifyTheme()
+      if (themePrettify) {
+        link.href = themePrettify
+        document.head.appendChild(link)
+      }
+    }
+  }
 
   window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
     const storedTheme = getStoredTheme()
@@ -38,6 +62,13 @@
   })
 
   window.addEventListener('DOMContentLoaded', () => {
+    const sheetPrettify = getPrettifyThemeLink()
+    if (sheetPrettify) {
+      setStoredPrettifyTheme(sheetPrettify.href)
+    } else {
+      delStoredPrettifyTheme()
+    }
+    setTheme(getStoredPreferredTheme())
     const toggle = document.querySelector('#bd-theme')
     toggle.checked = getStoredTheme() === 'dark'
     toggle.addEventListener('change', (event) => {

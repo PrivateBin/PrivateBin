@@ -42,7 +42,7 @@ endif;
 		<script type="text/javascript" data-cfasync="false" src="js/base-x-4.0.0.js" integrity="sha512-nNPg5IGCwwrveZ8cA/yMGr5HiRS5Ps2H+s0J/mKTPjCPWUgFGGw7M5nqdnPD3VsRwCVysUh3Y8OWjeSKGkEQJQ==" crossorigin="anonymous"></script>
 		<script type="text/javascript" data-cfasync="false" src="js/rawinflate-0.3.js" integrity="sha512-g8uelGgJW9A/Z1tB6Izxab++oj5kdD7B4qC7DHwZkB6DGMXKyzx7v5mvap2HXueI2IIn08YlRYM56jwWdm2ucQ==" crossorigin="anonymous"></script>
 		<script type="text/javascript" data-cfasync="false" src="js/bootstrap-5.3.3.js" integrity="sha512-in2rcOpLTdJ7/pw5qjF4LWHFRtgoBDxXCy49H4YGOcVdGiPaQucGIbOqxt1JvmpvOpq3J/C7VTa0FlioakB2gQ==" crossorigin="anonymous"></script>
-		<script type="text/javascript" data-cfasync="false" src="js/dark-mode-switch.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-Az8HG0zbZ+yisIA5bRykjmXwC1Rv2KZ/freagwMdikN4eLO0ZDKNawJzcvqTO+y5kZHgyoTW2s3f39y+cCOVwQ==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/dark-mode-switch.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-xdW325H1OW06oUf/Lc4ccJXOUW41tU08iyXVOiVL3SbTufQtKVWi1/cQPrWZ3FagPTNL2CwDMqZsHNmXruHnHg==" crossorigin="anonymous"></script>
 <?php
 if ($SYNTAXHIGHLIGHTING) :
 ?>
