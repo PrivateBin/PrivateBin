@@ -178,7 +178,7 @@ class Controller
         // force default language, if language selection is disabled and a default is set
         if (!$this->_conf->getKey('languageselection') && strlen($lang) == 2) {
             $_COOKIE['lang'] = $lang;
-            setcookie('lang', $lang, 0, '', '', true);
+            setcookie('lang', $lang, array('SameSite' => 'Strict', 'Secure' => true));
         }
     }
 
@@ -389,7 +389,7 @@ class Controller
         $languageselection = '';
         if ($this->_conf->getKey('languageselection')) {
             $languageselection = I18n::getLanguage();
-            setcookie('lang', $languageselection, 0, '', '', true);
+            setcookie('lang', $languageselection, array('SameSite' => 'Strict', 'Secure' => true));
         }
 
         // strip policies that are unsupported in meta tag
