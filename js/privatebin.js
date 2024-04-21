@@ -2305,6 +2305,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                     backdrop: 'static',
                     keyboard: false
                 });
+                $passwordModal.modal('show');
                 // focus password input
                 $passwordDecrypt.focus();
                 // then re-focus it, when modal causes it to loose focus again
@@ -3926,7 +3927,10 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 text: window.location.href
             });
             $('#qrcode-display').html(qrCanvas);
-            $('#qrcodemodal').modal('show');
+            // only necessary for bootstrap 5, other templates won't have this
+            if (bootstrap.Tooltip.VERSION) {
+                $('#qrcodemodal').modal('show');
+            }
         }
 
         /**
