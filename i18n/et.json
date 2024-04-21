@@ -216,5 +216,6 @@
     "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "Viga YOURLS-i kutsumisel. Tõenäoliselt konfiguratsiooniprobleem, näiteks vale või puuduv \"apiurl\" või \"signature\".",
     "Error parsing YOURLS response.": "Viga YOURLS vastuse parsimisel.",
     "This secret message can only be displayed once. Would you like to see it now?": "This secret message can only be displayed once. Would you like to see it now?",
-    "Yes, see it": "Yes, see it"
+    "Yes, see it": "Yes, see it",
+    "Dark Mode": "Dark Mode"
 }

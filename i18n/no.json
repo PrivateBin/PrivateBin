@@ -216,5 +216,6 @@
     "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "Feil ved å ringe YOURLS. Sannsynligvis et konfigurasjonsproblem, som feil eller mangler, \"apiurl\" eller \"signatur\".",
     "Error parsing YOURLS response.": "Feil ved analyse av YOURLS svar.",
     "This secret message can only be displayed once. Would you like to see it now?": "Brenne etter lesing av pasta kan kun vises når den lastes inn. Vil du se den nå?",
-    "Yes, see it": "Ja, se det"
+    "Yes, see it": "Ja, se det",
+    "Dark Mode": "Dark Mode"
 }
