@@ -485,7 +485,7 @@ if ($FILEUPLOAD) :
 ?>
 				<div id="attachment" role="alert" class="hidden alert alert-info">
 					<span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
-					<a class="alert-link"><?php echo I18n::_('Download attachment'), PHP_EOL; ?></a>
+					<a class="alert-link"><?php echo I18n::_('Download attachment'); ?></a>
 				</div>
 <?php
 endif;
@@ -517,12 +517,12 @@ if ($HTTPWARNING) :
 ?>
 				<div id="httpnotice" role="alert" class="hidden alert alert-danger">
 					<span class="glyphicon glyphicon-alert" aria-hidden="true"></span>
-					<?php echo I18n::_('This website is using an insecure connection! Please only use it for testing.'), PHP_EOL; ?><br />
+					<?php echo I18n::_('This website is using an insecure connection! Please only use it for testing.'); ?><br />
 					<span class="small"><?php echo I18n::_('For more information <a href="%s">see this FAQ entry</a>.', 'https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-it-show-me-an-error-about-an-insecure-connection'); ?></span>
 				</div>
 				<div id="insecurecontextnotice" role="alert" class="hidden alert alert-danger">
 					<span class="glyphicon glyphicon-alert" aria-hidden="true"></span>
-					<?php echo I18n::_('Your browser may require an HTTPS connection to support the WebCrypto API. Try <a href="%s">switching to HTTPS</a>.', $HTTPSLINK); ?>
+					<?php echo I18n::_('Your browser may require an HTTPS connection to support the WebCrypto API. Try <a href="%s">switching to HTTPS</a>.', $HTTPSLINK), PHP_EOL; ?>
 				</div>
 <?php
 endif;
