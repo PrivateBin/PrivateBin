@@ -467,9 +467,25 @@ if ($DISCUSSION) :
 ?>
 		<div id="serverdata" class="hidden" aria-hidden="true">
 			<div id="templates">
-				<article id="commenttemplate" class="comment"><div class="commentmeta"><span class="nickname">name</span><span class="commentdate">0000-00-00</span></div><div class="commentdata">c</div><button class="btn btn-secondary btn-sm"><?php echo I18n::_('Reply'); ?></button></article>
-				<p id="commenttailtemplate" class="comment"><button class="btn btn-secondary btn-sm"><?php echo I18n::_('Add comment'); ?></button></p>
-				<div id="replytemplate" class="reply hidden"><input type="text" id="nickname" class="form-control" title="<?php echo I18n::_('Optional nickname…'); ?>" placeholder="<?php echo I18n::_('Optional nickname…'); ?>" /><textarea id="replymessage" class="replymessage form-control" cols="80" rows="7"></textarea><br /><div id="replystatus" role="alert" class="statusmessage hidden alert"><svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#info-circle" /></svg> </div><button id="replybutton" class="btn btn-secondary btn-sm"><?php echo I18n::_('Post comment'); ?></button></div>
+				<article id="commenttemplate" class="comment">
+					<div class="commentmeta">
+						<span class="nickname">name</span>
+						<span class="commentdate">0000-00-00</span>
+					</div>
+					<div class="commentdata">c</div>
+					<button class="btn btn-secondary btn-sm"><?php echo I18n::_('Reply'); ?></button>
+				</article>
+				<p id="commenttailtemplate" class="comment">
+					<button class="btn btn-secondary btn-sm"><?php echo I18n::_('Add comment'); ?></button>
+				</p>
+				<div id="replytemplate" class="reply hidden">
+					<input type="text" id="nickname" class="form-control" title="<?php echo I18n::_('Optional nickname…'); ?>" placeholder="<?php echo I18n::_('Optional nickname…'); ?>" />
+					<textarea id="replymessage" class="replymessage form-control" cols="80" rows="7"></textarea><br />
+					<div id="replystatus" role="alert" class="statusmessage hidden alert">
+						<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#info-circle" /></svg>
+					</div>
+					<button id="replybutton" class="btn btn-secondary btn-sm"><?php echo I18n::_('Post comment'); ?></button>
+				</div>
 			</div>
 		</div>
 <?php
