@@ -267,7 +267,7 @@ if ($FILEUPLOAD) :
 								</li>
 								<li id="customattachment" class="hidden"></li>
 								<li>
-									<a id="fileremovebutton"  href="#" class="dropdown-item">
+									<a id="fileremovebutton" href="#" class="dropdown-item">
 										<?php echo I18n::_('Remove attachment'), PHP_EOL; ?>
 									</a>
 								</li>
