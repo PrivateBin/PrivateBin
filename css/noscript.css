@@ -1,7 +1,7 @@
 /**
  * PrivateBin
  *
- * CSS file only loaded when no JavaScript available.
+ * Cascading style sheet only loaded when JavaScript is not available.
  *
  * @link      https://github.com/PrivateBin/PrivateBin
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
@@ -9,7 +9,6 @@
  * @version   1.7.1
  */
 
-/* When there is no script at all other */
 .noscript-hide {
 	display: none;
 }
