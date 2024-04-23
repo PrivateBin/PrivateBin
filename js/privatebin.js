@@ -2391,9 +2391,9 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
         let $editorTabs,
             $messageEdit,
-            $messageEditLi,
+            $messageEditParent,
             $messagePreview,
-            $messagePreviewLi,
+            $messagePreviewParent,
             $message,
             isPreview = false;
 
@@ -2434,9 +2434,9 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         {
             // toggle buttons
             $messageEdit.addClass('active');
-            $messageEditLi.addClass('active');
+            $messageEditParent.addClass('active');
             $messagePreview.removeClass('active');
-            $messagePreviewLi.removeClass('active');
+            $messagePreviewParent.removeClass('active');
 
             $messageEdit.attr('aria-selected','true');
             $messagePreview.attr('aria-selected','false');
@@ -2468,9 +2468,9 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         {
             // toggle buttons
             $messageEdit.removeClass('active');
-            $messageEditLi.removeClass('active');
+            $messageEditParent.removeClass('active');
             $messagePreview.addClass('active');
-            $messagePreviewLi.addClass('active');
+            $messagePreviewParent.addClass('active');
 
             $messageEdit.attr('aria-selected','false');
             $messagePreview.attr('aria-selected','true');
@@ -2603,9 +2603,9 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
             // bind click events to tab switchers (a), and save parents (li)
             $messageEdit = $('#messageedit').click(viewEditor);
-            $messageEditLi = $messageEdit.parent();
+            $messageEditParent = $messageEdit.parent();
             $messagePreview = $('#messagepreview').click(viewPreview);
-            $messagePreviewLi = $messagePreview.parent();
+            $messagePreviewParent = $messagePreview.parent();
         };
 
         return me;
