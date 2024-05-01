@@ -918,7 +918,7 @@ class Database extends AbstractData
                 $supportsDropColumn = true;
                 if ($this->_type === 'sqlite') {
                     try {
-                        $row = $this->_select('SELECT sqlite_version() AS "v"', array(), true);
+                        $row                = $this->_select('SELECT sqlite_version() AS "v"', array(), true);
                         $supportsDropColumn = version_compare($row['v'], '3.35.0', '>=');
                     } catch (PDOException $e) {
                         $supportsDropColumn = false;
