@@ -134,12 +134,11 @@ class ModelTest extends TestCase
             $options['model_options']['pwd'],
             $options['model_options']['opt']
         );
-        $statement = $db->prepare('INSERT INTO paste VALUES(?,?,?,?,?,?,?,?,?)');
+        $statement = $db->prepare('INSERT INTO paste VALUES(?,?,?,?,?,?,?,?)');
         $statement->execute(
             array(
                 Helper::getPasteId(),
                 $pasteData['data'],
-                $pasteData['meta']['postdate'],
                 0,
                 0,
                 0,

@@ -146,9 +146,6 @@ class Database extends AbstractData
         $attachment       = $attachmentname   = null;
         $meta             = $paste['meta'];
         $isVersion1       = array_key_exists('data', $paste);
-        list($createdKey) = $this->_getVersionedKeys($isVersion1 ? 1 : 2);
-        $created          = (int) $meta[$createdKey];
-        unset($meta[$createdKey], $paste['meta']);
         if (array_key_exists('expire_date', $meta)) {
             $expire_date = (int) $meta['expire_date'];
             unset($meta['expire_date']);
@@ -177,11 +174,10 @@ class Database extends AbstractData
         try {
             return $this->_exec(
                 'INSERT INTO "' . $this->_sanitizeIdentifier('paste') .
-                '" VALUES(?,?,?,?,?,?,?,?,?)',
+                '" VALUES(?,?,?,?,?,?,?,?)',
                 array(
                     $pasteid,
                     $isVersion1 ? $paste['data'] : Json::encode($paste),
-                    $created,
                     $expire_date,
                     (int) $opendiscussion,
                     (int) $burnafterreading,
@@ -218,13 +214,7 @@ class Database extends AbstractData
         // create array
         $data       = Json::decode($row['data']);
         $isVersion2 = array_key_exists('v', $data) && $data['v'] >= 2;
-        if ($isVersion2) {
-            $paste            = $data;
-            list($createdKey) = $this->_getVersionedKeys(2);
-        } else {
-            $paste            = array('data' => $row['data']);
-            list($createdKey) = $this->_getVersionedKeys(1);
-        }
+        $paste      = $isVersion2 ? $data : array('data' => $row['data']);
 
         try {
             $row['meta'] = Json::decode($row['meta']);
@@ -233,7 +223,6 @@ class Database extends AbstractData
         }
         $row                        = self::upgradePreV1Format($row);
         $paste['meta']              = $row['meta'];
-        $paste['meta'][$createdKey] = (int) $row['postdate'];
         $expire_date                = (int) $row['expiredate'];
         if ($expire_date > 0) {
             $paste['meta']['expire_date'] = $expire_date;
@@ -751,7 +740,6 @@ class Database extends AbstractData
             'CREATE TABLE "' . $this->_sanitizeIdentifier('paste') . '" ( ' .
             "\"dataid\" CHAR(16) NOT NULL$main_key, " .
             "\"data\" $attachmentType, " .
-            '"postdate" INT, ' .
             '"expiredate" INT, ' .
             '"opendiscussion" INT, ' .
             '"burnafterreading" INT, ' .
@@ -925,6 +913,12 @@ class Database extends AbstractData
                         "\" MODIFY COLUMN \"data\" $attachmentType"
                     );
                 }
+                // no break, continue with updates for all newer versions
+            case '1.7.2':
+                $this->_db->exec(
+                    'ALTER TABLE "' . $this->_sanitizeIdentifier('paste') .
+                    "\" DROP COLUMN \"postdate\""
+                );
                 // no break, continue with updates for all newer versions
             default:
                 $this->_exec(

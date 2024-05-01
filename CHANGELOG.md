@@ -5,6 +5,7 @@
 * ADDED: Input sanitation to some not yet filtered query and server parameters
 * CHANGED: "Send" button now labeled "Create" (#946)
 * CHANGED: drop some PHP < 5.6 fallbacks, minimum version is PHP 7.3 as of release 1.6.0
+* CHANGED: `create` attribute is no longer returned in API for pastes (#1290)
 * FIXED: Add cache control headers also to API calls (#1263)
 * FIXED: Shortened paste URL does not appear in email (#606)
 

@@ -169,14 +169,13 @@ user these additional privileges:
 
 For reference or if you want to create the table schema for yourself to avoid
 having to give PrivateBin too many permissions (replace `prefix_` with your own
-table prefix and create the table schema with your favourite MariaDB/MySQL
+table prefix and create the table schema with your favorite MariaDB/MySQL
 client):
 
 ```sql
 CREATE TABLE prefix_paste (
     dataid CHAR(16) NOT NULL,
     data MEDIUMBLOB,
-    postdate INT,
     expiredate INT,
     opendiscussion INT,
     burnafterreading INT,

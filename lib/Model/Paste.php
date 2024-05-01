@@ -37,7 +37,7 @@ class Paste extends AbstractModel
             throw new Exception(Controller::GENERIC_ERROR, 64);
         }
 
-        // check if paste has expired and delete it if neccessary.
+        // check if paste has expired and delete it if necessary.
         if (array_key_exists('expire_date', $data['meta'])) {
             if ($data['meta']['expire_date'] < time()) {
                 $this->delete();
@@ -92,7 +92,6 @@ class Paste extends AbstractModel
             throw new Exception('You are unlucky. Try again.', 75);
         }
 
-        $this->_data['meta']['created'] = time();
         $this->_data['meta']['salt']    = ServerSalt::generate();
 
         // store paste
