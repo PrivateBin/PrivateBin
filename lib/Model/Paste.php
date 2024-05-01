@@ -47,6 +47,12 @@ class Paste extends AbstractModel
             $data['meta']['time_to_live'] = $data['meta']['expire_date'] - time();
             unset($data['meta']['expire_date']);
         }
+        if (array_key_exists('created', $data['meta'])) {
+            unset($data['meta']['created']);
+        }
+        if (array_key_exists('postdate', $data['meta'])) {
+            unset($data['meta']['postdate']);
+        }
 
         // check if non-expired burn after reading paste needs to be deleted
         if (

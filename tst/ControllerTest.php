@@ -742,7 +742,7 @@ class ControllerTest extends TestCase
         $this->assertEquals($paste['adata'][1], $response['adata'][1], 'outputs formatter correctly');
         $this->assertEquals($paste['adata'][2], $response['adata'][2], 'outputs opendiscussion correctly');
         $this->assertEquals($paste['adata'][3], $response['adata'][3], 'outputs burnafterreading correctly');
-        $this->assertFalse(array_key_exists('created', $paste['meta']), 'does not output created');
+        $this->assertFalse(array_key_exists('created', $response['meta']), 'does not output created');
         $this->assertEquals(0, $response['comment_count'], 'outputs comment_count correctly');
         $this->assertEquals(0, $response['comment_offset'], 'outputs comment_offset correctly');
     }
@@ -772,7 +772,7 @@ class ControllerTest extends TestCase
         $this->assertStringEndsWith('?' . $response['id'], $response['url'], 'returned URL points to new paste');
         $this->assertEquals($paste['data'], $response['data'], 'outputs data correctly');
         $this->assertEquals('syntaxhighlighting', $response['meta']['formatter'], 'outputs format correctly');
-        $this->assertEquals($paste['meta']['postdate'], $response['meta']['postdate'], 'outputs postdate correctly');
+        $this->assertFalse(array_key_exists('postdate', $response['meta']), 'does not output postdate');
         $this->assertEquals($paste['meta']['opendiscussion'], $response['meta']['opendiscussion'], 'outputs opendiscussion correctly');
         $this->assertEquals(0, $response['comment_count'], 'outputs comment_count correctly');
         $this->assertEquals(0, $response['comment_offset'], 'outputs comment_offset correctly');
