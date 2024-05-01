@@ -713,7 +713,7 @@ class ControllerTest extends TestCase
         $this->assertEquals($paste['adata'][1], $response['adata'][1], 'outputs formatter correctly');
         $this->assertEquals($paste['adata'][2], $response['adata'][2], 'outputs opendiscussion correctly');
         $this->assertEquals($paste['adata'][3], $response['adata'][3], 'outputs burnafterreading correctly');
-        $this->assertFalse(array_key_exists('created', $paste['meta']), 'does not output created');
+        $this->assertFalse(array_key_exists('created', $response['meta']), 'does not output created');
         $this->assertEquals(0, $response['comment_count'], 'outputs comment_count correctly');
         $this->assertEquals(0, $response['comment_offset'], 'outputs comment_offset correctly');
         // by default it will be deleted instantly after it is read
