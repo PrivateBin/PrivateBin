@@ -98,7 +98,7 @@ class Paste extends AbstractModel
             throw new Exception('You are unlucky. Try again.', 75);
         }
 
-        $this->_data['meta']['salt']    = ServerSalt::generate();
+        $this->_data['meta']['salt'] = ServerSalt::generate();
 
         // store paste
         if (
