@@ -915,10 +915,21 @@ class Database extends AbstractData
                 }
                 // no break, continue with updates for all newer versions
             case '1.7.2':
-                $this->_db->exec(
-                    'ALTER TABLE "' . $this->_sanitizeIdentifier('paste') .
-                    '" DROP COLUMN "postdate"'
-                );
+                $supportsDropColumn = true;
+                if ($this->_type === 'sqlite') {
+                    try {
+                        $row = $this->_select('SELECT sqlite_version() AS "v"', array(), true);
+                        $supportsDropColumn = version_compare($row['v'], '3.35.0', '>=');
+                    } catch (PDOException $e) {
+                        $supportsDropColumn = false;
+                    }
+                }
+                if ($supportsDropColumn) {
+                    $this->_db->exec(
+                        'ALTER TABLE "' . $this->_sanitizeIdentifier('paste') .
+                        '" DROP COLUMN "postdate"'
+                    );
+                }
                 // no break, continue with updates for all newer versions
             default:
                 $this->_exec(
