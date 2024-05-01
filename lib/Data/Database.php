@@ -917,7 +917,7 @@ class Database extends AbstractData
             case '1.7.2':
                 $this->_db->exec(
                     'ALTER TABLE "' . $this->_sanitizeIdentifier('paste') .
-                    "\" DROP COLUMN \"postdate\""
+                    '" DROP COLUMN "postdate"'
                 );
                 // no break, continue with updates for all newer versions
             default:
