@@ -307,7 +307,7 @@ if (!empty($LANGUAGESELECTION)) :
 							<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false">
 								<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#flag" /></svg> <?php echo $LANGUAGES[$LANGUAGESELECTION][0], PHP_EOL; ?>
 							</a>
-							<ul class="dropdown-menu dropdown-menu-end">
+							<ul class="dropdown-menu dropdown-menu-end" role="menu">
 <?php
     foreach ($LANGUAGES as $key => $value) :
 ?>
