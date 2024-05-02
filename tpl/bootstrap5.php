@@ -160,7 +160,7 @@ endif;
 				</button>
 				<div id="navbar" class="collapse navbar-collapse">
 					<ul class="navbar-nav me-auto">
-						<li id="loadingindicator" class="navbar-text hidden me-2">
+						<li id="loadingindicator" class="navbar-text hidden me-auto">
 							<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#clock" /></svg>
 							<?php echo I18n::_('Loading…'), PHP_EOL; ?>
 						</li>
