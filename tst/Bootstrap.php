@@ -508,6 +508,11 @@ class ConnectionInterfaceStub implements ConnectionInterface
         throw new BadMethodCallException('not supported by this stub');
     }
 
+    public function restoreObject(array $args = array())
+    {
+        throw new BadMethodCallException('not supported by this stub');
+    }
+
     public function copyObject(array $args = array())
     {
         throw new BadMethodCallException('not supported by this stub');

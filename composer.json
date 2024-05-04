@@ -30,8 +30,8 @@
 		"yzalis/identicon": "2.0.0"
 	},
 	"suggest" : {
-		"google/cloud-storage" : "1.32.0",
-		"aws/aws-sdk-php" : "3.275.1"
+		"google/cloud-storage" : "1.41.0",
+		"aws/aws-sdk-php" : "3.302.0"
 	},
 	"require-dev" : {
 		"phpunit/phpunit" : "^9"
