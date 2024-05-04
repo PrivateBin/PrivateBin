@@ -18,6 +18,11 @@ discussion = true
 ; preselect the discussion feature, defaults to false
 opendiscussion = false
 
+; enable or disable the diplay of dates & times in the comments, defaults to true
+; note that internally the creation time will still get tracked in order to sort
+; the comments by creation time, but you can choose not to display them
+; discussiondatedisplay = false
+
 ; enable or disable the password feature, defaults to true
 password = true
 
@@ -242,7 +247,7 @@ dir = PATH "data"
 ; - AWS_ACCESS_KEY_ID
 ; - AWS_SECRET_ACCESS_KEY
 ; - AWS_SESSION_TOKEN (if needed)
-; for more details, see https://docs.aws.amazon.com/sdk-for-php/v3/developer-guide/guide_credentials.html#default-credential-chain 
+; for more details, see https://docs.aws.amazon.com/sdk-for-php/v3/developer-guide/guide_credentials.html#default-credential-chain
 ;class = S3Storage
 ;[model_options]
 ;region = "eu-central-1"
