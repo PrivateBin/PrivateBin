@@ -7,6 +7,8 @@ jobs:
 
   Composer:
     runs-on: ubuntu-latest
+    # https://docs.github.com/en/actions/using-jobs/using-a-matrix-for-your-jobs#handling-failures
+    continue-on-error: ${{ matrix.experimental }}
     steps:
     - name: Checkout
       uses: actions/checkout@v4
