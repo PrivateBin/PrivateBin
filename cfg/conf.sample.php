@@ -19,8 +19,8 @@ discussion = true
 opendiscussion = false
 
 ; enable or disable the diplay of dates & times in the comments, defaults to true
-; note that internally the creation time will still get tracked in order to sort
-; the comments by creation time, but you can choose not to display them
+; Note that internally the creation time will still get tracked in order to sort
+; the comments by creation time, but you can choose not to display them.
 ; discussiondatedisplay = false
 
 ; enable or disable the password feature, defaults to true
