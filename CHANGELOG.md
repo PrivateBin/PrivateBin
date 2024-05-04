@@ -9,6 +9,7 @@
 * CHANGED: Set `lang` cookie with lax `SameSite` property
 * FIXED: Add cache control headers also to API calls (#1263)
 * FIXED: Shortened paste URL does not appear in email (#606)
+* CHANGED: Upgrading libraries to: DOMpurify 3.1.2 (#1299)
 
 ## 1.7.1 (2024-02-11)
 * FIXED: zlib 1.3.1 wasm file reference
