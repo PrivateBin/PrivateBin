@@ -108,7 +108,6 @@ body.loading {
 .comment {
 	border-left: 1px solid #ccc;
 	padding: 5px 0 5px 10px;
-	white-space: pre-wrap;
 	transition: background-color 0.75s ease-out;
 }
 

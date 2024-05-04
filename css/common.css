@@ -59,3 +59,7 @@
 	float: right;
 	margin-left: 5px;
 }
+
+.commentdata {
+	white-space: pre-wrap;
+}
