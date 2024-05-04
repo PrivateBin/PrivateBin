@@ -162,8 +162,9 @@ jobs:
 
     steps:
       - name: Download Artifacts
-        uses: actions/download-artifact@v4
+        uses: dawidd6/action-download-artifact@v3
         with:
+          run_id: ${{ github.event.workflow_run.id }}
           path: artifacts
 
       - name: Publish Test Results
