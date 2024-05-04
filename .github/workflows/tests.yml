@@ -130,7 +130,7 @@ jobs:
       working-directory: js
 
     - name: Run unit tests
-      run: npm ci-test
+      run: npm run ci-test
       working-directory: js
       
     - name: Upload Test Results
