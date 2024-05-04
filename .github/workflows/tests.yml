@@ -16,11 +16,16 @@ jobs:
       run: composer install --prefer-dist --no-dev
 
   PHPunit:
+    name: PHP ${{ matrix.php-versions }} unit tests on ${{ matrix.operating-system }}
     runs-on: ubuntu-latest
+    continue-on-error: ${{ matrix.experimental }}
     strategy:
       matrix:
-        php-versions: ['7.3', '7.4', '8.0', '8.1', '8.2', '8.3', '8.4']
-    name: PHP ${{ matrix.php-versions }} unit tests on ${{ matrix.operating-system }}
+        php-versions: ['7.3', '7.4', '8.0', '8.1', '8.2', '8.3']
+        experimental: [false]
+        include:
+          - php-versions: '8.4' # development release, things can break
+            experimental: true
     env:
       extensions: gd, sqlite3
       extensions-cache-key-name: phpextensions
