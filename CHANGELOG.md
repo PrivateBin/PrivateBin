@@ -6,7 +6,7 @@
 * ADDED: Optional Bootstrap CSS 5.3.3 based template, use configuration `template = "bootstrap5"` to switch to it (#728)
 * CHANGED: "Send" button now labeled "Create" (#946)
 * CHANGED: Drop some PHP < 5.6 fallbacks, minimum version is PHP 7.3 as of release 1.6.0
-* CHANGED: Set `lang` cookie with strict `SameSite` property
+* CHANGED: Set `lang` cookie with lax `SameSite` property
 * FIXED: Add cache control headers also to API calls (#1263)
 * FIXED: Shortened paste URL does not appear in email (#606)
 

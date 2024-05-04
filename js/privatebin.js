@@ -3855,7 +3855,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         function setLanguage(event)
         {
-            document.cookie = 'lang=' + $(event.target).data('lang') + '; SameSite=Strict; Secure';
+            document.cookie = 'lang=' + $(event.target).data('lang') + '; SameSite=Lax; Secure';
             UiHelper.reloadHome();
             event.preventDefault();
         }
