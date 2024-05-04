@@ -130,7 +130,7 @@ jobs:
       working-directory: js
 
     - name: Run unit tests
-      run: npm test --reporter-option output=mocha-results.xml
+      run: npm ci-test
       working-directory: js
       
     - name: Upload Test Results
@@ -138,7 +138,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: Test Results (Mocha)
-        path: tst/mocha-results.xml
+        path: js/mocha-results.xml
 
   publish-test-results:
     name: "Publish Tests Results"
