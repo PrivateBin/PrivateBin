@@ -9,6 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     # https://docs.github.com/en/actions/using-jobs/using-a-matrix-for-your-jobs#handling-failures
     continue-on-error: ${{ matrix.experimental }}
+    
     steps:
     - name: Checkout
       uses: actions/checkout@v4
@@ -97,8 +98,15 @@ jobs:
 
     # testing
     - name: Run unit tests
-      run: ../vendor/bin/phpunit --no-coverage
+      run: ../vendor/bin/phpunit --no-coverage --log-junit results.xml
       working-directory: tst
+
+    - name: Upload Test Results
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: Test Results (PHP ${{ matrix.php-versions }})
+        path: tst/results.xml
 
   Mocha:
     runs-on: ubuntu-latest
@@ -122,5 +130,37 @@ jobs:
       working-directory: js
 
     - name: Run unit tests
-      run: npm test
+      run: npm test --reporter-option output=mocha-results.xml
       working-directory: js
+      
+    - name: Upload Test Results
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: Test Results (Mocha)
+        path: tst/mocha-results.xml
+
+  publish-test-results:
+    name: "Publish Tests Results"
+    needs: ['PHPunit', 'Mocha']
+    runs-on: ubuntu-latest
+    permissions:
+      checks: write
+      # only needed unless run with comment_mode: off
+      pull-requests: write
+    if: always()
+
+    steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        with:
+          check_name: "Test Results (${{ github.event.workflow_run.event || github.event_name }})"
+          files: |
+            artifacts/**/*.xml
+            artifacts/**/*.trx
+            artifacts/**/*.json
