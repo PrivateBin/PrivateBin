@@ -139,7 +139,17 @@ jobs:
       with:
         name: Test Results (Mocha)
         path: js/mocha-results.xml
-
+  
+  event_file:
+    name: "Event File"
+    runs-on: ubuntu-latest
+    steps:
+    - name: Upload
+      uses: actions/upload-artifact@v4
+      with:
+        name: Event File
+        path: ${{ github.event_path }}
+          
   publish-test-results:
     name: "Publish Tests Results"
     needs: ['PHPunit', 'Mocha']
@@ -160,6 +170,9 @@ jobs:
         uses: EnricoMi/publish-unit-test-result-action@v2
         with:
           check_name: "Test Results (${{ github.event.workflow_run.event || github.event_name }})"
+          commit: ${{ github.event.workflow_run.head_sha }}
+          event_file: artifacts/Event File/event.json
+          event_name: ${{ github.event.workflow_run.event }}
           files: |
             artifacts/**/*.xml
             artifacts/**/*.trx
