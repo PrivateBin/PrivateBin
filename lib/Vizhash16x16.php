@@ -109,9 +109,9 @@ class Vizhash16x16
         for ($i = 0; $i < 7; ++$i) {
             $action = $this->getInt();
             $color  = imagecolorallocate($image, $r, $g, $b);
-            $r      = $r0      = ((int) $r0 + $this->getInt() / 25) % 256;
-            $g      = $g0      = ((int) $g0 + $this->getInt() / 25) % 256;
-            $b      = $b0      = ((int) $b0 + $this->getInt() / 25) % 256;
+            $r      = $r0      = (int) ($r0 + $this->getInt() / 25) % 256;
+            $g      = $g0      = (int) ($g0 + $this->getInt() / 25) % 256;
+            $b      = $b0      = (int) ($b0 + $this->getInt() / 25) % 256;
             $this->drawshape($image, $action, $color);
         }
 
@@ -148,7 +148,7 @@ class Vizhash16x16
      */
     private function getX()
     {
-        return (int) $this->width * $this->getInt() / 256;
+        return (int) ($this->width * $this->getInt() / 256);
     }
 
     /**
@@ -159,7 +159,7 @@ class Vizhash16x16
      */
     private function getY()
     {
-        return (int) $this->height * $this->getInt() / 256;
+        return (int) ($this->height * $this->getInt() / 256);
     }
 
     /**
@@ -225,8 +225,8 @@ class Vizhash16x16
                 version_compare(PHP_VERSION, '8.1', '<') ? imagefilledpolygon($image, $points, 4, $color) : imagefilledpolygon($image, $points, $color);
                 break;
             default:
-                $start = $this->getInt() * 360 / 256;
-                $end   = $start + $this->getInt() * 180 / 256;
+                $start = (int) ($this->getInt() * 360 / 256);
+                $end   = (int) ($start + $this->getInt() * 180 / 256);
                 imagefilledarc($image, $this->getX(), $this->getY(), $this->getX(), $this->getY(), $start, $end, $color, IMG_ARC_PIE);
         }
     }
