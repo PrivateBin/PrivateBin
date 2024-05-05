@@ -9,6 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     # https://docs.github.com/en/actions/using-jobs/using-a-matrix-for-your-jobs#handling-failures
     continue-on-error: ${{ matrix.experimental }}
+    
     steps:
     - name: Checkout
       uses: actions/checkout@v4
@@ -98,8 +99,15 @@ jobs:
 
     # testing
     - name: Run unit tests
-      run: ../vendor/bin/phpunit --no-coverage
+      run: ../vendor/bin/phpunit --no-coverage --log-junit results.xml
       working-directory: tst
+
+    - name: Upload Test Results
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: Test Results (PHP ${{ matrix.php-versions }})
+        path: tst/results.xml
 
   Mocha:
     runs-on: ubuntu-latest
@@ -123,5 +131,23 @@ jobs:
       working-directory: js
 
     - name: Run unit tests
-      run: npm test
+      run: npm run ci-test
       working-directory: js
+      
+    - name: Upload Test Results
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: Test Results (Mocha)
+        path: js/mocha-results.xml
+  
+  event_file:
+    name: "Event File"
+    runs-on: ubuntu-latest
+    steps:
+    - name: Upload
+      uses: actions/upload-artifact@v4
+      with:
+        name: Event File
+        path: ${{ github.event_path }}
+
