@@ -1,5 +1,7 @@
 # PrivateBin version history
 
+## 1.7.3 (not yet released)
+
 ## 1.7.2 (2024-05-05)
 * ADDED: Allow use of `shortenviayourls` in query parameters (#1267)
 * ADDED: Input sanitation to some not yet filtered query and server parameters
