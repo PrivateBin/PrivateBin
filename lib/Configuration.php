@@ -40,6 +40,7 @@ class Configuration
             'basepath'                 => '',
             'discussion'               => true,
             'opendiscussion'           => false,
+            'discussiondatedisplay'    => true,
             'password'                 => true,
             'fileupload'               => false,
             'burnafterreadingselected' => false,

@@ -134,12 +134,11 @@ class ModelTest extends TestCase
             $options['model_options']['pwd'],
             $options['model_options']['opt']
         );
-        $statement = $db->prepare('INSERT INTO paste VALUES(?,?,?,?,?,?,?,?,?)');
+        $statement = $db->prepare('INSERT INTO paste VALUES(?,?,?,?,?,?,?,?)');
         $statement->execute(
             array(
                 Helper::getPasteId(),
                 $pasteData['data'],
-                $pasteData['meta']['postdate'],
                 0,
                 0,
                 0,
@@ -452,12 +451,13 @@ class ModelTest extends TestCase
 
     public function testCommentWithDisabledVizhash()
     {
-        $options                 = parse_ini_file(CONF, true);
-        $options['main']['icon'] = 'none';
-        $options['model']        = array(
+        $options                                  = parse_ini_file(CONF, true);
+        $options['main']['discussiondatedisplay'] = 'false';
+        $options['main']['icon']                  = 'none';
+        $options['model']                         = array(
             'class' => 'Database',
         );
-        $options['model_options'] = array(
+        $options['model_options']                 = array(
             'dsn' => 'sqlite::memory:',
             'usr' => null,
             'pwd' => null,
@@ -494,6 +494,10 @@ class ModelTest extends TestCase
 
         $comment = current($this->_model->getPaste(Helper::getPasteId())->get()['comments']);
         $this->assertFalse(array_key_exists('icon', $comment['meta']), 'icon was not generated');
+        $this->assertTrue(array_key_exists('created', $comment['meta']), 'creation is set, when using default configuration');
+
+        $comment = current($paste->get()['comments']);
+        $this->assertFalse(array_key_exists('created', $comment['meta']), 'creation is not set, if using disabled configuration');
     }
 
     public function testCommentVizhash()

@@ -660,7 +660,6 @@ class Helper
         ),
         'meta' => array(
             'expire'  => '5min',
-            'created' => 1344803344,
         ),
         'v'  => 2,
         'ct' => 'ME5JF/YBEijp2uYMzLZozbKtWc5wfy6R59NBb7SmRig=',

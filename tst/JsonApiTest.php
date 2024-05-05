@@ -180,7 +180,7 @@ class JsonApiTest extends TestCase
         $this->assertEquals(Helper::getPasteId(), $response['id'], 'outputs data correctly');
         $this->assertStringEndsWith('?' . $response['id'], $response['url'], 'returned URL points to new paste');
         $this->assertEquals($paste['ct'], $response['ct'], 'outputs data correctly');
-        $this->assertEquals($paste['meta']['created'], $response['meta']['created'], 'outputs postdate correctly');
+        $this->assertFalse(array_key_exists('created', $paste['meta']), 'does not output created');
         $this->assertEquals(0, $response['comment_count'], 'outputs comment_count correctly');
         $this->assertEquals(0, $response['comment_offset'], 'outputs comment_offset correctly');
     }

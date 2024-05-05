@@ -196,7 +196,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         this.getCreated = function()
         {
-            return this.meta[this.v === 1 ? 'postdate' : 'created'];
+            return this.meta[this.v === 1 ? 'postdate' : 'created'] || 0;
         }
 
         /**
@@ -2736,7 +2736,6 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             if (Editor.isPreview()) {
                 PasteViewer.run();
             }
-
         };
 
         /**
@@ -3495,9 +3494,11 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             }
 
             // set date
+            const created = comment.getCreated();
+            const commentDate = created == 0 ? '' : ' (' + (new Date(created * 1000).toLocaleString()) + ')';
             $commentEntry.find('span.commentdate')
-                      .text(' (' + (new Date(comment.getCreated() * 1000).toLocaleString()) + ')')
-                      .attr('title', 'CommentID: ' + comment.id);
+                         .text(commentDate)
+                         .attr('title', 'CommentID: ' + comment.id);
 
             // if an avatar is available, display it
             const icon = comment.getIcon();

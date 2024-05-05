@@ -259,12 +259,11 @@ class DatabaseTest extends TestCase
             $this->_options['pwd'],
             $this->_options['opt']
         );
-        $statement = $db->prepare('INSERT INTO bar_paste VALUES(?,?,?,?,?,?,?,?,?)');
+        $statement = $db->prepare('INSERT INTO bar_paste VALUES(?,?,?,?,?,?,?,?)');
         $statement->execute(
             array(
                 Helper::getPasteId(),
                 $paste['data'],
-                $paste['meta']['postdate'],
                 $paste['meta']['expire_date'],
                 0,
                 0,
@@ -292,7 +291,7 @@ class DatabaseTest extends TestCase
         $this->_options['tbl'] = 'baz_';
         $model                 = new Database($this->_options);
         $paste                 = Helper::getPaste(1, array('expire_date' => 1344803344));
-        unset($paste['meta']['formatter'], $paste['meta']['opendiscussion'], $paste['meta']['salt']);
+        unset($paste['meta']['formatter'], $paste['meta']['opendiscussion'], $paste['meta']['postdate'], $paste['meta']['salt']);
         $model->delete(Helper::getPasteId());
 
         $db = new PDO(
@@ -301,12 +300,11 @@ class DatabaseTest extends TestCase
             $this->_options['pwd'],
             $this->_options['opt']
         );
-        $statement = $db->prepare('INSERT INTO baz_paste VALUES(?,?,?,?,?,?,?,?,?)');
+        $statement = $db->prepare('INSERT INTO baz_paste VALUES(?,?,?,?,?,?,?,?)');
         $statement->execute(
             array(
                 Helper::getPasteId(),
                 $paste['data'],
-                $paste['meta']['postdate'],
                 $paste['meta']['expire_date'],
                 0,
                 0,
