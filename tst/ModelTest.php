@@ -451,13 +451,13 @@ class ModelTest extends TestCase
 
     public function testCommentWithDisabledVizhash()
     {
-        $options                 = parse_ini_file(CONF, true);
+        $options                                  = parse_ini_file(CONF, true);
         $options['main']['discussiondatedisplay'] = 'false';
-        $options['main']['icon'] = 'none';
-        $options['model']        = array(
+        $options['main']['icon']                  = 'none';
+        $options['model']                         = array(
             'class' => 'Database',
         );
-        $options['model_options'] = array(
+        $options['model_options']                 = array(
             'dsn' => 'sqlite::memory:',
             'usr' => null,
             'pwd' => null,
