@@ -213,9 +213,9 @@
     "Save paste": "Guardar \"paste\"",
     "Your IP is not authorized to create pastes.": "Tu IP no está autorizada para crear contenido.",
     "Trying to shorten a URL that isn't pointing at our instance.": "Intentando acortar una URL que no apunta a nuestra instancia.",
-    "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".",
-    "Error parsing YOURLS response.": "Error parsing YOURLS response.",
-    "This secret message can only be displayed once. Would you like to see it now?": "This secret message can only be displayed once. Would you like to see it now?",
-    "Yes, see it": "Yes, see it",
-    "Dark Mode": "Dark Mode"
+    "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "Error llamando a YOURLS. Probablemente un problema de configuración, como error o falta \"apiurl\" o \"signature\".",
+    "Error parsing YOURLS response.": "Error al analizar la respuesta de YOURLS.",
+    "This secret message can only be displayed once. Would you like to see it now?": "Este mensaje secreto sólo se puede mostrar una vez. ¿Quieres verlo ahora?",
+    "Yes, see it": "Sí, verlo",
+    "Dark Mode": "Modo nocturno"
 }

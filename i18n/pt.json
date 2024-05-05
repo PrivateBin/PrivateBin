@@ -209,13 +209,13 @@
     "Close": "Fechar",
     "Encrypted note on %s": "Nota criptografada no %s",
     "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "Visite esse link para ver a nota. Dar a URL para qualquer um permite que eles também acessem a nota.",
-    "URL shortener may expose your decrypt key in URL.": "URL shortener may expose your decrypt key in URL.",
+    "URL shortener may expose your decrypt key in URL.": "Encurtador de URL pode expor sua chave de descriptografia em URL.",
     "Save paste": "Salvar cópia",
     "Your IP is not authorized to create pastes.": "Seu IP não está autorizado a criar cópias.",
     "Trying to shorten a URL that isn't pointing at our instance.": "Tentando encurtar uma URL que não aponta para a nossa instância.",
-    "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".",
-    "Error parsing YOURLS response.": "Error parsing YOURLS response.",
-    "This secret message can only be displayed once. Would you like to see it now?": "This secret message can only be displayed once. Would you like to see it now?",
-    "Yes, see it": "Yes, see it",
-    "Dark Mode": "Dark Mode"
+    "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "Erro ao chamar YOURLS. Provavelmente um problema de configuração, como errado ou faltando \"apiurl\" ou \"signature\".",
+    "Error parsing YOURLS response.": "Erro ao analisar a resposta do YOURLS.",
+    "This secret message can only be displayed once. Would you like to see it now?": "Esta mensagem secreta só pode ser exibida uma vez. Gostaria de vê-la agora?",
+    "Yes, see it": "Sim, veja",
+    "Dark Mode": "Modo Noturno"
 }
