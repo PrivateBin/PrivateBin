@@ -217,5 +217,5 @@
     "Error parsing YOURLS response.": "Ошибка разбора ответа от YOURLS.",
     "This secret message can only be displayed once. Would you like to see it now?": "Записи, удаляемые после прочтения, могут быть отображены после загрузки только один раз. Вы хотите открыть её сейчас?",
     "Yes, see it": "Да, загрузить",
-    "Dark Mode": "Dark Mode"
+    "Dark Mode": "Тёмная"
 }
