@@ -26,17 +26,17 @@ jobs:
        - name: Download and Extract Artifacts
          uses: dawidd6/action-download-artifact@e7466d1a7587ed14867642c2ca74b5bcc1e19a2d
          with:
-            run_id: ${{ github.event.workflow_run.id }}
-            path: artifacts
+          run_id: ${{ github.event.workflow_run.id }}
+          path: artifacts
 
        - name: Publish Test Results
          uses: EnricoMi/publish-unit-test-result-action@v2
          with:
-            check_name: "Test Results (${{ github.event.workflow_run.event || github.event_name }})"
-            commit: ${{ github.event.workflow_run.head_sha }}
-            event_file: artifacts/Event File/event.json
-            event_name: ${{ github.event.workflow_run.event }}
-            files: |
-                artifacts/**/*.xml
-                artifacts/**/*.trx
-                artifacts/**/*.json
+          check_name: "Test Results (${{ github.event.workflow_run.event || github.event_name }})"
+          commit: ${{ github.event.workflow_run.head_sha }}
+          event_file: artifacts/Event File/event.json
+          event_name: ${{ github.event.workflow_run.event }}
+          files: |
+            artifacts/**/*.xml
+            artifacts/**/*.trx
+            artifacts/**/*.json
