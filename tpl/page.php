@@ -14,7 +14,7 @@ if ($SYNTAXHIGHLIGHTING):
 ?>
 		<link type="text/css" rel="stylesheet" href="css/prettify/prettify.css?<?php echo rawurlencode($VERSION); ?>" />
 <?php
-    if (strlen($SYNTAXHIGHLIGHTINGTHEME)):
+    if (!empty($SYNTAXHIGHLIGHTINGTHEME)):
 ?>
 		<link type="text/css" rel="stylesheet" href="css/prettify/<?php echo rawurlencode($SYNTAXHIGHLIGHTINGTHEME); ?>.css?<?php echo rawurlencode($VERSION); ?>" />
 <?php
@@ -51,7 +51,7 @@ endif;
 ?>
 		<script type="text/javascript" data-cfasync="false" src="js/purify-3.1.2.js" integrity="sha512-voYCOVXik5/jcT+McTiptsB00iB0NWQrhBmSwSEfj0IH3UDphU8w12JV8w1y+m8FRaozbzW4efHSEWKZpOA+JQ==" crossorigin="anonymous"></script>
 		<script type="text/javascript" data-cfasync="false" src="js/legacy.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-LYos+qXHIRqFf5ZPNphvtTB0cgzHUizu2wwcOwcwz/VIpRv9lpcBgPYz4uq6jx0INwCAj6Fbnl5HoKiLufS2jg==" crossorigin="anonymous"></script>
-		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-I0F8qtFtaBvVvTThlXa63q0fLptZHP+hg9SbUqZ/qpimAPvHYGFfRj06aqEvECByNgKlQOWab3p8NQ2waDZ+fQ==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-hqatct2X1I7GZZFAvbnaWU+QPz+cIhBQIxhXtR50aq+pTfhvUljqzqoLi4Yli6P+GIV6IFlm5Yf/uvdEvSjMcA==" crossorigin="anonymous"></script>
 		<!-- icon -->
 		<link rel="apple-touch-icon" href="img/apple-touch-icon.png?<?php echo rawurlencode($VERSION); ?>" sizes="180x180" />
 		<link rel="icon" type="image/png" href="img/favicon-32x32.png?<?php echo rawurlencode($VERSION); ?>" sizes="32x32" />
@@ -86,7 +86,7 @@ endif;
                 ?>
 				<br />
 <?php
-if (strlen($NOTICE)):
+if (!empty($NOTICE)):
 ?>
 				<span class="blink">▶</span> <?php echo I18n::encode($NOTICE);
 endif;
@@ -203,7 +203,7 @@ endforeach;
 						</select>
 					</div>
 <?php
-if (strlen($LANGUAGESELECTION)):
+if (!empty($LANGUAGESELECTION)):
 ?>
 					<div id="language" class="button">
 						<select name="lang">
@@ -234,7 +234,7 @@ endif;
 					<div id="deletelink"></div>
 					<div id="pastelink"></div>
 <?php
-if (strlen($URLSHORTENER)):
+if (!empty($URLSHORTENER)):
 ?>
 					<button id="shortenbutton" data-shortener="<?php echo I18n::encode($URLSHORTENER); ?>"><img src="img/icon_shorten.png" width="13" height="15" /><?php echo I18n::_('Shorten URL'); ?></button>
 <?php
@@ -277,9 +277,25 @@ if ($DISCUSSION):
 ?>
 		<div id="serverdata" class="hidden" aria-hidden="true">
 			<div id="templates">
-				<article id="commenttemplate" class="comment"><div class="commentmeta"><span class="nickname">name</span><span class="commentdate">0000-00-00</span></div><div class="commentdata">c</div><button class="btn btn-default btn-sm"><?php echo I18n::_('Reply'); ?></button></article>
-				<div id="commenttailtemplate" class="comment"><button class="btn btn-default btn-sm"><?php echo I18n::_('Add comment'); ?></button></div>
-				<div id="replytemplate" class="reply hidden"><input type="text" id="nickname" class="form-control" title="<?php echo I18n::_('Optional nickname…'); ?>" placeholder="<?php echo I18n::_('Optional nickname…'); ?>" /><textarea id="replymessage" class="replymessage form-control" cols="80" rows="7"></textarea><br /><div id="replystatus" role="alert" class="statusmessage hidden alert"><span class="glyphicon" aria-hidden="true"></span> </div><button id="replybutton" class="btn btn-default btn-sm"><?php echo I18n::_('Post comment'); ?></button></div>
+				<article id="commenttemplate" class="comment">
+					<div class="commentmeta">
+						<span class="nickname">name</span>
+						<span class="commentdate">0000-00-00</span>
+					</div>
+					<div class="commentdata">c</div>
+					<button class="btn btn-default btn-sm"><?php echo I18n::_('Reply'); ?></button>
+				</article>
+				<div id="commenttailtemplate" class="comment">
+					<button class="btn btn-default btn-sm"><?php echo I18n::_('Add comment'); ?></button>
+				</div>
+				<div id="replytemplate" class="reply hidden">
+					<input type="text" id="nickname" class="form-control" title="<?php echo I18n::_('Optional nickname…'); ?>" placeholder="<?php echo I18n::_('Optional nickname…'); ?>" />
+					<textarea id="replymessage" class="replymessage form-control" cols="80" rows="7"></textarea><br />
+					<div id="replystatus" role="alert" class="statusmessage hidden alert">
+						<span class="glyphicon" aria-hidden="true"></span>
+					</div>
+					<button id="replybutton" class="btn btn-default btn-sm"><?php echo I18n::_('Post comment'); ?></button>
+				</div>
 			</div>
 		</div>
 <?php

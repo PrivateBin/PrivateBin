@@ -216,5 +216,6 @@
     "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "Sbagliu à a chjama di YOURLS. Seria forse una cunfigurazione gattiva, tale una \"apiurl\" o \"signature\" falsa o assente.",
     "Error parsing YOURLS response.": "Sbagliu durante l’analisa di a risposta di YOURLS.",
     "This secret message can only be displayed once. Would you like to see it now?": "Stu messaghju secretu pò esse affissatu solu una volta. Vulete fighjallu subitu ?",
-    "Yes, see it": "Iè, fighjallu"
+    "Yes, see it": "Iè, fighjallu",
+    "Dark Mode": "Dark Mode"
 }

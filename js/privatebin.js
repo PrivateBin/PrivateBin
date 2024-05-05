@@ -2305,6 +2305,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                     backdrop: 'static',
                     keyboard: false
                 });
+                $passwordModal.modal('show');
                 // focus password input
                 $passwordDecrypt.focus();
                 // then re-focus it, when modal causes it to loose focus again
@@ -2390,7 +2391,9 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
         let $editorTabs,
             $messageEdit,
+            $messageEditParent,
             $messagePreview,
+            $messagePreviewParent,
             $message,
             isPreview = false;
 
@@ -2431,10 +2434,12 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         {
             // toggle buttons
             $messageEdit.addClass('active');
+            $messageEditParent.addClass('active');
             $messagePreview.removeClass('active');
+            $messagePreviewParent.removeClass('active');
 
-            $('#messageedit').attr('aria-selected','true');
-            $('#messagepreview').attr('aria-selected','false');
+            $messageEdit.attr('aria-selected','true');
+            $messagePreview.attr('aria-selected','false');
 
             PasteViewer.hide();
 
@@ -2463,10 +2468,12 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         {
             // toggle buttons
             $messageEdit.removeClass('active');
+            $messageEditParent.removeClass('active');
             $messagePreview.addClass('active');
+            $messagePreviewParent.addClass('active');
 
-            $('#messageedit').attr('aria-selected','false');
-            $('#messagepreview').attr('aria-selected','true');
+            $messageEdit.attr('aria-selected','false');
+            $messagePreview.attr('aria-selected','true');
 
             // hide input as now preview is shown
             $message.addClass('hidden');
@@ -2594,10 +2601,11 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             // bind events
             $message.keydown(supportTabs);
 
-            // bind click events to tab switchers (a), but save parent of them
-            // (li)
-            $messageEdit = $('#messageedit').click(viewEditor).parent();
-            $messagePreview = $('#messagepreview').click(viewPreview).parent();
+            // bind click events to tab switchers (a), and save parents (li)
+            $messageEdit = $('#messageedit').click(viewEditor);
+            $messageEditParent = $messageEdit.parent();
+            $messagePreview = $('#messagepreview').click(viewPreview);
+            $messagePreviewParent = $messagePreview.parent();
         };
 
         return me;
@@ -2693,15 +2701,12 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             // otherwise hide the placeholder
             $placeholder.addClass('hidden');
 
-            switch (format) {
-                case 'markdown':
-                    $plainText.removeClass('hidden');
-                    $prettyMessage.addClass('hidden');
-                    break;
-                default:
-                    $plainText.addClass('hidden');
-                    $prettyMessage.removeClass('hidden');
-                    break;
+            if (format === 'markdown') {
+                $plainText.removeClass('hidden');
+                $prettyMessage.addClass('hidden');
+            } else {
+                $plainText.addClass('hidden');
+                $prettyMessage.removeClass('hidden');
             }
         }
 
@@ -2726,6 +2731,12 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
             format = newFormat;
             isChanged = true;
+
+            // update preview
+            if (Editor.isPreview()) {
+                PasteViewer.run();
+            }
+
         };
 
         /**
@@ -3712,11 +3723,6 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             $('#pasteFormatterDisplay').text($target.text());
             PasteViewer.setFormat(newFormat);
 
-            // update preview
-            if (Editor.isPreview()) {
-                PasteViewer.run();
-            }
-
             event.preventDefault();
         }
 
@@ -3849,7 +3855,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         function setLanguage(event)
         {
-            document.cookie = 'lang=' + $(event.target).data('lang') + ';secure';
+            document.cookie = 'lang=' + $(event.target).data('lang') + '; SameSite=Lax; Secure';
             UiHelper.reloadHome();
             event.preventDefault();
         }
@@ -3921,6 +3927,10 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 text: window.location.href
             });
             $('#qrcode-display').html(qrCanvas);
+            // only necessary for bootstrap 5, other templates won't have this
+            if (bootstrap.Tooltip.VERSION) {
+                $('#qrcodemodal').modal('show');
+            }
         }
 
         /**
@@ -4360,7 +4370,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         me.getExpiration = function()
         {
-            return pasteExpiration;
+            return Model.getExpirationDefault() || pasteExpiration;
         };
 
         /**
@@ -4543,6 +4553,9 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             // bootstrap template drop downs
             $('ul.dropdown-menu li a', $('#expiration').parent()).click(updateExpiration);
             $('ul.dropdown-menu li a', $('#formatter').parent()).click(updateFormat);
+            $('#pasteFormatter').on('change', function() {
+                PasteViewer.setFormat(Model.getFormatDefault());
+            });
 
             // initiate default state of checkboxes
             changeBurnAfterReading();

@@ -3,11 +3,13 @@
 ## 1.7.2 (not yet released)
 * ADDED: Allow use of `shortenviayourls` in query parameters (#1267)
 * ADDED: Input sanitation to some not yet filtered query and server parameters
+* ADDED: Optional Bootstrap CSS 5.3.3 based template, use configuration `template = "bootstrap5"` to switch to it (#728)
 * CHANGED: "Send" button now labeled "Create" (#946)
-* CHANGED: drop some PHP < 5.6 fallbacks, minimum version is PHP 7.3 as of release 1.6.0
+* CHANGED: Drop some PHP < 5.6 fallbacks, minimum version is PHP 7.3 as of release 1.6.0
+* CHANGED: Set `lang` cookie with lax `SameSite` property
+* CHANGED: Upgrading libraries to: DOMpurify 3.1.2 (#1299)
 * FIXED: Add cache control headers also to API calls (#1263)
 * FIXED: Shortened paste URL does not appear in email (#606)
-* CHANGED: Upgrading libraries to: DOMpurify 3.1.2 (#1299)
 
 ## 1.7.1 (2024-02-11)
 * FIXED: zlib 1.3.1 wasm file reference

@@ -351,6 +351,7 @@ Copyright © 2016 Nils Adermann, Jordi Boggiano
 Copyright © 2016 Lars Jung (https://larsjung.de)
 Copyright © 2018 base-x contributors
 Copyright © 2014-2018 The Bitcoin Core developers
+Copyright © 2019-2024 The Bootstrap Authors
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

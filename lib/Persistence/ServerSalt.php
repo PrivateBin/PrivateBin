@@ -56,7 +56,7 @@ class ServerSalt extends AbstractPersistence
      */
     public static function get()
     {
-        if (strlen(self::$_salt)) {
+        if (!empty(self::$_salt)) {
             return self::$_salt;
         }
 
