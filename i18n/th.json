@@ -216,5 +216,6 @@
     "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "เกิดข้อผิดพลาดในการเรียก YOURLS อาจเป็นปัญหามาจากการกำหนดค่า เช่น \"apiurl\" หรือ \"signature\" ไม่ถูกต้องหรือขาดหายไป",
     "Error parsing YOURLS response.": "เกิดข้อผิดพลาดในการแยกวิเคราะห์การตอบสนองของ YOURLS",
     "This secret message can only be displayed once. Would you like to see it now?": "This secret message can only be displayed once. Would you like to see it now?",
-    "Yes, see it": "Yes, see it"
+    "Yes, see it": "Yes, see it",
+    "Dark Mode": "Dark Mode"
 }

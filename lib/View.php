@@ -50,7 +50,7 @@ class View
      */
     public function draw($template)
     {
-        $file = substr($template, 0, 9) === 'bootstrap' ? 'bootstrap' : $template;
+        $file = substr($template, 0, 10) === 'bootstrap-' ? 'bootstrap' : $template;
         $path = PATH . 'tpl' . DIRECTORY_SEPARATOR . $file . '.php';
         if (!file_exists($path)) {
             throw new Exception('Template ' . $template . ' not found!', 80);

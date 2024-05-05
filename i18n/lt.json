@@ -216,5 +216,6 @@
     "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "Klaida iškviečiant YOURLS. Tikriausiai, konfigūracijos klaida, pavyzdžiui, neteisingi „apiurl“ ar „signature“, arba jų nėra.",
     "Error parsing YOURLS response.": "Klaida nagrinėjant YOURLS atsaką.",
     "This secret message can only be displayed once. Would you like to see it now?": "This secret message can only be displayed once. Would you like to see it now?",
-    "Yes, see it": "Yes, see it"
+    "Yes, see it": "Yes, see it",
+    "Dark Mode": "Dark Mode"
 }

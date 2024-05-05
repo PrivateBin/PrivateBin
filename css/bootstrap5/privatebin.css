@@ -1,0 +1,69 @@
+/**
+ * PrivateBin
+ *
+ * Cascading style sheets for bootstrap 5 template.
+ *
+ * @link      https://github.com/PrivateBin/PrivateBin
+ * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
+ * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
+ * @version   1.7.1
+ */
+
+@import url("../common.css");
+
+.hidden {
+	display: none !important;
+}
+
+#qrcodemodalClose {
+	float: right;
+}
+
+#qrcode-display {
+	width: 200px;
+	height: 200px;
+	margin: auto;
+}
+
+#pastelink {
+	display: inline;
+}
+
+#pastelink > a {
+	word-wrap: break-word;
+}
+
+#preview {
+	margin-bottom: 10px;
+}
+
+#message, .replymessage {
+	font-family: monospace;
+	resize: vertical;
+}
+
+#nickname {
+	margin: 5px 0;
+}
+
+#comments, #comments button {
+	margin-bottom: 10px;
+}
+
+.comment {
+	border-left: 1px solid #ccc;
+	padding: 5px 0 5px 10px;
+	transition: background-color 0.75s ease-out;
+}
+
+li.L0, li.L1, li.L2, li.L3, li.L5, li.L6, li.L7, li.L8 {
+	list-style-type: decimal !important;
+}
+
+.text-right button {
+	float: right;
+}
+
+html[dir="rtl"] #deletelink, html[dir="rtl"] #qrcodemodalClose {
+	float: left;
+}

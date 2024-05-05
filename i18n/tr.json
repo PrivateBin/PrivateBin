@@ -3,7 +3,7 @@
     "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted %sin the browser%s using 256 bits AES.": "%s sunucunun burada paylaştığınız veriyi görmediği, minimal, açık kaynak bir pastebindir. Veriler tarayıcıda 256 bit AES kullanılarak şifrelenir/çözülür.",
     "More information on the <a href=\"https://privatebin.info/\">project page</a>.": "Daha fazla bilgi için <a href=\"https://privatebin.info/\">proje sayfası</a>'na göz atabilirsiniz.",
     "Because ignorance is bliss": "Çünkü, cehalet mutluluktur",
-    "Paste does not exist, has expired or has been deleted.": "Paste does not exist, has expired or has been deleted.",
+    "Paste does not exist, has expired or has been deleted.": "Bu mevcut değil, süresi dolmuş veya silinmiş.",
     "%s requires php %s or above to work. Sorry.": "%s PHP %s veya daha üstünü gerektirir.",
     "%s requires configuration section [%s] to be present in configuration file.": "%s konfigürasyon bölümünün [%s] bulunmasını gerektir.",
     "Please wait %d seconds between each post.": [
@@ -188,7 +188,7 @@
     "Decrypting paste…": "Yazı şifresi çözülüyor…",
     "Preparing new paste…": "Yeni yazı hazırlanıyor…",
     "In case this message never disappears please have a look at <a href=\"%s\">this FAQ for information to troubleshoot</a>.": "In case this message never disappears please have a look at <a href=\"%s\">this FAQ for information to troubleshoot</a>.",
-    "+++ no paste text +++": "+++ no paste text +++",
+    "+++ no paste text +++": "+++ yazı içeriği yok +++",
     "Could not get paste data: %s": "Yazı verisi alınamıyor: %s",
     "QR code": "QR kodu",
     "This website is using an insecure HTTP connection! Please use it only for testing.": "This website is using an insecure HTTP connection! Please use it only for testing.",
@@ -216,5 +216,6 @@
     "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".",
     "Error parsing YOURLS response.": "Error parsing YOURLS response.",
     "This secret message can only be displayed once. Would you like to see it now?": "This secret message can only be displayed once. Would you like to see it now?",
-    "Yes, see it": "Yes, see it"
+    "Yes, see it": "Evet, görüyorum",
+    "Dark Mode": "Dark Mode"
 }

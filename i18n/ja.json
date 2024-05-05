@@ -216,5 +216,6 @@
     "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "YOURLSの呼び出し中にエラーが発生しました。\"apiurl\"または\"signature\"等の設定に問題がある可能性があります。",
     "Error parsing YOURLS response.": "YOURLSレスポンスの解析中にエラーが発生しました。",
     "This secret message can only be displayed once. Would you like to see it now?": "This secret message can only be displayed once. Would you like to see it now?",
-    "Yes, see it": "Yes, see it"
+    "Yes, see it": "Yes, see it",
+    "Dark Mode": "Dark Mode"
 }

@@ -42,9 +42,12 @@ defaultformatter = "plaintext"
 ; size limit per paste or comment in bytes, defaults to 10 Mebibytes
 sizelimit = 10485760
 
-; template to include, default is "bootstrap" (tpl/bootstrap.php)
-; Also available is a dark version ("bootstrap-dark",) and
-; a theme that resembles the classic ZeroBin style ("page".)
+; template to include, default is "bootstrap" (tpl/bootstrap.php), also
+; available are "page" (tpl/page.php), the classic ZeroBin style and several
+; bootstrap variants: "bootstrap-dark", "bootstrap-compact", "bootstrap-page",
+; which can be combined with "-dark" and "-compact" for "bootstrap-dark-page"
+; and finally "bootstrap-compact-page" - previews at:
+; https://privatebin.info/screenshots.html
 template = "bootstrap"
 
 ; (optional) info text to display
@@ -90,8 +93,10 @@ languageselection = false
 ; scripts or run your site behind certain DDoS-protection services.
 ; Check the documentation at https://content-security-policy.com/
 ; Notes:
-; - If you use a bootstrap theme, you can remove the allow-popups from the
+; - If you use any bootstrap theme, you can remove the allow-popups from the
 ;   sandbox restrictions.
+; - If you use the bootstrap5 theme, you must change default-src to 'self' to
+;   enable display of the svg icons
 ; - By default this disallows to load images from third-party servers, e.g. when
 ;   they are embedded in pastes. If you wish to allow that, you can adjust the
 ;   policy here. See https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-it-load-embedded-images

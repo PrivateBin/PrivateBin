@@ -34,7 +34,7 @@ if ($SYNTAXHIGHLIGHTING) :
 ?>
 		<link type="text/css" rel="stylesheet" href="css/prettify/prettify.css?<?php echo rawurlencode($VERSION); ?>" />
 <?php
-    if (strlen($SYNTAXHIGHLIGHTINGTHEME)) :
+    if (!empty($SYNTAXHIGHLIGHTINGTHEME)) :
 ?>
 		<link type="text/css" rel="stylesheet" href="css/prettify/<?php echo rawurlencode($SYNTAXHIGHLIGHTINGTHEME); ?>.css?<?php echo rawurlencode($VERSION); ?>" />
 <?php
@@ -71,9 +71,9 @@ if ($MARKDOWN) :
 <?php
 endif;
 ?>
-		<script type="text/javascript" data-cfasync="false" src="js/purify-3.0.8.js" integrity="sha512-wWBDKh5wYGtJ1Df+PPZIn59jHVBnJ4/Yb2W/pVnzaXab8cmlZnHVx+FEBGu5JX39s3P2Qlt+aNQou0XnjW86hg==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/purify-3.1.2.js" integrity="sha512-voYCOVXik5/jcT+McTiptsB00iB0NWQrhBmSwSEfj0IH3UDphU8w12JV8w1y+m8FRaozbzW4efHSEWKZpOA+JQ==" crossorigin="anonymous"></script>
 		<script type="text/javascript" data-cfasync="false" src="js/legacy.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-LYos+qXHIRqFf5ZPNphvtTB0cgzHUizu2wwcOwcwz/VIpRv9lpcBgPYz4uq6jx0INwCAj6Fbnl5HoKiLufS2jg==" crossorigin="anonymous"></script>
-		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-q2+Xxj6aqq8VCdEZs60z/nQTeHYb400bmfyWVh7gIICdNEz2LIVt95hH/DMVDr3pv+vkIcdDL8va5J9rtaY6WA==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-UdOSZnkEQtdvgsyYhMSTCw2/TRv7x/jL8AtCKLnT722eudYsGPAd8wvPOU6zvdoNNJ8R43CfSJCJuCaDP2ahzA==" crossorigin="anonymous"></script>
 		<!-- icon -->
 		<link rel="apple-touch-icon" href="<?php echo I18n::encode($BASEPATH); ?>img/apple-touch-icon.png" sizes="180x180" />
 		<link rel="icon" type="image/png" href="img/favicon-32x32.png" sizes="32x32" />
@@ -437,7 +437,7 @@ endif;
 				</ul>
 				<ul class="nav navbar-nav pull-right">
 <?php
-if (strlen($LANGUAGESELECTION)) :
+if (!empty($LANGUAGESELECTION)) :
 ?>
 					<li id="language" class="dropdown">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-flag" aria-hidden="true"></span> <?php echo $LANGUAGES[$LANGUAGESELECTION][0]; ?> <span class="caret"></span></a>
@@ -468,7 +468,7 @@ endif;
 		<main>
 			<section class="container">
 <?php
-if (strlen($NOTICE)) :
+if (!empty($NOTICE)) :
 ?>
 				<div role="alert" class="alert alert-info">
 					<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
@@ -485,7 +485,7 @@ if ($FILEUPLOAD) :
 ?>
 				<div id="attachment" role="alert" class="hidden alert alert-info">
 					<span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
-					<a class="alert-link"><?php echo I18n::_('Download attachment'), PHP_EOL; ?></a>
+					<a class="alert-link"><?php echo I18n::_('Download attachment'); ?></a>
 				</div>
 <?php
 endif;
@@ -517,12 +517,12 @@ if ($HTTPWARNING) :
 ?>
 				<div id="httpnotice" role="alert" class="hidden alert alert-danger">
 					<span class="glyphicon glyphicon-alert" aria-hidden="true"></span>
-					<?php echo I18n::_('This website is using an insecure connection! Please only use it for testing.'), PHP_EOL; ?><br />
+					<?php echo I18n::_('This website is using an insecure connection! Please only use it for testing.'); ?><br />
 					<span class="small"><?php echo I18n::_('For more information <a href="%s">see this FAQ entry</a>.', 'https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-it-show-me-an-error-about-an-insecure-connection'); ?></span>
 				</div>
 				<div id="insecurecontextnotice" role="alert" class="hidden alert alert-danger">
 					<span class="glyphicon glyphicon-alert" aria-hidden="true"></span>
-					<?php echo I18n::_('Your browser may require an HTTPS connection to support the WebCrypto API. Try <a href="%s">switching to HTTPS</a>.', $HTTPSLINK); ?>
+					<?php echo I18n::_('Your browser may require an HTTPS connection to support the WebCrypto API. Try <a href="%s">switching to HTTPS</a>.', $HTTPSLINK), PHP_EOL; ?>
 				</div>
 <?php
 endif;
@@ -534,7 +534,7 @@ endif;
 						<div id="pastelink"></div>
 					</div>
 <?php
-if (strlen($URLSHORTENER)) :
+if (!empty($URLSHORTENER)) :
 ?>
 					<p>
 						<button id="shortenbutton" data-shortener="<?php echo I18n::encode($URLSHORTENER); ?>" type="button" class="btn btn-<?php echo $isDark ? 'warning' : 'primary'; ?> btn-block">
@@ -613,9 +613,25 @@ if ($DISCUSSION) :
 ?>
 		<div id="serverdata" class="hidden" aria-hidden="true">
 			<div id="templates">
-				<article id="commenttemplate" class="comment"><div class="commentmeta"><span class="nickname">name</span><span class="commentdate">0000-00-00</span></div><div class="commentdata">c</div><button class="btn btn-default btn-sm"><?php echo I18n::_('Reply'); ?></button></article>
-				<p id="commenttailtemplate" class="comment"><button class="btn btn-default btn-sm"><?php echo I18n::_('Add comment'); ?></button></p>
-				<div id="replytemplate" class="reply hidden"><input type="text" id="nickname" class="form-control" title="<?php echo I18n::_('Optional nickname…'); ?>" placeholder="<?php echo I18n::_('Optional nickname…'); ?>" /><textarea id="replymessage" class="replymessage form-control" cols="80" rows="7"></textarea><br /><div id="replystatus" role="alert" class="statusmessage hidden alert"><span class="glyphicon" aria-hidden="true"></span> </div><button id="replybutton" class="btn btn-default btn-sm"><?php echo I18n::_('Post comment'); ?></button></div>
+				<article id="commenttemplate" class="comment">
+					<div class="commentmeta">
+						<span class="nickname">name</span>
+						<span class="commentdate">0000-00-00</span>
+					</div>
+					<div class="commentdata">c</div>
+					<button class="btn btn-default btn-sm"><?php echo I18n::_('Reply'); ?></button>
+				</article>
+				<p id="commenttailtemplate" class="comment">
+					<button class="btn btn-default btn-sm"><?php echo I18n::_('Add comment'); ?></button>
+				</p>
+				<div id="replytemplate" class="reply hidden">
+					<input type="text" id="nickname" class="form-control" title="<?php echo I18n::_('Optional nickname…'); ?>" placeholder="<?php echo I18n::_('Optional nickname…'); ?>" />
+					<textarea id="replymessage" class="replymessage form-control" cols="80" rows="7"></textarea><br />
+					<div id="replystatus" role="alert" class="statusmessage hidden alert">
+						<span class="glyphicon" aria-hidden="true"></span>
+					</div>
+					<button id="replybutton" class="btn btn-default btn-sm"><?php echo I18n::_('Post comment'); ?></button>
+				</div>
 			</div>
 		</div>
 <?php
