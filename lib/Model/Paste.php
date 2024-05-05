@@ -166,7 +166,7 @@ class Paste extends AbstractModel
         if ($this->_conf->getKey('discussiondatedisplay')) {
             return $this->_store->readComments($this->getId());
         }
-        return array_map(function($comment) {
+        return array_map(function ($comment) {
             foreach (array('created', 'postdate') as $key) {
                 if (array_key_exists($key, $comment['meta'])) {
                     unset($comment['meta'][$key]);
