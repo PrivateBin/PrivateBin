@@ -1,6 +1,6 @@
 # PrivateBin version history
 
-## 1.7.2 (not yet released)
+## 1.7.2 (2024-05-05)
 * ADDED: Allow use of `shortenviayourls` in query parameters (#1267)
 * ADDED: Input sanitation to some not yet filtered query and server parameters
 * ADDED: Optional Bootstrap CSS 5.3.3 based template, use configuration `template = "bootstrap5"` to switch to it (#728)
