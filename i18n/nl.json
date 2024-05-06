@@ -217,5 +217,7 @@
     "Error parsing YOURLS response.": "Foutmelding bij parsen van YOURLS respons.",
     "This secret message can only be displayed once. Would you like to see it now?": "Brand na het lezen van de plagen kan slechts eenmaal worden weergegeven wanneer deze worden geladen. Wilt u het nu zien?",
     "Yes, see it": "Ja, zie het",
-    "Dark Mode": "Donkere modus"
+    "Dark Mode": "Donkere modus",
+    "Error compressing paste, due to missing WebAssembly support.": "Error compressing paste, due to missing WebAssembly support.",
+    "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.": "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste."
 }

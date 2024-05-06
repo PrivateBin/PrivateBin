@@ -217,5 +217,7 @@
     "Error parsing YOURLS response.": "Virhe jäsennettäessä YOURLS-vastausta.",
     "This secret message can only be displayed once. Would you like to see it now?": "Tämä salainen viesti voidaan näyttää vain kerran. Haluatko nähdä sen nyt?",
     "Yes, see it": "Kyllä, näet sen",
-    "Dark Mode": "Tumma tila"
+    "Dark Mode": "Tumma tila",
+    "Error compressing paste, due to missing WebAssembly support.": "Error compressing paste, due to missing WebAssembly support.",
+    "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.": "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste."
 }

@@ -217,5 +217,7 @@
     "Error parsing YOURLS response.": "Error parsing YOURLS response.",
     "This secret message can only be displayed once. Would you like to see it now?": "This secret message can only be displayed once. Would you like to see it now?",
     "Yes, see it": "Evet, görüyorum",
-    "Dark Mode": "Koyu Mod"
+    "Dark Mode": "Koyu Mod",
+    "Error compressing paste, due to missing WebAssembly support.": "Error compressing paste, due to missing WebAssembly support.",
+    "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.": "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste."
 }

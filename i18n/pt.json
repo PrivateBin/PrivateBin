@@ -217,5 +217,7 @@
     "Error parsing YOURLS response.": "Erro ao analisar a resposta do YOURLS.",
     "This secret message can only be displayed once. Would you like to see it now?": "Esta mensagem secreta só pode ser exibida uma vez. Gostaria de vê-la agora?",
     "Yes, see it": "Sim, veja",
-    "Dark Mode": "Modo Noturno"
+    "Dark Mode": "Modo Noturno",
+    "Error compressing paste, due to missing WebAssembly support.": "Error compressing paste, due to missing WebAssembly support.",
+    "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.": "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste."
 }

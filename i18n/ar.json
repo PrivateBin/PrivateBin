@@ -217,5 +217,7 @@
     "Error parsing YOURLS response.": "خطأ في تحليل استجابة YOURLS.",
     "This secret message can only be displayed once. Would you like to see it now?": "لا يمكن عرض اللصق احرقه بعد قراءته إلا مرة واحدة عند تحميله. هل تريد فتحه الآن؟",
     "Yes, see it": "نعم، حمله",
-    "Dark Mode": "الوضع الداكن"
+    "Dark Mode": "الوضع الداكن",
+    "Error compressing paste, due to missing WebAssembly support.": "Error compressing paste, due to missing WebAssembly support.",
+    "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.": "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste."
 }

@@ -217,5 +217,7 @@
     "Error parsing YOURLS response.": "Sbagliu durante l’analisa di a risposta di YOURLS.",
     "This secret message can only be displayed once. Would you like to see it now?": "Stu messaghju secretu pò esse affissatu solu una volta. Vulete fighjallu subitu ?",
     "Yes, see it": "Iè, fighjallu",
-    "Dark Mode": "Modu scuru"
+    "Dark Mode": "Modu scuru",
+    "Error compressing paste, due to missing WebAssembly support.": "Error compressing paste, due to missing WebAssembly support.",
+    "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.": "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste."
 }
