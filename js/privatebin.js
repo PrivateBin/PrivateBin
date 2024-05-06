@@ -1068,7 +1068,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             if (mode === 'zlib' || mode === 'none') {
                 if (mode === 'zlib') {
                     if (typeof zlib === 'undefined') {
-                        throw 'Error decompressing paste, due to missing WebAssembly support.'
+                        throw 'Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.'
                     }
                     data = zlib.inflate(
                         new Uint8Array(data)
@@ -1305,7 +1305,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             spec[1] = atob(spec[1]);
             if (spec[7] === 'zlib') {
                 if (typeof zlib === 'undefined') {
-                    throw 'Error decompressing paste, due to missing WebAssembly support.'
+                    throw 'Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.'
                 }
             }
             try {
