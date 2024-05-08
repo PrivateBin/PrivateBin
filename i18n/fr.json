@@ -218,6 +218,6 @@
     "This secret message can only be displayed once. Would you like to see it now?": "Les pastes de type \"Effacer après la lecture\" ne peuvent être affichés qu'une seule fois. Voulez-vous le voir maintenant ?",
     "Yes, see it": "Oui, voyez le",
     "Dark Mode": "Mode Sombre",
-    "Error compressing paste, due to missing WebAssembly support.": "Error compressing paste, due to missing WebAssembly support.",
-    "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.": "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste."
+    "Error compressing paste, due to missing WebAssembly support.": "Erreur lors de la compression du paste, en raison du support de WebAssembly manquant.",
+    "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.": "Erreur lors de la décompression du paste, votre navigateur ne supporte pas WebAssembly. Veuillez utiliser un autre navigateur pour voir ce collage."
 }
