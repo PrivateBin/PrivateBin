@@ -218,6 +218,6 @@
     "This secret message can only be displayed once. Would you like to see it now?": "Texte des \"Einmal\"-Typs können nach dem Öffnen nur einmal angezeigt werden. Möchtest Du ihn jetzt einsehen?",
     "Yes, see it": "Ja, jetzt einsehen",
     "Dark Mode": "Nachtmodus",
-    "Error compressing paste, due to missing WebAssembly support.": "Error compressing paste, due to missing WebAssembly support.",
+    "Error compressing paste, due to missing WebAssembly support.": "Fehler beim Komprimieren des Textes, da WebAssembly-Unterstützung fehlt.",
     "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.": "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste."
 }
