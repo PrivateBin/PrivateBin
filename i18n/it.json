@@ -218,6 +218,6 @@
     "This secret message can only be displayed once. Would you like to see it now?": "Questo messaggio di tipo Distruggi-dopo-lettura può essere visualizzato solo una volta. Vuoi vederlo ora?",
     "Yes, see it": "Sì, visualizzalo",
     "Dark Mode": "Tema Scuro",
-    "Error compressing paste, due to missing WebAssembly support.": "Error compressing paste, due to missing WebAssembly support.",
-    "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.": "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste."
+    "Error compressing paste, due to missing WebAssembly support.": "Errore nella compressione dell messaggio, a causa del supporto WebAssembly mancante.",
+    "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.": "Errore nella decompressione dell messaggio, il tuo browser non supporta WebAssembly. Utilizza un altro browser per visualizzare questo messaggio."
 }
