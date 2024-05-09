@@ -1,6 +1,7 @@
 # PrivateBin version history
 
 ## 1.7.3 (not yet released)
+* FIXED: Selected expiration not being applied, when using bootstrap template (#1309)
 
 ## 1.7.2 (2024-05-05)
 * ADDED: Allow use of `shortenviayourls` in query parameters (#1267)
