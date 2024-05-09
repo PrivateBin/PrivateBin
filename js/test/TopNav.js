@@ -456,8 +456,14 @@ describe('TopNav', function () {
         it(
             'returns the currently selected expiration date',
             function () {
+                $('body').html(
+                    '<select id="pasteExpiration" name="pasteExpiration">' +
+                    '<option value="1day">1 day</option>' +
+                    '<option value="never">Never</option></select>'
+                );
                 $.PrivateBin.TopNav.init();
-                assert.ok($.PrivateBin.TopNav.getExpiration() === null);
+                assert.ok($.PrivateBin.TopNav.getExpiration() === '1day');
+                cleanup();
             }
         );
     });
