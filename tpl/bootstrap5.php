@@ -426,8 +426,8 @@ endif;
 				<article class="row">
 					<div id="placeholder" class="col-md-12 hidden"><?php echo I18n::_('+++ no paste text +++'); ?></div>
 					<div id="attachmentPreview" class="col-md-12 text-center hidden"></div>
-					<div id="prettymessage" class="col-md-12 hidden">
-						<pre id="prettyprint" class="col-md-12 prettyprint linenums:1"></pre>
+					<div id="prettymessage" class="card col-md-12 hidden">
+						<pre id="prettyprint" class="card-body col-md-12 prettyprint linenums:1"></pre>
 					</div>
 					<div id="plaintext" class="col-md-12 hidden"></div>
 					<p class="col-md-12"><textarea id="message" name="message" cols="80" rows="25" class="form-control hidden"></textarea></p>
