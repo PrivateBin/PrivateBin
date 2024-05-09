@@ -88,6 +88,9 @@ jobs:
         restore-keys: ${{ runner.os }}-composer-${{ steps.get-date.outputs.date }}-
 
     # composer installation
+    - name: Unset platform requirement
+      run: composer config --unset platform
+
     - name: Setup PHPunit
       run: composer install -n
 
