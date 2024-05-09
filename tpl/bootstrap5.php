@@ -258,7 +258,7 @@ if ($FILEUPLOAD) :
 ?>
 						<li id="attach" class="nav-item hidden dropdown me-2">
 							<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false"><?php echo I18n::_('Attach a file'); ?></a>
-							<ul class="dropdown-menu">
+							<ul class="dropdown-menu px-2">
 								<li id="filewrap">
 									<div>
 										<input type="file" id="file" name="file" class="form-control" />
