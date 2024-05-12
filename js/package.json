@@ -15,7 +15,8 @@
     "@peculiar/webcrypto": "^1.1.1"
   },
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "ci-test": "mocha --reporter-option output=mocha-results.xml"
   },
   "repository": {
     "type": "git",
