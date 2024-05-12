@@ -1,6 +1,7 @@
 # PrivateBin version history
 
 ## 1.7.3 (not yet released)
+* CHANGED: Upgrading libraries to: DOMpurify 3.1.3
 
 ## 1.7.2 (2024-05-05)
 * ADDED: Allow use of `shortenviayourls` in query parameters (#1267)

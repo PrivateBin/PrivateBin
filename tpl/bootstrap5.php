@@ -55,7 +55,7 @@ if ($MARKDOWN) :
 <?php
 endif;
 ?>
-		<script type="text/javascript" data-cfasync="false" src="js/purify-3.1.2.js" integrity="sha512-voYCOVXik5/jcT+McTiptsB00iB0NWQrhBmSwSEfj0IH3UDphU8w12JV8w1y+m8FRaozbzW4efHSEWKZpOA+JQ==" crossorigin="anonymous"></script>
+		<script type="text/javascript" data-cfasync="false" src="js/purify-3.1.3.js" integrity="sha512-t/FKG/ucQVMWTWVouSMABSEx1r+uSyAI9eNDq0KEr9mPhkgxpJztHI/E72JIpv/+VwPs/Q4husxj14TE9Ps/wg==" crossorigin="anonymous"></script>
 		<script type="text/javascript" data-cfasync="false" src="js/legacy.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-LYos+qXHIRqFf5ZPNphvtTB0cgzHUizu2wwcOwcwz/VIpRv9lpcBgPYz4uq6jx0INwCAj6Fbnl5HoKiLufS2jg==" crossorigin="anonymous"></script>
 		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-QnwyZIEFZg8uvFAsnXbeHTNarA4hPhGcMv8RTAIS4cOgR6oh0ofxjY3OdiGzccArf6VeFFKjqkFo94CrcUXkxQ==" crossorigin="anonymous"></script>
 		<!-- icon -->
