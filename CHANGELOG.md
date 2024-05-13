@@ -1,5 +1,7 @@
 # PrivateBin version history
 
+## 1.7.4 (not yet released)
+
 ## 1.7.3 (2024-05-13)
 * CHANGED: Various tweaks of the `bootstrap5` template, suggested by the community
 * CHANGED: Upgrading libraries to: DOMpurify 3.1.3
