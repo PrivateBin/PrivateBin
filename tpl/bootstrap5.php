@@ -150,7 +150,7 @@ if ($EMAIL) :
 <?php
 endif;
 ?>
-		<nav class="navbar navbar-expand-lg bg-body-tertiary">
+		<nav class="navbar navbar-expand-lg bg-body-tertiary text-nowrap">
 			<div class="container-fluid">
 				<a class="reloadlink navbar-brand" href="">
 					<img alt="<?php echo I18n::_($NAME); ?>" src="img/icon.svg" height="38" />
@@ -159,48 +159,48 @@ endif;
 					<span class="navbar-toggler-icon"></span>
 				</button>
 				<div id="navbar" class="collapse navbar-collapse">
-					<ul class="navbar-nav me-auto">
+					<ul class="navbar-nav me-auto gap-2 align-items-lg-center align-items-stretch">
 						<li id="loadingindicator" class="navbar-text hidden me-auto">
 							<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#clock" /></svg>
 							<?php echo I18n::_('Loading…'), PHP_EOL; ?>
 						</li>
-						<li class="nav-item me-2">
+						<li class="nav-item d-flex flex-lg-row flex-column">
 							<button id="retrybutton" type="button" class="reloadlink hidden btn btn-primary">
 								<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#repeat" /></svg> <?php echo I18n::_('Retry'), PHP_EOL; ?>
 							</button>
 						</li>
-						<li class="nav-item">
-							<button id="newbutton" type="button" class="hidden btn btn-secondary me-2">
+						<li class="nav-item d-flex flex-lg-row flex-column gap-2">
+							<button id="newbutton" type="button" class="hidden btn btn-secondary flex-fill">
 								<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#file-earmark" /></svg> <?php echo I18n::_('New'), PHP_EOL; ?>
 							</button>
-							<button id="clonebutton" type="button" class="hidden btn btn-secondary me-2">
+							<button id="clonebutton" type="button" class="hidden btn btn-secondary flex-fill">
 								<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#copy" /></svg> <?php echo I18n::_('Clone'), PHP_EOL; ?>
 							</button>
-							<button id="rawtextbutton" type="button" class="hidden btn btn-secondary me-2">
+							<button id="rawtextbutton" type="button" class="hidden btn btn-secondary flex-fill">
 								<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#filetype-txt" /></svg> <?php echo I18n::_('Raw text'), PHP_EOL; ?>
 							</button>
-							<button id="downloadtextbutton" type="button" class="hidden btn btn-secondary me-2">
+							<button id="downloadtextbutton" type="button" class="hidden btn btn-secondary flex-fill">
 								<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#download" /></svg> <?php echo I18n::_('Save paste'), PHP_EOL; ?>
 							</button>
 <?php
 if ($EMAIL) :
 ?>
 
-							<button id="emaillink" type="button" class="hidden btn btn-secondary me-2">
+							<button id="emaillink" type="button" class="hidden btn btn-secondary flex-fill">
 								<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#envelope" /></svg> <?php echo I18n::_('Email'), PHP_EOL; ?>
 							</button>
 <?php
 endif;
 if ($QRCODE) :
 ?>
-							<button id="qrcodelink" type="button" data-toggle="modal" data-target="#qrcodemodal" class="hidden btn btn-secondary me-2">
+							<button id="qrcodelink" type="button" data-toggle="modal" data-target="#qrcodemodal" class="hidden btn btn-secondary flex-fill">
 								<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#qr-code" /></svg> <?php echo I18n::_('QR code'), PHP_EOL; ?>
 							</button>
 <?php
 endif;
 ?>
 						</li>
-						<li id="expiration" class="nav-item me-2 d-flex hidden">
+						<li id="expiration" class="nav-item d-flex hidden">
 							<label for="pasteExpiration" class="form-label my-auto me-1"><?php echo I18n::_('Expires'); ?>:</label>
 							<select id="pasteExpiration" name="pasteExpiration" class="form-select">
 <?php
@@ -216,7 +216,7 @@ endforeach;
 ?>
 							</select>
 						</li>
-						<li class="nav-item me-2">
+						<li class="nav-item">
 							<div id="burnafterreadingoption" class="navbar-text form-check hidden">
 								<input class="form-check-input" type="checkbox" id="burnafterreading" name="burnafterreading"<?php
 if ($BURNAFTERREADINGSELECTED) :
@@ -231,7 +231,7 @@ endif;
 <?php
 if ($DISCUSSION) :
 ?>
-						<li class="nav-item me-2">
+						<li class="nav-item">
 							<div id="opendiscussionoption" class="navbar-text form-check hidden">
 								<input class="form-check-input" type="checkbox" id="opendiscussion" name="opendiscussion"<?php
 	if ($OPENDISCUSSION) :
@@ -247,7 +247,7 @@ if ($DISCUSSION) :
 endif;
 if ($PASSWORD) :
 ?>
-						<li class="nav-item me-2">
+						<li class="nav-item">
 							<div id="password" class="navbar-form hidden">
 								<input type="password" id="passwordinput" placeholder="<?php echo I18n::_('Password (recommended)'); ?>" class="form-control" size="23" />
 							</div>
@@ -256,7 +256,7 @@ if ($PASSWORD) :
 endif;
 if ($FILEUPLOAD) :
 ?>
-						<li id="attach" class="nav-item hidden dropdown me-2">
+						<li id="attach" class="nav-item hidden dropdown">
 							<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false"><?php echo I18n::_('Attach a file'); ?></a>
 							<ul class="dropdown-menu px-2">
 								<li id="filewrap">
@@ -276,7 +276,7 @@ if ($FILEUPLOAD) :
 <?php
 endif;
 ?>
-						<li id="formatter" class="nav-item me-2 d-flex hidden">
+						<li id="formatter" class="nav-item d-flex hidden">
 							<label for="pasteFormatter" class="form-label my-auto me-1"><?php echo I18n::_('Format'); ?>:</label>
 							<select id="pasteFormatter" name="pasteFormatter" class="form-select">
 <?php
@@ -293,7 +293,7 @@ endif;
 							</select>
 						</li>
 					</ul>
-					<ul class="navbar-nav">
+					<ul class="navbar-nav gap-2">
 						<li class="nav-item">
 							<div class="form-check form-switch navbar-text">
 								<input id="bd-theme" type="checkbox" class="form-check-input">
@@ -303,7 +303,7 @@ endif;
 <?php
 if (!empty($LANGUAGESELECTION)) :
 ?>
-						<li id="language" class="nav-item dropdown ms-2">
+						<li id="language" class="nav-item dropdown">
 							<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false">
 								<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#flag" /></svg> <?php echo $LANGUAGES[$LANGUAGESELECTION][0], PHP_EOL; ?>
 							</a>
@@ -448,7 +448,7 @@ endif;
 			</section>
 			<footer class="container">
 				<div class="row">
-					<h4 class="col-md-5 col-xs-8"><?php echo I18n::_($NAME); ?> <small>- <?php echo I18n::_('Because ignorance is bliss'); ?></small></h4>
+					<h5 class="col-md-5 col-xs-8"><?php echo I18n::_($NAME); ?> <small>- <?php echo I18n::_('Because ignorance is bliss'); ?></small></h5>
 					<p class="col-md-1 col-xs-4 text-center"><?php echo $VERSION; ?></p>
 					<p id="aboutbox" class="col-md-6 col-xs-12">
 						<?php echo sprintf(
