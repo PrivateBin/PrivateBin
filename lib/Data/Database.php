@@ -7,7 +7,7 @@
  * @link      https://github.com/PrivateBin/PrivateBin
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
- * @version   1.7.2
+ * @version   1.7.3
  */
 
 namespace PrivateBin\Data;
@@ -914,7 +914,7 @@ class Database extends AbstractData
                     );
                 }
                 // no break, continue with updates for all newer versions
-            case '1.7.2':
+            case '1.7.3':
                 $supportsDropColumn = true;
                 if ($this->_type === 'sqlite') {
                     try {
