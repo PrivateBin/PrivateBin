@@ -26,7 +26,7 @@
     "JavaScript is required for %s to work. Sorry for the inconvenience.": "JavaScript este necesar pentru ca %s să funcționeze. Ne cerem scuze pentru neplăceri.",
     "%s requires a modern browser to work.": "%s necesită un browser modern pentru a funcționa.",
     "New": "Nou",
-    "Create": "Creează",
+    "Create": "Creați",
     "Clone": "Clonați",
     "Raw text": "Text brut",
     "Expires": "Expiră",
@@ -215,9 +215,9 @@
     "Trying to shorten a URL that isn't pointing at our instance.": "Încercarea de a scurta un URL care nu direcționează spre instanța noastră.",
     "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "Eroare la apelarea YOURLS. Probabil o problemă de configurare, cum ar fi \"apiurl\" sau \"signature\" greșite sau lipsă.",
     "Error parsing YOURLS response.": "Eroare la analizarea răspunsului YOURLS.",
-    "This secret message can only be displayed once. Would you like to see it now?": "Paste-urile care se șterg după citire pot fi afișate numai o dată după încărcare. Doriți să o vedeți acum?",
+    "This secret message can only be displayed once. Would you like to see it now?": "Acest mesaj secret poate fi afișat o singură dată. Doriți să îl vedeți acum?",
     "Yes, see it": "Da, vezi",
-    "Dark Mode": "Mod Întunecat",
-    "Error compressing paste, due to missing WebAssembly support.": "Error compressing paste, due to missing WebAssembly support.",
-    "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.": "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste."
+    "Dark Mode": "Mod întunecat",
+    "Error compressing paste, due to missing WebAssembly support.": "Eroare la compresia paste-ului din cauza incompatibilității cu WebAssembly.",
+    "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.": "Eroare la deschiderea paste-ului, browserul dvs. nu acceptă WebAssembly. Vă rugăm să utilizați un alt browser pentru a vedea acest paste."
 }
