@@ -735,6 +735,7 @@ describe('TopNav', function () {
                 $('body').html('<button id="rawtextbutton"></button>');
                 const sample = 'example';
                 $.PrivateBin.PasteViewer.setText(sample);
+                $.PrivateBin.Helper.reset();
                 $.PrivateBin.TopNav.init();
                 $('#rawtextbutton').click();
                 assert.equal($('pre').text(), sample);
