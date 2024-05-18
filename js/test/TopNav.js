@@ -612,7 +612,6 @@ describe('TopNav', function () {
         );
     });
 
-
     describe('getPassword', function () {
         before(function () {
             cleanup();
@@ -682,47 +681,65 @@ describe('TopNav', function () {
         );
     });
 
+    describe('hideAllButtons', function () {
+        before(function () {
+            cleanup();
+        });
+
+        it(
+            'hides all buttons correctly',
+            function () {
+                // Insert any setup code needed for the hideAllButtons function
+                // Example: Initialize the DOM elements required for testing
+                $('body').html(
+                    '<nav class="navbar navbar-inverse navbar-static-top">' +
+                    '<div id="navbar" class="navbar-collapse collapse"><ul ' +
+                    'class="nav navbar-nav"><li><button id="newbutton" ' +
+                    'type="button" class="hidden btn btn-warning navbar-btn">' +
+                    '<span class="glyphicon glyphicon-file" aria-hidden="true">' +
+                    '</span> New</button><button id="clonebutton" type="button"' +
+                    ' class="hidden btn btn-warning navbar-btn">' +
+                    '<span class="glyphicon glyphicon-duplicate" ' +
+                    'aria-hidden="true"></span> Clone</button><button ' +
+                    'id="rawtextbutton" type="button" class="hidden btn ' +
+                    'btn-warning navbar-btn"><span class="glyphicon ' +
+                    'glyphicon-text-background" aria-hidden="true"></span> ' +
+                    'Raw text</button><button id="qrcodelink" type="button" ' +
+                    'data-toggle="modal" data-target="#qrcodemodal" ' +
+                    'class="hidden btn btn-warning navbar-btn"><span ' +
+                    'class="glyphicon glyphicon-qrcode" aria-hidden="true">' +
+                    '</span> QR code</button></li></ul></div></nav>'
+                );
+                $.PrivateBin.TopNav.init();
+                $.PrivateBin.TopNav.hideAllButtons();
+
+                assert.ok($('#newbutton').hasClass('hidden'));
+                assert.ok($('#clonebutton').hasClass('hidden'));
+                assert.ok($('#rawtextbutton').hasClass('hidden'));
+                assert.ok($('#qrcodelink').hasClass('hidden'));
+                cleanup();
+            }
+        );
+    });
+
     describe('rawText', function () {
         before(function () {
-            // Insert any setup code needed for the rawText function
-            // Example: Initialize the DOM elements required for testing
-            $('body').html(
-                '<nav class="navbar navbar-inverse navbar-static-top">' +
-                '<div id="navbar" class="navbar-collapse collapse"><ul ' +
-                'class="nav navbar-nav"><li><button id="newbutton" ' +
-                'type="button" class="hidden btn btn-warning navbar-btn">' +
-                '<span class="glyphicon glyphicon-file" aria-hidden="true">' +
-                '</span> New</button><button id="clonebutton" type="button"' +
-                ' class="hidden btn btn-warning navbar-btn">' +
-                '<span class="glyphicon glyphicon-duplicate" ' +
-                'aria-hidden="true"></span> Clone</button><button ' +
-                'id="rawtextbutton" type="button" class="hidden btn ' +
-                'btn-warning navbar-btn"><span class="glyphicon ' +
-                'glyphicon-text-background" aria-hidden="true"></span> ' +
-                'Raw text</button><button id="qrcodelink" type="button" ' +
-                'data-toggle="modal" data-target="#qrcodemodal" ' +
-                'class="hidden btn btn-warning navbar-btn"><span ' +
-                'class="glyphicon glyphicon-qrcode" aria-hidden="true">' +
-                '</span> QR code</button></li></ul></div></nav>'
-            );
+            cleanup();
         });
-    
+
         it(
             'displays raw text view correctly',
             function () {
-                rawText();
-    
-                assert.ok($('#newbutton').hasClass('hidden'));
-                assert.ok($('#clonebutton').hasClass('hidden'));
-                assert.ok(!$('#rawtextbutton').hasClass('hidden'));
-                assert.ok($('#qrcodelink').hasClass('hidden'));
+                const clean = jsdom('', {url: 'https://privatebin.net/?0123456789abcdef#0'});
+                global.URL = require('jsdom-url').URL;
+                $('body').html('<button id="rawtextbutton"></button>');
+                const sample = 'example';
+                $.PrivateBin.PasteViewer.setText(sample);
+                $.PrivateBin.TopNav.init();
+                $('#rawtextbutton').click();
+                assert.equal($('pre').text(), sample);
+                clean();
             }
         );
-    
-        after(function () {
-            $('body').empty();
-        });
     });
-    
-
 });
