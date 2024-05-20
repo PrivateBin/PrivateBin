@@ -3831,7 +3831,8 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         function downloadText()
         {
-            var filename='paste-' + Model.getPasteId() + '.txt';
+            var fileFormat = PasteViewer.getFormat() === 'markdown' ? '.md' : '.txt';
+            var filename='paste-' + Model.getPasteId() + fileFormat;
             var text = PasteViewer.getText();
 
             var element = document.createElement('a');
