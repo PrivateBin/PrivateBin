@@ -329,7 +329,7 @@ endif;
 			</div>
 		</nav>
 		<main>
-			<section class="container mt-2">
+			<section class="container-fluid mt-2">
 <?php
 if (!empty($NOTICE)) :
 ?>
@@ -422,8 +422,8 @@ endif;
 					</li>
 				</ul>
 			</section>
-			<section class="container">
-				<article class="row">
+			<section class="container-fluid">
+				<article>
 					<div id="placeholder" class="col-md-12 hidden"><?php echo I18n::_('+++ no paste text +++'); ?></div>
 					<div id="attachmentPreview" class="col-md-12 text-center hidden"></div>
 					<div id="prettymessage" class="card col-md-12 hidden">
@@ -433,20 +433,20 @@ endif;
 					<p class="col-md-12"><textarea id="message" name="message" cols="80" rows="25" class="form-control hidden"></textarea></p>
 				</article>
 			</section>
-			<section class="container">
+			<section class="container-fluid">
 				<div id="discussion" class="hidden">
 					<h4><?php echo I18n::_('Discussion'); ?></h4>
 					<div id="commentcontainer"></div>
 				</div>
 			</section>
-			<section class="container">
+			<section class="container-fluid">
 				<div id="noscript" role="alert" class="alert alert-info noscript-hide">
 					<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#exclamation-circle" /></svg>
 					<?php echo I18n::_('Loading…'); ?><br />
 					<span class="small"><?php echo I18n::_('In case this message never disappears please have a look at <a href="%s">this FAQ for information to troubleshoot</a>.', 'https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-the-loading-message-not-go-away'); ?></span>
 				</div>
 			</section>
-			<footer class="container">
+			<footer class="container-fluid">
 				<div class="row">
 					<h5 class="col-md-5 col-xs-8"><?php echo I18n::_($NAME); ?> <small>- <?php echo I18n::_('Because ignorance is bliss'); ?></small></h5>
 					<p class="col-md-1 col-xs-4 text-center"><?php echo $VERSION; ?></p>
