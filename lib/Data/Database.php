@@ -914,7 +914,7 @@ class Database extends AbstractData
                     );
                 }
                 // no break, continue with updates for all newer versions
-            case '1.7.3':
+            case '1.7.2':
                 $supportsDropColumn = true;
                 if ($this->_type === 'sqlite') {
                     try {
