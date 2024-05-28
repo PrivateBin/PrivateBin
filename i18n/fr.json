@@ -212,12 +212,12 @@
     "URL shortener may expose your decrypt key in URL.": "Raccourcir l'URL peut exposer votre clé de déchiffrement dans l'URL.",
     "Save paste": "Sauver le paste",
     "Your IP is not authorized to create pastes.": "Votre adresse IP n'est pas autorisée à créer des pastes.",
-    "Trying to shorten a URL that isn't pointing at our instance.": "Essayer de raccourcir une URL qui ne pointe pas vers notre instance.",
+    "Trying to shorten a URL that isn't pointing at our instance.": "Tentative de raccourcir une URL qui ne pointe pas vers notre instance.",
     "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "Erreur lors de l'appel de YOURLS. Peut-être un problème de configuration, comme \"apiurl\" ou \"signature\" manquant.",
     "Error parsing YOURLS response.": "Erreur d'analyse de la réponse YOURLS.",
     "This secret message can only be displayed once. Would you like to see it now?": "Les pastes de type \"Effacer après la lecture\" ne peuvent être affichés qu'une seule fois. Voulez-vous le voir maintenant ?",
-    "Yes, see it": "Oui, voyez le",
+    "Yes, see it": "Oui, le voir",
     "Dark Mode": "Mode Sombre",
     "Error compressing paste, due to missing WebAssembly support.": "Erreur lors de la compression du paste, en raison du support de WebAssembly manquant.",
-    "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.": "Erreur lors de la décompression du paste, votre navigateur ne supporte pas WebAssembly. Veuillez utiliser un autre navigateur pour voir ce collage."
+    "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.": "Erreur lors de la décompression du paste, votre navigateur ne supporte pas WebAssembly. Veuillez utiliser un autre navigateur pour voir ce paste."
 }
