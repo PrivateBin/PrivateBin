@@ -1,8 +1,16 @@
 #!/usr/bin/env php
 <?php
+/**
+ * PrivateBin
+ *
+ * a zero-knowledge paste bin
+ *
+ * @link      https://github.com/PrivateBin/PrivateBin
+ * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
+ * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
+ */
+
 define('ITERATIONS', 100000);
-
-
 
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
 use Identicon\Generator\GdGenerator;
@@ -11,8 +19,6 @@ use Identicon\Generator\SvgGenerator;
 use Identicon\Identicon;
 use Jdenticon\Identicon as Jdenticon;
 use PrivateBin\Vizhash16x16;
-
-
 
 $vizhash = new Vizhash16x16();
 $identiconGenerators = array(
