@@ -3767,6 +3767,18 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             }
         }
 
+        /**
+         * Clear the password input in the top navigation
+         * 
+         * @name TopNav.clearPasswordInput
+         * @function
+         */
+
+        function clearPasswordInput()
+        {
+            $passwordInput.val('');
+        }
+
 
         /**
          * Clear the attachment input in the top navigation.
@@ -4349,6 +4361,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         me.resetInput = function()
         {
             clearAttachmentInput();
+            clearPasswordInput();
             $burnAfterReading.prop('checked', burnAfterReadingDefault);
             $openDiscussion.prop('checked', openDiscussionDefault);
             if (openDiscussionDefault || !burnAfterReadingDefault) $openDiscussionOption.removeClass('buttondisabled');
