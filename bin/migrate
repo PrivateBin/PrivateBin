@@ -1,7 +1,16 @@
 #!/usr/bin/env php
 <?php
+/**
+ * PrivateBin
+ *
+ * a zero-knowledge paste bin
+ *
+ * @link      https://github.com/PrivateBin/PrivateBin
+ * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
+ * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
+ */
 
-// change this, if your php files and data is outside of your webservers document root
+// change this, if your php files and data are outside of your webservers document root
 define('PATH', dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR);
 
 define('PUBLIC_PATH', __DIR__ . DIRECTORY_SEPARATOR);

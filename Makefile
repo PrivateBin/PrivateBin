@@ -2,7 +2,7 @@
 
 CURRENT_VERSION = 1.7.3
 VERSION ?= 1.7.4
-VERSION_FILES = index.php bin/ cfg/ *.md doc/Installation.md css/ i18n/ img/ js/package.json js/privatebin.js lib/ Makefile tpl/ tst/
+VERSION_FILES = README.md SECURITY.md doc/Installation.md js/package*.json lib/Controller.php Makefile
 REGEX_CURRENT_VERSION := $(shell echo $(CURRENT_VERSION) | sed "s/\./\\\./g")
 REGEX_VERSION := $(shell echo $(VERSION) | sed "s/\./\\\./g")
 
@@ -29,12 +29,11 @@ doc-php: ## Generate JS code documentation.
 	phpdoc --visibility=public,protected,private --target=doc/phpdoc --directory=lib/
 
 increment: ## Increment and commit new version number, set target version using `make increment VERSION=1.2.3`.
-	for F in `grep -l -R $(REGEX_CURRENT_VERSION) $(VERSION_FILES) | grep -v -e tst/log/ -e ":0" -e CHANGELOG.md`; \
+	for F in `grep -l -R $(REGEX_CURRENT_VERSION) $(VERSION_FILES)`; \
 	do \
 		sed -i "s/$(REGEX_CURRENT_VERSION)/$(REGEX_VERSION)/g" $$F; \
 	done
-	cd tst && phpunit --no-coverage && cd ..
-	git add $(VERSION_FILES) tpl/
+	git add $(VERSION_FILES)
 	git commit -m "incrementing version"
 
 sign: ## Sign a release.
