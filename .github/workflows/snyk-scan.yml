@@ -12,6 +12,7 @@ jobs:
   # https://github.com/snyk/actions/tree/master/php
   snyk-php:
     runs-on: ubuntu-latest
+    if: ${{ github.repository == 'PrivateBin/PrivateBin' }}
     steps:
       - uses: actions/checkout@v4
       - name: Install Google Cloud Storage
