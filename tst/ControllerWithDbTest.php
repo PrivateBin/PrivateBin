@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 use PrivateBin\Data\Database;
 use PrivateBin\Persistence\ServerSalt;

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 use Google\Cloud\Core\Exception\BadRequestException;
 use Google\Cloud\Core\Exception\NotFoundException;

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 use Google\Auth\HttpHandler\HttpHandlerFactory;
 use GuzzleHttp\Client;
