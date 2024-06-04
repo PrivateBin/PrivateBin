@@ -181,7 +181,7 @@ abstract class AbstractData
     protected function getOpenSlot(array &$comments, $postdate)
     {
         if (array_key_exists($postdate, $comments)) {
-            $parts = explode('.', $postdate, 2);
+            $parts = explode('.', (string) $postdate, 2);
             if (!array_key_exists(1, $parts)) {
                 $parts[1] = 0;
             }
