@@ -2,6 +2,7 @@
 
 ## 1.7.4 (not yet released)
 * CHANGED: Saving markdown pastes uses `.md` extension instead of `.txt` (#1293)
+* CHANGED: Enable strict type checking in PHP (#1350)
 * FIXED: Reset password input field on creation of new paste (#1194)
 * FIXED: Allow database schema upgrade to skip versions (#1343)
 
