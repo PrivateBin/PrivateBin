@@ -1,5 +1,5 @@
 #!/usr/bin/env php
-<?php
+<?php declare(strict_types=1);
 /**
  * PrivateBin
  *
@@ -413,7 +413,7 @@ class ConfigurationTestGenerator
     private function _getHeader()
     {
         return <<<'EOT'
-<?php
+<?php declare(strict_types=1);
 /**
  * DO NOT EDIT: This file is generated automatically using configGenerator.php
  */

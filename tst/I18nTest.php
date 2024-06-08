@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
 use PrivateBin\I18n;
@@ -198,7 +198,7 @@ class I18nTest extends TestCase
         $languageCount = 0;
         foreach ($languageIterator as $file) {
             ++$languageCount;
-            $this->assertTrue(copy($file, $path . DIRECTORY_SEPARATOR . $file->getBasename()));
+            $this->assertTrue(copy($file->getPathname(), $path . DIRECTORY_SEPARATOR . $file->getBasename()));
         }
 
         I18nMock::resetPath($path);
