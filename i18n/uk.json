@@ -218,6 +218,6 @@
     "This secret message can only be displayed once. Would you like to see it now?": "Спалити після вставки читання можна вивести лише один раз під час завантаження. Відкрити його зараз?",
     "Yes, see it": "Так, завантажити",
     "Dark Mode": "Темний режим",
-    "Error compressing paste, due to missing WebAssembly support.": "Error compressing paste, due to missing WebAssembly support.",
-    "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.": "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste."
+    "Error compressing paste, due to missing WebAssembly support.": "Помилка при стисканні допису, через відсутність підтримки WebAssembly сервера.",
+    "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.": "Помилка при розпакуванні допису, бо ваш браузер не підтримує WebAssembly. Будь ласка, відкрийте інший браузер для перегляду цього допису."
 }
