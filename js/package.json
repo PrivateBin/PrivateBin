@@ -16,7 +16,7 @@
   },
   "scripts": {
     "test": "mocha",
-    "ci-test": "mocha --reporter-option output=mocha-results.xml"
+    "ci-test": "mocha --reporter xunit --reporter-option output=mocha-results.xml"
   },
   "repository": {
     "type": "git",
