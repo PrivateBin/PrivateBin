@@ -436,6 +436,7 @@ class Controller
         $page->assign('HTTPWARNING', $this->_conf->getKey('httpwarning'));
         $page->assign('HTTPSLINK', 'https://' . $this->_request->getHost() . $this->_request->getRequestUri());
         $page->assign('COMPRESSION', $this->_conf->getKey('compression'));
+        $page->assign('SRI', $this->_conf->getSection('sri'));
         $page->draw($this->_conf->getKey('template'));
     }
 

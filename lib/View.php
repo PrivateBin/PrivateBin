@@ -57,4 +57,22 @@ class View
         extract($this->_variables);
         include $path;
     }
+
+    /**
+     * echo script tag incl. SRI hash for given script file
+     *
+     * @access private
+     * @param  string $file
+     * @param  bool   $async should it execute ASAP or only after HTML got parsed
+     */
+    private function _scriptTag($file, $async = true)
+    {
+        $sri = array_key_exists($file, $this->_variables['SRI']) ?
+            ' integrity="' . $this->_variables['SRI'][$file] . '"' : '';
+        $suffix = preg_match('#\d.js$#', $file) == 0 ?
+            '?' . rawurlencode($this->_variables['VERSION']) : '';
+        echo '<script ', $async ? 'async' : 'defer',
+            ' type="text/javascript" data-cfasync="false" src="', $file,
+            $suffix, '"', $sri, ' crossorigin="anonymous"></script>', PHP_EOL;
+    }
 }
