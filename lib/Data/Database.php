@@ -598,18 +598,8 @@ class Database extends AbstractData
                 $sql = 'SELECT table_name FROM all_tables';
                 break;
             case 'pgsql':
-                $sql = 'SELECT c."relname" AS "table_name" '
-                     . 'FROM "pg_class" c, "pg_user" u '
-                     . 'WHERE c."relowner" = u."usesysid" AND c."relkind" = \'r\' '
-                     . 'AND NOT EXISTS (SELECT 1 FROM "pg_views" WHERE "viewname" = c."relname") '
-                     . "AND c.\"relname\" !~ '^(pg_|sql_)' "
-                     . 'UNION '
-                     . 'SELECT c."relname" AS "table_name" '
-                     . 'FROM "pg_class" c '
-                     . "WHERE c.\"relkind\" = 'r' "
-                     . 'AND NOT EXISTS (SELECT 1 FROM "pg_views" WHERE "viewname" = c."relname") '
-                     . 'AND NOT EXISTS (SELECT 1 FROM "pg_user" WHERE "usesysid" = c."relowner") '
-                     . "AND c.\"relname\" !~ '^pg_'";
+                $sql = 'SELECT "tablename" FROM "pg_catalog"."pg_tables" '
+                     . 'WHERE "schemaname" NOT IN (\'pg_catalog\', \'information_schema\')';
                 break;
             case 'sqlite':
                 $sql = 'SELECT "name" FROM "sqlite_master" WHERE "type"=\'table\' '
