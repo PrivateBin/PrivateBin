@@ -7,9 +7,6 @@ jobs:
 
   Composer:
     runs-on: ubuntu-latest
-    # https://docs.github.com/en/actions/using-jobs/using-a-matrix-for-your-jobs#handling-failures
-    continue-on-error: ${{ matrix.experimental }}
-    
     steps:
     - name: Checkout
       uses: actions/checkout@v4
@@ -21,7 +18,8 @@ jobs:
   PHPunit:
     name: PHP ${{ matrix.php-versions }} unit tests on ${{ matrix.operating-system }}
     runs-on: ubuntu-latest
-    continue-on-error: ${{ matrix.experimental }}
+    # https://docs.github.com/en/actions/using-jobs/using-a-matrix-for-your-jobs#handling-failures
+    continue-on-error: "${{ matrix.experimental }}"
     strategy:
       matrix:
         php-versions: ['7.3', '7.4', '8.0', '8.1', '8.2', '8.3']
@@ -86,9 +84,9 @@ jobs:
     - name: Cache dependencies
       uses: actions/cache@v4
       with:
-        path: ${{ steps.composer-cache.outputs.dir }}
-        key: ${{ runner.os }}-composer-${{ steps.get-date.outputs.date }}-${{ hashFiles('**/composer.json') }}
-        restore-keys: ${{ runner.os }}-composer-${{ steps.get-date.outputs.date }}-
+        path: "${{ steps.composer-cache.outputs.dir }}"
+        key: "${{ runner.os }}-composer-${{ steps.get-date.outputs.date }}-${{ hashFiles('**/composer.json') }}"
+        restore-keys: "${{ runner.os }}-composer-${{ steps.get-date.outputs.date }}-"
 
     # composer installation
     - name: Unset platform requirement
@@ -136,14 +134,14 @@ jobs:
     - name: Run unit tests
       run: npm run ci-test
       working-directory: js
-      
+
     - name: Upload Test Results
       if: always()
       uses: actions/upload-artifact@v4
       with:
         name: Test Results (Mocha)
         path: js/mocha-results.xml
-  
+
   event_file:
     name: "Event File"
     runs-on: ubuntu-latest
@@ -152,5 +150,4 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: Event File
-        path: ${{ github.event_path }}
-
+        path: "${{ github.event_path }}"

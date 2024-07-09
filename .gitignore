@@ -28,6 +28,7 @@ vendor/**/build_phar.php
 
 # Ignore local node modules, unit testing logs, api docs and IDE project files
 js/node_modules/
+js/mocha-results.xml
 js/test.log
 tst/log/
 tst/ConfigurationCombinationsTest.php
