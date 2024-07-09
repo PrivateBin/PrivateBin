@@ -63,15 +63,15 @@ class View
      *
      * @access private
      * @param  string $file
-     * @param  bool   $async should it execute ASAP or only after HTML got parsed
+     * @param  string $attributes additional attributes to add into the script tag
      */
-    private function _scriptTag($file, $async = true)
+    private function _scriptTag($file, $attributes = '')
     {
         $sri = array_key_exists($file, $this->_variables['SRI']) ?
             ' integrity="' . $this->_variables['SRI'][$file] . '"' : '';
         $suffix = preg_match('#\d.js$#', $file) == 0 ?
             '?' . rawurlencode($this->_variables['VERSION']) : '';
-        echo '<script ', $async ? 'async' : 'defer',
+        echo '<script ', $attributes,
             ' type="text/javascript" data-cfasync="false" src="', $file,
             $suffix, '"', $sri, ' crossorigin="anonymous"></script>', PHP_EOL;
     }

@@ -21,7 +21,7 @@ if ($SYNTAXHIGHLIGHTING):
     endif;
 endif;
 ?>
-		<?php $this->_scriptTag('js/jquery-3.7.1.js', false); ?>
+		<?php $this->_scriptTag('js/jquery-3.7.1.js', 'defer'); ?>
 <?php
 if ($QRCODE):
 ?>
@@ -51,7 +51,7 @@ endif;
 ?>
 		<?php $this->_scriptTag('js/purify-3.1.3.js'); ?>
 		<?php $this->_scriptTag('js/legacy.js'); ?>
-		<?php $this->_scriptTag('js/privatebin.js', false); ?>
+		<?php $this->_scriptTag('js/privatebin.js', 'defer'); ?>
 		<!-- icon -->
 		<link rel="apple-touch-icon" href="img/apple-touch-icon.png?<?php echo rawurlencode($VERSION); ?>" sizes="180x180" />
 		<link rel="icon" type="image/png" href="img/favicon-32x32.png?<?php echo rawurlencode($VERSION); ?>" sizes="32x32" />

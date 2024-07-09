@@ -42,38 +42,38 @@ if ($SYNTAXHIGHLIGHTING) :
 endif;
 ?>
 		<noscript><link type="text/css" rel="stylesheet" href="css/noscript.css" /></noscript>
-		<?php $this->_scriptTag('js/jquery-3.7.1.js', false); ?>
+		<?php $this->_scriptTag('js/jquery-3.7.1.js', 'async'); ?>
 <?php
 if ($QRCODE) :
 ?>
-		<?php $this->_scriptTag('js/kjua-0.9.0.js'); ?>
+		<?php $this->_scriptTag('js/kjua-0.9.0.js', 'async'); ?>
 <?php
 endif;
 if ($ZEROBINCOMPATIBILITY) :
 ?>
-		<?php $this->_scriptTag('js/base64-1.7.js'); ?>
+		<?php $this->_scriptTag('js/base64-1.7.js', 'async'); ?>
 <?php
 endif;
 ?>
-		<?php $this->_scriptTag('js/zlib-1.3.1.js'); ?>
-		<?php $this->_scriptTag('js/base-x-4.0.0.js'); ?>
-		<?php $this->_scriptTag('js/rawinflate-0.3.js'); ?>
-		<?php $this->_scriptTag('js/bootstrap-3.4.1.js', false); ?>
+		<?php $this->_scriptTag('js/zlib-1.3.1.js', 'async'); ?>
+		<?php $this->_scriptTag('js/base-x-4.0.0.js', 'async'); ?>
+		<?php $this->_scriptTag('js/rawinflate-0.3.js', 'async'); ?>
+		<?php $this->_scriptTag('js/bootstrap-3.4.1.js', 'defer'); ?>
 <?php
 if ($SYNTAXHIGHLIGHTING) :
 ?>
-		<?php $this->_scriptTag('js/prettify.js'); ?>
+		<?php $this->_scriptTag('js/prettify.js', 'async'); ?>
 <?php
 endif;
 if ($MARKDOWN) :
 ?>
-		<?php $this->_scriptTag('js/showdown-2.1.0.js'); ?>
+		<?php $this->_scriptTag('js/showdown-2.1.0.js', 'async'); ?>
 <?php
 endif;
 ?>
-		<?php $this->_scriptTag('js/purify-3.1.3.js'); ?>
-		<?php $this->_scriptTag('js/legacy.js'); ?>
-		<?php $this->_scriptTag('js/privatebin.js', false); ?>
+		<?php $this->_scriptTag('js/purify-3.1.3.js', 'async'); ?>
+		<?php $this->_scriptTag('js/legacy.js', 'async'); ?>
+		<?php $this->_scriptTag('js/privatebin.js', 'defer'); ?>
 		<!-- icon -->
 		<link rel="apple-touch-icon" href="<?php echo I18n::encode($BASEPATH); ?>img/apple-touch-icon.png" sizes="180x180" />
 		<link rel="icon" type="image/png" href="img/favicon-32x32.png" sizes="32x32" />
