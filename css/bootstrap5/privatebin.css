@@ -36,6 +36,10 @@
 	margin-bottom: 10px;
 }
 
+#message {
+	height: 70vh;
+}
+
 #message, .replymessage {
 	font-family: monospace;
 	resize: vertical;
