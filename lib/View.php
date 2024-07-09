@@ -72,7 +72,7 @@ class View
         $suffix = preg_match('#\d.js$#', $file) == 0 ?
             '?' . rawurlencode($this->_variables['VERSION']) : '';
         echo '<script ', $attributes,
-            ' type="text/javascript" data-cfasync="false" src="', $file,
-            $suffix, '"', $sri, ' crossorigin="anonymous"></script>', PHP_EOL;
+        ' type="text/javascript" data-cfasync="false" src="', $file,
+        $suffix, '"', $sri, ' crossorigin="anonymous"></script>', PHP_EOL;
     }
 }

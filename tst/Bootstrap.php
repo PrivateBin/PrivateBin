@@ -382,7 +382,7 @@ class Helper
             }
         }
 
-        $file = PATH . 'lib' . DIRECTORY_SEPARATOR . 'Configuration.php';
+        $file    = PATH . 'lib' . DIRECTORY_SEPARATOR . 'Configuration.php';
         $content = preg_replace_callback(
             '#\'js/([a-z0-9.-]+.js)\' =\> \'([^\']*)\',#',
             function ($matches) {
