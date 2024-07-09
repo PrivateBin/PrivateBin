@@ -1,6 +1,6 @@
 # PrivateBin version history
 
-## 1.7.4 (not yet released)
+## 1.7.4 (2024-07-09)
 * CHANGED: Saving markdown pastes uses `.md` extension instead of `.txt` (#1293)
 * CHANGED: Enable strict type checking in PHP (#1350)
 * CHANGED: Various tweaks of the `bootstrap5` template, suggested by the community
