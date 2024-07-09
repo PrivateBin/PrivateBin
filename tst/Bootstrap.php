@@ -384,12 +384,11 @@ class Helper
 
         $file    = PATH . 'lib' . DIRECTORY_SEPARATOR . 'Configuration.php';
         $content = preg_replace_callback(
-            '#\'js/([a-z0-9.-]+.js)\' =\> \'([^\']*)\',#',
+            '#\'js/([a-z0-9.-]+.js)(\' +)=\> \'[^\']*\',#',
             function ($matches) {
                 if (array_key_exists($matches[1], Helper::$hashes)) {
-                    return '\'js/' . $matches[1] . '\' => \'sha512-' .
-                        Helper::$hashes[$matches[1]] .
-                        '\',';
+                    return '\'js/' . $matches[1] . $matches[2] .
+                        '=> \'sha512-' . Helper::$hashes[$matches[1]] . '\',';
                 } else {
                     return $matches[0];
                 }
