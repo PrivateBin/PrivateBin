@@ -388,7 +388,7 @@ class Helper
             '#\'js/([a-z0-9.-]+.js)(\' +)=\> \'[^\']*\',#',
             function ($matches) use (&$counter) {
                 if (array_key_exists($matches[1], Helper::$hashes)) {
-                    $counter++;
+                    ++$counter;
                     return '\'js/' . $matches[1] . $matches[2] .
                         '=> \'sha512-' . Helper::$hashes[$matches[1]] . '\',';
                 } else {
