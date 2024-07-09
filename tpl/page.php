@@ -25,32 +25,32 @@ endif;
 <?php
 if ($QRCODE):
 ?>
-		<?php $this->_scriptTag('js/kjua-0.9.0.js'); ?>
+		<?php $this->_scriptTag('js/kjua-0.9.0.js', 'async'); ?>
 <?php
 endif;
 if ($ZEROBINCOMPATIBILITY):
 ?>
-		<?php $this->_scriptTag('js/base64-1.7.js'); ?>
+		<?php $this->_scriptTag('js/base64-1.7.js', 'async'); ?>
 <?php
 endif;
 ?>
-		<?php $this->_scriptTag('js/zlib-1.3.1.js'); ?>
-		<?php $this->_scriptTag('js/base-x-4.0.0.js'); ?>
-		<?php $this->_scriptTag('js/rawinflate-0.3.js'); ?>
+		<?php $this->_scriptTag('js/zlib-1.3.1.js', 'async'); ?>
+		<?php $this->_scriptTag('js/base-x-4.0.0.js', 'async'); ?>
+		<?php $this->_scriptTag('js/rawinflate-0.3.js', 'async'); ?>
 <?php
 if ($SYNTAXHIGHLIGHTING):
 ?>
-		<?php $this->_scriptTag('js/prettify.js'); ?>
+		<?php $this->_scriptTag('js/prettify.js', 'async'); ?>
 <?php
 endif;
 if ($MARKDOWN):
 ?>
-		<?php $this->_scriptTag('js/showdown-2.1.0.js'); ?>
+		<?php $this->_scriptTag('js/showdown-2.1.0.js', 'async'); ?>
 <?php
 endif;
 ?>
-		<?php $this->_scriptTag('js/purify-3.1.3.js'); ?>
-		<?php $this->_scriptTag('js/legacy.js'); ?>
+		<?php $this->_scriptTag('js/purify-3.1.3.js', 'async'); ?>
+		<?php $this->_scriptTag('js/legacy.js', 'async'); ?>
 		<?php $this->_scriptTag('js/privatebin.js', 'defer'); ?>
 		<!-- icon -->
 		<link rel="apple-touch-icon" href="img/apple-touch-icon.png?<?php echo rawurlencode($VERSION); ?>" sizes="180x180" />
