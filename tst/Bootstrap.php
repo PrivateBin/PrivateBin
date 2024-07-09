@@ -1,7 +1,5 @@
 <?php declare(strict_types=1);
 
-use Exception;
-use GlobIterator;
 use Google\Cloud\Core\Exception\BadRequestException;
 use Google\Cloud\Core\Exception\NotFoundException;
 use Google\Cloud\Storage\Bucket;

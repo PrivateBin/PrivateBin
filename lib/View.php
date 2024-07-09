@@ -69,10 +69,11 @@ class View
     {
         $sri = array_key_exists($file, $this->_variables['SRI']) ?
             ' integrity="' . $this->_variables['SRI'][$file] . '"' : '';
-        $suffix = preg_match('#\d.js$#', $file) == 0 ?
-            '?' . rawurlencode($this->_variables['VERSION']) : '';
+        // if the file isn't versioned (ends in a digit), add our own version
+        $cacheBuster = ctype_digit(substr($file, -4, 1)) ?
+            '' : '?' . rawurlencode($this->_variables['VERSION']);
         echo '<script ', $attributes,
         ' type="text/javascript" data-cfasync="false" src="', $file,
-        $suffix, '"', $sri, ' crossorigin="anonymous"></script>', PHP_EOL;
+        $cacheBuster, '"', $sri, ' crossorigin="anonymous"></script>', PHP_EOL;
     }
 }
