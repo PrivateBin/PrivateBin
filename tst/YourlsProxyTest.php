@@ -54,6 +54,13 @@ class YourlsProxyTest extends TestCase
         $this->assertEquals($yourls->getError(), 'Trying to shorten a URL that isn\'t pointing at our instance.');
     }
 
+    public function testSneakyForeignUrl()
+    {
+        $yourls = new YourlsProxy($this->_conf, 'https://other.example.com/?q=https://example.com/?foo#bar');
+        $this->assertTrue($yourls->isError());
+        $this->assertEquals($yourls->getError(), 'Trying to shorten a URL that isn\'t pointing at our instance.');
+    }
+
     public function testYourlsError()
     {
         // when statusCode is not 200, shorturl may not have been set

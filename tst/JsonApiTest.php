@@ -325,6 +325,9 @@ class JsonApiTest extends TestCase
      */
     public function testShortenViaYourlsFailure()
     {
+        $options                            = parse_ini_file(CONF, true);
+        $options['main']['basepath']        = 'https://example.com/path'; // missing slash gets added by Configuration constructor
+        Helper::createIniFile(CONF, $options);
         $_SERVER['REQUEST_URI'] = '/path/shortenviayourls?link=https%3A%2F%2Fexample.com%2Fpath%2F%3Ffoo%23bar';
         $_GET['link']           = 'https://example.com/path/?foo#bar';
         ob_start();

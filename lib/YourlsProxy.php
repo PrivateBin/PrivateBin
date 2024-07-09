@@ -47,7 +47,7 @@ class YourlsProxy
      */
     public function __construct(Configuration $conf, $link)
     {
-        if (strpos($link, $conf->getKey('basepath') . '?') === false) {
+        if (strpos($link, $conf->getKey('basepath') . '?') !== 0) {
             $this->_error = 'Trying to shorten a URL that isn\'t pointing at our instance.';
             return;
         }
