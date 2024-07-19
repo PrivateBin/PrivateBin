@@ -210,6 +210,10 @@ class Configuration
             }
             // check for missing keys and set defaults if necessary
             else {
+                // preserve configured SRI hashes
+                if ($section == 'sri' && array_key_exists($section, $config)) {
+                    $this->_configuration[$section] = $config[$section];
+                }
                 foreach ($values as $key => $val) {
                     if ($key == 'dir') {
                         $val = PATH . $val;
