@@ -213,10 +213,10 @@
     "Save paste": "Зберегти вставку",
     "Your IP is not authorized to create pastes.": "Вашому IP не дозволено створювати вставки.",
     "Trying to shorten a URL that isn't pointing at our instance.": "Спроба скоротити URL, який не вказує на наш екземпляр.",
-    "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "Помилка виклику YOURLS. Ймовірно проблема з конфігурацією, наприклад \"apiurl\" чи \"signature\".",
+    "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "Помилка виклику YOURLS. Ймовірно проблема з налаштуванням, наприклад \"apiurl\" чи \"signature\".",
     "Error parsing YOURLS response.": "Помилка розбору відповіді YOURLS.",
-    "This secret message can only be displayed once. Would you like to see it now?": "Спалити після вставки читання можна вивести лише один раз під час завантаження. Відкрити його зараз?",
-    "Yes, see it": "Так, завантажити",
+    "This secret message can only be displayed once. Would you like to see it now?": "Це таємне повідомлення можна надіслати лише один раз. Хочете переглянути його зараз?",
+    "Yes, see it": "Так, побачити",
     "Dark Mode": "Темний режим",
     "Error compressing paste, due to missing WebAssembly support.": "Помилка при стисканні допису, через відсутність підтримки WebAssembly сервера.",
     "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.": "Помилка при розпакуванні допису, бо ваш браузер не підтримує WebAssembly. Будь ласка, відкрийте інший браузер для перегляду цього допису."
