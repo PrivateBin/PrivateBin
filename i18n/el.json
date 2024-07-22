@@ -215,9 +215,9 @@
     "Trying to shorten a URL that isn't pointing at our instance.": "Προσπαθώντας να συντομεύσει μια διεύθυνση URL που δεν δείχνει στην περίπτωσή μας.",
     "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "Σφάλμα κατά την κλήση YOURLS. Πιθανώς ένα ζήτημα διαμόρφωσης, όπως λάθος ή λείπει \"apiurl\" ή \"υπογραφή\".",
     "Error parsing YOURLS response.": "Σφάλμα ανάλυσης της απόκρισης YOURLS.",
-    "This secret message can only be displayed once. Would you like to see it now?": "Αυτό το μυστικό μήνυμα μπορεί να εμφανιστεί μόνο μία φορά. Θα θέλατε να το δείτε τώρα?",
+    "This secret message can only be displayed once. Would you like to see it now?": "Αυτό το μυστικό μήνυμα μπορεί να εμφανιστεί μόνο μία φορά. Θα θέλατε να το δείτε τώρα;",
     "Yes, see it": "Ναι, δείτε το",
     "Dark Mode": "Σκοτεινό Θέμα",
-    "Error compressing paste, due to missing WebAssembly support.": "Error compressing paste, due to missing WebAssembly support.",
-    "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.": "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste."
+    "Error compressing paste, due to missing WebAssembly support.": "Σφάλμα συμπίεσης επικόλλησης, λόγω έλλειψης υποστήριξης WebAssembly.",
+    "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.": "Σφάλμα αποσυμπίεσης της επικόλλησης, ο περιηγητής σας δεν υποστηρίζει WebAssembly. Παρακαλούμε χρησιμοποιήστε έναν άλλο περιηγητή για να δείτε αυτή την επικόλληση."
 }
