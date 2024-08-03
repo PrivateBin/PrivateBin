@@ -120,9 +120,15 @@ class ConfigurationTest extends TestCase
         unset($options['expire_options']['1week']);
         unset($options['expire_options']['1year']);
         unset($options['expire_options']['never']);
+        $sri_key                         = array_key_first($options['sri']);
+        $valid_sri                       = $options['sri'][$sri_key];
+        $options['sri'][$sri_key]        = ''; // empty string should get replaced with default
+        $options['sri']['js/example.js'] = 'some invalid SRI hash';
         Helper::createIniFile(CONF, $options);
         $conf                         = new Configuration;
+        // restore expected results
         $options['expire']['default'] = '5min';
+        $options['sri'][$sri_key]     = $valid_sri;
         $this->assertEquals($options, $conf->get(), 'not overriding "missing" subkeys');
     }
 

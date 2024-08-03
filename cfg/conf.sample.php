@@ -275,3 +275,9 @@ dir = PATH "data"
 ; signature = ""
 ; (optional) the URL of the YOURLS API, called to shorten a PrivateBin URL
 ; apiurl = "https://yourls.example.com/yourls-api.php"
+
+;[sri]
+; Subresource integrity (SRI) hashes used in template files. Uncomment and set
+; these for all js files used. See:
+; https://github.com/PrivateBin/PrivateBin/wiki/FAQ#user-content-how-to-make-privatebin-work-when-i-have-changed-some-javascript-files
+;privatebin.js = sha512-[…]

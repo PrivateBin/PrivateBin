@@ -2,6 +2,7 @@
 
 ## 1.7.5 (not yet released)
 * CHANGED: Simpler PostgreSQL table lookup query (#1361)
+* CHANGED: SRI hashes are now configurable, no longer hardcoded in templates (#1365)
 
 ## 1.7.4 (2024-07-09)
 * CHANGED: Saving markdown pastes uses `.md` extension instead of `.txt` (#1293)

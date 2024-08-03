@@ -371,42 +371,33 @@ class Helper
      */
     public static function updateSubresourceIntegrity()
     {
-        $dir = dir(PATH . 'js');
-        while (false !== ($file = $dir->read())) {
-            if (substr($file, -3) === '.js') {
-                self::$hashes[$file] = base64_encode(
-                    hash('sha512', file_get_contents(
-                        PATH . 'js' . DIRECTORY_SEPARATOR . $file
-                    ), true)
-                );
+        foreach (new GlobIterator(PATH . 'js' . DIRECTORY_SEPARATOR . '*.js') as $file) {
+            if ($file->getBasename() == 'common.js') {
+                continue; // ignore JS unit test bootstrap
             }
+            self::$hashes[$file->getBasename()] = base64_encode(
+                hash('sha512', file_get_contents($file->getPathname()), true)
+            );
         }
 
-        $dir = dir(PATH . 'tpl');
-        while (false !== ($file = $dir->read())) {
-            if (substr($file, -4) === '.php') {
-                $content = file_get_contents(
-                    PATH . 'tpl' . DIRECTORY_SEPARATOR . $file
-                );
-                $content = preg_replace_callback(
-                    '#<script ([^>]+) src="js/([a-z0-9.-]+.js)([^"]*)"( integrity="[^"]+" crossorigin="[^"]+")?></script>#',
-                    function ($matches) {
-                        if (array_key_exists($matches[2], Helper::$hashes)) {
-                            return '<script ' . $matches[1] . ' src="js/' .
-                                $matches[2] . $matches[3] .
-                                '" integrity="sha512-' . Helper::$hashes[$matches[2]] .
-                                '" crossorigin="anonymous"></script>';
-                        } else {
-                            return $matches[0];
-                        }
-                    },
-                    $content
-                );
-                file_put_contents(
-                    PATH . 'tpl' . DIRECTORY_SEPARATOR . $file,
-                    $content
-                );
-            }
+        $counter = 0;
+        $file    = PATH . 'lib' . DIRECTORY_SEPARATOR . 'Configuration.php';
+        $content = preg_replace_callback(
+            '#\'js/([a-z0-9.-]+.js)(\' +)=\> \'[^\']*\',#',
+            function ($matches) use (&$counter) {
+                if (array_key_exists($matches[1], Helper::$hashes)) {
+                    ++$counter;
+                    return '\'js/' . $matches[1] . $matches[2] .
+                        '=> \'sha512-' . Helper::$hashes[$matches[1]] . '\',';
+                } else {
+                    throw new Exception('SRI hash for file js/' . $matches[1] . ' not found, please add the missing file or remove it from lib/Configuration.php.');
+                }
+            },
+            file_get_contents($file)
+        );
+        file_put_contents($file, $content);
+        if ($counter != count(self::$hashes)) {
+            throw new Exception('Mismatch between ' . count(self::$hashes) . ' found js files and ' . $counter . ' SRI hashes in lib/Configuration.php, please update lib/Configuration.php to match the list of js files.');
         }
     }
 }

@@ -63,6 +63,7 @@ class ViewTest extends TestCase
         $page->assign('HTTPSLINK', 'https://example.com/');
         $page->assign('COMPRESSION', 'zlib');
         $page->assign('CSPHEADER', 'default-src \'none\'');
+        $page->assign('SRI', array());
 
         $dir = dir(PATH . 'tpl');
         while (false !== ($file = $dir->read())) {

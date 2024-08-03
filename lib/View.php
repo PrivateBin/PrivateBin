@@ -57,4 +57,23 @@ class View
         extract($this->_variables);
         include $path;
     }
+
+    /**
+     * echo script tag incl. SRI hash for given script file
+     *
+     * @access private
+     * @param  string $file
+     * @param  string $attributes additional attributes to add into the script tag
+     */
+    private function _scriptTag($file, $attributes = '')
+    {
+        $sri = array_key_exists($file, $this->_variables['SRI']) ?
+            ' integrity="' . $this->_variables['SRI'][$file] . '"' : '';
+        // if the file isn't versioned (ends in a digit), add our own version
+        $cacheBuster = ctype_digit(substr($file, -4, 1)) ?
+            '' : '?' . rawurlencode($this->_variables['VERSION']);
+        echo '<script ', $attributes,
+        ' type="text/javascript" data-cfasync="false" src="', $file,
+        $cacheBuster, '"', $sri, ' crossorigin="anonymous"></script>', PHP_EOL;
+    }
 }
