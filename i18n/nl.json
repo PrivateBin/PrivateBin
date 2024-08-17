@@ -26,7 +26,7 @@
     "JavaScript is required for %s to work. Sorry for the inconvenience.": "JavaScript vereist om %s te laten werken. Sorry voor het ongemak.",
     "%s requires a modern browser to work.": "%s vereist een moderne browser om te kunnen werken.",
     "New": "Nieuw",
-    "Create": "Aanmaken",
+    "Create": "Maak",
     "Clone": "Klonen",
     "Raw text": "Onbewerkte tekst",
     "Expires": "Verloopt",
@@ -154,7 +154,7 @@
     "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit [Ctrl]+[c] to copy)</span>": "Je paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Druk [Ctrl]+[c] om te kopiëren)</span>",
     "Delete data": "Gegevens wissen",
     "Could not create paste: %s": "Kon de paste niet aanmaken: %s",
-    "Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)": "Kon de paste niet decoderen: Decoderingssleutel ontbreekt in URL (Heb je een doorverwijzer of een URL-verkorter gebruikt die een deel van de URL verwijdert?)",
+    "Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)": "Kon de paste niet decoderen: Decoderingssleutel ontbreekt in URL (Heb je een redirector of een URL-verkorter gebruikt die een deel van de URL verwijdert?)",
     "B": "B",
     "KiB": "KiB",
     "MiB": "MiB",
@@ -215,9 +215,9 @@
     "Trying to shorten a URL that isn't pointing at our instance.": "Proberen om een URL te verkorten dat niet naar ons systeem wijst.",
     "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "Foutmelding ophalen YOURLS. Waarschijnlijk een configuratiefout, zoals een verkeerde of missende \"apiurl\" of \"signature\".",
     "Error parsing YOURLS response.": "Foutmelding bij parsen van YOURLS respons.",
-    "This secret message can only be displayed once. Would you like to see it now?": "Dit geheime bericht kan maar één keer worden weergegeven. Wil je het nu zien?",
-    "Yes, see it": "Ja, tonen",
+    "This secret message can only be displayed once. Would you like to see it now?": "Brand na het lezen van de plagen kan slechts eenmaal worden weergegeven wanneer deze worden geladen. Wilt u het nu zien?",
+    "Yes, see it": "Ja, zie het",
     "Dark Mode": "Donkere modus",
-    "Error compressing paste, due to missing WebAssembly support.": "Fout bij het comprimeren van notitie door ontbrekende ondersteuning voor WebAssembly.",
-    "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.": "Fout bij het decomprimeren van de notitie, uw browser ondersteunt WebAssembly niet. Gebruik een andere browser om deze notitie te bekijken."
+    "Error compressing paste, due to missing WebAssembly support.": "Error compressing paste, due to missing WebAssembly support.",
+    "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.": "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste."
 }
