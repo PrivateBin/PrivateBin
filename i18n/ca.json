@@ -92,7 +92,7 @@
         "%d anys"
     ],
     "Never": "Mai",
-    "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.": "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.",
+    "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.": "Nota: Aquest és un servei de prova. Les dades s'eliminaran. Molts gatets moriran si abuses d'aquest servei.",
     "This document will expire in %d seconds.": [
         "Aquest document caducarà d'aquí %d segon.",
         "Aquest document caducarà d'aquí %d segons.",
@@ -154,7 +154,7 @@
     "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit [Ctrl]+[c] to copy)</span>": "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit [Ctrl]+[c] to copy)</span>",
     "Delete data": "Esborrar les dades",
     "Could not create paste: %s": "Could not create paste: %s",
-    "Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)": "No es pot desxifrar la nota: falta la clau de desxifrat a l'URL (vau utilitzar un redirector o un escurçador d'URL que elimina part de l'URL?)",
+    "Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)": "No es pot desxifrar la nota: falta la clau de desxifrat a l'URL (vau utilitzar un adreçament o un escurçador d'URL que elimina part de l'URL?)",
     "B": "B",
     "KiB": "KiB",
     "MiB": "MiB",
