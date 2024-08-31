@@ -72,7 +72,9 @@ class Database extends AbstractData
             // set default options
             $options['opt'][PDO::ATTR_ERRMODE]          = PDO::ERRMODE_EXCEPTION;
             $options['opt'][PDO::ATTR_EMULATE_PREPARES] = false;
-            $options['opt'][PDO::ATTR_PERSISTENT]       = true;
+            if (!array_key_exists(PDO::ATTR_PERSISTENT, $options['opt'])) {
+                $options['opt'][PDO::ATTR_PERSISTENT] = true;
+            }
             $db_tables_exist                            = true;
 
             // setup type and dabase connection
