@@ -1,6 +1,7 @@
 # PrivateBin version history
 
 ## 1.7.5 (not yet released)
+* ADDED: Allow non persistent SQL connections, if configured (#1394)
 * CHANGED: Simpler PostgreSQL table lookup query (#1361)
 * CHANGED: SRI hashes are now configurable, no longer hardcoded in templates (#1365)
 * CHANGED: Upgrading libraries to: DOMpurify 3.1.6
