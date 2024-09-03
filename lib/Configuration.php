@@ -12,7 +12,6 @@
 namespace PrivateBin;
 
 use Exception;
-use PDO;
 
 /**
  * Configuration
@@ -166,7 +165,7 @@ class Configuration
                     'tbl' => null,
                     'usr' => null,
                     'pwd' => null,
-                    'opt' => array(PDO::ATTR_PERSISTENT => true),
+                    'opt' => array(),
                 );
             } elseif (
                 $section == 'model_options' && in_array(
@@ -235,6 +234,8 @@ class Configuration
                             $result = (int) $config[$section][$key];
                         } elseif (is_string($val) && !empty($config[$section][$key])) {
                             $result = (string) $config[$section][$key];
+                        } elseif (is_array($val) && is_array($config[$section][$key])) {
+                            $result = $config[$section][$key];
                         }
                     }
                     $this->_configuration[$section][$key] = $result;
