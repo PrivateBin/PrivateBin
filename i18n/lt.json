@@ -26,7 +26,7 @@
     "JavaScript is required for %s to work. Sorry for the inconvenience.": "%s darbui reikalinga JavaScript. Atsiprašome už nepatogumus.",
     "%s requires a modern browser to work.": "%s savo darbui reikalauja šiuolaikinės naršyklės.",
     "New": "Naujas",
-    "Create": "Kurti",
+    "Create": "Sukurti",
     "Clone": "Dubliuoti",
     "Raw text": "Neapdorotas tekstas",
     "Expires": "Baigs galioti po",
@@ -215,9 +215,9 @@
     "Trying to shorten a URL that isn't pointing at our instance.": "Bandoma sutrumpinti URL adresą, kuris nenurodo į mūsų egzempliorių.",
     "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "Klaida iškviečiant YOURLS. Tikriausiai, konfigūracijos klaida, pavyzdžiui, neteisingi „apiurl“ ar „signature“, arba jų nėra.",
     "Error parsing YOURLS response.": "Klaida nagrinėjant YOURLS atsaką.",
-    "This secret message can only be displayed once. Would you like to see it now?": "This secret message can only be displayed once. Would you like to see it now?",
-    "Yes, see it": "Yes, see it",
-    "Dark Mode": "Tamsus režimas",
-    "Error compressing paste, due to missing WebAssembly support.": "Error compressing paste, due to missing WebAssembly support.",
-    "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.": "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste."
+    "This secret message can only be displayed once. Would you like to see it now?": "Ši slapta žinutė gali būti parodyta tik vieną kartą. Ar norėtumėte ją dabar pamatyti?",
+    "Yes, see it": "Taip, pamatyti",
+    "Dark Mode": "Tamsi veiksena",
+    "Error compressing paste, due to missing WebAssembly support.": "Klaida glaudinant įdėjimą, nes trūksta WebAssembly palaikymo.",
+    "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.": "Klaida išglaudinant įdėjimą, jūsų naršyklė nepalaiko WebAssembly. Norėdami peržiūrėti šį įdėjimą, naudokite kitą naršyklę."
 }
