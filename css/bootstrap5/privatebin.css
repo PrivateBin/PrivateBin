@@ -84,3 +84,11 @@ li.L0, li.L1, li.L2, li.L3, li.L4, li.L5, li.L6, li.L7, li.L8, li.L9 {
 html[dir="rtl"] #deletelink, html[dir="rtl"] #qrcodemodalClose {
 	float: left;
 }
+
+.wrapper {
+	display: flex;
+	min-height: 100vh;
+	min-height: calc(var(--vh, 1vh) * 100);
+	flex-direction: column;
+	justify-content: space-between;
+}

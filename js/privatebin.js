@@ -1744,6 +1744,43 @@ jQuery.PrivateBin = (function($, RawDeflate) {
     })();
 
     /**
+     * Calculate css variables
+     * 
+     * @class
+     */
+    const CssVariables = (function () {
+        const me = {};
+
+        /**
+         * Calculate 1/100 viewport height on each page resize event
+         * 
+         * @name CssVariables.viewportHeight
+         * @private
+         * @function
+         */
+        function viewportHeight()
+        {
+            window.addEventListener('resize', function () {
+                const vh = window.innerHeight * 0.01;
+                document.documentElement.style.setProperty('--vh', `${vh}px`);
+            });
+        }
+
+         /**
+         * Init css variables calculation
+         *
+         * @name CssVariables.init
+         * @function
+         */
+         me.init = function()
+         {
+            viewportHeight();
+         };
+         
+         return me;
+    })();
+
+    /**
      * Alert/error manager
      *
      * @name   Alert
@@ -5657,6 +5694,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         CryptTool: CryptTool,
         Model: Model,
         UiHelper: UiHelper,
+        CssVariables: CssVariables,
         Alert: Alert,
         PasteStatus: PasteStatus,
         Prompt: Prompt,

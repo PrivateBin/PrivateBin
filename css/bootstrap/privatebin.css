@@ -11,7 +11,7 @@
 @import url("../common.css");
 
 body {
-	padding: 0 0 30px;
+	padding: 0;
 }
 
 body.navbar-spacing {
@@ -174,4 +174,12 @@ html[dir="rtl"] #language {
 
 html[dir="rtl"] #deletelink, html[dir="rtl"] #qrcodemodalClose {
 	float: left;
+}
+
+.wrapper {
+	display: flex;
+	min-height: 100vh;
+	min-height: calc(var(--vh, 1vh) * 100);
+	flex-direction: column;
+	justify-content: space-between;
 }
