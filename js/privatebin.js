@@ -5649,6 +5649,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             Prompt.init();
             TopNav.init();
             UiHelper.init();
+            CssVariables.init();
 
             // check for legacy browsers before going any further
             if (!Legacy.Check.getInit()) {
