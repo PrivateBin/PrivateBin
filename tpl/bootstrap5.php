@@ -467,7 +467,7 @@ if ($DISCUSSION) :
 ?>
 		<div id="serverdata" class="hidden" aria-hidden="true">
 			<div id="templates">
-				<article id="commenttemplate" class="comment">
+				<article id="commenttemplate" class="comment px-2 pb-3">
 					<div class="commentmeta">
 						<span class="nickname">name</span>
 						<span class="commentdate">0000-00-00</span>
@@ -475,11 +475,11 @@ if ($DISCUSSION) :
 					<div class="commentdata">c</div>
 					<button class="btn btn-secondary btn-sm"><?php echo I18n::_('Reply'); ?></button>
 				</article>
-				<p id="commenttailtemplate" class="comment">
+				<p id="commenttailtemplate" class="comment px-2 pb-3">
 					<button class="btn btn-secondary btn-sm"><?php echo I18n::_('Add comment'); ?></button>
 				</p>
 				<div id="replytemplate" class="reply hidden">
-					<input type="text" id="nickname" class="form-control" title="<?php echo I18n::_('Optional nickname…'); ?>" placeholder="<?php echo I18n::_('Optional nickname…'); ?>" />
+					<input type="text" id="nickname" class="form-control my-2" title="<?php echo I18n::_('Optional nickname…'); ?>" placeholder="<?php echo I18n::_('Optional nickname…'); ?>" />
 					<textarea id="replymessage" class="replymessage form-control" cols="80" rows="7"></textarea><br />
 					<div id="replystatus" role="alert" class="statusmessage hidden alert">
 						<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#info-circle" /></svg>

@@ -32,11 +32,7 @@
 	word-wrap: break-word;
 }
 
-#preview {
-	margin-bottom: 10px;
-}
-
-#message {
+#message, #placeholder, #plaintext, #prettymessage {
 	height: 70vh;
 }
 
@@ -45,17 +41,8 @@
 	resize: vertical;
 }
 
-#nickname {
-	margin: 5px 0;
-}
-
-#comments, #comments button {
-	margin-bottom: 10px;
-}
-
 .comment {
 	border-left: 1px solid #ccc;
-	padding: 5px 0 5px 10px;
 	transition: background-color 0.75s ease-out;
 }
 
