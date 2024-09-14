@@ -32,7 +32,7 @@
 	word-wrap: break-word;
 }
 
-#message, #placeholder, #plaintext, #prettymessage {
+#message {
 	height: 70vh;
 }
 
