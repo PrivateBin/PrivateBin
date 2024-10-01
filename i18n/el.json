@@ -1,6 +1,6 @@
 {
     "PrivateBin": "PrivateBin",
-    "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted %sin the browser%s using 256 bits AES.": "%s είναι ένα λιτό, ανοικτού λογισμικού διαδικτυακής υπηρεσίας επικόλλησης όπου ο διακομιστής έχει πλήρη άγνια του περιεχομένου που επικολλήθηκαν. Τα Δεδομένα κρυπτογραφούνται και αποκρυπτογραφούνται %sστον φιλομετρητή (browser)%s χρησιμοποιόντας 256 bits AES.",
+    "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted %sin the browser%s using 256 bits AES.": "Το %s αποτελεί ένα εργαλείο επικόλλησης δεδομένων στο διαδίκτυο, που βασίζεται σε λογισμικό ανοιχτού κώδικα. Ο διακομιστής έχει πλήρη άγνοια αυτών των δεδομένων, τα οποία από/κρυπτογραφούνται %sστο πρόγραμμα περιήγησης%s, χρησιμοποιώντας τη μέθοδο 256-bits AES.",
     "More information on the <a href=\"https://privatebin.info/\">project page</a>.": "Περισσότερες πληροφορίες στον <a href=\"https://privatebin.info/\">ιστότοπο του εργαλείου</a>.",
     "Because ignorance is bliss": "Επειδή η άγνοια είναι ευτυχία",
     "Paste does not exist, has expired or has been deleted.": "Η επικόλληση δεν υπάρχει, έληξε ή διαγράφηκε",
@@ -212,7 +212,7 @@
     "URL shortener may expose your decrypt key in URL.": "Συντομευτές συνδέσμων πιθανώς να δημοσιοποιήσουν το κλειδί αποκρυπτογράφισης στον σύνδεσμο.",
     "Save paste": "Αποθήκευση επικόλλησης",
     "Your IP is not authorized to create pastes.": "Η IP σας δεν επιτρέπεται να δημιουργεί επικολλήσεις.",
-    "Trying to shorten a URL that isn't pointing at our instance.": "Προσπαθώντας να συντομεύσει μια διεύθυνση URL που δεν δείχνει στην περίπτωσή μας.",
+    "Trying to shorten a URL that isn't pointing at our instance.": "Έγινε προσπάθεια συντόμευσης ενός URL που δε δείχνει προς τη δική μας υπηρεσία.",
     "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "Σφάλμα κατά την κλήση YOURLS. Πιθανώς ένα ζήτημα διαμόρφωσης, όπως λάθος ή λείπει \"apiurl\" ή \"υπογραφή\".",
     "Error parsing YOURLS response.": "Σφάλμα ανάλυσης της απόκρισης YOURLS.",
     "This secret message can only be displayed once. Would you like to see it now?": "Αυτό το μυστικό μήνυμα μπορεί να εμφανιστεί μόνο μία φορά. Θα θέλατε να το δείτε τώρα;",

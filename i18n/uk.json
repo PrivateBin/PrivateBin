@@ -16,15 +16,15 @@
     ],
     "Paste is limited to %s of encrypted data.": "Розмір допису обмежений %s зашифрованих даних.",
     "Invalid data.": "Неправильні дані.",
-    "You are unlucky. Try again.": "Вам не пощастило. Спробуйте ще раз.",
+    "You are unlucky. Try again.": "Якась халепа! Спробуйте ще раз.",
     "Error saving comment. Sorry.": "Помилка при збереженні коментаря. Вибачте.",
     "Error saving paste. Sorry.": "Помилка при збереженні допису. Вибачте.",
     "Invalid paste ID.": "Неправильний ID допису.",
     "Paste is not of burn-after-reading type.": "Тип допису не \"Знищити після прочитання\".",
-    "Wrong deletion token. Paste was not deleted.": "Неправильний ключ вилучення допису. Допис не вилучено.",
+    "Wrong deletion token. Paste was not deleted.": "Неправильний жетон вилучення допису. Допис не вилучено.",
     "Paste was properly deleted.": "Допис був вилучений повністю.",
     "JavaScript is required for %s to work. Sorry for the inconvenience.": "Для роботи %s потрібен увімкнутий JavaScript. Вибачте.",
-    "%s requires a modern browser to work.": "Для роботи %s потрібен більш сучасний переглядач.",
+    "%s requires a modern browser to work.": "Для роботи %s потрібен більш сучасний браузер.",
     "New": "Новий допис",
     "Create": "Створити",
     "Clone": "Дублювати",
@@ -36,8 +36,8 @@
     "Discussion": "Обговорення",
     "Toggle navigation": "Перемкнути навігацію",
     "%d seconds": [
-        "%d секунду",
-        "%d секунди",
+        "%d секунд",
+        "%d секунд",
         "%d секунд",
         "%d секунд",
         "%d секунд",
@@ -219,5 +219,5 @@
     "Yes, see it": "Так, побачити",
     "Dark Mode": "Темний режим",
     "Error compressing paste, due to missing WebAssembly support.": "Помилка при стисканні допису, через відсутність підтримки WebAssembly сервера.",
-    "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.": "Помилка при розпакуванні допису, бо ваш браузер не підтримує WebAssembly. Будь ласка, відкрийте інший браузер для перегляду цього допису."
+    "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.": "Помилка при розпакуванні допису, бо ваш браузер не підтримує WebAssembly. Будь ласка, відкрийте в іншому браузері для перегляду цього допису."
 }
