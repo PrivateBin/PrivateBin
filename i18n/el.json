@@ -212,7 +212,7 @@
     "URL shortener may expose your decrypt key in URL.": "Συντομευτές συνδέσμων πιθανώς να δημοσιοποιήσουν το κλειδί αποκρυπτογράφισης στον σύνδεσμο.",
     "Save paste": "Αποθήκευση επικόλλησης",
     "Your IP is not authorized to create pastes.": "Η IP σας δεν επιτρέπεται να δημιουργεί επικολλήσεις.",
-    "Trying to shorten a URL that isn't pointing at our instance.": "Προσπαθώντας να συντομεύσει μια διεύθυνση URL που δεν δείχνει στην περίπτωσή μας.",
+    "Trying to shorten a URL that isn't pointing at our instance.": "Έγινε προσπάθεια συντόμευσης ενός URL που δε δείχνει προς τη δική μας υπηρεσία.",
     "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "Σφάλμα κατά την κλήση YOURLS. Πιθανώς ένα ζήτημα διαμόρφωσης, όπως λάθος ή λείπει \"apiurl\" ή \"υπογραφή\".",
     "Error parsing YOURLS response.": "Σφάλμα ανάλυσης της απόκρισης YOURLS.",
     "This secret message can only be displayed once. Would you like to see it now?": "Αυτό το μυστικό μήνυμα μπορεί να εμφανιστεί μόνο μία φορά. Θα θέλατε να το δείτε τώρα;",
