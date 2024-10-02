@@ -1,6 +1,6 @@
 {
     "PrivateBin": "PrivateBin",
-    "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted %sin the browser%s using 256 bits AES.": "%s це мінімалістичний Open Source проєкт для створення нотаток, де сервер не знає нічого про дані, що зберігаються. Дані шифруються/розшифровуються %sу переглядачі%s з використанням 256-бітного шифрувания AES.",
+    "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted %sin the browser%s using 256 bits AES.": "%s це мінімалістичний Open Source проєкт для створення нотаток, де сервер не знає нічого про дані, що зберігаються. Дані шифруються/розшифровуються %sу браузері%s з використанням 256-бітного шифрування AES.",
     "More information on the <a href=\"https://privatebin.info/\">project page</a>.": "Подробиці можна дізнатися на <a href=\"https://privatebin.info/\">сайті проєкту</a>.",
     "Because ignorance is bliss": "Бо незнання - благо",
     "Paste does not exist, has expired or has been deleted.": "Допис не існує, протермінований чи був видалений.",
@@ -134,7 +134,7 @@
         "Документ буде вилучений через %d місяців."
     ],
     "Please enter the password for this paste:": "Будь ласка, введіть пароль від допису:",
-    "Could not decrypt data (Wrong key?)": "Неможливо розшифрувати дані (Неправильний  ключ?)",
+    "Could not decrypt data (Wrong key?)": "Неможливо розшифрувати дані (можливо, невірний ключ?)",
     "Could not delete the paste, it was not stored in burn after reading mode.": "Неможливо вилучити допис, він не був збережений в режимі знищити після прочитання.",
     "FOR YOUR EYES ONLY. Don't close this window, this message can't be displayed again.": "ЛИШЕ ДЛЯ ВАШИХ ОЧЕЙ. Не закривайте це вікно, це повідомлення не може бути показано знову.",
     "Could not decrypt comment; Wrong key?": "Неможливо розшифрувати коментар; Неправильний ключ?",
@@ -166,7 +166,7 @@
     "YiB": "Йбайт",
     "Format": "Формат",
     "Plain Text": "Звичайний текст",
-    "Source Code": "Джерельний код",
+    "Source Code": "Вихідний код",
     "Markdown": "Мова розмітки",
     "Download attachment": "Звантажити прикріплений файл",
     "Cloned: '%s'": "Дубльовано: '%s'",
