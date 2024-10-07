@@ -490,7 +490,7 @@ if ($FILEUPLOAD) :
 <?php
 endif;
 ?>
-				<div id="status" role="alert" class="alert alert-info<?php echo empty($STATUS) ? ' hidden' : '' ?>">
+				<div id="status" role="alert" class="alert alert-<?php echo $STATUS === 'Paste was properly deleted.' ? 'success' : 'info' ?><?php echo empty($STATUS) ? ' hidden' : '' ?>">
 					<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
 					<?php echo I18n::encode($STATUS), PHP_EOL; ?>
 				</div>

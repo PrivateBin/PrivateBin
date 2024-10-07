@@ -5626,8 +5626,11 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             me.initZ();
 
             // if delete token is passed (i.e. paste has been deleted by this
-            // access), there is nothing more to do
+            // access), redirect to baseurl after 5 seconds
             if (Model.hasDeleteToken()) {
+                setTimeout(() => {
+                    UiHelper.reloadHome();
+                }, 5000);
                 return;
             }
 
