@@ -201,7 +201,7 @@ endif;
 ?>
 						</li>
 						<li id="expiration" class="nav-item d-flex hidden">
-							<label for="pasteExpiration" class="form-label my-auto me-1"><?php echo I18n::_('Expires'); ?>:</label>
+							<label for="pasteExpiration" class="form-label my-auto me-1 text-danger"><?php echo I18n::_('Expires'); ?>:</label>
 							<select id="pasteExpiration" name="pasteExpiration" class="form-select">
 <?php
 foreach ($EXPIRE as $key => $value) :
@@ -223,7 +223,7 @@ if ($BURNAFTERREADINGSELECTED) :
 ?> checked="checked"<?php
 endif;
 ?> />
-								<label class="form-check-label" for="burnafterreading">
+								<label class="form-check-label text-warning" for="burnafterreading">
 									<?php echo I18n::_('Burn after reading'), PHP_EOL; ?>
 								</label>
 							</div>
