@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 use PrivateBin\I18n;
 $isCpct = substr($template, 9, 8) === '-compact';
 $isDark = substr($template, 9, 5) === '-dark';
