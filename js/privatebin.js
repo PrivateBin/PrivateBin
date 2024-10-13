@@ -5626,11 +5626,11 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             me.initZ();
 
             // if delete token is passed (i.e. paste has been deleted by this
-            // access), redirect to baseurl after 5 seconds
+            // access), add an event listener for the 'new' paste button in the alert
             if (Model.hasDeleteToken()) {
-                setTimeout(() => {
+                $("#new-from-alert").on("click", function () {
                     UiHelper.reloadHome();
-                }, 5000);
+                });
                 return;
             }
 
