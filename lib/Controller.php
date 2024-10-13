@@ -71,7 +71,7 @@ class Controller
      * status message
      *
      * @access private
-     * @var    boolean
+     * @var    bool
      */
     private $_is_deleted = false;
 
@@ -316,7 +316,7 @@ class Controller
                 if (hash_equals($paste->getDeleteToken(), $deletetoken)) {
                     // Paste exists and deletion token is valid: Delete the paste.
                     $paste->delete();
-                    $this->_status = 'Paste was properly deleted.';
+                    $this->_status     = 'Paste was properly deleted.';
                     $this->_is_deleted = true;
                 } else {
                     $this->_error = 'Wrong deletion token. Paste was not deleted.';
