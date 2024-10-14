@@ -493,9 +493,13 @@ endif;
 				<div id="status" role="alert" class="clearfix alert alert-<?php echo (bool)$ISDELETED ? 'success' : 'info'; echo empty($STATUS) ? ' hidden' : '' ?>">
 					<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
 					<?php echo I18n::encode($STATUS), PHP_EOL; ?>
-					<button type="button" class="btn btn-default pull-right" id="new-from-alert">
-						<span class="glyphicon glyphicon-file"></span> <?php echo I18n::_('New'), PHP_EOL; ?>
-					</button>
+					<?php
+						if ((bool)$ISDELETED):
+					?>
+						<button type="button" class="btn btn-default pull-right" id="new-from-alert">
+							<span class="glyphicon glyphicon-file"></span> <?php echo I18n::_('New'), PHP_EOL; ?>
+						</button>
+					<?php endif; ?>
 				</div>
 				<div id="errormessage" role="alert" class="<?php echo empty($ERROR) ? 'hidden' : '' ?> alert alert-danger">
 					<span class="glyphicon glyphicon-alert" aria-hidden="true"></span>
