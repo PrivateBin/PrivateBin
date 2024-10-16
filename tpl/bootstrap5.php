@@ -25,7 +25,7 @@ if ($SYNTAXHIGHLIGHTING) :
 endif;
 ?>
 		<noscript><link type="text/css" rel="stylesheet" href="css/noscript.css" /></noscript>
-		<?php $this->_scriptTag('js/jquery-3.7.1.js', 'defer'); ?>
+		<?php $this->_scriptTag('js/jquery-3.7.1.js', ''); ?>
 <?php
 if ($QRCODE) :
 ?>
@@ -39,8 +39,8 @@ if ($ZEROBINCOMPATIBILITY) :
 endif;
 ?>
 		<?php $this->_scriptTag('js/zlib-1.3.1.js', 'async'); ?>
-		<?php $this->_scriptTag('js/base-x-4.0.0.js', 'async'); ?>
-		<?php $this->_scriptTag('js/rawinflate-0.3.js', 'async'); ?>
+		<?php $this->_scriptTag('js/base-x-4.0.0.js', ''); ?>
+		<?php $this->_scriptTag('js/rawinflate-0.3.js', ''); ?>
 		<?php $this->_scriptTag('js/bootstrap-5.3.3.js', 'async'); ?>
 		<?php $this->_scriptTag('js/dark-mode-switch.js', 'async'); ?>
 <?php
