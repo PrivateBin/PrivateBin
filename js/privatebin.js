@@ -34,6 +34,13 @@ jQuery.fn.draghover = function() {
     });
 };
 
+// main application start, called when DOM is fully loaded
+jQuery(document).ready(function() {
+    'use strict';
+    // run main controller
+    $.PrivateBin.Controller.init();
+});
+
 jQuery.PrivateBin = (function($, RawDeflate) {
     'use strict';
 
@@ -3761,7 +3768,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
         /**
          * Clear the password input in the top navigation
-         *
+         * 
          * @name TopNav.clearPasswordInput
          * @function
          */
@@ -5664,10 +5671,3 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         Controller: Controller
     };
 })(jQuery, RawDeflate);
-
-// main application start, called when DOM is fully loaded
-jQuery(document).ready(function() {
-    'use strict';
-    // run main controller
-    $.PrivateBin.Controller.init();
-});
