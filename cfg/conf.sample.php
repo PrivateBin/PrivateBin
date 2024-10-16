@@ -280,4 +280,5 @@ dir = PATH "data"
 ; Subresource integrity (SRI) hashes used in template files. Uncomment and set
 ; these for all js files used. See:
 ; https://github.com/PrivateBin/PrivateBin/wiki/FAQ#user-content-how-to-make-privatebin-work-when-i-have-changed-some-javascript-files
-;privatebin.js = sha512-[…]
+;privatebin.js = "sha512-[…]"
+
