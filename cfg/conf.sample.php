@@ -259,7 +259,7 @@ dir = PATH "data"
 ;version = "latest"
 ;bucket = "my-bucket"
 
-[yourls]
+;[yourls]
 ; When using YOURLS as a "urlshortener" config item:
 ; - By default, "urlshortener" will point to the YOURLS API URL, with or without
 ;   credentials, and will be visible in public on the PrivateBin web page.
