@@ -3988,7 +3988,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             }
             emailBody += I18n._('Link:');
             emailBody += EOL;
-            emailBody += $('#pasteurl').attr('href'); // might have been shortened
+            emailBody += $('#pasteurl').attr('href') || window.location.href; // href is tried first as it might have been shortened
             return emailBody;
         }
 
