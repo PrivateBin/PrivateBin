@@ -219,5 +219,6 @@
     "Yes, see it": "Так, побачити",
     "Dark Mode": "Темний режим",
     "Error compressing paste, due to missing WebAssembly support.": "Помилка при стисканні допису, через відсутність підтримки WebAssembly сервера.",
-    "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.": "Помилка при розпакуванні допису, бо ваш браузер не підтримує WebAssembly. Будь ласка, відкрийте в іншому браузері для перегляду цього допису."
+    "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.": "Помилка при розпакуванні допису, бо ваш браузер не підтримує WebAssembly. Будь ласка, відкрийте в іншому браузері для перегляду цього допису.",
+    "Start over": "Start over"
 }

@@ -219,5 +219,6 @@
     "Yes, see it": "Iè, fighjallu",
     "Dark Mode": "Modu scuru",
     "Error compressing paste, due to missing WebAssembly support.": "Sbagliu durante a cumpressione di l’appiccicu, perchè WebAssembly ùn hè micca accettatu.",
-    "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.": "Sbagliu durante a scumpressione di l’appiccicu, perchè u vostru navigatore ùn accetteghja micca WebAssembly. Ci vole à impiegà un altru navigatore per affissà st’appiccicu."
+    "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.": "Sbagliu durante a scumpressione di l’appiccicu, perchè u vostru navigatore ùn accetteghja micca WebAssembly. Ci vole à impiegà un altru navigatore per affissà st’appiccicu.",
+    "Start over": "Start over"
 }

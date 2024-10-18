@@ -219,5 +219,6 @@
     "Yes, see it": "Ναι, δείτε το",
     "Dark Mode": "Σκοτεινό Θέμα",
     "Error compressing paste, due to missing WebAssembly support.": "Σφάλμα συμπίεσης επικόλλησης, λόγω έλλειψης υποστήριξης WebAssembly.",
-    "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.": "Σφάλμα αποσυμπίεσης της επικόλλησης, ο περιηγητής σας δεν υποστηρίζει WebAssembly. Παρακαλούμε χρησιμοποιήστε έναν άλλο περιηγητή για να δείτε αυτή την επικόλληση."
+    "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.": "Σφάλμα αποσυμπίεσης της επικόλλησης, ο περιηγητής σας δεν υποστηρίζει WebAssembly. Παρακαλούμε χρησιμοποιήστε έναν άλλο περιηγητή για να δείτε αυτή την επικόλληση.",
+    "Start over": "Start over"
 }

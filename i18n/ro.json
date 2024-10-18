@@ -219,5 +219,6 @@
     "Yes, see it": "Da, vezi",
     "Dark Mode": "Mod întunecat",
     "Error compressing paste, due to missing WebAssembly support.": "Eroare la compresia paste-ului din cauza incompatibilității cu WebAssembly.",
-    "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.": "Eroare la deschiderea paste-ului, browserul dvs. nu acceptă WebAssembly. Vă rugăm să utilizați un alt browser pentru a vedea acest paste."
+    "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.": "Eroare la deschiderea paste-ului, browserul dvs. nu acceptă WebAssembly. Vă rugăm să utilizați un alt browser pentru a vedea acest paste.",
+    "Start over": "Start over"
 }

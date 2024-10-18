@@ -219,5 +219,6 @@
     "Yes, see it": "Tak, pokaż",
     "Dark Mode": "Ciemny motyw",
     "Error compressing paste, due to missing WebAssembly support.": "Błąd kompresowania wklejenia przez brak obsługi WebAssembly.",
-    "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.": "Błąd dekompresowania wklejenia przez brak obsługi WebAssembly przez przeglądarkę. Użyj innej przeglądarki, aby zobaczyć to wklejenie."
+    "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.": "Błąd dekompresowania wklejenia przez brak obsługi WebAssembly przez przeglądarkę. Użyj innej przeglądarki, aby zobaczyć to wklejenie.",
+    "Start over": "Start over"
 }

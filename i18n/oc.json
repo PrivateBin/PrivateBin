@@ -219,5 +219,6 @@
     "Yes, see it": "Òc, afichatz-lo",
     "Dark Mode": "Mòde escur",
     "Error compressing paste, due to missing WebAssembly support.": "Error al moment de la compression de l'empegatge, a causa de la manca de presa en carga de WebAssembly.",
-    "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.": "Error al moment de descompresar l'empegatge, vòstre navegador pren pas en carga WebAssembly. Mercés d'utilizar un autre navigador per visualizar aquesta pega."
+    "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.": "Error al moment de descompresar l'empegatge, vòstre navegador pren pas en carga WebAssembly. Mercés d'utilizar un autre navigador per visualizar aquesta pega.",
+    "Start over": "Start over"
 }
