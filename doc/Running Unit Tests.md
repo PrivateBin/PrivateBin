@@ -43,6 +43,11 @@ Example for Debian and Ubuntu:
 $ sudo apt install phpunit php-gd php-sqlite3 php-xdebug
 ```
 
+Because the unit tests depend on this, you also need to install the optional. Otherwise they won't run:
+```console
+composer require google/cloud-storage
+```
+
 To run the tests, change into the `tst` directory and run phpunit:
 
 ```console
