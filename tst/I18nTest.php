@@ -154,10 +154,10 @@ class I18nTest extends TestCase
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'cs;q=0.8,en-GB;q=0.6,en-US;q=0.4,en;q=0.2';
         I18n::loadTranslations();
         $this->assertEquals('cs', I18n::getLanguage(), 'browser language cs');
-        $this->assertEquals('1 hodina', I18n::_('%d hours', 1), '1 hour in Czech');
-        $this->assertEquals('2 hodiny', I18n::_('%d hours', 2), '2 hours in Czech');
-        $this->assertEquals('5 minut',  I18n::_('%d minutes', 5), '5 minutes in Czech');
-        $this->assertEquals('14 minut',  I18n::_('%d minutes', 14), '14 minutes in Czech');
+        $this->assertEquals('1 hodina', I18n::_('%d hours', 1), '1 hour in Czech');
+        $this->assertEquals('2 hodiny', I18n::_('%d hours', 2), '2 hours in Czech');
+        $this->assertEquals('5 minut',  I18n::_('%d minutes', 5), '5 minutes in Czech');
+        $this->assertEquals('14 minut',  I18n::_('%d minutes', 14), '14 minutes in Czech');
     }
 
     public function testBrowserLanguageAnyDetection()

@@ -215,9 +215,9 @@
     "Trying to shorten a URL that isn't pointing at our instance.": "Ensag d’abracar una URL que mena pas a nòstra instància.",
     "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "Error en cridant YOURLS. Es probablament un problèma de configuracion, quicòm coma « apirul » o « signature » marrit o absent.",
     "Error parsing YOURLS response.": "Error d'analisi de la responsa YOURLS.",
-    "This secret message can only be displayed once. Would you like to see it now?": "This secret message can only be displayed once. Would you like to see it now?",
-    "Yes, see it": "Yes, see it",
-    "Dark Mode": "Dark Mode",
-    "Error compressing paste, due to missing WebAssembly support.": "Error compressing paste, due to missing WebAssembly support.",
-    "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.": "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste."
+    "This secret message can only be displayed once. Would you like to see it now?": "Aqueste messatge secrèt se pòt pas qu'afichar un còp. Lo volètz veire ara ?",
+    "Yes, see it": "Òc, afichatz-lo",
+    "Dark Mode": "Mòde escur",
+    "Error compressing paste, due to missing WebAssembly support.": "Error al moment de la compression de l'empegatge, a causa de la manca de presa en carga de WebAssembly.",
+    "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.": "Error al moment de descompresar l'empegatge, vòstre navegador pren pas en carga WebAssembly. Mercés d'utilizar un autre navigador per visualizar aquesta pega."
 }
