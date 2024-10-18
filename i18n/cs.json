@@ -219,5 +219,6 @@
     "Yes, see it": "Ano, zobrazit",
     "Dark Mode": "Tmavý režim",
     "Error compressing paste, due to missing WebAssembly support.": "Chyba při komprimování příspěvku kvůli chybějící podpoře WebAssembly.",
-    "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.": "Chyba při dekomprimování příspěvku, váš prohlížeč nepodporuje WebAssembly. Pro zobrazení tohoto příspěvku prosím použijte jiný prohlížeč."
+    "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.": "Chyba při dekomprimování příspěvku, váš prohlížeč nepodporuje WebAssembly. Pro zobrazení tohoto příspěvku prosím použijte jiný prohlížeč.",
+    "Start over": "Start over"
 }

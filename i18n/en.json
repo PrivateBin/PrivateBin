@@ -26,7 +26,6 @@
     "JavaScript is required for %s to work. Sorry for the inconvenience.": "JavaScript is required for %s to work. Sorry for the inconvenience.",
     "%s requires a modern browser to work.": "%s requires a modern browser to work.",
     "New": "New",
-    "Start over": "Start over",
     "Create": "Create",
     "Clone": "Clone",
     "Raw text": "Raw text",
@@ -220,5 +219,6 @@
     "Yes, see it": "Yes, see it",
     "Dark Mode": "Dark Mode",
     "Error compressing paste, due to missing WebAssembly support.": "Error compressing paste, due to missing WebAssembly support.",
-    "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.": "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste."
+    "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.": "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.",
+    "Start over": "Start over"
 }

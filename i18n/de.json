@@ -219,5 +219,6 @@
     "Yes, see it": "Ja, jetzt einsehen",
     "Dark Mode": "Nachtmodus",
     "Error compressing paste, due to missing WebAssembly support.": "Fehler beim Komprimieren des Textes, da WebAssembly-Unterstützung fehlt.",
-    "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.": "Fehler beim Dekomprimieren des Textes. Dein Browser unterstützt WebAssembly nicht. Bitte verwende einen anderen Browser, um diesen Text anzuzeigen."
+    "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.": "Fehler beim Dekomprimieren des Textes. Dein Browser unterstützt WebAssembly nicht. Bitte verwende einen anderen Browser, um diesen Text anzuzeigen.",
+    "Start over": "Start over"
 }
