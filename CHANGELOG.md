@@ -5,6 +5,7 @@
 * CHANGED: Simpler PostgreSQL table lookup query (#1361)
 * CHANGED: SRI hashes are now configurable, no longer hardcoded in templates (#1365)
 * CHANGED: Upgrading libraries to: DOMpurify 3.1.6
+* ADDED: Show a button (that redirects to the `basepath` URL) inside the alert after a paste is deleted
 
 ## 1.7.4 (2024-07-09)
 * CHANGED: Saving markdown pastes uses `.md` extension instead of `.txt` (#1293)
