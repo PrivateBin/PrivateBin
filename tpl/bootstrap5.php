@@ -362,7 +362,7 @@ endif;
 						if ((bool)$ISDELETED):
 					?>
 						<button type="button" class="btn btn-secondary" id="new-from-alert">
-							<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#file-earmark" /></svg> <?php echo I18n::_('New'), PHP_EOL; ?>
+							<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#repeat" /></svg> <?php echo I18n::_('Start over'), PHP_EOL; ?>
 						</button>
 					<?php endif; ?>
 				</div>

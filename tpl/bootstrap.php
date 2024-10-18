@@ -497,7 +497,7 @@ endif;
 						if ((bool)$ISDELETED):
 					?>
 						<button type="button" class="btn btn-default pull-right" id="new-from-alert">
-							<span class="glyphicon glyphicon-file"></span> <?php echo I18n::_('New'), PHP_EOL; ?>
+							<span class="glyphicon glyphicon-repeat"></span> <?php echo I18n::_('Start over'), PHP_EOL; ?>
 						</button>
 					<?php endif; ?>
 				</div>
