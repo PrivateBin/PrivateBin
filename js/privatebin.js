@@ -5626,8 +5626,11 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             me.initZ();
 
             // if delete token is passed (i.e. paste has been deleted by this
-            // access), there is nothing more to do
+            // access), add an event listener for the 'new' paste button in the alert
             if (Model.hasDeleteToken()) {
+                $("#new-from-alert").on("click", function () {
+                    UiHelper.reloadHome();
+                });
                 return;
             }
 

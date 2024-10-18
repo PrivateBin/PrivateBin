@@ -353,9 +353,18 @@ if ($FILEUPLOAD) :
 <?php
 endif;
 ?>
-				<div id="status" role="alert" class="alert alert-info<?php echo empty($STATUS) ? ' hidden' : '' ?>">
-					<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#info-circle" /></svg>
-					<?php echo I18n::encode($STATUS), PHP_EOL; ?>
+				<div id="status" role="alert" class="d-flex justify-content-between align-items-center alert alert-<?php echo (bool)$ISDELETED ? 'success' : 'info'; echo empty($STATUS) ? ' hidden' : '' ?>">
+					<div>
+						<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#info-circle" /></svg>
+						<?php echo I18n::encode($STATUS), PHP_EOL; ?>
+					</div>
+					<?php
+						if ((bool)$ISDELETED):
+					?>
+						<button type="button" class="btn btn-secondary" id="new-from-alert">
+							<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#repeat" /></svg> <?php echo I18n::_('Start over'), PHP_EOL; ?>
+						</button>
+					<?php endif; ?>
 				</div>
 				<div id="errormessage" role="alert" class="<?php echo empty($ERROR) ? 'hidden' : '' ?> alert alert-danger">
 					<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#exclamation-triangle" /></svg>

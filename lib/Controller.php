@@ -68,6 +68,14 @@ class Controller
     private $_status = '';
 
     /**
+     * status message
+     *
+     * @access private
+     * @var    bool
+     */
+    private $_is_deleted = false;
+
+    /**
      * JSON message
      *
      * @access private
@@ -308,7 +316,8 @@ class Controller
                 if (hash_equals($paste->getDeleteToken(), $deletetoken)) {
                     // Paste exists and deletion token is valid: Delete the paste.
                     $paste->delete();
-                    $this->_status = 'Paste was properly deleted.';
+                    $this->_status     = 'Paste was properly deleted.';
+                    $this->_is_deleted = true;
                 } else {
                     $this->_error = 'Wrong deletion token. Paste was not deleted.';
                 }
@@ -412,6 +421,7 @@ class Controller
         }
         $page->assign('BASEPATH', I18n::_($this->_conf->getKey('basepath')));
         $page->assign('STATUS', I18n::_($this->_status));
+        $page->assign('ISDELETED', I18n::_(json_encode($this->_is_deleted)));
         $page->assign('VERSION', self::VERSION);
         $page->assign('DISCUSSION', $this->_conf->getKey('discussion'));
         $page->assign('OPENDISCUSSION', $this->_conf->getKey('opendiscussion'));
