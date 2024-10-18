@@ -48,6 +48,9 @@ Because the unit tests depend on this, you also need to install the optional. Ot
 composer require google/cloud-storage
 ```
 
+If you do this and want to develop further, please go into `.gitignore` and adjust it to ignore the whole
+vendor directory. Otherwise your `git status` will be filled with lot's of unrelated PHP files.
+
 To run the tests, change into the `tst` directory and run phpunit:
 
 ```console
