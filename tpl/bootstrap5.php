@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 use PrivateBin\I18n;
 ?><!DOCTYPE html>
-<html lang="<?php echo I18n::getLanguage(); ?>"<?php echo I18n::isRtl() ? ' dir="rtl"' : ''; ?>>
+<html lang="<?php echo I18n::getLanguage(); ?>"<?php echo I18n::isRtl() ? ' dir="rtl"' : ''; ?> class="h-100">
 	<head>
 		<meta charset="utf-8" />
 		<meta http-equiv="Content-Security-Policy" content="<?php echo I18n::encode($CSPHEADER); ?>">
@@ -80,7 +80,7 @@ endif;
 		<meta property="og:image:width" content="180" />
 		<meta property="og:image:height" content="180" />
 	</head>
-	<body role="document" data-compression="<?php echo rawurlencode($COMPRESSION); ?>">
+	<body role="document" data-compression="<?php echo rawurlencode($COMPRESSION); ?>" class="d-flex flex-column h-100">
 		<div id="passwordmodal" tabindex="-1" class="modal fade" role="dialog" aria-hidden="true">
 			<div class="modal-dialog" role="document">
 				<div class="modal-content">
@@ -455,28 +455,28 @@ endif;
 					<span class="small"><?php echo I18n::_('In case this message never disappears please have a look at <a href="%s">this FAQ for information to troubleshoot</a>.', 'https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-the-loading-message-not-go-away'); ?></span>
 				</div>
 			</section>
-			<footer class="container-fluid">
-				<div class="row">
-					<h5 class="col-md-5 col-xs-8"><?php echo I18n::_($NAME); ?> <small>- <?php echo I18n::_('Because ignorance is bliss'); ?></small></h5>
-					<p class="col-md-1 col-xs-4 text-center"><?php echo $VERSION; ?></p>
-					<p id="aboutbox" class="col-md-6 col-xs-12">
-						<?php echo sprintf(
-                            I18n::_('%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted %sin the browser%s using 256 bits AES.',
-                                I18n::_($NAME),
-                                '%s', '%s'
-                            ),
-                            '<i>', '</i>'), ' ', $INFO, PHP_EOL;
-                        ?>
-					</p>
-				</div>
-			</footer>
 		</main>
+		<footer class="container-fluid mt-auto">
+			<div class="row">
+				<h5 class="col-md-5 col-xs-8"><?php echo I18n::_($NAME); ?> <small>- <?php echo I18n::_('Because ignorance is bliss'); ?></small></h5>
+				<p class="col-md-1 col-xs-4 text-center"><?php echo $VERSION; ?></p>
+				<p id="aboutbox" class="col-md-6 col-xs-12">
+					<?php echo sprintf(
+                        I18n::_('%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted %sin the browser%s using 256 bits AES.',
+                            I18n::_($NAME),
+                            '%s', '%s'
+                        ),
+                        '<i>', '</i>'), ' ', $INFO, PHP_EOL;
+                    ?>
+				</p>
+			</div>
+		</footer>
 <?php
 if ($DISCUSSION) :
 ?>
 		<div id="serverdata" class="hidden" aria-hidden="true">
 			<div id="templates">
-				<article id="commenttemplate" class="comment">
+				<article id="commenttemplate" class="comment px-2 pb-3">
 					<div class="commentmeta">
 						<span class="nickname">name</span>
 						<span class="commentdate">0000-00-00</span>
@@ -484,11 +484,11 @@ if ($DISCUSSION) :
 					<div class="commentdata">c</div>
 					<button class="btn btn-secondary btn-sm"><?php echo I18n::_('Reply'); ?></button>
 				</article>
-				<p id="commenttailtemplate" class="comment">
+				<p id="commenttailtemplate" class="comment px-2 pb-3">
 					<button class="btn btn-secondary btn-sm"><?php echo I18n::_('Add comment'); ?></button>
 				</p>
 				<div id="replytemplate" class="reply hidden">
-					<input type="text" id="nickname" class="form-control" title="<?php echo I18n::_('Optional nickname…'); ?>" placeholder="<?php echo I18n::_('Optional nickname…'); ?>" />
+					<input type="text" id="nickname" class="form-control my-2" title="<?php echo I18n::_('Optional nickname…'); ?>" placeholder="<?php echo I18n::_('Optional nickname…'); ?>" />
 					<textarea id="replymessage" class="replymessage form-control" cols="80" rows="7"></textarea><br />
 					<div id="replystatus" role="alert" class="statusmessage hidden alert">
 						<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#info-circle" /></svg>
