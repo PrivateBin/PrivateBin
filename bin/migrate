@@ -200,9 +200,9 @@ Options:
   -h, --help       displays this help message
   -n               dry run, do not copy data
   -v               be verbose
-  <srcconfdir>     use storage backend configration from conf.php found in
+  <srcconfdir>     use storage backend configuration from conf.php found in
                    this directory as source
-  <dstconfdir>     optionally, use storage backend configration from conf.php
+  <dstconfdir>     optionally, use storage backend configuration from conf.php
                    found in this directory as destination; defaults to:
                    " . PATH . "cfg" . DIRECTORY_SEPARATOR . "conf.php
 ");
