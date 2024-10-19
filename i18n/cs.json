@@ -5,7 +5,7 @@
     "Because ignorance is bliss": "Protože nevědomost je sladká",
     "Paste does not exist, has expired or has been deleted.": "Vložený text neexistuje, expiroval nebo byl odstraněn.",
     "%s requires php %s or above to work. Sorry.": "%s vyžaduje php %s nebo vyšší. Lituji.",
-    "%s requires configuration section [%s] to be present in configuration file.": "%s vyžaduje, aby byla v konfiguračním souboru přítomna sekce [%s].",
+    "%s requires configuration section [%s] to be present in configuration file.": "%s vyžaduje, aby byla v konfiguračním souboru přítomna sekce [%s].",
     "Please wait %d seconds between each post.": [
         "Vyčkejte prosím %d sekundu mezi následujícími příspěvky.",
         "Vyčkejte prosím %d sekundy mezi následujícími příspěvky.",
