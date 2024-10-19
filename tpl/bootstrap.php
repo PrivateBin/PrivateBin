@@ -71,7 +71,7 @@ if ($MARKDOWN) :
 <?php
 endif;
 ?>
-		<?php $this->_scriptTag('js/purify-3.1.6.js', 'async'); ?>
+		<?php $this->_scriptTag('js/purify-3.1.7.js', 'async'); ?>
 		<?php $this->_scriptTag('js/legacy.js', 'async'); ?>
 		<?php $this->_scriptTag('js/privatebin.js', 'defer'); ?>
 		<!-- icon -->
@@ -489,7 +489,7 @@ if ($FILEUPLOAD) :
 				</div>
 <?php
 endif;
-?>					
+?>
 				<div id="status" role="alert" class="clearfix alert alert-<?php echo (bool)$ISDELETED ? 'success' : 'info'; echo empty($STATUS) ? ' hidden' : '' ?>">
 					<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
 					<?php echo I18n::encode($STATUS), PHP_EOL; ?>
