@@ -259,7 +259,7 @@ dir = PATH "data"
 ;version = "latest"
 ;bucket = "my-bucket"
 
-[yourls]
+;[yourls]
 ; When using YOURLS as a "urlshortener" config item:
 ; - By default, "urlshortener" will point to the YOURLS API URL, with or without
 ;   credentials, and will be visible in public on the PrivateBin web page.
@@ -280,4 +280,4 @@ dir = PATH "data"
 ; Subresource integrity (SRI) hashes used in template files. Uncomment and set
 ; these for all js files used. See:
 ; https://github.com/PrivateBin/PrivateBin/wiki/FAQ#user-content-how-to-make-privatebin-work-when-i-have-changed-some-javascript-files
-;privatebin.js = sha512-[…]
+;js/privatebin.js = "sha512-[…]"
