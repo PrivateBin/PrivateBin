@@ -55,8 +55,8 @@ if ($MARKDOWN) :
 <?php
 endif;
 ?>
-		<?php $this->_scriptTag('js/purify-3.1.6.js', 'defer'); ?>
-		<?php $this->_scriptTag('js/legacy.js', 'defer'); ?>
+		<?php $this->_scriptTag('js/purify-3.1.7.js', 'defer'); ?>
+		<?php $this->_scriptTag('js/legacy.js', 'async'); ?>
 		<?php $this->_scriptTag('js/privatebin.js', 'defer'); ?>
 		<!-- icon -->
 		<link rel="apple-touch-icon" href="<?php echo I18n::encode($BASEPATH); ?>img/apple-touch-icon.png" sizes="180x180" />

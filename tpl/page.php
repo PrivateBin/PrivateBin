@@ -49,7 +49,7 @@ if ($MARKDOWN):
 <?php
 endif;
 ?>
-		<?php $this->_scriptTag('js/purify-3.1.6.js', 'async'); ?>
+		<?php $this->_scriptTag('js/purify-3.1.7.js', 'async'); ?>
 		<?php $this->_scriptTag('js/legacy.js', 'async'); ?>
 		<?php $this->_scriptTag('js/privatebin.js', 'defer'); ?>
 		<!-- icon -->
