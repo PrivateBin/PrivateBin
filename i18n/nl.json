@@ -219,5 +219,6 @@
     "Yes, see it": "Ja, tonen",
     "Dark Mode": "Donkere modus",
     "Error compressing paste, due to missing WebAssembly support.": "Fout bij het comprimeren van notitie door ontbrekende ondersteuning voor WebAssembly.",
-    "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.": "Fout bij het decomprimeren van de notitie, uw browser ondersteunt WebAssembly niet. Gebruik een andere browser om deze notitie te bekijken."
+    "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.": "Fout bij het decomprimeren van de notitie, uw browser ondersteunt WebAssembly niet. Gebruik een andere browser om deze notitie te bekijken.",
+    "Start over": "Start over"
 }

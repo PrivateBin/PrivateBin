@@ -219,5 +219,6 @@
     "Yes, see it": "Taip, pamatyti",
     "Dark Mode": "Tamsi veiksena",
     "Error compressing paste, due to missing WebAssembly support.": "Klaida glaudinant įdėjimą, nes trūksta WebAssembly palaikymo.",
-    "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.": "Klaida išglaudinant įdėjimą, jūsų naršyklė nepalaiko WebAssembly. Norėdami peržiūrėti šį įdėjimą, naudokite kitą naršyklę."
+    "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.": "Klaida išglaudinant įdėjimą, jūsų naršyklė nepalaiko WebAssembly. Norėdami peržiūrėti šį įdėjimą, naudokite kitą naršyklę.",
+    "Start over": "Start over"
 }
