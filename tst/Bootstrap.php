@@ -239,6 +239,17 @@ class Helper
     }
 
     /**
+     * Returns 16 random hexadecimal characters.
+     *
+     * @return string
+     */
+    public static function getRandomId()
+    {
+        // 8 binary bytes are 16 characters long in hex
+        return bin2hex(random_bytes(8));
+    }
+
+    /**
      * delete directory and all its contents recursively
      *
      * @param string $path
