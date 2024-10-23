@@ -3988,7 +3988,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             }
             emailBody += I18n._('Link:');
             emailBody += EOL;
-            emailBody += $('#pasteurl').attr('href'); // might have been shortened
+            emailBody += $('#pasteurl').attr('href') || window.location.href; // href is tried first as it might have been shortened
             return emailBody;
         }
 
@@ -5626,8 +5626,11 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             me.initZ();
 
             // if delete token is passed (i.e. paste has been deleted by this
-            // access), there is nothing more to do
+            // access), add an event listener for the 'new' paste button in the alert
             if (Model.hasDeleteToken()) {
+                $("#new-from-alert").on("click", function () {
+                    UiHelper.reloadHome();
+                });
                 return;
             }
 

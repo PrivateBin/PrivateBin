@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 use PrivateBin\I18n;
 ?><!DOCTYPE html>
 <html lang="<?php echo I18n::getLanguage(); ?>"<?php echo I18n::isRtl() ? ' dir="rtl"' : ''; ?> class="h-100">
@@ -34,15 +34,15 @@ if ($QRCODE) :
 endif;
 if ($ZEROBINCOMPATIBILITY) :
 ?>
-		<?php $this->_scriptTag('js/base64-1.7.js', 'async'); ?>
+		<?php $this->_scriptTag('js/base64-1.7.js', 'defer'); ?>
 <?php
 endif;
 ?>
-		<?php $this->_scriptTag('js/zlib-1.3.1.js', 'async'); ?>
-		<?php $this->_scriptTag('js/base-x-4.0.0.js', 'async'); ?>
-		<?php $this->_scriptTag('js/rawinflate-0.3.js', 'async'); ?>
+		<?php $this->_scriptTag('js/zlib-1.3.1.js', 'defer'); ?>
+		<?php $this->_scriptTag('js/base-x-4.0.0.js', 'defer'); ?>
+		<?php $this->_scriptTag('js/rawinflate-0.3.js', 'defer'); ?>
 		<?php $this->_scriptTag('js/bootstrap-5.3.3.js', 'async'); ?>
-		<?php $this->_scriptTag('js/dark-mode-switch.js', 'async'); ?>
+		<?php $this->_scriptTag('js/dark-mode-switch.js', 'defer'); ?>
 <?php
 if ($SYNTAXHIGHLIGHTING) :
 ?>
@@ -55,7 +55,7 @@ if ($MARKDOWN) :
 <?php
 endif;
 ?>
-		<?php $this->_scriptTag('js/purify-3.1.6.js', 'async'); ?>
+		<?php $this->_scriptTag('js/purify-3.1.7.js', 'defer'); ?>
 		<?php $this->_scriptTag('js/legacy.js', 'async'); ?>
 		<?php $this->_scriptTag('js/privatebin.js', 'defer'); ?>
 		<!-- icon -->
@@ -353,9 +353,18 @@ if ($FILEUPLOAD) :
 <?php
 endif;
 ?>
-				<div id="status" role="alert" class="alert alert-info<?php echo empty($STATUS) ? ' hidden' : '' ?>">
-					<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#info-circle" /></svg>
-					<?php echo I18n::encode($STATUS), PHP_EOL; ?>
+				<div id="status" role="alert" class="d-flex justify-content-between align-items-center alert alert-<?php echo (bool)$ISDELETED ? 'success' : 'info'; echo empty($STATUS) ? ' hidden' : '' ?>">
+					<div>
+						<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#info-circle" /></svg>
+						<?php echo I18n::encode($STATUS), PHP_EOL; ?>
+					</div>
+					<?php
+						if ((bool)$ISDELETED):
+					?>
+						<button type="button" class="btn btn-secondary" id="new-from-alert">
+							<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#repeat" /></svg> <?php echo I18n::_('Start over'), PHP_EOL; ?>
+						</button>
+					<?php endif; ?>
 				</div>
 				<div id="errormessage" role="alert" class="<?php echo empty($ERROR) ? 'hidden' : '' ?> alert alert-danger">
 					<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#exclamation-triangle" /></svg>

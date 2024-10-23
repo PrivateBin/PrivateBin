@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 use PrivateBin\I18n;
 ?><!DOCTYPE html>
 <html lang="<?php echo I18n::getLanguage(); ?>"<?php echo I18n::isRtl() ? ' dir="rtl"' : ''; ?>>
@@ -49,7 +49,7 @@ if ($MARKDOWN):
 <?php
 endif;
 ?>
-		<?php $this->_scriptTag('js/purify-3.1.6.js', 'async'); ?>
+		<?php $this->_scriptTag('js/purify-3.1.7.js', 'async'); ?>
 		<?php $this->_scriptTag('js/legacy.js', 'async'); ?>
 		<?php $this->_scriptTag('js/privatebin.js', 'defer'); ?>
 		<!-- icon -->

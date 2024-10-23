@@ -162,6 +162,7 @@ class FilesystemTest extends TestCase
         // check that all 10 pastes were converted after the purge
         $this->_model->purge(10);
         foreach ($ids as $dataid => $storagedir) {
+            $dataid = (string) $dataid; // undue potential key cast, see https://www.php.net/manual/en/language.types.array.php
             $this->assertFileExists($storagedir . $dataid . '.php', "paste $dataid exists in new format");
             $this->assertFileDoesNotExist($storagedir . $dataid, "old format paste $dataid got removed");
             $this->assertTrue($this->_model->exists($dataid), "paste $dataid exists");
