@@ -34,15 +34,15 @@ if ($QRCODE) :
 endif;
 if ($ZEROBINCOMPATIBILITY) :
 ?>
-		<?php $this->_scriptTag('js/base64-1.7.js', 'async'); ?>
+		<?php $this->_scriptTag('js/base64-1.7.js', 'defer'); ?>
 <?php
 endif;
 ?>
-		<?php $this->_scriptTag('js/zlib-1.3.1.js', 'async'); ?>
-		<?php $this->_scriptTag('js/base-x-4.0.0.js', 'async'); ?>
-		<?php $this->_scriptTag('js/rawinflate-0.3.js', 'async'); ?>
+		<?php $this->_scriptTag('js/zlib-1.3.1.js', 'defer'); ?>
+		<?php $this->_scriptTag('js/base-x-4.0.0.js', 'defer'); ?>
+		<?php $this->_scriptTag('js/rawinflate-0.3.js', 'defer'); ?>
 		<?php $this->_scriptTag('js/bootstrap-5.3.3.js', 'async'); ?>
-		<?php $this->_scriptTag('js/dark-mode-switch.js', 'async'); ?>
+		<?php $this->_scriptTag('js/dark-mode-switch.js', 'defer'); ?>
 <?php
 if ($SYNTAXHIGHLIGHTING) :
 ?>
@@ -55,7 +55,7 @@ if ($MARKDOWN) :
 <?php
 endif;
 ?>
-		<?php $this->_scriptTag('js/purify-3.1.7.js', 'async'); ?>
+		<?php $this->_scriptTag('js/purify-3.1.7.js', 'defer'); ?>
 		<?php $this->_scriptTag('js/legacy.js', 'async'); ?>
 		<?php $this->_scriptTag('js/privatebin.js', 'defer'); ?>
 		<!-- icon -->
