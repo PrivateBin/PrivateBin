@@ -87,8 +87,14 @@ body.loading {
 	word-wrap: break-word;
 }
 
-#preview {
-	margin-bottom: 10px;
+#message {
+	height: 70dvh;
+}
+
+@media ((max-width: 450px) and (max-height: 950px)) {
+	#message {
+		height: 55dvh;
+	}
 }
 
 #message, .replymessage {
@@ -98,10 +104,6 @@ body.loading {
 
 #nickname {
 	margin: 5px 0;
-}
-
-#comments, #comments button {
-	margin-bottom: 10px;
 }
 
 .comment {

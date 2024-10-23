@@ -32,12 +32,14 @@
 	word-wrap: break-word;
 }
 
-#preview {
-	margin-bottom: 10px;
+#message {
+	height: 70dvh;
 }
 
-#message {
-	height: 70vh;
+@media ((max-width: 450px) and (max-height: 950px)) {
+	#message {
+		height: 55dvh;
+	}
 }
 
 #message, .replymessage {
@@ -45,17 +47,8 @@
 	resize: vertical;
 }
 
-#nickname {
-	margin: 5px 0;
-}
-
-#comments, #comments button {
-	margin-bottom: 10px;
-}
-
 .comment {
 	border-left: 1px solid #ccc;
-	padding: 5px 0 5px 10px;
 	transition: background-color 0.75s ease-out;
 }
 

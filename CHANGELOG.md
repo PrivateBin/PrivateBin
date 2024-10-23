@@ -3,6 +3,7 @@
 ## 1.7.5 (not yet released)
 * ADDED: Allow non persistent SQL connections, if configured (#1394)
 * ADDED: Show a button (that redirects to the `basepath` URL) inside the alert after a paste is deleted
+* CHANGED: Tweaked page footer of the `bootstrap5` template (#1392)
 * CHANGED: Simpler PostgreSQL table lookup query (#1361)
 * CHANGED: SRI hashes are now configurable, no longer hardcoded in templates (#1365)
 * CHANGED: Upgrading libraries to: DOMpurify 3.1.7
