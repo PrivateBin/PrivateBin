@@ -506,7 +506,7 @@ class Database extends AbstractData
     private function _exec($sql, array $params)
     {
         $statement = $this->_db->prepare($sql);
-        $position = 1;
+        $position  = 1;
         foreach ($params as &$parameter) {
             if (is_int($parameter)) {
                 $statement->bindParam($position, $parameter, PDO::PARAM_INT);

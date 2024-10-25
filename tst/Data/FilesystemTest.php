@@ -141,7 +141,7 @@ class FilesystemTest extends TestCase
         $commentid = Helper::getCommentId();
         $ids       = array();
         for ($i = 0, $max = 10; $i < $max; ++$i) {
-            $dataid = Helper::getRandomId();
+            $dataid     = Helper::getRandomId();
             $storagedir = $this->_path . DIRECTORY_SEPARATOR . substr($dataid, 0, 2) .
                 DIRECTORY_SEPARATOR . substr($dataid, 2, 2) . DIRECTORY_SEPARATOR;
             $ids[$dataid] = $storagedir;
