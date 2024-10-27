@@ -141,9 +141,7 @@ class FilesystemTest extends TestCase
         $commentid = Helper::getCommentId();
         $ids       = array();
         for ($i = 0, $max = 10; $i < $max; ++$i) {
-            // PHPs mt_rand only supports 32 bit or up 0x7fffffff on 64 bit systems to be precise :-/
-            $dataid = str_pad(dechex(mt_rand(0, mt_getrandmax())), 8, '0', STR_PAD_LEFT) .
-                str_pad(dechex(mt_rand(0, mt_getrandmax())), 8, '0', STR_PAD_LEFT);
+            $dataid     = Helper::getRandomId();
             $storagedir = $this->_path . DIRECTORY_SEPARATOR . substr($dataid, 0, 2) .
                 DIRECTORY_SEPARATOR . substr($dataid, 2, 2) . DIRECTORY_SEPARATOR;
             $ids[$dataid] = $storagedir;

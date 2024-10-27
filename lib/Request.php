@@ -83,6 +83,7 @@ class Request
     {
         foreach ($_GET as $key => $value) {
             // only return if value is empty and key is 16 hex chars
+            $key = (string) $key;
             if (($value === '') && strlen($key) === 16 && ctype_xdigit($key)) {
                 return $key;
             }
