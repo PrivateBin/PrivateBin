@@ -5,12 +5,12 @@
 
 [main]
 ; (optional) set a project name to be displayed on the website
-; name = "PrivateBin"
+name = "DELERIUM"
 
 ; The full URL, with the domain name and directories that point to the
 ; PrivateBin files, including an ending slash (/). This URL is essential to
 ; allow Opengraph images to be displayed on social networks.
-; basepath = "https://privatebin.example.com/"
+; basepath = "https://zero.delerium.cc"
 
 ; enable or disable the discussion feature, defaults to true
 discussion = true
@@ -27,7 +27,7 @@ opendiscussion = false
 password = true
 
 ; enable or disable the file upload feature, defaults to false
-fileupload = false
+fileupload = true
 
 ; preselect the burn-after-reading feature, defaults to false
 burnafterreadingselected = false
@@ -37,7 +37,7 @@ burnafterreadingselected = false
 defaultformatter = "plaintext"
 
 ; (optional) set a syntax highlighting theme, as found in css/prettify/
-; syntaxhighlightingtheme = "sons-of-obsidian"
+syntaxhighlightingtheme = "sons-of-obsidian"
 
 ; size limit per paste or comment in bytes, defaults to 10 Mebibytes
 sizelimit = 10485760
@@ -48,7 +48,7 @@ sizelimit = 10485760
 ; which can be combined with "-dark" and "-compact" for "bootstrap-dark-page"
 ; and finally "bootstrap-compact-page" - previews at:
 ; https://privatebin.info/screenshots.html
-template = "bootstrap"
+template = "bootstrap-dark"
 
 ; (optional) info text to display
 ; use single, instead of double quotes for HTML attributes
@@ -64,7 +64,7 @@ languageselection = false
 
 ; set the language your installs defaults to, defaults to English
 ; if this is set and language selection is disabled, this will be the only language
-; languagedefault = "en"
+languagedefault = "en"
 
 ; (optional) URL shortener address to offer after a new paste is created.
 ; It is suggested to only use this with self-hosted shorteners as this will leak
@@ -73,7 +73,7 @@ languageselection = false
 
 ; (optional) Let users create a QR code for sharing the paste URL with one click.
 ; It works both when a new paste is created and when you view a paste.
-; qrcode = true
+qrcode = true
 
 ; (optional) Let users send an email sharing the paste URL with one click.
 ; It works both when a new paste is created and when you view a paste.
@@ -85,7 +85,7 @@ languageselection = false
 ; SHA512 HMAC rainbow table is generated for all (relevant) IPs.
 ; Can be set to one these values:
 ; "none" / "identicon" (default) / "jdenticon" / "vizhash".
-; icon = "none"
+icon = "none"
 
 ; Content Security Policy headers allow a website to restrict what sources are
 ; allowed to be accessed in its context. You need to change this if you added
@@ -105,7 +105,7 @@ languageselection = false
 ;   async functions and display an error if not and for Chrome to enable
 ;   webassembly support (used for zlib compression). You can remove it if Chrome
 ;   doesn't need to be supported and old browsers don't need to be warned.
-; cspheader = "default-src 'none'; base-uri 'self'; form-action 'none'; manifest-src 'self'; connect-src * blob:; script-src 'self' 'unsafe-eval'; style-src 'self'; font-src 'self'; frame-ancestors 'none'; img-src 'self' data: blob:; media-src blob:; object-src blob:; sandbox allow-same-origin allow-scripts allow-forms allow-popups allow-modals allow-downloads"
+cspheader = "default-src 'none'; base-uri 'self'; form-action 'none'; manifest-src 'self'; connect-src * blob:; script-src 'self' 'unsafe-eval'; style-src 'self'; font-src 'self'; frame-ancestors 'none'; img-src 'self' data: blob:; media-src blob:; object-src blob:; sandbox allow-same-origin allow-scripts allow-forms allow-modals allow-downloads"
 
 ; stay compatible with PrivateBin Alpha 0.19, less secure
 ; if enabled will use base64.js version 1.7 instead of 2.1.9 and sha1 instead of
@@ -117,7 +117,7 @@ languageselection = false
 ; Secure transport methods like Tor and I2P domains are automatically whitelisted.
 ; It is **strongly discouraged** to disable this.
 ; See https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-it-show-me-an-error-about-an-insecure-connection for more information.
-; httpwarning = true
+httpwarning = true
 
 ; Pick compression algorithm or disable it. Only applies to pastes/comments
 ; created after changing the setting.
