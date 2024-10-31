@@ -84,17 +84,17 @@ class Factory
      * For upgrading:
      * - if $supportNonDecimalIPv4 is true, use the ParseStringFlag::IPV4_MAYBE_NON_DECIMAL flag
      *
-     * @param string|mixed $address
+     * @param string|mixed $range
      * @param bool $supportNonDecimalIPv4
      *
-     * @return \IPLib\Address\AddressInterface|null
+     * @return \IPLib\Range\RangeInterface|null
      *
      * @see \IPLib\Factory::parseRangeString()
      * @since 1.10.0 added the $supportNonDecimalIPv4 argument
      */
-    public static function rangeFromString($address, $supportNonDecimalIPv4 = false)
+    public static function rangeFromString($range, $supportNonDecimalIPv4 = false)
     {
-        return static::parseRangeString($address, $supportNonDecimalIPv4 ? ParseStringFlag::IPV4_MAYBE_NON_DECIMAL : 0);
+        return static::parseRangeString($range, $supportNonDecimalIPv4 ? ParseStringFlag::IPV4_MAYBE_NON_DECIMAL : 0);
     }
 
     /**
@@ -215,20 +215,20 @@ class Factory
     }
 
     /**
-     * @param \IPLib\Address\AddressInterface $from
-     * @param \IPLib\Address\AddressInterface $to
+     * @param \IPLib\Address\AddressInterface|null $from
+     * @param \IPLib\Address\AddressInterface|null $to
      *
      * @return \IPLib\Range\RangeInterface|null
      *
      * @since 1.2.0
      */
-    protected static function rangeFromBoundaryAddresses(AddressInterface $from = null, AddressInterface $to = null)
+    protected static function rangeFromBoundaryAddresses($from = null, $to = null)
     {
-        if ($from === null && $to === null) {
+        if (!$from instanceof AddressInterface && !$to instanceof AddressInterface) {
             $result = null;
-        } elseif ($to === null) {
+        } elseif (!$to instanceof AddressInterface) {
             $result = Range\Single::fromAddress($from);
-        } elseif ($from === null) {
+        } elseif (!$from instanceof AddressInterface) {
             $result = Range\Single::fromAddress($to);
         } else {
             $result = null;

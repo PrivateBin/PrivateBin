@@ -6,7 +6,7 @@
 * CHANGED: Tweaked page footer of the `bootstrap5` template (#1392)
 * CHANGED: Simpler PostgreSQL table lookup query (#1361)
 * CHANGED: SRI hashes are now configurable, no longer hardcoded in templates (#1365)
-* CHANGED: Upgrading libraries to: DOMpurify 3.1.7
+* CHANGED: Upgrading libraries to: DOMpurify 3.1.7, ip-lib 1.18.1, cloud-storage 1.43.0, aws-sdk-php 3.325.0
 * FIXED: Numeric array keys being cast to integer causing failures under strict type checking (#1435)
 
 ## 1.7.4 (2024-07-09)
