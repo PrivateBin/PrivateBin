@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b76c0c25f93dc79c4525cb3c86e5af99",
+    "content-hash": "bb78267a7d61d23706111a91bc90d515",
     "packages": [
         {
             "name": "jdenticon/jdenticon",
@@ -57,16 +57,16 @@
         },
         {
             "name": "mlocati/ip-lib",
-            "version": "1.18.0",
+            "version": "1.18.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mlocati/ip-lib.git",
-                "reference": "c77bd0b1f3e3956c7e9661e75cb1f54ed67d95d2"
+                "reference": "08bb43b4949069c543ebdf099a6b2c322d0172ab"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mlocati/ip-lib/zipball/c77bd0b1f3e3956c7e9661e75cb1f54ed67d95d2",
-                "reference": "c77bd0b1f3e3956c7e9661e75cb1f54ed67d95d2",
+                "url": "https://api.github.com/repos/mlocati/ip-lib/zipball/08bb43b4949069c543ebdf099a6b2c322d0172ab",
+                "reference": "08bb43b4949069c543ebdf099a6b2c322d0172ab",
                 "shasum": ""
             },
             "require": {
@@ -112,7 +112,7 @@
             ],
             "support": {
                 "issues": "https://github.com/mlocati/ip-lib/issues",
-                "source": "https://github.com/mlocati/ip-lib/tree/1.18.0"
+                "source": "https://github.com/mlocati/ip-lib/tree/1.18.1"
             },
             "funding": [
                 {
@@ -124,7 +124,7 @@
                     "type": "other"
                 }
             ],
-            "time": "2022-01-13T18:05:33+00:00"
+            "time": "2024-10-29T15:44:19+00:00"
         },
         {
             "name": "yzalis/identicon",
