@@ -1,6 +1,6 @@
 # PrivateBin version history
 
-## 1.7.5 (not yet released)
+## 1.7.5 (2024-11-16)
 * ADDED: Allow non persistent SQL connections, if configured (#1394)
 * ADDED: Show a button (that redirects to the `basepath` URL) inside the alert after a paste is deleted
 * CHANGED: Tweaked page footer of the `bootstrap5` template (#1392)

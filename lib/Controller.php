@@ -27,7 +27,7 @@ class Controller
      *
      * @const string
      */
-    const VERSION = '1.7.4';
+    const VERSION = '1.7.5';
 
     /**
      * minimal required PHP version

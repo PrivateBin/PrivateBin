@@ -1,7 +1,7 @@
 .PHONY: all coverage coverage-js coverage-php doc doc-js doc-php increment sign test test-js test-php help
 
-CURRENT_VERSION = 1.7.4
-VERSION ?= 1.7.5
+CURRENT_VERSION = 1.7.5
+VERSION ?= 1.7.6
 VERSION_FILES = README.md SECURITY.md doc/Installation.md js/package*.json lib/Controller.php Makefile
 REGEX_CURRENT_VERSION := $(shell echo $(CURRENT_VERSION) | sed "s/\./\\\./g")
 REGEX_VERSION := $(shell echo $(VERSION) | sed "s/\./\\\./g")
@@ -33,7 +33,7 @@ increment: ## Increment and commit new version number, set target version using 
 	do \
 		sed -i "s/$(REGEX_CURRENT_VERSION)/$(REGEX_VERSION)/g" $$F; \
 	done
-	git add $(VERSION_FILES)
+	git add $(VERSION_FILES) CHANGELOG.md
 	git commit -m "incrementing version"
 
 sign: ## Sign a release.
