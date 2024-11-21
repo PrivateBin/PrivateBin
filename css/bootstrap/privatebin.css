@@ -87,6 +87,10 @@ body.loading {
 	word-wrap: break-word;
 }
 
+#plaintext > a {
+	word-wrap: break-word;
+}
+
 #message {
 	height: 70dvh;
 }
