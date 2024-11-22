@@ -32,7 +32,7 @@
 	word-wrap: break-word;
 }
 
-#plaintext > a {
+#pastelink > a, #plaintext  a,  {
 	word-wrap: break-word;
 }
 
