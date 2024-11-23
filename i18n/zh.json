@@ -218,7 +218,7 @@
     "This secret message can only be displayed once. Would you like to see it now?": "读取粘贴后只能在加载时显示一次。您想现在打开吗？",
     "Yes, see it": "是的，加载它",
     "Dark Mode": "暗黑模式",
-    "Error compressing paste, due to missing WebAssembly support.": "Error compressing paste, due to missing WebAssembly support.",
-    "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.": "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.",
-    "Start over": "Start over"
+    "Error compressing paste, due to missing WebAssembly support.": "由于缺少 WebAssembly 支持，在压缩粘贴时出错。",
+    "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.": "解压粘贴时出错，您的浏览器不支持 WebAssembly。请使用其他浏览器查看此粘贴。",
+    "Start over": "重新开始"
 }
