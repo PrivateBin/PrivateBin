@@ -38,20 +38,8 @@
 	outline-offset: -50px;
 }
 
-.dragAndDropFile {
-	color: #777;
-	font-size: 1em;
-	display: inline;
-	white-space: normal;
-}
-
 #filewrap {
 	transition: background-color 0.75s ease-out;
-}
-
-.highlight {
-	background-color: #fd8;
-	transition: background-color 0.2s ease-in;
 }
 
 #deletelink {
@@ -59,6 +47,56 @@
 	margin-left: 5px;
 }
 
+#qrcodemodalClose {
+	float: right;
+}
+
+#qrcode-display {
+	width: 200px;
+	height: 200px;
+	margin: auto;
+}
+
+#pastelink {
+	display: inline;
+}
+
+#pastelink > a, #plaintext > a {
+	word-wrap: break-word;
+}
+
+#message {
+	height: 70dvh;
+}
+
+@media ((max-width: 450px) and (max-height: 950px)) {
+	#message {
+		height: 55dvh;
+	}
+}
+
+#message, .replymessage {
+	font-family: monospace;
+	resize: vertical;
+}
+
+.comment {
+	border-left: 1px solid #ccc;
+	transition: background-color 0.75s ease-out;
+}
+
 .commentdata {
 	white-space: pre-wrap;
+}
+
+.dragAndDropFile {
+	color: #777;
+	font-size: 1em;
+	display: inline;
+	white-space: normal;
+}
+
+.highlight {
+	background-color: #fd8;
+	transition: background-color 0.2s ease-in;
 }
