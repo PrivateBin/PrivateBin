@@ -151,7 +151,7 @@
     "server error or not responding": "เซิร์ฟเวอร์มีข้อผิดพลาดหรือไม่ตอบสนอง",
     "Could not post comment: %s": "ไม่สามารถส่งความคิดเห็นได้: %s",
     "Sending paste…": "กำลังส่งข้อมูล…",
-    "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit [Ctrl]+[c] to copy)</span>": "การฝากโค้ดของคุณอยู่ที่ <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(กดปุ่ม [Ctrl]+[c] เพื่อคัดลอก)</span>",
+    "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit <kbd>Ctrl</kbd>+<kbd>c</kbd> to copy)</span>": "การฝากโค้ดของคุณอยู่ที่ <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(กดปุ่ม <kbd>Ctrl</kbd>+<kbd>c</kbd> เพื่อคัดลอก)</span>",
     "Delete data": "ลบข้อมูล",
     "Could not create paste: %s": "ไม่สามารถสร้างข้อมูลการฝากโค้ดได้: %s",
     "Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)": "ไม่สามารถถอดรหัสข้อมูลการฝากโค้ดได้: คีย์ถอดรหัสที่อยู่ใน URL หายไป (คุณได้ใช้ตัวเปลี่ยนเส้นทางหรือตัวย่อ URL ที่มีการตัดส่วนของ URL ออกหรือไม่)",
@@ -220,5 +220,7 @@
     "Dark Mode": "โหมดมืด",
     "Error compressing paste, due to missing WebAssembly support.": "Error compressing paste, due to missing WebAssembly support.",
     "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.": "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.",
-    "Start over": "Start over"
+    "Start over": "Start over",
+    "Paste text": "Paste text",
+    "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)": "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)"
 }

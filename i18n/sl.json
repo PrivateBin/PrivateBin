@@ -151,7 +151,7 @@
     "server error or not responding": "napaka na strežniku, ali pa se strežnik ne odziva",
     "Could not post comment: %s": "Komentarja ni bilo mogoče objaviti : %s",
     "Sending paste…": "Pošiljam prilepek…",
-    "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit [Ctrl]+[c] to copy)</span>": "Tvoj prilepek je dostopen na naslovu: <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Pritisni [Ctrl]+[c] ali [Cmd] + [c] in skopiraj)</span>",
+    "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit <kbd>Ctrl</kbd>+<kbd>c</kbd> to copy)</span>": "Tvoj prilepek je dostopen na naslovu: <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Pritisni <kbd>Ctrl</kbd>+<kbd>c</kbd> ali [Cmd] + [c] in skopiraj)</span>",
     "Delete data": "Izbriši podatke",
     "Could not create paste: %s": "Ne morem ustvariti prilepka: %s",
     "Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)": "Ne morem odkodirati prilepka: V URL-ju manjka ključ (A si uporabil krajšalnik URL-jev, ki odstrani del URL-ja?)",
@@ -220,5 +220,7 @@
     "Dark Mode": "Temni način",
     "Error compressing paste, due to missing WebAssembly support.": "Error compressing paste, due to missing WebAssembly support.",
     "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.": "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.",
-    "Start over": "Start over"
+    "Start over": "Start over",
+    "Paste text": "Paste text",
+    "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)": "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)"
 }

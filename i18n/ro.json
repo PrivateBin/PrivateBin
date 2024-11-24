@@ -151,7 +151,7 @@
     "server error or not responding": "eroare de server sau nu răspunde",
     "Could not post comment: %s": "Nu s-a putut posta comentariul: %s",
     "Sending paste…": "Se trimite paste-ul…",
-    "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit [Ctrl]+[c] to copy)</span>": "Paste-ul dvs. este <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Apăsați [Ctrl]+[c] pentru a copia)</span>",
+    "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit <kbd>Ctrl</kbd>+<kbd>c</kbd> to copy)</span>": "Paste-ul dvs. este <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Apăsați <kbd>Ctrl</kbd>+<kbd>c</kbd> pentru a copia)</span>",
     "Delete data": "Ștergeți datele",
     "Could not create paste: %s": "Nu s-a putut crea paste-ul: %s",
     "Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)": "Nu s-a putut decripta paste-ul: Cheia de decriptare lipsește din URL (Ați folosit un redirector sau un scurtător de URL care a tăiat o parte din URL?)",
@@ -220,5 +220,7 @@
     "Dark Mode": "Mod întunecat",
     "Error compressing paste, due to missing WebAssembly support.": "Eroare la compresia paste-ului din cauza incompatibilității cu WebAssembly.",
     "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.": "Eroare la deschiderea paste-ului, browserul dvs. nu acceptă WebAssembly. Vă rugăm să utilizați un alt browser pentru a vedea acest paste.",
-    "Start over": "Start over"
+    "Start over": "Start over",
+    "Paste text": "Paste text",
+    "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)": "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)"
 }

@@ -13,7 +13,7 @@ use PrivateBin\I18n;
 <?php
 if (empty($ERROR)) :
 ?>
-		<p><?php echo I18n::_('Your paste is <a id="pasteurl" href="%s">%s</a> <span id="copyhint">(Hit [Ctrl]+[c] to copy)</span>', $SHORTURL, $SHORTURL); ?></p>
+		<p><?php echo I18n::_('Your paste is <a id="pasteurl" href="%s">%s</a> <span id="copyhint">(Hit <kbd>Ctrl</kbd>+<kbd>c</kbd> to copy)</span>', $SHORTURL, $SHORTURL); ?></p>
 <?php
 else:
 ?>

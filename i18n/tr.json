@@ -151,7 +151,7 @@
     "server error or not responding": "sunucu hatası veya yanıt vermiyor",
     "Could not post comment: %s": "Yorum paylaşılamadı: %s",
     "Sending paste…": "Yazı gönderiliyor…",
-    "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit [Ctrl]+[c] to copy)</span>": "Yazınız: <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">([Ctrl]+[c] tuşlarına basarak kopyalayın.)</span>",
+    "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit <kbd>Ctrl</kbd>+<kbd>c</kbd> to copy)</span>": "Yazınız: <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(<kbd>Ctrl</kbd>+<kbd>c</kbd> tuşlarına basarak kopyalayın.)</span>",
     "Delete data": "Veriyi sil",
     "Could not create paste: %s": "Yazı oluşturulamadı: %s",
     "Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)": "Yazı şifresi çözülemedi, çözme anahtarı URL'de bulunamadı. (Buraya bir yönlendirici veya URL kısaltıcı kullanarak gelmiş olabilirsiniz.)",
@@ -220,5 +220,7 @@
     "Dark Mode": "Koyu Mod",
     "Error compressing paste, due to missing WebAssembly support.": "WebAssembly desteği eksik olduğundan yazı sıkıştırılamadı.",
     "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.": "Yazı açılırken hata oluştu, tarayıcınız WebAssembly'i desteklemiyor. Lütfen bu yazıyı görüntülemek için başka bir tarayıcı kullanın.",
-    "Start over": "Baştan başla"
+    "Start over": "Baştan başla",
+    "Paste text": "Paste text",
+    "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)": "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)"
 }

@@ -151,7 +151,7 @@
     "server error or not responding": "Грешка в сървъра или не отговаря",
     "Could not post comment: %s": "Публикуването на коментара Ви беше неуспешно: %s",
     "Sending paste…": "Изпращане на информацията Ви…",
-    "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit [Ctrl]+[c] to copy)</span>": "Вашата връзка е <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Натиснете [Ctrl]+[c] за да копирате)</span>",
+    "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit <kbd>Ctrl</kbd>+<kbd>c</kbd> to copy)</span>": "Вашата връзка е <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Натиснете <kbd>Ctrl</kbd>+<kbd>c</kbd> за да копирате)</span>",
     "Delete data": "Изтриване на информацията",
     "Could not create paste: %s": "Създаването на връзката ви беше неуспешно: %s",
     "Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)": "Дешифроването на информацията беше неуспешно: Ключа за декриптиране липсва във връзката (Да не сте използвали услуга за пренасочване или скъсяване на връзката, което би изрязало части от нея?)",
@@ -220,5 +220,7 @@
     "Dark Mode": "Dark Mode",
     "Error compressing paste, due to missing WebAssembly support.": "Error compressing paste, due to missing WebAssembly support.",
     "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.": "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.",
-    "Start over": "Start over"
+    "Start over": "Start over",
+    "Paste text": "Paste text",
+    "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)": "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)"
 }

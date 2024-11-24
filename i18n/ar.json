@@ -151,7 +151,7 @@
     "server error or not responding": "خطأ في الخادم أو لا يستجيب",
     "Could not post comment: %s": "لا يمكن نشر تعليق: %s",
     "Sending paste…": "يُرسل لصق…",
-    "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit [Ctrl]+[c] to copy)</span>": "لصقك هو <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(اضغط على [Ctrl] + [c] للنسخ)</span>",
+    "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit <kbd>Ctrl</kbd>+<kbd>c</kbd> to copy)</span>": "لصقك هو <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(اضغط على <kbd>Ctrl</kbd> + <kbd>c</kbd> للنسخ)</span>",
     "Delete data": "حذف البيانات",
     "Could not create paste: %s": "تعذر إنشاء اللصق: %s",
     "Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)": "لا يمكن فك تشفير اللصق: مفتاح فك التشفير مفقود في URL (هل استخدمت معيد توجيه أو أداة تقصير لعناوين URL تزيل جزءًا من عنوان URL؟)",
@@ -220,5 +220,7 @@
     "Dark Mode": "الوضع الداكن",
     "Error compressing paste, due to missing WebAssembly support.": "Error compressing paste, due to missing WebAssembly support.",
     "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.": "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.",
-    "Start over": "Start over"
+    "Start over": "Start over",
+    "Paste text": "Paste text",
+    "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)": "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)"
 }

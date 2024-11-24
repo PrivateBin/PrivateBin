@@ -151,7 +151,7 @@
     "server error or not responding": "A szerveren hiba lépett fel vagy nem válaszol.",
     "Could not post comment: %s": "Nem tudtuk beküldeni a hozzászólást: %s",
     "Sending paste…": "Bejegyzés elküldése...",
-    "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit [Ctrl]+[c] to copy)</span>": "A bejegyzésed a <a id=\"pasteurl\" href=\"%s\">%s</a> címen elérhető. <span id=\"copyhint\"> [Ctrl]+[c]-vel tudod vágólapra másolni.</span>",
+    "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit <kbd>Ctrl</kbd>+<kbd>c</kbd> to copy)</span>": "A bejegyzésed a <a id=\"pasteurl\" href=\"%s\">%s</a> címen elérhető. <span id=\"copyhint\"> <kbd>Ctrl</kbd>+<kbd>c</kbd>-vel tudod vágólapra másolni.</span>",
     "Delete data": "Adat törlése",
     "Could not create paste: %s": "Nem tudtuk létrehozni a bejegyzést: %s",
     "Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)": "Nem tudjuk visszafejteni a bejegyzést: a dekódoláshoz szükséges kulcs hiányzik a címből. Talán URL rövidítőt használtál ami kivágta azt belőle?",
@@ -220,5 +220,7 @@
     "Dark Mode": "Sötét mód",
     "Error compressing paste, due to missing WebAssembly support.": "Error compressing paste, due to missing WebAssembly support.",
     "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.": "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.",
-    "Start over": "Start over"
+    "Start over": "Start over",
+    "Paste text": "Paste text",
+    "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)": "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)"
 }

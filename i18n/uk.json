@@ -151,7 +151,7 @@
     "server error or not responding": "помилка на сервері чи немає відповіді",
     "Could not post comment: %s": "Не вдалося опублікувати коментар: %s",
     "Sending paste…": "Відправка допису…",
-    "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit [Ctrl]+[c] to copy)</span>": "Посилання на допис <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Тисніть [Ctrl]+[c], щоб скопіювати посилання)</span>",
+    "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit <kbd>Ctrl</kbd>+<kbd>c</kbd> to copy)</span>": "Посилання на допис <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Тисніть <kbd>Ctrl</kbd>+<kbd>c</kbd>, щоб скопіювати посилання)</span>",
     "Delete data": "Видалити допис",
     "Could not create paste: %s": "Не вдалося опублікувати допис: %s",
     "Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)": "Неможливо розшифрувати запис: Ключ дешифрування відсутній в посиланні (Можливо, ви використовуєте скорочувач посилань, що видаляє частину посилання?)",
@@ -220,5 +220,7 @@
     "Dark Mode": "Темний режим",
     "Error compressing paste, due to missing WebAssembly support.": "Помилка при стисканні допису, через відсутність підтримки WebAssembly сервера.",
     "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.": "Помилка при розпакуванні допису, бо ваш браузер не підтримує WebAssembly. Будь ласка, відкрийте в іншому браузері для перегляду цього допису.",
-    "Start over": "Start over"
+    "Start over": "Start over",
+    "Paste text": "Paste text",
+    "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)": "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)"
 }
