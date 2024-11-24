@@ -1,6 +1,7 @@
 # PrivateBin version history
 
 ## 1.7.6 (not yet released)
+* CHANGED: Allow toggling tab-key-support using `[Ctrl]+[m]` or `[Esc]` in textarea for keyboard navigation (#1386)
 
 ## 1.7.5 (2024-11-16)
 * ADDED: Allow non persistent SQL connections, if configured (#1394)

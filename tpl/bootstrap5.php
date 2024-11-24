@@ -88,7 +88,7 @@ endif;
 						<form id="passwordform" role="form">
 							<div class="mb-3">
 								<label for="passworddecrypt"><svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#eye" /></svg> <?php echo I18n::_('Please enter the password for this paste:') ?></label>
-								<input id="passworddecrypt" type="password" class="form-control" placeholder="<?php echo I18n::_('Enter password') ?>" required="required">
+								<input id="passworddecrypt" type="password" class="form-control" placeholder="<?php echo I18n::_('Enter password') ?>" required="required" />
 							</div>
 							<button type="submit" class="btn btn-success btn-block"><svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#power" /></svg> <?php echo I18n::_('Decrypt') ?></button>
 						</form>
@@ -249,7 +249,7 @@ if ($PASSWORD) :
 ?>
 						<li class="nav-item">
 							<div id="password" class="navbar-form hidden">
-								<input type="password" id="passwordinput" placeholder="<?php echo I18n::_('Password (recommended)'); ?>" class="form-control" size="23" />
+								<input type="password" id="passwordinput" placeholder="<?php echo I18n::_('Password (recommended)'); ?>" aria-label="<?php echo I18n::_('Password (recommended)'); ?>" class="form-control" size="23" />
 							</div>
 						</li>
 <?php
@@ -296,7 +296,7 @@ endif;
 					<ul class="navbar-nav gap-2">
 						<li class="nav-item">
 							<div class="form-check form-switch navbar-text">
-								<input id="bd-theme" type="checkbox" class="form-check-input">
+								<input id="bd-theme" type="checkbox" class="form-check-input" />
 								<label for="bd-theme" class="form-check-label"><?php echo I18n::_('Dark Mode'); ?></label>
 							</div>
 						</li>
@@ -439,7 +439,13 @@ endif;
 						<pre id="prettyprint" class="card-body col-md-12 prettyprint linenums:1"></pre>
 					</div>
 					<div id="plaintext" class="col-md-12 hidden"></div>
-					<p class="col-md-12"><textarea id="message" name="message" cols="80" rows="25" class="form-control hidden"></textarea></p>
+					<p class="col-md-12"><textarea id="message" name="message" cols="80" rows="25" aria-label="<?php echo I18n::_('Paste text'); ?>" class="form-control hidden"></textarea></p>
+					<p class="col-md-12" id="message-controls">
+						<input id="message-tab" type="checkbox" class="form-check-input" checked="checked" />
+						<label for="message-tab" class="form-check-label">
+							<?php echo I18n::_('Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)'); ?>
+						</label>
+					</p>
 				</article>
 			</section>
 			<section class="container-fluid">

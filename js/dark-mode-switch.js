@@ -68,7 +68,7 @@
     } else {
       delStoredPrettifyTheme()
     }
-    const toggle = document.querySelector('#bd-theme')
+    const toggle = document.getElementById('bd-theme')
     const theme = getStoredPreferredTheme()
     setTheme(theme)
     toggle.checked = (theme === 'dark')

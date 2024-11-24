@@ -2092,7 +2092,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         {
             I18n._(
                 $('#pastelink'),
-                'Your paste is <a id="pasteurl" href="%s">%s</a> <span id="copyhint">(Hit [Ctrl]+[c] to copy)</span>',
+                'Your paste is <a id="pasteurl" href="%s">%s</a> <span id="copyhint">(Hit <kbd>Ctrl</kbd>+<kbd>c</kbd> to copy)</span>',
                 url, url
             );
             // save newly created element
@@ -2394,7 +2394,8 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             $messagePreview,
             $messagePreviewParent,
             $message,
-            isPreview = false;
+            isPreview = false,
+            isTabSupported = true;
 
         /**
          * support input of tab character
@@ -2406,9 +2407,14 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         function supportTabs(event)
         {
-            const keyCode = event.keyCode || event.which;
+            // support disabling tab support using [Esc] and [Ctrl]+[m]
+            if (event.key === 'Escape' || (event.ctrlKey && event.key === 'm')) {
+                toggleTabSupport();
+                document.getElementById('message-tab').checked = isTabSupported;
+                event.preventDefault();
+            }
             // tab was pressed
-            if (keyCode === 9) {
+            else if (isTabSupported && event.key === 'Tab') {
                 // get caret position & selection
                 const val   = this.value,
                       start = this.selectionStart,
@@ -2420,6 +2426,18 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 // prevent the textarea to lose focus
                 event.preventDefault();
             }
+        }
+
+        /**
+         * toggle tab support in message textarea
+         *
+         * @name   Editor.toggleTabSupport
+         * @private
+         * @function
+         */
+        function toggleTabSupport()
+        {
+            isTabSupported = !isTabSupported;
         }
 
         /**
@@ -2599,6 +2617,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
             // bind events
             $message.keydown(supportTabs);
+            $('#message-tab').change(toggleTabSupport);
 
             // bind click events to tab switchers (a), and save parents (li)
             $messageEdit = $('#messageedit').click(viewEditor);
@@ -3768,7 +3787,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
         /**
          * Clear the password input in the top navigation
-         * 
+         *
          * @name TopNav.clearPasswordInput
          * @function
          */
