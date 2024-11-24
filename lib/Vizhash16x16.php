@@ -1,14 +1,13 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * VizHash_GD
  *
  * Visual Hash implementation in php4+GD,
- * stripped down and modified version for PrivateBin
+ * stripped down from version 0.0.5 beta, modified for PrivateBin
  *
- * @link      http://sebsauvage.net/wiki/doku.php?id=php:vizhash_gd
+ * @link      https://sebsauvage.net/wiki/doku.php?id=php:vizhash_gd
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
- * @version   0.0.5 beta PrivateBin 1.3.5
  */
 
 namespace PrivateBin;
@@ -109,9 +108,9 @@ class Vizhash16x16
         for ($i = 0; $i < 7; ++$i) {
             $action = $this->getInt();
             $color  = imagecolorallocate($image, $r, $g, $b);
-            $r      = $r0      = ($r0 + $this->getInt() / 25) % 256;
-            $g      = $g0      = ($g0 + $this->getInt() / 25) % 256;
-            $b      = $b0      = ($b0 + $this->getInt() / 25) % 256;
+            $r      = $r0      = (int) ($r0 + $this->getInt() / 25) % 256;
+            $g      = $g0      = (int) ($g0 + $this->getInt() / 25) % 256;
+            $b      = $b0      = (int) ($b0 + $this->getInt() / 25) % 256;
             $this->drawshape($image, $action, $color);
         }
 
@@ -136,7 +135,7 @@ class Vizhash16x16
     {
         $v = $this->VALUES[$this->VALUES_INDEX];
         ++$this->VALUES_INDEX;
-        $this->VALUES_INDEX %= count($this->VALUES); // Warp around the array
+        $this->VALUES_INDEX %= count($this->VALUES); // Wrap around the array
         return $v;
     }
 
@@ -148,7 +147,7 @@ class Vizhash16x16
      */
     private function getX()
     {
-        return $this->width * $this->getInt() / 256;
+        return (int) ($this->width * $this->getInt() / 256);
     }
 
     /**
@@ -159,14 +158,14 @@ class Vizhash16x16
      */
     private function getY()
     {
-        return $this->height * $this->getInt() / 256;
+        return (int) ($this->height * $this->getInt() / 256);
     }
 
     /**
      * Gradient function
      *
      * taken from:
-     * http://www.supportduweb.com/scripts_tutoriaux-code-source-41-gd-faire-un-degrade-en-php-gd-fonction-degrade-imagerie.html
+     * @link   https://www.supportduweb.com/scripts_tutoriaux-code-source-41-gd-faire-un-degrade-en-php-gd-fonction-degrade-imagerie.html
      *
      * @access private
      * @param  resource $img
@@ -185,14 +184,14 @@ class Vizhash16x16
             $sizeinv = imagesx($img);
         }
         $diffs = array(
-            (($color2[0] - $color1[0]) / $size),
-            (($color2[1] - $color1[1]) / $size),
-            (($color2[2] - $color1[2]) / $size),
+            ($color2[0] - $color1[0]) / $size,
+            ($color2[1] - $color1[1]) / $size,
+            ($color2[2] - $color1[2]) / $size,
         );
         for ($i = 0; $i < $size; ++$i) {
-            $r = $color1[0] + ($diffs[0] * $i);
-            $g = $color1[1] + ($diffs[1] * $i);
-            $b = $color1[2] + ($diffs[2] * $i);
+            $r = $color1[0] + ((int) $diffs[0] * $i);
+            $g = $color1[1] + ((int) $diffs[1] * $i);
+            $b = $color1[2] + ((int) $diffs[2] * $i);
             if ($direction == 'h') {
                 imageline($img, $i, 0, $i, $sizeinv, imagecolorallocate($img, $r, $g, $b));
             } else {
@@ -222,11 +221,11 @@ class Vizhash16x16
                 break;
             case 3:
                 $points = array($this->getX(), $this->getY(), $this->getX(), $this->getY(), $this->getX(), $this->getY(), $this->getX(), $this->getY());
-                imagefilledpolygon($image, $points, 4, $color);
+                version_compare(PHP_VERSION, '8.1', '<') ? imagefilledpolygon($image, $points, 4, $color) : imagefilledpolygon($image, $points, $color);
                 break;
             default:
-                $start = $this->getInt() * 360 / 256;
-                $end   = $start + $this->getInt() * 180 / 256;
+                $start = (int) ($this->getInt() * 360 / 256);
+                $end   = (int) ($start + $this->getInt() * 180 / 256);
                 imagefilledarc($image, $this->getX(), $this->getY(), $this->getX(), $this->getY(), $start, $end, $color, IMG_ARC_PIE);
         }
     }

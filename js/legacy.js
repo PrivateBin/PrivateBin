@@ -6,7 +6,6 @@
  * @see       {@link https://github.com/PrivateBin/PrivateBin}
  * @copyright 2012 Sébastien SAUVAGE ({@link http://sebsauvage.net})
  * @license   {@link https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License}
- * @version   1.3.1
  * @name      Legacy
  * @namespace
  */
@@ -178,7 +177,7 @@
 
             // async & ES6 support
             try {
-                eval('async () => {}');
+                async () => {};
             } catch (e) {
                 if (e instanceof SyntaxError) {
                     return true;
@@ -238,7 +237,7 @@
         {
             return init;
         };
-        
+
         /**
          * returns the current status of the check
          *
@@ -250,7 +249,7 @@
         {
             return status;
         };
-        
+
         /**
          * init on application start, returns an all-clear signal
          *

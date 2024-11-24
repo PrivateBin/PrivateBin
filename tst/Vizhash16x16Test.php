@@ -1,16 +1,17 @@
-<?php
+<?php declare(strict_types=1);
 
+use PHPUnit\Framework\TestCase;
 use PrivateBin\Data\Filesystem;
 use PrivateBin\Persistence\ServerSalt;
 use PrivateBin\Vizhash16x16;
 
-class Vizhash16x16Test extends PHPUnit_Framework_TestCase
+class Vizhash16x16Test extends TestCase
 {
     private $_file;
 
     private $_path;
 
-    public function setUp()
+    public function setUp(): void
     {
         /* Setup Routine */
         $this->_path = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'privatebin_data';
@@ -18,10 +19,10 @@ class Vizhash16x16Test extends PHPUnit_Framework_TestCase
             mkdir($this->_path);
         }
         $this->_file = $this->_path . DIRECTORY_SEPARATOR . 'vizhash.png';
-        ServerSalt::setStore(Filesystem::getInstance(array('dir' => $this->_path)));
+        ServerSalt::setStore(new Filesystem(array('dir' => $this->_path)));
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         /* Tear Down Routine */
         chmod($this->_path, 0700);

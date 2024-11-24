@@ -3,11 +3,12 @@
     "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted %sin the browser%s using 256 bits AES.": "%s adalah sebuah pastebin online sumber terbuka dan minimalis, dimana servernya tersebut tidak punya pengetahuan tentang data yang ditempelkan. Data tersebut di enkrip/dekrip %sdi dalam browser%s menggunakan metode enkrip AES 256 bit.",
     "More information on the <a href=\"https://privatebin.info/\">project page</a>.": "Infomasi lebih lanjut pada <a href=\"https://privatebin.info/\">halaman proyek</a>.",
     "Because ignorance is bliss": "Karena ketidaktahuan adalah kebahagiaan, gitu loh",
-    "en": "id",
     "Paste does not exist, has expired or has been deleted.": "Paste tidak ada, telah kedaluwarsa atau telah dihapus.",
     "%s requires php %s or above to work. Sorry.": "%s memerlukan php %s atau versi diatasnya untuk dapat dijalankan. Maaf.",
     "%s requires configuration section [%s] to be present in configuration file.": "%s membutuhkan bagian konfigurasi [%s] untuk ada di file konfigurasi.",
     "Please wait %d seconds between each post.": [
+        "Silahkan menunggu %d detik antara masing-masing postingan.",
+        "Silahkan menunggu %d detik antara masing-masing postingan.",
         "Silahkan menunggu %d detik antara masing-masing postingan.",
         "Silahkan menunggu %d detik antara masing-masing postingan.",
         "Silahkan menunggu %d detik antara masing-masing postingan.",
@@ -25,7 +26,7 @@
     "JavaScript is required for %s to work. Sorry for the inconvenience.": "JavaScript diperlukan agar %s bekerja. Maaf untuk ketidaknyamanannya.",
     "%s requires a modern browser to work.": "%s memerlukan sebuah browser modern untuk bekerja.",
     "New": "Baru",
-    "Send": "Kirim",
+    "Create": "Buat baru",
     "Clone": "Klon",
     "Raw text": "Teks mentah",
     "Expires": "Kadaluarsa",
@@ -38,9 +39,13 @@
         "%d detik",
         "%d detik",
         "%d detik",
+        "%d detik",
+        "%d detik",
         "%d detik"
     ],
     "%d minutes": [
+        "%d menit",
+        "%d menit",
         "%d menit",
         "%d menit",
         "%d menit",
@@ -50,9 +55,13 @@
         "%d jam",
         "%d jam",
         "%d jam",
+        "%d jam",
+        "%d jam",
         "%d jam"
     ],
     "%d days": [
+        "%d hari",
+        "%d hari",
         "%d hari",
         "%d hari",
         "%d hari",
@@ -62,15 +71,21 @@
         "%d minggu",
         "%d minggu",
         "%d minggu",
+        "%d minggu",
+        "%d minggu",
         "%d minggu"
     ],
     "%d months": [
         "%d bulan",
         "%d bulan",
         "%d bulan",
+        "%d bulan",
+        "%d bulan",
         "%d bulan"
     ],
     "%d years": [
+        "%d tahun",
+        "%d tahun",
         "%d tahun",
         "%d tahun",
         "%d tahun",
@@ -82,9 +97,13 @@
         "Dokumen ini kadaluarsa dalam %d detik.",
         "Dokumen ini kadaluarsa dalam %d detik.",
         "Dokumen ini kadaluarsa dalam %d detik.",
+        "Dokumen ini kadaluarsa dalam %d detik.",
+        "Dokumen ini kadaluarsa dalam %d detik.",
         "Dokumen ini kadaluarsa dalam %d detik."
     ],
     "This document will expire in %d minutes.": [
+        "Dokumen ini akan kadaluarsa dalam %d menit.",
+        "Dokumen ini akan kadaluarsa dalam %d menit.",
         "Dokumen ini akan kadaluarsa dalam %d menit.",
         "Dokumen ini akan kadaluarsa dalam %d menit.",
         "Dokumen ini akan kadaluarsa dalam %d menit.",
@@ -94,15 +113,21 @@
         "Dokumen ini akan kadaluarsa dalam %d jam.",
         "Dokumen ini akan kadaluarsa dalam %d jam.",
         "Dokumen ini akan kadaluarsa dalam %d jam.",
+        "Dokumen ini akan kadaluarsa dalam %d jam.",
+        "Dokumen ini akan kadaluarsa dalam %d jam.",
         "Dokumen ini akan kadaluarsa dalam %d jam."
     ],
     "This document will expire in %d days.": [
         "Dokumen ini akan kadaluarsa dalam %d hari.",
         "Dokumen ini akan kadaluarsa dalam %d hari.",
         "Dokumen ini akan kadaluarsa dalam %d hari.",
+        "Dokumen ini akan kadaluarsa dalam %d hari.",
+        "Dokumen ini akan kadaluarsa dalam %d hari.",
         "Dokumen ini akan kadaluarsa dalam %d hari."
     ],
     "This document will expire in %d months.": [
+        "Dokumen ini akan kadaluarsa dalam %d bulan.",
+        "Dokumen ini akan kadaluarsa dalam %d bulan.",
         "Dokumen ini akan kadaluarsa dalam %d bulan.",
         "Dokumen ini akan kadaluarsa dalam %d bulan.",
         "Dokumen ini akan kadaluarsa dalam %d bulan.",
@@ -182,8 +207,18 @@
     "Use Current Timezone": "Gunakan Zonawaktu Saat Ini",
     "Convert To UTC": "Konversi Ke UTC",
     "Close": "Tutup",
-    "Encrypted note on PrivateBin": "Catatan ter-ekrip di PrivateBin",
+    "Encrypted note on %s": "Catatan ter-ekrip di %s",
     "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "Kunjungi tautan ini untuk melihat catatan. Memberikan alamat URL pada siapapun juga, akan mengizinkan mereka untuk mengakses catatan, so pasti gitu loh Kaka.",
     "URL shortener may expose your decrypt key in URL.": "Pemendek URL mungkin akan menampakkan kunci dekrip Anda dalam URL.",
-    "Save paste": "Simpan paste"
+    "Save paste": "Simpan paste",
+    "Your IP is not authorized to create pastes.": "Your IP is not authorized to create pastes.",
+    "Trying to shorten a URL that isn't pointing at our instance.": "Trying to shorten a URL that isn't pointing at our instance.",
+    "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".",
+    "Error parsing YOURLS response.": "Error parsing YOURLS response.",
+    "This secret message can only be displayed once. Would you like to see it now?": "This secret message can only be displayed once. Would you like to see it now?",
+    "Yes, see it": "Yes, see it",
+    "Dark Mode": "Mode Gelap",
+    "Error compressing paste, due to missing WebAssembly support.": "Error compressing paste, due to missing WebAssembly support.",
+    "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.": "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.",
+    "Start over": "Start over"
 }

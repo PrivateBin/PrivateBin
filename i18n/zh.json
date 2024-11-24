@@ -2,12 +2,13 @@
     "PrivateBin": "PrivateBin",
     "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted %sin the browser%s using 256 bits AES.": "%s 是一个极简、开源、对粘贴内容毫不知情的在线粘贴板，数据%s在浏览器内%s进行 AES-256 加密和解密。",
     "More information on the <a href=\"https://privatebin.info/\">project page</a>.": "更多信息请查看<a href=\"https://privatebin.info/\">项目主页</a>。",
-    "Because ignorance is bliss": "因为无知是福",
-    "en": "zh",
+    "Because ignorance is bliss": "以不知为幸",
     "Paste does not exist, has expired or has been deleted.": "粘贴内容不存在、已过期或已被删除。",
     "%s requires php %s or above to work. Sorry.": "抱歉，%s 需要 PHP %s 及以上版本才能运行。",
     "%s requires configuration section [%s] to be present in configuration file.": "%s 需要设置配置文件中的 [%s] 部分。",
     "Please wait %d seconds between each post.": [
+        "每 %d 秒只能粘贴一次。",
+        "每 %d 秒只能粘贴一次。",
         "每 %d 秒只能粘贴一次。",
         "每 %d 秒只能粘贴一次。",
         "每 %d 秒只能粘贴一次。",
@@ -25,7 +26,7 @@
     "JavaScript is required for %s to work. Sorry for the inconvenience.": "%s 需要 JavaScript 来进行加解密。 给你带来的不便敬请谅解。",
     "%s requires a modern browser to work.": "%s 需要在现代浏览器上工作。",
     "New": "新建",
-    "Send": "送出",
+    "Create": "创建",
     "Clone": "复制",
     "Raw text": "纯文本",
     "Expires": "有效期",
@@ -38,15 +39,21 @@
         "%d 秒",
         "%d 秒",
         "%d 秒",
+        "%d 秒",
+        "%d 秒",
         "%d 秒"
     ],
     "%d minutes": [
         "%d 分钟",
         "%d 分钟",
         "%d 秒",
+        "%d 秒",
+        "%d 秒",
         "%d 秒"
     ],
     "%d hours": [
+        "%d 小时",
+        "%d 小时",
         "%d 小时",
         "%d 小时",
         "%d 小时",
@@ -56,9 +63,13 @@
         "%d 天",
         "%d 天",
         "%d 天",
+        "%d 天",
+        "%d 天",
         "%d 天"
     ],
     "%d weeks": [
+        "%d 周",
+        "%d 周",
         "%d 周",
         "%d 周",
         "%d 周",
@@ -68,9 +79,13 @@
         "%d 个月",
         "%d 个月",
         "%d 个月",
+        "%d 个月",
+        "%d 个月",
         "%d 个月"
     ],
     "%d years": [
+        "%d 年",
+        "%d 年",
         "%d 年",
         "%d 年",
         "%d 年",
@@ -82,10 +97,14 @@
         "这份文档将在一秒后过期。",
         "这份文档将在 %d 秒后过期。",
         "这份文档将在 %d 秒后过期。",
+        "这份文档将在 %d 秒后过期。",
+        "这份文档将在 %d 秒后过期。",
         "这份文档将在 %d 秒后过期。"
     ],
     "This document will expire in %d minutes.": [
         "这份文档将在一分钟后过期。",
+        "这份文档将在 %d 分钟后过期。",
+        "这份文档将在 %d 分钟后过期。",
         "这份文档将在 %d 分钟后过期。",
         "这份文档将在 %d 分钟后过期。",
         "这份文档将在 %d 分钟后过期。"
@@ -94,16 +113,22 @@
         "这份文档将在一小时后过期。",
         "这份文档将在 %d 小时后过期。",
         "这份文档将在 %d 小时后过期。",
+        "这份文档将在 %d 小时后过期。",
+        "这份文档将在 %d 小时后过期。",
         "这份文档将在 %d 小时后过期。"
     ],
     "This document will expire in %d days.": [
         "这份文档将在一天后过期。",
         "这份文档将在 %d 天后过期。",
         "这份文档将在 %d 天后过期。",
+        "这份文档将在 %d 天后过期。",
+        "这份文档将在 %d 天后过期。",
         "这份文档将在 %d 天后过期。"
     ],
     "This document will expire in %d months.": [
         "这份文档将在一个月后过期。",
+        "这份文档将在 %d 个月后过期。",
+        "这份文档将在 %d 个月后过期。",
         "这份文档将在 %d 个月后过期。",
         "这份文档将在 %d 个月后过期。",
         "这份文档将在 %d 个月后过期。"
@@ -182,8 +207,18 @@
     "Use Current Timezone": "使用当前时区",
     "Convert To UTC": "转换为 UTC",
     "Close": "关闭",
-    "Encrypted note on PrivateBin": "PrivateBin 上的加密笔记",
+    "Encrypted note on %s": "%s 上的加密笔记",
     "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "访问此链接来查看该笔记。将此 URL 发送给任何人即可允许其访问该笔记。",
     "URL shortener may expose your decrypt key in URL.": "短链接服务可能会暴露您在 URL 中的解密密钥。",
-    "Save paste": "保存内容"
+    "Save paste": "保存内容",
+    "Your IP is not authorized to create pastes.": "您的 IP 无权创建粘贴。",
+    "Trying to shorten a URL that isn't pointing at our instance.": "尝试缩短一个不指向我们实例的URL。",
+    "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "调用 YOURLS 时出错。可能是配置问题，例如“apiurl”或“signature”错误或缺失。",
+    "Error parsing YOURLS response.": "解析 YOURLS 响应时出错。",
+    "This secret message can only be displayed once. Would you like to see it now?": "读取粘贴后只能在加载时显示一次。您想现在打开吗？",
+    "Yes, see it": "是的，加载它",
+    "Dark Mode": "暗黑模式",
+    "Error compressing paste, due to missing WebAssembly support.": "由于缺少 WebAssembly 支持，在压缩粘贴时出错。",
+    "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.": "解压粘贴时出错，您的浏览器不支持 WebAssembly。请使用其他浏览器查看此粘贴。",
+    "Start over": "重新开始"
 }

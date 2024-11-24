@@ -3,12 +3,13 @@
     "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted %sin the browser%s using 256 bits AES.": "%s es un 'pastebin' (o gestionari d’extrachs de tèxte e còdi font) minimalista e open source, dins lo qual lo servidor a pas cap de coneissença de las donadas mandadas. Las donadas son chifradas/deschifradas %sdins lo navigator%s per un chiframent AES 256 bits.",
     "More information on the <a href=\"https://privatebin.info/\">project page</a>.": "Mai informacions sus <a href=\"https://privatebin.info/\">la pagina del projècte</a>.",
     "Because ignorance is bliss": "Perque lo bonaür es l’ignorància",
-    "en": "oc",
     "Paste does not exist, has expired or has been deleted.": "Lo tèxte existís pas, a expirat, o es estat suprimit.",
     "%s requires php %s or above to work. Sorry.": "O planhèm, %s necessita php %s o superior per foncionar.",
     "%s requires configuration section [%s] to be present in configuration file.": "%s fa besonh de la seccion de configuracion [%s] dins lo fichièr de configuracion per foncionar.",
     "Please wait %d seconds between each post.": [
         "Mercés d'esperar %d segonda entre cada publicacion.",
+        "Mercés d'esperar %d segondas entre cada publicacion.",
+        "Mercés d'esperar %d segondas entre cada publicacion.",
         "Mercés d'esperar %d segondas entre cada publicacion.",
         "Mercés d'esperar %d segondas entre cada publicacion.",
         "Mercés d'esperar %d segondas entre cada publicacion."
@@ -25,7 +26,7 @@
     "JavaScript is required for %s to work. Sorry for the inconvenience.": "JavaScript es requesit per far foncionar %s. O planhèm per l’inconvenient.",
     "%s requires a modern browser to work.": "%s requerís un navigator modèrn per foncionar.",
     "New": "Nòu",
-    "Send": "Mandar",
+    "Create": "Mandar",
     "Clone": "Clonar",
     "Raw text": "Tèxte brut",
     "Expires": "Expira",
@@ -37,76 +38,100 @@
     "%d seconds": [
         "%d segonda",
         "%d segondas",
-        "%d seconds (2nd plural)",
-        "%d seconds (3rd plural)"
+        "%d segondas",
+        "%d segondas",
+        "%d segondas",
+        "%d segondas"
     ],
     "%d minutes": [
         "%d minuta",
         "%d minutas",
-        "%d minutes (2nd plural)",
-        "%d minutes (3rd plural)"
+        "%d minutas",
+        "%d minutas",
+        "%d minutas",
+        "%d minutas"
     ],
     "%d hours": [
         "%d ora",
         "%d oras",
-        "%d hours (2nd plural)",
-        "%d hours (3rd plural)"
+        "%d oras",
+        "%d oras",
+        "%d oras",
+        "%d oras"
     ],
     "%d days": [
         "%d jorn",
         "%d jorns",
-        "%d days (2nd plural)",
-        "%d days (3rd plural)"
+        "%d jorns",
+        "%d jorns",
+        "%d jorns",
+        "%d jorns"
     ],
     "%d weeks": [
         "%d setmana",
         "%d setmanas",
-        "%d weeks (2nd plural)",
-        "%d weeks (3rd plural)"
+        "%d setmanas",
+        "%d setmanas",
+        "%d setmanas",
+        "%d setmanas"
     ],
     "%d months": [
         "%d mes",
         "%d meses",
-        "%d months (2nd plural)",
-        "%d months (3rd plural)"
+        "%d meses",
+        "%d meses",
+        "%d meses",
+        "%d meses"
     ],
     "%d years": [
         "%d an",
         "%d ans",
-        "%d years (2nd plural)",
-        "%d years (3rd plural)"
+        "%d ans",
+        "%d ans",
+        "%d ans",
+        "%d ans"
     ],
     "Never": "Jamai",
     "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.": "Nota : Aquò es un servici d’espròva : las donadas pòdon èsser suprimidas a cada moment. De catons moriràn s’abusatz d’aqueste servici.",
     "This document will expire in %d seconds.": [
-        "Ce document expirera dans %d seconde.",
-        "Aqueste document expirarà dins %d segondas.",
-        "Aqueste document expirarà dins %d segondas.",
-        "Aqueste document expirarà dins %d segondas."
+        "Aqueste document expirarà d’aquí %d segonda.",
+        "Aqueste document expirarà d’aquí %d segondas.",
+        "Aqueste document expirarà d’aquí %d segondas.",
+        "Aqueste document expirarà d’aquí %d segondas.",
+        "Aqueste document expirarà d’aquí %d segondas.",
+        "Aqueste document expirarà d’aquí %d segondas."
     ],
     "This document will expire in %d minutes.": [
-        "Ce document expirera dans %d minute.",
-        "Aqueste document expirarà dins %d minutas.",
-        "Aqueste document expirarà dins %d minutas.",
-        "Aqueste document expirarà dins %d minutas."
+        "Aqueste document expirarà d’aquí %d minuta.",
+        "Aqueste document expirarà d’aquí %d minutas.",
+        "Aqueste document expirarà d’aquí %d minutas.",
+        "Aqueste document expirarà d’aquí %d minutas.",
+        "Aqueste document expirarà d’aquí %d minutas.",
+        "Aqueste document expirarà d’aquí %d minutas."
     ],
     "This document will expire in %d hours.": [
-        "Ce document expirera dans %d heure.",
-        "Aqueste document expirarà dins %d oras.",
-        "Aqueste document expirarà dins %d oras.",
-        "Aqueste document expirarà dins %d oras."
+        "Aqueste document expirarà d’aquí %d ora.",
+        "Aqueste document expirarà d’aquí %d oras.",
+        "Aqueste document expirarà d’aquí %d oras.",
+        "Aqueste document expirarà d’aquí %d oras.",
+        "Aqueste document expirarà d’aquí %d oras.",
+        "Aqueste document expirarà d’aquí %d oras."
     ],
     "This document will expire in %d days.": [
-        "Ce document expirera dans %d jour.",
-        "Aqueste document expirarà dins %d jorns.",
-        "Aqueste document expirarà dins %d jorns.",
-        "Aqueste document expirarà dins %d jorns."
+        "Aqueste document expirarà d’aquí %d jorn.",
+        "Aqueste document expirarà d’aquí %d jorns.",
+        "Aqueste document expirarà d’aquí %d jorns.",
+        "Aqueste document expirarà d’aquí %d jorns.",
+        "Aqueste document expirarà d’aquí %d jorns.",
+        "Aqueste document expirarà d’aquí %d jorns."
     ],
     "This document will expire in %d months.": [
-        "Ce document expirera dans %d mois.",
-        "Aqueste document expirarà dins %d meses.",
-        "Aqueste document expirarà dins %d meses.",
-        "Aqueste document expirarà dins %d meses."
+        "Aqueste document expirarà d’aquí %d mes.",
+        "Aqueste document expirarà d’aquí %d meses.",
+        "Aqueste document expirarà d’aquí %d meses.",
+        "Aqueste document expirarà d’aquí %d meses.",
+        "Aqueste document expirarà d’aquí %d meses.",
+        "Aqueste document expirarà d’aquí %d meses."
     ],
     "Please enter the password for this paste:": "Picatz lo senhal per aqueste tèxte :",
     "Could not decrypt data (Wrong key?)": "Impossible de deschifrar las donadas (marrida clau ?)",
@@ -122,8 +147,8 @@
     "Sending comment…": "Mandadís del comentari…",
     "Comment posted.": "Comentari mandat.",
     "Could not refresh display: %s": "Impossible d’actualizar l’afichatge : %s",
-    "unknown status": "Estatut desconegut",
-    "server error or not responding": "Lo servidor respond pas o a rescontrat una error",
+    "unknown status": "estatut desconegut",
+    "server error or not responding": "lo servidor respond pas o a rescontrat una error",
     "Could not post comment: %s": "Impossible de mandar lo comentari : %s",
     "Sending paste…": "Mandadís del tèxte…",
     "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit [Ctrl]+[c] to copy)</span>": "Vòstre tèxte es disponible a l’adreça <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Picatz sus [Ctrl]+[c] per copiar)</span>",
@@ -156,7 +181,7 @@
     "Shorten URL": "Acorchir l’URL",
     "Editor": "Editar",
     "Preview": "Previsualizar",
-    "%s requires the PATH to end in a \"%s\". Please update the PATH in your index.php.": "%s demanda que lo PATH termine en \"%s\". Mercés de metre a jorn lo PATH dins vòstre index.php.",
+    "%s requires the PATH to end in a \"%s\". Please update the PATH in your index.php.": "%s demanda que lo PATH termine en « %s ». Mercés de metre a jorn lo PATH dins vòstre index.php.",
     "Decrypt": "Deschifrar",
     "Enter password": "Picatz lo senhal",
     "Loading…": "Cargament…",
@@ -182,8 +207,18 @@
     "Use Current Timezone": "Utilizar l’actual",
     "Convert To UTC": "Convertir en UTC",
     "Close": "Tampar",
-    "Encrypted note on PrivateBin": "Nòtas chifradas sus PrivateBin",
+    "Encrypted note on %s": "Nòtas chifradas sus %s",
     "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "Visitatz aqueste ligam per veire la nòta. Fornir lo ligam a qualqu’un mai li permet tanben d’accedir a la nòta.",
-    "URL shortener may expose your decrypt key in URL.": "URL shortener may expose your decrypt key in URL.",
-    "Save paste": "Save paste"
+    "URL shortener may expose your decrypt key in URL.": "Los espleches d’acorchiment d’URL pòdon expausar la clau de deschiframent dins l’URL.",
+    "Save paste": "Enregistrar lo tèxt",
+    "Your IP is not authorized to create pastes.": "Vòstra adreça IP a pas l’autorizacion de crear de tèxtes.",
+    "Trying to shorten a URL that isn't pointing at our instance.": "Ensag d’abracar una URL que mena pas a nòstra instància.",
+    "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "Error en cridant YOURLS. Es probablament un problèma de configuracion, quicòm coma « apirul » o « signature » marrit o absent.",
+    "Error parsing YOURLS response.": "Error d'analisi de la responsa YOURLS.",
+    "This secret message can only be displayed once. Would you like to see it now?": "Aqueste messatge secrèt se pòt pas qu'afichar un còp. Lo volètz veire ara ?",
+    "Yes, see it": "Òc, afichatz-lo",
+    "Dark Mode": "Mòde escur",
+    "Error compressing paste, due to missing WebAssembly support.": "Error al moment de la compression de l'empegatge, a causa de la manca de presa en carga de WebAssembly.",
+    "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.": "Error al moment de descompresar l'empegatge, vòstre navegador pren pas en carga WebAssembly. Mercés d'utilizar un autre navigador per visualizar aquesta pega.",
+    "Start over": "Start over"
 }

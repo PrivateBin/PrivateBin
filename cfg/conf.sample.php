@@ -7,15 +7,21 @@
 ; (optional) set a project name to be displayed on the website
 ; name = "PrivateBin"
 
-; The full URL, with the domain name and directories that point to the PrivateBin files
-; This URL is essential to allow Opengraph images to be displayed on social networks
-; basepath = ""
+; The full URL, with the domain name and directories that point to the
+; PrivateBin files, including an ending slash (/). This URL is essential to
+; allow Opengraph images to be displayed on social networks.
+; basepath = "https://privatebin.example.com/"
 
 ; enable or disable the discussion feature, defaults to true
 discussion = true
 
 ; preselect the discussion feature, defaults to false
 opendiscussion = false
+
+; enable or disable the display of dates & times in the comments, defaults to true
+; Note that internally the creation time will still get tracked in order to sort
+; the comments by creation time, but you can choose not to display them.
+; discussiondatedisplay = false
 
 ; enable or disable the password feature, defaults to true
 password = true
@@ -36,7 +42,12 @@ defaultformatter = "plaintext"
 ; size limit per paste or comment in bytes, defaults to 10 Mebibytes
 sizelimit = 10485760
 
-; template to include, default is "bootstrap" (tpl/bootstrap.php)
+; template to include, default is "bootstrap" (tpl/bootstrap.php), also
+; available are "page" (tpl/page.php), the classic ZeroBin style and several
+; bootstrap variants: "bootstrap-dark", "bootstrap-compact", "bootstrap-page",
+; which can be combined with "-dark" and "-compact" for "bootstrap-dark-page"
+; and finally "bootstrap-compact-page" - previews at:
+; https://privatebin.info/screenshots.html
 template = "bootstrap"
 
 ; (optional) info text to display
@@ -55,20 +66,25 @@ languageselection = false
 ; if this is set and language selection is disabled, this will be the only language
 ; languagedefault = "en"
 
-; (optional) URL shortener address to offer after a new paste is created
-; it is suggested to only use this with self-hosted shorteners as this will leak
-; the pastes encryption key
+; (optional) URL shortener address to offer after a new paste is created.
+; It is suggested to only use this with self-hosted shorteners as this will leak
+; the pastes encryption key.
 ; urlshortener = "https://shortener.example.com/api?link="
 
 ; (optional) Let users create a QR code for sharing the paste URL with one click.
 ; It works both when a new paste is created and when you view a paste.
 ; qrcode = true
 
+; (optional) Let users send an email sharing the paste URL with one click.
+; It works both when a new paste is created and when you view a paste.
+; email = true
+
 ; (optional) IP based icons are a weak mechanism to detect if a comment was from
-; a different user when the same username was used in a comment. It might be
-; used to get the IP of a non anonymous comment poster if the server salt is
-; leaked and a SHA256 HMAC rainbow table is generated for all (relevant) IPs.
-; Can be set to one these values: "none" / "vizhash" / "identicon" (default).
+; a different user when the same username was used in a comment. It might get
+; used to get the IP of a comment poster if the server salt is leaked and a
+; SHA512 HMAC rainbow table is generated for all (relevant) IPs.
+; Can be set to one these values:
+; "none" / "identicon" (default) / "jdenticon" / "vizhash".
 ; icon = "none"
 
 ; Content Security Policy headers allow a website to restrict what sources are
@@ -77,17 +93,17 @@ languageselection = false
 ; scripts or run your site behind certain DDoS-protection services.
 ; Check the documentation at https://content-security-policy.com/
 ; Notes:
-; - If you use a bootstrap theme, you can remove the allow-popups from the
+; - If you use any bootstrap theme, you can remove the allow-popups from the
 ;   sandbox restrictions.
+; - If you use the bootstrap5 theme, you must change default-src to 'self' to
+;   enable display of the svg icons
 ; - By default this disallows to load images from third-party servers, e.g. when
 ;   they are embedded in pastes. If you wish to allow that, you can adjust the
 ;   policy here. See https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-it-load-embedded-images
 ;   for details.
-; - The 'unsafe-eval' is used in two cases; to check if the browser supports
-;   async functions and display an error if not and for Chrome to enable
-;   webassembly support (used for zlib compression). You can remove it if Chrome
-;   doesn't need to be supported and old browsers don't need to be warned.
-; cspheader = "default-src 'none'; base-uri 'self'; form-action 'none'; manifest-src 'self'; connect-src * blob:; script-src 'self' resource:; style-src 'self'; font-src 'self'; img-src 'self' data: blob:; media-src blob:; object-src blob:; sandbox allow-same-origin allow-scripts allow-forms allow-popups allow-modals allow-downloads"
+; - The 'wasm-unsafe-eval' is used to enable webassembly support (used for zlib
+;   compression). You can remove it if compression doesn't need to be supported.
+; cspheader = "default-src 'none'; base-uri 'self'; form-action 'none'; manifest-src 'self'; connect-src * blob:; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'; font-src 'self'; frame-ancestors 'none'; img-src 'self' data: blob:; media-src blob:; object-src blob:; sandbox allow-same-origin allow-scripts allow-forms allow-popups allow-modals allow-downloads"
 
 ; stay compatible with PrivateBin Alpha 0.19, less secure
 ; if enabled will use base64.js version 1.7 instead of 2.1.9 and sha1 instead of
@@ -135,9 +151,17 @@ markdown = "Markdown"
 ; Set this to 0 to disable rate limiting.
 limit = 10
 
-; Set ips (v4|v6) which should be exempted for the rate-limit. CIDR also supported. Needed to be comma separated.
-; Unset for enabling and invalid values will be ignored
-; eg: exemptedIp = '1.2.3.4,10.10.10/24'
+; (optional) Set IPs addresses (v4 or v6) or subnets (CIDR) which are exempted
+; from the rate-limit. Invalid IPs will be ignored. If multiple values are to
+; be exempted, the list needs to be comma separated. Leave unset to disable
+; exemptions.
+; exempted = "1.2.3.4,10.10.10/24"
+
+; (optional) If you want only some source IP addresses (v4 or v6) or subnets
+; (CIDR) to be allowed to create pastes, set these here. Invalid IPs will be
+; ignored. If multiple values are to be exempted, the list needs to be comma
+; separated. Leave unset to allow anyone to create pastes.
+; creators = "1.2.3.4,10.10.10/24"
 
 ; (optional) if your website runs behind a reverse proxy or load balancer,
 ; set the HTTP header containing the visitors IP address, i.e. X_FORWARDED_FOR
@@ -161,12 +185,13 @@ class = Filesystem
 [model_options]
 dir = PATH "data"
 
-[model]
+;[model]
 ; example of a Google Cloud Storage configuration
 ;class = GoogleCloudStorage
 ;[model_options]
 ;bucket = "my-private-bin"
 ;prefix = "pastes"
+;uniformacl = false
 
 ;[model]
 ; example of DB configuration for MySQL
@@ -186,3 +211,71 @@ dir = PATH "data"
 ;usr = null
 ;pwd = null
 ;opt[12] = true	; PDO::ATTR_PERSISTENT
+
+;[model]
+; example of DB configuration for PostgreSQL
+;class = Database
+;[model_options]
+;dsn = "pgsql:host=localhost;dbname=privatebin"
+;tbl = "privatebin_"     ; table prefix
+;usr = "privatebin"
+;pwd = "Z3r0P4ss"
+;opt[12] = true    ; PDO::ATTR_PERSISTENT
+
+;[model]
+; example of S3 configuration for Rados gateway / CEPH
+;class = S3Storage
+;[model_options]
+;region = ""
+;version = "2006-03-01"
+;endpoint = "https://s3.my-ceph.invalid"
+;use_path_style_endpoint = true
+;bucket = "my-bucket"
+;accesskey = "my-rados-user"
+;secretkey = "my-rados-pass"
+
+;[model]
+; example of S3 configuration for AWS
+;class = S3Storage
+;[model_options]
+;region = "eu-central-1"
+;version = "latest"
+;bucket = "my-bucket"
+;accesskey = "access key id"
+;secretkey = "secret access key"
+
+;[model]
+; example of S3 configuration for AWS using its SDK default credential provider chain
+; if relying on environment variables, the AWS SDK will look for the following:
+; - AWS_ACCESS_KEY_ID
+; - AWS_SECRET_ACCESS_KEY
+; - AWS_SESSION_TOKEN (if needed)
+; for more details, see https://docs.aws.amazon.com/sdk-for-php/v3/developer-guide/guide_credentials.html#default-credential-chain
+;class = S3Storage
+;[model_options]
+;region = "eu-central-1"
+;version = "latest"
+;bucket = "my-bucket"
+
+;[yourls]
+; When using YOURLS as a "urlshortener" config item:
+; - By default, "urlshortener" will point to the YOURLS API URL, with or without
+;   credentials, and will be visible in public on the PrivateBin web page.
+;   Only use this if you allow short URL creation without credentials.
+; - Alternatively, using the parameters in this section ("signature" and
+;   "apiurl"), "urlshortener" needs to point to the base URL of your PrivateBin
+;   instance with "?shortenviayourls&link=" appended. For example:
+;   urlshortener = "${basepath}?shortenviayourls&link="
+;   This URL will in turn call YOURLS on the server side, using the URL from
+;   "apiurl" and the "access signature" from the "signature" parameters below.
+
+; (optional) the "signature" (access key) issued by YOURLS for the using account
+; signature = ""
+; (optional) the URL of the YOURLS API, called to shorten a PrivateBin URL
+; apiurl = "https://yourls.example.com/yourls-api.php"
+
+;[sri]
+; Subresource integrity (SRI) hashes used in template files. Uncomment and set
+; these for all js files used. See:
+; https://github.com/PrivateBin/PrivateBin/wiki/FAQ#user-content-how-to-make-privatebin-work-when-i-have-changed-some-javascript-files
+;js/privatebin.js = "sha512-[…]"

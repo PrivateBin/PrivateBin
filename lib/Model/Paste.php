@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * PrivateBin
  *
@@ -7,7 +7,6 @@
  * @link      https://github.com/PrivateBin/PrivateBin
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
- * @version   1.3.5
  */
 
 namespace PrivateBin\Model;
@@ -37,7 +36,7 @@ class Paste extends AbstractModel
             throw new Exception(Controller::GENERIC_ERROR, 64);
         }
 
-        // check if paste has expired and delete it if neccessary.
+        // check if paste has expired and delete it if necessary.
         if (array_key_exists('expire_date', $data['meta'])) {
             if ($data['meta']['expire_date'] < time()) {
                 $this->delete();
@@ -46,6 +45,11 @@ class Paste extends AbstractModel
             // We kindly provide the remaining time before expiration (in seconds)
             $data['meta']['time_to_live'] = $data['meta']['expire_date'] - time();
             unset($data['meta']['expire_date']);
+        }
+        foreach (array('created', 'postdate') as $key) {
+            if (array_key_exists($key, $data['meta'])) {
+                unset($data['meta'][$key]);
+            }
         }
 
         // check if non-expired burn after reading paste needs to be deleted
@@ -92,8 +96,7 @@ class Paste extends AbstractModel
             throw new Exception('You are unlucky. Try again.', 75);
         }
 
-        $this->_data['meta']['created'] = time();
-        $this->_data['meta']['salt']    = ServerSalt::generate();
+        $this->_data['meta']['salt'] = ServerSalt::generate();
 
         // store paste
         if (
@@ -159,7 +162,17 @@ class Paste extends AbstractModel
      */
     public function getComments()
     {
-        return $this->_store->readComments($this->getId());
+        if ($this->_conf->getKey('discussiondatedisplay')) {
+            return $this->_store->readComments($this->getId());
+        }
+        return array_map(function ($comment) {
+            foreach (array('created', 'postdate') as $key) {
+                if (array_key_exists($key, $comment['meta'])) {
+                    unset($comment['meta'][$key]);
+                }
+            }
+            return $comment;
+        }, $this->_store->readComments($this->getId()));
     }
 
     /**

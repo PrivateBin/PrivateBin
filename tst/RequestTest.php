@@ -1,36 +1,15 @@
-<?php
+<?php declare(strict_types=1);
 
+use PHPUnit\Framework\TestCase;
 use PrivateBin\Request;
 
-class RequestTest extends PHPUnit_Framework_TestCase
+class RequestTest extends TestCase
 {
-    public function setUp()
-    {
-        /* Setup Routine */
-    }
-
-    public function tearDown()
-    {
-        /* Tear Down Routine */
-    }
-
     public function reset()
     {
         $_SERVER = array();
         $_GET    = array();
         $_POST   = array();
-    }
-
-    /**
-     * Returns 16 random hexadecimal characters.
-     *
-     * @access public
-     * @return string
-     */
-    public function getRandomId()
-    {
-        // 8 binary bytes are 16 characters long in hex
-        return bin2hex(random_bytes(8));
     }
 
     /**
@@ -63,7 +42,25 @@ class RequestTest extends PHPUnit_Framework_TestCase
     public function testRead()
     {
         $this->reset();
-        $id                        = $this->getRandomId();
+        $id                        = Helper::getRandomId();
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+        $_SERVER['QUERY_STRING']   = $id;
+        $_GET[$id]                 = '';
+        $request                   = new Request;
+        $this->assertFalse($request->isJsonApiCall(), 'is HTML call');
+        $this->assertEquals($id, $request->getParam('pasteid'));
+        $this->assertEquals('read', $request->getOperation());
+    }
+
+    /**
+     * paste IDs are 8 bytes hex encoded strings, if unlucky, this turns into
+     * a numeric string that PHP will cast to an int, for example in array keys
+     * @see https://www.php.net/manual/en/language.types.array.php
+     */
+    public function testReadNumeric()
+    {
+        $this->reset();
+        $id                        = '1234567812345678';
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_SERVER['QUERY_STRING']   = $id;
         $_GET[$id]                 = '';
@@ -76,7 +73,7 @@ class RequestTest extends PHPUnit_Framework_TestCase
     public function testDelete()
     {
         $this->reset();
-        $id                        = $this->getRandomId();
+        $id                        = Helper::getRandomId();
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_GET['pasteid']           = $id;
         $_GET['deletetoken']       = 'bar';
@@ -97,7 +94,7 @@ class RequestTest extends PHPUnit_Framework_TestCase
         Request::setInputStream($file);
         $request = new Request;
         unlink($file);
-        $this->assertTrue($request->isJsonApiCall(), 'is JSON Api call');
+        $this->assertTrue($request->isJsonApiCall(), 'is JSON API call');
         $this->assertEquals('create', $request->getOperation());
         $this->assertEquals('foo', $request->getParam('ct'));
     }
@@ -111,7 +108,7 @@ class RequestTest extends PHPUnit_Framework_TestCase
         file_put_contents($file, '{"ct":"foo"}');
         Request::setInputStream($file);
         $request = new Request;
-        $this->assertTrue($request->isJsonApiCall(), 'is JSON Api call');
+        $this->assertTrue($request->isJsonApiCall(), 'is JSON API call');
         $this->assertEquals('create', $request->getOperation());
         $this->assertEquals('foo', $request->getParam('ct'));
     }
@@ -119,13 +116,13 @@ class RequestTest extends PHPUnit_Framework_TestCase
     public function testApiRead()
     {
         $this->reset();
-        $id                        = $this->getRandomId();
+        $id                        = Helper::getRandomId();
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_SERVER['HTTP_ACCEPT']    = 'application/json, text/javascript, */*; q=0.01';
         $_SERVER['QUERY_STRING']   = $id;
         $_GET[$id]                 = '';
         $request                   = new Request;
-        $this->assertTrue($request->isJsonApiCall(), 'is JSON Api call');
+        $this->assertTrue($request->isJsonApiCall(), 'is JSON API call');
         $this->assertEquals($id, $request->getParam('pasteid'));
         $this->assertEquals('read', $request->getOperation());
     }
@@ -133,7 +130,7 @@ class RequestTest extends PHPUnit_Framework_TestCase
     public function testApiDelete()
     {
         $this->reset();
-        $id                               = $this->getRandomId();
+        $id                               = Helper::getRandomId();
         $_SERVER['REQUEST_METHOD']        = 'POST';
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['QUERY_STRING']          = $id;
@@ -142,16 +139,29 @@ class RequestTest extends PHPUnit_Framework_TestCase
         file_put_contents($file, '{"deletetoken":"bar"}');
         Request::setInputStream($file);
         $request = new Request;
-        $this->assertTrue($request->isJsonApiCall(), 'is JSON Api call');
+        $this->assertTrue($request->isJsonApiCall(), 'is JSON API call');
         $this->assertEquals('delete', $request->getOperation());
         $this->assertEquals($id, $request->getParam('pasteid'));
         $this->assertEquals('bar', $request->getParam('deletetoken'));
     }
 
+    public function testPostGarbage()
+    {
+        $this->reset();
+        $_SERVER['REQUEST_METHOD']        = 'POST';
+        $file                             = tempnam(sys_get_temp_dir(), 'FOO');
+        file_put_contents($file, random_bytes(256));
+        Request::setInputStream($file);
+        $request = new Request;
+        unlink($file);
+        $this->assertFalse($request->isJsonApiCall(), 'is HTML call');
+        $this->assertEquals('create', $request->getOperation());
+    }
+
     public function testReadWithNegotiation()
     {
         $this->reset();
-        $id                        = $this->getRandomId();
+        $id                        = Helper::getRandomId();
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_SERVER['HTTP_ACCEPT']    = 'text/html,text/html; charset=UTF-8,application/xhtml+xml, application/xml;q=0.9,*/*;q=0.8, text/csv,application/json';
         $_SERVER['QUERY_STRING']   = $id;
@@ -165,7 +175,7 @@ class RequestTest extends PHPUnit_Framework_TestCase
     public function testReadWithXhtmlNegotiation()
     {
         $this->reset();
-        $id                        = $this->getRandomId();
+        $id                        = Helper::getRandomId();
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_SERVER['HTTP_ACCEPT']    = 'application/xhtml+xml,text/html,text/html; charset=UTF-8, application/xml;q=0.9,*/*;q=0.8, text/csv,application/json';
         $_SERVER['QUERY_STRING']   = $id;
@@ -179,7 +189,7 @@ class RequestTest extends PHPUnit_Framework_TestCase
     public function testApiReadWithNegotiation()
     {
         $this->reset();
-        $id                        = $this->getRandomId();
+        $id                        = Helper::getRandomId();
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_SERVER['HTTP_ACCEPT']    = 'text/plain,text/csv, application/xml;q=0.9, application/json, text/html,text/html; charset=UTF-8,application/xhtml+xml, */*;q=0.8';
         $_SERVER['QUERY_STRING']   = $id;
@@ -193,7 +203,7 @@ class RequestTest extends PHPUnit_Framework_TestCase
     public function testReadWithFailedNegotiation()
     {
         $this->reset();
-        $id                        = $this->getRandomId();
+        $id                        = Helper::getRandomId();
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_SERVER['HTTP_ACCEPT']    = 'text/plain,text/csv, application/xml;q=0.9, */*;q=0.8';
         $_SERVER['QUERY_STRING']   = $id;
@@ -207,7 +217,7 @@ class RequestTest extends PHPUnit_Framework_TestCase
     public function testPasteIdExtraction()
     {
         $this->reset();
-        $id              = $this->getRandomId();
+        $id              = Helper::getRandomId();
         $queryParams     = array($id);
         $queryParamCount = random_int(1, 5);
         for ($i = 0; $i < $queryParamCount; ++$i) {

@@ -1,13 +1,14 @@
-<?php
+<?php declare(strict_types=1);
 
+use PHPUnit\Framework\TestCase;
 use PrivateBin\Data\Filesystem;
 use PrivateBin\Persistence\PurgeLimiter;
 
-class PurgeLimiterTest extends PHPUnit_Framework_TestCase
+class PurgeLimiterTest extends TestCase
 {
     private $_path;
 
-    public function setUp()
+    public function setUp(): void
     {
         /* Setup Routine */
         $this->_path = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'privatebin_data';
@@ -15,11 +16,11 @@ class PurgeLimiterTest extends PHPUnit_Framework_TestCase
             mkdir($this->_path);
         }
         PurgeLimiter::setStore(
-            Filesystem::getInstance(array('dir' => $this->_path))
+            new Filesystem(array('dir' => $this->_path))
         );
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         /* Tear Down Routine */
         Helper::rmDir($this->_path);

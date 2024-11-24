@@ -1,0 +1,102 @@
+/**
+ * PrivateBin
+ *
+ * Common cascading style sheets for all templates.
+ *
+ * @link      https://github.com/PrivateBin/PrivateBin
+ * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
+ * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
+ */
+
+#attachmentPreview img {
+	max-width: 100%;
+	height: auto;
+	margin-bottom: 20px;
+}
+
+#attachmentPreview .pdfPreview {
+	width: 100%;
+	height: 100vh;
+	margin-bottom: 20px;
+}
+
+#dropzone {
+	text-align: center;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 1000;
+	opacity: 0.6;
+	background-color: #9cf;
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M0 0h24v24H0z' fill='none'/%3E%3Cpath d='M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z'/%3E%3C/svg%3E");
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: 25vh;
+	outline: 2px dashed #28f;
+	outline-offset: -50px;
+}
+
+#filewrap {
+	transition: background-color 0.75s ease-out;
+}
+
+#deletelink {
+	float: right;
+	margin-left: 5px;
+}
+
+#qrcodemodalClose {
+	float: right;
+}
+
+#qrcode-display {
+	width: 200px;
+	height: 200px;
+	margin: auto;
+}
+
+#pastelink {
+	display: inline;
+}
+
+#pastelink > a, #plaintext > a {
+	word-wrap: break-word;
+}
+
+#message {
+	height: 70dvh;
+}
+
+@media ((max-width: 450px) and (max-height: 950px)) {
+	#message {
+		height: 55dvh;
+	}
+}
+
+#message, .replymessage {
+	font-family: monospace;
+	resize: vertical;
+}
+
+.comment {
+	border-left: 1px solid #ccc;
+	transition: background-color 0.75s ease-out;
+}
+
+.commentdata {
+	white-space: pre-wrap;
+}
+
+.dragAndDropFile {
+	color: #777;
+	font-size: 1em;
+	display: inline;
+	white-space: normal;
+}
+
+.highlight {
+	background-color: #fd8;
+	transition: background-color 0.2s ease-in;
+}

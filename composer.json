@@ -24,16 +24,17 @@
 		"docs" : "https://privatebin.info/codedoc/"
 	},
 	"require" : {
-		"php" : "^5.6.0 || ^7.0 || ^8.0",
-		"paragonie/random_compat" : "2.0.20",
-		"yzalis/identicon" : "2.0.0",
-		"mlocati/ip-lib" : "1.14.0"
+		"php": "^7.3 || ^8.0",
+		"jdenticon/jdenticon": "1.0.2",
+		"mlocati/ip-lib": "1.18.1",
+		"yzalis/identicon": "2.0.0"
 	},
 	"suggest" : {
-		"google/cloud-storage" : "1.23.1"
+		"google/cloud-storage" : "1.43.0",
+		"aws/aws-sdk-php" : "3.325.0"
 	},
 	"require-dev" : {
-		"phpunit/phpunit" : "^4.6 || ^5.0"
+		"phpunit/phpunit" : "^9"
 	},
 	"autoload" : {
 		"psr-4" : {
@@ -41,6 +42,12 @@
 		}
 	},
 	"config" : {
-		"autoloader-suffix" : "DontChange"
+		"autoloader-suffix" : "DontChange",
+		"optimize-autoloader": true,
+		"preferred-install": "dist",
+		"sort-packages": true,
+		"platform": {
+			"php": "7.3"
+		}
 	}
 }

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * PrivateBin
  *
@@ -7,7 +7,6 @@
  * @link      https://github.com/PrivateBin/PrivateBin
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
- * @version   1.3.5
  */
 
 namespace PrivateBin;
@@ -28,14 +27,14 @@ class Controller
      *
      * @const string
      */
-    const VERSION = '1.3.5';
+    const VERSION = '1.7.5';
 
     /**
      * minimal required PHP version
      *
      * @const string
      */
-    const MIN_PHP_VERSION = '5.6.0';
+    const MIN_PHP_VERSION = '7.3.0';
 
     /**
      * show the same error message if the paste expired or does not exist
@@ -67,6 +66,14 @@ class Controller
      * @var    string
      */
     private $_status = '';
+
+    /**
+     * status message
+     *
+     * @access private
+     * @var    bool
+     */
+    private $_is_deleted = false;
 
     /**
      * JSON message
@@ -111,10 +118,12 @@ class Controller
     public function __construct()
     {
         if (version_compare(PHP_VERSION, self::MIN_PHP_VERSION) < 0) {
-            throw new Exception(I18n::_('%s requires php %s or above to work. Sorry.', I18n::_('PrivateBin'), self::MIN_PHP_VERSION), 1);
+            error_log(I18n::_('%s requires php %s or above to work. Sorry.', I18n::_('PrivateBin'), self::MIN_PHP_VERSION));
+            return;
         }
         if (strlen(PATH) < 0 && substr(PATH, -1) !== DIRECTORY_SEPARATOR) {
-            throw new Exception(I18n::_('%s requires the PATH to end in a "%s". Please update the PATH in your index.php.', I18n::_('PrivateBin'), DIRECTORY_SEPARATOR), 5);
+            error_log(I18n::_('%s requires the PATH to end in a "%s". Please update the PATH in your index.php.', I18n::_('PrivateBin'), DIRECTORY_SEPARATOR));
+            return;
         }
 
         // load config from ini file, initialize required classes
@@ -136,7 +145,12 @@ class Controller
             case 'jsonld':
                 $this->_jsonld($this->_request->getParam('jsonld'));
                 return;
+            case 'yourlsproxy':
+                $this->_yourlsproxy($this->_request->getParam('link'));
+                break;
         }
+
+        $this->_setCacheHeaders();
 
         // output JSON or HTML
         if ($this->_request->isJsonApiCall()) {
@@ -144,6 +158,8 @@ class Controller
             header('Access-Control-Allow-Origin: *');
             header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
             header('Access-Control-Allow-Headers: X-Requested-With, Content-Type');
+            header('X-Uncompressed-Content-Length: ' . strlen($this->_json));
+            header('Access-Control-Expose-Headers: X-Uncompressed-Content-Length');
             echo $this->_json;
         } else {
             $this->_view();
@@ -169,8 +185,24 @@ class Controller
         // force default language, if language selection is disabled and a default is set
         if (!$this->_conf->getKey('languageselection') && strlen($lang) == 2) {
             $_COOKIE['lang'] = $lang;
-            setcookie('lang', $lang, 0, '', '', true);
+            setcookie('lang', $lang, array('SameSite' => 'Lax', 'Secure' => true));
         }
+    }
+
+    /**
+     * Turn off browser caching
+     *
+     * @access private
+     */
+    private function _setCacheHeaders()
+    {
+        // set headers to disable caching
+        $time = gmdate('D, d M Y H:i:s \G\M\T');
+        header('Cache-Control: no-store, no-cache, no-transform, must-revalidate');
+        header('Pragma: no-cache');
+        header('Expires: ' . $time);
+        header('Last-Modified: ' . $time);
+        header('Vary: Accept');
     }
 
     /**
@@ -199,13 +231,10 @@ class Controller
         ServerSalt::setStore($this->_model->getStore());
         TrafficLimiter::setConfiguration($this->_conf);
         TrafficLimiter::setStore($this->_model->getStore());
-        if (!TrafficLimiter::canPass()) {
-            $this->_return_message(
-                1, I18n::_(
-                    'Please wait %d seconds between each post.',
-                    $this->_conf->getKey('limit', 'traffic')
-                )
-            );
+        try {
+            TrafficLimiter::canPass();
+        } catch (Exception $e) {
+            $this->_return_message(1, $e->getMessage());
             return;
         }
 
@@ -250,7 +279,14 @@ class Controller
         }
         // The user posts a standard paste.
         else {
-            $this->_model->purge();
+            try {
+                $this->_model->purge();
+            } catch (Exception $e) {
+                error_log('Error purging pastes: ' . $e->getMessage() . PHP_EOL .
+                    'Use the administration scripts statistics to find ' .
+                    'damaged paste IDs and either delete them or restore them ' .
+                    'from backup.');
+            }
             $paste = $this->_model->getPaste();
             try {
                 $paste->setData($data);
@@ -280,7 +316,8 @@ class Controller
                 if (hash_equals($paste->getDeleteToken(), $deletetoken)) {
                     // Paste exists and deletion token is valid: Delete the paste.
                     $paste->delete();
-                    $this->_status = 'Paste was properly deleted.';
+                    $this->_status     = 'Paste was properly deleted.';
+                    $this->_is_deleted = true;
                 } else {
                     $this->_error = 'Wrong deletion token. Paste was not deleted.';
                 }
@@ -291,10 +328,10 @@ class Controller
             $this->_error = $e->getMessage();
         }
         if ($this->_request->isJsonApiCall()) {
-            if (strlen($this->_error)) {
-                $this->_return_message(1, $this->_error);
-            } else {
+            if (empty($this->_error)) {
                 $this->_return_message(0, $dataid);
+            } else {
+                $this->_return_message(1, $this->_error);
             }
         }
     }
@@ -334,18 +371,14 @@ class Controller
      */
     private function _view()
     {
-        // set headers to disable caching
-        $time = gmdate('D, d M Y H:i:s \G\M\T');
-        header('Cache-Control: no-store, no-cache, no-transform, must-revalidate');
-        header('Pragma: no-cache');
-        header('Expires: ' . $time);
-        header('Last-Modified: ' . $time);
-        header('Vary: Accept');
         header('Content-Security-Policy: ' . $this->_conf->getKey('cspheader'));
         header('Cross-Origin-Resource-Policy: same-origin');
         header('Cross-Origin-Embedder-Policy: require-corp');
-        header('Cross-Origin-Opener-Policy: same-origin');
-        header('Permissions-Policy: interest-cohort=()');
+        // disabled, because it prevents links from a paste to the same site to
+        // be opened. Didn't work with `same-origin-allow-popups` either.
+        // See issue https://github.com/PrivateBin/PrivateBin/issues/970 for details.
+        // header('Cross-Origin-Opener-Policy: same-origin');
+        header('Permissions-Policy: browsing-topics=()');
         header('Referrer-Policy: no-referrer');
         header('X-Content-Type-Options: nosniff');
         header('X-Frame-Options: deny');
@@ -364,14 +397,31 @@ class Controller
         $languageselection = '';
         if ($this->_conf->getKey('languageselection')) {
             $languageselection = I18n::getLanguage();
-            setcookie('lang', $languageselection, 0, '', '', true);
+            setcookie('lang', $languageselection, array('SameSite' => 'Lax', 'Secure' => true));
         }
 
+        // strip policies that are unsupported in meta tag
+        $metacspheader = str_replace(
+            array(
+                'frame-ancestors \'none\'; ',
+                '; sandbox allow-same-origin allow-scripts allow-forms allow-popups allow-modals allow-downloads',
+            ),
+            '',
+            $this->_conf->getKey('cspheader')
+        );
+
         $page = new View;
-        $page->assign('NAME', $this->_conf->getKey('name'));
-        $page->assign('BASEPATH', I18n::_($this->_conf->getKey('basepath')));
+        $page->assign('CSPHEADER', $metacspheader);
         $page->assign('ERROR', I18n::_($this->_error));
+        $page->assign('NAME', $this->_conf->getKey('name'));
+        if ($this->_request->getOperation() === 'yourlsproxy') {
+            $page->assign('SHORTURL', $this->_status);
+            $page->draw('yourlsproxy');
+            return;
+        }
+        $page->assign('BASEPATH', I18n::_($this->_conf->getKey('basepath')));
         $page->assign('STATUS', I18n::_($this->_status));
+        $page->assign('ISDELETED', I18n::_(json_encode($this->_is_deleted)));
         $page->assign('VERSION', self::VERSION);
         $page->assign('DISCUSSION', $this->_conf->getKey('discussion'));
         $page->assign('OPENDISCUSSION', $this->_conf->getKey('opendiscussion'));
@@ -392,9 +442,11 @@ class Controller
         $page->assign('EXPIREDEFAULT', $this->_conf->getKey('default', 'expire'));
         $page->assign('URLSHORTENER', $this->_conf->getKey('urlshortener'));
         $page->assign('QRCODE', $this->_conf->getKey('qrcode'));
+        $page->assign('EMAIL', $this->_conf->getKey('email'));
         $page->assign('HTTPWARNING', $this->_conf->getKey('httpwarning'));
         $page->assign('HTTPSLINK', 'https://' . $this->_request->getHost() . $this->_request->getRequestUri());
         $page->assign('COMPRESSION', $this->_conf->getKey('compression'));
+        $page->assign('SRI', $this->_conf->getSection('sri'));
         $page->draw($this->_conf->getKey('template'));
     }
 
@@ -406,10 +458,13 @@ class Controller
      */
     private function _jsonld($type)
     {
-        if (
-            $type !== 'paste' && $type !== 'comment' &&
-            $type !== 'pastemeta' && $type !== 'commentmeta'
-        ) {
+        if (!in_array($type, array(
+            'comment',
+            'commentmeta',
+            'paste',
+            'pastemeta',
+            'types',
+        ))) {
             $type = '';
         }
         $content = '{}';
@@ -421,11 +476,34 @@ class Controller
                 file_get_contents($file)
             );
         }
+        if ($type === 'types') {
+            $content = str_replace(
+                implode('", "', array_keys($this->_conf->getDefaults()['expire_options'])),
+                implode('", "', array_keys($this->_conf->getSection('expire_options'))),
+                $content
+            );
+        }
 
         header('Content-type: application/ld+json');
         header('Access-Control-Allow-Origin: *');
         header('Access-Control-Allow-Methods: GET');
         echo $content;
+    }
+
+    /**
+     * proxies link to YOURLS, updates status or error with response
+     *
+     * @access private
+     * @param string $link
+     */
+    private function _yourlsproxy($link)
+    {
+        $yourls = new YourlsProxy($this->_conf, $link);
+        if ($yourls->isError()) {
+            $this->_error = $yourls->getError();
+        } else {
+            $this->_status = $yourls->getUrl();
+        }
     }
 
     /**

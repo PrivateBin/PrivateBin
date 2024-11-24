@@ -10,17 +10,17 @@ global.fs = require('fs');
 global.WebCrypto = require('@peculiar/webcrypto').Crypto;
 
 // application libraries to test
-global.$ = global.jQuery = require('./jquery-3.4.1');
+global.$ = global.jQuery = require('./jquery-3.7.1');
 global.RawDeflate = require('./rawinflate-0.3').RawDeflate;
-global.zlib = require('./zlib-1.2.11').zlib;
+global.zlib = require('./zlib-1.3.1').zlib;
 require('./prettify');
 global.prettyPrint = window.PR.prettyPrint;
 global.prettyPrintOne = window.PR.prettyPrintOne;
-global.showdown = require('./showdown-1.9.1');
-global.DOMPurify = require('./purify-2.2.7');
-global.baseX = require('./base-x-3.0.7').baseX;
+global.showdown = require('./showdown-2.1.0');
+global.DOMPurify = require('./purify-3.1.7');
+global.baseX = require('./base-x-4.0.0').baseX;
 global.Legacy = require('./legacy').Legacy;
-require('./bootstrap-3.3.7');
+require('./bootstrap-3.4.1');
 require('./privatebin');
 
 // internal variables
@@ -37,7 +37,7 @@ var a2zString    = ['a','b','c','d','e','f','g','h','i','j','k','l','m',
         })
     ),
     schemas = ['ftp','http','https'],
-    supportedLanguages = ['de', 'es', 'fr', 'it', 'no', 'pl', 'pt', 'oc', 'ru', 'sl', 'zh'],
+    supportedLanguages = ['ar', 'bg', 'ca', 'co', 'cs', 'de', 'el', 'es', 'et', 'fi', 'fr', 'he', 'hu', 'id', 'it', 'ja', 'jbo', 'lt', 'no', 'nl', 'pl', 'pt', 'oc', 'ru', 'sk', 'sl', 'th', 'tr', 'uk', 'zh'],
     mimeTypes = ['image/png', 'application/octet-stream'],
     formats = ['plaintext', 'markdown', 'syntaxhighlighting'],
     mimeFile = fs.createReadStream('/etc/mime.types'),
@@ -113,8 +113,8 @@ exports.jscBase64String = function() {
 };
 
 // provides a random URL schema supported by the whatwg-url library
-exports.jscSchemas = function() {
-    return jsc.elements(schemas);
+exports.jscSchemas = function(withFtp = true) {
+    return jsc.elements(withFtp ? schemas : schemas.slice(1));
 };
 
 // provides a random supported language string
@@ -132,3 +132,23 @@ exports.jscFormats = function() {
     return jsc.elements(formats);
 };
 
+// provides random URLs
+exports.jscUrl = function(withFragment = true, withQuery = true) {
+    let url = {
+        schema: exports.jscSchemas(),
+        address: jsc.nearray(exports.jscA2zString()),
+    };
+    if (withFragment) {
+        url.fragment = jsc.string;
+    }
+    if(withQuery) {
+        url.query = jsc.array(exports.jscQueryString());
+    }
+    return jsc.record(url);
+};
+
+exports.urlToString = function (url) {
+    return url.schema + '://' + url.address.join('') + '/' + (url.query ? '?' +
+        encodeURI(url.query.join('').replace(/^&+|&+$/gm,'')) : '') +
+        (url.fragment ? '#' + encodeURI(url.fragment) : '');
+};

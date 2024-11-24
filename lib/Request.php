@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * PrivateBin
  *
@@ -7,10 +7,11 @@
  * @link      https://github.com/PrivateBin/PrivateBin
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
- * @version   1.3.5
  */
 
 namespace PrivateBin;
+
+use Exception;
 
 /**
  * Request
@@ -80,13 +81,11 @@ class Request
      */
     private function getPasteId()
     {
-        // RegEx to check for valid paste ID (16 base64 chars)
-        $pasteIdRegEx = '/^[a-f0-9]{16}$/';
-
         foreach ($_GET as $key => $value) {
-            // only return if value is empty and key matches RegEx
-            if (($value === '') and preg_match($pasteIdRegEx, $key, $match)) {
-                return $match[0];
+            // only return if value is empty and key is 16 hex chars
+            $key = (string) $key;
+            if (($value === '') && strlen($key) === 16 && ctype_xdigit($key)) {
+                return $key;
             }
         }
 
@@ -110,16 +109,27 @@ class Request
             case 'POST':
                 // it might be a creation or a deletion, the latter is detected below
                 $this->_operation = 'create';
-                $this->_params    = Json::decode(
-                    file_get_contents(self::$_inputStream)
-                );
+                try {
+                    $this->_params = Json::decode(
+                        file_get_contents(self::$_inputStream)
+                    );
+                } catch (Exception $e) {
+                    // ignore error, $this->_params will remain empty
+                }
                 break;
             default:
-                $this->_params = $_GET;
+                $this->_params = filter_var_array($_GET, array(
+                    'deletetoken'      => FILTER_SANITIZE_SPECIAL_CHARS,
+                    'jsonld'           => FILTER_SANITIZE_SPECIAL_CHARS,
+                    'link'             => FILTER_SANITIZE_URL,
+                    'pasteid'          => FILTER_SANITIZE_SPECIAL_CHARS,
+                    'shortenviayourls' => FILTER_SANITIZE_SPECIAL_CHARS,
+                ), false);
         }
         if (
             !array_key_exists('pasteid', $this->_params) &&
             !array_key_exists('jsonld', $this->_params) &&
+            !array_key_exists('link', $this->_params) &&
             array_key_exists('QUERY_STRING', $_SERVER) &&
             !empty($_SERVER['QUERY_STRING'])
         ) {
@@ -135,6 +145,10 @@ class Request
             }
         } elseif (array_key_exists('jsonld', $this->_params) && !empty($this->_params['jsonld'])) {
             $this->_operation = 'jsonld';
+        } elseif (array_key_exists('link', $this->_params) && !empty($this->_params['link'])) {
+            if (strpos($this->getRequestUri(), '/shortenviayourls') !== false || array_key_exists('shortenviayourls', $this->_params)) {
+                $this->_operation = 'yourlsproxy';
+            }
         }
     }
 
@@ -198,9 +212,8 @@ class Request
      */
     public function getHost()
     {
-        return array_key_exists('HTTP_HOST', $_SERVER) ?
-            htmlspecialchars($_SERVER['HTTP_HOST']) :
-            'localhost';
+        $host = array_key_exists('HTTP_HOST', $_SERVER) ? filter_var($_SERVER['HTTP_HOST'], FILTER_SANITIZE_URL) : '';
+        return empty($host) ? 'localhost' : $host;
     }
 
     /**
@@ -211,10 +224,8 @@ class Request
      */
     public function getRequestUri()
     {
-        return array_key_exists('REQUEST_URI', $_SERVER) ?
-        htmlspecialchars(
-            parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH)
-            ) : '/';
+        $uri = array_key_exists('REQUEST_URI', $_SERVER) ? filter_var($_SERVER['REQUEST_URI'], FILTER_SANITIZE_URL) : '';
+        return empty($uri) ? '/' : $uri;
     }
 
     /**
@@ -264,10 +275,9 @@ class Request
         }
 
         // advanced case: media type negotiation
-        $mediaTypes = array();
         if ($hasAcceptHeader) {
-            $mediaTypeRanges = explode(',', trim($acceptHeader));
-            foreach ($mediaTypeRanges as $mediaTypeRange) {
+            $mediaTypes = array();
+            foreach (explode(',', trim($acceptHeader)) as $mediaTypeRange) {
                 if (preg_match(
                     '#(\*/\*|[a-z\-]+/[a-z\-+*]+(?:\s*;\s*[^q]\S*)*)(?:\s*;\s*q\s*=\s*(0(?:\.\d{0,3})|1(?:\.0{0,3})))?#',
                     trim($mediaTypeRange), $match
@@ -276,6 +286,9 @@ class Request
                         $match[2] = '1.0';
                     } else {
                         $match[2] = (string) floatval($match[2]);
+                        if ($match[2] === '0.0') {
+                            continue;
+                        }
                     }
                     if (!isset($mediaTypes[$match[2]])) {
                         $mediaTypes[$match[2]] = array();
@@ -285,9 +298,6 @@ class Request
             }
             krsort($mediaTypes);
             foreach ($mediaTypes as $acceptedQuality => $acceptedValues) {
-                if ($acceptedQuality === '0.0') {
-                    continue;
-                }
                 foreach ($acceptedValues as $acceptedValue) {
                     if (
                         strpos($acceptedValue, self::MIME_HTML) === 0 ||

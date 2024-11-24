@@ -1,15 +1,16 @@
-<?php
+<?php declare(strict_types=1);
 
 use Google\Auth\HttpHandler\HttpHandlerFactory;
 use GuzzleHttp\Client;
+use PHPUnit\Framework\TestCase;
 use PrivateBin\Data\GoogleCloudStorage;
 
-class GoogleCloudStorageTest extends PHPUnit_Framework_TestCase
+class GoogleCloudStorageTest extends TestCase
 {
     private static $_client;
     private static $_bucket;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         $httpClient = new Client(array('debug'=>false));
         $handler    = HttpHandlerFactory::build($httpClient);
@@ -23,23 +24,23 @@ class GoogleCloudStorageTest extends PHPUnit_Framework_TestCase
         self::$_bucket = self::$_client->createBucket($name);
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         ini_set('error_log', stream_get_meta_data(tmpfile())['uri']);
-        $this->_model = GoogleCloudStorage::getInstance(array(
+        $this->_model = new GoogleCloudStorage(array(
             'bucket' => self::$_bucket->name(),
             'prefix' => 'pastes',
         ));
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         foreach (self::$_bucket->objects() as $object) {
             $object->delete();
         }
     }
 
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         self::$_bucket->delete();
     }

@@ -3,12 +3,13 @@
     "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted %sin the browser%s using 256 bits AES.": "%s on minimalistlik, avatud lähtekoodiga online pastebin, kus serveril pole kleebitud andmete kohta teadmist. Andmed krüpteeritakse/dekrüpteeritakse %sbrauseris%s kasutades 256-bitist AES-i.",
     "More information on the <a href=\"https://privatebin.info/\">project page</a>.": "Lisateave <a href=\"https://privatebin.info/\">projekti lehel</a>.",
     "Because ignorance is bliss": "Kuna teadmatus on õndsus",
-    "en": "et",
     "Paste does not exist, has expired or has been deleted.": "Kleebet ei eksisteeri, on aegunud või on kustutatud.",
     "%s requires php %s or above to work. Sorry.": "%s vajab, et oleks php %s või kõrgem, et töötada. Vabandame.",
     "%s requires configuration section [%s] to be present in configuration file.": "%s vajab, et [%s] seadistamise jaotis oleks olemas konfiguratsioonifailis.",
     "Please wait %d seconds between each post.": [
         "Palun oota %d sekund iga postituse vahel.",
+        "Palun oota %d sekundit iga postituse vahel.",
+        "Palun oota %d sekundit iga postituse vahel.",
         "Palun oota %d sekundit iga postituse vahel.",
         "Palun oota %d sekundit iga postituse vahel.",
         "Palun oota %d sekundit iga postituse vahel."
@@ -25,7 +26,7 @@
     "JavaScript is required for %s to work. Sorry for the inconvenience.": "JavaScript on vajalik %s'i töötamiseks. Vabandame ebamugavuste pärast.",
     "%s requires a modern browser to work.": "%s vajab töötamiseks kaasaegset brauserit.",
     "New": "Uus",
-    "Send": "Saada",
+    "Create": "Loo",
     "Clone": "Klooni",
     "Raw text": "Lähtetekst",
     "Expires": "Aegub",
@@ -38,10 +39,14 @@
         "%d sekund",
         "%d sekundit",
         "%d sekundit",
+        "%d sekundit",
+        "%d sekundit",
         "%d sekundit"
     ],
     "%d minutes": [
         "%d minut",
+        "%d minutit",
+        "%d minutit",
         "%d minutit",
         "%d minutit",
         "%d minutit"
@@ -50,10 +55,14 @@
         "%d tund",
         "%d tundi",
         "%d tundi",
+        "%d tundi",
+        "%d tundi",
         "%d tundi"
     ],
     "%d days": [
         "%d päev",
+        "%d päeva",
+        "%d päeva",
         "%d päeva",
         "%d päeva",
         "%d päeva"
@@ -62,16 +71,22 @@
         "%d nädal",
         "%d nädalat",
         "%d nädalat",
+        "%d nädalat",
+        "%d nädalat",
         "%d nädalat"
     ],
     "%d months": [
         "%d kuu",
         "%d kuud",
         "%d kuud",
+        "%d kuud",
+        "%d kuud",
         "%d kuud"
     ],
     "%d years": [
         "%d aasta",
+        "%d aastat",
+        "%d aastat",
         "%d aastat",
         "%d aastat",
         "%d aastat"
@@ -82,9 +97,13 @@
         "See dokument aegub %d sekundi pärast.",
         "See dokument aegub %d sekundi pärast.",
         "See dokument aegub %d sekundi pärast.",
+        "See dokument aegub %d sekundi pärast.",
+        "See dokument aegub %d sekundi pärast.",
         "See dokument aegub %d sekundi pärast."
     ],
     "This document will expire in %d minutes.": [
+        "See dokument aegub %d minuti pärast.",
+        "See dokument aegub %d minuti pärast.",
         "See dokument aegub %d minuti pärast.",
         "See dokument aegub %d minuti pärast.",
         "See dokument aegub %d minuti pärast.",
@@ -94,15 +113,21 @@
         "See dokument aegub %d tunni pärast.",
         "See dokument aegub %d tunni pärast.",
         "See dokument aegub %d tunni pärast.",
+        "See dokument aegub %d tunni pärast.",
+        "See dokument aegub %d tunni pärast.",
         "See dokument aegub %d tunni pärast."
     ],
     "This document will expire in %d days.": [
         "See dokument aegub %d päeva pärast.",
         "See dokument aegub %d päeva pärast.",
         "See dokument aegub %d päeva pärast.",
+        "See dokument aegub %d päeva pärast.",
+        "See dokument aegub %d päeva pärast.",
         "See dokument aegub %d päeva pärast."
     ],
     "This document will expire in %d months.": [
+        "See dokument aegub %d kuu pärast.",
+        "See dokument aegub %d kuu pärast.",
         "See dokument aegub %d kuu pärast.",
         "See dokument aegub %d kuu pärast.",
         "See dokument aegub %d kuu pärast.",
@@ -182,8 +207,18 @@
     "Use Current Timezone": "Kasuta praegust ajavööndit",
     "Convert To UTC": "Teisenda UTC-ks",
     "Close": "Sulge",
-    "Encrypted note on PrivateBin": "Krüpteeritud kiri PrivateBin-is",
+    "Encrypted note on %s": "Krüpteeritud kiri %s-is",
     "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "Kirja nägemiseks külasta seda linki. Teistele URL-i andmine lubab ka neil ligi pääseda kirjale.",
     "URL shortener may expose your decrypt key in URL.": "URL-i lühendaja võib paljastada sinu dekrüpteerimisvõtme URL-is.",
-    "Save paste": "Salvesta kleebe"
+    "Save paste": "Salvesta kleebe",
+    "Your IP is not authorized to create pastes.": "Su IP-l ei ole lubatud kleepeid luua.",
+    "Trying to shorten a URL that isn't pointing at our instance.": "Püüame lühendada URL-i, mis ei viita meie instantsile.",
+    "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "Viga YOURLS-i kutsumisel. Tõenäoliselt konfiguratsiooniprobleem, näiteks vale või puuduv \"apiurl\" või \"signature\".",
+    "Error parsing YOURLS response.": "Viga YOURLS vastuse parsimisel.",
+    "This secret message can only be displayed once. Would you like to see it now?": "This secret message can only be displayed once. Would you like to see it now?",
+    "Yes, see it": "Yes, see it",
+    "Dark Mode": "Tume režiim",
+    "Error compressing paste, due to missing WebAssembly support.": "Error compressing paste, due to missing WebAssembly support.",
+    "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.": "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.",
+    "Start over": "Start over"
 }

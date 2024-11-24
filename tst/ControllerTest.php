@@ -1,28 +1,29 @@
-<?php
+<?php declare(strict_types=1);
 
+use PHPUnit\Framework\TestCase;
 use PrivateBin\Controller;
 use PrivateBin\Data\Filesystem;
 use PrivateBin\Persistence\ServerSalt;
 use PrivateBin\Persistence\TrafficLimiter;
 use PrivateBin\Request;
 
-class ControllerTest extends PHPUnit_Framework_TestCase
+class ControllerTest extends TestCase
 {
     protected $_data;
 
     protected $_path;
 
-    public function setUp()
+    public function setUp(): void
     {
         /* Setup Routine */
         $this->_path  = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'privatebin_data';
-        $this->_data  = Filesystem::getInstance(array('dir' => $this->_path));
+        $this->_data  = new Filesystem(array('dir' => $this->_path));
         ServerSalt::setStore($this->_data);
         TrafficLimiter::setStore($this->_data);
         $this->reset();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         /* Tear Down Routine */
         unlink(CONF);
@@ -48,21 +49,27 @@ class ControllerTest extends PHPUnit_Framework_TestCase
      */
     public function testView()
     {
+        $_SERVER['HTTP_HOST']             = 'example.com';
         $_SERVER['QUERY_STRING']          = Helper::getPasteId();
         $_GET[Helper::getPasteId()]       = '';
         ob_start();
         new Controller;
         $content = ob_get_contents();
         ob_end_clean();
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<title>PrivateBin</title>',
             $content,
             'outputs title correctly'
         );
-        $this->assertNotContains(
+        $this->assertStringNotContainsString(
             'id="shortenbutton"',
             $content,
             'doesn\'t output shortener button'
+        );
+        $this->assertMatchesRegularExpression(
+            '# href="https://' . preg_quote($_SERVER['HTTP_HOST']) . '/">switching to HTTPS#',
+            $content,
+            'outputs configured https URL correctly'
         );
     }
 
@@ -79,7 +86,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         new Controller;
         $content = ob_get_contents();
         ob_end_clean();
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<title>PrivateBin</title>',
             $content,
             'outputs title correctly'
@@ -100,7 +107,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         new Controller;
         $content = ob_get_contents();
         ob_end_clean();
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<title>PrivateBin</title>',
             $content,
             'outputs title correctly'
@@ -121,7 +128,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         new Controller;
         $content = ob_get_contents();
         ob_end_clean();
-        $this->assertRegExp(
+        $this->assertMatchesRegularExpression(
             '#id="shortenbutton"[^>]*data-shortener="' . preg_quote($shortener) . '"#',
             $content,
             'outputs configured shortener URL correctly'
@@ -135,6 +142,8 @@ class ControllerTest extends PHPUnit_Framework_TestCase
     public function testConf()
     {
         file_put_contents(CONF, '');
+        $this->expectException(Exception::class);
+        $this->expectExceptionCode(2);
         new Controller;
     }
 
@@ -161,6 +170,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(0, $response['status'], 'outputs status');
         $this->assertTrue($this->_data->exists($response['id']), 'paste exists after posting data');
         $paste = $this->_data->read($response['id']);
+        $this->assertFalse(array_key_exists('created', $paste['meta']), 'does not output created');
         $this->assertEquals(
             hash_hmac('sha256', $response['id'], $paste['meta']['salt']),
             $response['deletetoken'],
@@ -430,8 +440,6 @@ class ControllerTest extends PHPUnit_Framework_TestCase
      * silently removed, check that this case is handled
      *
      * @runInSeparateProcess
-     * @expectedException Exception
-     * @expectedExceptionCode 90
      */
     public function testCreateBrokenUpload()
     {
@@ -443,7 +451,12 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $_SERVER['REQUEST_METHOD']        = 'POST';
         $_SERVER['REMOTE_ADDR']           = '::1';
         $this->assertFalse($this->_data->exists(Helper::getPasteId()), 'paste does not exists before posting data');
+        ob_start();
         new Controller;
+        $content = ob_get_contents();
+        ob_end_clean();
+        $response = json_decode($content, true);
+        $this->assertEquals(1, $response['status'], 'outputs error status');
         $this->assertFalse($this->_data->exists(Helper::getPasteId()), 'paste exists after posting data');
     }
 
@@ -700,7 +713,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($paste['adata'][1], $response['adata'][1], 'outputs formatter correctly');
         $this->assertEquals($paste['adata'][2], $response['adata'][2], 'outputs opendiscussion correctly');
         $this->assertEquals($paste['adata'][3], $response['adata'][3], 'outputs burnafterreading correctly');
-        $this->assertEquals($paste['meta']['created'], $response['meta']['created'], 'outputs created correctly');
+        $this->assertFalse(array_key_exists('created', $response['meta']), 'does not output created');
         $this->assertEquals(0, $response['comment_count'], 'outputs comment_count correctly');
         $this->assertEquals(0, $response['comment_offset'], 'outputs comment_offset correctly');
         // by default it will be deleted instantly after it is read
@@ -729,7 +742,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($paste['adata'][1], $response['adata'][1], 'outputs formatter correctly');
         $this->assertEquals($paste['adata'][2], $response['adata'][2], 'outputs opendiscussion correctly');
         $this->assertEquals($paste['adata'][3], $response['adata'][3], 'outputs burnafterreading correctly');
-        $this->assertEquals($paste['meta']['created'], $response['meta']['created'], 'outputs created correctly');
+        $this->assertFalse(array_key_exists('created', $response['meta']), 'does not output created');
         $this->assertEquals(0, $response['comment_count'], 'outputs comment_count correctly');
         $this->assertEquals(0, $response['comment_offset'], 'outputs comment_offset correctly');
     }
@@ -759,7 +772,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $this->assertStringEndsWith('?' . $response['id'], $response['url'], 'returned URL points to new paste');
         $this->assertEquals($paste['data'], $response['data'], 'outputs data correctly');
         $this->assertEquals('syntaxhighlighting', $response['meta']['formatter'], 'outputs format correctly');
-        $this->assertEquals($paste['meta']['postdate'], $response['meta']['postdate'], 'outputs postdate correctly');
+        $this->assertFalse(array_key_exists('postdate', $response['meta']), 'does not output postdate');
         $this->assertEquals($paste['meta']['opendiscussion'], $response['meta']['opendiscussion'], 'outputs opendiscussion correctly');
         $this->assertEquals(0, $response['comment_count'], 'outputs comment_count correctly');
         $this->assertEquals(0, $response['comment_offset'], 'outputs comment_offset correctly');
@@ -800,7 +813,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         new Controller;
         $content = ob_get_contents();
         ob_end_clean();
-        $this->assertRegExp(
+        $this->assertMatchesRegularExpression(
             '#<div[^>]*id="status"[^>]*>.*Paste was properly deleted\.#s',
             $content,
             'outputs deleted status correctly'
@@ -820,7 +833,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         new Controller;
         $content = ob_get_contents();
         ob_end_clean();
-        $this->assertRegExp(
+        $this->assertMatchesRegularExpression(
             '#<div[^>]*id="errormessage"[^>]*>.*Invalid paste ID\.#s',
             $content,
             'outputs delete error correctly'
@@ -839,7 +852,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         new Controller;
         $content = ob_get_contents();
         ob_end_clean();
-        $this->assertRegExp(
+        $this->assertMatchesRegularExpression(
             '#<div[^>]*id="errormessage"[^>]*>.*Paste does not exist, has expired or has been deleted\.#s',
             $content,
             'outputs delete error correctly'
@@ -858,7 +871,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         new Controller;
         $content = ob_get_contents();
         ob_end_clean();
-        $this->assertRegExp(
+        $this->assertMatchesRegularExpression(
             '#<div[^>]*id="errormessage"[^>]*>.*Wrong deletion token\. Paste was not deleted\.#s',
             $content,
             'outputs delete error correctly'
@@ -906,7 +919,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         new Controller;
         $content = ob_get_contents();
         ob_end_clean();
-        $this->assertRegExp(
+        $this->assertMatchesRegularExpression(
             '#<div[^>]*id="errormessage"[^>]*>.*Paste does not exist, has expired or has been deleted\.#s',
             $content,
             'outputs error correctly'
@@ -929,7 +942,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         new Controller;
         $content = ob_get_contents();
         ob_end_clean();
-        $this->assertRegExp(
+        $this->assertMatchesRegularExpression(
             '#<div[^>]*id="status"[^>]*>.*Paste was properly deleted\.#s',
             $content,
             'outputs deleted status correctly'

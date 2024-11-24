@@ -27,6 +27,8 @@ class Type
      * @param int $type
      *
      * @return string
+     *
+     * @since 1.1.0
      */
     public static function getName($type)
     {

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * PrivateBin
  *
@@ -7,7 +7,6 @@
  * @link      https://github.com/PrivateBin/PrivateBin
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
- * @version   1.3.5
  */
 
 namespace PrivateBin\Model;
@@ -108,7 +107,7 @@ abstract class AbstractModel
         $this->_data = $data;
 
         // calculate a 64 bit checksum to avoid collisions
-        $this->setId(hash(version_compare(PHP_VERSION, '5.6', '<') ? 'fnv164' : 'fnv1a64', $data['ct']));
+        $this->setId(hash('fnv1a64', $data['ct']));
     }
 
     /**

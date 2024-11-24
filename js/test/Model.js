@@ -80,23 +80,22 @@ describe('Model', function () {
 
         jsc.property(
             'returns the query string without separator, if any',
-            jsc.nearray(common.jscA2zString()),
-            jsc.nearray(common.jscA2zString()),
+            common.jscUrl(true, false),
             jsc.tuple(new Array(16).fill(common.jscHexString)),
             jsc.array(common.jscQueryString()),
             jsc.array(common.jscQueryString()),
-            'string',
-            function (schema, address, pasteId, queryStart, queryEnd, fragment) {
-                var pasteIdString    = pasteId.join(''),
-                    queryStartString = queryStart.join('') + (queryStart.length > 0 ? '&' : ''),
-                    queryEndString   = (queryEnd.length > 0 ? '&' : '') + queryEnd.join(''),
-                    queryString      = queryStartString + pasteIdString + queryEndString,
-                    clean            = jsdom('', {
-                        url: schema.join('') + '://' + address.join('') +
-                             '/?' + queryString + '#' + fragment
-                    });
-                    global.URL = require('jsdom-url').URL;
-                    var result = $.PrivateBin.Model.getPasteId();
+            function (url, pasteId, queryStart, queryEnd) {
+                if (queryStart.length > 0) {
+                    queryStart.push('&');
+                }
+                if (queryEnd.length > 0) {
+                    queryEnd.unshift('&');
+                }
+                url.query = queryStart.concat(pasteId, queryEnd);
+                const pasteIdString = pasteId.join(''),
+                    clean           = jsdom('', {url: common.urlToString(url)});
+                global.URL = require('jsdom-url').URL;
+                const result = $.PrivateBin.Model.getPasteId();
                 $.PrivateBin.Model.reset();
                 clean();
                 return pasteIdString === result;
@@ -104,14 +103,9 @@ describe('Model', function () {
         );
         jsc.property(
             'throws exception on empty query string',
-            jsc.nearray(common.jscA2zString()),
-            jsc.nearray(common.jscA2zString()),
-            'string',
-            function (schema, address, fragment) {
-                var clean = jsdom('', {
-                        url: schema.join('') + '://' + address.join('') +
-                             '/#' + fragment
-                    }),
+            common.jscUrl(true, false),
+            function (url) {
+                let clean = jsdom('', {url: common.urlToString(url)}),
                     result = false;
                 global.URL = require('jsdom-url').URL;
                 try {
@@ -135,35 +129,24 @@ describe('Model', function () {
 
         jsc.property(
             'returns the fragment of a v1 URL',
-            jsc.nearray(common.jscA2zString()),
-            jsc.nearray(common.jscA2zString()),
-            jsc.array(common.jscQueryString()),
-            'nestring',
-            function (schema, address, query, fragment) {
-                const fragmentString = common.btoa(fragment.padStart(32, '\u0000'));
-                let clean = jsdom('', {
-                        url: schema.join('') + '://' + address.join('') +
-                             '/?' + query.join('') + '#' + fragmentString
-                    }),
+            common.jscUrl(),
+            function (url) {
+                url.fragment = common.btoa(url.fragment.padStart(32, '\u0000'));
+                const clean = jsdom('', {url: common.urlToString(url)}),
                     result = $.PrivateBin.Model.getPasteKey();
                 $.PrivateBin.Model.reset();
                 clean();
-                return fragmentString === result;
+                return url.fragment === result;
             }
         );
         jsc.property(
             'returns the v1 fragment stripped of trailing query parts',
-            jsc.nearray(common.jscA2zString()),
-            jsc.nearray(common.jscA2zString()),
-            jsc.array(common.jscQueryString()),
-            'nestring',
+            common.jscUrl(),
             jsc.array(common.jscHashString()),
-            function (schema, address, query, fragment, trail) {
-                const fragmentString = common.btoa(fragment.padStart(32, '\u0000'));
-                let clean = jsdom('', {
-                        url: schema.join('') + '://' + address.join('') + '/?' +
-                             query.join('') + '#' + fragmentString + '&' + trail.join('')
-                    }),
+            function (url, trail) {
+                const fragmentString = common.btoa(url.fragment.padStart(32, '\u0000'));
+                url.fragment = fragmentString + '&' + trail.join('');
+                const clean = jsdom('', {url: common.urlToString(url)}),
                     result = $.PrivateBin.Model.getPasteKey();
                 $.PrivateBin.Model.reset();
                 clean();
@@ -172,18 +155,12 @@ describe('Model', function () {
         );
         jsc.property(
             'returns the fragment of a v2 URL',
-            jsc.nearray(common.jscA2zString()),
-            jsc.nearray(common.jscA2zString()),
-            jsc.array(common.jscQueryString()),
-            'nestring',
-            function (schema, address, query, fragment) {
+            common.jscUrl(),
+            function (url) {
                 // base58 strips leading NULL bytes, so the string is padded with these if not found
-                fragment = fragment.padStart(32, '\u0000');
-                let fragmentString = $.PrivateBin.CryptTool.base58encode(fragment),
-                    clean = jsdom('', {
-                        url: schema.join('') + '://' + address.join('') +
-                             '/?' + query.join('') + '#' + fragmentString
-                    }),
+                const fragment = url.fragment.padStart(32, '\u0000');
+                url.fragment = $.PrivateBin.CryptTool.base58encode(fragment);
+                const clean = jsdom('', {url: common.urlToString(url)}),
                     result = $.PrivateBin.Model.getPasteKey();
                 $.PrivateBin.Model.reset();
                 clean();
@@ -192,19 +169,13 @@ describe('Model', function () {
         );
         jsc.property(
             'returns the v2 fragment stripped of trailing query parts',
-            jsc.nearray(common.jscA2zString()),
-            jsc.nearray(common.jscA2zString()),
-            jsc.array(common.jscQueryString()),
-            'nestring',
+            common.jscUrl(),
             jsc.array(common.jscHashString()),
-            function (schema, address, query, fragment, trail) {
+            function (url, trail) {
                 // base58 strips leading NULL bytes, so the string is padded with these if not found
-                fragment = fragment.padStart(32, '\u0000');
-                let fragmentString = $.PrivateBin.CryptTool.base58encode(fragment),
-                    clean = jsdom('', {
-                        url: schema.join('') + '://' + address.join('') + '/?' +
-                             query.join('') + '#' + fragmentString + '&' + trail.join('')
-                    }),
+                const fragment = url.fragment.padStart(32, '\u0000');
+                url.fragment = $.PrivateBin.CryptTool.base58encode(fragment) + '&' + trail.join('');
+                const clean = jsdom('', {url: common.urlToString(url)}),
                     result = $.PrivateBin.Model.getPasteKey();
                 $.PrivateBin.Model.reset();
                 clean();
@@ -213,14 +184,9 @@ describe('Model', function () {
         );
         jsc.property(
             'throws exception on empty fragment of the URL',
-            jsc.nearray(common.jscA2zString()),
-            jsc.nearray(common.jscA2zString()),
-            jsc.array(common.jscQueryString()),
-            function (schema, address, query) {
-                var clean = jsdom('', {
-                        url: schema.join('') + '://' + address.join('') +
-                             '/?' + query.join('')
-                    }),
+            common.jscUrl(false),
+            function (url) {
+                let clean = jsdom('', {url: common.urlToString(url)}),
                     result = false;
                 try {
                     $.PrivateBin.Model.getPasteKey();

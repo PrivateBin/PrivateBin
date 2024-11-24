@@ -1,9 +1,10 @@
-<?php
+<?php declare(strict_types=1);
 use PrivateBin\I18n;
 ?><!DOCTYPE html>
-<html lang="<?php echo I18n::_('en'); ?>">
+<html lang="<?php echo I18n::getLanguage(); ?>"<?php echo I18n::isRtl() ? ' dir="rtl"' : ''; ?>>
 	<head>
 		<meta charset="utf-8" />
+		<meta http-equiv="Content-Security-Policy" content="<?php echo I18n::encode($CSPHEADER); ?>">
 		<meta name="robots" content="noindex" />
 		<meta name="google" content="notranslate">
 		<title><?php echo I18n::_($NAME); ?></title>
@@ -13,44 +14,44 @@ if ($SYNTAXHIGHLIGHTING):
 ?>
 		<link type="text/css" rel="stylesheet" href="css/prettify/prettify.css?<?php echo rawurlencode($VERSION); ?>" />
 <?php
-    if (strlen($SYNTAXHIGHLIGHTINGTHEME)):
+    if (!empty($SYNTAXHIGHLIGHTINGTHEME)):
 ?>
 		<link type="text/css" rel="stylesheet" href="css/prettify/<?php echo rawurlencode($SYNTAXHIGHLIGHTINGTHEME); ?>.css?<?php echo rawurlencode($VERSION); ?>" />
 <?php
     endif;
 endif;
 ?>
-		<script type="text/javascript" data-cfasync="false" src="js/jquery-3.4.1.js" integrity="sha512-bnIvzh6FU75ZKxp0GXLH9bewza/OIw6dLVh9ICg0gogclmYGguQJWl8U30WpbsGTqbIiAwxTsbe76DErLq5EDQ==" crossorigin="anonymous"></script>
+		<?php $this->_scriptTag('js/jquery-3.7.1.js', 'defer'); ?>
 <?php
 if ($QRCODE):
 ?>
-		<script async type="text/javascript" data-cfasync="false" src="js/kjua-0.9.0.js" integrity="sha512-CVn7af+vTMBd9RjoS4QM5fpLFEOtBCoB0zPtaqIDC7sF4F8qgUSRFQQpIyEDGsr6yrjbuOLzdf20tkHHmpaqwQ==" crossorigin="anonymous"></script>
+		<?php $this->_scriptTag('js/kjua-0.9.0.js', 'async'); ?>
 <?php
 endif;
 if ($ZEROBINCOMPATIBILITY):
 ?>
-		<script type="text/javascript" data-cfasync="false" src="js/base64-1.7.js" integrity="sha512-JdwsSP3GyHR+jaCkns9CL9NTt4JUJqm/BsODGmYhBcj5EAPKcHYh+OiMfyHbcDLECe17TL0hjXADFkusAqiYgA==" crossorigin="anonymous"></script>
+		<?php $this->_scriptTag('js/base64-1.7.js', 'async'); ?>
 <?php
 endif;
 ?>
-		<script type="text/javascript" data-cfasync="false" src="js/zlib-1.2.11.js" integrity="sha512-Ji/WNgLpfd+sJgYjJv67Tjs4aYeMVrMeYIgCp5VU+EB8INzpfilh0ptjBHa3xem8tLCMROgJR10ilK3saci2YA==" crossorigin="anonymous"></script>
-		<script type="text/javascript" data-cfasync="false" src="js/base-x-3.0.7.js" integrity="sha512-/Bi1AJIP0TtxEB+Jh6Hk809H1G7vn4iJV80qagslf0+Hm0UjUi1s3qNrn1kZULjzUYuaf6ck0ndLGJ7MxWLmgQ==" crossorigin="anonymous"></script>
-		<script type="text/javascript" data-cfasync="false" src="js/rawinflate-0.3.js" integrity="sha512-g8uelGgJW9A/Z1tB6Izxab++oj5kdD7B4qC7DHwZkB6DGMXKyzx7v5mvap2HXueI2IIn08YlRYM56jwWdm2ucQ==" crossorigin="anonymous"></script>
+		<?php $this->_scriptTag('js/zlib-1.3.1.js', 'async'); ?>
+		<?php $this->_scriptTag('js/base-x-4.0.0.js', 'async'); ?>
+		<?php $this->_scriptTag('js/rawinflate-0.3.js', 'async'); ?>
 <?php
 if ($SYNTAXHIGHLIGHTING):
 ?>
-		<script type="text/javascript" data-cfasync="false" src="js/prettify.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-puO0Ogy++IoA2Pb9IjSxV1n4+kQkKXYAEUtVzfZpQepyDPyXk8hokiYDS7ybMogYlyyEIwMLpZqVhCkARQWLMg==" crossorigin="anonymous"></script>
+		<?php $this->_scriptTag('js/prettify.js', 'async'); ?>
 <?php
 endif;
 if ($MARKDOWN):
 ?>
-		<script type="text/javascript" data-cfasync="false" src="js/showdown-1.9.1.js" integrity="sha512-nRri7kqh3iRLdHbhtjfe8w9eAQPmt+ubH5U88UZyKbz6O9Q0q4haaXF0krOUclKmRJou/kKZYulgBHvHXPqOvg==" crossorigin="anonymous"></script>
+		<?php $this->_scriptTag('js/showdown-2.1.0.js', 'async'); ?>
 <?php
 endif;
 ?>
-		<script type="text/javascript" data-cfasync="false" src="js/purify-2.2.7.js" integrity="sha512-7Ka1I/nJuR2CL8wzIS5PJS4HgEMd0HJ6kfAl6fFhwFBB27rhztFbe0tS+Ex+Qg+5n4nZIT4lty4k4Di3+X9T4A==" crossorigin="anonymous"></script>
-		<script type="text/javascript" data-cfasync="false" src="js/legacy.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-LYos+qXHIRqFf5ZPNphvtTB0cgzHUizu2wwcOwcwz/VIpRv9lpcBgPYz4uq6jx0INwCAj6Fbnl5HoKiLufS2jg==" crossorigin="anonymous"></script>
-		<script type="text/javascript" data-cfasync="false" src="js/privatebin.js?<?php echo rawurlencode($VERSION); ?>" integrity="sha512-lJwDAY69TQuYQZ7FjUFPfhgYeZ2L6y5bmGt1hR+d3kMm2sddivGr7ZDdLLSe/CBgn1JrsKMj3th9dPyXN3dLHw==" crossorigin="anonymous"></script>
+		<?php $this->_scriptTag('js/purify-3.1.7.js', 'async'); ?>
+		<?php $this->_scriptTag('js/legacy.js', 'async'); ?>
+		<?php $this->_scriptTag('js/privatebin.js', 'defer'); ?>
 		<!-- icon -->
 		<link rel="apple-touch-icon" href="img/apple-touch-icon.png?<?php echo rawurlencode($VERSION); ?>" sizes="180x180" />
 		<link rel="icon" type="image/png" href="img/favicon-32x32.png?<?php echo rawurlencode($VERSION); ?>" sizes="32x32" />
@@ -62,7 +63,7 @@ endif;
 		<meta name="theme-color" content="#ffe57e" />
 		<!-- Twitter/social media cards -->
 		<meta name="twitter:card" content="summary" />
-		<meta name="twitter:title" content="<?php echo I18n::_('Encrypted note on PrivateBin') ?>" />
+		<meta name="twitter:title" content="<?php echo I18n::_('Encrypted note on %s', I18n::_($NAME)) ?>" />
 		<meta name="twitter:description" content="<?php echo I18n::_('Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.') ?>" />
 		<meta name="twitter:image" content="img/apple-touch-icon.png?<?php echo rawurlencode($VERSION); ?>" />
 		<meta property="og:title" content="<?php echo I18n::_($NAME); ?>" />
@@ -85,7 +86,7 @@ endif;
                 ?>
 				<br />
 <?php
-if (strlen($NOTICE)):
+if (!empty($NOTICE)):
 ?>
 				<span class="blink">▶</span> <?php echo I18n::encode($NOTICE);
 endif;
@@ -124,12 +125,17 @@ endif;
 				<div id="toolbar">
 					<button id="newbutton" class="reloadlink hidden"><img src="img/icon_new.png" width="11" height="15" alt="" /><?php echo I18n::_('New'); ?></button>
 					<button id="retrybutton" class="reloadlink hidden"><?php echo I18n::_('Retry'), PHP_EOL; ?></button>
-					<button id="sendbutton" class="hidden"><img src="img/icon_send.png" width="18" height="15" alt="" /><?php echo I18n::_('Send'); ?></button>
+					<button id="sendbutton" class="hidden"><img src="img/icon_send.png" width="18" height="15" alt="" /><?php echo I18n::_('Create'); ?></button>
 					<button id="clonebutton" class="hidden"><img src="img/icon_clone.png" width="15" height="17" alt="" /><?php echo I18n::_('Clone'); ?></button>
 					<button id="rawtextbutton" class="hidden"><img src="img/icon_raw.png" width="15" height="15" alt="" /><?php echo I18n::_('Raw text'); ?></button>
 					<button id="downloadtextbutton" class="hidden"><?php echo I18n::_('Save paste'), PHP_EOL; ?></button>
+<?php
+if ($EMAIL):
+?>
+
 					<button id="emaillink" class="hidden"><img src="img/icon_email.png" width="15" height="15" alt="" /><?php echo I18n::_('Email'); ?></button>
 <?php
+endif;
 if ($QRCODE):
 ?>
 					<button id="qrcodelink" class="hidden"><img src="img/icon_qr.png" width="15" height="15" alt="" /><?php echo I18n::_('QR code'); ?></button>
@@ -197,7 +203,7 @@ endforeach;
 						</select>
 					</div>
 <?php
-if (strlen($LANGUAGESELECTION)):
+if (!empty($LANGUAGESELECTION)):
 ?>
 					<div id="language" class="button">
 						<select name="lang">
@@ -228,7 +234,7 @@ endif;
 					<div id="deletelink"></div>
 					<div id="pastelink"></div>
 <?php
-if (strlen($URLSHORTENER)):
+if (!empty($URLSHORTENER)):
 ?>
 					<button id="shortenbutton" data-shortener="<?php echo I18n::encode($URLSHORTENER); ?>"><img src="img/icon_shorten.png" width="13" height="15" /><?php echo I18n::_('Shorten URL'); ?></button>
 <?php
@@ -271,9 +277,25 @@ if ($DISCUSSION):
 ?>
 		<div id="serverdata" class="hidden" aria-hidden="true">
 			<div id="templates">
-				<article id="commenttemplate" class="comment"><div class="commentmeta"><span class="nickname">name</span><span class="commentdate">0000-00-00</span></div><div class="commentdata">c</div><button class="btn btn-default btn-sm"><?php echo I18n::_('Reply'); ?></button></article>
-				<div id="commenttailtemplate" class="comment"><button class="btn btn-default btn-sm"><?php echo I18n::_('Add comment'); ?></button></div>
-				<div id="replytemplate" class="reply hidden"><input type="text" id="nickname" class="form-control" title="<?php echo I18n::_('Optional nickname…'); ?>" placeholder="<?php echo I18n::_('Optional nickname…'); ?>" /><textarea id="replymessage" class="replymessage form-control" cols="80" rows="7"></textarea><br /><div id="replystatus" role="alert" class="statusmessage hidden alert"><span class="glyphicon" aria-hidden="true"></span> </div><button id="replybutton" class="btn btn-default btn-sm"><?php echo I18n::_('Post comment'); ?></button></div>
+				<article id="commenttemplate" class="comment">
+					<div class="commentmeta">
+						<span class="nickname">name</span>
+						<span class="commentdate">0000-00-00</span>
+					</div>
+					<div class="commentdata">c</div>
+					<button class="btn btn-default btn-sm"><?php echo I18n::_('Reply'); ?></button>
+				</article>
+				<div id="commenttailtemplate" class="comment">
+					<button class="btn btn-default btn-sm"><?php echo I18n::_('Add comment'); ?></button>
+				</div>
+				<div id="replytemplate" class="reply hidden">
+					<input type="text" id="nickname" class="form-control" title="<?php echo I18n::_('Optional nickname…'); ?>" placeholder="<?php echo I18n::_('Optional nickname…'); ?>" />
+					<textarea id="replymessage" class="replymessage form-control" cols="80" rows="7"></textarea><br />
+					<div id="replystatus" role="alert" class="statusmessage hidden alert">
+						<span class="glyphicon" aria-hidden="true"></span>
+					</div>
+					<button id="replybutton" class="btn btn-default btn-sm"><?php echo I18n::_('Post comment'); ?></button>
+				</div>
 			</div>
 		</div>
 <?php

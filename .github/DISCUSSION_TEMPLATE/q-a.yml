@@ -1,0 +1,90 @@
+labels: ["question/support"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Thanks for taking the time to fill out this form!
+  - type: textarea
+    id: description
+    attributes:
+      label: Describe the problem/question
+      description: A clear and concise description of what the problem/issue or question is.
+    validations:
+      required: true
+  - type: checkboxes
+    id: readed-faq
+    attributes:
+      label: Did you use the FAQ section?
+      description: Have you read [the FAQ](https://github.com/PrivateBin/PrivateBin/wiki/FAQ)?
+      options:
+        - label: Yes, I have read [the FAQ](https://github.com/PrivateBin/PrivateBin/wiki/FAQ) and I found no solution/answer there.
+          required: true
+  - type: textarea
+    id: what_you_did
+    attributes:
+      label: What you did?
+      description: Tell us how to reproduce the problem.
+      value: |
+        1.
+        2.
+        ...
+    validations:
+      required: true
+  - type: textarea
+    id: what_happens
+    attributes:
+      label: What happens
+      placeholder: Tell us what you see!
+  - type: textarea
+    id: what_should_happen
+    attributes:
+      label: What should happen
+      placeholder: Tell us what you want to see!
+  - type: textarea
+    id: additional_info
+    attributes:
+      label: Additional information
+      description: E.g. if you have access to the server log files, copy them here. Or copy the browser console content, if appropiate.
+  - type: input
+    id: server_address
+    attributes:
+      label: Server address
+      description: The instance of PrivateBin, where you experience the issue.
+      placeholder: e.g. https://privatebin.net
+  - type: input
+    id: server_os
+    attributes:
+      label: Server OS
+      placeholder: e.g. Ubuntu
+  - type: input
+    id: webserver
+    attributes:
+      label: Webserver
+      placeholder: e.g. Apache
+  - type: input
+    id: privatebin_version
+    attributes:
+      label: PrivateBin version
+      description: The PrivateBin version, where you experience the issue. It is e.g. shown at the bottom left in the web interface.
+      placeholder: e.g. v1.5.2
+  - type: input
+    id: browser
+    attributes:
+      label: Browser and version
+      placeholder: e.g. Firefox v116.3.0 (desktop)
+  - type: input
+    id: client
+    attributes:
+      label: Local operating system and version
+      placeholder: e.g. Windows 10
+  - type: dropdown
+    id: reproduce_issue
+    attributes:
+      label: Issue reproducibility
+      description: Can you reproduce this issue on [https://privatebin.net](https://privatebin.net)?
+      options:
+        - "No, I cannot reproduce it on https://privatebin.net."
+        - "Yes, reproducible on https://privatebin.net."
+      default: 0
+    validations:
+      required: true

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * PrivateBin
  *
@@ -7,13 +7,11 @@
  * @link      https://github.com/PrivateBin/PrivateBin
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
- * @version   1.3.5
  */
 
 namespace PrivateBin;
 
 use Exception;
-use PDO;
 
 /**
  * Configuration
@@ -40,11 +38,12 @@ class Configuration
             'basepath'                 => '',
             'discussion'               => true,
             'opendiscussion'           => false,
+            'discussiondatedisplay'    => true,
             'password'                 => true,
             'fileupload'               => false,
             'burnafterreadingselected' => false,
             'defaultformatter'         => 'plaintext',
-            'syntaxhighlightingtheme'  => null,
+            'syntaxhighlightingtheme'  => '',
             'sizelimit'                => 10485760,
             'template'                 => 'bootstrap',
             'info'                     => 'More information on the <a href=\'https://privatebin.info/\'>project page</a>.',
@@ -53,8 +52,9 @@ class Configuration
             'languagedefault'          => '',
             'urlshortener'             => '',
             'qrcode'                   => true,
+            'email'                    => true,
             'icon'                     => 'identicon',
-            'cspheader'                => 'default-src \'none\'; base-uri \'self\'; form-action \'none\'; manifest-src \'self\'; connect-src * blob:; script-src \'self\' resource:; style-src \'self\'; font-src \'self\'; img-src \'self\' data: blob:; media-src blob:; object-src blob:; sandbox allow-same-origin allow-scripts allow-forms allow-popups allow-modals allow-downloads',
+            'cspheader'                => 'default-src \'none\'; base-uri \'self\'; form-action \'none\'; manifest-src \'self\'; connect-src * blob:; script-src \'self\' \'wasm-unsafe-eval\'; style-src \'self\'; font-src \'self\'; frame-ancestors \'none\'; img-src \'self\' data: blob:; media-src blob:; object-src blob:; sandbox allow-same-origin allow-scripts allow-forms allow-popups allow-modals allow-downloads',
             'zerobincompatibility'     => false,
             'httpwarning'              => true,
             'compression'              => 'zlib',
@@ -78,9 +78,10 @@ class Configuration
             'markdown'           => 'Markdown',
         ),
         'traffic' => array(
-            'limit'      => 10,
-            'header'     => null,
-            'exemptedIp' => null,
+            'limit'     => 10,
+            'header'    => '',
+            'exempted'  => '',
+            'creators'  => '',
         ),
         'purge' => array(
             'limit'     => 300,
@@ -92,6 +93,27 @@ class Configuration
         'model_options' => array(
             'dir' => 'data',
         ),
+        'yourls' => array(
+            'signature' => '',
+            'apiurl'    => '',
+        ),
+        // update this array when adding/changing/removing js files
+        'sri' => array(
+            'js/base-x-4.0.0.js'     => 'sha512-nNPg5IGCwwrveZ8cA/yMGr5HiRS5Ps2H+s0J/mKTPjCPWUgFGGw7M5nqdnPD3VsRwCVysUh3Y8OWjeSKGkEQJQ==',
+            'js/base64-1.7.js'       => 'sha512-JdwsSP3GyHR+jaCkns9CL9NTt4JUJqm/BsODGmYhBcj5EAPKcHYh+OiMfyHbcDLECe17TL0hjXADFkusAqiYgA==',
+            'js/bootstrap-3.4.1.js'  => 'sha512-oBTprMeNEKCnqfuqKd6sbvFzmFQtlXS3e0C/RGFV0hD6QzhHV+ODfaQbAlmY6/q0ubbwlAM/nCJjkrgA3waLzg==',
+            'js/bootstrap-5.3.3.js'  => 'sha512-in2rcOpLTdJ7/pw5qjF4LWHFRtgoBDxXCy49H4YGOcVdGiPaQucGIbOqxt1JvmpvOpq3J/C7VTa0FlioakB2gQ==',
+            'js/dark-mode-switch.js' => 'sha512-CCbdHdeWDbDO7aqFFmhgnvFESzaILHbUYmbhNjTpcjyO/XYdouQ9Pw8W9rpV8oJT1TsK5FbwSHU1oazmnb7BWA==',
+            'js/jquery-3.7.1.js'     => 'sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==',
+            'js/kjua-0.9.0.js'       => 'sha512-CVn7af+vTMBd9RjoS4QM5fpLFEOtBCoB0zPtaqIDC7sF4F8qgUSRFQQpIyEDGsr6yrjbuOLzdf20tkHHmpaqwQ==',
+            'js/legacy.js'           => 'sha512-p76t5AT6YHgvhG5RqWGOQ6o87aObfYWYwOPHYhhN4KfExVEZJ0/I0D+1daKprxgbL37/gtXxbd1qZx4PIhSU3g==',
+            'js/prettify.js'         => 'sha512-puO0Ogy++IoA2Pb9IjSxV1n4+kQkKXYAEUtVzfZpQepyDPyXk8hokiYDS7ybMogYlyyEIwMLpZqVhCkARQWLMg==',
+            'js/privatebin.js'       => 'sha512-JUj/Sbl/bMHlIoIUT1U9e89JU33fDBxCxLSGxwwaeydBFXOBHyfdF7hwSIjgbPxb4d9CO7CSe4meouTIRMy8Vg==',
+            'js/purify-3.1.7.js'     => 'sha512-LegvqULiMtOfboJZw9MpETN/b+xnLRXZI90gG7oIFHW+yAeHmKvRtEUbiMFx2WvUqQoL9XB3gwU+hWXUT0X+8A==',
+            'js/rawinflate-0.3.js'   => 'sha512-g8uelGgJW9A/Z1tB6Izxab++oj5kdD7B4qC7DHwZkB6DGMXKyzx7v5mvap2HXueI2IIn08YlRYM56jwWdm2ucQ==',
+            'js/showdown-2.1.0.js'   => 'sha512-WYXZgkTR0u/Y9SVIA4nTTOih0kXMEd8RRV6MLFdL6YU8ymhR528NLlYQt1nlJQbYz4EW+ZsS0fx1awhiQJme1Q==',
+            'js/zlib-1.3.1.js'       => 'sha512-5bU9IIP4PgBrOKLZvGWJD4kgfQrkTz8Z3Iqeu058mbQzW3mCumOU6M3UVbVZU9rrVoVwaW4cZK8U8h5xjF88eQ==',
+        ),
     );
 
     /**
@@ -101,16 +123,23 @@ class Configuration
      */
     public function __construct()
     {
+        $basePaths  = array();
         $config     = array();
-        $basePath   = (getenv('CONFIG_PATH') !== false ? getenv('CONFIG_PATH') : PATH . 'cfg') . DIRECTORY_SEPARATOR;
-        $configFile = $basePath . 'conf.php';
-
-        if (is_readable($configFile)) {
-            $config = parse_ini_file($configFile, true);
-            foreach (array('main', 'model', 'model_options') as $section) {
-                if (!array_key_exists($section, $config)) {
-                    throw new Exception(I18n::_('PrivateBin requires configuration section [%s] to be present in configuration file.', $section), 2);
+        $configPath = getenv('CONFIG_PATH');
+        if ($configPath !== false && !empty($configPath)) {
+            $basePaths[] = $configPath;
+        }
+        $basePaths[] = PATH . 'cfg';
+        foreach ($basePaths as $basePath) {
+            $configFile = $basePath . DIRECTORY_SEPARATOR . 'conf.php';
+            if (is_readable($configFile)) {
+                $config = parse_ini_file($configFile, true);
+                foreach (array('main', 'model', 'model_options') as $section) {
+                    if (!array_key_exists($section, $config)) {
+                        throw new Exception(I18n::_('PrivateBin requires configuration section [%s] to be present in configuration file.', $section), 2);
+                    }
                 }
+                break;
             }
         }
 
@@ -136,7 +165,7 @@ class Configuration
                     'tbl' => null,
                     'usr' => null,
                     'pwd' => null,
-                    'opt' => array(PDO::ATTR_PERSISTENT => true),
+                    'opt' => array(),
                 );
             } elseif (
                 $section == 'model_options' && in_array(
@@ -145,8 +174,25 @@ class Configuration
                 )
             ) {
                 $values = array(
-                    'bucket' => getenv('PRIVATEBIN_GCS_BUCKET') ? getenv('PRIVATEBIN_GCS_BUCKET') : null,
-                    'prefix' => 'pastes',
+                    'bucket'     => getenv('PRIVATEBIN_GCS_BUCKET') ? getenv('PRIVATEBIN_GCS_BUCKET') : null,
+                    'prefix'     => 'pastes',
+                    'uniformacl' => false,
+                );
+            } elseif (
+                $section == 'model_options' && in_array(
+                    $this->_configuration['model']['class'],
+                    array('S3Storage')
+                )
+            ) {
+                $values = array(
+                    'region'                  => null,
+                    'version'                 => null,
+                    'endpoint'                => null,
+                    'accesskey'               => null,
+                    'secretkey'               => null,
+                    'use_path_style_endpoint' => null,
+                    'bucket'                  => null,
+                    'prefix'                  => '',
                 );
             }
 
@@ -163,6 +209,10 @@ class Configuration
             }
             // check for missing keys and set defaults if necessary
             else {
+                // preserve configured SRI hashes
+                if ($section == 'sri' && array_key_exists($section, $config)) {
+                    $this->_configuration[$section] = $config[$section];
+                }
                 foreach ($values as $key => $val) {
                     if ($key == 'dir') {
                         $val = PATH . $val;
@@ -184,6 +234,8 @@ class Configuration
                             $result = (int) $config[$section][$key];
                         } elseif (is_string($val) && !empty($config[$section][$key])) {
                             $result = (string) $config[$section][$key];
+                        } elseif (is_array($val) && is_array($config[$section][$key])) {
+                            $result = $config[$section][$key];
                         }
                     }
                     $this->_configuration[$section][$key] = $result;
@@ -206,6 +258,14 @@ class Configuration
         // ensure a valid expire default key is set
         if (!array_key_exists($this->_configuration['expire']['default'], $this->_configuration['expire_options'])) {
             $this->_configuration['expire']['default'] = key($this->_configuration['expire_options']);
+        }
+
+        // ensure the basepath ends in a slash, if one is set
+        if (
+            !empty($this->_configuration['main']['basepath']) &&
+            substr_compare($this->_configuration['main']['basepath'], '/', -1) !== 0
+        ) {
+            $this->_configuration['main']['basepath'] .= '/';
         }
     }
 

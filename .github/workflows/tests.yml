@@ -1,54 +1,153 @@
 name: Tests
-on: [push]
+on:
+  push:
+  workflow_dispatch:
 
 jobs:
+
   Composer:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
     - name: Validate composer.json and composer.lock
       run: composer validate
     - name: Install dependencies
       run: composer install --prefer-dist --no-dev
+
   PHPunit:
+    name: PHP ${{ matrix.php-versions }} unit tests on ${{ matrix.operating-system }}
     runs-on: ubuntu-latest
+    # https://docs.github.com/en/actions/using-jobs/using-a-matrix-for-your-jobs#handling-failures
+    continue-on-error: "${{ matrix.experimental }}"
     strategy:
       matrix:
-        php-versions: ['5.6', '7.0', '7.1', '7.2', '7.3', '7.4']
-    name: PHP ${{ matrix.php-versions }} unit tests on ${{ matrix.operating-system }}
+        php-versions: ['7.3', '7.4', '8.0', '8.1', '8.2', '8.3']
+        experimental: [false]
+        include:
+          - php-versions: '8.4' # development release, things can break
+            experimental: true
+    env:
+      extensions: gd, sqlite3
+      extensions-cache-key-name: phpextensions
+
     steps:
+
+    # let's get started!
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
+
+    # cache PHP extensions
+    - name: Setup cache environment
+      id: extcache
+      uses: shivammathur/cache-extensions@v1
+      with:
+        php-version: ${{ matrix.php-versions }}
+        extensions: ${{ env.extensions }}
+        key: ${{ runner.os }}-${{ env.extensions-cache-key }}
+
+    - name: Cache extensions
+      uses: actions/cache@v4
+      with:
+        path: ${{ steps.extcache.outputs.dir }}
+        key: ${{ steps.extcache.outputs.key }}
+        restore-keys: ${{ runner.os }}-${{ env.extensions-cache-key }}
+
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
       with:
         php-version: ${{ matrix.php-versions }}
-        extensions: gd, sqlite3
+        extensions: ${{ env.extensions }}
+
+    # Setup GitHub CI PHP problem matchers
+    # https://github.com/shivammathur/setup-php#problem-matchers
+    - name: Setup problem matchers for PHP
+      run: echo "::add-matcher::${{ runner.tool_cache }}/php.json"
+
+    - name: Setup problem matchers for PHPUnit
+      run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
+
+    # composer cache
     - name: Remove composer lock
       run: rm composer.lock
+
+    - name: Get composer cache directory
+      id: composer-cache
+      run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+    # http://man7.org/linux/man-pages/man1/date.1.html
+    # https://github.com/actions/cache#creating-a-cache-key
+    - name: Get Date
+      id: get-date
+      run: echo "date=$(/bin/date -u "+%Y%m%d")" >> $GITHUB_OUTPUT
+      shell: bash
+
+    - name: Cache dependencies
+      uses: actions/cache@v4
+      with:
+        path: "${{ steps.composer-cache.outputs.dir }}"
+        key: "${{ runner.os }}-composer-${{ steps.get-date.outputs.date }}-${{ hashFiles('**/composer.json') }}"
+        restore-keys: "${{ runner.os }}-composer-${{ steps.get-date.outputs.date }}-"
+
+    # composer installation
+    - name: Unset platform requirement
+      run: composer config --unset platform
+
     - name: Setup PHPunit
       run: composer install -n
+
     - name: Install Google Cloud Storage
       run: composer require google/cloud-storage
+
+    # testing
     - name: Run unit tests
-      run: ../vendor/bin/phpunit --no-coverage
+      run: ../vendor/bin/phpunit --no-coverage --log-junit results.xml
       working-directory: tst
+
+    - name: Upload Test Results
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: Test Results (PHP ${{ matrix.php-versions }})
+        path: tst/results.xml
+
   Mocha:
     runs-on: ubuntu-latest
     steps:
+
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
+
     - name: Setup Node
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v4
       with:
-        node-version: '12'
+        node-version: '20'
+        cache: 'npm'
+        cache-dependency-path: 'js/package-lock.json'
+
     - name: Setup Mocha
       run: npm install -g mocha
+
     - name: Setup Node modules
-      run: npm install
-      working-directory: js
-    - name: Run unit tests
-      run: mocha
+      run: npm ci
       working-directory: js
 
+    - name: Run unit tests
+      run: npm run ci-test
+      working-directory: js
+
+    - name: Upload Test Results
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: Test Results (Mocha)
+        path: js/mocha-results.xml
+
+  event_file:
+    name: "Event File"
+    runs-on: ubuntu-latest
+    steps:
+    - name: Upload
+      uses: actions/upload-artifact@v4
+      with:
+        name: Event File
+        path: "${{ github.event_path }}"

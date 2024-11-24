@@ -3,11 +3,12 @@
     "%s is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted %sin the browser%s using 256 bits AES.": "A %s egy minimalista, nyílt forráskódú adattároló szoftver, ahol a szerver semmilyen információt nem tárol a feltett adatról. Azt ugyanis a %sböngésződ%s segítségével titkosítja és oldja fel 256 bit hosszú titkosítási kulcsú AES-t használva.",
     "More information on the <a href=\"https://privatebin.info/\">project page</a>.": "További információt a <a href=\"https://privatebin.info/\">projekt oldalán</a> találsz.",
     "Because ignorance is bliss": "A titok egyfajta hatalom.",
-    "en": "hu",
     "Paste does not exist, has expired or has been deleted.": "A bejegyzés nem létezik, lejárt vagy törölve lett.",
     "%s requires php %s or above to work. Sorry.": "Bocs, de a %s működéséhez %s vagy ezt meghaladó verziójú php-s környezet szükséges.",
     "%s requires configuration section [%s] to be present in configuration file.": "A %s megfelelő működéséhez a konfigurációs fájlban a [%s] résznek léteznie kell.",
     "Please wait %d seconds between each post.": [
+        "Kérlek várj %d másodpercet két beküldés között.",
+        "Kérlek várj %d másodpercet két beküldés között.",
         "Kérlek várj %d másodpercet két beküldés között.",
         "Kérlek várj %d másodpercet két beküldés között.",
         "Kérlek várj %d másodpercet két beküldés között.",
@@ -25,7 +26,7 @@
     "JavaScript is required for %s to work. Sorry for the inconvenience.": "JavaScript szükséges a %s működéséhez. Elnézést a fennakadásért.",
     "%s requires a modern browser to work.": "A %s működéséhez a jelenleginél újabb böngészőre van szükség.",
     "New": "Új",
-    "Send": "Beküldöm!",
+    "Create": "Létrehozás",
     "Clone": "Másol",
     "Raw text": "A nyers szöveg",
     "Expires": "Lejárati idő",
@@ -37,48 +38,64 @@
     "%d seconds": [
         "%d másodperc",
         "%d másodperc",
-        "%d seconds (2nd plural)",
-        "%d seconds (3rd plural)"
+        "%d másodperc",
+        "%d másodperc",
+        "%d másodperc",
+        "%d másodperc"
     ],
     "%d minutes": [
         "%d perc",
         "%d perc",
-        "%d minutes (2nd plural)",
-        "%d minutes (3rd plural)"
+        "%d perc",
+        "%d perc",
+        "%d perc",
+        "%d perc"
     ],
     "%d hours": [
         "%d óra",
         "%d óra",
-        "%d hours (2nd plural)",
-        "%d hours (3rd plural)"
+        "%d óra",
+        "%d óra",
+        "%d óra",
+        "%d óra"
     ],
     "%d days": [
         "%d nap",
         "%d nap",
-        "%d days (2nd plural)",
-        "%d days (3rd plural)"
+        "%d nap",
+        "%d nap",
+        "%d nap",
+        "%d nap"
     ],
     "%d weeks": [
         "%d hét",
         "%d hét",
-        "%d weeks (2nd plural)",
-        "%d weeks (3rd plural)"
+        "%d hét",
+        "%d hét",
+        "%d hét",
+        "%d hét"
     ],
     "%d months": [
         "%d hónap",
         "%d hónap",
-        "%d months (2nd plural)",
-        "%d months (3rd plural)"
+        "%d hónap",
+        "%d hónap",
+        "%d hónap",
+        "%d hónap"
     ],
     "%d years": [
         "%d év",
         "%d év",
-        "%d years (2nd plural)",
-        "%d years (3rd plural)"
+        "%d év",
+        "%d év",
+        "%d év",
+        "%d év"
     ],
     "Never": "Soha",
     "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.": "Megjegyzés: ez egy teszt szolgáltatás, az adatok bármikor törlődhetnek. Ha visszaélsz vele, kiscicák bánhatják! :)",
     "This document will expire in %d seconds.": [
+        "Ez a bejegyzés %d másodperc múlva megsemmisül.",
+        "Ez a bejegyzés %d másodperc múlva megsemmisül.",
         "Ez a bejegyzés %d másodperc múlva megsemmisül.",
         "Ez a bejegyzés %d másodperc múlva megsemmisül.",
         "Ez a bejegyzés %d másodperc múlva megsemmisül.",
@@ -88,9 +105,13 @@
         "Ez a bejegyzés %d perc múlva megsemmisül.",
         "Ez a bejegyzés %d perc múlva megsemmisül.",
         "Ez a bejegyzés %d perc múlva megsemmisül.",
+        "Ez a bejegyzés %d perc múlva megsemmisül.",
+        "Ez a bejegyzés %d perc múlva megsemmisül.",
         "Ez a bejegyzés %d perc múlva megsemmisül."
     ],
     "This document will expire in %d hours.": [
+        "Ez a bejegyzés %d óra múlva megsemmisül.",
+        "Ez a bejegyzés %d óra múlva megsemmisül.",
         "Ez a bejegyzés %d óra múlva megsemmisül.",
         "Ez a bejegyzés %d óra múlva megsemmisül.",
         "Ez a bejegyzés %d óra múlva megsemmisül.",
@@ -100,9 +121,13 @@
         "Ez a bejegyzés %d nap múlva megsemmisül.",
         "Ez a bejegyzés %d nap múlva megsemmisül.",
         "Ez a bejegyzés %d nap múlva megsemmisül.",
+        "Ez a bejegyzés %d nap múlva megsemmisül.",
+        "Ez a bejegyzés %d nap múlva megsemmisül.",
         "Ez a bejegyzés %d nap múlva megsemmisül."
     ],
     "This document will expire in %d months.": [
+        "Ez a bejegyzés %d hónap múlva megsemmisül.",
+        "Ez a bejegyzés %d hónap múlva megsemmisül.",
         "Ez a bejegyzés %d hónap múlva megsemmisül.",
         "Ez a bejegyzés %d hónap múlva megsemmisül.",
         "Ez a bejegyzés %d hónap múlva megsemmisül.",
@@ -182,8 +207,18 @@
     "Use Current Timezone": "Az aktuális időzóna használata",
     "Convert To UTC": "Átalakítás UTC időzónára",
     "Close": "Bezárás",
-    "Encrypted note on PrivateBin": "Titkosított jegyzet a PrivateBinen",
+    "Encrypted note on %s": "Titkosított jegyzet a %s",
     "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "Látogasd meg ezt a hivatkozást a bejegyzés megtekintéséhez. Ha mások számára is megadod ezt a linket, azzal hozzáférnek ők is.",
     "URL shortener may expose your decrypt key in URL.": "URL shortener may expose your decrypt key in URL.",
-    "Save paste": "Save paste"
+    "Save paste": "Save paste",
+    "Your IP is not authorized to create pastes.": "Your IP is not authorized to create pastes.",
+    "Trying to shorten a URL that isn't pointing at our instance.": "Trying to shorten a URL that isn't pointing at our instance.",
+    "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".",
+    "Error parsing YOURLS response.": "Error parsing YOURLS response.",
+    "This secret message can only be displayed once. Would you like to see it now?": "This secret message can only be displayed once. Would you like to see it now?",
+    "Yes, see it": "Yes, see it",
+    "Dark Mode": "Sötét mód",
+    "Error compressing paste, due to missing WebAssembly support.": "Error compressing paste, due to missing WebAssembly support.",
+    "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.": "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.",
+    "Start over": "Start over"
 }

@@ -1,8 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
+use PHPUnit\Framework\TestCase;
 use PrivateBin\FormatV2;
 
-class FormatV2Test extends PHPUnit_Framework_TestCase
+class FormatV2Test extends TestCase
 {
     public function testFormatV2ValidatorValidatesCorrectly()
     {

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * PrivateBin
  *
@@ -7,13 +7,13 @@
  * @link      https://github.com/PrivateBin/PrivateBin
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
- * @version   1.3.5
  */
 
 namespace PrivateBin\Model;
 
 use Exception;
 use Identicon\Identicon;
+use Jdenticon\Identicon as Jdenticon;
 use PrivateBin\Persistence\TrafficLimiter;
 use PrivateBin\Vizhash16x16;
 
@@ -167,6 +167,16 @@ class Comment extends AbstractModel
             if ($icon == 'identicon') {
                 $identicon = new Identicon();
                 $pngdata   = $identicon->getImageDataUri($hmac, 16);
+            } elseif ($icon == 'jdenticon') {
+                $jdenticon = new Jdenticon(array(
+                    'hash'  => $hmac,
+                    'size'  => 16,
+                    'style' => array(
+                        'backgroundColor'   => '#fff0', // fully transparent, for dark mode
+                        'padding'           => 0,
+                    ),
+                ));
+                $pngdata   = $jdenticon->getImageDataUri('png');
             } elseif ($icon == 'vizhash') {
                 $vh      = new Vizhash16x16();
                 $pngdata = 'data:image/png;base64,' . base64_encode(

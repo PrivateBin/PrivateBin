@@ -1,0 +1,331 @@
+#!/usr/bin/env php
+<?php declare(strict_types=1);
+/**
+ * PrivateBin
+ *
+ * a zero-knowledge paste bin
+ *
+ * @link      https://github.com/PrivateBin/PrivateBin
+ * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
+ * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
+ */
+
+namespace PrivateBin;
+
+use Exception;
+use PrivateBin\Configuration;
+use PrivateBin\Data\AbstractData;
+use PrivateBin\Model\Paste;
+
+define('PATH', dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR);
+require PATH . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
+
+/**
+ * Administration
+ *
+ * Command line utility for administrative tasks.
+ */
+class Administration
+{
+    /**
+     * configuration
+     *
+     * @access private
+     * @var    Configuration
+     */
+    private $_conf;
+
+    /**
+     * options, parsed from the command line arguments
+     *
+     * @access private
+     * @var    array
+     */
+    private $_opts = array();
+
+    /**
+     * data storage model
+     *
+     * @access private
+     * @var    AbstractData
+     */
+    private $_store;
+
+    /**
+     * deletes the requested paste ID, if a valid ID and it exists
+     *
+     * @access private
+     * @param  string $pasteId
+     */
+    private function _delete($pasteId)
+    {
+        if (!Paste::isValidId($pasteId)) {
+            self::_error('given ID is not a valid paste ID (16 hexadecimal digits)', 5);
+        }
+        if (!$this->_store->exists($pasteId)) {
+            self::_error('given ID does not exist, has expired or was already deleted', 6);
+        }
+        $this->_store->delete($pasteId);
+        if ($this->_store->exists($pasteId)) {
+            self::_error('paste ID exists after deletion, permission problem?', 7);
+        }
+        exit("paste $pasteId successfully deleted" . PHP_EOL);
+    }
+
+    /**
+     * removes empty directories, if current storage model uses Filesystem
+     *
+     * @access private
+     */
+    private function _empty_dirs()
+    {
+        if ($this->_conf->getKey('class', 'model') !== 'Filesystem') {
+            self::_error('instance not using Filesystem storage, no directories to empty', 4);
+        }
+        $dir = $this->_conf->getKey('dir', 'model_options');
+        passthru("find $dir -type d -empty -delete", $code);
+        exit($code);
+    }
+
+    /**
+     * display a message on STDERR and exits
+     *
+     * @access private
+     * @static
+     * @param  string $message
+     * @param  int    $code optional, defaults to 1
+     */
+    private static function _error($message, $code = 1)
+    {
+        self::_error_echo($message);
+        exit($code);
+    }
+
+    /**
+     * display a message on STDERR
+     *
+     * @access private
+     * @static
+     * @param  string $message
+     */
+    private static function _error_echo($message)
+    {
+        fwrite(STDERR, 'Error: ' . $message . PHP_EOL);
+    }
+
+    /**
+     * display usage help on STDOUT and exits
+     *
+     * @access private
+     * @static
+     * @param  int    $code optional, defaults to 0
+     */
+    private static function _help($code = 0)
+    {
+        echo <<<'EOT'
+Usage:
+  administration [--delete <paste id> | --empty-dirs | --help | --purge | --statistics]
+
+Options:
+  -d, --delete      deletes the requested paste ID
+  -e, --empty-dirs  removes empty directories (only if Filesystem storage is
+                    configured)
+  -h, --help        displays this help message
+  -p, --purge       purge all expired pastes
+  -s, --statistics  reads all stored pastes and comments and reports statistics
+EOT, PHP_EOL;
+        exit($code);
+    }
+
+    /**
+     * return option for given short or long keyname, if it got set
+     *
+     * @access private
+     * @static
+     * @param  string $short
+     * @param  string $long
+     * @return string|null
+     */
+    private function _option($short, $long)
+    {
+        foreach (array($short, $long) as $key) {
+            if (array_key_exists($key, $this->_opts)) {
+                return $this->_opts[$key];
+            }
+        }
+        return null;
+    }
+
+    /**
+     * initialize options from given argument array
+     *
+     * @access private
+     * @static
+     * @param  array $arguments
+     */
+    private function _options_initialize($arguments)
+    {
+        if ($arguments > 3) {
+            self::_error_echo('too many arguments given');
+            echo PHP_EOL;
+            self::_help(1);
+        }
+
+        if ($arguments < 2) {
+            self::_error_echo('missing arguments');
+            echo PHP_EOL;
+            self::_help(2);
+        }
+
+        $this->_opts = getopt('hd:eps', array('help', 'delete:', 'empty-dirs', 'purge', 'statistics'));
+        if (!$this->_opts) {
+            self::_error_echo('unsupported arguments given');
+            echo PHP_EOL;
+            self::_help(3);
+        }
+    }
+
+    /**
+     * reads all stored pastes and comments and reports statistics
+     *
+     * @access public
+     */
+    private function _statistics()
+    {
+        $counters = array(
+            'burn'          => 0,
+            'damaged'       => 0,
+            'discussion'    => 0,
+            'expired'       => 0,
+            'md'            => 0,
+            'percent'       => 1,
+            'plain'         => 0,
+            'progress'      => 0,
+            'syntax'        => 0,
+            'total'         => 0,
+            'unknown'       => 0,
+        );
+        $time = time();
+        $ids = $this->_store->getAllPastes();
+        $counters['total'] = count($ids);
+        $dots = $counters['total'] < 100 ? 10 : (
+            $counters['total'] < 1000 ? 50 : 100
+        );
+        $percentages = $counters['total'] < 100 ? 0 : (
+            $counters['total'] < 1000 ? 4 : 10
+        );
+
+        echo "Total:\t\t\t{$counters['total']}", PHP_EOL;
+        foreach ($ids as $pasteid) {
+            try {
+                $paste = $this->_store->read($pasteid);
+            } catch (Exception $e) {
+                echo "Error reading paste {$pasteid}: ", $e->getMessage(), PHP_EOL;
+                ++$counters['damaged'];
+            }
+            ++$counters['progress'];
+
+            if (
+                array_key_exists('expire_date', $paste['meta']) &&
+                $paste['meta']['expire_date'] < $time
+            ) {
+                ++$counters['expired'];
+            }
+
+            if (array_key_exists('adata', $paste)) {
+                $format = $paste['adata'][1];
+                $discussion = $paste['adata'][2];
+                $burn = $paste['adata'][3];
+            } else {
+                $format = array_key_exists('formatter', $paste['meta']) ? $paste['meta']['formatter'] : 'plaintext';
+                $discussion = array_key_exists('opendiscussion', $paste['meta']) ? $paste['meta']['opendiscussion'] : false;
+                $burn = array_key_exists('burnafterreading', $paste['meta']) ? $paste['meta']['burnafterreading'] : false;
+            }
+
+            if ($format === 'plaintext') {
+                ++$counters['plain'];
+            } elseif ($format === 'syntaxhighlighting') {
+                ++$counters['syntax'];
+            } elseif ($format === 'markdown') {
+                ++$counters['md'];
+            } else {
+                ++$counters['unknown'];
+            }
+
+            $counters['discussion'] += (int) $discussion;
+            $counters['burn'] += (int) $burn;
+
+            // display progress
+            if ($counters['progress'] % $dots === 0) {
+                echo '.';
+                if ($percentages) {
+                    $progress = $percentages / $counters['total'] * $counters['progress'];
+                    if ($progress >= $counters['percent']) {
+                        printf(' %d%% ', 100 / $percentages * $progress);
+                        ++$counters['percent'];
+                    }
+                }
+            }
+        }
+
+        echo PHP_EOL, <<<EOT
+Expired:\t\t{$counters['expired']}
+Burn after reading:\t{$counters['burn']}
+Discussions:\t\t{$counters['discussion']}
+Plain Text:\t\t{$counters['plain']}
+Source Code:\t\t{$counters['syntax']}
+Markdown:\t\t{$counters['md']}
+EOT, PHP_EOL;
+        if ($counters['damaged'] > 0) {
+            echo "Damaged:\t\t{$counters['damaged']}", PHP_EOL;
+        }
+        if ($counters['unknown'] > 0) {
+            echo "Unknown format:\t\t{$counters['unknown']}", PHP_EOL;
+        }
+    }
+
+    /**
+     * constructor
+     *
+     * initializes and runs administrative tasks
+     *
+     * @access public
+     */
+    public function __construct()
+    {
+        $this->_options_initialize($_SERVER['argc']);
+
+        if ($this->_option('h', 'help') !== null) {
+            self::_help();
+        }
+
+        $this->_conf = new Configuration;
+
+        if ($this->_option('e', 'empty-dirs') !== null) {
+            $this->_empty_dirs();
+        }
+
+        $class = 'PrivateBin\\Data\\' . $this->_conf->getKey('class', 'model');
+        $this->_store = new $class($this->_conf->getSection('model_options'));
+
+        if (($pasteId = $this->_option('d', 'delete')) !== null) {
+            $this->_delete($pasteId);
+        }
+
+        if ($this->_option('p', 'purge') !== null) {
+            try {
+                $this->_store->purge(PHP_INT_MAX);
+            } catch (Exception $e) {
+                echo 'Error purging pastes: ', $e->getMessage(), PHP_EOL,
+                    'Run the statistics to find damaged paste IDs and either delete them or restore them from backup.', PHP_EOL;
+            }
+            exit('purging of expired pastes concluded' . PHP_EOL);
+        }
+
+        if ($this->_option('s', 'statistics') !== null) {
+            $this->_statistics();
+        }
+    }
+}
+
+new Administration();

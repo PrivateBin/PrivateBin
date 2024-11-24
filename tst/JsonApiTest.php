@@ -1,21 +1,25 @@
-<?php
+<?php declare(strict_types=1);
 
+use PHPUnit\Framework\TestCase;
 use PrivateBin\Controller;
 use PrivateBin\Data\Filesystem;
 use PrivateBin\Persistence\ServerSalt;
 use PrivateBin\Request;
 
-class JsonApiTest extends PHPUnit_Framework_TestCase
+class JsonApiTest extends TestCase
 {
     protected $_model;
 
     protected $_path;
 
-    public function setUp()
+    public function setUp(): void
     {
         /* Setup Routine */
         $this->_path  = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'privatebin_data';
-        $this->_model = Filesystem::getInstance(array('dir' => $this->_path));
+        if (!is_dir($this->_path)) {
+            mkdir($this->_path);
+        }
+        $this->_model = new Filesystem(array('dir' => $this->_path));
         ServerSalt::setStore($this->_model);
 
         $_POST   = array();
@@ -30,7 +34,7 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
         Helper::createIniFile(CONF, $options);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         /* Tear Down Routine */
         unlink(CONF);
@@ -176,7 +180,7 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(Helper::getPasteId(), $response['id'], 'outputs data correctly');
         $this->assertStringEndsWith('?' . $response['id'], $response['url'], 'returned URL points to new paste');
         $this->assertEquals($paste['ct'], $response['ct'], 'outputs data correctly');
-        $this->assertEquals($paste['meta']['created'], $response['meta']['created'], 'outputs postdate correctly');
+        $this->assertFalse(array_key_exists('created', $paste['meta']), 'does not output created');
         $this->assertEquals(0, $response['comment_count'], 'outputs comment_count correctly');
         $this->assertEquals(0, $response['comment_offset'], 'outputs comment_offset correctly');
     }
@@ -186,18 +190,16 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
      */
     public function testJsonLdPaste()
     {
-        $paste = Helper::getPaste();
-        $this->_model->create(Helper::getPasteId(), $paste);
         $_GET['jsonld'] = 'paste';
         ob_start();
         new Controller;
         $content = ob_get_contents();
         ob_end_clean();
         $this->assertEquals(str_replace(
-                '?jsonld=',
-                '/?jsonld=',
-                file_get_contents(PUBLIC_PATH . '/js/paste.jsonld')
-            ), $content, 'outputs data correctly');
+            '?jsonld=',
+            '/?jsonld=',
+            file_get_contents(PUBLIC_PATH . '/js/paste.jsonld')
+        ), $content, 'outputs data correctly');
     }
 
     /**
@@ -205,18 +207,16 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
      */
     public function testJsonLdComment()
     {
-        $paste = Helper::getPaste();
-        $this->_model->create(Helper::getPasteId(), $paste);
         $_GET['jsonld'] = 'comment';
         ob_start();
         new Controller;
         $content = ob_get_contents();
         ob_end_clean();
         $this->assertEquals(str_replace(
-                '?jsonld=',
-                '/?jsonld=',
-                file_get_contents(PUBLIC_PATH . '/js/comment.jsonld')
-            ), $content, 'outputs data correctly');
+            '?jsonld=',
+            '/?jsonld=',
+            file_get_contents(PUBLIC_PATH . '/js/comment.jsonld')
+        ), $content, 'outputs data correctly');
     }
 
     /**
@@ -224,18 +224,16 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
      */
     public function testJsonLdPasteMeta()
     {
-        $paste = Helper::getPaste();
-        $this->_model->create(Helper::getPasteId(), $paste);
         $_GET['jsonld'] = 'pastemeta';
         ob_start();
         new Controller;
         $content = ob_get_contents();
         ob_end_clean();
         $this->assertEquals(str_replace(
-                '?jsonld=',
-                '/?jsonld=',
-                file_get_contents(PUBLIC_PATH . '/js/pastemeta.jsonld')
-            ), $content, 'outputs data correctly');
+            '?jsonld=',
+            '/?jsonld=',
+            file_get_contents(PUBLIC_PATH . '/js/pastemeta.jsonld')
+        ), $content, 'outputs data correctly');
     }
 
     /**
@@ -243,18 +241,33 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
      */
     public function testJsonLdCommentMeta()
     {
-        $paste = Helper::getPaste();
-        $this->_model->create(Helper::getPasteId(), $paste);
         $_GET['jsonld'] = 'commentmeta';
         ob_start();
         new Controller;
         $content = ob_get_contents();
         ob_end_clean();
         $this->assertEquals(str_replace(
-                '?jsonld=',
-                '/?jsonld=',
-                file_get_contents(PUBLIC_PATH . '/js/commentmeta.jsonld')
-            ), $content, 'outputs data correctly');
+            '?jsonld=',
+            '/?jsonld=',
+            file_get_contents(PUBLIC_PATH . '/js/commentmeta.jsonld')
+        ), $content, 'outputs data correctly');
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testJsonLdTypes()
+    {
+        $_GET['jsonld'] = 'types';
+        ob_start();
+        new Controller;
+        $content = ob_get_contents();
+        ob_end_clean();
+        $this->assertEquals(str_replace(
+            '?jsonld=',
+            '/?jsonld=',
+            file_get_contents(PUBLIC_PATH . '/js/types.jsonld')
+        ), $content, 'outputs data correctly');
     }
 
     /**
@@ -262,13 +275,65 @@ class JsonApiTest extends PHPUnit_Framework_TestCase
      */
     public function testJsonLdInvalid()
     {
-        $paste = Helper::getPaste();
-        $this->_model->create(Helper::getPasteId(), $paste);
         $_GET['jsonld'] = CONF;
         ob_start();
         new Controller;
         $content = ob_get_contents();
         ob_end_clean();
         $this->assertEquals('{}', $content, 'does not output nasty data');
+    }
+
+    /**
+     * @runInSeparateProcess
+     * @dataProvider baseUriProvider
+     */
+    public function testShortenViaYourls($baseUri)
+    {
+        $mock_yourls_service                = $this->_path . DIRECTORY_SEPARATOR . 'yourls.json';
+        $options                            = parse_ini_file(CONF, true);
+        $options['main']['basepath']        = 'https://example.com/path'; // missing slash gets added by Configuration constructor
+        $options['main']['urlshortener']    = 'https://example.com' . $baseUri . 'link=';
+        $options['yourls']['apiurl']        = $mock_yourls_service;
+        Helper::createIniFile(CONF, $options);
+
+        // the real service answer is more complex, but we only look for the shorturl & statusCode
+        file_put_contents($mock_yourls_service, '{"shorturl":"https:\/\/example.com\/1","statusCode":200}');
+
+        $_SERVER['REQUEST_URI'] = $baseUri . 'link=https%3A%2F%2Fexample.com%2Fpath%2F%3Ffoo%23bar';
+        $_GET['link']           = 'https://example.com/path/?foo#bar';
+        if (strpos($baseUri, '?shortenviayourls') !== false) {
+            $_GET['shortenviayourls'] = null;
+        }
+        ob_start();
+        new Controller;
+        $content = ob_get_contents();
+        ob_end_clean();
+        $this->assertStringContainsString('id="pasteurl" href="https://example.com/1"', $content, "'{$baseUri}' outputs shortened URL correctly");
+    }
+
+    public function baseUriProvider()
+    {
+        return array(
+            array('/path/shortenviayourls?'),
+            array('/path/index.php/shortenviayourls?'),
+            array('/path?shortenviayourls&'),
+        );
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testShortenViaYourlsFailure()
+    {
+        $options                            = parse_ini_file(CONF, true);
+        $options['main']['basepath']        = 'https://example.com/path'; // missing slash gets added by Configuration constructor
+        Helper::createIniFile(CONF, $options);
+        $_SERVER['REQUEST_URI'] = '/path/shortenviayourls?link=https%3A%2F%2Fexample.com%2Fpath%2F%3Ffoo%23bar';
+        $_GET['link']           = 'https://example.com/path/?foo#bar';
+        ob_start();
+        new Controller;
+        $content = ob_get_contents();
+        ob_end_clean();
+        $this->assertStringContainsString('Error calling YOURLS.', $content, 'outputs error correctly');
     }
 }

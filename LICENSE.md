@@ -1,7 +1,7 @@
 # License
 
 PrivateBin consists of PHP and JS code which was originally written by Sébastien
-Sauvage in 2012 and falls unter the Zlib/libpng license. Also included are
+Sauvage in 2012 and falls under the Zlib/libpng license. Also included are
 libraries that fall under the GPLv2 (rawinflate), BSD 3-clause (Showdown), MIT
 (base64.js version 1.7, Bootstrap, Identicon, random_compat, composer, kjua,
 base-x), Apache (prettify.js) and CC-BY (favicon, icon, logo) licenses. All of
@@ -342,16 +342,16 @@ any theory of liability, whether in contract, strict liability, or tort
 (including negligence or otherwise) arising in any way out of the use of this
 software, even if advised of the possibility of such damage.
 
-## MIT License for base64.js version 1.7, Bootstrap, Identicon, random_compat, Composer, kjua and base-x
+## MIT License for base64.js version 1.7, Bootstrap, Identicon, Composer, kjua and base-x
 
 Copyright © 2012 Dan Kogai
 Copyright © 2011-2016 Twitter, Inc.
 Copyright © 2013 Benjamin Laugueux <benjamin@yzalis.com>
-Copyright © 2015 Paragon Initiative Enterprises
 Copyright © 2016 Nils Adermann, Jordi Boggiano
 Copyright © 2016 Lars Jung (https://larsjung.de)
 Copyright © 2018 base-x contributors
 Copyright © 2014-2018 The Bitcoin Core developers
+Copyright © 2019-2024 The Bootstrap Authors
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

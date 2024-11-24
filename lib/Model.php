@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * PrivateBin
  *
@@ -7,7 +7,6 @@
  * @link      https://github.com/PrivateBin/PrivateBin
  * @copyright 2012 Sébastien SAUVAGE (sebsauvage.net)
  * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
- * @version   1.3.5
  */
 
 namespace PrivateBin;
@@ -81,10 +80,8 @@ class Model
     public function getStore()
     {
         if ($this->_store === null) {
-            $this->_store = forward_static_call(
-                'PrivateBin\\Data\\' . $this->_conf->getKey('class', 'model') . '::getInstance',
-                $this->_conf->getSection('model_options')
-            );
+            $class        = 'PrivateBin\\Data\\' . $this->_conf->getKey('class', 'model');
+            $this->_store = new $class($this->_conf->getSection('model_options'));
         }
         return $this->_store;
     }
