@@ -125,7 +125,7 @@ h3.title {
 
 #pasteresult button { margin-left: 11px; }
 
-#toolbar, #status { margin-bottom: 5px; }
+#message, #plaintext, #prettymessage, #toolbar, #status { margin-bottom: 5px; }
 
 #copyhint { color: #666; font-size: 0.85em }
 

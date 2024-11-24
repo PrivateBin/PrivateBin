@@ -440,10 +440,10 @@ endif;
 					</div>
 					<div id="plaintext" class="col-md-12 hidden"></div>
 					<p class="col-md-12"><textarea id="message" name="message" cols="80" rows="25" aria-label="<?php echo I18n::_('Paste text'); ?>" class="form-control hidden"></textarea></p>
-					<p class="col-md-12" id="message-controls">
-						<input id="message-tab" type="checkbox" class="form-check-input" checked="checked" />
-						<label for="message-tab" class="form-check-label">
-							<?php echo I18n::_('Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)'); ?>
+					<p class="col-md-12 form-check form-switch">
+						<input id="messagetab" type="checkbox" class="form-check-input" checked="checked" />
+						<label for="messagetab" class="form-check-label">
+							<?php echo I18n::_('Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)'), PHP_EOL; ?>
 						</label>
 					</p>
 				</article>

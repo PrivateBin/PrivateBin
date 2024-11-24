@@ -264,6 +264,10 @@ endif;
 				</div>
 				<div id="plaintext" class="hidden"></div>
 				<textarea id="message" name="message" cols="80" rows="25" class="hidden"></textarea>
+				<div class="button">
+					<input id="messagetab" type="checkbox" checked="checked" />
+					<label for="messagetab"><?php echo I18n::_('Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)'); ?></label>
+				</div>
 			</article>
 		</section>
 		<section>

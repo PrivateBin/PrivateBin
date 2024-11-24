@@ -127,12 +127,19 @@ class I18n
         } else {
             $args[0] = self::$_translations[$messageId];
         }
-        // encode any non-integer arguments and the message ID, if it doesn't contain a link
+        // encode any non-integer arguments and the message ID, if it doesn't contain a link or keyboard input
         $argsCount = count($args);
         for ($i = 0; $i < $argsCount; ++$i) {
-            if ($i > 0 ? !is_int($args[$i]) : strpos($args[0], '<a') === false) {
-                $args[$i] = self::encode($args[$i]);
+            if ($i === 0) {
+                if (strpos($args[0], '<a') !== false || strpos($args[0], '<kbd>') !== false) {
+                    continue;
+                }
+            } else {
+                if (is_int($args[$i])) {
+                    continue;
+                }
             }
+            $args[$i] = self::encode($args[$i]);
         }
         return call_user_func_array('sprintf', $args);
     }

@@ -18,6 +18,10 @@
 	--bs-dropdown-min-width: 23rem;
 }
 
+pre {
+	margin-bottom: 0;
+}
+
 [data-bs-theme=light] pre, [data-bs-theme=light] .card {
 	background-color: RGBA(var(--bs-light-rgb), var(--bs-bg-opacity, 1));
 }
