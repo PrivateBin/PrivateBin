@@ -125,7 +125,7 @@ endif;
 				<div id="toolbar">
 					<button id="newbutton" class="reloadlink hidden"><img src="img/icon_new.png" width="11" height="15" alt="" /><?php echo I18n::_('New'); ?></button>
 					<button id="retrybutton" class="reloadlink hidden"><?php echo I18n::_('Retry'), PHP_EOL; ?></button>
-					<button id="sendbutton" class="hidden"><img src="img/icon_send.png" width="18" height="15" alt="" /><?php echo I18n::_('Create'); ?></button>
+					<button id="sendbutton" tabindex="2" class="hidden"><img src="img/icon_send.png" width="18" height="15" alt="" /><?php echo I18n::_('Create'); ?></button>
 					<button id="clonebutton" class="hidden"><img src="img/icon_clone.png" width="15" height="17" alt="" /><?php echo I18n::_('Clone'); ?></button>
 					<button id="rawtextbutton" class="hidden"><img src="img/icon_raw.png" width="15" height="15" alt="" /><?php echo I18n::_('Raw text'); ?></button>
 					<button id="downloadtextbutton" class="hidden"><?php echo I18n::_('Save paste'), PHP_EOL; ?></button>
@@ -263,9 +263,9 @@ endif;
 					<pre id="prettyprint" class="prettyprint linenums:1"></pre>
 				</div>
 				<div id="plaintext" class="hidden"></div>
-				<textarea id="message" name="message" cols="80" rows="25" class="hidden"></textarea>
+				<textarea id="message" name="message" cols="80" rows="25" tabindex="1" class="hidden"></textarea>
 				<div class="button">
-					<input id="messagetab" type="checkbox" checked="checked" />
+					<input id="messagetab" type="checkbox" tabindex="3" checked="checked" />
 					<label for="messagetab"><?php echo I18n::_('Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)'); ?></label>
 				</div>
 			</article>
