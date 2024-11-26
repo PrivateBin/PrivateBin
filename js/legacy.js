@@ -174,18 +174,6 @@
             )) {
                 return true;
             }
-
-            // async & ES6 support
-            try {
-                async () => {};
-            } catch (e) {
-                if (e instanceof SyntaxError) {
-                    return true;
-                } else {
-                    throw e; // throws CSP error
-                }
-            }
-
             return false;
         }
 
