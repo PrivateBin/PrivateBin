@@ -2,6 +2,7 @@
 
 ## 1.7.6 (not yet released)
 * CHANGED: Switched to WASM streaming and replace unsafe-eval with wasm-unsafe-eval CSP declaration (#1464), requires webserver to have `application/wasm` MIME type configured.
+* CHANGED: Upgrading libraries to: cloud-storage 1.44.0, aws-sdk-php 3.331.0
 
 ## 1.7.5 (2024-11-16)
 * ADDED: Allow non persistent SQL connections, if configured (#1394)
