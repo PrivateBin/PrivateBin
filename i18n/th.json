@@ -215,10 +215,10 @@
     "Trying to shorten a URL that isn't pointing at our instance.": "กำลังพยายามใช้เครื่องมือสร้างลิงก์ย่อ ที่ไม่ได้ชี้ไปที่อินสแตนซ์ของเรา",
     "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "เกิดข้อผิดพลาดในการเรียก YOURLS อาจเป็นปัญหามาจากการกำหนดค่า เช่น \"apiurl\" หรือ \"signature\" ไม่ถูกต้องหรือขาดหายไป",
     "Error parsing YOURLS response.": "เกิดข้อผิดพลาดในการแยกวิเคราะห์การตอบสนองของ YOURLS",
-    "This secret message can only be displayed once. Would you like to see it now?": "This secret message can only be displayed once. Would you like to see it now?",
-    "Yes, see it": "Yes, see it",
-    "Dark Mode": "โหมดมืด",
-    "Error compressing paste, due to missing WebAssembly support.": "Error compressing paste, due to missing WebAssembly support.",
-    "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.": "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.",
-    "Start over": "Start over"
+    "This secret message can only be displayed once. Would you like to see it now?": "ข้อความลับนี้จะแสดงได้เพียงครั้งเดียวเท่านั้น คุณต้องการดูข้อความนี้ตอนนี้เลยใช่หรือไม่",
+    "Yes, see it": "ใช่ ดูเลย",
+    "Dark Mode": "โหมดสีเข้ม",
+    "Error compressing paste, due to missing WebAssembly support.": "ไม่สามารถบีบอัดข้อมูลที่คุณต้องการฝากโค้ดได้ เนื่องจากอุปกรณ์ของคุณขาดการรองรับ WebAssembly",
+    "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.": "ไม่สามารถอ่านข้อมูลที่คุณได้ฝากโค้ดไว้ เบราว์เซอร์ของคุณไม่รองรับ WebAssembly กรุณาลองเปลี่ยนใช้เบราว์เซอร์ตัวอื่นเพื่อดูการฝากโค้ดนี้อีกครั้ง",
+    "Start over": "เริ่มใหม่"
 }
