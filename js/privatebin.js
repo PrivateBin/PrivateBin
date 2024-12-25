@@ -2309,10 +2309,10 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             // show new bootstrap method (if available)
             if ($passwordModal.length !== 0) {
                 if (typeof bootstrap !== 'undefined' && bootstrap.Tooltip.VERSION) {
-                    (new bootstrap.Modal($passwordModal[0]), {
+                    (new bootstrap.Modal($passwordModal[0], {
                         backdrop: 'static',
                         keyboard: false
-                    }).show();
+                    })).show();
                 } else {
                     $passwordModal.modal({
                         backdrop: 'static',
