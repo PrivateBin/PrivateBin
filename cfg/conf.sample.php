@@ -101,11 +101,9 @@ languageselection = false
 ;   they are embedded in pastes. If you wish to allow that, you can adjust the
 ;   policy here. See https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-it-load-embedded-images
 ;   for details.
-; - The 'unsafe-eval' is used in two cases; to check if the browser supports
-;   async functions and display an error if not and for Chrome to enable
-;   webassembly support (used for zlib compression). You can remove it if Chrome
-;   doesn't need to be supported and old browsers don't need to be warned.
-; cspheader = "default-src 'none'; base-uri 'self'; form-action 'none'; manifest-src 'self'; connect-src * blob:; script-src 'self' 'unsafe-eval'; style-src 'self'; font-src 'self'; frame-ancestors 'none'; img-src 'self' data: blob:; media-src blob:; object-src blob:; sandbox allow-same-origin allow-scripts allow-forms allow-popups allow-modals allow-downloads"
+; - The 'wasm-unsafe-eval' is used to enable webassembly support (used for zlib
+;   compression). You can remove it if compression doesn't need to be supported.
+; cspheader = "default-src 'none'; base-uri 'self'; form-action 'none'; manifest-src 'self'; connect-src * blob:; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'; font-src 'self'; frame-ancestors 'none'; img-src 'self' data: blob:; media-src blob:; object-src blob:; sandbox allow-same-origin allow-scripts allow-forms allow-popups allow-modals allow-downloads"
 
 ; stay compatible with PrivateBin Alpha 0.19, less secure
 ; if enabled will use base64.js version 1.7 instead of 2.1.9 and sha1 instead of
