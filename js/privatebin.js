@@ -2237,8 +2237,8 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         const me = {};
 
         let $passwordDecrypt,
-            $passwordForm,
             $passwordModal,
+            bootstrap5PasswordModal = null,
             password = '';
 
         /**
@@ -2257,8 +2257,8 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             password = $passwordDecrypt.val();
 
             // hide modal
-            if (typeof bootstrap !== 'undefined' && bootstrap.Tooltip.VERSION) {
-                (new bootstrap.Modal($passwordModal[0])).hide();
+            if (bootstrap5PasswordModal) {
+                bootstrap5PasswordModal.hide();
             } else {
                 $passwordModal.modal('hide');
             }
@@ -2308,24 +2308,11 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         {
             // show new bootstrap method (if available)
             if ($passwordModal.length !== 0) {
-                if (typeof bootstrap !== 'undefined' && bootstrap.Tooltip.VERSION) {
-                    (new bootstrap.Modal($passwordModal[0], {
-                        backdrop: 'static',
-                        keyboard: false
-                    })).show();
+                if (bootstrap5PasswordModal) {
+                    bootstrap5PasswordModal.show();
                 } else {
-                    $passwordModal.modal({
-                        backdrop: 'static',
-                        keyboard: false
-                    });
                     $passwordModal.modal('show');
                 }
-                // focus password input
-                $passwordDecrypt.focus();
-                // then re-focus it, when modal causes it to loose focus again
-                setTimeout(function () {
-                    $passwordDecrypt.focus();
-                }, 500);
                 return;
             }
 
@@ -2369,7 +2356,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
             // and also reset UI
             $passwordDecrypt.val('');
-        }
+        };
 
         /**
          * init status manager
@@ -2382,11 +2369,26 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         me.init = function()
         {
             $passwordDecrypt = $('#passworddecrypt');
-            $passwordForm = $('#passwordform');
             $passwordModal = $('#passwordmodal');
 
             // bind events - handle Model password submission
-            $passwordForm.submit(submitPasswordModal);
+            if ($passwordModal.length !== 0) {
+                $('#passwordform').submit(submitPasswordModal);
+
+                const disableClosingConfig = {
+                    backdrop: 'static',
+                    keyboard: false,
+                    show: false
+                };
+                if (typeof bootstrap !== 'undefined' && bootstrap.Tooltip.VERSION) {
+                    bootstrap5PasswordModal = new bootstrap.Modal($passwordModal[0], disableClosingConfig);
+                } else {
+                    $passwordModal.modal(disableClosingConfig);
+                }
+                $passwordModal.on('shown.bs.modal', () => {
+                    $passwordDecrypt.focus();
+                });
+            }
         };
 
         return me;
@@ -3985,10 +3987,6 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 text: window.location.href
             });
             $('#qrcode-display').html(qrCanvas);
-            // only necessary for bootstrap 5, other templates won't have this
-            if (typeof bootstrap !== 'undefined' && bootstrap.Tooltip.VERSION) {
-                (new bootstrap.Modal('#qrcodemodal')).show();
-            }
         }
 
         /**
@@ -4077,32 +4075,34 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 if (expirationDate !== null) {
                     const $emailconfirmTimezoneCurrent = $emailconfirmmodal.find('#emailconfirm-timezone-current');
                     const $emailconfirmTimezoneUtc = $emailconfirmmodal.find('#emailconfirm-timezone-utc');
-                    $emailconfirmTimezoneCurrent.off('click.sendEmailCurrentTimezone');
-                    $emailconfirmTimezoneCurrent.on('click.sendEmailCurrentTimezone', () => {
-                        const emailBody = templateEmailBody(expirationDateRoundedToSecond.toLocaleString(), isBurnafterreading);
-                        if (typeof bootstrap !== 'undefined' && bootstrap.Tooltip.VERSION) {
-                            (new bootstrap.Modal($emailconfirmmodal[0])).hide();
+                    let localeConfiguration = { dateStyle: 'long', timeStyle: 'long' };
+                    const bootstrap5EmailConfirmModal = typeof bootstrap !== 'undefined' && bootstrap.Tooltip.VERSION ?
+                        new bootstrap.Modal($emailconfirmmodal[0]) : null;
+
+                    function sendEmailAndHideModal() {
+                        const emailBody = templateEmailBody(
+                            // we don't use Date.prototype.toUTCString() because we would like to avoid GMT
+                            expirationDateRoundedToSecond.toLocaleString(
+                                [], localeConfiguration
+                            ), isBurnafterreading
+                        );
+                        if (bootstrap5EmailConfirmModal) {
+                            bootstrap5EmailConfirmModal.hide();
                         } else {
                             $emailconfirmmodal.modal('hide');
                         }
                         triggerEmailSend(emailBody);
-                    });
+                    };
+
+                    $emailconfirmTimezoneCurrent.off('click.sendEmailCurrentTimezone');
+                    $emailconfirmTimezoneCurrent.on('click.sendEmailCurrentTimezone', sendEmailAndHideModal);
                     $emailconfirmTimezoneUtc.off('click.sendEmailUtcTimezone');
                     $emailconfirmTimezoneUtc.on('click.sendEmailUtcTimezone', () => {
-                        const emailBody = templateEmailBody(expirationDateRoundedToSecond.toLocaleString(
-                            undefined,
-                            // we don't use Date.prototype.toUTCString() because we would like to avoid GMT
-                            { timeZone: 'UTC', dateStyle: 'long', timeStyle: 'long' }
-                        ), isBurnafterreading);
-                        if (typeof bootstrap !== 'undefined' && bootstrap.Tooltip.VERSION) {
-                            (new bootstrap.Modal($emailconfirmmodal[0])).hide();
-                        } else {
-                            $emailconfirmmodal.modal('hide');
-                        }
-                        triggerEmailSend(emailBody);
+                        localeConfiguration.timeZone = 'UTC';
+                        sendEmailAndHideModal();
                     });
-                    if (typeof bootstrap !== 'undefined' && bootstrap.Tooltip.VERSION) {
-                        (new bootstrap.Modal($emailconfirmmodal[0])).show();
+                    if (bootstrap5EmailConfirmModal) {
+                        bootstrap5EmailConfirmModal.show();
                     } else {
                         $emailconfirmmodal.modal('show');
                     }

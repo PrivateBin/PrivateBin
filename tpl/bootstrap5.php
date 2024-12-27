@@ -193,7 +193,7 @@ if ($EMAIL) :
 endif;
 if ($QRCODE) :
 ?>
-							<button id="qrcodelink" type="button" data-toggle="modal" data-target="#qrcodemodal" class="hidden btn btn-secondary flex-fill">
+							<button id="qrcodelink" type="button" data-bs-toggle="modal" data-bs-target="#qrcodemodal" class="hidden btn btn-secondary flex-fill">
 								<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#qr-code" /></svg> <?php echo I18n::_('QR code'), PHP_EOL; ?>
 							</button>
 <?php
