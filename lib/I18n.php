@@ -134,10 +134,8 @@ class I18n
                 if (strpos($args[0], '<a') !== false || strpos($args[0], '<kbd>') !== false) {
                     continue;
                 }
-            } else {
-                if (is_int($args[$i])) {
-                    continue;
-                }
+            } elseif (is_int($args[$i])) {
+                continue;
             }
             $args[$i] = self::encode($args[$i]);
         }
