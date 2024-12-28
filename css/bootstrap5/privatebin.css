@@ -84,3 +84,38 @@ li.L0, li.L1, li.L2, li.L3, li.L4, li.L5, li.L6, li.L7, li.L8, li.L9 {
 html[dir="rtl"] #deletelink, html[dir="rtl"] #qrcodemodalClose {
 	float: left;
 }
+
+#prettyprint {
+	padding-right: 30px;
+}
+
+#prettymessageCopyBtn {
+	position: absolute;
+	top: 5px;
+	right: 5px;
+	width: 25px;
+	height: 25px;
+	padding: 0;
+	background: none;
+	border: none;
+	z-index: 1;
+}
+
+#prettymessageCopyBtn svg {
+	width: 100%;
+}
+
+#copyIcon {
+	fill: rgb(145, 152, 161);
+	opacity: 0.4;
+	transition: all 0.3s ease;
+}
+
+#copyIcon:hover {
+	opacity: 1;
+}
+
+#copySuccessIcon {
+	fill: rgb(63, 185, 80);
+	display: none;
+}

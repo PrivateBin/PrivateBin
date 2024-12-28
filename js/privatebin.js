@@ -4901,6 +4901,8 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
             TopNav.showViewButtons();
 
+            CopyToClipboard.showKeyboardShortcutHint();
+
             // this cannot be grouped with showViewButtons due to remaining time calculation
             TopNav.showEmailButton();
 
@@ -5337,6 +5339,8 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             // shows the remaining time (until) deletion
             PasteStatus.showRemainingTime(paste);
 
+            CopyToClipboard.showKeyboardShortcutHint();
+
             Promise.all(decryptionPromises)
                 .then(() => {
                     Alert.hideLoading();
@@ -5362,6 +5366,138 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                     Alert.showError(err);
                 });
         };
+
+        return me;
+    })();
+
+    /**
+     * 
+     * @name CopyToClipboard
+     * @class
+     */
+    const CopyToClipboard = (function () {
+        const me = {};
+
+        let copyButton = $("#prettymessageCopyBtn"),
+            copyIcon = $("#copyIcon"),
+            successIcon = $("#copySuccessIcon"),
+            shortcutHint = $("#copyShortcutHintText");
+
+        /**
+         * Handle copy to clipboard button click
+         * 
+         * @name CopyToClipboard.handleCopyButtonClick
+         * @private
+         * @function
+         */
+        function handleCopyButtonClick() {
+            $(copyButton).click(function() {
+                const text = PasteViewer.getText();
+                saveToClipboard(text);
+            });
+        };
+
+        /**
+         * Handle CTRL+C/CMD+C keyboard shortcut
+         * 
+         * @name CopyToClipboard.handleKeyboardShortcut
+         * @private
+         * @function
+         */
+        function handleKeyboardShortcut() {
+            $(document).bind('copy', function () {
+                if (!isUserSelectedTextToCopy()) {
+                    const text = PasteViewer.getText();
+                    saveToClipboard(text);
+                }
+            });
+        }
+
+        /**
+         * Check if user selected some text on the page to copy it
+         * 
+         * @name CopyToClipboard.isUserSelectedTextToCopy
+         * @private
+         * @function
+         * @returns {boolean}
+         */
+        function isUserSelectedTextToCopy() {
+            let text = "";
+        
+            if (window.getSelection) {
+                text = window.getSelection().toString();
+            } else if (document.selection && document.selection.type != "Control") {
+                text = document.selection.createRange().text;
+            }
+        
+            return text.length > 0;
+        }
+
+        /**
+         * Save text to the clipboard
+         * 
+         * @name CopyToClipboard.saveToClipboard
+         * @private
+         * @param {string} text
+         * @function
+         */
+        function saveToClipboard(text) {
+            navigator.clipboard.writeText(text);
+            toggleSuccessIcon();
+            showAlertMessage();
+        };
+
+        /**
+         * Show alert message after text copy
+         * 
+         * @name CopyToClipboard.showAlertMessage
+         * @private
+         * @function
+         */
+        function showAlertMessage() {
+            Alert.showStatus("Paste copied to clipboard");
+        }
+
+        /**
+         * Toogle success icon after copy
+         * 
+         * @name CopyToClipboard.toggleSuccessIcon
+         * @private
+         * @function
+         */
+        function toggleSuccessIcon() {
+            $(copyIcon).css("display", "none");
+            $(successIcon).css("display", "block");
+
+            setTimeout(function() {
+                $(copyIcon).css("display", "block");
+                $(successIcon).css("display", "none");
+            }, 1000);
+        };
+
+        /**
+         * Show keyboard shortcut hint
+         * 
+         * @name CopyToClipboard.showKeyboardShortcutHint
+         * @function
+         */
+        me.showKeyboardShortcutHint = function () {
+            I18n._(
+                shortcutHint,
+                'To copy paste press on the copy button or use the clipboard shortcut Ctrl+c/Cmd+c'
+            );
+        }
+
+        /**
+         * Initialize
+         * 
+         * @name CopyToClipboard.init
+         * @function
+         */
+        me.init = function() {
+            handleCopyButtonClick();
+            handleKeyboardShortcut();
+        }
 
         return me;
     })();
@@ -5612,6 +5748,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             Prompt.init();
             TopNav.init();
             UiHelper.init();
+            CopyToClipboard.init();
 
             // check for legacy browsers before going any further
             if (!Legacy.Check.getInit()) {
@@ -5668,6 +5805,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         ServerInteraction: ServerInteraction,
         PasteEncrypter: PasteEncrypter,
         PasteDecrypter: PasteDecrypter,
+        CopyToClipboard: CopyToClipboard,
         Controller: Controller
     };
 })(jQuery, RawDeflate);
