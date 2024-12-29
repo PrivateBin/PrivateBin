@@ -116,7 +116,7 @@ class Helper
      *
      * @return string
      */
-    public static function getPasteId()
+    public static function getPasteId(): string
     {
         return self::$pasteid;
     }
@@ -128,7 +128,7 @@ class Helper
      * @param  array $meta
      * @return array
      */
-    public static function getPaste($version = 2, array $meta = array())
+    public static function getPaste($version = 2, array $meta = array()): array
     {
         $example = self::getPasteWithAttachment($version, $meta);
         // v1 has the attachment stored in a separate property
@@ -145,7 +145,7 @@ class Helper
      * @param  array $meta
      * @return array
      */
-    public static function getPasteWithAttachment($version = 2, array $meta = array())
+    public static function getPasteWithAttachment($version = 2, array $meta = array()): array
     {
         $example                 = $version === 1 ? self::$pasteV1 : self::$pasteV2;
         $example['meta']['salt'] = ServerSalt::generate();
@@ -160,7 +160,7 @@ class Helper
      * @param  array $meta
      * @return array
      */
-    public static function getPastePost($version = 2, array $meta = array())
+    public static function getPastePost($version = 2, array $meta = array()): array
     {
         $example         = self::getPaste($version, $meta);
         if ($version == 2) {
@@ -176,9 +176,9 @@ class Helper
      *
      * @param  int $version
      * @param  array $meta
-     * @return array
+     * @return string
      */
-    public static function getPasteJson($version = 2, array $meta = array())
+    public static function getPasteJson($version = 2, array $meta = array()): string
     {
         return json_encode(self::getPastePost($version, $meta));
     }
@@ -188,7 +188,7 @@ class Helper
      *
      * @return string
      */
-    public static function getCommentId()
+    public static function getCommentId(): string
     {
         return self::$commentid;
     }
@@ -200,7 +200,7 @@ class Helper
      * @param  array $meta
      * @return array
      */
-    public static function getComment($version = 2, array $meta = array())
+    public static function getComment($version = 2, array $meta = array()): array
     {
         $example         = $version === 1 ? self::$commentV1 : self::$pasteV2;
         if ($version === 2) {
@@ -220,7 +220,7 @@ class Helper
      * @param  int $version
      * @return array
      */
-    public static function getCommentPost()
+    public static function getCommentPost(): array
     {
         $example = self::getComment();
         unset($example['meta']);
@@ -231,11 +231,22 @@ class Helper
      * get example comment, as received via POST by user
      *
      * @param  int $version
-     * @return array
+     * @return string
      */
-    public static function getCommentJson()
+    public static function getCommentJson(): string
     {
         return json_encode(self::getCommentPost());
+    }
+
+    /**
+     * Returns 16 random hexadecimal characters.
+     *
+     * @return string
+     */
+    public static function getRandomId(): string
+    {
+        // 8 binary bytes are 16 characters long in hex
+        return bin2hex(random_bytes(8));
     }
 
     /**
@@ -243,8 +254,9 @@ class Helper
      *
      * @param string $path
      * @throws Exception
+     * @return void
      */
-    public static function rmDir($path)
+    public static function rmDir($path): void
     {
         if (is_dir($path)) {
             $path .= DIRECTORY_SEPARATOR;
@@ -272,7 +284,7 @@ class Helper
      *
      * @return void
      */
-    public static function confBackup()
+    public static function confBackup(): void
     {
         if (!is_file(CONF . '.bak') && is_file(CONF)) {
             rename(CONF, CONF . '.bak');
@@ -287,7 +299,7 @@ class Helper
      *
      * @return void
      */
-    public static function confRestore()
+    public static function confRestore(): void
     {
         if (is_file(CONF . '.bak')) {
             rename(CONF . '.bak', CONF);
@@ -303,7 +315,7 @@ class Helper
      * @param string $pathToFile
      * @param array $values
      */
-    public static function createIniFile($pathToFile, array $values)
+    public static function createIniFile($pathToFile, array $values): void
     {
         if (count($values)) {
             @unlink($pathToFile);
@@ -346,7 +358,7 @@ class Helper
      * @param bool $return
      * @return void|string
      */
-    public static function varExportMin($var, $return = false)
+    public static function varExportMin($var, $return = false): string
     {
         if (is_array($var)) {
             $toImplode = array();
@@ -369,7 +381,7 @@ class Helper
      *
      * @return void
      */
-    public static function updateSubresourceIntegrity()
+    public static function updateSubresourceIntegrity(): void
     {
         foreach (new GlobIterator(PATH . 'js' . DIRECTORY_SEPARATOR . '*.js') as $file) {
             if ($file->getBasename() == 'common.js') {

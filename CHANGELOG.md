@@ -1,10 +1,17 @@
 # PrivateBin version history
 
-## 1.7.5 (not yet released)
+## 1.7.6 (not yet released)
+* CHANGED: Switched to WASM streaming and replace unsafe-eval with wasm-unsafe-eval CSP declaration (#1464), requires webserver to have `application/wasm` MIME type configured.
+* CHANGED: Upgrading libraries to: cloud-storage 1.44.0, aws-sdk-php 3.331.0
+
+## 1.7.5 (2024-11-16)
 * ADDED: Allow non persistent SQL connections, if configured (#1394)
+* ADDED: Show a button (that redirects to the `basepath` URL) inside the alert after a paste is deleted
+* CHANGED: Tweaked page footer of the `bootstrap5` template (#1392)
 * CHANGED: Simpler PostgreSQL table lookup query (#1361)
 * CHANGED: SRI hashes are now configurable, no longer hardcoded in templates (#1365)
-* CHANGED: Upgrading libraries to: DOMpurify 3.1.6
+* CHANGED: Upgrading libraries to: DOMpurify 3.1.7, ip-lib 1.18.1, cloud-storage 1.43.0, aws-sdk-php 3.325.0
+* FIXED: Numeric array keys being cast to integer causing failures under strict type checking (#1435)
 
 ## 1.7.4 (2024-07-09)
 * CHANGED: Saving markdown pastes uses `.md` extension instead of `.txt` (#1293)

@@ -1,6 +1,6 @@
 {
   "name": "privatebin",
-  "version": "1.7.4",
+  "version": "1.7.5",
   "description": "PrivateBin is a minimalist, open source online pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted in the browser using 256 bit AES in Galois Counter mode (GCM).",
   "main": "privatebin.js",
   "directories": {

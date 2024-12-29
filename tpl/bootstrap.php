@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 use PrivateBin\I18n;
 $isCpct = substr($template, 9, 8) === '-compact';
 $isDark = substr($template, 9, 5) === '-dark';
@@ -42,7 +42,7 @@ if ($SYNTAXHIGHLIGHTING) :
 endif;
 ?>
 		<noscript><link type="text/css" rel="stylesheet" href="css/noscript.css" /></noscript>
-		<?php $this->_scriptTag('js/jquery-3.7.1.js', 'async'); ?>
+		<?php $this->_scriptTag('js/jquery-3.7.1.js', 'defer'); ?>
 <?php
 if ($QRCODE) :
 ?>
@@ -56,8 +56,8 @@ if ($ZEROBINCOMPATIBILITY) :
 endif;
 ?>
 		<?php $this->_scriptTag('js/zlib-1.3.1.js', 'async'); ?>
-		<?php $this->_scriptTag('js/base-x-4.0.0.js', 'async'); ?>
-		<?php $this->_scriptTag('js/rawinflate-0.3.js', 'async'); ?>
+		<?php $this->_scriptTag('js/base-x-4.0.0.js', 'defer'); ?>
+		<?php $this->_scriptTag('js/rawinflate-0.3.js', 'defer'); ?>
 		<?php $this->_scriptTag('js/bootstrap-3.4.1.js', 'defer'); ?>
 <?php
 if ($SYNTAXHIGHLIGHTING) :
@@ -71,7 +71,7 @@ if ($MARKDOWN) :
 <?php
 endif;
 ?>
-		<?php $this->_scriptTag('js/purify-3.1.6.js', 'async'); ?>
+		<?php $this->_scriptTag('js/purify-3.1.7.js', 'async'); ?>
 		<?php $this->_scriptTag('js/legacy.js', 'async'); ?>
 		<?php $this->_scriptTag('js/privatebin.js', 'defer'); ?>
 		<!-- icon -->
@@ -490,9 +490,16 @@ if ($FILEUPLOAD) :
 <?php
 endif;
 ?>
-				<div id="status" role="alert" class="alert alert-info<?php echo empty($STATUS) ? ' hidden' : '' ?>">
+				<div id="status" role="alert" class="clearfix alert alert-<?php echo (bool)$ISDELETED ? 'success' : 'info'; echo empty($STATUS) ? ' hidden' : '' ?>">
 					<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
 					<?php echo I18n::encode($STATUS), PHP_EOL; ?>
+					<?php
+						if ((bool)$ISDELETED):
+					?>
+						<button type="button" class="btn btn-default pull-right" id="new-from-alert">
+							<span class="glyphicon glyphicon-repeat"></span> <?php echo I18n::_('Start over'), PHP_EOL; ?>
+						</button>
+					<?php endif; ?>
 				</div>
 				<div id="errormessage" role="alert" class="<?php echo empty($ERROR) ? 'hidden' : '' ?> alert alert-danger">
 					<span class="glyphicon glyphicon-alert" aria-hidden="true"></span>

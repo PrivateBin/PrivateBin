@@ -506,8 +506,8 @@ class Database extends AbstractData
     private function _exec($sql, array $params)
     {
         $statement = $this->_db->prepare($sql);
-        foreach ($params as $key => &$parameter) {
-            $position = $key + 1;
+        $position  = 1;
+        foreach ($params as &$parameter) {
             if (is_int($parameter)) {
                 $statement->bindParam($position, $parameter, PDO::PARAM_INT);
             } elseif (is_string($parameter) && strlen($parameter) >= 4000) {
@@ -515,6 +515,7 @@ class Database extends AbstractData
             } else {
                 $statement->bindParam($position, $parameter);
             }
+            ++$position;
         }
         $result = $statement->execute();
         $statement->closeCursor();

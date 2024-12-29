@@ -69,45 +69,8 @@ body.loading {
 	margin-right: 8px;
 }
 
-#qrcodemodalClose {
-	float: right;
-}
-
-#qrcode-display {
-	width: 200px;
-	height: 200px;
-	margin: auto;
-}
-
-#pastelink {
-	display: inline;
-}
-
-#pastelink > a {
-	word-wrap: break-word;
-}
-
-#preview {
-	margin-bottom: 10px;
-}
-
-#message, .replymessage {
-	font-family: monospace;
-	resize: vertical;
-}
-
-#nickname {
-	margin: 5px 0;
-}
-
-#comments, #comments button {
-	margin-bottom: 10px;
-}
-
 .comment {
-	border-left: 1px solid #ccc;
 	padding: 5px 0 5px 10px;
-	transition: background-color 0.75s ease-out;
 }
 
 footer h4 {

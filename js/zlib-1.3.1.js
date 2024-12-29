@@ -1,6 +1,6 @@
 'use strict';
 
-(function() {
+(function () {
     let ret;
 
     async function initialize() {
@@ -23,16 +23,7 @@
             _abort: errno => { console.error(`Error: ${errno}`) },
             _grow: () => { },
         };
-
-        let buff;
-        if (typeof fs === 'object') {
-            buff = fs.readFileSync('zlib-1.3.1.wasm');
-        } else {
-            const resp = await fetch('js/zlib-1.3.1.wasm');
-            buff = await resp.arrayBuffer();
-        }
-        const module = await WebAssembly.compile(buff);
-        const ins = await WebAssembly.instantiate(module, { env });
+        const ins = (await WebAssembly.instantiateStreaming(fetch('js/zlib-1.3.1.wasm'), { env })).instance;
 
         const srcPtr = ins.exports._malloc(CHUNK_SIZE);
         const dstPtr = ins.exports._malloc(CHUNK_SIZE);
@@ -116,28 +107,28 @@
         }
 
         ret = {
-                inflate(rawDeflateBuffer) {
-                    const rawInf = new RawInf();
-                    for (let offset = 0; offset < rawDeflateBuffer.length; offset += CHUNK_SIZE) {
-                        const end = Math.min(offset + CHUNK_SIZE, rawDeflateBuffer.length);
-                        const chunk = rawDeflateBuffer.subarray(offset, end);
-                        rawInf.inflate(chunk);
-                    }
-                    const ret = rawInf.getBuffer();
-                    rawInf.destroy();
-                    return ret;
-                },
-                deflate(rawInflateBuffer) {
-                    const rawDef = new RawDef();
-                    for (let offset = 0; offset < rawInflateBuffer.length; offset += CHUNK_SIZE) {
-                        const end = Math.min(offset + CHUNK_SIZE, rawInflateBuffer.length);
-                        const chunk = rawInflateBuffer.subarray(offset, end);
-                        rawDef.deflate(chunk, rawInflateBuffer.length <= offset + CHUNK_SIZE);
-                    }
-                    const ret = rawDef.getBuffer();
-                    rawDef.destroy();
-                    return ret;
-                },
+            inflate(rawDeflateBuffer) {
+                const rawInf = new RawInf();
+                for (let offset = 0; offset < rawDeflateBuffer.length; offset += CHUNK_SIZE) {
+                    const end = Math.min(offset + CHUNK_SIZE, rawDeflateBuffer.length);
+                    const chunk = rawDeflateBuffer.subarray(offset, end);
+                    rawInf.inflate(chunk);
+                }
+                const ret = rawInf.getBuffer();
+                rawInf.destroy();
+                return ret;
+            },
+            deflate(rawInflateBuffer) {
+                const rawDef = new RawDef();
+                for (let offset = 0; offset < rawInflateBuffer.length; offset += CHUNK_SIZE) {
+                    const end = Math.min(offset + CHUNK_SIZE, rawInflateBuffer.length);
+                    const chunk = rawInflateBuffer.subarray(offset, end);
+                    rawDef.deflate(chunk, rawInflateBuffer.length <= offset + CHUNK_SIZE);
+                }
+                const ret = rawDef.getBuffer();
+                rawDef.destroy();
+                return ret;
+            },
         }
 
         return ret;

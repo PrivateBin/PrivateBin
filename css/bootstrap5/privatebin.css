@@ -14,51 +14,6 @@
 	display: none !important;
 }
 
-#qrcodemodalClose {
-	float: right;
-}
-
-#qrcode-display {
-	width: 200px;
-	height: 200px;
-	margin: auto;
-}
-
-#pastelink {
-	display: inline;
-}
-
-#pastelink > a {
-	word-wrap: break-word;
-}
-
-#preview {
-	margin-bottom: 10px;
-}
-
-#message {
-	height: 70vh;
-}
-
-#message, .replymessage {
-	font-family: monospace;
-	resize: vertical;
-}
-
-#nickname {
-	margin: 5px 0;
-}
-
-#comments, #comments button {
-	margin-bottom: 10px;
-}
-
-.comment {
-	border-left: 1px solid #ccc;
-	padding: 5px 0 5px 10px;
-	transition: background-color 0.75s ease-out;
-}
-
 .dropdown-menu {
 	--bs-dropdown-min-width: 23rem;
 }
