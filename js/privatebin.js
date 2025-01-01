@@ -757,14 +757,14 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 args[0] = translations[messageId];
             }
 
-            // messageID may contain links, but should be from a trusted source (code or translation JSON files)
-            let containsLinks = args[0].indexOf('<a') !== -1;
+            // messageID may contain HTML, but should be from a trusted source (code or translation JSON files)
+            let containsHtml = isStringContainsHtml(args[0]);
 
             // prevent double encoding, when we insert into a text node
-            if (containsLinks || $element === null) {
+            if (containsHtml || $element === null) {
                 for (let i = 0; i < args.length; ++i) {
                     // parameters (i > 0) may never contain HTML as they may come from untrusted parties
-                    if ((containsLinks ? i > 1 : i > 0) || !containsLinks) {
+                    if ((containsHtml ? i > 1 : i > 0) || !containsHtml) {
                         args[i] = Helper.htmlEntities(args[i]);
                     }
                 }
@@ -772,11 +772,11 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             // format string
             let output = Helper.sprintf.apply(this, args);
 
-            if (containsLinks) {
+            if (containsHtml) {
                 // only allow tags/attributes we actually use in translations
                 output = DOMPurify.sanitize(
                     output, {
-                        ALLOWED_TAGS: ['a', 'i', 'span'],
+                        ALLOWED_TAGS: ['a', 'i', 'span', 'kbd'],
                         ALLOWED_ATTR: ['href', 'id']
                     }
                 );
@@ -784,7 +784,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
             // if $element is given, insert translation
             if ($element !== null) {
-                if (containsLinks) {
+                if (containsHtml) {
                     $element.html(output);
                 } else {
                     // text node takes care of entity encoding
@@ -913,6 +913,25 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             language = mockLanguage || null;
             translations = mockTranslations || {};
         };
+
+        /**
+         * Check if string contains valid HTML code
+         *
+         * @name I18n.isStringContainsHtml
+         * @function
+         * @private
+         * @param {string} messageId
+         * @returns {boolean}
+         */
+        function isStringContainsHtml(messageId) {
+            // An integer which specifies the type of the node. An Element node like <p> or <div>.
+            const elementNodeType = 1;
+
+            const div = document.createElement('div');
+            div.innerHTML = messageId;
+
+            return Array.from(div.childNodes).some(node => node.nodeType === elementNodeType);
+        }
 
         return me;
     })();
@@ -3768,7 +3787,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
         /**
          * Clear the password input in the top navigation
-         * 
+         *
          * @name TopNav.clearPasswordInput
          * @function
          */
@@ -5371,21 +5390,21 @@ jQuery.PrivateBin = (function($, RawDeflate) {
     })();
 
     /**
-     * 
+     *
      * @name CopyToClipboard
      * @class
      */
     const CopyToClipboard = (function () {
         const me = {};
 
-        let copyButton = $("#prettymessageCopyBtn"),
-            copyIcon = $("#copyIcon"),
-            successIcon = $("#copySuccessIcon"),
-            shortcutHint = $("#copyShortcutHintText");
+        let copyButton = $('#prettyMessageCopyBtn'),
+            copyIcon = $('#copyIcon'),
+            successIcon = $('#copySuccessIcon'),
+            shortcutHint = $('#copyShortcutHintText');
 
         /**
          * Handle copy to clipboard button click
-         * 
+         *
          * @name CopyToClipboard.handleCopyButtonClick
          * @private
          * @function
@@ -5399,7 +5418,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
         /**
          * Handle CTRL+C/CMD+C keyboard shortcut
-         * 
+         *
          * @name CopyToClipboard.handleKeyboardShortcut
          * @private
          * @function
@@ -5411,31 +5430,31 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                     saveToClipboard(text);
                 }
             });
-        }
+        };
 
         /**
          * Check if user selected some text on the page to copy it
-         * 
+         *
          * @name CopyToClipboard.isUserSelectedTextToCopy
          * @private
          * @function
          * @returns {boolean}
          */
         function isUserSelectedTextToCopy() {
-            let text = "";
-        
+            let text = '';
+
             if (window.getSelection) {
                 text = window.getSelection().toString();
-            } else if (document.selection && document.selection.type != "Control") {
+            } else if (document.selection && document.selection.type != 'Control') {
                 text = document.selection.createRange().text;
             }
-        
+
             return text.length > 0;
-        }
+        };
 
         /**
          * Save text to the clipboard
-         * 
+         *
          * @name CopyToClipboard.saveToClipboard
          * @private
          * @param {string} text
@@ -5449,55 +5468,65 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
         /**
          * Show alert message after text copy
-         * 
+         *
          * @name CopyToClipboard.showAlertMessage
          * @private
          * @function
          */
         function showAlertMessage() {
-            Alert.showStatus("Paste copied to clipboard");
-        }
+            Alert.showStatus(I18n._('Paste copied to clipboard'));
+        };
 
         /**
          * Toogle success icon after copy
-         * 
+         *
          * @name CopyToClipboard.toggleSuccessIcon
          * @private
          * @function
          */
         function toggleSuccessIcon() {
-            $(copyIcon).css("display", "none");
-            $(successIcon).css("display", "block");
+            $(copyIcon).css('display', 'none');
+            $(successIcon).css('display', 'block');
 
             setTimeout(function() {
-                $(copyIcon).css("display", "block");
-                $(successIcon).css("display", "none");
+                $(copyIcon).css('display', 'block');
+                $(successIcon).css('display', 'none');
             }, 1000);
         };
 
         /**
          * Show keyboard shortcut hint
-         * 
+         *
          * @name CopyToClipboard.showKeyboardShortcutHint
          * @function
          */
         me.showKeyboardShortcutHint = function () {
             I18n._(
                 shortcutHint,
-                'To copy paste press on the copy button or use the clipboard shortcut Ctrl+c/Cmd+c'
+                'To copy paste press on the copy button or use the clipboard shortcut <kbd>Ctrl</kbd>+<kbd>c</kbd>/<kbd>Cmd</kbd>+<kbd>c</kbd>'
             );
-        }
+        };
+
+        /**
+         * Hide keyboard shortcut hint
+         *
+         * @name CopyToClipboard.showKeyboardShortcutHint
+         * @function
+         */
+        me.hideKeyboardShortcutHint = function () {
+            $(shortcutHint).html('');
+        };
 
         /**
          * Initialize
-         * 
+         *
          * @name CopyToClipboard.init
          * @function
          */
         me.init = function() {
             handleCopyButtonClick();
             handleKeyboardShortcut();
-        }
+        };
 
         return me;
     })();
@@ -5523,6 +5552,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         {
             PasteStatus.hideMessages();
             Alert.hideMessages();
+            CopyToClipboard.hideKeyboardShortcutHint();
         };
 
         /**

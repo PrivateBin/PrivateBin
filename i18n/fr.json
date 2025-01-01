@@ -222,5 +222,5 @@
     "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.": "Erreur lors de la décompression du paste, votre navigateur ne supporte pas WebAssembly. Veuillez utiliser un autre navigateur pour voir ce paste.",
     "Start over": "Recommencer",
     "Paste copied to clipboard": "Paste copied to clipboard",
-    "To copy paste press on the copy button or use the clipboard shortcut Ctrl+c/Cmd+c": "To copy paste press on the copy button or use the clipboard shortcut Ctrl+c/Cmd+c"
+    "To copy paste press on the copy button or use the clipboard shortcut <kbd>Ctrl</kbd>+<kbd>c</kbd>/<kbd>Cmd</kbd>+<kbd>c</kbd>": "To copy paste press on the copy button or use the clipboard shortcut <kbd>Ctrl</kbd>+<kbd>c</kbd>/<kbd>Cmd</kbd>+<kbd>c</kbd>"
 }
