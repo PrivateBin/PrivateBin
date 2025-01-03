@@ -400,6 +400,9 @@ if ($HTTPWARNING) :
 endif;
 ?>
 				<div id="pastesuccess" class="hidden">
+					<button id="copyLink" type="button" class="btn btn-secondary flex-fill mb-2">
+						<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#copy" /></svg> <?php echo I18n::_('Copy link') ?>
+					</button>
 					<div role="alert" class="alert alert-success">
 						<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#check" /></svg>
 						<div id="deletelink"></div>

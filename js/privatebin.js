@@ -4920,6 +4920,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
             TopNav.showViewButtons();
 
+            CopyToClipboard.setUrl(url);
             CopyToClipboard.showKeyboardShortcutHint();
 
             // this cannot be grouped with showViewButtons due to remaining time calculation
@@ -5398,9 +5399,11 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         const me = {};
 
         let copyButton = $('#prettyMessageCopyBtn'),
+            copyLinkButton = $('#copyLink'),
             copyIcon = $('#copyIcon'),
             successIcon = $('#copySuccessIcon'),
-            shortcutHint = $('#copyShortcutHintText');
+            shortcutHint = $('#copyShortcutHintText'),
+            url;
 
         /**
          * Handle copy to clipboard button click
@@ -5413,8 +5416,26 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             $(copyButton).click(function() {
                 const text = PasteViewer.getText();
                 saveToClipboard(text);
+
+                toggleSuccessIcon();
+                showAlertMessage('Paste copied to clipboard');
             });
         };
+
+        /**
+         * Handle copy link to clipboard button click
+         *
+         * @name CopyToClipboard.handleCopyLinkButtonClick
+         * @private
+         * @function
+         */
+        function handleCopyLinkButtonClick() {
+            $(copyLinkButton).click(function () {
+                saveToClipboard(url);
+
+                showAlertMessage('Link copied to clipboard');
+            });
+        }
 
         /**
          * Handle CTRL+C/CMD+C keyboard shortcut
@@ -5428,6 +5449,8 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 if (!isUserSelectedTextToCopy()) {
                     const text = PasteViewer.getText();
                     saveToClipboard(text);
+
+                    showAlertMessage('Paste copied to clipboard');
                 }
             });
         };
@@ -5462,8 +5485,6 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         function saveToClipboard(text) {
             navigator.clipboard.writeText(text);
-            toggleSuccessIcon();
-            showAlertMessage();
         };
 
         /**
@@ -5471,10 +5492,11 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          *
          * @name CopyToClipboard.showAlertMessage
          * @private
+         * @param {string} message
          * @function
          */
-        function showAlertMessage() {
-            Alert.showStatus(I18n._('Paste copied to clipboard'));
+        function showAlertMessage(message) {
+            Alert.showStatus(message);
         };
 
         /**
@@ -5518,6 +5540,17 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         };
 
         /**
+         * Set paste url
+         *
+         * @name CopyToClipboard.setUrl
+         * @param {string} newUrl
+         * @function
+         */
+        me.setUrl = function (newUrl) {
+            url = newUrl;
+        };
+
+        /**
          * Initialize
          *
          * @name CopyToClipboard.init
@@ -5525,6 +5558,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         me.init = function() {
             handleCopyButtonClick();
+            handleCopyLinkButtonClick();
             handleKeyboardShortcut();
         };
 
