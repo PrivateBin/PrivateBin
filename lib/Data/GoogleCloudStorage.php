@@ -371,7 +371,7 @@ class GoogleCloudStorage extends AbstractData
         try {
             foreach ($this->_bucket->objects(array('prefix' => $prefix)) as $object) {
                 $candidate = substr($object->name(), strlen($prefix));
-                if (strpos($candidate, '/') === false) {
+                if (!str_contains($candidate, '/')) {
                     $pastes[] = $candidate;
                 }
             }
