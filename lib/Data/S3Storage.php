@@ -462,7 +462,7 @@ class S3Storage extends AbstractData
         try {
             foreach ($this->_listAllObjects($prefix) as $object) {
                 $candidate = substr($object['Key'], strlen($prefix));
-                if (strpos($candidate, '/') === false) {
+                if (!str_contains($candidate, '/')) {
                     $pastes[] = $candidate;
                 }
             }

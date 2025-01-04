@@ -301,7 +301,7 @@ class JsonApiTest extends TestCase
 
         $_SERVER['REQUEST_URI'] = $baseUri . 'link=https%3A%2F%2Fexample.com%2Fpath%2F%3Ffoo%23bar';
         $_GET['link']           = 'https://example.com/path/?foo#bar';
-        if (strpos($baseUri, '?shortenviayourls') !== false) {
+        if (str_contains($baseUri, '?shortenviayourls')) {
             $_GET['shortenviayourls'] = null;
         }
         ob_start();
