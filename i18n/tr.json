@@ -220,5 +220,9 @@
     "Dark Mode": "Koyu Mod",
     "Error compressing paste, due to missing WebAssembly support.": "WebAssembly desteği eksik olduğundan yazı sıkıştırılamadı.",
     "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.": "Yazı açılırken hata oluştu, tarayıcınız WebAssembly'i desteklemiyor. Lütfen bu yazıyı görüntülemek için başka bir tarayıcı kullanın.",
-    "Start over": "Baştan başla"
+    "Start over": "Baştan başla",
+    "Paste copied to clipboard": "Paste copied to clipboard",
+    "To copy paste press on the copy button or use the clipboard shortcut <kbd>Ctrl</kbd>+<kbd>c</kbd>/<kbd>Cmd</kbd>+<kbd>c</kbd>": "To copy paste press on the copy button or use the clipboard shortcut <kbd>Ctrl</kbd>+<kbd>c</kbd>/<kbd>Cmd</kbd>+<kbd>c</kbd>",
+    "Copy link": "Copy link",
+    "Link copied to clipboard": "Link copied to clipboard"
 }

@@ -146,7 +146,7 @@ class Request
         } elseif (array_key_exists('jsonld', $this->_params) && !empty($this->_params['jsonld'])) {
             $this->_operation = 'jsonld';
         } elseif (array_key_exists('link', $this->_params) && !empty($this->_params['link'])) {
-            if (strpos($this->getRequestUri(), '/shortenviayourls') !== false || array_key_exists('shortenviayourls', $this->_params)) {
+            if (str_contains($this->getRequestUri(), '/shortenviayourls') || array_key_exists('shortenviayourls', $this->_params)) {
                 $this->_operation = 'yourlsproxy';
             }
         }
@@ -267,9 +267,9 @@ class Request
             (array_key_exists('HTTP_X_REQUESTED_WITH', $_SERVER) &&
                 $_SERVER['HTTP_X_REQUESTED_WITH'] == 'JSONHttpRequest') ||
             ($hasAcceptHeader &&
-                strpos($acceptHeader, self::MIME_JSON) !== false &&
-                strpos($acceptHeader, self::MIME_HTML) === false &&
-                strpos($acceptHeader, self::MIME_XHTML) === false)
+                str_contains($acceptHeader, self::MIME_JSON) &&
+                !str_contains($acceptHeader, self::MIME_HTML) &&
+                !str_contains($acceptHeader, self::MIME_XHTML))
         ) {
             return true;
         }
@@ -300,11 +300,11 @@ class Request
             foreach ($mediaTypes as $acceptedQuality => $acceptedValues) {
                 foreach ($acceptedValues as $acceptedValue) {
                     if (
-                        strpos($acceptedValue, self::MIME_HTML) === 0 ||
-                        strpos($acceptedValue, self::MIME_XHTML) === 0
+                        str_starts_with($acceptedValue, self::MIME_HTML) ||
+                        str_starts_with($acceptedValue, self::MIME_XHTML)
                     ) {
                         return false;
-                    } elseif (strpos($acceptedValue, self::MIME_JSON) === 0) {
+                    } elseif (str_starts_with($acceptedValue, self::MIME_JSON)) {
                         return true;
                     }
                 }

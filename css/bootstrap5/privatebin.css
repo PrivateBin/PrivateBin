@@ -14,6 +14,15 @@
 	display: none !important;
 }
 
+.opacity-05-1-hover {
+	opacity: 0.5;
+	transition: all 0.15s ease;
+}
+
+.opacity-05-1-hover:hover {
+	opacity: 1;
+}
+
 .dropdown-menu {
 	--bs-dropdown-min-width: 23rem;
 }
@@ -38,4 +47,36 @@ li.L0, li.L1, li.L2, li.L3, li.L4, li.L5, li.L6, li.L7, li.L8, li.L9 {
 
 html[dir="rtl"] #deletelink, html[dir="rtl"] #qrcodemodalClose {
 	float: left;
+}
+
+#prettyprint {
+	padding-right: 30px;
+}
+
+#prettyMessageCopyBtn {
+	position: absolute;
+	top: 8px;
+	right: 8px;
+	left: auto;
+	width: 20px;
+	height: 20px;
+	padding: 0;
+	background: none;
+	border: none;
+	z-index: 1;
+}
+
+html[dir="rtl"] #prettyMessageCopyBtn {
+	left: 8px;
+	right: auto;
+}
+
+#prettyMessageCopyBtn svg {
+	width: 100%;
+	height: 100%;
+	vertical-align: baseline;
+}
+
+#copySuccessIcon {
+	display: none;
 }

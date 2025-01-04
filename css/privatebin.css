@@ -86,6 +86,7 @@ h3.title {
 #aboutbox a { color: #94a3b4; }
 
 #message, #cleartext, #prettymessage, #attachment, .replymessage {
+	position: relative;
 	clear: both;
 	color: #000;
 	background-color: #fff;

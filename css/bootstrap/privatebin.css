@@ -138,3 +138,31 @@ html[dir="rtl"] #language {
 html[dir="rtl"] #deletelink, html[dir="rtl"] #qrcodemodalClose {
 	float: left;
 }
+
+#prettyprint {
+	padding-right: 30px;
+}
+
+#prettyMessageCopyBtn {
+	position: absolute;
+	top: 8px;
+	right: 25px;
+	left: auto;
+	padding: 0;
+	background: none;
+	border: none;
+	z-index: 1;
+}
+
+html[dir="rtl"] #prettyMessageCopyBtn {
+	left: 25px;
+	right: auto;
+}
+
+#copySuccessIcon {
+	display: none;
+}
+
+#copyShortcutHint {
+	margin-bottom: 5px;
+}
