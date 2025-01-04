@@ -130,7 +130,7 @@ class I18n
         // encode any non-integer arguments and the message ID, if it doesn't contain a link
         $argsCount = count($args);
         for ($i = 0; $i < $argsCount; ++$i) {
-            if ($i > 0 ? !is_int($args[$i]) : strpos($args[0], '<a') === false) {
+            if ($i > 0 ? !is_int($args[$i]) : !str_contains($args[0], '<a')) {
                 $args[$i] = self::encode($args[$i]);
             }
         }
