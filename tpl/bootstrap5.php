@@ -400,6 +400,9 @@ if ($HTTPWARNING) :
 endif;
 ?>
 				<div id="pastesuccess" class="hidden">
+					<button id="copyLink" type="button" class="btn btn-secondary flex-fill mb-2">
+						<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#copy" /></svg> <?php echo I18n::_('Copy link') ?>
+					</button>
 					<div role="alert" class="alert alert-success">
 						<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#check" /></svg>
 						<div id="deletelink"></div>
@@ -435,7 +438,12 @@ endif;
 				<article>
 					<div id="placeholder" class="col-md-12 hidden"><?php echo I18n::_('+++ no paste text +++'); ?></div>
 					<div id="attachmentPreview" class="col-md-12 text-center hidden"></div>
+					<h6 id="copyShortcutHint" class="col-md-12"><small id="copyShortcutHintText"></small></h6>
 					<div id="prettymessage" class="card col-md-12 hidden">
+						<button type="button" id="prettyMessageCopyBtn" class="text-secondary opacity-05-1-hover">
+							<svg id="copyIcon" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#copy" /></svg>
+							<svg id="copySuccessIcon" class="text-success" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#check" /></svg>
+						</button>
 						<pre id="prettyprint" class="card-body col-md-12 prettyprint linenums:1"></pre>
 					</div>
 					<div id="plaintext" class="col-md-12 hidden"></div>

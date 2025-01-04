@@ -131,7 +131,7 @@ class I18n
         $argsCount = count($args);
         for ($i = 0; $i < $argsCount; ++$i) {
             if ($i === 0) {
-                if (strpos($args[0], '<a') !== false || strpos($args[0], '<kbd>') !== false) {
+                if (str_contains($args[0], '<a') || str_contains($args[0], '<kbd>')) {
                     continue;
                 }
             } elseif (is_int($args[$i])) {

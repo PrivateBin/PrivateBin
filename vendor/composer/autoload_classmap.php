@@ -6,6 +6,7 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Attribute' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
     'IPLib\\Address\\AddressInterface' => $vendorDir . '/mlocati/ip-lib/src/Address/AddressInterface.php',
     'IPLib\\Address\\AssignedRange' => $vendorDir . '/mlocati/ip-lib/src/Address/AssignedRange.php',
@@ -65,6 +66,7 @@ return array(
     'Jdenticon\\Shapes\\ShapeCategory' => $vendorDir . '/jdenticon/jdenticon/src/Shapes/ShapeCategory.php',
     'Jdenticon\\Shapes\\ShapeDefinitions' => $vendorDir . '/jdenticon/jdenticon/src/Shapes/ShapeDefinitions.php',
     'Jdenticon\\Shapes\\ShapePosition' => $vendorDir . '/jdenticon/jdenticon/src/Shapes/ShapePosition.php',
+    'PhpToken' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/PhpToken.php',
     'PrivateBin\\Configuration' => $baseDir . '/lib/Configuration.php',
     'PrivateBin\\Controller' => $baseDir . '/lib/Controller.php',
     'PrivateBin\\Data\\AbstractData' => $baseDir . '/lib/Data/AbstractData.php',
@@ -88,4 +90,10 @@ return array(
     'PrivateBin\\View' => $baseDir . '/lib/View.php',
     'PrivateBin\\Vizhash16x16' => $baseDir . '/lib/Vizhash16x16.php',
     'PrivateBin\\YourlsProxy' => $baseDir . '/lib/YourlsProxy.php',
+    'Stringable' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/Stringable.php',
+    'Symfony\\Polyfill\\Ctype\\Ctype' => $vendorDir . '/symfony/polyfill-ctype/Ctype.php',
+    'Symfony\\Polyfill\\Php80\\Php80' => $vendorDir . '/symfony/polyfill-php80/Php80.php',
+    'Symfony\\Polyfill\\Php80\\PhpToken' => $vendorDir . '/symfony/polyfill-php80/PhpToken.php',
+    'UnhandledMatchError' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/UnhandledMatchError.php',
+    'ValueError' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/ValueError.php',
 );

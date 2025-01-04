@@ -27,6 +27,8 @@
 		"php": "^7.3 || ^8.0",
 		"jdenticon/jdenticon": "1.0.2",
 		"mlocati/ip-lib": "1.18.1",
+		"symfony/polyfill-ctype": "^1.31",
+		"symfony/polyfill-php80": "^1.31",
 		"yzalis/identicon": "2.0.0"
 	},
 	"suggest" : {
