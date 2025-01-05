@@ -55,7 +55,7 @@ if ($MARKDOWN) :
 <?php
 endif;
 ?>
-		<?php $this->_scriptTag('js/purify-3.1.7.js', 'defer'); ?>
+		<?php $this->_scriptTag('js/purify-3.2.3.js', 'defer'); ?>
 		<?php $this->_scriptTag('js/legacy.js', 'async'); ?>
 		<?php $this->_scriptTag('js/privatebin.js', 'defer'); ?>
 		<!-- icon -->
@@ -400,12 +400,17 @@ if ($HTTPWARNING) :
 endif;
 ?>
 				<div id="pastesuccess" class="hidden">
-					<button id="copyLink" type="button" class="btn btn-secondary flex-fill mb-2">
-						<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#copy" /></svg> <?php echo I18n::_('Copy link') ?>
-					</button>
+					<div class="nav justify-content-between mb-2">
+						<button id="copyLink" type="button" class="btn btn-secondary">
+							<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#copy" /></svg> <?php echo I18n::_('Copy link') ?>
+						</button>
+						<a href="#" id="deletelink" class="btn btn-secondary">
+							<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#trash" /></svg>
+							<span></span>
+						</a>
+					</div>
 					<div role="alert" class="alert alert-success">
 						<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#check" /></svg>
-						<div id="deletelink"></div>
 						<div id="pastelink"></div>
 					</div>
 <?php

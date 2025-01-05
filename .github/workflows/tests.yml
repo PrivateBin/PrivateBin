@@ -22,11 +22,12 @@ jobs:
     continue-on-error: "${{ matrix.experimental }}"
     strategy:
       matrix:
-        php-versions: ['7.3', '7.4', '8.0', '8.1', '8.2', '8.3']
+        php-versions: ['7.3', '7.4', '8.0', '8.1', '8.2', '8.3', '8.4']
         experimental: [false]
-        include:
-          - php-versions: '8.4' # development release, things can break
-            experimental: true
+# uncomment this to start testing on development release
+#        include:
+#          - php-versions: '8.5' # development release, things can break
+#            experimental: true
     env:
       extensions: gd, sqlite3
       extensions-cache-key-name: phpextensions

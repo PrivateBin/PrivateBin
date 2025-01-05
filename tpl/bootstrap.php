@@ -71,7 +71,7 @@ if ($MARKDOWN) :
 <?php
 endif;
 ?>
-		<?php $this->_scriptTag('js/purify-3.1.7.js', 'async'); ?>
+		<?php $this->_scriptTag('js/purify-3.2.3.js', 'async'); ?>
 		<?php $this->_scriptTag('js/legacy.js', 'async'); ?>
 		<?php $this->_scriptTag('js/privatebin.js', 'defer'); ?>
 		<!-- icon -->
@@ -535,12 +535,17 @@ if ($HTTPWARNING) :
 endif;
 ?>
 				<div id="pastesuccess" class="hidden">
-					<button id="copyLink" type="button" class="btn btn-<?php echo $isDark ? 'warning' : 'default'; ?> navbar-btn">
-						<span class="glyphicon glyphicon-duplicate" aria-hidden="true"></span> <?php echo I18n::_('Copy link') ?>
-					</button>
+					<div class="nav nav-justified">
+						<button id="copyLink" type="button" class="btn btn-<?php echo $isDark ? 'warning' : 'default'; ?> navbar-btn">
+							<span class="glyphicon glyphicon-duplicate" aria-hidden="true"></span> <?php echo I18n::_('Copy link') ?>
+						</button>
+						<a href="#" id="deletelink" class="btn btn-<?php echo $isDark ? 'warning' : 'default'; ?> navbar-btn">
+							<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+							<span></span>
+						</a>
+					</div>
 					<div role="alert" class="alert alert-success">
 						<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
-						<div id="deletelink"></div>
 						<div id="pastelink"></div>
 					</div>
 <?php

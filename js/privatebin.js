@@ -2120,8 +2120,8 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             $pasteUrl.click(pasteLinkClick);
 
             // delete link
-            $('#deletelink').html('<a href="' + deleteUrl + '"></a>');
-            I18n._($('#deletelink a').first(), 'Delete data');
+            $('#deletelink').attr('href', deleteUrl);
+            I18n._($('#deletelink span').not('.glyphicon').first(), 'Delete data');
 
             // enable shortener button
             $shortenButton.removeClass('buttondisabled');

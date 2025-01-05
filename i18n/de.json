@@ -221,10 +221,10 @@
     "Error compressing paste, due to missing WebAssembly support.": "Fehler beim Komprimieren des Textes, da WebAssembly-Unterstützung fehlt.",
     "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.": "Fehler beim Dekomprimieren des Textes. Dein Browser unterstützt WebAssembly nicht. Bitte verwende einen anderen Browser, um diesen Text anzuzeigen.",
     "Start over": "Neuen Text erstellen",
-    "Paste copied to clipboard": "Paste copied to clipboard",
-    "To copy paste press on the copy button or use the clipboard shortcut <kbd>Ctrl</kbd>+<kbd>c</kbd>/<kbd>Cmd</kbd>+<kbd>c</kbd>": "To copy paste press on the copy button or use the clipboard shortcut <kbd>Ctrl</kbd>+<kbd>c</kbd>/<kbd>Cmd</kbd>+<kbd>c</kbd>",
-    "Copy link": "Copy link",
-    "Link copied to clipboard": "Link copied to clipboard",
+    "Paste copied to clipboard": "Text wurde in Zwischenablage kopiert.",
+    "To copy paste press on the copy button or use the clipboard shortcut <kbd>Ctrl</kbd>+<kbd>c</kbd>/<kbd>Cmd</kbd>+<kbd>c</kbd>": "Zum Kopieren des Textes drücken Sie die Kopieren-Schaltfläche oder verwenden Sie die Tastenkombination <kbd>Strg</kbd>+<kbd>c</kbd>/<kbd>Cmd</kbd>+<kbd>c</kbd>",
+    "Copy link": "Verknüpfung kopieren",
+    "Link copied to clipboard": "Verknüpfung wurde in die Zwischenablage kopiert.",
     "Paste text": "Paste text",
     "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)": "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)"
 }
