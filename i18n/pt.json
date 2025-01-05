@@ -151,7 +151,7 @@
     "server error or not responding": "Servidor em erro ou não responsivo",
     "Could not post comment: %s": "Não foi possível publicar o comentário: %s",
     "Sending paste…": "Enviando cópia…",
-    "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit <kbd>Ctrl</kbd>+<kbd>c</kbd> to copy)</span>": "Sua cópia é <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Pressione <kbd>Ctrl</kbd>+<kbd>c</kbd> para copiar)</span>",
+    "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit <kbd>Ctrl</kbd>+<kbd>c</kbd> to copy)</span>": "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit <kbd>Ctrl</kbd>+<kbd>c</kbd> to copy)</span>",
     "Delete data": "Excluir dados",
     "Could not create paste: %s": "Não foi possível criar cópia: %s",
     "Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)": "Não foi possível decifrar a cópia: chave de decriptografia ausente na URL (Você utilizou um redirecionador ou encurtador de URL que removeu parte dela?)",
