@@ -2451,7 +2451,6 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 $messageTab[0].checked = isTabSupported;
                 event.preventDefault();
             }
-            // tab was pressed
             else if (isTabSupported && event.key === 'Tab') {
                 // get caret position & selection
                 const val   = this.value,
