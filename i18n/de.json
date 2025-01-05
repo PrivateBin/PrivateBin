@@ -151,7 +151,7 @@
     "server error or not responding": "Fehler auf dem Server oder keine Antwort vom Server",
     "Could not post comment: %s": "Konnte Kommentar nicht senden: %s",
     "Sending paste…": "Sende Paste…",
-    "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit <kbd>Ctrl</kbd>+<kbd>c</kbd> to copy)</span>": "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit <kbd>Ctrl</kbd>+<kbd>c</kbd> to copy)</span>",
+    "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit <kbd>Ctrl</kbd>+<kbd>c</kbd> to copy)</span>": "Dein Text ist unter <a id=\"pasteurl\" href=\"%s\">%s</a> zu finden <span id=\"copyhint\">(Drücke <kbd>Strg</kbd>+<kbd>c</kbd> um den Link zu kopieren)</span>",
     "Delete data": "Lösche Daten",
     "Could not create paste: %s": "Text konnte nicht erstellt werden: %s",
     "Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)": "Konnte Paste nicht entschlüsseln: Der Schlüssel fehlt in der Adresse (Hast du eine Umleitung oder einen URL-Verkürzer benutzt, der Teile der Adresse entfernt?)",
@@ -225,6 +225,6 @@
     "To copy paste press on the copy button or use the clipboard shortcut <kbd>Ctrl</kbd>+<kbd>c</kbd>/<kbd>Cmd</kbd>+<kbd>c</kbd>": "Zum Kopieren des Textes drücken Sie die Kopieren-Schaltfläche oder verwenden Sie die Tastenkombination <kbd>Strg</kbd>+<kbd>c</kbd>/<kbd>Cmd</kbd>+<kbd>c</kbd>",
     "Copy link": "Verknüpfung kopieren",
     "Link copied to clipboard": "Verknüpfung wurde in die Zwischenablage kopiert.",
-    "Paste text": "Paste text",
-    "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)": "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)"
+    "Paste text": "Text",
+    "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)": "Tabulatortaste als Zeichen interpretieren (Umschalten durch <kbd>Strg</kbd>+<kbd>m</kbd> oder <kbd>Esc</kbd>)"
 }
