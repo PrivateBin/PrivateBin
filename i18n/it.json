@@ -151,7 +151,7 @@
     "server error or not responding": "errore o mancata risposta dal server",
     "Could not post comment: %s": "Impossibile inviare il commento: %s",
     "Sending paste…": "Messaggio in fase di invio…",
-    "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit <kbd>Ctrl</kbd>+<kbd>c</kbd> to copy)</span>": "Il tuo messaggio è qui: <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Premi <kbd>Ctrl</kbd>+<kbd>c</kbd> (Windows) o [Cmd]+[c] (Mac) per copiare il link)</span>",
+    "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit <kbd>Ctrl</kbd>+<kbd>c</kbd> to copy)</span>": "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit <kbd>Ctrl</kbd>+<kbd>c</kbd> to copy)</span>",
     "Delete data": "Cancella i dati",
     "Could not create paste: %s": "Non riesco a creare il messaggio: %s",
     "Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)": "Non riesco a decifrare il messaggio: manca la chiave di decifrazione nell'URL (La chiave è parte integrante dell'URL. Per caso hai usato un Redirector o un altro servizio che ha rimosso una parte dell'URL?)",
