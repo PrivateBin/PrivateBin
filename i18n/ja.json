@@ -151,7 +151,7 @@
     "server error or not responding": "サーバーエラーまたは応答しません",
     "Could not post comment: %s": "コメントを投稿できませんでした：%s",
     "Sending paste…": "ペーストを送信しています…",
-    "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit <kbd>Ctrl</kbd>+<kbd>c</kbd> to copy)</span>": "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit <kbd>Ctrl</kbd>+<kbd>c</kbd> to copy)</span>",
+    "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit <kbd>Ctrl</kbd>+<kbd>c</kbd> to copy)</span>": "ペーストは<a id=\"pasteurl\" href=\"%s\">%s</a>です<span id=\"copyhint\">（コピーするには<kbd>Ctrl</kbd>+<kbd>c</kbd>を押してください）</span>",
     "Delete data": "データを削除",
     "Could not create paste: %s": "ペーストを作成できませんでした：%s",
     "Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)": "ペーストを復号化できません：復号化キーがURLにありません（URLの一部を削除するリダイレクト機能またはURLの短縮アプリケーションを使いましたか？）",
