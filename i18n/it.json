@@ -221,10 +221,10 @@
     "Error compressing paste, due to missing WebAssembly support.": "Errore nella compressione dell messaggio, a causa del supporto WebAssembly mancante.",
     "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.": "Errore nella decompressione dell messaggio, il tuo browser non supporta WebAssembly. Utilizza un altro browser per visualizzare questo messaggio.",
     "Start over": "Ricominciare",
-    "Paste copied to clipboard": "Paste copied to clipboard",
+    "Paste copied to clipboard": "Messaggio copiato",
     "To copy paste press on the copy button or use the clipboard shortcut <kbd>Ctrl</kbd>+<kbd>c</kbd>/<kbd>Cmd</kbd>+<kbd>c</kbd>": "To copy paste press on the copy button or use the clipboard shortcut <kbd>Ctrl</kbd>+<kbd>c</kbd>/<kbd>Cmd</kbd>+<kbd>c</kbd>",
-    "Copy link": "Copy link",
+    "Copy link": "Copia il link",
     "Link copied to clipboard": "Link copied to clipboard",
-    "Paste text": "Paste text",
+    "Paste text": "Testo del messaggio",
     "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)": "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)"
 }

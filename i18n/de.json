@@ -225,6 +225,6 @@
     "To copy paste press on the copy button or use the clipboard shortcut <kbd>Ctrl</kbd>+<kbd>c</kbd>/<kbd>Cmd</kbd>+<kbd>c</kbd>": "Zum Kopieren des Textes drücken Sie die Kopieren-Schaltfläche oder verwenden Sie die Tastenkombination <kbd>Strg</kbd>+<kbd>c</kbd>/<kbd>Cmd</kbd>+<kbd>c</kbd>",
     "Copy link": "Verknüpfung kopieren",
     "Link copied to clipboard": "Verknüpfung wurde in die Zwischenablage kopiert.",
-    "Paste text": "Paste text",
-    "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)": "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)"
+    "Paste text": "Text",
+    "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)": "Tabulatortaste als Zeichen interpretieren (Umschalten durch <kbd>Strg</kbd>+<kbd>m</kbd> oder <kbd>Esc</kbd>)"
 }
