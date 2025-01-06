@@ -151,7 +151,7 @@
     "server error or not responding": "serveri viga või ei vasta",
     "Could not post comment: %s": "Ei suutnud kommentaari postitada: %s",
     "Sending paste…": "Kleepe saatmine…",
-    "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit <kbd>Ctrl</kbd>+<kbd>c</kbd> to copy)</span>": "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit <kbd>Ctrl</kbd>+<kbd>c</kbd> to copy)</span>",
+    "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit <kbd>Ctrl</kbd>+<kbd>c</kbd> to copy)</span>": "Sinu kleebe on <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Kopeerimiseks vajuta <kbd>Ctrl</kbd>+<kbd>c</kbd>)</span>",
     "Delete data": "Kustuta andmed",
     "Could not create paste: %s": "Ei suutnud kleebet luua: %s",
     "Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)": "Ei suutnud kleebet dekrüpteerida: Dekrüpteerimisvõti on URL-ist puudu (Kas kasutasid ümbersuunajat või URL-i lühendajat, mis eemaldab osa URL-ist?)",
