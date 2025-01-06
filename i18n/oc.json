@@ -151,7 +151,7 @@
     "server error or not responding": "lo servidor respond pas o a rescontrat una error",
     "Could not post comment: %s": "Impossible de mandar lo comentari : %s",
     "Sending paste…": "Mandadís del tèxte…",
-    "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit <kbd>Ctrl</kbd>+<kbd>c</kbd> to copy)</span>": "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit <kbd>Ctrl</kbd>+<kbd>c</kbd> to copy)</span>",
+    "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit <kbd>Ctrl</kbd>+<kbd>c</kbd> to copy)</span>": "Vòstre tèxte es disponible a l’adreça <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Picatz sus <kbd>Ctrl</kbd>+<kbd>c</kbd> per copiar)</span>",
     "Delete data": "Supprimir las donadas del tèxte",
     "Could not create paste: %s": "Impossible de crear lo tèxte : %s",
     "Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)": "Impossible de deschifrar lo tèxte : clau de deschiframent absenta de l’URL (Avètz utilizat un redirector o un site de reduccion d’URL que suprimís una partida de l’URL ?)",
