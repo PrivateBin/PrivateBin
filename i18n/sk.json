@@ -151,7 +151,7 @@
     "server error or not responding": "chyba servera alebo server neodpovedá",
     "Could not post comment: %s": "Nepodarilo sa pridať komentár: %s",
     "Sending paste…": "Odosiela sa príspevok…",
-    "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit <kbd>Ctrl</kbd>+<kbd>c</kbd> to copy)</span>": "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit <kbd>Ctrl</kbd>+<kbd>c</kbd> to copy)</span>",
+    "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit <kbd>Ctrl</kbd>+<kbd>c</kbd> to copy)</span>": "Váš príspevok je <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(skopírujte stlačením <kbd>Ctrl</kbd>+<kbd>c</kbd>)</span>",
     "Delete data": "Odstrániť dáta",
     "Could not create paste: %s": "Nepodarilo sa vytvoriť príspevok: %s",
     "Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)": "Nie je možné dešifrovať príspevok: V URL adrese chýba dešifrovací kľúč (Použili ste presmerovač alebo skracovač adresy, ktorý odstráni časť adresy URL?)",
