@@ -151,7 +151,7 @@
     "server error or not responding": "błąd serwera lub brak odpowiedzi",
     "Could not post comment: %s": "Nie udało się wysłać komentarza: %s",
     "Sending paste…": "Wysyłanie wklejki…",
-    "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit <kbd>Ctrl</kbd>+<kbd>c</kbd> to copy)</span>": "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit <kbd>Ctrl</kbd>+<kbd>c</kbd> to copy)</span>",
+    "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit <kbd>Ctrl</kbd>+<kbd>c</kbd> to copy)</span>": "Twoja wklejka to <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(wciśnij <kbd>Ctrl</kbd>+<kbd>c</kbd> aby skopiować)</span>",
     "Delete data": "Skasuj dane",
     "Could not create paste: %s": "Nie udało się utworzyć wklejki: %s",
     "Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)": "Nie udało się odszyfrować wklejki - brak klucza deszyfrującego w adresie (użyłeś skracacza linków, który ucina część adresu?)",
