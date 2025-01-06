@@ -151,7 +151,7 @@
     "server error or not responding": "Error del servidor o el servidor no responde",
     "Could not post comment: %s": "No fue posible publicar comentario: %s",
     "Sending paste…": "Enviando \"paste\"…",
-    "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit <kbd>Ctrl</kbd>+<kbd>c</kbd> to copy)</span>": "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit <kbd>Ctrl</kbd>+<kbd>c</kbd> to copy)</span>",
+    "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit <kbd>Ctrl</kbd>+<kbd>c</kbd> to copy)</span>": "Su texto está en <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Presione <kbd>Ctrl</kbd>+<kbd>c</kbd> para copiar)</span>",
     "Delete data": "Eliminar datos",
     "Could not create paste: %s": "No fue posible crear el archivo: %s",
     "Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)": "No es posible descifrar el documento: Falta la clave de descifrado en la URL (¿Utilizó un redirector o un acortador de URL que quite parte de la URL?)",
