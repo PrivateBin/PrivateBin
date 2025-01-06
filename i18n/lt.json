@@ -151,7 +151,7 @@
     "server error or not responding": "serverio klaida arba jis neatsako",
     "Could not post comment: %s": "Nepavyko paskelbti komentaro: %s",
     "Sending paste…": "Siunčiamas įdėjimas…",
-    "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit <kbd>Ctrl</kbd>+<kbd>c</kbd> to copy)</span>": "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit <kbd>Ctrl</kbd>+<kbd>c</kbd> to copy)</span>",
+    "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit <kbd>Ctrl</kbd>+<kbd>c</kbd> to copy)</span>": "Jūsų įdėjimas yra <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Paspauskite <kbd>Vald</kbd>+<kbd>c</kbd> norėdami nukopijuoti)</span>",
     "Delete data": "Ištrinti duomenis",
     "Could not create paste: %s": "Nepavyko sukurti įdėjimo: %s",
     "Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)": "Nepavyksta iššifruoti įdėjimo: URL adrese trūksta iššifravimo rakto (Ar naudojote peradresavimo ar URL trumpinimo įrankį, kuris pašalina URL dalį?)",
