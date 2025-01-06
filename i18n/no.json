@@ -151,7 +151,7 @@
     "server error or not responding": "tjener feilet eller svarer ikke",
     "Could not post comment: %s": "Kunne ikke sende kommentar: %s",
     "Sending paste…": "Sender innlegg…",
-    "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit <kbd>Ctrl</kbd>+<kbd>c</kbd> to copy)</span>": "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit <kbd>Ctrl</kbd>+<kbd>c</kbd> to copy)</span>",
+    "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit <kbd>Ctrl</kbd>+<kbd>c</kbd> to copy)</span>": "Ditt innlegg er <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Trykk <kbd>Ctrl</kbd>+<kbd>c</kbd> for å kopiere)</span>",
     "Delete data": "Slett data",
     "Could not create paste: %s": "Kunne ikke opprette innlegg: %s",
     "Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)": "Kan ikke dekryptere innlegg: Dekrypteringsnøkkelen mangler i adressen (Har du bruket en redirector eller en URL forkorter som fjerner en del av addressen?)",
