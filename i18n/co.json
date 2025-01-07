@@ -151,7 +151,7 @@
     "server error or not responding": "sbagliu di u servitore o u servitore ùn risponde micca",
     "Could not post comment: %s": "Ùn si pò micca impustà u cummentu : %s",
     "Sending paste…": "Inviu di l’appiccicu…",
-    "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit <kbd>Ctrl</kbd>+<kbd>c</kbd> to copy)</span>": "U vostru appiccicu si trova à l’indirizzu<a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Appughjate <kbd>Ctrl</kbd>+<kbd>c</kbd> per cupià u liame)</span>",
+    "Your paste is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit <kbd>Ctrl</kbd>+<kbd>c</kbd> to copy)</span>": "U vostru appiccicu si trova à l’indirizzu <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Appughjate nant’à <kbd>Ctrl</kbd>+<kbd>c</kbd> per cupià u liame)</span>",
     "Delete data": "Squassà i dati",
     "Could not create paste: %s": "Ùn si pò micca creà l’appiccicu : %s",
     "Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)": "Ùn si pò micca dicifrà l’appiccicu : A chjave di dicifratura hè assente in l’indirizzu. Averiate impiegatu un orientadore d’indirizzu o un riduttore chì ammuzzeghja una parte di l’indirizzu ?",
@@ -221,10 +221,10 @@
     "Error compressing paste, due to missing WebAssembly support.": "Sbagliu durante a cumpressione di l’appiccicu, perchè WebAssembly ùn hè micca accettatu.",
     "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.": "Sbagliu durante a scumpressione di l’appiccicu, perchè u vostru navigatore ùn accetteghja micca WebAssembly. Ci vole à impiegà un altru navigatore per affissà st’appiccicu.",
     "Start over": "Principià torna",
-    "Paste copied to clipboard": "Paste copied to clipboard",
-    "To copy paste press on the copy button or use the clipboard shortcut <kbd>Ctrl</kbd>+<kbd>c</kbd>/<kbd>Cmd</kbd>+<kbd>c</kbd>": "To copy paste press on the copy button or use the clipboard shortcut <kbd>Ctrl</kbd>+<kbd>c</kbd>/<kbd>Cmd</kbd>+<kbd>c</kbd>",
-    "Copy link": "Copy link",
-    "Link copied to clipboard": "Link copied to clipboard",
-    "Paste text": "Paste text",
-    "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)": "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)"
+    "Paste copied to clipboard": "L’appiccicu hè statu cupiatu in u preme’papei",
+    "To copy paste press on the copy button or use the clipboard shortcut <kbd>Ctrl</kbd>+<kbd>c</kbd>/<kbd>Cmd</kbd>+<kbd>c</kbd>": "Per cupià l’appiccicu, appughjate nant’à u buttone di copia o impiegate l’accurtatoghju di u preme’papei <kbd>Ctrl</kbd>+<kbd>c</kbd>/<kbd>Cmd</kbd>+<kbd>c</kbd>",
+    "Copy link": "Cupià u liame",
+    "Link copied to clipboard": "U liame hè statu cupiatu in u preme’papei",
+    "Paste text": "Testu di l’appiccicu",
+    "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)": "U tastu di tabulazione ghjova cum’è un caratteru (Appughjate nant’à <kbd>Ctrl</kbd>+<kbd>m</kbd> o <kbd>Scapp</kbd> per scambià)"
 }
