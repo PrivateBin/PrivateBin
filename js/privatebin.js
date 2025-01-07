@@ -5454,12 +5454,14 @@ jQuery.PrivateBin = (function($, RawDeflate) {
     const CopyToClipboard = (function () {
         const me = {};
 
-        let copyButton = $('#prettyMessageCopyBtn'),
-            copyLinkButton = $('#copyLink'),
-            copyIcon = $('#copyIcon'),
-            successIcon = $('#copySuccessIcon'),
-            shortcutHint = $('#copyShortcutHintText'),
-            url;
+        let copyButton,
+            copyLinkButton,
+            copyIcon,
+            successIcon,
+            shortcutHint,
+            url,
+            testMode,
+            testClipboard;
 
         /**
          * Handle copy to clipboard button click
@@ -5540,7 +5542,11 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          * @function
          */
         function saveToClipboard(text) {
-            navigator.clipboard.writeText(text);
+            if (testMode) {
+                testClipboard = text;
+            } else {
+                navigator.clipboard.writeText(text);
+            }
         };
 
         /**
@@ -5607,12 +5613,47 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         };
 
         /**
+         * Enable test mode, using for unit tests
+         * 
+         * @name CopyToClipboard.testMode
+         * @function
+         */
+        me.enableTestMode = function () {
+            testMode = true;
+        };
+
+        /**
+         * Read text from user's clipboard
+         * 
+         * @name CopyToClipboard.readFromClipboard
+         * @function
+         * @returns {string}
+         */
+        me.readFromClipboard = function () {
+            let clipboardData = "";
+
+            if (testMode) {
+                clipboardData = testClipboard;
+            } else {
+                clipboardData = navigator.clipboard.readText();
+            }
+
+            return clipboardData;
+        };
+
+        /**
          * Initialize
          *
          * @name CopyToClipboard.init
          * @function
          */
         me.init = function() {
+            copyButton = $('#prettyMessageCopyBtn');
+            copyLinkButton = $('#copyLink');
+            copyIcon = $('#copyIcon');
+            successIcon = $('#copySuccessIcon');
+            shortcutHint = $('#copyShortcutHintText');
+
             handleCopyButtonClick();
             handleCopyLinkButtonClick();
             handleKeyboardShortcut();
