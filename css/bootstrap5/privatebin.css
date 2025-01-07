@@ -84,3 +84,7 @@ html[dir="rtl"] #prettyMessageCopyBtn {
 #copySuccessIcon {
 	display: none;
 }
+
+#sendbutton svg {
+	transform: translateY(1.5px);
+}
