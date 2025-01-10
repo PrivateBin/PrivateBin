@@ -5459,9 +5459,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             copyIcon,
             successIcon,
             shortcutHint,
-            url,
-            testMode,
-            testClipboard;
+            url;
 
         /**
          * Handle copy to clipboard button click
@@ -5542,11 +5540,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          * @function
          */
         function saveToClipboard(text) {
-            if (testMode) {
-                testClipboard = text;
-            } else {
-                navigator.clipboard.writeText(text);
-            }
+            navigator.clipboard.writeText(text);
         };
 
         /**
@@ -5610,35 +5604,6 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         me.setUrl = function (newUrl) {
             url = newUrl;
-        };
-
-        /**
-         * Enable test mode, using for unit tests
-         * 
-         * @name CopyToClipboard.testMode
-         * @function
-         */
-        me.enableTestMode = function () {
-            testMode = true;
-        };
-
-        /**
-         * Read text from user's clipboard
-         * 
-         * @name CopyToClipboard.readFromClipboard
-         * @function
-         * @returns {string}
-         */
-        me.readFromClipboard = function () {
-            let clipboardData = "";
-
-            if (testMode) {
-                clipboardData = testClipboard;
-            } else {
-                clipboardData = navigator.clipboard.readText();
-            }
-
-            return clipboardData;
         };
 
         /**

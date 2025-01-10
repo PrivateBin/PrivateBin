@@ -152,3 +152,22 @@ exports.urlToString = function (url) {
         encodeURI(url.query.join('').replace(/^&+|&+$/gm,'')) : '') +
         (url.fragment ? '#' + encodeURI(url.fragment) : '');
 };
+
+exports.enableClipboard = function () {
+    navigator.clipboard = (function () {
+        let savedText = "";
+    
+        async function writeText(text) {
+            savedText = text;
+        };
+    
+        async function readText() {
+            return savedText;
+        };
+    
+        return {
+            writeText,
+            readText,
+        };
+    })();
+};

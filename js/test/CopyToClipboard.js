@@ -1,12 +1,13 @@
 'use strict';
-var common = require('../common');
+const common = require('../common');
 
 describe('CopyToClipboard', function() {
     this.timeout(30000);
 
     describe ('Copy paste co clipboard', function () {
-        jsc.property('Copy with button click', common.jscFormats(), 'nestring', function (format, text) {
+        jsc.property('Copy with button click', common.jscFormats(), 'nestring', async function (format, text) {
             var clean = jsdom();
+            common.enableClipboard();
     
             $('body').html(
                 '<div id="placeholder" class="hidden">+++ no paste text ' +
@@ -23,23 +24,23 @@ describe('CopyToClipboard', function() {
             $.PrivateBin.PasteViewer.run();
     
             $.PrivateBin.CopyToClipboard.init();
-            $.PrivateBin.CopyToClipboard.enableTestMode();
             
             $('#prettyMessageCopyBtn').trigger('click');
-            
-            const copiedText = $.PrivateBin.CopyToClipboard.readFromClipboard();
+
+            const savedToClipboardText = await navigator.clipboard.readText();
     
             clean();
     
-            return text === copiedText;
+            return text === savedToClipboardText;
         });
 
         /**
          * Unfortunately in JSVerify impossible to check if copy with shortcut when user selected some text on the page
          * (the copy paste to clipboard should not work in this case) due to lucking window.getSelection() in jsdom.
          */
-        jsc.property('Copy with keyboard shortcut',  common.jscFormats(), 'nestring', function (format, text) {
+        jsc.property('Copy with keyboard shortcut',  common.jscFormats(), 'nestring', async function (format, text) {
             var clean = jsdom();
+            common.enableClipboard();
     
             $('body').html(
                 '<div id="placeholder">+++ no paste text ' +
@@ -56,11 +57,10 @@ describe('CopyToClipboard', function() {
             $.PrivateBin.PasteViewer.run();
     
             $.PrivateBin.CopyToClipboard.init();
-            $.PrivateBin.CopyToClipboard.enableTestMode();
 
             $('body').trigger('copy');
 
-            const copiedTextWithoutSelectedText = $.PrivateBin.CopyToClipboard.readFromClipboard();
+            const copiedTextWithoutSelectedText = await navigator.clipboard.readText();
 
             clean();
 
@@ -69,18 +69,18 @@ describe('CopyToClipboard', function() {
     });
 
 
-    jsc.property('Copy link to clipboard', 'nestring', function (text) {
+    jsc.property('Copy link to clipboard', 'nestring', async function (text) {
         var clean = jsdom();
+        common.enableClipboard();
 
         $('body').html('<button id="copyLink"></button>');
 
         $.PrivateBin.CopyToClipboard.init();
-        $.PrivateBin.CopyToClipboard.enableTestMode();
         $.PrivateBin.CopyToClipboard.setUrl(text);
 
         $('#copyLink').trigger('click');
 
-        const copiedText = $.PrivateBin.CopyToClipboard.readFromClipboard();
+        const copiedText = await navigator.clipboard.readText();
 
         clean();
 
