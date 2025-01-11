@@ -5454,11 +5454,11 @@ jQuery.PrivateBin = (function($, RawDeflate) {
     const CopyToClipboard = (function () {
         const me = {};
 
-        let copyButton = $('#prettyMessageCopyBtn'),
-            copyLinkButton = $('#copyLink'),
-            copyIcon = $('#copyIcon'),
-            successIcon = $('#copySuccessIcon'),
-            shortcutHint = $('#copyShortcutHintText'),
+        let copyButton,
+            copyLinkButton,
+            copyIcon,
+            successIcon,
+            shortcutHint,
             url;
 
         /**
@@ -5613,6 +5613,12 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          * @function
          */
         me.init = function() {
+            copyButton = $('#prettyMessageCopyBtn');
+            copyLinkButton = $('#copyLink');
+            copyIcon = $('#copyIcon');
+            successIcon = $('#copySuccessIcon');
+            shortcutHint = $('#copyShortcutHintText');
+
             handleCopyButtonClick();
             handleCopyLinkButtonClick();
             handleKeyboardShortcut();
