@@ -924,11 +924,10 @@ class StorageClientStub extends StorageClient
         $this->_connection =  new ConnectionInterfaceStub();
     }
 
-    public function bucket($name, $userProject = false)
+    public function bucket($name, $userProject = false, array $config = array())
     {
         if (!key_exists($name, self::$_buckets)) {
-            $b                     = new BucketStub($this->_connection, $name, array(), $this);
-            self::$_buckets[$name] = $b;
+            self::$_buckets[$name] = new BucketStub($this->_connection, $name, array(), $this);
         }
         return self::$_buckets[$name];
     }
