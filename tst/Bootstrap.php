@@ -763,6 +763,11 @@ class ConnectionInterfaceStub implements ConnectionInterface
         throw new BadMethodCallException('not supported by this stub');
     }
 
+    public function restoreBucket(array $args = array())
+    {
+        throw new BadMethodCallException('not supported by this stub');
+    }
+
     public function getBucket(array $args = array())
     {
         throw new BadMethodCallException('not supported by this stub');
