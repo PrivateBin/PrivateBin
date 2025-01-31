@@ -7,7 +7,7 @@
 * CHANGED: Replaced usage of strpos with str_starts_with & str_contains (#1373)
 * CHANGED: Added polyfill libraries for ctype, str_starts_with & str_contains functions (#1476)
 * CHANGED: Turned paste delete link into a button (#266)
-* CHANGED: Upgrading libraries to: DOMpurify 3.2.3, cloud-storage 1.45.0, aws-sdk-php 3.336.2
+* CHANGED: Upgrading libraries to: DOMpurify 3.2.4, cloud-storage 1.45.0, aws-sdk-php 3.336.2
 * CHANGED: `bootstrap5` template UI improvements
 * FIXED: Redirect to the home page after changing the language (#92)
 
