@@ -1,5 +1,7 @@
 # PrivateBin version history
 
+## 1.7.7 (not yet released)
+
 ## 1.7.6 (2025-02-01)
 * ADDED: Ability to copy the paste by clicking the copy icon button or using the keyboard shortcut ctrl+c/cmd+c (#1390 & #12)
 * CHANGED: Allow toggling tab-key-support using `[Ctrl]+[m]` or `[Esc]` in textarea for keyboard navigation (#1386)
