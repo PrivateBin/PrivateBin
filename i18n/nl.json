@@ -143,7 +143,7 @@
     "Avatar generated from IP address": "Anonieme avatar (van het IP-adres)",
     "Add comment": "Commentaar toevoegen",
     "Optional nickname…": "Optionele bijnaam…",
-    "Post comment": "Plaats een commentaar",
+    "Post comment": "Plaats commentaar",
     "Sending comment…": "Commentaar verzenden…",
     "Comment posted.": "Commentaar geplaatst.",
     "Could not refresh display: %s": "Kon de weergave niet vernieuwen: %s",
@@ -220,11 +220,11 @@
     "Dark Mode": "Donkere modus",
     "Error compressing paste, due to missing WebAssembly support.": "Fout bij het comprimeren van notitie door ontbrekende ondersteuning voor WebAssembly.",
     "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.": "Fout bij het decomprimeren van de notitie, uw browser ondersteunt WebAssembly niet. Gebruik een andere browser om deze notitie te bekijken.",
-    "Start over": "Start over",
-    "Paste copied to clipboard": "Paste copied to clipboard",
-    "To copy paste press on the copy button or use the clipboard shortcut <kbd>Ctrl</kbd>+<kbd>c</kbd>/<kbd>Cmd</kbd>+<kbd>c</kbd>": "To copy paste press on the copy button or use the clipboard shortcut <kbd>Ctrl</kbd>+<kbd>c</kbd>/<kbd>Cmd</kbd>+<kbd>c</kbd>",
-    "Copy link": "Copy link",
-    "Link copied to clipboard": "Link copied to clipboard",
-    "Paste text": "Paste text",
-    "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)": "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)"
+    "Start over": "Opnieuw beginnen",
+    "Paste copied to clipboard": "Notitie gekopieerd naar klembord",
+    "To copy paste press on the copy button or use the clipboard shortcut <kbd>Ctrl</kbd>+<kbd>c</kbd>/<kbd>Cmd</kbd>+<kbd>c</kbd>": "Om te kopiëren en plakken druk je op de knop Kopiëren of gebruik je de sneltoets op het klembord <kbd>Ctrl</kbd>+<kbd>c</kbd>/<kbd>Cmd</kbd>+<kbd>c</kbd>",
+    "Copy link": "Kopieer link",
+    "Link copied to clipboard": "Link gekopieerd naar klembord",
+    "Paste text": "Tekst plakken",
+    "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)": "Tabulatortoets dient als teken (gebruik <kbd>Ctrl</kbd>+<kbd>m</kbd> of <kbd>Esc</kbd> om te schakelen)"
 }
