@@ -621,7 +621,7 @@ describe('TopNav', function () {
             'returns the contents of the password input',
             'string',
             function (password) {
-                password = password.replace(/\r+/g, '');
+                password = password.replace(/\r+|\n+/g, '');
                 var results = [];
                 $('body').html(
                     '<nav><div id="navbar"><ul><li><div id="password" ' +
