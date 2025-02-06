@@ -234,20 +234,19 @@ describe('Helper', function () {
             jsc.nearray(jsc.nearray(common.jscAlnumString())),
             jsc.nearray(jsc.nearray(common.jscAlnumString())),
             function (labels, values) {
-                var selectedKey = '', selectedValue = '',
-                    cookieArray = [];
+                let selectedKey = '', selectedValue = '';
+                const clean = jsdom();
                 labels.forEach(function(item, i) {
-                    var key = item.join(''),
+                    const key = item.join(''),
                         value = (values[i] || values[0]).join('');
-                    cookieArray.push(key + '=' + value);
+                    document.cookie = key + '=' + value;
                     if (Math.random() < 1 / i || selectedKey === key)
                     {
                         selectedKey = key;
                         selectedValue = value;
                     }
                 });
-                var clean = jsdom('', {cookie: cookieArray}),
-                    result = $.PrivateBin.Helper.getCookie(selectedKey);
+                const result = $.PrivateBin.Helper.getCookie(selectedKey);
                 $.PrivateBin.Helper.reset();
                 clean();
                 return result === selectedValue;
