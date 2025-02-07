@@ -727,11 +727,12 @@ describe('TopNav', function () {
             cleanup();
         });
 
+        // TODO triggers error messages in jsDOM version 12, but passes
         it(
             'displays raw text view correctly',
             function () {
                 const clean = jsdom('', {url: 'https://privatebin.net/?0123456789abcdef#0'});
-                global.URL = require('jsdom-url').URL;
+                //global.URL = require('jsdom-url').URL;
                 $('body').html('<button id="rawtextbutton"></button>');
                 const sample = 'example';
                 $.PrivateBin.PasteViewer.setText(sample);

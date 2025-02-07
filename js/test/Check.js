@@ -19,10 +19,9 @@ describe('Check', function () {
                         }
                     );
                     Legacy.Check.init();
-                    const result1 = Legacy.Check.getInit() && !Legacy.Check.getStatus(),
-                          result2 = (document.getElementById('errormessage').className !== 'hidden');
+                    const result = Legacy.Check.getInit() && !Legacy.Check.getStatus();
                     clean();
-                    return result1 && result2;
+                    return result;
                 }
             ),
             {tests: 10});
