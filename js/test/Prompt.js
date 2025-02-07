@@ -32,7 +32,8 @@ describe('Prompt', function () {
                 //var result = $.PrivateBin.Prompt.getPassword();
                 var result = $('#passworddecrypt').val();
                 $.PrivateBin.Model.reset();
-                clean();
+                // TODO triggers error messages in jsDOM version 11
+                //clean();
                 return result === password;
             }
         );
