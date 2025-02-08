@@ -42,13 +42,18 @@ defaultformatter = "plaintext"
 ; size limit per paste or comment in bytes, defaults to 10 Mebibytes
 sizelimit = 10485760
 
-; template to include, default is "bootstrap" (tpl/bootstrap.php), also
+; by default PrivateBin use "bootstrap" template (tpl/bootstrap.php).
+; Optionally you can enable the template selection menu, which uses
+; a session cookie to store the choice until the browser is closed.
+templateselection = false
+
+; set the template your installs defaults to, defaults to "bootstrap" (tpl/bootstrap.php), also
 ; available are "page" (tpl/page.php), the classic ZeroBin style and several
 ; bootstrap variants: "bootstrap-dark", "bootstrap-compact", "bootstrap-page",
-; which can be combined with "-dark" and "-compact" for "bootstrap-dark-page"
-; and finally "bootstrap-compact-page" - previews at:
+; which can be combined with "-dark" and "-compact" for "bootstrap-dark-page",
+; "bootstrap-compact-page" and finally "bootstrap5" (tpl/bootstrap5.php) - previews at:
 ; https://privatebin.info/screenshots.html
-template = "bootstrap"
+; templatedefault = "bootstrap"
 
 ; (optional) info text to display
 ; use single, instead of double quotes for HTML attributes
@@ -145,6 +150,17 @@ never = 0
 plaintext = "Plain Text"
 syntaxhighlighting = "Source Code"
 markdown = "Markdown"
+
+[available_templates]
+; List of available for selection templates when "templateselection" option is enabled
+bootstrap
+bootstrap-page
+bootstrap-dark
+bootstrap-dark-page
+bootstrap-compact
+bootstrap-compact-page
+bootstrap5
+page
 
 [traffic]
 ; time limit between calls from the same IP address in seconds
