@@ -1,6 +1,7 @@
 # PrivateBin version history
 
 ## 1.7.7 (not yet released)
+* ADDED: Switching templates using the web ui (#13)
 
 ## 1.7.6 (2025-02-01)
 * ADDED: Ability to copy the paste by clicking the copy icon button or using the keyboard shortcut ctrl+c/cmd+c (#1390 & #12)
