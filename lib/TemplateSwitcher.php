@@ -36,14 +36,20 @@ class TemplateSwitcher {
      * @static
      * @var    array
      */
-    protected static $_availableTemplates = [
-        'page',
-        'bootstrap',
-        'bootstrap-compact',
-        'bootstrap-dark',
-        'bootstrap-page',
-        'bootstrap5',
-    ];
+    protected static $_availableTemplates = array();
+
+
+    /**
+     * set available templates
+     *
+     * @access public
+     * @static
+     * @param  array $templates
+     */
+    public static function setAvailableTemplates(array $templates)
+    {
+        self::$_availableTemplates = $templates;
+    }
 
     /**
      * set the default template
@@ -101,7 +107,7 @@ class TemplateSwitcher {
      *
      * @access private
      * @static
-     * @return string
+     * @return string|null
      */
     private static function getSelectedByUserTemplate(): ?string
     {

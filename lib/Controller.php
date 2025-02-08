@@ -183,6 +183,12 @@ class Controller
         $this->_setDefaultTemplate();
     }
 
+
+    /**
+     * Set default language
+     *
+     * @access private
+     */
     private function _setDefaultLanguage()
     {
         $this->_conf = new Configuration;
@@ -197,14 +203,21 @@ class Controller
     }
 
 
+    /**
+     * Set default template
+     *
+     * @access private
+     */
     private function _setDefaultTemplate()
     {
         $this->_conf = new Configuration;
 
+        $templates = $this->_conf->getSection('available_templates');
         $template = $this->_conf->getKey('templatedefault');
+        TemplateSwitcher::setAvailableTemplates($templates);
         TemplateSwitcher::setTemplateFallback($template);
         // force default template, if template selection is disabled and a default is set
-        if (!$this->_conf->getKey('languageselection') && strlen($template) == 2) {
+        if (!$this->_conf->getKey('templateselection') && !empty($template)) {
             $_COOKIE['template'] = $template;
             setcookie('template', $template, array('SameSite' => 'Lax', 'Secure' => true));
         }

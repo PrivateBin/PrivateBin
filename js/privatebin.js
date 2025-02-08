@@ -3940,6 +3940,14 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             event.preventDefault();
         }
 
+        /**
+         * save the template in a cookie and reloads the page
+         *
+         * @name TopNav.setTemplate
+         * @private
+         * @function
+         * @param {Event} event
+         */
         function setTemplate(event)
         {
             let template = $(event.target).data('template') || event.target.value;
