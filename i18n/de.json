@@ -226,5 +226,6 @@
     "Copy link": "Verknüpfung kopieren",
     "Link copied to clipboard": "Verknüpfung wurde in die Zwischenablage kopiert.",
     "Paste text": "Text",
-    "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)": "Tabulatortaste als Zeichen interpretieren (Umschalten durch <kbd>Strg</kbd>+<kbd>m</kbd> oder <kbd>Esc</kbd>)"
+    "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)": "Tabulatortaste als Zeichen interpretieren (Umschalten durch <kbd>Strg</kbd>+<kbd>m</kbd> oder <kbd>Esc</kbd>)",
+    "Theme": "Theme"
 }

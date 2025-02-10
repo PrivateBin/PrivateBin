@@ -223,6 +223,27 @@ if (!empty($LANGUAGESELECTION)):
 <?php
 endif;
 ?>
+<?php
+if (!empty($TEMPLATESELECTION)):
+?>
+					<div id="template" class="button"><?php echo I18n::_('Theme'); ?>:
+						<select name="template">
+<?php
+    foreach ($TEMPLATES as $value):
+?>
+							<option data-template="<?php echo $value; ?>" value="<?php echo $value; ?>"<?php
+        if ($value == $TEMPLATESELECTION):
+?> selected="selected"<?php
+        endif;
+?>><?php echo $value; ?></option>
+<?php
+    endforeach;
+?>
+						</select>
+					</div>
+<?php
+endif;
+?>
 				</div>
 <?php
 if ($QRCODE):

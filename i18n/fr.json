@@ -226,5 +226,6 @@
     "Copy link": "Copier le lien",
     "Link copied to clipboard": "Lien copié dans le presse-papier",
     "Paste text": "Texte du paste",
-    "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)": "La touche de tabulation sert de caractère (Presser <kbd>Ctrl</kbd>+<kbd>m</kbd> ou <kbd>Esc</kbd> pour basculer)"
+    "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)": "La touche de tabulation sert de caractère (Presser <kbd>Ctrl</kbd>+<kbd>m</kbd> ou <kbd>Esc</kbd> pour basculer)",
+    "Theme": "Theme"
 }

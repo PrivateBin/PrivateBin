@@ -226,5 +226,6 @@
     "Copy link": "Kopieer link",
     "Link copied to clipboard": "Link gekopieerd naar klembord",
     "Paste text": "Tekst plakken",
-    "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)": "Tabulatortoets dient als teken (gebruik <kbd>Ctrl</kbd>+<kbd>m</kbd> of <kbd>Esc</kbd> om te schakelen)"
+    "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)": "Tabulatortoets dient als teken (gebruik <kbd>Ctrl</kbd>+<kbd>m</kbd> of <kbd>Esc</kbd> om te schakelen)",
+    "Theme": "Theme"
 }

@@ -458,6 +458,28 @@ if (!empty($LANGUAGESELECTION)) :
 <?php
 endif;
 ?>
+<?php
+if (!empty($TEMPLATESELECTION)) :
+?>
+					<li id="template" class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><?php echo I18n::_('Theme'); ?>: <?php echo $TEMPLATESELECTION; ?> <span class="caret"></span></a>
+						<ul class="dropdown-menu dropdown-menu-right">
+<?php
+    foreach ($TEMPLATES as $value) :
+?>
+							<li>
+								<a href="#" data-template="<?php echo $value; ?>">
+									<?php echo $value; ?>
+								</a>
+							</li>
+<?php
+    endforeach;
+?>
+						</ul>
+					</li>
+<?php
+endif;
+?>
 				</ul>
 			</div>
 		<?php
