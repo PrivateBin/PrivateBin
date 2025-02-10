@@ -53,7 +53,7 @@ templateselection = false
 ; which can be combined with "-dark" and "-compact" for "bootstrap-dark-page",
 ; "bootstrap-compact-page" and finally "bootstrap5" (tpl/bootstrap5.php) - previews at:
 ; https://privatebin.info/screenshots.html
-; templatedefault = "bootstrap"
+; template = "bootstrap"
 
 ; (optional) info text to display
 ; use single, instead of double quotes for HTML attributes

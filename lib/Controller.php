@@ -213,9 +213,10 @@ class Controller
         $this->_conf = new Configuration;
 
         $templates = $this->_conf->getSection('available_templates');
-        $template = $this->_conf->getKey('templatedefault');
+        $template = $this->_conf->getKey('template');
         TemplateSwitcher::setAvailableTemplates($templates);
         TemplateSwitcher::setTemplateFallback($template);
+
         // force default template, if template selection is disabled and a default is set
         if (!$this->_conf->getKey('templateselection') && !empty($template)) {
             $_COOKIE['template'] = $template;

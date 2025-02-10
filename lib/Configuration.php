@@ -46,7 +46,7 @@ class Configuration
             'syntaxhighlightingtheme'  => '',
             'sizelimit'                => 10485760,
             'templateselection'        => false,
-            'templatedefault'          => '',
+            'template'                 => 'bootstrap',
             'info'                     => 'More information on the <a href=\'https://privatebin.info/\'>project page</a>.',
             'notice'                   => '',
             'languageselection'        => false,
@@ -79,13 +79,13 @@ class Configuration
             'markdown'           => 'Markdown',
         ),
         'available_templates' => array(
+            'bootstrap5',
             'bootstrap',
             'bootstrap-page',
             'bootstrap-dark',
             'bootstrap-dark-page',
             'bootstrap-compact',
             'bootstrap-compact-page',
-            'bootstrap5',
             'page',
         ),
         'traffic' => array(
