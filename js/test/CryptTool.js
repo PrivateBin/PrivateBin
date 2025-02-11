@@ -20,7 +20,10 @@ describe('CryptTool', function () {
                     let clean = jsdom();
                     // ensure zlib is getting loaded
                     $.PrivateBin.Controller.initZ();
-                    window.crypto = new WebCrypto();
+                    Object.defineProperty(window, 'crypto', {
+                        value: new WebCrypto(),
+                        writeable: false,
+                    });
                     message = message.trim();
                     let cipherMessage = await $.PrivateBin.CryptTool.cipher(
                             key, password, message, []
@@ -42,7 +45,10 @@ describe('CryptTool', function () {
             function () {
                 delete global.Base64;
                 let clean = jsdom();
-                window.crypto = new WebCrypto();
+                Object.defineProperty(window, 'crypto', {
+                    value: new WebCrypto(),
+                    writeable: false,
+                });
 
                 // Of course you can easily decipher the following texts, if you like.
                 // Bonus points for finding their sources and hidden meanings.
@@ -119,7 +125,10 @@ describe('CryptTool', function () {
             function () {
                 global.Base64 = require('../base64-1.7').Base64;
                 var clean = jsdom();
-                window.crypto = new WebCrypto();
+                Object.defineProperty(window, 'crypto', {
+                    value: new WebCrypto(),
+                    writeable: false,
+                });
 
                 // Of course you can easily decipher the following texts, if you like.
                 // Bonus points for finding their sources and hidden meanings.
@@ -180,7 +189,10 @@ describe('CryptTool', function () {
         it('does not truncate messages', async function () {
             let message = fs.readFileSync('test/compression-sample.txt', 'utf8'),
                 clean = jsdom();
-            window.crypto = new WebCrypto();
+            Object.defineProperty(window, 'crypto', {
+                value: new WebCrypto(),
+                writeable: false,
+            });
             // ensure zlib is getting loaded
             $.PrivateBin.Controller.initZ();
             let cipherMessage = await $.PrivateBin.CryptTool.cipher(
@@ -228,7 +240,10 @@ conseq_or_bottom inv (interp (nth_iterate sBody n) (MemElem mem))
                     let clean = jsdom();
                     // ensure zlib is getting loaded
                     $.PrivateBin.Controller.initZ();
-                    window.crypto = new WebCrypto();
+                    Object.defineProperty(window, 'crypto', {
+                        value: new WebCrypto(),
+                        writeable: false,
+                    });
                     let cipherMessage = await $.PrivateBin.CryptTool.cipher(
                             key, password, message, []
                         ),
@@ -253,7 +268,10 @@ conseq_or_bottom inv (interp (nth_iterate sBody n) (MemElem mem))
             'integer',
             function(counter) {
                 var clean = jsdom();
-                window.crypto = new WebCrypto();
+                Object.defineProperty(window, 'crypto', {
+                    value: new WebCrypto(),
+                    writeable: false,
+                });
                 var key = $.PrivateBin.CryptTool.getSymmetricKey(),
                     result = (key !== '' && keys.indexOf(key) === -1);
                 keys.push(key);
@@ -263,4 +281,3 @@ conseq_or_bottom inv (interp (nth_iterate sBody n) (MemElem mem))
         );
     });
 });
-
