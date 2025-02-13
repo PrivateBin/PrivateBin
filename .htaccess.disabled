@@ -2,6 +2,7 @@ RewriteEngine on
 RewriteCond !%{HTTP_USER_AGENT} "Let's Encrypt validation server" [NC]
 RewriteCond %{HTTP_USER_AGENT} ^.*(bot|spider|crawl|https?://|WhatsApp|SkypeUriPreview|facebookexternalhit) [NC]
 RewriteRule .* - [R=403,L]
+AddType application/wasm .wasm
 
 <IfModule mod_php7.c>
 php_value max_execution_time 30
