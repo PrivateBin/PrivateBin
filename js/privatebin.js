@@ -58,7 +58,6 @@ jQuery.PrivateBin = (function($, RawDeflate) {
      */
      const purifyHtmlConfig = {
         ALLOWED_URI_REGEXP: /^(?:(?:(?:f|ht)tps?|mailto|magnet):)/i,
-        SAFE_FOR_JQUERY: true,
         USE_PROFILES: {
             html: true
         }
