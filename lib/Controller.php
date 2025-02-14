@@ -183,7 +183,6 @@ class Controller
         $this->_setDefaultTemplate();
     }
 
-
     /**
      * Set default language
      *
@@ -202,7 +201,6 @@ class Controller
         }
     }
 
-
     /**
      * Set default template
      *
@@ -213,7 +211,7 @@ class Controller
         $this->_conf = new Configuration;
 
         $templates = $this->_conf->getSection('available_templates');
-        $template = $this->_conf->getKey('template');
+        $template  = $this->_conf->getKey('template');
         TemplateSwitcher::setAvailableTemplates($templates);
         TemplateSwitcher::setTemplateFallback($template);
 

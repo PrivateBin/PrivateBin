@@ -11,14 +11,13 @@
 
 namespace PrivateBin;
 
-
 /**
  * TemplateSwitcher
  *
  * Provides tool to change application template
  */
-class TemplateSwitcher {
-
+class TemplateSwitcher
+{
     /**
      * template fallback
      *
@@ -28,7 +27,6 @@ class TemplateSwitcher {
      */
     protected static $_templateFallback;
 
-
     /**
      * available templates
      *
@@ -37,7 +35,6 @@ class TemplateSwitcher {
      * @var    array
      */
     protected static $_availableTemplates = array();
-
 
     /**
      * set available templates
@@ -111,8 +108,8 @@ class TemplateSwitcher {
      */
     private static function getSelectedByUserTemplate(): ?string
     {
-        $selectedTemplate = null;
-        $templateCookieValue = $_COOKIE['template'] ?? "";
+        $selectedTemplate    = null;
+        $templateCookieValue = $_COOKIE['template'] ?? '';
 
         if (self::isTemplateAvailable($templateCookieValue)) {
             $selectedTemplate = $templateCookieValue;
