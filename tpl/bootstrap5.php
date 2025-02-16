@@ -324,6 +324,30 @@ if (!empty($LANGUAGESELECTION)) :
 <?php
 endif;
 ?>
+<?php
+if (!empty($TEMPLATESELECTION)) :
+?>
+						<li id="template" class="nav-item dropdown">
+							<a href="#" class="nav-link dropdown-toggle d-flex align-items-center gap-1" data-bs-toggle="dropdown" role="button" aria-expanded="false">
+								<?php echo I18n::_('Theme'); ?>: <?php echo $TEMPLATESELECTION, PHP_EOL; ?>
+							</a>
+							<ul class="dropdown-menu dropdown-menu-end" role="menu">
+<?php
+    foreach ($TEMPLATES as $value) :
+?>
+								<li>
+									<a href="#" class="dropdown-item" data-template="<?php echo $value; ?>">
+										<?php echo $value; ?>
+									</a>
+								</li>
+<?php
+    endforeach;
+?>
+							</ul>
+						</li>
+<?php
+endif;
+?>
 					</ul>
 				</div>
 			</div>

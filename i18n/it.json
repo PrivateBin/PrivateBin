@@ -226,5 +226,6 @@
     "Copy link": "Copia il link",
     "Link copied to clipboard": "Link copied to clipboard",
     "Paste text": "Testo del messaggio",
-    "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)": "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)"
+    "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)": "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)",
+    "Theme": "Theme"
 }

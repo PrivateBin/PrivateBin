@@ -179,13 +179,46 @@ class Controller
         $this->_request = new Request;
         $this->_urlBase = $this->_request->getRequestUri();
 
-        // set default language
+        $this->_setDefaultLanguage();
+        $this->_setDefaultTemplate();
+    }
+
+    /**
+     * Set default language
+     *
+     * @access private
+     */
+    private function _setDefaultLanguage()
+    {
+        $this->_conf = new Configuration;
+
         $lang = $this->_conf->getKey('languagedefault');
         I18n::setLanguageFallback($lang);
         // force default language, if language selection is disabled and a default is set
         if (!$this->_conf->getKey('languageselection') && strlen($lang) == 2) {
             $_COOKIE['lang'] = $lang;
             setcookie('lang', $lang, array('SameSite' => 'Lax', 'Secure' => true));
+        }
+    }
+
+    /**
+     * Set default template
+     *
+     * @access private
+     */
+    private function _setDefaultTemplate()
+    {
+        $this->_conf = new Configuration;
+
+        $templates = $this->_conf->getSection('available_templates');
+        $template  = $this->_conf->getKey('template');
+        TemplateSwitcher::setAvailableTemplates($templates);
+        TemplateSwitcher::setTemplateFallback($template);
+
+        // force default template, if template selection is disabled and a default is set
+        if (!$this->_conf->getKey('templateselection') && !empty($template)) {
+            $_COOKIE['template'] = $template;
+            setcookie('template', $template, array('SameSite' => 'Lax', 'Secure' => true));
         }
     }
 
@@ -400,6 +433,13 @@ class Controller
             setcookie('lang', $languageselection, array('SameSite' => 'Lax', 'Secure' => true));
         }
 
+        // set template cookie if that functionality was enabled
+        $templateselection = '';
+        if ($this->_conf->getKey('templateselection')) {
+            $templateselection = TemplateSwitcher::getTemplate();
+            setcookie('template', $templateselection, array('SameSite' => 'Lax', 'Secure' => true));
+        }
+
         // strip policies that are unsupported in meta tag
         $metacspheader = str_replace(
             array(
@@ -438,6 +478,8 @@ class Controller
         $page->assign('ZEROBINCOMPATIBILITY', $this->_conf->getKey('zerobincompatibility'));
         $page->assign('LANGUAGESELECTION', $languageselection);
         $page->assign('LANGUAGES', I18n::getLanguageLabels(I18n::getAvailableLanguages()));
+        $page->assign('TEMPLATESELECTION', $templateselection);
+        $page->assign('TEMPLATES', TemplateSwitcher::getAvailableTemplates());
         $page->assign('EXPIRE', $expire);
         $page->assign('EXPIREDEFAULT', $this->_conf->getKey('default', 'expire'));
         $page->assign('URLSHORTENER', $this->_conf->getKey('urlshortener'));
@@ -447,7 +489,7 @@ class Controller
         $page->assign('HTTPSLINK', 'https://' . $this->_request->getHost() . $this->_request->getRequestUri());
         $page->assign('COMPRESSION', $this->_conf->getKey('compression'));
         $page->assign('SRI', $this->_conf->getSection('sri'));
-        $page->draw($this->_conf->getKey('template'));
+        $page->draw(TemplateSwitcher::getTemplate());
     }
 
     /**
