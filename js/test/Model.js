@@ -94,7 +94,6 @@ describe('Model', function () {
                 url.query = queryStart.concat(pasteId, queryEnd);
                 const pasteIdString = pasteId.join(''),
                     clean           = jsdom('', {url: common.urlToString(url)});
-                global.URL = require('jsdom-url').URL;
                 const result = $.PrivateBin.Model.getPasteId();
                 $.PrivateBin.Model.reset();
                 clean();
@@ -107,7 +106,6 @@ describe('Model', function () {
             function (url) {
                 let clean = jsdom('', {url: common.urlToString(url)}),
                     result = false;
-                global.URL = require('jsdom-url').URL;
                 try {
                     $.PrivateBin.Model.getPasteId();
                 }
@@ -131,7 +129,7 @@ describe('Model', function () {
             'returns the fragment of a v1 URL',
             common.jscUrl(),
             function (url) {
-                url.fragment = common.btoa(url.fragment.padStart(32, '\u0000'));
+                url.fragment = '0OIl'; // any non-base58 string
                 const clean = jsdom('', {url: common.urlToString(url)}),
                     result = $.PrivateBin.Model.getPasteKey();
                 $.PrivateBin.Model.reset();
@@ -140,17 +138,17 @@ describe('Model', function () {
             }
         );
         jsc.property(
-            'returns the v1 fragment stripped of trailing query parts',
+            'returns the fragment stripped of trailing query parts',
             common.jscUrl(),
             jsc.array(common.jscHashString()),
             function (url, trail) {
-                const fragmentString = common.btoa(url.fragment.padStart(32, '\u0000'));
-                url.fragment = fragmentString + '&' + trail.join('');
+                const fragment = url.fragment.padStart(32, '\u0000');
+                url.fragment = $.PrivateBin.CryptTool.base58encode(fragment) + '&' + trail.join('');
                 const clean = jsdom('', {url: common.urlToString(url)}),
                     result = $.PrivateBin.Model.getPasteKey();
                 $.PrivateBin.Model.reset();
                 clean();
-                return fragmentString === result;
+                return fragment === result;
             }
         );
         jsc.property(

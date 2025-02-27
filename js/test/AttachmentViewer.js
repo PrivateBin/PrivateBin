@@ -1,5 +1,5 @@
 'use strict';
-var common = require('../common');
+const common = require('../common');
 
 describe('AttachmentViewer', function () {
     describe('setAttachment, showAttachment, removeAttachment, hideAttachment, hideAttachmentPreview, hasAttachment, getAttachment & moveAttachmentTo', function () {
@@ -14,11 +14,12 @@ describe('AttachmentViewer', function () {
             'string',
             function (mimeType, rawdata, filename, prefix, postfix) {
                 let clean = jsdom(),
-                    data = 'data:' + mimeType + ';base64,' + btoa(rawdata),
+                    data = 'data:' + mimeType + ';base64,' + common.btoa(rawdata),
+                    mimePrefix = mimeType.substring(0, 6),
                     previewSupported = (
-                        mimeType.substring(0, 6) === 'image/' ||
-                        mimeType.substring(0, 6) === 'audio/' ||
-                        mimeType.substring(0, 6) === 'video/' ||
+                        mimePrefix === 'image/' ||
+                        mimePrefix === 'audio/' ||
+                        mimePrefix === 'video/' ||
                         mimeType.match(/\/pdf/i)
                     ),
                     results = [],
@@ -48,6 +49,7 @@ describe('AttachmentViewer', function () {
                     $('#attachment').hasClass('hidden') &&
                     $('#attachmentPreview').hasClass('hidden')
                 );
+                global.atob = common.atob;
                 if (filename.length) {
                     $.PrivateBin.AttachmentViewer.setAttachment(data, filename);
                 } else {
