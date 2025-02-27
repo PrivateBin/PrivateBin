@@ -5,7 +5,6 @@ global.assert = require('assert');
 global.jsc = require('jsverify');
 global.jsdom = require('jsdom-global');
 global.cleanup = global.jsdom();
-global.URL = require('jsdom-url').URL;
 global.fs = require('fs');
 global.WebCrypto = require('@peculiar/webcrypto').Crypto;
 
@@ -79,8 +78,16 @@ function parseMime(line) {
 }
 
 // common testing helper functions
-exports.atob = atob;
-exports.btoa = btoa;
+// as of jsDOM 22 the base64 functions provided in the DOM are more restrictive
+// than browser implementation and throw when being passed invalid unicode
+// codepoints - as we use these in the encryption with binary data, we need
+// these to be character encoding agnostic
+exports.atob = function(encoded) {
+    return Buffer.from(encoded, 'base64').toString('binary');
+}
+exports.btoa = function(text) {
+    return Buffer.from(text, 'binary').toString('base64');
+}
 
 // provides random lowercase characters from a to z
 exports.jscA2zString = function() {
