@@ -47,7 +47,7 @@ describe('UiHelper', function () {
     });
 
     describe('reloadHome', function () {
-        // TODO triggers error messages in jsDOM version 11
+        // TODO triggers error messages in jsDOM since version 11
         /*
         this.timeout(30000);
         before(function () {
