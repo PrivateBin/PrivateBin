@@ -43,7 +43,7 @@ describe('CryptTool', function () {
         // The below static unit tests are included to ensure deciphering of "classic"
         // SJCL based pastes still works
         it(
-            'supports PrivateBin v1 ciphertext 1 (SJCL & browser atob)',
+            'supports PrivateBin v1 ciphertext with password (SJCL & browser atob)',
             async function () {
                 delete global.Base64;
                 const clean = jsdom();
@@ -95,7 +95,7 @@ describe('CryptTool', function () {
         );
 
         it(
-            'supports PrivateBin v1 ciphertext 2 (SJCL & browser atob)',
+            'supports PrivateBin v1 ciphertext no password (SJCL & browser atob)',
             async function () {
                 delete global.Base64;
                 const clean = jsdom();
@@ -143,7 +143,7 @@ describe('CryptTool', function () {
         );
 
         it(
-            'supports ZeroBin ciphertext 1 (SJCL & Base64 1.7)',
+            'supports ZeroBin ciphertext with password (SJCL & Base64 1.7)',
             async function () {
                 global.Base64 = require('../base64-1.7').Base64;
                 const clean = jsdom();
@@ -188,7 +188,7 @@ describe('CryptTool', function () {
         );
 
         it(
-            'supports ZeroBin ciphertext 2 (SJCL & Base64 1.7)',
+            'supports ZeroBin ciphertext no password (SJCL & Base64 1.7)',
             async function () {
                 global.Base64 = require('../base64-1.7').Base64;
                 const clean = jsdom();
