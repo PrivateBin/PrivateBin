@@ -727,7 +727,7 @@ describe('TopNav', function () {
             cleanup();
         });
 
-        // TODO triggers error messages in jsDOM version 12, but passes
+        // TODO triggers error messages in jsDOM since version 12, but passes
         it(
             'displays raw text view correctly',
             function () {

@@ -229,7 +229,7 @@ describe('Helper', function () {
             cleanup();
         });
 
-/* TODO test fails in jsDOM version 17 - document.cookie remains empty
+/* TODO test fails since jsDOM version 17 - document.cookie remains empty
         jsc.property(
             'returns the requested cookie',
             jsc.nearray(jsc.nearray(common.jscAlnumString())),
