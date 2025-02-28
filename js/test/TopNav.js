@@ -621,7 +621,7 @@ describe('TopNav', function () {
             'returns the contents of the password input',
             'string',
             function (password) {
-                password = password.replace(/\r+/g, '');
+                password = password.replace(/\r+|\n+/g, '');
                 var results = [];
                 $('body').html(
                     '<nav><div id="navbar"><ul><li><div id="password" ' +
@@ -727,11 +727,11 @@ describe('TopNav', function () {
             cleanup();
         });
 
+        // TODO triggers error messages in jsDOM since version 12, but passes
         it(
             'displays raw text view correctly',
             function () {
                 const clean = jsdom('', {url: 'https://privatebin.net/?0123456789abcdef#0'});
-                global.URL = require('jsdom-url').URL;
                 $('body').html('<button id="rawtextbutton"></button>');
                 const sample = 'example';
                 $.PrivateBin.PasteViewer.setText(sample);

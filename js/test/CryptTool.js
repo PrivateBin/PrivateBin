@@ -1,5 +1,5 @@
 'use strict';
-require('../common');
+const common = require('../common');
 
 describe('CryptTool', function () {
     describe('cipher & decipher', function () {
@@ -15,21 +15,26 @@ describe('CryptTool', function () {
                 'string',
                 'string',
                 async function (key, password, message) {
-                    // pause to let async functions conclude
-                    await new Promise(resolve => setTimeout(resolve, 300));
-                    let clean = jsdom();
+                    const clean = jsdom();
                     // ensure zlib is getting loaded
                     $.PrivateBin.Controller.initZ();
-                    window.crypto = new WebCrypto();
+                    Object.defineProperty(window, 'crypto', {
+                        value: new WebCrypto(),
+                        writeable: false,
+                    });
+                    global.atob = common.atob;
+                    global.btoa = common.btoa;
                     message = message.trim();
-                    let cipherMessage = await $.PrivateBin.CryptTool.cipher(
+                    const cipherMessage = await $.PrivateBin.CryptTool.cipher(
                             key, password, message, []
                         ),
                         plaintext = await $.PrivateBin.CryptTool.decipher(
                             key, password, cipherMessage
                         );
                     clean();
-                    return message === plaintext;
+                    const result = (message === plaintext);
+                    if (!result) console.log(plaintext, cipherMessage);
+                    return result;
                 }
             ),
             {tests: 3});
@@ -38,15 +43,19 @@ describe('CryptTool', function () {
         // The below static unit tests are included to ensure deciphering of "classic"
         // SJCL based pastes still works
         it(
-            'supports PrivateBin v1 ciphertext (SJCL & browser atob)',
-            function () {
+            'supports PrivateBin v1 ciphertext with password (SJCL & browser atob)',
+            async function () {
                 delete global.Base64;
-                let clean = jsdom();
-                window.crypto = new WebCrypto();
+                const clean = jsdom();
+                Object.defineProperty(window, 'crypto', {
+                    value: new WebCrypto(),
+                    writeable: false,
+                });
+                global.atob = common.atob;
 
                 // Of course you can easily decipher the following texts, if you like.
                 // Bonus points for finding their sources and hidden meanings.
-                return $.PrivateBin.CryptTool.decipher(
+                const paste = await $.PrivateBin.CryptTool.decipher(
                     '6t2qsmLyfXIokNCL+3/yl15rfTUBQvm5SOnFPvNE7Q8=',
                     // -- "That's amazing. I've got the same combination on my luggage."
                     Array.apply(0, Array(6)).map((_,b) => b + 1).join(''),
@@ -77,53 +86,76 @@ describe('CryptTool', function () {
                     'QUxMXI5htsn2rf0HxCFu7Po8DNYLxTS+67hYjDIYWYaEIc8LXWMLyDm9' +
                     'C5fARPJ4F2BIWgzgzkNj+dVjusft2XnziamWdbS5u3kuRlVuz5LQj+R5' +
                     'imnqQAincdZTkTT1nYx+DatlOLllCYIHffpI="}'
-                ).then(function (paste1) {
-                    $.PrivateBin.CryptTool.decipher(
-                        's9pmKZKOBN7EVvHpTA8jjLFH3Xlz/0l8lB4+ONPACrM=',
-                        '', // no password
-                        '{"iv":"WA42mdxIVXUwBqZu7JYNiw==","v":1,"iter":10000,"ks"' +
-                        ':256,"ts":128,"mode":"gcm","adata":"","cipher":"aes","sa' +
-                        'lt":"jN6CjbQMJCM=","ct":"kYYMo5DFG1+w0UHiYXT5pdV0IUuXxzO' +
-                        'lslkW/c3DRCbGFROCVkAskHce7HoRczee1N9c5MhHjVMJUIZE02qIS8U' +
-                        'yHdJ/GqcPVidTUcj9rnDNWsTXkjVv8jCwHS/cwmAjDTWpwp5ThECN+ov' +
-                        '/wNp/NdtTj8Qj7f/T3rfZIOCWfwLH9s4Des35UNcUidfPTNQ1l0Gm0X+' +
-                        'r98CCUSYZjQxkZc6hRZBLPQ8EaNVooUwd5eP4GiYlmSDNA0wOSA+5isP' +
-                        'YxomVCt+kFf58VBlNhpfNi7BLYAUTPpXT4SfH5drR9+C7NTeZ+tTCYjb' +
-                        'U94PzYItOpu8vgnB1/a6BAM5h3m9w+giUb0df4hgTWeZnZxLjo5BN8WV' +
-                        '+kdTXMj3/Vv0gw0DQrDcCuX/cBAjpy3lQGwlAN1vXoOIyZJUjMpQRrOL' +
-                        'dKvLB+zcmVNtGDbgnfP2IYBzk9NtodpUa27ne0T0ZpwOPlVwevsIVZO2' +
-                        '24WLa+iQmmHOWDFFpVDlS0t0fLfOk7Hcb2xFsTxiCIiyKMho/IME1Du3' +
-                        'X4e6BVa3hobSSZv0rRtNgY1KcyYPrUPW2fxZ+oik3y9SgGvb7XpjVIta' +
-                        '8DWlDWRfZ9kzoweWEYqz9IA8Xd373RefpyuWI25zlHoX3nwljzsZU6dC' +
-                        '//h/Dt2DNr+IAvKO3+u23cWoB9kgcZJ2FJuqjLvVfCF+OWcig7zs2pTY' +
-                        'JW6Rg6lqbBCxiUUlae6xJrjfv0pzD2VYCLY7v1bVTagppwKzNI3WaluC' +
-                        'OrdDYUCxUSe56yd1oAoLPRVbYvomRboUO6cjQhEknERyvt45og2kORJO' +
-                        'EJayHW+jZgR0Y0jM3Nk17ubpij2gHxNx9kiLDOiCGSV5mn9mV7qd3HHc' +
-                        'OMSykiBgbyzjobi96LT2dIGLeDXTIdPOog8wyobO4jWq0GGs0vBB8oSY' +
-                        'XhHvixZLcSjX2KQuHmEoWzmJcr3DavdoXZmAurGWLKjzEdJc5dSD/eNr' +
-                        '99gjHX7wphJ6umKMM+fn6PcbYJkhDh2GlJL5COXjXfm/5aj/vuyaRRWZ' +
-                        'MZtmnYpGAtAPg7AUG"}'
-                    ).then(function (paste2) {
-                        clean();
-                        assert.ok(
-                            paste1.includes('securely packed in iron') &&
-                            paste2.includes('Sol is right')
-                        );
-                    });
-                });
+                );
+                clean();
+                const result = typeof paste === 'string' && paste.includes('securely packed in iron');
+                if (!result) console.log(paste);
+                assert.ok(result);
             }
         );
 
         it(
-            'supports ZeroBin ciphertext (SJCL & Base64 1.7)',
-            function () {
-                global.Base64 = require('../base64-1.7').Base64;
-                var clean = jsdom();
-                window.crypto = new WebCrypto();
+            'supports PrivateBin v1 ciphertext no password (SJCL & browser atob)',
+            async function () {
+                delete global.Base64;
+                const clean = jsdom();
+                // ensure zlib is getting loaded
+                $.PrivateBin.Controller.initZ();
+                Object.defineProperty(window, 'crypto', {
+                    value: new WebCrypto(),
+                    writeable: false,
+                });
+                global.atob = common.atob;
 
                 // Of course you can easily decipher the following texts, if you like.
                 // Bonus points for finding their sources and hidden meanings.
-                return $.PrivateBin.CryptTool.decipher(
+                const paste = await $.PrivateBin.CryptTool.decipher(
+                    's9pmKZKOBN7EVvHpTA8jjLFH3Xlz/0l8lB4+ONPACrM=',
+                    '', // no password
+                    '{"iv":"WA42mdxIVXUwBqZu7JYNiw==","v":1,"iter":10000,"ks"' +
+                    ':256,"ts":128,"mode":"gcm","adata":"","cipher":"aes","sa' +
+                    'lt":"jN6CjbQMJCM=","ct":"kYYMo5DFG1+w0UHiYXT5pdV0IUuXxzO' +
+                    'lslkW/c3DRCbGFROCVkAskHce7HoRczee1N9c5MhHjVMJUIZE02qIS8U' +
+                    'yHdJ/GqcPVidTUcj9rnDNWsTXkjVv8jCwHS/cwmAjDTWpwp5ThECN+ov' +
+                    '/wNp/NdtTj8Qj7f/T3rfZIOCWfwLH9s4Des35UNcUidfPTNQ1l0Gm0X+' +
+                    'r98CCUSYZjQxkZc6hRZBLPQ8EaNVooUwd5eP4GiYlmSDNA0wOSA+5isP' +
+                    'YxomVCt+kFf58VBlNhpfNi7BLYAUTPpXT4SfH5drR9+C7NTeZ+tTCYjb' +
+                    'U94PzYItOpu8vgnB1/a6BAM5h3m9w+giUb0df4hgTWeZnZxLjo5BN8WV' +
+                    '+kdTXMj3/Vv0gw0DQrDcCuX/cBAjpy3lQGwlAN1vXoOIyZJUjMpQRrOL' +
+                    'dKvLB+zcmVNtGDbgnfP2IYBzk9NtodpUa27ne0T0ZpwOPlVwevsIVZO2' +
+                    '24WLa+iQmmHOWDFFpVDlS0t0fLfOk7Hcb2xFsTxiCIiyKMho/IME1Du3' +
+                    'X4e6BVa3hobSSZv0rRtNgY1KcyYPrUPW2fxZ+oik3y9SgGvb7XpjVIta' +
+                    '8DWlDWRfZ9kzoweWEYqz9IA8Xd373RefpyuWI25zlHoX3nwljzsZU6dC' +
+                    '//h/Dt2DNr+IAvKO3+u23cWoB9kgcZJ2FJuqjLvVfCF+OWcig7zs2pTY' +
+                    'JW6Rg6lqbBCxiUUlae6xJrjfv0pzD2VYCLY7v1bVTagppwKzNI3WaluC' +
+                    'OrdDYUCxUSe56yd1oAoLPRVbYvomRboUO6cjQhEknERyvt45og2kORJO' +
+                    'EJayHW+jZgR0Y0jM3Nk17ubpij2gHxNx9kiLDOiCGSV5mn9mV7qd3HHc' +
+                    'OMSykiBgbyzjobi96LT2dIGLeDXTIdPOog8wyobO4jWq0GGs0vBB8oSY' +
+                    'XhHvixZLcSjX2KQuHmEoWzmJcr3DavdoXZmAurGWLKjzEdJc5dSD/eNr' +
+                    '99gjHX7wphJ6umKMM+fn6PcbYJkhDh2GlJL5COXjXfm/5aj/vuyaRRWZ' +
+                    'MZtmnYpGAtAPg7AUG"}'
+                );
+                clean();
+                const result = typeof paste === 'string' && paste.includes('Sol is right');
+                if (!result) console.log(paste);
+                assert.ok(result);
+            }
+        );
+
+        it(
+            'supports ZeroBin ciphertext with password (SJCL & Base64 1.7)',
+            async function () {
+                global.Base64 = require('../base64-1.7').Base64;
+                const clean = jsdom();
+                Object.defineProperty(window, 'crypto', {
+                    value: new WebCrypto(),
+                    writeable: false,
+                });
+                global.atob = common.atob;
+
+                // Of course you can easily decipher the following texts, if you like.
+                // Bonus points for finding their sources and hidden meanings.
+                const paste = await $.PrivateBin.CryptTool.decipher(
                     '6t2qsmLyfXIokNCL+3/yl15rfTUBQvm5SOnFPvNE7Q8=',
                     // -- "That's amazing. I've got the same combination on my luggage."
                     Array.apply(0, Array(6)).map((_,b) => b + 1).join(''),
@@ -146,54 +178,74 @@ describe('CryptTool', function () {
                     '7mNNo7xba/YT9KoPDaniqnYqb+q2pX1WNWE7dLS2wfroMAS3kh8P22DA' +
                     'V37AeiNoD2PcI6ZcHbRdPa+XRrRcJhSPPW7UQ0z4OvBfjdu/w390QxAx' +
                     'SxvZewoh49fKKB6hTsRnZb4tpHkjlww=="}'
-                ).then(function (paste1) {
-                    $.PrivateBin.CryptTool.decipher(
-                        's9pmKZKOBN7EVvHpTA8jjLFH3Xlz/0l8lB4+ONPACrM=',
-                        '', // no password
-                        '{"iv":"Z7lAZQbkrqGMvruxoSm6Pw==","v":1,"iter":10000,"ks"' +
-                        ':256,"ts":128,"mode":"gcm","adata":"","cipher":"aes","sa' +
-                        'lt":"jN6CjbQMJCM=","ct":"PuOPWB3i2FPcreSrLYeQf84LdE8RHjs' +
-                        'c+MGtiOr4b7doNyWKYtkNorbRadxaPnEee2/Utrp1MIIfY5juJSy8RGw' +
-                        'EPX5ciWcYe6EzsXWznsnvhmpKNj9B7eIIrfSbxfy8E2e/g7xav1nive+' +
-                        'ljToka3WT1DZ8ILQd/NbnJeHWaoSEOfvz8+d8QJPb1tNZvs7zEY95Dum' +
-                        'QwbyOsIMKAvcZHJ9OJNpujXzdMyt6DpcFcqlldWBZ/8q5rAUTw0HNx/r' +
-                        'CgbhAxRYfNoTLIcMM4L0cXbPSgCjwf5FuO3EdE13mgEDhcClW79m0Qvc' +
-                        'nIh8xgzYoxLbp0+AwvC/MbZM8savN/0ieWr2EKkZ04ggiOIEyvfCUuNp' +
-                        'rQBYO+y8kKduNEN6by0Yf4LRCPfmwN+GezDLuzTnZIMhPbGqUAdgV6Ex' +
-                        'qK2ULEEIrQEMoOuQIxfoMhqLlzG79vXGt2O+BY+4IiYfvmuRLks4UXfy' +
-                        'HqxPXTJg48IYbGs0j4TtJPUgp3523EyYLwEGyVTAuWhYAmVIwd/hoV7d' +
-                        '7tmfcF73w9dufDFI3LNca2KxzBnWNPYvIZKBwWbq8ncxkb191dP6mjEi' +
-                        '7NnhqVk5A6vIBbu4AC5PZf76l6yep4xsoy/QtdDxCMocCXeAML9MQ9uP' +
-                        'QbuspOKrBvMfN5igA1kBqasnxI472KBNXsdZnaDddSVUuvhTcETM="}'
-                    ).then(function (paste2) {
-                        clean();
-                        delete global.Base64;
-                        assert.ok(
-                            paste1.includes('securely packed in iron') &&
-                            paste2.includes('Sol is right')
-                        );
-                    });
+                );
+                clean();
+                delete global.Base64;
+                const result = typeof paste === 'string' && paste.includes('securely packed in iron');
+                if (!result) console.log(paste);
+                assert.ok(result);
+            }
+        );
+
+        it(
+            'supports ZeroBin ciphertext no password (SJCL & Base64 1.7)',
+            async function () {
+                global.Base64 = require('../base64-1.7').Base64;
+                const clean = jsdom();
+                Object.defineProperty(window, 'crypto', {
+                    value: new WebCrypto(),
+                    writeable: false,
                 });
+                global.atob = common.atob;
+
+                const paste = await $.PrivateBin.CryptTool.decipher(
+                    's9pmKZKOBN7EVvHpTA8jjLFH3Xlz/0l8lB4+ONPACrM=',
+                    '', // no password
+                    '{"iv":"Z7lAZQbkrqGMvruxoSm6Pw==","v":1,"iter":10000,"ks"' +
+                    ':256,"ts":128,"mode":"gcm","adata":"","cipher":"aes","sa' +
+                    'lt":"jN6CjbQMJCM=","ct":"PuOPWB3i2FPcreSrLYeQf84LdE8RHjs' +
+                    'c+MGtiOr4b7doNyWKYtkNorbRadxaPnEee2/Utrp1MIIfY5juJSy8RGw' +
+                    'EPX5ciWcYe6EzsXWznsnvhmpKNj9B7eIIrfSbxfy8E2e/g7xav1nive+' +
+                    'ljToka3WT1DZ8ILQd/NbnJeHWaoSEOfvz8+d8QJPb1tNZvs7zEY95Dum' +
+                    'QwbyOsIMKAvcZHJ9OJNpujXzdMyt6DpcFcqlldWBZ/8q5rAUTw0HNx/r' +
+                    'CgbhAxRYfNoTLIcMM4L0cXbPSgCjwf5FuO3EdE13mgEDhcClW79m0Qvc' +
+                    'nIh8xgzYoxLbp0+AwvC/MbZM8savN/0ieWr2EKkZ04ggiOIEyvfCUuNp' +
+                    'rQBYO+y8kKduNEN6by0Yf4LRCPfmwN+GezDLuzTnZIMhPbGqUAdgV6Ex' +
+                    'qK2ULEEIrQEMoOuQIxfoMhqLlzG79vXGt2O+BY+4IiYfvmuRLks4UXfy' +
+                    'HqxPXTJg48IYbGs0j4TtJPUgp3523EyYLwEGyVTAuWhYAmVIwd/hoV7d' +
+                    '7tmfcF73w9dufDFI3LNca2KxzBnWNPYvIZKBwWbq8ncxkb191dP6mjEi' +
+                    '7NnhqVk5A6vIBbu4AC5PZf76l6yep4xsoy/QtdDxCMocCXeAML9MQ9uP' +
+                    'QbuspOKrBvMfN5igA1kBqasnxI472KBNXsdZnaDddSVUuvhTcETM="}'
+                );
+                clean();
+                delete global.Base64;
+                const result = typeof paste === 'string' && paste.includes('Sol is right');
+                if (!result) console.log(paste);
+                assert.ok(result);
             }
         );
 
         it('does not truncate messages', async function () {
-            let message = fs.readFileSync('test/compression-sample.txt', 'utf8'),
+            const message = fs.readFileSync('test/compression-sample.txt', 'ascii').trim(),
                 clean = jsdom();
-            window.crypto = new WebCrypto();
+            Object.defineProperty(window, 'crypto', {
+                value: new WebCrypto(),
+                writeable: false,
+            });
             // ensure zlib is getting loaded
             $.PrivateBin.Controller.initZ();
-            let cipherMessage = await $.PrivateBin.CryptTool.cipher(
+            global.atob = common.atob;
+            global.btoa = common.btoa;
+            const cipherMessage = await $.PrivateBin.CryptTool.cipher(
                     'foo', 'bar', message, []
                 ),
                 plaintext = await $.PrivateBin.CryptTool.decipher(
-                        'foo', 'bar', cipherMessage
+                    'foo', 'bar', cipherMessage
                 );
             clean();
-            assert.strictEqual(
-                message,
-                plaintext
-            );
+            const result = (message === plaintext);
+            if (!result) console.log(plaintext, cipherMessage);
+            assert.ok(result);
         });
 
         it('can en- and decrypt a particular message (#260)', function () {
@@ -201,8 +253,6 @@ describe('CryptTool', function () {
                 'string',
                 'string',
                 async function (key, password) {
-                    // pause to let async functions conclude
-                    await new Promise(resolve => setTimeout(resolve, 300));
                     const message = `
 1 subgoal
 
@@ -225,18 +275,23 @@ isWhile : interp (while expr sBody) (MemElem mem) =
 ======================== ( 1 / 1 )
 conseq_or_bottom inv (interp (nth_iterate sBody n) (MemElem mem))
 `;
-                    let clean = jsdom();
+                    const clean = jsdom();
                     // ensure zlib is getting loaded
                     $.PrivateBin.Controller.initZ();
-                    window.crypto = new WebCrypto();
-                    let cipherMessage = await $.PrivateBin.CryptTool.cipher(
+                    Object.defineProperty(window, 'crypto', {
+                        value: new WebCrypto(),
+                        writeable: false,
+                    });
+                    const cipherMessage = await $.PrivateBin.CryptTool.cipher(
                             key, password, message, []
                         ),
                         plaintext = await $.PrivateBin.CryptTool.decipher(
                                 key, password, cipherMessage
                         );
                     clean();
-                    return message === plaintext;
+                    const result = (message === plaintext);
+                    if (!result) console.log(plaintext, cipherMessage);
+                    return result;
                 }
             ),
             {tests: 3});
@@ -244,23 +299,27 @@ conseq_or_bottom inv (interp (nth_iterate sBody n) (MemElem mem))
     });
 
     describe('getSymmetricKey', function () {
-        this.timeout(30000);
-        var keys = [];
+        this.timeout(10000);
+        let keys = [];
 
         // the parameter is used to ensure the test is run more then one time
-        jsc.property(
-            'returns random, non-empty keys',
-            'integer',
-            function(counter) {
-                var clean = jsdom();
-                window.crypto = new WebCrypto();
-                var key = $.PrivateBin.CryptTool.getSymmetricKey(),
-                    result = (key !== '' && keys.indexOf(key) === -1);
-                keys.push(key);
-                clean();
-                return result;
-            }
-        );
+        it('returns random, non-empty keys', function () {
+            jsc.assert(jsc.forall(
+                'integer',
+                function(counter) {
+                    const clean = jsdom();
+                    Object.defineProperty(window, 'crypto', {
+                        value: new WebCrypto(),
+                        writeable: false,
+                    });
+                    const key = $.PrivateBin.CryptTool.getSymmetricKey(),
+                        result = (key !== '' && keys.indexOf(key) === -1);
+                    keys.push(key);
+                    clean();
+                    return result;
+                }
+            ),
+            {tests: 10});
+        });
     });
 });
-

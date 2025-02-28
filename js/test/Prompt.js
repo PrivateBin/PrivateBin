@@ -11,7 +11,7 @@ describe('Prompt', function () {
             'returns the password fed into the dialog',
             'string',
             function (password) {
-                password = password.replace(/\r+/g, '');
+                password = password.replace(/\r+|\n+/g, '');
                 var clean = jsdom('', {url: 'ftp://example.com/?0000000000000000'});
                 $('body').html(
                     '<div id="passwordmodal" class="modal fade" role="dialog">' +
@@ -32,7 +32,8 @@ describe('Prompt', function () {
                 //var result = $.PrivateBin.Prompt.getPassword();
                 var result = $('#passworddecrypt').val();
                 $.PrivateBin.Model.reset();
-                clean();
+                // TODO triggers error messages in jsDOM since version 11
+                //clean();
                 return result === password;
             }
         );

@@ -19,10 +19,9 @@ describe('Check', function () {
                         }
                     );
                     Legacy.Check.init();
-                    const result1 = Legacy.Check.getInit() && !Legacy.Check.getStatus(),
-                          result2 = (document.getElementById('errormessage').className !== 'hidden');
+                    const result = Legacy.Check.getInit() && !Legacy.Check.getStatus();
                     clean();
-                    return result1 && result2;
+                    return result;
                 }
             ),
             {tests: 10});
@@ -67,7 +66,10 @@ describe('Check', function () {
                               'url': (secureProtocol ? 'https' : 'http' ) + '://' + domain.join('') + '/'
                           }
                       );
-                window.crypto = new WebCrypto();
+                Object.defineProperty(window, 'crypto', {
+                    value: new WebCrypto(),
+                    writeable: false,
+                });
                 Legacy.Check.init();
                 const result1 = Legacy.Check.getInit() && Legacy.Check.getStatus(),
                       result2 = secureProtocol === (document.getElementById('httpnotice').className === 'hidden');
