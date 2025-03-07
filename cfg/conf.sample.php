@@ -47,6 +47,16 @@ sizelimit = 10485760
 ; a session cookie to store the choice until the browser is closed.
 templateselection = false
 
+; List of available for selection templates when "templateselection" option is enabled
+availabletemplates[] = "bootstrap"
+availabletemplates[] = "bootstrap-page"
+availabletemplates[] = "bootstrap-dark"
+availabletemplates[] = "bootstrap-dark-page"
+availabletemplates[] = "bootstrap-compact"
+availabletemplates[] = "bootstrap-compact-page"
+availabletemplates[] = "bootstrap5"
+availabletemplates[] = "page"
+
 ; set the template your installs defaults to, defaults to "bootstrap" (tpl/bootstrap.php), also
 ; available are "page" (tpl/page.php), the classic ZeroBin style and several
 ; bootstrap variants: "bootstrap-dark", "bootstrap-compact", "bootstrap-page",
@@ -150,17 +160,6 @@ never = 0
 plaintext = "Plain Text"
 syntaxhighlighting = "Source Code"
 markdown = "Markdown"
-
-[available_templates]
-; List of available for selection templates when "templateselection" option is enabled
-bootstrap
-bootstrap-page
-bootstrap-dark
-bootstrap-dark-page
-bootstrap-compact
-bootstrap-compact-page
-bootstrap5
-page
 
 [traffic]
 ; time limit between calls from the same IP address in seconds

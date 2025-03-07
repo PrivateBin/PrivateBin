@@ -13,7 +13,7 @@ class TemplateSwitcherTest extends TestCase
         $existingTemplateFallback = 'bootstrap-dark';
         $wrongTemplateFallback    = 'bootstrap-wrong';
 
-        TemplateSwitcher::setAvailableTemplates($conf->getSection('available_templates'));
+        TemplateSwitcher::setAvailableTemplates($conf->getKey('availabletemplates'));
         TemplateSwitcher::setTemplateFallback($existingTemplateFallback);
         $this->assertEquals($existingTemplateFallback, TemplateSwitcher::getTemplate(), 'Correct template fallback');
 
@@ -24,7 +24,7 @@ class TemplateSwitcherTest extends TestCase
     public function testSetAvailableTemplates()
     {
         $conf               = new Configuration;
-        $availableTemplates = $conf->getSection('available_templates');
+        $availableTemplates = $conf->getKey('availabletemplates');
 
         TemplateSwitcher::setAvailableTemplates($availableTemplates);
         $this->assertEquals($availableTemplates, TemplateSwitcher::getAvailableTemplates(), 'Set available templates');
@@ -57,7 +57,7 @@ class TemplateSwitcherTest extends TestCase
         $existingTemplate    = 'bootstrap';
         $nonExistentTemplate = 'bootstrap-wrong';
 
-        TemplateSwitcher::setAvailableTemplates($conf->getSection('available_templates'));
+        TemplateSwitcher::setAvailableTemplates($conf->getKey('availabletemplates'));
 
         $this->assertTrue(TemplateSwitcher::isTemplateAvailable($existingTemplate), 'Existing template');
         $this->assertFalse(TemplateSwitcher::isTemplateAvailable($nonExistentTemplate), 'Non-existent template');

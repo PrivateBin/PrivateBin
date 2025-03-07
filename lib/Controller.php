@@ -210,7 +210,7 @@ class Controller
     {
         $this->_conf = new Configuration;
 
-        $templates = $this->_conf->getSection('available_templates');
+        $templates = $this->_conf->getKey('availabletemplates');
         $template  = $this->_conf->getKey('template');
         TemplateSwitcher::setAvailableTemplates($templates);
         TemplateSwitcher::setTemplateFallback($template);
