@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
+use PrivateBin\Configuration;
 use PrivateBin\Controller;
 use PrivateBin\Data\Filesystem;
 use PrivateBin\Persistence\ServerSalt;
@@ -145,6 +146,20 @@ class ControllerTest extends TestCase
         $this->expectException(Exception::class);
         $this->expectExceptionCode(2);
         new Controller;
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testNonDefaultConf()
+    {
+        $newConfig   = new class extends Configuration {};
+        $configValue = (new ReflectionClass(Controller::class))->getProperty('_conf');
+        $configValue->setAccessible(true);
+        ob_start();
+        $controller = new Controller($newConfig);
+        ob_end_clean();
+        $this->assertSame($newConfig, $configValue->getValue($controller));
     }
 
     /**
