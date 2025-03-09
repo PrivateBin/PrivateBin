@@ -190,8 +190,6 @@ class Controller
      */
     private function _setDefaultLanguage()
     {
-        $this->_conf = new Configuration;
-
         $lang = $this->_conf->getKey('languagedefault');
         I18n::setLanguageFallback($lang);
         // force default language, if language selection is disabled and a default is set
@@ -208,8 +206,6 @@ class Controller
      */
     private function _setDefaultTemplate()
     {
-        $this->_conf = new Configuration;
-
         $templates = $this->_conf->getKey('availabletemplates');
         $template  = $this->_conf->getKey('template');
         TemplateSwitcher::setAvailableTemplates($templates);
