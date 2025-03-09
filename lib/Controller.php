@@ -112,10 +112,12 @@ class Controller
      *
      * initializes and runs PrivateBin
      *
+     * @param ?Configuration $config
+     *
      * @access public
      * @throws Exception
      */
-    public function __construct()
+    public function __construct(?Configuration $config = null)
     {
         if (version_compare(PHP_VERSION, self::MIN_PHP_VERSION) < 0) {
             error_log(I18n::_('%s requires php %s or above to work. Sorry.', I18n::_('PrivateBin'), self::MIN_PHP_VERSION));
@@ -126,7 +128,8 @@ class Controller
             return;
         }
 
-        // load config from ini file, initialize required classes
+        // load config (using ini file by default) & initialize required classes
+        $this->_conf = $config ?? new Configuration();
         $this->_init();
 
         switch ($this->_request->getOperation()) {
@@ -174,7 +177,6 @@ class Controller
      */
     private function _init()
     {
-        $this->_conf    = new Configuration;
         $this->_model   = new Model($this->_conf);
         $this->_request = new Request;
         $this->_urlBase = $this->_request->getRequestUri();
