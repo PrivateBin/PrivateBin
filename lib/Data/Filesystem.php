@@ -343,12 +343,11 @@ class Filesystem extends AbstractData
      */
     private function _get($filename)
     {
-        return Json::decode(
-            substr(
-                file_get_contents($filename),
-                strlen(self::PROTECTION_LINE . PHP_EOL)
-            )
+        $data = substr(
+            file_get_contents($filename),
+            strlen(self::PROTECTION_LINE . PHP_EOL)
         );
+        return Json::decode($data);
     }
 
     /**

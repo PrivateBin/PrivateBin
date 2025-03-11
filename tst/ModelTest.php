@@ -163,7 +163,8 @@ class ModelTest extends TestCase
                 $this->_conf->getSection('model_options')
             )
         );
-        $comment->setPaste($this->_model->getPaste(Helper::getPasteId()));
+        $paste = $this->_model->getPaste(Helper::getPasteId());
+        $comment->setPaste($paste);
         $this->assertEquals(Helper::getPasteId(), $comment->getParentId(), 'comment parent ID gets initialized to paste ID');
     }
 

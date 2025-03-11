@@ -29,7 +29,7 @@ class Json
      * @throws Exception
      * @return string
      */
-    public static function encode($input)
+    public static function encode(&$input)
     {
         $jsonString = json_encode($input);
         self::_detectError();
@@ -45,7 +45,7 @@ class Json
      * @throws Exception
      * @return mixed
      */
-    public static function decode($input)
+    public static function decode(&$input)
     {
         $output = json_decode($input, true);
         self::_detectError();

@@ -7,10 +7,11 @@ class FormatV2Test extends TestCase
 {
     public function testFormatV2ValidatorValidatesCorrectly()
     {
-        $this->assertTrue(FormatV2::isValid(Helper::getPastePost()), 'valid format');
-        $this->assertTrue(FormatV2::isValid(Helper::getCommentPost(), true), 'valid format');
+        $paste   = Helper::getPastePost();
+        $comment = Helper::getCommentPost();
+        $this->assertTrue(FormatV2::isValid($paste), 'valid format');
+        $this->assertTrue(FormatV2::isValid($comment, true), 'valid format');
 
-        $paste                = Helper::getPastePost();
         $paste['adata'][0][0] = '$';
         $this->assertFalse(FormatV2::isValid($paste), 'invalid base64 encoding of iv');
 
@@ -68,6 +69,7 @@ class FormatV2Test extends TestCase
         $paste['adata'][0][7] = '!#@';
         $this->assertFalse(FormatV2::isValid($paste), 'invalid compression');
 
-        $this->assertFalse(FormatV2::isValid(Helper::getPaste()), 'invalid meta key');
+        $paste = Helper::getPaste();
+        $this->assertFalse(FormatV2::isValid($paste), 'invalid meta key');
     }
 }

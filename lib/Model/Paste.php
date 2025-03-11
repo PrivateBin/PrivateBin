@@ -219,11 +219,10 @@ class Paste extends AbstractModel
      *
      * @access protected
      * @param  array $data
-     * @return array
      */
-    protected function _sanitize(array $data)
+    protected function _sanitize(array &$data)
     {
-        $expiration = $data['meta']['expire'];
+        $expiration = $data['meta']['expire'] ?? 0;
         unset($data['meta']['expire']);
         $expire_options = $this->_conf->getSection('expire_options');
         if (array_key_exists($expiration, $expire_options)) {
@@ -235,7 +234,6 @@ class Paste extends AbstractModel
         if ($expire > 0) {
             $data['meta']['expire_date'] = time() + $expire;
         }
-        return $data;
     }
 
     /**
@@ -245,7 +243,7 @@ class Paste extends AbstractModel
      * @param  array $data
      * @throws Exception
      */
-    protected function _validate(array $data)
+    protected function _validate(array &$data)
     {
         // reject invalid or disabled formatters
         if (!array_key_exists($data['adata'][1], $this->_conf->getSection('formatter_options'))) {

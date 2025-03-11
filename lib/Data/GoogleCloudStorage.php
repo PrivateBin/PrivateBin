@@ -219,7 +219,8 @@ class GoogleCloudStorage extends AbstractData
         $prefix   = $this->_getKey($pasteid) . '/discussion/';
         try {
             foreach ($this->_bucket->objects(array('prefix' => $prefix)) as $key) {
-                $comment         = JSON::decode($this->_bucket->object($key->name())->downloadAsString());
+                $data            = $this->_bucket->object($key->name())->downloadAsString();
+                $comment         = Json::decode($data);
                 $comment['id']   = basename($key->name());
                 $slot            = $this->getOpenSlot($comments, (int) $comment['meta']['created']);
                 $comments[$slot] = $comment;
