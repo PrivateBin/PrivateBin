@@ -155,7 +155,7 @@ abstract class AbstractModel
      */
     public static function isValidId($id)
     {
-        return (bool) preg_match('#\A[a-f\d]{16}\z#', (string) $id);
+        return (bool) preg_match('#\A[a-f0-9]{16}\z#', (string) $id);
     }
 
     /**
