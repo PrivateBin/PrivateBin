@@ -153,4 +153,30 @@ interface AddressInterface
      * @example for IPv6 it returns something like x.x.x.x..x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.ip6.arpa
      */
     public function getReverseDNSLookupName();
+
+    /**
+     * Shift the bits of the address, padding with zeroes.
+     *
+     * @param int $bits If negative the bits will be shifted left, if positive the bits will be shifted right
+     *
+     * @return self
+     *
+     * @since 1.20.0
+     *
+     * @example shifting by 1 127.0.0.1 you'll have 63.128.0.0
+     * @example shifting by -1 127.0.0.1 you'll have 254.0.0.2
+     */
+    public function shift($bits);
+
+    /**
+     * Create a new IP address by adding to this address another address.
+     *
+     * @return self|null returns NULL if $other is not compatible with this address, or if it generates an invalid address
+     *
+     * @since 1.20.0
+     *
+     * @example adding 0.0.0.10 to 127.0.0.1 generates the IP 127.0.0.11
+     * @example adding 255.0.0.10 to 127.0.0.1 generates NULL
+     */
+    public function add(AddressInterface $other);
 }

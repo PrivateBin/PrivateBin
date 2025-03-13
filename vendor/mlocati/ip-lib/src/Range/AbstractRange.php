@@ -7,6 +7,7 @@ use IPLib\Address\IPv4;
 use IPLib\Address\IPv6;
 use IPLib\Address\Type as AddressType;
 use IPLib\Factory;
+use OutOfBoundsException;
 
 /**
  * Base class for range classes.
@@ -117,6 +118,50 @@ abstract class AbstractRange implements RangeInterface
                 if ($itsEnd <= $myEnd) {
                     $result = true;
                 }
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \IPLib\Range\RangeInterface::split()
+     */
+    public function split($networkPrefix, $forceSubnet = false)
+    {
+        $networkPrefix = (int) $networkPrefix;
+        $myNetworkPrefix = $this->getNetworkPrefix();
+        if ($networkPrefix === $myNetworkPrefix) {
+            return array(
+                $forceSubnet ? $this->asSubnet() : $this,
+            );
+        }
+        if ($networkPrefix < $myNetworkPrefix) {
+            throw new OutOfBoundsException("The value of the \$networkPrefix parameter can't be smaller than the network prefix of the range ({$myNetworkPrefix})");
+        }
+        $startIp = $this->getStartAddress();
+        $maxPrefix = $startIp::getNumberOfBits();
+        if ($networkPrefix > $maxPrefix) {
+            throw new OutOfBoundsException("The value of the \$networkPrefix parameter can't be larger than the maximum network prefix of the range ({$maxPrefix})");
+        }
+        if ($startIp instanceof IPv4) {
+            $one = IPv4::fromBytes(array(0, 0, 0, 1));
+        } elseif ($startIp instanceof IPv6) {
+            $one = IPv6::fromBytes(array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1));
+        }
+        $delta = $one->shift($networkPrefix - $maxPrefix);
+        $result = array();
+        while (true) {
+            $range = Subnet::parseString("{$startIp}/{$networkPrefix}");
+            if (!$forceSubnet && $this instanceof Pattern) {
+                $range = $range->asPattern() ?: $range;
+            }
+            $result[] = $range;
+            $startIp = $startIp->add($delta);
+            if ($startIp === null || !$this->contains($startIp)) {
+                break;
             }
         }
 
