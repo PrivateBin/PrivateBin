@@ -111,7 +111,7 @@ class Request
                 // it might be a creation or a deletion, the latter is detected below
                 $this->_operation = 'create';
                 try {
-                    $data = file_get_contents(self::$_inputStream);
+                    $data          = file_get_contents(self::$_inputStream);
                     $this->_params = Json::decode($data);
                 } catch (Exception $e) {
                     // ignore error, $this->_params will remain empty

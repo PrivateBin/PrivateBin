@@ -524,7 +524,7 @@ class ControllerTest extends TestCase
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD']        = 'POST';
         $_SERVER['REMOTE_ADDR']           = '::1';
-        $paste = Helper::getPaste();
+        $paste                            = Helper::getPaste();
         $this->_data->create(Helper::getPasteId(), $paste);
         ob_start();
         new Controller;
@@ -551,7 +551,7 @@ class ControllerTest extends TestCase
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD']        = 'POST';
         $_SERVER['REMOTE_ADDR']           = '::1';
-        $paste = Helper::getPaste();
+        $paste                            = Helper::getPaste();
         $this->_data->create(Helper::getPasteId(), $paste);
         ob_start();
         new Controller;
