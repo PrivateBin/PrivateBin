@@ -288,7 +288,8 @@ class ControllerTest extends TestCase
         $options                     = parse_ini_file(CONF, true);
         $options['traffic']['limit'] = 0;
         Helper::createIniFile(CONF, $options);
-        $this->_data->create(Helper::getPasteId(), Helper::getPaste());
+        $paste = Helper::getPaste();
+        $this->_data->create(Helper::getPasteId(), $paste);
         $paste = Helper::getPasteJson();
         $file  = tempnam(sys_get_temp_dir(), 'FOO');
         file_put_contents($file, $paste);
@@ -538,7 +539,8 @@ class ControllerTest extends TestCase
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD']        = 'POST';
         $_SERVER['REMOTE_ADDR']           = '::1';
-        $this->_data->create(Helper::getPasteId(), Helper::getPaste());
+        $paste                            = Helper::getPaste();
+        $this->_data->create(Helper::getPasteId(), $paste);
         ob_start();
         new Controller;
         $content = ob_get_contents();
@@ -564,7 +566,8 @@ class ControllerTest extends TestCase
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD']        = 'POST';
         $_SERVER['REMOTE_ADDR']           = '::1';
-        $this->_data->create(Helper::getPasteId(), Helper::getPaste());
+        $paste                            = Helper::getPaste();
+        $this->_data->create(Helper::getPasteId(), $paste);
         ob_start();
         new Controller;
         $content = ob_get_contents();
@@ -633,8 +636,10 @@ class ControllerTest extends TestCase
         $options                     = parse_ini_file(CONF, true);
         $options['traffic']['limit'] = 0;
         Helper::createIniFile(CONF, $options);
-        $this->_data->create(Helper::getPasteId(), Helper::getPaste());
-        $this->_data->createComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getPasteId(), Helper::getComment());
+        $paste = Helper::getPaste();
+        $this->_data->create(Helper::getPasteId(), $paste);
+        $comment = Helper::getComment();
+        $this->_data->createComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getPasteId(), $comment);
         $this->assertTrue($this->_data->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getPasteId()), 'comment exists before posting data');
         $comment = Helper::getCommentJson();
         $file    = tempnam(sys_get_temp_dir(), 'FOO');
@@ -819,7 +824,8 @@ class ControllerTest extends TestCase
      */
     public function testDelete()
     {
-        $this->_data->create(Helper::getPasteId(), Helper::getPaste());
+        $paste = Helper::getPaste();
+        $this->_data->create(Helper::getPasteId(), $paste);
         $this->assertTrue($this->_data->exists(Helper::getPasteId()), 'paste exists before deleting data');
         $paste               = $this->_data->read(Helper::getPasteId());
         $_GET['pasteid']     = Helper::getPasteId();
@@ -841,7 +847,8 @@ class ControllerTest extends TestCase
      */
     public function testDeleteInvalidId()
     {
-        $this->_data->create(Helper::getPasteId(), Helper::getPaste());
+        $paste = Helper::getPaste();
+        $this->_data->create(Helper::getPasteId(), $paste);
         $_GET['pasteid']     = 'foo';
         $_GET['deletetoken'] = 'bar';
         ob_start();
@@ -879,7 +886,8 @@ class ControllerTest extends TestCase
      */
     public function testDeleteInvalidToken()
     {
-        $this->_data->create(Helper::getPasteId(), Helper::getPaste());
+        $paste = Helper::getPaste();
+        $this->_data->create(Helper::getPasteId(), $paste);
         $_GET['pasteid']     = Helper::getPasteId();
         $_GET['deletetoken'] = 'bar';
         ob_start();
@@ -899,7 +907,8 @@ class ControllerTest extends TestCase
      */
     public function testDeleteInvalidBurnAfterReading()
     {
-        $this->_data->create(Helper::getPasteId(), Helper::getPaste());
+        $paste = Helper::getPaste();
+        $this->_data->create(Helper::getPasteId(), $paste);
         $this->assertTrue($this->_data->exists(Helper::getPasteId()), 'paste exists before deleting data');
         $file  = tempnam(sys_get_temp_dir(), 'FOO');
         file_put_contents($file, json_encode(array(

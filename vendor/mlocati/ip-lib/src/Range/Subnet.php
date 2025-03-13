@@ -261,10 +261,9 @@ class Subnet extends AbstractRange
     }
 
     /**
-     * Get subnet prefix.
+     * {@inheritdoc}
      *
-     * @return int
-     *
+     * @see \IPLib\Range\RangeInterface::getNetworkPrefix()
      * @since 1.7.0
      */
     public function getNetworkPrefix()

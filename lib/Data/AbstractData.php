@@ -34,7 +34,7 @@ abstract class AbstractData
      * @param  array  $paste
      * @return bool
      */
-    abstract public function create($pasteid, array $paste);
+    abstract public function create($pasteid, array &$paste);
 
     /**
      * Read a paste.
@@ -72,7 +72,7 @@ abstract class AbstractData
      * @param  array  $comment
      * @return bool
      */
-    abstract public function createComment($pasteid, $parentid, $commentid, array $comment);
+    abstract public function createComment($pasteid, $parentid, $commentid, array &$comment);
 
     /**
      * Read all comments of paste.
@@ -199,7 +199,7 @@ abstract class AbstractData
      * @param  array $paste
      * @return array
      */
-    protected static function upgradePreV1Format(array $paste)
+    protected static function upgradePreV1Format(array &$paste)
     {
         if (array_key_exists('attachment', $paste['meta'])) {
             $paste['attachment'] = $paste['meta']['attachment'];

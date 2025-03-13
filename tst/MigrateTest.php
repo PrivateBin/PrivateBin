@@ -59,8 +59,10 @@ class MigrateTest extends TestCase
         $this->_model_2->delete(Helper::getPasteId());
 
         // storing paste & comment
-        $this->_model_1->create(Helper::getPasteId(), Helper::getPaste());
-        $this->_model_1->createComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId(), Helper::getComment());
+        $data = Helper::getPaste();
+        $this->_model_1->create(Helper::getPasteId(), $data);
+        $data = Helper::getComment();
+        $this->_model_1->createComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId(), $data);
 
         // migrate files to database
         $output    = null;

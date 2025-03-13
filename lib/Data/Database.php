@@ -140,7 +140,7 @@ class Database extends AbstractData
      * @param  array  $paste
      * @return bool
      */
-    public function create($pasteid, array $paste)
+    public function create($pasteid, array &$paste)
     {
         $expire_date      = 0;
         $opendiscussion   = $burnafterreading = false;
@@ -297,14 +297,18 @@ class Database extends AbstractData
      * @param  array  $comment
      * @return bool
      */
-    public function createComment($pasteid, $parentid, $commentid, array $comment)
+    public function createComment($pasteid, $parentid, $commentid, array &$comment)
     {
         if (array_key_exists('data', $comment)) {
             $version = 1;
             $data    = $comment['data'];
         } else {
-            $version = 2;
-            $data    = Json::encode($comment);
+            try {
+                $version = 2;
+                $data    = Json::encode($comment);
+            } catch (Exception $e) {
+                return false;
+            }
         }
         list($createdKey, $iconKey) = $this->_getVersionedKeys($version);
         $meta                       = $comment['meta'];

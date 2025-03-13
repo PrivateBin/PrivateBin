@@ -105,7 +105,7 @@ class GoogleCloudStorage extends AbstractData
      * @param $payload array to store
      * @return bool true if successful, otherwise false.
      */
-    private function _upload($key, $payload)
+    private function _upload($key, &$payload)
     {
         $metadata = array_key_exists('meta', $payload) ? $payload['meta'] : array();
         unset($metadata['attachment'], $metadata['attachmentname'], $metadata['salt']);
@@ -136,7 +136,7 @@ class GoogleCloudStorage extends AbstractData
     /**
      * @inheritDoc
      */
-    public function create($pasteid, array $paste)
+    public function create($pasteid, array &$paste)
     {
         if ($this->exists($pasteid)) {
             return false;
@@ -201,7 +201,7 @@ class GoogleCloudStorage extends AbstractData
     /**
      * @inheritDoc
      */
-    public function createComment($pasteid, $parentid, $commentid, array $comment)
+    public function createComment($pasteid, $parentid, $commentid, array &$comment)
     {
         if ($this->existsComment($pasteid, $parentid, $commentid)) {
             return false;
@@ -219,7 +219,8 @@ class GoogleCloudStorage extends AbstractData
         $prefix   = $this->_getKey($pasteid) . '/discussion/';
         try {
             foreach ($this->_bucket->objects(array('prefix' => $prefix)) as $key) {
-                $comment         = JSON::decode($this->_bucket->object($key->name())->downloadAsString());
+                $data            = $this->_bucket->object($key->name())->downloadAsString();
+                $comment         = Json::decode($data);
                 $comment['id']   = basename($key->name());
                 $slot            = $this->getOpenSlot($comments, (int) $comment['meta']['created']);
                 $comments[$slot] = $comment;

@@ -157,4 +157,30 @@ interface RangeInterface
      * @since 1.16.0
      */
     public function getSize();
+
+    /**
+     * Get the "network prefix", that is how many bits of the address are dedicated to the network portion.
+     *
+     * @return int
+     *
+     * @since 1.19.0
+     *
+     * @example for 10.0.0.0/24 it's 24
+     * @example for 10.0.0.* it's 24
+     */
+    public function getNetworkPrefix();
+
+    /**
+     * Split the range into smaller ranges.
+     *
+     * @param int $networkPrefix
+     * @param bool $forceSubnet set to true to always have ranges in "subnet format" (ie 1.2.3.4/5), to false to try to keep the original format if possible (that is, pattern to pattern, single to single)
+     *
+     * @throws \OutOfBoundsException if $networkPrefix is not valid
+     *
+     * @return \IPLib\Range\RangeInterface[]
+     *
+     * @since 1.19.0
+     */
+    public function split($networkPrefix, $forceSubnet = false);
 }

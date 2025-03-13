@@ -29,7 +29,7 @@ class FormatV2
      * @param  bool  $isComment
      * @return bool
      */
-    public static function isValid($message, $isComment = false)
+    public static function isValid(&$message, $isComment = false)
     {
         $required_keys = array('adata', 'v', 'ct');
         if ($isComment) {

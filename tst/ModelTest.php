@@ -163,7 +163,8 @@ class ModelTest extends TestCase
                 $this->_conf->getSection('model_options')
             )
         );
-        $comment->setPaste($this->_model->getPaste(Helper::getPasteId()));
+        $paste = $this->_model->getPaste(Helper::getPasteId());
+        $comment->setPaste($paste);
         $this->assertEquals(Helper::getPasteId(), $comment->getParentId(), 'comment parent ID gets initialized to paste ID');
     }
 
@@ -316,7 +317,11 @@ class ModelTest extends TestCase
     public function testPasteIdValidation()
     {
         $this->assertTrue(Paste::isValidId('a242ab7bdfb2581a'), 'valid paste id');
-        $this->assertFalse(Paste::isValidId('foo'), 'invalid hex values');
+        $this->assertFalse(Paste::isValidId('foo'), 'invalid hex values & length');
+        $this->assertFalse(Paste::isValidId('f00'), 'invalid length');
+        $this->assertFalse(Paste::isValidId('foo bar baz quux'), 'invalid hex values');
+        $this->assertFalse(Paste::isValidId("\n01234567feedcafe"), 'invalid line breaks');
+        $this->assertFalse(Paste::isValidId("deadbeef01234567\n"), 'invalid line breaks');
         $this->assertFalse(Paste::isValidId('../bar/baz'), 'path attack');
     }
 

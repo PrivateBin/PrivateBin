@@ -104,7 +104,7 @@ class Comment extends AbstractModel
      * @param Paste $paste
      * @throws Exception
      */
-    public function setPaste(Paste $paste)
+    public function setPaste(Paste &$paste)
     {
         $this->_paste           = $paste;
         $this->_data['pasteid'] = $paste->getId();
@@ -155,9 +155,8 @@ class Comment extends AbstractModel
      *
      * @access protected
      * @param  array $data
-     * @return array
      */
-    protected function _sanitize(array $data)
+    protected function _sanitize(array &$data)
     {
         // we generate an icon based on a SHA512 HMAC of the users IP, if configured
         $icon = $this->_conf->getKey('icon');
@@ -190,6 +189,5 @@ class Comment extends AbstractModel
                 $data['meta']['icon'] = $pngdata;
             }
         }
-        return $data;
     }
 }

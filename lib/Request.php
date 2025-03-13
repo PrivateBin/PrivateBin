@@ -12,6 +12,7 @@
 namespace PrivateBin;
 
 use Exception;
+use PrivateBin\Model\Paste;
 
 /**
  * Request
@@ -84,7 +85,7 @@ class Request
         foreach ($_GET as $key => $value) {
             // only return if value is empty and key is 16 hex chars
             $key = (string) $key;
-            if (($value === '') && strlen($key) === 16 && ctype_xdigit($key)) {
+            if (empty($value) && Paste::isValidId($key)) {
                 return $key;
             }
         }
@@ -110,9 +111,8 @@ class Request
                 // it might be a creation or a deletion, the latter is detected below
                 $this->_operation = 'create';
                 try {
-                    $this->_params = Json::decode(
-                        file_get_contents(self::$_inputStream)
-                    );
+                    $data          = file_get_contents(self::$_inputStream);
+                    $this->_params = Json::decode($data);
                 } catch (Exception $e) {
                     // ignore error, $this->_params will remain empty
                 }

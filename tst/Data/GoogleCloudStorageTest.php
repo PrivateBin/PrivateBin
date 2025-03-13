@@ -58,11 +58,11 @@ class GoogleCloudStorageTest extends TestCase
         $this->assertEquals($paste, $this->_model->read(Helper::getPasteId()));
 
         // storing comments
-        $this->assertFalse($this->_model->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId()), 'comment does not yet exist');
-        $this->assertTrue($this->_model->createComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId(), Helper::getComment()), 'store comment');
-        $this->assertTrue($this->_model->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId()), 'comment exists after storing it');
-        $this->assertFalse($this->_model->createComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId(), Helper::getComment()), 'unable to store the same comment twice');
         $comment             = Helper::getComment();
+        $this->assertFalse($this->_model->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId()), 'comment does not yet exist');
+        $this->assertTrue($this->_model->createComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId(), $comment), 'store comment');
+        $this->assertTrue($this->_model->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId()), 'comment exists after storing it');
+        $this->assertFalse($this->_model->createComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId(), $comment), 'unable to store the same comment twice');
         $comment['id']       = Helper::getCommentId();
         $comment['parentid'] = Helper::getPasteId();
         $this->assertEquals(
@@ -92,7 +92,8 @@ class GoogleCloudStorageTest extends TestCase
             if (in_array($key, array('x', 'y', 'z'))) {
                 $this->assertTrue($this->_model->create($ids[$key], $paste), "store $key paste");
             } elseif ($key === 'x') {
-                $this->assertTrue($this->_model->create($ids[$key], Helper::getPaste()), "store $key paste");
+                $data = Helper::getPaste();
+                $this->assertTrue($this->_model->create($ids[$key], $data), "store $key paste");
             } else {
                 $this->assertTrue($this->_model->create($ids[$key], $expired), "store $key paste");
             }
@@ -121,9 +122,10 @@ class GoogleCloudStorageTest extends TestCase
     public function testCommentErrorDetection()
     {
         $this->_model->delete(Helper::getPasteId());
+        $data    = Helper::getPaste();
         $comment = Helper::getComment(1, array('nickname' => "Invalid UTF-8 sequence: \xB1\x31"));
         $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste does not yet exist');
-        $this->assertTrue($this->_model->create(Helper::getPasteId(), Helper::getPaste()), 'store new paste');
+        $this->assertTrue($this->_model->create(Helper::getPasteId(), $data), 'store new paste');
         $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste exists after storing it');
         $this->assertFalse($this->_model->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId()), 'comment does not yet exist');
         $this->assertFalse($this->_model->createComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId(), $comment), 'unable to store broken comment');

@@ -605,4 +605,62 @@ class IPv6 implements AddressInterface
             array_reverse(str_split(str_replace(':', '', $this->toString(true)), 1))
         ) . '.ip6.arpa';
     }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \IPLib\Address\AddressInterface::shift()
+     */
+    public function shift($bits)
+    {
+        $bits = (int) $bits;
+        if ($bits === 0) {
+            return $this;
+        }
+        $absBits = abs($bits);
+        if ($absBits >= 128) {
+            return new self('0000:0000:0000:0000:0000:0000:0000:0000');
+        }
+        $pad = str_repeat('0', $absBits);
+        $paddedBits = $this->getBits();
+        if ($bits > 0) {
+            $paddedBits = $pad . substr($paddedBits, 0, -$bits);
+        } else {
+            $paddedBits = substr($paddedBits, $absBits) . $pad;
+        }
+        $bytes = array_map('bindec', str_split($paddedBits, 16));
+
+        return static::fromWords($bytes);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \IPLib\Address\AddressInterface::add()
+     */
+    public function add(AddressInterface $other)
+    {
+        if (!$other instanceof self) {
+            return null;
+        }
+        $myWords = $this->getWords();
+        $otherWords = $other->getWords();
+        $sum = array_fill(0, 7, 0);
+        $carry = 0;
+        for ($index = 7; $index >= 0; $index--) {
+            $word = $myWords[$index] + $otherWords[$index] + $carry;
+            if ($word > 0xFFFF) {
+                $carry = $word >> 16;
+                $word &= 0xFFFF;
+            } else {
+                $carry = 0;
+            }
+            $sum[$index] = $word;
+        }
+        if ($carry !== 0) {
+            return null;
+        }
+
+        return static::fromWords($sum);
+    }
 }

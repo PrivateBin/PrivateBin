@@ -308,9 +308,11 @@ class Pattern extends AbstractRange
     }
 
     /**
-     * @return float|int
+     * {@inheritdoc}
+     *
+     * @see \IPLib\Range\RangeInterface::getNetworkPrefix()
      */
-    private function getNetworkPrefix()
+    public function getNetworkPrefix()
     {
         switch ($this->getAddressType()) {
             case AddressType::T_IPv4:
