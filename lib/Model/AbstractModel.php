@@ -100,9 +100,9 @@ abstract class AbstractModel
      * @param  array $data
      * @throws Exception
      */
-    public function setData(array $data)
+    public function setData(array &$data)
     {
-        $data = $this->_sanitize($data);
+        $this->_sanitize($data);
         $this->_validate($data);
         $this->_data = $data;
 
@@ -155,7 +155,7 @@ abstract class AbstractModel
      */
     public static function isValidId($id)
     {
-        return (bool) preg_match('#\A[a-f\d]{16}\z#', (string) $id);
+        return (bool) preg_match('#\A[a-f0-9]{16}\z#', (string) $id);
     }
 
     /**
@@ -163,9 +163,8 @@ abstract class AbstractModel
      *
      * @access protected
      * @param  array $data
-     * @return array
      */
-    abstract protected function _sanitize(array $data);
+    abstract protected function _sanitize(array &$data);
 
     /**
      * Validate data.
@@ -174,7 +173,7 @@ abstract class AbstractModel
      * @param  array $data
      * @throws Exception
      */
-    protected function _validate(array $data)
+    protected function _validate(array &$data)
     {
     }
 }

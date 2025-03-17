@@ -2,6 +2,8 @@
 
 ## 1.7.7 (not yet released)
 * ADDED: Switching templates using the web ui (#1501)
+* CHANGED: Passing large data structures by reference to reduce memory consumption (#858)
+* CHANGED: Removed use of ctype functions and polyfill library for ctype
 * CHANGED: Upgrading libraries to: ip-lib 1.20.0
 
 ## 1.7.6 (2025-02-01)

@@ -114,7 +114,8 @@ class JsonApiTest extends TestCase
      */
     public function testDelete()
     {
-        $this->_model->create(Helper::getPasteId(), Helper::getPaste());
+        $data = Helper::getPaste();
+        $this->_model->create(Helper::getPasteId(), $data);
         $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste exists before deleting data');
         $paste = $this->_model->read(Helper::getPasteId());
         $file  = tempnam(sys_get_temp_dir(), 'FOO');
@@ -141,7 +142,8 @@ class JsonApiTest extends TestCase
      */
     public function testDeleteWithPost()
     {
-        $this->_model->create(Helper::getPasteId(), Helper::getPaste());
+        $data = Helper::getPaste();
+        $this->_model->create(Helper::getPasteId(), $data);
         $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste exists before deleting data');
         $paste = $this->_model->read(Helper::getPasteId());
         $file  = tempnam(sys_get_temp_dir(), 'FOO');
@@ -166,7 +168,7 @@ class JsonApiTest extends TestCase
      */
     public function testRead()
     {
-        $paste                           = Helper::getPaste();
+        $paste                            = Helper::getPaste();
         $this->_model->create(Helper::getPasteId(), $paste);
         $_SERVER['QUERY_STRING']          = Helper::getPasteId();
         $_GET[Helper::getPasteId()]       = '';

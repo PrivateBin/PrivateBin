@@ -7,7 +7,6 @@ namespace Composer\Autoload;
 class ComposerStaticInitDontChange
 {
     public static $files = array (
-        '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
         'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
     );
 
@@ -15,7 +14,6 @@ class ComposerStaticInitDontChange
         'S' => 
         array (
             'Symfony\\Polyfill\\Php80\\' => 23,
-            'Symfony\\Polyfill\\Ctype\\' => 23,
         ),
         'P' => 
         array (
@@ -36,10 +34,6 @@ class ComposerStaticInitDontChange
         'Symfony\\Polyfill\\Php80\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-php80',
-        ),
-        'Symfony\\Polyfill\\Ctype\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/symfony/polyfill-ctype',
         ),
         'PrivateBin\\' => 
         array (
@@ -141,11 +135,11 @@ class ComposerStaticInitDontChange
         'PrivateBin\\Persistence\\ServerSalt' => __DIR__ . '/../..' . '/lib/Persistence/ServerSalt.php',
         'PrivateBin\\Persistence\\TrafficLimiter' => __DIR__ . '/../..' . '/lib/Persistence/TrafficLimiter.php',
         'PrivateBin\\Request' => __DIR__ . '/../..' . '/lib/Request.php',
+        'PrivateBin\\TemplateSwitcher' => __DIR__ . '/../..' . '/lib/TemplateSwitcher.php',
         'PrivateBin\\View' => __DIR__ . '/../..' . '/lib/View.php',
         'PrivateBin\\Vizhash16x16' => __DIR__ . '/../..' . '/lib/Vizhash16x16.php',
         'PrivateBin\\YourlsProxy' => __DIR__ . '/../..' . '/lib/YourlsProxy.php',
         'Stringable' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Stringable.php',
-        'Symfony\\Polyfill\\Ctype\\Ctype' => __DIR__ . '/..' . '/symfony/polyfill-ctype/Ctype.php',
         'Symfony\\Polyfill\\Php80\\Php80' => __DIR__ . '/..' . '/symfony/polyfill-php80/Php80.php',
         'Symfony\\Polyfill\\Php80\\PhpToken' => __DIR__ . '/..' . '/symfony/polyfill-php80/PhpToken.php',
         'UnhandledMatchError' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/UnhandledMatchError.php',

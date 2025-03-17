@@ -85,7 +85,7 @@ class Filesystem extends AbstractData
      * @param  array  $paste
      * @return bool
      */
-    public function create($pasteid, array $paste)
+    public function create($pasteid, array &$paste)
     {
         $storagedir = $this->_dataid2path($pasteid);
         $file       = $storagedir . $pasteid . '.php';
@@ -188,7 +188,7 @@ class Filesystem extends AbstractData
      * @param  array  $comment
      * @return bool
      */
-    public function createComment($pasteid, $parentid, $commentid, array $comment)
+    public function createComment($pasteid, $parentid, $commentid, array &$comment)
     {
         $storagedir = $this->_dataid2discussionpath($pasteid);
         $file       = $storagedir . $pasteid . '.' . $commentid . '.' . $parentid . '.php';
@@ -343,12 +343,11 @@ class Filesystem extends AbstractData
      */
     private function _get($filename)
     {
-        return Json::decode(
-            substr(
-                file_get_contents($filename),
-                strlen(self::PROTECTION_LINE . PHP_EOL)
-            )
+        $data = substr(
+            file_get_contents($filename),
+            strlen(self::PROTECTION_LINE . PHP_EOL)
         );
+        return Json::decode($data);
     }
 
     /**
