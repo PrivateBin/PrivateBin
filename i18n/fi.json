@@ -218,14 +218,14 @@
     "This secret message can only be displayed once. Would you like to see it now?": "Tämä salainen viesti voidaan näyttää vain kerran. Haluatko nähdä sen nyt?",
     "Yes, see it": "Kyllä, näet sen",
     "Dark Mode": "Tumma tila",
-    "Error compressing paste, due to missing WebAssembly support.": "Error compressing paste, due to missing WebAssembly support.",
-    "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.": "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.",
+    "Error compressing paste, due to missing WebAssembly support.": "Virhe pakattaessa pastea, koska WebAssembly-tuki puuttuu.",
+    "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.": "Virhe pasten purkamisessa, selaimesi ei tue WebAssemblyä. Ole hyvä ja käytä toista selainta nähdäksesi tämä paste.",
     "Start over": "Aloita alusta",
     "Paste copied to clipboard": "Paste kopioitu leikepöydälle",
-    "To copy paste press on the copy button or use the clipboard shortcut <kbd>Ctrl</kbd>+<kbd>c</kbd>/<kbd>Cmd</kbd>+<kbd>c</kbd>": "To copy paste press on the copy button or use the clipboard shortcut <kbd>Ctrl</kbd>+<kbd>c</kbd>/<kbd>Cmd</kbd>+<kbd>c</kbd>",
+    "To copy paste press on the copy button or use the clipboard shortcut <kbd>Ctrl</kbd>+<kbd>c</kbd>/<kbd>Cmd</kbd>+<kbd>c</kbd>": "Voit kopioida pasten painamalla kopioi-painiketta tai käyttämällä leikepöydän oikotietä <kbd>Ctrl</kbd>+<kbd>c</kbd>/<kbd>Cmd</kbd>+<kbd>c</kbd>",
     "Copy link": "Kopioi linkki",
     "Link copied to clipboard": "Linkki kopioitu leikepöydälle",
     "Paste text": "Liitä teksti",
-    "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)": "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)",
+    "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)": "Tabulaattori toimii merkkinä (Paina <kbd>Ctrl</kbd>+<kbd>m</kbd> tai <kbd>Esc</kbd> vaihtaaksesi)",
     "Theme": "Teema"
 }
