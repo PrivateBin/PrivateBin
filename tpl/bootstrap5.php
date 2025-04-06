@@ -55,7 +55,7 @@ if ($MARKDOWN) :
 <?php
 endif;
 ?>
-		<?php $this->_scriptTag('js/purify-3.2.4.js', 'defer'); ?>
+		<?php $this->_scriptTag('js/purify-3.2.5.js', 'defer'); ?>
 		<?php $this->_scriptTag('js/legacy.js', 'async'); ?>
 		<?php $this->_scriptTag('js/privatebin.js', 'defer'); ?>
 		<!-- icon -->
