@@ -192,7 +192,7 @@
     "Could not get paste data: %s": "לא ניתן לקבל את נתוני ההדבקה: %s",
     "QR code": "קוד QR",
     "This website is using an insecure HTTP connection! Please use it only for testing.": "האתר הזה משתמש בחיבור HTTP בלתי מאובטח! נא להשתמש בזה לבדיקות בלבד.",
-    "For more information <a href=\"%s\">see this FAQ entry</a>.": "לפרטים נוספים <a href=\"%s\">עיין ברשומת שאלות נפוצות זו</a>.",
+    "For more information <a href=\"%s\">see this FAQ entry</a>.": "יש מידע נוסף <a href=\"%s\">ברשומה הזאת בשו״ת</a>.",
     "Your browser may require an HTTPS connection to support the WebCrypto API. Try <a href=\"%s\">switching to HTTPS</a>.": "יכול להיות שהדפדפן שלך ידרוש חיבור HTTPS כדי לתמוך ב־API של WebCrypto. כדי לנסות <a href=\"%s\">לעבור ל־HTTPS</a>.",
     "Your browser doesn't support WebAssembly, used for zlib compression. You can create uncompressed documents, but can't read compressed ones.": "הדפדפן שלך לא תומך ב־WebAssembly שמשמש לדחיסת zlib. אפשר ליצור מסמכים בלתי מוצפנים אך אין אפשרות לקרוא מסמכים מוצפנים.",
     "waiting on user to provide a password": "בהמתנה למילוי הססמה מצד המשתמש",
@@ -225,7 +225,7 @@
     "To copy paste press on the copy button or use the clipboard shortcut <kbd>Ctrl</kbd>+<kbd>c</kbd>/<kbd>Cmd</kbd>+<kbd>c</kbd>": "על מנת להעתיק את ההדבקה, לחץ על כפתור ההעתקה או השתמש בקיצור הדרך ללוח <kbd>Ctrl</kbd>+<kbd>c</kbd>/<kbd>Cmd</kbd>+<kbd>c</kbd>",
     "Copy link": "העתק קישור",
     "Link copied to clipboard": "הקישור הועתק ללוח",
-    "Paste text":"הדבק טקסט",
+    "Paste text": "הדבק טקסט",
     "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)": "משטח ה-tab פועל כמקש תו (לחץ על <kbd>Ctrl</kbd>+<kbd>m</kbd> או <kbd>Esc</kbd> להחלפה)",
     "Theme": "נושא"
 }
