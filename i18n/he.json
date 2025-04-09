@@ -225,7 +225,7 @@
     "To copy paste press on the copy button or use the clipboard shortcut <kbd>Ctrl</kbd>+<kbd>c</kbd>/<kbd>Cmd</kbd>+<kbd>c</kbd>": "על מנת להעתיק את ההדבקה, לחץ על כפתור ההעתקה או השתמש בקיצור הדרך ללוח <kbd>Ctrl</kbd>+<kbd>c</kbd>/<kbd>Cmd</kbd>+<kbd>c</kbd>",
     "Copy link": "העתק קישור",
     "Link copied to clipboard": "הקישור הועתק ללוח",
-    "Paste text":"הדבק טקסט",
+    "Paste text": "הדבק טקסט",
     "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)": "משטח ה-tab פועל כמקש תו (לחץ על <kbd>Ctrl</kbd>+<kbd>m</kbd> או <kbd>Esc</kbd> להחלפה)",
     "Theme": "נושא"
 }
