@@ -220,12 +220,12 @@
     "Dark Mode": "Ciemny motyw",
     "Error compressing paste, due to missing WebAssembly support.": "Błąd kompresowania wklejenia przez brak obsługi WebAssembly.",
     "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.": "Błąd dekompresowania wklejenia przez brak obsługi WebAssembly przez przeglądarkę. Użyj innej przeglądarki, aby zobaczyć to wklejenie.",
-    "Start over": "Start over",
-    "Paste copied to clipboard": "Paste copied to clipboard",
-    "To copy paste press on the copy button or use the clipboard shortcut <kbd>Ctrl</kbd>+<kbd>c</kbd>/<kbd>Cmd</kbd>+<kbd>c</kbd>": "To copy paste press on the copy button or use the clipboard shortcut <kbd>Ctrl</kbd>+<kbd>c</kbd>/<kbd>Cmd</kbd>+<kbd>c</kbd>",
-    "Copy link": "Copy link",
-    "Link copied to clipboard": "Link copied to clipboard",
-    "Paste text": "Paste text",
-    "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)": "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)",
-    "Theme": "Theme"
+    "Start over": "Zacznij od nowa",
+    "Paste copied to clipboard": "Wklejka skopiowana do schowka",
+    "To copy paste press on the copy button or use the clipboard shortcut <kbd>Ctrl</kbd>+<kbd>c</kbd>/<kbd>Cmd</kbd>+<kbd>c</kbd>": "Aby skopiować wklejkę, naciśnij przycisk kopiowania lub użyj skrótu schowka <kbd>Ctrl</kbd>+<kbd>c</kbd>/<kbd>Cmd</kbd>+<kbd>c</kbd>",
+    "Copy link": "Kopiuj link",
+    "Link copied to clipboard": "Link został skopiowany do schowka",
+    "Paste text": "Wklej tekst",
+    "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)": "Klawisz Tabulatora służy jako znak (przytrzymaj <kbd>Ctrl</kbd>+<kbd>m</kbd> lub <kbd>Esc</kbd> aby przełączać)",
+    "Theme": "Motyw"
 }
