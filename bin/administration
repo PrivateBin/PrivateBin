@@ -344,13 +344,13 @@ EOT, PHP_EOL;
 
         $class = 'PrivateBin\\Data\\' . $this->_conf->getKey('class', 'model');
         $this->_store = new $class($this->_conf->getSection('model_options'));
-		
-		if ($this->_option('l', 'list-ids') !== null) {
-			$this->_list_ids();
-		}
-		if ($this->_option(null, 'delete-all') !== null) {
-			$this->_delete_all();
-		}
+
+        if ($this->_option('l', 'list-ids') !== null) {
+            $this->_list_ids();
+        }
+        if ($this->_option(null, 'delete-all') !== null) {
+            $this->_delete_all();
+        }
         if (($pasteId = $this->_option('d', 'delete')) !== null) {
             $this->_delete($pasteId);
         }
