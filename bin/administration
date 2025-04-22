@@ -213,7 +213,7 @@ EOT, PHP_EOL;
             self::_help(2);
         }
 
-		$this->_opts = getopt('hd:epsl', array('help', 'delete:', 'empty-dirs', 'purge', 'statistics', 'list-ids', 'delete-all'));
+        $this->_opts = getopt('hd:epsl', array('help', 'delete:', 'empty-dirs', 'purge', 'statistics', 'list-ids', 'delete-all'));
 
         if (!$this->_opts) {
             self::_error_echo('unsupported arguments given');
