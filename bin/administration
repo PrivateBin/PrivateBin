@@ -153,7 +153,7 @@ class Administration
     {
         echo <<<'EOT'
 Usage:
-	administration [--delete <paste id> | --empty-dirs | --help | --purge | --statistics | --list-ids]
+  administration [--delete <paste id> | --delete-all | --empty-dirs | --help | --list-ids | --purge | --statistics]
 
 Options:
   -d, --delete      deletes the requested paste ID
