@@ -157,11 +157,6 @@ Usage:
 
 Options:
   -d, --delete      deletes the requested paste ID
-  -e, --empty-dirs  removes empty directories (only if Filesystem storage is
-                    configured)
-  -h, --help        displays this help message
-  -p, --purge       purge all expired pastes
-  -s, --statistics  reads all stored pastes and comments and reports statistics
   --delete-all      deletes all paste IDs
   -e, --empty-dirs  removes empty directories (only if Filesystem storage is
                     configured)
