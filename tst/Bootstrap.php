@@ -823,6 +823,11 @@ class ConnectionInterfaceStub implements ConnectionInterface
         throw new BadMethodCallException('not supported by this stub');
     }
 
+    public function moveObject(array $args = array())
+    {
+        throw new BadMethodCallException('not supported by this stub');
+    }
+
     public function composeObject(array $args = array())
     {
         throw new BadMethodCallException('not supported by this stub');
