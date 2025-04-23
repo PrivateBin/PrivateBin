@@ -73,6 +73,35 @@ class Administration
     }
 
     /**
+     * lists all stored paste IDs
+     *
+     * @access private
+     */
+    private function _list_ids()
+    {
+        $ids = $this->_store->getAllPastes();
+        foreach ($ids as $pasteid) {
+            echo $pasteid, PHP_EOL;
+        }
+        exit;
+    }
+
+    /**
+     * deletes all stored pastes (regardless of expiration)
+     *
+     * @access private
+     */
+    private function _delete_all()
+    {
+        $ids = $this->_store->getAllPastes();
+        foreach ($ids as $pasteid) {
+            echo "Deleting paste ID: $pasteid" . PHP_EOL;
+            $this->_store->delete($pasteid);
+        }
+        exit("All pastes successfully deleted" . PHP_EOL);
+    }
+
+    /**
      * removes empty directories, if current storage model uses Filesystem
      *
      * @access private
@@ -124,13 +153,20 @@ class Administration
     {
         echo <<<'EOT'
 Usage:
-  administration [--delete <paste id> | --empty-dirs | --help | --purge | --statistics]
+  administration [--delete <paste id> | --delete-all | --empty-dirs | --help | --list-ids | --purge | --statistics]
 
 Options:
   -d, --delete      deletes the requested paste ID
   -e, --empty-dirs  removes empty directories (only if Filesystem storage is
                     configured)
   -h, --help        displays this help message
+  -p, --purge       purge all expired pastes
+  -s, --statistics  reads all stored pastes and comments and reports statistics
+  --delete-all      deletes all paste IDs
+  -e, --empty-dirs  removes empty directories (only if Filesystem storage is
+                    configured)
+  -h, --help        displays this help message
+  -l, --list-ids    lists all paste IDs
   -p, --purge       purge all expired pastes
   -s, --statistics  reads all stored pastes and comments and reports statistics
 EOT, PHP_EOL;
@@ -177,7 +213,8 @@ EOT, PHP_EOL;
             self::_help(2);
         }
 
-        $this->_opts = getopt('hd:eps', array('help', 'delete:', 'empty-dirs', 'purge', 'statistics'));
+        $this->_opts = getopt('hd:epsl', array('help', 'delete:', 'empty-dirs', 'purge', 'statistics', 'list-ids', 'delete-all'));
+
         if (!$this->_opts) {
             self::_error_echo('unsupported arguments given');
             echo PHP_EOL;
@@ -308,6 +345,12 @@ EOT, PHP_EOL;
         $class = 'PrivateBin\\Data\\' . $this->_conf->getKey('class', 'model');
         $this->_store = new $class($this->_conf->getSection('model_options'));
 
+        if ($this->_option('l', 'list-ids') !== null) {
+            $this->_list_ids();
+        }
+        if ($this->_option(null, 'delete-all') !== null) {
+            $this->_delete_all();
+        }
         if (($pasteId = $this->_option('d', 'delete')) !== null) {
             $this->_delete($pasteId);
         }
