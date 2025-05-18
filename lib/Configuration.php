@@ -123,7 +123,7 @@ class Configuration
             'js/purify-3.2.5.js'     => 'sha512-eLlLLL/zYuf5JuG0x4WQm687MToqOGP9cDQHIdmOy1ZpjiY4J48BBcOM7DtZheKk1UogW920+9RslWYB4KGuuA==',
             'js/rawinflate-0.3.js'   => 'sha512-g8uelGgJW9A/Z1tB6Izxab++oj5kdD7B4qC7DHwZkB6DGMXKyzx7v5mvap2HXueI2IIn08YlRYM56jwWdm2ucQ==',
             'js/showdown-2.1.0.js'   => 'sha512-WYXZgkTR0u/Y9SVIA4nTTOih0kXMEd8RRV6MLFdL6YU8ymhR528NLlYQt1nlJQbYz4EW+ZsS0fx1awhiQJme1Q==',
-            'js/zlib-1.3.1.js'       => 'sha512-5bU9IIP4PgBrOKLZvGWJD4kgfQrkTz8Z3Iqeu058mbQzW3mCumOU6M3UVbVZU9rrVoVwaW4cZK8U8h5xjF88eQ==',
+            'js/zlib-1.3.1-1.js'     => 'sha512-5bU9IIP4PgBrOKLZvGWJD4kgfQrkTz8Z3Iqeu058mbQzW3mCumOU6M3UVbVZU9rrVoVwaW4cZK8U8h5xjF88eQ==',
         ),
     );
 
