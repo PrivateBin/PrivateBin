@@ -34,7 +34,7 @@ if ($ZEROBINCOMPATIBILITY):
 <?php
 endif;
 ?>
-		<?php $this->_scriptTag('js/zlib-1.3.1.js', 'async'); ?>
+		<?php $this->_scriptTag('js/zlib-1.3.1-1.js', 'async'); ?>
 		<?php $this->_scriptTag('js/base-x-4.0.0.js', 'async'); ?>
 		<?php $this->_scriptTag('js/rawinflate-0.3.js', 'async'); ?>
 <?php
