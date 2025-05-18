@@ -185,7 +185,9 @@ class FilesystemTest extends TestCase
         foreach (array('purge_limiter', 'salt', 'traffic_limiter') as $namespace) {
             file_put_contents($this->_invalidPath . DIRECTORY_SEPARATOR . $namespace . '.php', 'invalid content');
             $model = new Filesystem(array('dir' => $this->_invalidPath));
+            ob_start(); // hide "invalid content", when file gets included
             $this->assertEquals($model->getValue($namespace), '', 'empty default value returned, invalid content ignored');
+            ob_end_clean();
             $this->assertTrue($model->setValue(VALID, $namespace), 'setting valid value');
             $this->assertEquals($model->getValue($namespace), VALID, 'valid value returned');
         }
