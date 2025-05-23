@@ -3477,6 +3477,12 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         {
             const $source = $(event.target);
 
+            // show all reply buttons
+            $commentContainer.find('button').removeClass('hidden');
+
+            // hide the current reply button
+            $source.addClass('hidden');
+
             // clear input
             $replyMessage.val('');
             $replyNickname.val('');
