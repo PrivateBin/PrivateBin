@@ -5416,6 +5416,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         me.run = function(paste)
         {
             Alert.hideMessages();
+            Alert.setCustomHandler(null);
             Alert.showLoading('Decrypting paste…', 'cloud-download');
 
             if (typeof paste === 'undefined' || paste.type === 'click') {
