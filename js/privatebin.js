@@ -3477,6 +3477,12 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         {
             const $source = $(event.target);
 
+            // show all reply buttons
+            $commentContainer.find('button').removeClass('hidden');
+
+            // hide the current reply button
+            $source.addClass('hidden');
+
             // clear input
             $replyMessage.val('');
             $replyNickname.val('');
@@ -5410,6 +5416,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         me.run = function(paste)
         {
             Alert.hideMessages();
+            Alert.setCustomHandler(null);
             Alert.showLoading('Decrypting paste…', 'cloud-download');
 
             if (typeof paste === 'undefined' || paste.type === 'click') {
