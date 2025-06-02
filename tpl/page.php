@@ -265,10 +265,10 @@ endif;
 <?php
 if ($FILEUPLOAD):
 ?>
-				<div id="attachment" class="hidden"><a><?php echo I18n::_('Download attachment'); ?></a></div>
+				<div id="attachment" class="hidden"></div>
 				<div id="attach" class="hidden">
 					<span id="clonedfile" class="hidden"><?php echo I18n::_('Cloned file attached.'); ?></span>
-					<span id="filewrap"><?php echo I18n::_('Attach a file'); ?>: <input type="file" id="file" name="file" /></span>
+					<span id="filewrap"><?php echo I18n::_('Attach a file'); ?>: <input type="file" id="file" name="file" multiple /></span>
 					<span id="dragAndDropFileName" class="dragAndDropFile"><?php echo I18n::_('alternatively drag & drop a file or paste an image from the clipboard'); ?></span>
 					<button id="fileremovebutton"><?php echo I18n::_('Remove attachment'); ?></button>
 				</div>
@@ -297,9 +297,6 @@ endif;
 				<div id="commentcontainer"></div>
 			</div>
 		</section>
-<?php
-if ($DISCUSSION):
-?>
 		<div id="serverdata" class="hidden" aria-hidden="true">
 			<div id="templates">
 				<article id="commenttemplate" class="comment">
@@ -321,11 +318,11 @@ if ($DISCUSSION):
 					</div>
 					<button id="replybutton" class="btn btn-default btn-sm"><?php echo I18n::_('Post comment'); ?></button>
 				</div>
+				<div id="attachmenttemplate" class="attachment">
+					<a><?php echo I18n::_('Download attachment'); ?></a>
+				</div>
 			</div>
 		</div>
-<?php
-endif;
-?>
 <?php
 if ($FILEUPLOAD):
 ?>
