@@ -8,6 +8,12 @@
  * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
  */
 
+#attachmentPreview {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
 #attachmentPreview img {
 	max-width: 100%;
 	height: auto;
