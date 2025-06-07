@@ -5,6 +5,8 @@
 * CHANGED: Passing large data structures by reference to reduce memory consumption (#858)
 * CHANGED: Removed use of ctype functions and polyfill library for ctype
 * CHANGED: Upgrading libraries to: DOMpurify 3.2.5, ip-lib 1.20.0
+* CHANGED: Support for multiple file uploads (#1060)
+* FIXED: Hide Reply button in the discussions once clicked to avoid losing the text input (#1508)
 * FIXED: Bump zlib library suffix, ensuring cache refresh for WASM streaming change
 * FIXED: Handle undefined globals in file based persisted values (#1544)
 
