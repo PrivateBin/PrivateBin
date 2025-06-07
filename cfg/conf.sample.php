@@ -118,7 +118,15 @@ languageselection = false
 ;   for details.
 ; - The 'wasm-unsafe-eval' is used to enable webassembly support (used for zlib
 ;   compression). You can remove it if compression doesn't need to be supported.
-; cspheader = "default-src 'none'; base-uri 'self'; form-action 'none'; manifest-src 'self'; connect-src * blob:; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'; font-src 'self'; frame-ancestors 'none'; img-src 'self' data: blob:; media-src blob:; object-src blob:; sandbox allow-same-origin allow-scripts allow-forms allow-popups allow-modals allow-downloads"
+; - The 'unsafe-inline' style-src is used by Chrome when displaying PDF previews
+;   and can be omitted if attachment upload is disabled (which is the default).
+;   See https://issues.chromium.org/issues/343754409
+; - To allow displaying PDF previews in Firefox or Chrome, sandboxing must also
+;   get turned off. The following CSP allows PDF previews:
+; cspheader = "default-src 'none'; base-uri 'self'; form-action 'none'; manifest-src 'self'; connect-src * blob:; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; font-src 'self'; frame-ancestors 'none'; frame-src blob:; img-src 'self' data: blob:; media-src blob:; object-src blob:"
+;
+; The recommended and default used CSP is:
+; cspheader = "default-src 'none'; base-uri 'self'; form-action 'none'; manifest-src 'self'; connect-src * blob:; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'; font-src 'self'; frame-ancestors 'none'; frame-src blob:; img-src 'self' data: blob:; media-src blob:; object-src blob:; sandbox allow-same-origin allow-scripts allow-forms allow-popups allow-modals allow-downloads"
 
 ; stay compatible with PrivateBin Alpha 0.19, less secure
 ; if enabled will use base64.js version 1.7 instead of 2.1.9 and sha1 instead of
