@@ -25,7 +25,7 @@ class TemplateSwitcher
      * @static
      * @var    string
      */
-    protected static $_templateFallback;
+    protected static $_templateFallback = "bootstrap";
 
     /**
      * available templates
@@ -59,6 +59,11 @@ class TemplateSwitcher
     {
         if (self::isTemplateAvailable($template)) {
             self::$_templateFallback = $template;
+
+            if (!in_array($template, self::getAvailableTemplates())) {
+                // Add custom template to the available templates list
+                self::$_availableTemplates[] = $template;
+            }
         }
     }
 
@@ -96,7 +101,14 @@ class TemplateSwitcher
      */
     public static function isTemplateAvailable(string $template): bool
     {
-        return in_array($template, self::getAvailableTemplates());
+        $available = in_array($template, self::getAvailableTemplates());
+
+        if (!$available && !View::isBootstrapTemplate($template)) {
+            $path      = View::getTemplateFilePath($template);
+            $available = file_exists($path);
+        }
+
+        return $available;
     }
 
     /**
