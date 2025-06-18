@@ -25,7 +25,7 @@ class TemplateSwitcher
      * @static
      * @var    string
      */
-    protected static $_templateFallback = "bootstrap";
+    protected static $_templateFallback = 'bootstrap';
 
     /**
      * available templates
