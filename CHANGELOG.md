@@ -8,6 +8,8 @@
 * CHANGED: Support for multiple file uploads (#1060)
 * CHANGED: Documented CSP change necessary to allow PDF attachment preview (#1552)
 * FIXED: Hide Reply button in the discussions once clicked to avoid losing the text input (#1508)
+* FIXED: Bump zlib library suffix, ensuring cache refresh for WASM streaming change
+* FIXED: Handle undefined globals in file based persisted values (#1544)
 
 ## 1.7.6 (2025-02-01)
 * ADDED: Ability to copy the paste by clicking the copy icon button or using the keyboard shortcut ctrl+c/cmd+c (#1390 & #12)

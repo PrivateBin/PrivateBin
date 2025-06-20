@@ -276,7 +276,7 @@ class Filesystem extends AbstractData
             case 'purge_limiter':
                 return $this->_storeString(
                     $this->_path . DIRECTORY_SEPARATOR . 'purge_limiter.php',
-                    '<?php' . PHP_EOL . '$GLOBALS[\'purge_limiter\'] = ' . $value . ';'
+                    '<?php' . PHP_EOL . '$GLOBALS[\'purge_limiter\'] = ' . var_export($value, true) . ';'
                 );
             case 'salt':
                 return $this->_storeString(
@@ -308,7 +308,9 @@ class Filesystem extends AbstractData
                 $file = $this->_path . DIRECTORY_SEPARATOR . 'purge_limiter.php';
                 if (is_readable($file)) {
                     require $file;
-                    return $GLOBALS['purge_limiter'];
+                    if (array_key_exists('purge_limiter', $GLOBALS)) {
+                        return $GLOBALS['purge_limiter'];
+                    }
                 }
                 break;
             case 'salt':
@@ -324,9 +326,11 @@ class Filesystem extends AbstractData
                 $file = $this->_path . DIRECTORY_SEPARATOR . 'traffic_limiter.php';
                 if (is_readable($file)) {
                     require $file;
-                    $this->_last_cache = $GLOBALS['traffic_limiter'];
-                    if (array_key_exists($key, $this->_last_cache)) {
-                        return $this->_last_cache[$key];
+                    if (array_key_exists('traffic_limiter', $GLOBALS)) {
+                        $this->_last_cache = $GLOBALS['traffic_limiter'];
+                        if (array_key_exists($key, $this->_last_cache)) {
+                            return $this->_last_cache[$key];
+                        }
                     }
                 }
                 break;
