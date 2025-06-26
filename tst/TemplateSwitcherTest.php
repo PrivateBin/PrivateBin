@@ -10,15 +10,21 @@ class TemplateSwitcherTest extends TestCase
     {
         $conf = new Configuration;
 
-        $existingTemplateFallback = 'bootstrap-dark';
-        $wrongTemplateFallback    = 'bootstrap-wrong';
+        $defaultTemplateFallback        = 'bootstrap';
+        $existingTemplateFallback       = 'bootstrap-dark';
+        $wrongBootstrapTemplateFallback = 'bootstrap-wrong';
+        $wrongTemplateFallback          = 'wrong-template';
 
         TemplateSwitcher::setAvailableTemplates($conf->getKey('availabletemplates'));
-        TemplateSwitcher::setTemplateFallback($existingTemplateFallback);
-        $this->assertEquals($existingTemplateFallback, TemplateSwitcher::getTemplate(), 'Correct template fallback');
+
+        TemplateSwitcher::setTemplateFallback($wrongBootstrapTemplateFallback);
+        $this->assertEquals($defaultTemplateFallback, TemplateSwitcher::getTemplate(), 'Wrong bootstrap template fallback');
 
         TemplateSwitcher::setTemplateFallback($wrongTemplateFallback);
-        $this->assertEquals($existingTemplateFallback, TemplateSwitcher::getTemplate(), 'Wrong template fallback');
+        $this->assertEquals($defaultTemplateFallback, TemplateSwitcher::getTemplate(), 'Wrong template fallback');
+
+        TemplateSwitcher::setTemplateFallback($existingTemplateFallback);
+        $this->assertEquals($existingTemplateFallback, TemplateSwitcher::getTemplate(), 'Correct template fallback');
     }
 
     public function testSetAvailableTemplates()

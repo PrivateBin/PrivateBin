@@ -49,13 +49,37 @@ class View
      */
     public function draw($template)
     {
-        $file = substr($template, 0, 10) === 'bootstrap-' ? 'bootstrap' : $template;
-        $path = PATH . 'tpl' . DIRECTORY_SEPARATOR . $file . '.php';
+        $path = self::getTemplateFilePath($template);
         if (!file_exists($path)) {
             throw new Exception('Template ' . $template . ' not found!', 80);
         }
         extract($this->_variables);
         include $path;
+    }
+
+    /**
+     * Get template file path
+     *
+     * @access public
+     * @param  string $template
+     * @return string
+     */
+    public static function getTemplateFilePath(string $template): string
+    {
+        $file = self::isBootstrapTemplate($template) ? 'bootstrap' : $template;
+        return PATH . 'tpl' . DIRECTORY_SEPARATOR . $file . '.php';
+    }
+
+    /**
+     * Is the template a variation of the bootstrap template
+     *
+     * @access public
+     * @param  string $template
+     * @return bool
+     */
+    public static function isBootstrapTemplate(string $template): bool
+    {
+        return substr($template, 0, 10) === 'bootstrap-';
     }
 
     /**
