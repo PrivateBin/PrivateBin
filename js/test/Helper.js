@@ -290,5 +290,31 @@ describe('Helper', function () {
             }
         );
     });
+
+    describe('formatBytes', function () {
+        jsc.property('returns 0 B for 0 bytes', function () {
+            return $.PrivateBin.Helper.formatBytes(0) === '0 B';
+        });
+
+        jsc.property('formats bytes < 1000 as B', function () {
+            return $.PrivateBin.Helper.formatBytes(500) === '500 B';
+        });
+
+        jsc.property('formats kilobytes correctly', function () {
+            return $.PrivateBin.Helper.formatBytes(1500) === '1.5 KB';
+        });
+
+        jsc.property('formats megabytes correctly', function () {
+            return $.PrivateBin.Helper.formatBytes(2 * 1000 * 1000) === '2 MB';
+        });
+
+        jsc.property('formats gigabytes correctly', function () {
+            return $.PrivateBin.Helper.formatBytes(3.45 * 1000 * 1000 * 1000) === '3.45 GB';
+        });
+
+        jsc.property('rounds to two decimal places', function () {
+            return $.PrivateBin.Helper.formatBytes(1234567) === '1.23 MB';
+        });
+    });
 });
 
