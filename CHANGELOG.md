@@ -4,7 +4,7 @@
 * ADDED: Switching templates using the web ui (#1501)
 * CHANGED: Passing large data structures by reference to reduce memory consumption (#858)
 * CHANGED: Removed use of ctype functions and polyfill library for ctype
-* CHANGED: Upgrading libraries to: DOMpurify 3.2.5, ip-lib 1.20.0
+* CHANGED: Upgrading libraries to: DOMpurify 3.2.6, ip-lib 1.20.0
 * CHANGED: Support for multiple file uploads (#1060)
 * CHANGED: Documented CSP change necessary to allow PDF attachment preview (#1552)
 * FIXED: Hide Reply button in the discussions once clicked to avoid losing the text input (#1508)
