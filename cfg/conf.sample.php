@@ -145,10 +145,7 @@ languageselection = false
 ; Can be set to one these values: "none" / "zlib" (default).
 ; compression = "zlib"
 
-[expire]
-; expire value that is selected per default
-; make sure the value exists in [expire_options]
-default = "1week"
+
 
 [expire_options]
 ; Set each one of these to the number of seconds in the expiration period,
@@ -158,6 +155,7 @@ default = "1week"
 1hour = 3600
 1day = 86400
 1week = 604800
+"1month" => 2592000 // ✅ 30 দিন
 ; Well this is not *exactly* one month, it's 30 days:
 1month = 2592000
 1year = 31536000
