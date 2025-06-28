@@ -3027,7 +3027,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             if (typeof fileName !== 'undefined') {
                 attachmentLink.attr('download', fileName);
 
-                const fileSize = me.getAttachmentSize(attachmentData);
+                const fileSize = Helper.formatBytes(decodedData.length);
                 template.append(`(${fileName}, ${fileSize})`);
             }
 
