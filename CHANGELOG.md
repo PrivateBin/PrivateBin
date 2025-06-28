@@ -1,5 +1,7 @@
 # PrivateBin version history
 
+## 2.0.0 (not yet released)
+
 ## 1.7.7 (2025-06-28)
 * ADDED: Switching templates using the web ui (#1501)
 * ADDED: Show file name and size on download page (#603)
