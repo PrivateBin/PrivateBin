@@ -592,7 +592,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         };
 
         /**
-         * Convert Bytes to KB/MB/GB
+         * Convert Bytes to KiB/MiB/GiB
          *
          * @name   Helper.formatBytes
          * @function
@@ -603,9 +603,9 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         me.formatBytes = function (bytes)
         {
             let result = '';
-            const kilobyte = 1000;
+            const kilobyte = 1024;
             const decimalPoint = 2;
-            const sizes = [I18n._('B'), I18n._('KB'), I18n._('MB'), I18n._('GB')];
+            const sizes = [I18n._('B'), I18n._('KiB'), I18n._('MiB'), I18n._('GiB')];
             const index = Math.floor(Math.log(bytes) / Math.log(kilobyte));
 
             if (bytes > 0) {
@@ -3228,25 +3228,6 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
             // extract mimeType
             return attachmentData.substring(5, mimeTypeEnd);
-        }
-
-        /**
-         * Get attachment size in B/KB/MB/GB
-         *
-         * @name AttachmentViewer.getAttachmentSize
-         * @function
-         * @param {string} attachmentData - Base64 string
-         */
-        me.getAttachmentSize = function(attachmentData)
-        {
-            const base64Start = attachmentData.indexOf(',') + 1;
-            const rawData = attachmentData.substring(base64Start);
-            const decodedData = rawData.length > 0 ? atob(rawData) : '';
-
-            const buf = new Uint8Array(decodedData.length);
-            const bytes = new Blob([buf]).size;
-
-            return Helper.formatBytes(bytes);
         }
 
         /**

@@ -300,20 +300,20 @@ describe('Helper', function () {
             return $.PrivateBin.Helper.formatBytes(500) === '500 B';
         });
 
-        jsc.property('formats kilobytes correctly', function () {
-            return $.PrivateBin.Helper.formatBytes(1500) === '1.5 KB';
+        jsc.property('formats kibibytes correctly', function () {
+            return $.PrivateBin.Helper.formatBytes(1500) === '1.46 KiB';
         });
 
-        jsc.property('formats megabytes correctly', function () {
-            return $.PrivateBin.Helper.formatBytes(2 * 1000 * 1000) === '2 MB';
+        jsc.property('formats mebibytes correctly', function () {
+            return $.PrivateBin.Helper.formatBytes(2 * 1000 * 1000) === '1.91 MiB';
         });
 
-        jsc.property('formats gigabytes correctly', function () {
-            return $.PrivateBin.Helper.formatBytes(3.45 * 1000 * 1000 * 1000) === '3.45 GB';
+        jsc.property('formats gibibytes correctly', function () {
+            return $.PrivateBin.Helper.formatBytes(3.45 * 1000 * 1000 * 1000) === '3.21 GiB';
         });
 
         jsc.property('rounds to two decimal places', function () {
-            return $.PrivateBin.Helper.formatBytes(1234567) === '1.23 MB';
+            return $.PrivateBin.Helper.formatBytes(1234567) === '1.18 MiB';
         });
     });
 });
