@@ -2,12 +2,15 @@
 
 ## 1.7.7 (not yet released)
 * ADDED: Switching templates using the web ui (#1501)
+* ADDED: Show file name and size on download page (#603)
 * CHANGED: Passing large data structures by reference to reduce memory consumption (#858)
 * CHANGED: Removed use of ctype functions and polyfill library for ctype
 * CHANGED: Upgrading libraries to: DOMpurify 3.2.6, ip-lib 1.20.0
 * CHANGED: Support for multiple file uploads (#1060)
 * CHANGED: Documented CSP change necessary to allow PDF attachment preview (#1552)
 * FIXED: Hide Reply button in the discussions once clicked to avoid losing the text input (#1508)
+* FIXED: Bump zlib library suffix, ensuring cache refresh for WASM streaming change
+* FIXED: Handle undefined globals in file based persisted values (#1544)
 
 ## 1.7.6 (2025-02-01)
 * ADDED: Ability to copy the paste by clicking the copy icon button or using the keyboard shortcut ctrl+c/cmd+c (#1390 & #12)

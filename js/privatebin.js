@@ -592,6 +592,32 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         };
 
         /**
+         * Convert Bytes to KiB/MiB/GiB
+         *
+         * @name   Helper.formatBytes
+         * @function
+         *
+         * @param  {number} bytes
+         * @return {string}
+         */
+        me.formatBytes = function (bytes)
+        {
+            let result = '';
+            const kilobyte = 1024;
+            const decimalPoint = 2;
+            const sizes = [I18n._('B'), I18n._('KiB'), I18n._('MiB'), I18n._('GiB')];
+            const index = Math.floor(Math.log(bytes) / Math.log(kilobyte));
+
+            if (bytes > 0) {
+                result = parseFloat((bytes / Math.pow(kilobyte, index)).toFixed(decimalPoint)) + ' ' + sizes[index];
+            } else {
+                result = `0 ${I18n._('B')}`;
+            }
+
+            return result;
+        }
+
+        /**
          * resets state, used for unit testing
          *
          * @name   Helper.reset
@@ -3000,7 +3026,9 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
             if (typeof fileName !== 'undefined') {
                 attachmentLink.attr('download', fileName);
-                template.append(fileName);
+
+                const fileSize = Helper.formatBytes(decodedData.length);
+                template.append(`(${fileName}, ${fileSize})`);
             }
 
             // sanitize SVG preview
