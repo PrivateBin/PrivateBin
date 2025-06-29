@@ -5521,6 +5521,9 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 me.run(paste);
             });
 
+            // Clear attachments to prevent duplicates
+            AttachmentViewer.removeAttachment();
+
             // decrypt paste & attachments
             decryptionPromises.push(decryptPaste(paste, key, password));
 
