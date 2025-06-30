@@ -3265,6 +3265,9 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/FileReader#readAsDataURL()}
          */
         function readFileData(loadedFiles) {
+            // Clear old cache
+            me.removeAttachmentData();
+
             if (typeof FileReader === 'undefined') {
                 // revert loading status…
                 me.hideAttachment();
@@ -5520,6 +5523,9 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 TopNav.hideRetryButton();
                 me.run(paste);
             });
+
+            // Clear attachments to prevent duplicates
+            AttachmentViewer.removeAttachment();
 
             // decrypt paste & attachments
             decryptionPromises.push(decryptPaste(paste, key, password));
