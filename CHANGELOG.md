@@ -1,6 +1,9 @@
 # PrivateBin version history
 
-## 2.0.0 (not yet released)
+## 1.7.8 (2025-06-30)
+* FIXED: Duplicate attachment for every comment (#1577)
+* FIXED: Attachments with empty file names (#1577)
+* FIXED: Page template scripts loading order (#1579)
 
 ## 1.7.7 (2025-06-28)
 * ADDED: Switching templates using the web ui (#1501)
