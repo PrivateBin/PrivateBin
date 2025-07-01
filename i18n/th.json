@@ -229,11 +229,11 @@
     "Error compressing paste, due to missing WebAssembly support.": "ไม่สามารถบีบอัดข้อมูลที่คุณต้องการฝากโค้ดได้ เนื่องจากอุปกรณ์ของคุณขาดการรองรับ WebAssembly",
     "Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.": "ไม่สามารถอ่านข้อมูลที่คุณได้ฝากโค้ดไว้ เบราว์เซอร์ของคุณไม่รองรับ WebAssembly กรุณาลองเปลี่ยนใช้เบราว์เซอร์ตัวอื่นเพื่อดูการฝากโค้ดนี้อีกครั้ง",
     "Start over": "เริ่มใหม่",
-    "Paste copied to clipboard": "Paste copied to clipboard",
-    "To copy paste press on the copy button or use the clipboard shortcut <kbd>Ctrl</kbd>+<kbd>c</kbd>/<kbd>Cmd</kbd>+<kbd>c</kbd>": "To copy paste press on the copy button or use the clipboard shortcut <kbd>Ctrl</kbd>+<kbd>c</kbd>/<kbd>Cmd</kbd>+<kbd>c</kbd>",
-    "Copy link": "Copy link",
-    "Link copied to clipboard": "Link copied to clipboard",
-    "Paste text": "Paste text",
-    "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)": "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)",
-    "Theme": "Theme"
+    "Paste copied to clipboard": "คัดลอกการฝากโค้ดไปที่คลิปบอร์ดแล้ว",
+    "To copy paste press on the copy button or use the clipboard shortcut <kbd>Ctrl</kbd>+<kbd>c</kbd>/<kbd>Cmd</kbd>+<kbd>c</kbd>": "หากต้องการคัดลอกและวาง กรุณากดปุ่มคัดลอก หรือใช้ปุ่มลัด <kbd>Ctrl</kbd>+<kbd>c</kbd>/<kbd>Cmd</kbd>+<kbd>c</kbd> สำหรับคลิปบอร์ด",
+    "Copy link": "คัดลอกลิงก์",
+    "Link copied to clipboard": "คัดลอกลิงก์ไปที่คลิปบอร์ดแล้ว",
+    "Paste text": "ฝากข้อความ",
+    "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)": "ปุ่ม Tabulator ใช้เป็นอักขระ (กด <kbd>Ctrl</kbd>+<kbd>m</kbd> หรือ <kbd>Esc</kbd> เพื่อสลับ)",
+    "Theme": "ธีม"
 }
