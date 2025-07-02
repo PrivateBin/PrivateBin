@@ -1,6 +1,7 @@
 # PrivateBin version history
 
 ## 2.0.0 (not yet released)
+* CHANGED: Remove page template (#265)
 
 ## 1.7.8 (2025-06-30)
 * FIXED: Duplicate attachment for every comment (#1577)

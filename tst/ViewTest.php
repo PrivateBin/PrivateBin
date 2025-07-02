@@ -154,7 +154,7 @@ class ViewTest extends TestCase
     public function testIsBootstrapTemplate()
     {
         $bootstrapTemplate    = 'bootstrap-dark';
-        $nonBootstrapTemplate = 'page';
+        $nonBootstrapTemplate = 'bootstrap5';
         $this->assertTrue(View::isBootstrapTemplate($bootstrapTemplate), 'Is bootstrap template');
         $this->assertFalse(View::isBootstrapTemplate($nonBootstrapTemplate), 'Is not bootstrap template');
     }
