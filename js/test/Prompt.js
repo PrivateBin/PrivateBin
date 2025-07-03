@@ -2,8 +2,6 @@
 require('../common');
 
 describe('Prompt', function () {
-    // TODO: this does not test the prompt() fallback, since that isn't available
-    //       in nodejs -> replace the prompt in the "page" template with a modal
     describe('requestPassword & getPassword', function () {
         this.timeout(30000);
 
