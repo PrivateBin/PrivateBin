@@ -3270,13 +3270,13 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
             if (typeof loadedFiles !== 'undefined') {
                 files = loadedFiles;
-                loadedFiles.forEach(loadedFile => {
+                loadedFiles.forEach((loadedFile, index) => {
                     const fileReader = new FileReader();
 
                     fileReader.onload = function (event) {
                         const dataURL = event.target.result;
                         if (dataURL) {
-                            attachmentsData.push(dataURL);
+                            attachmentsData[index] = dataURL;
                         }
 
                         if (Editor.isPreview()) {
