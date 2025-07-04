@@ -48,17 +48,15 @@ sizelimit = 10485760
 templateselection = false
 
 ; List of available for selection templates when "templateselection" option is enabled
+availabletemplates[] = "bootstrap5"
 availabletemplates[] = "bootstrap"
 availabletemplates[] = "bootstrap-page"
 availabletemplates[] = "bootstrap-dark"
 availabletemplates[] = "bootstrap-dark-page"
 availabletemplates[] = "bootstrap-compact"
 availabletemplates[] = "bootstrap-compact-page"
-availabletemplates[] = "bootstrap5"
-availabletemplates[] = "page"
 
 ; set the template your installs defaults to, defaults to "bootstrap" (tpl/bootstrap.php), also
-; available are "page" (tpl/page.php), the classic ZeroBin style and several
 ; bootstrap variants: "bootstrap-dark", "bootstrap-compact", "bootstrap-page",
 ; which can be combined with "-dark" and "-compact" for "bootstrap-dark-page",
 ; "bootstrap-compact-page" and finally "bootstrap5" (tpl/bootstrap5.php) - previews at:
@@ -108,8 +106,6 @@ languageselection = false
 ; scripts or run your site behind certain DDoS-protection services.
 ; Check the documentation at https://content-security-policy.com/
 ; Notes:
-; - If you use any bootstrap theme, you can remove the allow-popups from the
-;   sandbox restrictions.
 ; - If you use the bootstrap5 theme, you must change default-src to 'self' to
 ;   enable display of the svg icons
 ; - By default this disallows to load images from third-party servers, e.g. when
@@ -126,7 +122,7 @@ languageselection = false
 ; cspheader = "default-src 'none'; base-uri 'self'; form-action 'none'; manifest-src 'self'; connect-src * blob:; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; font-src 'self'; frame-ancestors 'none'; frame-src blob:; img-src 'self' data: blob:; media-src blob:; object-src blob:"
 ;
 ; The recommended and default used CSP is:
-; cspheader = "default-src 'none'; base-uri 'self'; form-action 'none'; manifest-src 'self'; connect-src * blob:; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'; font-src 'self'; frame-ancestors 'none'; frame-src blob:; img-src 'self' data: blob:; media-src blob:; object-src blob:; sandbox allow-same-origin allow-scripts allow-forms allow-popups allow-modals allow-downloads"
+; cspheader = "default-src 'none'; base-uri 'self'; form-action 'none'; manifest-src 'self'; connect-src * blob:; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'; font-src 'self'; frame-ancestors 'none'; frame-src blob:; img-src 'self' data: blob:; media-src blob:; object-src blob:; sandbox allow-same-origin allow-scripts allow-forms allow-modals allow-downloads"
 
 ; stay compatible with PrivateBin Alpha 0.19, less secure
 ; if enabled will use base64.js version 1.7 instead of 2.1.9 and sha1 instead of

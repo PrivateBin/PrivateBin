@@ -1,6 +1,7 @@
 # PrivateBin version history
 
 ## 2.0.0 (not yet released)
+* CHANGED: Remove page template (#265)
 * FIXED: Name mismatches in attached files (#1584)
 
 ## 1.7.8 (2025-06-30)

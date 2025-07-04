@@ -2319,26 +2319,19 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         me.requestLoadConfirmation = function()
         {
             const $loadconfirmmodal = $('#loadconfirmmodal');
-            if ($loadconfirmmodal.length > 0) {
-                const $loadconfirmOpenNow = $loadconfirmmodal.find('#loadconfirm-open-now');
-                $loadconfirmOpenNow.off('click.loadPaste');
-                $loadconfirmOpenNow.on('click.loadPaste', PasteDecrypter.run);
-                const $loadconfirmClose = $loadconfirmmodal.find('.close');
-                $loadconfirmClose.off('click.close');
-                $loadconfirmClose.on('click.close', Controller.newPaste);
-                if (typeof bootstrap !== 'undefined' && bootstrap.Tooltip.VERSION) {
-                    (new bootstrap.Modal($loadconfirmmodal[0])).show();
-                } else {
-                    $loadconfirmmodal.modal('show');
-                }
+
+            const $loadconfirmOpenNow = $loadconfirmmodal.find('#loadconfirm-open-now');
+            $loadconfirmOpenNow.off('click.loadPaste');
+            $loadconfirmOpenNow.on('click.loadPaste', PasteDecrypter.run);
+
+            const $loadconfirmClose = $loadconfirmmodal.find('.close');
+            $loadconfirmClose.off('click.close');
+            $loadconfirmClose.on('click.close', Controller.newPaste);
+
+            if (typeof bootstrap !== 'undefined' && bootstrap.Tooltip.VERSION) {
+                (new bootstrap.Modal($loadconfirmmodal[0])).show();
             } else {
-                if (window.confirm(
-                    I18n._('This secret message can only be displayed once. Would you like to see it now?')
-                )) {
-                    PasteDecrypter.run();
-                } else {
-                    Controller.newPaste();
-                }
+                $loadconfirmmodal.modal('show');
             }
         }
 
@@ -2360,15 +2353,6 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 return;
             }
 
-            // fallback to old method for page template
-            password = prompt(I18n._('Please enter the password for this paste:'), '');
-            if (password === null) {
-                throw 'password prompt canceled';
-            }
-            if (password.length === 0) {
-                // recurse…
-                return me.requestPassword();
-            }
             PasteDecrypter.run();
         };
 
@@ -4193,59 +4177,42 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             expirationDateRoundedToSecond.setUTCSeconds(0);
 
             const $emailconfirmmodal = $('#emailconfirmmodal');
-            if ($emailconfirmmodal.length > 0) {
-                if (expirationDate !== null) {
-                    const $emailconfirmTimezoneCurrent = $emailconfirmmodal.find('#emailconfirm-timezone-current');
-                    const $emailconfirmTimezoneUtc = $emailconfirmmodal.find('#emailconfirm-timezone-utc');
-                    let localeConfiguration = { dateStyle: 'long', timeStyle: 'long' };
-                    const bootstrap5EmailConfirmModal = typeof bootstrap !== 'undefined' && bootstrap.Tooltip.VERSION ?
-                        new bootstrap.Modal($emailconfirmmodal[0]) : null;
+            if (expirationDate !== null) {
+                const $emailconfirmTimezoneCurrent = $emailconfirmmodal.find('#emailconfirm-timezone-current');
+                const $emailconfirmTimezoneUtc = $emailconfirmmodal.find('#emailconfirm-timezone-utc');
+                let localeConfiguration = { dateStyle: 'long', timeStyle: 'long' };
+                const bootstrap5EmailConfirmModal = typeof bootstrap !== 'undefined' && bootstrap.Tooltip.VERSION ?
+                    new bootstrap.Modal($emailconfirmmodal[0]) : null;
 
-                    function sendEmailAndHideModal() {
-                        const emailBody = templateEmailBody(
-                            // we don't use Date.prototype.toUTCString() because we would like to avoid GMT
-                            expirationDateRoundedToSecond.toLocaleString(
-                                [], localeConfiguration
-                            ), isBurnafterreading
-                        );
-                        if (bootstrap5EmailConfirmModal) {
-                            bootstrap5EmailConfirmModal.hide();
-                        } else {
-                            $emailconfirmmodal.modal('hide');
-                        }
-                        triggerEmailSend(emailBody);
-                    };
-
-                    $emailconfirmTimezoneCurrent.off('click.sendEmailCurrentTimezone');
-                    $emailconfirmTimezoneCurrent.on('click.sendEmailCurrentTimezone', sendEmailAndHideModal);
-                    $emailconfirmTimezoneUtc.off('click.sendEmailUtcTimezone');
-                    $emailconfirmTimezoneUtc.on('click.sendEmailUtcTimezone', () => {
-                        localeConfiguration.timeZone = 'UTC';
-                        sendEmailAndHideModal();
-                    });
+                function sendEmailAndHideModal() {
+                    const emailBody = templateEmailBody(
+                        // we don't use Date.prototype.toUTCString() because we would like to avoid GMT
+                        expirationDateRoundedToSecond.toLocaleString(
+                            [], localeConfiguration
+                        ), isBurnafterreading
+                    );
                     if (bootstrap5EmailConfirmModal) {
-                        bootstrap5EmailConfirmModal.show();
+                        bootstrap5EmailConfirmModal.hide();
                     } else {
-                        $emailconfirmmodal.modal('show');
+                        $emailconfirmmodal.modal('hide');
                     }
+                    triggerEmailSend(emailBody);
+                };
+
+                $emailconfirmTimezoneCurrent.off('click.sendEmailCurrentTimezone');
+                $emailconfirmTimezoneCurrent.on('click.sendEmailCurrentTimezone', sendEmailAndHideModal);
+                $emailconfirmTimezoneUtc.off('click.sendEmailUtcTimezone');
+                $emailconfirmTimezoneUtc.on('click.sendEmailUtcTimezone', () => {
+                    localeConfiguration.timeZone = 'UTC';
+                    sendEmailAndHideModal();
+                });
+                if (bootstrap5EmailConfirmModal) {
+                    bootstrap5EmailConfirmModal.show();
                 } else {
-                    triggerEmailSend(templateEmailBody(null, isBurnafterreading));
+                    $emailconfirmmodal.modal('show');
                 }
             } else {
-                let emailBody = '';
-                if (expirationDate !== null) {
-                    const expirationDateString = window.confirm(
-                        I18n._('Recipient may become aware of your timezone, convert time to UTC?')
-                    ) ? expirationDateRoundedToSecond.toLocaleString(
-                        undefined,
-                        // we don't use Date.prototype.toUTCString() because we would like to avoid GMT
-                        { timeZone: 'UTC', dateStyle: 'long', timeStyle: 'long' }
-                    ) : expirationDateRoundedToSecond.toLocaleString();
-                    emailBody = templateEmailBody(expirationDateString, isBurnafterreading);
-                } else {
-                    emailBody = templateEmailBody(null, isBurnafterreading);
-                }
-                triggerEmailSend(emailBody);
+                triggerEmailSend(templateEmailBody(null, isBurnafterreading));
             }
         }
 
@@ -4728,13 +4695,9 @@ jQuery.PrivateBin = (function($, RawDeflate) {
 
             // bootstrap template drop down
             $('#language ul.dropdown-menu li a').click(setLanguage);
-            // page template drop down
-            $('#language select').change(setLanguage);
 
             // bootstrap template drop down
             $('#template ul.dropdown-menu li a').click(setTemplate);
-            // page template drop down
-            $('#template select').change(setTemplate);
 
             // bind events
             $burnAfterReading.change(changeBurnAfterReading);

@@ -442,7 +442,7 @@ class Controller
         $metacspheader = str_replace(
             array(
                 'frame-ancestors \'none\'; ',
-                '; sandbox allow-same-origin allow-scripts allow-forms allow-popups allow-modals allow-downloads',
+                '; sandbox allow-same-origin allow-scripts allow-forms allow-modals allow-downloads',
             ),
             '',
             $this->_conf->getKey('cspheader')
