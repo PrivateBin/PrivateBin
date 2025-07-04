@@ -316,5 +316,18 @@ describe('Helper', function () {
             return $.PrivateBin.Helper.formatBytes(1234567) === '1.18 MiB';
         });
     });
+
+
+    describe('isBootstrap5', function () {
+        jsc.property('Bootstrap 5 has been detected', function () {
+            global.bootstrap = {};
+            return $.PrivateBin.Helper.isBootstrap5() === true;
+        });
+
+        jsc.property('Bootstrap 5 has not been detected', function () {
+            delete global.bootstrap;
+            return $.PrivateBin.Helper.isBootstrap5() === false;
+        });
+    });
 });
 

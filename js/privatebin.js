@@ -628,6 +628,17 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             baseUri = null;
         };
 
+        /**
+         * check if bootstrap5 object detected
+         *
+         * @name Helper.isBootstrap5
+         * @returns {Boolean}
+         */
+        me.isBootstrap5 = function ()
+        {
+            return typeof bootstrap !== 'undefined';
+        };
+
         return me;
     })();
 
@@ -4632,7 +4643,11 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             // visually indicate file uploaded
             const $attachDropdownToggle = $attach.children('.dropdown-toggle');
             if ($attachDropdownToggle.attr('aria-expanded') === 'false') {
-                $attachDropdownToggle.click();
+                if (Helper.isBootstrap5()) {
+                    new bootstrap.Dropdown($attachDropdownToggle).toggle();
+                } else {
+                    $attachDropdownToggle.click();
+                }
             }
             $fileWrap.addClass('highlight');
             setTimeout(function () {
