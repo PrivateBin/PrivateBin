@@ -628,6 +628,17 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             baseUri = null;
         };
 
+        /**
+         * check if bootstrap5 object detected
+         *
+         * @name Helper.isBootstrap5
+         * @returns {Boolean}
+         */
+        me.isBootstrap5 = function ()
+        {
+            return typeof bootstrap !== 'undefined';
+        };
+
         return me;
     })();
 
@@ -3421,16 +3432,17 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         function addClipboardEventHandler() {
             $(document).on('paste', function (event) {
                 const items = (event.clipboardData || event.originalEvent.clipboardData).items;
-                const lastItem = items[items.length - 1];
-                if (lastItem.kind === 'file') {
-                    if (TopNav.isAttachmentReadonly()) {
-                        event.stopPropagation();
-                        event.preventDefault();
-                        return false;
-                    } else {
-                        readFileData(lastItem.getAsFile());
-                    }
+                const files = [...items]
+                                    .filter(item => item.kind === 'file')
+                                    .map(item => item.getAsFile());
+
+                if (TopNav.isAttachmentReadonly()) {
+                    event.stopPropagation();
+                    event.preventDefault();
+                    return false;
                 }
+
+                readFileData(files);
             });
         }
 
@@ -4631,7 +4643,11 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             // visually indicate file uploaded
             const $attachDropdownToggle = $attach.children('.dropdown-toggle');
             if ($attachDropdownToggle.attr('aria-expanded') === 'false') {
-                $attachDropdownToggle.click();
+                if (Helper.isBootstrap5()) {
+                    new bootstrap.Dropdown($attachDropdownToggle).toggle();
+                } else {
+                    $attachDropdownToggle.click();
+                }
             }
             $fileWrap.addClass('highlight');
             setTimeout(function () {

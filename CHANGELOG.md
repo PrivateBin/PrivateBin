@@ -3,6 +3,7 @@
 ## 2.0.0 (not yet released)
 * CHANGED: Remove page template (#265)
 * FIXED: Name mismatches in attached files (#1584)
+* FIXED: Unable to paste attachments from clipboard (#1589)
 
 ## 1.7.8 (2025-06-30)
 * FIXED: Duplicate attachment for every comment (#1577)
