@@ -190,11 +190,7 @@ class Paste extends AbstractModel
         if (!array_key_exists('salt', $this->_data['meta'])) {
             $this->get();
         }
-        return hash_hmac(
-            $this->_conf->getKey('zerobincompatibility') ? 'sha1' : 'sha256',
-            $this->getId(),
-            $this->_data['meta']['salt']
-        );
+        return hash_hmac('sha256', $this->getId(), $this->_data['meta']['salt']);
     }
 
     /**

@@ -10,7 +10,7 @@
  * @namespace
  */
 
-// global Base64, DOMPurify, FileReader, RawDeflate, history, navigator, prettyPrint, prettyPrintOne, showdown, kjua
+// global Base64, DOMPurify, FileReader, history, navigator, prettyPrint, prettyPrintOne, showdown, kjua
 
 jQuery.fn.draghover = function() {
     'use strict';
@@ -41,7 +41,7 @@ jQuery(document).ready(function() {
     $.PrivateBin.Controller.init();
 });
 
-jQuery.PrivateBin = (function($, RawDeflate) {
+jQuery.PrivateBin = (function($) {
     'use strict';
 
     /**
@@ -1119,39 +1119,17 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         async function decompress(data, mode, zlib)
         {
-            if (mode === 'zlib' || mode === 'none') {
-                if (mode === 'zlib') {
-                    if (typeof zlib === 'undefined') {
-                        throw 'Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.'
-                    }
-                    data = zlib.inflate(
-                        new Uint8Array(data)
-                    ).buffer;
+            if (mode === 'zlib') {
+                if (typeof zlib === 'undefined') {
+                    throw 'Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.'
                 }
-                return utf8To16(
-                    arraybufferToString(data)
-                );
+                data = zlib.inflate(
+                    new Uint8Array(data)
+                ).buffer;
             }
-            // detect presence of Base64.js, indicating legacy ZeroBin paste
-            if (typeof Base64 === 'undefined') {
-                return utf8To16(
-                    RawDeflate.inflate(
-                        utf8To16(
-                            atob(
-                                arraybufferToString(data)
-                            )
-                        )
-                    )
-                );
-            } else {
-                return Base64.btou(
-                    RawDeflate.inflate(
-                        Base64.fromBase64(
-                            arraybufferToString(data)
-                        )
-                    )
-                );
-            }
+            return utf8To16(
+                arraybufferToString(data)
+            );
         }
 
         /**
@@ -1191,19 +1169,6 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         {
             let keyArray = stringToArraybuffer(key);
             if (password.length > 0) {
-                // version 1 pastes did append the passwords SHA-256 hash in hex
-                if (spec[7] === 'rawdeflate') {
-                    let passwordBuffer = await window.crypto.subtle.digest(
-                        {name: 'SHA-256'},
-                        stringToArraybuffer(
-                            utf16To8(password)
-                        )
-                    ).catch(Alert.showError);
-                    password = Array.prototype.map.call(
-                        new Uint8Array(passwordBuffer),
-                        x => ('00' + x.toString(16)).slice(-2)
-                    ).join('');
-                }
                 let passwordArray = stringToArraybuffer(password),
                     newKeyArray = new Uint8Array(keyArray.length + passwordArray.length);
                 newKeyArray.set(keyArray, 0);
@@ -1337,21 +1302,6 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 // clone the array instead of passing the reference
                 spec = (data[1][0] instanceof Array ? data[1][0] : data[1]).slice();
                 cipherMessage = data[0];
-            } else if (typeof data === 'string') {
-                // version 1
-                let object = JSON.parse(data);
-                adataString = atob(object.adata);
-                spec = [
-                    object.iv,
-                    object.salt,
-                    object.iter,
-                    object.ks,
-                    object.ts,
-                    object.cipher,
-                    object.mode,
-                    'rawdeflate'
-                ];
-                cipherMessage = object.ct;
             } else {
                 throw 'unsupported message format';
             }
@@ -6043,4 +5993,4 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         CopyToClipboard: CopyToClipboard,
         Controller: Controller
     };
-})(jQuery, RawDeflate);
+})(jQuery);
