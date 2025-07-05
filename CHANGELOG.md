@@ -2,6 +2,7 @@
 
 ## 2.0.0 (not yet released)
 * CHANGED: Remove page template (#265)
+* CHANGED: Jdenticons are now used as the default icons
 * FIXED: Name mismatches in attached files (#1584)
 * FIXED: Unable to paste attachments from clipboard (#1589)
 
