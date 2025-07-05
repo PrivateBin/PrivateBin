@@ -644,7 +644,6 @@ class Database extends AbstractData
     private function _createPasteTable()
     {
         list($main_key, $after_key) = $this->_getPrimaryKeyClauses();
-        $dataType                   = $this->_getDataType();
         $attachmentType             = $this->_getAttachmentType();
         $metaType                   = $this->_getMetaType();
         $this->_db->exec(
