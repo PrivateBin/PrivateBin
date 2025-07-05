@@ -103,57 +103,6 @@ class ModelTest extends TestCase
         $this->assertEquals(array(), $paste->getComments(), 'comment was deleted with paste');
     }
 
-    public function testPasteV1()
-    {
-        $pasteData = Helper::getPaste(1);
-        unset($pasteData['meta']['formatter']);
-
-        $path = $this->_path . DIRECTORY_SEPARATOR . 'v1-test.sq3';
-        if (is_file($path)) {
-            unlink($path);
-        }
-        $options                   = parse_ini_file(CONF_SAMPLE, true);
-        $options['purge']['limit'] = 0;
-        $options['model']          = array(
-            'class' => 'Database',
-        );
-        $options['model_options'] = array(
-            'dsn' => 'sqlite:' . $path,
-            'usr' => null,
-            'pwd' => null,
-            'opt' => array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION),
-        );
-        Helper::createIniFile(CONF, $options);
-        $model = new Model(new Configuration);
-        $model->getPaste('0000000000000000')->exists(); // triggers database table creation
-        $model->getPaste(Helper::getPasteId())->delete(); // deletes the cache
-
-        $db = new PDO(
-            $options['model_options']['dsn'],
-            $options['model_options']['usr'],
-            $options['model_options']['pwd'],
-            $options['model_options']['opt']
-        );
-        $statement = $db->prepare('INSERT INTO paste VALUES(?,?,?,?,?,?,?,?)');
-        $statement->execute(
-            array(
-                Helper::getPasteId(),
-                $pasteData['data'],
-                0,
-                0,
-                0,
-                json_encode($pasteData['meta']),
-                null,
-                null,
-            )
-        );
-        $statement->closeCursor();
-
-        $paste = $model->getPaste(Helper::getPasteId());
-        $this->assertNotEmpty($paste->getDeleteToken(), 'excercise the condition to load the data from storage');
-        $this->assertEquals('plaintext', $paste->get()['meta']['formatter'], 'paste got created with default formatter');
-    }
-
     public function testCommentDefaults()
     {
         $class   = 'PrivateBin\\Data\\' . $this->_conf->getKey('class', 'model');
@@ -428,8 +377,8 @@ class ModelTest extends TestCase
         $conf  = new Configuration;
         $store = new Database($conf->getSection('model_options'));
         $store->delete(Helper::getPasteId());
-        $expired = Helper::getPaste(2, array('expire_date' => 1344803344));
-        $paste   = Helper::getPaste(2, array('expire_date' => time() + 3600));
+        $expired = Helper::getPaste(array('expire_date' => 1344803344));
+        $paste   = Helper::getPaste(array('expire_date' => time() + 3600));
         $keys    = array('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'x', 'y', 'z');
         $ids     = array();
         foreach ($keys as $key) {

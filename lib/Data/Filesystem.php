@@ -113,7 +113,7 @@ class Filesystem extends AbstractData
         ) {
             return false;
         }
-        return self::upgradePreV1Format($paste);
+        return $paste;
     }
 
     /**

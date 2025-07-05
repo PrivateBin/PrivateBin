@@ -201,7 +201,7 @@ class ControllerTest extends TestCase
         $options                     = parse_ini_file(CONF, true);
         $options['traffic']['limit'] = 0;
         Helper::createIniFile(CONF, $options);
-        $paste = Helper::getPasteJson(2, array('expire' => 25));
+        $paste = Helper::getPasteJson(array('expire' => 25));
         $file  = tempnam(sys_get_temp_dir(), 'FOO');
         file_put_contents($file, $paste);
         Request::setInputStream($file);
@@ -379,7 +379,7 @@ class ControllerTest extends TestCase
         $options                     = parse_ini_file(CONF, true);
         $options['traffic']['limit'] = 0;
         Helper::createIniFile(CONF, $options);
-        $paste = Helper::getPasteJson(2, array('expire' => 'foo'));
+        $paste = Helper::getPasteJson(array('expire' => 'foo'));
         $file  = tempnam(sys_get_temp_dir(), 'FOO');
         file_put_contents($file, $paste);
         Request::setInputStream($file);
@@ -510,7 +510,7 @@ class ControllerTest extends TestCase
         $options['traffic']['limit'] = 0;
         Helper::createIniFile(CONF, $options);
         $file = tempnam(sys_get_temp_dir(), 'FOO');
-        file_put_contents($file, Helper::getPasteJson(1));
+        file_put_contents($file, '{"data":"","meta":{}}');
         Request::setInputStream($file);
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD']        = 'POST';
@@ -696,7 +696,7 @@ class ControllerTest extends TestCase
      */
     public function testReadExpired()
     {
-        $expiredPaste = Helper::getPaste(2, array('expire_date' => 1344803344));
+        $expiredPaste = Helper::getPaste(array('expire_date' => 1344803344));
         $this->_data->create(Helper::getPasteId(), $expiredPaste);
         $_SERVER['QUERY_STRING']          = Helper::getPasteId();
         $_GET[Helper::getPasteId()]       = '';
@@ -763,37 +763,6 @@ class ControllerTest extends TestCase
         $this->assertEquals($paste['adata'][2], $response['adata'][2], 'outputs opendiscussion correctly');
         $this->assertEquals($paste['adata'][3], $response['adata'][3], 'outputs burnafterreading correctly');
         $this->assertFalse(array_key_exists('created', $response['meta']), 'does not output created');
-        $this->assertEquals(0, $response['comment_count'], 'outputs comment_count correctly');
-        $this->assertEquals(0, $response['comment_offset'], 'outputs comment_offset correctly');
-    }
-
-    /**
-     * @runInSeparateProcess
-     */
-    public function testReadOldSyntax()
-    {
-        $paste         = Helper::getPaste(1);
-        $paste['meta'] = array(
-            'syntaxcoloring' => true,
-            'postdate'       => $paste['meta']['postdate'],
-            'opendiscussion' => $paste['meta']['opendiscussion'],
-        );
-        $this->_data->create(Helper::getPasteId(), $paste);
-        $_SERVER['QUERY_STRING']          = Helper::getPasteId();
-        $_GET[Helper::getPasteId()]       = '';
-        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
-        ob_start();
-        new Controller;
-        $content = ob_get_contents();
-        ob_end_clean();
-        $response = json_decode($content, true);
-        $this->assertEquals(0, $response['status'], 'outputs success status');
-        $this->assertEquals(Helper::getPasteId(), $response['id'], 'outputs data correctly');
-        $this->assertStringEndsWith('?' . $response['id'], $response['url'], 'returned URL points to new paste');
-        $this->assertEquals($paste['data'], $response['data'], 'outputs data correctly');
-        $this->assertEquals('syntaxhighlighting', $response['meta']['formatter'], 'outputs format correctly');
-        $this->assertFalse(array_key_exists('postdate', $response['meta']), 'does not output postdate');
-        $this->assertEquals($paste['meta']['opendiscussion'], $response['meta']['opendiscussion'], 'outputs opendiscussion correctly');
         $this->assertEquals(0, $response['comment_count'], 'outputs comment_count correctly');
         $this->assertEquals(0, $response['comment_offset'], 'outputs comment_offset correctly');
     }
@@ -933,7 +902,7 @@ class ControllerTest extends TestCase
      */
     public function testDeleteExpired()
     {
-        $expiredPaste = Helper::getPaste(2, array('expire_date' => 1000));
+        $expiredPaste = Helper::getPaste(array('expire_date' => 1000));
         $this->assertFalse($this->_data->exists(Helper::getPasteId()), 'paste does not exist before being created');
         $this->_data->create(Helper::getPasteId(), $expiredPaste);
         $this->assertTrue($this->_data->exists(Helper::getPasteId()), 'paste exists before deleting data');

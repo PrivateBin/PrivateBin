@@ -91,7 +91,6 @@ jQuery.PrivateBin = (function($) {
      * @class
      */
     function CryptoData(data) {
-        this.v = 1;
         // store all keys in the default locations for drop-in replacement
         for (let key in data) {
             this[key] = data[key];
@@ -102,11 +101,11 @@ jQuery.PrivateBin = (function($) {
          *
          * @name CryptoData.getCipherData
          * @function
-         * @return {Array}|{string}
+         * @return {Array}
          */
         this.getCipherData = function()
         {
-            return this.v === 1 ? this.data : [this.ct, this.adata];
+            return [this.ct, this.adata];
         }
     }
 
@@ -131,7 +130,7 @@ jQuery.PrivateBin = (function($) {
          */
         this.getFormat = function()
         {
-            return this.v === 1 ? this.meta.formatter : this.adata[1];
+            return this.adata[1];
         }
 
         /**
@@ -145,7 +144,7 @@ jQuery.PrivateBin = (function($) {
          */
         this.getTimeToLive = function()
         {
-            return (this.v === 1 ? this.meta.remaining_time : this.meta.time_to_live) || 0;
+            return this.meta.time_to_live || 0;
         }
 
         /**
@@ -157,7 +156,7 @@ jQuery.PrivateBin = (function($) {
          */
         this.isBurnAfterReadingEnabled = function()
         {
-            return (this.v === 1 ? this.meta.burnafterreading : this.adata[3]);
+            return this.adata[3];
         }
 
         /**
@@ -169,7 +168,7 @@ jQuery.PrivateBin = (function($) {
          */
         this.isDiscussionEnabled = function()
         {
-            return (this.v === 1 ? this.meta.opendiscussion : this.adata[2]);
+            return this.adata[2];
         }
     }
 
@@ -194,7 +193,7 @@ jQuery.PrivateBin = (function($) {
          */
         this.getCreated = function()
         {
-            return this.meta[this.v === 1 ? 'postdate' : 'created'] || 0;
+            return this.meta['created'] || 0;
         }
 
         /**
@@ -206,7 +205,7 @@ jQuery.PrivateBin = (function($) {
          */
         this.getIcon = function()
         {
-            return this.meta[this.v === 1 ? 'vizhash' : 'icon'] || '';
+            return this.meta['icon'] || '';
         }
     }
 
@@ -5316,7 +5315,7 @@ jQuery.PrivateBin = (function($) {
          */
         async function decryptPaste(paste, key, password)
         {
-            let pastePlain = await decryptOrPromptPassword(
+            const pastePlain = await decryptOrPromptPassword(
                 key, password,
                 paste.getCipherData()
             );
@@ -5332,36 +5331,21 @@ jQuery.PrivateBin = (function($) {
                 }
             }
 
-            if (paste.v > 1) {
-                // version 2 paste
-                const pasteMessage = JSON.parse(pastePlain);
-                if (pasteMessage.hasOwnProperty('attachment') && pasteMessage.hasOwnProperty('attachment_name')) {
-                    if (Array.isArray(pasteMessage.attachment) && Array.isArray(pasteMessage.attachment_name)) {
-                        pasteMessage.attachment.forEach((attachment, key) => {
-                            const attachment_name = pasteMessage.attachment_name[key];
-                            AttachmentViewer.setAttachment(attachment, attachment_name);
-                        });
-                    } else {
-                        // Continue to process attachment parameters as strings to ensure backward compatibility
-                        AttachmentViewer.setAttachment(pasteMessage.attachment, pasteMessage.attachment_name);
-                    }
-                    AttachmentViewer.showAttachment();
-                }
-                pastePlain = pasteMessage.paste;
-            } else {
-                // version 1 paste
-                if (paste.hasOwnProperty('attachment') && paste.hasOwnProperty('attachmentname')) {
-                    Promise.all([
-                        CryptTool.decipher(key, password, paste.attachment),
-                        CryptTool.decipher(key, password, paste.attachmentname)
-                    ]).then((attachment) => {
-                        AttachmentViewer.setAttachment(attachment[0], attachment[1]);
-                        AttachmentViewer.showAttachment();
+            const pasteMessage = JSON.parse(pastePlain);
+            if (pasteMessage.hasOwnProperty('attachment') && pasteMessage.hasOwnProperty('attachment_name')) {
+                if (Array.isArray(pasteMessage.attachment) && Array.isArray(pasteMessage.attachment_name)) {
+                    pasteMessage.attachment.forEach((attachment, key) => {
+                        const attachment_name = pasteMessage.attachment_name[key];
+                        AttachmentViewer.setAttachment(attachment, attachment_name);
                     });
+                } else {
+                    // Continue to process attachment parameters as strings to ensure backward compatibility
+                    AttachmentViewer.setAttachment(pasteMessage.attachment, pasteMessage.attachment_name);
                 }
+                AttachmentViewer.showAttachment();
             }
             PasteViewer.setFormat(paste.getFormat());
-            PasteViewer.setText(pastePlain);
+            PasteViewer.setText(pasteMessage.paste);
             PasteViewer.run();
         }
 
@@ -5388,28 +5372,15 @@ jQuery.PrivateBin = (function($) {
                 const comment        = new Comment(paste.comments[i]),
                       commentPromise = CryptTool.decipher(key, password, comment.getCipherData());
                 paste.comments[i] = comment;
-                if (comment.v > 1) {
-                    // version 2 comment
-                    commentDecryptionPromises.push(
-                        commentPromise.then(function (commentJson) {
-                            const commentMessage = JSON.parse(commentJson);
-                            return [
-                                commentMessage.comment  || '',
-                                commentMessage.nickname || ''
-                            ];
-                        })
-                    );
-                } else {
-                    // version 1 comment
-                    commentDecryptionPromises.push(
-                        Promise.all([
-                            commentPromise,
-                            paste.comments[i].meta.hasOwnProperty('nickname') ?
-                                CryptTool.decipher(key, password, paste.comments[i].meta.nickname) :
-                                Promise.resolve('')
-                        ])
-                    );
-                }
+                commentDecryptionPromises.push(
+                    commentPromise.then(function (commentJson) {
+                        const commentMessage = JSON.parse(commentJson);
+                        return [
+                            commentMessage.comment  || '',
+                            commentMessage.nickname || ''
+                        ];
+                    })
+                );
             }
             return Promise.all(commentDecryptionPromises).then(function (plaintexts) {
                 for (let i = 0; i < paste.comments.length; ++i) {

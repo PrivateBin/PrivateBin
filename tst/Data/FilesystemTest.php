@@ -37,7 +37,7 @@ class FilesystemTest extends TestCase
         $this->_model->delete(Helper::getPasteId());
 
         // storing pastes
-        $paste = Helper::getPaste(2, array('expire_date' => 1344803344));
+        $paste = Helper::getPaste(array('expire_date' => 1344803344));
         $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste does not yet exist');
         $this->assertTrue($this->_model->create(Helper::getPasteId(), $paste), 'store new paste');
         $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste exists after storing it');
@@ -67,10 +67,7 @@ class FilesystemTest extends TestCase
     public function testFileBasedAttachmentStoreWorks()
     {
         $this->_model->delete(Helper::getPasteId());
-        $original                        = $paste = Helper::getPasteWithAttachment(1, array('expire_date' => 1344803344));
-        $paste['meta']['attachment']     = $paste['attachment'];
-        $paste['meta']['attachmentname'] = $paste['attachmentname'];
-        unset($paste['attachment'], $paste['attachmentname']);
+        $original = $paste = Helper::getPaste(array('expire_date' => 1344803344));
         $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste does not yet exist');
         $this->assertTrue($this->_model->create(Helper::getPasteId(), $paste), 'store new paste');
         $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste exists after storing it');
@@ -84,8 +81,8 @@ class FilesystemTest extends TestCase
     public function testPurge()
     {
         mkdir($this->_path . DIRECTORY_SEPARATOR . '00', 0777, true);
-        $expired = Helper::getPaste(2, array('expire_date' => 1344803344));
-        $paste   = Helper::getPaste(2, array('expire_date' => time() + 3600));
+        $expired = Helper::getPaste(array('expire_date' => 1344803344));
+        $paste   = Helper::getPaste(array('expire_date' => time() + 3600));
         $keys    = array('a', 'b', 'c', 'd', 'e', 'f', 'g', 'x', 'y', 'z');
         $ids     = array();
         foreach ($keys as $key) {
@@ -115,7 +112,7 @@ class FilesystemTest extends TestCase
     public function testErrorDetection()
     {
         $this->_model->delete(Helper::getPasteId());
-        $paste = Helper::getPaste(2, array('expire' => "Invalid UTF-8 sequence: \xB1\x31"));
+        $paste = Helper::getPaste(array('expire' => "Invalid UTF-8 sequence: \xB1\x31"));
         $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste does not yet exist');
         $this->assertFalse($this->_model->create(Helper::getPasteId(), $paste), 'unable to store broken paste');
         $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste does still not exist');
@@ -126,7 +123,7 @@ class FilesystemTest extends TestCase
     {
         $this->_model->delete(Helper::getPasteId());
         $data    = Helper::getPaste();
-        $comment = Helper::getComment(1, array('nickname' => "Invalid UTF-8 sequence: \xB1\x31"));
+        $comment = Helper::getComment(array('icon' => "Invalid UTF-8 sequence: \xB1\x31"));
         $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste does not yet exist');
         $this->assertTrue($this->_model->create(Helper::getPasteId(), $data), 'store new paste');
         $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste exists after storing it');

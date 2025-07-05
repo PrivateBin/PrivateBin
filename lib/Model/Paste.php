@@ -23,6 +23,27 @@ use PrivateBin\Persistence\ServerSalt;
 class Paste extends AbstractModel
 {
     /**
+     * authenticated data index of paste formatter (plaintext/syntaxhighlighting/markdown)
+     *
+     * @const int
+     */
+    const ADATA_FORMATTER = 1;
+
+    /**
+     * authenticated data index of open-discussion flag (0/1)
+     *
+     * @const int
+     */
+    const ADATA_OPEN_DISCUSSION = 2;
+
+    /**
+     * authenticated data index of burn-after-reading flag (0/1)
+     *
+     * @const int
+     */
+    const ADATA_BURN_AFTER_READING = 3;
+
+    /**
      * Get paste data.
      *
      * @access public
@@ -38,12 +59,13 @@ class Paste extends AbstractModel
 
         // check if paste has expired and delete it if necessary.
         if (array_key_exists('expire_date', $data['meta'])) {
-            if ($data['meta']['expire_date'] < time()) {
+            $now = time();
+            if ($data['meta']['expire_date'] < $now) {
                 $this->delete();
                 throw new Exception(Controller::GENERIC_ERROR, 63);
             }
             // We kindly provide the remaining time before expiration (in seconds)
-            $data['meta']['time_to_live'] = $data['meta']['expire_date'] - time();
+            $data['meta']['time_to_live'] = $data['meta']['expire_date'] - $now;
             unset($data['meta']['expire_date']);
         }
         foreach (array('created', 'postdate') as $key) {
@@ -54,8 +76,8 @@ class Paste extends AbstractModel
 
         // check if non-expired burn after reading paste needs to be deleted
         if (
-            (array_key_exists('adata', $data) && $data['adata'][3] === 1) ||
-            (array_key_exists('burnafterreading', $data['meta']) && $data['meta']['burnafterreading'])
+            array_key_exists('adata', $data) &&
+            $data['adata'][self::ADATA_BURN_AFTER_READING] === 1
         ) {
             $this->delete();
         }
@@ -205,9 +227,8 @@ class Paste extends AbstractModel
         if (!array_key_exists('adata', $this->_data) && !array_key_exists('data', $this->_data)) {
             $this->get();
         }
-        return
-            (array_key_exists('adata', $this->_data) && $this->_data['adata'][2] === 1) ||
-            (array_key_exists('opendiscussion', $this->_data['meta']) && $this->_data['meta']['opendiscussion']);
+        return array_key_exists('adata', $this->_data) &&
+            $this->_data['adata'][self::ADATA_OPEN_DISCUSSION] === 1;
     }
 
     /**
@@ -242,23 +263,26 @@ class Paste extends AbstractModel
     protected function _validate(array &$data)
     {
         // reject invalid or disabled formatters
-        if (!array_key_exists($data['adata'][1], $this->_conf->getSection('formatter_options'))) {
+        if (!array_key_exists($data['adata'][self::ADATA_FORMATTER], $this->_conf->getSection('formatter_options'))) {
             throw new Exception('Invalid data.', 75);
         }
 
         // discussion requested, but disabled in config or burn after reading requested as well, or invalid integer
         if (
-            ($data['adata'][2] === 1 && ( // open discussion flag
+            ($data['adata'][self::ADATA_OPEN_DISCUSSION] === 1 && (
                 !$this->_conf->getKey('discussion') ||
-                $data['adata'][3] === 1  // burn after reading flag
+                $data['adata'][self::ADATA_BURN_AFTER_READING] === 1
             )) ||
-            ($data['adata'][2] !== 0 && $data['adata'][2] !== 1)
+            ($data['adata'][self::ADATA_OPEN_DISCUSSION] !== 0 && $data['adata'][self::ADATA_OPEN_DISCUSSION] !== 1)
         ) {
             throw new Exception('Invalid data.', 74);
         }
 
         // reject invalid burn after reading
-        if ($data['adata'][3] !== 0 && $data['adata'][3] !== 1) {
+        if (
+            $data['adata'][self::ADATA_BURN_AFTER_READING] !== 0 &&
+            $data['adata'][self::ADATA_BURN_AFTER_READING] !== 1
+        ) {
             throw new Exception('Invalid data.', 73);
         }
     }

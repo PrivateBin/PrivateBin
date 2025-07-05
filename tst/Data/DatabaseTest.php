@@ -60,8 +60,8 @@ class DatabaseTest extends TestCase
         $this->assertEquals($paste, $this->_model->read(Helper::getPasteId()));
 
         // storing comments
-        $comment1             = Helper::getComment(1);
-        $comment2             = Helper::getComment(2);
+        $comment1             = Helper::getComment();
+        $comment2             = Helper::getComment();
         $meta1                = $comment1['meta'];
         $meta2                = $comment2['meta'];
         $this->assertFalse($this->_model->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId()), 'v1 comment does not yet exist');
@@ -78,7 +78,7 @@ class DatabaseTest extends TestCase
         $comment2['meta']     = $meta2;
         $this->assertEquals(
             array(
-                $comment1['meta']['postdate']       => $comment1,
+                $comment1['meta']['created']        => $comment1,
                 $comment2['meta']['created'] . '.1' => $comment2,
             ),
             $this->_model->readComments(Helper::getPasteId())
@@ -95,11 +95,8 @@ class DatabaseTest extends TestCase
     {
         // this assumes a version 1 formatted paste
         $this->_model->delete(Helper::getPasteId());
-        $original                          = $paste                                = Helper::getPasteWithAttachment(1, array('expire_date' => 1344803344));
+        $original                          = $paste                                = Helper::getPaste(array('expire_date' => 1344803344));
         $paste['meta']['burnafterreading'] = $original['meta']['burnafterreading'] = true;
-        $paste['meta']['attachment']       = $paste['attachment'];
-        $paste['meta']['attachmentname']   = $paste['attachmentname'];
-        unset($paste['attachment'], $paste['attachmentname']);
         $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste does not yet exist');
         $this->assertTrue($this->_model->create(Helper::getPasteId(), $paste), 'store new paste');
         $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste exists after storing it');
@@ -113,8 +110,8 @@ class DatabaseTest extends TestCase
     public function testPurge()
     {
         $this->_model->delete(Helper::getPasteId());
-        $expired = Helper::getPaste(2, array('expire_date' => 1344803344));
-        $paste   = Helper::getPaste(2, array('expire_date' => time() + 3600));
+        $expired = Helper::getPaste(array('expire_date' => 1344803344));
+        $paste   = Helper::getPaste(array('expire_date' => time() + 3600));
         $keys    = array('a', 'b', 'c', 'd', 'e', 'f', 'g', 'x', 'y', 'z');
         $ids     = array();
         foreach ($keys as $key) {
@@ -145,7 +142,7 @@ class DatabaseTest extends TestCase
     public function testErrorDetection()
     {
         $this->_model->delete(Helper::getPasteId());
-        $paste = Helper::getPaste(2, array('expire' => "Invalid UTF-8 sequence: \xB1\x31"));
+        $paste = Helper::getPaste(array('expire' => "Invalid UTF-8 sequence: \xB1\x31"));
         $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste does not yet exist');
         $this->assertFalse($this->_model->create(Helper::getPasteId(), $paste), 'unable to store broken paste');
         $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste does still not exist');
@@ -155,7 +152,7 @@ class DatabaseTest extends TestCase
     {
         $this->_model->delete(Helper::getPasteId());
         $data    = Helper::getPaste();
-        $comment = Helper::getComment(2, array('nickname' => "Invalid UTF-8 sequence: \xB1\x31"));
+        $comment = Helper::getComment(array('icon' => "Invalid UTF-8 sequence: \xB1\x31"));
         $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste does not yet exist');
         $this->assertTrue($this->_model->create(Helper::getPasteId(), $data), 'store new paste');
         $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste exists after storing it');
@@ -261,91 +258,6 @@ class DatabaseTest extends TestCase
         $this->expectException(Exception::class);
         $this->expectExceptionCode(6);
         new Database($options);
-    }
-
-    public function testOldAttachments()
-    {
-        mkdir($this->_path);
-        $path = $this->_path . DIRECTORY_SEPARATOR . 'attachement-test.sq3';
-        if (is_file($path)) {
-            unlink($path);
-        }
-        $this->_options['dsn'] = 'sqlite:' . $path;
-        $this->_options['tbl'] = 'bar_';
-        $model                 = new Database($this->_options);
-
-        $original               = $paste = Helper::getPasteWithAttachment(1, array('expire_date' => 1344803344));
-        $meta                   = $paste['meta'];
-        $meta['attachment']     = $paste['attachment'];
-        $meta['attachmentname'] = $paste['attachmentname'];
-        unset($paste['attachment'], $paste['attachmentname']);
-
-        $db = new PDO(
-            $this->_options['dsn'],
-            $this->_options['usr'],
-            $this->_options['pwd'],
-            $this->_options['opt']
-        );
-        $statement = $db->prepare('INSERT INTO bar_paste VALUES(?,?,?,?,?,?,?,?)');
-        $statement->execute(
-            array(
-                Helper::getPasteId(),
-                $paste['data'],
-                $paste['meta']['expire_date'],
-                0,
-                0,
-                json_encode($meta),
-                null,
-                null,
-            )
-        );
-        $statement->closeCursor();
-
-        $this->assertTrue($model->exists(Helper::getPasteId()), 'paste exists after storing it');
-        $this->assertEquals($original, $model->read(Helper::getPasteId()));
-
-        Helper::rmDir($this->_path);
-    }
-
-    public function testCorruptMeta()
-    {
-        mkdir($this->_path);
-        $path = $this->_path . DIRECTORY_SEPARATOR . 'meta-test.sq3';
-        if (is_file($path)) {
-            unlink($path);
-        }
-        $this->_options['dsn'] = 'sqlite:' . $path;
-        $this->_options['tbl'] = 'baz_';
-        $model                 = new Database($this->_options);
-        $paste                 = Helper::getPaste(1, array('expire_date' => 1344803344));
-        unset($paste['meta']['formatter'], $paste['meta']['opendiscussion'], $paste['meta']['postdate'], $paste['meta']['salt']);
-        $model->delete(Helper::getPasteId());
-
-        $db = new PDO(
-            $this->_options['dsn'],
-            $this->_options['usr'],
-            $this->_options['pwd'],
-            $this->_options['opt']
-        );
-        $statement = $db->prepare('INSERT INTO baz_paste VALUES(?,?,?,?,?,?,?,?)');
-        $statement->execute(
-            array(
-                Helper::getPasteId(),
-                $paste['data'],
-                $paste['meta']['expire_date'],
-                0,
-                0,
-                '{',
-                null,
-                null,
-            )
-        );
-        $statement->closeCursor();
-
-        $this->assertTrue($model->exists(Helper::getPasteId()), 'paste exists after storing it');
-        $this->assertEquals($paste, $model->read(Helper::getPasteId()));
-
-        Helper::rmDir($this->_path);
     }
 
     public function testTableUpgrade()

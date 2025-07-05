@@ -190,25 +190,4 @@ abstract class AbstractData
         }
         return $postdate;
     }
-
-    /**
-     * Upgrade pre-version 1 pastes with attachment to version 1 format.
-     *
-     * @access protected
-     * @static
-     * @param  array $paste
-     * @return array
-     */
-    protected static function upgradePreV1Format(array &$paste)
-    {
-        if (array_key_exists('attachment', $paste['meta'])) {
-            $paste['attachment'] = $paste['meta']['attachment'];
-            unset($paste['meta']['attachment']);
-            if (array_key_exists('attachmentname', $paste['meta'])) {
-                $paste['attachmentname'] = $paste['meta']['attachmentname'];
-                unset($paste['meta']['attachmentname']);
-            }
-        }
-        return $paste;
-    }
 }
