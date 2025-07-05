@@ -98,8 +98,7 @@ class GoogleCloudStorage extends AbstractData
     /**
      * Uploads the payload in the $this->_bucket under the specified key.
      * The entire payload is stored as a JSON document. The metadata is replicated
-     * as the GCS object's metadata except for the fields attachment, attachmentname
-     * and salt.
+     * as the GCS object's metadata except for the field salt.
      *
      * @param $key string to store the payload under
      * @param $payload array to store
@@ -108,7 +107,7 @@ class GoogleCloudStorage extends AbstractData
     private function _upload($key, &$payload)
     {
         $metadata = array_key_exists('meta', $payload) ? $payload['meta'] : array();
-        unset($metadata['attachment'], $metadata['attachmentname'], $metadata['salt']);
+        unset($metadata['salt']);
         foreach ($metadata as $k => $v) {
             $metadata[$k] = strval($v);
         }
