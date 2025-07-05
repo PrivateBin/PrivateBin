@@ -299,8 +299,8 @@ class Database extends AbstractData
         $comments = array();
         if (is_array($rows) && count($rows)) {
             foreach ($rows as $row) {
-                $i            = $this->getOpenSlot($comments, (int) $row['postdate']);
-                $comments[$i] = Json::decode($row['data']);
+                $i                          = $this->getOpenSlot($comments, (int) $row['postdate']);
+                $comments[$i]               = Json::decode($row['data']);
                 $comments[$i]['id']         = $row['dataid'];
                 $comments[$i]['parentid']   = $row['parentid'];
                 $comments[$i]['meta']       = array('created' => (int) $row['postdate']);
