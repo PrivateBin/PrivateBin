@@ -186,7 +186,6 @@ CREATE TABLE prefix_comment (
     pasteid CHAR(16),
     parentid CHAR(16),
     data BLOB,
-    nickname BLOB,
     vizhash BLOB,
     postdate INT,
     PRIMARY KEY (dataid)

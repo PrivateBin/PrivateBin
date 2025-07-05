@@ -485,6 +485,6 @@ class ModelTest extends TestCase
         $vz        = new Vizhash16x16();
         $pngdata   = 'data:image/png;base64,' . base64_encode($vz->generate(TrafficLimiter::getHash()));
         $comment   = current($this->_model->getPaste(Helper::getPasteId())->get()['comments']);
-        $this->assertEquals($pngdata, $comment['meta']['icon'], 'nickname triggers vizhash to be set');
+        $this->assertEquals($pngdata, $comment['meta']['icon'], 'vizhash was generated');
     }
 }

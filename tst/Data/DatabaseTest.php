@@ -93,7 +93,6 @@ class DatabaseTest extends TestCase
 
     public function testDatabaseBasedAttachmentStoreWorks()
     {
-        // this assumes a version 1 formatted paste
         $this->_model->delete(Helper::getPasteId());
         $original                          = $paste                                = Helper::getPaste(array('expire_date' => 1344803344));
         $paste['meta']['burnafterreading'] = $original['meta']['burnafterreading'] = true;

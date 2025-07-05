@@ -256,22 +256,18 @@ class Database extends AbstractData
             return false;
         }
         $meta = $comment['meta'];
-        unset($comment['meta']);
-        foreach (array('nickname', 'icon') as $key) {
-            if (!array_key_exists($key, $meta)) {
-                $meta[$key] = null;
-            }
+        if (!array_key_exists('icon', $meta)) {
+            $meta['icon'] = null;
         }
         try {
             return $this->_exec(
                 'INSERT INTO "' . $this->_sanitizeIdentifier('comment') .
-                '" VALUES(?,?,?,?,?,?,?)',
+                '" VALUES(?,?,?,?,?,?)',
                 array(
                     $commentid,
                     $pasteid,
                     $parentid,
                     $data,
-                    $meta['nickname'],
                     $meta['icon'],
                     $meta['created'],
                 )
@@ -304,10 +300,8 @@ class Database extends AbstractData
                 $comments[$i]['id']         = $row['dataid'];
                 $comments[$i]['parentid']   = $row['parentid'];
                 $comments[$i]['meta']       = array('created' => (int) $row['postdate']);
-                foreach (array('nickname' => 'nickname', 'vizhash' => 'icon') as $rowKey => $commentKey) {
-                    if (array_key_exists($rowKey, $row) && !empty($row[$rowKey])) {
-                        $comments[$i]['meta'][$commentKey] = $row[$rowKey];
-                    }
+                if (array_key_exists('vizhash', $row) && !empty($row['vizhash'])) {
+                    $comments[$i]['meta']['icon'] = $row['vizhash'];
                 }
             }
             ksort($comments);
@@ -677,7 +671,6 @@ class Database extends AbstractData
             '"pasteid" CHAR(16), ' .
             '"parentid" CHAR(16), ' .
             "\"data\" $dataType, " .
-            "\"nickname\" $dataType, " .
             "\"vizhash\" $dataType, " .
             "\"postdate\" INT$after_key )"
         );
@@ -871,6 +864,10 @@ class Database extends AbstractData
                 $this->_db->exec(
                     'ALTER TABLE "' . $this->_sanitizeIdentifier('paste') .
                     '" DROP COLUMN "attachmentname"'
+                );
+                $this->_db->exec(
+                    'ALTER TABLE "' . $this->_sanitizeIdentifier('comment') .
+                    '" DROP COLUMN "nickname"'
                 );
             }
         }
