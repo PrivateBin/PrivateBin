@@ -5,6 +5,7 @@
 * CHANGED: Removed page template (#265)
 * CHANGED: Removed support for ZeroBin & v1 pastes - since release 1.3 the v2 format is used (#551)
 * CHANGED: Removed use of base64 & rawinflate libraries (#551)
+* CHANGED: Removed support for `privatebin_data`, `privatebin_db` & `zerobin_db` model class configurations, must be replaced with `Filesystem` or `Database` in `cfg/conf.php`, if still present
 * FIXED: Name mismatches in attached files (#1584)
 * FIXED: Unable to paste attachments from clipboard (#1589)
 

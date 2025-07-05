@@ -162,10 +162,8 @@ class Configuration
             }
             // provide different defaults for database model
             elseif (
-                $section == 'model_options' && in_array(
-                    $this->_configuration['model']['class'],
-                    array('Database', 'privatebin_db', 'zerobin_db')
-                )
+                $section == 'model_options' &&
+                $this->_configuration['model']['class'] === 'Database'
             ) {
                 $values = array(
                     'dsn' => 'sqlite:' . PATH . 'data' . DIRECTORY_SEPARATOR . 'db.sq3',
@@ -175,10 +173,8 @@ class Configuration
                     'opt' => array(),
                 );
             } elseif (
-                $section == 'model_options' && in_array(
-                    $this->_configuration['model']['class'],
-                    array('GoogleCloudStorage')
-                )
+                $section == 'model_options' &&
+                $this->_configuration['model']['class'] === 'GoogleCloudStorage'
             ) {
                 $values = array(
                     'bucket'     => getenv('PRIVATEBIN_GCS_BUCKET') ? getenv('PRIVATEBIN_GCS_BUCKET') : null,
@@ -186,10 +182,8 @@ class Configuration
                     'uniformacl' => false,
                 );
             } elseif (
-                $section == 'model_options' && in_array(
-                    $this->_configuration['model']['class'],
-                    array('S3Storage')
-                )
+                $section == 'model_options' &&
+                $this->_configuration['model']['class'] === 'S3Storage'
             ) {
                 $values = array(
                     'region'                  => null,
@@ -249,18 +243,6 @@ class Configuration
                 }
             }
         }
-
-        // support for old config file format, before the fork was renamed and PSR-4 introduced
-        $this->_configuration['model']['class'] = str_replace(
-            'zerobin_', 'privatebin_',
-            $this->_configuration['model']['class']
-        );
-
-        $this->_configuration['model']['class'] = str_replace(
-            array('privatebin_data', 'privatebin_db'),
-            array('Filesystem', 'Database'),
-            $this->_configuration['model']['class']
-        );
 
         // ensure a valid expire default key is set
         if (!array_key_exists($this->_configuration['expire']['default'], $this->_configuration['expire_options'])) {
