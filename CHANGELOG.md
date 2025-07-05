@@ -1,6 +1,7 @@
 # PrivateBin version history
 
 ## 2.0.0 (not yet released)
+* ADDED: Statistics on v1 pastes in administration script and option to delete them
 * CHANGED: Removed page template (#265)
 * CHANGED: Removed support for ZeroBin & v1 pastes - since release 1.3 the v2 format is used (#551)
 * CHANGED: Removed use of base64 & rawinflate libraries (#551)
