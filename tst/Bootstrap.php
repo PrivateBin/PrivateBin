@@ -99,7 +99,7 @@ class Helper
         'data' => '{"iv":"Pd4pOKWkmDTT9uPwVwd5Ag","v":1,"iter":1000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"ZIUhFTliVz4","ct":"6nOCU3peNDclDDpFtJEBKA"}',
         'meta' => array(
             'nickname' => '{"iv":"76MkAtOGC4oFogX/aSMxRA","v":1,"iter":1000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"ZIUhFTliVz4","ct":"b6Ae/U1xJdsX/+lATud4sQ"}',
-            'vizhash'  => 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAABGUlEQVQokWOsl5/94983CNKQMjnxaOePf98MeKwPfNjkLZ3AgARab6b9+PeNEVnDj3/ff/z7ZiHnzsDA8Pv7H2TVPJw8EAYLAwb48OaVgIgYKycLsrYv378wMDB8//qdCVMDRA9EKSsnCwRBxNsepaLboMFlyMDAICAi9uHNK24GITQ/MDAwoNhgIGMLtwGrzegaLjw5jMz9+vUdnN17uwDCQDhJgk0O07yvX9+teDX1x79v6DYIsIjgcgMaYGFgYOBg4kJx2JejkAiBxAw+PzAwMNz4dp6wDXDw4MdNNOl0rWYsNkD89OLXI/xmo9sgzatJjAYmBgYGDiauD3/ePP18nVgb4MF89+M5ZX6js293wUMpnr8KTQMAxsCJnJ30apMAAAAASUVORK5CYII=',
+            'vizhash'  => 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAABGdBTUEAALGPC/xhBQAAABJ0RVh0U29mdHdhcmUASmRlbnRpY29um8oJfgAAADxQTFRFAAAA0XWJVFRUVFRU0XWJVFRU0XWJ0XSJ0XWJ0XWJVFRU0XWJVFRU0HWJ0HSJVFRUVFRU0XWJ0XWJ0XWJ1A2yXAAAABR0Uk5TAH//v/8/9pERkLIaMxqRRMyIIqH4+eQFAAAAgElEQVR4Xk2PCQ7DIAwEjQ9okrbp8f+/dndBUS0lwOBZYbPWjOWBH/ctU8Rr7QkCBzXoEm3uUWBT4ZqZHV8qZ4EhwDb6aLhtADtv6WcOs2P0+zKqj4fZM/N8uZMFlPcHilkxtpyBXwFVCLDmec5S8v9mgVuhp8/3l9KvWZgjH8oPUfACkPyGX2gAAAAASUVORK5CYII=',
             'postdate' => 1344803528,
         ),
     );
