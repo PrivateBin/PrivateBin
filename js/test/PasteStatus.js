@@ -177,36 +177,7 @@ describe('PasteStatus', function () {
         this.timeout(30000);
 
         jsc.property(
-            'shows burn after reading message or remaining time v1',
-            'bool',
-            'nat',
-            common.jscUrl(),
-            function (burnafterreading, remainingTime, url) {
-                let clean = jsdom('', {url: common.urlToString(url)}),
-                    result;
-                $('body').html('<div id="remainingtime" class="hidden"></div>');
-                $.PrivateBin.PasteStatus.init();
-                $.PrivateBin.PasteStatus.showRemainingTime($.PrivateBin.Helper.PasteFactory({'meta': {
-                    'burnafterreading': burnafterreading,
-                    'remaining_time': remainingTime
-                }}));
-                if (burnafterreading) {
-                    result = $('#remainingtime').hasClass('foryoureyesonly') &&
-                            !$('#remainingtime').hasClass('hidden');
-                } else if (remainingTime) {
-                    result =!$('#remainingtime').hasClass('foryoureyesonly') &&
-                            !$('#remainingtime').hasClass('hidden');
-                } else {
-                    result = $('#remainingtime').hasClass('hidden') &&
-                            !$('#remainingtime').hasClass('foryoureyesonly');
-                }
-                clean();
-                return result;
-            }
-        );
-
-        jsc.property(
-            'shows burn after reading message or remaining time v2',
+            'shows burn after reading message or remaining time',
             'bool',
             'nat',
             common.jscUrl(),
