@@ -4792,7 +4792,10 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          * @readonly
          * @enum   {Object}
          */
-        const ajaxHeaders = {'X-Requested-With': 'JSONHttpRequest'};
+        const ajaxHeaders = {
+            'X-Requested-With': 'JSONHttpRequest',
+            'Content-Type': 'application/json'
+        };
 
         /**
          * called after successful upload
