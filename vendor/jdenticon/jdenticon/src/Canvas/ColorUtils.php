@@ -3,7 +3,7 @@
  * This file is part of Jdenticon for PHP.
  * https://github.com/dmester/jdenticon-php/
  * 
- * Copyright (c) 2018 Daniel Mester Pirttijärvi
+ * Copyright (c) 2025 Daniel Mester Pirttijärvi
  * 
  * For full license information, please see the LICENSE file that was 
  * distributed with this source code.
@@ -15,9 +15,9 @@ class ColorUtils
 {
     /**
      * Transparent color.
-     * @var integer
+     * @var int
      */
-    const TRANSPARENT = 0;
+    public const TRANSPARENT = 0;
 
     /**
      * Specifies a transparent color that will not blend with layers below the 
@@ -25,15 +25,15 @@ class ColorUtils
      *
      * @var float
      */
-    const FORCE_TRANSPARENT = INF;
+    public const FORCE_TRANSPARENT = INF;
 
     /**
      * Creates a color on the format 0xRRGGBBAA from the specified
      * color components.
      *
-     * @return integer
+     * @return int
      */
-    public static function from($a, $r, $g, $b) 
+    public static function from(int $a, int $r, int $g, int $b): int
     {
         return ($r << 24) | ($g << 16) | ($b << 8) | $a;
     }
@@ -41,10 +41,10 @@ class ColorUtils
     /**
      * Gets the alpha component of a color.
      *
-     * @param integer $color  32-bit color value on the format 0xRRGGBBAA.
-     * @return integer Alpha in the range [0, 255].
+     * @param int $color  32-bit color value on the format 0xRRGGBBAA.
+     * @return int Alpha in the range [0, 255].
      */
-    public static function alpha($color) 
+    public static function alpha(int $color): int
     {
         return $color & 0xff;
     }
@@ -52,10 +52,10 @@ class ColorUtils
     /**
      * Gets the red component of a color.
      *
-     * @param integer $color  32-bit color value on the format 0xRRGGBBAA.
-     * @return integer Red component in the range [0, 255].
+     * @param int $color  32-bit color value on the format 0xRRGGBBAA.
+     * @return int Red component in the range [0, 255].
      */
-    public static function red($color) 
+    public static function red(int $color): int
     {
         return ($color >> 24) & 0xff;
     }
@@ -63,10 +63,10 @@ class ColorUtils
     /**
      * Gets the green component of a color.
      *
-     * @param integer $color  32-bit color value on the format 0xRRGGBBAA.
-     * @return integer Green component in the range [0, 255].
+     * @param int $color  32-bit color value on the format 0xRRGGBBAA.
+     * @return int Green component in the range [0, 255].
      */
-    public static function green($color) 
+    public static function green(int $color): int
     {
         return ($color >> 16) & 0xff;
     }
@@ -74,10 +74,10 @@ class ColorUtils
     /**
      * Gets the blue component of a color.
      *
-     * @param integer $color  32-bit color value on the format 0xRRGGBBAA.
-     * @return integer Blue component in the range [0, 255].
+     * @param int $color  32-bit color value on the format 0xRRGGBBAA.
+     * @return int Blue component in the range [0, 255].
      */
-    public static function blue($color) 
+    public static function blue(int $color): int
     {
         return ($color >> 8) & 0xff;
     }
@@ -85,10 +85,10 @@ class ColorUtils
     /**
      * Formats a color as a string.
      *
-     * @param integer $color Color to format.
+     * @param int $color Color to format.
      * @return string
      */
-    public static function format($color) 
+    public static function format(int $color): string
     {
         return bin2hex(pack('N', $color));
     }
@@ -97,13 +97,13 @@ class ColorUtils
      * Computes a mix of the two specified colors, with the proportion given 
      * by the specified weight.
      *
-     * @param integer $color1  First color to mix.
-     * @param integer $color2  Second color to mix.
+     * @param int $color1  First color to mix.
+     * @param int $color2  Second color to mix.
      * @param float $weight  Weight in the range [0,1]. 
      *      0 gives $color1, 1 gives $color2.
-     * @return integer Mixed color.
+     * @return int Mixed color.
      */
-    public static function mix($color1, $color2, $weight) 
+    public static function mix(int $color1, int $color2, float $weight): int
     {
         if ($weight < 0) {
             $weight = 0;
@@ -142,10 +142,10 @@ class ColorUtils
     /**
      * Parses a value to a 32-bit color on the format 0xRRGGBBAA.
      *
-     * @param integer|string $color  The value to parse.
-     * @return integer
+     * @param int|string $color  The value to parse.
+     * @return int
      */
-    public static function parse($color) 
+    public static function parse($color): int 
     {
         if (gettype($color) == "integer") {
             return $color & 0xffffffff;
@@ -187,11 +187,11 @@ class ColorUtils
     /**
      * Blends this color with another color using the over blending operation.
      *
-     * @param integer $fore  The foreground color.
-     * @param integer $back  The background color.
-     * @return integer
+     * @param int $fore  The foreground color.
+     * @param int $back  The background color.
+     * @return int
      */
-    public static function over($fore, $back) 
+    public static function over(int $fore, int $back): int
     {
         $foreA = ($fore & 0xff);
         $backA = ($back & 0xff);

@@ -3,7 +3,7 @@
  * This file is part of Jdenticon for PHP.
  * https://github.com/dmester/jdenticon-php/
  * 
- * Copyright (c) 2018 Daniel Mester Pirttijärvi
+ * Copyright (c) 2025 Daniel Mester Pirttijärvi
  * 
  * For full license information, please see the LICENSE file that was 
  * distributed with this source code.
@@ -37,15 +37,18 @@ class Rasterizer
     /**
      * Rasterizes the edges in the edge table to a list of color ranges. No 
      * range will span multiple scanlines.
+     *
+     * @param array<int> $colorData
+     * @return array<int>
      */
-    public static function rasterize(& $colorData, $edgeTable, $width, $height) 
+    public static function rasterize(array &$colorData, EdgeTable $edgeTable, int $width, int $height): array
     {
         $edgeTable->sort();
 
         $superSampleBuffer = new SuperSampleBuffer(
             $width, self::SAMPLES_PER_PIXEL_X);
 
-        $layers = array();
+        $layers = [];
         $color = 0;
         
         // Keeps track of how many of the subpixellayers that are used for 
@@ -278,7 +281,7 @@ class Rasterizer
         return $colorData;
     }
     
-    private static function intersection_cmp($a, $b) 
+    private static function intersection_cmp(EdgeSuperSampleIntersection $a, EdgeSuperSampleIntersection $b): int
     {
         if ($a->x < $b->x) {
             return -1;
@@ -296,14 +299,14 @@ class Rasterizer
      * y coordinate. For each intersecting edge the intersecting x coordinate is 
      * returned.
      *
-     * @param array $edges Array of edges in the current scanline.
-     * @param int $y Y coordinate of the current scanline.
-     * @return array Array containing EdgeSuperSampleIntersection. Objects
-     * are sorted ascending by x coordinate.
+     * @param array<Edge> $edges Array of edges in the current scanline.
+     * @param float $y Y coordinate of the current scanline.
+     * @return array<EdgeSuperSampleIntersection> Intersections sorted ascending by x coordinate.
      */
-    private static function getIntersections($edges, $y) 
+    private static function getIntersections(array $edges, float $y): array
     {
-        $intersections = array();
+        /** @var array<EdgeSuperSampleIntersection> */
+        $intersections = [];
 
         foreach ($edges as $edge) {
             if ($edge->y0 < $y && $edge->y1 >= $y ||
@@ -317,9 +320,7 @@ class Rasterizer
             }
         }
 
-        usort($intersections, array(
-            'Jdenticon\\Canvas\\Rasterization\\Rasterizer', 
-            'intersection_cmp'));
+        usort($intersections, [self::class, 'intersection_cmp']);
         
         return $intersections;
     }
@@ -327,12 +328,13 @@ class Rasterizer
     /**
      * Determines what ranges of a scanline that needs to be supersampled.
      *
-     * @param array $scanline  Array of edges in the current scanline.
-     * @return array  Array of SuperSampleRange.
+     * @param array<EdgeIntersection> $scanline Array of edges in the current scanline.
+     * @param int $width
+     * @return array<SuperSampleRange>
      */
-    private static function getSuperSampleRanges(&$scanline, $width) 
+    private static function getSuperSampleRanges(array &$scanline, int $width): array
     {
-        $superSampleRanges = array();
+        $superSampleRanges = [];
 
         $rangeIndex = 0;
         $scanlineCount = count($scanline);

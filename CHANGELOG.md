@@ -3,6 +3,8 @@
 ## 2.0.0 (not yet released)
 * CHANGED: Remove page template (#265)
 * CHANGED: Jdenticons are now used as the default icons
+* CHANGED: Upgrading libraries to: jdenticon 2.0.0
+* CHANGED: Minimum required PHP version is 7.4, due to a change in the jdenticon library
 * FIXED: Name mismatches in attached files (#1584)
 * FIXED: Unable to paste attachments from clipboard (#1589)
 

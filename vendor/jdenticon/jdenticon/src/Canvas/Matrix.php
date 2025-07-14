@@ -3,7 +3,7 @@
  * This file is part of Jdenticon for PHP.
  * https://github.com/dmester/jdenticon-php/
  * 
- * Copyright (c) 2018 Daniel Mester Pirttijärvi
+ * Copyright (c) 2025 Daniel Mester Pirttijärvi
  * 
  * For full license information, please see the LICENSE file that was 
  * distributed with this source code.
@@ -15,17 +15,17 @@ use Jdenticon\Canvas\Point;
 
 class Matrix
 {
-    private $a;
-    private $b;
-    private $c;
-    private $d;
-    private $e;
-    private $f;
+    private float $a;
+    private float $b;
+    private float $c;
+    private float $d;
+    private float $e;
+    private float $f;
 
     /**
      * Creates a new transformation matrix.
      */
-    public function __construct($a, $b, $c, $d, $e, $f) 
+    public function __construct(float $a, float $b, float $c, float $d, float $e, float $f) 
     {
         $this->a = $a;
         $this->b = $b;
@@ -40,7 +40,7 @@ class Matrix
      *
      * @return boolean
      */
-    public function hasSkewing() 
+    public function hasSkewing(): bool 
     {
         return $this->b || $this->c;
     }
@@ -50,7 +50,7 @@ class Matrix
      *
      * @return boolean
      */
-    public function hasTranslation() 
+    public function hasTranslation(): bool 
     {
         return $this->e || $this->f;
     }
@@ -60,7 +60,7 @@ class Matrix
      *
      * @return boolean
      */
-    public function hasScaling() 
+    public function hasScaling(): bool 
     {
         return $this->a != 1 || $this->d != 1;
     }
@@ -71,7 +71,7 @@ class Matrix
      *
      * @return \Jdenticon\Canvas\Matrix
      */
-    public function multiply($a, $b, $c, $d, $e, $f) 
+    public function multiply(float $a, float $b, float $c, float $d, float $e, float $f): Matrix 
     {
         return new Matrix(
             $this->a * $a + $this->c * $b,
@@ -91,7 +91,7 @@ class Matrix
      * @param float $y  Y coordinate.
      * @return \Jdenticon\Canvas\Point
      */
-    public function multiplyPoint($x, $y) 
+    public function multiplyPoint(float $x, float $y): Point 
     {
         return new Point(
             $this->a * $x + $this->c * $y + $this->e,
@@ -106,7 +106,7 @@ class Matrix
      * @param float $angle  Rotation angle in radians.
      * @return \Jdenticon\Canvas\Matrix
      */
-    public function rotate($angle) 
+    public function rotate(float $angle): Matrix 
     {
         $sin = sin($angle);
         $cos = cos($angle);
@@ -121,7 +121,7 @@ class Matrix
      * @param float $y  Vertical move distance.
      * @return \Jdenticon\Canvas\Matrix
      */
-    public function translate($x, $y) 
+    public function translate(float $x, float $y): Matrix 
     {
         return $this->multiply(1, 0, 0, 1, $x, $y);
     }
@@ -134,7 +134,7 @@ class Matrix
      * @param float $y  Vertical scale.
      * @return \Jdenticon\Canvas\Matrix
      */
-    public function scale($x, $y) 
+    public function scale(float $x, float $y): Matrix 
     {
         return $this->multiply($x, 0, 0, $y, 0, 0);
     }

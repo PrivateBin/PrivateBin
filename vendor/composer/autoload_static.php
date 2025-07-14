@@ -113,7 +113,6 @@ class ComposerStaticInitDontChange
         'Jdenticon\\Shapes\\Shape' => __DIR__ . '/..' . '/jdenticon/jdenticon/src/Shapes/Shape.php',
         'Jdenticon\\Shapes\\ShapeCategory' => __DIR__ . '/..' . '/jdenticon/jdenticon/src/Shapes/ShapeCategory.php',
         'Jdenticon\\Shapes\\ShapeDefinitions' => __DIR__ . '/..' . '/jdenticon/jdenticon/src/Shapes/ShapeDefinitions.php',
-        'Jdenticon\\Shapes\\ShapePosition' => __DIR__ . '/..' . '/jdenticon/jdenticon/src/Shapes/ShapePosition.php',
         'PhpToken' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/PhpToken.php',
         'PrivateBin\\Configuration' => __DIR__ . '/../..' . '/lib/Configuration.php',
         'PrivateBin\\Controller' => __DIR__ . '/../..' . '/lib/Controller.php',

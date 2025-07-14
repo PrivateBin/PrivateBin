@@ -3,7 +3,7 @@
  * This file is part of Jdenticon for PHP.
  * https://github.com/dmester/jdenticon-php/
  * 
- * Copyright (c) 2018 Daniel Mester Pirttijärvi
+ * Copyright (c) 2025 Daniel Mester Pirttijärvi
  * 
  * For full license information, please see the LICENSE file that was 
  * distributed with this source code.
@@ -11,15 +11,18 @@
 
 namespace Jdenticon\Rendering;
 
+use Jdenticon\Color;
+
 /**
  * Renders icons as SVG paths.
  */
 class SvgRenderer extends AbstractRenderer
 {
-    private $pathsByColor = array();
-    private $path;
-    private $width;
-    private $height;
+    /** @var array<string, SvgPath> */
+    private array $pathsByColor = [];
+    private ?SvgPath $path = null;
+    private int $width;
+    private int $height;
 
     /**
      * Creates a new SvgRenderer.
@@ -27,7 +30,7 @@ class SvgRenderer extends AbstractRenderer
      * @param int $width The width of the icon in pixels.
      * @param int $height The height of the icon in pixels.
      */
-    public function __construct($width, $height)
+    public function __construct(int $width, int $height)
     {
         $this->width = $width;
         $this->height = $height;
@@ -38,7 +41,7 @@ class SvgRenderer extends AbstractRenderer
      *
      * @return string
      */
-    public function getMimeType()
+    public function getMimeType(): string
     {
         return 'image/svg+xml';
     }
@@ -54,7 +57,7 @@ class SvgRenderer extends AbstractRenderer
      * @param bool $counterClockwise If true the circle will be drawn 
      *      counter clockwise.
      */
-    protected function addCircleNoTransform($x, $y, $size, $counterClockwise)
+    protected function addCircleNoTransform(float $x, float $y, float $size, bool $counterClockwise): void
     {
         $this->path->addCircle($x, $y, $size, $counterClockwise);
     }
@@ -62,9 +65,9 @@ class SvgRenderer extends AbstractRenderer
     /**
      * Adds a polygon without translating its coordinates.
      *
-     * @param array $points An array of the points that the polygon consists of.
+     * @param array<Point> $points An array of the points that the polygon consists of.
      */
-    protected function addPolygonNoTransform($points)
+    protected function addPolygonNoTransform(array $points): void
     {
         $this->path->addPolygon($points);
     }
@@ -74,7 +77,7 @@ class SvgRenderer extends AbstractRenderer
      *
      * @param \Jdenticon\Color $color The color of the shape.
      */
-    public function beginShape(\Jdenticon\Color $color)
+    public function beginShape(Color $color): void
     {
         $colorString = $color->toHexString(6);
         
@@ -89,7 +92,7 @@ class SvgRenderer extends AbstractRenderer
     /**
      * Ends the currently drawn shape.
      */
-    public function endShape()
+    public function endShape(): void
     {
     }
     
@@ -98,8 +101,9 @@ class SvgRenderer extends AbstractRenderer
      *
      * @param bool $fragment If true an SVG string without the root svg element 
      *      will be rendered.
+     * @return string
      */
-    public function getData($fragment = false)
+    public function getData(bool $fragment = false): string
     {
         $svg = '';
         $widthAsString = number_format($this->width, 0, '.', '');
