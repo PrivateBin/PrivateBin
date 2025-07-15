@@ -3,7 +3,7 @@
  * This file is part of Jdenticon for PHP.
  * https://github.com/dmester/jdenticon-php/
  * 
- * Copyright (c) 2018 Daniel Mester Pirttijärvi
+ * Copyright (c) 2025 Daniel Mester Pirttijärvi
  * 
  * For full license information, please see the LICENSE file that was 
  * distributed with this source code.
@@ -11,20 +11,25 @@
 
 namespace Jdenticon\Canvas\Rasterization;
 
+use Jdenticon\Canvas\Rasterization\Edge;
+
 class EdgeTable
 {
-    private $scanlines;
-    private $nextPolygonId;
-    private $width;
-    private $height;
+    /**
+     * @var array<array<EdgeIntersection>>
+     */
+    private array $scanlines;
+    private int $nextPolygonId;
+    private int $width;
+    private int $height;
 
     /**
      * Keeps a list of edges per scanline.
      *
-     * @param integer $width  Clipping width.
-     * @param integer $height  Clipping height.
+     * @param int $width  Clipping width.
+     * @param int $height  Clipping height.
      */
-    public function __construct($width, $height) 
+    public function __construct(int $width, int $height) 
     {
         $this->width = $width;
         $this->height = $height;
@@ -34,9 +39,9 @@ class EdgeTable
     /**
      * Sorts the edges of each scanline in ascending x coordinates.
      */
-    public function clear() 
+    public function clear(): void
     {
-        $this->scanlines = array();
+        $this->scanlines = [];
         $this->nextPolygonId = 1;
     }
 
@@ -45,18 +50,19 @@ class EdgeTable
      *
      * @return int
      */
-    public function getNextPolygonId() 
+    public function getNextPolygonId(): int
     {
         return $this->nextPolygonId++;
     }
 
     /**
-     * Gets the scaline for the specified Y coordinate, or NULL if there are 
+     * Gets the scanline for the specified Y coordinate, or NULL if there are 
      * no edges for the specified Y coordinate.
      *
-     * @return array|null.
+     * @param int $y
+     * @return array<EdgeIntersection>|null
      */
-    public function getScanline($y)
+    public function getScanline(int $y): ?array
     {
         return isset($this->scanlines[$y]) ? $this->scanlines[$y] : null;
     }
@@ -66,7 +72,7 @@ class EdgeTable
      *
      * @param \Jdenticon\Canvas\Rasterization\Edge $edge
      */
-    public function add(\Jdenticon\Canvas\Rasterization\Edge $edge) 
+    public function add(Edge $edge): void
     {
         $minY = 0;
         $maxY = 0;
@@ -121,7 +127,7 @@ class EdgeTable
 
                 if ($fromX < $this->width) {
                     if (!isset($this->scanlines[$y])) {
-                        $this->scanlines[$y] = array();
+                        $this->scanlines[$y] = [];
                     }
                     
                     $this->scanlines[$y][] = new EdgeIntersection(
@@ -134,7 +140,7 @@ class EdgeTable
         }
     }
 
-    private static function edge_cmp($x, $y)
+    private static function edge_cmp(EdgeIntersection $x, EdgeIntersection $y): int
     {
         if ($x->fromX < $y->fromX) {
             return -1;
@@ -148,11 +154,10 @@ class EdgeTable
     /**
      * Sorts the edges of each scanline in ascending x coordinates.
      */
-    public function sort() 
+    public function sort(): void
     {
         foreach ($this->scanlines as $i => &$scanline) {
-            usort($scanline, array(
-                'Jdenticon\\Canvas\\Rasterization\\EdgeTable', 'edge_cmp'));
+            usort($scanline, [self::class, 'edge_cmp']);
         }
     }
 }

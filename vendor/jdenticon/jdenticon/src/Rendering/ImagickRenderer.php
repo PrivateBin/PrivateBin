@@ -1,6 +1,8 @@
 <?php
 namespace Jdenticon\Rendering;
 
+use Jdenticon\Color;
+
 class ImagickRendererLine
 {
     /**
@@ -10,8 +12,9 @@ class ImagickRendererLine
      * @param float $y0 Vector start y coordinate.
      * @param float $x1 Vector end x coordinate.
      * @param float $y1 Vector end y coordinate.
+     * @return self
      */
-    public static function fromVector($x0, $y0, $x1, $y1) 
+    public static function fromVector(float $x0, float $y0, float $x1, float $y1): self
     {
         $line = new ImagickRendererLine();
 
@@ -27,9 +30,9 @@ class ImagickRendererLine
     /**
      * Moves the line to the right relative the direction vector.
      * 
-     * @param float $distance  The number of pixels to move the line.
+     * @param float $distance The number of pixels to move the line.
      */
-    public function moveRight($distance) 
+    public function moveRight(float $distance): void
     {
         // Ortogonal direction vector
         $rx = -$this->ry;
@@ -44,12 +47,12 @@ class ImagickRendererLine
     /**
      * Computes the point at which two lines intersect.
      * 
+     * @param ImagickRendererLine $l1
+     * @param ImagickRendererLine $l2
      * @return Point|null
      */
-    public static function intersection(
-        ImagickRendererLine $l1,
-        ImagickRendererLine $l2
-    ) {
+    public static function intersection(ImagickRendererLine $l1, ImagickRendererLine $l2): ?Point
+    {
         $rs = $l1->rx * $l2->ry - $l1->ry * $l2->rx;
 
         if ($rs == 0) {
@@ -66,25 +69,21 @@ class ImagickRendererLine
 
     /**
      * X coordiate of a point on the line.
-     * @var float 
      */
-    public $Px;
+    public float $Px;
     /**
      * Y coordiate of a point on the line.
-     * @var float 
      */
-    public $Py;
+    public float $Py;
 
     /**
      * X component of the direction vector.
-     * @var float 
      */
-    public $rx;
+    public float $rx;
     /**
      * Y component of the direction vector.
-     * @var float 
      */
-    public $ry;
+    public float $ry;
 }
 
 /**
@@ -108,17 +107,17 @@ class ImagickRendererLine
  */
 class ImagickRenderer extends AbstractRenderer
 {
-    private $draw;
-    private $polygon;
-    private $width;
-    private $height;
+    private \ImagickDraw $draw;
+    private array $polygon;
+    private int $width;
+    private int $height;
 
     /**
      * This constant is added to all coordinates to avoid white pixels
      * that sometimes appear near edge intersections when a polygon including
      * its 1/2 invisible border is perfectly aligned to the pixel grid. 
      */
-    const PREVENT_WHITE_PIXELS_OFFSET = -0.00013;
+    private const PREVENT_WHITE_PIXELS_OFFSET = -0.00013;
 
     /**
      * Creates an instance of the class ImagickRenderer.
@@ -126,7 +125,7 @@ class ImagickRenderer extends AbstractRenderer
      * @param int $width The width of the icon in pixels.
      * @param int $height The height of the icon in pixels.
      */
-    public function __construct($width, $height)
+    public function __construct(int $width, int $height)
     {
         parent::__construct();
         $this->draw = new \ImagickDraw();
@@ -141,7 +140,7 @@ class ImagickRenderer extends AbstractRenderer
      *
      * @return string
      */
-    public function getMimeType()
+    public function getMimeType(): string
     {
         return 'image/png';
     }
@@ -149,15 +148,12 @@ class ImagickRenderer extends AbstractRenderer
     /**
      * Adds a circle without translating its coordinates.
      *
-     * @param  float $x  The x-coordinate of the bounding rectangle 
-     *      upper-left corner.
-     * @param  float $y  The y-coordinate of the bounding rectangle 
-     *      upper-left corner.
-     * @param  float $size  The size of the bounding rectangle.
-     * @param  bool $counterClockwise  If true the circle will be drawn 
-     *      counter clockwise.
+     * @param float $x The x-coordinate of the bounding rectangle upper-left corner.
+     * @param float $y The y-coordinate of the bounding rectangle upper-left corner.
+     * @param float $size The size of the bounding rectangle.
+     * @param bool $counterClockwise If true the circle will be drawn counter clockwise.
      */
-    protected function addCircleNoTransform($x, $y, $size, $counterClockwise)
+    protected function addCircleNoTransform(float $x, float $y, float $size, bool $counterClockwise): void
     {
         if ($counterClockwise) {
             $x -= $size + 0.5;
@@ -179,9 +175,9 @@ class ImagickRenderer extends AbstractRenderer
     /**
      * Adds a polygon without translating its coordinates.
      *
-     * @param  array $points  An array of the points that the polygon consists of.
+     * @param array<Point> $points An array of the points that the polygon consists of.
      */
-    protected function addPolygonNoTransform($points)
+    protected function addPolygonNoTransform(array $points): void
     {
         $firstPoint = $points[0];
         $lastPoint = end($points);
@@ -209,7 +205,7 @@ class ImagickRenderer extends AbstractRenderer
 
         // ImageMagick draws all polygons 1 pixel too large. To prevent this,
         // shrink polygons by 1 pixel.
-        $lines = array();
+        $lines = [];
         $previousPoint = null;
 
         // Transform all edges to lines.
@@ -259,7 +255,7 @@ class ImagickRenderer extends AbstractRenderer
      *
      * @param \Jdenticon\Color $color The color of the shape.
      */
-    public function beginShape(\Jdenticon\Color $color)
+    public function beginShape(Color $color): void
     {
         $this->draw->setFillColor($color->__toString());
         $this->draw->pathStart();
@@ -268,7 +264,7 @@ class ImagickRenderer extends AbstractRenderer
     /**
      * Ends the currently drawn shape.
      */
-    public function endShape()
+    public function endShape(): void
     {
         $this->draw->pathFinish();
     }
@@ -278,7 +274,7 @@ class ImagickRenderer extends AbstractRenderer
      * 
      * @return string
      */
-    public function getData()
+    public function getData(): string
     {
         $imagick = new \Imagick();
         $imagick->newImage($this->width, $this->height, $this->backgroundColor->__toString());

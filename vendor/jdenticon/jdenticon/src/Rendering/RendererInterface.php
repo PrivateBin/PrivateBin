@@ -3,7 +3,7 @@
  * This file is part of Jdenticon for PHP.
  * https://github.com/dmester/jdenticon-php/
  * 
- * Copyright (c) 2018 Daniel Mester Pirttijärvi
+ * Copyright (c) 2025 Daniel Mester Pirttijärvi
  * 
  * For full license information, please see the LICENSE file that was 
  * distributed with this source code.
@@ -25,7 +25,7 @@ interface RendererInterface
      * @param \Jdenticon\Rendering\Transform $transform The transform to set. 
      *      If NULL is specified any existing transform is removed.
      */
-    public function setTransform(\Jdenticon\Rendering\Transform $transform);
+    public function setTransform(Transform $transform): void;
     
     /**
      * Gets the current transform that will be applied on all coordinates before 
@@ -33,40 +33,40 @@ interface RendererInterface
      *
      * @return \Jdenticon\Rendering\Transform
      */
-    public function getTransform();
+    public function getTransform(): Transform;
     
     /**
      * Sets the background color of the image.
      *
      * @param \Jdenticon\Color $color The image background color.
      */
-    public function setBackgroundColor(Color $color);
+    public function setBackgroundColor(Color $color): void;
     
     /**
      * Gets the background color of the image.
      *
      * @return \Jdenticon\Color
      */
-    public function getBackgroundColor();
+    public function getBackgroundColor(): Color;
     
     /**
      * Gets the MIME type of the renderer output.
      *
      * @return string
      */
-    public function getMimeType();
+    public function getMimeType(): string;
     
     /**
      * Begins a new shape. The shape should be ended with a call to endShape.
      *
      * @param \Jdenticon\Color $color The color of the shape.
      */
-    public function beginShape(Color $color);
+    public function beginShape(Color $color): void;
     
     /**
      * Ends the currently drawn shape.
      */
-    public function endShape();
+    public function endShape(): void;
 
     /**
      * Adds a rectangle to the image.
@@ -78,7 +78,7 @@ interface RendererInterface
      * @param bool $invert If true the area of the rectangle will be removed 
      *      from the filled area.
      */
-    public function addRectangle($x, $y, $width, $height, $invert = false);
+    public function addRectangle(float $x, float $y, float $width, float $height, bool $invert = false): void;
 
     /**
      * Adds a circle to the image.
@@ -91,16 +91,16 @@ interface RendererInterface
      * @param bool $invert If true the area of the circle will be removed from 
      *      the filled area.
      */
-    public function addCircle($x, $y, $size, $invert = false);
+    public function addCircle(float $x, float $y, float $size, bool $invert = false): void;
 
     /**
      * Adds a polygon to the image.
      *
-     * @param array $points Array of points that the polygon consists of.
+     * @param array<Point> $points Array of points that the polygon consists of.
      * @param bool $invert If true the area of the polygon will be removed from
      *      the filled area.
      */
-    public function addPolygon($points, $invert = false);
+    public function addPolygon(array $points, bool $invert = false): void;
 
     /**
      * Adds a triangle to the image.
@@ -111,12 +111,12 @@ interface RendererInterface
      *      upper-left corner.
      * @param float $width The width of the bounding rectangle.
      * @param float $height The height of the bounding rectangle.
-     * @param float $direction The direction of the 90 degree corner of 
-     *      the triangle.
+     * @param int $direction The direction of the 90 degree corner of 
+     *      the triangle. Value of {@link \Jdenticon\Rendering\TriageDirection}
      * @param bool $invert If true the area of the triangle will be removed 
      *      from the filled area.
      */
-    public function addTriangle($x, $y, $width, $height, $direction, $invert = false);
+    public function addTriangle(float $x, float $y, float $width, float $height, int $direction, bool $invert = false): void;
 
     /**
      * Adds a rhombus to the image.
@@ -130,12 +130,12 @@ interface RendererInterface
      * @param bool $invert If true the area of the rhombus will be removed 
      *      from the filled area.
      */
-    public function addRhombus($x, $y, $width, $height, $invert = false);
+    public function addRhombus(float $x, float $y, float $width, float $height, bool $invert = false): void;
     
     /**
      * Gets the output from the renderer.
      *
      * @return string
      */
-    public function getData();
+    public function getData(): string;
 }

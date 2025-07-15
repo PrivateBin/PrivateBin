@@ -3,7 +3,7 @@
  * This file is part of Jdenticon for PHP.
  * https://github.com/dmester/jdenticon-php/
  * 
- * Copyright (c) 2018 Daniel Mester Pirttijärvi
+ * Copyright (c) 2025 Daniel Mester Pirttijärvi
  * 
  * For full license information, please see the LICENSE file that was 
  * distributed with this source code.
@@ -13,16 +13,22 @@ namespace Jdenticon\Canvas\Rasterization;
 
 class Edge
 {
-    public $polygonId;
-    public $x0;
-    public $x1;
-    public $y0;
-    public $y1;
-    public $color;
-    public $windingRule;
+    public int $polygonId;
+    public float $x0;
+    public float $x1;
+    public float $y0;
+    public float $y1;
+    public int $color;
+    public string $windingRule;
  
     public function __construct(
-        $polygonId, $x0, $y0, $x1, $y1, $color, $windingRule = null) 
+        int $polygonId, 
+        float $x0, 
+        float $y0, 
+        float $x1, 
+        float $y1, 
+        int $color, 
+        string $windingRule = "nonzero") 
     {
         $this->polygonId = $polygonId;
         $this->x0 = $x0;
@@ -33,7 +39,7 @@ class Edge
         $this->windingRule = $windingRule;
     }
 
-    public function intersection($y)
+    public function intersection(float $y): float
     {
         $dx = 
             ($this->x1 - $this->x0) * ($this->y0 - $y) / 

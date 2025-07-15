@@ -3,7 +3,7 @@
  * This file is part of Jdenticon for PHP.
  * https://github.com/dmester/jdenticon-php/
  * 
- * Copyright (c) 2018 Daniel Mester Pirttijärvi
+ * Copyright (c) 2025 Daniel Mester Pirttijärvi
  * 
  * For full license information, please see the LICENSE file that was 
  * distributed with this source code.
@@ -21,13 +21,12 @@ use Jdenticon\Canvas\Rasterization\Edge;
  */
 class LayerManager
 {
-    public $topLayer;
+    public ?Layer $topLayer = null;
 
     /**
      * The current visible color.
-     * @var integer
      */
-    public $color;
+    public int $color;
 
     public function __construct() 
     {
@@ -40,7 +39,7 @@ class LayerManager
      * @param \Jdenticon\Canvas\Rasterization\LayerManager $other The 
      *      LayerManager to copy all layers to.
      */
-    public function copyTo(LayerManager $other) 
+    public function copyTo(LayerManager $other): void
     {
         $other->color = $this->color;
         
@@ -72,7 +71,7 @@ class LayerManager
      *
      * @param \Jdenticon\Canvas\Rasterization\Edge edge
      */
-    public function add(Edge $edge) 
+    public function add(Edge $edge): void
     {
         $dwinding = $edge->y0 < $edge->y1 ? 1 : -1;
         

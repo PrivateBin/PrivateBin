@@ -3,7 +3,7 @@
  * This file is part of Jdenticon for PHP.
  * https://github.com/dmester/jdenticon-php/
  * 
- * Copyright (c) 2018 Daniel Mester Pirttijärvi
+ * Copyright (c) 2025 Daniel Mester Pirttijärvi
  * 
  * For full license information, please see the LICENSE file that was 
  * distributed with this source code.
@@ -16,32 +16,28 @@ namespace Jdenticon;
  */
 class Color
 {
-    private static $lightnessCompensations = array(
-        0.55, 0.5, 0.5, 0.46, 0.6, 0.55, 0.55);
+    /** @var array<float> */
+    private static array $lightnessCompensations = [0.55, 0.5, 0.5, 0.46, 0.6, 0.55, 0.55];
     
     /**
      * The red component of the color in the range [0, 255].
-     * @var int
      */
-    public $r;
+    public int $r;
     
     /**
      * The green component of the color in the range [0, 255].
-     * @var int
      */
-    public $g;
+    public int $g;
     
     /**
      * The blue component of the color in the range [0, 255].
-     * @var int
      */
-    public $b;
+    public int $b;
     
     /**
      * The alpha component of the color in the range [0, 255].
-     * @var int
      */
-    public $a;
+    public int $a;
 
     // Users of the struct should use the static factory methods 
     // to create Color value.
@@ -52,12 +48,13 @@ class Color
     /**
      * Creates a Color from an RGB value.
      *
-     * @param int $alpha Alpha channel value in the range [0, 255].
      * @param int $red Red component in the range [0, 255].
-     * @param int $green GReen component in the range [0, 255].
+     * @param int $green Green component in the range [0, 255].
      * @param int $blue Blue component in the range [0, 255].
+     * @param int $alpha Alpha channel value in the range [0, 255].
+     * @return \Jdenticon\Color
      */
-    public static function fromRgb($red, $green, $blue, $alpha = 255)
+    public static function fromRgb(int $red, int $green, int $blue, int $alpha = 255): Color
     {
         $color = new Color();
         $color->r = $red;
@@ -70,12 +67,13 @@ class Color
     /**
      * Creates a Color instance from HSL color parameters.
      *
-     * @param float $hue Hue in the range [0, 1]
-     * @param float $saturation Saturation in the range [0, 1]
-     * @param float $lightness Lightness in the range [0, 1]
+     * @param float $hue Hue in the range [0, 1].
+     * @param float $saturation Saturation in the range [0, 1].
+     * @param float $lightness Lightness in the range [0, 1].
      * @param float $alpha Alpha channel value in the range [0, 1].
+     * @return \Jdenticon\Color
      */
-    public static function fromHsl($hue, $saturation, $lightness, $alpha = 1.0)
+    public static function fromHsl(float $hue, float $saturation, float $lightness, float $alpha = 1.0): Color
     {
         if ($hue < 0) $hue = 0;
         if ($hue > 1) $hue = 1;
@@ -111,15 +109,16 @@ class Color
     }
     
     /**
-     * Creates a Color> instance from HSL color parameters and will compensate 
+     * Creates a Color instance from HSL color parameters and compensates 
      * the lightness for hues that appear to be darker than others.
      *
      * @param float $hue Hue in the range [0, 1].
      * @param float $saturation Saturation in the range [0, 1].
      * @param float $lightness Lightness in the range [0, 1].
      * @param float $alpha Alpha channel value in the range [0, 1].
+     * @return \Jdenticon\Color
      */
-    public static function fromHslCompensated($hue, $saturation, $lightness, $alpha = 1.0)
+    public static function fromHslCompensated(float $hue, float $saturation, float $lightness, float $alpha = 1.0): Color
     {
         if ($hue < 0) $hue = 0;
         if ($hue > 1) $hue = 1;
@@ -135,7 +134,7 @@ class Color
     }
 
     // Helper method for FromHsl
-    private static function hueToRgb($m1, $m2, $h)
+    private static function hueToRgb(float $m1, float $m2, float $h): int
     {
         if ($h < 0) {
             $h = $h + 6;
@@ -161,7 +160,7 @@ class Color
      *
      * @return int
      */
-    public function toRgba()
+    public function toRgba(): int
     {
         return 
             ($this->r << 24) |
@@ -175,7 +174,7 @@ class Color
      *
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return '#' . bin2hex(pack('N', $this->toRgba()));
     }
@@ -183,9 +182,10 @@ class Color
     /**
      * Gets a hexadecimal representation of this color on the format #rrggbbaa.
      *
+     * @param int $length Length of the hex string (6 or 8).
      * @return string
      */
-    public function toHexString($length = 8)
+    public function toHexString(int $length = 8): string
     {
         if ($length === 8) {
             return $this->__toString();
@@ -197,10 +197,11 @@ class Color
      * Tries to parse a value as a Color.
      * 
      * @param mixed $value Value to parse.
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      * @return \Jdenticon\Color
      */
-    public static function parse($value) {
+    public static function parse($value): Color
+    {
         if ($value instanceof Color) {
             return $value;
         }
@@ -252,7 +253,7 @@ class Color
      * 
      * @return boolean
      */
-    private static function parsePercent($input, &$result)
+    private static function parsePercent(string $input, ?float &$result): bool
     {
         // Detect and remove percent sign
         if (preg_match('/^\\s*(\\d*(?:\\.\\d*)?)%\\s*$/', $input, $matches)) {
@@ -274,7 +275,7 @@ class Color
      * 
      * @return boolean
      */
-    private static function parseAlpha($input, &$result)
+    private static function parseAlpha(?string $input, ?float &$result): bool
     {
         if ($input === null ||
             $input === ''
@@ -303,21 +304,21 @@ class Color
     /**
      * Parses an RGB component.
      * 
-     * @param string $input  Input string.
-     * @param float  $result Hue in range [0, 255].
+     * @param string $input Input string.
+     * @param int $result RGB component in range [0, 255].
      * 
      * @return boolean
      */
-    private static function parseRgbComponent($input, &$result)
+    private static function parseRgbComponent(string $input, ?int &$result): bool
     {
         if (preg_match('/^\\s*(\\d*(?:\\.\\d*)?)(%?)\\s*$/', $input, $matches)) {
-            $result = floatval($matches[1]);
+            $float = floatval($matches[1]);
             
             if ($matches[2] === '%') {
-                $result = 255 * $result / 100;
+                $float = 255 * $float / 100;
             }
             
-            $result = (int)$result;
+            $result = (int)$float;
             
             if ($result < 0) $result = 0;
             if ($result > 255) $result = 255;
@@ -327,7 +328,7 @@ class Color
         return false;
     }
 
-    /**
+     /**
      * Parses a hue component.
      * 
      * @param string $input Input string.
@@ -335,7 +336,7 @@ class Color
      * 
      * @return boolean
      */
-    private static function parseHue($input, &$result)
+    private static function parseHue(string $input, ?float &$result): bool
     {
         if (preg_match(
             '/^\s*(\d*(?:\.\d*)?)(deg|grad|rad|turn|)\s*$/', 
@@ -355,7 +356,7 @@ class Color
                     break;
                 case "turn":
                     // Turns: range 0 - 1
-                    $result = $result;
+                    // No change
                     break;
                 default:
                     // Degree: range 0 - 360
@@ -373,16 +374,16 @@ class Color
         }
         return false;
     }
-    
+
     /**
      * Parses a hex color string.
      * 
      * @param string $input Input string.
-     * @param float $result Hue in range [0, 1].
+     * @param \Jdenticon\Color $result Parsed color.
      * 
      * @return boolean
      */
-    private static function parseHexColor($input, &$result) 
+    private static function parseHexColor(string $input, ?Color &$result): bool
     {
         if ($input[0] === '#') {
             $input = substr($input, 1);
@@ -444,9 +445,9 @@ class Color
      * 
      * @param string $input Input string.
      * 
-     * @return \Jdenticon\Color
+     * @return \Jdenticon\Color|null
      */
-    private static function parseNamedColor($input) 
+    private static function parseNamedColor(string $input): ?Color
     {
         // Source: https://www.w3.org/TR/css-color-4/#named-colors
         switch ($input) {

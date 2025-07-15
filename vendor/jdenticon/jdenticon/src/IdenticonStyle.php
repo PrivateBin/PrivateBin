@@ -2,10 +2,11 @@
 /**
  * This file is part of Jdenticon for PHP.
  * https://github.com/dmester/jdenticon-php/
- * 
- * Copyright (c) 2018 Daniel Mester Pirttijärvi
- * 
- * For full license information, please see the LICENSE file that was 
+ *
+ * Copyright (c) 2025 Daniel Mester Pirttijärvi
+ * Copyright (c) 2024 Peter Putzer
+ *
+ * For full license information, please see the LICENSE file that was
  * distributed with this source code.
  */
 
@@ -18,42 +19,15 @@ use Jdenticon\Color;
  */
 class IdenticonStyle
 {
-    /** 
-     * @var \Jdenticon\Color
-     */
-    private $backgroundColor;
-    
-    /** 
-     * @var float
-     */
-    private $padding;
-    
-    /** 
-     * @var float
-     */
-    private $colorSaturation;
-    
-    /** 
-     * @var float
-     */
-    private $grayscaleSaturation;
-    
-    /** 
-     * @var array(float)
-     */
-    private $colorLightness;
-    
-    /** 
-     * @var array(float)
-     */
-    private $grayscaleLightness;
+    private Color $backgroundColor;
+    private float $padding;
+    private float $colorSaturation;
+    private float $grayscaleSaturation;
+    private array $colorLightness;
+    private array $grayscaleLightness;
+    private ?array $hues = null;
 
-    /** 
-     * @var array(integer)
-     */
-    private $hues;
-    
-    public function __construct(array $options = null)
+    public function __construct(?array $options = null)
     {
         $this->backgroundColor = self::getDefaultBackgroundColor();
         $this->padding = self::getDefaultPadding();
@@ -61,20 +35,20 @@ class IdenticonStyle
         $this->grayscaleSaturation = self::getDefaultGrayscaleSaturation();
         $this->colorLightness = self::getDefaultColorLightness();
         $this->grayscaleLightness = self::getDefaultGrayscaleLightness();
-        
+
         if ($options !== null) {
             $this->setOptions($options);
         }
     }
-    
+
     /**
      * Gets an associative array of all options of this style.
      *
      * @return array
      */
-    public function getOptions()
+    public function getOptions(): array
     {
-        $options = array();
+        $options = [];
 
         $options['backgroundColor'] = $this->getBackgroundColor()->__toString();
         $options['padding'] = $this->getPadding();
@@ -89,7 +63,7 @@ class IdenticonStyle
 
         return $options;
     }
-    
+
     /**
      * Sets options in this style by specifying an associative array of option
      * values.
@@ -97,15 +71,15 @@ class IdenticonStyle
      * @param array $options Options to set.
      * @return self
      */
-    public function setOptions(array $options)
+    public function setOptions(array $options): self
     {
         foreach ($options as $key => $value) {
             $this->__set($key, $value);
         }
         return $this;
     }
-    
-    public function __get($name)
+
+    public function __get(string $name)
     {
         switch (strtolower($name)) {
             case 'backgroundcolor':
@@ -127,8 +101,8 @@ class IdenticonStyle
                     "Unknown IdenticonStyle option '$name'.");
         }
     }
-    
-    public function __set($name, $value)
+
+    public function __set(string $name, $value): void
     {
         switch (strtolower($name)) {
             case 'backgroundcolor':
@@ -157,34 +131,34 @@ class IdenticonStyle
                     "Unknown IdenticonStyle option '$name'.");
         }
     }
-    
+
     /**
      * Normalizes a hue to the first turn [0, 360).
-     * 
-     * @param mixed $hue
+     *
+     * @param int|float $hue
      * @return integer
      */
-    private static function normalizeHue($hue) 
+    private static function normalizeHue($hue): int
     {
         if (!is_numeric($hue)) {
             throw new \InvalidArgumentException(
                 "'$hue' is not a valid hue.");
         }
 
-        $hue = $hue % 360;
+        $hue = (int)$hue % 360;
         if ($hue < 0) {
             $hue += 360;
         }
 
         return $hue;
     }
-    
+
     /**
      * Gets an array of allowed hues, or null if there are no restrictions.
      *
-     * @return array(int)|null
+     * @return array<int>|null
      */
-    public function getHues()
+    public function getHues(): ?array
     {
         return $this->hues;
     }
@@ -192,14 +166,14 @@ class IdenticonStyle
     /**
      * Sets the allowed hues of generated icons.
      *
-     * @param array(integer)|integer|null $value A hue specified in degrees,
+     * @param array<integer>|integer|null $value A hue specified in degrees,
      *      or an array of hues specified in degrees. If set to null, the hue
      *      list is cleared.
      * @return self
      */
-    public function setHues($value)
+    public function setHues($value): self
     {
-        $hues = array();
+        $hues = [];
 
         if ($value !== null) {
             if (is_array($value)) {
@@ -214,26 +188,26 @@ class IdenticonStyle
         $this->hues = empty($hues) ? null : $hues;
         return $this;
     }
-    
+
     /**
      * Gets the padding of an icon in percents in the range [0.0, 0.4].
      *
      * @return float
      */
-    public function getPadding()
+    public function getPadding(): float
     {
         return $this->padding;
     }
-    
+
     /**
      * Sets the padding of an icon in percents.
      *
      * @param float $value New padding in the range [0.0, 0.4].
      * @return self
      */
-    public function setPadding($value)
+    public function setPadding(float $value): self
     {
-        if (!is_numeric($value) || $value < 0 || $value > 0.4) {
+        if ($value < 0 || $value > 0.4) {
             throw new \InvalidArgumentException(
                 "Padding '$value' out of range. ".
                 "Values in the range [0.0, 0.4] are allowed.");
@@ -241,55 +215,53 @@ class IdenticonStyle
         $this->padding = (float)$value;
         return $this;
     }
-    
+
     /**
      * Gets the color of the identicon background.
      *
      * @return \Jdenticon\Color
      */
-    public function getBackgroundColor()
+    public function getBackgroundColor(): Color
     {
         return $this->backgroundColor;
     }
-    
+
     /**
      * Sets the color of the identicon background.
      *
      * @param \Jdenticon\Color|string $value New background color.
      * @return \Jdenticon\IdenticonStyle
      */
-    public function setBackgroundColor($value)
+    public function setBackgroundColor($value): self
     {
         if ($value instanceof Color) {
             $this->backgroundColor = $value;
         } else {
             $this->backgroundColor = Color::parse($value);
         }
-        
+
         return $this;
     }
-    
+
     /**
      * Gets the saturation of the originally grayscale identicon shapes.
      *
      * @return float  Saturation in the range [0.0, 1.0].
      */
-    public function getGrayscaleSaturation()
+    public function getGrayscaleSaturation(): float
     {
         return $this->grayscaleSaturation;
     }
-    
+
     /**
      * Sets the saturation of the originally grayscale identicon shapes.
      *
      * @param $value float  Saturation in the range [0.0, 1.0].
      * @return self
      */
-    public function setGrayscaleSaturation($value)
+    public function setGrayscaleSaturation(float $value): self
     {
-        if (!is_numeric($value) ||
-            $value < 0 || $value > 1
-        ) {
+        if ($value < 0 || $value > 1) {
             throw new \InvalidArgumentException(
                 "The grayscale saturation was invalid. ".
                 "Only values in the range [0.0, 1.0] are allowed.");
@@ -297,28 +269,26 @@ class IdenticonStyle
         $this->grayscaleSaturation = (float)$value;
         return $this;
     }
-    
+
     /**
      * Gets the saturation of the colored identicon shapes.
      *
      * @return float Saturation in the range [0.0, 1.0].
      */
-    public function getColorSaturation()
+    public function getColorSaturation(): float
     {
         return $this->colorSaturation;
     }
-    
+
     /**
      * Sets the saturation of the colored identicon shapes.
      *
      * @param $value float  Saturation in the range [0.0, 1.0].
      * @return self
      */
-    public function setColorSaturation($value)
+    public function setColorSaturation(float $value): self
     {
-        if (!is_numeric($value) ||
-            $value < 0 || $value > 1
-        ) {
+        if ($value < 0 || $value > 1) {
             throw new \InvalidArgumentException(
                 "The color saturation was invalid. ".
                 "Only values in the range [0.0, 1.0] are allowed.");
@@ -326,27 +296,26 @@ class IdenticonStyle
         $this->colorSaturation = (float)$value;
         return $this;
     }
-    
+
     /**
      * Gets the value of the ColorLightness property.
      *
-     * @return array(float, float)
+     * @return array<float>
      */
-    public function getColorLightness()
+    public function getColorLightness(): array
     {
         return $this->colorLightness;
     }
-    
+
     /**
      * Sets the value of the ColorLightness property.
      *
-     * @param $value array(float, float)  Lightness range.
+     * @param array<float> $value Lightness range.
      * @return self
      */
-    public function setColorLightness($value)
+    public function setColorLightness(array $value): self
     {
-        if (!is_array($value) ||
-            !array_key_exists(0, $value) ||
+        if (!array_key_exists(0, $value) ||
             !array_key_exists(1, $value) ||
             !is_numeric($value[0]) ||
             !is_numeric($value[1]) ||
@@ -357,31 +326,30 @@ class IdenticonStyle
                 "The value passed to setColorLightness was invalid. ".
                 "Please check the documentation.");
         }
-        
-        $this->colorLightness = array((float)$value[0], (float)$value[1]);
+
+        $this->colorLightness = [(float)$value[0], (float)$value[1]];
         return $this;
     }
-    
+
     /**
      * Gets the value of the GrayscaleLightness property.
      *
-     * @return array(float, float)
+     * @return array<float>
      */
-    public function getGrayscaleLightness()
+    public function getGrayscaleLightness(): array
     {
         return $this->grayscaleLightness;
     }
-    
+
     /**
      * Sets the value of the GrayscaleLightness property.
      *
-     * @param $value array(float, float)  Lightness range.
+     * @param array<float> $value Lightness range.
      * @return self
      */
-    public function setGrayscaleLightness($value)
+    public function setGrayscaleLightness(array $value): self
     {
-        if (!is_array($value) ||
-            !array_key_exists(0, $value) ||
+        if (!array_key_exists(0, $value) ||
             !array_key_exists(1, $value) ||
             !is_numeric($value[0]) ||
             !is_numeric($value[1]) ||
@@ -392,69 +360,69 @@ class IdenticonStyle
                 "The value passed to setGrayscaleLightness was invalid. ".
                 "Please check the documentation.");
         }
-        $this->grayscaleLightness = array((float)$value[0], (float)$value[1]);
+        $this->grayscaleLightness = [(float)$value[0], (float)$value[1]];
         return $this;
     }
-    
-    
-    
+
+
+
     /**
      * Gets the default value of the BackgroundColor property. Resolves to transparent.
      *
      * @return \Jdenticon\Color
      */
-    public static function getDefaultBackgroundColor()
+    public static function getDefaultBackgroundColor(): Color
     {
         return Color::fromRgb(255, 255, 255, 255);
     }
-    
+
     /**
      * Gets the default value of the Padding property. Resolves to 0.08.
      *
      * @return float
      */
-    public static function getDefaultPadding()
+    public static function getDefaultPadding(): float
     {
         return 0.08;
     }
-    
+
     /**
      * Gets the default value of the ColorSaturation property. Resolves to 0.5.
      *
      * @return float
      */
-    public static function getDefaultColorSaturation()
+    public static function getDefaultColorSaturation(): float
     {
         return 0.5;
     }
-    
+
     /**
      * Gets the default value of the GrayscaleSaturation property. Resolves to 0.
      *
      * @return float
      */
-    public static function getDefaultGrayscaleSaturation()
+    public static function getDefaultGrayscaleSaturation(): float
     {
         return 0;
     }
-    
+
     /**
      * Gets the default value of the ColorLightness property. Resolves to [0.4, 0.8].
      *
-     * @return array
+     * @return array<float>
      */
-    public static function getDefaultColorLightness()
+    public static function getDefaultColorLightness(): array
     {
-        return array(0.4, 0.8);
+        return [0.4, 0.8];
     }
-    
+
     /**
      * Gets the default value of the GrayscaleLightness property. Resolves to [0.3, 0.9].
      *
-     * @return array
+     * @return array<float>
      */
-    public static function getDefaultGrayscaleLightness()
+    public static function getDefaultGrayscaleLightness(): array
     {
-        return array(0.3, 0.9);
+        return [0.3, 0.9];
     }
 }

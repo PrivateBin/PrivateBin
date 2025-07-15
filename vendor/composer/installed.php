@@ -3,7 +3,7 @@
         'name' => 'privatebin/privatebin',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => '7825471d70c39baf6042c52a453c8fe705d9ed75',
+        'reference' => '3ba29ea29e04d8a16d64e0f49994ba416c1b008f',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -11,9 +11,9 @@
     ),
     'versions' => array(
         'jdenticon/jdenticon' => array(
-            'pretty_version' => '1.0.2',
-            'version' => '1.0.2.0',
-            'reference' => 'cabb7a44c413c318392a341c5d3ca30fcdd57a6f',
+            'pretty_version' => '2.0.0',
+            'version' => '2.0.0.0',
+            'reference' => 'fb39a98a0a54982a130b7e7b06305d4fd8c9717e',
             'type' => 'library',
             'install_path' => __DIR__ . '/../jdenticon/jdenticon',
             'aliases' => array(),
@@ -31,7 +31,7 @@
         'privatebin/privatebin' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '7825471d70c39baf6042c52a453c8fe705d9ed75',
+            'reference' => '3ba29ea29e04d8a16d64e0f49994ba416c1b008f',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

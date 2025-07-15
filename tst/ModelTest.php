@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-use Identicon\Identicon;
+use Jdenticon\Identicon;
 use PHPUnit\Framework\TestCase;
 use PrivateBin\Configuration;
 use PrivateBin\Data\Database;
@@ -308,9 +308,16 @@ class ModelTest extends TestCase
         $comment->get();
         $comment->store();
 
-        $identicon = new Identicon();
-        $pngdata   = $identicon->getImageDataUri(TrafficLimiter::getHash(), 16);
-        $comment   = current($this->_model->getPaste(Helper::getPasteId())->get()['comments']);
+        $identicon = new Identicon(array(
+            'hash'  => TrafficLimiter::getHash(),
+            'size'  => 16,
+            'style' => array(
+                'backgroundColor'   => '#fff0', // fully transparent, for dark mode
+                'padding'           => 0,
+            ),
+        ));
+        $pngdata = $identicon->getImageDataUri('png');
+        $comment = current($this->_model->getPaste(Helper::getPasteId())->get()['comments']);
         $this->assertEquals($pngdata, $comment['meta']['icon'], 'icon gets set');
     }
 

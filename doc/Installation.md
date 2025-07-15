@@ -21,7 +21,7 @@ for more information.
 
 ### Minimal Requirements
 
-- PHP version 7.3 or above
+- PHP version 7.4 or above
 - GD extension (when using identicon or vizhash icons, jdenticon works without it)
 - zlib extension
 - some disk space or a database supported by [PDO](https://php.net/manual/book.pdo.php)

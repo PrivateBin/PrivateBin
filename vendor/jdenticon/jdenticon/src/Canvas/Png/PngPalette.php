@@ -3,15 +3,13 @@
  * This file is part of Jdenticon for PHP.
  * https://github.com/dmester/jdenticon-php/
  * 
- * Copyright (c) 2018 Daniel Mester Pirttijärvi
+ * Copyright (c) 2025 Daniel Mester Pirttijärvi
  * 
  * For full license information, please see the LICENSE file that was 
  * distributed with this source code.
  */
 
 namespace Jdenticon\Canvas\Png;
-
-use Jdenticon\Canvas\ColorUtils;
 
 /**
  * Contains the colors of a PNG color palette.
@@ -21,13 +19,13 @@ class PngPalette
     /**
      * Creates a PNG color palette for the specified bitmap data.
      *
-     * @param array(integer) $colorRanges Array of interleaved values on the 
-     *      format array(count0, color0, count1, color1, ...).
+     * @param array<int> $colorRanges Array of interleaved values on the 
+     *      format [count0, color0, count1, color1, ...]
      */
-    function __construct(& $colorRanges) 
+    function __construct(array &$colorRanges) 
     {
-        $lookup = array();
-        $colors = array();
+        $lookup = [];
+        $colors = [];
         $hasAlphaChannel = false;
         $colorsCount = 0;
 
@@ -63,30 +61,22 @@ class PngPalette
 
     /**
      * Specifies if the palette is valid to be used for encoding a PNG image.
-     *
-     * @var boolean
      */
-    public $isValid;
+    public bool $isValid;
 
     /**
      * Specifies if the palette has any partial or fully transparent
      * colors.
-     *
-     * @var boolean
      */
-    public $hasAlphaChannel;
+    public bool $hasAlphaChannel;
 
     /**
      * Array of colors in the palette.
-     *
-     * @var array
      */
-    public $colors;
+    public array $colors;
 
     /**
      * Lookup table from 32-bit color value to color index.
-     *
-     * @var array
      */
-    public $lookup;
+    public array $lookup;
 }
