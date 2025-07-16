@@ -3,7 +3,7 @@
  * This file is part of Jdenticon for PHP.
  * https://github.com/dmester/jdenticon-php/
  * 
- * Copyright (c) 2018 Daniel Mester Pirttijärvi
+ * Copyright (c) 2025 Daniel Mester Pirttijärvi
  * 
  * For full license information, please see the LICENSE file that was 
  * distributed with this source code.
@@ -13,7 +13,6 @@ namespace Jdenticon\Canvas\Png;
 
 use Jdenticon\Canvas\Png\PngPalette;
 use Jdenticon\Canvas\Png\PngBuffer;
-use Jdenticon\Canvas\ColorUtils;
 
 class PngEncoder
 {
@@ -23,7 +22,7 @@ class PngEncoder
     const GRAYSCALE_WITH_ALPHA = 4;
     const TRUE_COLOR_WITH_ALPHA = 6;
 
-    private $buffer;
+    private PngBuffer $buffer;
     
     public function __construct()
     {
@@ -36,10 +35,10 @@ class PngEncoder
      *
      * @param int $width Image width in pixels.
      * @param int $height Image height in pixels.
-     * @param int $colorType Color depth, speocfy one of the constants in 
+     * @param int $colorType Color depth, specify one of the constants in 
      *      PngEncoder.
      */
-    public function writeImageHeader($width, $height, $colorType) 
+    public function writeImageHeader(int $width, int $height, int $colorType): void
     {
         $this->buffer->startChunk("IHDR");
         $this->buffer->writeUInt32BE($width);
@@ -57,7 +56,7 @@ class PngEncoder
      *
      * @param int $gamma Gamma value.
      */
-    public function writeImageGamma($gamma = 45455) 
+    public function writeImageGamma(int $gamma = 45455): void
     {
         $this->buffer->startChunk("gAMA");
         $this->buffer->writeUInt32BE($gamma);
@@ -68,12 +67,11 @@ class PngEncoder
      * Writes an IDAT chunk of truecolor encoded image data.
      *
      * @param array $colorRanges Image data on the format 
-     *      array(count0, color0, count1, color1, ...)
+     *      [count0, color0, count1, color1, ...]
      * @param int $width Image width in pixels.
      * @param int $height Image height in pixels.
      */
-    public function writeTrueColorWithAlpha(
-        array & $colorRanges, $width, $height) 
+    public function writeTrueColorWithAlpha(array &$colorRanges, int $width, int $height): void
     {
         $this->buffer->startChunk("IDAT");
 
@@ -111,16 +109,13 @@ class PngEncoder
      * Writes an IDAT chunk of indexed image data.
      *
      * @param array $colorRanges Image data on the format 
-     *      array(count0, color0, count1, color1, ...)
+     *      [count0, color0, count1, color1, ...]
      * @param \Jdenticon\Canvas\Png\PngPalette $palette Palette containing the 
      *      indexed colors.
      * @param int $width Image width in pixels.
      * @param int $height Image height in pixels.
      */
-    public function writeIndexed(
-        array & $colorRanges, 
-        PngPalette $palette, 
-        $width, $height) 
+    public function writeIndexed(array &$colorRanges, PngPalette $palette, int $width, int $height): void
     {
         $this->buffer->startChunk("IDAT");
 
@@ -162,7 +157,7 @@ class PngEncoder
      * @param \Jdenticon\Canvas\Png\PngPalette $palette Palette containing the 
      *      indexed colors.
      */
-    public function writePalette(PngPalette $palette) 
+    public function writePalette(PngPalette $palette): void
     {
         if ($palette && $palette->isValid) {
             $this->buffer->startChunk("PLTE");
@@ -184,7 +179,7 @@ class PngEncoder
      * @param \Jdenticon\Canvas\Png\PngPalette $palette Palette containing the 
      *      indexed colors.
      */
-    public function writeTransparency(PngPalette $palette) 
+    public function writeTransparency(PngPalette $palette): void
     {
         if ($palette && $palette->isValid && $palette->hasAlphaChannel) {
             $this->buffer->startChunk("tRNS");
@@ -208,7 +203,7 @@ class PngEncoder
      *      {@link https://www.w3.org/TR/2003/REC-PNG-20031110/#11keywords}
      * @param string $value Value.
      */
-    public function writeTextualData($key, $value) 
+    public function writeTextualData(string $key, string $value): void
     {
         $this->buffer->startChunk("tEXt");
         $this->buffer->writeString($key);
@@ -220,7 +215,7 @@ class PngEncoder
     /**
      * Writes an IEND chunk to the png data stream.
      */
-    public function writeImageEnd() 
+    public function writeImageEnd(): void
     {
         $this->buffer->startChunk("IEND");
         $this->buffer->endChunk();
@@ -231,7 +226,7 @@ class PngEncoder
      *
      * @return string
      */
-    public function getBuffer() 
+    public function getBuffer(): string
     {
         return $this->buffer->getBuffer();
     }

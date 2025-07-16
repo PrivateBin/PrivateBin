@@ -3,13 +3,15 @@
  * This file is part of Jdenticon for PHP.
  * https://github.com/dmester/jdenticon-php/
  * 
- * Copyright (c) 2018 Daniel Mester Pirttijärvi
+ * Copyright (c) 2025 Daniel Mester Pirttijärvi
  * 
  * For full license information, please see the LICENSE file that was 
  * distributed with this source code.
  */
 
 namespace Jdenticon\Shapes;
+
+use Jdenticon\Color;
 
 /**
  * Represents a shape to be rendered in an icon. These instances are 
@@ -20,39 +22,35 @@ class Shape
     /**
      * The shape definition to be used to render the shape.
      *
-     * @var function(
+     * @var callable(
      *      \Jdenticon\Rendering\RendererInterface $renderer, 
-     *      \Jdenticon\Shapes\ShapePosition $cell, 
-     *      int $index)
+     *      int $cell, 
+     *      int $index): void
      */
     public $definition;
 
     /**
      * The fill color of the shape.
-     *
-     * @var Jdenticon\Color
      */
-    public $color;
+    public Color $color;
 
     /**
-     * The positions in which the shape will be rendered.
-     * 
-     * @var array(\Jdenticon\Shapes\ShapePosition)
+     * The positions in which the shape will be rendered. Interleaved x and y cell coordinates.
+     *
+     * @var array<int>
      */
-    public $positions;
+    public array $positions;
 
     /**
      * The rotation index of the icon in the first position.
-     *
-     * @var int
      */
-    public $startRotationIndex;
+    public int $startRotationIndex;
     
     public function __construct(
-        $definition, 
-        \Jdenticon\Color $color, 
+        callable $definition, 
+        Color $color, 
         array $positions, 
-        $startRotationIndex)
+        int $startRotationIndex)
     {
         $this->definition = $definition;
         $this->color = $color;

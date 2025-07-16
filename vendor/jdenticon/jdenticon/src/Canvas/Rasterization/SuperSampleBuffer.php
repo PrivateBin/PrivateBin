@@ -3,7 +3,7 @@
  * This file is part of Jdenticon for PHP.
  * https://github.com/dmester/jdenticon-php/
  * 
- * Copyright (c) 2018 Daniel Mester Pirttijärvi
+ * Copyright (c) 2025 Daniel Mester Pirttijärvi
  * 
  * For full license information, please see the LICENSE file that was 
  * distributed with this source code.
@@ -21,25 +21,25 @@ class SuperSampleBuffer
     const IDX_G = 3;
     const IDX_B = 4;
 
-    private $samples;
-    private $samplesPerPixel;
+    private array $samples;
+    private int $samplesPerPixel;
 
-    private $pixelOffset;
-    private $subPixelOffset;
+    private int $pixelOffset;
+    private int $subPixelOffset;
 
-    private $width;
-    private $used;
+    private int $width;
+    private int $used;
 
     /**
      * Creates a color buffer keeping an average color out of several
      * color samples per pixel.
      *
-     * @param integer $width  Width of the buffer in pixels.
-     * @param integer $samplesPerPixel  Number of samples to keep per pixel.
+     * @param int $width  Width of the buffer in pixels.
+     * @param int $samplesPerPixel  Number of samples to keep per pixel.
      */
-    public function __construct($width, $samplesPerPixel) 
+    public function __construct(int $width, int $samplesPerPixel) 
     {
-        $this->samples = array();
+        $this->samples = [];
         $this->samplesPerPixel = $samplesPerPixel;
 
         $this->pixelOffset = 0;
@@ -52,7 +52,7 @@ class SuperSampleBuffer
     /**
      * Rewinds the cursor to the beginning of the buffer.
      */
-    public function rewind() 
+    public function rewind(): void
     {
         $this->pixelOffset = 0;
         $this->subPixelOffset = 0;
@@ -61,7 +61,7 @@ class SuperSampleBuffer
     /**
      * Clears the samples in this buffer.
      */
-    public function clear() 
+    public function clear(): void
     {
         $this->pixelOffset = 0;
         $this->subPixelOffset = 0;
@@ -71,11 +71,11 @@ class SuperSampleBuffer
     /**
      * Writes the average color of each pixel to a specified color array.
      *
-     * @param array $colorData The average colors will be written to this 
+     * @param array<int> $colorData The average colors will be written to this 
      *      color array.
-     * @param integer $count  Number of pixels to write.
+     * @param int $count  Number of pixels to write.
      */
-    public function emptyTo(& $colorData, $count) 
+    public function emptyTo(array &$colorData, int $count): void
     {
         for ($i = 0; $i < $count; $i++) {
             $sampleCount = $this->samples[$i * 5 + self::IDX_COUNT];
@@ -100,10 +100,10 @@ class SuperSampleBuffer
     /**
      * Gets the average color of the pixel at a specified index.
      *
-     * @param integer $index The index of the pixel.
-     * @return integer
+     * @param int $index The index of the pixel.
+     * @return int
      */
-    public function colorAt($index) 
+    public function colorAt(int $index): int
     {
         $sampleCount = $this->samples[$index * 5 + self::IDX_COUNT];
         $alphaSum = $this->samples[$index * 5 + self::IDX_A];
@@ -119,10 +119,14 @@ class SuperSampleBuffer
     /**
      * Adds a color to the current pixel in the buffer.
      *
-     * @param integer $count Number of samples of the color to be added to 
+     * @param int $count Number of samples of the color to be added to 
      *      the buffer.
+     * @param int $a Alpha value.
+     * @param int $r Red value.
+     * @param int $g Green value.
+     * @param int $b Blue value.
      */
-    private function _add($count, $a, $r, $g, $b) 
+    private function _add(int $count, int $a, int $r, int $g, int $b): void
     {
         if ($this->used < $this->pixelOffset) {
             $this->used = $this->pixelOffset;
@@ -147,11 +151,11 @@ class SuperSampleBuffer
     /**
      * Adds a color to the buffer up until the specified x index.
      *
-     * @param integer $color Color to write.
-     * @param float $untilX Samples of the color will be added the buffer until 
+     * @param int $color Color to write.
+     * @param float $untilX Samples of the color will be added to the buffer until 
      *      the cursor reaches this coordinate.
      */
-    public function add($color, $untilX) 
+    public function add(int $color, float $untilX): void
     {
         $samplesLeft = 
             (int)($untilX * $this->samplesPerPixel) - 

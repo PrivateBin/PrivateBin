@@ -97,7 +97,7 @@ languageselection = false
 ; used to get the IP of a comment poster if the server salt is leaked and a
 ; SHA512 HMAC rainbow table is generated for all (relevant) IPs.
 ; Can be set to one these values:
-; "none" / "identicon" (default) / "jdenticon" / "vizhash".
+; "none" / "identicon" / "jdenticon" (default) / "vizhash".
 ; icon = "none"
 
 ; Content Security Policy headers allow a website to restrict what sources are

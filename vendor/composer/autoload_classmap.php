@@ -65,7 +65,6 @@ return array(
     'Jdenticon\\Shapes\\Shape' => $vendorDir . '/jdenticon/jdenticon/src/Shapes/Shape.php',
     'Jdenticon\\Shapes\\ShapeCategory' => $vendorDir . '/jdenticon/jdenticon/src/Shapes/ShapeCategory.php',
     'Jdenticon\\Shapes\\ShapeDefinitions' => $vendorDir . '/jdenticon/jdenticon/src/Shapes/ShapeDefinitions.php',
-    'Jdenticon\\Shapes\\ShapePosition' => $vendorDir . '/jdenticon/jdenticon/src/Shapes/ShapePosition.php',
     'PhpToken' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/PhpToken.php',
     'PrivateBin\\Configuration' => $baseDir . '/lib/Configuration.php',
     'PrivateBin\\Controller' => $baseDir . '/lib/Controller.php',

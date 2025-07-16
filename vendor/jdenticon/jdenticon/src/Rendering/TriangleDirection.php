@@ -3,7 +3,7 @@
  * This file is part of Jdenticon for PHP.
  * https://github.com/dmester/jdenticon-php/
  * 
- * Copyright (c) 2018 Daniel Mester Pirttijärvi
+ * Copyright (c) 2025 Daniel Mester Pirttijärvi
  * 
  * For full license information, please see the LICENSE file that was 
  * distributed with this source code.
@@ -19,17 +19,17 @@ class TriangleDirection
     /**
      * The 90 degree angle is pointing to South West.
      */
-    const SOUTH_WEST = 0;
+    public const SOUTH_WEST = 0;
     /**
      * The 90 degree angle is pointing to North West.
      */
-    const NORTH_WEST = 1;
+    public const NORTH_WEST = 1;
     /**
      * The 90 degree angle is pointing to North East.
      */ 
-    const NORTH_EAST = 2;
+    public const NORTH_EAST = 2;
     /**
      * The 90 degree angle is pointing to South East.
      */
-    const SOUTH_EAST = 3;
+    public const SOUTH_EAST = 3;
 }

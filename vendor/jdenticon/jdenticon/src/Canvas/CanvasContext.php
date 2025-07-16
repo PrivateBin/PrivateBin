@@ -3,7 +3,7 @@
  * This file is part of Jdenticon for PHP.
  * https://github.com/dmester/jdenticon-php/
  * 
- * Copyright (c) 2018 Daniel Mester Pirttijärvi
+ * Copyright (c) 2025 Daniel Mester Pirttijärvi
  * 
  * For full license information, please see the LICENSE file that was 
  * distributed with this source code.
@@ -12,26 +12,27 @@
 namespace Jdenticon\Canvas;
 
 use Jdenticon\Canvas\ColorUtils;
-use Jdenticon\Canvas\CanvasState;
 use Jdenticon\Canvas\Rasterization\EdgeTable;
 use Jdenticon\Canvas\Rasterization\Edge;
 use Jdenticon\Canvas\Matrix;
 
 class CanvasContext
 {
-    private $savedStates = array();
-    private $edges;
-    private $transform;
-    private $paths;
-    private $canvas;
+    /** @var array<string, array> */
+    private array $savedStates = [];
+    private EdgeTable $edges;
+    private Matrix $transform;
+    /** @var array<float> */
+    private array $paths;
+    private Canvas $canvas;
 
     /**
      * Creates a new canvas with the specified dimensions given in pixels.
      *
      * @param \Jdenticon\Canvas\Canvas $canvas The owner canvas.
-     * @param array $edges The owner canvas' edge buffer.
+     * @param \Jdenticon\Canvas\Rasterization\EdgeTable $edges The owner canvas' edge buffer.
      */
-    public function __construct($canvas, &$edges) 
+    public function __construct(Canvas $canvas, EdgeTable &$edges) 
     {
         $this->edges = $edges;
         $this->canvas = $canvas;
@@ -46,25 +47,25 @@ class CanvasContext
      * - strings on the format #RRGGBB
      * - strings on the format #RRGGBBAA
      *
-     * @var integer|string
+     * @var int|string
      */
     public $fillStyle = 0x000000ff;
 
     /**
      * Saves the current state to the state stack.
      */
-    public function save() 
+    public function save(): void
     {
-        array_push($this->savedStates, array(
+        array_push($this->savedStates, [
             'transform' => $this->transform,
             'fillStyle' => $this->fillStyle
-        ));
+        ]);
     }
 
     /**
      * Restores the last saved state of the CanvasContext.
      */
-    public function restore() 
+    public function restore(): void
     {
         $state = array_pop($this->savedStates);
         if ($state != NULL) {
@@ -76,7 +77,7 @@ class CanvasContext
     /**
      * Resets the internal path buffer and begins a new path.
      */
-    public function resetTransform() 
+    public function resetTransform(): void
     {
         $this->transform = new Matrix(1, 0, 0, 1, 0, 0);
     }
@@ -84,36 +85,16 @@ class CanvasContext
     /**
      * Multiplies the current transformation matrix with the specified values.
      */
-    public function transform($a, $b, $c, $d, $e, $f) 
+    public function transform(float $a, float $b, float $c, float $d, float $e, float $f): void
     {
-        if (gettype($a) != 'integer' ||
-            gettype($b) != 'integer' ||
-            gettype($c) != 'integer' ||
-            gettype($d) != 'integer' ||
-            gettype($e) != 'integer' ||
-            gettype($f) != 'integer'
-        ) {
-            return;
-        }
-
         $this->transform = $this->transform->multiply($a, $b, $c, $d, $e, $f);
     }
 
     /**
      * Sets the transformation matrix to the specified matrix.
      */
-    public function setTransform($a, $b, $c, $d, $e, $f) 
+    public function setTransform(float $a, float $b, float $c, float $d, float $e, float $f): void
     {
-        if (gettype($a) != 'integer' ||
-            gettype($b) != 'integer' ||
-            gettype($c) != 'integer' ||
-            gettype($d) != 'integer' ||
-            gettype($e) != 'integer' ||
-            gettype($f) != 'integer'
-        ) {
-            return;
-        }
-
         $this->transform = new Matrix($a, $b, $c, $d, $e, $f);
     }
 
@@ -123,7 +104,7 @@ class CanvasContext
      * @param float $x Distance to move in the horizontal direction in pixels.
      * @param float $y Distance to move in the vertical direction in pixels.
      */
-    public function translate($x, $y) 
+    public function translate(float $x, float $y): void
     {
         $this->transform = $this->transform->translate($x, $y);
     }
@@ -134,7 +115,7 @@ class CanvasContext
      * @param float $x Scale in the horizontal direction. 1 means no scale.
      * @param float $y Scale in the vertical direction. 1 means no scale.
      */
-    public function scale($x, $y) 
+    public function scale(float $x, float $y): void
     {
         $this->transform = $this->transform->scale($x, $y);
     }
@@ -142,10 +123,9 @@ class CanvasContext
     /**
      * Applies a rotation transformation to the canvas around its current origo.
      *
-     * @param float $angle  Angle in radians measured clockwise from the 
-     *      positive x axis.
+     * @param float $angle Angle in radians measured clockwise from the positive x axis.
      */
-    public function rotate($angle) 
+    public function rotate(float $angle): void
     {
         $this->transform = $this->transform->rotate($angle);
     }
@@ -153,16 +133,16 @@ class CanvasContext
     /**
      * Removes all existing subpaths and begins a new path.
      */
-    public function beginPath() 
+    public function beginPath(): void
     {
-        $this->paths = array();
+        $this->paths = [];
     }
 
     /**
      * Starts a new subpath that begins in the same point as the start and end 
      * point of the previous one.
      */
-    public function closePath() 
+    public function closePath(): void
     {
         $pathsCount = count($this->paths);
         if ($pathsCount > 0) {
@@ -179,7 +159,7 @@ class CanvasContext
                 }
 
                 // Begin a new path
-                $this->paths[] = array($path[0], $path[1]);
+                $this->paths[] = [$path[0], $path[1]];
             }
         }
     }
@@ -187,27 +167,26 @@ class CanvasContext
     /**
      * Begins a new subpath by moving the cursor to the specified position.
      *
-     * @param float $x  X coordinate.
-     * @param float $y  Y coordinate.
+     * @param float $x X coordinate.
+     * @param float $y Y coordinate.
      */
-    public function moveTo($x, $y) 
+    public function moveTo(float $x, float $y): void
     {
         $p = $this->transform->multiplyPoint($x, $y);
-        $this->paths[] = array($p->x, $p->y);
+        $this->paths[] = [$p->x, $p->y];
     }
 
     /**
      * Inserts an edge between the last and specified position.
      *
-     * @param float $x  Target X coordinate.
-     * @param float $y  Target Y coordinate.
-     * @public
+     * @param float $x Target X coordinate.
+     * @param float $y Target Y coordinate.
      */
-    public function lineTo($x, $y) 
+    public function lineTo(float $x, float $y): void
     {
         $pathsCount = count($this->paths);
         if ($pathsCount == 0) {
-            $this->paths[] = array();
+            $this->paths[] = [];
             $pathsCount++;
         }
 
@@ -227,10 +206,10 @@ class CanvasContext
      *       measured clockwise from the positive x axis.
      * @param float $endAngle  The angle in radians at which the arc end, 
      *       measured clockwise from the positive x axis.
-     * @param boolean $anticlockwise  Specifies whether the arc will be drawn 
+     * @param bool $anticlockwise  Specifies whether the arc will be drawn 
      *       counter clockwise. Default is clockwise.
      */
-    public function arc($x, $y, $radius, $startAngle, $endAngle, $anticlockwise) 
+    public function arc(float $x, float $y, float $radius, float $startAngle, float $endAngle, bool $anticlockwise): void
     {
         $TARGET_CHORD_LENGTH_PIXELS = 3;
         
@@ -269,8 +248,6 @@ class CanvasContext
             }
         }
         
-        $dx;
-        $dy;
         $sectors = ($endAngle - $startAngle) / $sectorAngle;
 
         $angle = $startAngle;
@@ -296,7 +273,7 @@ class CanvasContext
      * @param float $width Width of the rectangle.
      * @param float $height Height of the rectangle.
      */
-    public function clearRect($x, $y, $width, $height) 
+    public function clearRect(float $x, float $y, float $width, float $height): void
     {
         $fullCanvas = false;
 
@@ -330,23 +307,23 @@ class CanvasContext
      * @param float $width Width of the rectangle.
      * @param float $height Height of the rectangle.
      */
-    public function fillRect($x, $y, $width, $height) 
+    public function fillRect(float $x, float $y, float $width, float $height): void
     {
         $fillColor = ColorUtils::parse($this->fillStyle);
         $this->_fillRect($fillColor, $x, $y, $width, $height);
     }
 
-    private function _fillRect($fillColor, $x, $y, $width, $height) 
+    private function _fillRect(int $fillColor, float $x, float $y, float $width, float $height): void
     {
         $polygonId = $this->edges->getNextPolygonId();
         
-        $points = array(
+        $points = [
             $this->transform->multiplyPoint($x, $y),
             $this->transform->multiplyPoint($x + $width, $y),
             $this->transform->multiplyPoint($x + $width, $y + $height),
             $this->transform->multiplyPoint($x, $y + $height),
             $this->transform->multiplyPoint($x, $y)
-        );
+        ];
 
         $pointsCount = count($points);
         for ($i = 1; $i < $pointsCount; $i++) {
@@ -363,11 +340,11 @@ class CanvasContext
     /**
      * Fills the defined paths.
      *
-     * @param string $windingRule  The winding rule to be used for determining
+     * @param string $windingRule The winding rule to be used for determining
      *      which areas are covered by the current path. Valid values are 
      *      "evenodd" and "nonzero". Default is "nonzero".
      */
-    public function fill($windingRule = "nonzero") 
+    public function fill(string $windingRule = "nonzero"): void
     {
         $polygonId = $this->edges->getNextPolygonId();
         $fillColor = ColorUtils::parse($this->fillStyle);

@@ -3,7 +3,7 @@
  * This file is part of Jdenticon for PHP.
  * https://github.com/dmester/jdenticon-php/
  * 
- * Copyright (c) 2018 Daniel Mester Pirttijärvi
+ * Copyright (c) 2025 Daniel Mester Pirttijärvi
  * 
  * For full license information, please see the LICENSE file that was 
  * distributed with this source code.
@@ -12,6 +12,7 @@
 namespace Jdenticon\Shapes;
 
 use Jdenticon\Rendering\Point;
+use Jdenticon\Rendering\RendererInterface;
 use Jdenticon\Rendering\TriangleDirection;
 
 /**
@@ -19,16 +20,16 @@ use Jdenticon\Rendering\TriangleDirection;
  */
 class ShapeDefinitions
 {
-    private static $outerShapes;
-    private static $centerShapes;
-    
+    private static ?array $outerShapes = null;
+    private static ?array $centerShapes = null;
+
     /**
      * Gets an array of all possible outer shapes. Do not modify the returned
      * array.
      *
-     * @return array(\Jdenticon\Rendering\Shape)
+     * @return array<callable>
      */
-    public static function getOuterShapes()
+    public static function getOuterShapes(): array
     {
         if (self::$outerShapes === null) {
             self::$outerShapes = self::createOuterShapes();
@@ -40,9 +41,9 @@ class ShapeDefinitions
      * Gets an array of all possible center shapes. Do not modify the returned
      * array.
      *
-     * @return array(\Jdenticon\Rendering\Shape)
+     * @return array<callable>
      */
-    public static function getCenterShapes()
+    public static function getCenterShapes(): array
     {
         if (self::$centerShapes === null) {
             self::$centerShapes = self::createCenterShapes();
@@ -50,58 +51,60 @@ class ShapeDefinitions
         return self::$centerShapes;
     }
     
-    private static function createOuterShapes()
+    /**
+     * Creates an array of outer shape definitions.
+     *
+     * @return array<callable>
+     */
+    private static function createOuterShapes(): array
     {
-        return array(
-            function ($renderer, $cell, $index)
-            {
+        return [
+            function (RendererInterface $renderer, int $cell, int $index): void {
                 $renderer->addTriangle(0, 0, $cell, $cell, 0);
             },
-            function ($renderer, $cell, $index)
-            {
+            function (RendererInterface $renderer, int $cell, int $index): void {
                 $renderer->addTriangle(0, $cell / 2, $cell, $cell / 2, 0);
             },
-            function ($renderer, $cell, $index)
-            {
+            function (RendererInterface $renderer, int $cell, int $index): void {
                 $renderer->addRhombus(0, 0, $cell, $cell);
             },
-            function ($renderer, $cell, $index)
-            {
+            function (RendererInterface $renderer, int $cell, int $index): void {
                 $m = $cell / 6;
                 $renderer->addCircle($m, $m, $cell - 2 * $m);
             }
-        );
+        ];
     }
     
-    private static function createCenterShapes()
+    /**
+     * Creates an array of center shape definitions.
+     *
+     * @return array<callable>
+     */
+    private static function createCenterShapes(): array
     {
-        return array(
-            function ($renderer, $cell, $index)
-            {
+        return [
+            function (RendererInterface $renderer, int $cell, int $index): void {
                 $k = $cell * 0.42;
-                $renderer->addPolygon(array(
+                $renderer->addPolygon([
                     new Point(0, 0),
                     new Point($cell, 0),
                     new Point($cell, $cell - $k * 2),
                     new Point($cell - $k, $cell),
                     new Point(0, $cell)
-                ));
+                ]);
             },
-            function ($renderer, $cell, $index)
-            {
+            function (RendererInterface $renderer, int $cell, int $index): void {
                 $w = (int)($cell * 0.5);
                 $h = (int)($cell * 0.8);
                 $renderer->addTriangle(
                     $cell - $w, 0, $w, $h, 
                     TriangleDirection::NORTH_EAST);
             },
-            function ($renderer, $cell, $index)
-            {
+            function (RendererInterface $renderer, int $cell, int $index): void {
                 $s = (int)($cell / 3);
                 $renderer->addRectangle($s, $s, $cell - $s, $cell - $s);
             },
-            function ($renderer, $cell, $index)
-            {
+            function (RendererInterface $renderer, int $cell, int $index): void {
                 $tmp = $cell * 0.1;
 
                 if ($tmp > 1) {
@@ -129,14 +132,12 @@ class ShapeDefinitions
                     $outer, $outer, 
                     $cell - $inner - $outer, $cell - $inner - $outer);
             },
-            function ($renderer, $cell, $index)
-            {
+            function (RendererInterface $renderer, int $cell, int $index): void {
                 $m = (int)($cell * 0.15);
                 $s = (int)($cell * 0.5);
                 $renderer->addCircle($cell - $s - $m, $cell - $s - $m, $s);
             },
-            function ($renderer, $cell, $index)
-            {
+            function (RendererInterface $renderer, int $cell, int $index): void {
                 $inner = $cell * 0.1;
                 $outer = $inner * 4;
                 
@@ -146,42 +147,38 @@ class ShapeDefinitions
                 }
 
                 $renderer->addRectangle(0, 0, $cell, $cell);
-                $renderer->addPolygon(array(
+                $renderer->addPolygon([
                     new Point($outer, $outer),
                     new Point($cell - $inner, $outer),
                     new Point($outer + ($cell - $outer - $inner) / 2, 
                         $cell - $inner)
-                ), true);
+                ], true);
             },
-            function ($renderer, $cell, $index)
-            {
-                $renderer->addPolygon(array(
+            function (RendererInterface $renderer, int $cell, int $index): void {
+                $renderer->addPolygon([
                     new Point(0, 0),
                     new Point($cell, 0),
                     new Point($cell, $cell * 0.7),
                     new Point($cell * 0.4, $cell * 0.4),
                     new Point($cell * 0.7, $cell),
                     new Point(0, $cell)
-                ));
+                ]);
             },
-            function ($renderer, $cell, $index)
-            {
+            function (RendererInterface $renderer, int $cell, int $index): void {
                 $renderer->addTriangle(
                     $cell / 2, $cell / 2, $cell / 2, $cell / 2, 
                     TriangleDirection::SOUTH_EAST);
             },
-            function ($renderer, $cell, $index)
-            {
-                $renderer->addPolygon(array(
+            function (RendererInterface $renderer, int $cell, int $index): void {
+                $renderer->addPolygon([
                     new Point(0, 0),
                     new Point($cell, 0),
                     new Point($cell, $cell / 2),
                     new Point($cell / 2, $cell),
                     new Point(0, $cell)
-                ));
+                ]);
             },
-            function ($renderer, $cell, $index)
-            {
+            function (RendererInterface $renderer, int $cell, int $index): void {
                 $tmp = $cell * 0.14;
                 
                 if ($cell < 8) {
@@ -207,8 +204,7 @@ class ShapeDefinitions
                     $outer, $outer, 
                     $cell - $outer - $inner, $cell - $outer - $inner, true);
             },
-            function ($renderer, $cell, $index)
-            {
+            function (RendererInterface $renderer, int $cell, int $index): void {
                 $inner = $cell * 0.12;
                 $outer = $inner * 3;
 
@@ -216,21 +212,18 @@ class ShapeDefinitions
                 $renderer->addCircle($outer, $outer, $cell - $inner - $outer, 
                     true);
             },
-            function ($renderer, $cell, $index)
-            {
+            function (RendererInterface $renderer, int $cell, int $index): void {
                 $renderer->addTriangle(
                     $cell / 2, $cell / 2, $cell / 2, $cell / 2, 
                     TriangleDirection::SOUTH_EAST);
             },
-            function ($renderer, $cell, $index)
-            {
+            function (RendererInterface $renderer, int $cell, int $index): void {
                 $m = $cell * 0.25;
 
                 $renderer->addRectangle(0, 0, $cell, $cell);
                 $renderer->addRhombus($m, $m, $cell - $m, $cell - $m, true);
             },
-            function ($renderer, $cell, $index)
-            {
+            function (RendererInterface $renderer, int $cell, int $index): void {
                 $m = $cell * 0.4;
                 $s = $cell * 1.2;
 
@@ -238,6 +231,6 @@ class ShapeDefinitions
                     $renderer->addCircle($m, $m, $s);
                 }
             }
-        );
+        ];
     }
 }

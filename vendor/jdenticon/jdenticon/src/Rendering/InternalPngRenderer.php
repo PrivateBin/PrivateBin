@@ -3,7 +3,7 @@
  * This file is part of Jdenticon for PHP.
  * https://github.com/dmester/jdenticon-php/
  * 
- * Copyright (c) 2018 Daniel Mester Pirttijärvi
+ * Copyright (c) 2025 Daniel Mester Pirttijärvi
  * 
  * For full license information, please see the LICENSE file that was 
  * distributed with this source code.
@@ -12,14 +12,16 @@
 namespace Jdenticon\Rendering;
 
 use Jdenticon\Canvas\Canvas;
+use Jdenticon\Canvas\CanvasContext;
+use Jdenticon\Color;
 
 /**
  * Renders icons as PNG using the internal vector rasterizer.
  */
 class InternalPngRenderer extends AbstractRenderer
 {
-    private $canvas;
-    private $ctx;
+    private Canvas $canvas;
+    private CanvasContext $ctx;
 
     /**
      * Creates an instance of the class ImagickRenderer.
@@ -27,7 +29,7 @@ class InternalPngRenderer extends AbstractRenderer
      * @param int $width  The width of the icon in pixels.
      * @param int $height  The height of the icon in pixels.
      */
-    public function __construct($width, $height)
+    public function __construct(int $width, int $height)
     {
         parent::__construct();
         $this->canvas = new Canvas($width, $height);
@@ -39,7 +41,7 @@ class InternalPngRenderer extends AbstractRenderer
      *
      * @return string
      */
-    public function getMimeType()
+    public function getMimeType(): string
     {
         return 'image/png';
     }
@@ -55,7 +57,7 @@ class InternalPngRenderer extends AbstractRenderer
      * @param bool $counterClockwise  If true the circle will be drawn 
      *      counter clockwise.
      */
-    protected function addCircleNoTransform($x, $y, $size, $counterClockwise)
+    protected function addCircleNoTransform(float $x, float $y, float $size, bool $counterClockwise): void
     {
         $radius = $size / 2;
         $this->ctx->moveTo($x + $size, $y + $radius);
@@ -69,9 +71,9 @@ class InternalPngRenderer extends AbstractRenderer
     /**
      * Adds a polygon without translating its coordinates.
      *
-     * @param array $points  An array of the points that the polygon consists of.
+     * @param array<Point> $points  An array of the points that the polygon consists of.
      */
-    protected function addPolygonNoTransform($points)
+    protected function addPolygonNoTransform(array $points): void
     {
         $pointCount = count($points);
         $this->ctx->moveTo($points[0]->x, $points[0]->y);
@@ -86,7 +88,7 @@ class InternalPngRenderer extends AbstractRenderer
      *
      * @param \Jdenticon\Color $color  The background color.
      */
-    public function setBackgroundColor(\Jdenticon\Color $color)
+    public function setBackgroundColor(Color $color): void
     {
         parent::setBackgroundColor($color);
         $this->canvas->backColor = $this->backgroundColor->toRgba();
@@ -97,7 +99,7 @@ class InternalPngRenderer extends AbstractRenderer
      *
      * @param \Jdenticon\Color $color  The color of the shape.
      */
-    public function beginShape(\Jdenticon\Color $color)
+    public function beginShape(Color $color): void
     {
         $this->ctx->fillStyle = $color->toRgba();
         $this->ctx->beginPath();
@@ -106,7 +108,7 @@ class InternalPngRenderer extends AbstractRenderer
     /**
      * Ends the currently drawn shape.
      */
-    public function endShape()
+    public function endShape(): void
     {
         $this->ctx->fill();
     }
@@ -116,8 +118,8 @@ class InternalPngRenderer extends AbstractRenderer
      *
      * @return string
      */
-    public function getData()
+    public function getData(): string
     {
-        return $this->canvas->toPng(array('Software' => 'Jdenticon'));
+        return $this->canvas->toPng(['Software' => 'Jdenticon']);
     }
 }

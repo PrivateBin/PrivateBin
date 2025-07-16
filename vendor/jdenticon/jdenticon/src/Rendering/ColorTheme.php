@@ -3,7 +3,7 @@
  * This file is part of Jdenticon for PHP.
  * https://github.com/dmester/jdenticon-php/
  * 
- * Copyright (c) 2018 Daniel Mester Pirttijärvi
+ * Copyright (c) 2025 Daniel Mester Pirttijärvi
  * 
  * For full license information, please see the LICENSE file that was 
  * distributed with this source code.
@@ -12,17 +12,18 @@
 namespace Jdenticon\Rendering;
 
 use Jdenticon\Color;
+use Jdenticon\IdenticonStyle;
 
 /**
  * Specifies the colors to be used in an identicon.
  */
 class ColorTheme
 {
-    private $darkGray;
-    private $midColor;
-    private $lightGray;
-    private $lightColor;
-    private $darkColor;
+    private Color $darkGray;
+    private Color $midColor;
+    private Color $lightGray;
+    private Color $lightColor;
+    private Color $darkColor;
     
     /**
      * Creates a new ColorTheme.
@@ -31,7 +32,7 @@ class ColorTheme
      * @param \Jdenticon\IdenticonStyle $style The style that specifies the 
      *      lightness and saturation of the icon.
      */
-    public function __construct($hue, \Jdenticon\IdenticonStyle $style)
+    public function __construct(float $hue, IdenticonStyle $style)
     {
         $grayscaleLightness = $style->getGrayscaleLightness();
         $colorLightness = $style->getColorLightness();
@@ -60,9 +61,9 @@ class ColorTheme
      * Gets a color from this color theme by index.
      *
      * @param int $index Color index in the range [0, getCount()).
-     * @return Jdenticon\Color
+     * @return \Jdenticon\Color|null
      */
-    public function getByIndex($index)
+    public function getByIndex(int $index): ?Color
     {
         if ($index === 0) return $this->darkGray;
         if ($index === 1) return $this->midColor;
@@ -77,7 +78,7 @@ class ColorTheme
      *
      * @return int
      */
-    public function getCount() 
+    public function getCount(): int
     {
         return 5;
     }
