@@ -188,6 +188,7 @@ class Database extends AbstractData
                 )
             );
         } catch (Exception $e) {
+            error_log('Error while attempting to insert a paste into the database: ' . $e->getMessage() . PHP_EOL);
             return false;
         }
     }
@@ -333,6 +334,7 @@ class Database extends AbstractData
                 )
             );
         } catch (Exception $e) {
+            error_log('Error while attempting to insert a comment into the database: ' . $e->getMessage() . PHP_EOL);
             return false;
         }
     }
@@ -915,8 +917,12 @@ class Database extends AbstractData
                 try {
                     $row                = $this->_select('SELECT sqlite_version() AS "v"', array(), true);
                     $supportsDropColumn = version_compare($row['v'], '3.35.0', '>=');
+                    if (!$supportsDropColumn) {
+                        error_log('Error: the available SQLite version (' . $row['v'] . ') does not support dropping columns. SQLite version 3.35.0 or later is necessary. The migration will not be fully complete, and you will need to delete the "postdate" column of the "paste" table yourself!');
+                    }
                 } catch (PDOException $e) {
                     $supportsDropColumn = false;
+                    error_log('Error while checking the SQLite version. The migration will not be fully complete, and you will need to delete the "postdate" column of the "paste" table yourself!');
                 }
             }
             if ($supportsDropColumn) {
