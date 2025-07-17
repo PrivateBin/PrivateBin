@@ -456,6 +456,7 @@ class Filesystem extends AbstractData
                 self::PROTECTION_LINE . PHP_EOL . Json::encode($data)
             );
         } catch (Exception $e) {
+            error_log('Error while trying to store data to the filesystem at path "' . $filename . '": ' . $e->getMessage());
             return false;
         }
     }

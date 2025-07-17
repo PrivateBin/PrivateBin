@@ -111,16 +111,20 @@ class FilesystemTest extends TestCase
 
     public function testErrorDetection()
     {
+        $error_log_setting = ini_get('error_log');
         $this->_model->delete(Helper::getPasteId());
         $paste = Helper::getPaste(array('expire' => "Invalid UTF-8 sequence: \xB1\x31"));
         $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste does not yet exist');
+        ini_set('error_log', '/dev/null');
         $this->assertFalse($this->_model->create(Helper::getPasteId(), $paste), 'unable to store broken paste');
+        ini_set('error_log', $error_log_setting);
         $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste does still not exist');
         $this->assertFalse($this->_model->setValue('foo', 'non existing namespace'), 'rejects setting value in non existing namespace');
     }
 
     public function testCommentErrorDetection()
     {
+        $error_log_setting = ini_get('error_log');
         $this->_model->delete(Helper::getPasteId());
         $data    = Helper::getPaste();
         $comment = Helper::getComment(array('icon' => "Invalid UTF-8 sequence: \xB1\x31"));
@@ -128,7 +132,9 @@ class FilesystemTest extends TestCase
         $this->assertTrue($this->_model->create(Helper::getPasteId(), $data), 'store new paste');
         $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste exists after storing it');
         $this->assertFalse($this->_model->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId()), 'comment does not yet exist');
+        ini_set('error_log', '/dev/null');
         $this->assertFalse($this->_model->createComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId(), $comment), 'unable to store broken comment');
+        ini_set('error_log', $error_log_setting);
         $this->assertFalse($this->_model->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId()), 'comment does still not exist');
     }
 

@@ -160,6 +160,7 @@ class Database extends AbstractData
                 )
             );
         } catch (Exception $e) {
+            error_log('Error while attempting to insert a paste into the database: ' . $e->getMessage());
             return false;
         }
     }
@@ -253,6 +254,7 @@ class Database extends AbstractData
         try {
             $data = Json::encode($comment);
         } catch (Exception $e) {
+            error_log('Error while attempting to insert a comment into the database: ' . $e->getMessage());
             return false;
         }
         $meta = $comment['meta'];
@@ -273,6 +275,7 @@ class Database extends AbstractData
                 )
             );
         } catch (Exception $e) {
+            error_log('Error while attempting to insert a comment into the database: ' . $e->getMessage());
             return false;
         }
     }

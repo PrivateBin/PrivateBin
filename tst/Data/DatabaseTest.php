@@ -49,6 +49,7 @@ class DatabaseTest extends TestCase
 
     public function testDatabaseBasedDataStoreWorks()
     {
+        $error_log_setting = ini_get('error_log');
         $this->_model->delete(Helper::getPasteId());
 
         // storing pastes
@@ -56,7 +57,9 @@ class DatabaseTest extends TestCase
         $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste does not yet exist');
         $this->assertTrue($this->_model->create(Helper::getPasteId(), $paste), 'store new paste');
         $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste exists after storing it');
+        ini_set('error_log', '/dev/null');
         $this->assertFalse($this->_model->create(Helper::getPasteId(), $paste), 'unable to store the same paste twice');
+        ini_set('error_log', $error_log_setting);
         $this->assertEquals($paste, $this->_model->read(Helper::getPasteId()));
 
         // storing comments
@@ -93,13 +96,16 @@ class DatabaseTest extends TestCase
 
     public function testDatabaseBasedAttachmentStoreWorks()
     {
+        $error_log_setting = ini_get('error_log');
         $this->_model->delete(Helper::getPasteId());
         $original                          = $paste                                = Helper::getPaste(array('expire_date' => 1344803344));
         $paste['meta']['burnafterreading'] = $original['meta']['burnafterreading'] = true;
         $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste does not yet exist');
         $this->assertTrue($this->_model->create(Helper::getPasteId(), $paste), 'store new paste');
         $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste exists after storing it');
+        ini_set('error_log', '/dev/null');
         $this->assertFalse($this->_model->create(Helper::getPasteId(), $paste), 'unable to store the same paste twice');
+        ini_set('error_log', $error_log_setting);
         $this->assertEquals($original, $this->_model->read(Helper::getPasteId()));
     }
 
@@ -140,15 +146,19 @@ class DatabaseTest extends TestCase
 
     public function testErrorDetection()
     {
+        $error_log_setting = ini_get('error_log');
         $this->_model->delete(Helper::getPasteId());
         $paste = Helper::getPaste(array('expire' => "Invalid UTF-8 sequence: \xB1\x31"));
         $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste does not yet exist');
+        ini_set('error_log', '/dev/null');
         $this->assertFalse($this->_model->create(Helper::getPasteId(), $paste), 'unable to store broken paste');
+        ini_set('error_log', $error_log_setting);
         $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste does still not exist');
     }
 
     public function testCommentErrorDetection()
     {
+        $error_log_setting = ini_get('error_log');
         $this->_model->delete(Helper::getPasteId());
         $data    = Helper::getPaste();
         $comment = Helper::getComment(array('icon' => "Invalid UTF-8 sequence: \xB1\x31"));
@@ -156,7 +166,9 @@ class DatabaseTest extends TestCase
         $this->assertTrue($this->_model->create(Helper::getPasteId(), $data), 'store new paste');
         $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste exists after storing it');
         $this->assertFalse($this->_model->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId()), 'comment does not yet exist');
+        ini_set('error_log', '/dev/null');
         $this->assertFalse($this->_model->createComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId(), $comment), 'unable to store broken comment');
+        ini_set('error_log', $error_log_setting);
         $this->assertFalse($this->_model->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId()), 'comment does still not exist');
     }
 
