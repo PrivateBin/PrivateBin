@@ -1,6 +1,7 @@
 # PrivateBin version history
 
 ## 2.0.0 (not yet released)
+* ADDED: Error logging in database and filesystem backend (#1554)
 * CHANGED: Remove page template (#265)
 * CHANGED: Jdenticons are now used as the default icons
 * CHANGED: Upgrading libraries to: jdenticon 2.0.0
