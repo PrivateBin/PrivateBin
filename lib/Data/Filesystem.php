@@ -229,9 +229,7 @@ class Filesystem extends AbstractData
                     // Store in array
                     $key            = $this->getOpenSlot(
                         $comments,
-                        (int) array_key_exists('created', $comment['meta']) ?
-                        $comment['meta']['created'] : // v2 comments
-                        $comment['meta']['postdate']  // v1 comments
+                        $comment['meta']['created']
                     );
                     $comments[$key] = $comment;
                 }

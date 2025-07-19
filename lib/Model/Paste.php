@@ -68,10 +68,8 @@ class Paste extends AbstractModel
             $data['meta']['time_to_live'] = $data['meta']['expire_date'] - $now;
             unset($data['meta']['expire_date']);
         }
-        foreach (array('created', 'postdate') as $key) {
-            if (array_key_exists($key, $data['meta'])) {
-                unset($data['meta'][$key]);
-            }
+        if (array_key_exists('created', $data['meta'])) {
+            unset($data['meta']['created']);
         }
 
         // check if non-expired burn after reading paste needs to be deleted
@@ -188,10 +186,8 @@ class Paste extends AbstractModel
             return $this->_store->readComments($this->getId());
         }
         return array_map(function ($comment) {
-            foreach (array('created', 'postdate') as $key) {
-                if (array_key_exists($key, $comment['meta'])) {
-                    unset($comment['meta'][$key]);
-                }
+            if (array_key_exists('created', $comment['meta'])) {
+                unset($comment['meta']['created']);
             }
             return $comment;
         }, $this->_store->readComments($this->getId()));

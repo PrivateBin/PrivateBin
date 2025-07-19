@@ -67,12 +67,12 @@ class DatabaseTest extends TestCase
         $comment2             = Helper::getComment();
         $meta1                = $comment1['meta'];
         $meta2                = $comment2['meta'];
-        $this->assertFalse($this->_model->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId()), 'v1 comment does not yet exist');
-        $this->assertTrue($this->_model->createComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId(), $comment1) !== false, 'store v1 comment');
-        $this->assertTrue($this->_model->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId()), 'v1 comment exists after storing it');
-        $this->assertFalse($this->_model->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getPasteId()), 'v2 comment does not yet exist');
-        $this->assertTrue($this->_model->createComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getPasteId(), $comment2) !== false, 'store v2 comment');
-        $this->assertTrue($this->_model->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getPasteId()), 'v2 comment exists after storing it');
+        $this->assertFalse($this->_model->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId()), 'comment 1 does not yet exist');
+        $this->assertTrue($this->_model->createComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId(), $comment1) !== false, 'store comment 1');
+        $this->assertTrue($this->_model->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId()), 'comment 2 exists after storing it');
+        $this->assertFalse($this->_model->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getPasteId()), 'comment 2 does not yet exist');
+        $this->assertTrue($this->_model->createComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getPasteId(), $comment2) !== false, 'store comment 2');
+        $this->assertTrue($this->_model->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getPasteId()), 'comment 2 exists after storing it');
         $comment1['id']       = Helper::getCommentId();
         $comment1['parentid'] = Helper::getPasteId();
         $comment1['meta']     = $meta1;
