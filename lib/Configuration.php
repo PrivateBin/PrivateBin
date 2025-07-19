@@ -46,7 +46,7 @@ class Configuration
             'syntaxhighlightingtheme'  => '',
             'sizelimit'                => 10485760,
             'templateselection'        => false,
-            'template'                 => 'bootstrap',
+            'template'                 => 'bootstrap5',
             'availabletemplates'       => array(
                 'bootstrap5',
                 'bootstrap',
