@@ -20,7 +20,7 @@ build:
             version: 8.2
     tests:
         override:
-            -   command: 'composer require google/cloud-storage && cd tst && ../vendor/bin/phpunit'
+            -   command: 'composer require google/cloud-storage && cd tst && XDEBUG_MODE=coverage ../vendor/bin/phpunit'
                 coverage:
                     file: 'tst/log/coverage-clover.xml'
                     format: 'clover'
