@@ -42,7 +42,7 @@ defaultformatter = "plaintext"
 ; size limit per paste or comment in bytes, defaults to 10 Mebibytes
 sizelimit = 10485760
 
-; by default PrivateBin use "bootstrap" template (tpl/bootstrap.php).
+; by default PrivateBin use "bootstrap5" template (tpl/bootstrap5.php).
 ; Optionally you can enable the template selection menu, which uses
 ; a session cookie to store the choice until the browser is closed.
 templateselection = false
@@ -56,12 +56,12 @@ availabletemplates[] = "bootstrap-dark-page"
 availabletemplates[] = "bootstrap-compact"
 availabletemplates[] = "bootstrap-compact-page"
 
-; set the template your installs defaults to, defaults to "bootstrap" (tpl/bootstrap.php), also
-; bootstrap variants: "bootstrap-dark", "bootstrap-compact", "bootstrap-page",
+; set the template your installs defaults to, defaults to "bootstrap5" (tpl/bootstrap5.php), also
+; bootstrap template (tpl/bootstrap.php) and it's variants: "bootstrap-dark", "bootstrap-compact", "bootstrap-page",
 ; which can be combined with "-dark" and "-compact" for "bootstrap-dark-page",
-; "bootstrap-compact-page" and finally "bootstrap5" (tpl/bootstrap5.php) - previews at:
+; "bootstrap-compact-page" - previews at:
 ; https://privatebin.info/screenshots.html
-; template = "bootstrap"
+; template = "bootstrap5"
 
 ; (optional) info text to display
 ; use single, instead of double quotes for HTML attributes
