@@ -62,13 +62,13 @@ class GoogleCloudStorage extends AbstractData
         if (getenv('PRIVATEBIN_GCS_BUCKET')) {
             $bucket = getenv('PRIVATEBIN_GCS_BUCKET');
         }
-        if (is_array($options) && array_key_exists('bucket', $options)) {
+        if (array_key_exists('bucket', $options)) {
             $bucket = $options['bucket'];
         }
-        if (is_array($options) && array_key_exists('prefix', $options)) {
+        if (array_key_exists('prefix', $options)) {
             $this->_prefix = $options['prefix'];
         }
-        if (is_array($options) && array_key_exists('uniformacl', $options)) {
+        if (array_key_exists('uniformacl', $options)) {
             $this->_uniformacl = $options['uniformacl'];
         }
 

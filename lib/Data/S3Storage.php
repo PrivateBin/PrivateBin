@@ -81,33 +81,31 @@ class S3Storage extends AbstractData
      */
     public function __construct(array $options)
     {
-        if (is_array($options)) {
-            // AWS SDK will try to load credentials from environment if credentials are not passed via configuration
-            // ref: https://docs.aws.amazon.com/sdk-for-php/v3/developer-guide/guide_credentials.html#default-credential-chain
-            if (isset($options['accesskey']) && isset($options['secretkey'])) {
-                $this->_options['credentials'] = array();
+        // AWS SDK will try to load credentials from environment if credentials are not passed via configuration
+        // ref: https://docs.aws.amazon.com/sdk-for-php/v3/developer-guide/guide_credentials.html#default-credential-chain
+        if (isset($options['accesskey']) && isset($options['secretkey'])) {
+            $this->_options['credentials'] = array();
 
-                $this->_options['credentials']['key']    = $options['accesskey'];
-                $this->_options['credentials']['secret'] = $options['secretkey'];
-            }
-            if (array_key_exists('region', $options)) {
-                $this->_options['region'] = $options['region'];
-            }
-            if (array_key_exists('version', $options)) {
-                $this->_options['version'] = $options['version'];
-            }
-            if (array_key_exists('endpoint', $options)) {
-                $this->_options['endpoint'] = $options['endpoint'];
-            }
-            if (array_key_exists('use_path_style_endpoint', $options)) {
-                $this->_options['use_path_style_endpoint'] = filter_var($options['use_path_style_endpoint'], FILTER_VALIDATE_BOOLEAN);
-            }
-            if (array_key_exists('bucket', $options)) {
-                $this->_bucket = $options['bucket'];
-            }
-            if (array_key_exists('prefix', $options)) {
-                $this->_prefix = $options['prefix'];
-            }
+            $this->_options['credentials']['key']    = $options['accesskey'];
+            $this->_options['credentials']['secret'] = $options['secretkey'];
+        }
+        if (array_key_exists('region', $options)) {
+            $this->_options['region'] = $options['region'];
+        }
+        if (array_key_exists('version', $options)) {
+            $this->_options['version'] = $options['version'];
+        }
+        if (array_key_exists('endpoint', $options)) {
+            $this->_options['endpoint'] = $options['endpoint'];
+        }
+        if (array_key_exists('use_path_style_endpoint', $options)) {
+            $this->_options['use_path_style_endpoint'] = filter_var($options['use_path_style_endpoint'], FILTER_VALIDATE_BOOLEAN);
+        }
+        if (array_key_exists('bucket', $options)) {
+            $this->_bucket = $options['bucket'];
+        }
+        if (array_key_exists('prefix', $options)) {
+            $this->_prefix = $options['prefix'];
         }
 
         $this->_client = new S3Client($this->_options);
@@ -285,7 +283,8 @@ class S3Storage extends AbstractData
                     'Bucket' => $this->_bucket,
                     'Key'    => $entry['Key'],
                 ));
-                $body             = JSON::decode($object['Body']->getContents());
+                $data             = $object['Body']->getContents();
+                $body             = JSON::decode($data);
                 $items            = explode('/', $entry['Key']);
                 $body['id']       = $items[3];
                 $body['parentid'] = $items[2];

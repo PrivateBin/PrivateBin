@@ -69,10 +69,7 @@ class Filesystem extends AbstractData
     public function __construct(array $options)
     {
         // if given update the data directory
-        if (
-            is_array($options) &&
-            array_key_exists('dir', $options)
-        ) {
+        if (array_key_exists('dir', $options)) {
             $this->_path = $options['dir'];
         }
     }
@@ -315,7 +312,7 @@ class Filesystem extends AbstractData
                 $file = $this->_path . DIRECTORY_SEPARATOR . 'salt.php';
                 if (is_readable($file)) {
                     $items = explode('|', file_get_contents($file));
-                    if (is_array($items) && count($items) == 3) {
+                    if (count($items) == 3) {
                         return $items[1];
                     }
                 }
@@ -505,7 +502,7 @@ class Filesystem extends AbstractData
         if ($fileCreated === false || $writtenBytes === false || $writtenBytes < strlen($data)) {
             return false;
         }
-        @chmod($filename, 0640); // protect file from access by other users on the host
+        chmod($filename, 0640); // protect file from access by other users on the host
         return true;
     }
 

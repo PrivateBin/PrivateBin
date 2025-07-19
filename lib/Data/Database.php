@@ -296,7 +296,7 @@ class Database extends AbstractData
 
         // create comment list
         $comments = array();
-        if (is_array($rows) && count($rows)) {
+        if (count($rows)) {
             foreach ($rows as $row) {
                 $i                          = $this->getOpenSlot($comments, (int) $row['postdate']);
                 $comments[$i]               = Json::decode($row['data']);
@@ -386,7 +386,7 @@ class Database extends AbstractData
                 $fs    = new Filesystem(array('dir' => 'data'));
                 $value = $fs->getValue('salt');
                 $this->setValue($value, 'salt');
-                @unlink($file);
+                unlink($file);
                 return $value;
             }
         }
@@ -467,7 +467,7 @@ class Database extends AbstractData
      * @param  array $params
      * @param  bool $firstOnly if only the first row should be returned
      * @throws PDOException
-     * @return array|false
+     * @return array
      */
     private function _select($sql, array $params, $firstOnly = false)
     {
@@ -475,6 +475,10 @@ class Database extends AbstractData
         $statement->execute($params);
         if ($firstOnly) {
             $result = $statement->fetch(PDO::FETCH_ASSOC);
+            if ($this->_type === 'oci' && is_array($result)) {
+                // returned CLOB values are streams, convert these into strings
+                $result = array_map('PrivateBin\Data\Database::_sanitizeClob', $result);
+            }
         } elseif ($this->_type === 'oci') {
             // workaround for https://bugs.php.net/bug.php?id=46728
             $result = array();
@@ -485,12 +489,6 @@ class Database extends AbstractData
             $result = $statement->fetchAll(PDO::FETCH_ASSOC);
         }
         $statement->closeCursor();
-        if ($this->_type === 'oci' && is_array($result)) {
-            // returned CLOB values are streams, convert these into strings
-            $result = $firstOnly ?
-                array_map('PrivateBin\Data\Database::_sanitizeClob', $result) :
-                $result;
-        }
         return $result;
     }
 
@@ -763,7 +761,7 @@ class Database extends AbstractData
         if ($this->_type === 'sqlite') {
             try {
                 $row                = $this->_select('SELECT sqlite_version() AS "v"', array(), true);
-                $supportsDropColumn = version_compare($row['v'], '3.35.0', '>=');
+                $supportsDropColumn = (bool) version_compare($row['v'], '3.35.0', '>=');
             } catch (PDOException $e) {
                 $supportsDropColumn = false;
             }

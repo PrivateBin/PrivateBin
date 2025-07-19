@@ -93,6 +93,9 @@ class Vizhash16x16
 
         // Then use these integers to drive the creation of an image.
         $image = imagecreatetruecolor($this->width, $this->height);
+        if ($image === false) {
+            return '';
+        }
 
         $r = $r0 = $this->getInt();
         $g = $g0 = $this->getInt();
