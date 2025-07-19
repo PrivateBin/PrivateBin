@@ -9,6 +9,7 @@ class GoogleCloudStorageTest extends TestCase
 {
     private static $_client;
     private static $_bucket;
+    private $_model;
 
     public static function setUpBeforeClass(): void
     {
