@@ -17,7 +17,7 @@ coding_style:
 build:
     environment:
         php:
-            version: 8.3
+            version: 8.2
     tests:
         override:
             -   command: 'composer require google/cloud-storage && cd tst && ../vendor/bin/phpunit'
