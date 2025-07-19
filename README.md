@@ -12,9 +12,7 @@ Data is encrypted and decrypted in the browser using 256bit AES in
 This is a fork of ZeroBin, originally developed by
 [Sébastien Sauvage](https://github.com/sebsauvage/ZeroBin). PrivateBin was
 refactored to allow easier and cleaner extensions and has many additional
-features. It is, however, still fully compatible to the original ZeroBin 0.19
-data storage scheme. Therefore, such installations can be upgraded to PrivateBin
-without losing any data.
+features.
 
 ## What PrivateBin provides
 

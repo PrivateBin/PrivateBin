@@ -32,15 +32,9 @@ if ($QRCODE) :
 		<?php $this->_scriptTag('js/kjua-0.9.0.js', 'async'); ?>
 <?php
 endif;
-if ($ZEROBINCOMPATIBILITY) :
-?>
-		<?php $this->_scriptTag('js/base64-1.7.js', 'defer'); ?>
-<?php
-endif;
 ?>
 		<?php $this->_scriptTag('js/zlib-1.3.1-1.js', 'defer'); ?>
 		<?php $this->_scriptTag('js/base-x-4.0.0.js', 'defer'); ?>
-		<?php $this->_scriptTag('js/rawinflate-0.3.js', 'defer'); ?>
 		<?php $this->_scriptTag('js/bootstrap-5.3.3.js', 'async'); ?>
 		<?php $this->_scriptTag('js/dark-mode-switch.js', 'defer'); ?>
 <?php

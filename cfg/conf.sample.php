@@ -124,11 +124,6 @@ languageselection = false
 ; The recommended and default used CSP is:
 ; cspheader = "default-src 'none'; base-uri 'self'; form-action 'none'; manifest-src 'self'; connect-src * blob:; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'; font-src 'self'; frame-ancestors 'none'; frame-src blob:; img-src 'self' data: blob:; media-src blob:; object-src blob:; sandbox allow-same-origin allow-scripts allow-forms allow-modals allow-downloads"
 
-; stay compatible with PrivateBin Alpha 0.19, less secure
-; if enabled will use base64.js version 1.7 instead of 2.1.9 and sha1 instead of
-; sha256 in HMAC for the deletion token
-; zerobincompatibility = false
-
 ; Enable or disable the warning message when the site is served over an insecure
 ; connection (insecure HTTP instead of HTTPS), defaults to true.
 ; Secure transport methods like Tor and I2P domains are automatically whitelisted.

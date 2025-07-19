@@ -177,11 +177,7 @@ CREATE TABLE prefix_paste (
     dataid CHAR(16) NOT NULL,
     data MEDIUMBLOB,
     expiredate INT,
-    opendiscussion INT,
-    burnafterreading INT,
     meta TEXT,
-    attachment MEDIUMBLOB,
-    attachmentname BLOB,
     PRIMARY KEY (dataid)
 );
 
@@ -190,7 +186,6 @@ CREATE TABLE prefix_comment (
     pasteid CHAR(16),
     parentid CHAR(16),
     data BLOB,
-    nickname BLOB,
     vizhash BLOB,
     postdate INT,
     PRIMARY KEY (dataid)

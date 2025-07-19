@@ -143,52 +143,24 @@ class Database extends AbstractData
     public function create($pasteid, array &$paste)
     {
         $expire_date      = 0;
-        $opendiscussion   = $burnafterreading = false;
-        $attachment       = $attachmentname   = null;
         $meta             = $paste['meta'];
-        $isVersion1       = array_key_exists('data', $paste);
         if (array_key_exists('expire_date', $meta)) {
             $expire_date = (int) $meta['expire_date'];
             unset($meta['expire_date']);
         }
-        if (array_key_exists('opendiscussion', $meta)) {
-            $opendiscussion = $meta['opendiscussion'];
-            unset($meta['opendiscussion']);
-        }
-        if (array_key_exists('burnafterreading', $meta)) {
-            $burnafterreading = $meta['burnafterreading'];
-            unset($meta['burnafterreading']);
-        }
-        if ($isVersion1) {
-            if (array_key_exists('attachment', $meta)) {
-                $attachment = $meta['attachment'];
-                unset($meta['attachment']);
-            }
-            if (array_key_exists('attachmentname', $meta)) {
-                $attachmentname = $meta['attachmentname'];
-                unset($meta['attachmentname']);
-            }
-        } else {
-            $opendiscussion   = $paste['adata'][2];
-            $burnafterreading = $paste['adata'][3];
-        }
         try {
             return $this->_exec(
                 'INSERT INTO "' . $this->_sanitizeIdentifier('paste') .
-                '" VALUES(?,?,?,?,?,?,?,?)',
+                '" VALUES(?,?,?,?)',
                 array(
                     $pasteid,
-                    $isVersion1 ? $paste['data'] : Json::encode($paste),
+                    Json::encode($paste),
                     $expire_date,
-                    (int) $opendiscussion,
-                    (int) $burnafterreading,
                     Json::encode($meta),
-                    $attachment,
-                    $attachmentname,
                 )
             );
         } catch (Exception $e) {
-            error_log('Error while attempting to insert a paste into the database: ' . $e->getMessage() . PHP_EOL);
+            error_log('Error while attempting to insert a paste into the database: ' . $e->getMessage());
             return false;
         }
     }
@@ -214,37 +186,16 @@ class Database extends AbstractData
             return false;
         }
         // create array
-        $data       = Json::decode($row['data']);
-        $isVersion2 = array_key_exists('v', $data) && $data['v'] >= 2;
-        $paste      = $isVersion2 ? $data : array('data' => $row['data']);
+        $paste = Json::decode($row['data']);
 
         try {
-            $row['meta'] = Json::decode($row['meta']);
+            $paste['meta'] = Json::decode($row['meta']);
         } catch (Exception $e) {
-            $row['meta'] = array();
+            $paste['meta'] = array();
         }
-        $row                        = self::upgradePreV1Format($row);
-        $paste['meta']              = $row['meta'];
-        $expire_date                = (int) $row['expiredate'];
+        $expire_date = (int) $row['expiredate'];
         if ($expire_date > 0) {
             $paste['meta']['expire_date'] = $expire_date;
-        }
-        if ($isVersion2) {
-            return $paste;
-        }
-
-        // support v1 attachments
-        if (array_key_exists('attachment', $row) && !empty($row['attachment'])) {
-            $paste['attachment'] = $row['attachment'];
-            if (array_key_exists('attachmentname', $row) && !empty($row['attachmentname'])) {
-                $paste['attachmentname'] = $row['attachmentname'];
-            }
-        }
-        if ($row['opendiscussion']) {
-            $paste['meta']['opendiscussion'] = true;
-        }
-        if ($row['burnafterreading']) {
-            $paste['meta']['burnafterreading'] = true;
         }
 
         return $paste;
@@ -300,41 +251,31 @@ class Database extends AbstractData
      */
     public function createComment($pasteid, $parentid, $commentid, array &$comment)
     {
-        if (array_key_exists('data', $comment)) {
-            $version = 1;
-            $data    = $comment['data'];
-        } else {
-            try {
-                $version = 2;
-                $data    = Json::encode($comment);
-            } catch (Exception $e) {
-                return false;
-            }
+        try {
+            $data = Json::encode($comment);
+        } catch (Exception $e) {
+            error_log('Error while attempting to insert a comment into the database: ' . $e->getMessage());
+            return false;
         }
-        list($createdKey, $iconKey) = $this->_getVersionedKeys($version);
-        $meta                       = $comment['meta'];
-        unset($comment['meta']);
-        foreach (array('nickname', $iconKey) as $key) {
-            if (!array_key_exists($key, $meta)) {
-                $meta[$key] = null;
-            }
+        $meta = $comment['meta'];
+        if (!array_key_exists('icon', $meta)) {
+            $meta['icon'] = null;
         }
         try {
             return $this->_exec(
                 'INSERT INTO "' . $this->_sanitizeIdentifier('comment') .
-                '" VALUES(?,?,?,?,?,?,?)',
+                '" VALUES(?,?,?,?,?,?)',
                 array(
                     $commentid,
                     $pasteid,
                     $parentid,
                     $data,
-                    $meta['nickname'],
-                    $meta[$iconKey],
-                    $meta[$createdKey],
+                    $meta['icon'],
+                    $meta['created'],
                 )
             );
         } catch (Exception $e) {
-            error_log('Error while attempting to insert a comment into the database: ' . $e->getMessage() . PHP_EOL);
+            error_log('Error while attempting to insert a comment into the database: ' . $e->getMessage());
             return false;
         }
     }
@@ -355,25 +296,15 @@ class Database extends AbstractData
 
         // create comment list
         $comments = array();
-        if (is_array($rows) && count($rows)) {
+        if (count($rows)) {
             foreach ($rows as $row) {
-                $i    = $this->getOpenSlot($comments, (int) $row['postdate']);
-                $data = Json::decode($row['data']);
-                if (array_key_exists('v', $data) && $data['v'] >= 2) {
-                    $version      = 2;
-                    $comments[$i] = $data;
-                } else {
-                    $version      = 1;
-                    $comments[$i] = array('data' => $row['data']);
-                }
-                list($createdKey, $iconKey) = $this->_getVersionedKeys($version);
+                $i                          = $this->getOpenSlot($comments, (int) $row['postdate']);
+                $comments[$i]               = Json::decode($row['data']);
                 $comments[$i]['id']         = $row['dataid'];
                 $comments[$i]['parentid']   = $row['parentid'];
-                $comments[$i]['meta']       = array($createdKey => (int) $row['postdate']);
-                foreach (array('nickname' => 'nickname', 'vizhash' => $iconKey) as $rowKey => $commentKey) {
-                    if (array_key_exists($rowKey, $row) && !empty($row[$rowKey])) {
-                        $comments[$i]['meta'][$commentKey] = $row[$rowKey];
-                    }
+                $comments[$i]['meta']       = array('created' => (int) $row['postdate']);
+                if (array_key_exists('vizhash', $row) && !empty($row['vizhash'])) {
+                    $comments[$i]['meta']['icon'] = $row['vizhash'];
                 }
             }
             ksort($comments);
@@ -455,7 +386,7 @@ class Database extends AbstractData
                 $fs    = new Filesystem(array('dir' => 'data'));
                 $value = $fs->getValue('salt');
                 $this->setValue($value, 'salt');
-                @unlink($file);
+                unlink($file);
                 return $value;
             }
         }
@@ -536,7 +467,7 @@ class Database extends AbstractData
      * @param  array $params
      * @param  bool $firstOnly if only the first row should be returned
      * @throws PDOException
-     * @return array|false
+     * @return array
      */
     private function _select($sql, array $params, $firstOnly = false)
     {
@@ -544,6 +475,10 @@ class Database extends AbstractData
         $statement->execute($params);
         if ($firstOnly) {
             $result = $statement->fetch(PDO::FETCH_ASSOC);
+            if ($this->_type === 'oci' && is_array($result)) {
+                // returned CLOB values are streams, convert these into strings
+                $result = array_map('PrivateBin\Data\Database::_sanitizeClob', $result);
+            }
         } elseif ($this->_type === 'oci') {
             // workaround for https://bugs.php.net/bug.php?id=46728
             $result = array();
@@ -554,28 +489,7 @@ class Database extends AbstractData
             $result = $statement->fetchAll(PDO::FETCH_ASSOC);
         }
         $statement->closeCursor();
-        if ($this->_type === 'oci' && is_array($result)) {
-            // returned CLOB values are streams, convert these into strings
-            $result = $firstOnly ?
-                array_map('PrivateBin\Data\Database::_sanitizeClob', $result) :
-                $result;
-        }
         return $result;
-    }
-
-    /**
-     * get version dependent key names
-     *
-     * @access private
-     * @param  int $version
-     * @return array
-     */
-    private function _getVersionedKeys($version)
-    {
-        if ($version === 1) {
-            return array('postdate', 'vizhash');
-        }
-        return array('created', 'icon');
     }
 
     /**
@@ -731,7 +645,6 @@ class Database extends AbstractData
     private function _createPasteTable()
     {
         list($main_key, $after_key) = $this->_getPrimaryKeyClauses();
-        $dataType                   = $this->_getDataType();
         $attachmentType             = $this->_getAttachmentType();
         $metaType                   = $this->_getMetaType();
         $this->_db->exec(
@@ -739,16 +652,12 @@ class Database extends AbstractData
             "\"dataid\" CHAR(16) NOT NULL$main_key, " .
             "\"data\" $attachmentType, " .
             '"expiredate" INT, ' .
-            '"opendiscussion" INT, ' .
-            '"burnafterreading" INT, ' .
-            "\"meta\" $metaType, " .
-            "\"attachment\" $attachmentType, " .
-            "\"attachmentname\" $dataType$after_key )"
+            "\"meta\" $metaType$after_key )"
         );
     }
 
     /**
-     * create the paste table
+     * create the comment table
      *
      * @access private
      */
@@ -762,7 +671,6 @@ class Database extends AbstractData
             '"pasteid" CHAR(16), ' .
             '"parentid" CHAR(16), ' .
             "\"data\" $dataType, " .
-            "\"nickname\" $dataType, " .
             "\"vizhash\" $dataType, " .
             "\"postdate\" INT$after_key )"
         );
@@ -791,7 +699,7 @@ class Database extends AbstractData
     }
 
     /**
-     * create the paste table
+     * create the config table
      *
      * @access private
      */
@@ -839,6 +747,26 @@ class Database extends AbstractData
     private function _sanitizeIdentifier($identifier)
     {
         return preg_replace('/[^A-Za-z0-9_]+/', '', $this->_prefix . $identifier);
+    }
+
+    /**
+     * check if the current database type supports dropping columns
+     *
+     * @access private
+     * @return bool
+     */
+    private function _supportsDropColumn()
+    {
+        $supportsDropColumn = true;
+        if ($this->_type === 'sqlite') {
+            try {
+                $row                = $this->_select('SELECT sqlite_version() AS "v"', array(), true);
+                $supportsDropColumn = (bool) version_compare($row['v'], '3.35.0', '>=');
+            } catch (PDOException $e) {
+                $supportsDropColumn = false;
+            }
+        }
+        return $supportsDropColumn;
     }
 
     /**
@@ -912,23 +840,34 @@ class Database extends AbstractData
             }
         }
         if (version_compare($oldversion, '1.7.1', '<=')) {
-            $supportsDropColumn = true;
-            if ($this->_type === 'sqlite') {
-                try {
-                    $row                = $this->_select('SELECT sqlite_version() AS "v"', array(), true);
-                    $supportsDropColumn = version_compare($row['v'], '3.35.0', '>=');
-                    if (!$supportsDropColumn) {
-                        error_log('Error: the available SQLite version (' . $row['v'] . ') does not support dropping columns. SQLite version 3.35.0 or later is necessary. The migration will not be fully complete, and you will need to delete the "postdate" column of the "paste" table yourself!');
-                    }
-                } catch (PDOException $e) {
-                    $supportsDropColumn = false;
-                    error_log('Error while checking the SQLite version. The migration will not be fully complete, and you will need to delete the "postdate" column of the "paste" table yourself!');
-                }
-            }
-            if ($supportsDropColumn) {
+            if ($this->_supportsDropColumn()) {
                 $this->_db->exec(
                     'ALTER TABLE "' . $this->_sanitizeIdentifier('paste') .
                     '" DROP COLUMN "postdate"'
+                );
+            }
+        }
+        if (version_compare($oldversion, '1.7.8', '<=')) {
+            if ($this->_supportsDropColumn()) {
+                $this->_db->exec(
+                    'ALTER TABLE "' . $this->_sanitizeIdentifier('paste') .
+                    '" DROP COLUMN "opendiscussion"'
+                );
+                $this->_db->exec(
+                    'ALTER TABLE "' . $this->_sanitizeIdentifier('paste') .
+                    '" DROP COLUMN "burnafterreading"'
+                );
+                $this->_db->exec(
+                    'ALTER TABLE "' . $this->_sanitizeIdentifier('paste') .
+                    '" DROP COLUMN "attachment"'
+                );
+                $this->_db->exec(
+                    'ALTER TABLE "' . $this->_sanitizeIdentifier('paste') .
+                    '" DROP COLUMN "attachmentname"'
+                );
+                $this->_db->exec(
+                    'ALTER TABLE "' . $this->_sanitizeIdentifier('comment') .
+                    '" DROP COLUMN "nickname"'
                 );
             }
         }
