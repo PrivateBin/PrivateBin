@@ -171,11 +171,11 @@ class Vizhash16x16
      * @link   https://www.supportduweb.com/scripts_tutoriaux-code-source-41-gd-faire-un-degrade-en-php-gd-fonction-degrade-imagerie.html
      *
      * @access private
-     * @param  resource $img
+     * @param  GdImage $img
      * @param  string $direction
      * @param  array $color1
      * @param  array $color2
-     * @return resource
+     * @return GdImage
      */
     private function degrade($img, $direction, $color1, $color2)
     {
