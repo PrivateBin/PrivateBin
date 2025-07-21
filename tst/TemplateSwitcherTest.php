@@ -10,7 +10,7 @@ class TemplateSwitcherTest extends TestCase
     {
         $conf = new Configuration;
 
-        $defaultTemplateFallback        = 'bootstrap';
+        $defaultTemplateFallback        = 'bootstrap5';
         $existingTemplateFallback       = 'bootstrap-dark';
         $wrongBootstrapTemplateFallback = 'bootstrap-wrong';
         $wrongTemplateFallback          = 'wrong-template';
@@ -38,7 +38,7 @@ class TemplateSwitcherTest extends TestCase
 
     public function testGetTemplate()
     {
-        $defaultTemplateFallback = 'bootstrap';
+        $defaultTemplateFallback = 'bootstrap5';
         $customTemplate          = 'bootstrap-dark';
         $customWrongTemplate     = 'bootstrap-wrong';
 
