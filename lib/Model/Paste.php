@@ -80,20 +80,6 @@ class Paste extends AbstractModel
             $this->delete();
         }
 
-        // set formatter for the view in version 1 pastes.
-        if (array_key_exists('data', $data) && !array_key_exists('formatter', $data['meta'])) {
-            // support < 0.21 syntax highlighting
-            if (array_key_exists('syntaxcoloring', $data['meta']) && $data['meta']['syntaxcoloring'] === true) {
-                $data['meta']['formatter'] = 'syntaxhighlighting';
-            } else {
-                $data['meta']['formatter'] = $this->_conf->getKey('defaultformatter');
-            }
-        }
-
-        // support old paste format with server wide salt
-        if (!array_key_exists('salt', $data['meta'])) {
-            $data['meta']['salt'] = ServerSalt::get();
-        }
         $data['comments']       = array_values($this->getComments());
         $data['comment_count']  = count($data['comments']);
         $data['comment_offset'] = 0;

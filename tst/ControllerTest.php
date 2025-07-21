@@ -919,27 +919,4 @@ class ControllerTest extends TestCase
         );
         $this->assertFalse($this->_data->exists(Helper::getPasteId()), 'paste successfully deleted');
     }
-
-    /**
-     * @runInSeparateProcess
-     */
-    public function testDeleteMissingPerPasteSalt()
-    {
-        $paste = Helper::getPaste();
-        unset($paste['meta']['salt']);
-        $this->_data->create(Helper::getPasteId(), $paste);
-        $this->assertTrue($this->_data->exists(Helper::getPasteId()), 'paste exists before deleting data');
-        $_GET['pasteid']     = Helper::getPasteId();
-        $_GET['deletetoken'] = hash_hmac('sha256', Helper::getPasteId(), ServerSalt::get());
-        ob_start();
-        new Controller;
-        $content = ob_get_contents();
-        ob_end_clean();
-        $this->assertMatchesRegularExpression(
-            '#<div[^>]*id="status"[^>]*>.*Paste was properly deleted\.#s',
-            $content,
-            'outputs deleted status correctly'
-        );
-        $this->assertFalse($this->_data->exists(Helper::getPasteId()), 'paste successfully deleted');
-    }
 }

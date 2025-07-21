@@ -1547,7 +1547,7 @@ jQuery.PrivateBin = (function($) {
                     // string, so we re-add them if necessary
                     symmetricKey = CryptTool.base58decode(newKey).padStart(32, '\u0000');
                 } catch(e) {
-                    symmetricKey = newKey;
+                    throw 'encryption key of unsupported format given or incomplete, mangled URL';
                 }
             }
 
@@ -5727,12 +5727,8 @@ jQuery.PrivateBin = (function($) {
                 Model.getPasteKey();
             } catch (err) {
                 console.error(err);
-
-                // missing decryption key (or paste ID) in URL?
-                if (window.location.hash.length === 0) {
-                    Alert.showError('Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)');
-                    return;
-                }
+                Alert.showError('Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)');
+                return;
             }
 
             // check if we should request loading confirmation
