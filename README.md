@@ -79,7 +79,7 @@ file](https://github.com/PrivateBin/PrivateBin/wiki/Configuration):
 * File upload support, image, media and PDF preview (disabled by default, size
   limit adjustable)
 
-* Templates: By default there are bootstrap CSS, darkstrap and "classic ZeroBin"
+* Templates: By default there are bootstrap5, bootstrap CSS and darkstrap
   to choose from and it is easy to adapt these to your own websites layout or
   create your own.
 
