@@ -731,7 +731,7 @@ describe('TopNav', function () {
         it(
             'displays raw text view correctly',
             function () {
-                const clean = jsdom('', {url: 'https://privatebin.net/?0123456789abcdef#0'});
+                const clean = jsdom('', {url: 'https://privatebin.net/?0123456789abcdef#1'});
                 $('body').html('<button id="rawtextbutton"></button>');
                 const sample = 'example';
                 $.PrivateBin.PasteViewer.setText(sample);

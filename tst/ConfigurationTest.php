@@ -132,20 +132,6 @@ class ConfigurationTest extends TestCase
         $this->assertEquals($options, $conf->get(), 'not overriding "missing" subkeys');
     }
 
-    public function testHandlePreRenameConfig()
-    {
-        $options                   = $this->_options;
-        $options['model']['class'] = 'zerobin_data';
-        Helper::createIniFile(CONF, $options);
-        $conf = new Configuration;
-        $this->assertEquals('Filesystem', $conf->getKey('class', 'model'), 'old data class gets renamed');
-
-        $options['model']['class'] = 'zerobin_db';
-        Helper::createIniFile(CONF, $options);
-        $conf = new Configuration;
-        $this->assertEquals('Database', $conf->getKey('class', 'model'), 'old db class gets renamed');
-    }
-
     public function testConfigPath()
     {
         // setup

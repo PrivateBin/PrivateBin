@@ -37,7 +37,7 @@ class FilesystemTest extends TestCase
         $this->_model->delete(Helper::getPasteId());
 
         // storing pastes
-        $paste = Helper::getPaste(2, array('expire_date' => 1344803344));
+        $paste = Helper::getPaste(array('expire_date' => 1344803344));
         $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste does not yet exist');
         $this->assertTrue($this->_model->create(Helper::getPasteId(), $paste), 'store new paste');
         $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste exists after storing it');
@@ -67,10 +67,7 @@ class FilesystemTest extends TestCase
     public function testFileBasedAttachmentStoreWorks()
     {
         $this->_model->delete(Helper::getPasteId());
-        $original                        = $paste = Helper::getPasteWithAttachment(1, array('expire_date' => 1344803344));
-        $paste['meta']['attachment']     = $paste['attachment'];
-        $paste['meta']['attachmentname'] = $paste['attachmentname'];
-        unset($paste['attachment'], $paste['attachmentname']);
+        $original = $paste = Helper::getPaste(array('expire_date' => 1344803344));
         $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste does not yet exist');
         $this->assertTrue($this->_model->create(Helper::getPasteId(), $paste), 'store new paste');
         $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste exists after storing it');
@@ -84,8 +81,8 @@ class FilesystemTest extends TestCase
     public function testPurge()
     {
         mkdir($this->_path . DIRECTORY_SEPARATOR . '00', 0777, true);
-        $expired = Helper::getPaste(2, array('expire_date' => 1344803344));
-        $paste   = Helper::getPaste(2, array('expire_date' => time() + 3600));
+        $expired = Helper::getPaste(array('expire_date' => 1344803344));
+        $paste   = Helper::getPaste(array('expire_date' => time() + 3600));
         $keys    = array('a', 'b', 'c', 'd', 'e', 'f', 'g', 'x', 'y', 'z');
         $ids     = array();
         foreach ($keys as $key) {
@@ -114,24 +111,30 @@ class FilesystemTest extends TestCase
 
     public function testErrorDetection()
     {
+        $error_log_setting = ini_get('error_log');
         $this->_model->delete(Helper::getPasteId());
-        $paste = Helper::getPaste(2, array('expire' => "Invalid UTF-8 sequence: \xB1\x31"));
+        $paste = Helper::getPaste(array('expire' => "Invalid UTF-8 sequence: \xB1\x31"));
         $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste does not yet exist');
+        ini_set('error_log', '/dev/null');
         $this->assertFalse($this->_model->create(Helper::getPasteId(), $paste), 'unable to store broken paste');
+        ini_set('error_log', $error_log_setting);
         $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste does still not exist');
         $this->assertFalse($this->_model->setValue('foo', 'non existing namespace'), 'rejects setting value in non existing namespace');
     }
 
     public function testCommentErrorDetection()
     {
+        $error_log_setting = ini_get('error_log');
         $this->_model->delete(Helper::getPasteId());
         $data    = Helper::getPaste();
-        $comment = Helper::getComment(1, array('nickname' => "Invalid UTF-8 sequence: \xB1\x31"));
+        $comment = Helper::getComment(array('icon' => "Invalid UTF-8 sequence: \xB1\x31"));
         $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste does not yet exist');
         $this->assertTrue($this->_model->create(Helper::getPasteId(), $data), 'store new paste');
         $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste exists after storing it');
         $this->assertFalse($this->_model->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId()), 'comment does not yet exist');
+        ini_set('error_log', '/dev/null');
         $this->assertFalse($this->_model->createComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId(), $comment), 'unable to store broken comment');
+        ini_set('error_log', $error_log_setting);
         $this->assertFalse($this->_model->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId()), 'comment does still not exist');
     }
 

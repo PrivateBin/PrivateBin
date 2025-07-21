@@ -93,6 +93,9 @@ class Vizhash16x16
 
         // Then use these integers to drive the creation of an image.
         $image = imagecreatetruecolor($this->width, $this->height);
+        if ($image === false) {
+            return '';
+        }
 
         $r = $r0 = $this->getInt();
         $g = $g0 = $this->getInt();
@@ -168,11 +171,11 @@ class Vizhash16x16
      * @link   https://www.supportduweb.com/scripts_tutoriaux-code-source-41-gd-faire-un-degrade-en-php-gd-fonction-degrade-imagerie.html
      *
      * @access private
-     * @param  resource $img
+     * @param  resource|\GdImage $img
      * @param  string $direction
      * @param  array $color1
      * @param  array $color2
-     * @return resource
+     * @return resource|\GdImage
      */
     private function degrade($img, $direction, $color1, $color2)
     {
@@ -205,7 +208,7 @@ class Vizhash16x16
      * Draw a shape
      *
      * @access private
-     * @param  resource $image
+     * @param  resource|\GdImage $image
      * @param  int $action
      * @param  int $color
      */

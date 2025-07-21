@@ -171,44 +171,28 @@ abstract class AbstractData
     abstract public function getAllPastes();
 
     /**
-     * Get next free slot for comment from postdate.
+     * Get next free slot for comment from the creation timestamp
+     *
+     * The creation timestamp is usually a unix timestamp in seconds, but if a
+     * comment already exists at that timestamp, a number, separated by a dot is
+     * appended to it and incremented, then the function recurses until a free
+     * slot is found.
      *
      * @access protected
      * @param  array $comments
-     * @param  int|string $postdate
+     * @param  int|string $created
      * @return int|string
      */
-    protected function getOpenSlot(array &$comments, $postdate)
+    protected function getOpenSlot(array &$comments, $created)
     {
-        if (array_key_exists($postdate, $comments)) {
-            $parts = explode('.', (string) $postdate, 2);
+        if (array_key_exists($created, $comments)) {
+            $parts = explode('.', (string) $created, 2);
             if (!array_key_exists(1, $parts)) {
                 $parts[1] = 0;
             }
             ++$parts[1];
             return $this->getOpenSlot($comments, implode('.', $parts));
         }
-        return $postdate;
-    }
-
-    /**
-     * Upgrade pre-version 1 pastes with attachment to version 1 format.
-     *
-     * @access protected
-     * @static
-     * @param  array $paste
-     * @return array
-     */
-    protected static function upgradePreV1Format(array &$paste)
-    {
-        if (array_key_exists('attachment', $paste['meta'])) {
-            $paste['attachment'] = $paste['meta']['attachment'];
-            unset($paste['meta']['attachment']);
-            if (array_key_exists('attachmentname', $paste['meta'])) {
-                $paste['attachmentname'] = $paste['meta']['attachmentname'];
-                unset($paste['meta']['attachmentname']);
-            }
-        }
-        return $paste;
+        return $created;
     }
 }

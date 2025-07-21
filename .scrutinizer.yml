@@ -15,14 +15,12 @@ coding_style:
                 additive: false
                 concatenation: true
 build:
-    image: default-bionic
     environment:
         php:
-            version: 7.4
+            version: 8.2
     tests:
         override:
-            -
-                command: 'composer require google/cloud-storage && cd tst && ../vendor/bin/phpunit'
+            -   command: 'composer require google/cloud-storage && cd tst && XDEBUG_MODE=coverage ../vendor/bin/phpunit'
                 coverage:
                     file: 'tst/log/coverage-clover.xml'
                     format: 'clover'

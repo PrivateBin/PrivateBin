@@ -2,7 +2,12 @@
 
 ## 2.0.0 (not yet released)
 * ADDED: Error logging in database and filesystem backend (#1554)
-* CHANGED: Remove page template (#265)
+* ADDED: Statistics on v1 pastes in administration script and option to delete them
+* CHANGED: Removed page template (#265)
+* CHANGED: Removed support for ZeroBin & v1 pastes - since release 1.3 the v2 format is used (#551)
+* CHANGED: Removed use of base64 & rawinflate libraries (#551)
+* CHANGED: Removed support for `privatebin_data`, `privatebin_db` & `zerobin_db` model class configurations, must be replaced with `Filesystem` or `Database` in `cfg/conf.php`, if still present
+* CHANGED: Removed unused columns in database schema of tables `paste` & `comment`
 * CHANGED: Jdenticons are now used as the default icons
 * CHANGED: Upgrading libraries to: jdenticon 2.0.0
 * CHANGED: Minimum required PHP version is 7.4, due to a change in the jdenticon library

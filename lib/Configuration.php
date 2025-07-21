@@ -65,7 +65,6 @@ class Configuration
             'email'                    => true,
             'icon'                     => 'jdenticon',
             'cspheader'                => 'default-src \'none\'; base-uri \'self\'; form-action \'none\'; manifest-src \'self\'; connect-src * blob:; script-src \'self\' \'wasm-unsafe-eval\'; style-src \'self\'; font-src \'self\'; frame-ancestors \'none\'; frame-src blob:; img-src \'self\' data: blob:; media-src blob:; object-src blob:; sandbox allow-same-origin allow-scripts allow-forms allow-modals allow-downloads',
-            'zerobincompatibility'     => false,
             'httpwarning'              => true,
             'compression'              => 'zlib',
         ),
@@ -110,7 +109,6 @@ class Configuration
         // update this array when adding/changing/removing js files
         'sri' => array(
             'js/base-x-4.0.0.js'     => 'sha512-nNPg5IGCwwrveZ8cA/yMGr5HiRS5Ps2H+s0J/mKTPjCPWUgFGGw7M5nqdnPD3VsRwCVysUh3Y8OWjeSKGkEQJQ==',
-            'js/base64-1.7.js'       => 'sha512-JdwsSP3GyHR+jaCkns9CL9NTt4JUJqm/BsODGmYhBcj5EAPKcHYh+OiMfyHbcDLECe17TL0hjXADFkusAqiYgA==',
             'js/bootstrap-3.4.1.js'  => 'sha512-oBTprMeNEKCnqfuqKd6sbvFzmFQtlXS3e0C/RGFV0hD6QzhHV+ODfaQbAlmY6/q0ubbwlAM/nCJjkrgA3waLzg==',
             'js/bootstrap-5.3.3.js'  => 'sha512-in2rcOpLTdJ7/pw5qjF4LWHFRtgoBDxXCy49H4YGOcVdGiPaQucGIbOqxt1JvmpvOpq3J/C7VTa0FlioakB2gQ==',
             'js/dark-mode-switch.js' => 'sha512-BhY7dNU14aDN5L+muoUmA66x0CkYUWkQT0nxhKBLP/o2d7jE025+dvWJa4OiYffBGEFgmhrD/Sp+QMkxGMTz2g==',
@@ -118,9 +116,8 @@ class Configuration
             'js/kjua-0.9.0.js'       => 'sha512-CVn7af+vTMBd9RjoS4QM5fpLFEOtBCoB0zPtaqIDC7sF4F8qgUSRFQQpIyEDGsr6yrjbuOLzdf20tkHHmpaqwQ==',
             'js/legacy.js'           => 'sha512-UxW/TOZKon83n6dk/09GsYKIyeO5LeBHokxyIq+r7KFS5KMBeIB/EM7NrkVYIezwZBaovnyNtY2d9tKFicRlXg==',
             'js/prettify.js'         => 'sha512-puO0Ogy++IoA2Pb9IjSxV1n4+kQkKXYAEUtVzfZpQepyDPyXk8hokiYDS7ybMogYlyyEIwMLpZqVhCkARQWLMg==',
-            'js/privatebin.js'       => 'sha512-mPPCBJRbTT7LCOhjv2xL01yhJqwKOgwalktUuQVgsno14vXAs8iAr7qQ6aYh9jUqTarUoXpZJSqxijpziSzhuA==',
+            'js/privatebin.js'       => 'sha512-FSrG36x5zv0ERkagznlfQSE4Dpnvf0Sm6F1a21Qn874ALt9OxqUObUTe7D8tmTBCo0jh5i2B4dh8wIa4HSWB8Q==',
             'js/purify-3.2.6.js'     => 'sha512-zqwL4OoBLFx89QPewkz4Lz5CSA2ktU+f31fuECkF0iK3Id5qd3Zpq5dMby8KwHjIEpsUgOqwF58cnmcaNem0EA==',
-            'js/rawinflate-0.3.js'   => 'sha512-g8uelGgJW9A/Z1tB6Izxab++oj5kdD7B4qC7DHwZkB6DGMXKyzx7v5mvap2HXueI2IIn08YlRYM56jwWdm2ucQ==',
             'js/showdown-2.1.0.js'   => 'sha512-WYXZgkTR0u/Y9SVIA4nTTOih0kXMEd8RRV6MLFdL6YU8ymhR528NLlYQt1nlJQbYz4EW+ZsS0fx1awhiQJme1Q==',
             'js/zlib-1.3.1-1.js'     => 'sha512-5bU9IIP4PgBrOKLZvGWJD4kgfQrkTz8Z3Iqeu058mbQzW3mCumOU6M3UVbVZU9rrVoVwaW4cZK8U8h5xjF88eQ==',
         ),
@@ -165,10 +162,8 @@ class Configuration
             }
             // provide different defaults for database model
             elseif (
-                $section == 'model_options' && in_array(
-                    $this->_configuration['model']['class'],
-                    array('Database', 'privatebin_db', 'zerobin_db')
-                )
+                $section == 'model_options' &&
+                $this->_configuration['model']['class'] === 'Database'
             ) {
                 $values = array(
                     'dsn' => 'sqlite:' . PATH . 'data' . DIRECTORY_SEPARATOR . 'db.sq3',
@@ -178,10 +173,8 @@ class Configuration
                     'opt' => array(),
                 );
             } elseif (
-                $section == 'model_options' && in_array(
-                    $this->_configuration['model']['class'],
-                    array('GoogleCloudStorage')
-                )
+                $section == 'model_options' &&
+                $this->_configuration['model']['class'] === 'GoogleCloudStorage'
             ) {
                 $values = array(
                     'bucket'     => getenv('PRIVATEBIN_GCS_BUCKET') ? getenv('PRIVATEBIN_GCS_BUCKET') : null,
@@ -189,10 +182,8 @@ class Configuration
                     'uniformacl' => false,
                 );
             } elseif (
-                $section == 'model_options' && in_array(
-                    $this->_configuration['model']['class'],
-                    array('S3Storage')
-                )
+                $section == 'model_options' &&
+                $this->_configuration['model']['class'] === 'S3Storage'
             ) {
                 $values = array(
                     'region'                  => null,
@@ -252,18 +243,6 @@ class Configuration
                 }
             }
         }
-
-        // support for old config file format, before the fork was renamed and PSR-4 introduced
-        $this->_configuration['model']['class'] = str_replace(
-            'zerobin_', 'privatebin_',
-            $this->_configuration['model']['class']
-        );
-
-        $this->_configuration['model']['class'] = str_replace(
-            array('privatebin_data', 'privatebin_db'),
-            array('Filesystem', 'Database'),
-            $this->_configuration['model']['class']
-        );
 
         // ensure a valid expire default key is set
         if (!array_key_exists($this->_configuration['expire']['default'], $this->_configuration['expire_options'])) {

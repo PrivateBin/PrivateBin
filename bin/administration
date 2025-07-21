@@ -73,20 +73,6 @@ class Administration
     }
 
     /**
-     * lists all stored paste IDs
-     *
-     * @access private
-     */
-    private function _list_ids()
-    {
-        $ids = $this->_store->getAllPastes();
-        foreach ($ids as $pasteid) {
-            echo $pasteid, PHP_EOL;
-        }
-        exit;
-    }
-
-    /**
      * deletes all stored pastes (regardless of expiration)
      *
      * @access private
@@ -99,6 +85,29 @@ class Administration
             $this->_store->delete($pasteid);
         }
         exit("All pastes successfully deleted" . PHP_EOL);
+    }
+
+    /**
+     * deletes all unsupported v1 pastes (regardless of expiration)
+     *
+     * @access private
+     */
+    private function _delete_v1()
+    {
+        $ids = $this->_store->getAllPastes();
+        foreach ($ids as $pasteid) {
+            try {
+                $paste = $this->_store->read($pasteid);
+            } catch (Exception $e) {
+                echo "Error reading paste {$pasteid}: ", $e->getMessage(), PHP_EOL;
+            }
+            if (array_key_exists('adata', $paste)) {
+                continue;
+            }
+            echo "Deleting v1 paste ID: $pasteid" . PHP_EOL;
+            $this->_store->delete($pasteid);
+        }
+        exit("All unsupported legacy v1 pastes successfully deleted" . PHP_EOL);
     }
 
     /**
@@ -153,11 +162,13 @@ class Administration
     {
         echo <<<'EOT'
 Usage:
-  administration [--delete <paste id> | --delete-all | --empty-dirs | --help | --list-ids | --purge | --statistics]
+  administration [--delete <paste id> | --delete-all | --delete-v1 |
+                  --empty-dirs | --help | --list-ids | --purge | --statistics]
 
 Options:
   -d, --delete      deletes the requested paste ID
-  --delete-all      deletes all paste IDs
+  --delete-all      deletes all pastes
+  --delete-v1       deletes all unsupported v1 pastes
   -e, --empty-dirs  removes empty directories (only if Filesystem storage is
                     configured)
   -h, --help        displays this help message
@@ -166,6 +177,20 @@ Options:
   -s, --statistics  reads all stored pastes and comments and reports statistics
 EOT, PHP_EOL;
         exit($code);
+    }
+
+    /**
+     * lists all stored paste IDs
+     *
+     * @access private
+     */
+    private function _list_ids()
+    {
+        $ids = $this->_store->getAllPastes();
+        foreach ($ids as $pasteid) {
+            echo $pasteid, PHP_EOL;
+        }
+        exit;
     }
 
     /**
@@ -208,7 +233,7 @@ EOT, PHP_EOL;
             self::_help(2);
         }
 
-        $this->_opts = getopt('hd:epsl', array('help', 'delete:', 'empty-dirs', 'purge', 'statistics', 'list-ids', 'delete-all'));
+        $this->_opts = getopt('hd:elps', array('help', 'delete:', 'delete-all', 'delete-v1', 'empty-dirs', 'list-ids', 'purge', 'statistics'));
 
         if (!$this->_opts) {
             self::_error_echo('unsupported arguments given');
@@ -229,6 +254,7 @@ EOT, PHP_EOL;
             'damaged'       => 0,
             'discussion'    => 0,
             'expired'       => 0,
+            'legacy'        => 0,
             'md'            => 0,
             'percent'       => 1,
             'plain'         => 0,
@@ -265,13 +291,12 @@ EOT, PHP_EOL;
             }
 
             if (array_key_exists('adata', $paste)) {
-                $format = $paste['adata'][1];
-                $discussion = $paste['adata'][2];
-                $burn = $paste['adata'][3];
+                $format = $paste['adata'][Paste::ADATA_FORMATTER];
+                $discussion = $paste['adata'][Paste::ADATA_OPEN_DISCUSSION];
+                $burn = $paste['adata'][Paste::ADATA_BURN_AFTER_READING];
             } else {
-                $format = array_key_exists('formatter', $paste['meta']) ? $paste['meta']['formatter'] : 'plaintext';
-                $discussion = array_key_exists('opendiscussion', $paste['meta']) ? $paste['meta']['opendiscussion'] : false;
-                $burn = array_key_exists('burnafterreading', $paste['meta']) ? $paste['meta']['burnafterreading'] : false;
+                echo "Unsupported v1 paste ", $pasteid, PHP_EOL;
+                ++$counters['legacy'];
             }
 
             if ($format === 'plaintext') {
@@ -308,6 +333,9 @@ Plain Text:\t\t{$counters['plain']}
 Source Code:\t\t{$counters['syntax']}
 Markdown:\t\t{$counters['md']}
 EOT, PHP_EOL;
+        if ($counters['legacy'] > 0) {
+            echo "Legacy v1:\t\t{$counters['legacy']}", PHP_EOL;
+        }
         if ($counters['damaged'] > 0) {
             echo "Damaged:\t\t{$counters['damaged']}", PHP_EOL;
         }
@@ -340,14 +368,20 @@ EOT, PHP_EOL;
         $class = 'PrivateBin\\Data\\' . $this->_conf->getKey('class', 'model');
         $this->_store = new $class($this->_conf->getSection('model_options'));
 
-        if ($this->_option('l', 'list-ids') !== null) {
-            $this->_list_ids();
+        if (($pasteId = $this->_option('d', 'delete')) !== null) {
+            $this->_delete($pasteId);
         }
+
         if ($this->_option(null, 'delete-all') !== null) {
             $this->_delete_all();
         }
-        if (($pasteId = $this->_option('d', 'delete')) !== null) {
-            $this->_delete($pasteId);
+
+        if ($this->_option(null, 'delete-v1') !== null) {
+            $this->_delete_v1();
+        }
+
+        if ($this->_option('l', 'list-ids') !== null) {
+            $this->_list_ids();
         }
 
         if ($this->_option('p', 'purge') !== null) {

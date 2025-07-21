@@ -10,7 +10,7 @@
  * @namespace
  */
 
-// global Base64, DOMPurify, FileReader, RawDeflate, history, navigator, prettyPrint, prettyPrintOne, showdown, kjua
+// global Base64, DOMPurify, FileReader, history, navigator, prettyPrint, prettyPrintOne, showdown, kjua
 
 jQuery.fn.draghover = function() {
     'use strict';
@@ -41,7 +41,7 @@ jQuery(document).ready(function() {
     $.PrivateBin.Controller.init();
 });
 
-jQuery.PrivateBin = (function($, RawDeflate) {
+jQuery.PrivateBin = (function($) {
     'use strict';
 
     /**
@@ -91,7 +91,6 @@ jQuery.PrivateBin = (function($, RawDeflate) {
      * @class
      */
     function CryptoData(data) {
-        this.v = 1;
         // store all keys in the default locations for drop-in replacement
         for (let key in data) {
             this[key] = data[key];
@@ -102,11 +101,11 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          *
          * @name CryptoData.getCipherData
          * @function
-         * @return {Array}|{string}
+         * @return {Array}
          */
         this.getCipherData = function()
         {
-            return this.v === 1 ? this.data : [this.ct, this.adata];
+            return [this.ct, this.adata];
         }
     }
 
@@ -131,7 +130,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         this.getFormat = function()
         {
-            return this.v === 1 ? this.meta.formatter : this.adata[1];
+            return this.adata[1];
         }
 
         /**
@@ -145,7 +144,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         this.getTimeToLive = function()
         {
-            return (this.v === 1 ? this.meta.remaining_time : this.meta.time_to_live) || 0;
+            return this.meta.time_to_live || 0;
         }
 
         /**
@@ -157,7 +156,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         this.isBurnAfterReadingEnabled = function()
         {
-            return (this.v === 1 ? this.meta.burnafterreading : this.adata[3]);
+            return this.adata[3];
         }
 
         /**
@@ -169,7 +168,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         this.isDiscussionEnabled = function()
         {
-            return (this.v === 1 ? this.meta.opendiscussion : this.adata[2]);
+            return this.adata[2];
         }
     }
 
@@ -194,7 +193,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         this.getCreated = function()
         {
-            return this.meta[this.v === 1 ? 'postdate' : 'created'] || 0;
+            return this.meta['created'] || 0;
         }
 
         /**
@@ -206,7 +205,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         this.getIcon = function()
         {
-            return this.meta[this.v === 1 ? 'vizhash' : 'icon'] || '';
+            return this.meta['icon'] || '';
         }
     }
 
@@ -1119,39 +1118,17 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         async function decompress(data, mode, zlib)
         {
-            if (mode === 'zlib' || mode === 'none') {
-                if (mode === 'zlib') {
-                    if (typeof zlib === 'undefined') {
-                        throw 'Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.'
-                    }
-                    data = zlib.inflate(
-                        new Uint8Array(data)
-                    ).buffer;
+            if (mode === 'zlib') {
+                if (typeof zlib === 'undefined') {
+                    throw 'Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.'
                 }
-                return utf8To16(
-                    arraybufferToString(data)
-                );
+                data = zlib.inflate(
+                    new Uint8Array(data)
+                ).buffer;
             }
-            // detect presence of Base64.js, indicating legacy ZeroBin paste
-            if (typeof Base64 === 'undefined') {
-                return utf8To16(
-                    RawDeflate.inflate(
-                        utf8To16(
-                            atob(
-                                arraybufferToString(data)
-                            )
-                        )
-                    )
-                );
-            } else {
-                return Base64.btou(
-                    RawDeflate.inflate(
-                        Base64.fromBase64(
-                            arraybufferToString(data)
-                        )
-                    )
-                );
-            }
+            return utf8To16(
+                arraybufferToString(data)
+            );
         }
 
         /**
@@ -1191,19 +1168,6 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         {
             let keyArray = stringToArraybuffer(key);
             if (password.length > 0) {
-                // version 1 pastes did append the passwords SHA-256 hash in hex
-                if (spec[7] === 'rawdeflate') {
-                    let passwordBuffer = await window.crypto.subtle.digest(
-                        {name: 'SHA-256'},
-                        stringToArraybuffer(
-                            utf16To8(password)
-                        )
-                    ).catch(Alert.showError);
-                    password = Array.prototype.map.call(
-                        new Uint8Array(passwordBuffer),
-                        x => ('00' + x.toString(16)).slice(-2)
-                    ).join('');
-                }
                 let passwordArray = stringToArraybuffer(password),
                     newKeyArray = new Uint8Array(keyArray.length + passwordArray.length);
                 newKeyArray.set(keyArray, 0);
@@ -1337,21 +1301,6 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 // clone the array instead of passing the reference
                 spec = (data[1][0] instanceof Array ? data[1][0] : data[1]).slice();
                 cipherMessage = data[0];
-            } else if (typeof data === 'string') {
-                // version 1
-                let object = JSON.parse(data);
-                adataString = atob(object.adata);
-                spec = [
-                    object.iv,
-                    object.salt,
-                    object.iter,
-                    object.ks,
-                    object.ts,
-                    object.cipher,
-                    object.mode,
-                    'rawdeflate'
-                ];
-                cipherMessage = object.ct;
             } else {
                 throw 'unsupported message format';
             }
@@ -1598,7 +1547,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                     // string, so we re-add them if necessary
                     symmetricKey = CryptTool.base58decode(newKey).padStart(32, '\u0000');
                 } catch(e) {
-                    symmetricKey = newKey;
+                    throw 'encryption key of unsupported format given or incomplete, mangled URL';
                 }
             }
 
@@ -5369,7 +5318,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          */
         async function decryptPaste(paste, key, password)
         {
-            let pastePlain = await decryptOrPromptPassword(
+            const pastePlain = await decryptOrPromptPassword(
                 key, password,
                 paste.getCipherData()
             );
@@ -5385,36 +5334,21 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 }
             }
 
-            if (paste.v > 1) {
-                // version 2 paste
-                const pasteMessage = JSON.parse(pastePlain);
-                if (pasteMessage.hasOwnProperty('attachment') && pasteMessage.hasOwnProperty('attachment_name')) {
-                    if (Array.isArray(pasteMessage.attachment) && Array.isArray(pasteMessage.attachment_name)) {
-                        pasteMessage.attachment.forEach((attachment, key) => {
-                            const attachment_name = pasteMessage.attachment_name[key];
-                            AttachmentViewer.setAttachment(attachment, attachment_name);
-                        });
-                    } else {
-                        // Continue to process attachment parameters as strings to ensure backward compatibility
-                        AttachmentViewer.setAttachment(pasteMessage.attachment, pasteMessage.attachment_name);
-                    }
-                    AttachmentViewer.showAttachment();
-                }
-                pastePlain = pasteMessage.paste;
-            } else {
-                // version 1 paste
-                if (paste.hasOwnProperty('attachment') && paste.hasOwnProperty('attachmentname')) {
-                    Promise.all([
-                        CryptTool.decipher(key, password, paste.attachment),
-                        CryptTool.decipher(key, password, paste.attachmentname)
-                    ]).then((attachment) => {
-                        AttachmentViewer.setAttachment(attachment[0], attachment[1]);
-                        AttachmentViewer.showAttachment();
+            const pasteMessage = JSON.parse(pastePlain);
+            if (pasteMessage.hasOwnProperty('attachment') && pasteMessage.hasOwnProperty('attachment_name')) {
+                if (Array.isArray(pasteMessage.attachment) && Array.isArray(pasteMessage.attachment_name)) {
+                    pasteMessage.attachment.forEach((attachment, key) => {
+                        const attachment_name = pasteMessage.attachment_name[key];
+                        AttachmentViewer.setAttachment(attachment, attachment_name);
                     });
+                } else {
+                    // Continue to process attachment parameters as strings to ensure backward compatibility
+                    AttachmentViewer.setAttachment(pasteMessage.attachment, pasteMessage.attachment_name);
                 }
+                AttachmentViewer.showAttachment();
             }
             PasteViewer.setFormat(paste.getFormat());
-            PasteViewer.setText(pastePlain);
+            PasteViewer.setText(pasteMessage.paste);
             PasteViewer.run();
         }
 
@@ -5441,28 +5375,15 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 const comment        = new Comment(paste.comments[i]),
                       commentPromise = CryptTool.decipher(key, password, comment.getCipherData());
                 paste.comments[i] = comment;
-                if (comment.v > 1) {
-                    // version 2 comment
-                    commentDecryptionPromises.push(
-                        commentPromise.then(function (commentJson) {
-                            const commentMessage = JSON.parse(commentJson);
-                            return [
-                                commentMessage.comment  || '',
-                                commentMessage.nickname || ''
-                            ];
-                        })
-                    );
-                } else {
-                    // version 1 comment
-                    commentDecryptionPromises.push(
-                        Promise.all([
-                            commentPromise,
-                            paste.comments[i].meta.hasOwnProperty('nickname') ?
-                                CryptTool.decipher(key, password, paste.comments[i].meta.nickname) :
-                                Promise.resolve('')
-                        ])
-                    );
-                }
+                commentDecryptionPromises.push(
+                    commentPromise.then(function (commentJson) {
+                        const commentMessage = JSON.parse(commentJson);
+                        return [
+                            commentMessage.comment  || '',
+                            commentMessage.nickname || ''
+                        ];
+                    })
+                );
             }
             return Promise.all(commentDecryptionPromises).then(function (plaintexts) {
                 for (let i = 0; i < paste.comments.length; ++i) {
@@ -5806,12 +5727,8 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 Model.getPasteKey();
             } catch (err) {
                 console.error(err);
-
-                // missing decryption key (or paste ID) in URL?
-                if (window.location.hash.length === 0) {
-                    Alert.showError('Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)');
-                    return;
-                }
+                Alert.showError('Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)');
+                return;
             }
 
             // check if we should request loading confirmation
@@ -6046,4 +5963,4 @@ jQuery.PrivateBin = (function($, RawDeflate) {
         CopyToClipboard: CopyToClipboard,
         Controller: Controller
     };
-})(jQuery, RawDeflate);
+})(jQuery);

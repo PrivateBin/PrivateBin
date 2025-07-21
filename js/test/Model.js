@@ -104,8 +104,8 @@ describe('Model', function () {
             'throws exception on empty query string',
             common.jscUrl(true, false),
             function (url) {
-                let clean = jsdom('', {url: common.urlToString(url)}),
-                    result = false;
+                const clean = jsdom('', {url: common.urlToString(url)});
+                let result = false;
                 try {
                     $.PrivateBin.Model.getPasteId();
                 }
@@ -126,15 +126,21 @@ describe('Model', function () {
         });
 
         jsc.property(
-            'returns the fragment of a v1 URL',
+            'throws exception on v1 URLs',
             common.jscUrl(),
             function (url) {
                 url.fragment = '0OIl'; // any non-base58 string
-                const clean = jsdom('', {url: common.urlToString(url)}),
-                    result = $.PrivateBin.Model.getPasteKey();
+                const clean = jsdom('', {url: common.urlToString(url)});
+                let result = false;
+                try {
+                    $.PrivateBin.Model.getPasteId();
+                }
+                catch(err) {
+                    result = true;
+                }
                 $.PrivateBin.Model.reset();
                 clean();
-                return url.fragment === result;
+                return result;
             }
         );
         jsc.property(
