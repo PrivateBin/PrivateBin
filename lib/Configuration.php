@@ -110,7 +110,7 @@ class Configuration
         'sri' => array(
             'js/base-x-4.0.0.js'     => 'sha512-nNPg5IGCwwrveZ8cA/yMGr5HiRS5Ps2H+s0J/mKTPjCPWUgFGGw7M5nqdnPD3VsRwCVysUh3Y8OWjeSKGkEQJQ==',
             'js/bootstrap-3.4.1.js'  => 'sha512-oBTprMeNEKCnqfuqKd6sbvFzmFQtlXS3e0C/RGFV0hD6QzhHV+ODfaQbAlmY6/q0ubbwlAM/nCJjkrgA3waLzg==',
-            'js/bootstrap-5.3.3.js'  => 'sha512-in2rcOpLTdJ7/pw5qjF4LWHFRtgoBDxXCy49H4YGOcVdGiPaQucGIbOqxt1JvmpvOpq3J/C7VTa0FlioakB2gQ==',
+            'js/bootstrap-5.3.7.js'  => 'sha512-UqmrCkPcp6WOB9cC/NB5GB7vQd2/sB70bLpFk0bqHz/WQIFucjAM0vFNI4xp8B7jJ8KIUWPblNAS/M30AHKSzA==',
             'js/dark-mode-switch.js' => 'sha512-BhY7dNU14aDN5L+muoUmA66x0CkYUWkQT0nxhKBLP/o2d7jE025+dvWJa4OiYffBGEFgmhrD/Sp+QMkxGMTz2g==',
             'js/jquery-3.7.1.js'     => 'sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==',
             'js/kjua-0.9.0.js'       => 'sha512-CVn7af+vTMBd9RjoS4QM5fpLFEOtBCoB0zPtaqIDC7sF4F8qgUSRFQQpIyEDGsr6yrjbuOLzdf20tkHHmpaqwQ==',

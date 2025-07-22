@@ -10,7 +10,7 @@ use PrivateBin\I18n;
 		<meta name="robots" content="noindex" />
 		<meta name="google" content="notranslate">
 		<title><?php echo I18n::_($NAME); ?></title>
-		<link type="text/css" rel="stylesheet" href="css/bootstrap5/bootstrap<?php echo I18n::isRtl() ? '.rtl' : ''; ?>-5.3.3.css" />
+		<link type="text/css" rel="stylesheet" href="css/bootstrap5/bootstrap<?php echo I18n::isRtl() ? '.rtl' : ''; ?>-5.3.7.css" />
 		<link type="text/css" rel="stylesheet" href="css/bootstrap5/privatebin.css?<?php echo rawurlencode($VERSION); ?>" />
 <?php
 if ($SYNTAXHIGHLIGHTING) :
@@ -35,7 +35,7 @@ endif;
 ?>
 		<?php $this->_scriptTag('js/zlib-1.3.1-1.js', 'defer'); ?>
 		<?php $this->_scriptTag('js/base-x-4.0.0.js', 'defer'); ?>
-		<?php $this->_scriptTag('js/bootstrap-5.3.3.js', 'async'); ?>
+		<?php $this->_scriptTag('js/bootstrap-5.3.7.js', 'async'); ?>
 		<?php $this->_scriptTag('js/dark-mode-switch.js', 'defer'); ?>
 <?php
 if ($SYNTAXHIGHLIGHTING) :
