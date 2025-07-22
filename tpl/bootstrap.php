@@ -46,12 +46,12 @@ endif;
 <?php
 if ($QRCODE) :
 ?>
-		<?php $this->_scriptTag('js/kjua-0.9.0.js', 'async'); ?>
+		<?php $this->_scriptTag('js/kjua-0.10.0.js', 'async'); ?>
 <?php
 endif;
 ?>
 		<?php $this->_scriptTag('js/zlib-1.3.1-1.js', 'async'); ?>
-		<?php $this->_scriptTag('js/base-x-4.0.0.js', 'defer'); ?>
+		<?php $this->_scriptTag('js/base-x-5.0.1.js', 'defer'); ?>
 		<?php $this->_scriptTag('js/bootstrap-3.4.1.js', 'defer'); ?>
 <?php
 if ($SYNTAXHIGHLIGHTING) :
