@@ -8,6 +8,7 @@
 * FIXED: Sanitize file name in attachment size hint
 * FIXED: Unable to create a new paste from the cloned one when a JSON file attached (#1585)
 * FIXED: traffic limiter not working when using Filesystem storage and PHP opcache
+* FIXED: Configuration combinations test errors
 
 ## 1.7.8 (2025-06-30)
 * FIXED: Duplicate attachment for every comment (#1577)
