@@ -10,7 +10,7 @@
  * @namespace
  */
 
-// global Base64, DOMPurify, FileReader, RawDeflate, history, navigator, prettyPrint, prettyPrintOne, showdown, kjua
+// global Base64, DOMPurify, FileReader, baseX, bootstrap, RawDeflate, history, navigator, prettyPrint, prettyPrintOne, showdown, kjua
 
 jQuery.fn.draghover = function() {
     'use strict';
@@ -975,7 +975,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          *
          * @private
          */
-        let base58 = new baseX('123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz');
+        const base58 = new baseX('123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz');
 
         /**
          * convert UTF-8 string stored in a DOMString to a standard UTF-16 DOMString

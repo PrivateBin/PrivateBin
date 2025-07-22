@@ -110,7 +110,7 @@ class Configuration
         ),
         // update this array when adding/changing/removing js files
         'sri' => array(
-            'js/base-x-4.0.0.js'     => 'sha512-nNPg5IGCwwrveZ8cA/yMGr5HiRS5Ps2H+s0J/mKTPjCPWUgFGGw7M5nqdnPD3VsRwCVysUh3Y8OWjeSKGkEQJQ==',
+            'js/base-x-5.0.1.js'     => 'sha512-FmhlnjIxQyxkkxQmzf0l6IRGsGbgyCdgqPxypFsEtHMF1naRqaLLo6mcyN5rEaT16nKx1PeJ4g7+07D6gnk/Tg==',
             'js/base64-1.7.js'       => 'sha512-JdwsSP3GyHR+jaCkns9CL9NTt4JUJqm/BsODGmYhBcj5EAPKcHYh+OiMfyHbcDLECe17TL0hjXADFkusAqiYgA==',
             'js/bootstrap-3.4.1.js'  => 'sha512-oBTprMeNEKCnqfuqKd6sbvFzmFQtlXS3e0C/RGFV0hD6QzhHV+ODfaQbAlmY6/q0ubbwlAM/nCJjkrgA3waLzg==',
             'js/bootstrap-5.3.8.js'  => 'sha512-BkZvJ5rZ3zbDCod5seWHpRGg+PRd6ZgE8Nua/OMtcxqm8Wtg0PqwhUUXK5bqvl3oclMt5O+3zjRVX0L+L2j7fA==',
@@ -119,7 +119,7 @@ class Configuration
             'js/kjua-0.9.0.js'       => 'sha512-CVn7af+vTMBd9RjoS4QM5fpLFEOtBCoB0zPtaqIDC7sF4F8qgUSRFQQpIyEDGsr6yrjbuOLzdf20tkHHmpaqwQ==',
             'js/legacy.js'           => 'sha512-UxW/TOZKon83n6dk/09GsYKIyeO5LeBHokxyIq+r7KFS5KMBeIB/EM7NrkVYIezwZBaovnyNtY2d9tKFicRlXg==',
             'js/prettify.js'         => 'sha512-puO0Ogy++IoA2Pb9IjSxV1n4+kQkKXYAEUtVzfZpQepyDPyXk8hokiYDS7ybMogYlyyEIwMLpZqVhCkARQWLMg==',
-            'js/privatebin.js'       => 'sha512-i0l0rh+NCY8Oeg9SxzQREHin6egXJ6sdIC84RTEsBpBNhYGObv8QEdRng1dMERZmw4olVeXx2ZCkusTyT1G+SA==',
+            'js/privatebin.js'       => 'sha512-4JZRpxpswphn0BaWaTtUWacCiqAGOYoH3M4wG6A+vkEFfyZfA9upJ6CqAHpKVA9gNj5o0BSuj8RRwPVbO478IA==',
             'js/purify-3.2.6.js'     => 'sha512-zqwL4OoBLFx89QPewkz4Lz5CSA2ktU+f31fuECkF0iK3Id5qd3Zpq5dMby8KwHjIEpsUgOqwF58cnmcaNem0EA==',
             'js/rawinflate-0.3.js'   => 'sha512-g8uelGgJW9A/Z1tB6Izxab++oj5kdD7B4qC7DHwZkB6DGMXKyzx7v5mvap2HXueI2IIn08YlRYM56jwWdm2ucQ==',
             'js/showdown-2.1.0.js'   => 'sha512-WYXZgkTR0u/Y9SVIA4nTTOih0kXMEd8RRV6MLFdL6YU8ymhR528NLlYQt1nlJQbYz4EW+ZsS0fx1awhiQJme1Q==',
