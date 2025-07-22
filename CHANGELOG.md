@@ -14,6 +14,7 @@
 * CHANGED: Set bootstrap5 template as default for PrivateBin (#1572)
 * FIXED: Name mismatches in attached files (#1584)
 * FIXED: Unable to paste attachments from clipboard (#1589)
+* FIXED: Configuration combinations test errors
 
 ## 1.7.8 (2025-06-30)
 * FIXED: Duplicate attachment for every comment (#1577)

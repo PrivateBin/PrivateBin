@@ -536,7 +536,8 @@ EOT;
                 break;
             case 'Delete':
                 $code .= PHP_EOL . <<<'EOT'
-        $this->_model->create(Helper::getPasteId(), Helper::getPaste());
+        $paste = Helper::getPaste();
+        $this->_model->create(Helper::getPasteId(), $paste);
         $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste exists before deleting data');
         $_GET['pasteid'] = Helper::getPasteId();
         $_GET['deletetoken'] = hash_hmac('sha256', Helper::getPasteId(), $this->_model->read(Helper::getPasteId())['meta']['salt']);
@@ -574,7 +575,7 @@ EOT;
                 $code .= <<<'EOT'
 
         $this->assertMatchesRegularExpression(
-            '#<div[^>]*id="status"[^>]*>.*Paste was properly deleted[^<]*</div>#s',
+            '#<div[^>]*id="status"[^>]*>.*Paste was properly deleted[^<]*(<button|<\/div>)#s',
             $content,
             'outputs deleted status correctly'
         );
