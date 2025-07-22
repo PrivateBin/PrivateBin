@@ -34,7 +34,7 @@ if ($QRCODE) :
 endif;
 ?>
 		<?php $this->_scriptTag('js/zlib-1.3.1-1.js', 'defer'); ?>
-		<?php $this->_scriptTag('js/base-x-4.0.0.js', 'defer'); ?>
+		<?php $this->_scriptTag('js/base-x-5.0.1.js', 'defer'); ?>
 		<?php $this->_scriptTag('js/bootstrap-5.3.7.js', 'async'); ?>
 		<?php $this->_scriptTag('js/dark-mode-switch.js', 'defer'); ?>
 <?php
