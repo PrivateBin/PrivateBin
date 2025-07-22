@@ -9,7 +9,7 @@
 * CHANGED: Removed support for `privatebin_data`, `privatebin_db` & `zerobin_db` model class configurations, must be replaced with `Filesystem` or `Database` in `cfg/conf.php`, if still present
 * CHANGED: Removed unused columns in database schema of tables `paste` & `comment`
 * CHANGED: Jdenticons are now used as the default icons
-* CHANGED: Upgrading libraries to: bootstrap 5.3.7 & jdenticon 2.0.0
+* CHANGED: Upgrading libraries to: bootstrap 5.3.7, jdenticon 2.0.0 & kjua 0.10.0
 * CHANGED: Minimum required PHP version is 7.4, due to a change in the jdenticon library
 * CHANGED: Set bootstrap5 template as default for PrivateBin (#1572)
 * FIXED: Name mismatches in attached files (#1584)

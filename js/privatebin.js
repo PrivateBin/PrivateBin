@@ -10,7 +10,7 @@
  * @namespace
  */
 
-// global Base64, DOMPurify, FileReader, history, navigator, prettyPrint, prettyPrintOne, showdown, kjua
+// global Base64, DOMPurify, FileReader, bootstrap, history, navigator, prettyPrint, prettyPrintOne, showdown, kjua
 
 jQuery.fn.draghover = function() {
     'use strict';
