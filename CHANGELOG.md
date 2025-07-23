@@ -12,6 +12,7 @@
 * CHANGED: Upgrading libraries to: base-x 5.0.1, bootstrap 5.3.7, jdenticon 2.0.0 & kjua 0.10.0
 * CHANGED: Minimum required PHP version is 7.4, due to a change in the jdenticon library
 * CHANGED: Set bootstrap5 template as default for PrivateBin (#1572)
+* CHANGED: Switch from binary bytes to SI-units (#1565)
 * FIXED: Name mismatches in attached files (#1584)
 * FIXED: Unable to paste attachments from clipboard (#1589)
 * FIXED: Configuration combinations test errors
