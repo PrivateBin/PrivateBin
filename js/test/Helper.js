@@ -312,6 +312,22 @@ describe('Helper', function () {
             return $.PrivateBin.Helper.formatBytes(3.45 * 1000 * 1000 * 1000) === '3.45 GB';
         });
 
+        jsc.property('formats terabytes correctly', function () {
+            return $.PrivateBin.Helper.formatBytes(1.75 * 1000 ** 4) === '1.75 TB';
+        });
+
+        jsc.property('formats petabytes correctly', function () {
+            return $.PrivateBin.Helper.formatBytes(1.5 * 1000 ** 5) === '1.5 PB';
+        });
+
+        jsc.property('formats exabytes correctly', function () {
+            return $.PrivateBin.Helper.formatBytes(1.2345 * 1000 ** 6).startsWith('1.23 EB');
+        });
+
+        jsc.property('formats yottabytes correctly', function () {
+            return $.PrivateBin.Helper.formatBytes(1.23 * 1000 ** 8).startsWith('1.23 YB');
+        });
+
         jsc.property('rounds to two decimal places', function () {
             return $.PrivateBin.Helper.formatBytes(1234567) === '1.23 MB';
         });

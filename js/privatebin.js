@@ -591,7 +591,7 @@ jQuery.PrivateBin = (function($) {
         };
 
         /**
-         * Convert Bytes to KiB/MiB/GiB
+         * Convert Bytes to kB/MB/GB/TB/PB/EB/ZB/YB
          *
          * @name   Helper.formatBytes
          * @function
@@ -604,7 +604,10 @@ jQuery.PrivateBin = (function($) {
             let result = '';
             const kilobyte = 1000;
             const decimalPoint = 2;
-            const sizes = [I18n._('B'), I18n._('kB'), I18n._('MB'), I18n._('GB'), I18n._('TB'), I18n._('PB'), I18n._('EB'), I18n._('ZB'), I18n._('YB')];
+            const sizes = [
+                I18n._('B'), I18n._('kB'), I18n._('MB'), I18n._('GB'), I18n._('TB'),
+                I18n._('PB'), I18n._('EB'), I18n._('ZB'), I18n._('YB')
+            ];
             const index = Math.floor(Math.log(bytes) / Math.log(kilobyte));
 
             if (bytes > 0) {
