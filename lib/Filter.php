@@ -59,10 +59,10 @@ class Filter
      */
     public static function formatHumanReadableSize($size)
     {
-        $iec = array('B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB');
+        $iec = array('B', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB');
         $i   = 0;
-        while (($size / 1024) >= 1) {
-            $size = $size / 1024;
+        while (($size / 1000) >= 1) {
+            $size = $size / 1000;
             ++$i;
         }
         return number_format($size, $i ? 2 : 0, '.', ' ') . ' ' . I18n::_($iec[$i]);

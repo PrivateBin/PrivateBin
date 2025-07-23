@@ -602,9 +602,9 @@ jQuery.PrivateBin = (function($) {
         me.formatBytes = function (bytes)
         {
             let result = '';
-            const kilobyte = 1024;
+            const kilobyte = 1000;
             const decimalPoint = 2;
-            const sizes = [I18n._('B'), I18n._('KiB'), I18n._('MiB'), I18n._('GiB')];
+            const sizes = [I18n._('B'), I18n._('kB'), I18n._('MB'), I18n._('GB')];
             const index = Math.floor(Math.log(bytes) / Math.log(kilobyte));
 
             if (bytes > 0) {

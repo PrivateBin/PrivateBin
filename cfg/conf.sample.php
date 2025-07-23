@@ -39,8 +39,8 @@ defaultformatter = "plaintext"
 ; (optional) set a syntax highlighting theme, as found in css/prettify/
 ; syntaxhighlightingtheme = "sons-of-obsidian"
 
-; size limit per paste or comment in bytes, defaults to 10 Mebibytes
-sizelimit = 10485760
+; size limit per paste or comment in bytes, defaults to 10 Megabytes
+sizelimit = 1000000
 
 ; by default PrivateBin use "bootstrap5" template (tpl/bootstrap5.php).
 ; Optionally you can enable the template selection menu, which uses
