@@ -300,20 +300,36 @@ describe('Helper', function () {
             return $.PrivateBin.Helper.formatBytes(500) === '500 B';
         });
 
-        jsc.property('formats kibibytes correctly', function () {
-            return $.PrivateBin.Helper.formatBytes(1500) === '1.46 KiB';
+        jsc.property('formats kilobytes correctly', function () {
+            return $.PrivateBin.Helper.formatBytes(1500) === '1.5 kB';
         });
 
-        jsc.property('formats mebibytes correctly', function () {
-            return $.PrivateBin.Helper.formatBytes(2 * 1000 * 1000) === '1.91 MiB';
+        jsc.property('formats megabytes correctly', function () {
+            return $.PrivateBin.Helper.formatBytes(2 * 1000 * 1000) === '2 MB';
         });
 
-        jsc.property('formats gibibytes correctly', function () {
-            return $.PrivateBin.Helper.formatBytes(3.45 * 1000 * 1000 * 1000) === '3.21 GiB';
+        jsc.property('formats gigabytes correctly', function () {
+            return $.PrivateBin.Helper.formatBytes(3.45 * 1000 * 1000 * 1000) === '3.45 GB';
+        });
+
+        jsc.property('formats terabytes correctly', function () {
+            return $.PrivateBin.Helper.formatBytes(1.75 * 1000 ** 4) === '1.75 TB';
+        });
+
+        jsc.property('formats petabytes correctly', function () {
+            return $.PrivateBin.Helper.formatBytes(1.5 * 1000 ** 5) === '1.5 PB';
+        });
+
+        jsc.property('formats exabytes correctly', function () {
+            return $.PrivateBin.Helper.formatBytes(1.2345 * 1000 ** 6).startsWith('1.23 EB');
+        });
+
+        jsc.property('formats yottabytes correctly', function () {
+            return $.PrivateBin.Helper.formatBytes(1.23 * 1000 ** 8).startsWith('1.23 YB');
         });
 
         jsc.property('rounds to two decimal places', function () {
-            return $.PrivateBin.Helper.formatBytes(1234567) === '1.18 MiB';
+            return $.PrivateBin.Helper.formatBytes(1234567) === '1.23 MB';
         });
     });
 
