@@ -174,7 +174,7 @@ Options:
   -h, --help        displays this help message
   -l, --list-ids    lists all document IDs
   -p, --purge       purge all expired documents
-  -s, --statistics  reads all stored documents and comments and reports statistics
+  -s, --statistics  reads all stored documents and reports statistics
 EOT, PHP_EOL;
         exit($code);
     }
@@ -243,7 +243,7 @@ EOT, PHP_EOL;
     }
 
     /**
-     * reads all stored documents and comments and reports statistics
+     * reads all stored documents and reports statistics
      *
      * @access public
      */
