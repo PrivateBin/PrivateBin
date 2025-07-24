@@ -66,7 +66,7 @@ $dststore = $dstmodel->getStore();
 $ids      = $srcstore->getAllPastes();
 
 foreach ($ids as $id) {
-    debug("Reading paste id " . $id);
+    debug("Reading document ID " . $id);
     $paste    = $srcstore->read($id);
     $comments = $srcstore->readComments($id);
 
@@ -91,10 +91,10 @@ debug("Done.");
 function deletePaste($dryrun, $pasteid, $srcstore)
 {
     if (!$dryrun) {
-        debug("Deleting paste id " . $pasteid);
+        debug("Deleting document ID " . $pasteid);
         $srcstore->delete($pasteid);
     } else {
-        debug("Would delete paste id " . $pasteid);
+        debug("Would delete document ID " . $pasteid);
     }
 }
 
@@ -105,28 +105,28 @@ function saveComment ($force_overwrite, $dryrun, $pasteid, $comment, $dststore)
 
     if (!$dststore->existsComment($pasteid, $parentid, $commentid)) {
         if (!$dryrun) {
-            debug("Saving paste id " . $pasteid . ", parent id " .
+            debug("Saving document ID " . $pasteid . ", parent id " .
                   $parentid . ", comment id " . $commentid);
             $dststore->createComment($pasteid, $parentid, $commentid, $comment);
         } else {
-            debug("Would save paste id " . $pasteid . ", parent id " .
+            debug("Would save document ID " . $pasteid . ", parent id " .
                   $parentid . ", comment id " . $commentid);
         }
     } else if ($force_overwrite) {
         if (!$dryrun) {
-            debug("Overwriting paste id " . $pasteid . ", parent id " .
+            debug("Overwriting document ID " . $pasteid . ", parent id " .
                   $parentid . ", comment id " . $commentid);
             $dststore->createComment($pasteid, $parentid, $commentid, $comment);
         } else {
-            debug("Would overwrite paste id " . $pasteid . ", parent id " .
+            debug("Would overwrite document ID " . $pasteid . ", parent id " .
                   $parentid . ", comment id " . $commentid);
         }
     } else {
         if (!$dryrun) {
-            dieerr("Not overwriting paste id " . $pasteid . ", parent id " .
+            dieerr("Not overwriting document ID " . $pasteid . ", parent id " .
                    $parentid . ", comment id " . $commentid);
         } else {
-            dieerr("Would not overwrite paste id " . $pasteid . ", parent id " .
+            dieerr("Would not overwrite document ID " . $pasteid . ", parent id " .
                    $parentid . ", comment id " . $commentid);
         }
     }
@@ -136,23 +136,23 @@ function savePaste ($force_overwrite, $dryrun, $pasteid, $paste, $dststore)
 {
     if (!$dststore->exists($pasteid)) {
         if (!$dryrun) {
-            debug("Saving paste id " . $pasteid);
+            debug("Saving document ID " . $pasteid);
             $dststore->create($pasteid, $paste);
         } else {
-            debug("Would save paste id " . $pasteid);
+            debug("Would save document ID " . $pasteid);
         }
     } else if ($force_overwrite) {
         if (!$dryrun) {
-            debug("Overwriting paste id " . $pasteid);
+            debug("Overwriting document ID " . $pasteid);
             $dststore->create($pasteid, $paste);
         } else {
-            debug("Would overwrite paste id " . $pasteid);
+            debug("Would overwrite document ID " . $pasteid);
         }
     } else {
         if (!$dryrun) {
-            dieerr("Not overwriting paste id " . $pasteid);
+            dieerr("Not overwriting document ID " . $pasteid);
         } else {
-            dieerr("Would not overwrite paste id " . $pasteid);
+            dieerr("Would not overwrite document ID " . $pasteid);
         }
     }
 }
@@ -191,10 +191,10 @@ Usage:
   migrate [-h|--help]
 
 Options:
-  --delete-after   delete data from source after all pastes and comments have
+  --delete-after   delete data from source after all documents have successfully
+                   been copied to the destination
+  --delete-during  delete data from source after the current document have
                    successfully been copied to the destination
-  --delete-during  delete data from source after the current paste and its
-                   comments have successfully been copied to the destination
   -f               forcefully overwrite data which already exists at the
                    destination
   -h, --help       displays this help message
