@@ -8,7 +8,7 @@ describe('TopNav', function () {
         });
 
         it(
-            'displays & hides navigation elements for viewing an existing paste',
+            'displays & hides navigation elements for viewing an existing document',
             function () {
                 var results = [];
                 $('body').html(
@@ -63,7 +63,7 @@ describe('TopNav', function () {
         });
 
         it(
-            'displays & hides navigation elements for creating a paste',
+            'displays & hides navigation elements for creating a document',
             function () {
                 var results = [];
                 $('body').html(
@@ -124,7 +124,7 @@ describe('TopNav', function () {
         });
 
         it(
-            'displays the button for creating a paste',
+            'displays the button for creating a document',
             function () {
                 var results = [];
                 $('body').html(
@@ -151,7 +151,7 @@ describe('TopNav', function () {
         });
 
         it(
-            'hides the button for cloning a paste',
+            'hides the button for cloning a document',
             function () {
                 var results = [];
                 $('body').html(

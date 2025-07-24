@@ -46,7 +46,7 @@ class Comment extends AbstractModel
             throw new Exception('Invalid data.', 67);
         }
 
-        // Make sure the discussion is opened in this paste and in configuration.
+        // Make sure the discussion is opened in this paste and allowed in the configuration.
         if (!$this->getPaste()->isOpendiscussion() || !$this->_conf->getKey('discussion')) {
             throw new Exception('Invalid data.', 68);
         }

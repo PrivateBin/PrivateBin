@@ -8,7 +8,7 @@ describe('ServerInteraction', function () {
             await new Promise(resolve => setTimeout(resolve, 1900));
         });
         this.timeout(30000);
-        it('can prepare an encrypted paste', function () {
+        it('can prepare an encrypted document', function () {
             jsc.assert(jsc.forall(
                 'string',
                 'string',

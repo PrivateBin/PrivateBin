@@ -181,7 +181,7 @@ class TrafficLimiter extends AbstractPersistence
                     return true;
                 }
             }
-            throw new Exception(I18n::_('Your IP is not authorized to create pastes.'));
+            throw new Exception(I18n::_('Your IP is not authorized to create documents.'));
         }
 
         // disable limits if set to less then 1

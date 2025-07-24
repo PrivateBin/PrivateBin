@@ -246,7 +246,7 @@
          */
         me.init = function()
         {
-            // prevent bots from viewing a paste and potentially deleting data
+            // prevent bots from viewing a document and potentially deleting data
             // when burn-after-reading is set
             if (isBadBot()) {
                 showError('I love you too, bot…');

@@ -13,7 +13,7 @@ describe('PasteViewer', function () {
                 var clean = jsdom(),
                     results = [];
                 $('body').html(
-                    '<div id="placeholder" class="hidden">+++ no paste text ' +
+                    '<div id="placeholder" class="hidden">+++ no document text ' +
                     '+++</div><div id="prettymessage" class="hidden"><pre ' +
                     'id="prettyprint" class="prettyprint linenums:1"></pre>' +
                     '</div><div id="plaintext" class="hidden"></div>'
@@ -99,7 +99,7 @@ describe('PasteViewer', function () {
                 var clean = jsdom(),
                     text = prefix + xss + suffix;
                 $('body').html(
-                    '<div id="placeholder" class="hidden">+++ no paste text ' +
+                    '<div id="placeholder" class="hidden">+++ no document text ' +
                     '+++</div><div id="prettymessage" class="hidden"><pre ' +
                     'id="prettyprint" class="prettyprint linenums:1"></pre>' +
                     '</div><div id="plaintext" class="hidden"></div>'
