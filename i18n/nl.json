@@ -156,14 +156,6 @@
     "Could not create paste: %s": "Kon de paste niet aanmaken: %s",
     "Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)": "Kon de paste niet decoderen: Decoderingssleutel ontbreekt in URL (Heb je een doorverwijzer of een URL-verkorter gebruikt die een deel van de URL verwijdert?)",
     "B": "B",
-    "KiB": "KiB",
-    "MiB": "MiB",
-    "GiB": "GiB",
-    "TiB": "TiB",
-    "PiB": "PiB",
-    "EiB": "EiB",
-    "ZiB": "ZiB",
-    "YiB": "YiB",
     "kB": "kB",
     "MB": "MB",
     "GB": "GB",
@@ -235,5 +227,5 @@
     "Link copied to clipboard": "Link gekopieerd naar klembord",
     "Paste text": "Tekst plakken",
     "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)": "Tabulatortoets dient als teken (gebruik <kbd>Ctrl</kbd>+<kbd>m</kbd> of <kbd>Esc</kbd> om te schakelen)",
-    "Theme": "Thema"
+    "Theme": "Theme"
 }
