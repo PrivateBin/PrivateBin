@@ -24,8 +24,12 @@ describe('AttachmentViewer', function () {
                     ),
                     results = [],
                     result = '';
+                // text node of attachment will truncate at null byte
+                if (filename === '\u0000') {
+                    filename = '';
+                }
                 prefix  = prefix.replace(/%(s|d)/g, '%%');
-                postfix = postfix.replace(/%(s|d)/g, '%%');
+                postfix = postfix.replace(/%(s|d)/g, '%%').replace(/<|>/g, '');
                 $('body').html(
                     '<div id="attachmentPreview" class="col-md-12 text-center hidden"></div>' +
                     '<div id="attachment" class="hidden"></div>' +
@@ -126,4 +130,3 @@ describe('AttachmentViewer', function () {
         );
     });
 });
-
