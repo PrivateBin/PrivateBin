@@ -155,7 +155,7 @@
     "Delete data": "Poista data",
     "Could not create paste: %s": "Pastea ei voitu luoda: %s",
     "Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)": "Pastea ei voitu purkaa: Purkausavain puuttuu URL:stä (Käytitkö uudelleenohjaajaa tai URL-lyhentäjää joka poistaa osan URL:stä?)",
-    "B": "B",
+    "B": "t",
     "kB": "kt",
     "MB": "Mt",
     "GB": "Gt",
