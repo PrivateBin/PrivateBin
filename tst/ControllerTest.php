@@ -671,7 +671,7 @@ class ControllerTest extends TestCase
         ob_end_clean();
         $response = json_decode($content, true);
         $this->assertEquals(1, $response['status'], 'outputs error status');
-        $this->assertEquals('Invalid paste ID.', $response['message'], 'outputs error message');
+        $this->assertEquals('Invalid document ID.', $response['message'], 'outputs error message');
     }
 
     /**
@@ -825,7 +825,7 @@ class ControllerTest extends TestCase
         $content = ob_get_contents();
         ob_end_clean();
         $this->assertMatchesRegularExpression(
-            '#<div[^>]*id="errormessage"[^>]*>.*Invalid paste ID\.#s',
+            '#<div[^>]*id="errormessage"[^>]*>.*Invalid document ID\.#s',
             $content,
             'outputs delete error correctly'
         );

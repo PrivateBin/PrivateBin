@@ -111,7 +111,7 @@ class Paste extends AbstractModel
                 $this->_data
             ) === false
         ) {
-            throw new Exception('Error saving paste. Sorry.', 76);
+            throw new Exception('Error saving document. Sorry.', 76);
         }
     }
 

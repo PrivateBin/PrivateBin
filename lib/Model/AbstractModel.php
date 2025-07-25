@@ -88,7 +88,7 @@ abstract class AbstractModel
     public function setId($id)
     {
         if (!self::isValidId($id)) {
-            throw new Exception('Invalid paste ID.', 60);
+            throw new Exception('Invalid document ID.', 60);
         }
         $this->_id = $id;
     }
@@ -128,14 +128,6 @@ abstract class AbstractModel
      * @throws Exception
      */
     abstract public function store();
-
-    /**
-     * Delete the current instance.
-     *
-     * @access public
-     * @throws Exception
-     */
-    abstract public function delete();
 
     /**
      * Test if current instance exists in store.

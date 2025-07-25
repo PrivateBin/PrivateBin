@@ -72,17 +72,6 @@ class Comment extends AbstractModel
     }
 
     /**
-     * Delete the comment.
-     *
-     * @access public
-     * @throws Exception
-     */
-    public function delete()
-    {
-        throw new Exception('To delete a comment, delete its parent paste', 64);
-    }
-
-    /**
      * Test if comment exists in store.
      *
      * @access public
@@ -131,7 +120,7 @@ class Comment extends AbstractModel
     public function setParentId($id)
     {
         if (!self::isValidId($id)) {
-            throw new Exception('Invalid paste ID.', 65);
+            throw new Exception('Invalid document ID.', 65);
         }
         $this->_data['parentid'] = $id;
     }
