@@ -575,7 +575,7 @@ EOT;
                 $code .= <<<'EOT'
 
         $this->assertMatchesRegularExpression(
-            '#<div[^>]*id="status"[^>]*>.*Paste was properly deleted[^<]*(<button|<\/div>)#s',
+            '#<div[^>]*id="status"[^>]*>.*Document was properly deleted[^<]*(<button|<\/div>)#s',
             $content,
             'outputs deleted status correctly'
         );
