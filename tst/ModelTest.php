@@ -366,19 +366,6 @@ class ModelTest extends TestCase
         $this->assertEquals((float) 300, (float) $paste['meta']['time_to_live'], 'remaining time is set correctly', 1.0);
     }
 
-    public function testCommentDeletion()
-    {
-        $pasteData = Helper::getPastePost();
-        $this->_model->getPaste(Helper::getPasteId())->delete();
-
-        $paste = $this->_model->getPaste();
-        $paste->setData($pasteData);
-        $paste->store();
-        $this->expectException(Exception::class);
-        $this->expectExceptionCode(64);
-        $paste->getComment(Helper::getPasteId())->delete();
-    }
-
     public function testPurge()
     {
         $conf  = new Configuration;

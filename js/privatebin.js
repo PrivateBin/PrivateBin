@@ -85,7 +85,7 @@ jQuery.PrivateBin = (function($) {
     /**
      * CryptoData class
      *
-     * bundles helper functions used in both paste and comment formats
+     * bundles helper functions used in both document and comment formats
      *
      * @name CryptoData
      * @class
@@ -112,7 +112,7 @@ jQuery.PrivateBin = (function($) {
     /**
      * Paste class
      *
-     * bundles helper functions around the paste formats
+     * bundles helper functions around the document formats
      *
      * @name Paste
      * @class
@@ -134,7 +134,7 @@ jQuery.PrivateBin = (function($) {
         }
 
         /**
-         * gets the remaining seconds before the paste expires
+         * gets the remaining seconds before the document expires
          *
          * returns 0 if there is no expiration
          *
@@ -1099,7 +1099,7 @@ jQuery.PrivateBin = (function($) {
             );
             if (mode === 'zlib') {
                 if (typeof zlib === 'undefined') {
-                    throw 'Error compressing paste, due to missing WebAssembly support.'
+                    throw 'Error compressing document, due to missing WebAssembly support.'
                 }
                 return zlib.deflate(message).buffer;
             }
@@ -1123,7 +1123,7 @@ jQuery.PrivateBin = (function($) {
         {
             if (mode === 'zlib') {
                 if (typeof zlib === 'undefined') {
-                    throw 'Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.'
+                    throw 'Error decompressing document, your browser does not support WebAssembly. Please use another browser to view this document.'
                 }
                 data = zlib.inflate(
                     new Uint8Array(data)
@@ -1311,7 +1311,7 @@ jQuery.PrivateBin = (function($) {
             spec[1] = atob(spec[1]);
             if (spec[7] === 'zlib') {
                 if (typeof zlib === 'undefined') {
-                    throw 'Error decompressing paste, your browser does not support WebAssembly. Please use another browser to view this paste.'
+                    throw 'Error decompressing document, your browser does not support WebAssembly. Please use another browser to view this document.'
                 }
             }
             try {
@@ -1421,7 +1421,7 @@ jQuery.PrivateBin = (function($) {
         };
 
         /**
-         * returns the paste data (including the cipher data)
+         * returns the document data (including the cipher data)
          *
          * @name   Model.getPasteData
          * @function
@@ -1453,7 +1453,7 @@ jQuery.PrivateBin = (function($) {
                 TopNav.showViewButtons();
 
                 // show error message
-                Alert.showError(ServerInteraction.parseUploadError(status, data, 'get paste data'));
+                Alert.showError(ServerInteraction.parseUploadError(status, data, 'get document data'));
             });
             ServerInteraction.setSuccess(function (status, data) {
                 pasteData = new Paste(data);
@@ -1466,7 +1466,7 @@ jQuery.PrivateBin = (function($) {
         };
 
         /**
-         * get the pastes unique identifier from the URL,
+         * get the documents unique identifier from the URL,
          * eg. https://example.com/path/?c05354954c49a487#dfdsdgdgdfgdf returns c05354954c49a487
          *
          * @name   Model.getPasteId
@@ -1498,14 +1498,14 @@ jQuery.PrivateBin = (function($) {
             }
 
             if (id === null) {
-                throw 'no paste id given';
+                throw 'no document id given';
             }
 
             return id;
         }
 
         /**
-         * returns true, when the URL has a delete token and the current call was used for deleting a paste.
+         * returns true, when the URL has a delete token and the current call was used for deleting a document.
          *
          * @name   Model.hasDeleteToken
          * @function
@@ -2070,7 +2070,7 @@ jQuery.PrivateBin = (function($) {
         }
 
         /**
-         * Forces opening the paste if the link does not do this automatically.
+         * Forces opening the document if the link does not do this automatically.
          *
          * This is necessary as browsers will not reload the page when it is
          * already loaded (which is fake as it is set via history.pushState()).
@@ -2088,7 +2088,7 @@ jQuery.PrivateBin = (function($) {
         }
 
         /**
-         * creates a notification after a successfull paste upload
+         * creates a notification after a successful document upload
          *
          * @name   PasteStatus.createPasteNotification
          * @function
@@ -2099,7 +2099,7 @@ jQuery.PrivateBin = (function($) {
         {
             I18n._(
                 $('#pastelink'),
-                'Your paste is <a id="pasteurl" href="%s">%s</a> <span id="copyhint">(Hit <kbd>Ctrl</kbd>+<kbd>c</kbd> to copy)</span>',
+                'Your document is <a id="pasteurl" href="%s">%s</a> <span id="copyhint">(Hit <kbd>Ctrl</kbd>+<kbd>c</kbd> to copy)</span>',
                 url, url
             );
             // save newly created element
@@ -2124,7 +2124,7 @@ jQuery.PrivateBin = (function($) {
          * extracts URLs from given string
          *
          * if at least one is found, it disables the shortener button and
-         * replaces the paste URL
+         * replaces the document URL
          *
          * @name   PasteStatus.extractUrl
          * @function
@@ -2174,15 +2174,15 @@ jQuery.PrivateBin = (function($) {
         me.showRemainingTime = function(paste)
         {
             if (paste.isBurnAfterReadingEnabled()) {
-                // display paste "for your eyes only" if it is deleted
+                // display document "for your eyes only" if it is deleted
 
-                // the paste has been deleted when the JSON with the ciphertext
+                // the document has been deleted when the JSON with the ciphertext
                 // has been downloaded
 
                 Alert.showRemaining('FOR YOUR EYES ONLY. Don\'t close this window, this message can\'t be displayed again.');
                 $remainingTime.addClass('foryoureyesonly');
             } else if (paste.getTimeToLive() > 0) {
-                // display paste expiration
+                // display document expiration
                 let expiration = Helper.secondsToHuman(paste.getTimeToLive()),
                     expirationLabel = [
                         'This document will expire in %d ' + expiration[1] + '.',
@@ -2274,7 +2274,7 @@ jQuery.PrivateBin = (function($) {
         }
 
         /**
-         * Request users confirmation to load possibly burn after reading paste
+         * Request users confirmation to load possibly burn after reading document
          *
          * @name   Prompt.requestLoadConfirmation
          * @function
@@ -2652,7 +2652,7 @@ jQuery.PrivateBin = (function($) {
     })();
 
     /**
-     * (view) Parse and show paste.
+     * (view) Parse and show document.
      *
      * @name   PasteViewer
      * @class
@@ -2726,7 +2726,7 @@ jQuery.PrivateBin = (function($) {
         }
 
         /**
-         * displays the paste
+         * displays the document
          *
          * @name   PasteViewer.showPaste
          * @private
@@ -3907,7 +3907,7 @@ jQuery.PrivateBin = (function($) {
             history.pushState(
                 {type: 'raw'},
                 document.title,
-                // recreate paste URL
+                // recreate document URL
                 Helper.baseUri() + '?' + Model.getPasteId() + '#' +
                 CryptTool.base58encode(Model.getPasteKey())
             );
@@ -3940,11 +3940,11 @@ jQuery.PrivateBin = (function($) {
          */
         function downloadText()
         {
-            var fileFormat = PasteViewer.getFormat() === 'markdown' ? '.md' : '.txt';
-            var filename='paste-' + Model.getPasteId() + fileFormat;
-            var text = PasteViewer.getText();
+            const fileFormat = PasteViewer.getFormat() === 'markdown' ? '.md' : '.txt';
+            const filename = 'document-' + Model.getPasteId() + fileFormat;
+            const text = PasteViewer.getText();
 
-            var element = document.createElement('a');
+            const element = document.createElement('a');
             element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
             element.setAttribute('download', filename);
 
@@ -3991,7 +3991,7 @@ jQuery.PrivateBin = (function($) {
         }
 
         /**
-         * hides all messages and creates a new paste
+         * hides all messages and creates a new document
          *
          * @name   TopNav.clickNewPaste
          * @private
@@ -4044,7 +4044,7 @@ jQuery.PrivateBin = (function($) {
         }
 
         /**
-         * Shows the QR code of the current paste (URL).
+         * Shows the QR code of the current document (URL).
          *
          * @name   TopNav.displayQrCode
          * @private
@@ -4122,7 +4122,7 @@ jQuery.PrivateBin = (function($) {
         }
 
         /**
-         * Send Email with current paste (URL).
+         * Send Email with current document (URL).
          *
          * @name   TopNav.sendEmail
          * @private
@@ -4181,7 +4181,7 @@ jQuery.PrivateBin = (function($) {
         }
 
         /**
-         * Shows all navigation elements for viewing an existing paste
+         * Shows all navigation elements for viewing an existing document
          *
          * @name   TopNav.showViewButtons
          * @function
@@ -4202,7 +4202,7 @@ jQuery.PrivateBin = (function($) {
         };
 
         /**
-         * Hides all navigation elements for viewing an existing paste
+         * Hides all navigation elements for viewing an existing document
          *
          * @name   TopNav.hideViewButtons
          * @function
@@ -4224,7 +4224,7 @@ jQuery.PrivateBin = (function($) {
         };
 
         /**
-         * Hides all elements belonging to existing pastes
+         * Hides all elements belonging to existing documents
          *
          * @name   TopNav.hideAllButtons
          * @function
@@ -4236,7 +4236,7 @@ jQuery.PrivateBin = (function($) {
         };
 
         /**
-         * shows all elements needed when creating a new paste
+         * shows all elements needed when creating a new document
          *
          * @name   TopNav.showCreateButtons
          * @function
@@ -4260,7 +4260,7 @@ jQuery.PrivateBin = (function($) {
         };
 
         /**
-         * shows all elements needed when creating a new paste
+         * shows all elements needed when creating a new document
          *
          * @name   TopNav.hideCreateButtons
          * @function
@@ -4284,7 +4284,7 @@ jQuery.PrivateBin = (function($) {
         };
 
         /**
-         * only shows the "new paste" button
+         * only shows the "new document" button
          *
          * @name   TopNav.showNewPasteButton
          * @function
@@ -4401,7 +4401,7 @@ jQuery.PrivateBin = (function($) {
         }
 
         /**
-         * hide all irrelevant buttons when viewing burn after reading paste
+         * hide irrelevant buttons when viewing burn after reading document
          *
          * @name   TopNav.hideBurnAfterReadingButtons
          * @function
@@ -4985,7 +4985,7 @@ jQuery.PrivateBin = (function($) {
     })();
 
     /**
-     * (controller) Responsible for encrypting paste and sending it to server.
+     * (controller) Responsible for encrypting document and sending it to server.
      *
      * Does upload, encryption is done transparently by ServerInteraction.
      *
@@ -4996,7 +4996,7 @@ jQuery.PrivateBin = (function($) {
         const me = {};
 
         /**
-         * called after successful paste upload
+         * called after successful document upload
          *
          * @name PasteEncrypter.showCreatedPaste
          * @private
@@ -5047,7 +5047,7 @@ jQuery.PrivateBin = (function($) {
             // show success message
             Alert.showStatus('Comment posted.');
 
-            // reload paste
+            // reload document
             Controller.refreshPaste(function () {
                 // highlight sent comment
                 DiscussionViewer.highlightComment(data.id, true);
@@ -5110,7 +5110,7 @@ jQuery.PrivateBin = (function($) {
             ServerInteraction.setUnencryptedData('pasteid', Model.getPasteId());
             if (typeof parentid === 'undefined') {
                 // if parent id is not set, this is the top-most comment, so use
-                // paste id as parent, as the root element of the discussion tree
+                // document id as parent, as the root element of the discussion tree
                 ServerInteraction.setUnencryptedData('parentid', Model.getPasteId());
             } else {
                 ServerInteraction.setUnencryptedData('parentid', parentid);
@@ -5129,7 +5129,7 @@ jQuery.PrivateBin = (function($) {
         };
 
         /**
-         * sends a new paste to server
+         * sends a new document to server
          *
          * @name   PasteEncrypter.sendPaste
          * @async
@@ -5172,7 +5172,7 @@ jQuery.PrivateBin = (function($) {
 
                 // show error message
                 Alert.showError(
-                    ServerInteraction.parseUploadError(status, data, 'create paste')
+                    ServerInteraction.parseUploadError(status, data, 'create document')
                 );
             });
 
@@ -5307,13 +5307,13 @@ jQuery.PrivateBin = (function($) {
         }
 
         /**
-         * decrypt the actual paste text
+         * decrypt the actual document text
          *
          * @name   PasteDecrypter.decryptPaste
          * @private
          * @async
          * @function
-         * @param  {Paste} paste - paste data in object form
+         * @param  {Paste} paste - document data in object form
          * @param  {string} key
          * @param  {string} password
          * @throws {string}
@@ -5362,7 +5362,7 @@ jQuery.PrivateBin = (function($) {
          * @private
          * @async
          * @function
-         * @param  {Paste} paste - paste data in object form
+         * @param  {Paste} paste - document data in object form
          * @param  {string} key
          * @param  {string} password
          * @return {Promise}
@@ -5436,7 +5436,7 @@ jQuery.PrivateBin = (function($) {
             // decrypt paste & attachments
             decryptionPromises.push(decryptPaste(paste, key, password));
 
-            // if the discussion is opened on this paste, display it
+            // if the discussion is opened on this document, display it
             if (paste.isDiscussionEnabled()) {
                 decryptionPromises.push(decryptComments(paste, key, password));
             }
@@ -5459,7 +5459,7 @@ jQuery.PrivateBin = (function($) {
                         TopNav.showEmailButton(paste.getTimeToLive());
                     }
 
-                    // only offer adding comments, after paste was successfully decrypted
+                    // only offer adding comments, after document was successfully decrypted
                     if (paste.isDiscussionEnabled()) {
                         DiscussionViewer.finishDiscussion();
                     }
@@ -5503,7 +5503,7 @@ jQuery.PrivateBin = (function($) {
                 saveToClipboard(text);
 
                 toggleSuccessIcon();
-                showAlertMessage('Paste copied to clipboard');
+                showAlertMessage('Document copied to clipboard');
             });
         };
 
@@ -5535,7 +5535,7 @@ jQuery.PrivateBin = (function($) {
                     const text = PasteViewer.getText();
                     saveToClipboard(text);
 
-                    showAlertMessage('Paste copied to clipboard');
+                    showAlertMessage('Document copied to clipboard');
                 }
             });
         };
@@ -5610,7 +5610,7 @@ jQuery.PrivateBin = (function($) {
         me.showKeyboardShortcutHint = function () {
             I18n._(
                 shortcutHint,
-                'To copy paste press on the copy button or use the clipboard shortcut <kbd>Ctrl</kbd>+<kbd>c</kbd>/<kbd>Cmd</kbd>+<kbd>c</kbd>'
+                'To copy document press on the copy button or use the clipboard shortcut <kbd>Ctrl</kbd>+<kbd>c</kbd>/<kbd>Cmd</kbd>+<kbd>c</kbd>'
             );
         };
 
@@ -5625,7 +5625,7 @@ jQuery.PrivateBin = (function($) {
         };
 
         /**
-         * Set paste url
+         * Set document url
          *
          * @name CopyToClipboard.setUrl
          * @param {string} newUrl
@@ -5681,7 +5681,7 @@ jQuery.PrivateBin = (function($) {
         };
 
         /**
-         * creates a new paste
+         * creates a new document
          *
          * @name   Controller.newPaste
          * @function
@@ -5689,7 +5689,7 @@ jQuery.PrivateBin = (function($) {
         me.newPaste = function()
         {
             // Important: This *must not* run Alert.hideMessages() as previous
-            // errors from viewing a paste should be shown.
+            // errors from viewing a document should be shown.
             TopNav.hideAllButtons();
             Alert.showLoading('Preparing new paste…', 'time');
 
@@ -5703,7 +5703,7 @@ jQuery.PrivateBin = (function($) {
 
             TopNav.showCreateButtons();
 
-            // newPaste could be called when user is on paste clone editing view
+            // newPaste could be called when user is on document clone editing view
             TopNav.hideCustomAttachment();
             AttachmentViewer.clearDragAndDrop();
             AttachmentViewer.removeAttachmentData();
@@ -5719,7 +5719,7 @@ jQuery.PrivateBin = (function($) {
         };
 
         /**
-         * shows the loaded paste
+         * shows the loaded document
          *
          * @name   Controller.showPaste
          * @function
@@ -5730,7 +5730,7 @@ jQuery.PrivateBin = (function($) {
                 Model.getPasteKey();
             } catch (err) {
                 console.error(err);
-                Alert.showError('Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)');
+                Alert.showError('Cannot decrypt document: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)');
                 return;
             }
 
@@ -5745,7 +5745,7 @@ jQuery.PrivateBin = (function($) {
         };
 
         /**
-         * refreshes the loaded paste to show potential new data
+         * refreshes the loaded document to show potential new data
          *
          * @name   Controller.refreshPaste
          * @function
@@ -5786,7 +5786,7 @@ jQuery.PrivateBin = (function($) {
         }
 
         /**
-         * clone the current paste
+         * clone the current document
          *
          * @name   Controller.clonePaste
          * @function
@@ -5796,7 +5796,7 @@ jQuery.PrivateBin = (function($) {
             TopNav.collapseBar();
             TopNav.hideAllButtons();
 
-            // hide messages from previous paste
+            // hide messages from previous document
             me.hideStatusMessages();
 
             // erase the id and the key in url
@@ -5822,7 +5822,7 @@ jQuery.PrivateBin = (function($) {
                 // files were cloned too!
                 Alert.showStatus(
                     [
-                        'The cloned file \'%s\' was attached to this paste.',
+                        'The cloned file \'%s\' was attached to this document.',
                         attachments.map(attachment => attachment[1]).join(', '),
                     ],
                     'copy'
@@ -5917,8 +5917,8 @@ jQuery.PrivateBin = (function($) {
             }
             me.initZ();
 
-            // if delete token is passed (i.e. paste has been deleted by this
-            // access), add an event listener for the 'new' paste button in the alert
+            // if delete token is passed (i.e. document has been deleted by this
+            // access), add an event listener for the 'new' document button in the alert
             if (Model.hasDeleteToken()) {
                 $("#new-from-alert").on("click", function () {
                     UiHelper.reloadHome();
@@ -5926,20 +5926,20 @@ jQuery.PrivateBin = (function($) {
                 return;
             }
 
-            // check whether existing paste needs to be shown
+            // check whether existing document needs to be shown
             try {
                 Model.getPasteId();
             } catch (e) {
-                // otherwise create a new paste
+                // otherwise create a new document
                 return me.newPaste();
             }
 
-            // always reload on back button to invalidate cache(protect burn after read paste)
+            // always reload on back button to invalidate cache (protect burn after read document)
             window.addEventListener('popstate', () => {
                 window.location.reload();
             });
 
-            // display an existing paste
+            // display an existing document
             return me.showPaste();
         }
 

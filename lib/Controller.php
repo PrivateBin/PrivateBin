@@ -37,11 +37,11 @@ class Controller
     const MIN_PHP_VERSION = '7.4.0';
 
     /**
-     * show the same error message if the paste expired or does not exist
+     * show the same error message if the document expired or does not exist
      *
      * @const string
      */
-    const GENERIC_ERROR = 'Paste does not exist, has expired or has been deleted.';
+    const GENERIC_ERROR = 'Document does not exist, has expired or has been deleted.';
 
     /**
      * configuration
@@ -280,7 +280,7 @@ class Controller
             $this->_return_message(
                 1,
                 I18n::_(
-                    'Paste is limited to %s of encrypted data.',
+                    'Document is limited to %s of encrypted data.',
                     Filter::formatHumanReadableSize($sizelimit)
                 )
             );
@@ -309,7 +309,7 @@ class Controller
             try {
                 $this->_model->purge();
             } catch (Exception $e) {
-                error_log('Error purging pastes: ' . $e->getMessage() . PHP_EOL .
+                error_log('Error purging documents: ' . $e->getMessage() . PHP_EOL .
                     'Use the administration scripts statistics to find ' .
                     'damaged paste IDs and either delete them or restore them ' .
                     'from backup.');
@@ -327,7 +327,7 @@ class Controller
     }
 
     /**
-     * Delete an existing paste
+     * Delete an existing document
      *
      * @access private
      * @param  string $dataid
@@ -338,16 +338,16 @@ class Controller
         try {
             $paste = $this->_model->getPaste($dataid);
             if ($paste->exists()) {
-                // accessing this method ensures that the paste would be
+                // accessing this method ensures that the document would be
                 // deleted if it has already expired
                 $paste->get();
                 if (hash_equals($paste->getDeleteToken(), $deletetoken)) {
-                    // Paste exists and deletion token is valid: Delete the paste.
+                    // Document exists and deletion token is valid: Delete the it.
                     $paste->delete();
-                    $this->_status     = 'Paste was properly deleted.';
+                    $this->_status     = 'Document was properly deleted.';
                     $this->_is_deleted = true;
                 } else {
-                    $this->_error = 'Wrong deletion token. Paste was not deleted.';
+                    $this->_error = 'Wrong deletion token. Document was not deleted.';
                 }
             } else {
                 $this->_error = self::GENERIC_ERROR;
@@ -365,7 +365,7 @@ class Controller
     }
 
     /**
-     * Read an existing paste or comment, only allowed via a JSON API call
+     * Read an existing document, only allowed via a JSON API call
      *
      * @access private
      * @param  string $dataid
@@ -402,7 +402,7 @@ class Controller
         header('Content-Security-Policy: ' . $this->_conf->getKey('cspheader'));
         header('Cross-Origin-Resource-Policy: same-origin');
         header('Cross-Origin-Embedder-Policy: require-corp');
-        // disabled, because it prevents links from a paste to the same site to
+        // disabled, because it prevents links from a document to the same site to
         // be opened. Didn't work with `same-origin-allow-popups` either.
         // See issue https://github.com/PrivateBin/PrivateBin/issues/970 for details.
         // header('Cross-Origin-Opener-Policy: same-origin');

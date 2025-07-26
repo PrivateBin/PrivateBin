@@ -39,7 +39,7 @@ defaultformatter = "plaintext"
 ; (optional) set a syntax highlighting theme, as found in css/prettify/
 ; syntaxhighlightingtheme = "sons-of-obsidian"
 
-; size limit per paste or comment in bytes, defaults to 10 Megabytes
+; size limit per document or comment in bytes, defaults to 10 Megabytes
 sizelimit = 10000000
 
 ; by default PrivateBin use "bootstrap5" template (tpl/bootstrap5.php).
@@ -79,17 +79,17 @@ languageselection = false
 ; if this is set and language selection is disabled, this will be the only language
 ; languagedefault = "en"
 
-; (optional) URL shortener address to offer after a new paste is created.
+; (optional) URL shortener address to offer after a new document is created.
 ; It is suggested to only use this with self-hosted shorteners as this will leak
-; the pastes encryption key.
+; the documents encryption key.
 ; urlshortener = "https://shortener.example.com/api?link="
 
-; (optional) Let users create a QR code for sharing the paste URL with one click.
-; It works both when a new paste is created and when you view a paste.
+; (optional) Let users create a QR code for sharing the document URL with one click.
+; It works both when a new document is created and when you view a document.
 ; qrcode = true
 
-; (optional) Let users send an email sharing the paste URL with one click.
-; It works both when a new paste is created and when you view a paste.
+; (optional) Let users send an email sharing the document URL with one click.
+; It works both when a new document is created and when you view a document.
 ; email = true
 
 ; (optional) IP based icons are a weak mechanism to detect if a comment was from
@@ -109,7 +109,7 @@ languageselection = false
 ; - If you use the bootstrap5 theme, you must change default-src to 'self' to
 ;   enable display of the svg icons
 ; - By default this disallows to load images from third-party servers, e.g. when
-;   they are embedded in pastes. If you wish to allow that, you can adjust the
+;   they are embedded in documents. If you wish to allow that, you can adjust the
 ;   policy here. See https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-it-load-embedded-images
 ;   for details.
 ; - The 'wasm-unsafe-eval' is used to enable webassembly support (used for zlib
@@ -131,7 +131,7 @@ languageselection = false
 ; See https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-it-show-me-an-error-about-an-insecure-connection for more information.
 ; httpwarning = true
 
-; Pick compression algorithm or disable it. Only applies to pastes/comments
+; Pick compression algorithm or disable it. Only applies to documents & comments
 ; created after changing the setting.
 ; Can be set to one these values: "none" / "zlib" (default).
 ; compression = "zlib"
@@ -172,9 +172,9 @@ limit = 10
 ; exempted = "1.2.3.4,10.10.10/24"
 
 ; (optional) If you want only some source IP addresses (v4 or v6) or subnets
-; (CIDR) to be allowed to create pastes, set these here. Invalid IPs will be
+; (CIDR) to be allowed to create documents, set these here. Invalid IPs will be
 ; ignored. If multiple values are to be exempted, the list needs to be comma
-; separated. Leave unset to allow anyone to create pastes.
+; separated. Leave unset to allow anyone to create documents.
 ; creators = "1.2.3.4,10.10.10/24"
 
 ; (optional) if your website runs behind a reverse proxy or load balancer,
@@ -182,12 +182,12 @@ limit = 10
 ; header = "X_FORWARDED_FOR"
 
 [purge]
-; minimum time limit between two purgings of expired pastes, it is only
-; triggered when pastes are created
-; Set this to 0 to run a purge every time a paste is created.
+; minimum time limit between two purgings of expired documents, it is only
+; checked when documents get created
+; Set this to 0 to run a purge every time a document is created.
 limit = 300
 
-; maximum amount of expired pastes to delete in one purge
+; maximum amount of expired documents to delete in one purge
 ; Set this to 0 to disable purging. Set it higher, if you are running a large
 ; site
 batchsize = 10

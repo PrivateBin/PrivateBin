@@ -132,7 +132,7 @@ exports.jscMimeTypes = function() {
     return jsc.elements(mimeTypes);
 };
 
-// provides a random PrivateBin paste formatter
+// provides a random PrivateBin document formatter
 exports.jscFormats = function() {
     return jsc.elements(formats);
 };

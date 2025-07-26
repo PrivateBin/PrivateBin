@@ -671,7 +671,7 @@ class ControllerTest extends TestCase
         ob_end_clean();
         $response = json_decode($content, true);
         $this->assertEquals(1, $response['status'], 'outputs error status');
-        $this->assertEquals('Invalid paste ID.', $response['message'], 'outputs error message');
+        $this->assertEquals('Invalid document ID.', $response['message'], 'outputs error message');
     }
 
     /**
@@ -688,7 +688,7 @@ class ControllerTest extends TestCase
         ob_end_clean();
         $response = json_decode($content, true);
         $this->assertEquals(1, $response['status'], 'outputs error status');
-        $this->assertEquals('Paste does not exist, has expired or has been deleted.', $response['message'], 'outputs error message');
+        $this->assertEquals('Document does not exist, has expired or has been deleted.', $response['message'], 'outputs error message');
     }
 
     /**
@@ -707,7 +707,7 @@ class ControllerTest extends TestCase
         ob_end_clean();
         $response = json_decode($content, true);
         $this->assertEquals(1, $response['status'], 'outputs error status');
-        $this->assertEquals('Paste does not exist, has expired or has been deleted.', $response['message'], 'outputs error message');
+        $this->assertEquals('Document does not exist, has expired or has been deleted.', $response['message'], 'outputs error message');
     }
 
     /**
@@ -804,7 +804,7 @@ class ControllerTest extends TestCase
         $content = ob_get_contents();
         ob_end_clean();
         $this->assertMatchesRegularExpression(
-            '#<div[^>]*id="status"[^>]*>.*Paste was properly deleted\.#s',
+            '#<div[^>]*id="status"[^>]*>.*Document was properly deleted\.#s',
             $content,
             'outputs deleted status correctly'
         );
@@ -825,7 +825,7 @@ class ControllerTest extends TestCase
         $content = ob_get_contents();
         ob_end_clean();
         $this->assertMatchesRegularExpression(
-            '#<div[^>]*id="errormessage"[^>]*>.*Invalid paste ID\.#s',
+            '#<div[^>]*id="errormessage"[^>]*>.*Invalid document ID\.#s',
             $content,
             'outputs delete error correctly'
         );
@@ -844,7 +844,7 @@ class ControllerTest extends TestCase
         $content = ob_get_contents();
         ob_end_clean();
         $this->assertMatchesRegularExpression(
-            '#<div[^>]*id="errormessage"[^>]*>.*Paste does not exist, has expired or has been deleted\.#s',
+            '#<div[^>]*id="errormessage"[^>]*>.*Document does not exist, has expired or has been deleted\.#s',
             $content,
             'outputs delete error correctly'
         );
@@ -864,7 +864,7 @@ class ControllerTest extends TestCase
         $content = ob_get_contents();
         ob_end_clean();
         $this->assertMatchesRegularExpression(
-            '#<div[^>]*id="errormessage"[^>]*>.*Wrong deletion token\. Paste was not deleted\.#s',
+            '#<div[^>]*id="errormessage"[^>]*>.*Wrong deletion token\. Document was not deleted\.#s',
             $content,
             'outputs delete error correctly'
         );
@@ -913,7 +913,7 @@ class ControllerTest extends TestCase
         $content = ob_get_contents();
         ob_end_clean();
         $this->assertMatchesRegularExpression(
-            '#<div[^>]*id="errormessage"[^>]*>.*Paste does not exist, has expired or has been deleted\.#s',
+            '#<div[^>]*id="errormessage"[^>]*>.*Document does not exist, has expired or has been deleted\.#s',
             $content,
             'outputs error correctly'
         );

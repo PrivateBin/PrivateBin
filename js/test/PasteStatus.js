@@ -23,7 +23,7 @@ describe('PasteStatus', function () {
         this.timeout(30000);
 
         jsc.property(
-            'creates a notification after a successfull paste upload',
+            'creates a notification after a successful document upload',
             common.jscUrl(),
             common.jscUrl(false),
             function (url1, url2) {
@@ -155,7 +155,7 @@ describe('PasteStatus', function () {
                         '\t\t<title>PrivateBin</title>\n' +
                         '\t</head>\n' +
                         '\t<body>\n' +
-                        '\t\t<p>Your paste is <a id="pasteurl" href="' + shortUrlString + '">' + shortUrlString + '</a> <span id="copyhint">(Hit <kbd>Ctrl</kbd>+<kbd>c</kbd> to copy)</span></p>\n' +
+                        '\t\t<p>Your document is <a id="pasteurl" href="' + shortUrlString + '">' + shortUrlString + '</a> <span id="copyhint">(Hit <kbd>Ctrl</kbd>+<kbd>c</kbd> to copy)</span></p>\n' +
                         '\t</body>\n' +
                         '</html>',
                     clean = jsdom();

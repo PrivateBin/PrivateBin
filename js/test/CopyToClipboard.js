@@ -4,7 +4,7 @@ const common = require('../common');
 describe('CopyToClipboard', function() {
     this.timeout(30000);
 
-    describe ('Copy paste to clipboard', function () {
+    describe ('Copy document to clipboard', function () {
         jsc.property('Copy with button click',
             common.jscFormats(),
             'nestring',
@@ -13,7 +13,7 @@ describe('CopyToClipboard', function() {
                 common.enableClipboard();
 
                 $('body').html(
-                    '<div id="placeholder" class="hidden">+++ no paste text ' +
+                    '<div id="placeholder" class="hidden">+++ no document text ' +
                     '+++</div><div id="prettymessage" class="hidden">' +
                     '<button type="button" id="prettyMessageCopyBtn"><svg id="copyIcon"></svg>' +
                     '<svg id="copySuccessIcon"></svg></button><pre ' +
@@ -40,7 +40,7 @@ describe('CopyToClipboard', function() {
 
         /**
          * Unfortunately in JSVerify impossible to check if copy with shortcut when user selected some text on the page
-         * (the copy paste to clipboard should not work in this case) due to lacking window.getSelection() in jsdom.
+         * (the copy document to clipboard should not work in this case) due to lacking window.getSelection() in jsdom.
          */
         jsc.property('Copy with keyboard shortcut',
             common.jscFormats(),
@@ -50,7 +50,7 @@ describe('CopyToClipboard', function() {
                 common.enableClipboard();
 
                 $('body').html(
-                    '<div id="placeholder">+++ no paste text ' +
+                    '<div id="placeholder">+++ no document text ' +
                     '+++</div><div id="prettymessage" class="hidden">' +
                     '<button type="button" id="prettyMessageCopyBtn"><svg id="copyIcon"></svg>' +
                     '<svg id="copySuccessIcon"></svg></button><pre ' +
