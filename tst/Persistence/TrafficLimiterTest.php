@@ -91,7 +91,7 @@ class TrafficLimiterTest extends TestCase
         try {
             $this->assertFalse(TrafficLimiter::canPass(), 'expected an exception');
         } catch (Exception $e) {
-            $this->assertEquals($e->getMessage(), 'Your IP is not authorized to create pastes.', 'not a creator');
+            $this->assertEquals($e->getMessage(), 'Your IP is not authorized to create documents.', 'not a creator');
         }
         $_SERVER['REMOTE_ADDR'] = '10.10.10.10';
         $this->assertTrue(TrafficLimiter::canPass(), 'IPv4 in creator range');
@@ -103,7 +103,7 @@ class TrafficLimiterTest extends TestCase
         try {
             $this->assertFalse(TrafficLimiter::canPass(), 'expected an exception');
         } catch (Exception $e) {
-            $this->assertEquals($e->getMessage(), 'Your IP is not authorized to create pastes.', 'request is to fast, not a creator');
+            $this->assertEquals($e->getMessage(), 'Your IP is not authorized to create documents.', 'request is to fast, not a creator');
         }
         $_SERVER['REMOTE_ADDR'] = 'foobar';
         $this->assertTrue(TrafficLimiter::canPass(), 'non-IP address');

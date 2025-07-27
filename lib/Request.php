@@ -75,7 +75,7 @@ class Request
     private $_isJsonApi = false;
 
     /**
-     * Return the paste ID of the current paste.
+     * Return the paste ID of the current document.
      *
      * @access private
      * @return string

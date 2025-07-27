@@ -52,7 +52,7 @@ class Administration
     private $_store;
 
     /**
-     * deletes the requested paste ID, if a valid ID and it exists
+     * deletes the requested document ID, if a valid ID and it exists
      *
      * @access private
      * @param  string $pasteId
@@ -60,20 +60,20 @@ class Administration
     private function _delete($pasteId)
     {
         if (!Paste::isValidId($pasteId)) {
-            self::_error('given ID is not a valid paste ID (16 hexadecimal digits)', 5);
+            self::_error('given ID is not a valid document ID (16 hexadecimal digits)', 5);
         }
         if (!$this->_store->exists($pasteId)) {
             self::_error('given ID does not exist, has expired or was already deleted', 6);
         }
         $this->_store->delete($pasteId);
         if ($this->_store->exists($pasteId)) {
-            self::_error('paste ID exists after deletion, permission problem?', 7);
+            self::_error('document ID exists after deletion, permission problem?', 7);
         }
-        exit("paste $pasteId successfully deleted" . PHP_EOL);
+        exit("document $pasteId successfully deleted" . PHP_EOL);
     }
 
     /**
-     * deletes all stored pastes (regardless of expiration)
+     * deletes all stored documents (regardless of expiration)
      *
      * @access private
      */
@@ -81,14 +81,14 @@ class Administration
     {
         $ids = $this->_store->getAllPastes();
         foreach ($ids as $pasteid) {
-            echo "Deleting paste ID: $pasteid" . PHP_EOL;
+            echo "Deleting document ID: $pasteid" . PHP_EOL;
             $this->_store->delete($pasteid);
         }
-        exit("All pastes successfully deleted" . PHP_EOL);
+        exit("All documents successfully deleted" . PHP_EOL);
     }
 
     /**
-     * deletes all unsupported v1 pastes (regardless of expiration)
+     * deletes all unsupported v1 documents (regardless of expiration)
      *
      * @access private
      */
@@ -99,15 +99,15 @@ class Administration
             try {
                 $paste = $this->_store->read($pasteid);
             } catch (Exception $e) {
-                echo "Error reading paste {$pasteid}: ", $e->getMessage(), PHP_EOL;
+                echo "Error reading document {$pasteid}: ", $e->getMessage(), PHP_EOL;
             }
             if (array_key_exists('adata', $paste)) {
                 continue;
             }
-            echo "Deleting v1 paste ID: $pasteid" . PHP_EOL;
+            echo "Deleting v1 document ID: $pasteid" . PHP_EOL;
             $this->_store->delete($pasteid);
         }
-        exit("All unsupported legacy v1 pastes successfully deleted" . PHP_EOL);
+        exit("All unsupported legacy v1 documents successfully deleted" . PHP_EOL);
     }
 
     /**
@@ -162,25 +162,25 @@ class Administration
     {
         echo <<<'EOT'
 Usage:
-  administration [--delete <paste id> | --delete-all | --delete-v1 |
+  administration [--delete <document id> | --delete-all | --delete-v1 |
                   --empty-dirs | --help | --list-ids | --purge | --statistics]
 
 Options:
-  -d, --delete      deletes the requested paste ID
-  --delete-all      deletes all pastes
-  --delete-v1       deletes all unsupported v1 pastes
+  -d, --delete      deletes the requested document ID
+  --delete-all      deletes all documents
+  --delete-v1       deletes all unsupported v1 documents
   -e, --empty-dirs  removes empty directories (only if Filesystem storage is
                     configured)
   -h, --help        displays this help message
-  -l, --list-ids    lists all paste IDs
-  -p, --purge       purge all expired pastes
-  -s, --statistics  reads all stored pastes and comments and reports statistics
+  -l, --list-ids    lists all document IDs
+  -p, --purge       purge all expired documents
+  -s, --statistics  reads all stored documents and reports statistics
 EOT, PHP_EOL;
         exit($code);
     }
 
     /**
-     * lists all stored paste IDs
+     * lists all stored document IDs
      *
      * @access private
      */
@@ -243,7 +243,7 @@ EOT, PHP_EOL;
     }
 
     /**
-     * reads all stored pastes and comments and reports statistics
+     * reads all stored documents and reports statistics
      *
      * @access public
      */
@@ -278,7 +278,7 @@ EOT, PHP_EOL;
             try {
                 $paste = $this->_store->read($pasteid);
             } catch (Exception $e) {
-                echo "Error reading paste {$pasteid}: ", $e->getMessage(), PHP_EOL;
+                echo "Error reading document {$pasteid}: ", $e->getMessage(), PHP_EOL;
                 ++$counters['damaged'];
             }
             ++$counters['progress'];
@@ -295,7 +295,7 @@ EOT, PHP_EOL;
                 $discussion = $paste['adata'][Paste::ADATA_OPEN_DISCUSSION];
                 $burn = $paste['adata'][Paste::ADATA_BURN_AFTER_READING];
             } else {
-                echo "Unsupported v1 paste ", $pasteid, PHP_EOL;
+                echo "Unsupported v1 document ", $pasteid, PHP_EOL;
                 ++$counters['legacy'];
             }
 
@@ -388,10 +388,10 @@ EOT, PHP_EOL;
             try {
                 $this->_store->purge(PHP_INT_MAX);
             } catch (Exception $e) {
-                echo 'Error purging pastes: ', $e->getMessage(), PHP_EOL,
-                    'Run the statistics to find damaged paste IDs and either delete them or restore them from backup.', PHP_EOL;
+                echo 'Error purging documents: ', $e->getMessage(), PHP_EOL,
+                    'Run the statistics to find damaged document IDs and either delete them or restore them from backup.', PHP_EOL;
             }
-            exit('purging of expired pastes concluded' . PHP_EOL);
+            exit('purging of expired documents concluded' . PHP_EOL);
         }
 
         if ($this->_option('s', 'statistics') !== null) {

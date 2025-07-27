@@ -27,7 +27,7 @@ describe('UiHelper', function () {
         );
 
         jsc.property(
-            'does not redirect to home, when a new paste is created',
+            'does not redirect to home, when a new document is created',
             common.jscUrl(false),
             jsc.nearray(common.jscBase64String()),
             function (url, fragment) {

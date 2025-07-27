@@ -46,7 +46,7 @@ class Comment extends AbstractModel
             throw new Exception('Invalid data.', 67);
         }
 
-        // Make sure the discussion is opened in this paste and in configuration.
+        // Make sure the discussion is opened in this paste and allowed in the configuration.
         if (!$this->getPaste()->isOpendiscussion() || !$this->_conf->getKey('discussion')) {
             throw new Exception('Invalid data.', 68);
         }
@@ -69,17 +69,6 @@ class Comment extends AbstractModel
         ) {
             throw new Exception('Error saving comment. Sorry.', 70);
         }
-    }
-
-    /**
-     * Delete the comment.
-     *
-     * @access public
-     * @throws Exception
-     */
-    public function delete()
-    {
-        throw new Exception('To delete a comment, delete its parent paste', 64);
     }
 
     /**
@@ -131,7 +120,7 @@ class Comment extends AbstractModel
     public function setParentId($id)
     {
         if (!self::isValidId($id)) {
-            throw new Exception('Invalid paste ID.', 65);
+            throw new Exception('Invalid document ID.', 65);
         }
         $this->_data['parentid'] = $id;
     }
