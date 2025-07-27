@@ -1,6 +1,6 @@
 {
     "PrivateBin": "sivlolnitvanku'a",
-    "%s is a minimalist, open source online pastebin where the server has zero knowledge of stored data. Data is encrypted/decrypted %sin the browser%s using 256 bits AES.": ".i la %s mupli lo sorcu lo'e se setca kibro .i ji'a zo'e se zancari gi'e fingubni .i lo samse'u na djuno lo datni selru'e cu .i ba'e %sle brauzero%s ku mipri le do datni ku fi la'oi AES poi bitni li 256",
+    "%s is a minimalist, open source online pastebin where the server has zero knowledge of stored data. Data is encrypted/decrypted %sin the browser%s using 256 bits AES.": "%s is a minimalist, open source online pastebin where the server has zero knowledge of stored data. Data is encrypted/decrypted %sin the browser%s using 256 bits AES.",
     "More information on the <a href=\"https://privatebin.info/\">project page</a>.": "More information on the <a href=\"https://privatebin.info/\">project page</a>.",
     "Because ignorance is bliss": ".i ki'u le ka na djuno cu ka saxfri",
     "Document does not exist, has expired or has been deleted.": "Document does not exist, has expired or has been deleted.",
@@ -210,7 +210,7 @@
     "Encrypted note on %s": ".i lo lo notci ku mifra cu zvati %s",
     "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.",
     "URL shortener may expose your decrypt key in URL.": "URL shortener may expose your decrypt key in URL.",
-    "Save document": "rejgau fukpi",
+    "Save document": "Save document",
     "Your IP is not authorized to create documents.": "Your IP is not authorized to create documents.",
     "Trying to shorten a URL that isn't pointing at our instance.": "Trying to shorten a URL that isn't pointing at our instance.",
     "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".": "Error calling YOURLS. Probably a configuration issue, like wrong or missing \"apiurl\" or \"signature\".",
