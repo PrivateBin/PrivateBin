@@ -172,7 +172,7 @@
     "Cloned: '%s'": "Naklonované: '%s'",
     "The cloned file '%s' was attached to this document.": "K tomuto príspevku bol pripojený klonovaný súbor '%s'.",
     "Attach a file": "Priložiť súbor",
-    "alternatively drag & drop a file or document an image from the clipboard": "prípadne presuňte súbor myšou alebo vložte obrázok zo schránky",
+    "alternatively drag & drop a file or paste an image from the clipboard": "alternatively drag & drop a file or paste an image from the clipboard",
     "File too large, to display a preview. Please download the attachment.": "Súbor je príliš veľký na zobrazenie ukážky. Stiahnite si prosím prílohu.",
     "Remove attachment": "Odstrániť prílohu",
     "Your browser does not support uploading encrypted files. Please use a newer browser.": "Váš prehliadač nepodporuje nahrávanie šifrovaných súborov. Použite prosím novší prehliadač.",
