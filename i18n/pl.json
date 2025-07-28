@@ -172,7 +172,7 @@
     "Cloned: '%s'": "Sklonowano: '%s'",
     "The cloned file '%s' was attached to this document.": "Sklonowany plik '%s' był dołączony do tego dokumentu.",
     "Attach a file": "Załącz plik",
-    "alternatively drag & drop a file or document an image from the clipboard": "Alternatywnie przeciągnij i upuść plik albo wklej obraz ze schowka",
+    "alternatively drag & drop a file or paste an image from the clipboard": "Alternatywnie przeciągnij i upuść plik albo wklej obraz ze schowka",
     "File too large, to display a preview. Please download the attachment.": "Plik zbyt duży aby wyświetlić podgląd. Proszę pobrać załącznik.",
     "Remove attachment": "Usuń załącznik",
     "Your browser does not support uploading encrypted files. Please use a newer browser.": "Twoja przeglądarka nie wspiera wysyłania zaszyfrowanych plików. Użyj nowszej przeglądarki.",

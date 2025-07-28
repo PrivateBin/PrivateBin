@@ -172,7 +172,7 @@
     "Cloned: '%s'": "S-a clonat: '%s'",
     "The cloned file '%s' was attached to this document.": "Fișierul clonat '%s' a fost atașat la acest document.",
     "Attach a file": "Atașați un fișier",
-    "alternatively drag & drop a file or document an image from the clipboard": "alternativ, trageți și plasați un fișier sau lipiți o imagine din clipboard",
+    "alternatively drag & drop a file or paste an image from the clipboard": "alternativ, trageți și plasați un fișier sau lipiți o imagine din clipboard",
     "File too large, to display a preview. Please download the attachment.": "Fișierul este prea mare pentru a afișa o previzualizare. Vă rugăm să descărcaţi fișierul.",
     "Remove attachment": "Eliminați fișierul atașat",
     "Your browser does not support uploading encrypted files. Please use a newer browser.": "Browserul dvs. nu acceptă încărcarea fișierelor criptate. Vă rugăm să folosiți un browser mai nou.",
