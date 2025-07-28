@@ -172,7 +172,7 @@
     "Cloned: '%s'": "Дубльовано: '%s'",
     "The cloned file '%s' was attached to this document.": "Дублікат файлу '%s' був прикріплений до цього запису.",
     "Attach a file": "Прикріпити файл",
-    "alternatively drag & drop a file or paste an image from the clipboard": "alternatively drag & drop a file or paste an image from the clipboard",
+    "alternatively drag & drop a file or paste an image from the clipboard": "також можна перенести файл у вікно переглядача чи вставити зображення з буфера",
     "File too large, to display a preview. Please download the attachment.": "Файл завеликий для відображення передогляду. Будь ласка, звантажте прикріплений файл.",
     "Remove attachment": "Видалити вкладення",
     "Your browser does not support uploading encrypted files. Please use a newer browser.": "Ваш переглядач не підтримує відправлення зашифрованих файлів. Використовуйте сучасніший переглядач.",
