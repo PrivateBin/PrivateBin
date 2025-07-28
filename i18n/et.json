@@ -172,7 +172,7 @@
     "Cloned: '%s'": "Kloonitud: '%s'",
     "The cloned file '%s' was attached to this document.": "Kloonitud fail '%s' manustati sellele kleepele.",
     "Attach a file": "Manusta fail",
-    "alternatively drag & drop a file or document an image from the clipboard": "teise võimalusena lohista fail või kleebi pilt lõikelaualt",
+    "alternatively drag & drop a file or paste an image from the clipboard": "teise võimalusena lohista fail või kleebi pilt lõikelaualt",
     "File too large, to display a preview. Please download the attachment.": "Fail on eelvaate kuvamiseks liiga suur. Palun laadi manus alla.",
     "Remove attachment": "Eemalda manus",
     "Your browser does not support uploading encrypted files. Please use a newer browser.": "Sinu brauser ei toeta krüpteeritud failide üleslaadimist. Palun kasuta uuemat brauserit.",
