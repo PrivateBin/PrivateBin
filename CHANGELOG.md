@@ -1,6 +1,7 @@
 # PrivateBin version history
 
 ## 2.0.1 (not yet released)
+* CHANGED: Update CSP to display icons by default with bootstrap5 template
 
 ## 2.0.0 (2025-07-28)
 * ADDED: Error logging in database and filesystem backend (#1554)
