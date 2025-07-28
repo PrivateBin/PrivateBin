@@ -284,6 +284,7 @@ EOT, PHP_EOL;
             ++$counters['progress'];
 
             if (
+                array_key_exists('meta', $paste) &&
                 array_key_exists('expire_date', $paste['meta']) &&
                 $paste['meta']['expire_date'] < $time
             ) {
