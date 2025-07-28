@@ -1,6 +1,6 @@
 # PrivateBin version history
 
-## 2.0.0 (not yet released)
+## 2.0.0 (2025-07-28)
 * ADDED: Error logging in database and filesystem backend (#1554)
 * ADDED: Statistics on v1 pastes in administration script and option to delete them
 * CHANGED: Removed page template (#265)
