@@ -106,8 +106,6 @@ languageselection = false
 ; scripts or run your site behind certain DDoS-protection services.
 ; Check the documentation at https://content-security-policy.com/
 ; Notes:
-; - If you do not use the bootstrap5 theme, you can change default-src to 'none';
-;   'self' is required in bootstrap5 to enable display of the svg icons
 ; - By default this disallows to load images from third-party servers, e.g. when
 ;   they are embedded in documents. If you wish to allow that, you can adjust the
 ;   policy here. See https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-not-it-load-embedded-images
@@ -119,10 +117,10 @@ languageselection = false
 ;   See https://issues.chromium.org/issues/343754409
 ; - To allow displaying PDF previews in Firefox or Chrome, sandboxing must also
 ;   get turned off. The following CSP allows PDF previews:
-; cspheader = "default-src 'self'; base-uri 'self'; form-action 'none'; manifest-src 'self'; connect-src * blob:; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; font-src 'self'; frame-ancestors 'none'; frame-src blob:; img-src 'self' data: blob:; media-src blob:; object-src blob:"
+; cspheader = "default-src 'none'; base-uri 'self'; form-action 'none'; manifest-src 'self'; connect-src * blob:; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; font-src 'self'; frame-ancestors 'none'; frame-src blob:; img-src 'self' data: blob:; media-src blob:; object-src blob:"
 ;
 ; The recommended and default used CSP is:
-; cspheader = "default-src 'self'; base-uri 'self'; form-action 'none'; manifest-src 'self'; connect-src * blob:; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'; font-src 'self'; frame-ancestors 'none'; frame-src blob:; img-src 'self' data: blob:; media-src blob:; object-src blob:; sandbox allow-same-origin allow-scripts allow-forms allow-modals allow-downloads"
+; cspheader = "default-src 'none'; base-uri 'self'; form-action 'none'; manifest-src 'self'; connect-src * blob:; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'; font-src 'self'; frame-ancestors 'none'; frame-src blob:; img-src 'self' data: blob:; media-src blob:; object-src blob:; sandbox allow-same-origin allow-scripts allow-forms allow-modals allow-downloads"
 
 ; Enable or disable the warning message when the site is served over an insecure
 ; connection (insecure HTTP instead of HTTPS), defaults to true.
