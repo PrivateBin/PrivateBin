@@ -172,7 +172,7 @@
     "Cloned: '%s'": "Klonlandı: '%s'",
     "The cloned file '%s' was attached to this document.": "Klonlanmış dosya '%s' bu yazıya eklendi.",
     "Attach a file": "Dosya ekle",
-    "alternatively drag & drop a file or document an image from the clipboard": "alternatif olarak dosyayı yapıştırabilir veya sürükleyip bırakabilirsiniz",
+    "alternatively drag & drop a file or paste an image from the clipboard": "alternatively drag & drop a file or paste an image from the clipboard",
     "File too large, to display a preview. Please download the attachment.": "Dosya önizleme için çok büyük. Lütfen eki indirin.",
     "Remove attachment": "Eki sil",
     "Your browser does not support uploading encrypted files. Please use a newer browser.": "Tarayıcınız şifreli dosyaları yüklemeyi desteklemiyor. Lütfen daha yeni bir tarayıcı kullanın.",
