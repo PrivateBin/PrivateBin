@@ -172,7 +172,7 @@
     "Cloned: '%s'": "'%s' másolva",
     "The cloned file '%s' was attached to this document.": "A másolt '%s' csatolmányt hozzáadtuk ehhez a bejegyzéshez.",
     "Attach a file": "Fájl csatolása",
-    "alternatively drag & drop a file or document an image from the clipboard": "vagy húzz ide egy fájlt, netán illessz be egy képet a vágólapról.",
+    "alternatively drag & drop a file or paste an image from the clipboard": "alternatively drag & drop a file or paste an image from the clipboard",
     "File too large, to display a preview. Please download the attachment.": "A fájl túl nagy ahhoz, hogy előnézete legyen. Töltsd le, hogy megtekinthesd.",
     "Remove attachment": "Csatolmány eltávolítása",
     "Your browser does not support uploading encrypted files. Please use a newer browser.": "A böngésződ nem támogatja titkosított fájlok feltöltését. Használj újabbat.",
