@@ -137,7 +137,7 @@
     "Could not decrypt data (Wrong key?)": "Impossible de déchiffrer les données (mauvaise clé ?)",
     "Could not delete the document, it was not stored in burn after reading mode.": "Impossible de supprimer le document, car il n'a pas été stocké en mode \"Effacer après lecture\".",
     "FOR YOUR EYES ONLY. Don't close this window, this message can't be displayed again.": "POUR VOS YEUX UNIQUEMENT. Ne fermez pas cette fenêtre, ce document ne pourra plus être affiché.",
-    "Could not decrypt comment; Wrong key?": "Impossible de déchiffrer le commentaire; mauvaise clé ?",
+    "Could not decrypt comment; Wrong key?": "Impossible de déchiffrer le commentaire ; mauvaise clé ?",
     "Reply": "Répondre",
     "Anonymous": "Anonyme",
     "Avatar generated from IP address": "Avatar généré à partir de l'adresse IP",
