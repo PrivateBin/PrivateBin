@@ -292,26 +292,26 @@ EOT, PHP_EOL;
             }
 
             if (array_key_exists('adata', $paste)) {
-                $format = $paste['adata'][Paste::ADATA_FORMATTER];
-                $discussion = $paste['adata'][Paste::ADATA_OPEN_DISCUSSION];
-                $burn = $paste['adata'][Paste::ADATA_BURN_AFTER_READING];
+                switch ($paste['adata'][Paste::ADATA_FORMATTER]) {
+                    case 'plaintext':
+                        ++$counters['plain'];
+                        break;
+                    case 'syntaxhighlighting':
+                        ++$counters['syntax'];
+                        break;
+                    case 'markdown':
+                        ++$counters['md'];
+                        break;
+                    default:
+                        ++$counters['unknown'];
+                        break;
+                }
+                $counters['discussion'] += (int) $paste['adata'][Paste::ADATA_OPEN_DISCUSSION];
+                $counters['burn'] += (int) $paste['adata'][Paste::ADATA_BURN_AFTER_READING];
             } else {
-                echo "Unsupported v1 document ", $pasteid, PHP_EOL;
+                echo "Unsupported v1 paste ", $pasteid, PHP_EOL;
                 ++$counters['legacy'];
             }
-
-            if ($format === 'plaintext') {
-                ++$counters['plain'];
-            } elseif ($format === 'syntaxhighlighting') {
-                ++$counters['syntax'];
-            } elseif ($format === 'markdown') {
-                ++$counters['md'];
-            } else {
-                ++$counters['unknown'];
-            }
-
-            $counters['discussion'] += (int) $discussion;
-            $counters['burn'] += (int) $burn;
 
             // display progress
             if ($counters['progress'] % $dots === 0) {
