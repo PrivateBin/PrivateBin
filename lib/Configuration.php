@@ -25,7 +25,7 @@ class Configuration
      *
      * @var array
      */
-    private $_configuration;
+    protected $_configuration;
 
     /**
      * default configuration
