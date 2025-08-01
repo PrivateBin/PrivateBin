@@ -3382,7 +3382,7 @@ jQuery.PrivateBin = (function($) {
          * @function
          */
         function addClipboardEventHandler() {
-            $(document).on('paste', function (event) {
+            $('#message').on('paste', function (event) {
                 const items = (event.clipboardData || event.originalEvent.clipboardData).items;
                 const files = [...items]
                                     .filter(item => item.kind === 'file')
