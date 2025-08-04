@@ -2158,6 +2158,7 @@ jQuery.PrivateBin = (function($) {
                     $pasteUrl.prop('href', shortUrl);
                     // we pre-select the link so that the user only has to [Ctrl]+[c] the link
                     Helper.selectText($pasteUrl[0]);
+                    CopyToClipboard.setUrl(shortUrl);
                     return;
                 }
             }
