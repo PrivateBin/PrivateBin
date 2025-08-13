@@ -4,6 +4,7 @@
 * CHANGED: CSP recommendation around bootstrap5 template resolved in Firefox 131 (#1613)
 * FIXED: Allow pasting a password for decrypting a paste (#1620)
 * FIXED: Allow copying the shortened link after using a URL shortener (#1624)
+* ADDED: Auto shorten URLs with config option `shortenbydefault` (#1627)
 
 ## 2.0.0 (2025-07-28)
 * ADDED: Error logging in database and filesystem backend (#1554)
