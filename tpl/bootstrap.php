@@ -565,12 +565,20 @@ endif;
 if (!empty($URLSHORTENER)) :
 ?>
 					<p>
-						<button id="shortenbutton" data-shortener="<?php echo I18n::encode($URLSHORTENER); ?>" type="button" class="btn btn-<?php echo $isDark ? 'warning' : 'primary'; ?> btn-block">
+						<button id="shortenbutton" data-shortener="<?php echo I18n::encode($URLSHORTENER); ?>" 
+								<?php if ($SHORTENBYDEFAULT) : ?>
+								data-autoshorten="true" 
+								<?php endif; ?>
+								type="button" class="btn btn-<?php echo $isDark ? 'warning' : 'primary'; ?> btn-block"
+						>
 							<span class="glyphicon glyphicon-send" aria-hidden="true"></span> <?php echo I18n::_('Shorten URL'), PHP_EOL; ?>
 						</button>
 					</p>
 					<div role="alert" class="alert alert-danger">
 						<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+						<?php if ($SHORTENBYDEFAULT) : ?>
+							<?php echo I18n::_('URL shortener is enabled by default.'), PHP_EOL; ?>
+						<?php endif; ?>
 						<?php echo I18n::_('URL shortener may expose your decrypt key in URL.'), PHP_EOL; ?>
 					</div>
 <?php

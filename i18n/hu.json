@@ -210,6 +210,7 @@
     "Encrypted note on %s": "Titkosított jegyzet a %s",
     "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "Látogasd meg ezt a hivatkozást a bejegyzés megtekintéséhez. Ha mások számára is megadod ezt a linket, azzal hozzáférnek ők is.",
     "URL shortener may expose your decrypt key in URL.": "URL shortener may expose your decrypt key in URL.",
+    "URL shortener is enabled by default.": "URL shortener is enabled by default.",
     "Save document": "Save document",
     "Your IP is not authorized to create documents.": "Your IP is not authorized to create documents.",
     "Trying to shorten a URL that isn't pointing at our instance.": "Trying to shorten a URL that isn't pointing at our instance.",

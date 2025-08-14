@@ -210,6 +210,7 @@
     "Encrypted note on %s": "ملاحظة مشفرة على %s",
     "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "زُر هذا الرابط لرؤية الملاحظة. يتيح إعطاء عنوان URL لأي شخص الوصول إلى الملاحظة أيضًا.",
     "URL shortener may expose your decrypt key in URL.": "قد يفضح أداة تقصير عناوين URL مفتاح فك التشفير الخاص بك في URL.",
+    "URL shortener is enabled by default.": "URL shortener is enabled by default.",
     "Save document": "احفظ اللصق",
     "Your IP is not authorized to create documents.": "عنوان IP الخاص بك غير مصرح له بإنشاء لصُق.",
     "Trying to shorten a URL that isn't pointing at our instance.": "محاولة تقصير عنوان URL لا يشير إلى خادمنا.",

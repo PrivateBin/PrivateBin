@@ -210,6 +210,7 @@
     "Encrypted note on %s": "%sהערה מוצפנת ב־",
     "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "נא לבקר בקישור כדי לצפות בהערה. מסירת הקישור לאנשים כלשהם תאפשר גם להם לגשת להערה.",
     "URL shortener may expose your decrypt key in URL.": "שירות קיצור כתובת URL עשוי לחשוף את מפתח הפענוח שלך בכתובת ה-URL.",
+    "URL shortener is enabled by default.": "URL shortener is enabled by default.",
     "Save document": "שמור הדבקה",
     "Your IP is not authorized to create documents.": "ה-IP שלך אינו מורשה ליצור הדבקות.",
     "Trying to shorten a URL that isn't pointing at our instance.": "מנסים לקצר כתובת URL שאינה מצביעה על המערכת שלנו.",

@@ -210,6 +210,7 @@
     "Encrypted note on %s": "Zašifrovaná poznámka na %s",
     "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "Ak chcete zobraziť poznámku, navštívte tento odkaz. Poskytnutie adresy URL komukoľvek im umožní prístup aj k poznámke.",
     "URL shortener may expose your decrypt key in URL.": "Skracovač adries URL môže odhaliť váš dešifrovací kľúč v adrese URL.",
+    "URL shortener is enabled by default.": "URL shortener is enabled by default.",
     "Save document": "Uložiť príspevok",
     "Your IP is not authorized to create documents.": "Vaša IP adresa nie je oprávnená vytvárať príspevky.",
     "Trying to shorten a URL that isn't pointing at our instance.": "Pokúšate sa skrátiť adresu URL, ktorá neukazuje na túto inštanciu.",

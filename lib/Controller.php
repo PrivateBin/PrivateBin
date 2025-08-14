@@ -477,6 +477,7 @@ class Controller
         $page->assign('EXPIRE', $expire);
         $page->assign('EXPIREDEFAULT', $this->_conf->getKey('default', 'expire'));
         $page->assign('URLSHORTENER', $this->_conf->getKey('urlshortener'));
+        $page->assign('SHORTENBYDEFAULT', $this->_conf->getKey('shortenbydefault'));
         $page->assign('QRCODE', $this->_conf->getKey('qrcode'));
         $page->assign('EMAIL', $this->_conf->getKey('email'));
         $page->assign('HTTPWARNING', $this->_conf->getKey('httpwarning'));

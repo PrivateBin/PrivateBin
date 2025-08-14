@@ -2121,6 +2121,21 @@ jQuery.PrivateBin = (function($) {
         };
 
         /**
+         * Checks if auto-shortening is enabled and sends the link to the shortener if it is.
+         *
+         * @name  PasteStatus.checkAutoShorten
+         * @function
+         */
+        me.checkAutoShorten = function() {
+            // check if auto-shortening is enabled
+            if ($shortenButton.data('autoshorten') === true) {
+                // if so, we send the link to the shortener
+                // we do not remove the button, in case shortener fails
+                sendToShortener();
+            } 
+        }
+
+        /**
          * extracts URLs from given string
          *
          * if at least one is found, it disables the shortener button and
@@ -5029,6 +5044,8 @@ jQuery.PrivateBin = (function($) {
             TopNav.hideRawButton();
             TopNav.hideDownloadButton();
             Editor.hide();
+
+            PasteStatus.checkAutoShorten();
 
             // parse and show text
             // (preparation already done in me.sendPaste())

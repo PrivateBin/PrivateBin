@@ -210,6 +210,7 @@
     "Encrypted note on %s": "Encrypted note on %s",
     "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.",
     "URL shortener may expose your decrypt key in URL.": "URL shortener may expose your decrypt key in URL.",
+    "URL shortener is enabled by default.": "URL shortener is enabled by default.",
     "Save document": "Save document",
     "Your IP is not authorized to create documents.": "La teva IP no està autoritzada a crear notes.",
     "Trying to shorten a URL that isn't pointing at our instance.": "S'està intentant escurçar un URL que no apunta a la nostra instància.",

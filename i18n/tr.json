@@ -210,6 +210,7 @@
     "Encrypted note on %s": "%s üzerinde şifrelenmiş not",
     "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "Notu görmek için bu bağlantıyı ziyaret edin. URL'yi birine vermek, onların da nota erişmesini sağlar.",
     "URL shortener may expose your decrypt key in URL.": "URL kısaltıcı, şifre çözme anahtarınızı URL içinde gösterebilir.",
+    "URL shortener is enabled by default.": "URL shortener is enabled by default.",
     "Save document": "Yazıyı kaydet",
     "Your IP is not authorized to create documents.": "IP adresinizin yazı oluşturmaya yetkisi yoktur.",
     "Trying to shorten a URL that isn't pointing at our instance.": "URL'yi kısaltmaya çalışırken, bizim sunucumuza işaret etmeyen bir URL kullanıyorsunuz.",

@@ -210,6 +210,7 @@
     "Encrypted note on %s": "%s 上的加密笔记",
     "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "访问此链接来查看该笔记。将此 URL 发送给任何人即可允许其访问该笔记。",
     "URL shortener may expose your decrypt key in URL.": "短链接服务可能会暴露您在 URL 中的解密密钥。",
+    "URL shortener is enabled by default.": "URL shortener is enabled by default.",
     "Save document": "保存内容",
     "Your IP is not authorized to create documents.": "您的 IP 无权创建粘贴。",
     "Trying to shorten a URL that isn't pointing at our instance.": "尝试缩短一个不指向我们实例的URL。",

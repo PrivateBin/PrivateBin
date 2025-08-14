@@ -210,6 +210,7 @@
     "Encrypted note on %s": "Nota criptografada no %s",
     "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "Visite esse link para ver a nota. Dar a URL para qualquer um permite que eles também acessem a nota.",
     "URL shortener may expose your decrypt key in URL.": "Encurtador de URL pode expor sua chave de descriptografia em URL.",
+    "URL shortener is enabled by default.": "URL shortener is enabled by default.",
     "Save document": "Salvar cópia",
     "Your IP is not authorized to create documents.": "Seu IP não está autorizado a criar cópias.",
     "Trying to shorten a URL that isn't pointing at our instance.": "Tentando encurtar uma URL que não aponta para a nossa instância.",

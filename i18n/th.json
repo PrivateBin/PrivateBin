@@ -210,6 +210,7 @@
     "Encrypted note on %s": "เขารหัสบันทึกย่อบน %s",
     "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "ไปที่ลิงก์นี้เพื่อดูบันทึกย่อทั้งหมด ส่ง URL นี้ให้ใครก็ได้เพื่อให้สามารถเข้าถึงบันทึกย่อได้",
     "URL shortener may expose your decrypt key in URL.": "เครื่องมือสร้างลิงก์ย่ออาจเปิดเผยคีย์ถอดรหัสของคุณใน URL ได้",
+    "URL shortener is enabled by default.": "URL shortener is enabled by default.",
     "Save document": "ดาวน์โหลดข้อมูลการฝากโค้ด",
     "Your IP is not authorized to create documents.": "IP ของคุณไม่ได้รับอนุญาตให้สร้างการฝากโค้ด",
     "Trying to shorten a URL that isn't pointing at our instance.": "กำลังพยายามใช้เครื่องมือสร้างลิงก์ย่อ ที่ไม่ได้ชี้ไปที่อินสแตนซ์ของเรา",
