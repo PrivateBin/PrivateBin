@@ -65,7 +65,7 @@ class ShlinkProxy
                     'http' => array(
                         'method'  => 'POST',
                         'header'  => "Content-Type: application/json\r\n" .
-                                     "X-Api-Key: " . $shlink_api_key . "\r\n",
+                                     'X-Api-Key: ' . $shlink_api_key . "\r\n",
                         'content' => json_encode(
                             array(
                                 'longUrl'       => $link,
@@ -76,8 +76,8 @@ class ShlinkProxy
             )
         );
         if ($data === false) {
-            $http_response_header = $http_response_header ?? [];
-            $statusCode = '';
+            $http_response_header = $http_response_header ?? array();
+            $statusCode           = '';
             if (!empty($http_response_header) && preg_match('/HTTP\/\d+\.\d+\s+(\d+)/', $http_response_header[0], $matches)) {
                 $statusCode = $matches[1];
             }
