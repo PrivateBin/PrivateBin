@@ -210,6 +210,7 @@
     "Encrypted note on %s": "Šifruoti užrašai ties %s",
     "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "Norėdami matyti užrašus, aplankykite šį tinklalapį. Pasidalinus šiuo URL adresu su kitais žmonėmis, jiems taip pat bus leidžiama prieiga prie šių užrašų.",
     "URL shortener may expose your decrypt key in URL.": "URL trumpinimo įrankis gali atskleisti URL adrese jūsų iššifravimo raktą.",
+    "URL shortener is enabled by default.": "URL shortener is enabled by default.",
     "Save document": "Įrašyti įdėjimą",
     "Your IP is not authorized to create documents.": "Jūsų IP adresas neturi įgaliojimų kurti įdėjimų.",
     "Trying to shorten a URL that isn't pointing at our instance.": "Bandoma sutrumpinti URL adresą, kuris nenurodo į mūsų egzempliorių.",

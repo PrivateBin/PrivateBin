@@ -210,6 +210,7 @@
     "Encrypted note on %s": "Notă criptată pe %s",
     "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "Accesați acest link pentru a vedea nota. Nota poate fi accesată de către oricine care are acest URL.",
     "URL shortener may expose your decrypt key in URL.": "Scurtătorul de URL ar putea să vă expună cheia de decriptare din URL.",
+    "URL shortener is enabled by default.": "URL shortener is enabled by default.",
     "Save document": "Salvați document-ul",
     "Your IP is not authorized to create documents.": "Adresa dvs. IP nu este autorizată să creeze document-uri.",
     "Trying to shorten a URL that isn't pointing at our instance.": "Încercarea de a scurta un URL care nu direcționează spre instanța noastră.",

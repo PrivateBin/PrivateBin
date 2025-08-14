@@ -210,6 +210,7 @@
     "Encrypted note on %s": "%sの暗号化されたメモ",
     "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "メモを見るには、このリンクを参照してください。誰でもURLからこのメモにアクセスできます。",
     "URL shortener may expose your decrypt key in URL.": "URLの短縮アプリケーションを使うと、復号用のキーが漏洩するおそれがあります。",
+    "URL shortener is enabled by default.": "URL shortener is enabled by default.",
     "Save document": "ペーストを保存",
     "Your IP is not authorized to create documents.": "あなたのIPアドレスにはペーストを作成する権限がありません。",
     "Trying to shorten a URL that isn't pointing at our instance.": "このインスタンスを指していないURLを短縮しようとしています。",

@@ -210,6 +210,7 @@
     "Encrypted note on %s": "Kryptert notat på %s",
     "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "Besøk denne lenken for å se notatet. Hvis lenken deles med andre, vil de også kunne se notatet.",
     "URL shortener may expose your decrypt key in URL.": "URL forkorter kan avsløre dekrypteringsnøkkelen.",
+    "URL shortener is enabled by default.": "URL shortener is enabled by default.",
     "Save document": "Lagre utklipp",
     "Your IP is not authorized to create documents.": "Din IP er ikke autorisert til å opprette dokumenter.",
     "Trying to shorten a URL that isn't pointing at our instance.": "Prøver å forkorte en URL som ikke peker i vår instans.",

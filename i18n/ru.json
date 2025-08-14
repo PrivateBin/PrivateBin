@@ -210,6 +210,7 @@
     "Encrypted note on %s": "Зашифрованная запись на %s",
     "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "Посетите эту ссылку чтобы просмотреть запись. Передача ссылки кому либо позволит им получить доступ к записи тоже.",
     "URL shortener may expose your decrypt key in URL.": "Сервис сокращения ссылок может получить ваш ключ расшифровки из ссылки.",
+    "URL shortener is enabled by default.": "URL shortener is enabled by default.",
     "Save document": "Сохранить запись",
     "Your IP is not authorized to create documents.": "Вашему IP адресу не разрешено создавать записи.",
     "Trying to shorten a URL that isn't pointing at our instance.": "Попытка сократить URL, который указывает не на наш сервер.",

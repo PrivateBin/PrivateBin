@@ -210,6 +210,7 @@
     "Encrypted note on %s": "Зашифрована нотатка на %s",
     "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "Відвідайте посилання, щоб переглянути нотатку. Передача посилання будь-кому дозволить їм переглянути нотатку.",
     "URL shortener may expose your decrypt key in URL.": "Сервіс скорочення посилань може викрити ваш ключ дешифрування з URL.",
+    "URL shortener is enabled by default.": "URL shortener is enabled by default.",
     "Save document": "Зберегти вставку",
     "Your IP is not authorized to create documents.": "Вашому IP не дозволено створювати вставки.",
     "Trying to shorten a URL that isn't pointing at our instance.": "Спроба скоротити URL, який не вказує на наш екземпляр.",
