@@ -90,6 +90,7 @@ return array(
     'PrivateBin\\View' => $baseDir . '/lib/View.php',
     'PrivateBin\\Vizhash16x16' => $baseDir . '/lib/Vizhash16x16.php',
     'PrivateBin\\YourlsProxy' => $baseDir . '/lib/YourlsProxy.php',
+    'PrivateBin\\ShlinkProxy' => $baseDir . '/lib/ShlinkProxy.php',
     'Stringable' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/Stringable.php',
     'Symfony\\Polyfill\\Php80\\Php80' => $vendorDir . '/symfony/polyfill-php80/Php80.php',
     'Symfony\\Polyfill\\Php80\\PhpToken' => $vendorDir . '/symfony/polyfill-php80/PhpToken.php',

@@ -138,6 +138,7 @@ class ComposerStaticInitDontChange
         'PrivateBin\\View' => __DIR__ . '/../..' . '/lib/View.php',
         'PrivateBin\\Vizhash16x16' => __DIR__ . '/../..' . '/lib/Vizhash16x16.php',
         'PrivateBin\\YourlsProxy' => __DIR__ . '/../..' . '/lib/YourlsProxy.php',
+        'PrivateBin\\ShlinkProxy' => __DIR__ . '/../..' . '/lib/ShlinkProxy.php',
         'Stringable' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Stringable.php',
         'Symfony\\Polyfill\\Php80\\Php80' => __DIR__ . '/..' . '/symfony/polyfill-php80/Php80.php',
         'Symfony\\Polyfill\\Php80\\PhpToken' => __DIR__ . '/..' . '/symfony/polyfill-php80/PhpToken.php',

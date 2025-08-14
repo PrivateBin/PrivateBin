@@ -151,6 +151,9 @@ class Controller
             case 'yourlsproxy':
                 $this->_yourlsproxy($this->_request->getParam('link'));
                 break;
+            case 'shlinkproxy':
+                $this->_shlinkproxy($this->_request->getParam('link'));
+                break;
         }
 
         $this->_setCacheHeaders();
@@ -454,6 +457,11 @@ class Controller
             $page->draw('yourlsproxy');
             return;
         }
+        if ($this->_request->getOperation() === 'shlinkproxy') {
+            $page->assign('SHORTURL', $this->_status);
+            $page->draw('shlinkproxy');
+            return;
+        }
         $page->assign('BASEPATH', I18n::_($this->_conf->getKey('basepath')));
         $page->assign('STATUS', I18n::_($this->_status));
         $page->assign('ISDELETED', I18n::_(json_encode($this->_is_deleted)));
@@ -540,6 +548,22 @@ class Controller
             $this->_error = $yourls->getError();
         } else {
             $this->_status = $yourls->getUrl();
+        }
+    }
+
+    /**
+     * proxies link to SHLINK, updates status or error with response
+     *
+     * @access private
+     * @param string $link
+     */
+    private function _shlinkproxy($link)
+    {
+        $shlink = new ShlinkProxy($this->_conf, $link);
+        if ($shlink->isError()) {
+            $this->_error = $shlink->getError();
+        } else {
+            $this->_status = $shlink->getUrl();
         }
     }
 
