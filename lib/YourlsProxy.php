@@ -11,54 +11,42 @@
 
 namespace PrivateBin;
 
-use Exception;
-
 /**
  * YourlsProxy
  *
  * Forwards a URL for shortening to YOURLS (your own URL shortener) and stores
  * the result.
  */
-class YourlsProxy
+class YourlsProxy extends AbstractProxy
 {
-    /**
-     * error message
-     *
-     * @access private
-     * @var    string
-     */
-    private $_error = '';
-
-    /**
-     * shortened URL
-     *
-     * @access private
-     * @var    string
-     */
-    private $_url = '';
-
     /**
      * constructor
      *
-     * initializes and runs PrivateBin
+     * initializes and runs YourlsProxy
      *
      * @access public
      * @param string $link
      */
     public function __construct(Configuration $conf, $link)
     {
-        if (!str_starts_with($link, $conf->getKey('basepath') . '?')) {
-            $this->_error = 'Trying to shorten a URL that isn\'t pointing at our instance.';
-            return;
-        }
+        parent::__construct($conf, $link);
+    }
 
+    /**
+     * Overrides the abstract parent function to get contents from YOURLS API.
+     *
+     * @access protected
+     * @return string
+     */
+    protected function _getcontents(Configuration $conf, string $link)
+    {
         $yourls_api_url = $conf->getKey('apiurl', 'yourls');
+
         if (empty($yourls_api_url)) {
-            $this->_error = 'Error calling YOURLS. Probably a configuration issue, like wrong or missing "apiurl" or "signature".';
-            return;
+            return null;
         }
 
-        $data = file_get_contents(
+        return file_get_contents(
             $yourls_api_url, false, stream_context_create(
                 array(
                     'http' => array(
@@ -76,56 +64,25 @@ class YourlsProxy
                 )
             )
         );
-        try {
-            $data = Json::decode($data);
-        } catch (Exception $e) {
-            $this->_error = 'Error calling YOURLS. Probably a configuration issue, like wrong or missing "apiurl" or "signature".';
-            error_log('Error calling YOURLS: ' . $e->getMessage());
-            return;
-        }
+    }
 
+    /**
+     * Extracts the short URL from the YOURLS API response.
+     *
+     * @access protected
+     * @param array $data
+     * @return ?string
+     */
+    protected function _extractShortUrl(array $data): ?string
+    {
         if (
             !is_null($data) &&
             array_key_exists('statusCode', $data) &&
             $data['statusCode'] == 200 &&
             array_key_exists('shorturl', $data)
         ) {
-            $this->_url = $data['shorturl'];
-        } else {
-            $this->_error = 'Error parsing YOURLS response.';
+            return $data['shorturl'];
         }
-    }
-
-    /**
-     * Returns the (untranslated) error message
-     *
-     * @access public
-     * @return string
-     */
-    public function getError()
-    {
-        return $this->_error;
-    }
-
-    /**
-     * Returns the shortened URL
-     *
-     * @access public
-     * @return string
-     */
-    public function getUrl()
-    {
-        return $this->_url;
-    }
-
-    /**
-     * Returns true if any error has occurred
-     *
-     * @access public
-     * @return bool
-     */
-    public function isError()
-    {
-        return !empty($this->_error);
+        return null;
     }
 }

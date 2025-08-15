@@ -11,130 +11,74 @@
 
 namespace PrivateBin;
 
-use Exception;
-
 /**
  * ShlinkProxy
  *
  * Forwards a URL for shortening to shlink and stores the result.
  */
-class ShlinkProxy
+class ShlinkProxy extends AbstractProxy
 {
-    /**
-     * error message
-     *
-     * @access private
-     * @var    string
-     */
-    private $_error = '';
-
-    /**
-     * shortened URL
-     *
-     * @access private
-     * @var    string
-     */
-    private $_url = '';
-
     /**
      * constructor
      *
-     * initializes and runs PrivateBin
+     * initializes and runs ShlinkProxy
      *
      * @access public
      * @param string $link
      */
     public function __construct(Configuration $conf, $link)
     {
-        if (!str_starts_with($link, $conf->getKey('basepath') . '?')) {
-            $this->_error = 'Trying to shorten a URL that isn\'t pointing at our instance.';
-            return;
-        }
+        parent::__construct($conf, $link);
+    }
 
+    /**
+     * Overrides the abstract parent function to get contents from Shlink API.
+     *
+     * @access protected
+     * @return string
+     */
+    protected function _getcontents(Configuration $conf, string $link)
+    {
         $shlink_api_url = $conf->getKey('apiurl', 'shlink');
         $shlink_api_key = $conf->getKey('apikey', 'shlink');
 
         if (empty($shlink_api_url) || empty($shlink_api_key)) {
-            $this->_error = 'Error calling Shlink. Probably a configuration issue, like wrong or missing "apiurl" or "apikey".';
             return;
         }
 
-        $data = file_get_contents(
+        $body = array(
+            'longUrl' => $link,
+        );
+
+        return file_get_contents(
             $shlink_api_url, false, stream_context_create(
                 array(
                     'http' => array(
                         'method'  => 'POST',
                         'header'  => "Content-Type: application/json\r\n" .
                                      'X-Api-Key: ' . $shlink_api_key . "\r\n",
-                        'content' => json_encode(
-                            array(
-                                'longUrl'       => $link,
-                            )
-                        ),
+                        'content' => Json::encode($body),
                     ),
                 )
             )
         );
-        if ($data === false) {
-            $http_response_header = $http_response_header ?? array();
-            $statusCode           = '';
-            if (!empty($http_response_header) && preg_match('/HTTP\/\d+\.\d+\s+(\d+)/', $http_response_header[0], $matches)) {
-                $statusCode = $matches[1];
-            }
-            $this->_error = 'Error calling shlink. HTTP request failed for URL ' . $shlink_api_url . '. Status code: ' . $statusCode;
-            error_log('Error calling shlink: HTTP request failed for URL ' . $shlink_api_url . '. Status code: ' . $statusCode);
-            return;
-        }
-        try {
-            $data = Json::decode($data);
-        } catch (Exception $e) {
-            $this->_error = 'Error calling shlink. Probably a configuration issue, like wrong or missing "apiurl" or "apikey".';
-            error_log('Error calling shlink: ' . $e->getMessage());
-            return;
-        }
+    }
 
+    /**
+     * Extracts the short URL from the shlink API response.
+     *
+     * @access protected
+     * @param array $data
+     * @return ?string
+     */
+    protected function _extractShortUrl(array $data): ?string
+    {
         if (
             !is_null($data) &&
-            // array_key_exists('statusCode', $data) &&
-            // $data['statusCode'] == 200 &&
             array_key_exists('shortUrl', $data)
         ) {
-            $this->_url = $data['shortUrl'];
-        } else {
-            $this->_error = 'Error parsing shlink response.';
+            return $data['shortUrl'];
         }
-    }
-
-    /**
-     * Returns the (untranslated) error message
-     *
-     * @access public
-     * @return string
-     */
-    public function getError()
-    {
-        return $this->_error;
-    }
-
-    /**
-     * Returns the shortened URL
-     *
-     * @access public
-     * @return string
-     */
-    public function getUrl()
-    {
-        return $this->_url;
-    }
-
-    /**
-     * Returns true if any error has occurred
-     *
-     * @access public
-     * @return bool
-     */
-    public function isError()
-    {
-        return !empty($this->_error);
+        return null;
     }
 }

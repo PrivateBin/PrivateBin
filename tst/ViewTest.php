@@ -106,8 +106,8 @@ class ViewTest extends TestCase
                 $content,
                 $template . ': outputs error correctly'
             );
-            if ($template === 'yourlsproxy' || $template === 'shlinkproxy') {
-                // yourlsproxy and shlinkproxy templates only display error message
+            if ($template === 'shortenerproxy') {
+                // shortenerproxy template only displays error message
                 continue;
             }
             $this->assertMatchesRegularExpression(
