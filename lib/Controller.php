@@ -149,7 +149,10 @@ class Controller
                 $this->_jsonld($this->_request->getParam('jsonld'));
                 return;
             case 'yourlsproxy':
-                $this->_yourlsproxy($this->_request->getParam('link'));
+                $this->_shortenerproxy($this->_request->getParam('link'), YourlsProxy::class);
+                break;
+            case 'shlinkproxy':
+                $this->_shortenerproxy($this->_request->getParam('link'), ShlinkProxy::class);
                 break;
         }
 
@@ -451,7 +454,12 @@ class Controller
         $page->assign('NAME', $this->_conf->getKey('name'));
         if ($this->_request->getOperation() === 'yourlsproxy') {
             $page->assign('SHORTURL', $this->_status);
-            $page->draw('yourlsproxy');
+            $page->draw('shortenerproxy');
+            return;
+        }
+        if ($this->_request->getOperation() === 'shlinkproxy') {
+            $page->assign('SHORTURL', $this->_status);
+            $page->draw('shortenerproxy');
             return;
         }
         $page->assign('BASEPATH', I18n::_($this->_conf->getKey('basepath')));
@@ -528,18 +536,23 @@ class Controller
     }
 
     /**
-     * proxies link to YOURLS, updates status or error with response
+     * Proxies a link using the specified proxy class, and updates the status or error with the response.
      *
      * @access private
-     * @param string $link
+     * @param string $link The link to be proxied.
+     * @param string $proxyClass The fully qualified class name of the proxy to use.
      */
-    private function _yourlsproxy($link)
+    private function _shortenerproxy($link, $proxyClass)
     {
-        $yourls = new YourlsProxy($this->_conf, $link);
-        if ($yourls->isError()) {
-            $this->_error = $yourls->getError();
+        if (!is_subclass_of($proxyClass, AbstractProxy::class)) {
+            $this->_error = 'Invalid proxy class.';
+            return;
+        }
+        $proxy = new $proxyClass($this->_conf, $link);
+        if ($proxy->isError()) {
+            $this->_error = $proxy->getError();
         } else {
-            $this->_status = $yourls->getUrl();
+            $this->_status = $proxy->getUrl();
         }
     }
 

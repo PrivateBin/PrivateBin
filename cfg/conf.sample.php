@@ -274,6 +274,17 @@ dir = PATH "data"
 ;version = "latest"
 ;bucket = "my-bucket"
 
+;[shlink]
+; - Shlink requires you to make a post call with a generated API key.
+;   use this section to setup the API key and URL. In order to use this section,
+;   "urlshortener" needs to point to the base URL of your PrivateBin
+;   instance with "?shortenviashlink&link=" appended. For example:
+;   urlshortener = "${basepath}?shortenviashlink&link="
+;   This URL will in turn call YOURLS on the server side, using the URL from
+;   "apiurl" and the API Key from the "apikey" parameters below.
+; apiurl = "https://shlink.example.com/rest/v3/short-urls"
+; apikey = "your_api_key"
+
 ;[yourls]
 ; When using YOURLS as a "urlshortener" config item:
 ; - By default, "urlshortener" will point to the YOURLS API URL, with or without

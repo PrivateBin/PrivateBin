@@ -336,6 +336,6 @@ class JsonApiTest extends TestCase
         new Controller;
         $content = ob_get_contents();
         ob_end_clean();
-        $this->assertStringContainsString('Error calling YOURLS.', $content, 'outputs error correctly');
+        $this->assertStringContainsString('Error calling proxy.', $content, 'outputs error correctly');
     }
 }
