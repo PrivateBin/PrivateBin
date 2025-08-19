@@ -57,7 +57,7 @@ abstract class AbstractProxy
         $proxyUrl = $this->_getProxyUrl($conf);
 
         if (empty($proxyUrl)) {
-            $this->_error = 'Error calling proxy. Probably a configuration issue, like missing api url';
+            $this->_error = 'Error calling proxy. Probably a configuration issue, like wrong or missing config keys.';
             error_log($this->_error);
             return;
         }
@@ -70,20 +70,14 @@ abstract class AbstractProxy
             )
         );
 
-        if ($data == null) {
-            $this->_error = 'Error calling proxy. Probably a configuration issue';
-            error_log($this->_error);
-            return;
-        }
-
         if ($data === false) {
             $http_response_header = $http_response_header ?? array();
             $statusCode           = '';
             if (!empty($http_response_header) && preg_match('/HTTP\/\d+\.\d+\s+(\d+)/', $http_response_header[0], $matches)) {
                 $statusCode = $matches[1];
             }
-            $this->_error = 'Error calling proxy. HTTP request failed. Status code: ' . $statusCode;
-            error_log($this->_error);
+            $this->_error = 'Error calling proxy. Probably a configuration issue, like wrong or missing config keys.';
+            error_log($this->_error . ' Status code: ' . $statusCode);
             return;
         }
 
@@ -97,8 +91,8 @@ abstract class AbstractProxy
 
         $url = $this->_extractShortUrl($jsonData);
 
-        if ($url === null) {
-            $this->_error = 'Error calling proxy. Probably a configuration issue, like wrong or missing config keys.';
+        if ($url === null || empty($url)) {
+            $this->_error = 'Error parsing proxy response.';
             error_log('Error calling proxy: ' . $data);
         } else {
             $this->_url = $url;
