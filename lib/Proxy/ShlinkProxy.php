@@ -9,7 +9,10 @@
  * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
  */
 
-namespace PrivateBin;
+namespace PrivateBin\Proxy;
+
+use PrivateBin\Configuration;
+use PrivateBin\Json;
 
 /**
  * ShlinkProxy
@@ -19,48 +22,37 @@ namespace PrivateBin;
 class ShlinkProxy extends AbstractProxy
 {
     /**
-     * constructor
+     * Overrides the abstract parent function to get the proxy URL.
      *
-     * initializes and runs ShlinkProxy
-     *
-     * @access public
-     * @param string $link
+     * @param Configuration $conf
+     * @return string
      */
-    public function __construct(Configuration $conf, $link)
+    protected function _getProxyUrl(Configuration $conf): string
     {
-        parent::__construct($conf, $link);
+        return $conf->getKey('apiurl', 'shlink');
     }
 
     /**
      * Overrides the abstract parent function to get contents from Shlink API.
      *
      * @access protected
-     * @return string
+     * @param Configuration $conf
+     * @param string $link
+     * @return array
      */
-    protected function _getcontents(Configuration $conf, string $link)
+    protected function _getProxyPayload(Configuration $conf, string $link): array
     {
-        $shlink_api_url = $conf->getKey('apiurl', 'shlink');
         $shlink_api_key = $conf->getKey('apikey', 'shlink');
-
-        if (empty($shlink_api_url) || empty($shlink_api_key)) {
-            return;
-        }
 
         $body = array(
             'longUrl' => $link,
         );
 
-        return file_get_contents(
-            $shlink_api_url, false, stream_context_create(
-                array(
-                    'http' => array(
-                        'method'  => 'POST',
-                        'header'  => "Content-Type: application/json\r\n" .
-                                     'X-Api-Key: ' . $shlink_api_key . "\r\n",
-                        'content' => Json::encode($body),
-                    ),
-                )
-            )
+        return array(
+            'method'  => 'POST',
+            'header'  => "Content-Type: application/json\r\n" .
+                         'X-Api-Key: ' . $shlink_api_key . "\r\n",
+            'content' => Json::encode($body),
         );
     }
 
@@ -74,7 +66,6 @@ class ShlinkProxy extends AbstractProxy
     protected function _extractShortUrl(array $data): ?string
     {
         if (
-            !is_null($data) &&
             array_key_exists('shortUrl', $data)
         ) {
             return $data['shortUrl'];

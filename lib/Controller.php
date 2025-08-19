@@ -14,6 +14,9 @@ namespace PrivateBin;
 use Exception;
 use PrivateBin\Persistence\ServerSalt;
 use PrivateBin\Persistence\TrafficLimiter;
+use PrivateBin\Proxy\AbstractProxy;
+use PrivateBin\Proxy\ShlinkProxy;
+use PrivateBin\Proxy\YourlsProxy;
 
 /**
  * Controller
@@ -149,10 +152,10 @@ class Controller
                 $this->_jsonld($this->_request->getParam('jsonld'));
                 return;
             case 'yourlsproxy':
-                $this->_shortenerproxy($this->_request->getParam('link'), YourlsProxy::class);
+                $this->_shortenerproxy(new YourlsProxy($this->_conf, $this->_request->getParam('link')));
                 break;
             case 'shlinkproxy':
-                $this->_shortenerproxy($this->_request->getParam('link'), ShlinkProxy::class);
+                $this->_shortenerproxy(new ShlinkProxy($this->_conf, $this->_request->getParam('link')));
                 break;
         }
 
@@ -539,16 +542,10 @@ class Controller
      * Proxies a link using the specified proxy class, and updates the status or error with the response.
      *
      * @access private
-     * @param string $link The link to be proxied.
-     * @param string $proxyClass The fully qualified class name of the proxy to use.
+     * @param AbstractProxy $proxy The instance of the proxy class.
      */
-    private function _shortenerproxy($link, $proxyClass)
+    private function _shortenerproxy(AbstractProxy $proxy)
     {
-        if (!is_subclass_of($proxyClass, AbstractProxy::class)) {
-            $this->_error = 'Invalid proxy class.';
-            return;
-        }
-        $proxy = new $proxyClass($this->_conf, $link);
         if ($proxy->isError()) {
             $this->_error = $proxy->getError();
         } else {

@@ -9,14 +9,16 @@
  * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
  */
 
-namespace PrivateBin;
+namespace PrivateBin\Proxy;
 
 use Exception;
+use PrivateBin\Configuration;
+use PrivateBin\Json;
 
 /**
  * AbstractProxy
  *
- * Forwards a URL for shortening to shlink and stores the result.
+ * Forwards a URL for shortening and stores the result.
  */
 abstract class AbstractProxy
 {
@@ -42,20 +44,35 @@ abstract class AbstractProxy
      * initializes and runs the proxy class
      *
      * @access public
+     * @param Configuration $conf
      * @param string $link
      */
-    public function __construct(Configuration $conf, $link)
+    public function __construct(Configuration $conf, string $link)
     {
         if (!str_starts_with($link, $conf->getKey('basepath') . '?')) {
             $this->_error = 'Trying to shorten a URL that isn\'t pointing at our instance.';
             return;
         }
 
-        $data = $this->_getcontents($conf, $link);
+        $proxyUrl = $this->_getProxyUrl($conf);
+
+        if (empty($proxyUrl)) {
+            $this->_error = 'Error calling proxy. Probably a configuration issue, like missing api url';
+            error_log($this->_error);
+            return;
+        }
+
+        $data = file_get_contents($proxyUrl, false,
+            stream_context_create(
+                array(
+                    'http' => $this->_getProxyPayload($conf, $link),
+                )
+            )
+        );
 
         if ($data == null) {
             $this->_error = 'Error calling proxy. Probably a configuration issue';
-            error_log('Error calling proxy: ' . $this->_error);
+            error_log($this->_error);
             return;
         }
 
@@ -66,22 +83,23 @@ abstract class AbstractProxy
                 $statusCode = $matches[1];
             }
             $this->_error = 'Error calling proxy. HTTP request failed. Status code: ' . $statusCode;
-            error_log('Error calling proxy: ' . $this->_error);
+            error_log($this->_error);
             return;
         }
 
         try {
-            $data = Json::decode($data);
+            $jsonData = Json::decode($data);
         } catch (Exception $e) {
             $this->_error = 'Error calling proxy. Probably a configuration issue, like wrong or missing config keys.';
             error_log('Error calling proxy: ' . $e->getMessage());
             return;
         }
 
-        $url = $this->_extractShortUrl($data);
+        $url = $this->_extractShortUrl($jsonData);
 
         if ($url === null) {
             $this->_error = 'Error calling proxy. Probably a configuration issue, like wrong or missing config keys.';
+            error_log('Error calling proxy: ' . $data);
         } else {
             $this->_url = $url;
         }
@@ -121,13 +139,14 @@ abstract class AbstractProxy
     }
 
     /**
-     * Abstract method to get contents from a URL.
+     * Abstract method to get the payload to send to the URL Shortener
      *
+     * @access protected
      * @param Configuration $conf
      * @param string $link
-     * @return mixed
+     * @return array
      */
-    abstract protected function _getcontents(Configuration $conf, string $link);
+    abstract protected function _getProxyPayload(Configuration $conf, string $link): array;
 
     /**
      * Abstract method to extract the shortUrl from the response
@@ -136,4 +155,12 @@ abstract class AbstractProxy
      * @return ?string
      */
     abstract protected function _extractShortUrl(array $data): ?string;
+
+    /**
+     * Abstract method to get the proxy URL
+     *
+     * @param Configuration $conf
+     * @return string
+     */
+    abstract protected function _getProxyUrl(Configuration $conf): string;
 }

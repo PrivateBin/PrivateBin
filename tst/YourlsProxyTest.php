@@ -2,7 +2,7 @@
 
 use PHPUnit\Framework\TestCase;
 use PrivateBin\Configuration;
-use PrivateBin\YourlsProxy;
+use PrivateBin\Proxy\YourlsProxy;
 
 class YourlsProxyTest extends TestCase
 {
