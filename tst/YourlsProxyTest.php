@@ -68,7 +68,7 @@ class YourlsProxyTest extends TestCase
 
         $yourls = new YourlsProxy($this->_conf, 'https://example.com/?foo#bar');
         $this->assertTrue($yourls->isError());
-        $this->assertEquals($yourls->getError(), 'Error parsing proxy response.');
+        $this->assertEquals($yourls->getError(), 'Proxy error: Error parsing proxy response. This can be a configuration issue, like wrong or missing config keys.');
     }
 
     public function testServerError()
@@ -78,6 +78,6 @@ class YourlsProxyTest extends TestCase
 
         $yourls = new YourlsProxy($this->_conf, 'https://example.com/?foo#bar');
         $this->assertTrue($yourls->isError());
-        $this->assertEquals($yourls->getError(), 'Error calling proxy. Probably a configuration issue, like wrong or missing config keys.');
+        $this->assertEquals($yourls->getError(), 'Proxy error: Error parsing proxy response. This can be a configuration issue, like wrong or missing config keys.');
     }
 }

@@ -57,8 +57,8 @@ abstract class AbstractProxy
         $proxyUrl = $this->_getProxyUrl($conf);
 
         if (empty($proxyUrl)) {
-            $this->_error = 'Error calling proxy. Probably a configuration issue, like wrong or missing config keys.';
-            error_log($this->_error);
+            $this->_error = 'Proxy error: Proxy URL is empty. This can be a configuration issue, like wrong or missing config keys.';
+            $this->logErrorWithClassName($this->_error);
             return;
         }
 
@@ -76,27 +76,32 @@ abstract class AbstractProxy
             if (!empty($http_response_header) && preg_match('/HTTP\/\d+\.\d+\s+(\d+)/', $http_response_header[0], $matches)) {
                 $statusCode = $matches[1];
             }
-            $this->_error = 'Error calling proxy. Probably a configuration issue, like wrong or missing config keys.';
-            error_log($this->_error . ' Status code: ' . $statusCode);
+            $this->_error = 'Proxy error: Bad response. This can be a configuration issue, like wrong or missing config keys or a temporary outage.';
+            $this->logErrorWithClassName($this->_error . ' Status code: ' . $statusCode);
             return;
         }
 
         try {
             $jsonData = Json::decode($data);
         } catch (Exception $e) {
-            $this->_error = 'Error calling proxy. Probably a configuration issue, like wrong or missing config keys.';
-            error_log('Error calling proxy: ' . $e->getMessage());
+            $this->_error = 'Proxy error: Error parsing proxy response. This can be a configuration issue, like wrong or missing config keys.';
+            $this->logErrorWithClassName('Error calling proxy: ' . $e->getMessage());
             return;
         }
 
         $url = $this->_extractShortUrl($jsonData);
 
         if ($url === null || empty($url)) {
-            $this->_error = 'Error parsing proxy response.';
-            error_log('Error calling proxy: ' . $data);
+            $this->_error = 'Proxy error: Error parsing proxy response. This can be a configuration issue, like wrong or missing config keys.';
+            $this->logErrorWithClassName('Error calling proxy: ' . $data);
         } else {
             $this->_url = $url;
         }
+    }
+
+    private function logErrorWithClassName(string $error)
+    {
+        error_log('[' . get_class($this) . '] ' . $error);
     }
 
     /**
@@ -133,7 +138,7 @@ abstract class AbstractProxy
     }
 
     /**
-     * Abstract method to get the payload to send to the URL Shortener
+     * Abstract method to get the payload to send to the URL shortener
      *
      * @access protected
      * @param Configuration $conf

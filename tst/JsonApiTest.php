@@ -364,7 +364,35 @@ class JsonApiTest extends TestCase
         @new Controller;
         $content = ob_get_contents();
         ob_end_clean();
-        $this->assertStringContainsString('Error calling proxy.', $content, 'outputs error correctly');
+        $this->assertStringContainsString('Proxy error: Bad response.', $content, 'outputs error correctly');
+    }
+
+    /**
+     * @runInSeparateProcess
+     * @dataProvider baseShlinkUriProvider
+     */
+    public function testShortenViaShlinkSuccessButMissingShortUrl($baseUri)
+    {
+        $mock_shlink_service                = $this->_path . DIRECTORY_SEPARATOR . 'shlink.json';
+        $options                            = parse_ini_file(CONF, true);
+        $options['main']['basepath']        = 'https://example.com/path'; // missing slash gets added by Configuration constructor
+        $options['main']['urlshortener']    = 'https://example.com' . $baseUri . 'link=';
+        $options['shlink']['apiurl']        = $mock_shlink_service;
+        Helper::createIniFile(CONF, $options);
+
+        // Ideally, this should never happen, just in case "shortUrl" is somehow missing in the 200 response
+        file_put_contents($mock_shlink_service, '{}');
+
+        $_SERVER['REQUEST_URI'] = $baseUri . 'link=https%3A%2F%2Fexample.com%2Fpath%2F%3Ffoo%23bar';
+        $_GET['link']           = 'https://example.com/path/?foo#bar';
+        if (str_contains($baseUri, '?shortenviashlink')) {
+            $_GET['shortenviashlink'] = null;
+        }
+        ob_start();
+        new Controller;
+        $content = ob_get_contents();
+        ob_end_clean();
+        $this->assertStringContainsString('Proxy error: Error parsing proxy response.', $content, 'outputs error correctly');
     }
 
     public function baseUriProvider()
@@ -399,7 +427,7 @@ class JsonApiTest extends TestCase
         new Controller;
         $content = ob_get_contents();
         ob_end_clean();
-        $this->assertStringContainsString('Error calling proxy.', $content, 'outputs error correctly');
+        $this->assertStringContainsString('Proxy error: Proxy URL is empty. This can be a configuration issue, like wrong or missing config keys.', $content, 'outputs error correctly');
     }
 
     /**
@@ -416,6 +444,6 @@ class JsonApiTest extends TestCase
         new Controller;
         $content = ob_get_contents();
         ob_end_clean();
-        $this->assertStringContainsString('Error calling proxy.', $content, 'outputs error correctly');
+        $this->assertStringContainsString('Proxy error: Proxy URL is empty. This can be a configuration issue, like wrong or missing config keys.', $content, 'outputs error correctly');
     }
 }
