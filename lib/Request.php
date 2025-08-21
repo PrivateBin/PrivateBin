@@ -124,6 +124,7 @@ class Request
                     'link'             => FILTER_SANITIZE_URL,
                     'pasteid'          => FILTER_SANITIZE_SPECIAL_CHARS,
                     'shortenviayourls' => FILTER_SANITIZE_SPECIAL_CHARS,
+                    'shortenviashlink' => FILTER_SANITIZE_SPECIAL_CHARS,
                 ), false);
         }
         if (
@@ -148,6 +149,9 @@ class Request
         } elseif (array_key_exists('link', $this->_params) && !empty($this->_params['link'])) {
             if (str_contains($this->getRequestUri(), '/shortenviayourls') || array_key_exists('shortenviayourls', $this->_params)) {
                 $this->_operation = 'yourlsproxy';
+            }
+            if (str_contains($this->getRequestUri(), '/shortenviashlink') || array_key_exists('shortenviashlink', $this->_params)) {
+                $this->_operation = 'shlinkproxy';
             }
         }
     }
