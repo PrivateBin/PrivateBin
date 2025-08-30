@@ -455,12 +455,7 @@ class Controller
         $page->assign('CSPHEADER', $metacspheader);
         $page->assign('ERROR', I18n::_($this->_error));
         $page->assign('NAME', $this->_conf->getKey('name'));
-        if ($this->_request->getOperation() === 'yourlsproxy') {
-            $page->assign('SHORTURL', $this->_status);
-            $page->draw('shortenerproxy');
-            return;
-        }
-        if ($this->_request->getOperation() === 'shlinkproxy') {
+        if (in_array($this->_request->getOperation(), array('shlinkproxy', 'yourlsproxy'), true)) {
             $page->assign('SHORTURL', $this->_status);
             $page->draw('shortenerproxy');
             return;
