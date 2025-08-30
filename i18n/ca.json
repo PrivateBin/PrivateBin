@@ -214,7 +214,7 @@
     "Save document": "Save document",
     "Your IP is not authorized to create documents.": "La teva IP no està autoritzada a crear notes.",
     "Trying to shorten a URL that isn't pointing at our instance.": "S'està intentant escurçar un URL que no apunta a la nostra instància.",
-    "Proxy error: Proxy URL is empty. This can be a configuration issue, like wrong or missing config keys.": "Proxy error: Proxy URL is empty. This can be a configuration issue, like wrong or missing config keys.",
+    "Proxy error: Proxy URL is empty. This can be a configuration issue, like wrong or missing config keys.": "Error en la crida a YOURLS. Probablement és un problema de configuració, com ara \"apiurl\" o \"signature\" incorrectes o que falten.",
     "Proxy error: Error parsing proxy response. This can be a configuration issue, like wrong or missing config keys.": "Proxy error: Error parsing proxy response. This can be a configuration issue, like wrong or missing config keys.",
     "Proxy error: Bad response. This can be a configuration issue, like wrong or missing config keys or a temporary outage.": "Proxy error: Bad response. This can be a configuration issue, like wrong or missing config keys or a temporary outage.",
     "This secret message can only be displayed once. Would you like to see it now?": "Aquest missatge secret sols es pot veure una vegada. Vols obrir-ho ara?",
