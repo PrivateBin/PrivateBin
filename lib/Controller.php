@@ -14,6 +14,9 @@ namespace PrivateBin;
 use Exception;
 use PrivateBin\Persistence\ServerSalt;
 use PrivateBin\Persistence\TrafficLimiter;
+use PrivateBin\Proxy\AbstractProxy;
+use PrivateBin\Proxy\ShlinkProxy;
+use PrivateBin\Proxy\YourlsProxy;
 
 /**
  * Controller
@@ -149,7 +152,10 @@ class Controller
                 $this->_jsonld($this->_request->getParam('jsonld'));
                 return;
             case 'yourlsproxy':
-                $this->_yourlsproxy($this->_request->getParam('link'));
+                $this->_shortenerproxy(new YourlsProxy($this->_conf, $this->_request->getParam('link')));
+                break;
+            case 'shlinkproxy':
+                $this->_shortenerproxy(new ShlinkProxy($this->_conf, $this->_request->getParam('link')));
                 break;
         }
 
@@ -451,7 +457,12 @@ class Controller
         $page->assign('NAME', $this->_conf->getKey('name'));
         if ($this->_request->getOperation() === 'yourlsproxy') {
             $page->assign('SHORTURL', $this->_status);
-            $page->draw('yourlsproxy');
+            $page->draw('shortenerproxy');
+            return;
+        }
+        if ($this->_request->getOperation() === 'shlinkproxy') {
+            $page->assign('SHORTURL', $this->_status);
+            $page->draw('shortenerproxy');
             return;
         }
         $page->assign('BASEPATH', I18n::_($this->_conf->getKey('basepath')));
@@ -528,18 +539,17 @@ class Controller
     }
 
     /**
-     * proxies link to YOURLS, updates status or error with response
+     * Proxies a link using the specified proxy class, and updates the status or error with the response.
      *
      * @access private
-     * @param string $link
+     * @param AbstractProxy $proxy The instance of the proxy class.
      */
-    private function _yourlsproxy($link)
+    private function _shortenerproxy(AbstractProxy $proxy)
     {
-        $yourls = new YourlsProxy($this->_conf, $link);
-        if ($yourls->isError()) {
-            $this->_error = $yourls->getError();
+        if ($proxy->isError()) {
+            $this->_error = $proxy->getError();
         } else {
-            $this->_status = $yourls->getUrl();
+            $this->_status = $proxy->getUrl();
         }
     }
 

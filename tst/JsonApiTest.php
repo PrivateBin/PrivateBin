@@ -313,12 +313,103 @@ class JsonApiTest extends TestCase
         $this->assertStringContainsString('id="pasteurl" href="https://example.com/1"', $content, "'{$baseUri}' outputs shortened URL correctly");
     }
 
+    /**
+     * @runInSeparateProcess
+     * @dataProvider baseShlinkUriProvider
+     */
+    public function testShortenViaShlink($baseUri)
+    {
+        $mock_shlink_service                = $this->_path . DIRECTORY_SEPARATOR . 'shlink.json';
+        $options                            = parse_ini_file(CONF, true);
+        $options['main']['basepath']        = 'https://example.com/path'; // missing slash gets added by Configuration constructor
+        $options['main']['urlshortener']    = 'https://example.com' . $baseUri . 'link=';
+        $options['shlink']['apiurl']        = $mock_shlink_service;
+        Helper::createIniFile(CONF, $options);
+
+        // the real service answer is more complex, but we only look for the shorturl & statusCode
+        file_put_contents($mock_shlink_service, '{"shortUrl":"https:\/\/example.com\/1"}');
+
+        $_SERVER['REQUEST_URI'] = $baseUri . 'link=https%3A%2F%2Fexample.com%2Fpath%2F%3Ffoo%23bar';
+        $_GET['link']           = 'https://example.com/path/?foo#bar';
+        if (str_contains($baseUri, '?shortenviashlink')) {
+            $_GET['shortenviashlink'] = null;
+        }
+        ob_start();
+        new Controller;
+        $content = ob_get_contents();
+        ob_end_clean();
+        $this->assertStringContainsString('id="pasteurl" href="https://example.com/1"', $content, "'{$baseUri}' outputs shortened URL correctly");
+    }
+
+    /**
+     * @runInSeparateProcess
+     * @dataProvider baseShlinkUriProvider
+     */
+    public function testShortenViaShlinkFailureHttp($baseUri)
+    {
+        $mock_shlink_service                = 'https://httpbin.org/status/403';
+        $options                            = parse_ini_file(CONF, true);
+        $options['main']['basepath']        = 'https://example.com/path'; // missing slash gets added by Configuration constructor
+        $options['main']['urlshortener']    = 'https://example.com' . $baseUri . 'link=';
+        $options['shlink']['apiurl']        = $mock_shlink_service;
+        Helper::createIniFile(CONF, $options);
+
+        $_SERVER['REQUEST_URI'] = $baseUri . 'link=https%3A%2F%2Fexample.com%2Fpath%2F%3Ffoo%23bar';
+        $_GET['link']           = 'https://example.com/path/?foo#bar';
+        if (str_contains($baseUri, '?shortenviashlink')) {
+            $_GET['shortenviashlink'] = null;
+        }
+        ob_start();
+        // Use @ to ignore the http warning for the 403. It will be handled appropriately by AbstractProxy
+        @new Controller;
+        $content = ob_get_contents();
+        ob_end_clean();
+        $this->assertStringContainsString('Proxy error: Bad response.', $content, 'outputs error correctly');
+    }
+
+    /**
+     * @runInSeparateProcess
+     * @dataProvider baseShlinkUriProvider
+     */
+    public function testShortenViaShlinkSuccessButMissingShortUrl($baseUri)
+    {
+        $mock_shlink_service                = $this->_path . DIRECTORY_SEPARATOR . 'shlink.json';
+        $options                            = parse_ini_file(CONF, true);
+        $options['main']['basepath']        = 'https://example.com/path'; // missing slash gets added by Configuration constructor
+        $options['main']['urlshortener']    = 'https://example.com' . $baseUri . 'link=';
+        $options['shlink']['apiurl']        = $mock_shlink_service;
+        Helper::createIniFile(CONF, $options);
+
+        // Ideally, this should never happen, just in case "shortUrl" is somehow missing in the 200 response
+        file_put_contents($mock_shlink_service, '{}');
+
+        $_SERVER['REQUEST_URI'] = $baseUri . 'link=https%3A%2F%2Fexample.com%2Fpath%2F%3Ffoo%23bar';
+        $_GET['link']           = 'https://example.com/path/?foo#bar';
+        if (str_contains($baseUri, '?shortenviashlink')) {
+            $_GET['shortenviashlink'] = null;
+        }
+        ob_start();
+        new Controller;
+        $content = ob_get_contents();
+        ob_end_clean();
+        $this->assertStringContainsString('Proxy error: Error parsing proxy response.', $content, 'outputs error correctly');
+    }
+
     public function baseUriProvider()
     {
         return array(
             array('/path/shortenviayourls?'),
             array('/path/index.php/shortenviayourls?'),
             array('/path?shortenviayourls&'),
+        );
+    }
+
+    public function baseShlinkUriProvider()
+    {
+        return array(
+            array('/path/shortenviashlink?'),
+            array('/path/index.php/shortenviashlink?'),
+            array('/path?shortenviashlink&'),
         );
     }
 
@@ -336,6 +427,23 @@ class JsonApiTest extends TestCase
         new Controller;
         $content = ob_get_contents();
         ob_end_clean();
-        $this->assertStringContainsString('Error calling YOURLS.', $content, 'outputs error correctly');
+        $this->assertStringContainsString('Proxy error: Proxy URL is empty. This can be a configuration issue, like wrong or missing config keys.', $content, 'outputs error correctly');
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testShortenViaShlinkFailure()
+    {
+        $options                            = parse_ini_file(CONF, true);
+        $options['main']['basepath']        = 'https://example.com/path'; // missing slash gets added by Configuration constructor
+        Helper::createIniFile(CONF, $options);
+        $_SERVER['REQUEST_URI'] = '/path/shortenviashlink?link=https%3A%2F%2Fexample.com%2Fpath%2F%3Ffoo%23bar';
+        $_GET['link']           = 'https://example.com/path/?foo#bar';
+        ob_start();
+        new Controller;
+        $content = ob_get_contents();
+        ob_end_clean();
+        $this->assertStringContainsString('Proxy error: Proxy URL is empty. This can be a configuration issue, like wrong or missing config keys.', $content, 'outputs error correctly');
     }
 }
