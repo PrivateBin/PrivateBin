@@ -74,13 +74,22 @@ class YourlsProxyTest extends TestCase
      * This tests for a trick using username of an URI, see:
      * {@see https://cloud.google.com/blog/topics/threat-intelligence/url-obfuscation-schema-abuse/?hl=en}
      *
-     * @return void
+     * @dataProvider providerForeignUrlUsernameTrick
      */
-    public function testForeignUrlUsingUsernameTrick(): void
+    public function testForeignUrlUsingUsernameTrick($url): void
     {
-        $yourls = new YourlsProxy($this->_conf, 'https://example.com/@foreign.malicious.example?foo#bar');
+        $yourls = new YourlsProxy($this->_conf, $url);
         $this->assertTrue($yourls->isError());
         $this->assertEquals($yourls->getError(), 'Trying to shorten a URL that isn\'t pointing at our instance.');
+    }
+
+    public function providerForeignUrlUsernameTrick(): array
+    {
+        return array(
+            array('https://example.com@foreign.malicious.example?foo#bar'),
+            array('https://example.com/@foreign.malicious.example?foo#bar'),
+            array('https://example.com/?@foreign.malicious.example?foo#bar')
+        );
     }
 
     /**
