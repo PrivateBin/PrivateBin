@@ -57,16 +57,17 @@ class YourlsProxyTest extends TestCase
         $this->assertEquals($yourls->getError(), 'Invalid URL given.');
     }
 
-    public function providerInvalidUrl(): array {
-        return [
-            [''],
-            [' '],
-            ['foo'],
-            ['https://'],
-            ['https://example.com'], // missing path and query parameter,
-            ['https://example.com/'], // missing query parameter
-            ['https://example.com?paste=something'] // missing path parameter
-        ];
+    public function providerInvalidUrl(): array
+    {
+        return array(
+            array(''),
+            array(' '),
+            array('foo'),
+            array('https://'),
+            array('https://example.com'), // missing path and query parameter,
+            array('https://example.com/'), // missing query parameter
+            array('https://example.com?paste=something'), // missing path parameter
+        );
     }
 
     /**
@@ -92,12 +93,13 @@ class YourlsProxyTest extends TestCase
         $this->assertEquals($yourls->getError(), 'Trying to shorten a URL that isn\'t pointing at our instance.');
     }
 
-    public function providerForeignUrl(): array {
-        return [
-            ['ftp://example.com/?n=np'], // wrong protocol
-            ['https://other.example.com/?foo#bar'], // wrong domain
-            ['https://other.example.com/?q=https://example.com/?foo#bar'] // domain included inside string
-        ];
+    public function providerForeignUrl(): array
+    {
+        return array(
+            array('ftp://example.com/?n=np'), // wrong protocol
+            array('https://other.example.com/?foo#bar'), // wrong domain
+            array('https://other.example.com/?q=https://example.com/?foo#bar'), // domain included inside string
+        );
     }
 
     public function testYourlsError()
