@@ -50,9 +50,9 @@ class YourlsProxyTest extends TestCase
     /**
      * @dataProvider providerInvalidUrl
      */
-    public function testImvalidUrl($uri)
+    public function testImvalidUrl($url)
     {
-        $yourls = new YourlsProxy($this->_conf, $uri);
+        $yourls = new YourlsProxy($this->_conf, $url);
         $this->assertTrue($yourls->isError());
         $this->assertEquals($yourls->getError(), 'Invalid URL given.');
     }
@@ -63,7 +63,6 @@ class YourlsProxyTest extends TestCase
             array(' '),
             array('foo'),
             array('https://'),
-            array('ftp://example.com/?n=np'),
             array('https://example.com'), // missing path and query parameter,
             array('https://example.com/'), // missing query parameter
             array('https://example.com?paste=something'), // missing path parameter
@@ -82,12 +81,20 @@ class YourlsProxyTest extends TestCase
         $this->assertTrue($yourls->isError());
         $this->assertEquals($yourls->getError(), 'Trying to shorten a URL that isn\'t pointing at our instance.');
     }
-
-    public function testForeignUrl()
+/**
+     * @dataProvider providerForeignUrl
+     */
+    public function testForeignUrl($url)
     {
-        $yourls = new YourlsProxy($this->_conf, 'https://other.example.com/?foo#bar');
+        $yourls = new YourlsProxy($this->_conf, $url);
         $this->assertTrue($yourls->isError());
         $this->assertEquals($yourls->getError(), 'Trying to shorten a URL that isn\'t pointing at our instance.');
+    }
+    public function providerForeignUrl() {
+        return array(
+            ['ftp://example.com/?n=np'], // wrong protocol
+            ['https://other.example.com/?foo#bar'] // wrong domain
+        );
     }
 
     public function testSneakyForeignUrl()
