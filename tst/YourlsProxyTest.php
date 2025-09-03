@@ -88,7 +88,7 @@ class YourlsProxyTest extends TestCase
         return array(
             array('https://example.com@foreign.malicious.example?foo#bar'),
             array('https://example.com/@foreign.malicious.example?foo#bar'),
-            array('https://example.com/?@foreign.malicious.example?foo#bar')
+            array('https://example.com/?@foreign.malicious.example?foo#bar'),
         );
     }
 
