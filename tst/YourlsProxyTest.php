@@ -50,14 +50,14 @@ class YourlsProxyTest extends TestCase
     /**
      * @dataProvider providerInvalidUrl
      */
-    public function testImvalidUrl($url)
+    public function testImvalidUrl($url): void
     {
         $yourls = new YourlsProxy($this->_conf, $url);
         $this->assertTrue($yourls->isError());
         $this->assertEquals($yourls->getError(), 'Invalid URL given.');
     }
 
-    public function providerInvalidUrl() {
+    public function providerInvalidUrl(): array {
         return [
             [''],
             [' '],
@@ -75,7 +75,7 @@ class YourlsProxyTest extends TestCase
      *
      * @return void
      */
-    public function testForeignUrlUsingUsernameTrick()
+    public function testForeignUrlUsingUsernameTrick(): void
     {
         $yourls = new YourlsProxy($this->_conf, 'https://example.com/@foreign.malicious.example?foo#bar');
         $this->assertTrue($yourls->isError());
@@ -85,14 +85,14 @@ class YourlsProxyTest extends TestCase
     /**
      * @dataProvider providerForeignUrl
      */
-    public function testForeignUrl($url)
+    public function testForeignUrl($url): void
     {
         $yourls = new YourlsProxy($this->_conf, $url);
         $this->assertTrue($yourls->isError());
         $this->assertEquals($yourls->getError(), 'Trying to shorten a URL that isn\'t pointing at our instance.');
     }
 
-    public function providerForeignUrl() {
+    public function providerForeignUrl(): array {
         return [
             ['ftp://example.com/?n=np'], // wrong protocol
             ['https://other.example.com/?foo#bar'], // wrong domain
