@@ -45,6 +45,10 @@ class YourlsProxyTest extends TestCase
         $yourls = new YourlsProxy($this->_conf, 'https://example.com/?foo#bar');
         $this->assertFalse($yourls->isError());
         $this->assertEquals($yourls->getUrl(), 'https://example.com/1');
+
+        $yourls = new YourlsProxy($this->_conf, 'https://example.com/?@foreign.malicious.example?foo#bar');
+        $this->assertFalse($yourls->isError());
+        $this->assertEquals($yourls->getUrl(), 'https://example.com/1');
     }
 
     /**
@@ -67,7 +71,7 @@ class YourlsProxyTest extends TestCase
             array('https://example.com'), // missing path and query parameter,
             array('https://example.com/'), // missing query parameter
             array('https://example.com?paste=something'), // missing path parameter
-            array('https://example.com@foreign.malicious.example?foo#bar'), // shall belong to providerForeignUrlUsernameTrick, but for some reason PHP considers this an invalid URL
+            array('https://example.com@foreign.malicious.example?foo#bar'), // missing path parameter
         );
     }
 
@@ -87,9 +91,8 @@ class YourlsProxyTest extends TestCase
     public function providerForeignUrlUsernameTrick(): array
     {
         return array(
-            // array('https://example.com@foreign.malicious.example?foo#bar'),
+            array('https://example.com@foreign.malicious.example/?foo#bar'),
             array('https://example.com/@foreign.malicious.example?foo#bar'),
-            array('https://example.com/?@foreign.malicious.example?foo#bar'),
         );
     }
 
