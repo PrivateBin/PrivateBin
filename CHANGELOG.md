@@ -6,6 +6,7 @@
 * FIXED: Allow copying the shortened link after using a URL shortener (#1624)
 * ADDED: Auto shorten URLs with config option `shortenbydefault` (#1627)
 * ADDED: Added `shortenviashlink` endpoint with an `shlink` configuration section 
+* FIXED: Check for quotes and conical braces when extracting short url (#1644)
 
 ## 2.0.0 (2025-07-28)
 * ADDED: Error logging in database and filesystem backend (#1554)
