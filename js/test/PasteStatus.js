@@ -149,7 +149,6 @@ describe('PasteStatus', function () {
                         '<html lang="en">\n' +
                         '\t<head>\n' +
                         '\t\t<meta charset="utf-8" />\n' +
-                        '\t\t<meta http-equiv="Content-Security-Policy" content="default-src \'none\'; base-uri \'self\'; form-action \'none\'; manifest-src \'self\'; connect-src * blob:; script-src \'self\' \'unsafe-eval\'; style-src \'self\'; font-src \'self\'; frame-ancestors \'none\'; img-src \'self\' data: blob:; media-src blob:; object-src blob:; sandbox allow-same-origin allow-scripts allow-forms allow-popups allow-modals allow-downloads">\n' +
                         '\t\t<meta name="robots" content="noindex" />\n' +
                         '\t\t<meta name="google" content="notranslate">\n' +
                         '\t\t<title>PrivateBin</title>\n' +

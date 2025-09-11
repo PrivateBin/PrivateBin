@@ -2151,7 +2151,7 @@ jQuery.PrivateBin = (function($) {
                 response = JSON.stringify(response);
             }
             if (typeof response === 'string' && response.length > 0) {
-                const shortUrlMatcher = /(?<=[>"])https?:\/\/[^\s"<]+(?=[<"])/g; // JSON API will have URL in quotes, XML in tags
+                const shortUrlMatcher = /https?:\/\/[^\s"<]+/g; // JSON API will have URL in quotes, XML in tags
                 const shortUrl = (response.match(shortUrlMatcher) || []).filter(function(urlRegExMatch) {
                     if (typeof URL.canParse === 'function') {
                         return URL.canParse(urlRegExMatch);
