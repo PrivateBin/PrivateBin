@@ -45,20 +45,74 @@ class YourlsProxyTest extends TestCase
         $yourls = new YourlsProxy($this->_conf, 'https://example.com/?foo#bar');
         $this->assertFalse($yourls->isError());
         $this->assertEquals($yourls->getUrl(), 'https://example.com/1');
+
+        $yourls = new YourlsProxy($this->_conf, 'https://example.com/?@foreign.malicious.example?foo#bar');
+        $this->assertFalse($yourls->isError());
+        $this->assertEquals($yourls->getUrl(), 'https://example.com/1');
     }
 
-    public function testForeignUrl()
+    /**
+     * @dataProvider providerInvalidUrl
+     */
+    public function testImvalidUrl($url): void
     {
-        $yourls = new YourlsProxy($this->_conf, 'https://other.example.com/?foo#bar');
+        $yourls = new YourlsProxy($this->_conf, $url);
+        $this->assertTrue($yourls->isError());
+        $this->assertEquals($yourls->getError(), 'Invalid URL given.');
+    }
+
+    public function providerInvalidUrl(): array
+    {
+        return array(
+            array(''),
+            array(' '),
+            array('foo'),
+            array('https://'),
+            array('https://example.com'), // missing path and query parameter,
+            array('https://example.com/'), // missing query parameter
+            array('https://example.com?paste=something'), // missing path parameter
+            array('https://example.com@foreign.malicious.example?foo#bar'), // missing path parameter
+        );
+    }
+
+    /**
+     * This tests for a trick using username of an URI, see:
+     * {@see https://cloud.google.com/blog/topics/threat-intelligence/url-obfuscation-schema-abuse/?hl=en}
+     *
+     * @dataProvider providerForeignUrlUsernameTrick
+     */
+    public function testForeignUrlUsingUsernameTrick($url): void
+    {
+        $yourls = new YourlsProxy($this->_conf, $url);
         $this->assertTrue($yourls->isError());
         $this->assertEquals($yourls->getError(), 'Trying to shorten a URL that isn\'t pointing at our instance.');
     }
 
-    public function testSneakyForeignUrl()
+    public function providerForeignUrlUsernameTrick(): array
     {
-        $yourls = new YourlsProxy($this->_conf, 'https://other.example.com/?q=https://example.com/?foo#bar');
+        return array(
+            array('https://example.com@foreign.malicious.example/?foo#bar'),
+            array('https://example.com/@foreign.malicious.example?foo#bar'),
+        );
+    }
+
+    /**
+     * @dataProvider providerForeignUrl
+     */
+    public function testForeignUrl($url): void
+    {
+        $yourls = new YourlsProxy($this->_conf, $url);
         $this->assertTrue($yourls->isError());
         $this->assertEquals($yourls->getError(), 'Trying to shorten a URL that isn\'t pointing at our instance.');
+    }
+
+    public function providerForeignUrl(): array
+    {
+        return array(
+            array('ftp://example.com/?n=np'), // wrong protocol
+            array('https://other.example.com/?foo#bar'), // wrong domain
+            array('https://other.example.com/?q=https://example.com/?foo#bar'), // domain included inside string
+        );
     }
 
     public function testYourlsError()

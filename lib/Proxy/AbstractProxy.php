@@ -49,7 +49,14 @@ abstract class AbstractProxy
      */
     public function __construct(Configuration $conf, string $link)
     {
-        if (!str_starts_with($link, $conf->getKey('basepath') . '?')) {
+        if (!filter_var($link, FILTER_VALIDATE_URL, FILTER_FLAG_PATH_REQUIRED | FILTER_FLAG_QUERY_REQUIRED)) {
+            $this->_error = 'Invalid URL given.';
+            return;
+        }
+
+        if (!str_starts_with($link, $conf->getKey('basepath') . '?') ||
+            parse_url($link, PHP_URL_HOST) != parse_url($conf->getKey('basepath'), PHP_URL_HOST)
+        ) {
             $this->_error = 'Trying to shorten a URL that isn\'t pointing at our instance.';
             return;
         }
