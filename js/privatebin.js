@@ -2132,7 +2132,7 @@ jQuery.PrivateBin = (function($) {
                 // if so, we send the link to the shortener
                 // we do not remove the button, in case shortener fails
                 sendToShortener();
-            } 
+            }
         }
 
         /**
@@ -5675,6 +5675,48 @@ jQuery.PrivateBin = (function($) {
     })();
 
     /**
+     *
+     * @name PasswordPeek
+     * @class
+     */
+    const PasswordPeek = (function () {
+        const me = {};
+
+        /**
+         * Switch between visible and hidden password
+         *
+         * @name PasswordPeek.handleRevealButtonClick
+         * @private
+         * @function
+         */
+        function handleRevealButtonClick() {
+            const passwordInput = $(this).siblings('.input-password');
+			const isHidden = passwordInput.attr('type') === 'password';
+
+            passwordInput.attr('type', isHidden ? 'text' : 'password');
+
+			const tooltip = I18n._(isHidden ? 'Hide password' : 'Show password as plain text. Warning: this will display your password on the screen.');
+
+			$(this).attr('title', tooltip);
+			$(this).attr('aria-label', tooltip);
+        }
+
+        /**
+         * Initialize
+         *
+         * @name PasswordPeek.init
+         * @function
+         */
+        me.init = function() {
+            const revealButton = $('.toggle-password');
+
+            revealButton.click(handleRevealButtonClick);
+        };
+
+        return me;
+    })();
+
+    /**
      * (controller) main PrivateBin logic
      *
      * @name   Controller
@@ -5922,6 +5964,7 @@ jQuery.PrivateBin = (function($) {
             TopNav.init();
             UiHelper.init();
             CopyToClipboard.init();
+            PasswordPeek.init();
 
             // check for legacy browsers before going any further
             if (!Legacy.Check.getInit()) {
@@ -5981,6 +6024,7 @@ jQuery.PrivateBin = (function($) {
         ServerInteraction: ServerInteraction,
         PasteEncrypter: PasteEncrypter,
         PasteDecrypter: PasteDecrypter,
+        PasswordPeek: PasswordPeek,
         CopyToClipboard: CopyToClipboard,
         Controller: Controller
     };
