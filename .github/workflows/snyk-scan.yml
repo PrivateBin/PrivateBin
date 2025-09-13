@@ -17,7 +17,12 @@ jobs:
   # https://github.com/snyk/actions/tree/master/php
   snyk-php:
     runs-on: ubuntu-latest
-    if: ${{ github.repository == 'PrivateBin/PrivateBin' && (github.event.pull_request.author_association == 'COLLABORATOR' || github.event.pull_request.author_association == 'OWNER') }}
+    if: |
+      github.repository == 'PrivateBin/PrivateBin' && (
+      github.event.pull_request.author_association == 'COLLABORATOR' ||
+      github.event.pull_request.author_association == 'CONTRIBUTOR' ||
+      github.event.pull_request.author_association == 'MEMBER' ||
+      github.event.pull_request.author_association == 'OWNER' )
     steps:
       - uses: actions/checkout@v5
       - name: Install Google Cloud Storage
