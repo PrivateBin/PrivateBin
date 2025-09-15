@@ -229,5 +229,7 @@
     "Link copied to clipboard": "Verknüpfung wurde in die Zwischenablage kopiert.",
     "Document text": "Text des Dokuments",
     "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)": "Tabulatortaste als Zeichen interpretieren (Umschalten durch <kbd>Strg</kbd>+<kbd>m</kbd> oder <kbd>Esc</kbd>)",
+    "Show password as plain text. Warning: this will display your password on the screen.": "Show password as plain text. Warning: this will display your password on the screen.",
+    "Hide password": "Hide password",
     "Theme": "Design"
 }

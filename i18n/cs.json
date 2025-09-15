@@ -229,5 +229,7 @@
     "Link copied to clipboard": "Odkaz zkopírován do schránky",
     "Document text": "Text dokumentu",
     "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)": "Tabulátor funguje jako znak (pro přepnutí stiskněte <kbd>Ctrl</kbd>+<kbd>m</kbd> nebo <kbd>Esc</kbd>)",
+    "Show password as plain text. Warning: this will display your password on the screen.": "Show password as plain text. Warning: this will display your password on the screen.",
+    "Hide password": "Hide password",
     "Theme": "Vzhled"
 }
