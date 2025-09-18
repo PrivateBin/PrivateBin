@@ -1,0 +1,329 @@
+local Rayfield = loadstring(game:HttpGet('https://[Log in to view URL]'))()
+
+local Window = Rayfield:CreateWindow({
+   Name = "3KS MAINCHEATV2 ",
+   Icon = 0, -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
+   LoadingTitle = "3KS...",
+   LoadingSubtitle = "3KS MAINCHEATV2",
+   ShowText = "3KESPIRITO", -- for mobile users to unhide rayfield, change if you'd like
+   Theme = "Dark", -- Check https://[Log in to view URL]
+
+   ToggleUIKeybind = "K", -- The keybind to toggle the UI visibility (string like "K" or Enum.KeyCode)
+
+   DisableRayfieldPrompts = true,
+   DisableBuildWarnings = true, -- Prevents Rayfield from warning when the script has a version mismatch with the interface
+
+   ConfigurationSaving = {
+      Enabled = true,
+      FolderName = nil, -- Create a custom folder for your hub/game
+      FileName = "3KS"
+   },
+
+   Discord = {
+      Enabled = true, -- Prompt the user to join your Discord server if their executor supports it
+      Invite = "discord.gg/369SHITZ", -- The Discord invite code, do not include discord.gg/. E.g. discord.gg/ ABCD would be ABCD
+      RememberJoins = true -- Set this to false to make them join the discord every time they load it up
+   },
+
+   KeySystem = false, -- Set this to true to use our key system
+   KeySettings = {
+      Title = "3KS GODS",
+      Subtitle = "3KS BABIES",
+      Note = "READY KANA MAG PASABOG!", -- Use this to tell the user how to get a key
+      FileName = "3KESPIRITO", -- It is recommended to use something unique as other scripts using Rayfield may overwrite your key file
+      SaveKey = true, -- The user's key will be saved, but if you change the key, they will be unable to use your script
+      GrabKeyFromSite = false, -- If this is true, set Key below to the RAW site you would like Rayfield to get the key from
+      Key = "3K-CHEAT" -- List of keys that will be accepted by the system, can be RAW file links (pastebin, github etc) or simple strings ("hello","key22")
+   }
+})
+
+local MAINTab = Window:CreateTab("3K MAINCHEATV2", 4483362458) -- Title, Image
+local MAINSection = MAINTab:CreateSection("MAIN")
+
+Rayfield:Notify({
+   Title = "You executed the script",
+   Content = "",
+   Duration = 5,
+   Image = 13047715178,
+   Actions = { -- Notification Buttons
+      Ignore = {
+         Name = "Okay!",
+         Callback = function()
+         print("!!THE SCRIPTS EXECUTED!!")
+      end
+   },
+},
+})
+
+
+local Button = MAINTab:CreateButton({
+   Name = "INFINITE YIELD [3KS]",
+   Callback = function()
+       loadstring(game:HttpGet('https://[Log in to view URL]'))()
+   end
+})
+
+local Button = MAINTab:CreateButton({
+   Name = "MUSIC EXPO [3KS]",
+   Callback = function()
+loadstring(game:HttpGet("https://[Log in to view URL]"))()
+   end,
+})
+
+
+local Button = MAINTab:CreateButton({
+   Name = "BIG HEAD [3KS]",
+   Callback = function()
+_G.HeadSize = 4 _G.Disabled = true game:GetService('RunService').RenderStepped:connect(function() if _G.Disabled then for i,v in next, game:GetService('Players'):GetPlayers() do if v.Name ~= game:GetService('Players').LocalPlayer.Name then pcall(function() v.Character.Head.Size = Vector3.new(_G.HeadSize,_G.HeadSize,_G.HeadSize) v.Character.Head.Transparency = 0.4 v.Character.Head.BrickColor = BrickColor.new("Red") v.Character.Head.Material = "Neon" v.Character.Head.CanCollide = false v.Character.Head.Massless = true end) end end end end)
+ end,
+})
+
+local Button = MAINTab:CreateButton({
+   Name = "FADED MENU [3KS]",
+   Callback = function()
+_G.Toggles = "Y" -- You can put any keybind
+loadstring(game:HttpGet("https://[Log in to view URL]", true))()
+   end,
+})
+
+local Button = MAINTab:CreateButton({
+   Name = "BRING PARTS [3KS]",
+   Callback = function()
+loadstring(game:HttpGet("https://[Log in to view URL]"))("More Scripts: t.me/arceusxscripts")
+   end,
+})
+
+
+
+
+local Button = MAINTab:CreateButton({
+   Name = "TOUCH FLING [3KS]",
+   Callback = function()
+loadstring(game:HttpGet("https://[Log in to view URL]"))()
+   end,
+})
+
+
+local Button = MAINTab:CreateButton({
+   Name = "HITBOX EXPANDER [3KS]",
+   Callback = function()
+loadstring(game:HttpGet("https://[Log in to view URL]"))()
+   end,
+})
+
+local TROLLTab = Window:CreateTab("TROLL", 4483362458) -- Title, Image
+local TROLLSection = TROLLTab:CreateSection("TROLL")
+
+local Button = TROLLTab:CreateButton({
+   Name = "FLING ALL [3KS]",
+   Callback = function()
+loadstring(game:HttpGet("https://[Log in to view URL]"))()
+   end,
+})
+
+local Button = TROLLTab:CreateButton({
+   Name = "WICKED [3KS]",
+   Callback = function()
+loadstring(game:HttpGet("https://[Log in to view URL]"))()
+   end,
+})
+
+local SPAWNGUNTab = Window:CreateTab("🔫SPAWN GUN 1KMI$TRA🔫", 4483362458) -- Title, Image
+local SPAWNGUNSection = SPAWNGUNTab:CreateSection("DUPED GUNS [3KS]")
+
+-- Rayfield button
+SPAWNGUNTab:CreateButton({
+    Name = "ALL CITY HK416 [3KS]",
+    Callback = function()
+        local args = {
+    [1] = "HK416",
+    [2] = -1000000
+}
+
+game:GetService("ReplicatedStorage").GunShop.Events.Purchase:FireServer("HK416", -10000)
+   end,
+})
+
+-- Rayfield button
+SPAWNGUNTab:CreateButton({
+    Name = "ALL CITY SP [3KS]",
+    Callback = function()
+local args = {
+    [1] = "Silenced Pistol",
+    [2] = -1000000
+}
+
+game:GetService("ReplicatedStorage").GunShop.Events.Purchase:FireServer("Silenced Pistol", -10000)
+   end,
+})
+
+-- Rayfield button
+SPAWNGUNTab:CreateButton({
+    Name = "ALL CITY MEDKIT [3KS]",
+    Callback = function()
+   local args = {
+    [1] = "MEDKIT",
+    [2] = -1000000
+}
+
+game:GetService("ReplicatedStorage").GunShop.Events.Purchase:FireServer("MEDKIT", -10000)
+   end,
+})
+
+SPAWNGUNTab:CreateButton({
+    Name = "ALL CITY Desert Eagle [3KS]",
+    Callback = function() game:GetService("ReplicatedStorage").GunShop.Events.Purchase:FireServer("Desert Deagle", -10000)
+    end,
+})
+-- Rayfield button
+SPAWNGUNTab:CreateButton({
+    Name = "ALL CITY Glock-17 [3KS]",
+    Callback = function()
+        local args = {
+    [1] = "Glock-17",
+    [2] = -1000000
+}
+
+game:GetService("ReplicatedStorage").GunShop.Events.Purchase:FireServer("Glock-17", -10000)
+   end,
+ })
+
+-- Rayfield button
+SPAWNGUNTab:CreateButton({
+    Name = "ALL CITY Glock-19 [3KS]",
+    Callback = function()
+        local args = {
+    [1] = "Glock-19",
+    [2] = -1000000
+}
+
+game:GetService("ReplicatedStorage").GunShop.Events.Purchase:FireServer("Glock-19", -10000)
+   end,
+})
+
+local Button = MAINTab:CreateButton({
+   Name = "ESP [3KS]",
+   Callback = function()
+    loadstring(game:HttpGet("https://[Log in to view URL]"))()
+   end,
+})
+
+-- FPS Booster Button (Rayfield example)
+
+local Button = MAINTab:CreateButton({
+   Name = "BOOST FPS [3KS]",
+   Callback = function()
+       _G.Ignore = {}
+_G.Settings = {
+    Players = {
+        ["Ignore Me"] = true,
+        ["Ignore Others"] = true,
+        ["Ignore Tools"] = true
+    },
+    Meshes = {
+        NoMesh = false,
+        NoTexture = false,
+        Destroy = false
+    },
+    Images = {
+        Invisible = true,
+        Destroy = false
+    },
+    Explosions = {
+        Smaller = true,
+        Invisible = false, -- Not for PVP games
+        Destroy = false -- Not for PVP games
+    },
+    Particles = {
+        Invisible = true,
+        Destroy = false
+    },
+    TextLabels = {
+        LowerQuality = true,
+        Invisible = false,
+        Destroy = false
+    },
+    MeshParts = {
+        LowerQuality = true,
+        Invisible = false,
+        NoTexture = false,
+        NoMesh = false,
+        Destroy = false
+    },
+    Other = {
+        ["FPS Cap"] = 240, -- true to uncap
+        ["No Camera Effects"] = true,
+        ["No Clothes"] = true,
+        ["Low Water Graphics"] = true,
+        ["No Shadows"] = true,
+        ["Low Rendering"] = true,    
+        ["Low Quality Parts"] = true,
+        ["Low Quality Models"] = true,
+        ["Reset Materials"] = true,
+    }
+}
+loadstring(game:HttpGet("https://[Log in to view URL]"))()
+   end
+})
+
+-- Rayfield button
+SPAWNGUNTab:CreateButton({
+    Name = "ALL CITY AK-47 [3KS]",
+    Callback = function()
+        local args = {
+    [1] = "AK-47",
+    [2] = -1000000
+}
+
+game:GetService("ReplicatedStorage").GunShop.Events.Purchase:FireServer("AK-47", -10000)
+   end,
+})
+
+-- Rayfield button
+SPAWNGUNTab:CreateButton({
+    Name = "ALL CITY BANDAGES [3KS]",
+    Callback = function()
+        local args = {
+    [1] = "BANDAGES",
+    [2] = -1000000
+}
+
+game:GetService("ReplicatedStorage").GunShop.Events.Purchase:FireServer("BANDAGES", -10000)
+   end,
+})
+
+local Button = MAINTab:CreateButton({
+   Name = "DEX EXPLORER [3KS]",
+   Callback = function()
+loadstring(game:HttpGet('https://[Log in to view URL]'))()
+   end
+})
+
+-- Rayfield button
+SPAWNGUNTab:CreateButton({
+    Name = "ALL CITY UZI [3KS]",
+    Callback = function()
+        local args = {
+    [1] = "UZI",
+    [2] = -1000000
+}
+
+game:GetService("ReplicatedStorage").GunShop.Events.Purchase:FireServer("UZI", -10000)
+   end,
+})
+
+local FANTab = Window:CreateTab("TUROK SA FANTASMA", 4483362458) -- Title, Image
+local FANSection = FANTab:CreateSection("FANSTAMA CHEAT")
+
+local Button = FANTab:CreateButton({
+   Name = "AIMBOT [3KS]",
+   Callback = function()
+loadstring(game:HttpGet("https://[Log in to view URL]"))()
+   end
+})local Button = MAINTab:CreateButton({
+   Name = "AIMBOT [3KS]",
+   Callback = function()
+local Aimbot = loadstring(game:HttpGet("https://[Log in to view URL]"))()
+Aimbot.Load()
+   end
+})
