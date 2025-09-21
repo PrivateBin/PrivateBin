@@ -931,11 +931,12 @@ jQuery.PrivateBin = (function($) {
 
             // load strings from JSON
             let main_script = document.querySelector('script[src^="js/privatebin.js"]');
+            let privatebin_version;
 
             if (main_script) {
-                let privatebin_version = main_script.getAttribute("src").split("?")[1] || null;
+                privatebin_version = main_script.getAttribute("src").split("?")[1] || null;
             } else {
-                let privatebin_version = Math.floor(Date.now() / 60000);
+                privatebin_version = Math.floor(Date.now() / 60000);
             }
 
             $.getJSON('i18n/' + newLanguage + '.json?v=' + privatebin_version, function(data) {
