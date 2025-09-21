@@ -150,7 +150,7 @@
     "unknown status": "Statut inconnu",
     "server error or not responding": "Le serveur ne répond pas ou a rencontré une erreur",
     "Could not post comment: %s": "Impossible de poster le commentaire : %s",
-    "Sending document…": "Envoi du document…",
+    "Sending paste…": "Envoi du document…",
     "Your document is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit <kbd>Ctrl</kbd>+<kbd>c</kbd> to copy)</span>": "Votre document est disponible à l'adresse <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Appuyez sur <kbd>Ctrl</kbd>+<kbd>c</kbd>/<kbd>Cmd</kbd>+<kbd>c</kbd> pour copier)</span>",
     "Delete data": "Supprimer les données du document",
     "Could not create document: %s": "Impossible de créer le document : %s",
@@ -230,5 +230,6 @@
     "Document text": "Texte du document",
     "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)": "La touche de tabulation sert de caractère (Presser <kbd>Ctrl</kbd>+<kbd>m</kbd> ou <kbd>Esc</kbd> pour basculer)",
     "Theme": "Thème",
-    "Decrypting paste…": "Déchiffrement du document…"
+    "Decrypting paste…": "Déchiffrement du document…",
+    "Preparing new paste…": "Préparation du nouveau document…"
 }
