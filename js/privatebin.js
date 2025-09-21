@@ -930,7 +930,15 @@ jQuery.PrivateBin = (function($) {
             }
 
             // load strings from JSON
-            $.getJSON('i18n/' + newLanguage + '.json' + new URL(document.currentScript.src).search, function(data) {
+            let main_script = document.querySelector('script[src^="js/privatebin.js"]');
+
+            if (main_script) {
+                let privatebin_version = main_script.getAttribute("src").split("?")[1] || null;
+            } else {
+                let privatebin_version = Math.floor(Date.now() / 60000);
+            }
+
+            $.getJSON('i18n/' + newLanguage + '.json?v=' + privatebin_version, function(data) {
                 language = newLanguage;
                 translations = data;
                 $(document).triggerHandler(languageLoadedEvent);
