@@ -930,7 +930,7 @@ jQuery.PrivateBin = (function($) {
             }
 
             // load strings from JSON
-            $.getJSON('i18n/' + newLanguage + '.json', function(data) {
+            $.getJSON('i18n/' + newLanguage + '.json' + new URL(document.currentScript.src).search, function(data) {
                 language = newLanguage;
                 translations = data;
                 $(document).triggerHandler(languageLoadedEvent);
@@ -5160,7 +5160,7 @@ jQuery.PrivateBin = (function($) {
 
             // UI loading state
             TopNav.hideAllButtons();
-            Alert.showLoading('Sending paste…', 'cloud-upload');
+            Alert.showLoading('Sending document…', 'cloud-upload');
             TopNav.collapseBar();
 
             // get data
@@ -5431,7 +5431,7 @@ jQuery.PrivateBin = (function($) {
         {
             Alert.hideMessages();
             Alert.setCustomHandler(null);
-            Alert.showLoading('Decrypting paste…', 'cloud-download');
+            Alert.showLoading('Decrypting document…', 'cloud-download');
 
             if (typeof paste === 'undefined' || paste.type === 'click') {
                 // get cipher data and wait until it is available
@@ -5709,7 +5709,7 @@ jQuery.PrivateBin = (function($) {
             // Important: This *must not* run Alert.hideMessages() as previous
             // errors from viewing a document should be shown.
             TopNav.hideAllButtons();
-            Alert.showLoading('Preparing new paste…', 'time');
+            Alert.showLoading('Preparing new document…', 'time');
 
             PasteStatus.hideMessages();
             PasteViewer.hide();
