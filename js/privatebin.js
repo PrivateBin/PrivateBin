@@ -930,7 +930,7 @@ jQuery.PrivateBin = (function($) {
             }
 
             // load strings from JSON
-            $.getJSON('i18n/' + newLanguage + '.json', function(data) {
+            $.getJSON('i18n/' + newLanguage + '.json?v=' + Math.floor(Date.now() / 60000), function(data) {
                 language = newLanguage;
                 translations = data;
                 $(document).triggerHandler(languageLoadedEvent);
