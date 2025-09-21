@@ -229,5 +229,6 @@
     "Link copied to clipboard": "Lien copié dans le presse-papier",
     "Document text": "Texte du document",
     "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)": "La touche de tabulation sert de caractère (Presser <kbd>Ctrl</kbd>+<kbd>m</kbd> ou <kbd>Esc</kbd> pour basculer)",
-    "Theme": "Thème"
+    "Theme": "Thème",
+    "Decrypting paste…": "Déchiffrement du document…"
 }
