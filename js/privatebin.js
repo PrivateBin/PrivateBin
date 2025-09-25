@@ -930,16 +930,8 @@ jQuery.PrivateBin = (function($) {
             }
 
             // load strings from JSON
-            let main_script = document.querySelector('script[src^="js/privatebin.js"]');
-            let privatebin_version;
-
-            if (main_script) {
-                privatebin_version = main_script.getAttribute("src").split("?")[1] || null;
-            } else {
-                privatebin_version = Math.floor(Date.now() / 60000);
-            }
-
-            $.getJSON('i18n/' + newLanguage + '.json?v=' + privatebin_version, function(data) {
+            const cacheBreaker = document.querySelector('script[src^="js/privatebin.js"]').getAttribute("src").split(".js")[1] || "";
+            $.getJSON('i18n/' + newLanguage + '.json' + cacheBreaker, function(data) {
                 language = newLanguage;
                 translations = data;
                 $(document).triggerHandler(languageLoadedEvent);
@@ -2141,7 +2133,7 @@ jQuery.PrivateBin = (function($) {
                 // if so, we send the link to the shortener
                 // we do not remove the button, in case shortener fails
                 sendToShortener();
-            } 
+            }
         }
 
         /**
