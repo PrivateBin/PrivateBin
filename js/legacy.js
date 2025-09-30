@@ -106,8 +106,8 @@
                 return window.isSecureContext;
             }
 
-            // HTTP is obviously insecure
-            if (window.location.protocol !== 'http:') {
+            // HTTPS is considered secure
+            if (window.location.protocol === 'https:') {
                 return true;
             }
 
