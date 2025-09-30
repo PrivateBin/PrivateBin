@@ -311,11 +311,11 @@ jQuery.PrivateBin = (function($) {
         /**
          * cache for script location
          *
-         * @name Helper.baseUri
+         * @name Helper.windowLocationBaseUri
          * @private
          * @enum   {string|null}
          */
-        let baseUri = null;
+        let windowLocationBaseUri = null;
 
         /**
          * converts a duration (in seconds) into human friendly approximation
@@ -505,19 +505,32 @@ jQuery.PrivateBin = (function($) {
          * get the current location (without search or hash part of the URL),
          * eg. https://example.com/path/?aaaa#bbbb --> https://example.com/path/
          *
-         * @name   Helper.baseUri
+         * @name   Helper.windowLocationBaseUri
          * @function
          * @return {string}
          */
-        me.baseUri = function()
+        me.windowLocationBaseUri = function()
         {
             // check for cached version
-            if (baseUri !== null) {
-                return baseUri;
+            if (windowLocationBaseUri !== null) {
+                return windowLocationBaseUri;
             }
 
-            baseUri = window.location.origin + window.location.pathname;
-            return baseUri;
+            windowLocationBaseUri = window.location.origin + window.location.pathname;
+            return windowLocationBaseUri;
+        };
+
+        /**
+         * get the basepath from config file,
+         * eg. https://privatebin.example.com/
+         *
+         * @name   Helper.configBaseUri
+         * @function
+         * @return {string}
+         */
+        me.configBaseUri = function()
+        {
+            return configBaseUri || me.windowLocationBaseUri();
         };
 
         /**
@@ -627,7 +640,7 @@ jQuery.PrivateBin = (function($) {
          */
         me.reset = function()
         {
-            baseUri = null;
+            windowLocationBaseUri = null;
         };
 
         /**
@@ -1446,7 +1459,7 @@ jQuery.PrivateBin = (function($) {
 
             // reload data
             ServerInteraction.prepare();
-            ServerInteraction.setUrl(Helper.baseUri() + '?pasteid=' + me.getPasteId());
+            ServerInteraction.setUrl(Helper.windowLocationBaseUri() + '?pasteid=' + me.getPasteId());
 
             ServerInteraction.setFailure(function (status, data) {
                 // revert loading status…
@@ -1624,7 +1637,7 @@ jQuery.PrivateBin = (function($) {
          */
         function historyChange(event)
         {
-            let currentLocation = Helper.baseUri();
+            let currentLocation = Helper.windowLocationBaseUri();
             if (event.originalEvent.state === null && // no state object passed
                 event.target.location.href === currentLocation && // target location is home page
                 window.location.href === currentLocation // and we are not already on the home page
@@ -1644,7 +1657,7 @@ jQuery.PrivateBin = (function($) {
          */
         me.reloadHome = function()
         {
-            window.location.href = Helper.baseUri();
+            window.location.href = Helper.windowLocationBaseUri();
         };
 
         /**
@@ -1743,7 +1756,7 @@ jQuery.PrivateBin = (function($) {
         me.init = function()
         {
             // update link to home page
-            $('.reloadlink').prop('href', Helper.baseUri());
+            $('.reloadlink').prop('href', Helper.windowLocationBaseUri());
 
             $(window).on('popstate', historyChange);
         };
@@ -3925,7 +3938,7 @@ jQuery.PrivateBin = (function($) {
                 {type: 'raw'},
                 document.title,
                 // recreate document URL
-                Helper.baseUri() + '?' + Model.getPasteId() + '#' +
+                Helper.windowLocationBaseUri() + '?' + Model.getPasteId() + '#' +
                 CryptTool.base58encode(Model.getPasteKey())
             );
 
@@ -4924,7 +4937,7 @@ jQuery.PrivateBin = (function($) {
             // reset data
             successFunc = null;
             failureFunc = null;
-            url = Helper.baseUri();
+            url = Helper.windowLocationBaseUri();
             data = {};
         };
 
@@ -5026,7 +5039,7 @@ jQuery.PrivateBin = (function($) {
             Alert.hideMessages();
 
             // show notification
-            const baseUri   = Helper.baseUri() + '?',
+            const baseUri   = Helper.configBaseUri() + '?',
                   url       = baseUri + data.id + (TopNav.getBurnAfterReading() ? loadConfirmPrefix : '#') + CryptTool.base58encode(data.encryptionKey),
                   deleteUrl = baseUri + 'pasteid=' + data.id + '&deletetoken=' + data.deletetoken;
             PasteStatus.createPasteNotification(url, deleteUrl);
@@ -5729,8 +5742,8 @@ jQuery.PrivateBin = (function($) {
 
             Alert.hideLoading();
             // only push new state if we are coming from a different one
-            if (Helper.baseUri() != window.location) {
-                history.pushState({type: 'create'}, document.title, Helper.baseUri());
+            if (Helper.windowLocationBaseUri() != window.location) {
+                history.pushState({type: 'create'}, document.title, Helper.windowLocationBaseUri());
             }
 
             // clear discussion
@@ -5777,7 +5790,7 @@ jQuery.PrivateBin = (function($) {
 
             Model.getPasteData(function (data) {
                 ServerInteraction.prepare();
-                ServerInteraction.setUrl(Helper.baseUri() + '?pasteid=' + Model.getPasteId());
+                ServerInteraction.setUrl(Helper.windowLocationBaseUri() + '?pasteid=' + Model.getPasteId());
 
                 ServerInteraction.setFailure(function (status, data) {
                     // revert loading status…
@@ -5819,7 +5832,7 @@ jQuery.PrivateBin = (function($) {
             me.hideStatusMessages();
 
             // erase the id and the key in url
-            history.pushState({type: 'clone'}, document.title, Helper.baseUri());
+            history.pushState({type: 'clone'}, document.title, Helper.windowLocationBaseUri());
 
             if (AttachmentViewer.hasAttachment()) {
                 const attachments = AttachmentViewer.getAttachments();

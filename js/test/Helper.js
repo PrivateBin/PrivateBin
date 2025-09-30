@@ -255,10 +255,10 @@ describe('Helper', function () {
         ); */
     });
 
-    describe('baseUri', function () {
+    describe('windowLocationBaseUri', function () {
         this.timeout(30000);
         jsc.property(
-            'returns the URL without query & fragment',
+            'returns the window location URL without query & fragment',
             common.jscSchemas(false),
             common.jscUrl(),
             function (schema, url) {
@@ -269,7 +269,7 @@ describe('Helper', function () {
                 $.PrivateBin.Helper.reset();
                 const expected = common.urlToString(url),
                     clean = jsdom('', {url: fullUrl}),
-                    result = $.PrivateBin.Helper.baseUri();
+                    result = $.PrivateBin.Helper.windowLocationBaseUri();
                 clean();
                 return expected === result;
             }
