@@ -33,7 +33,7 @@
     "Discussion": "Dyskusja",
     "Toggle navigation": "Przełącz nawigację",
     "%d seconds": [
-        "%d sekund",
+        "%d sekunda",
         "%d sekund",
         "%d sekund",
         "%d sekund",
@@ -41,7 +41,7 @@
         "%d sekund"
     ],
     "%d minutes": [
-        "%d minut",
+        "%d minuta",
         "%d minut",
         "%d minut",
         "%d minut",
@@ -49,7 +49,7 @@
         "%d minut"
     ],
     "%d hours": [
-        "%d godzin",
+        "%d godzina",
         "%d godzin",
         "%d godzin",
         "%d godzin",
