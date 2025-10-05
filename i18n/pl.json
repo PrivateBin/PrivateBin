@@ -33,39 +33,39 @@
     "Discussion": "Dyskusja",
     "Toggle navigation": "Przełącz nawigację",
     "%d seconds": [
-        "%d sekunda",
-        "%d sekundy",
+        "%d sekund",
+        "%d sekund",
         "%d sekund",
         "%d sekund",
         "%d sekund",
         "%d sekund"
     ],
     "%d minutes": [
-        "%d minuta",
-        "%d minuty",
+        "%d minut",
+        "%d minut",
         "%d minut",
         "%d minut",
         "%d minut",
         "%d minut"
     ],
     "%d hours": [
-        "%d godzina",
-        "%d godzina",
-        "%d godzinę",
-        "%d godzinę",
-        "%d godzinę",
-        "%d godzinę"
+        "%d godzin",
+        "%d godzin",
+        "%d godzin",
+        "%d godzin",
+        "%d godzin",
+        "%d godzin"
     ],
     "%d days": [
-        "%d dzień",
-        "%d dzień",
-        "%d dzień",
-        "%d dzień",
-        "%d dzień",
-        "%d dzień"
+        "%d dni",
+        "%d dni",
+        "%d dni",
+        "%d dni",
+        "%d dni",
+        "%d dni"
     ],
     "%d weeks": [
-        "%d tydzień",
+        "%d tygodni",
         "%d tygodni",
         "%d tygodni",
         "%d tygodni",
@@ -73,16 +73,16 @@
         "%d tygodni"
     ],
     "%d months": [
-        "%d miesiąc",
-        "%d miesiące",
+        "%d miesięcy",
+        "%d miesięcy",
         "%d miesięcy",
         "%d miesięcy",
         "%d miesięcy",
         "%d miesięcy"
     ],
     "%d years": [
-        "%d rok",
-        "%d lata",
+        "%d lat",
+        "%d lat",
         "%d lat",
         "%d lat",
         "%d lat",
