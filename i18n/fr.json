@@ -224,7 +224,7 @@
     "Error decompressing document, your browser does not support WebAssembly. Please use another browser to view this document.": "Erreur lors de la décompression du document, votre navigateur ne supporte pas WebAssembly. Veuillez utiliser un autre navigateur pour voir ce document.",
     "Start over": "Recommencer",
     "Document copied to clipboard": "Document copié dans le presse-papier",
-    "To copy document press on the copy button or use the clipboard shortcut <kbd>Ctrl</kbd>+<kbd>c</kbd>/<kbd>Cmd</kbd>+<kbd>c</kbd>": "Pour copier-coller appuyer sur le bouton To copy document press on the copy button or use the clipboard shortcut <kbd>Ctrl</kbd>+<kbd>c</kbd>/<kbd>Cmd</kbd>+<kbd>c</kbd>",
+    "To copy document press on the copy button or use the clipboard shortcut <kbd>Ctrl</kbd>+<kbd>c</kbd>/<kbd>Cmd</kbd>+<kbd>c</kbd>": "Pour copier appuyer sur le bouton Copier le lien ou utiliser le raccourci <kbd>Ctrl</kbd>+<kbd>c</kbd>/<kbd>Cmd</kbd>+<kbd>c</kbd>",
     "Copy link": "Copier le lien",
     "Link copied to clipboard": "Lien copié dans le presse-papier",
     "Document text": "Texte du document",
