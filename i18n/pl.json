@@ -49,8 +49,8 @@
         "%d minut"
     ],
     "%d hours": [
-        "%d godzin",
         "%d godzina",
+        "%d godziny",
         "%d godzin",
         "%d godzin",
         "%d godzin",
