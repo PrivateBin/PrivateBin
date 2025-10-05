@@ -32,13 +32,13 @@
     "Password (recommended)": "Hasło (opcjonalnie, zalecane)",
     "Discussion": "Dyskusja",
     "Toggle navigation": "Przełącz nawigację",
-    "%d seconds": [
-        "%d sekunda",
-        "%d sekund",
-        "%d sekund",
-        "%d sekund",
-        "%d sekund",
-        "%d sekund"
+        "%d seconds": [
+        "%d second",
+        "%d second",
+        "%d second",
+        "%d second",
+        "%d second",
+        "%d second"
     ],
     "%d minutes": [
         "%d minuta",
@@ -50,43 +50,43 @@
     ],
     "%d hours": [
         "%d godzina",
-        "%d godzin",
-        "%d godzin",
-        "%d godzin",
-        "%d godzin",
-        "%d godzin"
+        "%d godzina",
+        "%d godzinę",
+        "%d godzinę",
+        "%d godzinę",
+        "%d godzinę"
     ],
     "%d days": [
-        "%d dni",
-        "%d dni",
-        "%d dni",
-        "%d dni",
-        "%d dni",
-        "%d dni"
+        "%d dzień",
+        "%d dzień",
+        "%d dzień",
+        "%d dzień",
+        "%d dzień",
+        "%d dzień"
     ],
     "%d weeks": [
-        "%d tygodni",
-        "%d tygodni",
-        "%d tygodni",
-        "%d tygodni",
-        "%d tygodni",
-        "%d tygodni"
+        "%d tydzień",
+        "%d tydzień",
+        "%d tydzień",
+        "%d tydzień",
+        "%d tydzień",
+        "%d tydzień"
     ],
     "%d months": [
-        "%d miesięcy",
-        "%d miesięcy",
-        "%d miesięcy",
-        "%d miesięcy",
-        "%d miesięcy",
-        "%d miesięcy"
+        "%d miesiąc",
+        "%d miesiąc",
+        "%d miesiąc",
+        "%d miesiąc",
+        "%d miesiąc",
+        "%d miesiąc"
     ],
     "%d years": [
-        "%d lat",
-        "%d lat",
-        "%d lat",
-        "%d lat",
-        "%d lat",
-        "%d lat"
+        "%d rok",
+        "%d rok",
+        "%d rok",
+        "%d rok",
+        "%d rok",
+        "%d rok"
     ],
     "Never": "Nigdy",
     "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.": "Uwaga: to usługa testowa — dane mogą zostać usunięte w dowolnym momencie. Nie nadużywaj jej, bo ucierpią kotki 🐱.",
