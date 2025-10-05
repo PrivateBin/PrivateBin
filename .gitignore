@@ -25,6 +25,7 @@ vendor/**/tst
 vendor/**/tests
 vendor/**/build_phar.php
 !vendor/**/*.php
+vendor/bin/**
 
 # Ignore local node modules, unit testing logs, api docs and IDE project files
 js/node_modules/
