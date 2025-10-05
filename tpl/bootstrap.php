@@ -109,12 +109,13 @@ if (count($class)) {
 						<form id="passwordform" role="form">
 							<div class="form-group">
 								<label for="passworddecrypt"><span class="glyphicon glyphicon-eye-open"></span> <?php echo I18n::_('Please enter the password for this document:') ?></label>
-								<div class="password-peek-container">
+								<div class="input-group">
 									<input id="passworddecrypt" type="password" class="form-control input-password" placeholder="<?php echo I18n::_('Enter password') ?>" required="required">
-									<button class="toggle-password" type="button"
+									<div class="input-group-addon toggle-password" type="button"
 										title="<?php echo I18n::_('Show password as plain text. Warning: this will display your password on the screen.'); ?>"
 										aria-label="<?php echo I18n::_('Show password as plain text. Warning: this will display your password on the screen.'); ?>">
-									</button>
+										<span class="glyphicon glyphicon-eye-open"></span>
+									</div>
 								</div>
 							</div>
 							<button type="submit" class="btn btn-success btn-block"><span class="glyphicon glyphicon-off"></span> <?php echo I18n::_('Decrypt') ?></button>
@@ -376,10 +377,11 @@ if ($PASSWORD) :
 						<div id="password" class="navbar-form hidden">
 							<div class="password-peek-container">
 								<input type="password" id="passwordinput" placeholder="<?php echo I18n::_('Password (recommended)'); ?>" class="form-control input-password" size="23" />
-								<button class="toggle-password" type="button"
+								<div class="input-group-addon toggle-password" type="button"
 									title="<?php echo I18n::_('Show password as plain text. Warning: this will display your password on the screen.'); ?>"
 									aria-label="<?php echo I18n::_('Show password as plain text. Warning: this will display your password on the screen.'); ?>">
-								</button>
+									<span class="glyphicon glyphicon-eye-open"></span>
+								</div>
 							</div>
 						</div>
 					</li>

@@ -82,11 +82,12 @@ endif;
 						<form id="passwordform" role="form">
 							<div class="mb-3">
 								<label for="passworddecrypt"><svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#eye" /></svg> <?php echo I18n::_('Please enter the password for this document:') ?></label>
-								<div class="password-peek-container">
+								<div class="input-group">
 									<input id="passworddecrypt" type="password" class="form-control input-password" placeholder="<?php echo I18n::_('Enter password') ?>" required="required" />
-									<button class="toggle-password" type="button"
+									<button class="btn btn-outline-secondary toggle-password" type="button"
 										title="<?php echo I18n::_('Show password as plain text. Warning: this will display your password on the screen.'); ?>"
 										aria-label="<?php echo I18n::_('Show password as plain text. Warning: this will display your password on the screen.'); ?>">
+										<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#eye" /></svg>
 									</button>
 								</div>
 							</div>
@@ -249,11 +250,12 @@ if ($PASSWORD) :
 ?>
 						<li class="nav-item">
 							<div id="password" class="navbar-form hidden">
-								<div class="password-peek-container">
+								<div class="input-group">
 									<input type="password" id="passwordinput" placeholder="<?php echo I18n::_('Password (recommended)'); ?>" aria-label="<?php echo I18n::_('Password (recommended)'); ?>" class="form-control input-password" size="23" />
-									<button class="toggle-password" type="button"
+									<button class="btn btn-outline-secondary toggle-password" type="button"
 										title="<?php echo I18n::_('Show password as plain text. Warning: this will display your password on the screen.'); ?>"
 										aria-label="<?php echo I18n::_('Show password as plain text. Warning: this will display your password on the screen.'); ?>">
+										<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#eye" /></svg>
 									</button>
 								</div>
 							</div>

@@ -5690,15 +5690,40 @@ jQuery.PrivateBin = (function($) {
          * @function
          */
         function handleRevealButtonClick() {
-            const passwordInput = $(this).siblings('.input-password');
+            const element = $(this);
+            const passwordInput = element.siblings('.input-password');
 			const isHidden = passwordInput.attr('type') === 'password';
 
             passwordInput.attr('type', isHidden ? 'text' : 'password');
 
 			const tooltip = I18n._(isHidden ? 'Hide password' : 'Show password as plain text. Warning: this will display your password on the screen.');
 
-			$(this).attr('title', tooltip);
-			$(this).attr('aria-label', tooltip);
+			element.attr('title', tooltip);
+			element.attr('aria-label', tooltip);
+
+            // handle bootstrap 5 icons: eye & eye-slash
+            const buttonSvg = element.find('use');
+            if (buttonSvg.length) {
+                const iconHref = buttonSvg.attr('href');
+                if (isHidden) {
+                    buttonSvg.attr('href', iconHref + '-slash');
+                } else {
+                    buttonSvg.attr('href', iconHref.substring(0, iconHref.length - 6));
+                }
+                return;
+            }
+
+            // handle bootstrap 3 icons: eye-open & eye-close
+            const buttonSpan = element.find('span');
+            if (buttonSpan.length) {
+                if (isHidden) {
+                    buttonSpan.addClass('glyphicon-eye-close');
+                    buttonSpan.removeClass('glyphicon-eye-open');
+                } else {
+                    buttonSpan.addClass('glyphicon-eye-open');
+                    buttonSpan.removeClass('glyphicon-eye-close');
+                }
+            }
         }
 
         /**
