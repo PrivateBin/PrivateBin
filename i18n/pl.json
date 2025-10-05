@@ -51,18 +51,18 @@
     "%d hours": [
         "%d godzina",
         "%d godzina",
-        "%d godzin",
-        "%d godzina",
-        "%d godzin",
-        "%d godzin"
+        "%d godzinę",
+        "%d godzinę",
+        "%d godzinę",
+        "%d godzinę"
     ],
     "%d days": [
         "%d dzień",
-        "%d dni",
-        "%d dni",
-        "%d dni",
-        "%d dni",
-        "%d dni"
+        "%d dzień",
+        "%d dzień",
+        "%d dzień",
+        "%d dzień",
+        "%d dzień"
     ],
     "%d weeks": [
         "%d tydzień",
