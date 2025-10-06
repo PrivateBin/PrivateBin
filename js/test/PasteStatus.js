@@ -88,13 +88,13 @@ describe('PasteStatus', function () {
                         url: {
                             keyword: longUrl.address.join(''),
                             url: longUrlString,
-                            title: "example title",
-                            date: "2014-10-24 16:01:39",
-                            ip: "127.0.0.1"
+                            title: 'example title',
+                            date: '2014-10-24 16:01:39',
+                            ip: '127.0.0.1'
                         },
-                        status: "success",
-                        message: longUrlString + " added to database",
-                        title: "example title",
+                        status: 'success',
+                        message: longUrlString + ' added to database',
+                        title: 'example title',
                         shorturl: shortUrlString,
                         statusCode: 200
                     },
