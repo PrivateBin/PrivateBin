@@ -1,7 +1,7 @@
-import { defineConfig, globalIgnores } from "eslint/config";
-import globals from "globals";
+const globals = require('globals');
+const { globalIgnores } = require('eslint/config')
 
-export default defineConfig([globalIgnores(["./*.js", "!./privatebin.js"]), {
+module.exports = [globalIgnores(["./*.js", "!./privatebin.js"]), {
     languageOptions: {
         globals: {
             ...globals.amd,
@@ -18,6 +18,7 @@ export default defineConfig([globalIgnores(["./*.js", "!./privatebin.js"]), {
             WebCrypto: "writable",
         },
 
+        // async & await are ECMAScript 2017 features
         ecmaVersion: 2017,
         sourceType: "commonjs",
     },
@@ -51,6 +52,8 @@ export default defineConfig([globalIgnores(["./*.js", "!./privatebin.js"]), {
         "use-isnan": 2,
         "valid-jsdoc": 0,
         "valid-typeof": 2,
+
+        // Best Practices
         "accessor-pairs": 2,
         "block-scoped-var": 0,
         complexity: ["error", 20],
@@ -106,7 +109,11 @@ export default defineConfig([globalIgnores(["./*.js", "!./privatebin.js"]), {
         "vars-on-top": 0,
         "wrap-iife": 0,
         yoda: 0,
+
+        // Strict
         strict: 0,
+
+        // Variables
         "init-declarations": 0,
         "no-catch-shadow": 2,
         "no-delete-var": 2,
@@ -118,6 +125,8 @@ export default defineConfig([globalIgnores(["./*.js", "!./privatebin.js"]), {
         "no-undefined": 0,
         "no-unused-vars": 0,
         "no-use-before-define": 0,
+
+        // Node.js and CommonJS
         "callback-return": 2,
         "global-require": 2,
         "handle-callback-err": 2,
@@ -127,6 +136,8 @@ export default defineConfig([globalIgnores(["./*.js", "!./privatebin.js"]), {
         "no-process-exit": 2,
         "no-restricted-modules": 0,
         "no-sync": 0,
+
+        // Stylistic Issues
         "array-bracket-spacing": 0,
         "block-spacing": 0,
         "brace-style": 0,
@@ -191,6 +202,8 @@ export default defineConfig([globalIgnores(["./*.js", "!./privatebin.js"]), {
         "space-unary-ops": 0,
         "spaced-comment": 0,
         "wrap-regex": 0,
+
+        // ECMAScript 6 (2015)
         "arrow-body-style": 0,
         "arrow-parens": 0,
         "arrow-spacing": 0,
@@ -210,4 +223,4 @@ export default defineConfig([globalIgnores(["./*.js", "!./privatebin.js"]), {
         "prefer-template": 0,
         "require-yield": 0,
     },
-}]);
+}];
