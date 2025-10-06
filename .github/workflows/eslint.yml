@@ -4,10 +4,12 @@ on:
   push:
     paths:
       - 'js/**/*.js'
+      - 'js/package-lock.json'
       - .github/workflows/eslint.yml
   pull_request:
     paths:
       - 'js/**/*.js'
+      - 'js/package-lock.json'
       - .github/workflows/eslint.yml
 
 jobs:
