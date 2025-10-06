@@ -1,7 +1,7 @@
 import { defineConfig, globalIgnores } from "eslint/config";
 import globals from "globals";
 
-export default defineConfig([globalIgnores(["js/*.js", "!js/privatebin.js"]), {
+export default defineConfig([globalIgnores(["./*.js", "!./privatebin.js"]), {
     languageOptions: {
         globals: {
             ...globals.amd,
