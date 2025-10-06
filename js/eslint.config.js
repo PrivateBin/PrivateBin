@@ -18,8 +18,8 @@ module.exports = [globalIgnores(["./*.js", "!./privatebin.js"]), {
             WebCrypto: "writable",
         },
 
-        // async & await are ECMAScript 2017 features
-        ecmaVersion: 2017,
+        // async & await are ECMAScript 2017 features, unicode character class escape are ECMAScript 2018 features
+        ecmaVersion: 2018,
         sourceType: "commonjs",
     },
 

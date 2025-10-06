@@ -517,12 +517,10 @@ describe('TopNav', function () {
             cleanup();
         });
 
-        // eslint-disable global-require
         var File = window.File,
             FileList = window.FileList,
-            path = require('path'),
-            mime = require('mime-types');
-        // eslint-enable global-require
+            path = require('path'), // eslint-disable-line global-require
+            mime = require('mime-types'); // eslint-disable-line global-require
 
         // mocking file input as per https://github.com/jsdom/jsdom/issues/1272
         function createFile(file_path) {
