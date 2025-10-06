@@ -84,9 +84,7 @@ endif;
 								<label for="passworddecrypt"><svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#eye" /></svg> <?php echo I18n::_('Please enter the password for this document:') ?></label>
 								<div class="input-group">
 									<input id="passworddecrypt" type="password" class="form-control input-password" placeholder="<?php echo I18n::_('Enter password') ?>" required="required" />
-									<button class="btn btn-outline-secondary toggle-password" type="button"
-										title="<?php echo I18n::_('Show password as plain text. Warning: this will display your password on the screen.'); ?>"
-										aria-label="<?php echo I18n::_('Show password as plain text. Warning: this will display your password on the screen.'); ?>">
+									<button class="btn btn-outline-secondary toggle-password" type="button" title="<?php echo I18n::_('Show password'); ?>" aria-label="<?php echo I18n::_('Show password'); ?>">
 										<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#eye" /></svg>
 									</button>
 								</div>
@@ -252,9 +250,7 @@ if ($PASSWORD) :
 							<div id="password" class="navbar-form hidden">
 								<div class="input-group">
 									<input type="password" id="passwordinput" placeholder="<?php echo I18n::_('Password (recommended)'); ?>" aria-label="<?php echo I18n::_('Password (recommended)'); ?>" class="form-control input-password" size="23" />
-									<button class="btn btn-outline-secondary toggle-password" type="button"
-										title="<?php echo I18n::_('Show password as plain text. Warning: this will display your password on the screen.'); ?>"
-										aria-label="<?php echo I18n::_('Show password as plain text. Warning: this will display your password on the screen.'); ?>">
+									<button class="btn btn-outline-secondary toggle-password" type="button" title="<?php echo I18n::_('Show password'); ?>" aria-label="<?php echo I18n::_('Show password'); ?>">
 										<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#eye" /></svg>
 									</button>
 								</div>

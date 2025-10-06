@@ -5697,7 +5697,7 @@ jQuery.PrivateBin = (function($) {
 
             passwordInput.attr('type', isHidden ? 'text' : 'password');
 
-			const tooltip = I18n._(isHidden ? 'Hide password' : 'Show password as plain text. Warning: this will display your password on the screen.');
+			const tooltip = I18n._(isHidden ? 'Hide password' : 'Show password');
 
 			element.attr('title', tooltip);
 			element.attr('aria-label', tooltip);

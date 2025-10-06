@@ -229,7 +229,7 @@
     "Link copied to clipboard": "Link kopeeriti lõikelauale",
     "Document text": "Kleebi tekst",
     "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)": "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)",
-    "Show password as plain text. Warning: this will display your password on the screen.": "Show password as plain text. Warning: this will display your password on the screen.",
+    "Show password": "Show password",
     "Hide password": "Hide password",
     "Theme": "Teema"
 }
