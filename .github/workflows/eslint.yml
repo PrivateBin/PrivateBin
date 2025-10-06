@@ -4,9 +4,11 @@ on:
   push:
     paths:
       - 'js/**/*.js'
+      - .github/workflows/eslint.yml
   pull_request:
     paths:
       - 'js/**/*.js'
+      - .github/workflows/eslint.yml
 
 jobs:
   eslint:
