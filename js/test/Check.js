@@ -72,7 +72,7 @@ describe('Check', function () {
                       );
                 Object.defineProperty(window, 'crypto', {
                     value: new WebCrypto(),
-                    writeable: false,
+                    writeable: false
                 });
                 Legacy.Check.init();
                 const result1 = Legacy.Check.getInit() && Legacy.Check.getStatus(),

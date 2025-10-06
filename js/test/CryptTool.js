@@ -20,7 +20,7 @@ describe('CryptTool', function () {
                     $.PrivateBin.Controller.initZ();
                     Object.defineProperty(window, 'crypto', {
                         value: new WebCrypto(),
-                        writeable: false,
+                        writeable: false
                     });
                     global.atob = common.atob;
                     global.btoa = common.btoa;
@@ -45,7 +45,7 @@ describe('CryptTool', function () {
                 clean = jsdom();
             Object.defineProperty(window, 'crypto', {
                 value: new WebCrypto(),
-                writeable: false,
+                writeable: false
             });
             // ensure zlib is getting loaded
             $.PrivateBin.Controller.initZ();
@@ -96,7 +96,7 @@ conseq_or_bottom inv (interp (nth_iterate sBody n) (MemElem mem))
                     $.PrivateBin.Controller.initZ();
                     Object.defineProperty(window, 'crypto', {
                         value: new WebCrypto(),
-                        writeable: false,
+                        writeable: false
                     });
                     const cipherMessage = await $.PrivateBin.CryptTool.cipher(
                             key, password, message, []
@@ -126,7 +126,7 @@ conseq_or_bottom inv (interp (nth_iterate sBody n) (MemElem mem))
                     const clean = jsdom();
                     Object.defineProperty(window, 'crypto', {
                         value: new WebCrypto(),
-                        writeable: false,
+                        writeable: false
                     });
                     const key = $.PrivateBin.CryptTool.getSymmetricKey(),
                         result = (key !== '' && keys.indexOf(key) === -1);

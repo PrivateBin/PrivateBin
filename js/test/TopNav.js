@@ -533,7 +533,7 @@ describe('TopNav', function () {
                 path.basename(file_path),
                 {
                     lastModified,
-                    type: mime.lookup(file_path) || '',
+                    type: mime.lookup(file_path) || ''
                 }
             );
         }
@@ -550,7 +550,7 @@ describe('TopNav', function () {
 
             Object.defineProperty(input, 'files', {
                 value: file_list,
-                writeable: false,
+                writeable: false
             });
 
             return input;
