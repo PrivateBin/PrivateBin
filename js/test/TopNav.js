@@ -52,7 +52,11 @@ describe('TopNav', function () {
                     $('#qrcodelink').hasClass('hidden')
                 );
                 cleanup();
-                assert.ok(results.every(element => element));
+                const result = results.every(element => element);
+                if (!result) {
+                    console.log(results);
+                }
+                assert.ok(result);
             }
         );
     });
@@ -113,7 +117,11 @@ describe('TopNav', function () {
                     $('#attach').hasClass('hidden')
                 );
                 cleanup();
-                assert.ok(results.every(element => element));
+                const result = results.every(element => element);
+                if (!result) {
+                    console.log(results);
+                }
+                assert.ok(result);
             }
         );
     });
@@ -140,7 +148,11 @@ describe('TopNav', function () {
                     !$('#newbutton').hasClass('hidden')
                 );
                 cleanup();
-                assert.ok(results.every(element => element));
+                const result = results.every(element => element);
+                if (!result) {
+                    console.log(results);
+                }
+                assert.ok(result);
             }
         );
     });
@@ -169,7 +181,11 @@ describe('TopNav', function () {
                     $('#clonebutton').hasClass('hidden')
                 );
                 cleanup();
-                assert.ok(results.every(element => element));
+                const result = results.every(element => element);
+                if (!result) {
+                    console.log(results);
+                }
+                assert.ok(result);
             }
         );
     });
@@ -199,7 +215,11 @@ describe('TopNav', function () {
                     $('#rawtextbutton').hasClass('hidden')
                 );
                 cleanup();
-                assert.ok(results.every(element => element));
+                const result = results.every(element => element);
+                if (!result) {
+                    console.log(results);
+                }
+                assert.ok(result);
             }
         );
     });
@@ -233,7 +253,11 @@ describe('TopNav', function () {
                     $('#filewrap').hasClass('hidden')
                 );
                 cleanup();
-                assert.ok(results.every(element => element));
+                const result = results.every(element => element);
+                if (!result) {
+                    console.log(results);
+                }
+                assert.ok(result);
             }
         );
     });
@@ -267,7 +291,11 @@ describe('TopNav', function () {
                     !$('#customattachment').hasClass('hidden')
                 );
                 cleanup();
-                assert.ok(results.every(element => element));
+                const result = results.every(element => element);
+                if (!result) {
+                    console.log(results);
+                }
+                assert.ok(result);
             }
         );
     });
@@ -318,7 +346,11 @@ describe('TopNav', function () {
                 );
                 */
                 clean();
-                assert.ok(results.every(element => element));
+                const result = results.every(element => element);
+                if (!result) {
+                    console.log(results);
+                }
+                assert.ok(result);
             }
         );
     });
@@ -364,7 +396,11 @@ describe('TopNav', function () {
                     !$.PrivateBin.TopNav.getOpenDiscussion()
                 );
                 cleanup();
-                assert.ok(results.every(element => element));
+                const result = results.every(element => element);
+                if (!result) {
+                    console.log(results);
+                }
+                assert.ok(result);
             }
         );
 
@@ -403,7 +439,11 @@ describe('TopNav', function () {
                     !$.PrivateBin.TopNav.getOpenDiscussion()
                 );
                 cleanup();
-                assert.ok(results.every(element => element));
+                const result = results.every(element => element);
+                if (!result) {
+                    console.log(results);
+                }
+                assert.ok(result);
             }
         );
 
@@ -443,7 +483,11 @@ describe('TopNav', function () {
                     $.PrivateBin.TopNav.getOpenDiscussion()
                 );
                 cleanup();
-                assert.ok(results.every(element => element));
+                const result = results.every(element => element);
+                if (!result) {
+                    console.log(results);
+                }
+                assert.ok(result);
             }
         );
     });
@@ -462,7 +506,7 @@ describe('TopNav', function () {
                     '<option value="never">Never</option></select>'
                 );
                 $.PrivateBin.TopNav.init();
-                assert.ok($.PrivateBin.TopNav.getExpiration() === '1day');
+                assert.strictEqual($.PrivateBin.TopNav.getExpiration(), '1day');
                 cleanup();
             }
         );
@@ -491,25 +535,25 @@ describe('TopNav', function () {
                     lastModified,
                     type: mime.lookup(file_path) || '',
                 }
-            )
+            );
         }
 
         function addFileList(input, file_paths) {
-            if (typeof file_paths === 'string')
-                file_paths = [file_paths]
-            else if (!Array.isArray(file_paths)) {
-                throw new Error('file_paths needs to be a file path string or an Array of file path strings')
+            if (typeof file_paths === 'string') {
+                file_paths = [file_paths];
+            } else if (!Array.isArray(file_paths)) {
+                throw new Error('file_paths needs to be a file path string or an Array of file path strings');
             }
 
-            const file_list = file_paths.map(fp => createFile(fp))
-            file_list.__proto__ = Object.create(FileList.prototype)
+            const file_list = file_paths.map(fp => createFile(fp));
+            file_list.__proto__ = Object.create(FileList.prototype);
 
             Object.defineProperty(input, 'files', {
                 value: file_list,
                 writeable: false,
-            })
+            });
 
-            return input
+            return input;
         }
 
         it(
@@ -541,7 +585,11 @@ describe('TopNav', function () {
                     files[1].name === 'busy.gif'
                 );
                 cleanup();
-                assert.ok(results.every(element => element));
+                const result = results.every(element => element);
+                if (!result) {
+                    console.log(results);
+                }
+                assert.ok(result);
             }
         );
     });
@@ -574,7 +622,11 @@ describe('TopNav', function () {
                     !$.PrivateBin.TopNav.getBurnAfterReading()
                 );
                 cleanup();
-                assert.ok(results.every(element => element));
+                const result = results.every(element => element);
+                if (!result) {
+                    console.log(results);
+                }
+                assert.ok(result);
             }
         );
     });
@@ -607,7 +659,11 @@ describe('TopNav', function () {
                     !$.PrivateBin.TopNav.getOpenDiscussion()
                 );
                 cleanup();
-                assert.ok(results.every(element => element));
+                const result = results.every(element => element);
+                if (!result) {
+                    console.log(results);
+                }
+                assert.ok(result);
             }
         );
     });
@@ -642,7 +698,11 @@ describe('TopNav', function () {
                     $.PrivateBin.TopNav.getPassword() === ''
                 );
                 cleanup();
-                return results.every(element => element);
+                const result = results.every(element => element);
+                if (!result) {
+                    console.log(results);
+                }
+                return result;
             }
         );
     });
@@ -676,7 +736,11 @@ describe('TopNav', function () {
                     $.PrivateBin.TopNav.getCustomAttachment().hasClass('test')
                 );
                 cleanup();
-                assert.ok(results.every(element => element));
+                const result = results.every(element => element);
+                if (!result) {
+                    console.log(results);
+                }
+                assert.ok(result);
             }
         );
     });
@@ -738,7 +802,7 @@ describe('TopNav', function () {
                 $.PrivateBin.Helper.reset();
                 $.PrivateBin.TopNav.init();
                 $('#rawtextbutton').click();
-                assert.equal($('pre').text(), sample);
+                assert.strictEqual($('pre').text(), sample);
                 clean();
             }
         );

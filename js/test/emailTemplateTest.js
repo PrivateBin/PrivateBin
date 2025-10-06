@@ -80,7 +80,7 @@ function stubWinOpen($element) {
 
 // Extract and decode the body from a "mailto:?body=..." URL.
 function extractMailtoBody(mailtoUrl) {
-    assert.ok(/^mailto:\?body=/.test(mailtoUrl), 'expected a mailto:?body= URL');
+    assert.match(mailtoUrl, /^mailto:\?body=/, 'expected a mailto:?body= URL');
     return decodeURIComponent(mailtoUrl.replace(/^mailto:\?body=/, ''));
 }
 
@@ -104,8 +104,8 @@ describe('Email - mail body content (short URL vs. fallback)', function () {
             assert.ok(openedUrl, 'window.open should have been called');
 
             const body = extractMailtoBody(openedUrl);
-            assert.ok(body.includes('https://short.example/xYz'), 'email body should include the short URL');
-            assert.ok(!body.includes('undefined'), 'email body must not contain "undefined"');
+            assert.match(body, /https:\/\/short\.example\/xYz/, 'email body should include the short URL');
+            assert.doesNotMatch(body, /undefined/, 'email body must not contain "undefined"');
         } finally {
             restore();
             cleanup();
@@ -127,8 +127,8 @@ describe('Email - mail body content (short URL vs. fallback)', function () {
             assert.ok(openedUrl, 'window.open should have been called');
 
             const body = extractMailtoBody(openedUrl);
-            assert.ok(body.includes(win.location.href), 'email body should include the fallback page URL');
-            assert.ok(!body.includes('undefined'), 'email body must not contain "undefined"');
+            assert.match(body, new RegExp(win.location.href), 'email body should include the fallback page URL');
+            assert.doesNotMatch(body, /undefined/, 'email body must not contain "undefined"');
         } finally {
             restore();
             cleanup();
