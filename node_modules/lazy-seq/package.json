@@ -1,0 +1,41 @@
+{
+  "name": "lazy-seq",
+  "description": "Lazy sequences",
+  "version": "1.0.0",
+  "homepage": "https://github.com/phadej/lazy-seq",
+  "author": {
+    "name": "Oleg Grenrus",
+    "email": "oleg.grenrus@iki.fi",
+    "url": "http://oleg.fi/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/phadej/lazy-seq.git"
+  },
+  "bugs": {
+    "url": "https://github.com/phadej/lazy-seq/issues"
+  },
+  "license": "MIT",
+  "main": "index.js",
+  "engines": {
+    "node": ">= 0.10.0"
+  },
+  "scripts": {
+    "test": "make test"
+  },
+  "devDependencies": {
+    "david": "^6.0.1",
+    "eslint": "^0.24.1",
+    "istanbul": "^0.3.2",
+    "jscs": "^2.0.0",
+    "jshint": "^2.5.10",
+    "jsverify": "^0.6.3",
+    "ljs": "^0.3.0",
+    "mocha": "^2.0.1",
+    "underscore": "^1.7.0"
+  },
+  "keywords": [
+    "lazy",
+    "sequence"
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "name": "privatebin",
+  "version": "1.0.0",
+  "description": "*Current version: 2.0.0*",
+  "main": "index.js",
+  "directories": {
+    "doc": "doc",
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/galindosarah/PrivateBin.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/galindosarah/PrivateBin/issues"
+  },
+  "homepage": "https://github.com/galindosarah/PrivateBin#readme",
+  "devDependencies": {
+    "jquery": "^3.7.1",
+    "jsdom": "^27.0.0",
+    "jsverify": "^0.8.4",
+    "mocha": "^11.7.4",
+    "sinon": "^21.0.0"
+  }
+}

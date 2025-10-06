@@ -1,0 +1,71 @@
+{
+  "name": "jsverify",
+  "description": "Property-based testing for JavaScript.",
+  "version": "0.8.4",
+  "homepage": "http://jsverify.github.io/",
+  "author": {
+    "name": "Oleg Grenrus",
+    "email": "oleg.grenrus@iki.fi",
+    "url": "http://oleg.fi"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/jsverify/jsverify.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jsverify/jsverify/issues"
+  },
+  "license": "MIT",
+  "main": "lib/jsverify.js",
+  "types": "lib/jsverify.d.ts",
+  "engines": {
+    "node": ">= 0.8.0"
+  },
+  "scripts": {
+    "test": "make test"
+  },
+  "devDependencies": {
+    "@types/mocha": "^5.0.0",
+    "bluebird": "^3.1.1",
+    "browserify": "^16.1.1",
+    "chai": "^4.1.2",
+    "david": "^11.0.0",
+    "eslint": "^5.8.0",
+    "esprima": "^4.0.0",
+    "istanbul": "^0.4.1",
+    "jasmine-core": "^3.1.0",
+    "jscs": "^3.0.7",
+    "jshint": "^2.7.0",
+    "karma": "^3.1.1",
+    "karma-chrome-launcher": "^2.0.0",
+    "karma-cli": "^1.0.1",
+    "karma-firefox-launcher": "^1.0.0",
+    "karma-jasmine": "^1.0.2",
+    "karma-mocha": "^1.1.1",
+    "ljs": "~0.3.0",
+    "lodash": "^4.4.0",
+    "mocha": "^5.0.5",
+    "npm-freeze": "^0.1.3",
+    "q": "~2.0.2",
+    "ts-node": "^7.0.1",
+    "tslint": "^5.0.0",
+    "typescript": "^3.1.4",
+    "underscore": "^1.8.2",
+    "when": "~3.7.2"
+  },
+  "keywords": [
+    "testing",
+    "unit testing",
+    "TDD",
+    "property-based testing",
+    "quickcheck",
+    "quick check",
+    "jscheck"
+  ],
+  "dependencies": {
+    "lazy-seq": "^1.0.0",
+    "rc4": "~0.1.5",
+    "trampa": "^1.0.0",
+    "typify-parser": "^1.1.0"
+  }
+}

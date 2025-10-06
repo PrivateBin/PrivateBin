@@ -1,0 +1,18 @@
+{
+  "folders":
+  [
+    {
+      "path": ".",
+      "folder_exclude_patterns": ["dist", "coverage", "node_modules"]
+    }
+  ],
+  "settings":
+  {
+    "tab_size": 2,
+    "translate_tabs_to_spaces": true,
+    "use_tab_stops": true,
+    "detect_indentation": false,
+    "ensure_newline_at_eof_on_save": true,
+    "trim_trailing_white_space_on_save": true
+  }
+}

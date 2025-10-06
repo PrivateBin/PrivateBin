@@ -1,0 +1,39 @@
+{
+  "name": "rc4",
+  "version": "0.1.5",
+  "description": "RC4 random number generator",
+  "main": "rc4.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "make test"
+  },
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:phadej/rc4.git"
+  },
+  "keywords": [
+    "rc4",
+    "random",
+    "generator",
+    "seed"
+  ],
+  "author": "Oleg Grenrus <oleg.grenrus@iki.fi>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/phadej/rc4/issues"
+  },
+  "homepage": "https://github.com/phadej/rc4",
+  "devDependencies": {
+    "david": "^6.1.4",
+    "eslint": "^0.19.0",
+    "istanbul": "^0.3.6",
+    "jscs": "^1.11.3",
+    "jshint": "^2.6.0",
+    "mocha": "^2.1.0"
+  }
+}
