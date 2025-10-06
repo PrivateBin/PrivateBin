@@ -217,10 +217,8 @@ describe('PasteStatus', function () {
                 );
                 $.PrivateBin.PasteStatus.init();
                 $.PrivateBin.PasteStatus.hideMessages();
-                assert.ok(
-                    $('#remainingtime').hasClass('hidden') &&
-                    $('#pastesuccess').hasClass('hidden')
-                );
+                assert.ok($('#remainingtime').hasClass('hidden'));
+                assert.ok($('#pastesuccess').hasClass('hidden'));
             }
         );
     });

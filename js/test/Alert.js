@@ -306,10 +306,8 @@ describe('Alert', function () {
                 $('body').addClass('loading');
                 $.PrivateBin.Alert.init();
                 $.PrivateBin.Alert.hideLoading();
-                assert.ok(
-                    !$('body').hasClass('loading') &&
-                    $('#loadingindicator').hasClass('hidden')
-                );
+                assert.ok(!$('body').hasClass('loading'));
+                assert.ok($('#loadingindicator').hasClass('hidden'));
             }
         );
     });
@@ -328,10 +326,8 @@ describe('Alert', function () {
                 );
                 $.PrivateBin.Alert.init();
                 $.PrivateBin.Alert.hideMessages();
-                assert.ok(
-                    $('#status').hasClass('hidden') &&
-                    $('#errormessage').hasClass('hidden')
-                );
+                assert.ok($('#status').hasClass('hidden'));
+                assert.ok($('#errormessage').hasClass('hidden'));
             }
         );
     });
@@ -381,4 +377,3 @@ describe('Alert', function () {
         );
     });
 });
-

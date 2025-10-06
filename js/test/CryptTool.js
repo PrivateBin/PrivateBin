@@ -58,9 +58,10 @@ describe('CryptTool', function () {
                     'foo', 'bar', cipherMessage
                 );
             clean();
-            const result = (message === plaintext);
-            if (!result) console.log(plaintext, cipherMessage);
-            assert.ok(result);
+            if (message !== plaintext) {
+                console.log(plaintext, cipherMessage);
+            }
+            assert.strictEqual(message, plaintext);
         });
 
         it('can en- and decrypt a particular message (#260)', function () {
