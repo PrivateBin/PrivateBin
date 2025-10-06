@@ -323,12 +323,12 @@ describe('TopNav', function () {
                 $.PrivateBin.TopNav.init();
                 results.push(
                     $('.navbar-toggle').hasClass('collapsed') &&
-                    $('#navbar').attr('aria-expanded') != 'true'
+                    $('#navbar').attr('aria-expanded') !== 'true'
                 );
                 $.PrivateBin.TopNav.collapseBar();
                 results.push(
                     $('.navbar-toggle').hasClass('collapsed') &&
-                    $('#navbar').attr('aria-expanded') != 'true'
+                    $('#navbar').attr('aria-expanded') !== 'true'
                 );
                 /*
                 with the upgrade for bootstrap-3.3.7.js to bootstrap-3.4.1.js
@@ -517,10 +517,12 @@ describe('TopNav', function () {
             cleanup();
         });
 
+        // eslint-disable-line global-require
         var File = window.File,
             FileList = window.FileList,
             path = require('path'),
             mime = require('mime-types');
+        // eslint-enable-line global-require
 
         // mocking file input as per https://github.com/jsdom/jsdom/issues/1272
         function createFile(file_path) {
@@ -546,7 +548,7 @@ describe('TopNav', function () {
             }
 
             const file_list = file_paths.map(fp => createFile(fp));
-            file_list.__proto__ = Object.create(FileList.prototype);
+            Object.setPrototypeOf(file_list, Object.create(FileList.prototype));
 
             Object.defineProperty(input, 'files', {
                 value: file_list,

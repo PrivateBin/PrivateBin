@@ -90,8 +90,10 @@ jQuery.PrivateBin = (function($) {
      */
     function CryptoData(data) {
         // store all keys in the default locations for drop-in replacement
-        for (let key in data) {
-            this[key] = data[key];
+        for (const key in data) {
+            if (Object.prototype.hasOwnProperty.call(data, key)) {
+                this[key] = data[key];
+            }
         }
 
         /**
@@ -3607,7 +3609,7 @@ jQuery.PrivateBin = (function($) {
 
             // set date
             const created = comment.getCreated();
-            const commentDate = created == 0 ? '' : ' (' + (new Date(created * 1000).toLocaleString()) + ')';
+            const commentDate = created === 0 ? '' : ' (' + (new Date(created * 1000).toLocaleString()) + ')';
             $commentEntry.find('span.commentdate')
                          .text(commentDate)
                          .attr('title', 'CommentID: ' + comment.id);
@@ -5570,7 +5572,7 @@ jQuery.PrivateBin = (function($) {
 
             if (window.getSelection) {
                 text = window.getSelection().toString();
-            } else if (document.selection && document.selection.type != 'Control') {
+            } else if (document.selection && document.selection.type !== 'Control') {
                 text = document.selection.createRange().text;
             }
 
@@ -5727,7 +5729,7 @@ jQuery.PrivateBin = (function($) {
 
             Alert.hideLoading();
             // only push new state if we are coming from a different one
-            if (Helper.baseUri() != window.location) {
+            if (Helper.baseUri() !== window.location) {
                 history.pushState({type: 'create'}, document.title, Helper.baseUri());
             }
 

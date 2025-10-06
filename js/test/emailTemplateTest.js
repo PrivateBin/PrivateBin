@@ -59,7 +59,7 @@ function stubWinOpen($element) {
             openedUrl = url;
             return {};
         };
-    } catch {
+    } catch (e) {
         Object.defineProperty(win, 'open', {
             value: function (url) {
                 openedUrl = url;
@@ -72,7 +72,7 @@ function stubWinOpen($element) {
 
     return {
         getUrl: () => openedUrl,
-        restore: () => { try { win.open = origOpen; } catch {} },
+        restore: () => { try { win.open = origOpen; } catch (e) {} },
         win
     };
 }
