@@ -194,7 +194,7 @@
     "This website is using an insecure HTTP connection! Please use it only for testing.": "Ta strona korzysta z niezabezpieczonego połączenia HTTP! Używaj jej tylko do testów.",
     "For more information <a href=\"%s\">see this FAQ entry</a>.": "Więcej informacji znajdziesz w <a href=\"%s\">tym wpisie FAQ</a>.",
     "Your browser may require an HTTPS connection to support the WebCrypto API. Try <a href=\"%s\">switching to HTTPS</a>.": "Twoja przeglądarka może wymagać połączenia HTTPS, aby obsługiwać WebCrypto API. Spróbuj <a href=\"%s\">przełączyć się na HTTPS</a>.",
-    "Your browser doesn't support WebAssembly, used for zlib compression. You can create uncompressed documents, but can't read compressed ones.": "Twoja przeglądarka nie obsługuje WebAssembly używanego do kompresji zlib. Możesz utworzyć nieskompresowane dokumenty, ale nie możesz odczytać skompresowanych.",
+    "Your browser doesn't support WebAssembly, used for zlib compression. You can create uncompressed documents, but can't read compressed ones.": "Twoja przeglądarka nie obsługuje WebAssembly (używanego do kompresji zlib). Możesz tworzyć nieskompresowane dokumenty, ale nie odczytasz skompresowanych.",
     "waiting on user to provide a password": "oczekiwanie na podanie hasła przez użytkownika",
     "Could not decrypt data. Did you enter a wrong password? Retry with the button at the top.": "Nie udało się odszyfrować danych. Czy podałeś błędne hasło? Spróbuj ponownie, używając przycisku u góry.",
     "Retry": "Spróbuj ponownie",
