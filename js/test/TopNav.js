@@ -535,25 +535,25 @@ describe('TopNav', function () {
                     lastModified,
                     type: mime.lookup(file_path) || '',
                 }
-            )
+            );
         }
 
         function addFileList(input, file_paths) {
-            if (typeof file_paths === 'string')
-                file_paths = [file_paths]
-            else if (!Array.isArray(file_paths)) {
-                throw new Error('file_paths needs to be a file path string or an Array of file path strings')
+            if (typeof file_paths === 'string') {
+                file_paths = [file_paths];
+            } else if (!Array.isArray(file_paths)) {
+                throw new Error('file_paths needs to be a file path string or an Array of file path strings');
             }
 
-            const file_list = file_paths.map(fp => createFile(fp))
-            file_list.__proto__ = Object.create(FileList.prototype)
+            const file_list = file_paths.map(fp => createFile(fp));
+            file_list.__proto__ = Object.create(FileList.prototype);
 
             Object.defineProperty(input, 'files', {
                 value: file_list,
                 writeable: false,
-            })
+            });
 
-            return input
+            return input;
         }
 
         it(
