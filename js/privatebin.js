@@ -928,7 +928,7 @@ jQuery.PrivateBin = (function($) {
             }
 
             // load strings from JSON
-            const cacheBreaker = document.querySelector('script[src^="js/privatebin.js"]').getAttribute("src").split(".js")[1] || "";
+            const cacheBreaker = document.querySelector('script[src^="js/privatebin.js"]').getAttribute('src').split('.js')[1] || '';
             $.getJSON('i18n/' + newLanguage + '.json' + cacheBreaker, function(data) {
                 language = newLanguage;
                 translations = data;
@@ -3086,7 +3086,7 @@ jQuery.PrivateBin = (function($) {
          * @param {array} fileNames
          */
         function printDragAndDropFileNames(fileNames) {
-            $dragAndDropFileNames.html(fileNames.join("<br>"));
+            $dragAndDropFileNames.html(fileNames.join('<br>'));
         }
 
         /**
@@ -4176,7 +4176,7 @@ jQuery.PrivateBin = (function($) {
                         $emailconfirmmodal.modal('hide');
                     }
                     triggerEmailSend(emailBody);
-                };
+                }
 
                 $emailconfirmTimezoneCurrent.off('click.sendEmailCurrentTimezone');
                 $emailconfirmTimezoneCurrent.on('click.sendEmailCurrentTimezone', sendEmailAndHideModal);
@@ -5522,7 +5522,7 @@ jQuery.PrivateBin = (function($) {
                 toggleSuccessIcon();
                 showAlertMessage('Document copied to clipboard');
             });
-        };
+        }
 
         /**
          * Handle copy link to clipboard button click
@@ -5555,7 +5555,7 @@ jQuery.PrivateBin = (function($) {
                     showAlertMessage('Document copied to clipboard');
                 }
             });
-        };
+        }
 
         /**
          * Check if user selected some text on the page to copy it
@@ -5575,7 +5575,7 @@ jQuery.PrivateBin = (function($) {
             }
 
             return text.length > 0;
-        };
+        }
 
         /**
          * Save text to the clipboard
@@ -5587,7 +5587,7 @@ jQuery.PrivateBin = (function($) {
          */
         function saveToClipboard(text) {
             navigator.clipboard.writeText(text);
-        };
+        }
 
         /**
          * Show alert message after text copy
@@ -5599,7 +5599,7 @@ jQuery.PrivateBin = (function($) {
          */
         function showAlertMessage(message) {
             Alert.showStatus(message);
-        };
+        }
 
         /**
          * Toogle success icon after copy
@@ -5616,7 +5616,7 @@ jQuery.PrivateBin = (function($) {
                 $(copyIcon).css('display', 'block');
                 $(successIcon).css('display', 'none');
             }, 1000);
-        };
+        }
 
         /**
          * Show keyboard shortcut hint
@@ -5840,7 +5840,7 @@ jQuery.PrivateBin = (function($) {
                 Alert.showStatus(
                     [
                         'The cloned file \'%s\' was attached to this document.',
-                        attachments.map(attachment => attachment[1]).join(', '),
+                        attachments.map(attachment => attachment[1]).join(', ')
                     ],
                     'copy'
                 );
@@ -5937,7 +5937,7 @@ jQuery.PrivateBin = (function($) {
             // if delete token is passed (i.e. document has been deleted by this
             // access), add an event listener for the 'new' document button in the alert
             if (Model.hasDeleteToken()) {
-                $("#new-from-alert").on("click", function () {
+                $('#new-from-alert').on('click', function () {
                     UiHelper.reloadHome();
                 });
                 return;
