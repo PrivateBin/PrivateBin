@@ -114,13 +114,13 @@ class I18nTest extends TestCase
         I18n::loadTranslations();
         $this->assertEquals('pl', I18n::getLanguage(), 'browser language pl');
         $this->assertEquals('1 godzina', I18n::_('%d hours', 1), '1 hour in Polish');
-        $this->assertEquals('2 godzina', I18n::_('%d hours', 2), '2 hours in Polish');
-        $this->assertEquals('12 godzinę', I18n::_('%d hours', 12), '12 hours in Polish');
-        $this->assertEquals('22 godzina', I18n::_('%d hours', 22), '22 hours in Polish');
-        $this->assertEquals('1 minut',  I18n::_('%d minutes', 1), '1 minute in Polish');
-        $this->assertEquals('3 minut',  I18n::_('%d minutes', 3), '3 minutes in Polish');
+        $this->assertEquals('2 godziny', I18n::_('%d hours', 2), '2 hours in Polish');
+        $this->assertEquals('12 godzin', I18n::_('%d hours', 12), '12 hours in Polish');
+        $this->assertEquals('22 godziny', I18n::_('%d hours', 22), '22 hours in Polish');
+        $this->assertEquals('1 minuta',  I18n::_('%d minutes', 1), '1 minute in Polish');
+        $this->assertEquals('3 minuty',  I18n::_('%d minutes', 3), '3 minutes in Polish');
         $this->assertEquals('13 minut',  I18n::_('%d minutes', 13), '13 minutes in Polish');
-        $this->assertEquals('23 minut',  I18n::_('%d minutes', 23), '23 minutes in Polish');
+        $this->assertEquals('23 minuty',  I18n::_('%d minutes', 23), '23 minutes in Polish');
     }
 
     public function testBrowserLanguageRuDetection()
