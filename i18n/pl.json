@@ -1,7 +1,7 @@
 {
     "PrivateBin": "PrivateBin",
     "%s is a minimalist, open source online pastebin where the server has zero knowledge of stored data. Data is encrypted/decrypted %sin the browser%s using 256 bits AES.": "%s to minimalistyczny, otwartoźródłowy serwis typu pastebin, w którym serwer nie posiada żadnej wiedzy o przechowywanych danych. Dane są szyfrowane i deszyfrowywane %sw przeglądarce%s przy użyciu 256-bitowego klucza AES.",
-    "More information on the <a href=\"https://privatebin.info/\">project page</a>.": "Więcej informacji znajdziesz na <a href=\"https://privatebin.info/\">stronie projektu</a>.",
+    "More information on the <a href=\"https://privatebin.info/\">project page</a>.": "Więcej informacji na <a href=\"https://privatebin.info/\">stronie projektu</a>.",
     "Because ignorance is bliss": "Bo niewiedza to błogosławieństwo",
     "Document does not exist, has expired or has been deleted.": "Dokument nie istnieje, wygasł lub został usunięty.",
     "%s requires php %s or above to work. Sorry.": "%s wymaga PHP w wersji %s lub nowszej.",
@@ -11,7 +11,8 @@
         "Poczekaj %d sekundy przed kolejnym wklejeniem.",
         "Poczekaj %d sekund przed kolejnym wklejeniem.",
         "Poczekaj %d sekund przed kolejnym wklejeniem.",
-        "Poczekaj %d sekund przed kolejnym wklejeniem."
+        "Poczekaj %d sekund przed kolejnym wklejeniem.",
+        "Poczekaj %d sekund pomiędzy każdą wklejką."
     ],
     "Document is limited to %s of encrypted data.": "Dokument jest ograniczony do %s zaszyfrowanych danych.",
     "Invalid data.": "Nieprawidłowe dane.",
@@ -40,15 +41,11 @@
         "%d sekond",
         "%d sekond",
         "%d sekond",
-        "%d sekond",
-        "%d sekond",
         "%d sekond"
     ],
     "%d minutes": [
         "%d minuta",
         "%d minuty",
-        "%d minut",
-        "%d minut",
         "%d minut",
         "%d minut",
         "%d minut",
@@ -60,14 +57,10 @@
         "%d godzin",
         "%d godzin",
         "%d godzin",
-        "%d godzin",
-        "%d godzin",
         "%d godzin"
     ],
     "%d days": [
         "%d dzień",
-        "%d dni",
-        "%d dni",
         "%d dni",
         "%d dni",
         "%d dni",
@@ -80,8 +73,6 @@
         "%d tydgodni",
         "%d tydgodni",
         "%d tydgodni",
-        "%d tydgodni",
-        "%d tydgodni",
         "%d tydgodni"
     ],
     "%d months": [
@@ -90,15 +81,11 @@
         "%d miesiący",
         "%d miesiący",
         "%d miesiący",
-        "%d miesiący",
-        "%d miesiący",
         "%d miesiący"
     ],
     "%d years": [
         "%d rok",
         "%d lata",
-        "%d lat",
-        "%d lat",
         "%d lat",
         "%d lat",
         "%d lat",
@@ -111,11 +98,13 @@
         "Ten dokument wygaśnie za %d sekundy.",
         "Ten dokument wygaśnie za %d sekund.",
         "Ten dokument wygaśnie za %d sekund.",
+        "Ten dokument wygaśnie za %d sekund.",
         "Ten dokument wygaśnie za %d sekund."
     ],
     "This document will expire in %d minutes.": [
         "Ten dokument wygaśnie za minutę.",
         "Ten dokument wygaśnie za %d minuty.",
+        "Ten dokument wygaśnie za %d minut.",
         "Ten dokument wygaśnie za %d minut.",
         "Ten dokument wygaśnie za %d minut.",
         "Ten dokument wygaśnie za %d minut."
@@ -125,10 +114,12 @@
         "Ten dokument wygaśnie za %d godziny.",
         "Ten dokument wygaśnie za %d godzin.",
         "Ten dokument wygaśnie za %d godzin.",
+        "Ten dokument wygaśnie za %d godzin.",
         "Ten dokument wygaśnie za %d godzin."
     ],
     "This document will expire in %d days.": [
         "Ten dokument wygaśnie za dzień.",
+        "Ten dokument wygaśnie za %d dni.",
         "Ten dokument wygaśnie za %d dni.",
         "Ten dokument wygaśnie za %d dni.",
         "Ten dokument wygaśnie za %d dni.",
@@ -137,6 +128,7 @@
     "This document will expire in %d months.": [
         "Ten dokument wygaśnie za miesiąc.",
         "Ten dokument wygaśnie za %d miesiące.",
+        "Ten dokument wygaśnie za %d miesięcy.",
         "Ten dokument wygaśnie za %d miesięcy.",
         "Ten dokument wygaśnie za %d miesięcy.",
         "Ten dokument wygaśnie za %d miesięcy."
@@ -175,7 +167,7 @@
     "Format": "Format",
     "Plain Text": "Tekst niesformatowany",
     "Source Code": "Kod źródłowy (source code)",
-    "Markdown": "Markdown",
+    "Markdown": "Znakowanie",
     "Download attachment": "Pobierz załącznik",
     "Cloned: '%s'": "Sklonowano: '%s'",
     "The cloned file '%s' was attached to this document.": "Sklonowany plik '%s' został dołączony do tego dokumentu.",
@@ -189,7 +181,7 @@
     "Shorten URL": "Skróć adres URL",
     "Editor": "Edytor",
     "Preview": "Podgląd",
-    "%s requires the PATH to end in a \"%s\". Please update the PATH in your index.php.": "%s wymaga, aby zmienna PATH kończyła się na \"%s\". Zaktualizuj PATH w pliku index.php.",
+    "%s requires the PATH to end in a \"%s\". Please update the PATH in your index.php.": "%s wymaga zmiennej PATH zakończonej w \"%s\". Zaktualizuj zmienną PATH w index.php.",
     "Decrypt": "Odszyfruj",
     "Enter password": "Wpisz hasło",
     "Loading…": "Ładowanie…",
@@ -199,18 +191,18 @@
     "+++ no document text +++": "+++ brak treści dokumentu +++",
     "Could not get document data: %s": "Nie można pobrać danych dokumentu: %s",
     "QR code": "Kod QR",
-    "This website is using an insecure HTTP connection! Please use it only for testing.": "Ta strona korzysta z niezabezpieczonego połączenia HTTP! Używaj jej tylko do testów.",
-    "For more information <a href=\"%s\">see this FAQ entry</a>.": "Więcej informacji znajdziesz w <a href=\"%s\">tym wpisie FAQ</a>.",
+    "This website is using an insecure HTTP connection! Please use it only for testing.": "Ta witryna używa niezabezpieczonego połączenia HTTP! Używaj jej wyłącznie do testowania.",
+    "For more information <a href=\"%s\">see this FAQ entry</a>.": "Aby uzyskać więcej informacji, <a href=\"%s\">sprawdź to często zadawane pytanie</a>.",
     "Your browser may require an HTTPS connection to support the WebCrypto API. Try <a href=\"%s\">switching to HTTPS</a>.": "Twoja przeglądarka może wymagać połączenia HTTPS, aby obsługiwać WebCrypto API. Spróbuj <a href=\"%s\">przełączyć się na HTTPS</a>.",
-    "Your browser doesn't support WebAssembly, used for zlib compression. You can create uncompressed documents, but can't read compressed ones.": "Twoja przeglądarka nie obsługuje WebAssembly (używanego do kompresji zlib). Możesz tworzyć nieskompresowane dokumenty, ale nie odczytasz skompresowanych.",
+    "Your browser doesn't support WebAssembly, used for zlib compression. You can create uncompressed documents, but can't read compressed ones.": "Twoja przeglądarka nie obsługuje WebAssembly używanego do kompresji zlib. Możesz utworzyć nieskompresowane dokumenty, ale nie możesz odczytać skompresowanych.",
     "waiting on user to provide a password": "oczekiwanie na podanie hasła przez użytkownika",
-    "Could not decrypt data. Did you enter a wrong password? Retry with the button at the top.": "Nie udało się odszyfrować danych. Czy podałeś błędne hasło? Spróbuj ponownie, używając przycisku u góry.",
-    "Retry": "Spróbuj ponownie",
+    "Could not decrypt data. Did you enter a wrong password? Retry with the button at the top.": "Błąd odszyfrowywania danych. Czy wprowadzono niepoprawne hasło? Spróbuj ponownie, używając przycisku na górze.",
+    "Retry": "Ponów",
     "Showing raw text…": "Wyświetlanie surowego tekstu…",
     "Notice:": "Uwaga:",
     "This link will expire after %s.": "Ten link wygaśnie po %s.",
     "This link can only be accessed once, do not use back or refresh button in your browser.": "Tego linku można użyć tylko raz — nie cofaj ani nie odświeżaj strony.",
-    "Link:": "Link:",
+    "Link:": "Odnośnik:",
     "Recipient may become aware of your timezone, convert time to UTC?": "Odbiorca może poznać Twoją strefę czasową. Czy chcesz zamienić czas na UTC?",
     "Use Current Timezone": "Użyj bieżącej strefy czasowej",
     "Convert To UTC": "Zamień na UTC",
