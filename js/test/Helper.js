@@ -100,7 +100,7 @@ describe('Helper', function () {
             jsc.array(common.jscHashString()),
             'string',
             function (prefix, url, fragment, postfix) {
-                prefix = prefix.replace(/\r|\f/g, '\n').replace('\u0000', '').replace('\u000b', '');;
+                prefix = prefix.replace(/\r|\f/g, '\n').replace('\u0000', '').replace('\u000b', '');
                 postfix  = ' ' + postfix.replace('\r', '\n').replace('\u0000', '');
                 url.fragment = fragment.join('');
                 let urlString = common.urlToString(url),

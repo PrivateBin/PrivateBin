@@ -68,7 +68,7 @@ describe('TopNav', function () {
 
         it(
             'displays & hides navigation elements for creating a document',
-            function () {
+            function () { // eslint-disable-line complexity
                 var results = [];
                 $('body').html(
                     '<nav><div id="navbar"><ul><li><button id="newbutton" ' +
@@ -517,12 +517,12 @@ describe('TopNav', function () {
             cleanup();
         });
 
-        // eslint-disable-line global-require
+        // eslint-disable global-require
         var File = window.File,
             FileList = window.FileList,
             path = require('path'),
             mime = require('mime-types');
-        // eslint-enable-line global-require
+        // eslint-enable global-require
 
         // mocking file input as per https://github.com/jsdom/jsdom/issues/1272
         function createFile(file_path) {

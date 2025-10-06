@@ -50,7 +50,7 @@ describe('PasteStatus', function () {
             'nestring',
             common.jscUrl(),
             function (schema, domain, url) {
-                domain = domain.replace(/\P{Letter}|[\u{00AA}-\u{00BA}]/gu, '').toLowerCase();
+                domain = domain.replace(/\P{Letter}|[\u{AA}-\u{BA}]/gu, '').toLowerCase();
                 if (domain.length === 0) {
                     domain = 'a';
                 }

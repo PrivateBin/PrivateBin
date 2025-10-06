@@ -192,9 +192,8 @@ describe('I18n', function () {
 
                 // mock
                 clean = jsdom('', {cookie: ['lang=' + language]});
-                // eslint-disable-line global-require
+                // eslint-disable-next-line global-require
                 $.PrivateBin.I18n.reset(language, require('../../i18n/' + language + '.json'));
-                // eslint-enable-line global-require
                 var loadedLang = $.PrivateBin.I18n.getLanguage(),
                     result = $.PrivateBin.I18n.translate('Never'),
                     alias  = $.PrivateBin.I18n._('Never');

@@ -12,6 +12,7 @@ describe('AttachmentViewer', function () {
             'string',
             'string',
             'string',
+             // eslint-disable-next-line complexity
             function (mimeType, rawdata, filename, prefix, postfix) {
                 let clean = jsdom(),
                     data = 'data:' + mimeType + ';base64,' + common.btoa(rawdata),

@@ -22,9 +22,8 @@ describe('Prompt', function () {
                 );
                 $.PrivateBin.Model.reset();
                 $.PrivateBin.Model.init();
-                // eslint-disable-line global-require
+                // eslint-disable-next-line global-require
                 global.bootstrap = require('../bootstrap-5.3.7');
-                // eslint-enable-line global-require
                 $.PrivateBin.Prompt.init();
                 $.PrivateBin.Prompt.requestPassword();
                 $('#passworddecrypt').val(password);

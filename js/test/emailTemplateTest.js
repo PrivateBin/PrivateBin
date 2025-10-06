@@ -37,7 +37,7 @@ function buildEmailDomWithShortUrl() {
         '</ul></div></nav>' +
         '<input id="burnafterreadingoption" type="checkbox">' +
         '<div id="pastelink">Your document is ' +
-          `<a id="pasteurl" href="'https://short.example/xYz'">'https://short.example/xYz'</a> ` +
+          '<a id="pasteurl" href="https://short.example/xYz">https://short.example/xYz</a> ' +
           '<span id="copyhint">(Hit <kbd>Ctrl</kbd>+<kbd>c</kbd> to copy)</span>' +
         '</div>'
     );
@@ -72,7 +72,7 @@ function stubWinOpen($element) {
 
     return {
         getUrl: () => openedUrl,
-        restore: () => { try { win.open = origOpen; } catch (e) {} },
+        restore: () => { try { win.open = origOpen; } catch (e) { /* suppress exception in restore */ } },
         win
     };
 }

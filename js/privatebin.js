@@ -727,7 +727,7 @@ jQuery.PrivateBin = (function($) {
          * @param  {...*} args - one or multiple parameters injected into placeholders
          * @return {string}
          */
-        me.translate = function()
+        me.translate = function() // eslint-disable-line complexity
         {
             // convert parameters to array
             let args = Array.prototype.slice.call(arguments),
@@ -855,7 +855,7 @@ jQuery.PrivateBin = (function($) {
          * @param  {int} n
          * @return {int} array key
          */
-        me.getPluralForm = function(n) {
+        me.getPluralForm = function(n) { // eslint-disable-line complexity
             switch (language)
             {
                 case 'ar':
