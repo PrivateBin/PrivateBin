@@ -50,7 +50,11 @@ describe('Check', function () {
                       result2 = isSecureContext === (document.getElementById('insecurecontextnotice').className === 'hidden'),
                       result3 = (document.getElementById('oldnotice').className !== 'hidden');
                 clean();
-                return result1 && result2 && result3;
+                if (result1 && result2 && result3) {
+                    return true;
+                }
+                console.log(result1, result2, result3);
+                return false;
             }
         );
 
@@ -74,9 +78,12 @@ describe('Check', function () {
                 const result1 = Legacy.Check.getInit() && Legacy.Check.getStatus(),
                       result2 = secureProtocol === (document.getElementById('httpnotice').className === 'hidden');
                 clean();
-                return result1 && result2;
+                if (result1 && result2) {
+                    return true;
+                }
+                console.log(result1, result2);
+                return false;
             }
         );
     });
 });
-
