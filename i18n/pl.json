@@ -9,9 +9,11 @@
     "Please wait %d seconds between each post.": [
         "Poczekaj %d sekundę przed kolejnym wklejeniem.",
         "Poczekaj %d sekundy przed kolejnym wklejeniem.",
+        "Poczekaj %d sekund przed kolejnym wklejeniem.",
+        "Poczekaj %d sekund przed kolejnym wklejeniem.",
         "Poczekaj %d sekund przed kolejnym wklejeniem."
     ],
-"Document is limited to %s of encrypted data.": "Dokument jest ograniczony do %s zaszyfrowanych danych.",
+    "Document is limited to %s of encrypted data.": "Dokument jest ograniczony do %s zaszyfrowanych danych.",
     "Invalid data.": "Nieprawidłowe dane.",
     "You are unlucky. Try again.": "Miałeś pecha — spróbuj ponownie.",
     "Error saving comment. Sorry.": "Błąd podczas zapisywania komentarza.",
@@ -32,16 +34,20 @@
     "Password (recommended)": "Hasło (opcjonalnie, zalecane)",
     "Discussion": "Dyskusja",
     "Toggle navigation": "Przełącz nawigację",
-        "%d seconds": [
-        "%d second",
-        "%d second",
-        "%d second",
-        "%d second",
-        "%d second",
-        "%d second"
+    "%d seconds": [
+        "%d sekonda",
+        "%d sekondy",
+        "%d sekond",
+        "%d sekond",
+        "%d sekond",
+        "%d sekond",
+        "%d sekond",
+        "%d sekond"
     ],
     "%d minutes": [
         "%d minuta",
+        "%d minuty",
+        "%d minut",
         "%d minut",
         "%d minut",
         "%d minut",
@@ -50,68 +56,89 @@
     ],
     "%d hours": [
         "%d godzina",
-        "%d godzina",
-        "%d godzinę",
-        "%d godzinę",
-        "%d godzinę",
-        "%d godzinę"
+        "%d godziny",
+        "%d godzin",
+        "%d godzin",
+        "%d godzin",
+        "%d godzin",
+        "%d godzin",
+        "%d godzin"
     ],
     "%d days": [
         "%d dzień",
-        "%d dzień",
-        "%d dzień",
-        "%d dzień",
-        "%d dzień",
-        "%d dzień"
+        "%d dni",
+        "%d dni",
+        "%d dni",
+        "%d dni",
+        "%d dni",
+        "%d dni",
+        "%d dni"
     ],
     "%d weeks": [
         "%d tydzień",
-        "%d tydzień",
-        "%d tydzień",
-        "%d tydzień",
-        "%d tydzień",
-        "%d tydzień"
+        "%d tydgodnie",
+        "%d tydgodni",
+        "%d tydgodni",
+        "%d tydgodni",
+        "%d tydgodni",
+        "%d tydgodni",
+        "%d tydgodni"
     ],
     "%d months": [
         "%d miesiąc",
-        "%d miesiąc",
-        "%d miesiąc",
-        "%d miesiąc",
-        "%d miesiąc",
-        "%d miesiąc"
+        "%d miesiące",
+        "%d miesiący",
+        "%d miesiący",
+        "%d miesiący",
+        "%d miesiący",
+        "%d miesiący",
+        "%d miesiący"
     ],
     "%d years": [
         "%d rok",
-        "%d rok",
-        "%d rok",
-        "%d rok",
-        "%d rok",
-        "%d rok"
+        "%d lata",
+        "%d lat",
+        "%d lat",
+        "%d lat",
+        "%d lat",
+        "%d lat",
+        "%d lat"
     ],
     "Never": "Nigdy",
     "Note: This is a test service: Data may be deleted anytime. Kittens will die if you abuse this service.": "Uwaga: to usługa testowa — dane mogą zostać usunięte w dowolnym momencie. Nie nadużywaj jej, bo ucierpią kotki 🐱.",
     "This document will expire in %d seconds.": [
-        "Ten dokument wygaśnie za %d sekundę.",
+        "Ten dokument wygaśnie za sekundę.",
         "Ten dokument wygaśnie za %d sekundy.",
+        "Ten dokument wygaśnie za %d sekund.",
+        "Ten dokument wygaśnie za %d sekund.",
         "Ten dokument wygaśnie za %d sekund."
     ],
     "This document will expire in %d minutes.": [
-        "Ten dokument wygaśnie za %d minutę.",
+        "Ten dokument wygaśnie za minutę.",
         "Ten dokument wygaśnie za %d minuty.",
+        "Ten dokument wygaśnie za %d minut.",
+        "Ten dokument wygaśnie za %d minut.",
         "Ten dokument wygaśnie za %d minut."
     ],
     "This document will expire in %d hours.": [
         "Ten dokument wygaśnie za godzinę.",
         "Ten dokument wygaśnie za %d godziny.",
+        "Ten dokument wygaśnie za %d godzin.",
+        "Ten dokument wygaśnie za %d godzin.",
         "Ten dokument wygaśnie za %d godzin."
     ],
     "This document will expire in %d days.": [
-        "Ten dokument wygaśnie za %d dzień.",
+        "Ten dokument wygaśnie za dzień.",
+        "Ten dokument wygaśnie za %d dni.",
+        "Ten dokument wygaśnie za %d dni.",
+        "Ten dokument wygaśnie za %d dni.",
         "Ten dokument wygaśnie za %d dni."
     ],
     "This document will expire in %d months.": [
         "Ten dokument wygaśnie za miesiąc.",
         "Ten dokument wygaśnie za %d miesiące.",
+        "Ten dokument wygaśnie za %d miesięcy.",
+        "Ten dokument wygaśnie za %d miesięcy.",
         "Ten dokument wygaśnie za %d miesięcy."
     ],
     "Please enter the password for this document:": "Podaj hasło do tego dokumentu:",
