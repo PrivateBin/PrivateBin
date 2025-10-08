@@ -121,7 +121,7 @@ class Configuration
             'js/kjua-0.10.0.js'      => 'sha512-BYj4xggowR7QD150VLSTRlzH62YPfhpIM+b/1EUEr7RQpdWAGKulxWnOvjFx1FUlba4m6ihpNYuQab51H6XlYg==',
             'js/legacy.js'           => 'sha512-mXAgFn/DonfPANvPO6Kf08zRKCeQ75jXK69gcUUOpPLFkp3KHnDhnvij8nEJxlutD/670Bfi4RNMG6uEjA4nNQ==',
             'js/prettify.js'         => 'sha512-puO0Ogy++IoA2Pb9IjSxV1n4+kQkKXYAEUtVzfZpQepyDPyXk8hokiYDS7ybMogYlyyEIwMLpZqVhCkARQWLMg==',
-            'js/privatebin.js'       => 'sha512-Id47n8ZPz6j93KoR7DkaS48MxtwKftVq3RyZw9WRGpRT+6bYKP/ZkU84RscbcW3icxBTS9fQKQpdnmZ3rr00dQ==',
+            'js/privatebin.js'       => 'sha512-ua90kdFdjCfjRLX3WnqJdLI1HksNlvbmEdwVT3Ct0vsOhP/68gEJ3tucD/3vK5pcsVdWuJb+5ZkfymvS2QbERQ==',
             'js/purify-3.2.6.js'     => 'sha512-zqwL4OoBLFx89QPewkz4Lz5CSA2ktU+f31fuECkF0iK3Id5qd3Zpq5dMby8KwHjIEpsUgOqwF58cnmcaNem0EA==',
             'js/showdown-2.1.0.js'   => 'sha512-WYXZgkTR0u/Y9SVIA4nTTOih0kXMEd8RRV6MLFdL6YU8ymhR528NLlYQt1nlJQbYz4EW+ZsS0fx1awhiQJme1Q==',
             'js/zlib-1.3.1-1.js'     => 'sha512-5bU9IIP4PgBrOKLZvGWJD4kgfQrkTz8Z3Iqeu058mbQzW3mCumOU6M3UVbVZU9rrVoVwaW4cZK8U8h5xjF88eQ==',

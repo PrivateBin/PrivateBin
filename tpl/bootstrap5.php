@@ -82,7 +82,12 @@ endif;
 						<form id="passwordform" role="form">
 							<div class="mb-3">
 								<label for="passworddecrypt"><svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#eye" /></svg> <?php echo I18n::_('Please enter the password for this document:') ?></label>
-								<input id="passworddecrypt" type="password" class="form-control" placeholder="<?php echo I18n::_('Enter password') ?>" required="required" />
+								<div class="input-group">
+									<input id="passworddecrypt" type="password" class="form-control input-password" placeholder="<?php echo I18n::_('Enter password') ?>" required="required" />
+									<button class="btn btn-outline-secondary toggle-password" type="button" title="<?php echo I18n::_('Show password'); ?>" aria-label="<?php echo I18n::_('Show password'); ?>">
+										<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#eye" /></svg>
+									</button>
+								</div>
 							</div>
 							<button type="submit" class="btn btn-success btn-block"><svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#power" /></svg> <?php echo I18n::_('Decrypt') ?></button>
 						</form>
@@ -243,7 +248,12 @@ if ($PASSWORD) :
 ?>
 						<li class="nav-item">
 							<div id="password" class="navbar-form hidden">
-								<input type="password" id="passwordinput" placeholder="<?php echo I18n::_('Password (recommended)'); ?>" aria-label="<?php echo I18n::_('Password (recommended)'); ?>" class="form-control" size="23" />
+								<div class="input-group">
+									<input type="password" id="passwordinput" placeholder="<?php echo I18n::_('Password (recommended)'); ?>" aria-label="<?php echo I18n::_('Password (recommended)'); ?>" class="form-control input-password" size="23" />
+									<button class="btn btn-outline-secondary toggle-password" type="button" title="<?php echo I18n::_('Show password'); ?>" aria-label="<?php echo I18n::_('Show password'); ?>">
+										<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#eye" /></svg>
+									</button>
+								</div>
 							</div>
 						</li>
 <?php
@@ -434,7 +444,7 @@ if (!empty($URLSHORTENER)) :
 					<p>
 						<button id="shortenbutton" data-shortener="<?php echo I18n::encode($URLSHORTENER); ?>"
 								<?php if ($SHORTENBYDEFAULT) : ?>
-								data-autoshorten="true" 
+								data-autoshorten="true"
 								<?php endif; ?>
 								type="button" class="btn btn-primary btn-block d-flex justify-content-center align-items-center gap-1"
 						>

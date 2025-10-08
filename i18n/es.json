@@ -229,5 +229,7 @@
     "Link copied to clipboard": "Enlace copiado al portapapeles",
     "Document text": "Texto del documento",
     "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)": "La tecla de tabulación funciona como carácter (presione <kbd>Ctrl</kbd>+<kbd>m</kbd> o <kbd>Esc</kbd> para alternar)",
+    "Show password": "Show password",
+    "Hide password": "Hide password",
     "Theme": "Tema"
 }

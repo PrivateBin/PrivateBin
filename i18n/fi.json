@@ -229,5 +229,7 @@
     "Link copied to clipboard": "Linkki kopioitu leikepöydälle",
     "Document text": "Liitä teksti",
     "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)": "Tabulaattori toimii merkkinä (Paina <kbd>Ctrl</kbd>+<kbd>m</kbd> tai <kbd>Esc</kbd> vaihtaaksesi)",
+    "Show password": "Show password",
+    "Hide password": "Hide password",
     "Theme": "Teema"
 }

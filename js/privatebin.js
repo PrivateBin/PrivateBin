@@ -930,7 +930,7 @@ jQuery.PrivateBin = (function($) {
             }
 
             // load strings from JSON
-            const cacheBreaker = document.querySelector('script[src^="js/privatebin.js"]').getAttribute("src").split(".js")[1] || "";
+            const cacheBreaker = document.querySelector('script[src^="js/privatebin.js"]').getAttribute('src').split('.js')[1] || '';
             $.getJSON('i18n/' + newLanguage + '.json' + cacheBreaker, function(data) {
                 language = newLanguage;
                 translations = data;
@@ -5676,6 +5676,73 @@ jQuery.PrivateBin = (function($) {
     })();
 
     /**
+     *
+     * @name PasswordPeek
+     * @class
+     */
+    const PasswordPeek = (function () {
+        const me = {};
+
+        /**
+         * Switch between visible and hidden password
+         *
+         * @name PasswordPeek.handleRevealButtonClick
+         * @private
+         * @function
+         */
+        function handleRevealButtonClick() {
+            const element = $(this);
+            const passwordInput = element.siblings('.input-password');
+			const isHidden = passwordInput.attr('type') === 'password';
+
+            passwordInput.attr('type', isHidden ? 'text' : 'password');
+
+			const tooltip = I18n._(isHidden ? 'Hide password' : 'Show password');
+
+			element.attr('title', tooltip);
+			element.attr('aria-label', tooltip);
+
+            // handle bootstrap 5 icons: eye & eye-slash
+            const buttonSvg = element.find('use');
+            if (buttonSvg.length) {
+                const iconHref = buttonSvg.attr('href');
+                if (isHidden) {
+                    buttonSvg.attr('href', iconHref + '-slash');
+                } else {
+                    buttonSvg.attr('href', iconHref.substring(0, iconHref.length - 6));
+                }
+                return;
+            }
+
+            // handle bootstrap 3 icons: eye-open & eye-close
+            const buttonSpan = element.find('span');
+            if (buttonSpan.length) {
+                if (isHidden) {
+                    buttonSpan.addClass('glyphicon-eye-close');
+                    buttonSpan.removeClass('glyphicon-eye-open');
+                } else {
+                    buttonSpan.addClass('glyphicon-eye-open');
+                    buttonSpan.removeClass('glyphicon-eye-close');
+                }
+            }
+        }
+
+        /**
+         * Initialize
+         *
+         * @name PasswordPeek.init
+         * @function
+         */
+        me.init = function() {
+            const revealButton = $('.toggle-password');
+
+            revealButton.click(handleRevealButtonClick);
+        };
+
+        return me;
+    })();
+
+    /**
      * (controller) main PrivateBin logic
      *
      * @name   Controller
@@ -5923,6 +5990,7 @@ jQuery.PrivateBin = (function($) {
             TopNav.init();
             UiHelper.init();
             CopyToClipboard.init();
+            PasswordPeek.init();
 
             // check for legacy browsers before going any further
             if (!Legacy.Check.getInit()) {
@@ -5982,6 +6050,7 @@ jQuery.PrivateBin = (function($) {
         ServerInteraction: ServerInteraction,
         PasteEncrypter: PasteEncrypter,
         PasteDecrypter: PasteDecrypter,
+        PasswordPeek: PasswordPeek,
         CopyToClipboard: CopyToClipboard,
         Controller: Controller
     };

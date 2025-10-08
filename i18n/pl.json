@@ -229,5 +229,7 @@
     "Link copied to clipboard": "Link skopiowany do schowka",
     "Document text": "Treść dokumentu",
     "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)": "Klawisz Tabulatora służy jako znak (użyj <kbd>Ctrl</kbd>+<kbd>m</kbd> lub <kbd>Esc</kbd>, aby przełączyć tryb)",
+    "Show password": "Show password",
+    "Hide password": "Hide password",
     "Theme": "Motyw"
 }
