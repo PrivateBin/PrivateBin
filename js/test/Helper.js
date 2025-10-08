@@ -82,7 +82,8 @@ describe('Helper', function () {
             'ignores non-URL content',
             'string',
             function (content) {
-                content = content.replace(/\r|\f/g, '\n').replace(/\u0000/g, '').replace(/\u000b/g, '');
+                // eslint-disable-next-line no-control-regex
+                content = content.replace(/\r|\f/g, '\n').replace(/\u0000|\u000b/g, '');
                 let clean = jsdom();
                 $('body').html('<div id="foo"></div>');
                 let e = $('#foo');
@@ -100,7 +101,9 @@ describe('Helper', function () {
             jsc.array(common.jscHashString()),
             'string',
             function (prefix, url, fragment, postfix) {
-                prefix = prefix.replace(/\r|\f/g, '\n').replace(/\u0000/g, '').replace(/\u000b/g, '');
+                // eslint-disable-next-line no-control-regex
+                prefix = prefix.replace(/\r|\f/g, '\n').replace(/\u0000|\u000b/g, '');
+                // eslint-disable-next-line no-control-regex
                 postfix  = ' ' + postfix.replace(/\r/g, '\n').replace(/\u0000/g, '');
                 url.fragment = fragment.join('');
                 let urlString = common.urlToString(url),
@@ -132,9 +135,11 @@ describe('Helper', function () {
             jsc.array(common.jscQueryString()),
             'string',
             function (prefix, query, postfix) {
-                prefix = prefix.replace(/\r|\f/g, '\n').replace(/\u0000/g, '').replace(/\u000b/g, '');
+                // eslint-disable-next-line no-control-regex
+                prefix = prefix.replace(/\r|\f/g, '\n').replace(/\u0000|\u000b/g, '');
+                // eslint-disable-next-line no-control-regex
                 postfix = ' ' + postfix.replace(/\r/g, '\n').replace(/\u0000/g, '');
-                let url  = 'magnet:?' + query.join('').replace(/^&+|&+$/gm,''),
+                let url  = 'magnet:?' + query.join('').replace(/^&+|&+$/gm, ''),
                     clean = jsdom();
                 $('body').html('<div id="foo"></div>');
                 let e = $('#foo');
@@ -346,4 +351,3 @@ describe('Helper', function () {
         });
     });
 });
-

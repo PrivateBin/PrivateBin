@@ -1,0 +1,41 @@
+name: ESLint Check
+permissions:
+  contents: read
+
+on:
+  push:
+    paths:
+      - 'js/**/*.js'
+      - 'js/package-lock.json'
+      - .github/workflows/eslint.yml
+  pull_request:
+    paths:
+      - 'js/**/*.js'
+      - 'js/package-lock.json'
+      - .github/workflows/eslint.yml
+
+jobs:
+  eslint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: |
+          if [ -f js/package.json ]; then
+            cd js && npm ci
+          fi
+
+      - name: Run ESLint
+        run: |
+          if [ -f js/package.json ]; then
+            cd js && npx eslint .
+          else
+            npx eslint js/
+          fi

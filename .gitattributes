@@ -7,13 +7,12 @@ img/browserstack.svg export-ignore
 js/.istanbul.yml export-ignore
 js/.nycrc.yml export-ignore
 js/common.js export-ignore
+js/eslint.config.js export-ignore
 js/test/ export-ignore
 .codeclimate.yml export-ignore
 .csslintrc export-ignore
 .devcontainer export-ignore
 .editorconfig export-ignore
-.eslintignore export-ignore
-.eslintrc export-ignore
 .gitattributes export-ignore
 .github export-ignore
 .gitignore export-ignore

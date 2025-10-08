@@ -246,6 +246,11 @@
          */
         me.init = function()
         {
+            // prevent early init
+            if (typeof document === 'undefined' || typeof navigator === 'undefined' || typeof window === 'undefined') {
+                return;
+            }
+
             // prevent bots from viewing a document and potentially deleting data
             // when burn-after-reading is set
             if (isBadBot()) {

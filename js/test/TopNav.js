@@ -52,7 +52,11 @@ describe('TopNav', function () {
                     $('#qrcodelink').hasClass('hidden')
                 );
                 cleanup();
-                assert.ok(results.every(element => element));
+                const result = results.every(element => element);
+                if (!result) {
+                    console.log(results);
+                }
+                assert.ok(result);
             }
         );
     });
@@ -64,7 +68,7 @@ describe('TopNav', function () {
 
         it(
             'displays & hides navigation elements for creating a document',
-            function () {
+            function () { // eslint-disable-line complexity
                 var results = [];
                 $('body').html(
                     '<nav><div id="navbar"><ul><li><button id="newbutton" ' +
@@ -113,7 +117,11 @@ describe('TopNav', function () {
                     $('#attach').hasClass('hidden')
                 );
                 cleanup();
-                assert.ok(results.every(element => element));
+                const result = results.every(element => element);
+                if (!result) {
+                    console.log(results);
+                }
+                assert.ok(result);
             }
         );
     });
@@ -140,7 +148,11 @@ describe('TopNav', function () {
                     !$('#newbutton').hasClass('hidden')
                 );
                 cleanup();
-                assert.ok(results.every(element => element));
+                const result = results.every(element => element);
+                if (!result) {
+                    console.log(results);
+                }
+                assert.ok(result);
             }
         );
     });
@@ -169,7 +181,11 @@ describe('TopNav', function () {
                     $('#clonebutton').hasClass('hidden')
                 );
                 cleanup();
-                assert.ok(results.every(element => element));
+                const result = results.every(element => element);
+                if (!result) {
+                    console.log(results);
+                }
+                assert.ok(result);
             }
         );
     });
@@ -199,7 +215,11 @@ describe('TopNav', function () {
                     $('#rawtextbutton').hasClass('hidden')
                 );
                 cleanup();
-                assert.ok(results.every(element => element));
+                const result = results.every(element => element);
+                if (!result) {
+                    console.log(results);
+                }
+                assert.ok(result);
             }
         );
     });
@@ -233,7 +253,11 @@ describe('TopNav', function () {
                     $('#filewrap').hasClass('hidden')
                 );
                 cleanup();
-                assert.ok(results.every(element => element));
+                const result = results.every(element => element);
+                if (!result) {
+                    console.log(results);
+                }
+                assert.ok(result);
             }
         );
     });
@@ -267,7 +291,11 @@ describe('TopNav', function () {
                     !$('#customattachment').hasClass('hidden')
                 );
                 cleanup();
-                assert.ok(results.every(element => element));
+                const result = results.every(element => element);
+                if (!result) {
+                    console.log(results);
+                }
+                assert.ok(result);
             }
         );
     });
@@ -295,12 +323,12 @@ describe('TopNav', function () {
                 $.PrivateBin.TopNav.init();
                 results.push(
                     $('.navbar-toggle').hasClass('collapsed') &&
-                    $('#navbar').attr('aria-expanded') != 'true'
+                    $('#navbar').attr('aria-expanded') !== 'true'
                 );
                 $.PrivateBin.TopNav.collapseBar();
                 results.push(
                     $('.navbar-toggle').hasClass('collapsed') &&
-                    $('#navbar').attr('aria-expanded') != 'true'
+                    $('#navbar').attr('aria-expanded') !== 'true'
                 );
                 /*
                 with the upgrade for bootstrap-3.3.7.js to bootstrap-3.4.1.js
@@ -318,7 +346,11 @@ describe('TopNav', function () {
                 );
                 */
                 clean();
-                assert.ok(results.every(element => element));
+                const result = results.every(element => element);
+                if (!result) {
+                    console.log(results);
+                }
+                assert.ok(result);
             }
         );
     });
@@ -364,7 +396,11 @@ describe('TopNav', function () {
                     !$.PrivateBin.TopNav.getOpenDiscussion()
                 );
                 cleanup();
-                assert.ok(results.every(element => element));
+                const result = results.every(element => element);
+                if (!result) {
+                    console.log(results);
+                }
+                assert.ok(result);
             }
         );
 
@@ -403,7 +439,11 @@ describe('TopNav', function () {
                     !$.PrivateBin.TopNav.getOpenDiscussion()
                 );
                 cleanup();
-                assert.ok(results.every(element => element));
+                const result = results.every(element => element);
+                if (!result) {
+                    console.log(results);
+                }
+                assert.ok(result);
             }
         );
 
@@ -443,7 +483,11 @@ describe('TopNav', function () {
                     $.PrivateBin.TopNav.getOpenDiscussion()
                 );
                 cleanup();
-                assert.ok(results.every(element => element));
+                const result = results.every(element => element);
+                if (!result) {
+                    console.log(results);
+                }
+                assert.ok(result);
             }
         );
     });
@@ -462,7 +506,7 @@ describe('TopNav', function () {
                     '<option value="never">Never</option></select>'
                 );
                 $.PrivateBin.TopNav.init();
-                assert.ok($.PrivateBin.TopNav.getExpiration() === '1day');
+                assert.strictEqual($.PrivateBin.TopNav.getExpiration(), '1day');
                 cleanup();
             }
         );
@@ -475,8 +519,8 @@ describe('TopNav', function () {
 
         var File = window.File,
             FileList = window.FileList,
-            path = require('path'),
-            mime = require('mime-types');
+            path = require('path'), // eslint-disable-line global-require
+            mime = require('mime-types'); // eslint-disable-line global-require
 
         // mocking file input as per https://github.com/jsdom/jsdom/issues/1272
         function createFile(file_path) {
@@ -489,27 +533,27 @@ describe('TopNav', function () {
                 path.basename(file_path),
                 {
                     lastModified,
-                    type: mime.lookup(file_path) || '',
+                    type: mime.lookup(file_path) || ''
                 }
-            )
+            );
         }
 
         function addFileList(input, file_paths) {
-            if (typeof file_paths === 'string')
-                file_paths = [file_paths]
-            else if (!Array.isArray(file_paths)) {
-                throw new Error('file_paths needs to be a file path string or an Array of file path strings')
+            if (typeof file_paths === 'string') {
+                file_paths = [file_paths];
+            } else if (!Array.isArray(file_paths)) {
+                throw new Error('file_paths needs to be a file path string or an Array of file path strings');
             }
 
-            const file_list = file_paths.map(fp => createFile(fp))
-            file_list.__proto__ = Object.create(FileList.prototype)
+            const file_list = file_paths.map(fp => createFile(fp));
+            Object.setPrototypeOf(file_list, Object.create(FileList.prototype));
 
             Object.defineProperty(input, 'files', {
                 value: file_list,
-                writeable: false,
-            })
+                writeable: false
+            });
 
-            return input
+            return input;
         }
 
         it(
@@ -541,7 +585,11 @@ describe('TopNav', function () {
                     files[1].name === 'busy.gif'
                 );
                 cleanup();
-                assert.ok(results.every(element => element));
+                const result = results.every(element => element);
+                if (!result) {
+                    console.log(results);
+                }
+                assert.ok(result);
             }
         );
     });
@@ -574,7 +622,11 @@ describe('TopNav', function () {
                     !$.PrivateBin.TopNav.getBurnAfterReading()
                 );
                 cleanup();
-                assert.ok(results.every(element => element));
+                const result = results.every(element => element);
+                if (!result) {
+                    console.log(results);
+                }
+                assert.ok(result);
             }
         );
     });
@@ -607,7 +659,11 @@ describe('TopNav', function () {
                     !$.PrivateBin.TopNav.getOpenDiscussion()
                 );
                 cleanup();
-                assert.ok(results.every(element => element));
+                const result = results.every(element => element);
+                if (!result) {
+                    console.log(results);
+                }
+                assert.ok(result);
             }
         );
     });
@@ -642,7 +698,11 @@ describe('TopNav', function () {
                     $.PrivateBin.TopNav.getPassword() === ''
                 );
                 cleanup();
-                return results.every(element => element);
+                const result = results.every(element => element);
+                if (!result) {
+                    console.log(results);
+                }
+                return result;
             }
         );
     });
@@ -676,7 +736,11 @@ describe('TopNav', function () {
                     $.PrivateBin.TopNav.getCustomAttachment().hasClass('test')
                 );
                 cleanup();
-                assert.ok(results.every(element => element));
+                const result = results.every(element => element);
+                if (!result) {
+                    console.log(results);
+                }
+                assert.ok(result);
             }
         );
     });
@@ -738,7 +802,7 @@ describe('TopNav', function () {
                 $.PrivateBin.Helper.reset();
                 $.PrivateBin.TopNav.init();
                 $('#rawtextbutton').click();
-                assert.equal($('pre').text(), sample);
+                assert.strictEqual($('pre').text(), sample);
                 clean();
             }
         );

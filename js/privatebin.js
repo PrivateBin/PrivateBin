@@ -10,8 +10,6 @@
  * @namespace
  */
 
-// global Base64, DOMPurify, FileReader, baseX, bootstrap, history, navigator, prettyPrint, prettyPrintOne, showdown, kjua
-
 jQuery.fn.draghover = function() {
     'use strict';
     return this.each(function() {
@@ -92,8 +90,10 @@ jQuery.PrivateBin = (function($) {
      */
     function CryptoData(data) {
         // store all keys in the default locations for drop-in replacement
-        for (let key in data) {
-            this[key] = data[key];
+        for (const key in data) {
+            if (Object.prototype.hasOwnProperty.call(data, key)) {
+                this[key] = data[key];
+            }
         }
 
         /**
@@ -727,7 +727,7 @@ jQuery.PrivateBin = (function($) {
          * @param  {...*} args - one or multiple parameters injected into placeholders
          * @return {string}
          */
-        me.translate = function()
+        me.translate = function() // eslint-disable-line complexity
         {
             // convert parameters to array
             let args = Array.prototype.slice.call(arguments),
@@ -855,7 +855,7 @@ jQuery.PrivateBin = (function($) {
          * @param  {int} n
          * @return {int} array key
          */
-        me.getPluralForm = function(n) {
+        me.getPluralForm = function(n) { // eslint-disable-line complexity
             switch (language)
             {
                 case 'ar':
@@ -3088,7 +3088,7 @@ jQuery.PrivateBin = (function($) {
          * @param {array} fileNames
          */
         function printDragAndDropFileNames(fileNames) {
-            $dragAndDropFileNames.html(fileNames.join("<br>"));
+            $dragAndDropFileNames.html(fileNames.join('<br>'));
         }
 
         /**
@@ -3609,7 +3609,7 @@ jQuery.PrivateBin = (function($) {
 
             // set date
             const created = comment.getCreated();
-            const commentDate = created == 0 ? '' : ' (' + (new Date(created * 1000).toLocaleString()) + ')';
+            const commentDate = created === 0 ? '' : ' (' + (new Date(created * 1000).toLocaleString()) + ')';
             $commentEntry.find('span.commentdate')
                          .text(commentDate)
                          .attr('title', 'CommentID: ' + comment.id);
@@ -4178,7 +4178,7 @@ jQuery.PrivateBin = (function($) {
                         $emailconfirmmodal.modal('hide');
                     }
                     triggerEmailSend(emailBody);
-                };
+                }
 
                 $emailconfirmTimezoneCurrent.off('click.sendEmailCurrentTimezone');
                 $emailconfirmTimezoneCurrent.on('click.sendEmailCurrentTimezone', sendEmailAndHideModal);
@@ -5524,7 +5524,7 @@ jQuery.PrivateBin = (function($) {
                 toggleSuccessIcon();
                 showAlertMessage('Document copied to clipboard');
             });
-        };
+        }
 
         /**
          * Handle copy link to clipboard button click
@@ -5557,7 +5557,7 @@ jQuery.PrivateBin = (function($) {
                     showAlertMessage('Document copied to clipboard');
                 }
             });
-        };
+        }
 
         /**
          * Check if user selected some text on the page to copy it
@@ -5572,12 +5572,12 @@ jQuery.PrivateBin = (function($) {
 
             if (window.getSelection) {
                 text = window.getSelection().toString();
-            } else if (document.selection && document.selection.type != 'Control') {
+            } else if (document.selection && document.selection.type !== 'Control') {
                 text = document.selection.createRange().text;
             }
 
             return text.length > 0;
-        };
+        }
 
         /**
          * Save text to the clipboard
@@ -5589,7 +5589,7 @@ jQuery.PrivateBin = (function($) {
          */
         function saveToClipboard(text) {
             navigator.clipboard.writeText(text);
-        };
+        }
 
         /**
          * Show alert message after text copy
@@ -5601,7 +5601,7 @@ jQuery.PrivateBin = (function($) {
          */
         function showAlertMessage(message) {
             Alert.showStatus(message);
-        };
+        }
 
         /**
          * Toogle success icon after copy
@@ -5618,7 +5618,7 @@ jQuery.PrivateBin = (function($) {
                 $(copyIcon).css('display', 'block');
                 $(successIcon).css('display', 'none');
             }, 1000);
-        };
+        }
 
         /**
          * Show keyboard shortcut hint
@@ -5796,7 +5796,7 @@ jQuery.PrivateBin = (function($) {
 
             Alert.hideLoading();
             // only push new state if we are coming from a different one
-            if (Helper.baseUri() != window.location) {
+            if (Helper.baseUri() !== window.location) {
                 history.pushState({type: 'create'}, document.title, Helper.baseUri());
             }
 
@@ -5909,7 +5909,7 @@ jQuery.PrivateBin = (function($) {
                 Alert.showStatus(
                     [
                         'The cloned file \'%s\' was attached to this document.',
-                        attachments.map(attachment => attachment[1]).join(', '),
+                        attachments.map(attachment => attachment[1]).join(', ')
                     ],
                     'copy'
                 );
@@ -6007,7 +6007,7 @@ jQuery.PrivateBin = (function($) {
             // if delete token is passed (i.e. document has been deleted by this
             // access), add an event listener for the 'new' document button in the alert
             if (Model.hasDeleteToken()) {
-                $("#new-from-alert").on("click", function () {
+                $('#new-from-alert').on('click', function () {
                     UiHelper.reloadHome();
                 });
                 return;

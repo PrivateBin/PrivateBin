@@ -22,6 +22,7 @@ describe('Prompt', function () {
                 );
                 $.PrivateBin.Model.reset();
                 $.PrivateBin.Model.init();
+                // eslint-disable-next-line global-require
                 global.bootstrap = require('../bootstrap-5.3.7');
                 $.PrivateBin.Prompt.init();
                 $.PrivateBin.Prompt.requestPassword();

@@ -50,7 +50,7 @@ describe('PasteStatus', function () {
             'nestring',
             common.jscUrl(),
             function (schema, domain, url) {
-                domain = domain.replace(/\P{Letter}|[\u00AA-\u00BA]/gu, '').toLowerCase();
+                domain = domain.replace(/\P{Letter}|[\u{AA}-\u{BA}]/gu, '').toLowerCase();
                 if (domain.length === 0) {
                     domain = 'a';
                 }
@@ -88,13 +88,13 @@ describe('PasteStatus', function () {
                         url: {
                             keyword: longUrl.address.join(''),
                             url: longUrlString,
-                            title: "example title",
-                            date: "2014-10-24 16:01:39",
-                            ip: "127.0.0.1"
+                            title: 'example title',
+                            date: '2014-10-24 16:01:39',
+                            ip: '127.0.0.1'
                         },
-                        status: "success",
-                        message: longUrlString + " added to database",
-                        title: "example title",
+                        status: 'success',
+                        message: longUrlString + ' added to database',
+                        title: 'example title',
                         shorturl: shortUrlString,
                         statusCode: 200
                     },
@@ -217,10 +217,8 @@ describe('PasteStatus', function () {
                 );
                 $.PrivateBin.PasteStatus.init();
                 $.PrivateBin.PasteStatus.hideMessages();
-                assert.ok(
-                    $('#remainingtime').hasClass('hidden') &&
-                    $('#pastesuccess').hasClass('hidden')
-                );
+                assert.ok($('#remainingtime').hasClass('hidden'));
+                assert.ok($('#pastesuccess').hasClass('hidden'));
             }
         );
     });
