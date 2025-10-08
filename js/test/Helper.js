@@ -83,7 +83,7 @@ describe('Helper', function () {
             'string',
             function (content) {
                 // eslint-disable-next-line no-control-regex
-                content = content.replace(/\r|\f/g, '\n').replace(/\u0000/g, '').replace(/\u000b/g, '');
+                content = content.replace(/\r|\f/g, '\n').replace(/\u0000|\u000b/g, '');
                 let clean = jsdom();
                 $('body').html('<div id="foo"></div>');
                 let e = $('#foo');
@@ -102,7 +102,7 @@ describe('Helper', function () {
             'string',
             function (prefix, url, fragment, postfix) {
                 // eslint-disable-next-line no-control-regex
-                prefix = prefix.replace(/\r|\f/g, '\n').replace(/\u0000/g, '').replace(/\u000b/g, '');
+                prefix = prefix.replace(/\r|\f/g, '\n').replace(/\u0000|\u000b/g, '');
                 // eslint-disable-next-line no-control-regex
                 postfix  = ' ' + postfix.replace(/\r/g, '\n').replace(/\u0000/g, '');
                 url.fragment = fragment.join('');
@@ -136,7 +136,7 @@ describe('Helper', function () {
             'string',
             function (prefix, query, postfix) {
                 // eslint-disable-next-line no-control-regex
-                prefix = prefix.replace(/\r|\f/g, '\n').replace(/\u0000/g, '').replace(/\u000b/g, '');
+                prefix = prefix.replace(/\r|\f/g, '\n').replace(/\u0000|\u000b/g, '');
                 // eslint-disable-next-line no-control-regex
                 postfix = ' ' + postfix.replace(/\r/g, '\n').replace(/\u0000/g, '');
                 let url  = 'magnet:?' + query.join('').replace(/^&+|&+$/gm, ''),
