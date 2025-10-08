@@ -26,6 +26,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v5
 
+      - name: Remove folders causing errors in report
+        run: rm -rf doc img *.md
+
       # Execute Codacy Analysis CLI and generate a SARIF output with the security issues identified during the analysis
       - name: Run Codacy Analysis CLI
         uses: codacy/codacy-analysis-cli-action@v4
