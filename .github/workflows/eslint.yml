@@ -1,4 +1,6 @@
 name: ESLint Check
+permissions:
+  contents: read
 
 on:
   push:
