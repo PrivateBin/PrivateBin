@@ -229,5 +229,7 @@
     "Link copied to clipboard": "הקישור הועתק ללוח",
     "Document text": "הדבק טקסט",
     "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)": "משטח ה-tab פועל כמקש תו (לחץ על <kbd>Ctrl</kbd>+<kbd>m</kbd> או <kbd>Esc</kbd> להחלפה)",
+    "Show password": "Show password",
+    "Hide password": "Hide password",
     "Theme": "נושא"
 }

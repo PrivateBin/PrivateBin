@@ -229,5 +229,7 @@
     "Link copied to clipboard": "نُسخ الرابط إلى الحافظة",
     "Document text": "لصق النص",
     "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)": "مفتاح التبويب يعمل كشخصية (انقر <kbd>Ctrl</kbd>+<kbd>m</kbd> أو <kbd>Esc</kbd> للتبديل)",
+    "Show password": "Show password",
+    "Hide password": "Hide password",
     "Theme": "السمة"
 }

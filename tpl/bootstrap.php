@@ -109,7 +109,12 @@ if (count($class)) {
 						<form id="passwordform" role="form">
 							<div class="form-group">
 								<label for="passworddecrypt"><span class="glyphicon glyphicon-eye-open"></span> <?php echo I18n::_('Please enter the password for this document:') ?></label>
-								<input id="passworddecrypt" type="password" class="form-control" placeholder="<?php echo I18n::_('Enter password') ?>" required="required">
+								<div class="input-group">
+									<input id="passworddecrypt" type="password" class="form-control input-password" placeholder="<?php echo I18n::_('Enter password') ?>" required="required">
+									<div class="input-group-addon toggle-password" type="button" title="<?php echo I18n::_('Show password'); ?>" aria-label="<?php echo I18n::_('Show password'); ?>">
+										<span class="glyphicon glyphicon-eye-open"></span>
+									</div>
+								</div>
 							</div>
 							<button type="submit" class="btn btn-success btn-block"><span class="glyphicon glyphicon-off"></span> <?php echo I18n::_('Decrypt') ?></button>
 						</form>
@@ -368,7 +373,12 @@ if ($PASSWORD) :
 ?>
 					<li>
 						<div id="password" class="navbar-form hidden">
-							<input type="password" id="passwordinput" placeholder="<?php echo I18n::_('Password (recommended)'); ?>" class="form-control" size="23" />
+							<div class="password-peek-container">
+								<input type="password" id="passwordinput" placeholder="<?php echo I18n::_('Password (recommended)'); ?>" class="form-control input-password" size="23" />
+								<div class="input-group-addon toggle-password" type="button" title="<?php echo I18n::_('Show password'); ?>" aria-label="<?php echo I18n::_('Show password'); ?>">
+									<span class="glyphicon glyphicon-eye-open"></span>
+								</div>
+							</div>
 						</div>
 					</li>
 <?php
@@ -565,9 +575,9 @@ endif;
 if (!empty($URLSHORTENER)) :
 ?>
 					<p>
-						<button id="shortenbutton" data-shortener="<?php echo I18n::encode($URLSHORTENER); ?>" 
+						<button id="shortenbutton" data-shortener="<?php echo I18n::encode($URLSHORTENER); ?>"
 								<?php if ($SHORTENBYDEFAULT) : ?>
-								data-autoshorten="true" 
+								data-autoshorten="true"
 								<?php endif; ?>
 								type="button" class="btn btn-<?php echo $isDark ? 'warning' : 'primary'; ?> btn-block"
 						>

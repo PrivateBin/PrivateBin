@@ -24,26 +24,30 @@ jobs:
     steps:
       # Checkout the repository to the GitHub Actions runner
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
+
+      - name: Remove folders causing errors in report
+        run: rm -rf doc img *.md
 
       # Execute Codacy Analysis CLI and generate a SARIF output with the security issues identified during the analysis
       - name: Run Codacy Analysis CLI
-        uses: codacy/codacy-analysis-cli-action@1.1.0
+        uses: codacy/codacy-analysis-cli-action@v4
         with:
           # Check https://github.com/codacy/codacy-analysis-cli#project-token to get your project token from your Codacy repository
           # You can also omit the token and run the tools that support default configurations
           project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
-          verbose: true
-          output: results.sarif
-          format: sarif
+      #    verbose: true
+      #    output: results.sarif
+      #    format: sarif
           # Adjust severity of non-security issues
-          gh-code-scanning-compat: true
+      #    gh-code-scanning-compat: true
           # Force 0 exit code to allow SARIF file generation
           # This will handover control about PR rejection to the GitHub side
-          max-allowed-issues: 2147483647
+      #    max-allowed-issues: 2147483647
 
       # Upload the SARIF file generated in the previous step
-      - name: Upload SARIF results file
-        uses: github/codeql-action/upload-sarif@v1
-        with:
-          sarif_file: results.sarif
+      # disabled due to: https://github.com/codacy/codacy-analysis-cli-action/issues/142
+      #- name: Upload SARIF results file
+      #  uses: github/codeql-action/upload-sarif@v4
+      #  with:
+      #    sarif_file: results.sarif
