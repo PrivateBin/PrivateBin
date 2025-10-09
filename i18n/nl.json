@@ -210,7 +210,7 @@
     "Encrypted note on %s": "Versleuteld document op %s",
     "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "Bezoek deze link om het document te bekijken. Als je de URL aan iemand geeft, kan die het document ook bekijken.",
     "URL shortener may expose your decrypt key in URL.": "URL-verkorter kan je ontcijferingssleutel in URL blootleggen.",
-    "URL shortener is enabled by default.": "URL shortener is enabled by default.",
+    "URL shortener is enabled by default.": "URL verkorter is standaard ingeschakeld.",
     "Save document": "Document opslaan",
     "Your IP is not authorized to create documents.": "Je IP-adres is niet gemachtigd om documenten te maken.",
     "Trying to shorten a URL that isn't pointing at our instance.": "Proberen om een URL te verkorten dat niet naar ons systeem wijst.",
@@ -229,7 +229,7 @@
     "Link copied to clipboard": "Link gekopieerd naar klembord",
     "Document text": "Tekst plakken",
     "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)": "Tabulatortoets dient als teken (gebruik <kbd>Ctrl</kbd>+<kbd>m</kbd> of <kbd>Esc</kbd> om te schakelen)",
-    "Show password": "Show password",
-    "Hide password": "Hide password",
+    "Show password": "Toon wachtwoord",
+    "Hide password": "Verberg wachtwoord",
     "Theme": "Thema"
 }

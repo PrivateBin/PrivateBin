@@ -210,7 +210,7 @@
     "Encrypted note on %s": "Nota cifrada en %s",
     "Visit this link to see the note. Giving the URL to anyone allows them to access the note, too.": "Visite este enlace para ver la nota. Dar la URL a cualquier persona también les permite acceder a la nota.",
     "URL shortener may expose your decrypt key in URL.": "El acortador de URL puede exponer su clave de descifrado en el URL.",
-    "URL shortener is enabled by default.": "URL shortener is enabled by default.",
+    "URL shortener is enabled by default.": "El acortador de URL está habilitado por defecto.",
     "Save document": "Guardar documento",
     "Your IP is not authorized to create documents.": "Tu IP no está autorizada para crear contenido.",
     "Trying to shorten a URL that isn't pointing at our instance.": "Intentando acortar una URL que no apunta a nuestra instancia.",
@@ -229,7 +229,7 @@
     "Link copied to clipboard": "Enlace copiado al portapapeles",
     "Document text": "Texto del documento",
     "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)": "La tecla de tabulación funciona como carácter (presione <kbd>Ctrl</kbd>+<kbd>m</kbd> o <kbd>Esc</kbd> para alternar)",
-    "Show password": "Show password",
-    "Hide password": "Hide password",
+    "Show password": "Mostrar contraseña",
+    "Hide password": "Ocultar contraseña",
     "Theme": "Tema"
 }
