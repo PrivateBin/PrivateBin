@@ -46,11 +46,12 @@ interface RangeInterface
     /**
      * Get the address at a certain offset of this range.
      *
-     * @param int $n the offset of the address (support negative offset)
+     * @param int|numeric-string $n the offset of the address (support negative offset)
      *
-     * @return \IPLib\Address\AddressInterface|null return NULL if $n is not an integer or if the offset out of range
+     * @return \IPLib\Address\AddressInterface|null return NULL if $n is neither an integer nor a string containing a valid integer, or if the offset out of range
      *
      * @since 1.15.0
+     * @since 1.21.0 $n can also be a numeric string
      *
      * @example passing 256 to the range 127.0.0.0/16 will result in 127.0.1.0
      * @example passing -1 to the range 127.0.1.0/16 will result in 127.0.255.255
@@ -150,13 +151,22 @@ interface RangeInterface
     public function getReverseDNSLookupName();
 
     /**
-     * Get the count of addresses this IP range contains.
+     * Get the count of addresses contained in this IP range (possibly approximated).
      *
-     * @return int|float Return float as for huge IPv6 networks, int is not enough
+     * @return int|float If the number of addresses exceeds PHP_INT_MAX a float containing an approximation will be returned
      *
      * @since 1.16.0
      */
     public function getSize();
+
+    /**
+     * Get the exact count of addresses contained in this IP range.
+     *
+     * @return int|numeric-string If the number of addresses exceeds PHP_INT_MAX a string containing the exact number of addresses will be returned
+     *
+     * @since 1.21.0
+     */
+    public function getExactSize();
 
     /**
      * Get the "network prefix", that is how many bits of the address are dedicated to the network portion.

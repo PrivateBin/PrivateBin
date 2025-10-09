@@ -7,6 +7,7 @@ use IPLib\Address\IPv4;
 use IPLib\Address\IPv6;
 use IPLib\Address\Type as AddressType;
 use IPLib\ParseStringFlag;
+use IPLib\Service\BinaryMath;
 
 /**
  * Represents an address range in pattern format (only ending asterisks are supported).
@@ -304,7 +305,21 @@ class Pattern extends AbstractRange
         $maxPrefix = $fromAddress::getNumberOfBits();
         $prefix = $this->getNetworkPrefix();
 
-        return pow(2, ($maxPrefix - $prefix));
+        return pow(2, $maxPrefix - $prefix);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \IPLib\Range\RangeInterface::getExactSize()
+     */
+    public function getExactSize()
+    {
+        $fromAddress = $this->fromAddress;
+        $maxPrefix = $fromAddress::getNumberOfBits();
+        $prefix = $this->getNetworkPrefix();
+
+        return BinaryMath::getInstance()->pow2string($maxPrefix - $prefix);
     }
 
     /**

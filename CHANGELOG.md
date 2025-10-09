@@ -5,7 +5,7 @@
 * ADDED: Added `shortenviashlink` endpoint with an `shlink` configuration section
 * ADDED: Password peek (#1254)
 * CHANGED: CSP recommendation around bootstrap5 template resolved in Firefox 131 (#1613)
-* CHANGED: Upgrading libraries to: bootstrap 5.3.8 & DOMpurify 3.2.7
+* CHANGED: Upgrading libraries to: bootstrap 5.3.8, DOMpurify 3.2.7 & ip-lib 1.21.0
 * FIXED: Allow pasting a password for decrypting a paste (#1620)
 * FIXED: Allow copying the shortened link after using a URL shortener (#1624)
 * FIXED: URL extraction fails when frame-ancestors is set in CSP (#1644)

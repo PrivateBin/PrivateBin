@@ -7,6 +7,7 @@ use IPLib\Address\IPv4;
 use IPLib\Address\IPv6;
 use IPLib\Address\Type as AddressType;
 use IPLib\Factory;
+use IPLib\Service\BinaryMath;
 use OutOfBoundsException;
 
 /**
@@ -59,17 +60,26 @@ abstract class AbstractRange implements RangeInterface
      */
     public function getAddressAtOffset($n)
     {
-        if (!is_int($n)) {
+        if (is_int($n)) {
+            $positive = $n >= 0;
+            if ($positive === false) {
+                $nPlus1 = $n + 1;
+            }
+        } elseif (($s = BinaryMath::getInstance()->normalizeIntegerString($n)) !== '') {
+            $n = $s;
+            $positive = $n[0] !== '-';
+            if ($positive === false) {
+                $nPlus1 = BinaryMath::getInstance()->add1ToIntegerString($n);
+            }
+        } else {
             return null;
         }
-
-        $address = null;
-        if ($n >= 0) {
+        if ($positive) {
             $start = Factory::parseAddressString($this->getComparableStartString());
             $address = $start->getAddressAtOffset($n);
         } else {
             $end = Factory::parseAddressString($this->getComparableEndString());
-            $address = $end->getAddressAtOffset($n + 1);
+            $address = $end->getAddressAtOffset($nPlus1);
         }
 
         if ($address === null) {
