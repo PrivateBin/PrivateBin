@@ -110,11 +110,12 @@ interface AddressInterface
     /**
      * Get the address at a certain distance from this address.
      *
-     * @param int $n the distance of the address (can be negative)
+     * @param int|numeric-string $n the distance of the address (can be negative)
      *
-     * @return \IPLib\Address\AddressInterface|null return NULL if $n is not an integer or if the final address would be invalid
+     * @return \IPLib\Address\AddressInterface|null return NULL if $n is not an integer or NULL if $n is neither an integer nor a string containing a valid integer, or if the final address would be invalid
      *
      * @since 1.15.0
+     * @since 1.21.0 $n can also be a numeric string
      *
      * @example passing 1 to the address 127.0.0.1 will result in 127.0.0.2
      * @example passing -1 to the address 127.0.0.1 will result in 127.0.0.0

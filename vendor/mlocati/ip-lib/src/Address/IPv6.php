@@ -6,6 +6,8 @@ use IPLib\ParseStringFlag;
 use IPLib\Range\RangeInterface;
 use IPLib\Range\Subnet;
 use IPLib\Range\Type as RangeType;
+use IPLib\Service\BinaryMath;
+use IPLib\Service\NumberInChunks;
 
 /**
  * An IPv6 address.
@@ -549,28 +551,24 @@ class IPv6 implements AddressInterface
      */
     public function getAddressAtOffset($n)
     {
-        if (!is_int($n)) {
+        if (is_int($n)) {
+            $thatChunks = NumberInChunks::fromInteger($n, NumberInChunks::CHUNKSIZE_WORDS);
+        } elseif (($s = BinaryMath::getInstance()->normalizeIntegerString($n)) !== '') {
+            $thatChunks = NumberInChunks::fromNumericString($s, NumberInChunks::CHUNKSIZE_WORDS);
+        } else {
+            return null;
+        }
+        $myWords = $this->getWords();
+        while (isset($myWords[1]) && $myWords[0] === 0) {
+            array_shift($myWords);
+        }
+        $myChunks = new NumberInChunks(false, $myWords, NumberInChunks::CHUNKSIZE_WORDS);
+        $result = $myChunks->add($thatChunks);
+        if ($result->negative || count($result->chunks) > 8) {
             return null;
         }
 
-        $boundary = 0x10000;
-        $mod = $n;
-        $words = $this->getWords();
-        for ($i = count($words) - 1; $i >= 0; $i--) {
-            $tmp = ($words[$i] + $mod) % $boundary;
-            $mod = (int) floor(($words[$i] + $mod) / $boundary);
-            if ($tmp < 0) {
-                $tmp += $boundary;
-            }
-
-            $words[$i] = $tmp;
-        }
-
-        if ($mod !== 0) {
-            return null;
-        }
-
-        return static::fromWords($words);
+        return static::fromWords(array_pad($result->chunks, -8, 0));
     }
 
     /**
@@ -645,7 +643,7 @@ class IPv6 implements AddressInterface
         }
         $myWords = $this->getWords();
         $otherWords = $other->getWords();
-        $sum = array_fill(0, 7, 0);
+        $sum = array_fill(0, 8, 0);
         $carry = 0;
         for ($index = 7; $index >= 0; $index--) {
             $word = $myWords[$index] + $otherWords[$index] + $carry;

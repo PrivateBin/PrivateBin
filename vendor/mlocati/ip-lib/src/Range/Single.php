@@ -240,6 +240,16 @@ class Single extends AbstractRange
     /**
      * {@inheritdoc}
      *
+     * @see \IPLib\Range\RangeInterface::getExactSize()
+     */
+    public function getExactSize()
+    {
+        return 1;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
      * @see \IPLib\Range\RangeInterface::getNetworkPrefix()
      */
     public function getNetworkPrefix()
