@@ -18,6 +18,10 @@ on:
   schedule:
     - cron: '28 22 * * 5'
 
+permissions:
+  contents: read
+  security-events: write
+
 jobs:
   analyze:
     name: Analyze

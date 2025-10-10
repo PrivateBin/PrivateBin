@@ -8,6 +8,11 @@ on:
     branches: [ master ]
   pull_request:
     branches: [ master ]
+
+permissions:
+  contents: read
+  security-events: write
+
 jobs:
   # https://github.com/snyk/actions/tree/master/php
   snyk-php:
