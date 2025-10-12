@@ -2,7 +2,7 @@
 
 CURRENT_VERSION = 2.0.1
 VERSION ?= 2.0.1
-VERSION_FILES = README.md SECURITY.md doc/Installation.md js/package*.json lib/Controller.php Makefile
+VERSION_FILES = README.md SECURITY.md doc/Installation.md js/package.json lib/Controller.php Makefile
 REGEX_CURRENT_VERSION := $(shell echo $(CURRENT_VERSION) | sed "s/\./\\\./g")
 REGEX_VERSION := $(shell echo $(VERSION) | sed "s/\./\\\./g")
 
