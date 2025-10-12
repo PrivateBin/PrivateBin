@@ -274,6 +274,7 @@ class Filesystem extends AbstractData
     {
         switch ($namespace) {
             case 'purge_limiter':
+                opcache_invalidate($this->_path . DIRECTORY_SEPARATOR . 'purge_limiter.php');
                 return $this->_storeString(
                     $this->_path . DIRECTORY_SEPARATOR . 'purge_limiter.php',
                     '<?php' . PHP_EOL . '$GLOBALS[\'purge_limiter\'] = ' . var_export($value, true) . ';'
@@ -285,6 +286,7 @@ class Filesystem extends AbstractData
                 );
             case 'traffic_limiter':
                 $this->_last_cache[$key] = $value;
+                opcache_invalidate($this->_path . DIRECTORY_SEPARATOR . 'traffic_limiter.php');
                 return $this->_storeString(
                     $this->_path . DIRECTORY_SEPARATOR . 'traffic_limiter.php',
                     '<?php' . PHP_EOL . '$GLOBALS[\'traffic_limiter\'] = ' . var_export($this->_last_cache, true) . ';'
