@@ -6,7 +6,7 @@
 * rugk - security review, doc improvment, JS refactoring & various other stuff
 * R4SAS - python client, compression, blob URI to support larger attachments
 * Mikhail Romanov - UI improvements, theme switching, clipboard support, multi-file upload, bugfixes, code refactoring
-* karthikkasturi - shlink proxy and url shortening bugfixes
+* Karthik Kasturi - shlink proxy and url shortening bugfixes
 
 ## Past contributions
 

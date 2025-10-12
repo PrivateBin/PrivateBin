@@ -1,6 +1,6 @@
 # PrivateBin version history
 
-## 2.0.1 (not yet released)
+## 2.0.1 (2025-10-12)
 * ADDED: Auto shorten URLs with config option `shortenbydefault` (#1627)
 * ADDED: Added `shortenviashlink` endpoint with an `shlink` configuration section
 * ADDED: Password peek (#1254)

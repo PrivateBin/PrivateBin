@@ -1,6 +1,6 @@
 .PHONY: all coverage coverage-js coverage-php doc doc-js doc-php increment sign test test-js test-php help
 
-CURRENT_VERSION = 2.0.0
+CURRENT_VERSION = 2.0.1
 VERSION ?= 2.0.1
 VERSION_FILES = README.md SECURITY.md doc/Installation.md js/package*.json lib/Controller.php Makefile
 REGEX_CURRENT_VERSION := $(shell echo $(CURRENT_VERSION) | sed "s/\./\\\./g")
