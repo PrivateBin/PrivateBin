@@ -30,7 +30,7 @@ for more information.
 ### Optional Requirements
 
 - PHP with GD extension (when using identicon or vizhash icons, jdenticon works
-  without it)
+  without it) and OPcache (for better performance)
 - a database supported by [PHP PDO](https://php.net/manual/book.pdo.php) and the
   PHP PDO extension (when using database storage)
 - a Ceph cluster with Rados gateway or AWS S3 storage (when using S3 storage)
