@@ -267,31 +267,25 @@ class Filesystem extends AbstractData
      */
     public function setValue($value, $namespace, $key = '')
     {
+        $file = $this->_path . DIRECTORY_SEPARATOR . $namespace . '.php';
+        if (function_exists('opcache_invalidate')) {
+            opcache_invalidate($file);
+        }
         switch ($namespace) {
             case 'purge_limiter':
-                if (function_exists('opcache_invalidate')) {
-                    opcache_invalidate($this->_path . DIRECTORY_SEPARATOR . 'purge_limiter.php');
-                }
-                return $this->_storeString(
-                    $this->_path . DIRECTORY_SEPARATOR . 'purge_limiter.php',
-                    '<?php' . PHP_EOL . '$GLOBALS[\'purge_limiter\'] = ' . var_export($value, true) . ';'
-                );
+                $content = '<?php' . PHP_EOL . '$GLOBALS[\'purge_limiter\'] = ' . var_export($value, true) . ';';
+                break;
             case 'salt':
-                return $this->_storeString(
-                    $this->_path . DIRECTORY_SEPARATOR . 'salt.php',
-                    '<?php # |' . $value . '|'
-                );
+                $content = '<?php # |' . $value . '|';
+                break;
             case 'traffic_limiter':
                 $this->_last_cache[$key] = $value;
-                if (function_exists('opcache_invalidate')) {
-                    opcache_invalidate($this->_path . DIRECTORY_SEPARATOR . 'traffic_limiter.php');
-                }
-                return $this->_storeString(
-                    $this->_path . DIRECTORY_SEPARATOR . 'traffic_limiter.php',
-                    '<?php' . PHP_EOL . '$GLOBALS[\'traffic_limiter\'] = ' . var_export($this->_last_cache, true) . ';'
-                );
+                $content = '<?php' . PHP_EOL . '$GLOBALS[\'traffic_limiter\'] = ' . var_export($this->_last_cache, true) . ';';
+                break;
+            default:
+                return false;
         }
-        return false;
+        return $this->_storeString($file, $content);
     }
 
     /**
