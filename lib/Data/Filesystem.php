@@ -280,7 +280,7 @@ class Filesystem extends AbstractData
                 break;
             case 'traffic_limiter':
                 $this->_last_cache[$key] = $value;
-                $content = '<?php' . PHP_EOL . '$GLOBALS[\'traffic_limiter\'] = ' . var_export($this->_last_cache, true) . ';';
+                $content                 = '<?php' . PHP_EOL . '$GLOBALS[\'traffic_limiter\'] = ' . var_export($this->_last_cache, true) . ';';
                 break;
             default:
                 return false;
