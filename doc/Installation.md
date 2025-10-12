@@ -22,12 +22,20 @@ for more information.
 ### Minimal Requirements
 
 - PHP version 7.3 or above
-- GD extension (when using identicon or vizhash icons, jdenticon works without it)
-- zlib extension
-- some disk space or a database supported by [PDO](https://php.net/manual/book.pdo.php)
-- ability to create files and folders in the installation directory and the PATH
-  defined in index.php
-- A web browser with JavaScript and (optional) WebAssembly support
+- PHP with zlib extension
+- some disk space and the capability to create files and folders in the
+  installation directory and the `PATH` defined in index.php
+- A web browser with JavaScript support enabled
+
+### Optional Requirements
+
+- PHP with GD extension (when using identicon or vizhash icons, jdenticon works
+  without it) and OPcache (for better performance)
+- a database supported by [PHP PDO](https://php.net/manual/book.pdo.php) and the
+  PHP PDO extension (when using database storage)
+- a Ceph cluster with Rados gateway or AWS S3 storage (when using S3 storage)
+- Google Cloud Storage (when using GCP storage)
+- A web browser with WebAssembly support
 
 ## Hardening and Security
 
