@@ -9,6 +9,7 @@
 * FIXED: Allow pasting a password for decrypting a paste (#1620)
 * FIXED: Allow copying the shortened link after using a URL shortener (#1624)
 * FIXED: URL extraction fails when frame-ancestors is set in CSP (#1644)
+* FIXED: traffic limiter not working when using Filesystem storage and PHP opcache
 
 ## 2.0.0 (2025-07-28)
 * ADDED: Error logging in database and filesystem backend (#1554)
