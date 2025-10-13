@@ -373,7 +373,7 @@ if ($PASSWORD) :
 ?>
 					<li>
 						<div id="password" class="navbar-form hidden">
-							<div class="password-peek-container">
+							<div class="input-group">
 								<input type="password" id="passwordinput" placeholder="<?php echo I18n::_('Password (recommended)'); ?>" class="form-control input-password" size="23" />
 								<div class="input-group-addon toggle-password" type="button" title="<?php echo I18n::_('Show password'); ?>" aria-label="<?php echo I18n::_('Show password'); ?>">
 									<span class="glyphicon glyphicon-eye-open"></span>
