@@ -129,5 +129,46 @@ describe('AttachmentViewer', function () {
                 return results.every(element => element);
             }
         );
+
+        it(
+            'sanitizes file names in attachments',
+            function() {
+                const clean = jsdom();
+                $('body').html(
+                    '<div id="attachmentPreview" class="col-md-12 text-center hidden"></div>' +
+                    '<div id="attachment" class="hidden"></div>' +
+                    '<div id="templates">' +
+                        '<div id="attachmenttemplate" role="alert" class="attachment hidden alert alert-info">' +
+                            '<span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>' +
+                            '<a class="alert-link">Download attachment</a>' +
+                        '</div>' +
+                    '</div>'
+                );
+                // mock createObjectURL for jsDOM
+                if (typeof window.URL.createObjectURL === 'undefined') {
+                    Object.defineProperty(
+                        window.URL,
+                        'createObjectURL',
+                        {value: function(blob) {
+                            return 'blob:' + location.origin + '/1b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed';
+                        }}
+                    )
+                }
+                $.PrivateBin.AttachmentViewer.init();
+                $.PrivateBin.Model.init();
+                global.atob = common.atob;
+
+                const maliciousFileNames = [
+                    '<script>alert("☹️");//<a',
+                    '"><meta http-equiv="refresh" content="0;url=http://example.com/">.txt',
+                ];
+                for (const filename of maliciousFileNames) {
+                    $.PrivateBin.AttachmentViewer.setAttachment('data:;base64,', filename);
+                    assert.ok(!$('body').html().includes(filename));
+                }
+                clean();
+            }
+        );
+
     });
 });
