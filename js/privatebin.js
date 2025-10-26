@@ -2100,7 +2100,7 @@ jQuery.PrivateBin = (function($) {
         {
             I18n._(
                 $('#pastelink'),
-                'Your document is <a id="pasteurl" href="%s">%s</a> <span id="copyhint">(Hit <kbd>Ctrl</kbd>+<kbd>c</kbd> to copy)</span>',
+                'Your document is <a id="pasteurl" href="%s">%s</a>',
                 url, url
             );
             // save newly created element
