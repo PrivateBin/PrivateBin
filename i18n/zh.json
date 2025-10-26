@@ -229,7 +229,7 @@
     "Link copied to clipboard": "链接已复制到剪贴板",
     "Document text": "粘贴文本",
     "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)": "Tab 键可作为字符（按 <kbd>Ctrl</kbd>+<kbd>m</kbd> 或 <kbd>Esc</kbd> 切换开关）",
-    "Show password": "Show password",
-    "Hide password": "Hide password",
+    "Show password": "显示密码",
+    "Hide password": "隐藏密码",
     "Theme": "主题"
 }
