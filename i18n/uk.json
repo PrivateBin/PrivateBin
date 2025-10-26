@@ -5,7 +5,7 @@
     "Because ignorance is bliss": "Менше знаєш — краще спиш",
     "Document does not exist, has expired or has been deleted.": "Документ не існує. Можливо, його протерміновано чи видалено.",
     "%s requires php %s or above to work. Sorry.": "Для роботи %s потрібен php %s чи вище. Вибачте.",
-    "%s requires configuration section [%s] to be present in configuration file.": "%s потрібна секція [%s] у файлі налаштувань.",
+    "%s requires configuration section [%s] to be present in configuration file.": "%s потрібна секція [%s] в конфігураційному файлі.",
     "Please wait %d seconds between each post.": [
         "Будь ласка, зачекайте %d секунду між створеннями.",
         "Будь ласка, зачекайте %d секунди між створеннями.",
@@ -36,8 +36,8 @@
     "Discussion": "Обговорення",
     "Toggle navigation": "Перемкнути навігацію",
     "%d seconds": [
-        "%d секунд",
-        "%d секунд",
+        "%d секунду",
+        "%d секунди",
         "%d секунд",
         "%d секунд",
         "%d секунд",
@@ -213,7 +213,7 @@
     "URL shortener is enabled by default.": "Скорочення посилань типово увімкнено.",
     "Save document": "Зберегти документ",
     "Your IP is not authorized to create documents.": "Вашій IP-адресі не дозволено створювати документи.",
-    "Trying to shorten a URL that isn't pointing at our instance.": "Спроба скоротити URL, який не вказує на наш екземпляр.",
+    "Trying to shorten a URL that isn't pointing at our instance.": "Спроба скоротити URL, який не вказує на наш сервер.",
     "Proxy error: Proxy URL is empty. This can be a configuration issue, like wrong or missing config keys.": "Помилка проксі: не вказано URL-адреси проксі. Ймовірно, проблема в налаштуваннях: ключі конфігурації можуть бути відсутні або містити одрук.",
     "Proxy error: Error parsing proxy response. This can be a configuration issue, like wrong or missing config keys.": "Помилка проксі: не вдається розпізнати відповідь проксі. Ймовірно, проблема в налаштуваннях: ключі конфігурації можуть бути відсутні або містити одрук",
     "Proxy error: Bad response. This can be a configuration issue, like wrong or missing config keys or a temporary outage.": "Помилка проксі: хибна відповідь. Ймовірно, проблема в налаштуваннях: ключі конфігурації можуть бути відсутні або містити одрук.",
