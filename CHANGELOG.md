@@ -1,6 +1,7 @@
 # PrivateBin version history
 
 ## 2.0.2 (not yet released)
+* CHANGED: Upgrading libraries to: DOMpurify 3.3.0
 * CHANGED: Refactored jQuery DOM element creation into plain JavaScript
 * FIXED: Sanitize file name in attachment size hint
 

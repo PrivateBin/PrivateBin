@@ -160,7 +160,7 @@ describe('AttachmentViewer', function () {
 
                 const maliciousFileNames = [
                     '<script>alert("☹️");//<a',
-                    '"><meta http-equiv="refresh" content="0;url=http://example.com/">.txt',
+                    '"><meta http-equiv="refresh" content="0;url=http://example.com/">.txt'
                 ];
                 for (const filename of maliciousFileNames) {
                     $.PrivateBin.AttachmentViewer.setAttachment('data:;base64,', filename);
