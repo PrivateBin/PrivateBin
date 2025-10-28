@@ -3635,6 +3635,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             } else {
                 const anonCommenter = document.createElement('em');
                 anonCommenter.textContent = I18n._('Anonymous');
+                $commentEntry.find('span.nickname')[0].innerHTML = '';
                 $commentEntry.find('span.nickname')[0].appendChild(anonCommenter);
             }
 
@@ -3651,7 +3652,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 const image = document.createElement('img');
                 image.setAttribute('src', icon);
                 image.setAttribute('class', 'vizhash');
-                $commentEntry.find('span.nickname').prepend(image);
+                $commentEntry.find('span.nickname').prepend(' ').prepend(image);
             }
 
             // starting point (default value/fallback)
