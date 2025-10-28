@@ -2,6 +2,8 @@
 
 ## 2.0.2 (not yet released)
 * CHANGED: Upgrading libraries to: DOMpurify 3.3.0
+* CHANGED: Refactored jQuery DOM element creation into plain JavaScript
+* FIXED: Sanitize file name in attachment size hint
 
 ## 2.0.1 (2025-10-12)
 * ADDED: Auto shorten URLs with config option `shortenbydefault` (#1627)
