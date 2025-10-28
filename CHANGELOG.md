@@ -1,9 +1,11 @@
 # PrivateBin version history
 
-## 2.0.2 (not yet released)
+## 2.0.2 (2025-10-28)
 * CHANGED: Upgrading libraries to: DOMpurify 3.3.0
 * CHANGED: Refactored jQuery DOM element creation into plain JavaScript
 * FIXED: Sanitize file name in attachment size hint
+* FIXED: PHP OPcache module is optional again (#1679)
+* FIXED: bootstrap template password peek input group display
 
 ## 2.0.1 (2025-10-12)
 * ADDED: Auto shorten URLs with config option `shortenbydefault` (#1627)
