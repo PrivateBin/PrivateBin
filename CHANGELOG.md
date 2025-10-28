@@ -1,5 +1,7 @@
 # PrivateBin version history
 
+## 2.0.3 (not yet released)
+
 ## 2.0.2 (2025-10-28)
 * CHANGED: Upgrading libraries to: DOMpurify 3.3.0
 * CHANGED: Refactored jQuery DOM element creation into plain JavaScript
