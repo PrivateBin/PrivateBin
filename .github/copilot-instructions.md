@@ -12,7 +12,7 @@
 
 ### Prerequisites
 
-- **PHP:** 7.0+ (recommended: latest stable 7.x or 8.x)
+- **PHP:** 7.4+ (recommended: latest stable 7.x or 8.x)
 - **Composer:** For dependency management (`composer install`)
 - **Node.js & npm:** Only required for running JavaScript unit tests. **Main JS logic must remain browser-compatible!**
 - **Recommended Environment:** Unix-like OS (Linux, macOS) with Apache or Nginx for full demo.
@@ -29,6 +29,7 @@
 
 3. **Install JS dependencies (for test only):**
    ```sh
+   cd ./js
    npm install
    ```
    - Only required for running JS tests. Not needed for building or running the app.
@@ -53,9 +54,9 @@
   - Always run after code changes to backend logic.
   - If `vendor/bin/phpunit` does not exist, ensure `composer install` completed without errors.
 
-- **JavaScript Unit Tests:**
   ```sh
-  npm test
+  cd ./js
+  npm run test
   ```
   - Runs Jasmine-based tests in Node.js context.
   - Note: **Production JS must not use Node-only APIs.** Test code may use Node.js features, but main JS logic must remain browser-compatible.
@@ -81,28 +82,27 @@
 ## Project Layout & Structure
 
 - **Root files:**
-  - `index.php`: Main server entry point.
-  - `README.md`: Project overview ([view full](https://github.com/PrivateBin/PrivateBin/blob/9d7508f44fac95dfadf4aad4fb3d3be128633336/README.md)).
+  - `README.md`: Project overview ([view full](../README.md)).
   - `composer.json`, `composer.lock`: PHP dependencies.
   - `package.json`: JS test/lint dependencies (not for production JS).
   - `.github/workflows/`: CI configuration.
   - `cfg/`: Default configuration files.
   - `js/`: Main client logic (browser JS), including:
     - `legacy.js`: Must remain compatible with legacy browsers (ES3). **Do not use modern JS here.**
-    - `main.js`: Core encryption and paste interface logic.
+    - `privatebin.js`: Core encryption and paste interface logic.
   - `tpl/`: HTML templates.
   - `css/`: Stylesheets.
 
 - **Testing & Validation:**
-  - `test/`: Contains PHP and JS unit tests.
+  - `tst/`: Contains PHP unit tests.
+  - `js/test`: Contains JS unit tests.
   - `phpunit.xml`: PHPUnit config.
   - JS test files may use Node.js features; browser JS must not.
 
-- **Key architectural notes:**
-  - **Encryption:** Only client-side in JS.
+  - **Encryption:** Only client-side in JS with WebCrypto.
   - **Backend:** Serves encrypted blobs, never sees plaintext.
   - **Legacy Support:** `js/legacy.js` must remain ES3 for feature detection in old browsers.
-  - **Configuration:** See `cfg/conf.php` and wiki for available options.
+  - **Configuration:** See `cfg/conf.php` and [wiki](https://github.com/PrivateBin/PrivateBin/wiki/Configuration) for available options.
 
 ## Automated Checks
 
