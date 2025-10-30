@@ -36,6 +36,7 @@
 ### Build
 
 - **No explicit build step** for PHP. The web app is served directly from source.
+  - This means **composer directory** need to be comitted (_except_ of big optional dependences like Google Cloud like GCS support or similar!)
 - **For JavaScript:** There is no webpack/bundler step for release; browser JS is written in compatible ES5+ syntax except in `legacy.js` (ES3).
 
 ### Run
