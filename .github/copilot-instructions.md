@@ -42,7 +42,7 @@
 
 ### Run
 
-- **PHP Server Mode:** Use Apache/Nginx with PHP, pointing the web root to the repo root or the `public/` directory (if present).
+- **PHP Server Mode:** Use Apache/Nginx with PHP, pointing the web root to the repo root.
 - **Demo:** Open `index.php` in a browser (via your web server).
 
 ### Test
