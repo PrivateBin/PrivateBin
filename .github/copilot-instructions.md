@@ -38,7 +38,7 @@
 
 - **No explicit build step** for PHP. The web app is served directly from source.
   - This means **composer directory** need to be comitted (_except_ of big optional dependences like Google Cloud like GCS support or similar!)
-- **For JavaScript:** There is no webpack/bundler step for release; browser JS is written in compatible ES5+ syntax except in `legacy.js` (ES3).
+- **For JavaScript:** There is no webpack/bundler step for release; browser JS is written in compatible ES6+ syntax, except in `legacy.js` (which must be designed to run cleanly even on ancient IE4 or Netscape to display the error message that a browser upgrade is necessary). We are trying to avoid jQuery in any new code and would like to eventually drop use of jQuery. We are considering modularizing the JS logic, but need to ensure to do so in a way that will work both in the browser as well as for node JS driven unit tests.
 
 ### Run
 
