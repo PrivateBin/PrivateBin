@@ -1,6 +1,7 @@
 # PrivateBin version history
 
 ## 2.0.3 (not yet released)
+* FIXED: Unable to create a new paste from the cloned one when a JSON file attached (#1585)
 
 ## 2.0.2 (2025-10-28)
 * CHANGED: Upgrading libraries to: DOMpurify 3.3.0
