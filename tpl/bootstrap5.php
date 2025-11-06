@@ -477,11 +477,11 @@ endif;
 					<div id="placeholder" class="col-md-12 hidden"><?php echo I18n::_('+++ no document text +++'); ?></div>
 					<div id="attachmentPreview" class="col-md-12 text-center hidden"></div>
 					<h6 id="copyShortcutHint" class="col-md-12"><small id="copyShortcutHintText"></small></h6>
+					<button type="button" id="prettyMessageCopyBtn" class="text-secondary opacity-05-1-hover col-md-12 hidden">
+						<svg id="copyIcon" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#copy" /></svg>
+						<svg id="copySuccessIcon" class="text-success" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#check" /></svg>
+					</button>
 					<div id="prettymessage" class="card col-md-12 hidden">
-						<button type="button" id="prettyMessageCopyBtn" class="text-secondary opacity-05-1-hover">
-							<svg id="copyIcon" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#copy" /></svg>
-							<svg id="copySuccessIcon" class="text-success" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#check" /></svg>
-						</button>
 						<pre id="prettyprint" class="card-body col-md-12 prettyprint linenums:1"></pre>
 					</div>
 					<div id="plaintext" class="col-md-12 hidden"></div>

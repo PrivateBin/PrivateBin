@@ -619,11 +619,11 @@ endif;
 					<div id="placeholder" class="col-md-12 hidden"><?php echo I18n::_('+++ no document text +++'); ?></div>
 					<div id="attachmentPreview" class="col-md-12 text-center hidden"></div>
 					<h5 id="copyShortcutHint" class="col-md-12"><small id="copyShortcutHintText"></small></h5>
+					<button id="prettyMessageCopyBtn" class="col-md-12 hidden">
+						<span id="copyIcon" class="glyphicon glyphicon-duplicate" aria-hidden="true"></span>
+						<span id="copySuccessIcon" class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+					</button>
 					<div id="prettymessage" class="col-md-12 hidden">
-						<button id="prettyMessageCopyBtn">
-							<span id="copyIcon" class="glyphicon glyphicon-duplicate" aria-hidden="true"></span>
-							<span id="copySuccessIcon" class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
-						</button>
 						<pre id="prettyprint" class="col-md-12 prettyprint linenums:1"></pre>
 					</div>
 					<div id="plaintext" class="col-md-12 hidden"></div>
