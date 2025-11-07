@@ -1,0 +1,609 @@
+-- سكربت المطور فوزي/FWZ - إصدار الحماية الخارقة
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local StarterGui = game:GetService("StarterGui")
+local Workspace = game:GetService("Workspace")
+local UserInputService = game:GetService("UserInputService")
+local TeleportService = game:GetService("TeleportService")
+local HttpService = game:GetService("HttpService")
+
+-- انتظار اللاعب
+while not Players.LocalPlayer do
+    wait(0.1)
+end
+local LocalPlayer = Players.LocalPlayer
+
+-- ===== إعدادات الحماية الخارقة =====
+local SECURITY = {
+    AntiKick = true,
+    AntiBan = true,
+    AntiTeleport = true,
+    AntiCrash = true,
+    AntiLog = true
+}
+
+-- ===== إعدادات الواجهة =====
+local CONFIG = {
+    uiSize = Vector2.new(220, 250),
+    title = "فوزي/FWZ - الخارق"
+}
+
+-- ===== حالات الميزات =====
+local State = {
+    platformOn = false,
+    flotOn = false,
+    ebsOn = false,
+    platformPart = nil,
+    flotBV = nil,
+    currentSpeed = 16, -- السرعة الطبيعية
+    speedCycles = {16, 25, 30}, -- دورات السرعة
+    speedCycleIndex = 1,
+    protectionActive = false
+}
+
+-- ===== حماية خارقة جداً جداً =====
+local function setupSuperProtection()
+    if State.protectionActive then return end
+    State.protectionActive = true
+    
+    -- حماية من الطرد
+    if SECURITY.AntiKick then
+        local oldKick
+        oldKick = hookmetamethod(game, "__namecall", function(self, ...)
+            local method = getnamecallmethod()
+            if method == "Kick" and self == LocalPlayer then
+                showNotification("🛡️ الحماية", "تم منع محاولة طردك!")
+                return nil
+            end
+            return oldKick(self, ...)
+        end)
+    end
+
+    -- حماية من التليپورت للخلف
+    if SECURITY.AntiTeleport then
+        LocalPlayer.CharacterAdded:Connect(function(char)
+            wait(1)
+            local root = char:FindFirstChild("HumanoidRootPart")
+            if root then
+                root:GetPropertyChangedSignal("Position"):Connect(function()
+                    if State.protectionActive then
+                        -- منع التليپورت المفاجئ
+                        local currentPos = root.Position
+                        wait(0.1)
+                        if (root.Position - currentPos).Magnitude > 100 then
+                            showNotification("🛡️ الحماية", "تم منع تليپورت خلفي!")
+                            root.Position = currentPos
+                        end
+                    end
+                end)
+            end
+        end)
+    end
+
+    -- حماية من الكراش
+    if SECURITY.AntiCrash then
+        game:GetService("ScriptContext").Error:Connect(function(message, trace, script)
+            showNotification("🛡️ الحماية", "تم منع تهكير!")
+            return nil
+        end)
+    end
+
+    -- مراقبة مستمرة
+    spawn(function()
+        while State.protectionActive do
+            wait(5)
+            -- التأكد من أن اللاعب لا يطرد
+            if not LocalPlayer or not LocalPlayer.Parent then
+                showNotification("🛡️ الحماية", "تم استعادة اللاعب!")
+                wait(2)
+                if game:GetService("CoreGui"):FindFirstChild("FawziSuperUI") then
+                    game:GetService("CoreGui").FawziSuperUI:Destroy()
+                end
+            end
+        end
+    end)
+
+    showNotification("🛡️ الحماية", "تم تفعيل الحماية الخارقة!")
+end
+
+-- ===== إنشاء واجهة سوداء =====
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "FawziSuperUI"
+screenGui.ResetOnSpawn = false
+
+local mainFrame = Instance.new("Frame")
+mainFrame.Size = UDim2.new(0, CONFIG.uiSize.X, 0, CONFIG.uiSize.Y)
+mainFrame.Position = UDim2.new(0, 100, 0, 100)
+mainFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+mainFrame.BorderSizePixel = 0
+mainFrame.Active = true
+mainFrame.Draggable = true
+
+local uiStroke = Instance.new("UIStroke")
+uiStroke.Color = Color3.fromRGB(255, 165, 0)
+uiStroke.Thickness = 2
+uiStroke.Parent = mainFrame
+
+local uiCorner = Instance.new("UICorner")
+uiCorner.CornerRadius = UDim.new(0, 8)
+uiCorner.Parent = mainFrame
+
+-- شريط العنوان
+local titleBar = Instance.new("Frame")
+titleBar.Size = UDim2.new(1, 0, 0, 30)
+titleBar.Position = UDim2.new(0, 0, 0, 0)
+titleBar.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+titleBar.BorderSizePixel = 0
+titleBar.Parent = mainFrame
+
+local titleLabel = Instance.new("TextLabel")
+titleLabel.Size = UDim2.new(1, -60, 1, 0)
+titleLabel.Position = UDim2.new(0, 5, 0, 0)
+titleLabel.BackgroundTransparency = 1
+titleLabel.Text = CONFIG.title
+titleLabel.TextColor3 = Color3.fromRGB(255, 165, 0)
+titleLabel.TextScaled = true
+titleLabel.Font = Enum.Font.GothamBold
+titleLabel.Parent = titleBar
+
+-- زر الإغلاق
+local closeBtn = Instance.new("TextButton")
+closeBtn.Size = UDim2.new(0, 25, 0, 25)
+closeBtn.Position = UDim2.new(1, -30, 0, 2)
+closeBtn.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+closeBtn.TextColor3 = Color3.new(1, 1, 1)
+closeBtn.Text = "X"
+closeBtn.Font = Enum.Font.GothamBold
+closeBtn.TextScaled = true
+closeBtn.Parent = titleBar
+
+-- زر التقليل
+local minimizeBtn = Instance.new("TextButton")
+minimizeBtn.Size = UDim2.new(0, 25, 0, 25)
+minimizeBtn.Position = UDim2.new(1, -60, 0, 2)
+minimizeBtn.BackgroundColor3 = Color3.fromRGB(255, 165, 0)
+minimizeBtn.TextColor3 = Color3.new(1, 1, 1)
+minimizeBtn.Text = "-"
+minimizeBtn.Font = Enum.Font.GothamBold
+minimizeBtn.TextScaled = true
+minimizeBtn.Parent = titleBar
+
+-- أزرار الميزات
+local function createButton(text, yPos)
+    local button = Instance.new("TextButton")
+    button.Size = UDim2.new(0.9, 0, 0, 30)
+    button.Position = UDim2.new(0.05, 0, 0, yPos)
+    button.Text = text
+    button.Font = Enum.Font.Gotham
+    button.TextScaled = true
+    button.BackgroundColor3 = Color3.fromRGB(255, 165, 0)
+    button.TextColor3 = Color3.new(0, 0, 0)
+    button.Parent = mainFrame
+    
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 5)
+    corner.Parent = button
+    
+    return button
+end
+
+-- إنشاء الأزرار
+local btnPlatform = createButton("منصة", 35)
+local btnFlot = createButton("طيران", 70)
+local btnEBS = createButton("EBS", 105)
+local btnSaveLocation = createButton("حفظ موقع", 140)
+local btnFlyToLocation = createButton("طيران للموقع", 175)
+local btnAntiSpeed = createButton("Anti-Speed", 210)
+
+-- ===== واجهة السرعات =====
+local speedGui = Instance.new("ScreenGui")
+speedGui.Name = "SpeedSelectorUI"
+speedGui.ResetOnSpawn = false
+speedGui.Enabled = false
+
+local speedFrame = Instance.new("Frame")
+speedFrame.Size = UDim2.new(0, 200, 0, 250)
+speedFrame.Position = UDim2.new(0.5, -100, 0.5, -125)
+speedFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+speedFrame.BorderSizePixel = 0
+speedFrame.Parent = speedGui
+
+local speedStroke = Instance.new("UIStroke")
+speedStroke.Color = Color3.fromRGB(255, 165, 0)
+speedStroke.Thickness = 2
+speedStroke.Parent = speedFrame
+
+local speedCorner = Instance.new("UICorner")
+speedCorner.CornerRadius = UDim.new(0, 8)
+speedCorner.Parent = speedFrame
+
+local speedTitle = Instance.new("TextLabel")
+speedTitle.Size = UDim2.new(1, 0, 0, 40)
+speedTitle.Position = UDim2.new(0, 0, 0, 0)
+speedTitle.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+speedTitle.Text = "اختر السرعة"
+speedTitle.TextColor3 = Color3.fromRGB(255, 165, 0)
+speedTitle.TextScaled = true
+speedTitle.Font = Enum.Font.GothamBold
+speedTitle.Parent = speedFrame
+
+local closeSpeedBtn = Instance.new("TextButton")
+closeSpeedBtn.Size = UDim2.new(0, 30, 0, 30)
+closeSpeedBtn.Position = UDim2.new(1, -35, 0, 5)
+closeSpeedBtn.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+closeSpeedBtn.TextColor3 = Color3.new(1, 1, 1)
+closeSpeedBtn.Text = "X"
+closeSpeedBtn.Font = Enum.Font.GothamBold
+closeSpeedBtn.TextScaled = true
+closeSpeedBtn.Parent = speedFrame
+
+-- أزرار السرعات
+local speedButtons = {}
+local speeds = {20, 25, 30, 40, 50, 75, 100, 150, 200}
+local speedNames = {"سريع", "أسرع", "سريع جداً", "البرق", "الريح", "الصاروخ", "الخفاش", "الطائرة", "الفضاء"}
+
+for i = 1, #speeds do
+    local btn = Instance.new("TextButton")
+    btn.Size = UDim2.new(0.9, 0, 0, 25)
+    btn.Position = UDim2.new(0.05, 0, 0, 45 + (i-1)*25)
+    btn.Text = speedNames[i] .. " (" .. speeds[i] .. ")"
+    btn.Font = Enum.Font.Gotham
+    btn.TextScaled = true
+    btn.BackgroundColor3 = Color3.fromRGB(255, 165, 0)
+    btn.TextColor3 = Color3.new(0, 0, 0)
+    btn.Parent = speedFrame
+    
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 4)
+    corner.Parent = btn
+    
+    speedButtons[i] = btn
+end
+
+-- إضافة الواجهات
+screenGui.Parent = game:GetService("CoreGui")
+mainFrame.Parent = screenGui
+speedGui.Parent = game:GetService("CoreGui")
+
+-- ===== وظائف أساسية =====
+local function showNotification(title, text)
+    pcall(function()
+        StarterGui:SetCore("SendNotification", {
+            Title = title,
+            Text = text,
+            Duration = 3
+        })
+    end)
+end
+
+-- ===== التحكم بالواجهة =====
+local isMinimized = false
+
+local function toggleMinimize()
+    isMinimized = not isMinimized
+    if isMinimized then
+        btnPlatform.Visible = false
+        btnFlot.Visible = false
+        btnEBS.Visible = false
+        btnSaveLocation.Visible = false
+        btnFlyToLocation.Visible = false
+        btnAntiSpeed.Visible = false
+        mainFrame.Size = UDim2.new(0, CONFIG.uiSize.X, 0, 30)
+        minimizeBtn.Text = "+"
+    else
+        btnPlatform.Visible = true
+        btnFlot.Visible = true
+        btnEBS.Visible = true
+        btnSaveLocation.Visible = true
+        btnFlyToLocation.Visible = true
+        btnAntiSpeed.Visible = true
+        mainFrame.Size = UDim2.new(0, CONFIG.uiSize.X, 0, CONFIG.uiSize.Y)
+        minimizeBtn.Text = "-"
+    end
+end
+
+minimizeBtn.MouseButton1Click:Connect(toggleMinimize)
+closeBtn.MouseButton1Click:Connect(function()
+    screenGui:Destroy()
+    speedGui:Destroy()
+    showNotification("فوزي", "تم الإغلاق")
+end)
+
+closeSpeedBtn.MouseButton1Click:Connect(function()
+    speedGui.Enabled = false
+end)
+
+-- ===== ميزة Anti-Speed =====
+local antiSpeedHoldTime = 0
+local antiSpeedHolding = false
+
+btnAntiSpeed.MouseButton1Down:Connect(function()
+    antiSpeedHolding = true
+    antiSpeedHoldTime = tick()
+    
+    while antiSpeedHolding do
+        wait(0.1)
+        if tick() - antiSpeedHoldTime >= 5 then
+            -- عرض واجهة السرعات بعد 5 ثواني
+            speedGui.Enabled = true
+            antiSpeedHolding = false
+            showNotification("Anti-Speed", "اختر السرعة المطلوبة")
+            break
+        end
+    end
+end)
+
+btnAntiSpeed.MouseButton1Up:Connect(function()
+    if tick() - antiSpeedHoldTime < 5 then
+        -- تغيير السرعة بشكل دوري
+        State.speedCycleIndex = State.speedCycleIndex + 1
+        if State.speedCycleIndex > #State.speedCycles then
+            State.speedCycleIndex = 1
+        end
+        
+        State.currentSpeed = State.speedCycles[State.speedCycleIndex]
+        
+        local char = LocalPlayer.Character
+        if char then
+            local humanoid = char:FindFirstChildOfClass("Humanoid")
+            if humanoid then
+                humanoid.WalkSpeed = State.currentSpeed
+            end
+        end
+        
+        showNotification("Anti-Speed", "السرعة: " .. State.currentSpeed)
+    end
+    antiSpeedHolding = false
+end)
+
+-- أحداث أزرار السرعات
+for i, btn in ipairs(speedButtons) do
+    btn.MouseButton1Click:Connect(function()
+        State.currentSpeed = speeds[i]
+        
+        local char = LocalPlayer.Character
+        if char then
+            local humanoid = char:FindFirstChildOfClass("Humanoid")
+            if humanoid then
+                humanoid.WalkSpeed = State.currentSpeed
+            end
+        end
+        
+        speedGui.Enabled = false
+        showNotification("Anti-Speed", "تم تعيين السرعة: " .. speeds[i])
+    end)
+end
+
+-- ===== ميزة المنصة المتوسطة البرتقالية =====
+btnPlatform.MouseButton1Click:Connect(function()
+    State.platformOn = not State.platformOn
+    
+    if State.platformOn then
+        local char = LocalPlayer.Character
+        if char and char:FindFirstChild("HumanoidRootPart") then
+            if State.platformPart then
+                State.platformPart:Destroy()
+            end
+            
+            local platform = Instance.new("Part")
+            platform.Size = Vector3.new(8, 1, 8)
+            platform.Anchored = true
+            platform.CanCollide = true
+            platform.BrickColor = BrickColor.new("Bright orange")
+            platform.Material = Enum.Material.Neon
+            platform.Position = char.HumanoidRootPart.Position + Vector3.new(0, 10, 0)
+            platform.Parent = Workspace
+            State.platformPart = platform
+            
+            showNotification("منصة", "تم تفعيل المنصة البرتقالية في الأعلى")
+        end
+    else
+        if State.platformPart then
+            State.platformPart:Destroy()
+            State.platformPart = nil
+        end
+        showNotification("منصة", "تم إيقاف المنصة")
+    end
+end)
+
+-- ===== ميزة الطيران العادي =====
+btnFlot.MouseButton1Click:Connect(function()
+    State.flotOn = not State.flotOn
+    
+    if State.flotOn then
+        local char = LocalPlayer.Character
+        if char and char:FindFirstChild("HumanoidRootPart") then
+            if State.flotBV then
+                State.flotBV:Destroy()
+            end
+            
+            local bv = Instance.new("BodyVelocity")
+            bv.Velocity = Vector3.new(0, 0, 0)
+            bv.MaxForce = Vector3.new(40000, 40000, 40000)
+            bv.Parent = char.HumanoidRootPart
+            State.flotBV = bv
+            
+            local connection
+            connection = RunService.Heartbeat:Connect(function()
+                if not State.flotOn or not char or not char.Parent then
+                    connection:Disconnect()
+                    return
+                end
+                
+                local root = char:FindFirstChild("HumanoidRootPart")
+                local camera = Workspace.CurrentCamera
+                
+                if root and camera and State.flotBV then
+                    local lookVector = camera.CFrame.LookVector
+                    State.flotBV.Velocity = lookVector * 50
+                end
+            end)
+            
+            showNotification("طيران", "مفعل - حرك الكاميرا للتحكم")
+        end
+    else
+        if State.flotBV then
+            State.flotBV:Destroy()
+            State.flotBV = nil
+        end
+        showNotification("طيران", "متوقف")
+    end
+end)
+
+-- ===== ميزة EBS محسنة =====
+btnEBS.MouseButton1Click:Connect(function()
+    State.ebsOn = not State.ebsOn
+    
+    if State.ebsOn then
+        for _, player in pairs(Players:GetPlayers()) do
+            if player ~= LocalPlayer and player.Character then
+                local highlight = Instance.new("Highlight")
+                highlight.FillColor = Color3.fromRGB(0, 255, 0)
+                highlight.FillTransparency = 0.3
+                highlight.OutlineColor = Color3.fromRGB(0, 200, 0)
+                highlight.OutlineTransparency = 0
+                highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+                highlight.Parent = player.Character
+                
+                local billboard = Instance.new("BillboardGui")
+                billboard.Size = UDim2.new(0, 200, 0, 50)
+                billboard.StudsOffset = Vector3.new(0, 3, 0)
+                billboard.AlwaysOnTop = true
+                billboard.Parent = player.Character
+                
+                local nameLabel = Instance.new("TextLabel")
+                nameLabel.Size = UDim2.new(1, 0, 1, 0)
+                nameLabel.BackgroundTransparency = 1
+                nameLabel.Text = player.Name
+                nameLabel.TextColor3 = Color3.fromRGB(0, 255, 0)
+                nameLabel.TextScaled = true
+                nameLabel.Font = Enum.Font.GothamBold
+                nameLabel.Parent = billboard
+            end
+        end
+        
+        showNotification("EBS", "مفعل - يظهر المربع الأخضر حول اللاعبين")
+    else
+        for _, player in pairs(Players:GetPlayers()) do
+            if player.Character then
+                for _, child in pairs(player.Character:GetChildren()) do
+                    if child:IsA("Highlight") or child:IsA("BillboardGui") then
+                        child:Destroy()
+                    end
+                end
+            end
+        end
+        
+        showNotification("EBS", "متوقف")
+    end
+end)
+
+-- ===== حفظ الموقع =====
+local savedLocation = nil
+
+btnSaveLocation.MouseButton1Click:Connect(function()
+    local char = LocalPlayer.Character
+    if char and char:FindFirstChild("HumanoidRootPart") then
+        savedLocation = char.HumanoidRootPart.Position
+        showNotification("حفظ موقع", "تم حفظ موقعك!")
+    else
+        showNotification("حفظ موقع", "خطأ: لا يوجد شخصية!")
+    end
+end)
+
+-- ===== طيران للموقع بسرعة 18 فقط =====
+btnFlyToLocation.MouseButton1Click:Connect(function()
+    if not savedLocation then
+        showNotification("طيران للموقع", "لا يوجد موقع محفوظ!")
+        return
+    end
+    
+    local char = LocalPlayer.Character
+    if not char or not char:FindFirstChild("HumanoidRootPart") then
+        showNotification("طيران للموقع", "خطأ: لا يوجد شخصية!")
+        return
+    end
+    
+    showNotification("طيران للموقع", "جاري الطيران للموقع...")
+    
+    local root = char.HumanoidRootPart
+    local bv = Instance.new("BodyVelocity")
+    bv.Velocity = Vector3.new(0, 0, 0)
+    bv.MaxForce = Vector3.new(40000, 40000, 40000)
+    bv.Parent = root
+    
+    local target = savedLocation + Vector3.new(0, 2, 0)
+    
+    local connection
+    connection = RunService.Heartbeat:Connect(function()
+        if not bv or not bv.Parent then
+            connection:Disconnect()
+            return
+        end
+        
+        local direction = (target - root.Position).Unit
+        local distance = (target - root.Position).Magnitude
+        
+        if distance > 3 then
+            bv.Velocity = direction * 18
+        else
+            bv:Destroy()
+            connection:Disconnect()
+            showNotification("طيران للموقع", "وصلت للموقع!")
+        end
+    end)
+end)
+
+-- ===== إعادة التفعيل عند إعادة الظهور =====
+LocalPlayer.CharacterAdded:Connect(function(char)
+    wait(2)
+    
+    -- إعادة تعيين السرعة
+    local humanoid = char:FindFirstChildOfClass("Humanoid")
+    if humanoid then
+        humanoid.WalkSpeed = State.currentSpeed
+    end
+    
+    -- إعادة المنصة
+    if State.platformOn then
+        local platform = Instance.new("Part")
+        platform.Size = Vector3.new(8, 1, 8)
+        platform.Anchored = true
+        platform.CanCollide = true
+        platform.BrickColor = BrickColor.new("Bright orange")
+        platform.Material = Enum.Material.Neon
+        platform.Position = char.HumanoidRootPart.Position + Vector3.new(0, 10, 0)
+        platform.Parent = Workspace
+        State.platformPart = platform
+    end
+    
+    -- إعادة EBS
+    if State.ebsOn then
+        for _, player in pairs(Players:GetPlayers()) do
+            if player ~= LocalPlayer and player.Character then
+                local highlight = Instance.new("Highlight")
+                highlight.FillColor = Color3.fromRGB(0, 255, 0)
+                highlight.FillTransparency = 0.3
+                highlight.OutlineColor = Color3.fromRGB(0, 200, 0)
+                highlight.Parent = player.Character
+                
+                local billboard = Instance.new("BillboardGui")
+                billboard.Size = UDim2.new(0, 200, 0, 50)
+                billboard.StudsOffset = Vector3.new(0, 3, 0)
+                billboard.AlwaysOnTop = true
+                billboard.Parent = player.Character
+                
+                local nameLabel = Instance.new("TextLabel")
+                nameLabel.Size = UDim2.new(1, 0, 1, 0)
+                nameLabel.BackgroundTransparency = 1
+                nameLabel.Text = player.Name
+                nameLabel.TextColor3 = Color3.fromRGB(0, 255, 0)
+                nameLabel.TextScaled = true
+                nameLabel.Font = Enum.Font.GothamBold
+                nameLabel.Parent = billboard
+            end
+        end
+    end
+end)
+
+-- ===== ب
