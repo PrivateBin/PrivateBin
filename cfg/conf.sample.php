@@ -280,7 +280,7 @@ dir = PATH "data"
 ;   "urlshortener" needs to point to the base URL of your PrivateBin
 ;   instance with "?shortenviashlink&link=" appended. For example:
 ;   urlshortener = "${basepath}?shortenviashlink&link="
-;   This URL will in turn call YOURLS on the server side, using the URL from
+;   This URL will in turn call Shlink on the server side, using the URL from
 ;   "apiurl" and the API Key from the "apikey" parameters below.
 ; apiurl = "https://shlink.example.com/rest/v3/short-urls"
 ; apikey = "your_api_key"
