@@ -434,11 +434,15 @@ class Controller
             setcookie('lang', $languageselection, array('SameSite' => 'Lax', 'Secure' => true));
         }
 
-        // set template cookie if that functionality was enabled
+        // set template cookie if that functionality was enabled, otherwise delete any existing cookie
         $templateselection = '';
         if ($this->_conf->getKey('templateselection')) {
             $templateselection = TemplateSwitcher::getTemplate();
             setcookie('template', $templateselection, array('SameSite' => 'Lax', 'Secure' => true));
+        } elseif (array_key_exists('template', $_COOKIE)) {
+            unset($_COOKIE['template']); // ensure value is not re-used in template switcher
+            $expiredInAllTimezones = time() - 86400;
+            setcookie('template', '', array('expires' => $expiredInAllTimezones, 'SameSite' => 'Lax', 'Secure' => true));
         }
 
         // strip policies that are unsupported in meta tag
