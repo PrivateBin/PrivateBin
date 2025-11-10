@@ -59,11 +59,8 @@ class TemplateSwitcher
     {
         if (self::isTemplateAvailable($template)) {
             self::$_templateFallback = $template;
-
-            if (!in_array($template, self::getAvailableTemplates())) {
-                // Add custom template to the available templates list
-                self::$_availableTemplates[] = $template;
-            }
+        } else {
+            error_log('failed to set "' . $template . '" as a fallback, it needs to be added to the list of `availabletemplates` in the configuration file');
         }
     }
 
@@ -101,13 +98,11 @@ class TemplateSwitcher
      */
     public static function isTemplateAvailable(string $template): bool
     {
-        if (in_array($template, self::getAvailableTemplates())) {
+        if (in_array($template, self::getAvailableTemplates(), true)) {
             return true;
         }
-        if (View::isBootstrapTemplate($template)) {
-            return false;
-        }
-        return file_exists(View::getTemplateFilePath($template));
+        error_log('template "' . $template . '" is not in the list of `availabletemplates` in the configuration file');
+        return false;
     }
 
     /**
@@ -119,9 +114,8 @@ class TemplateSwitcher
      */
     private static function getSelectedByUserTemplate(): ?string
     {
-        $templateCookieValue = $_COOKIE['template'] ?? '';
-        if (self::isTemplateAvailable($templateCookieValue)) {
-            return $templateCookieValue;
+        if (array_key_exists('template', $_COOKIE) && self::isTemplateAvailable($_COOKIE['template'])) {
+            return $_COOKIE['template'];
         }
         return null;
     }
