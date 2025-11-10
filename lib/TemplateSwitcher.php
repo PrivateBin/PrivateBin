@@ -101,14 +101,13 @@ class TemplateSwitcher
      */
     public static function isTemplateAvailable(string $template): bool
     {
-        $available = in_array($template, self::getAvailableTemplates());
-
-        if (!$available && !View::isBootstrapTemplate($template)) {
-            $path      = View::getTemplateFilePath($template);
-            $available = file_exists($path);
+        if (in_array($template, self::getAvailableTemplates())) {
+            return true;
         }
-
-        return $available;
+        if (View::isBootstrapTemplate($template)) {
+            return false;
+        }
+        return file_exists(View::getTemplateFilePath($template));
     }
 
     /**
@@ -120,13 +119,10 @@ class TemplateSwitcher
      */
     private static function getSelectedByUserTemplate(): ?string
     {
-        $selectedTemplate    = null;
         $templateCookieValue = $_COOKIE['template'] ?? '';
-
         if (self::isTemplateAvailable($templateCookieValue)) {
-            $selectedTemplate = $templateCookieValue;
+            return $templateCookieValue;
         }
-
-        return $selectedTemplate;
+        return null;
     }
 }
