@@ -66,7 +66,7 @@ class View
      */
     public static function getTemplateFilePath(string $template): string
     {
-        $file = self::isBootstrapTemplate($template) ? 'bootstrap' : $template;
+        $file = self::isBootstrapTemplate($template) ? 'bootstrap' : basename($template);
         return PATH . 'tpl' . DIRECTORY_SEPARATOR . $file . '.php';
     }
 
