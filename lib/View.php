@@ -12,6 +12,7 @@
 namespace PrivateBin;
 
 use Exception;
+use GlobIterator;
 
 /**
  * View
@@ -49,13 +50,21 @@ class View
      */
     public function draw($template)
     {
+        $dir  = PATH . 'tpl' . DIRECTORY_SEPARATOR;
         $file = substr($template, 0, 10) === 'bootstrap-' ? 'bootstrap' : $template;
-        $path = PATH . 'tpl' . DIRECTORY_SEPARATOR . $file . '.php';
-        if (!file_exists($path)) {
+        $path = realpath($dir . $file . '.php');
+        if ($path === false) {
             throw new Exception('Template ' . $template . ' not found!', 80);
         }
-        extract($this->_variables);
-        include $path;
+        foreach (new GlobIterator($dir . '*.php') as $tplFile) {
+            if ($tplFile->getRealPath() === $path) {
+                $templatesInPath = new GlobIterator(PATH . 'tpl' . DIRECTORY_SEPARATOR . '*.php');
+                extract($this->_variables);
+                include $path;
+                return;
+            }
+        }
+        throw new Exception('Template ' . $file . '.php not found in ' . $dir . '!', 81);
     }
 
     /**
