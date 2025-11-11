@@ -58,7 +58,6 @@ class View
         }
         foreach (new GlobIterator($dir . '*.php') as $tplFile) {
             if ($tplFile->getRealPath() === $path) {
-                $templatesInPath = new GlobIterator(PATH . 'tpl' . DIRECTORY_SEPARATOR . '*.php');
                 extract($this->_variables);
                 include $path;
                 return;
