@@ -65,7 +65,7 @@ class TemplateSwitcher
     }
 
     /**
-     * get currently loaded template
+     * get user selected template or fallback
      *
      * @access public
      * @static
@@ -73,8 +73,10 @@ class TemplateSwitcher
      */
     public static function getTemplate(): string
     {
-        $selectedTemplate = self::getSelectedByUserTemplate();
-        return $selectedTemplate ?? self::$_templateFallback;
+        if (array_key_exists('template', $_COOKIE) && self::isTemplateAvailable($_COOKIE['template'])) {
+            return $_COOKIE['template'];
+        }
+        return self::$_templateFallback;
     }
 
     /**
@@ -103,20 +105,5 @@ class TemplateSwitcher
         }
         error_log('template "' . $template . '" is not in the list of `availabletemplates` in the configuration file');
         return false;
-    }
-
-    /**
-     * get the template selected by user
-     *
-     * @access private
-     * @static
-     * @return string|null
-     */
-    private static function getSelectedByUserTemplate(): ?string
-    {
-        if (array_key_exists('template', $_COOKIE) && self::isTemplateAvailable($_COOKIE['template'])) {
-            return $_COOKIE['template'];
-        }
-        return null;
     }
 }
