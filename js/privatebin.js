@@ -3091,9 +3091,9 @@ jQuery.PrivateBin = (function($) {
         function printDragAndDropFileNames(fileNames) {
             $dragAndDropFileNames.empty();
             fileNames.forEach(fileName => {
-                const div = document.createElement('div');
-                div.textContent = fileName;
-                $(div).appendTo($dragAndDropFileNames);
+                const name = document.createTextNode(fileName);
+                $dragAndDropFileNames[0].appendChild(name);
+                $dragAndDropFileNames[0].appendChild(document.createElement('br'));
             });
         }
 
