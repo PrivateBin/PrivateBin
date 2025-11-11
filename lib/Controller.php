@@ -216,6 +216,9 @@ class Controller
     {
         $templates = $this->_conf->getKey('availabletemplates');
         $template  = $this->_conf->getKey('template');
+        if (!in_array($template, $templates, true)) {
+            $templates[] = $template;
+        }
         TemplateSwitcher::setAvailableTemplates($templates);
         TemplateSwitcher::setTemplateFallback($template);
 
