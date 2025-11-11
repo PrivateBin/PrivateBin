@@ -142,4 +142,13 @@ class ViewTest extends TestCase
         $this->expectExceptionCode(80);
         $test->draw('123456789 does not exist!');
     }
+
+    public function testInvalidTemplate()
+    {
+        $test = new View;
+        $this->expectException(Exception::class);
+        $this->expectExceptionCode(81);
+        $test->draw('../index');
+    }
+
 }
