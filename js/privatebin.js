@@ -5219,22 +5219,23 @@ jQuery.PrivateBin = (function($) {
                 cipherMessage['attachment'] = attachments.map(attachment => attachment[0]);
                 cipherMessage['attachment_name'] = attachments.map(attachment => attachment[1]);
 
-                cipherMessage['attachment'] = await Promise.all(cipherMessage['attachment'].map(async (attachment) => {
+                cipherMessage['attachment'] = await Promise.all(cipherMessage['attachment'].map(async (attachment, i) => {
                     // we need to retrieve data from blob if browser already parsed it in memory
                     if (typeof attachment === 'string' && attachment.startsWith('blob:')) {
                         Alert.showStatus(
                             [
                                 'Retrieving cloned file \'%s\' from memory...',
-                                attachment[1]
+                                cipherMessage['attachment_name'][i]
                             ],
                             'copy'
                         );
                         try {
                             const blobData = await $.ajax({
                                 type: 'GET',
-                                url: `${attachment}`,
+                                url: attachment,
                                 processData: false,
                                 timeout: 10000,
+                                dataType: 'binary',
                                 xhrFields: {
                                     withCredentials: false,
                                     responseType: 'blob'
