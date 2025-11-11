@@ -219,10 +219,11 @@ class Controller
         TemplateSwitcher::setAvailableTemplates($templates);
         TemplateSwitcher::setTemplateFallback($template);
 
-        // force default template, if template selection is disabled and a default is set
-        if (!$this->_conf->getKey('templateselection') && !empty($template)) {
-            $_COOKIE['template'] = $template;
-            setcookie('template', $template, array('SameSite' => 'Lax', 'Secure' => true));
+        // force default template, if template selection is disabled
+        if (!$this->_conf->getKey('templateselection') && array_key_exists('template', $_COOKIE)) {
+            unset($_COOKIE['template']); // ensure value is not re-used in template switcher
+            $expiredInAllTimezones = time() - 86400;
+            setcookie('template', '', array('expires' => $expiredInAllTimezones, 'SameSite' => 'Lax', 'Secure' => true));
         }
     }
 
@@ -434,15 +435,11 @@ class Controller
             setcookie('lang', $languageselection, array('SameSite' => 'Lax', 'Secure' => true));
         }
 
-        // set template cookie if that functionality was enabled, otherwise delete any existing cookie
+        // set template cookie if that functionality was enabled
         $templateselection = '';
         if ($this->_conf->getKey('templateselection')) {
             $templateselection = TemplateSwitcher::getTemplate();
             setcookie('template', $templateselection, array('SameSite' => 'Lax', 'Secure' => true));
-        } elseif (array_key_exists('template', $_COOKIE)) {
-            unset($_COOKIE['template']); // ensure value is not re-used in template switcher
-            $expiredInAllTimezones = time() - 86400;
-            setcookie('template', '', array('expires' => $expiredInAllTimezones, 'SameSite' => 'Lax', 'Secure' => true));
         }
 
         // strip policies that are unsupported in meta tag
