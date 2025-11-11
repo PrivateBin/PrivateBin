@@ -43,7 +43,7 @@
 ### Run
 
 - **PHP Server Mode:** Use Apache/Nginx with PHP, pointing the web root to the repo root.
-- **Demo:** Open `index.php` in a browser (via your web server).
+- **Demo:** Open the root directory served by the web server in a browser. This should call the index.php in the repositories root directory.
 
 ### Test
 
