@@ -73,8 +73,11 @@ class TemplateSwitcher
      */
     public static function getTemplate(): string
     {
-        if (array_key_exists('template', $_COOKIE) && self::isTemplateAvailable($_COOKIE['template'])) {
-            return $_COOKIE['template'];
+        if (array_key_exists('template', $_COOKIE)) {
+            $template = basename($_COOKIE['template']);
+            if (self::isTemplateAvailable($template)) {
+                return $template;
+            }
         }
         return self::$_templateFallback;
     }
