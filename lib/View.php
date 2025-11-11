@@ -52,18 +52,15 @@ class View
     {
         $dir  = PATH . 'tpl' . DIRECTORY_SEPARATOR;
         $file = substr($template, 0, 10) === 'bootstrap-' ? 'bootstrap' : $template;
-        $path = realpath($dir . $file . '.php');
-        if ($path === false) {
-            throw new Exception('Template ' . $template . ' not found!', 80);
+        $path = $dir . $file . '.php';
+        if (!is_file($path)) {
+            throw new Exception('Template ' . $template . ' not found in file ' . $path . '!', 80);
         }
-        foreach (new GlobIterator($dir . '*.php') as $tplFile) {
-            if ($tplFile->getRealPath() === $path) {
-                extract($this->_variables);
-                include $path;
-                return;
-            }
+        if (!in_array($path, glob($dir . '*.php', GLOB_NOSORT | GLOB_ERR), true)) {
+            throw new Exception('Template ' . $file . '.php not found in ' . $dir . '!', 81);
         }
-        throw new Exception('Template ' . $file . '.php not found in ' . $dir . '!', 81);
+        extract($this->_variables);
+        include $path;
     }
 
     /**
