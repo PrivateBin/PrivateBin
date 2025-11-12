@@ -150,5 +150,4 @@ class ViewTest extends TestCase
         $this->expectExceptionCode(81);
         $test->draw('../index');
     }
-
 }
