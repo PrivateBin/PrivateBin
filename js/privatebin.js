@@ -3086,10 +3086,15 @@ jQuery.PrivateBin = (function($) {
          * @name AttachmentViewer.printDragAndDropFileNames
          * @private
          * @function
-         * @param {array} fileNames
+         * @param {string[]} fileNames
          */
         function printDragAndDropFileNames(fileNames) {
-            $dragAndDropFileNames.html(fileNames.join('<br>'));
+            $dragAndDropFileNames.empty();
+            fileNames.forEach(fileName => {
+                const name = document.createTextNode(fileName);
+                $dragAndDropFileNames[0].appendChild(name);
+                $dragAndDropFileNames[0].appendChild(document.createElement('br'));
+            });
         }
 
         /**
