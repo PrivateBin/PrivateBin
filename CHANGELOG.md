@@ -1,6 +1,8 @@
 # PrivateBin version history
 
-## 2.0.3 (not yet released)
+## 2.0.4 (not yet released)
+
+## 2.0.3 (2025-11-12)
 * FIXED: Prevent arbitrary PHP file inclusion when enabling template switching
 * FIXED: Malicious filename can be used for self-XSS / HTML injection locally for users
 * FIXED: Unable to create a new paste from the cloned one when a JSON file attached (#1585)
