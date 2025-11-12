@@ -216,13 +216,17 @@ class Controller
     {
         $templates = $this->_conf->getKey('availabletemplates');
         $template  = $this->_conf->getKey('template');
+        if (!in_array($template, $templates, true)) {
+            $templates[] = $template;
+        }
         TemplateSwitcher::setAvailableTemplates($templates);
         TemplateSwitcher::setTemplateFallback($template);
 
-        // force default template, if template selection is disabled and a default is set
-        if (!$this->_conf->getKey('templateselection') && !empty($template)) {
-            $_COOKIE['template'] = $template;
-            setcookie('template', $template, array('SameSite' => 'Lax', 'Secure' => true));
+        // force default template, if template selection is disabled
+        if (!$this->_conf->getKey('templateselection') && array_key_exists('template', $_COOKIE)) {
+            unset($_COOKIE['template']); // ensure value is not re-used in template switcher
+            $expiredInAllTimezones = time() - 86400;
+            setcookie('template', '', array('expires' => $expiredInAllTimezones, 'SameSite' => 'Lax', 'Secure' => true));
         }
     }
 

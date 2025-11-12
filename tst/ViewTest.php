@@ -142,19 +142,12 @@ class ViewTest extends TestCase
         $test->draw('123456789 does not exist!');
     }
 
-    public function testTemplateFilePath()
+    public function testInvalidTemplate()
     {
-        $template     = 'bootstrap';
-        $templatePath = PATH . 'tpl' . DIRECTORY_SEPARATOR . $template . '.php';
-        $path         = View::getTemplateFilePath($template);
-        $this->assertEquals($templatePath, $path, 'Template file path');
+        $test = new View;
+        $this->expectException(Exception::class);
+        $this->expectExceptionCode(81);
+        $test->draw('../index');
     }
 
-    public function testIsBootstrapTemplate()
-    {
-        $bootstrapTemplate    = 'bootstrap-dark';
-        $nonBootstrapTemplate = 'bootstrap5';
-        $this->assertTrue(View::isBootstrapTemplate($bootstrapTemplate), 'Is bootstrap template');
-        $this->assertFalse(View::isBootstrapTemplate($nonBootstrapTemplate), 'Is not bootstrap template');
-    }
 }

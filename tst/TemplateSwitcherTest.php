@@ -41,6 +41,7 @@ class TemplateSwitcherTest extends TestCase
         $defaultTemplateFallback = 'bootstrap5';
         $customTemplate          = 'bootstrap-dark';
         $customWrongTemplate     = 'bootstrap-wrong';
+        $escapeTemplateDirectory = '../index';
 
         TemplateSwitcher::setTemplateFallback($defaultTemplateFallback);
 
@@ -49,6 +50,9 @@ class TemplateSwitcherTest extends TestCase
 
         $_COOKIE['template'] = $customTemplate;
         $this->assertEquals($customTemplate, TemplateSwitcher::getTemplate(), 'Custom template');
+
+        $_COOKIE['template'] = $escapeTemplateDirectory;
+        $this->assertEquals($defaultTemplateFallback, TemplateSwitcher::getTemplate(), 'Fallback on escaping template directory');
     }
 
     public function testGetAvailableTemplates()
