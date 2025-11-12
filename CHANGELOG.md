@@ -3,14 +3,14 @@
 ## 2.0.4 (not yet released)
 
 ## 2.0.3 (2025-11-12)
-* FIXED: Prevent arbitrary PHP file inclusion when enabling template switching
-* FIXED: Malicious filename can be used for self-XSS / HTML injection locally for users
+* FIXED: Prevent arbitrary PHP file inclusion when enabling template switching (CVE-2025-64714)
+* FIXED: Malicious filename can be used for self-XSS / HTML injection locally for users (CVE-2025-64711)
 * FIXED: Unable to create a new paste from the cloned one when a JSON file attached (#1585)
 
 ## 2.0.2 (2025-10-28)
 * CHANGED: Upgrading libraries to: DOMpurify 3.3.0
 * CHANGED: Refactored jQuery DOM element creation into plain JavaScript
-* FIXED: Sanitize file name in attachment size hint
+* FIXED: Sanitize file name in attachment size hint (CVE-2025-62796 / https://github.com/PrivateBin/PrivateBin/security/advisories/GHSA-867c-p784-5q6g)
 * FIXED: PHP OPcache module is optional again (#1679)
 * FIXED: bootstrap template password peek input group display
 
