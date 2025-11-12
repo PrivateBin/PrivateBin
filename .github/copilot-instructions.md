@@ -22,7 +22,7 @@
 1. **Clone the repository** and enter its root directory.
 2. **Install PHP dependencies:**
    ```sh
-   composer install
+   composer require --global google/cloud-storage phpunit/phpunit
    ```
    - Always run this before building or testing PHP code.
    - If you receive permission errors, verify `vendor/` is writable.
@@ -58,7 +58,7 @@
   cd ./js
   npm run test
   ```
-  - Runs Jasmine-based tests in Node.js context.
+  - Runs Mocha-based tests in Node.js context. Tests are implemented in BDD-Style or using jsVerify fixtures for property-based tests.
   - Note: **Production JS must not use Node-only APIs.** Test code may use Node.js features, but main JS logic must remain browser-compatible.
   - If you encounter `ReferenceError` for browser features, ensure only test code uses Node.js APIs.
 
@@ -76,7 +76,7 @@
 
 ### Validation / CI
 
-- **GitHub Actions:** CI runs `composer install`, `phpunit`, and JS tests on PRs and pushes.
+- **GitHub Actions:** CI runs `composer install`, `phpunit`, and `mocha` tests on PRs and pushes, as well as external tools such as style checkers and linters.
 - **Pre-commit:** Always run both PHP and JS tests before submitting PRs. Fix any warnings or errors.
 
 ## Project Layout & Structure
@@ -84,10 +84,10 @@
 - **Root files:**
   - `README.md`: Project overview ([view full](../README.md)).
   - `composer.json`, `composer.lock`: PHP dependencies.
-  - `package.json`: JS test/lint dependencies (not for production JS).
   - `.github/workflows/`: CI configuration.
   - `cfg/`: Default configuration files.
   - `js/`: Main client logic (browser JS), including:
+      - `package.json`: JS test/lint dependencies (not for production JS).
     - `legacy.js`: Must remain compatible with legacy browsers (ES3). **Do not use modern JS here.**
     - `privatebin.js`: Core encryption and paste interface logic.
   - `tpl/`: HTML templates.
@@ -99,10 +99,10 @@
   - `phpunit.xml`: PHPUnit config.
   - JS test files may use Node.js features; browser JS must not.
 
-  - **Encryption:** Only client-side in JS with WebCrypto.
-  - **Backend:** Serves encrypted blobs, never sees plaintext.
-  - **Legacy Support:** `js/legacy.js` must remain ES3 for feature detection in old browsers.
-  - **Configuration:** See `cfg/conf.php` and [wiki](https://github.com/PrivateBin/PrivateBin/wiki/Configuration) for available options.
+  - **Encryption:** Only client-side in JS using the browsers WebCrypto API.
+  - **Backend:** Serves encrypted blobs (as base64 encoded strings) and plaintext meta data in JSON format. APIs are designed for WORM (write once, read many) usage. Once stored content is never updated, only deleted, if delete token is sent, has expired as per meta data or immediately upon reading for the first time, if meta data was set to burn-after-reading.
+  - **Legacy Support:** `js/legacy.js` must remain compatible with IE4 and Netscape for feature detection of ancient browsers.
+  - **Configuration:** See `cfg/conf.sample.php` and the [wiki](https://github.com/PrivateBin/PrivateBin/wiki/Configuration) for available options. All option defaults are defined in `lib/Configuration.php`
 
 ## Automated Checks
 
