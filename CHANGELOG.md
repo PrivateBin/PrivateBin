@@ -1,5 +1,14 @@
 # PrivateBin version history
 
+## 1.7.9 (not yet released)
+* CHANGED: Upgrading libraries to: base-x 5.0.1, bootstrap 5.3.8, DOMpurify 3.2.7, ip-lib 1.21.0 & kjua 0.10.0
+* CHANGED: Refactored jQuery DOM element creation into plain JavaScript
+* FIXED: Prevent arbitrary PHP file inclusion when enabling template switching
+* FIXED: Malicious filename can be used for self-XSS / HTML injection locally for users
+* FIXED: Sanitize file name in attachment size hint
+* FIXED: Unable to create a new paste from the cloned one when a JSON file attached (#1585)
+* FIXED: traffic limiter not working when using Filesystem storage and PHP opcache
+
 ## 1.7.8 (2025-06-30)
 * FIXED: Duplicate attachment for every comment (#1577)
 * FIXED: Attachments with empty file names (#1577)
