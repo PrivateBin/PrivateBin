@@ -10,7 +10,7 @@
 ## 2.0.2 (2025-10-28)
 * CHANGED: Upgrading libraries to: DOMpurify 3.3.0
 * CHANGED: Refactored jQuery DOM element creation into plain JavaScript
-* FIXED: Sanitize file name in attachment size hint (CVE-2025-62796 / https://github.com/PrivateBin/PrivateBin/security/advisories/GHSA-867c-p784-5q6g)
+* FIXED: Sanitize file name in attachment size hint ([CVE-2025-62796](https://privatebin.info/reports/vulnerability-2025-10-28.html))
 * FIXED: PHP OPcache module is optional again (#1679)
 * FIXED: bootstrap template password peek input group display
 
