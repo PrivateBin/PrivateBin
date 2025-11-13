@@ -963,13 +963,17 @@ jQuery.PrivateBin = (function($) {
          * @returns {boolean}
          */
         function isStringContainsHtml(messageId) {
-            // An integer which specifies the type of the node. An Element node like <p> or <div>.
-            const elementNodeType = 1;
-
-            const div = document.createElement('div');
-            div.innerHTML = messageId;
-
-            return Array.from(div.childNodes).some(node => node.nodeType === elementNodeType);
+            // Use DOMParser to parse the string as HTML. DOMParser does not
+            // execute scripts nor load external resources when parsing, making
+            // it safer against XSS.
+            try {
+                const doc = new DOMParser().parseFromString(String(messageId), 'text/html');
+                return Array.from(doc.body.childNodes).some(node => node.nodeType === Node.ELEMENT_NODE);
+            } catch (e) {
+                // If parsing fails for any reason, consider it not HTML to avoid
+                // treating arbitrary strings as markup.
+                return false;
+            }
         }
 
         return me;
