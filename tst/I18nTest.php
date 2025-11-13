@@ -182,7 +182,20 @@ class I18nTest extends TestCase
         $result = htmlspecialchars($input, ENT_QUOTES | ENT_HTML5 | ENT_DISALLOWED, 'UTF-8', false);
         $this->assertEquals($result, I18n::encode($input), 'encodes HTML entities');
         $this->assertEquals('<a>some ' . $result . ' + 1</a>', I18n::_('<a>some %s + %d</a>', $input, 1), 'encodes parameters in translations');
-        $this->assertEquals($result . $result, I18n::_($input . '%s', $input), 'encodes message ID as well, when no link');
+        // Message ID should NOT be encoded (it comes from trusted source), only the parameter should be
+        $this->assertEquals($input . $result, I18n::_($input . '%s', $input), 'encodes only parameters, not message ID');
+    }
+
+    public function testFrenchApostropheInMessage()
+    {
+        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'fr';
+        I18n::loadTranslations();
+        // The French translation should not have the apostrophe encoded
+        // Original: "Le document n'existe pas, a expiré, ou a été supprimé."
+        // Should NOT become: "Le document n&apos;existe pas, a expir&eacute;, ou a &eacute;t&eacute; supprim&eacute;."
+        $message = I18n::_('Document does not exist, has expired or has been deleted.');
+        $this->assertFalse(strpos($message, '&apos;') !== false, 'French apostrophe should not be encoded in translation message');
+        $this->assertTrue(strpos($message, "n'existe") !== false, 'French apostrophe should be present as literal character');
     }
 
     public function testFallbackAlwaysPresent()
