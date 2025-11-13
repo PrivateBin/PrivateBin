@@ -191,9 +191,8 @@ class I18nTest extends TestCase
     {
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'fr';
         I18n::loadTranslations();
-        // The French translation should not have the apostrophe encoded
-        // Original: "Le document n'existe pas, a expiré, ou a été supprimé."
-        // Should NOT become: "Le document n&apos;existe pas, a expir&eacute;, ou a &eacute;t&eacute; supprim&eacute;."
+        // For example, the French translation should not have the apostrophe encoded
+        // See https://github.com/PrivateBin/PrivateBin/issues/1712
         $message = I18n::_('Document does not exist, has expired or has been deleted.');
         $this->assertFalse(strpos($message, '&apos;') !== false, 'French apostrophe should not be encoded in translation message');
         $this->assertTrue(strpos($message, "n'existe") !== false, 'French apostrophe should be present as literal character');
