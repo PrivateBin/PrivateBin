@@ -6,6 +6,8 @@ use IPLib\ParseStringFlag;
 use IPLib\Range\RangeInterface;
 use IPLib\Range\Subnet;
 use IPLib\Range\Type as RangeType;
+use IPLib\Service\BinaryMath;
+use IPLib\Service\NumberInChunks;
 
 /**
  * An IPv4 address.
@@ -456,28 +458,24 @@ class IPv4 implements AddressInterface
      */
     public function getAddressAtOffset($n)
     {
-        if (!is_int($n)) {
+        if (is_int($n)) {
+            $thatChunks = NumberInChunks::fromInteger($n, NumberInChunks::CHUNKSIZE_BYTES);
+        } elseif (($s = BinaryMath::getInstance()->normalizeIntegerString($n)) !== '') {
+            $thatChunks = NumberInChunks::fromNumericString($s, NumberInChunks::CHUNKSIZE_BYTES);
+        } else {
+            return null;
+        }
+        $myBytes = $this->getBytes();
+        while (isset($myBytes[1]) && $myBytes[0] === 0) {
+            array_shift($myBytes);
+        }
+        $myChunks = new NumberInChunks(false, $myBytes, NumberInChunks::CHUNKSIZE_BYTES);
+        $result = $myChunks->add($thatChunks);
+        if ($result->negative || count($result->chunks) > 4) {
             return null;
         }
 
-        $boundary = 256;
-        $mod = $n;
-        $bytes = $this->getBytes();
-        for ($i = count($bytes) - 1; $i >= 0; $i--) {
-            $tmp = ($bytes[$i] + $mod) % $boundary;
-            $mod = (int) floor(($bytes[$i] + $mod) / $boundary);
-            if ($tmp < 0) {
-                $tmp += $boundary;
-            }
-
-            $bytes[$i] = $tmp;
-        }
-
-        if ($mod !== 0) {
-            return null;
-        }
-
-        return static::fromBytes($bytes);
+        return static::fromBytes(array_pad($result->chunks, -4, 0));
     }
 
     /**

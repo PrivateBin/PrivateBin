@@ -50,7 +50,7 @@ class RangesFromBoundaryCalculator
      */
     public function __construct($numBits)
     {
-        $this->math = new BinaryMath();
+        $this->math = BinaryMath::getInstance();
         $this->setNumBits($numBits);
     }
 

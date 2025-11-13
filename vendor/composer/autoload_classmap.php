@@ -22,6 +22,7 @@ return array(
     'IPLib\\Range\\Subnet' => $vendorDir . '/mlocati/ip-lib/src/Range/Subnet.php',
     'IPLib\\Range\\Type' => $vendorDir . '/mlocati/ip-lib/src/Range/Type.php',
     'IPLib\\Service\\BinaryMath' => $vendorDir . '/mlocati/ip-lib/src/Service/BinaryMath.php',
+    'IPLib\\Service\\NumberInChunks' => $vendorDir . '/mlocati/ip-lib/src/Service/NumberInChunks.php',
     'IPLib\\Service\\RangesFromBoundaryCalculator' => $vendorDir . '/mlocati/ip-lib/src/Service/RangesFromBoundaryCalculator.php',
     'IPLib\\Service\\UnsignedIntegerMath' => $vendorDir . '/mlocati/ip-lib/src/Service/UnsignedIntegerMath.php',
     'Identicon\\Generator\\BaseGenerator' => $vendorDir . '/yzalis/identicon/src/Identicon/Generator/BaseGenerator.php',

@@ -9,6 +9,20 @@ namespace IPLib\Service;
  */
 class BinaryMath
 {
+    private static $instance;
+
+    /**
+     * @return \IPLib\Service\BinaryMath
+     */
+    public static function getInstance()
+    {
+        if (self::$instance === null) {
+            self::$instance = new self();
+        }
+
+        return self::$instance;
+    }
+
     /**
      * Trim the leading zeroes from a non-negative integer represented in binary form.
      *
@@ -95,6 +109,104 @@ class BinaryMath
         }
 
         return $result;
+    }
+
+    /**
+     * Compute 2 raised to the given exponent.
+     *
+     * If the result fits into a native PHP integer, an int is returned.
+     * If the result exceeds PHP_INT_MAX, a string containing the exact decimal representation is returned.
+     *
+     * @param int $exponent The non-negative exponent
+     *
+     * @return int|string
+     */
+    public function pow2string($exponent)
+    {
+        if ($exponent < PHP_INT_SIZE * 8 - 1) {
+            return 1 << $exponent;
+        }
+        $digits = array(1);
+        for ($i = 0; $i < $exponent; $i++) {
+            $carry = 0;
+            foreach ($digits as $index => $digit) {
+                $product = $digit * 2 + $carry;
+                $digits[$index] = $product % 10;
+                $carry = (int) ($product / 10);
+            }
+            if ($carry !== 0) {
+                $digits[] = $carry;
+            }
+        }
+
+        return implode('', array_reverse($digits));
+    }
+
+    /**
+     * @param numeric-string|mixed $value
+     *
+     * @return string empty string if $value is not a valid numeric string
+     */
+    public function normalizeIntegerString($value)
+    {
+        if (!is_string($value) || $value === '') {
+            return '';
+        }
+        $sign = $value[0];
+        if ($sign === '-' || $sign === '+') {
+            $value = substr($value, 1);
+        }
+        $matches = null;
+        if (!preg_match('/^0*([0-9]+)$/', $value, $matches)) {
+            return '';
+        }
+
+        return ($sign === '-' && $matches[1] !== '0' ? $sign : '') . $matches[1];
+    }
+
+    /**
+     * @param numeric-string $value a string that has been normalized with normalizeIntegerString()
+     *
+     * @return string
+     */
+    public function add1ToIntegerString($value)
+    {
+        if ($value[0] === '-') {
+            if ($value === '-1') {
+                return '0';
+            }
+            $digits = str_split(substr($value, 1));
+            $i = count($digits) - 1;
+            while ($i >= 0) {
+                if ($digits[$i] !== '0') {
+                    $digits[$i] = (string) ((int) $digits[$i] - 1);
+                    break;
+                }
+                $digits[$i] = '9';
+                $i--;
+            }
+            $imploded = implode('', $digits);
+            if ($imploded[0] === '0') {
+                $imploded = substr($imploded, 1);
+            }
+
+            return '-' . $imploded;
+        }
+        $digits = str_split($value);
+        $carry = 1;
+        for ($i = count($digits) - 1; $i >= 0; $i--) {
+            $sum = (int) $digits[$i] + $carry;
+            $digits[$i] = (string) ($sum % 10);
+            $carry = (int) ($sum / 10);
+            if ($carry === 0) {
+                break;
+            }
+            if ($i === 0) {
+                array_unshift($digits, (string) $carry);
+            }
+        }
+
+        return implode('', $digits);
     }
 
     /**

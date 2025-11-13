@@ -10,7 +10,7 @@ use PrivateBin\I18n;
 		<meta name="robots" content="noindex" />
 		<meta name="google" content="notranslate">
 		<title><?php echo I18n::_($NAME); ?></title>
-		<link type="text/css" rel="stylesheet" href="css/bootstrap5/bootstrap<?php echo I18n::isRtl() ? '.rtl' : ''; ?>-5.3.3.css" />
+		<link type="text/css" rel="stylesheet" href="css/bootstrap5/bootstrap<?php echo I18n::isRtl() ? '.rtl' : ''; ?>-5.3.8.css" />
 		<link type="text/css" rel="stylesheet" href="css/bootstrap5/privatebin.css?<?php echo rawurlencode($VERSION); ?>" />
 <?php
 if ($SYNTAXHIGHLIGHTING) :
@@ -29,7 +29,7 @@ endif;
 <?php
 if ($QRCODE) :
 ?>
-		<?php $this->_scriptTag('js/kjua-0.9.0.js', 'async'); ?>
+		<?php $this->_scriptTag('js/kjua-0.10.0.js', 'async'); ?>
 <?php
 endif;
 if ($ZEROBINCOMPATIBILITY) :
@@ -39,9 +39,9 @@ if ($ZEROBINCOMPATIBILITY) :
 endif;
 ?>
 		<?php $this->_scriptTag('js/zlib-1.3.1-1.js', 'defer'); ?>
-		<?php $this->_scriptTag('js/base-x-4.0.0.js', 'defer'); ?>
+		<?php $this->_scriptTag('js/base-x-5.0.1.js', 'defer'); ?>
 		<?php $this->_scriptTag('js/rawinflate-0.3.js', 'defer'); ?>
-		<?php $this->_scriptTag('js/bootstrap-5.3.3.js', 'async'); ?>
+		<?php $this->_scriptTag('js/bootstrap-5.3.8.js', 'defer'); ?>
 		<?php $this->_scriptTag('js/dark-mode-switch.js', 'defer'); ?>
 <?php
 if ($SYNTAXHIGHLIGHTING) :
@@ -55,8 +55,8 @@ if ($MARKDOWN) :
 <?php
 endif;
 ?>
-		<?php $this->_scriptTag('js/purify-3.2.6.js', 'defer'); ?>
-		<?php $this->_scriptTag('js/legacy.js', 'async'); ?>
+		<?php $this->_scriptTag('js/purify-3.3.0.js', 'defer'); ?>
+		<?php $this->_scriptTag('js/legacy.js', 'defer'); ?>
 		<?php $this->_scriptTag('js/privatebin.js', 'defer'); ?>
 		<!-- icon -->
 		<link rel="apple-touch-icon" href="<?php echo I18n::encode($BASEPATH); ?>img/apple-touch-icon.png" sizes="180x180" />

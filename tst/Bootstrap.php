@@ -6,7 +6,9 @@ use Google\Cloud\Storage\Bucket;
 use Google\Cloud\Storage\Connection\ConnectionInterface;
 use Google\Cloud\Storage\StorageClient;
 use Google\Cloud\Storage\StorageObject;
+use PrivateBin\Configuration;
 use PrivateBin\Persistence\ServerSalt;
+use PrivateBin\TemplateSwitcher;
 
 error_reporting(E_ALL | E_STRICT);
 
@@ -26,6 +28,7 @@ if (!defined('CONF_SAMPLE')) {
 
 require PATH . 'vendor/autoload.php';
 Helper::updateSubresourceIntegrity();
+TemplateSwitcher::setAvailableTemplates(Configuration::getDefaults()['main']['availabletemplates']);
 
 /**
  * Class Helper provides unit tests pastes and comments of various formats

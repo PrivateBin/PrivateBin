@@ -106,8 +106,8 @@
                 return window.isSecureContext;
             }
 
-            // HTTP is obviously insecure
-            if (window.location.protocol !== 'http:') {
+            // HTTPS is considered secure
+            if (window.location.protocol === 'https:') {
                 return true;
             }
 
@@ -246,6 +246,11 @@
          */
         me.init = function()
         {
+            // prevent early init
+            if (typeof document === 'undefined' || typeof navigator === 'undefined' || typeof window === 'undefined') {
+                return;
+            }
+
             // prevent bots from viewing a paste and potentially deleting data
             // when burn-after-reading is set
             if (isBadBot()) {

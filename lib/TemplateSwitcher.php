@@ -59,16 +59,13 @@ class TemplateSwitcher
     {
         if (self::isTemplateAvailable($template)) {
             self::$_templateFallback = $template;
-
-            if (!in_array($template, self::getAvailableTemplates())) {
-                // Add custom template to the available templates list
-                self::$_availableTemplates[] = $template;
-            }
+        } else {
+            error_log('failed to set "' . $template . '" as a fallback, it needs to be added to the list of `availabletemplates` in the configuration file');
         }
     }
 
     /**
-     * get currently loaded template
+     * get user selected template or fallback
      *
      * @access public
      * @static
@@ -76,8 +73,13 @@ class TemplateSwitcher
      */
     public static function getTemplate(): string
     {
-        $selectedTemplate = self::getSelectedByUserTemplate();
-        return $selectedTemplate ?? self::$_templateFallback;
+        if (array_key_exists('template', $_COOKIE)) {
+            $template = basename($_COOKIE['template']);
+            if (self::isTemplateAvailable($template)) {
+                return $template;
+            }
+        }
+        return self::$_templateFallback;
     }
 
     /**
@@ -101,32 +103,10 @@ class TemplateSwitcher
      */
     public static function isTemplateAvailable(string $template): bool
     {
-        $available = in_array($template, self::getAvailableTemplates());
-
-        if (!$available && !View::isBootstrapTemplate($template)) {
-            $path      = View::getTemplateFilePath($template);
-            $available = file_exists($path);
+        if (in_array($template, self::getAvailableTemplates(), true)) {
+            return true;
         }
-
-        return $available;
-    }
-
-    /**
-     * get the template selected by user
-     *
-     * @access private
-     * @static
-     * @return string|null
-     */
-    private static function getSelectedByUserTemplate(): ?string
-    {
-        $selectedTemplate    = null;
-        $templateCookieValue = $_COOKIE['template'] ?? '';
-
-        if (self::isTemplateAvailable($templateCookieValue)) {
-            $selectedTemplate = $templateCookieValue;
-        }
-
-        return $selectedTemplate;
+        error_log('template "' . $template . '" is not in the list of `availabletemplates` in the configuration file');
+        return false;
     }
 }

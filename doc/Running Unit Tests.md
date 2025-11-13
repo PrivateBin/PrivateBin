@@ -18,7 +18,7 @@ The parameters in detail:
   an accidentally destructive test case in it.
 - `--read-only` - This image supports running in read-only mode. Only /tmp
   may be written into.
-- `-rm` - Remove the container after the run. This saves you doing a cleanup
+- `--rm` - Remove the container after the run. This saves you doing a cleanup
   on your docker environment, if you run the image frequently.
 
 You can also run just the php and javascript test suites instead of both:

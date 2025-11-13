@@ -10,7 +10,7 @@
  * @namespace
  */
 
-// global Base64, DOMPurify, FileReader, RawDeflate, history, navigator, prettyPrint, prettyPrintOne, showdown, kjua
+// global Base64, DOMPurify, FileReader, baseX, bootstrap, RawDeflate, history, navigator, prettyPrint, prettyPrintOne, showdown, kjua
 
 jQuery.fn.draghover = function() {
     'use strict';
@@ -975,7 +975,7 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          *
          * @private
          */
-        let base58 = new baseX('123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz');
+        const base58 = new baseX('123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz');
 
         /**
          * convert UTF-8 string stored in a DOMString to a standard UTF-16 DOMString
@@ -3028,7 +3028,8 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 attachmentLink.attr('download', fileName);
 
                 const fileSize = Helper.formatBytes(decodedData.length);
-                template.append(`(${fileName}, ${fileSize})`);
+                const fileInfo = document.createTextNode(` (${fileName}, ${fileSize})`);
+                template[0].appendChild(fileInfo);
             }
 
             // sanitize SVG preview
@@ -3121,10 +3122,15 @@ jQuery.PrivateBin = (function($, RawDeflate) {
          * @name AttachmentViewer.printDragAndDropFileNames
          * @private
          * @function
-         * @param {array} fileNames
+         * @param {string[]} fileNames
          */
         function printDragAndDropFileNames(fileNames) {
-            $dragAndDropFileNames.html(fileNames.join("<br>"));
+            $dragAndDropFileNames.empty();
+            fileNames.forEach(fileName => {
+                const name = document.createTextNode(fileName);
+                $dragAndDropFileNames[0].appendChild(name);
+                $dragAndDropFileNames[0].appendChild(document.createElement('br'));
+            });
         }
 
         /**
@@ -3323,44 +3329,38 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             const alreadyIncludesCurrentAttachment = $targetElement.find(`[src='${blobUrl}']`).length > 0;
 
             if (blobUrl && !alreadyIncludesCurrentAttachment) {
-                if (mimeType.match(/^image\//i)) {
-                    $targetElement.append(
-                        $(document.createElement('img'))
-                            .attr('src', blobUrl)
-                            .attr('class', 'img-thumbnail')
-                    );
-                } else if (mimeType.match(/^video\//i)) {
-                    $targetElement.append(
-                        $(document.createElement('video'))
-                            .attr('controls', 'true')
-                            .attr('autoplay', 'true')
-                            .attr('class', 'img-thumbnail')
-
-                            .append($(document.createElement('source'))
-                            .attr('type', mimeType)
-                            .attr('src', blobUrl))
-                    );
-                } else if (mimeType.match(/^audio\//i)) {
-                    $targetElement.append(
-                        $(document.createElement('audio'))
-                            .attr('controls', 'true')
-                            .attr('autoplay', 'true')
-
-                            .append($(document.createElement('source'))
-                            .attr('type', mimeType)
-                            .attr('src', blobUrl))
-                    );
-                } else if (mimeType.match(/\/pdf/i)) {
+                if (mimeType.toLowerCase().startsWith('image/')) {
+                    const image = document.createElement('img');
+                    image.setAttribute('src', blobUrl);
+                    image.setAttribute('class', 'img-thumbnail');
+                    $targetElement[0].appendChild(image);
+                } else if (mimeType.toLowerCase().startsWith('video/')) {
+                    const video = document.createElement('video');
+                    video.setAttribute('controls', 'true');
+                    video.setAttribute('autoplay', 'true');
+                    video.setAttribute('class', 'img-thumbnail');
+                    const source = document.createElement('source');
+                    source.setAttribute('type', mimeType);
+                    source.setAttribute('src', blobUrl);
+                    video.appendChild(source);
+                    $targetElement[0].appendChild(video);
+                } else if (mimeType.toLowerCase().startsWith('audio/')) {
+                    const audio = document.createElement('audio');
+                    audio.setAttribute('controls', 'true');
+                    audio.setAttribute('autoplay', 'true');
+                    const source = document.createElement('source');
+                    source.setAttribute('type', mimeType);
+                    source.setAttribute('src', blobUrl);
+                    audio.appendChild(source);
+                    $targetElement[0].appendChild(audio);
+                } else if (mimeType.toLowerCase().endsWith('/pdf')) {
+                    const embed = document.createElement('embed');
+                    embed.setAttribute('src', blobUrl);
+                    embed.setAttribute('type', 'application/pdf');
+                    embed.setAttribute('class', 'pdfPreview');
                     // Fallback for browsers, that don't support the vh unit
-                    const clientHeight = $(window).height();
-
-                    $targetElement.append(
-                        $(document.createElement('embed'))
-                            .attr('src', blobUrl)
-                            .attr('type', 'application/pdf')
-                            .attr('class', 'pdfPreview')
-                            .css('height', clientHeight)
-                    );
+                    embed.style.height = window.innerHeight + 'px';
+                    $targetElement[0].appendChild(embed);
                 }
             }
         };
@@ -3638,8 +3638,10 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             if (nickname.length > 0) {
                 $commentEntry.find('span.nickname').text(nickname);
             } else {
-                $commentEntry.find('span.nickname').html('<i></i>');
-                I18n._($commentEntry.find('span.nickname i'), 'Anonymous');
+                const anonCommenter = document.createElement('em');
+                anonCommenter.textContent = I18n._('Anonymous');
+                $commentEntry.find('span.nickname')[0].innerHTML = '';
+                $commentEntry.find('span.nickname')[0].appendChild(anonCommenter);
             }
 
             // set date
@@ -3652,14 +3654,10 @@ jQuery.PrivateBin = (function($, RawDeflate) {
             // if an avatar is available, display it
             const icon = comment.getIcon();
             if (icon) {
-                $commentEntry.find('span.nickname')
-                             .before(
-                                '<img src="' + icon + '" class="vizhash" /> '
-                             );
-                $(document).on('languageLoaded', function () {
-                    $commentEntry.find('img.vizhash')
-                                 .prop('title', I18n._('Avatar generated from IP address'));
-                });
+                const image = document.createElement('img');
+                image.setAttribute('src', icon);
+                image.setAttribute('class', 'vizhash');
+                $commentEntry.find('span.nickname').prepend(' ').prepend(image);
             }
 
             // starting point (default value/fallback)
@@ -5268,22 +5266,23 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                 cipherMessage['attachment'] = attachments.map(attachment => attachment[0]);
                 cipherMessage['attachment_name'] = attachments.map(attachment => attachment[1]);
 
-                cipherMessage['attachment'] = await Promise.all(cipherMessage['attachment'].map(async (attachment) => {
+                cipherMessage['attachment'] = await Promise.all(cipherMessage['attachment'].map(async (attachment, i) => {
                     // we need to retrieve data from blob if browser already parsed it in memory
                     if (typeof attachment === 'string' && attachment.startsWith('blob:')) {
                         Alert.showStatus(
                             [
                                 'Retrieving cloned file \'%s\' from memory...',
-                                attachment[1]
+                                cipherMessage['attachment_name'][i]
                             ],
                             'copy'
                         );
                         try {
                             const blobData = await $.ajax({
                                 type: 'GET',
-                                url: `${attachment}`,
+                                url: attachment,
                                 processData: false,
                                 timeout: 10000,
+                                dataType: 'binary',
                                 xhrFields: {
                                     withCredentials: false,
                                     responseType: 'blob'
@@ -5493,6 +5492,10 @@ jQuery.PrivateBin = (function($, RawDeflate) {
                         plaintexts[i][1]
                     );
                 }
+                $(document).on('languageLoaded', function () {
+                    $('#commentcontainer').find('img.vizhash')
+                        .prop('title', I18n._('Avatar generated from IP address'));
+                });
             });
         }
 

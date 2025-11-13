@@ -1,7 +1,10 @@
 name: Tests
+
 on:
   push:
   workflow_dispatch:
+
+permissions: {}
 
 jobs:
 
@@ -9,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
     - name: Validate composer.json and composer.lock
       run: composer validate
     - name: Install dependencies
@@ -36,7 +39,7 @@ jobs:
 
     # let's get started!
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
 
     # cache PHP extensions
     - name: Setup cache environment
@@ -106,9 +109,100 @@ jobs:
 
     - name: Upload Test Results
       if: always()
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: Test Results (PHP ${{ matrix.php-versions }})
+        path: tst/results.xml
+
+  PHPunitConfigCombinations:
+    name: PHP configuration combination unit tests
+    runs-on: ubuntu-latest
+    env:
+      php-version: '8.4'
+      extensions: gd, sqlite3
+      extensions-cache-key-name: phpextensions
+
+    steps:
+
+    # let's get started!
+    - name: Checkout
+      uses: actions/checkout@v5
+
+    # cache PHP extensions
+    - name: Setup cache environment
+      id: extcache
+      uses: shivammathur/cache-extensions@v1
+      with:
+        php-version: ${{ env.php-version }}
+        extensions: ${{ env.extensions }}
+        key: ${{ runner.os }}-${{ env.extensions-cache-key }}
+
+    - name: Cache extensions
+      uses: actions/cache@v4
+      with:
+        path: ${{ steps.extcache.outputs.dir }}
+        key: ${{ steps.extcache.outputs.key }}
+        restore-keys: ${{ runner.os }}-${{ env.extensions-cache-key }}
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ env.php-version }}
+        extensions: ${{ env.extensions }}
+
+    # Setup GitHub CI PHP problem matchers
+    # https://github.com/shivammathur/setup-php#problem-matchers
+    - name: Setup problem matchers for PHP
+      run: echo "::add-matcher::${{ runner.tool_cache }}/php.json"
+
+    - name: Setup problem matchers for PHPUnit
+      run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
+
+    # composer cache
+    - name: Remove composer lock
+      run: rm composer.lock
+
+    - name: Get composer cache directory
+      id: composer-cache
+      run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+    # http://man7.org/linux/man-pages/man1/date.1.html
+    # https://github.com/actions/cache#creating-a-cache-key
+    - name: Get Date
+      id: get-date
+      run: echo "date=$(/bin/date -u "+%Y%m%d")" >> $GITHUB_OUTPUT
+      shell: bash
+
+    - name: Cache dependencies
+      uses: actions/cache@v4
+      with:
+        path: "${{ steps.composer-cache.outputs.dir }}"
+        key: "${{ runner.os }}-composer-${{ steps.get-date.outputs.date }}-${{ hashFiles('**/composer.json') }}"
+        restore-keys: "${{ runner.os }}-composer-${{ steps.get-date.outputs.date }}-"
+
+    # composer installation
+    - name: Unset platform requirement
+      run: composer config --unset platform
+
+    - name: Setup PHPunit
+      run: composer install -n
+
+    - name: Install Google Cloud Storage
+      run: composer require google/cloud-storage
+
+    # testing
+    - name: Generate configuration combination unit tests
+      run: bin/configuration-test-generator
+
+    - name: Run unit tests
+      run: ../vendor/bin/phpunit --no-coverage --log-junit results.xml ConfigurationCombinationsTest.php
+      working-directory: tst
+
+    - name: Upload Test Results
+      if: always()
+      uses: actions/upload-artifact@v5
+      with:
+        name: Test Results
         path: tst/results.xml
 
   Mocha:
@@ -116,10 +210,10 @@ jobs:
     steps:
 
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
 
     - name: Setup Node
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@v6
       with:
         node-version: '18'
         cache: 'npm'
@@ -138,7 +232,7 @@ jobs:
 
     - name: Upload Test Results
       if: always()
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: Test Results (Mocha)
         path: js/mocha-results.xml
@@ -148,7 +242,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Upload
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: Event File
         path: "${{ github.event_path }}"

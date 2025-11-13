@@ -4,12 +4,16 @@ on:
   push:
     tags: '[0-9]+.[0-9]?[0-9]?[0-9]?.?[0-9]+'
 
+permissions: {}
+
 jobs:
   draft:
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     steps:
       - name: Fetch changelog from tag
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           sparse-checkout: CHANGELOG.md
           sparse-checkout-cone-mode: false
