@@ -37,6 +37,7 @@ class I18nTest extends TestCase
     public function tearDown(): void
     {
         unset($_COOKIE['lang'], $_SERVER['HTTP_ACCEPT_LANGUAGE']);
+        unset($_SERVER['HTTP_ACCEPT_LANGUAGE']);
     }
 
     public function testTranslationFallback()
@@ -186,7 +187,7 @@ class I18nTest extends TestCase
         $this->assertEquals($input . $result, I18n::_($input . '%s', $input), 'encodes only parameters, not message ID');
     }
 
-    public function testFrenchApostropheInMessage()
+    public function testApostropheEncodngInMessage()
     {
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'fr';
         I18n::loadTranslations();
