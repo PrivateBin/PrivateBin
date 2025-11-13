@@ -208,7 +208,7 @@ CREATE INDEX parent ON prefix_comment(pasteid);
 CREATE TABLE prefix_config (
     id CHAR(16) NOT NULL, value TEXT, PRIMARY KEY (id)
 );
-INSERT INTO prefix_config VALUES('VERSION', '1.7.8');
+INSERT INTO prefix_config VALUES('VERSION', '1.7.9');
 ```
 
 In **PostgreSQL**, the `data`, `attachment`, `nickname` and `vizhash` columns

@@ -1,6 +1,6 @@
 # PrivateBin version history
 
-## 1.7.9 (not yet released)
+## 1.7.9 (2025-11-13)
 * CHANGED: Upgrading libraries to: base-x 5.0.1, bootstrap 5.3.8, DOMpurify 3.2.7, ip-lib 1.21.0 & kjua 0.10.0
 * CHANGED: Refactored jQuery DOM element creation into plain JavaScript
 * FIXED: Prevent arbitrary PHP file inclusion when enabling template switching
