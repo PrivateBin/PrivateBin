@@ -550,7 +550,7 @@ class Controller
     {
         $result = array(
             'status'  => 1,
-            'message' => $error
+            'message' => $error,
         );
         $this->_json = Json::encode($result);
     }
@@ -567,7 +567,7 @@ class Controller
         $result = array(
             'status' => 0,
             'id'     => $dataid,
-            'url'    => $this->_urlBase . '?' . $dataid
+            'url'    => $this->_urlBase . '?' . $dataid,
         ) + $other;
         $this->_json = Json::encode($result);
     }
