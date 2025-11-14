@@ -1,6 +1,7 @@
 # PrivateBin version history
 
 ## 2.0.4 (not yet released)
+* CHANGED: Deduplicate JSON error message translations.
 
 ## 2.0.3 (2025-11-12)
 * FIXED: Prevent arbitrary PHP file inclusion when enabling template switching (CVE-2025-64714)
