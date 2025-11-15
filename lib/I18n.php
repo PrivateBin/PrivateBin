@@ -127,14 +127,13 @@ class I18n
         } else {
             $args[0] = self::$_translations[$messageId];
         }
-        // encode any non-integer arguments and the message ID, if it doesn't contain a link or keyboard input
+        // encode any non-integer arguments, but not the message itself
+        // The message ID comes from trusted sources (code or translation JSON files),
+        // while parameters may come from untrusted sources and need HTML entity encoding
+        // to prevent XSS attacks when the message is inserted into HTML context
         $argsCount = count($args);
-        for ($i = 0; $i < $argsCount; ++$i) {
-            if ($i === 0) {
-                if (str_contains($args[0], '<a') || str_contains($args[0], '<kbd>')) {
-                    continue;
-                }
-            } elseif (is_int($args[$i])) {
+        for ($i = 1; $i < $argsCount; ++$i) {
+            if (is_int($args[$i])) {
                 continue;
             }
             $args[$i] = self::encode($args[$i]);
