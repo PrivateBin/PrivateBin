@@ -12,11 +12,10 @@
 
 namespace PrivateBin\Persistence;
 
-use Exception;
 use IPLib\Factory;
 use IPLib\ParseStringFlag;
 use PrivateBin\Configuration;
-use PrivateBin\I18n;
+use PrivateBin\TranslatedException;
 
 /**
  * TrafficLimiter
@@ -167,7 +166,7 @@ class TrafficLimiter extends AbstractPersistence
      *
      * @access public
      * @static
-     * @throws Exception
+     * @throws TranslatedException
      * @return true
      */
     public static function canPass()
@@ -181,7 +180,7 @@ class TrafficLimiter extends AbstractPersistence
                     return true;
                 }
             }
-            throw new Exception(I18n::_('Your IP is not authorized to create documents.'));
+            throw new TranslatedException('Your IP is not authorized to create documents.');
         }
 
         // disable limits if set to less then 1
@@ -210,7 +209,7 @@ class TrafficLimiter extends AbstractPersistence
             }
             return true;
         }
-        throw new Exception(I18n::_(
+        throw new TranslatedException(array(
             'Please wait %d seconds between each post.',
             self::$_limit
         ));

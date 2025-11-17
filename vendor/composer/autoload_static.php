@@ -139,6 +139,7 @@ class ComposerStaticInitDontChange
         'PrivateBin\\Proxy\\YourlsProxy' => __DIR__ . '/../..' . '/lib/Proxy/YourlsProxy.php',
         'PrivateBin\\Request' => __DIR__ . '/../..' . '/lib/Request.php',
         'PrivateBin\\TemplateSwitcher' => __DIR__ . '/../..' . '/lib/TemplateSwitcher.php',
+        'PrivateBin\\TranslatedException' => __DIR__ . '/../..' . '/lib/TranslatedException.php',
         'PrivateBin\\View' => __DIR__ . '/../..' . '/lib/View.php',
         'PrivateBin\\Vizhash16x16' => __DIR__ . '/../..' . '/lib/Vizhash16x16.php',
         'Stringable' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Stringable.php',

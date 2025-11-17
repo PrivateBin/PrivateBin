@@ -3,7 +3,7 @@
         'name' => 'privatebin/privatebin',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => '06496a1b0e975b79c5a7abc0bd54b492ca264640',
+        'reference' => 'a051c4bd6b71fd56f0d7fc235e815dafc8eb54ea',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -31,7 +31,7 @@
         'privatebin/privatebin' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '06496a1b0e975b79c5a7abc0bd54b492ca264640',
+            'reference' => 'a051c4bd6b71fd56f0d7fc235e815dafc8eb54ea',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

@@ -11,10 +11,10 @@
 
 namespace PrivateBin\Model;
 
-use Exception;
 use Identicon\Identicon;
 use Jdenticon\Identicon as Jdenticon;
 use PrivateBin\Persistence\TrafficLimiter;
+use PrivateBin\TranslatedException;
 use PrivateBin\Vizhash16x16;
 
 /**
@@ -36,24 +36,24 @@ class Comment extends AbstractModel
      * Store the comment's data.
      *
      * @access public
-     * @throws Exception
+     * @throws TranslatedException
      */
     public function store()
     {
         // Make sure paste exists.
         $pasteid = $this->getPaste()->getId();
         if (!$this->getPaste()->exists()) {
-            throw new Exception('Invalid data.', 67);
+            throw new TranslatedException(self::INVALID_DATA_ERROR, 67);
         }
 
         // Make sure the discussion is opened in this paste and allowed in the configuration.
         if (!$this->getPaste()->isOpendiscussion() || !$this->_conf->getKey('discussion')) {
-            throw new Exception('Invalid data.', 68);
+            throw new TranslatedException(self::INVALID_DATA_ERROR, 68);
         }
 
         // Check for improbable collision.
         if ($this->exists()) {
-            throw new Exception('You are unlucky. Try again.', 69);
+            throw new TranslatedException(self::COLLISION_ERROR, 69);
         }
 
         $this->_data['meta']['created'] = time();
@@ -67,7 +67,7 @@ class Comment extends AbstractModel
                 $this->_data
             ) === false
         ) {
-            throw new Exception('Error saving comment. Sorry.', 70);
+            throw new TranslatedException('Error saving comment. Sorry.', 70);
         }
     }
 
@@ -91,7 +91,6 @@ class Comment extends AbstractModel
      *
      * @access public
      * @param Paste $paste
-     * @throws Exception
      */
     public function setPaste(Paste &$paste)
     {
@@ -115,12 +114,12 @@ class Comment extends AbstractModel
      *
      * @access public
      * @param string $id
-     * @throws Exception
+     * @throws TranslatedException
      */
     public function setParentId($id)
     {
         if (!self::isValidId($id)) {
-            throw new Exception('Invalid document ID.', 65);
+            throw new TranslatedException('Invalid document ID.', 65);
         }
         $this->_data['parentid'] = $id;
     }

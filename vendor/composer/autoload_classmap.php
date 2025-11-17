@@ -91,6 +91,7 @@ return array(
     'PrivateBin\\Proxy\\YourlsProxy' => $baseDir . '/lib/Proxy/YourlsProxy.php',
     'PrivateBin\\Request' => $baseDir . '/lib/Request.php',
     'PrivateBin\\TemplateSwitcher' => $baseDir . '/lib/TemplateSwitcher.php',
+    'PrivateBin\\TranslatedException' => $baseDir . '/lib/TranslatedException.php',
     'PrivateBin\\View' => $baseDir . '/lib/View.php',
     'PrivateBin\\Vizhash16x16' => $baseDir . '/lib/Vizhash16x16.php',
     'Stringable' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/Stringable.php',

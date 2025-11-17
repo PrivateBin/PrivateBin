@@ -17,6 +17,7 @@ use PrivateBin\Persistence\TrafficLimiter;
 use PrivateBin\Proxy\AbstractProxy;
 use PrivateBin\Proxy\ShlinkProxy;
 use PrivateBin\Proxy\YourlsProxy;
+use PrivateBin\TranslatedException;
 
 /**
  * Controller
@@ -195,6 +196,7 @@ class Controller
      * Set default language
      *
      * @access private
+     * @throws Exception
      */
     private function _setDefaultLanguage()
     {
@@ -211,6 +213,7 @@ class Controller
      * Set default template
      *
      * @access private
+     * @throws Exception
      */
     private function _setDefaultTemplate()
     {
@@ -260,6 +263,7 @@ class Controller
      * pasteid (optional) = in discussions, which paste this comment belongs to.
      *
      * @access private
+     * @throws Exception
      * @return string
      */
     private function _create()
@@ -270,8 +274,7 @@ class Controller
         TrafficLimiter::setStore($this->_model->getStore());
         try {
             TrafficLimiter::canPass();
-        } catch (Exception $e) {
-            // traffic limiter exceptions come translated
+        } catch (TranslatedException $e) {
             $this->_json_error($e->getMessage());
             return;
         }
@@ -305,9 +308,8 @@ class Controller
                     $comment = $paste->getComment($data['parentid']);
                     $comment->setData($data);
                     $comment->store();
-                } catch (Exception $e) {
-                    // comment exceptions need translation
-                    $this->_json_error(I18n::_($e->getMessage()));
+                } catch (TranslatedException $e) {
+                    $this->_json_error($e->getMessage());
                     return;
                 }
                 $this->_json_result($comment->getId());
@@ -319,7 +321,7 @@ class Controller
         else {
             try {
                 $this->_model->purge();
-            } catch (Exception $e) {
+            } catch (Exception $e) { // JSON error!!!
                 error_log('Error purging documents: ' . $e->getMessage() . PHP_EOL .
                     'Use the administration scripts statistics to find ' .
                     'damaged paste IDs and either delete them or restore them ' .
@@ -329,9 +331,8 @@ class Controller
             try {
                 $paste->setData($data);
                 $paste->store();
-            } catch (Exception $e) {
-                // paste exceptions need translation
-                $this->_json_error(I18n::_($e->getMessage()));
+            } catch (TranslatedException $e) {
+                $this->_json_error($e->getMessage());
                 return;
             }
             $this->_json_result($paste->getId(), array('deletetoken' => $paste->getDeleteToken()));
@@ -399,9 +400,8 @@ class Controller
             } else {
                 $this->_json_error(I18n::_(self::GENERIC_ERROR));
             }
-        } catch (Exception $e) {
-            // paste exceptions need translation
-            $this->_json_error(I18n::_($e->getMessage()));
+        } catch (TranslatedException $e) {
+            $this->_json_error($e->getMessage());
         }
     }
 
@@ -409,6 +409,7 @@ class Controller
      * Display frontend.
      *
      * @access private
+     * @throws Exception
      */
     private function _view()
     {

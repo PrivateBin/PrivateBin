@@ -12,6 +12,7 @@
 namespace PrivateBin;
 
 use Exception;
+use PrivateBin\TranslatedException;
 
 /**
  * Configuration
@@ -131,7 +132,7 @@ class Configuration
     /**
      * parse configuration file and ensure default configuration values are present
      *
-     * @throws Exception
+     * @throws TranslatedException
      */
     public function __construct()
     {
@@ -148,7 +149,9 @@ class Configuration
                 $config = parse_ini_file($configFile, true);
                 foreach (array('main', 'model', 'model_options') as $section) {
                     if (!array_key_exists($section, $config)) {
-                        throw new Exception(I18n::_('PrivateBin requires configuration section [%s] to be present in configuration file.', $section), 2);
+                        $name = array_key_exists('main', $config) && array_key_exists('name', $config['main']) ?
+                            $config['main']['name'] : self::getDefaults()['main']['name'];
+                        throw new TranslatedException(array('%s requires configuration section [%s] to be present in configuration file.', I18n::_($name), $section), 2);
                     }
                 }
                 break;
@@ -304,13 +307,13 @@ class Configuration
      * get a section from the configuration, must exist
      *
      * @param string $section
-     * @throws Exception
+     * @throws TranslatedException
      * @return mixed
      */
     public function getSection($section)
     {
         if (!array_key_exists($section, $this->_configuration)) {
-            throw new Exception(I18n::_('%s requires configuration section [%s] to be present in configuration file.', I18n::_($this->getKey('name')), $section), 3);
+            throw new TranslatedException(array('%s requires configuration section [%s] to be present in configuration file.', I18n::_($this->getKey('name')), $section), 3);
         }
         return $this->_configuration[$section];
     }

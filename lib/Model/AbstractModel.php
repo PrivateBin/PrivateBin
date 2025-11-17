@@ -11,9 +11,9 @@
 
 namespace PrivateBin\Model;
 
-use Exception;
 use PrivateBin\Configuration;
 use PrivateBin\Data\AbstractData;
+use PrivateBin\TranslatedException;
 
 /**
  * AbstractModel
@@ -22,6 +22,20 @@ use PrivateBin\Data\AbstractData;
  */
 abstract class AbstractModel
 {
+    /**
+     * show the same error message if the data is invalid
+     *
+     * @const string
+     */
+    const INVALID_DATA_ERROR = 'Invalid data.';
+
+    /**
+     * show the same error message if the document ID already exists
+     *
+     * @const string
+     */
+    const COLLISION_ERROR = 'You are unlucky. Try again.';
+
     /**
      * Instance ID.
      *
@@ -83,12 +97,12 @@ abstract class AbstractModel
      *
      * @access public
      * @param string $id
-     * @throws Exception
+     * @throws TranslatedException
      */
     public function setId($id)
     {
         if (!self::isValidId($id)) {
-            throw new Exception('Invalid document ID.', 60);
+            throw new TranslatedException('Invalid document ID.', 60);
         }
         $this->_id = $id;
     }
@@ -98,7 +112,7 @@ abstract class AbstractModel
      *
      * @access public
      * @param  array $data
-     * @throws Exception
+     * @throws TranslatedException
      */
     public function setData(array &$data)
     {
@@ -125,7 +139,7 @@ abstract class AbstractModel
      * Store the instance's data.
      *
      * @access public
-     * @throws Exception
+     * @throws TranslatedException
      */
     abstract public function store();
 
@@ -163,7 +177,7 @@ abstract class AbstractModel
      *
      * @access protected
      * @param  array $data
-     * @throws Exception
+     * @throws TranslatedException
      */
     protected function _validate(array &$data)
     {
