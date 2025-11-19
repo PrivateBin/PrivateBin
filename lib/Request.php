@@ -104,7 +104,7 @@ class Request
         $this->_isJsonApi = $this->_detectJsonRequest();
 
         // parse parameters, depending on request type
-        switch (array_key_exists('REQUEST_METHOD', $_SERVER) ? $_SERVER['REQUEST_METHOD'] : 'GET') {
+        switch ($_SERVER['REQUEST_METHOD'] ?? 'GET') {
             case 'DELETE':
             case 'PUT':
             case 'POST':
@@ -204,8 +204,7 @@ class Request
      */
     public function getParam($param, $default = '')
     {
-        return array_key_exists($param, $this->_params) ?
-            $this->_params[$param] : $default;
+        return $this->_params[$param] ?? $default;
     }
 
     /**
@@ -263,23 +262,22 @@ class Request
      */
     private function _detectJsonRequest()
     {
-        $hasAcceptHeader = array_key_exists('HTTP_ACCEPT', $_SERVER);
-        $acceptHeader    = $hasAcceptHeader ? $_SERVER['HTTP_ACCEPT'] : '';
+        $acceptHeader = $_SERVER['HTTP_ACCEPT'] ?? '';
 
         // simple cases
         if (
-            (array_key_exists('HTTP_X_REQUESTED_WITH', $_SERVER) &&
-                $_SERVER['HTTP_X_REQUESTED_WITH'] == 'JSONHttpRequest') ||
-            ($hasAcceptHeader &&
+            ($_SERVER['HTTP_X_REQUESTED_WITH'] ?? '' ) == 'JSONHttpRequest' ||
+            (
                 str_contains($acceptHeader, self::MIME_JSON) &&
                 !str_contains($acceptHeader, self::MIME_HTML) &&
-                !str_contains($acceptHeader, self::MIME_XHTML))
+                !str_contains($acceptHeader, self::MIME_XHTML)
+            )
         ) {
             return true;
         }
 
         // advanced case: media type negotiation
-        if ($hasAcceptHeader) {
+        if (!empty($acceptHeader)) {
             $mediaTypes = array();
             foreach (explode(',', trim($acceptHeader)) as $mediaTypeRange) {
                 if (preg_match(

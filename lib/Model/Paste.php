@@ -73,10 +73,7 @@ class Paste extends AbstractModel
         }
 
         // check if non-expired burn after reading paste needs to be deleted
-        if (
-            array_key_exists('adata', $data) &&
-            $data['adata'][self::ADATA_BURN_AFTER_READING] === 1
-        ) {
+        if (($data['adata'][self::ADATA_BURN_AFTER_READING] ?? 0) === 1) {
             $this->delete();
         }
 
@@ -207,8 +204,7 @@ class Paste extends AbstractModel
         if (!array_key_exists('adata', $this->_data) && !array_key_exists('data', $this->_data)) {
             $this->get();
         }
-        return array_key_exists('adata', $this->_data) &&
-            $this->_data['adata'][self::ADATA_OPEN_DISCUSSION] === 1;
+        return ($this->_data['adata'][self::ADATA_OPEN_DISCUSSION] ?? 0) === 1;
     }
 
     /**
@@ -222,12 +218,9 @@ class Paste extends AbstractModel
         $expiration = $data['meta']['expire'] ?? 0;
         unset($data['meta']['expire']);
         $expire_options = $this->_conf->getSection('expire_options');
-        if (array_key_exists($expiration, $expire_options)) {
-            $expire = $expire_options[$expiration];
-        } else {
-            // using getKey() to ensure a default value is present
-            $expire = $this->_conf->getKey($this->_conf->getKey('default', 'expire'), 'expire_options');
-        }
+        // using getKey() to ensure a default value is present
+        $expire = $expire_options[$expiration] ??
+            $this->_conf->getKey($this->_conf->getKey('default', 'expire'), 'expire_options');
         if ($expire > 0) {
             $data['meta']['expire_date'] = time() + $expire;
         }

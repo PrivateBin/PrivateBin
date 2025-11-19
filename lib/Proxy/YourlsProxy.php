@@ -65,12 +65,8 @@ class YourlsProxy extends AbstractProxy
      */
     protected function _extractShortUrl(array $data): ?string
     {
-        if (
-            array_key_exists('statusCode', $data) &&
-            $data['statusCode'] == 200 &&
-            array_key_exists('shorturl', $data)
-        ) {
-            return $data['shorturl'];
+        if (($data['statusCode'] ?? 0) == 200) {
+            return $data['shorturl'] ?? 0;
         }
         return null;
     }

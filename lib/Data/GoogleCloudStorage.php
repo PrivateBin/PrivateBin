@@ -107,7 +107,7 @@ class GoogleCloudStorage extends AbstractData
      */
     private function _upload($key, &$payload)
     {
-        $metadata = array_key_exists('meta', $payload) ? $payload['meta'] : array();
+        $metadata = $payload['meta'] ?? array();
         unset($metadata['salt']);
         foreach ($metadata as $k => $v) {
             $metadata[$k] = strval($v);
