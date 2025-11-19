@@ -162,6 +162,7 @@ class I18n
      *
      * @access public
      * @static
+     * @throws JsonException
      */
     public static function loadTranslations()
     {
@@ -270,6 +271,7 @@ class I18n
      * @access public
      * @static
      * @param  array $languages
+     * @throws JsonException
      * @return array
      */
     public static function getLanguageLabels($languages = array())

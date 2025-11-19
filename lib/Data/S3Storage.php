@@ -37,6 +37,7 @@ namespace PrivateBin\Data;
 
 use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3Client;
+use PrivateBin\Exception\JsonException;
 use PrivateBin\Json;
 
 class S3Storage extends AbstractData
@@ -177,12 +178,14 @@ class S3Storage extends AbstractData
                 'ContentType' => 'application/json',
                 'Metadata'    => $metadata,
             ));
+            return true;
         } catch (S3Exception $e) {
             error_log('failed to upload ' . $key . ' to ' . $this->_bucket . ', ' .
                 trim(preg_replace('/\s\s+/', ' ', $e->getMessage())));
-            return false;
+        } catch (JsonException $e) {
+            error_log('failed to JSON encode ' . $key . ', ' . $e->getMessage());
         }
-        return true;
+        return false;
     }
 
     /**
@@ -212,8 +215,10 @@ class S3Storage extends AbstractData
         } catch (S3Exception $e) {
             error_log('failed to read ' . $pasteid . ' from ' . $this->_bucket . ', ' .
                 trim(preg_replace('/\s\s+/', ' ', $e->getMessage())));
-            return false;
+        } catch (JsonException $e) {
+            error_log('failed to JSON decode ' . $key . ', ' . $e->getMessage());
         }
+        return false;
     }
 
     /**

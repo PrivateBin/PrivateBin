@@ -11,8 +11,8 @@
 
 namespace PrivateBin\Proxy;
 
-use Exception;
 use PrivateBin\Configuration;
+use PrivateBin\Exception\JsonException;
 use PrivateBin\Json;
 
 /**
@@ -90,7 +90,7 @@ abstract class AbstractProxy
 
         try {
             $jsonData = Json::decode($data);
-        } catch (Exception $e) {
+        } catch (JsonException $e) {
             $this->_error = 'Proxy error: Error parsing proxy response. This can be a configuration issue, like wrong or missing config keys.';
             $this->logErrorWithClassName('Error calling proxy: ' . $e->getMessage());
             return;

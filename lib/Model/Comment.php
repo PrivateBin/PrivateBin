@@ -13,8 +13,8 @@ namespace PrivateBin\Model;
 
 use Identicon\Identicon;
 use Jdenticon\Identicon as Jdenticon;
+use PrivateBin\Exception\TranslatedException;
 use PrivateBin\Persistence\TrafficLimiter;
-use PrivateBin\TranslatedException;
 use PrivateBin\Vizhash16x16;
 
 /**

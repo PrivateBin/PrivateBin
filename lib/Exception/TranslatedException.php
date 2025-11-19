@@ -9,7 +9,7 @@
  * @license   https://www.opensource.org/licenses/zlib-license.php The zlib/libpng License
  */
 
-namespace PrivateBin;
+namespace PrivateBin\Exception;
 
 use Exception;
 use PrivateBin\I18n;

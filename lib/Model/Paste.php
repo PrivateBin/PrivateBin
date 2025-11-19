@@ -12,8 +12,8 @@
 namespace PrivateBin\Model;
 
 use PrivateBin\Controller;
+use PrivateBin\Exception\TranslatedException;
 use PrivateBin\Persistence\ServerSalt;
-use PrivateBin\TranslatedException;
 
 /**
  * Paste

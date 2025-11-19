@@ -12,6 +12,7 @@
 namespace PrivateBin\Proxy;
 
 use PrivateBin\Configuration;
+use PrivateBin\Exception\JsonException;
 use PrivateBin\Json;
 
 /**
@@ -48,12 +49,17 @@ class ShlinkProxy extends AbstractProxy
             'longUrl' => $link,
         );
 
-        return array(
-            'method'  => 'POST',
-            'header'  => "Content-Type: application/json\r\n" .
-                         'X-Api-Key: ' . $shlink_api_key . "\r\n",
-            'content' => Json::encode($body),
-        );
+        try {
+            return array(
+                'method'  => 'POST',
+                'header'  => "Content-Type: application/json\r\n" .
+                            'X-Api-Key: ' . $shlink_api_key . "\r\n",
+                'content' => Json::encode($body),
+            );
+        } catch (JsonException $e) {
+            error_log('[' . get_class($this) . '] Error encoding body: ' . $e->getMessage());
+            return array();
+        }
     }
 
     /**

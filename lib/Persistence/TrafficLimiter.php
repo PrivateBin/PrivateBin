@@ -15,7 +15,7 @@ namespace PrivateBin\Persistence;
 use IPLib\Factory;
 use IPLib\ParseStringFlag;
 use PrivateBin\Configuration;
-use PrivateBin\TranslatedException;
+use PrivateBin\Exception\TranslatedException;
 
 /**
  * TrafficLimiter

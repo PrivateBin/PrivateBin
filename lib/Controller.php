@@ -12,12 +12,13 @@
 namespace PrivateBin;
 
 use Exception;
+use PrivateBin\Exception\JsonException;
+use PrivateBin\Exception\TranslatedException;
 use PrivateBin\Persistence\ServerSalt;
 use PrivateBin\Persistence\TrafficLimiter;
 use PrivateBin\Proxy\AbstractProxy;
 use PrivateBin\Proxy\ShlinkProxy;
 use PrivateBin\Proxy\YourlsProxy;
-use PrivateBin\TranslatedException;
 
 /**
  * Controller
@@ -308,11 +309,10 @@ class Controller
                     $comment = $paste->getComment($data['parentid']);
                     $comment->setData($data);
                     $comment->store();
-                } catch (TranslatedException $e) {
+                    $this->_json_result($comment->getId());
+                } catch (Exception $e) {
                     $this->_json_error($e->getMessage());
-                    return;
                 }
-                $this->_json_result($comment->getId());
             } else {
                 $this->_json_error(I18n::_('Invalid data.'));
             }
@@ -321,21 +321,13 @@ class Controller
         else {
             try {
                 $this->_model->purge();
-            } catch (Exception $e) { // JSON error!!!
-                error_log('Error purging documents: ' . $e->getMessage() . PHP_EOL .
-                    'Use the administration scripts statistics to find ' .
-                    'damaged paste IDs and either delete them or restore them ' .
-                    'from backup.');
-            }
-            $paste = $this->_model->getPaste();
-            try {
+                $paste = $this->_model->getPaste();
                 $paste->setData($data);
                 $paste->store();
-            } catch (TranslatedException $e) {
+                $this->_json_result($paste->getId(), array('deletetoken' => $paste->getDeleteToken()));
+            } catch (Exception $e) {
                 $this->_json_error($e->getMessage());
-                return;
             }
-            $this->_json_result($paste->getId(), array('deletetoken' => $paste->getDeleteToken()));
         }
     }
 
@@ -365,7 +357,7 @@ class Controller
             } else {
                 $this->_error = self::GENERIC_ERROR;
             }
-        } catch (Exception $e) {
+        } catch (TranslatedException $e) {
             $this->_error = $e->getMessage();
         }
         if ($this->_request->isJsonApiCall()) {
@@ -470,7 +462,7 @@ class Controller
         }
         $page->assign('BASEPATH', I18n::_($this->_conf->getKey('basepath')));
         $page->assign('STATUS', I18n::_($this->_status));
-        $page->assign('ISDELETED', I18n::_(json_encode($this->_is_deleted)));
+        $page->assign('ISDELETED', $this->_is_deleted);
         $page->assign('VERSION', self::VERSION);
         $page->assign('DISCUSSION', $this->_conf->getKey('discussion'));
         $page->assign('OPENDISCUSSION', $this->_conf->getKey('opendiscussion'));
@@ -546,6 +538,7 @@ class Controller
      *
      * @access private
      * @param  string $error
+     * @throws JsonException
      */
     private function _json_error($error)
     {
@@ -562,6 +555,7 @@ class Controller
      * @access private
      * @param  string $dataid
      * @param  array $other
+     * @throws JsonException
      */
     private function _json_result($dataid, $other = array())
     {

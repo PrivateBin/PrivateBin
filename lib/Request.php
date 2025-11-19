@@ -11,7 +11,7 @@
 
 namespace PrivateBin;
 
-use Exception;
+use PrivateBin\Exception\JsonException;
 use PrivateBin\Model\Paste;
 
 /**
@@ -113,7 +113,7 @@ class Request
                 try {
                     $data          = file_get_contents(self::$_inputStream);
                     $this->_params = Json::decode($data);
-                } catch (Exception $e) {
+                } catch (JsonException $e) {
                     // ignore error, $this->_params will remain empty
                 }
                 break;

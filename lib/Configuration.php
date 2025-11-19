@@ -12,7 +12,7 @@
 namespace PrivateBin;
 
 use Exception;
-use PrivateBin\TranslatedException;
+use PrivateBin\Exception\TranslatedException;
 
 /**
  * Configuration

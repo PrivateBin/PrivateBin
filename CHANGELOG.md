@@ -1,7 +1,9 @@
 # PrivateBin version history
 
 ## 2.0.4 (not yet released)
-* CHANGED: Deduplicate JSON error message translations.
+* CHANGED: Deduplicate JSON error message translations
+* CHANGED: Refactored translation of exception messages
+* FIXED: Some exceptions not getting translated
 
 ## 1.7.9 (2025-11-13)
 * CHANGED: Upgrading libraries to: base-x 5.0.1, bootstrap 5.3.8, DOMpurify 3.2.7, ip-lib 1.21.0 & kjua 0.10.0

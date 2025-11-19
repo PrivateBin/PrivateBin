@@ -11,8 +11,8 @@
 
 namespace PrivateBin\Data;
 
-use Exception;
 use GlobIterator;
+use PrivateBin\Exception\JsonException;
 use PrivateBin\Json;
 
 /**
@@ -104,13 +104,10 @@ class Filesystem extends AbstractData
      */
     public function read($pasteid)
     {
-        if (
-            !$this->exists($pasteid) ||
-            !$paste = $this->_get($this->_dataid2path($pasteid) . $pasteid . '.php')
-        ) {
-            return false;
+        if ($this->exists($pasteid)) {
+            return $this->_get($this->_dataid2path($pasteid) . $pasteid . '.php');
         }
-        return $paste;
+        return false;
     }
 
     /**
@@ -346,7 +343,12 @@ class Filesystem extends AbstractData
             file_get_contents($filename),
             strlen(self::PROTECTION_LINE . PHP_EOL)
         );
-        return Json::decode($data);
+        try {
+            return Json::decode($data);
+        } catch (JsonException $e) {
+            error_log('Error decoding JSON from "' . $filename . '": ' . $e->getMessage());
+            return false;
+        }
     }
 
     /**
@@ -450,7 +452,7 @@ class Filesystem extends AbstractData
                 $filename,
                 self::PROTECTION_LINE . PHP_EOL . Json::encode($data)
             );
-        } catch (Exception $e) {
+        } catch (JsonException $e) {
             error_log('Error while trying to store data to the filesystem at path "' . $filename . '": ' . $e->getMessage());
             return false;
         }

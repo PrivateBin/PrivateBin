@@ -13,7 +13,7 @@ namespace PrivateBin\Model;
 
 use PrivateBin\Configuration;
 use PrivateBin\Data\AbstractData;
-use PrivateBin\TranslatedException;
+use PrivateBin\Exception\TranslatedException;
 
 /**
  * AbstractModel

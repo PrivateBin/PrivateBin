@@ -15,6 +15,7 @@ use Exception;
 use Google\Cloud\Core\Exception\NotFoundException;
 use Google\Cloud\Storage\Bucket;
 use Google\Cloud\Storage\StorageClient;
+use PrivateBin\Exception\JsonException;
 use PrivateBin\Json;
 
 class GoogleCloudStorage extends AbstractData
@@ -219,7 +220,12 @@ class GoogleCloudStorage extends AbstractData
         try {
             foreach ($this->_bucket->objects(array('prefix' => $prefix)) as $key) {
                 $data            = $this->_bucket->object($key->name())->downloadAsString();
-                $comment         = Json::decode($data);
+                try {
+                    $comment = Json::decode($data);
+                } catch (JsonException $e) {
+                    error_log('failed to read comment from ' . $key->name() . ', ' . $e->getMessage());
+                    $comment = array();
+                }
                 $comment['id']   = basename($key->name());
                 $slot            = $this->getOpenSlot($comments, (int) $comment['meta']['created']);
                 $comments[$slot] = $comment;
