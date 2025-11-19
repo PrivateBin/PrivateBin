@@ -149,8 +149,7 @@ class Configuration
                 $config = parse_ini_file($configFile, true);
                 foreach (array('main', 'model', 'model_options') as $section) {
                     if (!array_key_exists($section, $config)) {
-                        $name = array_key_exists('main', $config) && array_key_exists('name', $config['main']) ?
-                            $config['main']['name'] : self::getDefaults()['main']['name'];
+                        $name = $config['main']['name'] ?? self::getDefaults()['main']['name'];
                         throw new TranslatedException(array('%s requires configuration section [%s] to be present in configuration file.', I18n::_($name), $section), 2);
                     }
                 }
