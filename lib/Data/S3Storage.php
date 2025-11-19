@@ -216,7 +216,7 @@ class S3Storage extends AbstractData
             error_log('failed to read ' . $pasteid . ' from ' . $this->_bucket . ', ' .
                 trim(preg_replace('/\s\s+/', ' ', $e->getMessage())));
         } catch (JsonException $e) {
-            error_log('failed to JSON decode ' . $key . ', ' . $e->getMessage());
+            error_log('failed to JSON decode ' . $pasteid . ', ' . $e->getMessage());
         }
         return false;
     }
