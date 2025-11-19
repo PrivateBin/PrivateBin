@@ -26,7 +26,8 @@ class JsonException extends Exception
      * @access public
      * @param  int $code
      */
-    public function __construct(int $code) {
+    public function __construct(int $code)
+    {
         $message = 'A JSON error occurred';
         if (function_exists('json_last_error_msg')) {
             $message .= ': ' . json_last_error_msg();
