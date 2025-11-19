@@ -173,21 +173,20 @@ class I18n
             array_key_exists('lang', $_COOKIE) &&
             ($key = array_search($_COOKIE['lang'], $availableLanguages)) !== false
         ) {
-            $match = $availableLanguages[$key];
+            self::$_language = $availableLanguages[$key];
         }
         // find a translation file matching the browsers language preferences
         else {
-            $match = self::_getMatchingLanguage(
+            self::$_language = self::_getMatchingLanguage(
                 self::getBrowserLanguages(), $availableLanguages
             );
         }
 
         // load translations
-        self::$_language     = $match;
-        if ($match == 'en') {
+        if (self::$_language == 'en') {
             self::$_translations = array();
         } else {
-            $data                = file_get_contents(self::_getPath($match . '.json'));
+            $data                = file_get_contents(self::_getPath(self::$_language . '.json'));
             self::$_translations = Json::decode($data);
         }
     }
