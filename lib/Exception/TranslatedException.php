@@ -28,7 +28,7 @@ class TranslatedException extends Exception
      * @param  string|array $messageId message ID or array of message ID and parameters
      * @param  int $code
      */
-    public function __construct(string|array $messageId, int $code = 0)
+    public function __construct($messageId, int $code = 0)
     {
         $message = is_string($messageId) ? I18n::translate($messageId) : forward_static_call_array('PrivateBin\I18n::translate', $messageId);
         parent::__construct($message, $code);
