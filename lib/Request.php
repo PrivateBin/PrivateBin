@@ -266,7 +266,7 @@ class Request
 
         // simple cases
         if (
-            ($_SERVER['HTTP_X_REQUESTED_WITH'] ?? '' ) == 'JSONHttpRequest' ||
+            ($_SERVER['HTTP_X_REQUESTED_WITH'] ?? '') == 'JSONHttpRequest' ||
             (
                 str_contains($acceptHeader, self::MIME_JSON) &&
                 !str_contains($acceptHeader, self::MIME_HTML) &&
