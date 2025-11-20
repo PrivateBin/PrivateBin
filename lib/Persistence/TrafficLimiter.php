@@ -73,7 +73,7 @@ class TrafficLimiter extends AbstractPersistence
         self::setExempted($conf->getKey('exempted', 'traffic'));
         self::setLimit($conf->getKey('limit', 'traffic'));
 
-        if (($option = $conf->getKey('header', 'traffic')) !== '') {
+        if (!empty($option = $conf->getKey('header', 'traffic'))) {
             $httpHeader = 'HTTP_' . $option;
             if (array_key_exists($httpHeader, $_SERVER) && !empty($_SERVER[$httpHeader])) {
                 self::$_ipKey = $httpHeader;

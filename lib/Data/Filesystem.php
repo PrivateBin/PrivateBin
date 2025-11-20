@@ -309,7 +309,7 @@ class Filesystem extends AbstractData
                 $file = $this->_path . DIRECTORY_SEPARATOR . 'salt.php';
                 if (is_readable($file)) {
                     $items = explode('|', file_get_contents($file));
-                    if (count($items) == 3) {
+                    if (count($items) === 3) {
                         return $items[1];
                     }
                 }

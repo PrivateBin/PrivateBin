@@ -160,7 +160,7 @@ class Configuration
         $opts = '_options';
         foreach (self::getDefaults() as $section => $values) {
             // fill missing sections with default values
-            if (!array_key_exists($section, $config) || count($config[$section]) == 0) {
+            if (!array_key_exists($section, $config) || count($config[$section]) === 0) {
                 $this->_configuration[$section] = $values;
                 if (array_key_exists('dir', $this->_configuration[$section])) {
                     $this->_configuration[$section]['dir'] = PATH . $this->_configuration[$section]['dir'];
@@ -169,7 +169,7 @@ class Configuration
             }
             // provide different defaults for database model
             elseif (
-                $section == 'model_options' &&
+                $section === 'model_options' &&
                 $this->_configuration['model']['class'] === 'Database'
             ) {
                 $values = array(
@@ -180,7 +180,7 @@ class Configuration
                     'opt' => array(),
                 );
             } elseif (
-                $section == 'model_options' &&
+                $section === 'model_options' &&
                 $this->_configuration['model']['class'] === 'GoogleCloudStorage'
             ) {
                 $values = array(
@@ -189,7 +189,7 @@ class Configuration
                     'uniformacl' => false,
                 );
             } elseif (
-                $section == 'model_options' &&
+                $section === 'model_options' &&
                 $this->_configuration['model']['class'] === 'S3Storage'
             ) {
                 $values = array(
@@ -218,11 +218,11 @@ class Configuration
             // check for missing keys and set defaults if necessary
             else {
                 // preserve configured SRI hashes
-                if ($section == 'sri' && array_key_exists($section, $config)) {
+                if ($section === 'sri' && array_key_exists($section, $config)) {
                     $this->_configuration[$section] = $config[$section];
                 }
                 foreach ($values as $key => $val) {
-                    if ($key == 'dir') {
+                    if ($key === 'dir') {
                         $val = PATH . $val;
                     }
                     $result = $val;

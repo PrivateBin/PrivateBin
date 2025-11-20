@@ -206,7 +206,7 @@ endif;
 foreach ($EXPIRE as $key => $value) :
 ?>
 								<option value="<?php echo $key; ?>"<?php
-    if ($key == $EXPIREDEFAULT) :
+    if ($key === $EXPIREDEFAULT) :
 ?> selected="selected"<?php
     endif;
 ?>><?php echo $value; ?></option>
@@ -287,7 +287,7 @@ endif;
     foreach ($FORMATTER as $key => $value) :
 ?>
 								<option value="<?php echo $key; ?>"<?php
-        if ($key == $FORMATTERDEFAULT) :
+        if ($key === $FORMATTERDEFAULT) :
 ?> selected="selected"<?php
         endif;
 ?>><?php echo $value; ?></option>

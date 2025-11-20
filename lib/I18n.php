@@ -183,7 +183,7 @@ class I18n
         }
 
         // load translations
-        if (self::$_language == 'en') {
+        if (self::$_language === 'en') {
             self::$_translations = array();
         } else {
             $data                = file_get_contents(self::_getPath(self::$_language . '.json'));
@@ -200,14 +200,14 @@ class I18n
      */
     public static function getAvailableLanguages()
     {
-        if (count(self::$_availableLanguages) == 0) {
+        if (count(self::$_availableLanguages) === 0) {
             self::$_availableLanguages[] = 'en'; // en.json is not part of the release archive
             $languageIterator            = new AppendIterator();
             $languageIterator->append(new GlobIterator(self::_getPath('??.json')));
             $languageIterator->append(new GlobIterator(self::_getPath('???.json'))); // for jbo
             foreach ($languageIterator as $file) {
                 $language = $file->getBasename('.json');
-                if ($language != 'en') {
+                if ($language !== 'en') {
                     self::$_availableLanguages[] = $language;
                 }
             }
@@ -276,11 +276,11 @@ class I18n
     public static function getLanguageLabels($languages = array())
     {
         $file = self::_getPath('languages.json');
-        if (count(self::$_languageLabels) == 0 && is_readable($file)) {
+        if (count(self::$_languageLabels) === 0 && is_readable($file)) {
             $data                  = file_get_contents($file);
             self::$_languageLabels = Json::decode($data);
         }
-        if (count($languages) == 0) {
+        if (count($languages) === 0) {
             return self::$_languageLabels;
         }
         return array_intersect_key(self::$_languageLabels, array_flip($languages));
@@ -367,7 +367,7 @@ class I18n
                 return $n === 1 ? 0 : (($n === 0 || ($n % 100 > 0 && $n % 100 < 20)) ? 1 : 2);
             case 'ru':
             case 'uk':
-                return $n % 10 === 1 && $n % 100 != 11 ? 0 : ($n % 10 >= 2 && $n % 10 <= 4 && ($n % 100 < 10 || $n % 100 >= 20) ? 1 : 2);
+                return $n % 10 === 1 && $n % 100 !== 11 ? 0 : ($n % 10 >= 2 && $n % 10 <= 4 && ($n % 100 < 10 || $n % 100 >= 20) ? 1 : 2);
             case 'sl':
                 return $n % 100 === 1 ? 1 : ($n % 100 === 2 ? 2 : ($n % 100 === 3 || $n % 100 === 4 ? 3 : 0));
             default:

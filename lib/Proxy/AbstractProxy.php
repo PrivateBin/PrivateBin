@@ -55,7 +55,7 @@ abstract class AbstractProxy
         }
 
         if (!str_starts_with($link, $conf->getKey('basepath') . '?') ||
-            parse_url($link, PHP_URL_HOST) != parse_url($conf->getKey('basepath'), PHP_URL_HOST)
+            parse_url($link, PHP_URL_HOST) !== parse_url($conf->getKey('basepath'), PHP_URL_HOST)
         ) {
             $this->_error = 'Trying to shorten a URL that isn\'t pointing at our instance.';
             return;

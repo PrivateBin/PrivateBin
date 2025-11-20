@@ -141,7 +141,7 @@ class Request
         if (array_key_exists('pasteid', $this->_params) && !empty($this->_params['pasteid'])) {
             if (array_key_exists('deletetoken', $this->_params) && !empty($this->_params['deletetoken'])) {
                 $this->_operation = 'delete';
-            } elseif ($this->_operation != 'create') {
+            } elseif ($this->_operation !== 'create') {
                 $this->_operation = 'read';
             }
         } elseif (array_key_exists('jsonld', $this->_params) && !empty($this->_params['jsonld'])) {
@@ -187,7 +187,7 @@ class Request
             $data['meta'] = $meta;
         }
         foreach ($required_keys as $key) {
-            $data[$key] = $this->getParam($key, $key == 'v' ? 1 : '');
+            $data[$key] = $this->getParam($key, $key === 'v' ? 1 : '');
         }
         // forcing a cast to int or float
         $data['v'] = $data['v'] + 0;
@@ -266,7 +266,7 @@ class Request
 
         // simple cases
         if (
-            ($_SERVER['HTTP_X_REQUESTED_WITH'] ?? '') == 'JSONHttpRequest' ||
+            ($_SERVER['HTTP_X_REQUESTED_WITH'] ?? '') === 'JSONHttpRequest' ||
             (
                 str_contains($acceptHeader, self::MIME_JSON) &&
                 !str_contains($acceptHeader, self::MIME_HTML) &&

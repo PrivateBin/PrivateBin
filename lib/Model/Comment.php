@@ -148,13 +148,13 @@ class Comment extends AbstractModel
     {
         // we generate an icon based on a SHA512 HMAC of the users IP, if configured
         $icon = $this->_conf->getKey('icon');
-        if ($icon != 'none') {
+        if ($icon !== 'none') {
             $pngdata = '';
             $hmac    = TrafficLimiter::getHash();
-            if ($icon == 'identicon') {
+            if ($icon === 'identicon') {
                 $identicon = new Identicon();
                 $pngdata   = $identicon->getImageDataUri($hmac, 16);
-            } elseif ($icon == 'jdenticon') {
+            } elseif ($icon === 'jdenticon') {
                 $jdenticon = new Jdenticon(array(
                     'hash'  => $hmac,
                     'size'  => 16,
@@ -164,13 +164,13 @@ class Comment extends AbstractModel
                     ),
                 ));
                 $pngdata   = $jdenticon->getImageDataUri('png');
-            } elseif ($icon == 'vizhash') {
+            } elseif ($icon === 'vizhash') {
                 $vh      = new Vizhash16x16();
                 $pngdata = 'data:image/png;base64,' . base64_encode(
                     $vh->generate($hmac)
                 );
             }
-            if ($pngdata != '') {
+            if (!empty($pngdata)) {
                 if (!array_key_exists('meta', $data)) {
                     $data['meta'] = array();
                 }

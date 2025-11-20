@@ -150,7 +150,7 @@ class Paste extends AbstractModel
         $comment = new Comment($this->_conf, $this->_store);
         $comment->setPaste($this);
         $comment->setParentId($parentId);
-        if ($commentId !== '') {
+        if (!empty($commentId)) {
             $comment->setId($commentId);
         }
         return $comment;

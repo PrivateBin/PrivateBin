@@ -204,7 +204,7 @@ class Controller
         $lang = $this->_conf->getKey('languagedefault');
         I18n::setLanguageFallback($lang);
         // force default language, if language selection is disabled and a default is set
-        if (!$this->_conf->getKey('languageselection') && strlen($lang) == 2) {
+        if (!$this->_conf->getKey('languageselection') && strlen($lang) === 2) {
             $_COOKIE['lang'] = $lang;
             setcookie('lang', $lang, array('SameSite' => 'Lax', 'Secure' => true));
         }
@@ -421,7 +421,7 @@ class Controller
         // label all the expiration options
         $expire = array();
         foreach ($this->_conf->getSection('expire_options') as $time => $seconds) {
-            $expire[$time] = ($seconds == 0) ? I18n::_(ucfirst($time)) : Filter::formatHumanReadableTime($time);
+            $expire[$time] = ($seconds === 0) ? I18n::_(ucfirst($time)) : Filter::formatHumanReadableTime($time);
         }
 
         // translate all the formatter options
