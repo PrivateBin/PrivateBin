@@ -432,7 +432,7 @@ class S3Storage extends AbstractData
                     'Bucket' => $this->_bucket,
                     'Key'    => $object['Key'],
                 ));
-                $expire_at = $metadata['expire_date'] ?? '';
+                $expire_at = $head->get('Metadata')['expire_date'] ?? '';
                 if (is_numeric($expire_at) && intval($expire_at) < $now) {
                     array_push($expired, $object['Key']);
                 }
