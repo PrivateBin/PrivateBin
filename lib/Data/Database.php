@@ -400,7 +400,9 @@ class Database extends AbstractData
                 $fs    = new Filesystem(array('dir' => 'data'));
                 $value = $fs->getValue('salt');
                 $this->setValue($value, 'salt');
-                unlink($file);
+                if (!unlink($file)) {
+                    error_log('Error deleting migrated salt: ' . $file);
+                }
                 return $value;
             }
         }
