@@ -24,7 +24,7 @@ jobs:
       github.event.pull_request.author_association == 'MEMBER' ||
       github.event.pull_request.author_association == 'OWNER' )
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Install Google Cloud Storage
         run: composer require --no-update google/cloud-storage && composer update --no-dev
       - name: Run Snyk to check for vulnerabilities

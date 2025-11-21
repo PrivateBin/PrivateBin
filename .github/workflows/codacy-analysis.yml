@@ -28,7 +28,7 @@ jobs:
     steps:
       # Checkout the repository to the GitHub Actions runner
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Remove folders causing errors in report
         run: rm -rf doc img *.md
