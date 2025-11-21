@@ -2,6 +2,7 @@
 
 use PHPUnit\Framework\TestCase;
 use PrivateBin\I18n;
+use PrivateBin\Json;
 
 class I18nMock extends I18n
 {
@@ -221,19 +222,19 @@ class I18nTest extends TestCase
     {
         $messageIds = array();
         $languages  = array();
-        $dir        = dir(PATH . 'i18n');
-        while (false !== ($file = $dir->read())) {
-            if (strlen($file) === 7) {
-                $language            = substr($file, 0, 2);
-                $languageMessageIds  = array_keys(
-                    json_decode(
-                        file_get_contents(PATH . 'i18n' . DIRECTORY_SEPARATOR . $file),
-                        true
-                    )
-                );
-                $messageIds           = array_unique(array_merge($messageIds, $languageMessageIds));
-                $languages[$language] = $languageMessageIds;
+        foreach (new DirectoryIterator(PATH . 'i18n') as $file) {
+            $fileNameLength = strlen($file->getFilename());
+            if ($fileNameLength === 7) {       // xx.json
+                $language = substr($file->getFilename(), 0, 2);
+            } elseif ($fileNameLength === 8) { // jbo.json
+                $language = substr($file->getFilename(), 0, 3);
+            } else {
+                continue;
             }
+            $languageJson         = file_get_contents($file->getPathname());
+            $languageMessageIds   = array_keys(Json::decode($languageJson));
+            $messageIds           = array_unique(array_merge($messageIds, $languageMessageIds));
+            $languages[$language] = $languageMessageIds;
         }
         foreach ($messageIds as $messageId) {
             foreach (array_keys($languages) as $language) {

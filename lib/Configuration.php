@@ -12,6 +12,7 @@
 namespace PrivateBin;
 
 use Exception;
+use PrivateBin\Exception\TranslatedException;
 
 /**
  * Configuration
@@ -131,7 +132,7 @@ class Configuration
     /**
      * parse configuration file and ensure default configuration values are present
      *
-     * @throws Exception
+     * @throws TranslatedException
      */
     public function __construct()
     {
@@ -148,7 +149,8 @@ class Configuration
                 $config = parse_ini_file($configFile, true);
                 foreach (array('main', 'model', 'model_options') as $section) {
                     if (!array_key_exists($section, $config)) {
-                        throw new Exception(I18n::_('PrivateBin requires configuration section [%s] to be present in configuration file.', $section), 2);
+                        $name = $config['main']['name'] ?? self::getDefaults()['main']['name'];
+                        throw new TranslatedException(array('%s requires configuration section [%s] to be present in configuration file.', I18n::_($name), $section), 2);
                     }
                 }
                 break;
@@ -158,7 +160,7 @@ class Configuration
         $opts = '_options';
         foreach (self::getDefaults() as $section => $values) {
             // fill missing sections with default values
-            if (!array_key_exists($section, $config) || count($config[$section]) == 0) {
+            if (!array_key_exists($section, $config) || count($config[$section]) === 0) {
                 $this->_configuration[$section] = $values;
                 if (array_key_exists('dir', $this->_configuration[$section])) {
                     $this->_configuration[$section]['dir'] = PATH . $this->_configuration[$section]['dir'];
@@ -167,7 +169,7 @@ class Configuration
             }
             // provide different defaults for database model
             elseif (
-                $section == 'model_options' &&
+                $section === 'model_options' &&
                 $this->_configuration['model']['class'] === 'Database'
             ) {
                 $values = array(
@@ -178,7 +180,7 @@ class Configuration
                     'opt' => array(),
                 );
             } elseif (
-                $section == 'model_options' &&
+                $section === 'model_options' &&
                 $this->_configuration['model']['class'] === 'GoogleCloudStorage'
             ) {
                 $values = array(
@@ -187,7 +189,7 @@ class Configuration
                     'uniformacl' => false,
                 );
             } elseif (
-                $section == 'model_options' &&
+                $section === 'model_options' &&
                 $this->_configuration['model']['class'] === 'S3Storage'
             ) {
                 $values = array(
@@ -216,11 +218,11 @@ class Configuration
             // check for missing keys and set defaults if necessary
             else {
                 // preserve configured SRI hashes
-                if ($section == 'sri' && array_key_exists($section, $config)) {
+                if ($section === 'sri' && array_key_exists($section, $config)) {
                     $this->_configuration[$section] = $config[$section];
                 }
                 foreach ($values as $key => $val) {
-                    if ($key == 'dir') {
+                    if ($key === 'dir') {
                         $val = PATH . $val;
                     }
                     $result = $val;
@@ -304,13 +306,13 @@ class Configuration
      * get a section from the configuration, must exist
      *
      * @param string $section
-     * @throws Exception
+     * @throws TranslatedException
      * @return mixed
      */
     public function getSection($section)
     {
         if (!array_key_exists($section, $this->_configuration)) {
-            throw new Exception(I18n::_('%s requires configuration section [%s] to be present in configuration file.', I18n::_($this->getKey('name')), $section), 3);
+            throw new TranslatedException(array('%s requires configuration section [%s] to be present in configuration file.', I18n::_($this->getKey('name')), $section), 3);
         }
         return $this->_configuration[$section];
     }

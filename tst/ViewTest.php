@@ -67,10 +67,9 @@ class ViewTest extends TestCase
         $page->assign('CSPHEADER', 'default-src \'none\'');
         $page->assign('SRI', array());
 
-        $dir = dir(PATH . 'tpl');
-        while (false !== ($file = $dir->read())) {
-            if (substr($file, -4) === '.php') {
-                $template = substr($file, 0, -4);
+        foreach (new DirectoryIterator(PATH . 'tpl') as $file) {
+            if ($file->getExtension() === 'php') {
+                $template = $file->getBasename('.php');
                 ob_start();
                 $page->draw($template);
                 $this->_content[$template] = ob_get_contents();

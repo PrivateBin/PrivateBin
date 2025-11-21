@@ -12,6 +12,8 @@
 namespace PrivateBin;
 
 use Exception;
+use PrivateBin\Exception\JsonException;
+use PrivateBin\Exception\TranslatedException;
 use PrivateBin\Persistence\ServerSalt;
 use PrivateBin\Persistence\TrafficLimiter;
 use PrivateBin\Proxy\AbstractProxy;
@@ -195,13 +197,14 @@ class Controller
      * Set default language
      *
      * @access private
+     * @throws Exception
      */
     private function _setDefaultLanguage()
     {
         $lang = $this->_conf->getKey('languagedefault');
         I18n::setLanguageFallback($lang);
         // force default language, if language selection is disabled and a default is set
-        if (!$this->_conf->getKey('languageselection') && strlen($lang) == 2) {
+        if (!$this->_conf->getKey('languageselection') && strlen($lang) === 2) {
             $_COOKIE['lang'] = $lang;
             setcookie('lang', $lang, array('SameSite' => 'Lax', 'Secure' => true));
         }
@@ -211,6 +214,7 @@ class Controller
      * Set default template
      *
      * @access private
+     * @throws Exception
      */
     private function _setDefaultTemplate()
     {
@@ -260,6 +264,7 @@ class Controller
      * pasteid (optional) = in discussions, which paste this comment belongs to.
      *
      * @access private
+     * @throws Exception
      * @return string
      */
     private function _create()
@@ -270,8 +275,7 @@ class Controller
         TrafficLimiter::setStore($this->_model->getStore());
         try {
             TrafficLimiter::canPass();
-        } catch (Exception $e) {
-            // traffic limiter exceptions come translated
+        } catch (TranslatedException $e) {
             $this->_json_error($e->getMessage());
             return;
         }
@@ -305,12 +309,10 @@ class Controller
                     $comment = $paste->getComment($data['parentid']);
                     $comment->setData($data);
                     $comment->store();
+                    $this->_json_result($comment->getId());
                 } catch (Exception $e) {
-                    // comment exceptions need translation
-                    $this->_json_error(I18n::_($e->getMessage()));
-                    return;
+                    $this->_json_error($e->getMessage());
                 }
-                $this->_json_result($comment->getId());
             } else {
                 $this->_json_error(I18n::_('Invalid data.'));
             }
@@ -319,22 +321,13 @@ class Controller
         else {
             try {
                 $this->_model->purge();
-            } catch (Exception $e) {
-                error_log('Error purging documents: ' . $e->getMessage() . PHP_EOL .
-                    'Use the administration scripts statistics to find ' .
-                    'damaged paste IDs and either delete them or restore them ' .
-                    'from backup.');
-            }
-            $paste = $this->_model->getPaste();
-            try {
+                $paste = $this->_model->getPaste();
                 $paste->setData($data);
                 $paste->store();
+                $this->_json_result($paste->getId(), array('deletetoken' => $paste->getDeleteToken()));
             } catch (Exception $e) {
-                // paste exceptions need translation
-                $this->_json_error(I18n::_($e->getMessage()));
-                return;
+                $this->_json_error($e->getMessage());
             }
-            $this->_json_result($paste->getId(), array('deletetoken' => $paste->getDeleteToken()));
         }
     }
 
@@ -364,7 +357,7 @@ class Controller
             } else {
                 $this->_error = self::GENERIC_ERROR;
             }
-        } catch (Exception $e) {
+        } catch (TranslatedException $e) {
             $this->_error = $e->getMessage();
         }
         if ($this->_request->isJsonApiCall()) {
@@ -399,9 +392,8 @@ class Controller
             } else {
                 $this->_json_error(I18n::_(self::GENERIC_ERROR));
             }
-        } catch (Exception $e) {
-            // paste exceptions need translation
-            $this->_json_error(I18n::_($e->getMessage()));
+        } catch (TranslatedException $e) {
+            $this->_json_error($e->getMessage());
         }
     }
 
@@ -409,6 +401,7 @@ class Controller
      * Display frontend.
      *
      * @access private
+     * @throws Exception
      */
     private function _view()
     {
@@ -428,7 +421,7 @@ class Controller
         // label all the expiration options
         $expire = array();
         foreach ($this->_conf->getSection('expire_options') as $time => $seconds) {
-            $expire[$time] = ($seconds == 0) ? I18n::_(ucfirst($time)) : Filter::formatHumanReadableTime($time);
+            $expire[$time] = ($seconds === 0) ? I18n::_(ucfirst($time)) : Filter::formatHumanReadableTime($time);
         }
 
         // translate all the formatter options
@@ -469,7 +462,7 @@ class Controller
         }
         $page->assign('BASEPATH', I18n::_($this->_conf->getKey('basepath')));
         $page->assign('STATUS', I18n::_($this->_status));
-        $page->assign('ISDELETED', I18n::_(json_encode($this->_is_deleted)));
+        $page->assign('ISDELETED', $this->_is_deleted);
         $page->assign('VERSION', self::VERSION);
         $page->assign('DISCUSSION', $this->_conf->getKey('discussion'));
         $page->assign('OPENDISCUSSION', $this->_conf->getKey('opendiscussion'));
@@ -545,6 +538,7 @@ class Controller
      *
      * @access private
      * @param  string $error
+     * @throws JsonException
      */
     private function _json_error($error)
     {
@@ -561,6 +555,7 @@ class Controller
      * @access private
      * @param  string $dataid
      * @param  array $other
+     * @throws JsonException
      */
     private function _json_result($dataid, $other = array())
     {

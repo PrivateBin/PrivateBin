@@ -11,8 +11,8 @@
 
 namespace PrivateBin\Model;
 
-use Exception;
 use PrivateBin\Controller;
+use PrivateBin\Exception\TranslatedException;
 use PrivateBin\Persistence\ServerSalt;
 
 /**
@@ -47,14 +47,14 @@ class Paste extends AbstractModel
      * Get paste data.
      *
      * @access public
-     * @throws Exception
+     * @throws TranslatedException
      * @return array
      */
     public function get()
     {
         $data = $this->_store->read($this->getId());
         if ($data === false) {
-            throw new Exception(Controller::GENERIC_ERROR, 64);
+            throw new TranslatedException(Controller::GENERIC_ERROR, 64);
         }
 
         // check if paste has expired and delete it if necessary.
@@ -62,7 +62,7 @@ class Paste extends AbstractModel
             $now = time();
             if ($data['meta']['expire_date'] < $now) {
                 $this->delete();
-                throw new Exception(Controller::GENERIC_ERROR, 63);
+                throw new TranslatedException(Controller::GENERIC_ERROR, 63);
             }
             // We kindly provide the remaining time before expiration (in seconds)
             $data['meta']['time_to_live'] = $data['meta']['expire_date'] - $now;
@@ -73,10 +73,7 @@ class Paste extends AbstractModel
         }
 
         // check if non-expired burn after reading paste needs to be deleted
-        if (
-            array_key_exists('adata', $data) &&
-            $data['adata'][self::ADATA_BURN_AFTER_READING] === 1
-        ) {
+        if (($data['adata'][self::ADATA_BURN_AFTER_READING] ?? 0) === 1) {
             $this->delete();
         }
 
@@ -93,13 +90,13 @@ class Paste extends AbstractModel
      * Store the paste's data.
      *
      * @access public
-     * @throws Exception
+     * @throws TranslatedException
      */
     public function store()
     {
         // Check for improbable collision.
         if ($this->exists()) {
-            throw new Exception('You are unlucky. Try again.', 75);
+            throw new TranslatedException(self::COLLISION_ERROR, 75);
         }
 
         $this->_data['meta']['salt'] = ServerSalt::generate();
@@ -111,7 +108,7 @@ class Paste extends AbstractModel
                 $this->_data
             ) === false
         ) {
-            throw new Exception('Error saving document. Sorry.', 76);
+            throw new TranslatedException('Error saving document. Sorry.', 76);
         }
     }
 
@@ -119,7 +116,6 @@ class Paste extends AbstractModel
      * Delete the paste.
      *
      * @access public
-     * @throws Exception
      */
     public function delete()
     {
@@ -143,18 +139,18 @@ class Paste extends AbstractModel
      * @access public
      * @param string $parentId
      * @param string $commentId
-     * @throws Exception
+     * @throws TranslatedException
      * @return Comment
      */
     public function getComment($parentId, $commentId = '')
     {
         if (!$this->exists()) {
-            throw new Exception('Invalid data.', 62);
+            throw new TranslatedException(self::INVALID_DATA_ERROR, 62);
         }
         $comment = new Comment($this->_conf, $this->_store);
         $comment->setPaste($this);
         $comment->setParentId($parentId);
-        if ($commentId !== '') {
+        if (!empty($commentId)) {
             $comment->setId($commentId);
         }
         return $comment;
@@ -201,7 +197,6 @@ class Paste extends AbstractModel
      * Check if paste has discussions enabled.
      *
      * @access public
-     * @throws Exception
      * @return bool
      */
     public function isOpendiscussion()
@@ -209,8 +204,7 @@ class Paste extends AbstractModel
         if (!array_key_exists('adata', $this->_data) && !array_key_exists('data', $this->_data)) {
             $this->get();
         }
-        return array_key_exists('adata', $this->_data) &&
-            $this->_data['adata'][self::ADATA_OPEN_DISCUSSION] === 1;
+        return ($this->_data['adata'][self::ADATA_OPEN_DISCUSSION] ?? 0) === 1;
     }
 
     /**
@@ -224,12 +218,9 @@ class Paste extends AbstractModel
         $expiration = $data['meta']['expire'] ?? 0;
         unset($data['meta']['expire']);
         $expire_options = $this->_conf->getSection('expire_options');
-        if (array_key_exists($expiration, $expire_options)) {
-            $expire = $expire_options[$expiration];
-        } else {
-            // using getKey() to ensure a default value is present
-            $expire = $this->_conf->getKey($this->_conf->getKey('default', 'expire'), 'expire_options');
-        }
+        // using getKey() to ensure a default value is present
+        $expire = $expire_options[$expiration] ??
+            $this->_conf->getKey($this->_conf->getKey('default', 'expire'), 'expire_options');
         if ($expire > 0) {
             $data['meta']['expire_date'] = time() + $expire;
         }
@@ -240,13 +231,13 @@ class Paste extends AbstractModel
      *
      * @access protected
      * @param  array $data
-     * @throws Exception
+     * @throws TranslatedException
      */
     protected function _validate(array &$data)
     {
         // reject invalid or disabled formatters
         if (!array_key_exists($data['adata'][self::ADATA_FORMATTER], $this->_conf->getSection('formatter_options'))) {
-            throw new Exception('Invalid data.', 75);
+            throw new TranslatedException(self::INVALID_DATA_ERROR, 75);
         }
 
         // discussion requested, but disabled in config or burn after reading requested as well, or invalid integer
@@ -257,7 +248,7 @@ class Paste extends AbstractModel
             )) ||
             ($data['adata'][self::ADATA_OPEN_DISCUSSION] !== 0 && $data['adata'][self::ADATA_OPEN_DISCUSSION] !== 1)
         ) {
-            throw new Exception('Invalid data.', 74);
+            throw new TranslatedException(self::INVALID_DATA_ERROR, 74);
         }
 
         // reject invalid burn after reading
@@ -265,7 +256,7 @@ class Paste extends AbstractModel
             $data['adata'][self::ADATA_BURN_AFTER_READING] !== 0 &&
             $data['adata'][self::ADATA_BURN_AFTER_READING] !== 1
         ) {
-            throw new Exception('Invalid data.', 73);
+            throw new TranslatedException(self::INVALID_DATA_ERROR, 73);
         }
     }
 }

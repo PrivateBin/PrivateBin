@@ -11,7 +11,7 @@
 
 namespace PrivateBin;
 
-use Exception;
+use PrivateBin\Exception\JsonException;
 
 /**
  * Json
@@ -26,7 +26,7 @@ class Json
      * @access public
      * @static
      * @param  mixed $input
-     * @throws Exception
+     * @throws JsonException
      * @return string
      */
     public static function encode(&$input)
@@ -42,7 +42,7 @@ class Json
      * @access public
      * @static
      * @param  string $input
-     * @throws Exception
+     * @throws JsonException
      * @return mixed
      */
     public static function decode(&$input)
@@ -57,21 +57,14 @@ class Json
      *
      * @access private
      * @static
-     * @throws Exception
+     * @throws JsonException
      * @return void
      */
     private static function _detectError()
     {
         $errorCode = json_last_error();
-        if ($errorCode === JSON_ERROR_NONE) {
-            return;
+        if ($errorCode !== JSON_ERROR_NONE) {
+            throw new JsonException($errorCode);
         }
-
-        $message = 'A JSON error occurred';
-        if (function_exists('json_last_error_msg')) {
-            $message .= ': ' . json_last_error_msg();
-        }
-        $message .= ' (' . $errorCode . ')';
-        throw new Exception($message, 90);
     }
 }

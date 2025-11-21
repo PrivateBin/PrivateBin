@@ -15,6 +15,7 @@ use Exception;
 use PDO;
 use PDOException;
 use PrivateBin\Controller;
+use PrivateBin\Exception\JsonException;
 use PrivateBin\Json;
 
 /**
@@ -179,18 +180,24 @@ class Database extends AbstractData
                 'SELECT * FROM "' . $this->_sanitizeIdentifier('paste') .
                 '" WHERE "dataid" = ?', array($pasteid), true
             );
-        } catch (Exception $e) {
+        } catch (PDOException $e) {
             $row = false;
         }
         if ($row === false) {
             return false;
         }
         // create array
-        $paste = Json::decode($row['data']);
+        try {
+            $paste = Json::decode($row['data']);
+        } catch (JsonException $e) {
+            error_log('Error while reading a paste from the database: ' . $e->getMessage());
+            $paste = array();
+        }
 
         try {
             $paste['meta'] = Json::decode($row['meta']);
-        } catch (Exception $e) {
+        } catch (JsonException $e) {
+            error_log('Error while reading a paste from the database: ' . $e->getMessage());
             $paste['meta'] = array();
         }
         $expire_date = (int) $row['expiredate'];
@@ -233,7 +240,7 @@ class Database extends AbstractData
                 'SELECT "dataid" FROM "' . $this->_sanitizeIdentifier('paste') .
                 '" WHERE "dataid" = ?', array($pasteid), true
             );
-        } catch (Exception $e) {
+        } catch (PDOException $e) {
             return false;
         }
         return (bool) $row;
@@ -253,7 +260,7 @@ class Database extends AbstractData
     {
         try {
             $data = Json::encode($comment);
-        } catch (Exception $e) {
+        } catch (JsonException $e) {
             error_log('Error while attempting to insert a comment into the database: ' . $e->getMessage());
             return false;
         }
@@ -274,7 +281,7 @@ class Database extends AbstractData
                     $meta['created'],
                 )
             );
-        } catch (Exception $e) {
+        } catch (PDOException $e) {
             error_log('Error while attempting to insert a comment into the database: ' . $e->getMessage());
             return false;
         }
@@ -298,8 +305,14 @@ class Database extends AbstractData
         $comments = array();
         if (count($rows)) {
             foreach ($rows as $row) {
+                try {
+                    $data = Json::decode($row['data']);
+                } catch (JsonException $e) {
+                    error_log('Error while reading a comment from the database: ' . $e->getMessage());
+                    $data = array();
+                }
                 $i                          = $this->getOpenSlot($comments, (int) $row['postdate']);
-                $comments[$i]               = Json::decode($row['data']);
+                $comments[$i]               = $data;
                 $comments[$i]['id']         = $row['dataid'];
                 $comments[$i]['parentid']   = $row['parentid'];
                 $comments[$i]['meta']       = array('created' => (int) $row['postdate']);
@@ -329,7 +342,7 @@ class Database extends AbstractData
                 '" WHERE "pasteid" = ? AND "parentid" = ? AND "dataid" = ?',
                 array($pasteid, $parentid, $commentid), true
             );
-        } catch (Exception $e) {
+        } catch (PDOException $e) {
             return false;
         }
     }
@@ -349,7 +362,8 @@ class Database extends AbstractData
             $this->_last_cache[$key] = $value;
             try {
                 $value = Json::encode($this->_last_cache);
-            } catch (Exception $e) {
+            } catch (JsonException $e) {
+                error_log('Error encoding JSON for table "config", row "traffic_limiter": ' . $e->getMessage());
                 return false;
             }
         }
@@ -386,14 +400,17 @@ class Database extends AbstractData
                 $fs    = new Filesystem(array('dir' => 'data'));
                 $value = $fs->getValue('salt');
                 $this->setValue($value, 'salt');
-                unlink($file);
+                if (!unlink($file)) {
+                    error_log('Error deleting migrated salt: ' . $file);
+                }
                 return $value;
             }
         }
         if ($value && $namespace === 'traffic_limiter') {
             try {
                 $this->_last_cache = Json::decode($value);
-            } catch (Exception $e) {
+            } catch (JsonException $e) {
+                error_log('Error decoding JSON from table "config", row "traffic_limiter": ' . $e->getMessage());
                 $this->_last_cache = array();
             }
             if (array_key_exists($key, $this->_last_cache)) {
@@ -412,13 +429,18 @@ class Database extends AbstractData
      */
     protected function _getExpiredPastes($batchsize)
     {
-        $statement = $this->_db->prepare(
-            'SELECT "dataid" FROM "' . $this->_sanitizeIdentifier('paste') .
-            '" WHERE "expiredate" < ? AND "expiredate" != ? ' .
-            ($this->_type === 'oci' ? 'FETCH NEXT ? ROWS ONLY' : 'LIMIT ?')
-        );
-        $statement->execute(array(time(), 0, $batchsize));
-        return $statement->fetchAll(PDO::FETCH_COLUMN, 0);
+        try {
+            $statement = $this->_db->prepare(
+                'SELECT "dataid" FROM "' . $this->_sanitizeIdentifier('paste') .
+                '" WHERE "expiredate" < ? AND "expiredate" != ? ' .
+                ($this->_type === 'oci' ? 'FETCH NEXT ? ROWS ONLY' : 'LIMIT ?')
+            );
+            $statement->execute(array(time(), 0, $batchsize));
+            return $statement->fetchAll(PDO::FETCH_COLUMN, 0);
+        } catch (PDOException $e) {
+            error_log('Error while attempting to find expired pastes in the database: ' . $e->getMessage());
+            return array();
+        }
     }
 
     /**
@@ -552,6 +574,7 @@ class Database extends AbstractData
                 '" WHERE "id" = ?', array($key), true
             );
         } catch (PDOException $e) {
+            error_log('Error while attempting to fetch configuration key "' . $key . '" in the database: ' . $e->getMessage());
             return '';
         }
         return $row ? $row['value'] : '';

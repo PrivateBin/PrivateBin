@@ -40,7 +40,7 @@ class FormatV2
         }
 
         // Make sure no additionnal keys were added.
-        if (count(array_keys($message)) != count($required_keys)) {
+        if (count(array_keys($message)) !== count($required_keys)) {
             return false;
         }
 
