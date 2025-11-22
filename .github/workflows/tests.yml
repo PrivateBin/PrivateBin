@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v5
+      uses: actions/checkout@v6
     - name: Validate composer.json and composer.lock
       run: composer validate
     - name: Install dependencies
@@ -41,7 +41,7 @@ jobs:
 
     # let's get started!
     - name: Checkout
-      uses: actions/checkout@v5
+      uses: actions/checkout@v6
 
     # cache PHP extensions
     - name: Setup cache environment
@@ -129,7 +129,7 @@ jobs:
 
     # let's get started!
     - name: Checkout
-      uses: actions/checkout@v5
+      uses: actions/checkout@v6
 
     # cache PHP extensions
     - name: Setup cache environment
@@ -213,7 +213,7 @@ jobs:
     steps:
 
     - name: Checkout
-      uses: actions/checkout@v5
+      uses: actions/checkout@v6
 
     - name: Setup Node
       uses: actions/setup-node@v6
