@@ -371,7 +371,7 @@ class I18n
             case 'sl':
                 return $n % 100 === 1 ? 1 : ($n % 100 === 2 ? 2 : ($n % 100 === 3 || $n % 100 === 4 ? 3 : 0));
             default:
-                // bg, ca, de, el, en, es, et, fi, hu, it, nl, no, pt
+                // bg, ca, de, el, en, es, et, fi, hu, it, nl, no, pt, sv
                 return $n !== 1 ? 1 : 0;
         }
     }

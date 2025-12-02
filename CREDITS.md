@@ -69,3 +69,4 @@
 * Nicolas Le Gall - Japanese
 * lazerns - Arabic
 * Edward205 - Romanian
+* babiloof - Swedish
