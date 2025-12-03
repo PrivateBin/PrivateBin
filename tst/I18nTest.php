@@ -38,6 +38,7 @@ class I18nTest extends TestCase
     public function tearDown(): void
     {
         unset($_COOKIE['lang'], $_SERVER['HTTP_ACCEPT_LANGUAGE']);
+        I18n::loadTranslations();
     }
 
     public function testTranslationFallback()
@@ -183,7 +184,19 @@ class I18nTest extends TestCase
         $result = htmlspecialchars($input, ENT_QUOTES | ENT_HTML5 | ENT_DISALLOWED, 'UTF-8', false);
         $this->assertEquals($result, I18n::encode($input), 'encodes HTML entities');
         $this->assertEquals('<a>some ' . $result . ' + 1</a>', I18n::_('<a>some %s + %d</a>', $input, 1), 'encodes parameters in translations');
-        $this->assertEquals($result . $result, I18n::_($input . '%s', $input), 'encodes message ID as well, when no link');
+        // Message ID should NOT be encoded (it comes from trusted source), only the parameter should be
+        $this->assertEquals($input . $result, I18n::_($input . '%s', $input), 'encodes only parameters, not message ID');
+    }
+
+    public function testApostropheEncodngInMessage()
+    {
+        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'fr';
+        I18n::loadTranslations();
+        // For example, the French translation should not have the apostrophe encoded
+        // See https://github.com/PrivateBin/PrivateBin/issues/1712
+        $message = I18n::_('Document does not exist, has expired or has been deleted.');
+        $this->assertFalse(strpos($message, '&apos;') !== false, 'French apostrophe should not be encoded in translation message');
+        $this->assertTrue(strpos($message, "n'existe") !== false, 'French apostrophe should be present as literal character');
     }
 
     public function testFallbackAlwaysPresent()
