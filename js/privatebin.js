@@ -3399,19 +3399,21 @@ jQuery.PrivateBin = (function($) {
          * @function
          */
         function addClipboardEventHandler() {
-            $('#message').on('paste', function (event) {
+            document.addEventListener('paste', (event) => {
                 const items = (event.clipboardData || event.originalEvent.clipboardData).items;
                 const files = [...items]
                                     .filter(item => item.kind === 'file')
                                     .map(item => item.getAsFile());
 
-                if (TopNav.isAttachmentReadonly()) {
+                if (TopNav.isAttachmentReadonly() && files.length) {
                     event.stopPropagation();
                     event.preventDefault();
                     return false;
                 }
 
-                readFileData(files);
+                if (files.length) {
+                    readFileData(files);
+                }
             });
         }
 
