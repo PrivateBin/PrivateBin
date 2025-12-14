@@ -4633,7 +4633,7 @@ jQuery.PrivateBin = (function($) {
         me.setFormat = function(format)
         {
             if (Helper.isBootstrap5()) {
-                $formatter.find(`select`).val(format);
+                $formatter.find('select').val(format);
             } else {
                 $formatter.parent().find(`a[data-format="${format}"]`).click();
             }
