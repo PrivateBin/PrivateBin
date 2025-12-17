@@ -4632,7 +4632,11 @@ jQuery.PrivateBin = (function($) {
          */
         me.setFormat = function(format)
         {
-            $formatter.parent().find(`a[data-format="${format}"]`).click();
+            if (Helper.isBootstrap5()) {
+                $formatter.find('select').val(format);
+            } else {
+                $formatter.parent().find(`a[data-format="${format}"]`).click();
+            }
         }
 
         /**
@@ -5791,6 +5795,10 @@ jQuery.PrivateBin = (function($) {
             Editor.focusInput();
             AttachmentViewer.removeAttachment();
             TopNav.resetInput();
+
+            // reset format
+            PasteViewer.setFormat('plaintext');
+            TopNav.setFormat('plaintext');
 
             TopNav.showCreateButtons();
 
