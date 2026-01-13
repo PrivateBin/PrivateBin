@@ -1680,6 +1680,8 @@ jQuery.PrivateBin = (function($) {
             if (!support.supported) {
                 console.warn('[PQC] Not supported, falling back to v2. Missing:', support.missing);
                 pqcSupported = false;
+                // Show browser fallback notice to user
+                UxEnhancements.showBrowserFallbackNotice(support);
                 return;
             }
             console.info('[PQC] Browser support confirmed');
@@ -2341,6 +2343,156 @@ jQuery.PrivateBin = (function($) {
                 'glyphicon-warning-sign', // warning icon
                 'glyphicon-alert' // error icon
             ];
+        };
+
+        return me;
+    })();
+
+    /**
+     * handles PQC UX enhancements
+     *
+     * @name   UxEnhancements
+     * @class
+     */
+    const UxEnhancements = (function () {
+        const me = {};
+
+        const STORAGE_KEY_V3_WARNING = 'pqc_v3_warning_shown';
+        const STORAGE_KEY_FALLBACK_SHOWN = 'pqc_fallback_notice_shown';
+
+        /**
+         * Show one-time warning when v3 paste is created
+         *
+         * @name   UxEnhancements.showV3SharingWarning
+         * @function
+         */
+        me.showV3SharingWarning = function()
+        {
+            // Check if warning already shown in this browser
+            try {
+                if (localStorage && localStorage.getItem(STORAGE_KEY_V3_WARNING)) {
+                    return; // Already shown
+                }
+            } catch (e) {
+                // localStorage not available, show warning anyway
+            }
+
+            // Show informative alert about quantum-protected URLs
+            Alert.showStatus([
+                'Quantum-Protected Paste Created: This link contains a post-quantum encryption key. ' +
+                'Share it only via ephemeral channels (Signal, in-person, verbal). ' +
+                'Avoid email, ticketing systems, or chat logs with long retention.'
+            ], 'glyphicon-info-sign');
+
+            // Mark as shown
+            try {
+                if (localStorage) {
+                    localStorage.setItem(STORAGE_KEY_V3_WARNING, 'true');
+                }
+            } catch (e) {
+                // Ignore localStorage errors
+            }
+
+            // Auto-hide after 10 seconds
+            setTimeout(function() {
+                Alert.hideMessages();
+            }, 10000);
+        };
+
+        /**
+         * Show quantum badge indicator for v3 pastes
+         *
+         * @name   UxEnhancements.showQuantumBadge
+         * @function
+         */
+        me.showQuantumBadge = function()
+        {
+            // Find the paste success/status area
+            const $pasteSuccess = $('#pastesuccess');
+            if ($pasteSuccess.length === 0) {
+                return;
+            }
+
+            // Check if badge already exists
+            if ($pasteSuccess.find('.pqc-badge').length > 0) {
+                return;
+            }
+
+            // Create quantum badge
+            const $badge = $('<span>')
+                .addClass('pqc-badge')
+                .attr('title', 'Post-Quantum Protected')
+                .css({
+                    'margin-left': '8px',
+                    'padding': '2px 8px',
+                    'background-color': '#5bc0de',
+                    'color': '#fff',
+                    'border-radius': '10px',
+                    'font-size': '12px',
+                    'font-weight': 'bold',
+                    'display': 'inline-block',
+                    'vertical-align': 'middle'
+                })
+                .text('\u269b\ufe0f PQC'); // ⚛️ PQC
+
+            // Insert badge next to paste URL
+            $pasteSuccess.find('#pasteurl').after($badge);
+        };
+
+        /**
+         * Show browser fallback notice when PQC unavailable
+         *
+         * @name   UxEnhancements.showBrowserFallbackNotice
+         * @function
+         * @param {object} support - browser support check result
+         */
+        me.showBrowserFallbackNotice = function(support)
+        {
+            // Check if notice already shown in this session
+            try {
+                if (sessionStorage && sessionStorage.getItem(STORAGE_KEY_FALLBACK_SHOWN)) {
+                    return; // Already shown in this session
+                }
+            } catch (e) {
+                // sessionStorage not available
+            }
+
+            // Build message with missing features
+            let message = 'Your browser does not support post-quantum cryptography. ';
+
+            if (support && support.missing && support.missing.length > 0) {
+                message += 'Missing features: ' + support.missing.join(', ') + '. ';
+            }
+
+            message += 'This paste will use classical encryption (v2 format). ' +
+                      'For quantum protection, use Chrome 90+, Firefox 88+, or Safari 15+.';
+
+            Alert.showWarning(message, 'glyphicon-warning-sign');
+
+            // Mark as shown for this session
+            try {
+                if (sessionStorage) {
+                    sessionStorage.setItem(STORAGE_KEY_FALLBACK_SHOWN, 'true');
+                }
+            } catch (e) {
+                // Ignore sessionStorage errors
+            }
+
+            // Auto-hide after 8 seconds
+            setTimeout(function() {
+                Alert.hideMessages();
+            }, 8000);
+        };
+
+        /**
+         * Initialize UX enhancements
+         *
+         * @name   UxEnhancements.init
+         * @function
+         */
+        me.init = function()
+        {
+            // Initialization placeholder for future features
         };
 
         return me;
@@ -5279,6 +5431,7 @@ jQuery.PrivateBin = (function($) {
                     data['ct'] = result.encrypted.ct;
                     data['adata'] = result.encrypted.adata;
                     data['kem'] = result.encrypted.kem; // KEM metadata
+                    data['pasteVersion'] = 3; // Track version for UX enhancements
 
                     // Store urlKey for later URL construction
                     symmetricKey = result.urlKey;
@@ -5302,6 +5455,7 @@ jQuery.PrivateBin = (function($) {
                 }
                 let cipherResult = await CryptTool.cipher(symmetricKey, password, JSON.stringify(cipherMessage), data['adata']);
                 data['v'] = 2;
+                data['pasteVersion'] = 2; // Track version for UX enhancements
                 data['ct'] = cipherResult[0];
                 data['adata'] = cipherResult[1];
             }
@@ -5384,6 +5538,12 @@ jQuery.PrivateBin = (function($) {
                   url       = baseUri + data.id + (TopNav.getBurnAfterReading() ? loadConfirmPrefix : '#') + CryptTool.base58encode(data.encryptionKey),
                   deleteUrl = baseUri + 'pasteid=' + data.id + '&deletetoken=' + data.deletetoken;
             PasteStatus.createPasteNotification(url, deleteUrl);
+
+            // Show UX enhancements for v3 pastes
+            if (data.pasteVersion === 3) {
+                UxEnhancements.showQuantumBadge();
+                UxEnhancements.showV3SharingWarning();
+            }
 
             // show new URL in browser bar
             history.pushState({type: 'newpaste'}, document.title, url);

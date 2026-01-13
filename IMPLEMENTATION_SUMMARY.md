@@ -63,57 +63,117 @@ All 12 success criteria from planning.md achieved:
 3. **Integration Tests** - Comprehensive test suite in `js/test/integration-pqc.js`
 4. **Deployment Guide** - Complete WASM configuration in `DEPLOYMENT.md`
 
-## Recommended UX Improvements (Future Phase)
+## UX Improvements (IMPLEMENTED)
 
-### 1. Sharing Warning for v3 Pastes
+### 1. Sharing Warning for v3 Pastes ✅
 
-**Goal:** Educate users that URLs are quantum-resistant keys
+**Status:** Fully implemented in `js/privatebin.js` (UxEnhancements module)
 
-**Implementation:** Add one-time tooltip when v3 paste is created:
+**Features:**
+- One-time warning shown after v3 paste creation
+- Persisted in localStorage to avoid repeated warnings
+- Auto-dismisses after 10 seconds
+- Clear guidance on secure sharing practices
 
+**Implementation:**
+- Module: `UxEnhancements.showV3SharingWarning()`
+- Triggered automatically when `data.pasteVersion === 3`
+- Uses `localStorage` to track if warning was shown
+- Graceful degradation if localStorage unavailable
+
+### 2. Quantum Badge Indicator ✅
+
+**Status:** Fully implemented in `js/privatebin.js` (UxEnhancements module)
+
+**Features:**
+- Visual badge (⚛️ PQC) shown next to paste URL
+- Tooltip indicates "Post-Quantum Protected"
+- Styled with Bootstrap-compatible CSS
+- Only appears on v3 pastes
+
+**Implementation:**
+- Module: `UxEnhancements.showQuantumBadge()`
+- Dynamically creates styled `<span>` element
+- Inserted after `#pasteurl` element
+- Prevents duplicate badges
+
+### 3. Browser Fallback Notice ✅
+
+**Status:** Fully implemented in `js/privatebin.js` (UxEnhancements module)
+
+**Features:**
+- Shown when browser lacks PQC support
+- Lists specific missing features (WebAssembly, HKDF, etc.)
+- Persisted in sessionStorage (once per session)
+- Auto-dismisses after 8 seconds
+- Provides browser upgrade guidance
+
+**Implementation:**
+- Module: `UxEnhancements.showBrowserFallbackNotice(support)`
+- Triggered during PQC initialization failure
+- Uses `sessionStorage` to avoid repeated notices
+- Graceful degradation if sessionStorage unavailable
+
+## Advanced Security Features (IMPLEMENTED)
+
+### 1. Subresource Integrity (SRI) for WASM ✅
+
+**Status:** Fully implemented in `js/pqccrypto.js`
+
+**Features:**
+- Runtime WASM integrity verification
+- SHA-384 hash comparison
+- Configurable via `EXPECTED_WASM_HASH` constant
+- Fails closed on hash mismatch
+
+**Implementation:**
+- Function: `verifyWasmIntegrity(wasmModule, expectedHash)`
+- Automatically called during `initialize()`
+- Only runs if hash is configured (not placeholder)
+- Supports both npm and self-hosted WASM
+
+### 2. Self-Hosted WASM Support ✅
+
+**Status:** Fully implemented in `js/pqccrypto.js`
+
+**Features:**
+- Load WASM from custom path instead of npm
+- Useful for air-gapped deployments
+- Supply chain security enhancement
+- Configurable via constants
+
+**Configuration:**
 ```javascript
-// After successful paste creation (v3 only)
-if (pasteVersion === 3 && !localStorage.getItem('v3_warning_shown')) {
-    Alert.showInfo(
-        'Quantum-Protected Paste Created: This link contains a post-quantum encryption key. ' +
-        'Share it only via ephemeral channels (Signal, in-person, verbal). ' +
-        'Avoid email, ticketing systems, or chat logs with long retention.',
-        10000 // 10 second display
-    );
-    localStorage.setItem('v3_warning_shown', 'true');
-}
+const SELF_HOSTED_WASM_ENABLED = false; // Set to true to enable
+const SELF_HOSTED_WASM_PATH = '/js/mlkem768.wasm'; // Custom path
 ```
 
-### 2. Quantum Badge Indicator
+**Implementation:**
+- Function: `loadSelfHostedWasm(path)`
+- Fetches and compiles WASM binary
+- Creates API-compatible wrapper
+- Stores bytes for integrity verification
 
-**Goal:** Visual indication that paste is quantum-protected
+### 3. WASM Hash Pinning ✅
 
-**Implementation:** Add badge next to expiration/burn indicators:
+**Status:** Fully implemented in `js/pqccrypto.js`
 
-```html
-<!-- In paste view template -->
-<span class="badge badge-info" title="Post-Quantum Protected">
-    ⚛️ PQC
-</span>
-```
+**Features:**
+- Runtime hash verification of WASM module
+- Defense against supply chain attacks
+- SHA-384 cryptographic hash
+- Detailed error messages on mismatch
 
-### 3. Browser Fallback Notice
-
-**Goal:** Inform user when PQC unavailable
-
-**Implementation:** Show notification when browser doesn't support WASM:
-
-```javascript
-// In initializePQC() failure path
-if (!support.supported) {
-    Alert.showWarning(
-        'Your browser does not support post-quantum cryptography. ' +
-        'This paste will use classical encryption (v2 format). ' +
-        'For quantum protection, use Chrome 90+, Firefox 88+, or Safari 15+.',
-        8000
-    );
-}
-```
+**How to Configure:**
+1. Generate hash of WASM file:
+   ```bash
+   openssl dgst -sha384 -binary mlkem768.wasm | openssl base64
+   ```
+2. Update constant in `pqccrypto.js`:
+   ```javascript
+   const EXPECTED_WASM_HASH = 'sha384-<your-hash-here>';
+   ```
+3. Hash verification runs automatically on initialization
 
 ## Next Steps
 

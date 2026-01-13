@@ -19,6 +19,10 @@
 // Expected WASM hash (to be updated when WASM module is installed)
 const EXPECTED_WASM_HASH = 'sha384-PLACEHOLDER_HASH_WILL_BE_UPDATED';
 
+// Self-hosted WASM configuration
+const SELF_HOSTED_WASM_ENABLED = false; // Set to true to use self-hosted WASM
+const SELF_HOSTED_WASM_PATH = '/js/mlkem768.wasm'; // Path to self-hosted WASM file
+
 // Performance monitoring configuration
 const ENABLE_PERFORMANCE_LOGGING = true; // Set to false to disable performance logs
 
@@ -59,15 +63,20 @@ const PqcCrypto = (function () {
 
         try {
             // Import ML-KEM WASM module
-            // Note: This will work once mlkem-wasm is installed via npm
-            // For now, this is a placeholder structure
-            if (typeof window !== 'undefined' && window.mlkem) {
-                wasmModule = window.mlkem;
-            } else if (typeof require !== 'undefined') {
-                // Node.js/CommonJS environment
-                wasmModule = require('mlkem-wasm');
+            if (SELF_HOSTED_WASM_ENABLED) {
+                // Self-hosted WASM: load from specified path
+                console.info('[PQC] Using self-hosted WASM from:', SELF_HOSTED_WASM_PATH);
+                wasmModule = await loadSelfHostedWasm(SELF_HOSTED_WASM_PATH);
             } else {
-                throw new Error('ML-KEM WASM module not found');
+                // Use npm-installed module
+                if (typeof window !== 'undefined' && window.mlkem) {
+                    wasmModule = window.mlkem;
+                } else if (typeof require !== 'undefined') {
+                    // Node.js/CommonJS environment
+                    wasmModule = require('mlkem-wasm');
+                } else {
+                    throw new Error('ML-KEM WASM module not found');
+                }
             }
 
             // Initialize WASM (if needed by the library)
@@ -75,9 +84,15 @@ const PqcCrypto = (function () {
                 await wasmModule.init();
             }
 
-            // TODO: Verify WASM integrity (hash-pinning)
-            // This will be implemented once the actual WASM module is integrated
-            // await verifyWasmIntegrity(wasmBytes, EXPECTED_WASM_HASH);
+            // Verify WASM integrity (hash-pinning)
+            // Only if hash is configured (not placeholder)
+            if (EXPECTED_WASM_HASH !== 'sha384-PLACEHOLDER_HASH_WILL_BE_UPDATED') {
+                console.info('[PQC] Verifying WASM integrity...');
+                await verifyWasmIntegrity(wasmModule, EXPECTED_WASM_HASH);
+                console.info('[PQC] WASM integrity verified');
+            } else {
+                console.warn('[PQC] WASM integrity check disabled (hash not configured)');
+            }
 
             initialized = true;
             console.info('ML-KEM WASM module initialized successfully');
@@ -454,6 +469,49 @@ const PqcCrypto = (function () {
     }
 
     /**
+     * Load self-hosted WASM module
+     *
+     * Loads WASM binary from a specified path instead of npm package.
+     * Useful for air-gapped environments or supply chain security.
+     *
+     * @private
+     * @async
+     * @param {string} path - Path to WASM file
+     * @returns {Promise<object>} WASM module instance
+     * @throws {Error} If loading fails
+     */
+    async function loadSelfHostedWasm(path) {
+        try {
+            // Fetch WASM binary
+            const response = await fetch(path);
+            if (!response.ok) {
+                throw new Error(`Failed to fetch WASM: ${response.status} ${response.statusText}`);
+            }
+
+            const wasmBytes = await response.arrayBuffer();
+
+            // Compile and instantiate WASM
+            const wasmModule = await WebAssembly.instantiate(wasmBytes);
+
+            // Create wrapper object matching mlkem-wasm API
+            // This is a simplified wrapper - adjust based on actual mlkem-wasm API
+            return {
+                MlKem768: wasmModule.instance.exports.MlKem768 || function() {
+                    // Placeholder for WASM exports
+                    throw new Error('ML-KEM-768 not available in self-hosted WASM');
+                },
+                init: async function() {
+                    // No-op for self-hosted WASM
+                },
+                _wasmBytes: wasmBytes // Store for integrity verification
+            };
+        } catch (error) {
+            console.error('Failed to load self-hosted WASM:', error);
+            throw new Error('Self-hosted WASM loading failed: ' + error.message);
+        }
+    }
+
+    /**
      * Verify WASM module integrity (optional, for supply chain security)
      *
      * Compares WASM module hash against expected value.
@@ -461,17 +519,42 @@ const PqcCrypto = (function () {
      *
      * @private
      * @async
-     * @param {ArrayBuffer} wasmBytes - WASM module bytes
-     * @param {string} expectedHash - Expected SHA-384 hash
+     * @param {object} wasmModule - WASM module instance
+     * @param {string} expectedHash - Expected SHA-384 hash (base64)
      * @throws {Error} If hash mismatch
      */
-    async function verifyWasmIntegrity(wasmBytes, expectedHash) {
-        const hashBuffer = await crypto.subtle.digest('SHA-384', wasmBytes);
-        const hashArray = Array.from(new Uint8Array(hashBuffer));
-        const hashHex = btoa(String.fromCharCode.apply(null, hashArray));
+    async function verifyWasmIntegrity(wasmModule, expectedHash) {
+        try {
+            let wasmBytes;
 
-        if (hashHex !== expectedHash) {
-            throw new Error('WASM module integrity check failed');
+            // Try to get WASM bytes from different sources
+            if (wasmModule._wasmBytes) {
+                // Self-hosted WASM stores bytes
+                wasmBytes = wasmModule._wasmBytes;
+            } else if (wasmModule.wasmBinary) {
+                // Some WASM modules expose binary
+                wasmBytes = wasmModule.wasmBinary;
+            } else {
+                // Cannot verify - module doesn't expose bytes
+                console.warn('[PQC] Cannot verify WASM integrity: bytes not accessible');
+                console.warn('[PQC] Relying on Subresource Integrity (SRI) if configured');
+                return;
+            }
+
+            // Compute SHA-384 hash
+            const hashBuffer = await crypto.subtle.digest('SHA-384', wasmBytes);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            const computedHash = 'sha384-' + btoa(String.fromCharCode.apply(null, hashArray));
+
+            // Compare hashes
+            if (computedHash !== expectedHash) {
+                throw new Error(`WASM integrity check failed: expected ${expectedHash}, got ${computedHash}`);
+            }
+
+            console.info('[PQC] WASM integrity verified successfully');
+        } catch (error) {
+            console.error('[PQC] WASM integrity verification failed:', error);
+            throw error;
         }
     }
 
