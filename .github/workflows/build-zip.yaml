@@ -52,32 +52,31 @@ jobs:
       - name: Install npm dependencies
         working-directory: js
         run: |
-          echo "Installing npm dependencies (including mlkem-wasm)..."
+          echo "Installing npm dependencies (including mlkem)..."
           npm ci --production
           echo "Installed packages:"
           npm list --depth=0
 
-      - name: Verify WASM files
+      - name: Verify ML-KEM package
         working-directory: js
         run: |
-          echo "Verifying WASM module installation..."
-          if [ -f "node_modules/mlkem-wasm/mlkem768.wasm" ]; then
-            echo "✓ ML-KEM WASM module found"
-            ls -lh node_modules/mlkem-wasm/mlkem768.wasm
+          echo "Verifying ML-KEM package installation..."
+          if [ -d "node_modules/mlkem" ]; then
+            echo "✓ ML-KEM package found"
+            ls -lh node_modules/mlkem/
           else
-            echo "✗ ML-KEM WASM module NOT found"
+            echo "✗ ML-KEM package NOT found"
             exit 1
           fi
 
-      - name: Generate WASM hash for SRI
-        id: wasm_hash
+      - name: Generate package info
+        id: mlkem_info
         working-directory: js
         run: |
-          if [ -f "node_modules/mlkem-wasm/mlkem768.wasm" ]; then
-            HASH=$(openssl dgst -sha384 -binary node_modules/mlkem-wasm/mlkem768.wasm | openssl base64 -A)
-            echo "wasm_hash=sha384-$HASH" >> $GITHUB_OUTPUT
-            echo "WASM SHA-384 Hash: sha384-$HASH"
-            echo "Add this to js/pqccrypto.js EXPECTED_WASM_HASH constant"
+          if [ -d "node_modules/mlkem" ]; then
+            MLKEM_VERSION=$(node -p "require('./node_modules/mlkem/package.json').version")
+            echo "mlkem_version=$MLKEM_VERSION" >> $GITHUB_OUTPUT
+            echo "ML-KEM Package Version: $MLKEM_VERSION"
           fi
 
       - name: Create installation script
@@ -176,27 +175,16 @@ jobs:
             echo -e "${GREEN}✓ Ownership set${NC}"
           fi
 
-          # Verify WASM installation
+          # Verify ML-KEM package installation
           echo ""
-          echo "Verifying PQC WASM module..."
-          if [ -f "$INSTALL_DIR/js/node_modules/mlkem-wasm/mlkem768.wasm" ]; then
-            echo -e "${GREEN}✓ ML-KEM WASM module installed${NC}"
-            WASM_SIZE=$(du -h "$INSTALL_DIR/js/node_modules/mlkem-wasm/mlkem768.wasm" | cut -f1)
-            echo "  Size: $WASM_SIZE"
+          echo "Verifying PQC ML-KEM package..."
+          if [ -d "$INSTALL_DIR/js/node_modules/mlkem" ]; then
+            echo -e "${GREEN}✓ ML-KEM package installed${NC}"
+            MLKEM_SIZE=$(du -sh "$INSTALL_DIR/js/node_modules/mlkem" | cut -f1)
+            echo "  Size: $MLKEM_SIZE"
           else
-            echo -e "${RED}✗ ML-KEM WASM module NOT found${NC}"
+            echo -e "${RED}✗ ML-KEM package NOT found${NC}"
             echo "  This is required for post-quantum cryptography!"
-          fi
-
-          # Display WASM hash
-          if [ -f "$INSTALL_DIR/js/node_modules/mlkem-wasm/mlkem768.wasm" ]; then
-            echo ""
-            echo "WASM SHA-384 Hash (for SRI configuration):"
-            WASM_HASH=$(openssl dgst -sha384 -binary "$INSTALL_DIR/js/node_modules/mlkem-wasm/mlkem768.wasm" | openssl base64 -A 2>/dev/null || echo "openssl not available")
-            echo "sha384-$WASM_HASH"
-            echo ""
-            echo "Add this to js/pqccrypto.js:"
-            echo "  const EXPECTED_WASM_HASH = 'sha384-$WASM_HASH';"
           fi
 
           echo ""
@@ -207,7 +195,7 @@ jobs:
           echo "Next steps:"
           echo "1. Configure your web server (see DEPLOYMENT.md)"
           echo "2. Configure cfg/conf.php"
-          echo "3. Set up WASM MIME type (see DEPLOYMENT.md)"
+          echo "3. Test PQC functionality (see DEPLOYMENT.md)"
           echo "4. Run Day Zero checklist (see DEPLOYMENT.md)"
           echo ""
           echo "Documentation location: $INSTALL_DIR/doc/"
@@ -250,7 +238,7 @@ jobs:
           echo "${{ steps.version.outputs.version }}" > deployment-package/VERSION
           echo "Built on: $(date -u +"%Y-%m-%d %H:%M:%S UTC")" >> deployment-package/VERSION
           echo "Commit: ${{ github.sha }}" >> deployment-package/VERSION
-          echo "WASM Hash: ${{ steps.wasm_hash.outputs.wasm_hash }}" >> deployment-package/VERSION
+          echo "ML-KEM Version: ${{ steps.mlkem_info.outputs.mlkem_version }}" >> deployment-package/VERSION
 
       - name: Create README for package
         run: |
@@ -282,7 +270,7 @@ jobs:
           ===============
 
           - Complete PrivateBin-PQC application
-          - ML-KEM (Kyber-768) WASM module
+          - ML-KEM (Kyber-768) JavaScript implementation
           - All npm dependencies pre-installed
           - Installation script (install.sh)
           - Complete documentation:
@@ -301,7 +289,7 @@ jobs:
 
           Client (for PQC support):
           - Chrome 90+, Firefox 88+, Safari 15+, or Edge 90+
-          - WebAssembly support
+          - JavaScript enabled
           - Web Crypto API with HKDF support
 
           Note: Older browsers automatically fall back to v2 (classical) encryption.
@@ -332,16 +320,13 @@ jobs:
 
           Before going live, verify these critical items:
 
-          ☑ 1. CSP Header (wasm-unsafe-eval)
-               curl -I https://your-site.com | grep -i content-security-policy
+          ☑ 1. ML-KEM Package Installed
+               Check that js/node_modules/mlkem exists
 
-          ☑ 2. WASM MIME Type (application/wasm)
-               curl -I https://your-site.com/js/node_modules/mlkem-wasm/mlkem768.wasm
-
-          ☑ 3. Size Limits (10M+ for PHP, 2MB+ buffer in PrivateBin)
+          ☑ 2. Size Limits (10M+ for PHP, 2MB+ buffer in PrivateBin)
                php -i | grep post_max_size
 
-          ☑ 4. Log Scrubbing (URL fragments not logged)
+          ☑ 3. Log Scrubbing (URL fragments not logged)
                tail -f /var/log/nginx/access.log
 
           See DEPLOYMENT.md for detailed instructions.
@@ -352,11 +337,7 @@ jobs:
           1. Basic Configuration:
              Edit cfg/conf.php and adjust settings
 
-          2. WASM Hash (Optional but Recommended):
-             See VERSION file for WASM hash
-             Update js/pqccrypto.js with the hash
-
-          3. Web Server:
+          2. Web Server:
              See DEPLOYMENT.md for Nginx/Apache/Caddy configuration examples
 
           TESTING
@@ -443,10 +424,8 @@ jobs:
             - [SECURITY.md](SECURITY.md) - Security model
             - [ADVANCED_FEATURES.md](ADVANCED_FEATURES.md) - Advanced features guide
 
-            ### WASM Integrity
-            WASM SHA-384 Hash: `${{ steps.wasm_hash.outputs.wasm_hash }}`
-
-            Add this to `js/pqccrypto.js` for integrity verification.
+            ### ML-KEM Package
+            Version: `${{ steps.mlkem_info.outputs.mlkem_version }}`
 
             ### System Requirements
             - **Server:** PHP 7.4+, HTTPS enabled
@@ -468,11 +447,11 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Artifact:** \`privatebin-pqc-${{ steps.version.outputs.version }}.zip\`" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**WASM Hash:** \`${{ steps.wasm_hash.outputs.wasm_hash }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "**ML-KEM Version:** \`${{ steps.mlkem_info.outputs.mlkem_version }}\`" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### Contents" >> $GITHUB_STEP_SUMMARY
           echo "- ✅ Complete PrivateBin-PQC application" >> $GITHUB_STEP_SUMMARY
-          echo "- ✅ ML-KEM WASM module (Kyber-768)" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ ML-KEM JavaScript implementation (Kyber-768)" >> $GITHUB_STEP_SUMMARY
           echo "- ✅ All npm dependencies" >> $GITHUB_STEP_SUMMARY
           echo "- ✅ Installation script" >> $GITHUB_STEP_SUMMARY
           echo "- ✅ Complete documentation" >> $GITHUB_STEP_SUMMARY

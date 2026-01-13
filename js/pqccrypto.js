@@ -73,7 +73,7 @@ const PqcCrypto = (function () {
                     wasmModule = window.mlkem;
                 } else if (typeof require !== 'undefined') {
                     // Node.js/CommonJS environment
-                    wasmModule = require('mlkem-wasm');
+                    wasmModule = require('mlkem');
                 } else {
                     throw new Error('ML-KEM WASM module not found');
                 }
