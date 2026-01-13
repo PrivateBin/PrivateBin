@@ -32,7 +32,7 @@ class Controller
      *
      * @const string
      */
-    const VERSION = '2.0.3';
+    const VERSION = '3.0.0';
 
     /**
      * minimal required PHP version
@@ -40,6 +40,27 @@ class Controller
      * @const string
      */
     const MIN_PHP_VERSION = '7.4.0';
+
+    /**
+     * Minimum supported paste version (for future deprecation)
+     *
+     * This constant acts as a "kill switch" for deprecating old paste formats.
+     * Current: 1 (supports v1, v2, v3)
+     * Future: Set to 2 to disable v1 pastes, or 3 to disable v1+v2 pastes
+     *
+     * @const int
+     */
+    const MIN_SUPPORTED_VERSION = 1;
+
+    /**
+     * Maximum supported paste version (for forward compatibility)
+     *
+     * Rejects pastes with versions higher than this.
+     * Update when new format versions are added.
+     *
+     * @const int
+     */
+    const MAX_SUPPORTED_VERSION = 3;
 
     /**
      * show the same error message if the document expired or does not exist
@@ -285,8 +306,34 @@ class Controller
             !empty($data['pasteid']) &&
             array_key_exists('parentid', $data) &&
             !empty($data['parentid']);
-        if (!FormatV2::isValid($data, $isComment)) {
-            $this->_json_error(I18n::_('Invalid data.'));
+
+        // Determine version and validate accordingly
+        $version = isset($data['v']) ? (int)$data['v'] : 2;
+
+        // Check version bounds (deprecation support)
+        if ($version < self::MIN_SUPPORTED_VERSION) {
+            $this->_json_error(I18n::_('This paste format is no longer supported. Please use a newer version of PrivateBin.'));
+            return;
+        }
+        if ($version > self::MAX_SUPPORTED_VERSION) {
+            $this->_json_error(I18n::_('This paste requires a newer version of PrivateBin. Please upgrade.'));
+            return;
+        }
+
+        // Validate based on version
+        if ($version >= 3) {
+            if (!FormatV3::isValid($data, $isComment)) {
+                $this->_json_error(I18n::_('Invalid data.'));
+                return;
+            }
+        } elseif ($version == 2) {
+            if (!FormatV2::isValid($data, $isComment)) {
+                $this->_json_error(I18n::_('Invalid data.'));
+                return;
+            }
+        } else {
+            // This should not be reachable due to MIN_SUPPORTED_VERSION check above
+            $this->_json_error(I18n::_('Unsupported paste version.'));
             return;
         }
         $sizelimit = $this->_conf->getKey('sizelimit');

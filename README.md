@@ -1,18 +1,123 @@
 # [![PrivateBin](https://cdn.rawgit.com/PrivateBin/assets/master/images/preview/logoSmall.png)](https://privatebin.info/)
 
-*Current version: 2.0.3*
+*Current version: 3.0.0 (PQC-enabled fork)*
 
-**PrivateBin** is a minimalist, open source online
+**PrivateBin-PQC** is a minimalist, open source online
 [pastebin](https://en.wikipedia.org/wiki/Pastebin)
 where the server has zero knowledge of stored data.
 
 Data is encrypted and decrypted in the browser using 256bit AES in
-[Galois Counter mode](https://en.wikipedia.org/wiki/Galois/Counter_Mode).
+[Galois Counter mode](https://en.wikipedia.org/wiki/Galois/Counter_Mode),
+with optional **post-quantum cryptography** (ML-KEM/Kyber-768) for
+protection against harvest-now, decrypt-later attacks.
 
-This is a fork of ZeroBin, originally developed by
-[Sébastien Sauvage](https://github.com/sebsauvage/ZeroBin). PrivateBin was
-refactored to allow easier and cleaner extensions and has many additional
-features.
+This is a fork of [PrivateBin](https://privatebin.info/), which itself
+is a fork of ZeroBin, originally developed by
+[Sébastien Sauvage](https://github.com/sebsauvage/ZeroBin).
+
+## Post-Quantum Cryptography (PQC)
+
+This fork includes **experimental post-quantum cryptography** protection against
+harvest-now, decrypt-later attacks using ML-KEM (Kyber-768).
+
+### What Changed
+
+- **New pastes use hybrid encryption** (classical + post-quantum)
+- **URLs remain short** (~43 characters, same format as v2)
+- **Legacy pastes continue to work unchanged** (full backward compatibility)
+- **Graceful fallback** for older browsers (automatic v2 fallback)
+
+### How It Works
+
+1. **Sender creates a paste:** Browser generates ephemeral Kyber-768 keypair, encapsulates shared secret
+2. **Hybrid key derivation:** Content key = HKDF-SHA-256(shared_secret || urlKey)
+3. **Defense-in-depth:** Attacker needs to break BOTH Kyber AND obtain URL to decrypt
+4. **Zero-knowledge preserved:** Server sees encrypted data only, no keys
+
+### Browser Requirements
+
+**Modern browsers with PQC support (v3 pastes):**
+- Chrome 90+
+- Firefox 88+
+- Safari 15+
+- Edge 90+
+
+**Older browsers:**
+- Automatically fall back to classical encryption (v2 pastes)
+- No user intervention needed
+
+**Required browser APIs:**
+- Web Crypto API (crypto.subtle)
+- WebAssembly
+- Secure Random (crypto.getRandomValues)
+- HKDF support
+
+### Security Scope
+
+**✅ Protects Against:**
+- Future quantum cryptanalysis of harvested pastes
+- Long-term confidentiality (10+ years)
+- Adversaries who store encrypted pastes today
+
+**❌ Does NOT Protect Against:**
+- Endpoint compromise (malicious browser extensions, malware)
+- URL interception (if URL captured, paste can be decrypted)
+- Social engineering (voluntary URL sharing)
+- Malicious server administrators
+
+**Important:** This is honest scope control. PQC protects against future cryptanalysis, not endpoint security.
+
+### URL Retention Risks
+
+**Critical:** URLs contain decryption keys. Avoid sharing via:
+- ❌ Email (may be archived indefinitely)
+- ❌ Ticketing systems (long-term retention)
+- ❌ Chat with history (enables future access)
+- ❌ Public forums or websites
+
+**Prefer:**
+- ✅ In-person sharing
+- ✅ Verbal communication
+- ✅ Ephemeral messaging (Signal, WhatsApp with disappearing messages)
+- ✅ Password-protected pastes with separate password delivery
+
+### For Developers
+
+- **Implementation:** See `js/pqccrypto.js` for PQC module
+- **Security model:** See [SECURITY.md](SECURITY.md) for complete threat model and design rationale
+- **Tests:** Run `cd js && npm test` to execute test suite
+- **WASM library:** Uses [mlkem-wasm](https://github.com/dchest/mlkem-wasm) (npm package)
+
+### Strategic Positioning
+
+This is not just "PrivateBin with PQC" — it's a **reference design** for post-quantum, zero-knowledge, browser-based secure exchange that:
+- Can be cited in academic papers
+- Survives security audits
+- Provides a template for PQC integration in web applications
+- Demonstrates infrastructure-grade cryptographic design
+
+### Installation
+
+```bash
+# Install dependencies (includes mlkem-wasm)
+cd js
+npm install
+
+# Run tests
+npm test
+
+# Deploy as normal PrivateBin instance
+# (See standard PrivateBin installation guide)
+```
+
+### Algorithm Agility
+
+The v3 format supports algorithm migration:
+- **Current (v3.0):** Kyber-768 only
+- **Future (v3.1):** Add Kyber-1024 support
+- **Future (v4.0):** Migrate to final NIST ML-KEM standard
+
+Designed for smooth transitions as cryptographic standards evolve.
 
 ## What PrivateBin provides
 

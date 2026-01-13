@@ -1227,6 +1227,263 @@ jQuery.PrivateBin = (function($) {
         }
 
         /**
+         * compress, then encrypt message with given symmetric key directly
+         *
+         * Helper function for v3 encryption. Uses provided symmetric key directly
+         * instead of deriving via PBKDF2.
+         *
+         * @name   CryptTool.cipherWithData
+         * @async
+         * @function
+         * @private
+         * @param  {string} message plaintext message
+         * @param  {object} options encryption options
+         * @param  {CryptoKey} options.symmetricKey Web Crypto API key object
+         * @return {object} encrypted data {ct, adata}
+         */
+        async function cipherWithData(message, options)
+        {
+            const symmetricKey = options.symmetricKey;
+            let zlib = (await z);
+
+            // Generate encryption parameters (same as v2)
+            const compression = (
+                    typeof zlib === 'undefined' ?
+                    'none' : // client lacks support for WASM
+                    ($('body').data('compression') || 'zlib')
+                ),
+                spec = [
+                    getRandomBytes(16), // initialization vector
+                    getRandomBytes(8),  // salt
+                    100000,             // iterations
+                    256,                // key size
+                    128,                // tag size
+                    'aes',              // algorithm
+                    'gcm',              // algorithm mode
+                    compression         // compression
+                ], encodedSpec = [];
+
+            for (let i = 0; i < spec.length; ++i) {
+                encodedSpec[i] = i < 2 ? btoa(spec[i]) : spec[i];
+            }
+
+            // Build adata array (paste format)
+            const adata = [encodedSpec];
+            const adataString = JSON.stringify(adata);
+
+            // Compress and encrypt
+            const compressedData = await compress(message, compression, zlib);
+            const ciphertext = await window.crypto.subtle.encrypt(
+                cryptoSettings(adataString, spec),
+                symmetricKey,
+                compressedData
+            ).catch(Alert.showError);
+
+            return {
+                ct: btoa(arraybufferToString(ciphertext)),
+                adata: adata
+            };
+        }
+
+        /**
+         * decrypt message with symmetric key directly, then decompress
+         *
+         * Helper function for v3 decryption. Uses provided symmetric key directly
+         * instead of deriving via PBKDF2.
+         *
+         * @name   CryptTool.decipherWithData
+         * @async
+         * @function
+         * @private
+         * @param  {object} data encrypted paste data
+         * @param  {CryptoKey} symmetricKey Web Crypto API key object
+         * @return {string} decrypted message
+         */
+        async function decipherWithData(data, symmetricKey)
+        {
+            let adataString, spec, cipherMessage, plaintext;
+            let zlib = (await z);
+
+            // Extract adata from v3 format
+            adataString = JSON.stringify(data.adata);
+            // clone the array instead of passing the reference
+            spec = (data.adata[0] instanceof Array ? data.adata[0] : data.adata).slice();
+            cipherMessage = data.ct;
+
+            // Decode IV and salt
+            spec[0] = atob(spec[0]);
+            spec[1] = atob(spec[1]);
+
+            // Check compression support
+            if (spec[7] === 'zlib') {
+                if (typeof zlib === 'undefined') {
+                    throw 'Error decompressing document, your browser does not support WebAssembly. Please use another browser to view this document.';
+                }
+            }
+
+            // Decrypt
+            try {
+                plaintext = await window.crypto.subtle.decrypt(
+                    cryptoSettings(adataString, spec),
+                    symmetricKey,
+                    stringToArraybuffer(atob(cipherMessage))
+                );
+            } catch(err) {
+                console.error(err);
+                throw new DecryptionError('V3_DECRYPTION_FAILED', err);
+            }
+
+            // Decompress
+            try {
+                return await decompress(plaintext, spec[7], zlib);
+            } catch(err) {
+                throw new DecryptionError('V3_DECRYPTION_FAILED', err);
+            }
+        }
+
+        /**
+         * compress, then encrypt message with v3 PQC encryption
+         *
+         * Uses ML-KEM (Kyber-768) for post-quantum key encapsulation.
+         * Derives content key from BOTH shared secret (KEM) AND urlKey (URL fragment).
+         * Stores KEM ciphertext and private key UNENCRYPTED in paste (security from urlKey).
+         *
+         * @name   CryptTool.cipherV3
+         * @async
+         * @function
+         * @param  {string} message plaintext message
+         * @param  {string} password (not used in v3 for now)
+         * @return {object} {encrypted, urlKey} - encrypted data object and URL key
+         */
+        me.cipherV3 = async function(message, password)
+        {
+            try {
+                // 1. Generate Kyber-768 keypair
+                const {publicKey, privateKey} = await PqcCrypto.generateKeypair();
+
+                // 2. Encapsulate to get shared secret
+                const {sharedSecret, ciphertext: kemCiphertext} = await PqcCrypto.encapsulate(publicKey);
+
+                // 3. Generate random urlKey for URL fragment (32 bytes)
+                const urlKey = stringToArraybuffer(getRandomBytes(32));
+
+                // 4. Derive content encryption key from BOTH shared secret AND urlKey
+                const contentKey = await PqcCrypto.deriveContentKey(sharedSecret, urlKey);
+
+                // 5. Import contentKey for Web Crypto API
+                const cryptoKey = await window.crypto.subtle.importKey(
+                    'raw',
+                    contentKey,
+                    'AES-GCM',
+                    false,
+                    ['encrypt']
+                );
+
+                // 6. Encrypt plaintext with AES-GCM
+                const encrypted = await cipherWithData(message, {
+                    symmetricKey: cryptoKey
+                });
+
+                // 7. Add v3 KEM metadata (ciphertext and private key UNENCRYPTED)
+                encrypted.kem = {
+                    algo: 'kyber768',
+                    param: '768',
+                    ciphertext: btoa(arraybufferToString(kemCiphertext)),
+                    privkey: PqcCrypto.serializePrivateKey(privateKey)
+                };
+
+                // 8. Set version
+                encrypted.v = 3;
+
+                // 9. Return encrypted data and urlKey separately
+                return {
+                    encrypted: encrypted,
+                    urlKey: arraybufferToString(urlKey)
+                };
+            } catch (e) {
+                console.error('V3 encryption failed:', e);
+                throw new EncryptionError('ENCRYPTION_FAILED', e);
+            }
+        };
+
+        /**
+         * decrypt v3 message with PQC, then decompress
+         *
+         * Uses ML-KEM (Kyber-768) for post-quantum key decapsulation.
+         * Requires BOTH shared secret (from KEM) AND urlKey (from URL fragment).
+         *
+         * @name   CryptTool.decipherV3
+         * @async
+         * @function
+         * @param  {object} data encrypted paste data with kem object
+         * @param  {string} urlKey 32-byte key from URL fragment
+         * @return {string} decrypted message
+         */
+        me.decipherV3 = async function(data, urlKey)
+        {
+            let sharedSecret = null;
+            let urlKeyBytes = null;
+            let contentKey = null;
+            let privateKey = null;
+
+            try {
+                // 1. Extract and validate KEM metadata
+                if (!data.kem) {
+                    throw new DecryptionError('MISSING_KEM_DATA');
+                }
+                if (data.kem.algo !== 'kyber768') {
+                    throw new DecryptionError('UNSUPPORTED_VERSION');
+                }
+
+                // 2. Extract private key and ciphertext from kem object (both unencrypted)
+                const serializedPrivKey = data.kem.privkey;
+                const kemCiphertext = stringToArraybuffer(atob(data.kem.ciphertext));
+                privateKey = PqcCrypto.deserializePrivateKey(serializedPrivKey);
+
+                // 3. Decapsulate to get shared secret
+                sharedSecret = await PqcCrypto.decapsulate(kemCiphertext, privateKey);
+
+                // 4. Derive content key from BOTH shared secret AND urlKey
+                urlKeyBytes = stringToArraybuffer(urlKey);
+                contentKey = await PqcCrypto.deriveContentKey(sharedSecret, urlKeyBytes);
+
+                // 5. Import contentKey for Web Crypto API
+                const cryptoKey = await window.crypto.subtle.importKey(
+                    'raw',
+                    contentKey,
+                    'AES-GCM',
+                    false,
+                    ['decrypt']
+                );
+
+                // 6. Decrypt paste using contentKey
+                const plaintext = await decipherWithData(data, cryptoKey);
+
+                // Security: Zero out sensitive buffers after use
+                sharedSecret.fill(0);
+                urlKeyBytes.fill(0);
+                contentKey.fill(0);
+                if (privateKey && privateKey.fill) {
+                    privateKey.fill(0);
+                }
+
+                return plaintext;
+            } catch (e) {
+                // Zero out sensitive data on error path too
+                if (sharedSecret) sharedSecret.fill(0);
+                if (urlKeyBytes) urlKeyBytes.fill(0);
+                if (contentKey) contentKey.fill(0);
+                if (privateKey && privateKey.fill) privateKey.fill(0);
+
+                if (e instanceof DecryptionError) {
+                    throw e;
+                }
+                console.error('V3 decryption failed:', e);
+                throw new DecryptionError('V3_DECRYPTION_FAILED', e);
+            }
+        };
+
+        /**
          * compress, then encrypt message with given key and password
          *
          * @name   CryptTool.cipher
@@ -1382,6 +1639,75 @@ jQuery.PrivateBin = (function($) {
 
         return me;
     })();
+
+    /**
+     * PQC (Post-Quantum Cryptography) initialization
+     *
+     * Initializes PQC support on page load for v3 paste encryption.
+     * Falls back gracefully to v2 encryption if PQC unavailable.
+     *
+     * @name   PQCInit
+     * @private
+     */
+    let pqcSupported = false;
+    let pqcInitialized = false;
+    let pqcInitializing = false; // Mutex to prevent concurrent initialization
+
+    /**
+     * Initialize PQC module on page load
+     *
+     * @name   initializePQC
+     * @async
+     * @function
+     * @private
+     */
+    async function initializePQC() {
+        // Concurrency protection: if already initializing or initialized, return
+        if (pqcInitializing || pqcInitialized) {
+            return;
+        }
+
+        pqcInitializing = true;
+
+        try {
+            // Show initialization started
+            console.info('[PQC] Initializing post-quantum cryptography...');
+
+            // Check browser support first
+            console.info('[PQC] Checking browser capabilities...');
+            const support = await PqcCrypto.checkBrowserSupport();
+
+            if (!support.supported) {
+                console.warn('[PQC] Not supported, falling back to v2. Missing:', support.missing);
+                pqcSupported = false;
+                return;
+            }
+            console.info('[PQC] Browser support confirmed');
+
+            // Initialize WASM module (this may take 100-500ms)
+            console.info('[PQC] Loading ML-KEM WASM module (Kyber-768)...');
+            const startTime = performance.now();
+            await PqcCrypto.initialize();
+            const endTime = performance.now();
+            const duration = (endTime - startTime).toFixed(0);
+
+            pqcSupported = true;
+            pqcInitialized = true;
+            console.info(`[PQC] Initialized successfully in ${duration}ms (v3 encryption available)`);
+        } catch (e) {
+            console.error('[PQC] Initialization failed, falling back to v2:', e);
+            pqcSupported = false;
+        } finally {
+            pqcInitializing = false;
+        }
+    }
+
+    // Call on page load
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initializePQC);
+    } else {
+        initializePQC();
+    }
 
     /**
      * (Model) Data source (aka MVC)
@@ -4942,19 +5268,43 @@ jQuery.PrivateBin = (function($) {
          */
         me.setCipherMessage = async function(cipherMessage)
         {
-            if (
-                symmetricKey === null ||
-                (typeof symmetricKey === 'string' && symmetricKey === '')
-            ) {
-                symmetricKey = CryptTool.getSymmetricKey();
+            // Check if PQC (v3) is available, otherwise fall back to v2
+            if (pqcSupported && pqcInitialized) {
+                // Use v3 PQC encryption
+                try {
+                    const result = await CryptTool.cipherV3(JSON.stringify(cipherMessage), password);
+
+                    // Copy all fields from encrypted result to data
+                    data['v'] = result.encrypted.v; // version 3
+                    data['ct'] = result.encrypted.ct;
+                    data['adata'] = result.encrypted.adata;
+                    data['kem'] = result.encrypted.kem; // KEM metadata
+
+                    // Store urlKey for later URL construction
+                    symmetricKey = result.urlKey;
+                } catch (e) {
+                    console.error('V3 encryption failed, falling back to v2:', e);
+                    // Fall through to v2 encryption below
+                    pqcSupported = false; // Disable PQC for this session
+                }
             }
-            if (!data.hasOwnProperty('adata')) {
-                data['adata'] = [];
+
+            // Fall back to v2 encryption if PQC unavailable or failed
+            if (!pqcSupported || !pqcInitialized) {
+                if (
+                    symmetricKey === null ||
+                    (typeof symmetricKey === 'string' && symmetricKey === '')
+                ) {
+                    symmetricKey = CryptTool.getSymmetricKey();
+                }
+                if (!data.hasOwnProperty('adata')) {
+                    data['adata'] = [];
+                }
+                let cipherResult = await CryptTool.cipher(symmetricKey, password, JSON.stringify(cipherMessage), data['adata']);
+                data['v'] = 2;
+                data['ct'] = cipherResult[0];
+                data['adata'] = cipherResult[1];
             }
-            let cipherResult = await CryptTool.cipher(symmetricKey, password, JSON.stringify(cipherMessage), data['adata']);
-            data['v'] = 2;
-            data['ct'] = cipherResult[0];
-            data['adata'] = cipherResult[1];
 
         };
 
@@ -5309,8 +5659,32 @@ jQuery.PrivateBin = (function($) {
          */
         async function decryptOrPromptPassword(key, password, cipherdata)
         {
-            // try decryption without password
-            const plaindata = await CryptTool.decipher(key, password, cipherdata);
+            let plaindata;
+
+            // Check version and route to appropriate decryption method
+            try {
+                if (cipherdata && cipherdata.v >= 3) {
+                    // Use v3 PQC decryption
+                    if (!pqcSupported || !pqcInitialized) {
+                        throw new DecryptionError('BROWSER_NOT_SUPPORTED');
+                    }
+                    plaindata = await CryptTool.decipherV3(cipherdata, key);
+                } else if (cipherdata && cipherdata.v == 2) {
+                    // Use v2 decryption
+                    plaindata = await CryptTool.decipher(key, password, [cipherdata.ct, cipherdata.adata]);
+                } else {
+                    // Legacy v1 or unknown version
+                    plaindata = await CryptTool.decipher(key, password, cipherdata);
+                }
+            } catch (e) {
+                if (e instanceof DecryptionError) {
+                    // Show user-friendly error from PQC module
+                    Alert.showError(e.message);
+                } else {
+                    console.error('Decryption error:', e);
+                }
+                plaindata = '';
+            }
 
             // if it fails, request password
             if (plaindata.length === 0 && password.length === 0) {

@@ -6,6 +6,9 @@
   "directories": {
     "test": "test"
   },
+  "dependencies": {
+    "mlkem-wasm": "^1.0.0"
+  },
   "devDependencies": {
     "@peculiar/webcrypto": "^1.5.0",
     "eslint": "^9.37.0",
