@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="referrer" content="no-referrer">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Share Paste</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f8f9fa;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
+            text-align: center;
+        }
+
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            border: 1px solid #f5c6cb;
+            display: none;
+        }
+
+        .error.show {
+            display: block;
+        }
+
+        .buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        button {
+            padding: 14px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            font-weight: 500;
+            min-height: 44px;
+            text-align: center;
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background-color: #0056b3;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background-color: #545b62;
+        }
+
+        .btn-success {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .btn-whatsapp {
+            background-color: #25D366;
+            color: white;
+        }
+
+        .btn-whatsapp:hover:not(:disabled) {
+            background-color: #1da851;
+        }
+
+        .btn-signal {
+            background-color: #3a76f0;
+            color: white;
+        }
+
+        .btn-signal:hover:not(:disabled) {
+            background-color: #2962d7;
+        }
+
+        .btn-viber {
+            background-color: #7360f2;
+            color: white;
+        }
+
+        .btn-viber:hover:not(:disabled) {
+            background-color: #5a4bc2;
+        }
+
+        @media (min-width: 768px) {
+            .buttons {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .btn-open {
+                grid-column: 1 / -1;
+            }
+        }
+
+        .info {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e7f3ff;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #004085;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Share This Paste</h1>
+
+        <div id="error" class="error"></div>
+
+        <div class="buttons">
+            <button id="btn-open" class="btn-primary btn-open" disabled>Open Paste</button>
+            <button id="btn-copy" class="btn-secondary" disabled>Copy Link</button>
+            <button id="btn-whatsapp" class="btn-whatsapp" disabled>Share via WhatsApp</button>
+            <button id="btn-signal" class="btn-signal" disabled>Share via Signal</button>
+            <button id="btn-viber" class="btn-viber" disabled>Share via Viber</button>
+        </div>
+
+        <div class="info">
+            Privacy preserved: All operations happen in your browser.
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            'use strict';
+
+            var decodedUrl = null;
+
+            /**
+             * Decode base64url string to regular string
+             * RFC 4648 base64url decoding
+             */
+            function base64urlDecode(str) {
+                try {
+                    // Replace base64url characters with base64 characters
+                    var base64 = str.replace(/-/g, '+').replace(/_/g, '/');
+
+                    // Add padding if needed
+                    while (base64.length % 4) {
+                        base64 += '=';
+                    }
+
+                    // Decode base64
+                    var decoded = atob(base64);
+
+                    // Handle Unicode by decoding percent-encoded sequences
+                    try {
+                        // Convert to percent-encoded string and decode
+                        var percentEncoded = decoded.split('').map(function(c) {
+                            var hex = ('0' + c.charCodeAt(0).toString(16)).slice(-2);
+                            return '%' + hex;
+                        }).join('');
+                        return decodeURIComponent(percentEncoded);
+                    } catch (e) {
+                        // If decoding fails, return the raw decoded string
+                        return decoded;
+                    }
+                } catch (e) {
+                    return null;
+                }
+            }
+
+            /**
+             * Validate decoded URL
+             */
+            function validateUrl(url) {
+                if (!url) {
+                    return 'No paste URL provided. Please scan a valid QR code.';
+                }
+
+                if (!url.match(/^https?:\/\//)) {
+                    return 'Invalid paste URL (must be http/https).';
+                }
+
+                if (url.indexOf('#') === -1) {
+                    return 'Invalid paste URL (missing encryption key).';
+                }
+
+                return null; // Valid
+            }
+
+            /**
+             * Show error message
+             */
+            function showError(message) {
+                var errorEl = document.getElementById('error');
+                errorEl.textContent = message;
+                errorEl.classList.add('show');
+
+                // Disable all buttons
+                var buttons = document.querySelectorAll('button');
+                for (var i = 0; i < buttons.length; i++) {
+                    buttons[i].disabled = true;
+                }
+            }
+
+            /**
+             * Enable all buttons
+             */
+            function enableButtons() {
+                var buttons = document.querySelectorAll('button');
+                for (var i = 0; i < buttons.length; i++) {
+                    buttons[i].disabled = false;
+                }
+            }
+
+            /**
+             * Copy text to clipboard
+             */
+            function copyToClipboard(text) {
+                // Try modern Clipboard API first
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(text)
+                        .then(function() {
+                            showCopySuccess();
+                        })
+                        .catch(function() {
+                            fallbackCopy(text);
+                        });
+                } else {
+                    fallbackCopy(text);
+                }
+            }
+
+            /**
+             * Fallback copy using execCommand
+             */
+            function fallbackCopy(text) {
+                var textarea = document.createElement('textarea');
+                textarea.value = text;
+                textarea.style.position = 'fixed';
+                textarea.style.opacity = '0';
+                document.body.appendChild(textarea);
+                textarea.focus();
+                textarea.select();
+
+                try {
+                    var successful = document.execCommand('copy');
+                    if (successful) {
+                        showCopySuccess();
+                    } else {
+                        alert('Copy failed. Please copy manually: ' + text);
+                    }
+                } catch (err) {
+                    alert('Copy failed. Please copy manually: ' + text);
+                }
+
+                document.body.removeChild(textarea);
+            }
+
+            /**
+             * Show copy success feedback
+             */
+            function showCopySuccess() {
+                var btn = document.getElementById('btn-copy');
+                var originalText = btn.textContent;
+                btn.textContent = '✓ Copied!';
+                btn.classList.remove('btn-secondary');
+                btn.classList.add('btn-success');
+
+                setTimeout(function() {
+                    btn.textContent = originalText;
+                    btn.classList.remove('btn-success');
+                    btn.classList.add('btn-secondary');
+                }, 2000);
+            }
+
+            /**
+             * Build messenger deep link
+             */
+            function buildMessengerLink(type, url) {
+                var message = 'Secure Paste: ' + url;
+                var encoded = encodeURIComponent(message);
+
+                switch(type) {
+                    case 'whatsapp':
+                        return 'https://wa.me/?text=' + encoded;
+                    case 'signal':
+                        return 'sgnl://send?text=' + encoded;
+                    case 'viber':
+                        return 'viber://forward?text=' + encoded;
+                    default:
+                        return null;
+                }
+            }
+
+            /**
+             * Initialize page
+             */
+            function init() {
+                // Get hash from URL
+                var hash = window.location.hash;
+
+                // Check if hash exists
+                if (!hash || hash === '#') {
+                    showError('No paste URL provided. Please scan a valid QR code.');
+                    return;
+                }
+
+                // Remove # and get encoded part (before any &)
+                var encoded = hash.substring(1);
+                var ampIndex = encoded.indexOf('&');
+                if (ampIndex !== -1) {
+                    encoded = encoded.substring(0, ampIndex);
+                }
+
+                // Decode base64url
+                decodedUrl = base64urlDecode(encoded);
+
+                // Validate decoded URL
+                if (decodedUrl === null) {
+                    showError('Invalid share link format.');
+                    return;
+                }
+
+                var error = validateUrl(decodedUrl);
+                if (error) {
+                    showError(error);
+                    return;
+                }
+
+                // Valid URL - enable buttons
+                enableButtons();
+            }
+
+            /**
+             * Button click handlers
+             */
+            document.getElementById('btn-open').addEventListener('click', function() {
+                if (decodedUrl) {
+                    window.location.href = decodedUrl;
+                }
+            });
+
+            document.getElementById('btn-copy').addEventListener('click', function() {
+                if (decodedUrl) {
+                    copyToClipboard(decodedUrl);
+                }
+            });
+
+            document.getElementById('btn-whatsapp').addEventListener('click', function() {
+                if (decodedUrl) {
+                    var link = buildMessengerLink('whatsapp', decodedUrl);
+                    window.open(link, '_blank');
+                }
+            });
+
+            document.getElementById('btn-signal').addEventListener('click', function() {
+                if (decodedUrl) {
+                    var link = buildMessengerLink('signal', decodedUrl);
+                    window.open(link, '_blank');
+                }
+            });
+
+            document.getElementById('btn-viber').addEventListener('click', function() {
+                if (decodedUrl) {
+                    var link = buildMessengerLink('viber', decodedUrl);
+                    window.open(link, '_blank');
+                }
+            });
+
+            // Initialize on page load
+            init();
+        })();
+    </script>
+</body>
+</html>

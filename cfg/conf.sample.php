@@ -93,6 +93,11 @@ languageselection = false
 ; It works both when a new document is created and when you view a document.
 ; qrcode = true
 
+; (optional) Pre-open share via QR - shows messenger share options before opening paste.
+; When enabled, QR codes point to a share choice page instead of directly opening the paste.
+; Requires qrcode = true to have any effect. Disabled by default.
+; qrshare = false
+
 ; (optional) Let users send an email sharing the document URL with one click.
 ; It works both when a new document is created and when you view a document.
 ; email = true

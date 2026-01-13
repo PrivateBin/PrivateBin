@@ -641,6 +641,69 @@ jQuery.PrivateBin = (function($) {
             return typeof bootstrap !== 'undefined';
         };
 
+        /**
+         * encode string to base64url format (RFC 4648)
+         *
+         * @name   Helper.base64urlEncode
+         * @function
+         * @param  {string} str
+         * @return {string|null} base64url encoded string or null on error
+         */
+        me.base64urlEncode = function(str)
+        {
+            try {
+                // Handle Unicode characters by percent encoding first
+                const percentEncoded = encodeURIComponent(str);
+
+                // Convert percent-encoded string to byte string for btoa
+                const byteString = percentEncoded.replace(/%([0-9A-F]{2})/g, function(match, p1) {
+                    return String.fromCharCode(parseInt(p1, 16));
+                });
+
+                // Encode to base64
+                let base64 = btoa(byteString);
+
+                // Convert to base64url: replace + with -, / with _, and remove padding =
+                return base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+            } catch (e) {
+                return null;
+            }
+        };
+
+        /**
+         * decode base64url string to regular string (RFC 4648)
+         *
+         * @name   Helper.base64urlDecode
+         * @function
+         * @param  {string} str
+         * @return {string|null} decoded string or null on error
+         */
+        me.base64urlDecode = function(str)
+        {
+            try {
+                // Replace base64url characters with base64 characters
+                let base64 = str.replace(/-/g, '+').replace(/_/g, '/');
+
+                // Add padding if needed
+                while (base64.length % 4) {
+                    base64 += '=';
+                }
+
+                // Decode base64
+                const decoded = atob(base64);
+
+                // Handle Unicode by converting to percent-encoded string then decoding
+                const percentEncoded = decoded.split('').map(function(c) {
+                    const hex = ('0' + c.charCodeAt(0).toString(16)).slice(-2);
+                    return '%' + hex;
+                }).join('');
+
+                return decodeURIComponent(percentEncoded);
+            } catch (e) {
+                return null;
+            }
+        };
+
         return me;
     })();
 
@@ -4069,9 +4132,26 @@ jQuery.PrivateBin = (function($) {
          */
         function displayQrCode()
         {
+            let url = window.location.href;
+
+            // Check if qrshare feature is enabled
+            const qrshareEnabled = $('body').data('qrshare') === 'true';
+
+            if (qrshareEnabled) {
+                // Build share.html URL with base64url-encoded paste URL
+                const baseUrl = window.location.protocol + '//' + window.location.host + window.location.pathname;
+                const sharePageUrl = baseUrl.replace(/\/[^\/]*$/, '/share.html');
+                const encodedUrl = Helper.base64urlEncode(window.location.href);
+
+                if (encodedUrl !== null) {
+                    url = sharePageUrl + '#' + encodedUrl;
+                }
+                // If encoding fails, fall back to original URL
+            }
+
             const qrCanvas = kjua({
                 render: 'canvas',
-                text: window.location.href
+                text: url
             });
             $('#qrcode-display').html(qrCanvas);
         }

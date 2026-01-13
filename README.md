@@ -6,6 +6,10 @@
 [pastebin](https://en.wikipedia.org/wiki/Pastebin)
 where the server has zero knowledge of stored data.
 
+## What's New in This Fork (PrivateBin-PQC)
+
+**🛡️ Metadata Shield for QR Codes:** This fork includes a privacy-preserving QR share feature. Even if a messenger app tries to "preview" your link, it only sees the share gateway—your private encryption keys never leave your device. When you scan a QR code, you're presented with sharing options (WhatsApp, Signal, Viber) before the paste opens, ensuring you maintain complete control over when and how your encrypted content is accessed.
+
 Data is encrypted and decrypted in the browser using 256bit AES in
 [Galois Counter mode](https://en.wikipedia.org/wiki/Galois/Counter_Mode).
 
@@ -89,6 +93,15 @@ file](https://github.com/PrivateBin/PrivateBin/wiki/Configuration):
 * Language selection (disabled by default, as it uses a session cookie)
 
 * QR code for paste URLs, to easily transfer them over to mobile devices
+
+* **Pre-Open Share via QR** (disabled by default): When enabled, QR codes point to a share choice page instead of directly opening the paste. This provides:
+  - **Privacy shield**: Messenger apps that try to preview links only see the share gateway, never your encryption keys
+  - **Social sharing**: One-click sharing to WhatsApp, Signal, and Viber with the paste URL embedded in the message
+  - **Control**: Choose when to open and decrypt the paste, useful for burn-after-reading pastes
+  - **Zero-knowledge preserved**: All operations remain client-side, no server ever sees decrypted content or encryption keys
+  - **PQC compatible**: Fully supports Post-Quantum Cryptography (v3) pastes with longer hybrid keys
+
+  To enable: Set both `qrcode = true` and `qrshare = true` in your configuration file.
 
 ## Further resources
 
