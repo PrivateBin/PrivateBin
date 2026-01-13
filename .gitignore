@@ -42,3 +42,6 @@ tst/.phpunit.result.cache
 .c9
 /.idea/
 *.iml
+
+# Ignore build artifacts
+dist/

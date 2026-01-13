@@ -1,7 +1,7 @@
-.PHONY: all coverage coverage-js coverage-php doc doc-js doc-php increment sign test test-js test-php help
+.PHONY: all coverage coverage-js coverage-php doc doc-js doc-php increment sign test test-js test-php build build-clean help
 
-CURRENT_VERSION = 2.0.3
-VERSION ?= 2.0.4
+CURRENT_VERSION = 3.0.0
+VERSION ?= 3.0.0
 VERSION_FILES = README.md SECURITY.md doc/Installation.md js/package.json lib/Controller.php Makefile
 REGEX_CURRENT_VERSION := $(shell echo $(CURRENT_VERSION) | sed "s/\./\\\./g")
 REGEX_VERSION := $(shell echo $(VERSION) | sed "s/\./\\\./g")
@@ -40,6 +40,25 @@ sign: ## Sign a release.
 	git tag --sign --message "Release v$(VERSION)" $(VERSION)
 	git push origin $(VERSION)
 	signrelease.sh
+
+build: ## Create production-ready archive (excludes dev files via .gitattributes).
+	@echo "Creating production build for version $(VERSION)..."
+	@mkdir -p dist
+	git archive --format=tar --prefix=PrivateBin-PQC-$(VERSION)/ HEAD | gzip > dist/PrivateBin-PQC-$(VERSION).tar.gz
+	git archive --format=zip --prefix=PrivateBin-PQC-$(VERSION)/ HEAD > dist/PrivateBin-PQC-$(VERSION).zip
+	@echo "Build complete:"
+	@echo "  - dist/PrivateBin-PQC-$(VERSION).tar.gz"
+	@echo "  - dist/PrivateBin-PQC-$(VERSION).zip"
+	@echo ""
+	@echo "Generating checksums..."
+	@cd dist && sha256sum PrivateBin-PQC-$(VERSION).tar.gz > PrivateBin-PQC-$(VERSION).tar.gz.sha256
+	@cd dist && sha256sum PrivateBin-PQC-$(VERSION).zip > PrivateBin-PQC-$(VERSION).zip.sha256
+	@echo "Checksums:"
+	@cat dist/PrivateBin-PQC-$(VERSION).tar.gz.sha256
+	@cat dist/PrivateBin-PQC-$(VERSION).zip.sha256
+
+build-clean: ## Remove build artifacts.
+	rm -rf dist/
 
 test: test-js test-php ## Run all unit tests.
 
