@@ -1,0 +1,485 @@
+name: Build Deployment Package
+
+on:
+  push:
+    branches:
+      - master
+      - main
+      - compyle/pqc-hybrid-encryption
+    tags:
+      - 'v*'
+  pull_request:
+    branches:
+      - master
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: 'js/package-lock.json'
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          extensions: gd, json, mbstring, openssl
+          coverage: none
+
+      - name: Get version info
+        id: version
+        run: |
+          if [[ $GITHUB_REF == refs/tags/* ]]; then
+            VERSION=${GITHUB_REF#refs/tags/}
+          else
+            VERSION=$(git describe --tags --always --dirty)-$(date +%Y%m%d-%H%M%S)
+          fi
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Building version: $VERSION"
+
+      - name: Install npm dependencies
+        working-directory: js
+        run: |
+          echo "Installing npm dependencies (including mlkem-wasm)..."
+          npm ci --production
+          echo "Installed packages:"
+          npm list --depth=0
+
+      - name: Verify WASM files
+        working-directory: js
+        run: |
+          echo "Verifying WASM module installation..."
+          if [ -f "node_modules/mlkem-wasm/mlkem768.wasm" ]; then
+            echo "✓ ML-KEM WASM module found"
+            ls -lh node_modules/mlkem-wasm/mlkem768.wasm
+          else
+            echo "✗ ML-KEM WASM module NOT found"
+            exit 1
+          fi
+
+      - name: Generate WASM hash for SRI
+        id: wasm_hash
+        working-directory: js
+        run: |
+          if [ -f "node_modules/mlkem-wasm/mlkem768.wasm" ]; then
+            HASH=$(openssl dgst -sha384 -binary node_modules/mlkem-wasm/mlkem768.wasm | openssl base64 -A)
+            echo "wasm_hash=sha384-$HASH" >> $GITHUB_OUTPUT
+            echo "WASM SHA-384 Hash: sha384-$HASH"
+            echo "Add this to js/pqccrypto.js EXPECTED_WASM_HASH constant"
+          fi
+
+      - name: Create installation script
+        run: |
+          cat > install.sh << 'INSTALL_SCRIPT_EOF'
+          #!/bin/bash
+          set -e
+
+          echo "=================================================="
+          echo "  PrivateBin-PQC Installation Script"
+          echo "  Version: ${{ steps.version.outputs.version }}"
+          echo "=================================================="
+          echo ""
+
+          # Color codes
+          RED='\033[0;31m'
+          GREEN='\033[0;32m'
+          YELLOW='\033[1;33m'
+          NC='\033[0m' # No Color
+
+          # Check if running as root
+          if [ "$EUID" -ne 0 ]; then
+            echo -e "${YELLOW}Warning: Not running as root. You may need sudo for some operations.${NC}"
+          fi
+
+          # Get installation directory
+          if [ -z "$1" ]; then
+            read -p "Enter installation directory [/var/www/privatebin]: " INSTALL_DIR
+            INSTALL_DIR=${INSTALL_DIR:-/var/www/privatebin}
+          else
+            INSTALL_DIR="$1"
+          fi
+
+          echo ""
+          echo "Installation directory: $INSTALL_DIR"
+          echo ""
+
+          # Check if directory exists
+          if [ -d "$INSTALL_DIR" ]; then
+            read -p "Directory exists. Backup existing installation? [Y/n]: " BACKUP
+            BACKUP=${BACKUP:-Y}
+            if [[ $BACKUP =~ ^[Yy]$ ]]; then
+              BACKUP_DIR="${INSTALL_DIR}.backup.$(date +%Y%m%d-%H%M%S)"
+              echo "Creating backup at: $BACKUP_DIR"
+              cp -r "$INSTALL_DIR" "$BACKUP_DIR"
+              echo -e "${GREEN}✓ Backup created${NC}"
+            fi
+          fi
+
+          # Create installation directory
+          echo "Creating installation directory..."
+          mkdir -p "$INSTALL_DIR"
+
+          # Copy files
+          echo "Copying PrivateBin-PQC files..."
+          cp -r css "$INSTALL_DIR/" 2>/dev/null || true
+          cp -r img "$INSTALL_DIR/" 2>/dev/null || true
+          cp -r js "$INSTALL_DIR/"
+          cp -r lib "$INSTALL_DIR/"
+          cp -r tpl "$INSTALL_DIR/" 2>/dev/null || true
+          cp -r vendor "$INSTALL_DIR/" 2>/dev/null || true
+          cp index.php "$INSTALL_DIR/"
+          cp .htaccess "$INSTALL_DIR/" 2>/dev/null || true
+
+          # Copy documentation
+          echo "Copying documentation..."
+          mkdir -p "$INSTALL_DIR/doc"
+          cp README.md "$INSTALL_DIR/doc/" 2>/dev/null || true
+          cp SECURITY.md "$INSTALL_DIR/doc/" 2>/dev/null || true
+          cp DEPLOYMENT.md "$INSTALL_DIR/doc/" 2>/dev/null || true
+          cp ADVANCED_FEATURES.md "$INSTALL_DIR/doc/" 2>/dev/null || true
+          cp IMPLEMENTATION_SUMMARY.md "$INSTALL_DIR/doc/" 2>/dev/null || true
+
+          # Create configuration directory
+          echo "Setting up configuration..."
+          mkdir -p "$INSTALL_DIR/cfg"
+          if [ ! -f "$INSTALL_DIR/cfg/conf.php" ]; then
+            cp cfg/conf.sample.php "$INSTALL_DIR/cfg/conf.php" 2>/dev/null || true
+            echo -e "${YELLOW}⚠ Please configure cfg/conf.php${NC}"
+          else
+            echo -e "${GREEN}✓ Existing configuration preserved${NC}"
+          fi
+
+          # Create data directory
+          echo "Creating data directory..."
+          mkdir -p "$INSTALL_DIR/data"
+          chmod 700 "$INSTALL_DIR/data"
+
+          # Set ownership (if running as root)
+          if [ "$EUID" -eq 0 ]; then
+            read -p "Enter web server user [www-data]: " WEB_USER
+            WEB_USER=${WEB_USER:-www-data}
+
+            echo "Setting ownership to $WEB_USER..."
+            chown -R "$WEB_USER:$WEB_USER" "$INSTALL_DIR"
+            echo -e "${GREEN}✓ Ownership set${NC}"
+          fi
+
+          # Verify WASM installation
+          echo ""
+          echo "Verifying PQC WASM module..."
+          if [ -f "$INSTALL_DIR/js/node_modules/mlkem-wasm/mlkem768.wasm" ]; then
+            echo -e "${GREEN}✓ ML-KEM WASM module installed${NC}"
+            WASM_SIZE=$(du -h "$INSTALL_DIR/js/node_modules/mlkem-wasm/mlkem768.wasm" | cut -f1)
+            echo "  Size: $WASM_SIZE"
+          else
+            echo -e "${RED}✗ ML-KEM WASM module NOT found${NC}"
+            echo "  This is required for post-quantum cryptography!"
+          fi
+
+          # Display WASM hash
+          if [ -f "$INSTALL_DIR/js/node_modules/mlkem-wasm/mlkem768.wasm" ]; then
+            echo ""
+            echo "WASM SHA-384 Hash (for SRI configuration):"
+            WASM_HASH=$(openssl dgst -sha384 -binary "$INSTALL_DIR/js/node_modules/mlkem-wasm/mlkem768.wasm" | openssl base64 -A 2>/dev/null || echo "openssl not available")
+            echo "sha384-$WASM_HASH"
+            echo ""
+            echo "Add this to js/pqccrypto.js:"
+            echo "  const EXPECTED_WASM_HASH = 'sha384-$WASM_HASH';"
+          fi
+
+          echo ""
+          echo "=================================================="
+          echo -e "${GREEN}Installation Complete!${NC}"
+          echo "=================================================="
+          echo ""
+          echo "Next steps:"
+          echo "1. Configure your web server (see DEPLOYMENT.md)"
+          echo "2. Configure cfg/conf.php"
+          echo "3. Set up WASM MIME type (see DEPLOYMENT.md)"
+          echo "4. Run Day Zero checklist (see DEPLOYMENT.md)"
+          echo ""
+          echo "Documentation location: $INSTALL_DIR/doc/"
+          echo ""
+          echo "For detailed deployment instructions, see:"
+          echo "  $INSTALL_DIR/doc/DEPLOYMENT.md"
+          echo "  $INSTALL_DIR/doc/ADVANCED_FEATURES.md"
+          echo ""
+          INSTALL_SCRIPT_EOF
+          chmod +x install.sh
+
+      - name: Create deployment package
+        run: |
+          echo "Creating deployment package..."
+          mkdir -p deployment-package
+
+          # Copy core application files
+          cp -r css deployment-package/ 2>/dev/null || true
+          cp -r img deployment-package/ 2>/dev/null || true
+          cp -r js deployment-package/
+          cp -r lib deployment-package/
+          cp -r tpl deployment-package/ 2>/dev/null || true
+          cp -r vendor deployment-package/ 2>/dev/null || true
+          cp -r cfg deployment-package/ 2>/dev/null || true
+          cp index.php deployment-package/
+          cp .htaccess deployment-package/ 2>/dev/null || true
+
+          # Copy documentation
+          cp README.md deployment-package/
+          cp SECURITY.md deployment-package/
+          cp DEPLOYMENT.md deployment-package/
+          cp ADVANCED_FEATURES.md deployment-package/ 2>/dev/null || true
+          cp IMPLEMENTATION_SUMMARY.md deployment-package/ 2>/dev/null || true
+          cp UX_AND_SECURITY_ENHANCEMENTS.md deployment-package/ 2>/dev/null || true
+
+          # Copy installation script
+          cp install.sh deployment-package/
+
+          # Create version file
+          echo "${{ steps.version.outputs.version }}" > deployment-package/VERSION
+          echo "Built on: $(date -u +"%Y-%m-%d %H:%M:%S UTC")" >> deployment-package/VERSION
+          echo "Commit: ${{ github.sha }}" >> deployment-package/VERSION
+          echo "WASM Hash: ${{ steps.wasm_hash.outputs.wasm_hash }}" >> deployment-package/VERSION
+
+      - name: Create README for package
+        run: |
+          cat > deployment-package/INSTALL.txt << 'README_EOF'
+          ================================
+          PrivateBin-PQC Deployment Package
+          ================================
+
+          This package contains a complete, ready-to-deploy installation of PrivateBin-PQC
+          with post-quantum cryptography support (ML-KEM/Kyber-768).
+
+          QUICK START
+          ===========
+
+          1. Extract this package to your server:
+             unzip privatebin-pqc-*.zip
+
+          2. Run the installation script:
+             cd privatebin-pqc-*
+             sudo ./install.sh /var/www/privatebin
+
+          3. Configure your web server (see DEPLOYMENT.md)
+
+          4. Configure PrivateBin (edit cfg/conf.php)
+
+          5. Run Day Zero checklist (see DEPLOYMENT.md)
+
+          WHAT'S INCLUDED
+          ===============
+
+          - Complete PrivateBin-PQC application
+          - ML-KEM (Kyber-768) WASM module
+          - All npm dependencies pre-installed
+          - Installation script (install.sh)
+          - Complete documentation:
+            * README.md - Overview and features
+            * DEPLOYMENT.md - Deployment guide with Day Zero checklist
+            * SECURITY.md - Security model and threat analysis
+            * ADVANCED_FEATURES.md - UX enhancements and security features
+
+          SYSTEM REQUIREMENTS
+          ===================
+
+          Server:
+          - PHP 7.4+ (8.1+ recommended)
+          - Web server (Nginx, Apache, or Caddy)
+          - HTTPS enabled (required for Web Crypto API)
+
+          Client (for PQC support):
+          - Chrome 90+, Firefox 88+, Safari 15+, or Edge 90+
+          - WebAssembly support
+          - Web Crypto API with HKDF support
+
+          Note: Older browsers automatically fall back to v2 (classical) encryption.
+
+          FEATURES
+          ========
+
+          Core PQC Features:
+          - Hybrid encryption (classical + post-quantum)
+          - ML-KEM (Kyber-768) key encapsulation
+          - Zero-knowledge architecture preserved
+          - Full backward compatibility with v2 pastes
+
+          UX Enhancements:
+          - V3 sharing warning (educates users about secure URL sharing)
+          - Quantum badge indicator (⚛️ PQC)
+          - Browser fallback notice
+
+          Advanced Security:
+          - Subresource Integrity (SRI) for WASM
+          - Self-hosted WASM support
+          - WASM hash pinning
+          - Memory zeroing for sensitive data
+          - Concurrency protection
+
+          DEPLOYMENT CHECKLIST
+          ====================
+
+          Before going live, verify these critical items:
+
+          ☑ 1. CSP Header (wasm-unsafe-eval)
+               curl -I https://your-site.com | grep -i content-security-policy
+
+          ☑ 2. WASM MIME Type (application/wasm)
+               curl -I https://your-site.com/js/node_modules/mlkem-wasm/mlkem768.wasm
+
+          ☑ 3. Size Limits (10M+ for PHP, 2MB+ buffer in PrivateBin)
+               php -i | grep post_max_size
+
+          ☑ 4. Log Scrubbing (URL fragments not logged)
+               tail -f /var/log/nginx/access.log
+
+          See DEPLOYMENT.md for detailed instructions.
+
+          CONFIGURATION
+          =============
+
+          1. Basic Configuration:
+             Edit cfg/conf.php and adjust settings
+
+          2. WASM Hash (Optional but Recommended):
+             See VERSION file for WASM hash
+             Update js/pqccrypto.js with the hash
+
+          3. Web Server:
+             See DEPLOYMENT.md for Nginx/Apache/Caddy configuration examples
+
+          TESTING
+          =======
+
+          After deployment:
+          1. Open your PrivateBin instance
+          2. Check browser console (F12) for: "[PQC] Initialized successfully"
+          3. Create a test paste
+          4. Verify quantum badge (⚛️ PQC) appears
+          5. Check paste version in Network tab (should be v: 3)
+
+          SUPPORT
+          =======
+
+          Documentation:
+          - DEPLOYMENT.md - Complete deployment guide
+          - ADVANCED_FEATURES.md - Advanced features guide
+          - SECURITY.md - Security model and threat analysis
+
+          Version: See VERSION file
+          Built: See VERSION file
+
+          ================================
+          README_EOF
+
+      - name: Create ZIP archive
+        run: |
+          cd deployment-package
+          zip -r ../privatebin-pqc-${{ steps.version.outputs.version }}.zip . -x "*.git*"
+          cd ..
+
+          # Calculate checksums
+          sha256sum privatebin-pqc-${{ steps.version.outputs.version }}.zip > privatebin-pqc-${{ steps.version.outputs.version }}.zip.sha256
+
+          echo "Archive created:"
+          ls -lh privatebin-pqc-*.zip
+          echo ""
+          echo "SHA-256:"
+          cat privatebin-pqc-*.zip.sha256
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: privatebin-pqc-${{ steps.version.outputs.version }}
+          path: |
+            privatebin-pqc-*.zip
+            privatebin-pqc-*.zip.sha256
+          retention-days: 90
+
+      - name: Create Release (on tag)
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            privatebin-pqc-*.zip
+            privatebin-pqc-*.zip.sha256
+          body: |
+            ## PrivateBin-PQC Release ${{ steps.version.outputs.version }}
+
+            ### What's New
+            - Post-quantum cryptography using ML-KEM (Kyber-768)
+            - Hybrid encryption (classical + post-quantum)
+            - UX enhancements (sharing warning, quantum badge, fallback notice)
+            - Advanced security features (SRI, self-hosted WASM, hash pinning)
+
+            ### Installation
+
+            1. Download `privatebin-pqc-${{ steps.version.outputs.version }}.zip`
+            2. Verify checksum (optional):
+               ```bash
+               sha256sum -c privatebin-pqc-${{ steps.version.outputs.version }}.zip.sha256
+               ```
+            3. Extract and run installation script:
+               ```bash
+               unzip privatebin-pqc-${{ steps.version.outputs.version }}.zip
+               cd privatebin-pqc-${{ steps.version.outputs.version }}
+               sudo ./install.sh /var/www/privatebin
+               ```
+            4. Follow the Day Zero checklist in DEPLOYMENT.md
+
+            ### Documentation
+            - [DEPLOYMENT.md](DEPLOYMENT.md) - Deployment guide
+            - [SECURITY.md](SECURITY.md) - Security model
+            - [ADVANCED_FEATURES.md](ADVANCED_FEATURES.md) - Advanced features guide
+
+            ### WASM Integrity
+            WASM SHA-384 Hash: `${{ steps.wasm_hash.outputs.wasm_hash }}`
+
+            Add this to `js/pqccrypto.js` for integrity verification.
+
+            ### System Requirements
+            - **Server:** PHP 7.4+, HTTPS enabled
+            - **Clients:** Chrome 90+, Firefox 88+, Safari 15+, Edge 90+
+            - Older browsers automatically fall back to v2 encryption
+
+            ### Checksums
+            See `privatebin-pqc-${{ steps.version.outputs.version }}.zip.sha256`
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Summary
+        run: |
+          echo "## Build Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "✅ **Build completed successfully**" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Version:** \`${{ steps.version.outputs.version }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Artifact:** \`privatebin-pqc-${{ steps.version.outputs.version }}.zip\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**WASM Hash:** \`${{ steps.wasm_hash.outputs.wasm_hash }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Contents" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Complete PrivateBin-PQC application" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ ML-KEM WASM module (Kyber-768)" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ All npm dependencies" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Installation script" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Complete documentation" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Quick Start" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`bash" >> $GITHUB_STEP_SUMMARY
+          echo "unzip privatebin-pqc-${{ steps.version.outputs.version }}.zip" >> $GITHUB_STEP_SUMMARY
+          echo "cd privatebin-pqc-${{ steps.version.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+          echo "sudo ./install.sh /var/www/privatebin" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
