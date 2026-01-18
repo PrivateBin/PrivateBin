@@ -120,11 +120,13 @@ More details can be found in the
 
 ### Web server configuration
 
-A `robots.txt` file is provided in the root dir of PrivateBin. It disallows all
-robots from accessing your pastes. It is recommend to place it into the root of
-your web directory if you have installed PrivateBin in a subdirectory. Make sure
-to adjust it, so that the file paths match your installation. Of course also
-adjust the file, if you already use a `robots.txt`.
+A `robots.txt` file is provided in the root dir of PrivateBin. It requests bots to
+not access (and potentially burn) your pastes. It is recommend to place it into the
+root of your web directory if you have installed PrivateBin in a subdirectory.
+Make sure to adjust it, so that the file paths match your installation.
+Of course also adjust the file, if you already use a `robots.txt`.  
+More bot detection is implemented in JavaScript, but note none of these mechanisms is a
+100% fail-safe way to prevent non-human visitors on your site.
 
 A `.htaccess.disabled` file is provided in the root dir of PrivateBin. It blocks
 some known robots and link-scanning bots. If you use Apache, you can rename the
