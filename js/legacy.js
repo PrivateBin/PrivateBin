@@ -59,8 +59,71 @@
          * @readonly
          */
         var badBotUA = [
-            'Bot',
-            'bot'
+            // Generic bot identifiers
+            'bot/',
+            'Bot/',
+            '-bot',
+            '-Bot',
+            'crawler',
+            'Crawler',
+            'spider',
+            'Spider',
+            'scraper',
+            'Scraper',
+            
+            // Search Engines
+            'Googlebot',
+            'Mediapartners-Google',
+            'AdsBot-Google',
+            'bingbot',
+            'msnbot',
+            'BingPreview',
+            'Yahoo! Slurp',
+            'Baiduspider',
+            'YandexBot',
+            'DuckDuckBot',
+            
+            // SEO & Analytics
+            'AhrefsBot',
+            'SemrushBot',
+            'MJ12bot',
+            'rogerbot',
+            'Screaming Frog',
+            
+            // Social Media
+            'facebookexternalhit',
+            'Facebot',
+            'Twitterbot',
+            'LinkedInBot',
+            'Pinterestbot',
+            'Slackbot',
+            
+            // AI & LLM
+            'GPTBot',
+            'ChatGPT-User',
+            'OAI-SearchBot',
+            'ClaudeBot',
+            'anthropic-ai',
+            'PerplexityBot',
+            
+            // Monitoring & Uptime
+            'Pingdom',
+            'UptimeRobot',
+            'BetterStackBot',
+            'cron-job.org',
+            
+            // Security Scanners
+            'CensysInspect',
+            'Shodan',
+            'BitSightBot',
+            
+            // Other Common Crawlers
+            '80legs',
+            'ia_archiver',
+            'Teoma',
+            'Linguee Bot',
+            'AddThis.com robot',
+            'Speedy Spider'
         ];
 
         /**
