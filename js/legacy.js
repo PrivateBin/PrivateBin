@@ -55,7 +55,7 @@
          * blacklist of UserAgents (parts) known to belong to a bot
          *
          * @private
-         * @enum   {Array}
+         * @type {string[]}
          * @readonly
          */
         var badBotUA = [
