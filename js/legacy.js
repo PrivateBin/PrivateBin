@@ -86,10 +86,6 @@
             'ChatGPT-User',
             'anthropic-ai',
             
-            // Monitoring & Uptime
-            'Pingdom',
-            'cron-job.org',
-            
             // Security Scanners
             'CensysInspect',
             'Shodan',
