@@ -72,16 +72,9 @@
             'Scraper',
             
             // Search Engines
-            'Googlebot',
             'Mediapartners-Google',
-            'AdsBot-Google',
-            'bingbot',
-            'msnbot',
             'BingPreview',
             'Yahoo! Slurp',
-            'Baiduspider',
-            'YandexBot',
-            'DuckDuckBot',
             
             // SEO & Analytics
             'AhrefsBot',
