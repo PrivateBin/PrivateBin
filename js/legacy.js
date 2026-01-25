@@ -77,27 +77,14 @@
             'Yahoo! Slurp',
             
             // SEO & Analytics
-            'AhrefsBot',
-            'SemrushBot',
-            'MJ12bot',
-            'rogerbot',
             'Screaming Frog',
             
             // Social Media
             'facebookexternalhit',
-            'Facebot',
-            'Twitterbot',
-            'LinkedInBot',
-            'Pinterestbot',
-            'Slackbot',
             
             // AI & LLM
-            'GPTBot',
             'ChatGPT-User',
-            'OAI-SearchBot',
-            'ClaudeBot',
             'anthropic-ai',
-            'PerplexityBot',
             
             // Monitoring & Uptime
             'Pingdom',
