@@ -299,6 +299,16 @@ class Helper
     }
 
     /**
+     * create a temporary file, returns it's file name
+     *
+     * @return string
+     */
+    public static function createTempFile(): string
+    {
+        return tempnam(sys_get_temp_dir(), 'FOO');
+    }
+
+    /**
      * a var_export that returns arrays without line breaks
      * by linus@flowingcreativity.net via php.net
      *
