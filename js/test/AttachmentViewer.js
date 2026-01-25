@@ -49,7 +49,7 @@ describe('AttachmentViewer', function () {
                         {value: function(blob) {
                             return 'blob:' + location.origin + '/1b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed';
                         }}
-                    )
+                    );
                 }
                 $.PrivateBin.AttachmentViewer.init();
                 $.PrivateBin.Model.init();
@@ -152,7 +152,7 @@ describe('AttachmentViewer', function () {
                         {value: function(blob) {
                             return 'blob:' + location.origin + '/1b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed';
                         }}
-                    )
+                    );
                 }
                 $.PrivateBin.AttachmentViewer.init();
                 $.PrivateBin.Model.init();
