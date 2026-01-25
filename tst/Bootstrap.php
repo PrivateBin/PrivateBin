@@ -243,7 +243,7 @@ class Helper
     }
 
     /**
-     * restor backup of the config file
+     * restore backup of the config file
      *
      * @return void
      */
