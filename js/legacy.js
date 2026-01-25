@@ -93,15 +93,11 @@
             // Security Scanners
             'CensysInspect',
             'Shodan',
-            'BitSightBot',
             
             // Other Common Crawlers
             '80legs',
             'ia_archiver',
             'Teoma',
-            'Linguee Bot',
-            'AddThis.com robot',
-            'Speedy Spider'
         ];
 
         /**
