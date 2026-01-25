@@ -144,7 +144,7 @@ describe('PasteStatus', function () {
             common.jscUrl(),
             common.jscUrl(false),
             function (schema, longUrl, shortUrl) {
-                const [longUrlString, shortUrlString] = urlStrings(schema, longUrl, shortUrl),
+                const [_, shortUrlString] = urlStrings(schema, longUrl, shortUrl),
                     yourlsResponse = '<!DOCTYPE html>\n' +
                         '<html lang="en">\n' +
                         '\t<head>\n' +

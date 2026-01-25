@@ -1,5 +1,5 @@
 'use strict';
-var common = require('../common');
+require('../common');
 
 describe('TopNav', function () {
     describe('showViewButtons & hideViewButtons', function () {
@@ -10,7 +10,7 @@ describe('TopNav', function () {
         it(
             'displays & hides navigation elements for viewing an existing document',
             function () {
-                var results = [];
+                let results = [];
                 $('body').html(
                     '<nav class="navbar navbar-inverse navbar-static-top">' +
                     '<div id="navbar" class="navbar-collapse collapse"><ul ' +
@@ -69,7 +69,7 @@ describe('TopNav', function () {
         it(
             'displays & hides navigation elements for creating a document',
             function () { // eslint-disable-line complexity
-                var results = [];
+                let results = [];
                 $('body').html(
                     '<nav><div id="navbar"><ul><li><button id="newbutton" ' +
                     'type="button" class="hidden">New</button></li><li><a ' +
@@ -134,7 +134,7 @@ describe('TopNav', function () {
         it(
             'displays the button for creating a document',
             function () {
-                var results = [];
+                let results = [];
                 $('body').html(
                     '<nav><div id="navbar"><ul><li><button id="newbutton" type=' +
                     '"button" class="hidden">New</button></li></ul></div></nav>'
@@ -165,7 +165,7 @@ describe('TopNav', function () {
         it(
             'hides the button for cloning a document',
             function () {
-                var results = [];
+                let results = [];
                 $('body').html(
                     '<nav><div id="navbar"><ul><li><button id="clonebutton" ' +
                     'type="button" class="btn btn-warning navbar-btn">' +
@@ -198,7 +198,7 @@ describe('TopNav', function () {
         it(
             'hides the raw text button',
             function () {
-                var results = [];
+                let results = [];
                 $('body').html(
                     '<nav><div id="navbar"><ul><li><button ' +
                     'id="rawtextbutton" type="button" class="btn ' +
@@ -232,7 +232,7 @@ describe('TopNav', function () {
         it(
             'hides the file attachment selection button',
             function () {
-                var results = [];
+                let results = [];
                 $('body').html(
                     '<nav><div id="navbar"><ul><li id="attach" class="hidden ' +
                     'dropdown"><a href="#" class="dropdown-toggle" data-' +
@@ -270,7 +270,7 @@ describe('TopNav', function () {
         it(
             'display the custom file attachment',
             function () {
-                var results = [];
+                let results = [];
                 $('body').html(
                     '<nav><div id="navbar"><ul><li id="attach" class="hidden ' +
                     'dropdown"><a href="#" class="dropdown-toggle" data-' +
@@ -308,8 +308,8 @@ describe('TopNav', function () {
         it(
             'collapses the navigation when displayed on a small screen',
             function () {
-                var clean = jsdom(),
-                    results = [];
+                const clean = jsdom();
+                let results = [];
                 $('body').html(
                     '<nav><div class="navbar-header"><button type="button" ' +
                     'class="navbar-toggle collapsed" data-toggle="collapse" ' +
@@ -363,7 +363,7 @@ describe('TopNav', function () {
         it(
             'reset inputs to defaults (options off)',
             function () {
-                var results = [];
+                let results = [];
                 $('body').html(
                     '<nav><div id="navbar"><ul><li id="burnafterreadingoption" ' +
                     'class="hidden"><label><input type="checkbox" ' +
@@ -407,7 +407,7 @@ describe('TopNav', function () {
         it(
             'reset inputs to defaults (burnafterreading on)',
             function () {
-                var results = [];
+                let results = [];
                 $('body').html(
                     '<nav><div id="navbar"><ul><li id="burnafterreadingoption" ' +
                     'class="hidden"><label><input type="checkbox" ' +
@@ -450,7 +450,7 @@ describe('TopNav', function () {
         it(
             'reset inputs to defaults (opendiscussion on)',
             function () {
-                var results = [];
+                let results = [];
                 $('body').html(
                     '<nav><div id="navbar"><ul><li id="burnafterreadingoption" ' +
                     'class="hidden"><label><input type="checkbox" ' +
@@ -517,16 +517,14 @@ describe('TopNav', function () {
             cleanup();
         });
 
-        var File = window.File,
+        const File = window.File,
             FileList = window.FileList,
             path = require('path'), // eslint-disable-line global-require
             mime = require('mime-types'); // eslint-disable-line global-require
 
         // mocking file input as per https://github.com/jsdom/jsdom/issues/1272
         function createFile(file_path) {
-            var file = fs.statSync(file_path),
-                lastModified = file.mtimeMs,
-                size = file.size;
+            const lastModified = fs.statSync(file_path).mtimeMs;
 
             return new File(
                 [new fs.readFileSync(file_path)],
@@ -559,7 +557,7 @@ describe('TopNav', function () {
         it(
             'returns the selected files',
             function () {
-                var results = [];
+                let results = [];
                 $('body').html(
                     '<nav><div id="navbar"><ul><li id="attach" class="hidden ' +
                     'dropdown"><a href="#" class="dropdown-toggle" data-' +
@@ -579,7 +577,7 @@ describe('TopNav', function () {
                     '../img/logo.svg',
                     '../img/busy.gif'
                 ]);
-                var files = $.PrivateBin.TopNav.getFileList();
+                const files = $.PrivateBin.TopNav.getFileList();
                 results.push(
                     files[0].name === 'logo.svg' &&
                     files[1].name === 'busy.gif'
@@ -602,7 +600,7 @@ describe('TopNav', function () {
         it(
             'returns if the burn-after-reading checkbox was ticked',
             function () {
-                var results = [];
+                let results = [];
                 $('body').html(
                     '<nav><div id="navbar"><ul><li id="burnafterreadingoption" ' +
                     'class="hidden"><label><input type="checkbox" ' +
@@ -639,7 +637,7 @@ describe('TopNav', function () {
         it(
             'returns if the open-discussion checkbox was ticked',
             function () {
-                var results = [];
+                let results = [];
                 $('body').html(
                     '<nav><div id="navbar"><ul><li id="opendiscussionoption" ' +
                     'class="hidden"><label><input type="checkbox" ' +
@@ -678,7 +676,7 @@ describe('TopNav', function () {
             'string',
             function (password) {
                 password = password.replace(/\r+|\n+/g, '');
-                var results = [];
+                let results = [];
                 $('body').html(
                     '<nav><div id="navbar"><ul><li><div id="password" ' +
                     'class="navbar-form hidden"><input type="password" ' +
@@ -715,7 +713,7 @@ describe('TopNav', function () {
         it(
             'returns the custom attachment element',
             function () {
-                var results = [];
+                let results = [];
                 $('body').html(
                     '<nav><div id="navbar"><ul><li id="attach" class="hidden ' +
                     'dropdown"><a href="#" class="dropdown-toggle" data-' +

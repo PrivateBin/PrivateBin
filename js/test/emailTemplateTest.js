@@ -1,6 +1,5 @@
 'use strict';
-var common = require('../common');
-const assert = require('assert');
+require('../common');
 
 // DOM builder that mirrors bootstrap5.php navbar
 function buildEmailDomNoShortUrl() {
