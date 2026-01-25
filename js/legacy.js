@@ -108,8 +108,6 @@
             
             // Monitoring & Uptime
             'Pingdom',
-            'UptimeRobot',
-            'BetterStackBot',
             'cron-job.org',
             
             // Security Scanners
