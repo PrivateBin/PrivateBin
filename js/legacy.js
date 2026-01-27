@@ -60,10 +60,8 @@
          */
         var badBotUA = [
             // Generic bot identifiers
-            'bot/',
-            'Bot/',
-            '-bot',
-            '-Bot',
+            'bot',
+            'Bot',
             'crawler',
             'Crawler',
             'spider',
