@@ -120,7 +120,7 @@ class Configuration
             'js/dark-mode-switch.js' => 'sha512-BhY7dNU14aDN5L+muoUmA66x0CkYUWkQT0nxhKBLP/o2d7jE025+dvWJa4OiYffBGEFgmhrD/Sp+QMkxGMTz2g==',
             'js/jquery-3.7.1.js'     => 'sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==',
             'js/kjua-0.10.0.js'      => 'sha512-BYj4xggowR7QD150VLSTRlzH62YPfhpIM+b/1EUEr7RQpdWAGKulxWnOvjFx1FUlba4m6ihpNYuQab51H6XlYg==',
-            'js/legacy.js'           => 'sha512-rGXYUpIqbFoHAgBXZ0UlJBdNAIMOC9EQ67MG0X46D5uRB8LvwzgKirbSQRGdYfk8I2jsUcm+tvHXYboUnC6DUg==',
+            'js/legacy.js'           => 'sha512-RQEo1hxpNc37i+jz/D9/JiAZhG8GFx3+SNxjYnI7jUgirDIqrCSj6QPAAZeaidditcWzsJ3jxfEj5lVm7ZwTRQ==',
             'js/prettify.js'         => 'sha512-puO0Ogy++IoA2Pb9IjSxV1n4+kQkKXYAEUtVzfZpQepyDPyXk8hokiYDS7ybMogYlyyEIwMLpZqVhCkARQWLMg==',
             'js/privatebin.js'       => 'sha512-2ybiXcPP5nF8Vv5mD03EW9jCQEC25adiwp+nMRELSSXCAL1KErWMYS9mVOsUeRSlvnzHrRw19DGpF0gmIZFXbw==',
             'js/purify-3.3.0.js'     => 'sha512-lsHD5zxs4lu/NDzaaibe27Vd2t7Cy9JQ3qDHUvDfb4oZvKoWDNEhwUY+4bT3R68cGgpgCYp8U1x2ifeVxqurdQ==',
