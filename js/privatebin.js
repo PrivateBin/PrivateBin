@@ -3236,7 +3236,7 @@ jQuery.PrivateBin = (function($) {
          * @param {FileList[]} loadedFiles (optional) loaded files array
          * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/FileReader#readAsDataURL()}
          */
-        function readFileData(loadedFiles) {
+        function readFileData(loadedFiles = []) {
             // Clear old cache
             me.removeAttachmentData();
 
@@ -3248,15 +3248,15 @@ jQuery.PrivateBin = (function($) {
                 return;
             }
 
-            if (loadedFiles === undefined) {
-                loadedFiles = [...$fileInput[0].files];
-                me.clearDragAndDrop();
-            } else {
+            if (loadedFiles && loadedFiles.length > 0) {
                 const fileNames = loadedFiles.map((loadedFile => loadedFile.name));
                 printDragAndDropFileNames(fileNames);
+            } else {
+                loadedFiles = [...$fileInput[0].files];
+                me.clearDragAndDrop();
             }
 
-            if (typeof loadedFiles !== 'undefined') {
+            if (loadedFiles.length > 0) {
                 files = loadedFiles;
                 loadedFiles.forEach((loadedFile, index) => {
                     const fileReader = new FileReader();
