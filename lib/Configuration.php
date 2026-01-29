@@ -104,6 +104,11 @@ class Configuration
         'model_options' => array(
             'dir' => 'data',
         ),
+        'auth' => array(
+            'enabled'       => false,
+            'username'      => '',
+            'password_hash' => '',
+        ),
         'yourls' => array(
             'signature' => '',
             'apiurl'    => '',

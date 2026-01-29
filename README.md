@@ -90,6 +90,8 @@ file](https://github.com/PrivateBin/PrivateBin/wiki/Configuration):
 
 * QR code for paste URLs, to easily transfer them over to mobile devices
 
+* HTTP Basic Auth protection for paste creation (reading remains public)
+
 ## Further resources
 
 * [FAQ](https://github.com/PrivateBin/PrivateBin/wiki/FAQ)

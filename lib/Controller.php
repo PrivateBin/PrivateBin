@@ -269,6 +269,11 @@ class Controller
      */
     private function _create()
     {
+        // Check authentication if enabled
+        if (!$this->_authenticate()) {
+            return;
+        }
+
         // Ensure last paste from visitors IP address was more than configured amount of seconds ago.
         ServerSalt::setStore($this->_model->getStore());
         TrafficLimiter::setConfiguration($this->_conf);
@@ -489,6 +494,7 @@ class Controller
         $page->assign('HTTPWARNING', $this->_conf->getKey('httpwarning'));
         $page->assign('HTTPSLINK', 'https://' . $this->_request->getHost() . $this->_request->getRequestUri());
         $page->assign('COMPRESSION', $this->_conf->getKey('compression'));
+        $page->assign('AUTHREQUIRED', $this->_conf->getKey('enabled', 'auth'));
         $page->assign('SRI', $this->_conf->getSection('sri'));
         $page->draw(TemplateSwitcher::getTemplate());
     }
@@ -531,6 +537,37 @@ class Controller
         header('Access-Control-Allow-Origin: *');
         header('Access-Control-Allow-Methods: GET');
         echo $content;
+    }
+
+    /**
+     * Check HTTP Basic Auth credentials if auth is enabled
+     *
+     * @access private
+     * @return bool true if authenticated or auth disabled, false if rejected
+     */
+    private function _authenticate()
+    {
+        if (!$this->_conf->getKey('enabled', 'auth')) {
+            return true;
+        }
+
+        $username = $this->_conf->getKey('username', 'auth');
+        $passwordHash = $this->_conf->getKey('password_hash', 'auth');
+
+        if (
+            empty($username) || empty($passwordHash) ||
+            !array_key_exists('PHP_AUTH_USER', $_SERVER) ||
+            !array_key_exists('PHP_AUTH_PW', $_SERVER) ||
+            $_SERVER['PHP_AUTH_USER'] !== $username ||
+            !password_verify($_SERVER['PHP_AUTH_PW'], $passwordHash)
+        ) {
+            header('HTTP/1.1 401 Unauthorized');
+            header('WWW-Authenticate: Basic realm="PrivateBin"');
+            $this->_json_error(I18n::_('Unauthorized'));
+            return false;
+        }
+
+        return true;
     }
 
     /**

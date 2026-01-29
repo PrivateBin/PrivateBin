@@ -4728,6 +4728,65 @@ jQuery.PrivateBin = (function($) {
     })(window, document);
 
     /**
+     * Handles authentication prompt for paste creation
+     *
+     * @name   AuthPrompt
+     * @class
+     */
+    const AuthPrompt = (function () {
+        const me = {};
+
+        let $authModal,
+            pendingCallback = null;
+
+        /**
+         * request authentication from the user
+         *
+         * @name   AuthPrompt.requestAuth
+         * @function
+         * @param {function} callback - called after credentials are set
+         */
+        me.requestAuth = function(callback)
+        {
+            pendingCallback = callback;
+            $authModal = $('#authmodal');
+            if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+                (new bootstrap.Modal($authModal[0])).show();
+            } else {
+                $authModal.modal('show');
+            }
+        };
+
+        /**
+         * init auth form
+         *
+         * @name   AuthPrompt.init
+         * @function
+         */
+        me.init = function()
+        {
+            $(document).on('submit', '#authform', function(e) {
+                e.preventDefault();
+                let user = $('#authuser').val(),
+                    pass = $('#authpassword').val();
+                ServerInteraction.setAuthCredentials(user, pass);
+                $authModal = $('#authmodal');
+                if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+                    bootstrap.Modal.getInstance($authModal[0])?.hide();
+                } else {
+                    $authModal.modal('hide');
+                }
+                if (pendingCallback !== null) {
+                    pendingCallback();
+                    pendingCallback = null;
+                }
+            });
+        };
+
+        return me;
+    })();
+
+    /**
      * Responsible for AJAX requests, transparently handles encryption…
      *
      * @name   ServerInteraction
@@ -4739,6 +4798,8 @@ jQuery.PrivateBin = (function($) {
         let successFunc = null,
             failureFunc = null,
             symmetricKey = null,
+            authUser = null,
+            authPassword = null,
             url,
             data,
             password;
@@ -4813,10 +4874,16 @@ jQuery.PrivateBin = (function($) {
         me.run = function()
         {
             let isPost = Object.keys(data).length > 0,
-                ajaxParams = {
+                headers = $.extend({}, ajaxHeaders);
+
+            if (authUser !== null && authPassword !== null) {
+                headers['Authorization'] = 'Basic ' + btoa(authUser + ':' + authPassword);
+            }
+
+            let ajaxParams = {
                     type: isPost ? 'POST' : 'GET',
                     url: url,
-                    headers: ajaxHeaders,
+                    headers: headers,
                     dataType: 'json',
                     success: function(result) {
                         if (result.status === 0) {
@@ -4832,9 +4899,29 @@ jQuery.PrivateBin = (function($) {
                 ajaxParams.data = JSON.stringify(data);
             }
             $.ajax(ajaxParams).fail(function(jqXHR, textStatus, errorThrown) {
+                if (jqXHR.status === 401) {
+                    AuthPrompt.requestAuth(function() {
+                        me.run();
+                    });
+                    return;
+                }
                 console.error(textStatus, errorThrown);
                 fail(3, jqXHR);
             });
+        };
+
+        /**
+         * set auth credentials
+         *
+         * @name   ServerInteraction.setAuthCredentials
+         * @function
+         * @param {string} user
+         * @param {string} pass
+         */
+        me.setAuthCredentials = function(user, pass)
+        {
+            authUser = user;
+            authPassword = pass;
         };
 
         /**
@@ -6004,6 +6091,7 @@ jQuery.PrivateBin = (function($) {
             UiHelper.init();
             CopyToClipboard.init();
             PasswordPeek.init();
+            AuthPrompt.init();
 
             // check for legacy browsers before going any further
             if (!Legacy.Check.getInit()) {

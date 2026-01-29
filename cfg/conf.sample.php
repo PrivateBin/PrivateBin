@@ -302,6 +302,15 @@ dir = PATH "data"
 ; (optional) the URL of the YOURLS API, called to shorten a PrivateBin URL
 ; apiurl = "https://yourls.example.com/yourls-api.php"
 
+[auth]
+; enable or disable authentication for paste creation, defaults to false
+; enabled = false
+; username for HTTP Basic Auth
+; username = "admin"
+; password hash (generated with: php -r "echo password_hash('yourpassword', PASSWORD_DEFAULT);")
+; NEVER store the password in plain text
+; password_hash = ""
+
 ;[sri]
 ; Subresource integrity (SRI) hashes used in template files. Uncomment and set
 ; these for all js files used. See:

@@ -90,7 +90,7 @@ endif;
 		<meta property="og:image:width" content="180" />
 		<meta property="og:image:height" content="180" />
 	</head>
-	<body role="document" data-compression="<?php echo rawurlencode($COMPRESSION); ?>"<?php
+	<body role="document" data-compression="<?php echo rawurlencode($COMPRESSION); ?>"<?php if ($AUTHREQUIRED) : ?> data-authrequired="true"<?php endif; ?><?php
 $class = array();
 if ($isCpct) {
     $class[] = 'navbar-spacing';
@@ -131,6 +131,25 @@ if (count($class)) {
 					</div>
 					<div class="modal-body text-center">
 						<button id="loadconfirm-open-now" type="button" class="btn btn-success" data-dismiss="modal"><span class="glyphicon glyphicon-download"></span> <?php echo I18n::_('Yes, see it') ?></button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="authmodal" tabindex="-1" class="modal fade" role="dialog" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-body">
+						<form id="authform" role="form">
+							<div class="form-group">
+								<label for="authuser"><span class="glyphicon glyphicon-user"></span> <?php echo I18n::_('Username') ?></label>
+								<input id="authuser" type="text" class="form-control" placeholder="<?php echo I18n::_('Username') ?>" required="required" autocomplete="username" />
+							</div>
+							<div class="form-group">
+								<label for="authpassword"><span class="glyphicon glyphicon-lock"></span> <?php echo I18n::_('Password') ?></label>
+								<input id="authpassword" type="password" class="form-control" placeholder="<?php echo I18n::_('Password') ?>" required="required" autocomplete="current-password" />
+							</div>
+							<button type="submit" class="btn btn-success btn-block"><span class="glyphicon glyphicon-off"></span> <?php echo I18n::_('Login') ?></button>
+						</form>
 					</div>
 				</div>
 			</div>

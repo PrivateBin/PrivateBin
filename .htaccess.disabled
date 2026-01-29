@@ -4,6 +4,23 @@ RewriteCond %{HTTP_USER_AGENT} ^.*(bot|spider|crawl|https?://|WhatsApp|SkypeUriP
 RewriteRule .* - [R=403,L]
 AddType application/wasm .wasm
 
+# Block access to sensitive files
+<FilesMatch "^(AGENT\.md|README\.md|CHANGELOG\.md|INSTALL\.md|composer\.json|composer\.lock|Makefile)$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+# Block access to hidden files and directories (except .well-known)
+RewriteRule (^|/)\.(?!well-known/) - [F,L]
+
+# Block access to internal directories (cfg, lib, tpl, tst, vendor, doc)
+RewriteRule ^(cfg|lib|tpl|tst|vendor|doc)/ - [F,L]
+
 <IfModule mod_php7.c>
 php_value max_execution_time 30
 php_value post_max_size 10M
