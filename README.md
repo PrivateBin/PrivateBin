@@ -43,7 +43,7 @@ features.
   [DANE](https://en.wikipedia.org/wiki/DNS-based_Authentication_of_Named_Entities)
   record.
 
-- The "key" used to encrypt the paste is part of the URL (in
+- The “key” used to encrypt the paste is part of the URL (in
   [the fragment part separated by the `#`](https://en.wikipedia.org/wiki/URL#fragment)).
   If you publicly post the URL of a paste that is not password-protected, anyone
   can read it.
