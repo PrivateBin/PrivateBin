@@ -126,7 +126,7 @@ describe('Helper', function () {
                 clean();
                 urlString = $('<div />').text(urlString).html();
                 const expected = $('<div />').text(prefix).html() + '<a href="' + urlString + '" target="_blank" rel="nofollow noopener noreferrer">' + urlString + '</a>' + $('<div />').text(postfix).html();
-                return $('<div />').text(prefix).html() + '<a href="' + urlString + '" target="_blank" rel="nofollow noopener noreferrer">' + urlString + '</a>' + $('<div />').text(postfix).html() === result;
+                return expected === result;
             }
         );
         jsc.property(

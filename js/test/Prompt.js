@@ -10,7 +10,7 @@ describe('Prompt', function () {
             'string',
             function (password) {
                 password = password.replace(/\r+|\n+/g, '');
-                const clean = jsdom('', {url: 'ftp://example.com/?0000000000000000'});
+                /* const clean = */ jsdom('', {url: 'ftp://example.com/?0000000000000000'});
                 $('body').html(
                     '<div id="passwordmodal" class="modal fade" role="dialog">' +
                     '<div class="modal-dialog"><div class="modal-content">' +
