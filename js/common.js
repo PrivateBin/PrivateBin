@@ -10,7 +10,7 @@ global.WebCrypto = require('@peculiar/webcrypto').Crypto;
 
 // application libraries to test
 global.$ = global.jQuery = require('./jquery-3.7.1');
-global.zlib = require('./zlib-1.3.1-1').zlib;
+global.zlib = require('./zlib-1.3.1-2').zlib;
 require('./prettify');
 global.prettyPrint = window.PR.prettyPrint;
 global.prettyPrintOne = window.PR.prettyPrintOne;
@@ -82,10 +82,10 @@ function parseMime(line) {
 // these to be character encoding agnostic
 exports.atob = function(encoded) {
     return Buffer.from(encoded, 'base64').toString('binary');
-}
+};
 exports.btoa = function(text) {
     return Buffer.from(text, 'binary').toString('base64');
-}
+};
 
 // provides random lowercase characters from a to z
 exports.jscA2zString = function() {

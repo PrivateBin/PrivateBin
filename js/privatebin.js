@@ -555,13 +555,14 @@ jQuery.PrivateBin = (function($) {
          * @param  {string} str
          * @return {string} escaped HTML
          */
-        me.htmlEntities = function(str) {
+        me.htmlEntities = function(str)
+        {
             return String(str).replace(
                 /[&<>"'`=\/]/g, function(s) {
                     return entityMap[s];
                 }
             );
-        }
+        };
 
         /**
          * calculate expiration date given initial date and expiration period
@@ -572,7 +573,8 @@ jQuery.PrivateBin = (function($) {
          * @param  {string|number} expirationDisplayStringOrSecondsToExpire - may not be empty
          * @return {Date}
          */
-        me.calculateExpirationDate = function(initialDate, expirationDisplayStringOrSecondsToExpire) {
+        me.calculateExpirationDate = function(initialDate, expirationDisplayStringOrSecondsToExpire)
+        {
             let expirationDate      = new Date(initialDate),
                 secondsToExpiration = expirationDisplayStringOrSecondsToExpire;
             if (typeof expirationDisplayStringOrSecondsToExpire === 'string') {
@@ -617,7 +619,7 @@ jQuery.PrivateBin = (function($) {
             }
 
             return result;
-        }
+        };
 
         /**
          * resets state, used for unit testing
@@ -1312,7 +1314,7 @@ jQuery.PrivateBin = (function($) {
             spec[1] = atob(spec[1]);
             if (spec[7] === 'zlib') {
                 if (typeof zlib === 'undefined') {
-                    throw 'Error decompressing document, your browser does not support WebAssembly. Please use another browser to view this document.'
+                    throw 'Error decompressing document, your browser does not support WebAssembly. Please use another browser to view this document.';
                 }
             }
             try {

@@ -50,7 +50,7 @@ if ($QRCODE) :
 <?php
 endif;
 ?>
-		<?php $this->_scriptTag('js/zlib-1.3.1-1.js', 'defer'); ?>
+		<?php $this->_scriptTag('js/zlib-1.3.1-2.js', 'defer'); ?>
 		<?php $this->_scriptTag('js/base-x-5.0.1.js', 'defer'); ?>
 		<?php $this->_scriptTag('js/bootstrap-3.4.1.js', 'defer'); ?>
 <?php

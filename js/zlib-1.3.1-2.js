@@ -129,7 +129,7 @@
                 rawDef.destroy();
                 return ret;
             },
-        }
+        };
 
         return ret;
     }
