@@ -108,22 +108,28 @@ endif;
 				</div>
 			</div>
 		</div>
-		<div id="authmodal" tabindex="-1" class="modal fade" role="dialog" aria-hidden="true">
-			<div class="modal-dialog" role="document">
-				<div class="modal-content">
-					<div class="modal-body">
-						<form id="authform" role="form">
-							<div class="mb-3">
-								<label for="authuser"><svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#person" /></svg> <?php echo I18n::_('Username') ?></label>
-								<input id="authuser" type="text" class="form-control" placeholder="<?php echo I18n::_('Username') ?>" required="required" autocomplete="username" />
-							</div>
-							<div class="mb-3">
-								<label for="authpassword"><svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#key" /></svg> <?php echo I18n::_('Password') ?></label>
-								<input id="authpassword" type="password" class="form-control" placeholder="<?php echo I18n::_('Password') ?>" required="required" autocomplete="current-password" />
-							</div>
-							<button type="submit" class="btn btn-success btn-block"><svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#power" /></svg> <?php echo I18n::_('Login') ?></button>
-						</form>
+		<div id="authscreen">
+			<div class="card shadow">
+				<div class="card-body p-4">
+					<div class="text-center mb-4">
+						<img alt="<?php echo I18n::_($NAME); ?>" src="img/icon.svg" height="48" />
+						<h4 class="mt-3"><?php echo I18n::_($NAME); ?></h4>
 					</div>
+					<div id="authfailure" class="alert alert-danger hidden" role="alert">
+						<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#exclamation-circle" /></svg>
+						<?php echo I18n::_('Unauthorized') ?>
+					</div>
+					<form id="authform" action="javascript:void(0)" method="post" role="form">
+						<div class="mb-3">
+							<label for="authuser"><svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#person" /></svg> <?php echo I18n::_('Username') ?></label>
+							<input id="authuser" name="authuser" type="text" class="form-control" placeholder="<?php echo I18n::_('Username') ?>" required="required" autocomplete="username" />
+						</div>
+						<div class="mb-3">
+							<label for="authpassword"><svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#key" /></svg> <?php echo I18n::_('Password') ?></label>
+							<input id="authpassword" name="authpassword" type="password" class="form-control" placeholder="<?php echo I18n::_('Password') ?>" required="required" autocomplete="current-password" />
+						</div>
+						<button id="authloginbutton" type="submit" class="btn btn-success w-100"><svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#box-arrow-in-right" /></svg> <?php echo I18n::_('Login') ?></button>
+					</form>
 				</div>
 			</div>
 		</div>
@@ -367,6 +373,17 @@ if (!empty($TEMPLATESELECTION)) :
     endforeach;
 ?>
 							</ul>
+						</li>
+<?php
+endif;
+?>
+<?php
+if ($AUTHREQUIRED) :
+?>
+						<li class="nav-item ms-lg-auto">
+							<button id="logoutbutton" type="button" class="btn btn-outline-danger d-flex justify-content-center align-items-center gap-1">
+								<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#box-arrow-right" /></svg> <?php echo I18n::_('Logout'), PHP_EOL; ?>
+							</button>
 						</li>
 <?php
 endif;

@@ -309,7 +309,10 @@ dir = PATH "data"
 ; username = "admin"
 ; password hash (generated with: php -r "echo password_hash('yourpassword', PASSWORD_DEFAULT);")
 ; NEVER store the password in plain text
+; Use double quotes around the hash value
 ; password_hash = ""
+; session duration in seconds, defaults to 86400 (24 hours)
+; session_duration = 86400
 
 ;[sri]
 ; Subresource integrity (SRI) hashes used in template files. Uncomment and set

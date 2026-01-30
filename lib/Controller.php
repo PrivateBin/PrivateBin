@@ -274,6 +274,15 @@ class Controller
             return;
         }
 
+        // login-only request (no paste data) — just set the cookie and return
+        if (
+            $this->_conf->getKey('enabled', 'auth') &&
+            empty($this->_request->getParam('ct'))
+        ) {
+            $this->_json = Json::encode(array('status' => 0));
+            return;
+        }
+
         // Ensure last paste from visitors IP address was more than configured amount of seconds ago.
         ServerSalt::setStore($this->_model->getStore());
         TrafficLimiter::setConfiguration($this->_conf);
@@ -551,23 +560,87 @@ class Controller
             return true;
         }
 
+        // check session cookie first
+        if ($this->_verifyAuthToken()) {
+            return true;
+        }
+
+        // fall back to credentials in POST body
         $username = $this->_conf->getKey('username', 'auth');
         $passwordHash = $this->_conf->getKey('password_hash', 'auth');
+        $authUser = $this->_request->getParam('auth_user');
+        $authPassword = $this->_request->getParam('auth_password');
 
         if (
             empty($username) || empty($passwordHash) ||
-            !array_key_exists('PHP_AUTH_USER', $_SERVER) ||
-            !array_key_exists('PHP_AUTH_PW', $_SERVER) ||
-            $_SERVER['PHP_AUTH_USER'] !== $username ||
-            !password_verify($_SERVER['PHP_AUTH_PW'], $passwordHash)
+            empty($authUser) || empty($authPassword) ||
+            $authUser !== $username ||
+            !password_verify($authPassword, $passwordHash)
         ) {
-            header('HTTP/1.1 401 Unauthorized');
-            header('WWW-Authenticate: Basic realm="PrivateBin"');
             $this->_json_error(I18n::_('Unauthorized'));
             return false;
         }
 
+        // set session cookie on successful login
+        $this->_setAuthToken();
         return true;
+    }
+
+    /**
+     * Generate and set an auth token cookie
+     *
+     * @access private
+     */
+    private function _setAuthToken()
+    {
+        ServerSalt::setStore($this->_model->getStore());
+        $duration = $this->_conf->getKey('session_duration', 'auth');
+        $expires = time() + $duration;
+        $salt = ServerSalt::get();
+        $signature = hash_hmac('sha256', $this->_conf->getKey('username', 'auth') . ':' . $expires, $salt);
+        $token = base64_encode($expires . ':' . $signature);
+        $isSecure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+            || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443);
+        setcookie('auth_token', $token, array(
+            'expires'  => $expires,
+            'path'     => '/',
+            'httponly'  => false,
+            'secure'   => $isSecure,
+            'samesite' => 'Lax',
+        ));
+    }
+
+    /**
+     * Verify the auth token cookie
+     *
+     * @access private
+     * @return bool
+     */
+    private function _verifyAuthToken()
+    {
+        if (!array_key_exists('auth_token', $_COOKIE) || empty($_COOKIE['auth_token'])) {
+            return false;
+        }
+
+        $decoded = base64_decode($_COOKIE['auth_token'], true);
+        if ($decoded === false) {
+            return false;
+        }
+
+        $parts = explode(':', $decoded, 2);
+        if (count($parts) !== 2) {
+            return false;
+        }
+
+        list($expires, $signature) = $parts;
+        if (!is_numeric($expires) || (int) $expires < time()) {
+            return false;
+        }
+
+        ServerSalt::setStore($this->_model->getStore());
+        $salt = ServerSalt::get();
+        $expected = hash_hmac('sha256', $this->_conf->getKey('username', 'auth') . ':' . $expires, $salt);
+        return hash_equals($expected, $signature);
     }
 
     /**

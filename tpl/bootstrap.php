@@ -135,22 +135,28 @@ if (count($class)) {
 				</div>
 			</div>
 		</div>
-		<div id="authmodal" tabindex="-1" class="modal fade" role="dialog" aria-hidden="true">
-			<div class="modal-dialog" role="document">
-				<div class="modal-content">
-					<div class="modal-body">
-						<form id="authform" role="form">
-							<div class="form-group">
-								<label for="authuser"><span class="glyphicon glyphicon-user"></span> <?php echo I18n::_('Username') ?></label>
-								<input id="authuser" type="text" class="form-control" placeholder="<?php echo I18n::_('Username') ?>" required="required" autocomplete="username" />
-							</div>
-							<div class="form-group">
-								<label for="authpassword"><span class="glyphicon glyphicon-lock"></span> <?php echo I18n::_('Password') ?></label>
-								<input id="authpassword" type="password" class="form-control" placeholder="<?php echo I18n::_('Password') ?>" required="required" autocomplete="current-password" />
-							</div>
-							<button type="submit" class="btn btn-success btn-block"><span class="glyphicon glyphicon-off"></span> <?php echo I18n::_('Login') ?></button>
-						</form>
+		<div id="authscreen">
+			<div class="panel panel-default">
+				<div class="panel-body" style="padding: 30px;">
+					<div class="text-center" style="margin-bottom: 25px;">
+						<img alt="<?php echo I18n::_($NAME); ?>" src="img/icon.svg" height="48" />
+						<h4><?php echo I18n::_($NAME); ?></h4>
 					</div>
+					<div id="authfailure" class="alert alert-danger hidden" role="alert">
+						<span class="glyphicon glyphicon-exclamation-sign"></span>
+						<?php echo I18n::_('Unauthorized') ?>
+					</div>
+					<form id="authform" action="javascript:void(0)" method="post" role="form">
+						<div class="form-group">
+							<label for="authuser"><span class="glyphicon glyphicon-user"></span> <?php echo I18n::_('Username') ?></label>
+							<input id="authuser" name="authuser" type="text" class="form-control" placeholder="<?php echo I18n::_('Username') ?>" required="required" autocomplete="username" />
+						</div>
+						<div class="form-group">
+							<label for="authpassword"><span class="glyphicon glyphicon-lock"></span> <?php echo I18n::_('Password') ?></label>
+							<input id="authpassword" name="authpassword" type="password" class="form-control" placeholder="<?php echo I18n::_('Password') ?>" required="required" autocomplete="current-password" />
+						</div>
+						<button id="authloginbutton" type="submit" class="btn btn-success btn-block"><span class="glyphicon glyphicon-log-in"></span> <?php echo I18n::_('Login') ?></button>
+					</form>
 				</div>
 			</div>
 		</div>
@@ -499,6 +505,17 @@ if (!empty($TEMPLATESELECTION)) :
     endforeach;
 ?>
 						</ul>
+					</li>
+<?php
+endif;
+?>
+<?php
+if ($AUTHREQUIRED) :
+?>
+					<li class="pull-right">
+						<button id="logoutbutton" type="button" class="btn btn-danger navbar-btn">
+							<span class="glyphicon glyphicon-log-out"></span> <?php echo I18n::_('Logout'), PHP_EOL; ?>
+						</button>
 					</li>
 <?php
 endif;

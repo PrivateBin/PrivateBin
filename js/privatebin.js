@@ -4736,11 +4736,26 @@ jQuery.PrivateBin = (function($) {
     const AuthPrompt = (function () {
         const me = {};
 
-        let $authModal,
+        let $authScreen,
+            $nav,
+            $main,
+            authenticated = false,
             pendingCallback = null;
 
         /**
-         * request authentication from the user
+         * whether user is authenticated (via form or session cookie)
+         *
+         * @name   AuthPrompt.isAuthenticated
+         * @function
+         * @return {bool}
+         */
+        me.isAuthenticated = function()
+        {
+            return authenticated;
+        };
+
+        /**
+         * request authentication from the user (called by ServerInteraction)
          *
          * @name   AuthPrompt.requestAuth
          * @function
@@ -4749,37 +4764,119 @@ jQuery.PrivateBin = (function($) {
         me.requestAuth = function(callback)
         {
             pendingCallback = callback;
-            $authModal = $('#authmodal');
-            if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
-                (new bootstrap.Modal($authModal[0])).show();
-            } else {
-                $authModal.modal('show');
-            }
         };
 
         /**
-         * init auth form
+         * init auth screen - shows full-page login if auth is required
          *
          * @name   AuthPrompt.init
          * @function
          */
         me.init = function()
         {
-            $(document).on('submit', '#authform', function(e) {
-                e.preventDefault();
-                let user = $('#authuser').val(),
-                    pass = $('#authpassword').val();
+            $authScreen = $('#authscreen');
+            $nav = $('nav');
+            $main = $('main');
+
+            // show login screen on main page when auth is required, unless session cookie exists
+            let hasSession = document.cookie.split(';').some(function(c) {
+                return c.trim().indexOf('auth_token=') === 0;
+            });
+            if ($('body').data('authrequired') && !window.location.hash && !hasSession) {
+                $nav.addClass('hidden');
+                $main.addClass('hidden');
+                $authScreen.css('display', 'block');
+            }
+            if (hasSession) {
+                authenticated = true;
+            }
+
+            function getCredentials() {
+                let userEl = document.getElementById('authuser'),
+                    passEl = document.getElementById('authpassword');
+                return {
+                    user: (userEl ? userEl.value : '').trim(),
+                    pass: (passEl ? passEl.value : '').trim()
+                };
+            }
+
+            function hasAuthCookie() {
+                return document.cookie.split(';').some(function(c) {
+                    return c.trim().indexOf('auth_token=') === 0;
+                });
+            }
+
+            function onLoginSuccess(user, pass) {
                 ServerInteraction.setAuthCredentials(user, pass);
-                $authModal = $('#authmodal');
-                if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
-                    bootstrap.Modal.getInstance($authModal[0])?.hide();
-                } else {
-                    $authModal.modal('hide');
-                }
+                authenticated = true;
+                $('#authfailure').addClass('hidden');
+                $authScreen.css('display', 'none');
+                $nav.removeClass('hidden');
+                $main.removeClass('hidden');
                 if (pendingCallback !== null) {
                     pendingCallback();
                     pendingCallback = null;
                 }
+            }
+
+            function sendLogin(user, pass) {
+                $.ajax({
+                    type: 'POST',
+                    url: Helper.baseUri(),
+                    headers: {
+                        'X-Requested-With': 'JSONHttpRequest',
+                        'Content-Type': 'application/json'
+                    },
+                    dataType: 'text',
+                    data: JSON.stringify({
+                        auth_user: user,
+                        auth_password: pass
+                    }),
+                    complete: function() {
+                        // check cookie presence regardless of response parsing
+                        if (hasAuthCookie()) {
+                            onLoginSuccess(user, pass);
+                        } else {
+                            $('#authfailure').removeClass('hidden');
+                        }
+                    }
+                });
+            }
+
+            // poll for filled fields after submit (password managers may fill with a delay)
+            function waitAndLogin(attempts) {
+                let creds = getCredentials();
+                if (creds.user && creds.pass) {
+                    sendLogin(creds.user, creds.pass);
+                } else if (attempts > 0) {
+                    setTimeout(function() { waitAndLogin(attempts - 1); }, 100);
+                } else {
+                    $('#authfailure').removeClass('hidden');
+                }
+            }
+
+            // form submit (action="javascript:void(0)" prevents native navigation)
+            $(document).on('submit', '#authform', function(e) {
+                e.preventDefault();
+                waitAndLogin(10);
+            });
+
+            // logout button
+            $(document).on('click', '#logoutbutton', function() {
+                // delete auth cookie
+                document.cookie = 'auth_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; SameSite=Lax';
+                authenticated = false;
+                ServerInteraction.setAuthCredentials(null, null);
+                // show login screen
+                $nav.addClass('hidden');
+                $main.addClass('hidden');
+                $authScreen.css('display', 'block');
+                // clear form fields
+                let userEl = document.getElementById('authuser'),
+                    passEl = document.getElementById('authpassword');
+                if (userEl) userEl.value = '';
+                if (passEl) passEl.value = '';
+                $('#authfailure').addClass('hidden');
             });
         };
 
@@ -4873,17 +4970,26 @@ jQuery.PrivateBin = (function($) {
          */
         me.run = function()
         {
-            let isPost = Object.keys(data).length > 0,
-                headers = $.extend({}, ajaxHeaders);
+            let isPost = Object.keys(data).length > 0;
 
-            if (authUser !== null && authPassword !== null) {
-                headers['Authorization'] = 'Basic ' + btoa(authUser + ':' + authPassword);
+            // if auth is required and no credentials or session, prompt first
+            if (isPost && $('body').data('authrequired') && authUser === null && !AuthPrompt.isAuthenticated()) {
+                AuthPrompt.requestAuth(function() {
+                    me.run();
+                });
+                return;
+            }
+
+            let sendData = $.extend({}, data);
+            if (isPost && authUser !== null && authPassword !== null) {
+                sendData['auth_user'] = authUser;
+                sendData['auth_password'] = authPassword;
             }
 
             let ajaxParams = {
                     type: isPost ? 'POST' : 'GET',
                     url: url,
-                    headers: headers,
+                    headers: ajaxHeaders,
                     dataType: 'json',
                     success: function(result) {
                         if (result.status === 0) {
@@ -4896,15 +5002,9 @@ jQuery.PrivateBin = (function($) {
                     }
                 };
             if (isPost) {
-                ajaxParams.data = JSON.stringify(data);
+                ajaxParams.data = JSON.stringify(sendData);
             }
             $.ajax(ajaxParams).fail(function(jqXHR, textStatus, errorThrown) {
-                if (jqXHR.status === 401) {
-                    AuthPrompt.requestAuth(function() {
-                        me.run();
-                    });
-                    return;
-                }
                 console.error(textStatus, errorThrown);
                 fail(3, jqXHR);
             });

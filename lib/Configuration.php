@@ -105,9 +105,10 @@ class Configuration
             'dir' => 'data',
         ),
         'auth' => array(
-            'enabled'       => false,
-            'username'      => '',
-            'password_hash' => '',
+            'enabled'          => false,
+            'username'         => '',
+            'password_hash'    => '',
+            'session_duration' => 86400,
         ),
         'yourls' => array(
             'signature' => '',
@@ -127,7 +128,7 @@ class Configuration
             'js/kjua-0.10.0.js'      => 'sha512-BYj4xggowR7QD150VLSTRlzH62YPfhpIM+b/1EUEr7RQpdWAGKulxWnOvjFx1FUlba4m6ihpNYuQab51H6XlYg==',
             'js/legacy.js'           => 'sha512-RQEo1hxpNc37i+jz/D9/JiAZhG8GFx3+SNxjYnI7jUgirDIqrCSj6QPAAZeaidditcWzsJ3jxfEj5lVm7ZwTRQ==',
             'js/prettify.js'         => 'sha512-puO0Ogy++IoA2Pb9IjSxV1n4+kQkKXYAEUtVzfZpQepyDPyXk8hokiYDS7ybMogYlyyEIwMLpZqVhCkARQWLMg==',
-            'js/privatebin.js'       => 'sha512-2ybiXcPP5nF8Vv5mD03EW9jCQEC25adiwp+nMRELSSXCAL1KErWMYS9mVOsUeRSlvnzHrRw19DGpF0gmIZFXbw==',
+            'js/privatebin.js'       => 'sha512-iFpa3aH4cwQ1xn7qHSSx9CvXclTpis3DYR2RYulWTyrNa5ZaDFUmmf6kVjCm8MBBay4IgVyJJjZqeDodIRKyiw==',
             'js/purify-3.3.0.js'     => 'sha512-lsHD5zxs4lu/NDzaaibe27Vd2t7Cy9JQ3qDHUvDfb4oZvKoWDNEhwUY+4bT3R68cGgpgCYp8U1x2ifeVxqurdQ==',
             'js/showdown-2.1.0.js'   => 'sha512-WYXZgkTR0u/Y9SVIA4nTTOih0kXMEd8RRV6MLFdL6YU8ymhR528NLlYQt1nlJQbYz4EW+ZsS0fx1awhiQJme1Q==',
             'js/zlib-1.3.1-1.js'     => 'sha512-5bU9IIP4PgBrOKLZvGWJD4kgfQrkTz8Z3Iqeu058mbQzW3mCumOU6M3UVbVZU9rrVoVwaW4cZK8U8h5xjF88eQ==',
@@ -152,6 +153,11 @@ class Configuration
             $configFile = $basePath . DIRECTORY_SEPARATOR . 'conf.php';
             if (is_readable($configFile)) {
                 $config = parse_ini_file($configFile, true);
+                // re-parse with raw scanner to preserve special chars in password hashes
+                $rawConfig = parse_ini_file($configFile, true, INI_SCANNER_RAW);
+                if (isset($rawConfig['auth']['password_hash'])) {
+                    $config['auth']['password_hash'] = $rawConfig['auth']['password_hash'];
+                }
                 foreach (array('main', 'model', 'model_options') as $section) {
                     if (!array_key_exists($section, $config)) {
                         $name = $config['main']['name'] ?? self::getDefaults()['main']['name'];
