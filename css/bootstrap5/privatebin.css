@@ -88,3 +88,21 @@ html[dir="rtl"] #prettyMessageCopyBtn {
 #sendbutton svg {
 	transform: translateY(1.5px);
 }
+
+#authscreen {
+	display: none;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 9999;
+	background: var(--bs-body-bg, #fff);
+	overflow-y: auto;
+}
+
+#authscreen > .card {
+	width: 400px;
+	max-width: calc(100% - 30px);
+	margin: 120px auto 0;
+}

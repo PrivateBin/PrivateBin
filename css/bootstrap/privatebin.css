@@ -166,3 +166,22 @@ html[dir="rtl"] #prettyMessageCopyBtn {
 #copyShortcutHint {
 	margin-bottom: 5px;
 }
+
+#authscreen {
+	display: none;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 9999;
+	background: #fff;
+	overflow-y: auto;
+}
+
+#authscreen > .panel {
+	width: 400px;
+	max-width: calc(100% - 30px);
+	margin: 120px auto 0;
+	box-shadow: 0 2px 8px rgba(0,0,0,.15);
+}
