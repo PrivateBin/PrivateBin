@@ -89,6 +89,11 @@ class Controller
     private $_json = '';
 
     /**
+     * @var bool whether a JSON response was already sent
+     */
+    private $_jsonSent = false;
+
+    /**
      * Factory of instance models
      *
      * @access private
@@ -162,6 +167,11 @@ class Controller
         }
 
         $this->_setCacheHeaders();
+
+        // skip output if already sent (e.g. auth endpoints)
+        if ($this->_jsonSent) {
+            return;
+        }
 
         // output JSON or HTML
         if ($this->_request->isJsonApiCall()) {
@@ -275,7 +285,7 @@ class Controller
             $this->_request->getParam('auth_logout')
         ) {
             $this->_clearAuthToken();
-            $this->_json = Json::encode(array('status' => 0));
+            $this->_respondJson(array('status' => 0));
             return;
         }
 
@@ -289,7 +299,7 @@ class Controller
             $this->_conf->getKey('enabled', 'auth') &&
             empty($this->_request->getParam('ct'))
         ) {
-            $this->_json = Json::encode(array('status' => 0));
+            $this->_respondJson(array('status' => 0));
             return;
         }
 
@@ -575,17 +585,6 @@ class Controller
             return true;
         }
 
-        // rate-limit authentication attempts
-        ServerSalt::setStore($this->_model->getStore());
-        TrafficLimiter::setConfiguration($this->_conf);
-        TrafficLimiter::setStore($this->_model->getStore());
-        try {
-            TrafficLimiter::canPass();
-        } catch (TranslatedException $e) {
-            $this->_json_error($e->getMessage());
-            return false;
-        }
-
         // fall back to credentials in POST body
         $username = $this->_conf->getKey('username', 'auth');
         $passwordHash = $this->_conf->getKey('password_hash', 'auth');
@@ -598,7 +597,7 @@ class Controller
             !hash_equals($username, $authUser) ||
             !password_verify($authPassword, $passwordHash)
         ) {
-            $this->_json_error(I18n::_('Unauthorized'));
+            $this->_respondJson(array('status' => 1, 'message' => I18n::_('Unauthorized')));
             return false;
         }
 
@@ -696,6 +695,24 @@ class Controller
             'message' => $error,
         );
         $this->_json = Json::encode($result);
+    }
+
+    /**
+     * Send a JSON response immediately with proper headers.
+     * Used for auth endpoints where isJsonApiCall() may not detect
+     * the request as JSON (e.g. reverse proxy stripping headers).
+     *
+     * @access private
+     * @param  array $data
+     * @throws JsonException
+     */
+    private function _respondJson($data)
+    {
+        $json = Json::encode($data);
+        header('Content-type: ' . Request::MIME_JSON);
+        header('X-Uncompressed-Content-Length: ' . strlen($json));
+        echo $json;
+        $this->_jsonSent = true;
     }
 
     /**

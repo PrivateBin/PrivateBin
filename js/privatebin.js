@@ -4816,7 +4816,8 @@ jQuery.PrivateBin = (function($) {
                     url: Helper.baseUri(),
                     headers: {
                         'X-Requested-With': 'JSONHttpRequest',
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
                     },
                     dataType: 'json',
                     data: JSON.stringify({
@@ -4861,7 +4862,8 @@ jQuery.PrivateBin = (function($) {
                     url: Helper.baseUri(),
                     headers: {
                         'X-Requested-With': 'JSONHttpRequest',
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
                     },
                     data: JSON.stringify({auth_logout: true}),
                     complete: function() {
