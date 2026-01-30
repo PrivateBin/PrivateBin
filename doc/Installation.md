@@ -120,9 +120,9 @@ More details can be found in the
 
 ### Web server configuration
 
-A `robots.txt` file is provided in the root dir of PrivateBin. It requests search
-engines to not index your site so the paste keys are not leaked and bots and other
-automation tools not to crawl the contents. It is recommended to place it into
+A `robots.txt` file is provided in the root dir of PrivateBin. It requests bots
+such as search engines and other automation tools to not index or crawl your
+site, so the paste keys are not leaked. It is recommended to place it into
 the root of your web directory if you have installed PrivateBin in a subdirectory.
 Make sure to adjust it, so that the file paths match your installation. Of course
 you can also adjust an existing `robots.txt` file. More bot detection is
