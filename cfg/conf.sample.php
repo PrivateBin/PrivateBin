@@ -305,14 +305,22 @@ dir = PATH "data"
 [auth]
 ; enable or disable authentication for paste creation, defaults to false
 ; enabled = false
-; username for HTTP Basic Auth
-; username = "admin"
-; password hash (generated with: php -r "echo password_hash('yourpassword', PASSWORD_DEFAULT);")
-; NEVER store the password in plain text
-; Use double quotes around the hash value
-; password_hash = ""
 ; session duration in seconds, defaults to 86400 (24 hours)
 ; session_duration = 86400
+
+; Single user (legacy format):
+; username = "admin"
+; password_hash = ""
+
+; Multi-user format: add one [auth:username] section per user.
+; Generate hashes with: php -r "echo password_hash('yourpassword', PASSWORD_DEFAULT);"
+; NEVER store passwords in plain text. Use double quotes around hash values.
+;
+;[auth:admin]
+;password_hash = ""
+;
+;[auth:alice]
+;password_hash = ""
 
 ;[sri]
 ; Subresource integrity (SRI) hashes used in template files. Uncomment and set

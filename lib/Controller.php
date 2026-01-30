@@ -586,23 +586,34 @@ class Controller
         }
 
         // fall back to credentials in POST body
-        $username = $this->_conf->getKey('username', 'auth');
-        $passwordHash = $this->_conf->getKey('password_hash', 'auth');
         $authUser = $this->_request->getParam('auth_user');
         $authPassword = $this->_request->getParam('auth_password');
 
-        if (
-            empty($username) || empty($passwordHash) ||
-            empty($authUser) || empty($authPassword) ||
-            !hash_equals($username, $authUser) ||
-            !password_verify($authPassword, $passwordHash)
-        ) {
+        if (empty($authUser) || empty($authPassword)) {
+            $this->_respondJson(array('status' => 1, 'message' => I18n::_('Unauthorized')));
+            return false;
+        }
+
+        // build list of valid users: multi-user [auth:*] sections + legacy single user
+        $users = $this->_conf->getKey('users', 'auth');
+        $legacyUser = $this->_conf->getKey('username', 'auth');
+        $legacyHash = $this->_conf->getKey('password_hash', 'auth');
+        if (!empty($legacyUser) && !empty($legacyHash)) {
+            $users[$legacyUser] = $legacyHash;
+        }
+
+        if (empty($users) || !array_key_exists($authUser, $users)) {
+            $this->_respondJson(array('status' => 1, 'message' => I18n::_('Unauthorized')));
+            return false;
+        }
+
+        if (!password_verify($authPassword, $users[$authUser])) {
             $this->_respondJson(array('status' => 1, 'message' => I18n::_('Unauthorized')));
             return false;
         }
 
         // set session cookie on successful login
-        $this->_setAuthToken();
+        $this->_setAuthToken($authUser);
         return true;
     }
 
@@ -611,13 +622,16 @@ class Controller
      *
      * @access private
      */
-    private function _setAuthToken()
+    private function _setAuthToken(string $username = '')
     {
         ServerSalt::setStore($this->_model->getStore());
         $duration = $this->_conf->getKey('session_duration', 'auth');
         $expires = time() + $duration;
         $salt = ServerSalt::get();
-        $signature = hash_hmac('sha256', $this->_conf->getKey('username', 'auth') . ':' . $expires, $salt);
+        if (empty($username)) {
+            $username = $this->_conf->getKey('username', 'auth');
+        }
+        $signature = hash_hmac('sha256', $username . ':' . $expires, $salt);
         $token = base64_encode($expires . ':' . $signature);
         $isSecure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
             || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443);
@@ -659,8 +673,22 @@ class Controller
 
         ServerSalt::setStore($this->_model->getStore());
         $salt = ServerSalt::get();
-        $expected = hash_hmac('sha256', $this->_conf->getKey('username', 'auth') . ':' . $expires, $salt);
-        return hash_equals($expected, $signature);
+
+        // collect all known usernames
+        $users = $this->_conf->getKey('users', 'auth');
+        $legacyUser = $this->_conf->getKey('username', 'auth');
+        if (!empty($legacyUser)) {
+            $users[$legacyUser] = true;
+        }
+
+        // check if the token matches any known user
+        foreach ($users as $username => $hash) {
+            $expected = hash_hmac('sha256', $username . ':' . $expires, $salt);
+            if (hash_equals($expected, $signature)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

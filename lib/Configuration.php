@@ -109,6 +109,7 @@ class Configuration
             'username'         => '',
             'password_hash'    => '',
             'session_duration' => 86400,
+            'users'            => array(),
         ),
         'yourls' => array(
             'signature' => '',
@@ -157,6 +158,21 @@ class Configuration
                 $rawConfig = parse_ini_file($configFile, true, INI_SCANNER_RAW);
                 if (isset($rawConfig['auth']['password_hash'])) {
                     $config['auth']['password_hash'] = $rawConfig['auth']['password_hash'];
+                }
+                // parse [auth:username] sections into auth.users array
+                $authUsers = array();
+                foreach ($rawConfig as $section => $values) {
+                    if (strpos($section, 'auth:') === 0) {
+                        $user = substr($section, 5);
+                        if (!empty($user) && isset($values['password_hash'])) {
+                            $authUsers[$user] = $values['password_hash'];
+                        }
+                        // remove from config so it doesn't get processed as unknown section
+                        unset($config[$section]);
+                    }
+                }
+                if (!empty($authUsers)) {
+                    $config['auth']['users'] = $authUsers;
                 }
                 foreach (array('main', 'model', 'model_options') as $section) {
                     if (!array_key_exists($section, $config)) {
