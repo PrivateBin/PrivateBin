@@ -4778,16 +4778,13 @@ jQuery.PrivateBin = (function($) {
             $nav = $('nav');
             $main = $('main');
 
-            // show login screen on main page when auth is required, unless session cookie exists
-            let hasSession = document.cookie.split(';').some(function(c) {
-                return c.trim().indexOf('auth_token=') === 0;
-            });
-            if ($('body').data('authrequired') && !window.location.hash && !hasSession) {
+            // show login screen on main page when auth is required, unless server set authenticated flag
+            if ($('body').data('authrequired') && !window.location.hash && !$('body').data('authenticated')) {
                 $nav.addClass('hidden');
                 $main.addClass('hidden');
                 $authScreen.css('display', 'block');
             }
-            if (hasSession) {
+            if ($('body').data('authenticated')) {
                 authenticated = true;
             }
 
@@ -4798,12 +4795,6 @@ jQuery.PrivateBin = (function($) {
                     user: (userEl ? userEl.value : '').trim(),
                     pass: (passEl ? passEl.value : '').trim()
                 };
-            }
-
-            function hasAuthCookie() {
-                return document.cookie.split(';').some(function(c) {
-                    return c.trim().indexOf('auth_token=') === 0;
-                });
             }
 
             function onLoginSuccess(user, pass) {
@@ -4827,18 +4818,20 @@ jQuery.PrivateBin = (function($) {
                         'X-Requested-With': 'JSONHttpRequest',
                         'Content-Type': 'application/json'
                     },
-                    dataType: 'text',
+                    dataType: 'json',
                     data: JSON.stringify({
                         auth_user: user,
                         auth_password: pass
                     }),
-                    complete: function() {
-                        // check cookie presence regardless of response parsing
-                        if (hasAuthCookie()) {
+                    success: function(data) {
+                        if (data && data.status === 0) {
                             onLoginSuccess(user, pass);
                         } else {
                             $('#authfailure').removeClass('hidden');
                         }
+                    },
+                    error: function() {
+                        $('#authfailure').removeClass('hidden');
                     }
                 });
             }
@@ -4863,20 +4856,29 @@ jQuery.PrivateBin = (function($) {
 
             // logout button
             $(document).on('click', '#logoutbutton', function() {
-                // delete auth cookie
-                document.cookie = 'auth_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; SameSite=Lax';
-                authenticated = false;
-                ServerInteraction.setAuthCredentials(null, null);
-                // show login screen
-                $nav.addClass('hidden');
-                $main.addClass('hidden');
-                $authScreen.css('display', 'block');
-                // clear form fields
-                let userEl = document.getElementById('authuser'),
-                    passEl = document.getElementById('authpassword');
-                if (userEl) userEl.value = '';
-                if (passEl) passEl.value = '';
-                $('#authfailure').addClass('hidden');
+                $.ajax({
+                    type: 'POST',
+                    url: Helper.baseUri(),
+                    headers: {
+                        'X-Requested-With': 'JSONHttpRequest',
+                        'Content-Type': 'application/json'
+                    },
+                    data: JSON.stringify({auth_logout: true}),
+                    complete: function() {
+                        authenticated = false;
+                        ServerInteraction.setAuthCredentials(null, null);
+                        // show login screen
+                        $nav.addClass('hidden');
+                        $main.addClass('hidden');
+                        $authScreen.css('display', 'block');
+                        // clear form fields
+                        let userEl = document.getElementById('authuser'),
+                            passEl = document.getElementById('authpassword');
+                        if (userEl) userEl.value = '';
+                        if (passEl) passEl.value = '';
+                        $('#authfailure').addClass('hidden');
+                    }
+                });
             });
         };
 

@@ -269,6 +269,16 @@ class Controller
      */
     private function _create()
     {
+        // Handle logout request
+        if (
+            $this->_conf->getKey('enabled', 'auth') &&
+            $this->_request->getParam('auth_logout')
+        ) {
+            $this->_clearAuthToken();
+            $this->_json = Json::encode(array('status' => 0));
+            return;
+        }
+
         // Check authentication if enabled
         if (!$this->_authenticate()) {
             return;
@@ -565,6 +575,17 @@ class Controller
             return true;
         }
 
+        // rate-limit authentication attempts
+        ServerSalt::setStore($this->_model->getStore());
+        TrafficLimiter::setConfiguration($this->_conf);
+        TrafficLimiter::setStore($this->_model->getStore());
+        try {
+            TrafficLimiter::canPass();
+        } catch (TranslatedException $e) {
+            $this->_json_error($e->getMessage());
+            return false;
+        }
+
         // fall back to credentials in POST body
         $username = $this->_conf->getKey('username', 'auth');
         $passwordHash = $this->_conf->getKey('password_hash', 'auth');
@@ -574,7 +595,7 @@ class Controller
         if (
             empty($username) || empty($passwordHash) ||
             empty($authUser) || empty($authPassword) ||
-            $authUser !== $username ||
+            !hash_equals($username, $authUser) ||
             !password_verify($authPassword, $passwordHash)
         ) {
             $this->_json_error(I18n::_('Unauthorized'));
@@ -604,7 +625,7 @@ class Controller
         setcookie('auth_token', $token, array(
             'expires'  => $expires,
             'path'     => '/',
-            'httponly'  => false,
+            'httponly'  => true,
             'secure'   => $isSecure,
             'samesite' => 'Lax',
         ));
@@ -641,6 +662,24 @@ class Controller
         $salt = ServerSalt::get();
         $expected = hash_hmac('sha256', $this->_conf->getKey('username', 'auth') . ':' . $expires, $salt);
         return hash_equals($expected, $signature);
+    }
+
+    /**
+     * Clear the auth token cookie (server-side logout)
+     *
+     * @access private
+     */
+    private function _clearAuthToken()
+    {
+        $isSecure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+            || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443);
+        setcookie('auth_token', '', array(
+            'expires'  => time() - 3600,
+            'path'     => '/',
+            'httponly'  => true,
+            'secure'   => $isSecure,
+            'samesite' => 'Lax',
+        ));
     }
 
     /**

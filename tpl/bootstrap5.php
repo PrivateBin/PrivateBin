@@ -74,7 +74,7 @@ endif;
 		<meta property="og:image:width" content="180" />
 		<meta property="og:image:height" content="180" />
 	</head>
-	<body role="document" data-compression="<?php echo rawurlencode($COMPRESSION); ?>"<?php if ($AUTHREQUIRED) : ?> data-authrequired="true"<?php endif; ?> class="d-flex flex-column h-100">
+	<body role="document" data-compression="<?php echo rawurlencode($COMPRESSION); ?>"<?php if ($AUTHREQUIRED) : ?> data-authrequired="true"<?php endif; ?><?php if ($AUTHREQUIRED && !empty($_COOKIE['auth_token'])) : ?> data-authenticated="true"<?php endif; ?> class="d-flex flex-column h-100">
 		<div id="passwordmodal" tabindex="-1" class="modal fade" role="dialog" aria-hidden="true">
 			<div class="modal-dialog" role="document">
 				<div class="modal-content">

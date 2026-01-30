@@ -90,7 +90,7 @@ endif;
 		<meta property="og:image:width" content="180" />
 		<meta property="og:image:height" content="180" />
 	</head>
-	<body role="document" data-compression="<?php echo rawurlencode($COMPRESSION); ?>"<?php if ($AUTHREQUIRED) : ?> data-authrequired="true"<?php endif; ?><?php
+	<body role="document" data-compression="<?php echo rawurlencode($COMPRESSION); ?>"<?php if ($AUTHREQUIRED) : ?> data-authrequired="true"<?php endif; ?><?php if ($AUTHREQUIRED && !empty($_COOKIE['auth_token'])) : ?> data-authenticated="true"<?php endif; ?><?php
 $class = array();
 if ($isCpct) {
     $class[] = 'navbar-spacing';
