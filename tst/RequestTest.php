@@ -89,7 +89,7 @@ class RequestTest extends TestCase
         $this->reset();
         $_SERVER['REQUEST_METHOD']        = 'PUT';
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
-        $file                             = tempnam(sys_get_temp_dir(), 'FOO');
+        $file                             = Helper::createTempFile();
         file_put_contents($file, '{"ct":"foo"}');
         Request::setInputStream($file);
         $request = new Request;
@@ -104,7 +104,7 @@ class RequestTest extends TestCase
         $this->reset();
         $_SERVER['REQUEST_METHOD'] = 'POST';
         $_SERVER['HTTP_ACCEPT']    = 'application/json, text/javascript, */*; q=0.01';
-        $file                      = tempnam(sys_get_temp_dir(), 'FOO');
+        $file                      = Helper::createTempFile();
         file_put_contents($file, '{"ct":"foo"}');
         Request::setInputStream($file);
         $request = new Request;
@@ -135,7 +135,7 @@ class RequestTest extends TestCase
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['QUERY_STRING']          = $id;
         $_GET                             = array($id => '');
-        $file                             = tempnam(sys_get_temp_dir(), 'FOO');
+        $file                             = Helper::createTempFile();
         file_put_contents($file, '{"deletetoken":"bar"}');
         Request::setInputStream($file);
         $request = new Request;
@@ -149,7 +149,7 @@ class RequestTest extends TestCase
     {
         $this->reset();
         $_SERVER['REQUEST_METHOD']        = 'POST';
-        $file                             = tempnam(sys_get_temp_dir(), 'FOO');
+        $file                             = Helper::createTempFile();
         file_put_contents($file, random_bytes(256));
         Request::setInputStream($file);
         $request = new Request;

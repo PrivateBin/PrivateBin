@@ -51,7 +51,7 @@ class JsonApiTest extends TestCase
         $options['traffic']['limit'] = 0;
         Helper::createIniFile(CONF, $options);
         $paste = Helper::getPasteJson();
-        $file  = tempnam(sys_get_temp_dir(), 'FOO');
+        $file  = Helper::createTempFile();
         file_put_contents($file, $paste);
         Request::setInputStream($file);
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
@@ -83,7 +83,7 @@ class JsonApiTest extends TestCase
         $options['traffic']['limit'] = 0;
         Helper::createIniFile(CONF, $options);
         $paste = Helper::getPasteJson();
-        $file  = tempnam(sys_get_temp_dir(), 'FOO');
+        $file  = Helper::createTempFile();
         file_put_contents($file, $paste);
         Request::setInputStream($file);
         $_SERVER['QUERY_STRING']          = Helper::getPasteId();
@@ -118,7 +118,7 @@ class JsonApiTest extends TestCase
         $this->_model->create(Helper::getPasteId(), $data);
         $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste exists before deleting data');
         $paste = $this->_model->read(Helper::getPasteId());
-        $file  = tempnam(sys_get_temp_dir(), 'FOO');
+        $file  = Helper::createTempFile();
         file_put_contents($file, json_encode(array(
             'deletetoken' => hash_hmac('sha256', Helper::getPasteId(), $paste['meta']['salt']),
         )));
@@ -146,7 +146,7 @@ class JsonApiTest extends TestCase
         $this->_model->create(Helper::getPasteId(), $data);
         $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste exists before deleting data');
         $paste = $this->_model->read(Helper::getPasteId());
-        $file  = tempnam(sys_get_temp_dir(), 'FOO');
+        $file  = Helper::createTempFile();
         file_put_contents($file, json_encode(array(
             'pasteid'     => Helper::getPasteId(),
             'deletetoken' => hash_hmac('sha256', Helper::getPasteId(), $paste['meta']['salt']),
