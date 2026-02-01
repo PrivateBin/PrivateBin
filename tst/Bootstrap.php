@@ -243,7 +243,7 @@ class Helper
     }
 
     /**
-     * restor backup of the config file
+     * restore backup of the config file
      *
      * @return void
      */
@@ -296,6 +296,16 @@ class Helper
             }
             fclose($ini);
         }
+    }
+
+    /**
+     * create a temporary file, returns it's file name
+     *
+     * @return string
+     */
+    public static function createTempFile(): string
+    {
+        return tempnam(sys_get_temp_dir(), 'FOO');
     }
 
     /**
