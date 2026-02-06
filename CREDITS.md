@@ -70,3 +70,4 @@
 * lazerns - Arabic
 * Edward205 - Romanian
 * babiloof - Swedish
+* Ali Fani - Persian

@@ -346,6 +346,7 @@ class I18n
             case 'sk':
                 return $n === 1 ? 0 : ($n >= 2 && $n <= 4 ? 1 : 2);
             case 'co':
+            case 'fa':
             case 'fr':
             case 'oc':
             case 'tr':

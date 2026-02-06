@@ -1,7 +1,7 @@
 # PrivateBin version history
 
 ## 2.0.4 (not yet released)
-* ADDED: Translations for Swedish
+* ADDED: Translations for Swedish & Persian
 * CHANGED: Deduplicate JSON error message translations
 * CHANGED: Refactored translation of exception messages
 * CHANGED: Upgrading libraries to: ip-lib 1.22.0 & polyfill-php80 1.33.0
