@@ -26,6 +26,12 @@
 	margin-bottom: 20px;
 }
 
+#attachmentInfo {
+	color: #666;
+	font-size: 0.9em;
+	margin-left: 0.25em;
+}
+
 #dropzone {
 	text-align: center;
 	position: fixed;
