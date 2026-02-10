@@ -33,7 +33,7 @@ if ($QRCODE) :
 <?php
 endif;
 ?>
-		<?php $this->_scriptTag('js/zlib-1.3.1-1.js', 'defer'); ?>
+		<?php $this->_scriptTag('js/zlib-1.3.1-2.js', 'defer'); ?>
 		<?php $this->_scriptTag('js/base-x-5.0.1.js', 'defer'); ?>
 		<?php $this->_scriptTag('js/bootstrap-5.3.8.js', 'defer'); ?>
 		<?php $this->_scriptTag('js/dark-mode-switch.js', 'defer'); ?>
@@ -206,7 +206,7 @@ endif;
 foreach ($EXPIRE as $key => $value) :
 ?>
 								<option value="<?php echo $key; ?>"<?php
-    if ($key == $EXPIREDEFAULT) :
+    if ($key === $EXPIREDEFAULT) :
 ?> selected="selected"<?php
     endif;
 ?>><?php echo $value; ?></option>
@@ -287,7 +287,7 @@ endif;
     foreach ($FORMATTER as $key => $value) :
 ?>
 								<option value="<?php echo $key; ?>"<?php
-        if ($key == $FORMATTERDEFAULT) :
+        if ($key === $FORMATTERDEFAULT) :
 ?> selected="selected"<?php
         endif;
 ?>><?php echo $value; ?></option>
@@ -378,18 +378,21 @@ if ($FILEUPLOAD) :
 <?php
 endif;
 ?>
-				<div id="status" role="alert" class="d-flex justify-content-between align-items-center alert alert-<?php echo (bool)$ISDELETED ? 'success' : 'info'; echo empty($STATUS) ? ' hidden' : '' ?>">
+				<div id="status" role="alert" class="d-flex justify-content-between align-items-center alert alert-<?php echo $ISDELETED ? 'success' : 'info'; echo empty($STATUS) ? ' hidden' : '' ?>">
 					<div>
 						<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#info-circle" /></svg>
 						<?php echo I18n::encode($STATUS), PHP_EOL; ?>
 					</div>
-					<?php
-						if ((bool)$ISDELETED):
-					?>
-						<button type="button" class="btn btn-secondary d-flex justify-content-center align-items-center gap-1" id="new-from-alert">
-							<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#repeat" /></svg> <?php echo I18n::_('Start over'), PHP_EOL; ?>
-						</button>
-					<?php endif; ?>
+<?php
+if ($ISDELETED) :
+?>
+					<button type="button" class="btn btn-secondary d-flex justify-content-center align-items-center gap-1" id="new-from-alert">
+						<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#repeat" /></svg>
+						<?php echo I18n::_('Start over'), PHP_EOL; ?>
+					</button>
+<?php
+endif;
+?>
 				</div>
 				<div id="errormessage" role="alert" class="<?php echo empty($ERROR) ? 'hidden' : '' ?> alert alert-danger">
 					<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#exclamation-triangle" /></svg>
@@ -547,6 +550,7 @@ endif;
 				<div id="attachmenttemplate" role="alert" class="hidden alert alert-info">
 					<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#download" /></svg>
 					<a class="alert-link"><?php echo I18n::_('Download attachment'); ?></a>
+					<span id="attachmentInfo"></span>
 				</div>
 			</div>
 		</div>
