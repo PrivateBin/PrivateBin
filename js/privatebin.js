@@ -2996,7 +2996,7 @@ jQuery.PrivateBin = (function($) {
 
                 const fileSize = Helper.formatBytes(decodedData.length);
                 const fileInfo = document.createElement('span');
-                fileInfo.id = 'attachmentInfo';
+                fileInfo.class = 'alert';
                 fileInfo.textContent = ` (${fileName}, ${fileSize})`;
                 template[0].appendChild(fileInfo);
             }
