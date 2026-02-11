@@ -2995,10 +2995,8 @@ jQuery.PrivateBin = (function($) {
                 attachmentLink.attr('download', fileName);
 
                 const fileSize = Helper.formatBytes(decodedData.length);
-                const fileInfo = document.createElement('span');
-                fileInfo.class = 'alert';
-                fileInfo.textContent = ` (${fileName}, ${fileSize})`;
-                template[0].appendChild(fileInfo);
+                const span = template[0].querySelector('a > span');
+                span.textContent = ` (${fileName}, ${fileSize})`;
             }
 
             // sanitize SVG preview

@@ -691,7 +691,10 @@ endif;
 				</div>
 				<div id="attachmenttemplate" role="alert" class="attachment hidden alert alert-info">
 					<span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
-					<a class="alert-link"><?php echo I18n::_('Download attachment'); ?></a>
+					<a class="alert-link">
+						<?php echo I18n::_('Download attachment'); ?>
+						<span></span>
+					</a>
 				</div>
 			</div>
 		</div>
