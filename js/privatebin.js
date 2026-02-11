@@ -2995,7 +2995,8 @@ jQuery.PrivateBin = (function($) {
                 attachmentLink.attr('download', fileName);
 
                 const fileSize = Helper.formatBytes(decodedData.length);
-                const span = template[0].querySelector('a > span');
+                const spans = template[0].querySelectorAll('span');
+                const span = spans[spans.length - 1];
                 span.textContent = ` (${fileName}, ${fileSize})`;
             }
 

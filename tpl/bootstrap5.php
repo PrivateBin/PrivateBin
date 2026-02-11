@@ -549,10 +549,7 @@ endif;
 				</div>
 				<div id="attachmenttemplate" role="alert" class="hidden alert alert-info">
 					<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#download" /></svg>
-					<a class="alert-link">
-						<?php echo I18n::_('Download attachment'); ?>
-						<span></span>
-					</a>
+					<a class="alert-link"><?php echo I18n::_('Download attachment'); ?><span></span></a>
 				</div>
 			</div>
 		</div>
