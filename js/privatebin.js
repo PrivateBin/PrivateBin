@@ -2997,7 +2997,7 @@ jQuery.PrivateBin = (function($) {
                 const fileSize = Helper.formatBytes(decodedData.length);
                 const spans = template[0].querySelectorAll('span');
                 const span = spans[spans.length - 1];
-                span.textContent = ` (${fileName}, ${fileSize})`;
+                span.textContent += ` (${fileName}, ${fileSize})`;
             }
 
             // sanitize SVG preview
