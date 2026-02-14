@@ -463,7 +463,7 @@ class Controller
         $page->assign('BASEPATH', I18n::_($this->_conf->getKey('basepath')));
         $page->assign('STATUS', I18n::_($this->_status));
         $page->assign('ISDELETED', $this->_is_deleted);
-        $page->assign('VERSION', self::VERSION);
+        $page->assign('VERSION',$this->_conf->getKey('show_version') ? self::VERSION : "");
         $page->assign('DISCUSSION', $this->_conf->getKey('discussion'));
         $page->assign('OPENDISCUSSION', $this->_conf->getKey('opendiscussion'));
         $page->assign('MARKDOWN', array_key_exists('markdown', $formatters));

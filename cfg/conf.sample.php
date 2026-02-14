@@ -139,6 +139,10 @@ languageselection = false
 ; Can be set to one these values: "none" / "zlib" (default).
 ; compression = "zlib"
 
+; Show the version in the templates. Defaults to false to prevent attackers from exploiting 0-days
+; or slow updaters.
+show_version = false
+
 [expire]
 ; expire value that is selected per default
 ; make sure the value exists in [expire_options]
