@@ -2765,9 +2765,13 @@ jQuery.PrivateBin = (function($) {
 
             if (format === 'markdown') {
                 $plainText.removeClass('hidden');
+                // Show copy button for markdown format
+                $('#prettyMessageCopyBtn').removeClass('hidden');
                 $prettyMessage.addClass('hidden');
             } else {
                 $plainText.addClass('hidden');
+                // Show copy button for non-markdown formats
+                $('#prettyMessageCopyBtn').removeClass('hidden');
                 $prettyMessage.removeClass('hidden');
             }
         }
@@ -2884,6 +2888,8 @@ jQuery.PrivateBin = (function($) {
 
             $plainText.addClass('hidden');
             $prettyMessage.addClass('hidden');
+            // Also hide the copy button when hiding the view
+            $('#prettyMessageCopyBtn').addClass('hidden');
             $placeholder.addClass('hidden');
             AttachmentViewer.hideAttachmentPreview();
 
