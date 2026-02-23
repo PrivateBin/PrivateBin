@@ -12,6 +12,7 @@
 namespace PrivateBin;
 
 use Exception;
+use PrivateBin\Exception\TranslatedException;
 
 /**
  * Configuration
@@ -119,19 +120,19 @@ class Configuration
             'js/dark-mode-switch.js' => 'sha512-BhY7dNU14aDN5L+muoUmA66x0CkYUWkQT0nxhKBLP/o2d7jE025+dvWJa4OiYffBGEFgmhrD/Sp+QMkxGMTz2g==',
             'js/jquery-3.7.1.js'     => 'sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==',
             'js/kjua-0.10.0.js'      => 'sha512-BYj4xggowR7QD150VLSTRlzH62YPfhpIM+b/1EUEr7RQpdWAGKulxWnOvjFx1FUlba4m6ihpNYuQab51H6XlYg==',
-            'js/legacy.js'           => 'sha512-rGXYUpIqbFoHAgBXZ0UlJBdNAIMOC9EQ67MG0X46D5uRB8LvwzgKirbSQRGdYfk8I2jsUcm+tvHXYboUnC6DUg==',
+            'js/legacy.js'           => 'sha512-RQEo1hxpNc37i+jz/D9/JiAZhG8GFx3+SNxjYnI7jUgirDIqrCSj6QPAAZeaidditcWzsJ3jxfEj5lVm7ZwTRQ==',
             'js/prettify.js'         => 'sha512-puO0Ogy++IoA2Pb9IjSxV1n4+kQkKXYAEUtVzfZpQepyDPyXk8hokiYDS7ybMogYlyyEIwMLpZqVhCkARQWLMg==',
-            'js/privatebin.js'       => 'sha512-lR/UzD67Pbg9nHDxDHxXktRKbXTQ96bDucbzbc0ELOLGzJHBqv1Qih+Aw+blBlAxXAdjuJDf9ch+R4m+i5bsQg==',
+            'js/privatebin.js'       => 'sha512-4kyDedBvdmfL+0OQcVMkHIAsf4TMW8/iuKyQfYJYfjxc6lPYwFiBQo7Qvy6sILRnKy6TJoK0KmTFDDi1p83vHA==',
             'js/purify-3.3.0.js'     => 'sha512-lsHD5zxs4lu/NDzaaibe27Vd2t7Cy9JQ3qDHUvDfb4oZvKoWDNEhwUY+4bT3R68cGgpgCYp8U1x2ifeVxqurdQ==',
             'js/showdown-2.1.0.js'   => 'sha512-WYXZgkTR0u/Y9SVIA4nTTOih0kXMEd8RRV6MLFdL6YU8ymhR528NLlYQt1nlJQbYz4EW+ZsS0fx1awhiQJme1Q==',
-            'js/zlib-1.3.1-1.js'     => 'sha512-5bU9IIP4PgBrOKLZvGWJD4kgfQrkTz8Z3Iqeu058mbQzW3mCumOU6M3UVbVZU9rrVoVwaW4cZK8U8h5xjF88eQ==',
+            'js/zlib-1.3.1-2.js'     => 'sha512-4gT+v+BkBqdVBbKOO4qKGOAzuay+v1FmOLksS+bMgQ08Oo4xEb3X48Xq1Kv2b4HtiCQA7xq9dFRzxal7jmQI7w==',
         ),
     );
 
     /**
      * parse configuration file and ensure default configuration values are present
      *
-     * @throws Exception
+     * @throws TranslatedException
      */
     public function __construct()
     {
@@ -148,7 +149,8 @@ class Configuration
                 $config = parse_ini_file($configFile, true);
                 foreach (array('main', 'model', 'model_options') as $section) {
                     if (!array_key_exists($section, $config)) {
-                        throw new Exception(I18n::_('PrivateBin requires configuration section [%s] to be present in configuration file.', $section), 2);
+                        $name = $config['main']['name'] ?? self::getDefaults()['main']['name'];
+                        throw new TranslatedException(array('%s requires configuration section [%s] to be present in configuration file.', I18n::_($name), $section), 2);
                     }
                 }
                 break;
@@ -158,7 +160,7 @@ class Configuration
         $opts = '_options';
         foreach (self::getDefaults() as $section => $values) {
             // fill missing sections with default values
-            if (!array_key_exists($section, $config) || count($config[$section]) == 0) {
+            if (!array_key_exists($section, $config) || count($config[$section]) === 0) {
                 $this->_configuration[$section] = $values;
                 if (array_key_exists('dir', $this->_configuration[$section])) {
                     $this->_configuration[$section]['dir'] = PATH . $this->_configuration[$section]['dir'];
@@ -167,7 +169,7 @@ class Configuration
             }
             // provide different defaults for database model
             elseif (
-                $section == 'model_options' &&
+                $section === 'model_options' &&
                 $this->_configuration['model']['class'] === 'Database'
             ) {
                 $values = array(
@@ -178,7 +180,7 @@ class Configuration
                     'opt' => array(),
                 );
             } elseif (
-                $section == 'model_options' &&
+                $section === 'model_options' &&
                 $this->_configuration['model']['class'] === 'GoogleCloudStorage'
             ) {
                 $values = array(
@@ -187,7 +189,7 @@ class Configuration
                     'uniformacl' => false,
                 );
             } elseif (
-                $section == 'model_options' &&
+                $section === 'model_options' &&
                 $this->_configuration['model']['class'] === 'S3Storage'
             ) {
                 $values = array(
@@ -216,11 +218,11 @@ class Configuration
             // check for missing keys and set defaults if necessary
             else {
                 // preserve configured SRI hashes
-                if ($section == 'sri' && array_key_exists($section, $config)) {
+                if ($section === 'sri' && array_key_exists($section, $config)) {
                     $this->_configuration[$section] = $config[$section];
                 }
                 foreach ($values as $key => $val) {
-                    if ($key == 'dir') {
+                    if ($key === 'dir') {
                         $val = PATH . $val;
                     }
                     $result = $val;
@@ -304,13 +306,13 @@ class Configuration
      * get a section from the configuration, must exist
      *
      * @param string $section
-     * @throws Exception
+     * @throws TranslatedException
      * @return mixed
      */
     public function getSection($section)
     {
         if (!array_key_exists($section, $this->_configuration)) {
-            throw new Exception(I18n::_('%s requires configuration section [%s] to be present in configuration file.', I18n::_($this->getKey('name')), $section), 3);
+            throw new TranslatedException(array('%s requires configuration section [%s] to be present in configuration file.', I18n::_($this->getKey('name')), $section), 3);
         }
         return $this->_configuration[$section];
     }

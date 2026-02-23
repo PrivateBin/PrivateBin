@@ -11,7 +11,7 @@
 
 namespace PrivateBin;
 
-use Exception;
+use PrivateBin\Exception\JsonException;
 use PrivateBin\Model\Paste;
 
 /**
@@ -104,7 +104,7 @@ class Request
         $this->_isJsonApi = $this->_detectJsonRequest();
 
         // parse parameters, depending on request type
-        switch (array_key_exists('REQUEST_METHOD', $_SERVER) ? $_SERVER['REQUEST_METHOD'] : 'GET') {
+        switch ($_SERVER['REQUEST_METHOD'] ?? 'GET') {
             case 'DELETE':
             case 'PUT':
             case 'POST':
@@ -113,7 +113,7 @@ class Request
                 try {
                     $data          = file_get_contents(self::$_inputStream);
                     $this->_params = Json::decode($data);
-                } catch (Exception $e) {
+                } catch (JsonException $e) {
                     // ignore error, $this->_params will remain empty
                 }
                 break;
@@ -141,7 +141,7 @@ class Request
         if (array_key_exists('pasteid', $this->_params) && !empty($this->_params['pasteid'])) {
             if (array_key_exists('deletetoken', $this->_params) && !empty($this->_params['deletetoken'])) {
                 $this->_operation = 'delete';
-            } elseif ($this->_operation != 'create') {
+            } elseif ($this->_operation !== 'create') {
                 $this->_operation = 'read';
             }
         } elseif (array_key_exists('jsonld', $this->_params) && !empty($this->_params['jsonld'])) {
@@ -187,7 +187,7 @@ class Request
             $data['meta'] = $meta;
         }
         foreach ($required_keys as $key) {
-            $data[$key] = $this->getParam($key, $key == 'v' ? 1 : '');
+            $data[$key] = $this->getParam($key, $key === 'v' ? 1 : '');
         }
         // forcing a cast to int or float
         $data['v'] = $data['v'] + 0;
@@ -204,8 +204,7 @@ class Request
      */
     public function getParam($param, $default = '')
     {
-        return array_key_exists($param, $this->_params) ?
-            $this->_params[$param] : $default;
+        return $this->_params[$param] ?? $default;
     }
 
     /**
@@ -263,23 +262,22 @@ class Request
      */
     private function _detectJsonRequest()
     {
-        $hasAcceptHeader = array_key_exists('HTTP_ACCEPT', $_SERVER);
-        $acceptHeader    = $hasAcceptHeader ? $_SERVER['HTTP_ACCEPT'] : '';
+        $acceptHeader = $_SERVER['HTTP_ACCEPT'] ?? '';
 
         // simple cases
         if (
-            (array_key_exists('HTTP_X_REQUESTED_WITH', $_SERVER) &&
-                $_SERVER['HTTP_X_REQUESTED_WITH'] == 'JSONHttpRequest') ||
-            ($hasAcceptHeader &&
+            ($_SERVER['HTTP_X_REQUESTED_WITH'] ?? '') === 'JSONHttpRequest' ||
+            (
                 str_contains($acceptHeader, self::MIME_JSON) &&
                 !str_contains($acceptHeader, self::MIME_HTML) &&
-                !str_contains($acceptHeader, self::MIME_XHTML))
+                !str_contains($acceptHeader, self::MIME_XHTML)
+            )
         ) {
             return true;
         }
 
         // advanced case: media type negotiation
-        if ($hasAcceptHeader) {
+        if (!empty($acceptHeader)) {
             $mediaTypes = array();
             foreach (explode(',', trim($acceptHeader)) as $mediaTypeRange) {
                 if (preg_match(

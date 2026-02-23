@@ -212,20 +212,15 @@ class Helper
     public static function rmDir($path): void
     {
         if (is_dir($path)) {
-            $path .= DIRECTORY_SEPARATOR;
-            $dir = dir($path);
-            while (false !== ($file = $dir->read())) {
-                if ($file != '.' && $file != '..') {
-                    if (is_dir($path . $file)) {
-                        self::rmDir($path . $file);
-                    } elseif (is_file($path . $file)) {
-                        if (!unlink($path . $file)) {
-                            throw new Exception('Error deleting file "' . $path . $file . '".');
-                        }
+            foreach (new DirectoryIterator($path) as $file) {
+                if ($file->isFile()) {
+                    if (!unlink($file->getPathname())) {
+                        throw new Exception('Error deleting file "' . $file->getPathname() . '".');
                     }
+                } elseif ($file->isDir() && !$file->isDot()) {
+                    self::rmDir($file->getPathname());
                 }
             }
-            $dir->close();
             if (!rmdir($path)) {
                 throw new Exception('Error deleting directory "' . $path . '".');
             }
@@ -248,7 +243,7 @@ class Helper
     }
 
     /**
-     * restor backup of the config file
+     * restore backup of the config file
      *
      * @return void
      */
@@ -301,6 +296,16 @@ class Helper
             }
             fclose($ini);
         }
+    }
+
+    /**
+     * create a temporary file, returns it's file name
+     *
+     * @return string
+     */
+    public static function createTempFile(): string
+    {
+        return tempnam(sys_get_temp_dir(), 'FOO');
     }
 
     /**
@@ -361,7 +366,7 @@ class Helper
             file_get_contents($file)
         );
         file_put_contents($file, $content);
-        if ($counter != count(self::$hashes)) {
+        if ($counter !== count(self::$hashes)) {
             throw new Exception('Mismatch between ' . count(self::$hashes) . ' found js files and ' . $counter . ' SRI hashes in lib/Configuration.php, please update lib/Configuration.php to match the list of js files.');
         }
     }
@@ -404,7 +409,7 @@ class BucketStub extends Bucket
 
     public function upload($data, array $options = array())
     {
-        if (!is_string($data) || !key_exists('name', $options)) {
+        if (!is_string($data) || !array_key_exists('name', $options)) {
             throw new BadMethodCallException('not supported by this stub');
         }
 
@@ -432,21 +437,17 @@ class BucketStub extends Bucket
 
     public function object($name, array $options = array())
     {
-        if (key_exists($name, $this->_objects)) {
-            return $this->_objects[$name];
-        } else {
-            return new StorageObjectStub($this->_connection, $name, $this, null, $options);
-        }
+        return $this->_objects[$name] ?? new StorageObjectStub($this->_connection, $name, $this, null, $options);
     }
 
     public function objects(array $options = array())
     {
-        $prefix = key_exists('prefix', $options) ? $options['prefix'] : '';
+        $prefix = $options['prefix'] ?? '';
 
         return new CallbackFilterIterator(
             new ArrayIterator($this->_objects),
             function ($current, $key, $iterator) use ($prefix) {
-                return substr($key, 0, strlen($prefix)) == $prefix;
+                return substr($key, 0, strlen($prefix)) === $prefix;
             }
         );
     }
@@ -563,7 +564,7 @@ class StorageObjectStub extends StorageObject
 
     public function exists(array $options = array())
     {
-        return key_exists($this->_name, $this->_bucket->_objects);
+        return array_key_exists($this->_name, $this->_bucket->_objects);
     }
 
     /**
@@ -571,7 +572,7 @@ class StorageObjectStub extends StorageObject
      */
     public function delete(array $options = array())
     {
-        if (key_exists($this->_name, $this->_bucket->_objects)) {
+        if (array_key_exists($this->_name, $this->_bucket->_objects)) {
             unset($this->_bucket->_objects[$this->_name]);
         } else {
             throw new NotFoundException('key ' . $this->_name . ' not found.');
@@ -647,7 +648,7 @@ class StorageObjectStub extends StorageObject
 
     public function info(array $options = array())
     {
-        return key_exists('metadata',$this->_info) ? $this->_info['metadata'] : array();
+        return $this->_info['metadata'] ?? array();
     }
 
     public function reload(array $options = array())
@@ -884,7 +885,7 @@ class StorageClientStub extends StorageClient
 
     public function bucket($name, $userProject = false, array $config = array())
     {
-        if (!key_exists($name, self::$_buckets)) {
+        if (!array_key_exists($name, self::$_buckets)) {
             self::$_buckets[$name] = new BucketStub($this->_connection, $name, array(), $this);
         }
         return self::$_buckets[$name];
@@ -895,7 +896,7 @@ class StorageClientStub extends StorageClient
      */
     public function deleteBucket($name)
     {
-        if (key_exists($name, self::$_buckets)) {
+        if (array_key_exists($name, self::$_buckets)) {
             unset(self::$_buckets[$name]);
         } else {
             throw new NotFoundException();
@@ -949,7 +950,7 @@ class StorageClientStub extends StorageClient
 
     public function createBucket($name, array $options = array())
     {
-        if (key_exists($name, self::$_buckets)) {
+        if (array_key_exists($name, self::$_buckets)) {
             throw new BadRequestException('already exists');
         }
         $b                     = new BucketStub($this->_connection, $name, array(), $this);

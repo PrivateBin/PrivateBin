@@ -11,8 +11,9 @@
 
 namespace PrivateBin\Data;
 
-use Exception;
+use DirectoryIterator;
 use GlobIterator;
+use PrivateBin\Exception\JsonException;
 use PrivateBin\Json;
 
 /**
@@ -104,13 +105,10 @@ class Filesystem extends AbstractData
      */
     public function read($pasteid)
     {
-        if (
-            !$this->exists($pasteid) ||
-            !$paste = $this->_get($this->_dataid2path($pasteid) . $pasteid . '.php')
-        ) {
-            return false;
+        if ($this->exists($pasteid)) {
+            return $this->_get($this->_dataid2path($pasteid) . $pasteid . '.php');
         }
-        return $paste;
+        return false;
     }
 
     /**
@@ -124,21 +122,24 @@ class Filesystem extends AbstractData
         $pastedir = $this->_dataid2path($pasteid);
         if (is_dir($pastedir)) {
             // Delete the paste itself.
-            if (is_file($pastedir . $pasteid . '.php')) {
-                unlink($pastedir . $pasteid . '.php');
+            $pastefile = $pastedir . $pasteid . '.php';
+            if (is_file($pastefile)) {
+                if (!unlink($pastefile)) {
+                    error_log('Error deleting paste: ' . $pastefile);
+                }
             }
 
             // Delete discussion if it exists.
             $discdir = $this->_dataid2discussionpath($pasteid);
             if (is_dir($discdir)) {
                 // Delete all files in discussion directory
-                $dir = dir($discdir);
-                while (false !== ($filename = $dir->read())) {
-                    if (is_file($discdir . $filename)) {
-                        unlink($discdir . $filename);
+                foreach (new DirectoryIterator($discdir) as $file) {
+                    if ($file->isFile()) {
+                        if (!unlink($file->getPathname())) {
+                            error_log('Error deleting comment: ' . $file->getPathname());
+                        }
                     }
                 }
-                $dir->close();
                 rmdir($discdir);
             }
         }
@@ -162,14 +163,11 @@ class Filesystem extends AbstractData
             // convert comments, too
             $discdir = $this->_dataid2discussionpath($pasteid);
             if (is_dir($discdir)) {
-                $dir = dir($discdir);
-                while (false !== ($filename = $dir->read())) {
-                    if (substr($filename, -4) !== '.php' && strlen($filename) >= 16) {
-                        $commentFilename = $discdir . $filename . '.php';
-                        $this->_prependRename($discdir . $filename, $commentFilename);
+                foreach (new DirectoryIterator($discdir) as $file) {
+                    if ($file->getExtension() !== 'php' && strlen($file->getFilename()) >= 16) {
+                        $this->_prependRename($file->getPathname(), $file->getPathname() . '.php');
                     }
                 }
-                $dir->close();
             }
         }
         return is_readable($pastePath);
@@ -210,15 +208,14 @@ class Filesystem extends AbstractData
         $comments = array();
         $discdir  = $this->_dataid2discussionpath($pasteid);
         if (is_dir($discdir)) {
-            $dir = dir($discdir);
-            while (false !== ($filename = $dir->read())) {
+            foreach (new DirectoryIterator($discdir) as $file) {
                 // Filename is in the form pasteid.commentid.parentid.php:
                 // - pasteid is the paste this reply belongs to.
                 // - commentid is the comment identifier itself.
                 // - parentid is the comment this comment replies to (It can be pasteid)
-                if (is_file($discdir . $filename)) {
-                    $comment = $this->_get($discdir . $filename);
-                    $items   = explode('.', $filename);
+                if ($file->isFile()) {
+                    $comment = $this->_get($file->getPathname());
+                    $items   = explode('.', $file->getBasename('.php'));
                     // Add some meta information not contained in file.
                     $comment['id']       = $items[1];
                     $comment['parentid'] = $items[2];
@@ -231,7 +228,6 @@ class Filesystem extends AbstractData
                     $comments[$key] = $comment;
                 }
             }
-            $dir->close();
 
             // Sort comments by date, oldest first.
             ksort($comments);
@@ -312,7 +308,7 @@ class Filesystem extends AbstractData
                 $file = $this->_path . DIRECTORY_SEPARATOR . 'salt.php';
                 if (is_readable($file)) {
                     $items = explode('|', file_get_contents($file));
-                    if (count($items) == 3) {
+                    if (count($items) === 3) {
                         return $items[1];
                     }
                 }
@@ -346,7 +342,12 @@ class Filesystem extends AbstractData
             file_get_contents($filename),
             strlen(self::PROTECTION_LINE . PHP_EOL)
         );
-        return Json::decode($data);
+        try {
+            return Json::decode($data);
+        } catch (JsonException $e) {
+            error_log('Error decoding JSON from "' . $filename . '": ' . $e->getMessage());
+            return false;
+        }
     }
 
     /**
@@ -368,10 +369,7 @@ class Filesystem extends AbstractData
         foreach ($files as $pasteid) {
             if ($this->exists($pasteid)) {
                 $data = $this->read($pasteid);
-                if (
-                    array_key_exists('expire_date', $data['meta']) &&
-                    $data['meta']['expire_date'] < $time
-                ) {
+                if (($data['meta']['expire_date'] ?? $time) < $time) {
                     $pastes[] = $pasteid;
                     if (++$count >= $batchsize) {
                         break;
@@ -450,7 +448,7 @@ class Filesystem extends AbstractData
                 $filename,
                 self::PROTECTION_LINE . PHP_EOL . Json::encode($data)
             );
-        } catch (Exception $e) {
+        } catch (JsonException $e) {
             error_log('Error while trying to store data to the filesystem at path "' . $filename . '": ' . $e->getMessage());
             return false;
         }
@@ -523,6 +521,8 @@ class Filesystem extends AbstractData
             file_put_contents($destFile, $handle, FILE_APPEND);
             fclose($handle);
         }
-        unlink($srcFile);
+        if (!unlink($srcFile)) {
+            error_log('Error deleting converted document: ' . $srcFile);
+        }
     }
 }

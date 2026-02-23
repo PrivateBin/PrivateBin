@@ -43,8 +43,10 @@ features.
   [DANE](https://en.wikipedia.org/wiki/DNS-based_Authentication_of_Named_Entities)
   record.
 
-- The "key" used to encrypt the paste is part of the URL. If you publicly post
-  the URL of a paste that is not password-protected, anyone can read it.
+- The “key” used to encrypt the paste is part of the URL (in
+  [the fragment part separated by the `#`](https://en.wikipedia.org/wiki/URL#fragment)).
+  If you publicly post the URL of a paste that is not password-protected, anyone
+  can read it.
   Use a password if you want your paste to remain private. In that case, make
   sure to use a strong password and share it privately and end-to-end-encrypted.
 

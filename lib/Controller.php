@@ -12,6 +12,8 @@
 namespace PrivateBin;
 
 use Exception;
+use PrivateBin\Exception\JsonException;
+use PrivateBin\Exception\TranslatedException;
 use PrivateBin\Persistence\ServerSalt;
 use PrivateBin\Persistence\TrafficLimiter;
 use PrivateBin\Proxy\AbstractProxy;
@@ -195,13 +197,14 @@ class Controller
      * Set default language
      *
      * @access private
+     * @throws Exception
      */
     private function _setDefaultLanguage()
     {
         $lang = $this->_conf->getKey('languagedefault');
         I18n::setLanguageFallback($lang);
         // force default language, if language selection is disabled and a default is set
-        if (!$this->_conf->getKey('languageselection') && strlen($lang) == 2) {
+        if (!$this->_conf->getKey('languageselection') && strlen($lang) === 2) {
             $_COOKIE['lang'] = $lang;
             setcookie('lang', $lang, array('SameSite' => 'Lax', 'Secure' => true));
         }
@@ -211,6 +214,7 @@ class Controller
      * Set default template
      *
      * @access private
+     * @throws Exception
      */
     private function _setDefaultTemplate()
     {
@@ -260,6 +264,7 @@ class Controller
      * pasteid (optional) = in discussions, which paste this comment belongs to.
      *
      * @access private
+     * @throws Exception
      * @return string
      */
     private function _create()
@@ -270,8 +275,8 @@ class Controller
         TrafficLimiter::setStore($this->_model->getStore());
         try {
             TrafficLimiter::canPass();
-        } catch (Exception $e) {
-            $this->_return_message(1, $e->getMessage());
+        } catch (TranslatedException $e) {
+            $this->_json_error($e->getMessage());
             return;
         }
 
@@ -281,14 +286,13 @@ class Controller
             array_key_exists('parentid', $data) &&
             !empty($data['parentid']);
         if (!FormatV2::isValid($data, $isComment)) {
-            $this->_return_message(1, I18n::_('Invalid data.'));
+            $this->_json_error(I18n::_('Invalid data.'));
             return;
         }
         $sizelimit = $this->_conf->getKey('sizelimit');
         // Ensure content is not too big.
         if (strlen($data['ct']) > $sizelimit) {
-            $this->_return_message(
-                1,
+            $this->_json_error(
                 I18n::_(
                     'Document is limited to %s of encrypted data.',
                     Filter::formatHumanReadableSize($sizelimit)
@@ -305,34 +309,25 @@ class Controller
                     $comment = $paste->getComment($data['parentid']);
                     $comment->setData($data);
                     $comment->store();
+                    $this->_json_result($comment->getId());
                 } catch (Exception $e) {
-                    $this->_return_message(1, $e->getMessage());
-                    return;
+                    $this->_json_error($e->getMessage());
                 }
-                $this->_return_message(0, $comment->getId());
             } else {
-                $this->_return_message(1, I18n::_('Invalid data.'));
+                $this->_json_error(I18n::_('Invalid data.'));
             }
         }
         // The user posts a standard paste.
         else {
             try {
                 $this->_model->purge();
-            } catch (Exception $e) {
-                error_log('Error purging documents: ' . $e->getMessage() . PHP_EOL .
-                    'Use the administration scripts statistics to find ' .
-                    'damaged paste IDs and either delete them or restore them ' .
-                    'from backup.');
-            }
-            $paste = $this->_model->getPaste();
-            try {
+                $paste = $this->_model->getPaste();
                 $paste->setData($data);
                 $paste->store();
+                $this->_json_result($paste->getId(), array('deletetoken' => $paste->getDeleteToken()));
             } catch (Exception $e) {
-                $this->_return_message(1, $e->getMessage());
-                return;
+                $this->_json_error($e->getMessage());
             }
-            $this->_return_message(0, $paste->getId(), array('deletetoken' => $paste->getDeleteToken()));
         }
     }
 
@@ -362,14 +357,14 @@ class Controller
             } else {
                 $this->_error = self::GENERIC_ERROR;
             }
-        } catch (Exception $e) {
+        } catch (TranslatedException $e) {
             $this->_error = $e->getMessage();
         }
         if ($this->_request->isJsonApiCall()) {
             if (empty($this->_error)) {
-                $this->_return_message(0, $dataid);
+                $this->_json_result($dataid);
             } else {
-                $this->_return_message(1, $this->_error);
+                $this->_json_error(I18n::_($this->_error));
             }
         }
     }
@@ -393,12 +388,12 @@ class Controller
                 if (array_key_exists('salt', $data['meta'])) {
                     unset($data['meta']['salt']);
                 }
-                $this->_return_message(0, $dataid, (array) $data);
+                $this->_json_result($dataid, (array) $data);
             } else {
-                $this->_return_message(1, self::GENERIC_ERROR);
+                $this->_json_error(I18n::_(self::GENERIC_ERROR));
             }
-        } catch (Exception $e) {
-            $this->_return_message(1, $e->getMessage());
+        } catch (TranslatedException $e) {
+            $this->_json_error($e->getMessage());
         }
     }
 
@@ -406,6 +401,7 @@ class Controller
      * Display frontend.
      *
      * @access private
+     * @throws Exception
      */
     private function _view()
     {
@@ -425,7 +421,7 @@ class Controller
         // label all the expiration options
         $expire = array();
         foreach ($this->_conf->getSection('expire_options') as $time => $seconds) {
-            $expire[$time] = ($seconds == 0) ? I18n::_(ucfirst($time)) : Filter::formatHumanReadableTime($time);
+            $expire[$time] = ($seconds === 0) ? I18n::_(ucfirst($time)) : Filter::formatHumanReadableTime($time);
         }
 
         // translate all the formatter options
@@ -466,7 +462,7 @@ class Controller
         }
         $page->assign('BASEPATH', I18n::_($this->_conf->getKey('basepath')));
         $page->assign('STATUS', I18n::_($this->_status));
-        $page->assign('ISDELETED', I18n::_(json_encode($this->_is_deleted)));
+        $page->assign('ISDELETED', $this->_is_deleted);
         $page->assign('VERSION', self::VERSION);
         $page->assign('DISCUSSION', $this->_conf->getKey('discussion'));
         $page->assign('OPENDISCUSSION', $this->_conf->getKey('opendiscussion'));
@@ -538,6 +534,40 @@ class Controller
     }
 
     /**
+     * prepares JSON encoded error message
+     *
+     * @access private
+     * @param  string $error
+     * @throws JsonException
+     */
+    private function _json_error($error)
+    {
+        $result = array(
+            'status'  => 1,
+            'message' => $error,
+        );
+        $this->_json = Json::encode($result);
+    }
+
+    /**
+     * prepares JSON encoded result message
+     *
+     * @access private
+     * @param  string $dataid
+     * @param  array $other
+     * @throws JsonException
+     */
+    private function _json_result($dataid, $other = array())
+    {
+        $result = array(
+            'status' => 0,
+            'id'     => $dataid,
+            'url'    => $this->_urlBase . '?' . $dataid,
+        ) + $other;
+        $this->_json = Json::encode($result);
+    }
+
+    /**
      * Proxies a link using the specified proxy class, and updates the status or error with the response.
      *
      * @access private
@@ -550,26 +580,5 @@ class Controller
         } else {
             $this->_status = $proxy->getUrl();
         }
-    }
-
-    /**
-     * prepares JSON encoded status message
-     *
-     * @access private
-     * @param  int $status
-     * @param  string $message
-     * @param  array $other
-     */
-    private function _return_message($status, $message, $other = array())
-    {
-        $result = array('status' => $status);
-        if ($status) {
-            $result['message'] = I18n::_($message);
-        } else {
-            $result['id']  = $message;
-            $result['url'] = $this->_urlBase . '?' . $message;
-        }
-        $result += $other;
-        $this->_json = Json::encode($result);
     }
 }

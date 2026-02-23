@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v5
+      uses: actions/checkout@v6
     - name: Validate composer.json and composer.lock
       run: composer validate
     - name: Install dependencies
@@ -27,11 +27,11 @@ jobs:
     continue-on-error: "${{ matrix.experimental }}"
     strategy:
       matrix:
-        php-versions: ['7.4', '8.0', '8.1', '8.2', '8.3', '8.4']
+        php-versions: ['7.4', '8.0', '8.1', '8.2', '8.3', '8.4', '8.5']
         experimental: [false]
 # uncomment this to start testing on development release
 #        include:
-#          - php-versions: '8.5' # development release, things can break
+#          - php-versions: '8.6' # development release, things can break
 #            experimental: true
     env:
       extensions: gd, sqlite3
@@ -41,7 +41,7 @@ jobs:
 
     # let's get started!
     - name: Checkout
-      uses: actions/checkout@v5
+      uses: actions/checkout@v6
 
     # cache PHP extensions
     - name: Setup cache environment
@@ -53,7 +53,7 @@ jobs:
         key: ${{ runner.os }}-${{ env.extensions-cache-key }}
 
     - name: Cache extensions
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       with:
         path: ${{ steps.extcache.outputs.dir }}
         key: ${{ steps.extcache.outputs.key }}
@@ -89,7 +89,7 @@ jobs:
       shell: bash
 
     - name: Cache dependencies
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       with:
         path: "${{ steps.composer-cache.outputs.dir }}"
         key: "${{ runner.os }}-composer-${{ steps.get-date.outputs.date }}-${{ hashFiles('**/composer.json') }}"
@@ -112,7 +112,7 @@ jobs:
 
     - name: Upload Test Results
       if: always()
-      uses: actions/upload-artifact@v5
+      uses: actions/upload-artifact@v6
       with:
         name: Test Results (PHP ${{ matrix.php-versions }})
         path: tst/results.xml
@@ -129,7 +129,7 @@ jobs:
 
     # let's get started!
     - name: Checkout
-      uses: actions/checkout@v5
+      uses: actions/checkout@v6
 
     # cache PHP extensions
     - name: Setup cache environment
@@ -141,7 +141,7 @@ jobs:
         key: ${{ runner.os }}-${{ env.extensions-cache-key }}
 
     - name: Cache extensions
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       with:
         path: ${{ steps.extcache.outputs.dir }}
         key: ${{ steps.extcache.outputs.key }}
@@ -177,7 +177,7 @@ jobs:
       shell: bash
 
     - name: Cache dependencies
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       with:
         path: "${{ steps.composer-cache.outputs.dir }}"
         key: "${{ runner.os }}-composer-${{ steps.get-date.outputs.date }}-${{ hashFiles('**/composer.json') }}"
@@ -203,7 +203,7 @@ jobs:
 
     - name: Upload Test Results
       if: always()
-      uses: actions/upload-artifact@v5
+      uses: actions/upload-artifact@v6
       with:
         name: Test Results
         path: tst/results.xml
@@ -213,7 +213,7 @@ jobs:
     steps:
 
     - name: Checkout
-      uses: actions/checkout@v5
+      uses: actions/checkout@v6
 
     - name: Setup Node
       uses: actions/setup-node@v6
@@ -235,7 +235,7 @@ jobs:
 
     - name: Upload Test Results
       if: always()
-      uses: actions/upload-artifact@v5
+      uses: actions/upload-artifact@v6
       with:
         name: Test Results (Mocha)
         path: js/mocha-results.xml
@@ -245,7 +245,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Upload
-      uses: actions/upload-artifact@v5
+      uses: actions/upload-artifact@v6
       with:
         name: Event File
         path: "${{ github.event_path }}"

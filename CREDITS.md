@@ -69,3 +69,5 @@
 * Nicolas Le Gall - Japanese
 * lazerns - Arabic
 * Edward205 - Romanian
+* babiloof - Swedish
+* Ali Fani - Persian

@@ -127,14 +127,13 @@ class I18n
         } else {
             $args[0] = self::$_translations[$messageId];
         }
-        // encode any non-integer arguments and the message ID, if it doesn't contain a link or keyboard input
+        // encode any non-integer arguments, but not the message itself
+        // The message ID comes from trusted sources (code or translation JSON files),
+        // while parameters may come from untrusted sources and need HTML entity encoding
+        // to prevent XSS attacks when the message is inserted into HTML context
         $argsCount = count($args);
-        for ($i = 0; $i < $argsCount; ++$i) {
-            if ($i === 0) {
-                if (str_contains($args[0], '<a') || str_contains($args[0], '<kbd>')) {
-                    continue;
-                }
-            } elseif (is_int($args[$i])) {
+        for ($i = 1; $i < $argsCount; ++$i) {
+            if (is_int($args[$i])) {
                 continue;
             }
             $args[$i] = self::encode($args[$i]);
@@ -162,6 +161,7 @@ class I18n
      *
      * @access public
      * @static
+     * @throws JsonException
      */
     public static function loadTranslations()
     {
@@ -172,21 +172,20 @@ class I18n
             array_key_exists('lang', $_COOKIE) &&
             ($key = array_search($_COOKIE['lang'], $availableLanguages)) !== false
         ) {
-            $match = $availableLanguages[$key];
+            self::$_language = $availableLanguages[$key];
         }
         // find a translation file matching the browsers language preferences
         else {
-            $match = self::_getMatchingLanguage(
+            self::$_language = self::_getMatchingLanguage(
                 self::getBrowserLanguages(), $availableLanguages
             );
         }
 
         // load translations
-        self::$_language     = $match;
-        if ($match == 'en') {
+        if (self::$_language === 'en') {
             self::$_translations = array();
         } else {
-            $data                = file_get_contents(self::_getPath($match . '.json'));
+            $data                = file_get_contents(self::_getPath(self::$_language . '.json'));
             self::$_translations = Json::decode($data);
         }
     }
@@ -200,14 +199,14 @@ class I18n
      */
     public static function getAvailableLanguages()
     {
-        if (count(self::$_availableLanguages) == 0) {
+        if (count(self::$_availableLanguages) === 0) {
             self::$_availableLanguages[] = 'en'; // en.json is not part of the release archive
             $languageIterator            = new AppendIterator();
             $languageIterator->append(new GlobIterator(self::_getPath('??.json')));
             $languageIterator->append(new GlobIterator(self::_getPath('???.json'))); // for jbo
             foreach ($languageIterator as $file) {
                 $language = $file->getBasename('.json');
-                if ($language != 'en') {
+                if ($language !== 'en') {
                     self::$_availableLanguages[] = $language;
                 }
             }
@@ -270,16 +269,17 @@ class I18n
      * @access public
      * @static
      * @param  array $languages
+     * @throws JsonException
      * @return array
      */
     public static function getLanguageLabels($languages = array())
     {
         $file = self::_getPath('languages.json');
-        if (count(self::$_languageLabels) == 0 && is_readable($file)) {
+        if (count(self::$_languageLabels) === 0 && is_readable($file)) {
             $data                  = file_get_contents($file);
             self::$_languageLabels = Json::decode($data);
         }
-        if (count($languages) == 0) {
+        if (count($languages) === 0) {
             return self::$_languageLabels;
         }
         return array_intersect_key(self::$_languageLabels, array_flip($languages));
@@ -346,6 +346,7 @@ class I18n
             case 'sk':
                 return $n === 1 ? 0 : ($n >= 2 && $n <= 4 ? 1 : 2);
             case 'co':
+            case 'fa':
             case 'fr':
             case 'oc':
             case 'tr':
@@ -366,11 +367,11 @@ class I18n
                 return $n === 1 ? 0 : (($n === 0 || ($n % 100 > 0 && $n % 100 < 20)) ? 1 : 2);
             case 'ru':
             case 'uk':
-                return $n % 10 === 1 && $n % 100 != 11 ? 0 : ($n % 10 >= 2 && $n % 10 <= 4 && ($n % 100 < 10 || $n % 100 >= 20) ? 1 : 2);
+                return $n % 10 === 1 && $n % 100 !== 11 ? 0 : ($n % 10 >= 2 && $n % 10 <= 4 && ($n % 100 < 10 || $n % 100 >= 20) ? 1 : 2);
             case 'sl':
                 return $n % 100 === 1 ? 1 : ($n % 100 === 2 ? 2 : ($n % 100 === 3 || $n % 100 === 4 ? 3 : 0));
             default:
-                // bg, ca, de, el, en, es, et, fi, hu, it, nl, no, pt
+                // bg, ca, de, el, en, es, et, fi, hu, it, nl, no, pt, sv
                 return $n !== 1 ? 1 : 0;
         }
     }

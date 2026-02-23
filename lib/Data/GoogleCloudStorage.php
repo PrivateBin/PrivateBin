@@ -15,6 +15,7 @@ use Exception;
 use Google\Cloud\Core\Exception\NotFoundException;
 use Google\Cloud\Storage\Bucket;
 use Google\Cloud\Storage\StorageClient;
+use PrivateBin\Exception\JsonException;
 use PrivateBin\Json;
 
 class GoogleCloudStorage extends AbstractData
@@ -89,7 +90,7 @@ class GoogleCloudStorage extends AbstractData
      */
     private function _getKey($pasteid)
     {
-        if ($this->_prefix != '') {
+        if (!empty($this->_prefix)) {
             return $this->_prefix . '/' . $pasteid;
         }
         return $pasteid;
@@ -106,7 +107,7 @@ class GoogleCloudStorage extends AbstractData
      */
     private function _upload($key, &$payload)
     {
-        $metadata = array_key_exists('meta', $payload) ? $payload['meta'] : array();
+        $metadata = $payload['meta'] ?? array();
         unset($metadata['salt']);
         foreach ($metadata as $k => $v) {
             $metadata[$k] = strval($v);
@@ -219,7 +220,12 @@ class GoogleCloudStorage extends AbstractData
         try {
             foreach ($this->_bucket->objects(array('prefix' => $prefix)) as $key) {
                 $data            = $this->_bucket->object($key->name())->downloadAsString();
-                $comment         = Json::decode($data);
+                try {
+                    $comment = Json::decode($data);
+                } catch (JsonException $e) {
+                    error_log('failed to read comment from ' . $key->name() . ', ' . $e->getMessage());
+                    $comment = array();
+                }
                 $comment['id']   = basename($key->name());
                 $slot            = $this->getOpenSlot($comments, (int) $comment['meta']['created']);
                 $comments[$slot] = $comment;
@@ -252,15 +258,12 @@ class GoogleCloudStorage extends AbstractData
                 if (strlen($name) > strlen($path) && substr($name, strlen($path), 1) !== '/') {
                     continue;
                 }
-                $info = $object->info();
-                if (key_exists('metadata', $info) && key_exists('value', $info['metadata'])) {
-                    $value = $info['metadata']['value'];
-                    if (is_numeric($value) && intval($value) < $time) {
-                        try {
-                            $object->delete();
-                        } catch (NotFoundException $e) {
-                            // deleted by another instance.
-                        }
+                $value = $object->info()['metadata']['value'] ?? '';
+                if (is_numeric($value) && intval($value) < $time) {
+                    try {
+                        $object->delete();
+                    } catch (NotFoundException $e) {
+                        // deleted by another instance.
                     }
                 }
             }
@@ -276,14 +279,14 @@ class GoogleCloudStorage extends AbstractData
      */
     public function setValue($value, $namespace, $key = '')
     {
-        if ($key === '') {
+        if (empty($key)) {
             $key = 'config/' . $namespace;
         } else {
             $key = 'config/' . $namespace . '/' . $key;
         }
 
         $metadata = array('namespace' => $namespace);
-        if ($namespace != 'salt') {
+        if ($namespace !== 'salt') {
             $metadata['value'] = strval($value);
         }
         try {
@@ -334,17 +337,14 @@ class GoogleCloudStorage extends AbstractData
 
         $now    = time();
         $prefix = $this->_prefix;
-        if ($prefix != '') {
+        if (!empty($prefix)) {
             $prefix .= '/';
         }
         try {
             foreach ($this->_bucket->objects(array('prefix' => $prefix)) as $object) {
-                $metadata = $object->info()['metadata'];
-                if ($metadata != null && array_key_exists('expire_date', $metadata)) {
-                    $expire_at = intval($metadata['expire_date']);
-                    if ($expire_at != 0 && $expire_at < $now) {
-                        array_push($expired, basename($object->name()));
-                    }
+                $expire_at = $object->info()['metadata']['expire_date'] ?? '';
+                if (is_numeric($expire_at) && intval($expire_at) < $now) {
+                    array_push($expired, basename($object->name()));
                 }
 
                 if (count($expired) > $batchsize) {
@@ -364,7 +364,7 @@ class GoogleCloudStorage extends AbstractData
     {
         $pastes = array();
         $prefix = $this->_prefix;
-        if ($prefix != '') {
+        if (!empty($prefix)) {
             $prefix .= '/';
         }
 

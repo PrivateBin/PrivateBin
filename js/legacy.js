@@ -55,12 +55,43 @@
          * blacklist of UserAgents (parts) known to belong to a bot
          *
          * @private
-         * @enum   {Array}
+         * @type {string[]}
          * @readonly
          */
         var badBotUA = [
+            // Generic bot identifiers
+            'bot',
             'Bot',
-            'bot'
+            'crawler',
+            'Crawler',
+            'spider',
+            'Spider',
+            'scraper',
+            'Scraper',
+            
+            // Search Engines
+            'Mediapartners-Google',
+            'BingPreview',
+            'Yahoo! Slurp',
+            
+            // SEO & Analytics
+            'Screaming Frog',
+            
+            // Social Media
+            'facebookexternalhit',
+            
+            // AI & LLM
+            'ChatGPT-User',
+            'anthropic-ai',
+            
+            // Security Scanners
+            'CensysInspect',
+            'Shodan',
+            
+            // Other Common Crawlers
+            '80legs',
+            'ia_archiver',
+            'Teoma',
         ];
 
         /**

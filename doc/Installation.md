@@ -110,7 +110,7 @@ file is divided into multiple sections, which are enclosed in square brackets.
 
 In the `[main]` section you can enable or disable the discussion feature, set
 the limit of stored pastes and comments in bytes. The `[traffic]` section lets
-you set a time limit in seconds. Users may not post more often then this limit
+you set a time limit in seconds. Users may not post more often than this limit
 to your PrivateBin installation.
 
 More details can be found in the
@@ -120,11 +120,14 @@ More details can be found in the
 
 ### Web server configuration
 
-A `robots.txt` file is provided in the root dir of PrivateBin. It disallows all
-robots from accessing your pastes. It is recommend to place it into the root of
-your web directory if you have installed PrivateBin in a subdirectory. Make sure
-to adjust it, so that the file paths match your installation. Of course also
-adjust the file, if you already use a `robots.txt`.
+A `robots.txt` file is provided in the root dir of PrivateBin. It requests bots
+such as search engines and other automation tools to not index or crawl your
+site, so the paste keys are not leaked. It is recommended to place it into
+the root of your web directory if you have installed PrivateBin in a subdirectory.
+Make sure to adjust it, so that the file paths match your installation. Of course
+you can also adjust an existing `robots.txt` file. More bot detection is
+implemented in JavaScript, but note none of these mechanisms is a 100% fail-safe
+way to prevent non-human visitors on your site.
 
 A `.htaccess.disabled` file is provided in the root dir of PrivateBin. It blocks
 some known robots and link-scanning bots. If you use Apache, you can rename the

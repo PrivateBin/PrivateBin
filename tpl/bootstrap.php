@@ -50,7 +50,7 @@ if ($QRCODE) :
 <?php
 endif;
 ?>
-		<?php $this->_scriptTag('js/zlib-1.3.1-1.js', 'defer'); ?>
+		<?php $this->_scriptTag('js/zlib-1.3.1-2.js', 'defer'); ?>
 		<?php $this->_scriptTag('js/base-x-5.0.1.js', 'defer'); ?>
 		<?php $this->_scriptTag('js/bootstrap-3.4.1.js', 'defer'); ?>
 <?php
@@ -249,7 +249,7 @@ endif;
 foreach ($EXPIRE as $key => $value) :
 ?>
 							<option value="<?php echo $key; ?>"<?php
-    if ($key == $EXPIREDEFAULT) :
+    if ($key === $EXPIREDEFAULT) :
 ?> selected="selected"<?php
     endif;
 ?>><?php echo $value; ?></option>
@@ -327,7 +327,7 @@ if ($isCpct) :
     foreach ($FORMATTER as $key => $value) :
 ?>
 							<option value="<?php echo $key; ?>"<?php
-        if ($key == $FORMATTERDEFAULT) :
+        if ($key === $FORMATTERDEFAULT) :
 ?> selected="selected"<?php
         endif;
 ?>><?php echo $value; ?></option>
@@ -412,7 +412,7 @@ if (!$isCpct) :
     foreach ($FORMATTER as $key => $value) :
 ?>
 							<option value="<?php echo $key; ?>"<?php
-        if ($key == $FORMATTERDEFAULT) :
+        if ($key === $FORMATTERDEFAULT) :
 ?> selected="selected"<?php
         endif;
 ?>><?php echo $value; ?></option>
@@ -513,16 +513,19 @@ if ($FILEUPLOAD) :
 <?php
 endif;
 ?>
-				<div id="status" role="alert" class="clearfix alert alert-<?php echo (bool)$ISDELETED ? 'success' : 'info'; echo empty($STATUS) ? ' hidden' : '' ?>">
+				<div id="status" role="alert" class="clearfix alert alert-<?php echo $ISDELETED ? 'success' : 'info'; echo empty($STATUS) ? ' hidden' : '' ?>">
 					<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
 					<?php echo I18n::encode($STATUS), PHP_EOL; ?>
-					<?php
-						if ((bool)$ISDELETED):
-					?>
-						<button type="button" class="btn btn-default pull-right" id="new-from-alert">
-							<span class="glyphicon glyphicon-repeat"></span> <?php echo I18n::_('Start over'), PHP_EOL; ?>
-						</button>
-					<?php endif; ?>
+<?php
+if ($ISDELETED) :
+?>
+					<button type="button" class="btn btn-default pull-right" id="new-from-alert">
+						<span class="glyphicon glyphicon-repeat"></span>
+						<?php echo I18n::_('Start over'), PHP_EOL; ?>
+					</button>
+<?php
+endif;
+?>
 				</div>
 				<div id="errormessage" role="alert" class="<?php echo empty($ERROR) ? 'hidden' : '' ?> alert alert-danger">
 					<span class="glyphicon glyphicon-alert" aria-hidden="true"></span>
@@ -688,7 +691,7 @@ endif;
 				</div>
 				<div id="attachmenttemplate" role="alert" class="attachment hidden alert alert-info">
 					<span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
-					<a class="alert-link"><?php echo I18n::_('Download attachment'); ?></a>
+					<a class="alert-link"><?php echo I18n::_('Download attachment'); ?><span></span></a>
 				</div>
 			</div>
 		</div>

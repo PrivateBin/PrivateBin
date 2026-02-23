@@ -569,13 +569,14 @@ jQuery.PrivateBin = (function($) {
          * @param  {string} str
          * @return {string} escaped HTML
          */
-        me.htmlEntities = function(str) {
+        me.htmlEntities = function(str)
+        {
             return String(str).replace(
                 /[&<>"'`=\/]/g, function(s) {
                     return entityMap[s];
                 }
             );
-        }
+        };
 
         /**
          * calculate expiration date given initial date and expiration period
@@ -586,7 +587,8 @@ jQuery.PrivateBin = (function($) {
          * @param  {string|number} expirationDisplayStringOrSecondsToExpire - may not be empty
          * @return {Date}
          */
-        me.calculateExpirationDate = function(initialDate, expirationDisplayStringOrSecondsToExpire) {
+        me.calculateExpirationDate = function(initialDate, expirationDisplayStringOrSecondsToExpire)
+        {
             let expirationDate      = new Date(initialDate),
                 secondsToExpiration = expirationDisplayStringOrSecondsToExpire;
             if (typeof expirationDisplayStringOrSecondsToExpire === 'string') {
@@ -631,7 +633,7 @@ jQuery.PrivateBin = (function($) {
             }
 
             return result;
-        }
+        };
 
         /**
          * resets state, used for unit testing
@@ -685,7 +687,7 @@ jQuery.PrivateBin = (function($) {
          * @prop   {string[]}
          * @readonly
          */
-        const supportedLanguages = ['ar', 'bg', 'ca', 'co', 'cs', 'de', 'el', 'es', 'et', 'fi', 'fr', 'he', 'hu', 'id', 'it', 'ja', 'jbo', 'lt', 'no', 'nl', 'pl', 'pt', 'oc', 'ro', 'ru', 'sk', 'sl', 'th', 'tr', 'uk', 'zh'];
+        const supportedLanguages = ['ar', 'bg', 'ca', 'co', 'cs', 'de', 'el', 'es', 'et', 'fa', 'fi', 'fr', 'he', 'hu', 'id', 'it', 'ja', 'jbo', 'lt', 'no', 'nl', 'pl', 'pt', 'oc', 'ro', 'ru', 'sk', 'sl', 'sv', 'th', 'tr', 'uk', 'zh'];
 
         /**
          * built in language
@@ -873,6 +875,7 @@ jQuery.PrivateBin = (function($) {
                 case 'sk':
                     return n === 1 ? 0 : (n >= 2 && n <= 4 ? 1 : 2);
                 case 'co':
+                case 'fa':
                 case 'fr':
                 case 'oc':
                 case 'tr':
@@ -896,7 +899,7 @@ jQuery.PrivateBin = (function($) {
                     return n % 10 === 1 && n % 100 !== 11 ? 0 : (n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20) ? 1 : 2);
                 case 'sl':
                     return n % 100 === 1 ? 1 : (n % 100 === 2 ? 2 : (n % 100 === 3 || n % 100 === 4 ? 3 : 0));
-                // bg, ca, de, el, en, es, et, fi, hu, it, nl, no, pt
+                // bg, ca, de, el, en, es, et, fi, hu, it, nl, no, pt, sv
                 default:
                     return n !== 1 ? 1 : 0;
             }
@@ -1317,7 +1320,7 @@ jQuery.PrivateBin = (function($) {
             spec[1] = atob(spec[1]);
             if (spec[7] === 'zlib') {
                 if (typeof zlib === 'undefined') {
-                    throw 'Error decompressing document, your browser does not support WebAssembly. Please use another browser to view this document.'
+                    throw 'Error decompressing document, your browser does not support WebAssembly. Please use another browser to view this document.';
                 }
             }
             try {
@@ -2997,8 +3000,9 @@ jQuery.PrivateBin = (function($) {
                 attachmentLink.attr('download', fileName);
 
                 const fileSize = Helper.formatBytes(decodedData.length);
-                const fileInfo = document.createTextNode(` (${fileName}, ${fileSize})`);
-                template[0].appendChild(fileInfo);
+                const spans = template[0].querySelectorAll('span');
+                const span = spans[spans.length - 1];
+                span.textContent += ` (${fileName}, ${fileSize})`;
             }
 
             // sanitize SVG preview
@@ -3239,7 +3243,7 @@ jQuery.PrivateBin = (function($) {
          * @param {FileList[]} loadedFiles (optional) loaded files array
          * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/FileReader#readAsDataURL()}
          */
-        function readFileData(loadedFiles) {
+        function readFileData(loadedFiles = []) {
             // Clear old cache
             me.removeAttachmentData();
 
@@ -3251,15 +3255,15 @@ jQuery.PrivateBin = (function($) {
                 return;
             }
 
-            if (loadedFiles === undefined) {
-                loadedFiles = [...$fileInput[0].files];
-                me.clearDragAndDrop();
-            } else {
+            if (loadedFiles && loadedFiles.length > 0) {
                 const fileNames = loadedFiles.map((loadedFile => loadedFile.name));
                 printDragAndDropFileNames(fileNames);
+            } else {
+                loadedFiles = [...$fileInput[0].files];
+                me.clearDragAndDrop();
             }
 
-            if (typeof loadedFiles !== 'undefined') {
+            if (loadedFiles.length > 0) {
                 files = loadedFiles;
                 loadedFiles.forEach((loadedFile, index) => {
                     const fileReader = new FileReader();
@@ -3404,19 +3408,21 @@ jQuery.PrivateBin = (function($) {
          * @function
          */
         function addClipboardEventHandler() {
-            $('#message').on('paste', function (event) {
+            document.addEventListener('paste', (event) => {
                 const items = (event.clipboardData || event.originalEvent.clipboardData).items;
                 const files = [...items]
                                     .filter(item => item.kind === 'file')
                                     .map(item => item.getAsFile());
 
-                if (TopNav.isAttachmentReadonly()) {
+                if (TopNav.isAttachmentReadonly() && files.length) {
                     event.stopPropagation();
                     event.preventDefault();
                     return false;
                 }
 
-                readFileData(files);
+                if (files.length) {
+                    readFileData(files);
+                }
             });
         }
 
@@ -4635,7 +4641,11 @@ jQuery.PrivateBin = (function($) {
          */
         me.setFormat = function(format)
         {
-            $formatter.parent().find(`a[data-format="${format}"]`).click();
+            if (Helper.isBootstrap5()) {
+                $formatter.find('select').val(format);
+            } else {
+                $formatter.parent().find(`a[data-format="${format}"]`).click();
+            }
         }
 
         /**
@@ -5794,6 +5804,10 @@ jQuery.PrivateBin = (function($) {
             Editor.focusInput();
             AttachmentViewer.removeAttachment();
             TopNav.resetInput();
+
+            // reset format
+            PasteViewer.setFormat('plaintext');
+            TopNav.setFormat('plaintext');
 
             TopNav.showCreateButtons();
 

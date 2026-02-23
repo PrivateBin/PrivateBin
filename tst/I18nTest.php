@@ -2,6 +2,7 @@
 
 use PHPUnit\Framework\TestCase;
 use PrivateBin\I18n;
+use PrivateBin\Json;
 
 class I18nMock extends I18n
 {
@@ -37,6 +38,7 @@ class I18nTest extends TestCase
     public function tearDown(): void
     {
         unset($_COOKIE['lang'], $_SERVER['HTTP_ACCEPT_LANGUAGE']);
+        I18n::loadTranslations();
     }
 
     public function testTranslationFallback()
@@ -139,14 +141,14 @@ class I18nTest extends TestCase
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'sl;q=0.8,en-GB;q=0.6,en-US;q=0.4,en;q=0.2';
         I18n::loadTranslations();
         $this->assertEquals('sl', I18n::getLanguage(), 'browser language sl');
-        $this->assertEquals('0 ura',  I18n::_('%d hours', 0), '0 hours in Slowene');
-        $this->assertEquals('1 uri',  I18n::_('%d hours', 1), '1 hour in Slowene');
-        $this->assertEquals('2 ure', I18n::_('%d hours', 2), '2 hours in Slowene');
-        $this->assertEquals('3 ur',  I18n::_('%d hours', 3), '3 hours in Slowene');
-        $this->assertEquals('11 ura',  I18n::_('%d hours', 11), '11 hours in Slowene');
-        $this->assertEquals('101 uri',  I18n::_('%d hours', 101), '101 hours in Slowene');
-        $this->assertEquals('102 ure', I18n::_('%d hours', 102), '102 hours in Slowene');
-        $this->assertEquals('104 ur',  I18n::_('%d hours', 104), '104 hours in Slowene');
+        $this->assertEquals('0 ura',  I18n::_('%d hours', 0), '0 hours in Slovene');
+        $this->assertEquals('1 uri',  I18n::_('%d hours', 1), '1 hour in Slovene');
+        $this->assertEquals('2 ure', I18n::_('%d hours', 2), '2 hours in Slovene');
+        $this->assertEquals('3 ur',  I18n::_('%d hours', 3), '3 hours in Slovene');
+        $this->assertEquals('11 ura',  I18n::_('%d hours', 11), '11 hours in Slovene');
+        $this->assertEquals('101 uri',  I18n::_('%d hours', 101), '101 hours in Slovene');
+        $this->assertEquals('102 ure', I18n::_('%d hours', 102), '102 hours in Slovene');
+        $this->assertEquals('104 ur',  I18n::_('%d hours', 104), '104 hours in Slovene');
     }
 
     public function testBrowserLanguageCsDetection()
@@ -182,7 +184,19 @@ class I18nTest extends TestCase
         $result = htmlspecialchars($input, ENT_QUOTES | ENT_HTML5 | ENT_DISALLOWED, 'UTF-8', false);
         $this->assertEquals($result, I18n::encode($input), 'encodes HTML entities');
         $this->assertEquals('<a>some ' . $result . ' + 1</a>', I18n::_('<a>some %s + %d</a>', $input, 1), 'encodes parameters in translations');
-        $this->assertEquals($result . $result, I18n::_($input . '%s', $input), 'encodes message ID as well, when no link');
+        // Message ID should NOT be encoded (it comes from trusted source), only the parameter should be
+        $this->assertEquals($input . $result, I18n::_($input . '%s', $input), 'encodes only parameters, not message ID');
+    }
+
+    public function testApostropheEncodngInMessage()
+    {
+        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'fr';
+        I18n::loadTranslations();
+        // For example, the French translation should not have the apostrophe encoded
+        // See https://github.com/PrivateBin/PrivateBin/issues/1712
+        $message = I18n::_('Document does not exist, has expired or has been deleted.');
+        $this->assertFalse(strpos($message, '&apos;') !== false, 'French apostrophe should not be encoded in translation message');
+        $this->assertTrue(strpos($message, "n'existe") !== false, 'French apostrophe should be present as literal character');
     }
 
     public function testFallbackAlwaysPresent()
@@ -221,19 +235,19 @@ class I18nTest extends TestCase
     {
         $messageIds = array();
         $languages  = array();
-        $dir        = dir(PATH . 'i18n');
-        while (false !== ($file = $dir->read())) {
-            if (strlen($file) === 7) {
-                $language            = substr($file, 0, 2);
-                $languageMessageIds  = array_keys(
-                    json_decode(
-                        file_get_contents(PATH . 'i18n' . DIRECTORY_SEPARATOR . $file),
-                        true
-                    )
-                );
-                $messageIds           = array_unique(array_merge($messageIds, $languageMessageIds));
-                $languages[$language] = $languageMessageIds;
+        foreach (new DirectoryIterator(PATH . 'i18n') as $file) {
+            $fileNameLength = strlen($file->getFilename());
+            if ($fileNameLength === 7) {       // xx.json
+                $language = substr($file->getFilename(), 0, 2);
+            } elseif ($fileNameLength === 8) { // jbo.json
+                $language = substr($file->getFilename(), 0, 3);
+            } else {
+                continue;
             }
+            $languageJson         = file_get_contents($file->getPathname());
+            $languageMessageIds   = array_keys(Json::decode($languageJson));
+            $messageIds           = array_unique(array_merge($messageIds, $languageMessageIds));
+            $languages[$language] = $languageMessageIds;
         }
         foreach ($messageIds as $messageId) {
             foreach (array_keys($languages) as $language) {

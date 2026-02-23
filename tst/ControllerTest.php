@@ -136,10 +136,6 @@ class ControllerTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionCode 2
-     */
     public function testConf()
     {
         file_put_contents(CONF, '');
@@ -155,7 +151,12 @@ class ControllerTest extends TestCase
     {
         $newConfig   = new class extends Configuration {};
         $configValue = (new ReflectionClass(Controller::class))->getProperty('_conf');
-        $configValue->setAccessible(true);
+        if (version_compare(PHP_VERSION, '8.1') < 0) {
+            // > This function has been DEPRECATED as of PHP 8.5.0. [...]
+            // > As of PHP 8.1.0, calling this method has no effect; all properties are accessible by default.
+            // @see: https://www.php.net/manual/en/reflectionproperty.setaccessible.php
+            $configValue->setAccessible(true);
+        }
         ob_start();
         $controller = new Controller($newConfig);
         ob_end_clean();
@@ -171,7 +172,7 @@ class ControllerTest extends TestCase
         $options['traffic']['limit'] = 0;
         Helper::createIniFile(CONF, $options);
         $paste = Helper::getPasteJson();
-        $file  = tempnam(sys_get_temp_dir(), 'FOO');
+        $file  = Helper::createTempFile();
         file_put_contents($file, $paste);
         Request::setInputStream($file);
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
@@ -202,12 +203,13 @@ class ControllerTest extends TestCase
         $options['traffic']['limit'] = 0;
         Helper::createIniFile(CONF, $options);
         $paste = Helper::getPasteJson(array('expire' => 25));
-        $file  = tempnam(sys_get_temp_dir(), 'FOO');
+        $file  = Helper::createTempFile();
         file_put_contents($file, $paste);
         Request::setInputStream($file);
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
         $_SERVER['REQUEST_METHOD']        = 'POST';
         $_SERVER['REMOTE_ADDR']           = '::1';
+        // Explicitly invoke TrafficLimiter to ensure limit applies to this test
         TrafficLimiter::canPass();
         ob_start();
         new Controller;
@@ -234,7 +236,7 @@ class ControllerTest extends TestCase
         $options['traffic']['limit']  = 0;
         Helper::createIniFile(CONF, $options);
         $paste = Helper::getPasteJson();
-        $file  = tempnam(sys_get_temp_dir(), 'FOO');
+        $file  = Helper::createTempFile();
         file_put_contents($file, $paste);
         Request::setInputStream($file);
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
@@ -258,7 +260,7 @@ class ControllerTest extends TestCase
         $options['traffic']['header'] = 'X_FORWARDED_FOR';
         Helper::createIniFile(CONF, $options);
         $paste = Helper::getPasteJson();
-        $file  = tempnam(sys_get_temp_dir(), 'FOO');
+        $file  = Helper::createTempFile();
         file_put_contents($file, $paste);
         Request::setInputStream($file);
         $_SERVER['HTTP_X_FORWARDED_FOR']  = '::2';
@@ -291,7 +293,7 @@ class ControllerTest extends TestCase
         $paste = Helper::getPaste();
         $this->_data->create(Helper::getPasteId(), $paste);
         $paste = Helper::getPasteJson();
-        $file  = tempnam(sys_get_temp_dir(), 'FOO');
+        $file  = Helper::createTempFile();
         file_put_contents($file, $paste);
         Request::setInputStream($file);
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
@@ -315,7 +317,7 @@ class ControllerTest extends TestCase
         $options['traffic']['limit'] = 0;
         Helper::createIniFile(CONF, $options);
         $paste = Helper::getPasteJson();
-        $file  = tempnam(sys_get_temp_dir(), 'FOO');
+        $file  = Helper::createTempFile();
         file_put_contents($file, $paste);
         Request::setInputStream($file);
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
@@ -347,7 +349,7 @@ class ControllerTest extends TestCase
         $options['traffic']['limit'] = 0;
         Helper::createIniFile(CONF, $options);
         $paste = Helper::getPasteJson();
-        $file  = tempnam(sys_get_temp_dir(), 'FOO');
+        $file  = Helper::createTempFile();
         file_put_contents($file, $paste);
         Request::setInputStream($file);
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
@@ -380,7 +382,7 @@ class ControllerTest extends TestCase
         $options['traffic']['limit'] = 0;
         Helper::createIniFile(CONF, $options);
         $paste = Helper::getPasteJson(array('expire' => 'foo'));
-        $file  = tempnam(sys_get_temp_dir(), 'FOO');
+        $file  = Helper::createTempFile();
         file_put_contents($file, $paste);
         Request::setInputStream($file);
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
@@ -411,7 +413,7 @@ class ControllerTest extends TestCase
         Helper::createIniFile(CONF, $options);
         $paste             = Helper::getPastePost();
         $paste['adata'][3] = 'neither 1 nor 0';
-        $file              = tempnam(sys_get_temp_dir(), 'FOO');
+        $file              = Helper::createTempFile();
         file_put_contents($file, json_encode($paste));
         Request::setInputStream($file);
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
@@ -436,7 +438,7 @@ class ControllerTest extends TestCase
         Helper::createIniFile(CONF, $options);
         $paste             = Helper::getPastePost();
         $paste['adata'][2] = 'neither 1 nor 0';
-        $file              = tempnam(sys_get_temp_dir(), 'FOO');
+        $file              = Helper::createTempFile();
         file_put_contents($file, json_encode($paste));
         Request::setInputStream($file);
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
@@ -460,7 +462,7 @@ class ControllerTest extends TestCase
     public function testCreateBrokenUpload()
     {
         $paste = substr(Helper::getPasteJson(), 0, -10);
-        $file  = tempnam(sys_get_temp_dir(), 'FOO');
+        $file  = Helper::createTempFile();
         file_put_contents($file, $paste);
         Request::setInputStream($file);
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
@@ -482,7 +484,7 @@ class ControllerTest extends TestCase
     public function testCreateTooSoon()
     {
         $paste = Helper::getPasteJson();
-        $file  = tempnam(sys_get_temp_dir(), 'FOO');
+        $file  = Helper::createTempFile();
         file_put_contents($file, $paste);
         Request::setInputStream($file);
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
@@ -509,7 +511,7 @@ class ControllerTest extends TestCase
         $options                     = parse_ini_file(CONF, true);
         $options['traffic']['limit'] = 0;
         Helper::createIniFile(CONF, $options);
-        $file = tempnam(sys_get_temp_dir(), 'FOO');
+        $file = Helper::createTempFile();
         file_put_contents($file, '{"data":"","meta":{}}');
         Request::setInputStream($file);
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
@@ -533,7 +535,7 @@ class ControllerTest extends TestCase
         $options['traffic']['limit'] = 0;
         Helper::createIniFile(CONF, $options);
         $comment = Helper::getCommentJson();
-        $file    = tempnam(sys_get_temp_dir(), 'FOO');
+        $file    = Helper::createTempFile();
         file_put_contents($file, $comment);
         Request::setInputStream($file);
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
@@ -560,7 +562,7 @@ class ControllerTest extends TestCase
         Helper::createIniFile(CONF, $options);
         $comment             = Helper::getCommentPost();
         $comment['parentid'] = 'foo';
-        $file                = tempnam(sys_get_temp_dir(), 'FOO');
+        $file                = Helper::createTempFile();
         file_put_contents($file, json_encode($comment));
         Request::setInputStream($file);
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
@@ -586,7 +588,7 @@ class ControllerTest extends TestCase
         $options['traffic']['limit'] = 0;
         Helper::createIniFile(CONF, $options);
         $comment = Helper::getCommentJson();
-        $file    = tempnam(sys_get_temp_dir(), 'FOO');
+        $file    = Helper::createTempFile();
         file_put_contents($file, $comment);
         Request::setInputStream($file);
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
@@ -613,7 +615,7 @@ class ControllerTest extends TestCase
         $options['traffic']['limit'] = 0;
         Helper::createIniFile(CONF, $options);
         $comment = Helper::getCommentJson();
-        $file    = tempnam(sys_get_temp_dir(), 'FOO');
+        $file    = Helper::createTempFile();
         file_put_contents($file, $comment);
         Request::setInputStream($file);
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
@@ -642,7 +644,7 @@ class ControllerTest extends TestCase
         $this->_data->createComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getPasteId(), $comment);
         $this->assertTrue($this->_data->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getPasteId()), 'comment exists before posting data');
         $comment = Helper::getCommentJson();
-        $file    = tempnam(sys_get_temp_dir(), 'FOO');
+        $file    = Helper::createTempFile();
         file_put_contents($file, $comment);
         Request::setInputStream($file);
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
@@ -879,7 +881,7 @@ class ControllerTest extends TestCase
         $paste = Helper::getPaste();
         $this->_data->create(Helper::getPasteId(), $paste);
         $this->assertTrue($this->_data->exists(Helper::getPasteId()), 'paste exists before deleting data');
-        $file  = tempnam(sys_get_temp_dir(), 'FOO');
+        $file  = Helper::createTempFile();
         file_put_contents($file, json_encode(array(
             'deletetoken' => 'burnafterreading',
         )));
