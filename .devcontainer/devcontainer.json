@@ -4,22 +4,18 @@
     "customizations": {
         "vscode": {
             "extensions": [
-				"github.codespaces",
-                // PHP from https://github.com/devcontainers/templates/tree/main/src/php
-				"xdebug.php-debug",
-				"bmewburn.vscode-intelephense-client",
-				"xdebug.php-pack",
-                // PHP
-				"DEVSENSE.phptools-vscode",
-				"DEVSENSE.composer-php-vscode",
-                // linting
-				"EditorConfig.EditorConfig",
-				"dbaeumer.vscode-eslint",
-				"raymondcamden.CSSLint",
-                // testing
-				"maty.vscode-mocha-sidebar",
-                "recca0120.vscode-phpunit"
-			]
+                "github.codespaces",
+                "xdebug.php-debug",
+                "bmewburn.vscode-intelephense-client",
+                "xdebug.php-pack",
+                "DEVSENSE.phptools-vscode",
+                "DEVSENSE.composer-php-vscode",
+                "EditorConfig.EditorConfig",
+                "dbaeumer.vscode-eslint",
+                "raymondcamden.CSSLint",
+                "recca0120.vscode-phpunit",
+                "hbenl.vscode-mocha-test-adapter"
+            ]
         },
         "codespaces": {
             "openFiles": [

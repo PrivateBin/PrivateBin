@@ -15,6 +15,10 @@ composer install --no-dev --optimize-autoloader
 composer global require phpunit/phpunit
 composer global require google/cloud-storage
 
-sudo chmod a+x "$(pwd)" && sudo rm -rf /var/www/html && sudo ln -s "$(pwd)" /var/www/html
-
+# for JS testing
+JAVASCRIPT_DIRECTORY="$(pwd)/js"
+npm --prefix "$JAVASCRIPT_DIRECTORY" install "$JAVASCRIPT_DIRECTORY"
 npm install --global nyc
+
+# development webserver
+sudo chmod a+x "$(pwd)" && sudo rm -rf /var/www/html && sudo ln -s "$(pwd)" /var/www/html

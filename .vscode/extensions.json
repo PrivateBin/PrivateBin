@@ -2,6 +2,7 @@
     "recommendations": [
         "recca0120.vscode-phpunit",
         "onecentlin.phpunit-snippets",
-        "devsense.profiler-php-vscode"
+        "devsense.profiler-php-vscode",
+        "spoonscen.es6-mocha-snippets"
     ]
 }
