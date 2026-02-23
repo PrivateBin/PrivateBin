@@ -962,17 +962,9 @@ jQuery.PrivateBin = (function($) {
          * @returns {boolean}
          */
         function isStringContainsHtml(messageId) {
-            // Use DOMParser to parse the string as HTML. DOMParser does not
-            // execute scripts nor load external resources when parsing, making
-            // it safer against XSS.
-            try {
-                const doc = new DOMParser().parseFromString(String(messageId), 'text/html');
-                return Array.from(doc.body.childNodes).some(node => node.nodeType === Node.ELEMENT_NODE);
-            } catch (e) {
-                // If parsing fails for any reason, consider it not HTML to avoid
-                // treating arbitrary strings as markup.
-                return false;
-            }
+            // message IDs are allowed to contain anchors, spans, keyboard and emphasis tags
+            // we can recognize all of them by only checking for anchors and keyboard tags
+            return args[0].indexOf('<a') !== -1 || args[0].indexOf('<kbd') !== -1;
         }
 
         return me;
