@@ -12,7 +12,8 @@ ln -s ./conf.sample.php cfg/conf.php
 composer install --no-dev --optimize-autoloader
 
 # for PHP unit testing
-composer require --global google/cloud-storage
+composer global require phpunit/phpunit
+composer global require google/cloud-storage
 
 sudo chmod a+x "$(pwd)" && sudo rm -rf /var/www/html && sudo ln -s "$(pwd)" /var/www/html
 
