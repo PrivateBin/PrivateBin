@@ -58,7 +58,7 @@ jQuery.PrivateBin = (function($) {
         ALLOWED_URI_REGEXP: /^(?:(?:(?:f|ht)tps?|mailto|magnet):)/i,
         USE_PROFILES: {
             html: true
-        },
+        }
     };
 
     /**
