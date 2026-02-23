@@ -26,7 +26,7 @@ if (!defined('CONF_SAMPLE')) {
     define('CONF_SAMPLE', PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.sample.php');
 }
 
-require PATH . 'vendor/autoload.php';
+require PATH . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
 Helper::updateSubresourceIntegrity();
 TemplateSwitcher::setAvailableTemplates(Configuration::getDefaults()['main']['availabletemplates']);
 
