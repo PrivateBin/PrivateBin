@@ -17,7 +17,8 @@
 				"dbaeumer.vscode-eslint",
 				"raymondcamden.CSSLint",
                 // testing
-				"maty.vscode-mocha-sidebar"
+				"maty.vscode-mocha-sidebar",
+                "recca0120.vscode-phpunit"
 			]
         },
         "codespaces": {
