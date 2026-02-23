@@ -1,9 +1,13 @@
 #!/bin/sh
 
-export PATH="$PATH:$HOME/.composer/vendor/bin"
-export PATH="$PATH:$PWD/vendor/bin"
-echo 'export PATH="$PATH:$HOME/.composer/vendor/bin"' >> ~/.bashrc
-echo 'export PATH="$PATH:$PWD/vendor/bin"' >> ~/.bashrc
+#COMPOSER_BIN="$HOME/.composer/vendor/bin" # should be equivalent
+COMPOSER_BIN="$(composer global config bin-dir --absolute --quiet)"
+# LOCAL_VENDOR_BIN="$PWD/vendor/bin" # should be equivalent
+LOCAL_VENDOR_BIN="$(composer config vendor-dir --absolute --quiet)"
+export PATH="$PATH:$COMPOSER_BIN"
+export PATH="$PATH:$LOCAL_VENDOR_BIN"
+echo 'export PATH="$PATH:$(composer global config bin-dir --absolute --quiet)"' >> ~/.bashrc
+echo 'export PATH="$PATH:$(composer config vendor-dir --absolute --quiet)"' >> ~/.bashrc
 ln -s ./conf.sample.php cfg/conf.php
 composer install --optimize-autoloader
 
