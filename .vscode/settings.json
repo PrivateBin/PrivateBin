@@ -2,8 +2,11 @@
     "files.associations": {
         "**/cfg/conf*.php": "ini"
     },
-    "phpunit.phpunit": "${workspaceFolder}/vendor/bin/phpunit",
+    "phpunit.phpunit": "${userHome}/.composer/vendor/bin/phpunit",
     "phpunit.args": [
-        "--configuration '${workspaceFolder}/tst/phpunit.xml'"
+        "--configuration",
+        "${workspaceFolder}/tst/phpunit.xml",
+        "--bootstrap",
+        "${workspaceFolder}/tst/Bootstrap.php"
     ]
 }
