@@ -64,8 +64,8 @@ jQuery.PrivateBin = (function($) {
     /**
      * DOMpurify settings for HTML content, where only a strict subset is allowed.
      *
-     * NOTE: The key `USE_PROFILES` from {@see purifyHtmlConfig} needs to be excluded,
-     * as otherwise `USE_PROFILES` takes precedence.
+     * NOTE: The key {@link purifyHtmlConfig.USE_PROFILES} **must not** be included,
+     * as otherwise `USE_PROFILES` takes precedence over {@link purifyHtmlConfigStrictSubset.ALLOWED_TAGS}.
      *
      * @private
      */
