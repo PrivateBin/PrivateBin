@@ -9,7 +9,7 @@ export PATH="$PATH:$LOCAL_VENDOR_BIN"
 echo 'export PATH="$PATH:$(composer global config bin-dir --absolute --quiet)"' >> ~/.bashrc
 echo 'export PATH="$PATH:$(composer config vendor-dir --absolute --quiet)"' >> ~/.bashrc
 ln -s ./conf.sample.php cfg/conf.php
-composer install --optimize-autoloader
+composer install --no-dev --optimize-autoloader
 
 # for PHP unit testing
 composer require --global google/cloud-storage
