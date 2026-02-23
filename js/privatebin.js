@@ -63,17 +63,17 @@ jQuery.PrivateBin = (function($) {
 
     /**
      * DOMpurify settings for HTML content, where only a strict subset is allowed.
-     * 
+     *
      * NOTE: The key `USE_PROFILES` from {@see purifyHtmlConfig} needs to be excluded,
      * as otherwise `USE_PROFILES` takes precedence.
      *
      * @private
      */
-   const purifyHtmlConfigStrictSubset {
+   const purifyHtmlConfigStrictSubset = {
         ALLOWED_URI_REGEXP: purifyHtmlConfig.ALLOWED_URI_REGEXP,
         ALLOWED_TAGS: ['a', 'i', 'span', 'kbd'],
         ALLOWED_ATTR: ['href', 'id']
-    })
+    };
 
     /**
      * DOMpurify settings for SVG content
@@ -977,7 +977,7 @@ jQuery.PrivateBin = (function($) {
         function isStringContainsHtml(messageId) {
             // message IDs are allowed to contain anchors, spans, keyboard and emphasis tags
             // we can recognize all of them by only checking for anchors and keyboard tags
-            return args[0].indexOf('<a') !== -1 || args[0].indexOf('<kbd') !== -1;
+            return messageId.indexOf('<a') !== -1 || messageId.indexOf('<kbd') !== -1;
         }
 
         return me;
