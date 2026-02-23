@@ -58,8 +58,22 @@ jQuery.PrivateBin = (function($) {
         ALLOWED_URI_REGEXP: /^(?:(?:(?:f|ht)tps?|mailto|magnet):)/i,
         USE_PROFILES: {
             html: true
-        }
+        },
     };
+
+    /**
+     * DOMpurify settings for HTML content, where only a strict subset is allowed.
+     * 
+     * NOTE: The key `USE_PROFILES` from {@see purifyHtmlConfig} needs to be excluded,
+     * as otherwise `USE_PROFILES` takes precedence.
+     *
+     * @private
+     */
+   const purifyHtmlConfigStrictSubset {
+        ALLOWED_URI_REGEXP: purifyHtmlConfig.ALLOWED_URI_REGEXP,
+        ALLOWED_TAGS: ['a', 'i', 'span', 'kbd'],
+        ALLOWED_ATTR: ['href', 'id']
+    })
 
     /**
      * DOMpurify settings for SVG content
@@ -439,7 +453,7 @@ jQuery.PrivateBin = (function($) {
                         /(((https?|ftp):\/\/[\w?!=&.\/-;#@~%+*-]+(?![\w\s?!&.\/;#~%"=-]>))|((magnet):[\w?=&.\/-;#@~%+*-]+))/ig,
                         '<a href="$1" rel="nofollow noopener noreferrer">$1</a>'
                     ),
-                    purifyHtmlConfig
+                    purifyHtmlConfigStrictSubset
                 )
             );
         };
@@ -812,12 +826,7 @@ jQuery.PrivateBin = (function($) {
 
             if (containsHtml) {
                 // only allow tags/attributes we actually use in translations
-                const sanitizeConfig = {
-                        ...purifyHtmlConfig,
-                        ALLOWED_TAGS: ['a', 'i', 'span', 'kbd'],
-                        ALLOWED_ATTR: ['href', 'id']
-                });
-                output = DOMPurify.sanitize(output, sanitizeConfig);
+                output = DOMPurify.sanitize(output, purifyHtmlConfigStrictSubset);
             }
 
             // if $element is given, insert translation
