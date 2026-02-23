@@ -9,6 +9,7 @@
         "--bootstrap",
         "${workspaceFolder}/tst/Bootstrap.php"
     ],
+    "mochaExplorer.mochaPath": "js/node_modules/mocha",
     "mochaExplorer.pkgFile": "js/package.json",
-    "mochaExplorer.files": "js/test/*.js",
+    "mochaExplorer.files": "js/test/*.js"
 }
