@@ -812,7 +812,8 @@ jQuery.PrivateBin = (function($) {
 
             if (containsHtml) {
                 // only allow tags/attributes we actually use in translations
-                const sanitizeConfig = Object.assign({}, purifyHtmlConfig, {
+                const sanitizeConfig = {
+                        ...purifyHtmlConfig,
                         ALLOWED_TAGS: ['a', 'i', 'span', 'kbd'],
                         ALLOWED_ATTR: ['href', 'id']
                 });
