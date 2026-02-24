@@ -42,6 +42,6 @@
         8080
     ],
     "postCreateCommand": ".devcontainer/postCreateCommand.sh",
-    // alternatiuve: apache2ctl start (but requires root)
+    // alternative: apache2ctl start (but requires root)
     "postAttachCommand": "php -S 0.0.0.0:8080"
 }
