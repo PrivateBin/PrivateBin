@@ -38,7 +38,7 @@
     "features": {
         "ghcr.io/devcontainers-contrib/features/mocha:2": {},
         "ghcr.io/yassinedoghri/devcontainers/php-extensions-installer:1": {
-            "extensions": "gd sqlite3"
+            "extensions": "gd"
         }
     },
     "forwardPorts": [
