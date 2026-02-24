@@ -12,7 +12,7 @@ ln -s ./conf.sample.php cfg/conf.php
 composer install --no-dev --optimize-autoloader
 
 # for PHP unit testing
-composer global require phpunit/phpunit
+composer global require phpunit/phpunit:^9
 composer global require google/cloud-storage
 
 # for JS testing
