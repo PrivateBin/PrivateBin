@@ -455,14 +455,13 @@ window.PrivateBin = (function() {
          */
         me.urls2links = function(element)
         {
-            element.html(
-                DOMPurify.sanitize(
-                    element.html().replace(
-                        /(((https?|ftp):\/\/[\w?!=&.\/-;#@~%+*-]+(?![\w\s?!&.\/;#~%"=-]>))|((magnet):[\w?=&.\/-;#@~%+*-]+))/ig,
-                        '<a href="$1" rel="nofollow noopener noreferrer">$1</a>'
-                    ),
-                    purifyHtmlConfigStrictSubset
-                )
+            const raw = element.innerHTML;
+            element.innerHTML = DOMPurify.sanitize(
+                raw.replace(
+                    /(((https?|ftp):\/\/[\w?!=&.\/\-;#@~%+*-]+(?![\w\s?!&.\/;#~%"=-]>))|((magnet):[\w?=&.\/\-;#@~%+*-]+))/ig,
+                    '<a href="$1" rel="nofollow noopener noreferrer">$1</a>'
+                ),
+                purifyHtmlConfigStrictSubset
             );
         };
 
@@ -2301,7 +2300,10 @@ window.PrivateBin = (function() {
             if (bootstrap5PasswordModal) {
                 bootstrap5PasswordModal.hide();
             } else {
-                $passwordModal.modal('hide');
+                if (passwordModal) {
+                    passwordModal.classList.remove('show');
+                    passwordModal.style.display = 'none';
+                }
             }
 
             PasteDecrypter.run();
@@ -2325,10 +2327,13 @@ window.PrivateBin = (function() {
             loadconfirmClose.removeEventListener('click', Controller.newPaste);
             loadconfirmClose.addEventListener('click', Controller.newPaste);
 
-            if (typeof bootstrap !== 'undefined' && bootstrap.Tooltip.VERSION) {
+            if (typeof bootstrap !== 'undefined' && bootstrap.Tooltip && typeof bootstrap.Modal === 'function') {
                 (new bootstrap.Modal(loadconfirmmodal)).show();
+            } else if (typeof jQuery !== 'undefined' && jQuery.fn && typeof jQuery.fn.modal === 'function') {
+                jQuery(loadconfirmmodal).modal('show');
             } else {
-                $(loadconfirmmodal).modal('show');
+                // minimal fallback: make element visible
+                loadconfirmmodal.classList.add('show');
             }
         }
 
@@ -2394,10 +2399,10 @@ window.PrivateBin = (function() {
         me.init = function()
         {
             passwordDecrypt = document.getElementById('passworddecrypt');
-            passwordModal = $('#passwordmodal');
+            passwordModal = document.getElementById('passwordmodal');
 
             // bind events - handle Model password submission
-            if (passwordModal.length !== 0) {
+            if (passwordModal) {
                 document.getElementById('passwordform').addEventListener('submit', submitPasswordModal);
 
                 const disableClosingConfig = {
@@ -2405,14 +2410,22 @@ window.PrivateBin = (function() {
                     keyboard: false,
                     show: false
                 };
-                if (typeof bootstrap !== 'undefined' && bootstrap.Tooltip.VERSION) {
-                    bootstrap5PasswordModal = new bootstrap.Modal(passwordModal[0], disableClosingConfig);
+                if (typeof bootstrap !== 'undefined' && bootstrap.Tooltip && typeof bootstrap.Modal === 'function') {
+                    bootstrap5PasswordModal = new bootstrap.Modal(passwordModal, disableClosingConfig);
                 } else {
-                    passwordModal.modal(disableClosingConfig);
+                    // fallback: keep modal hidden until explicitly shown
+                    passwordModal.style.display = 'none';
                 }
-                passwordModal.on('shown.bs.modal', () => {
+
+                // ensure focus when modal shown (works for bootstrap5 and jQuery plugin)
+                passwordModal.addEventListener('shown.bs.modal', () => {
                     passwordDecrypt.focus();
                 });
+                if (typeof jQuery !== 'undefined' && jQuery.fn && typeof jQuery.fn.on === 'function') {
+                    jQuery(passwordModal).on('shown.bs.modal', () => {
+                        passwordDecrypt.focus();
+                    });
+                }
             }
         };
 
@@ -2430,13 +2443,13 @@ window.PrivateBin = (function() {
     const Editor = (function () {
         const me = {};
 
-        let $editorTabs,
-            $messageEdit,
-            $messageEditParent,
-            $messagePreview,
-            $messagePreviewParent,
-            $messageTab,
-            $messageTabParent,
+        let editorTabs,
+            messageEdit,
+            messageEditParent,
+            messagePreview,
+            messagePreviewParent,
+            messageTab,
+            messageTabParent,
             message,
             isPreview = false,
             isTabSupported = true;
@@ -2454,7 +2467,7 @@ window.PrivateBin = (function() {
             // support disabling tab support using [Esc] and [Ctrl]+[m]
             if (event.key === 'Escape' || (event.ctrlKey && event.key === 'm')) {
                 toggleTabSupport();
-                $messageTab[0].checked = isTabSupported;
+                if (messageTab) messageTab.checked = isTabSupported;
                 event.preventDefault();
             }
             else if (isTabSupported && event.key === 'Tab') {
@@ -2493,19 +2506,20 @@ window.PrivateBin = (function() {
         function viewEditor(event)
         {
             // toggle buttons
-            $messageEdit.addClass('active');
-            $messageEditParent.addClass('active');
-            $messagePreview.removeClass('active');
-            $messagePreviewParent.removeClass('active');
 
-            $messageEdit.attr('aria-selected','true');
-            $messagePreview.attr('aria-selected','false');
+            messageEdit.classList.add('active');
+            messageEditParent.classList.add('active');
+            messagePreview.classList.remove('active');
+            messagePreviewParent.classList.remove('active');
+
+            messageEdit.setAttribute('aria-selected','true');
+            messagePreview.setAttribute('aria-selected','false');
 
             PasteViewer.hide();
 
             // reshow input
-            $message.removeClass('hidden');
-            $messageTabParent.removeClass('hidden');
+            message.classList.remove('hidden');
+            messageTabParent.classList.remove('hidden');
 
             me.focusInput();
 
@@ -2528,20 +2542,20 @@ window.PrivateBin = (function() {
         function viewPreview(event)
         {
             // toggle buttons
-            $messageEdit.removeClass('active');
-            $messageEditParent.removeClass('active');
-            $messagePreview.addClass('active');
-            $messagePreviewParent.addClass('active');
+            messageEdit.classList.remove('active');
+            messageEditParent.classList.remove('active');
+            messagePreview.classList.add('active');
+            messagePreviewParent.classList.add('active');
 
-            $messageEdit.attr('aria-selected','false');
-            $messagePreview.attr('aria-selected','true');
+            messageEdit.setAttribute('aria-selected','false');
+            messagePreview.setAttribute('aria-selected','true');
 
             // hide input as now preview is shown
-            $message.addClass('hidden');
-            $messageTabParent.addClass('hidden');
+            message.classList.add('hidden');
+            messageTabParent.classList.add('hidden');
 
             // show preview
-            PasteViewer.setText($message.val());
+            PasteViewer.setText(message.value);
             if (AttachmentViewer.hasAttachmentData()) {
                 const attachmentsData = AttachmentViewer.getAttachmentsData();
 
@@ -2592,7 +2606,7 @@ window.PrivateBin = (function() {
             }
 
             // clear content
-            $message.val('');
+            message.value = '';
         };
 
         /**
@@ -2603,9 +2617,9 @@ window.PrivateBin = (function() {
          */
         me.show = function()
         {
-            $message.removeClass('hidden');
-            $messageTabParent.removeClass('hidden');
-            $editorTabs.removeClass('hidden');
+            message.classList.remove('hidden');
+            messageTabParent.classList.remove('hidden');
+            editorTabs.classList.remove('hidden');
         };
 
         /**
@@ -2616,9 +2630,9 @@ window.PrivateBin = (function() {
          */
         me.hide = function()
         {
-            $message.addClass('hidden');
-            $messageTabParent.addClass('hidden');
-            $editorTabs.addClass('hidden');
+            message.classList.add('hidden');
+            messageTabParent.classList.add('hidden');
+            editorTabs.classList.add('hidden');
         };
 
         /**
@@ -2629,7 +2643,7 @@ window.PrivateBin = (function() {
          */
         me.focusInput = function()
         {
-            $message.focus();
+            message.focus();
         };
 
         /**
@@ -2641,7 +2655,7 @@ window.PrivateBin = (function() {
          */
         me.setText = function(newText)
         {
-            $message.val(newText);
+            message.value = newText;
         };
 
         /**
@@ -2653,7 +2667,7 @@ window.PrivateBin = (function() {
          */
         me.getText = function()
         {
-            return $message.val();
+            return message.value;
         };
 
         /**
@@ -2666,20 +2680,30 @@ window.PrivateBin = (function() {
          */
         me.init = function()
         {
-            $editorTabs = $('#editorTabs');
-            $message = $('#message');
-            $messageTab = $('#messagetab');
-            $messageTabParent = $messageTab.parent();
+            editorTabs = document.getElementById('editorTabs');
+            message = document.getElementById('message');
+            messageTab = document.getElementById('messagetab');
+            messageTabParent = messageTab ? messageTab.parentElement : null;
 
             // bind events
-            $message.keydown(supportTabs);
-            $messageTab.change(toggleTabSupport);
+            if (message) {
+                message.addEventListener('keydown', supportTabs);
+            }
+            if (messageTab) {
+                messageTab.addEventListener('change', toggleTabSupport);
+            }
 
             // bind click events to tab switchers (a), and save parents (li)
-            $messageEdit = $('#messageedit').click(viewEditor);
-            $messageEditParent = $messageEdit.parent();
-            $messagePreview = $('#messagepreview').click(viewPreview);
-            $messagePreviewParent = $messagePreview.parent();
+            messageEdit = document.getElementById('messageedit');
+            if (messageEdit) {
+                messageEdit.addEventListener('click', viewEditor);
+                messageEditParent = messageEdit.parentElement;
+            }
+            messagePreview = document.getElementById('messagepreview');
+            if (messagePreview) {
+                messagePreview.addEventListener('click', viewPreview);
+                messagePreviewParent = messagePreview.parentElement;
+            }
         };
 
         return me;
@@ -2694,11 +2718,11 @@ window.PrivateBin = (function() {
     const PasteViewer = (function () {
         const me = {};
 
-        let $messageTabParent,
-            $placeholder,
-            $prettyMessage,
-            $prettyPrint,
-            $plainText,
+        let messageTabParent,
+            placeholder,
+            prettyMessage,
+            prettyPrintEl,
+            plainText,
             text,
             format = 'plaintext',
             isDisplayed = false,
@@ -2727,14 +2751,14 @@ window.PrivateBin = (function() {
                     excludeTrailingPunctuationFromURLs: true
                 });
                 // let showdown convert the HTML and sanitize HTML *afterwards*!
-                $plainText.html(
-                    DOMPurify.sanitize(
-                        converter.makeHtml(text),
-                        purifyHtmlConfig
-                    )
+                plainText.innerHTML = DOMPurify.sanitize(
+                    converter.makeHtml(text),
+                    purifyHtmlConfig
                 );
                 // add table classes from bootstrap css
-                $plainText.find('table').addClass('table-condensed table-bordered');
+                plainText.querySelectorAll('table').forEach(t => {
+                    t.classList.add('table-condensed', 'table-bordered');
+                });
             } else {
                 if (format === 'syntaxhighlighting') {
                     // yes, this is really needed to initialize the environment
@@ -2743,19 +2767,17 @@ window.PrivateBin = (function() {
                         prettyPrint();
                     }
 
-                    $prettyPrint.html(
-                        prettyPrintOne(
-                            Helper.htmlEntities(text), null, true
-                        )
+                    prettyPrintEl.innerHTML = prettyPrintOne(
+                        Helper.htmlEntities(text), null, true
                     );
                 } else {
                     // = 'plaintext'
-                    $prettyPrint.text(text);
+                    prettyPrintEl.textContent = text;
                 }
-                Helper.urls2links($prettyPrint);
-                $prettyPrint.css('white-space', 'pre-wrap');
-                $prettyPrint.css('word-break', 'normal');
-                $prettyPrint.removeClass('prettyprint');
+                Helper.urls2links(prettyPrintEl);
+                prettyPrintEl.style.whiteSpace = 'pre-wrap';
+                prettyPrintEl.style.wordBreak = 'normal';
+                prettyPrintEl.classList.remove('prettyprint');
             }
         }
 
@@ -2770,19 +2792,19 @@ window.PrivateBin = (function() {
         {
             // instead of "nothing" better display a placeholder
             if (text === '') {
-                $placeholder.removeClass('hidden');
+                if (placeholder) placeholder.classList.remove('hidden');
                 return;
             }
             // otherwise hide the placeholder
-            $placeholder.addClass('hidden');
-            $messageTabParent.addClass('hidden');
+            if (placeholder) placeholder.classList.add('hidden');
+            if (messageTabParent) messageTabParent.classList.add('hidden');
 
             if (format === 'markdown') {
-                $plainText.removeClass('hidden');
-                $prettyMessage.addClass('hidden');
+                if (plainText) plainText.classList.remove('hidden');
+                if (prettyMessage) prettyMessage.classList.add('hidden');
             } else {
-                $plainText.addClass('hidden');
-                $prettyMessage.removeClass('hidden');
+                if (plainText) plainText.classList.add('hidden');
+                if (prettyMessage) prettyMessage.classList.remove('hidden');
             }
         }
 
@@ -2896,9 +2918,9 @@ window.PrivateBin = (function() {
                 return;
             }
 
-            $plainText.addClass('hidden');
-            $prettyMessage.addClass('hidden');
-            $placeholder.addClass('hidden');
+            if (plainText) plainText.classList.add('hidden');
+            if (prettyMessage) prettyMessage.classList.add('hidden');
+            if (placeholder) placeholder.classList.add('hidden');
             AttachmentViewer.hideAttachmentPreview();
 
             isDisplayed = false;
@@ -2914,11 +2936,12 @@ window.PrivateBin = (function() {
          */
         me.init = function()
         {
-            $messageTabParent = $('#messagetab').parent();
-            $placeholder = $('#placeholder');
-            $plainText = $('#plaintext');
-            $prettyMessage = $('#prettymessage');
-            $prettyPrint = $('#prettyprint');
+            const messagetab = document.getElementById('messagetab');
+            messageTabParent = messagetab ? messagetab.parentElement : null;
+            placeholder = document.getElementById('placeholder');
+            plainText = document.getElementById('plaintext');
+            prettyMessage = document.getElementById('prettymessage');
+            prettyPrintEl = document.getElementById('prettyprint');
 
             // get default option from template/HTML or fall back to set value
             format = Model.getFormatDefault() || format;
