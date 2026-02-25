@@ -11,7 +11,9 @@
     "eslint": "^9.37.0",
     "jsdom": "^26.0.0",
     "jsdom-global": "^3.0.2",
-    "jsverify": "^0.8.3"
+    "jsverify": "^0.8.3",
+    "mocha": "^11.7.5",
+    "nyc": "^17.1.0"
   },
   "scripts": {
     "test": "mocha",

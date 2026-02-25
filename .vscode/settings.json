@@ -1,5 +1,18 @@
 {
     "files.associations": {
         "**/cfg/conf*.php": "ini"
-    }
+    },
+    "phpunit.environment": {
+        "XDEBUG_MODE": "coverage"
+    },
+    "phpunit.phpunit": "${userHome}/.composer/vendor/bin/phpunit",
+    "phpunit.command": "/bin/sh -c 'cd ${workspaceFolder}/tst && ${php} ${phpunit} ${phpunitargs}'",
+    "phpunit.args": [
+        "--configuration",
+        "${workspaceFolder}/tst/phpunit.xml",
+        "--bootstrap",
+        "${workspaceFolder}/tst/Bootstrap.php"
+    ],
+    "mochaExplorer.pkgFile": "js/package.json",
+    "mochaExplorer.files": "js/test/*.js"
 }

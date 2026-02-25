@@ -1,15 +1,23 @@
 #!/bin/sh
 
-export PATH="$PATH:$HOME/.composer/vendor/bin"
-export PATH="$PATH:$PWD/vendor/bin"
-echo 'export PATH="$PATH:$HOME/.composer/vendor/bin"' >> ~/.bashrc
-echo 'export PATH="$PATH:$PWD/vendor/bin"' >> ~/.bashrc
+#COMPOSER_BIN="$HOME/.composer/vendor/bin" # should be equivalent
+COMPOSER_BIN="$(composer global config bin-dir --absolute --quiet)"
+# LOCAL_VENDOR_BIN="$PWD/vendor/bin" # should be equivalent
+LOCAL_VENDOR_BIN="$(composer config vendor-dir --absolute --quiet)"
+export PATH="$PATH:$COMPOSER_BIN"
+export PATH="$PATH:$LOCAL_VENDOR_BIN"
+echo 'export PATH="$PATH:$(composer global config bin-dir --absolute --quiet)"' >> ~/.bashrc
+echo 'export PATH="$PATH:$(composer config vendor-dir --absolute --quiet)"' >> ~/.bashrc
 ln -s ./conf.sample.php cfg/conf.php
 composer install --no-dev --optimize-autoloader
 
 # for PHP unit testing
-composer require --global google/cloud-storage
+composer global require phpunit/phpunit:^9
+composer global require google/cloud-storage
 
+# for JS testing
+JAVASCRIPT_DIRECTORY="$(pwd)/js"
+npm --prefix "$JAVASCRIPT_DIRECTORY" install "$JAVASCRIPT_DIRECTORY"
+
+# development webserver
 sudo chmod a+x "$(pwd)" && sudo rm -rf /var/www/html && sudo ln -s "$(pwd)" /var/www/html
-
-npm install --global nyc

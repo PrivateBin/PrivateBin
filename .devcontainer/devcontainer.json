@@ -17,8 +17,9 @@
 				"dbaeumer.vscode-eslint",
 				"raymondcamden.CSSLint",
                 // testing
-				"maty.vscode-mocha-sidebar"
-			]
+                "hbenl.vscode-mocha-test-adapter",
+                "recca0120.vscode-phpunit"
+            ]
         },
         "codespaces": {
             "openFiles": [
@@ -35,7 +36,10 @@
         }
     },
     "features": {
-        "ghcr.io/devcontainers-contrib/features/mocha:2": {}
+        "ghcr.io/devcontainers-contrib/features/mocha:2": {},
+        "ghcr.io/yassinedoghri/devcontainers/php-extensions-installer:1": {
+            "extensions": "gd"
+        }
     },
     "forwardPorts": [
         8080
