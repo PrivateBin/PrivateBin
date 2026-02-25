@@ -1744,7 +1744,7 @@ window.PrivateBin = (function() {
             if (typeof state === 'undefined') {
                 state = null;
             }
-            historyChange($.Event('popstate', {originalEvent: new PopStateEvent('popstate', {state: state}), target: window}));
+            historyChange({originalEvent: new PopStateEvent('popstate', {state: state}), target: window});
         };
 
         /**
@@ -1945,7 +1945,7 @@ window.PrivateBin = (function() {
                 message = 'Loading…';
             }
 
-            handleNotification(0, $loadingIndicator, message, icon);
+            handleNotification(0, loadingIndicator, message, icon);
 
             // show loading status (cursor)
             document.body.classList.add('loading');
@@ -1959,7 +1959,7 @@ window.PrivateBin = (function() {
          */
         me.hideLoading = function()
         {
-            $loadingIndicator.addClass('hidden');
+            loadingIndicator.classList.add('hidden');
 
             // hide loading cursor
             document.body.classList.remove('loading');
@@ -2082,18 +2082,6 @@ window.PrivateBin = (function() {
                     'noopener, noreferrer'
                 );
             });
-            })
-            .fail(function(data, textStatus, errorThrown) {
-                console.error(textStatus, errorThrown);
-                // we don't know why it failed, could be CORS of the external
-                // server not setup properly, in which case we follow old
-                // behavior to open it in new tab
-                window.open(
-                    `${$shortenButton.data('shortener')}${encodeURIComponent($pasteUrl.attr('href'))}`,
-                    '_blank',
-                    'noopener, noreferrer'
-                );
-            });
         }
 
         /**
@@ -2125,7 +2113,7 @@ window.PrivateBin = (function() {
         me.createPasteNotification = function(url, deleteUrl)
         {
             I18n._(
-                $('#pastelink'),
+                document.getElementById('pastelink'),
                 'Your document is <a id="pasteurl" href="%s">%s</a> <span id="copyhint">(Hit <kbd>Ctrl</kbd>+<kbd>c</kbd> to copy)</span>',
                 url, url
             );
@@ -2155,7 +2143,7 @@ window.PrivateBin = (function() {
          */
         me.checkAutoShorten = function() {
             // check if auto-shortening is enabled
-            if ($shortenButton.data('autoshorten') === true) {
+            if (shortenButton.dataset.autoshorten === 'true') {
                 // if so, we send the link to the shortener
                 // we do not remove the button, in case shortener fails
                 sendToShortener();
@@ -2286,8 +2274,8 @@ window.PrivateBin = (function() {
     const Prompt = (function () {
         const me = {};
 
-        let $passwordDecrypt,
-            $passwordModal,
+        let passwordDecrypt,
+            passwordModal,
             bootstrap5PasswordModal = null,
             password = '';
 
@@ -2304,7 +2292,7 @@ window.PrivateBin = (function() {
             event.preventDefault();
 
             // get input
-            password = $passwordDecrypt.val();
+            password = passwordDecrypt.value;
 
             // hide modal
             if (bootstrap5PasswordModal) {
@@ -2324,20 +2312,20 @@ window.PrivateBin = (function() {
          */
         me.requestLoadConfirmation = function()
         {
-            const $loadconfirmmodal = $('#loadconfirmmodal');
+            const loadconfirmmodal = document.getElementById('loadconfirmmodal');
 
-            const $loadconfirmOpenNow = $loadconfirmmodal.find('#loadconfirm-open-now');
-            $loadconfirmOpenNow.off('click.loadPaste');
-            $loadconfirmOpenNow.on('click.loadPaste', PasteDecrypter.run);
+            const loadconfirmOpenNow = loadconfirmmodal.querySelector('#loadconfirm-open-now');
+            loadconfirmOpenNow.removeEventListener('click', PasteDecrypter.run);
+            loadconfirmOpenNow.addEventListener('click', PasteDecrypter.run);
 
-            const $loadconfirmClose = $loadconfirmmodal.find('.close');
-            $loadconfirmClose.off('click.close');
-            $loadconfirmClose.on('click.close', Controller.newPaste);
+            const loadconfirmClose = loadconfirmmodal.querySelector('.close');
+            loadconfirmClose.removeEventListener('click', Controller.newPaste);
+            loadconfirmClose.addEventListener('click', Controller.newPaste);
 
             if (typeof bootstrap !== 'undefined' && bootstrap.Tooltip.VERSION) {
-                (new bootstrap.Modal($loadconfirmmodal[0])).show();
+                (new bootstrap.Modal(loadconfirmmodal)).show();
             } else {
-                $loadconfirmmodal.modal('show');
+                $(loadconfirmmodal).modal('show');
             }
         }
 
@@ -2402,12 +2390,12 @@ window.PrivateBin = (function() {
          */
         me.init = function()
         {
-            $passwordDecrypt = $('#passworddecrypt');
-            $passwordModal = $('#passwordmodal');
+            passwordDecrypt = document.getElementById('passworddecrypt');
+            passwordModal = $('#passwordmodal');
 
             // bind events - handle Model password submission
-            if ($passwordModal.length !== 0) {
-                $('#passwordform').submit(submitPasswordModal);
+            if (passwordModal.length !== 0) {
+                document.getElementById('passwordform').addEventListener('submit', submitPasswordModal);
 
                 const disableClosingConfig = {
                     backdrop: 'static',
@@ -2415,12 +2403,12 @@ window.PrivateBin = (function() {
                     show: false
                 };
                 if (typeof bootstrap !== 'undefined' && bootstrap.Tooltip.VERSION) {
-                    bootstrap5PasswordModal = new bootstrap.Modal($passwordModal[0], disableClosingConfig);
+                    bootstrap5PasswordModal = new bootstrap.Modal(passwordModal[0], disableClosingConfig);
                 } else {
-                    $passwordModal.modal(disableClosingConfig);
+                    passwordModal.modal(disableClosingConfig);
                 }
-                $passwordModal.on('shown.bs.modal', () => {
-                    $passwordDecrypt.focus();
+                passwordModal.on('shown.bs.modal', () => {
+                    passwordDecrypt.focus();
                 });
             }
         };
@@ -2446,7 +2434,7 @@ window.PrivateBin = (function() {
             $messagePreviewParent,
             $messageTab,
             $messageTabParent,
-            $message,
+            message,
             isPreview = false,
             isTabSupported = true;
 
