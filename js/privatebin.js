@@ -2012,8 +2012,11 @@ window.PrivateBin = (function() {
          */
         me.init = function()
         {
-            // hide "no javascript" error message
-            document.getElementById('noscript').style.display = 'none';
+            // hide "no javascript" error message (guard in test environments)
+            const noscriptEl = document.getElementById('noscript');
+            if (noscriptEl) {
+                noscriptEl.style.display = 'none';
+            }
 
             // not a reset, but first set of the elements
             errorMessage = document.getElementById('errormessage');
