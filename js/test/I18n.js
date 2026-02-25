@@ -77,7 +77,8 @@ describe('I18n', function () {
                 postfix   =   postfix.replace(/%(s|d)/g, '%%');
                 const translation = DOMPurify.sanitize(
                     prefix + '<a href="' + params[0] + '"></a>' + postfix, {
-                        ALLOWED_TAGS: ['a', 'i', 'span'],
+                        ALLOWED_URI_REGEXP: /^(?:(?:(?:f|ht)tps?|mailto|magnet):)/i,
+                        ALLOWED_TAGS: ['a', 'i', 'span', 'kbd'],
                         ALLOWED_ATTR: ['href', 'id']
                     }
                 );
@@ -129,7 +130,8 @@ describe('I18n', function () {
                 postfix   =   postfix.replace(/%(s|d)/g, '%%').trim();
                 const translation = DOMPurify.sanitize(
                     prefix + '<a href="' + params[0] + '"></a>' + postfix, {
-                        ALLOWED_TAGS: ['a', 'i', 'span'],
+                        ALLOWED_URI_REGEXP: /^(?:(?:(?:f|ht)tps?|mailto|magnet):)/i,
+                        ALLOWED_TAGS: ['a', 'i', 'span', 'kbd'],
                         ALLOWED_ATTR: ['href', 'id']
                     }
                 );

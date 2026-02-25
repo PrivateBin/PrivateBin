@@ -62,6 +62,20 @@ jQuery.PrivateBin = (function($) {
     };
 
     /**
+     * DOMpurify settings for HTML content, where only a strict subset is allowed.
+     *
+     * NOTE: The key {@link purifyHtmlConfig.USE_PROFILES} **must not** be included,
+     * as otherwise `USE_PROFILES` takes precedence over {@link purifyHtmlConfigStrictSubset.ALLOWED_TAGS}.
+     *
+     * @private
+     */
+   const purifyHtmlConfigStrictSubset = {
+        ALLOWED_URI_REGEXP: purifyHtmlConfig.ALLOWED_URI_REGEXP,
+        ALLOWED_TAGS: ['a', 'i', 'span', 'kbd'],
+        ALLOWED_ATTR: ['href', 'id']
+    };
+
+    /**
      * DOMpurify settings for SVG content
      *
      * @private
@@ -439,7 +453,7 @@ jQuery.PrivateBin = (function($) {
                         /(((https?|ftp):\/\/[\w?!=&.\/-;#@~%+*-]+(?![\w\s?!&.\/;#~%"=-]>))|((magnet):[\w?=&.\/-;#@~%+*-]+))/ig,
                         '<a href="$1" rel="nofollow noopener noreferrer">$1</a>'
                     ),
-                    purifyHtmlConfig
+                    purifyHtmlConfigStrictSubset
                 )
             );
         };
@@ -814,12 +828,7 @@ jQuery.PrivateBin = (function($) {
 
             if (containsHtml) {
                 // only allow tags/attributes we actually use in translations
-                output = DOMPurify.sanitize(
-                    output, {
-                        ALLOWED_TAGS: ['a', 'i', 'span', 'kbd'],
-                        ALLOWED_ATTR: ['href', 'id']
-                    }
-                );
+                output = DOMPurify.sanitize(output, purifyHtmlConfigStrictSubset);
             }
 
             // if $element is given, insert translation
@@ -966,13 +975,9 @@ jQuery.PrivateBin = (function($) {
          * @returns {boolean}
          */
         function isStringContainsHtml(messageId) {
-            // An integer which specifies the type of the node. An Element node like <p> or <div>.
-            const elementNodeType = 1;
-
-            const div = document.createElement('div');
-            div.innerHTML = messageId;
-
-            return Array.from(div.childNodes).some(node => node.nodeType === elementNodeType);
+            // message IDs are allowed to contain anchors, spans, keyboard and emphasis tags
+            // we can recognize all of them by only checking for anchors and keyboard tags
+            return messageId.indexOf('<a') !== -1 || messageId.indexOf('<kbd') !== -1;
         }
 
         return me;
