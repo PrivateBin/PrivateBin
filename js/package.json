@@ -16,6 +16,7 @@
     "nyc": "^17.1.0"
   },
   "scripts": {
+    "lint": "eslint",
     "test": "mocha",
     "ci-test": "mocha --reporter xunit --reporter-option output=mocha-results.xml"
   },
