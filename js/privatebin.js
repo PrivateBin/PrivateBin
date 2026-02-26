@@ -458,7 +458,7 @@ window.PrivateBin = (function() {
             const raw = element.innerHTML;
             element.innerHTML = DOMPurify.sanitize(
                 raw.replace(
-                    /(((https?|ftp):\/\/[\w?!=&.\/\-;#@~%+*-]+(?![\w\s?!&.\/;#~%"=-]>))|((magnet):[\w?=&.\/\-;#@~%+*-]+))/ig,
+                    /(((https?|ftp):\/\/[\w?!=&.\/;#@~%+*-]+(?![\w\s?!&.\/;#~%"=-]>))|((magnet):[\w?=&.\/\-;#@~%+*-]+))/ig,
                     '<a href="$1" rel="nofollow noopener noreferrer">$1</a>'
                 ),
                 purifyHtmlConfigStrictSubset
