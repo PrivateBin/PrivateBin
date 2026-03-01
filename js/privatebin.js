@@ -943,18 +943,20 @@ window.PrivateBin = (function () {
         };
 
         /**
-         * Check if string contains valid HTML code
+         * Check if string contains valid HTML code.
+         * 
+         * If it is no string at all, this always returns false for compatibility.
          *
          * @name I18n.isStringContainsHtml
          * @function
          * @private
-         * @param {string} messageId
+         * @param {string|object} messageId
          * @returns {boolean}
          */
         function isStringContainsHtml(messageId) {
             // message IDs are allowed to contain anchors, spans, keyboard and emphasis tags
             // we can recognize all of them by only checking for anchors and keyboard tags
-            return messageId.indexOf('<a') !== -1 || messageId.indexOf('<kbd') !== -1;
+            return typeof messageId === 'string' && (messageId.indexOf('<a') !== -1 || messageId.indexOf('<kbd') !== -1);
         }
 
         return me;
