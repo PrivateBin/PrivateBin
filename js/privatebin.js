@@ -4799,15 +4799,15 @@ window.PrivateBin = (function() {
             }
 
             // bootstrap5 & page drop downs
-            const pasteExpiration = document.getElementById('pasteExpiration');
-            if (pasteExpiration) {
-                pasteExpiration.addEventListener('change', function() {
+            const pasteExpirationSelect = document.getElementById('pasteExpiration');
+            if (pasteExpirationSelect) {
+                pasteExpirationSelect.addEventListener('change', function() {
                     pasteExpiration = Model.getExpirationDefault();
                 });
             }
-            const pasteFormatter = document.getElementById('pasteFormatter');
-            if (pasteFormatter) {
-                pasteFormatter.addEventListener('change', function() {
+            const pasteFormatterSelect = document.getElementById('pasteFormatter');
+            if (pasteFormatterSelect) {
+                pasteFormatterSelect.addEventListener('change', function() {
                     PasteViewer.setFormat(Model.getFormatDefault());
                 });
             }
