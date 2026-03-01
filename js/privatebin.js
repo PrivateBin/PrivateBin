@@ -6111,7 +6111,3 @@ window.PrivateBin = (function() {
     };
 })();
 
-// for compatibility with tests and existing code
-if (typeof jQuery !== 'undefined') {
-    jQuery.PrivateBin = window.PrivateBin;
-}
