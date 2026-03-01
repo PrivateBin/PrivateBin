@@ -760,7 +760,7 @@ window.PrivateBin = (function () {
                 // for all other languages than English for which this behaviour
                 // is expected as it is built-in, log error
                 if (language !== null && language !== 'en') {
-                    console.error('Missing translation for: \'' + messageId + '\' in language ' + language);
+                    console.error('Missing translation for: ', messageId, 'in language', language);
                     // fallback to English
                 }
 
@@ -944,7 +944,7 @@ window.PrivateBin = (function () {
 
         /**
          * Check if string contains valid HTML code.
-         * 
+         *
          * If it is no string at all, this always returns false for compatibility.
          *
          * @name I18n.isStringContainsHtml
