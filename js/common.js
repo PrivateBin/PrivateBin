@@ -24,6 +24,16 @@ global.cleanup = function () {
     }
     global.$ = global.jQuery = require('./jquery-3.7.1');
 
+    // reload the core library to capture the new window/document in any
+    // closures (TopNav, PasteViewer, etc). This also refreshes event bindings
+    // and cached element lookups.
+    try {
+        delete require.cache[require.resolve('./privatebin')];
+    } catch (e) {
+        // ignore
+    }
+    require('./privatebin');
+
     // also re-export the PrivateBin namespace if available
     if (typeof window !== 'undefined' && window.PrivateBin) {
         global.PrivateBin = window.PrivateBin;
