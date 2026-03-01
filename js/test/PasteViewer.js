@@ -5,6 +5,22 @@ describe('PasteViewer', function () {
     describe('run, hide, getText, setText, getFormat, setFormat & isPrettyPrinted', function () {
         this.timeout(30000);
 
+        it('basic plaintext display works', function () {
+            const clean = jsdom();
+            $('body').html(
+                '<div id="placeholder" class="hidden">+++ no document text +++</div>' +
+                '<div id="prettymessage" class="hidden"><pre id="prettyprint" class="prettyprint linenums:1"></pre></div>' +
+                '<div id="plaintext" class="hidden"></div>'
+            );
+            PrivateBin.PasteViewer.init();
+            PrivateBin.PasteViewer.setFormat('plaintext');
+            PrivateBin.PasteViewer.setText('hello');
+            PrivateBin.PasteViewer.run();
+            assert.strictEqual(PrivateBin.PasteViewer.getText(), 'hello');
+            assert.ok(!$('#plaintext').hasClass('hidden'));
+            clean();
+        });
+
         jsc.property(
             'displays text according to format',
             common.jscFormats(),

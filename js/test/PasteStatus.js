@@ -22,6 +22,20 @@ describe('PasteStatus', function () {
     describe('createPasteNotification', function () {
         this.timeout(30000);
 
+        it('creates a notification after a successful document upload', function () {
+            const clean = jsdom();
+            $('body').html('<a href="#" id="deletelink"><span></span></a><div id="pastelink"></div>');
+            PrivateBin.PasteStatus.init();
+            const expected1 = 'https://example.com/long';
+            const expected2 = 'https://example.com/short';
+            PrivateBin.PasteStatus.createPasteNotification(expected1, expected2);
+            const result1 = $('#pasteurl')[0].href,
+                result2 = $('#deletelink')[0].href;
+            clean();
+            assert.strictEqual(result1, expected1);
+            assert.strictEqual(result2, expected2);
+        });
+
         jsc.property(
             'creates a notification after a successful document upload',
             common.jscUrl(),
