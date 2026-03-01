@@ -3799,13 +3799,21 @@ window.PrivateBin = (function () {
          */
         function changeBurnAfterReading() {
             if (me.getBurnAfterReading()) {
-                openDiscussionOption.classList.add('buttondisabled');
-                openDiscussion.checked = false;
+                if (openDiscussionOption) {
+                    openDiscussionOption.classList.add('buttondisabled');
+                }
+                if (openDiscussion) {
+                    openDiscussion.checked = false;
+                }
 
                 // if button is actually disabled, force-enable it and uncheck other button
-                burnAfterReadingOption.classList.remove('buttondisabled');
+                if (burnAfterReadingOption) {
+                    burnAfterReadingOption.classList.remove('buttondisabled');
+                }
             } else {
-                openDiscussionOption.classList.remove('buttondisabled');
+                if (openDiscussionOption) {
+                    openDiscussionOption.classList.remove('buttondisabled');
+                }
             }
         }
 
@@ -3818,13 +3826,21 @@ window.PrivateBin = (function () {
          */
         function changeOpenDiscussion() {
             if (me.getOpenDiscussion()) {
-                burnAfterReadingOption.classList.add('buttondisabled');
-                burnAfterReading.checked = false;
+                if (burnAfterReadingOption) {
+                    burnAfterReadingOption.classList.add('buttondisabled');
+                }
+                if (burnAfterReading) {
+                    burnAfterReading.checked = false;
+                }
 
                 // if button is actually disabled, force-enable it and uncheck other button
-                openDiscussionOption.classList.remove('buttondisabled');
+                if (openDiscussionOption) {
+                    openDiscussionOption.classList.remove('buttondisabled');
+                }
             } else {
-                burnAfterReadingOption.classList.remove('buttondisabled');
+                if (burnAfterReadingOption) {
+                    burnAfterReadingOption.classList.remove('buttondisabled');
+                }
             }
         }
 
@@ -3836,7 +3852,9 @@ window.PrivateBin = (function () {
          */
 
         function clearPasswordInput() {
-            passwordInput.value = '';
+            if (passwordInput) {
+                passwordInput.value = '';
+            }
         }
 
 
@@ -4491,7 +4509,7 @@ window.PrivateBin = (function () {
          * @return {bool}
          */
         me.getBurnAfterReading = function () {
-            return burnAfterReading.checked;
+            return burnAfterReading ? !!burnAfterReading.checked : false;
         };
 
         /**
@@ -4502,7 +4520,7 @@ window.PrivateBin = (function () {
          * @return {bool}
          */
         me.getOpenDiscussion = function () {
-            return openDiscussion.checked;
+            return openDiscussion ? !!openDiscussion.checked : false;
         };
 
         /**
