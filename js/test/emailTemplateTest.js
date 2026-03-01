@@ -15,7 +15,12 @@ function buildEmailDomNoShortUrl() {
             '<button id="emaillink" type="button" class="hidden btn btn-secondary">Email</button>' +
           '</li>' +
         '</ul></div></nav>' +
-        '<input id="burnafterreadingoption" type="checkbox">'
+        '<input id="burnafterreadingoption" type="checkbox">' +
+        // include dummy email confirm modal for sendEmail
+        '<div id="emailconfirmmodal" class="hidden">' +
+            '<div id="emailconfirm-timezone-current"></div>' +
+            '<div id="emailconfirm-timezone-utc"></div>' +
+        '</div>'
     );
 }
 
@@ -38,6 +43,11 @@ function buildEmailDomWithShortUrl() {
         '<div id="pastelink">Your document is ' +
           '<a id="pasteurl" href="https://short.example/xYz">https://short.example/xYz</a> ' +
           '<span id="copyhint">(Hit <kbd>Ctrl</kbd>+<kbd>c</kbd> to copy)</span>' +
+        '</div>' +
+        // add a minimal email confirmation modal so sendEmail does not crash
+        '<div id="emailconfirmmodal" class="hidden">' +
+            '<div id="emailconfirm-timezone-current"></div>' +
+            '<div id="emailconfirm-timezone-utc"></div>' +
         '</div>'
     );
 }
@@ -90,8 +100,8 @@ describe('Email - mail body content (short URL vs. fallback)', function () {
 
     it('Uses the short URL when #pasteurl is present and never includes "undefined"', function () {
         buildEmailDomWithShortUrl();               // with #pastelink/#pasteurl
-        $.PrivateBin.TopNav.init();
-        $.PrivateBin.TopNav.showEmailButton(0);
+        PrivateBin.TopNav.init();
+        PrivateBin.TopNav.showEmailButton(0);
 
         const $emailBtn = $('#emaillink');
         assert.ok(!$emailBtn.hasClass('hidden'), '#emaillink should be visible after showEmailButton');
@@ -113,8 +123,8 @@ describe('Email - mail body content (short URL vs. fallback)', function () {
 
     it('Falls back to window.location.href when #pasteurl is absent and never includes "undefined"', function () {
         buildEmailDomNoShortUrl();      // No #pasteurl
-        $.PrivateBin.TopNav.init();
-        $.PrivateBin.TopNav.showEmailButton(0);
+        PrivateBin.TopNav.init();
+        PrivateBin.TopNav.showEmailButton(0);
 
         const $emailBtn = $('#emaillink');
         assert.ok(!$emailBtn.hasClass('hidden'), '#emaillink should be visible after showEmailButton');

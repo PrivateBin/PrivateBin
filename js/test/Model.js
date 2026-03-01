@@ -4,7 +4,7 @@ var common = require('../common');
 describe('Model', function () {
     describe('getExpirationDefault', function () {
         before(function () {
-            $.PrivateBin.Model.reset();
+            PrivateBin.Model.reset();
             cleanup = jsdom();
         });
 
@@ -14,8 +14,8 @@ describe('Model', function () {
             'string',
             'small nat',
             function (keys, value, key) {
-                keys = keys.map($.PrivateBin.Helper.htmlEntities);
-                value = $.PrivateBin.Helper.htmlEntities(value);
+                keys = keys.map(PrivateBin.Helper.htmlEntities);
+                value = PrivateBin.Helper.htmlEntities(value);
                 var content = keys.length > key ? keys[key] : keys[0],
                     contents = '<select id="pasteExpiration" name="pasteExpiration">';
                 keys.forEach(function(item) {
@@ -27,10 +27,10 @@ describe('Model', function () {
                 });
                 contents += '</select>';
                 $('body').html(contents);
-                var result = $.PrivateBin.Helper.htmlEntities(
-                    $.PrivateBin.Model.getExpirationDefault()
+                var result = PrivateBin.Helper.htmlEntities(
+                    PrivateBin.Model.getExpirationDefault()
                 );
-                $.PrivateBin.Model.reset();
+                PrivateBin.Model.reset();
                 return content === result;
             }
         );
@@ -38,7 +38,7 @@ describe('Model', function () {
 
     describe('getFormatDefault', function () {
         before(function () {
-            $.PrivateBin.Model.reset();
+            PrivateBin.Model.reset();
         });
         after(function () {
             cleanup();
@@ -50,8 +50,8 @@ describe('Model', function () {
             'string',
             'small nat',
             function (keys, value, key) {
-                keys = keys.map($.PrivateBin.Helper.htmlEntities);
-                value = $.PrivateBin.Helper.htmlEntities(value);
+                keys = keys.map(PrivateBin.Helper.htmlEntities);
+                value = PrivateBin.Helper.htmlEntities(value);
                 var content = keys.length > key ? keys[key] : keys[0],
                     contents = '<select id="pasteFormatter" name="pasteFormatter">';
                 keys.forEach(function(item) {
@@ -63,10 +63,10 @@ describe('Model', function () {
                 });
                 contents += '</select>';
                 $('body').html(contents);
-                var result = $.PrivateBin.Helper.htmlEntities(
-                    $.PrivateBin.Model.getFormatDefault()
+                var result = PrivateBin.Helper.htmlEntities(
+                    PrivateBin.Model.getFormatDefault()
                 );
-                $.PrivateBin.Model.reset();
+                PrivateBin.Model.reset();
                 return content === result;
             }
         );
@@ -75,7 +75,7 @@ describe('Model', function () {
     describe('getPasteId', function () {
         this.timeout(30000);
         beforeEach(function () {
-            $.PrivateBin.Model.reset();
+            PrivateBin.Model.reset();
         });
 
         jsc.property(
@@ -94,8 +94,8 @@ describe('Model', function () {
                 url.query = queryStart.concat(pasteId, queryEnd);
                 const pasteIdString = pasteId.join(''),
                     clean           = jsdom('', {url: common.urlToString(url)});
-                const result = $.PrivateBin.Model.getPasteId();
-                $.PrivateBin.Model.reset();
+                const result = PrivateBin.Model.getPasteId();
+                PrivateBin.Model.reset();
                 clean();
                 return pasteIdString === result;
             }
@@ -107,12 +107,12 @@ describe('Model', function () {
                 const clean = jsdom('', {url: common.urlToString(url)});
                 let result = false;
                 try {
-                    $.PrivateBin.Model.getPasteId();
+                    PrivateBin.Model.getPasteId();
                 }
                 catch(err) {
                     result = true;
                 }
-                $.PrivateBin.Model.reset();
+                PrivateBin.Model.reset();
                 clean();
                 return result;
             }
@@ -122,7 +122,7 @@ describe('Model', function () {
     describe('getPasteKey', function () {
         this.timeout(30000);
         beforeEach(function () {
-            $.PrivateBin.Model.reset();
+            PrivateBin.Model.reset();
         });
 
         jsc.property(
@@ -133,12 +133,12 @@ describe('Model', function () {
                 const clean = jsdom('', {url: common.urlToString(url)});
                 let result = false;
                 try {
-                    $.PrivateBin.Model.getPasteId();
+                    PrivateBin.Model.getPasteId();
                 }
                 catch(err) {
                     result = true;
                 }
-                $.PrivateBin.Model.reset();
+                PrivateBin.Model.reset();
                 clean();
                 return result;
             }
@@ -149,10 +149,10 @@ describe('Model', function () {
             jsc.array(common.jscHashString()),
             function (url, trail) {
                 const fragment = url.fragment.padStart(32, '\u0000');
-                url.fragment = $.PrivateBin.CryptTool.base58encode(fragment) + '&' + trail.join('');
+                url.fragment = PrivateBin.CryptTool.base58encode(fragment) + '&' + trail.join('');
                 const clean = jsdom('', {url: common.urlToString(url)}),
-                    result = $.PrivateBin.Model.getPasteKey();
-                $.PrivateBin.Model.reset();
+                    result = PrivateBin.Model.getPasteKey();
+                PrivateBin.Model.reset();
                 clean();
                 return fragment === result;
             }
@@ -163,10 +163,10 @@ describe('Model', function () {
             function (url) {
                 // base58 strips leading NULL bytes, so the string is padded with these if not found
                 const fragment = url.fragment.padStart(32, '\u0000');
-                url.fragment = $.PrivateBin.CryptTool.base58encode(fragment);
+                url.fragment = PrivateBin.CryptTool.base58encode(fragment);
                 const clean = jsdom('', {url: common.urlToString(url)}),
-                    result = $.PrivateBin.Model.getPasteKey();
-                $.PrivateBin.Model.reset();
+                    result = PrivateBin.Model.getPasteKey();
+                PrivateBin.Model.reset();
                 clean();
                 return fragment === result;
             }
@@ -178,10 +178,10 @@ describe('Model', function () {
             function (url, trail) {
                 // base58 strips leading NULL bytes, so the string is padded with these if not found
                 const fragment = url.fragment.padStart(32, '\u0000');
-                url.fragment = $.PrivateBin.CryptTool.base58encode(fragment) + '&' + trail.join('');
+                url.fragment = PrivateBin.CryptTool.base58encode(fragment) + '&' + trail.join('');
                 const clean = jsdom('', {url: common.urlToString(url)}),
-                    result = $.PrivateBin.Model.getPasteKey();
-                $.PrivateBin.Model.reset();
+                    result = PrivateBin.Model.getPasteKey();
+                PrivateBin.Model.reset();
                 clean();
                 return fragment === result;
             }
@@ -193,12 +193,12 @@ describe('Model', function () {
                 let clean = jsdom('', {url: common.urlToString(url)}),
                     result = false;
                 try {
-                    $.PrivateBin.Model.getPasteKey();
+                    PrivateBin.Model.getPasteKey();
                 }
                 catch(err) {
                     result = true;
                 }
-                $.PrivateBin.Model.reset();
+                PrivateBin.Model.reset();
                 clean();
                 return result;
             }
@@ -207,7 +207,7 @@ describe('Model', function () {
 
     describe('getTemplate', function () {
         beforeEach(function () {
-            $.PrivateBin.Model.reset();
+            PrivateBin.Model.reset();
         });
 
         jsc.property(
@@ -230,11 +230,11 @@ describe('Model', function () {
                     '<div id="templates"><' + element + ' id="' + id +
                     'template">' + value + '</' + element + '></div>'
                 );
-                $.PrivateBin.Model.init();
+                PrivateBin.Model.init();
                 var template = '<' + element + ' id="' + id + '">' + value +
                     '</' + element + '>',
-                    result = $.PrivateBin.Model.getTemplate(id).wrap('<p/>').parent().html();
-                $.PrivateBin.Model.reset();
+                    result = PrivateBin.Model.getTemplate(id).wrap('<p/>').parent().html();
+                PrivateBin.Model.reset();
                 return template === result;
             }
         );

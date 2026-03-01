@@ -7,7 +7,7 @@ describe('UiHelper', function () {
     describe('historyChange', function () {
         this.timeout(30000);
         beforeEach(function () {
-            $.PrivateBin.Helper.reset();
+            PrivateBin.Helper.reset();
             cleanup();
         });
 
@@ -18,8 +18,8 @@ describe('UiHelper', function () {
                 const expected = common.urlToString(url),
                     clean = jsdom('', {url: expected});
 
-                $.PrivateBin.UiHelper.mockHistoryChange();
-                $.PrivateBin.Helper.reset();
+                PrivateBin.UiHelper.mockHistoryChange();
+                PrivateBin.Helper.reset();
                 var result = window.location.href;
                 clean();
                 return expected === result;
@@ -35,10 +35,10 @@ describe('UiHelper', function () {
                 const expected = common.urlToString(url),
                     clean = jsdom('', {url: expected});
 
-                $.PrivateBin.UiHelper.mockHistoryChange([
+                PrivateBin.UiHelper.mockHistoryChange([
                     {type: 'newpaste'}, '', expected
                 ]);
-                $.PrivateBin.Helper.reset();
+                PrivateBin.Helper.reset();
                 var result = window.location.href;
                 clean();
                 return expected === result;
@@ -51,7 +51,7 @@ describe('UiHelper', function () {
         /*
         this.timeout(30000);
         before(function () {
-            $.PrivateBin.Helper.reset();
+            PrivateBin.Helper.reset();
         });
 
         jsc.property(
@@ -63,8 +63,8 @@ describe('UiHelper', function () {
                 delete(url.fragment);
                 const expected = common.urlToString(url);
 
-                $.PrivateBin.UiHelper.reloadHome();
-                $.PrivateBin.Helper.reset();
+                PrivateBin.UiHelper.reloadHome();
+                PrivateBin.Helper.reset();
                 var result = window.location.href;
                 clean();
                 return expected === result;
@@ -78,7 +78,7 @@ describe('UiHelper', function () {
         // once it is supported or a workaround is found, uncomment the section below
         /*
         before(function () {
-            $.PrivateBin.Helper.reset();
+            PrivateBin.Helper.reset();
         });
 
         jsc.property(
@@ -91,7 +91,7 @@ describe('UiHelper', function () {
                 var clean = jsdom(
                     '<' + element + ' id="' + id + '"></' + element + '>'
                 );
-                var result = $.PrivateBin.UiHelper.isVisible($('#' + id));
+                var result = PrivateBin.UiHelper.isVisible($('#' + id));
                 clean();
                 return result;
             }

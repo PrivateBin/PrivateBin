@@ -20,15 +20,15 @@ describe('ServerInteraction', function () {
                     window.crypto = new WebCrypto();
                     message = message.trim();
 
-                    $.PrivateBin.ServerInteraction.prepare();
-                    $.PrivateBin.ServerInteraction.setCryptParameters(password, key);
-                    $.PrivateBin.ServerInteraction.setUnencryptedData('adata', [
+                    PrivateBin.ServerInteraction.prepare();
+                    PrivateBin.ServerInteraction.setCryptParameters(password, key);
+                    PrivateBin.ServerInteraction.setUnencryptedData('adata', [
                         // encryption parameters defined by CryptTool, format, discussion, burn after reading
                         null, 'plaintext', 0, 0
                     ]);
-                    $.PrivateBin.ServerInteraction.setUnencryptedData('meta', {'expire': '5min'});
-                    await $.PrivateBin.ServerInteraction.setCipherMessage({'paste': message});
-                    //console.log($.PrivateBin.ServerInteraction.getData());
+                    PrivateBin.ServerInteraction.setUnencryptedData('meta', {'expire': '5min'});
+                    await PrivateBin.ServerInteraction.setCipherMessage({'paste': message});
+                    //console.log(PrivateBin.ServerInteraction.getData());
                     clean();
                     // TODO currently not testing anything and just used to generate v2 pastes for starting development of server side v2 implementation
                     return true;

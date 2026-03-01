@@ -2654,14 +2654,16 @@ window.PrivateBin = (function () {
                     excludeTrailingPunctuationFromURLs: true
                 });
                 // let showdown convert the HTML and sanitize HTML *afterwards*!
-                plainText.innerHTML = DOMPurify.sanitize(
-                    converter.makeHtml(text),
-                    purifyHtmlConfig
-                );
-                // add table classes from bootstrap css
-                plainText.querySelectorAll('table').forEach(t => {
-                    t.classList.add('table-condensed', 'table-bordered');
-                });
+                if (plainText) {
+                    plainText.innerHTML = DOMPurify.sanitize(
+                        converter.makeHtml(text),
+                        purifyHtmlConfig
+                    );
+                    // add table classes from bootstrap css
+                    plainText.querySelectorAll('table').forEach(t => {
+                        t.classList.add('table-condensed', 'table-bordered');
+                    });
+                }
             } else {
                 if (format === 'syntaxhighlighting') {
                     // yes, this is really needed to initialize the environment
@@ -2669,17 +2671,23 @@ window.PrivateBin = (function () {
                         prettyPrint();
                     }
 
-                    prettyPrintEl.innerHTML = prettyPrintOne(
-                        Helper.htmlEntities(text), null, true
-                    );
+                    if (prettyPrintEl) {
+                        prettyPrintEl.innerHTML = prettyPrintOne(
+                            Helper.htmlEntities(text), null, true
+                        );
+                    }
                 } else {
                     // = 'plaintext'
-                    prettyPrintEl.textContent = text;
+                    if (prettyPrintEl) {
+                        prettyPrintEl.textContent = text;
+                    }
                 }
-                Helper.urls2links(prettyPrintEl);
-                prettyPrintEl.style.whiteSpace = 'pre-wrap';
-                prettyPrintEl.style.wordBreak = 'normal';
-                prettyPrintEl.classList.remove('prettyprint');
+                if (prettyPrintEl) {
+                    Helper.urls2links(prettyPrintEl);
+                    prettyPrintEl.style.whiteSpace = 'pre-wrap';
+                    prettyPrintEl.style.wordBreak = 'normal';
+                    prettyPrintEl.classList.remove('prettyprint');
+                }
             }
         }
 
@@ -2755,7 +2763,7 @@ window.PrivateBin = (function () {
          * @return {bool}
          */
         me.isPrettyPrinted = function () {
-            return $prettyPrint.hasClass('prettyprinted');
+            return prettyPrintEl ? prettyPrintEl.classList.contains('prettyprinted') : false;
         };
 
         /**
