@@ -2329,8 +2329,6 @@ window.PrivateBin = (function() {
 
             if (typeof bootstrap !== 'undefined' && bootstrap.Tooltip && typeof bootstrap.Modal === 'function') {
                 (new bootstrap.Modal(loadconfirmmodal)).show();
-            } else if (typeof jQuery !== 'undefined' && jQuery.fn && typeof jQuery.fn.modal === 'function') {
-                jQuery(loadconfirmmodal).modal('show');
             } else {
                 // minimal fallback: make element visible
                 loadconfirmmodal.classList.add('show');
@@ -2346,11 +2344,9 @@ window.PrivateBin = (function() {
         me.requestPassword = function()
         {
             // show new bootstrap method (if available)
-            if ($passwordModal.length !== 0) {
+            if (passwordModal !== null) {
                 if (bootstrap5PasswordModal) {
                     bootstrap5PasswordModal.show();
-                } else {
-                    $passwordModal.modal('show');
                 }
                 return;
             }
@@ -2385,7 +2381,7 @@ window.PrivateBin = (function() {
             password = '';
 
             // and also reset UI
-            $passwordDecrypt.val('');
+            passwordDecrypt.value = '';
         };
 
         /**
@@ -2417,15 +2413,10 @@ window.PrivateBin = (function() {
                     passwordModal.style.display = 'none';
                 }
 
-                // ensure focus when modal shown (works for bootstrap5 and jQuery plugin)
+                // ensure focus when modal shown (works for bootstrap5)
                 passwordModal.addEventListener('shown.bs.modal', () => {
                     passwordDecrypt.focus();
                 });
-                if (typeof jQuery !== 'undefined' && jQuery.fn && typeof jQuery.fn.on === 'function') {
-                    jQuery(passwordModal).on('shown.bs.modal', () => {
-                        passwordDecrypt.focus();
-                    });
-                }
             }
         };
 
@@ -3118,7 +3109,7 @@ window.PrivateBin = (function() {
          */
         me.clearDragAndDrop = function()
         {
-            $dragAndDropFileNames.html('');
+            dragAndDropFileNames.innerHTML = '';
         };
 
         /**
@@ -3130,11 +3121,11 @@ window.PrivateBin = (function() {
          * @param {string[]} fileNames
          */
         function printDragAndDropFileNames(fileNames) {
-            $dragAndDropFileNames.empty();
+            dragAndDropFileNames.innerHTML = '';
             fileNames.forEach(fileName => {
                 const name = document.createTextNode(fileName);
-                $dragAndDropFileNames[0].appendChild(name);
-                $dragAndDropFileNames[0].appendChild(document.createElement('br'));
+                dragAndDropFileNames.appendChild(name);
+                dragAndDropFileNames.appendChild(document.createElement('br'));
             });
         }
 
@@ -3248,19 +3239,19 @@ window.PrivateBin = (function() {
          *
          * @name   AttachmentViewer.moveAttachmentTo
          * @function
-         * @param {jQuery} $element - the wrapper/container element where this should be moved to
+         * @param {HTMLElement} element - the wrapper/container element where this should be moved to
          * @param {array} attachment - attachment data
          * @param {string} label - the text to show (%s will be replaced with the file name), will automatically be translated
          */
-        me.moveAttachmentTo = function($element, attachment, label)
+        me.moveAttachmentTo = function(element, attachment, label)
         {
-            const attachmentLink = $(document.createElement('a'))
-                                        .addClass('alert-link')
-                                        .prop('href', attachment[0])
-                                        .prop('download', attachment[1]);
+            const attachmentLink = document.createElement('a');
+            attachmentLink.className = 'alert-link';
+            attachmentLink.href = attachment[0];
+            attachmentLink.download = attachment[1];
 
-            // move elemement to new place
-            attachmentLink.appendTo($element);
+            // move element to new place
+            element.appendChild(attachmentLink);
 
             // update text - ensuring no HTML is inserted into the text node
             I18n._(attachmentLink, label, attachment[1]);
@@ -3291,7 +3282,10 @@ window.PrivateBin = (function() {
                 const fileNames = loadedFiles.map((loadedFile => loadedFile.name));
                 printDragAndDropFileNames(fileNames);
             } else {
-                loadedFiles = [...$fileInput[0].files];
+                const fileInput = document.getElementById('file');
+                if (fileInput && fileInput.files) {
+                    loadedFiles = [...fileInput.files];
+                }
                 me.clearDragAndDrop();
             }
 
@@ -3723,7 +3717,7 @@ window.PrivateBin = (function() {
          */
         me.getReplyMessage = function()
         {
-            return $replyMessage.val();
+            return replyMessage.value;
         };
 
         /**
@@ -3735,7 +3729,7 @@ window.PrivateBin = (function() {
          */
         me.getReplyNickname = function()
         {
-            return $replyNickname.val();
+            return replyNickname.value;
         };
 
         /**
@@ -3819,26 +3813,26 @@ window.PrivateBin = (function() {
             viewButtonsDisplayed = false,
             burnAfterReadingDefault = false,
             openDiscussionDefault = false,
-            $attach,
-            $burnAfterReading,
-            $burnAfterReadingOption,
-            $cloneButton,
-            $customAttachment,
-            $expiration,
-            $fileRemoveButton,
-            $fileWrap,
-            $formatter,
-            $newButton,
-            $openDiscussion,
-            $openDiscussionOption,
-            $password,
-            $passwordInput,
-            $rawTextButton,
-            $downloadTextButton,
-            $qrCodeLink,
-            $emailLink,
-            $sendButton,
-            $retryButton,
+            attach,
+            burnAfterReading,
+            burnAfterReadingOption,
+            cloneButton,
+            customAttachment,
+            expiration,
+            fileRemoveButton,
+            fileWrap,
+            formatter,
+            newButton,
+            openDiscussion,
+            openDiscussionOption,
+            password,
+            passwordInput,
+            rawTextButton,
+            downloadTextButton,
+            qrCodeLink,
+            emailLink,
+            sendButton,
+            retryButton,
             pasteExpiration = null,
             retryButtonCallback;
 
@@ -3853,11 +3847,11 @@ window.PrivateBin = (function() {
         function updateExpiration(event)
         {
             // get selected option
-            const target = $(event.target);
+            const target = event.target;
 
             // update dropdown display and save new expiration time
-            $('#pasteExpirationDisplay').text(target.text());
-            pasteExpiration = target.data('expiration');
+            document.getElementById('pasteExpirationDisplay').textContent = target.textContent;
+            pasteExpiration = target.getAttribute('data-expiration');
 
             event.preventDefault();
         }
@@ -3873,11 +3867,11 @@ window.PrivateBin = (function() {
         function updateFormat(event)
         {
             // get selected option
-            const $target = $(event.target);
+            const target = event.target;
 
             // update dropdown display and save new format
-            const newFormat = $target.data('format');
-            $('#pasteFormatterDisplay').text($target.text());
+            const newFormat = target.getAttribute('data-format');
+            document.getElementById('pasteFormatterDisplay').textContent = target.textContent;
             PasteViewer.setFormat(newFormat);
 
             event.preventDefault();
@@ -3893,13 +3887,13 @@ window.PrivateBin = (function() {
         function changeBurnAfterReading()
         {
             if (me.getBurnAfterReading()) {
-                $openDiscussionOption.addClass('buttondisabled');
-                $openDiscussion.prop('checked', false);
+                openDiscussionOption.classList.add('buttondisabled');
+                openDiscussion.checked = false;
 
                 // if button is actually disabled, force-enable it and uncheck other button
-                $burnAfterReadingOption.removeClass('buttondisabled');
+                burnAfterReadingOption.classList.remove('buttondisabled');
             } else {
-                $openDiscussionOption.removeClass('buttondisabled');
+                openDiscussionOption.classList.remove('buttondisabled');
             }
         }
 
@@ -3913,13 +3907,13 @@ window.PrivateBin = (function() {
         function changeOpenDiscussion()
         {
             if (me.getOpenDiscussion()) {
-                $burnAfterReadingOption.addClass('buttondisabled');
-                $burnAfterReading.prop('checked', false);
+                burnAfterReadingOption.classList.add('buttondisabled');
+                burnAfterReading.checked = false;
 
                 // if button is actually disabled, force-enable it and uncheck other button
-                $openDiscussionOption.removeClass('buttondisabled');
+                openDiscussionOption.classList.remove('buttondisabled');
             } else {
-                $burnAfterReadingOption.removeClass('buttondisabled');
+                burnAfterReadingOption.classList.remove('buttondisabled');
             }
         }
 
@@ -3932,7 +3926,7 @@ window.PrivateBin = (function() {
 
         function clearPasswordInput()
         {
-            $passwordInput.val('');
+            passwordInput.value = '';
         }
 
 
@@ -3945,8 +3939,10 @@ window.PrivateBin = (function() {
         function clearAttachmentInput()
         {
             // hide UI for selected files
-            // our up-to-date jQuery can handle it :)
-            $fileWrap.find('input').val('');
+            const inputElement = fileWrap && fileWrap.querySelector('input');
+            if (inputElement) {
+                inputElement.value = '';
+            }
         }
 
         /**
@@ -4025,7 +4021,7 @@ window.PrivateBin = (function() {
          */
         function setLanguage(event)
         {
-            let lang = $(event.target).data('lang') || event.target.value;
+            let lang = event.target.getAttribute('data-lang') || event.target.value;
 
             document.cookie = 'lang=' + lang + '; SameSite=Lax; Secure';
             window.location.reload();
@@ -4042,7 +4038,7 @@ window.PrivateBin = (function() {
          */
         function setTemplate(event)
         {
-            let template = $(event.target).data('template') || event.target.value;
+            let template = event.target.getAttribute('data-template') || event.target.value;
 
             document.cookie = 'template=' + template + '; SameSite=Lax; Secure';
             window.location.reload();
@@ -4086,10 +4082,10 @@ window.PrivateBin = (function() {
         function removeAttachment(event)
         {
             // if custom attachment is used, remove it first
-            if (!$customAttachment.hasClass('hidden')) {
+            if (customAttachment && !customAttachment.classList.contains('hidden')) {
                 AttachmentViewer.removeAttachment();
-                $customAttachment.addClass('hidden');
-                $fileWrap.removeClass('hidden');
+                customAttachment.classList.add('hidden');
+                fileWrap.classList.remove('hidden');
             }
 
             // in any case, remove saved attachment data
@@ -4115,7 +4111,8 @@ window.PrivateBin = (function() {
                 render: 'canvas',
                 text: window.location.href
             });
-            $('#qrcode-display').html(qrCanvas);
+            document.getElementById('qrcode-display').innerHTML = '';
+            document.getElementById('qrcode-display').appendChild(qrCanvas);
         }
 
         /**
@@ -4160,7 +4157,8 @@ window.PrivateBin = (function() {
             }
             emailBody += I18n._('Link:');
             emailBody += EOL;
-            emailBody += $('#pasteurl').attr('href') || window.location.href; // href is tried first as it might have been shortened
+            const pasteUrlElement = document.getElementById('pasteurl');
+            emailBody += (pasteUrlElement && pasteUrlElement.getAttribute('href')) || window.location.href; // href is tried first as it might have been shortened
             return emailBody;
         }
 
@@ -4199,13 +4197,13 @@ window.PrivateBin = (function() {
             );
             expirationDateRoundedToSecond.setUTCSeconds(0);
 
-            const $emailconfirmmodal = $('#emailconfirmmodal');
+            const emailconfirmmodal = document.getElementById('emailconfirmmodal');
             if (expirationDate !== null) {
-                const $emailconfirmTimezoneCurrent = $emailconfirmmodal.find('#emailconfirm-timezone-current');
-                const $emailconfirmTimezoneUtc = $emailconfirmmodal.find('#emailconfirm-timezone-utc');
+                const emailconfirmTimezoneCurrent = emailconfirmmodal.querySelector('#emailconfirm-timezone-current');
+                const emailconfirmTimezoneUtc = emailconfirmmodal.querySelector('#emailconfirm-timezone-utc');
                 let localeConfiguration = { dateStyle: 'long', timeStyle: 'long' };
-                const bootstrap5EmailConfirmModal = typeof bootstrap !== 'undefined' && bootstrap.Tooltip.VERSION ?
-                    new bootstrap.Modal($emailconfirmmodal[0]) : null;
+                const bootstrap5EmailConfirmModal = typeof bootstrap !== 'undefined' && bootstrap.Tooltip && bootstrap.Tooltip.VERSION ?
+                    new bootstrap.Modal(emailconfirmmodal) : null;
 
                 function sendEmailAndHideModal() {
                     const emailBody = templateEmailBody(
@@ -4216,23 +4214,19 @@ window.PrivateBin = (function() {
                     );
                     if (bootstrap5EmailConfirmModal) {
                         bootstrap5EmailConfirmModal.hide();
-                    } else {
-                        $emailconfirmmodal.modal('hide');
                     }
                     triggerEmailSend(emailBody);
                 }
 
-                $emailconfirmTimezoneCurrent.off('click.sendEmailCurrentTimezone');
-                $emailconfirmTimezoneCurrent.on('click.sendEmailCurrentTimezone', sendEmailAndHideModal);
-                $emailconfirmTimezoneUtc.off('click.sendEmailUtcTimezone');
-                $emailconfirmTimezoneUtc.on('click.sendEmailUtcTimezone', () => {
+                emailconfirmTimezoneCurrent.removeEventListener('click', sendEmailAndHideModal);
+                emailconfirmTimezoneCurrent.addEventListener('click', sendEmailAndHideModal);
+                emailconfirmTimezoneUtc.removeEventListener('click', sendEmailAndHideModal);
+                emailconfirmTimezoneUtc.addEventListener('click', () => {
                     localeConfiguration.timeZone = 'UTC';
                     sendEmailAndHideModal();
                 });
                 if (bootstrap5EmailConfirmModal) {
                     bootstrap5EmailConfirmModal.show();
-                } else {
-                    $emailconfirmmodal.modal('show');
                 }
             } else {
                 triggerEmailSend(templateEmailBody(null, isBurnafterreading));
@@ -4251,11 +4245,11 @@ window.PrivateBin = (function() {
                 return;
             }
 
-            $newButton.removeClass('hidden');
-            $cloneButton.removeClass('hidden');
-            $rawTextButton.removeClass('hidden');
-            $downloadTextButton.removeClass('hidden');
-            $qrCodeLink.removeClass('hidden');
+            newButton.classList.remove('hidden');
+            cloneButton.classList.remove('hidden');
+            rawTextButton.classList.remove('hidden');
+            downloadTextButton.classList.remove('hidden');
+            qrCodeLink.classList.remove('hidden');
 
             viewButtonsDisplayed = true;
         };
@@ -4272,11 +4266,11 @@ window.PrivateBin = (function() {
                 return;
             }
 
-            $cloneButton.addClass('hidden');
-            $newButton.addClass('hidden');
-            $rawTextButton.addClass('hidden');
-            $downloadTextButton.addClass('hidden');
-            $qrCodeLink.addClass('hidden');
+            cloneButton.classList.add('hidden');
+            newButton.classList.add('hidden');
+            rawTextButton.classList.add('hidden');
+            downloadTextButton.classList.add('hidden');
+            qrCodeLink.classList.add('hidden');
             me.hideEmailButton();
 
             viewButtonsDisplayed = false;
@@ -4306,14 +4300,14 @@ window.PrivateBin = (function() {
                 return;
             }
 
-            $attach.removeClass('hidden');
-            $burnAfterReadingOption.removeClass('hidden');
-            $expiration.removeClass('hidden');
-            $formatter.removeClass('hidden');
-            $newButton.removeClass('hidden');
-            $openDiscussionOption.removeClass('hidden');
-            $password.removeClass('hidden');
-            $sendButton.removeClass('hidden');
+            attach.classList.remove('hidden');
+            burnAfterReadingOption.classList.remove('hidden');
+            expiration.classList.remove('hidden');
+            formatter.classList.remove('hidden');
+            newButton.classList.remove('hidden');
+            openDiscussionOption.classList.remove('hidden');
+            password.classList.remove('hidden');
+            sendButton.classList.remove('hidden');
 
             createButtonsDisplayed = true;
         };
@@ -4330,14 +4324,14 @@ window.PrivateBin = (function() {
                 return;
             }
 
-            $newButton.addClass('hidden');
-            $sendButton.addClass('hidden');
-            $expiration.addClass('hidden');
-            $formatter.addClass('hidden');
-            $burnAfterReadingOption.addClass('hidden');
-            $openDiscussionOption.addClass('hidden');
-            $password.addClass('hidden');
-            $attach.addClass('hidden');
+            newButton.classList.add('hidden');
+            sendButton.classList.add('hidden');
+            expiration.classList.add('hidden');
+            formatter.classList.add('hidden');
+            burnAfterReadingOption.classList.add('hidden');
+            openDiscussionOption.classList.add('hidden');
+            password.classList.add('hidden');
+            attach.classList.add('hidden');
 
             createButtonsDisplayed = false;
         };
@@ -4350,7 +4344,7 @@ window.PrivateBin = (function() {
          */
         me.showNewPasteButton = function()
         {
-            $newButton.removeClass('hidden');
+            newButton.classList.remove('hidden');
         };
 
         /**
@@ -4361,7 +4355,7 @@ window.PrivateBin = (function() {
          */
         me.showRetryButton = function()
         {
-            $retryButton.removeClass('hidden');
+            retryButton.classList.remove('hidden');
         }
 
         /**
@@ -4372,7 +4366,7 @@ window.PrivateBin = (function() {
          */
         me.hideRetryButton = function()
         {
-            $retryButton.addClass('hidden');
+            retryButton.classList.add('hidden');
         }
 
         /**
@@ -4392,9 +4386,9 @@ window.PrivateBin = (function() {
                 );
                 const isBurnafterreading = TopNav.getBurnAfterReading();
 
-                $emailLink.removeClass('hidden');
-                $emailLink.off('click.sendEmail');
-                $emailLink.on('click.sendEmail', () => {
+                emailLink.classList.remove('hidden');
+                emailLink.removeEventListener('click', sendEmail);
+                emailLink.addEventListener('click', () => {
                     sendEmail(expirationDate, isBurnafterreading);
                 });
             } catch (error) {
@@ -4411,8 +4405,8 @@ window.PrivateBin = (function() {
          */
         me.hideEmailButton = function()
         {
-            $emailLink.addClass('hidden');
-            $emailLink.off('click.sendEmail');
+            emailLink.classList.add('hidden');
+            emailLink.removeEventListener('click', sendEmail);
         }
 
         /**
@@ -4423,7 +4417,7 @@ window.PrivateBin = (function() {
          */
         me.hideCloneButton = function()
         {
-            $cloneButton.addClass('hidden');
+            cloneButton.classList.add('hidden');
         };
 
         /**
@@ -4434,7 +4428,7 @@ window.PrivateBin = (function() {
          */
         me.hideRawButton = function()
         {
-            $rawTextButton.addClass('hidden');
+            rawTextButton.classList.add('hidden');
         };
 
         /**
@@ -4445,7 +4439,7 @@ window.PrivateBin = (function() {
          */
         me.hideDownloadButton = function()
         {
-            $downloadTextButton.addClass('hidden');
+            downloadTextButton.classList.add('hidden');
         };
 
         /**
@@ -4456,7 +4450,7 @@ window.PrivateBin = (function() {
          */
         me.hideQrCodeButton = function()
         {
-            $qrCodeLink.addClass('hidden');
+            qrCodeLink.classList.add('hidden');
         }
 
         /**
@@ -4480,7 +4474,7 @@ window.PrivateBin = (function() {
          */
         me.hideFileSelector = function()
         {
-            $fileWrap.addClass('hidden');
+            fileWrap.classList.add('hidden');
         };
 
 
@@ -4492,7 +4486,7 @@ window.PrivateBin = (function() {
          */
         me.showCustomAttachment = function()
         {
-            $customAttachment.removeClass('hidden');
+            customAttachment.classList.remove('hidden');
         };
 
         /**
@@ -4503,8 +4497,8 @@ window.PrivateBin = (function() {
          */
         me.hideCustomAttachment = function()
         {
-            $customAttachment.addClass('hidden');
-            $fileWrap.removeClass('hidden');
+            customAttachment.classList.add('hidden');
+            fileWrap.classList.remove('hidden');
         };
 
         /**
@@ -4515,8 +4509,12 @@ window.PrivateBin = (function() {
          */
         me.collapseBar = function()
         {
-            if ($('#navbar').attr('aria-expanded') === 'true') {
-                $('.navbar-toggle').click();
+            const navbar = document.getElementById('navbar');
+            if (navbar && navbar.getAttribute('aria-expanded') === 'true') {
+                const toggle = document.querySelector('.navbar-toggle');
+                if (toggle) {
+                    toggle.click();
+                }
             }
         };
 
@@ -4530,18 +4528,28 @@ window.PrivateBin = (function() {
         {
             clearAttachmentInput();
             clearPasswordInput();
-            $burnAfterReading.prop('checked', burnAfterReadingDefault);
-            $openDiscussion.prop('checked', openDiscussionDefault);
-            if (openDiscussionDefault || !burnAfterReadingDefault) $openDiscussionOption.removeClass('buttondisabled');
-            if (burnAfterReadingDefault || !openDiscussionDefault) $burnAfterReadingOption.removeClass('buttondisabled');
+            if (burnAfterReading) {
+                burnAfterReading.checked = burnAfterReadingDefault;
+            }
+            if (openDiscussion) {
+                openDiscussion.checked = openDiscussionDefault;
+            }
+            if (openDiscussionDefault || !burnAfterReadingDefault) {
+                openDiscussionOption.classList.remove('buttondisabled');
+            }
+            if (burnAfterReadingDefault || !openDiscussionDefault) {
+                burnAfterReadingOption.classList.remove('buttondisabled');
+            }
 
             pasteExpiration = Model.getExpirationDefault() || pasteExpiration;
-            $('#pasteExpiration>option').each(function() {
-                const $this = $(this);
-                if ($this.val() === pasteExpiration) {
-                    $('#pasteExpirationDisplay').text($this.text());
-                }
-            });
+            const pasteExpirationSelect = document.getElementById('pasteExpiration');
+            if (pasteExpirationSelect) {
+                pasteExpirationSelect.querySelectorAll('option').forEach((option) => {
+                    if (option.value === pasteExpiration) {
+                        document.getElementById('pasteExpirationDisplay').textContent = option.textContent;
+                    }
+                });
+            }
         };
 
         /**
@@ -4565,19 +4573,19 @@ window.PrivateBin = (function() {
          */
         me.getFileList = function()
         {
-            const $file = $('#file');
+            const file = document.getElementById('file');
 
             // if no file given, return null
-            if (!$file.length || !$file[0].files.length) {
+            if (!file || !file.files || !file.files.length) {
                 return null;
             }
 
             // ensure the selected file is still accessible
-            if (!($file[0].files && $file[0].files[0])) {
+            if (!file.files[0]) {
                 return null;
             }
 
-            return $file[0].files;
+            return file.files;
         };
 
         /**
@@ -4613,8 +4621,8 @@ window.PrivateBin = (function() {
          */
         me.getPassword = function()
         {
-            // when password is disabled $passwordInput.val() will return undefined
-            return $passwordInput.val() || '';
+            // when password is disabled passwordInput.value will return undefined
+            return passwordInput && passwordInput.value || '';
         };
 
         /**
@@ -4624,11 +4632,11 @@ window.PrivateBin = (function() {
          *
          * @name   TopNav.getCustomAttachment
          * @function
-         * @return {jQuery}
+         * @return {HTMLElement}
          */
         me.getCustomAttachment = function()
         {
-            return $customAttachment;
+            return customAttachment;
         };
 
         /**
@@ -4652,17 +4660,17 @@ window.PrivateBin = (function() {
         me.highlightFileupload = function()
         {
             // visually indicate file uploaded
-            const $attachDropdownToggle = $attach.children('.dropdown-toggle');
-            if ($attachDropdownToggle.attr('aria-expanded') === 'false') {
+            const attachDropdownToggle = attach && attach.querySelector('.dropdown-toggle');
+            if (attachDropdownToggle && attachDropdownToggle.getAttribute('aria-expanded') === 'false') {
                 if (Helper.isBootstrap5()) {
-                    new bootstrap.Dropdown($attachDropdownToggle).toggle();
+                    new bootstrap.Dropdown(attachDropdownToggle).toggle();
                 } else {
-                    $attachDropdownToggle.click();
+                    attachDropdownToggle.click();
                 }
             }
-            $fileWrap.addClass('highlight');
+            fileWrap.classList.add('highlight');
             setTimeout(function () {
-                $fileWrap.removeClass('highlight');
+                fileWrap.classList.remove('highlight');
             }, 300);
         }
 
@@ -4675,9 +4683,15 @@ window.PrivateBin = (function() {
         me.setFormat = function(format)
         {
             if (Helper.isBootstrap5()) {
-                $formatter.find('select').val(format);
+                const select = formatter.querySelector('select');
+                if (select) {
+                    select.value = format;
+                }
             } else {
-                $formatter.parent().find(`a[data-format="${format}"]`).click();
+                const formatLink = formatter.parentElement.querySelector(`a[data-format="${format}"]`);
+                if (formatLink) {
+                    formatLink.click();
+                }
             }
         }
 
@@ -4690,68 +4704,113 @@ window.PrivateBin = (function() {
          */
         me.isAttachmentReadonly = function()
         {
-            return !createButtonsDisplayed || $attach.hasClass('hidden');
+            return !createButtonsDisplayed || (attach && attach.classList.contains('hidden'));
         }
 
         /**
          * init navigation manager
          *
-         * preloads jQuery elements
+         * preloads DOM elements
          *
          * @name   TopNav.init
          * @function
          */
         me.init = function()
         {
-            $attach = $('#attach');
-            $burnAfterReading = $('#burnafterreading');
-            $burnAfterReadingOption = $('#burnafterreadingoption');
-            $cloneButton = $('#clonebutton');
-            $customAttachment = $('#customattachment');
-            $expiration = $('#expiration');
-            $fileRemoveButton = $('#fileremovebutton');
-            $fileWrap = $('#filewrap');
-            $formatter = $('#formatter');
-            $newButton = $('#newbutton');
-            $openDiscussion = $('#opendiscussion');
-            $openDiscussionOption = $('#opendiscussionoption');
-            $password = $('#password');
-            $passwordInput = $('#passwordinput');
-            $rawTextButton = $('#rawtextbutton');
-            $downloadTextButton = $('#downloadtextbutton');
-            $retryButton = $('#retrybutton');
-            $sendButton = $('#sendbutton');
-            $qrCodeLink = $('#qrcodelink');
-            $emailLink = $('#emaillink');
+            attach = document.getElementById('attach');
+            burnAfterReading = document.getElementById('burnafterreading');
+            burnAfterReadingOption = document.getElementById('burnafterreadingoption');
+            cloneButton = document.getElementById('clonebutton');
+            customAttachment = document.getElementById('customattachment');
+            expiration = document.getElementById('expiration');
+            fileRemoveButton = document.getElementById('fileremovebutton');
+            fileWrap = document.getElementById('filewrap');
+            formatter = document.getElementById('formatter');
+            newButton = document.getElementById('newbutton');
+            openDiscussion = document.getElementById('opendiscussion');
+            openDiscussionOption = document.getElementById('opendiscussionoption');
+            password = document.getElementById('password');
+            passwordInput = document.getElementById('passwordinput');
+            rawTextButton = document.getElementById('rawtextbutton');
+            downloadTextButton = document.getElementById('downloadtextbutton');
+            retryButton = document.getElementById('retrybutton');
+            sendButton = document.getElementById('sendbutton');
+            qrCodeLink = document.getElementById('qrcodelink');
+            emailLink = document.getElementById('emaillink');
 
             // bootstrap template drop down
-            $('#language ul.dropdown-menu li a').click(setLanguage);
+            const languageDropdown = document.getElementById('language');
+            if (languageDropdown) {
+                languageDropdown.querySelectorAll('ul.dropdown-menu li a').forEach(link => {
+                    link.addEventListener('click', setLanguage);
+                });
+            }
 
             // bootstrap template drop down
-            $('#template ul.dropdown-menu li a').click(setTemplate);
+            const templateDropdown = document.getElementById('template');
+            if (templateDropdown) {
+                templateDropdown.querySelectorAll('ul.dropdown-menu li a').forEach(link => {
+                    link.addEventListener('click', setTemplate);
+                });
+            }
 
             // bind events
-            $burnAfterReading.change(changeBurnAfterReading);
-            $openDiscussionOption.change(changeOpenDiscussion);
-            $newButton.click(clickNewPaste);
-            $sendButton.click(PasteEncrypter.sendPaste);
-            $cloneButton.click(Controller.clonePaste);
-            $rawTextButton.click(rawText);
-            $downloadTextButton.click(downloadText);
-            $retryButton.click(clickRetryButton);
-            $fileRemoveButton.click(removeAttachment);
-            $qrCodeLink.click(displayQrCode);
+            if (burnAfterReading) {
+                burnAfterReading.addEventListener('change', changeBurnAfterReading);
+            }
+            if (openDiscussionOption) {
+                openDiscussionOption.addEventListener('change', changeOpenDiscussion);
+            }
+            if (newButton) {
+                newButton.addEventListener('click', clickNewPaste);
+            }
+            if (sendButton) {
+                sendButton.addEventListener('click', PasteEncrypter.sendPaste);
+            }
+            if (cloneButton) {
+                cloneButton.addEventListener('click', Controller.clonePaste);
+            }
+            if (rawTextButton) {
+                rawTextButton.addEventListener('click', rawText);
+            }
+            if (downloadTextButton) {
+                downloadTextButton.addEventListener('click', downloadText);
+            }
+            if (retryButton) {
+                retryButton.addEventListener('click', clickRetryButton);
+            }
+            if (fileRemoveButton) {
+                fileRemoveButton.addEventListener('click', removeAttachment);
+            }
+            if (qrCodeLink) {
+                qrCodeLink.addEventListener('click', displayQrCode);
+            }
 
             // bootstrap template drop downs
-            $('ul.dropdown-menu li a', $('#expiration').parent()).click(updateExpiration);
-            $('ul.dropdown-menu li a', $('#formatter').parent()).click(updateFormat);
+            if (expiration) {
+                expiration.parentElement.querySelectorAll('ul.dropdown-menu li a').forEach(link => {
+                    link.addEventListener('click', updateExpiration);
+                });
+            }
+            if (formatter) {
+                formatter.parentElement.querySelectorAll('ul.dropdown-menu li a').forEach(link => {
+                    link.addEventListener('click', updateFormat);
+                });
+            }
+
             // bootstrap5 & page drop downs
-            $('#pasteExpiration').on('change', function() {
-                pasteExpiration = Model.getExpirationDefault();
-            });
-            $('#pasteFormatter').on('change', function() {
-                PasteViewer.setFormat(Model.getFormatDefault());
-            });
+            const pasteExpiration = document.getElementById('pasteExpiration');
+            if (pasteExpiration) {
+                pasteExpiration.addEventListener('change', function() {
+                    pasteExpiration = Model.getExpirationDefault();
+                });
+            }
+            const pasteFormatter = document.getElementById('pasteFormatter');
+            if (pasteFormatter) {
+                pasteFormatter.addEventListener('change', function() {
+                    PasteViewer.setFormat(Model.getFormatDefault());
+                });
+            }
 
             // initiate default state of checkboxes
             changeBurnAfterReading();
@@ -6027,9 +6086,9 @@ window.PrivateBin = (function() {
             });
 
             // center all modals
-            $('.modal').on('show.bs.modal', function(e) {
-                $(e.target).css({
-                    display: 'flex'
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.addEventListener('show.bs.modal', function(e) {
+                    e.target.style.display = 'flex';
                 });
             });
 
@@ -6062,9 +6121,12 @@ window.PrivateBin = (function() {
             // if delete token is passed (i.e. document has been deleted by this
             // access), add an event listener for the 'new' document button in the alert
             if (Model.hasDeleteToken()) {
-                $('#new-from-alert').on('click', function () {
-                    UiHelper.reloadHome();
-                });
+                const newFromAlert = document.getElementById('new-from-alert');
+                if (newFromAlert) {
+                    newFromAlert.addEventListener('click', function () {
+                        UiHelper.reloadHome();
+                    });
+                }
                 return;
             }
 
