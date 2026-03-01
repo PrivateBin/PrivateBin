@@ -88,7 +88,7 @@ describe('Helper', function () {
                 $('body').html('<div id="foo"></div>');
                 let e = $('#foo');
                 e.text(content);
-                $.PrivateBin.Helper.urls2links(e);
+                $.PrivateBin.Helper.urls2links(e[0]);
                 let result = e.text();
                 clean();
                 return content === result;
@@ -121,7 +121,7 @@ describe('Helper', function () {
                     postfix = '';
                 }
                 e.text(prefix + urlString + postfix);
-                $.PrivateBin.Helper.urls2links(e);
+                $.PrivateBin.Helper.urls2links(e[0]);
                 let result = e.html();
                 clean();
                 urlString = $('<div />').text(urlString).html();
@@ -144,7 +144,7 @@ describe('Helper', function () {
                 $('body').html('<div id="foo"></div>');
                 let e = $('#foo');
                 e.text(prefix + url + postfix);
-                $.PrivateBin.Helper.urls2links(e);
+                $.PrivateBin.Helper.urls2links(e[0]);
                 let result = e.html();
                 clean();
                 url = $('<div />').text(url).html();

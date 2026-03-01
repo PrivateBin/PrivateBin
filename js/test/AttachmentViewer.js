@@ -98,7 +98,7 @@ describe('AttachmentViewer', function () {
                     (previewSupported ? !$('#attachmentPreview').hasClass('hidden') : $('#attachmentPreview').hasClass('hidden'))
                 );
                 let element = $('<div>');
-                $.PrivateBin.AttachmentViewer.moveAttachmentTo(element, attachment[0], prefix + '%s' + postfix);
+                $.PrivateBin.AttachmentViewer.moveAttachmentTo(element[0], attachment[0], prefix + '%s' + postfix);
                 // messageIDs with links get a relaxed treatment
                 if (prefix.indexOf('<a') === -1 && postfix.indexOf('<a') === -1) {
                     result = $('<textarea>').text((prefix + filename + postfix)).text();
