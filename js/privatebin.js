@@ -2057,7 +2057,9 @@ window.PrivateBin = (function () {
             I18n._(document.querySelector('#deletelink span:not(.glyphicon)'), 'Delete data');
 
             // enable shortener button
-            shortenButton.classList.remove('buttondisabled');
+            if (shortenButton) {
+                shortenButton.classList.remove('buttondisabled');
+            }
 
             // show result
             pasteSuccess.classList.remove('hidden');
@@ -2073,7 +2075,7 @@ window.PrivateBin = (function () {
          */
         me.checkAutoShorten = function () {
             // check if auto-shortening is enabled
-            if (shortenButton.dataset.autoshorten === 'true') {
+            if (shortenButton && shortenButton.dataset.autoshorten === 'true') {
                 // if so, we send the link to the shortener
                 // we do not remove the button, in case shortener fails
                 sendToShortener();
@@ -4227,7 +4229,9 @@ window.PrivateBin = (function () {
             burnAfterReadingOption.classList.add('hidden');
             openDiscussionOption.classList.add('hidden');
             password.classList.add('hidden');
-            attach.classList.add('hidden');
+            if (attach) {
+                attach.classList.add('hidden');
+            }
 
             createButtonsDisplayed = false;
         };
