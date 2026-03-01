@@ -18,21 +18,21 @@ function draghover(element) {
     'use strict';
     let collection = new Set();
 
-    element.addEventListener('dragenter', function(e) {
+    element.addEventListener('dragenter', function (e) {
         if (collection.size === 0) {
             element.dispatchEvent(new CustomEvent('draghoverstart'));
         }
         collection.add(e.target);
     });
 
-    element.addEventListener('dragleave', function(e) {
+    element.addEventListener('dragleave', function (e) {
         collection.delete(e.target);
         if (collection.size === 0) {
             element.dispatchEvent(new CustomEvent('draghoverend'));
         }
     });
 
-    element.addEventListener('drop', function(e) {
+    element.addEventListener('drop', function (e) {
         collection.delete(e.target);
         if (collection.size === 0) {
             element.dispatchEvent(new CustomEvent('draghoverend'));
@@ -40,14 +40,7 @@ function draghover(element) {
     });
 }
 
-// main application start, called when DOM is fully loaded
-window.addEventListener('DOMContentLoaded', function() {
-    'use strict';
-    // run main controller
-    window.PrivateBin.Controller.init();
-});
-
-window.PrivateBin = (function() {
+window.PrivateBin = (function () {
     'use strict';
 
     /**
@@ -62,7 +55,7 @@ window.PrivateBin = (function() {
      *
      * @private
      */
-     const purifyHtmlConfig = {
+    const purifyHtmlConfig = {
         ALLOWED_URI_REGEXP: /^(?:(?:(?:f|ht)tps?|mailto|magnet):)/i,
         USE_PROFILES: {
             html: true
@@ -77,7 +70,7 @@ window.PrivateBin = (function() {
      *
      * @private
      */
-   const purifyHtmlConfigStrictSubset = {
+    const purifyHtmlConfigStrictSubset = {
         ALLOWED_URI_REGEXP: purifyHtmlConfig.ALLOWED_URI_REGEXP,
         ALLOWED_TAGS: ['a', 'i', 'span', 'kbd'],
         ALLOWED_ATTR: ['href', 'id']
@@ -88,7 +81,7 @@ window.PrivateBin = (function() {
      *
      * @private
      */
-     const purifySvgConfig = {
+    const purifySvgConfig = {
         USE_PROFILES: {
             svg: true,
             svgFilters: true
@@ -125,8 +118,7 @@ window.PrivateBin = (function() {
          * @function
          * @return {Array}
          */
-        this.getCipherData = function()
-        {
+        this.getCipherData = function () {
             return [this.ct, this.adata];
         }
     }
@@ -150,8 +142,7 @@ window.PrivateBin = (function() {
          * @function
          * @return {string}
          */
-        this.getFormat = function()
-        {
+        this.getFormat = function () {
             return this.adata[1];
         }
 
@@ -164,8 +155,7 @@ window.PrivateBin = (function() {
          * @function
          * @return {string}
          */
-        this.getTimeToLive = function()
-        {
+        this.getTimeToLive = function () {
             return this.meta.time_to_live || 0;
         }
 
@@ -176,8 +166,7 @@ window.PrivateBin = (function() {
          * @function
          * @return {bool}
          */
-        this.isBurnAfterReadingEnabled = function()
-        {
+        this.isBurnAfterReadingEnabled = function () {
             return this.adata[3];
         }
 
@@ -188,8 +177,7 @@ window.PrivateBin = (function() {
          * @function
          * @return {bool}
          */
-        this.isDiscussionEnabled = function()
-        {
+        this.isDiscussionEnabled = function () {
             return this.adata[2];
         }
     }
@@ -213,8 +201,7 @@ window.PrivateBin = (function() {
          * @function
          * @return {int}
          */
-        this.getCreated = function()
-        {
+        this.getCreated = function () {
             return this.meta['created'] || 0;
         }
 
@@ -225,8 +212,7 @@ window.PrivateBin = (function() {
          * @function
          * @return {string}
          */
-        this.getIcon = function()
-        {
+        this.getIcon = function () {
             return this.meta['icon'] || '';
         }
     }
@@ -347,27 +333,22 @@ window.PrivateBin = (function() {
          * @param  {number} seconds
          * @return {Array}
          */
-        me.secondsToHuman = function(seconds)
-        {
+        me.secondsToHuman = function (seconds) {
             let v;
-            if (seconds < minute)
-            {
+            if (seconds < minute) {
                 v = Math.floor(seconds);
                 return [v, 'second'];
             }
-            if (seconds < hour)
-            {
+            if (seconds < hour) {
                 v = Math.floor(seconds / minute);
                 return [v, 'minute'];
             }
-            if (seconds < day)
-            {
+            if (seconds < day) {
                 v = Math.floor(seconds / hour);
                 return [v, 'hour'];
             }
             // If less than 2 months, display in days:
-            if (seconds < (2 * month))
-            {
+            if (seconds < (2 * month)) {
                 v = Math.floor(seconds / day);
                 return [v, 'day'];
             }
@@ -387,13 +368,11 @@ window.PrivateBin = (function() {
          * @param  {String} duration
          * @return {number}
          */
-        me.durationToSeconds = function(duration)
-        {
-            let pieces   = duration.split(/(\D+)/),
-                factor   = pieces[0] || 0,
+        me.durationToSeconds = function (duration) {
+            let pieces = duration.split(/(\D+)/),
+                factor = pieces[0] || 0,
                 timespan = pieces[1] || pieces[0];
-            switch (timespan)
-            {
+            switch (timespan) {
                 case 'min':
                     return factor * minute;
                 case 'hour':
@@ -421,8 +400,7 @@ window.PrivateBin = (function() {
          * @function
          * @param  {HTMLElement} element
          */
-        me.selectText = function(element)
-        {
+        me.selectText = function (element) {
             let range, selection;
 
             // MS
@@ -453,8 +431,7 @@ window.PrivateBin = (function() {
          * @function
          * @param  {HTMLElement} element
          */
-        me.urls2links = function(element)
-        {
+        me.urls2links = function (element) {
             const raw = element.innerHTML;
             element.innerHTML = DOMPurify.sanitize(
                 raw.replace(
@@ -478,8 +455,7 @@ window.PrivateBin = (function() {
          * @param  {...*} args - one or multiple parameters injected into format string
          * @return {string}
          */
-        me.sprintf = function()
-        {
+        me.sprintf = function () {
             const args = Array.prototype.slice.call(arguments);
             let format = args[0],
                 i = 1;
@@ -505,17 +481,15 @@ window.PrivateBin = (function() {
          * @param  {string} cname - may not be empty
          * @return {string}
          */
-        me.getCookie = function(cname) {
+        me.getCookie = function (cname) {
             const name = cname + '=',
-                  ca   = document.cookie.split(';');
+                ca = document.cookie.split(';');
             for (let i = 0; i < ca.length; ++i) {
                 let c = ca[i];
-                while (c.charAt(0) === ' ')
-                {
+                while (c.charAt(0) === ' ') {
                     c = c.substring(1);
                 }
-                if (c.indexOf(name) === 0)
-                {
+                if (c.indexOf(name) === 0) {
                     return c.substring(name.length, c.length);
                 }
             }
@@ -530,8 +504,7 @@ window.PrivateBin = (function() {
          * @function
          * @return {string}
          */
-        me.baseUri = function()
-        {
+        me.baseUri = function () {
             // check for cached version
             if (baseUri !== null) {
                 return baseUri;
@@ -549,8 +522,7 @@ window.PrivateBin = (function() {
          * @param  {object} data
          * @return {Paste}
          */
-        me.PasteFactory = function(data)
-        {
+        me.PasteFactory = function (data) {
             return new Paste(data);
         };
 
@@ -562,8 +534,7 @@ window.PrivateBin = (function() {
          * @param  {object} data
          * @return {Comment}
          */
-        me.CommentFactory = function(data)
-        {
+        me.CommentFactory = function (data) {
             return new Comment(data);
         };
 
@@ -576,10 +547,9 @@ window.PrivateBin = (function() {
          * @param  {string} str
          * @return {string} escaped HTML
          */
-        me.htmlEntities = function(str)
-        {
+        me.htmlEntities = function (str) {
             return String(str).replace(
-                /[&<>"'`=\/]/g, function(s) {
+                /[&<>"'`=\/]/g, function (s) {
                     return entityMap[s];
                 }
             );
@@ -594,9 +564,8 @@ window.PrivateBin = (function() {
          * @param  {string|number} expirationDisplayStringOrSecondsToExpire - may not be empty
          * @return {Date}
          */
-        me.calculateExpirationDate = function(initialDate, expirationDisplayStringOrSecondsToExpire)
-        {
-            let expirationDate      = new Date(initialDate),
+        me.calculateExpirationDate = function (initialDate, expirationDisplayStringOrSecondsToExpire) {
+            let expirationDate = new Date(initialDate),
                 secondsToExpiration = expirationDisplayStringOrSecondsToExpire;
             if (typeof expirationDisplayStringOrSecondsToExpire === 'string') {
                 secondsToExpiration = me.durationToSeconds(expirationDisplayStringOrSecondsToExpire);
@@ -622,8 +591,7 @@ window.PrivateBin = (function() {
          * @param  {number} bytes
          * @return {string}
          */
-        me.formatBytes = function (bytes)
-        {
+        me.formatBytes = function (bytes) {
             let result = '';
             const kilobyte = 1000;
             const decimalPoint = 2;
@@ -648,8 +616,7 @@ window.PrivateBin = (function() {
          * @name   Helper.reset
          * @function
          */
-        me.reset = function()
-        {
+        me.reset = function () {
             baseUri = null;
         };
 
@@ -659,8 +626,7 @@ window.PrivateBin = (function() {
          * @name Helper.isBootstrap5
          * @returns {Boolean}
          */
-        me.isBootstrap5 = function ()
-        {
+        me.isBootstrap5 = function () {
             return typeof bootstrap !== 'undefined';
         };
 
@@ -724,8 +690,7 @@ window.PrivateBin = (function() {
          * @param  {...*} args - one or multiple parameters injected into placeholders
          * @return {string}
          */
-        me._ = function()
-        {
+        me._ = function () {
             return me.translate.apply(this, arguments);
         };
 
@@ -750,7 +715,7 @@ window.PrivateBin = (function() {
          * @param  {...*} args - one or multiple parameters injected into placeholders
          * @return {string}
          */
-        me.translate = function() // eslint-disable-line complexity
+        me.translate = function () // eslint-disable-line complexity
         {
             // convert parameters to array
             let args = Array.prototype.slice.call(arguments),
@@ -859,8 +824,7 @@ window.PrivateBin = (function() {
          * @function
          * @return {string}
          */
-        me.getLanguage = function()
-        {
+        me.getLanguage = function () {
             return language;
         };
 
@@ -873,9 +837,8 @@ window.PrivateBin = (function() {
          * @param  {int} n
          * @return {int} array key
          */
-        me.getPluralForm = function(n) { // eslint-disable-line complexity
-            switch (language)
-            {
+        me.getPluralForm = function (n) { // eslint-disable-line complexity
+            switch (language) {
                 case 'ar':
                     return n === 0 ? 0 : (n === 1 ? 1 : (n === 2 ? 2 : (n % 100 >= 3 && n % 100 <= 10 ? 3 : (n % 100 >= 11 ? 4 : 5))));
                 case 'cs':
@@ -898,7 +861,7 @@ window.PrivateBin = (function() {
                 case 'lt':
                     return n % 10 === 1 && n % 100 !== 11 ? 0 : ((n % 10 >= 2 && n % 100 < 10 || n % 100 >= 20) ? 1 : 2);
                 case 'pl':
-                    return n === 1 ? 0 : (n % 10 >= 2 && n %10 <= 4 && (n % 100 < 10 || n % 100 >= 20) ? 1 : 2);
+                    return n === 1 ? 0 : (n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20) ? 1 : 2);
                 case 'ro':
                     return n === 1 ? 0 : ((n === 0 || (n % 100 > 0 && n % 100 < 20)) ? 1 : 2);
                 case 'ru':
@@ -918,8 +881,7 @@ window.PrivateBin = (function() {
          * @name   I18n.loadTranslations
          * @function
          */
-        me.loadTranslations = function()
-        {
+        me.loadTranslations = function () {
             let newLanguage = Helper.getCookie('lang');
 
             // auto-select language based on browser settings
@@ -949,7 +911,8 @@ window.PrivateBin = (function() {
             }
 
             // load strings from JSON
-            const cacheBreaker = document.querySelector('script[src^="js/privatebin.js"]').getAttribute('src').split('.js')[1] || '';
+            const scriptTag = document.querySelector('script[src^="js/privatebin.js"]');
+            const cacheBreaker = scriptTag ? (scriptTag.getAttribute('src').split('.js')[1] || '') : '';
             fetch('i18n/' + newLanguage + '.json' + cacheBreaker)
                 .then(response => {
                     if (!response.ok) {
@@ -974,8 +937,7 @@ window.PrivateBin = (function() {
          * @name   I18n.reset
          * @function
          */
-        me.reset = function(mockLanguage, mockTranslations)
-        {
+        me.reset = function (mockLanguage, mockTranslations) {
             language = mockLanguage || null;
             translations = mockTranslations || {};
         };
@@ -1026,12 +988,10 @@ window.PrivateBin = (function() {
          * @param  {string} message UTF-8 string
          * @return {string} UTF-16 string
          */
-        function utf8To16(message)
-        {
+        function utf8To16(message) {
             return decodeURIComponent(
                 message.split('').map(
-                    function(character)
-                    {
+                    function (character) {
                         return '%' + ('00' + character.charCodeAt(0).toString(16)).slice(-2);
                     }
                 ).join('')
@@ -1050,12 +1010,10 @@ window.PrivateBin = (function() {
          * @param  {string} message UTF-16 string
          * @return {string} UTF-8 string
          */
-        function utf16To8(message)
-        {
+        function utf16To8(message) {
             return encodeURIComponent(message).replace(
                 /%([0-9A-F]{2})/g,
-                function (match, hexCharacter)
-                {
+                function (match, hexCharacter) {
                     return String.fromCharCode('0x' + hexCharacter);
                 }
             );
@@ -1072,12 +1030,11 @@ window.PrivateBin = (function() {
          * @param  {ArrayBuffer} messageArray
          * @return {string} message
          */
-        function arraybufferToString(messageArray)
-        {
+        function arraybufferToString(messageArray) {
             const array = new Uint8Array(messageArray);
             let message = '',
-                i       = 0;
-            while(i < array.length) {
+                i = 0;
+            while (i < array.length) {
                 message += String.fromCharCode(array[i++]);
             }
             return message;
@@ -1094,8 +1051,7 @@ window.PrivateBin = (function() {
          * @param  {string} message UTF-8 string
          * @return {Uint8Array} array
          */
-        function stringToArraybuffer(message)
-        {
+        function stringToArraybuffer(message) {
             const messageArray = new Uint8Array(message.length);
             for (let i = 0; i < message.length; ++i) {
                 messageArray[i] = message.charCodeAt(i);
@@ -1116,8 +1072,7 @@ window.PrivateBin = (function() {
          * @throws {string}
          * @return {ArrayBuffer} data
          */
-        async function compress(message, mode, zlib)
-        {
+        async function compress(message, mode, zlib) {
             message = stringToArraybuffer(
                 utf16To8(message)
             );
@@ -1143,8 +1098,7 @@ window.PrivateBin = (function() {
          * @throws {string}
          * @return {string} message
          */
-        async function decompress(data, mode, zlib)
-        {
+        async function decompress(data, mode, zlib) {
             if (mode === 'zlib') {
                 if (typeof zlib === 'undefined') {
                     throw 'Error decompressing document, your browser does not support WebAssembly. Please use another browser to view this document.'
@@ -1168,9 +1122,8 @@ window.PrivateBin = (function() {
          * @throws {string}
          * @return {string} random bytes
          */
-        function getRandomBytes(length)
-        {
-            let bytes       = '';
+        function getRandomBytes(length) {
+            let bytes = '';
             const byteArray = new Uint8Array(length);
             window.crypto.getRandomValues(byteArray);
             for (let i = 0; i < length; ++i) {
@@ -1191,8 +1144,7 @@ window.PrivateBin = (function() {
          * @param  {array}  spec cryptographic specification
          * @return {CryptoKey} derived key
          */
-        async function deriveKey(key, password, spec)
-        {
+        async function deriveKey(key, password, spec) {
             let keyArray = stringToArraybuffer(key);
             if (password.length > 0) {
                 let passwordArray = stringToArraybuffer(password),
@@ -1206,7 +1158,7 @@ window.PrivateBin = (function() {
             const importedKey = await window.crypto.subtle.importKey(
                 'raw', // only 'raw' is allowed
                 keyArray,
-                {name: 'PBKDF2'}, // we use PBKDF2 for key derivation
+                { name: 'PBKDF2' }, // we use PBKDF2 for key derivation
                 false, // the key may not be exported
                 ['deriveKey'] // we may only use it for key derivation
             ).catch(Alert.showError);
@@ -1217,7 +1169,7 @@ window.PrivateBin = (function() {
                     name: 'PBKDF2', // we use PBKDF2 for key derivation
                     salt: stringToArraybuffer(spec[1]), // salt used in HMAC
                     iterations: spec[2], // amount of iterations to apply
-                    hash: {name: 'SHA-256'} // can be "SHA-1", "SHA-256", "SHA-384" or "SHA-512"
+                    hash: { name: 'SHA-256' } // can be "SHA-1", "SHA-256", "SHA-384" or "SHA-512"
                 },
                 importedKey,
                 {
@@ -1239,8 +1191,7 @@ window.PrivateBin = (function() {
          * @param  {array}  spec cryptographic specification
          * @return {object} crypto settings
          */
-        function cryptoSettings(adata, spec)
-        {
+        function cryptoSettings(adata, spec) {
             return {
                 name: 'AES-' + spec[6].toUpperCase(), // can be any supported AES algorithm ("AES-CTR", "AES-CBC", "AES-CMAC", "AES-GCM", "AES-CFB", "AES-KW", "ECDH", "DH" or "HMAC")
                 iv: stringToArraybuffer(spec[0]), // the initialization vector you used to encrypt
@@ -1261,16 +1212,15 @@ window.PrivateBin = (function() {
          * @param  {array}  adata
          * @return {array}  encrypted message in base64 encoding & adata containing encryption spec
          */
-        me.cipher = async function(key, password, message, adata)
-        {
+        me.cipher = async function (key, password, message, adata) {
             let zlib = (await z);
             // AES in Galois Counter Mode, keysize 256 bit,
             // authentication tag 128 bit, 10000 iterations in key derivation
             const compression = (
-                    typeof zlib === 'undefined' ?
+                typeof zlib === 'undefined' ?
                     'none' : // client lacks support for WASM
                     (document.body.dataset.compression || 'zlib')
-                ),
+            ),
                 spec = [
                     getRandomBytes(16), // initialization vector
                     getRandomBytes(8),  // salt
@@ -1318,8 +1268,7 @@ window.PrivateBin = (function() {
          * @param  {string|object} data encrypted message
          * @return {string} decrypted message, empty if decryption failed
          */
-        me.decipher = async function(key, password, data)
-        {
+        me.decipher = async function (key, password, data) {
             let adataString, spec, cipherMessage, plaintext;
             let zlib = (await z);
             if (data instanceof Array) {
@@ -1346,13 +1295,13 @@ window.PrivateBin = (function() {
                         atob(cipherMessage)
                     )
                 );
-            } catch(err) {
+            } catch (err) {
                 console.error(err);
                 return '';
             }
             try {
                 return await decompress(plaintext, spec[7], zlib);
-            } catch(err) {
+            } catch (err) {
                 Alert.showError(err);
                 return err;
             }
@@ -1368,8 +1317,7 @@ window.PrivateBin = (function() {
          * @throws {string}
          * @return {string} raw bytes
          */
-        me.getSymmetricKey = function()
-        {
+        me.getSymmetricKey = function () {
             return getRandomBytes(32);
         };
 
@@ -1381,8 +1329,7 @@ window.PrivateBin = (function() {
          * @param  {string} input
          * @return {string} output
          */
-        me.base58encode = function(input)
-        {
+        me.base58encode = function (input) {
             return base58.encode(
                 stringToArraybuffer(input)
             );
@@ -1396,8 +1343,7 @@ window.PrivateBin = (function() {
          * @param  {string} input
          * @return {string} output
          */
-        me.base58decode = function(input)
-        {
+        me.base58decode = function (input) {
             return arraybufferToString(
                 base58.decode(input)
             );
@@ -1427,9 +1373,9 @@ window.PrivateBin = (function() {
          * @function
          * @return string
          */
-        me.getExpirationDefault = function()
-        {
-            return document.getElementById('pasteExpiration').value;
+        me.getExpirationDefault = function () {
+            const element = document.getElementById('pasteExpiration');
+            return element ? element.value : '';
         };
 
         /**
@@ -1439,9 +1385,9 @@ window.PrivateBin = (function() {
          * @function
          * @return string
          */
-        me.getFormatDefault = function()
-        {
-            return document.getElementById('pasteFormatter').value;
+        me.getFormatDefault = function () {
+            const element = document.getElementById('pasteFormatter');
+            return element ? element.value : '';
         };
 
         /**
@@ -1454,8 +1400,7 @@ window.PrivateBin = (function() {
          *                            force a data reload. Default: true
          * @return string
          */
-        me.getPasteData = function(callback, useCache)
-        {
+        me.getPasteData = function (callback, useCache) {
             // use cache if possible/allowed
             if (useCache !== false && pasteData !== null) {
                 //execute callback
@@ -1498,8 +1443,7 @@ window.PrivateBin = (function() {
          * @return {string} unique identifier
          * @throws {string}
          */
-        me.getPasteId = function()
-        {
+        me.getPasteId = function () {
             const idRegEx = /^[a-z0-9]{16}$/;
 
             // return cached value
@@ -1535,8 +1479,7 @@ window.PrivateBin = (function() {
          * @function
          * @return {bool}
          */
-        me.hasDeleteToken = function()
-        {
+        me.hasDeleteToken = function () {
             return window.location.search.indexOf('deletetoken') !== -1;
         }
 
@@ -1548,11 +1491,10 @@ window.PrivateBin = (function() {
          * @return {string|null} key
          * @throws {string}
          */
-        me.getPasteKey = function()
-        {
+        me.getPasteKey = function () {
             if (symmetricKey === null) {
                 let startPos = 1;
-                if(window.location.hash.startsWith(loadConfirmPrefix)) {
+                if (window.location.hash.startsWith(loadConfirmPrefix)) {
                     startPos = loadConfirmPrefix.length;
                 }
                 let newKey = window.location.hash.substring(startPos);
@@ -1560,8 +1502,7 @@ window.PrivateBin = (function() {
                 // Some web 2.0 services and redirectors add data AFTER the anchor
                 // (such as &utm_source=...). We will strip any additional data.
                 let ampersandPos = newKey.indexOf('&');
-                if (ampersandPos > -1)
-                {
+                if (ampersandPos > -1) {
                     newKey = newKey.substring(0, ampersandPos);
                 }
                 if (newKey === '') {
@@ -1573,7 +1514,7 @@ window.PrivateBin = (function() {
                     // base58 encode strips NULL bytes at the beginning of the
                     // string, so we re-add them if necessary
                     symmetricKey = CryptTool.base58decode(newKey).padStart(32, '\u0000');
-                } catch(e) {
+                } catch (e) {
                     throw 'encryption key of unsupported format given or incomplete, mangled URL';
                 }
             }
@@ -1589,10 +1530,13 @@ window.PrivateBin = (function() {
          * @param  {string} name - the name of the template
          * @return {HTMLElement}
          */
-        me.getTemplate = function(name)
-        {
+        me.getTemplate = function (name) {
             // find template
-            let element = templates.querySelector('#' + name + 'template').cloneNode(true);
+            const template = templates.querySelector('#' + name + 'template');
+            if (!template) {
+                return null;
+            }
+            let element = template.cloneNode(true);
             // change ID to avoid collisions (one ID should really be unique)
             element.id = name;
             return element;
@@ -1604,8 +1548,7 @@ window.PrivateBin = (function() {
          * @name   Model.reset
          * @function
          */
-        me.reset = function()
-        {
+        me.reset = function () {
             pasteData = templates = id = symmetricKey = null;
         };
 
@@ -1617,8 +1560,7 @@ window.PrivateBin = (function() {
          * @name   Model.init
          * @function
          */
-        me.init = function()
-        {
+        me.init = function () {
             templates = document.getElementById('templates');
         };
 
@@ -1646,8 +1588,7 @@ window.PrivateBin = (function() {
          * @function
          * @param  {Event} event
          */
-        function historyChange(event)
-        {
+        function historyChange(event) {
             let currentLocation = Helper.baseUri();
             if (event.originalEvent.state === null && // no state object passed
                 event.target.location.href === currentLocation && // target location is home page
@@ -1666,8 +1607,7 @@ window.PrivateBin = (function() {
          * @name   UiHelper.reloadHome
          * @function
          */
-        me.reloadHome = function()
-        {
+        me.reloadHome = function () {
             window.location.href = Helper.baseUri();
         };
 
@@ -1680,10 +1620,9 @@ window.PrivateBin = (function() {
          * @function
          * @param  {HTMLElement} element The link hash to move to.
          */
-        me.isVisible = function(element)
-        {
-            let elementTop     = element.getBoundingClientRect().top + window.scrollY,
-                viewportTop    = window.scrollY,
+        me.isVisible = function (element) {
+            let elementTop = element.getBoundingClientRect().top + window.scrollY,
+                viewportTop = window.scrollY,
                 viewportBottom = viewportTop + window.innerHeight;
             return elementTop > viewportTop && elementTop < viewportBottom;
         };
@@ -1698,8 +1637,7 @@ window.PrivateBin = (function() {
          * @param  {string}           animationEffect   ignored
          * @param  {function}         finishedCallback  function to call after animation finished
          */
-        me.scrollTo = function(element, animationDuration, animationEffect, finishedCallback)
-        {
+        me.scrollTo = function (element, animationDuration, animationEffect, finishedCallback) {
             let margin = 50,
                 dest = 0;
 
@@ -1738,12 +1676,11 @@ window.PrivateBin = (function() {
          * @function
          * @param  {string} state   (optional) state to mock
          */
-        me.mockHistoryChange = function(state)
-        {
+        me.mockHistoryChange = function (state) {
             if (typeof state === 'undefined') {
                 state = null;
             }
-            historyChange({originalEvent: new PopStateEvent('popstate', {state: state}), target: window});
+            historyChange({ originalEvent: new PopStateEvent('popstate', { state: state }), target: window });
         };
 
         /**
@@ -1752,8 +1689,7 @@ window.PrivateBin = (function() {
          * @name   UiHelper.init
          * @function
          */
-        me.init = function()
-        {
+        me.init = function () {
             // update link to home page
             document.querySelectorAll('.reloadlink').forEach(link => link.href = Helper.baseUri());
 
@@ -1797,8 +1733,7 @@ window.PrivateBin = (function() {
          * @param  {string|array} args
          * @param  {string|null} icon - optional, icon
          */
-        function handleNotification(id, element, args, icon)
-        {
+        function handleNotification(id, element, args, icon) {
             // basic parsing/conversion of parameters
             if (typeof icon === 'undefined') {
                 icon = null;
@@ -1808,7 +1743,7 @@ window.PrivateBin = (function() {
             } else if (typeof args === 'string') {
                 // convert string to array if needed
                 args = [args];
-            } else if (args  instanceof Error) {
+            } else if (args instanceof Error) {
                 // extract message into array if needed
                 args = [args.message];
             }
@@ -1871,8 +1806,7 @@ window.PrivateBin = (function() {
          * @param  {string|null}  icon        optional, the icon to show,
          *                                    default: leave previous icon
          */
-        me.showStatus = function(message, icon)
-        {
+        me.showStatus = function (message, icon) {
             handleNotification(1, statusMessage, message, icon);
         };
 
@@ -1887,8 +1821,7 @@ window.PrivateBin = (function() {
          * @param  {string|null}  icon        optional, the icon to show, default:
          *                                    leave previous icon
          */
-        me.showWarning = function(message, icon)
-        {
+        me.showWarning = function (message, icon) {
             const glyphIcon = errorMessage.querySelector(':first-child');
             if (glyphIcon) {
                 glyphIcon.classList.remove(currentIcon[3]);
@@ -1908,8 +1841,7 @@ window.PrivateBin = (function() {
          * @param  {string|null}  icon        optional, the icon to show, default:
          *                                    leave previous icon
          */
-        me.showError = function(message, icon)
-        {
+        me.showError = function (message, icon) {
             handleNotification(3, errorMessage, message, icon);
         };
 
@@ -1922,8 +1854,7 @@ window.PrivateBin = (function() {
          * @function
          * @param  {string|array} message     string, use an array for %s/%d options
          */
-        me.showRemaining = function(message)
-        {
+        me.showRemaining = function (message) {
             handleNotification(1, remainingTime, message);
         };
 
@@ -1937,8 +1868,7 @@ window.PrivateBin = (function() {
          * @param  {string|array|null} message      optional, use an array for %s/%d options, default: 'Loading…'
          * @param  {string|null}       icon         optional, the icon to show, default: leave previous icon
          */
-        me.showLoading = function(message, icon)
-        {
+        me.showLoading = function (message, icon) {
             // default message text
             if (typeof message === 'undefined') {
                 message = 'Loading…';
@@ -1956,8 +1886,7 @@ window.PrivateBin = (function() {
          * @name   Alert.hideLoading
          * @function
          */
-        me.hideLoading = function()
-        {
+        me.hideLoading = function () {
             loadingIndicator.classList.add('hidden');
 
             // hide loading cursor
@@ -1972,8 +1901,7 @@ window.PrivateBin = (function() {
          * @name   Alert.hideMessages
          * @function
          */
-        me.hideMessages = function()
-        {
+        me.hideMessages = function () {
             statusMessage.classList.add('hidden');
             errorMessage.classList.add('hidden');
         };
@@ -1996,8 +1924,7 @@ window.PrivateBin = (function() {
          * @function
          * @param {function|null} newHandler
          */
-        me.setCustomHandler = function(newHandler)
-        {
+        me.setCustomHandler = function (newHandler) {
             customHandler = newHandler;
         };
 
@@ -2009,8 +1936,7 @@ window.PrivateBin = (function() {
          * @name   Alert.init
          * @function
          */
-        me.init = function()
-        {
+        me.init = function () {
             // hide "no javascript" error message (guard in test environments)
             const noscriptEl = document.getElementById('noscript');
             if (noscriptEl) {
@@ -2055,35 +1981,34 @@ window.PrivateBin = (function() {
          * @private
          * @function
          */
-        function sendToShortener()
-        {
+        function sendToShortener() {
             if (shortenButton.classList.contains('buttondisabled')) {
                 return;
             }
             fetch(`${shortenButton.dataset.shortener}${encodeURIComponent(pasteUrl.href)}`, {
                 method: 'GET',
-                headers: {'Accept': 'text/html, application/xhtml+xml, application/xml, application/json'},
+                headers: { 'Accept': 'text/html, application/xhtml+xml, application/xml, application/json' },
                 credentials: 'omit',
                 signal: AbortSignal.timeout(10000)
             })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('HTTP ' + response.status);
-                }
-                return response.text();
-            })
-            .then(data => PasteStatus.extractUrl(data))
-            .catch(error => {
-                console.error('Shortener error:', error);
-                // we don't know why it failed, could be CORS of the external
-                // server not setup properly, in which case we follow old
-                // behavior to open it in new tab
-                window.open(
-                    `${shortenButton.dataset.shortener}${encodeURIComponent(pasteUrl.href)}`,
-                    '_blank',
-                    'noopener, noreferrer'
-                );
-            });
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('HTTP ' + response.status);
+                    }
+                    return response.text();
+                })
+                .then(data => PasteStatus.extractUrl(data))
+                .catch(error => {
+                    console.error('Shortener error:', error);
+                    // we don't know why it failed, could be CORS of the external
+                    // server not setup properly, in which case we follow old
+                    // behavior to open it in new tab
+                    window.open(
+                        `${shortenButton.dataset.shortener}${encodeURIComponent(pasteUrl.href)}`,
+                        '_blank',
+                        'noopener, noreferrer'
+                    );
+                });
         }
 
         /**
@@ -2095,8 +2020,7 @@ window.PrivateBin = (function() {
          * @name   PasteStatus.pasteLinkClick
          * @function
          */
-        function pasteLinkClick()
-        {
+        function pasteLinkClick() {
             // check if location is (already) shown in URL bar
             if (window.location.href === pasteUrl.href) {
                 // if so we need to load link by reloading the current site
@@ -2112,8 +2036,7 @@ window.PrivateBin = (function() {
          * @param  {string} url
          * @param  {string} deleteUrl
          */
-        me.createPasteNotification = function(url, deleteUrl)
-        {
+        me.createPasteNotification = function (url, deleteUrl) {
             I18n._(
                 document.getElementById('pastelink'),
                 'Your document is <a id="pasteurl" href="%s">%s</a> <span id="copyhint">(Hit <kbd>Ctrl</kbd>+<kbd>c</kbd> to copy)</span>',
@@ -2125,7 +2048,10 @@ window.PrivateBin = (function() {
             pasteUrl.addEventListener('click', pasteLinkClick);
 
             // delete link
-            document.getElementById('deletelink').href = deleteUrl;
+            const deleteLink = document.getElementById('deletelink');
+            if (deleteLink) {
+                deleteLink.href = deleteUrl;
+            }
             I18n._(document.querySelector('#deletelink span:not(.glyphicon)'), 'Delete data');
 
             // enable shortener button
@@ -2143,7 +2069,7 @@ window.PrivateBin = (function() {
          * @name  PasteStatus.checkAutoShorten
          * @function
          */
-        me.checkAutoShorten = function() {
+        me.checkAutoShorten = function () {
             // check if auto-shortening is enabled
             if (shortenButton.dataset.autoshorten === 'true') {
                 // if so, we send the link to the shortener
@@ -2162,14 +2088,13 @@ window.PrivateBin = (function() {
          * @function
          * @param  {string} response
          */
-        me.extractUrl = function(response)
-        {
+        me.extractUrl = function (response) {
             if (typeof response === 'object') {
                 response = JSON.stringify(response);
             }
             if (typeof response === 'string' && response.length > 0) {
                 const shortUrlMatcher = /https?:\/\/[^\s"<]+/g; // JSON API will have URL in quotes, XML in tags
-                const shortUrl = (response.match(shortUrlMatcher) || []).filter(function(urlRegExMatch) {
+                const shortUrl = (response.match(shortUrlMatcher) || []).filter(function (urlRegExMatch) {
                     if (typeof URL.canParse === 'function') {
                         return URL.canParse(urlRegExMatch);
                     }
@@ -2179,7 +2104,7 @@ window.PrivateBin = (function() {
                     } catch (error) {
                         return false;
                     }
-                }).sort(function(a, b) {
+                }).sort(function (a, b) {
                     return a.length - b.length; // shortest first
                 })[0];
                 if (typeof shortUrl === 'string' && shortUrl.length > 0) {
@@ -2204,8 +2129,7 @@ window.PrivateBin = (function() {
          * @function
          * @param {Paste} paste
          */
-        me.showRemainingTime = function(paste)
-        {
+        me.showRemainingTime = function (paste) {
             if (paste.isBurnAfterReadingEnabled()) {
                 // display document "for your eyes only" if it is deleted
 
@@ -2239,8 +2163,7 @@ window.PrivateBin = (function() {
          * @name PasteStatus.hideMessages
          * @function
          */
-        me.hideMessages = function()
-        {
+        me.hideMessages = function () {
             remainingTime.classList.add('hidden');
             pasteSuccess.classList.add('hidden');
         };
@@ -2253,15 +2176,16 @@ window.PrivateBin = (function() {
          * @name   PasteStatus.init
          * @function
          */
-        me.init = function()
-        {
+        me.init = function () {
             pasteSuccess = document.getElementById('pastesuccess');
             // pasteUrl is saved in me.createPasteNotification() after creation
             remainingTime = document.getElementById('remainingtime');
             shortenButton = document.getElementById('shortenbutton');
 
             // bind elements
-            shortenButton.addEventListener('click', sendToShortener);
+            if (shortenButton) {
+                shortenButton.addEventListener('click', sendToShortener);
+            }
         };
 
         return me;
@@ -2289,8 +2213,7 @@ window.PrivateBin = (function() {
          * @function
          * @param  {Event} event
          */
-        function submitPasswordModal(event)
-        {
+        function submitPasswordModal(event) {
             event.preventDefault();
 
             // get input
@@ -2315,8 +2238,7 @@ window.PrivateBin = (function() {
          * @name   Prompt.requestLoadConfirmation
          * @function
          */
-        me.requestLoadConfirmation = function()
-        {
+        me.requestLoadConfirmation = function () {
             const loadconfirmmodal = document.getElementById('loadconfirmmodal');
 
             const loadconfirmOpenNow = loadconfirmmodal.querySelector('#loadconfirm-open-now');
@@ -2341,8 +2263,7 @@ window.PrivateBin = (function() {
          * @name Prompt.requestPassword
          * @function
          */
-        me.requestPassword = function()
-        {
+        me.requestPassword = function () {
             // show new bootstrap method (if available)
             if (passwordModal !== null) {
                 if (bootstrap5PasswordModal) {
@@ -2364,8 +2285,7 @@ window.PrivateBin = (function() {
          * @function
          * @return {string}
          */
-        me.getPassword = function()
-        {
+        me.getPassword = function () {
             return password;
         };
 
@@ -2375,8 +2295,7 @@ window.PrivateBin = (function() {
          * @name   Prompt.reset
          * @function
          */
-        me.reset = function()
-        {
+        me.reset = function () {
             // reset internal
             password = '';
 
@@ -2392,14 +2311,16 @@ window.PrivateBin = (function() {
          * @name   Prompt.init
          * @function
          */
-        me.init = function()
-        {
+        me.init = function () {
             passwordDecrypt = document.getElementById('passworddecrypt');
             passwordModal = document.getElementById('passwordmodal');
 
             // bind events - handle Model password submission
             if (passwordModal) {
-                document.getElementById('passwordform').addEventListener('submit', submitPasswordModal);
+                const passwordForm = document.getElementById('passwordform');
+                if (passwordForm) {
+                    passwordForm.addEventListener('submit', submitPasswordModal);
+                }
 
                 const disableClosingConfig = {
                     backdrop: 'static',
@@ -2453,8 +2374,7 @@ window.PrivateBin = (function() {
          * @param  {Event} event
          * @this $message (but not used, so it is jQuery-free, possibly faster)
          */
-        function supportTabs(event)
-        {
+        function supportTabs(event) {
             // support disabling tab support using [Esc] and [Ctrl]+[m]
             if (event.key === 'Escape' || (event.ctrlKey && event.key === 'm')) {
                 toggleTabSupport();
@@ -2463,9 +2383,9 @@ window.PrivateBin = (function() {
             }
             else if (isTabSupported && event.key === 'Tab') {
                 // get caret position & selection
-                const val   = this.value,
-                      start = this.selectionStart,
-                      end   = this.selectionEnd;
+                const val = this.value,
+                    start = this.selectionStart,
+                    end = this.selectionEnd;
                 // set textarea value to: text before caret + tab + text after caret
                 this.value = val.substring(0, start) + '\t' + val.substring(end);
                 // put caret at right position again
@@ -2482,8 +2402,7 @@ window.PrivateBin = (function() {
          * @private
          * @function
          */
-        function toggleTabSupport()
-        {
+        function toggleTabSupport() {
             isTabSupported = !isTabSupported;
         }
 
@@ -2494,8 +2413,7 @@ window.PrivateBin = (function() {
          * @function
          * @param  {Event} event - optional
          */
-        function viewEditor(event)
-        {
+        function viewEditor(event) {
             // toggle buttons
 
             messageEdit.classList.add('active');
@@ -2503,8 +2421,8 @@ window.PrivateBin = (function() {
             messagePreview.classList.remove('active');
             messagePreviewParent.classList.remove('active');
 
-            messageEdit.setAttribute('aria-selected','true');
-            messagePreview.setAttribute('aria-selected','false');
+            messageEdit.setAttribute('aria-selected', 'true');
+            messagePreview.setAttribute('aria-selected', 'false');
 
             PasteViewer.hide();
 
@@ -2530,16 +2448,15 @@ window.PrivateBin = (function() {
          * @function
          * @param  {Event} event
          */
-        function viewPreview(event)
-        {
+        function viewPreview(event) {
             // toggle buttons
             messageEdit.classList.remove('active');
             messageEditParent.classList.remove('active');
             messagePreview.classList.add('active');
             messagePreviewParent.classList.add('active');
 
-            messageEdit.setAttribute('aria-selected','false');
-            messagePreview.setAttribute('aria-selected','true');
+            messageEdit.setAttribute('aria-selected', 'false');
+            messagePreview.setAttribute('aria-selected', 'true');
 
             // hide input as now preview is shown
             message.classList.add('hidden');
@@ -2578,8 +2495,7 @@ window.PrivateBin = (function() {
          * @name   Editor.isPreview
          * @function
          */
-        me.isPreview = function()
-        {
+        me.isPreview = function () {
             return isPreview;
         };
 
@@ -2589,8 +2505,7 @@ window.PrivateBin = (function() {
          * @name   Editor.resetInput
          * @function
          */
-        me.resetInput = function()
-        {
+        me.resetInput = function () {
             // go back to input
             if (isPreview) {
                 viewEditor();
@@ -2606,8 +2521,7 @@ window.PrivateBin = (function() {
          * @name   Editor.show
          * @function
          */
-        me.show = function()
-        {
+        me.show = function () {
             message.classList.remove('hidden');
             messageTabParent.classList.remove('hidden');
             editorTabs.classList.remove('hidden');
@@ -2619,8 +2533,7 @@ window.PrivateBin = (function() {
          * @name   Editor.hide
          * @function
          */
-        me.hide = function()
-        {
+        me.hide = function () {
             message.classList.add('hidden');
             messageTabParent.classList.add('hidden');
             editorTabs.classList.add('hidden');
@@ -2632,8 +2545,7 @@ window.PrivateBin = (function() {
          * @name   Editor.focusInput
          * @function
          */
-        me.focusInput = function()
-        {
+        me.focusInput = function () {
             message.focus();
         };
 
@@ -2644,8 +2556,7 @@ window.PrivateBin = (function() {
          * @function
          * @param {string} newText
          */
-        me.setText = function(newText)
-        {
+        me.setText = function (newText) {
             message.value = newText;
         };
 
@@ -2656,8 +2567,7 @@ window.PrivateBin = (function() {
          * @function
          * @return {string}
          */
-        me.getText = function()
-        {
+        me.getText = function () {
             return message.value;
         };
 
@@ -2669,8 +2579,7 @@ window.PrivateBin = (function() {
          * @name   Editor.init
          * @function
          */
-        me.init = function()
-        {
+        me.init = function () {
             editorTabs = document.getElementById('editorTabs');
             message = document.getElementById('message');
             messageTab = document.getElementById('messagetab');
@@ -2726,8 +2635,7 @@ window.PrivateBin = (function() {
          * @private
          * @function
          */
-        function parsePaste()
-        {
+        function parsePaste() {
             // skip parsing if no text is given
             if (text === '') {
                 return;
@@ -2753,8 +2661,7 @@ window.PrivateBin = (function() {
             } else {
                 if (format === 'syntaxhighlighting') {
                     // yes, this is really needed to initialize the environment
-                    if (typeof prettyPrint === 'function')
-                    {
+                    if (typeof prettyPrint === 'function') {
                         prettyPrint();
                     }
 
@@ -2779,8 +2686,7 @@ window.PrivateBin = (function() {
          * @private
          * @function
          */
-        function showPaste()
-        {
+        function showPaste() {
             // instead of "nothing" better display a placeholder
             if (text === '') {
                 if (placeholder) placeholder.classList.remove('hidden');
@@ -2806,8 +2712,7 @@ window.PrivateBin = (function() {
          * @function
          * @param {string} newFormat the new format
          */
-        me.setFormat = function(newFormat)
-        {
+        me.setFormat = function (newFormat) {
             // skip if there is no update
             if (format === newFormat) {
                 return;
@@ -2834,8 +2739,7 @@ window.PrivateBin = (function() {
          * @function
          * @return {string}
          */
-        me.getFormat = function()
-        {
+        me.getFormat = function () {
             return format;
         };
 
@@ -2846,8 +2750,7 @@ window.PrivateBin = (function() {
          * @function
          * @return {bool}
          */
-        me.isPrettyPrinted = function()
-        {
+        me.isPrettyPrinted = function () {
             return $prettyPrint.hasClass('prettyprinted');
         };
 
@@ -2858,8 +2761,7 @@ window.PrivateBin = (function() {
          * @function
          * @param {string} newText the text to show
          */
-        me.setText = function(newText)
-        {
+        me.setText = function (newText) {
             if (text !== newText) {
                 text = newText;
                 isChanged = true;
@@ -2873,8 +2775,7 @@ window.PrivateBin = (function() {
          * @function
          * @return {string}
          */
-        me.getText = function()
-        {
+        me.getText = function () {
             return text;
         };
 
@@ -2884,8 +2785,7 @@ window.PrivateBin = (function() {
          * @name   PasteViewer.run
          * @function
          */
-        me.run = function()
-        {
+        me.run = function () {
             if (isChanged) {
                 parsePaste();
                 isChanged = false;
@@ -2903,8 +2803,7 @@ window.PrivateBin = (function() {
          * @name   PasteViewer.hide
          * @function
          */
-        me.hide = function()
-        {
+        me.hide = function () {
             if (!isDisplayed) {
                 return;
             }
@@ -2925,8 +2824,7 @@ window.PrivateBin = (function() {
          * @name   PasteViewer.init
          * @function
          */
-        me.init = function()
-        {
+        me.init = function () {
             const messagetab = document.getElementById('messagetab');
             messageTabParent = messagetab ? messagetab.parentElement : null;
             placeholder = document.getElementById('placeholder');
@@ -2971,8 +2869,7 @@ window.PrivateBin = (function() {
          * @param {string} data - mime type of attachment
          * @return {string} objectURL
          */
-         function getBlobUrl(data, mimeType)
-         {
+        function getBlobUrl(data, mimeType) {
             // Transform into a Blob
             const buf = new Uint8Array(data.length);
             for (let i = 0; i < data.length; ++i) {
@@ -2987,18 +2884,17 @@ window.PrivateBin = (function() {
 
             // Get blob URL
             return window.URL.createObjectURL(blob);
-         }
+        }
 
-         /**
-         * sets the attachment but does not yet show it
-         *
-         * @name   AttachmentViewer.setAttachment
-         * @function
-         * @param {string} attachmentData - base64-encoded data of file
-         * @param {string} fileName - optional, file name
-         */
-        me.setAttachment = function(attachmentData, fileName)
-        {
+        /**
+        * sets the attachment but does not yet show it
+        *
+        * @name   AttachmentViewer.setAttachment
+        * @function
+        * @param {string} attachmentData - base64-encoded data of file
+        * @param {string} fileName - optional, file name
+        */
+        me.setAttachment = function (attachmentData, fileName) {
             // skip, if attachments got disabled
             if (!attachment || !attachmentPreview) return;
 
@@ -3052,8 +2948,7 @@ window.PrivateBin = (function() {
          * @name AttachmentViewer.showAttachment
          * @function
          */
-        me.showAttachment = function()
-        {
+        me.showAttachment = function () {
             // skip, if attachments got disabled
             if (!attachment || !attachmentPreview) return;
 
@@ -3073,8 +2968,7 @@ window.PrivateBin = (function() {
          * @name AttachmentViewer.removeAttachment
          * @function
          */
-        me.removeAttachment = function()
-        {
+        me.removeAttachment = function () {
             if (!attachment) {
                 return;
             }
@@ -3095,8 +2989,7 @@ window.PrivateBin = (function() {
          * @name AttachmentViewer.removeAttachmentData
          * @function
          */
-        me.removeAttachmentData = function()
-        {
+        me.removeAttachmentData = function () {
             files = undefined;
             attachmentsData = [];
         };
@@ -3107,9 +3000,10 @@ window.PrivateBin = (function() {
          * @name AttachmentViewer.clearDragAndDrop
          * @function
          */
-        me.clearDragAndDrop = function()
-        {
-            dragAndDropFileNames.innerHTML = '';
+        me.clearDragAndDrop = function () {
+            if (dragAndDropFileNames) {
+                dragAndDropFileNames.innerHTML = '';
+            }
         };
 
         /**
@@ -3139,8 +3033,7 @@ window.PrivateBin = (function() {
          * @name AttachmentViewer.hideAttachment
          * @function
          */
-        me.hideAttachment = function()
-        {
+        me.hideAttachment = function () {
             attachment.classList.add('hidden');
         };
 
@@ -3150,8 +3043,7 @@ window.PrivateBin = (function() {
          * @name AttachmentViewer.hideAttachmentPreview
          * @function
          */
-        me.hideAttachmentPreview = function()
-        {
+        me.hideAttachmentPreview = function () {
             if (attachmentPreview) {
                 attachmentPreview.classList.add('hidden');
             }
@@ -3164,8 +3056,7 @@ window.PrivateBin = (function() {
          * @function
          * @return {JQuery}
          */
-        me.hasAttachmentPreview = function()
-        {
+        me.hasAttachmentPreview = function () {
             return attachmentPreview.children.length > 0;
         }
 
@@ -3175,8 +3066,7 @@ window.PrivateBin = (function() {
          * @name   AttachmentViewer.hasAttachment
          * @function
          */
-        me.hasAttachment = function()
-        {
+        me.hasAttachment = function () {
             if (!attachment) {
                 return false;
             }
@@ -3191,8 +3081,7 @@ window.PrivateBin = (function() {
          * @name   AttachmentViewer.hasAttachmentData
          * @function
          */
-        me.hasAttachmentData = function()
-        {
+        me.hasAttachmentData = function () {
             if (attachment) {
                 return true;
             }
@@ -3206,8 +3095,7 @@ window.PrivateBin = (function() {
          * @function
          * @returns {array}
          */
-        me.getAttachments = function()
-        {
+        me.getAttachments = function () {
             return [...attachment.querySelectorAll('a')].map(link => (
                 [
                     link.href,
@@ -3223,8 +3111,7 @@ window.PrivateBin = (function() {
          * @function
          * @param {string} attachmentData - Base64 string
          */
-        me.getAttachmentMimeType = function(attachmentData)
-        {
+        me.getAttachmentMimeType = function (attachmentData) {
             // position in data URI string of where mimeType ends
             const mimeTypeEnd = attachmentData.indexOf(';');
 
@@ -3243,8 +3130,7 @@ window.PrivateBin = (function() {
          * @param {array} attachment - attachment data
          * @param {string} label - the text to show (%s will be replaced with the file name), will automatically be translated
          */
-        me.moveAttachmentTo = function(element, attachment, label)
-        {
+        me.moveAttachmentTo = function (element, attachment, label) {
             const attachmentLink = document.createElement('a');
             attachmentLink.className = 'alert-link';
             attachmentLink.href = attachment[0];
@@ -3376,13 +3262,13 @@ window.PrivateBin = (function() {
                 return;
             }
 
-            const handleDragEnterOrOver = function(event) {
+            const handleDragEnterOrOver = function (event) {
                 event.stopPropagation();
                 event.preventDefault();
                 return false;
             };
 
-            const handleDrop = function(event) {
+            const handleDrop = function (event) {
                 event.stopPropagation();
                 event.preventDefault();
 
@@ -3402,7 +3288,7 @@ window.PrivateBin = (function() {
             };
 
             draghover(document);
-            document.addEventListener('draghoverstart', function(e) {
+            document.addEventListener('draghoverstart', function (e) {
                 if (TopNav.isAttachmentReadonly()) {
                     e.stopPropagation();
                     e.preventDefault();
@@ -3411,7 +3297,7 @@ window.PrivateBin = (function() {
                 // show dropzone to indicate drop support
                 dropzone.classList.remove('hidden');
             });
-            document.addEventListener('draghoverend', function() {
+            document.addEventListener('draghoverend', function () {
                 dropzone.classList.add('hidden');
             });
 
@@ -3435,8 +3321,8 @@ window.PrivateBin = (function() {
             document.addEventListener('paste', (event) => {
                 const items = (event.clipboardData || event.originalEvent.clipboardData).items;
                 const files = [...items]
-                                    .filter(item => item.kind === 'file')
-                                    .map(item => item.getAsFile());
+                    .filter(item => item.kind === 'file')
+                    .map(item => item.getAsFile());
 
                 if (TopNav.isAttachmentReadonly() && files.length) {
                     event.stopPropagation();
@@ -3492,12 +3378,11 @@ window.PrivateBin = (function() {
          * @name   AttachmentViewer.init
          * @function
          */
-        me.init = function()
-        {
+        me.init = function () {
             attachment = document.getElementById('attachment');
             dragAndDropFileNames = document.getElementById('dragAndDropFileName');
             dropzone = document.getElementById('dropzone');
-            if(attachment) {
+            if (attachment) {
                 attachmentPreview = document.getElementById('attachmentPreview');
 
                 fileInput = document.getElementById('file');
@@ -3534,8 +3419,7 @@ window.PrivateBin = (function() {
          * @private
          * @function
          */
-        function initTemplates()
-        {
+        function initTemplates() {
             reply = Model.getTemplate('reply');
             replyMessage = reply.querySelector('#replymessage');
             replyNickname = reply.querySelector('#nickname');
@@ -3553,8 +3437,7 @@ window.PrivateBin = (function() {
          * @function
          * @param  {Event} event
          */
-        function openReply(event)
-        {
+        function openReply(event) {
             const source = event.target;
 
             // show all reply buttons
@@ -3588,8 +3471,7 @@ window.PrivateBin = (function() {
          * @param  {string} alertType
          * @return {bool|jQuery}
          */
-        me.handleNotification = function(alertType)
-        {
+        me.handleNotification = function (alertType) {
             // ignore loading messages
             if (alertType === 'loading') {
                 return false;
@@ -3598,13 +3480,19 @@ window.PrivateBin = (function() {
             if (alertType === 'danger') {
                 replyStatus.classList.remove('alert-info');
                 replyStatus.classList.add('alert-danger');
-                replyStatus.querySelector(':first-child').classList.remove('glyphicon-alert');
-                replyStatus.querySelector(':first-child').classList.add('glyphicon-info-sign');
+                const replyIcon = replyStatus.querySelector(':first-child');
+                if (replyIcon) {
+                    replyIcon.classList.remove('glyphicon-alert');
+                    replyIcon.classList.add('glyphicon-info-sign');
+                }
             } else {
                 replyStatus.classList.remove('alert-danger');
                 replyStatus.classList.add('alert-info');
-                replyStatus.querySelector(':first-child').classList.remove('glyphicon-info-sign');
-                replyStatus.querySelector(':first-child').classList.add('glyphicon-alert');
+                const replyIcon = replyStatus.querySelector(':first-child');
+                if (replyIcon) {
+                    replyIcon.classList.remove('glyphicon-info-sign');
+                    replyIcon.classList.add('glyphicon-alert');
+                }
             }
 
             return replyStatus;
@@ -3619,16 +3507,21 @@ window.PrivateBin = (function() {
          * @param {string} commentText
          * @param {string} nickname
          */
-        me.addComment = function(comment, commentText, nickname)
-        {
+        me.addComment = function (comment, commentText, nickname) {
             if (commentText === '') {
                 commentText = 'comment decryption failed';
             }
 
             // create new comment based on template
             const commentEntry = Model.getTemplate('comment');
+            if (!commentEntry) {
+                return;
+            }
             commentEntry.id = 'comment_' + comment.id;
             const commentEntryData = commentEntry.querySelector('div.commentdata');
+            if (!commentEntryData) {
+                return;
+            }
 
             // set & parse text
             commentEntryData.textContent = commentText;
@@ -3636,20 +3529,28 @@ window.PrivateBin = (function() {
 
             // set nickname
             if (nickname.length > 0) {
-                commentEntry.querySelector('span.nickname').textContent = nickname;
+                const nicknameElement = commentEntry.querySelector('span.nickname');
+                if (nicknameElement) {
+                    nicknameElement.textContent = nickname;
+                }
             } else {
                 const anonCommenter = document.createElement('em');
                 anonCommenter.textContent = I18n._('Anonymous');
-                commentEntry.querySelector('span.nickname').innerHTML = '';
-                commentEntry.querySelector('span.nickname').appendChild(anonCommenter);
+                const nicknameElement = commentEntry.querySelector('span.nickname');
+                if (nicknameElement) {
+                    nicknameElement.innerHTML = '';
+                    nicknameElement.appendChild(anonCommenter);
+                }
             }
 
             // set date
             const created = comment.getCreated();
             const commentDate = created === 0 ? '' : ' (' + (new Date(created * 1000).toLocaleString()) + ')';
             const dateSpan = commentEntry.querySelector('span.commentdate');
-            dateSpan.textContent = commentDate;
-            dateSpan.setAttribute('title', 'CommentID: ' + comment.id);
+            if (dateSpan) {
+                dateSpan.textContent = commentDate;
+                dateSpan.setAttribute('title', 'CommentID: ' + comment.id);
+            }
 
             // if an avatar is available, display it
             const icon = comment.getIcon();
@@ -3658,8 +3559,10 @@ window.PrivateBin = (function() {
                 image.setAttribute('src', icon);
                 image.setAttribute('class', 'vizhash');
                 const nickSpan = commentEntry.querySelector('span.nickname');
-                nickSpan.prepend(' ');
-                nickSpan.prepend(image);
+                if (nickSpan) {
+                    nickSpan.prepend(' ');
+                    nickSpan.prepend(image);
+                }
             }
 
             // starting point (default value/fallback)
@@ -3683,8 +3586,7 @@ window.PrivateBin = (function() {
          * @name   DiscussionViewer.finishDiscussion
          * @function
          */
-        me.finishDiscussion = function()
-        {
+        me.finishDiscussion = function () {
             // add 'add new comment' area
             commentContainer.appendChild(commentTail);
 
@@ -3699,8 +3601,7 @@ window.PrivateBin = (function() {
          * @name   DiscussionViewer.prepareNewDiscussion
          * @function
          */
-        me.prepareNewDiscussion = function()
-        {
+        me.prepareNewDiscussion = function () {
             commentContainer.innerHTML = '';
             discussion.classList.add('hidden');
 
@@ -3715,8 +3616,7 @@ window.PrivateBin = (function() {
          * @function
          * @return {String}
          */
-        me.getReplyMessage = function()
-        {
+        me.getReplyMessage = function () {
             return replyMessage.value;
         };
 
@@ -3727,8 +3627,7 @@ window.PrivateBin = (function() {
          * @function
          * @return {String}
          */
-        me.getReplyNickname = function()
-        {
+        me.getReplyNickname = function () {
             return replyNickname.value;
         };
 
@@ -3739,8 +3638,7 @@ window.PrivateBin = (function() {
          * @function
          * @return {int|undefined}
          */
-        me.getReplyCommentId = function()
-        {
+        me.getReplyCommentId = function () {
             return replyCommentId;
         };
 
@@ -3752,8 +3650,7 @@ window.PrivateBin = (function() {
          * @param {string} commentId
          * @param {bool} fadeOut - whether to fade out the comment
          */
-        me.highlightComment = function(commentId, fadeOut)
-        {
+        me.highlightComment = function (commentId, fadeOut) {
             const comment = document.getElementById('comment_' + commentId);
             // in case comment does not exist, cancel
             if (!comment) {
@@ -3784,12 +3681,20 @@ window.PrivateBin = (function() {
          * @name   DiscussionViewer.init
          * @function
          */
-        me.init = function()
-        {
+        me.init = function () {
             // bind events to templates (so they are later cloned)
-            document.getElementById('commenttailtemplate').querySelectorAll('button').forEach(btn => btn.addEventListener('click', openReply));
-            document.getElementById('commenttemplate').querySelectorAll('button').forEach(btn => btn.addEventListener('click', openReply));
-            document.getElementById('replytemplate').querySelectorAll('button').forEach(btn => btn.addEventListener('click', PasteEncrypter.sendComment));
+            const commentTailTemplate = document.getElementById('commenttailtemplate');
+            if (commentTailTemplate) {
+                commentTailTemplate.querySelectorAll('button').forEach(btn => btn.addEventListener('click', openReply));
+            }
+            const commentTemplate = document.getElementById('commenttemplate');
+            if (commentTemplate) {
+                commentTemplate.querySelectorAll('button').forEach(btn => btn.addEventListener('click', openReply));
+            }
+            const replyTemplate = document.getElementById('replytemplate');
+            if (replyTemplate) {
+                replyTemplate.querySelectorAll('button').forEach(btn => btn.addEventListener('click', PasteEncrypter.sendComment));
+            }
 
             commentContainer = document.getElementById('commentcontainer');
             discussion = document.getElementById('discussion');
@@ -3844,13 +3749,15 @@ window.PrivateBin = (function() {
          * @function
          * @param  {Event} event
          */
-        function updateExpiration(event)
-        {
+        function updateExpiration(event) {
             // get selected option
             const target = event.target;
 
             // update dropdown display and save new expiration time
-            document.getElementById('pasteExpirationDisplay').textContent = target.textContent;
+            const display = document.getElementById('pasteExpirationDisplay');
+            if (display) {
+                display.textContent = target.textContent;
+            }
             pasteExpiration = target.getAttribute('data-expiration');
 
             event.preventDefault();
@@ -3864,14 +3771,16 @@ window.PrivateBin = (function() {
          * @function
          * @param  {Event} event
          */
-        function updateFormat(event)
-        {
+        function updateFormat(event) {
             // get selected option
             const target = event.target;
 
             // update dropdown display and save new format
             const newFormat = target.getAttribute('data-format');
-            document.getElementById('pasteFormatterDisplay').textContent = target.textContent;
+            const display = document.getElementById('pasteFormatterDisplay');
+            if (display) {
+                display.textContent = target.textContent;
+            }
             PasteViewer.setFormat(newFormat);
 
             event.preventDefault();
@@ -3884,8 +3793,7 @@ window.PrivateBin = (function() {
          * @private
          * @function
          */
-        function changeBurnAfterReading()
-        {
+        function changeBurnAfterReading() {
             if (me.getBurnAfterReading()) {
                 openDiscussionOption.classList.add('buttondisabled');
                 openDiscussion.checked = false;
@@ -3904,8 +3812,7 @@ window.PrivateBin = (function() {
          * @private
          * @function
          */
-        function changeOpenDiscussion()
-        {
+        function changeOpenDiscussion() {
             if (me.getOpenDiscussion()) {
                 burnAfterReadingOption.classList.add('buttondisabled');
                 burnAfterReading.checked = false;
@@ -3924,8 +3831,7 @@ window.PrivateBin = (function() {
          * @function
          */
 
-        function clearPasswordInput()
-        {
+        function clearPasswordInput() {
             passwordInput.value = '';
         }
 
@@ -3936,8 +3842,7 @@ window.PrivateBin = (function() {
          * @name   TopNav.clearAttachmentInput
          * @function
          */
-        function clearAttachmentInput()
-        {
+        function clearAttachmentInput() {
             // hide UI for selected files
             const inputElement = fileWrap && fileWrap.querySelector('input');
             if (inputElement) {
@@ -3952,15 +3857,14 @@ window.PrivateBin = (function() {
          * @private
          * @function
          */
-        function rawText()
-        {
+        function rawText() {
             TopNav.hideAllButtons();
             Alert.showLoading('Showing raw text…', 'time');
             let paste = PasteViewer.getText();
 
             // push a new state to allow back navigation with browser back button
             history.pushState(
-                {type: 'raw'},
+                { type: 'raw' },
                 document.title,
                 // recreate document URL
                 Helper.baseUri() + '?' + Model.getPasteId() + '#' +
@@ -3969,8 +3873,8 @@ window.PrivateBin = (function() {
 
             // we use text/html instead of text/plain to avoid a bug when
             // reloading the raw text view (it reverts to type text/html)
-            const $head  = $('head').children().not('noscript, script, link[type="text/css"]'),
-                  newDoc = document.open('text/html', 'replace');
+            const $head = $('head').children().not('noscript, script, link[type="text/css"]'),
+                newDoc = document.open('text/html', 'replace');
             newDoc.write('<!DOCTYPE html><html><head>');
             for (let i = 0; i < $head.length; ++i) {
                 newDoc.write($head[i].outerHTML);
@@ -3993,8 +3897,7 @@ window.PrivateBin = (function() {
          * @private
          * @function
          */
-        function downloadText()
-        {
+        function downloadText() {
             const fileFormat = PasteViewer.getFormat() === 'markdown' ? '.md' : '.txt';
             const filename = 'document-' + Model.getPasteId() + fileFormat;
             const text = PasteViewer.getText();
@@ -4019,8 +3922,7 @@ window.PrivateBin = (function() {
          * @function
          * @param  {Event} event
          */
-        function setLanguage(event)
-        {
+        function setLanguage(event) {
             let lang = event.target.getAttribute('data-lang') || event.target.value;
 
             document.cookie = 'lang=' + lang + '; SameSite=Lax; Secure';
@@ -4036,8 +3938,7 @@ window.PrivateBin = (function() {
          * @function
          * @param {Event} event
          */
-        function setTemplate(event)
-        {
+        function setTemplate(event) {
             let template = event.target.getAttribute('data-template') || event.target.value;
 
             document.cookie = 'template=' + template + '; SameSite=Lax; Secure';
@@ -4052,8 +3953,7 @@ window.PrivateBin = (function() {
          * @private
          * @function
          */
-        function clickNewPaste()
-        {
+        function clickNewPaste() {
             Controller.hideStatusMessages();
             Controller.newPaste();
         }
@@ -4066,8 +3966,7 @@ window.PrivateBin = (function() {
          * @function
          * @param  {Event} event
          */
-        function clickRetryButton(event)
-        {
+        function clickRetryButton(event) {
             retryButtonCallback(event);
         }
 
@@ -4079,8 +3978,7 @@ window.PrivateBin = (function() {
          * @function
          * @param  {Event} event
          */
-        function removeAttachment(event)
-        {
+        function removeAttachment(event) {
             // if custom attachment is used, remove it first
             if (customAttachment && !customAttachment.classList.contains('hidden')) {
                 AttachmentViewer.removeAttachment();
@@ -4105,14 +4003,16 @@ window.PrivateBin = (function() {
          * @private
          * @function
          */
-        function displayQrCode()
-        {
+        function displayQrCode() {
             const qrCanvas = kjua({
                 render: 'canvas',
                 text: window.location.href
             });
-            document.getElementById('qrcode-display').innerHTML = '';
-            document.getElementById('qrcode-display').appendChild(qrCanvas);
+            const qrDisplay = document.getElementById('qrcode-display');
+            if (qrDisplay) {
+                qrDisplay.innerHTML = '';
+                qrDisplay.appendChild(qrCanvas);
+            }
         }
 
         /**
@@ -4123,8 +4023,7 @@ window.PrivateBin = (function() {
          * @param {string} expirationDateString
          * @param {bool} isBurnafterreading
          */
-        function templateEmailBody(expirationDateString, isBurnafterreading)
-        {
+        function templateEmailBody(expirationDateString, isBurnafterreading) {
             const EOL = '\n';
             const BULLET = '  - ';
             let emailBody = '';
@@ -4169,8 +4068,7 @@ window.PrivateBin = (function() {
          * @private
          * @param {string} emailBody
          */
-        function triggerEmailSend(emailBody)
-        {
+        function triggerEmailSend(emailBody) {
             window.open(
                 `mailto:?body=${encodeURIComponent(emailBody)}`,
                 '_self',
@@ -4187,8 +4085,7 @@ window.PrivateBin = (function() {
          * @param  {Date|null} expirationDate date of expiration
          * @param  {bool} isBurnafterreading whether it is burn after reading
          */
-        function sendEmail(expirationDate, isBurnafterreading)
-        {
+        function sendEmail(expirationDate, isBurnafterreading) {
             const expirationDateRoundedToSecond = new Date(expirationDate);
 
             // round down at least 30 seconds to make up for the delay of request
@@ -4239,8 +4136,7 @@ window.PrivateBin = (function() {
          * @name   TopNav.showViewButtons
          * @function
          */
-        me.showViewButtons = function()
-        {
+        me.showViewButtons = function () {
             if (viewButtonsDisplayed) {
                 return;
             }
@@ -4260,8 +4156,7 @@ window.PrivateBin = (function() {
          * @name   TopNav.hideViewButtons
          * @function
          */
-        me.hideViewButtons = function()
-        {
+        me.hideViewButtons = function () {
             if (!viewButtonsDisplayed) {
                 return;
             }
@@ -4282,8 +4177,7 @@ window.PrivateBin = (function() {
          * @name   TopNav.hideAllButtons
          * @function
          */
-        me.hideAllButtons = function()
-        {
+        me.hideAllButtons = function () {
             me.hideViewButtons();
             me.hideCreateButtons();
         };
@@ -4294,13 +4188,14 @@ window.PrivateBin = (function() {
          * @name   TopNav.showCreateButtons
          * @function
          */
-        me.showCreateButtons = function()
-        {
+        me.showCreateButtons = function () {
             if (createButtonsDisplayed) {
                 return;
             }
 
-            attach.classList.remove('hidden');
+            if (attach) {
+                attach.classList.remove('hidden');
+            }
             burnAfterReadingOption.classList.remove('hidden');
             expiration.classList.remove('hidden');
             formatter.classList.remove('hidden');
@@ -4318,8 +4213,7 @@ window.PrivateBin = (function() {
          * @name   TopNav.hideCreateButtons
          * @function
          */
-        me.hideCreateButtons = function()
-        {
+        me.hideCreateButtons = function () {
             if (!createButtonsDisplayed) {
                 return;
             }
@@ -4342,8 +4236,7 @@ window.PrivateBin = (function() {
          * @name   TopNav.showNewPasteButton
          * @function
          */
-        me.showNewPasteButton = function()
-        {
+        me.showNewPasteButton = function () {
             newButton.classList.remove('hidden');
         };
 
@@ -4353,8 +4246,7 @@ window.PrivateBin = (function() {
          * @name   TopNav.showRetryButton
          * @function
          */
-        me.showRetryButton = function()
-        {
+        me.showRetryButton = function () {
             retryButton.classList.remove('hidden');
         }
 
@@ -4364,8 +4256,7 @@ window.PrivateBin = (function() {
          * @name   TopNav.hideRetryButton
          * @function
          */
-        me.hideRetryButton = function()
-        {
+        me.hideRetryButton = function () {
             retryButton.classList.add('hidden');
         }
 
@@ -4376,8 +4267,7 @@ window.PrivateBin = (function() {
          * @function
          * @param {int|undefined} optionalRemainingTimeInSeconds
          */
-        me.showEmailButton = function(optionalRemainingTimeInSeconds)
-        {
+        me.showEmailButton = function (optionalRemainingTimeInSeconds) {
             try {
                 // we cache expiration date in closure to avoid inaccurate expiration datetime
                 const expirationDate = Helper.calculateExpirationDate(
@@ -4403,8 +4293,7 @@ window.PrivateBin = (function() {
          * @name   TopNav.hideEmailButton
          * @function
          */
-        me.hideEmailButton = function()
-        {
+        me.hideEmailButton = function () {
             emailLink.classList.add('hidden');
             emailLink.removeEventListener('click', sendEmail);
         }
@@ -4415,8 +4304,7 @@ window.PrivateBin = (function() {
          * @name   TopNav.hideCloneButton
          * @function
          */
-        me.hideCloneButton = function()
-        {
+        me.hideCloneButton = function () {
             cloneButton.classList.add('hidden');
         };
 
@@ -4426,8 +4314,7 @@ window.PrivateBin = (function() {
          * @name   TopNav.hideRawButton
          * @function
          */
-        me.hideRawButton = function()
-        {
+        me.hideRawButton = function () {
             rawTextButton.classList.add('hidden');
         };
 
@@ -4437,8 +4324,7 @@ window.PrivateBin = (function() {
          * @name   TopNav.hideRawButton
          * @function
          */
-        me.hideDownloadButton = function()
-        {
+        me.hideDownloadButton = function () {
             downloadTextButton.classList.add('hidden');
         };
 
@@ -4448,8 +4334,7 @@ window.PrivateBin = (function() {
          * @name   TopNav.hideQrCodeButton
          * @function
          */
-        me.hideQrCodeButton = function()
-        {
+        me.hideQrCodeButton = function () {
             qrCodeLink.classList.add('hidden');
         }
 
@@ -4459,8 +4344,7 @@ window.PrivateBin = (function() {
          * @name   TopNav.hideBurnAfterReadingButtons
          * @function
          */
-        me.hideBurnAfterReadingButtons = function()
-        {
+        me.hideBurnAfterReadingButtons = function () {
             me.hideCloneButton();
             me.hideQrCodeButton();
             me.hideEmailButton();
@@ -4472,8 +4356,7 @@ window.PrivateBin = (function() {
          * @name   TopNav.hideFileSelector
          * @function
          */
-        me.hideFileSelector = function()
-        {
+        me.hideFileSelector = function () {
             fileWrap.classList.add('hidden');
         };
 
@@ -4484,8 +4367,11 @@ window.PrivateBin = (function() {
          * @name   TopNav.showCustomAttachment
          * @function
          */
-        me.showCustomAttachment = function()
-        {
+        me.showCustomAttachment = function () {
+            if (!customAttachment) {
+                return;
+            }
+
             customAttachment.classList.remove('hidden');
         };
 
@@ -4495,10 +4381,14 @@ window.PrivateBin = (function() {
          * @name  TopNav.hideCustomAttachment
          * @function
          */
-        me.hideCustomAttachment = function()
-        {
-            customAttachment.classList.add('hidden');
-            fileWrap.classList.remove('hidden');
+        me.hideCustomAttachment = function () {
+            if (customAttachment) {
+                customAttachment.classList.add('hidden');
+            }
+
+            if (fileWrap) {
+                fileWrap.classList.remove('hidden');
+            }
         };
 
         /**
@@ -4507,8 +4397,7 @@ window.PrivateBin = (function() {
          * @name   TopNav.collapseBar
          * @function
          */
-        me.collapseBar = function()
-        {
+        me.collapseBar = function () {
             const navbar = document.getElementById('navbar');
             if (navbar && navbar.getAttribute('aria-expanded') === 'true') {
                 const toggle = document.querySelector('.navbar-toggle');
@@ -4524,8 +4413,7 @@ window.PrivateBin = (function() {
          * @name   TopNav.resetInput
          * @function
          */
-        me.resetInput = function()
-        {
+        me.resetInput = function () {
             clearAttachmentInput();
             clearPasswordInput();
             if (burnAfterReading) {
@@ -4546,7 +4434,10 @@ window.PrivateBin = (function() {
             if (pasteExpirationSelect) {
                 pasteExpirationSelect.querySelectorAll('option').forEach((option) => {
                     if (option.value === pasteExpiration) {
-                        document.getElementById('pasteExpirationDisplay').textContent = option.textContent;
+                        const display = document.getElementById('pasteExpirationDisplay');
+                        if (display) {
+                            display.textContent = option.textContent;
+                        }
                     }
                 });
             }
@@ -4559,8 +4450,7 @@ window.PrivateBin = (function() {
          * @function
          * @return {int}
          */
-        me.getExpiration = function()
-        {
+        me.getExpiration = function () {
             return pasteExpiration;
         };
 
@@ -4571,8 +4461,7 @@ window.PrivateBin = (function() {
          * @function
          * @return {FileList|null}
          */
-        me.getFileList = function()
-        {
+        me.getFileList = function () {
             const file = document.getElementById('file');
 
             // if no file given, return null
@@ -4595,9 +4484,8 @@ window.PrivateBin = (function() {
          * @function
          * @return {bool}
          */
-        me.getBurnAfterReading = function()
-        {
-            return $burnAfterReading.prop('checked');
+        me.getBurnAfterReading = function () {
+            return burnAfterReading.checked;
         };
 
         /**
@@ -4607,9 +4495,8 @@ window.PrivateBin = (function() {
          * @function
          * @return {bool}
          */
-        me.getOpenDiscussion = function()
-        {
-            return $openDiscussion.prop('checked');
+        me.getOpenDiscussion = function () {
+            return openDiscussion.checked;
         };
 
         /**
@@ -4619,8 +4506,7 @@ window.PrivateBin = (function() {
          * @function
          * @return {string}
          */
-        me.getPassword = function()
-        {
+        me.getPassword = function () {
             // when password is disabled passwordInput.value will return undefined
             return passwordInput && passwordInput.value || '';
         };
@@ -4634,8 +4520,7 @@ window.PrivateBin = (function() {
          * @function
          * @return {HTMLElement}
          */
-        me.getCustomAttachment = function()
-        {
+        me.getCustomAttachment = function () {
             return customAttachment;
         };
 
@@ -4646,8 +4531,7 @@ window.PrivateBin = (function() {
          * @function
          * @param {function} callback
          */
-        me.setRetryCallback = function(callback)
-        {
+        me.setRetryCallback = function (callback) {
             retryButtonCallback = callback;
         }
 
@@ -4657,8 +4541,7 @@ window.PrivateBin = (function() {
          * @name  TopNav.highlightFileupload
          * @function
          */
-        me.highlightFileupload = function()
-        {
+        me.highlightFileupload = function () {
             // visually indicate file uploaded
             const attachDropdownToggle = attach && attach.querySelector('.dropdown-toggle');
             if (attachDropdownToggle && attachDropdownToggle.getAttribute('aria-expanded') === 'false') {
@@ -4680,8 +4563,7 @@ window.PrivateBin = (function() {
          * @name    TopNav.setFormat
          * @function
          */
-        me.setFormat = function(format)
-        {
+        me.setFormat = function (format) {
             if (Helper.isBootstrap5()) {
                 const select = formatter.querySelector('select');
                 if (select) {
@@ -4702,8 +4584,7 @@ window.PrivateBin = (function() {
          * @function
          * @return {bool}
          */
-        me.isAttachmentReadonly = function()
-        {
+        me.isAttachmentReadonly = function () {
             return !createButtonsDisplayed || (attach && attach.classList.contains('hidden'));
         }
 
@@ -4715,8 +4596,7 @@ window.PrivateBin = (function() {
          * @name   TopNav.init
          * @function
          */
-        me.init = function()
-        {
+        me.init = function () {
             attach = document.getElementById('attach');
             burnAfterReading = document.getElementById('burnafterreading');
             burnAfterReadingOption = document.getElementById('burnafterreadingoption');
@@ -4801,13 +4681,13 @@ window.PrivateBin = (function() {
             // bootstrap5 & page drop downs
             const pasteExpirationSelect = document.getElementById('pasteExpiration');
             if (pasteExpirationSelect) {
-                pasteExpirationSelect.addEventListener('change', function() {
+                pasteExpirationSelect.addEventListener('change', function () {
                     pasteExpiration = Model.getExpirationDefault();
                 });
             }
             const pasteFormatterSelect = document.getElementById('pasteFormatter');
             if (pasteFormatterSelect) {
-                pasteFormatterSelect.addEventListener('change', function() {
+                pasteFormatterSelect.addEventListener('change', function () {
                     PasteViewer.setFormat(Model.getFormatDefault());
                 });
             }
@@ -4880,8 +4760,7 @@ window.PrivateBin = (function() {
          * @param {int} status
          * @param {int} result - optional
          */
-        function success(status, result)
-        {
+        function success(status, result) {
             if (successFunc !== null) {
                 // add useful data to result
                 result.encryptionKey = symmetricKey;
@@ -4898,8 +4777,7 @@ window.PrivateBin = (function() {
          * @param {int} status - internal code
          * @param {int} result - original error code
          */
-        function fail(status, result)
-        {
+        function fail(status, result) {
             if (failureFunc !== null) {
                 failureFunc(status, result);
             }
@@ -4911,15 +4789,14 @@ window.PrivateBin = (function() {
          * @name   ServerInteraction.run
          * @function
          */
-        me.run = function()
-        {
+        me.run = function () {
             let isPost = Object.keys(data).length > 0,
                 ajaxParams = {
                     type: isPost ? 'POST' : 'GET',
                     url: url,
                     headers: ajaxHeaders,
                     dataType: 'json',
-                    success: function(result) {
+                    success: function (result) {
                         if (result.status === 0) {
                             success(0, result);
                         } else if (result.status === 1) {
@@ -4932,7 +4809,7 @@ window.PrivateBin = (function() {
             if (isPost) {
                 ajaxParams.data = JSON.stringify(data);
             }
-            $.ajax(ajaxParams).fail(function(jqXHR, textStatus, errorThrown) {
+            $.ajax(ajaxParams).fail(function (jqXHR, textStatus, errorThrown) {
                 console.error(textStatus, errorThrown);
                 fail(3, jqXHR);
             });
@@ -4944,8 +4821,7 @@ window.PrivateBin = (function() {
          * @name   ServerInteraction.getData
          * @function
          */
-        me.getData = function()
-        {
+        me.getData = function () {
             return data;
         };
 
@@ -4956,8 +4832,7 @@ window.PrivateBin = (function() {
          * @function
          * @param {function} newUrl
          */
-        me.setUrl = function(newUrl)
-        {
+        me.setUrl = function (newUrl) {
             url = newUrl;
         };
 
@@ -4972,8 +4847,7 @@ window.PrivateBin = (function() {
          * @param {string} newPassword
          * @param {string} newKey       - optional
          */
-        me.setCryptParameters = function(newPassword, newKey)
-        {
+        me.setCryptParameters = function (newPassword, newKey) {
             password = newPassword;
 
             if (typeof newKey !== 'undefined') {
@@ -4988,8 +4862,7 @@ window.PrivateBin = (function() {
          * @function
          * @param {function} func
          */
-        me.setSuccess = function(func)
-        {
+        me.setSuccess = function (func) {
             successFunc = func;
         };
 
@@ -5000,8 +4873,7 @@ window.PrivateBin = (function() {
          * @function
          * @param {function} func
          */
-        me.setFailure = function(func)
-        {
+        me.setFailure = function (func) {
             failureFunc = func;
         };
 
@@ -5016,8 +4888,7 @@ window.PrivateBin = (function() {
          * @function
          * @return {object}
          */
-        me.prepare = function()
-        {
+        me.prepare = function () {
             // entropy should already be checked!
 
             // reset password
@@ -5041,8 +4912,7 @@ window.PrivateBin = (function() {
          * @function
          * @param {object} cipherMessage
          */
-        me.setCipherMessage = async function(cipherMessage)
-        {
+        me.setCipherMessage = async function (cipherMessage) {
             if (
                 symmetricKey === null ||
                 (typeof symmetricKey === 'string' && symmetricKey === '')
@@ -5067,8 +4937,7 @@ window.PrivateBin = (function() {
          * @param {string} index
          * @param {mixed} element
          */
-        me.setUnencryptedData = function(index, element)
-        {
+        me.setUnencryptedData = function (index, element) {
             data[index] = element;
         };
 
@@ -5082,7 +4951,7 @@ window.PrivateBin = (function() {
          * @param {string} doThisThing - a human description of the action, which was tried
          * @return {array}
          */
-        me.parseUploadError = function(status, data, doThisThing) {
+        me.parseUploadError = function (status, data, doThisThing) {
             let errorArray;
 
             switch (status) {
@@ -5131,13 +5000,13 @@ window.PrivateBin = (function() {
             Alert.hideMessages();
 
             // show notification
-            const baseUri   = Helper.baseUri() + '?',
-                  url       = baseUri + data.id + (TopNav.getBurnAfterReading() ? loadConfirmPrefix : '#') + CryptTool.base58encode(data.encryptionKey),
-                  deleteUrl = baseUri + 'pasteid=' + data.id + '&deletetoken=' + data.deletetoken;
+            const baseUri = Helper.baseUri() + '?',
+                url = baseUri + data.id + (TopNav.getBurnAfterReading() ? loadConfirmPrefix : '#') + CryptTool.base58encode(data.encryptionKey),
+                deleteUrl = baseUri + 'pasteid=' + data.id + '&deletetoken=' + data.deletetoken;
             PasteStatus.createPasteNotification(url, deleteUrl);
 
             // show new URL in browser bar
-            history.pushState({type: 'newpaste'}, document.title, url);
+            history.pushState({ type: 'newpaste' }, document.title, url);
 
             TopNav.showViewButtons();
 
@@ -5187,8 +5056,7 @@ window.PrivateBin = (function() {
          * @async
          * @function
          */
-        me.sendComment = async function()
-        {
+        me.sendComment = async function () {
             Alert.hideMessages();
             Alert.setCustomHandler(DiscussionViewer.handleNotification);
 
@@ -5198,8 +5066,8 @@ window.PrivateBin = (function() {
 
             // get data
             const plainText = DiscussionViewer.getReplyMessage(),
-                  nickname  = DiscussionViewer.getReplyNickname(),
-                  parentid  = DiscussionViewer.getReplyCommentId();
+                nickname = DiscussionViewer.getReplyNickname(),
+                parentid = DiscussionViewer.getReplyCommentId();
 
             // do not send if there is no data
             if (plainText.length === 0) {
@@ -5259,8 +5127,7 @@ window.PrivateBin = (function() {
          * @async
          * @function
          */
-        me.sendPaste = async function()
-        {
+        me.sendPaste = async function () {
             // hide previous (error) messages
             Controller.hideStatusMessages();
 
@@ -5271,9 +5138,9 @@ window.PrivateBin = (function() {
 
             // get data
             const plainText = Editor.getText(),
-                  format    = PasteViewer.getFormat(),
-                  // the methods may return different values if no files are attached (null, undefined or false)
-                  files     = TopNav.getFileList() || AttachmentViewer.getFiles() || AttachmentViewer.hasAttachment();
+                format = PasteViewer.getFormat(),
+                // the methods may return different values if no files are attached (null, undefined or false)
+                files = TopNav.getFileList() || AttachmentViewer.getFiles() || AttachmentViewer.hasAttachment();
 
             // do not send if there is no data
             if (plainText.length === 0 && !files) {
@@ -5306,7 +5173,7 @@ window.PrivateBin = (function() {
                 TopNav.getOpenDiscussion() ? 1 : 0,
                 TopNav.getBurnAfterReading() ? 1 : 0
             ]);
-            ServerInteraction.setUnencryptedData('meta', {'expire': TopNav.getExpiration()});
+            ServerInteraction.setUnencryptedData('meta', { 'expire': TopNav.getExpiration() });
 
             // prepare PasteViewer for later preview
             PasteViewer.setText(plainText);
@@ -5349,7 +5216,7 @@ window.PrivateBin = (function() {
                                 }
                             });
                             if (blobData instanceof window.Blob) {
-                                const fileReading = new Promise(function(resolve, reject) {
+                                const fileReading = new Promise(function (resolve, reject) {
                                     const fileReader = new FileReader();
                                     fileReader.onload = function (event) {
                                         resolve(event.target.result);
@@ -5408,8 +5275,7 @@ window.PrivateBin = (function() {
          * @throws {string}
          * @return {false|string} false, when unsuccessful or string (decrypted data)
          */
-        async function decryptOrPromptPassword(key, password, cipherdata)
-        {
+        async function decryptOrPromptPassword(key, password, cipherdata) {
             // try decryption without password
             const plaindata = await CryptTool.decipher(key, password, cipherdata);
 
@@ -5444,8 +5310,7 @@ window.PrivateBin = (function() {
          * @throws {string}
          * @return {Promise}
          */
-        async function decryptPaste(paste, key, password)
-        {
+        async function decryptPaste(paste, key, password) {
             const pastePlain = await decryptOrPromptPassword(
                 key, password,
                 paste.getCipherData()
@@ -5492,22 +5357,21 @@ window.PrivateBin = (function() {
          * @param  {string} password
          * @return {Promise}
          */
-        async function decryptComments(paste, key, password)
-        {
+        async function decryptComments(paste, key, password) {
             // remove potential previous discussion
             DiscussionViewer.prepareNewDiscussion();
 
             const commentDecryptionPromises = [];
             // iterate over comments
             for (let i = 0; i < paste.comments.length; ++i) {
-                const comment        = new Comment(paste.comments[i]),
-                      commentPromise = CryptTool.decipher(key, password, comment.getCipherData());
+                const comment = new Comment(paste.comments[i]),
+                    commentPromise = CryptTool.decipher(key, password, comment.getCipherData());
                 paste.comments[i] = comment;
                 commentDecryptionPromises.push(
                     commentPromise.then(function (commentJson) {
                         const commentMessage = JSON.parse(commentJson);
                         return [
-                            commentMessage.comment  || '',
+                            commentMessage.comment || '',
                             commentMessage.nickname || ''
                         ];
                     })
@@ -5524,9 +5388,15 @@ window.PrivateBin = (function() {
                         plaintexts[i][1]
                     );
                 }
-                $(document).on('languageLoaded', function () {
-                    $('#commentcontainer').find('img.vizhash')
-                        .prop('title', I18n._('Avatar generated from IP address'));
+
+                document.addEventListener(I18n.languageLoadedEvent, function () {
+                    const comentContainer = document.getElementById('commentcontainer');
+                    if (!comentContainer) {
+                        return;
+                    }
+
+                    comentContainer.querySelectorAll('img.vizhash')
+                        .forEach(img => img.setAttribute('title', I18n._('Avatar generated from IP address')));
                 });
             });
         }
@@ -5538,8 +5408,7 @@ window.PrivateBin = (function() {
          * @function
          * @param  {Paste} [paste] - (optional) object including comments to display (items = array with keys ('data','meta'))
          */
-        me.run = function(paste)
-        {
+        me.run = function (paste) {
             Alert.hideMessages();
             Alert.setCustomHandler(null);
             Alert.showLoading('Decrypting document…', 'cloud-download');
@@ -5627,7 +5496,7 @@ window.PrivateBin = (function() {
          * @function
          */
         function handleCopyButtonClick() {
-            $(copyButton).click(function() {
+            $(copyButton).click(function () {
                 const text = PasteViewer.getText();
                 saveToClipboard(text);
 
@@ -5724,7 +5593,7 @@ window.PrivateBin = (function() {
             $(copyIcon).css('display', 'none');
             $(successIcon).css('display', 'block');
 
-            setTimeout(function() {
+            setTimeout(function () {
                 $(copyIcon).css('display', 'block');
                 $(successIcon).css('display', 'none');
             }, 1000);
@@ -5770,7 +5639,7 @@ window.PrivateBin = (function() {
          * @name CopyToClipboard.init
          * @function
          */
-        me.init = function() {
+        me.init = function () {
             copyButton = $('#prettyMessageCopyBtn');
             copyLinkButton = $('#copyLink');
             copyIcon = $('#copyIcon');
@@ -5803,14 +5672,14 @@ window.PrivateBin = (function() {
         function handleRevealButtonClick() {
             const element = $(this);
             const passwordInput = element.siblings('.input-password');
-			const isHidden = passwordInput.attr('type') === 'password';
+            const isHidden = passwordInput.attr('type') === 'password';
 
             passwordInput.attr('type', isHidden ? 'text' : 'password');
 
-			const tooltip = I18n._(isHidden ? 'Hide password' : 'Show password');
+            const tooltip = I18n._(isHidden ? 'Hide password' : 'Show password');
 
-			element.attr('title', tooltip);
-			element.attr('aria-label', tooltip);
+            element.attr('title', tooltip);
+            element.attr('aria-label', tooltip);
 
             // handle bootstrap 5 icons: eye & eye-slash
             const buttonSvg = element.find('use');
@@ -5843,7 +5712,7 @@ window.PrivateBin = (function() {
          * @name PasswordPeek.init
          * @function
          */
-        me.init = function() {
+        me.init = function () {
             const revealButton = $('.toggle-password');
 
             revealButton.click(handleRevealButtonClick);
@@ -5869,8 +5738,7 @@ window.PrivateBin = (function() {
          * @name   Controller.hideStatusMessages
          * @function
          */
-        me.hideStatusMessages = function()
-        {
+        me.hideStatusMessages = function () {
             PasteStatus.hideMessages();
             Alert.hideMessages();
             CopyToClipboard.hideKeyboardShortcutHint();
@@ -5882,8 +5750,7 @@ window.PrivateBin = (function() {
          * @name   Controller.newPaste
          * @function
          */
-        me.newPaste = function()
-        {
+        me.newPaste = function () {
             // Important: This *must not* run Alert.hideMessages() as previous
             // errors from viewing a document should be shown.
             TopNav.hideAllButtons();
@@ -5911,7 +5778,7 @@ window.PrivateBin = (function() {
             Alert.hideLoading();
             // only push new state if we are coming from a different one
             if (Helper.baseUri() !== window.location) {
-                history.pushState({type: 'create'}, document.title, Helper.baseUri());
+                history.pushState({ type: 'create' }, document.title, Helper.baseUri());
             }
 
             // clear discussion
@@ -5924,8 +5791,7 @@ window.PrivateBin = (function() {
          * @name   Controller.showPaste
          * @function
          */
-        me.showPaste = function()
-        {
+        me.showPaste = function () {
             try {
                 Model.getPasteKey();
             } catch (err) {
@@ -5935,7 +5801,7 @@ window.PrivateBin = (function() {
             }
 
             // check if we should request loading confirmation
-            if(window.location.hash.startsWith(loadConfirmPrefix)) {
+            if (window.location.hash.startsWith(loadConfirmPrefix)) {
                 Prompt.requestLoadConfirmation();
                 return;
             }
@@ -5951,8 +5817,7 @@ window.PrivateBin = (function() {
          * @function
          * @param  {function} callback
          */
-        me.refreshPaste = function(callback)
-        {
+        me.refreshPaste = function (callback) {
             // save window position to restore it later
             const orgPosition = window.scrollY;
 
@@ -5991,8 +5856,7 @@ window.PrivateBin = (function() {
          * @name   Controller.clonePaste
          * @function
          */
-        me.clonePaste = function()
-        {
+        me.clonePaste = function () {
             TopNav.collapseBar();
             TopNav.hideAllButtons();
 
@@ -6000,7 +5864,7 @@ window.PrivateBin = (function() {
             me.hideStatusMessages();
 
             // erase the id and the key in url
-            history.pushState({type: 'clone'}, document.title, Helper.baseUri());
+            history.pushState({ type: 'clone' }, document.title, Helper.baseUri());
 
             if (AttachmentViewer.hasAttachment()) {
                 const attachments = AttachmentViewer.getAttachments();
@@ -6048,8 +5912,7 @@ window.PrivateBin = (function() {
          * @name   Controller.initZ
          * @function
          */
-        me.initZ = function()
-        {
+        me.initZ = function () {
             z = zlib.catch(function () {
                 if (document.body.dataset.compression !== 'none') {
                     Alert.showWarning('Your browser doesn\'t support WebAssembly, used for zlib compression. You can create uncompressed documents, but can\'t read compressed ones.');
@@ -6063,13 +5926,12 @@ window.PrivateBin = (function() {
          * @name   Controller.init
          * @function
          */
-        me.init = function()
-        {
+        me.init = function () {
             // first load translations
             I18n.loadTranslations();
 
             // Add a hook to make all links open a new window
-            DOMPurify.addHook('afterSanitizeAttributes', function(node) {
+            DOMPurify.addHook('afterSanitizeAttributes', function (node) {
                 // set all elements owning target to target=_blank
                 if ('target' in node && node.id !== 'pasteurl') {
                     node.setAttribute('target', '_blank');
@@ -6087,7 +5949,7 @@ window.PrivateBin = (function() {
 
             // center all modals
             document.querySelectorAll('.modal').forEach(modal => {
-                modal.addEventListener('show.bs.modal', function(e) {
+                modal.addEventListener('show.bs.modal', function (e) {
                     e.target.style.display = 'flex';
                 });
             });
@@ -6173,3 +6035,9 @@ window.PrivateBin = (function() {
     };
 })();
 
+// main application start, called when DOM is fully loaded
+window.addEventListener('DOMContentLoaded', function () {
+    'use strict';
+    // run main controller
+    window.PrivateBin.Controller.init();
+});
