@@ -21,12 +21,12 @@ describe('CopyToClipboard', function() {
                     '</div><div id="plaintext" class="hidden"></div>'
                 );
 
-                $.PrivateBin.PasteViewer.init();
-                $.PrivateBin.PasteViewer.setFormat(format);
-                $.PrivateBin.PasteViewer.setText(text);
-                $.PrivateBin.PasteViewer.run();
+                PrivateBin.PasteViewer.init();
+                PrivateBin.PasteViewer.setFormat(format);
+                PrivateBin.PasteViewer.setText(text);
+                PrivateBin.PasteViewer.run();
 
-                $.PrivateBin.CopyToClipboard.init();
+                PrivateBin.CopyToClipboard.init();
 
                 $('#prettyMessageCopyBtn').trigger('click');
 
@@ -58,12 +58,12 @@ describe('CopyToClipboard', function() {
                     '</div><div id="plaintext" class="hidden"></div>'
                 );
 
-                $.PrivateBin.PasteViewer.init();
-                $.PrivateBin.PasteViewer.setFormat(format);
-                $.PrivateBin.PasteViewer.setText(text);
-                $.PrivateBin.PasteViewer.run();
+                PrivateBin.PasteViewer.init();
+                PrivateBin.PasteViewer.setFormat(format);
+                PrivateBin.PasteViewer.setText(text);
+                PrivateBin.PasteViewer.run();
 
-                $.PrivateBin.CopyToClipboard.init();
+                PrivateBin.CopyToClipboard.init();
 
                 $('body').trigger('copy');
 
@@ -85,8 +85,8 @@ describe('CopyToClipboard', function() {
 
             $('body').html('<button id="copyLink"></button>');
 
-            $.PrivateBin.CopyToClipboard.init();
-            $.PrivateBin.CopyToClipboard.setUrl(text);
+            PrivateBin.CopyToClipboard.init();
+            PrivateBin.CopyToClipboard.setUrl(text);
 
             $('#copyLink').trigger('click');
 
@@ -107,8 +107,8 @@ describe('CopyToClipboard', function() {
 
                 $('body').html('<small id="copyShortcutHintText"></small>');
 
-                $.PrivateBin.CopyToClipboard.init();
-                $.PrivateBin.CopyToClipboard.showKeyboardShortcutHint();
+                PrivateBin.CopyToClipboard.init();
+                PrivateBin.CopyToClipboard.showKeyboardShortcutHint();
 
                 const keyboardShortcutHint = $('#copyShortcutHintText').text();
 
@@ -125,8 +125,8 @@ describe('CopyToClipboard', function() {
 
                 $('body').html('<small id="copyShortcutHintText">' + text + '</small>');
 
-                $.PrivateBin.CopyToClipboard.init();
-                $.PrivateBin.CopyToClipboard.hideKeyboardShortcutHint();
+                PrivateBin.CopyToClipboard.init();
+                PrivateBin.CopyToClipboard.hideKeyboardShortcutHint();
 
                 const keyboardShortcutHint = $('#copyShortcutHintText').text();
 

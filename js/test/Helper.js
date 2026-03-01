@@ -4,42 +4,42 @@ var common = require('../common');
 describe('Helper', function () {
     describe('secondsToHuman', function () {
         jsc.property('returns an array with a number and a word', 'integer', function (number) {
-            var result = $.PrivateBin.Helper.secondsToHuman(number);
+            var result = PrivateBin.Helper.secondsToHuman(number);
             return Array.isArray(result) &&
                 result.length === 2 &&
                 result[0] === parseInt(result[0], 10) &&
                 typeof result[1] === 'string';
         });
         jsc.property('returns seconds on the first array position', 'integer 59', function (number) {
-            return $.PrivateBin.Helper.secondsToHuman(number)[0] === number;
+            return PrivateBin.Helper.secondsToHuman(number)[0] === number;
         });
         jsc.property('returns seconds on the second array position', 'integer 59', function (number) {
-            return $.PrivateBin.Helper.secondsToHuman(number)[1] === 'second';
+            return PrivateBin.Helper.secondsToHuman(number)[1] === 'second';
         });
         jsc.property('returns minutes on the first array position', 'integer 60 3599', function (number) {
-            return $.PrivateBin.Helper.secondsToHuman(number)[0] === Math.floor(number / 60);
+            return PrivateBin.Helper.secondsToHuman(number)[0] === Math.floor(number / 60);
         });
         jsc.property('returns minutes on the second array position', 'integer 60 3599', function (number) {
-            return $.PrivateBin.Helper.secondsToHuman(number)[1] === 'minute';
+            return PrivateBin.Helper.secondsToHuman(number)[1] === 'minute';
         });
         jsc.property('returns hours on the first array position', 'integer 3600 86399', function (number) {
-            return $.PrivateBin.Helper.secondsToHuman(number)[0] === Math.floor(number / (60 * 60));
+            return PrivateBin.Helper.secondsToHuman(number)[0] === Math.floor(number / (60 * 60));
         });
         jsc.property('returns hours on the second array position', 'integer 3600 86399', function (number) {
-            return $.PrivateBin.Helper.secondsToHuman(number)[1] === 'hour';
+            return PrivateBin.Helper.secondsToHuman(number)[1] === 'hour';
         });
         jsc.property('returns days on the first array position', 'integer 86400 5184000', function (number) {
-            return $.PrivateBin.Helper.secondsToHuman(number)[0] === Math.floor(number / (60 * 60 * 24));
+            return PrivateBin.Helper.secondsToHuman(number)[0] === Math.floor(number / (60 * 60 * 24));
         });
         jsc.property('returns days on the second array position', 'integer 86400 5184000', function (number) {
-            return $.PrivateBin.Helper.secondsToHuman(number)[1] === 'day';
+            return PrivateBin.Helper.secondsToHuman(number)[1] === 'day';
         });
         // max safe integer as per http://ecma262-5.com/ELS5_HTML.htm#Section_8.5
         jsc.property('returns months on the first array position', 'integer 5184000 9007199254740991', function (number) {
-            return $.PrivateBin.Helper.secondsToHuman(number)[0] === Math.floor(number / (60 * 60 * 24 * 30));
+            return PrivateBin.Helper.secondsToHuman(number)[0] === Math.floor(number / (60 * 60 * 24 * 30));
         });
         jsc.property('returns months on the second array position', 'integer 5184000 9007199254740991', function (number) {
-            return $.PrivateBin.Helper.secondsToHuman(number)[1] === 'month';
+            return PrivateBin.Helper.secondsToHuman(number)[1] === 'month';
         });
     });
 
@@ -56,13 +56,13 @@ describe('Helper', function () {
                     result = true,
                     clean = jsdom(html);
                 ids.forEach(function(item, i) {
-                    html += '<div id="' + item.join('') + '">' + $.PrivateBin.Helper.htmlEntities(contents[i] || contents[0]) + '</div>';
+                    html += '<div id="' + item.join('') + '">' + PrivateBin.Helper.htmlEntities(contents[i] || contents[0]) + '</div>';
                 });
                 // TODO: As per https://github.com/tmpvar/jsdom/issues/321 there is no getSelection in jsdom, yet.
                 // Once there is one, uncomment the block below to actually check the result.
                 /*
                 ids.forEach(function(item, i) {
-                    $.PrivateBin.Helper.selectText(item.join(''));
+                    PrivateBin.Helper.selectText(item.join(''));
                     result *= (contents[i] || contents[0]) === window.getSelection().toString();
                 });
                 */
@@ -88,7 +88,7 @@ describe('Helper', function () {
                 $('body').html('<div id="foo"></div>');
                 let e = $('#foo');
                 e.text(content);
-                $.PrivateBin.Helper.urls2links(e);
+                PrivateBin.Helper.urls2links(e[0]);
                 let result = e.text();
                 clean();
                 return content === result;
@@ -121,7 +121,7 @@ describe('Helper', function () {
                     postfix = '';
                 }
                 e.text(prefix + urlString + postfix);
-                $.PrivateBin.Helper.urls2links(e);
+                PrivateBin.Helper.urls2links(e[0]);
                 let result = e.html();
                 clean();
                 urlString = $('<div />').text(urlString).html();
@@ -144,7 +144,7 @@ describe('Helper', function () {
                 $('body').html('<div id="foo"></div>');
                 let e = $('#foo');
                 e.text(prefix + url + postfix);
-                $.PrivateBin.Helper.urls2links(e);
+                PrivateBin.Helper.urls2links(e[0]);
                 let result = e.html();
                 clean();
                 url = $('<div />').text(url).html();
@@ -165,7 +165,7 @@ describe('Helper', function () {
                 postfix   =   postfix.replace(/%(s|d)/g, '%%');
                 var result = prefix + params[0] + postfix;
                 params.unshift(prefix + '%s' + postfix);
-                return result === $.PrivateBin.Helper.sprintf.apply(this, params);
+                return result === PrivateBin.Helper.sprintf.apply(this, params);
             }
         );
         jsc.property(
@@ -178,7 +178,7 @@ describe('Helper', function () {
                 postfix = postfix.replace(/%(s|d)/g, '%%');
                 var result = prefix + params[0] + postfix;
                 params.unshift(prefix + '%d' + postfix);
-                return result === $.PrivateBin.Helper.sprintf.apply(this, params);
+                return result === PrivateBin.Helper.sprintf.apply(this, params);
             }
         );
         jsc.property(
@@ -191,7 +191,7 @@ describe('Helper', function () {
                 postfix = postfix.replace(/%(s|d)/g, '%%');
                 var result = prefix + '0' + postfix;
                 params.unshift(prefix + '%d' + postfix);
-                return result === $.PrivateBin.Helper.sprintf.apply(this, params);
+                return result === PrivateBin.Helper.sprintf.apply(this, params);
             }
         );
         jsc.property(
@@ -207,7 +207,7 @@ describe('Helper', function () {
                 postfix = postfix.replace(/%(s|d)/g, '');
                 var params = [prefix + '%d' + middle + '%s' + postfix, uint, string],
                     result = prefix + uint + middle + string + postfix;
-                return result === $.PrivateBin.Helper.sprintf.apply(this, params);
+                return result === PrivateBin.Helper.sprintf.apply(this, params);
             }
         );
         jsc.property(
@@ -223,7 +223,7 @@ describe('Helper', function () {
                 postfix = postfix.replace(/%(s|d)/g, '');
                 var params = [prefix + '%s' + middle + '%d' + postfix, string, uint],
                     result = prefix + string + middle + uint + postfix;
-                return result === $.PrivateBin.Helper.sprintf.apply(this, params);
+                return result === PrivateBin.Helper.sprintf.apply(this, params);
             }
         );
     });
@@ -252,8 +252,8 @@ describe('Helper', function () {
                         selectedValue = value;
                     }
                 });
-                const result = $.PrivateBin.Helper.getCookie(selectedKey);
-                $.PrivateBin.Helper.reset();
+                const result = PrivateBin.Helper.getCookie(selectedKey);
+                PrivateBin.Helper.reset();
                 clean();
                 return result === selectedValue;
             }
@@ -271,10 +271,10 @@ describe('Helper', function () {
                 const fullUrl = common.urlToString(url);
                 delete(url.query);
                 delete(url.fragment);
-                $.PrivateBin.Helper.reset();
+                PrivateBin.Helper.reset();
                 const expected = common.urlToString(url),
                     clean = jsdom('', {url: fullUrl}),
-                    result = $.PrivateBin.Helper.baseUri();
+                    result = PrivateBin.Helper.baseUri();
                 clean();
                 return expected === result;
             }
@@ -290,7 +290,7 @@ describe('Helper', function () {
             'removes all HTML entities from any given string',
             'string',
             function (string) {
-                var result = $.PrivateBin.Helper.htmlEntities(string);
+                var result = PrivateBin.Helper.htmlEntities(string);
                 return !(/[<>]/.test(result)) && !(string.indexOf('&') > -1 && !(/&amp;/.test(result)));
             }
         );
@@ -298,43 +298,43 @@ describe('Helper', function () {
 
     describe('formatBytes', function () {
         jsc.property('returns 0 B for 0 bytes', function () {
-            return $.PrivateBin.Helper.formatBytes(0) === '0 B';
+            return PrivateBin.Helper.formatBytes(0) === '0 B';
         });
 
         jsc.property('formats bytes < 1000 as B', function () {
-            return $.PrivateBin.Helper.formatBytes(500) === '500 B';
+            return PrivateBin.Helper.formatBytes(500) === '500 B';
         });
 
         jsc.property('formats kilobytes correctly', function () {
-            return $.PrivateBin.Helper.formatBytes(1500) === '1.5 kB';
+            return PrivateBin.Helper.formatBytes(1500) === '1.5 kB';
         });
 
         jsc.property('formats megabytes correctly', function () {
-            return $.PrivateBin.Helper.formatBytes(2 * 1000 * 1000) === '2 MB';
+            return PrivateBin.Helper.formatBytes(2 * 1000 * 1000) === '2 MB';
         });
 
         jsc.property('formats gigabytes correctly', function () {
-            return $.PrivateBin.Helper.formatBytes(3.45 * 1000 * 1000 * 1000) === '3.45 GB';
+            return PrivateBin.Helper.formatBytes(3.45 * 1000 * 1000 * 1000) === '3.45 GB';
         });
 
         jsc.property('formats terabytes correctly', function () {
-            return $.PrivateBin.Helper.formatBytes(1.75 * 1000 ** 4) === '1.75 TB';
+            return PrivateBin.Helper.formatBytes(1.75 * 1000 ** 4) === '1.75 TB';
         });
 
         jsc.property('formats petabytes correctly', function () {
-            return $.PrivateBin.Helper.formatBytes(1.5 * 1000 ** 5) === '1.5 PB';
+            return PrivateBin.Helper.formatBytes(1.5 * 1000 ** 5) === '1.5 PB';
         });
 
         jsc.property('formats exabytes correctly', function () {
-            return $.PrivateBin.Helper.formatBytes(1.2345 * 1000 ** 6).startsWith('1.23 EB');
+            return PrivateBin.Helper.formatBytes(1.2345 * 1000 ** 6).startsWith('1.23 EB');
         });
 
         jsc.property('formats yottabytes correctly', function () {
-            return $.PrivateBin.Helper.formatBytes(1.23 * 1000 ** 8).startsWith('1.23 YB');
+            return PrivateBin.Helper.formatBytes(1.23 * 1000 ** 8).startsWith('1.23 YB');
         });
 
         jsc.property('rounds to two decimal places', function () {
-            return $.PrivateBin.Helper.formatBytes(1234567) === '1.23 MB';
+            return PrivateBin.Helper.formatBytes(1234567) === '1.23 MB';
         });
     });
 
@@ -342,12 +342,12 @@ describe('Helper', function () {
     describe('isBootstrap5', function () {
         jsc.property('Bootstrap 5 has been detected', function () {
             global.bootstrap = {};
-            return $.PrivateBin.Helper.isBootstrap5() === true;
+            return PrivateBin.Helper.isBootstrap5() === true;
         });
 
         jsc.property('Bootstrap 5 has not been detected', function () {
             delete global.bootstrap;
-            return $.PrivateBin.Helper.isBootstrap5() === false;
+            return PrivateBin.Helper.isBootstrap5() === false;
         });
     });
 });

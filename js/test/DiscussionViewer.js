@@ -48,24 +48,24 @@ describe('DiscussionViewer', function () {
                     'aria-hidden="true"></span> </div><button id="replybutton" ' +
                     'class="btn btn-default btn-sm">Post comment</button></div></div>'
                 );
-                $.PrivateBin.Model.init();
-                $.PrivateBin.DiscussionViewer.init();
+                PrivateBin.Model.init();
+                PrivateBin.DiscussionViewer.init();
                 results.push(
                     !$('#discussion').hasClass('hidden')
                 );
-                $.PrivateBin.DiscussionViewer.prepareNewDiscussion();
+                PrivateBin.DiscussionViewer.prepareNewDiscussion();
                 results.push(
                     $('#discussion').hasClass('hidden')
                 );
                 comments.forEach(function (comment) {
                     comment.id = comment.idArray.join('');
                     comment.parentid = comment.parentidArray.join('');
-                    $.PrivateBin.DiscussionViewer.addComment($.PrivateBin.Helper.CommentFactory(comment), comment.data, comment.meta.nickname);
+                    PrivateBin.DiscussionViewer.addComment(PrivateBin.Helper.CommentFactory(comment), comment.data, comment.meta.nickname);
                 });
                 results.push(
                     $('#discussion').hasClass('hidden')
                 );
-                $.PrivateBin.DiscussionViewer.finishDiscussion();
+                PrivateBin.DiscussionViewer.finishDiscussion();
                 results.push(
                     !$('#discussion').hasClass('hidden') &&
                     comments.length + 1 >= $('#commentcontainer').children().length
@@ -74,7 +74,7 @@ describe('DiscussionViewer', function () {
                     if (commentKey >= comments.length) {
                         commentKey = commentKey % comments.length;
                     }
-                    $.PrivateBin.DiscussionViewer.highlightComment(comments[commentKey].id, fadeOut);
+                    PrivateBin.DiscussionViewer.highlightComment(comments[commentKey].id, fadeOut);
                     results.push(
                         $('#comment_' + comments[commentKey].id).hasClass('highlight')
                     );
@@ -85,12 +85,12 @@ describe('DiscussionViewer', function () {
                 );
                 $('#reply #nickname').val(nickname);
                 $('#reply #replymessage').val(message);
-                $.PrivateBin.DiscussionViewer.getReplyCommentId();
+                PrivateBin.DiscussionViewer.getReplyCommentId();
                 results.push(
-                    $.PrivateBin.DiscussionViewer.getReplyNickname() === $('#reply #nickname').val() &&
-                    $.PrivateBin.DiscussionViewer.getReplyMessage() === $('#reply #replymessage').val()
+                    PrivateBin.DiscussionViewer.getReplyNickname() === $('#reply #nickname').val() &&
+                    PrivateBin.DiscussionViewer.getReplyMessage() === $('#reply #replymessage').val()
                 );
-                var notificationResult = $.PrivateBin.DiscussionViewer.handleNotification(alertType === 'other' ? alert : alertType);
+                var notificationResult = PrivateBin.DiscussionViewer.handleNotification(alertType === 'other' ? alert : alertType);
                 if (alertType === 'loading') {
                     results.push(notificationResult === false);
                 } else {

@@ -5,7 +5,7 @@ describe('I18n', function () {
     describe('translate', function () {
         this.timeout(30000);
         before(function () {
-            $.PrivateBin.I18n.reset();
+            PrivateBin.I18n.reset();
         });
 
         jsc.property(
@@ -15,26 +15,26 @@ describe('I18n', function () {
                 messageId   = messageId.replace(/%(s|d)/g, '%%');
                 var plurals = [messageId, messageId + 's'],
                     fake    = [messageId],
-                    result  = $.PrivateBin.I18n.translate(messageId);
-                $.PrivateBin.I18n.reset();
+                    result  = PrivateBin.I18n.translate(messageId);
+                PrivateBin.I18n.reset();
 
-                var alias = $.PrivateBin.I18n._(messageId);
-                $.PrivateBin.I18n.reset();
+                var alias = PrivateBin.I18n._(messageId);
+                PrivateBin.I18n.reset();
 
-                var pluralResult = $.PrivateBin.I18n.translate(plurals);
-                $.PrivateBin.I18n.reset();
+                var pluralResult = PrivateBin.I18n.translate(plurals);
+                PrivateBin.I18n.reset();
 
-                var pluralAlias = $.PrivateBin.I18n._(plurals);
-                $.PrivateBin.I18n.reset();
+                var pluralAlias = PrivateBin.I18n._(plurals);
+                PrivateBin.I18n.reset();
 
-                var fakeResult = $.PrivateBin.I18n.translate(fake);
-                $.PrivateBin.I18n.reset();
+                var fakeResult = PrivateBin.I18n.translate(fake);
+                PrivateBin.I18n.reset();
 
-                var fakeAlias = $.PrivateBin.I18n._(fake);
-                $.PrivateBin.I18n.reset();
+                var fakeAlias = PrivateBin.I18n._(fake);
+                PrivateBin.I18n.reset();
 
                 if (messageId.indexOf('<a') === -1) {
-                    messageId = $.PrivateBin.Helper.htmlEntities(messageId);
+                    messageId = PrivateBin.Helper.htmlEntities(messageId);
                 } else {
                     messageId = DOMPurify.sanitize(
                         messageId, {
@@ -57,12 +57,12 @@ describe('I18n', function () {
                 prefix    =    prefix.replace(/%(s|d)/g, '%%').replace(/<a/g, '');
                 params[0] = params[0].replace(/%(s|d)/g, '%%');
                 postfix   =   postfix.replace(/%(s|d)/g, '%%').replace(/<a/g, '');
-                const translation = $.PrivateBin.Helper.htmlEntities(prefix + params[0] + postfix);
+                const translation = PrivateBin.Helper.htmlEntities(prefix + params[0] + postfix);
                 params.unshift(prefix + '%s' + postfix);
-                const result = $.PrivateBin.I18n.translate.apply(this, params);
-                $.PrivateBin.I18n.reset();
-                const alias = $.PrivateBin.I18n._.apply(this, params);
-                $.PrivateBin.I18n.reset();
+                const result = PrivateBin.I18n.translate.apply(this, params);
+                PrivateBin.I18n.reset();
+                const alias = PrivateBin.I18n._.apply(this, params);
+                PrivateBin.I18n.reset();
                 return translation === result && translation === alias;
             }
         );
@@ -83,10 +83,10 @@ describe('I18n', function () {
                     }
                 );
                 params.unshift(prefix + '<a href="%s"></a>' + postfix);
-                const result = $.PrivateBin.I18n.translate.apply(this, params);
-                $.PrivateBin.I18n.reset();
-                const alias = $.PrivateBin.I18n._.apply(this, params);
-                $.PrivateBin.I18n.reset();
+                const result = PrivateBin.I18n.translate.apply(this, params);
+                PrivateBin.I18n.reset();
+                const alias = PrivateBin.I18n._.apply(this, params);
+                PrivateBin.I18n.reset();
                 return translation === result && translation === alias;
             }
         );
@@ -105,16 +105,16 @@ describe('I18n', function () {
                 let clean = jsdom();
                 $('body').html('<div id="i18n"></div>');
                 args.unshift($('#i18n'));
-                $.PrivateBin.I18n.translate.apply(this, args);
+                PrivateBin.I18n.translate.apply(this, args);
                 const result = $('#i18n').text();
-                $.PrivateBin.I18n.reset();
+                PrivateBin.I18n.reset();
                 clean();
                 clean = jsdom();
                 $('body').html('<div id="i18n"></div>');
                 args[0] = $('#i18n');
-                $.PrivateBin.I18n._.apply(this, args);
+                PrivateBin.I18n._.apply(this, args);
                 const alias = $('#i18n').text();
-                $.PrivateBin.I18n.reset();
+                PrivateBin.I18n.reset();
                 clean();
                 return translation === result && translation === alias;
             }
@@ -140,16 +140,16 @@ describe('I18n', function () {
                 let clean = jsdom();
                 $('body').html('<div id="i18n"></div>');
                 args.unshift($('#i18n'));
-                $.PrivateBin.I18n.translate.apply(this, args);
+                PrivateBin.I18n.translate.apply(this, args);
                 const result = $('#i18n').html();
-                $.PrivateBin.I18n.reset();
+                PrivateBin.I18n.reset();
                 clean();
                 clean = jsdom();
                 $('body').html('<div id="i18n"></div>');
                 args[0] = $('#i18n');
-                $.PrivateBin.I18n._.apply(this, args);
+                PrivateBin.I18n._.apply(this, args);
                 const alias = $('#i18n').html();
-                $.PrivateBin.I18n.reset();
+                PrivateBin.I18n.reset();
                 clean();
                 return translation === result && translation === alias;
             }
@@ -158,7 +158,7 @@ describe('I18n', function () {
 
     describe('getPluralForm', function () {
         before(function () {
-            $.PrivateBin.I18n.reset();
+            PrivateBin.I18n.reset();
         });
 
         jsc.property(
@@ -166,8 +166,8 @@ describe('I18n', function () {
             common.jscSupportedLanguages(),
             'integer',
             function(language, n) {
-                $.PrivateBin.I18n.reset(language);
-                var result = $.PrivateBin.I18n.getPluralForm(n);
+                PrivateBin.I18n.reset(language);
+                var result = PrivateBin.I18n.getPluralForm(n);
                 // arabic seems to have the highest plural count with 6 forms
                 return result >= 0 && result <= 5;
             }
@@ -179,7 +179,7 @@ describe('I18n', function () {
     describe('loadTranslations', function () {
         this.timeout(30000);
         before(function () {
-            $.PrivateBin.I18n.reset();
+            PrivateBin.I18n.reset();
         });
 
         jsc.property(
@@ -188,17 +188,17 @@ describe('I18n', function () {
             function(language) {
                 // cleanup
                 var clean = jsdom('', {cookie: ['lang=en']});
-                $.PrivateBin.I18n.reset('en');
-                $.PrivateBin.I18n.loadTranslations();
+                PrivateBin.I18n.reset('en');
+                PrivateBin.I18n.loadTranslations();
                 clean();
 
                 // mock
                 clean = jsdom('', {cookie: ['lang=' + language]});
                 // eslint-disable-next-line global-require
-                $.PrivateBin.I18n.reset(language, require('../../i18n/' + language + '.json'));
-                var loadedLang = $.PrivateBin.I18n.getLanguage(),
-                    result = $.PrivateBin.I18n.translate('Never'),
-                    alias  = $.PrivateBin.I18n._('Never');
+                PrivateBin.I18n.reset(language, require('../../i18n/' + language + '.json'));
+                var loadedLang = PrivateBin.I18n.getLanguage(),
+                    result = PrivateBin.I18n.translate('Never'),
+                    alias  = PrivateBin.I18n._('Never');
                 clean();
                 return language === loadedLang && result === alias;
             }
@@ -218,10 +218,10 @@ describe('I18n', function () {
                     });
                 });
 
-                $.PrivateBin.I18n.reset('en');
-                $.PrivateBin.I18n.loadTranslations();
-                var result = $.PrivateBin.I18n.translate('Never'),
-                    alias  = $.PrivateBin.I18n._('Never');
+                PrivateBin.I18n.reset('en');
+                PrivateBin.I18n.loadTranslations();
+                var result = PrivateBin.I18n.translate('Never'),
+                    alias  = PrivateBin.I18n._('Never');
 
                 clean();
                 return 'Never' === result && 'Never' === alias;

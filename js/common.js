@@ -4,7 +4,46 @@
 global.assert = require('assert');
 global.jsc = require('jsverify');
 global.jsdom = require('jsdom-global');
+// initial DOM environment created by jsdom-global
 global.cleanup = global.jsdom();
+// wrap cleanup so that calling it recreates a fresh jsdom environment
+const _origCleanup = global.cleanup;
+global.cleanup = function () {
+    // remove previous environment
+    _origCleanup();
+    // create a new one and return its cleanup function for chaining if needed
+    global.cleanup = global.jsdom();
+
+    // after a new DOM is created we need to reinitialize jQuery so it binds to
+    // the fresh window/document. We simply reload the module and reset the
+    // globals. This mirrors what common.js does initially.
+    try {
+        delete require.cache[require.resolve('./jquery-3.7.1')];
+    } catch (e) {
+        // ignore
+    }
+    global.$ = global.jQuery = require('./jquery-3.7.1');
+
+    // reload the core library to capture the new window/document in any
+    // closures (TopNav, PasteViewer, etc). This also refreshes event bindings
+    // and cached element lookups.
+    try {
+        delete require.cache[require.resolve('./privatebin')];
+    } catch (e) {
+        // ignore
+    }
+    require('./privatebin');
+
+    // also re-export the PrivateBin namespace if available
+    if (typeof window !== 'undefined' && window.PrivateBin) {
+        global.PrivateBin = window.PrivateBin;
+        if (global.$) {
+            global.$.PrivateBin = window.PrivateBin;
+        }
+    }
+
+    return global.cleanup;
+};
 global.fs = require('fs');
 global.WebCrypto = require('@peculiar/webcrypto').Crypto;
 
@@ -12,13 +51,22 @@ global.WebCrypto = require('@peculiar/webcrypto').Crypto;
 global.$ = global.jQuery = require('./jquery-3.7.1');
 global.zlib = require('./zlib-1.3.1-2').zlib;
 require('./prettify');
-global.prettyPrint = window.PR.prettyPrint;
-global.prettyPrintOne = window.PR.prettyPrintOne;
+global.prettyPrint = window.PR ? window.PR.prettyPrint : function() {};
+global.prettyPrintOne = window.PR ? window.PR.prettyPrintOne : function() {};
 global.showdown = require('./showdown-2.1.0');
 global.DOMPurify = require('./purify-3.3.0');
 global.baseX = require('./base-x-5.0.1').baseX;
 global.Legacy = require('./legacy').Legacy;
 require('./privatebin');
+
+// provide global access to the namespace so tests can reference it directly
+if (typeof window !== 'undefined' && window.PrivateBin) {
+    global.PrivateBin = window.PrivateBin;
+    // keep the old jQuery alias around just in case some tests still use it
+    if (global.$) {
+        global.$.PrivateBin = window.PrivateBin;
+    }
+}
 
 // internal variables
 var a2zString    = ['a','b','c','d','e','f','g','h','i','j','k','l','m',

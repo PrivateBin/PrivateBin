@@ -30,21 +30,21 @@ describe('TopNav', function () {
                     'class="glyphicon glyphicon-qrcode" aria-hidden="true">' +
                     '</span> QR code</button></li></ul></div></nav>'
                 );
-                $.PrivateBin.TopNav.init();
+                PrivateBin.TopNav.init();
                 results.push(
                     $('#newbutton').hasClass('hidden') &&
                     $('#clonebutton').hasClass('hidden') &&
                     $('#rawtextbutton').hasClass('hidden') &&
                     $('#qrcodelink').hasClass('hidden')
                 );
-                $.PrivateBin.TopNav.showViewButtons();
+                PrivateBin.TopNav.showViewButtons();
                 results.push(
                     !$('#newbutton').hasClass('hidden') &&
                     !$('#clonebutton').hasClass('hidden') &&
                     !$('#rawtextbutton').hasClass('hidden') &&
                     !$('#qrcodelink').hasClass('hidden')
                 );
-                $.PrivateBin.TopNav.hideViewButtons();
+                PrivateBin.TopNav.hideViewButtons();
                 results.push(
                     $('#newbutton').hasClass('hidden') &&
                     $('#clonebutton').hasClass('hidden') &&
@@ -83,7 +83,7 @@ describe('TopNav', function () {
                     '</li><li><button id="sendbutton" type="button" ' +
                     'class="hidden">Create</button></li></ul></div></nav>'
                 );
-                $.PrivateBin.TopNav.init();
+                PrivateBin.TopNav.init();
                 results.push(
                     $('#sendbutton').hasClass('hidden') &&
                     $('#expiration').hasClass('hidden') &&
@@ -94,7 +94,7 @@ describe('TopNav', function () {
                     $('#password').hasClass('hidden') &&
                     $('#attach').hasClass('hidden')
                 );
-                $.PrivateBin.TopNav.showCreateButtons();
+                PrivateBin.TopNav.showCreateButtons();
                 results.push(
                     !$('#sendbutton').hasClass('hidden') &&
                     !$('#expiration').hasClass('hidden') &&
@@ -105,7 +105,7 @@ describe('TopNav', function () {
                     !$('#password').hasClass('hidden') &&
                     !$('#attach').hasClass('hidden')
                 );
-                $.PrivateBin.TopNav.hideCreateButtons();
+                PrivateBin.TopNav.hideCreateButtons();
                 results.push(
                     $('#sendbutton').hasClass('hidden') &&
                     $('#expiration').hasClass('hidden') &&
@@ -139,11 +139,11 @@ describe('TopNav', function () {
                     '<nav><div id="navbar"><ul><li><button id="newbutton" type=' +
                     '"button" class="hidden">New</button></li></ul></div></nav>'
                 );
-                $.PrivateBin.TopNav.init();
+                PrivateBin.TopNav.init();
                 results.push(
                     $('#newbutton').hasClass('hidden')
                 );
-                $.PrivateBin.TopNav.showNewPasteButton();
+                PrivateBin.TopNav.showNewPasteButton();
                 results.push(
                     !$('#newbutton').hasClass('hidden')
                 );
@@ -172,11 +172,11 @@ describe('TopNav', function () {
                     '<span class="glyphicon glyphicon-duplicate" aria-hidden=' +
                     '"true"></span> Clone</button></li></ul></div></nav>'
                 );
-                $.PrivateBin.TopNav.init();
+                PrivateBin.TopNav.init();
                 results.push(
                     !$('#clonebutton').hasClass('hidden')
                 );
-                $.PrivateBin.TopNav.hideCloneButton();
+                PrivateBin.TopNav.hideCloneButton();
                 results.push(
                     $('#clonebutton').hasClass('hidden')
                 );
@@ -206,11 +206,11 @@ describe('TopNav', function () {
                     'glyphicon-text-background" aria-hidden="true"></span> ' +
                     'Raw text</button></li></ul></div></nav>'
                 );
-                $.PrivateBin.TopNav.init();
+                PrivateBin.TopNav.init();
                 results.push(
                     !$('#rawtextbutton').hasClass('hidden')
                 );
-                $.PrivateBin.TopNav.hideRawButton();
+                PrivateBin.TopNav.hideRawButton();
                 results.push(
                     $('#rawtextbutton').hasClass('hidden')
                 );
@@ -244,11 +244,11 @@ describe('TopNav', function () {
                     '<a id="fileremovebutton"  href="#">Remove attachment</a>' +
                     '</li></ul></li></ul></div></nav>'
                 );
-                $.PrivateBin.TopNav.init();
+                PrivateBin.TopNav.init();
                 results.push(
                     !$('#filewrap').hasClass('hidden')
                 );
-                $.PrivateBin.TopNav.hideFileSelector();
+                PrivateBin.TopNav.hideFileSelector();
                 results.push(
                     $('#filewrap').hasClass('hidden')
                 );
@@ -282,11 +282,11 @@ describe('TopNav', function () {
                     '<a id="fileremovebutton"  href="#">Remove attachment</a>' +
                     '</li></ul></li></ul></div></nav>'
                 );
-                $.PrivateBin.TopNav.init();
+                PrivateBin.TopNav.init();
                 results.push(
                     $('#customattachment').hasClass('hidden')
                 );
-                $.PrivateBin.TopNav.showCustomAttachment();
+                PrivateBin.TopNav.showCustomAttachment();
                 results.push(
                     !$('#customattachment').hasClass('hidden')
                 );
@@ -320,12 +320,12 @@ describe('TopNav', function () {
                     'id="navbar"><ul><li><button id="newbutton" type=' +
                     '"button" class="hidden">New</button></li></ul></div></nav>'
                 );
-                $.PrivateBin.TopNav.init();
+                PrivateBin.TopNav.init();
                 results.push(
                     $('.navbar-toggle').hasClass('collapsed') &&
                     $('#navbar').attr('aria-expanded') !== 'true'
                 );
-                $.PrivateBin.TopNav.collapseBar();
+                PrivateBin.TopNav.collapseBar();
                 results.push(
                     $('.navbar-toggle').hasClass('collapsed') &&
                     $('#navbar').attr('aria-expanded') !== 'true'
@@ -339,7 +339,7 @@ describe('TopNav', function () {
                     !$('.navbar-toggle').hasClass('collapsed') &&
                     $('#navbar').attr('aria-expanded') == 'true'
                 );
-                $.PrivateBin.TopNav.collapseBar();
+                PrivateBin.TopNav.collapseBar();
                 results.push(
                     $('.navbar-toggle').hasClass('collapsed') &&
                     $('#navbar').attr('aria-expanded') == 'false'
@@ -373,27 +373,27 @@ describe('TopNav', function () {
                     'id="opendiscussion" name="opendiscussion" /> ' +
                     'Open discussion</label></li></ul></div></nav>'
                 );
-                $.PrivateBin.TopNav.init();
+                PrivateBin.TopNav.init();
                 results.push(
-                    !$.PrivateBin.TopNav.getBurnAfterReading()
+                    !PrivateBin.TopNav.getBurnAfterReading()
                 );
                 results.push(
-                    !$.PrivateBin.TopNav.getOpenDiscussion()
+                    !PrivateBin.TopNav.getOpenDiscussion()
                 );
                 $('#burnafterreading').attr('checked', 'checked');
                 $('#opendiscussion').attr('checked', 'checked');
                 results.push(
-                    $.PrivateBin.TopNav.getBurnAfterReading()
+                    PrivateBin.TopNav.getBurnAfterReading()
                 );
                 results.push(
-                    $.PrivateBin.TopNav.getOpenDiscussion()
+                    PrivateBin.TopNav.getOpenDiscussion()
                 );
-                $.PrivateBin.TopNav.resetInput();
+                PrivateBin.TopNav.resetInput();
                 results.push(
-                    !$.PrivateBin.TopNav.getBurnAfterReading()
+                    !PrivateBin.TopNav.getBurnAfterReading()
                 );
                 results.push(
-                    !$.PrivateBin.TopNav.getOpenDiscussion()
+                    !PrivateBin.TopNav.getOpenDiscussion()
                 );
                 cleanup();
                 const result = results.every(element => element);
@@ -417,26 +417,26 @@ describe('TopNav', function () {
                     'id="opendiscussion" name="opendiscussion" checked="checked" /> ' +
                     'Open discussion</label></li></ul></div></nav>'
                 );
-                $.PrivateBin.TopNav.init();
+                PrivateBin.TopNav.init();
                 results.push(
-                    $.PrivateBin.TopNav.getBurnAfterReading()
+                    PrivateBin.TopNav.getBurnAfterReading()
                 );
                 results.push(
-                    !$.PrivateBin.TopNav.getOpenDiscussion()
+                    !PrivateBin.TopNav.getOpenDiscussion()
                 );
                 $('#burnafterreading').removeAttr('checked');
                 results.push(
-                    !$.PrivateBin.TopNav.getBurnAfterReading()
+                    !PrivateBin.TopNav.getBurnAfterReading()
                 );
                 results.push(
-                    !$.PrivateBin.TopNav.getOpenDiscussion()
+                    !PrivateBin.TopNav.getOpenDiscussion()
                 );
-                $.PrivateBin.TopNav.resetInput();
+                PrivateBin.TopNav.resetInput();
                 results.push(
-                    $.PrivateBin.TopNav.getBurnAfterReading()
+                    PrivateBin.TopNav.getBurnAfterReading()
                 );
                 results.push(
-                    !$.PrivateBin.TopNav.getOpenDiscussion()
+                    !PrivateBin.TopNav.getOpenDiscussion()
                 );
                 cleanup();
                 const result = results.every(element => element);
@@ -460,27 +460,27 @@ describe('TopNav', function () {
                     'id="opendiscussion" name="opendiscussion" checked="checked" /> ' +
                     'Open discussion</label></li></ul></div></nav>'
                 );
-                $.PrivateBin.TopNav.init();
+                PrivateBin.TopNav.init();
                 results.push(
-                    !$.PrivateBin.TopNav.getBurnAfterReading()
+                    !PrivateBin.TopNav.getBurnAfterReading()
                 );
                 results.push(
-                    $.PrivateBin.TopNav.getOpenDiscussion()
+                    PrivateBin.TopNav.getOpenDiscussion()
                 );
                 $('#opendiscussion').removeAttr('checked');
                 $('#burnafterreading').prop('checked', true);
                 results.push(
-                    $.PrivateBin.TopNav.getBurnAfterReading()
+                    PrivateBin.TopNav.getBurnAfterReading()
                 );
                 results.push(
-                    !$.PrivateBin.TopNav.getOpenDiscussion()
+                    !PrivateBin.TopNav.getOpenDiscussion()
                 );
-                $.PrivateBin.TopNav.resetInput();
+                PrivateBin.TopNav.resetInput();
                 results.push(
-                    !$.PrivateBin.TopNav.getBurnAfterReading()
+                    !PrivateBin.TopNav.getBurnAfterReading()
                 );
                 results.push(
-                    $.PrivateBin.TopNav.getOpenDiscussion()
+                    PrivateBin.TopNav.getOpenDiscussion()
                 );
                 cleanup();
                 const result = results.every(element => element);
@@ -505,8 +505,8 @@ describe('TopNav', function () {
                     '<option value="1day">1 day</option>' +
                     '<option value="never">Never</option></select>'
                 );
-                $.PrivateBin.TopNav.init();
-                assert.strictEqual($.PrivateBin.TopNav.getExpiration(), '1day');
+                PrivateBin.TopNav.init();
+                assert.strictEqual(PrivateBin.TopNav.getExpiration(), '1day');
                 cleanup();
             }
         );
@@ -569,15 +569,15 @@ describe('TopNav', function () {
                     '<a id="fileremovebutton"  href="#">Remove attachment</a>' +
                     '</li></ul></li></ul></div></nav>'
                 );
-                $.PrivateBin.TopNav.init();
+                PrivateBin.TopNav.init();
                 results.push(
-                    $.PrivateBin.TopNav.getFileList() === null
+                    PrivateBin.TopNav.getFileList() === null
                 );
                 addFileList($('#file')[0], [
                     '../img/logo.svg',
                     '../img/busy.gif'
                 ]);
-                const files = $.PrivateBin.TopNav.getFileList();
+                const files = PrivateBin.TopNav.getFileList();
                 results.push(
                     files[0].name === 'logo.svg' &&
                     files[1].name === 'busy.gif'
@@ -607,17 +607,17 @@ describe('TopNav', function () {
                     'id="burnafterreading" name="burnafterreading" /> ' +
                     'Burn after reading</label></li></ul></div></nav>'
                 );
-                $.PrivateBin.TopNav.init();
+                PrivateBin.TopNav.init();
                 results.push(
-                    !$.PrivateBin.TopNav.getBurnAfterReading()
+                    !PrivateBin.TopNav.getBurnAfterReading()
                 );
                 $('#burnafterreading').attr('checked', 'checked');
                 results.push(
-                    $.PrivateBin.TopNav.getBurnAfterReading()
+                    PrivateBin.TopNav.getBurnAfterReading()
                 );
                 $('#burnafterreading').removeAttr('checked');
                 results.push(
-                    !$.PrivateBin.TopNav.getBurnAfterReading()
+                    !PrivateBin.TopNav.getBurnAfterReading()
                 );
                 cleanup();
                 const result = results.every(element => element);
@@ -644,17 +644,17 @@ describe('TopNav', function () {
                     'id="opendiscussion" name="opendiscussion" /> ' +
                     'Open discussion</label></li></ul></div></nav>'
                 );
-                $.PrivateBin.TopNav.init();
+                PrivateBin.TopNav.init();
                 results.push(
-                    !$.PrivateBin.TopNav.getOpenDiscussion()
+                    !PrivateBin.TopNav.getOpenDiscussion()
                 );
                 $('#opendiscussion').attr('checked', 'checked');
                 results.push(
-                    $.PrivateBin.TopNav.getOpenDiscussion()
+                    PrivateBin.TopNav.getOpenDiscussion()
                 );
                 $('#opendiscussion').removeAttr('checked');
                 results.push(
-                    !$.PrivateBin.TopNav.getOpenDiscussion()
+                    !PrivateBin.TopNav.getOpenDiscussion()
                 );
                 cleanup();
                 const result = results.every(element => element);
@@ -683,17 +683,17 @@ describe('TopNav', function () {
                     'id="passwordinput" placeholder="Password (recommended)" ' +
                     'class="form-control" size="23" /></div></li></ul></div></nav>'
                 );
-                $.PrivateBin.TopNav.init();
+                PrivateBin.TopNav.init();
                 results.push(
-                    $.PrivateBin.TopNav.getPassword() === ''
+                    PrivateBin.TopNav.getPassword() === ''
                 );
                 $('#passwordinput').val(password);
                 results.push(
-                    $.PrivateBin.TopNav.getPassword() === password
+                    PrivateBin.TopNav.getPassword() === password
                 );
                 $('#passwordinput').val('');
                 results.push(
-                    $.PrivateBin.TopNav.getPassword() === ''
+                    PrivateBin.TopNav.getPassword() === ''
                 );
                 cleanup();
                 const result = results.every(element => element);
@@ -725,13 +725,13 @@ describe('TopNav', function () {
                     '<a id="fileremovebutton"  href="#">Remove attachment</a>' +
                     '</li></ul></li></ul></div></nav>'
                 );
-                $.PrivateBin.TopNav.init();
+                PrivateBin.TopNav.init();
                 results.push(
-                    !$.PrivateBin.TopNav.getCustomAttachment().hasClass('test')
+                    !PrivateBin.TopNav.getCustomAttachment().hasClass('test')
                 );
                 $('#customattachment').addClass('test');
                 results.push(
-                    $.PrivateBin.TopNav.getCustomAttachment().hasClass('test')
+                    PrivateBin.TopNav.getCustomAttachment().hasClass('test')
                 );
                 cleanup();
                 const result = results.every(element => element);
@@ -772,8 +772,8 @@ describe('TopNav', function () {
                     'class="glyphicon glyphicon-qrcode" aria-hidden="true">' +
                     '</span> QR code</button></li></ul></div></nav>'
                 );
-                $.PrivateBin.TopNav.init();
-                $.PrivateBin.TopNav.hideAllButtons();
+                PrivateBin.TopNav.init();
+                PrivateBin.TopNav.hideAllButtons();
 
                 assert.ok($('#newbutton').hasClass('hidden'));
                 assert.ok($('#clonebutton').hasClass('hidden'));
@@ -796,9 +796,9 @@ describe('TopNav', function () {
                 const clean = jsdom('', {url: 'https://privatebin.net/?0123456789abcdef#1'});
                 $('body').html('<button id="rawtextbutton"></button>');
                 const sample = 'example';
-                $.PrivateBin.PasteViewer.setText(sample);
-                $.PrivateBin.Helper.reset();
-                $.PrivateBin.TopNav.init();
+                PrivateBin.PasteViewer.setText(sample);
+                PrivateBin.Helper.reset();
+                PrivateBin.TopNav.init();
                 $('#rawtextbutton').click();
                 assert.strictEqual($('pre').text(), sample);
                 clean();

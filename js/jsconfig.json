@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "target": "es2024",
+    "module": "NodeNext",
+    "moduleResolution": "nodenext",
+    "resolveJsonModule": true,
+    "checkJs": true,
+    "strict": true,
+    "noImplicitAny": false,
+    "forceConsistentCasingInFileNames": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "baseUrl": "./src",
+    "paths": {
+      "/*": ["./*"],
+    }
+  },
+  "exclude": [
+    "node_modules",
+    "**/node_modules/*"
+  ]
+}

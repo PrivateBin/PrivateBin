@@ -17,7 +17,7 @@ describe('CryptTool', function () {
                 async function (key, password, message) {
                     const clean = jsdom();
                     // ensure zlib is getting loaded
-                    $.PrivateBin.Controller.initZ();
+                    PrivateBin.Controller.initZ();
                     Object.defineProperty(window, 'crypto', {
                         value: new WebCrypto(),
                         writeable: false
@@ -25,10 +25,10 @@ describe('CryptTool', function () {
                     global.atob = common.atob;
                     global.btoa = common.btoa;
                     message = message.trim();
-                    const cipherMessage = await $.PrivateBin.CryptTool.cipher(
+                    const cipherMessage = await PrivateBin.CryptTool.cipher(
                             key, password, message, []
                         ),
-                        plaintext = await $.PrivateBin.CryptTool.decipher(
+                        plaintext = await PrivateBin.CryptTool.decipher(
                             key, password, cipherMessage
                         );
                     clean();
@@ -48,13 +48,13 @@ describe('CryptTool', function () {
                 writeable: false
             });
             // ensure zlib is getting loaded
-            $.PrivateBin.Controller.initZ();
+            PrivateBin.Controller.initZ();
             global.atob = common.atob;
             global.btoa = common.btoa;
-            const cipherMessage = await $.PrivateBin.CryptTool.cipher(
+            const cipherMessage = await PrivateBin.CryptTool.cipher(
                     'foo', 'bar', message, []
                 ),
-                plaintext = await $.PrivateBin.CryptTool.decipher(
+                plaintext = await PrivateBin.CryptTool.decipher(
                     'foo', 'bar', cipherMessage
                 );
             clean();
@@ -93,15 +93,15 @@ conseq_or_bottom inv (interp (nth_iterate sBody n) (MemElem mem))
 `;
                     const clean = jsdom();
                     // ensure zlib is getting loaded
-                    $.PrivateBin.Controller.initZ();
+                    PrivateBin.Controller.initZ();
                     Object.defineProperty(window, 'crypto', {
                         value: new WebCrypto(),
                         writeable: false
                     });
-                    const cipherMessage = await $.PrivateBin.CryptTool.cipher(
+                    const cipherMessage = await PrivateBin.CryptTool.cipher(
                             key, password, message, []
                         ),
-                        plaintext = await $.PrivateBin.CryptTool.decipher(
+                        plaintext = await PrivateBin.CryptTool.decipher(
                                 key, password, cipherMessage
                         );
                     clean();
@@ -128,7 +128,7 @@ conseq_or_bottom inv (interp (nth_iterate sBody n) (MemElem mem))
                         value: new WebCrypto(),
                         writeable: false
                     });
-                    const key = $.PrivateBin.CryptTool.getSymmetricKey(),
+                    const key = PrivateBin.CryptTool.getSymmetricKey(),
                         result = (key !== '' && keys.indexOf(key) === -1);
                     keys.push(key);
                     clean();

@@ -23,43 +23,43 @@ describe('Editor', function () {
                     'id="message" name="message" cols="80" rows="25" ' +
                     'class="form-control hidden"></textarea></p>'
                 );
-                $.PrivateBin.Editor.init();
+                PrivateBin.Editor.init();
                 results.push(
                     $('#editorTabs').hasClass('hidden') &&
                     $('#message').hasClass('hidden')
                 );
-                $.PrivateBin.Editor.show();
+                PrivateBin.Editor.show();
                 results.push(
                     !$('#editorTabs').hasClass('hidden') &&
                     !$('#message').hasClass('hidden')
                 );
-                $.PrivateBin.Editor.hide();
+                PrivateBin.Editor.hide();
                 results.push(
                     $('#editorTabs').hasClass('hidden') &&
                     $('#message').hasClass('hidden')
                 );
-                $.PrivateBin.Editor.show();
-                $.PrivateBin.Editor.focusInput();
+                PrivateBin.Editor.show();
+                PrivateBin.Editor.focusInput();
                 results.push(
-                    $.PrivateBin.Editor.getText().length === 0
+                    PrivateBin.Editor.getText().length === 0
                 );
-                $.PrivateBin.Editor.setText(text);
+                PrivateBin.Editor.setText(text);
                 results.push(
-                    $.PrivateBin.Editor.getText() === $('#message').val()
+                    PrivateBin.Editor.getText() === $('#message').val()
                 );
-                $.PrivateBin.Editor.setText();
+                PrivateBin.Editor.setText();
                 results.push(
-                    !$.PrivateBin.Editor.isPreview() &&
+                    !PrivateBin.Editor.isPreview() &&
                     !$('#message').hasClass('hidden')
                 );
                 $('#messagepreview').trigger('click');
                 results.push(
-                    $.PrivateBin.Editor.isPreview() &&
+                    PrivateBin.Editor.isPreview() &&
                     $('#message').hasClass('hidden')
                 );
                 $('#messageedit').trigger('click');
                 results.push(
-                    !$.PrivateBin.Editor.isPreview() &&
+                    !PrivateBin.Editor.isPreview() &&
                     !$('#message').hasClass('hidden')
                 );
                 clean();
