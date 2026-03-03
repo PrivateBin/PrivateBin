@@ -15,7 +15,7 @@ describe('CryptTool', function () {
                 'string',
                 'string',
                 async function (key, password, message) {
-                    const clean = jsdom();
+                    const clean = globalThis.cleanup();
                     // ensure zlib is getting loaded
                     PrivateBin.Controller.initZ();
                     Object.defineProperty(window, 'crypto', {
@@ -42,7 +42,7 @@ describe('CryptTool', function () {
 
         it('does not truncate messages', async function () {
             const message = fs.readFileSync('test/compression-sample.txt', 'ascii').trim(),
-                clean = jsdom();
+                clean = globalThis.cleanup();
             Object.defineProperty(window, 'crypto', {
                 value: new WebCrypto(),
                 writeable: false
@@ -91,7 +91,7 @@ isWhile : interp (while expr sBody) (MemElem mem) =
 ======================== ( 1 / 1 )
 conseq_or_bottom inv (interp (nth_iterate sBody n) (MemElem mem))
 `;
-                    const clean = jsdom();
+                    const clean = globalThis.cleanup();
                     // ensure zlib is getting loaded
                     PrivateBin.Controller.initZ();
                     Object.defineProperty(window, 'crypto', {
@@ -123,7 +123,7 @@ conseq_or_bottom inv (interp (nth_iterate sBody n) (MemElem mem))
             jsc.assert(jsc.forall(
                 'integer',
                 function(counter) {
-                    const clean = jsdom();
+                    const clean = globalThis.cleanup();
                     Object.defineProperty(window, 'crypto', {
                         value: new WebCrypto(),
                         writeable: false

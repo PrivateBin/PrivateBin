@@ -102,14 +102,14 @@ describe('I18n', function () {
                 const translation = $('<textarea>').text((prefix + params[0] + postfix)).text();
                 let args = Array.prototype.slice.call(params);
                 args.unshift(prefix + '%s' + postfix);
-                let clean = jsdom();
+                let clean = globalThis.cleanup();
                 $('body').html('<div id="i18n"></div>');
                 args.unshift($('#i18n'));
                 PrivateBin.I18n.translate.apply(this, args);
                 const result = $('#i18n').text();
                 PrivateBin.I18n.reset();
                 clean();
-                clean = jsdom();
+                clean = globalThis.cleanup();
                 $('body').html('<div id="i18n"></div>');
                 args[0] = $('#i18n');
                 PrivateBin.I18n._.apply(this, args);
@@ -137,14 +137,14 @@ describe('I18n', function () {
                 );
                 let args = Array.prototype.slice.call(params);
                 args.unshift(prefix + '<a href="%s"></a>' + postfix);
-                let clean = jsdom();
+                let clean = globalThis.cleanup();
                 $('body').html('<div id="i18n"></div>');
                 args.unshift($('#i18n'));
                 PrivateBin.I18n.translate.apply(this, args);
                 const result = $('#i18n').html();
                 PrivateBin.I18n.reset();
                 clean();
-                clean = jsdom();
+                clean = globalThis.cleanup();
                 $('body').html('<div id="i18n"></div>');
                 args[0] = $('#i18n');
                 PrivateBin.I18n._.apply(this, args);
@@ -187,13 +187,13 @@ describe('I18n', function () {
             common.jscSupportedLanguages(),
             function(language) {
                 // cleanup
-                var clean = jsdom('', {cookie: ['lang=en']});
+                var clean = globalThis.cleanup('', {cookie: ['lang=en']});
                 PrivateBin.I18n.reset('en');
                 PrivateBin.I18n.loadTranslations();
                 clean();
 
                 // mock
-                clean = jsdom('', {cookie: ['lang=' + language]});
+                clean = globalThis.cleanup('', {cookie: ['lang=' + language]});
                 // eslint-disable-next-line global-require
                 PrivateBin.I18n.reset(language, require('../../i18n/' + language + '.json'));
                 var loadedLang = PrivateBin.I18n.getLanguage(),
@@ -207,7 +207,7 @@ describe('I18n', function () {
         jsc.property(
             'should default to en',
             function() {
-                var clean = jsdom('', {url: 'https://privatebin.net/'});
+                var clean = globalThis.cleanup('', {url: 'https://privatebin.net/'});
 
                 // when navigator.userLanguage is undefined and no default language
                 // is specified, it would throw an error

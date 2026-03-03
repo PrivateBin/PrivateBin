@@ -6,7 +6,7 @@ describe('PasteViewer', function () {
         this.timeout(30000);
 
         it('basic plaintext display works', function () {
-            const clean = jsdom();
+            cleanup();
             $('body').html(
                 '<div id="placeholder" class="hidden">+++ no document text +++</div>' +
                 '<div id="prettymessage" class="hidden"><pre id="prettyprint" class="prettyprint linenums:1"></pre></div>' +
@@ -18,7 +18,6 @@ describe('PasteViewer', function () {
             PrivateBin.PasteViewer.run();
             assert.strictEqual(PrivateBin.PasteViewer.getText(), 'hello');
             assert.ok(!$('#plaintext').hasClass('hidden'));
-            clean();
         });
 
         jsc.property(
@@ -26,8 +25,8 @@ describe('PasteViewer', function () {
             common.jscFormats(),
             'nestring',
             function (format, text) {
-                var clean = jsdom(),
-                    results = [];
+                    cleanup();
+                    var results = [];
                 $('body').html(
                     '<div id="placeholder" class="hidden">+++ no document text ' +
                     '+++</div><div id="prettymessage" class="hidden"><pre ' +
@@ -113,7 +112,7 @@ describe('PasteViewer', function () {
             ]),
             'string',
             function (format, prefix, xss, suffix) {
-                var clean = jsdom(),
+                var clean = globalThis.cleanup(),
                     text = prefix + xss + suffix;
                 $('body').html(
                     '<div id="placeholder" class="hidden">+++ no document text ' +

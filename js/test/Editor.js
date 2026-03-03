@@ -9,7 +9,7 @@ describe('Editor', function () {
             'returns text fed into the textarea, handles editor tabs',
             'string',
             function (text) {
-                var clean = jsdom(),
+                var clean = globalThis.cleanup(),
                     results = [];
                 $('body').html(
                     '<ul id="editorTabs" class="nav nav-tabs hidden"><li ' +

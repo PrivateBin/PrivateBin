@@ -12,23 +12,17 @@ describe('TopNav', function () {
             function () {
                 let results = [];
                 $('body').html(
-                    '<nav class="navbar navbar-inverse navbar-static-top">' +
-                    '<div id="navbar" class="navbar-collapse collapse"><ul ' +
-                    'class="nav navbar-nav"><li><button id="newbutton" ' +
-                    'type="button" class="hidden btn btn-warning navbar-btn">' +
-                    '<span class="glyphicon glyphicon-file" aria-hidden="true">' +
-                    '</span> New</button><button id="clonebutton" type="button"' +
-                    ' class="hidden btn btn-warning navbar-btn">' +
-                    '<span class="glyphicon glyphicon-duplicate" ' +
-                    'aria-hidden="true"></span> Clone</button><button ' +
-                    'id="rawtextbutton" type="button" class="hidden btn ' +
-                    'btn-warning navbar-btn"><span class="glyphicon ' +
-                    'glyphicon-text-background" aria-hidden="true"></span> ' +
-                    'Raw text</button><button id="qrcodelink" type="button" ' +
-                    'data-toggle="modal" data-target="#qrcodemodal" ' +
-                    'class="hidden btn btn-warning navbar-btn"><span ' +
-                    'class="glyphicon glyphicon-qrcode" aria-hidden="true">' +
-                    '</span> QR code</button></li></ul></div></nav>'
+                    `<nav class="navbar navbar-inverse navbar-static-top">
+                    <div id="navbar" class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav"><li><button id="newbutton" type="button" class="hidden btn btn-warning navbar-btn">
+                    <span class="glyphicon glyphicon-file" aria-hidden="true">
+                        </span> New</button><button id="clonebutton" type="button" class="hidden btn btn-warning navbar-btn">
+                    <span class="glyphicon glyphicon-duplicate" aria-hidden="true"></span> Clone</button>
+                    <button id="rawtextbutton" type="button" class="hidden btn btn-warning navbar-btn">
+                    <span class="glyphicon glyphicon-text-background" aria-hidden="true"></span> Raw text</button>
+                    <button id="qrcodelink" type="button" data-toggle="modal" data-target="#qrcodemodal" class="hidden btn btn-warning navbar-btn">
+                    <span class="glyphicon glyphicon-qrcode" aria-hidden="true"></span> QR code</button></li></ul></div>
+                    </nav>`
                 );
                 PrivateBin.TopNav.init();
                 results.push(
@@ -308,7 +302,7 @@ describe('TopNav', function () {
         it(
             'collapses the navigation when displayed on a small screen',
             function () {
-                const clean = jsdom();
+                const clean = globalThis.cleanup();
                 let results = [];
                 $('body').html(
                     '<nav><div class="navbar-header"><button type="button" ' +
@@ -793,7 +787,7 @@ describe('TopNav', function () {
         it(
             'displays raw text view correctly',
             function () {
-                const clean = jsdom('', {url: 'https://privatebin.net/?0123456789abcdef#1'});
+                const clean = globalThis.cleanup('', {url: 'https://privatebin.net/?0123456789abcdef#1'});
                 $('body').html('<button id="rawtextbutton"></button>');
                 const sample = 'example';
                 PrivateBin.PasteViewer.setText(sample);

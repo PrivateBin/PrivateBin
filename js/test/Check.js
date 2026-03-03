@@ -12,7 +12,7 @@ describe('Check', function () {
                 jsc.elements(['Bot', 'bot']),
                 'string',
                 function (prefix, botBit, suffix) {
-                    const clean = jsdom(
+                    const clean = globalThis.cleanup(
                         '<html><body><div id="errormessage" class="hidden"></div>' +
                         '</body></html>', {
                             'userAgent': prefix + botBit + suffix
@@ -36,7 +36,7 @@ describe('Check', function () {
             function (secureProtocol, localhost, domain, tld) {
                 const isDomain = localhost === '',
                       isSecureContext = secureProtocol || !isDomain || tld.length > 0,
-                      clean = jsdom(
+                      clean = globalThis.cleanup(
                           '<html><body><div id="errormessage" class="hidden"></div>' +
                           '<div id="oldnotice" class="hidden"></div>' +
                           '<div id="insecurecontextnotice" class="hidden"></div></body></html>',
@@ -63,7 +63,7 @@ describe('Check', function () {
             'bool',
             jsc.nearray(common.jscA2zString()),
             function (secureProtocol, domain) {
-                const clean = jsdom(
+                const clean = globalThis.cleanup(
                           '<html><body><div id="httpnotice" class="hidden"></div>' +
                           '</body></html>',
                           {

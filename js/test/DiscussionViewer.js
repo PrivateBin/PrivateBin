@@ -26,7 +26,7 @@ describe('DiscussionViewer', function () {
             jsc.elements(['loading', 'danger', 'other']),
             'nestring',
             function (comments, commentKey, fadeOut, nickname, message, alertType, alert) {
-                var clean = jsdom(),
+                var clean = globalThis.cleanup(),
                     results = [];
                 $('body').html(
                     '<div id="discussion"><h4>Discussion</h4>' +

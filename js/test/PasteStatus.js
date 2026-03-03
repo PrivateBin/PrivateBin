@@ -23,7 +23,7 @@ describe('PasteStatus', function () {
         this.timeout(30000);
 
         it('creates a notification after a successful document upload', function () {
-            const clean = jsdom();
+            cleanup();
             $('body').html('<a href="#" id="deletelink"><span></span></a><div id="pastelink"></div>');
             PrivateBin.PasteStatus.init();
             const expected1 = 'https://example.com/long';
@@ -31,30 +31,29 @@ describe('PasteStatus', function () {
             PrivateBin.PasteStatus.createPasteNotification(expected1, expected2);
             const result1 = $('#pasteurl')[0].href,
                 result2 = $('#deletelink')[0].href;
-            clean();
             assert.strictEqual(result1, expected1);
             assert.strictEqual(result2, expected2);
         });
 
         jsc.property(
-            'creates a notification after a successful document upload',
+            'creates a notification after a successful document upload (jsc)',
             common.jscUrl(),
             common.jscUrl(false),
             function (url1, url2) {
-                // sometimes the generator returns incomplete objects, bail out
-                if (!url1 || !url1.address || !url2 || !url2.address) {
-                    return true;
-                }
-                const expected1 = common.urlToString(url1).replace(/&(gt|lt)$/, '&$1a'),
-                    expected2 = common.urlToString(url2).replace(/&(gt|lt)$/, '&$1a'),
-                    clean = jsdom();
-                $('body').html('<a href="#" id="deletelink"><span></span></a><div id="pastelink"></div>');
-                PrivateBin.PasteStatus.init();
-                PrivateBin.PasteStatus.createPasteNotification(expected1, expected2);
-                const result1 = $('#pasteurl')[0].href,
-                    result2 = $('#deletelink')[0].href;
-                clean();
-                return result1 === expected1 && result2 === expected2;
+                    // sometimes the generator returns incomplete objects, bail out
+                    if (!url1 || !url1.address || !url2 || !url2.address) {
+                        return true;
+                    }
+                    const expected1 = common.urlToString(url1).replace(/&(gt|lt)$/, '&$1a'),
+                        expected2 = common.urlToString(url2).replace(/&(gt|lt)$/, '&$1a');
+                    cleanup();
+                    $('body').html('<a href="#" id="deletelink"><span></span></a><div id="pastelink"></div>');
+                    PrivateBin.PasteStatus.init();
+                    PrivateBin.PasteStatus.createPasteNotification(expected1, expected2);
+                    const result1 = $('#pasteurl')[0].href,
+                        result2 = $('#deletelink')[0].href;
+                    return result1 === expected1 && result2 === expected2;
+
             }
         );
     });
@@ -77,7 +76,7 @@ describe('PasteStatus', function () {
                 url.address = domain.split('').concat(url.address);
                 const urlString = common.urlToString(url),
                     expected = urlString.substring((schema + '://' + domain).length),
-                    clean = jsdom();
+                    clean = globalThis.cleanup();
 
                 $('body').html('<div><div id="pastelink"></div></div>');
                 PrivateBin.PasteStatus.init();
@@ -116,7 +115,7 @@ describe('PasteStatus', function () {
                         shorturl: shortUrlString,
                         statusCode: 200
                     },
-                    clean = jsdom();
+                    clean = globalThis.cleanup();
 
                 $('body').html('<div><div id="pastelink"></div></div>');
                 PrivateBin.PasteStatus.init();
@@ -143,7 +142,7 @@ describe('PasteStatus', function () {
                         '    <message>success</message>\n' +
                         '    <statusCode>200</statusCode>\n' +
                         '</result>',
-                    clean = jsdom();
+                    clean = globalThis.cleanup();
 
                 $('body').html('<div><div id="pastelink"></div></div>');
                 PrivateBin.PasteStatus.init();
@@ -175,7 +174,7 @@ describe('PasteStatus', function () {
                         '\t\t<p>Your document is <a id="pasteurl" href="' + shortUrlString + '">' + shortUrlString + '</a> <span id="copyhint">(Hit <kbd>Ctrl</kbd>+<kbd>c</kbd> to copy)</span></p>\n' +
                         '\t</body>\n' +
                         '</html>',
-                    clean = jsdom();
+                    clean = globalThis.cleanup();
 
                 $('body').html('<div><div id="pastelink"></div></div>');
                 PrivateBin.PasteStatus.init();
@@ -199,7 +198,7 @@ describe('PasteStatus', function () {
             'nat',
             common.jscUrl(),
             function (burnafterreading, remainingTime, url) {
-                let clean = jsdom('', {url: common.urlToString(url)}),
+                let clean = globalThis.cleanup('', {url: common.urlToString(url)}),
                     result;
                 $('body').html('<div id="remainingtime" class="hidden"></div>');
                 PrivateBin.PasteStatus.init();

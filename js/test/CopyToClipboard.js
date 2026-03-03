@@ -9,7 +9,7 @@ describe('CopyToClipboard', function() {
             common.jscFormats(),
             'nestring',
             async function (format, text) {
-                var clean = jsdom();
+                var clean = globalThis.cleanup();
                 common.enableClipboard();
 
                 $('body').html(
@@ -46,7 +46,7 @@ describe('CopyToClipboard', function() {
             common.jscFormats(),
             'nestring',
             async function (format, text) {
-                var clean = jsdom();
+                var clean = globalThis.cleanup();
                 common.enableClipboard();
 
                 $('body').html(
@@ -80,7 +80,7 @@ describe('CopyToClipboard', function() {
     jsc.property('Copy link to clipboard',
         'nestring',
         async function (text) {
-            var clean = jsdom();
+            var clean = globalThis.cleanup();
             common.enableClipboard();
 
             $('body').html('<button id="copyLink"></button>');
@@ -103,7 +103,7 @@ describe('CopyToClipboard', function() {
         jsc.property('Show hint',
             'nestring',
             function (text) {
-                var clean = jsdom();
+                var clean = globalThis.cleanup();
 
                 $('body').html('<small id="copyShortcutHintText"></small>');
 
@@ -121,7 +121,7 @@ describe('CopyToClipboard', function() {
         jsc.property('Hide hint',
             'nestring',
             function (text) {
-                var clean = jsdom();
+                var clean = globalThis.cleanup();
 
                 $('body').html('<small id="copyShortcutHintText">' + text + '</small>');
 

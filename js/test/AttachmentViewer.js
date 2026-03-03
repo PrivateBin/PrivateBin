@@ -14,7 +14,7 @@ describe('AttachmentViewer', function () {
             'string',
              // eslint-disable-next-line complexity
             function (mimeType, rawdata, filename, prefix, postfix) {
-                let clean = jsdom(),
+                let clean = globalThis.cleanup(),
                     data = 'data:' + mimeType + ';base64,' + common.btoa(rawdata),
                     mimePrefix = mimeType.substring(0, 6),
                     previewSupported = (
@@ -133,7 +133,7 @@ describe('AttachmentViewer', function () {
         it(
             'sanitizes file names in attachments',
             function() {
-                const clean = jsdom();
+                const clean = globalThis.cleanup();
                 $('body').html(
                     '<div id="attachmentPreview" class="col-md-12 text-center hidden"></div>' +
                     '<div id="attachment" class="hidden"></div>' +

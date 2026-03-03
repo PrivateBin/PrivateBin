@@ -16,7 +16,7 @@ describe('UiHelper', function () {
             common.jscUrl(false, false),
             function (url) {
                 const expected = common.urlToString(url),
-                    clean = jsdom('', {url: expected});
+                    clean = globalThis.cleanup('', {url: expected});
 
                 PrivateBin.UiHelper.mockHistoryChange();
                 PrivateBin.Helper.reset();
@@ -33,7 +33,7 @@ describe('UiHelper', function () {
             function (url, fragment) {
                 url.fragment = fragment.join('');
                 const expected = common.urlToString(url),
-                    clean = jsdom('', {url: expected});
+                    clean = globalThis.cleanup('', {url: expected});
 
                 PrivateBin.UiHelper.mockHistoryChange([
                     {type: 'newpaste'}, '', expected
@@ -58,7 +58,7 @@ describe('UiHelper', function () {
             'redirects to home',
             common.jscUrl(),
             function (url) {
-                const clean = jsdom('', {url: common.urlToString(url)});
+                const clean = globalThis.cleanup('', {url: common.urlToString(url)});
                 delete(url.query);
                 delete(url.fragment);
                 const expected = common.urlToString(url);
@@ -88,7 +88,7 @@ describe('UiHelper', function () {
             function (id, element) {
                 id = id.join('');
                 element = element.join('');
-                var clean = jsdom(
+                var clean = globalThis.cleanup(
                     '<' + element + ' id="' + id + '"></' + element + '>'
                 );
                 var result = PrivateBin.UiHelper.isVisible($('#' + id));

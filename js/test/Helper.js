@@ -54,7 +54,7 @@ describe('Helper', function () {
             function (ids, contents) {
                 var html = '',
                     result = true,
-                    clean = jsdom(html);
+                    clean = globalThis.cleanup(html);
                 ids.forEach(function(item, i) {
                     html += '<div id="' + item.join('') + '">' + PrivateBin.Helper.htmlEntities(contents[i] || contents[0]) + '</div>';
                 });
@@ -75,7 +75,7 @@ describe('Helper', function () {
     describe('urls2links', function () {
         this.timeout(30000);
         before(function () {
-            cleanup = jsdom();
+            cleanup = globalThis.cleanup();
         });
 
         jsc.property(
@@ -84,7 +84,7 @@ describe('Helper', function () {
             function (content) {
                 // eslint-disable-next-line no-control-regex
                 content = content.replace(/\r|\f/g, '\n').replace(/\u0000|\u000b/g, '');
-                let clean = jsdom();
+                let clean = globalThis.cleanup();
                 $('body').html('<div id="foo"></div>');
                 let e = $('#foo');
                 e.text(content);
@@ -107,7 +107,7 @@ describe('Helper', function () {
                 postfix  = ' ' + postfix.replace(/\r/g, '\n').replace(/\u0000/g, '');
                 url.fragment = fragment.join('');
                 let urlString = common.urlToString(url),
-                    clean = jsdom();
+                    clean = globalThis.cleanup();
                 $('body').html('<div id="foo"></div>');
                 let e = $('#foo');
 
@@ -140,7 +140,7 @@ describe('Helper', function () {
                 // eslint-disable-next-line no-control-regex
                 postfix = ' ' + postfix.replace(/\r/g, '\n').replace(/\u0000/g, '');
                 let url  = 'magnet:?' + query.join('').replace(/^&+|&+$/gm, ''),
-                    clean = jsdom();
+                    clean = globalThis.cleanup();
                 $('body').html('<div id="foo"></div>');
                 let e = $('#foo');
                 e.text(prefix + url + postfix);
@@ -241,7 +241,7 @@ describe('Helper', function () {
             jsc.nearray(jsc.nearray(common.jscAlnumString())),
             function (labels, values) {
                 let selectedKey = '', selectedValue = '';
-                const clean = jsdom();
+                const clean = globalThis.cleanup();
                 labels.forEach(function(item, i) {
                     const key = item.join(''),
                         value = (values[i] || values[0]).join('');
@@ -273,7 +273,7 @@ describe('Helper', function () {
                 delete(url.fragment);
                 PrivateBin.Helper.reset();
                 const expected = common.urlToString(url),
-                    clean = jsdom('', {url: fullUrl}),
+                    clean = globalThis.cleanup('', {url: fullUrl}),
                     result = PrivateBin.Helper.baseUri();
                 clean();
                 return expected === result;
@@ -283,7 +283,7 @@ describe('Helper', function () {
 
     describe('htmlEntities', function () {
         before(function () {
-            cleanup = jsdom();
+            cleanup = globalThis.cleanup();
         });
 
         jsc.property(

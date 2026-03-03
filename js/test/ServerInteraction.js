@@ -16,7 +16,7 @@ describe('ServerInteraction', function () {
                 async function (key, password, message) {
                     // pause to let async functions conclude
                     await new Promise(resolve => setTimeout(resolve, 300));
-                    let clean = jsdom();
+                    let clean = globalThis.cleanup();
                     window.crypto = new WebCrypto();
                     message = message.trim();
 

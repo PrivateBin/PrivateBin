@@ -5,7 +5,7 @@ describe('Model', function () {
     describe('getExpirationDefault', function () {
         before(function () {
             PrivateBin.Model.reset();
-            cleanup = jsdom();
+            cleanup = globalThis.cleanup();
         });
 
         jsc.property(
@@ -93,7 +93,7 @@ describe('Model', function () {
                 }
                 url.query = queryStart.concat(pasteId, queryEnd);
                 const pasteIdString = pasteId.join(''),
-                    clean           = jsdom('', {url: common.urlToString(url)});
+                    clean           = globalThis.cleanup('', {url: common.urlToString(url)});
                 const result = PrivateBin.Model.getPasteId();
                 PrivateBin.Model.reset();
                 clean();
@@ -104,7 +104,7 @@ describe('Model', function () {
             'throws exception on empty query string',
             common.jscUrl(true, false),
             function (url) {
-                const clean = jsdom('', {url: common.urlToString(url)});
+                const clean = globalThis.cleanup('', {url: common.urlToString(url)});
                 let result = false;
                 try {
                     PrivateBin.Model.getPasteId();
@@ -130,7 +130,7 @@ describe('Model', function () {
             common.jscUrl(),
             function (url) {
                 url.fragment = '0OIl'; // any non-base58 string
-                const clean = jsdom('', {url: common.urlToString(url)});
+                const clean = globalThis.cleanup('', {url: common.urlToString(url)});
                 let result = false;
                 try {
                     PrivateBin.Model.getPasteId();
@@ -150,7 +150,7 @@ describe('Model', function () {
             function (url, trail) {
                 const fragment = url.fragment.padStart(32, '\u0000');
                 url.fragment = PrivateBin.CryptTool.base58encode(fragment) + '&' + trail.join('');
-                const clean = jsdom('', {url: common.urlToString(url)}),
+                const clean = globalThis.cleanup('', {url: common.urlToString(url)}),
                     result = PrivateBin.Model.getPasteKey();
                 PrivateBin.Model.reset();
                 clean();
@@ -164,7 +164,7 @@ describe('Model', function () {
                 // base58 strips leading NULL bytes, so the string is padded with these if not found
                 const fragment = url.fragment.padStart(32, '\u0000');
                 url.fragment = PrivateBin.CryptTool.base58encode(fragment);
-                const clean = jsdom('', {url: common.urlToString(url)}),
+                const clean = globalThis.cleanup('', {url: common.urlToString(url)}),
                     result = PrivateBin.Model.getPasteKey();
                 PrivateBin.Model.reset();
                 clean();
@@ -179,7 +179,7 @@ describe('Model', function () {
                 // base58 strips leading NULL bytes, so the string is padded with these if not found
                 const fragment = url.fragment.padStart(32, '\u0000');
                 url.fragment = PrivateBin.CryptTool.base58encode(fragment) + '&' + trail.join('');
-                const clean = jsdom('', {url: common.urlToString(url)}),
+                const clean = globalThis.cleanup('', {url: common.urlToString(url)}),
                     result = PrivateBin.Model.getPasteKey();
                 PrivateBin.Model.reset();
                 clean();
@@ -190,7 +190,7 @@ describe('Model', function () {
             'throws exception on empty fragment of the URL',
             common.jscUrl(false),
             function (url) {
-                let clean = jsdom('', {url: common.urlToString(url)}),
+                let clean = globalThis.cleanup('', {url: common.urlToString(url)}),
                     result = false;
                 try {
                     PrivateBin.Model.getPasteKey();
