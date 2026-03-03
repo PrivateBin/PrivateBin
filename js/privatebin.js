@@ -4326,6 +4326,10 @@ window.PrivateBin = (function () {
          * @function
          */
         me.hideEmailButton = function () {
+            if (!emailLink) {
+                return;
+            }
+
             emailLink.classList.add('hidden');
             emailLink.removeEventListener('click', sendEmail);
         }

@@ -20,7 +20,8 @@ describe('TopNav', function () {
                     <span class="glyphicon glyphicon-duplicate" aria-hidden="true"></span> Clone</button>
                     <button id="rawtextbutton" type="button" class="hidden btn btn-warning navbar-btn">
                     <span class="glyphicon glyphicon-text-background" aria-hidden="true"></span> Raw text</button>
-                    <button id="qrcodelink" type="button" data-toggle="modal" data-target="#qrcodemodal" class="hidden btn btn-warning navbar-btn">
+                    <button id="downloadtextbutton" type="button" class="hidden btn btn-<?php echo $isDark ? 'warning' : 'default'; ?> navbar-btn"></button>
+                    <button id="qrcodelink" type="button" data-toggle="modal" data-target="#qrcodemodal" class="hidden btn btn-warning navbar-btn"/>
                     <span class="glyphicon glyphicon-qrcode" aria-hidden="true"></span> QR code</button></li></ul></div>
                     </nav>`
                 );
