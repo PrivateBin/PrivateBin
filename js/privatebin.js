@@ -926,7 +926,7 @@ window.PrivateBin = (function () {
                     document.dispatchEvent(new CustomEvent(languageLoadedEvent));
                 })
                 .catch(error => {
-                    console.error('Language \'%s\' could not be loaded (%s). Translation failed, fallback to English.', newLanguage, error.message);
+                    console.error(`Language \'${newLanguage}\' could not be loaded (${error.message}). Translation failed, fallback to English.`);
                     language = 'en';
                 });
         };
