@@ -15,9 +15,9 @@ describe('CryptTool', function () {
                 'string',
                 'string',
                 async function (key, password, message) {
-                    const clean = jsdom();
+                    const clean = globalThis.cleanup();
                     // ensure zlib is getting loaded
-                    $.PrivateBin.Controller.initZ();
+                    PrivateBin.Controller.initZ();
                     Object.defineProperty(window, 'crypto', {
                         value: new WebCrypto(),
                         writeable: false
@@ -25,10 +25,10 @@ describe('CryptTool', function () {
                     global.atob = common.atob;
                     global.btoa = common.btoa;
                     message = message.trim();
-                    const cipherMessage = await $.PrivateBin.CryptTool.cipher(
+                    const cipherMessage = await PrivateBin.CryptTool.cipher(
                             key, password, message, []
                         ),
-                        plaintext = await $.PrivateBin.CryptTool.decipher(
+                        plaintext = await PrivateBin.CryptTool.decipher(
                             key, password, cipherMessage
                         );
                     clean();
@@ -42,19 +42,19 @@ describe('CryptTool', function () {
 
         it('does not truncate messages', async function () {
             const message = fs.readFileSync('test/compression-sample.txt', 'ascii').trim(),
-                clean = jsdom();
+                clean = globalThis.cleanup();
             Object.defineProperty(window, 'crypto', {
                 value: new WebCrypto(),
                 writeable: false
             });
             // ensure zlib is getting loaded
-            $.PrivateBin.Controller.initZ();
+            PrivateBin.Controller.initZ();
             global.atob = common.atob;
             global.btoa = common.btoa;
-            const cipherMessage = await $.PrivateBin.CryptTool.cipher(
+            const cipherMessage = await PrivateBin.CryptTool.cipher(
                     'foo', 'bar', message, []
                 ),
-                plaintext = await $.PrivateBin.CryptTool.decipher(
+                plaintext = await PrivateBin.CryptTool.decipher(
                     'foo', 'bar', cipherMessage
                 );
             clean();
@@ -91,17 +91,17 @@ isWhile : interp (while expr sBody) (MemElem mem) =
 ======================== ( 1 / 1 )
 conseq_or_bottom inv (interp (nth_iterate sBody n) (MemElem mem))
 `;
-                    const clean = jsdom();
+                    const clean = globalThis.cleanup();
                     // ensure zlib is getting loaded
-                    $.PrivateBin.Controller.initZ();
+                    PrivateBin.Controller.initZ();
                     Object.defineProperty(window, 'crypto', {
                         value: new WebCrypto(),
                         writeable: false
                     });
-                    const cipherMessage = await $.PrivateBin.CryptTool.cipher(
+                    const cipherMessage = await PrivateBin.CryptTool.cipher(
                             key, password, message, []
                         ),
-                        plaintext = await $.PrivateBin.CryptTool.decipher(
+                        plaintext = await PrivateBin.CryptTool.decipher(
                                 key, password, cipherMessage
                         );
                     clean();
@@ -123,12 +123,12 @@ conseq_or_bottom inv (interp (nth_iterate sBody n) (MemElem mem))
             jsc.assert(jsc.forall(
                 'integer',
                 function(counter) {
-                    const clean = jsdom();
+                    const clean = globalThis.cleanup();
                     Object.defineProperty(window, 'crypto', {
                         value: new WebCrypto(),
                         writeable: false
                     });
-                    const key = $.PrivateBin.CryptTool.getSymmetricKey(),
+                    const key = PrivateBin.CryptTool.getSymmetricKey(),
                         result = (key !== '' && keys.indexOf(key) === -1);
                     keys.push(key);
                     clean();
