@@ -10,7 +10,7 @@
     "forceConsistentCasingInFileNames": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "baseUrl": "./src",
+    "baseUrl": "./js",
     "paths": {
       "/*": ["./*"],
     }
