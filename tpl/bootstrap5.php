@@ -61,6 +61,10 @@ endif;
 		<link rel="shortcut icon" href="img/favicon.ico">
 		<meta name="msapplication-config" content="browserconfig.xml">
 		<meta name="theme-color" content="#ffe57e" />
+		<!-- Web Fonts -->
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 		<!-- Twitter/social media cards -->
 		<meta name="twitter:card" content="summary" />
 		<meta name="twitter:title" content="<?php echo I18n::_('Encrypted note on %s', I18n::_($NAME)) ?>" />
@@ -299,9 +303,15 @@ endif;
 					</ul>
 					<ul class="navbar-nav gap-2">
 						<li class="nav-item">
-							<div class="form-check form-switch navbar-text">
-								<input id="bd-theme" type="checkbox" class="form-check-input" />
-								<label for="bd-theme" class="form-check-label"><?php echo I18n::_('Dark Mode'); ?></label>
+							<div class="form-check form-switch navbar-text d-flex align-items-center gap-2">
+								<input id="bd-theme" type="checkbox" class="form-check-input"
+									title="<?php echo I18n::_('Toggle dark/light mode'); ?>"
+									aria-label="<?php echo I18n::_('Toggle dark/light mode'); ?>" />
+								<label for="bd-theme" class="form-check-label d-flex align-items-center gap-1">
+									<svg id="pb-theme-icon-sun" width="13" height="13" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#sun" /></svg>
+									<svg id="pb-theme-icon-moon" width="13" height="13" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#moon-stars" /></svg>
+									<?php echo I18n::_('Dark Mode'); ?>
+								</label>
 							</div>
 						</li>
 <?php
