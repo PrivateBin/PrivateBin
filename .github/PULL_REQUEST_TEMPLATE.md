@@ -6,12 +6,12 @@ If this PR fixes several issues, please prepend each issue url/number with the w
 This PR fixes 
 
 ## Changes
-<!-- List all the changes you have done.  THis section is just an example and may be removed if irrelevant. -->
+<!-- List all the changes you have done. This section is just an example and may be removed if irrelevant. -->
 * 
 * 
 
 ## ToDo
-<!-- THis section is just an example and may be removed if irrelevant, e.g. if you have completly implemented the PR. -->
+<!-- This section is just an example and may be removed if irrelevant, e.g. if you have completely implemented the PR. -->
 * [ ] 
 * [ ] 
 * [ ] 

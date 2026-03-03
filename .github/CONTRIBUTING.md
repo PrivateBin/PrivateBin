@@ -11,5 +11,5 @@ Except this also opening [issues](https://github.com/PrivateBin/PrivateBin/issue
 
 Please note that we, as per our pull request template, **require users to disclose the use of an AI/LLM tool**. We would be glad about details such as the exact used tool/relevant chat snippets or a full (link to the) chat conversation. In any case, please take care to manually test and review your pull request.
 
-For Frontend adjustments or other changes visible visually in the PrivateBin web UI, please _always_ attach at least **a screenshot** of how it loos like with your changes applied. You may only omit that for invisible changes or _very_ obvious little changes like fixing typographic mistakes or translations etc.
+For Frontend adjustments or other changes visible visually in the PrivateBin web UI, please _always_ attach at least **a screenshot** of how it looks like with your changes applied. You may only omit that for invisible changes or _very_ obvious little changes like fixing typographic mistakes or translations etc.
 If possible, especially for bigger or interactive changes, please also attach a link to a working test instance.
