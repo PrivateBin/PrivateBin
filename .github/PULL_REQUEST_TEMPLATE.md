@@ -1,4 +1,4 @@
-<!-- This is a template for your Pull Request. This are just some suggestions for you. You do not have to use all of them. -->
+<!--Please honor our guidelines as written in the CONTRIBUTING.md file. To emphasize: it is required to disclose the usage of an LLM tool. -->
 
 <!-- If your PR fixes an issue, mention it here. You can also just copy the URL - GitHub will convert it for you.
 If this PR fixes several issues, please prepend each issue url/number with the word "fix"/"fixes" or "close"/"closes" as this automatically closes the issues you mentioned when the PR is merged.
@@ -6,11 +6,12 @@ If this PR fixes several issues, please prepend each issue url/number with the w
 This PR fixes 
 
 ## Changes
-<!-- List all the changes you have done -->
+<!-- List all the changes you have done.  THis section is just an example and may be removed if irrelevant. -->
 * 
 * 
 
 ## ToDo
+<!-- THis section is just an example and may be removed if irrelevant, e.g. if you have completly implemented the PR. -->
 * [ ] 
 * [ ] 
 * [ ] 
