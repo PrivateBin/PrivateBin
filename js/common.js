@@ -8,31 +8,28 @@ global.jsdom = require('jsdom-global');
 global.cleanup = global.jsdom();
 // wrap cleanup so that calling it recreates a fresh jsdom environment
 const _origCleanup = global.cleanup;
-global.cleanup = function () {
+global.cleanup = function (...args) {
     // remove previous environment
     _origCleanup();
-    // create a new one and return its cleanup function for chaining if needed
-    global.cleanup = global.jsdom();
 
-    // after a new DOM is created we need to reinitialize jQuery so it binds to
-    // the fresh window/document. We simply reload the module and reset the
-    // globals. This mirrors what common.js does initially.
-    try {
-        delete require.cache[require.resolve('./jquery-3.7.1')];
-    } catch (e) {
-        // ignore
-    }
-    global.$ = global.jQuery = require('./jquery-3.7.1');
+    // create a new jsdom environment
+    const newCleanup = global.jsdom(...args);
 
-    // reload the core library to capture the new window/document in any
-    // closures (TopNav, PasteViewer, etc). This also refreshes event bindings
-    // and cached element lookups.
-    try {
-        delete require.cache[require.resolve('./privatebin')];
-    } catch (e) {
-        // ignore
+    // Make sure window and document are available in global scope for module loading
+    // jsdom-global sets them, but we need to ensure they're accessible
+    if (typeof window === 'undefined') {
+        throw new Error('jsdom-global failed to set up window');
     }
+    if (typeof document === 'undefined') {
+        throw new Error('jsdom-global failed to set up document');
+    }
+
+    global.cleanup = newCleanup;
+
     require('./privatebin');
+    if (typeof PrivateBin === 'undefined') {
+        throw new Error('PrivateBin module did not load correctly');
+    }
 
     // also re-export the PrivateBin namespace if available
     if (typeof window !== 'undefined' && window.PrivateBin) {
