@@ -1693,7 +1693,7 @@ window.PrivateBin = (function () {
          */
         me.init = function () {
             // update link to home page
-            document.querySelectorAll('.reloadlink').forEach(link => link.href = Helper.baseUri());
+            document.querySelectorAll('.reloadlink').forEach(link => (link.href = Helper.baseUri()));
 
             window.addEventListener('popstate', historyChange);
         };
