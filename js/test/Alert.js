@@ -14,8 +14,8 @@ describe('Alert', function () {
                 $('body').html(
                     '<div id="status"></div>'
                 );
-                $.PrivateBin.Alert.init();
-                $.PrivateBin.Alert.showStatus(message, icon);
+                PrivateBin.Alert.init();
+                PrivateBin.Alert.showStatus(message, icon);
                 const result = $('body').html();
                 return expected === result;
             }
@@ -35,8 +35,8 @@ describe('Alert', function () {
                     'alert alert-info hidden"><span class="glyphicon ' +
                     'glyphicon-info-sign" aria-hidden="true"></span> </div>'
                 );
-                $.PrivateBin.Alert.init();
-                $.PrivateBin.Alert.showStatus(message);
+                PrivateBin.Alert.init();
+                PrivateBin.Alert.showStatus(message);
                 const result = $('body').html();
                 return expected === result;
             }
@@ -58,8 +58,8 @@ describe('Alert', function () {
                     'alert alert-info hidden"><span class="glyphicon ' +
                     'glyphicon-info-sign" aria-hidden="true"></span> </div>'
                 );
-                $.PrivateBin.Alert.init();
-                $.PrivateBin.Alert.showStatus(message, icon);
+                PrivateBin.Alert.init();
+                PrivateBin.Alert.showStatus(message, icon);
                 const result = $('body').html();
                 return expected === result;
             }
@@ -78,8 +78,8 @@ describe('Alert', function () {
                 $('body').html(
                     '<div id="errormessage"></div>'
                 );
-                $.PrivateBin.Alert.init();
-                $.PrivateBin.Alert.showWarning(message, icon);
+                PrivateBin.Alert.init();
+                PrivateBin.Alert.showWarning(message, icon);
                 const result = $('body').html();
                 return expected === result;
             }
@@ -100,8 +100,8 @@ describe('Alert', function () {
                     'alert alert-danger hidden"><span class="glyphicon ' +
                     'glyphicon-alert" aria-hidden="true"></span> </div>'
                 );
-                $.PrivateBin.Alert.init();
-                $.PrivateBin.Alert.showWarning(message);
+                PrivateBin.Alert.init();
+                PrivateBin.Alert.showWarning(message);
                 const result = $('body').html();
                 return expected === result;
             }
@@ -123,8 +123,8 @@ describe('Alert', function () {
                     'alert alert-danger hidden"><span class="glyphicon ' +
                     'glyphicon-alert" aria-hidden="true"></span> </div>'
                 );
-                $.PrivateBin.Alert.init();
-                $.PrivateBin.Alert.showWarning(message, icon);
+                PrivateBin.Alert.init();
+                PrivateBin.Alert.showWarning(message, icon);
                 const result = $('body').html();
                 return expected === result;
             }
@@ -143,8 +143,8 @@ describe('Alert', function () {
                 $('body').html(
                     '<div id="errormessage"></div>'
                 );
-                $.PrivateBin.Alert.init();
-                $.PrivateBin.Alert.showError(message, icon);
+                PrivateBin.Alert.init();
+                PrivateBin.Alert.showError(message, icon);
                 const result = $('body').html();
                 return expected === result;
             }
@@ -165,8 +165,8 @@ describe('Alert', function () {
                     'alert alert-danger hidden"><span class="glyphicon ' +
                     'glyphicon-alert" aria-hidden="true"></span> </div>'
                 );
-                $.PrivateBin.Alert.init();
-                $.PrivateBin.Alert.showError(message);
+                PrivateBin.Alert.init();
+                PrivateBin.Alert.showError(message);
                 const result = $('body').html();
                 return expected === result;
             }
@@ -188,8 +188,8 @@ describe('Alert', function () {
                     'alert alert-danger hidden"><span class="glyphicon ' +
                     'glyphicon-alert" aria-hidden="true"></span> </div>'
                 );
-                $.PrivateBin.Alert.init();
-                $.PrivateBin.Alert.showError(message, icon);
+                PrivateBin.Alert.init();
+                PrivateBin.Alert.showError(message, icon);
                 const result = $('body').html();
                 return expected === result;
             }
@@ -209,8 +209,8 @@ describe('Alert', function () {
                 $('body').html(
                     '<div id="remainingtime" class="hidden"></div>'
                 );
-                $.PrivateBin.Alert.init();
-                $.PrivateBin.Alert.showRemaining(['%s' + message + '%d', string, number]);
+                PrivateBin.Alert.init();
+                PrivateBin.Alert.showRemaining(['%s' + message + '%d', string, number]);
                 const result = $('body').html();
                 return expected === result;
             }
@@ -233,8 +233,8 @@ describe('Alert', function () {
                     'alert alert-info"><span class="glyphicon ' +
                     'glyphicon-fire" aria-hidden="true"></span> </div>'
                 );
-                $.PrivateBin.Alert.init();
-                $.PrivateBin.Alert.showRemaining(['%s' + message + '%d', string, number]);
+                PrivateBin.Alert.init();
+                PrivateBin.Alert.showRemaining(['%s' + message + '%d', string, number]);
                 const result = $('body').html();
                 return expected === result;
             }
@@ -257,8 +257,8 @@ describe('Alert', function () {
                 $('body').html(
                     '<div id="loadingindicator" class="hidden">' + defaultMessage + '</div>'
                 );
-                $.PrivateBin.Alert.init();
-                $.PrivateBin.Alert.showLoading(message, icon);
+                PrivateBin.Alert.init();
+                PrivateBin.Alert.showLoading(message, icon);
                 const result = $('body').html();
                 return expected === result;
             }
@@ -285,8 +285,8 @@ describe('Alert', function () {
                     'glyphicon-time" aria-hidden="true"></span> ' +
                     defaultMessage + '</li></ul>'
                 );
-                $.PrivateBin.Alert.init();
-                $.PrivateBin.Alert.showLoading(message, icon);
+                PrivateBin.Alert.init();
+                PrivateBin.Alert.showLoading(message, icon);
                 const result = $('body').html();
                 return expected === result;
             }
@@ -304,8 +304,8 @@ describe('Alert', function () {
                     'Loading…</li></ul>'
                 );
                 $('body').addClass('loading');
-                $.PrivateBin.Alert.init();
-                $.PrivateBin.Alert.hideLoading();
+                PrivateBin.Alert.init();
+                PrivateBin.Alert.hideLoading();
                 assert.ok(!$('body').hasClass('loading'));
                 assert.ok($('#loadingindicator').hasClass('hidden'));
             }
@@ -324,8 +324,8 @@ describe('Alert', function () {
                     'alert alert-danger"><span class="glyphicon ' +
                     'glyphicon-alert" aria-hidden="true"></span> </div>'
                 );
-                $.PrivateBin.Alert.init();
-                $.PrivateBin.Alert.hideMessages();
+                PrivateBin.Alert.init();
+                PrivateBin.Alert.hideMessages();
                 assert.ok($('#status').hasClass('hidden'));
                 assert.ok($('#errormessage').hasClass('hidden'));
             }
@@ -342,10 +342,10 @@ describe('Alert', function () {
                 let handlerCalled = false,
                     defaultMessage = 'Loading…',
                     functions = [
-                        $.PrivateBin.Alert.showStatus,
-                        $.PrivateBin.Alert.showError,
-                        $.PrivateBin.Alert.showRemaining,
-                        $.PrivateBin.Alert.showLoading
+                        PrivateBin.Alert.showStatus,
+                        PrivateBin.Alert.showError,
+                        PrivateBin.Alert.showRemaining,
+                        PrivateBin.Alert.showLoading
                     ];
                 if (message.length === 0) {
                     message = defaultMessage;
@@ -365,13 +365,13 @@ describe('Alert', function () {
                     'alert alert-danger"><span class="glyphicon ' +
                     'glyphicon-alert" aria-hidden="true"></span> </div>'
                 );
-                $.PrivateBin.Alert.init();
-                $.PrivateBin.Alert.setCustomHandler(function(id, $element) {
+                PrivateBin.Alert.init();
+                PrivateBin.Alert.setCustomHandler(function(id, $element) {
                     handlerCalled = true;
                     return jsc.random(0, 1) ? true : $element;
                 });
                 functions[trigger](message);
-                $.PrivateBin.Alert.setCustomHandler(null);
+                PrivateBin.Alert.setCustomHandler(null);
                 return handlerCalled;
             }
         );

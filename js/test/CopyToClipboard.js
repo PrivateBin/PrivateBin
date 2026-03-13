@@ -9,7 +9,7 @@ describe('CopyToClipboard', function() {
             common.jscFormats(),
             'nestring',
             async function (format, text) {
-                var clean = jsdom();
+                var clean = globalThis.cleanup();
                 common.enableClipboard();
 
                 $('body').html(
@@ -21,12 +21,12 @@ describe('CopyToClipboard', function() {
                     '</div><div id="plaintext" class="hidden"></div>'
                 );
 
-                $.PrivateBin.PasteViewer.init();
-                $.PrivateBin.PasteViewer.setFormat(format);
-                $.PrivateBin.PasteViewer.setText(text);
-                $.PrivateBin.PasteViewer.run();
+                PrivateBin.PasteViewer.init();
+                PrivateBin.PasteViewer.setFormat(format);
+                PrivateBin.PasteViewer.setText(text);
+                PrivateBin.PasteViewer.run();
 
-                $.PrivateBin.CopyToClipboard.init();
+                PrivateBin.CopyToClipboard.init();
 
                 $('#prettyMessageCopyBtn').trigger('click');
 
@@ -46,7 +46,7 @@ describe('CopyToClipboard', function() {
             common.jscFormats(),
             'nestring',
             async function (format, text) {
-                var clean = jsdom();
+                var clean = globalThis.cleanup();
                 common.enableClipboard();
 
                 $('body').html(
@@ -58,12 +58,12 @@ describe('CopyToClipboard', function() {
                     '</div><div id="plaintext" class="hidden"></div>'
                 );
 
-                $.PrivateBin.PasteViewer.init();
-                $.PrivateBin.PasteViewer.setFormat(format);
-                $.PrivateBin.PasteViewer.setText(text);
-                $.PrivateBin.PasteViewer.run();
+                PrivateBin.PasteViewer.init();
+                PrivateBin.PasteViewer.setFormat(format);
+                PrivateBin.PasteViewer.setText(text);
+                PrivateBin.PasteViewer.run();
 
-                $.PrivateBin.CopyToClipboard.init();
+                PrivateBin.CopyToClipboard.init();
 
                 $('body').trigger('copy');
 
@@ -80,13 +80,13 @@ describe('CopyToClipboard', function() {
     jsc.property('Copy link to clipboard',
         'nestring',
         async function (text) {
-            var clean = jsdom();
+            var clean = globalThis.cleanup();
             common.enableClipboard();
 
             $('body').html('<button id="copyLink"></button>');
 
-            $.PrivateBin.CopyToClipboard.init();
-            $.PrivateBin.CopyToClipboard.setUrl(text);
+            PrivateBin.CopyToClipboard.init();
+            PrivateBin.CopyToClipboard.setUrl(text);
 
             $('#copyLink').trigger('click');
 
@@ -103,12 +103,12 @@ describe('CopyToClipboard', function() {
         jsc.property('Show hint',
             'nestring',
             function (text) {
-                var clean = jsdom();
+                var clean = globalThis.cleanup();
 
                 $('body').html('<small id="copyShortcutHintText"></small>');
 
-                $.PrivateBin.CopyToClipboard.init();
-                $.PrivateBin.CopyToClipboard.showKeyboardShortcutHint();
+                PrivateBin.CopyToClipboard.init();
+                PrivateBin.CopyToClipboard.showKeyboardShortcutHint();
 
                 const keyboardShortcutHint = $('#copyShortcutHintText').text();
 
@@ -121,12 +121,12 @@ describe('CopyToClipboard', function() {
         jsc.property('Hide hint',
             'nestring',
             function (text) {
-                var clean = jsdom();
+                var clean = globalThis.cleanup();
 
                 $('body').html('<small id="copyShortcutHintText">' + text + '</small>');
 
-                $.PrivateBin.CopyToClipboard.init();
-                $.PrivateBin.CopyToClipboard.hideKeyboardShortcutHint();
+                PrivateBin.CopyToClipboard.init();
+                PrivateBin.CopyToClipboard.hideKeyboardShortcutHint();
 
                 const keyboardShortcutHint = $('#copyShortcutHintText').text();
 

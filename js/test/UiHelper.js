@@ -7,7 +7,7 @@ describe('UiHelper', function () {
     describe('historyChange', function () {
         this.timeout(30000);
         beforeEach(function () {
-            $.PrivateBin.Helper.reset();
+            PrivateBin.Helper.reset();
             cleanup();
         });
 
@@ -16,10 +16,10 @@ describe('UiHelper', function () {
             common.jscUrl(false, false),
             function (url) {
                 const expected = common.urlToString(url),
-                    clean = jsdom('', {url: expected});
+                    clean = globalThis.cleanup('', {url: expected});
 
-                $.PrivateBin.UiHelper.mockHistoryChange();
-                $.PrivateBin.Helper.reset();
+                PrivateBin.UiHelper.mockHistoryChange();
+                PrivateBin.Helper.reset();
                 var result = window.location.href;
                 clean();
                 return expected === result;
@@ -33,12 +33,12 @@ describe('UiHelper', function () {
             function (url, fragment) {
                 url.fragment = fragment.join('');
                 const expected = common.urlToString(url),
-                    clean = jsdom('', {url: expected});
+                    clean = globalThis.cleanup('', {url: expected});
 
-                $.PrivateBin.UiHelper.mockHistoryChange([
+                PrivateBin.UiHelper.mockHistoryChange([
                     {type: 'newpaste'}, '', expected
                 ]);
-                $.PrivateBin.Helper.reset();
+                PrivateBin.Helper.reset();
                 var result = window.location.href;
                 clean();
                 return expected === result;
@@ -51,20 +51,20 @@ describe('UiHelper', function () {
         /*
         this.timeout(30000);
         before(function () {
-            $.PrivateBin.Helper.reset();
+            PrivateBin.Helper.reset();
         });
 
         jsc.property(
             'redirects to home',
             common.jscUrl(),
             function (url) {
-                const clean = jsdom('', {url: common.urlToString(url)});
+                const clean = globalThis.cleanup('', {url: common.urlToString(url)});
                 delete(url.query);
                 delete(url.fragment);
                 const expected = common.urlToString(url);
 
-                $.PrivateBin.UiHelper.reloadHome();
-                $.PrivateBin.Helper.reset();
+                PrivateBin.UiHelper.reloadHome();
+                PrivateBin.Helper.reset();
                 var result = window.location.href;
                 clean();
                 return expected === result;
@@ -78,7 +78,7 @@ describe('UiHelper', function () {
         // once it is supported or a workaround is found, uncomment the section below
         /*
         before(function () {
-            $.PrivateBin.Helper.reset();
+            PrivateBin.Helper.reset();
         });
 
         jsc.property(
@@ -88,10 +88,10 @@ describe('UiHelper', function () {
             function (id, element) {
                 id = id.join('');
                 element = element.join('');
-                var clean = jsdom(
+                var clean = globalThis.cleanup(
                     '<' + element + ' id="' + id + '"></' + element + '>'
                 );
-                var result = $.PrivateBin.UiHelper.isVisible($('#' + id));
+                var result = PrivateBin.UiHelper.isVisible($('#' + id));
                 clean();
                 return result;
             }
