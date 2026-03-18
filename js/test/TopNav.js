@@ -1,6 +1,20 @@
 'use strict';
 require('../common');
 
+function query(selector) {
+    if (selector.startsWith('#')) {
+        return document.getElementById(selector.slice(1));
+    }
+    return document.querySelector(selector);
+}
+
+function triggerClick(element) {
+    if (!element) {
+        return;
+    }
+    element.dispatchEvent(new window.Event('click', { bubbles: true, cancelable: true }));
+}
+
 describe('TopNav', function () {
     describe('showViewButtons & hideViewButtons', function () {
         before(function () {
@@ -26,24 +40,24 @@ describe('TopNav', function () {
                     </nav>`;
                 PrivateBin.TopNav.init();
                 results.push(
-                    $('#newbutton').hasClass('hidden') &&
-                    $('#clonebutton').hasClass('hidden') &&
-                    $('#rawtextbutton').hasClass('hidden') &&
-                    $('#qrcodelink').hasClass('hidden')
+                    query('#newbutton').classList.contains('hidden') &&
+                    query('#clonebutton').classList.contains('hidden') &&
+                    query('#rawtextbutton').classList.contains('hidden') &&
+                    query('#qrcodelink').classList.contains('hidden')
                 );
                 PrivateBin.TopNav.showViewButtons();
                 results.push(
-                    !$('#newbutton').hasClass('hidden') &&
-                    !$('#clonebutton').hasClass('hidden') &&
-                    !$('#rawtextbutton').hasClass('hidden') &&
-                    !$('#qrcodelink').hasClass('hidden')
+                    !query('#newbutton').classList.contains('hidden') &&
+                    !query('#clonebutton').classList.contains('hidden') &&
+                    !query('#rawtextbutton').classList.contains('hidden') &&
+                    !query('#qrcodelink').classList.contains('hidden')
                 );
                 PrivateBin.TopNav.hideViewButtons();
                 results.push(
-                    $('#newbutton').hasClass('hidden') &&
-                    $('#clonebutton').hasClass('hidden') &&
-                    $('#rawtextbutton').hasClass('hidden') &&
-                    $('#qrcodelink').hasClass('hidden')
+                    query('#newbutton').classList.contains('hidden') &&
+                    query('#clonebutton').classList.contains('hidden') &&
+                    query('#rawtextbutton').classList.contains('hidden') &&
+                    query('#qrcodelink').classList.contains('hidden')
                 );
                 cleanup();
                 const result = results.every(element => element);
@@ -78,36 +92,36 @@ describe('TopNav', function () {
                     'class="hidden">Create</button></li></ul></div></nav>';
                 PrivateBin.TopNav.init();
                 results.push(
-                    $('#sendbutton').hasClass('hidden') &&
-                    $('#expiration').hasClass('hidden') &&
-                    $('#formatter').hasClass('hidden') &&
-                    $('#burnafterreadingoption').hasClass('hidden') &&
-                    $('#opendiscussionoption').hasClass('hidden') &&
-                    $('#newbutton').hasClass('hidden') &&
-                    $('#password').hasClass('hidden') &&
-                    $('#attach').hasClass('hidden')
+                    query('#sendbutton').classList.contains('hidden') &&
+                    query('#expiration').classList.contains('hidden') &&
+                    query('#formatter').classList.contains('hidden') &&
+                    query('#burnafterreadingoption').classList.contains('hidden') &&
+                    query('#opendiscussionoption').classList.contains('hidden') &&
+                    query('#newbutton').classList.contains('hidden') &&
+                    query('#password').classList.contains('hidden') &&
+                    query('#attach').classList.contains('hidden')
                 );
                 PrivateBin.TopNav.showCreateButtons();
                 results.push(
-                    !$('#sendbutton').hasClass('hidden') &&
-                    !$('#expiration').hasClass('hidden') &&
-                    !$('#formatter').hasClass('hidden') &&
-                    !$('#burnafterreadingoption').hasClass('hidden') &&
-                    !$('#opendiscussionoption').hasClass('hidden') &&
-                    !$('#newbutton').hasClass('hidden') &&
-                    !$('#password').hasClass('hidden') &&
-                    !$('#attach').hasClass('hidden')
+                    !query('#sendbutton').classList.contains('hidden') &&
+                    !query('#expiration').classList.contains('hidden') &&
+                    !query('#formatter').classList.contains('hidden') &&
+                    !query('#burnafterreadingoption').classList.contains('hidden') &&
+                    !query('#opendiscussionoption').classList.contains('hidden') &&
+                    !query('#newbutton').classList.contains('hidden') &&
+                    !query('#password').classList.contains('hidden') &&
+                    !query('#attach').classList.contains('hidden')
                 );
                 PrivateBin.TopNav.hideCreateButtons();
                 results.push(
-                    $('#sendbutton').hasClass('hidden') &&
-                    $('#expiration').hasClass('hidden') &&
-                    $('#formatter').hasClass('hidden') &&
-                    $('#burnafterreadingoption').hasClass('hidden') &&
-                    $('#opendiscussionoption').hasClass('hidden') &&
-                    $('#newbutton').hasClass('hidden') &&
-                    $('#password').hasClass('hidden') &&
-                    $('#attach').hasClass('hidden')
+                    query('#sendbutton').classList.contains('hidden') &&
+                    query('#expiration').classList.contains('hidden') &&
+                    query('#formatter').classList.contains('hidden') &&
+                    query('#burnafterreadingoption').classList.contains('hidden') &&
+                    query('#opendiscussionoption').classList.contains('hidden') &&
+                    query('#newbutton').classList.contains('hidden') &&
+                    query('#password').classList.contains('hidden') &&
+                    query('#attach').classList.contains('hidden')
                 );
                 cleanup();
                 const result = results.every(element => element);
@@ -133,11 +147,11 @@ describe('TopNav', function () {
                     '"button" class="hidden">New</button></li></ul></div></nav>';
                 PrivateBin.TopNav.init();
                 results.push(
-                    $('#newbutton').hasClass('hidden')
+                    query('#newbutton').classList.contains('hidden')
                 );
                 PrivateBin.TopNav.showNewPasteButton();
                 results.push(
-                    !$('#newbutton').hasClass('hidden')
+                    !query('#newbutton').classList.contains('hidden')
                 );
                 cleanup();
                 const result = results.every(element => element);
@@ -165,11 +179,11 @@ describe('TopNav', function () {
                     '"true"></span> Clone</button></li></ul></div></nav>';
                 PrivateBin.TopNav.init();
                 results.push(
-                    !$('#clonebutton').hasClass('hidden')
+                    !query('#clonebutton').classList.contains('hidden')
                 );
                 PrivateBin.TopNav.hideCloneButton();
                 results.push(
-                    $('#clonebutton').hasClass('hidden')
+                    query('#clonebutton').classList.contains('hidden')
                 );
                 cleanup();
                 const result = results.every(element => element);
@@ -198,11 +212,11 @@ describe('TopNav', function () {
                     'Raw text</button></li></ul></div></nav>';
                 PrivateBin.TopNav.init();
                 results.push(
-                    !$('#rawtextbutton').hasClass('hidden')
+                    !query('#rawtextbutton').classList.contains('hidden')
                 );
                 PrivateBin.TopNav.hideRawButton();
                 results.push(
-                    $('#rawtextbutton').hasClass('hidden')
+                    query('#rawtextbutton').classList.contains('hidden')
                 );
                 cleanup();
                 const result = results.every(element => element);
@@ -235,11 +249,11 @@ describe('TopNav', function () {
                     '</li></ul></li></ul></div></nav>';
                 PrivateBin.TopNav.init();
                 results.push(
-                    !$('#filewrap').hasClass('hidden')
+                    !query('#filewrap').classList.contains('hidden')
                 );
                 PrivateBin.TopNav.hideFileSelector();
                 results.push(
-                    $('#filewrap').hasClass('hidden')
+                    query('#filewrap').classList.contains('hidden')
                 );
                 cleanup();
                 const result = results.every(element => element);
@@ -272,11 +286,11 @@ describe('TopNav', function () {
                     '</li></ul></li></ul></div></nav>';
                 PrivateBin.TopNav.init();
                 results.push(
-                    $('#customattachment').hasClass('hidden')
+                    query('#customattachment').classList.contains('hidden')
                 );
                 PrivateBin.TopNav.showCustomAttachment();
                 results.push(
-                    !$('#customattachment').hasClass('hidden')
+                    !query('#customattachment').classList.contains('hidden')
                 );
                 cleanup();
                 const result = results.every(element => element);
@@ -308,13 +322,13 @@ describe('TopNav', function () {
                     '"button" class="hidden">New</button></li></ul></div></nav>';
                 PrivateBin.TopNav.init();
                 results.push(
-                    $('.navbar-toggle').hasClass('collapsed') &&
-                    $('#navbar').attr('aria-expanded') !== 'true'
+                    query('.navbar-toggle').classList.contains('collapsed') &&
+                    query('#navbar').getAttribute('aria-expanded') !== 'true'
                 );
                 PrivateBin.TopNav.collapseBar();
                 results.push(
-                    $('.navbar-toggle').hasClass('collapsed') &&
-                    $('#navbar').attr('aria-expanded') !== 'true'
+                    query('.navbar-toggle').classList.contains('collapsed') &&
+                    query('#navbar').getAttribute('aria-expanded') !== 'true'
                 );
                 /*
                 with the upgrade for bootstrap-3.3.7.js to bootstrap-3.4.1.js
@@ -364,8 +378,8 @@ describe('TopNav', function () {
                 results.push(
                     !PrivateBin.TopNav.getOpenDiscussion()
                 );
-                $('#burnafterreading').attr('checked', 'checked');
-                $('#opendiscussion').attr('checked', 'checked');
+                query('#burnafterreading').checked = true;
+                query('#opendiscussion').checked = true;
                 results.push(
                     PrivateBin.TopNav.getBurnAfterReading()
                 );
@@ -407,7 +421,8 @@ describe('TopNav', function () {
                 results.push(
                     !PrivateBin.TopNav.getOpenDiscussion()
                 );
-                $('#burnafterreading').removeAttr('checked');
+                query('#burnafterreading').checked = false;
+                query('#burnafterreading').removeAttribute('checked');
                 results.push(
                     !PrivateBin.TopNav.getBurnAfterReading()
                 );
@@ -449,8 +464,10 @@ describe('TopNav', function () {
                 results.push(
                     PrivateBin.TopNav.getOpenDiscussion()
                 );
-                $('#opendiscussion').removeAttr('checked');
-                $('#burnafterreading').prop('checked', true);
+                query('#opendiscussion').checked = false;
+                query('#opendiscussion').removeAttribute('checked');
+                query('#burnafterreading').checked = true;
+                query('#burnafterreading').setAttribute('checked', 'checked');
                 results.push(
                     PrivateBin.TopNav.getBurnAfterReading()
                 );
@@ -553,7 +570,7 @@ describe('TopNav', function () {
                 results.push(
                     PrivateBin.TopNav.getFileList() === null
                 );
-                addFileList($('#file')[0], [
+                addFileList(query('#file'), [
                     '../img/logo.svg',
                     '../img/busy.gif'
                 ]);
@@ -590,11 +607,12 @@ describe('TopNav', function () {
                 results.push(
                     !PrivateBin.TopNav.getBurnAfterReading()
                 );
-                $('#burnafterreading').attr('checked', 'checked');
+                query('#burnafterreading').checked = true;
                 results.push(
                     PrivateBin.TopNav.getBurnAfterReading()
                 );
-                $('#burnafterreading').removeAttr('checked');
+                query('#burnafterreading').checked = false;
+                query('#burnafterreading').removeAttribute('checked');
                 results.push(
                     !PrivateBin.TopNav.getBurnAfterReading()
                 );
@@ -626,11 +644,12 @@ describe('TopNav', function () {
                 results.push(
                     !PrivateBin.TopNav.getOpenDiscussion()
                 );
-                $('#opendiscussion').attr('checked', 'checked');
+                query('#opendiscussion').checked = true;
                 results.push(
                     PrivateBin.TopNav.getOpenDiscussion()
                 );
-                $('#opendiscussion').removeAttr('checked');
+                query('#opendiscussion').checked = false;
+                query('#opendiscussion').removeAttribute('checked');
                 results.push(
                     !PrivateBin.TopNav.getOpenDiscussion()
                 );
@@ -664,11 +683,11 @@ describe('TopNav', function () {
                 results.push(
                     PrivateBin.TopNav.getPassword() === ''
                 );
-                $('#passwordinput').val(password);
+                query('#passwordinput').value = password;
                 results.push(
                     PrivateBin.TopNav.getPassword() === password
                 );
-                $('#passwordinput').val('');
+                query('#passwordinput').value = '';
                 results.push(
                     PrivateBin.TopNav.getPassword() === ''
                 );
@@ -703,11 +722,11 @@ describe('TopNav', function () {
                     '</li></ul></li></ul></div></nav>';
                 PrivateBin.TopNav.init();
                 results.push(
-                    !PrivateBin.TopNav.getCustomAttachment().hasClass('test')
+                    !PrivateBin.TopNav.getCustomAttachment().classList.contains('test')
                 );
-                $('#customattachment').addClass('test');
+                query('#customattachment').classList.add('test');
                 results.push(
-                    PrivateBin.TopNav.getCustomAttachment().hasClass('test')
+                    PrivateBin.TopNav.getCustomAttachment().classList.contains('test')
                 );
                 cleanup();
                 const result = results.every(element => element);
@@ -729,7 +748,7 @@ describe('TopNav', function () {
             function () {
                 // Insert any setup code needed for the hideAllButtons function
                 // Example: Initialize the DOM elements required for testing
-                document.documentElement.innerHTML =
+                document.body.innerHTML =
                     '<nav class="navbar navbar-inverse navbar-static-top">' +
                     '<div id="navbar" class="navbar-collapse collapse"><ul ' +
                     'class="nav navbar-nav"><li><button id="newbutton" ' +
@@ -750,10 +769,10 @@ describe('TopNav', function () {
                 PrivateBin.TopNav.init();
                 PrivateBin.TopNav.hideAllButtons();
 
-                assert.ok($('#newbutton').hasClass('hidden'));
-                assert.ok($('#clonebutton').hasClass('hidden'));
-                assert.ok($('#rawtextbutton').hasClass('hidden'));
-                assert.ok($('#qrcodelink').hasClass('hidden'));
+                assert.ok(query('#newbutton').classList.contains('hidden'));
+                assert.ok(query('#clonebutton').classList.contains('hidden'));
+                assert.ok(query('#rawtextbutton').classList.contains('hidden'));
+                assert.ok(query('#qrcodelink').classList.contains('hidden'));
                 cleanup();
             }
         );
@@ -774,8 +793,8 @@ describe('TopNav', function () {
                 PrivateBin.PasteViewer.setText(sample);
                 PrivateBin.Helper.reset();
                 PrivateBin.TopNav.init();
-                $('#rawtextbutton').click();
-                assert.strictEqual($('pre').text(), sample);
+                triggerClick(query('#rawtextbutton'));
+                assert.strictEqual(document.querySelector('pre').textContent, sample);
                 clean();
             }
         );
