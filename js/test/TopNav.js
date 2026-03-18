@@ -11,7 +11,7 @@ describe('TopNav', function () {
             'displays & hides navigation elements for viewing an existing document',
             function () {
                 let results = [];
-                $('body').html(
+                document.documentElement.innerHTML =
                     `<nav class="navbar navbar-inverse navbar-static-top">
                     <div id="navbar" class="navbar-collapse collapse">
                     <ul class="nav navbar-nav"><li><button id="newbutton" type="button" class="hidden btn btn-warning navbar-btn">
@@ -23,8 +23,7 @@ describe('TopNav', function () {
                     <button id="downloadtextbutton" type="button" class="hidden btn btn-<?php echo $isDark ? 'warning' : 'default'; ?> navbar-btn"></button>
                     <button id="qrcodelink" type="button" data-toggle="modal" data-target="#qrcodemodal" class="hidden btn btn-warning navbar-btn"/>
                     <span class="glyphicon glyphicon-qrcode" aria-hidden="true"></span> QR code</button></li></ul></div>
-                    </nav>`
-                );
+                    </nav>`;
                 PrivateBin.TopNav.init();
                 results.push(
                     $('#newbutton').hasClass('hidden') &&
@@ -65,7 +64,7 @@ describe('TopNav', function () {
             'displays & hides navigation elements for creating a document',
             function () { // eslint-disable-line complexity
                 let results = [];
-                $('body').html(
+                document.documentElement.innerHTML =
                     '<nav><div id="navbar"><ul><li><button id="newbutton" ' +
                     'type="button" class="hidden">New</button></li><li><a ' +
                     'id="expiration" href="#" class="hidden">Expiration</a>' +
@@ -76,8 +75,7 @@ describe('TopNav', function () {
                     '<li id="attach" class="hidden">Attach a file</li><li>' +
                     '<a id="formatter" href="#" class="hidden">Format</a>' +
                     '</li><li><button id="sendbutton" type="button" ' +
-                    'class="hidden">Create</button></li></ul></div></nav>'
-                );
+                    'class="hidden">Create</button></li></ul></div></nav>';
                 PrivateBin.TopNav.init();
                 results.push(
                     $('#sendbutton').hasClass('hidden') &&
@@ -130,10 +128,9 @@ describe('TopNav', function () {
             'displays the button for creating a document',
             function () {
                 let results = [];
-                $('body').html(
+                document.documentElement.innerHTML =
                     '<nav><div id="navbar"><ul><li><button id="newbutton" type=' +
-                    '"button" class="hidden">New</button></li></ul></div></nav>'
-                );
+                    '"button" class="hidden">New</button></li></ul></div></nav>';
                 PrivateBin.TopNav.init();
                 results.push(
                     $('#newbutton').hasClass('hidden')
@@ -161,12 +158,11 @@ describe('TopNav', function () {
             'hides the button for cloning a document',
             function () {
                 let results = [];
-                $('body').html(
+                document.documentElement.innerHTML =
                     '<nav><div id="navbar"><ul><li><button id="clonebutton" ' +
                     'type="button" class="btn btn-warning navbar-btn">' +
                     '<span class="glyphicon glyphicon-duplicate" aria-hidden=' +
-                    '"true"></span> Clone</button></li></ul></div></nav>'
-                );
+                    '"true"></span> Clone</button></li></ul></div></nav>';
                 PrivateBin.TopNav.init();
                 results.push(
                     !$('#clonebutton').hasClass('hidden')
@@ -194,13 +190,12 @@ describe('TopNav', function () {
             'hides the raw text button',
             function () {
                 let results = [];
-                $('body').html(
+                document.documentElement.innerHTML =
                     '<nav><div id="navbar"><ul><li><button ' +
                     'id="rawtextbutton" type="button" class="btn ' +
                     'btn-warning navbar-btn"><span class="glyphicon ' +
                     'glyphicon-text-background" aria-hidden="true"></span> ' +
-                    'Raw text</button></li></ul></div></nav>'
-                );
+                    'Raw text</button></li></ul></div></nav>';
                 PrivateBin.TopNav.init();
                 results.push(
                     !$('#rawtextbutton').hasClass('hidden')
@@ -228,7 +223,7 @@ describe('TopNav', function () {
             'hides the file attachment selection button',
             function () {
                 let results = [];
-                $('body').html(
+                document.documentElement.innerHTML =
                     '<nav><div id="navbar"><ul><li id="attach" class="hidden ' +
                     'dropdown"><a href="#" class="dropdown-toggle" data-' +
                     'toggle="dropdown" role="button" aria-haspopup="true" ' +
@@ -237,8 +232,7 @@ describe('TopNav', function () {
                     '<div><input type="file" id="file" name="file" /></div>' +
                     '</li><li id="customattachment" class="hidden"></li><li>' +
                     '<a id="fileremovebutton"  href="#">Remove attachment</a>' +
-                    '</li></ul></li></ul></div></nav>'
-                );
+                    '</li></ul></li></ul></div></nav>';
                 PrivateBin.TopNav.init();
                 results.push(
                     !$('#filewrap').hasClass('hidden')
@@ -266,7 +260,7 @@ describe('TopNav', function () {
             'display the custom file attachment',
             function () {
                 let results = [];
-                $('body').html(
+                document.documentElement.innerHTML =
                     '<nav><div id="navbar"><ul><li id="attach" class="hidden ' +
                     'dropdown"><a href="#" class="dropdown-toggle" data-' +
                     'toggle="dropdown" role="button" aria-haspopup="true" ' +
@@ -275,8 +269,7 @@ describe('TopNav', function () {
                     '<div><input type="file" id="file" name="file" /></div>' +
                     '</li><li id="customattachment" class="hidden"></li><li>' +
                     '<a id="fileremovebutton"  href="#">Remove attachment</a>' +
-                    '</li></ul></li></ul></div></nav>'
-                );
+                    '</li></ul></li></ul></div></nav>';
                 PrivateBin.TopNav.init();
                 results.push(
                     $('#customattachment').hasClass('hidden')
@@ -304,7 +297,7 @@ describe('TopNav', function () {
             'collapses the navigation when displayed on a small screen',
             function () {
                 let results = [];
-                $('body').html(
+                document.documentElement.innerHTML =
                     '<nav><div class="navbar-header"><button type="button" ' +
                     'class="navbar-toggle collapsed" data-toggle="collapse" ' +
                     'data-target="#navbar" aria-expanded="false" aria-controls' +
@@ -312,8 +305,7 @@ describe('TopNav', function () {
                     'navbar-brand" href=""><img alt="PrivateBin" ' +
                     'src="img/icon.svg" width="38" /></a></div><div ' +
                     'id="navbar"><ul><li><button id="newbutton" type=' +
-                    '"button" class="hidden">New</button></li></ul></div></nav>'
-                );
+                    '"button" class="hidden">New</button></li></ul></div></nav>';
                 PrivateBin.TopNav.init();
                 results.push(
                     $('.navbar-toggle').hasClass('collapsed') &&
@@ -357,15 +349,14 @@ describe('TopNav', function () {
             'reset inputs to defaults (options off)',
             function () {
                 let results = [];
-                $('body').html(
+                document.documentElement.innerHTML =
                     '<nav><div id="navbar"><ul><li id="burnafterreadingoption" ' +
                     'class="hidden"><label><input type="checkbox" ' +
                     'id="burnafterreading" name="burnafterreading" /> ' +
                     'Burn after reading</label></li><li id="opendiscussionoption" ' +
                     'class="hidden"><label><input type="checkbox" ' +
                     'id="opendiscussion" name="opendiscussion" /> ' +
-                    'Open discussion</label></li></ul></div></nav>'
-                );
+                    'Open discussion</label></li></ul></div></nav>';
                 PrivateBin.TopNav.init();
                 results.push(
                     !PrivateBin.TopNav.getBurnAfterReading()
@@ -401,15 +392,14 @@ describe('TopNav', function () {
             'reset inputs to defaults (burnafterreading on)',
             function () {
                 let results = [];
-                $('body').html(
+                document.documentElement.innerHTML =
                     '<nav><div id="navbar"><ul><li id="burnafterreadingoption" ' +
                     'class="hidden"><label><input type="checkbox" ' +
                     'id="burnafterreading" name="burnafterreading" checked="checked" /> ' +
                     'Burn after reading</label></li><li id="opendiscussionoption" ' +
                     'class="hidden"><label><input type="checkbox" ' +
                     'id="opendiscussion" name="opendiscussion" checked="checked" /> ' +
-                    'Open discussion</label></li></ul></div></nav>'
-                );
+                    'Open discussion</label></li></ul></div></nav>';
                 PrivateBin.TopNav.init();
                 results.push(
                     PrivateBin.TopNav.getBurnAfterReading()
@@ -444,15 +434,14 @@ describe('TopNav', function () {
             'reset inputs to defaults (opendiscussion on)',
             function () {
                 let results = [];
-                $('body').html(
+                document.documentElement.innerHTML =
                     '<nav><div id="navbar"><ul><li id="burnafterreadingoption" ' +
                     'class="hidden"><label><input type="checkbox" ' +
                     'id="burnafterreading" name="burnafterreading" /> ' +
                     'Burn after reading</label></li><li id="opendiscussionoption" ' +
                     'class="hidden"><label><input type="checkbox" ' +
                     'id="opendiscussion" name="opendiscussion" checked="checked" /> ' +
-                    'Open discussion</label></li></ul></div></nav>'
-                );
+                    'Open discussion</label></li></ul></div></nav>';
                 PrivateBin.TopNav.init();
                 results.push(
                     !PrivateBin.TopNav.getBurnAfterReading()
@@ -493,11 +482,10 @@ describe('TopNav', function () {
         it(
             'returns the currently selected expiration date',
             function () {
-                $('body').html(
+                document.documentElement.innerHTML =
                     '<select id="pasteExpiration" name="pasteExpiration">' +
                     '<option value="1day">1 day</option>' +
-                    '<option value="never">Never</option></select>'
-                );
+                    '<option value="never">Never</option></select>';
                 PrivateBin.TopNav.init();
                 assert.strictEqual(PrivateBin.TopNav.getExpiration(), '1day');
                 cleanup();
@@ -551,7 +539,7 @@ describe('TopNav', function () {
             'returns the selected files',
             function () {
                 let results = [];
-                $('body').html(
+                document.documentElement.innerHTML =
                     '<nav><div id="navbar"><ul><li id="attach" class="hidden ' +
                     'dropdown"><a href="#" class="dropdown-toggle" data-' +
                     'toggle="dropdown" role="button" aria-haspopup="true" ' +
@@ -560,8 +548,7 @@ describe('TopNav', function () {
                     '<div><input type="file" id="file" name="file" /></div>' +
                     '</li><li id="customattachment" class="hidden"></li><li>' +
                     '<a id="fileremovebutton"  href="#">Remove attachment</a>' +
-                    '</li></ul></li></ul></div></nav>'
-                );
+                    '</li></ul></li></ul></div></nav>';
                 PrivateBin.TopNav.init();
                 results.push(
                     PrivateBin.TopNav.getFileList() === null
@@ -594,12 +581,11 @@ describe('TopNav', function () {
             'returns if the burn-after-reading checkbox was ticked',
             function () {
                 let results = [];
-                $('body').html(
+                document.documentElement.innerHTML =
                     '<nav><div id="navbar"><ul><li id="burnafterreadingoption" ' +
                     'class="hidden"><label><input type="checkbox" ' +
                     'id="burnafterreading" name="burnafterreading" /> ' +
-                    'Burn after reading</label></li></ul></div></nav>'
-                );
+                    'Burn after reading</label></li></ul></div></nav>';
                 PrivateBin.TopNav.init();
                 results.push(
                     !PrivateBin.TopNav.getBurnAfterReading()
@@ -631,12 +617,11 @@ describe('TopNav', function () {
             'returns if the open-discussion checkbox was ticked',
             function () {
                 let results = [];
-                $('body').html(
+                document.documentElement.innerHTML =
                     '<nav><div id="navbar"><ul><li id="opendiscussionoption" ' +
                     'class="hidden"><label><input type="checkbox" ' +
                     'id="opendiscussion" name="opendiscussion" /> ' +
-                    'Open discussion</label></li></ul></div></nav>'
-                );
+                    'Open discussion</label></li></ul></div></nav>';
                 PrivateBin.TopNav.init();
                 results.push(
                     !PrivateBin.TopNav.getOpenDiscussion()
@@ -670,12 +655,11 @@ describe('TopNav', function () {
             function (password) {
                 password = password.replace(/\r+|\n+/g, '');
                 let results = [];
-                $('body').html(
+                document.documentElement.innerHTML =
                     '<nav><div id="navbar"><ul><li><div id="password" ' +
                     'class="navbar-form hidden"><input type="password" ' +
                     'id="passwordinput" placeholder="Password (recommended)" ' +
-                    'class="form-control" size="23" /></div></li></ul></div></nav>'
-                );
+                    'class="form-control" size="23" /></div></li></ul></div></nav>';
                 PrivateBin.TopNav.init();
                 results.push(
                     PrivateBin.TopNav.getPassword() === ''
@@ -707,7 +691,7 @@ describe('TopNav', function () {
             'returns the custom attachment element',
             function () {
                 let results = [];
-                $('body').html(
+                document.documentElement.innerHTML =
                     '<nav><div id="navbar"><ul><li id="attach" class="hidden ' +
                     'dropdown"><a href="#" class="dropdown-toggle" data-' +
                     'toggle="dropdown" role="button" aria-haspopup="true" ' +
@@ -716,8 +700,7 @@ describe('TopNav', function () {
                     '<div><input type="file" id="file" name="file" /></div>' +
                     '</li><li id="customattachment" class="hidden"></li><li>' +
                     '<a id="fileremovebutton"  href="#">Remove attachment</a>' +
-                    '</li></ul></li></ul></div></nav>'
-                );
+                    '</li></ul></li></ul></div></nav>';
                 PrivateBin.TopNav.init();
                 results.push(
                     !PrivateBin.TopNav.getCustomAttachment().hasClass('test')
@@ -746,7 +729,7 @@ describe('TopNav', function () {
             function () {
                 // Insert any setup code needed for the hideAllButtons function
                 // Example: Initialize the DOM elements required for testing
-                $('body').html(
+                document.documentElement.innerHTML =
                     '<nav class="navbar navbar-inverse navbar-static-top">' +
                     '<div id="navbar" class="navbar-collapse collapse"><ul ' +
                     'class="nav navbar-nav"><li><button id="newbutton" ' +
@@ -763,8 +746,7 @@ describe('TopNav', function () {
                     'data-toggle="modal" data-target="#qrcodemodal" ' +
                     'class="hidden btn btn-warning navbar-btn"><span ' +
                     'class="glyphicon glyphicon-qrcode" aria-hidden="true">' +
-                    '</span> QR code</button></li></ul></div></nav>'
-                );
+                    '</span> QR code</button></li></ul></div></nav>';
                 PrivateBin.TopNav.init();
                 PrivateBin.TopNav.hideAllButtons();
 
@@ -787,7 +769,7 @@ describe('TopNav', function () {
             'displays raw text view correctly',
             function () {
                 const clean = globalThis.cleanup('', {url: 'https://privatebin.net/?0123456789abcdef#1'});
-                $('body').html('<button id="rawtextbutton"></button>');
+                document.documentElement.innerHTML ='<button id="rawtextbutton"></button>';
                 const sample = 'example';
                 PrivateBin.PasteViewer.setText(sample);
                 PrivateBin.Helper.reset();
