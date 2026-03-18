@@ -303,7 +303,6 @@ describe('TopNav', function () {
         it(
             'collapses the navigation when displayed on a small screen',
             function () {
-                const clean = globalThis.cleanup();
                 let results = [];
                 $('body').html(
                     '<nav><div class="navbar-header"><button type="button" ' +
@@ -340,7 +339,6 @@ describe('TopNav', function () {
                     $('#navbar').attr('aria-expanded') == 'false'
                 );
                 */
-                clean();
                 const result = results.every(element => element);
                 if (!result) {
                     console.log(results);
