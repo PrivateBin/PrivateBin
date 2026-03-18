@@ -4297,7 +4297,7 @@ window.PrivateBin = (function () {
          *
          * @name   TopNav.showEmailbutton
          * @function
-         * @param {int|undefined} optionalRemainingTimeInSeconds
+         * @param {number|undefined} optionalRemainingTimeInSeconds
          */
         me.showEmailButton = function (optionalRemainingTimeInSeconds) {
             try {
