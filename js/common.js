@@ -5,15 +5,17 @@ global.assert = require('assert');
 global.jsc = require('jsverify');
 global.jsdom = require('jsdom-global');
 // initial DOM environment created by jsdom-global
-global.cleanup = global.jsdom();
+let currentCleanup = global.jsdom();
+
 // wrap cleanup so that calling it recreates a fresh jsdom environment
-const _origCleanup = global.cleanup;
 global.cleanup = function (...args) {
     // remove previous environment
-    _origCleanup();
+    if (typeof currentCleanup === 'function') {
+        currentCleanup();
+    }
 
     // create a new jsdom environment
-    const newCleanup = global.jsdom(...args);
+    currentCleanup = global.jsdom(...args);
 
     // Make sure window and document are available in global scope for module loading
     // jsdom-global sets them, but we need to ensure they're accessible
@@ -24,8 +26,9 @@ global.cleanup = function (...args) {
         throw new Error('jsdom-global failed to set up document');
     }
 
-    global.cleanup = newCleanup;
-
+    // Clear module cache to ensure modules are re-evaluated with new jsdom environment
+    delete require.cache[require.resolve('./privatebin')];
+    delete require.cache[require.resolve('./legacy')];
     require('./privatebin');
     if (typeof PrivateBin === 'undefined') {
         throw new Error('PrivateBin module did not load correctly');
