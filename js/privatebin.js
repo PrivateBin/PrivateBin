@@ -5755,7 +5755,7 @@ window.PrivateBin = (function () {
          * @function
          */
         me.init = function () {
-            const revealButton = $('.toggle-password');
+            const revealButton = document.querySelector('.toggle-password');
 
             revealButton.click(handleRevealButtonClick);
         };
