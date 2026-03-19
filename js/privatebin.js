@@ -5534,7 +5534,9 @@ window.PrivateBin = (function () {
          * @function
          */
         function handleCopyButtonClick() {
-            $(copyButton).click(function () {
+            if (!copyButton) return;
+
+            copyButton.addEventListener('click', function () {
                 const text = PasteViewer.getText();
                 saveToClipboard(text);
 
@@ -5551,7 +5553,9 @@ window.PrivateBin = (function () {
          * @function
          */
         function handleCopyLinkButtonClick() {
-            $(copyLinkButton).click(function () {
+            if (!copyLinkButton) return;
+
+            copyLinkButton.addEventListener('click', function () {
                 saveToClipboard(url);
 
                 showAlertMessage('Link copied to clipboard');
@@ -5566,7 +5570,7 @@ window.PrivateBin = (function () {
          * @function
          */
         function handleKeyboardShortcut() {
-            $(document).bind('copy', function () {
+            document.addEventListener('copy', function () {
                 if (!isUserSelectedTextToCopy()) {
                     const text = PasteViewer.getText();
                     saveToClipboard(text);
@@ -5628,12 +5632,12 @@ window.PrivateBin = (function () {
          * @function
          */
         function toggleSuccessIcon() {
-            $(copyIcon).css('display', 'none');
-            $(successIcon).css('display', 'block');
+            copyIcon.style.display = 'none';
+            successIcon.style.display = 'block';
 
             setTimeout(function () {
-                $(copyIcon).css('display', 'block');
-                $(successIcon).css('display', 'none');
+                copyIcon.style.display = 'block';
+                successIcon.style.display = 'none';
             }, 1000);
         }
 
@@ -5657,7 +5661,7 @@ window.PrivateBin = (function () {
          * @function
          */
         me.hideKeyboardShortcutHint = function () {
-            $(shortcutHint).html('');
+            shortcutHint.innerHTML = '';
         };
 
         /**
