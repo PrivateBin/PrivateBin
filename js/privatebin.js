@@ -2987,8 +2987,10 @@ window.PrivateBin = (function () {
             me.hideAttachment();
             me.hideAttachmentPreview();
             attachment.innerHTML = '';
-            attachmentPreview.innerHTML = '';
-            dragAndDropFileNames.innerHTML = '';
+            if (attachmentPreview) {
+                attachmentPreview.innerHTML = '';
+            }
+            me.clearDragAndDrop();
 
             AttachmentViewer.removeAttachmentData();
         };
@@ -3027,7 +3029,7 @@ window.PrivateBin = (function () {
          * @param {string[]} fileNames
          */
         function printDragAndDropFileNames(fileNames) {
-            dragAndDropFileNames.innerHTML = '';
+            me.clearDragAndDrop();
             fileNames.forEach(fileName => {
                 const name = document.createTextNode(fileName);
                 dragAndDropFileNames.appendChild(name);
