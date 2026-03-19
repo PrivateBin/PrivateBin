@@ -5678,11 +5678,11 @@ window.PrivateBin = (function () {
          * @function
          */
         me.init = function () {
-            copyButton = $('#prettyMessageCopyBtn');
-            copyLinkButton = $('#copyLink');
-            copyIcon = $('#copyIcon');
-            successIcon = $('#copySuccessIcon');
-            shortcutHint = $('#copyShortcutHintText');
+            copyButton = document.getElementById('prettyMessageCopyBtn');
+            copyLinkButton = document.getElementById('copyLink');
+            copyIcon = document.getElementById('copyIcon');
+            successIcon = document.getElementById('copySuccessIcon');
+            shortcutHint = document.getElementById('copyShortcutHintText');
 
             handleCopyButtonClick();
             handleCopyLinkButtonClick();
