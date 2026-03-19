@@ -334,15 +334,16 @@ describe('TopNav', function () {
                 with the upgrade for bootstrap-3.3.7.js to bootstrap-3.4.1.js
                 the mobile interface detection changed to check if the
                 ontouchstart event exists, which broke this section of the test
-                $('.navbar-toggle').trigger('click');
+                const toggleBtn = document.querySelector('.navbar-toggle');
+                toggleBtn.dispatchEvent(new MouseEvent('click'));
                 results.push(
-                    !$('.navbar-toggle').hasClass('collapsed') &&
-                    $('#navbar').attr('aria-expanded') == 'true'
+                    !toggleBtn.classList.contains('collapsed') &&
+                    document.getElementById('navbar').getAttribute('aria-expanded') == 'true'
                 );
                 PrivateBin.TopNav.collapseBar();
                 results.push(
-                    $('.navbar-toggle').hasClass('collapsed') &&
-                    $('#navbar').attr('aria-expanded') == 'false'
+                    document.querySelector('.navbar-toggle').classList.contains('collapsed') &&
+                    document.getElementById('navbar').getAttribute('aria-expanded') == 'false'
                 );
                 */
                 const result = results.every(element => element);

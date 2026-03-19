@@ -73,6 +73,12 @@ describe('Helper', function () {
     });
 
     describe('urls2links', function () {
+        function getTextAsRenderedHtml(stringContent) {
+            const tempDiv = document.createElement('div');
+            tempDiv.textContent = stringContent;
+            return tempDiv.innerHTML;
+        }
+
         this.timeout(30000);
         before(function () {
             cleanup = globalThis.cleanup();
@@ -85,11 +91,11 @@ describe('Helper', function () {
                 // eslint-disable-next-line no-control-regex
                 content = content.replace(/\r|\f/g, '\n').replace(/\u0000|\u000b/g, '');
                 let clean = globalThis.cleanup();
-                $('body').html('<div id="foo"></div>');
-                let e = $('#foo');
-                e.text(content);
-                PrivateBin.Helper.urls2links(e[0]);
-                let result = e.text();
+                document.body.innerHTML = '<div id="foo"></div>';
+                let e = document.getElementById('foo');
+                e.textContent = content;
+                PrivateBin.Helper.urls2links(e);
+                let result = e.textContent;
                 clean();
                 return content === result;
             }
@@ -108,8 +114,8 @@ describe('Helper', function () {
                 url.fragment = fragment.join('');
                 let urlString = common.urlToString(url),
                     clean = globalThis.cleanup();
-                $('body').html('<div id="foo"></div>');
-                let e = $('#foo');
+                document.body.innerHTML = '<div id="foo"></div>';
+                let e = document.getElementById('foo');
 
                 // special cases: When the query string and fragment imply the beginning of an HTML entity, eg. &#0 or &#x
                 if (
@@ -120,12 +126,14 @@ describe('Helper', function () {
                     urlString = common.urlToString(url);
                     postfix = '';
                 }
-                e.text(prefix + urlString + postfix);
-                PrivateBin.Helper.urls2links(e[0]);
-                let result = e.html();
+                e.textContent = prefix + urlString + postfix;
+                PrivateBin.Helper.urls2links(e);
+
+                let result = e.innerHTML;
                 clean();
-                urlString = $('<div />').text(urlString).html();
-                const expected = $('<div />').text(prefix).html() + '<a href="' + urlString + '" target="_blank" rel="nofollow noopener noreferrer">' + urlString + '</a>' + $('<div />').text(postfix).html();
+
+                urlString = getTextAsRenderedHtml(urlString);
+                const expected = getTextAsRenderedHtml(prefix) + '<a href="' + urlString + '" target="_blank" rel="nofollow noopener noreferrer">' + urlString + '</a>' + getTextAsRenderedHtml(postfix);
                 return expected === result;
             }
         );
@@ -141,14 +149,14 @@ describe('Helper', function () {
                 postfix = ' ' + postfix.replace(/\r/g, '\n').replace(/\u0000/g, '');
                 let url  = 'magnet:?' + query.join('').replace(/^&+|&+$/gm, ''),
                     clean = globalThis.cleanup();
-                $('body').html('<div id="foo"></div>');
-                let e = $('#foo');
-                e.text(prefix + url + postfix);
-                PrivateBin.Helper.urls2links(e[0]);
-                let result = e.html();
+                document.body.innerHTML = '<div id="foo"></div>';
+                let e = document.getElementById('foo');
+                e.textContent = prefix + url + postfix;
+                PrivateBin.Helper.urls2links(e);
+                let result = e.innerHTML;
                 clean();
-                url = $('<div />').text(url).html();
-                return $('<div />').text(prefix).html() + '<a href="' + url + '" target="_blank" rel="nofollow noopener noreferrer">' + url + '</a>' + $('<div />').text(postfix).html() === result;
+                url = getTextAsRenderedHtml(url);
+                return getTextAsRenderedHtml(prefix) + '<a href="' + url + '" target="_blank" rel="nofollow noopener noreferrer">' + url + '</a>' + getTextAsRenderedHtml(postfix) === result;
             }
         );
     });

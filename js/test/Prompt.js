@@ -11,7 +11,7 @@ describe('Prompt', function () {
             function (password) {
                 password = password.replace(/\r+|\n+/g, '');
                 const clean = globalThis.cleanup('', {url: 'ftp://example.com/?0000000000000000'});
-                $('body').html(
+                document.body.innerHTML = (
                     '<div id="passwordmodal" class="modal fade" role="dialog">' +
                     '<div class="modal-dialog"><div class="modal-content">' +
                     '<div class="modal-body"><form id="passwordform" role="form">' +
@@ -20,8 +20,9 @@ describe('Prompt', function () {
                     'password"></div><button type="submit">Decrypt</button>' +
                     '</form></div></div></div></div>'
                 );
-                $('#passworddecrypt').val(password);
-                const result = $('#passworddecrypt').val();
+                const passwordInput = document.getElementById('passworddecrypt');
+                passwordInput.value = password;
+                const result = passwordInput.value;
                 clean();
                 return result === password;
             }

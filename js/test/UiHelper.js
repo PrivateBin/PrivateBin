@@ -91,7 +91,7 @@ describe('UiHelper', function () {
                 var clean = globalThis.cleanup(
                     '<' + element + ' id="' + id + '"></' + element + '>'
                 );
-                var result = PrivateBin.UiHelper.isVisible($('#' + id));
+                var result = PrivateBin.UiHelper.isVisible(document.getElementById(id));
                 clean();
                 return result;
             }

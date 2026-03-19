@@ -11,7 +11,7 @@ describe('Editor', function () {
             function (text) {
                 var clean = globalThis.cleanup(),
                     results = [];
-                $('body').html(
+                document.body.innerHTML = (
                     '<ul id="editorTabs" class="nav nav-tabs hidden"><li ' +
                     'role="presentation" class="active"><a id="messageedit" ' +
                     'href="#">Editor</a></li><li role="presentation"><a ' +
@@ -25,18 +25,18 @@ describe('Editor', function () {
                 );
                 PrivateBin.Editor.init();
                 results.push(
-                    $('#editorTabs').hasClass('hidden') &&
-                    $('#message').hasClass('hidden')
+                    document.getElementById('editorTabs').classList.contains('hidden') &&
+                    document.getElementById('message').classList.contains('hidden')
                 );
                 PrivateBin.Editor.show();
                 results.push(
-                    !$('#editorTabs').hasClass('hidden') &&
-                    !$('#message').hasClass('hidden')
+                    !document.getElementById('editorTabs').classList.contains('hidden') &&
+                    !document.getElementById('message').classList.contains('hidden')
                 );
                 PrivateBin.Editor.hide();
                 results.push(
-                    $('#editorTabs').hasClass('hidden') &&
-                    $('#message').hasClass('hidden')
+                    document.getElementById('editorTabs').classList.contains('hidden') &&
+                    document.getElementById('message').classList.contains('hidden')
                 );
                 PrivateBin.Editor.show();
                 PrivateBin.Editor.focusInput();
@@ -45,22 +45,22 @@ describe('Editor', function () {
                 );
                 PrivateBin.Editor.setText(text);
                 results.push(
-                    PrivateBin.Editor.getText() === $('#message').val()
+                    PrivateBin.Editor.getText() === document.getElementById('message').value
                 );
                 PrivateBin.Editor.setText();
                 results.push(
                     !PrivateBin.Editor.isPreview() &&
-                    !$('#message').hasClass('hidden')
+                    !document.getElementById('message').classList.contains('hidden')
                 );
-                $('#messagepreview').trigger('click');
+                document.getElementById('messagepreview').click();
                 results.push(
                     PrivateBin.Editor.isPreview() &&
-                    $('#message').hasClass('hidden')
+                    document.getElementById('message').classList.contains('hidden')
                 );
-                $('#messageedit').trigger('click');
+                document.getElementById('messageedit').click();
                 results.push(
                     !PrivateBin.Editor.isPreview() &&
-                    !$('#message').hasClass('hidden')
+                    !document.getElementById('message').classList.contains('hidden')
                 );
                 clean();
                 return results.every(element => element);

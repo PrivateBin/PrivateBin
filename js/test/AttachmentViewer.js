@@ -31,7 +31,7 @@ describe('AttachmentViewer', function () {
                 }
                 prefix  = prefix.replace(/%(s|d)/g, '%%');
                 postfix = postfix.replace(/%(s|d)/g, '%%').replace(/<|>/g, '');
-                $('body').html(
+                document.body.innerHTML = (
                     '<div id="attachmentPreview" class="col-md-12 text-center hidden"></div>' +
                     '<div id="attachment" class="hidden"></div>' +
                     '<div id="templates">' +
@@ -55,10 +55,10 @@ describe('AttachmentViewer', function () {
                 PrivateBin.Model.init();
                 results.push(
                     !PrivateBin.AttachmentViewer.hasAttachment() &&
-                    $('#attachment').hasClass('hidden') &&
-                    $('#attachment').children().length === 0 &&
-                    $('#attachmenttemplate').hasClass('hidden') &&
-                    $('#attachmentPreview').hasClass('hidden')
+                    document.getElementById('attachment').classList.contains('hidden') &&
+                    document.getElementById('attachment').children.length === 0 &&
+                    document.getElementById('attachmenttemplate').classList.contains('hidden') &&
+                    document.getElementById('attachmentPreview').classList.contains('hidden')
                 );
                 global.atob = common.atob;
                 if (filename.length) {
@@ -71,37 +71,39 @@ describe('AttachmentViewer', function () {
                 const attachment = PrivateBin.AttachmentViewer.getAttachments();
                 results.push(
                     PrivateBin.AttachmentViewer.hasAttachment() &&
-                    $('#attachment').hasClass('hidden') &&
-                    $('#attachment').children().length > 0 &&
-                    $('#attachmentPreview').hasClass('hidden') &&
+                    document.getElementById('attachment').classList.contains('hidden') &&
+                    document.getElementById('attachment').children.length > 0 &&
+                    document.getElementById('attachmentPreview').classList.contains('hidden') &&
                     attachment[0][0] === data &&
                     attachment[0][1] === filename
                 );
                 PrivateBin.AttachmentViewer.showAttachment();
                 results.push(
-                    !$('#attachment').hasClass('hidden') &&
-                    $('#attachment').children().length > 0 &&
-                    (previewSupported ? !$('#attachmentPreview').hasClass('hidden') : $('#attachmentPreview').hasClass('hidden'))
+                    !document.getElementById('attachment').classList.contains('hidden') &&
+                    document.getElementById('attachment').children.length > 0 &&
+                    (previewSupported ? !document.getElementById('attachmentPreview').classList.contains('hidden') : document.getElementById('attachmentPreview').classList.contains('hidden'))
                 );
                 PrivateBin.AttachmentViewer.hideAttachment();
                 results.push(
-                    $('#attachment').hasClass('hidden') &&
-                    (previewSupported ? !$('#attachmentPreview').hasClass('hidden') : $('#attachmentPreview').hasClass('hidden'))
+                    document.getElementById('attachment').classList.contains('hidden') &&
+                    (previewSupported ? !document.getElementById('attachmentPreview').classList.contains('hidden') : document.getElementById('attachmentPreview').classList.contains('hidden'))
                 );
                 if (previewSupported) {
                     PrivateBin.AttachmentViewer.hideAttachmentPreview();
-                    results.push($('#attachmentPreview').hasClass('hidden'));
+                    results.push(document.getElementById('attachmentPreview').classList.contains('hidden'));
                 }
                 PrivateBin.AttachmentViewer.showAttachment();
                 results.push(
-                    !$('#attachment').hasClass('hidden') &&
-                    (previewSupported ? !$('#attachmentPreview').hasClass('hidden') : $('#attachmentPreview').hasClass('hidden'))
+                    !document.getElementById('attachment').classList.contains('hidden') &&
+                    (previewSupported ? !document.getElementById('attachmentPreview').classList.contains('hidden') : document.getElementById('attachmentPreview').classList.contains('hidden'))
                 );
-                let element = $('<div>');
-                PrivateBin.AttachmentViewer.moveAttachmentTo(element[0], attachment[0], prefix + '%s' + postfix);
+                let element = document.createElement('div');
+                PrivateBin.AttachmentViewer.moveAttachmentTo(element, attachment[0], prefix + '%s' + postfix);
                 // messageIDs with links get a relaxed treatment
                 if (prefix.indexOf('<a') === -1 && postfix.indexOf('<a') === -1) {
-                    result = $('<textarea>').text((prefix + filename + postfix)).text();
+                    const tempTA = document.createElement('textarea');
+                    tempTA.textContent = (prefix + filename + postfix);
+                    result = tempTA.textContent;
                 } else {
                     result = DOMPurify.sanitize(
                         prefix + PrivateBin.Helper.htmlEntities(filename) + postfix, {
@@ -112,18 +114,18 @@ describe('AttachmentViewer', function () {
                 }
                 if (filename.length) {
                     results.push(
-                        element.find('a')[0].href === data &&
-                        element.find('a')[0].getAttribute('download') === filename &&
-                        element.find('a')[0].text === result
+                        element.querySelector('a').href === data &&
+                        element.querySelector('a').getAttribute('download') === filename &&
+                        element.querySelector('a').textContent === result
                     );
                 } else {
-                    results.push(element.find('a')[0].href === data);
+                    results.push(element.querySelector('a').href === data);
                 }
                 PrivateBin.AttachmentViewer.removeAttachment();
                 results.push(
-                    $('#attachment').hasClass('hidden') &&
-                    $('#attachment').children().length === 0 &&
-                    $('#attachmentPreview').hasClass('hidden')
+                    document.getElementById('attachment').classList.contains('hidden') &&
+                    document.getElementById('attachment').children.length === 0 &&
+                    document.getElementById('attachmentPreview').classList.contains('hidden')
                 );
                 clean();
                 return results.every(element => element);
@@ -134,7 +136,7 @@ describe('AttachmentViewer', function () {
             'sanitizes file names in attachments',
             function() {
                 const clean = globalThis.cleanup();
-                $('body').html(
+                document.body.innerHTML = (
                     '<div id="attachmentPreview" class="col-md-12 text-center hidden"></div>' +
                     '<div id="attachment" class="hidden"></div>' +
                     '<div id="templates">' +
@@ -164,7 +166,7 @@ describe('AttachmentViewer', function () {
                 ];
                 for (const filename of maliciousFileNames) {
                     PrivateBin.AttachmentViewer.setAttachment('data:;base64,', filename);
-                    assert.ok(!$('body').html().includes(filename));
+                    assert.ok(!document.body.innerHTML.includes(filename));
                 }
                 clean();
             }

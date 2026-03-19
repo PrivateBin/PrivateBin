@@ -26,7 +26,7 @@ describe('Model', function () {
                     contents += '>' + value + '</option>';
                 });
                 contents += '</select>';
-                $('body').html(contents);
+                document.body.innerHTML = contents;
                 var result = PrivateBin.Helper.htmlEntities(
                     PrivateBin.Model.getExpirationDefault()
                 );
@@ -62,7 +62,7 @@ describe('Model', function () {
                     contents += '>' + value + '</option>';
                 });
                 contents += '</select>';
-                $('body').html(contents);
+                document.body.innerHTML = contents;
                 var result = PrivateBin.Helper.htmlEntities(
                     PrivateBin.Model.getFormatDefault()
                 );
@@ -226,14 +226,17 @@ describe('Model', function () {
                     element = 'p';
                 }
 
-                $('body').html(
+                document.body.innerHTML = (
                     '<div id="templates"><' + element + ' id="' + id +
                     'template">' + value + '</' + element + '></div>'
                 );
                 PrivateBin.Model.init();
                 var template = '<' + element + ' id="' + id + '">' + value +
                     '</' + element + '>',
-                    result = PrivateBin.Model.getTemplate(id).wrap('<p/>').parent().html();
+                    templateEl = PrivateBin.Model.getTemplate(id),
+                    wrapper = document.createElement('p');
+                wrapper.appendChild(templateEl.cloneNode(true));
+                var result = wrapper.innerHTML;
                 PrivateBin.Model.reset();
                 return template === result;
             }

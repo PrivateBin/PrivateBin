@@ -12,7 +12,7 @@ describe('CopyToClipboard', function() {
                 var clean = globalThis.cleanup();
                 common.enableClipboard();
 
-                $('body').html(
+                document.body.innerHTML = (
                     '<div id="placeholder" class="hidden">+++ no document text ' +
                     '+++</div><div id="prettymessage" class="hidden">' +
                     '<button type="button" id="prettyMessageCopyBtn"><svg id="copyIcon"></svg>' +
@@ -28,7 +28,7 @@ describe('CopyToClipboard', function() {
 
                 PrivateBin.CopyToClipboard.init();
 
-                $('#prettyMessageCopyBtn').trigger('click');
+                document.getElementById('prettyMessageCopyBtn').click();
 
                 const savedToClipboardText = await navigator.clipboard.readText();
 
@@ -49,7 +49,7 @@ describe('CopyToClipboard', function() {
                 var clean = globalThis.cleanup();
                 common.enableClipboard();
 
-                $('body').html(
+                document.body.innerHTML = (
                     '<div id="placeholder">+++ no document text ' +
                     '+++</div><div id="prettymessage" class="hidden">' +
                     '<button type="button" id="prettyMessageCopyBtn"><svg id="copyIcon"></svg>' +
@@ -65,7 +65,7 @@ describe('CopyToClipboard', function() {
 
                 PrivateBin.CopyToClipboard.init();
 
-                $('body').trigger('copy');
+                document.body.dispatchEvent(new Event('copy'));
 
                 const copiedTextWithoutSelectedText = await navigator.clipboard.readText();
 
@@ -83,12 +83,12 @@ describe('CopyToClipboard', function() {
             var clean = globalThis.cleanup();
             common.enableClipboard();
 
-            $('body').html('<button id="copyLink"></button>');
+            document.body.innerHTML = '<button id="copyLink"></button>';
 
             PrivateBin.CopyToClipboard.init();
             PrivateBin.CopyToClipboard.setUrl(text);
 
-            $('#copyLink').trigger('click');
+            document.getElementById('copyLink').click();
 
             const copiedText = await navigator.clipboard.readText();
 
@@ -105,12 +105,12 @@ describe('CopyToClipboard', function() {
             function (text) {
                 var clean = globalThis.cleanup();
 
-                $('body').html('<small id="copyShortcutHintText"></small>');
+                document.body.innerHTML = '<small id="copyShortcutHintText"></small>';
 
                 PrivateBin.CopyToClipboard.init();
                 PrivateBin.CopyToClipboard.showKeyboardShortcutHint();
 
-                const keyboardShortcutHint = $('#copyShortcutHintText').text();
+                const keyboardShortcutHint = document.getElementById('copyShortcutHintText').textContent;
 
                 clean();
 
@@ -123,12 +123,12 @@ describe('CopyToClipboard', function() {
             function (text) {
                 var clean = globalThis.cleanup();
 
-                $('body').html('<small id="copyShortcutHintText">' + text + '</small>');
+                document.body.innerHTML = '<small id="copyShortcutHintText">' + text + '</small>';
 
                 PrivateBin.CopyToClipboard.init();
                 PrivateBin.CopyToClipboard.hideKeyboardShortcutHint();
 
-                const keyboardShortcutHint = $('#copyShortcutHintText').text();
+                const keyboardShortcutHint = document.getElementById('copyShortcutHintText').textContent;
 
                 clean();
 
