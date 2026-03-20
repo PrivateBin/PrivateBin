@@ -1,5 +1,6 @@
 'use strict';
 const common = require('../common');
+const fs = require('fs');
 
 describe('CryptTool', function () {
     describe('cipher & decipher', function () {
