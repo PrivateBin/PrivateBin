@@ -73,7 +73,7 @@ describe('PasteViewer', function () {
                         document.getElementById('plaintext').classList.contains('hidden')
                     );
                 }
-                clean();
+                cleanup();
                 return results.every(element => element);
             }
         );
@@ -112,8 +112,7 @@ describe('PasteViewer', function () {
             ]),
             'string',
             function (format, prefix, xss, suffix) {
-                var clean = globalThis.cleanup(),
-                    text = prefix + xss + suffix;
+                var text = prefix + xss + suffix;
                 document.body.innerHTML = (
                     '<div id="placeholder" class="hidden">+++ no document text ' +
                     '+++</div><div id="prettymessage" class="hidden"><pre ' +
@@ -125,7 +124,7 @@ describe('PasteViewer', function () {
                 PrivateBin.PasteViewer.setText(text);
                 PrivateBin.PasteViewer.run();
                 var result = document.body.innerHTML.indexOf(xss) === -1;
-                clean();
+                cleanup();
                 return result;
             }
         );
