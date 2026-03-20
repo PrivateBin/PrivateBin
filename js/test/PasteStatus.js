@@ -32,6 +32,7 @@ describe('PasteStatus', function () {
 
             assert.strictEqual(document.getElementById('pasteurl').href, expected1);
             assert.strictEqual(document.getElementById('deletelink').href, expected2);
+            assert.ok(!document.getElementById('pastesuccess').classList.contains('hidden'));
         });
 
         jsc.property(
@@ -49,6 +50,9 @@ describe('PasteStatus', function () {
                     document.body.innerHTML = '<a href="#" id="deletelink"><span></span></a><div id="pastelink"></div><div id="pastesuccess"></div>';
                     PrivateBin.PasteStatus.init();
                     PrivateBin.PasteStatus.createPasteNotification(expected1, expected2);
+
+                    assert.ok(!document.getElementById('pastesuccess').classList.contains('hidden'));
+
                     const result2 = document.getElementById('deletelink').href;
                     return document.getElementById('pasteurl').href === expected1 && result2 === expected2;
             }
