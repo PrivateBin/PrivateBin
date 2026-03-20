@@ -24,15 +24,14 @@ describe('PasteStatus', function () {
 
         it('creates a notification after a successful document upload', function () {
             cleanup();
-            document.body.innerHTML = '<a href="#" id="deletelink"><span></span></a><div id="pastelink"></div>';
+            document.body.innerHTML = '<a href="#" id="deletelink"><span></span></a><div id="pastelink"></div><div id="pastesuccess"></div>';
             PrivateBin.PasteStatus.init();
             const expected1 = 'https://example.com/long';
             const expected2 = 'https://example.com/short';
             PrivateBin.PasteStatus.createPasteNotification(expected1, expected2);
-            const result1 = document.getElementById('pasteurl').href,
-                result2 = document.getElementById('deletelink').href;
-            assert.strictEqual(result1, expected1);
-            assert.strictEqual(result2, expected2);
+
+            assert.strictEqual(document.getElementById('pasteurl').href, expected1);
+            assert.strictEqual(document.getElementById('deletelink').href, expected2);
         });
 
         jsc.property(
@@ -47,13 +46,11 @@ describe('PasteStatus', function () {
                     const expected1 = common.urlToString(url1).replace(/&(gt|lt)$/, '&$1a'),
                         expected2 = common.urlToString(url2).replace(/&(gt|lt)$/, '&$1a');
                     cleanup();
-                    document.body.innerHTML = '<a href="#" id="deletelink"><span></span></a><div id="pastelink"></div>';
+                    document.body.innerHTML = '<a href="#" id="deletelink"><span></span></a><div id="pastelink"></div><div id="pastesuccess"></div>';
                     PrivateBin.PasteStatus.init();
                     PrivateBin.PasteStatus.createPasteNotification(expected1, expected2);
-                    const result1 = document.getElementById('pasteurl').href,
-                        result2 = document.getElementById('deletelink').href;
-                    return result1 === expected1 && result2 === expected2;
-
+                    const result2 = document.getElementById('deletelink').href;
+                    return document.getElementById('pasteurl').href === expected1 && result2 === expected2;
             }
         );
     });
