@@ -11,12 +11,11 @@ describe('Alert', function () {
                 icon = icon.join('');
                 message = message.join('');
                 const expected = '<div id="status">' + message + '</div>';
-                $('body').html(
-                    '<div id="status"></div>'
-                );
-                $.PrivateBin.Alert.init();
-                $.PrivateBin.Alert.showStatus(message, icon);
-                const result = $('body').html();
+                document.body.innerHTML =
+                    '<div id="status"></div>';
+                PrivateBin.Alert.init();
+                PrivateBin.Alert.showStatus(message, icon);
+                const result = document.body.innerHTML;
                 return expected === result;
             }
         );
@@ -30,14 +29,13 @@ describe('Alert', function () {
                     'class="statusmessage alert alert-info"><span ' +
                     'class="glyphicon glyphicon-info-sign" ' +
                     'aria-hidden="true"></span> <span>' + message + '</span></div>';
-                $('body').html(
+                document.body.innerHTML =
                     '<div id="status" role="alert" class="statusmessage ' +
                     'alert alert-info hidden"><span class="glyphicon ' +
-                    'glyphicon-info-sign" aria-hidden="true"></span> </div>'
-                );
-                $.PrivateBin.Alert.init();
-                $.PrivateBin.Alert.showStatus(message);
-                const result = $('body').html();
+                    'glyphicon-info-sign" aria-hidden="true"></span> </div>';
+                PrivateBin.Alert.init();
+                PrivateBin.Alert.showStatus(message);
+                const result = document.body.innerHTML;
                 return expected === result;
             }
         );
@@ -53,14 +51,13 @@ describe('Alert', function () {
                     'class="statusmessage alert alert-info"><span ' +
                     'class="glyphicon glyphicon-' + icon +
                     '" aria-hidden="true"></span> <span>' + message + '</span></div>';
-                $('body').html(
+                document.body.innerHTML =
                     '<div id="status" role="alert" class="statusmessage ' +
                     'alert alert-info hidden"><span class="glyphicon ' +
-                    'glyphicon-info-sign" aria-hidden="true"></span> </div>'
-                );
-                $.PrivateBin.Alert.init();
-                $.PrivateBin.Alert.showStatus(message, icon);
-                const result = $('body').html();
+                    'glyphicon-info-sign" aria-hidden="true"></span> </div>';
+                PrivateBin.Alert.init();
+                PrivateBin.Alert.showStatus(message, icon);
+                const result = document.body.innerHTML;
                 return expected === result;
             }
         );
@@ -75,12 +72,11 @@ describe('Alert', function () {
                 icon = icon.join('');
                 message = message.join('');
                 const expected = '<div id="errormessage">' + message + '</div>';
-                $('body').html(
-                    '<div id="errormessage"></div>'
-                );
-                $.PrivateBin.Alert.init();
-                $.PrivateBin.Alert.showWarning(message, icon);
-                const result = $('body').html();
+                document.body.innerHTML =
+                    '<div id="errormessage"></div>';
+                PrivateBin.Alert.init();
+                PrivateBin.Alert.showWarning(message, icon);
+                const result = document.body.innerHTML;
                 return expected === result;
             }
         );
@@ -95,14 +91,13 @@ describe('Alert', function () {
                     'class="statusmessage alert alert-danger"><span ' +
                     'class="glyphicon glyphicon-warning-sign" ' +
                     'aria-hidden="true"></span> <span>' + message + '</span></div>';
-                $('body').html(
+                document.body.innerHTML =
                     '<div id="errormessage" role="alert" class="statusmessage ' +
                     'alert alert-danger hidden"><span class="glyphicon ' +
-                    'glyphicon-alert" aria-hidden="true"></span> </div>'
-                );
-                $.PrivateBin.Alert.init();
-                $.PrivateBin.Alert.showWarning(message);
-                const result = $('body').html();
+                    'glyphicon-alert" aria-hidden="true"></span> </div>';
+                PrivateBin.Alert.init();
+                PrivateBin.Alert.showWarning(message);
+                const result = document.body.innerHTML;
                 return expected === result;
             }
         );
@@ -118,14 +113,13 @@ describe('Alert', function () {
                     'class="statusmessage alert alert-danger"><span ' +
                     'class="glyphicon glyphicon-' + icon +
                     '" aria-hidden="true"></span> <span>' + message + '</span></div>';
-                $('body').html(
+                document.body.innerHTML =
                     '<div id="errormessage" role="alert" class="statusmessage ' +
                     'alert alert-danger hidden"><span class="glyphicon ' +
-                    'glyphicon-alert" aria-hidden="true"></span> </div>'
-                );
-                $.PrivateBin.Alert.init();
-                $.PrivateBin.Alert.showWarning(message, icon);
-                const result = $('body').html();
+                    'glyphicon-alert" aria-hidden="true"></span> </div>';
+                PrivateBin.Alert.init();
+                PrivateBin.Alert.showWarning(message, icon);
+                const result = document.body.innerHTML;
                 return expected === result;
             }
         );
@@ -140,12 +134,11 @@ describe('Alert', function () {
                 icon = icon.join('');
                 message = message.join('');
                 const expected = '<div id="errormessage">' + message + '</div>';
-                $('body').html(
-                    '<div id="errormessage"></div>'
-                );
-                $.PrivateBin.Alert.init();
-                $.PrivateBin.Alert.showError(message, icon);
-                const result = $('body').html();
+                document.body.innerHTML =
+                    '<div id="errormessage"></div>';
+                PrivateBin.Alert.init();
+                PrivateBin.Alert.showError(message, icon);
+                const result = document.body.innerHTML;
                 return expected === result;
             }
         );
@@ -160,14 +153,13 @@ describe('Alert', function () {
                     'class="statusmessage alert alert-danger"><span ' +
                     'class="glyphicon glyphicon-alert" ' +
                     'aria-hidden="true"></span> <span>' + message + '</span></div>';
-                $('body').html(
+                document.body.innerHTML =
                     '<div id="errormessage" role="alert" class="statusmessage ' +
                     'alert alert-danger hidden"><span class="glyphicon ' +
-                    'glyphicon-alert" aria-hidden="true"></span> </div>'
-                );
-                $.PrivateBin.Alert.init();
-                $.PrivateBin.Alert.showError(message);
-                const result = $('body').html();
+                    'glyphicon-alert" aria-hidden="true"></span> </div>';
+                PrivateBin.Alert.init();
+                PrivateBin.Alert.showError(message);
+                const result = document.body.innerHTML;
                 return expected === result;
             }
         );
@@ -183,14 +175,13 @@ describe('Alert', function () {
                     'class="statusmessage alert alert-danger"><span ' +
                     'class="glyphicon glyphicon-' + icon +
                     '" aria-hidden="true"></span> <span>' + message + '</span></div>';
-                $('body').html(
+                document.body.innerHTML =
                     '<div id="errormessage" role="alert" class="statusmessage ' +
                     'alert alert-danger hidden"><span class="glyphicon ' +
-                    'glyphicon-alert" aria-hidden="true"></span> </div>'
-                );
-                $.PrivateBin.Alert.init();
-                $.PrivateBin.Alert.showError(message, icon);
-                const result = $('body').html();
+                    'glyphicon-alert" aria-hidden="true"></span> </div>';
+                PrivateBin.Alert.init();
+                PrivateBin.Alert.showError(message, icon);
+                const result = document.body.innerHTML;
                 return expected === result;
             }
         );
@@ -206,12 +197,11 @@ describe('Alert', function () {
                 message = message.join('');
                 string = string.join('');
                 const expected = '<div id="remainingtime" class="">' + string + message + number + '</div>';
-                $('body').html(
-                    '<div id="remainingtime" class="hidden"></div>'
-                );
-                $.PrivateBin.Alert.init();
-                $.PrivateBin.Alert.showRemaining(['%s' + message + '%d', string, number]);
-                const result = $('body').html();
+                document.body.innerHTML =
+                    '<div id="remainingtime" class="hidden"></div>';
+                PrivateBin.Alert.init();
+                PrivateBin.Alert.showRemaining(['%s' + message + '%d', string, number]);
+                const result = document.body.innerHTML;
                 return expected === result;
             }
         );
@@ -228,14 +218,13 @@ describe('Alert', function () {
                     'class="alert alert-info"><span ' +
                     'class="glyphicon glyphicon-fire" aria-hidden="true">' +
                     '</span> <span>' + string + message + number + '</span></div>';
-                $('body').html(
+                document.body.innerHTML =
                     '<div id="remainingtime" role="alert" class="hidden ' +
                     'alert alert-info"><span class="glyphicon ' +
-                    'glyphicon-fire" aria-hidden="true"></span> </div>'
-                );
-                $.PrivateBin.Alert.init();
-                $.PrivateBin.Alert.showRemaining(['%s' + message + '%d', string, number]);
-                const result = $('body').html();
+                    'glyphicon-fire" aria-hidden="true"></span> </div>';
+                PrivateBin.Alert.init();
+                PrivateBin.Alert.showRemaining(['%s' + message + '%d', string, number]);
+                const result = document.body.innerHTML;
                 return expected === result;
             }
         );
@@ -254,12 +243,11 @@ describe('Alert', function () {
                     message = defaultMessage;
                 }
                 const expected = '<div id="loadingindicator" class="">' + message + '</div>';
-                $('body').html(
-                    '<div id="loadingindicator" class="hidden">' + defaultMessage + '</div>'
-                );
-                $.PrivateBin.Alert.init();
-                $.PrivateBin.Alert.showLoading(message, icon);
-                const result = $('body').html();
+                document.body.innerHTML =
+                    '<div id="loadingindicator" class="hidden">' + defaultMessage + '</div>';
+                PrivateBin.Alert.init();
+                PrivateBin.Alert.showLoading(message, icon);
+                const result = document.body.innerHTML;
                 return expected === result;
             }
         );
@@ -279,15 +267,14 @@ describe('Alert', function () {
                     'id="loadingindicator" class="navbar-text"><span ' +
                     'class="glyphicon glyphicon-' + icon +
                     '" aria-hidden="true"></span> <span>' + message + '</span></li></ul>';
-                $('body').html(
+                document.body.innerHTML =
                     '<ul class="nav navbar-nav"><li id="loadingindicator" ' +
                     'class="navbar-text hidden"><span class="glyphicon ' +
                     'glyphicon-time" aria-hidden="true"></span> ' +
-                    defaultMessage + '</li></ul>'
-                );
-                $.PrivateBin.Alert.init();
-                $.PrivateBin.Alert.showLoading(message, icon);
-                const result = $('body').html();
+                    defaultMessage + '</li></ul>';
+                PrivateBin.Alert.init();
+                PrivateBin.Alert.showLoading(message, icon);
+                const result = document.body.innerHTML;
                 return expected === result;
             }
         );
@@ -297,17 +284,16 @@ describe('Alert', function () {
         it(
             'hides the loading message',
             function() {
-                $('body').html(
+                document.body.innerHTML =
                     '<ul class="nav navbar-nav"><li id="loadingindicator" ' +
                     'class="navbar-text"><span class="glyphicon ' +
                     'glyphicon-time" aria-hidden="true"></span> ' +
-                    'Loading…</li></ul>'
-                );
-                $('body').addClass('loading');
-                $.PrivateBin.Alert.init();
-                $.PrivateBin.Alert.hideLoading();
-                assert.ok(!$('body').hasClass('loading'));
-                assert.ok($('#loadingindicator').hasClass('hidden'));
+                    'Loading…</li></ul>';
+                document.body.classList.add('loading');
+                PrivateBin.Alert.init();
+                PrivateBin.Alert.hideLoading();
+                assert.ok(!document.body.classList.contains('loading'));
+                assert.ok(document.getElementById('loadingindicator').classList.contains('hidden'));
             }
         );
     });
@@ -316,18 +302,17 @@ describe('Alert', function () {
         it(
             'hides all messages',
             function() {
-                $('body').html(
+                document.body.innerHTML =
                     '<div id="status" role="alert" class="statusmessage ' +
                     'alert alert-info"><span class="glyphicon ' +
                     'glyphicon-info-sign" aria-hidden="true"></span> </div>' +
                     '<div id="errormessage" role="alert" class="statusmessage ' +
                     'alert alert-danger"><span class="glyphicon ' +
-                    'glyphicon-alert" aria-hidden="true"></span> </div>'
-                );
-                $.PrivateBin.Alert.init();
-                $.PrivateBin.Alert.hideMessages();
-                assert.ok($('#status').hasClass('hidden'));
-                assert.ok($('#errormessage').hasClass('hidden'));
+                    'glyphicon-alert" aria-hidden="true"></span> </div>';
+                PrivateBin.Alert.init();
+                PrivateBin.Alert.hideMessages();
+                assert.ok(document.getElementById('status').classList.contains('hidden'));
+                assert.ok(document.getElementById('errormessage').classList.contains('hidden'));
             }
         );
     });
@@ -342,15 +327,15 @@ describe('Alert', function () {
                 let handlerCalled = false,
                     defaultMessage = 'Loading…',
                     functions = [
-                        $.PrivateBin.Alert.showStatus,
-                        $.PrivateBin.Alert.showError,
-                        $.PrivateBin.Alert.showRemaining,
-                        $.PrivateBin.Alert.showLoading
+                        PrivateBin.Alert.showStatus,
+                        PrivateBin.Alert.showError,
+                        PrivateBin.Alert.showRemaining,
+                        PrivateBin.Alert.showLoading
                     ];
                 if (message.length === 0) {
                     message = defaultMessage;
                 }
-                $('body').html(
+                document.body.innerHTML =
                     '<ul class="nav navbar-nav"><li id="loadingindicator" ' +
                     'class="navbar-text hidden"><span class="glyphicon ' +
                     'glyphicon-time" aria-hidden="true"></span> ' +
@@ -363,15 +348,14 @@ describe('Alert', function () {
                     'glyphicon-info-sign" aria-hidden="true"></span> </div>' +
                     '<div id="errormessage" role="alert" class="statusmessage ' +
                     'alert alert-danger"><span class="glyphicon ' +
-                    'glyphicon-alert" aria-hidden="true"></span> </div>'
-                );
-                $.PrivateBin.Alert.init();
-                $.PrivateBin.Alert.setCustomHandler(function(id, $element) {
+                    'glyphicon-alert" aria-hidden="true"></span> </div>';
+                PrivateBin.Alert.init();
+                PrivateBin.Alert.setCustomHandler(function(id, element) {
                     handlerCalled = true;
-                    return jsc.random(0, 1) ? true : $element;
+                    return jsc.random(0, 1) ? true : element;
                 });
                 functions[trigger](message);
-                $.PrivateBin.Alert.setCustomHandler(null);
+                PrivateBin.Alert.setCustomHandler(null);
                 return handlerCalled;
             }
         );

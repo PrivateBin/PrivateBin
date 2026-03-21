@@ -1,6 +1,20 @@
 'use strict';
 require('../common');
 
+function query(selector) {
+    if (selector.startsWith('#')) {
+        return document.getElementById(selector.slice(1));
+    }
+    return document.querySelector(selector);
+}
+
+function triggerClick(element) {
+    if (!element) {
+        return;
+    }
+    element.dispatchEvent(new window.Event('click', { bubbles: true, cancelable: true }));
+}
+
 describe('TopNav', function () {
     describe('showViewButtons & hideViewButtons', function () {
         before(function () {
@@ -11,45 +25,39 @@ describe('TopNav', function () {
             'displays & hides navigation elements for viewing an existing document',
             function () {
                 let results = [];
-                $('body').html(
-                    '<nav class="navbar navbar-inverse navbar-static-top">' +
-                    '<div id="navbar" class="navbar-collapse collapse"><ul ' +
-                    'class="nav navbar-nav"><li><button id="newbutton" ' +
-                    'type="button" class="hidden btn btn-warning navbar-btn">' +
-                    '<span class="glyphicon glyphicon-file" aria-hidden="true">' +
-                    '</span> New</button><button id="clonebutton" type="button"' +
-                    ' class="hidden btn btn-warning navbar-btn">' +
-                    '<span class="glyphicon glyphicon-duplicate" ' +
-                    'aria-hidden="true"></span> Clone</button><button ' +
-                    'id="rawtextbutton" type="button" class="hidden btn ' +
-                    'btn-warning navbar-btn"><span class="glyphicon ' +
-                    'glyphicon-text-background" aria-hidden="true"></span> ' +
-                    'Raw text</button><button id="qrcodelink" type="button" ' +
-                    'data-toggle="modal" data-target="#qrcodemodal" ' +
-                    'class="hidden btn btn-warning navbar-btn"><span ' +
-                    'class="glyphicon glyphicon-qrcode" aria-hidden="true">' +
-                    '</span> QR code</button></li></ul></div></nav>'
-                );
-                $.PrivateBin.TopNav.init();
+                document.documentElement.innerHTML =
+                    `<nav class="navbar navbar-inverse navbar-static-top">
+                    <div id="navbar" class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav"><li><button id="newbutton" type="button" class="hidden btn btn-warning navbar-btn">
+                    <span class="glyphicon glyphicon-file" aria-hidden="true">
+                        </span> New</button><button id="clonebutton" type="button" class="hidden btn btn-warning navbar-btn">
+                    <span class="glyphicon glyphicon-duplicate" aria-hidden="true"></span> Clone</button>
+                    <button id="rawtextbutton" type="button" class="hidden btn btn-warning navbar-btn">
+                    <span class="glyphicon glyphicon-text-background" aria-hidden="true"></span> Raw text</button>
+                    <button id="downloadtextbutton" type="button" class="hidden btn btn-<?php echo $isDark ? 'warning' : 'default'; ?> navbar-btn"></button>
+                    <button id="qrcodelink" type="button" data-toggle="modal" data-target="#qrcodemodal" class="hidden btn btn-warning navbar-btn"/>
+                    <span class="glyphicon glyphicon-qrcode" aria-hidden="true"></span> QR code</button></li></ul></div>
+                    </nav>`;
+                PrivateBin.TopNav.init();
                 results.push(
-                    $('#newbutton').hasClass('hidden') &&
-                    $('#clonebutton').hasClass('hidden') &&
-                    $('#rawtextbutton').hasClass('hidden') &&
-                    $('#qrcodelink').hasClass('hidden')
+                    query('#newbutton').classList.contains('hidden') &&
+                    query('#clonebutton').classList.contains('hidden') &&
+                    query('#rawtextbutton').classList.contains('hidden') &&
+                    query('#qrcodelink').classList.contains('hidden')
                 );
-                $.PrivateBin.TopNav.showViewButtons();
+                PrivateBin.TopNav.showViewButtons();
                 results.push(
-                    !$('#newbutton').hasClass('hidden') &&
-                    !$('#clonebutton').hasClass('hidden') &&
-                    !$('#rawtextbutton').hasClass('hidden') &&
-                    !$('#qrcodelink').hasClass('hidden')
+                    !query('#newbutton').classList.contains('hidden') &&
+                    !query('#clonebutton').classList.contains('hidden') &&
+                    !query('#rawtextbutton').classList.contains('hidden') &&
+                    !query('#qrcodelink').classList.contains('hidden')
                 );
-                $.PrivateBin.TopNav.hideViewButtons();
+                PrivateBin.TopNav.hideViewButtons();
                 results.push(
-                    $('#newbutton').hasClass('hidden') &&
-                    $('#clonebutton').hasClass('hidden') &&
-                    $('#rawtextbutton').hasClass('hidden') &&
-                    $('#qrcodelink').hasClass('hidden')
+                    query('#newbutton').classList.contains('hidden') &&
+                    query('#clonebutton').classList.contains('hidden') &&
+                    query('#rawtextbutton').classList.contains('hidden') &&
+                    query('#qrcodelink').classList.contains('hidden')
                 );
                 cleanup();
                 const result = results.every(element => element);
@@ -70,7 +78,7 @@ describe('TopNav', function () {
             'displays & hides navigation elements for creating a document',
             function () { // eslint-disable-line complexity
                 let results = [];
-                $('body').html(
+                document.documentElement.innerHTML =
                     '<nav><div id="navbar"><ul><li><button id="newbutton" ' +
                     'type="button" class="hidden">New</button></li><li><a ' +
                     'id="expiration" href="#" class="hidden">Expiration</a>' +
@@ -81,40 +89,39 @@ describe('TopNav', function () {
                     '<li id="attach" class="hidden">Attach a file</li><li>' +
                     '<a id="formatter" href="#" class="hidden">Format</a>' +
                     '</li><li><button id="sendbutton" type="button" ' +
-                    'class="hidden">Create</button></li></ul></div></nav>'
-                );
-                $.PrivateBin.TopNav.init();
+                    'class="hidden">Create</button></li></ul></div></nav>';
+                PrivateBin.TopNav.init();
                 results.push(
-                    $('#sendbutton').hasClass('hidden') &&
-                    $('#expiration').hasClass('hidden') &&
-                    $('#formatter').hasClass('hidden') &&
-                    $('#burnafterreadingoption').hasClass('hidden') &&
-                    $('#opendiscussionoption').hasClass('hidden') &&
-                    $('#newbutton').hasClass('hidden') &&
-                    $('#password').hasClass('hidden') &&
-                    $('#attach').hasClass('hidden')
+                    query('#sendbutton').classList.contains('hidden') &&
+                    query('#expiration').classList.contains('hidden') &&
+                    query('#formatter').classList.contains('hidden') &&
+                    query('#burnafterreadingoption').classList.contains('hidden') &&
+                    query('#opendiscussionoption').classList.contains('hidden') &&
+                    query('#newbutton').classList.contains('hidden') &&
+                    query('#password').classList.contains('hidden') &&
+                    query('#attach').classList.contains('hidden')
                 );
-                $.PrivateBin.TopNav.showCreateButtons();
+                PrivateBin.TopNav.showCreateButtons();
                 results.push(
-                    !$('#sendbutton').hasClass('hidden') &&
-                    !$('#expiration').hasClass('hidden') &&
-                    !$('#formatter').hasClass('hidden') &&
-                    !$('#burnafterreadingoption').hasClass('hidden') &&
-                    !$('#opendiscussionoption').hasClass('hidden') &&
-                    !$('#newbutton').hasClass('hidden') &&
-                    !$('#password').hasClass('hidden') &&
-                    !$('#attach').hasClass('hidden')
+                    !query('#sendbutton').classList.contains('hidden') &&
+                    !query('#expiration').classList.contains('hidden') &&
+                    !query('#formatter').classList.contains('hidden') &&
+                    !query('#burnafterreadingoption').classList.contains('hidden') &&
+                    !query('#opendiscussionoption').classList.contains('hidden') &&
+                    !query('#newbutton').classList.contains('hidden') &&
+                    !query('#password').classList.contains('hidden') &&
+                    !query('#attach').classList.contains('hidden')
                 );
-                $.PrivateBin.TopNav.hideCreateButtons();
+                PrivateBin.TopNav.hideCreateButtons();
                 results.push(
-                    $('#sendbutton').hasClass('hidden') &&
-                    $('#expiration').hasClass('hidden') &&
-                    $('#formatter').hasClass('hidden') &&
-                    $('#burnafterreadingoption').hasClass('hidden') &&
-                    $('#opendiscussionoption').hasClass('hidden') &&
-                    $('#newbutton').hasClass('hidden') &&
-                    $('#password').hasClass('hidden') &&
-                    $('#attach').hasClass('hidden')
+                    query('#sendbutton').classList.contains('hidden') &&
+                    query('#expiration').classList.contains('hidden') &&
+                    query('#formatter').classList.contains('hidden') &&
+                    query('#burnafterreadingoption').classList.contains('hidden') &&
+                    query('#opendiscussionoption').classList.contains('hidden') &&
+                    query('#newbutton').classList.contains('hidden') &&
+                    query('#password').classList.contains('hidden') &&
+                    query('#attach').classList.contains('hidden')
                 );
                 cleanup();
                 const result = results.every(element => element);
@@ -135,17 +142,16 @@ describe('TopNav', function () {
             'displays the button for creating a document',
             function () {
                 let results = [];
-                $('body').html(
+                document.documentElement.innerHTML =
                     '<nav><div id="navbar"><ul><li><button id="newbutton" type=' +
-                    '"button" class="hidden">New</button></li></ul></div></nav>'
-                );
-                $.PrivateBin.TopNav.init();
+                    '"button" class="hidden">New</button></li></ul></div></nav>';
+                PrivateBin.TopNav.init();
                 results.push(
-                    $('#newbutton').hasClass('hidden')
+                    query('#newbutton').classList.contains('hidden')
                 );
-                $.PrivateBin.TopNav.showNewPasteButton();
+                PrivateBin.TopNav.showNewPasteButton();
                 results.push(
-                    !$('#newbutton').hasClass('hidden')
+                    !query('#newbutton').classList.contains('hidden')
                 );
                 cleanup();
                 const result = results.every(element => element);
@@ -166,19 +172,18 @@ describe('TopNav', function () {
             'hides the button for cloning a document',
             function () {
                 let results = [];
-                $('body').html(
+                document.documentElement.innerHTML =
                     '<nav><div id="navbar"><ul><li><button id="clonebutton" ' +
                     'type="button" class="btn btn-warning navbar-btn">' +
                     '<span class="glyphicon glyphicon-duplicate" aria-hidden=' +
-                    '"true"></span> Clone</button></li></ul></div></nav>'
-                );
-                $.PrivateBin.TopNav.init();
+                    '"true"></span> Clone</button></li></ul></div></nav>';
+                PrivateBin.TopNav.init();
                 results.push(
-                    !$('#clonebutton').hasClass('hidden')
+                    !query('#clonebutton').classList.contains('hidden')
                 );
-                $.PrivateBin.TopNav.hideCloneButton();
+                PrivateBin.TopNav.hideCloneButton();
                 results.push(
-                    $('#clonebutton').hasClass('hidden')
+                    query('#clonebutton').classList.contains('hidden')
                 );
                 cleanup();
                 const result = results.every(element => element);
@@ -199,20 +204,19 @@ describe('TopNav', function () {
             'hides the raw text button',
             function () {
                 let results = [];
-                $('body').html(
+                document.documentElement.innerHTML =
                     '<nav><div id="navbar"><ul><li><button ' +
                     'id="rawtextbutton" type="button" class="btn ' +
                     'btn-warning navbar-btn"><span class="glyphicon ' +
                     'glyphicon-text-background" aria-hidden="true"></span> ' +
-                    'Raw text</button></li></ul></div></nav>'
-                );
-                $.PrivateBin.TopNav.init();
+                    'Raw text</button></li></ul></div></nav>';
+                PrivateBin.TopNav.init();
                 results.push(
-                    !$('#rawtextbutton').hasClass('hidden')
+                    !query('#rawtextbutton').classList.contains('hidden')
                 );
-                $.PrivateBin.TopNav.hideRawButton();
+                PrivateBin.TopNav.hideRawButton();
                 results.push(
-                    $('#rawtextbutton').hasClass('hidden')
+                    query('#rawtextbutton').classList.contains('hidden')
                 );
                 cleanup();
                 const result = results.every(element => element);
@@ -233,7 +237,7 @@ describe('TopNav', function () {
             'hides the file attachment selection button',
             function () {
                 let results = [];
-                $('body').html(
+                document.documentElement.innerHTML =
                     '<nav><div id="navbar"><ul><li id="attach" class="hidden ' +
                     'dropdown"><a href="#" class="dropdown-toggle" data-' +
                     'toggle="dropdown" role="button" aria-haspopup="true" ' +
@@ -242,15 +246,14 @@ describe('TopNav', function () {
                     '<div><input type="file" id="file" name="file" /></div>' +
                     '</li><li id="customattachment" class="hidden"></li><li>' +
                     '<a id="fileremovebutton"  href="#">Remove attachment</a>' +
-                    '</li></ul></li></ul></div></nav>'
-                );
-                $.PrivateBin.TopNav.init();
+                    '</li></ul></li></ul></div></nav>';
+                PrivateBin.TopNav.init();
                 results.push(
-                    !$('#filewrap').hasClass('hidden')
+                    !query('#filewrap').classList.contains('hidden')
                 );
-                $.PrivateBin.TopNav.hideFileSelector();
+                PrivateBin.TopNav.hideFileSelector();
                 results.push(
-                    $('#filewrap').hasClass('hidden')
+                    query('#filewrap').classList.contains('hidden')
                 );
                 cleanup();
                 const result = results.every(element => element);
@@ -271,7 +274,7 @@ describe('TopNav', function () {
             'display the custom file attachment',
             function () {
                 let results = [];
-                $('body').html(
+                document.documentElement.innerHTML =
                     '<nav><div id="navbar"><ul><li id="attach" class="hidden ' +
                     'dropdown"><a href="#" class="dropdown-toggle" data-' +
                     'toggle="dropdown" role="button" aria-haspopup="true" ' +
@@ -280,15 +283,14 @@ describe('TopNav', function () {
                     '<div><input type="file" id="file" name="file" /></div>' +
                     '</li><li id="customattachment" class="hidden"></li><li>' +
                     '<a id="fileremovebutton"  href="#">Remove attachment</a>' +
-                    '</li></ul></li></ul></div></nav>'
-                );
-                $.PrivateBin.TopNav.init();
+                    '</li></ul></li></ul></div></nav>';
+                PrivateBin.TopNav.init();
                 results.push(
-                    $('#customattachment').hasClass('hidden')
+                    query('#customattachment').classList.contains('hidden')
                 );
-                $.PrivateBin.TopNav.showCustomAttachment();
+                PrivateBin.TopNav.showCustomAttachment();
                 results.push(
-                    !$('#customattachment').hasClass('hidden')
+                    !query('#customattachment').classList.contains('hidden')
                 );
                 cleanup();
                 const result = results.every(element => element);
@@ -308,9 +310,8 @@ describe('TopNav', function () {
         it(
             'collapses the navigation when displayed on a small screen',
             function () {
-                const clean = jsdom();
                 let results = [];
-                $('body').html(
+                document.documentElement.innerHTML =
                     '<nav><div class="navbar-header"><button type="button" ' +
                     'class="navbar-toggle collapsed" data-toggle="collapse" ' +
                     'data-target="#navbar" aria-expanded="false" aria-controls' +
@@ -318,34 +319,33 @@ describe('TopNav', function () {
                     'navbar-brand" href=""><img alt="PrivateBin" ' +
                     'src="img/icon.svg" width="38" /></a></div><div ' +
                     'id="navbar"><ul><li><button id="newbutton" type=' +
-                    '"button" class="hidden">New</button></li></ul></div></nav>'
-                );
-                $.PrivateBin.TopNav.init();
+                    '"button" class="hidden">New</button></li></ul></div></nav>';
+                PrivateBin.TopNav.init();
                 results.push(
-                    $('.navbar-toggle').hasClass('collapsed') &&
-                    $('#navbar').attr('aria-expanded') !== 'true'
+                    query('.navbar-toggle').classList.contains('collapsed') &&
+                    query('#navbar').getAttribute('aria-expanded') !== 'true'
                 );
-                $.PrivateBin.TopNav.collapseBar();
+                PrivateBin.TopNav.collapseBar();
                 results.push(
-                    $('.navbar-toggle').hasClass('collapsed') &&
-                    $('#navbar').attr('aria-expanded') !== 'true'
+                    query('.navbar-toggle').classList.contains('collapsed') &&
+                    query('#navbar').getAttribute('aria-expanded') !== 'true'
                 );
                 /*
                 with the upgrade for bootstrap-3.3.7.js to bootstrap-3.4.1.js
                 the mobile interface detection changed to check if the
                 ontouchstart event exists, which broke this section of the test
-                $('.navbar-toggle').trigger('click');
+                const toggleBtn = document.querySelector('.navbar-toggle');
+                toggleBtn.dispatchEvent(new MouseEvent('click'));
                 results.push(
-                    !$('.navbar-toggle').hasClass('collapsed') &&
-                    $('#navbar').attr('aria-expanded') == 'true'
+                    !toggleBtn.classList.contains('collapsed') &&
+                    document.getElementById('navbar').getAttribute('aria-expanded') == 'true'
                 );
-                $.PrivateBin.TopNav.collapseBar();
+                PrivateBin.TopNav.collapseBar();
                 results.push(
-                    $('.navbar-toggle').hasClass('collapsed') &&
-                    $('#navbar').attr('aria-expanded') == 'false'
+                    document.querySelector('.navbar-toggle').classList.contains('collapsed') &&
+                    document.getElementById('navbar').getAttribute('aria-expanded') == 'false'
                 );
                 */
-                clean();
                 const result = results.every(element => element);
                 if (!result) {
                     console.log(results);
@@ -364,36 +364,35 @@ describe('TopNav', function () {
             'reset inputs to defaults (options off)',
             function () {
                 let results = [];
-                $('body').html(
+                document.documentElement.innerHTML =
                     '<nav><div id="navbar"><ul><li id="burnafterreadingoption" ' +
                     'class="hidden"><label><input type="checkbox" ' +
                     'id="burnafterreading" name="burnafterreading" /> ' +
                     'Burn after reading</label></li><li id="opendiscussionoption" ' +
                     'class="hidden"><label><input type="checkbox" ' +
                     'id="opendiscussion" name="opendiscussion" /> ' +
-                    'Open discussion</label></li></ul></div></nav>'
-                );
-                $.PrivateBin.TopNav.init();
+                    'Open discussion</label></li></ul></div></nav>';
+                PrivateBin.TopNav.init();
                 results.push(
-                    !$.PrivateBin.TopNav.getBurnAfterReading()
-                );
-                results.push(
-                    !$.PrivateBin.TopNav.getOpenDiscussion()
-                );
-                $('#burnafterreading').attr('checked', 'checked');
-                $('#opendiscussion').attr('checked', 'checked');
-                results.push(
-                    $.PrivateBin.TopNav.getBurnAfterReading()
+                    !PrivateBin.TopNav.getBurnAfterReading()
                 );
                 results.push(
-                    $.PrivateBin.TopNav.getOpenDiscussion()
+                    !PrivateBin.TopNav.getOpenDiscussion()
                 );
-                $.PrivateBin.TopNav.resetInput();
+                query('#burnafterreading').checked = true;
+                query('#opendiscussion').checked = true;
                 results.push(
-                    !$.PrivateBin.TopNav.getBurnAfterReading()
+                    PrivateBin.TopNav.getBurnAfterReading()
                 );
                 results.push(
-                    !$.PrivateBin.TopNav.getOpenDiscussion()
+                    PrivateBin.TopNav.getOpenDiscussion()
+                );
+                PrivateBin.TopNav.resetInput();
+                results.push(
+                    !PrivateBin.TopNav.getBurnAfterReading()
+                );
+                results.push(
+                    !PrivateBin.TopNav.getOpenDiscussion()
                 );
                 cleanup();
                 const result = results.every(element => element);
@@ -408,35 +407,35 @@ describe('TopNav', function () {
             'reset inputs to defaults (burnafterreading on)',
             function () {
                 let results = [];
-                $('body').html(
+                document.documentElement.innerHTML =
                     '<nav><div id="navbar"><ul><li id="burnafterreadingoption" ' +
                     'class="hidden"><label><input type="checkbox" ' +
                     'id="burnafterreading" name="burnafterreading" checked="checked" /> ' +
                     'Burn after reading</label></li><li id="opendiscussionoption" ' +
                     'class="hidden"><label><input type="checkbox" ' +
                     'id="opendiscussion" name="opendiscussion" checked="checked" /> ' +
-                    'Open discussion</label></li></ul></div></nav>'
-                );
-                $.PrivateBin.TopNav.init();
+                    'Open discussion</label></li></ul></div></nav>';
+                PrivateBin.TopNav.init();
                 results.push(
-                    $.PrivateBin.TopNav.getBurnAfterReading()
-                );
-                results.push(
-                    !$.PrivateBin.TopNav.getOpenDiscussion()
-                );
-                $('#burnafterreading').removeAttr('checked');
-                results.push(
-                    !$.PrivateBin.TopNav.getBurnAfterReading()
+                    PrivateBin.TopNav.getBurnAfterReading()
                 );
                 results.push(
-                    !$.PrivateBin.TopNav.getOpenDiscussion()
+                    !PrivateBin.TopNav.getOpenDiscussion()
                 );
-                $.PrivateBin.TopNav.resetInput();
+                query('#burnafterreading').checked = false;
+                query('#burnafterreading').removeAttribute('checked');
                 results.push(
-                    $.PrivateBin.TopNav.getBurnAfterReading()
+                    !PrivateBin.TopNav.getBurnAfterReading()
                 );
                 results.push(
-                    !$.PrivateBin.TopNav.getOpenDiscussion()
+                    !PrivateBin.TopNav.getOpenDiscussion()
+                );
+                PrivateBin.TopNav.resetInput();
+                results.push(
+                    PrivateBin.TopNav.getBurnAfterReading()
+                );
+                results.push(
+                    !PrivateBin.TopNav.getOpenDiscussion()
                 );
                 cleanup();
                 const result = results.every(element => element);
@@ -451,36 +450,37 @@ describe('TopNav', function () {
             'reset inputs to defaults (opendiscussion on)',
             function () {
                 let results = [];
-                $('body').html(
+                document.documentElement.innerHTML =
                     '<nav><div id="navbar"><ul><li id="burnafterreadingoption" ' +
                     'class="hidden"><label><input type="checkbox" ' +
                     'id="burnafterreading" name="burnafterreading" /> ' +
                     'Burn after reading</label></li><li id="opendiscussionoption" ' +
                     'class="hidden"><label><input type="checkbox" ' +
                     'id="opendiscussion" name="opendiscussion" checked="checked" /> ' +
-                    'Open discussion</label></li></ul></div></nav>'
-                );
-                $.PrivateBin.TopNav.init();
+                    'Open discussion</label></li></ul></div></nav>';
+                PrivateBin.TopNav.init();
                 results.push(
-                    !$.PrivateBin.TopNav.getBurnAfterReading()
-                );
-                results.push(
-                    $.PrivateBin.TopNav.getOpenDiscussion()
-                );
-                $('#opendiscussion').removeAttr('checked');
-                $('#burnafterreading').prop('checked', true);
-                results.push(
-                    $.PrivateBin.TopNav.getBurnAfterReading()
+                    !PrivateBin.TopNav.getBurnAfterReading()
                 );
                 results.push(
-                    !$.PrivateBin.TopNav.getOpenDiscussion()
+                    PrivateBin.TopNav.getOpenDiscussion()
                 );
-                $.PrivateBin.TopNav.resetInput();
+                query('#opendiscussion').checked = false;
+                query('#opendiscussion').removeAttribute('checked');
+                query('#burnafterreading').checked = true;
+                query('#burnafterreading').setAttribute('checked', 'checked');
                 results.push(
-                    !$.PrivateBin.TopNav.getBurnAfterReading()
+                    PrivateBin.TopNav.getBurnAfterReading()
                 );
                 results.push(
-                    $.PrivateBin.TopNav.getOpenDiscussion()
+                    !PrivateBin.TopNav.getOpenDiscussion()
+                );
+                PrivateBin.TopNav.resetInput();
+                results.push(
+                    !PrivateBin.TopNav.getBurnAfterReading()
+                );
+                results.push(
+                    PrivateBin.TopNav.getOpenDiscussion()
                 );
                 cleanup();
                 const result = results.every(element => element);
@@ -500,13 +500,12 @@ describe('TopNav', function () {
         it(
             'returns the currently selected expiration date',
             function () {
-                $('body').html(
+                document.documentElement.innerHTML =
                     '<select id="pasteExpiration" name="pasteExpiration">' +
                     '<option value="1day">1 day</option>' +
-                    '<option value="never">Never</option></select>'
-                );
-                $.PrivateBin.TopNav.init();
-                assert.strictEqual($.PrivateBin.TopNav.getExpiration(), '1day');
+                    '<option value="never">Never</option></select>';
+                PrivateBin.TopNav.init();
+                assert.strictEqual(PrivateBin.TopNav.getExpiration(), '1day');
                 cleanup();
             }
         );
@@ -558,7 +557,7 @@ describe('TopNav', function () {
             'returns the selected files',
             function () {
                 let results = [];
-                $('body').html(
+                document.documentElement.innerHTML =
                     '<nav><div id="navbar"><ul><li id="attach" class="hidden ' +
                     'dropdown"><a href="#" class="dropdown-toggle" data-' +
                     'toggle="dropdown" role="button" aria-haspopup="true" ' +
@@ -567,17 +566,16 @@ describe('TopNav', function () {
                     '<div><input type="file" id="file" name="file" /></div>' +
                     '</li><li id="customattachment" class="hidden"></li><li>' +
                     '<a id="fileremovebutton"  href="#">Remove attachment</a>' +
-                    '</li></ul></li></ul></div></nav>'
-                );
-                $.PrivateBin.TopNav.init();
+                    '</li></ul></li></ul></div></nav>';
+                PrivateBin.TopNav.init();
                 results.push(
-                    $.PrivateBin.TopNav.getFileList() === null
+                    PrivateBin.TopNav.getFileList() === null
                 );
-                addFileList($('#file')[0], [
+                addFileList(query('#file'), [
                     '../img/logo.svg',
                     '../img/busy.gif'
                 ]);
-                const files = $.PrivateBin.TopNav.getFileList();
+                const files = PrivateBin.TopNav.getFileList();
                 results.push(
                     files[0].name === 'logo.svg' &&
                     files[1].name === 'busy.gif'
@@ -601,23 +599,23 @@ describe('TopNav', function () {
             'returns if the burn-after-reading checkbox was ticked',
             function () {
                 let results = [];
-                $('body').html(
+                document.documentElement.innerHTML =
                     '<nav><div id="navbar"><ul><li id="burnafterreadingoption" ' +
                     'class="hidden"><label><input type="checkbox" ' +
                     'id="burnafterreading" name="burnafterreading" /> ' +
-                    'Burn after reading</label></li></ul></div></nav>'
-                );
-                $.PrivateBin.TopNav.init();
+                    'Burn after reading</label></li></ul></div></nav>';
+                PrivateBin.TopNav.init();
                 results.push(
-                    !$.PrivateBin.TopNav.getBurnAfterReading()
+                    !PrivateBin.TopNav.getBurnAfterReading()
                 );
-                $('#burnafterreading').attr('checked', 'checked');
+                query('#burnafterreading').checked = true;
                 results.push(
-                    $.PrivateBin.TopNav.getBurnAfterReading()
+                    PrivateBin.TopNav.getBurnAfterReading()
                 );
-                $('#burnafterreading').removeAttr('checked');
+                query('#burnafterreading').checked = false;
+                query('#burnafterreading').removeAttribute('checked');
                 results.push(
-                    !$.PrivateBin.TopNav.getBurnAfterReading()
+                    !PrivateBin.TopNav.getBurnAfterReading()
                 );
                 cleanup();
                 const result = results.every(element => element);
@@ -638,23 +636,23 @@ describe('TopNav', function () {
             'returns if the open-discussion checkbox was ticked',
             function () {
                 let results = [];
-                $('body').html(
+                document.documentElement.innerHTML =
                     '<nav><div id="navbar"><ul><li id="opendiscussionoption" ' +
                     'class="hidden"><label><input type="checkbox" ' +
                     'id="opendiscussion" name="opendiscussion" /> ' +
-                    'Open discussion</label></li></ul></div></nav>'
-                );
-                $.PrivateBin.TopNav.init();
+                    'Open discussion</label></li></ul></div></nav>';
+                PrivateBin.TopNav.init();
                 results.push(
-                    !$.PrivateBin.TopNav.getOpenDiscussion()
+                    !PrivateBin.TopNav.getOpenDiscussion()
                 );
-                $('#opendiscussion').attr('checked', 'checked');
+                query('#opendiscussion').checked = true;
                 results.push(
-                    $.PrivateBin.TopNav.getOpenDiscussion()
+                    PrivateBin.TopNav.getOpenDiscussion()
                 );
-                $('#opendiscussion').removeAttr('checked');
+                query('#opendiscussion').checked = false;
+                query('#opendiscussion').removeAttribute('checked');
                 results.push(
-                    !$.PrivateBin.TopNav.getOpenDiscussion()
+                    !PrivateBin.TopNav.getOpenDiscussion()
                 );
                 cleanup();
                 const result = results.every(element => element);
@@ -677,23 +675,22 @@ describe('TopNav', function () {
             function (password) {
                 password = password.replace(/\r+|\n+/g, '');
                 let results = [];
-                $('body').html(
+                document.documentElement.innerHTML =
                     '<nav><div id="navbar"><ul><li><div id="password" ' +
                     'class="navbar-form hidden"><input type="password" ' +
                     'id="passwordinput" placeholder="Password (recommended)" ' +
-                    'class="form-control" size="23" /></div></li></ul></div></nav>'
-                );
-                $.PrivateBin.TopNav.init();
+                    'class="form-control" size="23" /></div></li></ul></div></nav>';
+                PrivateBin.TopNav.init();
                 results.push(
-                    $.PrivateBin.TopNav.getPassword() === ''
+                    PrivateBin.TopNav.getPassword() === ''
                 );
-                $('#passwordinput').val(password);
+                query('#passwordinput').value = password;
                 results.push(
-                    $.PrivateBin.TopNav.getPassword() === password
+                    PrivateBin.TopNav.getPassword() === password
                 );
-                $('#passwordinput').val('');
+                query('#passwordinput').value = '';
                 results.push(
-                    $.PrivateBin.TopNav.getPassword() === ''
+                    PrivateBin.TopNav.getPassword() === ''
                 );
                 cleanup();
                 const result = results.every(element => element);
@@ -714,7 +711,7 @@ describe('TopNav', function () {
             'returns the custom attachment element',
             function () {
                 let results = [];
-                $('body').html(
+                document.documentElement.innerHTML =
                     '<nav><div id="navbar"><ul><li id="attach" class="hidden ' +
                     'dropdown"><a href="#" class="dropdown-toggle" data-' +
                     'toggle="dropdown" role="button" aria-haspopup="true" ' +
@@ -723,15 +720,14 @@ describe('TopNav', function () {
                     '<div><input type="file" id="file" name="file" /></div>' +
                     '</li><li id="customattachment" class="hidden"></li><li>' +
                     '<a id="fileremovebutton"  href="#">Remove attachment</a>' +
-                    '</li></ul></li></ul></div></nav>'
-                );
-                $.PrivateBin.TopNav.init();
+                    '</li></ul></li></ul></div></nav>';
+                PrivateBin.TopNav.init();
                 results.push(
-                    !$.PrivateBin.TopNav.getCustomAttachment().hasClass('test')
+                    !PrivateBin.TopNav.getCustomAttachment().classList.contains('test')
                 );
-                $('#customattachment').addClass('test');
+                query('#customattachment').classList.add('test');
                 results.push(
-                    $.PrivateBin.TopNav.getCustomAttachment().hasClass('test')
+                    PrivateBin.TopNav.getCustomAttachment().classList.contains('test')
                 );
                 cleanup();
                 const result = results.every(element => element);
@@ -753,7 +749,7 @@ describe('TopNav', function () {
             function () {
                 // Insert any setup code needed for the hideAllButtons function
                 // Example: Initialize the DOM elements required for testing
-                $('body').html(
+                document.body.innerHTML =
                     '<nav class="navbar navbar-inverse navbar-static-top">' +
                     '<div id="navbar" class="navbar-collapse collapse"><ul ' +
                     'class="nav navbar-nav"><li><button id="newbutton" ' +
@@ -770,15 +766,14 @@ describe('TopNav', function () {
                     'data-toggle="modal" data-target="#qrcodemodal" ' +
                     'class="hidden btn btn-warning navbar-btn"><span ' +
                     'class="glyphicon glyphicon-qrcode" aria-hidden="true">' +
-                    '</span> QR code</button></li></ul></div></nav>'
-                );
-                $.PrivateBin.TopNav.init();
-                $.PrivateBin.TopNav.hideAllButtons();
+                    '</span> QR code</button></li></ul></div></nav>';
+                PrivateBin.TopNav.init();
+                PrivateBin.TopNav.hideAllButtons();
 
-                assert.ok($('#newbutton').hasClass('hidden'));
-                assert.ok($('#clonebutton').hasClass('hidden'));
-                assert.ok($('#rawtextbutton').hasClass('hidden'));
-                assert.ok($('#qrcodelink').hasClass('hidden'));
+                assert.ok(query('#newbutton').classList.contains('hidden'));
+                assert.ok(query('#clonebutton').classList.contains('hidden'));
+                assert.ok(query('#rawtextbutton').classList.contains('hidden'));
+                assert.ok(query('#qrcodelink').classList.contains('hidden'));
                 cleanup();
             }
         );
@@ -793,14 +788,14 @@ describe('TopNav', function () {
         it(
             'displays raw text view correctly',
             function () {
-                const clean = jsdom('', {url: 'https://privatebin.net/?0123456789abcdef#1'});
-                $('body').html('<button id="rawtextbutton"></button>');
+                const clean = globalThis.cleanup('', {url: 'https://privatebin.net/?0123456789abcdef#1'});
+                document.documentElement.innerHTML ='<button id="rawtextbutton"></button>';
                 const sample = 'example';
-                $.PrivateBin.PasteViewer.setText(sample);
-                $.PrivateBin.Helper.reset();
-                $.PrivateBin.TopNav.init();
-                $('#rawtextbutton').click();
-                assert.strictEqual($('pre').text(), sample);
+                PrivateBin.PasteViewer.setText(sample);
+                PrivateBin.Helper.reset();
+                PrivateBin.TopNav.init();
+                triggerClick(query('#rawtextbutton'));
+                assert.strictEqual(document.querySelector('pre').textContent, sample);
                 clean();
             }
         );

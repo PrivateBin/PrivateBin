@@ -36,7 +36,7 @@
         }
     },
     "features": {
-        "ghcr.io/devcontainers-contrib/features/mocha:2": {},
+        "ghcr.io/devcontainers-extra/features/mocha:2": {},
         "ghcr.io/yassinedoghri/devcontainers/php-extensions-installer:1": {
             "extensions": "gd"
         }

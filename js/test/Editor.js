@@ -9,9 +9,9 @@ describe('Editor', function () {
             'returns text fed into the textarea, handles editor tabs',
             'string',
             function (text) {
-                var clean = jsdom(),
+                var clean = globalThis.cleanup(),
                     results = [];
-                $('body').html(
+                document.body.innerHTML = (
                     '<ul id="editorTabs" class="nav nav-tabs hidden"><li ' +
                     'role="presentation" class="active"><a id="messageedit" ' +
                     'href="#">Editor</a></li><li role="presentation"><a ' +
@@ -23,44 +23,44 @@ describe('Editor', function () {
                     'id="message" name="message" cols="80" rows="25" ' +
                     'class="form-control hidden"></textarea></p>'
                 );
-                $.PrivateBin.Editor.init();
+                PrivateBin.Editor.init();
                 results.push(
-                    $('#editorTabs').hasClass('hidden') &&
-                    $('#message').hasClass('hidden')
+                    document.getElementById('editorTabs').classList.contains('hidden') &&
+                    document.getElementById('message').classList.contains('hidden')
                 );
-                $.PrivateBin.Editor.show();
+                PrivateBin.Editor.show();
                 results.push(
-                    !$('#editorTabs').hasClass('hidden') &&
-                    !$('#message').hasClass('hidden')
+                    !document.getElementById('editorTabs').classList.contains('hidden') &&
+                    !document.getElementById('message').classList.contains('hidden')
                 );
-                $.PrivateBin.Editor.hide();
+                PrivateBin.Editor.hide();
                 results.push(
-                    $('#editorTabs').hasClass('hidden') &&
-                    $('#message').hasClass('hidden')
+                    document.getElementById('editorTabs').classList.contains('hidden') &&
+                    document.getElementById('message').classList.contains('hidden')
                 );
-                $.PrivateBin.Editor.show();
-                $.PrivateBin.Editor.focusInput();
+                PrivateBin.Editor.show();
+                PrivateBin.Editor.focusInput();
                 results.push(
-                    $.PrivateBin.Editor.getText().length === 0
+                    PrivateBin.Editor.getText().length === 0
                 );
-                $.PrivateBin.Editor.setText(text);
+                PrivateBin.Editor.setText(text);
                 results.push(
-                    $.PrivateBin.Editor.getText() === $('#message').val()
+                    PrivateBin.Editor.getText() === document.getElementById('message').value
                 );
-                $.PrivateBin.Editor.setText();
+                PrivateBin.Editor.setText();
                 results.push(
-                    !$.PrivateBin.Editor.isPreview() &&
-                    !$('#message').hasClass('hidden')
+                    !PrivateBin.Editor.isPreview() &&
+                    !document.getElementById('message').classList.contains('hidden')
                 );
-                $('#messagepreview').trigger('click');
+                document.getElementById('messagepreview').click();
                 results.push(
-                    $.PrivateBin.Editor.isPreview() &&
-                    $('#message').hasClass('hidden')
+                    PrivateBin.Editor.isPreview() &&
+                    document.getElementById('message').classList.contains('hidden')
                 );
-                $('#messageedit').trigger('click');
+                document.getElementById('messageedit').click();
                 results.push(
-                    !$.PrivateBin.Editor.isPreview() &&
-                    !$('#message').hasClass('hidden')
+                    !PrivateBin.Editor.isPreview() &&
+                    !document.getElementById('message').classList.contains('hidden')
                 );
                 clean();
                 return results.every(element => element);

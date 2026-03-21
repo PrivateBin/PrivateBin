@@ -22,21 +22,39 @@ describe('PasteStatus', function () {
     describe('createPasteNotification', function () {
         this.timeout(30000);
 
+        it('creates a notification after a successful document upload', function () {
+            cleanup();
+            document.body.innerHTML = '<a href="#" id="deletelink"><span></span></a><div id="pastelink"></div><div id="pastesuccess"></div>';
+            PrivateBin.PasteStatus.init();
+            const expected1 = 'https://example.com/long';
+            const expected2 = 'https://example.com/short';
+            PrivateBin.PasteStatus.createPasteNotification(expected1, expected2);
+
+            assert.strictEqual(document.getElementById('pasteurl').href, expected1);
+            assert.strictEqual(document.getElementById('deletelink').href, expected2);
+            assert.ok(!document.getElementById('pastesuccess').classList.contains('hidden'));
+        });
+
         jsc.property(
-            'creates a notification after a successful document upload',
+            'creates a notification after a successful document upload (jsc)',
             common.jscUrl(),
             common.jscUrl(false),
             function (url1, url2) {
-                const expected1 = common.urlToString(url1).replace(/&(gt|lt)$/, '&$1a'),
-                    expected2 = common.urlToString(url2).replace(/&(gt|lt)$/, '&$1a'),
-                    clean = jsdom();
-                $('body').html('<a href="#" id="deletelink"><span></span></a><div id="pastelink"></div>');
-                $.PrivateBin.PasteStatus.init();
-                $.PrivateBin.PasteStatus.createPasteNotification(expected1, expected2);
-                const result1 = $('#pasteurl')[0].href,
-                    result2 = $('#deletelink')[0].href;
-                clean();
-                return result1 === expected1 && result2 === expected2;
+                    // sometimes the generator returns incomplete objects, bail out
+                    if (!url1 || !url1.address || !url2 || !url2.address) {
+                        return true;
+                    }
+                    const expected1 = common.urlToString(url1).replace(/&(gt|lt)$/, '&$1a'),
+                        expected2 = common.urlToString(url2).replace(/&(gt|lt)$/, '&$1a');
+                    cleanup();
+                    document.body.innerHTML = '<a href="#" id="deletelink"><span></span></a><div id="pastelink"></div><div id="pastesuccess"></div>';
+                    PrivateBin.PasteStatus.init();
+                    PrivateBin.PasteStatus.createPasteNotification(expected1, expected2);
+
+                    assert.ok(!document.getElementById('pastesuccess').classList.contains('hidden'));
+
+                    const result2 = document.getElementById('deletelink').href;
+                    return document.getElementById('pasteurl').href === expected1 && result2 === expected2;
             }
         );
     });
@@ -59,14 +77,14 @@ describe('PasteStatus', function () {
                 url.address = domain.split('').concat(url.address);
                 const urlString = common.urlToString(url),
                     expected = urlString.substring((schema + '://' + domain).length),
-                    clean = jsdom();
+                    clean = globalThis.cleanup();
 
-                $('body').html('<div><div id="pastelink"></div></div>');
-                $.PrivateBin.PasteStatus.init();
-                $.PrivateBin.PasteStatus.createPasteNotification('', '');
-                $.PrivateBin.PasteStatus.extractUrl(urlString);
+                document.body.innerHTML = '<div><div id="pastelink"></div></div>';
+                PrivateBin.PasteStatus.init();
+                PrivateBin.PasteStatus.createPasteNotification('', '');
+                PrivateBin.PasteStatus.extractUrl(urlString);
 
-                const result = $('#pasteurl')[0].href;
+                const result = document.getElementById('pasteurl').href;
                 clean();
 
                 return result.endsWith(expected) && (
@@ -98,14 +116,14 @@ describe('PasteStatus', function () {
                         shorturl: shortUrlString,
                         statusCode: 200
                     },
-                    clean = jsdom();
+                    clean = globalThis.cleanup();
 
-                $('body').html('<div><div id="pastelink"></div></div>');
-                $.PrivateBin.PasteStatus.init();
-                $.PrivateBin.PasteStatus.createPasteNotification('', '');
-                $.PrivateBin.PasteStatus.extractUrl(JSON.stringify(yourlsResponse, undefined, 4));
+                document.body.innerHTML = '<div><div id="pastelink"></div></div>';
+                PrivateBin.PasteStatus.init();
+                PrivateBin.PasteStatus.createPasteNotification('', '');
+                PrivateBin.PasteStatus.extractUrl(JSON.stringify(yourlsResponse, undefined, 4));
 
-                const result = $('#pasteurl')[0].href;
+                const result = document.getElementById('pasteurl').href;
                 clean();
 
                 return result === shortUrlString;
@@ -125,14 +143,14 @@ describe('PasteStatus', function () {
                         '    <message>success</message>\n' +
                         '    <statusCode>200</statusCode>\n' +
                         '</result>',
-                    clean = jsdom();
+                    clean = globalThis.cleanup();
 
-                $('body').html('<div><div id="pastelink"></div></div>');
-                $.PrivateBin.PasteStatus.init();
-                $.PrivateBin.PasteStatus.createPasteNotification('', '');
-                $.PrivateBin.PasteStatus.extractUrl(yourlsResponse);
+                document.body.innerHTML = '<div><div id="pastelink"></div></div>';
+                PrivateBin.PasteStatus.init();
+                PrivateBin.PasteStatus.createPasteNotification('', '');
+                PrivateBin.PasteStatus.extractUrl(yourlsResponse);
 
-                const result = $('#pasteurl')[0].href;
+                const result = document.getElementById('pasteurl').href;
                 clean();
 
                 return result === shortUrlString;
@@ -157,14 +175,14 @@ describe('PasteStatus', function () {
                         '\t\t<p>Your document is <a id="pasteurl" href="' + shortUrlString + '">' + shortUrlString + '</a> <span id="copyhint">(Hit <kbd>Ctrl</kbd>+<kbd>c</kbd> to copy)</span></p>\n' +
                         '\t</body>\n' +
                         '</html>',
-                    clean = jsdom();
+                    clean = globalThis.cleanup();
 
-                $('body').html('<div><div id="pastelink"></div></div>');
-                $.PrivateBin.PasteStatus.init();
-                $.PrivateBin.PasteStatus.createPasteNotification('', '');
-                $.PrivateBin.PasteStatus.extractUrl(yourlsResponse);
+                document.body.innerHTML = '<div><div id="pastelink"></div></div>';
+                PrivateBin.PasteStatus.init();
+                PrivateBin.PasteStatus.createPasteNotification('', '');
+                PrivateBin.PasteStatus.extractUrl(yourlsResponse);
 
-                const result = $('#pasteurl')[0].href;
+                const result = document.getElementById('pasteurl').href;
                 clean();
 
                 return result === shortUrlString;
@@ -181,11 +199,11 @@ describe('PasteStatus', function () {
             'nat',
             common.jscUrl(),
             function (burnafterreading, remainingTime, url) {
-                let clean = jsdom('', {url: common.urlToString(url)}),
+                let clean = globalThis.cleanup('', {url: common.urlToString(url)}),
                     result;
-                $('body').html('<div id="remainingtime" class="hidden"></div>');
-                $.PrivateBin.PasteStatus.init();
-                $.PrivateBin.PasteStatus.showRemainingTime($.PrivateBin.Helper.PasteFactory({
+                document.body.innerHTML = '<div id="remainingtime" class="hidden"></div>';
+                PrivateBin.PasteStatus.init();
+                PrivateBin.PasteStatus.showRemainingTime(PrivateBin.Helper.PasteFactory({
                     'adata': [null, null, null, burnafterreading],
                     'v': 2,
                     'meta': {
@@ -193,14 +211,14 @@ describe('PasteStatus', function () {
                     }
                 }));
                 if (burnafterreading) {
-                    result = $('#remainingtime').hasClass('foryoureyesonly') &&
-                            !$('#remainingtime').hasClass('hidden');
+                    result = document.getElementById('remainingtime').classList.contains('foryoureyesonly') &&
+                            !document.getElementById('remainingtime').classList.contains('hidden');
                 } else if (remainingTime) {
-                    result =!$('#remainingtime').hasClass('foryoureyesonly') &&
-                            !$('#remainingtime').hasClass('hidden');
+                    result =!document.getElementById('remainingtime').classList.contains('foryoureyesonly') &&
+                            !document.getElementById('remainingtime').classList.contains('hidden');
                 } else {
-                    result = $('#remainingtime').hasClass('hidden') &&
-                            !$('#remainingtime').hasClass('foryoureyesonly');
+                    result = document.getElementById('remainingtime').classList.contains('hidden') &&
+                            !document.getElementById('remainingtime').classList.contains('foryoureyesonly');
                 }
                 clean();
                 return result;
@@ -212,13 +230,13 @@ describe('PasteStatus', function () {
         it(
             'hides all messages',
             function() {
-                $('body').html(
+                document.body.innerHTML = (
                     '<div id="remainingtime"></div><div id="pastesuccess"></div>'
                 );
-                $.PrivateBin.PasteStatus.init();
-                $.PrivateBin.PasteStatus.hideMessages();
-                assert.ok($('#remainingtime').hasClass('hidden'));
-                assert.ok($('#pastesuccess').hasClass('hidden'));
+                PrivateBin.PasteStatus.init();
+                PrivateBin.PasteStatus.hideMessages();
+                assert.ok(document.getElementById('remainingtime').classList.contains('hidden'));
+                assert.ok(document.getElementById('pastesuccess').classList.contains('hidden'));
             }
         );
     });

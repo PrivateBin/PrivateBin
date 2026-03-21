@@ -5,60 +5,75 @@ describe('PasteViewer', function () {
     describe('run, hide, getText, setText, getFormat, setFormat & isPrettyPrinted', function () {
         this.timeout(30000);
 
+        it('basic plaintext display works', function () {
+            cleanup();
+            document.body.innerHTML = (
+                '<div id="placeholder" class="hidden">+++ no document text +++</div>' +
+                '<div id="prettymessage" class="hidden"><pre id="prettyprint" class="prettyprint linenums:1"></pre></div>' +
+                '<div id="plaintext" class="hidden"></div>'
+            );
+            PrivateBin.PasteViewer.init();
+            PrivateBin.PasteViewer.setFormat('plaintext');
+            PrivateBin.PasteViewer.setText('hello');
+            PrivateBin.PasteViewer.run();
+            assert.strictEqual(PrivateBin.PasteViewer.getText(), 'hello');
+            assert.ok(!document.getElementById('plaintext').classList.contains('hidden'));
+        });
+
         jsc.property(
             'displays text according to format',
             common.jscFormats(),
             'nestring',
             function (format, text) {
-                var clean = jsdom(),
-                    results = [];
-                $('body').html(
+                    cleanup();
+                    var results = [];
+                document.body.innerHTML = (
                     '<div id="placeholder" class="hidden">+++ no document text ' +
                     '+++</div><div id="prettymessage" class="hidden"><pre ' +
                     'id="prettyprint" class="prettyprint linenums:1"></pre>' +
                     '</div><div id="plaintext" class="hidden"></div>'
                 );
-                $.PrivateBin.PasteViewer.init();
-                $.PrivateBin.PasteViewer.setFormat(format);
-                $.PrivateBin.PasteViewer.setText('');
+                PrivateBin.PasteViewer.init();
+                PrivateBin.PasteViewer.setFormat(format);
+                PrivateBin.PasteViewer.setText('');
                 results.push(
-                    $('#placeholder').hasClass('hidden') &&
-                    $('#prettymessage').hasClass('hidden') &&
-                    $('#plaintext').hasClass('hidden') &&
-                    $.PrivateBin.PasteViewer.getFormat() === format &&
-                    $.PrivateBin.PasteViewer.getText() === ''
+                    document.getElementById('placeholder').classList.contains('hidden') &&
+                    document.getElementById('prettymessage').classList.contains('hidden') &&
+                    document.getElementById('plaintext').classList.contains('hidden') &&
+                    PrivateBin.PasteViewer.getFormat() === format &&
+                    PrivateBin.PasteViewer.getText() === ''
                 );
-                $.PrivateBin.PasteViewer.run();
+                PrivateBin.PasteViewer.run();
                 results.push(
-                    !$('#placeholder').hasClass('hidden') &&
-                    $('#prettymessage').hasClass('hidden') &&
-                    $('#plaintext').hasClass('hidden')
+                    !document.getElementById('placeholder').classList.contains('hidden') &&
+                    document.getElementById('prettymessage').classList.contains('hidden') &&
+                    document.getElementById('plaintext').classList.contains('hidden')
                 );
-                $.PrivateBin.PasteViewer.hide();
+                PrivateBin.PasteViewer.hide();
                 results.push(
-                    $('#placeholder').hasClass('hidden') &&
-                    $('#prettymessage').hasClass('hidden') &&
-                    $('#plaintext').hasClass('hidden')
+                    document.getElementById('placeholder').classList.contains('hidden') &&
+                    document.getElementById('prettymessage').classList.contains('hidden') &&
+                    document.getElementById('plaintext').classList.contains('hidden')
                 );
-                $.PrivateBin.PasteViewer.setText(text);
-                $.PrivateBin.PasteViewer.run();
+                PrivateBin.PasteViewer.setText(text);
+                PrivateBin.PasteViewer.run();
                 results.push(
-                    $('#placeholder').hasClass('hidden') &&
-                    !$.PrivateBin.PasteViewer.isPrettyPrinted() &&
-                    $.PrivateBin.PasteViewer.getText() === text
+                    document.getElementById('placeholder').classList.contains('hidden') &&
+                    !PrivateBin.PasteViewer.isPrettyPrinted() &&
+                    PrivateBin.PasteViewer.getText() === text
                 );
                 if (format === 'markdown') {
                     results.push(
-                        $('#prettymessage').hasClass('hidden') &&
-                        !$('#plaintext').hasClass('hidden')
+                        document.getElementById('prettymessage').classList.contains('hidden') &&
+                        !document.getElementById('plaintext').classList.contains('hidden')
                     );
                 } else {
                     results.push(
-                        !$('#prettymessage').hasClass('hidden') &&
-                        $('#plaintext').hasClass('hidden')
+                        !document.getElementById('prettymessage').classList.contains('hidden') &&
+                        document.getElementById('plaintext').classList.contains('hidden')
                     );
                 }
-                clean();
+                cleanup();
                 return results.every(element => element);
             }
         );
@@ -97,20 +112,19 @@ describe('PasteViewer', function () {
             ]),
             'string',
             function (format, prefix, xss, suffix) {
-                var clean = jsdom(),
-                    text = prefix + xss + suffix;
-                $('body').html(
+                var text = prefix + xss + suffix;
+                document.body.innerHTML = (
                     '<div id="placeholder" class="hidden">+++ no document text ' +
                     '+++</div><div id="prettymessage" class="hidden"><pre ' +
                     'id="prettyprint" class="prettyprint linenums:1"></pre>' +
                     '</div><div id="plaintext" class="hidden"></div>'
                 );
-                $.PrivateBin.PasteViewer.init();
-                $.PrivateBin.PasteViewer.setFormat(format);
-                $.PrivateBin.PasteViewer.setText(text);
-                $.PrivateBin.PasteViewer.run();
-                var result = $('body').html().indexOf(xss) === -1;
-                clean();
+                PrivateBin.PasteViewer.init();
+                PrivateBin.PasteViewer.setFormat(format);
+                PrivateBin.PasteViewer.setText(text);
+                PrivateBin.PasteViewer.run();
+                var result = document.body.innerHTML.indexOf(xss) === -1;
+                cleanup();
                 return result;
             }
         );
