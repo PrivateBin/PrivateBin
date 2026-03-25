@@ -790,7 +790,7 @@ describe('TopNav', function () {
             function () {
                 const clean = globalThis.cleanup('', {url: 'https://privatebin.net/?0123456789abcdef#1'});
                 document.documentElement.innerHTML = `
-                <li id="loadingindicator" class="navbar-text hidden me-auto"></li>
+                <li id="loadingindicator" class="hidden"></li>
                 <button id="rawtextbutton"></button>`;
                 const sample = 'example';
                 PrivateBin.Alert.init(); // required because of locading indiator being used
