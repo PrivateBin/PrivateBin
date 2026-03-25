@@ -789,12 +789,15 @@ describe('TopNav', function () {
             'displays raw text view correctly',
             function () {
                 const clean = globalThis.cleanup('', {url: 'https://privatebin.net/?0123456789abcdef#1'});
-                document.documentElement.innerHTML ='<button id="rawtextbutton"></button>';
+                document.documentElement.innerHTML = `
+                <li id="loadingindicator" class="navbar-text hidden me-auto"></li>
+                <button id="rawtextbutton"></button>`;
                 const sample = 'example';
+                PrivateBin.Alert.init(); // required because of locading indiator being used
+                PrivateBin.TopNav.init();
                 PrivateBin.PasteViewer.setText(sample);
                 PrivateBin.Helper.reset();
-                PrivateBin.TopNav.init();
-                triggerClick(query('#rawtextbutton'));
+                query('#rawtextbutton').click();
                 assert.strictEqual(document.querySelector('pre').textContent, sample);
                 clean();
             }
