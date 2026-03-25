@@ -1750,6 +1750,11 @@ window.PrivateBin = (function () {
                 args = [args.message];
             }
 
+            // function guard
+            if (!element) {
+                throw new TypeError(`invalid/no element (${element}) given for alert type ${alertType[id]} with ID ${id}`);
+            }
+
             // pass to custom handler if defined
             if (typeof customHandler === 'function') {
                 let handlerResult = customHandler(alertType[id], element, args, icon);
