@@ -3655,7 +3655,7 @@ window.PrivateBin = (function () {
          *
          * @name   DiscussionViewer.getReplyCommentId
          * @function
-         * @return {int|undefined}
+         * @return {number|undefined}
          */
         me.getReplyCommentId = function () {
             return replyCommentId;
@@ -3667,7 +3667,7 @@ window.PrivateBin = (function () {
          * @name   DiscussionViewer.highlightComment
          * @function
          * @param {string} commentId
-         * @param {bool} fadeOut - whether to fade out the comment
+         * @param {Boolean} fadeOut - whether to fade out the comment
          */
         me.highlightComment = function (commentId, fadeOut) {
             const comment = document.getElementById('comment_' + commentId);
