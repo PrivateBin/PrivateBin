@@ -29,24 +29,34 @@ describe('DiscussionViewer', function () {
                 var clean = globalThis.cleanup(),
                     results = [];
                 document.body.innerHTML = (
-                    '<div id="discussion"><h4>Discussion</h4>' +
-                    '<div id="commentcontainer"></div></div><div id="templates">' +
-                    '<article id="commenttemplate" class="comment">' +
-                    '<div class="commentmeta"><span class="nickname">name</span>' +
-                    '<span class="commentdate">0000-00-00</span></div>' +
-                    '<div class="commentdata">c</div>' +
-                    '<button class="btn btn-default btn-sm">Reply</button>' +
-                    '</article><p id="commenttailtemplate" class="comment">' +
-                    '<button class="btn btn-default btn-sm">Add comment</button>' +
-                    '</p><div id="replytemplate" class="reply hidden">' +
-                    '<input type="text" id="nickname" class="form-control" ' +
-                    'title="Optional nickname…" placeholder="Optional ' +
-                    'nickname…" /><textarea id="replymessage" ' +
-                    'class="replymessage form-control" cols="80" rows="7">' +
-                    '</textarea><br /><div id="replystatus" role="alert" ' +
-                    'class="statusmessage hidden alert"><span class="glyphicon" ' +
-                    'aria-hidden="true"></span> </div><button id="replybutton" ' +
-                    'class="btn btn-default btn-sm">Post comment</button></div></div>'
+                    `<div id="discussion">
+	<h4>Discussion</h4>
+	<div id="commentcontainer"></div>
+</div>
+<div id="templates">
+	<article id="commenttemplate" class="comment">
+		<div class="commentmeta">
+			<span class="nickname">name</span>
+			<span class="commentdate">0000-00-00</span>
+		</div>
+		<div class="commentdata">c</div>
+		<button class="btn btn-default btn-sm">Reply</button>
+	</article>
+	<p id="commenttailtemplate" class="comment">
+		<button class="btn btn-default btn-sm">Add comment</button>
+	</p>
+	<div id="replytemplate" class="reply hidden">
+		<input type="text" id="nickname" class="form-control" title="Optional nickname…"
+			placeholder="Optional nickname…" />
+		<textarea id="replymessage" class="replymessage form-control" cols="80" rows="7"></textarea>
+		<br />
+		<div id="replystatus" role="alert" class="statusmessage hidden alert">
+			<span class="glyphicon" aria-hidden="true"></span>
+		</div>
+		<button id="replybutton" class="btn btn-default btn-sm">Post comment</button>
+	</div>
+</div>
+`
                 );
                 PrivateBin.Model.init();
                 PrivateBin.DiscussionViewer.init();
