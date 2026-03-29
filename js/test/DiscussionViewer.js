@@ -89,6 +89,7 @@ describe('DiscussionViewer', function () {
                         document.getElementById('comment_' + comments[commentKey].id).classList.contains('highlight')
                     );
                 }
+                // clicking "Add comment" button should open the reply form
                 document.getElementById('commentcontainer').querySelector('button').click();
                 results.push(
                     !document.getElementById('reply').classList.contains('hidden')

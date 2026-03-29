@@ -3446,6 +3446,8 @@ window.PrivateBin = (function () {
 
             // cache elements
             commentTail = Model.getTemplate('commenttail');
+
+            addEventListeners();
         }
 
         /**
@@ -3607,7 +3609,9 @@ window.PrivateBin = (function () {
          */
         me.finishDiscussion = function () {
             // add 'add new comment' area
-            commentContainer.appendChild(commentTail);
+            commentContainer.appendChild(commentTail.cloneNode(true));
+
+            addEventListeners();
 
             // show discussions
             discussion.classList.remove('hidden');
@@ -3693,6 +3697,21 @@ window.PrivateBin = (function () {
         };
 
         /**
+         * Binds events to templates (**and** all )
+         */
+        function addEventListeners() {
+            //
+            document.querySelectorAll('#commenttail button')
+                .forEach(btn => btn.addEventListener('click', openReply));
+
+            document.querySelectorAll('#comment button')
+                .forEach(btn => btn.addEventListener('click', openReply));
+
+            document.querySelectorAll('#reply button, #reply #replybutton')
+                .forEach(btn => btn.addEventListener('click', PasteEncrypter.sendComment));
+        }
+
+        /**
          * initiate
          *
          * preloads jQuery elements
@@ -3701,19 +3720,8 @@ window.PrivateBin = (function () {
          * @function
          */
         me.init = function () {
-            // bind events to templates (so they are later cloned)
-            const commentTailTemplate = document.getElementById('commenttailtemplate');
-            if (commentTailTemplate) {
-                commentTailTemplate.querySelectorAll('button').forEach(btn => btn.addEventListener('click', openReply));
-            }
-            const commentTemplate = document.getElementById('commenttemplate');
-            if (commentTemplate) {
-                commentTemplate.querySelectorAll('button').forEach(btn => btn.addEventListener('click', openReply));
-            }
-            const replyTemplate = document.getElementById('replytemplate');
-            if (replyTemplate) {
-                replyTemplate.querySelectorAll('button').forEach(btn => btn.addEventListener('click', PasteEncrypter.sendComment));
-            }
+           // todo: remove
+            addEventListeners();
 
             commentContainer = document.getElementById('commentcontainer');
             discussion = document.getElementById('discussion');
@@ -5433,12 +5441,12 @@ window.PrivateBin = (function () {
                 }
 
                 document.addEventListener(I18n.languageLoadedEvent, function () {
-                    const comentContainer = document.getElementById('commentcontainer');
-                    if (!comentContainer) {
+                    const commentContainer = document.getElementById('commentcontainer');
+                    if (!commentContainer) {
                         return;
                     }
 
-                    comentContainer.querySelectorAll('img.vizhash')
+                    commentContainer.querySelectorAll('img.vizhash')
                         .forEach(img => img.setAttribute('title', I18n._('Avatar generated from IP address')));
                 });
             });
@@ -6088,3 +6096,5 @@ window.addEventListener('DOMContentLoaded', function () {
     // run main controller
     window.PrivateBin.Controller.init();
 });
+
+
