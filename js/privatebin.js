@@ -3918,11 +3918,20 @@ window.PrivateBin = (function () {
 
             // we use text/html instead of text/plain to avoid a bug when
             // reloading the raw text view (it reverts to type text/html)
-            const $head = $('head').children().not('noscript, script, link[type="text/css"]'),
-                newDoc = document.open('text/html', 'replace');
+            const headElements = Array.from(document.head.children).filter(function (element) {
+                if (element.tagName === 'NOSCRIPT' || element.tagName === 'SCRIPT') {
+                    return false;
+                }
+                if (element.tagName === 'LINK' && element.getAttribute('type') === 'text/css') {
+                    return false;
+                }
+                return true;
+            }),
+
+            newDoc = document.open('text/html', 'replace');
             newDoc.write('<!DOCTYPE html><html><head>');
-            for (let i = 0; i < $head.length; ++i) {
-                newDoc.write($head[i].outerHTML);
+            for (let i = 0; i < headElements.length; ++i) {
+                newDoc.write(headElements[i].outerHTML);
             }
             newDoc.write(
                 '</head><body><pre>' +
@@ -5725,38 +5734,38 @@ window.PrivateBin = (function () {
          * @function
          */
         function handleRevealButtonClick() {
-            const element = $(this);
-            const passwordInput = element.siblings('.input-password');
-            const isHidden = passwordInput.attr('type') === 'password';
+            const element = this;
+            const passwordInput = element.closest('.input-group')?.querySelector('.input-password');
+            if (!passwordInput) {
+                return;
+            }
 
-            passwordInput.attr('type', isHidden ? 'text' : 'password');
+            const isHidden = passwordInput.getAttribute('type') === 'password';
+            passwordInput.setAttribute('type', isHidden ? 'text' : 'password');
 
             const tooltip = I18n._(isHidden ? 'Hide password' : 'Show password');
-
-            element.attr('title', tooltip);
-            element.attr('aria-label', tooltip);
+            element.setAttribute('title', tooltip);
+            element.setAttribute('aria-label', tooltip);
 
             // handle bootstrap 5 icons: eye & eye-slash
-            const buttonSvg = element.find('use');
-            if (buttonSvg.length) {
-                const iconHref = buttonSvg.attr('href');
-                if (isHidden) {
-                    buttonSvg.attr('href', iconHref + '-slash');
-                } else {
-                    buttonSvg.attr('href', iconHref.substring(0, iconHref.length - 6));
+            const buttonSvg = element.querySelector('use');
+            if (buttonSvg) {
+                const iconHref = buttonSvg.getAttribute('href');
+                if (iconHref) {
+                    buttonSvg.setAttribute('href', isHidden ? `${iconHref}-slash` : iconHref.substring(0, iconHref.length - 6));
                 }
                 return;
             }
 
             // handle bootstrap 3 icons: eye-open & eye-close
-            const buttonSpan = element.find('span');
-            if (buttonSpan.length) {
+            const buttonSpan = element.querySelector('span');
+            if (buttonSpan) {
                 if (isHidden) {
-                    buttonSpan.addClass('glyphicon-eye-close');
-                    buttonSpan.removeClass('glyphicon-eye-open');
+                    buttonSpan.classList.add('glyphicon-eye-close');
+                    buttonSpan.classList.remove('glyphicon-eye-open');
                 } else {
-                    buttonSpan.addClass('glyphicon-eye-open');
-                    buttonSpan.removeClass('glyphicon-eye-close');
+                    buttonSpan.classList.add('glyphicon-eye-open');
+                    buttonSpan.classList.remove('glyphicon-eye-close');
                 }
             }
         }
@@ -5769,8 +5778,10 @@ window.PrivateBin = (function () {
          */
         me.init = function () {
             const revealButton = document.querySelector('.toggle-password');
-
-            revealButton.click(handleRevealButtonClick);
+            if (!revealButton) {
+                return;
+            }
+            revealButton.addEventListener('click', handleRevealButtonClick);
         };
 
         return me;
