@@ -3918,17 +3918,9 @@ window.PrivateBin = (function () {
 
             // we use text/html instead of text/plain to avoid a bug when
             // reloading the raw text view (it reverts to type text/html)
-            const headElements = Array.from(document.head.children).filter(function (element) {
-                if (element.tagName === 'NOSCRIPT' || element.tagName === 'SCRIPT') {
-                    return false;
-                }
-                if (element.tagName === 'LINK' && element.getAttribute('type') === 'text/css') {
-                    return false;
-                }
-                return true;
-            }),
+            const headElements = document.head.querySelectorAll(':not(noscript):not(script):not(link[type="text/css"])');
 
-            newDoc = document.open('text/html', 'replace');
+            const newDoc = document.open('text/html', 'replace');
             newDoc.write('<!DOCTYPE html><html><head>');
             for (let i = 0; i < headElements.length; ++i) {
                 newDoc.write(headElements[i].outerHTML);
