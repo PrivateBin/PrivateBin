@@ -3447,6 +3447,11 @@ window.PrivateBin = (function () {
             // cache elements
             commentTail = Model.getTemplate('commenttail');
 
+            const replyButton = reply.querySelector('#replybutton');
+            if (replyButton) {
+                replyButton.addEventListener('click', PasteEncrypter.sendComment);
+            }
+
             addEventListeners();
         }
 
@@ -3459,7 +3464,7 @@ window.PrivateBin = (function () {
          * @param  {Event} event
          */
         function openReply(event) {
-            const source = event.target;
+            const source = event.currentTarget || event.target;
 
             // show all reply buttons
             commentContainer.querySelectorAll('button').forEach(btn => btn.classList.remove('hidden'));
@@ -3475,7 +3480,16 @@ window.PrivateBin = (function () {
             replyCommentId = source.parentElement.id.split('_')[1];
 
             // move to correct position
-            source.after(reply);
+            const parent = source.parentNode;
+            if (parent && !reply.contains(source)) {
+                if (typeof source.after === 'function') {
+                    source.after(reply);
+                } else if (source.nextSibling) {
+                    parent.insertBefore(reply, source.nextSibling);
+                } else {
+                    parent.appendChild(reply);
+                }
+            }
 
             // show
             reply.classList.remove('hidden');
@@ -3597,6 +3611,12 @@ window.PrivateBin = (function () {
                 place = parentComment;
             }
 
+            // attach button handler before inserting
+            const replyButton = commentEntry.querySelector('button');
+            if (replyButton) {
+                replyButton.addEventListener('click', openReply);
+            }
+
             // finally append comment
             place.appendChild(commentEntry);
         };
@@ -3609,9 +3629,12 @@ window.PrivateBin = (function () {
          */
         me.finishDiscussion = function () {
             // add 'add new comment' area
-            commentContainer.appendChild(commentTail.cloneNode(true));
-
-            addEventListeners();
+            const tail = commentTail.cloneNode(true);
+            const tailButton = tail.querySelector('button');
+            if (tailButton) {
+                tailButton.addEventListener('click', openReply);
+            }
+            commentContainer.appendChild(tail);
 
             // show discussions
             discussion.classList.remove('hidden');
@@ -3706,9 +3729,6 @@ window.PrivateBin = (function () {
 
             document.querySelectorAll('#comment button')
                 .forEach(btn => btn.addEventListener('click', openReply));
-
-            document.querySelectorAll('#reply button, #reply #replybutton')
-                .forEach(btn => btn.addEventListener('click', PasteEncrypter.sendComment));
         }
 
         /**
@@ -6094,10 +6114,13 @@ window.PrivateBin = (function () {
 })();
 
 // main application start, called when DOM is fully loaded
-window.addEventListener('DOMContentLoaded', function () {
-    'use strict';
-    // run main controller
-    window.PrivateBin.Controller.init();
-});
+// skip auto-initialization in test environments (Node.js)
+if (typeof module === 'undefined' || !module.exports) {
+    window.addEventListener('DOMContentLoaded', function () {
+        'use strict';
+        // run main controller
+        window.PrivateBin.Controller.init();
+    });
+}
 
 
