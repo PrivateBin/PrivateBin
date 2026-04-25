@@ -207,6 +207,7 @@ exports.urlToString = function (url) {
 };
 
 exports.enableClipboard = function () {
+    // @ts-ignore
     navigator.clipboard = (function () {
         let savedText = "";
 

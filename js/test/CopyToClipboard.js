@@ -1,10 +1,10 @@
 'use strict';
 const common = require('../common');
 
-describe('CopyToClipboard', function() {
+describe('CopyToClipboard', function () {
     this.timeout(30000);
 
-    describe ('Copy document to clipboard', function () {
+    describe('Copy document to clipboard', function () {
         jsc.property('Copy with button click',
             common.jscFormats(),
             'nestring',
@@ -65,7 +65,7 @@ describe('CopyToClipboard', function() {
 
                 PrivateBin.CopyToClipboard.init();
 
-                document.body.dispatchEvent(new Event('copy'));
+                document.body.dispatchEvent(getClipboardEvent());
 
                 const copiedTextWithoutSelectedText = await navigator.clipboard.readText();
 
@@ -74,6 +74,28 @@ describe('CopyToClipboard', function() {
                 return copiedTextWithoutSelectedText === text;
             }
         );
+
+        /**
+         * ClipboardEvent is not supported in jsdom yet, so this creates a mock event to trigger the copy event listener.
+         *
+         * See https://github.com/jsdom/jsdom/issues/1568
+         *
+         * @returns {ClipboardEvent}
+         */
+        function getClipboardEvent() {
+            /** {@type ClipboardEvent} */
+            const clipboardEvent = new Event('copy', {
+                bubbles: true,
+                cancelable: true,
+                composed: true
+            });
+            clipboardEvent['clipboardData'] = {
+                getData: function () {
+                    return '';
+                }
+            }
+            return clipboardEvent;
+        }
     });
 
 
