@@ -1613,61 +1613,6 @@ window.PrivateBin = (function () {
             window.location.href = Helper.baseUri();
         };
 
-        /**
-         * checks whether the element is currently visible in the viewport (so
-         * the user can actually see it)
-         *
-         * @see    {@link https://stackoverflow.com/a/40658647}
-         * @name   UiHelper.isVisible
-         * @function
-         * @param  {HTMLElement} element The link hash to move to.
-         */
-        me.isVisible = function (element) {
-            let elementTop = element.getBoundingClientRect().top + window.scrollY,
-                viewportTop = window.scrollY,
-                viewportBottom = viewportTop + window.innerHeight;
-            return elementTop > viewportTop && elementTop < viewportBottom;
-        };
-
-        /**
-         * scrolls to a specific element
-         *
-         * @name   UiHelper.scrollTo
-         * @function
-         * @param  {HTMLElement}      element        The link hash to move to.
-         * @param  {(number|string)}  animationDuration when set to 0 the animation is skipped
-         * @param  {string}           animationEffect   ignored
-         * @param  {function}         finishedCallback  function to call after animation finished
-         */
-        me.scrollTo = function (element, animationDuration, animationEffect, finishedCallback) {
-            let margin = 50,
-                dest = 0;
-
-            // calculate destination place
-            let elementTop = element.getBoundingClientRect().top + window.scrollY;
-            // if it would scroll out of the screen at the bottom only scroll it as
-            // far as the screen can go
-            if (elementTop > document.documentElement.scrollHeight - window.innerHeight) {
-                dest = document.documentElement.scrollHeight - window.innerHeight;
-            } else {
-                dest = elementTop - margin;
-            }
-            // scroll to destination
-            window.scrollTo({
-                top: dest,
-                behavior: animationDuration === 0 ? 'auto' : 'smooth'
-            });
-
-            // call callback
-            if (typeof finishedCallback !== 'undefined') {
-                if (animationDuration === 0) {
-                    finishedCallback();
-                } else {
-                    // approximate time for smooth scroll
-                    setTimeout(finishedCallback, 500);
-                }
-            }
-        };
 
         /**
          * trigger a history (pop) state change
@@ -3711,19 +3656,15 @@ window.PrivateBin = (function () {
             }
 
             comment.classList.add('highlight');
-            const highlightComment = function () {
-                if (fadeOut === true) {
-                    setTimeout(function () {
-                        comment.classList.remove('highlight');
-                    }, 300);
-                }
-            };
-
-            if (UiHelper.isVisible(comment)) {
-                return highlightComment();
+            if (fadeOut === true) {
+                setTimeout(function () {
+                    comment.classList.remove('highlight');
+                }, 300);
             }
 
-            UiHelper.scrollTo(comment, 100, 'swing', highlightComment);
+            if (comment.checkVisibility() == false) {
+                comment.scrollIntoView({ block: 'center' });
+            }
         };
 
         /**
@@ -5348,7 +5289,7 @@ window.PrivateBin = (function () {
          * @param  {string} password - optional, may be an empty string
          * @param  {string} cipherdata
          * @throws {string}
-         * @return {false|string} false, when unsuccessful or string (decrypted data)
+         * @return {Promise<false|string>} false, when unsuccessful or string (decrypted data)
          */
         async function decryptOrPromptPassword(key, password, cipherdata) {
             // try decryption without password
@@ -5919,16 +5860,20 @@ window.PrivateBin = (function () {
                 ServerInteraction.setSuccess(function (status, data) {
                     PasteDecrypter.run(new Paste(data));
 
-                    // restore position
-                    window.scrollTo(0, orgPosition);
-
                     // NOTE: callback needs to be called (with setTimeout) after a JS
                     // rendering cycle, as otherwise it would be called before the new content
                     // is actually rendered, which would cause problems when trying to e.g.
                     // highlight a comment right after refreshing the document, as the comment would not be in the DOM at that time.
+                    // For scrolling, more timeout is used.
                     setTimeout(() => {
+                        // restore position instantly (as the process should be instantly)
+                        window.scrollTo({
+                            top: orgPosition,
+                            behavior: 'instant'
+                        });
+
                         callback();
-                    }, 0);
+                    }, 10);
                 });
                 ServerInteraction.run();
             }, false); // this false is important as it circumvents the cache

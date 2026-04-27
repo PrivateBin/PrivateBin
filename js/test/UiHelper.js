@@ -72,35 +72,5 @@ describe('UiHelper', function () {
         );
         */
     });
-
-    describe('isVisible', function () {
-        // TODO As per https://github.com/tmpvar/jsdom/issues/1048 there is no layout support in jsdom, yet.
-        // once it is supported or a workaround is found, uncomment the section below
-        /*
-        before(function () {
-            PrivateBin.Helper.reset();
-        });
-
-        jsc.property(
-            'detect visible elements',
-            jsc.nearray(common.jscAlnumString()),
-            jsc.nearray(common.jscA2zString()),
-            function (id, element) {
-                id = id.join('');
-                element = element.join('');
-                var clean = globalThis.cleanup(
-                    '<' + element + ' id="' + id + '"></' + element + '>'
-                );
-                var result = PrivateBin.UiHelper.isVisible(document.getElementById(id));
-                clean();
-                return result;
-            }
-        );
-        */
-    });
-
-    describe('scrollTo', function () {
-        // TODO Did not find a way to test that, see isVisible test above
-    });
 });
 
