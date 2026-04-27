@@ -5993,10 +5993,10 @@ window.PrivateBin = (function () {
          * try initializing zlib or display a warning if it fails,
          * extracted from main init to allow unit testing
          *
-         * @name   Controller.initZ
+         * @name   Controller.initZlib
          * @function
          */
-        me.initZ = function () {
+        me.initZlib = function () {
             z = zlib.catch(function () {
                 if (document.body.dataset.compression !== 'none') {
                     Alert.showWarning('Your browser doesn\'t support WebAssembly, used for zlib compression. You can create uncompressed documents, but can\'t read compressed ones.');
@@ -6062,7 +6062,7 @@ window.PrivateBin = (function () {
                 // something major is wrong, stop right away
                 return;
             }
-            me.initZ();
+            me.initZlib();
 
             // if delete token is passed (i.e. document has been deleted by this
             // access), add an event listener for the 'new' document button in the alert
