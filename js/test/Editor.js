@@ -12,16 +12,23 @@ describe('Editor', function () {
                 var clean = globalThis.cleanup(),
                     results = [];
                 document.body.innerHTML = (
-                    '<ul id="editorTabs" class="nav nav-tabs hidden"><li ' +
-                    'role="presentation" class="active"><a id="messageedit" ' +
-                    'href="#">Editor</a></li><li role="presentation"><a ' +
-                    'id="messagepreview" href="#">Preview</a></li></ul><div ' +
-                    'id="placeholder" class="hidden">+++ no document text +++</div>' +
-                    '<div id="prettymessage" class="hidden"><pre id="prettyprint" ' +
-                    'class="prettyprint linenums:1"></pre></div><div ' +
-                    'id="plaintext" class="hidden"></div><p><textarea ' +
-                    'id="message" name="message" cols="80" rows="25" ' +
-                    'class="form-control hidden"></textarea></p>'
+                    '<ul id="editorTabs" class="nav nav-tabs hidden">' +
+                        '<li role="presentation" class="active">' +
+                            '<a id="messageedit" href="#">Editor</a>' +
+                        '</li>' +
+                        '<li role="presentation">' +
+                            '<a id="messagepreview" href="#">Preview</a>' +
+                        '</li>' +
+                    '</ul>' +
+                    '<div id="placeholder" class="hidden">+++ no document text +++</div>' +
+                    '<div id="prettymessage" class="hidden">' +
+                        '<pre id="prettyprint" class="prettyprint linenums:1"></pre>' +
+                    '</div>' +
+                    '<div id="plaintext" class="hidden"></div>' +
+                    '<p>' +
+                        '<textarea id="message" name="message" cols="80" rows="25" class="form-control hidden"></textarea>' +
+                    '</p>' +
+                    '<input id="messagetab" type="checkbox" checked="checked" />'
                 );
                 PrivateBin.Editor.init();
                 results.push(
