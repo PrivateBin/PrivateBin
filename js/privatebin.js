@@ -2913,7 +2913,7 @@ window.PrivateBin = (function () {
         */
         me.setAttachment = function (attachmentData, fileName) {
             // skip, if attachments got disabled
-            if (!attachment || !attachmentPreview) return;
+            if (!attachment) return;
 
             // data URI format: data:[<mimeType>][;base64],<data>
 
@@ -2960,18 +2960,19 @@ window.PrivateBin = (function () {
         };
 
         /**
-         * displays the attachment
+         * displays the attachment and (if possible) the preview
          *
          * @name AttachmentViewer.showAttachment
          * @function
          */
         me.showAttachment = function () {
-            // skip, if attachments got disabled
-            if (!attachment || !attachmentPreview) return;
+            if (!attachment) {
+                return;
+            }
 
             attachment.classList.remove('hidden');
 
-            if (me.hasAttachmentPreview()) {
+            if (attachmentPreview && me.hasAttachmentPreview()) {
                 attachmentPreview.classList.remove('hidden');
             }
         };
@@ -3045,9 +3046,9 @@ window.PrivateBin = (function () {
         /**
          * hides the attachment
          *
-         * This will not hide the preview (see AttachmentViewer.hideAttachmentPreview
+         * This will not hide the preview (see {@see AttachmentViewer.hideAttachmentPreview}
          * for that) nor will it hide the attachment link if it was moved somewhere
-         * else (see AttachmentViewer.moveAttachmentTo).
+         * else (see {@see AttachmentViewer.moveAttachmentTo}).
          *
          * @name AttachmentViewer.hideAttachment
          * @function
@@ -3069,7 +3070,9 @@ window.PrivateBin = (function () {
         };
 
         /**
-         * checks if has any attachment preview
+         * checks if has any attachment preview that is currently rendered
+         *
+         * Note: This does not verify if the attachment preview is actually shown to the user, as it might be hidden ({@see AttachmentViewer.hideAttachmentPreview}).
          *
          * @name AttachmentViewer.hasAttachmentPreview
          * @function
@@ -3230,6 +3233,10 @@ window.PrivateBin = (function () {
          * @argument {string} mime type
          */
         me.handleBlobAttachmentPreview = function (targetElement, blobUrl, mimeType) {
+            if (targetElement === null) {
+                return;
+            }
+
             const alreadyIncludesCurrentAttachment = targetElement.querySelectorAll(`[src='${blobUrl}']`).length > 0;
 
             if (blobUrl && !alreadyIncludesCurrentAttachment) {
@@ -3372,10 +3379,10 @@ window.PrivateBin = (function () {
          *
          * @name   AttachmentViewer.getAttachmentPreview
          * @function
-         * @return {jQuery}
+         * @return {HTMLElement}
          */
         me.getAttachmentPreview = function () {
-            return $attachmentPreview;
+            return attachmentPreview;
         };
 
         /**

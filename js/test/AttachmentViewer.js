@@ -5,6 +5,14 @@ describe('AttachmentViewer', function () {
     describe('setAttachment, showAttachment, removeAttachment, hideAttachment, hideAttachmentPreview, hasAttachment, getAttachment & moveAttachmentTo', function () {
         this.timeout(30000);
 
+        beforeEach(() => {
+            mockCreateObjectUrl();
+        });
+
+        afterEach(() => {
+            globalThis.cleanup()
+        });
+
         jsc.property(
             'displays & hides data as requested',
             common.jscMimeTypes(),
@@ -14,8 +22,7 @@ describe('AttachmentViewer', function () {
             'string',
              // eslint-disable-next-line complexity
             function (mimeType, rawdata, filename, prefix, postfix) {
-                let clean = globalThis.cleanup(),
-                    data = 'data:' + mimeType + ';base64,' + common.btoa(rawdata),
+                let data = 'data:' + mimeType + ';base64,' + common.btoa(rawdata),
                     mimePrefix = mimeType.substring(0, 6),
                     previewSupported = (
                         mimePrefix === 'image/' ||
@@ -41,16 +48,6 @@ describe('AttachmentViewer', function () {
                         '</div>' +
                     '</div>'
                 );
-                // mock createObjectURL for jsDOM
-                if (typeof window.URL.createObjectURL === 'undefined') {
-                    Object.defineProperty(
-                        window.URL,
-                        'createObjectURL',
-                        {value: function(blob) {
-                            return 'blob:' + location.origin + '/1b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed';
-                        }}
-                    );
-                }
                 PrivateBin.AttachmentViewer.init();
                 PrivateBin.Model.init();
                 results.push(
@@ -127,7 +124,6 @@ describe('AttachmentViewer', function () {
                     document.getElementById('attachment').children.length === 0 &&
                     document.getElementById('attachmentPreview').classList.contains('hidden')
                 );
-                clean();
                 return results.every(element => element);
             }
         );
@@ -135,7 +131,6 @@ describe('AttachmentViewer', function () {
         it(
             'sanitizes file names in attachments',
             function() {
-                const clean = globalThis.cleanup();
                 document.body.innerHTML = (
                     '<div id="attachmentPreview" class="col-md-12 text-center hidden"></div>' +
                     '<div id="attachment" class="hidden"></div>' +
@@ -146,16 +141,6 @@ describe('AttachmentViewer', function () {
                         '</div>' +
                     '</div>'
                 );
-                // mock createObjectURL for jsDOM
-                if (typeof window.URL.createObjectURL === 'undefined') {
-                    Object.defineProperty(
-                        window.URL,
-                        'createObjectURL',
-                        {value: function(blob) {
-                            return 'blob:' + location.origin + '/1b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed';
-                        }}
-                    );
-                }
                 PrivateBin.AttachmentViewer.init();
                 PrivateBin.Model.init();
                 global.atob = common.atob;
@@ -168,9 +153,52 @@ describe('AttachmentViewer', function () {
                     PrivateBin.AttachmentViewer.setAttachment('data:;base64,', filename);
                     assert.ok(!document.body.innerHTML.includes(filename));
                 }
-                clean();
             }
         );
 
+        it('displays attachment even when attachmentPreview element is missing',
+            function() {
+                document.body.innerHTML = (
+                    '<div id="attachment" class="hidden"></div>' +
+                    '<div id="templates">' +
+                        '<div id="attachmenttemplate" role="alert" class="attachment hidden alert alert-info">' +
+                            '<span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>' +
+                            '<a class="alert-link">Download attachment</a>' +
+                        '</div>' +
+                    '</div>'
+                );
+                // Note: attachmentPreview element is intentionally NOT created
+
+                PrivateBin.AttachmentViewer.init();
+                PrivateBin.Model.init();
+                global.atob = common.atob;
+
+                // Set attachment without preview element
+                PrivateBin.AttachmentViewer.setAttachment('data:text/plain;base64,', 'test.txt');
+
+                // Show attachment should work even without attachmentPreview
+                PrivateBin.AttachmentViewer.showAttachment();
+
+                const attachment = document.getElementById('attachment');
+                assert.ok(!attachment.classList.contains('hidden'), 'Attachment should be visible');
+                assert.ok(attachment.children.length > 0, 'Attachment should have content');
+            }
+        );
     });
+
+    function mockCreateObjectUrl() {
+        if (typeof window.URL.createObjectURL === 'undefined') {
+            Object.defineProperty(
+                window.URL,
+                'createObjectURL',
+                {
+                    value: function (_blob) {
+                        return 'blob:' + location.origin + '/1b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed';
+                    }
+                }
+            );
+        }
+    }
 });
+
+
