@@ -5922,10 +5922,13 @@ window.PrivateBin = (function () {
                     // restore position
                     window.scrollTo(0, orgPosition);
 
-                    // NOTE: could create problems as callback may be called
-                    // asyncronously if PasteDecrypter e.g. needs to wait for a
-                    // password being entered
-                    callback();
+                    // NOTE: callback needs to be called (with setTimeout) after a JS
+                    // rendering cycle, as otherwise it would be called before the new content
+                    // is actually rendered, which would cause problems when trying to e.g.
+                    // highlight a comment right after refreshing the document, as the comment would not be in the DOM at that time.
+                    setTimeout(() => {
+                        callback();
+                    }, 0);
                 });
                 ServerInteraction.run();
             }, false); // this false is important as it circumvents the cache
