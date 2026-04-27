@@ -2,16 +2,16 @@
 const common = require('../common');
 
 describe('AttachmentViewer', function () {
-    describe('setAttachment, showAttachment, removeAttachment, hideAttachment, hideAttachmentPreview, hasAttachment, getAttachment & moveAttachmentTo', function () {
+    beforeEach(() => {
+        mockCreateObjectUrl();
+    });
+
+    afterEach(() => {
+        globalThis.cleanup()
+    });
+
+    describe('whole run (setAttachment, showAttachment, removeAttachment, hideAttachment, hideAttachmentPreview, hasAttachment, getAttachment & moveAttachmentTo)', function () {
         this.timeout(30000);
-
-        beforeEach(() => {
-            mockCreateObjectUrl();
-        });
-
-        afterEach(() => {
-            globalThis.cleanup()
-        });
 
         jsc.property(
             'displays & hides data as requested',
@@ -155,7 +155,9 @@ describe('AttachmentViewer', function () {
                 }
             }
         );
+    });
 
+    describe('showAttachment()', function () {
         it('displays attachment even when attachmentPreview element is missing',
             function() {
                 document.body.innerHTML = (
@@ -183,7 +185,7 @@ describe('AttachmentViewer', function () {
                 assert.ok(!attachment.classList.contains('hidden'), 'Attachment should be visible');
                 assert.ok(attachment.children.length > 0, 'Attachment should have content');
             }
-        );
+        )
     });
 
     function mockCreateObjectUrl() {

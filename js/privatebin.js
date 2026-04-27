@@ -2424,7 +2424,6 @@ window.PrivateBin = (function () {
          */
         function viewEditor(event) {
             // toggle buttons
-
             messageEdit.classList.add('active');
             messageEditParent.classList.add('active');
             messagePreview.classList.remove('active');
@@ -3076,7 +3075,7 @@ window.PrivateBin = (function () {
          *
          * @name AttachmentViewer.hasAttachmentPreview
          * @function
-         * @return {JQuery}
+         * @return {boolean}
          */
         me.hasAttachmentPreview = function () {
             return attachmentPreview.children.length > 0;
@@ -3228,12 +3227,13 @@ window.PrivateBin = (function () {
          *
          * @name   AttachmentViewer.handleBlobAttachmentPreview
          * @function
-         * @argument {HTMLElement} targetElement element where the preview should be appended
-         * @argument {string} file as a blob URL
-         * @argument {string} mime type
+         * @argument {HTMLElement?} targetElement element where the preview should be appended
+         * @argument {string} blobUrl as a blob URL
+         * @argument {string} mimeType type
          */
         me.handleBlobAttachmentPreview = function (targetElement, blobUrl, mimeType) {
-            if (targetElement === null) {
+            if (!targetElement) {
+                console.log('Attachment preview element not found/disabled, cannot show attachment preview.');
                 return;
             }
 
