@@ -5136,27 +5136,23 @@ window.PrivateBin = (function () {
          * @function
          */
         me.sendComment = async function () {
+            // get data
+            const plainText = DiscussionViewer.getReplyMessage();
+
+            // do not send if there is no data
+            if (plainText.length === 0) {
+                return;
+            }
+
+            let nickname = DiscussionViewer.getReplyNickname(),
+                parentid = DiscussionViewer.getReplyCommentId();
+
             Alert.hideMessages();
             Alert.setCustomHandler(DiscussionViewer.handleNotification);
 
             // UI loading state
             TopNav.hideAllButtons();
             Alert.showLoading('Sending comment…', 'cloud-upload');
-
-            // get data
-            const plainText = DiscussionViewer.getReplyMessage(),
-                nickname = DiscussionViewer.getReplyNickname(),
-                parentid = DiscussionViewer.getReplyCommentId();
-
-            // do not send if there is no data
-            if (plainText.length === 0) {
-                // revert loading status…
-                Alert.hideLoading();
-                Alert.setCustomHandler(null);
-                TopNav.showViewButtons();
-                return;
-            }
-
             // prepare server interaction
             ServerInteraction.prepare();
             ServerInteraction.setCryptParameters(Prompt.getPassword(), Model.getPasteKey());
