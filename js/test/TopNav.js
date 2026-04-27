@@ -8,13 +8,6 @@ function query(selector) {
     return document.querySelector(selector);
 }
 
-function triggerClick(element) {
-    if (!element) {
-        return;
-    }
-    element.dispatchEvent(new window.Event('click', { bubbles: true, cancelable: true }));
-}
-
 describe('TopNav', function () {
     describe('showViewButtons & hideViewButtons', function () {
         before(function () {
