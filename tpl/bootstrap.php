@@ -92,7 +92,7 @@ endif;
 		<meta property="og:image:height" content="180" />
 	</head>
 	<body role="document" data-compression="<?php echo rawurlencode($COMPRESSION); ?>"<?php
-$class = array();
+$class = [];
 if ($isCpct) {
     $class[] = 'navbar-spacing';
 }

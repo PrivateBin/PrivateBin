@@ -33,8 +33,8 @@ class Configuration
      *
      * @var array
      */
-    private static $_defaults = array(
-        'main' => array(
+    private static $_defaults = [
+        'main' => [
             'name'                     => 'PrivateBin',
             'basepath'                 => '',
             'discussion'               => true,
@@ -48,7 +48,7 @@ class Configuration
             'sizelimit'                => 10485760,
             'templateselection'        => false,
             'template'                 => 'bootstrap5',
-            'availabletemplates'       => array(
+            'availabletemplates'       => [
                 'bootstrap5',
                 'bootstrap',
                 'bootstrap-page',
@@ -56,7 +56,7 @@ class Configuration
                 'bootstrap-dark-page',
                 'bootstrap-compact',
                 'bootstrap-compact-page',
-            ),
+            ],
             'info'                     => 'More information on the <a href=\'https://privatebin.info/\'>project page</a>.',
             'notice'                   => '',
             'languageselection'        => false,
@@ -69,11 +69,11 @@ class Configuration
             'cspheader'                => 'default-src \'none\'; base-uri \'self\'; form-action \'none\'; manifest-src \'self\'; connect-src * blob:; script-src \'self\' \'wasm-unsafe-eval\'; style-src \'self\'; font-src \'self\'; frame-ancestors \'none\'; frame-src blob:; img-src \'self\' data: blob:; media-src blob:; object-src blob:; sandbox allow-same-origin allow-scripts allow-forms allow-modals allow-downloads',
             'httpwarning'              => true,
             'compression'              => 'zlib',
-        ),
-        'expire' => array(
+        ],
+        'expire' => [
             'default' => '1week',
-        ),
-        'expire_options' => array(
+        ],
+        'expire_options' => [
             '5min'   => 300,
             '10min'  => 600,
             '1hour'  => 3600,
@@ -82,38 +82,38 @@ class Configuration
             '1month' => 2592000,
             '1year'  => 31536000,
             'never'  => 0,
-        ),
-        'formatter_options' => array(
+        ],
+        'formatter_options' => [
             'plaintext'          => 'Plain Text',
             'syntaxhighlighting' => 'Source Code',
             'markdown'           => 'Markdown',
-        ),
-        'traffic' => array(
+        ],
+        'traffic' => [
             'limit'     => 10,
             'header'    => '',
             'exempted'  => '',
             'creators'  => '',
-        ),
-        'purge' => array(
+        ],
+        'purge' => [
             'limit'     => 300,
             'batchsize' => 10,
-        ),
-        'model' => array(
+        ],
+        'model' => [
             'class' => 'Filesystem',
-        ),
-        'model_options' => array(
+        ],
+        'model_options' => [
             'dir' => 'data',
-        ),
-        'yourls' => array(
+        ],
+        'yourls' => [
             'signature' => '',
             'apiurl'    => '',
-        ),
-        'shlink' => array(
+        ],
+        'shlink' => [
             'apikey'    => '',
             'apiurl'    => '',
-        ),
+        ],
         // update this array when adding/changing/removing js files
-        'sri' => array(
+        'sri' => [
             'js/base-x-5.0.1.js'     => 'sha512-FmhlnjIxQyxkkxQmzf0l6IRGsGbgyCdgqPxypFsEtHMF1naRqaLLo6mcyN5rEaT16nKx1PeJ4g7+07D6gnk/Tg==',
             'js/bootstrap-3.4.1.js'  => 'sha512-oBTprMeNEKCnqfuqKd6sbvFzmFQtlXS3e0C/RGFV0hD6QzhHV+ODfaQbAlmY6/q0ubbwlAM/nCJjkrgA3waLzg==',
             'js/bootstrap-5.3.8.js'  => 'sha512-BkZvJ5rZ3zbDCod5seWHpRGg+PRd6ZgE8Nua/OMtcxqm8Wtg0PqwhUUXK5bqvl3oclMt5O+3zjRVX0L+L2j7fA==',
@@ -127,8 +127,8 @@ class Configuration
             'js/showdown-2.1.0.js'   => 'sha512-WYXZgkTR0u/Y9SVIA4nTTOih0kXMEd8RRV6MLFdL6YU8ymhR528NLlYQt1nlJQbYz4EW+ZsS0fx1awhiQJme1Q==',
             'js/zlib-1.3.2.js'       => 'sha512-RAhJgxg9siMIA8ky4c10Rc2zUgnK80olHB8Tt1IOYWY4Eh1WmrviQkDn+sgBlb38ZHq3tzufGC41kP360gmosQ==',
             'js/zlib.js'             => 'sha512-QOaEwssHqHRRcWJ2Un3Kl2Zhyprzl7T8zmsKN2FppFxW3VR+8UChYOx2iuL0HbXK42fuBWJm5PNQJxufulrt/w==',
-        ),
-    );
+        ],
+    ];
 
     /**
      * parse configuration file and ensure default configuration values are present
@@ -137,8 +137,8 @@ class Configuration
      */
     public function __construct()
     {
-        $basePaths  = array();
-        $config     = array();
+        $basePaths  = [];
+        $config     = [];
         $configPath = getenv('CONFIG_PATH');
         if ($configPath !== false && !empty($configPath)) {
             $basePaths[] = $configPath;
@@ -148,10 +148,10 @@ class Configuration
             $configFile = $basePath . DIRECTORY_SEPARATOR . 'conf.php';
             if (is_readable($configFile)) {
                 $config = parse_ini_file($configFile, true);
-                foreach (array('main', 'model', 'model_options') as $section) {
+                foreach (['main', 'model', 'model_options'] as $section) {
                     if (!array_key_exists($section, $config)) {
                         $name = $config['main']['name'] ?? self::getDefaults()['main']['name'];
-                        throw new TranslatedException(array('%s requires configuration section [%s] to be present in configuration file.', I18n::_($name), $section), 2);
+                        throw new TranslatedException(['%s requires configuration section [%s] to be present in configuration file.', I18n::_($name), $section], 2);
                     }
                 }
                 break;
@@ -173,27 +173,27 @@ class Configuration
                 $section === 'model_options' &&
                 $this->_configuration['model']['class'] === 'Database'
             ) {
-                $values = array(
+                $values = [
                     'dsn' => 'sqlite:' . PATH . 'data' . DIRECTORY_SEPARATOR . 'db.sq3',
                     'tbl' => null,
                     'usr' => null,
                     'pwd' => null,
-                    'opt' => array(),
-                );
+                    'opt' => [],
+                ];
             } elseif (
                 $section === 'model_options' &&
                 $this->_configuration['model']['class'] === 'GoogleCloudStorage'
             ) {
-                $values = array(
+                $values = [
                     'bucket'     => getenv('PRIVATEBIN_GCS_BUCKET') ? getenv('PRIVATEBIN_GCS_BUCKET') : null,
                     'prefix'     => 'pastes',
                     'uniformacl' => false,
-                );
+                ];
             } elseif (
                 $section === 'model_options' &&
                 $this->_configuration['model']['class'] === 'S3Storage'
             ) {
-                $values = array(
+                $values = [
                     'region'                  => null,
                     'version'                 => null,
                     'endpoint'                => null,
@@ -202,7 +202,7 @@ class Configuration
                     'use_path_style_endpoint' => null,
                     'bucket'                  => null,
                     'prefix'                  => '',
-                );
+                ];
             }
 
             // "*_options" sections don't require all defaults to be set
@@ -232,9 +232,9 @@ class Configuration
                             $result = $config[$section][$key];
                         } elseif (is_bool($val)) {
                             $val = strtolower($config[$section][$key]);
-                            if (in_array($val, array('true', 'yes', 'on'))) {
+                            if (in_array($val, ['true', 'yes', 'on'])) {
                                 $result = true;
-                            } elseif (in_array($val, array('false', 'no', 'off'))) {
+                            } elseif (in_array($val, ['false', 'no', 'off'])) {
                                 $result = false;
                             } else {
                                 $result = (bool) $config[$section][$key];
@@ -313,7 +313,7 @@ class Configuration
     public function getSection($section)
     {
         if (!array_key_exists($section, $this->_configuration)) {
-            throw new TranslatedException(array('%s requires configuration section [%s] to be present in configuration file.', I18n::_($this->getKey('name')), $section), 3);
+            throw new TranslatedException(['%s requires configuration section [%s] to be present in configuration file.', I18n::_($this->getKey('name')), $section], 3);
         }
         return $this->_configuration[$section];
     }

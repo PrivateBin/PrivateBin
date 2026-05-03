@@ -205,7 +205,7 @@ class Filesystem extends AbstractData
      */
     public function readComments($pasteid)
     {
-        $comments = array();
+        $comments = [];
         $discdir  = $this->_dataid2discussionpath($pasteid);
         if (is_dir($discdir)) {
             foreach (new DirectoryIterator($discdir) as $file) {
@@ -359,7 +359,7 @@ class Filesystem extends AbstractData
      */
     protected function _getExpiredPastes($batchsize)
     {
-        $pastes = array();
+        $pastes = [];
         $count  = 0;
         $opened = 0;
         $limit  = $batchsize * 10; // try at most 10 times $batchsize pastes before giving up
@@ -388,7 +388,7 @@ class Filesystem extends AbstractData
      */
     public function getAllPastes()
     {
-        $pastes = array();
+        $pastes = [];
         foreach (new GlobIterator($this->_path . self::PASTE_FILE_PATTERN) as $file) {
             if ($file->isFile()) {
                 $pastes[] = $file->getBasename('.php');

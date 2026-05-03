@@ -19,7 +19,7 @@ class Vizhash16x16Test extends TestCase
             mkdir($this->_path);
         }
         $this->_file = $this->_path . DIRECTORY_SEPARATOR . 'vizhash.png';
-        ServerSalt::setStore(new Filesystem(array('dir' => $this->_path)));
+        ServerSalt::setStore(new Filesystem(['dir' => $this->_path]));
     }
 
     public function tearDown(): void

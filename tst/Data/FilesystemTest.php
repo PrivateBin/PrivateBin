@@ -16,7 +16,7 @@ class FilesystemTest extends TestCase
         /* Setup Routine */
         $this->_path        = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'privatebin_data';
         $this->_invalidPath = $this->_path . DIRECTORY_SEPARATOR . 'bar';
-        $this->_model       = new Filesystem(array('dir' => $this->_path));
+        $this->_model       = new Filesystem(['dir' => $this->_path]);
         if (!is_dir($this->_path)) {
             mkdir($this->_path);
         }
@@ -37,7 +37,7 @@ class FilesystemTest extends TestCase
         $this->_model->delete(Helper::getPasteId());
 
         // storing pastes
-        $paste = Helper::getPaste(array('expire_date' => 1344803344));
+        $paste = Helper::getPaste(['expire_date' => 1344803344]);
         $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste does not yet exist');
         $this->assertTrue($this->_model->create(Helper::getPasteId(), $paste), 'store new paste');
         $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste exists after storing it');
@@ -53,7 +53,7 @@ class FilesystemTest extends TestCase
         $comment['id']       = Helper::getCommentId();
         $comment['parentid'] = Helper::getPasteId();
         $this->assertEquals(
-            array($comment['meta']['created'] => $comment),
+            [$comment['meta']['created'] => $comment],
             $this->_model->readComments(Helper::getPasteId())
         );
 
@@ -67,7 +67,7 @@ class FilesystemTest extends TestCase
     public function testFileBasedAttachmentStoreWorks()
     {
         $this->_model->delete(Helper::getPasteId());
-        $original = $paste = Helper::getPaste(array('expire_date' => 1344803344));
+        $original = $paste = Helper::getPaste(['expire_date' => 1344803344]);
         $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste does not yet exist');
         $this->assertTrue($this->_model->create(Helper::getPasteId(), $paste), 'store new paste');
         $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste exists after storing it');
@@ -81,14 +81,14 @@ class FilesystemTest extends TestCase
     public function testPurge()
     {
         mkdir($this->_path . DIRECTORY_SEPARATOR . '00', 0777, true);
-        $expired = Helper::getPaste(array('expire_date' => 1344803344));
-        $paste   = Helper::getPaste(array('expire_date' => time() + 3600));
-        $keys    = array('a', 'b', 'c', 'd', 'e', 'f', 'g', 'x', 'y', 'z');
-        $ids     = array();
+        $expired = Helper::getPaste(['expire_date' => 1344803344]);
+        $paste   = Helper::getPaste(['expire_date' => time() + 3600]);
+        $keys    = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'x', 'y', 'z'];
+        $ids     = [];
         foreach ($keys as $key) {
             $ids[$key] = hash('fnv164', $key);
             $this->assertFalse($this->_model->exists($ids[$key]), "paste $key does not yet exist");
-            if (in_array($key, array('x', 'y', 'z'))) {
+            if (in_array($key, ['x', 'y', 'z'])) {
                 $this->assertTrue($this->_model->create($ids[$key], $paste), "store $key paste");
             } elseif ($key === 'x') {
                 $data = Helper::getPaste();
@@ -100,7 +100,7 @@ class FilesystemTest extends TestCase
         }
         $this->_model->purge(10);
         foreach ($ids as $key => $id) {
-            if (in_array($key, array('x', 'y', 'z'))) {
+            if (in_array($key, ['x', 'y', 'z'])) {
                 $this->assertTrue($this->_model->exists($id), "paste $key exists after purge");
                 $this->_model->delete($id);
             } else {
@@ -113,7 +113,7 @@ class FilesystemTest extends TestCase
     {
         $error_log_setting = ini_get('error_log');
         $this->_model->delete(Helper::getPasteId());
-        $paste = Helper::getPaste(array('expire' => "Invalid UTF-8 sequence: \xB1\x31"));
+        $paste = Helper::getPaste(['expire' => "Invalid UTF-8 sequence: \xB1\x31"]);
         $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste does not yet exist');
         ini_set('error_log', '/dev/null');
         $this->assertFalse($this->_model->create(Helper::getPasteId(), $paste), 'unable to store broken paste');
@@ -127,7 +127,7 @@ class FilesystemTest extends TestCase
         $error_log_setting = ini_get('error_log');
         $this->_model->delete(Helper::getPasteId());
         $data    = Helper::getPaste();
-        $comment = Helper::getComment(array('icon' => "Invalid UTF-8 sequence: \xB1\x31"));
+        $comment = Helper::getComment(['icon' => "Invalid UTF-8 sequence: \xB1\x31"]);
         $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste does not yet exist');
         $this->assertTrue($this->_model->create(Helper::getPasteId(), $data), 'store new paste');
         $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste exists after storing it');
@@ -144,7 +144,7 @@ class FilesystemTest extends TestCase
         $paste     = Helper::getPaste();
         $comment   = Helper::getComment();
         $commentid = Helper::getCommentId();
-        $ids       = array();
+        $ids       = [];
         for ($i = 0, $max = 10; $i < $max; ++$i) {
             $dataid     = Helper::getRandomId();
             $storagedir = $this->_path . DIRECTORY_SEPARATOR . substr($dataid, 0, 2) .
@@ -178,16 +178,16 @@ class FilesystemTest extends TestCase
             $comment             = $comment;
             $comment['id']       = $commentid;
             $comment['parentid'] = $dataid;
-            $this->assertEquals($this->_model->readComments($dataid), array($comment['meta']['created'] => $comment), "comment of $dataid wasn't modified in the conversion");
+            $this->assertEquals($this->_model->readComments($dataid), [$comment['meta']['created'] => $comment], "comment of $dataid wasn't modified in the conversion");
         }
     }
 
     public function testValueFileErrorHandling()
     {
         define('VALID', 'valid content');
-        foreach (array('purge_limiter', 'salt', 'traffic_limiter') as $namespace) {
+        foreach (['purge_limiter', 'salt', 'traffic_limiter'] as $namespace) {
             file_put_contents($this->_invalidPath . DIRECTORY_SEPARATOR . $namespace . '.php', 'invalid content');
-            $model = new Filesystem(array('dir' => $this->_invalidPath));
+            $model = new Filesystem(['dir' => $this->_invalidPath]);
             ob_start(); // hide "invalid content", when file gets included
             $this->assertEquals($model->getValue($namespace), '', 'empty default value returned, invalid content ignored');
             ob_end_clean();
