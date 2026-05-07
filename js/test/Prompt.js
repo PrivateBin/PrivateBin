@@ -1,31 +1,33 @@
 'use strict';
 require('../common');
+const fc = require('fast-check');
 
 describe('Prompt', function () {
     describe('requestPassword & getPassword', function () {
         this.timeout(30000);
 
-        jsc.property(
-            'returns the password fed into the dialog',
-            'string',
-            function (password) {
-                password = password.replace(/\r+|\n+/g, '');
-                const clean = globalThis.cleanup('', {url: 'ftp://example.com/?0000000000000000'});
-                document.body.innerHTML = (
-                    '<div id="passwordmodal" class="modal fade" role="dialog">' +
-                    '<div class="modal-dialog"><div class="modal-content">' +
-                    '<div class="modal-body"><form id="passwordform" role="form">' +
-                    '<div class="form-group"><input id="passworddecrypt" ' +
-                    'type="password" class="form-control" placeholder="Enter ' +
-                    'password"></div><button type="submit">Decrypt</button>' +
-                    '</form></div></div></div></div>'
-                );
-                const passwordInput = document.getElementById('passworddecrypt');
-                passwordInput.value = password;
-                const result = passwordInput.value;
-                clean();
-                return result === password;
-            }
-        );
+        it('returns the password fed into the dialog', () => {
+            fc.assert(fc.property(
+                fc.string(),
+                function (password) {
+                    password = password.replace(/\r+|\n+/g, '');
+                    const clean = globalThis.cleanup('', {url: 'ftp://example.com/?0000000000000000'});
+                    document.body.innerHTML = (
+                        '<div id="passwordmodal" class="modal fade" role="dialog">' +
+                        '<div class="modal-dialog"><div class="modal-content">' +
+                        '<div class="modal-body"><form id="passwordform" role="form">' +
+                        '<div class="form-group"><input id="passworddecrypt" ' +
+                        'type="password" class="form-control" placeholder="Enter ' +
+                        'password"></div><button type="submit">Decrypt</button>' +
+                        '</form></div></div></div></div>'
+                    );
+                    const passwordInput = document.getElementById('passworddecrypt');
+                    passwordInput.value = password;
+                    const result = passwordInput.value;
+                    clean();
+                    return result === password;
+                }
+            ));
+        });
     });
 });

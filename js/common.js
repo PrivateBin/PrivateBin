@@ -2,7 +2,7 @@
 
 // testing prerequisites
 global.assert = require('assert');
-global.jsc = require('jsverify');
+const fc = require('fast-check');
 global.jsdom = require('jsdom-global');
 // initial DOM environment created by jsdom-global
 let currentCleanup = global.jsdom();
@@ -136,68 +136,68 @@ exports.btoa = function(text) {
 };
 
 // provides random lowercase characters from a to z
-exports.jscA2zString = function() {
-    return jsc.elements(a2zString);
+exports.fcA2zString = function() {
+    return fc.constantFrom(...a2zString);
 };
 
 // provides random lowercase alpha numeric characters (a to z and 0 to 9)
-exports.jscAlnumString = function() {
-    return jsc.elements(alnumString);
+exports.fcAlnumString = function() {
+    return fc.constantFrom(...alnumString);
 };
 
 //provides random characters allowed in hexadecimal notation
-exports.jscHexString = function() {
-    return jsc.elements(hexString);
+exports.fcHexString = function() {
+    return fc.constantFrom(...hexString);
 };
 
 // provides random characters allowed in GET queries
-exports.jscQueryString = function() {
-    return jsc.elements(queryString);
+exports.fcQueryString = function() {
+    return fc.constantFrom(...queryString);
 };
 
 // provides random characters allowed in hash queries
-exports.jscHashString = function() {
-    return jsc.elements(hashString);
+exports.fcHashString = function() {
+    return fc.constantFrom(...hashString);
 };
 
 // provides random characters allowed in base64 encoded strings
-exports.jscBase64String = function() {
-    return jsc.elements(base64String);
+exports.fcBase64String = function() {
+    return fc.constantFrom(...base64String);
 };
 
 // provides a random URL schema supported by the whatwg-url library
-exports.jscSchemas = function(withFtp = true) {
-    return jsc.elements(withFtp ? schemas : schemas.slice(1));
+exports.fcSchemas = function(withFtp = true) {
+    return fc.constantFrom(...(withFtp ? schemas : schemas.slice(1)));
 };
 
 // provides a random supported language string
-exports.jscSupportedLanguages = function() {
-    return jsc.elements(supportedLanguages);
+exports.fcSupportedLanguages = function() {
+    return fc.constantFrom(...supportedLanguages);
 };
 
 // provides a random mime type
-exports.jscMimeTypes = function() {
-    return jsc.elements(mimeTypes);
+exports.fcMimeTypes = function() {
+    return fc.constantFrom(...mimeTypes);
 };
 
 // provides a random PrivateBin document formatter
-exports.jscFormats = function() {
-    return jsc.elements(formats);
+exports.fcFormats = function() {
+    return fc.constantFrom(...formats);
 };
 
 // provides random URLs
-exports.jscUrl = function(withFragment = true, withQuery = true) {
+exports.fcUrl = function(withFragment = true, withQuery = true) {
     let url = {
-        schema: exports.jscSchemas(),
-        address: jsc.nearray(exports.jscA2zString()),
+        schema: exports.fcSchemas(),
+        address: fc.array(exports.fcA2zString(), {minLength: 1}),
     };
     if (withFragment) {
-        url.fragment = jsc.string;
+        url.fragment = fc.string();
     }
     if(withQuery) {
-        url.query = jsc.array(exports.jscQueryString());
+        url.query = fc.array(exports.fcQueryString());
     }
-    return jsc.record(url);
+    return fc.record(url);
 };
 
 exports.urlToString = function (url) {

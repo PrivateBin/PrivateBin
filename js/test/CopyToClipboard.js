@@ -8,69 +8,74 @@ describe('CopyToClipboard', function () {
     });
 
     describe('Copy document to clipboard', function () {
-        jsc.property('Copy with button click',
-            common.jscFormats(),
-            'nestring',
-            async function (format, text) {
-                common.enableClipboard();
+        it('Copy with button click', async function () {
+            await fc.assert(fc.asyncProperty(
+                common.fcFormats(),
+                fc.string({minLength: 1}),
+                async function (format, text) {
+                    common.enableClipboard();
 
-                document.body.innerHTML = (
-                    '<div id="placeholder" class="hidden">+++ no document text ' +
-                    '+++</div><div id="prettymessage" class="hidden">' +
-                    '<button type="button" id="prettyMessageCopyBtn"><svg id="copyIcon"></svg>' +
-                    '<svg id="copySuccessIcon"></svg></button><pre ' +
-                    'id="prettyprint" class="prettyprint linenums:1"></pre>' +
-                    '</div><div id="plaintext" class="hidden"></div>'
-                );
+                    document.body.innerHTML = (
+                        '<div id="placeholder" class="hidden">+++ no document text ' +
+                        '+++</div><div id="prettymessage" class="hidden">' +
+                        '<button type="button" id="prettyMessageCopyBtn"><svg id="copyIcon"></svg>' +
+                        '<svg id="copySuccessIcon"></svg></button><pre ' +
+                        'id="prettyprint" class="prettyprint linenums:1"></pre>' +
+                        '</div><div id="plaintext" class="hidden"></div>'
+                    );
 
-                PrivateBin.PasteViewer.init();
-                PrivateBin.PasteViewer.setFormat(format);
-                PrivateBin.PasteViewer.setText(text);
-                PrivateBin.PasteViewer.run();
+                    PrivateBin.PasteViewer.init();
+                    PrivateBin.PasteViewer.setFormat(format);
+                    PrivateBin.PasteViewer.setText(text);
+                    PrivateBin.PasteViewer.run();
 
-                PrivateBin.CopyToClipboard.init();
+                    PrivateBin.CopyToClipboard.init();
 
-                document.getElementById('prettyMessageCopyBtn').click();
+                    document.getElementById('prettyMessageCopyBtn').click();
 
-                const savedToClipboardText = await navigator.clipboard.readText();
+                    const savedToClipboardText = await navigator.clipboard.readText();
 
-                return text === savedToClipboardText;
-            }
-        );
+                    return text === savedToClipboardText;
+                }
+            ));
+        });
 
         /**
-         * Unfortunately in JSVerify impossible to check if copy with shortcut when user selected some text on the page
+         * Unfortunately, in JSVerify impossible to check if copy with shortcut when user selected some text on the page
          * (the copy document to clipboard should not work in this case) due to lacking window.getSelection() in jsdom.
          */
-        jsc.property('Copy with keyboard shortcut',
-            common.jscFormats(),
-            'nestring',
-            async function (format, text) {
-                common.enableClipboard();
+        it('Copy with keyboard shortcut', async function () {
+            await fc.assert(fc.asyncProperty(
+                common.fcFormats(),
+                fc.string({minLength: 1}),
+                async function (format, text) {
+                    common.enableClipboard();
 
-                document.body.innerHTML = (
-                    '<div id="placeholder">+++ no document text ' +
-                    '+++</div><div id="prettymessage" class="hidden">' +
-                    '<button type="button" id="prettyMessageCopyBtn"><svg id="copyIcon"></svg>' +
-                    '<svg id="copySuccessIcon"></svg></button><pre ' +
-                    'id="prettyprint" class="prettyprint linenums:1"></pre>' +
-                    '</div><div id="plaintext" class="hidden"></div>'
-                );
+                    document.body.innerHTML = (
+                        '<div id="placeholder">+++ no document text ' +
+                        '+++</div><div id="prettymessage" class="hidden">' +
+                        '<button type="button" id="prettyMessageCopyBtn"><svg id="copyIcon"></svg>' +
+                        '<svg id="copySuccessIcon"></svg></button><pre ' +
+                        'id="prettyprint" class="prettyprint linenums:1"></pre>' +
+                        '</div><div id="plaintext" class="hidden"></div>'
+                    );
 
-                PrivateBin.PasteViewer.init();
-                PrivateBin.PasteViewer.setFormat(format);
-                PrivateBin.PasteViewer.setText(text);
-                PrivateBin.PasteViewer.run();
+                    PrivateBin.Alert.init();
+                    PrivateBin.PasteViewer.init();
+                    PrivateBin.PasteViewer.setFormat(format);
+                    PrivateBin.PasteViewer.setText(text);
+                    PrivateBin.PasteViewer.run();
 
-                PrivateBin.CopyToClipboard.init();
+                    PrivateBin.CopyToClipboard.init();
 
-                document.body.dispatchEvent(getClipboardEvent());
+                    document.body.dispatchEvent(getClipboardEvent());
 
-                const copiedTextWithoutSelectedText = await navigator.clipboard.readText();
+                    const copiedTextWithoutSelectedText = await navigator.clipboard.readText();
 
-                return copiedTextWithoutSelectedText === text;
-            }
-        );
+                    return copiedTextWithoutSelectedText === text;
+                }
+            ));
+        });
 
         /**
          * ClipboardEvent is not supported in jsdom yet, so this creates a mock event to trigger the copy event listener.
@@ -133,8 +138,9 @@ describe('CopyToClipboard', function () {
         });
     });
 
-        jsc.property('Hide hint',
-            'nestring',
+    it('Hide hint', () => {
+        fc.assert(fc.property(
+            fc.string({minLength: 1}),
             function (text) {
                 document.body.innerHTML = '<small id="copyShortcutHintText">' + text + '</small>';
 
@@ -145,5 +151,6 @@ describe('CopyToClipboard', function () {
 
                 return keyboardShortcutHint.length === 0;
             }
-        );
+        ));
+    });
 });

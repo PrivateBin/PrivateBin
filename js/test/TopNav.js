@@ -1,5 +1,6 @@
 'use strict';
 require('../common');
+const fc = require('fast-check');
 
 function query(selector) {
     if (selector.startsWith('#')) {
@@ -659,40 +660,41 @@ describe('TopNav', function () {
 
     describe('getPassword', function () {
         before(function () {
-            cleanup();
+            globalThis.cleanup();
         });
 
-        jsc.property(
-            'returns the contents of the password input',
-            'string',
-            function (password) {
-                password = password.replace(/\r+|\n+/g, '');
-                let results = [];
-                document.documentElement.innerHTML =
-                    '<nav><div id="navbar"><ul><li><div id="password" ' +
-                    'class="navbar-form hidden"><input type="password" ' +
-                    'id="passwordinput" placeholder="Password (recommended)" ' +
-                    'class="form-control" size="23" /></div></li></ul></div></nav>';
-                PrivateBin.TopNav.init();
-                results.push(
-                    PrivateBin.TopNav.getPassword() === ''
-                );
-                query('#passwordinput').value = password;
-                results.push(
-                    PrivateBin.TopNav.getPassword() === password
-                );
-                query('#passwordinput').value = '';
-                results.push(
-                    PrivateBin.TopNav.getPassword() === ''
-                );
-                cleanup();
-                const result = results.every(element => element);
-                if (!result) {
-                    console.log(results);
+        it('returns the contents of the password input', () => {
+            fc.assert(fc.property(
+                fc.string(),
+                function (password) {
+                    password = password.replace(/\r+|\n+/g, '');
+                    let results = [];
+                    document.documentElement.innerHTML =
+                        '<nav><div id="navbar"><ul><li><div id="password" ' +
+                        'class="navbar-form hidden"><input type="password" ' +
+                        'id="passwordinput" placeholder="Password (recommended)" ' +
+                        'class="form-control" size="23" /></div></li></ul></div></nav>';
+                    PrivateBin.TopNav.init();
+                    results.push(
+                        PrivateBin.TopNav.getPassword() === ''
+                    );
+                    query('#passwordinput').value = password;
+                    results.push(
+                        PrivateBin.TopNav.getPassword() === password
+                    );
+                    query('#passwordinput').value = '';
+                    results.push(
+                        PrivateBin.TopNav.getPassword() === ''
+                    );
+                    globalThis.cleanup();
+                    const result = results.every(element => element);
+                    if (!result) {
+                        console.log(results);
+                    }
+                    return result;
                 }
-                return result;
-            }
-        );
+            ));
+        });
     });
 
     describe('getCustomAttachment', function () {

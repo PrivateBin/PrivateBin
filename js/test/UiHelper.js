@@ -1,5 +1,6 @@
 'use strict';
-var common = require('../common');
+const common = require('../common');
+const fc = require('fast-check');
 
 describe('UiHelper', function () {
     // TODO: As per https://github.com/tmpvar/jsdom/issues/1565 there is no navigation support in jsdom, yet.
@@ -11,39 +12,41 @@ describe('UiHelper', function () {
             cleanup();
         });
 
-        jsc.property(
-            'redirects to home, when the state is null',
-            common.jscUrl(false, false),
-            function (url) {
-                const expected = common.urlToString(url),
-                    clean = globalThis.cleanup('', {url: expected});
+        it('redirects to home, when the state is null', () => {
+            fc.assert(fc.property(
+                common.fcUrl(false, false),
+                function (url) {
+                    const expected = common.urlToString(url),
+                        clean = globalThis.cleanup('', {url: expected});
 
-                PrivateBin.UiHelper.mockHistoryChange();
-                PrivateBin.Helper.reset();
-                var result = window.location.href;
-                clean();
-                return expected === result;
-            }
-        );
+                    PrivateBin.UiHelper.mockHistoryChange();
+                    PrivateBin.Helper.reset();
+                    var result = window.location.href;
+                    clean();
+                    return expected === result;
+                }
+            ));
+        });
 
-        jsc.property(
-            'does not redirect to home, when a new document is created',
-            common.jscUrl(false),
-            jsc.nearray(common.jscBase64String()),
-            function (url, fragment) {
-                url.fragment = fragment.join('');
-                const expected = common.urlToString(url),
-                    clean = globalThis.cleanup('', {url: expected});
+        it('does not redirect to home, when a new document is created', () => {
+            fc.assert(fc.property(
+                common.fcUrl(false),
+                fc.array(common.fcBase64String(), {minLength: 1}),
+                function (url, fragment) {
+                    url.fragment = fragment.join('');
+                    const expected = common.urlToString(url),
+                        clean = globalThis.cleanup('', {url: expected});
 
-                PrivateBin.UiHelper.mockHistoryChange([
-                    {type: 'newpaste'}, '', expected
-                ]);
-                PrivateBin.Helper.reset();
-                var result = window.location.href;
-                clean();
-                return expected === result;
-            }
-        );
+                    PrivateBin.UiHelper.mockHistoryChange([
+                        {type: 'newpaste'}, '', expected
+                    ]);
+                    PrivateBin.Helper.reset();
+                    var result = window.location.href;
+                    clean();
+                    return expected === result;
+                }
+            ));
+        });
     });
 
     describe('reloadHome', function () {
