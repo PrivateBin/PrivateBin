@@ -57,22 +57,23 @@ describe('UiHelper', function () {
             PrivateBin.Helper.reset();
         });
 
-        jsc.property(
-            'redirects to home',
-            common.jscUrl(),
-            function (url) {
-                const clean = globalThis.cleanup('', {url: common.urlToString(url)});
-                delete(url.query);
-                delete(url.fragment);
-                const expected = common.urlToString(url);
+        it('redirects to home', () => {
+            fc.assert(fc.property(
+                common.fcUrl(),
+                function (url) {
+                    const clean = globalThis.cleanup('', {url: common.urlToString(url)});
+                    delete(url.query);
+                    delete(url.fragment);
+                    const expected = common.urlToString(url);
 
-                PrivateBin.UiHelper.reloadHome();
-                PrivateBin.Helper.reset();
-                var result = window.location.href;
-                clean();
-                return expected === result;
-            }
-        );
+                    PrivateBin.UiHelper.reloadHome();
+                    PrivateBin.Helper.reset();
+                    var result = window.location.href;
+                    clean();
+                    return expected === result;
+                }
+            ));
+        });
         */
     });
 });

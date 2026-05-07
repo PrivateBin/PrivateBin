@@ -1,5 +1,6 @@
 'use strict';
 require('../common');
+const fc = require('fast-check');
 
 describe('ServerInteraction', function () {
     describe('prepare', function () {
@@ -8,11 +9,11 @@ describe('ServerInteraction', function () {
             await new Promise(resolve => setTimeout(resolve, 1900));
         });
         this.timeout(30000);
-        it('can prepare an encrypted document', function () {
-            jsc.assert(jsc.forall(
-                'string',
-                'string',
-                'string',
+        it('can prepare an encrypted document', async function () {
+            await fc.assert(fc.asyncProperty(
+                fc.string(),
+                fc.string(),
+                fc.string(),
                 async function (key, password, message) {
                     // pause to let async functions conclude
                     await new Promise(resolve => setTimeout(resolve, 300));
@@ -34,7 +35,7 @@ describe('ServerInteraction', function () {
                     return true;
                 }
             ),
-            {tests: 3});
+            {numRuns: 3});
         });
     });
 });

@@ -1,5 +1,6 @@
 'use strict';
 const common = require('../common');
+const fc = require('fast-check');
 const fs = require('fs');
 
 describe('CryptTool', function () {
@@ -10,18 +11,20 @@ describe('CryptTool', function () {
         });
 
         this.timeout(30000);
-        it('can en- and decrypt any message', function () {
-            jsc.assert(jsc.forall(
-                'string',
-                'string',
-                'string',
+        it('can en- and decrypt any message', async function () {
+            await fc.assert(fc.asyncProperty(
+                fc.string(),
+                fc.string(),
+                fc.string(),
                 async function (key, password, message) {
                     const clean = globalThis.cleanup();
                     // ensure zlib is getting loaded
                     PrivateBin.Controller.initZ();
                     Object.defineProperty(window, 'crypto', {
                         value: new WebCrypto(),
-                        writeable: false
+                        configurable: true,
+                        enumerable: true,
+                        writable: false
                     });
                     global.atob = common.atob;
                     global.btoa = common.btoa;
@@ -38,7 +41,7 @@ describe('CryptTool', function () {
                     return result;
                 }
             ),
-            {tests: 3});
+            {numRuns: 3});
         });
 
         it('does not truncate messages', async function () {
@@ -46,7 +49,9 @@ describe('CryptTool', function () {
                 clean = globalThis.cleanup();
             Object.defineProperty(window, 'crypto', {
                 value: new WebCrypto(),
-                writeable: false
+                configurable: true,
+                enumerable: true,
+                writable: false
             });
             // ensure zlib is getting loaded
             PrivateBin.Controller.initZ();
@@ -65,10 +70,10 @@ describe('CryptTool', function () {
             assert.strictEqual(message, plaintext);
         });
 
-        it('can en- and decrypt a particular message (#260)', function () {
-            jsc.assert(jsc.forall(
-                'string',
-                'string',
+        it('can en- and decrypt a particular message (#260)', async function () {
+            await fc.assert(fc.asyncProperty(
+                fc.string(),
+                fc.string(),
                 async function (key, password) {
                     const message = `
 1 subgoal
@@ -97,7 +102,9 @@ conseq_or_bottom inv (interp (nth_iterate sBody n) (MemElem mem))
                     PrivateBin.Controller.initZ();
                     Object.defineProperty(window, 'crypto', {
                         value: new WebCrypto(),
-                        writeable: false
+                        configurable: true,
+                        enumerable: true,
+                        writable: false
                     });
                     const cipherMessage = await PrivateBin.CryptTool.cipher(
                             key, password, message, []
@@ -111,7 +118,7 @@ conseq_or_bottom inv (interp (nth_iterate sBody n) (MemElem mem))
                     return result;
                 }
             ),
-            {tests: 3});
+            {numRuns: 3});
         });
     });
 
@@ -120,14 +127,16 @@ conseq_or_bottom inv (interp (nth_iterate sBody n) (MemElem mem))
         let keys = [];
 
         // the parameter is used to ensure the test is run more then one time
-        it('returns random, non-empty keys', function () {
-            jsc.assert(jsc.forall(
-                'integer',
+        it('returns random, non-empty keys', () => {
+            fc.assert(fc.property(
+                fc.integer(),
                 function(counter) {
                     const clean = globalThis.cleanup();
                     Object.defineProperty(window, 'crypto', {
                         value: new WebCrypto(),
-                        writeable: false
+                        configurable: true,
+                        enumerable: true,
+                        writable: false
                     });
                     const key = PrivateBin.CryptTool.getSymmetricKey(),
                         result = (key !== '' && keys.indexOf(key) === -1);
@@ -136,7 +145,7 @@ conseq_or_bottom inv (interp (nth_iterate sBody n) (MemElem mem))
                     return result;
                 }
             ),
-            {tests: 10});
+            {numRuns: 10});
         });
     });
 });
