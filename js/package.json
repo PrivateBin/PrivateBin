@@ -9,6 +9,7 @@
   "devDependencies": {
     "@peculiar/webcrypto": "^1.5.0",
     "eslint": "^9.37.0",
+    "fast-check": "^4.7.0",
     "jsdom": "^26.0.0",
     "jsdom-global": "^3.0.2",
     "jsverify": "^0.8.3",

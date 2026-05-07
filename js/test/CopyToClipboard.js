@@ -1,15 +1,17 @@
 'use strict';
 const common = require('../common');
+const fc = require('fast-check');
 
 describe('CopyToClipboard', function () {
-    this.timeout(30000);
+    afterEach(() => {
+        globalThis.cleanup();
+    });
 
     describe('Copy document to clipboard', function () {
         jsc.property('Copy with button click',
             common.jscFormats(),
             'nestring',
             async function (format, text) {
-                var clean = globalThis.cleanup();
                 common.enableClipboard();
 
                 document.body.innerHTML = (
@@ -32,8 +34,6 @@ describe('CopyToClipboard', function () {
 
                 const savedToClipboardText = await navigator.clipboard.readText();
 
-                clean();
-
                 return text === savedToClipboardText;
             }
         );
@@ -46,7 +46,6 @@ describe('CopyToClipboard', function () {
             common.jscFormats(),
             'nestring',
             async function (format, text) {
-                var clean = globalThis.cleanup();
                 common.enableClipboard();
 
                 document.body.innerHTML = (
@@ -68,8 +67,6 @@ describe('CopyToClipboard', function () {
                 document.body.dispatchEvent(getClipboardEvent());
 
                 const copiedTextWithoutSelectedText = await navigator.clipboard.readText();
-
-                clean();
 
                 return copiedTextWithoutSelectedText === text;
             }
@@ -99,52 +96,46 @@ describe('CopyToClipboard', function () {
     });
 
 
-    jsc.property('Copy link to clipboard',
-        'nestring',
-        async function (text) {
-            var clean = globalThis.cleanup();
-            common.enableClipboard();
+    it('Copy link to clipboard', async function () {
+        await fc.assert(fc.asyncProperty(fc.string(),
+            async function (text) {
+                common.enableClipboard();
 
-            document.body.innerHTML = '<button id="copyLink"></button>';
+                document.body.innerHTML = '<button id="copyLink"></button>';
 
-            PrivateBin.CopyToClipboard.init();
-            PrivateBin.CopyToClipboard.setUrl(text);
+                PrivateBin.Alert.init();
+                PrivateBin.CopyToClipboard.init();
+                PrivateBin.CopyToClipboard.setUrl(text);
 
-            document.getElementById('copyLink').click();
+                document.getElementById('copyLink').click();
 
-            const copiedText = await navigator.clipboard.readText();
+                const copiedText = await navigator.clipboard.readText();
 
-            clean();
-
-            return text === copiedText;
-        }
-    );
-
+                return text === copiedText;
+            })
+        );
+    });
 
     describe('Keyboard shortcut hint', function () {
-        jsc.property('Show hint',
-            'nestring',
-            function (text) {
-                var clean = globalThis.cleanup();
+        it('shows hint', () => {
+            fc.assert(fc.property(fc.string(),
+                function (text) {
+                    document.body.innerHTML = '<small id="copyShortcutHintText"></small>';
 
-                document.body.innerHTML = '<small id="copyShortcutHintText"></small>';
+                    PrivateBin.CopyToClipboard.init();
+                    PrivateBin.CopyToClipboard.showKeyboardShortcutHint();
 
-                PrivateBin.CopyToClipboard.init();
-                PrivateBin.CopyToClipboard.showKeyboardShortcutHint();
+                    const keyboardShortcutHint = document.getElementById('copyShortcutHintText').textContent;
 
-                const keyboardShortcutHint = document.getElementById('copyShortcutHintText').textContent;
-
-                clean();
-
-                return keyboardShortcutHint.length > 0;
-            }
-        );
+                    return keyboardShortcutHint.length > 0;
+                }
+            ));
+        });
+    });
 
         jsc.property('Hide hint',
             'nestring',
             function (text) {
-                var clean = globalThis.cleanup();
-
                 document.body.innerHTML = '<small id="copyShortcutHintText">' + text + '</small>';
 
                 PrivateBin.CopyToClipboard.init();
@@ -152,10 +143,7 @@ describe('CopyToClipboard', function () {
 
                 const keyboardShortcutHint = document.getElementById('copyShortcutHintText').textContent;
 
-                clean();
-
                 return keyboardShortcutHint.length === 0;
             }
         );
-    });
 });
