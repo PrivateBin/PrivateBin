@@ -2643,6 +2643,9 @@ window.PrivateBin = (function () {
         /**
          * displays the document
          *
+         * NOTE: FOr some obscure reaosn, Markdown is shown in the "plaintext" class
+         * and all other ones are rendered in the "prettyPrintEl" one.
+         *
          * @name   PasteViewer.showPaste
          * @private
          * @function

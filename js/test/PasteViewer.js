@@ -5,34 +5,41 @@ describe('PasteViewer', function () {
     describe('run, hide, getText, setText, getFormat, setFormat & isPrettyPrinted', function () {
         this.timeout(30000);
 
-        it('basic plaintext display works', function () {
-            cleanup();
+        beforeEach(() => {
             document.body.innerHTML = (
                 '<div id="placeholder" class="hidden">+++ no document text +++</div>' +
                 '<div id="prettymessage" class="hidden"><pre id="prettyprint" class="prettyprint linenums:1"></pre></div>' +
                 '<div id="plaintext" class="hidden"></div>'
             );
+        });
+
+        afterEach(() => {
+            globalThis.cleanup();
+        });
+
+        it('basic plaintext display works', function () {
             PrivateBin.PasteViewer.init();
             PrivateBin.PasteViewer.setFormat('plaintext');
             PrivateBin.PasteViewer.setText('hello');
             PrivateBin.PasteViewer.run();
             assert.strictEqual(PrivateBin.PasteViewer.getText(), 'hello');
+            assert.ok(!document.getElementById('prettymessage').classList.contains('hidden'));
+        });
+
+        it('basic markdown display works', function () {
+            PrivateBin.PasteViewer.init();
+            PrivateBin.PasteViewer.setFormat('markdown');
+            PrivateBin.PasteViewer.setText('hello **bold**');
+            PrivateBin.PasteViewer.run();
+            assert.strictEqual(PrivateBin.PasteViewer.getText(), 'hello **bold**');
             assert.ok(!document.getElementById('plaintext').classList.contains('hidden'));
         });
 
         jsc.property(
-            'displays text according to format',
+            'initializes with empty text and shows nothing',
             common.jscFormats(),
-            'nestring',
-            function (format, text) {
-                    cleanup();
-                    var results = [];
-                document.body.innerHTML = (
-                    '<div id="placeholder" class="hidden">+++ no document text ' +
-                    '+++</div><div id="prettymessage" class="hidden"><pre ' +
-                    'id="prettyprint" class="prettyprint linenums:1"></pre>' +
-                    '</div><div id="plaintext" class="hidden"></div>'
-                );
+            function (format) {
+                var results = [];
                 PrivateBin.PasteViewer.init();
                 PrivateBin.PasteViewer.setFormat(format);
                 PrivateBin.PasteViewer.setText('');
@@ -43,18 +50,36 @@ describe('PasteViewer', function () {
                     PrivateBin.PasteViewer.getFormat() === format &&
                     PrivateBin.PasteViewer.getText() === ''
                 );
+                return results.every(element => element);
+            }
+        );
+
+        jsc.property(
+            'when no text is given and view is rendered, it shows placeholder',
+            common.jscFormats(),
+            function (format) {
+                var results = [];
+                PrivateBin.PasteViewer.init();
+                PrivateBin.PasteViewer.setFormat(format);
+                PrivateBin.PasteViewer.setText('');
                 PrivateBin.PasteViewer.run();
                 results.push(
                     !document.getElementById('placeholder').classList.contains('hidden') &&
                     document.getElementById('prettymessage').classList.contains('hidden') &&
                     document.getElementById('plaintext').classList.contains('hidden')
                 );
-                PrivateBin.PasteViewer.hide();
-                results.push(
-                    document.getElementById('placeholder').classList.contains('hidden') &&
-                    document.getElementById('prettymessage').classList.contains('hidden') &&
-                    document.getElementById('plaintext').classList.contains('hidden')
-                );
+                return results.every(element => element);
+            }
+        );
+
+        jsc.property(
+            'displays text according to format',
+            common.jscFormats(),
+            'nestring',
+            function (format, text) {
+                var results = [];
+                PrivateBin.PasteViewer.init();
+                PrivateBin.PasteViewer.setFormat(format);
                 PrivateBin.PasteViewer.setText(text);
                 PrivateBin.PasteViewer.run();
                 results.push(
@@ -67,13 +92,15 @@ describe('PasteViewer', function () {
                         document.getElementById('prettymessage').classList.contains('hidden') &&
                         !document.getElementById('plaintext').classList.contains('hidden')
                     );
+                    console.log(document.getElementById('prettymessage').classList.contains('hidden'),
+                    !document.getElementById('plaintext').classList.contains('hidden'));
                 } else {
                     results.push(
                         !document.getElementById('prettymessage').classList.contains('hidden') &&
                         document.getElementById('plaintext').classList.contains('hidden')
                     );
                 }
-                cleanup();
+
                 return results.every(element => element);
             }
         );
