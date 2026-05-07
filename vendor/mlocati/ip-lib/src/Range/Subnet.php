@@ -14,6 +14,8 @@ use IPLib\Service\BinaryMath;
  *
  * @example 127.0.0.1/32
  * @example ::/8
+ *
+ * @phpstan-consistent-constructor
  */
 class Subnet extends AbstractRange
 {
@@ -146,15 +148,15 @@ class Subnet extends AbstractRange
         $startSameBits = $networkPrefix % 8;
         if ($startSameBits !== 0) {
             $varyingByte = $addressBytes[$numSameBytes];
-            $differentBytesStart[0] = $varyingByte & bindec(str_pad(str_repeat('1', $startSameBits), 8, '0', STR_PAD_RIGHT));
-            $differentBytesEnd[0] = $differentBytesStart[0] + bindec(str_repeat('1', 8 - $startSameBits));
+            $differentBytesStart[0] = $varyingByte & (int) bindec(str_pad(str_repeat('1', $startSameBits), 8, '0', STR_PAD_RIGHT));
+            $differentBytesEnd[0] = $differentBytesStart[0] + (int) bindec(str_repeat('1', 8 - $startSameBits));
         }
+        $fromAddress = Factory::addressFromBytes(array_merge($sameBytes, $differentBytesStart));
+        /** @var \IPLib\Address\AddressInterface $fromAddress */
+        $toAddress = Factory::addressFromBytes(array_merge($sameBytes, $differentBytesEnd));
+        /** @var \IPLib\Address\AddressInterface $toAddress */
 
-        return new static(
-            Factory::addressFromBytes(array_merge($sameBytes, $differentBytesStart)),
-            Factory::addressFromBytes(array_merge($sameBytes, $differentBytesEnd)),
-            $networkPrefix
-        );
+        return new static($fromAddress, $toAddress, $networkPrefix);
     }
 
     /**
@@ -255,7 +257,9 @@ class Subnet extends AbstractRange
     public static function get6to4()
     {
         if (self::$sixToFour === null) {
-            self::$sixToFour = self::parseString('2002::/16');
+            $subnet = self::parseString('2002::/16');
+            /** @var Subnet $subnet */
+            self::$sixToFour = $subnet;
         }
 
         return self::$sixToFour;
@@ -327,10 +331,11 @@ class Subnet extends AbstractRange
         $result = array();
         $unitsToRemove = $maxUnits - $prefixUnits;
         $initialPointer = preg_replace("/^(({$rxUnit})\.){{$unitsToRemove}}/", '', $this->getStartAddress()->getReverseDNSLookupName());
+        /** @var string $initialPointer */
         $chunks = explode('.', $initialPointer, 2);
         for ($index = 0; $index < $numVariants; $index++) {
             if ($index !== 0) {
-                $chunks[0] = $isHex ? dechex(1 + hexdec($chunks[0])) : (string) (1 + (int) $chunks[0]);
+                $chunks[0] = $isHex ? dechex(1 + (int) hexdec($chunks[0])) : (string) (1 + (int) $chunks[0]);
             }
             $result[] = implode('.', $chunks);
         }

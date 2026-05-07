@@ -63,6 +63,8 @@ interface AddressInterface
      * Get the type of the IP address.
      *
      * @return int One of the \IPLib\Address\Type::T_... constants
+     *
+     * @phpstan-return \IPLib\Address\Type::T_IPv4|\IPLib\Address\Type::T_IPv6
      */
     public function getAddressType();
 
@@ -110,7 +112,7 @@ interface AddressInterface
     /**
      * Get the address at a certain distance from this address.
      *
-     * @param int|numeric-string $n the distance of the address (can be negative)
+     * @param int|numeric-string|mixed $n the distance of the address (can be negative)
      *
      * @return \IPLib\Address\AddressInterface|null return NULL if $n is not an integer or NULL if $n is neither an integer nor a string containing a valid integer, or if the final address would be invalid
      *

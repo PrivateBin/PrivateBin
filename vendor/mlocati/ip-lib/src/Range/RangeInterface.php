@@ -31,13 +31,15 @@ interface RangeInterface
      * Get the type of the IP addresses contained in this range.
      *
      * @return int One of the \IPLib\Address\Type::T_... constants
+     *
+     * @phpstan-return \IPLib\Address\Type::T_IPv4|\IPLib\Address\Type::T_IPv6
      */
     public function getAddressType();
 
     /**
      * Get the type of range of the IP address.
      *
-     * @return int One of the \IPLib\Range\Type::T_... constants
+     * @return int|null One of the \IPLib\Range\Type::T_... constants, or null if this range crosses multiple range types
      *
      * @since 1.5.0
      */
@@ -46,7 +48,7 @@ interface RangeInterface
     /**
      * Get the address at a certain offset of this range.
      *
-     * @param int|numeric-string $n the offset of the address (support negative offset)
+     * @param int|numeric-string|mixed $n the offset of the address (support negative offset)
      *
      * @return \IPLib\Address\AddressInterface|null return NULL if $n is neither an integer nor a string containing a valid integer, or if the offset out of range
      *

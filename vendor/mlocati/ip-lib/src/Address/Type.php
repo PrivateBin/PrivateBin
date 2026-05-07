@@ -24,7 +24,7 @@ class Type
     /**
      * Get the name of a type.
      *
-     * @param int $type
+     * @param int|mixed $type
      *
      * @return string
      *
@@ -38,7 +38,7 @@ class Type
             case static::T_IPv6:
                 return 'IP v6';
             default:
-                return sprintf('Unknown type (%s)', $type);
+                return $type === null ? 'Unknown type' : sprintf('Unknown type (%s)', print_r($type, true));
         }
     }
 }

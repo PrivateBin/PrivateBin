@@ -25,6 +25,7 @@ if ($SYNTAXHIGHLIGHTING) :
 endif;
 ?>
 		<noscript><link type="text/css" rel="stylesheet" href="css/noscript.css" /></noscript>
+		<?php $this->_linkTag('js/zlib-1.3.2.js'); ?>
 		<?php $this->_scriptTag('js/jquery-3.7.1.js', 'defer'); ?>
 <?php
 if ($QRCODE) :
@@ -33,7 +34,7 @@ if ($QRCODE) :
 <?php
 endif;
 ?>
-		<?php $this->_scriptTag('js/zlib-1.3.1-2.js', 'defer'); ?>
+		<?php $this->_scriptTag('js/zlib.js', 'defer'); ?>
 		<?php $this->_scriptTag('js/base-x-5.0.1.js', 'defer'); ?>
 		<?php $this->_scriptTag('js/bootstrap-5.3.8.js', 'defer'); ?>
 		<?php $this->_scriptTag('js/dark-mode-switch.js', 'defer'); ?>
@@ -49,7 +50,7 @@ if ($MARKDOWN) :
 <?php
 endif;
 ?>
-		<?php $this->_scriptTag('js/purify-3.3.2.js', 'defer'); ?>
+		<?php $this->_scriptTag('js/purify-3.4.1.js', 'defer'); ?>
 		<?php $this->_scriptTag('js/legacy.js', 'defer'); ?>
 		<?php $this->_scriptTag('js/privatebin.js', 'defer'); ?>
 		<!-- icon -->
@@ -378,7 +379,7 @@ if ($FILEUPLOAD) :
 <?php
 endif;
 ?>
-				<div id="status" role="alert" class="d-flex justify-content-between align-items-center alert alert-<?php echo $ISDELETED ? 'success' : 'info'; echo empty($STATUS) ? ' hidden' : '' ?>">
+				<div id="status" role="alert" class="d-flex align-items-center gap-2 alert alert-<?php echo $ISDELETED ? 'success' : 'info'; echo empty($STATUS) ? ' hidden' : '' ?>">
 					<div>
 						<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#info-circle" /></svg>
 						<?php echo I18n::encode($STATUS), PHP_EOL; ?>
@@ -386,7 +387,7 @@ endif;
 <?php
 if ($ISDELETED) :
 ?>
-					<button type="button" class="btn btn-secondary d-flex justify-content-center align-items-center gap-1" id="new-from-alert">
+					<button type="button" class="btn btn-secondary d-flex justify-content-center align-items-center gap-1 ms-auto" id="new-from-alert">
 						<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#repeat" /></svg>
 						<?php echo I18n::_('Start over'), PHP_EOL; ?>
 					</button>

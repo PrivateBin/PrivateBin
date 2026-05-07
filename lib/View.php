@@ -63,6 +63,48 @@ class View
     }
 
     /**
+     * get cache buster query string
+     *
+     * if the file isn't versioned (ends in a digit), adds our own version as a query string
+     *
+     * @access private
+     * @param  string $file
+     */
+    private function _getCacheBuster($file)
+    {
+        if ((bool) preg_match('#[0-9]\.m?js$#', (string) $file)) {
+            return '';
+        }
+        return '?' . rawurlencode($this->_variables['VERSION']);
+    }
+
+    /**
+     * get SRI hash for given file
+     *
+     * @access private
+     * @param  string $file
+     */
+    private function _getSri($file)
+    {
+        if (array_key_exists($file, $this->_variables['SRI'])) {
+            return ' integrity="' . $this->_variables['SRI'][$file] . '"';
+        }
+        return '';
+    }
+
+    /**
+     * echo module preload link tag incl. SRI hash for given script file
+     *
+     * @access private
+     * @param  string $file
+     */
+    private function _linkTag($file)
+    {
+        echo '<link rel="modulepreload" href="', $file,
+        $this->_getCacheBuster($file), '"', $this->_getSri($file), ' />', PHP_EOL;
+    }
+
+    /**
      * echo script tag incl. SRI hash for given script file
      *
      * @access private
@@ -71,13 +113,9 @@ class View
      */
     private function _scriptTag($file, $attributes = '')
     {
-        $sri = array_key_exists($file, $this->_variables['SRI']) ?
-            ' integrity="' . $this->_variables['SRI'][$file] . '"' : '';
-        // if the file isn't versioned (ends in a digit), add our own version
-        $cacheBuster = (bool) preg_match('#[0-9]\.js$#', (string) $file) ?
-            '' : '?' . rawurlencode($this->_variables['VERSION']);
         echo '<script ', $attributes,
         ' type="text/javascript" data-cfasync="false" src="', $file,
-        $cacheBuster, '"', $sri, ' crossorigin="anonymous"></script>', PHP_EOL;
+        $this->_getCacheBuster($file), '"', $this->_getSri($file),
+        ' crossorigin="anonymous"></script>', PHP_EOL;
     }
 }

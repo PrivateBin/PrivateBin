@@ -430,15 +430,16 @@ window.PrivateBin = (function () {
          * @name   Helper.urls2links
          * @function
          * @param  {HTMLElement} element
+         * @param  {bool} strict - optional
          */
-        me.urls2links = function (element) {
+        me.urls2links = function (element, strict = true) {
             const raw = element.innerHTML;
             element.innerHTML = DOMPurify.sanitize(
                 raw.replace(
                     /(((https?|ftp):\/\/[\w?!=&.\/;#@~%+*-]+(?![\w\s?!&.\/;#~%"=-]>))|((magnet):[\w?=&.\/;#@~%+*-]+))/ig,
                     '<a href="$1" rel="nofollow noopener noreferrer">$1</a>'
                 ),
-                purifyHtmlConfigStrictSubset
+                    strict ? purifyHtmlConfigStrictSubset : purifyHtmlConfig
             );
         };
 
@@ -2632,7 +2633,7 @@ window.PrivateBin = (function () {
                     }
                 }
                 if (prettyPrintEl) {
-                    Helper.urls2links(prettyPrintEl);
+                    Helper.urls2links(prettyPrintEl, format !== 'syntaxhighlighting');
                     prettyPrintEl.style.whiteSpace = 'pre-wrap';
                     prettyPrintEl.style.wordBreak = 'normal';
                     prettyPrintEl.classList.remove('prettyprint');
@@ -3039,6 +3040,12 @@ window.PrivateBin = (function () {
             if (!attachment) {
                 return false;
             }
+
+            // Check if there are actual attachment data items (not just UI elements)
+            if (attachmentsData.length > 0) {
+                return true;
+            }
+            // Also check UI elements in case data was removed but UI wasn't updated
             return attachment.children.length > 0;
         };
 
@@ -3050,11 +3057,10 @@ window.PrivateBin = (function () {
          * @name   AttachmentViewer.hasAttachmentData
          * @function
          */
-        me.hasAttachmentData = function () {
-            if (attachment) {
-                return true;
-            }
-            return false;
+        me.hasAttachmentData = function()
+        {
+            // Check if there are actual attachment data items (not just UI elements)
+            return attachmentsData.length > 0;
         };
 
         /**
@@ -5157,9 +5163,9 @@ window.PrivateBin = (function () {
 
             // get data
             const plainText = Editor.getText(),
-                format = PasteViewer.getFormat(),
-                // the methods may return different values if no files are attached (null, undefined or false)
-                files = TopNav.getFileList() || AttachmentViewer.getFiles() || AttachmentViewer.hasAttachment();
+                  format    = PasteViewer.getFormat(),
+                  // the methods may return different values if no files are attached (null, undefined or false)
+                  files     = TopNav.getFileList() || AttachmentViewer.getFiles() || AttachmentViewer.hasAttachmentData();
 
             // do not send if there is no data
             if (plainText.length === 0 && !files) {
@@ -5205,7 +5211,7 @@ window.PrivateBin = (function () {
                 };
             if (attachmentsData.length) {
                 cipherMessage['attachment'] = attachmentsData;
-                cipherMessage['attachment_name'] = AttachmentViewer.getFiles().map((fileInfo => fileInfo.name));
+                cipherMessage['attachment_name'] = AttachmentViewer.getFiles()?.map((fileInfo => fileInfo.name)) ?? [];
             } else if (AttachmentViewer.hasAttachment()) {
                 // fall back to cloned part
                 let attachments = AttachmentViewer.getAttachments();

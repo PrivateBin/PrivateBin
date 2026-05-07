@@ -341,7 +341,7 @@ class Helper
      */
     public static function updateSubresourceIntegrity(): void
     {
-        foreach (new GlobIterator(PATH . 'js' . DIRECTORY_SEPARATOR . '*.js') as $file) {
+        foreach (new GlobIterator(PATH . 'js' . DIRECTORY_SEPARATOR . '*.*js') as $file) {
             if ($file->getBasename() === 'common.js' || $file->getBasename() === 'eslint.config.js') {
                 continue; // ignore JS unit test bootstrap
             }

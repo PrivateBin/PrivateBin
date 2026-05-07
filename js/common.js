@@ -49,12 +49,12 @@ global.WebCrypto = require('@peculiar/webcrypto').Crypto;
 
 // application libraries to test
 global.$ = global.jQuery = require('./jquery-3.7.1');
-global.zlib = require('./zlib-1.3.1-2').zlib;
+global.zlib = require('./zlib').zlib;
 require('./prettify');
 global.prettyPrint = window.PR ? window.PR.prettyPrint : function() {};
 global.prettyPrintOne = window.PR ? window.PR.prettyPrintOne : function() {};
 global.showdown = require('./showdown-2.1.0');
-global.DOMPurify = require('./purify-3.3.2');
+global.DOMPurify = require('./purify-3.4.1');
 global.baseX = require('./base-x-5.0.1').baseX;
 global.Legacy = require('./legacy').Legacy;
 require('./privatebin');

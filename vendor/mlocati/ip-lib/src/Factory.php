@@ -48,35 +48,33 @@ class Factory
      */
     public static function parseAddressString($address, $flags = 0)
     {
-        $result = null;
-        if ($result === null) {
-            $result = Address\IPv4::parseString($address, $flags);
+        if (($result = Address\IPv4::parseString($address, $flags)) !== null) {
+            return $result;
         }
-        if ($result === null) {
-            $result = Address\IPv6::parseString($address, $flags);
+        if (($result = Address\IPv6::parseString($address, $flags)) !== null) {
+            return $result;
         }
 
-        return $result;
+        return null;
     }
 
     /**
      * Convert a byte array to an address instance.
      *
-     * @param int[]|array $bytes
+     * @param array<int|mixed> $bytes
      *
      * @return \IPLib\Address\AddressInterface|null
      */
     public static function addressFromBytes(array $bytes)
     {
-        $result = null;
-        if ($result === null) {
-            $result = Address\IPv4::fromBytes($bytes);
+        if (($result = Address\IPv4::fromBytes($bytes)) !== null) {
+            return $result;
         }
-        if ($result === null) {
-            $result = Address\IPv6::fromBytes($bytes);
+        if (($result = Address\IPv6::fromBytes($bytes)) !== null) {
+            return $result;
         }
 
-        return $result;
+        return null;
     }
 
     /**
@@ -100,7 +98,7 @@ class Factory
     /**
      * Parse an IP range string.
      *
-     * @param string $range
+     * @param string|mixed $range
      * @param int $flags A combination or zero or more flags
      *
      * @return \IPLib\Range\RangeInterface|null
@@ -110,10 +108,7 @@ class Factory
      */
     public static function parseRangeString($range, $flags = 0)
     {
-        $result = null;
-        if ($result === null) {
-            $result = Range\Subnet::parseString($range, $flags);
-        }
+        $result = Range\Subnet::parseString($range, $flags);
         if ($result === null) {
             $result = Range\Pattern::parseString($range, $flags);
         }
@@ -133,7 +128,7 @@ class Factory
      * @param string|\IPLib\Address\AddressInterface|mixed $to
      * @param bool $supportNonDecimalIPv4
      *
-     * @return \IPLib\Address\AddressInterface|null
+     * @return \IPLib\Range\RangeInterface|null
      *
      * @see \IPLib\Factory::getRangeFromBoundaries()
      * @since 1.2.0
@@ -164,6 +159,53 @@ class Factory
     }
 
     /**
+     * Calculate the minimal range that contains all the specified addresses.
+     *
+     * @param array<non-empty-string|\IPLib\Address\AddressInterface|mixed> $addresses
+     * @param int $flags
+     *
+     * @return \IPLib\Range\RangeInterface|null Returns NULL if $addresses is empty, if it contains invalid addresses, or if the addresses aren't compatible (for example, both IPv4 and IPv6 addresses)
+     *
+     * @since 1.22.0
+     */
+    public static function getRangeFromAddresses(array $addresses, $flags = 0)
+    {
+        $min = null;
+        $max = null;
+        $numberOfBits = null;
+        foreach ($addresses as $address) {
+            if (!$address instanceof AddressInterface) {
+                $address = Factory::parseAddressString($address, $flags);
+                if ($address === null) {
+                    return null;
+                }
+            }
+            if ($numberOfBits === null) {
+                $min = $address;
+                $max = $address;
+                $numberOfBits = $address->getNumberOfBits();
+            } elseif ($numberOfBits !== $address->getNumberOfBits()) {
+                return null;
+            } else {
+                /** @var AddressInterface $min */
+                /** @var AddressInterface $max */
+                $comparable = $address->getComparableString();
+                if ($min->getComparableString() > $comparable) {
+                    $min = $address;
+                }
+                if ($max->getComparableString() < $comparable) {
+                    $max = $address;
+                }
+            }
+        }
+        if ($numberOfBits === null) {
+            return null;
+        }
+
+        return static::rangeFromBoundaryAddresses($min, $max);
+    }
+
+    /**
      * @deprecated since 1.17.0: use the getRangesFromBoundaries() method instead.
      * For upgrading:
      * - if $supportNonDecimalIPv4 is true, use the ParseStringFlag::IPV4_MAYBE_NON_DECIMAL flag
@@ -185,8 +227,8 @@ class Factory
     /**
      * Create a list of Range instances that exactly describes all the addresses between the two provided addresses.
      *
-     * @param string|\IPLib\Address\AddressInterface $from
-     * @param string|\IPLib\Address\AddressInterface $to
+     * @param string|\IPLib\Address\AddressInterface|mixed $from
+     * @param string|\IPLib\Address\AddressInterface|mixed $to
      * @param int $flags A combination or zero or more flags
      *
      * @return \IPLib\Range\Subnet[]|null return NULL if $from and/or $to are invalid addresses, or if both are NULL or empty strings, or if they are addresses of different types
@@ -202,6 +244,7 @@ class Factory
         }
         if ($from === null || $to === null) {
             $address = $from ? $from : $to;
+            /** @var AddressInterface $address */
 
             return array(new Subnet($address, $address, $address->getNumberOfBits()));
         }
@@ -265,11 +308,11 @@ class Factory
     }
 
     /**
-     * @param string|\IPLib\Address\AddressInterface $from
-     * @param string|\IPLib\Address\AddressInterface $to
+     * @param string|\IPLib\Address\AddressInterface|mixed $from
+     * @param string|\IPLib\Address\AddressInterface|mixed $to
      * @param int $flags
      *
-     * @return \IPLib\Address\AddressInterface[]|null[]|false[]
+     * @return array{\IPLib\Address\AddressInterface|false|null, \IPLib\Address\AddressInterface|false|null}
      */
     private static function parseBoundaries($from, $to, $flags = 0)
     {
@@ -277,7 +320,7 @@ class Factory
         foreach (array('from', 'to') as $param) {
             $value = $$param;
             if (!($value instanceof AddressInterface)) {
-                $value = (string) $value;
+                $value = is_object($value) && method_exists($value, '__toString') || is_scalar($value) ? (string) $value : '';
                 if ($value === '') {
                     $value = null;
                 } else {
@@ -289,6 +332,7 @@ class Factory
             }
             $result[] = $value;
         }
+        /** @var array{\IPLib\Address\AddressInterface|false|null, \IPLib\Address\AddressInterface|false|null} $result */
         if ($result[0] && $result[1] && strcmp($result[0]->getComparableString(), $result[1]->getComparableString()) > 0) {
             $result = array($result[1], $result[0]);
         }

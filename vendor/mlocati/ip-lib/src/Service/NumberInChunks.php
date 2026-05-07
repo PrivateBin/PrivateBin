@@ -88,7 +88,8 @@ class NumberInChunks
         $negative = $int < 0;
         if ($negative) {
             $positiveInt = -$int;
-            if (is_float($positiveInt)) { // -PHP_INT_MIN is bigger than PHP_INT_MAX
+            /** @var int|float $positiveInt may be float because -PHP_INT_MIN is bigger than PHP_INT_MAX */
+            if (is_float($positiveInt)) {
                 return self::fromNumericString((string) $int, $chunkSize);
             }
             $int = $positiveInt;
@@ -197,7 +198,7 @@ class NumberInChunks
      * @param int[] $subtrahend
      * @param int $chunkSize
      *
-     * @return array
+     * @return array{bool, int[]}
      */
     private static function substractChunks(array $minuend, array $subtrahend, $chunkSize)
     {

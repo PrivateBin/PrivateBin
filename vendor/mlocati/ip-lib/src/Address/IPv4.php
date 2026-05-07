@@ -11,6 +11,8 @@ use IPLib\Service\NumberInChunks;
 
 /**
  * An IPv4 address.
+ *
+ * @phpstan-consistent-constructor
  */
 class IPv4 implements AddressInterface
 {
@@ -40,14 +42,14 @@ class IPv4 implements AddressInterface
     /**
      * A string representation of this address than can be used when comparing addresses and ranges.
      *
-     * @var string
+     * @var string|null
      */
     protected $comparableString;
 
     /**
      * An array containing RFC designated address ranges.
      *
-     * @var array|null
+     * @var \IPLib\Address\AssignedRange[]|null
      */
     private static $reservedRanges;
 
@@ -181,7 +183,7 @@ class IPv4 implements AddressInterface
     /**
      * Parse an array of bytes and returns an IPv4 instance if the array is valid, or null otherwise.
      *
-     * @param int[]|array $bytes
+     * @param array<int|mixed> $bytes
      *
      * @return static|null
      */
@@ -367,10 +369,14 @@ class IPv4 implements AddressInterface
                 $exceptions = array();
                 if (isset($data[1])) {
                     foreach ($data[1] as $exceptionRange => $exceptionType) {
-                        $exceptions[] = new AssignedRange(Subnet::parseString($exceptionRange), $exceptionType);
+                        $subnet = Subnet::parseString($exceptionRange);
+                        /** @var Subnet $subnet */
+                        $exceptions[] = new AssignedRange($subnet, $exceptionType);
                     }
                 }
-                $reservedRanges[] = new AssignedRange(Subnet::parseString($range), $data[0], $exceptions);
+                $subnet = Subnet::parseString($range);
+                /** @var Subnet $subnet */
+                $reservedRanges[] = new AssignedRange($subnet, $data[0], $exceptions);
             }
             self::$reservedRanges = $reservedRanges;
         }
@@ -407,8 +413,10 @@ class IPv4 implements AddressInterface
     public function toIPv6()
     {
         $myBytes = $this->getBytes();
+        $ipv6 = IPv6::parseString('2002:' . sprintf('%02x', $myBytes[0]) . sprintf('%02x', $myBytes[1]) . ':' . sprintf('%02x', $myBytes[2]) . sprintf('%02x', $myBytes[3]) . '::');
+        /** @var IPv6 $ipv6 */
 
-        return IPv6::parseString('2002:' . sprintf('%02x', $myBytes[0]) . sprintf('%02x', $myBytes[1]) . ':' . sprintf('%02x', $myBytes[2]) . sprintf('%02x', $myBytes[3]) . '::');
+        return $ipv6;
     }
 
     /**
@@ -420,7 +428,10 @@ class IPv4 implements AddressInterface
      */
     public function toIPv6IPv4Mapped()
     {
-        return IPv6::fromBytes(array_merge(array(0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xff, 0xff), $this->getBytes()));
+        $ipv6 = IPv6::fromBytes(array_merge(array(0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xff, 0xff), $this->getBytes()));
+        /** @var IPv6 $ipv6 */
+
+        return $ipv6;
     }
 
     /**

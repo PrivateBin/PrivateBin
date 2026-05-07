@@ -80,6 +80,8 @@ class RangesFromBoundaryCalculator
      * Set the number of bits used to represent addresses (32 for IPv4, 128 for IPv6).
      *
      * @param int $numBits
+     *
+     * @return void
      */
     private function setNumBits($numBits)
     {
@@ -102,6 +104,8 @@ class RangesFromBoundaryCalculator
      * @param string $end the end address (represented in reduced bit form)
      * @param int $position the number of bits in the mask we are comparing at this cycle
      * @param \IPLib\Range\Subnet[] $result found ranges will be added to this variable
+     *
+     * @return void
      */
     private function calculate($start, $end, $position, array &$result)
     {
@@ -110,6 +114,7 @@ class RangesFromBoundaryCalculator
 
             return;
         }
+        $startMasked = '';
         for ($index = $position - 1; $index >= 0; $index--) {
             $startMasked = $this->math->andX($start, $this->masks[$index]);
             $endMasked = $this->math->andX($end, $this->masks[$index]);
@@ -140,10 +145,12 @@ class RangesFromBoundaryCalculator
         $bits = str_pad($bits, $this->numBits, '0', STR_PAD_LEFT);
         $bytes = array();
         foreach (explode("\n", trim(chunk_split($bits, 8, "\n"))) as $byteBits) {
-            $bytes[] = bindec($byteBits);
+            $bytes[] = (int) bindec($byteBits);
         }
+        $result = Factory::addressFromBytes($bytes);
+        /** @var AddressInterface $result */
 
-        return Factory::addressFromBytes($bytes);
+        return $result;
     }
 
     /**

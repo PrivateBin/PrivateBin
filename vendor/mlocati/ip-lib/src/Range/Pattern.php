@@ -14,6 +14,8 @@ use IPLib\Service\BinaryMath;
  *
  * @example 127.0.*.*
  * @example ::/8
+ *
+ * @phpstan-consistent-constructor
  */
 class Pattern extends AbstractRange
 {
@@ -106,10 +108,20 @@ class Pattern extends AbstractRange
             return null;
         }
         if ($range === '*.*.*.*') {
-            return new static(IPv4::parseString('0.0.0.0'), IPv4::parseString('255.255.255.255'), 4);
+            $fromAddress = IPv4::parseString('0.0.0.0');
+            /** @var \IPLib\Address\IPv4 $fromAddress */
+            $toAddress = IPv4::parseString('255.255.255.255');
+            /** @var \IPLib\Address\IPv4 $toAddress */
+
+            return new static($fromAddress, $toAddress, 4);
         }
         if ($range === '*:*:*:*:*:*:*:*') {
-            return new static(IPv6::parseString('::'), IPv6::parseString('ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff'), 8);
+            $fromAddress = IPv6::parseString('::');
+            /** @var \IPLib\Address\IPv6 $fromAddress */
+            $toAddress = IPv6::parseString('ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff');
+            /** @var \IPLib\Address\IPv6 $toAddress */
+
+            return new static($fromAddress, $toAddress, 8);
         }
         $matches = null;
         if (strpos($range, '.') !== false && preg_match('/^[^*]+((?:\.\*)+)$/', $range, $matches)) {
@@ -128,6 +140,7 @@ class Pattern extends AbstractRange
             $fixedBytes = array_slice($fromAddress->getBytes(), 0, -$asterisksCount);
             $otherBytes = array_fill(0, $asterisksCount, 255);
             $toAddress = IPv4::fromBytes(array_merge($fixedBytes, $otherBytes));
+            /** @var \IPLib\Address\IPv4 $toAddress */
 
             return new static($fromAddress, $toAddress, $asterisksCount);
         }
@@ -140,6 +153,7 @@ class Pattern extends AbstractRange
             $fixedWords = array_slice($fromAddress->getWords(), 0, -$asterisksCount);
             $otherWords = array_fill(0, $asterisksCount, 0xffff);
             $toAddress = IPv6::fromWords(array_merge($fixedWords, $otherWords));
+            /** @var \IPLib\Address\IPv6 $toAddress */
 
             return new static($fromAddress, $toAddress, $asterisksCount);
         }
@@ -177,6 +191,7 @@ class Pattern extends AbstractRange
                     $bytes = array_slice($bytes, 0, -$this->asterisksCount * 2);
                     $bytes = array_pad($bytes, 16, 1);
                     $address = IPv6::fromBytes($bytes);
+                    /** @var IPv6 $address */
                     $before = substr($address->toString(false), 0, -strlen(':101') * $this->asterisksCount);
                     $result = $before . str_repeat(':*', $this->asterisksCount);
                 }

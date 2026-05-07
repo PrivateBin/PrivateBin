@@ -11,6 +11,8 @@ use IPLib\Service\NumberInChunks;
 
 /**
  * An IPv6 address.
+ *
+ * @phpstan-consistent-constructor
  */
 class IPv6 implements AddressInterface
 {
@@ -56,7 +58,7 @@ class IPv6 implements AddressInterface
     /**
      * An array containing RFC designated address ranges.
      *
-     * @var array|null
+     * @var \IPLib\Address\AssignedRange[]|null
      */
     private static $reservedRanges;
 
@@ -144,7 +146,7 @@ class IPv6 implements AddressInterface
             }
         }
         $result = null;
-        if (is_string($address) && strpos($address, ':') !== false && strpos($address, ':::') === false) {
+        if (strpos($address, ':') !== false && strpos($address, ':::') === false) {
             if ($flags & ParseStringFlag::MAY_INCLUDE_PORT && $address[0] === '[' && preg_match('/^\[(.+)]:\d+$/', $address, $matches)) {
                 $address = $matches[1];
             }
@@ -212,7 +214,7 @@ class IPv6 implements AddressInterface
     /**
      * Parse an array of bytes and returns an IPv6 instance if the array is valid, or null otherwise.
      *
-     * @param int[]|array $bytes
+     * @param array<int|mixed> $bytes
      *
      * @return static|null
      */
@@ -244,7 +246,7 @@ class IPv6 implements AddressInterface
     /**
      * Parse an array of words and returns an IPv6 instance if the array is valid, or null otherwise.
      *
-     * @param int[]|array $words
+     * @param array<int|mixed> $words
      *
      * @return static|null
      */
@@ -353,7 +355,7 @@ class IPv6 implements AddressInterface
         if ($this->words === null) {
             $this->words = array_map(
                 function ($chunk) {
-                    return hexdec($chunk);
+                    return (int) hexdec($chunk);
                 },
                 explode(':', $this->longAddress)
             );
@@ -441,10 +443,14 @@ class IPv6 implements AddressInterface
                 $exceptions = array();
                 if (isset($data[1])) {
                     foreach ($data[1] as $exceptionRange => $exceptionType) {
-                        $exceptions[] = new AssignedRange(Subnet::parseString($exceptionRange), $exceptionType);
+                        $subnet = Subnet::parseString($exceptionRange);
+                        /** @var Subnet $subnet */
+                        $exceptions[] = new AssignedRange($subnet, $exceptionType);
                     }
                 }
-                $reservedRanges[] = new AssignedRange(Subnet::parseString($range), $data[0], $exceptions);
+                $subnet = Subnet::parseString($range);
+                /** @var Subnet $subnet */
+                $reservedRanges[] = new AssignedRange($subnet, $data[0], $exceptions);
             }
             self::$reservedRanges = $reservedRanges;
         }
@@ -517,11 +523,17 @@ class IPv6 implements AddressInterface
     {
         $myBytes = $this->getBytes();
         $ipv6Bytes = array_merge(array_slice($myBytes, 0, 12), array(0xff, 0xff, 0xff, 0xff));
-        $ipv6String = static::fromBytes($ipv6Bytes)->toString($ipV6Long);
+        $ipv6 = static::fromBytes($ipv6Bytes);
+        /** @var IPv6 $ipv6 */
+        $ipv6String = $ipv6->toString($ipV6Long);
         $ipv4Bytes = array_slice($myBytes, 12, 4);
-        $ipv4String = IPv4::fromBytes($ipv4Bytes)->toString($ipV4Long);
+        $ipv4 = IPv4::fromBytes($ipv4Bytes);
+        /** @var IPv4 $ipv4 */
+        $ipv4String = $ipv4->toString($ipV4Long);
+        $result = preg_replace('/((ffff:ffff)|(\d+(\.\d+){3}))$/i', $ipv4String, $ipv6String);
+        /** @var string $result */
 
-        return preg_replace('/((ffff:ffff)|(\d+(\.\d+){3}))$/i', $ipv4String, $ipv6String);
+        return $result;
     }
 
     /**
@@ -627,8 +639,11 @@ class IPv6 implements AddressInterface
             $paddedBits = substr($paddedBits, $absBits) . $pad;
         }
         $bytes = array_map('bindec', str_split($paddedBits, 16));
+        /** @var int[] $bytes */
+        $result = static::fromWords($bytes);
+        /** @var IPv6 $result */
 
-        return static::fromWords($bytes);
+        return $result;
     }
 
     /**

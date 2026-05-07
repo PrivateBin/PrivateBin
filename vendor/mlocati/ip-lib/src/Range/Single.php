@@ -13,6 +13,8 @@ use IPLib\ParseStringFlag;
  *
  * @example 127.0.0.1
  * @example ::1
+ *
+ * @phpstan-consistent-constructor
  */
 class Single extends AbstractRange
 {
