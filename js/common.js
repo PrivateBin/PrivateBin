@@ -54,7 +54,7 @@ require('./prettify');
 global.prettyPrint = window.PR ? window.PR.prettyPrint : function() {};
 global.prettyPrintOne = window.PR ? window.PR.prettyPrintOne : function() {};
 global.showdown = require('./showdown-2.1.0');
-global.DOMPurify = require('./purify-3.3.0');
+global.DOMPurify = require('./purify-3.3.2');
 global.baseX = require('./base-x-5.0.1').baseX;
 global.Legacy = require('./legacy').Legacy;
 require('./privatebin');
