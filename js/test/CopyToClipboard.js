@@ -16,6 +16,8 @@ describe('CopyToClipboard', function () {
                     common.enableClipboard();
 
                     document.body.innerHTML = (
+                        '<div id="status" class="hidden"></div>' +
+                        '<div id="errormessage" class="hidden"></div>' +
                         '<div id="placeholder" class="hidden">+++ no document text ' +
                         '+++</div><div id="prettymessage" class="hidden">' +
                         '<button type="button" id="prettyMessageCopyBtn"><svg id="copyIcon"></svg>' +
@@ -24,6 +26,7 @@ describe('CopyToClipboard', function () {
                         '</div><div id="plaintext" class="hidden"></div>'
                     );
 
+                    PrivateBin.Alert.init();
                     PrivateBin.PasteViewer.init();
                     PrivateBin.PasteViewer.setFormat(format);
                     PrivateBin.PasteViewer.setText(text);
@@ -52,6 +55,8 @@ describe('CopyToClipboard', function () {
                     common.enableClipboard();
 
                     document.body.innerHTML = (
+                        '<div id="status" class="hidden"></div>' +
+                        '<div id="errormessage" class="hidden"></div>' +
                         '<div id="placeholder">+++ no document text ' +
                         '+++</div><div id="prettymessage" class="hidden">' +
                         '<button type="button" id="prettyMessageCopyBtn"><svg id="copyIcon"></svg>' +
@@ -106,7 +111,11 @@ describe('CopyToClipboard', function () {
             async function (text) {
                 common.enableClipboard();
 
-                document.body.innerHTML = '<button id="copyLink"></button>';
+                document.body.innerHTML = (
+                    '<div id="status" class="hidden"></div>' +
+                    '<div id="errormessage" class="hidden"></div>' +
+                    '<button id="copyLink"></button>'
+                );
 
                 PrivateBin.Alert.init();
                 PrivateBin.CopyToClipboard.init();

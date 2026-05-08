@@ -29,7 +29,11 @@ describe('DiscussionViewer', function () {
                 function (comments, commentKey, fadeOut, nickname, message, alertType, alert) {
                     var clean = globalThis.cleanup(),
                         results = [];
+                    PrivateBin.Model.reset();
+                    PrivateBin.Helper.reset();
                     document.body.innerHTML = (
+                        '<div id="status" class="hidden"></div>' +
+                        '<div id="errormessage" class="hidden"></div>' +
                         `<div id="discussion">
 	<h4>Discussion</h4>
 	<div id="commentcontainer"></div>
@@ -60,6 +64,7 @@ describe('DiscussionViewer', function () {
 `
                     );
                     PrivateBin.Model.init();
+                    PrivateBin.Alert.init();
                     PrivateBin.DiscussionViewer.init();
                     results.push(
                         !document.getElementById('discussion').classList.contains('hidden')
@@ -71,7 +76,9 @@ describe('DiscussionViewer', function () {
                     comments.forEach(function (comment) {
                         comment.id = comment.idArray.join('');
                         comment.parentid = comment.parentidArray.join('');
-                        PrivateBin.DiscussionViewer.addComment(PrivateBin.Helper.CommentFactory(comment), comment.data, comment.meta.nickname);
+                        comment.getCreated = function() { return comment.meta.postdate; };
+                        comment.getIcon = function() { return comment.meta.vizhash; };
+                        PrivateBin.DiscussionViewer.addComment(comment, comment.data, comment.meta.nickname);
                     });
                     results.push(
                         document.getElementById('discussion').classList.contains('hidden')
@@ -93,6 +100,7 @@ describe('DiscussionViewer', function () {
                     // clicking "Add comment" button should open the reply form
                     document.getElementById('commentcontainer').querySelector('button').click();
                     results.push(
+                        document.getElementById('reply') !== null &&
                         !document.getElementById('reply').classList.contains('hidden')
                     );
                     document.querySelector('#reply #nickname').value = nickname;
