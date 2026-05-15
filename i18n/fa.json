@@ -231,5 +231,6 @@
     "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)": "کلید Tab به‌عنوان کاراکتر عمل می‌کند (برای تغییر وضعیت <kbd>Ctrl</kbd>+<kbd>m</kbd> یا <kbd>Esc</kbd> را فشار دهید)",
     "Show password": "نمایش رمز عبور",
     "Hide password": "مخفی‌کردن رمز عبور",
-    "Theme": "تم"
+    "Theme": "تم",
+    "Copy": "Copy"
 }

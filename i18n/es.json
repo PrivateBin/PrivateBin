@@ -231,5 +231,6 @@
     "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)": "La tecla de tabulación funciona como carácter (presione <kbd>Ctrl</kbd>+<kbd>m</kbd> o <kbd>Esc</kbd> para alternar)",
     "Show password": "Mostrar contraseña",
     "Hide password": "Ocultar contraseña",
-    "Theme": "Tema"
+    "Theme": "Tema",
+    "Copy": "Copy"
 }

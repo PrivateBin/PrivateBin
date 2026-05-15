@@ -13,12 +13,15 @@ describe('CopyToClipboard', function() {
                 common.enableClipboard();
 
                 $('body').html(
-                    '<div id="placeholder" class="hidden">+++ no document text ' +
-                    '+++</div><div id="prettymessage" class="hidden">' +
-                    '<button type="button" id="prettyMessageCopyBtn"><svg id="copyIcon"></svg>' +
-                    '<svg id="copySuccessIcon"></svg></button><pre ' +
-                    'id="prettyprint" class="prettyprint linenums:1"></pre>' +
-                    '</div><div id="plaintext" class="hidden"></div>'
+                    '<div id="placeholder"></div>' +
+					'<div id="attachmentPreview" class="hidden"></div>' +
+                    '<h5 id="copyShortcutHint" class="hidden">' +
+						'<small id="copyShortcutHintText"></small>' +
+						'<button type="button" id="copyShortcutHintBtn"></button>' +
+					'</h5>' +
+                    '<div id="prettymessage" class="hidden">' +
+						'<pre id="prettyprint"></pre>' +
+					'</div>'
                 );
 
                 $.PrivateBin.PasteViewer.init();
@@ -28,7 +31,7 @@ describe('CopyToClipboard', function() {
 
                 $.PrivateBin.CopyToClipboard.init();
 
-                $('#prettyMessageCopyBtn').trigger('click');
+                $('#copyShortcutHintBtn').trigger('click');
 
                 const savedToClipboardText = await navigator.clipboard.readText();
 
@@ -50,12 +53,15 @@ describe('CopyToClipboard', function() {
                 common.enableClipboard();
 
                 $('body').html(
-                    '<div id="placeholder">+++ no document text ' +
-                    '+++</div><div id="prettymessage" class="hidden">' +
-                    '<button type="button" id="prettyMessageCopyBtn"><svg id="copyIcon"></svg>' +
-                    '<svg id="copySuccessIcon"></svg></button><pre ' +
-                    'id="prettyprint" class="prettyprint linenums:1"></pre>' +
-                    '</div><div id="plaintext" class="hidden"></div>'
+                    '<div id="placeholder"></div>' +
+					'<div id="attachmentPreview" class="hidden"></div>' +
+                    '<h5 id="copyShortcutHint" class="hidden">' +
+						'<small id="copyShortcutHintText"></small>' +
+						'<button type="button" id="copyShortcutHintBtn"></button>' +
+					'</h5>' +
+                    '<div id="prettymessage" class="hidden">' +
+						'<pre id="prettyprint"></pre>' +
+					'</div>'
                 );
 
                 $.PrivateBin.PasteViewer.init();
@@ -100,39 +106,35 @@ describe('CopyToClipboard', function() {
 
 
     describe('Keyboard shortcut hint', function () {
-        jsc.property('Show hint',
-            'nestring',
-            function (text) {
+        jsc.property('Show hint', function () {
                 var clean = jsdom();
 
-                $('body').html('<small id="copyShortcutHintText"></small>');
+                $('body').html('<h5 id="copyShortcutHint" class="hidden"></h5>');
 
                 $.PrivateBin.CopyToClipboard.init();
                 $.PrivateBin.CopyToClipboard.showKeyboardShortcutHint();
 
-                const keyboardShortcutHint = $('#copyShortcutHintText').text();
+                const hasHidden = $('#copyShortcutHint').hasClass('hidden');
 
                 clean();
 
-                return keyboardShortcutHint.length > 0;
+                return !hasHidden;
             }
         );
 
-        jsc.property('Hide hint',
-            'nestring',
-            function (text) {
+        jsc.property('Hide hint', function () {
                 var clean = jsdom();
 
-                $('body').html('<small id="copyShortcutHintText">' + text + '</small>');
+                $('body').html('<h5 id="copyShortcutHint"></h5>');
 
                 $.PrivateBin.CopyToClipboard.init();
                 $.PrivateBin.CopyToClipboard.hideKeyboardShortcutHint();
 
-                const keyboardShortcutHint = $('#copyShortcutHintText').text();
+                const hasHidden = $('#copyShortcutHint').hasClass('hidden');
 
                 clean();
 
-                return keyboardShortcutHint.length === 0;
+                return hasHidden;
             }
         );
     });

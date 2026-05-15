@@ -231,5 +231,6 @@
     "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)": "Tabulatortaste als Zeichen interpretieren (Umschalten durch <kbd>Strg</kbd>+<kbd>m</kbd> oder <kbd>Esc</kbd>)",
     "Show password": "Passwort anzeigen",
     "Hide password": "Passwort verbergen",
-    "Theme": "Design"
+    "Theme": "Design",
+    "Copy": "Copy"
 }

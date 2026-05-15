@@ -231,5 +231,6 @@
     "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)": "ปุ่ม Tabulator ใช้เป็นอักขระ (กด <kbd>Ctrl</kbd>+<kbd>m</kbd> หรือ <kbd>Esc</kbd> เพื่อสลับ)",
     "Show password": "Show password",
     "Hide password": "Hide password",
-    "Theme": "ธีม"
+    "Theme": "ธีม",
+    "Copy": "Copy"
 }
