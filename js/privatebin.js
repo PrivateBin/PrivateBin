@@ -5537,7 +5537,7 @@ jQuery.PrivateBin = (function($) {
          * @function
          */
         function handleCopyButtonClick() {
-             $(copyButton).click(function () {
+            $(copyButton).click(function () {
                 const text = PasteViewer.getText();
                 saveToClipboard(text);
 
