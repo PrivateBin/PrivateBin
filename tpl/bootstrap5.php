@@ -481,10 +481,10 @@ endif;
 					<div id="placeholder" class="col-md-12 hidden"><?php echo I18n::_('+++ no document text +++'); ?></div>
 					<div id="attachmentPreview" class="col-md-12 text-center hidden"></div>
 					<h6 id="copyShortcutHint" class="col-md-12 nav justify-content-between align-items-center mb-2 hidden">
-						<small id="copyShortcutHintText">
+						<small id="copyShortcutHintText" class="d-none d-md-inline">
 							<?php echo I18n::_("To copy document press on the copy button or use the clipboard shortcut <kbd>Ctrl</kbd>+<kbd>c</kbd>/<kbd>Cmd</kbd>+<kbd>c</kbd>") ?>
 						</small>
-						<button type="button" id="copyShortcutHintBtn" class="btn btn-secondary"><?php echo I18n::_('Copy'); ?></button>
+						<button type="button" id="copyShortcutHintBtn" class="btn btn-secondary ms-auto"><?php echo I18n::_('Copy'); ?></button>
 					</h6>
 					<div id="prettymessage" class="card col-md-12 hidden">
 						<pre id="prettyprint" class="card-body col-md-12 prettyprint linenums:1"></pre>
