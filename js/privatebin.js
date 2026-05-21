@@ -4713,16 +4713,17 @@ jQuery.PrivateBin = (function($) {
             $fileRemoveButton.click(removeAttachment);
             $qrCodeLink.click(displayQrCode);
 
-            // bootstrap template drop downs
-            $('ul.dropdown-menu li a', $('#expiration').parent()).click(updateExpiration);
-            $('ul.dropdown-menu li a', $('#formatter').parent()).click(updateFormat);
-            // bootstrap5 & page drop downs
-            $('#pasteExpiration').on('change', function() {
-                pasteExpiration = Model.getExpirationDefault();
-            });
-            $('#pasteFormatter').on('change', function() {
-                PasteViewer.setFormat(Model.getFormatDefault());
-            });
+            if (Helper.isBootstrap5()) {
+                $('#pasteExpiration').on('change', function() {
+                    pasteExpiration = Model.getExpirationDefault();
+                });
+                $('#pasteFormatter').on('change', function() {
+                    PasteViewer.setFormat(Model.getFormatDefault());
+                });
+            } else {
+                $('ul.dropdown-menu li a', $('#expiration').parent()).click(updateExpiration);
+                $('ul.dropdown-menu li a', $('#formatter').parent()).click(updateFormat);
+            }
 
             // initiate default state of checkboxes
             changeBurnAfterReading();
