@@ -1,6 +1,7 @@
 # PrivateBin version history
 
 ## 2.0.5 (not yet released)
+* FIXED: State corruption after "Remove attachment" (#1824)
 
 ## 2.0.4 (2026-05-03)
 * ADDED: Translations for Swedish & Persian
