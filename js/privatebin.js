@@ -5527,8 +5527,6 @@ jQuery.PrivateBin = (function($) {
 
         let copyButton,
             copyLinkButton,
-            copyIcon,
-            successIcon,
             shortcutHint,
             url;
 
@@ -5540,11 +5538,10 @@ jQuery.PrivateBin = (function($) {
          * @function
          */
         function handleCopyButtonClick() {
-            $(copyButton).click(function() {
+            $(copyButton).click(function () {
                 const text = PasteViewer.getText();
                 saveToClipboard(text);
 
-                toggleSuccessIcon();
                 showAlertMessage('Document copied to clipboard');
             });
         }
@@ -5627,33 +5624,13 @@ jQuery.PrivateBin = (function($) {
         }
 
         /**
-         * Toogle success icon after copy
-         *
-         * @name CopyToClipboard.toggleSuccessIcon
-         * @private
-         * @function
-         */
-        function toggleSuccessIcon() {
-            $(copyIcon).css('display', 'none');
-            $(successIcon).css('display', 'block');
-
-            setTimeout(function() {
-                $(copyIcon).css('display', 'block');
-                $(successIcon).css('display', 'none');
-            }, 1000);
-        }
-
-        /**
          * Show keyboard shortcut hint
          *
          * @name CopyToClipboard.showKeyboardShortcutHint
          * @function
          */
         me.showKeyboardShortcutHint = function () {
-            I18n._(
-                shortcutHint,
-                'To copy document press on the copy button or use the clipboard shortcut <kbd>Ctrl</kbd>+<kbd>c</kbd>/<kbd>Cmd</kbd>+<kbd>c</kbd>'
-            );
+            $(shortcutHint).removeClass('hidden');
         };
 
         /**
@@ -5663,7 +5640,7 @@ jQuery.PrivateBin = (function($) {
          * @function
          */
         me.hideKeyboardShortcutHint = function () {
-            $(shortcutHint).html('');
+            $(shortcutHint).addClass('hidden');
         };
 
         /**
@@ -5684,11 +5661,9 @@ jQuery.PrivateBin = (function($) {
          * @function
          */
         me.init = function() {
-            copyButton = $('#prettyMessageCopyBtn');
+            copyButton = $('#copyShortcutHintBtn');
             copyLinkButton = $('#copyLink');
-            copyIcon = $('#copyIcon');
-            successIcon = $('#copySuccessIcon');
-            shortcutHint = $('#copyShortcutHintText');
+            shortcutHint = $('#copyShortcutHint');
 
             handleCopyButtonClick();
             handleCopyLinkButtonClick();

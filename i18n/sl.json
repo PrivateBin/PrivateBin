@@ -231,5 +231,6 @@
     "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)": "Tabulatorska tipka služi kot znak (za preklop pritisnite <kbd>Ctrl</kbd>+<kbd>m</kbd> ali <kbd>Esc</kbd>)",
     "Show password": "Pokaži geslo",
     "Hide password": "Skrij geslo",
-    "Theme": "Tema"
+    "Theme": "Tema",
+    "Copy": "Copy"
 }

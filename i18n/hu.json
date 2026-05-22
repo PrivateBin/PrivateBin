@@ -231,5 +231,6 @@
     "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)": "A tabulátor karakternek használható (nyomd le a <kbd>Ctrl</kbd>+<kbd>m</kbd> vagy az <kbd>Esc</kbd> to billentyűket ennek megszüntetéséhez).",
     "Show password": "Jelszó megjelenítése",
     "Hide password": "Jelszó elrejtése",
-    "Theme": "Téma"
+    "Theme": "Téma",
+    "Copy": "Copy"
 }

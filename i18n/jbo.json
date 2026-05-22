@@ -231,5 +231,6 @@
     "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)": "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)",
     "Show password": "Show password",
     "Hide password": "Hide password",
-    "Theme": "jvinu"
+    "Theme": "jvinu",
+    "Copy": "Copy"
 }
