@@ -1,139 +1,165 @@
 'use strict';
 const common = require('../common');
+const fc = require('fast-check');
 
-describe('CopyToClipboard', function() {
-    this.timeout(30000);
+describe('CopyToClipboard', function () {
+    afterEach(() => {
+        globalThis.cleanup();
+    });
 
-    describe ('Copy document to clipboard', function () {
-        jsc.property('Copy with button click',
-            common.jscFormats(),
-            'nestring',
-            async function (format, text) {
-                var clean = jsdom();
-                common.enableClipboard();
+    describe('Copy document to clipboard', function () {
+        it('Copy with button click', async function () {
+            await fc.assert(fc.asyncProperty(
+                common.fcFormats(),
+                fc.string({minLength: 1}),
+                async function (format, text) {
+                    common.enableClipboard();
 
-                $('body').html(
-                    '<div id="placeholder" class="hidden">+++ no document text ' +
-                    '+++</div><div id="prettymessage" class="hidden">' +
-                    '<button type="button" id="prettyMessageCopyBtn"><svg id="copyIcon"></svg>' +
-                    '<svg id="copySuccessIcon"></svg></button><pre ' +
-                    'id="prettyprint" class="prettyprint linenums:1"></pre>' +
-                    '</div><div id="plaintext" class="hidden"></div>'
-                );
+                    document.body.innerHTML = (
+                        '<div id="status" class="hidden"></div>' +
+                        '<div id="errormessage" class="hidden"></div>' +
+                        '<div id="placeholder" class="hidden">+++ no document text ' +
+                        '+++</div><div id="prettymessage" class="hidden">' +
+                        '<button type="button" id="prettyMessageCopyBtn"><svg id="copyIcon"></svg>' +
+                        '<svg id="copySuccessIcon"></svg></button><pre ' +
+                        'id="prettyprint" class="prettyprint linenums:1"></pre>' +
+                        '</div><div id="plaintext" class="hidden"></div>'
+                    );
 
-                $.PrivateBin.PasteViewer.init();
-                $.PrivateBin.PasteViewer.setFormat(format);
-                $.PrivateBin.PasteViewer.setText(text);
-                $.PrivateBin.PasteViewer.run();
+                    PrivateBin.Alert.init();
+                    PrivateBin.PasteViewer.init();
+                    PrivateBin.PasteViewer.setFormat(format);
+                    PrivateBin.PasteViewer.setText(text);
+                    PrivateBin.PasteViewer.run();
 
-                $.PrivateBin.CopyToClipboard.init();
+                    PrivateBin.CopyToClipboard.init();
 
-                $('#prettyMessageCopyBtn').trigger('click');
+                    document.getElementById('prettyMessageCopyBtn').click();
 
-                const savedToClipboardText = await navigator.clipboard.readText();
+                    const savedToClipboardText = await navigator.clipboard.readText();
 
-                clean();
-
-                return text === savedToClipboardText;
-            }
-        );
+                    return text === savedToClipboardText;
+                }
+            ));
+        });
 
         /**
-         * Unfortunately in JSVerify impossible to check if copy with shortcut when user selected some text on the page
+         * Unfortunately, in JSVerify impossible to check if copy with shortcut when user selected some text on the page
          * (the copy document to clipboard should not work in this case) due to lacking window.getSelection() in jsdom.
          */
-        jsc.property('Copy with keyboard shortcut',
-            common.jscFormats(),
-            'nestring',
-            async function (format, text) {
-                var clean = jsdom();
-                common.enableClipboard();
+        it('Copy with keyboard shortcut', async function () {
+            await fc.assert(fc.asyncProperty(
+                common.fcFormats(),
+                fc.string({minLength: 1}),
+                async function (format, text) {
+                    common.enableClipboard();
 
-                $('body').html(
-                    '<div id="placeholder">+++ no document text ' +
-                    '+++</div><div id="prettymessage" class="hidden">' +
-                    '<button type="button" id="prettyMessageCopyBtn"><svg id="copyIcon"></svg>' +
-                    '<svg id="copySuccessIcon"></svg></button><pre ' +
-                    'id="prettyprint" class="prettyprint linenums:1"></pre>' +
-                    '</div><div id="plaintext" class="hidden"></div>'
-                );
+                    document.body.innerHTML = (
+                        '<div id="status" class="hidden"></div>' +
+                        '<div id="errormessage" class="hidden"></div>' +
+                        '<div id="placeholder">+++ no document text ' +
+                        '+++</div><div id="prettymessage" class="hidden">' +
+                        '<button type="button" id="prettyMessageCopyBtn"><svg id="copyIcon"></svg>' +
+                        '<svg id="copySuccessIcon"></svg></button><pre ' +
+                        'id="prettyprint" class="prettyprint linenums:1"></pre>' +
+                        '</div><div id="plaintext" class="hidden"></div>'
+                    );
 
-                $.PrivateBin.PasteViewer.init();
-                $.PrivateBin.PasteViewer.setFormat(format);
-                $.PrivateBin.PasteViewer.setText(text);
-                $.PrivateBin.PasteViewer.run();
+                    PrivateBin.Alert.init();
+                    PrivateBin.PasteViewer.init();
+                    PrivateBin.PasteViewer.setFormat(format);
+                    PrivateBin.PasteViewer.setText(text);
+                    PrivateBin.PasteViewer.run();
 
-                $.PrivateBin.CopyToClipboard.init();
+                    PrivateBin.CopyToClipboard.init();
 
-                $('body').trigger('copy');
+                    document.body.dispatchEvent(getClipboardEvent());
 
-                const copiedTextWithoutSelectedText = await navigator.clipboard.readText();
+                    const copiedTextWithoutSelectedText = await navigator.clipboard.readText();
 
-                clean();
+                    return copiedTextWithoutSelectedText === text;
+                }
+            ));
+        });
 
-                return copiedTextWithoutSelectedText === text;
+        /**
+         * ClipboardEvent is not supported in jsdom yet, so this creates a mock event to trigger the copy event listener.
+         *
+         * See https://github.com/jsdom/jsdom/issues/1568
+         *
+         * @returns {ClipboardEvent}
+         */
+        function getClipboardEvent() {
+            /** {@type ClipboardEvent} */
+            const clipboardEvent = new Event('copy', {
+                bubbles: true,
+                cancelable: true,
+                composed: true
+            });
+            clipboardEvent['clipboardData'] = {
+                getData: function () {
+                    return '';
+                }
             }
-        );
+            return clipboardEvent;
+        }
     });
 
 
-    jsc.property('Copy link to clipboard',
-        'nestring',
-        async function (text) {
-            var clean = jsdom();
-            common.enableClipboard();
+    it('Copy link to clipboard', async function () {
+        await fc.assert(fc.asyncProperty(fc.string(),
+            async function (text) {
+                common.enableClipboard();
 
-            $('body').html('<button id="copyLink"></button>');
+                document.body.innerHTML = (
+                    '<div id="status" class="hidden"></div>' +
+                    '<div id="errormessage" class="hidden"></div>' +
+                    '<button id="copyLink"></button>'
+                );
 
-            $.PrivateBin.CopyToClipboard.init();
-            $.PrivateBin.CopyToClipboard.setUrl(text);
+                PrivateBin.Alert.init();
+                PrivateBin.CopyToClipboard.init();
+                PrivateBin.CopyToClipboard.setUrl(text);
 
-            $('#copyLink').trigger('click');
+                document.getElementById('copyLink').click();
 
-            const copiedText = await navigator.clipboard.readText();
+                const copiedText = await navigator.clipboard.readText();
 
-            clean();
-
-            return text === copiedText;
-        }
-    );
-
+                return text === copiedText;
+            })
+        );
+    });
 
     describe('Keyboard shortcut hint', function () {
-        jsc.property('Show hint',
-            'nestring',
+        it('shows hint', () => {
+            fc.assert(fc.property(fc.string(),
+                function (text) {
+                    document.body.innerHTML = '<small id="copyShortcutHintText"></small>';
+
+                    PrivateBin.CopyToClipboard.init();
+                    PrivateBin.CopyToClipboard.showKeyboardShortcutHint();
+
+                    const keyboardShortcutHint = document.getElementById('copyShortcutHintText').textContent;
+
+                    return keyboardShortcutHint.length > 0;
+                }
+            ));
+        });
+    });
+
+    it('Hide hint', () => {
+        fc.assert(fc.property(
+            fc.string({minLength: 1}),
             function (text) {
-                var clean = jsdom();
+                document.body.innerHTML = '<small id="copyShortcutHintText">' + text + '</small>';
 
-                $('body').html('<small id="copyShortcutHintText"></small>');
+                PrivateBin.CopyToClipboard.init();
+                PrivateBin.CopyToClipboard.hideKeyboardShortcutHint();
 
-                $.PrivateBin.CopyToClipboard.init();
-                $.PrivateBin.CopyToClipboard.showKeyboardShortcutHint();
-
-                const keyboardShortcutHint = $('#copyShortcutHintText').text();
-
-                clean();
-
-                return keyboardShortcutHint.length > 0;
-            }
-        );
-
-        jsc.property('Hide hint',
-            'nestring',
-            function (text) {
-                var clean = jsdom();
-
-                $('body').html('<small id="copyShortcutHintText">' + text + '</small>');
-
-                $.PrivateBin.CopyToClipboard.init();
-                $.PrivateBin.CopyToClipboard.hideKeyboardShortcutHint();
-
-                const keyboardShortcutHint = $('#copyShortcutHintText').text();
-
-                clean();
+                const keyboardShortcutHint = document.getElementById('copyShortcutHintText').textContent;
 
                 return keyboardShortcutHint.length === 0;
             }
-        );
+        ));
     });
 });

@@ -2,9 +2,48 @@
 
 // testing prerequisites
 global.assert = require('assert');
-global.jsc = require('jsverify');
+const fc = require('fast-check');
 global.jsdom = require('jsdom-global');
-global.cleanup = global.jsdom();
+// initial DOM environment created by jsdom-global
+let currentCleanup = global.jsdom();
+
+// wrap cleanup so that calling it recreates a fresh jsdom environment
+global.cleanup = function (...args) {
+    // remove previous environment
+    if (typeof currentCleanup === 'function') {
+        currentCleanup();
+    }
+
+    // create a new jsdom environment
+    currentCleanup = global.jsdom(...args);
+
+    // Make sure window and document are available in global scope for module loading
+    // jsdom-global sets them, but we need to ensure they're accessible
+    if (typeof window === 'undefined') {
+        throw new Error('jsdom-global failed to set up window');
+    }
+    if (typeof document === 'undefined') {
+        throw new Error('jsdom-global failed to set up document');
+    }
+
+    // Clear module cache to ensure modules are re-evaluated with new jsdom environment
+    delete require.cache[require.resolve('./privatebin')];
+    delete require.cache[require.resolve('./legacy')];
+    require('./privatebin');
+    if (typeof PrivateBin === 'undefined') {
+        throw new Error('PrivateBin module did not load correctly');
+    }
+
+    // also re-export the PrivateBin namespace if available
+    if (typeof window !== 'undefined' && window.PrivateBin) {
+        global.PrivateBin = window.PrivateBin;
+        if (global.$) {
+            global.$.PrivateBin = window.PrivateBin;
+        }
+    }
+
+    return global.cleanup;
+};
 global.fs = require('fs');
 global.WebCrypto = require('@peculiar/webcrypto').Crypto;
 
@@ -12,13 +51,22 @@ global.WebCrypto = require('@peculiar/webcrypto').Crypto;
 global.$ = global.jQuery = require('./jquery-3.7.1');
 global.zlib = require('./zlib').zlib;
 require('./prettify');
-global.prettyPrint = window.PR.prettyPrint;
-global.prettyPrintOne = window.PR.prettyPrintOne;
+global.prettyPrint = window.PR ? window.PR.prettyPrint : function() {};
+global.prettyPrintOne = window.PR ? window.PR.prettyPrintOne : function() {};
 global.showdown = require('./showdown-2.1.0');
 global.DOMPurify = require('./purify-3.4.1');
 global.baseX = require('./base-x-5.0.1').baseX;
 global.Legacy = require('./legacy').Legacy;
 require('./privatebin');
+
+// provide global access to the namespace so tests can reference it directly
+if (typeof window !== 'undefined' && window.PrivateBin) {
+    global.PrivateBin = window.PrivateBin;
+    // keep the old jQuery alias around just in case some tests still use it
+    if (global.$) {
+        global.$.PrivateBin = window.PrivateBin;
+    }
+}
 
 // internal variables
 var a2zString    = ['a','b','c','d','e','f','g','h','i','j','k','l','m',
@@ -88,68 +136,68 @@ exports.btoa = function(text) {
 };
 
 // provides random lowercase characters from a to z
-exports.jscA2zString = function() {
-    return jsc.elements(a2zString);
+exports.fcA2zString = function() {
+    return fc.constantFrom(...a2zString);
 };
 
 // provides random lowercase alpha numeric characters (a to z and 0 to 9)
-exports.jscAlnumString = function() {
-    return jsc.elements(alnumString);
+exports.fcAlnumString = function() {
+    return fc.constantFrom(...alnumString);
 };
 
 //provides random characters allowed in hexadecimal notation
-exports.jscHexString = function() {
-    return jsc.elements(hexString);
+exports.fcHexString = function() {
+    return fc.constantFrom(...hexString);
 };
 
 // provides random characters allowed in GET queries
-exports.jscQueryString = function() {
-    return jsc.elements(queryString);
+exports.fcQueryString = function() {
+    return fc.constantFrom(...queryString);
 };
 
 // provides random characters allowed in hash queries
-exports.jscHashString = function() {
-    return jsc.elements(hashString);
+exports.fcHashString = function() {
+    return fc.constantFrom(...hashString);
 };
 
 // provides random characters allowed in base64 encoded strings
-exports.jscBase64String = function() {
-    return jsc.elements(base64String);
+exports.fcBase64String = function() {
+    return fc.constantFrom(...base64String);
 };
 
 // provides a random URL schema supported by the whatwg-url library
-exports.jscSchemas = function(withFtp = true) {
-    return jsc.elements(withFtp ? schemas : schemas.slice(1));
+exports.fcSchemas = function(withFtp = true) {
+    return fc.constantFrom(...(withFtp ? schemas : schemas.slice(1)));
 };
 
 // provides a random supported language string
-exports.jscSupportedLanguages = function() {
-    return jsc.elements(supportedLanguages);
+exports.fcSupportedLanguages = function() {
+    return fc.constantFrom(...supportedLanguages);
 };
 
 // provides a random mime type
-exports.jscMimeTypes = function() {
-    return jsc.elements(mimeTypes);
+exports.fcMimeTypes = function() {
+    return fc.constantFrom(...mimeTypes);
 };
 
 // provides a random PrivateBin document formatter
-exports.jscFormats = function() {
-    return jsc.elements(formats);
+exports.fcFormats = function() {
+    return fc.constantFrom(...formats);
 };
 
 // provides random URLs
-exports.jscUrl = function(withFragment = true, withQuery = true) {
+exports.fcUrl = function(withFragment = true, withQuery = true) {
     let url = {
-        schema: exports.jscSchemas(),
-        address: jsc.nearray(exports.jscA2zString()),
+        schema: exports.fcSchemas(),
+        address: fc.array(exports.fcA2zString(), {minLength: 1}),
     };
     if (withFragment) {
-        url.fragment = jsc.string;
+        url.fragment = fc.string();
     }
     if(withQuery) {
-        url.query = jsc.array(exports.jscQueryString());
+        url.query = fc.array(exports.fcQueryString());
     }
-    return jsc.record(url);
+    return fc.record(url);
 };
 
 exports.urlToString = function (url) {
@@ -159,6 +207,7 @@ exports.urlToString = function (url) {
 };
 
 exports.enableClipboard = function () {
+    // @ts-ignore
     navigator.clipboard = (function () {
         let savedText = "";
 
