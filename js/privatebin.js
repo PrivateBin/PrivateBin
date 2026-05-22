@@ -2958,7 +2958,7 @@ window.PrivateBin = (function () {
          * @function
          */
         me.removeAttachmentData = function () {
-            files = undefined;
+            files = [];
             attachmentsData = [];
         };
 
@@ -4695,30 +4695,45 @@ window.PrivateBin = (function () {
                 qrCodeLink.addEventListener('click', displayQrCode);
             }
 
-            // bootstrap template drop downs
-            if (expiration) {
-                expiration.parentElement.querySelectorAll('ul.dropdown-menu li a').forEach(link => {
-                    link.addEventListener('click', updateExpiration);
-                });
-            }
-            if (formatter) {
-                formatter.parentElement.querySelectorAll('ul.dropdown-menu li a').forEach(link => {
-                    link.addEventListener('click', updateFormat);
-                });
-            }
+            if (Helper.isBootstrap5()) {
+                const pasteExpirationSelect = document.getElementById('pasteExpiration');
+                if (pasteExpirationSelect) {
+                    pasteExpirationSelect.addEventListener('change', function () {
+                        pasteExpiration = Model.getExpirationDefault();
+                    });
+                }
+                const pasteFormatterSelect = document.getElementById('pasteFormatter');
+                if (pasteFormatterSelect) {
+                    pasteFormatterSelect.addEventListener('change', function () {
+                        PasteViewer.setFormat(Model.getFormatDefault());
+                    });
+                }
+            } else {
+                // bootstrap template drop downs
+                if (expiration) {
+                    expiration.parentElement.querySelectorAll('ul.dropdown-menu li a').forEach(link => {
+                        link.addEventListener('click', updateExpiration);
+                    });
+                }
+                if (formatter) {
+                    formatter.parentElement.querySelectorAll('ul.dropdown-menu li a').forEach(link => {
+                        link.addEventListener('click', updateFormat);
+                    });
+                }
 
-            // bootstrap5 & page drop downs
-            const pasteExpirationSelect = document.getElementById('pasteExpiration');
-            if (pasteExpirationSelect) {
-                pasteExpirationSelect.addEventListener('change', function () {
-                    pasteExpiration = Model.getExpirationDefault();
-                });
-            }
-            const pasteFormatterSelect = document.getElementById('pasteFormatter');
-            if (pasteFormatterSelect) {
-                pasteFormatterSelect.addEventListener('change', function () {
-                    PasteViewer.setFormat(Model.getFormatDefault());
-                });
+                // page drop downs
+                const pasteExpirationSelect = document.getElementById('pasteExpiration');
+                if (pasteExpirationSelect) {
+                    pasteExpirationSelect.addEventListener('change', function () {
+                        pasteExpiration = Model.getExpirationDefault();
+                    });
+                }
+                const pasteFormatterSelect = document.getElementById('pasteFormatter');
+                if (pasteFormatterSelect) {
+                    pasteFormatterSelect.addEventListener('change', function () {
+                        PasteViewer.setFormat(Model.getFormatDefault());
+                    });
+                }
             }
 
             // initiate default state of checkboxes
@@ -4820,28 +4835,33 @@ window.PrivateBin = (function () {
          */
         me.run = function () {
             let isPost = Object.keys(data).length > 0,
-                ajaxParams = {
-                    type: isPost ? 'POST' : 'GET',
-                    url: url,
-                    headers: ajaxHeaders,
-                    dataType: 'json',
-                    success: function (result) {
-                        if (result.status === 0) {
-                            success(0, result);
-                        } else if (result.status === 1) {
-                            fail(1, result);
-                        } else {
-                            fail(2, result);
-                        }
-                    }
+                options = {
+                    method: isPost ? 'POST' : 'GET',
+                    headers: ajaxHeaders
                 };
             if (isPost) {
-                ajaxParams.data = JSON.stringify(data);
+                options.body = JSON.stringify(data);
             }
-            $.ajax(ajaxParams).fail(function (jqXHR, textStatus, errorThrown) {
-                console.error(textStatus, errorThrown);
-                fail(3, jqXHR);
-            });
+            fetch(url, options)
+                .then(response => {
+                    if (!response.ok) {
+                        throw response;
+                    }
+                    return response.json();
+                })
+                .then(result => {
+                    if (result.status === 0) {
+                        success(0, result);
+                    } else if (result.status === 1) {
+                        fail(1, result);
+                    } else {
+                        fail(2, result);
+                    }
+                })
+                .catch(error => {
+                    console.error(error);
+                    fail(3, error);
+                });
         };
 
         /**
@@ -5211,7 +5231,7 @@ window.PrivateBin = (function () {
                 };
             if (attachmentsData.length) {
                 cipherMessage['attachment'] = attachmentsData;
-                cipherMessage['attachment_name'] = AttachmentViewer.getFiles()?.map((fileInfo => fileInfo.name)) ?? [];
+                cipherMessage['attachment_name'] = AttachmentViewer.getFiles().map(fileInfo => fileInfo.name);
             } else if (AttachmentViewer.hasAttachment()) {
                 // fall back to cloned part
                 let attachments = AttachmentViewer.getAttachments();
