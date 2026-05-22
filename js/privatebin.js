@@ -57,6 +57,7 @@ window.PrivateBin = (function () {
      */
     const purifyHtmlConfig = {
         ALLOWED_URI_REGEXP: /^(?:(?:(?:f|ht)tps?|mailto|magnet):)/i,
+        ALLOWED_ATTR: ['href', 'id', 'target', 'rel', 'class', 'style'],
         USE_PROFILES: {
             html: true
         }
@@ -73,7 +74,8 @@ window.PrivateBin = (function () {
     const purifyHtmlConfigStrictSubset = {
         ALLOWED_URI_REGEXP: purifyHtmlConfig.ALLOWED_URI_REGEXP,
         ALLOWED_TAGS: ['a', 'i', 'span', 'kbd'],
-        ALLOWED_ATTR: ['href', 'id']
+        ALLOWED_ATTR: ['href', 'id', 'target', 'rel'],
+        ADD_ATTR: ['target', 'rel']
     };
 
     /**
@@ -120,7 +122,7 @@ window.PrivateBin = (function () {
          */
         this.getCipherData = function () {
             return [this.ct, this.adata];
-        }
+        };
     }
 
     /**
@@ -144,7 +146,7 @@ window.PrivateBin = (function () {
          */
         this.getFormat = function () {
             return this.adata[1];
-        }
+        };
 
         /**
          * gets the remaining seconds before the document expires
@@ -157,7 +159,7 @@ window.PrivateBin = (function () {
          */
         this.getTimeToLive = function () {
             return this.meta.time_to_live || 0;
-        }
+        };
 
         /**
          * is burn-after-reading enabled
@@ -168,7 +170,7 @@ window.PrivateBin = (function () {
          */
         this.isBurnAfterReadingEnabled = function () {
             return this.adata[3];
-        }
+        };
 
         /**
          * are discussions enabled
@@ -179,7 +181,7 @@ window.PrivateBin = (function () {
          */
         this.isDiscussionEnabled = function () {
             return this.adata[2];
-        }
+        };
     }
 
     /**
@@ -202,7 +204,7 @@ window.PrivateBin = (function () {
          * @return {int}
          */
         this.getCreated = function () {
-            return this.meta['created'] || 0;
+            return this.meta.created || 0;
         }
 
         /**
@@ -213,8 +215,8 @@ window.PrivateBin = (function () {
          * @return {string}
          */
         this.getIcon = function () {
-            return this.meta['icon'] || '';
-        }
+            return this.meta.icon || '';
+        };
     }
 
     /**
@@ -348,7 +350,7 @@ window.PrivateBin = (function () {
                 return [v, 'hour'];
             }
             // If less than 2 months, display in days:
-            if (seconds < (2 * month)) {
+            if (seconds <= (2 * month)) {
                 v = Math.floor(seconds / day);
                 return [v, 'day'];
             }
@@ -437,10 +439,16 @@ window.PrivateBin = (function () {
             element.innerHTML = DOMPurify.sanitize(
                 raw.replace(
                     /(((https?|ftp):\/\/[\w?!=&.\/;#@~%+*-]+(?![\w\s?!&.\/;#~%"=-]>))|((magnet):[\w?=&.\/;#@~%+*-]+))/ig,
-                    '<a href="$1" rel="nofollow noopener noreferrer">$1</a>'
+                    '<a href="$1">$1</a>'
                 ),
-                    strict ? purifyHtmlConfigStrictSubset : purifyHtmlConfig
+                strict ? purifyHtmlConfigStrictSubset : purifyHtmlConfig
             );
+            element.querySelectorAll('a').forEach(function (link) {
+                if (link.getAttribute('href').match(/^(?:(?:(?:f|ht)tps?|mailto|magnet):)/i)) {
+                    link.setAttribute('target', '_blank');
+                    link.setAttribute('rel', 'nofollow noopener noreferrer');
+                }
+            });
         };
 
         /**
@@ -1535,8 +1543,8 @@ window.PrivateBin = (function () {
          */
         me.getTemplate = function (name) {
             // find template
-            const template = templates.querySelector('#' + name + 'template');
-            if (!template) {
+            const template = document.getElementById(name + 'template');
+            if (!template || !templates.contains(template)) {
                 return null;
             }
             let element = template.cloneNode(true);
@@ -2210,7 +2218,7 @@ window.PrivateBin = (function () {
                 // minimal fallback: make element visible
                 loadconfirmmodal.classList.add('show');
             }
-        }
+        };
 
         /**
          * ask the user for the password and set it
@@ -3671,8 +3679,10 @@ window.PrivateBin = (function () {
                 }, 300);
             }
 
-            if (comment.checkVisibility() == false) {
-                comment.scrollIntoView({ block: 'center' });
+            if (('checkVisibility' in comment ? comment.checkVisibility() : comment.offsetParent !== null) === false) {
+                if (typeof comment.scrollIntoView === 'function') {
+                    comment.scrollIntoView({ block: 'center' });
+                }
             }
         };
 

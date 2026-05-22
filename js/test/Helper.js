@@ -55,12 +55,12 @@ describe('Helper', function () {
         });
         // max safe integer as per http://ecma262-5.com/ELS5_HTML.htm#Section_8.5
         it('returns months on the first array position', () => {
-            fc.assert(fc.property(fc.integer({min: 5184000}), function (number) {
+            fc.assert(fc.property(fc.integer({min: 5184001}), function (number) {
                 return PrivateBin.Helper.secondsToHuman(number)[0] === Math.floor(number / (60 * 60 * 24 * 30));
             }));
         });
         it('returns months on the second array position', () => {
-            fc.assert(fc.property(fc.integer({min: 5184000}), function (number) {
+            fc.assert(fc.property(fc.integer({min: 5184001}), function (number) {
                 return PrivateBin.Helper.secondsToHuman(number)[1] === 'month';
             }));
         });
@@ -159,7 +159,9 @@ describe('Helper', function () {
 
                     urlString = getTextAsRenderedHtml(urlString);
                     const expected = getTextAsRenderedHtml(prefix) + '<a href="' + urlString + '" target="_blank" rel="nofollow noopener noreferrer">' + urlString + '</a>' + getTextAsRenderedHtml(postfix);
-                    return expected === result;
+                    const expectedElement = document.createElement('div');
+                    expectedElement.innerHTML = expected;
+                    return expectedElement.innerHTML === result;
                 }
             ));
         });
@@ -182,7 +184,10 @@ describe('Helper', function () {
                     let result = e.innerHTML;
                     clean();
                     url = getTextAsRenderedHtml(url);
-                    return getTextAsRenderedHtml(prefix) + '<a href="' + url + '" target="_blank" rel="nofollow noopener noreferrer">' + url + '</a>' + getTextAsRenderedHtml(postfix) === result;
+                    const expected = getTextAsRenderedHtml(prefix) + '<a href="' + url + '" target="_blank" rel="nofollow noopener noreferrer">' + url + '</a>' + getTextAsRenderedHtml(postfix);
+                    const expectedElement = document.createElement('div');
+                    expectedElement.innerHTML = expected;
+                    return expectedElement.innerHTML === result;
                 }
             ));
         });

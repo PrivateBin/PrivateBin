@@ -19,7 +19,7 @@ describe('CryptTool', function () {
                 async function (key, password, message) {
                     const clean = globalThis.cleanup();
                     // ensure zlib is getting loaded
-                    PrivateBin.Controller.initZ();
+                    PrivateBin.Controller.initZlib();
                     Object.defineProperty(window, 'crypto', {
                         value: new WebCrypto(),
                         configurable: true,
@@ -54,7 +54,7 @@ describe('CryptTool', function () {
                 writable: false
             });
             // ensure zlib is getting loaded
-            PrivateBin.Controller.initZ();
+            PrivateBin.Controller.initZlib();
             global.atob = common.atob;
             global.btoa = common.btoa;
             const cipherMessage = await PrivateBin.CryptTool.cipher(
@@ -99,13 +99,15 @@ conseq_or_bottom inv (interp (nth_iterate sBody n) (MemElem mem))
 `;
                     const clean = globalThis.cleanup();
                     // ensure zlib is getting loaded
-                    PrivateBin.Controller.initZ();
+                    PrivateBin.Controller.initZlib();
                     Object.defineProperty(window, 'crypto', {
                         value: new WebCrypto(),
                         configurable: true,
                         enumerable: true,
                         writable: false
                     });
+                    global.atob = common.atob;
+                    global.btoa = common.btoa;
                     const cipherMessage = await PrivateBin.CryptTool.cipher(
                             key, password, message, []
                         ),
@@ -130,7 +132,7 @@ conseq_or_bottom inv (interp (nth_iterate sBody n) (MemElem mem))
         it('returns random, non-empty keys', () => {
             fc.assert(fc.property(
                 fc.integer(),
-                function(counter) {
+                function() {
                     const clean = globalThis.cleanup();
                     Object.defineProperty(window, 'crypto', {
                         value: new WebCrypto(),

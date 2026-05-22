@@ -11,7 +11,7 @@ describe('Model', function () {
 
         it('returns the contents of the element with id "pasteExpiration"', () => {
             fc.assert(fc.property(
-                fc.array(fc.asciiString({minLength: 1}), {minLength: 1}),
+                fc.array(fc.string({minLength: 1}), {minLength: 1}),
                 fc.string(),
                 fc.nat(),
                 function (keys, value, key) {
@@ -48,7 +48,7 @@ describe('Model', function () {
 
         it('returns the contents of the element with id "pasteFormatter"', () => {
             fc.assert(fc.property(
-                fc.array(fc.asciiString({minLength: 1}), {minLength: 1}),
+                fc.array(fc.string({minLength: 1}), {minLength: 1}),
                 fc.string(),
                 fc.nat(),
                 function (keys, value, key) {
