@@ -15,6 +15,8 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v6
+      with:
+        persist-credentials: false
     - name: Validate composer.json and composer.lock
       run: composer validate
     - name: Install dependencies
@@ -42,6 +44,8 @@ jobs:
     # let's get started!
     - name: Checkout
       uses: actions/checkout@v6
+      with:
+        persist-credentials: false
 
     # cache PHP extensions
     - name: Setup cache environment
@@ -121,7 +125,7 @@ jobs:
     name: PHP configuration combination unit tests
     runs-on: ubuntu-latest
     env:
-      php-version: '8.4'
+      php-version: '8.5'
       extensions: gd, sqlite3
       extensions-cache-key-name: phpextensions
 
@@ -130,6 +134,8 @@ jobs:
     # let's get started!
     - name: Checkout
       uses: actions/checkout@v6
+      with:
+        persist-credentials: false
 
     # cache PHP extensions
     - name: Setup cache environment
@@ -214,11 +220,13 @@ jobs:
 
     - name: Checkout
       uses: actions/checkout@v6
+      with:
+        persist-credentials: false
 
     - name: Setup Node
       uses: actions/setup-node@v6
       with:
-        node-version: '18'
+        node-version: '20'
         cache: 'npm'
         cache-dependency-path: 'js/package-lock.json'
 
