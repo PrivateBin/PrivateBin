@@ -51,6 +51,16 @@ class YourlsProxyTest extends TestCase
         $this->assertEquals($yourls->getUrl(), 'https://example.com/1');
     }
 
+    public function testYourlsProxyWithStringStatusCode(): void
+    {
+        // YOURLS API returns statusCode as a string "200", not integer 200
+        file_put_contents($this->_mock_yourls_service, '{"shorturl":"https:\/\/example.com\/1","statusCode":"200"}');
+
+        $yourls = new YourlsProxy($this->_conf, 'https://example.com/?foo#bar');
+        $this->assertFalse($yourls->isError());
+        $this->assertEquals($yourls->getUrl(), 'https://example.com/1');
+    }
+
     /**
      * @dataProvider providerInvalidUrl
      */
