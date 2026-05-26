@@ -2317,6 +2317,10 @@ jQuery.PrivateBin = (function($) {
             $loadconfirmClose.off('click.close');
             $loadconfirmClose.on('click.close', Controller.newPaste);
 
+            $loadconfirmmodal.on('shown.bs.modal', () => {
+                $loadconfirmOpenNow.trigger('focus');
+            });
+
             if (typeof bootstrap !== 'undefined' && bootstrap.Tooltip.VERSION) {
                 (new bootstrap.Modal($loadconfirmmodal[0])).show();
             } else {
@@ -4192,6 +4196,10 @@ jQuery.PrivateBin = (function($) {
                     }
                     triggerEmailSend(emailBody);
                 }
+
+                $emailconfirmmodal.on('shown.bs.modal', () => {
+                    $emailconfirmTimezoneUtc.trigger('focus');
+                });
 
                 $emailconfirmTimezoneCurrent.off('click.sendEmailCurrentTimezone');
                 $emailconfirmTimezoneCurrent.on('click.sendEmailCurrentTimezone', sendEmailAndHideModal);
