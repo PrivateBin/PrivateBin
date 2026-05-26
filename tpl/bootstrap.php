@@ -625,7 +625,10 @@ endif;
 					<h5 id="copyShortcutHint" class="media col-md-12 hidden" style="margin-top: 0;">
 						<div class="media-body media-middle">
 							<small id="copyShortcutHintText" class="hidden-xs">
-								<?php echo I18n::_("To copy document press on the copy button or use the clipboard shortcut <kbd>Ctrl</kbd>+<kbd>c</kbd>/<kbd>Cmd</kbd>+<kbd>c</kbd>") ?>
+								<?php
+									$hotkey = isset($_SERVER['HTTP_USER_AGENT']) && strpos($_SERVER['HTTP_USER_AGENT'], 'Mac') !== false ? 'Cmd' : 'Ctrl';
+									echo I18n::_("To copy document press on the copy button or use the clipboard shortcut <kbd>%s</kbd>+<kbd>c</kbd>", $hotkey)
+								?>
 							</small>
 						</div>
 						<div class="media-right media-middle">

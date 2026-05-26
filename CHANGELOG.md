@@ -1,6 +1,7 @@
 # PrivateBin version history
 
 ## 2.0.5 (not yet released)
+* CHANGED: Show OS-specific copy hotkey hint (Cmd+c on Mac, Ctrl+c on others) (#1506)
 * FIXED: State corruption after "Remove attachment" (#1824)
 * FIXED: Copy button is hidden if the document is made as markdown (#1703)
 * FIXED: Shortened URLs from YOURLS received but failed to parse (#1844)
