@@ -34,7 +34,7 @@ class TemplateSwitcher
      * @static
      * @var    array
      */
-    protected static $_availableTemplates = array();
+    protected static $_availableTemplates = [];
 
     /**
      * set available templates
