@@ -14,8 +14,7 @@ if (empty($ERROR)) :
 ?>
 		<p>
 			<?php
-				$hotkey = isset($_SERVER['HTTP_USER_AGENT']) && strpos($_SERVER['HTTP_USER_AGENT'], 'Mac') !== false ? 'Cmd' : 'Ctrl';
-				echo I18n::_('Your document is <a id="pasteurl" href="%s">%s</a> <span id="copyhint">(Hit <kbd>%s</kbd>+<kbd>c</kbd> to copy)</span>', $SHORTURL, $SHORTURL, $hotkey);
+				echo I18n::_('Your document is <a id="pasteurl" href="%s">%s</a> <span id="copyhint">(Hit <kbd>%s</kbd>+<kbd>c</kbd> to copy)</span>', $SHORTURL, $SHORTURL, I18n::getCopyHotkey());
 			?>
 		</p>
 <?php

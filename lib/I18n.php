@@ -298,6 +298,19 @@ class I18n
     }
 
     /**
+     * get OS-specific copy hotkey modifier key name based on user agent
+     *
+     * @access public
+     * @static
+     * @return string 'Cmd' on macOS, 'Ctrl' otherwise
+     */
+    public static function getCopyHotkey()
+    {
+        return isset($_SERVER['HTTP_USER_AGENT']) &&
+            strpos($_SERVER['HTTP_USER_AGENT'], 'Mac') !== false ? 'Cmd' : 'Ctrl';
+    }
+
+    /**
      * set the default language
      *
      * @access public
