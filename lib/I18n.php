@@ -177,7 +177,10 @@ class I18n
         // find a translation file matching the browsers language preferences
         else {
             self::$_language = self::_getMatchingLanguage(
-                self::getBrowserLanguages(), $availableLanguages
+                self::_normalizeBrowserLanguages(
+                    self::getBrowserLanguages(), $availableLanguages
+                ),
+                $availableLanguages
             );
         }
 
@@ -204,6 +207,7 @@ class I18n
             $languageIterator            = new AppendIterator();
             $languageIterator->append(new GlobIterator(self::_getPath('??.json')));
             $languageIterator->append(new GlobIterator(self::_getPath('???.json'))); // for jbo
+            $languageIterator->append(new GlobIterator(self::_getPath('??-??.json'))); // for regional variants like zh-tw
             foreach ($languageIterator as $file) {
                 $language = $file->getBasename('.json');
                 if ($language !== 'en') {
@@ -245,6 +249,38 @@ class I18n
                 }
             }
             krsort($languages);
+        }
+        return $languages;
+    }
+
+    /**
+     * normalize browser language aliases to available locale IDs
+     *
+     * @access protected
+     * @static
+     * @param  array $languages
+     * @param  array $availableLanguages
+     * @return array
+     */
+    protected static function _normalizeBrowserLanguages($languages, $availableLanguages)
+    {
+        // Base zh stays before zh-tw because regional locales are appended after base locales.
+        $hasSimplifiedChinese  = in_array('zh', $availableLanguages, true);
+        $hasTraditionalChinese = in_array('zh-tw', $availableLanguages, true);
+        foreach ($languages as $quality => $languageRanges) {
+            foreach ($languageRanges as $index => $languageRange) {
+                $isSimplifiedChinese = $languageRange === 'zh-hans' || strpos($languageRange, 'zh-hans-') === 0 ||
+                    $languageRange === 'zh-cn' || strpos($languageRange, 'zh-cn-') === 0 ||
+                    $languageRange === 'zh-sg' || strpos($languageRange, 'zh-sg-') === 0;
+                $isTraditionalChinese = $languageRange === 'zh-hant' || strpos($languageRange, 'zh-hant-') === 0 ||
+                    $languageRange === 'zh-hk' || strpos($languageRange, 'zh-hk-') === 0 ||
+                    $languageRange === 'zh-mo' || strpos($languageRange, 'zh-mo-') === 0;
+                if ($hasSimplifiedChinese && $isSimplifiedChinese) {
+                    $languages[$quality][$index] = 'zh';
+                } elseif ($hasTraditionalChinese && $isTraditionalChinese) {
+                    $languages[$quality][$index] = 'zh-tw';
+                }
+            }
         }
         return $languages;
     }
@@ -351,6 +387,7 @@ class I18n
             case 'oc':
             case 'tr':
             case 'zh':
+            case 'zh-tw':
                 return $n > 1 ? 1 : 0;
             case 'he':
                 return $n === 1 ? 0 : ($n === 2 ? 1 : (($n < 0 || $n > 10) && ($n % 10 === 0) ? 2 : 3));
