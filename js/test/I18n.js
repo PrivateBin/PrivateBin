@@ -216,6 +216,52 @@ describe('I18n', function () {
             ));
         });
 
+        it('maps Traditional Chinese browser languages to zh-tw', async () => {
+            const clean = globalThis.cleanup('', {url: 'https://privatebin.net/'}),
+                originalFetch = globalThis.fetch;
+            let requestedUrl;
+
+            globalThis.fetch = async url => {
+                requestedUrl = url;
+                return {
+                    ok: true,
+                    json: async () => ({})
+                };
+            };
+
+            try {
+                for (const language of ['zh-TW', 'zh-TW-u-nu-hanidec', 'zh-Hant', 'zh-Hant-TW', 'zh-HK', 'zh-MO']) {
+                    Object.defineProperty(navigator, 'language', {
+                        value: language,
+                        configurable: true
+                    });
+                    PrivateBin.I18n.reset('en');
+                    requestedUrl = undefined;
+                    const languageLoaded = new Promise((resolve, reject) => {
+                        let timeout;
+                        const onLanguageLoaded = () => {
+                            clearTimeout(timeout);
+                            resolve();
+                        };
+                        timeout = setTimeout(() => {
+                            document.removeEventListener('languageLoaded', onLanguageLoaded);
+                            reject(new Error(`Timed out loading translations for ${language}`));
+                        }, 1000);
+                        document.addEventListener('languageLoaded', onLanguageLoaded, {once: true});
+                    });
+                    PrivateBin.I18n.loadTranslations();
+                    await languageLoaded;
+                    assert.strictEqual(requestedUrl, 'i18n/zh-tw.json');
+                    assert.strictEqual(PrivateBin.I18n.getLanguage(), 'zh-tw', language);
+                }
+            } finally {
+                globalThis.fetch = originalFetch;
+                delete navigator.language;
+                PrivateBin.I18n.reset();
+                clean();
+            }
+        });
+
         it('should default to en', () => {
             var clean = globalThis.cleanup('', {url: 'https://privatebin.net/'});
 

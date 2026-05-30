@@ -7,6 +7,7 @@
 * CHANGED: Removed support for Bootstrap 3 as it requires jQuery.
 
 ## 2.0.6 (not yet released)
+* ADDED: Translation for Chinese (Traditional)
 * CHANGED: Upgrading libraries to: DOMpurify 3.4.12
 * CHANGED: Switch to PHP native JsonException type
 * FIXED: Gracefully handle YOURLS replies with a 200 status code but no shorturl, instead of raising a TypeError

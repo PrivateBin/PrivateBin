@@ -203,7 +203,7 @@ class Controller
         $lang = $this->_conf->getKey('languagedefault');
         I18n::setLanguageFallback($lang);
         // force default language, if language selection is disabled and a default is set
-        if (!$this->_conf->getKey('languageselection') && strlen($lang) === 2) {
+        if (!$this->_conf->getKey('languageselection') && in_array($lang, I18n::getAvailableLanguages(), true)) {
             $_COOKIE['lang'] = $lang;
             setcookie('lang', $lang, ['SameSite' => 'Lax', 'Secure' => true]);
         }
