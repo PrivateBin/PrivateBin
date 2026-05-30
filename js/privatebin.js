@@ -688,7 +688,7 @@ jQuery.PrivateBin = (function($) {
          * @prop   {string[]}
          * @readonly
          */
-        const supportedLanguages = ['ar', 'bg', 'ca', 'co', 'cs', 'de', 'el', 'es', 'et', 'fa', 'fi', 'fr', 'he', 'hu', 'id', 'it', 'ja', 'jbo', 'lt', 'no', 'nl', 'pl', 'pt', 'oc', 'ro', 'ru', 'sk', 'sl', 'sv', 'th', 'tr', 'uk', 'zh'];
+        const supportedLanguages = ['ar', 'bg', 'ca', 'co', 'cs', 'de', 'el', 'es', 'et', 'fa', 'fi', 'fr', 'he', 'hu', 'id', 'it', 'ja', 'jbo', 'lt', 'no', 'nl', 'pl', 'pt', 'oc', 'ro', 'ru', 'sk', 'sl', 'sv', 'th', 'tr', 'uk', 'zh', 'zh-tw'];
 
         /**
          * built in language
@@ -881,6 +881,7 @@ jQuery.PrivateBin = (function($) {
                 case 'oc':
                 case 'tr':
                 case 'zh':
+                case 'zh-tw':
                     return n > 1 ? 1 : 0;
                 case 'he':
                     return n === 1 ? 0 : (n === 2 ? 1 : ((n < 0 || n > 10) && (n % 10 === 0) ? 2 : 3));
@@ -918,8 +919,16 @@ jQuery.PrivateBin = (function($) {
 
             // auto-select language based on browser settings
             if (newLanguage.length === 0) {
-                newLanguage = (navigator.language || navigator.userLanguage || 'en');
-                if (newLanguage.indexOf('-') > 0) {
+                newLanguage = (navigator.language || navigator.userLanguage || 'en').toLowerCase();
+                const isTraditionalChinese = newLanguage.indexOf('zh-tw-') === 0 ||
+                    newLanguage === 'zh-hant' || newLanguage.indexOf('zh-hant-') === 0 ||
+                    newLanguage === 'zh-hk' || newLanguage.indexOf('zh-hk-') === 0 ||
+                    newLanguage === 'zh-mo' || newLanguage.indexOf('zh-mo-') === 0;
+                // alias Traditional Chinese browser tags to PrivateBin's zh-tw locale;
+                // otherwise try the full tag and fall back to the base language
+                if (isTraditionalChinese && supportedLanguages.indexOf('zh-tw') !== -1) {
+                    newLanguage = 'zh-tw';
+                } else if (supportedLanguages.indexOf(newLanguage) === -1 && newLanguage.indexOf('-') > 0) {
                     newLanguage = newLanguage.split('-')[0];
                 }
             }
