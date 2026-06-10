@@ -792,6 +792,11 @@ class ConnectionInterfaceStub implements ConnectionInterface
         throw new BadMethodCallException('not supported by this stub');
     }
 
+    public function headObject(array $args = array())
+    {
+        throw new BadMethodCallException('not supported by this stub');
+    }
+
     public function listObjects(array $args = array())
     {
         throw new BadMethodCallException('not supported by this stub');
