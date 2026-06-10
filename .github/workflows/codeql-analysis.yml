@@ -18,13 +18,13 @@ on:
   schedule:
     - cron: '28 22 * * 5'
 
-permissions:
-  contents: read
-  security-events: write
+permissions: {}
 
 jobs:
   analyze:
     name: Analyze
+    permissions:
+      security-events: write
     runs-on: ubuntu-latest
 
     strategy:
@@ -38,6 +38,8 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v6
+      with:
+        persist-credentials: false
 
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
