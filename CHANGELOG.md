@@ -1,6 +1,7 @@
 # PrivateBin version history
 
 ## 2.0.5 (not yet released)
+* FIXED: Prevent browsers from rendering unsafe attachments like HTML in a new tab
 * FIXED: State corruption after "Remove attachment" (#1824)
 * FIXED: Copy button is hidden if the document is made as markdown (#1703)
 * FIXED: Shortened URLs from YOURLS received but failed to parse (#1844)
