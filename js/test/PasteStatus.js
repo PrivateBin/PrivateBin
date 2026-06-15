@@ -208,6 +208,7 @@ describe('PasteStatus', function () {
                     let clean = globalThis.cleanup('', {url: common.urlToString(url)}),
                         result;
                     document.body.innerHTML = '<div id="remainingtime" class="hidden"></div>';
+                    PrivateBin.Alert.init();
                     PrivateBin.PasteStatus.init();
                     PrivateBin.PasteStatus.showRemainingTime(PrivateBin.Helper.PasteFactory({
                         'adata': [null, null, null, burnafterreading],
