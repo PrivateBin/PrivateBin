@@ -4650,29 +4650,14 @@ window.PrivateBin = (function () {
          * @name   TopNav.init
          * @function
          */
-        me.init = function () {
-            attach = document.getElementById('attach');
-            burnAfterReading = document.getElementById('burnafterreading');
-            burnAfterReadingOption = document.getElementById('burnafterreadingoption');
-            cloneButton = document.getElementById('clonebutton');
-            customAttachment = document.getElementById('customattachment');
-            expiration = document.getElementById('expiration');
-            fileRemoveButton = document.getElementById('fileremovebutton');
-            fileWrap = document.getElementById('filewrap');
-            formatter = document.getElementById('formatter');
-            newButton = document.getElementById('newbutton');
-            openDiscussion = document.getElementById('opendiscussion');
-            openDiscussionOption = document.getElementById('opendiscussionoption');
-            password = document.getElementById('password');
-            passwordInput = document.getElementById('passwordinput');
-            rawTextButton = document.getElementById('rawtextbutton');
-            downloadTextButton = document.getElementById('downloadtextbutton');
-            retryButton = document.getElementById('retrybutton');
-            sendButton = document.getElementById('sendbutton');
-            qrCodeLink = document.getElementById('qrcodelink');
-            emailLink = document.getElementById('emaillink');
-
-            // bootstrap template drop down
+        /**
+         * bind all navigation event listeners
+         *
+         * @name   TopNav.bindEvents
+         * @private
+         * @function
+         */
+        function bindEvents() {
             const languageDropdown = document.getElementById('language');
             if (languageDropdown) {
                 languageDropdown.querySelectorAll('ul.dropdown-menu li a').forEach(link => {
@@ -4680,7 +4665,6 @@ window.PrivateBin = (function () {
                 });
             }
 
-            // bootstrap template drop down
             const templateDropdown = document.getElementById('template');
             if (templateDropdown) {
                 templateDropdown.querySelectorAll('ul.dropdown-menu li a').forEach(link => {
@@ -4760,6 +4744,31 @@ window.PrivateBin = (function () {
                     });
                 }
             }
+        }
+
+        me.init = function () {
+            attach = document.getElementById('attach');
+            burnAfterReading = document.getElementById('burnafterreading');
+            burnAfterReadingOption = document.getElementById('burnafterreadingoption');
+            cloneButton = document.getElementById('clonebutton');
+            customAttachment = document.getElementById('customattachment');
+            expiration = document.getElementById('expiration');
+            fileRemoveButton = document.getElementById('fileremovebutton');
+            fileWrap = document.getElementById('filewrap');
+            formatter = document.getElementById('formatter');
+            newButton = document.getElementById('newbutton');
+            openDiscussion = document.getElementById('opendiscussion');
+            openDiscussionOption = document.getElementById('opendiscussionoption');
+            password = document.getElementById('password');
+            passwordInput = document.getElementById('passwordinput');
+            rawTextButton = document.getElementById('rawtextbutton');
+            downloadTextButton = document.getElementById('downloadtextbutton');
+            retryButton = document.getElementById('retrybutton');
+            sendButton = document.getElementById('sendbutton');
+            qrCodeLink = document.getElementById('qrcodelink');
+            emailLink = document.getElementById('emaillink');
+
+            bindEvents();
 
             // initiate default state of checkboxes
             changeBurnAfterReading();
@@ -5720,7 +5729,8 @@ window.PrivateBin = (function () {
          */
         function handleRevealButtonClick() {
             const element = this;
-            const passwordInput = element.closest('.input-group')?.querySelector('.input-password');
+            const inputGroup = element.closest('.input-group');
+            const passwordInput = inputGroup ? inputGroup.querySelector('.input-password') : null;
             if (!passwordInput) {
                 return;
             }
