@@ -1,5 +1,5 @@
 'use strict';
-require('../common');
+const common = require('../common');
 const fc = require('fast-check');
 
 describe('ServerInteraction', function () {
@@ -18,7 +18,14 @@ describe('ServerInteraction', function () {
                     // pause to let async functions conclude
                     await new Promise(resolve => setTimeout(resolve, 300));
                     let clean = globalThis.cleanup();
-                    window.crypto = new WebCrypto();
+                    Object.defineProperty(window, 'crypto', {
+                        value: new WebCrypto(),
+                        configurable: true,
+                        enumerable: true,
+                        writable: false
+                    });
+                    global.atob = common.atob;
+                    global.btoa = common.btoa;
                     message = message.trim();
 
                     PrivateBin.ServerInteraction.prepare();
