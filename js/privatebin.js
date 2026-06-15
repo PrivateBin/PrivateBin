@@ -688,7 +688,7 @@ window.PrivateBin = (function () {
          * @private
          * @enum   {Object}
          */
-        let translations = {};
+        let translations = Object.create(null);
 
         /**
          * translate a string, alias for I18n.translate
@@ -932,7 +932,7 @@ window.PrivateBin = (function () {
                 })
                 .then(data => {
                     language = newLanguage;
-                    translations = data;
+                    translations = Object.assign(Object.create(null), data);
                     document.dispatchEvent(new CustomEvent(languageLoadedEvent));
                 })
                 .catch(error => {
@@ -949,7 +949,7 @@ window.PrivateBin = (function () {
          */
         me.reset = function (mockLanguage, mockTranslations) {
             language = mockLanguage || null;
-            translations = mockTranslations || {};
+            translations = mockTranslations || Object.create(null);
         };
 
         /**
@@ -2219,8 +2219,8 @@ window.PrivateBin = (function () {
             loadconfirmClose.removeEventListener('click', Controller.newPaste);
             loadconfirmClose.addEventListener('click', Controller.newPaste);
 
-            $loadconfirmmodal.on('shown.bs.modal', () => {
-                $loadconfirmOpenNow.trigger('focus');
+            loadconfirmmodal.addEventListener('shown.bs.modal', () => {
+                loadconfirmOpenNow.focus();
             });
 
             if (typeof bootstrap !== 'undefined' && bootstrap.Tooltip && typeof bootstrap.Modal === 'function') {
