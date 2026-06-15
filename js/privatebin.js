@@ -444,7 +444,8 @@ window.PrivateBin = (function () {
                 strict ? purifyHtmlConfigStrictSubset : purifyHtmlConfig
             );
             element.querySelectorAll('a').forEach(function (link) {
-                if (link.getAttribute('href').match(/^(?:(?:(?:f|ht)tps?|mailto|magnet):)/i)) {
+                const href = link.getAttribute('href');
+                if (href && href.match(/^(?:(?:(?:f|ht)tps?|mailto|magnet):)/i)) {
                     link.setAttribute('target', '_blank');
                     link.setAttribute('rel', 'nofollow noopener noreferrer');
                 }
