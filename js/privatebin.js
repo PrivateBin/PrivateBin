@@ -753,7 +753,7 @@ window.PrivateBin = (function () {
             }
 
             // if no translation string cannot be found (in translations object)
-            if (!translations.hasOwnProperty(messageId) || language === null) {
+            if (!Object.prototype.hasOwnProperty.call(translations, messageId) || language === null) {
                 // if language is still loading and we have an element assigned
                 if (language === null && element !== null) {
                     // handle the error by attaching the language loaded event
