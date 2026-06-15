@@ -2651,7 +2651,7 @@ window.PrivateBin = (function () {
                     Helper.urls2links(prettyPrintEl, format !== 'syntaxhighlighting');
                     prettyPrintEl.style.whiteSpace = 'pre-wrap';
                     prettyPrintEl.style.wordBreak = 'normal';
-                    prettyPrintEl.classList.remove('prettyprint');
+                    prettyPrintEl.classList.remove('prettyprint', 'prettyprinted');
                 }
             }
         }
