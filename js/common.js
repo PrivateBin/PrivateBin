@@ -83,45 +83,8 @@ var a2zString    = ['a','b','c','d','e','f','g','h','i','j','k','l','m',
     ),
     schemas = ['ftp','http','https'],
     supportedLanguages = ['ar', 'bg', 'ca', 'co', 'cs', 'de', 'el', 'es', 'et', 'fi', 'fr', 'he', 'hu', 'id', 'it', 'ja', 'jbo', 'lt', 'no', 'nl', 'pl', 'pt', 'oc', 'ru', 'sk', 'sl', 'th', 'tr', 'uk', 'zh'],
-    mimeTypes = ['image/png', 'application/octet-stream'],
-    formats = ['plaintext', 'markdown', 'syntaxhighlighting'],
-    mimeFile = fs.createReadStream('/etc/mime.types'),
-    mimeLine = '';
-
-// populate mime types from environment
-mimeFile.on('data', function(data) {
-    mimeLine += data;
-    var index = mimeLine.indexOf('\n');
-    while (index > -1) {
-        var line = mimeLine.substring(0, index);
-        mimeLine = mimeLine.substring(index + 1);
-        parseMime(line);
-        index = mimeLine.indexOf('\n');
-    }
-});
-
-mimeFile.on('end', function() {
-    if (mimeLine.length > 0) {
-        parseMime(mimeLine);
-    }
-});
-
-function parseMime(line) {
-    // ignore comments
-    var index = line.indexOf('#');
-    if (index > -1) {
-        line = line.substring(0, index);
-    }
-
-    // ignore bits after tabs
-    index = line.indexOf('\t');
-    if (index > -1) {
-        line = line.substring(0, index);
-    }
-    if (line.length > 0) {
-        mimeTypes.push(line);
-    }
-}
+    mimeTypes = ['image/png', 'application/octet-stream'].concat(Object.keys(require('mime-db'))),
+    formats = ['plaintext', 'markdown', 'syntaxhighlighting'];
 
 // common testing helper functions
 // as of jsDOM 22 the base64 functions provided in the DOM are more restrictive
