@@ -231,5 +231,6 @@
     "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)": "Tab 键可作为字符（按 <kbd>Ctrl</kbd>+<kbd>m</kbd> 或 <kbd>Esc</kbd> 切换开关）",
     "Show password": "显示密码",
     "Hide password": "隐藏密码",
-    "Theme": "主题"
+    "Theme": "主题",
+    "Copy": "复制"
 }

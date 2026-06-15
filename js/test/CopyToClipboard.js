@@ -18,12 +18,15 @@ describe('CopyToClipboard', function () {
                     document.body.innerHTML = (
                         '<div id="status" class="hidden"></div>' +
                         '<div id="errormessage" class="hidden"></div>' +
-                        '<div id="placeholder" class="hidden">+++ no document text ' +
-                        '+++</div><div id="prettymessage" class="hidden">' +
-                        '<button type="button" id="prettyMessageCopyBtn"><svg id="copyIcon"></svg>' +
-                        '<svg id="copySuccessIcon"></svg></button><pre ' +
-                        'id="prettyprint" class="prettyprint linenums:1"></pre>' +
-                        '</div><div id="plaintext" class="hidden"></div>'
+                        '<div id="placeholder"></div>' +
+					'<div id="attachmentPreview" class="hidden"></div>' +
+                    '<h5 id="copyShortcutHint" class="hidden">' +
+						'<small id="copyShortcutHintText"></small>' +
+                        '<button type="button" id="copyShortcutHintBtn"></button>' +
+					'</h5>' +
+                    '<div id="prettymessage" class="hidden">' +
+                        '<pre id="prettyprint"></pre>' +
+                        '</div>'
                     );
 
                     PrivateBin.Alert.init();
@@ -34,7 +37,7 @@ describe('CopyToClipboard', function () {
 
                     PrivateBin.CopyToClipboard.init();
 
-                    document.getElementById('prettyMessageCopyBtn').click();
+                    document.getElementById('copyShortcutHintBtn').click();
 
                     const savedToClipboardText = await navigator.clipboard.readText();
 
@@ -57,12 +60,15 @@ describe('CopyToClipboard', function () {
                     document.body.innerHTML = (
                         '<div id="status" class="hidden"></div>' +
                         '<div id="errormessage" class="hidden"></div>' +
-                        '<div id="placeholder">+++ no document text ' +
-                        '+++</div><div id="prettymessage" class="hidden">' +
-                        '<button type="button" id="prettyMessageCopyBtn"><svg id="copyIcon"></svg>' +
-                        '<svg id="copySuccessIcon"></svg></button><pre ' +
-                        'id="prettyprint" class="prettyprint linenums:1"></pre>' +
-                        '</div><div id="plaintext" class="hidden"></div>'
+                        '<div id="placeholder"></div> ' +
+                        '<div id="attachmentPreview" class="hidden"></div>' +
+                    '<h5 id="copyShortcutHint" class="hidden">' +
+                        '<small id="copyShortcutHintText"></small>' +
+						'<button type="button" id="copyShortcutHintBtn"></button>' +
+					'</h5>' +
+                    '<div id="prettymessage" class="hidden">' +
+                        '<pre id="prettyprint"></pre>' +
+                        '</div>'
                     );
 
                     PrivateBin.Alert.init();
@@ -131,34 +137,37 @@ describe('CopyToClipboard', function () {
     });
 
     describe('Keyboard shortcut hint', function () {
-        it('shows hint', () => {
-            fc.assert(fc.property(fc.string(),
-                function (text) {
-                    document.body.innerHTML = '<small id="copyShortcutHintText"></small>';
+        jsc.property('Show hint', function () {
+                var clean = jsdom();
+
+                $('body').html('<small id="copyShortcutHintText"></small>');
 
                     PrivateBin.CopyToClipboard.init();
                     PrivateBin.CopyToClipboard.showKeyboardShortcutHint();
 
-                    const keyboardShortcutHint = document.getElementById('copyShortcutHintText').textContent;
+                const keyboardShortcutHint = $('#copyShortcutHintText').text();
 
-                    return keyboardShortcutHint.length > 0;
+                clean();
+
+                    return !hasHidden;
                 }
             ));
         });
     });
 
-    it('Hide hint', () => {
-        fc.assert(fc.property(
-            fc.string({minLength: 1}),
-            function (text) {
-                document.body.innerHTML = '<small id="copyShortcutHintText">' + text + '</small>';
+        jsc.property('Hide hint', function () {
+                var clean = jsdom();
+
+                $('body').html('<small id="copyShortcutHintText">' + text + '</small>');
 
                 PrivateBin.CopyToClipboard.init();
                 PrivateBin.CopyToClipboard.hideKeyboardShortcutHint();
 
-                const keyboardShortcutHint = document.getElementById('copyShortcutHintText').textContent;
+                const keyboardShortcutHint = $('#copyShortcutHintText').text();
 
-                return keyboardShortcutHint.length === 0;
+                clean();
+
+                return hasHidden;
             }
         ));
     });

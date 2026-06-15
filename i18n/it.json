@@ -231,5 +231,6 @@
     "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)": "Il tasto Tabulatore serve come carattere (basta <kbd>Ctrl</kbd>+<kbd>m</kbd> o <kbd>Esc</kbd> per attivare/disattivare)",
     "Show password": "Mostra password",
     "Hide password": "Nascondi password",
-    "Theme": "Tema"
+    "Theme": "Tema",
+    "Copy": "Copiare"
 }

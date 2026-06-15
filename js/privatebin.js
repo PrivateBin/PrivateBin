@@ -2219,6 +2219,10 @@ window.PrivateBin = (function () {
             loadconfirmClose.removeEventListener('click', Controller.newPaste);
             loadconfirmClose.addEventListener('click', Controller.newPaste);
 
+            $loadconfirmmodal.on('shown.bs.modal', () => {
+                $loadconfirmOpenNow.trigger('focus');
+            });
+
             if (typeof bootstrap !== 'undefined' && bootstrap.Tooltip && typeof bootstrap.Modal === 'function') {
                 (new bootstrap.Modal(loadconfirmmodal)).show();
             } else {
@@ -4155,6 +4159,10 @@ window.PrivateBin = (function () {
                     triggerEmailSend(emailBody);
                 }
 
+                emailconfirmmodal.addEventListener('shown.bs.modal', () => {
+                    emailconfirmTimezoneUtc.focus();
+                });
+
                 emailconfirmTimezoneCurrent.removeEventListener('click', sendEmailAndHideModal);
                 emailconfirmTimezoneCurrent.addEventListener('click', sendEmailAndHideModal);
                 emailconfirmTimezoneUtc.removeEventListener('click', sendEmailAndHideModal);
@@ -5545,8 +5553,6 @@ window.PrivateBin = (function () {
 
         let copyButton,
             copyLinkButton,
-            copyIcon,
-            successIcon,
             shortcutHint,
             url;
 
@@ -5564,7 +5570,6 @@ window.PrivateBin = (function () {
                 const text = PasteViewer.getText();
                 saveToClipboard(text);
 
-                toggleSuccessIcon();
                 showAlertMessage('Document copied to clipboard');
             });
         }
@@ -5649,33 +5654,13 @@ window.PrivateBin = (function () {
         }
 
         /**
-         * Toogle success icon after copy
-         *
-         * @name CopyToClipboard.toggleSuccessIcon
-         * @private
-         * @function
-         */
-        function toggleSuccessIcon() {
-            copyIcon.style.display = 'none';
-            successIcon.style.display = 'block';
-
-            setTimeout(function () {
-                copyIcon.style.display = 'block';
-                successIcon.style.display = 'none';
-            }, 1000);
-        }
-
-        /**
          * Show keyboard shortcut hint
          *
          * @name CopyToClipboard.showKeyboardShortcutHint
          * @function
          */
         me.showKeyboardShortcutHint = function () {
-            I18n._(
-                shortcutHint,
-                'To copy document press on the copy button or use the clipboard shortcut <kbd>Ctrl</kbd>+<kbd>c</kbd>/<kbd>Cmd</kbd>+<kbd>c</kbd>'
-            );
+            shortcutHint.classList.remove('hidden');
         };
 
         /**
@@ -5685,7 +5670,7 @@ window.PrivateBin = (function () {
          * @function
          */
         me.hideKeyboardShortcutHint = function () {
-            shortcutHint.innerHTML = '';
+            shortcutHint.classList.add('hidden');
         };
 
         /**
@@ -5706,11 +5691,9 @@ window.PrivateBin = (function () {
          * @function
          */
         me.init = function () {
-            copyButton = document.getElementById('prettyMessageCopyBtn');
+            copyButton = document.getElementById('copyShortcutHintBtn');
             copyLinkButton = document.getElementById('copyLink');
-            copyIcon = document.getElementById('copyIcon');
-            successIcon = document.getElementById('copySuccessIcon');
-            shortcutHint = document.getElementById('copyShortcutHintText');
+            shortcutHint = document.getElementById('copyShortcutHint');
 
             handleCopyButtonClick();
             handleCopyLinkButtonClick();

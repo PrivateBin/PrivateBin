@@ -9,13 +9,13 @@ on:
   pull_request:
     branches: [ master ]
 
-permissions:
-  contents: read
-  security-events: write
+permissions: {}
 
 jobs:
   # https://github.com/snyk/actions/tree/master/php
   snyk-php:
+    permissions:
+      security-events: write
     runs-on: ubuntu-latest
     if: |
       github.repository == 'PrivateBin/PrivateBin' && (
@@ -25,6 +25,8 @@ jobs:
       github.event.pull_request.author_association == 'OWNER' )
     steps:
       - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
       - name: Run Snyk to check for vulnerabilities
         uses: snyk/actions/php@master
         continue-on-error: true # To make sure that SARIF upload gets called
