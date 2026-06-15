@@ -732,8 +732,8 @@ window.PrivateBin = (function () {
                 element = null;
 
             // parse arguments
-            if (args[0] instanceof HTMLElement) {
-                // optional HTMLElement as first parameter
+            if (args[0] === null || args[0] instanceof HTMLElement) {
+                // optional HTMLElement as first parameter (null means element not found)
                 element = args[0];
                 args.shift();
             }
@@ -2006,7 +2006,9 @@ window.PrivateBin = (function () {
             // save newly created element
             pasteUrl = document.getElementById('pasteurl');
             // and add click event
-            pasteUrl.addEventListener('click', pasteLinkClick);
+            if (pasteUrl) {
+                pasteUrl.addEventListener('click', pasteLinkClick);
+            }
 
             // delete link
             const deleteLink = document.getElementById('deletelink');
@@ -2021,7 +2023,9 @@ window.PrivateBin = (function () {
             }
 
             // show result
-            pasteSuccess.classList.remove('hidden');
+            if (pasteSuccess) {
+                pasteSuccess.classList.remove('hidden');
+            }
             // we pre-select the link so that the user only has to [Ctrl]+[c] the link
             Helper.selectText(pasteUrl);
         };
@@ -2072,7 +2076,9 @@ window.PrivateBin = (function () {
                 })[0];
                 if (typeof shortUrl === 'string' && shortUrl.length > 0) {
                     // we disable the button to avoid calling shortener again
-                    shortenButton.classList.add('buttondisabled');
+                    if (shortenButton) {
+                        shortenButton.classList.add('buttondisabled');
+                    }
                     // update link
                     pasteUrl.textContent = shortUrl;
                     pasteUrl.href = shortUrl;
