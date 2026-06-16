@@ -115,7 +115,6 @@ class Configuration
         // update this array when adding/changing/removing js files
         'sri' => array(
             'js/base-x-5.0.1.js'     => 'sha512-FmhlnjIxQyxkkxQmzf0l6IRGsGbgyCdgqPxypFsEtHMF1naRqaLLo6mcyN5rEaT16nKx1PeJ4g7+07D6gnk/Tg==',
-            'js/bootstrap-3.4.1.js'  => 'sha512-oBTprMeNEKCnqfuqKd6sbvFzmFQtlXS3e0C/RGFV0hD6QzhHV+ODfaQbAlmY6/q0ubbwlAM/nCJjkrgA3waLzg==',
             'js/bootstrap-5.3.8.js'  => 'sha512-BkZvJ5rZ3zbDCod5seWHpRGg+PRd6ZgE8Nua/OMtcxqm8Wtg0PqwhUUXK5bqvl3oclMt5O+3zjRVX0L+L2j7fA==',
             'js/dark-mode-switch.js' => 'sha512-BhY7dNU14aDN5L+muoUmA66x0CkYUWkQT0nxhKBLP/o2d7jE025+dvWJa4OiYffBGEFgmhrD/Sp+QMkxGMTz2g==',
             'js/kjua-0.10.0.js'      => 'sha512-BYj4xggowR7QD150VLSTRlzH62YPfhpIM+b/1EUEr7RQpdWAGKulxWnOvjFx1FUlba4m6ihpNYuQab51H6XlYg==',
