@@ -21,9 +21,23 @@ describe('Prompt', function () {
                         'password"></div><button type="submit">Decrypt</button>' +
                         '</form></div></div></div></div>'
                     );
+
+                    // Initialize the Prompt module to set up event listeners
+                    PrivateBin.Prompt.init();
+                    PrivateBin.Prompt.requestPassword();
+
+                    // Simulate user input
                     const passwordInput = document.getElementById('passworddecrypt');
                     passwordInput.value = password;
-                    const result = passwordInput.value;
+
+                    // Simulate form submission to trigger password capture
+                    const passwordForm = document.getElementById('passwordform');
+                    /** {@type SubmitEvent} */
+                    const submitEvent = new Event('submit', { bubbles: true, cancelable: true });
+                    passwordForm.dispatchEvent(submitEvent);
+
+                    // Verify that getPassword returns the submitted password
+                    const result = PrivateBin.Prompt.getPassword();
                     clean();
                     return result === password;
                 }
