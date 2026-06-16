@@ -6013,13 +6013,6 @@ window.PrivateBin = (function () {
                 }
             });
 
-            // center all modals
-            document.querySelectorAll('.modal').forEach(modal => {
-                modal.addEventListener('show.bs.modal', function (e) {
-                    e.target.style.display = 'flex';
-                });
-            });
-
             // initialize other modules/"classes"
             Alert.init();
             Model.init();
