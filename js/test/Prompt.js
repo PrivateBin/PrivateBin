@@ -19,7 +19,7 @@ describe('Prompt', function () {
                                     <div class="modal-body">
                                         <form id="passwordform" role="form">
                                             <div class="form-group">
-                                                <input id="passworddecrypt" type="password" 
+                                                <input id="passworddecrypt" type="password"
                                                     class="form-control" placeholder="Enter password">
                                             </div>
                                             <button type="submit">Decrypt</button>
