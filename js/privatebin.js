@@ -430,7 +430,7 @@ window.PrivateBin = (function () {
          * @name   Helper.urls2links
          * @function
          * @param  {HTMLElement} element
-         * @param  {bool} strict - optional
+         * @param  {Boolean} strict - optional
          */
         me.urls2links = function (element, strict = true) {
             const raw = element.innerHTML;
