@@ -12,15 +12,23 @@ describe('Prompt', function () {
                 function (password) {
                     password = password.replace(/\r+|\n+/g, '');
                     const clean = globalThis.cleanup('', {url: 'ftp://example.com/?0000000000000000'});
-                    document.body.innerHTML = (
-                        '<div id="passwordmodal" class="modal fade" role="dialog">' +
-                        '<div class="modal-dialog"><div class="modal-content">' +
-                        '<div class="modal-body"><form id="passwordform" role="form">' +
-                        '<div class="form-group"><input id="passworddecrypt" ' +
-                        'type="password" class="form-control" placeholder="Enter ' +
-                        'password"></div><button type="submit">Decrypt</button>' +
-                        '</form></div></div></div></div>'
-                    );
+                    document.body.innerHTML = `
+                        <div id="passwordmodal" class="modal fade" role="dialog">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-body">
+                                        <form id="passwordform" role="form">
+                                            <div class="form-group">
+                                                <input id="passworddecrypt" type="password" 
+                                                    class="form-control" placeholder="Enter password">
+                                            </div>
+                                            <button type="submit">Decrypt</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
 
                     // Initialize the Prompt module to set up event listeners
                     PrivateBin.Prompt.init();
