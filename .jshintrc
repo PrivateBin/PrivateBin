@@ -19,7 +19,7 @@
     "strict": true,
     "undef": true,
     "unused": true,
-    "jquery": true,
+    "jquery": false,
     "browser": true,
     "predef": {
       "after": true,

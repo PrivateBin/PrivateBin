@@ -1,5 +1,11 @@
 # PrivateBin version history
 
+## 2.1.0 (not yet released)
+* CHANGED: We removed jQuery in the Frontend and replaced it with vanilla JS.
+* CHANGED: Removed the unmaintained js-verify and replaced it with fast-check library.
+* CHANGED: Added a `jsconfig.json` in order to check the types of JavaScript.
+* CHANGED: Rmeoved support for Bootstrap 3 as it requires jQuery.
+
 ## 2.0.5 (not yet released)
 * FIXED: State corruption after "Remove attachment" (#1824)
 * FIXED: Copy button is hidden if the document is made as markdown (#1703)
