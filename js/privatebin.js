@@ -397,7 +397,6 @@ window.PrivateBin = (function () {
         /**
          * text range selection
          *
-         * @see    {@link https://stackoverflow.com/questions/985272/jquery-selecting-text-in-an-element-akin-to-highlighting-with-your-mouse}
          * @name   Helper.selectText
          * @function
          * @param  {HTMLElement} element
@@ -405,13 +404,12 @@ window.PrivateBin = (function () {
         me.selectText = function (element) {
             let range, selection;
 
-            // MS
-            if (document.body.createTextRange) {
-                range = document.body.createTextRange();
-                range.moveToElementText(element);
-                range.select();
-            } else if (window.getSelection) {
+            if (window.getSelection) {
                 selection = window.getSelection();
+                if (!selection) {
+                    console.warn('window.getSelection() returned null, could not get any select text');
+                    return;
+                }
                 range = document.createRange();
                 range.selectNodeContents(element);
                 selection.removeAllRanges();
@@ -1875,7 +1873,7 @@ window.PrivateBin = (function () {
          * alertType (see array), $element, args, icon
          * If it returns true, the own processing will be stopped so the message
          * will not be displayed. Otherwise it will continue.
-         * As an aditional feature it can return q jQuery element, which will
+         * As an aditional feature it can return a HTMLElement, which will
          * then be used to add the message there. Icons are not supported in
          * that case and will be ignored.
          * Pass 'null' to reset/delete the custom handler.
@@ -1893,7 +1891,7 @@ window.PrivateBin = (function () {
         /**
          * init status manager
          *
-         * preloads jQuery elements
+         * preloads HTMLElements
          *
          * @name   Alert.init
          * @function
@@ -2141,7 +2139,7 @@ window.PrivateBin = (function () {
         /**
          * init status manager
          *
-         * preloads jQuery elements
+         * preloads HTMLElements
          *
          * @name   PasteStatus.init
          * @function
@@ -2280,7 +2278,7 @@ window.PrivateBin = (function () {
         /**
          * init status manager
          *
-         * preloads jQuery elements
+         * preloads HTMLElements
          *
          * @name   Prompt.init
          * @function
@@ -2345,8 +2343,8 @@ window.PrivateBin = (function () {
          *
          * @name   Editor.supportTabs
          * @function
-         * @param  {Event} event
-         * @this $message (but not used, so it is jQuery-free, possibly faster)
+         * @param  {KeyboardEvent} event
+         * @this message
          */
         function supportTabs(event) {
             // support disabling tab support using [Esc] and [Ctrl]+[m]
@@ -2547,7 +2545,7 @@ window.PrivateBin = (function () {
         /**
          * init editor
          *
-         * preloads jQuery elements
+         * preloads HTMLElements and binds events
          *
          * @name   Editor.init
          * @function
@@ -3372,7 +3370,7 @@ window.PrivateBin = (function () {
         /**
          * initiate
          *
-         * preloads jQuery elements
+         * preloads HTMLElements
          *
          * @name   AttachmentViewer.init
          * @function
@@ -3484,7 +3482,7 @@ window.PrivateBin = (function () {
          * @name   DiscussionViewer.handleNotification
          * @function
          * @param  {string} alertType
-         * @return {bool|jQuery}
+         * @return {Boolean|HTMLElement}
          */
         me.handleNotification = function (alertType) {
             // ignore loading messages
@@ -3712,7 +3710,7 @@ window.PrivateBin = (function () {
         /**
          * initiate
          *
-         * preloads jQuery elements
+         * preloads HTML elements
          *
          * @name   DiscussionViewer.init
          * @function
