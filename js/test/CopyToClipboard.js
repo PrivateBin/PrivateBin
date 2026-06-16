@@ -139,7 +139,7 @@ describe('CopyToClipboard', function () {
     describe('Keyboard shortcut hint', function () {
         it('shows hint', () => {
             fc.assert(fc.property(fc.string(),
-                function (text) {
+                function () {
                     document.body.innerHTML = '<h5 id="copyShortcutHint" class="hidden"></h5>';
 
                     PrivateBin.CopyToClipboard.init();
@@ -154,7 +154,7 @@ describe('CopyToClipboard', function () {
     it('Hide hint', () => {
         fc.assert(fc.property(
             fc.string({minLength: 1}),
-            function (text) {
+            function () {
                 document.body.innerHTML = '<h5 id="copyShortcutHint"></h5>';
 
                 PrivateBin.CopyToClipboard.init();
