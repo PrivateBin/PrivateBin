@@ -12,8 +12,7 @@ on:
       - 'js/package-lock.json'
       - .github/workflows/eslint.yml
 
-permissions:
-  contents: read
+permissions: {}
 
 jobs:
   eslint:
@@ -21,6 +20,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
+        with:
+          persist-credentials: false
 
       - name: Set up Node.js
         uses: actions/setup-node@v6
