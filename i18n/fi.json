@@ -232,5 +232,7 @@
     "Show password": "Näytä salasana",
     "Hide password": "Piilota salasana",
     "Theme": "Teema",
-    "Copy": "Copy"
+    "Copy": "Copy",
+    "Cmd": "Cmd",
+    "Ctrl": "Ctrl"
 }

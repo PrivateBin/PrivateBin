@@ -232,5 +232,7 @@
     "Show password": "Show password",
     "Hide password": "Hide password",
     "Theme": "ธีม",
-    "Copy": "Copy"
+    "Copy": "Copy",
+    "Cmd": "Cmd",
+    "Ctrl": "Ctrl"
 }

@@ -232,5 +232,7 @@
     "Show password": "نمایش رمز عبور",
     "Hide password": "مخفی‌کردن رمز عبور",
     "Theme": "تم",
-    "Copy": "Copy"
+    "Copy": "Copy",
+    "Cmd": "Cmd",
+    "Ctrl": "Ctrl"
 }

@@ -232,5 +232,7 @@
     "Show password": "Jelszó megjelenítése",
     "Hide password": "Jelszó elrejtése",
     "Theme": "Téma",
-    "Copy": "Copy"
+    "Copy": "Copy",
+    "Cmd": "Cmd",
+    "Ctrl": "Ctrl"
 }

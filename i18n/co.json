@@ -232,5 +232,7 @@
     "Show password": "Affissà a parolla d’intesa",
     "Hide password": "Piattà a parolla d’intesa",
     "Theme": "Tema",
-    "Copy": "Cupià"
+    "Copy": "Cupià",
+    "Cmd": "Cmd",
+    "Ctrl": "Ctrl"
 }

@@ -232,5 +232,7 @@
     "Show password": "הצג סיסמה",
     "Hide password": "הסתר סיסמה",
     "Theme": "נושא",
-    "Copy": "העתק"
+    "Copy": "העתק",
+    "Cmd": "Cmd",
+    "Ctrl": "Ctrl"
 }

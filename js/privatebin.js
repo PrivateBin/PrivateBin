@@ -2109,7 +2109,7 @@ jQuery.PrivateBin = (function($) {
         {
             const ua = navigator.userAgent;
             const isMac = /Mac/.test(ua);
-            const hotkey = isMac ? 'Cmd' : 'Ctrl';
+            const hotkey = isMac ? I18n._('Cmd') : I18n._('Ctrl');
             I18n._(
                 $('#pastelink'),
                 'Your document is <a id="pasteurl" href="%s">%s</a> <span id="copyhint">(Hit <kbd>%s</kbd>+<kbd>c</kbd> to copy)</span>',

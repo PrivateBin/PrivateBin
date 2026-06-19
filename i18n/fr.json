@@ -232,5 +232,7 @@
     "Show password": "Afficher le mot de passe",
     "Hide password": "Cacher le mot de passe",
     "Theme": "Thème",
-    "Copy": "Copier"
+    "Copy": "Copier",
+    "Cmd": "Cmd",
+    "Ctrl": "Ctrl"
 }

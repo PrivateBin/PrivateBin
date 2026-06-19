@@ -307,7 +307,7 @@ class I18n
     public static function getCopyHotkey()
     {
         return isset($_SERVER['HTTP_USER_AGENT']) &&
-            strpos($_SERVER['HTTP_USER_AGENT'], 'Mac') !== false ? 'Cmd' : 'Ctrl';
+            strpos($_SERVER['HTTP_USER_AGENT'], 'Mac') !== false ? self::_('Cmd') : self::_('Ctrl');
     }
 
     /**

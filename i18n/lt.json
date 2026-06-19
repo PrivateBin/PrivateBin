@@ -232,5 +232,7 @@
     "Show password": "Rodyti slaptažodį",
     "Hide password": "Slėpti slaptažodį",
     "Theme": "Apipavidalinimas",
-    "Copy": "Copy"
+    "Copy": "Copy",
+    "Cmd": "Cmd",
+    "Ctrl": "Ctrl"
 }

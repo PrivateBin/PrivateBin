@@ -232,5 +232,7 @@
     "Show password": "Toon wachtwoord",
     "Hide password": "Verberg wachtwoord",
     "Theme": "Thema",
-    "Copy": "Kopieëren"
+    "Copy": "Kopieëren",
+    "Cmd": "Cmd",
+    "Ctrl": "Ctrl"
 }

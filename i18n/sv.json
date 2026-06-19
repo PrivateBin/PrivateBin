@@ -232,5 +232,7 @@
     "Show password": "Visa lösenord",
     "Hide password": "Dölj lösenord",
     "Theme": "Tema",
-    "Copy": "Copy"
+    "Copy": "Copy",
+    "Cmd": "Cmd",
+    "Ctrl": "Ctrl"
 }
