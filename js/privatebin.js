@@ -3283,7 +3283,11 @@ jQuery.PrivateBin = (function($) {
                         }
 
                         if (Editor.isPreview()) {
-                            me.handleAttachmentPreview($attachmentPreview, dataURL);
+                            me.handleBlobAttachmentPreview(
+                                $attachmentPreview,
+                                dataURL,
+                                me.getAttachmentMimeType(dataURL)
+                            );
                             $attachmentPreview.removeClass('hidden');
                         }
 
