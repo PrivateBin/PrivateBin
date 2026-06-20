@@ -170,5 +170,41 @@ describe('AttachmentViewer', function () {
             }
         );
 
+        it(
+            'previews PDFs in a sandboxed iframe',
+            function() {
+                const clean = jsdom();
+                $('body').html(
+                    '<div id="attachmentPreview" class="col-md-12 text-center hidden"></div>' +
+                    '<div id="attachment" class="hidden"></div>' +
+                    '<div id="templates">' +
+                        '<div id="attachmenttemplate" role="alert" class="attachment hidden alert alert-info">' +
+                            '<span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>' +
+                            '<a class="alert-link">Download attachment</a>' +
+                        '</div>' +
+                    '</div>'
+                );
+                $.PrivateBin.AttachmentViewer.init();
+                $.PrivateBin.AttachmentViewer.handleBlobAttachmentPreview(
+                    $('#attachmentPreview'),
+                    'blob:https://example.com/document.pdf',
+                    'application/pdf'
+                );
+
+                const $preview = $('#attachmentPreview iframe.pdfPreview');
+                assert.strictEqual($preview.length, 1);
+                assert.strictEqual(
+                    $preview.attr('src'),
+                    'blob:https://example.com/document.pdf'
+                );
+                assert.strictEqual(
+                    $preview.attr('sandbox'),
+                    'allow-scripts allow-downloads allow-top-navigation-by-user-activation'
+                );
+                assert.strictEqual($('#attachmentPreview embed').length, 0);
+                clean();
+            }
+        );
+
     });
 });

@@ -3335,13 +3335,13 @@ jQuery.PrivateBin = (function($) {
                     audio.appendChild(source);
                     $targetElement[0].appendChild(audio);
                 } else if (mimeType.toLowerCase().endsWith('/pdf')) {
-                    const embed = document.createElement('embed');
-                    embed.setAttribute('src', blobUrl);
-                    embed.setAttribute('type', 'application/pdf');
-                    embed.setAttribute('class', 'pdfPreview');
+                    const iframe = document.createElement('iframe');
+                    iframe.setAttribute('src', blobUrl);
+                    iframe.setAttribute('sandbox', 'allow-scripts allow-downloads allow-top-navigation-by-user-activation');
+                    iframe.setAttribute('class', 'pdfPreview');
                     // Fallback for browsers, that don't support the vh unit
-                    embed.style.height = window.innerHeight + 'px';
-                    $targetElement[0].appendChild(embed);
+                    iframe.style.height = window.innerHeight + 'px';
+                    $targetElement[0].appendChild(iframe);
                 }
             }
         };
