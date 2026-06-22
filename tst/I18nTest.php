@@ -110,6 +110,26 @@ class I18nTest extends TestCase
         $this->assertEquals('2 小时', I18n::_('%d hours', 2), '2 hours in Chinese');
     }
 
+    public function testBrowserLanguageZhHantDetection()
+    {
+        foreach (array(
+            'zh-Hant,zh;q=0.8,en;q=0.2'            => 'zh-tw',
+            'zh-Hant-TW,zh;q=0.8,en;q=0.2'         => 'zh-tw',
+            'zh-TW,en;q=0.2'                       => 'zh-tw',
+            'zh-HK,zh;q=0.8,en;q=0.2'              => 'zh-tw',
+            'zh-MO,zh;q=0.8,en;q=0.2'              => 'zh-tw',
+            'zh-Hant,zh-Hans;q=0.8,en;q=0.2'       => 'zh-tw',
+            'zh-CN,zh-Hant;q=0.8,en;q=0.2'         => 'zh',
+            'zh-Hans,zh-Hant;q=0.8,en;q=0.2'       => 'zh',
+            'zh-Hans-CN,en;q=0.2'                  => 'zh',
+            'zh;q=0.9,zh-Hant;q=0.8,en;q=0.2'      => 'zh',
+        ) as $acceptedLanguage => $language) {
+            $_SERVER['HTTP_ACCEPT_LANGUAGE'] = $acceptedLanguage;
+            I18n::loadTranslations();
+            $this->assertEquals($language, I18n::getLanguage(), 'browser language ' . $acceptedLanguage);
+        }
+    }
+
     public function testBrowserLanguagePlDetection()
     {
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'pl;q=0.8,en-GB;q=0.6,en-US;q=0.4,en;q=0.2';
@@ -209,6 +229,7 @@ class I18nTest extends TestCase
         $languageIterator = new AppendIterator();
         $languageIterator->append(new GlobIterator(I18nMock::getPath('??.json')));
         $languageIterator->append(new GlobIterator(I18nMock::getPath('???.json'))); // for jbo
+        $languageIterator->append(new GlobIterator(I18nMock::getPath('??-??.json'))); // for regional variants like zh-tw
         $languageCount = 0;
         foreach ($languageIterator as $file) {
             ++$languageCount;
@@ -256,6 +277,8 @@ class I18nTest extends TestCase
                 $language = substr($file->getFilename(), 0, 2);
             } elseif ($fileNameLength === 8) { // jbo.json
                 $language = substr($file->getFilename(), 0, 3);
+            } elseif ($fileNameLength === 10) { // xx-xx.json
+                $language = substr($file->getFilename(), 0, 5);
             } else {
                 continue;
             }
