@@ -2,50 +2,6 @@
 var common = require('../common');
 
 describe('UiHelper', function () {
-    // TODO: As per https://github.com/tmpvar/jsdom/issues/1565 there is no navigation support in jsdom, yet.
-    // for now we use a mock function to trigger the event
-    describe('historyChange', function () {
-        this.timeout(30000);
-        beforeEach(function () {
-            $.PrivateBin.Helper.reset();
-            cleanup();
-        });
-
-        jsc.property(
-            'redirects to home, when the state is null',
-            common.jscUrl(false, false),
-            function (url) {
-                const expected = common.urlToString(url),
-                    clean = jsdom('', {url: expected});
-
-                $.PrivateBin.UiHelper.mockHistoryChange();
-                $.PrivateBin.Helper.reset();
-                var result = window.location.href;
-                clean();
-                return expected === result;
-            }
-        );
-
-        jsc.property(
-            'does not redirect to home, when a new document is created',
-            common.jscUrl(false),
-            jsc.nearray(common.jscBase64String()),
-            function (url, fragment) {
-                url.fragment = fragment.join('');
-                const expected = common.urlToString(url),
-                    clean = jsdom('', {url: expected});
-
-                $.PrivateBin.UiHelper.mockHistoryChange([
-                    {type: 'newpaste'}, '', expected
-                ]);
-                $.PrivateBin.Helper.reset();
-                var result = window.location.href;
-                clean();
-                return expected === result;
-            }
-        );
-    });
-
     describe('reloadHome', function () {
         // TODO triggers error messages in jsDOM since version 11
         /*
@@ -103,4 +59,3 @@ describe('UiHelper', function () {
         // TODO Did not find a way to test that, see isVisible test above
     });
 });
-

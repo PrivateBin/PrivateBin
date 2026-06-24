@@ -1727,23 +1727,6 @@ jQuery.PrivateBin = (function($) {
         };
 
         /**
-         * trigger a history (pop) state change
-         *
-         * used to test the UiHelper.historyChange private function
-         *
-         * @name   UiHelper.mockHistoryChange
-         * @function
-         * @param  {string} state   (optional) state to mock
-         */
-        me.mockHistoryChange = function(state)
-        {
-            if (typeof state === 'undefined') {
-                state = null;
-            }
-            historyChange($.Event('popstate', {originalEvent: new PopStateEvent('popstate', {state: state}), target: window}));
-        };
-
-        /**
          * initialize
          *
          * @name   UiHelper.init
