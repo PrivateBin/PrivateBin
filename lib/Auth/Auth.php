@@ -116,6 +116,17 @@ class Auth
     }
 
     /**
+     * Check if admin approval is required for new registrations
+     *
+     * @access public
+     * @return bool
+     */
+    public function requiresApproval(): bool
+    {
+        return $this->isEnabled() && (bool) $this->_conf->getKey('require_approval', 'auth');
+    }
+
+    /**
      * Resume the current session and load the authenticated user
      *
      * @access public
@@ -176,6 +187,10 @@ class Auth
             return array('success' => false, 'message' => 'Account is disabled.');
         }
 
+        if (!$user->isApproved()) {
+            return array('success' => false, 'message' => 'Account is pending admin approval.');
+        }
+
         if (!$user->verifyPassword($password)) {
             return array('success' => false, 'message' => 'Invalid username or password.');
         }
@@ -208,15 +223,18 @@ class Auth
      * @access public
      * @param string $username
      * @param string $password
+     * @param string $email
      * @return array result with 'success' bool and optional 'message'
      */
-    public function register(string $username, string $password): array
+    public function register(string $username, string $password, string $email = ''): array
     {
         if (!$this->allowsRegistration()) {
             return array('success' => false, 'message' => 'Registration is not allowed.');
         }
 
-        return $this->createUser($username, $password, User::ROLE_USER);
+        $needsApproval = $this->requiresApproval();
+
+        return $this->createUser($username, $password, User::ROLE_USER, $email, !$needsApproval);
     }
 
     /**
@@ -226,9 +244,11 @@ class Auth
      * @param string $username
      * @param string $password
      * @param string $role
+     * @param string $email
+     * @param bool   $approved
      * @return array result with 'success' bool and optional 'message'
      */
-    public function createUser(string $username, string $password, string $role = User::ROLE_USER): array
+    public function createUser(string $username, string $password, string $role = User::ROLE_USER, string $email = '', bool $approved = true): array
     {
         $username = trim($username);
 
@@ -249,9 +269,17 @@ class Auth
         $user = new User($username);
         $user->setPassword($password);
         $user->setRole($role);
+        $user->setEmail($email);
+        $user->setApproved($approved);
         $this->_saveUser($user);
 
-        return array('success' => true);
+        // send notification emails
+        if (!$approved) {
+            $this->_notifyAdminNewRegistration($user);
+            $this->_notifyUserPendingApproval($user);
+        }
+
+        return array('success' => true, 'pending_approval' => !$approved);
     }
 
     /**
@@ -408,6 +436,52 @@ class Auth
     }
 
     /**
+     * Approve a pending user
+     *
+     * @access public
+     * @param string $username
+     * @return array result with 'success' bool and optional 'message'
+     */
+    public function approveUser(string $username): array
+    {
+        $user = $this->_loadUser($username);
+        if ($user === null) {
+            return array('success' => false, 'message' => 'User not found.');
+        }
+
+        if ($user->isApproved()) {
+            return array('success' => false, 'message' => 'User is already approved.');
+        }
+
+        $user->setApproved(true);
+        $user->setActive(true);
+        $this->_saveUser($user);
+
+        $this->_notifyUserApproved($user);
+
+        return array('success' => true);
+    }
+
+    /**
+     * Reject a pending user (deletes the account)
+     *
+     * @access public
+     * @param string $username
+     * @return array result with 'success' bool and optional 'message'
+     */
+    public function rejectUser(string $username): array
+    {
+        $user = $this->_loadUser($username);
+        if ($user === null) {
+            return array('success' => false, 'message' => 'User not found.');
+        }
+
+        $this->_notifyUserRejected($user);
+
+        return $this->deleteUser($username);
+    }
+
+    /**
      * Check if there are any users (for initial setup)
      *
      * @access public
@@ -512,5 +586,141 @@ class Auth
         }
 
         return $decoded;
+    }
+
+    /**
+     * Send an email notification
+     *
+     * @access private
+     * @param string $to
+     * @param string $subject
+     * @param string $body
+     * @return bool
+     */
+    private function _sendEmail(string $to, string $subject, string $body): bool
+    {
+        if (empty($to)) {
+            return false;
+        }
+
+        $fromEmail = $this->_conf->getKey('email_from', 'auth');
+        if (empty($fromEmail)) {
+            $fromEmail = 'noreply@' . ($_SERVER['SERVER_NAME'] ?? 'localhost');
+        }
+
+        $siteName = $this->_conf->getKey('name', 'main') ?: 'PrivateBin';
+
+        $headers  = 'From: ' . $siteName . ' <' . $fromEmail . '>' . "\r\n";
+        $headers .= 'MIME-Version: 1.0' . "\r\n";
+        $headers .= 'Content-Type: text/plain; charset=UTF-8' . "\r\n";
+        $headers .= 'X-Mailer: PrivateBin-Auth' . "\r\n";
+
+        return @mail($to, $subject, $body, $headers);
+    }
+
+    /**
+     * Notify admin about a new user registration pending approval
+     *
+     * @access private
+     * @param User $user
+     */
+    private function _notifyAdminNewRegistration(User $user): void
+    {
+        $adminEmail = $this->_conf->getKey('admin_email', 'auth');
+        if (empty($adminEmail)) {
+            return;
+        }
+
+        $siteName = $this->_conf->getKey('name', 'main') ?: 'PrivateBin';
+        $basepath = $this->_conf->getKey('basepath', 'main') ?: '';
+
+        $subject = '[' . $siteName . '] New user registration pending approval';
+        $body    = "A new user has registered and is waiting for your approval.\n\n";
+        $body   .= 'Username: ' . $user->getUsername() . "\n";
+        if ($user->getEmail()) {
+            $body .= 'Email: ' . $user->getEmail() . "\n";
+        }
+        $body .= 'Registered: ' . date('Y-m-d H:i:s') . "\n\n";
+        if ($basepath) {
+            $body .= "Log in to the admin panel to approve or reject this user:\n";
+            $body .= $basepath . "\n";
+        }
+
+        $this->_sendEmail($adminEmail, $subject, $body);
+    }
+
+    /**
+     * Notify user that their registration is pending approval
+     *
+     * @access private
+     * @param User $user
+     */
+    private function _notifyUserPendingApproval(User $user): void
+    {
+        $userEmail = $user->getEmail();
+        if (empty($userEmail)) {
+            return;
+        }
+
+        $siteName = $this->_conf->getKey('name', 'main') ?: 'PrivateBin';
+
+        $subject = '[' . $siteName . '] Registration received - pending approval';
+        $body    = "Hello " . $user->getUsername() . ",\n\n";
+        $body   .= "Your registration on " . $siteName . " has been received.\n";
+        $body   .= "An administrator will review your account shortly.\n";
+        $body   .= "You will receive another email once your account has been approved.\n\n";
+        $body   .= "Thank you for your patience.";
+
+        $this->_sendEmail($userEmail, $subject, $body);
+    }
+
+    /**
+     * Notify user that their account has been approved
+     *
+     * @access private
+     * @param User $user
+     */
+    private function _notifyUserApproved(User $user): void
+    {
+        $userEmail = $user->getEmail();
+        if (empty($userEmail)) {
+            return;
+        }
+
+        $siteName = $this->_conf->getKey('name', 'main') ?: 'PrivateBin';
+        $basepath = $this->_conf->getKey('basepath', 'main') ?: '';
+
+        $subject = '[' . $siteName . '] Account approved';
+        $body    = "Hello " . $user->getUsername() . ",\n\n";
+        $body   .= "Your account on " . $siteName . " has been approved.\n";
+        $body   .= "You can now log in and start using the service.\n";
+        if ($basepath) {
+            $body .= "\n" . $basepath . "\n";
+        }
+
+        $this->_sendEmail($userEmail, $subject, $body);
+    }
+
+    /**
+     * Notify user that their account has been rejected
+     *
+     * @access private
+     * @param User $user
+     */
+    private function _notifyUserRejected(User $user): void
+    {
+        $userEmail = $user->getEmail();
+        if (empty($userEmail)) {
+            return;
+        }
+
+        $siteName = $this->_conf->getKey('name', 'main') ?: 'PrivateBin';
+
+        $subject = '[' . $siteName . '] Registration declined';
+        $body    = "Hello " . $user->getUsername() . ",\n\n";
+        $body   .= "Unfortunately, your registration on " . $siteName . " has been declined.\n";
+        $body   .= "If you believe this is an error, please contact the administrator.";
+
+        $this->_sendEmail($userEmail, $subject, $body);
     }
 }

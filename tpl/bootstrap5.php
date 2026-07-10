@@ -423,6 +423,10 @@ if ($AUTH_ENABLED && empty($AUTH_USER) && !$AUTH_NEEDS_SETUP) :
 										<label for="auth-page-reg-password2" class="form-label"><?php echo I18n::_('Confirm Password'); ?></label>
 										<input type="password" class="form-control" id="auth-page-reg-password2" required autocomplete="new-password">
 									</div>
+									<div class="mb-3">
+										<label for="auth-page-reg-email" class="form-label"><?php echo I18n::_('Email'); ?> <small class="text-muted">(<?php echo I18n::_('optional'); ?>)</small></label>
+										<input type="email" class="form-control" id="auth-page-reg-email" autocomplete="email" placeholder="<?php echo I18n::_('For approval notifications'); ?>">
+									</div>
 									<button type="submit" class="btn btn-primary w-100"><?php echo I18n::_('Register'); ?></button>
 								</form>
 								<p class="mt-3 text-center mb-0">

@@ -336,6 +336,12 @@ class Controller
             case 'toggle_active':
                 $this->_authToggleActive();
                 break;
+            case 'approve_user':
+                $this->_authApproveUser();
+                break;
+            case 'reject_user':
+                $this->_authRejectUser();
+                break;
             case 'get_settings':
                 $this->_authGetSettings();
                 break;
@@ -420,19 +426,29 @@ class Controller
     {
         $username = $this->_request->getParam('username', '');
         $password = $this->_request->getParam('password', '');
+        $email    = $this->_request->getParam('email', '');
 
-        $result = $this->_auth->register($username, $password);
+        $result = $this->_auth->register($username, $password, $email);
         if ($result['success']) {
-            // auto-login after registration
-            $this->_auth->login($username, $password);
-            $user       = $this->_auth->getCurrentUser();
-            $result = array(
-                'status'   => 0,
-                'username' => $user->getUsername(),
-                'role'     => $user->getRole(),
-                'csrf'     => $this->_auth->getSession()->getCsrfToken(),
-            );
-            $this->_json = Json::encode($result);
+            if (!empty($result['pending_approval']) && $result['pending_approval']) {
+                $result = array(
+                    'status'           => 0,
+                    'pending_approval' => true,
+                    'message'          => 'Registration successful. Your account is pending admin approval.',
+                );
+                $this->_json = Json::encode($result);
+            } else {
+                // auto-login after registration (only if no approval needed)
+                $this->_auth->login($username, $password);
+                $user       = $this->_auth->getCurrentUser();
+                $result = array(
+                    'status'   => 0,
+                    'username' => $user->getUsername(),
+                    'role'     => $user->getRole(),
+                    'csrf'     => $this->_auth->getSession()->getCsrfToken(),
+                );
+                $this->_json = Json::encode($result);
+            }
         } else {
             $this->_json_error(I18n::_($result['message']));
         }
@@ -480,11 +496,13 @@ class Controller
         $userData = array();
         foreach ($users as $user) {
             $userData[] = array(
-                'username'   => $user->getUsername(),
-                'role'       => $user->getRole(),
-                'is_active'  => $user->isActive(),
-                'created_at' => $user->getCreatedAt(),
-                'last_login' => $user->getLastLogin(),
+                'username'    => $user->getUsername(),
+                'role'        => $user->getRole(),
+                'is_active'   => $user->isActive(),
+                'is_approved' => $user->isApproved(),
+                'email'       => $user->getEmail(),
+                'created_at'  => $user->getCreatedAt(),
+                'last_login'  => $user->getLastLogin(),
             );
         }
 
@@ -640,6 +658,56 @@ class Controller
         $active   = (bool) $this->_request->getParam('active', '');
 
         $result = $this->_auth->setUserActive($username, $active);
+        if ($result['success']) {
+            $result = array('status' => 0);
+            $this->_json = Json::encode($result);
+        } else {
+            $this->_json_error(I18n::_($result['message']));
+        }
+    }
+
+    /**
+     * Approve a pending user (admin only)
+     *
+     * @access private
+     */
+    private function _authApproveUser(): void
+    {
+        if (!$this->_isAdmin()) {
+            $this->_json_error(I18n::_('Admin access required.'));
+            return;
+        }
+
+        if (!$this->_validateCsrf()) { return; }
+
+        $username = $this->_request->getParam('username', '');
+
+        $result = $this->_auth->approveUser($username);
+        if ($result['success']) {
+            $result = array('status' => 0);
+            $this->_json = Json::encode($result);
+        } else {
+            $this->_json_error(I18n::_($result['message']));
+        }
+    }
+
+    /**
+     * Reject a pending user (admin only)
+     *
+     * @access private
+     */
+    private function _authRejectUser(): void
+    {
+        if (!$this->_isAdmin()) {
+            $this->_json_error(I18n::_('Admin access required.'));
+            return;
+        }
+
+        if (!$this->_validateCsrf()) { return; }
+
+        $username = $this->_request->getParam('username', '');
+
+        $result = $this->_auth->rejectUser($username);
         if ($result['success']) {
             $result = array('status' => 0);
             $this->_json = Json::encode($result);

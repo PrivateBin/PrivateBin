@@ -65,6 +65,22 @@ class User
     private $_isActive;
 
     /**
+     * whether the account is approved by admin
+     *
+     * @access private
+     * @var bool
+     */
+    private $_isApproved;
+
+    /**
+     * user email address
+     *
+     * @access private
+     * @var string
+     */
+    private $_email;
+
+    /**
      * creation timestamp
      *
      * @access private
@@ -97,7 +113,9 @@ class User
         string $role = self::ROLE_USER,
         bool $isActive = true,
         int $createdAt = 0,
-        int $lastLogin = 0
+        int $lastLogin = 0,
+        bool $isApproved = true,
+        string $email = ''
     ) {
         $this->_username     = $username;
         $this->_passwordHash = $passwordHash;
@@ -105,6 +123,8 @@ class User
         $this->_isActive     = $isActive;
         $this->_createdAt    = $createdAt ?: time();
         $this->_lastLogin    = $lastLogin;
+        $this->_isApproved   = $isApproved;
+        $this->_email        = $email;
     }
 
     /**
@@ -243,6 +263,50 @@ class User
     }
 
     /**
+     * Check if account is approved
+     *
+     * @access public
+     * @return bool
+     */
+    public function isApproved(): bool
+    {
+        return $this->_isApproved;
+    }
+
+    /**
+     * Set approved status
+     *
+     * @access public
+     * @param bool $isApproved
+     */
+    public function setApproved(bool $isApproved): void
+    {
+        $this->_isApproved = $isApproved;
+    }
+
+    /**
+     * Get email address
+     *
+     * @access public
+     * @return string
+     */
+    public function getEmail(): string
+    {
+        return $this->_email;
+    }
+
+    /**
+     * Set email address
+     *
+     * @access public
+     * @param string $email
+     */
+    public function setEmail(string $email): void
+    {
+        $this->_email = $email;
+    }
+
+    /**
      * Serialize user to array for storage
      *
      * @access public
@@ -257,6 +321,8 @@ class User
             'is_active'     => $this->_isActive,
             'created_at'    => $this->_createdAt,
             'last_login'    => $this->_lastLogin,
+            'is_approved'   => $this->_isApproved,
+            'email'         => $this->_email,
         );
     }
 
@@ -276,7 +342,9 @@ class User
             $data['role'] ?? self::ROLE_USER,
             $data['is_active'] ?? true,
             $data['created_at'] ?? 0,
-            $data['last_login'] ?? 0
+            $data['last_login'] ?? 0,
+            $data['is_approved'] ?? true,
+            $data['email'] ?? ''
         );
     }
 

@@ -161,6 +161,19 @@ languageselection = false
 ; When false, only admins can create new user accounts.
 ; allow_registration = false
 
+; Require admin approval for new user registrations, defaults to false.
+; When enabled, self-registered users cannot log in until an admin approves them.
+; Admin receives email notification (if admin_email is set).
+; require_approval = false
+
+; Admin email address for notifications (new user registrations, etc.).
+; Leave empty to disable admin email notifications.
+; admin_email = ""
+
+; "From" address for notification emails sent by the auth system.
+; If empty, defaults to noreply@<server_name>.
+; email_from = ""
+
 ; Session timeout in seconds, defaults to 3600 (1 hour).
 ; session_timeout = 3600
 

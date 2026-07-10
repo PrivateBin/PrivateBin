@@ -162,9 +162,20 @@ jQuery.PrivateBin.Auth = (function($) {
             me.apiCall({
                 auth_action: 'register',
                 username: $('#auth-page-reg-username').val(),
-                password: pw1
+                password: pw1,
+                email: $('#auth-page-reg-email').val() || ''
             }, function(data) {
-                window.location.reload();
+                if (data.pending_approval) {
+                    $('#auth-register-page-form').html(
+                        '<div class="alert alert-info">' +
+                        '<strong>Registration received!</strong><br>' +
+                        'Your account is pending admin approval. ' +
+                        'You will be notified once approved.' +
+                        '</div>'
+                    );
+                } else {
+                    window.location.reload();
+                }
             }, function(message) {
                 $btn.prop('disabled', false).text('Register');
                 $('#auth-register-error').text(message).removeClass('d-none');
@@ -246,6 +257,8 @@ jQuery.PrivateBin.Auth = (function($) {
             '<div class="form-text">Minimum 8 characters</div></div>' +
             '<div class="mb-3"><label for="auth-reg-password2" class="form-label">Confirm Password</label>' +
             '<input type="password" class="form-control" id="auth-reg-password2" required autocomplete="new-password"></div>' +
+            '<div class="mb-3"><label for="auth-reg-email" class="form-label">Email <small class="text-muted">(optional)</small></label>' +
+            '<input type="email" class="form-control" id="auth-reg-email" autocomplete="email" placeholder="For approval notifications"></div>' +
             '<button type="submit" class="btn btn-primary w-100">Register</button>' +
             '</form>' +
             '<p class="mt-3 text-center"><a href="#" id="auth-show-login">Back to login</a></p>' +
@@ -266,7 +279,7 @@ jQuery.PrivateBin.Auth = (function($) {
                 me.showError('Passwords do not match.');
                 return;
             }
-            me.register($('#auth-reg-username').val(), pw1);
+            me.register($('#auth-reg-username').val(), pw1, $('#auth-reg-email').val() || '');
         });
 
         $('#auth-show-login').on('click', function(e) {
@@ -478,6 +491,9 @@ jQuery.PrivateBin.Auth = (function($) {
             html += me.settingsCheckbox('auth', 'require_login_to_create', 'Require login to create', s);
             html += me.settingsCheckbox('auth', 'require_login_to_read', 'Require login to read', s);
             html += me.settingsCheckbox('auth', 'allow_registration', 'Allow self-registration', s);
+            html += me.settingsCheckbox('auth', 'require_approval', 'Require admin approval for new users', s);
+            html += me.settingsInput('auth', 'admin_email', 'Admin email', s, 'email', 'Notifications for new registrations');
+            html += me.settingsInput('auth', 'email_from', 'From email address', s, 'email', 'noreply@example.com');
             html += me.settingsInput('auth', 'session_timeout', 'Session timeout (seconds)', s, 'number');
             html += '</div>';
 
@@ -649,18 +665,29 @@ jQuery.PrivateBin.Auth = (function($) {
      * @function
      * @param {string} username
      * @param {string} password
+     * @param {string} email
      */
-    me.register = function(username, password) {
+    me.register = function(username, password, email) {
         me.apiCall({
             auth_action: 'register',
             username: username,
-            password: password
+            password: password,
+            email: email || ''
         }, function(data) {
-            csrfToken = data.csrf || '';
-            currentUser = { username: data.username, role: data.role };
-            me.removeModal();
-            me.renderAuthUI();
-            window.location.reload();
+            if (data.pending_approval) {
+                me.removeModal();
+                var alertHtml = '<div class="alert alert-info mt-3 text-center">' +
+                    '<strong>Registration received!</strong><br>' +
+                    'Your account is pending admin approval.' +
+                    '</div>';
+                $('#auth-login-page').after(alertHtml);
+            } else {
+                csrfToken = data.csrf || '';
+                currentUser = { username: data.username, role: data.role };
+                me.removeModal();
+                me.renderAuthUI();
+                window.location.reload();
+            }
         });
     };
 
@@ -682,27 +709,41 @@ jQuery.PrivateBin.Auth = (function($) {
             }
 
             var table = '<table class="table table-sm table-striped">' +
-                '<thead><tr><th>Username</th><th>Role</th><th>Active</th><th>Created</th><th>Last Login</th><th>Actions</th></tr></thead><tbody>';
+                '<thead><tr><th>Username</th><th>Email</th><th>Role</th><th>Status</th><th>Created</th><th>Last Login</th><th>Actions</th></tr></thead><tbody>';
 
             for (var i = 0; i < data.users.length; i++) {
                 var u = data.users[i];
                 var created = u.created_at ? new Date(u.created_at * 1000).toLocaleDateString() : 'N/A';
                 var lastLogin = u.last_login ? new Date(u.last_login * 1000).toLocaleDateString() : 'Never';
-                var activeClass = u.is_active ? 'text-success' : 'text-danger';
-                var activeText = u.is_active ? 'Yes' : 'No';
                 var isSelf = currentUser && u.username === currentUser.username;
+
+                // determine status
+                var statusBadge;
+                if (!u.is_approved) {
+                    statusBadge = '<span class="badge bg-info">Pending</span>';
+                } else if (u.is_active) {
+                    statusBadge = '<span class="badge bg-success">Active</span>';
+                } else {
+                    statusBadge = '<span class="badge bg-danger">Disabled</span>';
+                }
 
                 table += '<tr>' +
                     '<td>' + me.escapeHtml(u.username) + (isSelf ? ' <em>(you)</em>' : '') + '</td>' +
+                    '<td>' + me.escapeHtml(u.email || '') + '</td>' +
                     '<td><span class="badge bg-' + (u.role === 'admin' ? 'warning' : 'secondary') + '">' + u.role + '</span></td>' +
-                    '<td class="' + activeClass + '">' + activeText + '</td>' +
+                    '<td>' + statusBadge + '</td>' +
                     '<td>' + created + '</td>' +
                     '<td>' + lastLogin + '</td>' +
                     '<td>';
 
                 if (!isSelf) {
-                    table += '<button class="btn btn-xs btn-outline-danger admin-delete-user" data-username="' + me.escapeHtml(u.username) + '" title="Delete">&#x2716;</button> ';
-                    table += '<button class="btn btn-xs btn-outline-secondary admin-toggle-active" data-username="' + me.escapeHtml(u.username) + '" data-active="' + (u.is_active ? '0' : '1') + '" title="' + (u.is_active ? 'Disable' : 'Enable') + '">' + (u.is_active ? '&#x23F8;' : '&#x25B6;') + '</button>';
+                    if (!u.is_approved) {
+                        table += '<button class="btn btn-xs btn-outline-success admin-approve-user" data-username="' + me.escapeHtml(u.username) + '" title="Approve">&#x2714;</button> ';
+                        table += '<button class="btn btn-xs btn-outline-danger admin-reject-user" data-username="' + me.escapeHtml(u.username) + '" title="Reject">&#x2716;</button> ';
+                    } else {
+                        table += '<button class="btn btn-xs btn-outline-danger admin-delete-user" data-username="' + me.escapeHtml(u.username) + '" title="Delete">&#x1F5D1;</button> ';
+                        table += '<button class="btn btn-xs btn-outline-secondary admin-toggle-active" data-username="' + me.escapeHtml(u.username) + '" data-active="' + (u.is_active ? '0' : '1') + '" title="' + (u.is_active ? 'Disable' : 'Enable') + '">' + (u.is_active ? '&#x23F8;' : '&#x25B6;') + '</button>';
+                    }
                 }
 
                 table += '</td></tr>';
@@ -722,6 +763,18 @@ jQuery.PrivateBin.Auth = (function($) {
                 var username = $(this).data('username');
                 var active = $(this).data('active') === 1 || $(this).data('active') === '1';
                 me.adminToggleActive(username, active);
+            });
+
+            $list.find('.admin-approve-user').on('click', function() {
+                var username = $(this).data('username');
+                me.adminApproveUser(username);
+            });
+
+            $list.find('.admin-reject-user').on('click', function() {
+                var username = $(this).data('username');
+                if (confirm('Reject and delete user "' + username + '"? This cannot be undone.')) {
+                    me.adminRejectUser(username);
+                }
             });
         });
     };
@@ -783,6 +836,42 @@ jQuery.PrivateBin.Auth = (function($) {
             active: active ? '1' : '0',
             csrf_token: csrfToken
         }, function() {
+            me.loadUsers();
+        });
+    };
+
+    /**
+     * Admin: approve pending user
+     *
+     * @name Auth.adminApproveUser
+     * @function
+     * @param {string} username
+     */
+    me.adminApproveUser = function(username) {
+        me.apiCall({
+            auth_action: 'approve_user',
+            username: username,
+            csrf_token: csrfToken
+        }, function() {
+            me.showSuccess('User "' + username + '" approved.');
+            me.loadUsers();
+        });
+    };
+
+    /**
+     * Admin: reject pending user
+     *
+     * @name Auth.adminRejectUser
+     * @function
+     * @param {string} username
+     */
+    me.adminRejectUser = function(username) {
+        me.apiCall({
+            auth_action: 'reject_user',
+            username: username,
+            csrf_token: csrfToken
+        }, function() {
+            me.showSuccess('User "' + username + '" rejected and removed.');
             me.loadUsers();
         });
     };
