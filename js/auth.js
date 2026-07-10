@@ -849,3 +849,17 @@ jQuery.PrivateBin.Auth = (function($) {
 
     return me;
 })(jQuery);
+
+// Auto-initialize from embedded config when loaded via defer
+(function() {
+    'use strict';
+    var el = document.getElementById('auth-config');
+    if (el && jQuery.PrivateBin && jQuery.PrivateBin.Auth) {
+        try {
+            var config = JSON.parse(el.textContent);
+            jQuery.PrivateBin.Auth.init(config);
+        } catch (e) {
+            // config parse error — auth will not initialize
+        }
+    }
+})();

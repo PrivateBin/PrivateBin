@@ -647,22 +647,16 @@ if ($FILEUPLOAD) :
 endif;
 if ($AUTH_ENABLED) :
 ?>
-		<script>
-		jQuery(document).ready(function() {
-			if (jQuery.PrivateBin && jQuery.PrivateBin.Auth) {
-				jQuery.PrivateBin.Auth.init({
-					enabled: true,
-					allowRegistration: <?php echo $AUTH_ALLOW_REGISTRATION ? 'true' : 'false'; ?>,
-					needsSetup: <?php echo $AUTH_NEEDS_SETUP ? 'true' : 'false'; ?>,
-					requireLoginCreate: <?php echo $AUTH_REQUIRE_LOGIN_CREATE ? 'true' : 'false'; ?>,
-					requireLoginRead: <?php echo $AUTH_REQUIRE_LOGIN_READ ? 'true' : 'false'; ?>,
-					username: <?php echo json_encode($AUTH_USER); ?>,
-					role: <?php echo json_encode($AUTH_ROLE); ?>,
-					csrf: <?php echo json_encode($AUTH_CSRF); ?>
-				});
-			}
-		});
-		</script>
+		<script id="auth-config" type="application/json"><?php echo json_encode(array(
+			'enabled'            => true,
+			'allowRegistration'  => (bool) $AUTH_ALLOW_REGISTRATION,
+			'needsSetup'         => (bool) $AUTH_NEEDS_SETUP,
+			'requireLoginCreate' => (bool) $AUTH_REQUIRE_LOGIN_CREATE,
+			'requireLoginRead'   => (bool) $AUTH_REQUIRE_LOGIN_READ,
+			'username'           => $AUTH_USER,
+			'role'               => $AUTH_ROLE,
+			'csrf'               => $AUTH_CSRF,
+		)); ?></script>
 <?php
 endif;
 ?>
