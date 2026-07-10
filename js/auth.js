@@ -753,35 +753,45 @@ jQuery.PrivateBin.Auth = (function($) {
         $.ajax({
             type: 'POST',
             url: baseUrl,
-            dataType: 'json',
+            dataType: 'text',
             contentType: 'application/json',
             headers: {'X-Requested-With': 'JSONHttpRequest'},
             data: JSON.stringify(data),
             timeout: 30000
-        }).done(function(response) {
-            if (response.status === 0) {
-                if (typeof success === 'function') {
-                    success(response);
-                }
-            } else {
-                var msg = response.message || 'An error occurred.';
+        }).done(function(rawText, textStatus, jqXHR) {
+            var response;
+            try {
+                response = JSON.parse(rawText.trim());
+            } catch (e) {
+                var msg = 'Invalid server response.';
                 if (typeof errorCallback === 'function') {
                     errorCallback(msg);
                 } else {
                     me.showError(msg);
                 }
+                return;
+            }
+            if (response.status === 0) {
+                if (typeof success === 'function') {
+                    success(response);
+                }
+            } else {
+                var errMsg = response.message || 'An error occurred.';
+                if (typeof errorCallback === 'function') {
+                    errorCallback(errMsg);
+                } else {
+                    me.showError(errMsg);
+                }
             }
         }).fail(function(jqXHR, textStatus) {
             var msg = 'Network error. Please try again.';
             if (jqXHR.responseText) {
-                // Try to extract a useful error from the response
                 try {
-                    var resp = JSON.parse(jqXHR.responseText);
+                    var resp = JSON.parse(jqXHR.responseText.trim());
                     if (resp.message) {
                         msg = resp.message;
                     }
                 } catch (e) {
-                    // Server returned non-JSON (likely a PHP error)
                     msg = 'Server error (HTTP ' + jqXHR.status + '). Check server logs.';
                 }
             } else if (textStatus === 'timeout') {
