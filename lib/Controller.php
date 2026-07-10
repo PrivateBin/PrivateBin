@@ -305,9 +305,15 @@ class Controller
      */
     private function _handleAuth(): void
     {
-        try {
         $action = $this->_request->getParam('auth_action', '');
 
+        // Debug: confirm code version is deployed
+        if ($action === 'debug_version') {
+            $this->_json = Json::encode(array('status' => 0, 'version' => 'v5-trycatch', 'php' => PHP_VERSION));
+            return;
+        }
+
+        try {
         // special case: initial setup when no users exist
         if ($action === 'setup' && $this->_auth->isEnabled() && !$this->_auth->hasUsers()) {
             $this->_authSetup();
