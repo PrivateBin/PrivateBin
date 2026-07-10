@@ -507,7 +507,7 @@ class Controller
             return;
         }
 
-        $this->_validateCsrf();
+        if (!$this->_validateCsrf()) { return; }
 
         $username = $this->_request->getParam('username', '');
         $password = $this->_request->getParam('password', '');
@@ -534,7 +534,7 @@ class Controller
             return;
         }
 
-        $this->_validateCsrf();
+        if (!$this->_validateCsrf()) { return; }
 
         $username = $this->_request->getParam('username', '');
 
@@ -567,7 +567,7 @@ class Controller
             return;
         }
 
-        $this->_validateCsrf();
+        if (!$this->_validateCsrf()) { return; }
 
         $username    = $this->_request->getParam('username', '');
         $newPassword = $this->_request->getParam('new_password', '');
@@ -608,7 +608,7 @@ class Controller
             return;
         }
 
-        $this->_validateCsrf();
+        if (!$this->_validateCsrf()) { return; }
 
         $username = $this->_request->getParam('username', '');
         $role     = $this->_request->getParam('role', '');
@@ -634,7 +634,7 @@ class Controller
             return;
         }
 
-        $this->_validateCsrf();
+        if (!$this->_validateCsrf()) { return; }
 
         $username = $this->_request->getParam('username', '');
         $active   = (bool) $this->_request->getParam('active', '');
@@ -672,11 +672,15 @@ class Controller
             return;
         }
 
-        $result = array(
-            'status'   => 0,
-            'settings' => $this->_conf->getSafeConfig(),
-        );
-        $this->_json = Json::encode($result);
+        try {
+            $result = array(
+                'status'   => 0,
+                'settings' => $this->_conf->getSafeConfig(),
+            );
+            $this->_json = Json::encode($result);
+        } catch (\Exception $e) {
+            $this->_json_error('Failed to load settings: ' . $e->getMessage());
+        }
     }
 
     /**
@@ -691,7 +695,7 @@ class Controller
             return;
         }
 
-        $this->_validateCsrf();
+        if (!$this->_validateCsrf()) { return; }
 
         $settings = $this->_request->getParam('settings', '');
         if (empty($settings) || !is_array($settings)) {
@@ -702,11 +706,15 @@ class Controller
         // type-cast known boolean and integer values
         $settings = $this->_castSettingsTypes($settings);
 
-        if ($this->_conf->updateAndSave($settings)) {
-            $result = array('status' => 0);
-            $this->_json = Json::encode($result);
-        } else {
-            $this->_json_error(I18n::_('Failed to save settings. Check file permissions on cfg/conf.php.'));
+        try {
+            if ($this->_conf->updateAndSave($settings)) {
+                $result = array('status' => 0);
+                $this->_json = Json::encode($result);
+            } else {
+                $this->_json_error(I18n::_('Failed to save settings. Check file permissions on cfg/conf.php.'));
+            }
+        } catch (\Exception $e) {
+            $this->_json_error('Failed to save settings: ' . $e->getMessage());
         }
     }
 
@@ -753,12 +761,14 @@ class Controller
      *
      * @access private
      */
-    private function _validateCsrf(): void
+    private function _validateCsrf(): bool
     {
         $token = $this->_request->getParam('csrf_token', '');
         if (!$this->_auth->getSession()->validateCsrfToken($token)) {
             $this->_json_error(I18n::_('Invalid security token. Please refresh and try again.'));
+            return false;
         }
+        return true;
     }
 
     /**

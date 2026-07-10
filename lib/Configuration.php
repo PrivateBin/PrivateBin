@@ -359,6 +359,10 @@ class Configuration
         if (isset($config['model_options']['accesskey'])) {
             $config['model_options']['accesskey'] = '***';
         }
+        // strip opt array (PDO options, not serializable)
+        if (isset($config['model_options']['opt'])) {
+            unset($config['model_options']['opt']);
+        }
         // strip SRI hashes (internal)
         unset($config['sri']);
         return $config;
@@ -421,18 +425,24 @@ class Configuration
             $conf .= "[$section]\n";
 
             if (!is_array($values)) {
+                $conf .= "\n";
                 continue;
             }
 
             foreach ($values as $key => $value) {
                 if (is_array($value)) {
                     foreach ($value as $item) {
-                        $conf .= $key . '[] = ' . self::_formatIniValue($item) . "\n";
+                        if (is_scalar($item) || is_null($item)) {
+                            $conf .= $key . '[] = ' . self::_formatIniValue($item) . "\n";
+                        }
                     }
                 } elseif (is_bool($value)) {
                     $conf .= "$key = " . ($value ? 'true' : 'false') . "\n";
                 } elseif (is_int($value) || is_float($value)) {
                     $conf .= "$key = $value\n";
+                } elseif (is_null($value)) {
+                    // skip null values (use defaults)
+                    continue;
                 } else {
                     $conf .= "$key = " . self::_formatIniValue($value) . "\n";
                 }
