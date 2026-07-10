@@ -512,25 +512,29 @@ class Controller
             return;
         }
 
-        $users    = $this->_auth->listUsers();
-        $userData = array();
-        foreach ($users as $user) {
-            $userData[] = array(
-                'username'    => $user->getUsername(),
-                'role'        => $user->getRole(),
-                'is_active'   => $user->isActive(),
-                'is_approved' => $user->isApproved(),
-                'email'       => $user->getEmail(),
-                'created_at'  => $user->getCreatedAt(),
-                'last_login'  => $user->getLastLogin(),
-            );
-        }
+        try {
+            $users    = $this->_auth->listUsers();
+            $userData = array();
+            foreach ($users as $user) {
+                $userData[] = array(
+                    'username'    => $user->getUsername(),
+                    'role'        => $user->getRole(),
+                    'is_active'   => $user->isActive(),
+                    'is_approved' => $user->isApproved(),
+                    'email'       => $user->getEmail(),
+                    'created_at'  => $user->getCreatedAt(),
+                    'last_login'  => $user->getLastLogin(),
+                );
+            }
 
-        $result = array(
-            'status' => 0,
-            'users'  => $userData,
-        );
-        $this->_json = Json::encode($result);
+            $result = array(
+                'status' => 0,
+                'users'  => $userData,
+            );
+            $this->_json = Json::encode($result);
+        } catch (\Throwable $e) {
+            $this->_json_error('Error listing users: ' . $e->getMessage());
+        }
     }
 
     /**
@@ -755,33 +759,37 @@ class Controller
 
         if (!$this->_validateCsrf()) { return; }
 
-        $email       = $this->_request->getParam('email', null);
-        $newPassword = $this->_request->getParam('new_password', '');
-        $curPassword = $this->_request->getParam('current_password', '');
+        try {
+            $email       = $this->_request->getParam('email', null);
+            $newPassword = $this->_request->getParam('new_password', '');
+            $curPassword = $this->_request->getParam('current_password', '');
 
-        // if changing password, verify current password
-        if (!empty($newPassword)) {
-            if (!$currentUser->verifyPassword($curPassword)) {
-                $this->_json_error(I18n::_('Current password is incorrect.'));
-                return;
+            // if changing password, verify current password
+            if (!empty($newPassword)) {
+                if (!$currentUser->verifyPassword($curPassword)) {
+                    $this->_json_error(I18n::_('Current password is incorrect.'));
+                    return;
+                }
+                $result = $this->_auth->changePassword($currentUser->getUsername(), $newPassword);
+                if (!$result['success']) {
+                    $this->_json_error(I18n::_($result['message']));
+                    return;
+                }
             }
-            $result = $this->_auth->changePassword($currentUser->getUsername(), $newPassword);
-            if (!$result['success']) {
-                $this->_json_error(I18n::_($result['message']));
-                return;
+
+            // update email if provided
+            if ($email !== null) {
+                $result = $this->_auth->updateEmail($currentUser->getUsername(), (string) $email);
+                if (!$result['success']) {
+                    $this->_json_error(I18n::_($result['message']));
+                    return;
+                }
             }
+
+            $this->_json = Json::encode(array('status' => 0));
+        } catch (\Throwable $e) {
+            $this->_json_error('Profile update error: ' . $e->getMessage());
         }
-
-        // update email if provided
-        if ($email !== null) {
-            $result = $this->_auth->updateEmail($currentUser->getUsername(), $email);
-            if (!$result['success']) {
-                $this->_json_error(I18n::_($result['message']));
-                return;
-            }
-        }
-
-        $this->_json = Json::encode(array('status' => 0));
     }
 
     /**
