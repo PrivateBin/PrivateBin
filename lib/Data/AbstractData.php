@@ -195,4 +195,76 @@ abstract class AbstractData
         }
         return $created;
     }
+
+    /**
+     * Create a new user
+     *
+     * @access public
+     * @param  string $username
+     * @param  array  $userData
+     * @return bool
+     */
+    public function createUser(string $username, array $userData): bool
+    {
+        return false;
+    }
+
+    /**
+     * Read user data
+     *
+     * @access public
+     * @param  string $username
+     * @return array|null
+     */
+    public function readUser(string $username): ?array
+    {
+        return null;
+    }
+
+    /**
+     * Update user data
+     *
+     * @access public
+     * @param  string $username
+     * @param  array  $userData
+     * @return bool
+     */
+    public function updateUser(string $username, array $userData): bool
+    {
+        return false;
+    }
+
+    /**
+     * Delete a user
+     *
+     * @access public
+     * @param  string $username
+     * @return bool
+     */
+    public function deleteUser(string $username): bool
+    {
+        return false;
+    }
+
+    /**
+     * List all users
+     *
+     * @access public
+     * @return array
+     */
+    public function listUsers(): array
+    {
+        return array();
+    }
+
+    /**
+     * Check if any users exist
+     *
+     * @access public
+     * @return bool
+     */
+    public function hasUsers(): bool
+    {
+        return false;
+    }
 }
