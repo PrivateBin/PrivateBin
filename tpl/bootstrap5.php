@@ -660,6 +660,7 @@ if ($AUTH_ENABLED) :
 			'username'           => $AUTH_USER,
 			'role'               => $AUTH_ROLE,
 			'csrf'               => $AUTH_CSRF,
+			'forcePasswordChange' => (bool) ($AUTH_FORCE_PASSWORD_CHANGE ?? false),
 		)); ?></script>
 <?php
 endif;

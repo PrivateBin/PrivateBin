@@ -44,9 +44,26 @@ jQuery.PrivateBin.Auth = (function($) {
 
         me.renderAuthUI();
 
+        // check for password reset link in URL
+        var urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('reset_password')) {
+            var resetUser = urlParams.get('user');
+            var resetToken = urlParams.get('token');
+            if (resetUser && resetToken) {
+                me.showResetPasswordDialog(resetUser, resetToken);
+                return;
+            }
+        }
+
         // show setup dialog if no users exist yet
         if (config.needsSetup) {
             me.showSetupDialog();
+            return;
+        }
+
+        // show forced password change if needed
+        if (config.forcePasswordChange && currentUser) {
+            me.showForcePasswordChangeDialog();
             return;
         }
 
@@ -83,8 +100,8 @@ jQuery.PrivateBin.Auth = (function($) {
             }
             $authContainer.html(
                 adminLink +
-                '<li class="nav-item"><span class="nav-link text-muted" id="auth-username">' +
-                me.escapeHtml(currentUser.username) + '</span></li>' +
+                '<li class="nav-item"><a class="nav-link" href="#" id="auth-profile-btn">' +
+                me.escapeHtml(currentUser.username) + '</a></li>' +
                 '<li class="nav-item"><a class="nav-link" href="#" id="auth-logout-btn">Logout</a></li>'
             );
             $authContainer.find('#auth-logout-btn').on('click', function(e) {
@@ -94,6 +111,10 @@ jQuery.PrivateBin.Auth = (function($) {
             $authContainer.find('#auth-admin-btn').on('click', function(e) {
                 e.preventDefault();
                 me.showAdminPanel();
+            });
+            $authContainer.find('#auth-profile-btn').on('click', function(e) {
+                e.preventDefault();
+                me.showProfileDialog();
             });
         } else {
             $authContainer.html(
@@ -209,6 +230,7 @@ jQuery.PrivateBin.Auth = (function($) {
             '<input type="password" class="form-control" id="auth-password-input" required autocomplete="current-password"></div>' +
             '<button type="submit" class="btn btn-primary w-100">Login</button>' +
             '</form>' +
+            '<p class="mt-2 text-center"><a href="#" id="auth-forgot-password" class="small text-muted">Forgot password?</a></p>' +
             registrationHtml +
             '</div></div></div></div>';
 
@@ -231,6 +253,12 @@ jQuery.PrivateBin.Auth = (function($) {
             e.preventDefault();
             modal.hide();
             me.showRegisterDialog();
+        });
+
+        $('#auth-forgot-password').on('click', function(e) {
+            e.preventDefault();
+            modal.hide();
+            me.showForgotPasswordDialog();
         });
     };
 
@@ -639,9 +667,14 @@ jQuery.PrivateBin.Auth = (function($) {
         }, function(data) {
             csrfToken = data.csrf || '';
             currentUser = { username: data.username, role: data.role };
-            me.removeModal();
-            me.renderAuthUI();
-            window.location.reload();
+            if (data.force_password_change) {
+                me.removeModal();
+                me.showForcePasswordChangeDialog();
+            } else {
+                me.removeModal();
+                me.renderAuthUI();
+                window.location.reload();
+            }
         });
     };
 
@@ -695,6 +728,255 @@ jQuery.PrivateBin.Auth = (function($) {
     };
 
     /**
+     * Show user profile dialog (change email/password)
+     *
+     * @name Auth.showProfileDialog
+     * @function
+     */
+    me.showProfileDialog = function() {
+        var html = '<div class="modal fade" id="auth-modal" tabindex="-1">' +
+            '<div class="modal-dialog modal-sm">' +
+            '<div class="modal-content">' +
+            '<div class="modal-header"><h5 class="modal-title">My Profile</h5>' +
+            '<button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>' +
+            '<div class="modal-body">' +
+            '<div class="alert alert-danger d-none" id="auth-error"></div>' +
+            '<div class="alert alert-success d-none" id="auth-success"></div>' +
+            '<p class="text-muted mb-3">Username: <strong>' + me.escapeHtml(currentUser.username) + '</strong></p>' +
+            '<form id="auth-profile-form">' +
+            '<h6>Update Email</h6>' +
+            '<div class="mb-3"><label for="profile-email" class="form-label">Email address</label>' +
+            '<input type="email" class="form-control" id="profile-email" placeholder="your@email.com" autocomplete="email"></div>' +
+            '<hr>' +
+            '<h6>Change Password</h6>' +
+            '<div class="mb-3"><label for="profile-current-password" class="form-label">Current Password</label>' +
+            '<input type="password" class="form-control" id="profile-current-password" autocomplete="current-password"></div>' +
+            '<div class="mb-3"><label for="profile-new-password" class="form-label">New Password</label>' +
+            '<input type="password" class="form-control" id="profile-new-password" autocomplete="new-password">' +
+            '<div class="form-text">Minimum 8 characters. Leave blank to keep current password.</div></div>' +
+            '<div class="mb-3"><label for="profile-confirm-password" class="form-label">Confirm New Password</label>' +
+            '<input type="password" class="form-control" id="profile-confirm-password" autocomplete="new-password"></div>' +
+            '<button type="submit" class="btn btn-primary w-100">Save Changes</button>' +
+            '</form>' +
+            '</div></div></div></div>';
+
+        me.removeModal();
+        $('body').append(html);
+
+        var $modal = $('#auth-modal');
+        var modal = new bootstrap.Modal($modal[0]);
+        modal.show();
+
+        // load current email
+        me.apiCall({
+            auth_action: 'status'
+        }, function(data) {
+            if (data.email) {
+                $('#profile-email').val(data.email);
+            }
+        });
+
+        $('#auth-profile-form').on('submit', function(e) {
+            e.preventDefault();
+            var newPw = $('#profile-new-password').val();
+            var confirmPw = $('#profile-confirm-password').val();
+            var curPw = $('#profile-current-password').val();
+            var email = $('#profile-email').val();
+
+            if (newPw && newPw !== confirmPw) {
+                me.showError('Passwords do not match.');
+                return;
+            }
+
+            if (newPw && !curPw) {
+                me.showError('Current password is required to set a new password.');
+                return;
+            }
+
+            var data = {
+                auth_action: 'update_profile',
+                csrf_token: csrfToken,
+                email: email
+            };
+            if (newPw) {
+                data.current_password = curPw;
+                data.new_password = newPw;
+            }
+
+            me.apiCall(data, function() {
+                me.showSuccess('Profile updated successfully.');
+            });
+        });
+    };
+
+    /**
+     * Show forced password change dialog (after login with forced reset)
+     *
+     * @name Auth.showForcePasswordChangeDialog
+     * @function
+     */
+    me.showForcePasswordChangeDialog = function() {
+        var html = '<div class="modal fade" id="auth-modal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">' +
+            '<div class="modal-dialog modal-sm">' +
+            '<div class="modal-content">' +
+            '<div class="modal-header"><h5 class="modal-title">Password Change Required</h5></div>' +
+            '<div class="modal-body">' +
+            '<p class="text-muted">Your password has been reset. You must set a new password to continue.</p>' +
+            '<div class="alert alert-danger d-none" id="auth-error"></div>' +
+            '<form id="auth-force-password-form">' +
+            '<div class="mb-3"><label for="force-new-password" class="form-label">New Password</label>' +
+            '<input type="password" class="form-control" id="force-new-password" required autocomplete="new-password">' +
+            '<div class="form-text">Minimum 8 characters</div></div>' +
+            '<div class="mb-3"><label for="force-confirm-password" class="form-label">Confirm Password</label>' +
+            '<input type="password" class="form-control" id="force-confirm-password" required autocomplete="new-password"></div>' +
+            '<button type="submit" class="btn btn-primary w-100">Set New Password</button>' +
+            '</form>' +
+            '</div></div></div></div>';
+
+        me.removeModal();
+        $('body').append(html);
+
+        var $modal = $('#auth-modal');
+        var modal = new bootstrap.Modal($modal[0]);
+        modal.show();
+
+        $('#auth-force-password-form').on('submit', function(e) {
+            e.preventDefault();
+            var newPw = $('#force-new-password').val();
+            var confirmPw = $('#force-confirm-password').val();
+            if (newPw !== confirmPw) {
+                me.showError('Passwords do not match.');
+                return;
+            }
+            me.apiCall({
+                auth_action: 'change_password',
+                username: currentUser.username,
+                new_password: newPw,
+                current_password: '', // not needed for forced change
+                csrf_token: csrfToken
+            }, function() {
+                me.removeModal();
+                me.renderAuthUI();
+                window.location.reload();
+            });
+        });
+    };
+
+    /**
+     * Show forgot password dialog
+     *
+     * @name Auth.showForgotPasswordDialog
+     * @function
+     */
+    me.showForgotPasswordDialog = function() {
+        var html = '<div class="modal fade" id="auth-modal" tabindex="-1">' +
+            '<div class="modal-dialog modal-sm">' +
+            '<div class="modal-content">' +
+            '<div class="modal-header"><h5 class="modal-title">Forgot Password</h5>' +
+            '<button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>' +
+            '<div class="modal-body">' +
+            '<p class="text-muted">Enter your username. If an email address is associated with your account, you will receive a password reset link.</p>' +
+            '<div class="alert alert-danger d-none" id="auth-error"></div>' +
+            '<div class="alert alert-success d-none" id="auth-success"></div>' +
+            '<form id="auth-forgot-form">' +
+            '<div class="mb-3"><label for="forgot-username" class="form-label">Username</label>' +
+            '<input type="text" class="form-control" id="forgot-username" required autocomplete="username"></div>' +
+            '<button type="submit" class="btn btn-primary w-100">Send Reset Link</button>' +
+            '</form>' +
+            '<p class="mt-3 text-center"><a href="#" id="auth-back-to-login">Back to login</a></p>' +
+            '</div></div></div></div>';
+
+        me.removeModal();
+        $('body').append(html);
+
+        var $modal = $('#auth-modal');
+        var modal = new bootstrap.Modal($modal[0]);
+        modal.show();
+
+        $('#auth-forgot-form').on('submit', function(e) {
+            e.preventDefault();
+            var username = $('#forgot-username').val();
+            me.apiCall({
+                auth_action: 'forgot_password',
+                username: username
+            }, function() {
+                $('#auth-forgot-form').html(
+                    '<div class="alert alert-success">' +
+                    'If your account has an email address on file, a password reset link has been sent. ' +
+                    'Please check your inbox.</div>'
+                );
+            });
+        });
+
+        $('#auth-back-to-login').on('click', function(e) {
+            e.preventDefault();
+            modal.hide();
+            me.showLoginDialog();
+        });
+    };
+
+    /**
+     * Show reset password dialog (from email link with token)
+     *
+     * @name Auth.showResetPasswordDialog
+     * @function
+     * @param {string} username
+     * @param {string} token
+     */
+    me.showResetPasswordDialog = function(username, token) {
+        var html = '<div class="modal fade" id="auth-modal" tabindex="-1" data-bs-backdrop="static">' +
+            '<div class="modal-dialog modal-sm">' +
+            '<div class="modal-content">' +
+            '<div class="modal-header"><h5 class="modal-title">Reset Password</h5></div>' +
+            '<div class="modal-body">' +
+            '<p class="text-muted">Set a new password for <strong>' + me.escapeHtml(username) + '</strong>.</p>' +
+            '<div class="alert alert-danger d-none" id="auth-error"></div>' +
+            '<form id="auth-reset-form">' +
+            '<div class="mb-3"><label for="reset-new-password" class="form-label">New Password</label>' +
+            '<input type="password" class="form-control" id="reset-new-password" required autocomplete="new-password">' +
+            '<div class="form-text">Minimum 8 characters</div></div>' +
+            '<div class="mb-3"><label for="reset-confirm-password" class="form-label">Confirm Password</label>' +
+            '<input type="password" class="form-control" id="reset-confirm-password" required autocomplete="new-password"></div>' +
+            '<button type="submit" class="btn btn-primary w-100">Reset Password</button>' +
+            '</form>' +
+            '</div></div></div></div>';
+
+        me.removeModal();
+        $('body').append(html);
+
+        var $modal = $('#auth-modal');
+        var modal = new bootstrap.Modal($modal[0]);
+        modal.show();
+
+        $('#auth-reset-form').on('submit', function(e) {
+            e.preventDefault();
+            var newPw = $('#reset-new-password').val();
+            var confirmPw = $('#reset-confirm-password').val();
+            if (newPw !== confirmPw) {
+                me.showError('Passwords do not match.');
+                return;
+            }
+            me.apiCall({
+                auth_action: 'reset_password',
+                username: username,
+                token: token,
+                new_password: newPw
+            }, function() {
+                me.removeModal();
+                var alertHtml = '<div class="alert alert-success mt-3 text-center">' +
+                    '<strong>Password reset successful!</strong><br>' +
+                    'You can now <a href="#" id="auth-reset-login">log in</a> with your new password.</div>';
+                $('body').append(alertHtml);
+                $('#auth-reset-login').on('click', function(ev) {
+                    ev.preventDefault();
+                    $(this).closest('.alert').remove();
+                    me.showLoginDialog();
+                });
+            });
+        });
+    };
+
+    /**
      * Load users list (admin)
      *
      * @name Auth.loadUsers
@@ -744,6 +1026,8 @@ jQuery.PrivateBin.Auth = (function($) {
                         table += '<button class="btn btn-xs btn-outline-success admin-approve-user" data-username="' + me.escapeHtml(u.username) + '" title="Approve">&#x2714;</button> ';
                         table += '<button class="btn btn-xs btn-outline-danger admin-reject-user" data-username="' + me.escapeHtml(u.username) + '" title="Reject">&#x2716;</button> ';
                     } else {
+                        table += '<button class="btn btn-xs btn-outline-warning admin-reset-pw" data-username="' + me.escapeHtml(u.username) + '" title="Reset Password">&#x1F511;</button> ';
+                        table += '<button class="btn btn-xs btn-outline-info admin-set-email" data-username="' + me.escapeHtml(u.username) + '" data-email="' + me.escapeHtml(u.email || '') + '" title="Set Email">&#x2709;</button> ';
                         table += '<button class="btn btn-xs btn-outline-danger admin-delete-user" data-username="' + me.escapeHtml(u.username) + '" title="Delete">&#x1F5D1;</button> ';
                         table += '<button class="btn btn-xs btn-outline-secondary admin-toggle-active" data-username="' + me.escapeHtml(u.username) + '" data-active="' + (u.is_active ? '0' : '1') + '" title="' + (u.is_active ? 'Disable' : 'Enable') + '">' + (u.is_active ? '&#x23F8;' : '&#x25B6;') + '</button>';
                     }
@@ -778,6 +1062,17 @@ jQuery.PrivateBin.Auth = (function($) {
                 if (confirm('Reject and delete user "' + username + '"? This cannot be undone.')) {
                     me.adminRejectUser(username);
                 }
+            });
+
+            $list.find('.admin-reset-pw').on('click', function() {
+                var username = $(this).data('username');
+                me.showAdminResetPasswordDialog(username);
+            });
+
+            $list.find('.admin-set-email').on('click', function() {
+                var username = $(this).data('username');
+                var currentEmail = $(this).data('email') || '';
+                me.showAdminSetEmailDialog(username, currentEmail);
             });
         });
     };
@@ -875,6 +1170,53 @@ jQuery.PrivateBin.Auth = (function($) {
             csrf_token: csrfToken
         }, function() {
             me.showSuccess('User "' + username + '" rejected and removed.');
+            me.loadUsers();
+        });
+    };
+
+    /**
+     * Show admin reset password dialog
+     *
+     * @name Auth.showAdminResetPasswordDialog
+     * @function
+     * @param {string} username
+     */
+    me.showAdminResetPasswordDialog = function(username) {
+        var newPw = prompt('Enter a temporary password for "' + username + '".\nThe user will be forced to change it on next login.\n\nMinimum 8 characters:');
+        if (!newPw) { return; }
+        if (newPw.length < 8) {
+            alert('Password must be at least 8 characters.');
+            return;
+        }
+        me.apiCall({
+            auth_action: 'admin_reset_password',
+            username: username,
+            new_password: newPw,
+            csrf_token: csrfToken
+        }, function() {
+            me.showSuccess('Password reset for "' + username + '". User will be forced to change it on next login.');
+            me.loadUsers();
+        });
+    };
+
+    /**
+     * Show admin set email dialog
+     *
+     * @name Auth.showAdminSetEmailDialog
+     * @function
+     * @param {string} username
+     * @param {string} currentEmail
+     */
+    me.showAdminSetEmailDialog = function(username, currentEmail) {
+        var newEmail = prompt('Set email address for "' + username + '":', currentEmail);
+        if (newEmail === null) { return; }
+        me.apiCall({
+            auth_action: 'admin_update_email',
+            username: username,
+            email: newEmail,
+            csrf_token: csrfToken
+        }, function() {
+            me.showSuccess('Email updated for "' + username + '".');
             me.loadUsers();
         });
     };

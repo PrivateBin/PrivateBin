@@ -342,6 +342,21 @@ class Controller
             case 'reject_user':
                 $this->_authRejectUser();
                 break;
+            case 'update_profile':
+                $this->_authUpdateProfile();
+                break;
+            case 'admin_reset_password':
+                $this->_authAdminResetPassword();
+                break;
+            case 'admin_update_email':
+                $this->_authAdminUpdateEmail();
+                break;
+            case 'forgot_password':
+                $this->_authForgotPassword();
+                break;
+            case 'reset_password':
+                $this->_authResetPassword();
+                break;
             case 'get_settings':
                 $this->_authGetSettings();
                 break;
@@ -393,13 +408,16 @@ class Controller
         $result = $this->_auth->login($username, $password);
         if ($result['success']) {
             $user       = $this->_auth->getCurrentUser();
-            $result = array(
+            $response = array(
                 'status'   => 0,
                 'username' => $user->getUsername(),
                 'role'     => $user->getRole(),
                 'csrf'     => $this->_auth->getSession()->getCsrfToken(),
             );
-            $this->_json = Json::encode($result);
+            if (!empty($result['force_password_change'])) {
+                $response['force_password_change'] = true;
+            }
+            $this->_json = Json::encode($response);
         } else {
             $this->_json_error(I18n::_($result['message']));
         }
@@ -468,7 +486,9 @@ class Controller
                 'loggedin' => true,
                 'username' => $user->getUsername(),
                 'role'     => $user->getRole(),
+                'email'    => $user->getEmail(),
                 'csrf'     => $this->_auth->getSession()->getCsrfToken(),
+                'force_password_change' => $user->isForcePasswordChange(),
             );
             $this->_json = Json::encode($result);
         } else {
@@ -596,11 +616,15 @@ class Controller
             return;
         }
 
-        // for own password change, verify current password
-        if ($currentUser->getUsername() === $username) {
+        // for own password change, verify current password (skip if forced change)
+        if ($currentUser->getUsername() === $username && !$currentUser->isForcePasswordChange()) {
             $currentPassword = $this->_request->getParam('current_password', '');
-            if (!$currentUser->verifyPassword($currentPassword)) {
+            if (!empty($currentPassword) && !$currentUser->verifyPassword($currentPassword)) {
                 $this->_json_error(I18n::_('Current password is incorrect.'));
+                return;
+            }
+            if (empty($currentPassword)) {
+                $this->_json_error(I18n::_('Current password is required.'));
                 return;
             }
         }
@@ -711,6 +735,143 @@ class Controller
         if ($result['success']) {
             $result = array('status' => 0);
             $this->_json = Json::encode($result);
+        } else {
+            $this->_json_error(I18n::_($result['message']));
+        }
+    }
+
+    /**
+     * Update current user's profile (email, password)
+     *
+     * @access private
+     */
+    private function _authUpdateProfile(): void
+    {
+        $currentUser = $this->_auth->getCurrentUser();
+        if ($currentUser === null) {
+            $this->_json_error(I18n::_('Authentication required.'));
+            return;
+        }
+
+        if (!$this->_validateCsrf()) { return; }
+
+        $email       = $this->_request->getParam('email', null);
+        $newPassword = $this->_request->getParam('new_password', '');
+        $curPassword = $this->_request->getParam('current_password', '');
+
+        // if changing password, verify current password
+        if (!empty($newPassword)) {
+            if (!$currentUser->verifyPassword($curPassword)) {
+                $this->_json_error(I18n::_('Current password is incorrect.'));
+                return;
+            }
+            $result = $this->_auth->changePassword($currentUser->getUsername(), $newPassword);
+            if (!$result['success']) {
+                $this->_json_error(I18n::_($result['message']));
+                return;
+            }
+        }
+
+        // update email if provided
+        if ($email !== null) {
+            $result = $this->_auth->updateEmail($currentUser->getUsername(), $email);
+            if (!$result['success']) {
+                $this->_json_error(I18n::_($result['message']));
+                return;
+            }
+        }
+
+        $this->_json = Json::encode(array('status' => 0));
+    }
+
+    /**
+     * Admin: reset a user's password (forces change on next login)
+     *
+     * @access private
+     */
+    private function _authAdminResetPassword(): void
+    {
+        if (!$this->_isAdmin()) {
+            $this->_json_error(I18n::_('Admin access required.'));
+            return;
+        }
+
+        if (!$this->_validateCsrf()) { return; }
+
+        $username    = $this->_request->getParam('username', '');
+        $newPassword = $this->_request->getParam('new_password', '');
+
+        $result = $this->_auth->adminResetPassword($username, $newPassword);
+        if ($result['success']) {
+            $this->_json = Json::encode(array('status' => 0));
+        } else {
+            $this->_json_error(I18n::_($result['message']));
+        }
+    }
+
+    /**
+     * Admin: update a user's email address
+     *
+     * @access private
+     */
+    private function _authAdminUpdateEmail(): void
+    {
+        if (!$this->_isAdmin()) {
+            $this->_json_error(I18n::_('Admin access required.'));
+            return;
+        }
+
+        if (!$this->_validateCsrf()) { return; }
+
+        $username = $this->_request->getParam('username', '');
+        $email    = $this->_request->getParam('email', '');
+
+        $result = $this->_auth->updateEmail($username, $email);
+        if ($result['success']) {
+            $this->_json = Json::encode(array('status' => 0));
+        } else {
+            $this->_json_error(I18n::_($result['message']));
+        }
+    }
+
+    /**
+     * Handle forgot password request (sends reset token via email)
+     *
+     * @access private
+     */
+    private function _authForgotPassword(): void
+    {
+        $username = $this->_request->getParam('username', '');
+
+        if (empty($username)) {
+            $this->_json_error(I18n::_('Username is required.'));
+            return;
+        }
+
+        // always return success to prevent user enumeration
+        $this->_auth->generateResetToken($username);
+        $this->_json = Json::encode(array('status' => 0));
+    }
+
+    /**
+     * Handle password reset with token
+     *
+     * @access private
+     */
+    private function _authResetPassword(): void
+    {
+        $username    = $this->_request->getParam('username', '');
+        $token       = $this->_request->getParam('token', '');
+        $newPassword = $this->_request->getParam('new_password', '');
+
+        if (empty($username) || empty($token) || empty($newPassword)) {
+            $this->_json_error(I18n::_('All fields are required.'));
+            return;
+        }
+
+        $result = $this->_auth->resetPasswordWithToken($username, $token, $newPassword);
+        if ($result['success']) {
+            $this->_json = Json::encode(array('status' => 0));
         } else {
             $this->_json_error(I18n::_($result['message']));
         }
@@ -1106,6 +1267,7 @@ class Controller
         $page->assign('AUTH_USER', $currentUser ? $currentUser->getUsername() : '');
         $page->assign('AUTH_ROLE', $currentUser ? $currentUser->getRole() : '');
         $page->assign('AUTH_CSRF', $this->_auth->getSession()->getCsrfToken());
+        $page->assign('AUTH_FORCE_PASSWORD_CHANGE', $currentUser ? $currentUser->isForcePasswordChange() : false);
 
         $page->draw(TemplateSwitcher::getTemplate());
     }

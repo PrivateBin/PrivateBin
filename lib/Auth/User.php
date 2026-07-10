@@ -81,6 +81,30 @@ class User
     private $_email;
 
     /**
+     * whether user must change password on next login
+     *
+     * @access private
+     * @var bool
+     */
+    private $_forcePasswordChange;
+
+    /**
+     * password reset token (hashed)
+     *
+     * @access private
+     * @var string
+     */
+    private $_resetToken;
+
+    /**
+     * password reset token expiry timestamp
+     *
+     * @access private
+     * @var int
+     */
+    private $_resetTokenExpires;
+
+    /**
      * creation timestamp
      *
      * @access private
@@ -115,16 +139,22 @@ class User
         int $createdAt = 0,
         int $lastLogin = 0,
         bool $isApproved = true,
-        string $email = ''
+        string $email = '',
+        bool $forcePasswordChange = false,
+        string $resetToken = '',
+        int $resetTokenExpires = 0
     ) {
-        $this->_username     = $username;
-        $this->_passwordHash = $passwordHash;
-        $this->_role         = $role;
-        $this->_isActive     = $isActive;
-        $this->_createdAt    = $createdAt ?: time();
-        $this->_lastLogin    = $lastLogin;
-        $this->_isApproved   = $isApproved;
-        $this->_email        = $email;
+        $this->_username            = $username;
+        $this->_passwordHash        = $passwordHash;
+        $this->_role                = $role;
+        $this->_isActive            = $isActive;
+        $this->_createdAt           = $createdAt ?: time();
+        $this->_lastLogin           = $lastLogin;
+        $this->_isApproved          = $isApproved;
+        $this->_email               = $email;
+        $this->_forcePasswordChange = $forcePasswordChange;
+        $this->_resetToken          = $resetToken;
+        $this->_resetTokenExpires   = $resetTokenExpires;
     }
 
     /**
@@ -307,6 +337,72 @@ class User
     }
 
     /**
+     * Check if password change is forced
+     *
+     * @access public
+     * @return bool
+     */
+    public function isForcePasswordChange(): bool
+    {
+        return $this->_forcePasswordChange;
+    }
+
+    /**
+     * Set force password change flag
+     *
+     * @access public
+     * @param bool $force
+     */
+    public function setForcePasswordChange(bool $force): void
+    {
+        $this->_forcePasswordChange = $force;
+    }
+
+    /**
+     * Get reset token hash
+     *
+     * @access public
+     * @return string
+     */
+    public function getResetToken(): string
+    {
+        return $this->_resetToken;
+    }
+
+    /**
+     * Set reset token (stores hash)
+     *
+     * @access public
+     * @param string $tokenHash
+     */
+    public function setResetToken(string $tokenHash): void
+    {
+        $this->_resetToken = $tokenHash;
+    }
+
+    /**
+     * Get reset token expiry timestamp
+     *
+     * @access public
+     * @return int
+     */
+    public function getResetTokenExpires(): int
+    {
+        return $this->_resetTokenExpires;
+    }
+
+    /**
+     * Set reset token expiry
+     *
+     * @access public
+     * @param int $expires
+     */
+    public function setResetTokenExpires(int $expires): void
+    {
+        $this->_resetTokenExpires = $expires;
+    }
+
+    /**
      * Serialize user to array for storage
      *
      * @access public
@@ -315,14 +411,17 @@ class User
     public function toArray(): array
     {
         return array(
-            'username'      => $this->_username,
-            'password_hash' => $this->_passwordHash,
-            'role'          => $this->_role,
-            'is_active'     => $this->_isActive,
-            'created_at'    => $this->_createdAt,
-            'last_login'    => $this->_lastLogin,
-            'is_approved'   => $this->_isApproved,
-            'email'         => $this->_email,
+            'username'              => $this->_username,
+            'password_hash'         => $this->_passwordHash,
+            'role'                  => $this->_role,
+            'is_active'             => $this->_isActive,
+            'created_at'            => $this->_createdAt,
+            'last_login'            => $this->_lastLogin,
+            'is_approved'           => $this->_isApproved,
+            'email'                 => $this->_email,
+            'force_password_change' => $this->_forcePasswordChange,
+            'reset_token'           => $this->_resetToken,
+            'reset_token_expires'   => $this->_resetTokenExpires,
         );
     }
 
@@ -344,7 +443,10 @@ class User
             $data['created_at'] ?? 0,
             $data['last_login'] ?? 0,
             $data['is_approved'] ?? true,
-            $data['email'] ?? ''
+            $data['email'] ?? '',
+            $data['force_password_change'] ?? false,
+            $data['reset_token'] ?? '',
+            $data['reset_token_expires'] ?? 0
         );
     }
 

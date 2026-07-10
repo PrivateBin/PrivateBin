@@ -778,6 +778,9 @@ class Database extends AbstractData
             '"is_active" INT NOT NULL DEFAULT 1, ' .
             '"is_approved" INT NOT NULL DEFAULT 1, ' .
             "\"email\" $usernameType DEFAULT '', " .
+            '"force_password_change" INT NOT NULL DEFAULT 0, ' .
+            "\"reset_token\" $usernameType DEFAULT '', " .
+            '"reset_token_expires" INT NOT NULL DEFAULT 0, ' .
             '"created_at" INT NOT NULL DEFAULT 0, ' .
             "\"last_login\" INT NOT NULL DEFAULT 0$after_key )"
         );
@@ -882,6 +885,36 @@ class Database extends AbstractData
                 // column may already exist
             }
         }
+
+        if (!in_array('force_password_change', $columns)) {
+            try {
+                $this->_db->exec(
+                    'ALTER TABLE "' . $tableName . '" ADD COLUMN "force_password_change" INT NOT NULL DEFAULT 0'
+                );
+            } catch (\PDOException $e) {
+                // column may already exist
+            }
+        }
+
+        if (!in_array('reset_token', $columns)) {
+            try {
+                $this->_db->exec(
+                    'ALTER TABLE "' . $tableName . '" ADD COLUMN "reset_token" ' . $usernameType . " DEFAULT ''"
+                );
+            } catch (\PDOException $e) {
+                // column may already exist
+            }
+        }
+
+        if (!in_array('reset_token_expires', $columns)) {
+            try {
+                $this->_db->exec(
+                    'ALTER TABLE "' . $tableName . '" ADD COLUMN "reset_token_expires" INT NOT NULL DEFAULT 0'
+                );
+            } catch (\PDOException $e) {
+                // column may already exist
+            }
+        }
     }
 
     /**
@@ -895,7 +928,7 @@ class Database extends AbstractData
         try {
             return $this->_exec(
                 'INSERT INTO "' . $this->_sanitizeIdentifier('user') .
-                '" ("username","password_hash","role","is_active","is_approved","email","created_at","last_login") VALUES(?,?,?,?,?,?,?,?)',
+                '" ("username","password_hash","role","is_active","is_approved","email","force_password_change","reset_token","reset_token_expires","created_at","last_login") VALUES(?,?,?,?,?,?,?,?,?,?,?)',
                 array(
                     $username,
                     $userData['password_hash'],
@@ -903,6 +936,9 @@ class Database extends AbstractData
                     $userData['is_active'] ? 1 : 0,
                     ($userData['is_approved'] ?? true) ? 1 : 0,
                     $userData['email'] ?? '',
+                    ($userData['force_password_change'] ?? false) ? 1 : 0,
+                    $userData['reset_token'] ?? '',
+                    $userData['reset_token_expires'] ?? 0,
                     $userData['created_at'] ?? time(),
                     $userData['last_login'] ?? 0,
                 )
@@ -930,11 +966,14 @@ class Database extends AbstractData
                 true
             );
             if ($row) {
-                $row['is_active']   = (bool) $row['is_active'];
-                $row['is_approved'] = isset($row['is_approved']) ? (bool) $row['is_approved'] : true;
-                $row['email']       = $row['email'] ?? '';
-                $row['created_at']  = (int) $row['created_at'];
-                $row['last_login']  = (int) $row['last_login'];
+                $row['is_active']             = (bool) $row['is_active'];
+                $row['is_approved']           = isset($row['is_approved']) ? (bool) $row['is_approved'] : true;
+                $row['email']                 = $row['email'] ?? '';
+                $row['force_password_change'] = isset($row['force_password_change']) ? (bool) $row['force_password_change'] : false;
+                $row['reset_token']           = $row['reset_token'] ?? '';
+                $row['reset_token_expires']   = (int) ($row['reset_token_expires'] ?? 0);
+                $row['created_at']            = (int) $row['created_at'];
+                $row['last_login']            = (int) $row['last_login'];
                 return $row;
             }
         } catch (\PDOException $e) {
@@ -956,13 +995,16 @@ class Database extends AbstractData
         try {
             return $this->_exec(
                 'UPDATE "' . $this->_sanitizeIdentifier('user') .
-                '" SET "password_hash" = ?, "role" = ?, "is_active" = ?, "is_approved" = ?, "email" = ?, "last_login" = ? WHERE "username" = ?',
+                '" SET "password_hash" = ?, "role" = ?, "is_active" = ?, "is_approved" = ?, "email" = ?, "force_password_change" = ?, "reset_token" = ?, "reset_token_expires" = ?, "last_login" = ? WHERE "username" = ?',
                 array(
                     $userData['password_hash'],
                     $userData['role'],
                     $userData['is_active'] ? 1 : 0,
                     ($userData['is_approved'] ?? true) ? 1 : 0,
                     $userData['email'] ?? '',
+                    ($userData['force_password_change'] ?? false) ? 1 : 0,
+                    $userData['reset_token'] ?? '',
+                    $userData['reset_token_expires'] ?? 0,
                     $userData['last_login'] ?? 0,
                     $username,
                 )

@@ -203,6 +203,11 @@ class Auth
         $this->_session->create($username);
         $this->_currentUser = $user;
 
+        // check if password change is forced
+        if ($user->isForcePasswordChange()) {
+            return array('success' => true, 'force_password_change' => true);
+        }
+
         return array('success' => true);
     }
 
@@ -283,7 +288,138 @@ class Auth
     }
 
     /**
-     * Update a user's password
+     * Update the current user's email address
+     *
+     * @access public
+     * @param string $username
+     * @param string $email
+     * @return array result with 'success' bool and optional 'message'
+     */
+    public function updateEmail(string $username, string $email): array
+    {
+        $user = $this->_loadUser($username);
+        if ($user === null) {
+            return array('success' => false, 'message' => 'User not found.');
+        }
+
+        if (!empty($email) && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return array('success' => false, 'message' => 'Invalid email address.');
+        }
+
+        $user->setEmail($email);
+        $this->_saveUser($user);
+
+        return array('success' => true);
+    }
+
+    /**
+     * Admin: force a password reset for a user (sets a temporary password and forces change on next login)
+     *
+     * @access public
+     * @param string $username
+     * @param string $newPassword temporary password
+     * @return array result with 'success' bool and optional 'message'
+     */
+    public function adminResetPassword(string $username, string $newPassword): array
+    {
+        if (!User::isValidPassword($newPassword)) {
+            return array('success' => false, 'message' => 'Password must be at least 8 characters long.');
+        }
+
+        $user = $this->_loadUser($username);
+        if ($user === null) {
+            return array('success' => false, 'message' => 'User not found.');
+        }
+
+        $user->setPassword($newPassword);
+        $user->setForcePasswordChange(true);
+        $this->_saveUser($user);
+
+        // notify user if they have an email
+        $this->_notifyUserPasswordReset($user);
+
+        return array('success' => true);
+    }
+
+    /**
+     * Generate a password reset token and send it via email
+     *
+     * @access public
+     * @param string $username
+     * @return array result with 'success' bool and optional 'message'
+     */
+    public function generateResetToken(string $username): array
+    {
+        $user = $this->_loadUser($username);
+        if ($user === null) {
+            // don't reveal whether user exists
+            return array('success' => true);
+        }
+
+        if (empty($user->getEmail())) {
+            // can't send token without email — but don't reveal this
+            return array('success' => true);
+        }
+
+        if (!$user->isActive() || !$user->isApproved()) {
+            return array('success' => true);
+        }
+
+        // generate a secure random token
+        $token = bin2hex(random_bytes(32));
+        $tokenHash = hash('sha256', $token);
+
+        // token expires in 1 hour
+        $user->setResetToken($tokenHash);
+        $user->setResetTokenExpires(time() + 3600);
+        $this->_saveUser($user);
+
+        // send email with reset link
+        $this->_sendPasswordResetEmail($user, $token);
+
+        return array('success' => true);
+    }
+
+    /**
+     * Reset password using a token (from forgot password email)
+     *
+     * @access public
+     * @param string $username
+     * @param string $token
+     * @param string $newPassword
+     * @return array result with 'success' bool and optional 'message'
+     */
+    public function resetPasswordWithToken(string $username, string $token, string $newPassword): array
+    {
+        if (!User::isValidPassword($newPassword)) {
+            return array('success' => false, 'message' => 'Password must be at least 8 characters long.');
+        }
+
+        $user = $this->_loadUser($username);
+        if ($user === null) {
+            return array('success' => false, 'message' => 'Invalid or expired reset link.');
+        }
+
+        $tokenHash = hash('sha256', $token);
+        if (empty($user->getResetToken()) || !hash_equals($user->getResetToken(), $tokenHash)) {
+            return array('success' => false, 'message' => 'Invalid or expired reset link.');
+        }
+
+        if ($user->getResetTokenExpires() < time()) {
+            return array('success' => false, 'message' => 'Reset link has expired. Please request a new one.');
+        }
+
+        $user->setPassword($newPassword);
+        $user->setForcePasswordChange(false);
+        $user->setResetToken('');
+        $user->setResetTokenExpires(0);
+        $this->_saveUser($user);
+
+        return array('success' => true);
+    }
+
+    /**
+     * Change password and clear force_password_change flag
      *
      * @access public
      * @param string $username
@@ -302,6 +438,9 @@ class Auth
         }
 
         $user->setPassword($newPassword);
+        $user->setForcePasswordChange(false);
+        $user->setResetToken('');
+        $user->setResetTokenExpires(0);
         $this->_saveUser($user);
 
         return array('success' => true);
@@ -720,6 +859,63 @@ class Auth
         $body    = "Hello " . $user->getUsername() . ",\n\n";
         $body   .= "Unfortunately, your registration on " . $siteName . " has been declined.\n";
         $body   .= "If you believe this is an error, please contact the administrator.";
+
+        $this->_sendEmail($userEmail, $subject, $body);
+    }
+
+    /**
+     * Notify user that their password has been reset by an admin
+     *
+     * @access private
+     * @param User $user
+     */
+    private function _notifyUserPasswordReset(User $user): void
+    {
+        $userEmail = $user->getEmail();
+        if (empty($userEmail)) {
+            return;
+        }
+
+        $siteName = $this->_conf->getKey('name', 'main') ?: 'PrivateBin';
+        $basepath = $this->_conf->getKey('basepath', 'main') ?: '';
+
+        $subject = '[' . $siteName . '] Your password has been reset';
+        $body    = "Hello " . $user->getUsername() . ",\n\n";
+        $body   .= "An administrator has reset your password on " . $siteName . ".\n";
+        $body   .= "You will be required to set a new password when you next log in.\n";
+        if ($basepath) {
+            $body .= "\nLogin at: " . $basepath . "\n";
+        }
+
+        $this->_sendEmail($userEmail, $subject, $body);
+    }
+
+    /**
+     * Send password reset email with token link
+     *
+     * @access private
+     * @param User $user
+     * @param string $token plain-text token (not hashed)
+     */
+    private function _sendPasswordResetEmail(User $user, string $token): void
+    {
+        $userEmail = $user->getEmail();
+        if (empty($userEmail)) {
+            return;
+        }
+
+        $siteName = $this->_conf->getKey('name', 'main') ?: 'PrivateBin';
+        $basepath = $this->_conf->getKey('basepath', 'main') ?: '';
+
+        $resetLink = $basepath . '?reset_password&user=' . urlencode($user->getUsername()) . '&token=' . $token;
+
+        $subject = '[' . $siteName . '] Password reset request';
+        $body    = "Hello " . $user->getUsername() . ",\n\n";
+        $body   .= "A password reset was requested for your account on " . $siteName . ".\n\n";
+        $body   .= "Click the following link to reset your password:\n";
+        $body   .= $resetLink . "\n\n";
+        $body   .= "This link will expire in 1 hour.\n\n";
+        $body   .= "If you did not request this, you can safely ignore this email.";
 
         $this->_sendEmail($userEmail, $subject, $body);
     }
