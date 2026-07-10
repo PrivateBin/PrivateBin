@@ -267,4 +267,51 @@ abstract class AbstractData
     {
         return false;
     }
+
+    /**
+     * Create a user session record
+     *
+     * @access public
+     * @param  string $sessionId
+     * @param  array  $sessionData
+     * @return bool
+     */
+    public function createSession(string $sessionId, array $sessionData): bool
+    {
+        return false;
+    }
+
+    /**
+     * Read a user session record
+     *
+     * @access public
+     * @param  string $sessionId
+     * @return array|null
+     */
+    public function readSession(string $sessionId): ?array
+    {
+        return null;
+    }
+
+    /**
+     * Delete a user session
+     *
+     * @access public
+     * @param  string $sessionId
+     * @return bool
+     */
+    public function deleteSession(string $sessionId): bool
+    {
+        return false;
+    }
+
+    /**
+     * Purge expired user sessions
+     *
+     * @access public
+     * @return void
+     */
+    public function purgeExpiredSessions(): void
+    {
+    }
 }
