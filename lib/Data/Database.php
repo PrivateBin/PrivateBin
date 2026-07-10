@@ -127,6 +127,16 @@ class Database extends AbstractData
                 $db_version = $this->_getConfig('VERSION');
             }
 
+            // create user table if necessary (for built-in auth)
+            if (!in_array($this->_sanitizeIdentifier('user'), $tables)) {
+                $this->_createUserTable();
+            }
+
+            // create user_session table if necessary (for built-in auth)
+            if (!in_array($this->_sanitizeIdentifier('user_session'), $tables)) {
+                $this->_createUserSessionTable();
+            }
+
             // update database structure if necessary
             if (version_compare($db_version, Controller::VERSION, '<')) {
                 $this->_upgradeDatabase($db_version);
@@ -745,6 +755,322 @@ class Database extends AbstractData
             '" VALUES(?,?)',
             array('VERSION', Controller::VERSION)
         );
+    }
+
+    /**
+     * create the user table for built-in authentication
+     *
+     * @access private
+     */
+    private function _createUserTable()
+    {
+        list($main_key, $after_key) = $this->_getPrimaryKeyClauses('username');
+        $metaType                   = $this->_getMetaType();
+        $usernameType               = $this->_type === 'oci' ? 'VARCHAR2(255)' : 'VARCHAR(255)';
+        $this->_db->exec(
+            'CREATE TABLE "' . $this->_sanitizeIdentifier('user') . '" ( ' .
+            "\"username\" $usernameType NOT NULL$main_key, " .
+            "\"password_hash\" $usernameType NOT NULL, " .
+            '"role" VARCHAR(20) NOT NULL DEFAULT \'user\', ' .
+            '"is_active" INT NOT NULL DEFAULT 1, ' .
+            '"created_at" INT NOT NULL DEFAULT 0, ' .
+            "\"last_login\" INT NOT NULL DEFAULT 0$after_key )"
+        );
+    }
+
+    /**
+     * create the user session table for built-in authentication
+     *
+     * @access private
+     */
+    private function _createUserSessionTable()
+    {
+        list($main_key, $after_key) = $this->_getPrimaryKeyClauses('id');
+        $metaType                   = $this->_getMetaType();
+        $idType                     = $this->_type === 'oci' ? 'VARCHAR2(64)' : 'VARCHAR(64)';
+        $usernameType               = $this->_type === 'oci' ? 'VARCHAR2(255)' : 'VARCHAR(255)';
+        $this->_db->exec(
+            'CREATE TABLE "' . $this->_sanitizeIdentifier('user_session') . '" ( ' .
+            "\"id\" $idType NOT NULL$main_key, " .
+            "\"username\" $usernameType NOT NULL, " .
+            '"created_at" INT NOT NULL DEFAULT 0, ' .
+            '"expires_at" INT NOT NULL DEFAULT 0, ' .
+            "\"ip_hash\" $idType$after_key )"
+        );
+        if ($this->_type === 'oci') {
+            $this->_db->exec(
+                'declare
+                    already_exists  exception;
+                    columns_indexed exception;
+                    pragma exception_init( already_exists, -955 );
+                    pragma exception_init(columns_indexed, -1408);
+                begin
+                    execute immediate \'create index "user_session_expires" on "' . $this->_sanitizeIdentifier('user_session') . '" ("expires_at")\';
+                exception
+                    when already_exists or columns_indexed then
+                    NULL;
+                end;'
+            );
+        } else {
+            $this->_db->exec(
+                'CREATE INDEX "' .
+                $this->_sanitizeIdentifier('user_session_expires') . '" ON "' .
+                $this->_sanitizeIdentifier('user_session') . '" ("expires_at")'
+            );
+        }
+    }
+
+    /**
+     * Create a user record
+     *
+     * @access public
+     * @param  string $username
+     * @param  array  $userData
+     * @return bool
+     */
+    public function createUser(string $username, array $userData): bool
+    {
+        try {
+            return $this->_exec(
+                'INSERT INTO "' . $this->_sanitizeIdentifier('user') .
+                '" ("username","password_hash","role","is_active","created_at","last_login") VALUES(?,?,?,?,?,?)',
+                array(
+                    $username,
+                    $userData['password_hash'],
+                    $userData['role'] ?? 'user',
+                    $userData['is_active'] ? 1 : 0,
+                    $userData['created_at'] ?? time(),
+                    $userData['last_login'] ?? 0,
+                )
+            );
+        } catch (\PDOException $e) {
+            error_log('Error creating user: ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Read a user record
+     *
+     * @access public
+     * @param  string $username
+     * @return array|null
+     */
+    public function readUser(string $username): ?array
+    {
+        try {
+            $row = $this->_select(
+                'SELECT * FROM "' . $this->_sanitizeIdentifier('user') .
+                '" WHERE "username" = ?',
+                array($username),
+                true
+            );
+            if ($row) {
+                $row['is_active'] = (bool) $row['is_active'];
+                $row['created_at'] = (int) $row['created_at'];
+                $row['last_login'] = (int) $row['last_login'];
+                return $row;
+            }
+        } catch (\PDOException $e) {
+            error_log('Error reading user: ' . $e->getMessage());
+        }
+        return null;
+    }
+
+    /**
+     * Update a user record
+     *
+     * @access public
+     * @param  string $username
+     * @param  array  $userData
+     * @return bool
+     */
+    public function updateUser(string $username, array $userData): bool
+    {
+        try {
+            return $this->_exec(
+                'UPDATE "' . $this->_sanitizeIdentifier('user') .
+                '" SET "password_hash" = ?, "role" = ?, "is_active" = ?, "last_login" = ? WHERE "username" = ?',
+                array(
+                    $userData['password_hash'],
+                    $userData['role'],
+                    $userData['is_active'] ? 1 : 0,
+                    $userData['last_login'] ?? 0,
+                    $username,
+                )
+            );
+        } catch (\PDOException $e) {
+            error_log('Error updating user: ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Delete a user record
+     *
+     * @access public
+     * @param  string $username
+     * @return bool
+     */
+    public function deleteUser(string $username): bool
+    {
+        try {
+            // also delete user sessions
+            $this->_exec(
+                'DELETE FROM "' . $this->_sanitizeIdentifier('user_session') .
+                '" WHERE "username" = ?',
+                array($username)
+            );
+            return $this->_exec(
+                'DELETE FROM "' . $this->_sanitizeIdentifier('user') .
+                '" WHERE "username" = ?',
+                array($username)
+            );
+        } catch (\PDOException $e) {
+            error_log('Error deleting user: ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Get all users
+     *
+     * @access public
+     * @return array
+     */
+    public function listUsers(): array
+    {
+        try {
+            $rows = $this->_select(
+                'SELECT * FROM "' . $this->_sanitizeIdentifier('user') .
+                '" ORDER BY "username"',
+                array()
+            );
+            return array_map(function ($row) {
+                $row['is_active'] = (bool) $row['is_active'];
+                $row['created_at'] = (int) $row['created_at'];
+                $row['last_login'] = (int) $row['last_login'];
+                return $row;
+            }, $rows ?: array());
+        } catch (\PDOException $e) {
+            error_log('Error listing users: ' . $e->getMessage());
+            return array();
+        }
+    }
+
+    /**
+     * Check if any users exist
+     *
+     * @access public
+     * @return bool
+     */
+    public function hasUsers(): bool
+    {
+        try {
+            $row = $this->_select(
+                'SELECT COUNT(*) as "cnt" FROM "' . $this->_sanitizeIdentifier('user') . '"',
+                array(),
+                true
+            );
+            return $row && (int) $row['cnt'] > 0;
+        } catch (\PDOException $e) {
+            return false;
+        }
+    }
+
+    /**
+     * Create a user session record
+     *
+     * @access public
+     * @param  string $sessionId
+     * @param  array  $sessionData
+     * @return bool
+     */
+    public function createSession(string $sessionId, array $sessionData): bool
+    {
+        try {
+            return $this->_exec(
+                'INSERT INTO "' . $this->_sanitizeIdentifier('user_session') .
+                '" ("id","username","created_at","expires_at","ip_hash") VALUES(?,?,?,?,?)',
+                array(
+                    $sessionId,
+                    $sessionData['username'],
+                    $sessionData['created_at'] ?? time(),
+                    $sessionData['expires_at'],
+                    $sessionData['ip_hash'] ?? '',
+                )
+            );
+        } catch (\PDOException $e) {
+            error_log('Error creating session: ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Read a user session record
+     *
+     * @access public
+     * @param  string $sessionId
+     * @return array|null
+     */
+    public function readSession(string $sessionId): ?array
+    {
+        try {
+            $row = $this->_select(
+                'SELECT * FROM "' . $this->_sanitizeIdentifier('user_session') .
+                '" WHERE "id" = ?',
+                array($sessionId),
+                true
+            );
+            if ($row) {
+                $row['created_at'] = (int) $row['created_at'];
+                $row['expires_at'] = (int) $row['expires_at'];
+                return $row;
+            }
+        } catch (\PDOException $e) {
+            error_log('Error reading session: ' . $e->getMessage());
+        }
+        return null;
+    }
+
+    /**
+     * Delete a user session
+     *
+     * @access public
+     * @param  string $sessionId
+     * @return bool
+     */
+    public function deleteSession(string $sessionId): bool
+    {
+        try {
+            return $this->_exec(
+                'DELETE FROM "' . $this->_sanitizeIdentifier('user_session') .
+                '" WHERE "id" = ?',
+                array($sessionId)
+            );
+        } catch (\PDOException $e) {
+            error_log('Error deleting session: ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Purge expired user sessions
+     *
+     * @access public
+     * @return void
+     */
+    public function purgeExpiredSessions(): void
+    {
+        try {
+            $this->_exec(
+                'DELETE FROM "' . $this->_sanitizeIdentifier('user_session') .
+                '" WHERE "expires_at" < ? AND "expires_at" != 0',
+                array(time())
+            );
+        } catch (\PDOException $e) {
+            error_log('Error purging expired sessions: ' . $e->getMessage());
+        }
     }
 
     /**

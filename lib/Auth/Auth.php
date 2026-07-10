@@ -340,14 +340,19 @@ class Auth
             return array('success' => false, 'message' => 'User not found.');
         }
 
-        $this->_store->setValue('', 'auth_users', $username);
+        // use dedicated DB methods if available
+        if (method_exists($this->_store, 'deleteUser')) {
+            $this->_store->deleteUser($username);
+        } else {
+            $this->_store->setValue('', 'auth_users', $username);
 
-        // remove from user list
-        $users = $this->_getUserList();
-        $users = array_filter($users, function ($u) use ($username) {
-            return $u !== $username;
-        });
-        $this->_store->setValue(json_encode(array_values($users)), 'auth_user_list', '');
+            // remove from user list
+            $users = $this->_getUserList();
+            $users = array_filter($users, function ($u) use ($username) {
+                return $u !== $username;
+            });
+            $this->_store->setValue(json_encode(array_values($users)), 'auth_user_list', '');
+        }
 
         return array('success' => true);
     }
@@ -360,6 +365,15 @@ class Auth
      */
     public function listUsers(): array
     {
+        // use dedicated DB methods if available
+        if (method_exists($this->_store, 'listUsers')) {
+            $rows = $this->_store->listUsers();
+            return array_map(function ($row) {
+                return User::fromArray($row);
+            }, $rows);
+        }
+
+        // fallback to key-value store
         $usernames = $this->_getUserList();
         $users     = array();
         foreach ($usernames as $username) {
@@ -401,6 +415,12 @@ class Auth
      */
     public function hasUsers(): bool
     {
+        // use dedicated DB methods if available
+        if (method_exists($this->_store, 'hasUsers')) {
+            return $this->_store->hasUsers();
+        }
+
+        // fallback to key-value store
         $users = $this->_getUserList();
         return !empty($users);
     }
@@ -414,6 +434,16 @@ class Auth
      */
     private function _loadUser(string $username): ?User
     {
+        // use dedicated DB methods if available
+        if (method_exists($this->_store, 'readUser')) {
+            $data = $this->_store->readUser($username);
+            if ($data === null) {
+                return null;
+            }
+            return User::fromArray($data);
+        }
+
+        // fallback to key-value store (Filesystem backend)
         $data = $this->_store->getValue('auth_users', $username);
         if (empty($data)) {
             return null;
@@ -435,8 +465,22 @@ class Auth
      */
     private function _saveUser(User $user): void
     {
+        $userData = $user->toArray();
+
+        // use dedicated DB methods if available
+        if (method_exists($this->_store, 'createUser')) {
+            $existing = $this->_store->readUser($user->getUsername());
+            if ($existing) {
+                $this->_store->updateUser($user->getUsername(), $userData);
+            } else {
+                $this->_store->createUser($user->getUsername(), $userData);
+            }
+            return;
+        }
+
+        // fallback to key-value store (Filesystem backend)
         $this->_store->setValue(
-            json_encode($user->toArray()),
+            json_encode($userData),
             'auth_users',
             $user->getUsername()
         );

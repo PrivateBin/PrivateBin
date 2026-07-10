@@ -92,6 +92,23 @@ class Session
             return false;
         }
 
+        // use dedicated DB methods if available
+        if (method_exists($this->_store, 'readSession')) {
+            $session = $this->_store->readSession($sessionId);
+            if (!$session) {
+                return false;
+            }
+            // check expiration
+            if ($session['expires_at'] < time()) {
+                $this->_store->deleteSession($sessionId);
+                return false;
+            }
+            $this->_sessionId   = $sessionId;
+            $this->_sessionData = $session;
+            return true;
+        }
+
+        // fallback to key-value store
         $data = $this->_store->getValue('auth_sessions', $sessionId);
         if (empty($data)) {
             return false;
@@ -130,11 +147,18 @@ class Session
             'ip_hash'    => hash('sha256', $_SERVER['REMOTE_ADDR'] ?? '127.0.0.1'),
         );
 
-        $this->_store->setValue(
-            json_encode($sessionData),
-            'auth_sessions',
-            $sessionId
-        );
+        // use dedicated DB methods if available
+        if (method_exists($this->_store, 'createSession')) {
+            $this->_store->createSession($sessionId, $sessionData);
+            // also purge expired sessions periodically
+            $this->_store->purgeExpiredSessions();
+        } else {
+            $this->_store->setValue(
+                json_encode($sessionData),
+                'auth_sessions',
+                $sessionId
+            );
+        }
 
         $this->_sessionId   = $sessionId;
         $this->_sessionData = $sessionData;
@@ -153,7 +177,12 @@ class Session
     public function destroy(): void
     {
         if ($this->_sessionId !== null) {
-            $this->_store->setValue('', 'auth_sessions', $this->_sessionId);
+            // use dedicated DB methods if available
+            if (method_exists($this->_store, 'deleteSession')) {
+                $this->_store->deleteSession($this->_sessionId);
+            } else {
+                $this->_store->setValue('', 'auth_sessions', $this->_sessionId);
+            }
         }
 
         $this->_sessionId   = null;
