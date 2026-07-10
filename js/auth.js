@@ -416,6 +416,7 @@ jQuery.PrivateBin.Auth = (function($) {
             html += me.settingsInput('main', 'basepath', 'Base URL', s, 'text', 'https://example.com/');
             html += me.settingsCheckbox('main', 'discussion', 'Enable discussions', s);
             html += me.settingsCheckbox('main', 'opendiscussion', 'Pre-select discussions', s);
+            html += me.settingsCheckbox('main', 'discussiondatedisplay', 'Show comment dates', s);
             html += me.settingsCheckbox('main', 'password', 'Enable paste passwords', s);
             html += me.settingsCheckbox('main', 'fileupload', 'Enable file upload', s);
             html += me.settingsCheckbox('main', 'burnafterreadingselected', 'Pre-select burn after reading', s);
@@ -430,9 +431,44 @@ jQuery.PrivateBin.Auth = (function($) {
                 {'bootstrap5': 'Bootstrap 5', 'bootstrap': 'Bootstrap 3', 'bootstrap-dark': 'Bootstrap Dark',
                  'bootstrap-compact': 'Bootstrap Compact', 'bootstrap-page': 'Bootstrap Page',
                  'bootstrap-dark-page': 'Dark Page', 'bootstrap-compact-page': 'Compact Page'});
+            html += me.settingsCheckbox('main', 'templateselection', 'Enable template selection', s);
             html += me.settingsCheckbox('main', 'languageselection', 'Enable language selection', s);
+            html += me.settingsInput('main', 'languagedefault', 'Default language', s, 'text', 'e.g. en, de, fr');
+            html += me.settingsSelect('main', 'icon', 'Comment icons', s,
+                {none: 'None', identicon: 'Identicon', jdenticon: 'Jdenticon', vizhash: 'Vizhash'});
+            html += me.settingsInput('main', 'syntaxhighlightingtheme', 'Syntax theme', s, 'text', 'e.g. sons-of-obsidian');
+            html += me.settingsInput('main', 'info', 'Info text (HTML)', s, 'text', 'Shown on the page');
             html += me.settingsInput('main', 'notice', 'Notice text', s, 'text', 'Optional notice shown to users');
             html += me.settingsCheckbox('main', 'httpwarning', 'HTTP warning', s);
+            html += '</div>';
+
+            // URL Shortener section
+            html += '<h6 class="border-bottom pb-2 mb-3">URL Shortener</h6>';
+            html += '<div class="row g-3 mb-4">';
+            html += me.settingsInput('main', 'urlshortener', 'Shortener URL', s, 'text', 'https://shortener.example.com/api?link=');
+            html += me.settingsCheckbox('main', 'shortenbydefault', 'Shorten by default', s);
+            html += me.settingsCheckbox('main', 'urlshortenerwarning', 'Show shortener warning', s);
+            html += '</div>';
+
+            // YOURLS section
+            html += '<h6 class="border-bottom pb-2 mb-3">YOURLS Integration</h6>';
+            html += '<div class="row g-3 mb-4">';
+            html += me.settingsInput('yourls', 'apiurl', 'YOURLS API URL', s, 'text', 'https://yourls.example.com/yourls-api.php');
+            html += me.settingsInput('yourls', 'signature', 'YOURLS Signature', s, 'text', 'Access signature key');
+            html += '</div>';
+
+            // Shlink section
+            html += '<h6 class="border-bottom pb-2 mb-3">Shlink Integration</h6>';
+            html += '<div class="row g-3 mb-4">';
+            html += me.settingsInput('shlink', 'apiurl', 'Shlink API URL', s, 'text', 'https://shlink.example.com/rest/v3/short-urls');
+            html += me.settingsInput('shlink', 'apikey', 'Shlink API Key', s, 'text', 'Your API key');
+            html += '</div>';
+
+            // CSP section
+            html += '<h6 class="border-bottom pb-2 mb-3">Security</h6>';
+            html += '<div class="row g-3 mb-4">';
+            html += me.settingsTextarea('main', 'cspheader', 'Content Security Policy', s,
+                'CSP header value (advanced)');
             html += '</div>';
 
             // Auth section
@@ -520,6 +556,18 @@ jQuery.PrivateBin.Auth = (function($) {
         }
         html += '</select></div>';
         return html;
+    };
+
+    /**
+     * Generate a textarea for settings (for long values like CSP)
+     */
+    me.settingsTextarea = function(section, key, label, settings, placeholder) {
+        var value = (settings[section] && settings[section][key] !== undefined) ? settings[section][key] : '';
+        return '<div class="col-12"><label class="form-label small">' + label + '</label>' +
+            '<textarea class="form-control form-control-sm" rows="3" ' +
+            'data-section="' + section + '" data-key="' + key + '"' +
+            (placeholder ? ' placeholder="' + me.escapeHtml(placeholder) + '"' : '') +
+            '>' + me.escapeHtml(String(value)) + '</textarea></div>';
     };
 
     /**
