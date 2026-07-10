@@ -300,73 +300,73 @@ class Controller
         $action = $this->_request->getParam('auth_action', '');
 
         try {
-        // special case: initial setup when no users exist
-        if ($action === 'setup' && $this->_auth->isEnabled() && !$this->_auth->hasUsers()) {
-            $this->_authSetup();
-            return;
-        }
+            // special case: initial setup when no users exist
+            if ($action === 'setup' && $this->_auth->isEnabled() && !$this->_auth->hasUsers()) {
+                $this->_authSetup();
+                return;
+            }
 
-        switch ($action) {
-            case 'login':
-                $this->_authLogin();
-                break;
-            case 'logout':
-                $this->_authLogout();
-                break;
-            case 'register':
-                $this->_authRegister();
-                break;
-            case 'status':
-                $this->_authStatus();
-                break;
-            case 'users':
-                $this->_authListUsers();
-                break;
-            case 'create_user':
-                $this->_authCreateUser();
-                break;
-            case 'delete_user':
-                $this->_authDeleteUser();
-                break;
-            case 'change_password':
-                $this->_authChangePassword();
-                break;
-            case 'change_role':
-                $this->_authChangeRole();
-                break;
-            case 'toggle_active':
-                $this->_authToggleActive();
-                break;
-            case 'approve_user':
-                $this->_authApproveUser();
-                break;
-            case 'reject_user':
-                $this->_authRejectUser();
-                break;
-            case 'update_profile':
-                $this->_authUpdateProfile();
-                break;
-            case 'admin_reset_password':
-                $this->_authAdminResetPassword();
-                break;
-            case 'admin_update_email':
-                $this->_authAdminUpdateEmail();
-                break;
-            case 'forgot_password':
-                $this->_authForgotPassword();
-                break;
-            case 'reset_password':
-                $this->_authResetPassword();
-                break;
-            case 'get_settings':
-                $this->_authGetSettings();
-                break;
-            case 'save_settings':
-                $this->_authSaveSettings();
-                break;
-            default:
-                $this->_json_error(I18n::_('Invalid authentication action.'));
-        }
+            switch ($action) {
+                case 'login':
+                    $this->_authLogin();
+                    break;
+                case 'logout':
+                    $this->_authLogout();
+                    break;
+                case 'register':
+                    $this->_authRegister();
+                    break;
+                case 'status':
+                    $this->_authStatus();
+                    break;
+                case 'users':
+                    $this->_authListUsers();
+                    break;
+                case 'create_user':
+                    $this->_authCreateUser();
+                    break;
+                case 'delete_user':
+                    $this->_authDeleteUser();
+                    break;
+                case 'change_password':
+                    $this->_authChangePassword();
+                    break;
+                case 'change_role':
+                    $this->_authChangeRole();
+                    break;
+                case 'toggle_active':
+                    $this->_authToggleActive();
+                    break;
+                case 'approve_user':
+                    $this->_authApproveUser();
+                    break;
+                case 'reject_user':
+                    $this->_authRejectUser();
+                    break;
+                case 'update_profile':
+                    $this->_authUpdateProfile();
+                    break;
+                case 'admin_reset_password':
+                    $this->_authAdminResetPassword();
+                    break;
+                case 'admin_update_email':
+                    $this->_authAdminUpdateEmail();
+                    break;
+                case 'forgot_password':
+                    $this->_authForgotPassword();
+                    break;
+                case 'reset_password':
+                    $this->_authResetPassword();
+                    break;
+                case 'get_settings':
+                    $this->_authGetSettings();
+                    break;
+                case 'save_settings':
+                    $this->_authSaveSettings();
+                    break;
+                default:
+                    $this->_json_error(I18n::_('Invalid authentication action.'));
+            }
         } catch (\Throwable $e) {
             $this->_json_error('Auth handler error [' . $action . ']: ' . $e->getMessage() . ' in ' . $e->getFile() . ':' . $e->getLine());
         }
@@ -387,7 +387,7 @@ class Controller
             // auto-login the new admin
             $this->_auth->login($username, $password);
             $user       = $this->_auth->getCurrentUser();
-            $result = array(
+            $result     = array(
                 'status'   => 0,
                 'username' => $user->getUsername(),
                 'role'     => $user->getRole(),
@@ -412,7 +412,7 @@ class Controller
         $result = $this->_auth->login($username, $password);
         if ($result['success']) {
             $user       = $this->_auth->getCurrentUser();
-            $response = array(
+            $response   = array(
                 'status'   => 0,
                 'username' => $user->getUsername(),
                 'role'     => $user->getRole(),
@@ -435,7 +435,7 @@ class Controller
     private function _authLogout(): void
     {
         $this->_auth->logout();
-        $result = array('status' => 0);
+        $result      = array('status' => 0);
         $this->_json = Json::encode($result);
     }
 
@@ -463,7 +463,7 @@ class Controller
                 // auto-login after registration (only if no approval needed)
                 $this->_auth->login($username, $password);
                 $user       = $this->_auth->getCurrentUser();
-                $result = array(
+                $result     = array(
                     'status'   => 0,
                     'username' => $user->getUsername(),
                     'role'     => $user->getRole(),
@@ -486,12 +486,12 @@ class Controller
         $user = $this->_auth->getCurrentUser();
         if ($user !== null) {
             $result = array(
-                'status'   => 0,
-                'loggedin' => true,
-                'username' => $user->getUsername(),
-                'role'     => $user->getRole(),
-                'email'    => $user->getEmail(),
-                'csrf'     => $this->_auth->getSession()->getCsrfToken(),
+                'status'                => 0,
+                'loggedin'              => true,
+                'username'              => $user->getUsername(),
+                'role'                  => $user->getRole(),
+                'email'                 => $user->getEmail(),
+                'csrf'                  => $this->_auth->getSession()->getCsrfToken(),
                 'force_password_change' => $user->isForcePasswordChange(),
             );
             $this->_json = Json::encode($result);
@@ -553,7 +553,9 @@ class Controller
             return;
         }
 
-        if (!$this->_validateCsrf()) { return; }
+        if (!$this->_validateCsrf()) {
+            return;
+        }
 
         $username = $this->_request->getParam('username', '');
         $password = $this->_request->getParam('password', '');
@@ -561,7 +563,7 @@ class Controller
 
         $result = $this->_auth->createUser($username, $password, $role);
         if ($result['success']) {
-            $result = array('status' => 0);
+            $result      = array('status' => 0);
             $this->_json = Json::encode($result);
         } else {
             $this->_json_error(I18n::_($result['message']));
@@ -580,7 +582,9 @@ class Controller
             return;
         }
 
-        if (!$this->_validateCsrf()) { return; }
+        if (!$this->_validateCsrf()) {
+            return;
+        }
 
         $username = $this->_request->getParam('username', '');
 
@@ -593,7 +597,7 @@ class Controller
 
         $result = $this->_auth->deleteUser($username);
         if ($result['success']) {
-            $result = array('status' => 0);
+            $result      = array('status' => 0);
             $this->_json = Json::encode($result);
         } else {
             $this->_json_error(I18n::_($result['message']));
@@ -613,7 +617,9 @@ class Controller
             return;
         }
 
-        if (!$this->_validateCsrf()) { return; }
+        if (!$this->_validateCsrf()) {
+            return;
+        }
 
         $username    = $this->_request->getParam('username', '');
         $newPassword = $this->_request->getParam('new_password', '');
@@ -639,7 +645,7 @@ class Controller
 
         $result = $this->_auth->changePassword($username, $newPassword);
         if ($result['success']) {
-            $result = array('status' => 0);
+            $result      = array('status' => 0);
             $this->_json = Json::encode($result);
         } else {
             $this->_json_error(I18n::_($result['message']));
@@ -658,14 +664,16 @@ class Controller
             return;
         }
 
-        if (!$this->_validateCsrf()) { return; }
+        if (!$this->_validateCsrf()) {
+            return;
+        }
 
         $username = $this->_request->getParam('username', '');
         $role     = $this->_request->getParam('role', '');
 
         $result = $this->_auth->changeRole($username, $role);
         if ($result['success']) {
-            $result = array('status' => 0);
+            $result      = array('status' => 0);
             $this->_json = Json::encode($result);
         } else {
             $this->_json_error(I18n::_($result['message']));
@@ -684,14 +692,16 @@ class Controller
             return;
         }
 
-        if (!$this->_validateCsrf()) { return; }
+        if (!$this->_validateCsrf()) {
+            return;
+        }
 
         $username = $this->_request->getParam('username', '');
         $active   = (bool) $this->_request->getParam('active', '');
 
         $result = $this->_auth->setUserActive($username, $active);
         if ($result['success']) {
-            $result = array('status' => 0);
+            $result      = array('status' => 0);
             $this->_json = Json::encode($result);
         } else {
             $this->_json_error(I18n::_($result['message']));
@@ -710,13 +720,15 @@ class Controller
             return;
         }
 
-        if (!$this->_validateCsrf()) { return; }
+        if (!$this->_validateCsrf()) {
+            return;
+        }
 
         $username = $this->_request->getParam('username', '');
 
         $result = $this->_auth->approveUser($username);
         if ($result['success']) {
-            $result = array('status' => 0);
+            $result      = array('status' => 0);
             $this->_json = Json::encode($result);
         } else {
             $this->_json_error(I18n::_($result['message']));
@@ -735,13 +747,15 @@ class Controller
             return;
         }
 
-        if (!$this->_validateCsrf()) { return; }
+        if (!$this->_validateCsrf()) {
+            return;
+        }
 
         $username = $this->_request->getParam('username', '');
 
         $result = $this->_auth->rejectUser($username);
         if ($result['success']) {
-            $result = array('status' => 0);
+            $result      = array('status' => 0);
             $this->_json = Json::encode($result);
         } else {
             $this->_json_error(I18n::_($result['message']));
@@ -761,7 +775,9 @@ class Controller
             return;
         }
 
-        if (!$this->_validateCsrf()) { return; }
+        if (!$this->_validateCsrf()) {
+            return;
+        }
 
         try {
             $email       = $this->_request->getParam('email', null);
@@ -790,7 +806,8 @@ class Controller
                 }
             }
 
-            $result = array('status' => 0); $this->_json = Json::encode($result);
+            $result      = array('status' => 0);
+            $this->_json = Json::encode($result);
         } catch (\Throwable $e) {
             $this->_json_error('Profile update error: ' . $e->getMessage());
         }
@@ -808,14 +825,17 @@ class Controller
             return;
         }
 
-        if (!$this->_validateCsrf()) { return; }
+        if (!$this->_validateCsrf()) {
+            return;
+        }
 
         $username    = $this->_request->getParam('username', '');
         $newPassword = $this->_request->getParam('new_password', '');
 
         $result = $this->_auth->adminResetPassword($username, $newPassword);
         if ($result['success']) {
-            $result = array('status' => 0); $this->_json = Json::encode($result);
+            $result      = array('status' => 0);
+            $this->_json = Json::encode($result);
         } else {
             $this->_json_error(I18n::_($result['message']));
         }
@@ -833,14 +853,17 @@ class Controller
             return;
         }
 
-        if (!$this->_validateCsrf()) { return; }
+        if (!$this->_validateCsrf()) {
+            return;
+        }
 
         $username = $this->_request->getParam('username', '');
         $email    = $this->_request->getParam('email', '');
 
         $result = $this->_auth->updateEmail($username, $email);
         if ($result['success']) {
-            $result = array('status' => 0); $this->_json = Json::encode($result);
+            $result      = array('status' => 0);
+            $this->_json = Json::encode($result);
         } else {
             $this->_json_error(I18n::_($result['message']));
         }
@@ -862,7 +885,8 @@ class Controller
 
         // always return success to prevent user enumeration
         $this->_auth->generateResetToken($username);
-        $result = array('status' => 0); $this->_json = Json::encode($result);
+        $result      = array('status' => 0);
+        $this->_json = Json::encode($result);
     }
 
     /**
@@ -883,7 +907,8 @@ class Controller
 
         $result = $this->_auth->resetPasswordWithToken($username, $token, $newPassword);
         if ($result['success']) {
-            $result = array('status' => 0); $this->_json = Json::encode($result);
+            $result      = array('status' => 0);
+            $this->_json = Json::encode($result);
         } else {
             $this->_json_error(I18n::_($result['message']));
         }
@@ -936,7 +961,9 @@ class Controller
             return;
         }
 
-        if (!$this->_validateCsrf()) { return; }
+        if (!$this->_validateCsrf()) {
+            return;
+        }
 
         $settings = $this->_request->getParam('settings', '');
         if (empty($settings) || !is_array($settings)) {
@@ -949,7 +976,7 @@ class Controller
 
         try {
             if ($this->_conf->updateAndSave($settings)) {
-                $result = array('status' => 0);
+                $result      = array('status' => 0);
                 $this->_json = Json::encode($result);
             } else {
                 $this->_json_error(I18n::_('Failed to save settings. Check file permissions on cfg/conf.php.'));
@@ -975,10 +1002,10 @@ class Controller
             'auth' => array('enabled', 'require_login_to_create', 'require_login_to_read', 'allow_registration'),
         );
         $intKeys = array(
-            'main' => array('sizelimit'),
-            'auth' => array('session_timeout'),
+            'main'    => array('sizelimit'),
+            'auth'    => array('session_timeout'),
             'traffic' => array('limit'),
-            'purge' => array('limit', 'batchsize'),
+            'purge'   => array('limit', 'batchsize'),
         );
 
         foreach ($settings as $section => &$values) {

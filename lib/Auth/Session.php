@@ -191,18 +191,18 @@ class Session
         // expire cookies
         $expiredTime = time() - 86400;
         setcookie(self::COOKIE_NAME, '', array(
-            'expires'  => $expiredTime,
-            'path'     => '/',
-            'secure'   => true,
+            'expires'   => $expiredTime,
+            'path'      => '/',
+            'secure'    => true,
             'httponly'  => true,
-            'samesite' => 'Lax',
+            'samesite'  => 'Lax',
         ));
         setcookie(self::CSRF_COOKIE_NAME, '', array(
-            'expires'  => $expiredTime,
-            'path'     => '/',
-            'secure'   => true,
+            'expires'   => $expiredTime,
+            'path'      => '/',
+            'secure'    => true,
             'httponly'  => false,
-            'samesite' => 'Lax',
+            'samesite'  => 'Lax',
         ));
     }
 
@@ -266,11 +266,11 @@ class Session
     private function _setSessionCookie(string $sessionId): void
     {
         setcookie(self::COOKIE_NAME, $sessionId, array(
-            'expires'  => time() + $this->_timeout,
-            'path'     => '/',
-            'secure'   => true,
+            'expires'   => time() + $this->_timeout,
+            'path'      => '/',
+            'secure'    => true,
             'httponly'  => true,
-            'samesite' => 'Lax',
+            'samesite'  => 'Lax',
         ));
     }
 
@@ -282,11 +282,11 @@ class Session
     private function _setCsrfCookie(): void
     {
         setcookie(self::CSRF_COOKIE_NAME, $this->getCsrfToken(), array(
-            'expires'  => time() + $this->_timeout,
-            'path'     => '/',
-            'secure'   => true,
+            'expires'   => time() + $this->_timeout,
+            'path'      => '/',
+            'secure'    => true,
             'httponly'  => false,
-            'samesite' => 'Lax',
+            'samesite'  => 'Lax',
         ));
     }
 

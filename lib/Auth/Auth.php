@@ -13,7 +13,6 @@ namespace PrivateBin\Auth;
 
 use PrivateBin\Configuration;
 use PrivateBin\Data\AbstractData;
-use PrivateBin\Json;
 
 /**
  * Auth
@@ -366,7 +365,7 @@ class Auth
         }
 
         // generate a secure random token
-        $token = bin2hex(random_bytes(32));
+        $token     = bin2hex(random_bytes(32));
         $tokenHash = hash('sha256', $token);
 
         // token expires in 1 hour
@@ -775,7 +774,7 @@ class Auth
 
         $subject = '[' . $siteName . '] New user registration pending approval';
         $body    = "A new user has registered and is waiting for your approval.\n\n";
-        $body   .= 'Username: ' . $user->getUsername() . "\n";
+        $body .= 'Username: ' . $user->getUsername() . "\n";
         if ($user->getEmail()) {
             $body .= 'Email: ' . $user->getEmail() . "\n";
         }
@@ -804,11 +803,11 @@ class Auth
         $siteName = $this->_conf->getKey('name', 'main') ?: 'PrivateBin';
 
         $subject = '[' . $siteName . '] Registration received - pending approval';
-        $body    = "Hello " . $user->getUsername() . ",\n\n";
-        $body   .= "Your registration on " . $siteName . " has been received.\n";
-        $body   .= "An administrator will review your account shortly.\n";
-        $body   .= "You will receive another email once your account has been approved.\n\n";
-        $body   .= "Thank you for your patience.";
+        $body    = 'Hello ' . $user->getUsername() . ",\n\n";
+        $body .= 'Your registration on ' . $siteName . " has been received.\n";
+        $body .= "An administrator will review your account shortly.\n";
+        $body .= "You will receive another email once your account has been approved.\n\n";
+        $body .= 'Thank you for your patience.';
 
         $this->_sendEmail($userEmail, $subject, $body);
     }
@@ -830,9 +829,9 @@ class Auth
         $basepath = $this->_conf->getKey('basepath', 'main') ?: '';
 
         $subject = '[' . $siteName . '] Account approved';
-        $body    = "Hello " . $user->getUsername() . ",\n\n";
-        $body   .= "Your account on " . $siteName . " has been approved.\n";
-        $body   .= "You can now log in and start using the service.\n";
+        $body    = 'Hello ' . $user->getUsername() . ",\n\n";
+        $body .= 'Your account on ' . $siteName . " has been approved.\n";
+        $body .= "You can now log in and start using the service.\n";
         if ($basepath) {
             $body .= "\n" . $basepath . "\n";
         }
@@ -856,9 +855,9 @@ class Auth
         $siteName = $this->_conf->getKey('name', 'main') ?: 'PrivateBin';
 
         $subject = '[' . $siteName . '] Registration declined';
-        $body    = "Hello " . $user->getUsername() . ",\n\n";
-        $body   .= "Unfortunately, your registration on " . $siteName . " has been declined.\n";
-        $body   .= "If you believe this is an error, please contact the administrator.";
+        $body    = 'Hello ' . $user->getUsername() . ",\n\n";
+        $body .= 'Unfortunately, your registration on ' . $siteName . " has been declined.\n";
+        $body .= 'If you believe this is an error, please contact the administrator.';
 
         $this->_sendEmail($userEmail, $subject, $body);
     }
@@ -880,9 +879,9 @@ class Auth
         $basepath = $this->_conf->getKey('basepath', 'main') ?: '';
 
         $subject = '[' . $siteName . '] Your password has been reset';
-        $body    = "Hello " . $user->getUsername() . ",\n\n";
-        $body   .= "An administrator has reset your password on " . $siteName . ".\n";
-        $body   .= "You will be required to set a new password when you next log in.\n";
+        $body    = 'Hello ' . $user->getUsername() . ",\n\n";
+        $body .= 'An administrator has reset your password on ' . $siteName . ".\n";
+        $body .= "You will be required to set a new password when you next log in.\n";
         if ($basepath) {
             $body .= "\nLogin at: " . $basepath . "\n";
         }
@@ -910,12 +909,12 @@ class Auth
         $resetLink = $basepath . '?reset_password&user=' . urlencode($user->getUsername()) . '&token=' . $token;
 
         $subject = '[' . $siteName . '] Password reset request';
-        $body    = "Hello " . $user->getUsername() . ",\n\n";
-        $body   .= "A password reset was requested for your account on " . $siteName . ".\n\n";
-        $body   .= "Click the following link to reset your password:\n";
-        $body   .= $resetLink . "\n\n";
-        $body   .= "This link will expire in 1 hour.\n\n";
-        $body   .= "If you did not request this, you can safely ignore this email.";
+        $body    = 'Hello ' . $user->getUsername() . ",\n\n";
+        $body .= 'A password reset was requested for your account on ' . $siteName . ".\n\n";
+        $body .= "Click the following link to reset your password:\n";
+        $body .= $resetLink . "\n\n";
+        $body .= "This link will expire in 1 hour.\n\n";
+        $body .= 'If you did not request this, you can safely ignore this email.';
 
         $this->_sendEmail($userEmail, $subject, $body);
     }

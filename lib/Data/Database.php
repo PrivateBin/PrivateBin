@@ -857,7 +857,7 @@ class Database extends AbstractData
             }
             if ($rows) {
                 foreach ($rows as $row) {
-                    $col = $row['COLUMN_NAME'] ?? $row['name'] ?? $row['column_name'] ?? '';
+                    $col       = $row['COLUMN_NAME'] ?? $row['name'] ?? $row['column_name'] ?? '';
                     $columns[] = strtolower($col);
                 }
             }

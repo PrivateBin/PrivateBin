@@ -423,7 +423,7 @@ class Configuration
 
         $conf = ";<?php http_response_code(403); /*\n";
         $conf .= "; config file for PrivateBin\n";
-        $conf .= "; last updated: " . date('Y-m-d H:i:s') . "\n\n";
+        $conf .= '; last updated: ' . date('Y-m-d H:i:s') . "\n\n";
 
         foreach ($this->_configuration as $section => $values) {
             // skip SRI section (auto-managed)

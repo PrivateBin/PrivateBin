@@ -187,7 +187,7 @@ class User
      */
     public function setPassword(string $password): void
     {
-        $this->_passwordHash = password_hash($password, PASSWORD_BCRYPT, ['cost' => 12]);
+        $this->_passwordHash = password_hash($password, PASSWORD_BCRYPT, array('cost' => 12));
     }
 
     /**
@@ -221,7 +221,7 @@ class User
      */
     public function setRole(string $role): void
     {
-        if (!in_array($role, [self::ROLE_ADMIN, self::ROLE_USER], true)) {
+        if (!in_array($role, array(self::ROLE_ADMIN, self::ROLE_USER), true)) {
             throw new \InvalidArgumentException('Invalid role: ' . $role);
         }
         $this->_role = $role;
