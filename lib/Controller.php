@@ -362,12 +362,13 @@ class Controller
             // auto-login the new admin
             $this->_auth->login($username, $password);
             $user       = $this->_auth->getCurrentUser();
-            $this->_json = Json::encode(array(
+            $result = array(
                 'status'   => 0,
                 'username' => $user->getUsername(),
                 'role'     => $user->getRole(),
                 'csrf'     => $this->_auth->getSession()->getCsrfToken(),
-            ));
+            );
+            $this->_json = Json::encode($result);
         } else {
             $this->_json_error(I18n::_($result['message']));
         }
@@ -386,12 +387,13 @@ class Controller
         $result = $this->_auth->login($username, $password);
         if ($result['success']) {
             $user       = $this->_auth->getCurrentUser();
-            $this->_json = Json::encode(array(
+            $result = array(
                 'status'   => 0,
                 'username' => $user->getUsername(),
                 'role'     => $user->getRole(),
                 'csrf'     => $this->_auth->getSession()->getCsrfToken(),
-            ));
+            );
+            $this->_json = Json::encode($result);
         } else {
             $this->_json_error(I18n::_($result['message']));
         }
@@ -405,7 +407,8 @@ class Controller
     private function _authLogout(): void
     {
         $this->_auth->logout();
-        $this->_json = Json::encode(array('status' => 0));
+        $result = array('status' => 0);
+        $this->_json = Json::encode($result);
     }
 
     /**
@@ -423,12 +426,13 @@ class Controller
             // auto-login after registration
             $this->_auth->login($username, $password);
             $user       = $this->_auth->getCurrentUser();
-            $this->_json = Json::encode(array(
+            $result = array(
                 'status'   => 0,
                 'username' => $user->getUsername(),
                 'role'     => $user->getRole(),
                 'csrf'     => $this->_auth->getSession()->getCsrfToken(),
-            ));
+            );
+            $this->_json = Json::encode($result);
         } else {
             $this->_json_error(I18n::_($result['message']));
         }
@@ -443,18 +447,20 @@ class Controller
     {
         $user = $this->_auth->getCurrentUser();
         if ($user !== null) {
-            $this->_json = Json::encode(array(
+            $result = array(
                 'status'   => 0,
                 'loggedin' => true,
                 'username' => $user->getUsername(),
                 'role'     => $user->getRole(),
                 'csrf'     => $this->_auth->getSession()->getCsrfToken(),
-            ));
+            );
+            $this->_json = Json::encode($result);
         } else {
-            $this->_json = Json::encode(array(
+            $result = array(
                 'status'   => 0,
                 'loggedin' => false,
-            ));
+            );
+            $this->_json = Json::encode($result);
         }
     }
 
@@ -482,10 +488,11 @@ class Controller
             );
         }
 
-        $this->_json = Json::encode(array(
+        $result = array(
             'status' => 0,
             'users'  => $userData,
-        ));
+        );
+        $this->_json = Json::encode($result);
     }
 
     /**
@@ -508,7 +515,8 @@ class Controller
 
         $result = $this->_auth->createUser($username, $password, $role);
         if ($result['success']) {
-            $this->_json = Json::encode(array('status' => 0));
+            $result = array('status' => 0);
+            $this->_json = Json::encode($result);
         } else {
             $this->_json_error(I18n::_($result['message']));
         }
@@ -539,7 +547,8 @@ class Controller
 
         $result = $this->_auth->deleteUser($username);
         if ($result['success']) {
-            $this->_json = Json::encode(array('status' => 0));
+            $result = array('status' => 0);
+            $this->_json = Json::encode($result);
         } else {
             $this->_json_error(I18n::_($result['message']));
         }
@@ -580,7 +589,8 @@ class Controller
 
         $result = $this->_auth->changePassword($username, $newPassword);
         if ($result['success']) {
-            $this->_json = Json::encode(array('status' => 0));
+            $result = array('status' => 0);
+            $this->_json = Json::encode($result);
         } else {
             $this->_json_error(I18n::_($result['message']));
         }
@@ -605,7 +615,8 @@ class Controller
 
         $result = $this->_auth->changeRole($username, $role);
         if ($result['success']) {
-            $this->_json = Json::encode(array('status' => 0));
+            $result = array('status' => 0);
+            $this->_json = Json::encode($result);
         } else {
             $this->_json_error(I18n::_($result['message']));
         }
@@ -630,7 +641,8 @@ class Controller
 
         $result = $this->_auth->setUserActive($username, $active);
         if ($result['success']) {
-            $this->_json = Json::encode(array('status' => 0));
+            $result = array('status' => 0);
+            $this->_json = Json::encode($result);
         } else {
             $this->_json_error(I18n::_($result['message']));
         }
@@ -660,10 +672,11 @@ class Controller
             return;
         }
 
-        $this->_json = Json::encode(array(
+        $result = array(
             'status'   => 0,
             'settings' => $this->_conf->getSafeConfig(),
-        ));
+        );
+        $this->_json = Json::encode($result);
     }
 
     /**
@@ -690,7 +703,8 @@ class Controller
         $settings = $this->_castSettingsTypes($settings);
 
         if ($this->_conf->updateAndSave($settings)) {
-            $this->_json = Json::encode(array('status' => 0));
+            $result = array('status' => 0);
+            $this->_json = Json::encode($result);
         } else {
             $this->_json_error(I18n::_('Failed to save settings. Check file permissions on cfg/conf.php.'));
         }
