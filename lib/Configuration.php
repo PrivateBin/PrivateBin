@@ -431,9 +431,19 @@ class Configuration
 
             foreach ($values as $key => $value) {
                 if (is_array($value)) {
-                    foreach ($value as $item) {
+                    foreach ($value as $arrayKey => $item) {
                         if (is_scalar($item) || is_null($item)) {
-                            $conf .= $key . '[] = ' . self::_formatIniValue($item) . "\n";
+                            $formattedItem = self::_formatIniValue($item);
+                            // preserve numeric keys (e.g. opt[12] for PDO options)
+                            if (is_int($arrayKey)) {
+                                // parse_ini_file converts true to "1"; restore boolean
+                                if ($key === 'opt' && ($item === '1' || $item === 1 || $item === true)) {
+                                    $formattedItem = 'true';
+                                }
+                                $conf .= $key . '[' . $arrayKey . '] = ' . $formattedItem . "\n";
+                            } else {
+                                $conf .= $key . '[] = ' . $formattedItem . "\n";
+                            }
                         }
                     }
                 } elseif (is_bool($value)) {
@@ -441,7 +451,9 @@ class Configuration
                 } elseif (is_int($value) || is_float($value)) {
                     $conf .= "$key = $value\n";
                 } elseif (is_null($value)) {
-                    // skip null values (use defaults)
+                    continue;
+                } elseif (is_string($value) && $value === '' && isset(self::$_defaults[$section][$key]) && self::$_defaults[$section][$key] === '') {
+                    // skip empty strings that match defaults (use defaults)
                     continue;
                 } else {
                     $conf .= "$key = " . self::_formatIniValue($value) . "\n";
