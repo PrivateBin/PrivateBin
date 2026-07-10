@@ -184,7 +184,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $conf .= "tbl = \"" . addslashes($tblPrefix) . "\"\n";
             $conf .= "usr = \"" . addslashes($dbUser ?? '') . "\"\n";
             $conf .= "pwd = \"" . addslashes($dbPass ?? '') . "\"\n";
-            $conf .= "opt[12] = true\n";
+            $conf .= "opt[12] = true\n\n";
+            $conf .= "; */ ?>\n";
 
             // write configuration
             $cfgDir = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'cfg';

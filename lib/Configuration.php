@@ -450,6 +450,8 @@ class Configuration
             $conf .= "\n";
         }
 
+        $conf .= "; */ ?>\n";
+
         return file_put_contents($configFile, $conf) !== false;
     }
 
