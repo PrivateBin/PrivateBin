@@ -13,6 +13,7 @@ namespace PrivateBin\Auth;
 
 use PrivateBin\Configuration;
 use PrivateBin\Data\AbstractData;
+use PrivateBin\Data\Database;
 
 /**
  * Auth
@@ -507,7 +508,7 @@ class Auth
         }
 
         // use dedicated DB methods if available
-        if (method_exists($this->_store, 'deleteUser')) {
+        if ($this->_store instanceof \PrivateBin\Data\Database) {
             $this->_store->deleteUser($username);
         } else {
             $this->_store->setValue('', 'auth_users', $username);
@@ -532,7 +533,7 @@ class Auth
     public function listUsers(): array
     {
         // use dedicated DB methods if available
-        if (method_exists($this->_store, 'listUsers')) {
+        if ($this->_store instanceof \PrivateBin\Data\Database) {
             $rows = $this->_store->listUsers();
             return array_map(function ($row) {
                 return User::fromArray($row);
@@ -628,7 +629,7 @@ class Auth
     public function hasUsers(): bool
     {
         // use dedicated DB methods if available
-        if (method_exists($this->_store, 'hasUsers')) {
+        if ($this->_store instanceof \PrivateBin\Data\Database) {
             return $this->_store->hasUsers();
         }
 
@@ -647,7 +648,7 @@ class Auth
     private function _loadUser(string $username): ?User
     {
         // use dedicated DB methods if available
-        if (method_exists($this->_store, 'readUser')) {
+        if ($this->_store instanceof \PrivateBin\Data\Database) {
             $data = $this->_store->readUser($username);
             if ($data === null) {
                 return null;
@@ -680,7 +681,7 @@ class Auth
         $userData = $user->toArray();
 
         // use dedicated DB methods if available
-        if (method_exists($this->_store, 'createUser')) {
+        if ($this->_store instanceof \PrivateBin\Data\Database) {
             $existing = $this->_store->readUser($user->getUsername());
             if ($existing) {
                 $this->_store->updateUser($user->getUsername(), $userData);

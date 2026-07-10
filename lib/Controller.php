@@ -780,7 +780,7 @@ class Controller
         }
 
         try {
-            $email       = $this->_request->getParam('email', null);
+            $email       = $this->_request->getParam('email', '');
             $newPassword = $this->_request->getParam('new_password', '');
             $curPassword = $this->_request->getParam('current_password', '');
 
@@ -798,7 +798,7 @@ class Controller
             }
 
             // update email if provided
-            if ($email !== null) {
+            if ($email !== '') {
                 $result = $this->_auth->updateEmail($currentUser->getUsername(), (string) $email);
                 if (!$result['success']) {
                     $this->_json_error(I18n::_($result['message']));
@@ -966,7 +966,13 @@ class Controller
         }
 
         $settings = $this->_request->getParam('settings', '');
-        if (empty($settings) || !is_array($settings)) {
+        if (empty($settings)) {
+            $this->_json_error(I18n::_('Invalid settings data.'));
+            return;
+        }
+
+        // settings must be an associative array (from JSON request body)
+        if (!is_array($settings)) {
             $this->_json_error(I18n::_('Invalid settings data.'));
             return;
         }

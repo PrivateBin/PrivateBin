@@ -12,6 +12,7 @@
 namespace PrivateBin\Auth;
 
 use PrivateBin\Data\AbstractData;
+use PrivateBin\Data\Database;
 
 /**
  * Session
@@ -93,7 +94,7 @@ class Session
         }
 
         // use dedicated DB methods if available
-        if (method_exists($this->_store, 'readSession')) {
+        if ($this->_store instanceof \PrivateBin\Data\Database) {
             $session = $this->_store->readSession($sessionId);
             if (!$session) {
                 return false;
@@ -148,7 +149,7 @@ class Session
         );
 
         // use dedicated DB methods if available
-        if (method_exists($this->_store, 'createSession')) {
+        if ($this->_store instanceof \PrivateBin\Data\Database) {
             $this->_store->createSession($sessionId, $sessionData);
             // also purge expired sessions periodically
             $this->_store->purgeExpiredSessions();
@@ -178,7 +179,7 @@ class Session
     {
         if ($this->_sessionId !== null) {
             // use dedicated DB methods if available
-            if (method_exists($this->_store, 'deleteSession')) {
+            if ($this->_store instanceof \PrivateBin\Data\Database) {
                 $this->_store->deleteSession($this->_sessionId);
             } else {
                 $this->_store->setValue('', 'auth_sessions', $this->_sessionId);
