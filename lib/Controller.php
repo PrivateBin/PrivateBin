@@ -309,7 +309,8 @@ class Controller
 
         // Debug: confirm code version is deployed
         if ($action === 'debug_version') {
-            $this->_json = Json::encode(array('status' => 0, 'version' => 'v5-trycatch', 'php' => PHP_VERSION));
+            $result = array('status' => 0, 'version' => 'v5-trycatch', 'php' => PHP_VERSION);
+            $this->_json = Json::encode($result);
             return;
         }
 
@@ -804,7 +805,7 @@ class Controller
                 }
             }
 
-            $this->_json = Json::encode(array('status' => 0));
+            $result = array('status' => 0); $this->_json = Json::encode($result);
         } catch (\Throwable $e) {
             $this->_json_error('Profile update error: ' . $e->getMessage());
         }
@@ -829,7 +830,7 @@ class Controller
 
         $result = $this->_auth->adminResetPassword($username, $newPassword);
         if ($result['success']) {
-            $this->_json = Json::encode(array('status' => 0));
+            $result = array('status' => 0); $this->_json = Json::encode($result);
         } else {
             $this->_json_error(I18n::_($result['message']));
         }
@@ -854,7 +855,7 @@ class Controller
 
         $result = $this->_auth->updateEmail($username, $email);
         if ($result['success']) {
-            $this->_json = Json::encode(array('status' => 0));
+            $result = array('status' => 0); $this->_json = Json::encode($result);
         } else {
             $this->_json_error(I18n::_($result['message']));
         }
@@ -876,7 +877,7 @@ class Controller
 
         // always return success to prevent user enumeration
         $this->_auth->generateResetToken($username);
-        $this->_json = Json::encode(array('status' => 0));
+        $result = array('status' => 0); $this->_json = Json::encode($result);
     }
 
     /**
@@ -897,7 +898,7 @@ class Controller
 
         $result = $this->_auth->resetPasswordWithToken($username, $token, $newPassword);
         if ($result['success']) {
-            $this->_json = Json::encode(array('status' => 0));
+            $result = array('status' => 0); $this->_json = Json::encode($result);
         } else {
             $this->_json_error(I18n::_($result['message']));
         }
