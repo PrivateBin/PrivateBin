@@ -134,6 +134,14 @@ class Controller
      */
     public function __construct(?Configuration $config = null)
     {
+        // Invalidate OPcache for this file to ensure latest code runs
+        if (function_exists('opcache_invalidate')) {
+            opcache_invalidate(__FILE__, true);
+            opcache_invalidate(__DIR__ . '/Auth/Auth.php', true);
+            opcache_invalidate(__DIR__ . '/Auth/User.php', true);
+            opcache_invalidate(__DIR__ . '/Data/Database.php', true);
+        }
+
         if (version_compare(PHP_VERSION, self::MIN_PHP_VERSION) < 0) {
             error_log(I18n::_('%s requires php %s or above to work. Sorry.', I18n::_('PrivateBin'), self::MIN_PHP_VERSION));
             return;
@@ -297,6 +305,7 @@ class Controller
      */
     private function _handleAuth(): void
     {
+        try {
         $action = $this->_request->getParam('auth_action', '');
 
         // special case: initial setup when no users exist
@@ -365,6 +374,9 @@ class Controller
                 break;
             default:
                 $this->_json_error(I18n::_('Invalid authentication action.'));
+        }
+        } catch (\Throwable $e) {
+            $this->_json_error('Auth handler error [' . $action . ']: ' . $e->getMessage() . ' in ' . $e->getFile() . ':' . $e->getLine());
         }
     }
 
