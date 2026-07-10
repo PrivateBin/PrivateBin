@@ -13,11 +13,11 @@
  */
 
 // prevent running if already configured
-$configFile = __DIR__ . DIRECTORY_SEPARATOR . 'cfg' . DIRECTORY_SEPARATOR . 'conf.php';
+$configFile = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'cfg' . DIRECTORY_SEPARATOR . 'conf.php';
 if (is_readable($configFile)) {
     $existingConfig = parse_ini_file($configFile, true);
     if ($existingConfig && isset($existingConfig['main'])) {
-        die('<!DOCTYPE html><html><body><h1>Already Installed</h1><p>PrivateBin is already configured. Delete <code>install.php</code> for security.</p></body></html>');
+        die('<!DOCTYPE html><html><body><h1>Already Installed</h1><p>PrivateBin is already configured. Delete the entire <code>install/</code> folder for security.</p></body></html>');
     }
 }
 
@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $dsn = '';
             switch ($dbType) {
                 case 'sqlite':
-                    $dataDir = __DIR__ . DIRECTORY_SEPARATOR . 'data';
+                    $dataDir = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'data';
                     if (!is_dir($dataDir)) {
                         mkdir($dataDir, 0700, true);
                     }
@@ -169,7 +169,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $conf .= "opt[12] = true\n";
 
             // write configuration
-            $cfgDir = __DIR__ . DIRECTORY_SEPARATOR . 'cfg';
+            $cfgDir = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'cfg';
             if (!is_dir($cfgDir)) {
                 mkdir($cfgDir, 0750, true);
             }
@@ -186,8 +186,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
 
             // now bootstrap PrivateBin to create the database tables and admin user
-            define('PATH', __DIR__ . DIRECTORY_SEPARATOR);
-            define('PUBLIC_PATH', __DIR__ . DIRECTORY_SEPARATOR);
+            define('PATH', dirname(__DIR__) . DIRECTORY_SEPARATOR);
+            define('PUBLIC_PATH', dirname(__DIR__) . DIRECTORY_SEPARATOR);
             require PATH . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
 
             try {
@@ -222,7 +222,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>PrivateBin Installation</title>
-    <link rel="stylesheet" href="css/bootstrap-5.3.8.css">
+    <link rel="stylesheet" href="../css/bootstrap-5.3.8.css">
     <style>
         body { background-color: #f8f9fa; }
         .install-container { max-width: 640px; margin: 40px auto; }
@@ -243,9 +243,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <p>Admin account <strong><?php echo htmlspecialchars($adminUser); ?></strong> has been created.</p>
             <?php endif; ?>
             <hr>
-            <p class="mb-0"><strong>⚠️ Security:</strong> Delete <code>install.php</code> immediately!</p>
+            <p class="mb-0"><strong>⚠️ Security:</strong> Delete the entire <code>install/</code> folder immediately!</p>
         </div>
-        <a href="./" class="btn btn-primary w-100">Open PrivateBin</a>
+        <a href="../" class="btn btn-primary w-100">Open PrivateBin</a>
     </div>
 
 <?php else: ?>
