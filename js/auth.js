@@ -748,22 +748,27 @@ jQuery.PrivateBin.Auth = (function($) {
      * @param {function} success - success callback
      */
     me.apiCall = function(data, success, errorCallback) {
-        // Determine the base URL: use <base> tag href or fallback to pathname
-        var baseUrl = document.querySelector('base') ? document.querySelector('base').href : (window.location.pathname || '/');
-        $.ajax({
-            type: 'POST',
-            url: baseUrl,
-            dataType: 'text',
-            contentType: 'application/json',
-            headers: {'X-Requested-With': 'JSONHttpRequest'},
-            data: JSON.stringify(data),
-            timeout: 30000
-        }).done(function(rawText, textStatus, jqXHR) {
+        // Determine the base URL: use <base> tag href or fallback to origin + pathname
+        var baseUrl = document.querySelector('base') ? document.querySelector('base').href : (window.location.origin + window.location.pathname);
+
+        fetch(baseUrl, {
+            method: 'POST',
+            credentials: 'same-origin',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'JSONHttpRequest'
+            },
+            body: JSON.stringify(data)
+        }).then(function(resp) {
+            return resp.text().then(function(text) {
+                return { status: resp.status, text: text };
+            });
+        }).then(function(result) {
             var response;
             try {
-                response = JSON.parse(rawText.trim());
+                response = JSON.parse(result.text.trim());
             } catch (e) {
-                var msg = 'Invalid server response.';
+                var msg = 'Invalid server response (HTTP ' + result.status + ').';
                 if (typeof errorCallback === 'function') {
                     errorCallback(msg);
                 } else {
@@ -783,20 +788,8 @@ jQuery.PrivateBin.Auth = (function($) {
                     me.showError(errMsg);
                 }
             }
-        }).fail(function(jqXHR, textStatus) {
-            var msg = 'Network error. Please try again.';
-            if (jqXHR.responseText) {
-                try {
-                    var resp = JSON.parse(jqXHR.responseText.trim());
-                    if (resp.message) {
-                        msg = resp.message;
-                    }
-                } catch (e) {
-                    msg = 'Server error (HTTP ' + jqXHR.status + '). Check server logs.';
-                }
-            } else if (textStatus === 'timeout') {
-                msg = 'Request timed out. Please try again.';
-            }
+        }).catch(function(err) {
+            var msg = 'Network error: ' + (err.message || 'Request failed.');
             if (typeof errorCallback === 'function') {
                 errorCallback(msg);
             } else {
