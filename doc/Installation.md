@@ -1,6 +1,30 @@
 # Installation
 
-## TL;DR
+## Quick Start — Web Installer (Recommended)
+
+The easiest way to set up PrivateBin Auth Edition is via the built-in web
+installer:
+
+1. Download and extract the release to your web server's document root
+2. Ensure your web server (Apache/Nginx) serves PHP from the installation
+   directory
+3. Open `https://your-domain/install/` in your browser
+4. The installer will guide you through:
+   - **Database configuration** — SQLite (default), MySQL, or PostgreSQL
+   - **Admin account creation** — your first admin username and password
+   - **Feature settings** — discussions, file upload, templates, expiration,
+     etc.
+   - **Authentication settings** — require login to create/read pastes, enable
+     self-registration
+5. Click **Install PrivateBin** — the installer generates `cfg/conf.php`,
+   creates database tables, and sets up your admin account
+6. **Delete the `install/` folder** for security
+7. Navigate to your site root and log in with your admin credentials
+
+> **Security note:** The `install/` folder must be removed after a successful
+> setup. The installer will refuse to run if a `cfg/conf.php` already exists.
+
+## Manual Installation (TL;DR)
 
 Download the
 [latest release archive](https://github.com/PrivateBin/PrivateBin/releases/latest)
@@ -115,6 +139,59 @@ to your PrivateBin installation.
 
 More details can be found in the
 [configuration documentation](https://github.com/PrivateBin/PrivateBin/wiki/Configuration).
+
+## Authentication
+
+This fork adds built-in user authentication. It can be configured in the
+`[auth]` section of `cfg/conf.php` or via the admin settings panel.
+
+### Configuration options
+
+```ini
+[auth]
+; Enable the authentication system (default: false)
+enabled = true
+
+; Require login to create new pastes (default: true)
+require_login_to_create = true
+
+; Require login to read existing pastes (default: false)
+require_login_to_read = false
+
+; Allow visitors to register their own account (default: false)
+allow_registration = false
+```
+
+### User management
+
+When authentication is enabled, the first user to access the setup wizard
+becomes the admin. Admins can:
+
+- Create and delete user accounts
+- Change user roles (admin / user) and passwords
+- Activate or deactivate accounts
+- Modify all `conf.php` settings from the admin panel (no SSH required)
+
+### Database requirements
+
+Authentication requires the **Database** storage backend (SQLite, MySQL, or
+PostgreSQL). Two additional tables are created automatically:
+
+| Table            | Purpose                          |
+|------------------|----------------------------------|
+| `prefix_user`    | User accounts (username, hash, role, status) |
+| `prefix_user_session` | Login sessions (token, expiry, IP hash) |
+
+The Filesystem backend also works via a key-value fallback, but Database is
+recommended for production use.
+
+### Security details
+
+- Passwords are hashed with **bcrypt** (cost 12) via `password_hash()`
+- Each password gets a **unique random salt** (embedded in the hash)
+- Login uses **timing-safe comparison** to prevent user enumeration
+- Sessions use **httponly**, **secure**, and **SameSite=Lax** cookies
+- CSRF protection via **HMAC-SHA256** tokens
 
 ## Advanced installation
 

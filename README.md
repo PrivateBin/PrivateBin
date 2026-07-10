@@ -1,18 +1,51 @@
-# [![PrivateBin](https://raw.githubusercontent.com/PrivateBin/assets/master/images/preview/logoSmall.png)](https://privatebin.info/)
+# [![PrivateBin](https://raw.githubusercontent.com/PrivateBin/assets/master/images/preview/logoSmall.png)](https://privatebin.info/) PrivateBin Auth Edition
 
-*Current version: 2.0.4*
+*Based on PrivateBin 2.0.4*
 
-**PrivateBin** is a minimalist, open source online
-[pastebin](https://en.wikipedia.org/wiki/Pastebin)
-where the server has zero knowledge of stored data.
+**PrivateBin Auth Edition** is a fork of [PrivateBin](https://privatebin.info/)
+that adds **built-in user authentication**, an **admin panel**, and a
+**web-based installer** — so you can run a secure, private pastebin that only
+authorized users can access, without relying on `.htaccess`, SSO, or third-party
+auth solutions.
 
-Data is encrypted and decrypted in the browser using 256bit AES in
-[Galois Counter mode](https://en.wikipedia.org/wiki/Galois/Counter_Mode).
+All the core PrivateBin features are preserved: data is encrypted and decrypted
+in the browser using 256-bit AES in
+[Galois Counter mode](https://en.wikipedia.org/wiki/Galois/Counter_Mode), and
+the server has **zero knowledge** of stored data.
 
-This is a fork of ZeroBin, originally developed by
-[Sébastien Sauvage](https://github.com/sebsauvage/ZeroBin). PrivateBin was
-refactored to allow easier and cleaner extensions and has many additional
-features.
+> **Upstream:** This fork is based on
+> [PrivateBin](https://github.com/PrivateBin/PrivateBin), originally a fork of
+> ZeroBin by [Sébastien Sauvage](https://github.com/sebsauvage/ZeroBin).
+
+## What this fork adds
+
+### 🔐 Built-in User Authentication
+
+* Username / password login with bcrypt hashing (cost 12, unique salt per user)
+* Role-based access: **admin** and **user** roles
+* Configurable access policy — require login to create pastes, read pastes, or
+  both
+* Optional self-registration (enable/disable in settings)
+* Cookie-based sessions with CSRF protection (HMAC-SHA256)
+* Timing-safe login to prevent user enumeration
+
+### 👤 Admin Panel
+
+* **User management** — create, delete, activate/deactivate users, change roles
+  and passwords
+* **Settings management** — edit all `conf.php` options from the browser (no
+  manual file editing required)
+* Protected sections (`model`, `model_options`) cannot be altered via the UI
+
+### 🧙 Web-Based Installer
+
+* Accessible at `/install/` — guides you through first-time setup
+* Configures database connection (SQLite, MySQL, PostgreSQL)
+* Creates the admin account
+* Sets all PrivateBin options (discussions, file upload, template, expiration,
+  etc.)
+* Generates `cfg/conf.php` automatically
+* Delete the `install/` folder after setup for security
 
 ## What PrivateBin provides
 
@@ -43,7 +76,7 @@ features.
   [DANE](https://en.wikipedia.org/wiki/DNS-based_Authentication_of_Named_Entities)
   record.
 
-- The “key” used to encrypt the paste is part of the URL (in
+- The "key" used to encrypt the paste is part of the URL (in
   [the fragment part separated by the `#`](https://en.wikipedia.org/wiki/URL#fragment)).
   If you publicly post the URL of a paste that is not password-protected, anyone
   can read it.
@@ -65,7 +98,8 @@ features.
 ## Options
 
 Some features are optional and can be enabled or disabled in the [configuration
-file](https://github.com/PrivateBin/PrivateBin/wiki/Configuration):
+file](https://github.com/PrivateBin/PrivateBin/wiki/Configuration) or via the
+**admin settings panel** (when authentication is enabled):
 
 * Password protection
 
@@ -92,19 +126,38 @@ file](https://github.com/PrivateBin/PrivateBin/wiki/Configuration):
 
 * QR code for paste URLs, to easily transfer them over to mobile devices
 
+* **Built-in user authentication** with role-based access control (this fork)
+
+## Quick Start
+
+1. Extract the release to your web server's document root
+2. Navigate to `https://your-domain/install/` in your browser
+3. Follow the installer to configure the database and create an admin account
+4. **Delete the `install/` folder** after successful setup
+5. Log in and manage users and settings from the admin panel
+
+For manual configuration, see [Installation](doc/Installation.md).
+
 ## Further resources
 
-* [FAQ](https://github.com/PrivateBin/PrivateBin/wiki/FAQ)
+* [PrivateBin FAQ](https://github.com/PrivateBin/PrivateBin/wiki/FAQ)
 
-* [Installation guide](https://github.com/PrivateBin/PrivateBin/blob/master/doc/Installation.md#installation)
+* [Installation guide](doc/Installation.md)
 
-* [Configuration guide](https://github.com/PrivateBin/PrivateBin/wiki/Configuration)
+* [PrivateBin Configuration guide](https://github.com/PrivateBin/PrivateBin/wiki/Configuration)
 
-* [Templates](https://github.com/PrivateBin/PrivateBin/wiki/Templates)
+* [PrivateBin Templates](https://github.com/PrivateBin/PrivateBin/wiki/Templates)
 
-* [Translation guide](https://github.com/PrivateBin/PrivateBin/wiki/Translation)
+* [PrivateBin Translation guide](https://github.com/PrivateBin/PrivateBin/wiki/Translation)
 
-* [Developer guide](https://github.com/PrivateBin/PrivateBin/wiki/Development)
+* [PrivateBin Developer guide](https://github.com/PrivateBin/PrivateBin/wiki/Development)
 
 Run into any issues? Have ideas for further developments? Please
-[report](https://github.com/PrivateBin/PrivateBin/issues) them!
+[report](https://github.com/EloTunk/PrivateBin-auth/issues) them!
+
+## Credits
+
+This project is a fork of [PrivateBin](https://github.com/PrivateBin/PrivateBin)
+by the PrivateBin community. All upstream features and security properties are
+preserved. The authentication system, admin panel, and web installer were added
+as extensions to the existing architecture.
