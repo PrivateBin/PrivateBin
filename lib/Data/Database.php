@@ -846,15 +846,14 @@ class Database extends AbstractData
                     'SELECT COLUMN_NAME FROM USER_TAB_COLUMNS WHERE TABLE_NAME = ?',
                     array(strtoupper($tableName))
                 );
+            } elseif ($this->_type === 'mysql' || $this->_type === 'pgsql') {
+                $rows = $this->_select(
+                    'SELECT COLUMN_NAME as name FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = ?',
+                    array($tableName)
+                );
             } else {
+                // SQLite
                 $rows = $this->_select('PRAGMA table_info("' . $tableName . '")', array());
-                if (!$rows) {
-                    // MySQL / PostgreSQL
-                    $rows = $this->_select(
-                        'SELECT COLUMN_NAME as name FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = ?',
-                        array($tableName)
-                    );
-                }
             }
             if ($rows) {
                 foreach ($rows as $row) {
