@@ -89,6 +89,11 @@ languageselection = false
 ; This only works if the "urlshortener" option is set.
 ; shortenbydefault = false
 
+; (optional) Show a warning that the URL shortener may expose the decrypt key.
+; Set to false if you control both the PrivateBin and URL shortener instances
+; and consider the shortener trusted.
+; urlshortenerwarning = true
+
 ; (optional) Let users create a QR code for sharing the document URL with one click.
 ; It works both when a new document is created and when you view a document.
 ; qrcode = true

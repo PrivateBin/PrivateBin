@@ -588,6 +588,7 @@ if (!empty($URLSHORTENER)) :
 							<span class="glyphicon glyphicon-send" aria-hidden="true"></span> <?php echo I18n::_('Shorten URL'), PHP_EOL; ?>
 						</button>
 					</p>
+<?php if ($URLSHORTENERWARNING) : ?>
 					<div role="alert" class="alert alert-danger">
 						<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
 						<?php if ($SHORTENBYDEFAULT) : ?>
@@ -595,6 +596,7 @@ if (!empty($URLSHORTENER)) :
 						<?php endif; ?>
 						<?php echo I18n::_('URL shortener may expose your decrypt key in URL.'), PHP_EOL; ?>
 					</div>
+<?php endif; ?>
 <?php
 endif;
 ?>
