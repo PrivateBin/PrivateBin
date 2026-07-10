@@ -134,14 +134,6 @@ class Controller
      */
     public function __construct(?Configuration $config = null)
     {
-        // Invalidate OPcache for this file to ensure latest code runs
-        if (function_exists('opcache_invalidate')) {
-            opcache_invalidate(__FILE__, true);
-            opcache_invalidate(__DIR__ . '/Auth/Auth.php', true);
-            opcache_invalidate(__DIR__ . '/Auth/User.php', true);
-            opcache_invalidate(__DIR__ . '/Data/Database.php', true);
-        }
-
         if (version_compare(PHP_VERSION, self::MIN_PHP_VERSION) < 0) {
             error_log(I18n::_('%s requires php %s or above to work. Sorry.', I18n::_('PrivateBin'), self::MIN_PHP_VERSION));
             return;
@@ -306,13 +298,6 @@ class Controller
     private function _handleAuth(): void
     {
         $action = $this->_request->getParam('auth_action', '');
-
-        // Debug: confirm code version is deployed
-        if ($action === 'debug_version') {
-            $result = array('status' => 0, 'version' => 'v5-trycatch', 'php' => PHP_VERSION);
-            $this->_json = Json::encode($result);
-            return;
-        }
 
         try {
         // special case: initial setup when no users exist
