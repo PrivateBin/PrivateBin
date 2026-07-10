@@ -130,7 +130,7 @@ class Configuration
             'js/legacy.js'           => 'sha512-RQEo1hxpNc37i+jz/D9/JiAZhG8GFx3+SNxjYnI7jUgirDIqrCSj6QPAAZeaidditcWzsJ3jxfEj5lVm7ZwTRQ==',
             'js/prettify.js'         => 'sha512-puO0Ogy++IoA2Pb9IjSxV1n4+kQkKXYAEUtVzfZpQepyDPyXk8hokiYDS7ybMogYlyyEIwMLpZqVhCkARQWLMg==',
             'js/privatebin.js'       => 'sha512-zbka2ePFe4nT6QVb6tManMPWaZleeJk57R0eRgQTZNpRdu5LklTuSdHnIfFKtY7ZLbN2tER1vKYDx1eHwvnDfg==',
-            'js/auth.js'             => 'sha512-AIjw5ipTYiRk9JMFRqXRZTz5dtB5gbIfXosMvFL0ZBKRd9xTE2UMPVbnZh2jJxrK/LBi3wuO58F/tYpEbxxH/Q==',
+            'js/auth.js'             => 'sha512-J8c9jzj0bBLiXuhfuesI4JYfwuPsWRkWCBF2PiS582d22XEAilV5TXSexDeMxOFuXT+M2mv4cAGnx5BXhNJBhg==',
             'js/purify-3.4.1.js'     => 'sha512-280a/Vb6fVFsYaeRrkuDp4EDmdYlt2XS+dlDEO/U9qljPrAraA2bIzHTNmP+9dpwPDDwTML+RS+h5iaagPwTzA==',
             'js/showdown-2.1.0.js'   => 'sha512-WYXZgkTR0u/Y9SVIA4nTTOih0kXMEd8RRV6MLFdL6YU8ymhR528NLlYQt1nlJQbYz4EW+ZsS0fx1awhiQJme1Q==',
             'js/zlib-1.3.2.js'       => 'sha512-RAhJgxg9siMIA8ky4c10Rc2zUgnK80olHB8Tt1IOYWY4Eh1WmrviQkDn+sgBlb38ZHq3tzufGC41kP360gmosQ==',
@@ -324,5 +324,144 @@ class Configuration
             throw new TranslatedException(array('%s requires configuration section [%s] to be present in configuration file.', I18n::_($this->getKey('name')), $section), 3);
         }
         return $this->_configuration[$section];
+    }
+
+    /**
+     * get the configuration file path
+     *
+     * @return string
+     */
+    public static function getConfigPath(): string
+    {
+        $configPath = getenv('CONFIG_PATH');
+        if ($configPath !== false && !empty($configPath)) {
+            return $configPath . DIRECTORY_SEPARATOR . 'conf.php';
+        }
+        return PATH . 'cfg' . DIRECTORY_SEPARATOR . 'conf.php';
+    }
+
+    /**
+     * get safe configuration for display (strips sensitive fields)
+     *
+     * @return array
+     */
+    public function getSafeConfig(): array
+    {
+        $config = $this->_configuration;
+        // strip sensitive model_options (passwords, keys)
+        if (isset($config['model_options']['pwd'])) {
+            $config['model_options']['pwd'] = '***';
+        }
+        if (isset($config['model_options']['secretkey'])) {
+            $config['model_options']['secretkey'] = '***';
+        }
+        if (isset($config['model_options']['accesskey'])) {
+            $config['model_options']['accesskey'] = '***';
+        }
+        // strip SRI hashes (internal)
+        unset($config['sri']);
+        return $config;
+    }
+
+    /**
+     * update configuration values and write to conf.php
+     *
+     * Only updates keys that exist in the current configuration.
+     * Does not allow changing model/model_options for safety.
+     *
+     * @param array $updates keyed by section => array of key => value
+     * @return bool
+     */
+    public function updateAndSave(array $updates): bool
+    {
+        // sections that cannot be changed via the admin UI
+        $protectedSections = array('model', 'model_options', 'sri');
+
+        foreach ($updates as $section => $values) {
+            if (in_array($section, $protectedSections, true)) {
+                continue;
+            }
+            if (!is_array($values)) {
+                continue;
+            }
+            if (!array_key_exists($section, $this->_configuration)) {
+                continue;
+            }
+            foreach ($values as $key => $value) {
+                if (array_key_exists($key, $this->_configuration[$section])) {
+                    $this->_configuration[$section][$key] = $value;
+                }
+            }
+        }
+
+        return $this->_writeConfig();
+    }
+
+    /**
+     * write the current configuration to conf.php
+     *
+     * @access private
+     * @return bool
+     */
+    private function _writeConfig(): bool
+    {
+        $configFile = self::getConfigPath();
+
+        $conf = ";<?php http_response_code(403); /*\n";
+        $conf .= "; config file for PrivateBin\n";
+        $conf .= "; last updated: " . date('Y-m-d H:i:s') . "\n\n";
+
+        foreach ($this->_configuration as $section => $values) {
+            // skip SRI section (auto-managed)
+            if ($section === 'sri') {
+                continue;
+            }
+
+            $conf .= "[$section]\n";
+
+            if (!is_array($values)) {
+                continue;
+            }
+
+            foreach ($values as $key => $value) {
+                if (is_array($value)) {
+                    foreach ($value as $item) {
+                        $conf .= $key . '[] = ' . self::_formatIniValue($item) . "\n";
+                    }
+                } elseif (is_bool($value)) {
+                    $conf .= "$key = " . ($value ? 'true' : 'false') . "\n";
+                } elseif (is_int($value) || is_float($value)) {
+                    $conf .= "$key = $value\n";
+                } else {
+                    $conf .= "$key = " . self::_formatIniValue($value) . "\n";
+                }
+            }
+            $conf .= "\n";
+        }
+
+        return file_put_contents($configFile, $conf) !== false;
+    }
+
+    /**
+     * format a value for INI file output
+     *
+     * @access private
+     * @static
+     * @param mixed $value
+     * @return string
+     */
+    private static function _formatIniValue($value): string
+    {
+        if (is_bool($value)) {
+            return $value ? 'true' : 'false';
+        }
+        if (is_int($value) || is_float($value)) {
+            return (string) $value;
+        }
+        if (is_null($value)) {
+            return 'null';
+        }
+        // quote strings
+        return '"' . addcslashes((string) $value, '"') . '"';
     }
 }

@@ -50,8 +50,12 @@ jQuery.PrivateBin.Auth = (function($) {
             return;
         }
 
+        // bind inline login form if present on page
+        me.bindInlineLoginForm();
+
         // show login dialog if login is required and user is not authenticated
-        if (!currentUser && (config.requireLoginCreate || config.requireLoginRead)) {
+        // (only if there's no inline form already)
+        if (!currentUser && (config.requireLoginCreate || config.requireLoginRead) && $('#auth-login-page-form').length === 0) {
             me.showLoginDialog();
         }
     };
@@ -104,6 +108,68 @@ jQuery.PrivateBin.Auth = (function($) {
         // remove old auth nav if present
         $('#auth-nav').remove();
         $navbar.append($authContainer);
+    };
+
+    /**
+     * Bind inline login/register forms rendered server-side in the template
+     *
+     * @name Auth.bindInlineLoginForm
+     * @function
+     */
+    me.bindInlineLoginForm = function() {
+        // inline login form
+        $('#auth-login-page-form').on('submit', function(e) {
+            e.preventDefault();
+            var $btn = $(this).find('button[type="submit"]');
+            $btn.prop('disabled', true).text('Logging in...');
+            me.apiCall({
+                auth_action: 'login',
+                username: $('#auth-page-username').val(),
+                password: $('#auth-page-password').val()
+            }, function(data) {
+                window.location.reload();
+            }, function(message) {
+                $btn.prop('disabled', false).text('Login');
+                $('#auth-login-error').text(message).removeClass('d-none');
+            });
+        });
+
+        // toggle to register form
+        $('#auth-page-show-register').on('click', function(e) {
+            e.preventDefault();
+            $('#auth-login-page').addClass('d-none');
+            $('#auth-register-page').removeClass('d-none');
+        });
+
+        // toggle back to login form
+        $('#auth-page-show-login').on('click', function(e) {
+            e.preventDefault();
+            $('#auth-register-page').addClass('d-none');
+            $('#auth-login-page').removeClass('d-none');
+        });
+
+        // inline register form
+        $('#auth-register-page-form').on('submit', function(e) {
+            e.preventDefault();
+            var pw1 = $('#auth-page-reg-password').val();
+            var pw2 = $('#auth-page-reg-password2').val();
+            if (pw1 !== pw2) {
+                $('#auth-register-error').text('Passwords do not match.').removeClass('d-none');
+                return;
+            }
+            var $btn = $(this).find('button[type="submit"]');
+            $btn.prop('disabled', true).text('Registering...');
+            me.apiCall({
+                auth_action: 'register',
+                username: $('#auth-page-reg-username').val(),
+                password: pw1
+            }, function(data) {
+                window.location.reload();
+            }, function(message) {
+                $btn.prop('disabled', false).text('Register');
+                $('#auth-register-error').text(message).removeClass('d-none');
+            });
+        });
     };
 
     /**
@@ -275,9 +341,15 @@ jQuery.PrivateBin.Auth = (function($) {
         var html = '<div class="modal fade" id="auth-modal" tabindex="-1">' +
             '<div class="modal-dialog modal-lg">' +
             '<div class="modal-content">' +
-            '<div class="modal-header"><h5 class="modal-title">User Administration</h5>' +
+            '<div class="modal-header"><h5 class="modal-title">Administration</h5>' +
             '<button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>' +
             '<div class="modal-body">' +
+            '<ul class="nav nav-tabs mb-3" role="tablist">' +
+            '<li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#admin-tab-users">Users</a></li>' +
+            '<li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#admin-tab-settings">Settings</a></li>' +
+            '</ul>' +
+            '<div class="tab-content">' +
+            '<div class="tab-pane fade show active" id="admin-tab-users">' +
             '<div class="alert alert-danger d-none" id="auth-error"></div>' +
             '<div class="alert alert-success d-none" id="auth-success"></div>' +
             '<h6>Add User</h6>' +
@@ -290,6 +362,13 @@ jQuery.PrivateBin.Auth = (function($) {
             '</form>' +
             '<h6>Users</h6>' +
             '<div id="admin-users-list"><p class="text-muted">Loading...</p></div>' +
+            '</div>' +
+            '<div class="tab-pane fade" id="admin-tab-settings">' +
+            '<div class="alert alert-danger d-none" id="settings-error"></div>' +
+            '<div class="alert alert-success d-none" id="settings-success"></div>' +
+            '<div id="admin-settings-content"><p class="text-muted">Loading settings...</p></div>' +
+            '</div>' +
+            '</div>' +
             '</div></div></div></div>';
 
         me.removeModal();
@@ -301,6 +380,11 @@ jQuery.PrivateBin.Auth = (function($) {
 
         me.loadUsers();
 
+        // load settings when tab is shown
+        $('a[href="#admin-tab-settings"]').on('shown.bs.tab', function() {
+            me.loadSettings();
+        });
+
         $('#auth-add-user-form').on('submit', function(e) {
             e.preventDefault();
             me.adminCreateUser(
@@ -308,6 +392,167 @@ jQuery.PrivateBin.Auth = (function($) {
                 $('#admin-new-password').val(),
                 $('#admin-new-role').val()
             );
+        });
+    };
+
+    /**
+     * Load and render settings form
+     *
+     * @name Auth.loadSettings
+     * @function
+     */
+    me.loadSettings = function() {
+        me.apiCall({
+            auth_action: 'get_settings',
+            csrf_token: csrfToken
+        }, function(data) {
+            var s = data.settings || {};
+            var html = '<form id="admin-settings-form">';
+
+            // Main section
+            html += '<h6 class="border-bottom pb-2 mb-3">General</h6>';
+            html += '<div class="row g-3 mb-4">';
+            html += me.settingsInput('main', 'name', 'Site Name', s, 'text');
+            html += me.settingsInput('main', 'basepath', 'Base URL', s, 'text', 'https://example.com/');
+            html += me.settingsCheckbox('main', 'discussion', 'Enable discussions', s);
+            html += me.settingsCheckbox('main', 'opendiscussion', 'Pre-select discussions', s);
+            html += me.settingsCheckbox('main', 'password', 'Enable paste passwords', s);
+            html += me.settingsCheckbox('main', 'fileupload', 'Enable file upload', s);
+            html += me.settingsCheckbox('main', 'burnafterreadingselected', 'Pre-select burn after reading', s);
+            html += me.settingsCheckbox('main', 'qrcode', 'Enable QR code sharing', s);
+            html += me.settingsCheckbox('main', 'email', 'Enable email sharing', s);
+            html += me.settingsSelect('main', 'defaultformatter', 'Default format', s,
+                {plaintext: 'Plain Text', syntaxhighlighting: 'Source Code', markdown: 'Markdown'});
+            html += me.settingsSelect('main', 'compression', 'Compression', s,
+                {zlib: 'zlib', none: 'None'});
+            html += me.settingsInput('main', 'sizelimit', 'Size limit (bytes)', s, 'number');
+            html += me.settingsSelect('main', 'template', 'Default template', s,
+                {'bootstrap5': 'Bootstrap 5', 'bootstrap': 'Bootstrap 3', 'bootstrap-dark': 'Bootstrap Dark',
+                 'bootstrap-compact': 'Bootstrap Compact', 'bootstrap-page': 'Bootstrap Page',
+                 'bootstrap-dark-page': 'Dark Page', 'bootstrap-compact-page': 'Compact Page'});
+            html += me.settingsCheckbox('main', 'languageselection', 'Enable language selection', s);
+            html += me.settingsInput('main', 'notice', 'Notice text', s, 'text', 'Optional notice shown to users');
+            html += me.settingsCheckbox('main', 'httpwarning', 'HTTP warning', s);
+            html += '</div>';
+
+            // Auth section
+            html += '<h6 class="border-bottom pb-2 mb-3">Authentication</h6>';
+            html += '<div class="row g-3 mb-4">';
+            html += me.settingsCheckbox('auth', 'enabled', 'Enable authentication', s);
+            html += me.settingsCheckbox('auth', 'require_login_to_create', 'Require login to create', s);
+            html += me.settingsCheckbox('auth', 'require_login_to_read', 'Require login to read', s);
+            html += me.settingsCheckbox('auth', 'allow_registration', 'Allow self-registration', s);
+            html += me.settingsInput('auth', 'session_timeout', 'Session timeout (seconds)', s, 'number');
+            html += '</div>';
+
+            // Traffic section
+            html += '<h6 class="border-bottom pb-2 mb-3">Rate Limiting</h6>';
+            html += '<div class="row g-3 mb-4">';
+            html += me.settingsInput('traffic', 'limit', 'Rate limit (seconds)', s, 'number');
+            html += me.settingsInput('traffic', 'header', 'IP header (proxy)', s, 'text', 'e.g. X_FORWARDED_FOR');
+            html += me.settingsInput('traffic', 'exempted', 'Exempted IPs', s, 'text', 'Comma-separated');
+            html += me.settingsInput('traffic', 'creators', 'Creator IPs', s, 'text', 'Comma-separated');
+            html += '</div>';
+
+            // Purge section
+            html += '<h6 class="border-bottom pb-2 mb-3">Purge</h6>';
+            html += '<div class="row g-3 mb-4">';
+            html += me.settingsInput('purge', 'limit', 'Purge interval (seconds)', s, 'number');
+            html += me.settingsInput('purge', 'batchsize', 'Purge batch size', s, 'number');
+            html += '</div>';
+
+            // Expire section
+            html += '<h6 class="border-bottom pb-2 mb-3">Expiration</h6>';
+            html += '<div class="row g-3 mb-4">';
+            var expireOpts = s.expire_options || {};
+            var expireKeys = {};
+            for (var ek in expireOpts) { expireKeys[ek] = ek; }
+            html += me.settingsSelect('expire', 'default', 'Default expiration', s, expireKeys);
+            html += '</div>';
+
+            html += '<button type="submit" class="btn btn-primary">Save Settings</button>';
+            html += '</form>';
+
+            $('#admin-settings-content').html(html);
+
+            $('#admin-settings-form').on('submit', function(e) {
+                e.preventDefault();
+                me.saveSettings();
+            });
+        });
+    };
+
+    /**
+     * Generate a text/number input for settings
+     */
+    me.settingsInput = function(section, key, label, settings, type, placeholder) {
+        var value = (settings[section] && settings[section][key] !== undefined) ? settings[section][key] : '';
+        return '<div class="col-md-6"><label class="form-label small">' + label + '</label>' +
+            '<input type="' + (type || 'text') + '" class="form-control form-control-sm" ' +
+            'data-section="' + section + '" data-key="' + key + '" ' +
+            'value="' + me.escapeHtml(String(value)) + '"' +
+            (placeholder ? ' placeholder="' + me.escapeHtml(placeholder) + '"' : '') +
+            '></div>';
+    };
+
+    /**
+     * Generate a checkbox for settings
+     */
+    me.settingsCheckbox = function(section, key, label, settings) {
+        var checked = (settings[section] && settings[section][key]) ? ' checked' : '';
+        return '<div class="col-md-6"><div class="form-check">' +
+            '<input type="checkbox" class="form-check-input" ' +
+            'data-section="' + section + '" data-key="' + key + '"' + checked + '>' +
+            '<label class="form-check-label small">' + label + '</label></div></div>';
+    };
+
+    /**
+     * Generate a select for settings
+     */
+    me.settingsSelect = function(section, key, label, settings, options) {
+        var current = (settings[section] && settings[section][key] !== undefined) ? settings[section][key] : '';
+        var html = '<div class="col-md-6"><label class="form-label small">' + label + '</label>' +
+            '<select class="form-select form-select-sm" data-section="' + section + '" data-key="' + key + '">';
+        for (var val in options) {
+            html += '<option value="' + me.escapeHtml(val) + '"' +
+                (val === String(current) ? ' selected' : '') + '>' +
+                me.escapeHtml(options[val]) + '</option>';
+        }
+        html += '</select></div>';
+        return html;
+    };
+
+    /**
+     * Save settings from the admin form
+     *
+     * @name Auth.saveSettings
+     * @function
+     */
+    me.saveSettings = function() {
+        var settings = {};
+
+        $('#admin-settings-form [data-section][data-key]').each(function() {
+            var section = $(this).data('section');
+            var key = $(this).data('key');
+            if (!settings[section]) { settings[section] = {}; }
+
+            if ($(this).is(':checkbox')) {
+                settings[section][key] = $(this).is(':checked');
+            } else {
+                settings[section][key] = $(this).val();
+            }
+        });
+
+        me.apiCall({
+            auth_action: 'save_settings',
+            settings: settings,
+            csrf_token: csrfToken
+        }, function() {
+            $('#settings-success').text('Settings saved successfully. Some changes may require a page reload.').removeClass('d-none');
+            $('#settings-error').addClass('d-none');
+        }, function(msg) {
+            $('#settings-error').text(msg).removeClass('d-none');
+            $('#settings-success').addClass('d-none');
         });
     };
 
@@ -502,7 +747,7 @@ jQuery.PrivateBin.Auth = (function($) {
      * @param {object} data - request data
      * @param {function} success - success callback
      */
-    me.apiCall = function(data, success) {
+    me.apiCall = function(data, success, errorCallback) {
         $.ajax({
             type: 'POST',
             url: window.location.pathname || '/',
@@ -517,10 +762,20 @@ jQuery.PrivateBin.Auth = (function($) {
                     success(response);
                 }
             } else {
-                me.showError(response.message || 'An error occurred.');
+                var msg = response.message || 'An error occurred.';
+                if (typeof errorCallback === 'function') {
+                    errorCallback(msg);
+                } else {
+                    me.showError(msg);
+                }
             }
         }).fail(function() {
-            me.showError('Network error. Please try again.');
+            var msg = 'Network error. Please try again.';
+            if (typeof errorCallback === 'function') {
+                errorCallback(msg);
+            } else {
+                me.showError(msg);
+            }
         });
     };
 

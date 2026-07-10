@@ -367,6 +367,75 @@ endif;
 		<main>
 			<section class="container-fluid mt-2">
 <?php
+if ($AUTH_ENABLED && empty($AUTH_USER) && !$AUTH_NEEDS_SETUP) :
+?>
+				<div id="auth-login-page" class="row justify-content-center mt-5">
+					<div class="col-md-4 col-lg-3">
+						<div class="card shadow-sm">
+							<div class="card-body">
+								<h4 class="card-title text-center mb-4">
+									<svg width="24" height="24" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#lock" /></svg>
+									<?php echo I18n::_('Login Required'); ?>
+								</h4>
+								<div class="alert alert-danger d-none" id="auth-login-error"></div>
+								<form id="auth-login-page-form">
+									<div class="mb-3">
+										<label for="auth-page-username" class="form-label"><?php echo I18n::_('Username'); ?></label>
+										<input type="text" class="form-control" id="auth-page-username" required autocomplete="username" autofocus>
+									</div>
+									<div class="mb-3">
+										<label for="auth-page-password" class="form-label"><?php echo I18n::_('Password'); ?></label>
+										<input type="password" class="form-control" id="auth-page-password" required autocomplete="current-password">
+									</div>
+									<button type="submit" class="btn btn-primary w-100"><?php echo I18n::_('Login'); ?></button>
+								</form>
+<?php
+    if ($AUTH_ALLOW_REGISTRATION) :
+?>
+								<p class="mt-3 text-center mb-0">
+									<a href="#" id="auth-page-show-register"><?php echo I18n::_('Create an account'); ?></a>
+								</p>
+<?php
+    endif;
+?>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div id="auth-register-page" class="row justify-content-center mt-5 d-none">
+					<div class="col-md-4 col-lg-3">
+						<div class="card shadow-sm">
+							<div class="card-body">
+								<h4 class="card-title text-center mb-4"><?php echo I18n::_('Register'); ?></h4>
+								<div class="alert alert-danger d-none" id="auth-register-error"></div>
+								<form id="auth-register-page-form">
+									<div class="mb-3">
+										<label for="auth-page-reg-username" class="form-label"><?php echo I18n::_('Username'); ?></label>
+										<input type="text" class="form-control" id="auth-page-reg-username" required autocomplete="username">
+										<div class="form-text"><?php echo I18n::_('3-64 characters: letters, numbers, _, -, .'); ?></div>
+									</div>
+									<div class="mb-3">
+										<label for="auth-page-reg-password" class="form-label"><?php echo I18n::_('Password'); ?></label>
+										<input type="password" class="form-control" id="auth-page-reg-password" required autocomplete="new-password">
+										<div class="form-text"><?php echo I18n::_('Minimum 8 characters'); ?></div>
+									</div>
+									<div class="mb-3">
+										<label for="auth-page-reg-password2" class="form-label"><?php echo I18n::_('Confirm Password'); ?></label>
+										<input type="password" class="form-control" id="auth-page-reg-password2" required autocomplete="new-password">
+									</div>
+									<button type="submit" class="btn btn-primary w-100"><?php echo I18n::_('Register'); ?></button>
+								</form>
+								<p class="mt-3 text-center mb-0">
+									<a href="#" id="auth-page-show-login"><?php echo I18n::_('Back to login'); ?></a>
+								</p>
+							</div>
+						</div>
+					</div>
+				</div>
+<?php
+else :
+?>
+<?php
 if (!empty($NOTICE)) :
 ?>
 				<div role="alert" class="alert alert-info">
@@ -521,6 +590,10 @@ endif;
 					<span class="small"><?php echo I18n::_('In case this message never disappears please have a look at <a href="%s">this FAQ for information to troubleshoot</a>.', 'https://github.com/PrivateBin/PrivateBin/wiki/FAQ#why-does-the-loading-message-not-go-away'); ?></span>
 				</div>
 			</section>
+<?php
+// close the auth login/content conditional from line 370
+endif;
+?>
 		</main>
 		<footer class="container-fluid mt-auto">
 			<div class="row">

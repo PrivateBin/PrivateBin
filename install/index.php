@@ -109,6 +109,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
             }
 
+            // read additional settings from form
+            $discussion        = !empty($_POST['discussion']);
+            $password          = !empty($_POST['password_feature']);
+            $fileupload        = !empty($_POST['fileupload']);
+            $burnafterreading  = !empty($_POST['burnafterreading']);
+            $qrcode            = !empty($_POST['qrcode']);
+            $email             = !empty($_POST['email_feature']);
+            $languageselection = !empty($_POST['languageselection']);
+            $defaultformatter  = $_POST['defaultformatter'] ?? 'plaintext';
+            $template          = $_POST['template'] ?? 'bootstrap5';
+            $sizelimit         = (int) ($_POST['sizelimit'] ?? 10000000);
+            $ratelimit         = (int) ($_POST['ratelimit'] ?? 10);
+            $defaultexpire     = $_POST['defaultexpire'] ?? '1week';
+            $compression       = $_POST['compression'] ?? 'zlib';
+
             // generate configuration file
             $conf = ";<?php http_response_code(403); /*\n";
             $conf .= "; config file for PrivateBin\n";
@@ -116,15 +131,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             $conf .= "[main]\n";
             $conf .= "name = \"" . addslashes($siteName) . "\"\n";
-            $conf .= "discussion = true\n";
+            $conf .= "discussion = " . ($discussion ? 'true' : 'false') . "\n";
             $conf .= "opendiscussion = false\n";
-            $conf .= "password = true\n";
-            $conf .= "fileupload = false\n";
-            $conf .= "burnafterreadingselected = false\n";
-            $conf .= "defaultformatter = \"plaintext\"\n";
-            $conf .= "sizelimit = 10000000\n";
-            $conf .= "template = \"bootstrap5\"\n";
-            $conf .= "languageselection = true\n\n";
+            $conf .= "password = " . ($password ? 'true' : 'false') . "\n";
+            $conf .= "fileupload = " . ($fileupload ? 'true' : 'false') . "\n";
+            $conf .= "burnafterreadingselected = " . ($burnafterreading ? 'true' : 'false') . "\n";
+            $conf .= "defaultformatter = \"" . addslashes($defaultformatter) . "\"\n";
+            $conf .= "sizelimit = $sizelimit\n";
+            $conf .= "template = \"" . addslashes($template) . "\"\n";
+            $conf .= "languageselection = " . ($languageselection ? 'true' : 'false') . "\n";
+            $conf .= "qrcode = " . ($qrcode ? 'true' : 'false') . "\n";
+            $conf .= "email = " . ($email ? 'true' : 'false') . "\n";
+            $conf .= "compression = \"" . addslashes($compression) . "\"\n\n";
 
             $conf .= "[auth]\n";
             $conf .= "enabled = " . ($authEnabled ? 'true' : 'false') . "\n";
@@ -134,7 +152,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $conf .= "session_timeout = 3600\n\n";
 
             $conf .= "[expire]\n";
-            $conf .= "default = \"1week\"\n\n";
+            $conf .= "default = \"" . addslashes($defaultexpire) . "\"\n\n";
 
             $conf .= "[expire_options]\n";
             $conf .= "5min = 300\n";
@@ -152,7 +170,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $conf .= "markdown = \"Markdown\"\n\n";
 
             $conf .= "[traffic]\n";
-            $conf .= "limit = 10\n\n";
+            $conf .= "limit = $ratelimit\n\n";
 
             $conf .= "[purge]\n";
             $conf .= "limit = 300\n";
@@ -263,6 +281,103 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <label for="site_name" class="form-label">Site Name</label>
                 <input type="text" class="form-control" id="site_name" name="site_name"
                     value="<?php echo htmlspecialchars($_POST['site_name'] ?? 'PrivateBin'); ?>">
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h5>⚙️ Features</h5>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-2 form-check">
+                        <input type="checkbox" class="form-check-input" name="discussion" value="1"
+                            <?php echo !empty($_POST['discussion']) || !isset($_POST['step']) ? 'checked' : ''; ?>>
+                        <label class="form-check-label">Enable discussions / comments</label>
+                    </div>
+                    <div class="mb-2 form-check">
+                        <input type="checkbox" class="form-check-input" name="password_feature" value="1"
+                            <?php echo !empty($_POST['password_feature']) || !isset($_POST['step']) ? 'checked' : ''; ?>>
+                        <label class="form-check-label">Enable paste passwords</label>
+                    </div>
+                    <div class="mb-2 form-check">
+                        <input type="checkbox" class="form-check-input" name="fileupload" value="1"
+                            <?php echo !empty($_POST['fileupload']) ? 'checked' : ''; ?>>
+                        <label class="form-check-label">Enable file upload</label>
+                    </div>
+                    <div class="mb-2 form-check">
+                        <input type="checkbox" class="form-check-input" name="burnafterreading" value="1"
+                            <?php echo !empty($_POST['burnafterreading']) ? 'checked' : ''; ?>>
+                        <label class="form-check-label">Pre-select burn after reading</label>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-2 form-check">
+                        <input type="checkbox" class="form-check-input" name="qrcode" value="1"
+                            <?php echo !empty($_POST['qrcode']) || !isset($_POST['step']) ? 'checked' : ''; ?>>
+                        <label class="form-check-label">Enable QR code sharing</label>
+                    </div>
+                    <div class="mb-2 form-check">
+                        <input type="checkbox" class="form-check-input" name="email_feature" value="1"
+                            <?php echo !empty($_POST['email_feature']) || !isset($_POST['step']) ? 'checked' : ''; ?>>
+                        <label class="form-check-label">Enable email sharing</label>
+                    </div>
+                    <div class="mb-2 form-check">
+                        <input type="checkbox" class="form-check-input" name="languageselection" value="1"
+                            <?php echo !empty($_POST['languageselection']) || !isset($_POST['step']) ? 'checked' : ''; ?>>
+                        <label class="form-check-label">Enable language selection</label>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">Default format</label>
+                    <select class="form-select form-select-sm" name="defaultformatter">
+                        <option value="plaintext" <?php echo ($_POST['defaultformatter'] ?? 'plaintext') === 'plaintext' ? 'selected' : ''; ?>>Plain Text</option>
+                        <option value="syntaxhighlighting" <?php echo ($_POST['defaultformatter'] ?? '') === 'syntaxhighlighting' ? 'selected' : ''; ?>>Source Code</option>
+                        <option value="markdown" <?php echo ($_POST['defaultformatter'] ?? '') === 'markdown' ? 'selected' : ''; ?>>Markdown</option>
+                    </select>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">Template</label>
+                    <select class="form-select form-select-sm" name="template">
+                        <option value="bootstrap5" <?php echo ($_POST['template'] ?? 'bootstrap5') === 'bootstrap5' ? 'selected' : ''; ?>>Bootstrap 5</option>
+                        <option value="bootstrap" <?php echo ($_POST['template'] ?? '') === 'bootstrap' ? 'selected' : ''; ?>>Bootstrap 3</option>
+                        <option value="bootstrap-dark" <?php echo ($_POST['template'] ?? '') === 'bootstrap-dark' ? 'selected' : ''; ?>>Dark</option>
+                        <option value="bootstrap-compact" <?php echo ($_POST['template'] ?? '') === 'bootstrap-compact' ? 'selected' : ''; ?>>Compact</option>
+                    </select>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">Compression</label>
+                    <select class="form-select form-select-sm" name="compression">
+                        <option value="zlib" <?php echo ($_POST['compression'] ?? 'zlib') === 'zlib' ? 'selected' : ''; ?>>zlib (recommended)</option>
+                        <option value="none" <?php echo ($_POST['compression'] ?? '') === 'none' ? 'selected' : ''; ?>>None</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">Size limit (bytes)</label>
+                    <input type="number" class="form-control form-control-sm" name="sizelimit"
+                        value="<?php echo htmlspecialchars($_POST['sizelimit'] ?? '10000000'); ?>">
+                    <div class="form-text">Default: 10 MB</div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">Rate limit (seconds)</label>
+                    <input type="number" class="form-control form-control-sm" name="ratelimit"
+                        value="<?php echo htmlspecialchars($_POST['ratelimit'] ?? '10'); ?>">
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">Default expiration</label>
+                    <select class="form-select form-select-sm" name="defaultexpire">
+                        <option value="5min" <?php echo ($_POST['defaultexpire'] ?? '') === '5min' ? 'selected' : ''; ?>>5 minutes</option>
+                        <option value="10min" <?php echo ($_POST['defaultexpire'] ?? '') === '10min' ? 'selected' : ''; ?>>10 minutes</option>
+                        <option value="1hour" <?php echo ($_POST['defaultexpire'] ?? '') === '1hour' ? 'selected' : ''; ?>>1 hour</option>
+                        <option value="1day" <?php echo ($_POST['defaultexpire'] ?? '') === '1day' ? 'selected' : ''; ?>>1 day</option>
+                        <option value="1week" <?php echo ($_POST['defaultexpire'] ?? '1week') === '1week' ? 'selected' : ''; ?>>1 week</option>
+                        <option value="1month" <?php echo ($_POST['defaultexpire'] ?? '') === '1month' ? 'selected' : ''; ?>>1 month</option>
+                        <option value="1year" <?php echo ($_POST['defaultexpire'] ?? '') === '1year' ? 'selected' : ''; ?>>1 year</option>
+                        <option value="never" <?php echo ($_POST['defaultexpire'] ?? '') === 'never' ? 'selected' : ''; ?>>Never</option>
+                    </select>
+                </div>
             </div>
         </div>
 

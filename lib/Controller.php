@@ -336,6 +336,12 @@ class Controller
             case 'toggle_active':
                 $this->_authToggleActive();
                 break;
+            case 'get_settings':
+                $this->_authGetSettings();
+                break;
+            case 'save_settings':
+                $this->_authSaveSettings();
+                break;
             default:
                 $this->_json_error(I18n::_('Invalid authentication action.'));
         }
@@ -640,6 +646,92 @@ class Controller
     {
         $user = $this->_auth->getCurrentUser();
         return $user !== null && $user->isAdmin();
+    }
+
+    /**
+     * Get settings (admin only)
+     *
+     * @access private
+     */
+    private function _authGetSettings(): void
+    {
+        if (!$this->_isAdmin()) {
+            $this->_json_error(I18n::_('Admin access required.'));
+            return;
+        }
+
+        $this->_json = Json::encode(array(
+            'status'   => 0,
+            'settings' => $this->_conf->getSafeConfig(),
+        ));
+    }
+
+    /**
+     * Save settings (admin only)
+     *
+     * @access private
+     */
+    private function _authSaveSettings(): void
+    {
+        if (!$this->_isAdmin()) {
+            $this->_json_error(I18n::_('Admin access required.'));
+            return;
+        }
+
+        $this->_validateCsrf();
+
+        $settings = $this->_request->getParam('settings', '');
+        if (empty($settings) || !is_array($settings)) {
+            $this->_json_error(I18n::_('Invalid settings data.'));
+            return;
+        }
+
+        // type-cast known boolean and integer values
+        $settings = $this->_castSettingsTypes($settings);
+
+        if ($this->_conf->updateAndSave($settings)) {
+            $this->_json = Json::encode(array('status' => 0));
+        } else {
+            $this->_json_error(I18n::_('Failed to save settings. Check file permissions on cfg/conf.php.'));
+        }
+    }
+
+    /**
+     * Cast settings values to their expected PHP types
+     *
+     * @access private
+     * @param array $settings
+     * @return array
+     */
+    private function _castSettingsTypes(array $settings): array
+    {
+        $boolKeys = array(
+            'main' => array('discussion', 'opendiscussion', 'discussiondatedisplay', 'password',
+                'fileupload', 'burnafterreadingselected', 'templateselection',
+                'languageselection', 'shortenbydefault', 'qrcode', 'email', 'httpwarning'),
+            'auth' => array('enabled', 'require_login_to_create', 'require_login_to_read', 'allow_registration'),
+        );
+        $intKeys = array(
+            'main' => array('sizelimit'),
+            'auth' => array('session_timeout'),
+            'traffic' => array('limit'),
+            'purge' => array('limit', 'batchsize'),
+        );
+
+        foreach ($settings as $section => &$values) {
+            if (!is_array($values)) {
+                continue;
+            }
+            foreach ($values as $key => &$value) {
+                if (isset($boolKeys[$section]) && in_array($key, $boolKeys[$section], true)) {
+                    $value = filter_var($value, FILTER_VALIDATE_BOOLEAN);
+                } elseif (isset($intKeys[$section]) && in_array($key, $intKeys[$section], true)) {
+                    $value = (int) $value;
+                }
+            }
+        }
+
+        return $settings;
     }
 
     /**
