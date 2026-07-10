@@ -1,5 +1,16 @@
 <?php declare(strict_types=1);
 use PrivateBin\I18n;
+
+// defaults for auth variables (may not be set in tests)
+$AUTH_ENABLED              = $AUTH_ENABLED ?? false;
+$AUTH_ALLOW_REGISTRATION   = $AUTH_ALLOW_REGISTRATION ?? false;
+$AUTH_REQUIRE_LOGIN_CREATE = $AUTH_REQUIRE_LOGIN_CREATE ?? false;
+$AUTH_REQUIRE_LOGIN_READ   = $AUTH_REQUIRE_LOGIN_READ ?? false;
+$AUTH_NEEDS_SETUP          = $AUTH_NEEDS_SETUP ?? false;
+$AUTH_USER                 = $AUTH_USER ?? '';
+$AUTH_ROLE                 = $AUTH_ROLE ?? '';
+$AUTH_CSRF                 = $AUTH_CSRF ?? '';
+$AUTH_FORCE_PASSWORD_CHANGE = $AUTH_FORCE_PASSWORD_CHANGE ?? false;
 ?><!DOCTYPE html>
 <html lang="<?php echo I18n::getLanguage(); ?>"<?php echo I18n::isRtl() ? ' dir="rtl"' : ''; ?> class="h-100">
 	<head>
