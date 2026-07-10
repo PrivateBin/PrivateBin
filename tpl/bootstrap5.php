@@ -53,6 +53,13 @@ endif;
 		<?php $this->_scriptTag('js/purify-3.4.1.js', 'defer'); ?>
 		<?php $this->_scriptTag('js/legacy.js', 'defer'); ?>
 		<?php $this->_scriptTag('js/privatebin.js', 'defer'); ?>
+<?php
+if ($AUTH_ENABLED) :
+?>
+		<?php $this->_scriptTag('js/auth.js', 'defer'); ?>
+<?php
+endif;
+?>
 		<!-- icon -->
 		<link rel="apple-touch-icon" href="<?php echo I18n::encode($BASEPATH); ?>img/apple-touch-icon.png" sizes="180x180" />
 		<link rel="icon" type="image/png" href="img/favicon-32x32.png" sizes="32x32" />
@@ -561,6 +568,26 @@ endif;
 if ($FILEUPLOAD) :
 ?>
 		<div id="dropzone" class="hidden" tabindex="-1" aria-hidden="true"></div>
+<?php
+endif;
+if ($AUTH_ENABLED) :
+?>
+		<script>
+		jQuery(document).ready(function() {
+			if (jQuery.PrivateBin && jQuery.PrivateBin.Auth) {
+				jQuery.PrivateBin.Auth.init({
+					enabled: true,
+					allowRegistration: <?php echo $AUTH_ALLOW_REGISTRATION ? 'true' : 'false'; ?>,
+					needsSetup: <?php echo $AUTH_NEEDS_SETUP ? 'true' : 'false'; ?>,
+					requireLoginCreate: <?php echo $AUTH_REQUIRE_LOGIN_CREATE ? 'true' : 'false'; ?>,
+					requireLoginRead: <?php echo $AUTH_REQUIRE_LOGIN_READ ? 'true' : 'false'; ?>,
+					username: <?php echo json_encode($AUTH_USER); ?>,
+					role: <?php echo json_encode($AUTH_ROLE); ?>,
+					csrf: <?php echo json_encode($AUTH_CSRF); ?>
+				});
+			}
+		});
+		</script>
 <?php
 endif;
 ?>

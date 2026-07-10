@@ -139,6 +139,26 @@ languageselection = false
 ; Can be set to one these values: "none" / "zlib" (default).
 ; compression = "zlib"
 
+[auth]
+; Enable built-in user authentication, defaults to false.
+; When enabled, you can require users to log in to create or read pastes.
+; On first enable, visit the site to set up the initial admin account.
+; enabled = false
+
+; Require login to create new pastes, defaults to true (when auth is enabled).
+; require_login_to_create = true
+
+; Require login to read existing pastes, defaults to false.
+; When false, anyone with the link can read pastes even without an account.
+; require_login_to_read = false
+
+; Allow users to self-register accounts, defaults to false.
+; When false, only admins can create new user accounts.
+; allow_registration = false
+
+; Session timeout in seconds, defaults to 3600 (1 hour).
+; session_timeout = 3600
+
 [expire]
 ; expire value that is selected per default
 ; make sure the value exists in [expire_options]

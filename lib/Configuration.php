@@ -98,6 +98,13 @@ class Configuration
             'limit'     => 300,
             'batchsize' => 10,
         ),
+        'auth' => array(
+            'enabled'                 => false,
+            'require_login_to_create' => true,
+            'require_login_to_read'   => false,
+            'allow_registration'      => false,
+            'session_timeout'         => 3600,
+        ),
         'model' => array(
             'class' => 'Filesystem',
         ),
@@ -123,6 +130,7 @@ class Configuration
             'js/legacy.js'           => 'sha512-RQEo1hxpNc37i+jz/D9/JiAZhG8GFx3+SNxjYnI7jUgirDIqrCSj6QPAAZeaidditcWzsJ3jxfEj5lVm7ZwTRQ==',
             'js/prettify.js'         => 'sha512-puO0Ogy++IoA2Pb9IjSxV1n4+kQkKXYAEUtVzfZpQepyDPyXk8hokiYDS7ybMogYlyyEIwMLpZqVhCkARQWLMg==',
             'js/privatebin.js'       => 'sha512-zbka2ePFe4nT6QVb6tManMPWaZleeJk57R0eRgQTZNpRdu5LklTuSdHnIfFKtY7ZLbN2tER1vKYDx1eHwvnDfg==',
+            'js/auth.js'             => 'sha512-AIjw5ipTYiRk9JMFRqXRZTz5dtB5gbIfXosMvFL0ZBKRd9xTE2UMPVbnZh2jJxrK/LBi3wuO58F/tYpEbxxH/Q==',
             'js/purify-3.4.1.js'     => 'sha512-280a/Vb6fVFsYaeRrkuDp4EDmdYlt2XS+dlDEO/U9qljPrAraA2bIzHTNmP+9dpwPDDwTML+RS+h5iaagPwTzA==',
             'js/showdown-2.1.0.js'   => 'sha512-WYXZgkTR0u/Y9SVIA4nTTOih0kXMEd8RRV6MLFdL6YU8ymhR528NLlYQt1nlJQbYz4EW+ZsS0fx1awhiQJme1Q==',
             'js/zlib-1.3.2.js'       => 'sha512-RAhJgxg9siMIA8ky4c10Rc2zUgnK80olHB8Tt1IOYWY4Eh1WmrviQkDn+sgBlb38ZHq3tzufGC41kP360gmosQ==',

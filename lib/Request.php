@@ -116,6 +116,10 @@ class Request
                 } catch (JsonException $e) {
                     // ignore error, $this->_params will remain empty
                 }
+                // check if this is an auth request
+                if (array_key_exists('auth_action', $this->_params) && !empty($this->_params['auth_action'])) {
+                    $this->_operation = 'auth';
+                }
                 break;
             default:
                 $this->_params = filter_var_array($_GET, array(
@@ -126,6 +130,14 @@ class Request
                     'shortenviayourls' => FILTER_SANITIZE_SPECIAL_CHARS,
                     'shortenviashlink' => FILTER_SANITIZE_SPECIAL_CHARS,
                 ), false);
+                // check if this is an auth status/logout GET request
+                if (
+                    array_key_exists('auth_action', $_GET) &&
+                    in_array($_GET['auth_action'], array('status', 'logout'), true)
+                ) {
+                    $this->_params['auth_action'] = filter_var($_GET['auth_action'], FILTER_SANITIZE_SPECIAL_CHARS);
+                    $this->_operation             = 'auth';
+                }
         }
         if (
             !array_key_exists('pasteid', $this->_params) &&

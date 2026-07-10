@@ -12,6 +12,8 @@
 namespace PrivateBin;
 
 use Exception;
+use PrivateBin\Auth\Auth;
+use PrivateBin\Auth\User;
 use PrivateBin\Exception\JsonException;
 use PrivateBin\Exception\TranslatedException;
 use PrivateBin\Persistence\ServerSalt;
@@ -97,6 +99,14 @@ class Controller
     private $_model;
 
     /**
+     * authentication handler
+     *
+     * @access private
+     * @var    Auth
+     */
+    private $_auth;
+
+    /**
      * request
      *
      * @access private
@@ -139,6 +149,9 @@ class Controller
 
         switch ($this->_request->getOperation()) {
             case 'create':
+                if ($this->_requireAuth('create')) {
+                    break;
+                }
                 $this->_create();
                 break;
             case 'delete':
@@ -148,6 +161,9 @@ class Controller
                 );
                 break;
             case 'read':
+                if ($this->_requireAuth('read')) {
+                    break;
+                }
                 $this->_read($this->_request->getParam('pasteid'));
                 break;
             case 'jsonld':
@@ -158,6 +174,9 @@ class Controller
                 break;
             case 'shlinkproxy':
                 $this->_shortenerproxy(new ShlinkProxy($this->_conf, $this->_request->getParam('link')));
+                break;
+            case 'auth':
+                $this->_handleAuth();
                 break;
         }
 
@@ -188,6 +207,10 @@ class Controller
         $this->_model   = new Model($this->_conf);
         $this->_request = new Request;
         $this->_urlBase = $this->_request->getRequestUri();
+        $this->_auth    = new Auth($this->_conf, $this->_model->getStore());
+
+        // attempt to resume existing session
+        $this->_auth->authenticate();
 
         $this->_setDefaultLanguage();
         $this->_setDefaultTemplate();
@@ -231,6 +254,404 @@ class Controller
             unset($_COOKIE['template']); // ensure value is not re-used in template switcher
             $expiredInAllTimezones = time() - 86400;
             setcookie('template', '', array('expires' => $expiredInAllTimezones, 'SameSite' => 'Lax', 'Secure' => true));
+        }
+    }
+
+    /**
+     * Check if auth is required for the given operation and deny if not authenticated
+     *
+     * @access private
+     * @param string $operation 'create' or 'read'
+     * @return bool true if access was denied (caller should break)
+     */
+    private function _requireAuth(string $operation): bool
+    {
+        if (!$this->_auth->isEnabled()) {
+            return false;
+        }
+
+        $required = ($operation === 'create')
+            ? $this->_auth->requiresLoginToCreate()
+            : $this->_auth->requiresLoginToRead();
+
+        if (!$required) {
+            return false;
+        }
+
+        if ($this->_auth->getCurrentUser() !== null) {
+            return false;
+        }
+
+        if ($this->_request->isJsonApiCall()) {
+            $this->_json_error(I18n::_('Authentication required.'));
+        } else {
+            $this->_error = 'Please log in to access this resource.';
+        }
+        return true;
+    }
+
+    /**
+     * Handle authentication API calls (login, logout, register, admin user management)
+     *
+     * @access private
+     */
+    private function _handleAuth(): void
+    {
+        $action = $this->_request->getParam('auth_action', '');
+
+        // special case: initial setup when no users exist
+        if ($action === 'setup' && $this->_auth->isEnabled() && !$this->_auth->hasUsers()) {
+            $this->_authSetup();
+            return;
+        }
+
+        switch ($action) {
+            case 'login':
+                $this->_authLogin();
+                break;
+            case 'logout':
+                $this->_authLogout();
+                break;
+            case 'register':
+                $this->_authRegister();
+                break;
+            case 'status':
+                $this->_authStatus();
+                break;
+            case 'users':
+                $this->_authListUsers();
+                break;
+            case 'create_user':
+                $this->_authCreateUser();
+                break;
+            case 'delete_user':
+                $this->_authDeleteUser();
+                break;
+            case 'change_password':
+                $this->_authChangePassword();
+                break;
+            case 'change_role':
+                $this->_authChangeRole();
+                break;
+            case 'toggle_active':
+                $this->_authToggleActive();
+                break;
+            default:
+                $this->_json_error(I18n::_('Invalid authentication action.'));
+        }
+    }
+
+    /**
+     * Handle initial admin setup (first user creation)
+     *
+     * @access private
+     */
+    private function _authSetup(): void
+    {
+        $username = $this->_request->getParam('username', '');
+        $password = $this->_request->getParam('password', '');
+
+        $result = $this->_auth->createUser($username, $password, User::ROLE_ADMIN);
+        if ($result['success']) {
+            // auto-login the new admin
+            $this->_auth->login($username, $password);
+            $user       = $this->_auth->getCurrentUser();
+            $this->_json = Json::encode(array(
+                'status'   => 0,
+                'username' => $user->getUsername(),
+                'role'     => $user->getRole(),
+                'csrf'     => $this->_auth->getSession()->getCsrfToken(),
+            ));
+        } else {
+            $this->_json_error(I18n::_($result['message']));
+        }
+    }
+
+    /**
+     * Handle login request
+     *
+     * @access private
+     */
+    private function _authLogin(): void
+    {
+        $username = $this->_request->getParam('username', '');
+        $password = $this->_request->getParam('password', '');
+
+        $result = $this->_auth->login($username, $password);
+        if ($result['success']) {
+            $user       = $this->_auth->getCurrentUser();
+            $this->_json = Json::encode(array(
+                'status'   => 0,
+                'username' => $user->getUsername(),
+                'role'     => $user->getRole(),
+                'csrf'     => $this->_auth->getSession()->getCsrfToken(),
+            ));
+        } else {
+            $this->_json_error(I18n::_($result['message']));
+        }
+    }
+
+    /**
+     * Handle logout request
+     *
+     * @access private
+     */
+    private function _authLogout(): void
+    {
+        $this->_auth->logout();
+        $this->_json = Json::encode(array('status' => 0));
+    }
+
+    /**
+     * Handle registration request
+     *
+     * @access private
+     */
+    private function _authRegister(): void
+    {
+        $username = $this->_request->getParam('username', '');
+        $password = $this->_request->getParam('password', '');
+
+        $result = $this->_auth->register($username, $password);
+        if ($result['success']) {
+            // auto-login after registration
+            $this->_auth->login($username, $password);
+            $user       = $this->_auth->getCurrentUser();
+            $this->_json = Json::encode(array(
+                'status'   => 0,
+                'username' => $user->getUsername(),
+                'role'     => $user->getRole(),
+                'csrf'     => $this->_auth->getSession()->getCsrfToken(),
+            ));
+        } else {
+            $this->_json_error(I18n::_($result['message']));
+        }
+    }
+
+    /**
+     * Return current auth status
+     *
+     * @access private
+     */
+    private function _authStatus(): void
+    {
+        $user = $this->_auth->getCurrentUser();
+        if ($user !== null) {
+            $this->_json = Json::encode(array(
+                'status'   => 0,
+                'loggedin' => true,
+                'username' => $user->getUsername(),
+                'role'     => $user->getRole(),
+                'csrf'     => $this->_auth->getSession()->getCsrfToken(),
+            ));
+        } else {
+            $this->_json = Json::encode(array(
+                'status'   => 0,
+                'loggedin' => false,
+            ));
+        }
+    }
+
+    /**
+     * List all users (admin only)
+     *
+     * @access private
+     */
+    private function _authListUsers(): void
+    {
+        if (!$this->_isAdmin()) {
+            $this->_json_error(I18n::_('Admin access required.'));
+            return;
+        }
+
+        $users    = $this->_auth->listUsers();
+        $userData = array();
+        foreach ($users as $user) {
+            $userData[] = array(
+                'username'   => $user->getUsername(),
+                'role'       => $user->getRole(),
+                'is_active'  => $user->isActive(),
+                'created_at' => $user->getCreatedAt(),
+                'last_login' => $user->getLastLogin(),
+            );
+        }
+
+        $this->_json = Json::encode(array(
+            'status' => 0,
+            'users'  => $userData,
+        ));
+    }
+
+    /**
+     * Create a user (admin only)
+     *
+     * @access private
+     */
+    private function _authCreateUser(): void
+    {
+        if (!$this->_isAdmin()) {
+            $this->_json_error(I18n::_('Admin access required.'));
+            return;
+        }
+
+        $this->_validateCsrf();
+
+        $username = $this->_request->getParam('username', '');
+        $password = $this->_request->getParam('password', '');
+        $role     = $this->_request->getParam('role', User::ROLE_USER);
+
+        $result = $this->_auth->createUser($username, $password, $role);
+        if ($result['success']) {
+            $this->_json = Json::encode(array('status' => 0));
+        } else {
+            $this->_json_error(I18n::_($result['message']));
+        }
+    }
+
+    /**
+     * Delete a user (admin only)
+     *
+     * @access private
+     */
+    private function _authDeleteUser(): void
+    {
+        if (!$this->_isAdmin()) {
+            $this->_json_error(I18n::_('Admin access required.'));
+            return;
+        }
+
+        $this->_validateCsrf();
+
+        $username = $this->_request->getParam('username', '');
+
+        // prevent self-deletion
+        $currentUser = $this->_auth->getCurrentUser();
+        if ($currentUser !== null && $currentUser->getUsername() === $username) {
+            $this->_json_error(I18n::_('Cannot delete your own account.'));
+            return;
+        }
+
+        $result = $this->_auth->deleteUser($username);
+        if ($result['success']) {
+            $this->_json = Json::encode(array('status' => 0));
+        } else {
+            $this->_json_error(I18n::_($result['message']));
+        }
+    }
+
+    /**
+     * Change a user's password (admin or own account)
+     *
+     * @access private
+     */
+    private function _authChangePassword(): void
+    {
+        $currentUser = $this->_auth->getCurrentUser();
+        if ($currentUser === null) {
+            $this->_json_error(I18n::_('Authentication required.'));
+            return;
+        }
+
+        $this->_validateCsrf();
+
+        $username    = $this->_request->getParam('username', '');
+        $newPassword = $this->_request->getParam('new_password', '');
+
+        // non-admins can only change their own password
+        if (!$currentUser->isAdmin() && $currentUser->getUsername() !== $username) {
+            $this->_json_error(I18n::_('Admin access required.'));
+            return;
+        }
+
+        // for own password change, verify current password
+        if ($currentUser->getUsername() === $username) {
+            $currentPassword = $this->_request->getParam('current_password', '');
+            if (!$currentUser->verifyPassword($currentPassword)) {
+                $this->_json_error(I18n::_('Current password is incorrect.'));
+                return;
+            }
+        }
+
+        $result = $this->_auth->changePassword($username, $newPassword);
+        if ($result['success']) {
+            $this->_json = Json::encode(array('status' => 0));
+        } else {
+            $this->_json_error(I18n::_($result['message']));
+        }
+    }
+
+    /**
+     * Change a user's role (admin only)
+     *
+     * @access private
+     */
+    private function _authChangeRole(): void
+    {
+        if (!$this->_isAdmin()) {
+            $this->_json_error(I18n::_('Admin access required.'));
+            return;
+        }
+
+        $this->_validateCsrf();
+
+        $username = $this->_request->getParam('username', '');
+        $role     = $this->_request->getParam('role', '');
+
+        $result = $this->_auth->changeRole($username, $role);
+        if ($result['success']) {
+            $this->_json = Json::encode(array('status' => 0));
+        } else {
+            $this->_json_error(I18n::_($result['message']));
+        }
+    }
+
+    /**
+     * Toggle a user's active status (admin only)
+     *
+     * @access private
+     */
+    private function _authToggleActive(): void
+    {
+        if (!$this->_isAdmin()) {
+            $this->_json_error(I18n::_('Admin access required.'));
+            return;
+        }
+
+        $this->_validateCsrf();
+
+        $username = $this->_request->getParam('username', '');
+        $active   = (bool) $this->_request->getParam('active', '');
+
+        $result = $this->_auth->setUserActive($username, $active);
+        if ($result['success']) {
+            $this->_json = Json::encode(array('status' => 0));
+        } else {
+            $this->_json_error(I18n::_($result['message']));
+        }
+    }
+
+    /**
+     * Check if current user is admin
+     *
+     * @access private
+     * @return bool
+     */
+    private function _isAdmin(): bool
+    {
+        $user = $this->_auth->getCurrentUser();
+        return $user !== null && $user->isAdmin();
+    }
+
+    /**
+     * Validate CSRF token from request
+     *
+     * @access private
+     */
+    private function _validateCsrf(): void
+    {
+        $token = $this->_request->getParam('csrf_token', '');
+        if (!$this->_auth->getSession()->validateCsrfToken($token)) {
+            $this->_json_error(I18n::_('Invalid security token. Please refresh and try again.'));
         }
     }
 
@@ -489,6 +910,18 @@ class Controller
         $page->assign('HTTPSLINK', 'https://' . $this->_request->getHost() . $this->_request->getRequestUri());
         $page->assign('COMPRESSION', $this->_conf->getKey('compression'));
         $page->assign('SRI', $this->_conf->getSection('sri'));
+
+        // authentication state
+        $page->assign('AUTH_ENABLED', $this->_auth->isEnabled());
+        $page->assign('AUTH_ALLOW_REGISTRATION', $this->_auth->allowsRegistration());
+        $page->assign('AUTH_REQUIRE_LOGIN_CREATE', $this->_auth->requiresLoginToCreate());
+        $page->assign('AUTH_REQUIRE_LOGIN_READ', $this->_auth->requiresLoginToRead());
+        $page->assign('AUTH_NEEDS_SETUP', $this->_auth->isEnabled() && !$this->_auth->hasUsers());
+        $currentUser = $this->_auth->getCurrentUser();
+        $page->assign('AUTH_USER', $currentUser ? $currentUser->getUsername() : '');
+        $page->assign('AUTH_ROLE', $currentUser ? $currentUser->getRole() : '');
+        $page->assign('AUTH_CSRF', $this->_auth->getSession()->getCsrfToken());
+
         $page->draw(TemplateSwitcher::getTemplate());
     }
 
