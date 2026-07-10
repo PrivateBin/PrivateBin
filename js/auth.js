@@ -459,6 +459,7 @@ jQuery.PrivateBin.Auth = (function($) {
             html += '<h6 class="border-bottom pb-2 mb-3">URL Shortener</h6>';
             html += '<div class="row g-3 mb-4">';
             html += me.settingsInput('main', 'urlshortener', 'Shortener URL', s, 'text', 'https://shortener.example.com/api?link=');
+            html += '<div class="col-12"><small class="text-muted">For YOURLS/Shlink via server-side proxy, use: <code>${basepath}?shortenviayourls&amp;link=</code> or <code>${basepath}?shortenviashlink&amp;link=</code></small></div>';
             html += me.settingsCheckbox('main', 'shortenbydefault', 'Shorten by default', s);
             html += me.settingsCheckbox('main', 'urlshortenerwarning', 'Show shortener warning', s);
             html += '</div>';
@@ -466,6 +467,7 @@ jQuery.PrivateBin.Auth = (function($) {
             // YOURLS section
             html += '<h6 class="border-bottom pb-2 mb-3">YOURLS Integration</h6>';
             html += '<div class="row g-3 mb-4">';
+            html += '<div class="col-12"><small class="text-muted">Set Shortener URL above to <code>${basepath}?shortenviayourls&amp;link=</code> to use YOURLS via server-side proxy.</small></div>';
             html += me.settingsInput('yourls', 'apiurl', 'YOURLS API URL', s, 'text', 'https://yourls.example.com/yourls-api.php');
             html += me.settingsInput('yourls', 'signature', 'YOURLS Signature', s, 'text', 'Access signature key');
             html += '</div>';
@@ -473,6 +475,7 @@ jQuery.PrivateBin.Auth = (function($) {
             // Shlink section
             html += '<h6 class="border-bottom pb-2 mb-3">Shlink Integration</h6>';
             html += '<div class="row g-3 mb-4">';
+            html += '<div class="col-12"><small class="text-muted">Set Shortener URL above to <code>${basepath}?shortenviashlink&amp;link=</code> to use Shlink via server-side proxy.</small></div>';
             html += me.settingsInput('shlink', 'apiurl', 'Shlink API URL', s, 'text', 'https://shlink.example.com/rest/v3/short-urls');
             html += me.settingsInput('shlink', 'apikey', 'Shlink API Key', s, 'text', 'Your API key');
             html += '</div>';
