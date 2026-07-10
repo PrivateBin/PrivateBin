@@ -140,6 +140,7 @@ class Request
                 }
         }
         if (
+            $this->_operation !== 'auth' &&
             !array_key_exists('pasteid', $this->_params) &&
             !array_key_exists('jsonld', $this->_params) &&
             !array_key_exists('link', $this->_params) &&
@@ -149,21 +150,23 @@ class Request
             $this->_params['pasteid'] = $this->getPasteId();
         }
 
-        // prepare operation, depending on current parameters
-        if (array_key_exists('pasteid', $this->_params) && !empty($this->_params['pasteid'])) {
-            if (array_key_exists('deletetoken', $this->_params) && !empty($this->_params['deletetoken'])) {
-                $this->_operation = 'delete';
-            } elseif ($this->_operation !== 'create') {
-                $this->_operation = 'read';
-            }
-        } elseif (array_key_exists('jsonld', $this->_params) && !empty($this->_params['jsonld'])) {
-            $this->_operation = 'jsonld';
-        } elseif (array_key_exists('link', $this->_params) && !empty($this->_params['link'])) {
-            if (str_contains($this->getRequestUri(), '/shortenviayourls') || array_key_exists('shortenviayourls', $this->_params)) {
-                $this->_operation = 'yourlsproxy';
-            }
-            if (str_contains($this->getRequestUri(), '/shortenviashlink') || array_key_exists('shortenviashlink', $this->_params)) {
-                $this->_operation = 'shlinkproxy';
+        // prepare operation, depending on current parameters (skip if already set to 'auth')
+        if ($this->_operation !== 'auth') {
+            if (array_key_exists('pasteid', $this->_params) && !empty($this->_params['pasteid'])) {
+                if (array_key_exists('deletetoken', $this->_params) && !empty($this->_params['deletetoken'])) {
+                    $this->_operation = 'delete';
+                } elseif ($this->_operation !== 'create') {
+                    $this->_operation = 'read';
+                }
+            } elseif (array_key_exists('jsonld', $this->_params) && !empty($this->_params['jsonld'])) {
+                $this->_operation = 'jsonld';
+            } elseif (array_key_exists('link', $this->_params) && !empty($this->_params['link'])) {
+                if (str_contains($this->getRequestUri(), '/shortenviayourls') || array_key_exists('shortenviayourls', $this->_params)) {
+                    $this->_operation = 'yourlsproxy';
+                }
+                if (str_contains($this->getRequestUri(), '/shortenviashlink') || array_key_exists('shortenviashlink', $this->_params)) {
+                    $this->_operation = 'shlinkproxy';
+                }
             }
         }
     }

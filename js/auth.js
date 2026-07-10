@@ -748,9 +748,11 @@ jQuery.PrivateBin.Auth = (function($) {
      * @param {function} success - success callback
      */
     me.apiCall = function(data, success, errorCallback) {
+        // Determine the base URL: use <base> tag href or fallback to pathname
+        var baseUrl = document.querySelector('base') ? document.querySelector('base').href : (window.location.pathname || '/');
         $.ajax({
             type: 'POST',
-            url: window.location.pathname || '/',
+            url: baseUrl,
             dataType: 'json',
             contentType: 'application/json',
             headers: {'X-Requested-With': 'JSONHttpRequest'},
@@ -769,8 +771,22 @@ jQuery.PrivateBin.Auth = (function($) {
                     me.showError(msg);
                 }
             }
-        }).fail(function() {
+        }).fail(function(jqXHR, textStatus) {
             var msg = 'Network error. Please try again.';
+            if (jqXHR.responseText) {
+                // Try to extract a useful error from the response
+                try {
+                    var resp = JSON.parse(jqXHR.responseText);
+                    if (resp.message) {
+                        msg = resp.message;
+                    }
+                } catch (e) {
+                    // Server returned non-JSON (likely a PHP error)
+                    msg = 'Server error (HTTP ' + jqXHR.status + '). Check server logs.';
+                }
+            } else if (textStatus === 'timeout') {
+                msg = 'Request timed out. Please try again.';
+            }
             if (typeof errorCallback === 'function') {
                 errorCallback(msg);
             } else {
