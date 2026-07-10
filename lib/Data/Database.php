@@ -1057,11 +1057,14 @@ class Database extends AbstractData
                 array()
             );
             return array_map(function ($row) {
-                $row['is_active']   = (bool) $row['is_active'];
-                $row['is_approved'] = isset($row['is_approved']) ? (bool) $row['is_approved'] : true;
-                $row['email']       = $row['email'] ?? '';
-                $row['created_at']  = (int) $row['created_at'];
-                $row['last_login']  = (int) $row['last_login'];
+                $row['is_active']             = (bool) $row['is_active'];
+                $row['is_approved']           = isset($row['is_approved']) ? (bool) $row['is_approved'] : true;
+                $row['email']                 = $row['email'] ?? '';
+                $row['force_password_change'] = isset($row['force_password_change']) ? (bool) $row['force_password_change'] : false;
+                $row['reset_token']           = $row['reset_token'] ?? '';
+                $row['reset_token_expires']   = (int) ($row['reset_token_expires'] ?? 0);
+                $row['created_at']            = (int) $row['created_at'];
+                $row['last_login']            = (int) $row['last_login'];
                 return $row;
             }, $rows ?: array());
         } catch (\PDOException $e) {

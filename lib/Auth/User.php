@@ -439,14 +439,14 @@ class User
             $data['username'],
             $data['password_hash'] ?? '',
             $data['role'] ?? self::ROLE_USER,
-            $data['is_active'] ?? true,
-            $data['created_at'] ?? 0,
-            $data['last_login'] ?? 0,
-            $data['is_approved'] ?? true,
+            (bool) ($data['is_active'] ?? true),
+            (int) ($data['created_at'] ?? 0),
+            (int) ($data['last_login'] ?? 0),
+            (bool) ($data['is_approved'] ?? true),
             $data['email'] ?? '',
-            $data['force_password_change'] ?? false,
+            (bool) ($data['force_password_change'] ?? false),
             $data['reset_token'] ?? '',
-            $data['reset_token_expires'] ?? 0
+            (int) ($data['reset_token_expires'] ?? 0)
         );
     }
 
