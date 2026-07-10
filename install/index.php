@@ -240,12 +240,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>PrivateBin Installation</title>
-    <link rel="stylesheet" href="../css/bootstrap-5.3.8.css">
+    <link rel="stylesheet" href="../css/bootstrap5/bootstrap-5.3.8.css">
+    <link rel="stylesheet" href="../css/bootstrap5/privatebin.css">
+    <link rel="stylesheet" href="../css/common.css">
     <style>
-        body { background-color: #f8f9fa; }
-        .install-container { max-width: 640px; margin: 40px auto; }
-        .form-section { background: white; border-radius: 8px; padding: 2rem; margin-bottom: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
-        .form-section h5 { margin-bottom: 1rem; border-bottom: 1px solid #eee; padding-bottom: 0.5rem; }
+        .install-container { max-width: 640px; margin: 40px auto; padding: 0 1rem; }
+        .form-section { background: var(--bs-body-bg, white); border-radius: 8px; padding: 2rem; margin-bottom: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
+        .form-section h5 { margin-bottom: 1rem; border-bottom: 1px solid var(--bs-border-color, #eee); padding-bottom: 0.5rem; }
     </style>
 </head>
 <body>
