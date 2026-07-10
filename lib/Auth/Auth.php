@@ -13,7 +13,10 @@ namespace PrivateBin\Auth;
 
 use PrivateBin\Configuration;
 use PrivateBin\Data\AbstractData;
-use PrivateBin\Data\Database;
+
+/**
+ * use PrivateBin\Data\Database;
+ */
 
 /**
  * Auth
