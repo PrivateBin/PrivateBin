@@ -151,7 +151,7 @@
     "server error or not responding": "שגיאת שרת או שהשרת לא מגיב",
     "Could not post comment: %s": "לא ניתן לפרסם תגובה: %s",
     "Sending document…": "ההדבקה נשלחת…",
-    "Your document is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit <kbd>Ctrl</kbd>+<kbd>c</kbd> to copy)</span>": "ההדבקה שלך היא <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(יש ללחוץ <kbd>Ctrl</kbd>+<kbd>c</kbd> כדי להעתיק)</span>",
+    "Your document is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit <kbd>%s</kbd>+<kbd>c</kbd> to copy)</span>": "ההדבקה שלך היא <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(יש ללחוץ <kbd>%s</kbd>+<kbd>c</kbd> כדי להעתיק)</span>",
     "Delete data": "מחיקת נתונים",
     "Could not create document: %s": "לא ניתן ליצור הדבקה: %s",
     "Cannot decrypt document: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)": "לא ניתן לפענח הדבקה: מפתח הפענוח חסר בכתובת (השתמשת במערכת הפנייה או מקצר כתובות שחותכים חלק מהכתובת?)",
@@ -224,7 +224,7 @@
     "Error decompressing document, your browser does not support WebAssembly. Please use another browser to view this document.": "שגיאה בהפקת ההדבקה, הדפדפן שלך לא תומך ב-WebAssembly. אנא השתמש בדפדפן אחר כדי לצפות בהדבקה זו.",
     "Start over": "להתחיל מחדש",
     "Document copied to clipboard": "ההדבקה הועתקה ללוח",
-    "To copy document press on the copy button or use the clipboard shortcut <kbd>Ctrl</kbd>+<kbd>c</kbd>/<kbd>Cmd</kbd>+<kbd>c</kbd>": "על מנת להעתיק את ההדבקה, לחץ על כפתור ההעתקה או השתמש בקיצור הדרך ללוח <kbd>Ctrl</kbd>+<kbd>c</kbd>/<kbd>Cmd</kbd>+<kbd>c</kbd>",
+    "To copy document press on the copy button or use the clipboard shortcut <kbd>%s</kbd>+<kbd>c</kbd>": "על מנת להעתיק את ההדבקה, לחץ על כפתור ההעתקה או השתמש בקיצור הדרך ללוח <kbd>%s</kbd>+<kbd>c</kbd>",
     "Copy link": "העתק קישור",
     "Link copied to clipboard": "הקישור הועתק ללוח",
     "Document text": "הדבק טקסט",
@@ -232,5 +232,7 @@
     "Show password": "הצג סיסמה",
     "Hide password": "הסתר סיסמה",
     "Theme": "נושא",
-    "Copy": "העתק"
+    "Copy": "העתק",
+    "Cmd": "Cmd",
+    "Ctrl": "Ctrl"
 }
