@@ -1,6 +1,6 @@
 # [![PrivateBin](https://raw.githubusercontent.com/PrivateBin/assets/master/images/preview/logoSmall.png)](https://privatebin.info/)
 
-*Current version: 2.0.4*
+*Current version: 2.0.5*
 
 **PrivateBin** is a minimalist, open source online
 [pastebin](https://en.wikipedia.org/wiki/Pastebin)

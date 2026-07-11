@@ -59,6 +59,44 @@ describe('PasteStatus', function () {
                 }
             ));
         });
+
+        it(
+            'shows Cmd hotkey hint on macOS',
+            function () {
+                cleanup();
+                Object.defineProperty(navigator, 'userAgent', {
+                    value: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36',
+                    configurable: true
+                });
+                document.body.innerHTML = '<a href="#" id="deletelink"><span></span></a><div id="pastelink"></div>';
+                PrivateBin.PasteStatus.init();
+                PrivateBin.PasteStatus.createPasteNotification('https://example.com/', 'https://example.com/delete');
+
+                const hotkey = document.querySelector('#copyhint kbd')?.textContent;
+
+                assert.strictEqual(hotkey, 'Cmd');
+            }
+        );
+
+        it(
+            'shows Ctrl hotkey hint on non-Mac platforms',
+            function () {
+                cleanup();
+
+                Object.defineProperty(navigator, 'userAgent', {
+                    value: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+                    configurable: true
+                });
+                document.body.innerHTML = '<a href="#" id="deletelink"><span></span></a><div id="pastelink"></div>';
+
+                PrivateBin.PasteStatus.init();
+                PrivateBin.PasteStatus.createPasteNotification('https://example.com/', 'https://example.com/delete');
+
+                const hotkey = document.querySelector('#copyhint kbd')?.textContent;
+
+                assert.strictEqual(hotkey, 'Ctrl');
+            }
+        );
     });
 
     describe('extractUrl', function () {

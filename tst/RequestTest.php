@@ -218,6 +218,7 @@ class RequestTest extends TestCase
     {
         $this->reset();
         $id              = Helper::getRandomId();
+        $path            = '/' . $this->getRandomQueryChars() . '/';
         $queryParams     = array($id);
         $queryParamCount = random_int(1, 5);
         for ($i = 0; $i < $queryParamCount; ++$i) {
@@ -226,8 +227,10 @@ class RequestTest extends TestCase
         shuffle($queryParams);
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_SERVER['QUERY_STRING']   = implode('&', $queryParams);
+        $_SERVER['REQUEST_URI']    = $path . '?' . $_SERVER['QUERY_STRING'];
         $_GET[$id]                 = '';
         $request                   = new Request;
         $this->assertEquals($id, $request->getParam('pasteid'));
+        $this->assertEquals($path, $request->getRequestUri());
     }
 }
