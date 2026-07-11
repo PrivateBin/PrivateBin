@@ -6,6 +6,7 @@
 * FIXED: State corruption after "Remove attachment" (#1824)
 * FIXED: Copy button is hidden if the document is made as markdown (#1703)
 * FIXED: Shortened URLs from YOURLS received but failed to parse (#1844)
+* FIXED: Insert only base path in JSON API responses, without GET parameters
 
 ## 2.0.4 (2026-05-03)
 * ADDED: Translations for Swedish & Persian
