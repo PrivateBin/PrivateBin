@@ -1,5 +1,7 @@
 # PrivateBin version history
 
+## 2.0.6 (not yet released)
+
 ## 2.0.5 (2026-07-11)
 * CHANGED: Show OS-specific copy hotkey hint (Cmd+c on Mac, Ctrl+c on others) (#1506)
 * FIXED: Prevent browsers from rendering unsafe attachments like HTML in a new tab
