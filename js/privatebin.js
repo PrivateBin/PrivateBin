@@ -2107,10 +2107,13 @@ jQuery.PrivateBin = (function($) {
          */
         me.createPasteNotification = function(url, deleteUrl)
         {
+            const ua = navigator.userAgent;
+            const isMac = /Mac/.test(ua);
+            const hotkey = isMac ? I18n._('Cmd') : I18n._('Ctrl');
             I18n._(
                 $('#pastelink'),
-                'Your document is <a id="pasteurl" href="%s">%s</a> <span id="copyhint">(Hit <kbd>Ctrl</kbd>+<kbd>c</kbd> to copy)</span>',
-                url, url
+                'Your document is <a id="pasteurl" href="%s">%s</a> <span id="copyhint">(Hit <kbd>%s</kbd>+<kbd>c</kbd> to copy)</span>',
+                url, url, hotkey
             );
             // save newly created element
             $pasteUrl = $('#pasteurl');
@@ -2994,11 +2997,18 @@ jQuery.PrivateBin = (function($) {
 
             const mimeType = me.getAttachmentMimeType(attachmentData);
 
+            // We explicitly do _not_ use the original mime type for the download link
+            // to always force a download instead of potentially dangerous browser rendering/parsing/interpretation
+            let safeMimeType = 'application/octet-stream';
+            if (me.isSafeMimeType(mimeType)) {
+                safeMimeType = mimeType;
+            }
+
             // extract data and convert to binary
             const rawData = attachmentData.substring(base64Start);
             const decodedData = rawData.length > 0 ? atob(rawData) : '';
 
-            let blobUrl = getBlobUrl(decodedData, mimeType);
+            let blobUrl = getBlobUrl(decodedData, safeMimeType);
             attachmentLink.attr('href', blobUrl);
 
             if (typeof fileName !== 'undefined') {
@@ -3027,6 +3037,28 @@ jQuery.PrivateBin = (function($) {
 
             me.handleBlobAttachmentPreview($attachmentPreview, blobUrl, mimeType);
         };
+
+
+        /**
+         * Evaluates whether this is known a safe mime type.
+         *
+         * This means, the media can safely be displayed and e.g. no XSS should be possible.
+         * 
+         * @name AttachmentViewer.isSafeMimeType
+         * @function
+         * @param {string}
+         * @returns {bool}
+         */
+        me.isSafeMimeType = function(mimeType) {
+            return (
+                    mimeType.startsWith('image/') && 
+                    !mimeType.includes('svg')
+                ) ||
+                mimeType.startsWith('video/') ||
+                mimeType.startsWith('audio/') ||
+                mimeType.endsWith('/pdf') ||
+                mimeType === 'text/plain';
+        }
 
         /**
          * displays the attachment
