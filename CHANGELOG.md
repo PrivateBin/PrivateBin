@@ -4,12 +4,17 @@
 * CHANGED: We removed jQuery in the Frontend and replaced it with vanilla JS.
 * CHANGED: Removed the unmaintained js-verify and replaced it with fast-check library.
 * CHANGED: Added a `jsconfig.json` in order to check the types of JavaScript.
-* CHANGED: Rmeoved support for Bootstrap 3 as it requires jQuery.
+* CHANGED: Removed support for Bootstrap 3 as it requires jQuery.
 
-## 2.0.5 (not yet released)
+## 2.0.6 (not yet released)
+
+## 2.0.5 (2026-07-11)
+* CHANGED: Show OS-specific copy hotkey hint (Cmd+c on Mac, Ctrl+c on others) (#1506)
+* FIXED: Prevent browsers from rendering unsafe attachments like HTML in a new tab
 * FIXED: State corruption after "Remove attachment" (#1824)
 * FIXED: Copy button is hidden if the document is made as markdown (#1703)
 * FIXED: Shortened URLs from YOURLS received but failed to parse (#1844)
+* FIXED: Insert only base path in JSON API responses, without GET parameters
 
 ## 2.0.4 (2026-05-03)
 * ADDED: Translations for Swedish & Persian
