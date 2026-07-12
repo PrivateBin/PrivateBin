@@ -135,6 +135,18 @@ class YourlsProxyTest extends TestCase
         $this->assertEquals($yourls->getError(), 'Proxy error: Error parsing proxy response. This can be a configuration issue, like wrong or missing config keys.');
     }
 
+    public function testYourlsSuccessWithoutShortUrl()
+    {
+        // YOURLS may reply with statusCode 200 but without a shorturl field;
+        // this must be handled gracefully as an error instead of raising a
+        // TypeError (the method is declared to return ?string)
+        file_put_contents($this->_mock_yourls_service, '{"statusCode":200}');
+
+        $yourls = new YourlsProxy($this->_conf, 'https://example.com/?foo#bar');
+        $this->assertTrue($yourls->isError());
+        $this->assertEquals($yourls->getError(), 'Proxy error: Error parsing proxy response. This can be a configuration issue, like wrong or missing config keys.');
+    }
+
     public function testServerError()
     {
         // simulate some other server error that results in a non-JSON reply
