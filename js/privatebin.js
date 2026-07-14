@@ -3344,12 +3344,12 @@ jQuery.PrivateBin = (function($) {
             const alreadyIncludesCurrentAttachment = $targetElement.find(`[src='${blobUrl}']`).length > 0;
 
             if (blobUrl && !alreadyIncludesCurrentAttachment) {
-                if (mimeType.toLowerCase().startsWith('image/')) {
+                if (mimeType.startsWith('image/')) {
                     const image = document.createElement('img');
                     image.setAttribute('src', blobUrl);
                     image.setAttribute('class', 'img-thumbnail');
                     $targetElement[0].appendChild(image);
-                } else if (mimeType.toLowerCase().startsWith('video/')) {
+                } else if (mimeType.startsWith('video/')) {
                     const video = document.createElement('video');
                     video.setAttribute('controls', 'true');
                     video.setAttribute('autoplay', 'true');
@@ -3359,7 +3359,7 @@ jQuery.PrivateBin = (function($) {
                     source.setAttribute('src', blobUrl);
                     video.appendChild(source);
                     $targetElement[0].appendChild(video);
-                } else if (mimeType.toLowerCase().startsWith('audio/')) {
+                } else if (mimeType.startsWith('audio/')) {
                     const audio = document.createElement('audio');
                     audio.setAttribute('controls', 'true');
                     audio.setAttribute('autoplay', 'true');
@@ -3368,7 +3368,7 @@ jQuery.PrivateBin = (function($) {
                     source.setAttribute('src', blobUrl);
                     audio.appendChild(source);
                     $targetElement[0].appendChild(audio);
-                } else if (mimeType.toLowerCase().endsWith('/pdf')) {
+                } else if (mimeType === 'application/pdf') {
                     const embed = document.createElement('embed');
                     embed.setAttribute('src', blobUrl);
                     embed.setAttribute('type', 'application/pdf');
