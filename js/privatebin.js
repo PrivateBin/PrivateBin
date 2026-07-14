@@ -2999,16 +2999,16 @@ jQuery.PrivateBin = (function($) {
 
             // We explicitly do _not_ use the original mime type for the download link
             // to always force a download instead of potentially dangerous browser rendering/parsing/interpretation
-            let safeMimeType = 'application/octet-stream';
+            let sanitizedMimeType = 'application/octet-stream';
             if (me.isSafeMimeType(mimeType)) {
-                safeMimeType = mimeType;
+                sanitizedMimeType = mimeType;
             }
 
             // extract data and convert to binary
             const rawData = attachmentData.substring(base64Start);
             const decodedData = rawData.length > 0 ? atob(rawData) : '';
 
-            let blobUrl = getBlobUrl(decodedData, safeMimeType);
+            let blobUrl = getBlobUrl(decodedData, sanitizedMimeType);
             attachmentLink.attr('href', blobUrl);
 
             if (typeof fileName !== 'undefined') {
@@ -3024,18 +3024,19 @@ jQuery.PrivateBin = (function($) {
             // prevents executing embedded scripts when CSP is not set and user
             // right-clicks/long-taps and opens the SVG in a new tab - prevented
             // in the preview by use of an img tag, which disables scripts, too
-            if (/^image\/.*svg/.test(mimeType)) {
+            if (mimeType.startsWith('image\/svg')) {
                 const sanitizedData = DOMPurify.sanitize(
                     decodedData,
                     purifySvgConfig
                 );
-                blobUrl = getBlobUrl(sanitizedData, mimeType);
+                sanitizedMimeType = 'image/svg+xml';
+                blobUrl = getBlobUrl(sanitizedData, sanitizedMimeType);
             }
 
             template.removeClass('hidden');
             $attachment.append(template);
 
-            me.handleBlobAttachmentPreview($attachmentPreview, blobUrl, mimeType);
+            me.handleBlobAttachmentPreview($attachmentPreview, blobUrl, sanitizedMimeType);
         };
 
 

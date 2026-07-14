@@ -150,7 +150,7 @@ describe('AttachmentViewer', function () {
                         window.URL,
                         'createObjectURL',
                         {value: function(blob) {
-                            return 'blob:' + location.origin + '/1b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed';
+                            return 'blob:' + blob.type + '/1b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed';
                         }}
                     );
                 }
@@ -165,6 +165,7 @@ describe('AttachmentViewer', function () {
                 for (const filename of maliciousFileNames) {
                     $.PrivateBin.AttachmentViewer.setAttachment('data:;base64,', filename);
                     assert.ok(!$('body').html().includes(filename), 'does not allow file name ' + filename);
+                    $.PrivateBin.AttachmentViewer.removeAttachment();
                 }
 
                 const maliciousMimeTypes = [
@@ -176,8 +177,6 @@ describe('AttachmentViewer', function () {
                     // SVG bypass
                     'text/html svg',
                     'text/html(svg',
-                    'image/SVG+xml',
-                    'image/Svg+xml',
 
                     // invalid bytes after string
                     'image/png\x01',
@@ -187,10 +186,45 @@ describe('AttachmentViewer', function () {
                     $.PrivateBin.AttachmentViewer.setAttachment('data:' + mimeType + ';base64,', 'example file name');
                     assert.ok(!$('body').html().includes(mimeType), 'does not allow MIME type: ' + mimeType);
                     assert.ok(!$('body').html().includes(mimeType.toLowerCase()), 'does not allow lower cased MIME type: ' + mimeType);
+                    assert.ok(!$('body').html().includes('<img'), 'does not allow image MIME type: ' + mimeType);
+                    $.PrivateBin.AttachmentViewer.removeAttachment();
+                }
+
+                const supportedSafeMimeTypes = [
+                    'text/plain',
+                    'image/png',
+                    'image/jpeg',
+                ];
+                for (const mimeType of supportedSafeMimeTypes) {
+                    assert.ok($.PrivateBin.AttachmentViewer.isSafeMimeType(mimeType), 'treats as safe MIME type: '+ mimeType);
+                }
+
+                const supportedPreviewMimeTypes = [
+                    'application/pdf',
+                    'audio/wav',
+                    'video/avi',
+                ];
+                for (const mimeType of supportedPreviewMimeTypes) {
+                    assert.ok($.PrivateBin.AttachmentViewer.isSafeMimeType(mimeType), 'treats as safe preview MIME type: '+ mimeType);
+                    $.PrivateBin.AttachmentViewer.setAttachment('data:' + mimeType + ';base64,', 'example file name');
+                    assert.ok($('body').html().includes(mimeType), 'allows MIME type: ' + mimeType);
+                    $.PrivateBin.AttachmentViewer.removeAttachment();
+                }
+
+                // special case: not a safe type, but renders a sanitized preview
+                const svgMimeTypes = [
+                    'image/svg+xml',
+                    'image/SVG+xml',
+                    'image/sVg',
+                ];
+                for (const mimeType of svgMimeTypes) {
+                    assert.ok(!$.PrivateBin.AttachmentViewer.isSafeMimeType(mimeType), 'treats as unsafe MIME type: '+ mimeType);
+                    $.PrivateBin.AttachmentViewer.setAttachment('data:' + mimeType + ';base64,', 'example file name');
+                    assert.ok($('body').html().includes('image/svg+xml'), 'allows sanitized MIME type: ' + mimeType);
+                    $.PrivateBin.AttachmentViewer.removeAttachment();
                 }
                 clean();
             }
         );
-
     });
 });
