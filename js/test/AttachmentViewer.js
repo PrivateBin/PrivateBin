@@ -131,7 +131,7 @@ describe('AttachmentViewer', function () {
         );
 
         it(
-            'sanitizes file names in attachments',
+            'sanitizes file names and MIME types in attachments',
             function() {
                 const clean = jsdom();
                 $('body').html(
@@ -164,7 +164,30 @@ describe('AttachmentViewer', function () {
                 ];
                 for (const filename of maliciousFileNames) {
                     $.PrivateBin.AttachmentViewer.setAttachment('data:;base64,', filename);
-                    assert.ok(!$('body').html().includes(filename));
+                    assert.ok(!$('body').html().includes(filename), 'does not allow file name ' + filename);
+                }
+
+                const maliciousMimeTypes = [
+                    // PDF bypasses
+                    'application/x-pdf',    // legacy, we don't need to support this
+                    'text/html /pdf',       // trips up Firefox and Chromium
+                    'text/html(/pdf',       // Chromium, see: https://chromium.googlesource.com/chromium/src/+/refs/tags/152.0.7949.0/net/base/mime_util.cc#521
+                    'application/PDF',
+
+                    // SVG bypass
+                    'text/html svg',
+                    'text/html(svg',
+                    'image/SVG+xml',
+                    'image/Svg+xml',
+
+                    // invalid bytes after string
+                    'image/png\x01',
+                ];
+                for (const mimeType of maliciousMimeTypes) {
+                    assert.ok(!$.PrivateBin.AttachmentViewer.isSafeMimeType(mimeType), 'does not treat as safe MIME type: '+ mimeType);
+                    $.PrivateBin.AttachmentViewer.setAttachment('data:' + mimeType + ';base64,', 'example file name');
+                    assert.ok(!$('body').html().includes(mimeType), 'does not allow MIME type: ' + mimeType);
+                    assert.ok(!$('body').html().includes(mimeType.toLowerCase()), 'does not allow lower cased MIME type: ' + mimeType + ': ' + $('body').html());
                 }
                 clean();
             }
