@@ -3024,7 +3024,7 @@ jQuery.PrivateBin = (function($) {
             // prevents executing embedded scripts when CSP is not set and user
             // right-clicks/long-taps and opens the SVG in a new tab - prevented
             // in the preview by use of an img tag, which disables scripts, too
-            if (mimeType.match(/^image\/.*svg/i)) {
+            if (/^image\/.*svg/.test(mimeType)) {
                 const sanitizedData = DOMPurify.sanitize(
                     decodedData,
                     purifySvgConfig
@@ -3043,21 +3043,23 @@ jQuery.PrivateBin = (function($) {
          * Evaluates whether this is known a safe mime type.
          *
          * This means, the media can safely be displayed and e.g. no XSS should be possible.
-         * 
+         *
          * @name AttachmentViewer.isSafeMimeType
          * @function
          * @param {string}
          * @returns {bool}
          */
         me.isSafeMimeType = function(mimeType) {
-            return (
-                    mimeType.startsWith('image/') && 
+            return ((
+                    mimeType.startsWith('image/') &&
                     !mimeType.includes('svg')
                 ) ||
                 mimeType.startsWith('video/') ||
                 mimeType.startsWith('audio/') ||
-                mimeType.endsWith('/pdf') ||
-                mimeType === 'text/plain';
+                mimeType === 'application/pdf' ||
+                mimeType === 'text/plain') &&
+                // don't accept comments, stray characters, spaces, etc.
+                /^[a-z0-9][a-z0-9.-]*[a-z0-9]\/[a-z0-9][a-z0-9.+-]*[a-z0-9]$/.test(mimeType);
         }
 
         /**
@@ -3246,7 +3248,7 @@ jQuery.PrivateBin = (function($) {
             const mimeTypeEnd = attachmentData.indexOf(';');
 
             // extract mimeType
-            return attachmentData.substring(5, mimeTypeEnd);
+            return attachmentData.substring(5, mimeTypeEnd).toLowerCase();
         }
 
         /**
