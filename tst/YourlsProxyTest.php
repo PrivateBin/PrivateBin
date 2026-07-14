@@ -139,8 +139,9 @@ class YourlsProxyTest extends TestCase
     {
         // YOURLS may reply with statusCode 200 but without a shorturl field;
         // this must be handled gracefully as an error instead of raising a
-        // TypeError (the method is declared to return ?string)
-        file_put_contents($this->_mock_yourls_service, '{"statusCode":200}');
+        // TypeError (the method is declared to return ?string). YOURLS returns
+        // the status code as a string, so mirror that here.
+        file_put_contents($this->_mock_yourls_service, '{"statusCode":"200"}');
 
         $yourls = new YourlsProxy($this->_conf, 'https://example.com/?foo#bar');
         $this->assertTrue($yourls->isError());
