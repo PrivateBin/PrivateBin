@@ -1,6 +1,8 @@
 # PrivateBin version history
 
 ## 2.0.6 (not yet released)
+* CHANGED: Stricter MIME type validation, divergent files get no preview and forced download link
+* FIXED: Restrict MIME types accepted for PDF & sanitized SVG previews to prevent HTML render fallback
 
 ## 2.0.5 (2026-07-11)
 * CHANGED: Show OS-specific copy hotkey hint (Cmd+c on Mac, Ctrl+c on others) (#1506)
