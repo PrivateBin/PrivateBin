@@ -32,11 +32,11 @@ endif;
 <?php
 if ($SYNTAXHIGHLIGHTING) :
 ?>
-		<link type="text/css" rel="stylesheet" href="css/prettify/prettify.css?<?php echo rawurlencode($VERSION); ?>" />
+		<link type="text/css" rel="stylesheet" href="css/prism/prism-1.29.0.css?<?php echo rawurlencode($VERSION); ?>" />
 <?php
     if (!empty($SYNTAXHIGHLIGHTINGTHEME)) :
 ?>
-		<link type="text/css" rel="stylesheet" href="css/prettify/<?php echo rawurlencode($SYNTAXHIGHLIGHTINGTHEME); ?>.css?<?php echo rawurlencode($VERSION); ?>" />
+		<link type="text/css" rel="stylesheet" href="css/prism/<?php echo rawurlencode($SYNTAXHIGHLIGHTINGTHEME); ?>.css?<?php echo rawurlencode($VERSION); ?>" />
 <?php
     endif;
 endif;
@@ -57,7 +57,8 @@ endif;
 <?php
 if ($SYNTAXHIGHLIGHTING) :
 ?>
-		<?php $this->_scriptTag('js/prettify.js', 'defer'); ?>
+		<?php $this->_scriptTag('js/prism-1.29.0.js', 'defer'); ?>
+		<?php $this->_scriptTag('js/flourite-1.3.0.js', 'defer'); ?>
 <?php
 endif;
 if ($MARKDOWN) :
@@ -321,6 +322,58 @@ if ($isCpct) :
 							</li>
 <?php
     endforeach;
+if ($SYNTAXHIGHLIGHTING) :
+?>
+							<li role="separator" class="divider style_language_divider hidden"></li>
+							<li class="style_language_header hidden">
+								<div>
+									<?php echo I18n::_('Language'); ?>: <span id="pasteLanguageDisplay"><?php echo I18n::_('Auto'); ?></span> <span class="caret"></span>
+								</div>
+							</li>
+							<li class="style_language_item hidden">
+								<a href="#" data-language="auto"><?php echo I18n::_('Auto'); ?></a>
+							</li>
+							<li class="style_language_item hidden">
+								<a href="#" data-language="diff"><?php echo I18n::_('Diff / Patch'); ?></a>
+							</li>
+							<li class="style_language_item hidden">
+								<a href="#" data-language="markup"><?php echo I18n::_('HTML/XML'); ?></a>
+							</li>
+							<li class="style_language_item hidden">
+								<a href="#" data-language="css"><?php echo I18n::_('CSS'); ?></a>
+							</li>
+							<li class="style_language_item hidden">
+								<a href="#" data-language="clike"><?php echo I18n::_('C-like'); ?></a>
+							</li>
+							<li class="style_language_item hidden">
+								<a href="#" data-language="javascript"><?php echo I18n::_('JavaScript'); ?></a>
+							</li>
+							<li class="style_language_item hidden">
+								<a href="#" data-language="php"><?php echo I18n::_('PHP'); ?></a>
+							</li>
+							<li class="style_language_item hidden">
+								<a href="#" data-language="python"><?php echo I18n::_('Python'); ?></a>
+							</li>
+							<li class="style_language_item hidden">
+								<a href="#" data-language="sql"><?php echo I18n::_('SQL'); ?></a>
+							</li>
+							<li class="style_language_item hidden">
+								<a href="#" data-language="bash"><?php echo I18n::_('Shell (Bash)'); ?></a>
+							</li>
+							<li class="style_language_item hidden">
+								<a href="#" data-language="go"><?php echo I18n::_('Go'); ?></a>
+							</li>
+							<li class="style_language_item hidden">
+								<a href="#" data-language="rust"><?php echo I18n::_('Rust'); ?></a>
+							</li>
+							<li class="style_language_item hidden">
+								<a href="#" data-language="yaml"><?php echo I18n::_('YAML'); ?></a>
+							</li>
+							<li class="style_language_item hidden">
+								<a href="#" data-language="json"><?php echo I18n::_('JSON'); ?></a>
+							</li>
+<?php
+endif;
 ?>
 						</ul>
 						<select id="pasteFormatter" name="pasteFormatter" class="hidden">
@@ -336,6 +389,30 @@ if ($isCpct) :
     endforeach;
 ?>
 						</select>
+<?php
+if ($SYNTAXHIGHLIGHTING) :
+?>
+						<select id="pasteLanguage" name="pasteLanguage" class="hidden">
+							<option value="auto" selected="selected"><?php echo I18n::_('Auto'); ?></option>
+							<option value="diff"><?php echo I18n::_('Diff / Patch'); ?></option>
+							<option value="markup"><?php echo I18n::_('HTML/XML'); ?></option>
+							<option value="css"><?php echo I18n::_('CSS'); ?></option>
+							<option value="clike"><?php echo I18n::_('C-like'); ?></option>
+							<option value="javascript"><?php echo I18n::_('JavaScript'); ?></option>
+							<option value="php"><?php echo I18n::_('PHP'); ?></option>
+							<option value="python"><?php echo I18n::_('Python'); ?></option>
+							<option value="sql"><?php echo I18n::_('SQL'); ?></option>
+							<option value="bash"><?php echo I18n::_('Shell (Bash)'); ?></option>
+							<option value="go"><?php echo I18n::_('Go'); ?></option>
+							<option value="rust"><?php echo I18n::_('Rust'); ?></option>
+							<option value="yaml"><?php echo I18n::_('YAML'); ?></option>
+							<option value="json"><?php echo I18n::_('JSON'); ?></option>
+							<option value="typescript"><?php echo I18n::_('TypeScript'); ?></option>
+							<option value="markdown"><?php echo I18n::_('Markdown'); ?></option>
+						</select>
+<?php
+endif;
+?>
 					</li>
 <?php
 else :
@@ -437,6 +514,31 @@ if (!$isCpct) :
 						</ul>
 					</li>
 <?php
+    if ($SYNTAXHIGHLIGHTING) :
+?>
+					<li id="style_language" class="dropdown hidden">
+						<a id="style_language_toggle" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><?php echo I18n::_('Language'); ?>: <span id="pasteLanguageDisplay"><?php echo I18n::_('Auto'); ?></span> <span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<li><a href="#" data-language="auto"><?php echo I18n::_('Auto'); ?></a></li>
+							<li><a href="#" data-language="diff"><?php echo I18n::_('Diff / Patch'); ?></a></li>
+							<li><a href="#" data-language="markup"><?php echo I18n::_('HTML/XML'); ?></a></li>
+							<li><a href="#" data-language="css"><?php echo I18n::_('CSS'); ?></a></li>
+							<li><a href="#" data-language="clike"><?php echo I18n::_('C-like'); ?></a></li>
+							<li><a href="#" data-language="javascript"><?php echo I18n::_('JavaScript'); ?></a></li>
+							<li><a href="#" data-language="php"><?php echo I18n::_('PHP'); ?></a></li>
+							<li><a href="#" data-language="python"><?php echo I18n::_('Python'); ?></a></li>
+							<li><a href="#" data-language="sql"><?php echo I18n::_('SQL'); ?></a></li>
+							<li><a href="#" data-language="bash"><?php echo I18n::_('Shell (Bash)'); ?></a></li>
+							<li><a href="#" data-language="go"><?php echo I18n::_('Go'); ?></a></li>
+							<li><a href="#" data-language="rust"><?php echo I18n::_('Rust'); ?></a></li>
+							<li><a href="#" data-language="yaml"><?php echo I18n::_('YAML'); ?></a></li>
+							<li><a href="#" data-language="json"><?php echo I18n::_('JSON'); ?></a></li>
+							<li><a href="#" data-language="typescript"><?php echo I18n::_('TypeScript'); ?></a></li>
+							<li><a href="#" data-language="markdown"><?php echo I18n::_('Markdown'); ?></a></li>
+						</ul>
+					</li>
+<?php
+    endif;
 endif;
 ?>
 				</ul>

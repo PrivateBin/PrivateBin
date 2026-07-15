@@ -115,4 +115,142 @@ describe('PasteViewer', function () {
             }
         );
     });
+
+    describe('Prism.js syntax highlighting & auto-detection', function () {
+        it('correctly auto-detects diff format', function () {
+            var clean = jsdom();
+            $('body').html(
+                '<div id="placeholder" class="hidden"></div><div id="prettymessage" class="hidden"><pre ' +
+                'id="prettyprint" class="line-numbers"></pre></div><div id="plaintext" class="hidden"></div>'
+            );
+            $.PrivateBin.PasteViewer.init();
+            $.PrivateBin.PasteViewer.setFormat('syntaxhighlighting');
+            $.PrivateBin.PasteViewer.setLanguage('auto');
+            $.PrivateBin.PasteViewer.setText('--- a/file.txt\n+++ b/file.txt\n@@ -1,1 +1,1 @@\n-old\n+new');
+            $.PrivateBin.PasteViewer.run();
+            assert.strictEqual($('#prettyprint code').hasClass('language-diff'), true);
+            assert.strictEqual($('#prettyprint').hasClass('diff-highlight'), true);
+            clean();
+        });
+
+        it('correctly auto-detects PHP format', function () {
+            var clean = jsdom();
+            $('body').html(
+                '<div id="placeholder" class="hidden"></div><div id="prettymessage" class="hidden"><pre ' +
+                'id="prettyprint" class="line-numbers"></pre></div><div id="plaintext" class="hidden"></div>'
+            );
+            $.PrivateBin.PasteViewer.init();
+            $.PrivateBin.PasteViewer.setFormat('syntaxhighlighting');
+            $.PrivateBin.PasteViewer.setLanguage('auto');
+            $.PrivateBin.PasteViewer.setText('<?php echo "Hello World"; ?>');
+            $.PrivateBin.PasteViewer.run();
+            assert.strictEqual($('#prettyprint code').hasClass('language-php'), true);
+            clean();
+        });
+
+        it('respects manual language override', function () {
+            var clean = jsdom();
+            $('body').html(
+                '<div id="placeholder" class="hidden"></div><div id="prettymessage" class="hidden"><pre ' +
+                'id="prettyprint" class="line-numbers"></pre></div><div id="plaintext" class="hidden"></div>'
+            );
+            $.PrivateBin.PasteViewer.init();
+            $.PrivateBin.PasteViewer.setFormat('syntaxhighlighting');
+            $.PrivateBin.PasteViewer.setLanguage('javascript');
+            $.PrivateBin.PasteViewer.setText('const foo = "bar";');
+            $.PrivateBin.PasteViewer.run();
+            assert.strictEqual($('#prettyprint code').hasClass('language-javascript'), true);
+            clean();
+        });
+
+        it('correctly auto-detects JSON format', function () {
+            var clean = jsdom();
+            $('body').html(
+                '<div id="placeholder" class="hidden"></div><div id="prettymessage" class="hidden"><pre ' +
+                'id="prettyprint" class="line-numbers"></pre></div><div id="plaintext" class="hidden"></div>'
+            );
+            $.PrivateBin.PasteViewer.init();
+            $.PrivateBin.PasteViewer.setFormat('syntaxhighlighting');
+            $.PrivateBin.PasteViewer.setLanguage('auto');
+            $.PrivateBin.PasteViewer.setText('{"name": "PrivateBin", "version": 2}');
+            $.PrivateBin.PasteViewer.run();
+            assert.strictEqual($('#prettyprint code').hasClass('language-json'), true);
+            clean();
+        });
+
+        it('correctly auto-detects SQL format', function () {
+            var clean = jsdom();
+            $('body').html(
+                '<div id="placeholder" class="hidden"></div><div id="prettymessage" class="hidden"><pre ' +
+                'id="prettyprint" class="line-numbers"></pre></div><div id="plaintext" class="hidden"></div>'
+            );
+            $.PrivateBin.PasteViewer.init();
+            $.PrivateBin.PasteViewer.setFormat('syntaxhighlighting');
+            $.PrivateBin.PasteViewer.setLanguage('auto');
+            $.PrivateBin.PasteViewer.setText('SELECT * FROM pastes WHERE id = 1;');
+            $.PrivateBin.PasteViewer.run();
+            assert.strictEqual($('#prettyprint code').hasClass('language-sql'), true);
+            clean();
+        });
+
+        it('correctly auto-detects Markdown format', function () {
+            var clean = jsdom();
+            $('body').html(
+                '<div id="placeholder" class="hidden"></div><div id="prettymessage" class="hidden"><pre ' +
+                'id="prettyprint" class="line-numbers"></pre></div><div id="plaintext" class="hidden"></div>'
+            );
+            $.PrivateBin.PasteViewer.init();
+            $.PrivateBin.PasteViewer.setFormat('syntaxhighlighting');
+            $.PrivateBin.PasteViewer.setLanguage('auto');
+            $.PrivateBin.PasteViewer.setText('## Header\n\n[Link](https://privatebin.info)\n\n- item 1\n- item 2');
+            $.PrivateBin.PasteViewer.run();
+            assert.strictEqual($('#prettyprint code').hasClass('language-markdown'), true);
+            clean();
+        });
+
+        it('correctly auto-detects TypeScript format', function () {
+            var clean = jsdom();
+            $('body').html(
+                '<div id="placeholder" class="hidden"></div><div id="prettymessage" class="hidden"><pre ' +
+                'id="prettyprint" class="line-numbers"></pre></div><div id="plaintext" class="hidden"></div>'
+            );
+            $.PrivateBin.PasteViewer.init();
+            $.PrivateBin.PasteViewer.setFormat('syntaxhighlighting');
+            $.PrivateBin.PasteViewer.setLanguage('auto');
+            $.PrivateBin.PasteViewer.setText('interface User {\n  id: number;\n  name: string;\n}\nconst u: User = { id: 1, name: "Alice" };');
+            $.PrivateBin.PasteViewer.run();
+            assert.strictEqual($('#prettyprint code').hasClass('language-typescript'), true);
+            clean();
+        });
+
+        it('correctly auto-detects YAML format', function () {
+            var clean = jsdom();
+            $('body').html(
+                '<div id="placeholder" class="hidden"></div><div id="prettymessage" class="hidden"><pre ' +
+                'id="prettyprint" class="line-numbers"></pre></div><div id="plaintext" class="hidden"></div>'
+            );
+            $.PrivateBin.PasteViewer.init();
+            $.PrivateBin.PasteViewer.setFormat('syntaxhighlighting');
+            $.PrivateBin.PasteViewer.setLanguage('auto');
+            $.PrivateBin.PasteViewer.setText('version: "3"\nservices:\n  web:\n    image: nginx:latest\n    ports:\n      - "80:80"');
+            $.PrivateBin.PasteViewer.run();
+            assert.strictEqual($('#prettyprint code').hasClass('language-yaml'), true);
+            clean();
+        });
+
+        it('falls back to clike for unsupported languages like Ruby', function () {
+            var clean = jsdom();
+            $('body').html(
+                '<div id="placeholder" class="hidden"></div><div id="prettymessage" class="hidden"><pre ' +
+                'id="prettyprint" class="line-numbers"></pre></div><div id="plaintext" class="hidden"></div>'
+            );
+            $.PrivateBin.PasteViewer.init();
+            $.PrivateBin.PasteViewer.setFormat('syntaxhighlighting');
+            $.PrivateBin.PasteViewer.setLanguage('auto');
+            $.PrivateBin.PasteViewer.setText('class Person\n  attr_accessor :name\n  def initialize(name)\n    @name = name\n  end\nend');
+            $.PrivateBin.PasteViewer.run();
+            assert.strictEqual($('#prettyprint code').hasClass('language-clike'), true);
+            clean();
+        });
+    });
 });

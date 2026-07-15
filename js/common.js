@@ -11,13 +11,18 @@ global.WebCrypto = require('@peculiar/webcrypto').Crypto;
 // application libraries to test
 global.$ = global.jQuery = require('./jquery-3.7.1');
 global.zlib = require('./zlib').zlib;
-require('./prettify');
-global.prettyPrint = window.PR.prettyPrint;
-global.prettyPrintOne = window.PR.prettyPrintOne;
+global.Prism = { manual: true };
+global.Prism = require('./prism-1.29.0');
+global.Prism.manual = true;
 global.showdown = require('./showdown-2.1.0');
 global.DOMPurify = require('./purify-3.4.1');
 global.baseX = require('./base-x-5.0.1').baseX;
 global.Legacy = require('./legacy').Legacy;
+
+const vm = require('vm');
+const flouriteCode = fs.readFileSync(__dirname + '/flourite-1.3.0.js', 'utf8');
+vm.runInThisContext(flouriteCode);
+
 require('./privatebin');
 
 // internal variables
@@ -39,6 +44,10 @@ var a2zString    = ['a','b','c','d','e','f','g','h','i','j','k','l','m',
     formats = ['plaintext', 'markdown', 'syntaxhighlighting'],
     mimeFile = fs.createReadStream('/etc/mime.types'),
     mimeLine = '';
+
+mimeFile.on('error', function(err) {
+    // ignore file not found error on Windows
+});
 
 // populate mime types from environment
 mimeFile.on('data', function(data) {
