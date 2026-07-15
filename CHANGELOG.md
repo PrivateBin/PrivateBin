@@ -1,6 +1,7 @@
 # PrivateBin version history
 
 ## 2.0.6 (not yet released)
+* CHANGED: Upgrading libraries to: DOMpurify 3.4.12
 * FIXED: Gracefully handle YOURLS replies with a 200 status code but no shorturl, instead of raising a TypeError
 
 ## 2.0.5 (2026-07-11)
