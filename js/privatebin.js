@@ -148,6 +148,18 @@ jQuery.PrivateBin = (function($) {
         }
 
         /**
+         * gets the selected language
+         *
+         * @name Paste.getLanguage
+         * @function
+         * @return {string|undefined}
+         */
+        this.getLanguage = function()
+        {
+            return this.adata[4];
+        }
+
+        /**
          * gets the remaining seconds before the document expires
          *
          * returns 0 if there is no expiration
@@ -2685,6 +2697,134 @@ jQuery.PrivateBin = (function($) {
     })();
 
     /**
+     * detects language of a given code snippet
+     *
+     * @private
+     * @param {string} code
+     * @return {string} language
+     */
+    function detectLanguage(code) {
+        code = code.trim();
+        // Limit detection to the first 5000 characters to ensure maximum performance
+        // and eliminate any potential regex backtracking bottlenecks on large files.
+        const detectCode = code.substring(0, 5000);
+
+        // --- Fast path short-circuit logic ---
+        if (/^(diff --git|Index: |--- |\*\*\* |@@ -\d)/m.test(detectCode)) {
+            return 'diff';
+        }
+        if (/^#!.*\b(bash|sh)\b/m.test(detectCode)) {
+            return 'bash';
+        }
+        if (/^#!.*\bpython\b/m.test(detectCode)) {
+            return 'python';
+        }
+        if (/<\?(php|=)/.test(detectCode)) {
+            return 'php';
+        }
+        if (/^\s*<\??(html|!DOCTYPE)\b/i.test(detectCode)) {
+            return 'markup';
+        }
+        if (/^\s*[\{\[]/.test(detectCode)) {
+            try {
+                JSON.parse(detectCode);
+                return 'json';
+            } catch (e) {}
+        }
+
+        // --- Flourite fallback ---
+        if (typeof flourite !== 'undefined') {
+            try {
+                const result = flourite(detectCode);
+                if (result && result.language) {
+                    const detected = result.language.toLowerCase();
+                    const mappings = {
+                        'javascript': 'javascript',
+                        'typescript': 'typescript',
+                        'ts': 'typescript',
+                        'ts-node': 'typescript',
+                        'node': 'javascript',
+                        'php': 'php',
+                        'python': 'python',
+                        'python3': 'python',
+                        'python2': 'python',
+                        'sql': 'sql',
+                        'bash': 'bash',
+                        'shell': 'bash',
+                        'go': 'go',
+                        'rust': 'rust',
+                        'yaml': 'yaml',
+                        'json': 'json',
+                        'html': 'markup',
+                        'xml': 'markup',
+                        'markdown': 'markdown',
+                        'css': 'css',
+                        'diff': 'diff'
+                    };
+                    if (mappings[detected]) {
+                        return mappings[detected];
+                    }
+                }
+            } catch (e) {
+                // Fallback gracefully on any flourite exception
+            }
+        }
+
+        // --- Slow path local regex heuristics (if flourite is not loaded/available) ---
+        if (/^(echo|cd|ls|mkdir|chmod)\s/m.test(detectCode)) {
+            return 'bash';
+        }
+        if (/^(def\s+\w+\(|import\s+\w+|from\s+\w+\s+import)/m.test(detectCode)) {
+            return 'python';
+        }
+        if (/^\s*<\??(xml|div|span|p|a|ul|li)\b/i.test(detectCode)) {
+            return 'markup';
+        }
+        if (/^\s*(SELECT|INSERT|UPDATE|DELETE|CREATE|ALTER|DROP)\s/i.test(detectCode)) {
+            return 'sql';
+        }
+        if (/^package\s+\w+\r?\n/m.test(detectCode) || /func\s+main\s*\(\s*\)/.test(detectCode)) {
+            return 'go';
+        }
+        if (/fn\s+main\s*\(\s*\)/.test(detectCode) || /impl\s+\w+/.test(detectCode)) {
+            return 'rust';
+        }
+        if (/^\s*[.#a-zA-Z0-9_-]+\s*\{[^{}]*:[^{}]*\}/m.test(detectCode)) {
+            return 'css';
+        }
+        if (/^(const|let|var)\s+\w+\s*=/m.test(detectCode) || /function\s+\w+\s*\(/m.test(detectCode) || /import\s+[^;]+from\s+['"]/m.test(detectCode) || /console\.log\(/.test(detectCode)) {
+            return 'javascript';
+        }
+        if (/^#+\s+\w+/m.test(detectCode) || /^\s*[-*+]\s+\w+/m.test(detectCode) || /\[\w+\]\(https?:\/\//.test(detectCode)) {
+            return 'markdown';
+        }
+        return 'clike';
+    }
+
+    /**
+     * updates the visibility of the language dropdown based on active format
+     *
+     * @private
+     */
+    function updateLanguageVisibility() {
+        if (typeof PasteViewer === 'undefined' || typeof PasteViewer.getFormat !== 'function') {
+            return;
+        }
+        let format = PasteViewer.getFormat();
+        if (format === 'syntaxhighlighting') {
+            $('#style_language').removeClass('hidden');
+            $('.style_language_divider').removeClass('hidden');
+            $('.style_language_header').removeClass('hidden');
+            $('.style_language_item').removeClass('hidden');
+        } else {
+            $('#style_language').addClass('hidden');
+            $('.style_language_divider').addClass('hidden');
+            $('.style_language_header').addClass('hidden');
+            $('.style_language_item').addClass('hidden');
+        }
+    }
+
+    /**
      * (view) Parse and show document.
      *
      * @name   PasteViewer
@@ -2700,6 +2840,7 @@ jQuery.PrivateBin = (function($) {
             $plainText,
             text,
             format = 'plaintext',
+            selectedLanguage = 'auto',
             isDisplayed = false,
             isChanged = true; // by default true as nothing was parsed yet
 
@@ -2734,27 +2875,64 @@ jQuery.PrivateBin = (function($) {
                 );
                 // add table classes from bootstrap css
                 $plainText.find('table').addClass('table-condensed table-bordered');
+                
+                // Add line-numbers class to markdown code blocks, and diff-highlight to diff blocks
+                $plainText.find('code[class*="language-"]').each(function() {
+                    let $code = $(this);
+                    let $pre = $code.parent('pre');
+                    $pre.addClass('line-numbers');
+                    if ($code.hasClass('language-diff') || $code.hasClass('diff')) {
+                        $pre.addClass('diff-highlight');
+                    }
+                });
+                if (typeof Prism !== 'undefined' && typeof Prism.highlightAllUnder === 'function' && $plainText[0]) {
+                    Prism.highlightAllUnder($plainText[0]);
+                }
             } else {
                 if (format === 'syntaxhighlighting') {
-                    // yes, this is really needed to initialize the environment
-                    if (typeof prettyPrint === 'function')
-                    {
-                        prettyPrint();
+                    let lang = selectedLanguage || 'auto';
+                    if (lang === 'auto') {
+                        lang = detectLanguage(text);
+                    }
+                    
+                    $prettyPrint.removeClass();
+                    $prettyPrint.addClass('line-numbers');
+                    if (lang === 'diff') {
+                        $prettyPrint.addClass('diff-highlight');
+                    }
+                    
+                    let hash = window.location.hash;
+                    let match = hash.match(/[#&]line=([0-9\-,]+)/) || hash.match(/[#&]L=([0-9\-,]+)/);
+                    if (match) {
+                        $prettyPrint.attr('data-line', match[1]);
+                    } else {
+                        $prettyPrint.removeAttr('data-line');
                     }
 
-                    $prettyPrint.html(
-                        prettyPrintOne(
-                            Helper.htmlEntities(text), null, true
-                        )
-                    );
+                    if (typeof Prism !== 'undefined' && Prism.languages[lang] && $prettyPrint[0]) {
+                        let highlighted = Prism.highlight(text, Prism.languages[lang], lang);
+                        $prettyPrint.html(`<code class="language-${lang}">${highlighted}</code>`);
+                        let codeEl = $prettyPrint.find('code')[0];
+                        if (codeEl) {
+                            Prism.highlightElement(codeEl);
+                        }
+                    } else {
+                        $prettyPrint.html(`<code class="language-none">${Helper.htmlEntities(text)}</code>`);
+                        if (typeof Prism !== 'undefined' && $prettyPrint[0]) {
+                            let codeEl = $prettyPrint.find('code')[0];
+                            if (codeEl) {
+                                Prism.highlightElement(codeEl);
+                            }
+                        }
+                    }
                 } else {
                     // = 'plaintext'
+                    $prettyPrint.empty();
                     $prettyPrint.text(text);
                 }
                 Helper.urls2links($prettyPrint, format !== 'syntaxhighlighting');
                 $prettyPrint.css('white-space', 'pre-wrap');
                 $prettyPrint.css('word-break', 'normal');
-                $prettyPrint.removeClass('prettyprint');
             }
         }
 
@@ -2807,6 +2985,10 @@ jQuery.PrivateBin = (function($) {
             format = newFormat;
             isChanged = true;
 
+            if (typeof updateLanguageVisibility === 'function') {
+                updateLanguageVisibility();
+            }
+
             // update preview
             if (Editor.isPreview()) {
                 PasteViewer.run();
@@ -2823,6 +3005,31 @@ jQuery.PrivateBin = (function($) {
         me.getFormat = function()
         {
             return format;
+        };
+
+        /**
+         * sets the language override
+         *
+         * @name   PasteViewer.setLanguage
+         * @function
+         * @param {string} newLang the new language
+         */
+        me.setLanguage = function(newLang)
+        {
+            selectedLanguage = newLang || 'auto';
+            isChanged = true;
+        };
+
+        /**
+         * returns the currently selected language
+         *
+         * @name   PasteViewer.getLanguage
+         * @function
+         * @return {string}
+         */
+        me.getLanguage = function()
+        {
+            return selectedLanguage;
         };
 
         /**
@@ -3891,6 +4098,27 @@ jQuery.PrivateBin = (function($) {
         }
 
         /**
+         * updates the language selection (for Bootstrap 3/4 dropdown links)
+         *
+         * @name   TopNav.updateLanguage
+         * @private
+         * @function
+         * @param  {Event} event
+         */
+        function updateLanguage(event)
+        {
+            // get selected option
+            const $target = $(event.target);
+
+            // update dropdown display and save new language
+            const newLang = $target.data('language');
+            $('#pasteLanguageDisplay').text($target.text());
+            PasteViewer.setLanguage(newLang);
+
+            event.preventDefault();
+        }
+
+        /**
          * when "burn after reading" is checked, disable discussion
          *
          * @name   TopNav.changeBurnAfterReading
@@ -4326,6 +4554,8 @@ jQuery.PrivateBin = (function($) {
             $password.removeClass('hidden');
             $sendButton.removeClass('hidden');
 
+            updateLanguageVisibility();
+
             createButtonsDisplayed = true;
         };
 
@@ -4349,6 +4579,11 @@ jQuery.PrivateBin = (function($) {
             $openDiscussionOption.addClass('hidden');
             $password.addClass('hidden');
             $attach.addClass('hidden');
+
+            $('#style_language').addClass('hidden');
+            $('.style_language_divider').addClass('hidden');
+            $('.style_language_header').addClass('hidden');
+            $('.style_language_item').addClass('hidden');
 
             createButtonsDisplayed = false;
         };
@@ -4553,6 +4788,12 @@ jQuery.PrivateBin = (function($) {
                     $('#pasteExpirationDisplay').text($this.text());
                 }
             });
+
+            // reset language
+            $('#pasteLanguage').val('auto');
+            $('#pasteLanguageDisplay').text('Auto');
+            PasteViewer.setLanguage('auto');
+            updateLanguageVisibility();
         };
 
         /**
@@ -4693,6 +4934,26 @@ jQuery.PrivateBin = (function($) {
         }
 
         /**
+         * set the language on bootstrap templates programmatically
+         *
+         * @name    TopNav.setLanguage
+         * @function
+         * @param   {string} lang
+         */
+        me.setLanguage = function(lang)
+        {
+            if (Helper.isBootstrap5()) {
+                $('#pasteLanguage').val(lang);
+            } else {
+                $(`#style_language a[data-language="${lang}"], .style_language_item a[data-language="${lang}"]`).first().each(function() {
+                    $('#pasteLanguageDisplay').text($(this).text());
+                });
+                $('#pasteLanguage').val(lang);
+            }
+            PasteViewer.setLanguage(lang);
+        }
+
+        /**
          * returns if attachment dropdown is readonly, not editable
          *
          * @name   TopNav.isAttachmentReadonly
@@ -4760,9 +5021,14 @@ jQuery.PrivateBin = (function($) {
                 $('#pasteFormatter').on('change', function() {
                     PasteViewer.setFormat(Model.getFormatDefault());
                 });
+                $('#pasteLanguage').on('change', function() {
+                    PasteViewer.setLanguage($(this).val());
+                });
             } else {
                 $('ul.dropdown-menu li a', $('#expiration').parent()).click(updateExpiration);
                 $('ul.dropdown-menu li a', $('#formatter').parent()).click(updateFormat);
+                $('ul.dropdown-menu li a', $('#style_language')).click(updateLanguage);
+                $('.style_language_item a').click(updateLanguage);
             }
 
             // initiate default state of checkboxes
@@ -5257,13 +5523,15 @@ jQuery.PrivateBin = (function($) {
             ServerInteraction.setUnencryptedData('adata', [
                 null, format,
                 TopNav.getOpenDiscussion() ? 1 : 0,
-                TopNav.getBurnAfterReading() ? 1 : 0
+                TopNav.getBurnAfterReading() ? 1 : 0,
+                (format === 'syntaxhighlighting' ? ($('#pasteLanguage').val() || 'auto') : undefined)
             ]);
             ServerInteraction.setUnencryptedData('meta', {'expire': TopNav.getExpiration()});
 
             // prepare PasteViewer for later preview
             PasteViewer.setText(plainText);
             PasteViewer.setFormat(format);
+            PasteViewer.setLanguage($('#pasteLanguage').val() || 'auto');
 
             // prepare cypher message
             let attachmentsData = AttachmentViewer.getAttachmentsData(),
@@ -5429,6 +5697,11 @@ jQuery.PrivateBin = (function($) {
                 AttachmentViewer.showAttachment();
             }
             PasteViewer.setFormat(paste.getFormat());
+            if (typeof paste.getLanguage === 'function') {
+                PasteViewer.setLanguage(paste.getLanguage() || 'auto');
+            } else {
+                PasteViewer.setLanguage('auto');
+            }
             PasteViewer.setText(pasteMessage.paste);
             PasteViewer.run();
         }
@@ -5960,6 +6233,11 @@ jQuery.PrivateBin = (function($) {
             Editor.setText(PasteViewer.getText());
             // also clone the format
             TopNav.setFormat(PasteViewer.getFormat());
+            if (typeof PasteViewer.getLanguage === 'function') {
+                TopNav.setLanguage(PasteViewer.getLanguage());
+            } else {
+                TopNav.setLanguage('auto');
+            }
             PasteViewer.hide();
             Editor.show();
 
@@ -6071,6 +6349,8 @@ jQuery.PrivateBin = (function($) {
             // display an existing document
             return me.showPaste();
         }
+
+        me._detectLanguage = detectLanguage;
 
         return me;
     })(window, document);

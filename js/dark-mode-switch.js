@@ -20,13 +20,13 @@
     return getPreferredTheme()
   }
 
-  const delStoredPrettifyTheme = () => localStorage.removeItem('themePrettify')
-  const getStoredPrettifyTheme = () => localStorage.getItem('themePrettify')
-  const setStoredPrettifyTheme = theme => localStorage.setItem('themePrettify', theme)
+  const delStoredPrismTheme = () => localStorage.removeItem('themePrism')
+  const getStoredPrismTheme = () => localStorage.getItem('themePrism')
+  const setStoredPrismTheme = theme => localStorage.setItem('themePrism', theme)
 
-  const getPrettifyThemeLink = () => {
+  const getPrismThemeLink = () => {
     for (const sheet of document.getElementsByTagName('link')) {
-      if (sheet.rel === 'stylesheet' && sheet.href.includes('css/prettify/') && !sheet.href.includes('css/prettify/prettify.css')) {
+      if (sheet.rel === 'stylesheet' && sheet.href.includes('css/prism/') && !sheet.href.includes('css/prism/prism-1.29.0.css')) {
         return sheet
       }
     }
@@ -36,19 +36,19 @@
   const setTheme = theme => {
     const preferredTheme = theme === 'auto' ? getPreferredTheme() : theme
     document.documentElement.setAttribute('data-bs-theme', preferredTheme)
-    const sheetPrettify = getPrettifyThemeLink()
-    if (sheetPrettify) {
-      sheetPrettify.remove()
+    const sheetPrism = getPrismThemeLink()
+    if (sheetPrism) {
+      sheetPrism.remove()
     }
     const link = document.createElement('link')
     link.rel = 'stylesheet'
     if (preferredTheme === 'dark') {
-      link.href = 'css/prettify/sons-of-obsidian.css'
+      link.href = 'css/prism/sons-of-obsidian.css'
       document.head.appendChild(link)
     } else {
-      const themePrettify = getStoredPrettifyTheme()
-      if (themePrettify) {
-        link.href = themePrettify
+      const themePrism = getStoredPrismTheme()
+      if (themePrism) {
+        link.href = themePrism
         document.head.appendChild(link)
       }
     }
@@ -62,11 +62,11 @@
   })
 
   window.addEventListener('DOMContentLoaded', () => {
-    const sheetPrettify = getPrettifyThemeLink()
-    if (sheetPrettify) {
-      setStoredPrettifyTheme(sheetPrettify.href)
+    const sheetPrism = getPrismThemeLink()
+    if (sheetPrism) {
+      setStoredPrismTheme(sheetPrism.href)
     } else {
-      delStoredPrettifyTheme()
+      delStoredPrismTheme()
     }
     const toggle = document.getElementById('bd-theme')
     const theme = getStoredPreferredTheme()

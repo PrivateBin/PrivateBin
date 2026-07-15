@@ -15,11 +15,11 @@ use PrivateBin\I18n;
 <?php
 if ($SYNTAXHIGHLIGHTING) :
 ?>
-		<link type="text/css" rel="stylesheet" href="css/prettify/prettify.css?<?php echo rawurlencode($VERSION); ?>" />
+		<link type="text/css" rel="stylesheet" href="css/prism/prism-1.29.0.css?<?php echo rawurlencode($VERSION); ?>" />
 <?php
     if (!empty($SYNTAXHIGHLIGHTINGTHEME)) :
 ?>
-		<link type="text/css" rel="stylesheet" href="css/prettify/<?php echo rawurlencode($SYNTAXHIGHLIGHTINGTHEME); ?>.css?<?php echo rawurlencode($VERSION); ?>" />
+		<link type="text/css" rel="stylesheet" href="css/prism/<?php echo rawurlencode($SYNTAXHIGHLIGHTINGTHEME); ?>.css?<?php echo rawurlencode($VERSION); ?>" />
 <?php
     endif;
 endif;
@@ -41,7 +41,8 @@ endif;
 <?php
 if ($SYNTAXHIGHLIGHTING) :
 ?>
-		<?php $this->_scriptTag('js/prettify.js', 'defer'); ?>
+		<?php $this->_scriptTag('js/prism-1.29.0.js', 'defer'); ?>
+		<?php $this->_scriptTag('js/flourite-1.3.0.js', 'defer'); ?>
 <?php
 endif;
 if ($MARKDOWN) :
@@ -297,6 +298,33 @@ endif;
 ?>
 							</select>
 						</li>
+<?php
+if ($SYNTAXHIGHLIGHTING) :
+?>
+						<li id="style_language" class="nav-item d-flex hidden">
+							<label for="pasteLanguage" class="form-label my-auto me-1 ms-2"><?php echo I18n::_('Language'); ?>:</label>
+							<select id="pasteLanguage" name="pasteLanguage" class="form-select">
+								<option value="auto" selected="selected"><?php echo I18n::_('Auto'); ?></option>
+								<option value="diff"><?php echo I18n::_('Diff / Patch'); ?></option>
+								<option value="markup"><?php echo I18n::_('HTML/XML'); ?></option>
+								<option value="css"><?php echo I18n::_('CSS'); ?></option>
+								<option value="clike"><?php echo I18n::_('C-like'); ?></option>
+								<option value="javascript"><?php echo I18n::_('JavaScript'); ?></option>
+								<option value="php"><?php echo I18n::_('PHP'); ?></option>
+								<option value="python"><?php echo I18n::_('Python'); ?></option>
+								<option value="sql"><?php echo I18n::_('SQL'); ?></option>
+								<option value="bash"><?php echo I18n::_('Shell (Bash)'); ?></option>
+								<option value="go"><?php echo I18n::_('Go'); ?></option>
+								<option value="rust"><?php echo I18n::_('Rust'); ?></option>
+								<option value="yaml"><?php echo I18n::_('YAML'); ?></option>
+								<option value="json"><?php echo I18n::_('JSON'); ?></option>
+								<option value="typescript"><?php echo I18n::_('TypeScript'); ?></option>
+								<option value="markdown"><?php echo I18n::_('Markdown'); ?></option>
+							</select>
+						</li>
+<?php
+endif;
+?>
 					</ul>
 					<ul class="navbar-nav gap-2">
 						<li class="nav-item">
