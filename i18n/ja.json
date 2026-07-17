@@ -151,7 +151,7 @@
     "server error or not responding": "サーバーエラーまたは応答しません",
     "Could not post comment: %s": "コメントを投稿できませんでした：%s",
     "Sending document…": "ペーストを送信しています…",
-    "Your document is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit <kbd>Ctrl</kbd>+<kbd>c</kbd> to copy)</span>": "ペーストは<a id=\"pasteurl\" href=\"%s\">%s</a>です<span id=\"copyhint\">（コピーするには<kbd>Ctrl</kbd>+<kbd>c</kbd>を押してください）</span>",
+    "Your document is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit <kbd>%s</kbd>+<kbd>c</kbd> to copy)</span>": "ペーストは<a id=\"pasteurl\" href=\"%s\">%s</a>です<span id=\"copyhint\">（コピーするには<kbd>%s</kbd>+<kbd>c</kbd>を押してください）</span>",
     "Delete data": "データを削除",
     "Could not create document: %s": "ペーストを作成できませんでした：%s",
     "Cannot decrypt document: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)": "ペーストを復号化できません：復号化キーがURLにありません（URLの一部を削除するリダイレクト機能またはURLの短縮アプリケーションを使いましたか？）",
@@ -224,12 +224,15 @@
     "Error decompressing document, your browser does not support WebAssembly. Please use another browser to view this document.": "Error decompressing document, your browser does not support WebAssembly. Please use another browser to view this document.",
     "Start over": "Start over",
     "Document copied to clipboard": "Document copied to clipboard",
-    "To copy document press on the copy button or use the clipboard shortcut <kbd>Ctrl</kbd>+<kbd>c</kbd>/<kbd>Cmd</kbd>+<kbd>c</kbd>": "To copy document press on the copy button or use the clipboard shortcut <kbd>Ctrl</kbd>+<kbd>c</kbd>/<kbd>Cmd</kbd>+<kbd>c</kbd>",
+    "To copy document press on the copy button or use the clipboard shortcut <kbd>%s</kbd>+<kbd>c</kbd>": "To copy document press on the copy button or use the clipboard shortcut <kbd>%s</kbd>+<kbd>c</kbd>",
     "Copy link": "Copy link",
     "Link copied to clipboard": "Link copied to clipboard",
     "Document text": "Document text",
     "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)": "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)",
     "Show password": "Show password",
     "Hide password": "Hide password",
-    "Theme": "Theme"
+    "Theme": "Theme",
+    "Copy": "Copy",
+    "Cmd": "Cmd",
+    "Ctrl": "Ctrl"
 }

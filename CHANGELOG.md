@@ -1,6 +1,16 @@
 # PrivateBin version history
 
-## 2.0.5 (not yet released)
+## 2.0.6 (not yet released)
+* CHANGED: Upgrading libraries to: DOMpurify 3.4.12
+* FIXED: Gracefully handle YOURLS replies with a 200 status code but no shorturl, instead of raising a TypeError
+
+## 2.0.5 (2026-07-11)
+* CHANGED: Show OS-specific copy hotkey hint (Cmd+c on Mac, Ctrl+c on others) (#1506)
+* FIXED: Prevent browsers from rendering unsafe attachments like HTML in a new tab
+* FIXED: State corruption after "Remove attachment" (#1824)
+* FIXED: Copy button is hidden if the document is made as markdown (#1703)
+* FIXED: Shortened URLs from YOURLS received but failed to parse (#1844)
+* FIXED: Insert only base path in JSON API responses, without GET parameters
 
 ## 2.0.4 (2026-05-03)
 * ADDED: Translations for Swedish & Persian

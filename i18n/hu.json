@@ -151,7 +151,7 @@
     "server error or not responding": "A szerveren hiba lépett fel vagy nem válaszol.",
     "Could not post comment: %s": "Nem tudtuk beküldeni a hozzászólást: %s",
     "Sending document…": "Bejegyzés elküldése...",
-    "Your document is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit <kbd>Ctrl</kbd>+<kbd>c</kbd> to copy)</span>": "A bejegyzésed a <a id=\"pasteurl\" href=\"%s\">%s</a> címen elérhető. <span id=\"copyhint\"> <kbd>Ctrl</kbd>+<kbd>c</kbd>-vel tudod vágólapra másolni.</span>",
+    "Your document is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit <kbd>%s</kbd>+<kbd>c</kbd> to copy)</span>": "A bejegyzésed a <a id=\"pasteurl\" href=\"%s\">%s</a> címen elérhető. <span id=\"copyhint\"> <kbd>%s</kbd>+<kbd>c</kbd>-vel tudod vágólapra másolni.</span>",
     "Delete data": "Adat törlése",
     "Could not create document: %s": "Nem tudtuk létrehozni a bejegyzést: %s",
     "Cannot decrypt document: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)": "Nem tudjuk visszafejteni a bejegyzést: a dekódoláshoz szükséges kulcs hiányzik a címből. Talán URL rövidítőt használtál, amely azt kivágta belőle?",
@@ -224,12 +224,15 @@
     "Error decompressing document, your browser does not support WebAssembly. Please use another browser to view this document.": "Error decompressing document, your browser does not support WebAssembly. Please use another browser to view this document.",
     "Start over": "Újrakezdés",
     "Document copied to clipboard": "Bejegyzés másolva",
-    "To copy document press on the copy button or use the clipboard shortcut <kbd>Ctrl</kbd>+<kbd>c</kbd>/<kbd>Cmd</kbd>+<kbd>c</kbd>": "Másoláshoz használd a <kbd>Ctrl</kbd>+<kbd>c</kbd>/<kbd>Cmd</kbd>+<kbd>c</kbd> billentyűkombinációt",
+    "To copy document press on the copy button or use the clipboard shortcut <kbd>%s</kbd>+<kbd>c</kbd>": "Másoláshoz használd a <kbd>%s</kbd>+<kbd>c</kbd> billentyűkombinációt",
     "Copy link": "Link másolása",
     "Link copied to clipboard": "Link másolva",
     "Document text": "Bejegyzés szövege",
     "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)": "A tabulátor karakternek használható (nyomd le a <kbd>Ctrl</kbd>+<kbd>m</kbd> vagy az <kbd>Esc</kbd> to billentyűket ennek megszüntetéséhez).",
     "Show password": "Jelszó megjelenítése",
     "Hide password": "Jelszó elrejtése",
-    "Theme": "Téma"
+    "Theme": "Téma",
+    "Copy": "Copy",
+    "Cmd": "Cmd",
+    "Ctrl": "Ctrl"
 }

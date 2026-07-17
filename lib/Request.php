@@ -220,7 +220,7 @@ class Request
     }
 
     /**
-     * Get request URI
+     * Get request URI path without GET parameters
      *
      * @access public
      * @return string
@@ -228,7 +228,7 @@ class Request
     public function getRequestUri()
     {
         $uri = array_key_exists('REQUEST_URI', $_SERVER) ? filter_var($_SERVER['REQUEST_URI'], FILTER_SANITIZE_URL) : '';
-        return empty($uri) ? '/' : $uri;
+        return empty($uri) ? '/' : parse_url($uri, PHP_URL_PATH);
     }
 
     /**

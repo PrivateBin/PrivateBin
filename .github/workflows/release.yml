@@ -13,8 +13,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Fetch changelog from tag
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
+          persist-credentials: false
           sparse-checkout: CHANGELOG.md
           sparse-checkout-cone-mode: false
 
@@ -32,8 +33,8 @@ jobs:
     steps:
       - name: Collect artifacts
         run: |
-          wget -q https://github.com/PrivateBin/PrivateBin/archive/refs/tags/${GITHUB_REF_NAME}.tar.gz
-          wget -q https://github.com/PrivateBin/PrivateBin/archive/refs/tags/${GITHUB_REF_NAME}.zip
+          wget -q "https://github.com/PrivateBin/PrivateBin/archive/refs/tags/${GITHUB_REF_NAME}.tar.gz"
+          wget -q "https://github.com/PrivateBin/PrivateBin/archive/refs/tags/${GITHUB_REF_NAME}.zip"
 
       - name: Generate hashes
         shell: bash

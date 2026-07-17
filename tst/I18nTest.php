@@ -231,6 +231,21 @@ class I18nTest extends TestCase
         Helper::rmDir($path);
     }
 
+    public function testGetCopyHotkey()
+    {
+        $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)';
+        $this->assertEquals('Cmd', I18n::getCopyHotkey(), 'returns Cmd on macOS');
+
+        $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)';
+        $this->assertEquals('Ctrl', I18n::getCopyHotkey(), 'returns Ctrl on Windows');
+
+        $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0 (X11; Linux x86_64)';
+        $this->assertEquals('Ctrl', I18n::getCopyHotkey(), 'returns Ctrl on Linux');
+
+        unset($_SERVER['HTTP_USER_AGENT']);
+        $this->assertEquals('Ctrl', I18n::getCopyHotkey(), 'returns Ctrl when user agent absent');
+    }
+
     public function testMessageIdsExistInAllLanguages()
     {
         $messageIds = [];

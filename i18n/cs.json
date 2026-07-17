@@ -151,7 +151,7 @@
     "server error or not responding": "Chyba na serveru nebo server neodpovídá",
     "Could not post comment: %s": "Nelze odeslat komentář: %s",
     "Sending document…": "Odesílání příspěvku…",
-    "Your document is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit <kbd>Ctrl</kbd>+<kbd>c</kbd> to copy)</span>": "Váš příspěvek je <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Stiskněte <kbd>Ctrl</kbd>+<kbd>c</kbd> pro zkopírování)</span>",
+    "Your document is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit <kbd>%s</kbd>+<kbd>c</kbd> to copy)</span>": "Váš příspěvek je <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Stiskněte <kbd>%s</kbd>+<kbd>c</kbd> pro zkopírování)</span>",
     "Delete data": "Odstranit data",
     "Could not create document: %s": "Nepodařilo se vytvořit příspěvek: %s",
     "Cannot decrypt document: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)": "Nepodařilo se dešifrovat příspěvek: V adrese chybí dešifrovací klíč (Nepoužili jste přesměrovač nebo zkracovač URL, který maže části URL?)",
@@ -224,12 +224,15 @@
     "Error decompressing document, your browser does not support WebAssembly. Please use another browser to view this document.": "Chyba při dekomprimování příspěvku, váš prohlížeč nepodporuje WebAssembly. Pro zobrazení tohoto příspěvku prosím použijte jiný prohlížeč.",
     "Start over": "Začít znovu",
     "Document copied to clipboard": "Dokument zkopírován do schránky",
-    "To copy document press on the copy button or use the clipboard shortcut <kbd>Ctrl</kbd>+<kbd>c</kbd>/<kbd>Cmd</kbd>+<kbd>c</kbd>": "Pro zkopírování dokumentu klikněte na tlačítko nebo použijte klávesovou zkratku schránky <kbd>Ctrl</kbd>+<kbd>c</kbd>/<kbd>Cmd</kbd>+<kbd>c</kbd>",
+    "To copy document press on the copy button or use the clipboard shortcut <kbd>%s</kbd>+<kbd>c</kbd>": "Pro zkopírování dokumentu klikněte na tlačítko nebo použijte klávesovou zkratku schránky <kbd>%s</kbd>+<kbd>c</kbd>",
     "Copy link": "Zkopírovat odkaz",
     "Link copied to clipboard": "Odkaz zkopírován do schránky",
     "Document text": "Text dokumentu",
     "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)": "Tabulátor funguje jako znak (pro přepnutí stiskněte <kbd>Ctrl</kbd>+<kbd>m</kbd> nebo <kbd>Esc</kbd>)",
     "Show password": "Show password",
     "Hide password": "Hide password",
-    "Theme": "Vzhled"
+    "Theme": "Vzhled",
+    "Copy": "Copy",
+    "Cmd": "Cmd",
+    "Ctrl": "Ctrl"
 }

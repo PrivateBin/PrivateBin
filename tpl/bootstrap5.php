@@ -50,7 +50,7 @@ if ($MARKDOWN) :
 <?php
 endif;
 ?>
-		<?php $this->_scriptTag('js/purify-3.4.1.js', 'defer'); ?>
+		<?php $this->_scriptTag('js/purify-3.4.12.js', 'defer'); ?>
 		<?php $this->_scriptTag('js/legacy.js', 'defer'); ?>
 		<?php $this->_scriptTag('js/privatebin.js', 'defer'); ?>
 		<!-- icon -->
@@ -379,7 +379,7 @@ if ($FILEUPLOAD) :
 <?php
 endif;
 ?>
-				<div id="status" role="alert" class="d-flex justify-content-between align-items-center alert alert-<?php echo $ISDELETED ? 'success' : 'info'; echo empty($STATUS) ? ' hidden' : '' ?>">
+				<div id="status" role="alert" class="d-flex align-items-center gap-2 alert alert-<?php echo $ISDELETED ? 'success' : 'info'; echo empty($STATUS) ? ' hidden' : '' ?>">
 					<div>
 						<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#info-circle" /></svg>
 						<?php echo I18n::encode($STATUS), PHP_EOL; ?>
@@ -387,7 +387,7 @@ endif;
 <?php
 if ($ISDELETED) :
 ?>
-					<button type="button" class="btn btn-secondary d-flex justify-content-center align-items-center gap-1" id="new-from-alert">
+					<button type="button" class="btn btn-secondary d-flex justify-content-center align-items-center gap-1 ms-auto" id="new-from-alert">
 						<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#repeat" /></svg>
 						<?php echo I18n::_('Start over'), PHP_EOL; ?>
 					</button>
@@ -480,12 +480,15 @@ endif;
 				<article>
 					<div id="placeholder" class="col-md-12 hidden"><?php echo I18n::_('+++ no document text +++'); ?></div>
 					<div id="attachmentPreview" class="col-md-12 text-center hidden"></div>
-					<h6 id="copyShortcutHint" class="col-md-12"><small id="copyShortcutHintText"></small></h6>
+					<h6 id="copyShortcutHint" class="col-md-12 nav justify-content-between align-items-center mb-2 hidden">
+						<small id="copyShortcutHintText" class="d-none d-md-inline">
+							<?php
+								echo I18n::_("To copy document press on the copy button or use the clipboard shortcut <kbd>%s</kbd>+<kbd>c</kbd>", I18n::getCopyHotkey())
+							?>
+						</small>
+						<button type="button" id="copyShortcutHintBtn" class="btn btn-secondary ms-auto"><?php echo I18n::_('Copy'); ?></button>
+					</h6>
 					<div id="prettymessage" class="card col-md-12 hidden">
-						<button type="button" id="prettyMessageCopyBtn" class="text-secondary opacity-05-1-hover">
-							<svg id="copyIcon" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#copy" /></svg>
-							<svg id="copySuccessIcon" class="text-success" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#check" /></svg>
-						</button>
 						<pre id="prettyprint" class="card-body col-md-12 prettyprint linenums:1"></pre>
 					</div>
 					<div id="plaintext" class="col-md-12 hidden"></div>

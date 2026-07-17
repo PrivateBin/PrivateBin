@@ -2107,10 +2107,13 @@ jQuery.PrivateBin = (function($) {
          */
         me.createPasteNotification = function(url, deleteUrl)
         {
+            const ua = navigator.userAgent;
+            const isMac = /Mac/.test(ua);
+            const hotkey = isMac ? I18n._('Cmd') : I18n._('Ctrl');
             I18n._(
                 $('#pastelink'),
-                'Your document is <a id="pasteurl" href="%s">%s</a> <span id="copyhint">(Hit <kbd>Ctrl</kbd>+<kbd>c</kbd> to copy)</span>',
-                url, url
+                'Your document is <a id="pasteurl" href="%s">%s</a> <span id="copyhint">(Hit <kbd>%s</kbd>+<kbd>c</kbd> to copy)</span>',
+                url, url, hotkey
             );
             // save newly created element
             $pasteUrl = $('#pasteurl');
@@ -2316,6 +2319,10 @@ jQuery.PrivateBin = (function($) {
             const $loadconfirmClose = $loadconfirmmodal.find('.close');
             $loadconfirmClose.off('click.close');
             $loadconfirmClose.on('click.close', Controller.newPaste);
+
+            $loadconfirmmodal.on('shown.bs.modal', () => {
+                $loadconfirmOpenNow.trigger('focus');
+            });
 
             if (typeof bootstrap !== 'undefined' && bootstrap.Tooltip.VERSION) {
                 (new bootstrap.Modal($loadconfirmmodal[0])).show();
@@ -2990,11 +2997,18 @@ jQuery.PrivateBin = (function($) {
 
             const mimeType = me.getAttachmentMimeType(attachmentData);
 
+            // We explicitly do _not_ use the original mime type for the download link
+            // to always force a download instead of potentially dangerous browser rendering/parsing/interpretation
+            let safeMimeType = 'application/octet-stream';
+            if (me.isSafeMimeType(mimeType)) {
+                safeMimeType = mimeType;
+            }
+
             // extract data and convert to binary
             const rawData = attachmentData.substring(base64Start);
             const decodedData = rawData.length > 0 ? atob(rawData) : '';
 
-            let blobUrl = getBlobUrl(decodedData, mimeType);
+            let blobUrl = getBlobUrl(decodedData, safeMimeType);
             attachmentLink.attr('href', blobUrl);
 
             if (typeof fileName !== 'undefined') {
@@ -3023,6 +3037,28 @@ jQuery.PrivateBin = (function($) {
 
             me.handleBlobAttachmentPreview($attachmentPreview, blobUrl, mimeType);
         };
+
+
+        /**
+         * Evaluates whether this is known a safe mime type.
+         *
+         * This means, the media can safely be displayed and e.g. no XSS should be possible.
+         * 
+         * @name AttachmentViewer.isSafeMimeType
+         * @function
+         * @param {string}
+         * @returns {bool}
+         */
+        me.isSafeMimeType = function(mimeType) {
+            return (
+                    mimeType.startsWith('image/') && 
+                    !mimeType.includes('svg')
+                ) ||
+                mimeType.startsWith('video/') ||
+                mimeType.startsWith('audio/') ||
+                mimeType.endsWith('/pdf') ||
+                mimeType === 'text/plain';
+        }
 
         /**
          * displays the attachment
@@ -3075,7 +3111,7 @@ jQuery.PrivateBin = (function($) {
          */
         me.removeAttachmentData = function()
         {
-            files = undefined;
+            files = [];
             attachmentsData = [];
         };
 
@@ -4193,6 +4229,10 @@ jQuery.PrivateBin = (function($) {
                     triggerEmailSend(emailBody);
                 }
 
+                $emailconfirmmodal.on('shown.bs.modal', () => {
+                    $emailconfirmTimezoneUtc.trigger('focus');
+                });
+
                 $emailconfirmTimezoneCurrent.off('click.sendEmailCurrentTimezone');
                 $emailconfirmTimezoneCurrent.on('click.sendEmailCurrentTimezone', sendEmailAndHideModal);
                 $emailconfirmTimezoneUtc.off('click.sendEmailUtcTimezone');
@@ -4713,16 +4753,17 @@ jQuery.PrivateBin = (function($) {
             $fileRemoveButton.click(removeAttachment);
             $qrCodeLink.click(displayQrCode);
 
-            // bootstrap template drop downs
-            $('ul.dropdown-menu li a', $('#expiration').parent()).click(updateExpiration);
-            $('ul.dropdown-menu li a', $('#formatter').parent()).click(updateFormat);
-            // bootstrap5 & page drop downs
-            $('#pasteExpiration').on('change', function() {
-                pasteExpiration = Model.getExpirationDefault();
-            });
-            $('#pasteFormatter').on('change', function() {
-                PasteViewer.setFormat(Model.getFormatDefault());
-            });
+            if (Helper.isBootstrap5()) {
+                $('#pasteExpiration').on('change', function() {
+                    pasteExpiration = Model.getExpirationDefault();
+                });
+                $('#pasteFormatter').on('change', function() {
+                    PasteViewer.setFormat(Model.getFormatDefault());
+                });
+            } else {
+                $('ul.dropdown-menu li a', $('#expiration').parent()).click(updateExpiration);
+                $('ul.dropdown-menu li a', $('#formatter').parent()).click(updateFormat);
+            }
 
             // initiate default state of checkboxes
             changeBurnAfterReading();
@@ -5231,7 +5272,7 @@ jQuery.PrivateBin = (function($) {
                 };
             if (attachmentsData.length) {
                 cipherMessage['attachment'] = attachmentsData;
-                cipherMessage['attachment_name'] = AttachmentViewer.getFiles()?.map((fileInfo => fileInfo.name)) ?? [];
+                cipherMessage['attachment_name'] = AttachmentViewer.getFiles().map(fileInfo => fileInfo.name);
             } else if (AttachmentViewer.hasAttachment()) {
                 // fall back to cloned part
                 let attachments = AttachmentViewer.getAttachments();
@@ -5526,8 +5567,6 @@ jQuery.PrivateBin = (function($) {
 
         let copyButton,
             copyLinkButton,
-            copyIcon,
-            successIcon,
             shortcutHint,
             url;
 
@@ -5539,11 +5578,10 @@ jQuery.PrivateBin = (function($) {
          * @function
          */
         function handleCopyButtonClick() {
-            $(copyButton).click(function() {
+            $(copyButton).click(function () {
                 const text = PasteViewer.getText();
                 saveToClipboard(text);
 
-                toggleSuccessIcon();
                 showAlertMessage('Document copied to clipboard');
             });
         }
@@ -5626,33 +5664,13 @@ jQuery.PrivateBin = (function($) {
         }
 
         /**
-         * Toogle success icon after copy
-         *
-         * @name CopyToClipboard.toggleSuccessIcon
-         * @private
-         * @function
-         */
-        function toggleSuccessIcon() {
-            $(copyIcon).css('display', 'none');
-            $(successIcon).css('display', 'block');
-
-            setTimeout(function() {
-                $(copyIcon).css('display', 'block');
-                $(successIcon).css('display', 'none');
-            }, 1000);
-        }
-
-        /**
          * Show keyboard shortcut hint
          *
          * @name CopyToClipboard.showKeyboardShortcutHint
          * @function
          */
         me.showKeyboardShortcutHint = function () {
-            I18n._(
-                shortcutHint,
-                'To copy document press on the copy button or use the clipboard shortcut <kbd>Ctrl</kbd>+<kbd>c</kbd>/<kbd>Cmd</kbd>+<kbd>c</kbd>'
-            );
+            $(shortcutHint).removeClass('hidden');
         };
 
         /**
@@ -5662,7 +5680,7 @@ jQuery.PrivateBin = (function($) {
          * @function
          */
         me.hideKeyboardShortcutHint = function () {
-            $(shortcutHint).html('');
+            $(shortcutHint).addClass('hidden');
         };
 
         /**
@@ -5683,11 +5701,9 @@ jQuery.PrivateBin = (function($) {
          * @function
          */
         me.init = function() {
-            copyButton = $('#prettyMessageCopyBtn');
+            copyButton = $('#copyShortcutHintBtn');
             copyLinkButton = $('#copyLink');
-            copyIcon = $('#copyIcon');
-            successIcon = $('#copySuccessIcon');
-            shortcutHint = $('#copyShortcutHintText');
+            shortcutHint = $('#copyShortcutHint');
 
             handleCopyButtonClick();
             handleCopyLinkButtonClick();

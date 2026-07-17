@@ -51,6 +51,16 @@ class YourlsProxyTest extends TestCase
         $this->assertEquals($yourls->getUrl(), 'https://example.com/1');
     }
 
+    public function testYourlsProxyWithStringStatusCode(): void
+    {
+        // YOURLS API returns statusCode as a string "200", not integer 200
+        file_put_contents($this->_mock_yourls_service, '{"shorturl":"https:\/\/example.com\/1","statusCode":"200"}');
+
+        $yourls = new YourlsProxy($this->_conf, 'https://example.com/?foo#bar');
+        $this->assertFalse($yourls->isError());
+        $this->assertEquals($yourls->getUrl(), 'https://example.com/1');
+    }
+
     /**
      * @dataProvider providerInvalidUrl
      */
@@ -119,6 +129,19 @@ class YourlsProxyTest extends TestCase
     {
         // when statusCode is not 200, shorturl may not have been set
         file_put_contents($this->_mock_yourls_service, '{"statusCode":403}');
+
+        $yourls = new YourlsProxy($this->_conf, 'https://example.com/?foo#bar');
+        $this->assertTrue($yourls->isError());
+        $this->assertEquals($yourls->getError(), 'Proxy error: Error parsing proxy response. This can be a configuration issue, like wrong or missing config keys.');
+    }
+
+    public function testYourlsSuccessWithoutShortUrl()
+    {
+        // YOURLS may reply with statusCode 200 but without a shorturl field;
+        // this must be handled gracefully as an error instead of raising a
+        // TypeError (the method is declared to return ?string). YOURLS returns
+        // the status code as a string, so mirror that here.
+        file_put_contents($this->_mock_yourls_service, '{"statusCode":"200"}');
 
         $yourls = new YourlsProxy($this->_conf, 'https://example.com/?foo#bar');
         $this->assertTrue($yourls->isError());

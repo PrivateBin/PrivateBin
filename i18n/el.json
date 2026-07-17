@@ -151,7 +151,7 @@
     "server error or not responding": "Πρόβλημα του διακομιστή ή δεν υπάρχει απάντηση",
     "Could not post comment: %s": "Δεν ήταν δυνατή η δημοσίευση του σχολίου: %s",
     "Sending document…": "Η επικόλληση αποστέλλεται…",
-    "Your document is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit <kbd>Ctrl</kbd>+<kbd>c</kbd> to copy)</span>": "Η επικόλλησή σας είναι <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Πληκτρολογήστε <kbd>Ctrl</kbd>+<kbd>c</kbd> για αντιγραφή)</span>",
+    "Your document is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit <kbd>%s</kbd>+<kbd>c</kbd> to copy)</span>": "Η επικόλλησή σας είναι <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Πληκτρολογήστε <kbd>%s</kbd>+<kbd>c</kbd> για αντιγραφή)</span>",
     "Delete data": "Διαγραφή δεδομένων",
     "Could not create document: %s": "Δεν ήταν δυνατή η δημιουργία επικόλλησης: %s",
     "Cannot decrypt document: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)": "Δεν ήταν δυνατή η αποκρυπτογράφηση της επικόλλησης: Το κλειδί αποκρυπτογράφησης λείπει από τον σύνδεσμο (Μήπως χρησιμοποιήσατε ανακατεύθυνση συνδέσμου ή υπηρεσία συντόμευσης συνδέσμου;)",
@@ -224,12 +224,15 @@
     "Error decompressing document, your browser does not support WebAssembly. Please use another browser to view this document.": "Σφάλμα αποσυμπίεσης της επικόλλησης, ο περιηγητής σας δεν υποστηρίζει WebAssembly. Παρακαλούμε χρησιμοποιήστε έναν άλλο περιηγητή για να δείτε αυτή την επικόλληση.",
     "Start over": "Start over",
     "Document copied to clipboard": "Document copied to clipboard",
-    "To copy document press on the copy button or use the clipboard shortcut <kbd>Ctrl</kbd>+<kbd>c</kbd>/<kbd>Cmd</kbd>+<kbd>c</kbd>": "To copy document press on the copy button or use the clipboard shortcut <kbd>Ctrl</kbd>+<kbd>c</kbd>/<kbd>Cmd</kbd>+<kbd>c</kbd>",
+    "To copy document press on the copy button or use the clipboard shortcut <kbd>%s</kbd>+<kbd>c</kbd>": "To copy document press on the copy button or use the clipboard shortcut <kbd>%s</kbd>+<kbd>c</kbd>",
     "Copy link": "Copy link",
     "Link copied to clipboard": "Link copied to clipboard",
     "Document text": "Document text",
     "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)": "Tabulator key serves as character (Hit <kbd>Ctrl</kbd>+<kbd>m</kbd> or <kbd>Esc</kbd> to toggle)",
     "Show password": "Show password",
     "Hide password": "Hide password",
-    "Theme": "Theme"
+    "Theme": "Theme",
+    "Copy": "Copy",
+    "Cmd": "Cmd",
+    "Ctrl": "Ctrl"
 }

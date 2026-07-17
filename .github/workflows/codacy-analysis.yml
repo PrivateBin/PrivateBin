@@ -17,18 +17,20 @@ on:
   schedule:
     - cron: '45 16 * * 1'
 
-permissions:
-  contents: read
-  security-events: write
+permissions: {}
 
 jobs:
   codacy-security-scan:
     name: Codacy Security Scan
+    permissions:
+      security-events: write
     runs-on: ubuntu-latest
     steps:
       # Checkout the repository to the GitHub Actions runner
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
 
       - name: Remove folders causing errors in report
         run: rm -rf doc img *.md
