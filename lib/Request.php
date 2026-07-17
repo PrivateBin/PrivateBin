@@ -189,8 +189,13 @@ class Request
         foreach ($required_keys as $key) {
             $data[$key] = $this->getParam($key, $key === 'v' ? 1 : '');
         }
-        // forcing a cast to int or float
-        $data['v'] = $data['v'] + 0;
+        // forcing a cast to int or float, but only when the value is
+        // numeric; a non-numeric version is left untouched so the format
+        // validator rejects it with "Invalid data." instead of a fatal
+        // type error
+        if (is_numeric($data['v'])) {
+            $data['v'] = $data['v'] + 0;
+        }
         return $data;
     }
 

@@ -72,4 +72,41 @@ class FormatV2Test extends TestCase
         $paste = Helper::getPaste();
         $this->assertFalse(FormatV2::isValid($paste), 'invalid meta key');
     }
+
+    public function testFormatV2ValidatorRejectsMalformedTypes()
+    {
+        // malformed input must yield "false" (Invalid data) rather than a
+        // fatal type error under strict_types
+        $paste          = Helper::getPastePost();
+        $paste['v']     = 'abc';
+        $this->assertFalse(FormatV2::isValid($paste), 'non-numeric version');
+
+        $paste          = Helper::getPastePost();
+        $paste['v']     = array();
+        $this->assertFalse(FormatV2::isValid($paste), 'array version');
+
+        $paste          = Helper::getPastePost();
+        $paste['ct']    = array('not', 'a', 'string');
+        $this->assertFalse(FormatV2::isValid($paste), 'non-string ciphertext');
+
+        $paste          = Helper::getPastePost();
+        $paste['meta']  = 'not-an-array';
+        $this->assertFalse(FormatV2::isValid($paste), 'non-array meta');
+
+        $paste          = Helper::getPastePost();
+        $paste['adata'][0] = 'not-an-array';
+        $this->assertFalse(FormatV2::isValid($paste), 'non-array cipher parameters');
+
+        $paste          = Helper::getPastePost();
+        $paste['adata'][0] = array();
+        $this->assertFalse(FormatV2::isValid($paste), 'empty cipher parameters');
+
+        $paste             = Helper::getPastePost();
+        $paste['adata'][0][0] = array();
+        $this->assertFalse(FormatV2::isValid($paste), 'non-string iv');
+
+        $comment           = Helper::getCommentPost();
+        $comment['ct']     = 42;
+        $this->assertFalse(FormatV2::isValid($comment, true), 'non-string comment ciphertext');
+    }
 }
