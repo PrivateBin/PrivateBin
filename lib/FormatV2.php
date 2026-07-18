@@ -56,7 +56,21 @@ class FormatV2
             return false;
         }
 
-        $cipherParams = $isComment ? $message['adata'] : $message['adata'][0];
+        $cipherParams = $isComment ? $message['adata'] : ($message['adata'][0] ?? null);
+
+        // Make sure the cipher parameters are a properly sized array.
+        if (!is_array($cipherParams) || count($cipherParams) < 8) {
+            return false;
+        }
+
+        // Make sure the ciphertext and the cipher parameters used in the
+        // string operations below are actually strings, so that malformed
+        // input yields "Invalid data." instead of a fatal type error.
+        if (!is_string($message['ct']) ||
+            !is_string($cipherParams[0] ?? null) ||
+            !is_string($cipherParams[1] ?? null)) {
+            return false;
+        }
 
         // Make sure some fields are base64 data:
         // - initialization vector
@@ -119,6 +133,7 @@ class FormatV2
 
         // require only the key 'expire' in the metadata of pastes
         if (!$isComment && (
+            !is_array($message['meta']) ||
             count($message['meta']) === 0 ||
             !array_key_exists('expire', $message['meta']) ||
             count($message['meta']) > 1

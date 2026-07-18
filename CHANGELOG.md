@@ -3,6 +3,7 @@
 ## 2.0.6 (not yet released)
 * CHANGED: Upgrading libraries to: DOMpurify 3.4.12
 * FIXED: Gracefully handle YOURLS replies with a 200 status code but no shorturl, instead of raising a TypeError
+* FIXED: Return "Invalid data." instead of HTTP 500 on malformed v2 JSON payloads (#1883)
 * FIXED: Dead PATH validation guard in Controller, the check for a missing trailing directory separator never ran (#1887)
 
 ## 2.0.5 (2026-07-11)

@@ -158,6 +158,26 @@ class RequestTest extends TestCase
         $this->assertEquals('create', $request->getOperation());
     }
 
+    public function testPostScalarJson()
+    {
+        // a valid JSON scalar body (number, boolean or quoted string) must not
+        // be treated as a set of parameters, so that it is rejected cleanly
+        // instead of triggering a type error further down
+        foreach (array('1', '0.0', 'true', 'false', '"example"') as $scalar) {
+            $this->reset();
+            $_SERVER['REQUEST_METHOD']        = 'POST';
+            $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
+            $file                             = Helper::createTempFile();
+            file_put_contents($file, $scalar);
+            Request::setInputStream($file);
+            $request = new Request;
+            unlink($file);
+            $this->assertTrue($request->isJsonApiCall(), 'is JSON API call');
+            $this->assertEquals('create', $request->getOperation());
+            $this->assertEquals('', $request->getParam('ct'), "scalar body {$scalar} yields no parameters");
+        }
+    }
+
     public function testReadWithNegotiation()
     {
         $this->reset();
