@@ -93,15 +93,15 @@ class FormatV2Test extends TestCase
         $paste['meta']  = 'not-an-array';
         $this->assertFalse(FormatV2::isValid($paste), 'non-array meta');
 
-        $paste          = Helper::getPastePost();
+        $paste             = Helper::getPastePost();
         $paste['adata'][0] = 'not-an-array';
         $this->assertFalse(FormatV2::isValid($paste), 'non-array cipher parameters');
 
-        $paste          = Helper::getPastePost();
+        $paste             = Helper::getPastePost();
         $paste['adata'][0] = array();
         $this->assertFalse(FormatV2::isValid($paste), 'empty cipher parameters');
 
-        $paste             = Helper::getPastePost();
+        $paste                = Helper::getPastePost();
         $paste['adata'][0][0] = array();
         $this->assertFalse(FormatV2::isValid($paste), 'non-string iv');
 

@@ -113,6 +113,11 @@ class Request
                 try {
                     $data          = file_get_contents(self::$_inputStream);
                     $this->_params = Json::decode($data);
+                    // a valid JSON scalar (number, bool or string) decodes
+                    // without error, but is not a usable set of parameters
+                    if (!is_array($this->_params)) {
+                        $this->_params = array();
+                    }
                 } catch (JsonException $e) {
                     // ignore error, $this->_params will remain empty
                 }
@@ -188,13 +193,6 @@ class Request
         }
         foreach ($required_keys as $key) {
             $data[$key] = $this->getParam($key, $key === 'v' ? 1 : '');
-        }
-        // forcing a cast to int or float, but only when the value is
-        // numeric; a non-numeric version is left untouched so the format
-        // validator rejects it with "Invalid data." instead of a fatal
-        // type error
-        if (is_numeric($data['v'])) {
-            $data['v'] = $data['v'] + 0;
         }
         return $data;
     }
