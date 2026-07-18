@@ -1060,13 +1060,9 @@ jQuery.PrivateBin = (function($) {
          */
         function arraybufferToString(messageArray)
         {
-            const array = new Uint8Array(messageArray);
-            let message = '',
-                i       = 0;
-            while(i < array.length) {
-                message += String.fromCharCode(array[i++]);
-            }
-            return message;
+            return Array.from(new Uint8Array(messageArray))
+                .map(byte => String.fromCharCode(byte))
+                .join('');
         }
 
         /**
@@ -1082,11 +1078,10 @@ jQuery.PrivateBin = (function($) {
          */
         function stringToArraybuffer(message)
         {
-            const messageArray = new Uint8Array(message.length);
-            for (let i = 0; i < message.length; ++i) {
-                messageArray[i] = message.charCodeAt(i);
-            }
-            return messageArray;
+            return Uint8Array.from(
+                message,
+                character => character.charCodeAt(0)
+            );
         }
 
         /**
@@ -2959,10 +2954,10 @@ jQuery.PrivateBin = (function($) {
          function getBlobUrl(data, mimeType)
          {
             // Transform into a Blob
-            const buf = new Uint8Array(data.length);
-            for (let i = 0; i < data.length; ++i) {
-                buf[i] = data.charCodeAt(i);
-            }
+            const buf = Uint8Array.from(
+                data,
+                character => character.charCodeAt(0)
+            );
             const blob = new window.Blob(
                 [buf],
                 {
@@ -3025,12 +3020,26 @@ jQuery.PrivateBin = (function($) {
             // right-clicks/long-taps and opens the SVG in a new tab - prevented
             // in the preview by use of an img tag, which disables scripts, too
             if (mimeType.startsWith('image\/svg')) {
-                const sanitizedData = DOMPurify.sanitize(
-                    decodedData,
-                    purifySvgConfig
-                );
-                sanitizedMimeType = 'image/svg+xml';
-                blobUrl = getBlobUrl(sanitizedData, sanitizedMimeType);
+                try {
+                    const decodedBuffer = Uint8Array.from(
+                        decodedData,
+                        character => character.charCodeAt(0)
+                    );
+                    const svgText = new TextDecoder(
+                        'utf-8',
+                        {fatal: true}
+                    ).decode(decodedBuffer);
+                    const sanitizedData = DOMPurify.sanitize(
+                        svgText,
+                        purifySvgConfig
+                    );
+                    sanitizedMimeType = 'image/svg+xml';
+                    blobUrl = getBlobUrl(sanitizedData, sanitizedMimeType);
+                } catch {
+                    // Invalid or non-UTF-8 SVG: download only, no preview.
+                    sanitizedMimeType = 'application/octet-stream';
+                    blobUrl = getBlobUrl(decodedData, sanitizedMimeType);
+                }
             }
 
             template.removeClass('hidden');
