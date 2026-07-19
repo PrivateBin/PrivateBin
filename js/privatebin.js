@@ -3000,16 +3000,16 @@ jQuery.PrivateBin = (function($) {
             }
 
             // extract data and convert to binary
-            const rawData = attachmentData.substring(base64Start);
-            const decodedData = rawData.length > 0 ? atob(rawData) : '';
+            const base64Data = attachmentData.substring(base64Start);
+            const plainData = base64Data.length > 0 ? atob(base64Data) : '';
 
-            let blobUrl = getBlobUrl(decodedData, sanitizedMimeType);
+            let blobUrl = getBlobUrl(plainData, sanitizedMimeType);
             attachmentLink.attr('href', blobUrl);
 
             if (typeof fileName !== 'undefined') {
                 attachmentLink.attr('download', fileName);
 
-                const fileSize = Helper.formatBytes(decodedData.length);
+                const fileSize = Helper.formatBytes(plainData.length);
                 const spans = template[0].querySelectorAll('span');
                 const span = spans[spans.length - 1];
                 span.textContent += ` (${fileName}, ${fileSize})`;
@@ -3021,24 +3021,27 @@ jQuery.PrivateBin = (function($) {
             // in the preview by use of an img tag, which disables scripts, too
             if (mimeType.startsWith('image\/svg')) {
                 try {
-                    const decodedBuffer = Uint8Array.from(
-                        decodedData,
+                    // attempt to UTF-8 decode the SVG data
+                    const svgBuffer = Uint8Array.from(
+                        plainData,
                         character => character.charCodeAt(0)
                     );
-                    const svgText = new TextDecoder(
+                    const utf8ValidatedSvgString = new TextDecoder(
                         'utf-8',
                         {fatal: true}
-                    ).decode(decodedBuffer);
+                    ).decode(svgBuffer);
                     const sanitizedData = DOMPurify.sanitize(
-                        svgText,
+                        utf8ValidatedSvgString,
                         purifySvgConfig
                     );
                     sanitizedMimeType = 'image/svg+xml';
                     blobUrl = getBlobUrl(sanitizedData, sanitizedMimeType);
                 } catch {
-                    // Invalid or non-UTF-8 SVG: download only, no preview.
+                    // Invalid or non-UTF-8 SVG: download only, no preview as it
+                    // may be used to smuggle multi-byte sequences past DOMpurify
+                    // such as `&#x13c` to get `\x01<` & `&#x13e` to get `\x01>`
                     sanitizedMimeType = 'application/octet-stream';
-                    blobUrl = getBlobUrl(decodedData, sanitizedMimeType);
+                    blobUrl = getBlobUrl(plainData, sanitizedMimeType);
                 }
             }
 

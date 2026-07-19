@@ -2,7 +2,7 @@
 
 ## 2.0.6 (not yet released)
 * CHANGED: Stricter MIME type validation, divergent files get no preview and forced download link
-* FIXED: Restrict MIME types accepted for PDF & sanitized SVG previews to prevent HTML render fallback
+* FIXED: Restrict MIME types accepted for PDF & sanitized SVG previews to prevent HTML render fallback, incl. DOMpurify bypass using multi-byte encoded HTML entities
 
 ## 2.0.5 (2026-07-11)
 * CHANGED: Show OS-specific copy hotkey hint (Cmd+c on Mac, Ctrl+c on others) (#1506)
