@@ -11,7 +11,7 @@
 
 namespace PrivateBin;
 
-use PrivateBin\Exception\JsonException;
+use JsonException;
 use PrivateBin\Model\Paste;
 
 /**

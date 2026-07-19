@@ -12,7 +12,6 @@
 namespace PrivateBin;
 
 use Exception;
-use PrivateBin\Exception\JsonException;
 use PrivateBin\Exception\TranslatedException;
 use PrivateBin\Persistence\ServerSalt;
 use PrivateBin\Persistence\TrafficLimiter;

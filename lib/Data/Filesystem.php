@@ -13,7 +13,7 @@ namespace PrivateBin\Data;
 
 use DirectoryIterator;
 use GlobIterator;
-use PrivateBin\Exception\JsonException;
+use JsonException;
 use PrivateBin\Json;
 
 /**

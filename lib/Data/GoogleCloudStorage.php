@@ -15,7 +15,7 @@ use Exception;
 use Google\Cloud\Core\Exception\NotFoundException;
 use Google\Cloud\Storage\Bucket;
 use Google\Cloud\Storage\StorageClient;
-use PrivateBin\Exception\JsonException;
+use JsonException;
 use PrivateBin\Json;
 
 class GoogleCloudStorage extends AbstractData

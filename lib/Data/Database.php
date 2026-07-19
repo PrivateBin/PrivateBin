@@ -12,10 +12,10 @@
 namespace PrivateBin\Data;
 
 use Exception;
+use JsonException;
 use PDO;
 use PDOException;
 use PrivateBin\Controller;
-use PrivateBin\Exception\JsonException;
 use PrivateBin\Json;
 
 /**
