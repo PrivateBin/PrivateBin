@@ -1,5 +1,24 @@
 'use strict';
 const common = require('../common');
+const bodyTemplate = '<div id="attachmentPreview" class="col-md-12 text-center hidden"></div>' +
+    '<div id="attachment" class="hidden"></div>' +
+    '<div id="templates">' +
+        '<div id="attachmenttemplate" role="alert" class="attachment hidden alert alert-info">' +
+            '<span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>' +
+            '<a class="alert-link">Download attachment</a>' +
+        '</div>' +
+    '</div>';
+const createMockObjectURL = function(window, includeType = true) {
+    if (typeof window.URL.createObjectURL === 'undefined') {
+        Object.defineProperty(
+            window.URL,
+            'createObjectURL',
+            {value: function(blob) {
+                return 'blob:' + (includeType ? blob.type : location.origin) + '/1b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed';
+            }}
+        );
+    }
+}
 
 describe('AttachmentViewer', function () {
     describe('setAttachment, showAttachment, removeAttachment, hideAttachment, hideAttachmentPreview, hasAttachment, getAttachment & moveAttachmentTo', function () {
@@ -31,26 +50,8 @@ describe('AttachmentViewer', function () {
                 }
                 prefix  = prefix.replace(/%(s|d)/g, '%%');
                 postfix = postfix.replace(/%(s|d)/g, '%%').replace(/<|>/g, '');
-                $('body').html(
-                    '<div id="attachmentPreview" class="col-md-12 text-center hidden"></div>' +
-                    '<div id="attachment" class="hidden"></div>' +
-                    '<div id="templates">' +
-                        '<div id="attachmenttemplate" role="alert" class="attachment hidden alert alert-info">' +
-                            '<span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>' +
-                            '<a class="alert-link">Download attachment</a>' +
-                        '</div>' +
-                    '</div>'
-                );
-                // mock createObjectURL for jsDOM
-                if (typeof window.URL.createObjectURL === 'undefined') {
-                    Object.defineProperty(
-                        window.URL,
-                        'createObjectURL',
-                        {value: function(blob) {
-                            return 'blob:' + location.origin + '/1b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed';
-                        }}
-                    );
-                }
+                $('body').html(bodyTemplate);
+                createMockObjectURL(window, false);
                 $.PrivateBin.AttachmentViewer.init();
                 $.PrivateBin.Model.init();
                 results.push(
@@ -66,7 +67,7 @@ describe('AttachmentViewer', function () {
                 } else {
                     $.PrivateBin.AttachmentViewer.setAttachment(data);
                 }
-                // // beyond this point we will get the blob URL instead of the data
+                // beyond this point we will get the blob URL instead of the data
                 data = window.URL.createObjectURL(data);
                 const attachment = $.PrivateBin.AttachmentViewer.getAttachments();
                 results.push(
@@ -131,29 +132,11 @@ describe('AttachmentViewer', function () {
         );
 
         it(
-            'sanitizes file names and MIME types in attachments',
+            'sanitizes file names',
             function() {
                 const clean = jsdom();
-                $('body').html(
-                    '<div id="attachmentPreview" class="col-md-12 text-center hidden"></div>' +
-                    '<div id="attachment" class="hidden"></div>' +
-                    '<div id="templates">' +
-                        '<div id="attachmenttemplate" role="alert" class="attachment hidden alert alert-info">' +
-                            '<span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>' +
-                            '<a class="alert-link">Download attachment</a>' +
-                        '</div>' +
-                    '</div>'
-                );
-                // mock createObjectURL for jsDOM
-                if (typeof window.URL.createObjectURL === 'undefined') {
-                    Object.defineProperty(
-                        window.URL,
-                        'createObjectURL',
-                        {value: function(blob) {
-                            return 'blob:' + blob.type + '/1b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed';
-                        }}
-                    );
-                }
+                $('body').html(bodyTemplate);
+                createMockObjectURL(window);
                 $.PrivateBin.AttachmentViewer.init();
                 $.PrivateBin.Model.init();
                 global.atob = common.atob;
@@ -167,6 +150,19 @@ describe('AttachmentViewer', function () {
                     assert.ok(!$('body').html().includes(filename), 'does not allow file name ' + filename);
                     $.PrivateBin.AttachmentViewer.removeAttachment();
                 }
+                clean();
+            }
+        );
+
+        it(
+            'sanitizes MIME types in attachments',
+            function() {
+                const clean = jsdom();
+                $('body').html(bodyTemplate);
+                createMockObjectURL(window);
+                $.PrivateBin.AttachmentViewer.init();
+                $.PrivateBin.Model.init();
+                global.atob = common.atob;
 
                 const maliciousMimeTypes = [
                     // PDF bypasses
@@ -189,6 +185,19 @@ describe('AttachmentViewer', function () {
                     assert.ok(!$('body').html().includes('<img'), 'does not allow image MIME type: ' + mimeType);
                     $.PrivateBin.AttachmentViewer.removeAttachment();
                 }
+                clean();
+            }
+        );
+
+        it(
+            'supports safe MIME types in attachments',
+            function() {
+                const clean = jsdom();
+                $('body').html(bodyTemplate);
+                createMockObjectURL(window);
+                $.PrivateBin.AttachmentViewer.init();
+                $.PrivateBin.Model.init();
+                global.atob = common.atob;
 
                 const supportedSafeMimeTypes = [
                     'text/plain',
@@ -198,6 +207,19 @@ describe('AttachmentViewer', function () {
                 for (const mimeType of supportedSafeMimeTypes) {
                     assert.ok($.PrivateBin.AttachmentViewer.isSafeMimeType(mimeType), 'treats as safe MIME type: '+ mimeType);
                 }
+                clean();
+            }
+        );
+
+        it(
+            'supports safe MIME type previews in attachments',
+            function() {
+                const clean = jsdom();
+                $('body').html(bodyTemplate);
+                createMockObjectURL(window);
+                $.PrivateBin.AttachmentViewer.init();
+                $.PrivateBin.Model.init();
+                global.atob = common.atob;
 
                 const supportedPreviewMimeTypes = [
                     'application/pdf',
@@ -210,6 +232,19 @@ describe('AttachmentViewer', function () {
                     assert.ok($('body').html().includes(mimeType), 'allows MIME type: ' + mimeType);
                     $.PrivateBin.AttachmentViewer.removeAttachment();
                 }
+                clean();
+            }
+        );
+
+        it(
+            'special case sanitizes potentially unsafe SVG previews',
+            function() {
+                const clean = jsdom();
+                $('body').html(bodyTemplate);
+                createMockObjectURL(window);
+                $.PrivateBin.AttachmentViewer.init();
+                $.PrivateBin.Model.init();
+                global.atob = common.atob;
 
                 // special case: not a safe type, but renders a sanitized preview
                 const svgMimeTypes = [
