@@ -4,6 +4,8 @@
 * CHANGED: Upgrading libraries to: DOMpurify 3.4.12
 * FIXED: Gracefully handle YOURLS replies with a 200 status code but no shorturl, instead of raising a TypeError
 * FIXED: Return "Invalid data." instead of HTTP 500 on malformed v2 JSON payloads (#1883)
+* FIXED: Prevent browsers guessing MIME types on JSON(LD) API responses (#164)
+* FIXED: Insert quoted base path into JSON-LD documents
 
 ## 2.0.5 (2026-07-11)
 * CHANGED: Show OS-specific copy hotkey hint (Cmd+c on Mac, Ctrl+c on others) (#1506)
