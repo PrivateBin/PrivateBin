@@ -37,7 +37,7 @@ namespace PrivateBin\Data;
 
 use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3Client;
-use PrivateBin\Exception\JsonException;
+use JsonException;
 use PrivateBin\Json;
 
 class S3Storage extends AbstractData

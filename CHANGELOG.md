@@ -2,6 +2,7 @@
 
 ## 2.0.6 (not yet released)
 * CHANGED: Upgrading libraries to: DOMpurify 3.4.12
+* CHANGED: Switch to PHP native JsonException type
 * FIXED: Gracefully handle YOURLS replies with a 200 status code but no shorturl, instead of raising a TypeError
 * FIXED: Return "Invalid data." instead of HTTP 500 on malformed v2 JSON payloads (#1883)
 

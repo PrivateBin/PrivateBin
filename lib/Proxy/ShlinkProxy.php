@@ -11,8 +11,8 @@
 
 namespace PrivateBin\Proxy;
 
+use JsonException;
 use PrivateBin\Configuration;
-use PrivateBin\Exception\JsonException;
 use PrivateBin\Json;
 
 /**
