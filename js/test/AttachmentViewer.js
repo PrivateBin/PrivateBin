@@ -170,5 +170,78 @@ describe('AttachmentViewer', function () {
             }
         );
 
+        it(
+            'previews file input attachments while editing markdown preview',
+            function() {
+                const clean = jsdom(),
+                    originalFileReader = global.FileReader;
+
+                try {
+                    $('body').html(
+                        '<nav><div id="navbar"><ul><li id="attach" class="' +
+                        'dropdown"><a href="#" class="dropdown-toggle" ' +
+                        'aria-expanded="false">Attach a file</a><ul ' +
+                        'class="dropdown-menu"><li id="filewrap"><div><input ' +
+                        'type="file" id="file" name="file" /></div></li><li ' +
+                        'id="customattachment" class="hidden"></li><li><a ' +
+                        'id="fileremovebutton" href="#">Remove attachment</a>' +
+                        '</li></ul></li></ul></div></nav><ul id="editorTabs" ' +
+                        'class="nav nav-tabs hidden"><li role="presentation" ' +
+                        'class="active"><a id="messageedit" href="#">Editor</a>' +
+                        '</li><li role="presentation"><a id="messagepreview" ' +
+                        'href="#">Preview</a></li></ul><div id="placeholder" ' +
+                        'class="hidden">+++ no document text +++</div><div ' +
+                        'id="prettymessage" class="hidden"><pre id="prettyprint" ' +
+                        'class="prettyprint linenums:1"></pre></div><div ' +
+                        'id="plaintext" class="hidden"></div><p><textarea ' +
+                        'id="message" name="message" cols="80" rows="25" ' +
+                        'class="form-control hidden"></textarea></p><div ' +
+                        'id="attachmentPreview" class="col-md-12 text-center hidden">' +
+                        '</div><div id="attachment" class="hidden"></div><div ' +
+                        'id="dragAndDropFileName"></div><div id="dropzone" ' +
+                        'class="hidden"></div><div id="templates"><div ' +
+                        'id="attachmenttemplate" role="alert" class="attachment ' +
+                        'hidden alert alert-info"><span class="glyphicon ' +
+                        'glyphicon-download-alt" aria-hidden="true"></span><a ' +
+                        'class="alert-link">Download attachment</a></div></div>'
+                    );
+
+                    global.FileReader = function() {
+                        this.readAsDataURL = function() {
+                            this.onload({
+                                target: {
+                                    result: 'data:application/pdf;base64,JVBERi0x'
+                                }
+                            });
+                        };
+                    };
+
+                    $.PrivateBin.Model.init();
+                    $.PrivateBin.PasteViewer.init();
+                    $.PrivateBin.Editor.init();
+                    $.PrivateBin.TopNav.init();
+                    $.PrivateBin.AttachmentViewer.init();
+
+                    $('#messagepreview').trigger('click');
+                    Object.defineProperty($('#file')[0], 'files', {
+                        value: [{name: 'preview.pdf'}],
+                        configurable: true
+                    });
+                    $('#file').trigger('change');
+
+                    const result =
+                        !$('#attachmentPreview').hasClass('hidden') &&
+                        $('#attachmentPreview embed.pdfPreview').attr('src') ===
+                            'data:application/pdf;base64,JVBERi0x';
+
+                    assert.ok(result);
+                } finally {
+                    $('#messageedit').trigger('click');
+                    global.FileReader = originalFileReader;
+                    clean();
+                }
+            }
+        );
+
     });
 });
