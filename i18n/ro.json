@@ -151,7 +151,7 @@
     "server error or not responding": "eroare de server sau nu răspunde",
     "Could not post comment: %s": "Nu s-a putut posta comentariul: %s",
     "Sending document…": "Se trimite document-ul…",
-    "Your document is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit <kbd>%s</kbd>+<kbd>c</kbd> to copy)</span>": "Your document is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit <kbd>%s</kbd>+<kbd>c</kbd> to copy)</span>",
+    "Your document is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit <kbd>%s</kbd>+<kbd>c</kbd> to copy)</span>": "Document-ul dvs. este <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Apăsați <kbd>%s</kbd>+<kbd>c</kbd> pentru a copia)</span>",
     "Delete data": "Ștergeți datele",
     "Could not create document: %s": "Nu s-a putut crea document-ul: %s",
     "Cannot decrypt document: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)": "Nu s-a putut decripta document-ul: Cheia de decriptare lipsește din URL (Ați folosit un redirector sau un scurtător de URL care a tăiat o parte din URL?)",
