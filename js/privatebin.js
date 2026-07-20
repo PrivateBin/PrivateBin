@@ -3312,11 +3312,15 @@ jQuery.PrivateBin = (function($) {
                         const dataURL = event.target.result;
                         if (dataURL) {
                             attachmentsData[index] = dataURL;
-                        }
 
-                        if (Editor.isPreview()) {
-                            me.handleAttachmentPreview($attachmentPreview, dataURL);
-                            $attachmentPreview.removeClass('hidden');
+                            if (Editor.isPreview()) {
+                                me.handleBlobAttachmentPreview(
+                                    $attachmentPreview,
+                                    dataURL,
+                                    me.getAttachmentMimeType(dataURL)
+                                );
+                                $attachmentPreview.removeClass('hidden');
+                            }
                         }
 
                         TopNav.highlightFileupload();
