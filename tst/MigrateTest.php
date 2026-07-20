@@ -34,15 +34,15 @@ class MigrateTest extends TestCase
         $this->_model_1                  = new Filesystem($options['model_options']);
         Helper::createIniFile($this->_path_instance_1 . DIRECTORY_SEPARATOR . 'cfg' . DIRECTORY_SEPARATOR . 'conf.php', $options);
 
-        $options['model']          = array(
+        $options['model']          = [
             'class' => 'Database',
-        );
-        $options['model_options'] = array(
+        ];
+        $options['model_options'] = [
             'dsn' => 'sqlite:' . $this->_path_instance_2 . DIRECTORY_SEPARATOR . 'test.sq3',
             'usr' => null,
             'pwd' => null,
-            'opt' => array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION),
-        );
+            'opt' => [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION],
+        ];
         $this->_model_2 = new Database($options['model_options']);
         Helper::createIniFile($this->_path_instance_2 . DIRECTORY_SEPARATOR . 'cfg' . DIRECTORY_SEPARATOR . 'conf.php', $options);
     }
