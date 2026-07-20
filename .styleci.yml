@@ -7,7 +7,6 @@ enabled:
   - concat_with_spaces
   - no_empty_comment
   - pre_increment
-  - short_array_syntax
 
 disabled:
   - blank_line_after_opening_tag
