@@ -127,7 +127,7 @@
     ],
     "This document will expire in %d months.": [
         "Ten dokument wygaśnie za miesiąc.",
-        "Este documento irá expirar em %d meses.",
+        "Ten dokument wygaśnie za %d miesiące.",
         "Ten dokument wygaśnie za %d miesięcy.",
         "Ten dokument wygaśnie za %d miesięcy.",
         "Ten dokument wygaśnie za %d miesięcy.",
@@ -224,7 +224,7 @@
     "Error decompressing document, your browser does not support WebAssembly. Please use another browser to view this document.": "Błąd dekompresji dokumentu — Twoja przeglądarka nie obsługuje WebAssembly. Użyj innej przeglądarki, aby go otworzyć.",
     "Start over": "Zacznij od nowa",
     "Document copied to clipboard": "Dokument skopiowany do schowka",
-    "To copy document press on the copy button or use the clipboard shortcut <kbd>%s</kbd>+<kbd>c</kbd>": "To copy document press on the copy button or use the clipboard shortcut <kbd>%s</kbd>+<kbd>c</kbd>",
+    "To copy document press on the copy button or use the clipboard shortcut <kbd>%s</kbd>+<kbd>c</kbd>": "Aby skopiować dokument, kliknij przycisk kopiowania lub użyj skrótu Ctrl+c/<kbd>%s</kbd>+<kbd>c</kbd>",
     "Copy link": "Kopiuj link",
     "Link copied to clipboard": "Link skopiowany do schowka",
     "Document text": "Treść dokumentu",
