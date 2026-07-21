@@ -387,7 +387,7 @@ class ConfigurationTestGenerator
                         }
                         $args = array();
                         foreach ($test['args'] as $arg) {
-                            if (is_string($arg) && strpos($arg, '$') === 0) {
+                            if (is_string($arg) && str_starts_with($arg, '$')) {
                                 $args[] = $arg;
                             } else {
                                 $args[] = Helper::varExportMin($arg, true);

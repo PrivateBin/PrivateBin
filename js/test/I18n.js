@@ -204,6 +204,36 @@ describe('I18n', function () {
             }
         );
 
+        it('maps Traditional Chinese browser languages to zh-tw', function () {
+            var clean = jsdom('<script src="js/privatebin.js"></script>', {url: 'https://privatebin.net/'}),
+                getJSON = $.getJSON;
+
+            $.getJSON = function(url, callback) {
+                assert.strictEqual(url, 'i18n/zh-tw.json');
+                callback({});
+                return {
+                    fail: function() {}
+                };
+            };
+
+            try {
+                ['zh-TW', 'zh-TW-u-nu-hanidec', 'zh-Hant', 'zh-Hant-TW', 'zh-HK', 'zh-MO'].forEach(function(language) {
+                    Object.defineProperty(navigator, 'language', {
+                        value: language,
+                        configurable: true
+                    });
+                    $.PrivateBin.I18n.reset('en');
+                    $.PrivateBin.I18n.loadTranslations();
+                    assert.strictEqual($.PrivateBin.I18n.getLanguage(), 'zh-tw', language);
+                });
+            } finally {
+                $.getJSON = getJSON;
+                delete navigator.language;
+                $.PrivateBin.I18n.reset();
+                clean();
+            }
+        });
+
         jsc.property(
             'should default to en',
             function() {
