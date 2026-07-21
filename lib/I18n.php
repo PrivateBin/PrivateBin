@@ -269,13 +269,13 @@ class I18n
         $hasTraditionalChinese = in_array('zh-tw', $availableLanguages, true);
         foreach ($languages as $quality => $languageRanges) {
             foreach ($languageRanges as $index => $languageRange) {
-                $isSimplifiedChinese = $languageRange === 'zh-hans' || strpos($languageRange, 'zh-hans-') === 0 ||
-                    $languageRange === 'zh-cn' || strpos($languageRange, 'zh-cn-') === 0 ||
-                    $languageRange === 'zh-sg' || strpos($languageRange, 'zh-sg-') === 0;
-                $isTraditionalChinese = strpos($languageRange, 'zh-tw-') === 0 ||
-                    $languageRange === 'zh-hant' || strpos($languageRange, 'zh-hant-') === 0 ||
-                    $languageRange === 'zh-hk' || strpos($languageRange, 'zh-hk-') === 0 ||
-                    $languageRange === 'zh-mo' || strpos($languageRange, 'zh-mo-') === 0;
+                $isSimplifiedChinese = $languageRange === 'zh-hans' || str_starts_with($languageRange, 'zh-hans-') ||
+                    $languageRange === 'zh-cn' || str_starts_with($languageRange, 'zh-cn-') ||
+                    $languageRange === 'zh-sg' || str_starts_with($languageRange, 'zh-sg-');
+                $isTraditionalChinese = str_starts_with($languageRange, 'zh-tw-') ||
+                    $languageRange === 'zh-hant' || str_starts_with($languageRange, 'zh-hant-') ||
+                    $languageRange === 'zh-hk' || str_starts_with($languageRange, 'zh-hk-') ||
+                    $languageRange === 'zh-mo' || str_starts_with($languageRange, 'zh-mo-');
                 if ($hasSimplifiedChinese && $isSimplifiedChinese) {
                     $languages[$quality][$index] = 'zh';
                 } elseif ($hasTraditionalChinese && $isTraditionalChinese) {
@@ -343,8 +343,8 @@ class I18n
      */
     public static function getCopyHotkey()
     {
-        return isset($_SERVER['HTTP_USER_AGENT']) &&
-            strpos($_SERVER['HTTP_USER_AGENT'], 'Mac') !== false ? self::_('Cmd') : self::_('Ctrl');
+        return array_key_exists('HTTP_USER_AGENT', $_SERVER) &&
+            str_contains($_SERVER['HTTP_USER_AGENT'], 'Mac') ? self::_('Cmd') : self::_('Ctrl');
     }
 
     /**

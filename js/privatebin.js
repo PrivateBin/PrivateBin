@@ -503,12 +503,8 @@ jQuery.PrivateBin = (function($) {
             const name = cname + '=',
                   ca   = document.cookie.split(';');
             for (let i = 0; i < ca.length; ++i) {
-                let c = ca[i];
-                while (c.charAt(0) === ' ')
-                {
-                    c = c.substring(1);
-                }
-                if (c.indexOf(name) === 0)
+                let c = ca[i].trim();
+                if (c.startsWith(name))
                 {
                     return c.substring(name.length, c.length);
                 }
@@ -920,15 +916,15 @@ jQuery.PrivateBin = (function($) {
             // auto-select language based on browser settings
             if (newLanguage.length === 0) {
                 newLanguage = (navigator.language || navigator.userLanguage || 'en').toLowerCase();
-                const isTraditionalChinese = newLanguage.indexOf('zh-tw-') === 0 ||
-                    newLanguage === 'zh-hant' || newLanguage.indexOf('zh-hant-') === 0 ||
-                    newLanguage === 'zh-hk' || newLanguage.indexOf('zh-hk-') === 0 ||
-                    newLanguage === 'zh-mo' || newLanguage.indexOf('zh-mo-') === 0;
+                const isTraditionalChinese = newLanguage.startsWith('zh-tw-') ||
+                    newLanguage === 'zh-hant' || newLanguage.startsWith('zh-hant-') ||
+                    newLanguage === 'zh-hk' || newLanguage.startsWith('zh-hk-') ||
+                    newLanguage === 'zh-mo' || newLanguage.startsWith('zh-mo-');
                 // alias Traditional Chinese browser tags to PrivateBin's zh-tw locale;
                 // otherwise try the full tag and fall back to the base language
-                if (isTraditionalChinese && supportedLanguages.indexOf('zh-tw') !== -1) {
+                if (isTraditionalChinese && supportedLanguages.includes('zh-tw')) {
                     newLanguage = 'zh-tw';
-                } else if (supportedLanguages.indexOf(newLanguage) === -1 && newLanguage.indexOf('-') > 0) {
+                } else if (!supportedLanguages.includes(newLanguage) && newLanguage.includes('-')) {
                     newLanguage = newLanguage.split('-')[0];
                 }
             }
@@ -945,7 +941,7 @@ jQuery.PrivateBin = (function($) {
             }
 
             // if language is not supported, show error
-            if (supportedLanguages.indexOf(newLanguage) === -1) {
+            if (!supportedLanguages.includes(newLanguage)) {
                 console.error('Language \'%s\' is not supported. Translation failed, fallback to English.', newLanguage);
                 language = 'en';
                 return;
@@ -987,7 +983,7 @@ jQuery.PrivateBin = (function($) {
         function isStringContainsHtml(messageId) {
             // message IDs are allowed to contain anchors, spans, keyboard and emphasis tags
             // we can recognize all of them by only checking for anchors and keyboard tags
-            return messageId.indexOf('<a') !== -1 || messageId.indexOf('<kbd') !== -1;
+            return messageId.includes('<a') || messageId.includes('<kbd');
         }
 
         return me;
@@ -1532,7 +1528,7 @@ jQuery.PrivateBin = (function($) {
          */
         me.hasDeleteToken = function()
         {
-            return window.location.search.indexOf('deletetoken') !== -1;
+            return window.location.search.includes('deletetoken');
         }
 
         /**
@@ -3052,7 +3048,7 @@ jQuery.PrivateBin = (function($) {
          * Evaluates whether this is known a safe mime type.
          *
          * This means, the media can safely be displayed and e.g. no XSS should be possible.
-         * 
+         *
          * @name AttachmentViewer.isSafeMimeType
          * @function
          * @param {string}
@@ -3060,7 +3056,7 @@ jQuery.PrivateBin = (function($) {
          */
         me.isSafeMimeType = function(mimeType) {
             return (
-                    mimeType.startsWith('image/') && 
+                    mimeType.startsWith('image/') &&
                     !mimeType.includes('svg')
                 ) ||
                 mimeType.startsWith('video/') ||
@@ -3253,6 +3249,9 @@ jQuery.PrivateBin = (function($) {
         {
             // position in data URI string of where mimeType ends
             const mimeTypeEnd = attachmentData.indexOf(';');
+            if (mimeTypeEnd < 6) {
+                return '';
+            }
 
             // extract mimeType
             return attachmentData.substring(5, mimeTypeEnd);

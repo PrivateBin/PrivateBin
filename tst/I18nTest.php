@@ -216,8 +216,8 @@ class I18nTest extends TestCase
         // For example, the French translation should not have the apostrophe encoded
         // See https://github.com/PrivateBin/PrivateBin/issues/1712
         $message = I18n::_('Document does not exist, has expired or has been deleted.');
-        $this->assertFalse(strpos($message, '&apos;') !== false, 'French apostrophe should not be encoded in translation message');
-        $this->assertTrue(strpos($message, "n'existe") !== false, 'French apostrophe should be present as literal character');
+        $this->assertFalse(str_contains($message, '&apos;'), 'French apostrophe should not be encoded in translation message');
+        $this->assertTrue(str_contains($message, "n'existe"), 'French apostrophe should be present as literal character');
     }
 
     public function testFallbackAlwaysPresent()
