@@ -163,7 +163,7 @@ class RequestTest extends TestCase
         // a valid JSON scalar body (number, boolean or quoted string) must not
         // be treated as a set of parameters, so that it is rejected cleanly
         // instead of triggering a type error further down
-        foreach (array('1', '0.0', 'true', 'false', '"example"') as $scalar) {
+        foreach (['1', '0.0', 'true', 'false', '"example"'] as $scalar) {
             $this->reset();
             $_SERVER['REQUEST_METHOD']        = 'POST';
             $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';

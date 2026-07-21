@@ -116,7 +116,7 @@ class Request
                     // a valid JSON scalar (number, bool or string) decodes
                     // without error, but is not a usable set of parameters
                     if (!is_array($this->_params)) {
-                        $this->_params = array();
+                        $this->_params = [];
                     }
                 } catch (JsonException $e) {
                     // ignore error, $this->_params will remain empty
