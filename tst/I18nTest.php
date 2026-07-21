@@ -112,7 +112,7 @@ class I18nTest extends TestCase
 
     public function testBrowserLanguageZhHantDetection()
     {
-        foreach (array(
+        foreach ([
             'zh-Hant,zh;q=0.8,en;q=0.2'            => 'zh-tw',
             'zh-Hant-TW,zh;q=0.8,en;q=0.2'         => 'zh-tw',
             'zh-TW,en;q=0.2'                       => 'zh-tw',
@@ -124,7 +124,7 @@ class I18nTest extends TestCase
             'zh-Hans,zh-Hant;q=0.8,en;q=0.2'       => 'zh',
             'zh-Hans-CN,en;q=0.2'                  => 'zh',
             'zh;q=0.9,zh-Hant;q=0.8,en;q=0.2'      => 'zh',
-        ) as $acceptedLanguage => $language) {
+        ] as $acceptedLanguage => $language) {
             $_SERVER['HTTP_ACCEPT_LANGUAGE'] = $acceptedLanguage;
             I18n::loadTranslations();
             $this->assertEquals($language, I18n::getLanguage(), 'browser language ' . $acceptedLanguage);
