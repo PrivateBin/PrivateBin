@@ -204,7 +204,7 @@ window.PrivateBin = (function () {
          */
         this.getCreated = function () {
             return this.meta.created || 0;
-        }
+        };
 
         /**
          * gets the icon of the comment submitter
@@ -1087,7 +1087,7 @@ window.PrivateBin = (function () {
             );
             if (mode === 'zlib') {
                 if (typeof zlib === 'undefined') {
-                    throw 'Error compressing document, due to missing WebAssembly support.'
+                    throw new Error('Error compressing document, due to missing WebAssembly support.');
                 }
                 return zlib.deflate(message).buffer;
             }
@@ -1110,7 +1110,7 @@ window.PrivateBin = (function () {
         async function decompress(data, mode, zlib) {
             if (mode === 'zlib') {
                 if (typeof zlib === 'undefined') {
-                    throw 'Error decompressing document, your browser does not support WebAssembly. Please use another browser to view this document.'
+                    throw new Error('Error decompressing document, your browser does not support WebAssembly. Please use another browser to view this document.');
                 }
                 data = zlib.inflate(
                     new Uint8Array(data)
@@ -1342,7 +1342,7 @@ window.PrivateBin = (function () {
             return base58.encode(
                 stringToArraybuffer(input)
             );
-        }
+        };
 
         /**
          * base58 decode a DOMString (UTF-16)
@@ -1356,7 +1356,7 @@ window.PrivateBin = (function () {
             return arraybufferToString(
                 base58.decode(input)
             );
-        }
+        };
 
         return me;
     })();
@@ -1479,7 +1479,7 @@ window.PrivateBin = (function () {
             }
 
             return id;
-        }
+        };
 
         /**
          * returns true, when the URL has a delete token and the current call was used for deleting a document.
@@ -1490,7 +1490,7 @@ window.PrivateBin = (function () {
          */
         me.hasDeleteToken = function () {
             return window.location.search.indexOf('deletetoken') !== -1;
-        }
+        };
 
         /**
          * return the deciphering key stored in anchor part of the URL
@@ -2045,7 +2045,7 @@ window.PrivateBin = (function () {
                 // we do not remove the button, in case shortener fails
                 sendToShortener();
             }
-        }
+        };
 
         /**
          * extracts URLs from given string
@@ -2955,7 +2955,7 @@ window.PrivateBin = (function () {
                 mimeType.startsWith('audio/') ||
                 mimeType.endsWith('/pdf') ||
                 mimeType === 'text/plain';
-        }
+        };
 
         /**
          * Evaluates whether this is known a safe mime type.
@@ -2976,7 +2976,7 @@ window.PrivateBin = (function () {
                 mimeType.startsWith('audio/') ||
                 mimeType.endsWith('/pdf') ||
                 mimeType === 'text/plain';
-        }
+        };
 
         /**
          * displays the attachment and (if possible) the preview
@@ -3099,7 +3099,7 @@ window.PrivateBin = (function () {
          */
         me.hasAttachmentPreview = function () {
             return attachmentPreview.children.length > 0;
-        }
+        };
 
         /**
          * checks if there is an attachment displayed
@@ -3163,7 +3163,7 @@ window.PrivateBin = (function () {
 
             // extract mimeType
             return attachmentData.substring(5, mimeTypeEnd);
-        }
+        };
 
         /**
          * moves the attachment link to another element
@@ -3440,7 +3440,7 @@ window.PrivateBin = (function () {
                 addDragDropHandler();
                 addClipboardEventHandler();
             }
-        }
+        };
 
         return me;
     })();
@@ -4350,7 +4350,7 @@ window.PrivateBin = (function () {
          */
         me.showRetryButton = function () {
             retryButton.classList.remove('hidden');
-        }
+        };
 
         /**
          * hides the "retry" button
@@ -4360,7 +4360,7 @@ window.PrivateBin = (function () {
          */
         me.hideRetryButton = function () {
             retryButton.classList.add('hidden');
-        }
+        };
 
         /**
          * show the "email" button
@@ -4387,7 +4387,7 @@ window.PrivateBin = (function () {
                 console.error(error);
                 Alert.showError('Cannot calculate expiration date.');
             }
-        }
+        };
 
         /**
          * hide the "email" button
@@ -4402,7 +4402,7 @@ window.PrivateBin = (function () {
 
             emailLink.classList.add('hidden');
             emailLink.removeEventListener('click', sendEmail);
-        }
+        };
 
         /**
          * only hides the clone button
@@ -4442,7 +4442,7 @@ window.PrivateBin = (function () {
          */
         me.hideQrCodeButton = function () {
             qrCodeLink.classList.add('hidden');
-        }
+        };
 
         /**
          * hide irrelevant buttons when viewing burn after reading document
@@ -4454,7 +4454,7 @@ window.PrivateBin = (function () {
             me.hideCloneButton();
             me.hideQrCodeButton();
             me.hideEmailButton();
-        }
+        };
 
         /**
          * hides the file selector in attachment
@@ -4639,7 +4639,7 @@ window.PrivateBin = (function () {
          */
         me.setRetryCallback = function (callback) {
             retryButtonCallback = callback;
-        }
+        };
 
         /**
          * Highlight file upload
@@ -5966,7 +5966,7 @@ window.PrivateBin = (function () {
                 });
                 ServerInteraction.run();
             }, false); // this false is important as it circumvents the cache
-        }
+        };
 
         /**
          * clone the current document
@@ -6036,7 +6036,7 @@ window.PrivateBin = (function () {
                     Alert.showWarning('Your browser doesn\'t support WebAssembly, used for zlib compression. You can create uncompressed documents, but can\'t read compressed ones.');
                 }
             });
-        }
+        };
 
         /**
          * application start
@@ -6118,7 +6118,7 @@ window.PrivateBin = (function () {
 
             // display an existing document
             return me.showPaste();
-        }
+        };
 
         return me;
     })(window, document);
