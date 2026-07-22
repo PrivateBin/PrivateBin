@@ -22,7 +22,7 @@
     "unused": true,
     "jquery": false,
     "browser": true,
-    "predef": {
+    "globals": {
       "after": true,
       "before": true,
       "cleanup": true,
@@ -37,9 +37,7 @@
       "jsdom": true,
       "require": false,
       "setTimeout": false,
-      "window": true
-    },
-    "globals": {
+      "window": true,
       "DOMPurify": true,
       "kjua": true
     }
