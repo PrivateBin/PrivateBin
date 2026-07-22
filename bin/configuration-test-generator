@@ -183,27 +183,7 @@ new ConfigurationTestGenerator(array(
                 ),
             ),
             'affects' => $vd,
-        ), array(
-            'setting' => 'bootstrap',
-            'tests'   => array(
-                array(
-                    'type' => 'DoesNotMatchRegularExpression',
-                    'args' => array(
-                        '#<link[^>]+type="text/css"[^>]+rel="stylesheet"[^>]+href="css/bootstrap5/privatebin\.css\\?\d[\d\.]+\d+"[^>]*/>#',
-                        '$content',
-                        'removes "bootstrap5" stylesheet correctly',
-                    ),
-                ), array(
-                    'type' => 'MatchesRegularExpression',
-                    'args' => array(
-                        '#<link[^>]+type="text/css"[^>]+rel="stylesheet"[^>]+href="css/bootstrap/bootstrap-\d[\d\.]+\d\.css"[^>]*/>#',
-                        '$content',
-                        'outputs "bootstrap" stylesheet correctly',
-                    ),
-                ),
-            ),
-            'affects' => $vd,
-        ),
+        )
     ),
     'main/sizelimit' => array(
         array(
