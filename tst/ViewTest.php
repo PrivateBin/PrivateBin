@@ -12,25 +12,25 @@ class ViewTest extends TestCase
 
     private static $is_deleted = false;
 
-    private static $formatters = array(
+    private static $formatters = [
         'plaintext'          => 'Plain Text',
         'syntaxhighlighting' => 'Source Code',
         'markdown'           => 'Markdown',
-    );
+    ];
 
     private static $formatter_default = 'plaintext';
 
-    private static $expire = array(
+    private static $expire = [
         '5min'  => '5 minutes',
         '1hour' => '1 hour',
         'never' => 'Never',
-    );
+    ];
 
     private static $expire_default = '1hour';
 
     private static $version = 'Version 1.2.3';
 
-    private $_content = array();
+    private $_content = [];
 
     public function setUp(): void
     {
@@ -65,7 +65,7 @@ class ViewTest extends TestCase
         $page->assign('HTTPSLINK', 'https://example.com/');
         $page->assign('COMPRESSION', 'zlib');
         $page->assign('CSPHEADER', 'default-src \'none\'');
-        $page->assign('SRI', array());
+        $page->assign('SRI', []);
 
         foreach (new DirectoryIterator(PATH . 'tpl') as $file) {
             if ($file->getExtension() === 'php') {

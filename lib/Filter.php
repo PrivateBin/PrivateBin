@@ -46,7 +46,7 @@ class Filter
             default:
                 $unit = rtrim($matches[2], 's');
         }
-        return I18n::_(array('%d ' . $unit, '%d ' . $unit . 's'), (int) $matches[1]);
+        return I18n::_(['%d ' . $unit, '%d ' . $unit . 's'], (int) $matches[1]);
     }
 
     /**
@@ -59,7 +59,7 @@ class Filter
      */
     public static function formatHumanReadableSize($size)
     {
-        $iec = array('B', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB');
+        $iec = ['B', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
         $i   = 0;
         while (($size / 1000) >= 1) {
             $size = $size / 1000;
