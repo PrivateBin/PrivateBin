@@ -17,6 +17,7 @@
     "quotmark": "single",
     "singleGroups": true,
     "strict": true,
+    "globalstrict": true,
     "undef": true,
     "unused": true,
     "jquery": false,

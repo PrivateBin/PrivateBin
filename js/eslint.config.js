@@ -1,5 +1,5 @@
 const globals = require('globals');
-const { globalIgnores } = require('eslint/config')
+const { globalIgnores } = require('eslint/config');
 
 module.exports = [globalIgnores(["./*.*js", "!./privatebin.js"]), {
     languageOptions: {
@@ -111,7 +111,7 @@ module.exports = [globalIgnores(["./*.*js", "!./privatebin.js"]), {
         yoda: 0,
 
         // Strict
-        strict: 0,
+        strict: 2,
 
         // Variables
         "init-declarations": 0,

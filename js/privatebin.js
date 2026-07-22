@@ -1,3 +1,4 @@
+'use strict';
 /**
  * PrivateBin
  *
@@ -15,7 +16,6 @@
  * adds draghoverstart and draghoverend events to an element
  */
 function draghover(element) {
-    'use strict';
     let collection = new Set();
 
     element.addEventListener('dragenter', function (e) {
@@ -41,7 +41,6 @@ function draghover(element) {
 }
 
 window.PrivateBin = (function () {
-    'use strict';
 
     /**
      * zlib library interface
@@ -6153,7 +6152,6 @@ window.PrivateBin = (function () {
 // skip auto-initialization in test environments (Node.js)
 if (typeof module === 'undefined' || !module.exports) {
     window.addEventListener('DOMContentLoaded', function () {
-        'use strict';
         // run main controller
         window.PrivateBin.Controller.init();
     });
