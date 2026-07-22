@@ -2217,7 +2217,7 @@ window.PrivateBin = (function () {
             loadconfirmOpenNow.removeEventListener('click', PasteDecrypter.run);
             loadconfirmOpenNow.addEventListener('click', PasteDecrypter.run);
 
-            const loadconfirmClose = loadconfirmmodal.querySelector('.close');
+            const loadconfirmClose = loadconfirmmodal.querySelector('.btn-close');
             loadconfirmClose.removeEventListener('click', Controller.newPaste);
             loadconfirmClose.addEventListener('click', Controller.newPaste);
 
