@@ -12,6 +12,7 @@
     "fast-check": "^4.7.0",
     "jsdom": "^26.1.0",
     "jsdom-global": "^3.0.2",
+    "jshint": "^2.13.6",
     "jsverify": "^0.8.3",
     "mime-types": "^3.0.2",
     "mocha": "^11.7.5",
