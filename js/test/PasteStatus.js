@@ -92,7 +92,7 @@ describe('PasteStatus', function () {
                 PrivateBin.PasteStatus.init();
                 PrivateBin.PasteStatus.createPasteNotification('https://example.com/', 'https://example.com/delete');
 
-                const hotkey = document.querySelector('#copyhint kbd')?.textContent;
+                const hotkey = document.querySelector('#copyhint kbd').textContent;
 
                 assert.strictEqual(hotkey, 'Ctrl');
             }
