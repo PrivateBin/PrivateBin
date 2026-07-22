@@ -2804,7 +2804,7 @@ window.PrivateBin = (function () {
         /**
          * init status manager
          *
-         * preloads jQuery elements
+         * preloads DOM elements
          *
          * @name   PasteViewer.init
          * @function
@@ -5335,17 +5335,15 @@ window.PrivateBin = (function () {
                             'copy'
                         );
                         try {
-                            const blobData = await $.ajax({
-                                type: 'GET',
-                                url: attachment,
-                                processData: false,
-                                timeout: 10000,
-                                dataType: 'binary',
-                                xhrFields: {
-                                    withCredentials: false,
-                                    responseType: 'blob'
-                                }
+                            const response = await fetch(attachment, {
+                                method: 'GET',
+                                credentials: 'omit',
+                                signal: AbortSignal.timeout(10000)
                             });
+                            if (!response.ok) {
+                                throw new Error('HTTP ' + response.status);
+                            }
+                            const blobData = await response.blob();
                             if (blobData instanceof window.Blob) {
                                 const fileReading = new Promise(function (resolve, reject) {
                                     const fileReader = new FileReader();
