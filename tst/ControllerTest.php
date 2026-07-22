@@ -18,7 +18,7 @@ class ControllerTest extends TestCase
     {
         /* Setup Routine */
         $this->_path  = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'privatebin_data';
-        $this->_data  = new Filesystem(array('dir' => $this->_path));
+        $this->_data  = new Filesystem(['dir' => $this->_path]);
         ServerSalt::setStore($this->_data);
         TrafficLimiter::setStore($this->_data);
         $this->reset();
@@ -34,9 +34,9 @@ class ControllerTest extends TestCase
 
     public function reset()
     {
-        $_POST   = array();
-        $_GET    = array();
-        $_SERVER = array();
+        $_POST   = [];
+        $_GET    = [];
+        $_SERVER = [];
         if ($this->_data->exists(Helper::getPasteId())) {
             $this->_data->delete(Helper::getPasteId());
         }
@@ -202,7 +202,7 @@ class ControllerTest extends TestCase
         $options                     = parse_ini_file(CONF, true);
         $options['traffic']['limit'] = 0;
         Helper::createIniFile(CONF, $options);
-        $paste = Helper::getPasteJson(array('expire' => 25));
+        $paste = Helper::getPasteJson(['expire' => 25]);
         $file  = Helper::createTempFile();
         file_put_contents($file, $paste);
         Request::setInputStream($file);
@@ -381,7 +381,7 @@ class ControllerTest extends TestCase
         $options                     = parse_ini_file(CONF, true);
         $options['traffic']['limit'] = 0;
         Helper::createIniFile(CONF, $options);
-        $paste = Helper::getPasteJson(array('expire' => 'foo'));
+        $paste = Helper::getPasteJson(['expire' => 'foo']);
         $file  = Helper::createTempFile();
         file_put_contents($file, $paste);
         Request::setInputStream($file);
@@ -698,7 +698,7 @@ class ControllerTest extends TestCase
      */
     public function testReadExpired()
     {
-        $expiredPaste = Helper::getPaste(array('expire_date' => 1344803344));
+        $expiredPaste = Helper::getPaste(['expire_date' => 1344803344]);
         $this->_data->create(Helper::getPasteId(), $expiredPaste);
         $_SERVER['QUERY_STRING']          = Helper::getPasteId();
         $_GET[Helper::getPasteId()]       = '';
@@ -882,9 +882,9 @@ class ControllerTest extends TestCase
         $this->_data->create(Helper::getPasteId(), $paste);
         $this->assertTrue($this->_data->exists(Helper::getPasteId()), 'paste exists before deleting data');
         $file  = Helper::createTempFile();
-        file_put_contents($file, json_encode(array(
+        file_put_contents($file, json_encode([
             'deletetoken' => 'burnafterreading',
-        )));
+        ]));
         Request::setInputStream($file);
         $_SERVER['QUERY_STRING']          = Helper::getPasteId();
         $_GET[Helper::getPasteId()]       = '';
@@ -904,7 +904,7 @@ class ControllerTest extends TestCase
      */
     public function testDeleteExpired()
     {
-        $expiredPaste = Helper::getPaste(array('expire_date' => 1000));
+        $expiredPaste = Helper::getPaste(['expire_date' => 1000]);
         $this->assertFalse($this->_data->exists(Helper::getPasteId()), 'paste does not exist before being created');
         $this->_data->create(Helper::getPasteId(), $expiredPaste);
         $this->assertTrue($this->_data->exists(Helper::getPasteId()), 'paste exists before deleting data');

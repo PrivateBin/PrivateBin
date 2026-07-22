@@ -46,7 +46,7 @@ class I18n
      * @static
      * @var    array
      */
-    protected static $_languageLabels = array();
+    protected static $_languageLabels = [];
 
     /**
      * available languages
@@ -55,7 +55,7 @@ class I18n
      * @static
      * @var    array
      */
-    protected static $_availableLanguages = array();
+    protected static $_availableLanguages = [];
 
     /**
      * path to language files
@@ -73,7 +73,7 @@ class I18n
      * @static
      * @var    array
      */
-    protected static $_translations = array();
+    protected static $_translations = [];
 
     /**
      * translate a string, alias for translate()
@@ -183,7 +183,7 @@ class I18n
 
         // load translations
         if (self::$_language === 'en') {
-            self::$_translations = array();
+            self::$_translations = [];
         } else {
             $data                = file_get_contents(self::_getPath(self::$_language . '.json'));
             self::$_translations = Json::decode($data);
@@ -225,7 +225,7 @@ class I18n
      */
     public static function getBrowserLanguages()
     {
-        $languages = array();
+        $languages = [];
         if (array_key_exists('HTTP_ACCEPT_LANGUAGE', $_SERVER)) {
             $languageRanges = explode(',', trim($_SERVER['HTTP_ACCEPT_LANGUAGE']));
             foreach ($languageRanges as $languageRange) {
@@ -239,7 +239,7 @@ class I18n
                         $match[2] = (string) floatval($match[2]);
                     }
                     if (!isset($languages[$match[2]])) {
-                        $languages[$match[2]] = array();
+                        $languages[$match[2]] = [];
                     }
                     $languages[$match[2]][] = strtolower($match[1]);
                 }
@@ -272,7 +272,7 @@ class I18n
      * @throws JsonException
      * @return array
      */
-    public static function getLanguageLabels($languages = array())
+    public static function getLanguageLabels($languages = [])
     {
         $file = self::_getPath('languages.json');
         if (count(self::$_languageLabels) === 0 && is_readable($file)) {
@@ -294,7 +294,7 @@ class I18n
      */
     public static function isRtl()
     {
-        return in_array(self::$_language, array('ar', 'he'));
+        return in_array(self::$_language, ['ar', 'he']);
     }
 
     /**
@@ -402,7 +402,7 @@ class I18n
      */
     protected static function _getMatchingLanguage($acceptedLanguages, $availableLanguages)
     {
-        $matches = array();
+        $matches = [];
         $any     = false;
         foreach ($acceptedLanguages as $acceptedQuality => $acceptedValues) {
             $acceptedQuality = floatval($acceptedQuality);
@@ -419,7 +419,7 @@ class I18n
                     if ($matchingGrade > 0) {
                         $q = (string) ($acceptedQuality * $availableQuality * $matchingGrade);
                         if (!isset($matches[$q])) {
-                            $matches[$q] = array();
+                            $matches[$q] = [];
                         }
                         if (!in_array($availableValue, $matches[$q])) {
                             $matches[$q][] = $availableValue;
