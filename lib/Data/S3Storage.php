@@ -37,7 +37,7 @@ namespace PrivateBin\Data;
 
 use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3Client;
-use PrivateBin\Exception\JsonException;
+use JsonException;
 use PrivateBin\Json;
 
 class S3Storage extends AbstractData
@@ -56,7 +56,7 @@ class S3Storage extends AbstractData
      * @access private
      * @var    array
      */
-    private $_options = array();
+    private $_options = [];
 
     /**
      * S3 bucket
@@ -85,7 +85,7 @@ class S3Storage extends AbstractData
         // AWS SDK will try to load credentials from environment if credentials are not passed via configuration
         // ref: https://docs.aws.amazon.com/sdk-for-php/v3/developer-guide/guide_credentials.html#default-credential-chain
         if (isset($options['accesskey']) && isset($options['secretkey'])) {
-            $this->_options['credentials'] = array();
+            $this->_options['credentials'] = [];
 
             $this->_options['credentials']['key']    = $options['accesskey'];
             $this->_options['credentials']['secret'] = $options['secretkey'];
@@ -121,15 +121,15 @@ class S3Storage extends AbstractData
      */
     private function _listAllObjects($prefix)
     {
-        $allObjects = array();
-        $options    = array(
+        $allObjects = [];
+        $options    = [
             'Bucket' => $this->_bucket,
             'Prefix' => $prefix,
-        );
+        ];
 
         do {
             $objectsListResponse = $this->_client->listObjects($options);
-            $objects             = $objectsListResponse['Contents'] ?? array();
+            $objects             = $objectsListResponse['Contents'] ?? [];
             foreach ($objects as $object) {
                 $allObjects[]      = $object;
                 $options['Marker'] = $object['Key'];
@@ -165,19 +165,19 @@ class S3Storage extends AbstractData
      */
     private function _upload($key, &$payload)
     {
-        $metadata = $payload['meta'] ?? array();
+        $metadata = $payload['meta'] ?? [];
         unset($metadata['salt']);
         foreach ($metadata as $k => $v) {
             $metadata[$k] = strval($v);
         }
         try {
-            $this->_client->putObject(array(
+            $this->_client->putObject([
                 'Bucket'      => $this->_bucket,
                 'Key'         => $key,
                 'Body'        => Json::encode($payload),
                 'ContentType' => 'application/json',
                 'Metadata'    => $metadata,
-            ));
+            ]);
             return true;
         } catch (S3Exception $e) {
             error_log('failed to upload ' . $key . ' to ' . $this->_bucket . ', ' .
@@ -206,10 +206,10 @@ class S3Storage extends AbstractData
     public function read($pasteid)
     {
         try {
-            $object = $this->_client->getObject(array(
+            $object = $this->_client->getObject([
                 'Bucket' => $this->_bucket,
                 'Key'    => $this->_getKey($pasteid),
-            ));
+            ]);
             $data = $object['Body']->getContents();
             return Json::decode($data);
         } catch (S3Exception $e) {
@@ -232,10 +232,10 @@ class S3Storage extends AbstractData
             $comments = $this->_listAllObjects($name . '/discussion/');
             foreach ($comments as $comment) {
                 try {
-                    $this->_client->deleteObject(array(
+                    $this->_client->deleteObject([
                         'Bucket' => $this->_bucket,
                         'Key'    => $comment['Key'],
-                    ));
+                    ]);
                 } catch (S3Exception $e) {
                     // ignore if already deleted.
                 }
@@ -245,10 +245,10 @@ class S3Storage extends AbstractData
         }
 
         try {
-            $this->_client->deleteObject(array(
+            $this->_client->deleteObject([
                 'Bucket' => $this->_bucket,
                 'Key'    => $name,
-            ));
+            ]);
         } catch (S3Exception $e) {
             // ignore if already deleted
         }
@@ -279,15 +279,15 @@ class S3Storage extends AbstractData
      */
     public function readComments($pasteid)
     {
-        $comments = array();
+        $comments = [];
         $prefix   = $this->_getKey($pasteid) . '/discussion/';
         try {
             $entries = $this->_listAllObjects($prefix);
             foreach ($entries as $entry) {
-                $object = $this->_client->getObject(array(
+                $object = $this->_client->getObject([
                     'Bucket' => $this->_bucket,
                     'Key'    => $entry['Key'],
-                ));
+                ]);
                 $data             = $object['Body']->getContents();
                 $body             = JSON::decode($data);
                 $items            = explode('/', $entry['Key']);
@@ -328,17 +328,17 @@ class S3Storage extends AbstractData
                 if (strlen($name) > strlen($path) && substr($name, strlen($path), 1) !== '/') {
                     continue;
                 }
-                $head = $this->_client->headObject(array(
+                $head = $this->_client->headObject([
                     'Bucket' => $this->_bucket,
                     'Key'    => $name,
-                ));
+                ]);
                 $value = $head->get('Metadata')['value'] ?? '';
                 if (is_numeric($value) && intval($value) < $time) {
                     try {
-                        $this->_client->deleteObject(array(
+                        $this->_client->deleteObject([
                             'Bucket' => $this->_bucket,
                             'Key'    => $name,
-                        ));
+                        ]);
                     } catch (S3Exception $e) {
                         // deleted by another instance.
                     }
@@ -367,18 +367,18 @@ class S3Storage extends AbstractData
             $key = $prefix . 'config/' . $namespace . '/' . $key;
         }
 
-        $metadata = array('namespace' => $namespace);
+        $metadata = ['namespace' => $namespace];
         if ($namespace !== 'salt') {
             $metadata['value'] = strval($value);
         }
         try {
-            $this->_client->putObject(array(
+            $this->_client->putObject([
                 'Bucket'      => $this->_bucket,
                 'Key'         => $key,
                 'Body'        => $value,
                 'ContentType' => 'application/json',
                 'Metadata'    => $metadata,
-            ));
+            ]);
         } catch (S3Exception $e) {
             error_log('failed to set key ' . $key . ' to ' . $this->_bucket . ', ' .
                 trim(preg_replace('/\s\s+/', ' ', $e->getMessage())));
@@ -404,10 +404,10 @@ class S3Storage extends AbstractData
         }
 
         try {
-            $object = $this->_client->getObject(array(
+            $object = $this->_client->getObject([
                 'Bucket' => $this->_bucket,
                 'Key'    => $key,
-            ));
+            ]);
             return $object['Body']->getContents();
         } catch (S3Exception $e) {
             return '';
@@ -419,7 +419,7 @@ class S3Storage extends AbstractData
      */
     protected function _getExpiredPastes($batchsize)
     {
-        $expired = array();
+        $expired = [];
         $now     = time();
         $prefix  = $this->_prefix;
         if (!empty($prefix)) {
@@ -428,10 +428,10 @@ class S3Storage extends AbstractData
 
         try {
             foreach ($this->_listAllObjects($prefix) as $object) {
-                $head = $this->_client->headObject(array(
+                $head = $this->_client->headObject([
                     'Bucket' => $this->_bucket,
                     'Key'    => $object['Key'],
-                ));
+                ]);
                 $expire_at = $head->get('Metadata')['expire_date'] ?? '';
                 if (is_numeric($expire_at) && intval($expire_at) < $now) {
                     array_push($expired, $object['Key']);
@@ -452,7 +452,7 @@ class S3Storage extends AbstractData
      */
     public function getAllPastes()
     {
-        $pastes = array();
+        $pastes = [];
         $prefix = $this->_prefix;
         if (!empty($prefix)) {
             $prefix .= '/';

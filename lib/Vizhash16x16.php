@@ -85,7 +85,7 @@ class Vizhash16x16
         $textlen = strlen($text);
 
         // We convert the hash into an array of integers.
-        $this->VALUES = array();
+        $this->VALUES = [];
         for ($i = 0; $i < $textlen; $i = $i + 2) {
             array_push($this->VALUES, hexdec(substr($text, $i, 2)));
         }
@@ -106,7 +106,7 @@ class Vizhash16x16
         if (($this->getInt() % 2) === 0) {
             $op = 'h';
         }
-        $image = $this->degrade($image, $op, array($r0, $g0, $b0), array(0, 0, 0));
+        $image = $this->degrade($image, $op, [$r0, $g0, $b0], [0, 0, 0]);
 
         for ($i = 0; $i < 7; ++$i) {
             $action = $this->getInt();
@@ -186,11 +186,11 @@ class Vizhash16x16
             $size    = imagesy($img);
             $sizeinv = imagesx($img);
         }
-        $diffs = array(
+        $diffs = [
             ($color2[0] - $color1[0]) / $size,
             ($color2[1] - $color1[1]) / $size,
             ($color2[2] - $color1[2]) / $size,
-        );
+        ];
         for ($i = 0; $i < $size; ++$i) {
             $r = $color1[0] + ((int) $diffs[0] * $i);
             $g = $color1[1] + ((int) $diffs[1] * $i);
@@ -223,7 +223,7 @@ class Vizhash16x16
                 imagefilledellipse($image, $this->getX(), $this->getY(), $this->getX(), $this->getY(), $color);
                 break;
             case 3:
-                $points = array($this->getX(), $this->getY(), $this->getX(), $this->getY(), $this->getX(), $this->getY(), $this->getX(), $this->getY());
+                $points = [$this->getX(), $this->getY(), $this->getX(), $this->getY(), $this->getX(), $this->getY(), $this->getX(), $this->getY()];
                 version_compare(PHP_VERSION, '8.1', '<') ? imagefilledpolygon($image, $points, 4, $color) : imagefilledpolygon($image, $points, $color);
                 break;
             default:

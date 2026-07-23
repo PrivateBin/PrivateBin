@@ -155,14 +155,14 @@ class Comment extends AbstractModel
                 $identicon = new Identicon();
                 $pngdata   = $identicon->getImageDataUri($hmac, 16);
             } elseif ($icon === 'jdenticon') {
-                $jdenticon = new Jdenticon(array(
+                $jdenticon = new Jdenticon([
                     'hash'  => $hmac,
                     'size'  => 16,
-                    'style' => array(
+                    'style' => [
                         'backgroundColor'   => '#fff0', // fully transparent, for dark mode
                         'padding'           => 0,
-                    ),
-                ));
+                    ],
+                ]);
                 $pngdata   = $jdenticon->getImageDataUri('png');
             } elseif ($icon === 'vizhash') {
                 $vh      = new Vizhash16x16();
@@ -172,7 +172,7 @@ class Comment extends AbstractModel
             }
             if (!empty($pngdata)) {
                 if (!array_key_exists('meta', $data)) {
-                    $data['meta'] = array();
+                    $data['meta'] = [];
                 }
                 $data['meta']['icon'] = $pngdata;
             }

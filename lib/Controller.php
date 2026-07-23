@@ -12,7 +12,6 @@
 namespace PrivateBin;
 
 use Exception;
-use PrivateBin\Exception\JsonException;
 use PrivateBin\Exception\TranslatedException;
 use PrivateBin\Persistence\ServerSalt;
 use PrivateBin\Persistence\TrafficLimiter;
@@ -128,7 +127,7 @@ class Controller
             error_log(I18n::_('%s requires php %s or above to work. Sorry.', I18n::_('PrivateBin'), self::MIN_PHP_VERSION));
             return;
         }
-        if (strlen(PATH) < 0 && substr(PATH, -1) !== DIRECTORY_SEPARATOR) {
+        if (strlen(PATH) > 0 && substr(PATH, -1) !== DIRECTORY_SEPARATOR) {
             error_log(I18n::_('%s requires the PATH to end in a "%s". Please update the PATH in your index.php.', I18n::_('PrivateBin'), DIRECTORY_SEPARATOR));
             return;
         }
@@ -206,7 +205,7 @@ class Controller
         // force default language, if language selection is disabled and a default is set
         if (!$this->_conf->getKey('languageselection') && strlen($lang) === 2) {
             $_COOKIE['lang'] = $lang;
-            setcookie('lang', $lang, array('SameSite' => 'Lax', 'Secure' => true));
+            setcookie('lang', $lang, ['SameSite' => 'Lax', 'Secure' => true]);
         }
     }
 
@@ -230,7 +229,7 @@ class Controller
         if (!$this->_conf->getKey('templateselection') && array_key_exists('template', $_COOKIE)) {
             unset($_COOKIE['template']); // ensure value is not re-used in template switcher
             $expiredInAllTimezones = time() - 86400;
-            setcookie('template', '', array('expires' => $expiredInAllTimezones, 'SameSite' => 'Lax', 'Secure' => true));
+            setcookie('template', '', ['expires' => $expiredInAllTimezones, 'SameSite' => 'Lax', 'Secure' => true]);
         }
     }
 
@@ -324,7 +323,7 @@ class Controller
                 $paste = $this->_model->getPaste();
                 $paste->setData($data);
                 $paste->store();
-                $this->_json_result($paste->getId(), array('deletetoken' => $paste->getDeleteToken()));
+                $this->_json_result($paste->getId(), ['deletetoken' => $paste->getDeleteToken()]);
             } catch (Exception $e) {
                 $this->_json_error($e->getMessage());
             }
@@ -418,7 +417,7 @@ class Controller
         header('X-Frame-Options: deny');
 
         // label all the expiration options
-        $expire = array();
+        $expire = [];
         foreach ($this->_conf->getSection('expire_options') as $time => $seconds) {
             $expire[$time] = ($seconds === 0) ? I18n::_(ucfirst($time)) : Filter::formatHumanReadableTime($time);
         }
@@ -430,22 +429,22 @@ class Controller
         $languageselection = '';
         if ($this->_conf->getKey('languageselection')) {
             $languageselection = I18n::getLanguage();
-            setcookie('lang', $languageselection, array('SameSite' => 'Lax', 'Secure' => true));
+            setcookie('lang', $languageselection, ['SameSite' => 'Lax', 'Secure' => true]);
         }
 
         // set template cookie if that functionality was enabled
         $templateselection = '';
         if ($this->_conf->getKey('templateselection')) {
             $templateselection = TemplateSwitcher::getTemplate();
-            setcookie('template', $templateselection, array('SameSite' => 'Lax', 'Secure' => true));
+            setcookie('template', $templateselection, ['SameSite' => 'Lax', 'Secure' => true]);
         }
 
         // strip policies that are unsupported in meta tag
         $metacspheader = str_replace(
-            array(
+            [
                 'frame-ancestors \'none\'; ',
                 '; sandbox allow-same-origin allow-scripts allow-forms allow-modals allow-downloads',
-            ),
+            ],
             '',
             $this->_conf->getKey('cspheader')
         );
@@ -454,7 +453,7 @@ class Controller
         $page->assign('CSPHEADER', $metacspheader);
         $page->assign('ERROR', I18n::_($this->_error));
         $page->assign('NAME', $this->_conf->getKey('name'));
-        if (in_array($this->_request->getOperation(), array('shlinkproxy', 'yourlsproxy'), true)) {
+        if (in_array($this->_request->getOperation(), ['shlinkproxy', 'yourlsproxy'], true)) {
             $page->assign('SHORTURL', $this->_status);
             $page->draw('shortenerproxy');
             return;
@@ -500,13 +499,13 @@ class Controller
      */
     private function _jsonld($type)
     {
-        if (!in_array($type, array(
+        if (!in_array($type, [
             'comment',
             'commentmeta',
             'paste',
             'pastemeta',
             'types',
-        ))) {
+        ])) {
             $type = '';
         }
         $content = '{}';
@@ -541,10 +540,10 @@ class Controller
      */
     private function _json_error($error)
     {
-        $result = array(
+        $result = [
             'status'  => 1,
             'message' => $error,
-        );
+        ];
         $this->_json = Json::encode($result);
     }
 
@@ -556,13 +555,13 @@ class Controller
      * @param  array $other
      * @throws JsonException
      */
-    private function _json_result($dataid, $other = array())
+    private function _json_result($dataid, $other = [])
     {
-        $result = array(
+        $result = [
             'status' => 0,
             'id'     => $dataid,
             'url'    => $this->_urlBase . '?' . $dataid,
-        ) + $other;
+        ] + $other;
         $this->_json = Json::encode($result);
     }
 

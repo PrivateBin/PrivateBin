@@ -12,10 +12,10 @@
 namespace PrivateBin\Data;
 
 use Exception;
+use JsonException;
 use PDO;
 use PDOException;
 use PrivateBin\Controller;
-use PrivateBin\Exception\JsonException;
 use PrivateBin\Json;
 
 /**
@@ -158,12 +158,12 @@ class Database extends AbstractData
             return $this->_exec(
                 'INSERT INTO "' . $this->_sanitizeIdentifier('paste') .
                 '" VALUES(?,?,?,?)',
-                array(
+                [
                     $pasteid,
                     Json::encode($paste),
                     $expire_date,
                     Json::encode($meta),
-                )
+                ]
             );
         } catch (Exception $e) {
             error_log('Error while attempting to insert a paste into the database: ' . $e->getMessage());
@@ -183,7 +183,7 @@ class Database extends AbstractData
         try {
             $row = $this->_select(
                 'SELECT * FROM "' . $this->_sanitizeIdentifier('paste') .
-                '" WHERE "dataid" = ?', array($pasteid), true
+                '" WHERE "dataid" = ?', [$pasteid], true
             );
         } catch (PDOException $e) {
             $row = false;
@@ -196,14 +196,14 @@ class Database extends AbstractData
             $paste = Json::decode($row['data']);
         } catch (JsonException $e) {
             error_log('Error while reading a paste from the database: ' . $e->getMessage());
-            $paste = array();
+            $paste = [];
         }
 
         try {
             $paste['meta'] = Json::decode($row['meta']);
         } catch (JsonException $e) {
             error_log('Error while reading a paste from the database: ' . $e->getMessage());
-            $paste['meta'] = array();
+            $paste['meta'] = [];
         }
         $expire_date = (int) $row['expiredate'];
         if ($expire_date > 0) {
@@ -223,11 +223,11 @@ class Database extends AbstractData
     {
         $this->_exec(
             'DELETE FROM "' . $this->_sanitizeIdentifier('paste') .
-            '" WHERE "dataid" = ?', array($pasteid)
+            '" WHERE "dataid" = ?', [$pasteid]
         );
         $this->_exec(
             'DELETE FROM "' . $this->_sanitizeIdentifier('comment') .
-            '" WHERE "pasteid" = ?', array($pasteid)
+            '" WHERE "pasteid" = ?', [$pasteid]
         );
     }
 
@@ -243,7 +243,7 @@ class Database extends AbstractData
         try {
             $row = $this->_select(
                 'SELECT "dataid" FROM "' . $this->_sanitizeIdentifier('paste') .
-                '" WHERE "dataid" = ?', array($pasteid), true
+                '" WHERE "dataid" = ?', [$pasteid], true
             );
         } catch (PDOException $e) {
             return false;
@@ -277,14 +277,14 @@ class Database extends AbstractData
             return $this->_exec(
                 'INSERT INTO "' . $this->_sanitizeIdentifier('comment') .
                 '" VALUES(?,?,?,?,?,?)',
-                array(
+                [
                     $commentid,
                     $pasteid,
                     $parentid,
                     $data,
                     $meta['icon'],
                     $meta['created'],
-                )
+                ]
             );
         } catch (PDOException $e) {
             error_log('Error while attempting to insert a comment into the database: ' . $e->getMessage());
@@ -303,24 +303,24 @@ class Database extends AbstractData
     {
         $rows = $this->_select(
             'SELECT * FROM "' . $this->_sanitizeIdentifier('comment') .
-            '" WHERE "pasteid" = ?', array($pasteid)
+            '" WHERE "pasteid" = ?', [$pasteid]
         );
 
         // create comment list
-        $comments = array();
+        $comments = [];
         if (count($rows)) {
             foreach ($rows as $row) {
                 try {
                     $data = Json::decode($row['data']);
                 } catch (JsonException $e) {
                     error_log('Error while reading a comment from the database: ' . $e->getMessage());
-                    $data = array();
+                    $data = [];
                 }
                 $i                          = $this->getOpenSlot($comments, (int) $row['postdate']);
                 $comments[$i]               = $data;
                 $comments[$i]['id']         = $row['dataid'];
                 $comments[$i]['parentid']   = $row['parentid'];
-                $comments[$i]['meta']       = array('created' => (int) $row['postdate']);
+                $comments[$i]['meta']       = ['created' => (int) $row['postdate']];
                 if (array_key_exists('vizhash', $row) && !empty($row['vizhash'])) {
                     $comments[$i]['meta']['icon'] = $row['vizhash'];
                 }
@@ -345,7 +345,7 @@ class Database extends AbstractData
             return (bool) $this->_select(
                 'SELECT "dataid" FROM "' . $this->_sanitizeIdentifier('comment') .
                 '" WHERE "pasteid" = ? AND "parentid" = ? AND "dataid" = ?',
-                array($pasteid, $parentid, $commentid), true
+                [$pasteid, $parentid, $commentid], true
             );
         } catch (PDOException $e) {
             return false;
@@ -375,7 +375,7 @@ class Database extends AbstractData
         return $this->_exec(
             'UPDATE "' . $this->_sanitizeIdentifier('config') .
             '" SET "value" = ? WHERE "id" = ?',
-            array($value, strtoupper($namespace))
+            [$value, strtoupper($namespace)]
         );
     }
 
@@ -396,13 +396,13 @@ class Database extends AbstractData
             $this->_exec(
                 'INSERT INTO "' . $this->_sanitizeIdentifier('config') .
                 '" VALUES(?,?)',
-                array($configKey, '')
+                [$configKey, '']
             );
 
             // migrate filesystem based salt into database
             $file = 'data' . DIRECTORY_SEPARATOR . 'salt.php';
             if ($namespace === 'salt' && is_readable($file)) {
-                $fs    = new Filesystem(array('dir' => 'data'));
+                $fs    = new Filesystem(['dir' => 'data']);
                 $value = $fs->getValue('salt');
                 $this->setValue($value, 'salt');
                 if (!unlink($file)) {
@@ -416,7 +416,7 @@ class Database extends AbstractData
                 $this->_last_cache = Json::decode($value);
             } catch (JsonException $e) {
                 error_log('Error decoding JSON from table "config", row "traffic_limiter": ' . $e->getMessage());
-                $this->_last_cache = array();
+                $this->_last_cache = [];
             }
             if (array_key_exists($key, $this->_last_cache)) {
                 return $this->_last_cache[$key];
@@ -440,11 +440,11 @@ class Database extends AbstractData
                 '" WHERE "expiredate" < ? AND "expiredate" != ? ' .
                 ($this->_type === 'oci' ? 'FETCH NEXT ? ROWS ONLY' : 'LIMIT ?')
             );
-            $statement->execute(array(time(), 0, $batchsize));
+            $statement->execute([time(), 0, $batchsize]);
             return $statement->fetchAll(PDO::FETCH_COLUMN, 0);
         } catch (PDOException $e) {
             error_log('Error while attempting to find expired pastes in the database: ' . $e->getMessage());
-            return array();
+            return [];
         }
     }
 
@@ -508,7 +508,7 @@ class Database extends AbstractData
             }
         } elseif ($this->_type === 'oci') {
             // workaround for https://bugs.php.net/bug.php?id=46728
-            $result = array();
+            $result = [];
             while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
                 $result[] = array_map('PrivateBin\Data\Database::_sanitizeClob', $row);
             }
@@ -576,7 +576,7 @@ class Database extends AbstractData
         try {
             $row = $this->_select(
                 'SELECT "value" FROM "' . $this->_sanitizeIdentifier('config') .
-                '" WHERE "id" = ?', array($key), true
+                '" WHERE "id" = ?', [$key], true
             );
         } catch (PDOException $e) {
             error_log('Error while attempting to fetch configuration key "' . $key . '" in the database: ' . $e->getMessage());
@@ -604,7 +604,7 @@ class Database extends AbstractData
                 $main_key = ' PRIMARY KEY';
                 break;
         }
-        return array($main_key, $after_key);
+        return [$main_key, $after_key];
     }
 
     /**
@@ -743,7 +743,7 @@ class Database extends AbstractData
         $this->_exec(
             'INSERT INTO "' . $this->_sanitizeIdentifier('config') .
             '" VALUES(?,?)',
-            array('VERSION', Controller::VERSION)
+            ['VERSION', Controller::VERSION]
         );
     }
 
@@ -788,7 +788,7 @@ class Database extends AbstractData
         $supportsDropColumn = true;
         if ($this->_type === 'sqlite') {
             try {
-                $row                = $this->_select('SELECT sqlite_version() AS "v"', array(), true);
+                $row                = $this->_select('SELECT sqlite_version() AS "v"', [], true);
                 $supportsDropColumn = (bool) version_compare($row['v'], '3.35.0', '>=');
             } catch (PDOException $e) {
                 $supportsDropColumn = false;
@@ -902,7 +902,7 @@ class Database extends AbstractData
         $this->_exec(
             'UPDATE "' . $this->_sanitizeIdentifier('config') .
             '" SET "value" = ? WHERE "id" = ?',
-            array(Controller::VERSION, 'VERSION')
+            [Controller::VERSION, 'VERSION']
         );
     }
 }
