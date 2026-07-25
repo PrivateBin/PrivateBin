@@ -2174,6 +2174,9 @@ window.PrivateBin = (function () {
         let passwordDecrypt,
             passwordModal,
             bootstrap5PasswordModal = null,
+            loadConfirmOpenHandler = null,
+            loadConfirmCloseHandler = null,
+            loadConfirmShownHandler = null,
             password = '';
 
         /**
@@ -2211,24 +2214,52 @@ window.PrivateBin = (function () {
          */
         me.requestLoadConfirmation = function () {
             const loadconfirmmodal = document.getElementById('loadconfirmmodal');
+            const loadconfirmOpenNow = loadconfirmmodal.querySelector('#loadconfirm-open-now'),
+                loadconfirmClose = loadconfirmmodal.querySelector('.btn-close'),
+                hasBootstrapModal = typeof bootstrap !== 'undefined' &&
+                    bootstrap.Tooltip && typeof bootstrap.Modal === 'function',
+                hideFallbackModal = function () {
+                    loadconfirmmodal.classList.remove('show');
+                    loadconfirmmodal.style.display = 'none';
+                };
 
-            const loadconfirmOpenNow = loadconfirmmodal.querySelector('#loadconfirm-open-now');
-            loadconfirmOpenNow.removeEventListener('click', PasteDecrypter.run);
-            loadconfirmOpenNow.addEventListener('click', PasteDecrypter.run);
+            if (loadConfirmOpenHandler !== null) {
+                loadconfirmOpenNow.removeEventListener('click', loadConfirmOpenHandler);
+            }
+            loadConfirmOpenHandler = function (event) {
+                if (!hasBootstrapModal) {
+                    hideFallbackModal();
+                }
+                PasteDecrypter.run(event);
+            };
+            loadconfirmOpenNow.addEventListener('click', loadConfirmOpenHandler);
 
-            const loadconfirmClose = loadconfirmmodal.querySelector('.btn-close');
-            loadconfirmClose.removeEventListener('click', Controller.newPaste);
-            loadconfirmClose.addEventListener('click', Controller.newPaste);
+            if (loadConfirmCloseHandler !== null) {
+                loadconfirmClose.removeEventListener('click', loadConfirmCloseHandler);
+            }
+            loadConfirmCloseHandler = function (event) {
+                if (!hasBootstrapModal) {
+                    hideFallbackModal();
+                }
+                Controller.newPaste(event);
+            };
+            loadconfirmClose.addEventListener('click', loadConfirmCloseHandler);
 
-            loadconfirmmodal.addEventListener('shown.bs.modal', () => {
+            if (loadConfirmShownHandler !== null) {
+                loadconfirmmodal.removeEventListener('shown.bs.modal', loadConfirmShownHandler);
+            }
+            loadConfirmShownHandler = () => {
                 loadconfirmOpenNow.focus();
-            });
+            };
+            loadconfirmmodal.addEventListener('shown.bs.modal', loadConfirmShownHandler);
 
-            if (typeof bootstrap !== 'undefined' && bootstrap.Tooltip && typeof bootstrap.Modal === 'function') {
+            if (hasBootstrapModal) {
                 (new bootstrap.Modal(loadconfirmmodal)).show();
             } else {
                 // minimal fallback: make element visible
                 loadconfirmmodal.classList.add('show');
+                loadconfirmmodal.style.display = 'block';
+                loadconfirmOpenNow.focus();
             }
         };
 
@@ -2243,6 +2274,10 @@ window.PrivateBin = (function () {
             if (passwordModal !== null) {
                 if (bootstrap5PasswordModal) {
                     bootstrap5PasswordModal.show();
+                } else {
+                    passwordModal.classList.add('show');
+                    passwordModal.style.display = 'block';
+                    passwordDecrypt.focus();
                 }
                 return;
             }
@@ -6154,5 +6189,4 @@ if (typeof module === 'undefined' || !module.exports) {
         window.PrivateBin.Controller.init();
     });
 }
-
 
