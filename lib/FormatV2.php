@@ -51,6 +51,13 @@ class FormatV2
             }
         }
 
+        if ($isComment && (
+            !is_string($message['pasteid']) ||
+            !is_string($message['parentid'])
+        )) {
+            return false;
+        }
+
         // Make sure adata is an array.
         if (!is_array($message['adata'])) {
             return false;
@@ -144,6 +151,7 @@ class FormatV2
             !is_array($message['meta']) ||
             count($message['meta']) === 0 ||
             !array_key_exists('expire', $message['meta']) ||
+            !(is_string($message['meta']['expire']) || is_int($message['meta']['expire'])) ||
             count($message['meta']) > 1
         )) {
             return false;

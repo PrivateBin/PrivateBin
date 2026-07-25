@@ -111,6 +111,10 @@ class FormatV2Test extends TestCase
             $this->assertFalse(FormatV2::isValid($paste), "invalid paste adata field $index");
         }
 
+        $paste                    = Helper::getPastePost();
+        $paste['meta']['expire'] = [];
+        $this->assertFalse(FormatV2::isValid($paste), 'array expiration');
+
         $paste                = Helper::getPastePost();
         $paste['adata'][0][0] = [];
         $this->assertFalse(FormatV2::isValid($paste), 'non-string iv');
@@ -118,5 +122,13 @@ class FormatV2Test extends TestCase
         $comment           = Helper::getCommentPost();
         $comment['ct']     = 42;
         $this->assertFalse(FormatV2::isValid($comment, true), 'non-string comment ciphertext');
+
+        $comment            = Helper::getCommentPost();
+        $comment['pasteid'] = [];
+        $this->assertFalse(FormatV2::isValid($comment, true), 'non-string paste ID');
+
+        $comment             = Helper::getCommentPost();
+        $comment['parentid'] = [];
+        $this->assertFalse(FormatV2::isValid($comment, true), 'non-string parent ID');
     }
 }
