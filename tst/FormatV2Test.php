@@ -107,12 +107,12 @@ class FormatV2Test extends TestCase
             3 => false,
         ] as $index => $value) {
             $paste                   = Helper::getPastePost();
-            $paste['adata'][$index] = $value;
+            $paste['adata'][$index]  = $value;
             $this->assertFalse(FormatV2::isValid($paste), "invalid paste adata field $index");
         }
 
         $paste                    = Helper::getPastePost();
-        $paste['meta']['expire'] = [];
+        $paste['meta']['expire']  = [];
         $this->assertFalse(FormatV2::isValid($paste), 'array expiration');
 
         $paste                = Helper::getPastePost();
