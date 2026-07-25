@@ -511,9 +511,12 @@ class Controller
         $content = '{}';
         $file    = PUBLIC_PATH . DIRECTORY_SEPARATOR . 'js' . DIRECTORY_SEPARATOR . $type . '.jsonld';
         if (is_readable($file)) {
-            $content = str_replace(
+            $urlBase        = $this->_urlBase;
+            $encodedUrlBase = Json::encode($urlBase, JSON_UNESCAPED_SLASHES);
+            $escapedUrlBase = substr($encodedUrlBase, 1, -1);
+            $content        = str_replace(
                 '?jsonld=',
-                $this->_urlBase . '?jsonld=',
+                $escapedUrlBase . '?jsonld=',
                 file_get_contents($file)
             );
         }

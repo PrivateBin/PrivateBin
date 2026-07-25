@@ -234,6 +234,15 @@ class RequestTest extends TestCase
         $this->assertEquals('read', $request->getOperation());
     }
 
+    public function testMalformedRequestUriFallsBackToRoot()
+    {
+        $this->reset();
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+        $_SERVER['REQUEST_URI']    = 'http://[';
+        $request                   = new Request;
+        $this->assertSame('/', $request->getRequestUri());
+    }
+
     public function testPasteIdExtraction()
     {
         $this->reset();
