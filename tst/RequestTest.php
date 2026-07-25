@@ -224,9 +224,9 @@ class RequestTest extends TestCase
     {
         $cases = [
             'application/json;q=0, text/plain' => false,
-            'application/jsonp' => false,
-            'application/json; charset=UTF-8' => true,
-            'APPLICATION/JSON' => true,
+            'application/jsonp'                => false,
+            'application/json; charset=UTF-8'  => true,
+            'APPLICATION/JSON'                 => true,
         ];
         foreach ($cases as $accept => $expected) {
             $this->reset();
