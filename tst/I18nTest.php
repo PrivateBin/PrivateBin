@@ -162,6 +162,12 @@ class I18nTest extends TestCase
         $this->assertEquals('14 minut',  I18n::_('%d minutes', 14), '14 minutes in Czech');
     }
 
+    public function testInvalidBrowserLanguageQualityIsIgnored()
+    {
+        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'de;q=2,en;q=0.8';
+        $this->assertSame(['0.8' => ['en']], I18n::getBrowserLanguages());
+    }
+
     public function testBrowserLanguageAnyDetection()
     {
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = '*';
