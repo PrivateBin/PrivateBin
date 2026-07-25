@@ -196,15 +196,24 @@ class Database extends AbstractData
             $paste = Json::decode($row['data']);
         } catch (JsonException $e) {
             error_log('Error while reading a paste from the database: ' . $e->getMessage());
-            $paste = [];
+            return false;
+        }
+        if (!is_array($paste)) {
+            error_log('Error while reading a paste from the database: invalid data structure');
+            return false;
         }
 
         try {
-            $paste['meta'] = Json::decode($row['meta']);
+            $meta = Json::decode($row['meta']);
         } catch (JsonException $e) {
             error_log('Error while reading a paste from the database: ' . $e->getMessage());
-            $paste['meta'] = [];
+            return false;
         }
+        if (!is_array($meta)) {
+            error_log('Error while reading a paste from the database: invalid metadata structure');
+            return false;
+        }
+        $paste['meta'] = $meta;
         $expire_date = (int) $row['expiredate'];
         if ($expire_date > 0) {
             $paste['meta']['expire_date'] = $expire_date;
@@ -314,7 +323,11 @@ class Database extends AbstractData
                     $data = Json::decode($row['data']);
                 } catch (JsonException $e) {
                     error_log('Error while reading a comment from the database: ' . $e->getMessage());
-                    $data = [];
+                    continue;
+                }
+                if (!is_array($data)) {
+                    error_log('Error while reading a comment from the database: invalid data structure');
+                    continue;
                 }
                 $i                          = $this->getOpenSlot($comments, (int) $row['postdate']);
                 $comments[$i]               = $data;

@@ -34,6 +34,13 @@ class DatabaseTest extends TestCase
         }
     }
 
+    private function getDatabaseConnection()
+    {
+        $property = new ReflectionProperty(Database::class, '_db');
+        $property->setAccessible(true);
+        return $property->getValue($this->_model);
+    }
+
     public function testSaltMigration()
     {
         ServerSalt::setStore(new Filesystem(['dir' => 'data']));
@@ -107,6 +114,52 @@ class DatabaseTest extends TestCase
         $this->assertFalse($this->_model->create(Helper::getPasteId(), $paste), 'unable to store the same paste twice');
         ini_set('error_log', $error_log_setting);
         $this->assertEquals($original, $this->_model->read(Helper::getPasteId()));
+    }
+
+    public function testCorruptPasteIsRejected()
+    {
+        $this->_model->delete(Helper::getPasteId());
+        $paste = Helper::getPaste();
+        $this->assertTrue($this->_model->create(Helper::getPasteId(), $paste));
+        $statement = $this->getDatabaseConnection()->prepare(
+            'UPDATE paste SET data = ? WHERE dataid = ?'
+        );
+        $statement->execute(['true', Helper::getPasteId()]);
+        $errorLog = ini_get('error_log');
+        ini_set('error_log', '/dev/null');
+        $this->assertFalse($this->_model->read(Helper::getPasteId()));
+        ini_set('error_log', $errorLog);
+    }
+
+    public function testCorruptCommentsAreIgnored()
+    {
+        $this->_model->delete(Helper::getPasteId());
+        $comment = Helper::getComment();
+        $this->assertTrue(
+            $this->_model->createComment(
+                Helper::getPasteId(),
+                Helper::getPasteId(),
+                Helper::getCommentId(),
+                $comment
+            )
+        );
+        $statement = $this->getDatabaseConnection()->prepare(
+            'INSERT INTO comment VALUES(?,?,?,?,?,?)'
+        );
+        $statement->execute([
+            'ffffffffffffffff',
+            Helper::getPasteId(),
+            Helper::getPasteId(),
+            'true',
+            null,
+            time(),
+        ]);
+        $errorLog = ini_get('error_log');
+        ini_set('error_log', '/dev/null');
+        $comments = $this->_model->readComments(Helper::getPasteId());
+        ini_set('error_log', $errorLog);
+        $this->assertCount(1, $comments);
+        $this->assertSame(Helper::getCommentId(), current($comments)['id']);
     }
 
     /**
