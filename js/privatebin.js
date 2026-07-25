@@ -5324,50 +5324,57 @@ window.PrivateBin = (function () {
                 cipherMessage['attachment'] = attachments.map(attachment => attachment[0]);
                 cipherMessage['attachment_name'] = attachments.map(attachment => attachment[1]);
 
-                cipherMessage['attachment'] = await Promise.all(cipherMessage['attachment'].map(async (attachment, i) => {
-                    // we need to retrieve data from blob if browser already parsed it in memory
-                    if (typeof attachment === 'string' && attachment.startsWith('blob:')) {
-                        Alert.showStatus(
-                            [
-                                'Retrieving cloned file \'%s\' from memory...',
-                                cipherMessage['attachment_name'][i]
-                            ],
-                            'copy'
-                        );
-                        try {
-                            const response = await fetch(attachment, {
-                                method: 'GET',
-                                credentials: 'omit',
-                                signal: AbortSignal.timeout(10000)
-                            });
-                            if (!response.ok) {
-                                throw new Error('HTTP ' + response.status);
-                            }
-                            const blobData = await response.blob();
-                            if (blobData instanceof window.Blob) {
-                                const fileReading = new Promise(function (resolve, reject) {
-                                    const fileReader = new FileReader();
-                                    fileReader.onload = function (event) {
-                                        resolve(event.target.result);
-                                    };
-                                    fileReader.onerror = function (error) {
-                                        reject(error);
-                                    }
-                                    fileReader.readAsDataURL(blobData);
+                try {
+                    cipherMessage['attachment'] = await Promise.all(cipherMessage['attachment'].map(async (attachment, i) => {
+                        // we need to retrieve data from blob if browser already parsed it in memory
+                        if (typeof attachment === 'string' && attachment.startsWith('blob:')) {
+                            Alert.showStatus(
+                                [
+                                    'Retrieving cloned file \'%s\' from memory...',
+                                    cipherMessage['attachment_name'][i]
+                                ],
+                                'copy'
+                            );
+                            try {
+                                const response = await fetch(attachment, {
+                                    method: 'GET',
+                                    credentials: 'omit',
+                                    signal: AbortSignal.timeout(10000)
                                 });
+                                if (!response.ok) {
+                                    throw new Error('HTTP ' + response.status);
+                                }
+                                const blobData = await response.blob();
+                                if (blobData instanceof window.Blob) {
+                                    const fileReading = new Promise(function (resolve, reject) {
+                                        const fileReader = new FileReader();
+                                        fileReader.onload = function (event) {
+                                            resolve(event.target.result);
+                                        };
+                                        fileReader.onerror = function (error) {
+                                            reject(error);
+                                        }
+                                        fileReader.readAsDataURL(blobData);
+                                    });
 
-                                return await fileReading;
-                            } else {
-                                const error = 'Cannot process attachment data.';
-                                Alert.showError(error);
-                                throw new TypeError(error);
+                                    return await fileReading;
+                                } else {
+                                    const error = 'Cannot process attachment data.';
+                                    Alert.showError(error);
+                                    throw new TypeError(error);
+                                }
+                            } catch (error) {
+                                Alert.showError('Cannot retrieve attachment.');
+                                throw error;
                             }
-                        } catch (error) {
-                            Alert.showError('Cannot retrieve attachment.');
-                            throw error;
                         }
-                    }
-                }));
+                        return attachment;
+                    }));
+                } catch (error) {
+                    Alert.hideLoading();
+                    TopNav.showCreateButtons();
+                    return;
+                }
             }
 
             // encrypt message
@@ -6154,5 +6161,3 @@ if (typeof module === 'undefined' || !module.exports) {
         window.PrivateBin.Controller.init();
     });
 }
-
-
