@@ -101,6 +101,16 @@ class FormatV2Test extends TestCase
         $paste['adata'][0] = [];
         $this->assertFalse(FormatV2::isValid($paste), 'empty cipher parameters');
 
+        foreach ([
+            1 => ['plaintext'],
+            2 => '1',
+            3 => false,
+        ] as $index => $value) {
+            $paste                   = Helper::getPastePost();
+            $paste['adata'][$index] = $value;
+            $this->assertFalse(FormatV2::isValid($paste), "invalid paste adata field $index");
+        }
+
         $paste                = Helper::getPastePost();
         $paste['adata'][0][0] = [];
         $this->assertFalse(FormatV2::isValid($paste), 'non-string iv');

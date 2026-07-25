@@ -56,6 +56,14 @@ class FormatV2
             return false;
         }
 
+        if (!$isComment && (
+            !is_string($message['adata'][1] ?? null) ||
+            !is_int($message['adata'][2] ?? null) ||
+            !is_int($message['adata'][3] ?? null)
+        )) {
+            return false;
+        }
+
         $cipherParams = $isComment ? $message['adata'] : ($message['adata'][0] ?? null);
 
         // Make sure the cipher parameters are a properly sized array.
