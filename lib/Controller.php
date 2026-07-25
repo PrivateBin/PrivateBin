@@ -514,7 +514,7 @@ class Controller
             $urlBase        = $this->_urlBase;
             $encodedUrlBase = Json::encode($urlBase, JSON_UNESCAPED_SLASHES);
             $escapedUrlBase = substr($encodedUrlBase, 1, -1);
-            $content = str_replace(
+            $content        = str_replace(
                 '?jsonld=',
                 $escapedUrlBase . '?jsonld=',
                 file_get_contents($file)
