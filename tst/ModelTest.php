@@ -4,6 +4,7 @@ use Jdenticon\Identicon;
 use PHPUnit\Framework\TestCase;
 use PrivateBin\Configuration;
 use PrivateBin\Data\Database;
+use PrivateBin\Data\Filesystem;
 use PrivateBin\Model;
 use PrivateBin\Model\Comment;
 use PrivateBin\Model\Paste;
@@ -285,6 +286,25 @@ class ModelTest extends TestCase
     {
         $this->_model->getPaste(Helper::getPasteId())->delete();
         $paste = $this->_model->getPaste(Helper::getPasteId());
+        $this->expectException(Exception::class);
+        $this->expectExceptionCode(64);
+        $paste->get();
+    }
+
+    public function testMalformedStoredPaste()
+    {
+        $pasteid = Helper::getPasteId();
+        $path    = $this->_path . DIRECTORY_SEPARATOR . substr($pasteid, 0, 2) .
+            DIRECTORY_SEPARATOR . substr($pasteid, 2, 2) . DIRECTORY_SEPARATOR;
+        if (!is_dir($path)) {
+            mkdir($path, 0700, true);
+        }
+        file_put_contents(
+            $path . $pasteid . '.php',
+            Filesystem::PROTECTION_LINE . PHP_EOL . 'true'
+        );
+        $paste = new Paste($this->_conf, new Filesystem(['dir' => $this->_path]));
+        $paste->setId($pasteid);
         $this->expectException(Exception::class);
         $this->expectExceptionCode(64);
         $paste->get();

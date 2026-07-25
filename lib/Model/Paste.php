@@ -53,7 +53,11 @@ class Paste extends AbstractModel
     public function get()
     {
         $data = $this->_store->read($this->getId());
-        if ($data === false) {
+        if (
+            !is_array($data) ||
+            !isset($data['meta']) ||
+            !is_array($data['meta'])
+        ) {
             throw new TranslatedException(Controller::GENERIC_ERROR, 64);
         }
 
