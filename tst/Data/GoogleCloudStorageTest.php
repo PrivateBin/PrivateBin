@@ -111,6 +111,26 @@ class GoogleCloudStorageTest extends TestCase
         }
     }
 
+    public function testPurgeHonorsBatchSize()
+    {
+        $expired = Helper::getPaste(['expire_date' => 1344803344]);
+        $ids     = [
+            'aaaaaaaaaaaaaaaa',
+            'bbbbbbbbbbbbbbbb',
+            'cccccccccccccccc',
+        ];
+        foreach ($ids as $id) {
+            $this->assertTrue($this->_model->create($id, $expired));
+        }
+
+        $this->_model->purge(2);
+
+        $remaining = array_filter($ids, function ($id) {
+            return $this->_model->exists($id);
+        });
+        $this->assertCount(1, $remaining);
+    }
+
     public function testErrorDetection()
     {
         $this->_model->delete(Helper::getPasteId());

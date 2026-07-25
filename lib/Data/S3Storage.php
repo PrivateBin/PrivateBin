@@ -428,16 +428,20 @@ class S3Storage extends AbstractData
 
         try {
             foreach ($this->_listAllObjects($prefix) as $object) {
+                $candidate = substr($object['Key'], strlen($prefix));
+                if (str_contains($candidate, '/')) {
+                    continue;
+                }
                 $head = $this->_client->headObject([
                     'Bucket' => $this->_bucket,
                     'Key'    => $object['Key'],
                 ]);
                 $expire_at = $head->get('Metadata')['expire_date'] ?? '';
                 if (is_numeric($expire_at) && intval($expire_at) < $now) {
-                    array_push($expired, $object['Key']);
+                    array_push($expired, $candidate);
                 }
 
-                if (count($expired) > $batchsize) {
+                if (count($expired) >= $batchsize) {
                     break;
                 }
             }

@@ -342,12 +342,16 @@ class GoogleCloudStorage extends AbstractData
         }
         try {
             foreach ($this->_bucket->objects(['prefix' => $prefix]) as $object) {
+                $candidate = substr($object->name(), strlen($prefix));
+                if (str_contains($candidate, '/')) {
+                    continue;
+                }
                 $expire_at = $object->info()['metadata']['expire_date'] ?? '';
                 if (is_numeric($expire_at) && intval($expire_at) < $now) {
-                    array_push($expired, basename($object->name()));
+                    array_push($expired, $candidate);
                 }
 
-                if (count($expired) > $batchsize) {
+                if (count($expired) >= $batchsize) {
                     break;
                 }
             }
