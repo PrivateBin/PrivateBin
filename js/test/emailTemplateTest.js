@@ -139,4 +139,30 @@ describe('Email - mail body content (short URL vs. fallback)', function () {
             restore();
         }
     });
+
+    it('Uses the viewed paste burn-after-reading state instead of the instance default', function () {
+        buildEmailDomNoShortUrl();
+        const burnAfterReading = document.createElement('input');
+        burnAfterReading.id = 'burnafterreading';
+        burnAfterReading.type = 'checkbox';
+        burnAfterReading.checked = true;
+        document.body.appendChild(burnAfterReading);
+        PrivateBin.TopNav.init();
+        PrivateBin.TopNav.showEmailButton(0, false);
+
+        const { getUrl, restore } = makeWindowOpenMock();
+        try {
+            document.getElementById('emaillink').click();
+            document.getElementById('emailconfirm-timezone-current').click();
+
+            const body = extractMailtoBody(getUrl());
+            assert.doesNotMatch(
+                body,
+                /only be accessed once/,
+                'email body must use the viewed paste metadata'
+            );
+        } finally {
+            restore();
+        }
+    });
 });
