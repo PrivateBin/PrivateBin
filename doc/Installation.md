@@ -186,7 +186,7 @@ client):
 ```sql
 CREATE TABLE prefix_paste (
     dataid CHAR(16) NOT NULL,
-    data MEDIUMBLOB,
+    data LONGBLOB,
     expiredate INT,
     meta TEXT,
     PRIMARY KEY (dataid)
@@ -209,12 +209,15 @@ CREATE TABLE prefix_config (
 INSERT INTO prefix_config VALUES('VERSION', '2.0.5');
 ```
 
+The configured `sizelimit` and the MariaDB/MySQL `max_allowed_packet` setting
+may impose lower limits than the `LONGBLOB` column.
+
 In **PostgreSQL**, the `data`, `attachment`, `nickname` and `vizhash` columns
-need to be `TEXT` and not `BLOB` or `MEDIUMBLOB`. The key names in brackets,
+need to be `TEXT` and not `BLOB` or `LONGBLOB`. The key names in brackets,
 after `PRIMARY KEY`, need to be removed.
 
 In **Oracle**, the `data`, `attachment`, `nickname` and `vizhash` columns need
-to be `CLOB` and not `BLOB` or `MEDIUMBLOB`, the `id` column in the `config`
+to be `CLOB` and not `BLOB` or `LONGBLOB`, the `id` column in the `config`
 table needs to be `VARCHAR2(16)` and the `meta` column in the `paste` table
 and the `value` column in the `config` table need to be `VARCHAR2(4000)`.
 

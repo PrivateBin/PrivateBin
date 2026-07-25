@@ -271,6 +271,28 @@ class DatabaseTest extends TestCase
         new Database($options);
     }
 
+    public function testPasteDataTypes()
+    {
+        $reflection     = new ReflectionClass(Database::class);
+        $database       = $reflection->newInstanceWithoutConstructor();
+        $type           = $reflection->getProperty('_type');
+        $attachmentType = $reflection->getMethod('_getAttachmentType');
+        $type->setAccessible(true);
+        $attachmentType->setAccessible(true);
+
+        foreach (
+            [
+                'mysql'  => 'LONGBLOB',
+                'oci'    => 'CLOB',
+                'pgsql'  => 'TEXT',
+                'sqlite' => 'MEDIUMBLOB',
+            ] as $driver => $expected
+        ) {
+            $type->setValue($database, $driver);
+            $this->assertSame($expected, $attachmentType->invoke($database));
+        }
+    }
+
     public function testTableUpgrade()
     {
         mkdir($this->_path);

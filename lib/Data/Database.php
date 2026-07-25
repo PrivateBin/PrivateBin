@@ -642,6 +642,8 @@ class Database extends AbstractData
                 return 'CLOB';
             case 'pgsql':
                 return 'TEXT';
+            case 'mysql':
+                return 'LONGBLOB';
             default:
                 return 'MEDIUMBLOB';
         }
@@ -866,6 +868,16 @@ class Database extends AbstractData
                     "\" MODIFY COLUMN \"data\" $attachmentType"
                 );
             }
+        }
+        if (
+            $this->_type === 'mysql' &&
+            version_compare($oldversion, '1.3', '>') &&
+            version_compare($oldversion, '2.0.5', '<=')
+        ) {
+            $this->_db->exec(
+                'ALTER TABLE "' . $this->_sanitizeIdentifier('paste') .
+                "\" MODIFY COLUMN \"data\" $attachmentType"
+            );
         }
         if (version_compare($oldversion, '1.7.1', '<=')) {
             if ($this->_supportsDropColumn()) {
