@@ -267,15 +267,8 @@ class Request
     {
         $acceptHeader = $_SERVER['HTTP_ACCEPT'] ?? '';
 
-        // simple cases
-        if (
-            ($_SERVER['HTTP_X_REQUESTED_WITH'] ?? '') === 'JSONHttpRequest' ||
-            (
-                str_contains($acceptHeader, self::MIME_JSON) &&
-                !str_contains($acceptHeader, self::MIME_HTML) &&
-                !str_contains($acceptHeader, self::MIME_XHTML)
-            )
-        ) {
+        // explicit API request
+        if (($_SERVER['HTTP_X_REQUESTED_WITH'] ?? '') === 'JSONHttpRequest') {
             return true;
         }
 
@@ -284,7 +277,7 @@ class Request
             $mediaTypes = [];
             foreach (explode(',', trim($acceptHeader)) as $mediaTypeRange) {
                 if (preg_match(
-                    '#(\*/\*|[a-z\-]+/[a-z\-+*]+(?:\s*;\s*[^q]\S*)*)(?:\s*;\s*q\s*=\s*(0(?:\.\d{0,3})|1(?:\.0{0,3})))?#',
+                    '#^(\*/\*|[a-z\-]+/[a-z\-+*]+(?:\s*;\s*[^q]\S*)*)(?:\s*;\s*q\s*=\s*(0(?:\.\d{0,3})|1(?:\.0{0,3})))?$#i',
                     trim($mediaTypeRange), $match
                 )) {
                     if (!isset($match[2])) {
@@ -304,12 +297,13 @@ class Request
             krsort($mediaTypes);
             foreach ($mediaTypes as $acceptedQuality => $acceptedValues) {
                 foreach ($acceptedValues as $acceptedValue) {
+                    $acceptedMediaType = trim(explode(';', $acceptedValue, 2)[0]);
                     if (
-                        str_starts_with($acceptedValue, self::MIME_HTML) ||
-                        str_starts_with($acceptedValue, self::MIME_XHTML)
+                        $acceptedMediaType === self::MIME_HTML ||
+                        $acceptedMediaType === self::MIME_XHTML
                     ) {
                         return false;
-                    } elseif (str_starts_with($acceptedValue, self::MIME_JSON)) {
+                    } elseif ($acceptedMediaType === self::MIME_JSON) {
                         return true;
                     }
                 }
