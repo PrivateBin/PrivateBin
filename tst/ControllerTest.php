@@ -4,6 +4,7 @@ use PHPUnit\Framework\TestCase;
 use PrivateBin\Configuration;
 use PrivateBin\Controller;
 use PrivateBin\Data\Filesystem;
+use PrivateBin\I18n;
 use PrivateBin\Persistence\ServerSalt;
 use PrivateBin\Persistence\TrafficLimiter;
 use PrivateBin\Request;
@@ -113,6 +114,23 @@ class ControllerTest extends TestCase
             $content,
             'outputs title correctly'
         );
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testViewForceThreeLetterLanguageDefault()
+    {
+        $options                              = parse_ini_file(CONF, true);
+        $options['main']['languageselection'] = false;
+        $options['main']['languagedefault']   = 'jbo';
+        Helper::createIniFile(CONF, $options);
+        $_COOKIE['lang'] = 'de';
+        ob_start();
+        new Controller;
+        ob_end_clean();
+        $this->assertSame('jbo', I18n::getLanguage());
+        $this->assertSame('jbo', $_COOKIE['lang']);
     }
 
     /**
