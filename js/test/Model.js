@@ -124,6 +124,22 @@ describe('Model', function () {
         });
     });
 
+    describe('hasDeleteToken', function () {
+        it('only recognizes an exact query parameter name', () => {
+            const cases = [
+                ['https://example.com/?abcdefghijklmnop&deletetoken=secret', true],
+                ['https://example.com/?abcdefghijklmnop&redirect=deletetoken', false],
+                ['https://example.com/?abcdefghijklmnop&notdeletetoken=secret', false]
+            ];
+
+            cases.forEach(function (testCase) {
+                const clean = globalThis.cleanup('', {url: testCase[0]});
+                assert.strictEqual(PrivateBin.Model.hasDeleteToken(), testCase[1]);
+                clean();
+            });
+        });
+    });
+
     describe('getPasteKey', function () {
         this.timeout(30000);
         beforeEach(function () {
@@ -254,4 +270,3 @@ describe('Model', function () {
         });
     });
 });
-
