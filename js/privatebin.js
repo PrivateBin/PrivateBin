@@ -5883,7 +5883,7 @@ window.PrivateBin = (function () {
 
             Alert.hideLoading();
             // only push new state if we are coming from a different one
-            if (Helper.baseUri() !== window.location) {
+            if (Helper.baseUri() !== window.location.href) {
                 history.pushState({ type: 'create' }, document.title, Helper.baseUri());
             }
 
