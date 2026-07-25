@@ -207,6 +207,25 @@ class JsonApiTest extends TestCase
     /**
      * @runInSeparateProcess
      */
+    public function testJsonLdEscapesRequestPath()
+    {
+        $_GET['jsonld']             = 'paste';
+        $_SERVER['REQUEST_URI']     = '/"quoted\\path?jsonld=paste';
+        ob_start();
+        new Controller;
+        $content = ob_get_contents();
+        ob_end_clean();
+
+        $decoded = json_decode($content, true, 512, JSON_THROW_ON_ERROR);
+        $this->assertSame(
+            '/"quoted\\path?jsonld=types#',
+            $decoded['@context']['pb']
+        );
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
     public function testJsonLdComment()
     {
         $_GET['jsonld'] = 'comment';

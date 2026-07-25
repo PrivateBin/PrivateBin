@@ -24,12 +24,13 @@ class Json
      * @access public
      * @static
      * @param  mixed $input
+     * @param  int $flags
      * @throws JsonException
      * @return string
      */
-    public static function encode(&$input)
+    public static function encode(&$input, $flags = 0)
     {
-        return json_encode($input, JSON_THROW_ON_ERROR);
+        return json_encode($input, $flags | JSON_THROW_ON_ERROR);
     }
 
     /**
