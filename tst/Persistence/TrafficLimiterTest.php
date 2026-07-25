@@ -64,7 +64,7 @@ class TrafficLimiterTest extends TestCase
     public function testTrafficPassesAtExactLimitBoundary()
     {
         TrafficLimiter::setLimit(10);
-        $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
+        $_SERVER['REMOTE_ADDR']  = '127.0.0.1';
         $hash                    = TrafficLimiter::getHash('sha256');
         $this->_store->setValue((string) (time() - 10), 'traffic_limiter', $hash);
         $this->assertTrue(TrafficLimiter::canPass());
