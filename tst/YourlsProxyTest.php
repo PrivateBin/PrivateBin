@@ -148,6 +148,25 @@ class YourlsProxyTest extends TestCase
         $this->assertEquals($yourls->getError(), 'Proxy error: Error parsing proxy response. This can be a configuration issue, like wrong or missing config keys.');
     }
 
+    /**
+     * @dataProvider providerMalformedResponses
+     */
+    public function testMalformedResponseShapeIsRejected($response)
+    {
+        file_put_contents($this->_mock_yourls_service, $response);
+        $yourls = new YourlsProxy($this->_conf, 'https://example.com/?foo#bar');
+        $this->assertTrue($yourls->isError());
+        $this->assertEquals($yourls->getError(), 'Proxy error: Error parsing proxy response. This can be a configuration issue, like wrong or missing config keys.');
+    }
+
+    public function providerMalformedResponses(): array
+    {
+        return [
+            ['true'],
+            ['{"statusCode":"200","shorturl":[]}'],
+        ];
+    }
+
     public function testServerError()
     {
         // simulate some other server error that results in a non-JSON reply
