@@ -9,6 +9,25 @@ describe('I18n', function () {
             PrivateBin.I18n.reset();
         });
 
+        it('updates elements only for the pending language load', () => {
+            const clean = globalThis.cleanup();
+            document.body.innerHTML = '<div id="i18n"></div>';
+            const element = document.getElementById('i18n');
+
+            PrivateBin.I18n.reset();
+            PrivateBin.I18n.translate(element, 'Never');
+            PrivateBin.I18n.reset('de', {'Never': 'Niemals'});
+            document.dispatchEvent(new CustomEvent('languageLoaded'));
+            assert.strictEqual(element.textContent, 'Niemals');
+
+            element.textContent = 'unchanged';
+            document.dispatchEvent(new CustomEvent('languageLoaded'));
+            assert.strictEqual(element.textContent, 'unchanged');
+
+            PrivateBin.I18n.reset();
+            clean();
+        });
+
         it('returns message ID unchanged if no translation found', () => {
             fc.assert(fc.property(
                 fc.string(),

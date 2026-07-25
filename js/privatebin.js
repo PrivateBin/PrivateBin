@@ -43,6 +43,14 @@ function draghover(element) {
 window.PrivateBin = (function () {
 
     /**
+     * event dispatched after an asynchronous language load
+     *
+     * @private
+     * @readonly
+     */
+    const languageLoadedEvent = 'languageLoaded';
+
+    /**
      * zlib library interface
      *
      * @private
@@ -650,16 +658,6 @@ window.PrivateBin = (function () {
         const me = {};
 
         /**
-         * const for string of loaded language
-         *
-         * @name I18n.languageLoadedEvent
-         * @private
-         * @prop   {string}
-         * @readonly
-         */
-        const languageLoadedEvent = 'languageLoaded';
-
-        /**
          * supported languages, minus the built in 'en'
          *
          * @name I18n.supportedLanguages
@@ -758,7 +756,7 @@ window.PrivateBin = (function () {
                     document.addEventListener(languageLoadedEvent, function () {
                         // re-execute this function
                         me.translate.apply(this, orgArguments);
-                    });
+                    }, {once: true});
 
                     // and fall back to English for now until the real language
                     // file is loaded
@@ -3623,8 +3621,15 @@ window.PrivateBin = (function () {
             const icon = comment.getIcon();
             if (icon) {
                 const image = document.createElement('img');
+                const updateImageTitle = function () {
+                    image.setAttribute('title', I18n._('Avatar generated from IP address'));
+                };
                 image.setAttribute('src', icon);
                 image.setAttribute('class', 'vizhash');
+                updateImageTitle();
+                if (I18n.getLanguage() === null) {
+                    document.addEventListener(languageLoadedEvent, updateImageTitle, {once: true});
+                }
                 const nickSpan = commentEntry.querySelector('span.nickname');
                 if (nickSpan) {
                     nickSpan.prepend(' ');
@@ -5518,15 +5523,6 @@ window.PrivateBin = (function () {
                     );
                 }
 
-                document.addEventListener(I18n.languageLoadedEvent, function () {
-                    const commentContainer = document.getElementById('commentcontainer');
-                    if (!commentContainer) {
-                        return;
-                    }
-
-                    commentContainer.querySelectorAll('img.vizhash')
-                        .forEach(img => img.setAttribute('title', I18n._('Avatar generated from IP address')));
-                });
             });
         }
 
@@ -6154,5 +6150,4 @@ if (typeof module === 'undefined' || !module.exports) {
         window.PrivateBin.Controller.init();
     });
 }
-
 

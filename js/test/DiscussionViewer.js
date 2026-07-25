@@ -6,6 +6,48 @@ describe('DiscussionViewer', function () {
     describe('handleNotification, prepareNewDiscussion, addComment, finishDiscussion, getReplyMessage, getReplyNickname, getReplyCommentId & highlightComment', function () {
         this.timeout(30000);
 
+        it('adds and refreshes descriptive avatar titles once', () => {
+            const clean = globalThis.cleanup();
+            document.body.innerHTML =
+                '<div id="discussion"><div id="commentcontainer"></div></div>' +
+                '<div id="templates">' +
+                    '<article id="commenttemplate" class="comment">' +
+                        '<span class="nickname"></span>' +
+                        '<span class="commentdate"></span>' +
+                        '<div class="commentdata"></div>' +
+                        '<button>Reply</button>' +
+                    '</article>' +
+                '</div>';
+            const comment = {
+                id: 'avatar',
+                parentid: '',
+                getCreated: function () { return 0; },
+                getIcon: function () { return 'data:image/png;base64,AA=='; }
+            };
+
+            PrivateBin.Model.reset();
+            PrivateBin.Model.init();
+            PrivateBin.DiscussionViewer.init();
+            PrivateBin.I18n.reset();
+            PrivateBin.DiscussionViewer.addComment(comment, 'text', 'nickname');
+
+            const image = document.querySelector('img.vizhash');
+            assert.strictEqual(image.getAttribute('title'), 'Avatar generated from IP address');
+
+            PrivateBin.I18n.reset('de', {
+                'Avatar generated from IP address': 'Aus IP-Adresse erzeugter Avatar'
+            });
+            document.dispatchEvent(new CustomEvent('languageLoaded'));
+            assert.strictEqual(image.getAttribute('title'), 'Aus IP-Adresse erzeugter Avatar');
+
+            image.setAttribute('title', 'unchanged');
+            document.dispatchEvent(new CustomEvent('languageLoaded'));
+            assert.strictEqual(image.getAttribute('title'), 'unchanged');
+
+            PrivateBin.I18n.reset();
+            clean();
+        });
+
         it('displays & hides comments as requested', () => {
             fc.assert(fc.property(
                 fc.array(
