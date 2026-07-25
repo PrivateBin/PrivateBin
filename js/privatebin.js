@@ -40,6 +40,7 @@ function draghover(element) {
     });
 }
 
+
 window.PrivateBin = (function () {
 
     /**
@@ -3966,24 +3967,19 @@ window.PrivateBin = (function () {
                 CryptTool.base58encode(Model.getPasteKey())
             );
 
-            // we use text/html instead of text/plain to avoid a bug when
-            // reloading the raw text view (it reverts to type text/html)
+            // Replace the document contents without document.open(), which
+            // replaces the active history entry and removes window listeners.
             const headElements = document.head.querySelectorAll(':not(noscript):not(script):not(link[type="text/css"])');
-
-            const newDoc = document.open('text/html', 'replace');
-            newDoc.write('<!DOCTYPE html><html><head>');
+            const newHead = document.createElement('head');
             for (let i = 0; i < headElements.length; ++i) {
-                newDoc.write(headElements[i].outerHTML);
+                newHead.appendChild(headElements[i].cloneNode(true));
             }
-            newDoc.write(
-                '</head><body><pre>' +
-                DOMPurify.sanitize(
-                    Helper.htmlEntities(paste),
-                    purifyHtmlConfig
-                ) +
-                '</pre></body></html>'
-            );
-            newDoc.close();
+            const newBody = document.createElement('body');
+            const rawPaste = document.createElement('pre');
+            rawPaste.textContent = paste;
+            newBody.appendChild(rawPaste);
+            document.head.replaceWith(newHead);
+            document.body.replaceWith(newBody);
         }
 
         /**
