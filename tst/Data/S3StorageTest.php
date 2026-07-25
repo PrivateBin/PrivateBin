@@ -25,7 +25,7 @@ class S3CommentClientStub
     public function __construct($pasteid, $parentid, $commentid, $comment, $prefix = '', $includeCorrupt = true)
     {
         $prefix         = empty($prefix) ? '' : $prefix . '/';
-        $prefix        .= $pasteid . '/discussion/' . $parentid . '/';
+        $prefix .= $pasteid . '/discussion/' . $parentid . '/';
         $this->_objects = [
             $prefix . $commentid => json_encode($comment),
         ];
@@ -86,7 +86,7 @@ class S3StorageTest extends TestCase
         $commentid = Helper::getCommentId();
         $client    = new S3CommentClientStub($pasteid, $pasteid, $commentid, Helper::getComment());
         $storage   = $this->getStorage($client);
-        $comments = $storage->readComments($pasteid);
+        $comments  = $storage->readComments($pasteid);
         $this->assertCount(1, $comments);
         $this->assertSame($commentid, current($comments)['id']);
     }
