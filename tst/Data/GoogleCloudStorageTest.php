@@ -133,6 +133,21 @@ class GoogleCloudStorageTest extends TestCase
         $this->assertFalse($this->_model->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId()), 'comment does still not exist');
     }
 
+    public function testCorruptCommentsAreIgnored()
+    {
+        $pasteid   = Helper::getPasteId();
+        $commentid = Helper::getCommentId();
+        $comment   = Helper::getComment();
+        $this->assertTrue($this->_model->createComment($pasteid, $pasteid, $commentid, $comment));
+        self::$_bucket->upload('{', [
+            'name' => 'pastes/' . $pasteid . '/discussion/' . $pasteid . '/ffffffffffffffff',
+        ]);
+
+        $comments = $this->_model->readComments($pasteid);
+        $this->assertCount(1, $comments);
+        $this->assertSame($commentid, current($comments)['id']);
+    }
+
     /**
      * @throws Exception
      */

@@ -288,12 +288,20 @@ class S3Storage extends AbstractData
                     'Bucket' => $this->_bucket,
                     'Key'    => $entry['Key'],
                 ]);
-                $data             = $object['Body']->getContents();
-                $body             = JSON::decode($data);
-                $items            = explode('/', $entry['Key']);
-                $body['id']       = $items[3];
-                $body['parentid'] = $items[2];
-                $slot             = $this->getOpenSlot($comments, (int) $object['Metadata']['created']);
+                $data = $object['Body']->getContents();
+                try {
+                    $body = Json::decode($data);
+                } catch (JsonException $e) {
+                    error_log('failed to read comment from ' . $entry['Key'] . ', ' . $e->getMessage());
+                    continue;
+                }
+                $created = $object['Metadata']['created'] ?? null;
+                if (!is_array($body) || !is_numeric($created)) {
+                    continue;
+                }
+                $body['id']       = basename($entry['Key']);
+                $body['parentid'] = basename(dirname($entry['Key']));
+                $slot             = $this->getOpenSlot($comments, (int) $created);
                 $comments[$slot]  = $body;
             }
         } catch (S3Exception $e) {

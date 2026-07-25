@@ -224,7 +224,14 @@ class GoogleCloudStorage extends AbstractData
                     $comment = Json::decode($data);
                 } catch (JsonException $e) {
                     error_log('failed to read comment from ' . $key->name() . ', ' . $e->getMessage());
-                    $comment = [];
+                    continue;
+                }
+                if (
+                    !is_array($comment) ||
+                    !isset($comment['meta']['created']) ||
+                    !(is_int($comment['meta']['created']) || is_string($comment['meta']['created']))
+                ) {
+                    continue;
                 }
                 $comment['id']   = basename($key->name());
                 $slot            = $this->getOpenSlot($comments, (int) $comment['meta']['created']);
