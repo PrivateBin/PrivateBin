@@ -474,6 +474,7 @@ class Controller
         $page->assign('BURNAFTERREADINGSELECTED', $this->_conf->getKey('burnafterreadingselected'));
         $page->assign('PASSWORD', $this->_conf->getKey('password'));
         $page->assign('FILEUPLOAD', $this->_conf->getKey('fileupload'));
+        $page->assign('SIZELIMIT', Filter::formatHumanReadableSize($this->_conf->getKey('sizelimit')));
         $page->assign('LANGUAGESELECTION', $languageselection);
         $page->assign('LANGUAGES', I18n::getLanguageLabels(I18n::getAvailableLanguages()));
         $page->assign('TEMPLATESELECTION', $templateselection);
