@@ -219,7 +219,11 @@ class GoogleCloudStorage extends AbstractData
         $prefix   = $this->_getKey($pasteid) . '/discussion/';
         try {
             foreach ($this->_bucket->objects(['prefix' => $prefix]) as $key) {
-                $data            = $this->_bucket->object($key->name())->downloadAsString();
+                try {
+                    $data = $this->_bucket->object($key->name())->downloadAsString();
+                } catch (NotFoundException $e) {
+                    continue;
+                }
                 try {
                     $comment = Json::decode($data);
                 } catch (JsonException $e) {

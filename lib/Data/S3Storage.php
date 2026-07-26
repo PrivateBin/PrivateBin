@@ -284,11 +284,15 @@ class S3Storage extends AbstractData
         try {
             $entries = $this->_listAllObjects($prefix);
             foreach ($entries as $entry) {
-                $object = $this->_client->getObject([
-                    'Bucket' => $this->_bucket,
-                    'Key'    => $entry['Key'],
-                ]);
-                $data = $object['Body']->getContents();
+                try {
+                    $object = $this->_client->getObject([
+                        'Bucket' => $this->_bucket,
+                        'Key'    => $entry['Key'],
+                    ]);
+                    $data = $object['Body']->getContents();
+                } catch (S3Exception $e) {
+                    continue;
+                }
                 try {
                     $body = Json::decode($data);
                 } catch (JsonException $e) {

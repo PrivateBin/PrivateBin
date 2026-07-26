@@ -5,6 +5,14 @@ use GuzzleHttp\Client;
 use PHPUnit\Framework\TestCase;
 use PrivateBin\Data\GoogleCloudStorage;
 
+class MissingStorageObjectStub extends StorageObjectStub
+{
+    public function downloadAsString(array $options = [])
+    {
+        throw new Google\Cloud\Core\Exception\NotFoundException('object disappeared');
+    }
+}
+
 class GoogleCloudStorageTest extends TestCase
 {
     private static $_client;
@@ -142,6 +150,25 @@ class GoogleCloudStorageTest extends TestCase
         self::$_bucket->upload('{', [
             'name' => 'pastes/' . $pasteid . '/discussion/' . $pasteid . '/ffffffffffffffff',
         ]);
+
+        $comments = $this->_model->readComments($pasteid);
+        $this->assertCount(1, $comments);
+        $this->assertSame($commentid, current($comments)['id']);
+    }
+
+    public function testMissingCommentsAreIgnored()
+    {
+        $pasteid = Helper::getPasteId();
+        $name    = 'pastes/' . $pasteid . '/discussion/' . $pasteid . '/ffffffffffffffff';
+        self::$_bucket->_objects[$name] = new MissingStorageObjectStub(
+            new ConnectionInterfaceStub,
+            $name,
+            self::$_bucket,
+            '1'
+        );
+        $comment   = Helper::getComment();
+        $commentid = Helper::getCommentId();
+        $this->assertTrue($this->_model->createComment($pasteid, $pasteid, $commentid, $comment));
 
         $comments = $this->_model->readComments($pasteid);
         $this->assertCount(1, $comments);
