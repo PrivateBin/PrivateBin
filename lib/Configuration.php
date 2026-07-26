@@ -228,7 +228,7 @@ class Configuration
                     if (array_key_exists($key, $config[$section])) {
                         if ($val === null) {
                             $result = $config[$section][$key];
-                        } elseif (is_bool($val)) {
+                        } elseif (is_bool($val) && is_scalar($config[$section][$key])) {
                             $val = strtolower($config[$section][$key]);
                             if (in_array($val, ['true', 'yes', 'on'])) {
                                 $result = true;
@@ -237,9 +237,13 @@ class Configuration
                             } else {
                                 $result = (bool) $config[$section][$key];
                             }
-                        } elseif (is_int($val)) {
+                        } elseif (is_int($val) && is_scalar($config[$section][$key])) {
                             $result = (int) $config[$section][$key];
-                        } elseif (is_string($val) && !empty($config[$section][$key])) {
+                        } elseif (
+                            is_string($val) &&
+                            is_scalar($config[$section][$key]) &&
+                            !empty($config[$section][$key])
+                        ) {
                             $result = (string) $config[$section][$key];
                         } elseif (is_array($val) && is_array($config[$section][$key])) {
                             $result = $config[$section][$key];
