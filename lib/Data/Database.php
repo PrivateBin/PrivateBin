@@ -214,7 +214,7 @@ class Database extends AbstractData
             return false;
         }
         $paste['meta'] = $meta;
-        $expire_date = (int) $row['expiredate'];
+        $expire_date   = (int) $row['expiredate'];
         if ($expire_date > 0) {
             $paste['meta']['expire_date'] = $expire_date;
         }
