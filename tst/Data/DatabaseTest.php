@@ -156,6 +156,19 @@ class DatabaseTest extends TestCase
         $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste does still not exist');
     }
 
+    public function testInvalidTrafficLimiterState()
+    {
+        $this->assertSame('', $this->_model->getValue('traffic_limiter', 'client'));
+        $property  = (new ReflectionClass(Database::class))->getProperty('_db');
+        $database  = $property->getValue($this->_model);
+        $statement = $database->prepare('UPDATE config SET value = ? WHERE id = ?');
+        $statement->execute(['true', 'TRAFFIC_LIMITER']);
+
+        $this->assertSame('', $this->_model->getValue('traffic_limiter', 'client'));
+        $this->assertTrue($this->_model->setValue('123', 'traffic_limiter', 'client'));
+        $this->assertSame('123', $this->_model->getValue('traffic_limiter', 'client'));
+    }
+
     public function testCommentErrorDetection()
     {
         $error_log_setting = ini_get('error_log');

@@ -317,7 +317,10 @@ class Filesystem extends AbstractData
                 $file = $this->_path . DIRECTORY_SEPARATOR . 'traffic_limiter.php';
                 if (is_readable($file)) {
                     require $file;
-                    if (array_key_exists('traffic_limiter', $GLOBALS)) {
+                    if (
+                        array_key_exists('traffic_limiter', $GLOBALS) &&
+                        is_array($GLOBALS['traffic_limiter'])
+                    ) {
                         $this->_last_cache = $GLOBALS['traffic_limiter'];
                         if (array_key_exists($key, $this->_last_cache)) {
                             return $this->_last_cache[$key];
