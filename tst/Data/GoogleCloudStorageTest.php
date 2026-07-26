@@ -158,8 +158,8 @@ class GoogleCloudStorageTest extends TestCase
 
     public function testMissingCommentsAreIgnored()
     {
-        $pasteid = Helper::getPasteId();
-        $name    = 'pastes/' . $pasteid . '/discussion/' . $pasteid . '/ffffffffffffffff';
+        $pasteid                        = Helper::getPasteId();
+        $name                           = 'pastes/' . $pasteid . '/discussion/' . $pasteid . '/ffffffffffffffff';
         self::$_bucket->_objects[$name] = new MissingStorageObjectStub(
             new ConnectionInterfaceStub,
             $name,
