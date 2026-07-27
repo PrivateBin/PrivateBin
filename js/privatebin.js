@@ -5270,11 +5270,15 @@ window.PrivateBin = (function () {
             // get data
             const plainText = Editor.getText(),
                   format    = PasteViewer.getFormat(),
-                  // the methods may return different values if no files are attached (null, undefined or false)
-                  files     = TopNav.getFileList() || AttachmentViewer.getFiles() || AttachmentViewer.hasAttachmentData();
+                  files     = TopNav.getFileList() || AttachmentViewer.getFiles(),
+                  hasFiles  = (
+                      (files && files.length > 0) ||
+                      AttachmentViewer.hasAttachmentData() ||
+                      AttachmentViewer.hasAttachment()
+                  );
 
             // do not send if there is no data
-            if (plainText.length === 0 && !files) {
+            if (plainText.length === 0 && !hasFiles) {
                 // revert loading status…
                 Alert.hideLoading();
                 TopNav.showCreateButtons();
@@ -6154,5 +6158,4 @@ if (typeof module === 'undefined' || !module.exports) {
         window.PrivateBin.Controller.init();
     });
 }
-
 
