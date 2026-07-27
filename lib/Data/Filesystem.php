@@ -368,7 +368,7 @@ class Filesystem extends AbstractData
         shuffle($files);
         foreach ($files as $pasteid) {
             if ($this->exists($pasteid)) {
-                $data = $this->read($pasteid);
+                $data       = $this->read($pasteid);
                 $expireDate = $data['meta']['expire_date'] ?? 0;
                 if ($expireDate > 0 && $expireDate <= $time) {
                     $pastes[] = $pasteid;
