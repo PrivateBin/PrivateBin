@@ -415,7 +415,7 @@ class I18n
                 }
                 foreach ($availableLanguages as $availableValue) {
                     $availableQuality = 1.0;
-                    $matchingGrade = self::_matchLanguage($acceptedValue, $availableValue);
+                    $matchingGrade    = self::_matchLanguage($acceptedValue, $availableValue);
                     if ($matchingGrade > 0) {
                         $q = (string) ($acceptedQuality * $availableQuality * $matchingGrade);
                         if (!isset($matches[$q])) {
