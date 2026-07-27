@@ -143,15 +143,31 @@ class Request
         }
 
         // prepare operation, depending on current parameters
-        if (array_key_exists('pasteid', $this->_params) && !empty($this->_params['pasteid'])) {
-            if (array_key_exists('deletetoken', $this->_params) && !empty($this->_params['deletetoken'])) {
+        if (
+            array_key_exists('pasteid', $this->_params) &&
+            is_string($this->_params['pasteid']) &&
+            !empty($this->_params['pasteid'])
+        ) {
+            if (
+                array_key_exists('deletetoken', $this->_params) &&
+                is_string($this->_params['deletetoken']) &&
+                !empty($this->_params['deletetoken'])
+            ) {
                 $this->_operation = 'delete';
             } elseif ($this->_operation !== 'create') {
                 $this->_operation = 'read';
             }
-        } elseif (array_key_exists('jsonld', $this->_params) && !empty($this->_params['jsonld'])) {
+        } elseif (
+            array_key_exists('jsonld', $this->_params) &&
+            is_string($this->_params['jsonld']) &&
+            !empty($this->_params['jsonld'])
+        ) {
             $this->_operation = 'jsonld';
-        } elseif (array_key_exists('link', $this->_params) && !empty($this->_params['link'])) {
+        } elseif (
+            array_key_exists('link', $this->_params) &&
+            is_string($this->_params['link']) &&
+            !empty($this->_params['link'])
+        ) {
             if (str_contains($this->getRequestUri(), '/shortenviayourls') || array_key_exists('shortenviayourls', $this->_params)) {
                 $this->_operation = 'yourlsproxy';
             }
