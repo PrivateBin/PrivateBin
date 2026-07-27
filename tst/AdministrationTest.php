@@ -124,7 +124,7 @@ class AdministrationTest extends TestCase
     {
         $databasePath = $this->_path . DIRECTORY_SEPARATOR . 'administration-' .
             bin2hex(random_bytes(4)) . '.sq3';
-        $options      = parse_ini_file(CONF_SAMPLE, true);
+        $options                   = parse_ini_file(CONF_SAMPLE, true);
         $options['model']['class'] = 'Database';
         $options['model_options']  = [
             'dsn' => 'sqlite:' . $databasePath,
