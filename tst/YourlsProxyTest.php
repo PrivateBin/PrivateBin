@@ -164,6 +164,9 @@ class YourlsProxyTest extends TestCase
         return [
             ['true'],
             ['{"statusCode":"200","shorturl":[]}'],
+            ['{"statusCode":"200","shorturl":"not a URL"}'],
+            ['{"statusCode":"200","shorturl":"javascript:alert(1)"}'],
+            ['{"statusCode":"200","shorturl":"ftp:\/\/example.com\/1"}'],
         ];
     }
 
