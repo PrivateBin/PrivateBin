@@ -32,9 +32,9 @@ function draghover(element) {
         }
     });
 
-    element.addEventListener('drop', function (e) {
-        collection.delete(e.target);
-        if (collection.size === 0) {
+    element.addEventListener('drop', function () {
+        if (collection.size > 0) {
+            collection.clear();
             element.dispatchEvent(new CustomEvent('draghoverend'));
         }
     });
@@ -6154,5 +6154,4 @@ if (typeof module === 'undefined' || !module.exports) {
         window.PrivateBin.Controller.init();
     });
 }
-
 
