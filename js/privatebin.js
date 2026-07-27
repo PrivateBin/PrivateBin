@@ -5247,7 +5247,15 @@ window.PrivateBin = (function () {
                 cipherMessage['nickname'] = nickname;
             }
 
-            await ServerInteraction.setCipherMessage(cipherMessage).catch(Alert.showError);
+            try {
+                await ServerInteraction.setCipherMessage(cipherMessage);
+            } catch (error) {
+                Alert.hideLoading();
+                TopNav.showViewButtons();
+                Alert.showError(error);
+                Alert.setCustomHandler(null);
+                return;
+            }
             ServerInteraction.run();
         };
 
@@ -5371,7 +5379,14 @@ window.PrivateBin = (function () {
             }
 
             // encrypt message
-            await ServerInteraction.setCipherMessage(cipherMessage).catch(Alert.showError);
+            try {
+                await ServerInteraction.setCipherMessage(cipherMessage);
+            } catch (error) {
+                Alert.hideLoading();
+                TopNav.showCreateButtons();
+                Alert.showError(error);
+                return;
+            }
 
             // send data
             ServerInteraction.run();
@@ -6154,5 +6169,4 @@ if (typeof module === 'undefined' || !module.exports) {
         window.PrivateBin.Controller.init();
     });
 }
-
 
