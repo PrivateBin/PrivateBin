@@ -3816,6 +3816,7 @@ window.PrivateBin = (function () {
             sendButton,
             retryButton,
             pasteExpiration = null,
+            pasteExpirationDefault = null,
             retryButtonCallback;
 
         /**
@@ -4535,9 +4536,10 @@ window.PrivateBin = (function () {
                 burnAfterReadingOption.classList.remove('buttondisabled');
             }
 
-            pasteExpiration = Model.getExpirationDefault() || pasteExpiration;
+            pasteExpiration = pasteExpirationDefault || pasteExpiration;
             const pasteExpirationSelect = document.getElementById('pasteExpiration');
             if (pasteExpirationSelect) {
+                pasteExpirationSelect.value = pasteExpiration;
                 pasteExpirationSelect.querySelectorAll('option').forEach((option) => {
                     if (option.value === pasteExpiration) {
                         const display = document.getElementById('pasteExpirationDisplay');
@@ -4829,7 +4831,8 @@ window.PrivateBin = (function () {
             // get default values from template or fall back to set value
             burnAfterReadingDefault = me.getBurnAfterReading();
             openDiscussionDefault = me.getOpenDiscussion();
-            pasteExpiration = Model.getExpirationDefault();
+            pasteExpirationDefault = Model.getExpirationDefault();
+            pasteExpiration = pasteExpirationDefault;
 
             createButtonsDisplayed = false;
             viewButtonsDisplayed = false;
@@ -6154,5 +6157,4 @@ if (typeof module === 'undefined' || !module.exports) {
         window.PrivateBin.Controller.init();
     });
 }
-
 

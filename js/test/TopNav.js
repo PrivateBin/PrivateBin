@@ -484,6 +484,29 @@ describe('TopNav', function () {
                 assert.ok(result);
             }
         );
+
+        it('restores the configured expiration', function () {
+            document.documentElement.innerHTML =
+                '<div id="burnafterreadingoption"><input id="burnafterreading" type="checkbox"></div>' +
+                '<div id="opendiscussionoption"><input id="opendiscussion" type="checkbox"></div>' +
+                '<select id="pasteExpiration">' +
+                    '<option value="1day" selected>1 day</option>' +
+                    '<option value="never">Never</option>' +
+                '</select>' +
+                '<span id="pasteExpirationDisplay">1 day</span>';
+            PrivateBin.TopNav.init();
+
+            const expiration = query('#pasteExpiration');
+            expiration.value = 'never';
+            expiration.dispatchEvent(new window.Event('change'));
+            assert.strictEqual(PrivateBin.TopNav.getExpiration(), 'never');
+
+            PrivateBin.TopNav.resetInput();
+
+            assert.strictEqual(PrivateBin.TopNav.getExpiration(), '1day');
+            assert.strictEqual(expiration.value, '1day');
+            assert.strictEqual(query('#pasteExpirationDisplay').textContent, '1 day');
+        });
     });
 
     describe('getExpiration', function () {
