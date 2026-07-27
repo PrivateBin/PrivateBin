@@ -89,6 +89,18 @@ class FilesystemTest extends TestCase
             $discussionPath . $pasteid . '.ffffffffffffffff.' . $pasteid . '.php',
             Filesystem::PROTECTION_LINE . PHP_EOL . '{'
         );
+        file_put_contents(
+            $discussionPath . $pasteid . '.invalid.invalid.php',
+            Filesystem::PROTECTION_LINE . PHP_EOL . json_encode($comment)
+        );
+        file_put_contents(
+            $discussionPath . 'ffffffffffffffff.eeeeeeeeeeeeeeee.' . $pasteid . '.php',
+            Filesystem::PROTECTION_LINE . PHP_EOL . json_encode($comment)
+        );
+        file_put_contents(
+            $discussionPath . $pasteid . '.dddddddddddddddd.' . $pasteid,
+            Filesystem::PROTECTION_LINE . PHP_EOL . json_encode($comment)
+        );
 
         $errorLog = ini_get('error_log');
         ini_set('error_log', '/dev/null');

@@ -215,7 +215,13 @@ class Filesystem extends AbstractData
                 // - parentid is the comment this comment replies to (It can be pasteid)
                 if ($file->isFile()) {
                     $items = explode('.', $file->getBasename('.php'));
-                    if (count($items) !== 3) {
+                    if (
+                        $file->getExtension() !== 'php' ||
+                        count($items) !== 3 ||
+                        $items[0] !== $pasteid ||
+                        preg_match('/\A[a-f0-9]{16}\z/', $items[1]) !== 1 ||
+                        preg_match('/\A[a-f0-9]{16}\z/', $items[2]) !== 1
+                    ) {
                         continue;
                     }
                     $comment = $this->_get($file->getPathname());
