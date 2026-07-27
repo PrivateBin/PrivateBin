@@ -361,6 +361,7 @@ class I18n
             case 'co':
             case 'fa':
             case 'fr':
+            case 'hi':
             case 'oc':
             case 'tr':
             case 'zh':
