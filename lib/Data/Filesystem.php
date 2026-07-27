@@ -472,7 +472,7 @@ class Filesystem extends AbstractData
         }
         $file        = $this->_path . DIRECTORY_SEPARATOR . '.htaccess';
         $fileCreated = is_file($file);
-        if (!$fileCreated || filesize($file) === 0) {
+        if (!$fileCreated || (!is_link($file) && filesize($file) === 0)) {
             $writtenBytes = 0;
             if ($fileCreated || ($fileCreated = @touch($file))) {
                 $writtenBytes = @file_put_contents(
