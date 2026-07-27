@@ -310,10 +310,15 @@ class Database extends AbstractData
      */
     public function readComments($pasteid)
     {
-        $rows = $this->_select(
-            'SELECT * FROM "' . $this->_sanitizeIdentifier('comment') .
-            '" WHERE "pasteid" = ?', [$pasteid]
-        );
+        try {
+            $rows = $this->_select(
+                'SELECT * FROM "' . $this->_sanitizeIdentifier('comment') .
+                '" WHERE "pasteid" = ?', [$pasteid]
+            );
+        } catch (PDOException $e) {
+            error_log('Error while reading comments from the database: ' . $e->getMessage());
+            return [];
+        }
 
         // create comment list
         $comments = [];

@@ -162,6 +162,15 @@ class DatabaseTest extends TestCase
         $this->assertSame(Helper::getCommentId(), current($comments)['id']);
     }
 
+    public function testCommentQueryFailureReturnsEmptyList()
+    {
+        $this->getDatabaseConnection()->exec('DROP TABLE comment');
+        $errorLog = ini_get('error_log');
+        ini_set('error_log', '/dev/null');
+        $this->assertSame([], $this->_model->readComments(Helper::getPasteId()));
+        ini_set('error_log', $errorLog);
+    }
+
     /**
      * pastes a-g are expired and should get deleted, x never expires and y-z expire in an hour
      */
