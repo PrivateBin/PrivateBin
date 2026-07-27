@@ -1944,12 +1944,15 @@ window.PrivateBin = (function () {
             if (shortenButton.classList.contains('buttondisabled')) {
                 return;
             }
-            fetch(`${shortenButton.dataset.shortener}${encodeURIComponent(pasteUrl.href)}`, {
+            const options = {
                 method: 'GET',
                 headers: { 'Accept': 'text/html, application/xhtml+xml, application/xml, application/json' },
-                credentials: 'omit',
-                signal: AbortSignal.timeout(10000)
-            })
+                credentials: 'omit'
+            };
+            if (typeof AbortSignal !== 'undefined' && typeof AbortSignal.timeout === 'function') {
+                options.signal = AbortSignal.timeout(10000);
+            }
+            fetch(`${shortenButton.dataset.shortener}${encodeURIComponent(pasteUrl.href)}`, options)
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('HTTP ' + response.status);
@@ -6154,5 +6157,4 @@ if (typeof module === 'undefined' || !module.exports) {
         window.PrivateBin.Controller.init();
     });
 }
-
 
