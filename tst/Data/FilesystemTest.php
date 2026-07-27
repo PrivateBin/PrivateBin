@@ -203,6 +203,24 @@ class FilesystemTest extends TestCase
         }
     }
 
+    public function testOldCommentConversionIsRetried()
+    {
+        $pasteid   = Helper::getPasteId();
+        $commentid = Helper::getCommentId();
+        $paste     = Helper::getPaste();
+        $this->assertTrue($this->_model->create($pasteid, $paste));
+        $discussionDir = $this->_path . DIRECTORY_SEPARATOR . substr($pasteid, 0, 2) .
+            DIRECTORY_SEPARATOR . substr($pasteid, 2, 2) . DIRECTORY_SEPARATOR .
+            $pasteid . '.discussion' . DIRECTORY_SEPARATOR;
+        mkdir($discussionDir, 0700, true);
+        $comment = $discussionDir . $pasteid . '.' . $commentid . '.' . $pasteid;
+        file_put_contents($comment, json_encode(Helper::getComment()));
+
+        $this->assertTrue($this->_model->exists($pasteid));
+        $this->assertFileDoesNotExist($comment);
+        $this->assertFileExists($comment . '.php');
+    }
+
     public function testValueFileErrorHandling()
     {
         define('VALID', 'valid content');

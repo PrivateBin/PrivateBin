@@ -159,14 +159,18 @@ class Filesystem extends AbstractData
         // convert to PHP protected files if needed
         if (is_readable($basePath)) {
             $this->_prependRename($basePath, $pastePath);
+        }
 
-            // convert comments, too
-            $discdir = $this->_dataid2discussionpath($pasteid);
-            if (is_dir($discdir)) {
-                foreach (new DirectoryIterator($discdir) as $file) {
-                    if ($file->getExtension() !== 'php' && strlen($file->getFilename()) >= 16) {
-                        $this->_prependRename($file->getPathname(), $file->getPathname() . '.php');
-                    }
+        // convert comments, too, including retries after paste conversion
+        $discdir = $this->_dataid2discussionpath($pasteid);
+        if (is_dir($discdir)) {
+            foreach (new DirectoryIterator($discdir) as $file) {
+                if (
+                    $file->isFile() &&
+                    $file->getExtension() !== 'php' &&
+                    strlen($file->getFilename()) >= 16
+                ) {
+                    $this->_prependRename($file->getPathname(), $file->getPathname() . '.php');
                 }
             }
         }
