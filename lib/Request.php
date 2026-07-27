@@ -266,10 +266,13 @@ class Request
     private function _detectJsonRequest()
     {
         $acceptHeader = $_SERVER['HTTP_ACCEPT'] ?? '';
+        $contentType  = $_SERVER['CONTENT_TYPE'] ?? ($_SERVER['HTTP_CONTENT_TYPE'] ?? '');
+        $contentType  = strtolower(trim(explode(';', $contentType, 2)[0]));
 
         // simple cases
         if (
             ($_SERVER['HTTP_X_REQUESTED_WITH'] ?? '') === 'JSONHttpRequest' ||
+            $contentType === self::MIME_JSON ||
             (
                 str_contains($acceptHeader, self::MIME_JSON) &&
                 !str_contains($acceptHeader, self::MIME_HTML) &&
