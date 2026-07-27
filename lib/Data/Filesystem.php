@@ -170,7 +170,7 @@ class Filesystem extends AbstractData
                 }
             }
         }
-        return is_readable($pastePath);
+        return is_file($pastePath) && is_readable($pastePath);
     }
 
     /**
@@ -514,12 +514,42 @@ class Filesystem extends AbstractData
      */
     private function _prependRename($srcFile, $destFile)
     {
-        // don't overwrite already converted file
-        if (!is_readable($destFile)) {
-            $handle = fopen($srcFile, 'r', false, stream_context_create());
-            file_put_contents($destFile, self::PROTECTION_LINE . PHP_EOL);
-            file_put_contents($destFile, $handle, FILE_APPEND);
-            fclose($handle);
+        // delete the legacy source if a converted file already exists
+        if (is_file($destFile) && is_readable($destFile)) {
+            if (!unlink($srcFile)) {
+                error_log('Error deleting converted document: ' . $srcFile);
+            }
+            return;
+        }
+
+        // don't overwrite a conflicting or unreadable destination
+        if (file_exists($destFile) || is_link($destFile)) {
+            error_log('Error converting document, destination already exists: ' . $destFile);
+            return;
+        }
+
+        $handle = @fopen($srcFile, 'r', false, stream_context_create());
+        if ($handle === false) {
+            error_log('Error reading document for conversion: ' . $srcFile);
+            return;
+        }
+        $stat           = fstat($handle);
+        $protectionLine = self::PROTECTION_LINE . PHP_EOL;
+        $writtenBytes   = @file_put_contents($destFile, $protectionLine, LOCK_EX);
+        $appendedBytes  = $writtenBytes === strlen($protectionLine) ?
+            @file_put_contents($destFile, $handle, FILE_APPEND | LOCK_EX) : false;
+        fclose($handle);
+        if (
+            $stat === false ||
+            $writtenBytes !== strlen($protectionLine) ||
+            $appendedBytes !== $stat['size'] ||
+            !@chmod($destFile, 0640)
+        ) {
+            if (is_file($destFile) && !is_link($destFile)) {
+                @unlink($destFile);
+            }
+            error_log('Error converting document: ' . $srcFile);
+            return;
         }
         if (!unlink($srcFile)) {
             error_log('Error deleting converted document: ' . $srcFile);

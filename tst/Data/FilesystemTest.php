@@ -182,6 +182,27 @@ class FilesystemTest extends TestCase
         }
     }
 
+    public function testFailedOldFileConversionPreservesSource()
+    {
+        $pasteid    = Helper::getPasteId();
+        $storageDir = $this->_path . DIRECTORY_SEPARATOR . substr($pasteid, 0, 2) .
+            DIRECTORY_SEPARATOR . substr($pasteid, 2, 2) . DIRECTORY_SEPARATOR;
+        mkdir($storageDir, 0700, true);
+        $source      = $storageDir . $pasteid;
+        $destination = $source . '.php';
+        file_put_contents($source, json_encode(Helper::getPaste()));
+        mkdir($destination);
+        $errorLog = ini_get('error_log');
+        ini_set('error_log', '/dev/null');
+        try {
+            $this->assertFalse($this->_model->exists($pasteid));
+            $this->assertFileExists($source);
+        } finally {
+            ini_set('error_log', $errorLog);
+            rmdir($destination);
+        }
+    }
+
     public function testValueFileErrorHandling()
     {
         define('VALID', 'valid content');
