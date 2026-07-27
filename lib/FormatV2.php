@@ -102,7 +102,7 @@ class FormatV2
             return false;
         }
         // - iterations, refuse less then 10000 iterations (minimum NIST recommendation)
-        if (!is_int($cipherParams[2]) || $cipherParams[2] <= 10000) {
+        if (!is_int($cipherParams[2]) || $cipherParams[2] < 10000) {
             return false;
         }
         // - key size

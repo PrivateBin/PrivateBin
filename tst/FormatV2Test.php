@@ -50,6 +50,14 @@ class FormatV2Test extends TestCase
         $this->assertFalse(FormatV2::isValid($paste), 'not enough iterations');
 
         $paste                = Helper::getPastePost();
+        $paste['adata'][0][2] = 10000;
+        $this->assertTrue(FormatV2::isValid($paste), 'minimum iteration count');
+
+        $paste                = Helper::getPastePost();
+        $paste['adata'][0][2] = 9999;
+        $this->assertFalse(FormatV2::isValid($paste), 'below minimum iteration count');
+
+        $paste                = Helper::getPastePost();
         $paste['adata'][0][3] = 127;
         $this->assertFalse(FormatV2::isValid($paste), 'invalid key size');
 
