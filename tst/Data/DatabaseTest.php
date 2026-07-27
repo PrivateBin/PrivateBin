@@ -156,6 +156,12 @@ class DatabaseTest extends TestCase
         $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste does still not exist');
     }
 
+    public function testRepeatedEmptyConfigReads()
+    {
+        $this->assertSame('', $this->_model->getValue('purge_limiter'));
+        $this->assertSame('', $this->_model->getValue('purge_limiter'));
+    }
+
     public function testCommentErrorDetection()
     {
         $error_log_setting = ini_get('error_log');

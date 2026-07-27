@@ -392,12 +392,21 @@ class Database extends AbstractData
         $configKey = strtoupper($namespace);
         $value     = $this->_getConfig($configKey);
         if ($value === '') {
-            // initialize the row, so that setValue can rely on UPDATE queries
-            $this->_exec(
-                'INSERT INTO "' . $this->_sanitizeIdentifier('config') .
-                '" VALUES(?,?)',
-                [$configKey, '']
-            );
+            if (!$this->_configKeyExists($configKey)) {
+                // initialize the row, so that setValue can rely on UPDATE queries
+                try {
+                    $this->_exec(
+                        'INSERT INTO "' . $this->_sanitizeIdentifier('config') .
+                        '" VALUES(?,?)',
+                        [$configKey, '']
+                    );
+                } catch (PDOException $e) {
+                    // another request may have initialized the row concurrently
+                    if (!$this->_configKeyExists($configKey)) {
+                        throw $e;
+                    }
+                }
+            }
 
             // migrate filesystem based salt into database
             $file = 'data' . DIRECTORY_SEPARATOR . 'salt.php';
@@ -562,6 +571,25 @@ class Database extends AbstractData
                 );
         }
         return $sql;
+    }
+
+    /**
+     * checks whether a configuration row exists
+     *
+     * @access private
+     * @param  string $key
+     * @return bool
+     */
+    private function _configKeyExists($key)
+    {
+        try {
+            return (bool) $this->_select(
+                'SELECT "id" FROM "' . $this->_sanitizeIdentifier('config') .
+                '" WHERE "id" = ?', [$key], true
+            );
+        } catch (PDOException $e) {
+            return false;
+        }
     }
 
     /**
