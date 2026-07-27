@@ -89,15 +89,18 @@ class FormatV2
 
         // Make sure some fields are base64 data:
         // - initialization vector
-        if (!base64_decode($cipherParams[0], true)) {
+        $iv = base64_decode($cipherParams[0], true);
+        if ($iv === false || $iv === '') {
             return false;
         }
         // - salt
-        if (!base64_decode($cipherParams[1], true)) {
+        $salt = base64_decode($cipherParams[1], true);
+        if ($salt === false || $salt === '') {
             return false;
         }
         // - cipher text
-        if (!($ct = base64_decode($message['ct'], true))) {
+        $ct = base64_decode($message['ct'], true);
+        if ($ct === false || $ct === '') {
             return false;
         }
 

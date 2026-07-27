@@ -23,6 +23,18 @@ class FormatV2Test extends TestCase
         $paste['ct'] = '$';
         $this->assertFalse(FormatV2::isValid($paste), 'invalid base64 encoding of ct');
 
+        $paste                = Helper::getPastePost();
+        $paste['adata'][0][0] = 'MA==';
+        $this->assertTrue(FormatV2::isValid($paste), 'valid base64 iv decoding to zero');
+
+        $paste                = Helper::getPastePost();
+        $paste['adata'][0][1] = 'MA==';
+        $this->assertTrue(FormatV2::isValid($paste), 'valid base64 salt decoding to zero');
+
+        $paste       = Helper::getPastePost();
+        $paste['ct'] = 'MA==';
+        $this->assertTrue(FormatV2::isValid($paste), 'valid base64 ct decoding to zero');
+
         $paste       = Helper::getPastePost();
         $paste['ct'] = 'bm9kYXRhbm9kYXRhbm9kYXRhbm9kYXRhbm9kYXRhCg==';
         $this->assertFalse(FormatV2::isValid($paste), 'low ct entropy');
