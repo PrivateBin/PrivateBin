@@ -138,6 +138,15 @@ class FilesystemTest extends TestCase
         $this->assertFalse($this->_model->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId()), 'comment does still not exist');
     }
 
+    public function testEmptyHtaccessIsRepaired()
+    {
+        $file = $this->_path . DIRECTORY_SEPARATOR . '.htaccess';
+        file_put_contents($file, '');
+
+        $this->assertTrue($this->_model->setValue('123', 'purge_limiter'));
+        $this->assertSame(Filesystem::HTACCESS_LINE . PHP_EOL, file_get_contents($file));
+    }
+
     public function testOldFilesGetConverted()
     {
         // generate 10 (default purge batch size) pastes in the old format
