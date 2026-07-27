@@ -5499,8 +5499,20 @@ window.PrivateBin = (function () {
                 commentDecryptionPromises.push(
                     commentPromise.then(function (commentJson) {
                         const commentMessage = JSON.parse(commentJson);
+                        if (
+                            commentMessage === null ||
+                            typeof commentMessage !== 'object' ||
+                            Array.isArray(commentMessage) ||
+                            typeof commentMessage.comment !== 'string' ||
+                            (
+                                Object.prototype.hasOwnProperty.call(commentMessage, 'nickname') &&
+                                typeof commentMessage.nickname !== 'string'
+                            )
+                        ) {
+                            throw new TypeError('Invalid decrypted comment.');
+                        }
                         return [
-                            commentMessage.comment || '',
+                            commentMessage.comment,
                             commentMessage.nickname || ''
                         ];
                     }).catch(function (error) {
@@ -6169,4 +6181,3 @@ if (typeof module === 'undefined' || !module.exports) {
         window.PrivateBin.Controller.init();
     });
 }
-

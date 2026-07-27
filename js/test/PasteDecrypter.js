@@ -14,6 +14,12 @@ describe('PasteDecrypter', function () {
                 if (cipherData[0] === 'rejected') {
                     throw new Error('decryption failed');
                 }
+                if (cipherData[0] === 'invalid-comment-type') {
+                    return '{"comment":{},"nickname":"author"}';
+                }
+                if (cipherData[0] === 'invalid-nickname-type') {
+                    return '{"comment":"hidden","nickname":[]}';
+                }
                 return 'not valid JSON';
             };
             PrivateBin.DiscussionViewer.prepareNewDiscussion = function () {};
@@ -43,6 +49,20 @@ describe('PasteDecrypter', function () {
                         ct: 'rejected',
                         adata: [],
                         meta: {created: 3}
+                    },
+                    {
+                        id: 'eeeeeeeeeeeeeeee',
+                        parentid: 'bbbbbbbbbbbbbbbb',
+                        ct: 'invalid-comment-type',
+                        adata: [],
+                        meta: {created: 4}
+                    },
+                    {
+                        id: 'ffffffffffffffff',
+                        parentid: 'bbbbbbbbbbbbbbbb',
+                        ct: 'invalid-nickname-type',
+                        adata: [],
+                        meta: {created: 5}
                     }
                 ]
             };
