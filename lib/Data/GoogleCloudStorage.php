@@ -219,6 +219,14 @@ class GoogleCloudStorage extends AbstractData
         $prefix   = $this->_getKey($pasteid) . '/discussion/';
         try {
             foreach ($this->_bucket->objects(['prefix' => $prefix]) as $key) {
+                $items = explode('/', substr($key->name(), strlen($prefix)));
+                if (
+                    count($items) !== 2 ||
+                    preg_match('/\A[a-f0-9]{16}\z/', $items[0]) !== 1 ||
+                    preg_match('/\A[a-f0-9]{16}\z/', $items[1]) !== 1
+                ) {
+                    continue;
+                }
                 try {
                     $data = $this->_bucket->object($key->name())->downloadAsString();
                 } catch (NotFoundException $e) {
@@ -237,9 +245,10 @@ class GoogleCloudStorage extends AbstractData
                 ) {
                     continue;
                 }
-                $comment['id']   = basename($key->name());
-                $slot            = $this->getOpenSlot($comments, (int) $comment['meta']['created']);
-                $comments[$slot] = $comment;
+                $comment['id']       = $items[1];
+                $comment['parentid'] = $items[0];
+                $slot                = $this->getOpenSlot($comments, (int) $comment['meta']['created']);
+                $comments[$slot]     = $comment;
             }
         } catch (NotFoundException $e) {
             // no comments found

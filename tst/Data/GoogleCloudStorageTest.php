@@ -150,6 +150,12 @@ class GoogleCloudStorageTest extends TestCase
         self::$_bucket->upload('{', [
             'name' => 'pastes/' . $pasteid . '/discussion/' . $pasteid . '/ffffffffffffffff',
         ]);
+        self::$_bucket->upload(json_encode($comment), [
+            'name' => 'pastes/' . $pasteid . '/discussion/' . $pasteid . '/invalid',
+        ]);
+        self::$_bucket->upload(json_encode($comment), [
+            'name' => 'pastes/' . $pasteid . '/discussion/invalid/eeeeeeeeeeeeeeee',
+        ]);
 
         $comments = $this->_model->readComments($pasteid);
         $this->assertCount(1, $comments);
@@ -173,6 +179,19 @@ class GoogleCloudStorageTest extends TestCase
         $comments = $this->_model->readComments($pasteid);
         $this->assertCount(1, $comments);
         $this->assertSame($commentid, current($comments)['id']);
+    }
+
+    public function testCommentParentComesFromObjectName()
+    {
+        $pasteid  = Helper::getPasteId();
+        $parentid = 'eeeeeeeeeeeeeeee';
+        $comment  = Helper::getComment();
+        self::$_bucket->upload(json_encode($comment), [
+            'name' => 'pastes/' . $pasteid . '/discussion/' . $parentid . '/' . Helper::getCommentId(),
+        ]);
+
+        $storedComment = current($this->_model->readComments($pasteid));
+        $this->assertSame($parentid, $storedComment['parentid']);
     }
 
     /**

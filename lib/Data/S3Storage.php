@@ -284,6 +284,14 @@ class S3Storage extends AbstractData
         try {
             $entries = $this->_listAllObjects($prefix);
             foreach ($entries as $entry) {
+                $items = explode('/', substr($entry['Key'], strlen($prefix)));
+                if (
+                    count($items) !== 2 ||
+                    preg_match('/\A[a-f0-9]{16}\z/', $items[0]) !== 1 ||
+                    preg_match('/\A[a-f0-9]{16}\z/', $items[1]) !== 1
+                ) {
+                    continue;
+                }
                 try {
                     $object = $this->_client->getObject([
                         'Bucket' => $this->_bucket,
@@ -300,11 +308,16 @@ class S3Storage extends AbstractData
                     continue;
                 }
                 $created = $object['Metadata']['created'] ?? null;
-                if (!is_array($body) || !is_numeric($created)) {
+                if (
+                    !is_array($body) ||
+                    !isset($body['meta']) ||
+                    !is_array($body['meta']) ||
+                    !is_numeric($created)
+                ) {
                     continue;
                 }
-                $body['id']       = basename($entry['Key']);
-                $body['parentid'] = basename(dirname($entry['Key']));
+                $body['id']       = $items[1];
+                $body['parentid'] = $items[0];
                 $slot             = $this->getOpenSlot($comments, (int) $created);
                 $comments[$slot]  = $body;
             }

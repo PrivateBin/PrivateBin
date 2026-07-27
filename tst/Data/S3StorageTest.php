@@ -31,6 +31,8 @@ class S3CommentClientStub
         ];
         if ($includeCorrupt) {
             $this->_objects[$prefix . 'ffffffffffffffff'] = '{';
+            $this->_objects[$prefix . 'eeeeeeeeeeeeeeee'] = json_encode(['meta' => true]);
+            $this->_objects[$prefix . 'invalid'] = json_encode($comment);
         }
     }
 
@@ -100,5 +102,37 @@ class S3StorageTest extends TestCase
         $comment   = current($storage->readComments($pasteid));
         $this->assertSame($commentid, $comment['id']);
         $this->assertSame($pasteid, $comment['parentid']);
+    }
+
+    public function testInvalidCommentParentIsIgnored()
+    {
+        $pasteid = Helper::getPasteId();
+        $client  = new S3CommentClientStub(
+            $pasteid,
+            'invalid',
+            Helper::getCommentId(),
+            Helper::getComment(),
+            '',
+            false
+        );
+        $storage = $this->getStorage($client);
+        $this->assertSame([], $storage->readComments($pasteid));
+    }
+
+    public function testCommentParentComesFromObjectKey()
+    {
+        $pasteid = Helper::getPasteId();
+        $parent  = 'eeeeeeeeeeeeeeee';
+        $client  = new S3CommentClientStub(
+            $pasteid,
+            $parent,
+            Helper::getCommentId(),
+            Helper::getComment(),
+            '',
+            false
+        );
+        $storage = $this->getStorage($client);
+        $comment = current($storage->readComments($pasteid));
+        $this->assertSame($parent, $comment['parentid']);
     }
 }
