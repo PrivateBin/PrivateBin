@@ -207,6 +207,7 @@ class Controller
             $_COOKIE['lang'] = $lang;
             setcookie('lang', $lang, ['SameSite' => 'Lax', 'Secure' => true]);
         }
+        I18n::loadTranslations();
     }
 
     /**
