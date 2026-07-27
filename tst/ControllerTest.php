@@ -679,6 +679,25 @@ class ControllerTest extends TestCase
     /**
      * @runInSeparateProcess
      */
+    public function testReadRejectsNonemptyShortFormValue()
+    {
+        $paste = Helper::getPaste();
+        $this->_data->create(Helper::getPasteId(), $paste);
+        $_SERVER['QUERY_STRING']                  = Helper::getPasteId() . '=0';
+        $_GET[Helper::getPasteId()]               = '0';
+        $_SERVER['HTTP_X_REQUESTED_WITH']         = 'JSONHttpRequest';
+        ob_start();
+        new Controller;
+        $content = ob_get_contents();
+        ob_end_clean();
+        $response = json_decode($content, true);
+        $this->assertEquals(1, $response['status'], 'outputs error status');
+        $this->assertEquals('Invalid document ID.', $response['message'], 'outputs error message');
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
     public function testReadNonexisting()
     {
         $_SERVER['QUERY_STRING']          = Helper::getPasteId();
