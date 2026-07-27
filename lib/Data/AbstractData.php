@@ -156,7 +156,7 @@ abstract class AbstractData
             return true;
         }
         $success = true;
-        $pastes = $this->_getExpiredPastes($batchsize);
+        $pastes  = $this->_getExpiredPastes($batchsize);
         if (count($pastes)) {
             foreach ($pastes as $pasteid) {
                 $this->delete($pasteid);
