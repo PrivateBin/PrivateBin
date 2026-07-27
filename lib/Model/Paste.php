@@ -191,10 +191,18 @@ class Paste extends AbstractModel
      */
     public function getDeleteToken()
     {
-        if (!array_key_exists('salt', $this->_data['meta'])) {
+        if (
+            !isset($this->_data['meta']) ||
+            !is_array($this->_data['meta']) ||
+            !array_key_exists('salt', $this->_data['meta'])
+        ) {
             $this->get();
         }
-        return hash_hmac('sha256', $this->getId(), $this->_data['meta']['salt']);
+        $salt = $this->_data['meta']['salt'] ?? null;
+        if (!is_string($salt) || $salt === '') {
+            throw new TranslatedException(Controller::GENERIC_ERROR, 64);
+        }
+        return hash_hmac('sha256', $this->getId(), $salt);
     }
 
     /**

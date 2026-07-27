@@ -310,6 +310,25 @@ class ModelTest extends TestCase
         $paste->get();
     }
 
+    public function testMalformedStoredPasteSalt()
+    {
+        $pasteid                 = Helper::getPasteId();
+        $paste                   = Helper::getPaste();
+        $paste['meta']['salt']   = [];
+        $store                   = $this->_model->getStore();
+        $store->delete($pasteid);
+        $this->assertTrue($store->create($pasteid, $paste));
+
+        try {
+            $this->_model->getPaste($pasteid)->getDeleteToken();
+            $this->fail('corrupt salt was accepted');
+        } catch (Exception $e) {
+            $this->assertSame(64, $e->getCode());
+        } finally {
+            $store->delete($pasteid);
+        }
+    }
+
     public function testInvalidPasteFormat()
     {
         $pasteData             = Helper::getPastePost();
