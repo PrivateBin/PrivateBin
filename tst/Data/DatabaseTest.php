@@ -109,6 +109,38 @@ class DatabaseTest extends TestCase
         $this->assertEquals($original, $this->_model->read(Helper::getPasteId()));
     }
 
+    public function testPasteIsPreservedWhenCommentDeletionFails()
+    {
+        mkdir($this->_path);
+        $path           = $this->_path . DIRECTORY_SEPARATOR . 'delete-comment.sq3';
+        $options        = $this->_options;
+        $options['dsn'] = 'sqlite:' . $path;
+        $model          = new Database($options);
+        $pasteid        = Helper::getPasteId();
+        $commentid      = Helper::getCommentId();
+        $paste          = Helper::getPaste();
+        $comment        = Helper::getComment();
+        $this->assertTrue($model->create($pasteid, $paste));
+        $this->assertTrue($model->createComment($pasteid, $pasteid, $commentid, $comment));
+
+        $database = new PDO($options['dsn'], $options['usr'], $options['pwd'], $options['opt']);
+        $database->exec(
+            'CREATE TRIGGER keep_comment BEFORE DELETE ON comment ' .
+            'BEGIN SELECT RAISE(ABORT, "deletion blocked"); END'
+        );
+
+        $failed = false;
+        try {
+            $model->delete($pasteid);
+        } catch (PDOException $e) {
+            $failed = true;
+        }
+
+        $this->assertTrue($failed, 'comment deletion failure was reported');
+        $this->assertTrue($model->exists($pasteid));
+        $this->assertTrue($model->existsComment($pasteid, $pasteid, $commentid));
+    }
+
     /**
      * pastes a-g are expired and should get deleted, x never expires and y-z expire in an hour
      */

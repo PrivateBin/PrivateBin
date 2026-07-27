@@ -222,12 +222,12 @@ class Database extends AbstractData
     public function delete($pasteid)
     {
         $this->_exec(
-            'DELETE FROM "' . $this->_sanitizeIdentifier('paste') .
-            '" WHERE "dataid" = ?', [$pasteid]
-        );
-        $this->_exec(
             'DELETE FROM "' . $this->_sanitizeIdentifier('comment') .
             '" WHERE "pasteid" = ?', [$pasteid]
+        );
+        $this->_exec(
+            'DELETE FROM "' . $this->_sanitizeIdentifier('paste') .
+            '" WHERE "dataid" = ?', [$pasteid]
         );
     }
 
