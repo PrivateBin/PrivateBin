@@ -210,7 +210,7 @@ class S3Storage extends AbstractData
                 'Bucket' => $this->_bucket,
                 'Key'    => $this->_getKey($pasteid),
             ]);
-            $data = $object['Body']->getContents();
+            $data  = $object['Body']->getContents();
             $paste = Json::decode($data);
             if (!is_array($paste) || !isset($paste['meta']) || !is_array($paste['meta'])) {
                 error_log('failed to read ' . $pasteid . ' from ' . $this->_bucket .
