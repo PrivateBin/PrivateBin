@@ -466,10 +466,15 @@ EOT, PHP_EOL;
 
         if ($this->_option('p', 'purge') !== null) {
             try {
-                $this->_store->purge(PHP_INT_MAX);
+                if (!$this->_store->purge(PHP_INT_MAX)) {
+                    self::_error('expired documents exist after deletion, permission problem?', 7);
+                }
             } catch (Exception $e) {
-                echo 'Error purging documents: ', $e->getMessage(), PHP_EOL,
-                    'Run the statistics to find damaged document IDs and either delete them or restore them from backup.', PHP_EOL;
+                self::_error(
+                    'purging documents failed: ' . $e->getMessage() . PHP_EOL .
+                    'Run the statistics to find damaged document IDs and either delete them or restore them from backup.',
+                    8
+                );
             }
             exit('purging of expired documents concluded' . PHP_EOL);
         }

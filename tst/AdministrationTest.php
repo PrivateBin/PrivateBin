@@ -120,7 +120,35 @@ class AdministrationTest extends TestCase
         $this->assertTrue($store->exists(Helper::getPasteId()));
     }
 
-    private function createUndeletableDatabasePaste(array $paste)
+    public function testPurgeReportsRecordsThatRemain()
+    {
+        $store = $this->createUndeletableDatabasePaste(
+            Helper::getPaste(['expire_date' => time() - 60])
+        );
+
+        [$exitCode, $output] = $this->runAdministration('--purge');
+
+        $this->assertSame(7, $exitCode);
+        $this->assertStringNotContainsString('purging of expired documents concluded', $output);
+        $this->assertTrue($store->exists(Helper::getPasteId()));
+    }
+
+    public function testPurgeReportsBackendErrors()
+    {
+        $store = $this->createUndeletableDatabasePaste(
+            Helper::getPaste(['expire_date' => time() - 60]),
+            true
+        );
+
+        [$exitCode, $output] = $this->runAdministration('--purge');
+
+        $this->assertSame(8, $exitCode);
+        $this->assertStringContainsString('Error: purging documents failed', $output);
+        $this->assertStringNotContainsString('purging of expired documents concluded', $output);
+        $this->assertTrue($store->exists(Helper::getPasteId()));
+    }
+
+    private function createUndeletableDatabasePaste(array $paste, $throw = false)
     {
         $databasePath = $this->_path . DIRECTORY_SEPARATOR . 'administration-' .
             bin2hex(random_bytes(4)) . '.sq3';
@@ -142,7 +170,9 @@ class AdministrationTest extends TestCase
         $database = new PDO('sqlite:' . $databasePath);
         $database->exec(
             'CREATE TRIGGER keep_paste BEFORE DELETE ON paste ' .
-            'BEGIN SELECT RAISE(IGNORE); END'
+            'BEGIN SELECT RAISE(' .
+            ($throw ? 'ABORT, "deletion blocked"' : 'IGNORE') .
+            '); END'
         );
 
         return $store;

@@ -148,18 +148,24 @@ abstract class AbstractData
      *
      * @access public
      * @param  int $batchsize
+     * @return bool
      */
     public function purge($batchsize)
     {
         if ($batchsize < 1) {
-            return;
+            return true;
         }
+        $success = true;
         $pastes = $this->_getExpiredPastes($batchsize);
         if (count($pastes)) {
             foreach ($pastes as $pasteid) {
                 $this->delete($pasteid);
+                if ($this->exists($pasteid)) {
+                    $success = false;
+                }
             }
         }
+        return $success;
     }
 
     /**
