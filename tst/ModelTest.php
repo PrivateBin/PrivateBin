@@ -329,6 +329,34 @@ class ModelTest extends TestCase
         }
     }
 
+    public function testMalformedStoredPasteExpiration()
+    {
+        $pasteid = Helper::getPasteId();
+        $store   = new Filesystem(['dir' => $this->_path]);
+        foreach ([[], 'invalid'] as $expireDate) {
+            $paste = Helper::getPaste(['expire_date' => $expireDate]);
+            $store->delete($pasteid);
+            $this->assertTrue($store->create($pasteid, $paste));
+            try {
+                $storedPaste = new Paste($this->_conf, $store);
+                $storedPaste->setId($pasteid);
+                $storedPaste->get();
+                $this->fail('corrupt expiration date was accepted');
+            } catch (Exception $e) {
+                $this->assertSame(64, $e->getCode());
+            } finally {
+                $store->delete($pasteid);
+            }
+        }
+
+        $paste = Helper::getPaste(['expire_date' => (string) (time() + 60)]);
+        $this->assertTrue($store->create($pasteid, $paste));
+        $storedPaste = new Paste($this->_conf, $store);
+        $storedPaste->setId($pasteid);
+        $this->assertIsInt($storedPaste->get()['meta']['time_to_live']);
+        $store->delete($pasteid);
+    }
+
     public function testInvalidPasteFormat()
     {
         $pasteData             = Helper::getPastePost();
