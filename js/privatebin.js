@@ -5503,12 +5503,15 @@ window.PrivateBin = (function () {
                             commentMessage.comment || '',
                             commentMessage.nickname || ''
                         ];
+                    }).catch(function (error) {
+                        console.warn('Could not decrypt comment.', error);
+                        return null;
                     })
                 );
             }
             return Promise.all(commentDecryptionPromises).then(function (plaintexts) {
                 for (let i = 0; i < paste.comments.length; ++i) {
-                    if (plaintexts[i][0].length === 0) {
+                    if (plaintexts[i] === null || plaintexts[i][0].length === 0) {
                         continue;
                     }
                     DiscussionViewer.addComment(
@@ -5529,6 +5532,18 @@ window.PrivateBin = (function () {
                 });
             });
         }
+
+        /**
+         * decrypt comments, exposed for unit testing
+         *
+         * @name PasteDecrypter.decryptComments
+         * @function
+         * @param {Paste} paste
+         * @param {string} key
+         * @param {string} password
+         * @return {Promise}
+         */
+        me.decryptComments = decryptComments;
 
         /**
          * show decrypted text in the display area, including discussion (if open)
@@ -6154,5 +6169,4 @@ if (typeof module === 'undefined' || !module.exports) {
         window.PrivateBin.Controller.init();
     });
 }
-
 
