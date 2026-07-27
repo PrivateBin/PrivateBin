@@ -1453,7 +1453,7 @@ window.PrivateBin = (function () {
          * @throws {string}
          */
         me.getPasteId = function () {
-            const idRegEx = /^[a-z0-9]{16}$/;
+            const idRegEx = /^[a-f0-9]{16}$/;
 
             // return cached value
             if (id !== null) {
@@ -6154,5 +6154,4 @@ if (typeof module === 'undefined' || !module.exports) {
         window.PrivateBin.Controller.init();
     });
 }
-
 
