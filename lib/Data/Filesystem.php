@@ -518,8 +518,19 @@ class Filesystem extends AbstractData
      */
     private function _prependRename($srcFile, $destFile)
     {
+        $protectionLine = self::PROTECTION_LINE . PHP_EOL;
+
         // delete the legacy source if a converted file already exists
         if (is_file($destFile) && is_readable($destFile)) {
+            $sourceData      = @file_get_contents($srcFile);
+            $destinationData = @file_get_contents($destFile);
+            if (
+                $sourceData === false ||
+                $destinationData !== $protectionLine . $sourceData
+            ) {
+                error_log('Error converting document, destination differs: ' . $destFile);
+                return;
+            }
             if (!unlink($srcFile)) {
                 error_log('Error deleting converted document: ' . $srcFile);
             }
@@ -538,7 +549,6 @@ class Filesystem extends AbstractData
             return;
         }
         $stat           = fstat($handle);
-        $protectionLine = self::PROTECTION_LINE . PHP_EOL;
         $writtenBytes   = @file_put_contents($destFile, $protectionLine, LOCK_EX);
         $appendedBytes  = $writtenBytes === strlen($protectionLine) ?
             @file_put_contents($destFile, $handle, FILE_APPEND | LOCK_EX) : false;

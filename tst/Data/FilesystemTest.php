@@ -203,6 +203,30 @@ class FilesystemTest extends TestCase
         }
     }
 
+    public function testConflictingOldFileConversionPreservesSource()
+    {
+        $pasteid    = Helper::getPasteId();
+        $storageDir = $this->_path . DIRECTORY_SEPARATOR . substr($pasteid, 0, 2) .
+            DIRECTORY_SEPARATOR . substr($pasteid, 2, 2) . DIRECTORY_SEPARATOR;
+        mkdir($storageDir, 0700, true);
+        $source      = $storageDir . $pasteid;
+        $destination = $source . '.php';
+        file_put_contents($source, json_encode(Helper::getPaste()));
+        file_put_contents($destination, Filesystem::PROTECTION_LINE . PHP_EOL . '{}');
+        $errorLog = ini_get('error_log');
+        ini_set('error_log', '/dev/null');
+        try {
+            $this->_model->exists($pasteid);
+            $this->assertFileExists($source);
+            $this->assertSame(
+                Filesystem::PROTECTION_LINE . PHP_EOL . '{}',
+                file_get_contents($destination)
+            );
+        } finally {
+            ini_set('error_log', $errorLog);
+        }
+    }
+
     public function testOldCommentConversionIsRetried()
     {
         $pasteid   = Helper::getPasteId();
