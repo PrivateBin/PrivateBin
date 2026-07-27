@@ -121,26 +121,38 @@ class Filesystem extends AbstractData
     {
         $pastedir = $this->_dataid2path($pasteid);
         if (is_dir($pastedir)) {
-            // Delete the paste itself.
+            // Delete discussion if it exists.
+            $discdir = $this->_dataid2discussionpath($pasteid);
+            if (is_dir($discdir)) {
+                $commentfiles = [];
+                foreach (new DirectoryIterator($discdir) as $file) {
+                    if ($file->isDot()) {
+                        continue;
+                    }
+                    if (!$file->isFile() && !$file->isLink()) {
+                        error_log('Error deleting discussion, unexpected entry: ' . $file->getPathname());
+                        return;
+                    }
+                    $commentfiles[] = $file->getPathname();
+                }
+                foreach ($commentfiles as $commentfile) {
+                    if (!@unlink($commentfile) && file_exists($commentfile)) {
+                        error_log('Error deleting comment: ' . $commentfile);
+                        return;
+                    }
+                }
+                if (!@rmdir($discdir) && is_dir($discdir)) {
+                    error_log('Error deleting discussion: ' . $discdir);
+                    return;
+                }
+            }
+
+            // Delete the paste only after its discussion has been removed.
             $pastefile = $pastedir . $pasteid . '.php';
             if (is_file($pastefile)) {
                 if (!unlink($pastefile)) {
                     error_log('Error deleting paste: ' . $pastefile);
                 }
-            }
-
-            // Delete discussion if it exists.
-            $discdir = $this->_dataid2discussionpath($pasteid);
-            if (is_dir($discdir)) {
-                // Delete all files in discussion directory
-                foreach (new DirectoryIterator($discdir) as $file) {
-                    if ($file->isFile()) {
-                        if (!unlink($file->getPathname())) {
-                            error_log('Error deleting comment: ' . $file->getPathname());
-                        }
-                    }
-                }
-                rmdir($discdir);
             }
         }
     }

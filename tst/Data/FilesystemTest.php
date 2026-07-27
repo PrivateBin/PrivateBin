@@ -75,6 +75,36 @@ class FilesystemTest extends TestCase
         $this->assertEquals($original, $this->_model->read(Helper::getPasteId()));
     }
 
+    public function testPasteIsPreservedWhenDiscussionCannotBeDeleted()
+    {
+        $pasteid   = Helper::getPasteId();
+        $commentid = Helper::getCommentId();
+        $paste     = Helper::getPaste();
+        $comment   = Helper::getComment();
+        $this->assertTrue($this->_model->create($pasteid, $paste));
+        $this->assertTrue($this->_model->createComment($pasteid, $pasteid, $commentid, $comment));
+
+        $discussion = $this->_path . DIRECTORY_SEPARATOR . substr($pasteid, 0, 2) .
+            DIRECTORY_SEPARATOR . substr($pasteid, 2, 2) . DIRECTORY_SEPARATOR .
+            $pasteid . '.discussion' . DIRECTORY_SEPARATOR;
+        mkdir($discussion . 'unexpected');
+
+        $error_log_setting = ini_get('error_log');
+        ini_set('error_log', '/dev/null');
+        set_error_handler(function () {
+            return true;
+        });
+        try {
+            $this->_model->delete($pasteid);
+        } finally {
+            restore_error_handler();
+            ini_set('error_log', $error_log_setting);
+        }
+
+        $this->assertTrue($this->_model->exists($pasteid));
+        $this->assertTrue($this->_model->existsComment($pasteid, $pasteid, $commentid));
+    }
+
     /**
      * pastes a-g are expired and should get deleted, x never expires and y-z expire in an hour
      */
