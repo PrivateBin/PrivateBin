@@ -4300,8 +4300,12 @@ window.PrivateBin = (function () {
             expiration.classList.remove('hidden');
             formatter.classList.remove('hidden');
             newButton.classList.remove('hidden');
-            openDiscussionOption.classList.remove('hidden');
-            password.classList.remove('hidden');
+            if (openDiscussionOption) {
+                openDiscussionOption.classList.remove('hidden');
+            }
+            if (password) {
+                password.classList.remove('hidden');
+            }
             sendButton.classList.remove('hidden');
 
             createButtonsDisplayed = true;
@@ -4323,8 +4327,12 @@ window.PrivateBin = (function () {
             expiration.classList.add('hidden');
             formatter.classList.add('hidden');
             burnAfterReadingOption.classList.add('hidden');
-            openDiscussionOption.classList.add('hidden');
-            password.classList.add('hidden');
+            if (openDiscussionOption) {
+                openDiscussionOption.classList.add('hidden');
+            }
+            if (password) {
+                password.classList.add('hidden');
+            }
             if (attach) {
                 attach.classList.add('hidden');
             }
@@ -6150,4 +6158,3 @@ if (typeof module === 'undefined' || !module.exports) {
         window.PrivateBin.Controller.init();
     });
 }
-

@@ -69,6 +69,25 @@ describe('TopNav', function () {
         });
 
         it(
+            'supports disabled discussion, password, and file upload controls',
+            function () {
+                document.body.innerHTML =
+                    '<button id="newbutton" class="hidden"></button>' +
+                    '<div id="expiration" class="hidden"></div>' +
+                    '<div id="burnafterreadingoption" class="hidden"></div>' +
+                    '<div id="formatter" class="hidden"></div>' +
+                    '<button id="sendbutton" class="hidden"></button>';
+                PrivateBin.TopNav.init();
+
+                assert.doesNotThrow(function () {
+                    PrivateBin.TopNav.resetInput();
+                    PrivateBin.TopNav.showCreateButtons();
+                    PrivateBin.TopNav.hideCreateButtons();
+                });
+            }
+        );
+
+        it(
             'displays & hides navigation elements for creating a document',
             function () { // eslint-disable-line complexity
                 let results = [];
