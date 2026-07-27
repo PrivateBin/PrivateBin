@@ -429,7 +429,7 @@ class S3Storage extends AbstractData
         try {
             foreach ($this->_listAllObjects($prefix) as $object) {
                 $candidate = substr($object['Key'], strlen($prefix));
-                if (str_contains($candidate, '/')) {
+                if (preg_match('/\A[a-f0-9]{16}\z/', $candidate) !== 1) {
                     continue;
                 }
                 $head = $this->_client->headObject([
@@ -465,7 +465,7 @@ class S3Storage extends AbstractData
         try {
             foreach ($this->_listAllObjects($prefix) as $object) {
                 $candidate = substr($object['Key'], strlen($prefix));
-                if (!str_contains($candidate, '/')) {
+                if (preg_match('/\A[a-f0-9]{16}\z/', $candidate) === 1) {
                     $pastes[] = $candidate;
                 }
             }

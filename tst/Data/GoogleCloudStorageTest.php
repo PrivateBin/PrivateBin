@@ -122,6 +122,13 @@ class GoogleCloudStorageTest extends TestCase
         foreach ($ids as $id) {
             $this->assertTrue($this->_model->create($id, $expired));
         }
+        foreach (['not-a-paste', 'aaaaaaaaaaaaaaaa.backup'] as $name) {
+            self::$_bucket->upload('{}', [
+                'name'     => 'pastes/' . $name,
+                'metadata' => ['metadata' => ['expire_date' => '1']],
+            ]);
+        }
+        $this->assertSame($ids, $this->_model->getAllPastes());
 
         $this->_model->purge(2);
 

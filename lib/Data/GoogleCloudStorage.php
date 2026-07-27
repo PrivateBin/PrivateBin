@@ -357,7 +357,7 @@ class GoogleCloudStorage extends AbstractData
         try {
             foreach ($this->_bucket->objects(['prefix' => $prefix]) as $object) {
                 $candidate = substr($object->name(), strlen($prefix));
-                if (str_contains($candidate, '/')) {
+                if (preg_match('/\A[a-f0-9]{16}\z/', $candidate) !== 1) {
                     continue;
                 }
                 $expire_at = $object->info()['metadata']['expire_date'] ?? '';
@@ -389,7 +389,7 @@ class GoogleCloudStorage extends AbstractData
         try {
             foreach ($this->_bucket->objects(['prefix' => $prefix]) as $object) {
                 $candidate = substr($object->name(), strlen($prefix));
-                if (!str_contains($candidate, '/')) {
+                if (preg_match('/\A[a-f0-9]{16}\z/', $candidate) === 1) {
                     $pastes[] = $candidate;
                 }
             }

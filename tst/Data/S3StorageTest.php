@@ -20,6 +20,9 @@ class S3PurgeClientStub
         $contents = [];
         if ($options['Prefix'] === 'pastes/') {
             $contents = [
+                ['Key' => 'pastes/not-a-paste'],
+                ['Key' => 'pastes/aaaaaaaaaaaaaaaa.backup'],
+                ['Key' => 'pastes/config/salt'],
                 ['Key' => 'pastes/aaaaaaaaaaaaaaaa'],
                 ['Key' => 'pastes/bbbbbbbbbbbbbbbb'],
                 ['Key' => 'pastes/cccccccccccccccc'],
@@ -59,6 +62,12 @@ class S3StorageTest extends TestCase
             $property->setAccessible(true);
             $property->setValue($storage, $value);
         }
+
+        $this->assertSame([
+            'aaaaaaaaaaaaaaaa',
+            'bbbbbbbbbbbbbbbb',
+            'cccccccccccccccc',
+        ], $storage->getAllPastes());
 
         $storage->purge(2);
 
