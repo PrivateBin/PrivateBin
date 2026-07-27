@@ -79,10 +79,21 @@ class Administration
      */
     private function _delete_all()
     {
-        $ids = $this->_store->getAllPastes();
+        $ids    = $this->_store->getAllPastes();
+        $failed = array();
         foreach ($ids as $pasteid) {
             echo "Deleting document ID: $pasteid" . PHP_EOL;
             $this->_store->delete($pasteid);
+            if ($this->_store->exists($pasteid)) {
+                $failed[] = $pasteid;
+            }
+        }
+        if (count($failed) > 0) {
+            self::_error(
+                'documents exist after deletion, permission problem? IDs: ' .
+                implode(', ', $failed),
+                7
+            );
         }
         exit("All documents successfully deleted" . PHP_EOL);
     }

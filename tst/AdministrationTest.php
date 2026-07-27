@@ -95,6 +95,39 @@ class AdministrationTest extends TestCase
         $this->assertFalse($this->_store->exists(Helper::getPasteId()));
     }
 
+    public function testDeleteAllReportsRecordsThatRemain()
+    {
+        $databasePath = $this->_path . DIRECTORY_SEPARATOR . 'administration.sq3';
+        $options      = parse_ini_file(CONF_SAMPLE, true);
+        $options['model']['class'] = 'Database';
+        $options['model_options']  = [
+            'dsn' => 'sqlite:' . $databasePath,
+            'usr' => '',
+            'pwd' => '',
+            'opt' => [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION],
+        ];
+        Helper::createIniFile(
+            $this->_path . DIRECTORY_SEPARATOR . 'cfg' . DIRECTORY_SEPARATOR . 'conf.php',
+            $options
+        );
+
+        $store = new PrivateBin\Data\Database($options['model_options']);
+        $paste = Helper::getPaste();
+        $this->assertTrue($store->create(Helper::getPasteId(), $paste));
+        $database = new PDO('sqlite:' . $databasePath);
+        $database->exec(
+            'CREATE TRIGGER keep_paste BEFORE DELETE ON paste ' .
+            'BEGIN SELECT RAISE(IGNORE); END'
+        );
+
+        [$exitCode, $output] = $this->runAdministration('--delete-all');
+
+        $this->assertSame(7, $exitCode);
+        $this->assertStringContainsString(Helper::getPasteId(), $output);
+        $this->assertStringNotContainsString('All documents successfully deleted', $output);
+        $this->assertTrue($store->exists(Helper::getPasteId()));
+    }
+
     private function overwritePaste($data)
     {
         file_put_contents(
