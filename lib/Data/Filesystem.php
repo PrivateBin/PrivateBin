@@ -228,11 +228,8 @@ class Filesystem extends AbstractData
                     $comments[$key] = $comment;
                 }
             }
-
-            // Sort comments by date, oldest first.
-            ksort($comments);
         }
-        return $comments;
+        return $this->sortComments($comments);
     }
 
     /**
