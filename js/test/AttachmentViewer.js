@@ -157,6 +157,47 @@ describe('AttachmentViewer', function () {
                 }
             }
         );
+
+        it('revokes attachment object URLs when removing them', function () {
+            const createdUrls = [];
+            const revokedUrls = [];
+            Object.defineProperty(window.URL, 'createObjectURL', {
+                value: function () {
+                    const url = 'blob:https://example.com/' + createdUrls.length;
+                    createdUrls.push(url);
+                    return url;
+                },
+                configurable: true
+            });
+            Object.defineProperty(window.URL, 'revokeObjectURL', {
+                value: function (url) {
+                    revokedUrls.push(url);
+                },
+                configurable: true
+            });
+            document.body.innerHTML = (
+                '<div id="attachmentPreview" class="col-md-12 text-center hidden"></div>' +
+                '<div id="attachment" class="hidden"></div>' +
+                '<div id="templates">' +
+                    '<div id="attachmenttemplate" role="alert" class="attachment hidden alert alert-info">' +
+                        '<span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>' +
+                        '<a class="alert-link">Download attachment</a>' +
+                    '</div>' +
+                '</div>'
+            );
+            PrivateBin.AttachmentViewer.init();
+            PrivateBin.Model.init();
+            global.atob = common.atob;
+
+            PrivateBin.AttachmentViewer.setAttachment(
+                'data:text/plain;base64,' + common.btoa('attachment'),
+                'attachment.txt'
+            );
+            assert.deepStrictEqual(createdUrls, ['blob:https://example.com/0']);
+
+            PrivateBin.AttachmentViewer.removeAttachment();
+            assert.deepStrictEqual(revokedUrls, createdUrls);
+        });
     });
 
     describe('showAttachment()', function () {
@@ -198,11 +239,10 @@ describe('AttachmentViewer', function () {
                 {
                     value: function (_blob) {
                         return 'blob:' + location.origin + '/1b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed';
-                    }
+                    },
+                    configurable: true
                 }
             );
         }
     }
 });
-
-

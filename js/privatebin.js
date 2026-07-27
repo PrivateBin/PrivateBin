@@ -2839,6 +2839,7 @@ window.PrivateBin = (function () {
         let attachmentPreview,
             attachment,
             attachmentsData = [],
+            blobUrls = new Set(),
             files,
             fileInput,
             dragAndDropFileNames,
@@ -2868,7 +2869,9 @@ window.PrivateBin = (function () {
             );
 
             // Get blob URL
-            return window.URL.createObjectURL(blob);
+            const blobUrl = window.URL.createObjectURL(blob);
+            blobUrls.add(blobUrl);
+            return blobUrl;
         }
 
         /**
@@ -3011,6 +3014,10 @@ window.PrivateBin = (function () {
             }
             me.hideAttachment();
             me.hideAttachmentPreview();
+            if (typeof window.URL.revokeObjectURL === 'function') {
+                blobUrls.forEach(blobUrl => window.URL.revokeObjectURL(blobUrl));
+            }
+            blobUrls.clear();
             attachment.innerHTML = '';
             if (attachmentPreview) {
                 attachmentPreview.innerHTML = '';
@@ -6154,5 +6161,4 @@ if (typeof module === 'undefined' || !module.exports) {
         window.PrivateBin.Controller.init();
     });
 }
-
 
