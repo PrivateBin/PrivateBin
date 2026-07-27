@@ -96,10 +96,9 @@ class Administration
     {
         $ids = $this->_store->getAllPastes();
         foreach ($ids as $pasteid) {
-            try {
-                $paste = $this->_store->read($pasteid);
-            } catch (Exception $e) {
-                echo "Error reading document {$pasteid}: ", $e->getMessage(), PHP_EOL;
+            $paste = $this->_read($pasteid);
+            if ($paste === false) {
+                continue;
             }
             if (array_key_exists('adata', $paste)) {
                 continue;
@@ -194,6 +193,28 @@ EOT, PHP_EOL;
     }
 
     /**
+     * reads a document and reports damaged data
+     *
+     * @access private
+     * @param  string $pasteid
+     * @return array|false
+     */
+    private function _read($pasteid)
+    {
+        try {
+            $paste = $this->_store->read($pasteid);
+        } catch (Exception $e) {
+            echo "Error reading document {$pasteid}: ", $e->getMessage(), PHP_EOL;
+            return false;
+        }
+        if (!is_array($paste)) {
+            echo "Error reading document {$pasteid}: damaged data", PHP_EOL;
+            return false;
+        }
+        return $paste;
+    }
+
+    /**
      * return option for given short or long keyname, if it got set
      *
      * @access private
@@ -275,42 +296,41 @@ EOT, PHP_EOL;
 
         echo "Total:\t\t\t{$counters['total']}", PHP_EOL;
         foreach ($ids as $pasteid) {
-            try {
-                $paste = $this->_store->read($pasteid);
-            } catch (Exception $e) {
-                echo "Error reading document {$pasteid}: ", $e->getMessage(), PHP_EOL;
-                ++$counters['damaged'];
-            }
+            $paste = $this->_read($pasteid);
             ++$counters['progress'];
 
-            if (
-                array_key_exists('meta', $paste) &&
-                array_key_exists('expire_date', $paste['meta']) &&
-                $paste['meta']['expire_date'] < $time
-            ) {
-                ++$counters['expired'];
-            }
-
-            if (array_key_exists('adata', $paste)) {
-                switch ($paste['adata'][Paste::ADATA_FORMATTER]) {
-                    case 'plaintext':
-                        ++$counters['plain'];
-                        break;
-                    case 'syntaxhighlighting':
-                        ++$counters['syntax'];
-                        break;
-                    case 'markdown':
-                        ++$counters['md'];
-                        break;
-                    default:
-                        ++$counters['unknown'];
-                        break;
-                }
-                $counters['discussion'] += (int) $paste['adata'][Paste::ADATA_OPEN_DISCUSSION];
-                $counters['burn'] += (int) $paste['adata'][Paste::ADATA_BURN_AFTER_READING];
+            if ($paste === false) {
+                ++$counters['damaged'];
             } else {
-                echo "Unsupported v1 paste ", $pasteid, PHP_EOL;
-                ++$counters['legacy'];
+                if (
+                    array_key_exists('meta', $paste) &&
+                    array_key_exists('expire_date', $paste['meta']) &&
+                    $paste['meta']['expire_date'] < $time
+                ) {
+                    ++$counters['expired'];
+                }
+
+                if (array_key_exists('adata', $paste)) {
+                    switch ($paste['adata'][Paste::ADATA_FORMATTER]) {
+                        case 'plaintext':
+                            ++$counters['plain'];
+                            break;
+                        case 'syntaxhighlighting':
+                            ++$counters['syntax'];
+                            break;
+                        case 'markdown':
+                            ++$counters['md'];
+                            break;
+                        default:
+                            ++$counters['unknown'];
+                            break;
+                    }
+                    $counters['discussion'] += (int) $paste['adata'][Paste::ADATA_OPEN_DISCUSSION];
+                    $counters['burn'] += (int) $paste['adata'][Paste::ADATA_BURN_AFTER_READING];
+                } else {
+                    echo "Unsupported v1 paste ", $pasteid, PHP_EOL;
+                    ++$counters['legacy'];
+                }
             }
 
             // display progress
