@@ -531,6 +531,10 @@ class Filesystem extends AbstractData
                 error_log('Error converting document, destination differs: ' . $destFile);
                 return;
             }
+            if (!@chmod($destFile, 0640)) {
+                error_log('Error protecting converted document: ' . $destFile);
+                return;
+            }
             if (!unlink($srcFile)) {
                 error_log('Error deleting converted document: ' . $srcFile);
             }

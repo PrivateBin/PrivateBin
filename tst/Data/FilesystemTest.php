@@ -227,6 +227,26 @@ class FilesystemTest extends TestCase
         }
     }
 
+    public function testMatchingOldFileConversionProtectsDestination()
+    {
+        $pasteid    = Helper::getPasteId();
+        $storageDir = $this->_path . DIRECTORY_SEPARATOR . substr($pasteid, 0, 2) .
+            DIRECTORY_SEPARATOR . substr($pasteid, 2, 2) . DIRECTORY_SEPARATOR;
+        mkdir($storageDir, 0700, true);
+        $source      = $storageDir . $pasteid;
+        $destination = $source . '.php';
+        $data        = json_encode(Helper::getPaste());
+        file_put_contents($source, $data);
+        file_put_contents($destination, Filesystem::PROTECTION_LINE . PHP_EOL . $data);
+        chmod($destination, 0666);
+
+        $this->assertTrue($this->_model->exists($pasteid));
+
+        clearstatcache(true, $destination);
+        $this->assertFileDoesNotExist($source);
+        $this->assertSame(0640, fileperms($destination) & 0777);
+    }
+
     public function testOldCommentConversionIsRetried()
     {
         $pasteid   = Helper::getPasteId();
