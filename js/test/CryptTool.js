@@ -122,6 +122,44 @@ conseq_or_bottom inv (interp (nth_iterate sBody n) (MemElem mem))
             ),
             {numRuns: 3});
         });
+
+        it('rejects decompression failures', async function () {
+            const clean = globalThis.cleanup();
+            Object.defineProperty(window, 'crypto', {
+                value: new WebCrypto(),
+                configurable: true,
+                enumerable: true,
+                writable: false
+            });
+            PrivateBin.Controller.initZlib();
+            global.atob = common.atob;
+            global.btoa = common.btoa;
+
+            const cipherMessage = await PrivateBin.CryptTool.cipher(
+                    'key', 'password', 'message', []
+                ),
+                runtimeZlib = await global.zlib,
+                originalInflate = runtimeZlib.inflate,
+                originalConsoleError = console.error;
+            runtimeZlib.inflate = function () {
+                throw new Error('forced decompression failure');
+            };
+            PrivateBin.Alert.showError = function () {};
+            console.error = function () {};
+
+            try {
+                await assert.rejects(
+                    PrivateBin.CryptTool.decipher(
+                        'key', 'password', cipherMessage
+                    ),
+                    /forced decompression failure/
+                );
+            } finally {
+                runtimeZlib.inflate = originalInflate;
+                console.error = originalConsoleError;
+                clean();
+            }
+        });
     });
 
     describe('getSymmetricKey', function () {

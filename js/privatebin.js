@@ -1311,8 +1311,8 @@ window.PrivateBin = (function () {
             try {
                 return await decompress(plaintext, spec[7], zlib);
             } catch (err) {
-                Alert.showError(err);
-                return err;
+                console.error(err);
+                throw err;
             }
         };
 
@@ -5595,6 +5595,7 @@ window.PrivateBin = (function () {
                 .catch((err) => {
                     // wait for the user to type in the password,
                     // then PasteDecrypter.run will be called again
+                    Alert.hideLoading();
                     Alert.showError(err);
                 });
         };
@@ -6154,5 +6155,4 @@ if (typeof module === 'undefined' || !module.exports) {
         window.PrivateBin.Controller.init();
     });
 }
-
 
