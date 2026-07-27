@@ -81,7 +81,7 @@ class TrafficLimiterTest extends TestCase
         Helper::confBackup();
         Helper::createIniFile(CONF, $options);
         try {
-            $configuration                      = new Configuration;
+            $configuration                       = new Configuration;
             $_SERVER['REMOTE_ADDR']              = '127.0.0.1';
             $_SERVER['HTTP_X_FORWARDED_FOR']     = '192.0.2.1';
             TrafficLimiter::setConfiguration($configuration);
