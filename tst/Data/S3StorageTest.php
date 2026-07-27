@@ -32,7 +32,7 @@ class S3CommentClientStub
         if ($includeCorrupt) {
             $this->_objects[$prefix . 'ffffffffffffffff'] = '{';
             $this->_objects[$prefix . 'eeeeeeeeeeeeeeee'] = json_encode(['meta' => true]);
-            $this->_objects[$prefix . 'invalid'] = json_encode($comment);
+            $this->_objects[$prefix . 'invalid']          = json_encode($comment);
         }
     }
 
