@@ -1,5 +1,6 @@
 <?php declare(strict_types=1);
 use PHPUnit\Framework\TestCase;
+use PrivateBin\Data\Database;
 use PrivateBin\Data\Filesystem;
 
 class AdministrationTest extends TestCase
@@ -97,7 +98,32 @@ class AdministrationTest extends TestCase
 
     public function testDeleteAllReportsRecordsThatRemain()
     {
-        $databasePath = $this->_path . DIRECTORY_SEPARATOR . 'administration.sq3';
+        $store = $this->createUndeletableDatabasePaste(Helper::getPaste());
+
+        [$exitCode, $output] = $this->runAdministration('--delete-all');
+
+        $this->assertSame(7, $exitCode);
+        $this->assertStringContainsString(Helper::getPasteId(), $output);
+        $this->assertStringNotContainsString('All documents successfully deleted', $output);
+        $this->assertTrue($store->exists(Helper::getPasteId()));
+    }
+
+    public function testDeleteV1ReportsRecordsThatRemain()
+    {
+        $store = $this->createUndeletableDatabasePaste(['data' => '', 'meta' => []]);
+
+        [$exitCode, $output] = $this->runAdministration('--delete-v1');
+
+        $this->assertSame(7, $exitCode);
+        $this->assertStringContainsString(Helper::getPasteId(), $output);
+        $this->assertStringNotContainsString('All unsupported legacy v1 documents successfully deleted', $output);
+        $this->assertTrue($store->exists(Helper::getPasteId()));
+    }
+
+    private function createUndeletableDatabasePaste(array $paste)
+    {
+        $databasePath = $this->_path . DIRECTORY_SEPARATOR . 'administration-' .
+            bin2hex(random_bytes(4)) . '.sq3';
         $options      = parse_ini_file(CONF_SAMPLE, true);
         $options['model']['class'] = 'Database';
         $options['model_options']  = [
@@ -111,8 +137,7 @@ class AdministrationTest extends TestCase
             $options
         );
 
-        $store = new PrivateBin\Data\Database($options['model_options']);
-        $paste = Helper::getPaste();
+        $store = new Database($options['model_options']);
         $this->assertTrue($store->create(Helper::getPasteId(), $paste));
         $database = new PDO('sqlite:' . $databasePath);
         $database->exec(
@@ -120,12 +145,7 @@ class AdministrationTest extends TestCase
             'BEGIN SELECT RAISE(IGNORE); END'
         );
 
-        [$exitCode, $output] = $this->runAdministration('--delete-all');
-
-        $this->assertSame(7, $exitCode);
-        $this->assertStringContainsString(Helper::getPasteId(), $output);
-        $this->assertStringNotContainsString('All documents successfully deleted', $output);
-        $this->assertTrue($store->exists(Helper::getPasteId()));
+        return $store;
     }
 
     private function overwritePaste($data)

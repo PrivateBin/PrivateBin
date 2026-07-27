@@ -88,13 +88,7 @@ class Administration
                 $failed[] = $pasteid;
             }
         }
-        if (count($failed) > 0) {
-            self::_error(
-                'documents exist after deletion, permission problem? IDs: ' .
-                implode(', ', $failed),
-                7
-            );
-        }
+        self::_report_deletion_failures($failed);
         exit("All documents successfully deleted" . PHP_EOL);
     }
 
@@ -105,7 +99,8 @@ class Administration
      */
     private function _delete_v1()
     {
-        $ids = $this->_store->getAllPastes();
+        $ids    = $this->_store->getAllPastes();
+        $failed = array();
         foreach ($ids as $pasteid) {
             $paste = $this->_read($pasteid);
             if ($paste === false) {
@@ -116,8 +111,30 @@ class Administration
             }
             echo "Deleting v1 document ID: $pasteid" . PHP_EOL;
             $this->_store->delete($pasteid);
+            if ($this->_store->exists($pasteid)) {
+                $failed[] = $pasteid;
+            }
         }
+        self::_report_deletion_failures($failed);
         exit("All unsupported legacy v1 documents successfully deleted" . PHP_EOL);
+    }
+
+    /**
+     * reports documents that remain after a bulk deletion
+     *
+     * @access private
+     * @static
+     * @param  array $failed
+     */
+    private static function _report_deletion_failures(array $failed)
+    {
+        if (count($failed) > 0) {
+            self::_error(
+                'documents exist after deletion, permission problem? IDs: ' .
+                implode(', ', $failed),
+                7
+            );
+        }
     }
 
     /**
