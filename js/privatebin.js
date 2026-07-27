@@ -5457,7 +5457,18 @@ window.PrivateBin = (function () {
             }
 
             const pasteMessage = JSON.parse(pastePlain);
-            if (pasteMessage.hasOwnProperty('attachment') && pasteMessage.hasOwnProperty('attachment_name')) {
+            if (
+                pasteMessage === null ||
+                typeof pasteMessage !== 'object' ||
+                Array.isArray(pasteMessage) ||
+                typeof pasteMessage.paste !== 'string'
+            ) {
+                throw new TypeError('Invalid decrypted paste.');
+            }
+            if (
+                Object.prototype.hasOwnProperty.call(pasteMessage, 'attachment') &&
+                Object.prototype.hasOwnProperty.call(pasteMessage, 'attachment_name')
+            ) {
                 if (Array.isArray(pasteMessage.attachment) && Array.isArray(pasteMessage.attachment_name)) {
                     pasteMessage.attachment.forEach((attachment, key) => {
                         const attachment_name = pasteMessage.attachment_name[key];
@@ -6154,5 +6165,4 @@ if (typeof module === 'undefined' || !module.exports) {
         window.PrivateBin.Controller.init();
     });
 }
-
 
