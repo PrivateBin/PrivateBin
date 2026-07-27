@@ -230,7 +230,7 @@ class Request
      */
     public function getRequestUri()
     {
-        $uri = array_key_exists('REQUEST_URI', $_SERVER) ? filter_var($_SERVER['REQUEST_URI'], FILTER_SANITIZE_URL) : '';
+        $uri  = array_key_exists('REQUEST_URI', $_SERVER) ? filter_var($_SERVER['REQUEST_URI'], FILTER_SANITIZE_URL) : '';
         $path = empty($uri) ? '' : parse_url($uri, PHP_URL_PATH);
         return is_string($path) && $path !== '' ? $path : '/';
     }
