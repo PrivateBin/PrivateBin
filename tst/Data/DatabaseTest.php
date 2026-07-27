@@ -171,6 +171,49 @@ class DatabaseTest extends TestCase
         ini_set('error_log', $errorLog);
     }
 
+    public function testDeleteContinuesAfterPasteQueryFailure()
+    {
+        $comment = Helper::getComment();
+        $this->assertTrue(
+            $this->_model->createComment(
+                Helper::getPasteId(),
+                Helper::getPasteId(),
+                Helper::getCommentId(),
+                $comment
+            )
+        );
+        $this->getDatabaseConnection()->exec('DROP TABLE paste');
+        $errorLog = ini_get('error_log');
+        ini_set('error_log', '/dev/null');
+        try {
+            $this->_model->delete(Helper::getPasteId());
+        } finally {
+            ini_set('error_log', $errorLog);
+        }
+        $this->assertFalse(
+            $this->_model->existsComment(
+                Helper::getPasteId(),
+                Helper::getPasteId(),
+                Helper::getCommentId()
+            )
+        );
+    }
+
+    public function testDeleteHandlesCommentQueryFailure()
+    {
+        $paste = Helper::getPaste();
+        $this->assertTrue($this->_model->create(Helper::getPasteId(), $paste));
+        $this->getDatabaseConnection()->exec('DROP TABLE comment');
+        $errorLog = ini_get('error_log');
+        ini_set('error_log', '/dev/null');
+        try {
+            $this->_model->delete(Helper::getPasteId());
+        } finally {
+            ini_set('error_log', $errorLog);
+        }
+        $this->assertFalse($this->_model->exists(Helper::getPasteId()));
+    }
+
     /**
      * pastes a-g are expired and should get deleted, x never expires and y-z expire in an hour
      */

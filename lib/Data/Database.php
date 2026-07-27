@@ -230,14 +230,22 @@ class Database extends AbstractData
      */
     public function delete($pasteid)
     {
-        $this->_exec(
-            'DELETE FROM "' . $this->_sanitizeIdentifier('paste') .
-            '" WHERE "dataid" = ?', [$pasteid]
-        );
-        $this->_exec(
-            'DELETE FROM "' . $this->_sanitizeIdentifier('comment') .
-            '" WHERE "pasteid" = ?', [$pasteid]
-        );
+        try {
+            $this->_exec(
+                'DELETE FROM "' . $this->_sanitizeIdentifier('paste') .
+                '" WHERE "dataid" = ?', [$pasteid]
+            );
+        } catch (PDOException $e) {
+            error_log('Error while deleting a paste from the database: ' . $e->getMessage());
+        }
+        try {
+            $this->_exec(
+                'DELETE FROM "' . $this->_sanitizeIdentifier('comment') .
+                '" WHERE "pasteid" = ?', [$pasteid]
+            );
+        } catch (PDOException $e) {
+            error_log('Error while deleting comments from the database: ' . $e->getMessage());
+        }
     }
 
     /**
