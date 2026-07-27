@@ -333,7 +333,7 @@ class S3Storage extends AbstractData
                     'Key'    => $name,
                 ]);
                 $value = $head->get('Metadata')['value'] ?? '';
-                if (is_numeric($value) && intval($value) < $time) {
+                if (is_numeric($value) && intval($value) <= $time) {
                     try {
                         $this->_client->deleteObject([
                             'Bucket' => $this->_bucket,

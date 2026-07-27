@@ -259,7 +259,7 @@ class GoogleCloudStorage extends AbstractData
                     continue;
                 }
                 $value = $object->info()['metadata']['value'] ?? '';
-                if (is_numeric($value) && intval($value) < $time) {
+                if (is_numeric($value) && intval($value) <= $time) {
                     try {
                         $object->delete();
                     } catch (NotFoundException $e) {

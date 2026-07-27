@@ -153,7 +153,7 @@ class GoogleCloudStorageTest extends TestCase
 
         $this->_model->purgeValues('traffic_limiter', time() - 60);
         $this->assertEquals($storedExpired, $this->_model->getValue('traffic_limiter', $client));
-        $this->_model->purgeValues('traffic_limiter', time() + 60);
+        $this->_model->purgeValues('traffic_limiter', $expire);
         $this->assertEquals('', $this->_model->getValue('traffic_limiter', $client));
 
         $purgeAt = $expire + (15 * 60);
