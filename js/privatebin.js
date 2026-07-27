@@ -4691,7 +4691,7 @@ window.PrivateBin = (function () {
          * @return {bool}
          */
         me.isAttachmentReadonly = function () {
-            return !createButtonsDisplayed || (attach && attach.classList.contains('hidden'));
+            return !createButtonsDisplayed || !attach || attach.classList.contains('hidden');
         }
 
         /**
@@ -6154,5 +6154,4 @@ if (typeof module === 'undefined' || !module.exports) {
         window.PrivateBin.Controller.init();
     });
 }
-
 

@@ -584,6 +584,27 @@ describe('TopNav', function () {
         );
     });
 
+    describe('isAttachmentReadonly', function () {
+        afterEach(function () {
+            globalThis.cleanup();
+        });
+
+        it('is read-only when file uploads are disabled', function () {
+            document.body.innerHTML =
+                '<div id="burnafterreadingoption"></div>' +
+                '<div id="expiration"></div>' +
+                '<div id="formatter"></div>' +
+                '<button id="newbutton"></button>' +
+                '<div id="opendiscussionoption"></div>' +
+                '<div id="password"></div>' +
+                '<button id="sendbutton"></button>';
+            PrivateBin.TopNav.init();
+            PrivateBin.TopNav.showCreateButtons();
+
+            assert.strictEqual(PrivateBin.TopNav.isAttachmentReadonly(), true);
+        });
+    });
+
     describe('getBurnAfterReading', function () {
         before(function () {
             cleanup();
