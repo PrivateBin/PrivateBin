@@ -54,17 +54,20 @@ function buildEmailDomWithShortUrl() {
 function makeWindowOpenMock() {
     const originalOpen = window.open;
     let openedUrl = null;
+    let callCount = 0;
     let mockRestoreFn = null;
 
     if (typeof jest !== 'undefined' && typeof jest.spyOn === 'function') {
         const spy = jest.spyOn(window, 'open').mockImplementation((url) => {
             openedUrl = url;
+            ++callCount;
             return {};
         });
         mockRestoreFn = () => spy.mockRestore();
     } else {
         window.open = function (url) {
             openedUrl = url;
+            ++callCount;
             return {};
         };
         mockRestoreFn = () => { window.open = originalOpen; };
@@ -72,6 +75,7 @@ function makeWindowOpenMock() {
 
     return {
         getUrl: () => openedUrl,
+        getCallCount: () => callCount,
         restore: () => {
             if (mockRestoreFn) {
                 mockRestoreFn();
@@ -135,6 +139,33 @@ describe('Email - mail body content (short URL vs. fallback)', function () {
             const body = extractMailtoBody(openedUrl);
             assert.match(body, new RegExp(window.location.href), 'email body should include the fallback page URL');
             assert.doesNotMatch(body, /undefined/, 'email body must not contain "undefined"');
+        } finally {
+            restore();
+        }
+    });
+
+    it('keeps one active email action across repeated refreshes', function () {
+        buildEmailDomNoShortUrl();
+        PrivateBin.TopNav.init();
+
+        const emailBtn = document.getElementById('emaillink');
+        const timezoneCurrent = document.getElementById('emailconfirm-timezone-current');
+        const { getCallCount, restore } = makeWindowOpenMock();
+        try {
+            PrivateBin.TopNav.showEmailButton(60);
+            PrivateBin.TopNav.showEmailButton(120);
+            emailBtn.click();
+            timezoneCurrent.click();
+            assert.strictEqual(getCallCount(), 1);
+
+            emailBtn.click();
+            timezoneCurrent.click();
+            assert.strictEqual(getCallCount(), 2);
+
+            PrivateBin.TopNav.hideEmailButton();
+            emailBtn.click();
+            timezoneCurrent.click();
+            assert.strictEqual(getCallCount(), 2);
         } finally {
             restore();
         }

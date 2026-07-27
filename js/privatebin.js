@@ -3813,6 +3813,8 @@ window.PrivateBin = (function () {
             downloadTextButton,
             qrCodeLink,
             emailLink,
+            emailLinkClickHandler = null,
+            emailModalEventController = null,
             sendButton,
             retryButton,
             pasteExpiration = null,
@@ -4192,6 +4194,13 @@ window.PrivateBin = (function () {
 
             const emailconfirmmodal = document.getElementById('emailconfirmmodal');
             if (expirationDate !== null) {
+                if (emailModalEventController !== null) {
+                    emailModalEventController.abort();
+                }
+                emailModalEventController = new window.AbortController();
+                const emailModalEventOptions = {
+                    signal: emailModalEventController.signal
+                };
                 const emailconfirmTimezoneCurrent = emailconfirmmodal.querySelector('#emailconfirm-timezone-current');
                 const emailconfirmTimezoneUtc = emailconfirmmodal.querySelector('#emailconfirm-timezone-utc');
                 let localeConfiguration = { dateStyle: 'long', timeStyle: 'long' };
@@ -4213,15 +4222,13 @@ window.PrivateBin = (function () {
 
                 emailconfirmmodal.addEventListener('shown.bs.modal', () => {
                     emailconfirmTimezoneUtc.focus();
-                });
+                }, emailModalEventOptions);
 
-                emailconfirmTimezoneCurrent.removeEventListener('click', sendEmailAndHideModal);
-                emailconfirmTimezoneCurrent.addEventListener('click', sendEmailAndHideModal);
-                emailconfirmTimezoneUtc.removeEventListener('click', sendEmailAndHideModal);
+                emailconfirmTimezoneCurrent.addEventListener('click', sendEmailAndHideModal, emailModalEventOptions);
                 emailconfirmTimezoneUtc.addEventListener('click', () => {
                     localeConfiguration.timeZone = 'UTC';
                     sendEmailAndHideModal();
-                });
+                }, emailModalEventOptions);
                 if (bootstrap5EmailConfirmModal) {
                     bootstrap5EmailConfirmModal.show();
                 }
@@ -4379,10 +4386,13 @@ window.PrivateBin = (function () {
                 const isBurnafterreading = TopNav.getBurnAfterReading();
 
                 emailLink.classList.remove('hidden');
-                emailLink.removeEventListener('click', sendEmail);
-                emailLink.addEventListener('click', () => {
+                if (emailLinkClickHandler !== null) {
+                    emailLink.removeEventListener('click', emailLinkClickHandler);
+                }
+                emailLinkClickHandler = () => {
                     sendEmail(expirationDate, isBurnafterreading);
-                });
+                };
+                emailLink.addEventListener('click', emailLinkClickHandler);
             } catch (error) {
                 console.error(error);
                 Alert.showError('Cannot calculate expiration date.');
@@ -4401,7 +4411,14 @@ window.PrivateBin = (function () {
             }
 
             emailLink.classList.add('hidden');
-            emailLink.removeEventListener('click', sendEmail);
+            if (emailLinkClickHandler !== null) {
+                emailLink.removeEventListener('click', emailLinkClickHandler);
+                emailLinkClickHandler = null;
+            }
+            if (emailModalEventController !== null) {
+                emailModalEventController.abort();
+                emailModalEventController = null;
+            }
         };
 
         /**
@@ -6154,5 +6171,4 @@ if (typeof module === 'undefined' || !module.exports) {
         window.PrivateBin.Controller.init();
     });
 }
-
 
