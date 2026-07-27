@@ -125,6 +125,20 @@ class I18nTest extends TestCase
         $this->assertEquals('23 minuty',  I18n::_('%d minutes', 23), '23 minutes in Polish');
     }
 
+    public function testBrowserLanguageLtDetection()
+    {
+        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'lt;q=0.8,en-GB;q=0.6,en-US;q=0.4,en;q=0.2';
+        I18n::loadTranslations();
+        $this->assertEquals('lt', I18n::getLanguage(), 'browser language lt');
+        $this->assertEquals('1 sekundę', I18n::_('%d seconds', 1), '1 second in Lithuanian');
+        $this->assertEquals('2 sekundės', I18n::_('%d seconds', 2), '2 seconds in Lithuanian');
+        $this->assertEquals('10 sekundžių', I18n::_('%d seconds', 10), '10 seconds in Lithuanian');
+        $this->assertEquals('22 sekundės', I18n::_('%d seconds', 22), '22 seconds in Lithuanian');
+        $this->assertEquals('110 sekundžių', I18n::_('%d seconds', 110), '110 seconds in Lithuanian');
+        $this->assertEquals('111 sekundžių', I18n::_('%d seconds', 111), '111 seconds in Lithuanian');
+        $this->assertEquals('120 sekundžių', I18n::_('%d seconds', 120), '120 seconds in Lithuanian');
+    }
+
     public function testBrowserLanguageRuDetection()
     {
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'ru;q=0.8,en-GB;q=0.6,en-US;q=0.4,en;q=0.2';
