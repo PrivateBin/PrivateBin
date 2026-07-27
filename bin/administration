@@ -207,11 +207,42 @@ EOT, PHP_EOL;
             echo "Error reading document {$pasteid}: ", $e->getMessage(), PHP_EOL;
             return false;
         }
-        if (!is_array($paste)) {
+        if (!is_array($paste) || !$this->_isValidPaste($paste)) {
             echo "Error reading document {$pasteid}: damaged data", PHP_EOL;
             return false;
         }
         return $paste;
+    }
+
+    /**
+     * checks whether a stored document can safely be classified
+     *
+     * @access private
+     * @param  array $paste
+     * @return bool
+     */
+    private function _isValidPaste(array $paste)
+    {
+        if (!array_key_exists('meta', $paste) || !is_array($paste['meta'])) {
+            return false;
+        }
+        if (array_key_exists('expire_date', $paste['meta'])) {
+            $expireDate = $paste['meta']['expire_date'];
+            if (
+                !is_int($expireDate) &&
+                !(is_string($expireDate) && preg_match('/\A[+-]?\d+\z/', $expireDate) === 1)
+            ) {
+                return false;
+            }
+        }
+        if (!array_key_exists('adata', $paste)) {
+            return array_key_exists('data', $paste) && is_string($paste['data']);
+        }
+        $adata = $paste['adata'];
+        return is_array($adata) &&
+            is_string($adata[Paste::ADATA_FORMATTER] ?? null) &&
+            is_int($adata[Paste::ADATA_OPEN_DISCUSSION] ?? null) &&
+            is_int($adata[Paste::ADATA_BURN_AFTER_READING] ?? null);
     }
 
     /**

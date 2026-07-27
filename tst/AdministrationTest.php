@@ -60,6 +60,52 @@ class AdministrationTest extends TestCase
         $this->assertTrue($this->_store->exists(Helper::getPasteId()));
     }
 
+    public function testStatisticsSkipsStructurallyDamagedPastes()
+    {
+        $this->overwritePaste('{"adata":[],"meta":"invalid"}');
+
+        [$exitCode, $output] = $this->runAdministration('--statistics');
+
+        $this->assertSame(0, $exitCode);
+        $this->assertStringContainsString("Damaged:\t\t1", $output);
+        $this->assertStringNotContainsString('Unsupported v1 paste', $output);
+    }
+
+    public function testDeleteV1PreservesStructurallyDamagedPastes()
+    {
+        $this->overwritePaste('{"meta":[]}');
+
+        [$exitCode, $output] = $this->runAdministration('--delete-v1');
+
+        $this->assertSame(0, $exitCode);
+        $this->assertStringContainsString(
+            'Error reading document ' . Helper::getPasteId(),
+            $output
+        );
+        $this->assertTrue($this->_store->exists(Helper::getPasteId()));
+    }
+
+    public function testDeleteV1DeletesLegacyPastes()
+    {
+        $this->overwritePaste('{"data":"","meta":{}}');
+
+        [$exitCode] = $this->runAdministration('--delete-v1');
+
+        $this->assertSame(0, $exitCode);
+        $this->assertFalse($this->_store->exists(Helper::getPasteId()));
+    }
+
+    private function overwritePaste($data)
+    {
+        file_put_contents(
+            $this->_path . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR .
+            substr(Helper::getPasteId(), 0, 2) . DIRECTORY_SEPARATOR .
+            substr(Helper::getPasteId(), 2, 2) . DIRECTORY_SEPARATOR .
+            Helper::getPasteId() . '.php',
+            Filesystem::PROTECTION_LINE . PHP_EOL . $data
+        );
+    }
+
     private function runAdministration($option)
     {
         $command = 'CONFIG_PATH=' .
