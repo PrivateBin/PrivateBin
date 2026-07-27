@@ -127,7 +127,20 @@ class TrafficLimiter extends AbstractPersistence
      */
     public static function getHash($algo = 'sha512')
     {
-        return hash_hmac($algo, $_SERVER[self::$_ipKey], ServerSalt::get());
+        return hash_hmac($algo, self::getClientIp(), ServerSalt::get());
+    }
+
+    /**
+     * Get the current visitor's IP address.
+     *
+     * @access private
+     * @static
+     * @return string
+     */
+    private static function getClientIp()
+    {
+        $address = $_SERVER[self::$_ipKey] ?? '';
+        return is_string($address) ? $address : '';
     }
 
     /**
@@ -140,18 +153,19 @@ class TrafficLimiter extends AbstractPersistence
      */
     private static function matchIp($ipRange = null)
     {
-        if (is_string($ipRange)) {
-            $ipRange = trim($ipRange);
+        if (!is_string($ipRange) || ($ipRange = trim($ipRange)) === '') {
+            return false;
         }
-        $address = Factory::parseAddressString($_SERVER[self::$_ipKey]);
-        $range   = Factory::parseRangeString(
+        $clientIp = self::getClientIp();
+        $address  = Factory::parseAddressString($clientIp);
+        $range    = Factory::parseRangeString(
             $ipRange,
             ParseStringFlag::IPV4_MAYBE_NON_DECIMAL | ParseStringFlag::IPV4SUBNET_MAYBE_COMPACT | ParseStringFlag::IPV4ADDRESS_MAYBE_NON_QUAD_DOTTED
         );
 
         // address could not be parsed, we might not be in IP space and try a string comparison instead
         if (is_null($address)) {
-            return $_SERVER[self::$_ipKey] === $ipRange;
+            return $clientIp === $ipRange;
         }
         // range could not be parsed, possibly an invalid ip range given in config
         if (is_null($range)) {
