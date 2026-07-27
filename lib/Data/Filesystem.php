@@ -369,7 +369,8 @@ class Filesystem extends AbstractData
         foreach ($files as $pasteid) {
             if ($this->exists($pasteid)) {
                 $data = $this->read($pasteid);
-                if (($data['meta']['expire_date'] ?? $time) < $time) {
+                $expireDate = $data['meta']['expire_date'] ?? 0;
+                if ($expireDate > 0 && $expireDate <= $time) {
                     $pastes[] = $pasteid;
                     if (++$count >= $batchsize) {
                         break;

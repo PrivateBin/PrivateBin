@@ -437,7 +437,7 @@ class Database extends AbstractData
         try {
             $statement = $this->_db->prepare(
                 'SELECT "dataid" FROM "' . $this->_sanitizeIdentifier('paste') .
-                '" WHERE "expiredate" < ? AND "expiredate" != ? ' .
+                '" WHERE "expiredate" <= ? AND "expiredate" != ? ' .
                 ($this->_type === 'oci' ? 'FETCH NEXT ? ROWS ONLY' : 'LIMIT ?')
             );
             $statement->execute([time(), 0, $batchsize]);

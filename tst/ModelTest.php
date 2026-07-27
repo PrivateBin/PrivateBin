@@ -3,6 +3,7 @@
 use Jdenticon\Identicon;
 use PHPUnit\Framework\TestCase;
 use PrivateBin\Configuration;
+use PrivateBin\Data\AbstractData;
 use PrivateBin\Data\Database;
 use PrivateBin\Model;
 use PrivateBin\Model\Comment;
@@ -364,6 +365,28 @@ class ModelTest extends TestCase
 
         $paste = $paste->get();
         $this->assertEquals((float) 300, (float) $paste['meta']['time_to_live'], 'remaining time is set correctly', 1.0);
+    }
+
+    public function testPasteExpiresAtExactExpirationTime()
+    {
+        $store = $this->createMock(AbstractData::class);
+        $store->expects($this->once())
+            ->method('read')
+            ->willReturnCallback(function () {
+                $second = time();
+                while (time() === $second) {
+                    usleep(1000);
+                }
+                return Helper::getPaste(['expire_date' => time()]);
+            });
+        $store->expects($this->once())->method('delete');
+
+        $paste = new Paste(new Configuration, $store);
+        $paste->setId(Helper::getPasteId());
+
+        $this->expectException(Exception::class);
+        $this->expectExceptionCode(63);
+        $paste->get();
     }
 
     public function testPurge()

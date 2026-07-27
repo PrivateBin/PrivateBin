@@ -60,7 +60,7 @@ class Paste extends AbstractModel
         // check if paste has expired and delete it if necessary.
         if (array_key_exists('expire_date', $data['meta'])) {
             $now = time();
-            if ($data['meta']['expire_date'] < $now) {
+            if ($data['meta']['expire_date'] <= $now) {
                 $this->delete();
                 throw new TranslatedException(Controller::GENERIC_ERROR, 63);
             }
