@@ -4889,12 +4889,14 @@ window.PrivateBin = (function () {
          * @function
          * @param {int} status
          * @param {int} result - optional
+         * @param {function} callback
+         * @param {string} encryptionKey
          */
-        function success(status, result) {
-            if (successFunc !== null) {
+        function success(status, result, callback, encryptionKey) {
+            if (callback !== null) {
                 // add useful data to result
-                result.encryptionKey = symmetricKey;
-                successFunc(status, result);
+                result.encryptionKey = encryptionKey;
+                return callback(status, result);
             }
         }
 
@@ -4906,10 +4908,11 @@ window.PrivateBin = (function () {
          * @function
          * @param {int} status - internal code
          * @param {int} result - original error code
+         * @param {function} callback
          */
-        function fail(status, result) {
-            if (failureFunc !== null) {
-                failureFunc(status, result);
+        function fail(status, result, callback) {
+            if (callback !== null) {
+                return callback(status, result);
             }
         }
 
@@ -4924,7 +4927,10 @@ window.PrivateBin = (function () {
                 options = {
                     method: isPost ? 'POST' : 'GET',
                     headers: ajaxHeaders
-                };
+                },
+                requestSuccess = successFunc,
+                requestFailure = failureFunc,
+                requestKey = symmetricKey;
             if (isPost) {
                 options.body = JSON.stringify(data);
             }
@@ -4937,16 +4943,16 @@ window.PrivateBin = (function () {
                 })
                 .then(result => {
                     if (result.status === 0) {
-                        success(0, result);
+                        success(0, result, requestSuccess, requestKey);
                     } else if (result.status === 1) {
-                        fail(1, result);
+                        fail(1, result, requestFailure);
                     } else {
-                        fail(2, result);
+                        fail(2, result, requestFailure);
                     }
                 })
                 .catch(error => {
                     console.error(error);
-                    fail(3, error);
+                    fail(3, error, requestFailure);
                 });
         };
 
@@ -6154,5 +6160,3 @@ if (typeof module === 'undefined' || !module.exports) {
         window.PrivateBin.Controller.init();
     });
 }
-
-
