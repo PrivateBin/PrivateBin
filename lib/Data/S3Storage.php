@@ -155,6 +155,17 @@ class S3Storage extends AbstractData
     }
 
     /**
+     * tests whether an S3 exception represents a missing object
+     *
+     * @param  S3Exception $exception
+     * @return bool
+     */
+    private function _isMissingObject(S3Exception $exception)
+    {
+        return in_array($exception->getAwsErrorCode(), ['NoSuchKey', 'NotFound'], true);
+    }
+
+    /**
      * Uploads the payload in the $this->_bucket under the specified key.
      * The entire payload is stored as a JSON document. The metadata is replicated
      * as the S3 object's metadata except for the field salt.
@@ -213,8 +224,10 @@ class S3Storage extends AbstractData
             $data = $object['Body']->getContents();
             return Json::decode($data);
         } catch (S3Exception $e) {
-            error_log('failed to read ' . $pasteid . ' from ' . $this->_bucket . ', ' .
-                trim(preg_replace('/\s\s+/', ' ', $e->getMessage())));
+            if ($this->_isMissingObject($e)) {
+                return false;
+            }
+            throw $e;
         } catch (JsonException $e) {
             error_log('failed to JSON decode ' . $pasteid . ', ' . $e->getMessage());
         }
@@ -269,23 +282,26 @@ class S3Storage extends AbstractData
     {
         $comments = [];
         $prefix   = $this->_getKey($pasteid) . '/discussion/';
-        try {
-            $entries = $this->_listAllObjects($prefix);
-            foreach ($entries as $entry) {
+        $entries  = $this->_listAllObjects($prefix);
+        foreach ($entries as $entry) {
+            try {
                 $object = $this->_client->getObject([
                     'Bucket' => $this->_bucket,
                     'Key'    => $entry['Key'],
                 ]);
-                $data             = $object['Body']->getContents();
-                $body             = JSON::decode($data);
-                $items            = explode('/', $entry['Key']);
-                $body['id']       = $items[3];
-                $body['parentid'] = $items[2];
-                $slot             = $this->getOpenSlot($comments, (int) $object['Metadata']['created']);
-                $comments[$slot]  = $body;
+            } catch (S3Exception $e) {
+                if ($this->_isMissingObject($e)) {
+                    continue;
+                }
+                throw $e;
             }
-        } catch (S3Exception $e) {
-            // no comments found
+            $data             = $object['Body']->getContents();
+            $body             = JSON::decode($data);
+            $items            = explode('/', $entry['Key']);
+            $body['id']       = $items[3];
+            $body['parentid'] = $items[2];
+            $slot             = $this->getOpenSlot($comments, (int) $object['Metadata']['created']);
+            $comments[$slot]  = $body;
         }
         return $comments;
     }
@@ -310,30 +326,29 @@ class S3Storage extends AbstractData
         }
         $path .= 'config/' . $namespace;
 
-        try {
-            foreach ($this->_listAllObjects($path) as $object) {
-                $name = $object['Key'];
-                if (strlen($name) > strlen($path) && substr($name, strlen($path), 1) !== '/') {
-                    continue;
-                }
+        foreach ($this->_listAllObjects($path) as $object) {
+            $name = $object['Key'];
+            if (strlen($name) > strlen($path) && substr($name, strlen($path), 1) !== '/') {
+                continue;
+            }
+            try {
                 $head = $this->_client->headObject([
                     'Bucket' => $this->_bucket,
                     'Key'    => $name,
                 ]);
-                $value = $head->get('Metadata')['value'] ?? '';
-                if (is_numeric($value) && intval($value) < $time) {
-                    try {
-                        $this->_client->deleteObject([
-                            'Bucket' => $this->_bucket,
-                            'Key'    => $name,
-                        ]);
-                    } catch (S3Exception $e) {
-                        // deleted by another instance.
-                    }
+            } catch (S3Exception $e) {
+                if ($this->_isMissingObject($e)) {
+                    continue;
                 }
+                throw $e;
             }
-        } catch (S3Exception $e) {
-            // no objects in the bucket yet
+            $value = $head->get('Metadata')['value'] ?? '';
+            if (is_numeric($value) && intval($value) < $time) {
+                $this->_client->deleteObject([
+                    'Bucket' => $this->_bucket,
+                    'Key'    => $name,
+                ]);
+            }
         }
     }
 
@@ -398,7 +413,7 @@ class S3Storage extends AbstractData
             ]);
             return $object['Body']->getContents();
         } catch (S3Exception $e) {
-            if ($e->getAwsErrorCode() === 'NoSuchKey') {
+            if ($this->_isMissingObject($e)) {
                 return '';
             }
             throw $e;
@@ -417,23 +432,26 @@ class S3Storage extends AbstractData
             $prefix .= '/';
         }
 
-        try {
-            foreach ($this->_listAllObjects($prefix) as $object) {
+        foreach ($this->_listAllObjects($prefix) as $object) {
+            try {
                 $head = $this->_client->headObject([
                     'Bucket' => $this->_bucket,
                     'Key'    => $object['Key'],
                 ]);
-                $expire_at = $head->get('Metadata')['expire_date'] ?? '';
-                if (is_numeric($expire_at) && intval($expire_at) < $now) {
-                    array_push($expired, $object['Key']);
+            } catch (S3Exception $e) {
+                if ($this->_isMissingObject($e)) {
+                    continue;
                 }
-
-                if (count($expired) > $batchsize) {
-                    break;
-                }
+                throw $e;
             }
-        } catch (S3Exception $e) {
-            // no objects in the bucket yet
+            $expire_at = $head->get('Metadata')['expire_date'] ?? '';
+            if (is_numeric($expire_at) && intval($expire_at) < $now) {
+                array_push($expired, $object['Key']);
+            }
+
+            if (count($expired) > $batchsize) {
+                break;
+            }
         }
         return $expired;
     }
@@ -449,15 +467,11 @@ class S3Storage extends AbstractData
             $prefix .= '/';
         }
 
-        try {
-            foreach ($this->_listAllObjects($prefix) as $object) {
-                $candidate = substr($object['Key'], strlen($prefix));
-                if (!str_contains($candidate, '/')) {
-                    $pastes[] = $candidate;
-                }
+        foreach ($this->_listAllObjects($prefix) as $object) {
+            $candidate = substr($object['Key'], strlen($prefix));
+            if (!str_contains($candidate, '/')) {
+                $pastes[] = $candidate;
             }
-        } catch (S3Exception $e) {
-            // no objects in the bucket yet
         }
         return $pastes;
     }

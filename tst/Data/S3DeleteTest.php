@@ -76,6 +76,47 @@ namespace {
         }
     }
 
+    class S3ListClientStub
+    {
+        private $_exception;
+
+        public function __construct(S3Exception $exception)
+        {
+            $this->_exception = $exception;
+        }
+
+        public function listObjects($options)
+        {
+            throw $this->_exception;
+        }
+    }
+
+    class S3CommentReadClientStub
+    {
+        private $_exception;
+
+        public function __construct(S3Exception $exception)
+        {
+            $this->_exception = $exception;
+        }
+
+        public function listObjects($options)
+        {
+            return [
+                'Contents'    => [[
+                    'Key' => Helper::getPasteId() . '/discussion/' .
+                        Helper::getPasteId() . '/' . Helper::getCommentId(),
+                ]],
+                'IsTruncated' => false,
+            ];
+        }
+
+        public function getObject($options)
+        {
+            throw $this->_exception;
+        }
+    }
+
     class S3DeleteTest extends TestCase
     {
         public function testCommentDeletionErrorsStopPasteDeletion()
@@ -135,6 +176,86 @@ namespace {
             );
 
             $this->assertSame('', $storage->getValue('salt'));
+        }
+
+        public function testPasteReadErrorsArePropagated()
+        {
+            $storage = $this->getStorage(
+                new S3ValueClientStub($this->getS3Exception('AccessDenied'))
+            );
+
+            $failed = false;
+            try {
+                $storage->read(Helper::getPasteId());
+            } catch (S3Exception $e) {
+                $failed = true;
+            }
+
+            $this->assertTrue($failed);
+        }
+
+        public function testMissingPastesRemainMissing()
+        {
+            $storage = $this->getStorage(
+                new S3ValueClientStub($this->getS3Exception('NoSuchKey'))
+            );
+
+            $this->assertFalse($storage->read(Helper::getPasteId()));
+        }
+
+        public function testListErrorsArePropagated()
+        {
+            $storage = $this->getStorage(
+                new S3ListClientStub($this->getS3Exception('AccessDenied'))
+            );
+
+            foreach ([
+                function () use ($storage) {
+                    $storage->getAllPastes();
+                },
+                function () use ($storage) {
+                    $storage->readComments(Helper::getPasteId());
+                },
+                function () use ($storage) {
+                    $storage->purgeValues('traffic_limiter', time());
+                },
+                function () use ($storage) {
+                    $storage->purge(1);
+                },
+            ] as $operation) {
+                $failed = false;
+                try {
+                    $operation();
+                } catch (S3Exception $e) {
+                    $failed = true;
+                }
+                $this->assertTrue($failed);
+            }
+        }
+
+        public function testCommentReadErrorsArePropagated()
+        {
+            $storage = $this->getStorage(
+                new S3CommentReadClientStub($this->getS3Exception('AccessDenied'))
+            );
+
+            $failed = false;
+            try {
+                $storage->readComments(Helper::getPasteId());
+            } catch (S3Exception $e) {
+                $failed = true;
+            }
+
+            $this->assertTrue($failed);
+        }
+
+        public function testCommentsDeletedDuringReadAreIgnored()
+        {
+            $storage = $this->getStorage(
+                new S3CommentReadClientStub($this->getS3Exception('NoSuchKey'))
+            );
+
+            $this->assertSame([], $storage->readComments(Helper::getPasteId()));
         }
 
         private function getS3Exception($awsErrorCode)
