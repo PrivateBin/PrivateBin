@@ -4501,15 +4501,12 @@ window.PrivateBin = (function () {
          * collapses the navigation bar, only if expanded
          *
          * @name   TopNav.collapseBar
-         * @function
-         */
+        * @function
+        */
         me.collapseBar = function () {
-            const navbar = document.getElementById('navbar');
-            if (navbar && navbar.getAttribute('aria-expanded') === 'true') {
-                const toggle = document.querySelector('.navbar-toggle');
-                if (toggle) {
-                    toggle.click();
-                }
+            const toggle = document.querySelector('.navbar-toggler, .navbar-toggle');
+            if (toggle && toggle.getAttribute('aria-expanded') === 'true') {
+                toggle.click();
             }
         };
 
@@ -6154,5 +6151,4 @@ if (typeof module === 'undefined' || !module.exports) {
         window.PrivateBin.Controller.init();
     });
 }
-
 
