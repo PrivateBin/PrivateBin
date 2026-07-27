@@ -186,7 +186,8 @@ class I18n
             self::$_translations = [];
         } else {
             $data                = file_get_contents(self::_getPath(self::$_language . '.json'));
-            self::$_translations = Json::decode($data);
+            $translations        = Json::decode($data);
+            self::$_translations = is_array($translations) ? $translations : [];
         }
     }
 
@@ -277,7 +278,8 @@ class I18n
         $file = self::_getPath('languages.json');
         if (count(self::$_languageLabels) === 0 && is_readable($file)) {
             $data                  = file_get_contents($file);
-            self::$_languageLabels = Json::decode($data);
+            $labels                = Json::decode($data);
+            self::$_languageLabels = is_array($labels) ? $labels : [];
         }
         if (count($languages) === 0) {
             return self::$_languageLabels;

@@ -11,6 +11,16 @@ class I18nMock extends I18n
         self::$_availableLanguages = [];
     }
 
+    public static function resetLanguageLabels()
+    {
+        self::$_languageLabels = [];
+    }
+
+    public static function resetTranslations()
+    {
+        self::$_translations = [];
+    }
+
     public static function resetPath($path = '')
     {
         self::$_path = $path;
@@ -229,6 +239,34 @@ class I18nTest extends TestCase
         I18nMock::resetAvailableLanguages();
         I18nMock::resetPath();
         Helper::rmDir($path);
+    }
+
+    public function testMalformedTranslationStructuresAreIgnored()
+    {
+        $path = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'privatebin_i18n_malformed';
+        if (!is_dir($path)) {
+            mkdir($path);
+        }
+        file_put_contents($path . DIRECTORY_SEPARATOR . 'zz.json', 'true');
+        file_put_contents($path . DIRECTORY_SEPARATOR . 'languages.json', 'true');
+        I18nMock::resetPath($path);
+        I18nMock::resetAvailableLanguages();
+        I18nMock::resetLanguageLabels();
+        I18nMock::resetTranslations();
+        $_COOKIE['lang'] = 'zz';
+
+        try {
+            I18n::loadTranslations();
+            $this->assertSame('fallback message', I18n::_('fallback message'));
+            $this->assertSame([], I18n::getLanguageLabels());
+        } finally {
+            unset($_COOKIE['lang']);
+            I18nMock::resetPath();
+            I18nMock::resetAvailableLanguages();
+            I18nMock::resetLanguageLabels();
+            I18nMock::resetTranslations();
+            Helper::rmDir($path);
+        }
     }
 
     public function testGetCopyHotkey()
