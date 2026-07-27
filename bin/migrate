@@ -152,6 +152,7 @@ function savePaste ($force_overwrite, $dryrun, $pasteid, $paste, $dststore)
     } else if ($force_overwrite) {
         if (!$dryrun) {
             debug("Overwriting document ID " . $pasteid);
+            $dststore->delete($pasteid);
             if (!$dststore->create($pasteid, $paste)) {
                 dieerr("Unable to overwrite document ID " . $pasteid);
             }
