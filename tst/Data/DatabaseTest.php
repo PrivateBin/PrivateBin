@@ -172,6 +172,19 @@ class DatabaseTest extends TestCase
         $this->assertFalse($this->_model->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId()), 'comment does still not exist');
     }
 
+    public function testMysqlPasteDataUsesLongBlob()
+    {
+        $reflection = new ReflectionClass(Database::class);
+        $database   = $reflection->newInstanceWithoutConstructor();
+        $type       = $reflection->getProperty('_type');
+        $type->setAccessible(true);
+        $type->setValue($database, 'mysql');
+        $getAttachmentType = $reflection->getMethod('_getAttachmentType');
+        $getAttachmentType->setAccessible(true);
+
+        $this->assertSame('LONGBLOB', $getAttachmentType->invoke($database));
+    }
+
     public function testGetIbmInstance()
     {
         $this->expectException(PDOException::class);

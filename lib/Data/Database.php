@@ -642,6 +642,8 @@ class Database extends AbstractData
                 return 'CLOB';
             case 'pgsql':
                 return 'TEXT';
+            case 'mysql':
+                return 'LONGBLOB';
             default:
                 return 'MEDIUMBLOB';
         }
@@ -898,6 +900,17 @@ class Database extends AbstractData
                     '" DROP COLUMN "nickname"'
                 );
             }
+        }
+        if (
+            $this->_type === 'mysql' &&
+            version_compare($oldversion, '1.3', '>') &&
+            version_compare($oldversion, '2.0.5', '<=')
+        ) {
+            // releases through 2.0.5 created the MySQL paste data as MEDIUMBLOB
+            $this->_db->exec(
+                'ALTER TABLE "' . $this->_sanitizeIdentifier('paste') .
+                "\" MODIFY COLUMN \"data\" $attachmentType"
+            );
         }
         $this->_exec(
             'UPDATE "' . $this->_sanitizeIdentifier('config') .
