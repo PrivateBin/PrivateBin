@@ -71,6 +71,19 @@ class ConfigurationTest extends TestCase
         $this->assertEquals($this->_options, $conf->get(), 'returns correct defaults on empty file');
     }
 
+    public function testHandleEmptyInfo()
+    {
+        file_put_contents(
+            CONF,
+            '[main]' . PHP_EOL .
+            'info = ""' . PHP_EOL .
+            '[model]' . PHP_EOL .
+            '[model_options]'
+        );
+        $conf = new Configuration;
+        $this->assertSame('', $conf->getKey('info'), 'allows the optional info text to be cleared');
+    }
+
     public function testHandleInvalidSection()
     {
         file_put_contents(CONF, $this->_minimalConfig);

@@ -239,7 +239,10 @@ class Configuration
                             }
                         } elseif (is_int($val)) {
                             $result = (int) $config[$section][$key];
-                        } elseif (is_string($val) && !empty($config[$section][$key])) {
+                        } elseif (
+                            is_string($val) &&
+                            ($key === 'info' || !empty($config[$section][$key]))
+                        ) {
                             $result = (string) $config[$section][$key];
                         } elseif (is_array($val) && is_array($config[$section][$key])) {
                             $result = $config[$section][$key];
