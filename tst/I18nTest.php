@@ -259,6 +259,21 @@ class I18nTest extends TestCase
             I18n::loadTranslations();
             $this->assertSame('fallback message', I18n::_('fallback message'));
             $this->assertSame([], I18n::getLanguageLabels());
+
+            file_put_contents(
+                $path . DIRECTORY_SEPARATOR . 'zz.json',
+                '{"fallback message":true,"valid message":"translated"}'
+            );
+            file_put_contents(
+                $path . DIRECTORY_SEPARATOR . 'languages.json',
+                '{"zz":true,"yy":["Valid","Valid"]}'
+            );
+            I18nMock::resetLanguageLabels();
+            I18nMock::resetTranslations();
+            I18n::loadTranslations();
+            $this->assertSame('fallback message', I18n::_('fallback message'));
+            $this->assertSame('translated', I18n::_('valid message'));
+            $this->assertSame(['yy' => ['Valid', 'Valid']], I18n::getLanguageLabels());
         } finally {
             unset($_COOKIE['lang']);
             I18nMock::resetPath();

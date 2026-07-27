@@ -187,7 +187,8 @@ class I18n
         } else {
             $data                = file_get_contents(self::_getPath(self::$_language . '.json'));
             $translations        = Json::decode($data);
-            self::$_translations = is_array($translations) ? $translations : [];
+            self::$_translations = is_array($translations) ?
+                self::_filterCatalog($translations) : [];
         }
     }
 
@@ -279,7 +280,8 @@ class I18n
         if (count(self::$_languageLabels) === 0 && is_readable($file)) {
             $data                  = file_get_contents($file);
             $labels                = Json::decode($data);
-            self::$_languageLabels = is_array($labels) ? $labels : [];
+            self::$_languageLabels = is_array($labels) ?
+                self::_filterCatalog($labels) : [];
         }
         if (count($languages) === 0) {
             return self::$_languageLabels;
@@ -340,6 +342,34 @@ class I18n
             self::$_path = PUBLIC_PATH . DIRECTORY_SEPARATOR . 'i18n';
         }
         return self::$_path . (empty($file) ? '' : DIRECTORY_SEPARATOR . $file);
+    }
+
+    /**
+     * remove values that cannot be used as messages or language labels
+     *
+     * @access private
+     * @static
+     * @param  array $catalog
+     * @return array
+     */
+    private static function _filterCatalog(array $catalog)
+    {
+        foreach ($catalog as $key => $entry) {
+            if (is_string($entry)) {
+                continue;
+            }
+            if (!is_array($entry) || count($entry) === 0) {
+                unset($catalog[$key]);
+                continue;
+            }
+            foreach ($entry as $value) {
+                if (!is_string($value)) {
+                    unset($catalog[$key]);
+                    break;
+                }
+            }
+        }
+        return $catalog;
     }
 
     /**
