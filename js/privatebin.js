@@ -5627,9 +5627,7 @@ window.PrivateBin = (function () {
 
             copyButton.addEventListener('click', function () {
                 const text = PasteViewer.getText();
-                saveToClipboard(text);
-
-                showAlertMessage('Document copied to clipboard');
+                saveToClipboard(text, 'Document copied to clipboard');
             });
         }
 
@@ -5644,9 +5642,7 @@ window.PrivateBin = (function () {
             if (!copyLinkButton) return;
 
             copyLinkButton.addEventListener('click', function () {
-                saveToClipboard(url);
-
-                showAlertMessage('Link copied to clipboard');
+                saveToClipboard(url, 'Link copied to clipboard');
             });
         }
 
@@ -5661,9 +5657,7 @@ window.PrivateBin = (function () {
             document.addEventListener('copy', function () {
                 if (!isUserSelectedTextToCopy()) {
                     const text = PasteViewer.getText();
-                    saveToClipboard(text);
-
-                    showAlertMessage('Document copied to clipboard');
+                    saveToClipboard(text, 'Document copied to clipboard');
                 }
             });
         }
@@ -5694,10 +5688,18 @@ window.PrivateBin = (function () {
          * @name CopyToClipboard.saveToClipboard
          * @private
          * @param {string} text
+         * @param {string} successMessage
          * @function
+         * @return {Promise<void>}
          */
-        function saveToClipboard(text) {
-            navigator.clipboard.writeText(text);
+        async function saveToClipboard(text, successMessage) {
+            try {
+                await navigator.clipboard.writeText(text);
+                showAlertMessage(successMessage);
+            } catch (error) {
+                console.error('Clipboard error:', error);
+                Alert.showError('Could not copy to clipboard.');
+            }
         }
 
         /**
@@ -6154,5 +6156,4 @@ if (typeof module === 'undefined' || !module.exports) {
         window.PrivateBin.Controller.init();
     });
 }
-
 

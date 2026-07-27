@@ -136,6 +136,42 @@ describe('CopyToClipboard', function () {
         );
     });
 
+    it('reports clipboard write failures without showing success', async function () {
+        common.enableClipboard();
+        const error = new Error('permission denied');
+        navigator.clipboard.writeText = function () {
+            return Promise.reject(error);
+        };
+        document.body.innerHTML = '<button id="copyLink"></button>';
+
+        let statusMessage;
+        let errorMessage;
+        const originalConsoleError = console.error;
+        let loggedError;
+        PrivateBin.Alert.showStatus = function (message) {
+            statusMessage = message;
+        };
+        PrivateBin.Alert.showError = function (message) {
+            errorMessage = message;
+        };
+        PrivateBin.CopyToClipboard.init();
+        PrivateBin.CopyToClipboard.setUrl('https://example.com/');
+
+        try {
+            console.error = function (label, value) {
+                loggedError = [label, value];
+            };
+            document.getElementById('copyLink').click();
+            await new Promise(resolve => setImmediate(resolve));
+
+            assert.strictEqual(statusMessage, undefined);
+            assert.strictEqual(errorMessage, 'Could not copy to clipboard.');
+            assert.deepStrictEqual(loggedError, ['Clipboard error:', error]);
+        } finally {
+            console.error = originalConsoleError;
+        }
+    });
+
     describe('Keyboard shortcut hint', function () {
         it('shows hint', () => {
             fc.assert(fc.property(fc.string(),
