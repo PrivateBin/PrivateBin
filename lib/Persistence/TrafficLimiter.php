@@ -72,6 +72,7 @@ class TrafficLimiter extends AbstractPersistence
         self::setCreators($conf->getKey('creators', 'traffic'));
         self::setExempted($conf->getKey('exempted', 'traffic'));
         self::setLimit($conf->getKey('limit', 'traffic'));
+        self::$_ipKey = 'REMOTE_ADDR';
 
         if (!empty($option = $conf->getKey('header', 'traffic'))) {
             $httpHeader = 'HTTP_' . $option;
