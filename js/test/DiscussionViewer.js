@@ -129,5 +129,42 @@ describe('DiscussionViewer', function () {
                 }
             ));
         });
+
+        it('scrolls a highlighted comment into the viewport', function () {
+            document.body.innerHTML = '<article id="comment_target"></article>';
+            const comment = document.getElementById('comment_target');
+            let scrolls = 0;
+
+            comment.checkVisibility = function () {
+                return true;
+            };
+            comment.getBoundingClientRect = function () {
+                return {
+                    top: window.innerHeight + 10,
+                    bottom: window.innerHeight + 30,
+                    left: 0,
+                    right: 100
+                };
+            };
+            comment.scrollIntoView = function () {
+                ++scrolls;
+            };
+
+            PrivateBin.DiscussionViewer.highlightComment('target', false);
+
+            assert.strictEqual(scrolls, 1);
+
+            comment.getBoundingClientRect = function () {
+                return {
+                    top: 10,
+                    bottom: 30,
+                    left: 10,
+                    right: 110
+                };
+            };
+            PrivateBin.DiscussionViewer.highlightComment('target', false);
+
+            assert.strictEqual(scrolls, 1);
+        });
     });
 });
