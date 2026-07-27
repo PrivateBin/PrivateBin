@@ -34,7 +34,7 @@ class PurgeLimiterTest extends TestCase
 
         // try setting it
         $this->assertEquals(false, PurgeLimiter::canPurge());
-        sleep(2);
+        sleep(1);
         $this->assertEquals(true, PurgeLimiter::canPurge());
 
         // disable it

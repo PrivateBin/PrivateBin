@@ -44,7 +44,7 @@ class TrafficLimiterTest extends TestCase
         } catch (Exception $e) {
             $this->assertEquals($e->getMessage(), 'Please wait 4 seconds between each post.', 'second request is to fast, may not pass');
         }
-        sleep(4);
+        sleep(3);
         $this->assertTrue(TrafficLimiter::canPass(), 'third request waited long enough and may pass');
         $_SERVER['REMOTE_ADDR'] = '2001:1620:2057:dead:beef::cafe:babe';
         $this->assertTrue(TrafficLimiter::canPass(), 'fourth request has different ip and may pass');
