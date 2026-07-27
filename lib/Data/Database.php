@@ -342,6 +342,13 @@ class Database extends AbstractData
                     error_log('Error while reading a comment from the database: invalid data structure');
                     continue;
                 }
+                if (
+                    preg_match('/\A[a-f0-9]{16}\z/', (string) $row['dataid']) !== 1 ||
+                    preg_match('/\A[a-f0-9]{16}\z/', (string) $row['parentid']) !== 1
+                ) {
+                    error_log('Error while reading a comment from the database: invalid identifier');
+                    continue;
+                }
                 $i                          = $this->getOpenSlot($comments, (int) $row['postdate']);
                 $comments[$i]               = $data;
                 $comments[$i]['id']         = $row['dataid'];

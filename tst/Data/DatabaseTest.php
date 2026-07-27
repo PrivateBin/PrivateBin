@@ -154,6 +154,22 @@ class DatabaseTest extends TestCase
             null,
             time(),
         ]);
+        $statement->execute([
+            'invalid',
+            Helper::getPasteId(),
+            Helper::getPasteId(),
+            json_encode($comment),
+            null,
+            time(),
+        ]);
+        $statement->execute([
+            'eeeeeeeeeeeeeeee',
+            Helper::getPasteId(),
+            'invalid',
+            json_encode($comment),
+            null,
+            time(),
+        ]);
         $errorLog = ini_get('error_log');
         ini_set('error_log', '/dev/null');
         $comments = $this->_model->readComments(Helper::getPasteId());
