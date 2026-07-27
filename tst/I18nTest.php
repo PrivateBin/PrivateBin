@@ -80,6 +80,14 @@ class I18nTest extends TestCase
         $this->assertEquals('2 heures', I18n::_('%d hours', 2), '2 hours in French');
     }
 
+    public function testEqualQualityPreservesBrowserOrder()
+    {
+        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'fr;q=0.8,de;q=0.8';
+        I18n::loadTranslations();
+
+        $this->assertEquals('fr', I18n::getLanguage());
+    }
+
     public function testBrowserLanguageNoDetection()
     {
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'no;q=0.8,en-GB;q=0.6,en-US;q=0.4,en;q=0.2';

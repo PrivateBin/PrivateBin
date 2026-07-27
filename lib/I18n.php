@@ -409,12 +409,12 @@ class I18n
             if ($acceptedQuality === 0.0) {
                 continue;
             }
-            foreach ($availableLanguages as $availableValue) {
-                $availableQuality = 1.0;
-                foreach ($acceptedValues as $acceptedValue) {
-                    if ($acceptedValue === '*') {
-                        $any = true;
-                    }
+            foreach ($acceptedValues as $acceptedValue) {
+                if ($acceptedValue === '*') {
+                    $any = true;
+                }
+                foreach ($availableLanguages as $availableValue) {
+                    $availableQuality = 1.0;
                     $matchingGrade = self::_matchLanguage($acceptedValue, $availableValue);
                     if ($matchingGrade > 0) {
                         $q = (string) ($acceptedQuality * $availableQuality * $matchingGrade);
