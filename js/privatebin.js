@@ -1522,7 +1522,11 @@ window.PrivateBin = (function () {
                 try {
                     // base58 encode strips NULL bytes at the beginning of the
                     // string, so we re-add them if necessary
-                    symmetricKey = CryptTool.base58decode(newKey).padStart(32, '\u0000');
+                    const decodedKey = CryptTool.base58decode(newKey);
+                    if (decodedKey.length > 32) {
+                        throw new Error('encryption key is too long');
+                    }
+                    symmetricKey = decodedKey.padStart(32, '\u0000');
                 } catch (e) {
                     throw 'encryption key of unsupported format given or incomplete, mangled URL';
                 }
@@ -6154,5 +6158,4 @@ if (typeof module === 'undefined' || !module.exports) {
         window.PrivateBin.Controller.init();
     });
 }
-
 
