@@ -265,6 +265,13 @@ class Request
      */
     private function _detectJsonRequest()
     {
+        if (
+            ($_SERVER['REQUEST_METHOD'] ?? '') === 'OPTIONS' &&
+            isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD'])
+        ) {
+            return true;
+        }
+
         $acceptHeader = $_SERVER['HTTP_ACCEPT'] ?? '';
 
         // simple cases
