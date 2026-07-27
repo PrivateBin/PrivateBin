@@ -3373,7 +3373,8 @@ window.PrivateBin = (function () {
                 const items = (event.clipboardData || event.originalEvent.clipboardData).items;
                 const files = [...items]
                     .filter(item => item.kind === 'file')
-                    .map(item => item.getAsFile());
+                    .map(item => item.getAsFile())
+                    .filter(file => file !== null);
 
                 if (TopNav.isAttachmentReadonly() && files.length) {
                     event.stopPropagation();
@@ -6154,5 +6155,4 @@ if (typeof module === 'undefined' || !module.exports) {
         window.PrivateBin.Controller.init();
     });
 }
-
 
