@@ -183,6 +183,18 @@ describe('I18n', function () {
                 }
             ));
         });
+
+        it('uses the shipped plural forms for Hindi and Korean', () => {
+            PrivateBin.I18n.reset('hi');
+            assert.strictEqual(PrivateBin.I18n.getPluralForm(0), 0);
+            assert.strictEqual(PrivateBin.I18n.getPluralForm(1), 0);
+            assert.strictEqual(PrivateBin.I18n.getPluralForm(2), 1);
+
+            PrivateBin.I18n.reset('ko');
+            assert.strictEqual(PrivateBin.I18n.getPluralForm(0), 0);
+            assert.strictEqual(PrivateBin.I18n.getPluralForm(1), 0);
+            assert.strictEqual(PrivateBin.I18n.getPluralForm(2), 0);
+        });
     });
 
     // loading of JSON via AJAX needs to be tested in the browser, this just mocks it
@@ -191,6 +203,29 @@ describe('I18n', function () {
         this.timeout(30000);
         before(function () {
             PrivateBin.I18n.reset();
+        });
+
+        it('loads every translation exposed by the server', async () => {
+            const originalFetch = global.fetch;
+            global.fetch = () => Promise.resolve({
+                ok: true,
+                json: () => Promise.resolve({})
+            });
+            try {
+                for (const language of ['hi', 'ko', 'ku', 'la']) {
+                    globalThis.cleanup('', {
+                        url: 'https://privatebin.net/'
+                    });
+                    document.cookie = 'lang=' + language;
+                    PrivateBin.I18n.reset();
+                    PrivateBin.I18n.loadTranslations();
+                    await new Promise(resolve => setImmediate(resolve));
+                    assert.strictEqual(PrivateBin.I18n.getLanguage(), language);
+                }
+            } finally {
+                global.fetch = originalFetch;
+                globalThis.cleanup();
+            }
         });
 
         it('downloads and handles any supported language', () => {
