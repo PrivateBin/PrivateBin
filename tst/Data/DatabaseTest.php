@@ -131,6 +131,19 @@ class DatabaseTest extends TestCase
         ini_set('error_log', $errorLog);
     }
 
+    public function testPasteEnumerationRejectsInvalidIdentifiers()
+    {
+        $this->_model->delete(Helper::getPasteId());
+        $database  = $this->getDatabaseConnection();
+        $statement = $database->prepare('INSERT INTO paste VALUES(?,?,?,?)');
+        $statement->execute(['invalid', '{}', 0, '{}']);
+        try {
+            $this->assertSame([], $this->_model->getAllPastes());
+        } finally {
+            $database->exec("DELETE FROM paste WHERE dataid = 'invalid'");
+        }
+    }
+
     public function testCorruptCommentsAreIgnored()
     {
         $this->_model->delete(Helper::getPasteId());

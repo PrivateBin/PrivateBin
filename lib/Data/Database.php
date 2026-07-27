@@ -486,9 +486,17 @@ class Database extends AbstractData
      */
     public function getAllPastes()
     {
-        return $this->_db->query(
+        $ids = $this->_db->query(
             'SELECT "dataid" FROM "' . $this->_sanitizeIdentifier('paste') . '"'
         )->fetchAll(PDO::FETCH_COLUMN, 0);
+        $pastes = [];
+        foreach ($ids as $pasteid) {
+            $pasteid = (string) $pasteid;
+            if (preg_match('/\A[a-f0-9]{16}\z/', $pasteid) === 1) {
+                $pastes[] = $pasteid;
+            }
+        }
+        return $pastes;
     }
 
     /**
