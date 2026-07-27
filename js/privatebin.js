@@ -4528,12 +4528,8 @@ window.PrivateBin = (function () {
             if (openDiscussion) {
                 openDiscussion.checked = openDiscussionDefault;
             }
-            if (openDiscussionDefault || !burnAfterReadingDefault) {
-                openDiscussionOption.classList.remove('buttondisabled');
-            }
-            if (burnAfterReadingDefault || !openDiscussionDefault) {
-                burnAfterReadingOption.classList.remove('buttondisabled');
-            }
+            changeBurnAfterReading();
+            changeOpenDiscussion();
 
             pasteExpiration = Model.getExpirationDefault() || pasteExpiration;
             const pasteExpirationSelect = document.getElementById('pasteExpiration');
@@ -6154,5 +6150,4 @@ if (typeof module === 'undefined' || !module.exports) {
         window.PrivateBin.Controller.init();
     });
 }
-
 
