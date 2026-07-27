@@ -215,6 +215,13 @@ class Filesystem extends AbstractData
                 // - parentid is the comment this comment replies to (It can be pasteid)
                 if ($file->isFile()) {
                     $comment = $this->_get($file->getPathname());
+                    if (
+                        !is_array($comment) ||
+                        !isset($comment['meta']['created']) ||
+                        !(is_int($comment['meta']['created']) || is_string($comment['meta']['created']))
+                    ) {
+                        continue;
+                    }
                     $items   = explode('.', $file->getBasename('.php'));
                     // Add some meta information not contained in file.
                     $comment['id']       = $items[1];

@@ -138,6 +138,36 @@ class FilesystemTest extends TestCase
         $this->assertFalse($this->_model->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId()), 'comment does still not exist');
     }
 
+    public function testCorruptCommentsAreIgnored()
+    {
+        $pasteid   = Helper::getPasteId();
+        $commentid = Helper::getCommentId();
+        $comment   = Helper::getComment();
+        $this->assertTrue($this->_model->createComment($pasteid, $pasteid, $commentid, $comment));
+
+        $discussion = $this->_path . DIRECTORY_SEPARATOR . substr($pasteid, 0, 2) .
+            DIRECTORY_SEPARATOR . substr($pasteid, 2, 2) . DIRECTORY_SEPARATOR .
+            $pasteid . '.discussion' . DIRECTORY_SEPARATOR;
+        file_put_contents(
+            $discussion . $pasteid . '.ffffffffffffffff.' . $pasteid . '.php',
+            Filesystem::PROTECTION_LINE . PHP_EOL . '{'
+        );
+        file_put_contents(
+            $discussion . $pasteid . '.eeeeeeeeeeeeeeee.' . $pasteid . '.php',
+            Filesystem::PROTECTION_LINE . PHP_EOL . 'true'
+        );
+
+        $error_log_setting = ini_get('error_log');
+        ini_set('error_log', '/dev/null');
+        try {
+            $comments = $this->_model->readComments($pasteid);
+        } finally {
+            ini_set('error_log', $error_log_setting);
+        }
+        $this->assertCount(1, $comments);
+        $this->assertSame($commentid, current($comments)['id']);
+    }
+
     public function testOldFilesGetConverted()
     {
         // generate 10 (default purge batch size) pastes in the old format

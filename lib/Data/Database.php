@@ -314,7 +314,10 @@ class Database extends AbstractData
                     $data = Json::decode($row['data']);
                 } catch (JsonException $e) {
                     error_log('Error while reading a comment from the database: ' . $e->getMessage());
-                    $data = [];
+                    continue;
+                }
+                if (!is_array($data)) {
+                    continue;
                 }
                 $i                          = $this->getOpenSlot($comments, (int) $row['postdate']);
                 $comments[$i]               = $data;
