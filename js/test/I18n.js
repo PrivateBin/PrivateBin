@@ -238,5 +238,45 @@ describe('I18n', function () {
             clean();
             return 'Never' === result && 'Never' === alias;
         });
+
+        it('settles deferred translations when a language download fails', async () => {
+            const clean = globalThis.cleanup();
+            const originalFetch = global.fetch;
+            const originalConsoleError = console.error;
+            const originalGetCookie = PrivateBin.Helper.getCookie;
+            let completionEvents = 0;
+            const countCompletion = function () {
+                ++completionEvents;
+            };
+            document.body.innerHTML = '<div id="translated"></div>';
+            const translated = document.getElementById('translated');
+            PrivateBin.Helper.getCookie = function () {
+                return 'de';
+            };
+            global.fetch = function () {
+                return Promise.reject(new Error('download failed'));
+            };
+            console.error = function () {};
+            document.addEventListener('languageLoaded', countCompletion);
+
+            try {
+                PrivateBin.I18n.reset();
+                PrivateBin.I18n.translate(translated, 'Never');
+                translated.textContent = 'waiting';
+                PrivateBin.I18n.loadTranslations();
+                await new Promise(resolve => setImmediate(resolve));
+
+                assert.strictEqual(PrivateBin.I18n.getLanguage(), 'en');
+                assert.strictEqual(completionEvents, 1);
+                assert.strictEqual(translated.textContent, 'Never');
+            } finally {
+                document.removeEventListener('languageLoaded', countCompletion);
+                global.fetch = originalFetch;
+                console.error = originalConsoleError;
+                PrivateBin.Helper.getCookie = originalGetCookie;
+                PrivateBin.I18n.reset();
+                clean();
+            }
+        });
     });
 });
