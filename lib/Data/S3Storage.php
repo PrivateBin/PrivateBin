@@ -228,30 +228,18 @@ class S3Storage extends AbstractData
     {
         $name = $this->_getKey($pasteid);
 
-        try {
-            $comments = $this->_listAllObjects($name . '/discussion/');
-            foreach ($comments as $comment) {
-                try {
-                    $this->_client->deleteObject([
-                        'Bucket' => $this->_bucket,
-                        'Key'    => $comment['Key'],
-                    ]);
-                } catch (S3Exception $e) {
-                    // ignore if already deleted.
-                }
-            }
-        } catch (S3Exception $e) {
-            // there are no discussions associated with the paste
-        }
-
-        try {
+        $comments = $this->_listAllObjects($name . '/discussion/');
+        foreach ($comments as $comment) {
             $this->_client->deleteObject([
                 'Bucket' => $this->_bucket,
-                'Key'    => $name,
+                'Key'    => $comment['Key'],
             ]);
-        } catch (S3Exception $e) {
-            // ignore if already deleted
         }
+
+        $this->_client->deleteObject([
+            'Bucket' => $this->_bucket,
+            'Key'    => $name,
+        ]);
     }
 
     /**
