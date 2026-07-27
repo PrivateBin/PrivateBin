@@ -50,6 +50,11 @@ describe('I18n', function () {
                 }
             ));
         });
+        it('preserves zero when selecting and formatting plural translations', () => {
+            const result = PrivateBin.I18n.translate(['%d item', '%d items'], 0);
+            PrivateBin.I18n.reset();
+            assert.strictEqual(result, '0 items');
+        });
         it('replaces %s in strings with first given parameter, encoding all, when no link is in the messageID', () => {
             fc.assert(fc.property(
                 fc.string(),

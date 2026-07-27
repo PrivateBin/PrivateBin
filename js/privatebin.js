@@ -777,9 +777,12 @@ window.PrivateBin = (function () {
 
             // lookup plural translation
             if (usesPlurals && Array.isArray(translations[messageId])) {
-                let n = parseInt(args[1] || 1, 10),
-                    key = me.getPluralForm(n),
-                    maxKey = translations[messageId].length - 1;
+                let n = parseInt(args[1], 10);
+                if (isNaN(n)) {
+                    n = 1;
+                }
+                let key = me.getPluralForm(n);
+                const maxKey = translations[messageId].length - 1;
                 if (key > maxKey) {
                     key = maxKey;
                 }
@@ -6154,5 +6157,4 @@ if (typeof module === 'undefined' || !module.exports) {
         window.PrivateBin.Controller.init();
     });
 }
-
 
