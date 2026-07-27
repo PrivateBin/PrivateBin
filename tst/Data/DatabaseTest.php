@@ -162,6 +162,14 @@ class DatabaseTest extends TestCase
         $this->assertSame('', $this->_model->getValue('purge_limiter'));
     }
 
+    public function testConfigWriteBeforeRead()
+    {
+        $this->assertTrue($this->_model->setValue('123', 'purge_limiter'));
+        $this->assertSame('123', $this->_model->getValue('purge_limiter'));
+        $this->assertTrue($this->_model->setValue('456', 'traffic_limiter', 'client'));
+        $this->assertSame('456', $this->_model->getValue('traffic_limiter', 'client'));
+    }
+
     public function testCommentErrorDetection()
     {
         $error_log_setting = ini_get('error_log');

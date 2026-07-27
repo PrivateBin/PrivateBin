@@ -363,6 +363,7 @@ class Database extends AbstractData
      */
     public function setValue($value, $namespace, $key = '')
     {
+        $configKey = strtoupper($namespace);
         if ($namespace === 'traffic_limiter') {
             $this->_last_cache[$key] = $value;
             try {
@@ -372,10 +373,24 @@ class Database extends AbstractData
                 return false;
             }
         }
+        if (!$this->_configKeyExists($configKey)) {
+            try {
+                return $this->_exec(
+                    'INSERT INTO "' . $this->_sanitizeIdentifier('config') .
+                    '" VALUES(?,?)',
+                    [$configKey, $value]
+                );
+            } catch (PDOException $e) {
+                // another request may have initialized the row concurrently
+                if (!$this->_configKeyExists($configKey)) {
+                    throw $e;
+                }
+            }
+        }
         return $this->_exec(
             'UPDATE "' . $this->_sanitizeIdentifier('config') .
             '" SET "value" = ? WHERE "id" = ?',
-            [$value, strtoupper($namespace)]
+            [$value, $configKey]
         );
     }
 
