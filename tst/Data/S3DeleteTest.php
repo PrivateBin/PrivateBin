@@ -4,6 +4,19 @@ namespace Aws\S3\Exception {
     if (!class_exists(S3Exception::class)) {
         class S3Exception extends \Exception
         {
+            const TEST_STUB = true;
+
+            private $_awsErrorCode;
+
+            public function __construct($awsErrorCode = null)
+            {
+                $this->_awsErrorCode = $awsErrorCode;
+            }
+
+            public function getAwsErrorCode()
+            {
+                return $this->_awsErrorCode;
+            }
         }
     }
 }
@@ -48,6 +61,21 @@ namespace {
         }
     }
 
+    class S3ValueClientStub
+    {
+        private $_exception;
+
+        public function __construct(S3Exception $exception)
+        {
+            $this->_exception = $exception;
+        }
+
+        public function getObject($options)
+        {
+            throw $this->_exception;
+        }
+    }
+
     class S3DeleteTest extends TestCase
     {
         public function testCommentDeletionErrorsStopPasteDeletion()
@@ -82,6 +110,44 @@ namespace {
             }
 
             $this->assertTrue($failed);
+        }
+
+        public function testValueReadErrorsArePropagated()
+        {
+            $storage = $this->getStorage(
+                new S3ValueClientStub($this->getS3Exception('AccessDenied'))
+            );
+
+            $failed = false;
+            try {
+                $storage->getValue('salt');
+            } catch (S3Exception $e) {
+                $failed = true;
+            }
+
+            $this->assertTrue($failed);
+        }
+
+        public function testMissingValuesRemainEmpty()
+        {
+            $storage = $this->getStorage(
+                new S3ValueClientStub($this->getS3Exception('NoSuchKey'))
+            );
+
+            $this->assertSame('', $storage->getValue('salt'));
+        }
+
+        private function getS3Exception($awsErrorCode)
+        {
+            if (defined(S3Exception::class . '::TEST_STUB')) {
+                return new S3Exception($awsErrorCode);
+            }
+            $exception = $this->getMockBuilder(S3Exception::class)
+                ->disableOriginalConstructor()
+                ->onlyMethods(['getAwsErrorCode'])
+                ->getMock();
+            $exception->method('getAwsErrorCode')->willReturn($awsErrorCode);
+            return $exception;
         }
 
         private function getStorage($client)

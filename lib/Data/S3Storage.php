@@ -398,7 +398,10 @@ class S3Storage extends AbstractData
             ]);
             return $object['Body']->getContents();
         } catch (S3Exception $e) {
-            return '';
+            if ($e->getAwsErrorCode() === 'NoSuchKey') {
+                return '';
+            }
+            throw $e;
         }
     }
 
