@@ -125,6 +125,37 @@ describe('TopNav', function () {
                 assert.ok(result);
             }
         );
+
+        it(
+            'skips formatter when only a hidden pasteFormatter input exists',
+            function () {
+                document.documentElement.innerHTML =
+                    '<nav><div id="navbar"><ul><li><button id="newbutton" ' +
+                    'type="button" class="hidden">New</button></li><li><a ' +
+                    'id="expiration" href="#" class="hidden">Expiration</a>' +
+                    '</li><li><div id="burnafterreadingoption" class="hidden">' +
+                    'Burn after reading</div></li><li><div id="opendiscussion' +
+                    'option" class="hidden">Open discussion</div></li><li>' +
+                    '<div id="password" class="hidden">Password</div></li>' +
+                    '<li id="attach" class="hidden">Attach a file</li>' +
+                    '<li><button id="sendbutton" type="button" ' +
+                    'class="hidden">Create</button></li></ul>' +
+                    '<input type="hidden" id="pasteFormatter" value="plaintext" />' +
+                    '</div></nav>';
+                PrivateBin.TopNav.init();
+                PrivateBin.TopNav.showCreateButtons();
+                assert.strictEqual(document.getElementById('formatter'), null);
+                assert.ok(!query('#sendbutton').classList.contains('hidden'));
+                PrivateBin.TopNav.setFormat('markdown');
+                assert.strictEqual(
+                    document.getElementById('pasteFormatter').value,
+                    'plaintext'
+                );
+                PrivateBin.TopNav.hideCreateButtons();
+                assert.ok(query('#sendbutton').classList.contains('hidden'));
+                cleanup();
+            }
+        );
     });
 
     describe('showNewPasteButton', function () {
