@@ -76,4 +76,55 @@ describe('Editor', function () {
             ));
         });
     });
+
+    describe('updatePreviewTabVisibility', function () {
+        beforeEach(function () {
+            cleanup();
+            document.body.innerHTML = (
+                '<select id="pasteFormatter" name="pasteFormatter">' +
+                    '<option value="plaintext">Plain Text</option>' +
+                    '<option value="markdown">Markdown</option>' +
+                '</select>' +
+                '<ul id="editorTabs">' +
+                    '<li role="presentation" class="active">' +
+                        '<a id="messageedit" href="#">Editor</a>' +
+                    '</li>' +
+                    '<li role="presentation">' +
+                        '<a id="messagepreview" href="#">Preview</a>' +
+                    '</li>' +
+                '</ul>' +
+                '<div id="placeholder" class="hidden"></div>' +
+                '<div id="prettymessage" class="hidden"><pre id="prettyprint"></pre></div>' +
+                '<div id="plaintext" class="hidden"></div>' +
+                '<textarea id="message" class="hidden"></textarea>' +
+                '<input id="messagetab" type="checkbox" checked="checked" />'
+            );
+            PrivateBin.PasteViewer.init();
+            PrivateBin.Editor.init();
+        });
+
+        afterEach(function () {
+            cleanup();
+        });
+
+        it('hides preview tab for plaintext and shows it for other formats', function () {
+            const previewParent = document.getElementById('messagepreview').parentElement;
+            PrivateBin.PasteViewer.setFormat('plaintext');
+            assert.ok(previewParent.classList.contains('hidden'));
+            PrivateBin.PasteViewer.setFormat('markdown');
+            assert.ok(!previewParent.classList.contains('hidden'));
+        });
+
+        it('leaves preview when switching to plaintext while previewing', function () {
+            PrivateBin.PasteViewer.setFormat('markdown');
+            PrivateBin.Editor.show();
+            document.getElementById('messagepreview').click();
+            assert.ok(PrivateBin.Editor.isPreview());
+            PrivateBin.PasteViewer.setFormat('plaintext');
+            assert.ok(!PrivateBin.Editor.isPreview());
+            assert.ok(
+                document.getElementById('messagepreview').parentElement.classList.contains('hidden')
+            );
+        });
+    });
 });

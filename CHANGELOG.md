@@ -5,6 +5,8 @@
 * CHANGED: Removed the unmaintained js-verify and replaced it with fast-check library.
 * CHANGED: Added a `jsconfig.json` in order to check the types of JavaScript.
 * CHANGED: Removed support for Bootstrap 3 as it requires jQuery.
+* CHANGED: Hide Format dropdown when only one formatter is configured
+* CHANGED: Hide Preview tab when the selected format is plaintext
 
 ## 2.0.6 (not yet released)
 * CHANGED: Upgrading libraries to: DOMpurify 3.4.12

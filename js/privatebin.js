@@ -2382,6 +2382,30 @@ window.PrivateBin = (function () {
         }
 
         /**
+         * show or hide the Preview tab depending on format
+         *
+         * Plain text has no useful preview, so the tab is hidden.
+         *
+         * @name   Editor.updatePreviewTabVisibility
+         * @function
+         * @param  {string} format
+         */
+        me.updatePreviewTabVisibility = function (format) {
+            if (!messagePreviewParent) {
+                return;
+            }
+
+            if (format === 'plaintext') {
+                messagePreviewParent.classList.add('hidden');
+                if (isPreview) {
+                    viewEditor();
+                }
+            } else {
+                messagePreviewParent.classList.remove('hidden');
+            }
+        };
+
+        /**
          * view the Editor tab
          *
          * @name   Editor.viewEditor
@@ -2578,6 +2602,8 @@ window.PrivateBin = (function () {
                 messagePreview.addEventListener('click', viewPreview);
                 messagePreviewParent = messagePreview.parentElement;
             }
+
+            me.updatePreviewTabVisibility(Model.getFormatDefault() || 'plaintext');
         };
 
         return me;
@@ -2700,6 +2726,7 @@ window.PrivateBin = (function () {
         me.setFormat = function (newFormat) {
             // skip if there is no update
             if (format === newFormat) {
+                Editor.updatePreviewTabVisibility(format);
                 return;
             }
 
@@ -2710,6 +2737,8 @@ window.PrivateBin = (function () {
 
             format = newFormat;
             isChanged = true;
+
+            Editor.updatePreviewTabVisibility(format);
 
             // update preview
             if (Editor.isPreview()) {
@@ -4298,7 +4327,9 @@ window.PrivateBin = (function () {
             }
             burnAfterReadingOption.classList.remove('hidden');
             expiration.classList.remove('hidden');
-            formatter.classList.remove('hidden');
+            if (formatter) {
+                formatter.classList.remove('hidden');
+            }
             newButton.classList.remove('hidden');
             openDiscussionOption.classList.remove('hidden');
             password.classList.remove('hidden');
@@ -4321,7 +4352,9 @@ window.PrivateBin = (function () {
             newButton.classList.add('hidden');
             sendButton.classList.add('hidden');
             expiration.classList.add('hidden');
-            formatter.classList.add('hidden');
+            if (formatter) {
+                formatter.classList.add('hidden');
+            }
             burnAfterReadingOption.classList.add('hidden');
             openDiscussionOption.classList.add('hidden');
             password.classList.add('hidden');
@@ -4670,6 +4703,9 @@ window.PrivateBin = (function () {
          * @function
          */
         me.setFormat = function (format) {
+            if (!formatter) {
+                return;
+            }
             if (Helper.isBootstrap5()) {
                 const select = formatter.querySelector('select');
                 if (select) {

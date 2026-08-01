@@ -280,6 +280,9 @@ if ($FILEUPLOAD) :
 <?php
 endif;
 ?>
+<?php
+if (count($FORMATTER) > 1) :
+?>
 						<li id="formatter" class="nav-item d-flex hidden">
 							<label for="pasteFormatter" class="form-label my-auto me-1"><?php echo I18n::_('Format'); ?>:</label>
 							<select id="pasteFormatter" name="pasteFormatter" class="form-select">
@@ -296,6 +299,13 @@ endif;
 ?>
 							</select>
 						</li>
+<?php
+else :
+?>
+						<input type="hidden" id="pasteFormatter" name="pasteFormatter" value="<?php echo $FORMATTERDEFAULT; ?>" />
+<?php
+endif;
+?>
 					</ul>
 					<ul class="navbar-nav gap-2">
 						<li class="nav-item">
