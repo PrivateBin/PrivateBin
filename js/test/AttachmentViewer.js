@@ -190,6 +190,68 @@ describe('AttachmentViewer', function () {
         )
     });
 
+    describe('readFileData()', function () {
+        afterEach(() => {
+            delete global.FileReader;
+        });
+
+        it('previews a newly added file while the editor is in preview mode',
+            async function() {
+                document.body.innerHTML = (
+                    '<div id="attachmentPreview" class="col-md-12 text-center hidden"></div>' +
+                    '<div id="attachment" class="hidden"></div>' +
+                    '<input type="file" id="file">' +
+                    '<div id="templates">' +
+                        '<div id="attachmenttemplate" role="alert" class="attachment hidden alert alert-info">' +
+                            '<span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>' +
+                            '<a class="alert-link">Download attachment</a>' +
+                        '</div>' +
+                    '</div>'
+                );
+                // jsdom-global does not expose FileReader as a global, but
+                // readFileData() checks for it before reading any file - the
+                // subclass additionally exposes each read as a promise, so the
+                // test can await the asynchronous read instead of guessing a
+                // delay ("loadend" fires after the "load" handler of the code
+                // under test has run)
+                const pendingReads = [];
+                global.FileReader = class extends window.FileReader {
+                    constructor() {
+                        super();
+                        pendingReads.push(new Promise(
+                            resolve => this.addEventListener('loadend', resolve)
+                        ));
+                    }
+                };
+
+                PrivateBin.AttachmentViewer.init();
+                PrivateBin.Model.init();
+
+                // pretend the editor is showing the preview tab
+                PrivateBin.Editor.isPreview = () => true;
+
+                const fileInput = document.getElementById('file');
+                Object.defineProperty(fileInput, 'files', {
+                    value: [new File(['GIF89a'], 'test.gif', {type: 'image/gif'})]
+                });
+                fileInput.dispatchEvent(new window.Event('change'));
+
+                // the file is read asynchronously
+                await Promise.all(pendingReads);
+
+                const attachmentPreview = document.getElementById('attachmentPreview');
+                assert.ok(
+                    attachmentPreview.querySelector('img'),
+                    'the image preview should have been rendered'
+                );
+                assert.ok(
+                    !attachmentPreview.classList.contains('hidden'),
+                    'the attachment preview should be visible'
+                );
+            }
+        )
+    });
+
     function mockCreateObjectUrl() {
         if (typeof window.URL.createObjectURL === 'undefined') {
             Object.defineProperty(
