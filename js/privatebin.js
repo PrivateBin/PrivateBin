@@ -3036,7 +3036,7 @@ jQuery.PrivateBin = (function($) {
                     );
                     sanitizedMimeType = 'image/svg+xml';
                     blobUrl = getBlobUrl(sanitizedData, sanitizedMimeType);
-                } catch {
+                } catch (e) {
                     // Invalid or non-UTF-8 SVG: download only, no preview as it
                     // may be used to smuggle multi-byte sequences past DOMpurify
                     // such as `&#x13c` to get `\x01<` & `&#x13e` to get `\x01>`
