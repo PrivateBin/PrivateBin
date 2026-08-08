@@ -175,7 +175,7 @@ describe('AttachmentViewer', function () {
                     'text/html(svg',
 
                     // invalid bytes after string
-                    'image/png\x01',
+                    'image/png\x01'
                 ];
                 for (const mimeType of maliciousMimeTypes) {
                     assert.ok(!$.PrivateBin.AttachmentViewer.isSafeMimeType(mimeType), 'does not treat as safe MIME type: '+ mimeType);
@@ -202,7 +202,7 @@ describe('AttachmentViewer', function () {
                 const supportedSafeMimeTypes = [
                     'text/plain',
                     'image/png',
-                    'image/jpeg',
+                    'image/jpeg'
                 ];
                 for (const mimeType of supportedSafeMimeTypes) {
                     assert.ok($.PrivateBin.AttachmentViewer.isSafeMimeType(mimeType), 'treats as safe MIME type: '+ mimeType);
@@ -224,7 +224,7 @@ describe('AttachmentViewer', function () {
                 const supportedPreviewMimeTypes = [
                     'application/pdf',
                     'audio/wav',
-                    'video/avi',
+                    'video/avi'
                 ];
                 for (const mimeType of supportedPreviewMimeTypes) {
                     assert.ok($.PrivateBin.AttachmentViewer.isSafeMimeType(mimeType), 'treats as safe preview MIME type: '+ mimeType);
@@ -250,7 +250,7 @@ describe('AttachmentViewer', function () {
                 const svgMimeTypes = [
                     'image/svg+xml',
                     'image/SVG+xml',
-                    'image/sVg',
+                    'image/sVg'
                 ];
                 for (const mimeType of svgMimeTypes) {
                     assert.ok(!$.PrivateBin.AttachmentViewer.isSafeMimeType(mimeType), 'treats as unsafe MIME type: '+ mimeType);
