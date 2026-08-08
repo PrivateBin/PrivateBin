@@ -1,8 +1,10 @@
 # PrivateBin version history
 
 ## 2.0.6 (not yet released)
+* CHANGED: Stricter MIME type validation, divergent files get no preview and forced download link
 * CHANGED: Upgrading libraries to: DOMpurify 3.4.12
 * CHANGED: Switch to PHP native JsonException type
+* FIXED: Restrict MIME types accepted for PDF & sanitized SVG previews to prevent HTML render fallback, incl. DOMpurify bypass using multi-byte encoded HTML entities
 * FIXED: Gracefully handle YOURLS replies with a 200 status code but no shorturl, instead of raising a TypeError
 * FIXED: Return "Invalid data." instead of HTTP 500 on malformed v2 JSON payloads (#1883)
 * FIXED: Dead PATH validation guard in Controller, the check for a missing trailing directory separator never ran (#1887)
