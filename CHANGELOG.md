@@ -1,6 +1,6 @@
 # PrivateBin version history
 
-## 2.0.6 (not yet released)
+## 2.0.6 (2026-08-08)
 * CHANGED: Stricter MIME type validation, divergent files get no preview and forced download link
 * CHANGED: Upgrading libraries to: DOMpurify 3.4.12
 * CHANGED: Switch to PHP native JsonException type
