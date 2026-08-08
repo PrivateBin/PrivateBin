@@ -9,14 +9,17 @@
   "devDependencies": {
     "@peculiar/webcrypto": "^1.5.0",
     "eslint": "^9.37.0",
+    "fast-check": "^4.7.0",
     "jsdom": "^26.1.0",
     "jsdom-global": "^3.0.2",
+    "jshint": "^2.13.6",
     "jsverify": "^0.8.3",
     "mime-types": "^3.0.2",
     "mocha": "^11.7.5",
     "nyc": "^18.0.0"
   },
   "scripts": {
+    "lint": "eslint",
     "test": "mocha",
     "ci-test": "mocha --reporter xunit --reporter-option output=mocha-results.xml"
   },
