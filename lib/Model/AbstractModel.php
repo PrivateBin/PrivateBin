@@ -50,7 +50,7 @@ abstract class AbstractModel
      * @access protected
      * @var array
      */
-    protected $_data = array('meta' => array());
+    protected $_data = ['meta' => []];
 
     /**
      * Configuration.

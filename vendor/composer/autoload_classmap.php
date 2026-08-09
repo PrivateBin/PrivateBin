@@ -74,7 +74,6 @@ return array(
     'PrivateBin\\Data\\Filesystem' => $baseDir . '/lib/Data/Filesystem.php',
     'PrivateBin\\Data\\GoogleCloudStorage' => $baseDir . '/lib/Data/GoogleCloudStorage.php',
     'PrivateBin\\Data\\S3Storage' => $baseDir . '/lib/Data/S3Storage.php',
-    'PrivateBin\\Exception\\JsonException' => $baseDir . '/lib/Exception/JsonException.php',
     'PrivateBin\\Exception\\TranslatedException' => $baseDir . '/lib/Exception/TranslatedException.php',
     'PrivateBin\\Filter' => $baseDir . '/lib/Filter.php',
     'PrivateBin\\FormatV2' => $baseDir . '/lib/FormatV2.php',

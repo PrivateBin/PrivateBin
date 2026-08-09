@@ -8,7 +8,7 @@ class I18nMock extends I18n
 {
     public static function resetAvailableLanguages()
     {
-        self::$_availableLanguages = array();
+        self::$_availableLanguages = [];
     }
 
     public static function resetPath($path = '')
@@ -24,7 +24,7 @@ class I18nMock extends I18n
 
 class I18nTest extends TestCase
 {
-    private $_translations = array();
+    private $_translations = [];
 
     public function setUp(): void
     {
@@ -248,8 +248,8 @@ class I18nTest extends TestCase
 
     public function testMessageIdsExistInAllLanguages()
     {
-        $messageIds = array();
-        $languages  = array();
+        $messageIds = [];
+        $languages  = [];
         foreach (new DirectoryIterator(PATH . 'i18n') as $file) {
             $fileNameLength = strlen($file->getFilename());
             if ($fileNameLength === 7) {       // xx.json

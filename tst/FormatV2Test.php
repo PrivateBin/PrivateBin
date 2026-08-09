@@ -82,11 +82,11 @@ class FormatV2Test extends TestCase
         $this->assertFalse(FormatV2::isValid($paste), 'non-numeric version');
 
         $paste          = Helper::getPastePost();
-        $paste['v']     = array();
+        $paste['v']     = [];
         $this->assertFalse(FormatV2::isValid($paste), 'array version');
 
         $paste          = Helper::getPastePost();
-        $paste['ct']    = array('not', 'a', 'string');
+        $paste['ct']    = ['not', 'a', 'string'];
         $this->assertFalse(FormatV2::isValid($paste), 'non-string ciphertext');
 
         $paste          = Helper::getPastePost();
@@ -98,11 +98,11 @@ class FormatV2Test extends TestCase
         $this->assertFalse(FormatV2::isValid($paste), 'non-array cipher parameters');
 
         $paste             = Helper::getPastePost();
-        $paste['adata'][0] = array();
+        $paste['adata'][0] = [];
         $this->assertFalse(FormatV2::isValid($paste), 'empty cipher parameters');
 
         $paste                = Helper::getPastePost();
-        $paste['adata'][0][0] = array();
+        $paste['adata'][0][0] = [];
         $this->assertFalse(FormatV2::isValid($paste), 'non-string iv');
 
         $comment           = Helper::getCommentPost();

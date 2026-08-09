@@ -11,8 +11,8 @@
 
 namespace PrivateBin\Proxy;
 
+use JsonException;
 use PrivateBin\Configuration;
-use PrivateBin\Exception\JsonException;
 use PrivateBin\Json;
 
 /**
@@ -71,14 +71,14 @@ abstract class AbstractProxy
 
         $data = file_get_contents($proxyUrl, false,
             stream_context_create(
-                array(
+                [
                     'http' => $this->_getProxyPayload($conf, $link),
-                )
+                ]
             )
         );
 
         if ($data === false) {
-            $http_response_header = $http_response_header ?? array();
+            $http_response_header = $http_response_header ?? [];
             $statusCode           = '';
             if (!empty($http_response_header) && preg_match('/HTTP\/\d+\.\d+\s+(\d+)/', $http_response_header[0], $matches)) {
                 $statusCode = $matches[1];

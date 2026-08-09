@@ -122,7 +122,6 @@ class ComposerStaticInitDontChange
         'PrivateBin\\Data\\Filesystem' => __DIR__ . '/../..' . '/lib/Data/Filesystem.php',
         'PrivateBin\\Data\\GoogleCloudStorage' => __DIR__ . '/../..' . '/lib/Data/GoogleCloudStorage.php',
         'PrivateBin\\Data\\S3Storage' => __DIR__ . '/../..' . '/lib/Data/S3Storage.php',
-        'PrivateBin\\Exception\\JsonException' => __DIR__ . '/../..' . '/lib/Exception/JsonException.php',
         'PrivateBin\\Exception\\TranslatedException' => __DIR__ . '/../..' . '/lib/Exception/TranslatedException.php',
         'PrivateBin\\Filter' => __DIR__ . '/../..' . '/lib/Filter.php',
         'PrivateBin\\FormatV2' => __DIR__ . '/../..' . '/lib/FormatV2.php',

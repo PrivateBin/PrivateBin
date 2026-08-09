@@ -13,7 +13,6 @@
 /**
  * IMPORTANT NOTICE FOR DEVELOPERS:
  * The logic in this file is intended to run in legacy browsers. Avoid any use of:
- * - jQuery (doesn't work in older browsers)
  * - ES5 or newer in general
  * - const/let, use the traditional var declarations instead
  * - async/await or Promises, use traditional callbacks
@@ -68,26 +67,26 @@
             'Spider',
             'scraper',
             'Scraper',
-            
+
             // Search Engines
             'Mediapartners-Google',
             'BingPreview',
             'Yahoo! Slurp',
-            
+
             // SEO & Analytics
             'Screaming Frog',
-            
+
             // Social Media
             'facebookexternalhit',
-            
+
             // AI & LLM
             'ChatGPT-User',
             'anthropic-ai',
-            
+
             // Security Scanners
             'CensysInspect',
             'Shodan',
-            
+
             // Other Common Crawlers
             '80legs',
             'ia_archiver',
@@ -171,7 +170,7 @@
          * @private
          * @name   Check.isBadBot
          * @function
-         * @return {bool}
+         * @return {Boolean}
          */
         function isBadBot() {
             // check whether a bot user agent part can be found in the current
@@ -262,7 +261,7 @@
          *
          * @name   Check.getStatus
          * @function
-         * @return {bool}
+         * @return {Boolean}
          */
         me.getStatus = function()
         {

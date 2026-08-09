@@ -1,5 +1,7 @@
 'use strict';
 const common = require('../common');
+const fc = require('fast-check');
+const fs = require('fs');
 
 describe('CryptTool', function () {
     describe('cipher & decipher', function () {
@@ -9,26 +11,28 @@ describe('CryptTool', function () {
         });
 
         this.timeout(30000);
-        it('can en- and decrypt any message', function () {
-            jsc.assert(jsc.forall(
-                'string',
-                'string',
-                'string',
+        it('can en- and decrypt any message', async function () {
+            await fc.assert(fc.asyncProperty(
+                fc.string(),
+                fc.string(),
+                fc.string(),
                 async function (key, password, message) {
-                    const clean = jsdom();
+                    const clean = globalThis.cleanup();
                     // ensure zlib is getting loaded
-                    $.PrivateBin.Controller.initZ();
+                    PrivateBin.Controller.initZlib();
                     Object.defineProperty(window, 'crypto', {
                         value: new WebCrypto(),
-                        writeable: false
+                        configurable: true,
+                        enumerable: true,
+                        writable: false
                     });
                     global.atob = common.atob;
                     global.btoa = common.btoa;
                     message = message.trim();
-                    const cipherMessage = await $.PrivateBin.CryptTool.cipher(
+                    const cipherMessage = await PrivateBin.CryptTool.cipher(
                             key, password, message, []
                         ),
-                        plaintext = await $.PrivateBin.CryptTool.decipher(
+                        plaintext = await PrivateBin.CryptTool.decipher(
                             key, password, cipherMessage
                         );
                     clean();
@@ -37,24 +41,26 @@ describe('CryptTool', function () {
                     return result;
                 }
             ),
-            {tests: 3});
+            {numRuns: 3});
         });
 
         it('does not truncate messages', async function () {
             const message = fs.readFileSync('test/compression-sample.txt', 'ascii').trim(),
-                clean = jsdom();
+                clean = globalThis.cleanup();
             Object.defineProperty(window, 'crypto', {
                 value: new WebCrypto(),
-                writeable: false
+                configurable: true,
+                enumerable: true,
+                writable: false
             });
             // ensure zlib is getting loaded
-            $.PrivateBin.Controller.initZ();
+            PrivateBin.Controller.initZlib();
             global.atob = common.atob;
             global.btoa = common.btoa;
-            const cipherMessage = await $.PrivateBin.CryptTool.cipher(
+            const cipherMessage = await PrivateBin.CryptTool.cipher(
                     'foo', 'bar', message, []
                 ),
-                plaintext = await $.PrivateBin.CryptTool.decipher(
+                plaintext = await PrivateBin.CryptTool.decipher(
                     'foo', 'bar', cipherMessage
                 );
             clean();
@@ -64,10 +70,10 @@ describe('CryptTool', function () {
             assert.strictEqual(message, plaintext);
         });
 
-        it('can en- and decrypt a particular message (#260)', function () {
-            jsc.assert(jsc.forall(
-                'string',
-                'string',
+        it('can en- and decrypt a particular message (#260)', async function () {
+            await fc.assert(fc.asyncProperty(
+                fc.string(),
+                fc.string(),
                 async function (key, password) {
                     const message = `
 1 subgoal
@@ -91,17 +97,21 @@ isWhile : interp (while expr sBody) (MemElem mem) =
 ======================== ( 1 / 1 )
 conseq_or_bottom inv (interp (nth_iterate sBody n) (MemElem mem))
 `;
-                    const clean = jsdom();
+                    const clean = globalThis.cleanup();
                     // ensure zlib is getting loaded
-                    $.PrivateBin.Controller.initZ();
+                    PrivateBin.Controller.initZlib();
                     Object.defineProperty(window, 'crypto', {
                         value: new WebCrypto(),
-                        writeable: false
+                        configurable: true,
+                        enumerable: true,
+                        writable: false
                     });
-                    const cipherMessage = await $.PrivateBin.CryptTool.cipher(
+                    global.atob = common.atob;
+                    global.btoa = common.btoa;
+                    const cipherMessage = await PrivateBin.CryptTool.cipher(
                             key, password, message, []
                         ),
-                        plaintext = await $.PrivateBin.CryptTool.decipher(
+                        plaintext = await PrivateBin.CryptTool.decipher(
                                 key, password, cipherMessage
                         );
                     clean();
@@ -110,7 +120,7 @@ conseq_or_bottom inv (interp (nth_iterate sBody n) (MemElem mem))
                     return result;
                 }
             ),
-            {tests: 3});
+            {numRuns: 3});
         });
     });
 
@@ -119,23 +129,25 @@ conseq_or_bottom inv (interp (nth_iterate sBody n) (MemElem mem))
         let keys = [];
 
         // the parameter is used to ensure the test is run more then one time
-        it('returns random, non-empty keys', function () {
-            jsc.assert(jsc.forall(
-                'integer',
-                function(counter) {
-                    const clean = jsdom();
+        it('returns random, non-empty keys', () => {
+            fc.assert(fc.property(
+                fc.integer(),
+                function() {
+                    const clean = globalThis.cleanup();
                     Object.defineProperty(window, 'crypto', {
                         value: new WebCrypto(),
-                        writeable: false
+                        configurable: true,
+                        enumerable: true,
+                        writable: false
                     });
-                    const key = $.PrivateBin.CryptTool.getSymmetricKey(),
+                    const key = PrivateBin.CryptTool.getSymmetricKey(),
                         result = (key !== '' && keys.indexOf(key) === -1);
                     keys.push(key);
                     clean();
                     return result;
                 }
             ),
-            {tests: 10});
+            {numRuns: 10});
         });
     });
 });

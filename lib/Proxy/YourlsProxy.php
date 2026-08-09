@@ -42,18 +42,18 @@ class YourlsProxy extends AbstractProxy
      */
     protected function _getProxyPayload(Configuration $conf, string $link): array
     {
-        return array(
+        return [
             'method'  => 'POST',
             'header'  => "Content-Type: application/x-www-form-urlencoded\r\n",
             'content' => http_build_query(
-                array(
+                [
                     'signature' => $conf->getKey('signature', 'yourls'),
                     'format'    => 'json',
                     'action'    => 'shorturl',
                     'url'       => $link,
-                )
+                ]
             ),
-        );
+        ];
     }
 
     /**

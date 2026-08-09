@@ -11,8 +11,6 @@
 
 namespace PrivateBin;
 
-use PrivateBin\Exception\JsonException;
-
 /**
  * Json
  *
@@ -31,9 +29,7 @@ class Json
      */
     public static function encode(&$input)
     {
-        $jsonString = json_encode($input);
-        self::_detectError();
-        return $jsonString;
+        return json_encode($input, JSON_THROW_ON_ERROR);
     }
 
     /**
@@ -47,24 +43,6 @@ class Json
      */
     public static function decode(&$input)
     {
-        $output = json_decode($input, true);
-        self::_detectError();
-        return $output;
-    }
-
-    /**
-     * Detects JSON errors and raises an exception if one is found
-     *
-     * @access private
-     * @static
-     * @throws JsonException
-     * @return void
-     */
-    private static function _detectError()
-    {
-        $errorCode = json_last_error();
-        if ($errorCode !== JSON_ERROR_NONE) {
-            throw new JsonException($errorCode);
-        }
+        return json_decode($input, true, 10, JSON_THROW_ON_ERROR);
     }
 }

@@ -105,7 +105,7 @@
         "Ta dokument bo potekel čez %d minuto.",
         "Ta dokument bo potekel čez %d minuti.",
         "Ta dokument bo potekel čez %d minute.",
-        "Ta dokument bo potekel čez %d minut.",
+        "Ta dokument bo potekel čez %d minute.",
         "Ta dokument bo potekel čez %d minut.",
         "Ta dokument bo potekel čez %d minut."
     ],
@@ -113,13 +113,13 @@
         "Ta dokument bo potekel čez %d uro.",
         "Ta dokument bo potekel čez %d uri.",
         "Ta dokument bo potekel čez %d ure.",
-        "Ta dokument bo potekel čez %d ur.",
+        "Ta dokument bo potekel čez %d ure.",
         "Ta dokument bo potekel čez %d ur.",
         "Ta dokument bo potekel čez %d ur."
     ],
     "This document will expire in %d days.": [
         "Ta dokument bo potekel čez %d dan.",
-        "Ta dokument bo potekel čez %d dni.",
+        "Ta dokument bo potekel čez %d dneva.",
         "Ta dokument bo potekel čez %d dni.",
         "Ta dokument bo potekel čez %d dni.",
         "Ta dokument bo potekel čez %d dni.",
