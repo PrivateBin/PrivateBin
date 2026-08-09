@@ -168,6 +168,7 @@ class Controller
             header('Access-Control-Allow-Origin: *');
             header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
             header('Access-Control-Allow-Headers: X-Requested-With, Content-Type');
+            header('X-Content-Type-Options: nosniff');
             header('X-Uncompressed-Content-Length: ' . strlen($this->_json));
             header('Access-Control-Expose-Headers: X-Uncompressed-Content-Length');
             echo $this->_json;
@@ -513,7 +514,7 @@ class Controller
         if (is_readable($file)) {
             $content = str_replace(
                 '?jsonld=',
-                $this->_urlBase . '?jsonld=',
+                trim(Json::encode($this->_urlBase), '"') . '?jsonld=',
                 file_get_contents($file)
             );
         }
@@ -528,6 +529,7 @@ class Controller
         header('Content-type: application/ld+json');
         header('Access-Control-Allow-Origin: *');
         header('Access-Control-Allow-Methods: GET');
+        header('X-Content-Type-Options: nosniff');
         echo $content;
     }
 
