@@ -277,8 +277,8 @@ class JsonApiTest extends TestCase
      */
     public function testJsonLdPathBypass()
     {
-        $_SERVER['REQUEST_URI']    = '/","bypass\\';
-        $_GET['jsonld'] = 'paste';
+        $_SERVER['REQUEST_URI'] = '/","bypass\\';
+        $_GET['jsonld']         = 'paste';
         ob_start();
         new Controller;
         $content = ob_get_contents();
