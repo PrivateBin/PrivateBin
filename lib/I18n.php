@@ -230,7 +230,7 @@ class I18n
             $languageRanges = explode(',', trim($_SERVER['HTTP_ACCEPT_LANGUAGE']));
             foreach ($languageRanges as $languageRange) {
                 if (preg_match(
-                    '/(\*|[a-zA-Z0-9]{1,8}(?:-[a-zA-Z0-9]{1,8})*)(?:\s*;\s*q\s*=\s*(0(?:\.\d{0,3})|1(?:\.0{0,3})))?/',
+                    '/^(\*|[a-zA-Z0-9]{1,8}(?:-[a-zA-Z0-9]{1,8})*)(?:\s*;\s*q\s*=\s*(0(?:\.\d{0,3})|1(?:\.0{0,3})))?$/',
                     trim($languageRange), $match
                 )) {
                     if (!isset($match[2])) {
@@ -409,13 +409,13 @@ class I18n
             if ($acceptedQuality === 0.0) {
                 continue;
             }
-            foreach ($availableLanguages as $availableValue) {
-                $availableQuality = 1.0;
-                foreach ($acceptedValues as $acceptedValue) {
-                    if ($acceptedValue === '*') {
-                        $any = true;
-                    }
-                    $matchingGrade = self::_matchLanguage($acceptedValue, $availableValue);
+            foreach ($acceptedValues as $acceptedValue) {
+                if ($acceptedValue === '*') {
+                    $any = true;
+                }
+                foreach ($availableLanguages as $availableValue) {
+                    $availableQuality = 1.0;
+                    $matchingGrade    = self::_matchLanguage($acceptedValue, $availableValue);
                     if ($matchingGrade > 0) {
                         $q = (string) ($acceptedQuality * $availableQuality * $matchingGrade);
                         if (!isset($matches[$q])) {
