@@ -80,6 +80,21 @@ class I18nTest extends TestCase
         $this->assertEquals('2 heures', I18n::_('%d hours', 2), '2 hours in French');
     }
 
+    public function testBulgarianMonthExpirationTranslation()
+    {
+        $_COOKIE['lang'] = 'bg';
+        I18n::loadTranslations();
+
+        $this->assertEquals(
+            'Този документ изтича след един месец.',
+            I18n::_('This document will expire in %d months.', 1)
+        );
+        $this->assertEquals(
+            'Този документ изтича след 2 месеца.',
+            I18n::_('This document will expire in %d months.', 2)
+        );
+    }
+
     public function testBrowserLanguageNoDetection()
     {
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'no;q=0.8,en-GB;q=0.6,en-US;q=0.4,en;q=0.2';
