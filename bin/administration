@@ -205,7 +205,7 @@ EOT, PHP_EOL;
     private function _option($short, $long)
     {
         foreach (array($short, $long) as $key) {
-            if (array_key_exists($key, $this->_opts)) {
+            if ($key !== null && array_key_exists($key, $this->_opts)) {
                 return $this->_opts[$key];
             }
         }
