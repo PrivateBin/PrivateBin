@@ -196,16 +196,25 @@ class Database extends AbstractData
             $paste = Json::decode($row['data']);
         } catch (JsonException $e) {
             error_log('Error while reading a paste from the database: ' . $e->getMessage());
-            $paste = [];
+            return false;
+        }
+        if (!is_array($paste)) {
+            error_log('Error while reading a paste from the database: invalid data structure');
+            return false;
         }
 
         try {
-            $paste['meta'] = Json::decode($row['meta']);
+            $meta = Json::decode($row['meta']);
         } catch (JsonException $e) {
             error_log('Error while reading a paste from the database: ' . $e->getMessage());
-            $paste['meta'] = [];
+            return false;
         }
-        $expire_date = (int) $row['expiredate'];
+        if (!is_array($meta)) {
+            error_log('Error while reading a paste from the database: invalid metadata structure');
+            return false;
+        }
+        $paste['meta'] = $meta;
+        $expire_date   = (int) $row['expiredate'];
         if ($expire_date > 0) {
             $paste['meta']['expire_date'] = $expire_date;
         }
@@ -221,14 +230,22 @@ class Database extends AbstractData
      */
     public function delete($pasteid)
     {
-        $this->_exec(
-            'DELETE FROM "' . $this->_sanitizeIdentifier('paste') .
-            '" WHERE "dataid" = ?', [$pasteid]
-        );
-        $this->_exec(
-            'DELETE FROM "' . $this->_sanitizeIdentifier('comment') .
-            '" WHERE "pasteid" = ?', [$pasteid]
-        );
+        try {
+            $this->_exec(
+                'DELETE FROM "' . $this->_sanitizeIdentifier('paste') .
+                '" WHERE "dataid" = ?', [$pasteid]
+            );
+        } catch (PDOException $e) {
+            error_log('Error while deleting a paste from the database: ' . $e->getMessage());
+        }
+        try {
+            $this->_exec(
+                'DELETE FROM "' . $this->_sanitizeIdentifier('comment') .
+                '" WHERE "pasteid" = ?', [$pasteid]
+            );
+        } catch (PDOException $e) {
+            error_log('Error while deleting comments from the database: ' . $e->getMessage());
+        }
     }
 
     /**
@@ -301,10 +318,15 @@ class Database extends AbstractData
      */
     public function readComments($pasteid)
     {
-        $rows = $this->_select(
-            'SELECT * FROM "' . $this->_sanitizeIdentifier('comment') .
-            '" WHERE "pasteid" = ?', [$pasteid]
-        );
+        try {
+            $rows = $this->_select(
+                'SELECT * FROM "' . $this->_sanitizeIdentifier('comment') .
+                '" WHERE "pasteid" = ?', [$pasteid]
+            );
+        } catch (PDOException $e) {
+            error_log('Error while reading comments from the database: ' . $e->getMessage());
+            return [];
+        }
 
         // create comment list
         $comments = [];
@@ -314,7 +336,18 @@ class Database extends AbstractData
                     $data = Json::decode($row['data']);
                 } catch (JsonException $e) {
                     error_log('Error while reading a comment from the database: ' . $e->getMessage());
-                    $data = [];
+                    continue;
+                }
+                if (!is_array($data)) {
+                    error_log('Error while reading a comment from the database: invalid data structure');
+                    continue;
+                }
+                if (
+                    preg_match('/\A[a-f0-9]{16}\z/', (string) $row['dataid']) !== 1 ||
+                    preg_match('/\A[a-f0-9]{16}\z/', (string) $row['parentid']) !== 1
+                ) {
+                    error_log('Error while reading a comment from the database: invalid identifier');
+                    continue;
                 }
                 $i                          = $this->getOpenSlot($comments, (int) $row['postdate']);
                 $comments[$i]               = $data;
@@ -453,9 +486,17 @@ class Database extends AbstractData
      */
     public function getAllPastes()
     {
-        return $this->_db->query(
+        $ids = $this->_db->query(
             'SELECT "dataid" FROM "' . $this->_sanitizeIdentifier('paste') . '"'
         )->fetchAll(PDO::FETCH_COLUMN, 0);
+        $pastes = [];
+        foreach ($ids as $pasteid) {
+            $pasteid = (string) $pasteid;
+            if (preg_match('/\A[a-f0-9]{16}\z/', $pasteid) === 1) {
+                $pastes[] = $pasteid;
+            }
+        }
+        return $pastes;
     }
 
     /**

@@ -34,6 +34,13 @@ class DatabaseTest extends TestCase
         }
     }
 
+    private function getDatabaseConnection()
+    {
+        $property = new ReflectionProperty(Database::class, '_db');
+        $property->setAccessible(true);
+        return $property->getValue($this->_model);
+    }
+
     public function testSaltMigration()
     {
         ServerSalt::setStore(new Filesystem(['dir' => 'data']));
@@ -107,6 +114,133 @@ class DatabaseTest extends TestCase
         $this->assertFalse($this->_model->create(Helper::getPasteId(), $paste), 'unable to store the same paste twice');
         ini_set('error_log', $error_log_setting);
         $this->assertEquals($original, $this->_model->read(Helper::getPasteId()));
+    }
+
+    public function testCorruptPasteIsRejected()
+    {
+        $this->_model->delete(Helper::getPasteId());
+        $paste = Helper::getPaste();
+        $this->assertTrue($this->_model->create(Helper::getPasteId(), $paste));
+        $statement = $this->getDatabaseConnection()->prepare(
+            'UPDATE paste SET data = ? WHERE dataid = ?'
+        );
+        $statement->execute(['true', Helper::getPasteId()]);
+        $errorLog = ini_get('error_log');
+        ini_set('error_log', '/dev/null');
+        $this->assertFalse($this->_model->read(Helper::getPasteId()));
+        ini_set('error_log', $errorLog);
+    }
+
+    public function testPasteEnumerationRejectsInvalidIdentifiers()
+    {
+        $this->_model->delete(Helper::getPasteId());
+        $database  = $this->getDatabaseConnection();
+        $statement = $database->prepare('INSERT INTO paste VALUES(?,?,?,?)');
+        $statement->execute(['invalid', '{}', 0, '{}']);
+        try {
+            $this->assertSame([], $this->_model->getAllPastes());
+        } finally {
+            $database->exec("DELETE FROM paste WHERE dataid = 'invalid'");
+        }
+    }
+
+    public function testCorruptCommentsAreIgnored()
+    {
+        $this->_model->delete(Helper::getPasteId());
+        $comment = Helper::getComment();
+        $this->assertTrue(
+            $this->_model->createComment(
+                Helper::getPasteId(),
+                Helper::getPasteId(),
+                Helper::getCommentId(),
+                $comment
+            )
+        );
+        $statement = $this->getDatabaseConnection()->prepare(
+            'INSERT INTO comment VALUES(?,?,?,?,?,?)'
+        );
+        $statement->execute([
+            'ffffffffffffffff',
+            Helper::getPasteId(),
+            Helper::getPasteId(),
+            'true',
+            null,
+            time(),
+        ]);
+        $statement->execute([
+            'invalid',
+            Helper::getPasteId(),
+            Helper::getPasteId(),
+            json_encode($comment),
+            null,
+            time(),
+        ]);
+        $statement->execute([
+            'eeeeeeeeeeeeeeee',
+            Helper::getPasteId(),
+            'invalid',
+            json_encode($comment),
+            null,
+            time(),
+        ]);
+        $errorLog = ini_get('error_log');
+        ini_set('error_log', '/dev/null');
+        $comments = $this->_model->readComments(Helper::getPasteId());
+        ini_set('error_log', $errorLog);
+        $this->assertCount(1, $comments);
+        $this->assertSame(Helper::getCommentId(), current($comments)['id']);
+    }
+
+    public function testCommentQueryFailureReturnsEmptyList()
+    {
+        $this->getDatabaseConnection()->exec('DROP TABLE comment');
+        $errorLog = ini_get('error_log');
+        ini_set('error_log', '/dev/null');
+        $this->assertSame([], $this->_model->readComments(Helper::getPasteId()));
+        ini_set('error_log', $errorLog);
+    }
+
+    public function testDeleteContinuesAfterPasteQueryFailure()
+    {
+        $comment = Helper::getComment();
+        $this->assertTrue(
+            $this->_model->createComment(
+                Helper::getPasteId(),
+                Helper::getPasteId(),
+                Helper::getCommentId(),
+                $comment
+            )
+        );
+        $this->getDatabaseConnection()->exec('DROP TABLE paste');
+        $errorLog = ini_get('error_log');
+        ini_set('error_log', '/dev/null');
+        try {
+            $this->_model->delete(Helper::getPasteId());
+        } finally {
+            ini_set('error_log', $errorLog);
+        }
+        $this->assertFalse(
+            $this->_model->existsComment(
+                Helper::getPasteId(),
+                Helper::getPasteId(),
+                Helper::getCommentId()
+            )
+        );
+    }
+
+    public function testDeleteHandlesCommentQueryFailure()
+    {
+        $paste = Helper::getPaste();
+        $this->assertTrue($this->_model->create(Helper::getPasteId(), $paste));
+        $this->getDatabaseConnection()->exec('DROP TABLE comment');
+        $errorLog = ini_get('error_log');
+        ini_set('error_log', '/dev/null');
+        try {
+            $this->_model->delete(Helper::getPasteId());
+        } finally {
+            ini_set('error_log', $errorLog);
+        }
+        $this->assertFalse($this->_model->exists(Helper::getPasteId()));
     }
 
     /**
