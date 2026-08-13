@@ -112,6 +112,10 @@ class Configuration
             'apikey'    => '',
             'apiurl'    => '',
         ],
+        'chhoto' => [    
+            'apikey'    => '',
+            'apiurl'    => '',
+        ],
         // update this array when adding/changing/removing js files
         'sri' => [
             'js/base-x-5.0.1.js'     => 'sha512-FmhlnjIxQyxkkxQmzf0l6IRGsGbgyCdgqPxypFsEtHMF1naRqaLLo6mcyN5rEaT16nKx1PeJ4g7+07D6gnk/Tg==',
