@@ -159,6 +159,40 @@ describe('AttachmentViewer', function () {
         );
     });
 
+    describe('isSafeMimeType()', function () {
+        it('rejects forged mime types that merely end in known-safe suffixes', function () {
+            // regression test for GHSA-326h-xgp6-8jcx / GHSA-f2xf-7x3g-4272:
+            // browsers can MIME-sniff these as text/html instead of application/pdf
+            const unsafeMimeTypes = [
+                'application/PDF',       // mixed case must not bypass the exact-match check
+                'text/html /pdf',        // trips up Firefox and Chromium's MIME sniffer
+                'text/html(/pdf',        // Chromium, see: chromium/src/+/refs/tags/152.0.7949.0/net/base/mime_util.cc#521
+                'application/x-pdf',     // legacy alias, not the exact allow-listed value
+                'text/html svg',
+                'image/svg+xml svg'
+            ];
+            for (const mimeType of unsafeMimeTypes) {
+                assert.ok(
+                    !PrivateBin.AttachmentViewer.isSafeMimeType(mimeType),
+                    'does not treat as safe MIME type: ' + mimeType
+                );
+            }
+        });
+
+        it('accepts well-formed known-safe mime types', function () {
+            const safeMimeTypes = [
+                'image/png', 'image/jpeg', 'video/mp4', 'audio/mpeg',
+                'application/pdf', 'text/plain'
+            ];
+            for (const mimeType of safeMimeTypes) {
+                assert.ok(
+                    PrivateBin.AttachmentViewer.isSafeMimeType(mimeType),
+                    'treats as safe MIME type: ' + mimeType
+                );
+            }
+        });
+    });
+
     describe('showAttachment()', function () {
         it('displays attachment even when attachmentPreview element is missing',
             function() {
