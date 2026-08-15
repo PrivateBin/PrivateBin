@@ -4245,7 +4245,9 @@ window.PrivateBin = (function () {
             cloneButton.classList.remove('hidden');
             rawTextButton.classList.remove('hidden');
             downloadTextButton.classList.remove('hidden');
-            qrCodeLink.classList.remove('hidden');
+            if (qrCodeLink) {
+                qrCodeLink.classList.remove('hidden');
+            }
 
             viewButtonsDisplayed = true;
         };
@@ -4265,7 +4267,9 @@ window.PrivateBin = (function () {
             newButton.classList.add('hidden');
             rawTextButton.classList.add('hidden');
             downloadTextButton.classList.add('hidden');
-            qrCodeLink.classList.add('hidden');
+            if (qrCodeLink) {
+                qrCodeLink.classList.add('hidden');
+            }
             me.hideEmailButton();
 
             viewButtonsDisplayed = false;
@@ -4370,6 +4374,10 @@ window.PrivateBin = (function () {
          * @param {number|undefined} optionalRemainingTimeInSeconds
          */
         me.showEmailButton = function (optionalRemainingTimeInSeconds) {
+            if (!emailLink) {
+                return;
+            }
+
             try {
                 // we cache expiration date in closure to avoid inaccurate expiration datetime
                 const expirationDate = Helper.calculateExpirationDate(
@@ -4441,7 +4449,9 @@ window.PrivateBin = (function () {
          * @function
          */
         me.hideQrCodeButton = function () {
-            qrCodeLink.classList.add('hidden');
+            if (qrCodeLink) {
+                qrCodeLink.classList.add('hidden');
+            }
         };
 
         /**
@@ -6154,5 +6164,4 @@ if (typeof module === 'undefined' || !module.exports) {
         window.PrivateBin.Controller.init();
     });
 }
-
 

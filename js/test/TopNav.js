@@ -61,6 +61,35 @@ describe('TopNav', function () {
                 assert.ok(result);
             }
         );
+
+        it('supports a disabled QR code control', function () {
+            cleanup();
+            document.body.innerHTML =
+                '<button id="newbutton" class="hidden"></button>' +
+                '<button id="clonebutton" class="hidden"></button>' +
+                '<button id="rawtextbutton" class="hidden"></button>' +
+                '<button id="downloadtextbutton" class="hidden"></button>';
+            PrivateBin.TopNav.init();
+
+            assert.doesNotThrow(function () {
+                PrivateBin.TopNav.showViewButtons();
+                PrivateBin.TopNav.hideBurnAfterReadingButtons();
+                PrivateBin.TopNav.hideViewButtons();
+            });
+        });
+
+        it('supports a disabled email control', function () {
+            cleanup();
+            let errors = 0;
+            PrivateBin.Alert.showError = function () {
+                ++errors;
+            };
+            PrivateBin.TopNav.init();
+
+            PrivateBin.TopNav.showEmailButton(60);
+
+            assert.strictEqual(errors, 0);
+        });
     });
 
     describe('showCreateButtons & hideCreateButtons', function () {
