@@ -2616,35 +2616,47 @@ window.PrivateBin = (function () {
             }
 
             if (format === 'markdown') {
-                const converter = new showdown.Converter({
-                    strikethrough: true,
-                    tables: true,
-                    tablesHeaderId: true,
-                    simplifiedAutoLink: true,
-                    excludeTrailingPunctuationFromURLs: true
-                });
-                // let showdown convert the HTML and sanitize HTML *afterwards*!
                 if (plainText) {
-                    plainText.innerHTML = DOMPurify.sanitize(
-                        converter.makeHtml(text),
-                        purifyHtmlConfig
-                    );
-                    // add table classes from bootstrap css
-                    plainText.querySelectorAll('table').forEach(t => {
-                        t.classList.add('table-condensed', 'table-bordered');
-                    });
+                    if (typeof showdown === 'undefined') {
+                        plainText.textContent = text;
+                        Helper.urls2links(plainText);
+                    } else {
+                        const converter = new showdown.Converter({
+                            strikethrough: true,
+                            tables: true,
+                            tablesHeaderId: true,
+                            simplifiedAutoLink: true,
+                            excludeTrailingPunctuationFromURLs: true
+                        });
+                        // let showdown convert the HTML and sanitize HTML *afterwards*!
+                        plainText.innerHTML = DOMPurify.sanitize(
+                            converter.makeHtml(text),
+                            purifyHtmlConfig
+                        );
+                        // add table classes from bootstrap css
+                        plainText.querySelectorAll('table').forEach(t => {
+                            t.classList.add('table-condensed', 'table-bordered');
+                        });
+                    }
                 }
             } else {
                 if (format === 'syntaxhighlighting') {
+                    const hasSyntaxRenderer =
+                        typeof prettyPrint === 'function' &&
+                        typeof prettyPrintOne === 'function';
                     // yes, this is really needed to initialize the environment
-                    if (typeof prettyPrint === 'function') {
+                    if (hasSyntaxRenderer) {
                         prettyPrint();
                     }
 
                     if (prettyPrintEl) {
-                        prettyPrintEl.innerHTML = prettyPrintOne(
-                            Helper.htmlEntities(text), null, true
-                        );
+                        if (hasSyntaxRenderer) {
+                            prettyPrintEl.innerHTML = prettyPrintOne(
+                                Helper.htmlEntities(text), null, true
+                            );
+                        } else {
+                            prettyPrintEl.textContent = text;
+                        }
                     }
                 } else {
                     // = 'plaintext'
@@ -6154,5 +6166,4 @@ if (typeof module === 'undefined' || !module.exports) {
         window.PrivateBin.Controller.init();
     });
 }
-
 

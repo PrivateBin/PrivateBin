@@ -36,6 +36,45 @@ describe('PasteViewer', function () {
             assert.ok(!document.getElementById('plaintext').classList.contains('hidden'));
         });
 
+        it('falls back to plaintext without the markdown renderer', function () {
+            const originalShowdown = globalThis.showdown;
+            delete globalThis.showdown;
+            try {
+                PrivateBin.PasteViewer.init();
+                PrivateBin.PasteViewer.setFormat('markdown');
+                PrivateBin.PasteViewer.setText('hello **bold**');
+                PrivateBin.PasteViewer.run();
+
+                assert.strictEqual(
+                    document.getElementById('plaintext').textContent,
+                    'hello **bold**'
+                );
+            } finally {
+                globalThis.showdown = originalShowdown;
+            }
+        });
+
+        it('falls back to plaintext without the syntax renderer', function () {
+            const originalPrettyPrint = globalThis.prettyPrint;
+            const originalPrettyPrintOne = globalThis.prettyPrintOne;
+            delete globalThis.prettyPrint;
+            delete globalThis.prettyPrintOne;
+            try {
+                PrivateBin.PasteViewer.init();
+                PrivateBin.PasteViewer.setFormat('syntaxhighlighting');
+                PrivateBin.PasteViewer.setText('const answer = 42;');
+                PrivateBin.PasteViewer.run();
+
+                assert.strictEqual(
+                    document.getElementById('prettyprint').textContent,
+                    'const answer = 42;'
+                );
+            } finally {
+                globalThis.prettyPrint = originalPrettyPrint;
+                globalThis.prettyPrintOne = originalPrettyPrintOne;
+            }
+        });
+
         it('initializes with empty text and shows nothing', () => {
             fc.assert(fc.property(
                 common.fcFormats(),
