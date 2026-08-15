@@ -99,6 +99,50 @@ describe('PasteStatus', function () {
         );
     });
 
+    describe('checkAutoShorten', function () {
+        it('works when AbortSignal.timeout is unavailable', async function () {
+            globalThis.cleanup('', {url: 'https://example.com/'});
+            document.body.innerHTML =
+                '<a href="#" id="deletelink"><span></span></a>' +
+                '<div id="pastelink"></div><div id="pastesuccess"></div>' +
+                '<button id="shortenbutton" data-autoshorten="true" ' +
+                    'data-shortener="https://shortener.example/?url="></button>';
+            PrivateBin.PasteStatus.init();
+            PrivateBin.PasteStatus.createPasteNotification(
+                'https://example.com/?paste',
+                'https://example.com/?deletetoken'
+            );
+
+            const originalAbortSignal = global.AbortSignal;
+            const originalFetch = global.fetch;
+            let requestOptions = null;
+            global.AbortSignal = {};
+            global.fetch = async function (_url, options) {
+                requestOptions = options;
+                return {
+                    ok: true,
+                    text: async () => 'https://short.example/paste'
+                };
+            };
+
+            try {
+                PrivateBin.PasteStatus.checkAutoShorten();
+                await new Promise(resolve => setTimeout(resolve, 0));
+
+                assert.ok(requestOptions);
+                assert.ok(!Object.prototype.hasOwnProperty.call(requestOptions, 'signal'));
+                assert.strictEqual(
+                    document.getElementById('pasteurl').href,
+                    'https://short.example/paste'
+                );
+            } finally {
+                global.AbortSignal = originalAbortSignal;
+                global.fetch = originalFetch;
+                globalThis.cleanup();
+            }
+        });
+    });
+
     describe('extractUrl', function () {
         this.timeout(30000);
 
