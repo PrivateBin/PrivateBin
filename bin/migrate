@@ -67,7 +67,10 @@ $ids      = $srcstore->getAllPastes();
 
 foreach ($ids as $id) {
     debug("Reading document ID " . $id);
-    $paste    = $srcstore->read($id);
+    $paste = $srcstore->read($id);
+    if (!is_array($paste)) {
+        dieerr("Unable to read document ID " . $id);
+    }
     $comments = $srcstore->readComments($id);
 
     savePaste($force_overwrite, $dryrun, $id, $paste, $dststore);
