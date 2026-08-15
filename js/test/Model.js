@@ -213,6 +213,15 @@ describe('Model', function () {
                 }
             ));
         });
+        it('throws exception on keys longer than 32 bytes', () => {
+            const oversizedKey = PrivateBin.CryptTool.base58encode('x'.repeat(33)),
+                clean = globalThis.cleanup('', {
+                    url: 'https://example.com/?0123456789abcdef#' + oversizedKey
+                });
+            assert.throws(() => PrivateBin.Model.getPasteKey());
+            PrivateBin.Model.reset();
+            clean();
+        });
     });
 
     describe('getTemplate', function () {
@@ -254,4 +263,3 @@ describe('Model', function () {
         });
     });
 });
-
