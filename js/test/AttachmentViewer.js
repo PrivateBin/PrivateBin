@@ -1,5 +1,13 @@
 'use strict';
 const common = require('../common');
+const bodyTemplate = '<div id="attachmentPreview" class="col-md-12 text-center hidden"></div>' +
+    '<div id="attachment" class="hidden"></div>' +
+    '<div id="templates">' +
+        '<div id="attachmenttemplate" role="alert" class="attachment hidden alert alert-info">' +
+            '<span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>' +
+            '<a class="alert-link">Download attachment</a>' +
+        '</div>' +
+    '</div>';
 const fc = require('fast-check');
 
 describe('AttachmentViewer', function () {
@@ -39,16 +47,8 @@ describe('AttachmentViewer', function () {
                     }
                     prefix  = prefix.replace(/%(s|d)/g, '%%');
                     postfix = postfix.replace(/%(s|d)/g, '%%').replace(/<|>/g, '');
-                    document.body.innerHTML = (
-                        '<div id="attachmentPreview" class="col-md-12 text-center hidden"></div>' +
-                        '<div id="attachment" class="hidden"></div>' +
-                        '<div id="templates">' +
-                            '<div id="attachmenttemplate" role="alert" class="attachment hidden alert alert-info">' +
-                                '<span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>' +
-                                '<a class="alert-link">Download attachment</a>' +
-                            '</div>' +
-                        '</div>'
-                    );
+                    document.body.innerHTML = bodyTemplate;
+                    mockCreateObjectUrl(false);
                     PrivateBin.AttachmentViewer.init();
                     PrivateBin.Model.init();
                     results.push(
@@ -131,18 +131,9 @@ describe('AttachmentViewer', function () {
         });
 
         it(
-            'sanitizes file names in attachments',
+            'sanitizes file names',
             function() {
-                document.body.innerHTML = (
-                    '<div id="attachmentPreview" class="col-md-12 text-center hidden"></div>' +
-                    '<div id="attachment" class="hidden"></div>' +
-                    '<div id="templates">' +
-                        '<div id="attachmenttemplate" role="alert" class="attachment hidden alert alert-info">' +
-                            '<span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>' +
-                            '<a class="alert-link">Download attachment</a>' +
-                        '</div>' +
-                    '</div>'
-                );
+                document.body.innerHTML = bodyTemplate;
                 PrivateBin.AttachmentViewer.init();
                 PrivateBin.Model.init();
                 global.atob = common.atob;
@@ -154,6 +145,103 @@ describe('AttachmentViewer', function () {
                 for (const filename of maliciousFileNames) {
                     PrivateBin.AttachmentViewer.setAttachment('data:;base64,', filename);
                     assert.ok(!document.body.innerHTML.includes(filename));
+                    PrivateBin.AttachmentViewer.removeAttachment();
+                }
+            }
+        );
+
+        it(
+            'sanitizes MIME types in attachments',
+            function() {
+                document.body.innerHTML = bodyTemplate;
+                PrivateBin.AttachmentViewer.init();
+                PrivateBin.Model.init();
+                global.atob = common.atob;
+
+                const maliciousMimeTypes = [
+                    // PDF bypasses
+                    'application/x-pdf',    // legacy, we don't need to support this
+                    'text/html /pdf',       // trips up Firefox and Chromium
+                    'text/html(/pdf',       // Chromium, see: https://chromium.googlesource.com/chromium/src/+/refs/tags/152.0.7949.0/net/base/mime_util.cc#521
+
+                    // SVG bypass
+                    'text/html svg',
+                    'text/html(svg',
+
+                    // invalid bytes after string
+                    'image/png\x01'
+                ];
+                for (const mimeType of maliciousMimeTypes) {
+                    assert.ok(!PrivateBin.AttachmentViewer.isSafeMimeType(mimeType), 'does not treat as safe MIME type: '+ mimeType);
+                    PrivateBin.AttachmentViewer.setAttachment('data:' + mimeType + ';base64,', 'example file name');
+                    assert.ok(!document.body.innerHTML.includes(mimeType), 'does not allow MIME type: ' + mimeType);
+                    assert.ok(!document.body.innerHTML.includes(mimeType.toLowerCase()), 'does not allow lower cased MIME type: ' + mimeType);
+                    assert.ok(!document.body.innerHTML.includes('<img'), 'does not allow image MIME type: ' + mimeType);
+                    PrivateBin.AttachmentViewer.removeAttachment();
+                }
+            }
+        );
+
+        it(
+            'supports safe MIME types in attachments',
+            function() {
+                document.body.innerHTML = bodyTemplate;
+                PrivateBin.AttachmentViewer.init();
+                PrivateBin.Model.init();
+                global.atob = common.atob;
+
+                const supportedSafeMimeTypes = [
+                    'text/plain',
+                    'image/png',
+                    'image/jpeg'
+                ];
+                for (const mimeType of supportedSafeMimeTypes) {
+                    assert.ok(PrivateBin.AttachmentViewer.isSafeMimeType(mimeType), 'treats as safe MIME type: '+ mimeType);
+                }
+            }
+        );
+
+        it(
+            'supports safe MIME type previews in attachments',
+            function() {
+                document.body.innerHTML = bodyTemplate;
+                PrivateBin.AttachmentViewer.init();
+                PrivateBin.Model.init();
+                global.atob = common.atob;
+
+                const supportedPreviewMimeTypes = [
+                    'application/pdf',
+                    'audio/wav',
+                    'video/avi'
+                ];
+                for (const mimeType of supportedPreviewMimeTypes) {
+                    assert.ok(PrivateBin.AttachmentViewer.isSafeMimeType(mimeType), 'treats as safe preview MIME type: '+ mimeType);
+                    PrivateBin.AttachmentViewer.setAttachment('data:' + mimeType + ';base64,', 'example file name');
+                    assert.ok(document.body.innerHTML.includes(mimeType), 'allows MIME type: ' + mimeType);
+                    PrivateBin.AttachmentViewer.removeAttachment();
+                }
+            }
+        );
+
+        it(
+            'special case sanitizes potentially unsafe SVG previews',
+            function() {
+                document.body.innerHTML = bodyTemplate;
+                PrivateBin.AttachmentViewer.init();
+                PrivateBin.Model.init();
+                global.atob = common.atob;
+
+                // special case: not a safe type, but renders a sanitized preview
+                const svgMimeTypes = [
+                    'image/svg+xml',
+                    'image/SVG+xml',
+                    'image/sVg'
+                ];
+                for (const mimeType of svgMimeTypes) {
+                    assert.ok(!PrivateBin.AttachmentViewer.isSafeMimeType(mimeType), 'treats as unsafe MIME type: '+ mimeType);
+                    PrivateBin.AttachmentViewer.setAttachment('data:' + mimeType + ';base64,', 'example file name');
+                    assert.ok(document.body.innerHTML.includes('image/svg+xml'), 'allows sanitized MIME type: ' + mimeType);
+                    PrivateBin.AttachmentViewer.removeAttachment();
                 }
             }
         );
@@ -190,19 +278,17 @@ describe('AttachmentViewer', function () {
         )
     });
 
-    function mockCreateObjectUrl() {
+    function mockCreateObjectUrl(includeType = true) {
         if (typeof window.URL.createObjectURL === 'undefined') {
             Object.defineProperty(
                 window.URL,
                 'createObjectURL',
                 {
-                    value: function (_blob) {
-                        return 'blob:' + location.origin + '/1b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed';
+                    value: function (blob) {
+                        return 'blob:' + (includeType ? blob.type : location.origin) + '/1b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed';;
                     }
                 }
             );
         }
     }
 });
-
-

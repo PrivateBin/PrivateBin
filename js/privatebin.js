@@ -1039,14 +1039,11 @@ window.PrivateBin = (function () {
          * @param  {ArrayBuffer} messageArray
          * @return {string} message
          */
-        function arraybufferToString(messageArray) {
-            const array = new Uint8Array(messageArray);
-            let message = '',
-                i = 0;
-            while (i < array.length) {
-                message += String.fromCharCode(array[i++]);
-            }
-            return message;
+        function arraybufferToString(messageArray)
+        {
+            return Array.from(new Uint8Array(messageArray))
+                .map(byte => String.fromCharCode(byte))
+                .join('');
         }
 
         /**
@@ -1060,12 +1057,12 @@ window.PrivateBin = (function () {
          * @param  {string} message UTF-8 string
          * @return {Uint8Array} array
          */
-        function stringToArraybuffer(message) {
-            const messageArray = new Uint8Array(message.length);
-            for (let i = 0; i < message.length; ++i) {
-                messageArray[i] = message.charCodeAt(i);
-            }
-            return messageArray;
+        function stringToArraybuffer(message)
+        {
+            return Uint8Array.from(
+                message,
+                character => character.charCodeAt(0)
+            );
         }
 
         /**
@@ -2856,10 +2853,10 @@ window.PrivateBin = (function () {
          */
         function getBlobUrl(data, mimeType) {
             // Transform into a Blob
-            const buf = new Uint8Array(data.length);
-            for (let i = 0; i < data.length; ++i) {
-                buf[i] = data.charCodeAt(i);
-            }
+            const buf = Uint8Array.from(
+                data,
+                character => character.charCodeAt(0)
+            );
             const blob = new window.Blob(
                 [buf],
                 {
@@ -2895,22 +2892,22 @@ window.PrivateBin = (function () {
 
             // We explicitly do _not_ use the original mime type for the download link
             // to always force a download instead of potentially dangerous browser rendering/parsing/interpretation
-            let safeMimeType = 'application/octet-stream';
+            let sanitizedMimeType = 'application/octet-stream';
             if (me.isSafeMimeType(mimeType)) {
-                safeMimeType = mimeType;
+                sanitizedMimeType = mimeType;
             }
 
             // extract data and convert to binary
-            const rawData = attachmentData.substring(base64Start);
-            const decodedData = rawData.length > 0 ? atob(rawData) : '';
+            const base64Data = attachmentData.substring(base64Start);
+            const plainData = base64Data.length > 0 ? atob(base64Data) : '';
 
-            let blobUrl = getBlobUrl(decodedData, safeMimeType);
+            let blobUrl = getBlobUrl(plainData, sanitizedMimeType);
             attachmentLink.setAttribute('href', blobUrl);
 
             if (typeof fileName !== 'undefined') {
                 attachmentLink.setAttribute('download', fileName);
 
-                const fileSize = Helper.formatBytes(decodedData.length);
+                const fileSize = Helper.formatBytes(plainData.length);
                 const spans = template.querySelectorAll('span');
                 const span = spans[spans.length - 1];
                 span.textContent += ` (${fileName}, ${fileSize})`;
@@ -2920,18 +2917,36 @@ window.PrivateBin = (function () {
             // prevents executing embedded scripts when CSP is not set and user
             // right-clicks/long-taps and opens the SVG in a new tab - prevented
             // in the preview by use of an img tag, which disables scripts, too
-            if (mimeType.match(/^image\/.*svg/i)) {
-                const sanitizedData = DOMPurify.sanitize(
-                    decodedData,
-                    purifySvgConfig
-                );
-                blobUrl = getBlobUrl(sanitizedData, mimeType);
+            if (mimeType.startsWith('image\/svg')) {
+                try {
+                    // attempt to UTF-8 decode the SVG data
+                    const svgBuffer = Uint8Array.from(
+                        plainData,
+                        character => character.charCodeAt(0)
+                    );
+                    const utf8ValidatedSvgString = new TextDecoder(
+                        'utf-8',
+                        {fatal: true}
+                    ).decode(svgBuffer);
+                    const sanitizedData = DOMPurify.sanitize(
+                        utf8ValidatedSvgString,
+                        purifySvgConfig
+                    );
+                    sanitizedMimeType = 'image/svg+xml';
+                    blobUrl = getBlobUrl(sanitizedData, sanitizedMimeType);
+                } catch (e) {
+                    // Invalid or non-UTF-8 SVG: download only, no preview as it
+                    // may be used to smuggle multi-byte sequences past DOMpurify
+                    // such as `&#x13c` to get `\x01<` & `&#x13e` to get `\x01>`
+                    sanitizedMimeType = 'application/octet-stream';
+                    blobUrl = getBlobUrl(plainData, sanitizedMimeType);
+                }
             }
 
             template.classList.remove('hidden');
             attachment.appendChild(template);
 
-            me.handleBlobAttachmentPreview(attachmentPreview, blobUrl, mimeType);
+            me.handleBlobAttachmentPreview(attachmentPreview, blobUrl, sanitizedMimeType);
         };
 
 
@@ -2947,14 +2962,16 @@ window.PrivateBin = (function () {
          * @returns {bool}
          */
         me.isSafeMimeType = function(mimeType) {
-            return (
+            return ((
                     mimeType.startsWith('image/') &&
                     !mimeType.includes('svg')
                 ) ||
                 mimeType.startsWith('video/') ||
                 mimeType.startsWith('audio/') ||
-                mimeType.endsWith('/pdf') ||
-                mimeType === 'text/plain';
+                mimeType === 'application/pdf' ||
+                mimeType === 'text/plain') &&
+                // don't accept comments, stray characters, spaces, etc.
+                /^[a-z0-9][a-z0-9.-]*[a-z0-9]\/[a-z0-9][a-z0-9.+-]*[a-z0-9]$/.test(mimeType);
         };
 
         /**
@@ -3162,7 +3179,7 @@ window.PrivateBin = (function () {
             const mimeTypeEnd = attachmentData.indexOf(';');
 
             // extract mimeType
-            return attachmentData.substring(5, mimeTypeEnd);
+            return attachmentData.substring(5, mimeTypeEnd).toLowerCase();
         };
 
         /**
@@ -3265,12 +3282,12 @@ window.PrivateBin = (function () {
             const alreadyIncludesCurrentAttachment = targetElement.querySelectorAll(`[src='${blobUrl}']`).length > 0;
 
             if (blobUrl && !alreadyIncludesCurrentAttachment) {
-                if (mimeType.toLowerCase().startsWith('image/')) {
+                if (mimeType.startsWith('image/')) {
                     const image = document.createElement('img');
                     image.setAttribute('src', blobUrl);
                     image.setAttribute('class', 'img-thumbnail');
                     targetElement.appendChild(image);
-                } else if (mimeType.toLowerCase().startsWith('video/')) {
+                } else if (mimeType.startsWith('video/')) {
                     const video = document.createElement('video');
                     video.setAttribute('controls', 'true');
                     video.setAttribute('autoplay', 'true');
@@ -3280,7 +3297,7 @@ window.PrivateBin = (function () {
                     source.setAttribute('src', blobUrl);
                     video.appendChild(source);
                     targetElement.appendChild(video);
-                } else if (mimeType.toLowerCase().startsWith('audio/')) {
+                } else if (mimeType.startsWith('audio/')) {
                     const audio = document.createElement('audio');
                     audio.setAttribute('controls', 'true');
                     audio.setAttribute('autoplay', 'true');
@@ -3289,7 +3306,7 @@ window.PrivateBin = (function () {
                     source.setAttribute('src', blobUrl);
                     audio.appendChild(source);
                     targetElement.appendChild(audio);
-                } else if (mimeType.toLowerCase().endsWith('/pdf')) {
+                } else if (mimeType === 'application/pdf') {
                     const embed = document.createElement('embed');
                     embed.setAttribute('src', blobUrl);
                     embed.setAttribute('type', 'application/pdf');
@@ -6154,5 +6171,3 @@ if (typeof module === 'undefined' || !module.exports) {
         window.PrivateBin.Controller.init();
     });
 }
-
-
