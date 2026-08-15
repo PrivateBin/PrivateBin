@@ -163,16 +163,31 @@ class FilesystemTest extends TestCase
             file_put_contents($storagedir . $dataid . '.' . $commentid . '.' . $dataid, json_encode($comment));
         }
         // check that all 10 pastes were converted after the purge
-        $this->_model->purge(10);
+        $oldUmask = umask(0000);
+        try {
+            $this->_model->purge(10);
+        } finally {
+            umask($oldUmask);
+        }
         foreach ($ids as $dataid => $storagedir) {
             $dataid = (string) $dataid; // undue potential key cast, see https://www.php.net/manual/en/language.types.array.php
             $this->assertFileExists($storagedir . $dataid . '.php', "paste $dataid exists in new format");
+            $this->assertSame(
+                0640,
+                fileperms($storagedir . $dataid . '.php') & 0777,
+                "converted paste $dataid has protected permissions"
+            );
             $this->assertFileDoesNotExist($storagedir . $dataid, "old format paste $dataid got removed");
             $this->assertTrue($this->_model->exists($dataid), "paste $dataid exists");
             $this->assertEquals($this->_model->read($dataid), $paste, "paste $dataid wasn't modified in the conversion");
 
             $storagedir .= $dataid . '.discussion' . DIRECTORY_SEPARATOR;
             $this->assertFileExists($storagedir . $dataid . '.' . $commentid . '.' . $dataid . '.php', "comment of $dataid exists in new format");
+            $this->assertSame(
+                0640,
+                fileperms($storagedir . $dataid . '.' . $commentid . '.' . $dataid . '.php') & 0777,
+                "converted comment of $dataid has protected permissions"
+            );
             $this->assertFileDoesNotExist($storagedir . $dataid . '.' . $commentid . '.' . $dataid, "old format comment of $dataid got removed");
             $this->assertTrue($this->_model->existsComment($dataid, $dataid, $commentid), "comment in paste $dataid exists");
             $comment             = $comment;
