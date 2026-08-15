@@ -261,6 +261,19 @@ class I18nTest extends TestCase
         $this->assertEquals('Ctrl', I18n::getCopyHotkey(), 'returns Ctrl when user agent absent');
     }
 
+    public function testRightToLeftLanguages()
+    {
+        foreach (['ar', 'fa', 'he'] as $language) {
+            $_COOKIE['lang'] = $language;
+            I18n::loadTranslations();
+            $this->assertTrue(I18n::isRtl(), "$language is right-to-left");
+        }
+
+        $_COOKIE['lang'] = 'en';
+        I18n::loadTranslations();
+        $this->assertFalse(I18n::isRtl(), 'English is left-to-right');
+    }
+
     public function testMessageIdsExistInAllLanguages()
     {
         $messageIds = [];
