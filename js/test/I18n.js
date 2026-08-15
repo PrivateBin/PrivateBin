@@ -183,6 +183,17 @@ describe('I18n', function () {
                 }
             ));
         });
+
+        it('routes Lithuanian cardinal forms by the last digit', () => {
+            PrivateBin.I18n.reset('lt');
+            assert.strictEqual(PrivateBin.I18n.getPluralForm(1), 0);
+            assert.strictEqual(PrivateBin.I18n.getPluralForm(2), 1);
+            assert.strictEqual(PrivateBin.I18n.getPluralForm(10), 2);
+            assert.strictEqual(PrivateBin.I18n.getPluralForm(22), 1);
+            assert.strictEqual(PrivateBin.I18n.getPluralForm(110), 2);
+            assert.strictEqual(PrivateBin.I18n.getPluralForm(111), 2);
+            assert.strictEqual(PrivateBin.I18n.getPluralForm(120), 2);
+        });
     });
 
     // loading of JSON via AJAX needs to be tested in the browser, this just mocks it
