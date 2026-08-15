@@ -121,7 +121,7 @@ class Administration
             self::_error('instance not using Filesystem storage, no directories to empty', 4);
         }
         $dir = $this->_conf->getKey('dir', 'model_options');
-        passthru("find $dir -type d -empty -delete", $code);
+        passthru('find ' . escapeshellarg($dir) . ' -type d -empty -delete', $code);
         exit($code);
     }
 
