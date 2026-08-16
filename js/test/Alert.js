@@ -93,7 +93,7 @@ describe('Alert', function () {
                 function (message) {
                     message = message.join('');
                     const expected = '<div id="errormessage" role="alert" ' +
-                        'class="statusmessage alert alert-danger"><span ' +
+                        'class="statusmessage alert alert-warning"><span ' +
                         'class="glyphicon glyphicon-warning-sign" ' +
                         'aria-hidden="true"></span> <span>' + message + '</span></div>';
                     document.body.innerHTML =
@@ -116,7 +116,7 @@ describe('Alert', function () {
                     icon = icon.join('');
                     message = message.join('');
                     const expected = '<div id="errormessage" role="alert" ' +
-                        'class="statusmessage alert alert-danger"><span ' +
+                        'class="statusmessage alert alert-warning"><span ' +
                         'class="glyphicon glyphicon-' + icon +
                         '" aria-hidden="true"></span> <span>' + message + '</span></div>';
                     document.body.innerHTML =
@@ -194,6 +194,33 @@ describe('Alert', function () {
                     return expected === result;
                 }
             ));
+        });
+    });
+
+    describe('warning and error severity', function () {
+        it('updates Bootstrap 5 severity styling and icons', function () {
+            document.body.innerHTML = `
+                <div id="errormessage" role="alert" class="hidden alert alert-danger">
+                    <svg aria-hidden="true">
+                        <use href="img/bootstrap-icons.svg#exclamation-triangle"></use>
+                    </svg>
+                </div>
+            `;
+            PrivateBin.Alert.init();
+
+            PrivateBin.Alert.showWarning('Warning');
+
+            const errorMessage = document.getElementById('errormessage');
+            const icon = errorMessage.querySelector('use');
+            assert.ok(errorMessage.classList.contains('alert-warning'));
+            assert.ok(!errorMessage.classList.contains('alert-danger'));
+            assert.strictEqual(icon.getAttribute('href'), 'img/bootstrap-icons.svg#exclamation-circle');
+
+            PrivateBin.Alert.showError('Error');
+
+            assert.ok(errorMessage.classList.contains('alert-danger'));
+            assert.ok(!errorMessage.classList.contains('alert-warning'));
+            assert.strictEqual(icon.getAttribute('href'), 'img/bootstrap-icons.svg#exclamation-triangle');
         });
     });
 

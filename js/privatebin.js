@@ -1770,6 +1770,40 @@ window.PrivateBin = (function () {
         };
 
         /**
+         * switch the shared warning/error element to the requested severity
+         *
+         * @param {bool} isWarning
+         */
+        function setErrorSeverity(isWarning) {
+            if (errorMessage.classList.contains('alert')) {
+                errorMessage.classList.toggle('alert-warning', isWarning);
+                errorMessage.classList.toggle('alert-danger', !isWarning);
+            }
+
+            const glyphIcon = errorMessage.querySelector(':first-child');
+            if (!glyphIcon) {
+                return;
+            }
+            const bootstrapIcon = glyphIcon.querySelector('use');
+            if (bootstrapIcon) {
+                const href = bootstrapIcon.getAttribute('href');
+                if (href) {
+                    bootstrapIcon.setAttribute(
+                        'href',
+                        href.replace(
+                            /#[^#]*$/,
+                            isWarning ? '#exclamation-circle' : '#exclamation-triangle'
+                        )
+                    );
+                }
+                return;
+            }
+
+            glyphIcon.classList.remove(currentIcon[isWarning ? 3 : 2]);
+            glyphIcon.classList.add(currentIcon[isWarning ? 2 : 3]);
+        }
+
+        /**
          * display a warning message
          *
          * This automatically passes the text to I18n for translation.
@@ -1781,11 +1815,7 @@ window.PrivateBin = (function () {
          *                                    leave previous icon
          */
         me.showWarning = function (message, icon) {
-            const glyphIcon = errorMessage.querySelector(':first-child');
-            if (glyphIcon) {
-                glyphIcon.classList.remove(currentIcon[3]);
-                glyphIcon.classList.add(currentIcon[2]);
-            }
+            setErrorSeverity(true);
             handleNotification(2, errorMessage, message, icon);
         };
 
@@ -1801,6 +1831,7 @@ window.PrivateBin = (function () {
          *                                    leave previous icon
          */
         me.showError = function (message, icon) {
+            setErrorSeverity(false);
             handleNotification(3, errorMessage, message, icon);
         };
 
@@ -6154,5 +6185,4 @@ if (typeof module === 'undefined' || !module.exports) {
         window.PrivateBin.Controller.init();
     });
 }
-
 
