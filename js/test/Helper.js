@@ -3,6 +3,23 @@ const common = require('../common');
 const fc = require('fast-check');
 
 describe('Helper', function () {
+    describe('durationToSeconds', function () {
+        it('accepts plural expiration units used by server configuration', function () {
+            assert.strictEqual(PrivateBin.Helper.durationToSeconds('3days'), 259200);
+            assert.strictEqual(PrivateBin.Helper.durationToSeconds('6months'), 15552000);
+        });
+
+        it('calculates expiration dates from plural expiration units', function () {
+            const initialDate = new Date('2026-01-01T00:00:00Z');
+            const expirationDate = PrivateBin.Helper.calculateExpirationDate(initialDate, '3days');
+
+            assert.strictEqual(
+                new Date(expirationDate).toISOString(),
+                '2026-01-04T00:00:00.000Z'
+            );
+        });
+    });
+
     describe('secondsToHuman', function () {
         it('returns an array with a number and a word', () => {
             fc.assert(fc.property(fc.integer(), function (number) {

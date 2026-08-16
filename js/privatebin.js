@@ -373,6 +373,9 @@ window.PrivateBin = (function () {
             let pieces = duration.split(/(\D+)/),
                 factor = pieces[0] || 0,
                 timespan = pieces[1] || pieces[0];
+            if (typeof timespan === 'string' && timespan.endsWith('s')) {
+                timespan = timespan.slice(0, -1);
+            }
             switch (timespan) {
                 case 'min':
                     return factor * minute;
@@ -6154,5 +6157,4 @@ if (typeof module === 'undefined' || !module.exports) {
         window.PrivateBin.Controller.init();
     });
 }
-
 
