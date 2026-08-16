@@ -129,5 +129,38 @@ describe('DiscussionViewer', function () {
                 }
             ));
         });
+
+        it('uses matching Bootstrap 5 icons for reply notifications', function () {
+            const clean = globalThis.cleanup();
+            document.body.innerHTML = `
+                <div id="discussion"><div id="commentcontainer"></div></div>
+                <div id="templates">
+                    <p id="commenttailtemplate"><button>Add comment</button></p>
+                    <div id="replytemplate" class="hidden">
+                        <input id="nickname">
+                        <textarea id="replymessage"></textarea>
+                        <div id="replystatus" class="alert alert-info">
+                            <svg aria-hidden="true">
+                                <use href="img/bootstrap-icons.svg#info-circle"></use>
+                            </svg>
+                        </div>
+                        <button id="replybutton">Post comment</button>
+                    </div>
+                </div>
+            `;
+            PrivateBin.Model.reset();
+            PrivateBin.Model.init();
+            PrivateBin.DiscussionViewer.init();
+            PrivateBin.DiscussionViewer.prepareNewDiscussion();
+
+            const replyStatus = PrivateBin.DiscussionViewer.handleNotification('danger');
+            const icon = replyStatus.querySelector('use');
+            assert.strictEqual(icon.getAttribute('href'), 'img/bootstrap-icons.svg#exclamation-triangle');
+
+            PrivateBin.DiscussionViewer.handleNotification('info');
+            assert.strictEqual(icon.getAttribute('href'), 'img/bootstrap-icons.svg#info-circle');
+
+            clean();
+        });
     });
 });

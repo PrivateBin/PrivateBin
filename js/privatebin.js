@@ -3544,21 +3544,27 @@ window.PrivateBin = (function () {
                 return false;
             }
 
-            if (alertType === 'danger') {
-                replyStatus.classList.remove('alert-info');
-                replyStatus.classList.add('alert-danger');
-                const replyIcon = replyStatus.querySelector(':first-child');
-                if (replyIcon) {
-                    replyIcon.classList.remove('glyphicon-alert');
-                    replyIcon.classList.add('glyphicon-info-sign');
-                }
-            } else {
-                replyStatus.classList.remove('alert-danger');
-                replyStatus.classList.add('alert-info');
-                const replyIcon = replyStatus.querySelector(':first-child');
-                if (replyIcon) {
-                    replyIcon.classList.remove('glyphicon-info-sign');
-                    replyIcon.classList.add('glyphicon-alert');
+            const isDanger = alertType === 'danger';
+            replyStatus.classList.toggle('alert-info', !isDanger);
+            replyStatus.classList.toggle('alert-danger', isDanger);
+
+            const replyIcon = replyStatus.querySelector(':first-child');
+            if (replyIcon) {
+                const bootstrapIcon = replyIcon.querySelector('use');
+                if (bootstrapIcon) {
+                    const href = bootstrapIcon.getAttribute('href');
+                    if (href) {
+                        bootstrapIcon.setAttribute(
+                            'href',
+                            href.replace(
+                                /#[^#]*$/,
+                                isDanger ? '#exclamation-triangle' : '#info-circle'
+                            )
+                        );
+                    }
+                } else {
+                    replyIcon.classList.toggle('glyphicon-info-sign', !isDanger);
+                    replyIcon.classList.toggle('glyphicon-alert', isDanger);
                 }
             }
 
@@ -6154,5 +6160,4 @@ if (typeof module === 'undefined' || !module.exports) {
         window.PrivateBin.Controller.init();
     });
 }
-
 
