@@ -4894,7 +4894,11 @@ window.PrivateBin = (function () {
             if (successFunc !== null) {
                 // add useful data to result
                 result.encryptionKey = symmetricKey;
-                successFunc(status, result);
+                try {
+                    successFunc(status, result);
+                } catch (error) {
+                    console.error('Server success callback failed:', error);
+                }
             }
         }
 
@@ -4909,7 +4913,11 @@ window.PrivateBin = (function () {
          */
         function fail(status, result) {
             if (failureFunc !== null) {
-                failureFunc(status, result);
+                try {
+                    failureFunc(status, result);
+                } catch (error) {
+                    console.error('Server failure callback failed:', error);
+                }
             }
         }
 
@@ -6154,5 +6162,4 @@ if (typeof module === 'undefined' || !module.exports) {
         window.PrivateBin.Controller.init();
     });
 }
-
 

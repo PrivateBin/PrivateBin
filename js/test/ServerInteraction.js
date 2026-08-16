@@ -3,6 +3,76 @@ const common = require('../common');
 const fc = require('fast-check');
 
 describe('ServerInteraction', function () {
+    describe('run callbacks', function () {
+        let clean,
+            originalFetch,
+            originalConsoleError;
+
+        beforeEach(function () {
+            clean = globalThis.cleanup();
+            originalFetch = global.fetch;
+            originalConsoleError = console.error;
+            console.error = function () {};
+        });
+
+        afterEach(function () {
+            global.fetch = originalFetch;
+            console.error = originalConsoleError;
+            clean();
+        });
+
+        it('does not reclassify success callback errors as server failures', async function () {
+            let successCalls = 0,
+                failureCalls = 0;
+            global.fetch = async function () {
+                return {
+                    ok: true,
+                    json: async function () {
+                        return {status: 0};
+                    }
+                };
+            };
+            PrivateBin.ServerInteraction.prepare();
+            PrivateBin.ServerInteraction.setSuccess(function () {
+                ++successCalls;
+                throw new Error('render failed');
+            });
+            PrivateBin.ServerInteraction.setFailure(function () {
+                ++failureCalls;
+            });
+
+            PrivateBin.ServerInteraction.run();
+            await new Promise(resolve => setImmediate(resolve));
+
+            assert.strictEqual(successCalls, 1);
+            assert.strictEqual(failureCalls, 0);
+        });
+
+        it('does not invoke a throwing failure callback twice', async function () {
+            let failureCalls = 0;
+            global.fetch = async function () {
+                return {
+                    ok: true,
+                    json: async function () {
+                        return {status: 1, message: 'rejected'};
+                    }
+                };
+            };
+            PrivateBin.ServerInteraction.prepare();
+            PrivateBin.ServerInteraction.setFailure(function () {
+                ++failureCalls;
+                if (failureCalls === 1) {
+                    throw new Error('error rendering failure');
+                }
+            });
+
+            PrivateBin.ServerInteraction.run();
+            await new Promise(resolve => setImmediate(resolve));
+
+            assert.strictEqual(failureCalls, 1);
+        });
+    });
+
     describe('prepare', function () {
         afterEach(async function () {
             // pause to let async functions conclude
