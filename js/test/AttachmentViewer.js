@@ -190,6 +190,43 @@ describe('AttachmentViewer', function () {
         )
     });
 
+    describe('clipboard attachments', function () {
+        it('ignores file items that are no longer available', function () {
+            document.body.innerHTML = '<div id="attachment"></div>';
+            const originalIsAttachmentReadonly = PrivateBin.TopNav.isAttachmentReadonly;
+            const originalFileReader = global.FileReader;
+            PrivateBin.TopNav.isAttachmentReadonly = () => false;
+            global.FileReader = window.FileReader;
+            PrivateBin.AttachmentViewer.init();
+
+            const pasteEvent = new window.Event('paste');
+            Object.defineProperty(pasteEvent, 'clipboardData', {
+                value: {
+                    items: [{
+                        kind: 'file',
+                        getAsFile: () => null
+                    }]
+                }
+            });
+            let pasteError = null;
+            const captureError = event => {
+                pasteError = event.error;
+                event.preventDefault();
+            };
+            window.addEventListener('error', captureError);
+
+            try {
+                document.dispatchEvent(pasteEvent);
+            } finally {
+                window.removeEventListener('error', captureError);
+                PrivateBin.TopNav.isAttachmentReadonly = originalIsAttachmentReadonly;
+                global.FileReader = originalFileReader;
+            }
+
+            assert.strictEqual(pasteError, null);
+        });
+    });
+
     function mockCreateObjectUrl() {
         if (typeof window.URL.createObjectURL === 'undefined') {
             Object.defineProperty(
@@ -204,5 +241,3 @@ describe('AttachmentViewer', function () {
         }
     }
 });
-
-
