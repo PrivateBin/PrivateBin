@@ -2839,6 +2839,8 @@ window.PrivateBin = (function () {
         let attachmentPreview,
             attachment,
             attachmentsData = [],
+            attachmentReadGeneration = 0,
+            attachmentReadPromise = Promise.resolve(true),
             files,
             fileInput,
             dragAndDropFileNames,
@@ -3029,6 +3031,8 @@ window.PrivateBin = (function () {
          * @function
          */
         me.removeAttachmentData = function () {
+            ++attachmentReadGeneration;
+            attachmentReadPromise = Promise.resolve(true);
             files = [];
             attachmentsData = [];
         };
@@ -3223,25 +3227,43 @@ window.PrivateBin = (function () {
 
             if (loadedFiles.length > 0) {
                 files = loadedFiles;
-                loadedFiles.forEach((loadedFile, index) => {
-                    const fileReader = new FileReader();
+                const readGeneration = attachmentReadGeneration;
+                attachmentReadPromise = Promise.all(
+                    loadedFiles.map((loadedFile, index) => new Promise(resolve => {
+                        const fileReader = new FileReader();
 
-                    fileReader.onload = function (event) {
-                        const dataURL = event.target.result;
-                        if (dataURL) {
+                        fileReader.onload = function (event) {
+                            if (readGeneration !== attachmentReadGeneration) {
+                                resolve(true);
+                                return;
+                            }
+                            const dataURL = event.target.result;
+                            if (!dataURL) {
+                                resolve(false);
+                                return;
+                            }
                             attachmentsData[index] = dataURL;
+
+                            if (Editor.isPreview()) {
+                                me.handleAttachmentPreview(attachmentPreview, dataURL);
+                                attachmentPreview.classList.remove('hidden');
+                            }
+
+                            TopNav.highlightFileupload();
+                            resolve(true);
+                        };
+                        fileReader.onerror = function () {
+                            resolve(readGeneration !== attachmentReadGeneration);
+                        };
+                        fileReader.onabort = fileReader.onerror;
+
+                        try {
+                            fileReader.readAsDataURL(loadedFile);
+                        } catch (error) {
+                            resolve(false);
                         }
-
-                        if (Editor.isPreview()) {
-                            me.handleAttachmentPreview(attachmentPreview, dataURL);
-                            attachmentPreview.classList.remove('hidden');
-                        }
-
-                        TopNav.highlightFileupload();
-                    };
-
-                    fileReader.readAsDataURL(loadedFile);
-                });
+                    }))
+                ).then(results => results.every(Boolean));
             } else {
                 me.removeAttachmentData();
             }
@@ -3397,6 +3419,24 @@ window.PrivateBin = (function () {
          */
         me.getAttachmentsData = function () {
             return attachmentsData;
+        };
+
+        /**
+         * wait for all currently selected files to finish loading
+         *
+         * @name   AttachmentViewer.waitForAttachmentData
+         * @function
+         * @return {Promise<boolean>}
+         */
+        me.waitForAttachmentData = async function () {
+            let pendingRead;
+            do {
+                pendingRead = attachmentReadPromise;
+                if (!await pendingRead) {
+                    return false;
+                }
+            } while (pendingRead !== attachmentReadPromise);
+            return true;
         };
 
         /**
@@ -5280,6 +5320,12 @@ window.PrivateBin = (function () {
                 TopNav.showCreateButtons();
                 return;
             }
+            if (!await AttachmentViewer.waitForAttachmentData()) {
+                Alert.hideLoading();
+                TopNav.showCreateButtons();
+                Alert.showError('Cannot read attachment.');
+                return;
+            }
 
             // prepare server interaction
             ServerInteraction.prepare();
@@ -6154,5 +6200,3 @@ if (typeof module === 'undefined' || !module.exports) {
         window.PrivateBin.Controller.init();
     });
 }
-
-
