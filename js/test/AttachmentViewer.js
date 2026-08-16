@@ -190,6 +190,41 @@ describe('AttachmentViewer', function () {
         )
     });
 
+    describe('drag and drop', function () {
+        it('hides the drop zone after dropping across nested targets', function () {
+            document.body.innerHTML = `
+                <div id="attachment"></div>
+                <div id="dragAndDropFileName"></div>
+                <div id="dropzone" class="hidden"></div>
+                <input id="file" type="file">
+                <div id="drag-outer"><div id="drag-inner"></div></div>
+            `;
+            const originalReadonly = PrivateBin.TopNav.isAttachmentReadonly;
+            const originalFileReader = global.FileReader;
+            PrivateBin.TopNav.isAttachmentReadonly = function () {
+                return false;
+            };
+            global.FileReader = function () {};
+            PrivateBin.AttachmentViewer.init();
+
+            document.getElementById('drag-outer').dispatchEvent(
+                new Event('dragenter', {bubbles: true})
+            );
+            document.getElementById('drag-inner').dispatchEvent(
+                new Event('dragenter', {bubbles: true})
+            );
+            assert.ok(!document.getElementById('dropzone').classList.contains('hidden'));
+
+            const drop = new Event('drop', {bubbles: true, cancelable: true});
+            drop.dataTransfer = {files: []};
+            document.getElementById('drag-inner').dispatchEvent(drop);
+
+            assert.ok(document.getElementById('dropzone').classList.contains('hidden'));
+            PrivateBin.TopNav.isAttachmentReadonly = originalReadonly;
+            global.FileReader = originalFileReader;
+        });
+    });
+
     function mockCreateObjectUrl() {
         if (typeof window.URL.createObjectURL === 'undefined') {
             Object.defineProperty(
@@ -204,5 +239,3 @@ describe('AttachmentViewer', function () {
         }
     }
 });
-
-
