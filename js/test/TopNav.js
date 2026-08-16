@@ -69,6 +69,25 @@ describe('TopNav', function () {
         });
 
         it(
+            'supports disabled discussion, password, and file upload controls',
+            function () {
+                document.body.innerHTML =
+                    '<button id="newbutton" class="hidden"></button>' +
+                    '<div id="expiration" class="hidden"></div>' +
+                    '<div id="burnafterreadingoption" class="hidden"></div>' +
+                    '<div id="formatter" class="hidden"></div>' +
+                    '<button id="sendbutton" class="hidden"></button>';
+                PrivateBin.TopNav.init();
+
+                assert.doesNotThrow(function () {
+                    PrivateBin.TopNav.resetInput();
+                    PrivateBin.TopNav.showCreateButtons();
+                    PrivateBin.TopNav.hideCreateButtons();
+                });
+            }
+        );
+
+        it(
             'displays & hides navigation elements for creating a document',
             function () { // eslint-disable-line complexity
                 let results = [];
@@ -416,13 +435,20 @@ describe('TopNav', function () {
                 results.push(
                     !PrivateBin.TopNav.getOpenDiscussion()
                 );
+                results.push(
+                    query('#opendiscussionoption').classList.contains('buttondisabled')
+                );
                 query('#burnafterreading').checked = false;
                 query('#burnafterreading').removeAttribute('checked');
+                query('#burnafterreading').dispatchEvent(new window.Event('change'));
                 results.push(
                     !PrivateBin.TopNav.getBurnAfterReading()
                 );
                 results.push(
                     !PrivateBin.TopNav.getOpenDiscussion()
+                );
+                results.push(
+                    !query('#opendiscussionoption').classList.contains('buttondisabled')
                 );
                 PrivateBin.TopNav.resetInput();
                 results.push(
@@ -430,6 +456,9 @@ describe('TopNav', function () {
                 );
                 results.push(
                     !PrivateBin.TopNav.getOpenDiscussion()
+                );
+                results.push(
+                    query('#opendiscussionoption').classList.contains('buttondisabled')
                 );
                 cleanup();
                 const result = results.every(element => element);
@@ -459,10 +488,15 @@ describe('TopNav', function () {
                 results.push(
                     PrivateBin.TopNav.getOpenDiscussion()
                 );
+                results.push(
+                    query('#burnafterreadingoption').classList.contains('buttondisabled')
+                );
                 query('#opendiscussion').checked = false;
                 query('#opendiscussion').removeAttribute('checked');
+                query('#opendiscussion').dispatchEvent(new window.Event('change'));
                 query('#burnafterreading').checked = true;
                 query('#burnafterreading').setAttribute('checked', 'checked');
+                query('#burnafterreading').dispatchEvent(new window.Event('change'));
                 results.push(
                     PrivateBin.TopNav.getBurnAfterReading()
                 );
@@ -475,6 +509,10 @@ describe('TopNav', function () {
                 );
                 results.push(
                     PrivateBin.TopNav.getOpenDiscussion()
+                );
+                results.push(
+                    query('#burnafterreadingoption').classList.contains('buttondisabled') &&
+                    !query('#opendiscussionoption').classList.contains('buttondisabled')
                 );
                 cleanup();
                 const result = results.every(element => element);
