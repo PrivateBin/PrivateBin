@@ -781,19 +781,32 @@ describe('TopNav', function () {
 
         // TODO triggers error messages in jsDOM since version 12, but passes
         it(
-            'displays raw text view correctly',
+            'displays raw text without replacing the history document',
             function () {
                 const clean = globalThis.cleanup('', {url: 'https://privatebin.net/?0123456789abcdef#1'});
                 document.documentElement.innerHTML = `
+                <head><title>PrivateBin</title></head>
+                <body>
                 <li id="loadingindicator" class="hidden"></li>
-                <button id="rawtextbutton"></button>`;
+                <button id="rawtextbutton"></button>
+                </body>`;
                 const sample = 'example';
                 PrivateBin.Alert.init(); // required because of locading indiator being used
                 PrivateBin.TopNav.init();
                 PrivateBin.PasteViewer.setText(sample);
                 PrivateBin.Helper.reset();
-                query('#rawtextbutton').click();
-                assert.strictEqual(document.querySelector('pre').textContent, sample);
+                const originalOpen = document.open;
+                document.open = () => {
+                    throw new Error('document.open() replaces the history entry');
+                };
+                try {
+                    query('#rawtextbutton').click();
+                    assert.strictEqual(document.querySelector('pre').textContent, sample);
+                    assert.strictEqual(document.title, 'PrivateBin');
+                    assert.deepStrictEqual(history.state, {type: 'raw'});
+                } finally {
+                    document.open = originalOpen;
+                }
                 clean();
             }
         );

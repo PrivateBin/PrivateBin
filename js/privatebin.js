@@ -40,6 +40,7 @@ function draghover(element) {
     });
 }
 
+
 window.PrivateBin = (function () {
 
     /**
@@ -1595,13 +1596,12 @@ window.PrivateBin = (function () {
          * @name   UiHelper.historyChange
          * @private
          * @function
-         * @param  {Event} event
+         * @param  {PopStateEvent} event
          */
         function historyChange(event) {
             let currentLocation = Helper.baseUri();
-            if (event.originalEvent.state === null && // no state object passed
-                event.target.location.href === currentLocation && // target location is home page
-                window.location.href === currentLocation // and we are not already on the home page
+            if (event.state === null && // no state object passed
+                window.location.href === currentLocation // target location is home page
             ) {
                 // redirect to home page
                 window.location.href = currentLocation;
@@ -1634,7 +1634,7 @@ window.PrivateBin = (function () {
             if (typeof state === 'undefined') {
                 state = null;
             }
-            historyChange({ originalEvent: new PopStateEvent('popstate', { state: state }), target: window });
+            historyChange(new PopStateEvent('popstate', { state: state }));
         };
 
         /**
@@ -3966,24 +3966,19 @@ window.PrivateBin = (function () {
                 CryptTool.base58encode(Model.getPasteKey())
             );
 
-            // we use text/html instead of text/plain to avoid a bug when
-            // reloading the raw text view (it reverts to type text/html)
+            // Replace the document contents without document.open(), which
+            // replaces the active history entry and removes window listeners.
             const headElements = document.head.querySelectorAll(':not(noscript):not(script):not(link[type="text/css"])');
-
-            const newDoc = document.open('text/html', 'replace');
-            newDoc.write('<!DOCTYPE html><html><head>');
+            const newHead = document.createElement('head');
             for (let i = 0; i < headElements.length; ++i) {
-                newDoc.write(headElements[i].outerHTML);
+                newHead.appendChild(headElements[i].cloneNode(true));
             }
-            newDoc.write(
-                '</head><body><pre>' +
-                DOMPurify.sanitize(
-                    Helper.htmlEntities(paste),
-                    purifyHtmlConfig
-                ) +
-                '</pre></body></html>'
-            );
-            newDoc.close();
+            const newBody = document.createElement('body');
+            const rawPaste = document.createElement('pre');
+            rawPaste.textContent = paste;
+            newBody.appendChild(rawPaste);
+            document.head.replaceWith(newHead);
+            document.body.replaceWith(newBody);
         }
 
         /**
@@ -5888,7 +5883,7 @@ window.PrivateBin = (function () {
 
             Alert.hideLoading();
             // only push new state if we are coming from a different one
-            if (Helper.baseUri() !== window.location) {
+            if (Helper.baseUri() !== window.location.href) {
                 history.pushState({ type: 'create' }, document.title, Helper.baseUri());
             }
 
@@ -6154,5 +6149,3 @@ if (typeof module === 'undefined' || !module.exports) {
         window.PrivateBin.Controller.init();
     });
 }
-
-
