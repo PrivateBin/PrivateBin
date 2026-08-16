@@ -5822,11 +5822,10 @@ window.PrivateBin = (function () {
          * @function
          */
         me.init = function () {
-            const revealButton = document.querySelector('.toggle-password');
-            if (!revealButton) {
-                return;
-            }
-            revealButton.addEventListener('click', handleRevealButtonClick);
+            document.querySelectorAll('.toggle-password')
+                .forEach(revealButton => {
+                    revealButton.addEventListener('click', handleRevealButtonClick);
+                });
         };
 
         return me;
@@ -6154,5 +6153,3 @@ if (typeof module === 'undefined' || !module.exports) {
         window.PrivateBin.Controller.init();
     });
 }
-
-
