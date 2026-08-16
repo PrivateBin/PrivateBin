@@ -292,6 +292,24 @@ describe('Alert', function () {
                 }
             ));
         });
+
+        it('updates Bootstrap 5 loading icons', function () {
+            document.body.innerHTML = `
+                <div id="loadingindicator" class="hidden">
+                    <svg aria-hidden="true">
+                        <use href="img/bootstrap-icons.svg#clock"></use>
+                    </svg>
+                </div>
+            `;
+            PrivateBin.Alert.init();
+            const icon = document.querySelector('#loadingindicator use');
+
+            PrivateBin.Alert.showLoading('Sending document…', 'cloud-upload');
+            assert.strictEqual(icon.getAttribute('href'), 'img/bootstrap-icons.svg#cloud-upload');
+
+            PrivateBin.Alert.showLoading('Preparing new document…', 'time');
+            assert.strictEqual(icon.getAttribute('href'), 'img/bootstrap-icons.svg#clock');
+        });
     });
 
     describe('hideLoading', function () {

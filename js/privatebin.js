@@ -1732,8 +1732,9 @@ window.PrivateBin = (function () {
                 element.prepend(glyphIcon);
                 element.appendChild(translationTarget);
 
+                const nextIcon = typeof icon === 'string' ? 'glyphicon-' + icon : null;
                 if (icon !== null && // icon was passed
-                    icon !== currentIcon[id] // and it differs from current icon
+                    nextIcon !== currentIcon[id] // and it differs from current icon
                 ) {
                     // remove (previous) icon
                     glyphIcon.classList.remove(currentIcon[id]);
@@ -1741,8 +1742,19 @@ window.PrivateBin = (function () {
                     // any other thing as a string (e.g. 'null') (only) removes the icon
                     if (typeof icon === 'string') {
                         // set new icon
-                        currentIcon[id] = 'glyphicon-' + icon;
-                        glyphIcon.classList.add(currentIcon[id]);
+                        currentIcon[id] = nextIcon;
+                        const bootstrapIcon = glyphIcon.querySelector('use');
+                        if (bootstrapIcon) {
+                            const href = bootstrapIcon.getAttribute('href');
+                            if (href) {
+                                bootstrapIcon.setAttribute(
+                                    'href',
+                                    href.replace(/#[^#]*$/, '#' + (icon === 'time' ? 'clock' : icon))
+                                );
+                            }
+                        } else {
+                            glyphIcon.classList.add(currentIcon[id]);
+                        }
                     }
                 }
             }
@@ -6154,5 +6166,4 @@ if (typeof module === 'undefined' || !module.exports) {
         window.PrivateBin.Controller.init();
     });
 }
-
 
