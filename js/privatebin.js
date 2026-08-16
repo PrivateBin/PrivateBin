@@ -1489,7 +1489,7 @@ window.PrivateBin = (function () {
          * @return {bool}
          */
         me.hasDeleteToken = function () {
-            return window.location.search.indexOf('deletetoken') !== -1;
+            return (new URL(window.location)).searchParams.has('deletetoken');
         };
 
         /**
@@ -6154,5 +6154,4 @@ if (typeof module === 'undefined' || !module.exports) {
         window.PrivateBin.Controller.init();
     });
 }
-
 
