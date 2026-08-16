@@ -347,6 +347,25 @@ describe('TopNav', function () {
                 assert.ok(result);
             }
         );
+
+        it('collapses the expanded Bootstrap 5 navigation', function () {
+            document.body.innerHTML = `
+                <nav>
+                    <button class="navbar-toggler" aria-expanded="true"
+                        data-bs-target="#navbar">Toggle navigation</button>
+                    <div id="navbar" class="collapse navbar-collapse show"></div>
+                </nav>
+            `;
+            const toggle = document.querySelector('.navbar-toggler');
+            let clicks = 0;
+            toggle.addEventListener('click', function () {
+                ++clicks;
+            });
+
+            PrivateBin.TopNav.collapseBar();
+
+            assert.strictEqual(clicks, 1);
+        });
     });
 
     describe('resetInput', function () {
