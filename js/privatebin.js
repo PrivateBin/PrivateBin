@@ -3742,7 +3742,13 @@ window.PrivateBin = (function () {
                 }, 300);
             }
 
-            if (('checkVisibility' in comment ? comment.checkVisibility() : comment.offsetParent !== null) === false) {
+            const bounds = comment.getBoundingClientRect();
+            if (
+                bounds.top < 0 ||
+                bounds.left < 0 ||
+                bounds.bottom > window.innerHeight ||
+                bounds.right > window.innerWidth
+            ) {
                 if (typeof comment.scrollIntoView === 'function') {
                     comment.scrollIntoView({ block: 'center' });
                 }
@@ -6154,5 +6160,4 @@ if (typeof module === 'undefined' || !module.exports) {
         window.PrivateBin.Controller.init();
     });
 }
-
 
