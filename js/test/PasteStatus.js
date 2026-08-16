@@ -234,6 +234,86 @@ describe('PasteStatus', function () {
         });
     });
 
+    describe('URL shortener requests', function () {
+        it('ignores repeated clicks while a request is pending', async function () {
+            const clean = globalThis.cleanup();
+            const originalFetch = global.fetch;
+            let resolveFetch,
+                fetchCount = 0;
+            global.fetch = function () {
+                ++fetchCount;
+                return new Promise(resolve => {
+                    resolveFetch = resolve;
+                });
+            };
+            document.body.innerHTML =
+                '<div id="pastelink"></div>' +
+                '<div id="pastesuccess"></div>' +
+                '<button id="shortenbutton" data-shortener="https://short.example/?url="></button>';
+            PrivateBin.PasteStatus.init();
+            PrivateBin.PasteStatus.createPasteNotification(
+                'https://example.com/?0123456789abcdef#key',
+                ''
+            );
+
+            const shortenButton = document.getElementById('shortenbutton');
+            shortenButton.click();
+            shortenButton.click();
+            await Promise.resolve();
+
+            assert.strictEqual(fetchCount, 1);
+            assert.ok(shortenButton.classList.contains('buttondisabled'));
+
+            resolveFetch({
+                ok: true,
+                text: async function () {
+                    return 'https://short.example/a';
+                }
+            });
+            await new Promise(resolve => setTimeout(resolve, 0));
+
+            assert.strictEqual(
+                document.getElementById('pasteurl').href,
+                'https://short.example/a'
+            );
+            assert.ok(shortenButton.classList.contains('buttondisabled'));
+            global.fetch = originalFetch;
+            clean();
+        });
+
+        it('allows retrying after an invalid shortener response', async function () {
+            const clean = globalThis.cleanup();
+            const originalFetch = global.fetch;
+            let shownError;
+            global.fetch = async function () {
+                return {
+                    ok: true,
+                    text: async function () { return 'missing URL'; }
+                };
+            };
+            PrivateBin.Alert.showError = function (error) {
+                shownError = error;
+            };
+            document.body.innerHTML =
+                '<div id="pastelink"></div>' +
+                '<button id="shortenbutton" data-shortener="https://short.example/?url="></button>';
+            PrivateBin.PasteStatus.init();
+            PrivateBin.PasteStatus.createPasteNotification(
+                'https://example.com/?0123456789abcdef#key',
+                ''
+            );
+
+            const shortenButton = document.getElementById('shortenbutton');
+            shortenButton.click();
+            await new Promise(resolve => setTimeout(resolve, 0));
+
+            assert.ok(!shortenButton.classList.contains('buttondisabled'));
+            assert.strictEqual(shownError, 'Cannot parse response from URL shortener.');
+            global.fetch = originalFetch;
+            clean();
+        });
+    });
+
     describe('showRemainingTime', function () {
         this.timeout(30000);
 

@@ -1944,21 +1944,28 @@ window.PrivateBin = (function () {
             if (shortenButton.classList.contains('buttondisabled')) {
                 return;
             }
-            fetch(`${shortenButton.dataset.shortener}${encodeURIComponent(pasteUrl.href)}`, {
-                method: 'GET',
-                headers: { 'Accept': 'text/html, application/xhtml+xml, application/xml, application/json' },
-                credentials: 'omit',
-                signal: AbortSignal.timeout(10000)
-            })
+            shortenButton.classList.add('buttondisabled');
+            Promise.resolve()
+                .then(() => fetch(`${shortenButton.dataset.shortener}${encodeURIComponent(pasteUrl.href)}`, {
+                    method: 'GET',
+                    headers: { 'Accept': 'text/html, application/xhtml+xml, application/xml, application/json' },
+                    credentials: 'omit',
+                    signal: AbortSignal.timeout(10000)
+                }))
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('HTTP ' + response.status);
                     }
                     return response.text();
                 })
-                .then(data => PasteStatus.extractUrl(data))
+                .then(data => {
+                    if (!PasteStatus.extractUrl(data)) {
+                        shortenButton.classList.remove('buttondisabled');
+                    }
+                })
                 .catch(error => {
                     console.error('Shortener error:', error);
+                    shortenButton.classList.remove('buttondisabled');
                     // we don't know why it failed, could be CORS of the external
                     // server not setup properly, in which case we follow old
                     // behavior to open it in new tab
@@ -2056,6 +2063,7 @@ window.PrivateBin = (function () {
          * @name   PasteStatus.extractUrl
          * @function
          * @param  {string} response
+         * @return {boolean} whether a URL was extracted
          */
         me.extractUrl = function (response) {
             if (typeof response === 'object') {
@@ -2087,10 +2095,11 @@ window.PrivateBin = (function () {
                     // we pre-select the link so that the user only has to [Ctrl]+[c] the link
                     Helper.selectText(pasteUrl);
                     CopyToClipboard.setUrl(shortUrl);
-                    return;
+                    return true;
                 }
             }
             Alert.showError('Cannot parse response from URL shortener.');
+            return false;
         };
 
         /**
@@ -6154,5 +6163,4 @@ if (typeof module === 'undefined' || !module.exports) {
         window.PrivateBin.Controller.init();
     });
 }
-
 
