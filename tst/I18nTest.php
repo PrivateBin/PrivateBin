@@ -80,6 +80,21 @@ class I18nTest extends TestCase
         $this->assertEquals('2 heures', I18n::_('%d hours', 2), '2 hours in French');
     }
 
+    public function testBulgarianMonthExpirationTranslation()
+    {
+        $_COOKIE['lang'] = 'bg';
+        I18n::loadTranslations();
+
+        $this->assertEquals(
+            'Този документ изтича след един месец.',
+            I18n::_('This document will expire in %d months.', 1)
+        );
+        $this->assertEquals(
+            'Този документ изтича след 2 месеца.',
+            I18n::_('This document will expire in %d months.', 2)
+        );
+    }
+
     public function testBrowserLanguageNoDetection()
     {
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'no;q=0.8,en-GB;q=0.6,en-US;q=0.4,en;q=0.2';
@@ -244,6 +259,19 @@ class I18nTest extends TestCase
 
         unset($_SERVER['HTTP_USER_AGENT']);
         $this->assertEquals('Ctrl', I18n::getCopyHotkey(), 'returns Ctrl when user agent absent');
+    }
+
+    public function testRightToLeftLanguages()
+    {
+        foreach (['ar', 'fa', 'he'] as $language) {
+            $_COOKIE['lang'] = $language;
+            I18n::loadTranslations();
+            $this->assertTrue(I18n::isRtl(), "$language is right-to-left");
+        }
+
+        $_COOKIE['lang'] = 'en';
+        I18n::loadTranslations();
+        $this->assertFalse(I18n::isRtl(), 'English is left-to-right');
     }
 
     public function testMessageIdsExistInAllLanguages()

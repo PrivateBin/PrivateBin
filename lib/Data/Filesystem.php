@@ -228,11 +228,8 @@ class Filesystem extends AbstractData
                     $comments[$key] = $comment;
                 }
             }
-
-            // Sort comments by date, oldest first.
-            ksort($comments);
         }
-        return $comments;
+        return $this->sortComments($comments);
     }
 
     /**
@@ -520,6 +517,7 @@ class Filesystem extends AbstractData
             file_put_contents($destFile, self::PROTECTION_LINE . PHP_EOL);
             file_put_contents($destFile, $handle, FILE_APPEND);
             fclose($handle);
+            chmod($destFile, 0640); // protect file from access by other users on the host
         }
         if (!unlink($srcFile)) {
             error_log('Error deleting converted document: ' . $srcFile);

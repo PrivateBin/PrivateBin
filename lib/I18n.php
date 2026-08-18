@@ -294,7 +294,7 @@ class I18n
      */
     public static function isRtl()
     {
-        return in_array(self::$_language, ['ar', 'he']);
+        return in_array(self::$_language, ['ar', 'fa', 'he']);
     }
 
     /**

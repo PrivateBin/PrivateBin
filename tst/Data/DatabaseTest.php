@@ -109,6 +109,35 @@ class DatabaseTest extends TestCase
         $this->assertEquals($original, $this->_model->read(Helper::getPasteId()));
     }
 
+    public function testCommentsWithSameTimestampRemainInInsertionOrder()
+    {
+        $pasteid = Helper::getPasteId();
+        $paste   = Helper::getPaste();
+        $this->_model->delete($pasteid);
+        $this->assertTrue($this->_model->create($pasteid, $paste));
+
+        $expectedIds = [];
+        for ($i = 1; $i <= 12; ++$i) {
+            $comment                    = Helper::getComment();
+            $comment['meta']['created'] = 1735689600;
+            $commentid                  = sprintf('%016x', $i);
+            $expectedIds[]              = $commentid;
+            $this->assertTrue(
+                $this->_model->createComment($pasteid, $pasteid, $commentid, $comment)
+            );
+        }
+
+        $actualIds = array_values(
+            array_map(
+                function ($comment) {
+                    return $comment['id'];
+                },
+                $this->_model->readComments($pasteid)
+            )
+        );
+        $this->assertSame($expectedIds, $actualIds);
+    }
+
     /**
      * pastes a-g are expired and should get deleted, x never expires and y-z expire in an hour
      */

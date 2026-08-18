@@ -299,7 +299,7 @@ class S3Storage extends AbstractData
         } catch (S3Exception $e) {
             // no comments found
         }
-        return $comments;
+        return $this->sortComments($comments);
     }
 
     /**
