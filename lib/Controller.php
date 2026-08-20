@@ -15,6 +15,7 @@ use Exception;
 use PrivateBin\Exception\TranslatedException;
 use PrivateBin\Persistence\ServerSalt;
 use PrivateBin\Persistence\TrafficLimiter;
+use PrivateBin\Proxy\ChhotoProxy;
 use PrivateBin\Proxy\AbstractProxy;
 use PrivateBin\Proxy\ShlinkProxy;
 use PrivateBin\Proxy\YourlsProxy;
@@ -157,6 +158,9 @@ class Controller
                 break;
             case 'shlinkproxy':
                 $this->_shortenerproxy(new ShlinkProxy($this->_conf, $this->_request->getParam('link')));
+                break;
+            case 'chhotoproxy':
+                $this->_shortenerproxy(new ChhotoProxy($this->_conf, $this->_request->getParam('link')));
                 break;
         }
 
@@ -454,7 +458,7 @@ class Controller
         $page->assign('CSPHEADER', $metacspheader);
         $page->assign('ERROR', I18n::_($this->_error));
         $page->assign('NAME', $this->_conf->getKey('name'));
-        if (in_array($this->_request->getOperation(), ['shlinkproxy', 'yourlsproxy'], true)) {
+        if (in_array($this->_request->getOperation(), ['shlinkproxy', 'yourlsproxy', 'chhotoproxy'], true)) {
             $page->assign('SHORTURL', $this->_status);
             $page->draw('shortenerproxy');
             return;

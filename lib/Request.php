@@ -130,6 +130,7 @@ class Request
                     'pasteid'          => FILTER_SANITIZE_SPECIAL_CHARS,
                     'shortenviayourls' => FILTER_SANITIZE_SPECIAL_CHARS,
                     'shortenviashlink' => FILTER_SANITIZE_SPECIAL_CHARS,
+                    'shortenviachhoto' => FILTER_SANITIZE_SPECIAL_CHARS,
                 ], false);
         }
         if (
@@ -157,6 +158,9 @@ class Request
             }
             if (str_contains($this->getRequestUri(), '/shortenviashlink') || array_key_exists('shortenviashlink', $this->_params)) {
                 $this->_operation = 'shlinkproxy';
+            }
+           if (str_contains($this->getRequestUri(), '/shortenviachhoto') || array_key_exists('shortenviachhoto', $this->_params)) {
+                $this->_operation = 'chhotoproxy';
             }
         }
     }
