@@ -53,6 +53,9 @@ class TemplateSwitcherTest extends TestCase
 
         $_COOKIE['template'] = $escapeTemplateDirectory;
         $this->assertEquals($defaultTemplateFallback, TemplateSwitcher::getTemplate(), 'Fallback on escaping template directory');
+
+        $_COOKIE['template'] = [$customTemplate];
+        $this->assertEquals($defaultTemplateFallback, TemplateSwitcher::getTemplate(), 'Fallback on invalid cookie type');
     }
 
     public function testGetAvailableTemplates()
