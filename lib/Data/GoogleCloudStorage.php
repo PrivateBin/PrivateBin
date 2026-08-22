@@ -251,7 +251,7 @@ class GoogleCloudStorage extends AbstractData
      */
     public function purgeValues($namespace, $time)
     {
-        $path = 'config/' . $namespace;
+        $path = $this->_getKey('config/' . $namespace);
         try {
             foreach ($this->_bucket->objects(['prefix' => $path]) as $object) {
                 $name = $object->name();
@@ -284,6 +284,7 @@ class GoogleCloudStorage extends AbstractData
         } else {
             $key = 'config/' . $namespace . '/' . $key;
         }
+        $key = $this->_getKey($key);
 
         $metadata = ['namespace' => $namespace];
         if ($namespace !== 'salt') {
@@ -315,14 +316,27 @@ class GoogleCloudStorage extends AbstractData
      */
     public function getValue($namespace, $key = '')
     {
+        $valueKey = $key;
         if ($key === '') {
             $key = 'config/' . $namespace;
         } else {
             $key = 'config/' . $namespace . '/' . $key;
         }
+        $legacyKey = $key;
+        $key       = $this->_getKey($key);
         try {
             $o = $this->_bucket->object($key);
             return $o->downloadAsString();
+        } catch (NotFoundException $e) {
+            if ($legacyKey === $key) {
+                return '';
+            }
+        }
+        try {
+            $o     = $this->_bucket->object($legacyKey);
+            $value = $o->downloadAsString();
+            $this->setValue($value, $namespace, $valueKey);
+            return $value;
         } catch (NotFoundException $e) {
             return '';
         }
@@ -342,12 +356,16 @@ class GoogleCloudStorage extends AbstractData
         }
         try {
             foreach ($this->_bucket->objects(['prefix' => $prefix]) as $object) {
+                $candidate = substr($object->name(), strlen($prefix));
+                if (preg_match('/\A[a-f0-9]{16}\z/', $candidate) !== 1) {
+                    continue;
+                }
                 $expire_at = $object->info()['metadata']['expire_date'] ?? '';
                 if (is_numeric($expire_at) && intval($expire_at) < $now) {
-                    array_push($expired, basename($object->name()));
+                    array_push($expired, $candidate);
                 }
 
-                if (count($expired) > $batchsize) {
+                if (count($expired) >= $batchsize) {
                     break;
                 }
             }
@@ -371,7 +389,7 @@ class GoogleCloudStorage extends AbstractData
         try {
             foreach ($this->_bucket->objects(['prefix' => $prefix]) as $object) {
                 $candidate = substr($object->name(), strlen($prefix));
-                if (!str_contains($candidate, '/')) {
+                if (preg_match('/\A[a-f0-9]{16}\z/', $candidate) === 1) {
                     $pastes[] = $candidate;
                 }
             }
