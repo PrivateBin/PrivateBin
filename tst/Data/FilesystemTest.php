@@ -210,4 +210,15 @@ class FilesystemTest extends TestCase
             $this->assertEquals($model->getValue($namespace), VALID, 'valid value returned');
         }
     }
+
+    public function testInvalidTrafficLimiterState()
+    {
+        $file  = $this->_invalidPath . DIRECTORY_SEPARATOR . 'traffic_limiter.php';
+        file_put_contents($file, '<?php $GLOBALS[\'traffic_limiter\'] = true;');
+        $model = new Filesystem(['dir' => $this->_invalidPath]);
+
+        $this->assertSame('', $model->getValue('traffic_limiter', 'client'));
+        $this->assertTrue($model->setValue('123', 'traffic_limiter', 'client'));
+        $this->assertSame('123', $model->getValue('traffic_limiter', 'client'));
+    }
 }
