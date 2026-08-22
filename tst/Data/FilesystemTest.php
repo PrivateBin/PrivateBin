@@ -75,6 +75,30 @@ class FilesystemTest extends TestCase
         $this->assertEquals($original, $this->_model->read(Helper::getPasteId()));
     }
 
+    public function testCorruptPastesAreRejected()
+    {
+        $pasteid   = Helper::getPasteId();
+        $paste     = Helper::getPaste();
+        $pastePath = $this->_path . DIRECTORY_SEPARATOR . substr($pasteid, 0, 2) .
+            DIRECTORY_SEPARATOR . substr($pasteid, 2, 2) . DIRECTORY_SEPARATOR .
+            $pasteid . '.php';
+        $this->assertTrue($this->_model->create($pasteid, $paste));
+
+        $errorLog = ini_get('error_log');
+        ini_set('error_log', '/dev/null');
+        try {
+            foreach ([true, [], ['meta' => true]] as $corruptPaste) {
+                file_put_contents(
+                    $pastePath,
+                    Filesystem::PROTECTION_LINE . PHP_EOL . json_encode($corruptPaste)
+                );
+                $this->assertFalse($this->_model->read($pasteid));
+            }
+        } finally {
+            ini_set('error_log', $errorLog);
+        }
+    }
+
     /**
      * pastes a-g are expired and should get deleted, x never expires and y-z expire in an hour
      */

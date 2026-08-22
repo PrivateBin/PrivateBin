@@ -106,7 +106,12 @@ class Filesystem extends AbstractData
     public function read($pasteid)
     {
         if ($this->exists($pasteid)) {
-            return $this->_get($this->_dataid2path($pasteid) . $pasteid . '.php');
+            $paste = $this->_get($this->_dataid2path($pasteid) . $pasteid . '.php');
+            if (!is_array($paste) || !isset($paste['meta']) || !is_array($paste['meta'])) {
+                error_log('Error while reading a paste from the filesystem: invalid data structure');
+                return false;
+            }
+            return $paste;
         }
         return false;
     }
