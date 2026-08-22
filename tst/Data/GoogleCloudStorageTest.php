@@ -1,6 +1,8 @@
 <?php declare(strict_types=1);
 
 use Google\Auth\HttpHandler\HttpHandlerFactory;
+use Google\Cloud\Storage\Bucket;
+use Google\Cloud\Storage\StorageObject;
 use GuzzleHttp\Client;
 use PHPUnit\Framework\TestCase;
 use PrivateBin\Data\GoogleCloudStorage;
@@ -118,6 +120,23 @@ class GoogleCloudStorageTest extends TestCase
         $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste does not yet exist');
         $this->assertFalse($this->_model->create(Helper::getPasteId(), $paste), 'unable to store broken paste');
         $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste does still not exist');
+    }
+
+    public function testReadPropagatesOperationalErrors()
+    {
+        $object = $this->createMock(StorageObject::class);
+        $object->method('downloadAsString')->willThrowException(new RuntimeException('service unavailable'));
+        $bucket = $this->createMock(Bucket::class);
+        $bucket->method('object')->willReturn($object);
+        $bucket->method('name')->willReturn('test-bucket');
+
+        $property = new ReflectionProperty($this->_model, '_bucket');
+        $property->setAccessible(true);
+        $property->setValue($this->_model, $bucket);
+
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('service unavailable');
+        $this->_model->read(Helper::getPasteId());
     }
 
     public function testCommentErrorDetection()
