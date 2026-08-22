@@ -219,16 +219,36 @@ class GoogleCloudStorage extends AbstractData
         $prefix   = $this->_getKey($pasteid) . '/discussion/';
         try {
             foreach ($this->_bucket->objects(['prefix' => $prefix]) as $key) {
-                $data            = $this->_bucket->object($key->name())->downloadAsString();
+                $items = explode('/', substr($key->name(), strlen($prefix)));
+                if (
+                    count($items) !== 2 ||
+                    preg_match('/\A[a-f0-9]{16}\z/', $items[0]) !== 1 ||
+                    preg_match('/\A[a-f0-9]{16}\z/', $items[1]) !== 1
+                ) {
+                    continue;
+                }
+                try {
+                    $data = $this->_bucket->object($key->name())->downloadAsString();
+                } catch (NotFoundException $e) {
+                    continue;
+                }
                 try {
                     $comment = Json::decode($data);
                 } catch (JsonException $e) {
                     error_log('failed to read comment from ' . $key->name() . ', ' . $e->getMessage());
-                    $comment = [];
+                    continue;
                 }
-                $comment['id']   = basename($key->name());
-                $slot            = $this->getOpenSlot($comments, (int) $comment['meta']['created']);
-                $comments[$slot] = $comment;
+                if (
+                    !is_array($comment) ||
+                    !isset($comment['meta']['created']) ||
+                    !(is_int($comment['meta']['created']) || is_string($comment['meta']['created']))
+                ) {
+                    continue;
+                }
+                $comment['id']       = $items[1];
+                $comment['parentid'] = $items[0];
+                $slot                = $this->getOpenSlot($comments, (int) $comment['meta']['created']);
+                $comments[$slot]     = $comment;
             }
         } catch (NotFoundException $e) {
             // no comments found
