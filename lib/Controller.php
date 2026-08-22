@@ -285,19 +285,19 @@ class Controller
             !empty($data['pasteid']) &&
             array_key_exists('parentid', $data) &&
             !empty($data['parentid']);
-        if (!FormatV2::isValid($data, $isComment)) {
-            $this->_json_error(I18n::_('Invalid data.'));
-            return;
-        }
         $sizelimit = $this->_conf->getKey('sizelimit');
         // Ensure content is not too big.
-        if (strlen($data['ct']) > $sizelimit) {
+        if (is_string($data['ct']) && strlen($data['ct']) > $sizelimit) {
             $this->_json_error(
                 I18n::_(
                     'Document is limited to %s of encrypted data.',
                     Filter::formatHumanReadableSize($sizelimit)
                 )
             );
+            return;
+        }
+        if (!FormatV2::isValid($data, $isComment)) {
+            $this->_json_error(I18n::_('Invalid data.'));
             return;
         }
 

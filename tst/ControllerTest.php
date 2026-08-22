@@ -254,6 +254,32 @@ class ControllerTest extends TestCase
     /**
      * @runInSeparateProcess
      */
+    public function testCreateRejectsCompressibleOversizeBeforeFormatValidation()
+    {
+        $options                      = parse_ini_file(CONF, true);
+        $options['main']['sizelimit'] = 10;
+        $options['traffic']['limit']  = 0;
+        Helper::createIniFile(CONF, $options);
+        $paste       = Helper::getPastePost();
+        $paste['ct'] = str_repeat('A', 1000);
+        $file        = Helper::createTempFile();
+        file_put_contents($file, json_encode($paste));
+        Request::setInputStream($file);
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
+        $_SERVER['REQUEST_METHOD']        = 'POST';
+        $_SERVER['REMOTE_ADDR']           = '::1';
+        ob_start();
+        new Controller;
+        $content = ob_get_contents();
+        ob_end_clean();
+        $response = json_decode($content, true);
+        $this->assertEquals(1, $response['status'], 'outputs error status');
+        $this->assertStringContainsString('Document is limited to', $response['message']);
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
     public function testCreateProxyHeader()
     {
         $options                      = parse_ini_file(CONF, true);
