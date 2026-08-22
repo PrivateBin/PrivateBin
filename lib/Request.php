@@ -218,8 +218,15 @@ class Request
      */
     public function getHost()
     {
-        $host = array_key_exists('HTTP_HOST', $_SERVER) ? filter_var($_SERVER['HTTP_HOST'], FILTER_SANITIZE_URL) : '';
-        return empty($host) ? 'localhost' : $host;
+        $host = $_SERVER['HTTP_HOST'] ?? '';
+        if (
+            !is_string($host) ||
+            !preg_match('/\A(?:\[[0-9A-Fa-f:.]+\]|[A-Za-z0-9._-]+)(?::[0-9]{1,5})?\z/', $host)
+        ) {
+            return 'localhost';
+        }
+        $url = parse_url('http://' . $host);
+        return is_array($url) && isset($url['host']) ? $host : 'localhost';
     }
 
     /**

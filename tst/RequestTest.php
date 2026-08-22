@@ -39,6 +39,37 @@ class RequestTest extends TestCase
         $this->assertEquals('view', $request->getOperation());
     }
 
+    /**
+     * @dataProvider provideHosts
+     */
+    public function testHostValidation($host, $expected)
+    {
+        $this->reset();
+        if ($host !== null) {
+            $_SERVER['HTTP_HOST'] = $host;
+        }
+        $request = new Request;
+        $this->assertSame($expected, $request->getHost());
+    }
+
+    public function provideHosts()
+    {
+        return [
+            [null, 'localhost'],
+            ['example.com', 'example.com'],
+            ['example.com:8080', 'example.com:8080'],
+            ['127.0.0.1:80', '127.0.0.1:80'],
+            ['[::1]', '[::1]'],
+            ['[::1]:8080', '[::1]:8080'],
+            ['trusted.example@evil.example', 'localhost'],
+            ['example.com/path', 'localhost'],
+            ['example.com?query', 'localhost'],
+            ['example.com#fragment', 'localhost'],
+            ["example.com\r\nX-Test: injected", 'localhost'],
+            ['example.com:99999', 'localhost'],
+        ];
+    }
+
     public function testRead()
     {
         $this->reset();
