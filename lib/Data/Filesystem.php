@@ -467,10 +467,11 @@ class Filesystem extends AbstractData
                 return false;
             }
         }
-        $file = $this->_path . DIRECTORY_SEPARATOR . '.htaccess';
-        if (!is_file($file)) {
+        $file        = $this->_path . DIRECTORY_SEPARATOR . '.htaccess';
+        $fileCreated = is_file($file);
+        if (!$fileCreated || (!is_link($file) && filesize($file) === 0)) {
             $writtenBytes = 0;
-            if ($fileCreated = @touch($file)) {
+            if ($fileCreated || ($fileCreated = @touch($file))) {
                 $writtenBytes = @file_put_contents(
                     $file,
                     self::HTACCESS_LINE . PHP_EOL,
