@@ -75,6 +75,41 @@ class FilesystemTest extends TestCase
         $this->assertEquals($original, $this->_model->read(Helper::getPasteId()));
     }
 
+    public function testCorruptCommentsAreIgnored()
+    {
+        $pasteid   = Helper::getPasteId();
+        $commentid = Helper::getCommentId();
+        $comment   = Helper::getComment();
+        $this->assertTrue($this->_model->createComment($pasteid, $pasteid, $commentid, $comment));
+
+        $discussionPath = $this->_path . DIRECTORY_SEPARATOR . substr($pasteid, 0, 2) .
+            DIRECTORY_SEPARATOR . substr($pasteid, 2, 2) . DIRECTORY_SEPARATOR .
+            $pasteid . '.discussion' . DIRECTORY_SEPARATOR;
+        file_put_contents(
+            $discussionPath . $pasteid . '.ffffffffffffffff.' . $pasteid . '.php',
+            Filesystem::PROTECTION_LINE . PHP_EOL . '{'
+        );
+        file_put_contents(
+            $discussionPath . $pasteid . '.invalid.invalid.php',
+            Filesystem::PROTECTION_LINE . PHP_EOL . json_encode($comment)
+        );
+        file_put_contents(
+            $discussionPath . 'ffffffffffffffff.eeeeeeeeeeeeeeee.' . $pasteid . '.php',
+            Filesystem::PROTECTION_LINE . PHP_EOL . json_encode($comment)
+        );
+        file_put_contents(
+            $discussionPath . $pasteid . '.dddddddddddddddd.' . $pasteid,
+            Filesystem::PROTECTION_LINE . PHP_EOL . json_encode($comment)
+        );
+
+        $errorLog = ini_get('error_log');
+        ini_set('error_log', '/dev/null');
+        $comments = $this->_model->readComments($pasteid);
+        ini_set('error_log', $errorLog);
+        $this->assertCount(1, $comments);
+        $this->assertSame($commentid, current($comments)['id']);
+    }
+
     /**
      * pastes a-g are expired and should get deleted, x never expires and y-z expire in an hour
      */
