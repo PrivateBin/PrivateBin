@@ -14,6 +14,7 @@
 * FIXED: Gracefully handle YOURLS replies with a 200 status code but no shorturl, instead of raising a TypeError
 * FIXED: Return "Invalid data." instead of HTTP 500 on malformed v2 JSON payloads (#1883)
 * FIXED: Dead PATH validation guard in Controller, the check for a missing trailing directory separator never ran (#1887)
+* FIXED: Honor exact media types and quality values during JSON content negotiation
 
 ## 2.0.5 (2026-07-11)
 * CHANGED: Show OS-specific copy hotkey hint (Cmd+c on Mac, Ctrl+c on others) (#1506)

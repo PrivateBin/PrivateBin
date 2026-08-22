@@ -220,6 +220,23 @@ class RequestTest extends TestCase
         $this->assertEquals('read', $request->getOperation());
     }
 
+    public function testJsonNegotiationHonorsExactMediaTypeAndQuality()
+    {
+        $cases = [
+            'application/json;q=0, text/plain' => false,
+            'application/jsonp'                => false,
+            'application/json; charset=UTF-8'  => true,
+            'APPLICATION/JSON'                 => true,
+        ];
+        foreach ($cases as $accept => $expected) {
+            $this->reset();
+            $_SERVER['REQUEST_METHOD'] = 'GET';
+            $_SERVER['HTTP_ACCEPT']    = $accept;
+            $request                   = new Request;
+            $this->assertSame($expected, $request->isJsonApiCall(), $accept);
+        }
+    }
+
     public function testReadWithFailedNegotiation()
     {
         $this->reset();
