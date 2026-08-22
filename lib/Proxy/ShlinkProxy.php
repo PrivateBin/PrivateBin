@@ -71,6 +71,7 @@ class ShlinkProxy extends AbstractProxy
      */
     protected function _extractShortUrl(array $data): ?string
     {
-        return $data['shortUrl'] ?? null;
+        $url = $data['shortUrl'] ?? null;
+        return is_string($url) ? $url : null;
     }
 }

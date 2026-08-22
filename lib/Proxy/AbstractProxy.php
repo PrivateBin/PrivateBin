@@ -95,10 +95,21 @@ abstract class AbstractProxy
             $this->logErrorWithClassName('Error calling proxy: ' . $e->getMessage());
             return;
         }
+        if (!is_array($jsonData)) {
+            $this->_error = 'Proxy error: Error parsing proxy response. This can be a configuration issue, like wrong or missing config keys.';
+            $this->logErrorWithClassName('Error calling proxy: unexpected response structure');
+            return;
+        }
 
-        $url = $this->_extractShortUrl($jsonData);
+        $url    = $this->_extractShortUrl($jsonData);
+        $scheme = is_string($url) ? parse_url($url, PHP_URL_SCHEME) : null;
 
-        if ($url === null || empty($url)) {
+        if (
+            $url === null ||
+            filter_var($url, FILTER_VALIDATE_URL) === false ||
+            !is_string($scheme) ||
+            !in_array(strtolower($scheme), ['http', 'https'], true)
+        ) {
             $this->_error = 'Proxy error: Error parsing proxy response. This can be a configuration issue, like wrong or missing config keys.';
             $this->logErrorWithClassName('Error calling proxy: ' . $data);
         } else {
