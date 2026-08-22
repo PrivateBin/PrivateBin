@@ -3230,11 +3230,15 @@ window.PrivateBin = (function () {
                         const dataURL = event.target.result;
                         if (dataURL) {
                             attachmentsData[index] = dataURL;
-                        }
 
-                        if (Editor.isPreview()) {
-                            me.handleAttachmentPreview(attachmentPreview, dataURL);
-                            attachmentPreview.classList.remove('hidden');
+                            if (Editor.isPreview()) {
+                                me.handleBlobAttachmentPreview(
+                                    attachmentPreview,
+                                    dataURL,
+                                    me.getAttachmentMimeType(dataURL)
+                                );
+                                attachmentPreview.classList.remove('hidden');
+                            }
                         }
 
                         TopNav.highlightFileupload();
