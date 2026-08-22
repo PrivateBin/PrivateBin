@@ -4,6 +4,7 @@ use Jdenticon\Identicon;
 use PHPUnit\Framework\TestCase;
 use PrivateBin\Configuration;
 use PrivateBin\Data\Database;
+use PrivateBin\Data\Filesystem;
 use PrivateBin\Model;
 use PrivateBin\Model\Comment;
 use PrivateBin\Model\Paste;
@@ -288,6 +289,72 @@ class ModelTest extends TestCase
         $this->expectException(Exception::class);
         $this->expectExceptionCode(64);
         $paste->get();
+    }
+
+    public function testMalformedStoredPaste()
+    {
+        $pasteid = Helper::getPasteId();
+        $path    = $this->_path . DIRECTORY_SEPARATOR . substr($pasteid, 0, 2) .
+            DIRECTORY_SEPARATOR . substr($pasteid, 2, 2) . DIRECTORY_SEPARATOR;
+        if (!is_dir($path)) {
+            mkdir($path, 0700, true);
+        }
+        file_put_contents(
+            $path . $pasteid . '.php',
+            Filesystem::PROTECTION_LINE . PHP_EOL . 'true'
+        );
+        $paste = new Paste($this->_conf, new Filesystem(['dir' => $this->_path]));
+        $paste->setId($pasteid);
+        $this->expectException(Exception::class);
+        $this->expectExceptionCode(64);
+        $paste->get();
+    }
+
+    public function testMalformedStoredPasteSalt()
+    {
+        $pasteid                 = Helper::getPasteId();
+        $paste                   = Helper::getPaste();
+        $paste['meta']['salt']   = [];
+        $store                   = $this->_model->getStore();
+        $store->delete($pasteid);
+        $this->assertTrue($store->create($pasteid, $paste));
+
+        try {
+            $this->_model->getPaste($pasteid)->getDeleteToken();
+            $this->fail('corrupt salt was accepted');
+        } catch (Exception $e) {
+            $this->assertSame(64, $e->getCode());
+        } finally {
+            $store->delete($pasteid);
+        }
+    }
+
+    public function testMalformedStoredPasteExpiration()
+    {
+        $pasteid = Helper::getPasteId();
+        $store   = new Filesystem(['dir' => $this->_path]);
+        foreach ([[], 'invalid'] as $expireDate) {
+            $paste = Helper::getPaste(['expire_date' => $expireDate]);
+            $store->delete($pasteid);
+            $this->assertTrue($store->create($pasteid, $paste));
+            try {
+                $storedPaste = new Paste($this->_conf, $store);
+                $storedPaste->setId($pasteid);
+                $storedPaste->get();
+                $this->fail('corrupt expiration date was accepted');
+            } catch (Exception $e) {
+                $this->assertSame(64, $e->getCode());
+            } finally {
+                $store->delete($pasteid);
+            }
+        }
+
+        $paste = Helper::getPaste(['expire_date' => (string) (time() + 60)]);
+        $this->assertTrue($store->create($pasteid, $paste));
+        $storedPaste = new Paste($this->_conf, $store);
+        $storedPaste->setId($pasteid);
+        $this->assertIsInt($storedPaste->get()['meta']['time_to_live']);
+        $store->delete($pasteid);
     }
 
     public function testInvalidPasteFormat()
