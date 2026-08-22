@@ -120,6 +120,16 @@ class GoogleCloudStorageTest extends TestCase
         $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste does still not exist');
     }
 
+    public function testCorruptPastesAreRejected()
+    {
+        foreach ([true, [], ['meta' => true]] as $corruptPaste) {
+            self::$_bucket->upload(json_encode($corruptPaste), [
+                'name' => 'pastes/' . Helper::getPasteId(),
+            ]);
+            $this->assertFalse($this->_model->read(Helper::getPasteId()));
+        }
+    }
+
     public function testCommentErrorDetection()
     {
         $this->_model->delete(Helper::getPasteId());
