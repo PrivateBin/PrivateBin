@@ -294,7 +294,7 @@ class I18n
      */
     public static function isRtl()
     {
-        return in_array(self::$_language, ['ar', 'fa', 'he']);
+        return locale_is_right_to_left(self::$_language);
     }
 
     /**
