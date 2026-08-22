@@ -201,6 +201,39 @@ class DatabaseTest extends TestCase
         $this->assertFalse($this->_model->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId()), 'comment does still not exist');
     }
 
+    public function testCorruptCommentsAreIgnored()
+    {
+        mkdir($this->_path);
+        $path           = $this->_path . DIRECTORY_SEPARATOR . 'corrupt-comment.sq3';
+        $options        = $this->_options;
+        $options['dsn'] = 'sqlite:' . $path;
+        $model          = new Database($options);
+        $pasteid        = Helper::getPasteId();
+        $commentid      = Helper::getCommentId();
+        $comment        = Helper::getComment();
+        $corruptId      = 'ffffffffffffffff';
+        $scalarId       = 'eeeeeeeeeeeeeeee';
+
+        $this->assertTrue($model->createComment($pasteid, $pasteid, $commentid, $comment));
+        $this->assertTrue($model->createComment($pasteid, $pasteid, $corruptId, $comment));
+        $this->assertTrue($model->createComment($pasteid, $pasteid, $scalarId, $comment));
+
+        $database  = new PDO($options['dsn'], $options['usr'], $options['pwd'], $options['opt']);
+        $statement = $database->prepare('UPDATE "comment" SET "data" = ? WHERE "dataid" = ?');
+        $statement->execute(['{', $corruptId]);
+        $statement->execute(['true', $scalarId]);
+
+        $error_log_setting = ini_get('error_log');
+        ini_set('error_log', '/dev/null');
+        try {
+            $comments = $model->readComments($pasteid);
+        } finally {
+            ini_set('error_log', $error_log_setting);
+        }
+        $this->assertCount(1, $comments);
+        $this->assertSame($commentid, current($comments)['id']);
+    }
+
     public function testGetIbmInstance()
     {
         $this->expectException(PDOException::class);
