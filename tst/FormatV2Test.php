@@ -23,6 +23,18 @@ class FormatV2Test extends TestCase
         $paste['ct'] = '$';
         $this->assertFalse(FormatV2::isValid($paste), 'invalid base64 encoding of ct');
 
+        $paste                = Helper::getPastePost();
+        $paste['adata'][0][0] = 'MA==';
+        $this->assertTrue(FormatV2::isValid($paste), 'valid base64 iv decoding to zero');
+
+        $paste                = Helper::getPastePost();
+        $paste['adata'][0][1] = 'MA==';
+        $this->assertTrue(FormatV2::isValid($paste), 'valid base64 salt decoding to zero');
+
+        $paste       = Helper::getPastePost();
+        $paste['ct'] = 'MA==';
+        $this->assertTrue(FormatV2::isValid($paste), 'valid base64 ct decoding to zero');
+
         $paste       = Helper::getPastePost();
         $paste['ct'] = 'bm9kYXRhbm9kYXRhbm9kYXRhbm9kYXRhbm9kYXRhCg==';
         $this->assertFalse(FormatV2::isValid($paste), 'low ct entropy');
@@ -101,6 +113,20 @@ class FormatV2Test extends TestCase
         $paste['adata'][0] = [];
         $this->assertFalse(FormatV2::isValid($paste), 'empty cipher parameters');
 
+        foreach ([
+            1 => ['plaintext'],
+            2 => '1',
+            3 => false,
+        ] as $index => $value) {
+            $paste                   = Helper::getPastePost();
+            $paste['adata'][$index]  = $value;
+            $this->assertFalse(FormatV2::isValid($paste), "invalid paste adata field $index");
+        }
+
+        $paste                    = Helper::getPastePost();
+        $paste['meta']['expire']  = [];
+        $this->assertFalse(FormatV2::isValid($paste), 'array expiration');
+
         $paste                = Helper::getPastePost();
         $paste['adata'][0][0] = [];
         $this->assertFalse(FormatV2::isValid($paste), 'non-string iv');
@@ -108,5 +134,13 @@ class FormatV2Test extends TestCase
         $comment           = Helper::getCommentPost();
         $comment['ct']     = 42;
         $this->assertFalse(FormatV2::isValid($comment, true), 'non-string comment ciphertext');
+
+        $comment            = Helper::getCommentPost();
+        $comment['pasteid'] = [];
+        $this->assertFalse(FormatV2::isValid($comment, true), 'non-string paste ID');
+
+        $comment             = Helper::getCommentPost();
+        $comment['parentid'] = [];
+        $this->assertFalse(FormatV2::isValid($comment, true), 'non-string parent ID');
     }
 }
