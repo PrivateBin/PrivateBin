@@ -125,6 +125,16 @@ class I18nTest extends TestCase
         $this->assertEquals('2 小时', I18n::_('%d hours', 2), '2 hours in Chinese');
     }
 
+    public function testBrowserLanguageHiDetection()
+    {
+        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'hi';
+        I18n::loadTranslations();
+        $this->assertEquals('hi', I18n::getLanguage(), 'browser language hi');
+        $this->assertEquals('0 hour (singular)', I18n::_('%d hours', 0), '0 hours in Hindi');
+        $this->assertEquals('1 hour (singular)', I18n::_('%d hours', 1), '1 hour in Hindi');
+        $this->assertEquals('2 hours (1st plural)', I18n::_('%d hours', 2), '2 hours in Hindi');
+    }
+
     public function testBrowserLanguagePlDetection()
     {
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'pl;q=0.8,en-GB;q=0.6,en-US;q=0.4,en;q=0.2';
