@@ -1154,39 +1154,30 @@ window.PrivateBin = (function () {
          * @return {CryptoKey} derived key
          */
         async function deriveKey(key, password, spec) {
-            let keyArray = stringToArraybuffer(key);
-            if (password.length > 0) {
-                let passwordArray = stringToArraybuffer(password),
-                    newKeyArray = new Uint8Array(keyArray.length + passwordArray.length);
-                newKeyArray.set(keyArray, 0);
-                newKeyArray.set(passwordArray, keyArray.length);
-                keyArray = newKeyArray;
-            }
+            // combine URL key + optional password, same as before
+            const secret = key + (password && password.length > 0 ? password : '');
 
-            // import raw key
-            const importedKey = await window.crypto.subtle.importKey(
-                'raw', // only 'raw' is allowed
-                keyArray,
-                { name: 'PBKDF2' }, // we use PBKDF2 for key derivation
-                false, // the key may not be exported
-                ['deriveKey'] // we may only use it for key derivation
-            ).catch(Alert.showError);
+            // Argon2id: memory-hard key stretching (replaces PBKDF2)
+            const derivedKey = await hashwasm.argon2id({
+                password: secret,
+                salt: stringToArraybuffer(spec[1]), // reuse PrivateBin's existing salt
+                parallelism: 1,
+                iterations: 3,          // tune for speed vs. strength
+                memorySize: 19456,      // 19 MB, RFC 9106 low-memory profile
+                hashLength: spec[3] / 8, // e.g. 256-bit key = 32 bytes
+                outputType: 'binary'    // returns raw bytes directly (not wrapped in an object)
+            }).catch(Alert.showError);
 
-            // derive a stronger key for use with AES
-            return window.crypto.subtle.deriveKey(
+            // import derived bytes as the AES key (unchanged from before)
+            return window.crypto.subtle.importKey(
+                'raw',
+                derivedKey,
                 {
-                    name: 'PBKDF2', // we use PBKDF2 for key derivation
-                    salt: stringToArraybuffer(spec[1]), // salt used in HMAC
-                    iterations: spec[2], // amount of iterations to apply
-                    hash: { name: 'SHA-256' } // can be "SHA-1", "SHA-256", "SHA-384" or "SHA-512"
+                    name: 'AES-' + spec[6].toUpperCase(),
+                    length: spec[3]
                 },
-                importedKey,
-                {
-                    name: 'AES-' + spec[6].toUpperCase(), // can be any supported AES algorithm ("AES-CTR", "AES-CBC", "AES-CMAC", "AES-GCM", "AES-CFB", "AES-KW", "ECDH", "DH" or "HMAC")
-                    length: spec[3] // can be 128, 192 or 256
-                },
-                false, // the key may not be exported
-                ['encrypt', 'decrypt'] // we may only use it for en- and decryption
+                false,
+                ['encrypt', 'decrypt']
             ).catch(Alert.showError);
         }
 
