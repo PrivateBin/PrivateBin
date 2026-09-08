@@ -76,25 +76,6 @@ class ViewTest extends TestCase
                 ob_end_clean();
             }
         }
-        // check bootstrap variants
-        $template = 'bootstrap-page';
-        ob_start();
-        $page->draw($template);
-        $this->_content[$template] = ob_get_contents();
-        ob_end_clean();
-        foreach (['-dark', '-compact'] as $suffix) {
-            $template = 'bootstrap' . $suffix;
-            ob_start();
-            $page->draw($template);
-            $this->_content[$template] = ob_get_contents();
-            ob_end_clean();
-
-            $template .= '-page';
-            ob_start();
-            $page->draw($template);
-            $this->_content[$template] = ob_get_contents();
-            ob_end_clean();
-        }
     }
 
     public function testTemplateRendersCorrectly()

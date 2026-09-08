@@ -67,7 +67,10 @@ $ids      = $srcstore->getAllPastes();
 
 foreach ($ids as $id) {
     debug("Reading document ID " . $id);
-    $paste    = $srcstore->read($id);
+    $paste = $srcstore->read($id);
+    if (!is_array($paste)) {
+        dieerr("Unable to read document ID " . $id);
+    }
     $comments = $srcstore->readComments($id);
 
     savePaste($force_overwrite, $dryrun, $id, $paste, $dststore);
@@ -107,7 +110,10 @@ function saveComment ($force_overwrite, $dryrun, $pasteid, $comment, $dststore)
         if (!$dryrun) {
             debug("Saving document ID " . $pasteid . ", parent id " .
                   $parentid . ", comment id " . $commentid);
-            $dststore->createComment($pasteid, $parentid, $commentid, $comment);
+            if (!$dststore->createComment($pasteid, $parentid, $commentid, $comment)) {
+                dieerr("Unable to save document ID " . $pasteid . ", parent id " .
+                       $parentid . ", comment id " . $commentid);
+            }
         } else {
             debug("Would save document ID " . $pasteid . ", parent id " .
                   $parentid . ", comment id " . $commentid);
@@ -116,7 +122,10 @@ function saveComment ($force_overwrite, $dryrun, $pasteid, $comment, $dststore)
         if (!$dryrun) {
             debug("Overwriting document ID " . $pasteid . ", parent id " .
                   $parentid . ", comment id " . $commentid);
-            $dststore->createComment($pasteid, $parentid, $commentid, $comment);
+            if (!$dststore->createComment($pasteid, $parentid, $commentid, $comment)) {
+                dieerr("Unable to overwrite document ID " . $pasteid . ", parent id " .
+                       $parentid . ", comment id " . $commentid);
+            }
         } else {
             debug("Would overwrite document ID " . $pasteid . ", parent id " .
                   $parentid . ", comment id " . $commentid);
@@ -137,14 +146,19 @@ function savePaste ($force_overwrite, $dryrun, $pasteid, $paste, $dststore)
     if (!$dststore->exists($pasteid)) {
         if (!$dryrun) {
             debug("Saving document ID " . $pasteid);
-            $dststore->create($pasteid, $paste);
+            if (!$dststore->create($pasteid, $paste)) {
+                dieerr("Unable to save document ID " . $pasteid);
+            }
         } else {
             debug("Would save document ID " . $pasteid);
         }
     } else if ($force_overwrite) {
         if (!$dryrun) {
             debug("Overwriting document ID " . $pasteid);
-            $dststore->create($pasteid, $paste);
+            $dststore->delete($pasteid);
+            if (!$dststore->create($pasteid, $paste)) {
+                dieerr("Unable to overwrite document ID " . $pasteid);
+            }
         } else {
             debug("Would overwrite document ID " . $pasteid);
         }

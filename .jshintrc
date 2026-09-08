@@ -2,7 +2,7 @@
     "bitwise": true,
     "curly": true,
     "eqeqeq": true,
-    "esversion": 6,
+    "esversion": 2018,
     "forin": true,
     "freeze": true,
     "futurehostile": true,
@@ -17,11 +17,12 @@
     "quotmark": "single",
     "singleGroups": true,
     "strict": true,
+    "globalstrict": true,
     "undef": true,
     "unused": true,
-    "jquery": true,
+    "jquery": false,
     "browser": true,
-    "predef": {
+    "globals": {
       "after": true,
       "before": true,
       "cleanup": true,
@@ -36,9 +37,7 @@
       "jsdom": true,
       "require": false,
       "setTimeout": false,
-      "window": true
-    },
-    "globals": {
+      "window": true,
       "DOMPurify": true,
       "kjua": true
     }

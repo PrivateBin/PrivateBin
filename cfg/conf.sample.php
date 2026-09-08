@@ -49,17 +49,9 @@ templateselection = false
 
 ; List of available for selection templates when "templateselection" option is enabled
 availabletemplates[] = "bootstrap5"
-availabletemplates[] = "bootstrap"
-availabletemplates[] = "bootstrap-page"
-availabletemplates[] = "bootstrap-dark"
-availabletemplates[] = "bootstrap-dark-page"
-availabletemplates[] = "bootstrap-compact"
-availabletemplates[] = "bootstrap-compact-page"
 
-; set the template your installs defaults to, defaults to "bootstrap5" (tpl/bootstrap5.php), also
-; bootstrap template (tpl/bootstrap.php) and it's variants: "bootstrap-dark", "bootstrap-compact", "bootstrap-page",
-; which can be combined with "-dark" and "-compact" for "bootstrap-dark-page",
-; "bootstrap-compact-page" - previews at:
+; set the template your installs defaults to, defaults to "bootstrap5" (tpl/bootstrap5.php)
+; previews at:
 ; https://privatebin.info/screenshots.html
 ; template = "bootstrap5"
 

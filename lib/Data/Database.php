@@ -325,9 +325,8 @@ class Database extends AbstractData
                     $comments[$i]['meta']['icon'] = $row['vizhash'];
                 }
             }
-            ksort($comments);
         }
-        return $comments;
+        return $this->sortComments($comments);
     }
 
     /**
