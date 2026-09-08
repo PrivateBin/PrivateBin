@@ -26,6 +26,12 @@ opendiscussion = false
 ; enable or disable the password feature, defaults to true
 password = true
 
+; enable experimental ML-KEM-768 recipient encryption for newly created
+; documents, defaults to false. This keeps the AES content key out of the URL
+; and requires the recipient to provide their ML-KEM secret key when opening it.
+; The bundled JavaScript ML-KEM implementation has not been independently audited.
+; recipientencryption = false
+
 ; enable or disable the file upload feature, defaults to false
 fileupload = false
 

@@ -51,6 +51,13 @@ endif;
 ?>
 		<?php $this->_scriptTag('js/purify-3.4.12.js', 'defer'); ?>
 		<?php $this->_scriptTag('js/legacy.js', 'defer'); ?>
+<?php
+if ($RECIPIENTENCRYPTION) :
+?>
+		<?php $this->_scriptTag('js/ml-kem-0.7.0.js', 'defer'); ?>
+<?php
+endif;
+?>
 		<?php $this->_scriptTag('js/privatebin.js', 'defer'); ?>
 		<!-- icon -->
 		<link rel="apple-touch-icon" href="<?php echo I18n::encode($BASEPATH); ?>img/apple-touch-icon.png" sizes="180x180" />
@@ -95,6 +102,28 @@ endif;
 				</div>
 			</div>
 		</div>
+<?php
+if ($RECIPIENTENCRYPTION) :
+?>
+		<div id="pqcsecretkeymodal" tabindex="-1" class="modal fade" role="dialog" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-body">
+						<form id="pqcsecretkeyform" role="form">
+							<div class="mb-3">
+								<label for="pqcsecretkey"><?php echo I18n::_('Enter the ML-KEM-768 secret key for this document:') ?></label>
+								<textarea id="pqcsecretkey" class="form-control font-monospace" rows="7" autocomplete="off" spellcheck="false" required="required"></textarea>
+								<div class="form-text"><?php echo I18n::_('The secret key stays in this browser tab and is never sent to the server.') ?></div>
+							</div>
+							<button type="submit" class="btn btn-success"><svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#unlock" /></svg> <?php echo I18n::_('Decrypt') ?></button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+<?php
+endif;
+?>
 		<div id="loadconfirmmodal" tabindex="-1" class="modal fade" role="dialog" aria-hidden="true">
 			<div class="modal-dialog" role="document">
 				<div class="modal-content">
@@ -492,6 +521,31 @@ endif;
 					</div>
 					<div id="plaintext" class="col-md-12 hidden"></div>
 					<p class="col-md-12"><textarea id="message" name="message" cols="80" rows="25" aria-label="<?php echo I18n::_('Document text'); ?>" tabindex="1" class="form-control hidden"></textarea></p>
+<?php
+if ($RECIPIENTENCRYPTION) :
+?>
+					<div id="pqcrecipient" class="card col-md-12 mb-3 hidden">
+						<div class="card-body">
+							<div class="form-check form-switch">
+								<input id="pqcenabled" type="checkbox" class="form-check-input" />
+								<label for="pqcenabled" class="form-check-label fw-semibold"><?php echo I18n::_('Post-quantum recipient encryption (experimental)'); ?></label>
+							</div>
+							<div id="pqcoptions" class="hidden mt-3">
+								<label for="pqcpublickey" class="form-label"><?php echo I18n::_('Recipient ML-KEM-768 public key'); ?></label>
+								<textarea id="pqcpublickey" class="form-control font-monospace" rows="4" autocomplete="off" spellcheck="false" placeholder="<?php echo I18n::_('Paste the recipient public key'); ?>"></textarea>
+								<div class="form-text mb-2"><?php echo I18n::_('The URL will not contain the AES content key. ML-KEM does not authenticate the sender, so exchange public keys through a trusted channel.'); ?></div>
+								<button id="pqcgenerate" type="button" class="btn btn-outline-secondary"><?php echo I18n::_('Generate recipient key pair'); ?></button>
+								<div id="pqckeypaircontainer" class="alert alert-warning mt-3 hidden">
+									<label for="pqckeypair" class="form-label fw-semibold"><?php echo I18n::_('Save this key file now. Share only the public key above.'); ?></label>
+									<textarea id="pqckeypair" class="form-control font-monospace" rows="6" readonly="readonly"></textarea>
+									<button id="pqcdownload" type="button" class="btn btn-warning mt-2"><?php echo I18n::_('Download key file'); ?></button>
+								</div>
+							</div>
+						</div>
+					</div>
+<?php
+endif;
+?>
 					<p class="col-md-12 form-check form-switch">
 						<input id="messagetab" type="checkbox" tabindex="3" class="form-check-input" checked="checked" />
 						<label for="messagetab" class="form-check-label">

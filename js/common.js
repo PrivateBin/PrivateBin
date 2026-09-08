@@ -34,6 +34,7 @@ global.showdown = require('./showdown-2.1.0');
 global.DOMPurify = require('./purify-3.4.12');
 global.baseX = require('./base-x-5.0.1').baseX;
 global.Legacy = require('./legacy').Legacy;
+require('./ml-kem-0.7.0');
 require('./privatebin');
 global.PrivateBin = window.PrivateBin;
 

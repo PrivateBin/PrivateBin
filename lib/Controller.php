@@ -255,7 +255,7 @@ class Controller
      *
      * POST contains:
      * JSON encoded object with mandatory keys:
-     *   v = 2 (version)
+     *   v = 2 or 3 (format version)
      *   adata (array)
      *   ct (base64 encoded, encrypted text)
      * meta (optional):
@@ -285,7 +285,10 @@ class Controller
             !empty($data['pasteid']) &&
             array_key_exists('parentid', $data) &&
             !empty($data['parentid']);
-        if (!FormatV2::isValid($data, $isComment)) {
+        $isVersion3 = array_key_exists('v', $data) &&
+            (is_int($data['v']) || is_float($data['v'])) &&
+            (float) $data['v'] === 3.0;
+        if (!($isVersion3 ? FormatV3::isValid($data, $isComment) : FormatV2::isValid($data, $isComment))) {
             $this->_json_error(I18n::_('Invalid data.'));
             return;
         }
@@ -474,6 +477,7 @@ class Controller
         $page->assign('NOTICE', I18n::_($this->_conf->getKey('notice')));
         $page->assign('BURNAFTERREADINGSELECTED', $this->_conf->getKey('burnafterreadingselected'));
         $page->assign('PASSWORD', $this->_conf->getKey('password'));
+        $page->assign('RECIPIENTENCRYPTION', $this->_conf->getKey('recipientencryption'));
         $page->assign('FILEUPLOAD', $this->_conf->getKey('fileupload'));
         $page->assign('LANGUAGESELECTION', $languageselection);
         $page->assign('LANGUAGES', I18n::getLanguageLabels(I18n::getAvailableLanguages()));

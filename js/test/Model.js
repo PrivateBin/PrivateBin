@@ -213,6 +213,15 @@ describe('Model', function () {
                 }
             ));
         });
+        it('recognizes a recipient-encryption marker without treating it as a key', () => {
+            const clean = globalThis.cleanup('', {url: 'https://example.test/?0123456789abcdef#pqc'});
+            assert.strictEqual(PrivateBin.Model.isRecipientEncrypted(), true);
+            assert.throws(() => PrivateBin.Model.getPasteKey());
+            PrivateBin.Model.setPasteKey('x'.repeat(32));
+            assert.strictEqual(PrivateBin.Model.getPasteKey(), 'x'.repeat(32));
+            PrivateBin.Model.reset();
+            clean();
+        });
     });
 
     describe('getTemplate', function () {

@@ -51,6 +51,7 @@ class ViewTest extends TestCase
         $page->assign('FORMATTERDEFAULT', self::$formatter_default);
         $page->assign('BURNAFTERREADINGSELECTED', false);
         $page->assign('PASSWORD', true);
+        $page->assign('RECIPIENTENCRYPTION', true);
         $page->assign('FILEUPLOAD', false);
         $page->assign('INFO', 'example');
         $page->assign('NOTICE', 'example');
@@ -94,6 +95,16 @@ class ViewTest extends TestCase
                 '#<[^>]+id="password"[^>]*>#',
                 $content,
                 $template . ': password available if configured'
+            );
+            $this->assertMatchesRegularExpression(
+                '#<[^>]+id="pqcrecipient"[^>]*>#',
+                $content,
+                $template . ': recipient encryption available if configured'
+            );
+            $this->assertMatchesRegularExpression(
+                '#<script[^>]+src="js/ml-kem-0.7.0.js"[^>]*>#',
+                $content,
+                $template . ': ML-KEM implementation loaded if configured'
             );
             $this->assertMatchesRegularExpression(
                 '#<input[^>]+id="opendiscussion"[^>]*checked="checked"[^>]*>#',

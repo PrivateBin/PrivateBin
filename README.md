@@ -29,6 +29,10 @@ features.
   protects a paste and prevents people stumbling upon your paste's link
   from being able to read it without the password.
 
++ Optional, experimental ML-KEM-768 recipient encryption. It wraps the random
+  AES content key to a recipient public key instead of placing that key in the
+  URL.
+
 ## What it doesn't provide
 
 - As a user you have to trust the server administrator not to inject any
@@ -43,12 +47,14 @@ features.
   [DANE](https://en.wikipedia.org/wiki/DNS-based_Authentication_of_Named_Entities)
   record.
 
-- The “key” used to encrypt the paste is part of the URL (in
+- By default, the “key” used to encrypt the paste is part of the URL (in
   [the fragment part separated by the `#`](https://en.wikipedia.org/wiki/URL#fragment)).
   If you publicly post the URL of a paste that is not password-protected, anyone
   can read it.
   Use a password if you want your paste to remain private. In that case, make
   sure to use a strong password and share it privately and end-to-end-encrypted.
+  The optional [recipient-encryption mode](doc/RecipientEncryption.md) instead
+  requires an ML-KEM secret key and places no content key in the URL.
 
 - A server admin can be forced to hand over access logs to the authorities.
   PrivateBin encrypts your text and the discussion contents, but who accessed a
@@ -68,6 +74,8 @@ Some features are optional and can be enabled or disabled in the [configuration
 file](https://github.com/PrivateBin/PrivateBin/wiki/Configuration):
 
 * Password protection
+
+* Experimental ML-KEM-768 recipient encryption (disabled by default)
 
 * Discussions, anonymous or with nicknames and IP based identicons or vizhashes
 

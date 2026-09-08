@@ -1,7 +1,7 @@
 const globals = require('globals');
 const { globalIgnores } = require('eslint/config');
 
-module.exports = [globalIgnores(["./*.*js", "!./privatebin.js"]), {
+module.exports = [globalIgnores(["./*.*js", "!./privatebin.js", "./build/**"]), {
     languageOptions: {
         globals: {
             ...globals.amd,

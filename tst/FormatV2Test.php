@@ -45,6 +45,10 @@ class FormatV2Test extends TestCase
         $paste['v'] = 0.9;
         $this->assertFalse(FormatV2::isValid($paste), 'unsupported version');
 
+        $paste      = Helper::getPastePost();
+        $paste['v'] = 3;
+        $this->assertFalse(FormatV2::isValid($paste), 'future versions need their own validator');
+
         $paste                = Helper::getPastePost();
         $paste['adata'][0][2] = 1000;
         $this->assertFalse(FormatV2::isValid($paste), 'not enough iterations');

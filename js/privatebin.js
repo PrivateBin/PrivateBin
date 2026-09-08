@@ -97,6 +97,14 @@ window.PrivateBin = (function () {
     const loadConfirmPrefix = '#-';
 
     /**
+     * URL fragment used by recipient-encrypted pastes. It is deliberately not
+     * a secret; the content key is wrapped in the authenticated paste data.
+     *
+     * @private
+     */
+    const recipientEncryptionFragment = 'pqc';
+
+    /**
      * CryptoData class
      *
      * bundles helper functions used in both document and comment formats
@@ -180,6 +188,28 @@ window.PrivateBin = (function () {
          */
         this.isDiscussionEnabled = function () {
             return this.adata[2];
+        };
+
+        /**
+         * is this a version 3 recipient-encrypted paste
+         *
+         * @name Paste.isRecipientEncrypted
+         * @function
+         * @return {bool}
+         */
+        this.isRecipientEncrypted = function () {
+            return this.v === 3 && PqcCryptTool.isEnvelope(this.adata[4]);
+        };
+
+        /**
+         * gets the authenticated recipient-encryption envelope
+         *
+         * @name Paste.getRecipientEnvelope
+         * @function
+         * @return {object|null}
+         */
+        this.getRecipientEnvelope = function () {
+            return this.isRecipientEncrypted() ? this.adata[4] : null;
         };
     }
 
@@ -1362,6 +1392,253 @@ window.PrivateBin = (function () {
     })();
 
     /**
+     * Post-quantum recipient key encapsulation and content-key wrapping.
+     *
+     * ML-KEM is only used to protect the random AES content key. Paste content
+     * remains encrypted by CryptTool using AES-256-GCM. HKDF provides domain
+     * separation, and AES-GCM authenticates both the wrapped key and envelope.
+     *
+     * @name PqcCryptTool
+     * @class
+     */
+    const PqcCryptTool = (function () {
+        const me = {},
+            suite = 'ML-KEM-768+HKDF-SHA-256+AES-256-GCM',
+            keyAlgorithm = 'ML-KEM-768',
+            hkdfInfo = 'PrivateBin recipient encryption v3';
+
+        function implementation() {
+            const result = window.PrivateBinPQC || globalThis.PrivateBinPQC;
+            if (!result) {
+                throw new Error('ML-KEM support is unavailable on this PrivateBin instance.');
+            }
+            return result;
+        }
+
+        function bytesToBinary(bytes) {
+            let result = '';
+            for (let i = 0; i < bytes.length; ++i) {
+                result += String.fromCharCode(bytes[i]);
+            }
+            return result;
+        }
+
+        function binaryToBytes(value) {
+            const result = new Uint8Array(value.length);
+            for (let i = 0; i < value.length; ++i) {
+                result[i] = value.charCodeAt(i);
+            }
+            return result;
+        }
+
+        function encodeBase64(bytes) {
+            return btoa(bytesToBinary(bytes));
+        }
+
+        function decodeBase64(value, expectedLength, label) {
+            if (typeof value !== 'string' || value.length === 0 ||
+                !/^[A-Za-z0-9+/]+={0,2}$/.test(value) || value.length % 4 !== 0) {
+                throw new Error('Invalid ' + label + '.');
+            }
+            let binary;
+            try {
+                binary = atob(value);
+            } catch (error) {
+                throw new Error('Invalid ' + label + '.');
+            }
+            const result = binaryToBytes(binary);
+            if (result.length !== expectedLength || encodeBase64(result) !== value) {
+                throw new Error('Invalid ' + label + '.');
+            }
+            return result;
+        }
+
+        function parseSerializedKey(value, field) {
+            if (typeof value !== 'string') {
+                throw new Error('Invalid ML-KEM key.');
+            }
+            const trimmed = value.trim();
+            if (!trimmed.startsWith('{')) {
+                return trimmed;
+            }
+            let key;
+            try {
+                key = JSON.parse(trimmed);
+            } catch (error) {
+                throw new Error('Invalid ML-KEM key file.');
+            }
+            if (key.version !== 1 || key.algorithm !== keyAlgorithm || typeof key[field] !== 'string') {
+                throw new Error('Unsupported ML-KEM key file.');
+            }
+            return key[field];
+        }
+
+        async function keyId(publicKey) {
+            const digest = new Uint8Array(
+                await window.crypto.subtle.digest('SHA-256', publicKey)
+            );
+            return encodeBase64(digest.slice(0, 12))
+                .replace(/\+/g, '-')
+                .replace(/\//g, '_')
+                .replace(/[=]+$/, '');
+        }
+
+        function envelopeHeader(envelope) {
+            return {
+                type: 'recipient',
+                suite: suite,
+                kid: envelope.kid,
+                kemct: envelope.kemct,
+                salt: envelope.salt,
+                iv: envelope.iv
+            };
+        }
+
+        async function deriveWrappingKey(sharedSecret, salt) {
+            const importedKey = await window.crypto.subtle.importKey(
+                'raw',
+                sharedSecret,
+                { name: 'HKDF' },
+                false,
+                ['deriveKey']
+            );
+            return window.crypto.subtle.deriveKey(
+                {
+                    name: 'HKDF',
+                    hash: 'SHA-256',
+                    salt: salt,
+                    info: new TextEncoder().encode(hkdfInfo)
+                },
+                importedKey,
+                { name: 'AES-GCM', length: 256 },
+                false,
+                ['encrypt', 'decrypt']
+            );
+        }
+
+        me.getSuite = function () {
+            return suite;
+        };
+
+        me.generateKeyPair = async function () {
+            const impl = implementation(),
+                pair = impl.keygen(),
+                publicKey = encodeBase64(pair.publicKey),
+                secretKey = encodeBase64(pair.secretKey);
+            return {
+                version: 1,
+                algorithm: keyAlgorithm,
+                keyId: await keyId(pair.publicKey),
+                publicKey: publicKey,
+                secretKey: secretKey
+            };
+        };
+
+        me.parsePublicKey = function (value) {
+            const impl = implementation();
+            return decodeBase64(
+                parseSerializedKey(value, 'publicKey'),
+                impl.lengths.publicKey,
+                'ML-KEM public key'
+            );
+        };
+
+        me.parseSecretKey = function (value) {
+            const impl = implementation();
+            return decodeBase64(
+                parseSerializedKey(value, 'secretKey'),
+                impl.lengths.secretKey,
+                'ML-KEM secret key'
+            );
+        };
+
+        me.wrapKey = async function (contentKey, serializedPublicKey) {
+            const impl = implementation(),
+                contentKeyBytes = typeof contentKey === 'string' ? binaryToBytes(contentKey) : new Uint8Array();
+            if (contentKeyBytes.length !== 32) {
+                throw new Error('Invalid content key length.');
+            }
+            const publicKey = me.parsePublicKey(serializedPublicKey),
+                encapsulated = impl.encapsulate(publicKey),
+                salt = window.crypto.getRandomValues(new Uint8Array(32)),
+                iv = window.crypto.getRandomValues(new Uint8Array(12)),
+                envelope = {
+                    type: 'recipient',
+                    suite: suite,
+                    kid: await keyId(publicKey),
+                    kemct: encodeBase64(encapsulated.cipherText),
+                    salt: encodeBase64(salt),
+                    iv: encodeBase64(iv)
+                };
+            try {
+                const wrappingKey = await deriveWrappingKey(encapsulated.sharedSecret, salt),
+                    wrappedKey = await window.crypto.subtle.encrypt(
+                        {
+                            name: 'AES-GCM',
+                            iv: iv,
+                            additionalData: new TextEncoder().encode(JSON.stringify(envelopeHeader(envelope))),
+                            tagLength: 128
+                        },
+                        wrappingKey,
+                        contentKeyBytes
+                    );
+                envelope.wrappedkey = encodeBase64(new Uint8Array(wrappedKey));
+                return envelope;
+            } finally {
+                encapsulated.sharedSecret.fill(0);
+                contentKeyBytes.fill(0);
+            }
+        };
+
+        me.unwrapKey = async function (envelope, serializedSecretKey) {
+            const impl = implementation();
+            if (!me.isEnvelope(envelope)) {
+                throw new Error('Invalid recipient-encryption envelope.');
+            }
+            const cipherText = decodeBase64(envelope.kemct, impl.lengths.cipherText, 'ML-KEM ciphertext'),
+                secretKey = me.parseSecretKey(serializedSecretKey),
+                salt = decodeBase64(envelope.salt, 32, 'HKDF salt'),
+                iv = decodeBase64(envelope.iv, 12, 'key-wrap IV'),
+                wrappedKey = decodeBase64(envelope.wrappedkey, 48, 'wrapped content key');
+            let sharedSecret;
+            try {
+                sharedSecret = impl.decapsulate(cipherText, secretKey);
+                const unwrapped = await window.crypto.subtle.decrypt(
+                    {
+                        name: 'AES-GCM',
+                        iv: iv,
+                        additionalData: new TextEncoder().encode(JSON.stringify(envelopeHeader(envelope))),
+                        tagLength: 128
+                    },
+                    await deriveWrappingKey(sharedSecret, salt),
+                    wrappedKey
+                );
+                if (unwrapped.byteLength !== 32) {
+                    throw new Error('Invalid content key length.');
+                }
+                return bytesToBinary(new Uint8Array(unwrapped));
+            } catch (error) {
+                throw new Error('Unable to decrypt the content key. Check the ML-KEM secret key.');
+            } finally {
+                if (sharedSecret) {
+                    sharedSecret.fill(0);
+                }
+                secretKey.fill(0);
+            }
+        };
+
+        me.isEnvelope = function (envelope) {
+            return envelope !== null && typeof envelope === 'object' &&
+                !Array.isArray(envelope) && envelope.type === 'recipient' &&
+                envelope.suite === suite && typeof envelope.kid === 'string' &&
+                typeof envelope.kemct === 'string' && typeof envelope.salt === 'string' &&
+                typeof envelope.iv === 'string' && typeof envelope.wrappedkey === 'string';
+        };
+
+        return me;
+    })();
+
+    /**
      * (Model) Data source (aka MVC)
      *
      * @name   Model
@@ -1493,6 +1770,34 @@ window.PrivateBin = (function () {
         };
 
         /**
+         * returns true when the URL identifies a recipient-encrypted paste
+         *
+         * @name Model.isRecipientEncrypted
+         * @function
+         * @return {bool}
+         */
+        me.isRecipientEncrypted = function () {
+            const fragment = window.location.hash.substring(
+                window.location.hash.startsWith(loadConfirmPrefix) ? loadConfirmPrefix.length : 1
+            ).split('&', 1)[0];
+            return fragment === recipientEncryptionFragment;
+        };
+
+        /**
+         * caches a content key recovered from a recipient envelope
+         *
+         * @name Model.setPasteKey
+         * @function
+         * @param {string} key
+         */
+        me.setPasteKey = function (key) {
+            if (typeof key !== 'string' || key.length !== 32) {
+                throw new Error('Invalid content key.');
+            }
+            symmetricKey = key;
+        };
+
+        /**
          * return the deciphering key stored in anchor part of the URL
          *
          * @name   Model.getPasteKey
@@ -1502,6 +1807,9 @@ window.PrivateBin = (function () {
          */
         me.getPasteKey = function () {
             if (symmetricKey === null) {
+                if (me.isRecipientEncrypted()) {
+                    throw 'recipient content key has not been unwrapped';
+                }
                 let startPos = 1;
                 if (window.location.hash.startsWith(loadConfirmPrefix)) {
                     startPos = loadConfirmPrefix.length;
@@ -2314,6 +2622,230 @@ window.PrivateBin = (function () {
                     passwordDecrypt.focus();
                 });
             }
+        };
+
+        return me;
+    })();
+
+    /**
+     * UI and in-memory key handling for optional ML-KEM recipient encryption.
+     * Secret keys are never persisted by PrivateBin.
+     *
+     * @name RecipientEncryption
+     * @class
+     */
+    const RecipientEncryption = (function () {
+        const me = {},
+            waitingForKey = new Error('waiting on user to provide an ML-KEM secret key');
+
+        let panel,
+            enabled,
+            options,
+            publicKeyInput,
+            generateButton,
+            keyPairOutput,
+            keyPairContainer,
+            downloadButton,
+            secretKeyInput,
+            secretKeyModal,
+            bootstrap5SecretKeyModal = null,
+            secretKey = '',
+            retryCallback = null,
+            generatedKeyPair = null;
+
+        function setOptionsVisibility() {
+            if (!options || !enabled) {
+                return;
+            }
+            options.classList.toggle('hidden', !enabled.checked);
+        }
+
+        async function generateKeyPair() {
+            generateButton.disabled = true;
+            Alert.showLoading('Loading…', 'time');
+            try {
+                generatedKeyPair = await PqcCryptTool.generateKeyPair();
+                publicKeyInput.value = generatedKeyPair.publicKey;
+                keyPairOutput.value = JSON.stringify(generatedKeyPair, null, 2);
+                keyPairContainer.classList.remove('hidden');
+            } catch (error) {
+                Alert.showError(error);
+            } finally {
+                Alert.hideLoading();
+                generateButton.disabled = false;
+            }
+        }
+
+        function downloadKeyPair() {
+            if (!generatedKeyPair) {
+                return;
+            }
+            const blob = new Blob(
+                    [JSON.stringify(generatedKeyPair, null, 2) + '\n'],
+                    { type: 'application/json' }
+                ),
+                url = URL.createObjectURL(blob),
+                link = document.createElement('a');
+            link.href = url;
+            link.download = 'privatebin-ml-kem-' + generatedKeyPair.keyId + '.json';
+            link.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function submitSecretKey(event) {
+            event.preventDefault();
+            secretKey = secretKeyInput.value.trim();
+            if (bootstrap5SecretKeyModal) {
+                bootstrap5SecretKeyModal.hide();
+            } else if (secretKeyModal) {
+                secretKeyModal.classList.remove('show');
+                secretKeyModal.style.display = 'none';
+            }
+            if (retryCallback) {
+                const callback = retryCallback;
+                retryCallback = null;
+                return callback();
+            }
+        }
+
+        me.isEnabled = function () {
+            return !!enabled && enabled.checked;
+        };
+
+        me.getPublicKey = function () {
+            if (!me.isEnabled()) {
+                return '';
+            }
+            const value = publicKeyInput.value.trim();
+            if (value.length === 0) {
+                throw new Error('Enter an ML-KEM-768 recipient public key.');
+            }
+            // Validate before starting compression or encryption.
+            PqcCryptTool.parsePublicKey(value);
+            return value;
+        };
+
+        me.resolvePasteKey = async function (paste) {
+            try {
+                return Model.getPasteKey();
+            } catch (error) {
+                // Recipient links intentionally do not carry the content key.
+            }
+            if (!paste.isRecipientEncrypted()) {
+                throw new Error('Recipient-encryption URL and paste format do not match.');
+            }
+            if (secretKey.length === 0) {
+                me.requestSecretKey(function () {
+                    PasteDecrypter.run(paste);
+                });
+                throw waitingForKey;
+            }
+            const contentKey = await PqcCryptTool.unwrapKey(
+                paste.getRecipientEnvelope(),
+                secretKey
+            );
+            Model.setPasteKey(contentKey);
+            secretKey = '';
+            secretKeyInput.value = '';
+            return contentKey;
+        };
+
+        me.isWaitingForKey = function (error) {
+            return error === waitingForKey;
+        };
+
+        me.requestSecretKey = function (callback) {
+            retryCallback = callback;
+            Alert.hideLoading();
+            if (!secretKeyModal) {
+                throw new Error('ML-KEM secret-key prompt is unavailable.');
+            }
+            if (bootstrap5SecretKeyModal) {
+                bootstrap5SecretKeyModal.show();
+            } else {
+                secretKeyModal.style.display = 'block';
+                secretKeyModal.classList.add('show');
+                secretKeyInput.focus();
+            }
+        };
+
+        me.rejectSecretKey = function () {
+            secretKey = '';
+            if (secretKeyInput) {
+                secretKeyInput.value = '';
+            }
+        };
+
+        me.showCreate = function () {
+            if (panel) {
+                panel.classList.remove('hidden');
+            }
+        };
+
+        me.hide = function () {
+            if (panel) {
+                panel.classList.add('hidden');
+            }
+        };
+
+        me.reset = function () {
+            secretKey = '';
+            retryCallback = null;
+            generatedKeyPair = null;
+            if (enabled) {
+                enabled.checked = false;
+            }
+            if (publicKeyInput) {
+                publicKeyInput.value = '';
+            }
+            if (keyPairOutput) {
+                keyPairOutput.value = '';
+            }
+            if (keyPairContainer) {
+                keyPairContainer.classList.add('hidden');
+            }
+            if (secretKeyInput) {
+                secretKeyInput.value = '';
+            }
+            setOptionsVisibility();
+        };
+
+        me.init = function () {
+            panel = document.getElementById('pqcrecipient');
+            enabled = document.getElementById('pqcenabled');
+            options = document.getElementById('pqcoptions');
+            publicKeyInput = document.getElementById('pqcpublickey');
+            generateButton = document.getElementById('pqcgenerate');
+            keyPairOutput = document.getElementById('pqckeypair');
+            keyPairContainer = document.getElementById('pqckeypaircontainer');
+            downloadButton = document.getElementById('pqcdownload');
+            secretKeyInput = document.getElementById('pqcsecretkey');
+            secretKeyModal = document.getElementById('pqcsecretkeymodal');
+
+            if (panel) {
+                enabled.addEventListener('change', setOptionsVisibility);
+                generateButton.addEventListener('click', generateKeyPair);
+                downloadButton.addEventListener('click', downloadKeyPair);
+                setOptionsVisibility();
+            }
+
+            const secretKeyForm = document.getElementById('pqcsecretkeyform');
+            if (!secretKeyForm || !secretKeyModal) {
+                return;
+            }
+            secretKeyForm.addEventListener('submit', submitSecretKey);
+            if (typeof bootstrap !== 'undefined' && bootstrap.Tooltip && typeof bootstrap.Modal === 'function') {
+                bootstrap5SecretKeyModal = new bootstrap.Modal(secretKeyModal, {
+                    backdrop: 'static',
+                    keyboard: false,
+                    show: false
+                });
+            } else {
+                secretKeyModal.style.display = 'none';
+            }
+            secretKeyModal.addEventListener('shown.bs.modal', () => {
+                secretKeyInput.focus();
+            });
         };
 
         return me;
@@ -3958,12 +4490,14 @@ window.PrivateBin = (function () {
             let paste = PasteViewer.getText();
 
             // push a new state to allow back navigation with browser back button
+            const fragment = Model.isRecipientEncrypted() ?
+                recipientEncryptionFragment :
+                CryptTool.base58encode(Model.getPasteKey());
             history.pushState(
                 { type: 'raw' },
                 document.title,
                 // recreate document URL
-                Helper.baseUri() + '?' + Model.getPasteId() + '#' +
-                CryptTool.base58encode(Model.getPasteKey())
+                Helper.baseUri() + '?' + Model.getPasteId() + '#' + fragment
             );
 
             // we use text/html instead of text/plain to avoid a bug when
@@ -4852,6 +5386,7 @@ window.PrivateBin = (function () {
         let successFunc = null,
             failureFunc = null,
             symmetricKey = null,
+            recipientPublicKey = null,
             url,
             data,
             password;
@@ -4896,6 +5431,7 @@ window.PrivateBin = (function () {
             if (successFunc !== null) {
                 // add useful data to result
                 result.encryptionKey = symmetricKey;
+                result.recipientEncrypted = recipientPublicKey !== null;
                 successFunc(status, result);
             }
         }
@@ -4993,6 +5529,18 @@ window.PrivateBin = (function () {
         };
 
         /**
+         * enables version 3 recipient encryption for this upload
+         *
+         * @name ServerInteraction.setRecipientPublicKey
+         * @function
+         * @param {string} publicKey serialized ML-KEM-768 public key
+         */
+        me.setRecipientPublicKey = function (publicKey) {
+            PqcCryptTool.parsePublicKey(publicKey);
+            recipientPublicKey = publicKey;
+        };
+
+        /**
          * set success function
          *
          * @name   ServerInteraction.setSuccess
@@ -5033,6 +5581,7 @@ window.PrivateBin = (function () {
 
             // reset key, so it a new one is generated when it is used
             symmetricKey = null;
+            recipientPublicKey = null;
 
             // reset data
             successFunc = null;
@@ -5059,8 +5608,14 @@ window.PrivateBin = (function () {
             if (!data.hasOwnProperty('adata')) {
                 data['adata'] = [];
             }
+            if (recipientPublicKey !== null) {
+                if (data['adata'].length === 0) {
+                    throw new Error('Recipient encryption is only supported for documents.');
+                }
+                data['adata'][4] = await PqcCryptTool.wrapKey(symmetricKey, recipientPublicKey);
+            }
             let cipherResult = await CryptTool.cipher(symmetricKey, password, JSON.stringify(cipherMessage), data['adata']);
-            data['v'] = 2;
+            data['v'] = recipientPublicKey === null ? 2 : 3;
             data['ct'] = cipherResult[0];
             data['adata'] = cipherResult[1];
 
@@ -5138,8 +5693,12 @@ window.PrivateBin = (function () {
 
             // show notification
             const baseUri = Helper.baseUri() + '?',
-                url = baseUri + data.id + (TopNav.getBurnAfterReading() ? loadConfirmPrefix : '#') + CryptTool.base58encode(data.encryptionKey),
+                fragment = data.recipientEncrypted ? recipientEncryptionFragment : CryptTool.base58encode(data.encryptionKey),
+                url = baseUri + data.id + (TopNav.getBurnAfterReading() ? loadConfirmPrefix : '#') + fragment,
                 deleteUrl = baseUri + 'pasteid=' + data.id + '&deletetoken=' + data.deletetoken;
+            if (data.recipientEncrypted) {
+                Model.setPasteKey(data.encryptionKey);
+            }
             PasteStatus.createPasteNotification(url, deleteUrl);
 
             // show new URL in browser bar
@@ -5156,6 +5715,7 @@ window.PrivateBin = (function () {
             TopNav.hideRawButton();
             TopNav.hideDownloadButton();
             Editor.hide();
+            RecipientEncryption.hide();
 
             PasteStatus.checkAutoShorten();
 
@@ -5284,8 +5844,19 @@ window.PrivateBin = (function () {
             }
 
             // prepare server interaction
-            ServerInteraction.prepare();
-            ServerInteraction.setCryptParameters(TopNav.getPassword());
+            try {
+                const recipientPublicKey = RecipientEncryption.getPublicKey();
+                ServerInteraction.prepare();
+                ServerInteraction.setCryptParameters(TopNav.getPassword());
+                if (recipientPublicKey.length > 0) {
+                    ServerInteraction.setRecipientPublicKey(recipientPublicKey);
+                }
+            } catch (error) {
+                Alert.hideLoading();
+                TopNav.showCreateButtons();
+                Alert.showError(error);
+                return;
+            }
 
             // set success/fail functions
             ServerInteraction.setSuccess(showCreatedPaste);
@@ -5373,7 +5944,14 @@ window.PrivateBin = (function () {
             }
 
             // encrypt message
-            await ServerInteraction.setCipherMessage(cipherMessage).catch(Alert.showError);
+            try {
+                await ServerInteraction.setCipherMessage(cipherMessage);
+            } catch (error) {
+                Alert.hideLoading();
+                TopNav.showCreateButtons();
+                Alert.showError(error);
+                return;
+            }
 
             // send data
             ServerInteraction.run();
@@ -5539,7 +6117,7 @@ window.PrivateBin = (function () {
          * @function
          * @param  {Paste} [paste] - (optional) object including comments to display (items = array with keys ('data','meta'))
          */
-        me.run = function (paste) {
+        me.run = async function (paste) {
             Alert.hideMessages();
             Alert.setCustomHandler(null);
             Alert.showLoading('Decrypting document…', 'cloud-download');
@@ -5550,9 +6128,35 @@ window.PrivateBin = (function () {
                 return;
             }
 
-            let key = Model.getPasteKey(),
+            let key,
                 password = Prompt.getPassword(),
                 decryptionPromises = [];
+
+            try {
+                if (paste.isRecipientEncrypted()) {
+                    if (!Model.isRecipientEncrypted()) {
+                        throw new Error('This recipient-encrypted document requires a #pqc link.');
+                    }
+                    key = await RecipientEncryption.resolvePasteKey(paste);
+                } else {
+                    if (Model.isRecipientEncrypted()) {
+                        throw new Error('Recipient-encryption URL and paste format do not match.');
+                    }
+                    key = Model.getPasteKey();
+                }
+            } catch (error) {
+                if (!RecipientEncryption.isWaitingForKey(error)) {
+                    Alert.hideLoading();
+                    Alert.showError(error);
+                    if (paste.isRecipientEncrypted()) {
+                        RecipientEncryption.rejectSecretKey();
+                        RecipientEncryption.requestSecretKey(function () {
+                            me.run(paste);
+                        });
+                    }
+                }
+                return;
+            }
 
             TopNav.setRetryCallback(function () {
                 TopNav.hideRetryButton();
@@ -5877,6 +6481,8 @@ window.PrivateBin = (function () {
             Editor.resetInput();
             Editor.show();
             Editor.focusInput();
+            RecipientEncryption.reset();
+            RecipientEncryption.showCreate();
             AttachmentViewer.removeAttachment();
             TopNav.resetInput();
 
@@ -5908,12 +6514,15 @@ window.PrivateBin = (function () {
          * @function
          */
         me.showPaste = function () {
-            try {
-                Model.getPasteKey();
-            } catch (err) {
-                console.error(err);
-                Alert.showError('Cannot decrypt document: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)');
-                return;
+            RecipientEncryption.hide();
+            if (!Model.isRecipientEncrypted()) {
+                try {
+                    Model.getPasteKey();
+                } catch (err) {
+                    console.error(err);
+                    Alert.showError('Cannot decrypt document: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)');
+                    return;
+                }
             }
 
             // check if we should request loading confirmation
@@ -6021,6 +6630,8 @@ window.PrivateBin = (function () {
             TopNav.setFormat(PasteViewer.getFormat());
             PasteViewer.hide();
             Editor.show();
+            RecipientEncryption.reset();
+            RecipientEncryption.showCreate();
 
             TopNav.showCreateButtons();
 
@@ -6079,6 +6690,7 @@ window.PrivateBin = (function () {
             PasteStatus.init();
             PasteViewer.init();
             Prompt.init();
+            RecipientEncryption.init();
             TopNav.init();
             UiHelper.init();
             CopyToClipboard.init();
@@ -6132,11 +6744,13 @@ window.PrivateBin = (function () {
         Helper: Helper,
         I18n: I18n,
         CryptTool: CryptTool,
+        PqcCryptTool: PqcCryptTool,
         Model: Model,
         UiHelper: UiHelper,
         Alert: Alert,
         PasteStatus: PasteStatus,
         Prompt: Prompt,
+        RecipientEncryption: RecipientEncryption,
         Editor: Editor,
         PasteViewer: PasteViewer,
         AttachmentViewer: AttachmentViewer,

@@ -98,7 +98,7 @@ class FormatV2
 
         // Make sure some fields contain no unsupported values:
         // - version
-        if (!(is_int($message['v']) || is_float($message['v'])) || (float) $message['v'] < 2) {
+        if (!(is_int($message['v']) || is_float($message['v'])) || (float) $message['v'] !== 2.0) {
             return false;
         }
         // - iterations, refuse less then 10000 iterations (minimum NIST recommendation)
