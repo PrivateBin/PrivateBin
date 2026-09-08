@@ -1,7 +1,7 @@
 const globals = require('globals');
 const { globalIgnores } = require('eslint/config');
 
-module.exports = [globalIgnores(["./*.*js", "!./privatebin.js", "./build/**"]), {
+module.exports = [globalIgnores(["./*.*js", "!./privatebin.js"]), {
     languageOptions: {
         globals: {
             ...globals.amd,
@@ -222,5 +222,11 @@ module.exports = [globalIgnores(["./*.*js", "!./privatebin.js", "./build/**"]), 
         "prefer-spread": 0,
         "prefer-template": 0,
         "require-yield": 0,
+    },
+}, {
+    files: ["./build/**/*.js"],
+    languageOptions: {
+        ecmaVersion: 2020,
+        sourceType: "module",
     },
 }];
