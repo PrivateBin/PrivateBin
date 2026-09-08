@@ -449,7 +449,7 @@ if (!empty($URLSHORTENER)) :
 								<?php if ($SHORTENBYDEFAULT) : ?>
 								data-autoshorten="true"
 								<?php endif; ?>
-								type="button" class="btn btn-primary btn-block d-flex justify-content-center align-items-center gap-1"
+								type="button" class="btn btn-primary btn-block d-flex justify-content-center align-items-center gap-1<?php echo $SHORTENBYDEFAULT ? ' hidden' : ''; ?>"
 						>
 							<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#send" /></svg> <?php echo I18n::_('Shorten URL'), PHP_EOL; ?>
 						</button>
