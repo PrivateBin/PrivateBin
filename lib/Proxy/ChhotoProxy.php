@@ -83,8 +83,7 @@ class ChhotoProxy extends AbstractProxy
         // Fallback for older versions that return only the slug
         if (!empty($data['shortlink'])) {
             $apiUrl = $this->_getProxyUrl(new Configuration()); // not ideal, but works
-            // Better: hardcode or get base from config
-            return 'https://lix.sk/' . ltrim($data['shortlink'], '/');
+            return $apiUrl' . ltrim($data['shortlink'], '/');
         }
 
         return null;
