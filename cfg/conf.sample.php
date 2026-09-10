@@ -267,7 +267,7 @@ dir = PATH "data"
 ;bucket = "my-bucket"
 
 ;[chhoto]
-; - Chotto requires you to make a post call with a generated API key.
+; - Chhoto requires you to make a post call with a generated API key.
 ;   use this section to setup the API key and URL. In order to use this section,
 ;   "urlshortener" needs to point to the base URL of your PrivateBin
 ;   instance with "?shortenviachhoto&link=" appended. For example:
