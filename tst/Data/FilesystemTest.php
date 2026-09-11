@@ -75,6 +75,23 @@ class FilesystemTest extends TestCase
         $this->assertEquals($original, $this->_model->read(Helper::getPasteId()));
     }
 
+    public function testStoreDoesNotOverwriteAnExistingPaste()
+    {
+        $id         = Helper::getPasteId();
+        $storageDir = $this->_path . DIRECTORY_SEPARATOR . substr($id, 0, 2) .
+            DIRECTORY_SEPARATOR . substr($id, 2, 2) . DIRECTORY_SEPARATOR;
+        mkdir($storageDir, 0700, true);
+        $filename = $storageDir . $id . '.php';
+        $store    = new ReflectionMethod(Filesystem::class, '_store');
+        $store->setAccessible(true);
+        $original    = Helper::getPaste(['expire_date' => 1344803344]);
+        $replacement = Helper::getPaste(['expire_date' => 2344803344]);
+
+        $this->assertTrue($store->invoke($this->_model, $filename, $original));
+        $this->assertFalse($store->invoke($this->_model, $filename, $replacement));
+        $this->assertEquals($original, $this->_model->read($id));
+    }
+
     /**
      * pastes a-g are expired and should get deleted, x never expires and y-z expire in an hour
      */
