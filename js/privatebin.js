@@ -492,11 +492,9 @@ window.PrivateBin = (function () {
             const name = cname + '=',
                 ca = document.cookie.split(';');
             for (let i = 0; i < ca.length; ++i) {
-                let c = ca[i];
-                while (c.charAt(0) === ' ') {
-                    c = c.substring(1);
-                }
-                if (c.indexOf(name) === 0) {
+                let c = ca[i].trim();
+                if (c.startsWith(name))
+                {
                     return c.substring(name.length, c.length);
                 }
             }
@@ -667,7 +665,7 @@ window.PrivateBin = (function () {
          * @prop   {string[]}
          * @readonly
          */
-        const supportedLanguages = ['ar', 'bg', 'ca', 'co', 'cs', 'de', 'el', 'es', 'et', 'fa', 'fi', 'fr', 'he', 'hu', 'id', 'it', 'ja', 'jbo', 'lt', 'no', 'nl', 'pl', 'pt', 'oc', 'ro', 'ru', 'sk', 'sl', 'sv', 'th', 'tr', 'uk', 'zh'];
+        const supportedLanguages = ['ar', 'bg', 'ca', 'co', 'cs', 'de', 'el', 'es', 'et', 'fa', 'fi', 'fr', 'he', 'hu', 'id', 'it', 'ja', 'jbo', 'lt', 'no', 'nl', 'pl', 'pt', 'oc', 'ro', 'ru', 'sk', 'sl', 'sv', 'th', 'tr', 'uk', 'zh', 'zh-tw'];
 
         /**
          * built in language
@@ -857,6 +855,7 @@ window.PrivateBin = (function () {
                 case 'oc':
                 case 'tr':
                 case 'zh':
+                case 'zh-tw':
                     return n > 1 ? 1 : 0;
                 case 'he':
                     return n === 1 ? 0 : (n === 2 ? 1 : ((n < 0 || n > 10) && (n % 10 === 0) ? 2 : 3));
@@ -893,8 +892,16 @@ window.PrivateBin = (function () {
 
             // auto-select language based on browser settings
             if (newLanguage.length === 0) {
-                newLanguage = (navigator.language || navigator.userLanguage || 'en');
-                if (newLanguage.indexOf('-') > 0) {
+                newLanguage = (navigator.language || navigator.userLanguage || 'en').toLowerCase();
+                const isTraditionalChinese = newLanguage.startsWith('zh-tw-') ||
+                    newLanguage === 'zh-hant' || newLanguage.startsWith('zh-hant-') ||
+                    newLanguage === 'zh-hk' || newLanguage.startsWith('zh-hk-') ||
+                    newLanguage === 'zh-mo' || newLanguage.startsWith('zh-mo-');
+                // alias Traditional Chinese browser tags to PrivateBin's zh-tw locale;
+                // otherwise try the full tag and fall back to the base language
+                if (isTraditionalChinese && supportedLanguages.includes('zh-tw')) {
+                    newLanguage = 'zh-tw';
+                } else if (!supportedLanguages.includes(newLanguage) && newLanguage.includes('-')) {
                     newLanguage = newLanguage.split('-')[0];
                 }
             }
@@ -911,7 +918,7 @@ window.PrivateBin = (function () {
             }
 
             // if language is not supported, show error
-            if (supportedLanguages.indexOf(newLanguage) === -1) {
+            if (!supportedLanguages.includes(newLanguage)) {
                 console.error('Language \'%s\' is not supported. Translation failed, fallback to English.', newLanguage);
                 language = 'en';
                 return;
@@ -963,7 +970,7 @@ window.PrivateBin = (function () {
         function isStringContainsHtml(messageId) {
             // message IDs are allowed to contain anchors, spans, keyboard and emphasis tags
             // we can recognize all of them by only checking for anchors and keyboard tags
-            return typeof messageId === 'string' && (messageId.indexOf('<a') !== -1 || messageId.indexOf('<kbd') !== -1);
+            return typeof messageId === 'string' && (messageId.includes('<a') || messageId.includes('<kbd'));
         }
 
         return me;
@@ -1486,7 +1493,7 @@ window.PrivateBin = (function () {
          * @return {bool}
          */
         me.hasDeleteToken = function () {
-            return window.location.search.indexOf('deletetoken') !== -1;
+            return window.location.search.includes('deletetoken');
         };
 
         /**
@@ -3156,6 +3163,9 @@ window.PrivateBin = (function () {
         me.getAttachmentMimeType = function (attachmentData) {
             // position in data URI string of where mimeType ends
             const mimeTypeEnd = attachmentData.indexOf(';');
+            if (mimeTypeEnd < 6) {
+                return '';
+            }
 
             // extract mimeType
             return attachmentData.substring(5, mimeTypeEnd).toLowerCase();

@@ -216,6 +216,48 @@ describe('I18n', function () {
             ));
         });
 
+        it('maps Traditional Chinese browser languages to zh-tw', async function () {
+            const clean = globalThis.cleanup('<script src="js/privatebin.js"></script>', {url: 'https://privatebin.net/'});
+
+            // loadTranslations() loads the translation file via fetch() API,
+            // which is asynchronous. Stub it, so the test does not perform a
+            // real network request, and await the 'languageLoaded' event that
+            // loadTranslations() dispatches once the fetch has completed.
+            const originalFetch = globalThis.fetch;
+            globalThis.fetch = function (url) {
+                assert.strictEqual(url, 'i18n/zh-tw.json');
+                return Promise.resolve({
+                    ok: true,
+                    status: 200,
+                    statusText: 'OK',
+                    json: function () {
+                        return Promise.resolve({});
+                    }
+                });
+            };
+
+            try {
+                for (const language of ['zh-TW', 'zh-TW-u-nu-hanidec', 'zh-Hant', 'zh-Hant-TW', 'zh-HK', 'zh-MO']) {
+                    Object.defineProperty(navigator, 'language', {
+                        value: language,
+                        configurable: true
+                    });
+                    PrivateBin.I18n.reset('en');
+                    const loaded = new Promise(function (resolve) {
+                        document.addEventListener('languageLoaded', resolve, {once: true});
+                    });
+                    PrivateBin.I18n.loadTranslations();
+                    await loaded;
+                    assert.strictEqual(PrivateBin.I18n.getLanguage(), 'zh-tw', language);
+                }
+            } finally {
+                globalThis.fetch = originalFetch;
+                delete navigator.language;
+                PrivateBin.I18n.reset();
+                clean();
+            }
+        });
+
         it('should default to en', () => {
             var clean = globalThis.cleanup('', {url: 'https://privatebin.net/'});
 

@@ -72,3 +72,4 @@
 * Edward205 - Romanian
 * babiloof - Swedish
 * Ali Fani - Persian
+* Peter Dave Hello - Chinese (Traditional)
