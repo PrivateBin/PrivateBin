@@ -1,6 +1,7 @@
 # PrivateBin version history
 
 ## 2.1.0 (not yet released)
+* ADDED: Added `shortenviachhoto` endpoint with an `chhoto` configuration section
 * CHANGED: We removed jQuery in the Frontend and replaced it with vanilla JS.
 * CHANGED: Removed the unmaintained js-verify and replaced it with fast-check library.
 * CHANGED: Added a `jsconfig.json` in order to check the types of JavaScript.
