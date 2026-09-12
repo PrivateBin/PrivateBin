@@ -122,6 +122,14 @@ describe('Model', function () {
                 }
             ));
         });
+        it('throws exception on non-hexadecimal document IDs', () => {
+            const clean = globalThis.cleanup('', {
+                url: 'https://example.com/?gggggggggggggggg#key'
+            });
+            assert.throws(() => PrivateBin.Model.getPasteId());
+            PrivateBin.Model.reset();
+            clean();
+        });
     });
 
     describe('getPasteKey', function () {
@@ -254,4 +262,3 @@ describe('Model', function () {
         });
     });
 });
-

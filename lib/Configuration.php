@@ -112,6 +112,10 @@ class Configuration
             'apikey'    => '',
             'apiurl'    => '',
         ],
+        'chhoto' => [
+            'apikey'    => '',
+            'apiurl'    => '',
+        ],
         // update this array when adding/changing/removing js files
         'sri' => [
             'js/base-x-5.0.1.js'     => 'sha512-FmhlnjIxQyxkkxQmzf0l6IRGsGbgyCdgqPxypFsEtHMF1naRqaLLo6mcyN5rEaT16nKx1PeJ4g7+07D6gnk/Tg==',
@@ -120,7 +124,7 @@ class Configuration
             'js/kjua-0.10.0.js'      => 'sha512-BYj4xggowR7QD150VLSTRlzH62YPfhpIM+b/1EUEr7RQpdWAGKulxWnOvjFx1FUlba4m6ihpNYuQab51H6XlYg==',
             'js/legacy.js'           => 'sha512-pRofxsrf5UItjiP22Dcjh3FAcBjF/n7h8U9/W5xqJk17U0N2U1oajhXypq/omo9jhwS1iVGOhWrRepoPeFns+w==',
             'js/prettify.js'         => 'sha512-puO0Ogy++IoA2Pb9IjSxV1n4+kQkKXYAEUtVzfZpQepyDPyXk8hokiYDS7ybMogYlyyEIwMLpZqVhCkARQWLMg==',
-            'js/privatebin.js'       => 'sha512-fPpM20CwlvwIrx9lMPrCAnow7B6WoN+Op11wjPBbPfZne8rLEOZICYs1Dh3lM7iD1OSn1SGa+Rl9PF6NHB/t4Q==',
+            'js/privatebin.js'       => 'sha512-EDBvid7ZFsTiqmEbYUR2Bwo7ypn7GKf+JwW6VFvdE6qLQbzdKrAla+AKhONnt/Tve3zEPc9bXI+4hUHl5itdZw==',
             'js/purify-3.4.12.js'    => 'sha512-Akf6HnAJZm0sWWWI4gp2GYff0NDnHUB02XJE5S7Hdq/Z5xtMjkuFacsDA8ZtViv1gi+onBxMhEMIaGyQeGxBng==',
             'js/showdown-2.1.0.js'   => 'sha512-WYXZgkTR0u/Y9SVIA4nTTOih0kXMEd8RRV6MLFdL6YU8ymhR528NLlYQt1nlJQbYz4EW+ZsS0fx1awhiQJme1Q==',
             'js/zlib-1.3.2.js'       => 'sha512-RAhJgxg9siMIA8ky4c10Rc2zUgnK80olHB8Tt1IOYWY4Eh1WmrviQkDn+sgBlb38ZHq3tzufGC41kP360gmosQ==',
