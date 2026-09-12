@@ -37,7 +37,8 @@
 ### Build
 
 - **No explicit build step** for PHP. The web app is served directly from source.
-  - This means **composer directory** need to be comitted (_except_ of big optional dependences like Google Cloud like GCS support or similar!)
+  - This means **composer directory** need to be committed (_except_ of big optional dependences like Google Cloud like GCS support or similar!)
+  - But if you do add new PHP classes, you must run `make composer` to get the class added to the auto loader.
 - **For JavaScript:** There is no webpack/bundler step for release; browser JS is written in compatible ES6+ syntax, except in `legacy.js` (which must be designed to run cleanly even on ancient IE4 or Netscape to display the error message that a browser upgrade is necessary). We dropped use of jQuery. We are considering modularizing the JS logic, but need to ensure to do so in a way that will work both in the browser as well as for node JS driven unit tests.
 
 ### Run
@@ -117,3 +118,4 @@
 - **Always run `composer install` before PHP tests, and `npm install` before JS tests.**
 - **Validate all changes by running both PHP and JS tests.**
 - **Review `.github/workflows/` for the latest validation pipeline steps.**
+- Do update the CHANGELOG.md with an ADDED, CHANGED or FIXED list item to the not yet released version on top. New lines get added below the last line that matches the type of your change, but don't mix the types. See earlier releases for guidance on order and wording. If your change addresses an issue, do include the issue ID in brackets at the end. The lines should be short, details are explained in the pull request.
