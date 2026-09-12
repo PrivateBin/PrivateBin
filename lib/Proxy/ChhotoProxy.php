@@ -18,7 +18,7 @@ use PrivateBin\Json;
 /**
  * ChhotoProxy
  *
- * Forwards a URL for shortening to Chhoto URL (lix.sk) and stores the result.
+ * Forwards a URL for shortening to Chhoto URL and stores the result.
  */
 class ChhotoProxy extends AbstractProxy
 {
@@ -83,7 +83,7 @@ class ChhotoProxy extends AbstractProxy
         // Fallback for older versions that return only the slug
         if (!empty($data['shortlink'])) {
             $apiUrl = $this->_getProxyUrl(new Configuration()); // not ideal, but works
-            return $apiUrl' . ltrim($data['shortlink'], '/');
+            return $apiUrl . ltrim($data['shortlink'], '/');
         }
 
         return null;

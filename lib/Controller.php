@@ -15,8 +15,8 @@ use Exception;
 use PrivateBin\Exception\TranslatedException;
 use PrivateBin\Persistence\ServerSalt;
 use PrivateBin\Persistence\TrafficLimiter;
-use PrivateBin\Proxy\ChhotoProxy;
 use PrivateBin\Proxy\AbstractProxy;
+use PrivateBin\Proxy\ChhotoProxy;
 use PrivateBin\Proxy\ShlinkProxy;
 use PrivateBin\Proxy\YourlsProxy;
 

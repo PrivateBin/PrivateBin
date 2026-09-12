@@ -112,7 +112,7 @@ class Configuration
             'apikey'    => '',
             'apiurl'    => '',
         ],
-        'chhoto' => [    
+        'chhoto' => [
             'apikey'    => '',
             'apiurl'    => '',
         ],
