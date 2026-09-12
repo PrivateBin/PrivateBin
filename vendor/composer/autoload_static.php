@@ -136,6 +136,7 @@ class ComposerStaticInitDontChange
         'PrivateBin\\Persistence\\ServerSalt' => __DIR__ . '/../..' . '/lib/Persistence/ServerSalt.php',
         'PrivateBin\\Persistence\\TrafficLimiter' => __DIR__ . '/../..' . '/lib/Persistence/TrafficLimiter.php',
         'PrivateBin\\Proxy\\AbstractProxy' => __DIR__ . '/../..' . '/lib/Proxy/AbstractProxy.php',
+        'PrivateBin\\Proxy\\ChhotoProxy' => __DIR__ . '/../..' . '/lib/Proxy/ChhotoProxy.php',
         'PrivateBin\\Proxy\\ShlinkProxy' => __DIR__ . '/../..' . '/lib/Proxy/ShlinkProxy.php',
         'PrivateBin\\Proxy\\YourlsProxy' => __DIR__ . '/../..' . '/lib/Proxy/YourlsProxy.php',
         'PrivateBin\\Request' => __DIR__ . '/../..' . '/lib/Request.php',
