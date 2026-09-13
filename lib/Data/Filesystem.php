@@ -90,8 +90,12 @@ class Filesystem extends AbstractData
         if (is_file($file)) {
             return false;
         }
-        if (!is_dir($storagedir)) {
-            mkdir($storagedir, 0700, true);
+        if (
+            !is_dir($storagedir) &&
+            !@mkdir($storagedir, 0700, true) &&
+            !is_dir($storagedir)
+        ) {
+            return false;
         }
         return $this->_store($file, $paste);
     }
@@ -190,8 +194,12 @@ class Filesystem extends AbstractData
         if (is_file($file)) {
             return false;
         }
-        if (!is_dir($storagedir)) {
-            mkdir($storagedir, 0700, true);
+        if (
+            !is_dir($storagedir) &&
+            !@mkdir($storagedir, 0700, true) &&
+            !is_dir($storagedir)
+        ) {
+            return false;
         }
         return $this->_store($file, $comment);
     }
@@ -443,7 +451,8 @@ class Filesystem extends AbstractData
         try {
             return $this->_storeString(
                 $filename,
-                self::PROTECTION_LINE . PHP_EOL . Json::encode($data)
+                self::PROTECTION_LINE . PHP_EOL . Json::encode($data),
+                true
             );
         } catch (JsonException $e) {
             error_log('Error while trying to store data to the filesystem at path "' . $filename . '": ' . $e->getMessage());
@@ -457,15 +466,18 @@ class Filesystem extends AbstractData
      * @access public
      * @param  string $filename
      * @param  string $data
+     * @param  bool   $exclusive
      * @return bool
      */
-    private function _storeString($filename, $data)
+    private function _storeString($filename, $data, $exclusive = false)
     {
         // Create storage directory if it does not exist.
-        if (!is_dir($this->_path)) {
-            if (!@mkdir($this->_path, 0700)) {
-                return false;
-            }
+        if (
+            !is_dir($this->_path) &&
+            !@mkdir($this->_path, 0700) &&
+            !is_dir($this->_path)
+        ) {
+            return false;
         }
         $file = $this->_path . DIRECTORY_SEPARATOR . '.htaccess';
         if (!is_file($file)) {
@@ -484,6 +496,29 @@ class Filesystem extends AbstractData
             ) {
                 return false;
             }
+        }
+
+        if ($exclusive) {
+            $handle = @fopen($filename, 'x');
+            if ($handle === false) {
+                return false;
+            }
+            $length       = strlen($data);
+            $writtenBytes = 0;
+            while ($writtenBytes < $length) {
+                $written = @fwrite($handle, substr($data, $writtenBytes));
+                if ($written === false || $written === 0) {
+                    break;
+                }
+                $writtenBytes += $written;
+            }
+            $fileClosed = @fclose($handle);
+            if ($fileClosed === false || $writtenBytes < $length) {
+                @unlink($filename);
+                return false;
+            }
+            chmod($filename, 0640); // protect file from access by other users on the host
+            return true;
         }
 
         $fileCreated  = true;
