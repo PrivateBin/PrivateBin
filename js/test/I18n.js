@@ -14,24 +14,24 @@ describe('I18n', function () {
                 fc.string(),
                 function (messageId) {
                     messageId   = messageId.replace(/%(s|d)/g, '%%');
-                    var plurals = [messageId, messageId + 's'],
-                        fake    = [messageId],
-                        result  = PrivateBin.I18n.translate(messageId);
+                    const plurals = [messageId, messageId + 's'],
+                          fake    = [messageId],
+                          result  = PrivateBin.I18n.translate(messageId);
                     PrivateBin.I18n.reset();
 
-                    var alias = PrivateBin.I18n._(messageId);
+                    const alias = PrivateBin.I18n._(messageId);
                     PrivateBin.I18n.reset();
 
-                    var pluralResult = PrivateBin.I18n.translate(plurals);
+                    const pluralResult = PrivateBin.I18n.translate(plurals);
                     PrivateBin.I18n.reset();
 
-                    var pluralAlias = PrivateBin.I18n._(plurals);
+                    const pluralAlias = PrivateBin.I18n._(plurals);
                     PrivateBin.I18n.reset();
 
-                    var fakeResult = PrivateBin.I18n.translate(fake);
+                    const fakeResult = PrivateBin.I18n.translate(fake);
                     PrivateBin.I18n.reset();
 
-                    var fakeAlias = PrivateBin.I18n._(fake);
+                    const fakeAlias = PrivateBin.I18n._(fake);
                     PrivateBin.I18n.reset();
 
                     if (messageId.indexOf('<a') === -1) {
@@ -177,7 +177,7 @@ describe('I18n', function () {
                 fc.integer(),
                 function(language, n) {
                     PrivateBin.I18n.reset(language);
-                    var result = PrivateBin.I18n.getPluralForm(n);
+                    const result = PrivateBin.I18n.getPluralForm(n);
                     // arabic seems to have the highest plural count with 6 forms
                     return result >= 0 && result <= 5;
                 }
@@ -198,7 +198,7 @@ describe('I18n', function () {
                 common.fcSupportedLanguages(),
                 function(language) {
                     // cleanup
-                    var clean = globalThis.cleanup('', {cookie: ['lang=en']});
+                    let clean = globalThis.cleanup('', {cookie: ['lang=en']});
                     PrivateBin.I18n.reset('en');
                     PrivateBin.I18n.loadTranslations();
                     clean();
@@ -207,9 +207,9 @@ describe('I18n', function () {
                     clean = globalThis.cleanup('', {cookie: ['lang=' + language]});
                     // eslint-disable-next-line global-require
                     PrivateBin.I18n.reset(language, require('../../i18n/' + language + '.json'));
-                    var loadedLang = PrivateBin.I18n.getLanguage(),
-                        result = PrivateBin.I18n.translate('Never'),
-                        alias  = PrivateBin.I18n._('Never');
+                    const loadedLang = PrivateBin.I18n.getLanguage(),
+                          result     = PrivateBin.I18n.translate('Never'),
+                          alias      = PrivateBin.I18n._('Never');
                     clean();
                     return language === loadedLang && result === alias;
                 }
@@ -259,7 +259,7 @@ describe('I18n', function () {
         });
 
         it('should default to en', () => {
-            var clean = globalThis.cleanup('', {url: 'https://privatebin.net/'});
+            const clean = globalThis.cleanup('', {url: 'https://privatebin.net/'});
 
             // when navigator.userLanguage is undefined and no default language
             // is specified, it would throw an error
@@ -274,11 +274,27 @@ describe('I18n', function () {
 
             PrivateBin.I18n.reset('en');
             PrivateBin.I18n.loadTranslations();
-            var result = PrivateBin.I18n.translate('Never'),
-                alias  = PrivateBin.I18n._('Never');
+            const result = PrivateBin.I18n.translate('Never'),
+                  alias  = PrivateBin.I18n._('Never');
 
             clean();
             return 'Never' === result && 'Never' === alias;
+        });
+    });
+
+    describe('onLanguageLoaded', function () {
+        before(function () {
+            PrivateBin.I18n.reset();
+        });
+
+        it('invokes the callback when the languageLoaded event is dispatched', function () {
+            let called = false;
+            PrivateBin.I18n.onLanguageLoaded(function () {
+                called = true;
+            });
+            assert.strictEqual(called, false);
+            document.dispatchEvent(new CustomEvent('languageLoaded'));
+            assert.strictEqual(called, true);
         });
     });
 });
