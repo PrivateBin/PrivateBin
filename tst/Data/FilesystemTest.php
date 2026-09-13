@@ -109,6 +109,30 @@ class FilesystemTest extends TestCase
         }
     }
 
+    public function testPasteEnumerationValidatesFilenameAndShard()
+    {
+        $pasteid = Helper::getPasteId();
+        $paste   = Helper::getPaste();
+        $this->assertTrue($this->_model->create($pasteid, $paste));
+        $path = $this->_path . DIRECTORY_SEPARATOR . substr($pasteid, 0, 2) .
+            DIRECTORY_SEPARATOR . substr($pasteid, 2, 2) . DIRECTORY_SEPARATOR;
+        file_put_contents($path . $pasteid . '.php.bak', '{}');
+        file_put_contents($path . $pasteid . 'extra', '{}');
+        file_put_contents($path . 'ffffffffffffffff.php', '{}');
+
+        $legacyid   = 'aaaaaaaaaaaaaaaa';
+        $legacyPath = $this->_path . DIRECTORY_SEPARATOR . 'aa' .
+            DIRECTORY_SEPARATOR . 'aa' . DIRECTORY_SEPARATOR;
+        mkdir($legacyPath, 0700, true);
+        file_put_contents($legacyPath . $legacyid, '{}');
+
+        $expected = [$pasteid, $legacyid];
+        $actual   = $this->_model->getAllPastes();
+        sort($expected);
+        sort($actual);
+        $this->assertSame($expected, $actual);
+    }
+
     public function testErrorDetection()
     {
         $error_log_setting = ini_get('error_log');

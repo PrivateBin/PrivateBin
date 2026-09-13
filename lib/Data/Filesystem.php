@@ -388,7 +388,20 @@ class Filesystem extends AbstractData
         $pastes = [];
         foreach (new GlobIterator($this->_path . self::PASTE_FILE_PATTERN) as $file) {
             if ($file->isFile()) {
-                $pastes[] = $file->getBasename('.php');
+                if (
+                    preg_match('/\A([a-f0-9]{16})(?:\.php)?\z/', $file->getFilename(), $matches) !== 1
+                ) {
+                    continue;
+                }
+                $pasteid = $matches[1];
+                $path    = $file->getPath();
+                if (
+                    basename($path) !== substr($pasteid, 2, 2) ||
+                    basename(dirname($path)) !== substr($pasteid, 0, 2)
+                ) {
+                    continue;
+                }
+                $pastes[] = $pasteid;
             }
         }
         return $pastes;
