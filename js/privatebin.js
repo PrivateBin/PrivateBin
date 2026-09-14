@@ -946,6 +946,27 @@ window.PrivateBin = (function () {
         };
 
         /**
+         * Register a callback to be invoked when translations have been loaded.
+         *
+         * This is useful for code that needs to re-apply translated strings to
+         * DOM attributes (e.g. title attributes) that cannot be handled by
+         * I18n.translate's built-in element re-translation mechanism (which only
+         * sets textContent/innerHTML).
+         *
+         * Note: If translations are already loaded when this is called, the
+         * callback will not be invoked. Callers should apply the translation
+         * immediately as well, to cover the case where the language is already
+         * available.
+         *
+         * @name   I18n.onLanguageLoaded
+         * @function
+         * @param     {function} callback - function to call when language is loaded
+         */
+        me.onLanguageLoaded = function (callback) {
+            document.addEventListener(languageLoadedEvent, callback);
+        };
+
+        /**
          * resets state, used for unit testing
          *
          * @name   I18n.reset
@@ -3628,7 +3649,18 @@ window.PrivateBin = (function () {
             // if an avatar is available, display it
             const icon = comment.getIcon();
             if (icon) {
+                const iconTitle = 'Avatar generated from IP address';
                 const image = document.createElement('img');
+                // Set the title immediately with the current translation. If
+                // the language has not been loaded yet, this will fall back to
+                // English, so we also register a callback to re-apply the
+                // translation once available. To avoid a race condition, we
+                // register the callback first, then translate - if the language
+                // loads between the two lines, both will set the translated text.
+                I18n.onLanguageLoaded(function () {
+                    image.setAttribute('title', I18n._(iconTitle));
+                });
+                image.setAttribute('title', I18n._(iconTitle));
                 image.setAttribute('src', icon);
                 image.setAttribute('class', 'vizhash');
                 const nickSpan = commentEntry.querySelector('span.nickname');
@@ -5525,16 +5557,6 @@ window.PrivateBin = (function () {
                         plaintexts[i][1]
                     );
                 }
-
-                document.addEventListener(I18n.languageLoadedEvent, function () {
-                    const commentContainer = document.getElementById('commentcontainer');
-                    if (!commentContainer) {
-                        return;
-                    }
-
-                    commentContainer.querySelectorAll('img.vizhash')
-                        .forEach(img => img.setAttribute('title', I18n._('Avatar generated from IP address')));
-                });
             });
         }
 
