@@ -4164,15 +4164,29 @@ window.PrivateBin = (function () {
         }
 
         /**
+         * Template Email subject.
+         *
+         * Reuses the same translated string as the page's social media
+         * preview title, so no new translations are required.
+         *
+         * @name   TopNav.templateEmailSubject
+         * @private
+         */
+        function templateEmailSubject() {
+            return I18n._('Encrypted note on %s', document.title);
+        }
+
+        /**
          * Trigger Email send.
          *
          * @name   TopNav.triggerEmailSend
          * @private
+         * @param {string} subject
          * @param {string} emailBody
          */
-        function triggerEmailSend(emailBody) {
+        function triggerEmailSend(subject, emailBody) {
             window.open(
-                `mailto:?body=${encodeURIComponent(emailBody)}`,
+                `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(emailBody)}`,
                 '_self',
                 'noopener, noreferrer'
             );
@@ -4214,7 +4228,7 @@ window.PrivateBin = (function () {
                     if (bootstrap5EmailConfirmModal) {
                         bootstrap5EmailConfirmModal.hide();
                     }
-                    triggerEmailSend(emailBody);
+                    triggerEmailSend(templateEmailSubject(), emailBody);
                 }
 
                 emailconfirmmodal.addEventListener('shown.bs.modal', () => {
@@ -4232,7 +4246,7 @@ window.PrivateBin = (function () {
                     bootstrap5EmailConfirmModal.show();
                 }
             } else {
-                triggerEmailSend(templateEmailBody(null, isBurnafterreading));
+                triggerEmailSend(templateEmailSubject(), templateEmailBody(null, isBurnafterreading));
             }
         }
 
