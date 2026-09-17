@@ -4164,19 +4164,6 @@ window.PrivateBin = (function () {
         }
 
         /**
-         * Template Email subject.
-         *
-         * Reuses the same translated string as the page's social media
-         * preview title, so no new translations are required.
-         *
-         * @name   TopNav.templateEmailSubject
-         * @private
-         */
-        function templateEmailSubject() {
-            return I18n._('Encrypted note on %s', document.title);
-        }
-
-        /**
          * Trigger Email send.
          *
          * @name   TopNav.triggerEmailSend
@@ -4210,6 +4197,9 @@ window.PrivateBin = (function () {
             );
             expirationDateRoundedToSecond.setUTCSeconds(0);
 
+            // reused as-is by both the confirmation-modal and direct-send paths below
+            const emailSubject = I18n._('Encrypted note on %s', document.title);
+
             const emailconfirmmodal = document.getElementById('emailconfirmmodal');
             if (expirationDate !== null) {
                 const emailconfirmTimezoneCurrent = emailconfirmmodal.querySelector('#emailconfirm-timezone-current');
@@ -4228,7 +4218,7 @@ window.PrivateBin = (function () {
                     if (bootstrap5EmailConfirmModal) {
                         bootstrap5EmailConfirmModal.hide();
                     }
-                    triggerEmailSend(templateEmailSubject(), emailBody);
+                    triggerEmailSend(emailSubject, emailBody);
                 }
 
                 emailconfirmmodal.addEventListener('shown.bs.modal', () => {
@@ -4246,7 +4236,7 @@ window.PrivateBin = (function () {
                     bootstrap5EmailConfirmModal.show();
                 }
             } else {
-                triggerEmailSend(templateEmailSubject(), templateEmailBody(null, isBurnafterreading));
+                triggerEmailSend(emailSubject, templateEmailBody(null, isBurnafterreading));
             }
         }
 
