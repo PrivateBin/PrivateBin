@@ -993,28 +993,6 @@ window.PrivateBin = (function () {
         const base58 = new baseX('123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz');
 
         /**
-         * convert UTF-8 string stored in a DOMString to a standard UTF-16 DOMString
-         *
-         * Iterates over the bytes of the message, converting them all hexadecimal
-         * percent encoded representations, then URI decodes them all
-         *
-         * @name   CryptTool.utf8To16
-         * @function
-         * @private
-         * @param  {string} message UTF-8 string
-         * @return {string} UTF-16 string
-         */
-        function utf8To16(message) {
-            return decodeURIComponent(
-                message.split('').map(
-                    function (character) {
-                        return '%' + ('00' + character.charCodeAt(0).toString(16)).slice(-2);
-                    }
-                ).join('')
-            );
-        }
-
-        /**
          * convert DOMString (UTF-16) to a UTF-8 string stored in a DOMString
          *
          * URI encodes the message, then finds the percent encoded characters
@@ -1120,9 +1098,7 @@ window.PrivateBin = (function () {
                     new Uint8Array(data)
                 ).buffer;
             }
-            return utf8To16(
-                arraybufferToString(data)
-            );
+            return new TextDecoder('utf-8', {fatal: true}).decode(data);
         }
 
         /**

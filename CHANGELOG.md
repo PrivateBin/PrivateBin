@@ -8,6 +8,7 @@
 * CHANGED: Removed the unmaintained js-verify and replaced it with fast-check library.
 * CHANGED: Added a `jsconfig.json` in order to check the types of JavaScript.
 * CHANGED: Removed support for Bootstrap 3 as it requires jQuery.
+* FIXED: Decode decompressed documents with `TextDecoder` instead of `utf8To16()`, which allocated ~3.4 GB for a 100 MB document and killed the tab (#2027)
 * FIXED: Prevent browsers guessing MIME types on JSON(LD) API responses (#164)
 * FIXED: Insert quoted base path into JSON-LD documents
 
