@@ -81,10 +81,20 @@ function makeWindowOpenMock() {
 }
 
 
-// Extract and decode the body from a "mailto:?body=..." URL.
+// Extract and decode the body from a "mailto:?subject=...&body=..." URL.
 function extractMailtoBody(mailtoUrl) {
-    assert.match(mailtoUrl, /^mailto:\?body=/, 'expected a mailto:?body= URL');
-    return decodeURIComponent(mailtoUrl.replace(/^mailto:\?body=/, ''));
+    assert.match(mailtoUrl, /^mailto:\?/, 'expected a mailto: URL');
+    const match = mailtoUrl.match(/[?&]body=([^&]*)/);
+    assert.ok(match, 'expected the mailto: URL to have a body= parameter');
+    return decodeURIComponent(match[1]);
+}
+
+// Extract and decode the subject from a "mailto:?subject=...&body=..." URL.
+function extractMailtoSubject(mailtoUrl) {
+    assert.match(mailtoUrl, /^mailto:\?/, 'expected a mailto: URL');
+    const match = mailtoUrl.match(/[?&]subject=([^&]*)/);
+    assert.ok(match, 'expected the mailto: URL to have a subject= parameter');
+    return decodeURIComponent(match[1]);
 }
 
 describe('Email - mail body content (short URL vs. fallback)', function () {
@@ -161,6 +171,82 @@ describe('Email - mail body content (short URL vs. fallback)', function () {
                 /only be accessed once/,
                 'email body must use the viewed paste metadata'
             );
+        } finally {
+            restore();
+        }
+    });
+});
+
+describe('Email - mail subject', function () {
+    beforeEach(function () {
+        cleanup(); // provided by common
+    });
+
+    it('Includes a non-empty subject naming the instance, with no expiration confirmation step', function () {
+        buildEmailDomNoShortUrl();
+        // buildEmailDomNoShortUrl() replaces documentElement.innerHTML (dropping <title>),
+        // so document.title must be (re-)set after calling it, not before.
+        document.title = 'My PrivateBin Instance';
+        PrivateBin.TopNav.init();
+        PrivateBin.TopNav.showEmailButton(0);
+
+        const { getUrl, restore } = makeWindowOpenMock();
+        try {
+            document.getElementById('emaillink').click();
+
+            const openedUrl = getUrl();
+            assert.ok(openedUrl, 'window.open should have been called');
+
+            const subject = extractMailtoSubject(openedUrl);
+            assert.match(subject, /My PrivateBin Instance/, 'subject should name the instance');
+        } finally {
+            restore();
+        }
+    });
+
+    it('Includes the same subject after the expiration confirmation step', function () {
+        buildEmailDomWithShortUrl();
+        document.title = 'My PrivateBin Instance';
+        PrivateBin.TopNav.init();
+        // a non-zero remaining time routes through the timezone confirmation modal
+        PrivateBin.TopNav.showEmailButton(3600);
+
+        const { getUrl, restore } = makeWindowOpenMock();
+        try {
+            document.getElementById('emaillink').click();
+            document.getElementById('emailconfirm-timezone-current').click();
+
+            const openedUrl = getUrl();
+            assert.ok(openedUrl, 'window.open should have been called');
+
+            const subject = extractMailtoSubject(openedUrl);
+            assert.match(subject, /My PrivateBin Instance/, 'subject should name the instance');
+        } finally {
+            restore();
+        }
+    });
+
+    it('Percent-encodes the subject so a space-containing instance name does not break the mailto URL', function () {
+        buildEmailDomNoShortUrl();
+        document.title = 'My Cool Instance';
+        PrivateBin.TopNav.init();
+        PrivateBin.TopNav.showEmailButton(0);
+
+        const { getUrl, restore } = makeWindowOpenMock();
+        try {
+            document.getElementById('emaillink').click();
+
+            const openedUrl = getUrl();
+            const rawSubjectParam = openedUrl.split('&body=')[0];
+            assert.strictEqual(
+                rawSubjectParam,
+                `mailto:?subject=${encodeURIComponent('Encrypted note on My Cool Instance')}`,
+                'raw subject parameter should be exactly the encoded translated string'
+            );
+            assert.doesNotMatch(rawSubjectParam, / /, 'raw mailto URL must not contain a literal space');
+
+            const subject = extractMailtoSubject(openedUrl);
+            assert.strictEqual(subject, 'Encrypted note on My Cool Instance', 'decoded subject should round-trip exactly');
         } finally {
             restore();
         }

@@ -4168,11 +4168,12 @@ window.PrivateBin = (function () {
          *
          * @name   TopNav.triggerEmailSend
          * @private
+         * @param {string} subject
          * @param {string} emailBody
          */
-        function triggerEmailSend(emailBody) {
+        function triggerEmailSend(subject, emailBody) {
             window.open(
-                `mailto:?body=${encodeURIComponent(emailBody)}`,
+                `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(emailBody)}`,
                 '_self',
                 'noopener, noreferrer'
             );
@@ -4196,6 +4197,9 @@ window.PrivateBin = (function () {
             );
             expirationDateRoundedToSecond.setUTCSeconds(0);
 
+            // reused as-is by both the confirmation-modal and direct-send paths below
+            const emailSubject = I18n._('Encrypted note on %s', document.title);
+
             const emailconfirmmodal = document.getElementById('emailconfirmmodal');
             if (expirationDate !== null) {
                 const emailconfirmTimezoneCurrent = emailconfirmmodal.querySelector('#emailconfirm-timezone-current');
@@ -4214,7 +4218,7 @@ window.PrivateBin = (function () {
                     if (bootstrap5EmailConfirmModal) {
                         bootstrap5EmailConfirmModal.hide();
                     }
-                    triggerEmailSend(emailBody);
+                    triggerEmailSend(emailSubject, emailBody);
                 }
 
                 emailconfirmmodal.addEventListener('shown.bs.modal', () => {
@@ -4232,7 +4236,7 @@ window.PrivateBin = (function () {
                     bootstrap5EmailConfirmModal.show();
                 }
             } else {
-                triggerEmailSend(templateEmailBody(null, isBurnafterreading));
+                triggerEmailSend(emailSubject, templateEmailBody(null, isBurnafterreading));
             }
         }
 
