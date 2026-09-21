@@ -39,6 +39,30 @@ class RequestTest extends TestCase
         $this->assertEquals('view', $request->getOperation());
     }
 
+    /**
+     * @dataProvider provideRequestUris
+     */
+    public function testRequestUriValidation($uri, $expected)
+    {
+        $this->reset();
+        if ($uri !== null) {
+            $_SERVER['REQUEST_URI'] = $uri;
+        }
+        $request = new Request;
+        $this->assertSame($expected, $request->getRequestUri());
+    }
+
+    public function provideRequestUris()
+    {
+        return [
+            [null, '/'],
+            ['/', '/'],
+            ['/path/to/privatebin?query=value', '/path/to/privatebin'],
+            ['?query=value', '/'],
+            ['http://[', '/'],
+        ];
+    }
+
     public function testRead()
     {
         $this->reset();
