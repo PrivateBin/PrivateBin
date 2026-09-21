@@ -203,7 +203,7 @@ class TrafficLimiter extends AbstractPersistence
         $now  = time();
         $tl   = (int) self::$_store->getValue('traffic_limiter', $hash);
         self::$_store->purgeValues('traffic_limiter', $now - self::$_limit);
-        if ($tl === 0 || ($tl + self::$_limit) < $now) {
+        if ($tl === 0 || ($tl + self::$_limit) <= $now) {
             if (!self::$_store->setValue((string) $now, 'traffic_limiter', $hash)) {
                 error_log('failed to store the traffic limiter, it probably contains outdated information');
             }

@@ -9,13 +9,18 @@ class TrafficLimiterTest extends TestCase
 {
     private $_path;
 
+    private $_store;
+
     public function setUp(): void
     {
         /* Setup Routine */
-        $this->_path = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'trafficlimit';
-        $store       = new Filesystem(['dir' => $this->_path]);
-        ServerSalt::setStore($store);
-        TrafficLimiter::setStore($store);
+        $this->_path  = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'trafficlimit';
+        $this->_store = new Filesystem(['dir' => $this->_path]);
+        ServerSalt::setStore($this->_store);
+        TrafficLimiter::setStore($this->_store);
+        TrafficLimiter::setCreators(null);
+        TrafficLimiter::setExempted(null);
+        TrafficLimiter::setLimit(4);
     }
 
     public function tearDown(): void
@@ -54,6 +59,15 @@ class TrafficLimiterTest extends TestCase
         } catch (Exception $e) {
             $this->assertEquals($e->getMessage(), 'Please wait 4 seconds between each post.', 'fifth request is to fast, may not pass');
         }
+    }
+
+    public function testTrafficPassesAtExactLimitBoundary()
+    {
+        TrafficLimiter::setLimit(10);
+        $_SERVER['REMOTE_ADDR']  = '127.0.0.1';
+        $hash                    = TrafficLimiter::getHash('sha256');
+        $this->_store->setValue((string) (time() - 10), 'traffic_limiter', $hash);
+        $this->assertTrue(TrafficLimiter::canPass());
     }
 
     public function testTrafficLimitExempted()
