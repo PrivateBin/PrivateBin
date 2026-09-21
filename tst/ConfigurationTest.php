@@ -114,6 +114,21 @@ class ConfigurationTest extends TestCase
         $this->assertEquals($original_options, $conf->get(), 'incorrect types are corrected');
     }
 
+    public function testHandleWrongOptionShapes()
+    {
+        file_put_contents(
+            CONF,
+            '[main]' . PHP_EOL .
+            'discussion[] = true' . PHP_EOL .
+            'availabletemplates = "bootstrap5"' . PHP_EOL .
+            '[model]' . PHP_EOL .
+            '[model_options]'
+        );
+        $conf = new Configuration;
+        $this->assertSame($this->_options['main']['discussion'], $conf->getKey('discussion'));
+        $this->assertSame($this->_options['main']['availabletemplates'], $conf->getKey('availabletemplates'));
+    }
+
     public function testHandleMissingSubKeys()
     {
         $options = $this->_options;
