@@ -43,8 +43,6 @@ class NumberInChunks
     }
 
     /**
-     * @throws \InvalidArgumentException if $other has a $chunkSize that's not the same as the $chunkSize of this
-     *
      * @return \IPLib\Service\NumberInChunks
      */
     public function negate()
@@ -53,7 +51,7 @@ class NumberInChunks
     }
 
     /**
-     * @throws \InvalidArgumentException if $other has a $chunkSize that's not the same as the $chunkSize of this
+     * @throws \InvalidArgumentException if $that has a $chunkSize that's not the same as the $chunkSize of this
      *
      * @return \IPLib\Service\NumberInChunks
      */
