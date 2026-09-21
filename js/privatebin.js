@@ -993,27 +993,6 @@ window.PrivateBin = (function () {
         const base58 = new baseX('123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz');
 
         /**
-         * convert DOMString (UTF-16) to a UTF-8 string stored in a DOMString
-         *
-         * URI encodes the message, then finds the percent encoded characters
-         * and transforms these hexadecimal representation back into bytes
-         *
-         * @name   CryptTool.utf16To8
-         * @function
-         * @private
-         * @param  {string} message UTF-16 string
-         * @return {string} UTF-8 string
-         */
-        function utf16To8(message) {
-            return encodeURIComponent(message).replace(
-                /%([0-9A-F]{2})/g,
-                function (match, hexCharacter) {
-                    return String.fromCharCode('0x' + hexCharacter);
-                }
-            );
-        }
-
-        /**
          * convert ArrayBuffer into a UTF-8 string
          *
          * Iterates over the bytes of the array, catenating them into a string
@@ -1064,9 +1043,7 @@ window.PrivateBin = (function () {
          * @return {ArrayBuffer} data
          */
         async function compress(message, mode, zlib) {
-            message = stringToArraybuffer(
-                utf16To8(message)
-            );
+            message = new TextEncoder().encode(message);
             if (mode === 'zlib') {
                 if (typeof zlib === 'undefined') {
                     throw new Error('Error compressing document, due to missing WebAssembly support.');
