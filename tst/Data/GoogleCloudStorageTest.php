@@ -111,6 +111,33 @@ class GoogleCloudStorageTest extends TestCase
         }
     }
 
+    public function testPurgeHonorsBatchSize()
+    {
+        $expired = Helper::getPaste(['expire_date' => 1344803344]);
+        $ids     = [
+            'aaaaaaaaaaaaaaaa',
+            'bbbbbbbbbbbbbbbb',
+            'cccccccccccccccc',
+        ];
+        foreach ($ids as $id) {
+            $this->assertTrue($this->_model->create($id, $expired));
+        }
+        foreach (['not-a-paste', 'aaaaaaaaaaaaaaaa.backup'] as $name) {
+            self::$_bucket->upload('{}', [
+                'name'     => 'pastes/' . $name,
+                'metadata' => ['metadata' => ['expire_date' => '1']],
+            ]);
+        }
+        $this->assertSame($ids, $this->_model->getAllPastes());
+
+        $this->_model->purge(2);
+
+        $remaining = array_filter($ids, function ($id) {
+            return $this->_model->exists($id);
+        });
+        $this->assertCount(1, $remaining);
+    }
+
     public function testErrorDetection()
     {
         $this->_model->delete(Helper::getPasteId());
@@ -182,5 +209,33 @@ class GoogleCloudStorageTest extends TestCase
 
         $this->_model->purgeValues('traffic_limiter', time() + 60);
         $this->assertEquals('', $this->_model->getValue('traffic_limiter', $client));
+    }
+
+    public function testKeyValueStoreHonorsPrefix()
+    {
+        $other = new GoogleCloudStorage([
+            'bucket' => self::$_bucket->name(),
+            'prefix' => 'other',
+        ]);
+
+        $this->assertTrue($this->_model->setValue('first salt', 'salt'));
+        $this->assertTrue($other->setValue('second salt', 'salt'));
+        $this->assertSame('first salt', $this->_model->getValue('salt'));
+        $this->assertSame('second salt', $other->getValue('salt'));
+
+        $this->assertTrue($this->_model->setValue('1', 'traffic_limiter', 'client'));
+        $this->assertTrue($other->setValue('2', 'traffic_limiter', 'client'));
+        $this->_model->purgeValues('traffic_limiter', 2);
+        $this->assertSame('', $this->_model->getValue('traffic_limiter', 'client'));
+        $this->assertSame('2', $other->getValue('traffic_limiter', 'client'));
+    }
+
+    public function testKeyValueStoreMigratesLegacyConfig()
+    {
+        self::$_bucket->upload('legacy salt', ['name' => 'config/salt']);
+
+        $this->assertSame('legacy salt', $this->_model->getValue('salt'));
+        self::$_bucket->object('config/salt')->delete();
+        $this->assertSame('legacy salt', $this->_model->getValue('salt'));
     }
 }

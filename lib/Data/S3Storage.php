@@ -428,16 +428,20 @@ class S3Storage extends AbstractData
 
         try {
             foreach ($this->_listAllObjects($prefix) as $object) {
+                $candidate = substr($object['Key'], strlen($prefix));
+                if (preg_match('/\A[a-f0-9]{16}\z/', $candidate) !== 1) {
+                    continue;
+                }
                 $head = $this->_client->headObject([
                     'Bucket' => $this->_bucket,
                     'Key'    => $object['Key'],
                 ]);
                 $expire_at = $head->get('Metadata')['expire_date'] ?? '';
                 if (is_numeric($expire_at) && intval($expire_at) < $now) {
-                    array_push($expired, $object['Key']);
+                    array_push($expired, $candidate);
                 }
 
-                if (count($expired) > $batchsize) {
+                if (count($expired) >= $batchsize) {
                     break;
                 }
             }
@@ -461,7 +465,7 @@ class S3Storage extends AbstractData
         try {
             foreach ($this->_listAllObjects($prefix) as $object) {
                 $candidate = substr($object['Key'], strlen($prefix));
-                if (!str_contains($candidate, '/')) {
+                if (preg_match('/\A[a-f0-9]{16}\z/', $candidate) === 1) {
                     $pastes[] = $candidate;
                 }
             }
