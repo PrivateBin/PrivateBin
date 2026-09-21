@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
 use Google\Cloud\Core\Exception\BadRequestException;
+use Google\Cloud\Core\Exception\FailedPreconditionException;
 use Google\Cloud\Core\Exception\NotFoundException;
 use Google\Cloud\Storage\Bucket;
 use Google\Cloud\Storage\Connection\ConnectionInterface;
@@ -411,6 +412,12 @@ class BucketStub extends Bucket
     {
         if (!is_string($data) || !array_key_exists('name', $options)) {
             throw new BadMethodCallException('not supported by this stub');
+        }
+        if (
+            ($options['ifGenerationMatch'] ?? null) === 0 &&
+            array_key_exists($options['name'], $this->_objects)
+        ) {
+            throw new FailedPreconditionException('object already exists');
         }
 
         $name                             = $options['name'];
