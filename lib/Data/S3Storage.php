@@ -284,16 +284,41 @@ class S3Storage extends AbstractData
         try {
             $entries = $this->_listAllObjects($prefix);
             foreach ($entries as $entry) {
-                $object = $this->_client->getObject([
-                    'Bucket' => $this->_bucket,
-                    'Key'    => $entry['Key'],
-                ]);
-                $data             = $object['Body']->getContents();
-                $body             = JSON::decode($data);
-                $items            = explode('/', $entry['Key']);
-                $body['id']       = $items[3];
-                $body['parentid'] = $items[2];
-                $slot             = $this->getOpenSlot($comments, (int) $object['Metadata']['created']);
+                $items = explode('/', substr($entry['Key'], strlen($prefix)));
+                if (
+                    count($items) !== 2 ||
+                    preg_match('/\A[a-f0-9]{16}\z/', $items[0]) !== 1 ||
+                    preg_match('/\A[a-f0-9]{16}\z/', $items[1]) !== 1
+                ) {
+                    continue;
+                }
+                try {
+                    $object = $this->_client->getObject([
+                        'Bucket' => $this->_bucket,
+                        'Key'    => $entry['Key'],
+                    ]);
+                    $data = $object['Body']->getContents();
+                } catch (S3Exception $e) {
+                    continue;
+                }
+                try {
+                    $body = Json::decode($data);
+                } catch (JsonException $e) {
+                    error_log('failed to read comment from ' . $entry['Key'] . ', ' . $e->getMessage());
+                    continue;
+                }
+                $created = $object['Metadata']['created'] ?? null;
+                if (
+                    !is_array($body) ||
+                    !isset($body['meta']) ||
+                    !is_array($body['meta']) ||
+                    !is_numeric($created)
+                ) {
+                    continue;
+                }
+                $body['id']       = $items[1];
+                $body['parentid'] = $items[0];
+                $slot             = $this->getOpenSlot($comments, (int) $created);
                 $comments[$slot]  = $body;
             }
         } catch (S3Exception $e) {
