@@ -3,12 +3,17 @@
 ## 2.1.0 (not yet released)
 * ADDED: Added `shortenviachhoto` endpoint with an `chhoto` configuration section
 * ADDED: Translation for Chinese (Traditional)
+* ADDED: Subject line to the "Email" share button's mailto link (#928)
 * CHANGED: We removed jQuery in the Frontend and replaced it with vanilla JS.
 * CHANGED: Removed the unmaintained js-verify and replaced it with fast-check library.
 * CHANGED: Added a `jsconfig.json` in order to check the types of JavaScript.
 * CHANGED: Removed support for Bootstrap 3 as it requires jQuery.
+* CHANGED: Encode documents with `TextEncoder` in `compress()`, instead of the `utf16To8()` percent-encoding round trip, which allocated ~20 times the payload
+* CHANGED: Upgrading libraries to: ip-lib 1.22.1
+* FIXED: Decode decompressed documents with `TextDecoder` instead of `utf8To16()`, which allocated ~3.4 GB for a 100 MB document and killed the tab (#2027)
 * FIXED: Prevent browsers guessing MIME types on JSON(LD) API responses (#164)
 * FIXED: Insert quoted base path into JSON-LD documents
+* FIXED: Several potential issues in handling comment files (#1901)
 
 ## 2.0.6 (2026-08-08)
 * CHANGED: Stricter MIME type validation, divergent files get no preview and forced download link

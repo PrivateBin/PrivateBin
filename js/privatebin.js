@@ -1014,49 +1014,6 @@ window.PrivateBin = (function () {
         const base58 = new baseX('123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz');
 
         /**
-         * convert UTF-8 string stored in a DOMString to a standard UTF-16 DOMString
-         *
-         * Iterates over the bytes of the message, converting them all hexadecimal
-         * percent encoded representations, then URI decodes them all
-         *
-         * @name   CryptTool.utf8To16
-         * @function
-         * @private
-         * @param  {string} message UTF-8 string
-         * @return {string} UTF-16 string
-         */
-        function utf8To16(message) {
-            return decodeURIComponent(
-                message.split('').map(
-                    function (character) {
-                        return '%' + ('00' + character.charCodeAt(0).toString(16)).slice(-2);
-                    }
-                ).join('')
-            );
-        }
-
-        /**
-         * convert DOMString (UTF-16) to a UTF-8 string stored in a DOMString
-         *
-         * URI encodes the message, then finds the percent encoded characters
-         * and transforms these hexadecimal representation back into bytes
-         *
-         * @name   CryptTool.utf16To8
-         * @function
-         * @private
-         * @param  {string} message UTF-16 string
-         * @return {string} UTF-8 string
-         */
-        function utf16To8(message) {
-            return encodeURIComponent(message).replace(
-                /%([0-9A-F]{2})/g,
-                function (match, hexCharacter) {
-                    return String.fromCharCode('0x' + hexCharacter);
-                }
-            );
-        }
-
-        /**
          * convert ArrayBuffer into a UTF-8 string
          *
          * Iterates over the bytes of the array, catenating them into a string
@@ -1107,9 +1064,7 @@ window.PrivateBin = (function () {
          * @return {ArrayBuffer} data
          */
         async function compress(message, mode, zlib) {
-            message = stringToArraybuffer(
-                utf16To8(message)
-            );
+            message = new TextEncoder().encode(message);
             if (mode === 'zlib') {
                 if (typeof zlib === 'undefined') {
                     throw new Error('Error compressing document, due to missing WebAssembly support.');
@@ -1141,9 +1096,7 @@ window.PrivateBin = (function () {
                     new Uint8Array(data)
                 ).buffer;
             }
-            return utf8To16(
-                arraybufferToString(data)
-            );
+            return new TextDecoder('utf-8', {fatal: true}).decode(data);
         }
 
         /**
@@ -4200,11 +4153,12 @@ window.PrivateBin = (function () {
          *
          * @name   TopNav.triggerEmailSend
          * @private
+         * @param {string} subject
          * @param {string} emailBody
          */
-        function triggerEmailSend(emailBody) {
+        function triggerEmailSend(subject, emailBody) {
             window.open(
-                `mailto:?body=${encodeURIComponent(emailBody)}`,
+                `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(emailBody)}`,
                 '_self',
                 'noopener, noreferrer'
             );
@@ -4228,6 +4182,9 @@ window.PrivateBin = (function () {
             );
             expirationDateRoundedToSecond.setUTCSeconds(0);
 
+            // reused as-is by both the confirmation-modal and direct-send paths below
+            const emailSubject = I18n._('Encrypted note on %s', document.title);
+
             const emailconfirmmodal = document.getElementById('emailconfirmmodal');
             if (expirationDate !== null) {
                 const emailconfirmTimezoneCurrent = emailconfirmmodal.querySelector('#emailconfirm-timezone-current');
@@ -4246,7 +4203,7 @@ window.PrivateBin = (function () {
                     if (bootstrap5EmailConfirmModal) {
                         bootstrap5EmailConfirmModal.hide();
                     }
-                    triggerEmailSend(emailBody);
+                    triggerEmailSend(emailSubject, emailBody);
                 }
 
                 emailconfirmmodal.addEventListener('shown.bs.modal', () => {
@@ -4264,7 +4221,7 @@ window.PrivateBin = (function () {
                     bootstrap5EmailConfirmModal.show();
                 }
             } else {
-                triggerEmailSend(templateEmailBody(null, isBurnafterreading));
+                triggerEmailSend(emailSubject, templateEmailBody(null, isBurnafterreading));
             }
         }
 
