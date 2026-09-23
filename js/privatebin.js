@@ -492,11 +492,9 @@ window.PrivateBin = (function () {
             const name = cname + '=',
                 ca = document.cookie.split(';');
             for (let i = 0; i < ca.length; ++i) {
-                let c = ca[i];
-                while (c.charAt(0) === ' ') {
-                    c = c.substring(1);
-                }
-                if (c.indexOf(name) === 0) {
+                let c = ca[i].trim();
+                if (c.startsWith(name))
+                {
                     return c.substring(name.length, c.length);
                 }
             }
@@ -667,7 +665,7 @@ window.PrivateBin = (function () {
          * @prop   {string[]}
          * @readonly
          */
-        const supportedLanguages = ['ar', 'bg', 'ca', 'co', 'cs', 'de', 'el', 'es', 'et', 'fa', 'fi', 'fr', 'he', 'hu', 'id', 'it', 'ja', 'jbo', 'lt', 'no', 'nl', 'pl', 'pt', 'oc', 'ro', 'ru', 'sk', 'sl', 'sv', 'th', 'tr', 'uk', 'zh'];
+        const supportedLanguages = ['ar', 'bg', 'ca', 'co', 'cs', 'de', 'el', 'es', 'et', 'fa', 'fi', 'fr', 'he', 'hu', 'id', 'it', 'ja', 'jbo', 'lt', 'no', 'nl', 'pl', 'pt', 'oc', 'ro', 'ru', 'sk', 'sl', 'sv', 'th', 'tr', 'uk', 'zh', 'zh-tw'];
 
         /**
          * built in language
@@ -857,6 +855,7 @@ window.PrivateBin = (function () {
                 case 'oc':
                 case 'tr':
                 case 'zh':
+                case 'zh-tw':
                     return n > 1 ? 1 : 0;
                 case 'he':
                     return n === 1 ? 0 : (n === 2 ? 1 : ((n < 0 || n > 10) && (n % 10 === 0) ? 2 : 3));
@@ -893,8 +892,16 @@ window.PrivateBin = (function () {
 
             // auto-select language based on browser settings
             if (newLanguage.length === 0) {
-                newLanguage = (navigator.language || navigator.userLanguage || 'en');
-                if (newLanguage.indexOf('-') > 0) {
+                newLanguage = (navigator.language || navigator.userLanguage || 'en').toLowerCase();
+                const isTraditionalChinese = newLanguage.startsWith('zh-tw-') ||
+                    newLanguage === 'zh-hant' || newLanguage.startsWith('zh-hant-') ||
+                    newLanguage === 'zh-hk' || newLanguage.startsWith('zh-hk-') ||
+                    newLanguage === 'zh-mo' || newLanguage.startsWith('zh-mo-');
+                // alias Traditional Chinese browser tags to PrivateBin's zh-tw locale;
+                // otherwise try the full tag and fall back to the base language
+                if (isTraditionalChinese && supportedLanguages.includes('zh-tw')) {
+                    newLanguage = 'zh-tw';
+                } else if (!supportedLanguages.includes(newLanguage) && newLanguage.includes('-')) {
                     newLanguage = newLanguage.split('-')[0];
                 }
             }
@@ -911,7 +918,7 @@ window.PrivateBin = (function () {
             }
 
             // if language is not supported, show error
-            if (supportedLanguages.indexOf(newLanguage) === -1) {
+            if (!supportedLanguages.includes(newLanguage)) {
                 console.error('Language \'%s\' is not supported. Translation failed, fallback to English.', newLanguage);
                 language = 'en';
                 return;
@@ -939,6 +946,27 @@ window.PrivateBin = (function () {
         };
 
         /**
+         * Register a callback to be invoked when translations have been loaded.
+         *
+         * This is useful for code that needs to re-apply translated strings to
+         * DOM attributes (e.g. title attributes) that cannot be handled by
+         * I18n.translate's built-in element re-translation mechanism (which only
+         * sets textContent/innerHTML).
+         *
+         * Note: If translations are already loaded when this is called, the
+         * callback will not be invoked. Callers should apply the translation
+         * immediately as well, to cover the case where the language is already
+         * available.
+         *
+         * @name   I18n.onLanguageLoaded
+         * @function
+         * @param     {function} callback - function to call when language is loaded
+         */
+        me.onLanguageLoaded = function (callback) {
+            document.addEventListener(languageLoadedEvent, callback);
+        };
+
+        /**
          * resets state, used for unit testing
          *
          * @name   I18n.reset
@@ -963,7 +991,7 @@ window.PrivateBin = (function () {
         function isStringContainsHtml(messageId) {
             // message IDs are allowed to contain anchors, spans, keyboard and emphasis tags
             // we can recognize all of them by only checking for anchors and keyboard tags
-            return typeof messageId === 'string' && (messageId.indexOf('<a') !== -1 || messageId.indexOf('<kbd') !== -1);
+            return typeof messageId === 'string' && (messageId.includes('<a') || messageId.includes('<kbd'));
         }
 
         return me;
@@ -986,49 +1014,6 @@ window.PrivateBin = (function () {
         const base58 = new baseX('123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz');
 
         /**
-         * convert UTF-8 string stored in a DOMString to a standard UTF-16 DOMString
-         *
-         * Iterates over the bytes of the message, converting them all hexadecimal
-         * percent encoded representations, then URI decodes them all
-         *
-         * @name   CryptTool.utf8To16
-         * @function
-         * @private
-         * @param  {string} message UTF-8 string
-         * @return {string} UTF-16 string
-         */
-        function utf8To16(message) {
-            return decodeURIComponent(
-                message.split('').map(
-                    function (character) {
-                        return '%' + ('00' + character.charCodeAt(0).toString(16)).slice(-2);
-                    }
-                ).join('')
-            );
-        }
-
-        /**
-         * convert DOMString (UTF-16) to a UTF-8 string stored in a DOMString
-         *
-         * URI encodes the message, then finds the percent encoded characters
-         * and transforms these hexadecimal representation back into bytes
-         *
-         * @name   CryptTool.utf16To8
-         * @function
-         * @private
-         * @param  {string} message UTF-16 string
-         * @return {string} UTF-8 string
-         */
-        function utf16To8(message) {
-            return encodeURIComponent(message).replace(
-                /%([0-9A-F]{2})/g,
-                function (match, hexCharacter) {
-                    return String.fromCharCode('0x' + hexCharacter);
-                }
-            );
-        }
-
-        /**
          * convert ArrayBuffer into a UTF-8 string
          *
          * Iterates over the bytes of the array, catenating them into a string
@@ -1039,14 +1024,11 @@ window.PrivateBin = (function () {
          * @param  {ArrayBuffer} messageArray
          * @return {string} message
          */
-        function arraybufferToString(messageArray) {
-            const array = new Uint8Array(messageArray);
-            let message = '',
-                i = 0;
-            while (i < array.length) {
-                message += String.fromCharCode(array[i++]);
-            }
-            return message;
+        function arraybufferToString(messageArray)
+        {
+            return Array.from(new Uint8Array(messageArray))
+                .map(byte => String.fromCharCode(byte))
+                .join('');
         }
 
         /**
@@ -1060,12 +1042,12 @@ window.PrivateBin = (function () {
          * @param  {string} message UTF-8 string
          * @return {Uint8Array} array
          */
-        function stringToArraybuffer(message) {
-            const messageArray = new Uint8Array(message.length);
-            for (let i = 0; i < message.length; ++i) {
-                messageArray[i] = message.charCodeAt(i);
-            }
-            return messageArray;
+        function stringToArraybuffer(message)
+        {
+            return Uint8Array.from(
+                message,
+                character => character.charCodeAt(0)
+            );
         }
 
         /**
@@ -1082,9 +1064,7 @@ window.PrivateBin = (function () {
          * @return {ArrayBuffer} data
          */
         async function compress(message, mode, zlib) {
-            message = stringToArraybuffer(
-                utf16To8(message)
-            );
+            message = new TextEncoder().encode(message);
             if (mode === 'zlib') {
                 if (typeof zlib === 'undefined') {
                     throw new Error('Error compressing document, due to missing WebAssembly support.');
@@ -1116,9 +1096,7 @@ window.PrivateBin = (function () {
                     new Uint8Array(data)
                 ).buffer;
             }
-            return utf8To16(
-                arraybufferToString(data)
-            );
+            return new TextDecoder('utf-8', {fatal: true}).decode(data);
         }
 
         /**
@@ -1453,7 +1431,7 @@ window.PrivateBin = (function () {
          * @throws {string}
          */
         me.getPasteId = function () {
-            const idRegEx = /^[a-z0-9]{16}$/;
+            const idRegEx = /^[a-f0-9]{16}$/;
 
             // return cached value
             if (id !== null) {
@@ -2856,10 +2834,10 @@ window.PrivateBin = (function () {
          */
         function getBlobUrl(data, mimeType) {
             // Transform into a Blob
-            const buf = new Uint8Array(data.length);
-            for (let i = 0; i < data.length; ++i) {
-                buf[i] = data.charCodeAt(i);
-            }
+            const buf = Uint8Array.from(
+                data,
+                character => character.charCodeAt(0)
+            );
             const blob = new window.Blob(
                 [buf],
                 {
@@ -2895,22 +2873,22 @@ window.PrivateBin = (function () {
 
             // We explicitly do _not_ use the original mime type for the download link
             // to always force a download instead of potentially dangerous browser rendering/parsing/interpretation
-            let safeMimeType = 'application/octet-stream';
+            let sanitizedMimeType = 'application/octet-stream';
             if (me.isSafeMimeType(mimeType)) {
-                safeMimeType = mimeType;
+                sanitizedMimeType = mimeType;
             }
 
             // extract data and convert to binary
-            const rawData = attachmentData.substring(base64Start);
-            const decodedData = rawData.length > 0 ? atob(rawData) : '';
+            const base64Data = attachmentData.substring(base64Start);
+            const plainData = base64Data.length > 0 ? atob(base64Data) : '';
 
-            let blobUrl = getBlobUrl(decodedData, safeMimeType);
+            let blobUrl = getBlobUrl(plainData, sanitizedMimeType);
             attachmentLink.setAttribute('href', blobUrl);
 
             if (typeof fileName !== 'undefined') {
                 attachmentLink.setAttribute('download', fileName);
 
-                const fileSize = Helper.formatBytes(decodedData.length);
+                const fileSize = Helper.formatBytes(plainData.length);
                 const spans = template.querySelectorAll('span');
                 const span = spans[spans.length - 1];
                 span.textContent += ` (${fileName}, ${fileSize})`;
@@ -2920,18 +2898,36 @@ window.PrivateBin = (function () {
             // prevents executing embedded scripts when CSP is not set and user
             // right-clicks/long-taps and opens the SVG in a new tab - prevented
             // in the preview by use of an img tag, which disables scripts, too
-            if (mimeType.match(/^image\/.*svg/i)) {
-                const sanitizedData = DOMPurify.sanitize(
-                    decodedData,
-                    purifySvgConfig
-                );
-                blobUrl = getBlobUrl(sanitizedData, mimeType);
+            if (mimeType.startsWith('image/svg')) {
+                try {
+                    // attempt to UTF-8 decode the SVG data
+                    const svgBuffer = Uint8Array.from(
+                        plainData,
+                        character => character.charCodeAt(0)
+                    );
+                    const utf8ValidatedSvgString = new TextDecoder(
+                        'utf-8',
+                        {fatal: true}
+                    ).decode(svgBuffer);
+                    const sanitizedData = DOMPurify.sanitize(
+                        utf8ValidatedSvgString,
+                        purifySvgConfig
+                    );
+                    sanitizedMimeType = 'image/svg+xml';
+                    blobUrl = getBlobUrl(sanitizedData, sanitizedMimeType);
+                } catch (e) {
+                    // Invalid or non-UTF-8 SVG: download only, no preview as it
+                    // may be used to smuggle multi-byte sequences past DOMpurify
+                    // such as `&#x13c` to get `\x01<` & `&#x13e` to get `\x01>`
+                    sanitizedMimeType = 'application/octet-stream';
+                    blobUrl = getBlobUrl(plainData, sanitizedMimeType);
+                }
             }
 
             template.classList.remove('hidden');
             attachment.appendChild(template);
 
-            me.handleBlobAttachmentPreview(attachmentPreview, blobUrl, mimeType);
+            me.handleBlobAttachmentPreview(attachmentPreview, blobUrl, sanitizedMimeType);
         };
 
 
@@ -2947,35 +2943,16 @@ window.PrivateBin = (function () {
          * @returns {bool}
          */
         me.isSafeMimeType = function(mimeType) {
-            return (
+            return ((
                     mimeType.startsWith('image/') &&
-                    !mimeType.includes('svg')
+                    !/svg/i.test(mimeType)
                 ) ||
                 mimeType.startsWith('video/') ||
                 mimeType.startsWith('audio/') ||
-                mimeType.endsWith('/pdf') ||
-                mimeType === 'text/plain';
-        };
-
-        /**
-         * Evaluates whether this is known a safe mime type.
-         *
-         * This means, the media can safely be displayed and e.g. no XSS should be possible.
-         *
-         * @name AttachmentViewer.isSafeMimeType
-         * @function
-         * @param {string}
-         * @returns {bool}
-         */
-        me.isSafeMimeType = function(mimeType) {
-            return (
-                    mimeType.startsWith('image/') &&
-                    !mimeType.includes('svg')
-                ) ||
-                mimeType.startsWith('video/') ||
-                mimeType.startsWith('audio/') ||
-                mimeType.endsWith('/pdf') ||
-                mimeType === 'text/plain';
+                mimeType === 'application/pdf' ||
+                mimeType === 'text/plain') &&
+                // don't accept comments, stray characters, spaces, etc.
+                /^[a-z0-9][a-z0-9.-]*[a-z0-9]\/[a-z0-9][a-z0-9.+-]*[a-z0-9]$/.test(mimeType);
         };
 
         /**
@@ -3160,9 +3137,12 @@ window.PrivateBin = (function () {
         me.getAttachmentMimeType = function (attachmentData) {
             // position in data URI string of where mimeType ends
             const mimeTypeEnd = attachmentData.indexOf(';');
+            if (mimeTypeEnd < 6) {
+                return '';
+            }
 
             // extract mimeType
-            return attachmentData.substring(5, mimeTypeEnd);
+            return attachmentData.substring(5, mimeTypeEnd).toLowerCase();
         };
 
         /**
@@ -3265,12 +3245,12 @@ window.PrivateBin = (function () {
             const alreadyIncludesCurrentAttachment = targetElement.querySelectorAll(`[src='${blobUrl}']`).length > 0;
 
             if (blobUrl && !alreadyIncludesCurrentAttachment) {
-                if (mimeType.toLowerCase().startsWith('image/')) {
+                if (mimeType.startsWith('image/')) {
                     const image = document.createElement('img');
                     image.setAttribute('src', blobUrl);
                     image.setAttribute('class', 'img-thumbnail');
                     targetElement.appendChild(image);
-                } else if (mimeType.toLowerCase().startsWith('video/')) {
+                } else if (mimeType.startsWith('video/')) {
                     const video = document.createElement('video');
                     video.setAttribute('controls', 'true');
                     video.setAttribute('autoplay', 'true');
@@ -3280,7 +3260,7 @@ window.PrivateBin = (function () {
                     source.setAttribute('src', blobUrl);
                     video.appendChild(source);
                     targetElement.appendChild(video);
-                } else if (mimeType.toLowerCase().startsWith('audio/')) {
+                } else if (mimeType.startsWith('audio/')) {
                     const audio = document.createElement('audio');
                     audio.setAttribute('controls', 'true');
                     audio.setAttribute('autoplay', 'true');
@@ -3289,7 +3269,7 @@ window.PrivateBin = (function () {
                     source.setAttribute('src', blobUrl);
                     audio.appendChild(source);
                     targetElement.appendChild(audio);
-                } else if (mimeType.toLowerCase().endsWith('/pdf')) {
+                } else if (mimeType === 'application/pdf') {
                     const embed = document.createElement('embed');
                     embed.setAttribute('src', blobUrl);
                     embed.setAttribute('type', 'application/pdf');
@@ -3622,7 +3602,18 @@ window.PrivateBin = (function () {
             // if an avatar is available, display it
             const icon = comment.getIcon();
             if (icon) {
+                const iconTitle = 'Avatar generated from IP address';
                 const image = document.createElement('img');
+                // Set the title immediately with the current translation. If
+                // the language has not been loaded yet, this will fall back to
+                // English, so we also register a callback to re-apply the
+                // translation once available. To avoid a race condition, we
+                // register the callback first, then translate - if the language
+                // loads between the two lines, both will set the translated text.
+                I18n.onLanguageLoaded(function () {
+                    image.setAttribute('title', I18n._(iconTitle));
+                });
+                image.setAttribute('title', I18n._(iconTitle));
                 image.setAttribute('src', icon);
                 image.setAttribute('class', 'vizhash');
                 const nickSpan = commentEntry.querySelector('span.nickname');
@@ -4162,11 +4153,12 @@ window.PrivateBin = (function () {
          *
          * @name   TopNav.triggerEmailSend
          * @private
+         * @param {string} subject
          * @param {string} emailBody
          */
-        function triggerEmailSend(emailBody) {
+        function triggerEmailSend(subject, emailBody) {
             window.open(
-                `mailto:?body=${encodeURIComponent(emailBody)}`,
+                `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(emailBody)}`,
                 '_self',
                 'noopener, noreferrer'
             );
@@ -4190,6 +4182,9 @@ window.PrivateBin = (function () {
             );
             expirationDateRoundedToSecond.setUTCSeconds(0);
 
+            // reused as-is by both the confirmation-modal and direct-send paths below
+            const emailSubject = I18n._('Encrypted note on %s', document.title);
+
             const emailconfirmmodal = document.getElementById('emailconfirmmodal');
             if (expirationDate !== null) {
                 const emailconfirmTimezoneCurrent = emailconfirmmodal.querySelector('#emailconfirm-timezone-current');
@@ -4208,7 +4203,7 @@ window.PrivateBin = (function () {
                     if (bootstrap5EmailConfirmModal) {
                         bootstrap5EmailConfirmModal.hide();
                     }
-                    triggerEmailSend(emailBody);
+                    triggerEmailSend(emailSubject, emailBody);
                 }
 
                 emailconfirmmodal.addEventListener('shown.bs.modal', () => {
@@ -4226,7 +4221,7 @@ window.PrivateBin = (function () {
                     bootstrap5EmailConfirmModal.show();
                 }
             } else {
-                triggerEmailSend(templateEmailBody(null, isBurnafterreading));
+                triggerEmailSend(emailSubject, templateEmailBody(null, isBurnafterreading));
             }
         }
 
@@ -4368,15 +4363,17 @@ window.PrivateBin = (function () {
          * @name   TopNav.showEmailbutton
          * @function
          * @param {number|undefined} optionalRemainingTimeInSeconds
+         * @param {bool|undefined} optionalBurnAfterReading
          */
-        me.showEmailButton = function (optionalRemainingTimeInSeconds) {
+        me.showEmailButton = function (optionalRemainingTimeInSeconds, optionalBurnAfterReading) {
             try {
                 // we cache expiration date in closure to avoid inaccurate expiration datetime
                 const expirationDate = Helper.calculateExpirationDate(
                     new Date(),
                     typeof optionalRemainingTimeInSeconds === 'number' ? optionalRemainingTimeInSeconds : TopNav.getExpiration()
                 );
-                const isBurnafterreading = TopNav.getBurnAfterReading();
+                const isBurnafterreading = typeof optionalBurnAfterReading === 'boolean' ?
+                    optionalBurnAfterReading : TopNav.getBurnAfterReading();
 
                 emailLink.classList.remove('hidden');
                 emailLink.removeEventListener('click', sendEmail);
@@ -5517,16 +5514,6 @@ window.PrivateBin = (function () {
                         plaintexts[i][1]
                     );
                 }
-
-                document.addEventListener(I18n.languageLoadedEvent, function () {
-                    const commentContainer = document.getElementById('commentcontainer');
-                    if (!commentContainer) {
-                        return;
-                    }
-
-                    commentContainer.querySelectorAll('img.vizhash')
-                        .forEach(img => img.setAttribute('title', I18n._('Avatar generated from IP address')));
-                });
             });
         }
 
@@ -5583,7 +5570,10 @@ window.PrivateBin = (function () {
                         TopNav.hideBurnAfterReadingButtons();
                     } else {
                         // we have to pass in remaining_time here
-                        TopNav.showEmailButton(paste.getTimeToLive());
+                        TopNav.showEmailButton(
+                            paste.getTimeToLive(),
+                            paste.isBurnAfterReadingEnabled()
+                        );
                     }
 
                     // only offer adding comments, after document was successfully decrypted
@@ -6154,4 +6144,3 @@ if (typeof module === 'undefined' || !module.exports) {
         window.PrivateBin.Controller.init();
     });
 }
-

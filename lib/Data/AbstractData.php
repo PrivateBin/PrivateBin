@@ -195,4 +195,17 @@ abstract class AbstractData
         }
         return $created;
     }
+
+    /**
+     * Sort comments chronologically, including collision suffixes.
+     *
+     * @access protected
+     * @param  array $comments
+     * @return array
+     */
+    protected function sortComments(array $comments)
+    {
+        ksort($comments, SORT_NATURAL);
+        return $comments;
+    }
 }

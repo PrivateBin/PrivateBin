@@ -75,6 +75,41 @@ class FilesystemTest extends TestCase
         $this->assertEquals($original, $this->_model->read(Helper::getPasteId()));
     }
 
+    public function testCorruptCommentsAreIgnored()
+    {
+        $pasteid   = Helper::getPasteId();
+        $commentid = Helper::getCommentId();
+        $comment   = Helper::getComment();
+        $this->assertTrue($this->_model->createComment($pasteid, $pasteid, $commentid, $comment));
+
+        $discussionPath = $this->_path . DIRECTORY_SEPARATOR . substr($pasteid, 0, 2) .
+            DIRECTORY_SEPARATOR . substr($pasteid, 2, 2) . DIRECTORY_SEPARATOR .
+            $pasteid . '.discussion' . DIRECTORY_SEPARATOR;
+        file_put_contents(
+            $discussionPath . $pasteid . '.ffffffffffffffff.' . $pasteid . '.php',
+            Filesystem::PROTECTION_LINE . PHP_EOL . '{'
+        );
+        file_put_contents(
+            $discussionPath . $pasteid . '.invalid.invalid.php',
+            Filesystem::PROTECTION_LINE . PHP_EOL . json_encode($comment)
+        );
+        file_put_contents(
+            $discussionPath . 'ffffffffffffffff.eeeeeeeeeeeeeeee.' . $pasteid . '.php',
+            Filesystem::PROTECTION_LINE . PHP_EOL . json_encode($comment)
+        );
+        file_put_contents(
+            $discussionPath . $pasteid . '.dddddddddddddddd.' . $pasteid,
+            Filesystem::PROTECTION_LINE . PHP_EOL . json_encode($comment)
+        );
+
+        $errorLog = ini_get('error_log');
+        ini_set('error_log', '/dev/null');
+        $comments = $this->_model->readComments($pasteid);
+        ini_set('error_log', $errorLog);
+        $this->assertCount(1, $comments);
+        $this->assertSame($commentid, current($comments)['id']);
+    }
+
     /**
      * pastes a-g are expired and should get deleted, x never expires and y-z expire in an hour
      */
@@ -163,16 +198,31 @@ class FilesystemTest extends TestCase
             file_put_contents($storagedir . $dataid . '.' . $commentid . '.' . $dataid, json_encode($comment));
         }
         // check that all 10 pastes were converted after the purge
-        $this->_model->purge(10);
+        $oldUmask = umask(0000);
+        try {
+            $this->_model->purge(10);
+        } finally {
+            umask($oldUmask);
+        }
         foreach ($ids as $dataid => $storagedir) {
             $dataid = (string) $dataid; // undue potential key cast, see https://www.php.net/manual/en/language.types.array.php
             $this->assertFileExists($storagedir . $dataid . '.php', "paste $dataid exists in new format");
+            $this->assertSame(
+                0640,
+                fileperms($storagedir . $dataid . '.php') & 0777,
+                "converted paste $dataid has protected permissions"
+            );
             $this->assertFileDoesNotExist($storagedir . $dataid, "old format paste $dataid got removed");
             $this->assertTrue($this->_model->exists($dataid), "paste $dataid exists");
             $this->assertEquals($this->_model->read($dataid), $paste, "paste $dataid wasn't modified in the conversion");
 
             $storagedir .= $dataid . '.discussion' . DIRECTORY_SEPARATOR;
             $this->assertFileExists($storagedir . $dataid . '.' . $commentid . '.' . $dataid . '.php', "comment of $dataid exists in new format");
+            $this->assertSame(
+                0640,
+                fileperms($storagedir . $dataid . '.' . $commentid . '.' . $dataid . '.php') & 0777,
+                "converted comment of $dataid has protected permissions"
+            );
             $this->assertFileDoesNotExist($storagedir . $dataid . '.' . $commentid . '.' . $dataid, "old format comment of $dataid got removed");
             $this->assertTrue($this->_model->existsComment($dataid, $dataid, $commentid), "comment in paste $dataid exists");
             $comment             = $comment;

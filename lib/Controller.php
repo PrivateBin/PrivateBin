@@ -16,6 +16,7 @@ use PrivateBin\Exception\TranslatedException;
 use PrivateBin\Persistence\ServerSalt;
 use PrivateBin\Persistence\TrafficLimiter;
 use PrivateBin\Proxy\AbstractProxy;
+use PrivateBin\Proxy\ChhotoProxy;
 use PrivateBin\Proxy\ShlinkProxy;
 use PrivateBin\Proxy\YourlsProxy;
 
@@ -31,7 +32,7 @@ class Controller
      *
      * @const string
      */
-    const VERSION = '2.0.5';
+    const VERSION = '2.0.6';
 
     /**
      * minimal required PHP version
@@ -158,6 +159,9 @@ class Controller
             case 'shlinkproxy':
                 $this->_shortenerproxy(new ShlinkProxy($this->_conf, $this->_request->getParam('link')));
                 break;
+            case 'chhotoproxy':
+                $this->_shortenerproxy(new ChhotoProxy($this->_conf, $this->_request->getParam('link')));
+                break;
         }
 
         $this->_setCacheHeaders();
@@ -168,6 +172,7 @@ class Controller
             header('Access-Control-Allow-Origin: *');
             header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
             header('Access-Control-Allow-Headers: X-Requested-With, Content-Type');
+            header('X-Content-Type-Options: nosniff');
             header('X-Uncompressed-Content-Length: ' . strlen($this->_json));
             header('Access-Control-Expose-Headers: X-Uncompressed-Content-Length');
             echo $this->_json;
@@ -203,7 +208,10 @@ class Controller
         $lang = $this->_conf->getKey('languagedefault');
         I18n::setLanguageFallback($lang);
         // force default language, if language selection is disabled and a default is set
-        if (!$this->_conf->getKey('languageselection') && strlen($lang) === 2) {
+        if (!$this->_conf->getKey('languageselection') && (
+            in_array($lang, I18n::getAvailableLanguages(), true) ||
+            $lang === 'en'
+        )) {
             $_COOKIE['lang'] = $lang;
             setcookie('lang', $lang, ['SameSite' => 'Lax', 'Secure' => true]);
         }
@@ -453,7 +461,7 @@ class Controller
         $page->assign('CSPHEADER', $metacspheader);
         $page->assign('ERROR', I18n::_($this->_error));
         $page->assign('NAME', $this->_conf->getKey('name'));
-        if (in_array($this->_request->getOperation(), ['shlinkproxy', 'yourlsproxy'], true)) {
+        if (in_array($this->_request->getOperation(), ['shlinkproxy', 'yourlsproxy', 'chhotoproxy'], true)) {
             $page->assign('SHORTURL', $this->_status);
             $page->draw('shortenerproxy');
             return;
@@ -513,7 +521,7 @@ class Controller
         if (is_readable($file)) {
             $content = str_replace(
                 '?jsonld=',
-                $this->_urlBase . '?jsonld=',
+                trim(Json::encode($this->_urlBase), '"') . '?jsonld=',
                 file_get_contents($file)
             );
         }
@@ -528,6 +536,7 @@ class Controller
         header('Content-type: application/ld+json');
         header('Access-Control-Allow-Origin: *');
         header('Access-Control-Allow-Methods: GET');
+        header('X-Content-Type-Options: nosniff');
         echo $content;
     }
 
