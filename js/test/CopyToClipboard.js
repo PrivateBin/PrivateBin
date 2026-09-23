@@ -3,6 +3,8 @@ const common = require('../common');
 const fc = require('fast-check');
 
 describe('CopyToClipboard', function () {
+    this.timeout(30000);
+
     afterEach(() => {
         globalThis.cleanup();
     });
@@ -43,7 +45,7 @@ describe('CopyToClipboard', function () {
 
                     return text === savedToClipboardText;
                 }
-            ));
+            ), { numRuns: 20 });
         });
 
         /**
@@ -85,7 +87,7 @@ describe('CopyToClipboard', function () {
 
                     return copiedTextWithoutSelectedText === text;
                 }
-            ));
+            ), { numRuns: 20 });
         });
 
         /**

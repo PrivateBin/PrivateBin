@@ -118,6 +118,28 @@ class ControllerTest extends TestCase
     /**
      * @runInSeparateProcess
      */
+    public function testViewForceRegionalLanguageDefault()
+    {
+        $options                              = parse_ini_file(CONF, true);
+        $options['main']['languageselection'] = false;
+        $options['main']['languagedefault']   = 'zh-tw';
+        Helper::createIniFile(CONF, $options);
+        $_COOKIE['lang'] = 'de';
+        ob_start();
+        new Controller;
+        $content = ob_get_contents();
+        ob_end_clean();
+        $this->assertStringContainsString(
+            '<title>PrivateBin</title>',
+            $content,
+            'outputs title correctly'
+        );
+        $this->assertSame('zh-tw', $_COOKIE['lang'], 'forces configured default language');
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
     public function testViewUrlShortener()
     {
         $shortener                       = 'https://shortener.example.com/api?link=';
