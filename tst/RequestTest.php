@@ -113,6 +113,22 @@ class RequestTest extends TestCase
         $this->assertEquals('foo', $request->getParam('ct'));
     }
 
+    public function testApiCreateWithJsonContentType()
+    {
+        $this->reset();
+        $_SERVER['REQUEST_METHOD'] = 'POST';
+        $_SERVER['CONTENT_TYPE']    = 'Application/JSON; charset=UTF-8';
+        $file                       = Helper::createTempFile();
+        file_put_contents($file, '{"ct":"foo"}');
+        Request::setInputStream($file);
+        $request = new Request;
+        unlink($file);
+
+        $this->assertTrue($request->isJsonApiCall(), 'is JSON API call');
+        $this->assertEquals('create', $request->getOperation());
+        $this->assertEquals('foo', $request->getParam('ct'));
+    }
+
     public function testApiRead()
     {
         $this->reset();
