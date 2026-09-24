@@ -34,15 +34,15 @@ class MigrateTest extends TestCase
         $this->_model_1                  = new Filesystem($options['model_options']);
         Helper::createIniFile($this->_path_instance_1 . DIRECTORY_SEPARATOR . 'cfg' . DIRECTORY_SEPARATOR . 'conf.php', $options);
 
-        $options['model']          = array(
+        $options['model']          = [
             'class' => 'Database',
-        );
-        $options['model_options'] = array(
+        ];
+        $options['model_options'] = [
             'dsn' => 'sqlite:' . $this->_path_instance_2 . DIRECTORY_SEPARATOR . 'test.sq3',
             'usr' => null,
             'pwd' => null,
-            'opt' => array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION),
-        );
+            'opt' => [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION],
+        ];
         $this->_model_2 = new Database($options['model_options']);
         Helper::createIniFile($this->_path_instance_2 . DIRECTORY_SEPARATOR . 'cfg' . DIRECTORY_SEPARATOR . 'conf.php', $options);
     }
@@ -80,5 +80,36 @@ class MigrateTest extends TestCase
         $this->assertEquals(0, $exit_code, 'migrate script exits 0');
         $this->assertTrue($this->_model_1->exists(Helper::getPasteId()), 'paste migrated back');
         $this->assertTrue($this->_model_1->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId()), 'comment migrated back');
+    }
+
+    public function testDamagedSourcePasteIsPreserved()
+    {
+        $this->_model_1->delete(Helper::getPasteId());
+        $paste = Helper::getPaste();
+        $this->_model_1->create(Helper::getPasteId(), $paste);
+        file_put_contents(
+            $this->_path_instance_1 . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR .
+            substr(Helper::getPasteId(), 0, 2) . DIRECTORY_SEPARATOR .
+            substr(Helper::getPasteId(), 2, 2) . DIRECTORY_SEPARATOR .
+            Helper::getPasteId() . '.php',
+            Filesystem::PROTECTION_LINE . PHP_EOL . '{'
+        );
+
+        $output    = null;
+        $exit_code = 0;
+        exec(
+            'php ' . PATH . 'bin' . DIRECTORY_SEPARATOR . 'migrate --delete-after ' .
+            $this->_path_instance_1 . DIRECTORY_SEPARATOR . 'cfg ' .
+            $this->_path_instance_2 . DIRECTORY_SEPARATOR . 'cfg 2>&1',
+            $output,
+            $exit_code
+        );
+
+        $this->assertSame(1, $exit_code, implode(PHP_EOL, $output));
+        $this->assertStringContainsString(
+            'ERROR: Unable to read document ID ' . Helper::getPasteId(),
+            implode(PHP_EOL, $output)
+        );
+        $this->assertTrue($this->_model_1->exists(Helper::getPasteId()));
     }
 }

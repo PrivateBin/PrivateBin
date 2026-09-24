@@ -1,177 +1,188 @@
 'use strict';
-var common = require('../common');
+const common = require('../common');
+const fc = require('fast-check');
 
 describe('I18n', function () {
     describe('translate', function () {
         this.timeout(30000);
         before(function () {
-            $.PrivateBin.I18n.reset();
+            PrivateBin.I18n.reset();
         });
 
-        jsc.property(
-            'returns message ID unchanged if no translation found',
-            'string',
-            function (messageId) {
-                messageId   = messageId.replace(/%(s|d)/g, '%%');
-                var plurals = [messageId, messageId + 's'],
-                    fake    = [messageId],
-                    result  = $.PrivateBin.I18n.translate(messageId);
-                $.PrivateBin.I18n.reset();
+        it('returns message ID unchanged if no translation found', () => {
+            fc.assert(fc.property(
+                fc.string(),
+                function (messageId) {
+                    messageId   = messageId.replace(/%(s|d)/g, '%%');
+                    const plurals = [messageId, messageId + 's'],
+                          fake    = [messageId],
+                          result  = PrivateBin.I18n.translate(messageId);
+                    PrivateBin.I18n.reset();
 
-                var alias = $.PrivateBin.I18n._(messageId);
-                $.PrivateBin.I18n.reset();
+                    const alias = PrivateBin.I18n._(messageId);
+                    PrivateBin.I18n.reset();
 
-                var pluralResult = $.PrivateBin.I18n.translate(plurals);
-                $.PrivateBin.I18n.reset();
+                    const pluralResult = PrivateBin.I18n.translate(plurals);
+                    PrivateBin.I18n.reset();
 
-                var pluralAlias = $.PrivateBin.I18n._(plurals);
-                $.PrivateBin.I18n.reset();
+                    const pluralAlias = PrivateBin.I18n._(plurals);
+                    PrivateBin.I18n.reset();
 
-                var fakeResult = $.PrivateBin.I18n.translate(fake);
-                $.PrivateBin.I18n.reset();
+                    const fakeResult = PrivateBin.I18n.translate(fake);
+                    PrivateBin.I18n.reset();
 
-                var fakeAlias = $.PrivateBin.I18n._(fake);
-                $.PrivateBin.I18n.reset();
+                    const fakeAlias = PrivateBin.I18n._(fake);
+                    PrivateBin.I18n.reset();
 
-                if (messageId.indexOf('<a') === -1) {
-                    messageId = $.PrivateBin.Helper.htmlEntities(messageId);
-                } else {
-                    messageId = DOMPurify.sanitize(
-                        messageId, {
-                            ALLOWED_TAGS: ['a', 'i', 'span'],
+                    if (messageId.indexOf('<a') === -1) {
+                        messageId = PrivateBin.Helper.htmlEntities(messageId);
+                    } else {
+                        messageId = DOMPurify.sanitize(
+                            messageId, {
+                                ALLOWED_TAGS: ['a', 'i', 'span'],
+                                ALLOWED_ATTR: ['href', 'id']
+                            }
+                        );
+                    }
+                    return messageId === result && messageId === alias &&
+                        messageId === pluralResult && messageId === pluralAlias &&
+                        messageId === fakeResult && messageId === fakeAlias;
+                }
+            ));
+        });
+        it('replaces %s in strings with first given parameter, encoding all, when no link is in the messageID', () => {
+            fc.assert(fc.property(
+                fc.string(),
+                fc.array(fc.string(), {minLength: 1}),
+                fc.string(),
+                function (prefix, params, postfix) {
+                    prefix    =    prefix.replace(/%(s|d)/g, '%%').replace(/<a/g, '');
+                    params[0] = params[0].replace(/%(s|d)/g, '%%');
+                    postfix   =   postfix.replace(/%(s|d)/g, '%%').replace(/<a/g, '');
+                    const translation = PrivateBin.Helper.htmlEntities(prefix + params[0] + postfix);
+                    params.unshift(prefix + '%s' + postfix);
+                    const result = PrivateBin.I18n.translate.apply(this, params);
+                    PrivateBin.I18n.reset();
+                    const alias = PrivateBin.I18n._.apply(this, params);
+                    PrivateBin.I18n.reset();
+                    return translation === result && translation === alias;
+                }
+            ));
+        });
+        it('replaces %s in strings with first given parameter, encoding params only, when a link is part of the messageID', () => {
+            fc.assert(fc.property(
+                fc.string(),
+                fc.array(fc.string(), {minLength: 1}),
+                fc.string(),
+                function (prefix, params, postfix) {
+                    prefix    =    prefix.replace(/%(s|d)/g, '%%');
+                    params[0] = params[0].replace(/%(s|d)/g, '%%');
+                    postfix   =   postfix.replace(/%(s|d)/g, '%%');
+                    const translation = DOMPurify.sanitize(
+                        prefix + '<a href="' + params[0] + '"></a>' + postfix, {
+                            ALLOWED_URI_REGEXP: /^(?:(?:(?:f|ht)tps?|mailto|magnet):)/i,
+                            ALLOWED_TAGS: ['a', 'i', 'span', 'kbd'],
                             ALLOWED_ATTR: ['href', 'id']
                         }
                     );
+                    params.unshift(prefix + '<a href="%s"></a>' + postfix);
+                    const result = PrivateBin.I18n.translate.apply(this, params);
+                    PrivateBin.I18n.reset();
+                    const alias = PrivateBin.I18n._.apply(this, params);
+                    PrivateBin.I18n.reset();
+                    return translation === result && translation === alias;
                 }
-                return messageId === result && messageId === alias &&
-                    messageId === pluralResult && messageId === pluralAlias &&
-                    messageId === fakeResult && messageId === fakeAlias;
-            }
-        );
-        jsc.property(
-            'replaces %s in strings with first given parameter, encoding all, when no link is in the messageID',
-            'string',
-            '(small nearray) string',
-            'string',
-            function (prefix, params, postfix) {
-                prefix    =    prefix.replace(/%(s|d)/g, '%%').replace(/<a/g, '');
-                params[0] = params[0].replace(/%(s|d)/g, '%%');
-                postfix   =   postfix.replace(/%(s|d)/g, '%%').replace(/<a/g, '');
-                const translation = $.PrivateBin.Helper.htmlEntities(prefix + params[0] + postfix);
-                params.unshift(prefix + '%s' + postfix);
-                const result = $.PrivateBin.I18n.translate.apply(this, params);
-                $.PrivateBin.I18n.reset();
-                const alias = $.PrivateBin.I18n._.apply(this, params);
-                $.PrivateBin.I18n.reset();
-                return translation === result && translation === alias;
-            }
-        );
-        jsc.property(
-            'replaces %s in strings with first given parameter, encoding params only, when a link is part of the messageID',
-            'string',
-            '(small nearray) string',
-            'string',
-            function (prefix, params, postfix) {
-                prefix    =    prefix.replace(/%(s|d)/g, '%%');
-                params[0] = params[0].replace(/%(s|d)/g, '%%');
-                postfix   =   postfix.replace(/%(s|d)/g, '%%');
-                const translation = DOMPurify.sanitize(
-                    prefix + '<a href="' + params[0] + '"></a>' + postfix, {
-                        ALLOWED_URI_REGEXP: /^(?:(?:(?:f|ht)tps?|mailto|magnet):)/i,
-                        ALLOWED_TAGS: ['a', 'i', 'span', 'kbd'],
-                        ALLOWED_ATTR: ['href', 'id']
-                    }
-                );
-                params.unshift(prefix + '<a href="%s"></a>' + postfix);
-                const result = $.PrivateBin.I18n.translate.apply(this, params);
-                $.PrivateBin.I18n.reset();
-                const alias = $.PrivateBin.I18n._.apply(this, params);
-                $.PrivateBin.I18n.reset();
-                return translation === result && translation === alias;
-            }
-        );
-        jsc.property(
-            'replaces %s in strings with first given parameter into an element, encoding all, when no link is in the messageID',
-            'string',
-            '(small nearray) string',
-            'string',
-            function (prefix, params, postfix) {
-                prefix    =    prefix.replace(/%(s|d)/g, '%%').replace(/<a/g, '');
-                params[0] = params[0].replace(/%(s|d)/g, '%%');
-                postfix   =   postfix.replace(/%(s|d)/g, '%%').replace(/<a/g, '');
-                const translation = $('<textarea>').text((prefix + params[0] + postfix)).text();
-                let args = Array.prototype.slice.call(params);
-                args.unshift(prefix + '%s' + postfix);
-                let clean = jsdom();
-                $('body').html('<div id="i18n"></div>');
-                args.unshift($('#i18n'));
-                $.PrivateBin.I18n.translate.apply(this, args);
-                const result = $('#i18n').text();
-                $.PrivateBin.I18n.reset();
-                clean();
-                clean = jsdom();
-                $('body').html('<div id="i18n"></div>');
-                args[0] = $('#i18n');
-                $.PrivateBin.I18n._.apply(this, args);
-                const alias = $('#i18n').text();
-                $.PrivateBin.I18n.reset();
-                clean();
-                return translation === result && translation === alias;
-            }
-        );
-        jsc.property(
-            'replaces %s in strings with first given parameter into an element, encoding params only, when a link is part of the messageID inserted',
-            'string',
-            '(small nearray) string',
-            'string',
-            function (prefix, params, postfix) {
-                prefix    =    prefix.replace(/%(s|d)/g, '%%').trim();
-                params[0] = params[0].replace(/%(s|d)/g, '%%').trim();
-                postfix   =   postfix.replace(/%(s|d)/g, '%%').trim();
-                const translation = DOMPurify.sanitize(
-                    prefix + '<a href="' + params[0] + '"></a>' + postfix, {
-                        ALLOWED_URI_REGEXP: /^(?:(?:(?:f|ht)tps?|mailto|magnet):)/i,
-                        ALLOWED_TAGS: ['a', 'i', 'span', 'kbd'],
-                        ALLOWED_ATTR: ['href', 'id']
-                    }
-                );
-                let args = Array.prototype.slice.call(params);
-                args.unshift(prefix + '<a href="%s"></a>' + postfix);
-                let clean = jsdom();
-                $('body').html('<div id="i18n"></div>');
-                args.unshift($('#i18n'));
-                $.PrivateBin.I18n.translate.apply(this, args);
-                const result = $('#i18n').html();
-                $.PrivateBin.I18n.reset();
-                clean();
-                clean = jsdom();
-                $('body').html('<div id="i18n"></div>');
-                args[0] = $('#i18n');
-                $.PrivateBin.I18n._.apply(this, args);
-                const alias = $('#i18n').html();
-                $.PrivateBin.I18n.reset();
-                clean();
-                return translation === result && translation === alias;
-            }
-        );
+            ));
+        });
+        it('replaces %s in strings with first given parameter into an element, encoding all, when no link is in the messageID', () => {
+            fc.assert(fc.property(
+                fc.string(),
+                fc.array(fc.string(), {minLength: 1}),
+                fc.string(),
+                function (prefix, params, postfix) {
+                    prefix    =    prefix.replace(/%(s|d)/g, '%%').replace(/<a/g, '');
+                    params[0] = params[0].replace(/%(s|d)/g, '%%');
+                    postfix   =   postfix.replace(/%(s|d)/g, '%%').replace(/<a/g, '');
+                    const tempDiv = document.createElement('textarea');
+                    tempDiv.textContent = (prefix + params[0] + postfix);
+                    const translation = tempDiv.textContent;
+                    let args = Array.prototype.slice.call(params);
+                    args.unshift(prefix + '%s' + postfix);
+                    let clean = globalThis.cleanup();
+                    document.body.innerHTML = '<div id="i18n"></div>';
+                    const i18nElement = document.getElementById('i18n');
+                    args.unshift(i18nElement);
+                    PrivateBin.I18n.translate.apply(this, args);
+                    const result = i18nElement.textContent;
+                    PrivateBin.I18n.reset();
+                    clean();
+                    clean = globalThis.cleanup();
+                    document.body.innerHTML = '<div id="i18n"></div>';
+                    args[0] = document.getElementById('i18n');
+                    PrivateBin.I18n._.apply(this, args);
+                    const alias = document.getElementById('i18n').textContent;
+                    PrivateBin.I18n.reset();
+                    clean();
+                    return translation === result && translation === alias;
+                }
+            ));
+        });
+        it('replaces %s in strings with first given parameter into an element, encoding params only, when a link is part of the messageID inserted', () => {
+            fc.assert(fc.property(
+                fc.string(),
+                fc.array(fc.string(), {minLength: 1}),
+                fc.string(),
+                function (prefix, params, postfix) {
+                    prefix    =    prefix.replace(/%(s|d)/g, '%%').trim();
+                    params[0] = params[0].replace(/%(s|d)/g, '%%').trim();
+                    postfix   =   postfix.replace(/%(s|d)/g, '%%').trim();
+                    const translation = DOMPurify.sanitize(
+                        prefix + '<a href="' + params[0] + '"></a>' + postfix, {
+                            ALLOWED_URI_REGEXP: /^(?:(?:(?:f|ht)tps?|mailto|magnet):)/i,
+                            ALLOWED_TAGS: ['a', 'i', 'span', 'kbd'],
+                            ALLOWED_ATTR: ['href', 'id']
+                        }
+                    );
+                    let args = Array.prototype.slice.call(params);
+                    args.unshift(prefix + '<a href="%s"></a>' + postfix);
+                    let clean = globalThis.cleanup();
+                    document.body.innerHTML = '<div id="i18n"></div>';
+                    const i18nElement2 = document.getElementById('i18n');
+                    args.unshift(i18nElement2);
+                    PrivateBin.I18n.translate.apply(this, args);
+                    const result = i18nElement2.innerHTML;
+                    PrivateBin.I18n.reset();
+                    clean();
+                    clean = globalThis.cleanup();
+                    document.body.innerHTML = '<div id="i18n"></div>';
+                    args[0] = document.getElementById('i18n');
+                    PrivateBin.I18n._.apply(this, args);
+                    const alias = document.getElementById('i18n').innerHTML;
+                    PrivateBin.I18n.reset();
+                    clean();
+                    return translation === result && translation === alias;
+                }
+            ));
+        });
     });
 
     describe('getPluralForm', function () {
         before(function () {
-            $.PrivateBin.I18n.reset();
+            PrivateBin.I18n.reset();
         });
 
-        jsc.property(
-            'returns valid key for plural form',
-            common.jscSupportedLanguages(),
-            'integer',
-            function(language, n) {
-                $.PrivateBin.I18n.reset(language);
-                var result = $.PrivateBin.I18n.getPluralForm(n);
-                // arabic seems to have the highest plural count with 6 forms
-                return result >= 0 && result <= 5;
-            }
-        );
+        it('returns valid key for plural form', () => {
+            fc.assert(fc.property(
+                common.fcSupportedLanguages(),
+                fc.integer(),
+                function(language, n) {
+                    PrivateBin.I18n.reset(language);
+                    const result = PrivateBin.I18n.getPluralForm(n);
+                    // arabic seems to have the highest plural count with 6 forms
+                    return result >= 0 && result <= 5;
+                }
+            ));
+        });
     });
 
     // loading of JSON via AJAX needs to be tested in the browser, this just mocks it
@@ -179,53 +190,111 @@ describe('I18n', function () {
     describe('loadTranslations', function () {
         this.timeout(30000);
         before(function () {
-            $.PrivateBin.I18n.reset();
+            PrivateBin.I18n.reset();
         });
 
-        jsc.property(
-            'downloads and handles any supported language',
-            common.jscSupportedLanguages(),
-            function(language) {
-                // cleanup
-                var clean = jsdom('', {cookie: ['lang=en']});
-                $.PrivateBin.I18n.reset('en');
-                $.PrivateBin.I18n.loadTranslations();
-                clean();
+        it('downloads and handles any supported language', () => {
+            fc.assert(fc.property(
+                common.fcSupportedLanguages(),
+                function(language) {
+                    // cleanup
+                    let clean = globalThis.cleanup('', {cookie: ['lang=en']});
+                    PrivateBin.I18n.reset('en');
+                    PrivateBin.I18n.loadTranslations();
+                    clean();
 
-                // mock
-                clean = jsdom('', {cookie: ['lang=' + language]});
-                // eslint-disable-next-line global-require
-                $.PrivateBin.I18n.reset(language, require('../../i18n/' + language + '.json'));
-                var loadedLang = $.PrivateBin.I18n.getLanguage(),
-                    result = $.PrivateBin.I18n.translate('Never'),
-                    alias  = $.PrivateBin.I18n._('Never');
-                clean();
-                return language === loadedLang && result === alias;
-            }
-        );
+                    // mock
+                    clean = globalThis.cleanup('', {cookie: ['lang=' + language]});
+                    // eslint-disable-next-line global-require
+                    PrivateBin.I18n.reset(language, require('../../i18n/' + language + '.json'));
+                    const loadedLang = PrivateBin.I18n.getLanguage(),
+                          result     = PrivateBin.I18n.translate('Never'),
+                          alias      = PrivateBin.I18n._('Never');
+                    clean();
+                    return language === loadedLang && result === alias;
+                }
+            ));
+        });
 
-        jsc.property(
-            'should default to en',
-            function() {
-                var clean = jsdom('', {url: 'https://privatebin.net/'});
+        it('maps Traditional Chinese browser languages to zh-tw', async function () {
+            const clean = globalThis.cleanup('<script src="js/privatebin.js"></script>', {url: 'https://privatebin.net/'});
 
-                // when navigator.userLanguage is undefined and no default language
-                // is specified, it would throw an error
-                [ 'language', 'userLanguage' ].forEach(function (key) {
-                    Object.defineProperty(navigator, key, {
-                        value: undefined,
-                        writeable: false
-                    });
+            // loadTranslations() loads the translation file via fetch() API,
+            // which is asynchronous. Stub it, so the test does not perform a
+            // real network request, and await the 'languageLoaded' event that
+            // loadTranslations() dispatches once the fetch has completed.
+            const originalFetch = globalThis.fetch;
+            globalThis.fetch = function (url) {
+                assert.strictEqual(url, 'i18n/zh-tw.json');
+                return Promise.resolve({
+                    ok: true,
+                    status: 200,
+                    statusText: 'OK',
+                    json: function () {
+                        return Promise.resolve({});
+                    }
                 });
+            };
 
-                $.PrivateBin.I18n.reset('en');
-                $.PrivateBin.I18n.loadTranslations();
-                var result = $.PrivateBin.I18n.translate('Never'),
-                    alias  = $.PrivateBin.I18n._('Never');
-
+            try {
+                for (const language of ['zh-TW', 'zh-TW-u-nu-hanidec', 'zh-Hant', 'zh-Hant-TW', 'zh-HK', 'zh-MO']) {
+                    Object.defineProperty(navigator, 'language', {
+                        value: language,
+                        configurable: true
+                    });
+                    PrivateBin.I18n.reset('en');
+                    const loaded = new Promise(function (resolve) {
+                        document.addEventListener('languageLoaded', resolve, {once: true});
+                    });
+                    PrivateBin.I18n.loadTranslations();
+                    await loaded;
+                    assert.strictEqual(PrivateBin.I18n.getLanguage(), 'zh-tw', language);
+                }
+            } finally {
+                globalThis.fetch = originalFetch;
+                delete navigator.language;
+                PrivateBin.I18n.reset();
                 clean();
-                return 'Never' === result && 'Never' === alias;
             }
-        );
+        });
+
+        it('should default to en', () => {
+            const clean = globalThis.cleanup('', {url: 'https://privatebin.net/'});
+
+            // when navigator.userLanguage is undefined and no default language
+            // is specified, it would throw an error
+            [ 'language', 'userLanguage' ].forEach(function (key) {
+                Object.defineProperty(navigator, key, {
+                    value: undefined,
+                    configurable: true,
+                    enumerable: true,
+                    writable: false
+                });
+            });
+
+            PrivateBin.I18n.reset('en');
+            PrivateBin.I18n.loadTranslations();
+            const result = PrivateBin.I18n.translate('Never'),
+                  alias  = PrivateBin.I18n._('Never');
+
+            clean();
+            return 'Never' === result && 'Never' === alias;
+        });
+    });
+
+    describe('onLanguageLoaded', function () {
+        before(function () {
+            PrivateBin.I18n.reset();
+        });
+
+        it('invokes the callback when the languageLoaded event is dispatched', function () {
+            let called = false;
+            PrivateBin.I18n.onLanguageLoaded(function () {
+                called = true;
+            });
+            assert.strictEqual(called, false);
+            document.dispatchEvent(new CustomEvent('languageLoaded'));
+            assert.strictEqual(called, true);
+        });
     });
 });

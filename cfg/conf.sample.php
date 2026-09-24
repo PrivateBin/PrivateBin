@@ -49,17 +49,9 @@ templateselection = false
 
 ; List of available for selection templates when "templateselection" option is enabled
 availabletemplates[] = "bootstrap5"
-availabletemplates[] = "bootstrap"
-availabletemplates[] = "bootstrap-page"
-availabletemplates[] = "bootstrap-dark"
-availabletemplates[] = "bootstrap-dark-page"
-availabletemplates[] = "bootstrap-compact"
-availabletemplates[] = "bootstrap-compact-page"
 
-; set the template your installs defaults to, defaults to "bootstrap5" (tpl/bootstrap5.php), also
-; bootstrap template (tpl/bootstrap.php) and it's variants: "bootstrap-dark", "bootstrap-compact", "bootstrap-page",
-; which can be combined with "-dark" and "-compact" for "bootstrap-dark-page",
-; "bootstrap-compact-page" - previews at:
+; set the template your installs defaults to, defaults to "bootstrap5" (tpl/bootstrap5.php)
+; previews at:
 ; https://privatebin.info/screenshots.html
 ; template = "bootstrap5"
 
@@ -273,6 +265,17 @@ dir = PATH "data"
 ;region = "eu-central-1"
 ;version = "latest"
 ;bucket = "my-bucket"
+
+;[chhoto]
+; - Chhoto requires you to make a post call with a generated API key.
+;   use this section to setup the API key and URL. In order to use this section,
+;   "urlshortener" needs to point to the base URL of your PrivateBin
+;   instance with "?shortenviachhoto&link=" appended. For example:
+;   urlshortener = "${basepath}?shortenviachhoto&link="
+;    This URL will in turn call Chhoto on the server side, using the URL from
+;   "apiurl" and the API Key from the "apikey" parameters below.
+; apiurl = "https://chhoto-url.example.com/api/new"
+; apikey = "your_api_key"
 
 ;[shlink]
 ; - Shlink requires you to make a post call with a generated API key.

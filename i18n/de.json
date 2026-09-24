@@ -151,7 +151,7 @@
     "server error or not responding": "Fehler auf dem Server oder keine Antwort vom Server",
     "Could not post comment: %s": "Konnte Kommentar nicht senden: %s",
     "Sending document…": "Sende Document…",
-    "Your document is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit <kbd>Ctrl</kbd>+<kbd>c</kbd> to copy)</span>": "Dein Dokument ist unter <a id=\"pasteurl\" href=\"%s\">%s</a> zu finden <span id=\"copyhint\">(Drücke <kbd>Strg</kbd>+<kbd>c</kbd> um den Link zu kopieren)</span>",
+    "Your document is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit <kbd>%s</kbd>+<kbd>c</kbd> to copy)</span>": "Dein Dokument ist unter <a id=\"pasteurl\" href=\"%s\">%s</a> zu finden <span id=\"copyhint\">(Drücke <kbd>Strg</kbd>+<kbd>c</kbd> um den Link zu kopieren)</span>",
     "Delete data": "Lösche Daten",
     "Could not create document: %s": "Dokument konnte nicht erstellt werden: %s",
     "Cannot decrypt document: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)": "Konnte Document nicht entschlüsseln: Der Schlüssel fehlt in der Adresse (Hast du eine Umleitung oder einen URL-Verkürzer benutzt, der Teile der Adresse entfernt?)",
@@ -224,7 +224,7 @@
     "Error decompressing document, your browser does not support WebAssembly. Please use another browser to view this document.": "Fehler beim Dekomprimieren des Dokumentes. Dein Browser unterstützt WebAssembly nicht. Bitte verwende einen anderen Browser, um dieses Dokument anzuzeigen.",
     "Start over": "Neues Dokument erstellen",
     "Document copied to clipboard": "Dokument wurde in Zwischenablage kopiert.",
-    "To copy document press on the copy button or use the clipboard shortcut <kbd>Ctrl</kbd>+<kbd>c</kbd>/<kbd>Cmd</kbd>+<kbd>c</kbd>": "Zum Kopieren des Textes drücken Sie die Kopieren-Schaltfläche oder verwenden Sie die Tastenkombination <kbd>Strg</kbd>+<kbd>c</kbd>/<kbd>Cmd</kbd>+<kbd>c</kbd>",
+    "To copy document press on the copy button or use the clipboard shortcut <kbd>%s</kbd>+<kbd>c</kbd>": "Zum Kopieren des Textes drücken Sie die Kopieren-Schaltfläche oder verwenden Sie die Tastenkombination <kbd>%s</kbd>+<kbd>c</kbd>",
     "Copy link": "Verknüpfung kopieren",
     "Link copied to clipboard": "Verknüpfung wurde in die Zwischenablage kopiert.",
     "Document text": "Text des Dokuments",
@@ -232,5 +232,7 @@
     "Show password": "Passwort anzeigen",
     "Hide password": "Passwort verbergen",
     "Theme": "Design",
-    "Copy": "Kopieren"
+    "Copy": "Kopieren",
+    "Cmd": "Cmd",
+    "Ctrl": "Strg"
 }

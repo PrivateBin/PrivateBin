@@ -209,9 +209,9 @@ class TrafficLimiter extends AbstractPersistence
             }
             return true;
         }
-        throw new TranslatedException(array(
+        throw new TranslatedException([
             'Please wait %d seconds between each post.',
             self::$_limit,
-        ));
+        ]);
     }
 }

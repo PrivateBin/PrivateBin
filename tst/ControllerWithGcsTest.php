@@ -12,11 +12,11 @@ class ControllerWithGcsTest extends ControllerTest
 {
     private static $_client;
     private static $_bucket;
-    private $_options = array();
+    private $_options = [];
 
     public static function setUpBeforeClass(): void
     {
-        $httpClient = new Client(array('debug'=>false));
+        $httpClient = new Client(['debug'=>false]);
         $handler    = HttpHandlerFactory::build($httpClient);
 
         $name     = 'pb-';
@@ -24,7 +24,7 @@ class ControllerWithGcsTest extends ControllerTest
         for ($i = 0; $i < 29; ++$i) {
             $name .= $alphabet[rand(0, strlen($alphabet) - 1)];
         }
-        self::$_client = new StorageClientStub(array());
+        self::$_client = new StorageClientStub([]);
         self::$_bucket = self::$_client->createBucket($name);
     }
 
@@ -35,10 +35,10 @@ class ControllerWithGcsTest extends ControllerTest
         if (!is_dir($this->_path)) {
             mkdir($this->_path);
         }
-        $this->_options = array(
+        $this->_options = [
             'bucket' => self::$_bucket->name(),
             'prefix' => 'pastes',
-        );
+        ];
         $this->_data    = new GoogleCloudStorage($this->_options);
         ServerSalt::setStore($this->_data);
         TrafficLimiter::setStore($this->_data);
@@ -50,9 +50,9 @@ class ControllerWithGcsTest extends ControllerTest
         parent::reset();
         // but then inject a db config
         $options          = parse_ini_file(CONF, true);
-        $options['model'] = array(
+        $options['model'] = [
             'class' => 'GoogleCloudStorage',
-        );
+        ];
         $options['model_options'] = $this->_options;
         Helper::createIniFile(CONF, $options);
     }

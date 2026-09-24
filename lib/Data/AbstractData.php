@@ -24,7 +24,7 @@ abstract class AbstractData
      * @access protected
      * @var    array
      */
-    protected $_last_cache = array();
+    protected $_last_cache = [];
 
     /**
      * Create a paste.
@@ -194,5 +194,18 @@ abstract class AbstractData
             return $this->getOpenSlot($comments, implode('.', $parts));
         }
         return $created;
+    }
+
+    /**
+     * Sort comments chronologically, including collision suffixes.
+     *
+     * @access protected
+     * @param  array $comments
+     * @return array
+     */
+    protected function sortComments(array $comments)
+    {
+        ksort($comments, SORT_NATURAL);
+        return $comments;
     }
 }

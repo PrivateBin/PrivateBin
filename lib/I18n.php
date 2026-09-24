@@ -46,7 +46,7 @@ class I18n
      * @static
      * @var    array
      */
-    protected static $_languageLabels = array();
+    protected static $_languageLabels = [];
 
     /**
      * available languages
@@ -55,7 +55,7 @@ class I18n
      * @static
      * @var    array
      */
-    protected static $_availableLanguages = array();
+    protected static $_availableLanguages = [];
 
     /**
      * path to language files
@@ -73,7 +73,7 @@ class I18n
      * @static
      * @var    array
      */
-    protected static $_translations = array();
+    protected static $_translations = [];
 
     /**
      * translate a string, alias for translate()
@@ -177,13 +177,16 @@ class I18n
         // find a translation file matching the browsers language preferences
         else {
             self::$_language = self::_getMatchingLanguage(
-                self::getBrowserLanguages(), $availableLanguages
+                self::_normalizeBrowserLanguages(
+                    self::getBrowserLanguages(), $availableLanguages
+                ),
+                $availableLanguages
             );
         }
 
         // load translations
         if (self::$_language === 'en') {
-            self::$_translations = array();
+            self::$_translations = [];
         } else {
             $data                = file_get_contents(self::_getPath(self::$_language . '.json'));
             self::$_translations = Json::decode($data);
@@ -204,6 +207,7 @@ class I18n
             $languageIterator            = new AppendIterator();
             $languageIterator->append(new GlobIterator(self::_getPath('??.json')));
             $languageIterator->append(new GlobIterator(self::_getPath('???.json'))); // for jbo
+            $languageIterator->append(new GlobIterator(self::_getPath('??-??.json'))); // for regional variants like zh-tw
             foreach ($languageIterator as $file) {
                 $language = $file->getBasename('.json');
                 if ($language !== 'en') {
@@ -225,7 +229,7 @@ class I18n
      */
     public static function getBrowserLanguages()
     {
-        $languages = array();
+        $languages = [];
         if (array_key_exists('HTTP_ACCEPT_LANGUAGE', $_SERVER)) {
             $languageRanges = explode(',', trim($_SERVER['HTTP_ACCEPT_LANGUAGE']));
             foreach ($languageRanges as $languageRange) {
@@ -239,12 +243,45 @@ class I18n
                         $match[2] = (string) floatval($match[2]);
                     }
                     if (!isset($languages[$match[2]])) {
-                        $languages[$match[2]] = array();
+                        $languages[$match[2]] = [];
                     }
                     $languages[$match[2]][] = strtolower($match[1]);
                 }
             }
             krsort($languages);
+        }
+        return $languages;
+    }
+
+    /**
+     * normalize browser language aliases to available locale IDs
+     *
+     * @access protected
+     * @static
+     * @param  array $languages
+     * @param  array $availableLanguages
+     * @return array
+     */
+    protected static function _normalizeBrowserLanguages($languages, $availableLanguages)
+    {
+        // Base zh stays before zh-tw because regional locales are appended after base locales.
+        $hasSimplifiedChinese  = in_array('zh', $availableLanguages, true);
+        $hasTraditionalChinese = in_array('zh-tw', $availableLanguages, true);
+        foreach ($languages as $quality => $languageRanges) {
+            foreach ($languageRanges as $index => $languageRange) {
+                $isSimplifiedChinese = $languageRange === 'zh-hans' || str_starts_with($languageRange, 'zh-hans-') ||
+                    $languageRange === 'zh-cn' || str_starts_with($languageRange, 'zh-cn-') ||
+                    $languageRange === 'zh-sg' || str_starts_with($languageRange, 'zh-sg-');
+                $isTraditionalChinese = str_starts_with($languageRange, 'zh-tw-') ||
+                    $languageRange === 'zh-hant' || str_starts_with($languageRange, 'zh-hant-') ||
+                    $languageRange === 'zh-hk' || str_starts_with($languageRange, 'zh-hk-') ||
+                    $languageRange === 'zh-mo' || str_starts_with($languageRange, 'zh-mo-');
+                if ($hasSimplifiedChinese && $isSimplifiedChinese) {
+                    $languages[$quality][$index] = 'zh';
+                } elseif ($hasTraditionalChinese && $isTraditionalChinese) {
+                    $languages[$quality][$index] = 'zh-tw';
+                }
+            }
         }
         return $languages;
     }
@@ -272,7 +309,7 @@ class I18n
      * @throws JsonException
      * @return array
      */
-    public static function getLanguageLabels($languages = array())
+    public static function getLanguageLabels($languages = [])
     {
         $file = self::_getPath('languages.json');
         if (count(self::$_languageLabels) === 0 && is_readable($file)) {
@@ -294,7 +331,20 @@ class I18n
      */
     public static function isRtl()
     {
-        return in_array(self::$_language, array('ar', 'he'));
+        return in_array(self::$_language, ['ar', 'fa', 'he']);
+    }
+
+    /**
+     * get OS-specific copy hotkey modifier key name based on user agent
+     *
+     * @access public
+     * @static
+     * @return string 'Cmd' on macOS, 'Ctrl' otherwise
+     */
+    public static function getCopyHotkey()
+    {
+        return array_key_exists('HTTP_USER_AGENT', $_SERVER) &&
+            str_contains($_SERVER['HTTP_USER_AGENT'], 'Mac') ? self::_('Cmd') : self::_('Ctrl');
     }
 
     /**
@@ -351,6 +401,7 @@ class I18n
             case 'oc':
             case 'tr':
             case 'zh':
+            case 'zh-tw':
                 return $n > 1 ? 1 : 0;
             case 'he':
                 return $n === 1 ? 0 : ($n === 2 ? 1 : (($n < 0 || $n > 10) && ($n % 10 === 0) ? 2 : 3));
@@ -389,7 +440,7 @@ class I18n
      */
     protected static function _getMatchingLanguage($acceptedLanguages, $availableLanguages)
     {
-        $matches = array();
+        $matches = [];
         $any     = false;
         foreach ($acceptedLanguages as $acceptedQuality => $acceptedValues) {
             $acceptedQuality = floatval($acceptedQuality);
@@ -406,7 +457,7 @@ class I18n
                     if ($matchingGrade > 0) {
                         $q = (string) ($acceptedQuality * $availableQuality * $matchingGrade);
                         if (!isset($matches[$q])) {
-                            $matches[$q] = array();
+                            $matches[$q] = [];
                         }
                         if (!in_array($availableValue, $matches[$q])) {
                             $matches[$q][] = $availableValue;

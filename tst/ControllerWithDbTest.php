@@ -8,14 +8,14 @@ require_once 'ControllerTest.php';
 
 class ControllerWithDbTest extends ControllerTest
 {
-    private $_options = array(
+    private $_options = [
         'usr' => null,
         'pwd' => null,
-        'opt' => array(
+        'opt' => [
             PDO::ATTR_ERRMODE    => PDO::ERRMODE_EXCEPTION,
             PDO::ATTR_PERSISTENT => true,
-        ),
-    );
+        ],
+    ];
 
     public function setUp(): void
     {
@@ -36,9 +36,9 @@ class ControllerWithDbTest extends ControllerTest
         parent::reset();
         // but then inject a db config
         $options          = parse_ini_file(CONF, true);
-        $options['model'] = array(
+        $options['model'] = [
             'class' => 'Database',
-        );
+        ];
         $options['model_options'] = $this->_options;
         Helper::createIniFile(CONF, $options);
     }

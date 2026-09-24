@@ -13,7 +13,7 @@ class GoogleCloudStorageTest extends TestCase
 
     public static function setUpBeforeClass(): void
     {
-        $httpClient = new Client(array('debug'=>false));
+        $httpClient = new Client(['debug'=>false]);
         $handler    = HttpHandlerFactory::build($httpClient);
 
         $name     = 'pb-';
@@ -21,17 +21,17 @@ class GoogleCloudStorageTest extends TestCase
         for ($i = 0; $i < 29; ++$i) {
             $name .= $alphabet[rand(0, strlen($alphabet) - 1)];
         }
-        self::$_client = new StorageClientStub(array());
+        self::$_client = new StorageClientStub([]);
         self::$_bucket = self::$_client->createBucket($name);
     }
 
     public function setUp(): void
     {
         ini_set('error_log', stream_get_meta_data(tmpfile())['uri']);
-        $this->_model = new GoogleCloudStorage(array(
+        $this->_model = new GoogleCloudStorage([
             'bucket' => self::$_bucket->name(),
             'prefix' => 'pastes',
-        ));
+        ]);
     }
 
     public function tearDown(): void
@@ -51,7 +51,7 @@ class GoogleCloudStorageTest extends TestCase
         $this->_model->delete(Helper::getPasteId());
 
         // storing pastes
-        $paste = Helper::getPaste(array('expire_date' => 1344803344));
+        $paste = Helper::getPaste(['expire_date' => 1344803344]);
         $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste does not yet exist');
         $this->assertTrue($this->_model->create(Helper::getPasteId(), $paste), 'store new paste');
         $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste exists after storing it');
@@ -67,7 +67,7 @@ class GoogleCloudStorageTest extends TestCase
         $comment['id']       = Helper::getCommentId();
         $comment['parentid'] = Helper::getPasteId();
         $this->assertEquals(
-            array($comment['meta']['created'] => $comment),
+            [$comment['meta']['created'] => $comment],
             $this->_model->readComments(Helper::getPasteId())
         );
 
@@ -83,14 +83,14 @@ class GoogleCloudStorageTest extends TestCase
      */
     public function testPurge()
     {
-        $expired = Helper::getPaste(array('expire_date' => 1344803344));
-        $paste   = Helper::getPaste(array('expire_date' => time() + 3600));
-        $keys    = array('a', 'b', 'c', 'd', 'e', 'f', 'g', 'x', 'y', 'z');
-        $ids     = array();
+        $expired = Helper::getPaste(['expire_date' => 1344803344]);
+        $paste   = Helper::getPaste(['expire_date' => time() + 3600]);
+        $keys    = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'x', 'y', 'z'];
+        $ids     = [];
         foreach ($keys as $key) {
             $ids[$key] = hash('fnv164', $key);
             $this->assertFalse($this->_model->exists($ids[$key]), "paste $key does not yet exist");
-            if (in_array($key, array('x', 'y', 'z'))) {
+            if (in_array($key, ['x', 'y', 'z'])) {
                 $this->assertTrue($this->_model->create($ids[$key], $paste), "store $key paste");
             } elseif ($key === 'x') {
                 $data = Helper::getPaste();
@@ -102,7 +102,7 @@ class GoogleCloudStorageTest extends TestCase
         }
         $this->_model->purge(10);
         foreach ($ids as $key => $id) {
-            if (in_array($key, array('x', 'y', 'z'))) {
+            if (in_array($key, ['x', 'y', 'z'])) {
                 $this->assertTrue($this->_model->exists($id), "paste $key exists after purge");
                 $this->_model->delete($id);
             } else {
@@ -114,7 +114,7 @@ class GoogleCloudStorageTest extends TestCase
     public function testErrorDetection()
     {
         $this->_model->delete(Helper::getPasteId());
-        $paste = Helper::getPaste(array('expire' => "Invalid UTF-8 sequence: \xB1\x31"));
+        $paste = Helper::getPaste(['expire' => "Invalid UTF-8 sequence: \xB1\x31"]);
         $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste does not yet exist');
         $this->assertFalse($this->_model->create(Helper::getPasteId(), $paste), 'unable to store broken paste');
         $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste does still not exist');
@@ -124,7 +124,7 @@ class GoogleCloudStorageTest extends TestCase
     {
         $this->_model->delete(Helper::getPasteId());
         $data    = Helper::getPaste();
-        $comment = Helper::getComment(array('icon' => "Invalid UTF-8 sequence: \xB1\x31"));
+        $comment = Helper::getComment(['icon' => "Invalid UTF-8 sequence: \xB1\x31"]);
         $this->assertFalse($this->_model->exists(Helper::getPasteId()), 'paste does not yet exist');
         $this->assertTrue($this->_model->create(Helper::getPasteId(), $data), 'store new paste');
         $this->assertTrue($this->_model->exists(Helper::getPasteId()), 'paste exists after storing it');

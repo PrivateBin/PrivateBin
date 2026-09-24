@@ -256,11 +256,8 @@ class Single extends AbstractRange
      */
     public function getNetworkPrefix()
     {
-        switch ($this->getAddressType()) {
-            case AddressType::T_IPv4:
-                return 32;
-            case AddressType::T_IPv6:
-                return 128;
-        }
+        $address = $this->address;
+
+        return $address::getNumberOfBits();
     }
 }

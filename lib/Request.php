@@ -11,7 +11,7 @@
 
 namespace PrivateBin;
 
-use PrivateBin\Exception\JsonException;
+use JsonException;
 use PrivateBin\Model\Paste;
 
 /**
@@ -64,7 +64,7 @@ class Request
      * @access private
      * @var array
      */
-    private $_params = array();
+    private $_params = [];
 
     /**
      * If we are in a JSON API context
@@ -113,19 +113,25 @@ class Request
                 try {
                     $data          = file_get_contents(self::$_inputStream);
                     $this->_params = Json::decode($data);
+                    // a valid JSON scalar (number, bool or string) decodes
+                    // without error, but is not a usable set of parameters
+                    if (!is_array($this->_params)) {
+                        $this->_params = [];
+                    }
                 } catch (JsonException $e) {
                     // ignore error, $this->_params will remain empty
                 }
                 break;
             default:
-                $this->_params = filter_var_array($_GET, array(
+                $this->_params = filter_var_array($_GET, [
                     'deletetoken'      => FILTER_SANITIZE_SPECIAL_CHARS,
                     'jsonld'           => FILTER_SANITIZE_SPECIAL_CHARS,
                     'link'             => FILTER_SANITIZE_URL,
                     'pasteid'          => FILTER_SANITIZE_SPECIAL_CHARS,
                     'shortenviayourls' => FILTER_SANITIZE_SPECIAL_CHARS,
                     'shortenviashlink' => FILTER_SANITIZE_SPECIAL_CHARS,
-                ), false);
+                    'shortenviachhoto' => FILTER_SANITIZE_SPECIAL_CHARS,
+                ], false);
         }
         if (
             !array_key_exists('pasteid', $this->_params) &&
@@ -153,6 +159,9 @@ class Request
             if (str_contains($this->getRequestUri(), '/shortenviashlink') || array_key_exists('shortenviashlink', $this->_params)) {
                 $this->_operation = 'shlinkproxy';
             }
+            if (str_contains($this->getRequestUri(), '/shortenviachhoto') || array_key_exists('shortenviachhoto', $this->_params)) {
+                $this->_operation = 'chhotoproxy';
+            }
         }
     }
 
@@ -175,10 +184,10 @@ class Request
      */
     public function getData()
     {
-        $data = array(
+        $data = [
             'adata' => $this->getParam('adata'),
-        );
-        $required_keys = array('v', 'ct');
+        ];
+        $required_keys = ['v', 'ct'];
         $meta          = $this->getParam('meta');
         if (empty($meta)) {
             $required_keys[] = 'pasteid';
@@ -189,8 +198,6 @@ class Request
         foreach ($required_keys as $key) {
             $data[$key] = $this->getParam($key, $key === 'v' ? 1 : '');
         }
-        // forcing a cast to int or float
-        $data['v'] = $data['v'] + 0;
         return $data;
     }
 
@@ -220,7 +227,7 @@ class Request
     }
 
     /**
-     * Get request URI
+     * Get request URI path without GET parameters
      *
      * @access public
      * @return string
@@ -228,7 +235,7 @@ class Request
     public function getRequestUri()
     {
         $uri = array_key_exists('REQUEST_URI', $_SERVER) ? filter_var($_SERVER['REQUEST_URI'], FILTER_SANITIZE_URL) : '';
-        return empty($uri) ? '/' : $uri;
+        return empty($uri) ? '/' : parse_url($uri, PHP_URL_PATH);
     }
 
     /**
@@ -278,7 +285,7 @@ class Request
 
         // advanced case: media type negotiation
         if (!empty($acceptHeader)) {
-            $mediaTypes = array();
+            $mediaTypes = [];
             foreach (explode(',', trim($acceptHeader)) as $mediaTypeRange) {
                 if (preg_match(
                     '#(\*/\*|[a-z\-]+/[a-z\-+*]+(?:\s*;\s*[^q]\S*)*)(?:\s*;\s*q\s*=\s*(0(?:\.\d{0,3})|1(?:\.0{0,3})))?#',
@@ -293,7 +300,7 @@ class Request
                         }
                     }
                     if (!isset($mediaTypes[$match[2]])) {
-                        $mediaTypes[$match[2]] = array();
+                        $mediaTypes[$match[2]] = [];
                     }
                     $mediaTypes[$match[2]][] = strtolower($match[1]);
                 }

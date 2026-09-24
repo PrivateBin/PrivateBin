@@ -73,16 +73,16 @@ class YourlsProxyTest extends TestCase
 
     public function providerInvalidUrl(): array
     {
-        return array(
-            array(''),
-            array(' '),
-            array('foo'),
-            array('https://'),
-            array('https://example.com'), // missing path and query parameter,
-            array('https://example.com/'), // missing query parameter
-            array('https://example.com?paste=something'), // missing path parameter
-            array('https://example.com@foreign.malicious.example?foo#bar'), // missing path parameter
-        );
+        return [
+            [''],
+            [' '],
+            ['foo'],
+            ['https://'],
+            ['https://example.com'], // missing path and query parameter,
+            ['https://example.com/'], // missing query parameter
+            ['https://example.com?paste=something'], // missing path parameter
+            ['https://example.com@foreign.malicious.example?foo#bar'], // missing path parameter
+        ];
     }
 
     /**
@@ -100,10 +100,10 @@ class YourlsProxyTest extends TestCase
 
     public function providerForeignUrlUsernameTrick(): array
     {
-        return array(
-            array('https://example.com@foreign.malicious.example/?foo#bar'),
-            array('https://example.com/@foreign.malicious.example?foo#bar'),
-        );
+        return [
+            ['https://example.com@foreign.malicious.example/?foo#bar'],
+            ['https://example.com/@foreign.malicious.example?foo#bar'],
+        ];
     }
 
     /**
@@ -118,17 +118,30 @@ class YourlsProxyTest extends TestCase
 
     public function providerForeignUrl(): array
     {
-        return array(
-            array('ftp://example.com/?n=np'), // wrong protocol
-            array('https://other.example.com/?foo#bar'), // wrong domain
-            array('https://other.example.com/?q=https://example.com/?foo#bar'), // domain included inside string
-        );
+        return [
+            ['ftp://example.com/?n=np'], // wrong protocol
+            ['https://other.example.com/?foo#bar'], // wrong domain
+            ['https://other.example.com/?q=https://example.com/?foo#bar'], // domain included inside string
+        ];
     }
 
     public function testYourlsError()
     {
         // when statusCode is not 200, shorturl may not have been set
         file_put_contents($this->_mock_yourls_service, '{"statusCode":403}');
+
+        $yourls = new YourlsProxy($this->_conf, 'https://example.com/?foo#bar');
+        $this->assertTrue($yourls->isError());
+        $this->assertEquals($yourls->getError(), 'Proxy error: Error parsing proxy response. This can be a configuration issue, like wrong or missing config keys.');
+    }
+
+    public function testYourlsSuccessWithoutShortUrl()
+    {
+        // YOURLS may reply with statusCode 200 but without a shorturl field;
+        // this must be handled gracefully as an error instead of raising a
+        // TypeError (the method is declared to return ?string). YOURLS returns
+        // the status code as a string, so mirror that here.
+        file_put_contents($this->_mock_yourls_service, '{"statusCode":"200"}');
 
         $yourls = new YourlsProxy($this->_conf, 'https://example.com/?foo#bar');
         $this->assertTrue($yourls->isError());

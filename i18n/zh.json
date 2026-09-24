@@ -151,7 +151,7 @@
     "server error or not responding": "服务器错误或无回应",
     "Could not post comment: %s": "无法发送评论： %s",
     "Sending document…": "正在发送粘贴内容…",
-    "Your document is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit <kbd>Ctrl</kbd>+<kbd>c</kbd> to copy)</span>": "您粘贴内容的链接是 <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">（按下 <kbd>Ctrl</kbd>+<kbd>c</kbd> 以复制）</span>",
+    "Your document is <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">(Hit <kbd>%s</kbd>+<kbd>c</kbd> to copy)</span>": "您粘贴内容的链接是 <a id=\"pasteurl\" href=\"%s\">%s</a> <span id=\"copyhint\">（按下 <kbd>%s</kbd>+<kbd>c</kbd> 以复制）</span>",
     "Delete data": "删除数据",
     "Could not create document: %s": "无法创建粘贴：%s",
     "Cannot decrypt document: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL?)": "无法解密粘贴：URL中缺失解密密钥（是否使用了重定向或者短链接导致密钥丢失？）",
@@ -224,7 +224,7 @@
     "Error decompressing document, your browser does not support WebAssembly. Please use another browser to view this document.": "解压粘贴时出错，您的浏览器不支持 WebAssembly。请使用其他浏览器查看此粘贴。",
     "Start over": "重新开始",
     "Document copied to clipboard": "粘贴内容已复制到剪贴板",
-    "To copy document press on the copy button or use the clipboard shortcut <kbd>Ctrl</kbd>+<kbd>c</kbd>/<kbd>Cmd</kbd>+<kbd>c</kbd>": "要复制粘贴内容，请点击复制按钮或使用快捷键 <kbd>Ctrl</kbd>+<kbd>c</kbd>/<kbd>Cmd</kbd>+<kbd>c</kbd>。",
+    "To copy document press on the copy button or use the clipboard shortcut <kbd>%s</kbd>+<kbd>c</kbd>": "要复制粘贴内容，请点击复制按钮或使用快捷键 <kbd>%s</kbd>+<kbd>c</kbd>。",
     "Copy link": "复制链接",
     "Link copied to clipboard": "链接已复制到剪贴板",
     "Document text": "粘贴文本",
@@ -232,5 +232,7 @@
     "Show password": "显示密码",
     "Hide password": "隐藏密码",
     "Theme": "主题",
-    "Copy": "复制"
+    "Copy": "复制",
+    "Cmd": "Cmd",
+    "Ctrl": "Ctrl"
 }
