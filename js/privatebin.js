@@ -5866,8 +5866,9 @@ window.PrivateBin = (function () {
             TopNav.resetInput();
 
             // reset format
-            PasteViewer.setFormat('plaintext');
-            TopNav.setFormat('plaintext');
+            const defaultFormat = Model.getFormatDefault() || 'plaintext';
+            PasteViewer.setFormat(defaultFormat);
+            TopNav.setFormat(defaultFormat);
 
             TopNav.showCreateButtons();
 
