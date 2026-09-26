@@ -4,6 +4,7 @@
 * ADDED: Added `shortenviachhoto` endpoint with an `chhoto` configuration section
 * ADDED: Translation for Chinese (Traditional)
 * ADDED: Subject line to the "Email" share button's mailto link (#928)
+* ADDED: Send the document with Ctrl+S, or Cmd+S on macOS (#739)
 * CHANGED: We removed jQuery in the Frontend and replaced it with vanilla JS.
 * CHANGED: Removed the unmaintained js-verify and replaced it with fast-check library.
 * CHANGED: Added a `jsconfig.json` in order to check the types of JavaScript.

@@ -127,6 +127,112 @@ describe('TopNav', function () {
         );
     });
 
+    describe('send shortcut', function () {
+        let sendCount;
+
+        // builds the create-document navbar and stubs the actual send, so no
+        // server interaction happens
+        function setUpCreateMode(userAgent) {
+            cleanup();
+            sendCount = 0;
+            if (userAgent) {
+                Object.defineProperty(window.navigator, 'userAgent', {
+                    value: userAgent, configurable: true
+                });
+            }
+            document.documentElement.innerHTML =
+                '<nav><div id="navbar"><ul><li><button id="newbutton" ' +
+                'type="button" class="hidden">New</button></li><li><a ' +
+                'id="expiration" href="#" class="hidden">Expiration</a>' +
+                '</li><li><div id="burnafterreadingoption" class="hidden">' +
+                'Burn after reading</div></li><li><div id="opendiscussion' +
+                'option" class="hidden">Open discussion</div></li><li>' +
+                '<div id="password" class="hidden">Password</div></li>' +
+                '<li id="attach" class="hidden">Attach a file</li><li>' +
+                '<a id="formatter" href="#" class="hidden">Format</a>' +
+                '</li><li><button id="sendbutton" type="button" ' +
+                'class="hidden">Create</button></li></ul></div></nav>';
+            PrivateBin.PasteEncrypter.sendPaste = function () {
+                sendCount++;
+            };
+            PrivateBin.TopNav.init();
+            PrivateBin.TopNav.showCreateButtons();
+        }
+
+        // dispatches a keydown on the document, returns whether the default was prevented
+        function pressKey(options) {
+            const event = new window.KeyboardEvent('keydown', Object.assign(
+                {bubbles: true, cancelable: true}, options
+            ));
+            document.dispatchEvent(event);
+            return event.defaultPrevented;
+        }
+
+        afterEach(function () {
+            cleanup();
+        });
+
+        it('sends the document on Ctrl+S and suppresses the browser save dialog', function () {
+            setUpCreateMode();
+            const prevented = pressKey({key: 's', ctrlKey: true});
+            assert.strictEqual(sendCount, 1);
+            assert.ok(prevented);
+        });
+
+        it('sends the document on Cmd+S (macOS)', function () {
+            setUpCreateMode();
+            const prevented = pressKey({key: 's', metaKey: true});
+            assert.strictEqual(sendCount, 1);
+            assert.ok(prevented);
+        });
+
+        it('still sends when caps lock turns the key into an upper case S', function () {
+            setUpCreateMode();
+            pressKey({key: 'S', ctrlKey: true});
+            assert.strictEqual(sendCount, 1);
+        });
+
+        it('leaves Ctrl+S to the browser when viewing a document', function () {
+            setUpCreateMode();
+            PrivateBin.TopNav.hideCreateButtons();
+            const prevented = pressKey({key: 's', ctrlKey: true});
+            assert.strictEqual(sendCount, 0);
+            assert.ok(!prevented);
+        });
+
+        it('ignores S without Ctrl/Cmd, with AltGr (Ctrl+Alt) or with Shift', function () {
+            setUpCreateMode();
+            const prevented = [
+                pressKey({key: 's'}),
+                pressKey({key: 's', ctrlKey: true, altKey: true}),
+                pressKey({key: 'S', ctrlKey: true, shiftKey: true})
+            ];
+            assert.strictEqual(sendCount, 0);
+            assert.deepStrictEqual(prevented, [false, false, false]);
+        });
+
+        it('shows the Ctrl+S shortcut as tooltip and to assistive technology', function () {
+            setUpCreateMode();
+            const sendButton = query('#sendbutton');
+            assert.strictEqual(sendButton.getAttribute('title'), 'Ctrl+S');
+            assert.strictEqual(sendButton.getAttribute('aria-keyshortcuts'), 'Control+S');
+        });
+
+        it('shows Cmd+S on macOS', function () {
+            setUpCreateMode('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)');
+            const sendButton = query('#sendbutton');
+            assert.strictEqual(sendButton.getAttribute('title'), 'Cmd+S');
+            assert.strictEqual(sendButton.getAttribute('aria-keyshortcuts'), 'Meta+S');
+        });
+
+        it('translates the tooltip once the language has loaded', function () {
+            setUpCreateMode();
+            PrivateBin.I18n.reset('de', {Ctrl: 'Strg'});
+            document.dispatchEvent(new window.CustomEvent('languageLoaded'));
+            assert.strictEqual(query('#sendbutton').getAttribute('title'), 'Strg+S');
+        });
+    });
+
     describe('showNewPasteButton', function () {
         before(function () {
             cleanup();
