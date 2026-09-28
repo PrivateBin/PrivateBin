@@ -56,7 +56,7 @@ window.PrivateBin = (function () {
      */
     const purifyHtmlConfig = {
         ALLOWED_URI_REGEXP: /^(?:(?:(?:f|ht)tps?|mailto|magnet):)/i,
-        ALLOWED_ATTR: ['href', 'id', 'target', 'rel', 'class', 'style'],
+        ALLOWED_ATTR: ['href', 'id', 'target', 'rel'],
         USE_PROFILES: {
             html: true
         }
