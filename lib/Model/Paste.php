@@ -53,19 +53,31 @@ class Paste extends AbstractModel
     public function get()
     {
         $data = $this->_store->read($this->getId());
-        if ($data === false) {
+        if (
+            !is_array($data) ||
+            !isset($data['meta']) ||
+            !is_array($data['meta'])
+        ) {
             throw new TranslatedException(Controller::GENERIC_ERROR, 64);
         }
 
         // check if paste has expired and delete it if necessary.
         if (array_key_exists('expire_date', $data['meta'])) {
-            $now = time();
-            if ($data['meta']['expire_date'] < $now) {
+            $expireDate = $data['meta']['expire_date'];
+            if (
+                !is_int($expireDate) &&
+                !(is_string($expireDate) && preg_match('/\A[+-]?\d+\z/', $expireDate) === 1)
+            ) {
+                throw new TranslatedException(Controller::GENERIC_ERROR, 64);
+            }
+            $expireDate = (int) $expireDate;
+            $now        = time();
+            if ($expireDate < $now) {
                 $this->delete();
                 throw new TranslatedException(Controller::GENERIC_ERROR, 63);
             }
             // We kindly provide the remaining time before expiration (in seconds)
-            $data['meta']['time_to_live'] = $data['meta']['expire_date'] - $now;
+            $data['meta']['time_to_live'] = $expireDate - $now;
             unset($data['meta']['expire_date']);
         }
         if (array_key_exists('created', $data['meta'])) {
@@ -187,10 +199,18 @@ class Paste extends AbstractModel
      */
     public function getDeleteToken()
     {
-        if (!array_key_exists('salt', $this->_data['meta'])) {
+        if (
+            !isset($this->_data['meta']) ||
+            !is_array($this->_data['meta']) ||
+            !array_key_exists('salt', $this->_data['meta'])
+        ) {
             $this->get();
         }
-        return hash_hmac('sha256', $this->getId(), $this->_data['meta']['salt']);
+        $salt = $this->_data['meta']['salt'] ?? null;
+        if (!is_string($salt) || $salt === '') {
+            throw new TranslatedException(Controller::GENERIC_ERROR, 64);
+        }
+        return hash_hmac('sha256', $this->getId(), $salt);
     }
 
     /**
