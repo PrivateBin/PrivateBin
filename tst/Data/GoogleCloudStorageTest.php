@@ -78,6 +78,19 @@ class GoogleCloudStorageTest extends TestCase
         $this->assertFalse($this->_model->read(Helper::getPasteId()), 'paste can no longer be found');
     }
 
+    public function testUploadDoesNotOverwriteAnExistingPaste()
+    {
+        $key         = 'pastes/' . Helper::getPasteId();
+        $upload      = new ReflectionMethod(GoogleCloudStorage::class, '_upload');
+        $original    = Helper::getPaste(['expire_date' => 1344803344]);
+        $replacement = Helper::getPaste(['expire_date' => 2344803344]);
+        $upload->setAccessible(true);
+
+        $this->assertTrue($upload->invokeArgs($this->_model, [$key, &$original]));
+        $this->assertFalse($upload->invokeArgs($this->_model, [$key, &$replacement]));
+        $this->assertEquals($original, $this->_model->read(Helper::getPasteId()));
+    }
+
     /**
      * pastes a-g are expired and should get deleted, x never expires and y-z expire in an hour
      */
