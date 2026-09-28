@@ -234,5 +234,6 @@
     "Theme": "Thème",
     "Copy": "Copier",
     "Cmd": "Cmd",
-    "Ctrl": "Ctrl"
+    "Ctrl": "Ctrl",
+    "Hit %s+s to create the document, storing it on %s": "Hit %s+s to create the document, storing it on %s"
 }

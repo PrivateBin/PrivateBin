@@ -469,7 +469,7 @@ endif;
 					<li role="presentation" class="nav-item me-1"><a class="nav-link active" role="tab" id="messageedit" href="#"><?php echo I18n::_('Editor'); ?></a></li>
 					<li role="presentation" class="nav-item me-1"><a class="nav-link" role="tab" id="messagepreview" href="#"><?php echo I18n::_('Preview'); ?></a></li>
 					<li role="presentation" class="nav-item ms-auto">
-						<button id="sendbutton" type="button" tabindex="2" class="hidden btn btn-primary d-flex justify-content-center align-items-center gap-1">
+						<button id="sendbutton" type="button" tabindex="2" class="hidden btn btn-primary d-flex justify-content-center align-items-center gap-1" title="<?php echo I18n::_('Hit %s+s to create the document, storing it on %s', I18n::getCopyHotkey(), I18n::_($NAME)); ?>" aria-keyshortcuts="Control+S Meta+S">
 							<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#cloud-upload" /></svg> <?php echo I18n::_('Create'), PHP_EOL; ?>
 						</button>
 					</li>

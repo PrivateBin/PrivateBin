@@ -4049,9 +4049,7 @@ window.PrivateBin = (function () {
          * sends the document on [Ctrl]+[S] or, on macOS, [Cmd]+[S]
          *
          * Only acts while the send button is shown, so the browser's own
-         * "save page" still works when viewing an existing document. Alt is
-         * excluded because AltGr is reported as Ctrl+Alt and some keyboard
-         * layouts type letters with AltGr+S.
+         * "save page" still works when viewing an existing document.
          *
          * @name   TopNav.sendOnShortcut
          * @private
@@ -4059,36 +4057,17 @@ window.PrivateBin = (function () {
          * @param  {KeyboardEvent} event
          */
         function sendOnShortcut(event) {
-            if (!(event.ctrlKey || event.metaKey) || event.altKey || event.shiftKey ||
-                typeof event.key !== 'string' || event.key.toLowerCase() !== 's' ||
-                !sendButton || sendButton.classList.contains('hidden') || sendButton.disabled
-            ) {
-                return;
+            // the physical S key, so non-Latin keyboard layouts work, too
+            const isSaveKey = event.code === 'KeyS';
+            // Alt is excluded because AltGr is reported as Ctrl+Alt and some
+            // layouts type letters with AltGr+S, Shift to leave "Save page as"
+            // ([Ctrl]+[Shift]+[S]) to the browser
+            const hasCorrectModifiers = (event.ctrlKey || event.metaKey) && !event.altKey && !event.shiftKey;
+            const isButtonAvailable = sendButton && !sendButton.classList.contains('hidden') && !sendButton.disabled;
+            if (isSaveKey && hasCorrectModifiers && isButtonAvailable) {
+                event.preventDefault();
+                sendButton.click();
             }
-            event.preventDefault();
-            sendButton.click();
-        }
-
-        /**
-         * shows the send shortcut as tooltip and exposes it to assistive technology
-         *
-         * The tooltip only uses the existing "Ctrl"/"Cmd" translations, so no
-         * new message ID is needed in the language files.
-         *
-         * @name   TopNav.showSendShortcutHint
-         * @private
-         * @function
-         */
-        function showSendShortcutHint() {
-            const isMac = /Mac/.test(navigator.userAgent);
-            function applyTitle() {
-                sendButton.setAttribute('title', I18n._(isMac ? 'Cmd' : 'Ctrl') + '+S');
-            }
-            sendButton.setAttribute('aria-keyshortcuts', isMac ? 'Meta+S' : 'Control+S');
-            // the language may still be loading, so register the re-translation
-            // first and then apply the current (possibly English) text
-            I18n.onLanguageLoaded(applyTitle);
-            applyTitle();
         }
 
         /**
@@ -4780,7 +4759,6 @@ window.PrivateBin = (function () {
             if (sendButton) {
                 sendButton.addEventListener('click', PasteEncrypter.sendPaste);
                 document.addEventListener('keydown', sendOnShortcut);
-                showSendShortcutHint();
             }
             if (cloneButton) {
                 cloneButton.addEventListener('click', Controller.clonePaste);
