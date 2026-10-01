@@ -159,7 +159,10 @@ class GoogleCloudStorage extends AbstractData
         } catch (Exception $e) {
             error_log('failed to read ' . $pasteid . ' from ' . $this->_bucket->name() . ', ' .
                 trim(preg_replace('/\s\s+/', ' ', $e->getMessage())));
-            return false;
+            if ($e instanceof JsonException) {
+                return false;
+            }
+            throw $e;
         }
     }
 
