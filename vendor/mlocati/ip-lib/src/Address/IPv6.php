@@ -136,7 +136,7 @@ class IPv6 implements AddressInterface
         $matches = null;
         $flags = (int) $flags;
         if ($flags & ParseStringFlag::ADDRESS_MAYBE_RDNS) {
-            if (preg_match('/^([0-9a-f](?:\.[0-9a-f]){31})\.ip6\.arpa\.?/i', $address, $matches)) {
+            if (preg_match('/^([0-9a-f](?:\.[0-9a-f]){31})\.ip6\.arpa\.?$/Di', $address, $matches)) {
                 $nibbles = array_reverse(explode('.', $matches[1]));
                 $quibbles = array();
                 foreach (array_chunk($nibbles, 4) as $n) {
@@ -147,7 +147,7 @@ class IPv6 implements AddressInterface
         }
         $result = null;
         if (strpos($address, ':') !== false && strpos($address, ':::') === false) {
-            if ($flags & ParseStringFlag::MAY_INCLUDE_PORT && $address[0] === '[' && preg_match('/^\[(.+)]:\d+$/', $address, $matches)) {
+            if ($flags & ParseStringFlag::MAY_INCLUDE_PORT && $address[0] === '[' && preg_match('/^\[(.+)]:\d+$/D', $address, $matches)) {
                 $address = $matches[1];
             }
             if ($flags & ParseStringFlag::MAY_INCLUDE_ZONEID) {
@@ -156,7 +156,7 @@ class IPv6 implements AddressInterface
                     $address = substr($address, 0, $percentagePos);
                 }
             }
-            if (preg_match('/^((?:[0-9a-f]*:+)+)(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})$/i', $address, $matches)) {
+            if (preg_match('/^((?:[0-9a-f]*:+)+)(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})$/Di', $address, $matches)) {
                 $address6 = static::parseString($matches[1] . '0:0');
                 if ($address6 !== null) {
                     $address4 = IPv4::parseString($matches[2]);
@@ -188,7 +188,7 @@ class IPv6 implements AddressInterface
                 if (count($chunks) === 8) {
                     $nums = array_map(
                         function ($chunk) {
-                            return preg_match('/^[0-9A-Fa-f]{1,4}$/', $chunk) ? hexdec($chunk) : false;
+                            return preg_match('/^[0-9A-Fa-f]{1,4}$/D', $chunk) ? hexdec($chunk) : false;
                         },
                         $chunks
                     );
@@ -629,7 +629,7 @@ class IPv6 implements AddressInterface
         }
         $absBits = abs($bits);
         if ($absBits >= 128) {
-            return new self('0000:0000:0000:0000:0000:0000:0000:0000');
+            return new static('0000:0000:0000:0000:0000:0000:0000:0000');
         }
         $pad = str_repeat('0', $absBits);
         $paddedBits = $this->getBits();

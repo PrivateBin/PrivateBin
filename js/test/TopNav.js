@@ -127,6 +127,88 @@ describe('TopNav', function () {
         );
     });
 
+    describe('send shortcut', function () {
+        let sendCount;
+
+        // builds the create-document navbar and stubs the actual send, so no
+        // server interaction happens
+        function setUpCreateMode() {
+            cleanup();
+            sendCount = 0;
+            document.documentElement.innerHTML =
+                '<nav><div id="navbar"><ul><li><button id="newbutton" ' +
+                'type="button" class="hidden">New</button></li><li><a ' +
+                'id="expiration" href="#" class="hidden">Expiration</a>' +
+                '</li><li><div id="burnafterreadingoption" class="hidden">' +
+                'Burn after reading</div></li><li><div id="opendiscussion' +
+                'option" class="hidden">Open discussion</div></li><li>' +
+                '<div id="password" class="hidden">Password</div></li>' +
+                '<li id="attach" class="hidden">Attach a file</li><li>' +
+                '<a id="formatter" href="#" class="hidden">Format</a>' +
+                '</li><li><button id="sendbutton" type="button" ' +
+                'class="hidden">Create</button></li></ul></div></nav>';
+            PrivateBin.PasteEncrypter.sendPaste = function () {
+                sendCount++;
+            };
+            PrivateBin.TopNav.init();
+            PrivateBin.TopNav.showCreateButtons();
+        }
+
+        // dispatches a keydown on the document, returns whether the default was prevented
+        function pressKey(options) {
+            const event = new window.KeyboardEvent('keydown', Object.assign(
+                {bubbles: true, cancelable: true}, options
+            ));
+            document.dispatchEvent(event);
+            return event.defaultPrevented;
+        }
+
+        afterEach(function () {
+            cleanup();
+        });
+
+        it('sends the document on Ctrl+S and suppresses the browser save dialog', function () {
+            setUpCreateMode();
+            const prevented = pressKey({key: 's', code: 'KeyS', ctrlKey: true});
+            assert.strictEqual(sendCount, 1);
+            assert.ok(prevented);
+        });
+
+        it('sends the document on Cmd+S (macOS)', function () {
+            setUpCreateMode();
+            const prevented = pressKey({key: 's', code: 'KeyS', metaKey: true});
+            assert.strictEqual(sendCount, 1);
+            assert.ok(prevented);
+        });
+
+        it('sends on the physical S key of non-Latin keyboard layouts', function () {
+            setUpCreateMode();
+            // on a Russian layout the S key produces "ы"
+            pressKey({key: 'ы', code: 'KeyS', ctrlKey: true});
+            assert.strictEqual(sendCount, 1);
+        });
+
+        it('leaves Ctrl+S to the browser when viewing a document', function () {
+            setUpCreateMode();
+            PrivateBin.TopNav.hideCreateButtons();
+            const prevented = pressKey({key: 's', code: 'KeyS', ctrlKey: true});
+            assert.strictEqual(sendCount, 0);
+            assert.ok(!prevented);
+        });
+
+        it('ignores S without Ctrl/Cmd, with AltGr (Ctrl+Alt), with Shift, or other keys', function () {
+            setUpCreateMode();
+            const prevented = [
+                pressKey({key: 's', code: 'KeyS'}),
+                pressKey({key: 's', code: 'KeyS', ctrlKey: true, altKey: true}),
+                pressKey({key: 'S', code: 'KeyS', ctrlKey: true, shiftKey: true}),
+                pressKey({key: 'd', code: 'KeyD', ctrlKey: true})
+            ];
+            assert.strictEqual(sendCount, 0);
+            assert.deepStrictEqual(prevented, [false, false, false, false]);
+        });
+    });
+
     describe('showNewPasteButton', function () {
         before(function () {
             cleanup();

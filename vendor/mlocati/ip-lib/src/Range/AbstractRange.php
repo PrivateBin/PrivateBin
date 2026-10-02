@@ -26,12 +26,18 @@ abstract class AbstractRange implements RangeInterface
         // @phpstan-ignore varTag.nativeType
         if ($this->rangeType === null) {
             $addressType = $this->getAddressType();
-            if ($addressType === AddressType::T_IPv6 && Subnet::get6to4()->containsRange($this)) {
+            $fromIPv4 = $toIPv4 = null;
+            if ($addressType === AddressType::T_IPv6) {
                 $fromAddress = $this->fromAddress;
                 /** @var IPv6 $fromAddress */
                 $toAddress = $this->toAddress;
                 /** @var IPv6 $toAddress */
-                $range = Factory::getRangeFromBoundaries($fromAddress->toIPv4(), $toAddress->toIPv4());
+                // 6to4 and IPv4-mapped ranges: use the type of the corresponding IPv4 range
+                $fromIPv4 = $fromAddress->toIPv4();
+                $toIPv4 = $toAddress->toIPv4();
+            }
+            if ($fromIPv4 !== null && $toIPv4 !== null) {
+                $range = Factory::getRangeFromBoundaries($fromIPv4, $toIPv4);
                 /** @var RangeInterface $range */
                 $this->rangeType = $range->getRangeType();
             } else {

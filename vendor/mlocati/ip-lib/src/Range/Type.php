@@ -50,7 +50,7 @@ class Type
     const T_LIMITEDBROADCAST = 6;
 
     /**
-     * Multicast address assignments - Indentify a group of interfaces.
+     * Multicast address assignments - Identify a group of interfaces.
      *
      * @var int
      */
@@ -64,7 +64,7 @@ class Type
     const T_LINKLOCAL = 8;
 
     /**
-     * Link local unicast / Linked-scoped unicast.
+     * Link local unicast / Link-scoped unicast.
      *
      * @var int
      */
@@ -130,11 +130,11 @@ class Type
             case static::T_LIMITEDBROADCAST:
                 return '"Limited broadcast" destination address';
             case static::T_MULTICAST:
-                return 'Multicast address assignments - Indentify a group of interfaces';
+                return 'Multicast address assignments - Identify a group of interfaces';
             case static::T_LINKLOCAL:
                 return '"Link local" address, allocated for communication between hosts on a single link';
             case static::T_LINKLOCAL_UNICAST:
-                return 'Link local unicast / Linked-scoped unicast';
+                return 'Link local unicast / Link-scoped unicast';
             case static::T_DISCARDONLY:
                 return 'Discard only';
             case static::T_DISCARD:

@@ -233,7 +233,7 @@ class GoogleCloudStorage extends AbstractData
         } catch (NotFoundException $e) {
             // no comments found
         }
-        return $comments;
+        return $this->sortComments($comments);
     }
 
     /**

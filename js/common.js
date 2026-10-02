@@ -51,7 +51,7 @@ var a2zString    = ['a','b','c','d','e','f','g','h','i','j','k','l','m',
         })
     ),
     schemas = ['ftp','http','https'],
-    supportedLanguages = ['ar', 'bg', 'ca', 'co', 'cs', 'de', 'el', 'es', 'et', 'fi', 'fr', 'he', 'hu', 'id', 'it', 'ja', 'jbo', 'lt', 'no', 'nl', 'pl', 'pt', 'oc', 'ru', 'sk', 'sl', 'th', 'tr', 'uk', 'zh'],
+    supportedLanguages = ['ar', 'bg', 'ca', 'co', 'cs', 'de', 'el', 'es', 'et', 'fi', 'fr', 'he', 'hu', 'id', 'it', 'ja', 'jbo', 'lt', 'no', 'nl', 'pl', 'pt', 'oc', 'ru', 'sk', 'sl', 'th', 'tr', 'uk', 'zh', 'zh-tw'],
     mimeTypes = ['image/png', 'application/octet-stream'].concat(Object.keys(require('mime-db'))),
     formats = ['plaintext', 'markdown', 'syntaxhighlighting'];
 

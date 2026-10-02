@@ -226,6 +226,7 @@ class I18n
             $languageIterator = new AppendIterator();
             $languageIterator->append(new GlobIterator(self::_getPath('??.json')));
             $languageIterator->append(new GlobIterator(self::_getPath('???.json'))); // for jbo
+            $languageIterator->append(new GlobIterator(self::_getPath('??-??.json'))); // for regional variants like zh-tw
             foreach ($languageIterator as $file) {
                 $language = $file->getBasename('.json');
                 if ($language !== 'en') {
@@ -267,6 +268,39 @@ class I18n
                 }
             }
             krsort($languages);
+        }
+        return $languages;
+    }
+
+    /**
+     * normalize browser language aliases to available locale IDs
+     *
+     * @access protected
+     * @static
+     * @param  array $languages
+     * @param  array $availableLanguages
+     * @return array
+     */
+    protected static function _normalizeBrowserLanguages($languages, $availableLanguages)
+    {
+        // Base zh stays before zh-tw because regional locales are appended after base locales.
+        $hasSimplifiedChinese  = in_array('zh', $availableLanguages, true);
+        $hasTraditionalChinese = in_array('zh-tw', $availableLanguages, true);
+        foreach ($languages as $quality => $languageRanges) {
+            foreach ($languageRanges as $index => $languageRange) {
+                $isSimplifiedChinese = $languageRange === 'zh-hans' || str_starts_with($languageRange, 'zh-hans-') ||
+                    $languageRange === 'zh-cn' || str_starts_with($languageRange, 'zh-cn-') ||
+                    $languageRange === 'zh-sg' || str_starts_with($languageRange, 'zh-sg-');
+                $isTraditionalChinese = str_starts_with($languageRange, 'zh-tw-') ||
+                    $languageRange === 'zh-hant' || str_starts_with($languageRange, 'zh-hant-') ||
+                    $languageRange === 'zh-hk' || str_starts_with($languageRange, 'zh-hk-') ||
+                    $languageRange === 'zh-mo' || str_starts_with($languageRange, 'zh-mo-');
+                if ($hasSimplifiedChinese && $isSimplifiedChinese) {
+                    $languages[$quality][$index] = 'zh';
+                } elseif ($hasTraditionalChinese && $isTraditionalChinese) {
+                    $languages[$quality][$index] = 'zh-tw';
+                }
+            }
         }
         return $languages;
     }
@@ -316,7 +350,7 @@ class I18n
      */
     public static function isRtl()
     {
-        return in_array(self::$_language, ['ar', 'he']);
+        return in_array(self::$_language, ['ar', 'fa', 'he']);
     }
 
     /**
@@ -328,8 +362,8 @@ class I18n
      */
     public static function getCopyHotkey()
     {
-        return isset($_SERVER['HTTP_USER_AGENT']) &&
-            strpos($_SERVER['HTTP_USER_AGENT'], 'Mac') !== false ? self::_('Cmd') : self::_('Ctrl');
+        return array_key_exists('HTTP_USER_AGENT', $_SERVER) &&
+            str_contains($_SERVER['HTTP_USER_AGENT'], 'Mac') ? self::_('Cmd') : self::_('Ctrl');
     }
 
     /**
@@ -386,6 +420,7 @@ class I18n
             case 'oc':
             case 'tr':
             case 'zh':
+            case 'zh-tw':
                 return $n > 1 ? 1 : 0;
             case 'he':
                 return $n === 1 ? 0 : ($n === 2 ? 1 : (($n < 0 || $n > 10) && ($n % 10 === 0) ? 2 : 3));

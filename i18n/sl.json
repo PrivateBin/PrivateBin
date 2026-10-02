@@ -232,7 +232,8 @@
     "Show password": "Pokaži geslo",
     "Hide password": "Skrij geslo",
     "Theme": "Tema",
-    "Copy": "Copy",
+    "Copy": "Kopiraj",
     "Cmd": "Cmd",
-    "Ctrl": "Ctrl"
+    "Ctrl": "Ctrl",
+    "Hit %s+s to create the document, storing it on %s": "Hit %s+s to create the document, storing it on %s"
 }

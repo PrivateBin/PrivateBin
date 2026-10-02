@@ -20,7 +20,7 @@ class RequestTest extends TestCase
      */
     public function getRandomQueryChars()
     {
-        $queryChars     = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ=';
+        $queryChars     = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ=-_.!~*()';
         $queryCharCount = strlen($queryChars) - 1;
         $resultLength   = random_int(1, 10);
         $result         = '';

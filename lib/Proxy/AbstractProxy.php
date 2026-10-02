@@ -31,6 +31,14 @@ abstract class AbstractProxy
     private $_error = '';
 
     /**
+     * proxy URL
+     *
+     * @access protected
+     * @var    string
+     */
+    protected $_proxyUrl = '';
+
+    /**
      * shortened URL
      *
      * @access private
@@ -61,15 +69,15 @@ abstract class AbstractProxy
             return;
         }
 
-        $proxyUrl = $this->_getProxyUrl($conf);
+        $this->_proxyUrl = $this->_getProxyUrl($conf);
 
-        if (empty($proxyUrl)) {
+        if (empty($this->_proxyUrl)) {
             $this->_error = 'Proxy error: Proxy URL is empty. This can be a configuration issue, like wrong or missing config keys.';
             $this->logErrorWithClassName($this->_error);
             return;
         }
 
-        $data = file_get_contents($proxyUrl, false,
+        $data = file_get_contents($this->_proxyUrl, false,
             stream_context_create(
                 [
                     'http' => $this->_getProxyPayload($conf, $link),
