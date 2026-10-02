@@ -4046,6 +4046,31 @@ window.PrivateBin = (function () {
         }
 
         /**
+         * sends the document on [Ctrl]+[S] or, on macOS, [Cmd]+[S]
+         *
+         * Only acts while the send button is shown, so the browser's own
+         * "save page" still works when viewing an existing document.
+         *
+         * @name   TopNav.sendOnShortcut
+         * @private
+         * @function
+         * @param  {KeyboardEvent} event
+         */
+        function sendOnShortcut(event) {
+            // the physical S key, so non-Latin keyboard layouts work, too
+            const isSaveKey = event.code === 'KeyS';
+            // Alt is excluded because AltGr is reported as Ctrl+Alt and some
+            // layouts type letters with AltGr+S, Shift to leave "Save page as"
+            // ([Ctrl]+[Shift]+[S]) to the browser
+            const hasCorrectModifiers = (event.ctrlKey || event.metaKey) && !event.altKey && !event.shiftKey;
+            const isButtonAvailable = sendButton && !sendButton.classList.contains('hidden') && !sendButton.disabled;
+            if (isSaveKey && hasCorrectModifiers && isButtonAvailable) {
+                event.preventDefault();
+                sendButton.click();
+            }
+        }
+
+        /**
          * retrys some callback registered before
          *
          * @name   TopNav.clickRetryButton
@@ -4733,6 +4758,7 @@ window.PrivateBin = (function () {
             }
             if (sendButton) {
                 sendButton.addEventListener('click', PasteEncrypter.sendPaste);
+                document.addEventListener('keydown', sendOnShortcut);
             }
             if (cloneButton) {
                 cloneButton.addEventListener('click', Controller.clonePaste);

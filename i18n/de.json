@@ -234,5 +234,6 @@
     "Theme": "Design",
     "Copy": "Kopieren",
     "Cmd": "Cmd",
-    "Ctrl": "Strg"
+    "Ctrl": "Strg",
+    "Hit %s+s to create the document, storing it on %s": "Drücke %s+s um das Dokument zu erstellen und es auf %s zu speichern"
 }
