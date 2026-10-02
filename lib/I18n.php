@@ -13,6 +13,7 @@ namespace PrivateBin;
 
 use AppendIterator;
 use GlobIterator;
+use function in_array;
 
 /**
  * I18n
