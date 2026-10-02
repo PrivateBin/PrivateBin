@@ -176,9 +176,7 @@ class I18n
         }
         // find a translation file matching the browsers language preferences
         else {
-            self::$_language = self::_getMatchingLanguage(
-                self::getBrowserLanguages(), $availableLanguages
-            );
+            self::$_language = self::_getLanguageFromHttpHeader($availableLanguages);
         }
 
         // load translations
@@ -188,6 +186,30 @@ class I18n
             $data                = file_get_contents(self::_getPath(self::$_language . '.json'));
             self::$_translations = Json::decode($data);
         }
+    }
+
+    /**
+     * get languages bsed on the HTTP header
+     *
+     * @access private
+     * @static
+     * @param  array $availableLanguages
+     * @return string
+     */
+    private static function _getLanguageFromHttpHeader($availableLanguages)
+    {
+        // as per https://stackoverflow.com/a/9051957/5008962 we can use the I10n module
+        // if loaded, but it only returns the primary preference (aka one string)
+        if (function_exists('locale_accept_from_http')) {
+            $detectedBestLanguage = locale_accept_from_http($_SERVER['HTTP_ACCEPT_LANGUAGE']);
+            if (in_array($detectedBestLanguage, $availableLanguages)) {
+                return $detectedBestLanguage;
+            }
+        }
+
+        return self::_getMatchingLanguage(
+            self::getBrowserLanguages(), $availableLanguages
+        );
     }
 
     /**
@@ -201,7 +223,7 @@ class I18n
     {
         if (count(self::$_availableLanguages) === 0) {
             self::$_availableLanguages[] = 'en'; // en.json is not part of the release archive
-            $languageIterator            = new AppendIterator();
+            $languageIterator = new AppendIterator();
             $languageIterator->append(new GlobIterator(self::_getPath('??.json')));
             $languageIterator->append(new GlobIterator(self::_getPath('???.json'))); // for jbo
             foreach ($languageIterator as $file) {
