@@ -4370,6 +4370,11 @@ window.PrivateBin = (function () {
          */
         me.showRetryButton = function () {
             retryButton.classList.remove('hidden');
+            // The Bootstrap 5 template gives Retry its own list item. That item
+            // still takes a flex gap while only the button is hidden.
+            if (Helper.isBootstrap5()) {
+                retryButton.parentElement.classList.remove('hidden');
+            }
         };
 
         /**
@@ -4380,6 +4385,9 @@ window.PrivateBin = (function () {
          */
         me.hideRetryButton = function () {
             retryButton.classList.add('hidden');
+            if (Helper.isBootstrap5()) {
+                retryButton.parentElement.classList.add('hidden');
+            }
         };
 
         /**
