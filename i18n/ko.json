@@ -235,5 +235,5 @@
     "Copy": "복사",
     "Cmd": "Cmd",
     "Ctrl": "Ctrl",
-    "Hit %s+s to create the document, storing it on %s": "Hit %s+s to create the document, storing it on %s"
+    "Hit %s+s to create the document, storing it on %s": "%s+s를 눌러 문서를 생성하고 %s에 저장하세요."
 }
