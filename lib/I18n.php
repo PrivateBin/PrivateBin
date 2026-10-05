@@ -13,8 +13,9 @@ namespace PrivateBin;
 
 use AppendIterator;
 use GlobIterator;
-use function in_array;
+
 use function array_key_exists;
+use function in_array;
 
 /**
  * I18n
@@ -118,8 +119,8 @@ class I18n
         array_unshift($args, $messageId);
         if (is_array(self::$_translations[$messageId])) {
             $number = (int) $args[1];
-            $key    = self::_getPluralForm($number);
-            $max    = count(self::$_translations[$messageId]) - 1;
+            $key = self::_getPluralForm($number);
+            $max = count(self::$_translations[$messageId]) - 1;
             if ($key > $max) {
                 $key = $max;
             }
@@ -185,7 +186,7 @@ class I18n
         if (self::$_language === 'en') {
             self::$_translations = [];
         } else {
-            $data                = file_get_contents(self::_getPath(self::$_language . '.json'));
+            $data = file_get_contents(self::_getPath(self::$_language . '.json'));
             self::$_translations = Json::decode($data);
         }
     }
@@ -290,7 +291,7 @@ class I18n
     protected static function _normalizeBrowserLanguages($languages, $availableLanguages)
     {
         // Base zh stays before zh-tw because regional locales are appended after base locales.
-        $hasSimplifiedChinese  = in_array('zh', $availableLanguages, true);
+        $hasSimplifiedChinese = in_array('zh', $availableLanguages, true);
         $hasTraditionalChinese = in_array('zh-tw', $availableLanguages, true);
         foreach ($languages as $quality => $languageRanges) {
             foreach ($languageRanges as $index => $languageRange) {
@@ -338,7 +339,7 @@ class I18n
     {
         $file = self::_getPath('languages.json');
         if (count(self::$_languageLabels) === 0 && is_readable($file)) {
-            $data                  = file_get_contents($file);
+            $data = file_get_contents($file);
             self::$_languageLabels = Json::decode($data);
         }
         if (count($languages) === 0) {
@@ -466,7 +467,7 @@ class I18n
     protected static function _getMatchingLanguage($acceptedLanguages, $availableLanguages)
     {
         $matches = [];
-        $any     = false;
+        $any = false;
         foreach ($acceptedLanguages as $acceptedQuality => $acceptedValues) {
             $acceptedQuality = floatval($acceptedQuality);
             if ($acceptedQuality === 0.0) {
@@ -478,7 +479,7 @@ class I18n
                 }
                 foreach ($availableLanguages as $availableValue) {
                     $availableQuality = 1.0;
-                    $matchingGrade    = self::_matchLanguage($acceptedValue, $availableValue);
+                    $matchingGrade = self::_matchLanguage($acceptedValue, $availableValue);
                     if ($matchingGrade > 0) {
                         $q = (string) ($acceptedQuality * $availableQuality * $matchingGrade);
                         if (!isset($matches[$q])) {

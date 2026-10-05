@@ -44,7 +44,7 @@ class I18nTest extends TestCase
     public function testTranslationFallback()
     {
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'foobar';
-        $messageId                       = 'It does not matter if the message ID exists';
+        $messageId = 'It does not matter if the message ID exists';
         I18n::loadTranslations();
         $this->assertEquals($messageId, I18n::_($messageId), 'fallback to en');
         I18n::getLanguageLabels();
@@ -230,7 +230,7 @@ class I18nTest extends TestCase
     {
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'foobar';
         I18n::loadTranslations();
-        $input  = '&<>"\'/`=';
+        $input = '&<>"\'/`=';
         $result = htmlspecialchars($input, ENT_QUOTES | ENT_HTML5 | ENT_DISALLOWED, 'UTF-8', false);
         $this->assertEquals($result, I18n::encode($input), 'encodes HTML entities');
         $this->assertEquals('<a>some ' . $result . ' + 1</a>', I18n::_('<a>some %s + %d</a>', $input, 1), 'encodes parameters in translations');
@@ -313,7 +313,7 @@ class I18nTest extends TestCase
     public function testMessageIdsExistInAllLanguages()
     {
         $messageIds = [];
-        $languages  = [];
+        $languages = [];
         foreach (new DirectoryIterator(PATH . 'i18n') as $file) {
             $fileNameLength = strlen($file->getFilename());
             if ($fileNameLength === 7) {       // xx.json
@@ -325,9 +325,9 @@ class I18nTest extends TestCase
             } else {
                 continue;
             }
-            $languageJson         = file_get_contents($file->getPathname());
-            $languageMessageIds   = array_keys(Json::decode($languageJson));
-            $messageIds           = array_unique(array_merge($messageIds, $languageMessageIds));
+            $languageJson = file_get_contents($file->getPathname());
+            $languageMessageIds = array_keys(Json::decode($languageJson));
+            $messageIds = array_unique(array_merge($messageIds, $languageMessageIds));
             $languages[$language] = $languageMessageIds;
         }
         foreach ($messageIds as $messageId) {
