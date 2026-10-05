@@ -14,6 +14,7 @@ namespace PrivateBin;
 use AppendIterator;
 use GlobIterator;
 use function in_array;
+use function array_key_exists;
 
 /**
  * I18n
@@ -199,6 +200,10 @@ class I18n
      */
     private static function _getLanguageFromHttpHeader($availableLanguages)
     {
+        if (!array_key_exists('HTTP_ACCEPT_LANGUAGE', $_SERVER)) {
+            return self::$_languageFallback;
+        }
+
         // as per https://stackoverflow.com/a/9051957/5008962 we can use the I10n module
         // if loaded, but it only returns the primary preference (aka one string)
         if (function_exists('locale_accept_from_http')) {
