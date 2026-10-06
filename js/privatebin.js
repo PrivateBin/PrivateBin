@@ -56,7 +56,7 @@ window.PrivateBin = (function () {
      */
     const purifyHtmlConfig = {
         ALLOWED_URI_REGEXP: /^(?:(?:(?:f|ht)tps?|mailto|magnet):)/i,
-        ALLOWED_ATTR: ['href', 'id', 'target', 'rel', 'class', 'style'],
+        ALLOWED_ATTR: ['href'],
         USE_PROFILES: {
             html: true
         }
@@ -72,9 +72,8 @@ window.PrivateBin = (function () {
      */
     const purifyHtmlConfigStrictSubset = {
         ALLOWED_URI_REGEXP: purifyHtmlConfig.ALLOWED_URI_REGEXP,
-        ALLOWED_TAGS: ['a', 'i', 'span', 'kbd'],
-        ALLOWED_ATTR: ['href', 'id', 'target', 'rel'],
-        ADD_ATTR: ['target', 'rel']
+        ALLOWED_TAGS: ['a'],
+        ALLOWED_ATTR: ['href']
     };
 
     /**
@@ -87,6 +86,20 @@ window.PrivateBin = (function () {
             svg: true,
             svgFilters: true
         }
+    };
+
+    /**
+     * DOMpurify settings for translated messages, which are allowed to include limited HTML.
+     *
+     * NOTE: The key {@link purifyHtmlConfig.USE_PROFILES} **must not** be included,
+     * as otherwise `USE_PROFILES` takes precedence over {@link purifyHtmlConfigStrictSubset.ALLOWED_TAGS}.
+     *
+     * @private
+     */
+    const purifyTranslationConfig = {
+        ALLOWED_URI_REGEXP: /^(?:https?:)/i, // the only URL expected here is the generated document, so only http & https
+        ALLOWED_TAGS: ['a', 'i', 'span', 'kbd'],
+        ALLOWED_ATTR: ['href', 'id'] // one of the messages contains an id attribute
     };
 
     /**
@@ -805,7 +818,7 @@ window.PrivateBin = (function () {
 
             if (containsHtml) {
                 // only allow tags/attributes we actually use in translations
-                output = DOMPurify.sanitize(output, purifyHtmlConfigStrictSubset);
+                output = DOMPurify.sanitize(output, purifyTranslationConfig);
             }
 
             // if element is given, insert translation

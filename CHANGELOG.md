@@ -15,6 +15,7 @@
 * FIXED: Prevent browsers guessing MIME types on JSON(LD) API responses (#164)
 * FIXED: Insert quoted base path into JSON-LD documents
 * FIXED: Several potential issues in handling comment files (#1901)
+* FIXED: Sanitize Markdown HTML from CSS classes & styles
 
 ## 2.0.6 (2026-08-08)
 * CHANGED: Stricter MIME type validation, divergent files get no preview and forced download link
