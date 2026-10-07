@@ -129,4 +129,18 @@ class ViewTest extends TestCase
         $this->expectExceptionCode(81);
         $test->draw('../index');
     }
+
+    public function testAssignedVariableCannotOverrideTemplatePath()
+    {
+        $test = new View;
+        $test->assign('NAME', 'PrivateBinTest');
+        $test->assign('ERROR', 'expected error');
+        $test->assign('path', PATH . 'tpl' . DIRECTORY_SEPARATOR . 'does-not-exist.php');
+
+        ob_start();
+        $test->draw('shortenerproxy');
+        $content = ob_get_clean();
+
+        $this->assertStringContainsString('expected error', $content);
+    }
 }
