@@ -158,12 +158,12 @@ endif;
 					<span class="navbar-toggler-icon"></span>
 				</button>
 				<div id="navbar" class="collapse navbar-collapse">
-					<ul class="navbar-nav me-auto gap-2 align-items-lg-center align-items-stretch">
+					<ul class="navbar-nav me-auto gap-2 align-items-lg-center align-items-stretch flex-wrap">
 						<li id="loadingindicator" class="navbar-text hidden me-auto">
 							<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#clock" /></svg>
 							<?php echo I18n::_('Loading…'), PHP_EOL; ?>
 						</li>
-						<li class="nav-item d-flex flex-lg-row flex-column">
+						<li class="nav-item d-flex flex-lg-row flex-column hidden">
 							<button id="retrybutton" type="button" class="reloadlink hidden btn btn-primary d-flex justify-content-center align-items-center gap-1">
 								<svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="img/bootstrap-icons.svg#repeat" /></svg> <?php echo I18n::_('Retry'), PHP_EOL; ?>
 							</button>

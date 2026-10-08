@@ -856,6 +856,94 @@ describe('TopNav', function () {
         );
     });
 
+    describe('showRetryButton & hideRetryButton', function () {
+        afterEach(function () {
+            delete global.bootstrap;
+            cleanup();
+        });
+
+        it(
+            'shows and hides the Bootstrap 5 retry button with its list item and runs the callback once',
+            function () {
+                cleanup();
+                global.bootstrap = {};
+                document.documentElement.innerHTML =
+                    '<nav><div id="navbar"><ul class="navbar-nav">' +
+                    '<li class="nav-item hidden"><button id="retrybutton" ' +
+                    'type="button" class="hidden">Retry</button></li>' +
+                    '<li><button id="newbutton" type="button">New</button>' +
+                    '</li></ul></div></nav>';
+                PrivateBin.TopNav.init();
+                let calls = 0;
+                PrivateBin.TopNav.setRetryCallback(function () {
+                    calls++;
+                });
+                const retryItem = query('#retrybutton').parentElement;
+
+                assert.ok(query('#retrybutton').classList.contains('hidden'));
+                assert.ok(retryItem.classList.contains('hidden'));
+
+                PrivateBin.TopNav.showRetryButton();
+                assert.ok(!query('#retrybutton').classList.contains('hidden'));
+                assert.ok(!retryItem.classList.contains('hidden'));
+
+                query('#retrybutton').click();
+                assert.strictEqual(calls, 1);
+
+                PrivateBin.TopNav.hideRetryButton();
+                assert.ok(query('#retrybutton').classList.contains('hidden'));
+                assert.ok(retryItem.classList.contains('hidden'));
+
+                PrivateBin.TopNav.showRetryButton();
+                PrivateBin.TopNav.hideRetryButton();
+                assert.ok(query('#retrybutton').classList.contains('hidden'));
+                assert.ok(retryItem.classList.contains('hidden'));
+                assert.ok(!query('#newbutton').classList.contains('hidden'));
+                assert.strictEqual(calls, 1);
+            }
+        );
+
+        it(
+            'toggles only the retry button on legacy Bootstrap 3 and page templates',
+            function () {
+                cleanup();
+                delete global.bootstrap;
+                document.documentElement.innerHTML =
+                    '<nav><div id="navbar"><ul class="nav navbar-nav"><li>' +
+                    '<button id="retrybutton" type="button" class="hidden">' +
+                    'Retry</button><button id="newbutton" type="button">' +
+                    'New</button></li></ul></div></nav>';
+                PrivateBin.TopNav.init();
+                let calls = 0;
+                PrivateBin.TopNav.setRetryCallback(function () {
+                    calls++;
+                });
+                const retryItem = query('#retrybutton').parentElement;
+
+                assert.ok(query('#retrybutton').classList.contains('hidden'));
+                assert.ok(!retryItem.classList.contains('hidden'));
+
+                PrivateBin.TopNav.showRetryButton();
+                assert.ok(!query('#retrybutton').classList.contains('hidden'));
+                assert.ok(!retryItem.classList.contains('hidden'));
+                assert.ok(!query('#newbutton').classList.contains('hidden'));
+
+                query('#retrybutton').click();
+                assert.strictEqual(calls, 1);
+
+                PrivateBin.TopNav.hideRetryButton();
+                assert.ok(query('#retrybutton').classList.contains('hidden'));
+                assert.ok(!retryItem.classList.contains('hidden'));
+                assert.ok(!query('#newbutton').classList.contains('hidden'));
+
+                PrivateBin.TopNav.showRetryButton();
+                PrivateBin.TopNav.hideRetryButton();
+                assert.ok(query('#retrybutton').classList.contains('hidden'));
+                assert.strictEqual(calls, 1);
+            }
+        );
+    });
+
     describe('rawText', function () {
         before(function () {
             cleanup();
