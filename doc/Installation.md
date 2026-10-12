@@ -19,6 +19,18 @@ for more information.
 
 - [Config Configuration - PrivateBin by @e1mo](https://galaxy.ansible.com/ui/standalone/roles/e1mo/privatebin/) ([Github source code](https://git.sr.ht/~e1mo/ansible-role-privatebin)): Deploy PrivateBin configuration to disk with a customized configuration.
 
+**NOTE:** There are also container images and a Helm chart for Kubernetes:
+
+- [Container images](https://github.com/PrivateBin/docker-nginx-fpm-alpine#image-variants): Pre-installed PrivateBin on Nginx, php-fpm and Alpine, available on Docker Hub (`privatebin/…`) and GitHub (`ghcr.io/privatebin/…`), with variants for file based, database, Google Cloud and S3 storage.
+
+- [Helm chart](https://github.com/PrivateBin/helm-chart#quick-start): Deploys the container image to Kubernetes:
+
+  ```bash
+  helm repo add privatebin https://privatebin.github.io/helm-chart
+  helm repo update
+  helm install privatebin privatebin/privatebin
+  ```
+
 ### Minimal Requirements
 
 - PHP version 7.4 or above
