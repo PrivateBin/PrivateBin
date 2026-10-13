@@ -21,7 +21,7 @@ for more information.
 
 **NOTE:** There are also container images and a Helm chart for Kubernetes:
 
-- [Container images](https://github.com/PrivateBin/docker-nginx-fpm-alpine#image-variants): Pre-installed PrivateBin on Nginx, php-fpm and Alpine, available on Docker Hub (`privatebin/…`) and GitHub (`ghcr.io/privatebin/…`), with variants for file based, database, Google Cloud and S3 storage.
+- [Container images](https://github.com/PrivateBin/docker-nginx-fpm-alpine#image-variants): Pre-installed PrivateBin on Nginx and php-fpm or [FreeUnit](https://github.com/PrivateBin/docker-unit-alpine/#image-variants), both Alpine-based, available on Docker Hub (`privatebin/…`) and GitHub (`ghcr.io/privatebin/…`), with variants for file based, database, Google Cloud and S3 storage.
 
 - [Helm chart](https://github.com/PrivateBin/helm-chart#quick-start): Deploys the container image to Kubernetes:
 
