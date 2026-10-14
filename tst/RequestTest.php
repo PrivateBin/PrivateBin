@@ -99,6 +99,17 @@ class RequestTest extends TestCase
         $this->assertEquals('foo', $request->getParam('ct'));
     }
 
+    public function testApiCorsPreflight()
+    {
+        $this->reset();
+        $_SERVER['REQUEST_METHOD'] = 'OPTIONS';
+        $_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD'] = 'POST';
+        $request = new Request;
+
+        $this->assertTrue($request->isJsonApiCall(), 'is JSON API call');
+        $this->assertEquals('view', $request->getOperation());
+    }
+
     public function testApiCreateAlternative()
     {
         $this->reset();
