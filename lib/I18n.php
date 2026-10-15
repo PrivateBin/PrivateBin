@@ -14,6 +14,9 @@ namespace PrivateBin;
 use AppendIterator;
 use GlobIterator;
 
+use function array_key_exists;
+use function in_array;
+
 /**
  * I18n
  *
@@ -116,8 +119,8 @@ class I18n
         array_unshift($args, $messageId);
         if (is_array(self::$_translations[$messageId])) {
             $number = (int) $args[1];
-            $key    = self::_getPluralForm($number);
-            $max    = count(self::$_translations[$messageId]) - 1;
+            $key = self::_getPluralForm($number);
+            $max = count(self::$_translations[$messageId]) - 1;
             if ($key > $max) {
                 $key = $max;
             }
@@ -176,21 +179,44 @@ class I18n
         }
         // find a translation file matching the browsers language preferences
         else {
-            self::$_language = self::_getMatchingLanguage(
-                self::_normalizeBrowserLanguages(
-                    self::getBrowserLanguages(), $availableLanguages
-                ),
-                $availableLanguages
-            );
+            self::$_language = self::_getLanguageFromHttpHeader($availableLanguages);
         }
 
         // load translations
         if (self::$_language === 'en') {
             self::$_translations = [];
         } else {
-            $data                = file_get_contents(self::_getPath(self::$_language . '.json'));
+            $data = file_get_contents(self::_getPath(self::$_language . '.json'));
             self::$_translations = Json::decode($data);
         }
+    }
+
+    /**
+     * get languages bsed on the HTTP header
+     *
+     * @access private
+     * @static
+     * @param  array $availableLanguages
+     * @return string
+     */
+    private static function _getLanguageFromHttpHeader($availableLanguages)
+    {
+        if (!array_key_exists('HTTP_ACCEPT_LANGUAGE', $_SERVER)) {
+            return self::$_languageFallback;
+        }
+
+        // as per https://stackoverflow.com/a/9051957/5008962 we can use the I10n module
+        // if loaded, but it only returns the primary preference (aka one string)
+        if (function_exists('locale_accept_from_http')) {
+            $detectedBestLanguage = locale_accept_from_http($_SERVER['HTTP_ACCEPT_LANGUAGE']);
+            if (in_array($detectedBestLanguage, $availableLanguages)) {
+                return $detectedBestLanguage;
+            }
+        }
+
+        return self::_getMatchingLanguage(
+            self::getBrowserLanguages(), $availableLanguages
+        );
     }
 
     /**
@@ -204,7 +230,7 @@ class I18n
     {
         if (count(self::$_availableLanguages) === 0) {
             self::$_availableLanguages[] = 'en'; // en.json is not part of the release archive
-            $languageIterator            = new AppendIterator();
+            $languageIterator = new AppendIterator();
             $languageIterator->append(new GlobIterator(self::_getPath('??.json')));
             $languageIterator->append(new GlobIterator(self::_getPath('???.json'))); // for jbo
             $languageIterator->append(new GlobIterator(self::_getPath('??-??.json'))); // for regional variants like zh-tw
@@ -234,7 +260,7 @@ class I18n
             $languageRanges = explode(',', trim($_SERVER['HTTP_ACCEPT_LANGUAGE']));
             foreach ($languageRanges as $languageRange) {
                 if (preg_match(
-                    '/(\*|[a-zA-Z0-9]{1,8}(?:-[a-zA-Z0-9]{1,8})*)(?:\s*;\s*q\s*=\s*(0(?:\.\d{0,3})|1(?:\.0{0,3})))?/',
+                    '/^(\*|[a-zA-Z0-9]{1,8}(?:-[a-zA-Z0-9]{1,8})*)(?:\s*;\s*q\s*=\s*(0(?:\.\d{0,3})|1(?:\.0{0,3})))?$/',
                     trim($languageRange), $match
                 )) {
                     if (!isset($match[2])) {
@@ -265,7 +291,7 @@ class I18n
     protected static function _normalizeBrowserLanguages($languages, $availableLanguages)
     {
         // Base zh stays before zh-tw because regional locales are appended after base locales.
-        $hasSimplifiedChinese  = in_array('zh', $availableLanguages, true);
+        $hasSimplifiedChinese = in_array('zh', $availableLanguages, true);
         $hasTraditionalChinese = in_array('zh-tw', $availableLanguages, true);
         foreach ($languages as $quality => $languageRanges) {
             foreach ($languageRanges as $index => $languageRange) {
@@ -313,7 +339,7 @@ class I18n
     {
         $file = self::_getPath('languages.json');
         if (count(self::$_languageLabels) === 0 && is_readable($file)) {
-            $data                  = file_get_contents($file);
+            $data = file_get_contents($file);
             self::$_languageLabels = Json::decode($data);
         }
         if (count($languages) === 0) {
@@ -441,18 +467,18 @@ class I18n
     protected static function _getMatchingLanguage($acceptedLanguages, $availableLanguages)
     {
         $matches = [];
-        $any     = false;
+        $any = false;
         foreach ($acceptedLanguages as $acceptedQuality => $acceptedValues) {
             $acceptedQuality = floatval($acceptedQuality);
             if ($acceptedQuality === 0.0) {
                 continue;
             }
-            foreach ($availableLanguages as $availableValue) {
-                $availableQuality = 1.0;
-                foreach ($acceptedValues as $acceptedValue) {
-                    if ($acceptedValue === '*') {
-                        $any = true;
-                    }
+            foreach ($acceptedValues as $acceptedValue) {
+                if ($acceptedValue === '*') {
+                    $any = true;
+                }
+                foreach ($availableLanguages as $availableValue) {
+                    $availableQuality = 1.0;
                     $matchingGrade = self::_matchLanguage($acceptedValue, $availableValue);
                     if ($matchingGrade > 0) {
                         $q = (string) ($acceptedQuality * $availableQuality * $matchingGrade);

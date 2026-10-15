@@ -44,7 +44,7 @@ class I18nTest extends TestCase
     public function testTranslationFallback()
     {
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'foobar';
-        $messageId                       = 'It does not matter if the message ID exists';
+        $messageId = 'It does not matter if the message ID exists';
         I18n::loadTranslations();
         $this->assertEquals($messageId, I18n::_($messageId), 'fallback to en');
         I18n::getLanguageLabels();
@@ -78,6 +78,14 @@ class I18nTest extends TestCase
         $this->assertEquals('0 heure',  I18n::_('%d hours', 0), '0 hours in French');
         $this->assertEquals('1 heure',  I18n::_('%d hours', 1), '1 hour in French');
         $this->assertEquals('2 heures', I18n::_('%d hours', 2), '2 hours in French');
+    }
+
+    public function testEqualQualityPreservesBrowserOrder()
+    {
+        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'fr;q=0.8,de;q=0.8';
+        I18n::loadTranslations();
+
+        $this->assertEquals('fr', I18n::getLanguage());
     }
 
     public function testBulgarianMonthExpirationTranslation()
@@ -198,6 +206,12 @@ class I18nTest extends TestCase
         $this->assertEquals('14 minut',  I18n::_('%d minutes', 14), '14 minutes in Czech');
     }
 
+    public function testInvalidBrowserLanguageQualityIsIgnored()
+    {
+        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'de;q=2,en;q=0.8';
+        $this->assertSame(['0.8' => ['en']], I18n::getBrowserLanguages());
+    }
+
     public function testBrowserLanguageAnyDetection()
     {
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = '*';
@@ -216,7 +230,7 @@ class I18nTest extends TestCase
     {
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'foobar';
         I18n::loadTranslations();
-        $input  = '&<>"\'/`=';
+        $input = '&<>"\'/`=';
         $result = htmlspecialchars($input, ENT_QUOTES | ENT_HTML5 | ENT_DISALLOWED, 'UTF-8', false);
         $this->assertEquals($result, I18n::encode($input), 'encodes HTML entities');
         $this->assertEquals('<a>some ' . $result . ' + 1</a>', I18n::_('<a>some %s + %d</a>', $input, 1), 'encodes parameters in translations');
@@ -299,7 +313,7 @@ class I18nTest extends TestCase
     public function testMessageIdsExistInAllLanguages()
     {
         $messageIds = [];
-        $languages  = [];
+        $languages = [];
         foreach (new DirectoryIterator(PATH . 'i18n') as $file) {
             $fileNameLength = strlen($file->getFilename());
             if ($fileNameLength === 7) {       // xx.json
@@ -311,9 +325,9 @@ class I18nTest extends TestCase
             } else {
                 continue;
             }
-            $languageJson         = file_get_contents($file->getPathname());
-            $languageMessageIds   = array_keys(Json::decode($languageJson));
-            $messageIds           = array_unique(array_merge($messageIds, $languageMessageIds));
+            $languageJson = file_get_contents($file->getPathname());
+            $languageMessageIds = array_keys(Json::decode($languageJson));
+            $messageIds = array_unique(array_merge($messageIds, $languageMessageIds));
             $languages[$language] = $languageMessageIds;
         }
         foreach ($messageIds as $messageId) {
