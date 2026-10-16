@@ -79,11 +79,16 @@ class Administration
      */
     private function _delete_all()
     {
-        $ids = $this->_store->getAllPastes();
+        $ids    = $this->_store->getAllPastes();
+        $failed = array();
         foreach ($ids as $pasteid) {
             echo "Deleting document ID: $pasteid" . PHP_EOL;
             $this->_store->delete($pasteid);
+            if ($this->_store->exists($pasteid)) {
+                $failed[] = $pasteid;
+            }
         }
+        self::_report_deletion_failures($failed);
         exit("All documents successfully deleted" . PHP_EOL);
     }
 
@@ -94,20 +99,42 @@ class Administration
      */
     private function _delete_v1()
     {
-        $ids = $this->_store->getAllPastes();
+        $ids    = $this->_store->getAllPastes();
+        $failed = array();
         foreach ($ids as $pasteid) {
-            try {
-                $paste = $this->_store->read($pasteid);
-            } catch (Exception $e) {
-                echo "Error reading document {$pasteid}: ", $e->getMessage(), PHP_EOL;
+            $paste = $this->_read($pasteid);
+            if ($paste === false) {
+                continue;
             }
             if (array_key_exists('adata', $paste)) {
                 continue;
             }
             echo "Deleting v1 document ID: $pasteid" . PHP_EOL;
             $this->_store->delete($pasteid);
+            if ($this->_store->exists($pasteid)) {
+                $failed[] = $pasteid;
+            }
         }
+        self::_report_deletion_failures($failed);
         exit("All unsupported legacy v1 documents successfully deleted" . PHP_EOL);
+    }
+
+    /**
+     * reports documents that remain after a bulk deletion
+     *
+     * @access private
+     * @static
+     * @param  array $failed
+     */
+    private static function _report_deletion_failures(array $failed)
+    {
+        if (count($failed) > 0) {
+            self::_error(
+                'documents exist after deletion, permission problem? IDs: ' .
+                implode(', ', $failed),
+                7
+            );
+        }
     }
 
     /**
@@ -191,6 +218,59 @@ EOT, PHP_EOL;
             echo $pasteid, PHP_EOL;
         }
         exit;
+    }
+
+    /**
+     * reads a document and reports damaged data
+     *
+     * @access private
+     * @param  string $pasteid
+     * @return array|false
+     */
+    private function _read($pasteid)
+    {
+        try {
+            $paste = $this->_store->read($pasteid);
+        } catch (Exception $e) {
+            echo "Error reading document {$pasteid}: ", $e->getMessage(), PHP_EOL;
+            return false;
+        }
+        if (!is_array($paste) || !$this->_isValidPaste($paste)) {
+            echo "Error reading document {$pasteid}: damaged data", PHP_EOL;
+            return false;
+        }
+        return $paste;
+    }
+
+    /**
+     * checks whether a stored document can safely be classified
+     *
+     * @access private
+     * @param  array $paste
+     * @return bool
+     */
+    private function _isValidPaste(array $paste)
+    {
+        if (!array_key_exists('meta', $paste) || !is_array($paste['meta'])) {
+            return false;
+        }
+        if (array_key_exists('expire_date', $paste['meta'])) {
+            $expireDate = $paste['meta']['expire_date'];
+            if (
+                !is_int($expireDate) &&
+                !(is_string($expireDate) && preg_match('/\A[+-]?\d+\z/', $expireDate) === 1)
+            ) {
+                return false;
+            }
+        }
+        if (!array_key_exists('adata', $paste)) {
+            return array_key_exists('data', $paste) && is_string($paste['data']);
+        }
+        $adata = $paste['adata'];
+        return is_array($adata) &&
+            is_string($adata[Paste::ADATA_FORMATTER] ?? null) &&
+            is_int($adata[Paste::ADATA_OPEN_DISCUSSION] ?? null) &&
+            is_int($adata[Paste::ADATA_BURN_AFTER_READING] ?? null);
     }
 
     /**
@@ -279,42 +359,41 @@ EOT, PHP_EOL;
 
         echo "Total:\t\t\t{$counters['total']}", PHP_EOL;
         foreach ($ids as $pasteid) {
-            try {
-                $paste = $this->_store->read($pasteid);
-            } catch (Exception $e) {
-                echo "Error reading document {$pasteid}: ", $e->getMessage(), PHP_EOL;
-                ++$counters['damaged'];
-            }
+            $paste = $this->_read($pasteid);
             ++$counters['progress'];
 
-            if (
-                array_key_exists('meta', $paste) &&
-                array_key_exists('expire_date', $paste['meta']) &&
-                $paste['meta']['expire_date'] < $time
-            ) {
-                ++$counters['expired'];
-            }
-
-            if (array_key_exists('adata', $paste)) {
-                switch ($paste['adata'][Paste::ADATA_FORMATTER]) {
-                    case 'plaintext':
-                        ++$counters['plain'];
-                        break;
-                    case 'syntaxhighlighting':
-                        ++$counters['syntax'];
-                        break;
-                    case 'markdown':
-                        ++$counters['md'];
-                        break;
-                    default:
-                        ++$counters['unknown'];
-                        break;
-                }
-                $counters['discussion'] += (int) $paste['adata'][Paste::ADATA_OPEN_DISCUSSION];
-                $counters['burn'] += (int) $paste['adata'][Paste::ADATA_BURN_AFTER_READING];
+            if ($paste === false) {
+                ++$counters['damaged'];
             } else {
-                echo "Unsupported v1 paste ", $pasteid, PHP_EOL;
-                ++$counters['legacy'];
+                if (
+                    array_key_exists('meta', $paste) &&
+                    array_key_exists('expire_date', $paste['meta']) &&
+                    $paste['meta']['expire_date'] < $time
+                ) {
+                    ++$counters['expired'];
+                }
+
+                if (array_key_exists('adata', $paste)) {
+                    switch ($paste['adata'][Paste::ADATA_FORMATTER]) {
+                        case 'plaintext':
+                            ++$counters['plain'];
+                            break;
+                        case 'syntaxhighlighting':
+                            ++$counters['syntax'];
+                            break;
+                        case 'markdown':
+                            ++$counters['md'];
+                            break;
+                        default:
+                            ++$counters['unknown'];
+                            break;
+                    }
+                    $counters['discussion'] += (int) $paste['adata'][Paste::ADATA_OPEN_DISCUSSION];
+                    $counters['burn'] += (int) $paste['adata'][Paste::ADATA_BURN_AFTER_READING];
+                } else {
+                    echo "Unsupported v1 paste ", $pasteid, PHP_EOL;
+                    ++$counters['legacy'];
+                }
             }
 
             // display progress
@@ -391,10 +470,15 @@ EOT, PHP_EOL;
 
         if ($this->_option('p', 'purge') !== null) {
             try {
-                $this->_store->purge(PHP_INT_MAX);
+                if (!$this->_store->purge(PHP_INT_MAX)) {
+                    self::_error('expired documents exist after deletion, permission problem?', 7);
+                }
             } catch (Exception $e) {
-                echo 'Error purging documents: ', $e->getMessage(), PHP_EOL,
-                    'Run the statistics to find damaged document IDs and either delete them or restore them from backup.', PHP_EOL;
+                self::_error(
+                    'purging documents failed: ' . $e->getMessage() . PHP_EOL .
+                    'Run the statistics to find damaged document IDs and either delete them or restore them from backup.',
+                    8
+                );
             }
             exit('purging of expired documents concluded' . PHP_EOL);
         }
