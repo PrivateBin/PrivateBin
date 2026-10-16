@@ -178,6 +178,34 @@ class RequestTest extends TestCase
         }
     }
 
+    /**
+     * @dataProvider provideInvalidRoutingParameters
+     */
+    public function testPostInvalidRoutingParameters($parameters)
+    {
+        $this->reset();
+        $_SERVER['REQUEST_METHOD']        = 'POST';
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'JSONHttpRequest';
+        $file                             = Helper::createTempFile();
+        file_put_contents($file, json_encode($parameters));
+        Request::setInputStream($file);
+        $request = new Request;
+        unlink($file);
+        $this->assertSame('create', $request->getOperation());
+    }
+
+    public function provideInvalidRoutingParameters()
+    {
+        return [
+            [['pasteid' => '0123456789abcdef', 'deletetoken' => ['invalid']]],
+            [['pasteid' => '0123456789abcdef', 'deletetoken' => 123]],
+            [['pasteid' => ['0123456789abcdef'], 'deletetoken' => 'invalid']],
+            [['jsonld' => ['paste']]],
+            [['link' => ['https://example.com/'], 'shortenviayourls' => true]],
+            [['link' => 123, 'shortenviashlink' => true]],
+        ];
+    }
+
     public function testReadWithNegotiation()
     {
         $this->reset();
