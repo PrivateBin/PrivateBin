@@ -413,6 +413,9 @@ class Database extends AbstractData
         if ($value && $namespace === 'traffic_limiter') {
             try {
                 $this->_last_cache = Json::decode($value);
+                if (!is_array($this->_last_cache)) {
+                    $this->_last_cache = [];
+                }
             } catch (JsonException $e) {
                 error_log('Error decoding JSON from table "config", row "traffic_limiter": ' . $e->getMessage());
                 $this->_last_cache = [];
@@ -420,6 +423,7 @@ class Database extends AbstractData
             if (array_key_exists($key, $this->_last_cache)) {
                 return $this->_last_cache[$key];
             }
+            return '';
         }
         return (string) $value;
     }
