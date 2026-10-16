@@ -151,9 +151,15 @@ class GoogleCloudStorage extends AbstractData
     public function read($pasteid)
     {
         try {
-            $o    = $this->_bucket->object($this->_getKey($pasteid));
-            $data = $o->downloadAsString();
-            return Json::decode($data);
+            $o     = $this->_bucket->object($this->_getKey($pasteid));
+            $data  = $o->downloadAsString();
+            $paste = Json::decode($data);
+            if (!is_array($paste) || !isset($paste['meta']) || !is_array($paste['meta'])) {
+                error_log('failed to read ' . $pasteid . ' from ' . $this->_bucket->name() .
+                    ', invalid data structure');
+                return false;
+            }
+            return $paste;
         } catch (NotFoundException $e) {
             return false;
         } catch (Exception $e) {
