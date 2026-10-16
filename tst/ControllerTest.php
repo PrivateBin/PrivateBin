@@ -77,6 +77,31 @@ class ControllerTest extends TestCase
     /**
      * @runInSeparateProcess
      */
+    public function testViewDisplaysEncryptedDocumentSizeLimitForFileUploads()
+    {
+        $options                       = parse_ini_file(CONF, true);
+        $options['main']['fileupload'] = true;
+        $options['main']['sizelimit']  = 1234000;
+        Helper::createIniFile(CONF, $options);
+        ob_start();
+        new Controller;
+        $content = ob_get_contents();
+        ob_end_clean();
+        $this->assertStringContainsString(
+            'Document is limited to 1.23 MB of encrypted data.',
+            $content,
+            'outputs configured encrypted document size limit'
+        );
+        $this->assertMatchesRegularExpression(
+            '#<input[^>]+id="file"[^>]+aria-describedby="file-size-limit"[^>]*>#',
+            $content,
+            'associates the encrypted document size limit with the file input'
+        );
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
     public function testViewLanguageSelection()
     {
         $options                              = parse_ini_file(CONF, true);

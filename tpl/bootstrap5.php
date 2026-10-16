@@ -265,7 +265,10 @@ if ($FILEUPLOAD) :
 							<ul class="dropdown-menu px-2">
 								<li id="filewrap">
 									<div>
-										<input type="file" id="file" name="file" class="form-control" multiple />
+										<input type="file" id="file" name="file" class="form-control" aria-describedby="file-size-limit" multiple />
+									</div>
+									<div id="file-size-limit" class="form-text">
+										<?php echo I18n::_('Document is limited to %s of encrypted data.', $SIZELIMIT); ?>
 									</div>
 									<div id="dragAndDropFileName" class="dragAndDropFile"><?php echo I18n::_('alternatively drag & drop a file or paste an image from the clipboard'); ?></div>
 								</li>
