@@ -5,6 +5,14 @@ use GuzzleHttp\Client;
 use PHPUnit\Framework\TestCase;
 use PrivateBin\Data\GoogleCloudStorage;
 
+class MissingStorageObjectStub extends StorageObjectStub
+{
+    public function downloadAsString(array $options = [])
+    {
+        throw new Google\Cloud\Core\Exception\NotFoundException('object disappeared');
+    }
+}
+
 class GoogleCloudStorageTest extends TestCase
 {
     private static $_client;
@@ -131,6 +139,59 @@ class GoogleCloudStorageTest extends TestCase
         $this->assertFalse($this->_model->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId()), 'comment does not yet exist');
         $this->assertFalse($this->_model->createComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId(), $comment), 'unable to store broken comment');
         $this->assertFalse($this->_model->existsComment(Helper::getPasteId(), Helper::getPasteId(), Helper::getCommentId()), 'comment does still not exist');
+    }
+
+    public function testCorruptCommentsAreIgnored()
+    {
+        $pasteid   = Helper::getPasteId();
+        $commentid = Helper::getCommentId();
+        $comment   = Helper::getComment();
+        $this->assertTrue($this->_model->createComment($pasteid, $pasteid, $commentid, $comment));
+        self::$_bucket->upload('{', [
+            'name' => 'pastes/' . $pasteid . '/discussion/' . $pasteid . '/ffffffffffffffff',
+        ]);
+        self::$_bucket->upload(json_encode($comment), [
+            'name' => 'pastes/' . $pasteid . '/discussion/' . $pasteid . '/invalid',
+        ]);
+        self::$_bucket->upload(json_encode($comment), [
+            'name' => 'pastes/' . $pasteid . '/discussion/invalid/eeeeeeeeeeeeeeee',
+        ]);
+
+        $comments = $this->_model->readComments($pasteid);
+        $this->assertCount(1, $comments);
+        $this->assertSame($commentid, current($comments)['id']);
+    }
+
+    public function testMissingCommentsAreIgnored()
+    {
+        $pasteid                        = Helper::getPasteId();
+        $name                           = 'pastes/' . $pasteid . '/discussion/' . $pasteid . '/ffffffffffffffff';
+        self::$_bucket->_objects[$name] = new MissingStorageObjectStub(
+            new ConnectionInterfaceStub,
+            $name,
+            self::$_bucket,
+            '1'
+        );
+        $comment   = Helper::getComment();
+        $commentid = Helper::getCommentId();
+        $this->assertTrue($this->_model->createComment($pasteid, $pasteid, $commentid, $comment));
+
+        $comments = $this->_model->readComments($pasteid);
+        $this->assertCount(1, $comments);
+        $this->assertSame($commentid, current($comments)['id']);
+    }
+
+    public function testCommentParentComesFromObjectName()
+    {
+        $pasteid  = Helper::getPasteId();
+        $parentid = 'eeeeeeeeeeeeeeee';
+        $comment  = Helper::getComment();
+        self::$_bucket->upload(json_encode($comment), [
+            'name' => 'pastes/' . $pasteid . '/discussion/' . $parentid . '/' . Helper::getCommentId(),
+        ]);
+
+        $storedComment = current($this->_model->readComments($pasteid));
+        $this->assertSame($parentid, $storedComment['parentid']);
     }
 
     /**
