@@ -51,8 +51,23 @@ class FormatV2
             }
         }
 
+        if ($isComment && (
+            !is_string($message['pasteid']) ||
+            !is_string($message['parentid'])
+        )) {
+            return false;
+        }
+
         // Make sure adata is an array.
         if (!is_array($message['adata'])) {
+            return false;
+        }
+
+        if (!$isComment && (
+            !is_string($message['adata'][1] ?? null) ||
+            !is_int($message['adata'][2] ?? null) ||
+            !is_int($message['adata'][3] ?? null)
+        )) {
             return false;
         }
 
@@ -74,15 +89,18 @@ class FormatV2
 
         // Make sure some fields are base64 data:
         // - initialization vector
-        if (!base64_decode($cipherParams[0], true)) {
+        $iv = base64_decode($cipherParams[0], true);
+        if ($iv === false || $iv === '') {
             return false;
         }
         // - salt
-        if (!base64_decode($cipherParams[1], true)) {
+        $salt = base64_decode($cipherParams[1], true);
+        if ($salt === false || $salt === '') {
             return false;
         }
         // - cipher text
-        if (!($ct = base64_decode($message['ct'], true))) {
+        $ct = base64_decode($message['ct'], true);
+        if ($ct === false || $ct === '') {
             return false;
         }
 
@@ -136,6 +154,7 @@ class FormatV2
             !is_array($message['meta']) ||
             count($message['meta']) === 0 ||
             !array_key_exists('expire', $message['meta']) ||
+            !(is_string($message['meta']['expire']) || is_int($message['meta']['expire'])) ||
             count($message['meta']) > 1
         )) {
             return false;
