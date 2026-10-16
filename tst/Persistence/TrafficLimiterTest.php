@@ -1,7 +1,9 @@
 <?php declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
+use PrivateBin\Configuration;
 use PrivateBin\Data\Filesystem;
+use PrivateBin\Exception\TranslatedException;
 use PrivateBin\Persistence\ServerSalt;
 use PrivateBin\Persistence\TrafficLimiter;
 
@@ -31,6 +33,73 @@ class TrafficLimiterTest extends TestCase
         $_SERVER['REMOTE_ADDR'] = 'foobar';
         TrafficLimiter::canPass();
         $this->assertFileExists($htaccess, 'htaccess recreated');
+    }
+
+    /**
+     * @dataProvider provideInvalidClientAddresses
+     */
+    public function testInvalidClientAddressIsSafelyHashed($address)
+    {
+        if ($address === null) {
+            unset($_SERVER['REMOTE_ADDR']);
+        } else {
+            $_SERVER['REMOTE_ADDR'] = $address;
+        }
+        $this->assertSame(
+            hash_hmac('sha256', '', ServerSalt::get()),
+            TrafficLimiter::getHash('sha256')
+        );
+    }
+
+    public function provideInvalidClientAddresses()
+    {
+        return [
+            [null],
+            [[]],
+            [123],
+        ];
+    }
+
+    public function testMissingClientAddressDoesNotMatchEmptyCreatorRange()
+    {
+        unset($_SERVER['REMOTE_ADDR']);
+        TrafficLimiter::setCreators('127.0.0.1,');
+        try {
+            TrafficLimiter::canPass();
+            $this->fail('missing client address must not match an empty creator range');
+        } catch (TranslatedException $e) {
+            $this->assertSame('Your IP is not authorized to create documents.', $e->getMessage());
+        } finally {
+            TrafficLimiter::setCreators(null);
+        }
+    }
+
+    public function testConfiguredHeaderDoesNotLeakAcrossRequests()
+    {
+        $options                      = parse_ini_file(CONF_SAMPLE, true);
+        $options['traffic']['header'] = 'X_FORWARDED_FOR';
+        Helper::confBackup();
+        Helper::createIniFile(CONF, $options);
+        try {
+            $configuration                       = new Configuration;
+            $_SERVER['REMOTE_ADDR']              = '127.0.0.1';
+            $_SERVER['HTTP_X_FORWARDED_FOR']     = '192.0.2.1';
+            TrafficLimiter::setConfiguration($configuration);
+            $this->assertSame(
+                hash_hmac('sha256', '192.0.2.1', ServerSalt::get()),
+                TrafficLimiter::getHash('sha256')
+            );
+
+            unset($_SERVER['HTTP_X_FORWARDED_FOR']);
+            TrafficLimiter::setConfiguration($configuration);
+            $this->assertSame(
+                hash_hmac('sha256', '127.0.0.1', ServerSalt::get()),
+                TrafficLimiter::getHash('sha256')
+            );
+        } finally {
+            unlink(CONF);
+            Helper::confRestore();
+        }
     }
 
     public function testTrafficGetsLimited()
