@@ -8,6 +8,8 @@ class PurgeLimiterTest extends TestCase
 {
     private $_path;
 
+    private $_store;
+
     public function setUp(): void
     {
         /* Setup Routine */
@@ -15,9 +17,8 @@ class PurgeLimiterTest extends TestCase
         if (!is_dir($this->_path)) {
             mkdir($this->_path);
         }
-        PurgeLimiter::setStore(
-            new Filesystem(['dir' => $this->_path])
-        );
+        $this->_store = new Filesystem(['dir' => $this->_path]);
+        PurgeLimiter::setStore($this->_store);
     }
 
     public function tearDown(): void
@@ -41,5 +42,12 @@ class PurgeLimiterTest extends TestCase
         PurgeLimiter::setLimit(0);
         PurgeLimiter::canPurge();
         $this->assertEquals(true, PurgeLimiter::canPurge());
+    }
+
+    public function testPurgePassesAtExactLimitBoundary()
+    {
+        PurgeLimiter::setLimit(10);
+        $this->_store->setValue((string) (time() - 10), 'purge_limiter');
+        $this->assertTrue(PurgeLimiter::canPurge());
     }
 }
