@@ -1,16 +1,17 @@
 # PrivateBin version history
 
 ## 2.1.1 (not yet released)
+* CHANGED: Check `sizelimit` over full request, before attempting decoding
 
 ## 2.1.0 (2026-10-18)
 * ADDED: Added `shortenviachhoto` endpoint with an `chhoto` configuration section
 * ADDED: Translation for Chinese (Traditional)
 * ADDED: Subject line to the "Email" share button's mailto link (#928)
 * ADDED: Send the document with Ctrl+S, or Cmd+S on macOS (#739)
-* CHANGED: We removed jQuery in the Frontend and replaced it with vanilla JS.
-* CHANGED: Removed the unmaintained js-verify and replaced it with fast-check library.
-* CHANGED: Added a `jsconfig.json` in order to check the types of JavaScript.
-* CHANGED: Removed support for Bootstrap 3 as it requires jQuery.
+* CHANGED: We removed jQuery in the Frontend and replaced it with vanilla JS
+* CHANGED: Removed the unmaintained js-verify and replaced it with fast-check library
+* CHANGED: Added a `jsconfig.json` in order to check the types of JavaScript
+* CHANGED: Removed support for Bootstrap 3 as it requires jQuery
 * CHANGED: Encode documents with `TextEncoder` in `compress()`, instead of the `utf16To8()` percent-encoding round trip, which allocated ~20 times the payload
 * CHANGED: Upgrading libraries to: DOMpurify 3.4.17, ip-lib 1.22.1 & polyfill-php80 1.43.0
 * FIXED: Decode decompressed documents with `TextDecoder` instead of `utf8To16()`, which allocated ~3.4 GB for a 100 MB document and killed the tab (#2027)

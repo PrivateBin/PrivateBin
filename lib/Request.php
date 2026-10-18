@@ -13,6 +13,7 @@ namespace PrivateBin;
 
 use JsonException;
 use PrivateBin\Model\Paste;
+use PrivateBin\Exception\TranslatedException;
 
 /**
  * Request
@@ -41,6 +42,14 @@ class Request
      * @const string
      */
     const MIME_XHTML = 'application/xhtml+xml';
+
+    /**
+     * Input stream length for size checks
+     *
+     * @access private
+     * @var int
+     */
+    private $_bodyLength = 0;
 
     /**
      * Input stream to use for PUT parameter parsing
@@ -111,8 +120,9 @@ class Request
                 // it might be a creation or a deletion, the latter is detected below
                 $this->_operation = 'create';
                 try {
-                    $data          = file_get_contents(self::$_inputStream);
-                    $this->_params = Json::decode($data);
+                    $data              = file_get_contents(self::$_inputStream);
+                    $this->_bodyLength = strlen($data);
+                    $this->_params     = Json::decode($data);
                     // a valid JSON scalar (number, bool or string) decodes
                     // without error, but is not a usable set of parameters
                     if (!is_array($this->_params)) {
@@ -196,10 +206,19 @@ class Request
      * Get data of paste or comment
      *
      * @access public
+     * @param  int $sizelimit
+     * @throws JsonException
+     * @throws TranslatedException
      * @return array
      */
-    public function getData()
+    public function getData(int $sizelimit)
     {
+        if ($this->_bodyLength > $sizelimit) {
+            throw new TranslatedException([
+                'Document is limited to %s of encrypted data.',
+                Filter::formatHumanReadableSize($sizelimit)
+            ]);
+        }
         $data = [
             'adata' => $this->getParam('adata'),
         ];
