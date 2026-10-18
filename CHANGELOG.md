@@ -1,6 +1,6 @@
 # PrivateBin version history
 
-## 2.1.0 (not yet released)
+## 2.1.0 (2026-10-18)
 * ADDED: Added `shortenviachhoto` endpoint with an `chhoto` configuration section
 * ADDED: Translation for Chinese (Traditional)
 * ADDED: Subject line to the "Email" share button's mailto link (#928)
