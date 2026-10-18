@@ -1,5 +1,7 @@
 # PrivateBin version history
 
+## 2.1.1 (not yet released)
+
 ## 2.1.0 (2026-10-18)
 * ADDED: Added `shortenviachhoto` endpoint with an `chhoto` configuration section
 * ADDED: Translation for Chinese (Traditional)
