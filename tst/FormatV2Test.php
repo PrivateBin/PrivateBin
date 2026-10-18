@@ -19,6 +19,10 @@ class FormatV2Test extends TestCase
         $paste['adata'][0][1] = '$';
         $this->assertFalse(FormatV2::isValid($paste), 'invalid base64 encoding of salt');
 
+        $paste            = Helper::getPastePost();
+        $paste['adata'][] = 0;
+        $this->assertFalse(FormatV2::isValid($paste), 'invalid extra adata entry');
+
         $paste       = Helper::getPastePost();
         $paste['ct'] = '$';
         $this->assertFalse(FormatV2::isValid($paste), 'invalid base64 encoding of ct');
