@@ -1,7 +1,7 @@
 # PrivateBin version history
-* FIXED: Prevent toolbar JavaScript errors when optional controls are disabled (#2059)
-* 
+  
 ## 2.1.1 (not yet released)
+* FIXED: Prevent toolbar JavaScript errors when optional controls are disabled (#2059)
 
 ## 2.1.0 (2026-10-18)
 * ADDED: Added `shortenviachhoto` endpoint with an `chhoto` configuration section
