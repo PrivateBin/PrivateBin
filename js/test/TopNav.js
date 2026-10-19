@@ -125,6 +125,31 @@ describe('TopNav', function () {
                 assert.ok(result);
             }
         );
+
+        it(
+            'tolerates missing optional elements (discussion & password disabled)',
+            function () {
+                // with discussion = false and password = false in the
+                // configuration, the template omits these elements entirely
+                document.documentElement.innerHTML =
+                    '<nav><div id="navbar"><ul><li><button id="newbutton" ' +
+                    'type="button" class="hidden">New</button></li><li><a ' +
+                    'id="expiration" href="#" class="hidden">Expiration</a>' +
+                    '</li><li><div id="burnafterreadingoption" class="hidden">' +
+                    'Burn after reading</div></li><li>' +
+                    '<a id="formatter" href="#" class="hidden">Format</a>' +
+                    '</li><li><button id="sendbutton" type="button" ' +
+                    'class="hidden">Create</button></li></ul></div></nav>';
+                PrivateBin.TopNav.init();
+                assert.doesNotThrow(() => PrivateBin.TopNav.showCreateButtons());
+                assert.ok(!query('#sendbutton').classList.contains('hidden'));
+                assert.ok(!query('#burnafterreadingoption').classList.contains('hidden'));
+                assert.doesNotThrow(() => PrivateBin.TopNav.hideCreateButtons());
+                assert.ok(query('#sendbutton').classList.contains('hidden'));
+                assert.ok(query('#burnafterreadingoption').classList.contains('hidden'));
+                cleanup();
+            }
+        );
     });
 
     describe('send shortcut', function () {
@@ -564,6 +589,21 @@ describe('TopNav', function () {
                     console.log(results);
                 }
                 assert.ok(result);
+            }
+        );
+
+        it(
+            'tolerates a missing discussion option (discussion disabled)',
+            function () {
+                document.documentElement.innerHTML =
+                    '<nav><div id="navbar"><ul><li id="burnafterreadingoption" ' +
+                    'class="buttondisabled"><label><input type="checkbox" ' +
+                    'id="burnafterreading" name="burnafterreading" /> ' +
+                    'Burn after reading</label></li></ul></div></nav>';
+                PrivateBin.TopNav.init();
+                assert.doesNotThrow(() => PrivateBin.TopNav.resetInput());
+                assert.ok(!query('#burnafterreadingoption').classList.contains('buttondisabled'));
+                cleanup();
             }
         );
     });
