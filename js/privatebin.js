@@ -4278,7 +4278,7 @@ window.PrivateBin = (function () {
             cloneButton.classList.remove('hidden');
             rawTextButton.classList.remove('hidden');
             downloadTextButton.classList.remove('hidden');
-            qrCodeLink.classList.remove('hidden');
+            qrCodeLink?.classList.remove('hidden');
 
             viewButtonsDisplayed = true;
         };
@@ -4298,7 +4298,7 @@ window.PrivateBin = (function () {
             newButton.classList.add('hidden');
             rawTextButton.classList.add('hidden');
             downloadTextButton.classList.add('hidden');
-            qrCodeLink.classList.add('hidden');
+            qrCodeLink?.classList.add('hidden');
             me.hideEmailButton();
 
             viewButtonsDisplayed = false;
@@ -4333,7 +4333,7 @@ window.PrivateBin = (function () {
             expiration.classList.remove('hidden');
             formatter.classList.remove('hidden');
             newButton.classList.remove('hidden');
-            openDiscussionOption.classList.remove('hidden');
+            openDiscussionOption?.classList.remove('hidden');
             password.classList.remove('hidden');
             sendButton.classList.remove('hidden');
 
@@ -4356,7 +4356,7 @@ window.PrivateBin = (function () {
             expiration.classList.add('hidden');
             formatter.classList.add('hidden');
             burnAfterReadingOption.classList.add('hidden');
-            openDiscussionOption.classList.add('hidden');
+            openDiscussionOption?.classList.add('hidden');
             password.classList.add('hidden');
             if (attach) {
                 attach.classList.add('hidden');
@@ -4412,6 +4412,10 @@ window.PrivateBin = (function () {
          * @param {bool|undefined} optionalBurnAfterReading
          */
         me.showEmailButton = function (optionalRemainingTimeInSeconds, optionalBurnAfterReading) {
+            if (!emailLink) {
+                return;
+            }
+            
             try {
                 // we cache expiration date in closure to avoid inaccurate expiration datetime
                 const expirationDate = Helper.calculateExpirationDate(
@@ -4484,7 +4488,7 @@ window.PrivateBin = (function () {
          * @function
          */
         me.hideQrCodeButton = function () {
-            qrCodeLink.classList.add('hidden');
+            qrCodeLink?.classList.add('hidden');
         };
 
         /**
@@ -4572,7 +4576,7 @@ window.PrivateBin = (function () {
                 openDiscussion.checked = openDiscussionDefault;
             }
             if (openDiscussionDefault || !burnAfterReadingDefault) {
-                openDiscussionOption.classList.remove('buttondisabled');
+                openDiscussionOption?.classList.remove('buttondisabled');
             }
             if (burnAfterReadingDefault || !openDiscussionDefault) {
                 burnAfterReadingOption.classList.remove('buttondisabled');
