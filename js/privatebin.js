@@ -4496,7 +4496,9 @@ window.PrivateBin = (function () {
          * @function
          */
         me.hideQrCodeButton = function () {
-            qrCodeLink.classList.add('hidden');
+            if (qrCodeLink) {
+                qrCodeLink.classList.add('hidden');
+            }
         };
 
         /**

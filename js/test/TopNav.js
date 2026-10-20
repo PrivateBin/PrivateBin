@@ -10,6 +10,23 @@ function query(selector) {
 }
 
 describe('TopNav', function () {
+    describe('hideBurnAfterReadingButtons', function () {
+        it(
+            'hides buttons when the QR code button is disabled',
+            function () {
+                document.documentElement.innerHTML =
+                    '<nav><button id="clonebutton"></button></nav>';
+                PrivateBin.TopNav.init();
+
+                assert.doesNotThrow(function () {
+                    PrivateBin.TopNav.hideBurnAfterReadingButtons();
+                });
+                assert.ok(query('#clonebutton').classList.contains('hidden'));
+                cleanup();
+            }
+        );
+    });
+
     describe('showViewButtons & hideViewButtons', function () {
         before(function () {
             cleanup();
