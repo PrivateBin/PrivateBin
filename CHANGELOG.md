@@ -2,6 +2,8 @@
 
 ## 2.1.1 (not yet released)
 * FIXED: Creating a document failed with a JavaScript error when the `discussion` or `password` option is disabled, as the top navigation accessed the omitted elements
+* FIXED: Slovenian plural forms were stored in the wrong order, i.e. "1 uri" instead of "1 ura" for one hour (#1951)
+* FIXED: Lithuanian plural formula selected the "few" form for numbers ending in 0 above 10, i.e. "20 sekundės" instead of "20 sekundžių" (#1956)
 
 ## 2.1.0 (2026-10-18)
 * ADDED: Added `shortenviachhoto` endpoint with an `chhoto` configuration section
