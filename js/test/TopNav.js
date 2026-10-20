@@ -16,6 +16,27 @@ describe('TopNav', function () {
         });
 
         it(
+            'shows navigation elements when the QR code button is disabled',
+            function () {
+                document.documentElement.innerHTML =
+                    '<nav><button id="newbutton" class="hidden"></button>' +
+                    '<button id="clonebutton" class="hidden"></button>' +
+                    '<button id="rawtextbutton" class="hidden"></button>' +
+                    '<button id="downloadtextbutton" class="hidden"></button></nav>';
+                PrivateBin.TopNav.init();
+
+                assert.doesNotThrow(function () {
+                    PrivateBin.TopNav.showViewButtons();
+                });
+                assert.ok(!query('#newbutton').classList.contains('hidden'));
+                assert.ok(!query('#clonebutton').classList.contains('hidden'));
+                assert.ok(!query('#rawtextbutton').classList.contains('hidden'));
+                assert.ok(!query('#downloadtextbutton').classList.contains('hidden'));
+                cleanup();
+            }
+        );
+
+        it(
             'displays & hides navigation elements for viewing an existing document',
             function () {
                 let results = [];
