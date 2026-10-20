@@ -215,7 +215,8 @@ class I18n
         }
 
         return self::_getMatchingLanguage(
-            self::getBrowserLanguages(), $availableLanguages
+            self::_normalizeBrowserLanguages(self::getBrowserLanguages(), $availableLanguages),
+            $availableLanguages
         );
     }
 
