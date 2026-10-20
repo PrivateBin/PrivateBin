@@ -678,7 +678,7 @@ window.PrivateBin = (function () {
          * @prop   {string[]}
          * @readonly
          */
-        const supportedLanguages = ['ar', 'bg', 'ca', 'co', 'cs', 'de', 'el', 'es', 'et', 'fa', 'fi', 'fr', 'he', 'hu', 'id', 'it', 'ja', 'jbo', 'lt', 'no', 'nl', 'pl', 'pt', 'oc', 'ro', 'ru', 'sk', 'sl', 'sv', 'th', 'tr', 'uk', 'zh', 'zh-tw'];
+        const supportedLanguages = ['ar', 'bg', 'ca', 'co', 'cs', 'de', 'el', 'es', 'et', 'fa', 'fi', 'fr', 'he', 'hu', 'id', 'it', 'ja', 'jbo', 'ko', 'lt', 'no', 'nl', 'pl', 'pt', 'oc', 'ro', 'ru', 'sk', 'sl', 'sv', 'th', 'tr', 'uk', 'zh', 'zh-tw'];
 
         /**
          * built in language
@@ -875,6 +875,7 @@ window.PrivateBin = (function () {
                 case 'id':
                 case 'ja':
                 case 'jbo':
+                case 'ko':
                 case 'th':
                     return 0;
                 case 'lt':
