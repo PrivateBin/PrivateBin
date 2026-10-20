@@ -878,7 +878,7 @@ window.PrivateBin = (function () {
                 case 'th':
                     return 0;
                 case 'lt':
-                    return n % 10 === 1 && n % 100 !== 11 ? 0 : ((n % 10 >= 2 && n % 100 < 10 || n % 100 >= 20) ? 1 : 2);
+                    return n % 10 === 1 && n % 100 !== 11 ? 0 : ((n % 10 >= 2 && (n % 100 < 10 || n % 100 >= 20)) ? 1 : 2);
                 case 'pl':
                     return n === 1 ? 0 : (n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20) ? 1 : 2);
                 case 'ro':
@@ -4333,8 +4333,12 @@ window.PrivateBin = (function () {
             expiration.classList.remove('hidden');
             formatter.classList.remove('hidden');
             newButton.classList.remove('hidden');
-            openDiscussionOption.classList.remove('hidden');
-            password.classList.remove('hidden');
+            if (openDiscussionOption) {
+                openDiscussionOption.classList.remove('hidden');
+            }
+            if (password) {
+                password.classList.remove('hidden');
+            }
             sendButton.classList.remove('hidden');
 
             createButtonsDisplayed = true;
@@ -4356,8 +4360,12 @@ window.PrivateBin = (function () {
             expiration.classList.add('hidden');
             formatter.classList.add('hidden');
             burnAfterReadingOption.classList.add('hidden');
-            openDiscussionOption.classList.add('hidden');
-            password.classList.add('hidden');
+            if (openDiscussionOption) {
+                openDiscussionOption.classList.add('hidden');
+            }
+            if (password) {
+                password.classList.add('hidden');
+            }
             if (attach) {
                 attach.classList.add('hidden');
             }
@@ -4571,7 +4579,7 @@ window.PrivateBin = (function () {
             if (openDiscussion) {
                 openDiscussion.checked = openDiscussionDefault;
             }
-            if (openDiscussionDefault || !burnAfterReadingDefault) {
+            if (openDiscussionOption && (openDiscussionDefault || !burnAfterReadingDefault)) {
                 openDiscussionOption.classList.remove('buttondisabled');
             }
             if (burnAfterReadingDefault || !openDiscussionDefault) {
