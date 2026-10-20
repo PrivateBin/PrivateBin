@@ -1,7 +1,7 @@
 # PrivateBin version history
 
 ## 2.1.1 (not yet released)
-* FIXED: Creating a document failed with a JavaScript error when the `discussion` or `password` option is disabled, as the top navigation accessed the omitted elements
+* FIXED: Creating a document failed with a JavaScript error when the `discussion`, `password` or QR code option is disabled, as the top navigation accessed the omitted elements
 
 ## 2.1.0 (2026-10-18)
 * ADDED: Added `shortenviachhoto` endpoint with an `chhoto` configuration section
