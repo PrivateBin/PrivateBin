@@ -12,6 +12,7 @@
 namespace PrivateBin\Data;
 
 use Exception;
+use Google\Cloud\Core\Exception\FailedPreconditionException;
 use Google\Cloud\Core\Exception\NotFoundException;
 use Google\Cloud\Storage\Bucket;
 use Google\Cloud\Storage\StorageClient;
@@ -114,9 +115,10 @@ class GoogleCloudStorage extends AbstractData
         }
         try {
             $data = [
-                'name'          => $key,
-                'chunkSize'     => 262144,
-                'metadata'      => [
+                'name'              => $key,
+                'chunkSize'         => 262144,
+                'ifGenerationMatch' => 0,
+                'metadata'          => [
                     'content-type' => 'application/json',
                     'metadata'     => $metadata,
                 ],
@@ -125,6 +127,8 @@ class GoogleCloudStorage extends AbstractData
                 $data['predefinedAcl'] = 'private';
             }
             $this->_bucket->upload(Json::encode($payload), $data);
+        } catch (FailedPreconditionException $e) {
+            return false;
         } catch (Exception $e) {
             error_log('failed to upload ' . $key . ' to ' . $this->_bucket->name() . ', ' .
                 trim(preg_replace('/\s\s+/', ' ', $e->getMessage())));
