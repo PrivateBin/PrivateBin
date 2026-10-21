@@ -408,6 +408,7 @@ class I18n
             case 'id':
             case 'ja':
             case 'jbo':
+            case 'ko':
             case 'th':
                 return 0;
             case 'lt':
