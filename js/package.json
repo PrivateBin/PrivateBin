@@ -7,9 +7,11 @@
     "test": "test"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "@peculiar/webcrypto": "^1.5.0",
     "eslint": "^10.13.0",
     "fast-check": "^4.10.2",
+    "globals": "^17.13.0",
     "jsdom": "^26.1.0",
     "jsdom-global": "^3.0.2",
     "jshint": "^2.13.6",
