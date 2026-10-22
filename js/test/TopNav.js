@@ -10,6 +10,32 @@ function query(selector) {
 }
 
 describe('TopNav', function () {
+    describe('showEmailButton', function () {
+        afterEach(function () {
+            cleanup();
+        });
+
+        it('does nothing when the email button is omitted from the page', function () {
+            document.documentElement.innerHTML =
+                '<nav><div id="navbar"><ul><li><button id="newbutton" ' +
+                'type="button">New</button></li></ul></div></nav>';
+            PrivateBin.TopNav.init();
+
+            const originalShowError = PrivateBin.Alert.showError;
+            let errorShown = false;
+            PrivateBin.Alert.showError = function () {
+                errorShown = true;
+            };
+
+            try {
+                assert.doesNotThrow(() => PrivateBin.TopNav.showEmailButton());
+                assert.strictEqual(errorShown, false);
+            } finally {
+                PrivateBin.Alert.showError = originalShowError;
+            }
+        });
+    });
+
     describe('hideBurnAfterReadingButtons', function () {
         it(
             'hides buttons when the QR code button is disabled',

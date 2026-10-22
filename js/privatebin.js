@@ -4425,6 +4425,10 @@ window.PrivateBin = (function () {
          * @param {bool|undefined} optionalBurnAfterReading
          */
         me.showEmailButton = function (optionalRemainingTimeInSeconds, optionalBurnAfterReading) {
+            if (!emailLink) {
+                return;
+            }
+
             try {
                 // we cache expiration date in closure to avoid inaccurate expiration datetime
                 const expirationDate = Helper.calculateExpirationDate(
