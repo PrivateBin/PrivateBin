@@ -678,7 +678,7 @@ window.PrivateBin = (function () {
          * @prop   {string[]}
          * @readonly
          */
-        const supportedLanguages = ['ar', 'bg', 'ca', 'co', 'cs', 'de', 'el', 'es', 'et', 'fa', 'fi', 'fr', 'he', 'hu', 'id', 'it', 'ja', 'jbo', 'lt', 'no', 'nl', 'pl', 'pt', 'oc', 'ro', 'ru', 'sk', 'sl', 'sv', 'th', 'tr', 'uk', 'zh', 'zh-tw'];
+        const supportedLanguages = ['ar', 'bg', 'ca', 'co', 'cs', 'de', 'el', 'es', 'et', 'fa', 'fi', 'fr', 'he', 'hu', 'id', 'it', 'ja', 'jbo', 'ko', 'lt', 'no', 'nl', 'pl', 'pt', 'oc', 'ro', 'ru', 'sk', 'sl', 'sv', 'th', 'tr', 'uk', 'zh', 'zh-tw'];
 
         /**
          * built in language
@@ -875,10 +875,11 @@ window.PrivateBin = (function () {
                 case 'id':
                 case 'ja':
                 case 'jbo':
+                case 'ko':
                 case 'th':
                     return 0;
                 case 'lt':
-                    return n % 10 === 1 && n % 100 !== 11 ? 0 : ((n % 10 >= 2 && n % 100 < 10 || n % 100 >= 20) ? 1 : 2);
+                    return n % 10 === 1 && n % 100 !== 11 ? 0 : ((n % 10 >= 2 && (n % 100 < 10 || n % 100 >= 20)) ? 1 : 2);
                 case 'pl':
                     return n === 1 ? 0 : (n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20) ? 1 : 2);
                 case 'ro':
