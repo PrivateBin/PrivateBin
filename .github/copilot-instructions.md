@@ -55,7 +55,7 @@
   - Always run after code changes to backend logic.
   - If `vendor/bin/phpunit` does not exist, ensure `composer install` completed without errors.
 
-- **PHP JS Tests:**
+- **JS Tests:**
   ```sh
   cd ./js
   npm run test
